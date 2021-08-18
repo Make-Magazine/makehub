@@ -11,6 +11,7 @@ class Products
     private $affiliateId    = 0;
     private $category       = 0;
     private $orderBy        = '';
+    private $wooPriceFormat = '';
 
     public function __construct(){}
 
@@ -92,7 +93,12 @@ class Products
     {
         global $wpdb;
         $search = esc_sql( $this->searchPhrase );
-        $query = "SELECT a.ID, a.post_title, CAST(c.meta_value AS DECIMAL(10,2)) as price, CAST(d.meta_value AS UNSIGNED) as total_sales FROM {$wpdb->posts} a ";
+        $query = "SELECT a.ID, a.post_title,
+                          CAST(c.meta_value AS DECIMAL(10,2)) as price,
+                          CAST(d.meta_value AS UNSIGNED) as total_sales,
+                          c.meta_key as c_meta_key,
+                          c.meta_value as c_meta_value
+                          FROM {$wpdb->posts} a ";
         if ( $this->category ){
             $query .= " INNER JOIN {$wpdb->term_relationships} b ON a.ID=b.object_id  ";
         }
@@ -106,8 +112,9 @@ class Products
             $query .= " AND a.post_title LIKE '%$search%' ";
         }
         $query .= " AND a.post_type='product' AND a.post_status='publish' ";
-        $query .= " AND c.meta_key='_regular_price' ";
+        $query .= " AND (c.meta_key='_regular_price' OR c.meta_key='_price') ";
         $query .= " AND d.meta_key='total_sales' ";
+        $query .= " GROUP BY a.ID ";
         if ( $this->orderBy ){
             switch ( $this->orderBy ){
                 case 'popularity':
@@ -131,37 +138,130 @@ class Products
             return [];
         }
         $currency = get_option('woocommerce_currency');
+        if ( function_exists( 'get_woocommerce_currency_symbol' ) ){
+            $currency = get_woocommerce_currency_symbol( $currency );
+        }
         $return = [];
-
 
         require_once UAP_PATH . 'public/Affiliate_Referral_Amount.class.php';
         $do_math = new \Affiliate_Referral_Amount( $this->affiliateId, 'woo');
 
+        $excludeTax = get_option( 'uap_exclude_tax' );
+
         foreach ( $data as $productData){
+            $prices = [];
+            $regularPrices = [];
             $product = wc_get_product( $productData->ID );
-            $price = $productData->price;
-			      $regular_price = $product->get_regular_price();
+
+            
+            if ( $excludeTax ){
+              $price = wc_get_price_excluding_tax( $product, [] );
+            } else {
+              $price = wc_get_price_including_tax( $product, [] );
+            }
+
+      			$sale_price = $product->get_sale_price();
+      			$regular_price = $product->get_regular_price();
+
+      			if(!empty($sale_price)) {
+      				$price = $sale_price;
+      				if($regular_price == $sale_price){
+                 $regular_price = FALSE;
+              }
+      			}
+
+            $priceHtml = $this->formatWooPrice( $price, $currency );
             $referralAmount = $do_math->get_result( $price, $productData->ID );// input price, product id
+            $referralPrice = $this->formatWooPrice( $referralAmount, $currency );
+
+            if ( $product instanceof \WC_Product_Variable ){
+                  $variablePrices = $product->get_available_variations();
+                  foreach ( $variablePrices as $variablePrice ){
+                  		$variableProductObject = wc_get_product( $variablePrice['variation_id'] );
+                      if ( $excludeTax ){
+                        $prices[] = wc_get_price_excluding_tax( $variableProductObject, [] );
+                      } else {
+                        $prices[] = wc_get_price_including_tax( $variableProductObject, [] );
+                      }
+                      /*
+                      $prices[] = $variablePrice['display_price'];
+                      if ( isset( $variablePrice['display_regular_price'] ) ){
+                          $regularPrices[] = $variablePrice['display_regular_price'];
+                      }
+                      */
+                  }
+                  // referral amount
+                  $temporaryMinReferralAmount = $do_math->get_result( min( $prices ), $productData->ID );
+                  $temporaryMaxReferralAmount = $do_math->get_result( max( $prices ), $productData->ID );
+                  $referralPrice = $this->formatWooPrice( $temporaryMinReferralAmount, $currency );
+                  $referralPrice .= ' - ';
+                  $referralPrice .= $this->formatWooPrice( $temporaryMaxReferralAmount, $currency );
+
+                  // base price
+                  $priceHtml = $this->formatWooPrice( min( $prices ), $currency );
+                  $priceHtml .= ' - ';
+                  $priceHtml .= $this->formatWooPrice( max( $prices ), $currency );
+
+                  // regular price
+                  if ( !empty( $regularPrices ) ){
+                      $regularPriceHtml = $this->formatWooPrice( min( $regularPrices ), $currency );
+                      $regularPriceHtml .= ' - ';
+                      $regularPriceHtml .= $this->formatWooPrice( max( $regularPrices ), $currency );
+                  }
+            }
+
             $return[$productData->ID] = [
-                  'price'             => $price . $currency,
-				          'regular_price'     => $regular_price . $currency,
-                  'label'             => $productData->post_title,
-                  'featureImage'      => get_the_post_thumbnail_url( $productData->ID ),
-                  'id'                => $productData->ID,
-                  'product_type'      => 'woo',
-                  'referral_amount'   => $referralAmount . $currency,
-                  'permalink'         => get_permalink( $productData->ID ),
-                  'categories'        => get_the_terms( $productData->ID, 'product_cat' ),
+                  'price'                   => $priceHtml,
+                  'numeric_price'           => $price,
+				          'regular_price'           => isset( $regularPriceHtml ) ? $regularPriceHtml : $regular_price,
+                  'numeric_regular_price'   => $regular_price,
+                  'label'                   => $productData->post_title,
+                  'featureImage'            => get_the_post_thumbnail_url( $productData->ID ),
+                  'id'                      => $productData->ID,
+                  'product_type'            => 'woo',
+                  'referral_amount'         => $referralPrice,
+                  'permalink'               => get_permalink( $productData->ID ),
+                  'categories'              => get_the_terms( $productData->ID, 'product_cat' ),
             ];
+            if ( isset( $regularPriceHtml ) ){
+                unset( $regularPriceHtml );
+            }
         }
         return $return;
+    }
+
+    private function formatWooPrice( $price='', $currency='' )
+    {
+        if ($price === FALSE){
+           return FALSE;
+        }
+
+		    if ( !$this->wooPriceFormat ){
+            $this->wooPriceFormat = get_option( 'woocommerce_currency_pos' );
+        }
+        $string = $currency . $price;
+        switch ( $this->wooPriceFormat ) {
+          case 'left':
+            $string = $currency . $price;
+            break;
+          case 'right':
+            $string = $price . $currency;
+            break;
+          case 'left_space':
+            $string = $currency . ' ' . $price;
+            break;
+          case 'right_space':
+            $string = $price . ' ' . $currency;
+            break;
+        }
+        return $string;
     }
 
     private function countsForWoo()
     {
         global $wpdb;
         $search = esc_sql( $this->searchPhrase );
-        $query = "SELECT COUNT(a.ID) FROM {$wpdb->posts} a ";
+        $query = "SELECT COUNT( a.ID ) FROM {$wpdb->posts} a ";
         if ( $this->category ){
             $query .= " INNER JOIN {$wpdb->term_relationships} b ON a.ID=b.object_id ";
         }
@@ -221,20 +321,21 @@ class Products
         $return = [];
 
         $currency = edd_get_currency();
+        
         require_once UAP_PATH . 'public/Affiliate_Referral_Amount.class.php';
         $do_math = new \Affiliate_Referral_Amount( $this->affiliateId, 'edd');
 
         foreach ( $data as $productData){
-            $price = edd_price( $productData->ID, false );;
+            $price = edd_price( $productData->ID, false );
             $referralAmount = $do_math->get_result( $price, $productData->ID );// input price, product id
 
             $return[$productData->ID] = [
-                  'price'             => $price . $currency,
+                  'price'             => $price,
                   'label'             => $productData->post_title,
                   'featureImage'      => get_the_post_thumbnail_url( $productData->ID ),
                   'id'                => $productData->ID,
                   'product_type'      => 'edd',
-                  'referral_amount'   => $referralAmount . $currency,
+                  'referral_amount'   => edd_currency_filter( $referralAmount, $currency ),
                   'permalink'         => get_permalink( $productData->ID ),
                   'categories'        => get_the_terms( $productData->ID, 'download_category' ),
             ];
@@ -317,17 +418,26 @@ class Products
             $referralAmount = $do_math->get_result( $price, $productData->ID );// input price, product id
 
             $return[$productData->ID] = [
-                  'price'             => $price,
+                  'price'             => $this->formatUlpPrice( $price, $currency ), 
                   'label'             => $productData->post_title,
                   'featureImage'      => get_the_post_thumbnail_url( $productData->ID ),
                   'id'                => $productData->ID,
                   'product_type'      => 'ulp',
-                  'referral_amount'   => $referralAmount . $currency,
+                  'referral_amount'   => $this->formatUlpPrice( $referralAmount, $currency ), 
                   'permalink'         => get_permalink( $productData->ID ),
                   'categories'        => get_the_terms( $productData->ID, 'ulp_course_categories' ),
             ];
         }
         return $return;
+    }
+
+
+    private function formatUlpPrice( $price='', $currency='' )
+    {
+        if ( function_exists('ulp_format_price') ){
+            return ulp_format_price( $price );
+        }
+        return $price . $currency;
     }
 
     private function countsForUlp()

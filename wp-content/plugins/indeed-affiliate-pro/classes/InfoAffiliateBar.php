@@ -71,8 +71,9 @@ class InfoAffiliateBar
     {
         wp_enqueue_script( 'uap_iml_popover_js', UAP_URL . 'assets/js/iml.min.js', [], false, false );
         wp_enqueue_style( 'uap_iml_popover_css', UAP_URL . 'assets/css/iml-styles.css', [], false, 'all' );
+        wp_enqueue_script( 'uap-info-affiliate-bar', UAP_URL . 'assets/js/info-affiliate-bar.js', [], 1.1 );
 
-        if ( uap_is_social_share_intalled_and_active() && get_option('uap_info_affiliate_bar_social_shortcode') ){ 
+        if ( uap_is_social_share_intalled_and_active() && get_option('uap_info_affiliate_bar_social_shortcode') ){
             wp_enqueue_script( 'ism_front_end_f' );
         }
 
@@ -131,7 +132,7 @@ class InfoAffiliateBar
                   'custom_affiliate_slug'   => $indeed_db->is_magic_feat_enable('custom_affiliate_slug'),
                   'the_slug'                => $indeed_db->get_custom_slug_for_uid($this->uid),
                   'uap_default_ref_format'  => get_option('uap_default_ref_format'),
-                  'ref_type'                => (get_option('uap_default_ref_format')=='username') ? __('Username', 'uap') : 'Id',
+                  'ref_type'                => (get_option('uap_default_ref_format')=='username') ? esc_html__('Username', 'uap') : 'Id',
         ];
 
         if ($data['custom_affiliate_slug'] && !empty($the_slug) ){
@@ -149,7 +150,9 @@ class InfoAffiliateBar
     {
         global $indeed_db;
         $data = [
-                  'banner'            => $banner,
+                  'banner'                  => $banner,
+                  'affiliate_id'            => $this->affiliateId,
+                  'uid'                     => $this->uid,
         ];
         $viewObject = new \Indeed\Uap\IndeedView();
         return $viewObject->setTemplate( UAP_PATH . 'public/views/info_affiliate_bar-banner.php' )->setContentData( $data )->getOutput();

@@ -6,21 +6,25 @@
 	<p><?php echo do_shortcode($data['message']);?></p>
 <?php endif;?>
 
-<form action="" method="post" class="uap-change-password-form">
+<form  method="post" class="uap-change-password-form">
+
+	<input type="hidden" value="<?php echo wp_create_nonce( 'uap_public_change_password_nonce' );?>" name="uap_public_change_password_nonce" />
+
 	<div class="uap-change-password-field-wrap">
-		<label class="uap-change-password-label"><?php _e("Old Password", 'uap');?></label>
+		<label class="uap-change-password-label"><?php esc_html_e("Current Password", 'uap');?></label>
 		<input class="uap-change-password-field" type="password" value="" name="old_pass" />
+        <div class="uap-change-password-field-details"><?php esc_html_e("we need your current password to confirm your changes", 'uap');?></div>
 	</div>
 	<div class="uap-change-password-field-wrap">
-		<label class="uap-change-password-label"><?php _e("New Password", 'uap');?></label>
+		<label class="uap-change-password-label"><?php esc_html_e("New Password", 'uap');?></label>
 		<input class="uap-change-password-field" type="password" value="" name="pass1" />
 	</div>
 	<div class="uap-change-password-field-wrap">
-		<label class="uap-change-password-label"><?php _e("Repeat New Password", 'uap');?></label>
+		<label class="uap-change-password-label"><?php esc_html_e("Repeat New Password", 'uap');?></label>
 		<input class="uap-change-password-field" type="password" value="" name="pass2" />
 	</div>
 	<div class="uap-change-password-field-wrap">
-		<input type="submit" value="<?php _e("Save", 'uap');?>" name="update_pass" class="button button-primary button-large" />
+		<input type="submit" value="<?php esc_html_e("Save Changes", 'uap');?>" name="update_pass" class="button button-primary button-large" />
 	</div>
 	<?php if (!empty($data['error'])) : ?>
 		<div><?php echo $data['error'];?></div>

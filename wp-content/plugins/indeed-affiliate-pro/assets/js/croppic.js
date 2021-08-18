@@ -1,11 +1,13 @@
 /*
  * CROPPIC
  * dependancy: jQuery
- */
+ * author: Ognjen "Zmaj Džedaj" Božičković and Mat Steinlin
+ * Customized on 2021-05-27
+*/
 
-(function (window, document) {
+"use strict";
 
-	Croppic = function (id, options) {
+	var Croppic = function (id, options) {
 
 		var that = this;
 		that.id = id;
@@ -61,7 +63,7 @@
 		};
 
 		// OVERWRITE DEFAULT OPTIONS
-		for (i in options) that.options[i] = options[i];
+		for (var i in options) that.options[i] = options[i];
 
 		// INIT THE WHOLE DAMN THING!!!
 		that.init();
@@ -137,7 +139,7 @@
 					objH:0,
 					customIdentificator:0,
 				}
-				for (i in options){
+				for ( var i in options){
 					if (that.options[i] > 0){
 						that[i] = that.options[i]
 					}
@@ -180,7 +182,7 @@
 
 			// CREATE UPLOAD IMG FORM
 
-      var formHtml = '<form class="' + that.id + '_imgUploadForm" style="visibility: hidden;">  <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
+      var formHtml = '<form class="' + that.id + '_imgUploadForm uap-visibility-hidden">  <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
 			that.outputDiv.append(formHtml);
 			that.form = that.outputDiv.find('.'+that.id+'_imgUploadForm');
 
@@ -264,10 +266,10 @@
 
 					try {
 						// other modern browsers
-						formData = new FormData(that.form[0]);
+						var formData = new FormData(that.form[0]);
 					} catch(e) {
 						// IE10 MUST have all form items appended as individual form key / value pairs
-						formData = new FormData();
+						var formData = new FormData();
 						formData.append('img', that.form.find("input[type=file]")[0].files[0]);
 
 					}
@@ -333,7 +335,7 @@
 		afterUpload: function(data){
             var that = this;
 
-           	response = typeof data =='object' ? data : jQuery.parseJSON(data);
+           	var response = typeof data =='object' ? data : jQuery.parseJSON(data);
 
             if (response.status == 'success') {
 
@@ -373,7 +375,7 @@
 			var that = this;
 
 			var marginTop = that.windowH/2-that.objH/2;
-			var modalHTML =  '<div id="croppicModal">'+'<div id="croppicModalObj" style="width:'+ that.objW +'px; height:'+ that.objH +'px; margin:0 auto; margin-top:'+ marginTop +'px; position: relative; max-width:100%;"> </div>'+'</div>';
+			var modalHTML =  '<div id="croppicModal">'+'<div id="croppicModalObj" class="uap-cst-croppic uap-croppicModalObj" style = " width:'+ that.objW +'px; height:'+ that.objH +'px; margin-top:'+ marginTop +'px;"> </div>'+'</div>';
 
 			jQuery('body').append(modalHTML);
 
@@ -394,7 +396,7 @@
 
 			/*SET UP SOME VARS*/
 			that.img = that.obj.find('img');
-			that.img.wrap('<div class="cropImgWrapper" style="overflow:hidden; z-index:1; position:absolute; width:'+that.objW+'px; height:'+that.objH+'px;"></div>');
+			that.img.wrap('<div class="cropImgWrapper uap-cropImgWrapper" style = " width:'+that.objW+'px; height:'+that.objH+'px;"></div>');
 
 			/*INIT DRAGGING*/
 			that.createCropControls();
@@ -442,8 +444,8 @@
 			var cropControlZoomMuchOut =     '';
 			var cropControlRotateLeft =      '';
 	        var cropControlRotateRight =     '';
-	        var cropControlCrop =            '<i class="cropControlCrop"></i>';
-			var cropControlReset =           '<i class="cropControlReset"></i>';
+	        var cropControlCrop =            '<i class="cropControlCrop">Save</i>';
+			var cropControlReset =           '<i class="cropControlReset">Cancel</i>';
 
             var html;
 
@@ -456,7 +458,7 @@
 				cropControlRotateRight = '<i class="cropControlRotateRight"></i>';
 			}
 
-			html =  '<div class="cropControls cropControlsCrop">'+ cropControlZoomMuchIn + cropControlZoomIn + cropControlZoomOut + cropControlZoomMuchOut + cropControlRotateLeft + cropControlRotateRight + cropControlCrop + cropControlReset + '</div>';
+			html =  '<div class="cropControls cropControlsCrop">'+ cropControlZoomMuchIn + cropControlZoomIn + cropControlZoomOut + cropControlZoomMuchOut + cropControlRotateLeft + cropControlRotateRight + '<span id="uap-custom-controls">' + cropControlCrop + ' <span class="uap_delimiter">|</span> ' + cropControlReset + '</span></div>';
 
 			that.obj.append(html);
 
@@ -733,10 +735,10 @@
 		afterCrop: function (data) {
             var that = this;
 			try {
-				response = jQuery.parseJSON(data);
+				var response = jQuery.parseJSON(data);
 			}
 			catch(err) {
-				response = typeof data =='object' ? data : jQuery.parseJSON(data);
+				var response = typeof data =='object' ? data : jQuery.parseJSON(data);
 			}
 
             if (response.status == 'success') {
@@ -833,10 +835,10 @@
                                 + '<html><head><title>Uploading File</title></head>'
                                 + '<body>'
                                 + '<form '
-                                + 'class="' + that.id + '_upload_iframe_form" '
+                                + 'class="' + that.id + '_upload_iframe_form uap-display-none" '
                                 + 'name="' + that.id + '_upload_iframe_form" '
                                 + 'action="' + that.options.uploadUrl + '" method="post" '
-                                + 'enctype="multipart/form-data" encoding="multipart/form-data" style="display:none;">'
+                                + 'enctype="multipart/form-data" encoding="multipart/form-data">'
                                 + jQuery("#" + that.id + '_imgUploadField')[0].outerHTML
                                 + '</form></body></html>';
 
@@ -909,4 +911,3 @@
         }
 
 	};
-})(window, document);

@@ -1,20 +1,23 @@
 <div class="uap-wrapper">
-<form action="" method="post">
+<form  method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Admin Workflow Settings', 'uap');?></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Admin Workflow Settings', 'uap');?></h3>
 		<div class="inside">
 
 			<div class="uap-inside-item">
 				<div class="row">
 					<div class="col-xs-4">
-						<h3><?php _e('Updates', 'uap');?></h3>
+						<h3><?php esc_html_e('Updates', 'uap');?></h3>
 						<div class="uap-form-line">
-							<span class="uap-labels-special"><?php _e('Update Affiliates Rank:', 'uap');?></span>
+							<span class="uap-labels-special"><?php esc_html_e('Update Affiliates Rank:', 'uap');?></span>
 							<select name="uap_update_ranks_interval" class="form-control m-bot15"><?php
 								$values = array(
-													'hourly' => __('Hourly', 'uap'),
-													'twicedaily' => __('At every 12hours', 'uap'),
-													'daily' => __('Daily', 'uap'),
+													'hourly' => esc_html__('Hourly', 'uap'),
+													'twicedaily' => esc_html__('At every 12hours', 'uap'),
+													'daily' => esc_html__('Daily', 'uap'),
 								);
 								foreach ($values as $k=>$v){
 									$selected = ($data['metas']['uap_update_ranks_interval']==$k) ? 'selected' : '';
@@ -26,12 +29,12 @@
 						</div>
 
 						<div class="uap-form-line">
-							<span class="uap-labels-special"><?php _e('Update Payments Status:', 'uap');?></span>
+							<span class="uap-labels-special"><?php esc_html_e('Update Payments Status:', 'uap');?></span>
 							<select name="uap_update_payments_status" class="form-control m-bot15"><?php
 								$values = array(
-													'hourly' => __('Hourly', 'uap'),
-													'twicedaily' => __('At every 12hours', 'uap'),
-													'daily' => __('Daily', 'uap'),
+													'hourly' => esc_html__('Hourly', 'uap'),
+													'twicedaily' => esc_html__('At every 12hours', 'uap'),
+													'daily' => esc_html__('Daily', 'uap'),
 								);
 								foreach ($values as $k=>$v){
 									$selected = ($data['metas']['uap_update_payments_status']==$k) ? 'selected' : '';
@@ -50,14 +53,14 @@
 			<div class="uap-inside-item">
 				<div class="row">
 					<div class="col-xs-12">
-						<h3><?php _e('Keep Referral Status as Unverified', 'uap');?></h3>
+						<h3><?php esc_html_e('Keep Referral Status as Unverified', 'uap');?></h3>
 						<div class="uap-form-line">
-							<span class="uap-labels-special"><?php _e("Don't change the Referral Status to Verified", 'uap');?></span>
+							<span class="uap-labels-special"><?php esc_html_e("Don't change the Referral Status to Verified", 'uap');?></span>
 							<div class="uap-form-line">
-								<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<label class="uap_label_shiwtch uap-switch-button-margin">
 									<?php $checked = ($data['metas']['uap_workflow_referral_status_dont_automatically_change']) ? 'checked' : '';?>
 									<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_workflow_referral_status_dont_automatically_change');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch uap-display-inline"></div>
 								</label>
 								<input type="hidden" name="uap_workflow_referral_status_dont_automatically_change" value="<?php echo $data['metas']['uap_workflow_referral_status_dont_automatically_change'];?>" id="uap_workflow_referral_status_dont_automatically_change" />
 							</div>
@@ -65,14 +68,14 @@
 					</div>
 
 					<div class="col-xs-12">
-						<h3><?php _e('Show Dashboard Notifications', 'uap');?></h3>
+						<h3><?php esc_html_e('Show Dashboard Notifications', 'uap');?></h3>
 						<div class="uap-form-line">
-							<span class="uap-labels-special"><?php _e("New Affiliates & Referrals", 'uap');?></span>
+							<span class="uap-labels-special"><?php esc_html_e("New Affiliates & Referrals", 'uap');?></span>
 							<div class="uap-form-line">
-								<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<label class="uap_label_shiwtch uap-switch-button-margin">
 									<?php $checked = ($data['metas']['uap_admin_workflow_dashboard_notifications']) ? 'checked' : '';?>
 									<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_admin_workflow_dashboard_notifications');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch uap-display-inline"></div>
 								</label>
 								<input type="hidden" name="uap_admin_workflow_dashboard_notifications" value="<?php echo $data['metas']['uap_admin_workflow_dashboard_notifications'];?>" id="uap_admin_workflow_dashboard_notifications" />
 							</div>
@@ -80,13 +83,13 @@
 					</div>
 
 					<div class="col-xs-12">
-							<h3><?php _e('Unistall Settings:', 'uap');?></h3>
+							<h3><?php esc_html_e('Uninstall Settings:', 'uap');?></h3>
 							<div class="uap-form-line">
-								<span class="uap-labels-special"><?php _e("Keep data after delete plugin:", 'uap');?></span>
-								<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<span class="uap-labels-special"><?php esc_html_e("Keep data after delete plugin:", 'uap');?></span>
+								<label class="uap_label_shiwtch uap-switch-button-margin">
 									<?php $checked = ($data['metas']['uap_keep_data_after_delete']) ? 'checked' : '';?>
 									<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_keep_data_after_delete');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch uap-display-inline"></div>
 								</label>
 								<input type="hidden" name="uap_keep_data_after_delete" value="<?php echo $data['metas']['uap_keep_data_after_delete'];?>" id="uap_keep_data_after_delete" />
 							</div>
@@ -97,7 +100,7 @@
 			</div>
 
 			<div class="uap-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>

@@ -1,3 +1,7 @@
+/*
+ *Ultimate Affiliate Pro - Crop Avatar Image
+ */
+"use strict";
 var UapAvatarCroppic = {
     triggerId                   : '',
     saveImageTarget             : '',
@@ -10,8 +14,8 @@ var UapAvatarCroppic = {
     init: function(args){
         var obj = this;
         obj.setAttributes(obj, args);
-        jQuery(document).ready(function(){
-            cropperHeader = obj.initCroppic(obj);
+        jQuery(window).on('load', function(){
+            var cropperHeader = obj.initCroppic(obj);
             jQuery( obj.removeImageSelector ).on( 'click', function(){
       			    cropperHeader.reset();
       			    obj.handleRemove( obj );
@@ -56,12 +60,12 @@ var UapAvatarCroppic = {
     },
 
     handleAfterImageCrop: function(obj, response){
-        // console.log( response )
         if (response.status=='success'){
             jQuery( obj.imageSelectorWrapper ).html( '' );
             jQuery( obj.hiddenInputSelector ).val( response.uploadId );
             jQuery( obj.imageSelectorWrapper ).append( '<img src="' + response.url + '" class="' + obj.imageClass + '" />' );
 			      jQuery( obj.removeImageSelector ).css('visibility', 'visible');
+            jQuery( obj.removeImageSelector ).removeClass('uap-visibility-hidden');
         }
     },
 
@@ -99,6 +103,8 @@ var UapAvatarCroppic = {
             jQuery(obj.hiddenInputSelector).val( response.uploadId );
         }
 		    jQuery( obj.removeImageSelector ).css('visibility', 'visible');
+
+        jQuery( obj.removeImageSelector ).removeClass('uap-visibility-hidden');
     },
 
 }

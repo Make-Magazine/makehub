@@ -374,3 +374,6 @@ content: '\ec6b';
 .uap-theme_5 .member-social a.Tumblr:hover i {
 	background-color: #32506d;
 }
+.uap-theme_5 .uap-text-align-center{
+  text-align: center;
+}

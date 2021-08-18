@@ -431,7 +431,9 @@ class Pushover
      */
     public function send() {
         if(!Empty($this->_token) && !Empty($this->_user) && !Empty($this->_message)) {
-            if(!isset($this->_timestamp)) $this->setTimestamp(time());
+            if(!isset($this->_timestamp)){
+               $this->setTimestamp(time());
+            }
             $c = curl_init();
             curl_setopt($c, CURLOPT_URL, self::API_URL);
             curl_setopt($c, CURLOPT_HEADER, false);

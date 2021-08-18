@@ -1,37 +1,29 @@
 <div class="uap-wrapper">
-		<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Notifications', 'uap');?></span></div>
-		<a href="<?php echo $data['url-add_edit'];?>" class="uap-add-new-like-wp"><i class="fa-uap fa-add-uap"></i><?php _e('Activate New Notification', 'uap');?></a>
-		<a href="javascript:void(0)" class="button button-primary button-large" style="display:inline-block; float:right;" onClick="uapCheckEmailServer();"><?php _e('Check Mail Server', 'uap');?></a>
-        <span class="uap-admin-need-help" style="margin-right:20px;"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/how-to-send-notifications/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span>
+		<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php esc_html_e('Notifications', 'uap');?></span></div>
+		<a href="<?php echo $data['url-add_edit'];?>" class="uap-add-new-like-wp"><i class="fa-uap fa-add-uap"></i><?php esc_html_e('Activate New Notification', 'uap');?></a>
+		<a href="javascript:void(0)" class="button button-primary button-large uap-check-email-button" onClick="uapCheckEmailServer();"><?php esc_html_e('Check Mail Server', 'uap');?></a>
+        <span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/how-to-send-notifications/" target="_blank"><?php esc_html_e('Need Help?', 'uap');?></a></span>
 		<div class="uap-clear"></div>
-		<div style="margin-top: 20px;">
+		<div>
 		<?php if (!empty($data['listing_items'])) : ?>
 
-			<form action="" method="post" id="form_notification">
+			<form method="post" id="form_notification" class="uap-notifications-list">
+
+					<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
 
 					<table class="wp-list-table widefat fixed tags uap-admin-tables">
 						<thead>
 							<tr>
-								<th><?php _e('Subject', 'uap');?></th>
-								<th><?php _e('Action', 'uap');?></th>
-								<th><?php _e('Goes to', 'uap');?></th>
-								<th><?php _e('Target Ranks', 'uap');?></th>
+								<th><?php esc_html_e('Subject', 'uap');?></th>
+								<th><?php esc_html_e('Action', 'uap');?></th>
+								<th><?php esc_html_e('Goes to', 'uap');?></th>
+								<th><?php esc_html_e('Target Ranks', 'uap');?></th>
 								<?php if ($indeed_db->is_magic_feat_enable('pushover')):?>
-								<th class="manage-column uap-text-center"><?php _e('Mobile Notifications', 'uap');?></th>
+								<th class="manage-column uap-text-center"><?php esc_html_e('Mobile Notifications', 'uap');?></th>
 								<?php endif;?>
 							</tr>
 						</thead>
-						<tfoot>
-							<tr>
-								<th><?php _e('Subject', 'uap');?></th>
-								<th><?php _e('Action', 'uap');?></th>
-								<th><?php _e('Goes to', 'uap');?></th>
-								<th><?php _e('Target Ranks', 'uap');?></th>
-								<?php if ($indeed_db->is_magic_feat_enable('pushover')):?>
-								<th class="manage-column uap-text-center"><?php _e('Mobile Notifications', 'uap');?></th>
-								<?php endif;?>
-							</tr>
-						</tfoot>
+
 						<tbody class="ui-sortable uap-alternate">
 							<?php
 								$admin_notifications = array(
@@ -49,13 +41,15 @@
 								<tr onmouseover="uapDhSelector('#notification_<?php echo $arr->id;?>', 1);" onmouseout="uapDhSelector('#notification_<?php echo $arr->id;?>', 0);">
 									<td>
 										<?php echo $arr->subject;?>
-										<div id="notification_<?php echo $arr->id;?>" style="visibility: hidden;">
-											<a href="<?php echo $data['url-add_edit'] . '&id=' . $arr->id;?>"><?php _e('Edit', 'uap');?></a>
+										<div id="notification_<?php echo $arr->id;?>" class="uap-visibility-hidden">
+											<a href="<?php echo $data['url-add_edit'] . '&id=' . $arr->id;?>"><?php esc_html_e('Edit', 'uap');?></a>
 											|
-											<a onclick="uapDeleteFromTable(<?php echo $arr->id;?>, 'Notification', '#delete_notification_id', '#form_notification');" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'uap');?></a>
+											<a onclick="uapDeleteFromTable(<?php echo $arr->id;?>, 'Notification', '#delete_notification_id', '#form_notification');" href="javascript:return false;" class="uap-color-red"><?php esc_html_e('Delete', 'uap');?></a>
 										</div>
 									</td>
-									<td><div class="uap-list-affiliates-name-label" style="width:auto;"><?php if (!empty($data['actions_available'][$arr->type])) echo $data['actions_available'][$arr->type];?></div></td>
+									<td><div class="uap-list-affiliates-name-label"><?php if (!empty($data['actions_available'][$arr->type])){
+										echo $data['actions_available'][$arr->type];
+									}?></div></td>
 									<td><?php
 										if (in_array($arr->type, $admin_notifications)){
 											echo 'Admin';
@@ -64,8 +58,11 @@
 										}
 									?></td>
 									<td><?php
-										if ($arr->rank_id==-1) _e("All", 'uap');
-										else if (!empty($data['ranks'][$arr->rank_id])) echo $data['ranks'][$arr->rank_id];?>
+										if ($arr->rank_id==-1){
+											 esc_html_e("All", 'uap');
+										}elseif (!empty($data['ranks'][$arr->rank_id])){
+											 echo $data['ranks'][$arr->rank_id];
+										}?>
 									</td>
 									<?php if ($indeed_db->is_magic_feat_enable('pushover')):?>
 										<td class="uap-text-center">
@@ -77,6 +74,17 @@
 								</tr>
 							<?php endforeach;?>
 						</tbody>
+						<tfoot>
+							<tr>
+								<th><?php esc_html_e('Subject', 'uap');?></th>
+								<th><?php esc_html_e('Action', 'uap');?></th>
+								<th><?php esc_html_e('Goes to', 'uap');?></th>
+								<th><?php esc_html_e('Target Ranks', 'uap');?></th>
+								<?php if ($indeed_db->is_magic_feat_enable('pushover')):?>
+								<th class="manage-column uap-text-center"><?php esc_html_e('Mobile Notifications', 'uap');?></th>
+								<?php endif;?>
+							</tr>
+						</tfoot>
 					</table>
 
 				<input type="hidden" name="delete_notification" value="" id="delete_notification_id" />
@@ -84,14 +92,14 @@
 
 		<?php else :?>
 
-			<h5><?php _e('No Notification Available!', 'uap');?></h5>
+			<h5><?php esc_html_e('No Notification Available!', 'uap');?></h5>
 
 		<?php endif;?>
 	</div>
 </div>
 
 
-</div><!-- end of uap-dashboard-wrap -->
+
 
 
 <?php

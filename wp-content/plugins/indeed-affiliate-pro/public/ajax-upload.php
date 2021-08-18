@@ -4,6 +4,12 @@
  */
 require_once("../../../../wp-load.php");
 
+
+if ( !isset( $_GET['publicn'] ) || !wp_verify_nonce( $_GET['publicn'], 'publicn' ) ) {
+		die( "Not allowed" );
+}
+
+
 // security layer
 global $indeed_db;
 $uid = indeed_get_uid();
@@ -39,9 +45,7 @@ if ( $access ){
 		}
 	} else if (isset($_FILES['uap_file'])){
 		//============= handle upload file
-		//debug
-		//file_put_contents( "upload_media.log", $_FILES['uap_file']['type'], FILE_APPEND | LOCK_EX );
-		require_once ABSPATH . 'wp-admin/includes/image.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		$arr['id'] = media_handle_upload('uap_file',0);

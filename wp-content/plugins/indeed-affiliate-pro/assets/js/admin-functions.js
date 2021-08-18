@@ -1,3 +1,7 @@
+/*
+ *Ultimate Affiliate Pro - Main Backend JS Functions
+ */
+"use strict";
 function uapDeleteFromTable(i, t, h, f){
 	var m = window.uap_messages['general_delete'] + t + "?";
  	var c = confirm(m);
@@ -57,35 +61,12 @@ function openMediaUp(target){
   });
   //When a file is selected, grab the URL and set it as the text field's value
   custom_uploader.on('select', function() {
-      attachment = custom_uploader.state().get('selection').first().toJSON();
+      var attachment = custom_uploader.state().get('selection').first().toJSON();
       jQuery(target).val(attachment.url);
   });
   //Open the uploader dialog
   custom_uploader.open();
 }
-
-jQuery(document).ready(function(){
-
-	jQuery('#uap-register-fields-table tbody').sortable({
-		 update: function(e, ui) {
-		        jQuery('#uap-register-fields-table tbody tr').each(function (i, row) {
-		        	var id = jQuery(this).attr('id');
-		        	var newindex = jQuery("#uap-register-fields-table tbody tr").index(jQuery('#'+id));
-		        	jQuery('#'+id+' .uap-order').val(newindex);
-		        });
-		    }
-	});
-
-	jQuery('#uap_reorder_menu_items tbody').sortable({
-		 update: function(e, ui) {
-		        jQuery('#uap_reorder_menu_items tbody tr').each(function (i, row) {
-		        	var id = jQuery(this).attr('id');
-		        	jQuery('#'+id+' .uap_account_page_menu_order').val(i);
-		        });
-		 }
-	});
-
-});
 
 function uapRegisterFields(v){
 	jQuery('#uap-register-field-values').fadeOut(200);
@@ -101,17 +82,20 @@ function uapRegisterFields(v){
 }
 
 function uapAddNewRegisterFieldValue(){
-	var s = '<div style="display: block;margin-bottom: 5px;" class="uap-custom-field-item-wrapp">';
+	var s = '<div class="uap-custom-field-item-wrapp uap-custom-field-item-wrapp-st">';
 	s += '<input type="text" name="values[]" value=""/> ';
-	s += '<i class="fa-uap fa-remove-uap" style="cursor: pointer;" onclick="jQuery(this).parent().remove();"></i>';
+	s += '<i class="fa-uap fa-remove-uap uap-js-register-fields-add-edit-remove"></i>';
 	s += '<i class="fa-uap fa-arrows-uap"></i>';
 	s += '</div>';
 	jQuery('.uap-register-the-values').append(s);
 }
 
 function uapCheckAndH(from, target){
-	if (jQuery(from).is(":checked")) jQuery(target).val(1);
-	else jQuery(target).val(0);
+	if ( jQuery(from).is(":checked") ){
+			jQuery(target).val(1);
+	}	else {
+		jQuery(target).val(0);
+	}
 }
 
 function checkAndH(id, target){
@@ -191,7 +175,7 @@ function uapAddNewAchieveRule(){
 	jQuery('#achieve_type_value').val(str);
 
 	var achieve_type = jQuery("#achieve_type option[value='"+t+"']").text();
-	print += '<div class="achieve-item" id="achieve_item_' + n + '"><div style="font-weight:bold;font-size:14px;">'+'' + achieve_type + '</div><div>' + 'From: ' + v + '</div></div>';
+	print += '<div class="achieve-item" id="achieve_item_' + n + '"><div class="uap-achieve-type">'+'' + achieve_type + '</div><div>' + 'From: ' + v + '</div></div>';
 	jQuery("#achieve_type option[value='"+t+"']").remove();
 
 	var c = 0;
@@ -236,9 +220,9 @@ function uapAchieveReset(){
 
 function uapChageColor(id, value, where ){
     jQuery('#uap_colors_ul li').each(function(){
-        jQuery(this).attr('class', 'uap-color-scheme-item');
+				jQuery(this).removeClass('uap-color-scheme-item-selected');
     });
-    jQuery(id).attr('class', 'uap-color-scheme-item-selected');
+    jQuery(id).addClass('uap-color-scheme-item-selected');
     jQuery(where).val(value);
 }
 
@@ -249,7 +233,7 @@ function uapAutocompleteWriteTag(value_id, hiddenId, viewDivId, prevDivPrefix, l
 	 * prevDivPrefix - prefix of tag
 	 * hiddenId - where values are
 	 */
-	id = prevDivPrefix + value_id;
+	var id = prevDivPrefix + value_id;
 	jQuery(viewDivId).append('<div id="'+id+'" class="uap-tag-item">'+label+'<div class="uap-remove-tag" onclick="uapRemoveTag(\''+value_id+'\', \'#'+id+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
 }
 
@@ -259,7 +243,7 @@ function uapAutocompleteWriteAndReplaceTag(value_id, hiddenId, viewDivId, prevDi
 	 * prevDivPrefix - prefix of tag
 	 * hiddenId - where values are
 	 */
-	id = prevDivPrefix + value_id;
+	var id = prevDivPrefix + value_id;
 	jQuery(viewDivId).html('<div id="'+id+'" class="uap-tag-item">'+label+'<div class="uap-remove-tag" onclick="uapRemoveTag(\''+value_id+'\', \'#'+id+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
 }
 
@@ -268,15 +252,16 @@ function uapRemoveTag(removeVal, removeDiv, hiddenId){
 		jQuery(this).remove();
 	});
 
-    hidden_i = jQuery(hiddenId).val();
-    show_arr = hidden_i.split(',');
+    var hidden_i = jQuery(hiddenId).val();
+    var show_arr = hidden_i.split(',');
 
     show_arr = removeArrayElement(removeVal, show_arr);
-    str = show_arr.join(',');
+    var str = show_arr.join(',');
 	jQuery(hiddenId).val(str);
 }
 
 function removeArrayElement(elem, arr){
+	var i;
 	for (i=0;i<arr.length;i++) {
 	    if(arr[i]==elem){
 	    	arr.splice(i, 1);
@@ -311,10 +296,13 @@ function uapRankChangeOrderPreview(r, v){
 }
 
 function uapMakeInputhString(divCheck, showValue, hidden_input_id){
-    str = jQuery(hidden_input_id).val();
+    var str = jQuery(hidden_input_id).val();
     if(str==-1) str = '';
-    if(str!='') show_arr = str.split(',');
-    else show_arr = new Array();
+    if (str!=''){
+			 var show_arr = str.split(',');
+		} else {
+			 var show_arr = new Array();
+		}
     if (jQuery(divCheck).is(':checked')){
         show_arr.push(showValue);
     } else {
@@ -396,8 +384,6 @@ function uapMatrixTypeCondition(v){
 
 function uapMlmUpdateTbl(v){
 	var last = parseInt(jQuery('#mlm-amount-for-each-level tr').last().attr('data-tr'));
-	console.log('last: '+last);
-	console.log('current: '+v);
 	if (v<last){
 		for (var i=last; i>v; i--){
 			jQuery('#uap_mlm_level_' + i).remove();
@@ -546,7 +532,7 @@ function uapChangeColorScheme(id, value, where ){
 
 function uapPreviewUList(){
 	jQuery('#preview').html('');
-	jQuery("#preview").html('<div style="background:#fff;width: 100%;text-align:center;"><img src="'+window.uap_plugin_url+'/assets/images/loading.gif" class=""/></div>');
+	jQuery("#preview").html('<div class="uap-loading-img-wrapper"><img src="'+window.uapPluginUrl+'/assets/images/loading.gif" /></div>');
 	var meta = [];
 	meta.num_of_entries = jQuery('#num_of_entries').val();
 	meta.entries_per_page = jQuery('#entries_per_page').val();
@@ -607,6 +593,11 @@ function uapPreviewUList(){
                },
         success: function (r) {
         	jQuery('#preview').html(r);
+					if ( jQuery( '.uap-js-owl-settings-data' ).length ){
+							jQuery('.uap-js-owl-settings-data').each(function( e, html ){
+									uapInitiateOwl(html);
+							});
+					}
         }
    	});
 }
@@ -625,19 +616,22 @@ function uapCheckboxDivRelation(c, t){
 
 function uapWriteTagValueListUsers(id, hiddenId, viewDivId, prevDivPrefix){
     if( id.value == -1 || id.value == '' ) return;
-    hidden_i = jQuery(hiddenId).val();
+    var hidden_i = jQuery(hiddenId).val();
 
-    if(hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if ( hidden_i != '' ){
+			 var show_arr = hidden_i.split(',');
+		} else {
+			 var show_arr = new Array();
+		}
 
-    if(show_arr.indexOf(id.value)==-1){
+    if ( show_arr.indexOf(id.value) == -1 ){
         show_arr.push(id.value);
 
-	    str = show_arr.join(',');
+	    var str = show_arr.join(',');
 	    jQuery(hiddenId).val(str);
 
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="uap-tag-item">'+label+'<div class="uap-remove-tag" onclick="uapremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');uapPreviewUList();" title="Removing tag">x</div></div>');
+			var label = jQuery(id).find("option:selected").text();
+			jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="uap-tag-item">'+label+'<div class="uap-remove-tag" onclick="uapremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');uapPreviewUList();" title="Removing tag">x</div></div>');
     }
 
     jQuery(id).val(-1);
@@ -658,17 +652,17 @@ function uapremoveTag(removeVal, prevDivPrefix, hiddenId){
 		jQuery(this).remove();
 	});
 
-    hidden_i = jQuery(hiddenId).val();
-    show_arr = hidden_i.split(',');
+    var hidden_i = jQuery(hiddenId).val();
+    var show_arr = hidden_i.split(',');
 
     show_arr = removeArrayElement(removeVal, show_arr);
-    str = show_arr.join(',');
+    var str = show_arr.join(',');
 	jQuery(hiddenId).val(str);
 }
 
 function removeArrayElement(elem, arr){
-	for (i=0;i<arr.length;i++) {
-	    if(arr[i]==elem){
+	for ( var i=0; i<arr.length; i++ ) {
+	    if ( arr[i] == elem ){
 	    	arr.splice(i, 1);
 	    }
 	}
@@ -722,8 +716,8 @@ function uapApproveEmail(id, new_label){
                },
         success: function (response) {
         	jQuery('#user_email_'+id+'_status').fadeOut(200, function(){
-        		the_span_style = 'background-color: #f1f1f1;color: #666;padding: 3px 0px;font-size: 10px;font-weight: bold;display: inline-block; min-width: 70px; border: 1px solid #ddd;border-radius: 3px;text-align: center;';
-        		jQuery(this).html('<span style="'+the_span_style+'">'+new_label+'</span>');
+        		var the_span_styl = 'uap-user-email-st';
+        		jQuery(this).html('<span class="'+the_span_styl+'">'+new_label+'</span>');
         		jQuery(this).fadeIn(200);
 
         		jQuery('#approve_email_'+id).fadeOut(200, function(){
@@ -772,13 +766,14 @@ function uapGeneratePaymentsCsv(){
         type : 'post',
         url : decodeURI(ajax_url),
         data : {
-                   action: 'do_generate_payments_csv',
+                   action: 'uap_do_generate_payments_csv',
                    min_date: jQuery('#csv_min_date').val(),
                    max_date: jQuery('#csv_max_date').val(),
                    payment_type: jQuery('#csv_payment_type').val(),
                    switch_status: jQuery('#csv_switch_status').val(),
         },
         success: function (response) {
+					console.log(response);
         	if (response){
         		jQuery('.uap-hidden-download-link a').attr('href', response);
         		jQuery('.uap-hidden-download-link').fadeIn(200);
@@ -803,23 +798,23 @@ function uapShinySelect(params){
 	/*
 	 * params selector, item_selector, option_name_code, option_name_icon, default_icon, default_code
 	 */
-	this.selector = params.selector; ///got # in front of it
-	this.popup_id = 'indeed_select_' + params.option_name_code;
-	this.popup_visible = false;
-	this.option_name_code = params.option_name_code;
-	this.option_name_icon = params.option_name_icon;
-	this.item_selector = params.item_selector; /// got . in front of it
-	this.init_default = params.init_default;
-	this.second_selector = params.second_selector;
-	this.default_code = params.default_code;
-	var current_object = this;
+	var current_object = {};
+	current_object.selector = params.selector; ///got # in front of it
+	current_object.popup_id = 'indeed_select_' + params.option_name_code;
+	current_object.popup_visible = false;
+	current_object.option_name_code = params.option_name_code;
+	current_object.option_name_icon = params.option_name_icon;
+	current_object.item_selector = params.item_selector; /// got . in front of it
+	current_object.init_default = params.init_default;
+	current_object.second_selector = params.second_selector;
+	current_object.default_code = params.default_code;
 
 	jQuery(current_object.selector).after('<input type="hidden" name="' + current_object.option_name_code + '" value="' + params.default_code + '" />');
 	jQuery(current_object.selector).after('<input type="hidden" name="' + current_object.option_name_icon + '" value="' + params.default_icon + '" />');
-	jQuery(current_object.selector).after('<div class="indeed_select_popup" style="display: none;" id="' + current_object.popup_id + '"></div>');
+	jQuery(current_object.selector).after('<div class="indeed_select_popup uap-display-none" id="' + current_object.popup_id + '"></div>');
 
 	///run init
-	if (this.init_default){
+	if (current_object.init_default){
 		jQuery(current_object.selector).html('<i class="fa-uap-preview fa-uap ' + params.default_icon + '"></i>');
 	}
 
@@ -834,7 +829,7 @@ function uapShinySelect(params){
 	}
 
 	function loadDataViaAjax(){
-		var img = "<img src='" + decodeURI(window.uap_url) + '/wp-content/plugins/indeed-affiliate-pro/assets/images/loading.gif' + "' style='width: 200px'/>";
+		var img = "<img src='" + decodeURI(window.uap_url) + '/wp-content/plugins/indeed-affiliate-pro/assets/images/loading.gif' + "' class='uap-loading-img'/>";
 		jQuery('#'+current_object.popup_id).html(img);
 		jQuery('#'+current_object.popup_id).css('display', 'block');
 		jQuery.ajax({
@@ -871,7 +866,7 @@ function uapShinySelect(params){
 	});
 
 	function removePopup(){
-		jQuery('#'+current_object.popup_id).empty();
+		jQuery('#'+current_object.popup_id).html('');
 		jQuery('#'+current_object.popup_id).css('display', 'none');
 		current_object.popup_visible = false;
 	}
@@ -917,41 +912,1090 @@ function uapHideDivIfValue( checkValue, desiredValue, targetToHide )
 		}
 }
 
-jQuery( document ).ready( function(){
-	jQuery( '.deactivate' ).on( 'click', function(evt){
-			if ( jQuery( evt.target ).attr('href').indexOf( 'indeed-affiliate-pro' ) > -1 ){
-					if ( window.uapKeepData == 1 ){
-							var theMessage = 'Plugin data will be kept in database after you delete the plugin.';
-					} else {
-							var theMessage = 'Plugin data will be lost after you delete the plugin.';
+jQuery(document).ajaxSend(function (event, jqXHR, ajaxOptions) {
+    if ( typeof ajaxOptions.data !== 'string' || ajaxOptions.data.includes( 'action=uap' ) === false ){
+        return;
+    }
+    if ( typeof ajaxOptions.url === 'string' && ajaxOptions.url.includes('/admin-ajax.php')) {
+       var token = jQuery('meta[name="uap-admin-token"]').attr("content");
+       jqXHR.setRequestHeader('X-CSRF-UAP-ADMIN-TOKEN', token );
+    }
+});
+
+
+
+function uap_split(v){
+	if (v.indexOf(',')!=-1){
+	    return v.split( /,\s*/ );
+	} else if (v!=''){
+		return [v];
+	}
+	return [];
+}
+
+function uapContains(a, obj) {
+    return a.some(function(element){return element == obj;})
+}
+
+function uap_reset_autocomplete_fields()
+{
+		jQuery('#uap_pay_to_become_affiliate_target_products').val('')
+		jQuery('#uap_reference_search_tags').html('')
+}
+
+function uap_make_disable_if_checked( checkSelector, target )
+{
+		if (jQuery(checkSelector).is(':checked')){
+				jQuery(target).attr('disabled', 'disabled')
+		} else {
+				jQuery(target).removeAttr('disabled')
+		}
+}
+
+
+function uap_extract(t) {
+    return uap_split(t).pop();
+}
+
+
+
+jQuery(window).on('load', function(){
+		var i, j;
+		window.uap_messages = {
+							referrals: jQuery( '.uap-js-general-messages' ).attr( 'data-referrals' ),
+							general_delete: jQuery( '.uap-js-general-messages' ).attr( 'data-general_delete' ),
+							affiliates: jQuery( '.uap-js-general-messages' ).attr( 'data-affiliates' ),
+							email_server_check: jQuery( '.uap-js-general-messages' ).attr( 'data-email_server_check' ),
+		};
+
+		var uapCurrentUrl = window.location.href;
+
+		uapShinySelect({
+					selector: '#indeed_shiny_select_uap',
+					item_selector: '.uap-font-awesome-popup-item',
+					option_name_code: 'icon_code',
+					option_name_icon: 'icon_class',
+					default_icon: '',
+					default_code: '',
+					init_default: false,
+					second_selector: '.uap-icon-arrow'
+		});
+
+		uapApMakeVisible('overview', '#uap_tab-overview');
+
+		if ( jQuery('#referrals_date').length ){
+				jQuery('#referrals_date').datepicker({
+							dateFormat : 'yy-mm-dd ',
+							onSelect: function(datetext){
+									var d = new Date();
+									datetext = datetext+d.getHours()+":"+uapAddZero(d.getMinutes())+":"+uapAddZero(d.getSeconds());
+									jQuery(this).val(datetext);
+							}
+				});
+		}
+
+		jQuery( '.deactivate' ).on( 'click', function(evt){
+				if ( jQuery( evt.target ).attr('href').indexOf( 'indeed-affiliate-pro' ) > -1 ){
+						if ( window.uapKeepData == 1 ){
+								var theMessage = 'Plugin data will be kept in database after you delete the plugin.';
+						} else {
+								var theMessage = 'Plugin data will be lost after you delete the plugin.';
+						}
+						var target = jQuery( evt.target ).attr('href');
+						swal({
+							title: theMessage,
+							text: "In order to change that, go to General Settings -> Admin Workflow.",
+							type: "warning",
+							showCancelButton: true,
+							confirmButtonClass: "btn-danger",
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						},	function(){
+								window.location.href = target;
+						});
+						return false;
+				}
+		});
+
+		jQuery( '.uap-js-close-admin-dashboard-notice' ).on( 'click', function(){
+				var parent = jQuery(this).parent();
+				parent.fadeOut( 1000 );
+				jQuery.ajax({
+						type : 'post',
+						url : decodeURI(window.uap_url)+'/wp-admin/admin-ajax.php',
+						data : {
+											 action: 'uap_close_admin_notice'
+									 },
+						success: function (response) {
+								parent.remove();
+						}
+			 });
+		});
+
+		jQuery( '.uap-js-paypal-sandbox-on-off' ).on( 'click', function(){
+				if ( jQuery('.uap-js-paypal-sandbox-on-off').is(':checked') ){
+						/// sandbox
+						jQuery('.uap-js-paypal-sandbox-credentials').css( 'display', 'block' );
+						jQuery('.uap-js-paypal-live-credentials').css( 'display', 'none' );
+				} else {
+						/// live
+						jQuery('.uap-js-paypal-sandbox-credentials').css( 'display', 'none' );
+						jQuery('.uap-js-paypal-live-credentials').css( 'display', 'block' );
+				}
+		});
+
+		jQuery( '.js-uap-change-recaptcha-version' ).on( 'change', function( evt ){
+				if ( this.value == 'v2' ){
+						jQuery( '.js-uap-recaptcha-v2-wrapp' ).css( 'display', 'block' );
+						jQuery( '.js-uap-recaptcha-v3-wrapp' ).css( 'display', 'none' );
+				} else {
+						jQuery( '.js-uap-recaptcha-v2-wrapp' ).css( 'display', 'none' );
+						jQuery( '.js-uap-recaptcha-v3-wrapp' ).css( 'display', 'block' );
+				}
+		});
+
+		jQuery('#uap-register-fields-table tbody').sortable({
+			 update: function(e, ui) {
+			        jQuery('#uap-register-fields-table tbody tr').each(function (i, row) {
+			        	var id = jQuery(this).attr('id');
+			        	var newindex = jQuery("#uap-register-fields-table tbody tr").index(jQuery('#'+id));
+			        	jQuery('#'+id+' .uap-order').val(newindex);
+			        });
+			    }
+		});
+
+		jQuery('#uap_reorder_menu_items tbody').sortable({
+			 update: function(e, ui) {
+			        jQuery('#uap_reorder_menu_items tbody tr').each(function (i, row) {
+			        	var id = jQuery(this).attr('id');
+			        	jQuery('#'+id+' .uap_account_page_menu_order').val(i);
+			        });
+			 }
+		});
+
+		/// events
+		jQuery( '#uap_js_add_edit_banners_trash' ).on( 'click', function( e, html ){
+				jQuery('#uap_the_image').val('');
+		});
+		jQuery( '#uap_js_affiliate_list_add_filter' ).on( 'click', function( e, html ){
+				jQuery('.uap-filters-wrapper').toggle();
+		});
+		jQuery( '#uap_js_edit_background_image_trash' ).on( 'click', function( e, html ){
+				jQuery('#uap_ap_edit_background_image').val('');
+		});
+		jQuery( '#uap_js_flashbar_trash_img' ).on( 'click', function( e, html ){
+				jQuery('[name=uap_info_affiliate_bar_logo]').val('');
+		});
+		jQuery( '#uap_js_iab_trash_banner' ).on( 'click', function( e, html ){
+				jQuery('[name=uap_info_affiliate_bar_banner_default_value]').val('');
+		});
+		jQuery( '#uap_js_top_affiliates_the_toggle' ).on( 'click', function( e, html ){
+				jQuery('#the_uap_user_list_settings').slideToggle();
+		});
+		jQuery( '#uap_js_toggle_preview' ).on( 'click', function( e, html ){
+				jQuery('#preview').slideToggle();
+		});
+		jQuery( '.uap-js-location-reload' ).on( 'click', function( e, html ){
+				var url = jQuery( this ).attr('data-url');
+				window.location.href = url;
+		});
+		jQuery( '.uap-js-pay-to-become-aff-select-target' ).on( 'click', function( e, html ){
+				var url = jQuery( this ).attr( 'data-url' );
+				var value = jQuery( this ).val();
+				uap_reset_autocomplete_fields();
+				jQuery('#reference_search').autocomplete( 'option', { source: url + value } );
+		});
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=dashboard' ) !== -1 ){
+				// dashboard
+				if (jQuery("#uap_chart_1").length > 0) {
+						var uap_ticks = [];
+						var uap_chart_stats = [];
+						var i = 0;
+						var j;
+						jQuery( '.uap-js-dashboard-rank-data' ).each( function( e, html ){
+								var label = jQuery( html ).attr('data-label');
+								var value = jQuery( html ).attr('data-value');
+								uap_ticks[ i ]=[ i, label ];
+								uap_chart_stats[ i ]={ 0: i, 1:value};
+								i++;
+						});
+						if ( i < 10 ) {
+							for ( j=i; j<11; j++){
+								uap_ticks[ i ]=[ i, '' ];
+								uap_chart_stats[ i ]={ 0: j, 1:0 };
+							}
+						}
+
+						var options = {
+						    bars: { show: true, barWidth: 0.75, fillColor: '#7ebffc', lineWidth: 0 },
+								grid: { hoverable: false, backgroundColor: "#fff", minBorderMargin: 0,  borderWidth: {top: 0, right: 0, bottom: 1, left: 1}, borderColor: "#aaa" },
+								xaxis: { ticks: uap_ticks, tickLength:0 },
+								yaxis: { tickDecimals: 0, tickColor: "#eee"},
+								legend: {show: true, position: "ne"}
+						};
+
+						jQuery.plot(jQuery("#uap_chart_1"), [ {
+												color: "#669ccf",
+												data: uap_chart_stats,
+											} ], options
+						);
+				}
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=login' ) !== -1 ){
+				// login
+				uapLoginPreview();
+				return;
+		}
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=register&subtab=custom_fields-add_edit' ) !== -1 ){
+						// register fields - add edit
+						jQuery( document ).on( 'click', '.uap-js-register-fields-add-edit-remove', function( e, html ){
+								jQuery(this).parent().remove();
+						});
+						return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=register&subtab=custom_fields' ) !== -1 ){
+				// custom fields
+				jQuery('.uap-register-the-values').sortable({
+					cursor: 'move'
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=affiliates&subtab=add_edit&id=' ) !== -1 ){
+				// affiliates add/edit
+				jQuery( '#usernames_search' ).on( 'blur', function(){
+						var value = jQuery( '#usernames_search' ).val();
+						if ( value === '' ){
+								jQuery( '#uap_affiliate_mlm_parent' ).val( 0 );
+						}
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=affiliates' ) !== -1 ){
+				// affiliates list
+				jQuery( '.uap-js-affiliate-list-limit' ).on( 'change', function(){
+						var baseUrl = jQuery( this ).attr('data-url');
+						var value = jQuery( this ).val();
+						window.location = baseUrl + value;
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=register' ) !== -1 ){
+				// register
+				uapRegisterPreview();
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf('page=ultimate_affiliates_pro&tab=magic_features&subtab=mlm_view_affiliate_children') !== -1 ){
+				// Mlm - View Affiliate Childern
+				google.charts.load('current', {packages:["orgchart"]});
+				google.charts.setOnLoadCallback(uapDrawChart);
+
+				function uapDrawChart() {
+							var rows = [];
+
+							// parent
+							var theParentID = jQuery( '.uap-js-mlm-view-affiliate-children-parent-data' ).attr('data-parent_id');
+							var parent = jQuery( '.uap-js-mlm-view-affiliate-children-parent-data' ).attr('data-parent');
+							var parentAvatar = jQuery( '.uap-js-mlm-view-affiliate-children-parent-data' ).attr('data-parent_avatar');
+							var parentFullName = jQuery( '.uap-js-mlm-view-affiliate-children-parent-data' ).attr('data-parent_full_name');
+							if ( parent ){
+									var htmlData = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-parent"><img src="' + parentAvatar + '" /></div><div class="uap-mlm-tree-name-child">'+ parentFullName +'</div>';
+									rows.push( [ {v: theParentID, f: htmlData }, '', '' ] );
+							}
+
+							// affiliate
+							var affiliateId = jQuery( '.uap-js-mlm-view-affiliate-data' ).attr('data-affiliate_id');
+							var affiliateAvatar = jQuery( '.uap-js-mlm-view-affiliate-data' ).attr('data-affiliate_avatar');
+							var affiliateFullName = jQuery( '.uap-js-mlm-view-affiliate-data' ).attr('data-parent_full_name');
+							var htmlData = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-main"><img src="' + affiliateAvatar + '" /></div><div class="uap-mlm-tree-name-child">'+ affiliateFullName +'</div>';
+							rows.push( [ {v: affiliateId, f: htmlData }, theParentID, 'Main Affiliate' ] );
+
+							// children
+							jQuery( '.uap-js-mlm-view-affiliate-children-data' ).each(function( e, html ){
+										var affiliateId = jQuery( html ).attr('data-id');
+										var avatar = jQuery( html ).attr('data-avatar');
+										var name = jQuery( html ).attr('data-full_name');
+										var parentId = jQuery( html ).attr('data-parent_id');
+										var amount = jQuery( html ).attr('data-amount');
+										htmlData = '<div class="uap-mlm-tree-avatar-child"><img src="' + avatar + '" /></div><div class="uap-mlm-tree-name-child">'+ name +'</div>';
+										rows.push( [ {v: affiliateId, f: htmlData }, parentId, amount ] );
+							})
+
+							var data = new google.visualization.DataTable();
+							data.addColumn('string', 'Name');
+							data.addColumn('string', 'Manager');
+							data.addColumn('string', 'ToolTip');
+
+							data.addRows( rows );
+							var chart = new google.visualization.OrgChart(document.getElementById('uap_mlm_chart'));
+							if ( parent ){
+								data.setRowProperty(0, 'style', 'background-color: #2a81ae; color: #fff;');
+								data.setRowProperty(1, 'style', 'background-color: #f25a68; color: #fff;');
+							}
+							chart.draw(data, {allowHtml:true, size:"medium", allowCollapse:true});
+				}
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=migrate_affiliate_wp' ) !== -1 ){
+				// Migrate - affiliate wp
+				UapMigrate.init({
+						trigger: '.uap-trigger-event-migrate',
+						rankSelector: '.uap-migrate-assign-rank',
+						progressBarWrapp: '.uap-progress-bar-wrapp',
+						completeDiv: '.uap-progress-bar-warning',
+						completeMessage: window.uapMigrationCompleteMessage,
+						progressBarDiv: '.progress-bar',
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=migrate_affiliates_pro' ) !== -1 ){
+				// Migrate - affiliates pro
+				UapMigrate.init({
+				    trigger: '.uap-trigger-event-migrate',
+				    rankSelector: '.uap-migrate-assign-rank',
+				    progressBarWrapp: '.uap-progress-bar-wrapp',
+						completeDiv: '.uap-progress-bar-warning',
+						completeMessage: window.uapMigrationCompleteMessage,
+						progressBarDiv: '.progress-bar',
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=migrate_wp_affiliates' ) !== -1 ){
+				// Migrate - wp affiliates
+				UapMigrate.init({
+						trigger: '.uap-trigger-event-migrate',
+						rankSelector: '.uap-migrate-assign-rank',
+						progressBarWrapp: '.uap-progress-bar-wrapp',
+						completeDiv: '.uap-progress-bar-warning',
+						completeMessage: window.uapMigrationCompleteMessage,
+						progressBarDiv: '.progress-bar',
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=mlm' ) !== -1 ){
+				/// mlm - username search
+				jQuery( "#affiliate_name" ).on( "keydown", function( event ) {
+					if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+						jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						event.preventDefault();
 					}
-					var target = jQuery( evt.target ).attr('href');
-					swal({
-						title: theMessage,
-						text: "In order to change that, go to General Settings -> Admin Workflow.",
-						type: "warning",
-						showCancelButton: true,
-						confirmButtonClass: "btn-danger",
-						confirmButtonText: "OK",
-						closeOnConfirm: true
-					},	function(){
-							window.location.href = target;
+				}).autocomplete({
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce=' + window.uapAdminAjaxNonce + '&users=true',
+					focus: function() {},
+					select: function( event, ui ) {
+						var l = ui.item.label;
+						jQuery('#affiliate_name').val(l);
+						return false;
+					}
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=checkout_select_referral' ) !== -1 ){
+				/// checkout select referral
+				jQuery(function() {
+					/// USERNAME SEARCH
+					jQuery( "#usernames_search" ).on( "keydown", function( event ) {
+						if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+							jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						 	event.preventDefault();
+						}
+					}).autocomplete({
+						minLength: 0,
+						source: window.uapPluginUrl + 'admin/uap-offers-ajax-autocomplete.php?users=true&uapAdminAjaxNonce=' + window.uapAdminAjaxNonce,
+						focus: function() {},
+						select: function( event, ui ) {
+							var input_id = '#usernames_search_hidden';
+						 	var terms = uap_split(jQuery(input_id).val());//get items from input hidden
+							var v = ui.item.id;
+							var l = ui.item.label;
+						 	if (!uapContains(terms, v)){
+								terms.push(v);
+							 	// print the new shiny box
+							 	uapAutocompleteWriteTag(v, input_id, '#uap_username_search_tags', 'uap_username_tag_', l);
+							 }
+						 	var str_value = terms.join( "," );
+						 	jQuery(input_id).val(str_value);//send to input hidden
+							this.value = '';//reset search input
+						 	return false;
+						}
 					});
-					return false;
-			}
-	});
-	jQuery( '.uap-js-close-admin-dashboard-notice' ).on( 'click', function(){
-			var parent = jQuery(this).parent();
-			parent.fadeOut( 1000 );
-			jQuery.ajax({
-					type : 'post',
-					url : decodeURI(window.uap_url)+'/wp-admin/admin-ajax.php',
-					data : {
-										 action: 'uap_close_admin_notice'
-								 },
-					success: function (response) {
-							parent.remove();
+
+				});
+				return;
+		}
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=coupons&add_edit' ) !== -1 ){
+				/// coupons - add/edit
+				var uap_source = jQuery('#the_source').val();
+
+				jQuery('#the_source').on('change', function(){
+						uap_source = jQuery(this).val();
+						jQuery('#coupon_code').val('');
+				});
+
+				jQuery(function() {
+					jQuery( "#coupon_code" ).on( "keydown", function( event ) {
+						if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+							jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						 	event.preventDefault();
+						}
+					}).autocomplete({
+						focus: function( event, ui ){},
+						minLength: 0,
+						source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce='  + window.uapAdminAjaxNonce + '&source='+uap_source,
+						select: function( event, ui ) {
+							var v = ui.item.label;
+							jQuery('#coupon_code').val(v);
+						 	return false;
+
+						}
+					});
+
+					/// USERNAME SEARCH
+					jQuery( "#affiliate_name" ).on( "keydown", function( event ) {
+						if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+							jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						 	event.preventDefault();
+						}
+					}).autocomplete({
+						minLength: 0,
+						source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce='  + window.uapAdminAjaxNonce + '&users=true',
+						focus: function() {},
+						select: function( event, ui ) {
+							var v = ui.item.id;
+							var l = ui.item.label;
+							jQuery('#affiliate_name').val(l);
+						 	jQuery('#affiliate_id_hidden').val(v);//send to input hidden
+						 	return false;
+						}
+					});
+
+					jQuery( '.uap-js-coupons-add-edit-autocomplete' ).on( 'change', function( target ){
+							var url = jQuery( '.uap-js-coupons-add-edit-autocomplete' ).attr( 'data-url_target' );
+							var value =  jQuery( '.uap-js-coupons-add-edit-autocomplete' ).val();
+							jQuery('#coupon_code').autocomplete( 'option', { source: url + value } );
+					});
+
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=custom_affiliate_slug' ) !== -1 ){
+				// custom affiliate slug
+
+				jQuery(function() {
+					/// USERNAME SEARCH
+					jQuery( "#affiliate_name" ).on( "keydown", function( event ) {
+						if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+							jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						 	event.preventDefault();
+						}
+					}).autocomplete({
+						minLength: 0,
+						source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce='  + window.uapAdminAjaxNonce + '&users=true',
+						focus: function() {},
+						select: function( event, ui ) {
+							var v = ui.item.id;
+							var l = ui.item.label;
+							jQuery('#affiliate_name').val(l);
+						 	jQuery('#affiliate_id_hidden').val(v);//send to input hidden
+						 	return false;
+						}
+					});
+
+					window.custom_aff_base_url = jQuery( '.uap-js-custom-aff-base-url' ).attr( 'data-value' );
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'wp-admin/post.php') !== -1 && jQuery.fn.autocomplete ){
+				// posts and pages
+				// set the landing page
+				jQuery( "#usernames_search" ).on( "keydown", function( event ) {
+					if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+						jQuery( this ).autocomplete( "instance" ).menu.active ) {
+
+						event.preventDefault();
 					}
-		 });
-	});
+				}).autocomplete({
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-offers-ajax-autocomplete.php?users=true&without_all=true&uapAdminAjaxNonce=' + window.uapAdminAjaxNonce,
+					focus: function() {},
+					select: function( event, ui ) {
+						var input_id = '#uap_landing_page_affiliate_id';
+						var v = ui.item.id;
+						var l = ui.item.label;
+						uapAutocompleteWriteAndReplaceTag(v, input_id, '#uap_username_search_tags', 'uap_username_tag_', l);
+						jQuery(input_id).val(v);//send to input hidden
+						this.value = '';//reset search input
+						return false;
+					}
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=pay_to_become_affiliate' ) !== -1 ){
+				// pay to become affiliate
+					var uap_offer_source = jQuery('#the_source').val();
+					jQuery('#the_source').on('change', function(){
+						uap_offer_source = jQuery(this).val();
+						jQuery('#uap_reference_search_tags').empty();
+						jQuery('#reference_search_hidden').val('');
+					});
+
+					/// REFERENCE SEARCH
+					jQuery( "#reference_search" ).on( "keydown", function( event ) {
+						if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+							jQuery( this ).autocomplete( "instance" ).menu.active ) {
+						 	event.preventDefault();
+						}
+					}).autocomplete({
+					focus: function( event, ui ){},
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-offers-ajax-autocomplete.php?uapAdminAjaxNonce=' + window.uapAdminAjaxNonce + '&source=' + uap_offer_source,
+					select: function( event, ui ) {
+						var input_id = '#uap_pay_to_become_affiliate_target_products';
+					 	var terms = uap_split(jQuery(input_id).val());//get items from input hidden
+						var v = ui.item.id;
+						var l = ui.item.label;
+					 	if (!uapContains(terms, v)){
+							terms.push(v);
+						 	uapAutocompleteWriteTag(v, input_id, '#uap_reference_search_tags', 'uap_reference_tag_', l);// print the new shiny box
+						 }
+						var str_value = terms.join( "," );
+					 	jQuery(input_id).val(str_value);//send to input hidden
+						this.value = '';//reset search input
+					 	return false;
+					}
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=notifications&subtab=add_edit' ) !== -1 ){
+				// Notifications - Add/Edit
+				var notificationId = jQuery( '.uap-js-add-edit-notification-id' ).val();
+				if ( parseInt( notificationId ) > 0 ){
+						return;
+				} else {
+						uapReturnNotification();
+						return;
+				}
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=offers&subtab=add_edit' ) !== -1 ){
+				// Offers - Add/Edit
+
+				var uap_offer_source = jQuery('#the_source').val();
+
+				jQuery('#the_source').on('change', function(){
+						uap_offer_source = jQuery(this).val();
+						if ( uap_offer_source == 'woo' ){
+								jQuery( '.js-uap-product-label').html( jQuery( '.uap-js-offers-add-edit-labels' ).attr('data-products_and_cats') );
+						} else {
+								jQuery( '.js-uap-product-label').html( jQuery( '.uap-js-offers-add-edit-labels' ).attr('data-products') );
+						}
+						jQuery('#uap_reference_search_tags').empty();
+						jQuery('#reference_search_hidden').val('');
+				});
+
+
+				/// REFERENCE SEARCH
+				jQuery( "#reference_search" ).on( "keydown", function( event ) {
+					if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+						jQuery( this ).autocomplete( "instance" ).menu.active ) {
+					 	event.preventDefault();
+					}
+				}).autocomplete({
+					focus: function( event, ui ){},
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-offers-ajax-autocomplete.php?source='+uap_offer_source+'&uapAdminAjaxNonce=' + window.uapAdminAjaxNonce,
+					select: function( event, ui ) {
+						var input_id = '#reference_search_hidden';
+					 	var terms = uap_split(jQuery(input_id).val());//get items from input hidden
+						var v = ui.item.id;
+						var l = ui.item.label;
+						if ( typeof ui.item.is_category != 'undefined' ){
+
+								for ( var i = 0; i < ui.item.children.length; i++ ){
+										if (!uapContains(terms, ui.item.children[i].id )){
+											terms.push(ui.item.children[i].id);
+											uapAutocompleteWriteTag(ui.item.children[i].id, input_id, '#uap_reference_search_tags', 'uap_reference_tag_', ui.item.children[i].label);// print the new shiny box
+										 }
+										var str_value = terms.join( "," );
+										jQuery(input_id).val(str_value);//send to input hidden
+								}
+								this.value = '';//reset search input
+								return false;
+						}
+					 	if (!uapContains(terms, v)){
+							terms.push(v);
+						 	uapAutocompleteWriteTag(v, input_id, '#uap_reference_search_tags', 'uap_reference_tag_', l);// print the new shiny box
+						 }
+						var str_value = terms.join( "," );
+					 	jQuery(input_id).val(str_value);//send to input hidden
+						this.value = '';//reset search input
+					 	return false;
+
+					}
+				});
+
+			/// USERNAME SEARCH
+			jQuery( "#usernames_search" ).on( "keydown", function( event ) {
+				if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+					jQuery( this ).autocomplete( "instance" ).menu.active ) {
+					event.preventDefault();
+				}
+			}).autocomplete({
+				minLength: 0,
+				source: window.uapPluginUrl + 'admin/uap-offers-ajax-autocomplete.php?users=true&uapAdminAjaxNonce=' + window.uapAdminAjaxNonce,
+				focus: function() {},
+				select: function( event, ui ) {
+					var input_id = '#usernames_search_hidden';
+					var terms = uap_split(jQuery(input_id).val());//get items from input hidden
+					var v = ui.item.id;
+					var l = ui.item.label;
+					if (!uapContains(terms, v)){
+						terms.push(v);
+						// print the new shiny box
+						uapAutocompleteWriteTag(v, input_id, '#uap_username_search_tags', 'uap_username_tag_', l);
+					 }
+					var str_value = terms.join( "," );
+					jQuery(input_id).val(str_value);//send to input hidden
+					this.value = '';//reset search input
+					return false;
+				}
+			});
+
+			jQuery('.uap-datepick').each(function(){
+				jQuery(this).datepicker({
+								dateFormat : 'yy-mm-dd ',
+								onSelect: function(datetext){
+										var d = new Date();
+										datetext = datetext+d.getHours()+":"+uapAddZero(d.getMinutes())+":"+uapAddZero(d.getSeconds());
+										jQuery(this).val(datetext);
+								}
+						});
+				});
+
+				jQuery( '.uap-js-offers-add-edit-select-source' ).on( 'change', function(){
+						var targetUrl = jQuery( '.uap-js-offers-add-edit-select-source' ).attr( 'data-target_url' );
+						var value = jQuery( '.uap-js-offers-add-edit-select-source' ).val();
+						jQuery('#reference_search').autocomplete( 'option', { source: targetUrl + value } );
+				});
+
+				return;
+		}
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=payments&subtab=list_all_unpaid' ) !== -1 ){
+				// Payments - list all unpaid
+				jQuery(".do-the-payment").on('click', function(e){
+						e.preventDefault();
+			    	jQuery('.uap-referral').each(function(i){
+						if (jQuery(this).is(':checked')){
+							jQuery("#form_payments").submit();
+						}
+					});
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=ranks' ) !== -1 ){
+				// Ranks - Listing
+				jQuery( '.uap-js-delete-ranks' ).on( 'click', function(){
+						var rankId = jQuery( this ).attr( 'data-id' );
+						swal({
+							title: jQuery( '.uap-js-ranks-listing-delete-item-label' ).attr( 'data-value'),
+							text: "",
+							type: "warning",
+							showCancelButton: true,
+							confirmButtonClass: "btn-danger",
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						},
+						function(){
+								jQuery.ajax({
+										type : 'post',
+										url : decodeURI( window.uap_url )+'/wp-admin/admin-ajax.php',
+										data : {
+															 action									: 'uap_admin_delete_ranks',
+															 id											:	rankId,
+															 uap_admin_forms_nonce	:	jQuery( '.uap-js-ranks-listing-delete-nonce' ).attr( 'data-value'),
+													 },
+										success: function (response) {
+												if ( response == 'success' ){
+														location.reload();
+												} else {
+													swal({
+														title: response,
+														text: "",
+														type: "warning",
+														showCancelButton: false,
+														confirmButtonClass: "btn-danger",
+														confirmButtonText: "OK",
+														closeOnConfirm: true
+													});
+												}
+										}
+							 });
+					 });
+				});
+		}
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=magic_features&subtab=simple_links' ) !== -1 ){
+				/// USERNAME SEARCH
+				jQuery("#affiliate_name").on("keydown", function(event){
+					if (event.keyCode===jQuery.ui.keyCode.TAB &&
+						jQuery(this).autocomplete("instance").menu.active) {
+						event.preventDefault();
+					}
+				}).autocomplete({
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce=' + window.uapAdminAjaxNonce + '&users=true',
+					focus: function() {},
+					select: function( event, ui ) {
+						jQuery('#affiliate_name').val(ui.item.label);
+						jQuery('#affiliate_id').val(ui.item.id);
+						return false;
+					}
+				});
+
+				/// USERNAME SEARCH
+				jQuery("#affiliate_name_search").on("keydown", function(event){
+					if (event.keyCode===jQuery.ui.keyCode.TAB &&
+						jQuery(this).autocomplete("instance").menu.active) {
+						event.preventDefault();
+					}
+				}).autocomplete({
+					minLength: 0,
+					source: window.uapPluginUrl + 'admin/uap-coupons-ajax-autocomplete.php?uapAdminAjaxNonce=' + window.uapAdminAjaxNonce + '&users=true',
+					focus: function() {},
+					select: function( event, ui ) {
+						jQuery('#affiliate_name_search').val(ui.item.label);
+						jQuery('#search_aff_id').val(ui.item.id);
+						return false;
+					}
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf('page=ultimate_affiliates_pro&tab=help') !== -1 ){
+				// help section
+				jQuery( '[name=uap_save_licensing_code]' ).on( 'click', function(){
+						jQuery.ajax({
+									type : "post",
+									url : window.uap_url + '/wp-admin/admin-ajax.php',
+									data : {
+													 action						: "uap_el_check_get_url_ajax",
+													 purchase_code		: jQuery('[name=uap_envato_code]').val(),
+													 nonce						: jQuery( '.uap-js-help-section-nonce' ).attr('data-value'),
+									},
+									success: function (data) {
+											if ( data ){
+													window.location.href = data;
+											} else {
+													alert( 'Error!' );
+											}
+									}
+						});
+						return false;
+				});
+				jQuery( '.uap-js-revoke-license' ).on( 'click', function(){
+						jQuery.ajax({
+									type : "post",
+									url : window.uap_url + '/wp-admin/admin-ajax.php',
+									data : {
+													 action						: "uap_revoke_license",
+													 nonce						: jQuery( '.uap-js-help-section-nonce' ).attr('data-value'),
+									},
+									success: function (data) {
+											window.location.href = jQuery( '.uap-js-help-section-revoke-url' ).attr('data-value');
+									}
+						});
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=top_affiliates') !== -1 ){
+				// top affiliates
+				uapPreviewUList();
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=account_page' ) !== -1 ){
+				// account page
+				var i = 0;
+				var uap_shiny_object = [];
+				jQuery( '.uap-js-account-page-icon-details' ).each( function( e, html ){
+					var iconCode = jQuery( this ).attr('data-icon_code');
+					var slug = jQuery( this ).attr('data-slug');
+
+					uap_shiny_object[i] = new uapShinySelect({
+								selector: '#indeed_shiny_select_' + slug,
+								item_selector: '.uap-font-awesome-popup-item',
+								option_name_code: 'uap_tab_' + slug + '_icon_code',
+								option_name_icon: 'uap_tab_' + slug + '_icon_class',
+								default_icon: 'fa-uap fa-' + slug + '-account-uap',
+								default_code: iconCode,
+								init_default: true,
+								second_selector: '#uap_icon_arrow_' + slug
+					});
+					i++;
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf('page=ultimate_affiliates_pro&tab=ranks&subtab=add_edit') !== -1 ){
+				// Ranks - Add/Edit
+				var i = 1;
+				window.achieve_arr = [];
+				jQuery( '.uap-js-achieve-types-values' ).each( function( e, html ){
+						var theLabel = jQuery( html ).attr('data-label');
+						var theValue = jQuery( html ).attr('data-value');
+						window.achieve_arr[i] = {label: theLabel, value: theValue};
+						i++;
+				});
+				return;
+		}
+
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=user_profile&affiliate_id' ) !== -1 ){
+				// User Profile
+				    jQuery('.uap-js-delete-referrals-link').on( 'click', function(){
+				        jQuery.ajax({
+				            type : 'post',
+				            url : window.uap_url + '/wp-admin/admin-ajax.php',
+				            data : {
+				                       action: 'uap_delete_referrer_link_for_affiliate',
+				                       id: jQuery(this).attr('data-id'),
+				                   },
+				            success: function (response) {
+				                location.reload();
+				            }
+				       });
+				    });
+				    jQuery('.uap-js-delete-landing-page').on( 'click', function(){
+				        jQuery.ajax({
+				            type : 'post',
+				            url : window.uap_url + '/wp-admin/admin-ajax.php',
+				            data : {
+				                       action: 'uap_delete_landing_page_for_affiliate',
+				                       id: jQuery(this).attr('data-id'),
+				                   },
+				            success: function (response) {
+				                location.reload();
+				            }
+				       });
+				    });
+				    jQuery('.uap-js-delete-coupons-link').on( 'click', function(){
+				        jQuery.ajax({
+				            type : 'post',
+				            url : window.uap_url + '/wp-admin/admin-ajax.php',
+				            data : {
+				                       action: 'uap_delete_coupons_for_affiliate',
+				                       id: jQuery(this).attr('data-id'),
+				                   },
+				            success: function (response) {
+				                location.reload();
+				            }
+				       });
+				    });
+
+				    jQuery('.js-uap-copy').on( 'click', function(){
+				        var url = jQuery( '.uap-userprofile-links a' ).attr( 'href' );
+				        const el = document.createElement('textarea');
+				        el.value = url;
+				        document.body.appendChild(el);
+				        el.select();
+				        document.execCommand('copy');
+				        document.body.removeChild(el);
+				        swal({
+				          title: jQuery( '.uap-js-user-profile-copy-message' ).attr( 'data-value' ),
+				          text: "",
+				          type: "success",
+				          showConfirmButton: false,
+				          confirmButtonClass: "btn-success",
+				          confirmButtonText: "OK",
+				          timer: 1000
+				        });
+				    });
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=reports' ) !== -1 ){
+				// Reports
+
+				var tickType = jQuery( '.uap-js-reports-tick-type' ).attr('data-value');
+				var minTime = jQuery( '.uap-js-min-time' ).attr('data-value');
+				var maxTime = jQuery( '.uap-js-max-time' ).attr('data-value');
+
+				// visits
+				var uap_visits = [];
+				jQuery('.uap-js-visit-graph-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_visits.push( temporary );
+				});
+
+				// visits success
+				var uap_visits_success = [];
+				jQuery('.uap-js-visit-graph-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_visits_success.push( temporary );
+				});
+
+				jQuery.plot(
+						jQuery("#uap-plot-1"), [{
+							label : jQuery('.uap-js-reports-labels').attr('data-all_clicks'),
+							data : uap_visits,
+							color : "#f16161"
+						},{
+							label : jQuery('.uap-js-reports-labels').attr('data-converted_clicks'),
+							data : uap_visits_success,
+							color : "#38d0e3"
+						}
+						], {
+
+							grid: { hoverable: false, backgroundColor: "#fff", minBorderMargin: 0,  borderWidth: {top: 0, right: 0, bottom: 1, left: 1}, borderColor: "#aaa" },
+							xaxis : {
+								min : minTime,
+								max : maxTime,
+								mode : "time",
+								tickSize: [1, tickType ],
+							},
+
+						}
+				);
+
+				var tickType = jQuery( '.uap-js-reports-tick-type' ).attr('data-value');
+				var minTime = jQuery( '.uap-js-min-time' ).attr('data-value');
+				var maxTime = jQuery( '.uap-js-max-time' ).attr('data-value');
+
+				var uap_all_referrals = [];
+				jQuery('.uap-js-visit-graph-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_all_referrals.push( temporary );
+				});
+
+				var uap_all_referrals_refuse = [];
+				jQuery('.uap-js-referral-graph-refuse-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_all_referrals_refuse.push( temporary );
+				});
+
+				var uap_all_referrals_unverified = [];
+				jQuery('.uap-js-referral-graph-unverified-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_all_referrals_unverified.push( temporary );
+				});
+
+				var uap_all_referrals_verified = [];
+				jQuery('.uap-js-referral-graph-verified-data').each(function(e,html){
+						var value = jQuery( html ).attr('data-value');
+						var date = jQuery( html ).attr('data-date');
+						var temporary = [ date, value ];
+						uap_all_referrals_verified.push( temporary );
+				});
+
+
+				jQuery.plot(
+						jQuery("#uap-plot-2"), [{
+							label : jQuery('.uap-js-reports-labels').attr('data-all_referrals'),
+							data : uap_all_referrals,
+							color : "#f8ba01"
+						},{
+							label : jQuery('.uap-js-reports-labels').attr('data-refuse_referrals'),
+							data : uap_all_referrals_refuse,
+							color : "#f36b6b"
+						},{
+							label : jQuery('.uap-js-reports-labels').attr('data-unverified_referrals'),
+							data : uap_all_referrals_unverified,
+							color : "#4cc0c1"
+						},{
+							label :  jQuery('.uap-js-reports-labels').attr('data-verified_referrals'),
+							data : uap_all_referrals_verified,
+							color : "#94C523"
+						}
+						], {
+							grid: { hoverable: false, backgroundColor: "#fff", minBorderMargin: 0,  borderWidth: {top: 0, right: 0, bottom: 1, left: 1}, borderColor: "#aaa" },
+							xaxis : {
+								min : minTime,
+								max : maxTime,
+								mode : "time",
+								tickSize: [1, tickType],
+							},
+						}
+				);
+
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=referrals' ) !== -1 ){
+				// referrals - list
+				jQuery( '.uap-js-referral-list-change-status' ).on( 'click', function( e, html ){
+						var value = jQuery(this).attr('data-value');
+						jQuery('#change_status').val( value );
+						jQuery('#form_referrals').submit();
+				});
+
+				jQuery( '.uap-js-referral-list-limit-number' ).on( 'click', function( e, html ){
+						var url = jQuery( this ).attr('data-url');
+						var value = jQuery( this ).val();
+						window.location = url + value;
+				});
+				return;
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=visits' ) !== -1 ){
+			jQuery( '.uap-js-visits-list-limit-number' ).on( 'click', function( e, html ){
+					var url = jQuery( this ).attr('data-url');
+					var value = jQuery( this ).val();
+					window.location = url + value;
+			});
+		}
+
+		if ( uapCurrentUrl.indexOf( 'page=ultimate_affiliates_pro&tab=payments' ) !== -1 ){
+				// transactions
+				jQuery( '.uap-js-transactions-change-status' ).on( 'click', function( e, html ){
+						var status = jQuery(this).attr('data-status');
+						var id = jQuery(this).attr('data-id');
+						jQuery('#transaction_id').val( id );
+						jQuery('#new_status').val(status);
+						jQuery('#form_payments').submit();
+				});
+
+				jQuery( '.uap-js-transactions-delete-transaction' ).on( 'click', function( e, html ){
+						var id = jQuery(this).attr( 'data-id' );
+						jQuery('#delete_transaction').val( id );
+						jQuery('#form_payments').submit();
+				});
+		}
+
 });

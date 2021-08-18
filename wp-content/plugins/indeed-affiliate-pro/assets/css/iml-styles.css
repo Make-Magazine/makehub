@@ -1,3 +1,7 @@
+/*!
+ *  PopOver style from WP Dashboard
+ *  Dedicated for popover feature
+ */
 .tooltip {
  position: absolute;
  top: 0;
@@ -127,16 +131,6 @@
  display: none;
  z-index: 999;
 }
-
-/*.popover div {
- font-family:Arial;
- background: #000;
- color: #fff;
- font-size: 12px;
- max-width: 250px;
- text-align: left;
- cursor: default;
-}*/
 
 .popover_title{
 border-radius: 3px 3px 0px 0px;

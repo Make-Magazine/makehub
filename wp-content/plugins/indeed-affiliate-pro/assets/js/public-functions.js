@@ -1,3 +1,7 @@
+/*
+ *Ultimate Affiliate Pro - Public Main Functions
+ */
+"use strict";
 function iaGenerateLink(aff_id){
 	jQuery('.uap-ap-generate-links-result').css('visibility', 'hidden');
 	jQuery('.uap-ap-generate-social-result').css('visibility', 'hidden');
@@ -20,7 +24,7 @@ function iaGenerateLink(aff_id){
         type : "post",
         url : decodeURI(ajax_url),
         data : {
-                   action: "ia_ajax_return_url_for_aff",
+                   action: "uap_ia_ajax_return_url_for_aff",
                    aff_id: aff_id,
                    url: the_url,
                    campaign: c,
@@ -181,6 +185,9 @@ function uapGetCheckboxRadioValue(type, selector){
 			return arr.join(',');
 		}
 	}
+	if ( jQuery('[name="' + selector + '"]').is(':checked') ){
+			return 1;
+	}
 	return '';
 }
 
@@ -215,7 +222,6 @@ function uapRegisterCheckViaAjaxRec(types_arr){
 				field_type = 'multiselect';
 			}
 		}
-
 		if (field_type=='checkbox' || field_type=='radio'){
 			var val1 = uapGetCheckboxRadioValue(field_type, types_arr[i]);
 		} else if ( field_type=='multiselect' ){
@@ -320,7 +326,7 @@ function uapShowSubtabs(t){
 }
 
 function uapPaymentType(){
-	jQuery.each(['paypal', 'bt', 'stripe', 'stripe_v2'], function(k, v){
+	jQuery.each(['paypal', 'bt', 'stripe', 'stripe_v2', 'stripe_v3'], function(k, v){
 		jQuery('#uap_payment_with_' + v).css('display', 'none');
 	});
 	var t = jQuery('[name=uap_affiliate_payment_type]').val();
@@ -345,12 +351,12 @@ function uapBecomeAffiliatePublic(){
 function uapAddToWallet(divCheck, showValue, hidden_input_id){
     var str = jQuery(hidden_input_id).val();
     if (str!=''){
-    	show_arr = str.split(',');
-    	for (a in show_arr ){
+    	var show_arr = str.split(',');
+    	for ( var a in show_arr ){
         	show_arr[a] = parseInt(show_arr[a]);
-		}
+			}
     } else {
-    	show_arr = [];
+    	var show_arr = [];
     }
 
     if (jQuery(divCheck).is(':checked')){
@@ -358,14 +364,13 @@ function uapAddToWallet(divCheck, showValue, hidden_input_id){
         	show_arr.push(showValue);
     	}
     } else {
-
-        for (a in show_arr ){
-        	if (parseInt(show_arr[a])==showValue){
-        		show_arr.splice(a, 1);
-        	}
-		}
+        for ( var a in show_arr ){
+	        	if (parseInt(show_arr[a])==showValue){
+	        		show_arr.splice(a, 1);
+	        	}
+				}
     }
-    str = show_arr.join(',');
+    var str = show_arr.join(',');
     jQuery(hidden_input_id).val(str);
 
     jQuery('#uap_total_amount').html('');
@@ -387,6 +392,7 @@ function uapAddToWallet(divCheck, showValue, hidden_input_id){
 }
 
 function uapRemoveWalletItem(t, c){
+		var uapCurrentUrl = window.location.href;
    	jQuery.ajax({
         type: 'post',
         url : decodeURI(ajax_url),
@@ -397,9 +403,7 @@ function uapRemoveWalletItem(t, c){
         },
         success: function (r) {
 						if (r){
-							if (window.uap_current_url){
-								window.location.href = window.uap_current_url;
-							}
+								window.location.href = uapCurrentUrl;
 						}
         }
    	});
@@ -447,19 +451,26 @@ function uapDeleteFileViaAjax(id, u_id, parent, name, hidden_id){
 }
 
 function uapMakeInputhString(divCheck, showValue, hidden_input_id){
-    str = jQuery(hidden_input_id).val();
-    if(str==-1) str = '';
-    if(str!='') show_arr = str.split(',');
-    else show_arr = new Array();
-    if(jQuery(divCheck).is(':checked')){
+    var str = jQuery(hidden_input_id).val();
+    if (str==-1){
+			str = '';
+		}
+    if (str!=''){
+			var show_arr = str.split(',');
+		} else {
+			var show_arr = new Array();
+		}
+    if (jQuery(divCheck).is(':checked')){
         show_arr.push(showValue);
-    }else{
+    } else {
         var index = show_arr.indexOf(showValue);
         show_arr.splice(index, 1);
     }
     str = show_arr.join(',');
-    if(str=='') str = -1;
-    jQuery(hidden_input_id).val(str);
+    if (str=='') {
+			str = -1;
+		}
+		jQuery(hidden_input_id).val(str);
 }
 
 function uapAffiliateUsernameTest(v){
@@ -546,7 +557,7 @@ function uapInfoAffiliateBarUpdateLink()
 	      type 	: "post",
 	      url 	: decodeURI(ajax_url),
 	      data 	: {
-	                   action							: "ia_ajax_return_url_for_aff",
+	                   action							: "uap_ia_ajax_return_url_for_aff",
 	                   aff_id							: jQuery( '#uap_info_affiliate_bar_extra_info' ).attr( 'data-affiliate_id' ),
 	                   url								: window.location.href,
 	                   campaign						: '',
@@ -582,6 +593,282 @@ function uapInfoAffiliateBarChangeBannerSize( size )
 								jQuery('#uap_info_bar_banner_the_value').val( response );
 								jQuery('#uap_info_bar_banner_wrapp').html( response );
 						}
+				}
+		});
+}
+
+jQuery(document).ajaxSend(function (event, jqXHR, ajaxOptions) {
+    if ( typeof ajaxOptions.data !== 'string' || ajaxOptions.data.includes( 'action=uap' ) === false ){
+        return;
+    }
+    if ( typeof ajaxOptions.url === 'string' && ajaxOptions.url.includes('/admin-ajax.php')) {
+       var token = jQuery('meta[name="uap-token"]').attr("content");
+       jqXHR.setRequestHeader('X-CSRF-UAP-TOKEN', token );
+    }
+});
+
+jQuery(window).on('load', function(){
+		jQuery('.uap-js-submit-campaign').on( 'click', function(e){
+				e.preventDefault();
+				jQuery.ajax({
+						type : "post",
+						url : decodeURI(ajax_url),
+						data : {
+											 action						: "uap_ajax_save_campaign",
+											 campaignName			: jQuery('[name=campaign_name]').val(),
+									 },
+						success: function (response) {
+								location.reload();
+						}
+			 });
+		});
+
+		// Login Form
+		jQuery('#uap_login_username').on('blur', function(){
+			var errorMessage = jQuery( '.uap-js-login-form-error-messages' ).attr( 'data-log' );
+			uapCheckLoginField('log', errorMessage );
+		});
+		jQuery('#uap_login_password').on('blur', function(){
+			var errorMessage = jQuery( '.uap-js-login-form-error-messages' ).attr( 'data-pwd' );
+			uapCheckLoginField('pwd', errorMessage );
+		});
+		jQuery('#uap_login_form').on('submit', function(e){
+			e.preventDefault();
+			var u = jQuery('#uap_login_form [name=log]').val();
+			var p = jQuery('#uap_login_form [name=pwd]').val();
+			if (u!='' && p!=''){
+				jQuery('#uap_login_form').unbind('submit').submit();
+			} else {
+				var errorMessageLog = jQuery( '.uap-js-login-form-error-messages' ).attr( 'data-log' );
+				var errorMessagePwd = jQuery( '.uap-js-login-form-error-messages' ).attr( 'data-pwd' );
+				uapCheckLoginField('log', errorMessageLog );
+				uapCheckLoginField('pwd', errorMessagePwd );
+				return FALSE;
+			}
+		});
+		// end of Login Form
+
+		// payment settings
+		if ( jQuery( '.uap-js-payment-settings-nonce' ).val() != '' ){
+				uapPaymentType();
+				uapStripeV2UpdateFields();
+		}
+
+		// simple links
+		jQuery('.uap-js-submit-simple-link').on( 'click', function(e){
+				e.preventDefault();
+				jQuery.ajax({
+						type : "post",
+						url : decodeURI(ajax_url),
+						data : {
+											 action						: "uap_ajax_save_simple_link",
+											 url							: jQuery('[name=url]').val(),
+											 currentUrl 			: jQuery( '.uap-js-simple-links-section' ).attr('data-current_url'),
+									 },
+						success: function (response) {
+								if (response){
+									document.location.href= response;
+									return;
+								}
+								location.reload();
+						}
+			 });
+		})
+
+		// date picker
+		if ( jQuery( '.uap-general-date-filter' ).length ){
+			jQuery('.uap-general-date-filter').each(function(){
+				jQuery(this).datepicker({
+		            dateFormat : 'yy-mm-dd',
+		            onSelect: function(datetext){
+		                jQuery(this).val(datetext);
+		            }
+		        });
+		    });
+		}
+
+		// selector 2
+		if ( jQuery( '.uap-js-select2-data' ).length ){
+				jQuery('.uap-js-select2-data').each(function( e, html ){
+						var theSelector = jQuery( html ).attr( 'data-selector' );
+						var theLabel = jQuery( html ).attr( 'data-label' );
+						jQuery( theSelector ).select2({
+							placeholder: theLabel,
+							allowClear: true
+						});
+			  });
+		}
+
+		// date picker
+		if ( jQuery( '.uap-js-date-picker-data' ).length ){
+				jQuery('.uap-js-date-picker-data').each(function( e, html ){
+						var theSelector = jQuery( html ).attr( 'data-selector' );
+						jQuery( theSelector ).datepicker({
+								dateFormat : "dd-mm-yy"
+						});
+				});
+		}
+
+		// file upload
+		if ( jQuery( '.uap-js-upload-file-data' ).length ){
+				jQuery('.uap-js-upload-file-data').each(function( e, html ){
+
+						var rand = jQuery(html).attr( "data-rand" );
+						var theUrl = jQuery(html).attr( "data-url" );
+						var max_size = jQuery(html).attr( "data-max_size" );
+						var alowed_types = jQuery(html).attr( "data-alowed_types" );
+						var name = jQuery(html).attr( "data-name" );
+						var alertText = jQuery(html).attr( "data-alert_text" );
+
+						jQuery("#uap_fileuploader_wrapp_" + rand + " .uap-file-upload").uploadFile({
+							onSelect: function (files) {
+								jQuery("#uap_fileuploader_wrapp_" + rand + " .ajax-file-upload-container").css("display", "block");
+								var check_value = jQuery("#uap_upload_hidden_" + rand ).val();
+								if (check_value!="" ){
+									alert( alertText );
+									return false;
+								}
+								return true;
+							},
+							url: theUrl,
+							fileName: "uap_file",
+							dragDrop: false,
+							showFileCounter: false,
+							showProgress: true,
+							showFileSize: false,
+							maxFileSize: max_size,
+							allowedTypes: alowed_types,
+							onSuccess: function(a, response, b, c){
+								if (response){
+									var obj = jQuery.parseJSON(response);
+									if (typeof obj.secret!="undefined"){
+											jQuery("#uap_fileuploader_wrapp_" + rand ).attr("data-h", obj.secret);
+									}
+									var bttn = "<div onClick=\"uapDeleteFileViaAjax("+obj.id+", -1, '#uap_fileuploader_wrapp_" + rand + "', '" + name + "', '#uap_upload_hidden_" + rand + "');\" class='uap-delete-attachment-bttn'>Remove</div>";
+									jQuery("#uap_fileuploader_wrapp_" + rand + " .uap-file-upload").prepend(bttn);
+									switch (obj.type){
+										case "image":
+											jQuery("#uap_fileuploader_wrapp_" + rand + " .uap-file-upload").prepend("<img src="+obj.url+" class=\'uap-member-photo\' /><div class=\'uap-clear\'></div>");
+										break;
+										case "other":
+											jQuery("#uap_fileuploader_wrapp_" + rand + " .uap-file-upload").prepend("<div class=uap-icon-file-type></div><div class=uap-file-name-uploaded>"+obj.name+"</div>");
+										break;
+									}
+									jQuery("#uap_upload_hidden_" + rand).val(obj.id);
+									setTimeout(function(){
+										jQuery("#uap_fileuploader_wrapp_" + rand + " .ajax-file-upload-container").css("display", "none");
+									}, 3000);
+								}
+							}
+						});
+				});
+		}
+
+		// Login
+		if ( jQuery( '.uap-js-login-form-details' ).length ){
+				jQuery('.uap-js-login-form-details').each(function( e, html ){
+					  var usernameSelector = jQuery( html ).attr('data-username_selector');
+						var passwordSelector = jQuery( html ).attr('data-password_selector');
+						var errorMessage = jQuery( html ).attr('data-error_message');
+
+						jQuery( usernameSelector ).on('blur', function(){
+							uapCheckLoginField('log', errorMessage);
+						});
+						jQuery(passwordSelector).on('blur', function(){
+							uapCheckLoginField('pwd', errorMessage);
+						});
+						jQuery('#uap_login_form').on('submit', function(e){
+							e.preventDefault();
+							var u = jQuery('#uap_login_form [name=log]').val();
+							var p = jQuery('#uap_login_form [name=pwd]').val();
+							if (u!='' && p!=''){
+								jQuery('#uap_login_form').unbind('submit').submit();
+							} else {
+								uapCheckLoginField('log', errorMessage);
+								uapCheckLoginField('pwd', errorMessage );
+								return FALSE;
+							}
+						});
+				});
+		}
+
+		// Listing Top Affiliates
+		if ( jQuery( '.uap-js-owl-settings-data' ).length ){
+				jQuery('.uap-js-owl-settings-data').each(function( e, html ){
+						uapInitiateOwl(html);
+				});
+		}
+
+		// delete campaigns
+		if ( jQuery( '.uap-js-account-page-campaigns-delete-item' ).length ){
+				jQuery( '.uap-js-account-page-campaigns-delete-item' ).on( 'click', function( e, html ){
+						var id = jQuery( this ).attr('data-id');
+						jQuery('#uap_delete_campaign').val( id );
+						jQuery('#uap_campaign_form').submit();
+				});
+		}
+
+		// stripe tos
+		if ( jQuery( '.uap-js-payment-settings-stripe-tos' ).length ){
+				jQuery( '.uap-js-payment-settings-stripe-tos' ).on( 'click', function( e, html ){
+					jQuery('.stripe_v2_tos').removeAttr('disabled');
+					window.open('https://stripe.com/us/connect-account/legal', '_blank');
+				});
+		}
+});
+
+function uapInitiateOwl(selector)
+{
+		var selector = jQuery( selector ).attr( 'data-selector' );
+		var autoHeight = jQuery( selector ).attr( 'data-autoHeight' );
+		var animateOut = jQuery( selector ).attr( 'data-animateOut' );
+		var animateIn = jQuery( selector ).attr( 'data-animateIn' );
+		var lazyLoad = jQuery( selector ).attr( 'data-lazyLoad' );
+		var loop = jQuery( selector ).attr( 'data-loop' );
+		var autoplay = jQuery( selector ).attr( 'data-autoplay' );
+		var autoplayTimeout = jQuery( selector ).attr( 'data-autoplayTimeout' );
+		var autoplayHoverPause = jQuery( selector ).attr( 'data-autoplayHoverPause' );
+		var autoplaySpeed = jQuery( selector ).attr( 'data-autoplaySpeed' );
+		var nav = jQuery( selector ).attr( 'data-nav' );
+		var navSpeed = jQuery( selector ).attr( 'data-navSpeed' );
+		var dots = jQuery( selector ).attr( 'data-dots' );
+		var dotsSpeed = jQuery( selector ).attr( 'data-dotsSpeed' );
+		var responsiveClass = jQuery( selector ).attr( 'data-responsiveClass' );
+		var navigation = jQuery( selector ).attr( 'data-navigation' );
+		var owl = jQuery( selector );
+		owl.owluapCarousel({
+				items : 1,
+				mouseDrag: true,
+				touchDrag: true,
+
+				autoHeight: autoHeight,
+
+				animateOut: animateOut,
+				animateIn: animateIn,
+
+				lazyLoad : lazyLoad,
+				loop: loop,
+
+				autoplay : autoplay,
+				autoplayTimeout: autoplayTimeout,
+				autoplayHoverPause: autoplayHoverPause,
+				autoplaySpeed: autoplaySpeed,
+
+				nav : nav,
+				navSpeed : navSpeed,
+				navText: [ '', '' ],
+
+				dots: dots,
+				dotsSpeed : dotsSpeed,
+
+				responsiveClass: responsiveClass,
+				responsive:{
+					0:{
+						nav:false
+					},
+					450:{
+						nav : navigation
+					}
 				}
 		});
 }

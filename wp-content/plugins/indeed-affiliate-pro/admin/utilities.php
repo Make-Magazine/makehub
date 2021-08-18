@@ -1,4 +1,4 @@
-<?php 
+<?php
 function uap_create_ranks_graphic($ranks_arr, $current){
 	/*
 	 * @param array
@@ -14,11 +14,11 @@ function uap_create_ranks_graphic($ranks_arr, $current){
 				$current_printed = TRUE;
 				$class .= ' uap-current-rank';
 			}
-			$output .= '<div class="'.$class.'" style="padding: ' . $padding . 'px 5px;">' . $v->label . '</div>';
+			$output .= '<div class="'.$class.'" style = "padding: ' . $padding . 'px 5px;">' . $v->label . '</div>';
 			$padding += 7;
 		}
 		if (empty($current_printed)){
-			$output .= '<div class="uap-rank-item uap-current-rank" style="padding: ' . $padding . 'px 5px;">' . __('Current Rank', 'uap') . '</div>';
+			$output .= '<div class="uap-rank-item uap-current-rank" style = "padding: ' . $padding . 'px 5px;">' . esc_html__('Current Rank', 'uap') . '</div>';
 		}
 		$output = '<div class="rank-graphic-representation">' . $output . '</div>';
 		return $output;
@@ -36,7 +36,7 @@ function uap_return_errors(){
 	if (!empty($uap_error_register)){
 		$output = '<div class="uap-wrapp-the-errors">';
 		foreach ($uap_error_register as $key=>$err){
-			$output .= __('Field ', 'uap') . $key . ': ' . $err;
+			$output .= esc_html__('Field ', 'uap') . $key . ': ' . $err;
 		}
 		$output .= '</div>';
 	}
@@ -53,30 +53,40 @@ function uap_return_payment_details_for_admin_table($payment_details=array()){
 	 	switch ($payment_details['type']){
 			case 'bt':
 				if (!empty($payment_details['settings'])){
-					$output = '<div class="uap-payment-details-do-payment">' . __('Bank Transfer Details: ', 'uap') . $payment_details['settings'] . '</div>';
+					$output = '<div class="uap-payment-details-do-payment">' . esc_html__('Bank Transfer Details: ', 'uap') . $payment_details['settings'] . '</div>';
 				} else {
-					$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
+					$output = '<div class="uap-payment-details-do-payment">' . esc_html__('Incomplete Payment Settings', 'uap') . '</div>';
 				}
 				break;
 			case 'paypal':
 				if (!empty($payment_details['settings'])){
-					$output = '<div class="uap-payment-details-do-payment">' . __('PayPal E-mail Address: ', 'uap') . $payment_details['settings'] . '</div>';
+					$output = '<div class="uap-payment-details-do-payment">' . esc_html__('PayPal E-mail Address: ', 'uap') . $payment_details['settings'] . '</div>';
 				} else {
-					$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
-				}			
+					$output = '<div class="uap-payment-details-do-payment">' . esc_html__('Incomplete Payment Settings', 'uap') . '</div>';
+				}
 				break;
 			case 'stripe':
 				if (!empty($payment_details['settings']['uap_affiliate_stripe_name'])
-					&& !empty($payment_details['settings']['uap_affiliate_stripe_card_number']) 
+					&& !empty($payment_details['settings']['uap_affiliate_stripe_card_number'])
 					&& !empty($payment_details['settings']['uap_affiliate_stripe_expiration_month']) && !empty($payment_details['settings']['uap_affiliate_stripe_expiration_year'])){ //&& !empty($payment_details['settings']['uap_affiliate_stripe_cvc'])
-					$output = '<div class="uap-payment-details-do-payment">';	
-					$output .= __("Name on Card: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_name'] . ', ';
-					$output .= __("Card Number: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_card_number'] . ', '; 	
-					//$output .= __("CVC: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_cvc'] . ', '; 				
-					$output .= __("Expiration: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_expiration_month'] . '/' . $payment_details['settings']['uap_affiliate_stripe_expiration_year']; 						
+					$output = '<div class="uap-payment-details-do-payment">';
+					$output .= esc_html__("Name on Card: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_name'] . ', ';
+					$output .= esc_html__("Card Number: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_card_number'] . ', ';
+				
+					$output .= esc_html__("Expiration: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_expiration_month'] . '/' . $payment_details['settings']['uap_affiliate_stripe_expiration_year'];
 					$output .= '</div>';
 				} else {
-					$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
+					$output = '<div class="uap-payment-details-do-payment">' . esc_html__('Incomplete Payment Settings', 'uap') . '</div>';
+				}
+				break;
+			case 'stripe_v2':
+				$output = '';
+				break;
+			case 'stripe_v3':
+				if ( empty( $payment_details['account_id'] ) ){
+						$output = '<div class="uap-payment-details-do-payment">' . esc_html__('Incomplete Payment Settings', 'uap') . '</div>';
+				} else {
+						$output = '<div class="uap-payment-details-do-payment"><a href="' . 'https://dashboard.stripe.com/test/connect/accounts/' . $payment_details['account_id'] . '" target="_blank">' . esc_html__( 'View Stripe Affiliate Account', 'uap') . '</a></div>';
 				}
 				break;
 	 	}

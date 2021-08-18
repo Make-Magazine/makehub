@@ -1,3 +1,7 @@
+/*!
+ *  Ultimate Affiliate Pro Main BackEnd Style
+ *
+ */
 @import url(//fonts.googleapis.com/css?family=Open+Sans:100,400,300,500,600,700);
 @import url(//fonts.googleapis.com/css?family=Oswald:100,400,300,600,700);
 @import url(//fonts.googleapis.com/css?family=Roboto:400,100,300,500,600,700);
@@ -108,12 +112,13 @@
 	text-align: center;
 	text-transform: uppercase;
 	line-height: 15px;
+	font-size: 10px;
+font-weight: 600;
+text-transform: capitalize;
+line-height: 15px;
+letter-spacing: 0.05em;
 }
-@media screen and (max-width: 1280px) {
-.uap-dashboard-wrap .uap-admin-header .uap-top-menu-section .uap-dashboard-menu .uap-page-title div{
-	/*display:none;*/
-}
-}
+
 .uap-wrapper {
     padding: 10px 30px;
     padding-left: 5px;
@@ -172,8 +177,8 @@
 	margin-top: 20px;
 }
 .uap-dashboard-wrap th{
-  font-family: 'Oswald', arial, sans-serif !important;
-  font-weight:400;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-weight:600 !important;
 }
 
 .uap-dashboard-wrap .uap-stuffbox{
@@ -208,10 +213,15 @@
 }
 
 .uap-form-line .uap-label{
-    min-width: 140px;
+    min-width: 170px;
     text-align: right;
     padding-right: 15px;
     display: inline-block;
+}
+.uap-form-line .uap-sublabel{
+    text-align: left;
+    padding-left: 175px;
+    display: block;
 }
 .uap-form-line input[type=text], .uap-form-line textarea{
 	min-width: 400px;
@@ -397,8 +407,8 @@
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -11px 10px -11px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 700;
 }
 .uap-special-box {
 	font-weight: bold;
@@ -409,8 +419,8 @@
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     border-top: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -30px 10px -25px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 700;
 }
 .uap-special-box  .uap-general-date-filter-wrap input[type=text], .uap-special-box  .uap-general-date-filter-wrap select{
 	min-width: 200px;
@@ -418,10 +428,12 @@
     padding: 3px 5px;
 	box-sizing:border-box;
     vertical-align: baseline;
+		font-weight: 500;
 }
 .uap-special-box  .uap-general-date-filter-wrap input[type=submit]{
 	margin:0 10px;
-	padding: 0 22px 2px
+	padding: 0 22px 2px;
+	margin-top: -3px;
 }
 .uap-form-line{
 	min-width: 120px;
@@ -541,8 +553,8 @@ input[type="checkbox"].uap-switch + div:after {
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: -10px -11px 15px -11px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 700;
     text-transform: uppercase;
 }
 .uap-dashboard-textarea{
@@ -601,7 +613,7 @@ input[type="checkbox"].uap-switch + div:after {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-    font-family: Oswald;
+   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 #add_new_achieve{
 	margin: 10px 0px;
@@ -658,16 +670,11 @@ input[type="checkbox"].uap-switch + div:after {
 	height:240px;
 	color: #fff;
 }
-@media screen and (max-width: 1440px) {
-    .uap-admin-dashboard-offer-box-wrap{
-       width: 33%;
-    }
-}
+
 .uap-admin-dashboard-offer-box{
 	display:block;
 	height:100%;
 	width:100%;
-	font-family: Oswald, Helvetica, Arial, sans-serif;
 	font-family: "Roboto", sans-serif;
 	overflow:hidden;
 	position:relative;
@@ -697,9 +704,9 @@ input[type="checkbox"].uap-switch + div:after {
 }
 .uap-admin-dashboard-offer-box-bottom{
 	line-height:37px;
-	font-family: Oswald, Helvetica, Arial, sans-serif;
-	font-size:20px;
-	font-weight:200;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-size:14px;
+	font-weight:600;
 	height:45px;
 	padding:4px 0 4px 5px;
 	box-sizing:border-box;
@@ -829,11 +836,7 @@ input[type="checkbox"].uap-switch + div:after {
 }
 
 
-@media (max-width: 1500px){
-.uap-magic-box-wrap{
-	width: 33%;
-}
-}
+
 
 .uap-magic-box-wrap a{
 	text-decoration: none;
@@ -843,7 +846,6 @@ input[type="checkbox"].uap-switch + div:after {
 	display: block;
     height: 100%;
     width: 100%;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
     font-family: "Roboto", sans-serif;
     overflow: hidden;
     position: relative;
@@ -894,7 +896,7 @@ input[type="checkbox"].uap-switch + div:after {
 .uap-dashboard-inside-table{
 	width: 100%;
 	margin: 5px 0px;
-	font-family: verdana,arial,sans-serif;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 11px !important;
     color: #333333;
     border-width: 1px;
@@ -1093,7 +1095,7 @@ input[type="checkbox"].uap-switch + div:after {
 i.mce-i-uap_btn_forms{
   font: 400 20px/1 dashicons;
   padding: 0 2px 0 0;
-  vertical-align: top;
+  vertical-align: bottom;
   speak: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1103,7 +1105,7 @@ i.mce-i-uap_btn_forms{
   padding: 1px 5px !important;
   font-size: 15px;
   line-height: 18px;
-  height: 18px !important;
+  height: 20px !important;
   width: initial !important;
 }
 
@@ -1324,12 +1326,14 @@ i.mce-i-uap_btn_forms:after{
     border-color: #f8cdcd;
 }
 .uap-list-affiliates-name-label{
-	color: #21759b;
+	color: #343a40 !important;
 	font-weight:bold;
 	width:120px;
-	font-family: 'Oswald', arial, sans-serif !important;
-	font-size: 14px;
-	font-weight: 400;
+	font-size: 13px;
+	font-weight: 600;
+	font-size: 14px!important;
+	font-weight: 500;
+	display: block !important;
 }
 .uap-inside-item{
 	padding: 10px 5px;
@@ -1356,7 +1360,7 @@ i.mce-i-uap_btn_forms:after{
     color: #21759b;
     display: block;
     margin: 5px 0;
-    font-family: 'Oswald', arial, sans-serif !important;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 14px;
     font-weight: 400;
 }
@@ -1369,7 +1373,11 @@ i.mce-i-uap_btn_forms:after{
     color: #9b4449;
     background-color: #fff6f4;
     border-color: #f8cdcd;
-    margin-top: -10px;
+		color: #8a6d3b;
+	border:1px solid transparent;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    /*margin-top: -10px;*/
 }
 .uap-special-line {
     font-weight: bold;
@@ -1379,8 +1387,8 @@ i.mce-i-uap_btn_forms:after{
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -11px 10px -11px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 700;
 }
 .uap-alternate tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -1398,10 +1406,10 @@ i.mce-i-uap_btn_forms:after{
 	box-sizing:border-box;
 }
 .uap-achievement{
-	font-family: 'Oswald', arial, sans-serif !important;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	padding: 8px 4px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 600;
     color: #666;
 }
 .uap-dashboard-list-posts-col-default-pages{
@@ -1495,6 +1503,12 @@ i.mce-i-uap_btn_forms:after{
 	background-color: #0bb586;
 }
 .uap-admin-aff-payment-type.uap-payment-type-active-stripe{
+	background-color: #6a3da3;
+}
+.uap-admin-aff-payment-type.uap-payment-type-active-stripe_v2{
+	background-color: #6a3da3;
+}
+.uap-admin-aff-payment-type.uap-payment-type-active-stripe_v3{
 	background-color: #6a3da3;
 }
 .uap-payment-details-bt-data{
@@ -1656,6 +1670,7 @@ i.mce-i-uap_btn_forms:after{
     line-height: 1.4em;
     display: block !important;
     margin-bottom: 20px;
+	position:relative;
 }
 .uap-error-global-dashboard-message p{
 	margin: 13px 0px;
@@ -1790,8 +1805,8 @@ i.mce-i-uap_btn_forms:after{
 	display: inline-block;
     padding-right: 10px;
     box-sizing: border-box;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 700;
     color: #555;
     font-size: 14px;
     padding-top: 10px;
@@ -1940,8 +1955,8 @@ i.mce-i-uap_btn_forms:after{
     display: inline-block;
     padding-right: 10px;
     box-sizing: border-box;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 600;
     color: #555;
     font-size: 14px;
     padding-top: 10px;
@@ -2015,8 +2030,8 @@ i.mce-i-uap_btn_forms:after{
 #uap_mlm_chart .google-visualization-orgchart-node div{
 	font-size:12px;
 	color:#555;
-	font-family: 'Oswald', Arial, Helvetica, sans-serif;
-	font-weight:500;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-weight:700;
 }
 #uap_mlm_chart .google-visualization-orgchart-node:hover{
 	background-color: #2a81ae;
@@ -2095,6 +2110,11 @@ i.mce-i-uap_btn_forms:after{
     background: #fb5b4b !important;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fb5b4b), to(#db4e40)) !important;
 }
+.uap-blue-button {
+	color:#fff !important;
+	border: 1px solid #0a9fd8  !important;
+    background: #0a9fd8  !important;
+}
 .uap-footer-text{
 	display: inline-block;
     vertical-align: middle;
@@ -2167,11 +2187,12 @@ i.mce-i-uap_btn_forms:after{
 }
 .uap-wrapper .uap-admin-tables thead th, .uap-wrapper .uap-admin-tables tfoot th{
 	color:rgba(255,255,255,1.0);
-	font-family: 'Oswald', arial, sans-serif;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 	padding: 8px 7px;
-    font-weight: 300;
+    font-weight: 600;
     font-style: normal;
     font-size: 16px;
+	word-wrap: normal;
 }
 
 .uap-wrapper input[type=checkbox], .uap-wrapper input[type=color], .uap-wrapper input[type=date], .uap-wrapper input[type=datetime-local], .uap-wrapper input[type=datetime], .uap-wrapper input[type=email], .uap-wrapper input[type=month], .uap-wrapper input[type=number], .uap-wrapper input[type=password], .uap-wrapper input[type=radio], .uap-wrapper input[type=search], .uap-wrapper input[type=tel], .uap-wrapper input[type=text], .uap-wrapper input[type=time], input[type=url], .uap-wrapper input[type=week], .uap-wrapper select, .uap-wrapper textarea {
@@ -2350,9 +2371,10 @@ i.mce-i-uap_btn_forms:after{
     height: 6px;
 }
 .uap-metrics-cell{
-	padding-left: 2px !important;
-    padding-right: 3px !important;
+	padding-left: 1px !important;
+    padding-right: 1px !important;
     font-weight: bold;
+	font-size:9px;
 }
 .uap-metris-leftside{
 	    float: left;
@@ -2441,9 +2463,1218 @@ i.mce-i-uap_btn_forms:after{
 	content: " ";
 }
 .uap-close-notice{
-		color: red;
+		color: #555;
 		text-align: right;
 		font-size: 20px;
-		font-weight: bold;
+		font-weight: 400;
 		cursor: pointer;
+		position:absolute;
+		top:4px;
+		right:8px;
+}
+.uap-inside-notification{
+    clear: both;
+    margin: 15px 20px 15px 0;
+    box-sizing: border-box;
+    padding: 22px 12px 22px 12px;
+    border-radius: 3px 3px 3px 3px;
+    border: 1px solid #F0DBB4;
+    color: #fff;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5em;
+    background-color: #ab2c2c;
+    border-color: #ab2c2c;
+
+}
+.uap-admin-affiliate-list-avatar {
+    width: 55px;
+    height: 55px;
+    vertical-align: middle;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+	float: left;
+    margin-right: 10px;
+}
+.uap-admin-affiliate-list-details:after{
+	clear:both;
+	content: " ";
+}
+.uap-admin-affiliate-list-details .uap-admin-aff-payment-type{
+	margin:5px 0;
+}
+.uap-admin-affiliate-list-details-unserame{
+	display:block;
+}
+
+
+
+/*Admin add/edit form*/
+.uap-admin-edit .uap-edit-profile-section-title{
+	padding:20px 0 20px 40px;
+}
+.uap-admin-edit .uap-register-form  {
+	display:block;
+}
+.uap-admin-edit .uap-form-line-register{
+padding: 10px;
+    margin: 0;
+    vertical-align: middle;
+	max-width:760px;
+}
+.uap-admin-edit .uap-labels-register{
+	line-height: 1.3;
+	font-size: 15px;
+    text-align: right;
+    font-weight: 600;
+    vertical-align: middle;
+    min-width: 240px;
+}
+.uap-admin-edit .uap-labels-register span {
+    font-size: 15px;
+    font-weight: 700;
+    vertical-align: top;
+    color: red;
+    display: inline-block;
+    margin: 0 0 0 3px;
+	float:right;
+}
+.uap-admin-edit .uap-strength-wrapper{
+	width:100% !important;
+}
+.uap-admin-edit input[type=checkbox], .uap-admin-edit input[type=color], .uap-admin-edit input[type=date], .uap-admin-editinput[type=datetime-local], .uap-admin-edit input[type=datetime], .uap-admin-edit input[type=email], .uap-admin-edit input[type=month], .uap-admin-edit input[type=number], .uap-admin-edit input[type=password], .uap-admin-edit input[type=radio], .uap-admin-edit input[type=search], .uap-admin-edit input[type=tel], .uap-admin-edit input[type=text], .uap-admin-edit input[type=time], input[type=url], .uap-admin-edit input[type=week], .uap-admin-edit select, .uap-admin-edit textarea {
+
+}
+.uap-admin-edit .uap-form-element{
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    border: 1px solid #D2D2D2;
+    max-width: 96%;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+}
+.uap-admin-edit .uap-form-element-text, .uap-admin-edit .uap-form-element-password, .uap-admin-edit .uap-form-element-number, .uap-admin-edit .uap-form-element-textarea, .uap-admin-edit .uap-form-element-select, .uap-admin-edit .uap-form-element-multiselect{
+    padding: 0 10px;
+    width: 500px;
+    min-height: 34px;
+}
+.uap-admin-edit .uap-form-checkbox-wrapper,
+.uap-admin-edit .uap-upload-image-wrapper,
+.uap-admin-edit .select2-container,
+.uap-admin-edit .uap-single-checkbox-wrap{
+	display:inline-block;
+}
+.uap-admin-edit .uap-form-line-register .select2.select2-container{
+	width:500px !important;
+}
+.uap-admin-edit .uap-form-sublabel{
+	text-align:right;
+	font-size: 14px;
+	font-weight:600;
+}
+.uap-admin-edit .uap-form-element-checkbox{
+	padding: 10px !important;
+}
+.uap-admin-edit .uap-form-element-checkbox:before{
+	    margin: -10px 0 0 -10px !important;
+}
+.uap-admin-edit .uap-additional-section-title{
+border-top: 1px solid #EAEDF1;
+border-top:2px solid #53ba73;
+margin-top:30px;
+}
+.uap-admin-edit .uap-additional-section-title,
+.uap-admin-edit .uap-form-select-role,
+.uap-admin-edit .uap-form-select-ranks,
+.uap-admin-edit .uap-form-select-overview-post,
+.uap-admin-edit .uap-form-select-slug,
+.uap-admin-edit .uap-autocomplete-field
+{
+	padding-left:40px;
+}
+.uap-admin-edit .uap-autocomplete-field .col-xs-6{
+	padding-left:0 !important;
+}
+.uap-admin-edit .uap-submit-form{
+	max-width:760px;
+	text-align:center;
+	margin:40px 0;
+}
+.uap-admin-edit .uap-form-element-submit{
+	    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-border-radius: 50px;
+    -o-border-radius: 50px;
+    -moz-border-radius: 50px;
+    font-size: 18px;
+    vertical-align: middle;
+    padding: 8px 20px 7px !important;
+    margin: 3px 10px 3px 0;
+    cursor: pointer;
+    min-width: 110px;
+    width: auto;
+    display: inline-block;
+    transition: color .1s ease 0s,background-color .1s ease 0s;
+    -webkit-transition: color .1s ease 0s,background-color .1s ease 0s;
+    -moz-transition: color .1s ease 0s,background-color .1s ease 0s;
+    -ms-transition: color .1s ease 0s,background-color .1s ease 0s;
+    -o-transition: color .1s ease 0s,background-color .1s ease 0s;
+    color: #fff;
+    background-color: #53ba73;
+    background-position: 20px center;
+    border: 2px solid #53ba73;
+    text-decoration: none;
+    text-transform: none;
+    text-shadow: none;
+    height: 45px !important;
+	line-height:26px !important;
+}
+.uap-admin-edit .uap-form-element-submit:hover
+
+
+.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):active,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
+.uap-admin-edit .uap-form-element-submit:not(:disabled):focus{
+	color: #fff;
+    text-decoration: none;
+    background-color: #4cab6a;
+    border-color: #4cab6a;
+}
+.uap-admin-edit .uap-form-textarea  .uap-labels-register,
+.uap-admin-edit .uap-form-upload_image  .uap-labels-register
+{
+	vertical-align:top;
+}
+.uap-admin-edit .select2-selection{
+	min-height:34px;
+}
+.uap-admin-tables .uap-column-username .uap-admin-dashboard-table-avatar {
+    width: 55px;
+    height: 55px;
+    vertical-align: middle;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+.uap-danger-box{
+		color: #a94442;
+		background-color: #f2dede;
+		border-color: #ebccd1;
+		padding: 15px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+}
+.uap-success-box{
+		padding: 15px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		color: #3c763d;
+		background-color: #dff0d8;
+		border-color: #d6e9c6;
+}
+.uap-warning-box{
+		padding: 15px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		color: #856404;
+		background-color: #fff3cd;
+		border-color: #ffeeba;
+}
+
+.uap-revoke-license{
+	background: #e95a5a;
+    border: none;
+    /* box-shadow: 0 4px 0 0 #d23939; */
+    color: #FFFFFF !important;
+    cursor: pointer;
+    font-size: 16px !important;
+    font-style: normal;
+    font-weight: 600;
+    height: 30px;
+    min-width: 90px;
+    width: auto;
+    outline: none;
+    padding: 0px 10px;
+    text-shadow: none;
+    text-transform: none;
+    vertical-align: middle;
+    text-align: center;
+    margin-bottom: 15px;
+	line-height: 30px;
+	width:150px;
+    border-radius: 3px;
+}
+.affiliate-userprofile .form-table td {
+    padding: 10px;
+    margin: 0;
+    vertical-align: middle;
+    display: table-cell;
+}
+.uap-affiliate-userprofile .form-table th{
+    color: #191818;
+    text-align: right;
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif !important;
+    font-weight: 700 !important;
+    vertical-align: top;
+    padding: 15px 10px;
+    display: table-cell;
+}
+.uap-affiliate-userprofile .uap-userprofile-profiledetails .form-table th{
+	min-width:200px;
+}
+.uap-delete-span{
+		cursor: pointer;
+		color: red;
+}
+.uap-license-button{
+	    padding: 10px 5px;
+}
+.uap-no-border {
+    border: none !important;
+}
+.uap-labels {
+    min-width: 120px;
+    text-align: right;
+    padding-right: 15px;
+    display: inline-block;
+}
+.uap-new-extension-box{
+	background-color:rgba(0,0,0,0.05) !important;
+	border:1px solid #ddd !important;
+	border-radius:10px;
+}
+.uap-new-extension-box .uap-magic-box-title{
+	color:#bbb !important;
+	font-weight:400 !important;
+	text-shadow: 1px 1px rgba(255,255,255,0.6);
+}
+.uap-new-extension-box .uap-magic-box-icon{
+	color:#bbb !important;
+	text-shadow: 1px 1px rgba(255,255,255,0.6);
+
+    color: #999 !important;
+    opacity: 0.7;
+	font-size: 100px !important;
+}
+.uap-top-message-new-extension{
+    padding: 15px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: rgb(125, 138, 157);
+    background-color: rgba(255,255,255,0.8);
+    border-color: #ddd;
+    line-height: 1.4em;
+    font-size: 14px;
+}
+.uap-userprofile-mainname-wrapper{
+	margin:0 20px;
+	margin-bottom:20px;
+	padding:20px 40px;
+
+	border-bottom:1px solid #ccc;
+}
+.uap-userprofile-mainname{
+	font-size:29px;
+	color:#111;
+	font-weight:700;
+    line-height: 34px;
+    padding-bottom: 15px;
+}
+.uap-userprofile-links{
+	font-size:14px;
+	padding-bottom:15px;
+}
+.uap-userprofile-links .div-notice{
+	font-size:12px;
+	font-style:italic;
+	padding:5px 0;
+}
+.uap-userprofile-links-label{
+	font-weight:bold;
+}
+.uap-userprofile-rank{
+	padding:15px;
+	box-sizing:border-box;
+	border:1px solid transparent;
+	font-size:14px;
+}
+.uap-currentrank{
+	color:#fff;
+}
+.uap-userprofile-rank-title{
+	font-size:24px;
+	line-height: 30px;
+	font-weight:bold;
+	padding-bottom:15px;
+	border-bottom:1px solid #ddd;
+	margin-bottom:5px;
+}
+.uap-nextrank{
+	background-color:#efefef;
+	border-color:#ccc;
+}
+.uap-achievenextrank{
+    position: absolute;
+    top: 40%;
+    left: 41.6%;
+    text-align: center;
+    width: 16.6%;
+	border-bottom:1px solid #ddd;
+}
+.uap-userprofile-sectiontitle{
+	font-size:24px;
+	color:#111;
+	font-weight:400;
+    line-height: 30px;
+	margin: 10px 50px;
+	margin-top:0;
+	padding-bottom:10px;
+	border-bottom:1px solid #ddd;
+}
+.uap-userprofile-sectiontitle span{
+	font-size:13px;
+	color:#999;
+}
+.uap-userprofile-avatar{
+	margin: 0 auto;
+	padding:0 25px;
+	box-sizing:border-box;
+}
+.uap-userprofile-avatar .uap-avatar{
+	max-width:100%;
+}
+.uap-userprofile-stats .form-field{
+	line-height:20px;
+}
+.uap-userprofile-mainname-wrapper {
+    margin: 0 -12px;
+    margin-bottom: 45px;
+    padding: 40px 40px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fafafa;
+    margin-top: -8px;
+}
+.uap-userprofile-stats .form-table th{
+	line-height:1.6;
+}
+.uap-userprofile-stats .form-table td{
+	line-height:1.6;
+	border-left:1px solid #ddd;
+}
+.uap-userprofile-list{
+	padding-left:60px !important;
+}
+.uap-userprofile-specialrow{
+    padding-top: 35px !important;
+    background-color: #fafafa;
+    margin: 0 -12px !important;
+    margin-top: 20px !important;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+		padding-top:25px;
+}
+.uap-userprofile-specialrow .uap-userprofile-sectiontitle{
+	font-size:19px;
+}
+.uap-userprofile-copyclipboard{
+	border-radius: 3px;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    font-size: 11px;
+    cursor: pointer;
+}
+.chartjs-render-monitor{
+	min-height: 250px;
+}
+.uap-userprofile-top-wrapper{
+	text-align:center;
+}
+.uap-userprofile-top-wrapper img{
+	width:80%;
+	max-width: 115px;
+    padding-bottom: 10px;
+}
+.uap-userprofile-top-position{
+	font-weight:bold;
+	font-size:34px;
+	line-height:38px;
+}
+.uap-achievement-condition{
+	position:absolute;
+	top:110%;
+	text-align:center;
+	margin: 0 auto;
+    width: 100%;
+}
+.uap-affiliate-userprofile .uap-dashboard-inside-table{
+	max-width: 50%;
+    margin: 0 auto;
+}
+.uap-affiliate-userprofile .uap-dashboard-inside-table th{
+	background-color: rgba(80,88,107,1.0);
+}
+.uap-userprofile-chart-wrapper{
+	max-width:500px;
+	margin: 0 auto;
+}
+#register_preview  .uap-register-notice{
+	display:none !important;
+}
+.uap-userprofile-top-position-table{
+	font-weight:bold;
+	font-size: 14px;
+    line-height: 16px;
+	color: rgba(125,138,157,1.0);
+}
+.uap-cel-top-psition{
+	padding: 15px 0 !important;
+    text-align: center;
+	width:25px;
+}
+.uap-cel-top-psition img{
+	max-width:25px;
+	width:25px !important;
+}
+.uap-metrics-cell{
+	font-size:9px !important;
+	line-height:14px !important;
+}
+.uap-metrics-cell .uap-metris-rightside{
+	line-height:14px !important;
+}
+.uap-column-username a{
+	font-size:10px !important;
+}
+.uap-wrapper .uap-affiliates-list thead th, .uap-wrapper .uap-affiliates-list tfoot th{
+	font-size:11px;
+}
+.uap-wrapper .uap-affiliates-list .uap-metrics-cell{
+	font-weight:400;
+}
+.uap-wrapper .uap-affiliates-list .uap-metrics-cell .uap-metris-rightside{
+	padding:0;
+	float:none;
+	width:100%;
+}
+/*extra-extension-box*/
+.uap-magic-box-wrap .uap-extra-extension-box {
+  background-color: #53ba73;
+}
+.uap-extra-extension-box .fa-uap:before {
+    content: "\f085";
+}
+/*extra-extension-box*/
+
+.uap-global-error-wrapper{
+	position: relative;
+}
+.uap-switch-button-margin{
+  margin:10px 0 10px -10px;
+}
+.uap-color-red{
+  color: red;
+}
+.uap-display-inline{
+	display: inline-block;
+}
+.uap-display-none{
+	display: none;
+}
+.uap-display-block{
+	display: block;
+}
+.uap-text-align-center{
+  text-align:center;
+}
+.uap-text-align-left{
+  text-align:left;
+}
+.uap-opacity-disabled{
+	opacity: 0.6;
+}
+.uap-vertical-align-top{
+	vertical-align: top;
+}
+.uap-visibility-hidden{
+	visibility: hidden;
+}
+.uap-submit-form{
+	margin-top: 30px;
+}
+.uap-stuffbox .input-group-extra-margin{
+	margin:30px 0 15px 0;
+}
+.uap-wp-editor-module{
+	width:65%;
+	display: inline-block;
+	vertical-align: top;
+}
+.uap-stuffbox .row{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.uap-currentrank{
+	background-color:#f1505b;
+}
+.uap-userprofile-rank-row{
+	position: relative;
+}
+.uap-custom-css-box{
+	width: 100%;
+	height: 100px;
+}
+.uap-showcases-wrapper{
+	margin: 0 auto; display: inline-block;
+}
+.uap-wp-editor-box{
+	width:65%;
+	display: inline-block;
+	vertical-align: top;
+}
+.uap-wp-editor-constants{
+	width: 33%;
+	display: inline-block;
+	vertical-align: top;
+	padding-left:20px;
+}
+.uap-footer-wrap a{
+	margin-right: 5px;
+}
+.uap-hooks-files{
+	font-size: 9px;
+}
+.uap-optin-input{
+	min-width: 260px;
+}
+.uap-achievement-aff{
+	min-width:300px;
+	min-height:31px;
+}
+.progress-bar-nowidth{
+	width:0%;
+}
+.uap-page-meta-box-field{
+	margin-top: 13px;
+}
+.uap-missing-nmessage{
+	margin-top:50px;
+}
+.uap-admin-dashboard-offer-box-bottom .uap-lc-shortcode{
+	font-size: 12px;
+}
+.uap-payments-stats .uap-payment-box3{
+	width: 32%;
+}
+.referral-status-verified a{
+	color: #fff;
+}
+.uap-payments-stats .uap-special-color{
+	color: #9b4449;
+}
+.uap-admin-dashboard-offer-box-date span{
+	font-weight:200;
+}
+.uap-check-email-button{
+	display:inline-block;
+	float:right;
+	margin-left: 10px !important;
+}
+.uap-notifications-list{
+	margin-top: 20px;
+}
+.uap-notification-edit-editor{
+	padding-left: 5px;
+	width: 70%;
+	display:inline-block;
+}
+.uap-notification-edit-constants{
+	width: 20%;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	color: #333;
+}
+.uap-pushover_message{
+	width: 90%;
+	height: 100px;
+}
+.uap-dashboard-box-padded{
+	padding: 20px;
+}
+.uap-dashboard-las-reff{
+	margin-bottom: 10px;
+}
+.uap-dashboard-las-reff span{
+	display: inline-block;
+	vertical-align: text-top;
+}
+.uap-dashboard-wrapper{
+	width: 97%
+}
+.uap-lc-input-number{
+	max-width: 100px;
+}
+.uap-lc-cookie-time{
+	padding: 7px;
+	display:inline-block;
+}
+.uap-referrals-list-filter-wrapper{
+	margin-top: 20px;
+}
+.uap-referrals-list-action-wrapper{
+	display: inline-block;
+	float: left;
+	margin: 10px 0px 10px 0px;
+}
+.uap-referrals-list-pagination-wrapper{
+	float:right;
+	display:inline-block
+}
+.uap-referrals-list-numbers-wrapper{
+	display: inline-block;
+	float: right;
+	margin: 10px 0px 10px 30px;
+}
+.uap-referrals-list-date-color, .uap-general-date-color{
+	color: #396;
+}
+.js-uap-export-csv{
+	background-color:#38cbcb;
+}
+.uap-visits-list-url{
+	min-width: 210px;
+}
+.uap-transactions-export-bt{
+	background-color: #38cbcb;
+	float: none;
+}
+.uap-transactions-warning{
+	font-size: 9px;
+	color: #c0c0c0;
+}
+.referral-status-verified a{
+	color:#fff;
+}
+.uap-transactions-actions-col{
+	min-width: 250px;
+}
+.uap-transactions-check-payment{
+	margin: 10px 0px;
+	text-align: right;
+}
+.uap-transactions-filter-box{
+	display:inline-block;
+	padding:0 20px;
+}
+.uap-transactions-export-title{
+	margin-top:0px;
+}
+.uap-transactions-export-box{
+	border: 1px solid #e8e8e8;
+}
+.uap-account-page-menu-wrapper .input-group{
+	margin:0px 0 15px 0;
+}
+.uap-account-page-menu-wrapper .uap-slug-col{
+	position:relative;
+	width:30%;
+	min-width:200px;
+}
+.uap-account-page-menu-wrapper .uap-label-col{
+	position:relative;
+	min-width:200px;
+	 width:30%;
+	color: #21759b;
+	font-size: 14px;
+	font-weight: 400;
+}
+.uap-account-page-menu-wrapper .uap-icon-col{
+	position:relative;
+	width:20%;
+	min-width:100px;
+}
+.uap-account-page-menu-wrapper .uap-link-col{
+	position:relative;
+	width:20%;
+	min-width:100px;
+}
+.uap-admin-affiliate-bar-wrapper .input-group{
+	margin-bottom:20px;
+}
+.uap-admin-affiliate-bar-wrapper .uap-edit-input{
+	width: 80%;
+	display: inline-block;
+}
+.uap-admin-affiliate-bar-wrapper .uap-demo-image{
+	margin: 0 auto;
+	display: block;
+	width:100%;
+}
+.uap-admin-affiliate-bar-wrapper .uap-special-shortcode{
+	width: 100%;
+	 height: 150px;
+}
+.uap-admin-reports-wrapper .col-xs-3{
+	width: 30%;
+}
+.uap-admin-reports-wrapper .uap-dashboard-top-box{
+	background: #f1f4f8;
+	color: #47597a;
+}
+.uap-admin-reports-wrapper .uap-plot{
+	height: 300px;
+}
+.uap-admin-reports-wrapper .uap-main-search{
+	min-width:300px;
+	min-height:31px;
+}
+.uap-admin-reports-wrapper .fa-uap:before{
+	margin-right: 0px;
+  width: 66px;
+  height: 66px;
+  text-align: center;
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 50%;
+  font-size: 28px;
+  float: left!important;
+  box-sizing: border-box;
+	background-color: transparent !important;
+	color: #9fa6b2;
+	font-size: 40px;
+	padding: 10px;
+}
+.uap-admin-reports-wrapper .stats h4{
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	font-size: 30px;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+}
+.uap-admin-reports-wrapper .stats{
+	padding-bottom: 15px;
+}
+.uap-filters-wrapper .uap-span-box{
+	padding: 20px 10px 20px 10px;
+}
+.uap-admin-account-page-settings .uap-register-select-template{
+	padding:20px 0 35px 20px;
+}
+.uap-admin-account-page-settings .uap-register-select-template select{
+	min-width:300px;
+	margin-left:10px;
+}
+.uap-admin-account-page-settings .uap-wp-editor{
+	width:60%;
+	display: inline-block;
+	vertical-align: top;
+}
+.uap-admin-account-page-settings .uap-constants-first{
+	width: 19%;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	color: #333;
+}
+.uap-admin-account-page-settings .uap-constants-second{
+	width: 19%;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	color: #333;
+}
+.uap-admin-account-page-settings .uap-banner-field{
+	width: 90% !important;
+	display: inline;
+	float: none;
+}
+.uap-admin-account-page-settings .fa-trash-uap{
+	margin-left: 5px;
+	vertical-align:bottom;
+}
+.uap-admin-account-page-settings .uap-row-icon{
+	margin-bottom: 25px;
+}
+.uap-admin-account-page-settings .uap-activate-tab-btn{
+	margin-bottom: 10px !important;
+	margin-left: 0px !important;
+	margin-top: 5px !important;
+}
+.uap-rank-settings-position{
+	min-width: 70px;
+}
+.uap-mlm-levels-table-header-col{
+	width: 40%;
+}
+.uap-table-check-col{
+	width: 50px;
+}
+.uap-coupons-table{
+	margin-top: 15px;
+}
+.uap-table-visits-referral{
+	width: 110px;
+}
+.uap-table-visits-browser{
+	width: 75px;
+}
+.uap-table-referrals-affiliate-col{
+	width: 97px;
+}
+.uap-banner-settings-image-input{
+	display: inline-block !important;
+	width: 90% !important;
+}
+.uap-box-background-000{
+	background-color: #000 !important;
+}
+.uap-box-background-c9c9c9{
+	background-color: #c9c9c9 !important;
+}
+.uap-box-background-0a9fd8{
+	background-color: #0a9fd8 !important;
+}
+.uap-box-background-38cbcb{
+	background-color: #38cbcb !important;
+}
+.uap-box-background-27bebe{
+	background-color: #27bebe !important;
+}
+.uap-box-background-0bb586{
+	background-color: #0bb586 !important;
+}
+.uap-box-background-94c523{
+	background-color: #94c523 !important;
+}
+.uap-box-background-6a3da3{
+	background-color: #6a3da3 !important;
+}
+.uap-box-background-f1505b{
+	background-color: #f1505b !important;
+}
+.uap-box-background-ee3733{
+	background-color: #ee3733 !important;
+}
+.uap-box-background-f36510{
+	background-color: #f36510 !important;
+}
+.uap-box-background-f8ba01{
+	background-color: #f8ba01 !important;
+}
+#form_ranks{
+	margin-top: 15px;
+}
+.uap-rank-settings-achievement-label{
+	font-weight:bold;
+	font-size:14px;
+}
+.uap-payment-form-settings-wrapper .wp-list-table{
+	margin-top: 30px;
+}
+.uap-payment-form-settings-wrapper .uap-list-affiliates-name-label{
+	margin:10px 0 10px 0;
+}
+.uap-payment-form-settings-wrapper .uap-list-affiliates-name-label input[type=radio]{
+	vertical-align: baseline;
+}
+.uap-payment-form-settings-wrapper .uap-buttons-wrapper{
+	margin-top: 10px;
+}
+.uap-help-seetings-sectionone{
+	width:10%;
+	float:left;
+	box-sizing:border-box;
+	text-align:right;
+	font-weight:bold;
+}
+.uap-help-seetings-sectionone label{
+	padding-right: 0px;
+	line-height: 30px;
+}
+.uap-help-seetings-sectiontwo{
+	width:70%;
+	float:left;
+	box-sizing:border-box;
+}
+.uap-help-seetings-sectiontwo input{
+	width: 100%;
+}
+.uap-help-seetings-sectionthree{
+	width:20%;
+	float:right;
+	box-sizing:border-box;
+}
+.uap-help-seetings-sectionthree input{
+	width:150px;
+}
+.uap-help-seetings-description-wrapper{
+	padding:0 60px;
+}
+.uap-help-seetings-description-wrapper img{
+	margin: 0 auto;
+	display: block;
+}
+.uap-help-contact-sectionone{
+	float:left;
+	width:80%;
+}
+.uap-help-contact-sectiontwo{
+	float:left;
+	width:20%;
+	text-align:center;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list{
+	font-size: 11px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col1{
+	width: 40px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col2{
+	width: 42px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col3{
+	width: 50px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col4{
+	width:16%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col5{
+	width:8%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col6{
+	width:6%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col7{
+	width:5%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col8{
+	width: 6%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col9{
+	width: 6%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col10{
+	width: 6%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col11{
+	width:110px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col12{
+	width: 100px;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col13{
+	width:6%;
+}
+.uap-affiliate-list-wrapper .uap-affiliates-list .uap-size-col14{
+	width:10%;
+}
+.uap-affiliate-list-wrapper .uap-delete-button-wrapper{
+		display: inline-block;float: left;margin: 10px 0px 10px 0px;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper{
+	padding: 15px 0 !important;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-affiliate-profile-button{
+	display: inline-block; margin: 3px; background-color: #ffa726; font-size:9px;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-affiliate-transactions-button{
+	display: inline-block; margin: 3px ;background-color: #38cbcb; font-size:9px;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-mlm-button{
+	display: inline-block; margin: 3px; background-color: #0a9fd8; font-size:9px;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-reports-button{
+	display: inline-block; margin: 3px;background-color: #f1505b; font-size:9px;
+}
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-affiliate-profile-button a,
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-affiliate-transactions-button a,
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-mlm-button a,
+.uap-affiliate-list-wrapper .uap-buttons-wrapper .uap-reports-button a{
+	color:#fff;
+}
+.uap-affiliate-list-wrapper .uap-date-color{
+	color: #396;"
+}
+.uap-affiliate-list-wrapper .uap-price-color{
+	color: #9b4449;
+}
+.uap-affiliate-list-wrapper .uap-number-to-display{
+	display: inline-block;float: right;margin-right:10px;margin-top: 5px;
+}
+.uap-affiliate-list-wrapper .uap-search-field{
+	min-width:400px;
+}
+.uap-affiliate-list-wrapper .uap-special-action-link{
+	cursor:pointer; color: #0074a2;
+}
+.uap-last-five{
+	background-color: #fff !important;
+    color: #6b7280;
+}
+
+.uap-flot-slice{
+	font-size:x-small;
+	text-align:center;
+	padding:2px;
+}
+.uap-pie-label{
+	position:absolute;
+}
+
+.uap-top-affiliates-box1-background{
+	background-color: rgb(66, 66, 66) !important;
+}
+.uap-top-affiliates-box2-background{
+	background: #1fb5ac !important;
+}
+.uap-top-affiliates-box3-background{
+	background: rgba(240, 80, 80, 1.0) !important;
+}
+.uap-top-affiliates-box4-background{
+	background: #9972b5 !important;
+}
+.uap-column-four{
+	width: 50% !important;
+}
+.uap-column-two{
+	float:none !important;
+	width:100% !important;
+}
+.uap-top-affiliates-half-opacity{
+	opacity: 0.5;
+}
+.uap-code-warpper{
+	margin-top: 10px;
+}
+.uap-top-affiliates-fields-color-0a9fd8{
+	color:#0a9fd8;
+}
+.uap-top-affiliates-fields-color-000000{
+	color:#000000;
+}
+.uap-top-affiliates-fields-color-0bb586{
+	color:#0bb586;
+}
+.uap-top-affiliates-shortcode-wrapper{
+	font-weight:bolder;
+	color: #fff;
+	font-style:italic;
+	font-size:13px;
+}
+.uap-fields-add-new-value{
+	display: inline-block;
+	margin-left: 140px;
+	margin-top: 10px;
+	padding: 5px;
+	background-color: #27bebe;
+	color: #fff;
+	cursor: pointer;
+}
+.uap-fields-content-box{
+	display: inline-block;
+	max-width: 85%;
+}
+.uap-top-vertical-align{
+	vertical-align: top;
+}
+.uap-text-align-left{
+	text-align: left;
+}
+.uap-fields-error-mess{
+	min-width: 250px;
+}
+.uap-fields-extra-input{
+	width: 400px;
+}
+.uap-fields-values-box{
+	display: block;
+	margin-bottom: 5px;
+}
+.uap-fields-values-box-input{
+	min-width:250px;
+}
+.uap-condition-blockone{
+	display: inline-block;
+	margin-left: 20px;
+}
+.uap-condition-blockone .uap-fields-select{
+	min-width: 70px;
+}
+.uap-condition-blocktwo{
+	display: inline-block;
+	margin-left: 10px;
+}
+.uap-condition-blocktwo .uap-fields-label{
+	display: inline-block;
+	margin-right:10px;
+}
+.uap-condition-blocktwo .uap-fields-input{
+	vertical-align: middle;
+	min-width: 250px;
+}
+.uap-custom-field-item-wrapp-st{
+	display: block;
+	margin-bottom: 5px;
+}
+.uap-achieve-type{
+	font-weight:bold;
+	font-size:14px;
+}
+.uap-loading-img{
+	width: 200px;
+}
+.uap-loading-img-wrapper{
+	background:#fff;
+	width: 100%;
+	text-align:center;
+}
+.uap-user-email-st{
+	background-color: #f1f1f1;
+	color: #666;
+	padding: 3px 0px;
+	font-size: 10px;
+	font-weight: bold;
+	display: inline-block;
+	min-width: 70px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	text-align: center;
+}
+.uap-user-avatar-wrapp{
+    width: 150px;
+    height: 150px;
+}
+.uap-table-small-col{
+	width: 70px;
+}
+#wp-admin-bar-uap_dashboard_menu_pages, #wp-admin-bar-uap_dashboard_menu_magic_feat {
+    background: rgba(255,255,255,0.1) !important;
+}
+@media screen and (max-width: 1440px) {
+    .uap-admin-dashboard-offer-box-wrap{
+       width: 33%;
+    }
+}
+@media (max-width: 1500px){
+		.uap-magic-box-wrap{
+			width: 33%;
+		}
 }

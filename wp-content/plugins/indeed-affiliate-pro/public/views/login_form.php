@@ -7,7 +7,9 @@ function uap_print_form_login($meta_arr){
 	 */
 	$str = '';
 	if($meta_arr['uap_login_custom_css']){
-		$str .= '<style>'. stripslashes($meta_arr['uap_login_custom_css']).'</style>';
+		wp_register_style( 'dummy-handle', false );
+		wp_enqueue_style( 'dummy-handle' );
+		wp_add_inline_style( 'dummy-handle', stripslashes($meta_arr['uap_login_custom_css']) );
 	}
 
 	$user_field_id = 'uap_login_username';
@@ -31,30 +33,37 @@ function uap_print_form_login($meta_arr){
 						'langCode'	=> indeed_get_current_language_code(),
 						'type'			=> $captchaType,
 				);
+				if ( $captchaType !== false && $captchaType == 'v3' ){
+
+				}else{
+					wp_enqueue_script( 'uap-recaptcha-v2', 'https://www.google.com/recaptcha/api.js?hl='.indeed_get_current_language_code() );
+				}
+
+
 				$captcha .= $view->setTemplate( UAP_PATH . 'public/views/register-captcha.php' )->setContentData( $captchaData, true )->getOutput();
 		}
 
 	}
 
 	$str .= '<div class="uap-login-form-wrap '.$meta_arr['uap_login_template'].'">'
-			.'<form action="" method="post" id="uap_login_form">'
+			.'<form method="post" id="uap_login_form">'
 			. '<input type="hidden" name="uapaction" value="login" />';
 
 	switch ($meta_arr['uap_login_template']){
 
 	case 'uap-login-template-2':
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.__('Username', 'uap').':</span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.esc_html__('Username', 'uap').':</span>'
 				. '<input type="text" value="" name="log" id="' . $user_field_id . '" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.__('Password', 'uap').':</span>'
+				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.esc_html__('Password', 'uap').':</span>'
 				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" />'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-form-line-fr uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-form-line-fr uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 
@@ -65,16 +74,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+						 $register_page = get_home_url();
+					}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+					if (!$lost_pass_page){
+						 $lost_pass_page = get_home_url();
+					}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -89,7 +102,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 		//>>>>
 	break;
@@ -97,10 +110,10 @@ function uap_print_form_login($meta_arr){
 	case 'uap-login-template-3':
 		//<<<< FIELDS
 		$str .= '<div class="uap-form-line-fr">'
-				. '<input type="text" value="" id="' . $user_field_id . '" name="log" placeholder="'.__('Username', 'uap').'"/>'
+				. '<input type="text" value="" id="' . $user_field_id . '" name="log" placeholder="'.esc_html__('Username', 'uap').'"/>'
 				. '</div>'
 				. '<div class="uap-form-line-fr">'
-				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" placeholder="'.__('Password', 'uap').'"/>'
+				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" placeholder="'.esc_html__('Password', 'uap').'"/>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
@@ -113,13 +126,13 @@ function uap_print_form_login($meta_arr){
 		$str .= $captcha;
 
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 
 		$str .=    '<div class="uap-temp3-bottom">';
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 
@@ -130,16 +143,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if ($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -153,16 +170,16 @@ function uap_print_form_login($meta_arr){
 	case 'uap-login-template-4':
 		//<<<< FIELDS
 		$str .= '<div class="uap-form-line-fr">'
-				. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="'.__('Username', 'uap').'"/>'
+				. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="'.esc_html__('Username', 'uap').'"/>'
 				. '</div>'
 				. '<div class="uap-form-line-fr">'
-				. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" name="pwd" placeholder="'.__('Password', 'uap').'"/>'
+				. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" name="pwd" placeholder="'.esc_html__('Password', 'uap').'"/>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 
@@ -174,7 +191,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 				 . '</div>';
 
 
@@ -186,16 +203,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -205,10 +226,10 @@ function uap_print_form_login($meta_arr){
 		break;
 	case 'uap-login-template-5':
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.__('Username', 'uap').':</span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.esc_html__('Username', 'uap').':</span>'
 				. '<input id="' . $user_field_id . '" type="text" value="" name="log" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.__('Password', 'uap').':</span>'
+				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.esc_html__('Password', 'uap').':</span>'
 				. '<input type="password" id="' . $password_field_id . '" value="" name="pwd" />'
 				. '</div>';
 		//>>>>
@@ -217,7 +238,7 @@ function uap_print_form_login($meta_arr){
 		$str .=    '<div class="uap-temp5-row-left">';
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 		//<<<< ADDITIONAL LINKS
@@ -227,16 +248,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -252,7 +277,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 		//>>>>
 		$str .= '<div class="uap-clear"></div>';
@@ -261,10 +286,10 @@ function uap_print_form_login($meta_arr){
 		break;
 		case 'uap-login-template-6':
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username"><b>'.__('Username', 'uap').':</b></span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username"><b>'.esc_html__('Username', 'uap').':</b></span>'
 				. '<input type="text" id="' . $user_field_id . '" value="" name="log" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass"><b>'.__('Password', 'uap').':</b></span>'
+				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass"><b>'.esc_html__('Password', 'uap').':</b></span>'
 				. '<input type="password" id="' . $password_field_id . '" value="" name="pwd" />'
 				. '</div>';
 		//>>>>
@@ -276,16 +301,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -295,7 +324,7 @@ function uap_print_form_login($meta_arr){
 		$str .=    '<div class="uap-temp6-row-left">';
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 
@@ -309,7 +338,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 		//>>>>
 		$str .= '<div class="uap-clear"></div>';
@@ -319,10 +348,10 @@ function uap_print_form_login($meta_arr){
 
 		case 'uap-login-template-7':
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.__('Username', 'uap').':</span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.esc_html__('Username', 'uap').':</span>'
 				. '<input type="text" value="" id="' . $user_field_id . '" name="log" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.__('Password', 'uap').':</span>'
+				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.esc_html__('Password', 'uap').':</span>'
 				. '<input type="password" id="' . $password_field_id . '" value="" name="pwd" />'
 				. '</div>';
 		//>>>>
@@ -331,7 +360,7 @@ function uap_print_form_login($meta_arr){
 		$str .=    '<div class="uap-temp5-row-left">';
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 		}
 		//>>>>
 		//<<<< ADDITIONAL LINKS
@@ -341,16 +370,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -366,7 +399,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 		//>>>>
 		$str .= '<div class="uap-clear"></div>';
@@ -377,16 +410,16 @@ function uap_print_form_login($meta_arr){
 		case 'uap-login-template-8':
 			//<<<< FIELDS
 			$str .= '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . __('Username', 'uap') . '" />'
+					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . esc_html__('Username', 'uap') . '" />'
 					. '</div>'
 					. '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.__('Password', 'uap').'" name="pwd" />'
+					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.esc_html__('Password', 'uap').'" name="pwd" />'
 					. '</div>';
 			//>>>>
 			$str .= $sm_string;
 			//<<<< REMEMBER ME
 			if($meta_arr['uap_login_remember_me']){
-				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 			}
 			//>>>>
 
@@ -399,7 +432,7 @@ function uap_print_form_login($meta_arr){
 				$disabled = 'disabled';
 			}
 			$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-						. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class=""/>'
+						. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 					 . '</div>';
 			//>>>>
 
@@ -410,16 +443,20 @@ function uap_print_form_login($meta_arr){
 						$pag_id = get_option('uap_general_register_default_page');
 						if($pag_id!==FALSE){
 							$register_page = get_permalink( $pag_id );
-							if (!$register_page) $register_page = get_home_url();
-							$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+							if (!$register_page){
+$register_page = get_home_url();
+}
+							$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 						}
 					}
 					if($meta_arr['uap_login_pass_lost']){
 						$pag_id = get_option('uap_general_lost_pass_page');
 						if($pag_id!==FALSE){
 							$lost_pass_page = get_permalink( $pag_id );
-							if (!$lost_pass_page) $lost_pass_page = get_home_url();
-							$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+						if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+							$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 						}
 					}
 				$str .= '</div>';
@@ -431,16 +468,16 @@ function uap_print_form_login($meta_arr){
 		case 'uap-login-template-9':
 			//<<<< FIELDS
 			$str .= '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . __('Username', 'uap') . '" />'
+					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . esc_html__('Username', 'uap') . '" />'
 					. '</div>'
 					. '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.__('Password', 'uap').'" name="pwd" />'
+					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.esc_html__('Password', 'uap').'" name="pwd" />'
 					. '</div>';
 			//>>>>
 			$str .= $sm_string;
 			//<<<< REMEMBER ME
 			if($meta_arr['uap_login_remember_me']){
-				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 			}
 			//>>>>
 
@@ -451,8 +488,10 @@ function uap_print_form_login($meta_arr){
 					$pag_id = get_option('uap_general_lost_pass_page');
 					if($pag_id!==FALSE){
 						$lost_pass_page = get_permalink( $pag_id );
-						if (!$lost_pass_page) $lost_pass_page = get_home_url();
-						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+					if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 					}
 				}
 			$str .= '</div>';
@@ -468,16 +507,18 @@ function uap_print_form_login($meta_arr){
 				$disabled = 'disabled';
 			}
 			$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-						. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class=""/>'
+						. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 					 . '</div>';
 			//>>>>
 				if($meta_arr['uap_login_register']){
 					$pag_id = get_option('uap_general_register_default_page');
 					if($pag_id!==FALSE){
 						$register_page = get_permalink( $pag_id );
-						if (!$register_page) $register_page = get_home_url();
+						if (!$register_page){
+$register_page = get_home_url();
+}
 						$str .= '<div  class="uap-form-links">';
-						$str .= '<div class="uap-form-links-reg">' . __('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.__('Sign Up', 'uap').'</a></div>';
+						$str .= '<div class="uap-form-links-reg">' . esc_html__('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.esc_html__('Sign Up', 'uap').'</a></div>';
 						$str .= '</div>';
 						$str .= '<div class="uap-clear"></div>';
 					}
@@ -487,16 +528,16 @@ function uap_print_form_login($meta_arr){
 		case 'uap-login-template-10':
 			//<<<< FIELDS
 			$str .= '<div class="uap-form-line-fr">'
-				. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" id="" name="log" placeholder="'.__('Username', 'uap').'"/>'
+				. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value=""  name="log" placeholder="'.esc_html__('Username', 'uap').'"/>'
 				. '</div>'
 				. '<div class="uap-form-line-fr">'
-				. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" id="" name="pwd" placeholder="'.__('Password', 'uap').'"/>'
+				. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value=""  name="pwd" placeholder="'.esc_html__('Password', 'uap').'"/>'
 				. '</div>';
 			//>>>>
 			$str .= $sm_string;
 			//<<<< REMEMBER ME
 			if($meta_arr['uap_login_remember_me']){
-				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 			}
 			//>>>>
 
@@ -507,8 +548,10 @@ function uap_print_form_login($meta_arr){
 					$pag_id = get_option('uap_general_lost_pass_page');
 					if($pag_id!==FALSE){
 						$lost_pass_page = get_permalink( $pag_id );
-						if (!$lost_pass_page) $lost_pass_page = get_home_url();
-						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+					if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 					}
 				}
 			$str .= '</div>';
@@ -524,16 +567,18 @@ function uap_print_form_login($meta_arr){
 				$disabled = 'disabled';
 			}
 			$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-						. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class=""/>'
+						. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 					 . '</div>';
 			//>>>>
 				if($meta_arr['uap_login_register']){
 					$pag_id = get_option('uap_general_register_default_page');
 					if($pag_id!==FALSE){
 						$register_page = get_permalink( $pag_id );
-						if (!$register_page) $register_page = get_home_url();
+						if (!$register_page){
+$register_page = get_home_url();
+}
 						$str .= '<div  class="uap-form-links">';
-						$str .= '<div class="uap-form-links-reg">' . __('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.__('Sign Up', 'uap').'</a></div>';
+						$str .= '<div class="uap-form-links-reg">' . esc_html__('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.esc_html__('Sign Up', 'uap').'</a></div>';
 						$str .= '</div>';
 						$str .= '<div class="uap-clear"></div>';
 					}
@@ -543,16 +588,16 @@ function uap_print_form_login($meta_arr){
 	case 'uap-login-template-11':
 			//<<<< FIELDS
 			$str .= '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . __('Username', 'uap') . '" />'
+					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . esc_html__('Username', 'uap') . '" />'
 					. '</div>'
 					. '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.__('Password', 'uap').'" name="pwd" />'
+					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.esc_html__('Password', 'uap').'" name="pwd" />'
 					. '</div>';
 			//>>>>
 			$str .= $sm_string;
 			//<<<< REMEMBER ME
 			if($meta_arr['uap_login_remember_me']){
-				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 			}
 			//>>>>
 
@@ -563,8 +608,10 @@ function uap_print_form_login($meta_arr){
 					$pag_id = get_option('uap_general_lost_pass_page');
 					if($pag_id!==FALSE){
 						$lost_pass_page = get_permalink( $pag_id );
-						if (!$lost_pass_page) $lost_pass_page = get_home_url();
-						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+					if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 					}
 				}
 			$str .= '</div>';
@@ -580,16 +627,18 @@ function uap_print_form_login($meta_arr){
 				$disabled = 'disabled';
 			}
 			$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-						. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class=""/>'
+						. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 					 . '</div>';
 			//>>>>
 				if($meta_arr['uap_login_register']){
 					$pag_id = get_option('uap_general_register_default_page');
 					if($pag_id!==FALSE){
 						$register_page = get_permalink( $pag_id );
-						if (!$register_page) $register_page = get_home_url();
+						if (!$register_page){
+$register_page = get_home_url();
+}
 						$str .= '<div  class="uap-form-links">';
-						$str .= '<div class="uap-form-links-reg">' . __('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.__('Sign Up', 'uap').'</a></div>';
+						$str .= '<div class="uap-form-links-reg">' . esc_html__('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.esc_html__('Sign Up', 'uap').'</a></div>';
 						$str .= '</div>';
 						$str .= '<div class="uap-clear"></div>';
 					}
@@ -599,16 +648,16 @@ function uap_print_form_login($meta_arr){
 	case 'uap-login-template-12':
 			//<<<< FIELDS
 			$str .= '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . __('Username', 'uap') . '" />'
+					. '<i class="fa-uap fa-username-uap"></i><input type="text" id="' . $user_field_id . '" value="" name="log" placeholder="' . esc_html__('Username', 'uap') . '" />'
 					. '</div>'
 					. '<div class="uap-form-line-fr">'
-					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.__('Password', 'uap').'" name="pwd" />'
+					. '<i class="fa-uap fa-pass-uap"></i><input type="password" id="' . $password_field_id . '" value="" placeholder="'.esc_html__('Password', 'uap').'" name="pwd" />'
 					. '</div>';
 			//>>>>
 			$str .= $sm_string;
 			//<<<< REMEMBER ME
 			if($meta_arr['uap_login_remember_me']){
-				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+				$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 			}
 			//>>>>
 
@@ -619,8 +668,10 @@ function uap_print_form_login($meta_arr){
 					$pag_id = get_option('uap_general_lost_pass_page');
 					if($pag_id!==FALSE){
 						$lost_pass_page = get_permalink( $pag_id );
-						if (!$lost_pass_page) $lost_pass_page = get_home_url();
-						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+					if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+						$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 					}
 				}
 			$str .= '</div>';
@@ -636,16 +687,18 @@ function uap_print_form_login($meta_arr){
 				$disabled = 'disabled';
 			}
 			$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-						. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class=""/>'
+						. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' />'
 					 . '</div>';
 			//>>>>
 				if($meta_arr['uap_login_register']){
 					$pag_id = get_option('uap_general_register_default_page');
 					if($pag_id!==FALSE){
 						$register_page = get_permalink( $pag_id );
-						if (!$register_page) $register_page = get_home_url();
+						if (!$register_page){
+$register_page = get_home_url();
+}
 						$str .= '<div  class="uap-form-links">';
-						$str .= '<div class="uap-form-links-reg">' . __('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.__('Sign Up', 'uap').'</a></div>';
+						$str .= '<div class="uap-form-links-reg">' . esc_html__('Dont have an account?', 'uap') . '<a href="'.$register_page.'">'.esc_html__('Sign Up', 'uap').'</a></div>';
 						$str .= '</div>';
 						$str .= '<div class="uap-clear"></div>';
 					}
@@ -654,10 +707,10 @@ function uap_print_form_login($meta_arr){
 
 	case 'uap-login-template-13':
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.__('Username', 'uap').':</span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.esc_html__('Username', 'uap').':</span>'
 				. '<input id="' . $user_field_id . '" type="text" value="" name="log" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr" style="margin-bottom:30px;">' . '<span class="uap-form-label-fr uap-form-label-pass">'.__('Password', 'uap').':</span>'
+				. '<div class="uap-form-line-fr uap-form-line-fr-margin">' . '<span class="uap-form-label-fr uap-form-label-pass">'.esc_html__('Password', 'uap').':</span>'
 				. '<input type="password" id="' . $password_field_id . '" value="" name="pwd" />'
 				. '</div>';
 		//>>>>
@@ -666,7 +719,7 @@ function uap_print_form_login($meta_arr){
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
 			$str .=    '<div class="uap-temp5-row">';
-			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me', 'uap').'</span> </div>';
+			$str .= '<div class="uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me', 'uap').'</span> </div>';
 			$str .= '</div>';
 		}
 		//>>>>
@@ -679,7 +732,7 @@ function uap_print_form_login($meta_arr){
 		}
 		$str .= '<div class="uap-temp5-row-left">';
 		$str .=    '<div class="uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.'/>'
 				 . '</div>';
 		$str .= '</div>';
 		//>>>>
@@ -688,8 +741,10 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+$register_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			$str .= '</div>';
 			}
@@ -703,8 +758,10 @@ function uap_print_form_login($meta_arr){
 			$pag_id = get_option('uap_general_lost_pass_page');
 			if($pag_id!==FALSE){
 				$lost_pass_page = get_permalink( $pag_id );
-				if (!$lost_pass_page) $lost_pass_page = get_home_url();
-				$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+			if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+				$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 			}
 			$str .= '</div>';
 		}
@@ -719,17 +776,17 @@ function uap_print_form_login($meta_arr){
 
 	default:
 		//<<<< FIELDS
-		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.__('Username', 'uap').':</span>'
+		$str .= '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-username">'.esc_html__('Username', 'uap').':</span>'
 				. '<input type="text" value="" name="log" id="' . $user_field_id . '" />'
 				. '</div>'
-				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.__('Password', 'uap').':</span>'
+				. '<div class="uap-form-line-fr">' . '<span class="uap-form-label-fr uap-form-label-pass">'.esc_html__('Password', 'uap').':</span>'
 				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" />'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
 		//<<<< REMEMBER ME
 		if($meta_arr['uap_login_remember_me']){
-			$str .= '<div class="uap-form-line-fr uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.__('Remember Me').'</span> </div>';
+			$str .= '<div class="uap-form-line-fr uap-remember-wrapper"><input type="checkbox" value="forever" name="rememberme" class="uap-form-input-remember" /><span class="uap-form-label-fr uap-form-label-remember">'.esc_html__('Remember Me').'</span> </div>';
 		}
 		//>>>>
 
@@ -740,16 +797,20 @@ function uap_print_form_login($meta_arr){
 				$pag_id = get_option('uap_general_register_default_page');
 				if($pag_id!==FALSE){
 					$register_page = get_permalink( $pag_id );
-					if (!$register_page) $register_page = get_home_url();
-					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.__('Register', 'uap').'</a></div>';
+					if (!$register_page){
+						 $register_page = get_home_url();
+					}
+					$str .= '<div class="uap-form-links-reg"><a href="'.$register_page.'">'.esc_html__('Register', 'uap').'</a></div>';
 				}
 			}
 			if($meta_arr['uap_login_pass_lost']){
 				$pag_id = get_option('uap_general_lost_pass_page');
 				if($pag_id!==FALSE){
 					$lost_pass_page = get_permalink( $pag_id );
-					if (!$lost_pass_page) $lost_pass_page = get_home_url();
-					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.__('Lost your password?', 'uap').'</a></div>';
+				if (!$lost_pass_page){
+$lost_pass_page = get_home_url();
+}
+					$str .= '<div class="uap-form-links-pass"><a href="'.$lost_pass_page.'">'.esc_html__('Lost your password?', 'uap').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -764,7 +825,7 @@ function uap_print_form_login($meta_arr){
 			$disabled = 'disabled';
 		}
 		$str .=    '<div class="uap-form-line-fr uap-form-submit">'
-					. '<input type="submit" value="'.__('Log In', 'uap').'" name="Submit" '.$disabled.' class="button button-primary button-large"/>'
+					. '<input type="submit" value="'.esc_html__('Log In', 'uap').'" name="Submit" '.$disabled.' class="button button-primary button-large"/>'
 				 . '</div>';
 		//>>>>
 		break;
@@ -773,38 +834,23 @@ function uap_print_form_login($meta_arr){
 
 	}
 
-	$str .=   '</form>'
-			.'</div>';
-	$err_msg = __('Please complete all require fields!', 'uap');
+	$nonce = wp_create_nonce( 'uap_login_nonce' );
+	$str .= "<input type='hidden' value='$nonce' name='uap_login_nonce' />";
+
+	$err_msg = esc_html__('Please complete all require fields!', 'uap');
 	$custom_err_msg = get_option('uap_login_error_ajax');
 	if ($custom_err_msg){
 		$err_msg = $custom_err_msg;
 	}
-	/// JAVASCRIPT
-	$str .= "<script>
-		jQuery(document).ready(
-			function(){
-				jQuery('#$user_field_id').on('blur', function(){
-					uapCheckLoginField('log', '$err_msg');
-				});
-				jQuery('#$password_field_id').on('blur', function(){
-					uapCheckLoginField('pwd', '$err_msg');
-				});
-				jQuery('#uap_login_form').on('submit', function(e){
-					e.preventDefault();
-					var u = jQuery('#uap_login_form [name=log]').val();
-					var p = jQuery('#uap_login_form [name=pwd]').val();
-					if (u!='' && p!=''){
-						jQuery('#uap_login_form').unbind('submit').submit();
-					} else {
-						uapCheckLoginField('log', '$err_msg');
-						uapCheckLoginField('pwd', '$err_msg');
-						return FALSE;
-					}
-				});
-			}
-		);
-	</script>";
+
+	$str .=   '</form>
+	<span class="uap-js-login-form-details"
+	data-username_selector="#' . $user_field_id . '"
+	data-password_selector="#'.$password_field_id.'"
+	data-error_message="' . $err_msg . '"></span>
+	</div>';
+
+
 
 	return $str;
 }

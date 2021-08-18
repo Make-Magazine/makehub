@@ -92,6 +92,10 @@ class Uap_Easy_Digital_Download extends Referral_Main{
 				$sum = $do_math->get_result($data['price'], '');
 			}
 
+			$orderDefailts = get_post_meta( $order_id, '_edd_payment_meta' );
+			$eddCurrency = isset( $orderDefailts[0]['currency'] ) ? $orderDefailts[0]['currency'] : '';
+			$sum = apply_filters( 'uap_public_filter_on_referral_insert_amount_value', $sum, $eddCurrency );
+
 			$args = array(
 					'refferal_wp_uid' => $data['user_info']['id'],
 					'campaign' => self::$campaign,
@@ -142,10 +146,14 @@ class Uap_Easy_Digital_Download extends Referral_Main{
 				foreach ($products as $k=>$v){
 					$array[$v['id']]['price'] = $v['price'];
 					$array[$v['id']]['name'] = get_the_title($v['id']);
-					@$array[$v['id']]['tax'] = $v['tax'];
+					if(isset($array[$v['id']]['tax'] ) && isset($v['tax'])){
+						$array[$v['id']]['tax'] = $v['tax'];
+					}
 					$array[$v['id']]['shipping'] = 0;
 					if (!empty($v['fees']) && !empty($v['fees']['shipping']) && !empty($v['fees']['shipping']['amount'])){
-						@$array[$v['id']]['shipping'] = $v['fees']['shipping']['amount'];
+						if(isset($array[$v['id']]['shipping'] ) && isset($v['fees']['shipping']['amount'])){
+							$array[$v['id']]['shipping'] = $v['fees']['shipping']['amount'];
+						}
 					}
 				}
 			}

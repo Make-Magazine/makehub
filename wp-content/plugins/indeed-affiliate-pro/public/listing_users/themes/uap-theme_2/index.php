@@ -4,8 +4,7 @@ if (empty($total_items)){
 }
 
 $dir_path = plugin_dir_path (__FILE__);
-$style="<style>".file_get_contents( $dir_path.'style.css')."
-</style>";
+
 $list_item_template = '
 <div class="team-member">
 <div class="member-img">

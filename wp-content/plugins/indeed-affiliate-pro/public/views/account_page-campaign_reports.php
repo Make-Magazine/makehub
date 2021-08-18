@@ -5,25 +5,25 @@
 <?php endif;?>
 <?php if (!empty($data['message'])):?>
 	<p><?php echo do_shortcode($data['message']);?></p>
-<?php endif;?>	
+<?php endif;?>
 
 <?php if (!empty($data['items']) && is_array($data['items'])):?>
 	<div>
 		<table class="uap-account-table">
-		<thead>	
+		<thead>
 				<tr>
-					<th><?php _e("Name", 'uap');?></th>
-					<th align="center"><?php _e("Unique Visits", 'uap');?></th>
-					<th align="center"><?php _e("Total Visits", 'uap');?></th>
-					<th align="center"><?php _e("Referrals", 'uap');?></th>
+					<th><?php esc_html_e("Name", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Unique Visits", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Total Visits", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Referrals", 'uap');?></th>
 				</tr>
 			</thead>
-			<tfoot>	
+			<tfoot>
 				<tr>
-					<th><?php _e("Name", 'uap');?></th>
-					<th align="center"><?php _e("Unique Visits", 'uap');?></th>
-					<th align="center"><?php _e("Total Visits", 'uap');?></th>
-					<th align="center"><?php _e("Referrals", 'uap');?></th>
+					<th><?php esc_html_e("Name", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Unique Visits", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Total Visits", 'uap');?></th>
+					<th align="center"><?php esc_html_e("Referrals", 'uap');?></th>
 				</tr>
 			</tfoot>
 			<tbody class="uap-alternate">
@@ -38,6 +38,15 @@
 			</tbody>
 		</table>
 	</div>
+    <?php else: ?>
+    	   <div class="uap-account-detault-message">
+              <div>
+			  <?php esc_html_e('You have no campaign into your Affiliate account. Please create one ', 'uap');?>
+              <a href="<?php echo $data['campaign_page_url'];?>">
+			  	<?php esc_html_e('here', 'uap');?>
+              </a>
+              </div>
+          </div>
 <?php endif;?>
 
 <?php if (!empty($data['pagination'])):?>

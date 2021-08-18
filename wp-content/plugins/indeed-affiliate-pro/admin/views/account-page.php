@@ -1,26 +1,31 @@
 <?php
-require_once UAP_PATH . 'public/font_awesome_codes.php';
+require_once UAP_PATH . 'admin/font-awesome_codes.php';
 $font_awesome = uap_return_font_awesome();
+$custom_css = '';
 ?>
-<style>
-<?php foreach ($font_awesome as $base_class => $code):?>
-	<?php echo '.' . $base_class . ':before';?>{
-		content: '\<?php echo $code;?>';
-	}
-<?php endforeach;?>
-</style>
-<style>
-<?php foreach ($data['available_tabs'] as $k=>$v):?>
-	<?php echo '.fa-' . $k . '-account-uap:before';?>{
-		content: '\<?php echo $v['uap_tab_' . $k . '_icon_code'];?>';
-	}
-<?php endforeach;?>
-</style>
 
+<?php
+ foreach ($font_awesome as $base_class => $code):
+	$custom_css .= "." . $base_class . ":before{".
+		"content: '\\".$code."';".
+	"}";
+endforeach;
+foreach ($data['available_tabs'] as $k=>$v):
+	if ( isset( $v['uap_tab_' . $k . '_icon_code'] ) ):
+	$custom_css .=  ".fa-" . $k . "-account-uap:before{".
+		"content: '\\".$v['uap_tab_' . $k . '_icon_code']."';".
+	"}";
+	 endif;
+endforeach;
+
+wp_register_style( 'dummy-handle', false );
+wp_enqueue_style( 'dummy-handle' );
+wp_add_inline_style( 'dummy-handle', $custom_css );
+ ?>
 
 <div class="uap-page-title">Ultimate Affiliates Pro -
 	<span class="second-text">
-		<?php _e('Account Page', 'uap');?>
+		<?php esc_html_e('Account Page', 'uap');?>
 	</span>
 </div>
 <div class="uap-stuffbox">
@@ -29,16 +34,19 @@ $font_awesome = uap_return_font_awesome();
 	</div>
 </div>
 
-<div class="metabox-holder indeed">
-<form action="" method="post">
+<div class="metabox-holder indeed uap-admin-account-page-settings">
+<form  method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Top Section:', 'uap');?></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Top Section:', 'uap');?></h3>
 
 			<div class="inside">
 
-			<div class="uap-register-select-template" style="padding:20px 0 35px 20px;">
-				<?php _e('Select Template:', 'uap');?>
-				<select name="uap_ap_top_theme"  style="min-width:300px; margin-left:10px;"><?php
+			<div class="uap-register-select-template">
+				<?php esc_html_e('Select Template:', 'uap');?>
+				<select name="uap_ap_top_theme"><?php
 					foreach ($data['top_themes'] as $k=>$v){
 						$selected = ($k==$data['metas']['uap_ap_top_theme']) ? 'selected' : '';
 						?>
@@ -52,66 +60,66 @@ $font_awesome = uap_return_font_awesome();
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_show_avatar']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_avatar');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_avatar'];?>" name="uap_ap_edit_show_avatar" id="uap_ap_edit_show_avatar" />
-				<label><?php _e('Show Avatar Image', 'uap');?></label>
+				<label><?php esc_html_e('Show Avatar Image', 'uap');?></label>
 			</div>
 			 <div class="input-group">
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_show_earnings']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_earnings');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_earnings'];?>" name="uap_ap_edit_show_earnings" id="uap_ap_edit_show_earnings" />
-				<label><?php _e('Show Earning', 'uap');?></label>
+				<label><?php esc_html_e('Show Earning', 'uap');?></label>
 			</div>
 			 <div class="input-group">
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_show_referrals']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_referrals');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_referrals'];?>" name="uap_ap_edit_show_referrals" id="uap_ap_edit_show_referrals" />
-				<label><?php _e('Show Referrals', 'uap');?></label>
+				<label><?php esc_html_e('Show Referrals', 'uap');?></label>
 			</div>
 			 <div class="input-group">
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_show_achievement']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_achievement');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_achievement'];?>" name="uap_ap_edit_show_achievement" id="uap_ap_edit_show_achievement" />
-				<label><?php _e('Show Achievement', 'uap');?></label>
+				<label><?php esc_html_e('Show Achievement', 'uap');?></label>
 			</div>
 			 <div class="input-group">
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_show_rank']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_rank');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_rank'];?>" name="uap_ap_edit_show_rank" id="uap_ap_edit_show_rank" />
-				<label><?php _e('Show Rank', 'uap');?></label>
+				<label><?php esc_html_e('Show Rank', 'uap');?></label>
 			</div>
 				<div class="input-group">
 					 <label class="uap_label_shiwtch uap-onbutton">
 						 <?php $checked = ($data['metas']['uap_ap_edit_show_metrics']) ? 'checked' : '';?>
 						 <input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_show_metrics');" <?php echo $checked;?> />
-						 <div class="switch" style="display:inline-block;"></div>
+						 <div class="switch uap-display-inline"></div>
 					 </label>
 					 <input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_show_metrics'];?>" name="uap_ap_edit_show_metrics" id="uap_ap_edit_show_metrics" />
-					 <label><?php _e('Show EPC Metrics', 'uap');?></label>
+					 <label><?php esc_html_e('Show EPC Metrics', 'uap');?></label>
 			 	</div>
 
 			</div>
 
-			<div class="inside" style="padding-bottom:30px;">
-				<h4><?php _e('Welcome Message:', 'uap');?></h4>
-				<div class="uap-wp_editor" style="width:60%; display: inline-block; vertical-align: top;">
+			<div class="inside">
+				<h4><?php esc_html_e('Welcome Message:', 'uap');?></h4>
+				<div class="uap-wp_editor uap-wp-editor">
 				<?php wp_editor(stripslashes($data['metas']['uap_ap_welcome_msg']), 'uap_ap_welcome_msg', array('textarea_name'=>'uap_ap_welcome_msg', 'editor_height'=>200));?>
 				</div>
-				<div style="width: 19%; display: inline-block; vertical-align: top; margin-left: 10px; color: #333;">
-					<h4><?php _e('Regular constants', 'uap');?></h4>
+				<div class="uap-constants-first">
+					<h4><?php esc_html_e('Regular constants', 'uap');?></h4>
 					<?php
 						$constants = array(	"{username}",
 											"{first_name}",
@@ -136,8 +144,8 @@ $font_awesome = uap_return_font_awesome();
 						}
 						?>
 						</div>
-						<div style="width: 19%; display: inline-block; vertical-align: top; margin-left: 10px; color: #333;">
-							<h4><?php _e('Custom Fields constants', 'uap');?></h4>
+						<div class="uap-constants-second">
+							<h4><?php esc_html_e('Custom Fields constants', 'uap');?></h4>
 						<?php
 						foreach ($extra_constants as $k=>$v){
 							?>
@@ -151,39 +159,43 @@ $font_awesome = uap_return_font_awesome();
 
 			<div class="inside">
 				<div class="input-group">
-				<h3><?php _e('Background/Banner Image:', 'uap');?></h3>
-				<p><?php _e('The cover or background image, based on what theme you have chosen', 'uap');?></p>
+				<h3><?php esc_html_e('Background/Banner Image:', 'uap');?></h3>
+				<p><?php esc_html_e('The cover or background image, based on what theme you have chosen', 'uap');?></p>
 				<div class="input-group">
 				<label class="uap_label_shiwtch uap-onbutton">
 					<?php $checked = ($data['metas']['uap_ap_edit_background']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_ap_edit_background');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_edit_background'];?>" name="uap_ap_edit_background" id="uap_ap_edit_background" />
 				<label></label>
 				</div>
-				<div class="form-group" style="margin:20px 0 10px 10px">
-					<input type="text" class="form-control" onClick="openMediaUp(this);" value="<?php  echo $data['metas']['uap_ap_edit_background_image'];?>" name="uap_ap_edit_background_image" id="uap_ap_edit_background_image" style="width: 90%;display: inline; float:none; min-width:500px;"/>
-					<i class="fa-uap fa-trash-uap" onclick="jQuery('#uap_ap_edit_background_image').val('');" title="<?php _e('Remove Background Image', 'uap');?>"></i>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<input type="text" class="form-control uap-banner-field" onClick="openMediaUp(this);" value="<?php  echo $data['metas']['uap_ap_edit_background_image'];?>" name="uap_ap_edit_background_image" id="uap_ap_edit_background_image"/>
+								<i class="fa-uap fa-trash-uap" id="uap_js_edit_background_image_trash" onclick="" title="<?php esc_html_e('Remove Background Image', 'uap');?>"></i>
 
-				</div>
+							</div>
+						</div>
+					</div>
 			</div>
 			</div>
 			<div class="inside">
 				<div class="uap-wrapp-submit-bttn">
-						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  style="min-width:50px;" />
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  />
 
 					</div>
 			</div>
 		</div>
 		</div>
 		<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Content Section:', 'uap');?></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Content Section:', 'uap');?></h3>
 
 			<div class="inside">
-			<div class="uap-register-select-template" style="padding:20px 0 35px 20px;">
-				<?php _e('Select Template:', 'uap');?>
-				<select name="uap_ap_theme"  style="min-width:300px; margin-left:10px;"><?php
+			<div class="uap-register-select-template">
+				<?php esc_html_e('Select Template:', 'uap');?>
+				<select name="uap_ap_theme"><?php
 					foreach ($data['themes'] as $k=>$v){
 						$selected = ($k==$data['metas']['uap_ap_theme']) ? 'selected' : '';
 						?>
@@ -194,9 +206,9 @@ $font_awesome = uap_return_font_awesome();
 			</div>
 			</div>
 			<div>
-			  <div class="inside" style="margin-top: 0px;">
-				<h3 style="margin-top: 0px;"><?php _e('Menu Tabs:', 'uap');?></h3>
-				<div style="display: inline-block; vertical-align: top">
+			  <div class="inside">
+				<h3><?php esc_html_e('Menu Tabs:', 'uap');?></h3>
+				<div>
 					<div class="uap-ap-tabs-list">
 						<?php foreach ($data['available_tabs'] as $k=>$v):?>
 							<div class="uap-ap-tabs-list-item" onClick="uapApMakeVisible('<?php echo $k;?>', this);" id="<?php echo 'uap_tab-' . $k;?>"><?php echo $v['uap_tab_' . $k . '_menu_label'];?></div>
@@ -208,36 +220,45 @@ $font_awesome = uap_return_font_awesome();
 
 						$tabs = explode(',', $data['metas']['uap_ap_tabs']);
 						$i = 0;
+
 						foreach ($data['available_tabs'] as $k=>$v):?>
 							<div class="uap-ap-tabs-settings-item" id="<?php echo 'uap_tab_item_' . $k;?>">
 								<div class="input-group">
 									<h4><?php echo $v['uap_tab_' . $k . '_menu_label'];?></h4>
-									<span class="uap-labels-onbutton" style="font-weight:400; min-width:100px;"><?php _e('Activate the Tab:', 'uap');?></span>
+									<div><?php esc_html_e('Activate curent Tab', 'uap');?></div>
 									<label class="uap_label_shiwtch  uap-onbutton">
 										<?php $checked = (in_array($k, $tabs)) ? 'checked' : '';?>
 										<input type="checkbox" class="uap-switch" onClick="uapMakeInputhString(this, '<?php echo $k;?>', '#uap_ap_tabs');" <?php echo $checked;?> />
-										<div class="switch" style="display:inline-block;"></div>
+										<div class="switch uap-display-inline uap-activate-tab-btn"></div>
 									</label>
 								</div>
 								<?php if (isset($data['metas']['uap_tab_' . $k . '_menu_label'])) : ?>
-									<div class="input-group" style="max-width:40%;">
-										<span class="input-group-addon" id="basic-addon1"><?php _e('Menu Label', 'uap');?></span>
-										<input type="text" class="form-control" placeholder="" value="<?php echo $data['metas']['uap_tab_' . $k . '_menu_label'];?>" name="<?php echo 'uap_tab_' . $k . '_menu_label';?>">
-									</div>
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="input-group">
+												<span class="input-group-addon"><?php esc_html_e('Menu Label', 'uap');?></span>
+												<input type="text" class="form-control" placeholder="" value="<?php echo $data['metas']['uap_tab_' . $k . '_menu_label'];?>" name="<?php echo 'uap_tab_' . $k . '_menu_label';?>">
+											</div>
+								</div>
+							</div>
 								<?php endif;?>
 								<?php if (isset($data['metas']['uap_tab_' . $k . '_title'])) : ?>
-									<div class="input-group" style="max-width:40%;">
-										<span class="input-group-addon" id="basic-addon1"><?php _e('Title', 'uap');?></span>
-										<input type="text" class="form-control" placeholder="" value="<?php echo $data['metas']['uap_tab_' . $k . '_title'];?>" name="<?php echo 'uap_tab_' . $k . '_title';?>">
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="input-group">
+												<span class="input-group-addon"><?php esc_html_e('Title', 'uap');?></span>
+												<input type="text" class="form-control" placeholder="" value="<?php echo $data['metas']['uap_tab_' . $k . '_title'];?>" name="<?php echo 'uap_tab_' . $k . '_title';?>">
+											</div>
+										</div>
 									</div>
 								<?php endif;?>
 
 
 									<!-- ICON SELECT - SHINY -->
-									<div class="row" style="margin-left:0px;">
-										<div class="col-xs-4" style="margin-bottom: 10px;">
-									   		<div class="input-group" style="margin:0px 0 15px 0;">
-												<label><?php _e('Icon', 'uap');?></label>
+									<div class="row uap-row-icon">
+										<div class="col-xs-4">
+									   		<div class="input-group">
+												<label><?php esc_html_e('Icon', 'uap');?></label>
 											<div class="uap-icon-select-wrapper">
 												<div class="uap-icon-input">
 													<div id="<?php echo 'indeed_shiny_select_' . $k;?>" class="uap-shiny-select-html"></div>
@@ -249,31 +270,20 @@ $font_awesome = uap_return_font_awesome();
 									   		</div>
 										</div>
 									</div>
-									<script>
-									jQuery(document).ready(function(){
-										var <?php echo 'uap_shiny_object_' . $i;$i++;?> = new uapShinySelect({
-													selector: '<?php echo '#indeed_shiny_select_' . $k;?>',
-													item_selector: '.uap-font-awesome-popup-item',
-													option_name_code: '<?php echo 'uap_tab_' . $k . '_icon_code';?>',
-													option_name_icon: '<?php echo 'uap_tab_' . $k . '_icon_class';?>',
-													default_icon: '<?php echo 'fa-uap fa-' . $k . '-account-uap';?>',
-													default_code: '<?php echo $data['metas']['uap_tab_' . $k . '_icon_code'];?>',
-													init_default: true,
-													second_selector: '<?php echo '#uap_icon_arrow_' . $k;?>'
-										});
-									});
-									</script>
+									<span class="uap-js-account-page-icon-details" data-slug="<?php echo $k;?>"
+										data-icon_code="<?php echo isset($data['metas']['uap_tab_' . $k . '_icon_code']) ? $data['metas']['uap_tab_' . $k . '_icon_code'] : '';?>" ></span>
+
 									<!-- ICON SELECT - SHINY -->
 
 
 								<?php if (isset($data['metas']['uap_tab_' . $k . '_content'])) : ?>
-									<div style="margin-top:20px;">
-										<div style="width: 60%; display: inline-block; vertical-align: top; box-sizing:border-box;"><?php
+									<div>
+										<div class="uap-wp-editor"><?php
 											wp_editor(stripslashes($data['metas']['uap_tab_' . $k . '_content']), 'uap_tab_' . $k . '_content', array('textarea_name' => 'uap_tab_' . $k . '_content', 'editor_height'=>200));
 										?></div>
-										<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
+										<div class="uap-constants-first">
 											<?php
-												echo "<h4>" . __('Regular constants', 'uap') . "</h4>";
+												echo "<h4>" . esc_html__('Regular constants', 'uap') . "</h4>";
 												foreach ($constants as $v){
 													?>
 													<div><?php echo $v;?></div>
@@ -281,9 +291,9 @@ $font_awesome = uap_return_font_awesome();
 												}
 										?>
 										</div>
-										<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
+										<div class="uap-constants-second">
 										<?php
-												echo "<h4>" . __('Custom Fields constants', 'uap') . "</h4>";
+												echo "<h4>" . esc_html__('Custom Fields constants', 'uap') . "</h4>";
 												foreach ($extra_constants as $k=>$v){
 													?>
 													<div><?php echo $k;?></div>
@@ -299,21 +309,21 @@ $font_awesome = uap_return_font_awesome();
 				</div>
 				<input type="hidden" value="<?php echo $data['metas']['uap_ap_tabs'];?>" id="uap_ap_tabs" name="uap_ap_tabs" />
 				<div class="uap-wrapp-submit-bttn">
-						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  style="min-width:50px;" />
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  />
 					</div>
 			   </div>
 			</div>
 		</div>
 		<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Footer Section:', 'uap');?></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Footer Section:', 'uap');?></h3>
 
-			<div class="inside" style="padding-bottom:30px;">
-				<h4><?php _e('Footer Content:', 'uap');?></h4>
-				<div class="uap-wp_editor" style="width:60%; display: inline-block; vertical-align: top;">
+			<div class="inside">
+				<h4><?php esc_html_e('Footer Content:', 'uap');?></h4>
+				<div class="uap-wp_editor uap-wp-editor">
 				<?php wp_editor(stripslashes($data['metas']['uap_ap_footer_msg']), 'uap_ap_footer_msg', array('textarea_name'=>'uap_ap_footer_msg', 'editor_height'=>200));?>
 				</div>
-				<div style="width: 19%; display: inline-block; vertical-align: top; margin-left: 10px; color: #333;">
-					<h4><?php _e('Regular constants', 'uap');?></h4>
+				<div class="uap-constants-first">
+					<h4><?php esc_html_e('Regular constants', 'uap');?></h4>
 					<?php
 						$constants = array(	"{username}",
 											"{first_name}",
@@ -337,8 +347,8 @@ $font_awesome = uap_return_font_awesome();
 						}
 						?>
 						</div>
-						<div style="width: 19%; display: inline-block; vertical-align: top; margin-left: 10px; color: #333;">
-							<h4><?php _e('Custom Fields constants', 'uap');?></h4>
+						<div class="uap-constants-second">
+							<h4><?php esc_html_e('Custom Fields constants', 'uap');?></h4>
 						<?php
 						foreach ($extra_constants as $k=>$v){
 							?>
@@ -350,24 +360,19 @@ $font_awesome = uap_return_font_awesome();
 				</div>
 				<div class="uap-clear"></div>
 				<div class="uap-wrapp-submit-bttn">
-						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  style="min-width:50px;" />
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 					</div>
 		</div>
 			<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Additional Settings:', 'uap');?></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Additional Settings:', 'uap');?></h3>
 			<div class="uap-form-line">
-				<h2><?php _e('Custom CSS:', 'uap');?></h2>
-					<textarea id="uap_account_page_custom_css"  name="uap_account_page_custom_css" class="uap-dashboard-textarea-full"  style="width: 100%; height: 120px;"><?php echo stripslashes($data['metas']['uap_account_page_custom_css']);?></textarea>
+				<h2><?php esc_html_e('Custom CSS:', 'uap');?></h2>
+					<textarea id="uap_account_page_custom_css"  name="uap_account_page_custom_css" class="uap-dashboard-textarea-full uap-custom-css-box"><?php echo stripslashes($data['metas']['uap_account_page_custom_css']);?></textarea>
 					<div class="uap-wrapp-submit-bttn">
-						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large"  style="min-width:50px;" />
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 					</div>
 			</div>
 
 		</div>
 </form>
 </div>
-<script>
-jQuery(document).ready(function(){
-	uapApMakeVisible('overview', '#uap_tab-overview');
-});
-</script>

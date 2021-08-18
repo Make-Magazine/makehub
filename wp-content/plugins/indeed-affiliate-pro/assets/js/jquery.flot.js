@@ -33,7 +33,7 @@ Licensed under the MIT license.
 
 // the actual Flot code
 (function($) {
-
+"use strict";
 	// Cache the prototype hasOwnProperty for faster access
 
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -704,7 +704,7 @@ Licensed under the MIT license.
 
             $.extend(true, options, opts);
 
-            // $.extend merges arrays, rather than replacing them.  When less
+       
             // colors are provided than the size of the default palette, we
             // end up with those colors plus the remaining defaults, which is
             // not expected behavior; avoid it by replacing them here.
@@ -2439,9 +2439,9 @@ Licensed under the MIT license.
                 radius = series.points.radius,
                 symbol = series.points.symbol;
 
-            // If the user sets the line width to 0, we change it to a very 
+            // If the user sets the line width to 0, we change it to a very
             // small value. A line width of 0 seems to force the default of 1.
-            // Doing the conditional here allows the shadow setting to still be 
+            // Doing the conditional here allows the shadow setting to still be
             // optional even with a lineWidth of 0.
 
             if( lw == 0 )
@@ -2687,7 +2687,7 @@ Licensed under the MIT license.
                 }
 
                 fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
+                    '<td class="legendColorBox"><div style = " border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style = " width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
                     '<td class="legendLabel">' + entry.label + '</td>'
                 );
             }
@@ -2698,7 +2698,7 @@ Licensed under the MIT license.
             if (fragments.length == 0)
                 return;
 
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+            var table = '<table style = " font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
             if (options.legend.container != null)
                 $(options.legend.container).html(table);
             else {
@@ -2715,7 +2715,7 @@ Licensed under the MIT license.
                     pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
                 else if (p.charAt(1) == "w")
                     pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
-                var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
+                var legend = $('<div class="legend">' + table.replace('style = "', 'style = " position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
                 if (options.legend.backgroundOpacity != 0.0) {
                     // put in the transparent background
                     // separately to avoid blended labels and
@@ -2731,7 +2731,7 @@ Licensed under the MIT license.
                         c = c.toString();
                     }
                     var div = legend.children();
-                    $('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
+                    $('<div class="uap-pie-label" style = " width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
                 }
             }
         }

@@ -1,89 +1,92 @@
 <div class="uap-wrapper">
-	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Transactions', 'uap');?></span></div>
+	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php esc_html_e('Transactions', 'uap');?></span></div>
 
 		<?php if (!empty($data['subtitle'])):?>
 			<h4><?php echo $data['subtitle'];?></h4>
 		<?php endif;?>
-	<div class="uap-special-box" style="border: 1px solid #e8e8e8;">
-		<div class="uap-general-date-filter-wrap" style="padding: 10px 0px;">
-			<h3 style="margin-top:0px;"><?php _e('Generate CSV File with pending transactions', 'uap');?></h3>
-			<div style="display:inline-block; padding:0 20px 0 0;">
+	<div class="uap-special-box uap-transactions-export-box" >
+		<div class="uap-general-date-filter-wrap">
+			<h3 class="uap-transactions-export-title"><?php esc_html_e('Generate CSV File with pending transactions', 'uap');?></h3>
+			<div class="uap-transactions-filter-box">
 			<!--label class="uap-label">Start:</label-->
-			<input type="text" value="" class="uap-general-date-filter" placeholder="<?php _e('From - mm/dd/yyyy', 'uap');?>" id="csv_min_date" />
+			<input type="text" value="" class="uap-general-date-filter" placeholder="<?php esc_html_e('From - mm/dd/yyyy', 'uap');?>" id="csv_min_date" />
 			<!--label class="uap-label">Until:</label-->-
-			<input type="text" value="" class="uap-general-date-filter" placeholder="<?php _e('To - mm/dd/yyyy', 'uap');?>" id="csv_max_date" />
+			<input type="text" value="" class="uap-general-date-filter" placeholder="<?php esc_html_e('To - mm/dd/yyyy', 'uap');?>" id="csv_max_date" />
 			</div>
-			<div style=" display:inline-block; padding:0 20px;">
-				<label><?php _e('Payment Type', 'uap');?></label>
+			<div class="uap-transactions-filter-box">
+				<label><?php esc_html_e('Payment Type', 'uap');?></label>
 				<select id="csv_payment_type">
-					<option value=""><?php _e('All', 'uap');?></option>
-					<option value="bank_transfer"><?php _e('Bank Transfer', 'uap');?></option>
-					<option value="paypal"><?php _e('Paypal', 'uap');?></option>
-					<option value="stripe"><?php _e('Stripe', 'uap');?></option>
-					<option value="stripe_v2"><?php _e('Stripe v2', 'uap');?></option>
+					<option value=""><?php esc_html_e('All', 'uap');?></option>
+					<option value="bank_transfer"><?php esc_html_e('Bank Transfer', 'uap');?></option>
+					<option value="paypal"><?php esc_html_e('Paypal', 'uap');?></option>
+					<option value="stripe"><?php esc_html_e('Stripe', 'uap');?></option>
+					<option value="stripe_v2"><?php esc_html_e('Stripe v2', 'uap');?></option>
 				</select>
 			</div>
-			<div style="display:inline-block; padding:0 20px;">
-				<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+			<div class="uap-transactions-filter-box">
+				<label class="uap_label_shiwtch uap-switch-button-margin">
 					<input type="checkbox" class="uap-switch" onclick="uapCheckAndH(this, '#csv_switch_status');" checked />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 				</label>
-				<label><?php _e("Switch Transactions to 'Complete' ", 'uap');?></label>
+				<label><?php esc_html_e("Switch Transactions to 'Complete' ", 'uap');?></label>
 				<input type="hidden" id="csv_switch_status" value="1" />
 			</div>
-			<div style="display:inline-block; padding:0 20px;">
-				<div class="uap-special-button" style="background-color:#38cbcb; float: none;" onclick="uapGeneratePaymentsCsv();"><i class="fa-uap fa-export-csv"></i>Export CSV</div>
+			<div class="uap-transactions-filter-box">
+				<div class="uap-special-button uap-transactions-export-bt" onclick="uapGeneratePaymentsCsv();"><i class="fa-uap fa-export-csv"></i>Export CSV</div>
 			</div>
 			<div class="uap-clear"></div>
-			<div class="uap-hidden-download-link" style="display: none;"><a href="" target="_blank"><?php _e("Click on this if download doesn't start automatically in 20 seconds!", 'uap');?></a></div>
+			<div class="uap-hidden-download-link uap-display-none"><a href="" target="_blank"><?php esc_html_e("Click on this if download doesn't start automatically in 20 seconds!", 'uap');?></a></div>
 		</div>
 	</div>
+
+	<?php if ( !empty( $data['error_users'] ) || !empty( $data['error_details_for_users'] ) ):?>
+
+		<div class="uap-wrapp-the-errors">
+			<?php if ( !empty( $data['error_users'] ) ):?>
+					<?php foreach ($data['error_users'] as $user ):?>
+						<div><?php echo esc_html__('The Payment cannot be proceed for affiliate ', 'uap') . $user . esc_html__(' because of the payment settings.', 'uap');?></div>
+					<?php endforeach;?>
+			<?php endif;?>
+			<?php if ( !empty( $data['error_details_for_users'] ) ):?>
+					<?php foreach ($data['error_details_for_users'] as $details ):?>
+						<div><?php echo esc_html__('The Payment cannot be proceed for affiliate ', 'uap') . $details['username'] . '. ' . $details['error_message'];?></div>
+					<?php endforeach;?>
+			<?php endif;?>
+		</div>
+
+	<?php endif;?>
+
+
 	<?php if (!empty($data['listing_items'])) : ?>
 	<div class="uap-special-box">
 	<?php echo $data['filter'];?>
 	</div>
 
-	<?php if (isset($data['error_users'])):?>
-		<div class="uap-wrapp-the-errors">
-			<?php foreach ($data['error_users'] as $user):?>
-				<div><?php echo __('The Payment cannot be proceed for affiliate ', 'uap') . $user . __(' because of the payment settings.', 'uap');?></div>
-			<?php endforeach;?>
-		</div>
-	<?php endif;?>
-
-	<div style="margin: 10px 0px; text-align: right;">
-		<button class="button button-primary button-large" onClick="window.location.href='<?php echo $data['update_payments'];?>'"><?php _e("Check Payments Status", 'uap');?></button>
+	<div class="uap-transactions-check-payment">
+		<button class="button button-primary button-large uap-js-location-reload" data-url="<?php echo $data['update_payments'];?>" ><?php esc_html_e("Check Payments Status", 'uap');?></button>
 	</div>
 
 
 
 
-	<form action="" method="post" id="form_payments">
+	<form  method="post" id="form_payments">
+
+			<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 					<table class="wp-list-table widefat fixed tags uap-admin-tables">
 						<thead>
 							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Create Date', 'uap');?></th>
-								<th><?php _e('Update Date', 'uap');?></th>
-								<th><?php _e('Payment Service Status', 'uap');?></th>
-								<th><?php _e('Status', 'uap');?></th>
-								<th style="min-width:250px"><?php _e('Action', 'uap');?></th>
+								<th><?php esc_html_e('Username', 'uap');?></th>
+								<th><?php esc_html_e('Amount', 'uap');?></th>
+								<th><?php esc_html_e('Payment Type', 'uap');?></th>
+								<th><?php esc_html_e('Create Date', 'uap');?></th>
+								<th><?php esc_html_e('Update Date', 'uap');?></th>
+								<th><?php esc_html_e('Payment Service Status', 'uap');?></th>
+								<th><?php esc_html_e('Status', 'uap');?></th>
+								<th class="uap-transactions-actions-col"><?php esc_html_e('Action', 'uap');?></th>
 							</tr>
 						</thead>
-						<tfoot>
-							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Create Date', 'uap');?></th>
-								<th><?php _e('Update Date', 'uap');?></th>
-								<th><?php _e('Payment Service Status', 'uap');?></th>
-								<th><?php _e('Status', 'uap');?></th>
-								<th style="min-width:250px"><?php _e('Action', 'uap');?></th>
-							</tr>
-						</tfoot>
+
 						<tbody class="ui-sortable uap-alternate">
 							<?php foreach ($data['listing_items'] as $key => $array): ?>
 							<tr>
@@ -93,8 +96,8 @@
 									}
 									echo $this->print_flag_for_affiliate($u_ids[$array['affiliate_id']]) . $array['username'];
 								?></div></td>
-								<td style="font-weight:bold;"><?php echo uap_format_price_and_currency($array['currency'], $array['amount']);?></td>
-								<td><span class="uap-admin-aff-payment-type uap-payment-type-active-<?php echo $array['payment_type'];?>" style="font-size:12px;"><?php echo $array['payment_type'];?></span></td>
+								<td><strong><?php echo uap_format_price_and_currency($array['currency'], $array['amount']);?></strong></td>
+								<td><span class="uap-admin-aff-payment-type uap-payment-type-active-<?php echo $array['payment_type'];?>"><?php echo $array['payment_type'];?></span></td>
 								<td><?php echo uap_convert_date_to_us_format($array['create_date']);?></td>
 								<td><?php echo uap_convert_date_to_us_format($array['update_date']);?></td>
 								<td><?php if ($array['payment_special_status']) {
@@ -102,51 +105,69 @@
 								} else {
 									echo '-';
 								}?></td>
-								<td style="font-weight:bold; font-size: 12px;"><?php
+								<td><?php
 									switch ($array['status']){
 										case 0:
 											?>
-												<div><?php _e('Fail', 'uap');?></div>
+												<div><strong><?php esc_html_e('Fail', 'uap');?></strong></div>
 											<?php
 											break;
 										case 1:
 											?>
-												<div><?php _e('Pending', 'uap');?>
+												<div><strong><?php esc_html_e('Pending', 'uap');?></strong>
 													<?php if ($array['payment_type']=='paypal'):?>
-															<div style="font-size: 9px;color: #c0c0c0;"><?php _e("Press the 'Check Payments Status' button to get the lattest status of transaction.", 'uap');?></div>
+															<div class="uap-transactions-warning"><?php esc_html_e("Press the 'Check Payments Status' button to get the lattest status of transaction.", 'uap');?></div>
 													<?php endif;?>
 												</div>
 											<?php
 											break;
 										case 2:
 											?>
-												<div><?php _e('Complete', 'uap');?></div>
+												<div><strong><?php esc_html_e('Complete', 'uap');?></strong></div>
 											<?php
 											break;
 									}
 								?></td>
-								<td style="min-width:250px">
-									<div class="referral-status-verified"><a style="color:#fff;" href="<?php echo $data['view_transaction_url'] . '&id=' . $array['id'];?>"><?php _e('View Details', 'uap');?></a></div>
+								<td>
+									<div class="referral-status-verified"><a  href="<?php echo $data['view_transaction_url'] . '&id=' . $array['id'];?>"><?php esc_html_e('View Details', 'uap');?></a></div>
 									<div>
 
 									<?php
 										if ($array['status']==2){
 											?>
-											<span class="refferal-chang-status" onclick="jQuery('#transaction_id').val(<?php echo $array['id'];?>);jQuery('#new_status').val(1);jQuery('#form_payments').submit();"><?php _e('Mark as Pending', 'uap');?></span>
+											<span class="refferal-chang-status uap-js-transactions-change-status"
+												data-id="<?php echo $array['id'];?>"
+												data-status="1"><?php esc_html_e('Mark as Pending', 'uap');?></span>
 											<span>|</span>
 											<?php
 										} else if ($array['status']==1){
 											?>
-											<span class="refferal-chang-status" onclick="jQuery('#transaction_id').val(<?php echo $array['id'];?>);jQuery('#new_status').val(2);jQuery('#form_payments').submit();"><?php _e('Mark as Complete', 'uap');?></span><span>|</span> <?php
+											<span class="refferal-chang-status uap-js-transactions-change-status"
+												data-id="<?php echo $array['id'];?>"
+												data-status="2"
+											 	><?php esc_html_e('Mark as Complete', 'uap');?></span><span>|</span> <?php
 										}
 									?>
-									<span class="refferal-chang-status" onclick="jQuery('#delete_transaction').val(<?php echo $array['id'];?>);jQuery('#form_payments').submit();"><?php _e('Delete', 'uap');?></span>
+									<span class="refferal-chang-status uap-js-transactions-delete-transaction"
+											data-id="<?php echo $array['id'];?>"><?php esc_html_e('Delete', 'uap');?></span>
 									</div>
 								</td>
 							</tr>
 
 							<?php endforeach;?>
 						</tbody>
+						<tfoot>
+							<tr>
+								<th><?php esc_html_e('Username', 'uap');?></th>
+								<th><?php esc_html_e('Amount', 'uap');?></th>
+								<th><?php esc_html_e('Payment Type', 'uap');?></th>
+								<th><?php esc_html_e('Create Date', 'uap');?></th>
+								<th><?php esc_html_e('Update Date', 'uap');?></th>
+								<th><?php esc_html_e('Payment Service Status', 'uap');?></th>
+								<th><?php esc_html_e('Status', 'uap');?></th>
+								<th><?php esc_html_e('Action', 'uap');?></th>
+							</tr>
+						</tfoot>
 					</table>
 			<input type="hidden" name="transaction_id" id="transaction_id" value="" />
 			<input type="hidden" name="new_status" id="new_status" value="" />

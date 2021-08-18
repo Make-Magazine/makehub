@@ -9,7 +9,7 @@ API.txt for details.
 */
 
 (function($) {
-
+"use strict";
 	var options = {
 		xaxis: {
 			timezone: null,		// "browser" for local to the client or timezone for timezone-js

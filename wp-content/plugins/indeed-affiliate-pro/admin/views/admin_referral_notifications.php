@@ -1,16 +1,16 @@
-<form action="" method="post">
+<form  method="post">
 	<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Referral Notifications', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/admin-referral-notifications/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
+		<h3 class="uap-h3"><?php esc_html_e('Referral Notifications', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/admin-referral-notifications/" target="_blank"><?php esc_html_e('Need Help?', 'uap');?></a></span></h3>
 		<div class="inside">
 
 			<div class="row">
 				<div class="col-xs-7">
-					<h3><?php _e('Activate/Hold Referral Notifications', 'uap');?></h3>
-					<p><?php _e('If this module is activated, admins have the option to receive instant notifications when an affiliate gets a new referral.', 'uap');?></p>
-					<label class="uap_bp_account_page_enable" style="margin:10px 0 10px -10px;">
+					<h3><?php esc_html_e('Activate/Hold Referral Notifications', 'uap');?></h3>
+					<p><?php esc_html_e('If this module is activated, admins have the option to receive instant notifications when an affiliate gets a new referral.', 'uap');?></p>
+					<label class="uap_bp_account_page_enable  uap-switch-button-margin">
 					<?php $checked = ($data['metas']['uap_admin_referral_notifications_enable']) ? 'checked' : '';?>
 					<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_admin_referral_notifications_enable');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch uap-display-inline"></div>
 					</label>
 					<input type="hidden" name="uap_admin_referral_notifications_enable" value="<?php echo $data['metas']['uap_admin_referral_notifications_enable'];?>" id="uap_admin_referral_notifications_enable" />
 				</div>
@@ -18,25 +18,28 @@
 			<div class="uap-line-break"></div>
 			<div class="row">
 				<div class="col-xs-6">
-					<h3><?php _e('Notification Subject', 'uap');?></h3>
-					<input type="text" name="uap_admin_referral_notification_subject" value="<?php echo $data['metas']['uap_admin_referral_notification_subject'];?>" style="width: 100%;"/>
+					<h3><?php esc_html_e('Notification Subject', 'uap');?></h3>
+					<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Subject', 'uap');?></span>
+					<input type="text" class="uap-field-text-with-padding form-control" name="uap_admin_referral_notification_subject" value="<?php echo $data['metas']['uap_admin_referral_notification_subject'];?>"/>
+				</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-xs-12">
-					<h3><?php _e('Notification Content', 'uap');?></h3>
-					<div class="uap-wp_editor" style="width:65%; display: inline-block; vertical-align: top;">
+					<h3><?php esc_html_e('Notification Content', 'uap');?></h3>
+					<div class="uap-wp_editor uap-wp-editor-box">
 					<?php wp_editor(stripslashes($data['metas']['uap_admin_referral_notification_content']), 'uap_admin_referral_notification_content', array('textarea_name'=>'uap_admin_referral_notification_content', 'editor_height'=>400));?>
 					</div>
-					<div style="width: 33%; display: inline-block; vertical-align: top; padding-left:20px;">
-						<?php echo "<h4>" . __('Referral details constants', 'uap') . "</h4>"; ?>
+					<div class="uap-wp-editor-constants">
+						<?php echo "<h4>" . esc_html__('Referral details constants', 'uap') . "</h4>"; ?>
 						<?php foreach ($data['notification_constants'] as $key=>$value) : ?>
-							<div ><?php echo '<span style="font-weight:bold; color:#0bb586;">'.$value . '</span> : ' . $key;?></div>
+							<div ><?php echo '<span><strong>'.$value . '</strong></span> : ' . $key;?></div>
 						<?php endforeach; ?>
-							<div ><?php echo '<span style="font-weight:bold; color:#0bb586;">' . __('WooCommerce Order Details', 'uap') . '</span> : {WOOCOMMERCE_ORDER_DETAILS}';?></div>
+							<div ><?php echo '<span><strong>' . esc_html__('WooCommerce Order Details', 'uap') . '</strong></span> : {WOOCOMMERCE_ORDER_DETAILS}';?></div>
 						<?php
-						echo "<h4>" . __('Native Fields constants', 'uap') . "</h4>";
+						echo "<h4>" . esc_html__('Native Fields constants', 'uap') . "</h4>";
 							$constants = array(	"{username}",
 												"{first_name}",
 												"{last_name}",
@@ -56,7 +59,7 @@
 								<div><?php echo $v;?></div>
 								<?php
 							}
-							echo "<h4>" . __('Custom Fields constants', 'uap') . "</h4>";
+							echo "<h4>" . esc_html__('Custom Fields constants', 'uap') . "</h4>";
 							foreach ($extra_constants as $k=>$v){
 								?>
 								<div><?php echo $k;?></div>
@@ -68,8 +71,8 @@
 				</div>
 			</div>
 
-			<div class="uap-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+			<div class="uap-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>

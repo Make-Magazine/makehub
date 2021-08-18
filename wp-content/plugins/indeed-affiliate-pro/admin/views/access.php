@@ -1,12 +1,15 @@
-<form action="" method="post">
-	<div class="uap-stuffbox">
-		<h3 class="uap-h3"><?php _e('Roles allowed to enter into WordPress Admin Dashboard:', 'uap');?></h3>
+<form  method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
+ 	<div class="uap-stuffbox">
+		<h3 class="uap-h3"><?php esc_html_e('Roles allowed to enter into WordPress Admin Dashboard:', 'uap');?></h3>
 		<div class="inside">
 			<div class="uap-half-block">
 				<div class="uap-form-line uap-access-opacity">
-					<span class="uap-access-label"><?php _e('Administrator', 'uap');?></span>
+					<span class="uap-access-label"><?php esc_html_e('Administrator', 'uap');?></span>
 					<label class="uap_label_shiwtch uap-access-switch">
-						<input type="checkbox" class="uap-switch" onClick="" checked disabled/>
+						<input type="checkbox" class="uap-switch" checked disabled/>
 						<div class="switch uap-inline-block"></div>
 					</label>
 				</div>
@@ -44,8 +47,9 @@
 			</div>
 			<input type="hidden" name="uap_dashboard_allowed_roles" id="uap_dashboard_allowed_roles" value="<?php echo $meta_value;?>" />
 			<div class="uap-wrapp-submit-bttn iump-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php esc_html_e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>
-</div>
+
+</form>

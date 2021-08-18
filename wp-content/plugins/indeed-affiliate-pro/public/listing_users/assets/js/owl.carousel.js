@@ -9,10 +9,11 @@
  * @todo Test Zepto
  * @todo stagePadding calculate wrong active classes
  */
+ "use strict";
 ;(function($, window, document, undefined) {
 
 	var drag, state, e;
-	
+
 	/**
 	 * Template for status information about drag and touch events.
 	 * @private
@@ -264,9 +265,9 @@
 	/**
 	 * Update pipe.
 	 */
-	Owl.Pipe = [ { 
+	Owl.Pipe = [ {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) { 
+		run: function(cache) {
 			cache.current = this._items && this._items[this.relative(this._current)];
 		}
 	}, {
@@ -343,7 +344,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) { 
+		run: function(cache) {
 			cache.current && this.reset(this.$stage.children().index(cache.current));
 		}
 	}, {
@@ -377,14 +378,14 @@
 				this.$stage.children('.' + this.settings.centerClass).removeClass(this.settings.centerClass);
 				this.$stage.children().eq(this.current()).addClass(this.settings.centerClass);
 			}
-		} 
+		}
 	} ];
 
 	/**
 	 * Initializes the carousel.
 	 * @protected
 	 */
-	Owl.prototype.initialize = function() { 
+	Owl.prototype.initialize = function() {
 		this.trigger('initialize');
 
 		this.$element
@@ -984,7 +985,7 @@
 	Owl.prototype.animate = function(coordinate) {
 		this.trigger('translate');
 		this.state.inMotion = this.speed() > 0;
-		
+
 		//AZZARO
 		if (1 == 2) {
 			this.$stage.css({
@@ -1243,7 +1244,7 @@
 		} else {
 			coordinate = this._coordinates[position - 1] || 0;
 		}
-		
+
 		return coordinate;
 	};
 
@@ -1265,7 +1266,7 @@
 	 * @param {Number} position - The position of the item.
 	 * @param {Number} [speed] - The time in milliseconds for the transition.
 	 */
-	Owl.prototype.to = function(position, speed) { 
+	Owl.prototype.to = function(position, speed) {
 		if (this.settings.loop) {
 			var distance = position - this.relative(this.current()),
 				revert = this.current(),
@@ -2015,7 +2016,7 @@
 		this._core.$stage.parent()
 			.height(this._core.$stage.children().eq(this._core.current()).height())
 			.addClass(this._core.settings.autoHeightClass);
-		
+
 	};
 
 	AutoHeight.prototype.destroy = function() {
@@ -2174,7 +2175,7 @@
 		var tnLink,
 			icon,
 			path,
-			dimensions = video.width && video.height ? 'style="width:' + video.width + 'px;height:' + video.height + 'px;"' : '',
+			dimensions = video.width && video.height ? '' : '',
 			customTn = target.find('img'),
 			srcType = 'src',
 			lazyClass = '',
@@ -2184,8 +2185,6 @@
 
 				if (settings.lazyLoad) {
 					tnLink = '<div class="owl-uap-video-tn ' + lazyClass + '" ' + srcType + '="' + path + '"></div>';
-				} else {
-					tnLink = '<div class="owl-uap-video-tn" style="opacity:1;background-image:url(' + path + ')"></div>';
 				}
 				target.after(tnLink);
 				target.after(icon);
@@ -2265,7 +2264,7 @@
 		item.addClass('owl-uap-video-playing');
 		this._playing = item;
 
-		wrap = $('<div style="height:' + height + 'px; width:' + width + 'px" class="owl-uap-video-frame">'
+		wrap = $('<div class="owl-uap-video-frame">'
 			+ html + '</div>');
 		target.after(wrap);
 	};

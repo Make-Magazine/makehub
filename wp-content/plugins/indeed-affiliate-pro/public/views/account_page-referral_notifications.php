@@ -7,14 +7,14 @@
 		<p><?php echo do_shortcode($data['message']);?></p>
 	<?php endif;?>
 
-<form action="" method="post" class="uap-change-password-form">
+<form  method="post" class="uap-change-password-form">
 	<?php if (!empty($data['module_settings_notf']['uap_referral_notifications_enable'])) : ?>
 
 	<div class="uap-single-notf-row-wrapper">
 
 			<div class="uap-single-notf-row-top">
-				<div class="uap-single-notf-col uap-single-notf-label"><?php _e("Referral Notification", 'uap');?></div>
-				<div class="uap-single-notf-col uap-single-notf-checkbox"><?php _e("E-mail", 'uap');?></div>
+				<div class="uap-single-notf-col uap-single-notf-label"><?php esc_html_e("Referral Notification", 'uap');?></div>
+				<div class="uap-single-notf-col uap-single-notf-checkbox uap-text-align-center"><?php esc_html_e("E-mail", 'uap');?></div>
 			</div>
 			<?php
 				$posible_types = uap_get_possible_referral_types();
@@ -38,22 +38,31 @@
 	</div>
 	<?php endif;?>
 	<?php if (!empty($data['module_settings_reports']['uap_periodically_reports_enable'])) : ?>
-	<div class="uap-periodically-reports-wrapper">
-		<div class="uap-periodically-reports-title"><?php _e("Periodic Reports Interval", 'uap');?></div>
-		<div>
-			<select name="period"><?php
-				foreach (array(0 => __('Never send reports', 'uap'), 1 => __('Daily Reports', 'uap'), 7 => __('Weekly Reports', 'uap'), 30 => __('Monthly Reports', 'uap')) as $k=>$v):
-					$selected = ($k==$data['report_settings']['period']) ? 'selected' : '';
-					?>
-					<option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
-					<?php
-				endforeach;
-			?></select>
-		</div>
-	</div>
+    <div class="uap-profile-box-wrapper">
+    	<div class="uap-profile-box-title"><span><?php esc_html_e("Periodic Reports Interval", 'uap');?></span></div>
+        <div class="uap-profile-box-content">
+        	<div class="uap-row ">
+            	<div class="uap-col-xs-6">
+                        <div><?php esc_html_e("You can decide if and when you want to receive reports via Email.", 'uap');?></div>
+                        <div>
+                            <select name="period"  class="uap-public-form-control "><?php
+                                foreach (array(0 => esc_html__('Never send reports', 'uap'), 1 => esc_html__('Daily Reports', 'uap'), 7 => esc_html__('Weekly Reports', 'uap'), 30 => esc_html__('Monthly Reports', 'uap')) as $k=>$v):
+                                    $selected = ($k==$data['report_settings']['period']) ? 'selected' : '';
+                                    ?>
+                                    <option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
+                                    <?php
+                                endforeach;
+                            ?></select>
+                        </div>
+          		</div>
+             </div>
+        </div>
+     </div>
+
+
 	<?php endif;?>
 	<div class="uap-change-password-field-wrap">
-		<input type="submit" value="<?php _e("Save", 'uap');?>" name="save_settings" class="button button-primary button-large" />
+		<input type="submit" value="<?php esc_html_e("Save Changes", 'uap');?>" name="save_settings" class="button button-primary button-large" />
 	</div>
 </form>
 

@@ -14,16 +14,13 @@ class Uap_Woo extends Referral_Main{
 		/// THE HOOKS
 		add_action('woocommerce_checkout_order_processed', array($this, 'create_referral'));
 		add_action('woocommerce_order_status_completed', array($this, 'make_referral_verified'));
-		add_action('woocommerce_order_status_pending_to_cancelled', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_completed_to_refunded', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_pending_to_failed', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_on-hold_to_refunded', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_processing_to_refunded', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_processing_to_cancelled', array($this, 'make_referral_refuse'));
-		add_action('woocommerce_order_status_completed_to_cancelled', array($this, 'make_referral_refuse'));
 		add_action('wc-on-hold_to_trash', array($this, 'make_referral_refuse'));
 		add_action('wc-processing_to_trash', array($this, 'make_referral_refuse'));
 		add_action('wc-completed_to_trash', array($this, 'make_referral_refuse'));
+
+		add_action( 'woocommerce_order_status_on-hold_to_processing', [$this, 'make_referral_refuse'] );
+
+		add_action( 'woocommerce_order_status_changed', [ $this, 'change_status' ], 999, 4 );
 
 		/// CHECKOUT REFERRALS SELECT
 		add_action('woocommerce_after_order_notes', array($this, 'insert_affiliate_select'));
@@ -65,7 +62,7 @@ class Uap_Woo extends Referral_Main{
 			return; // out
 		}
 		$order = new WC_Order($order_id);
-		self::$user_id = (int)$order->user_id;
+		self::$user_id = (int)$order->get_user_id();
 
 		if (empty(self::$affiliate_id)){
 			/// let's check the coupon...
@@ -101,14 +98,16 @@ class Uap_Woo extends Referral_Main{
 			$items = $order->get_items();
 			$shipping = $order->get_total_shipping();
 			if ($shipping){
-				@$shipping_per_item = $shipping / count($items);
+				$shipping_per_item = $shipping / count($items);
 			} else {
 				$shipping_per_item = 0;
 			}
 			$sum = 0;
 			$product_price_sum = 0;
 			foreach ($items as $item){ /// foreach in lines
+
 				$products_arr[] = $item['product_id'];
+				$variableProductId = isset( $item['variation_id'] ) ? $item['variation_id'] : false;
 
 				///base price
 				$product_price = round($item['line_total'], 3);
@@ -126,7 +125,9 @@ class Uap_Woo extends Referral_Main{
 				$product_price_sum += $product_price;
 
 				/// get amount
-				$temp_amount = $do_math->get_result($product_price, $item['product_id']);// input price, product id
+				$do_math->setVariableProductId( $variableProductId );
+				$temp_amount = $do_math->get_result( $product_price, $item['product_id'] );// input price, product id
+
 				$sum += $temp_amount;
 
 				if (!empty($run_foreach_line_once)){
@@ -139,6 +140,17 @@ class Uap_Woo extends Referral_Main{
 			} else {
 				$product_list = '';
 			}
+
+			$wooCurrency = $order->get_currency();
+			if ( class_exists( 'WOOCS' ) && method_exists( $order, 'get_order_currency' ) ) {
+					$wooCurrency = $order->get_order_currency();
+			    global $WOOCS;
+			    if ( isset( $WOOCS->default_currency ) && $wooCurrency != $WOOCS->default_currency ) {
+			        $currencies = $WOOCS->get_currencies();
+			        $sum = $WOOCS->back_convert($sum, $currencies[$wooCurrency]['rate'] );
+			    }
+			}
+			$sum = apply_filters( 'uap_public_filter_on_referral_insert_amount_value', $sum, $wooCurrency );
 
 			$args = array(
 							'refferal_wp_uid' => self::$user_id,
@@ -154,6 +166,7 @@ class Uap_Woo extends Referral_Main{
 							'product_price' => $product_price_sum,
 			);
 			$this->save_referral_unverified($args);
+
 		}
 	}
 
@@ -187,7 +200,8 @@ class Uap_Woo extends Referral_Main{
 		 * @return none
 		 */
 		 if ($order_object){
-		 	 $coupons_arr = $order_object->get_used_coupons();
+
+			 $coupons_arr = $order_object->get_coupon_codes();
 			 if (!empty($coupons_arr)){
 			 	global $indeed_db;
 			 	foreach ($coupons_arr as $coupon){
@@ -303,6 +317,40 @@ class Uap_Woo extends Referral_Main{
 	{
 		$this->make_referral_refuse($subscription);
 	}
+
+	/*
+	 * 0 - REFUSE
+	 * 1 - UNVERIFIED
+	 * 2 - VERIFIED
+	 */
+	 public function change_status( $order_id=0, $status_transition_from = '', $status_transition_to = '', $that = '' )
+	 {
+		 	global $indeed_db;
+	 		$referral_id = $indeed_db->get_referral_id_for_reference( $order_id, $this->source_type );
+			switch ( $status_transition_to ){
+					case 'cancelled':
+						$status = 0;
+						break;
+					case 'on-hold':
+						$status = 1;
+						break;
+					case 'pending':
+						$status = 1;
+						break;
+					case 'processing':
+						$status = 1;
+						break;
+					case 'refunded':
+						$status = 0;
+						break;
+					case 'failed':
+						$status = 0;
+						break;
+			}
+	 		if ( $referral_id && isset( $status ) ){
+	 				$indeed_db->change_referral_status( $referral_id, $status );
+	 		}
+	 }
 
 }
 

@@ -1,4 +1,8 @@
-uapProductLinks = {
+/*
+ *Ultimate Affiliate Pro - Front-end Product Links
+ */
+"use strict";
+var uapProductLinks = {
     searchFieldSelector              : '',
     listProductsSelector             : '',
     offset                           : 0,
@@ -19,7 +23,7 @@ uapProductLinks = {
         var obj = this;
         obj.setAttributes(obj, args);
 
-        jQuery(document).ready(function(){
+        jQuery(document).on( 'ready',function(){
             obj.loadingGif = jQuery( obj.listProductsSelector ).attr( 'data-loading_more' );
 
             // search
@@ -94,7 +98,7 @@ uapProductLinks = {
 
     handleKeyUp: function( obj ){
         jQuery( obj.showMoreSelector ).remove();
-        jQuery( obj.listProductsSelector ).html( '<img src="' + obj.loadingGif + '" class="" />' );
+        jQuery( obj.listProductsSelector ).html( '<img src="' + obj.loadingGif + '" />' );
         obj.offset = 0;
         obj.getProducts( obj, obj.writeSearchResult );
     },
@@ -158,8 +162,9 @@ uapProductLinks = {
     	      type 	: "post",
     	      url 	: decodeURI(ajax_url),
     	      data 	: {
-    	                   action							: "ia_ajax_return_url_for_aff",
+    	                   action							: "uap_ia_ajax_return_url_for_aff",
     	                   aff_id							: jQuery( '#uap_show_link_affiliate_id' ).attr( 'data-affiliate_id' ),
+                         post_id            : jQuery( '#uap_show_link_affiliate_id' ).attr( 'data-post_id' ),
     	                   url								: window.location.href,
     	                   campaign						: '',
     	                   slug								: jQuery( '#uap_show_link_ref_type' ).val(),

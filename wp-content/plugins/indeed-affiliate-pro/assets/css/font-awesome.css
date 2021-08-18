@@ -2,8 +2,7 @@
  *  Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
-/* FONT PATH
- * -------------------------- */
+ /* -------------------------- */
 @font-face {
   font-family: 'FontAwesome-uap';
   src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
@@ -539,4 +538,7 @@
 }
 .fa-info_affiliate_bar-banner:before{
     content: "\f03e";
+}
+.fa-new-extension-uap:before{
+    content: "\f067";
 }

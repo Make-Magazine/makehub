@@ -7,6 +7,7 @@ class Uap_UMP extends Referral_Main{
 	private static $checkout_referrals_select_settings = array();
 	private static $check_require_error = FALSE;
 	protected static $coupon_code = '';
+	protected static $inserted = false;
 
 	public function __construct(){
 		/*
@@ -16,13 +17,22 @@ class Uap_UMP extends Referral_Main{
 		/// THE HOOKS
 		add_action('ump_payment_check', array($this, 'check_referral'), 1, 2);
 		add_action('ump_coupon_code_submited', array($this, 'check_coupon_code'), 1, 1);
+		add_action( 'ihc_action_before_after_order', [ $this, 'insertReferralsAfterInsertOrder' ], 1, 1 );
 
 		/// CHECKOUT REFERRALS SELECT
-		add_filter('ump_before_submit_form', array($this, 'insert_affiliate_select'), 1, 2);
+		add_filter('ump_before_submit_form', array($this, 'insert_affiliate_select'), 1, 3 );
 		add_filter('ump_before_printing_errors', array($this, 'check_require'), 1, 1);
 
 		///Refunded
 		add_action('ump_paypal_user_do_refund', array($this, 'make_referral_refuse'), 12, 3);
+	}
+
+	public function insertReferralsAfterInsertOrder( $paymentOutputData=[] )
+	{
+			if ( !isset($paymentOutputData['order_id']) || self::$inserted ){
+					return;
+			}
+			$this->check_referral($paymentOutputData['order_id'], 'insert' );
 	}
 
 
@@ -61,6 +71,7 @@ class Uap_UMP extends Referral_Main{
 				$this->create_referral_affiliate_relation($data['uid'], $data['lid'], $data['amount_value'], $order_id);
 			}
 
+
 			/// UPDATE
 			if (isset($data['status']) && $data['status']!='pending'){
 				if ($data['status']=='Completed'){
@@ -70,6 +81,14 @@ class Uap_UMP extends Referral_Main{
 				}
 			}
 		}
+	}
+
+	public function checkReferralBeforeCharge( $paymentData=[] )
+	{
+			if ( !isset( $paymentData['uid'] ) || !isset( $paymentData['lid'] ) || !isset( $paymentData['amount'] ) || !isset( $paymentData['order_id'] ) ){
+					return;
+			}
+			return $this->create_referral_affiliate_relation( $paymentData['uid'], $paymentData['lid'], $paymentData['amount'], $paymentData['order_id'] );
 	}
 
 	public function create_referral_affiliate_relation($uid=0, $lid=0, $amount=0, $referrence=''){
@@ -95,6 +114,14 @@ class Uap_UMP extends Referral_Main{
 				require_once UAP_PATH . 'public/Affiliate_Referral_Amount.class.php';
 				$do_math = new Affiliate_Referral_Amount(self::$affiliate_id, $this->source_type, self::$special_payment_type, self::$coupon_code);
 				$sum = $do_math->get_result($amount, $lid);// input price, product id
+
+				$orderObject = new \Indeed\Ihc\Db\Orders();
+				$orderDetails = $orderObject->setId( $referrence )
+																		->fetch()
+																		->get();
+				$umpCurrency = isset( $orderDetails->amount_type ) ? $orderDetails->amount_type : '';
+				$sum = apply_filters( 'uap_public_filter_on_referral_insert_amount_value', $sum, $umpCurrency );
+
 				$args = array(
 						'refferal_wp_uid' => self::$user_id,
 						'campaign' => self::$campaign,
@@ -109,6 +136,7 @@ class Uap_UMP extends Referral_Main{
 						'product_price' => $amount,
 				);
 				$this->save_referral_unverified($args);
+				self::$inserted = true;
 			}
 		}
 	}
@@ -155,12 +183,15 @@ class Uap_UMP extends Referral_Main{
 		 }
 	}
 
-	public function insert_affiliate_select($output='', $is_public=FALSE){
+	public function insert_affiliate_select($output='', $is_public=FALSE, $typeOfForm='' ){
 		/*
 		 * @param string, bool
 		 * @return string
 		 */
 		 global $indeed_db;
+		 if ( $typeOfForm == 'edit' ){
+			 	return $output;
+		 }
 		 $string = '';
 		 if (empty(self::$checkout_referrals_select_settings)){
 		 	self::$checkout_referrals_select_settings = $indeed_db->return_settings_from_wp_option('checkout_select_referral');
@@ -185,7 +216,7 @@ class Uap_UMP extends Referral_Main{
 			ob_end_clean();
 		 }
 		 if (!empty(self::$check_require_error)){
-		 	$string .= '<div class="ihc-register-notice">' . __('Please complete all required fields!', 'ihc') . '</div>';
+		 	$string .= '<div class="ihc-register-notice">' . esc_html__('Please complete all required fields!', 'ihc') . '</div>';
 		 }
 		 return $output . $string;
 	}

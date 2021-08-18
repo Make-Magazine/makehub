@@ -1,38 +1,55 @@
-<style>
-<?php foreach ($data['available_tabs'] as $k=>$v):?>
-	<?php echo '.fa-' . $k . '-account-uap:before';?>{
-		content: '\<?php echo $v['uap_tab_' . $k . '_icon_code'];?>';
-	}
-<?php endforeach;?>
-<?php   if (!empty($data['uap_account_page_custom_css'])) echo $data['uap_account_page_custom_css'];?>
-</style>
+<?php
+	$custom_css = ''
+ ?>
 
-<?php wp_enqueue_style( 'uap-croppic_css', UAP_URL . 'assets/css/croppic.css' );?>
+<?php foreach ($data['available_tabs'] as $k=>$v):
+	$custom_css .= ".fa-" . $k . "-account-uap:before{".
+		"content:'\\".$v['uap_tab_' . $k . '_icon_code']."';".
+	"}";
+endforeach;?>
+
+<?php   if (!empty($data['uap_account_page_custom_css'])){
+	 $custom_css .= $data['uap_account_page_custom_css'];
+}?>
+<?php wp_enqueue_style( 'uap-croppic_css', UAP_URL . 'assets/css/croppic.css', array(), 7.0 );?>
 <?php wp_enqueue_script( 'uap-jquery_mousewheel', UAP_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
 <?php wp_enqueue_script( 'uap-croppic', UAP_URL . 'assets/js/croppic.js', array(), null );?>
-<?php wp_enqueue_script( 'uap-account_page-banner', UAP_URL . 'assets/js/account_page-banner.js', array(), null );?>
+<?php wp_enqueue_script( 'uap-account_page-banner', UAP_URL . 'assets/js/account_page-banner.js', array(), 1.1 );?>
 
-<script>
-jQuery(document).ready(function(){
-		UapAccountPageBanner.init({
-				triggerId					: 'js_uap_edit_top_ap_banner',
-				saveImageTarget		: '<?php echo UAP_URL . 'public/ajax-upload.php';?>',
-				cropImageTarget   : '<?php echo UAP_URL . 'public/ajax-upload.php';?>',
-				bannerClass       : 'uap-user-page-top-background'
-		})
-})
-</script>
+<div class="uap-js-account-page-header-details" data-uap_url="<?php echo UAP_URL;?>" data-nonce="<?php echo wp_create_nonce( 'publicn' );?>"></div>
+
+
+<?php if(isset($data['rank']['color'])){
+	$custom_css .= "
+	.uap-user-page-top-wrapper .uap-top-rank-box{
+		background-color:#".$data['rank']['color'].";
+	}";
+ }
+if(isset($data['achieved'])){
+	$custom_css .= "
+	.uap-user-page-top-wrapper .uap-top-achievement .uap-achieved{
+		width:".$data['achieved']."%;
+	}";
+}
+?>
+<?php
+wp_register_style( 'dummy-handle', false );
+wp_enqueue_style( 'dummy-handle' );
+wp_add_inline_style( 'dummy-handle', $custom_css );
+ ?>
 
 <div class="uap-user-page-wrapper">
 <?php
-	$top_style='';
-	if (empty($data['top-background']) && ($data['uap_ap_top_theme'] == 'uap-ap-top-theme-2' || $data['uap_ap_top_theme'] == 'uap-ap-top-theme-3' )) $top_style .='style="padding-top:75px;"'; ?>
-<div class="uap-user-page-top-wrapper  <?php echo (!empty($data['uap_ap_top_theme']) ? $data['uap_ap_top_theme'] : '');?>" <?php echo $top_style;?>>
+	$top_class='';
+	if (empty($data['top-background']) && ($data['uap_ap_top_theme'] == 'uap-ap-top-theme-2' || $data['uap_ap_top_theme'] == 'uap-ap-top-theme-3' )){
+		 $top_class .='uap-ap-top-theme-3-extra-padding';
+	} ?>
+<div class="uap-user-page-top-wrapper  <?php echo (!empty($data['uap_ap_top_theme']) ? $data['uap_ap_top_theme'] : '');?> <?php echo $top_class;?> ">
 
   <div class="uap-left-side">
 	<div class="uap-user-page-details">
 		<?php if (!empty($data['avatar'])):?>
-			<div class="uap-user-page-avatar"><img src="<?php echo $data['avatar'];?>" class="uap-member-photo"/></div>
+			<div class="uap-user-page-avatar"><img src="<?php echo $data['avatar'];?>" alt="Avatar" class="uap-member-photo"/></div>
 		<?php endif;?>
 	 </div>
 	</div>
@@ -48,60 +65,73 @@ jQuery(document).ready(function(){
 													'rank_name_' . $data['rank']['id'],
 													apply_filters( 'wpml_current_language', NULL )
 					);
+					$atype = '%';
+					if($data['rank']['amount_type'] == 'flat'):
+						$atype = $data['stats']['currency'];
+					endif;
 			?>
-			<div class="uap-top-rank-box" style="background-color:#<?php echo $data['rank']['color'];?>;" title=""><?php echo $data['rank']['label'];?></div>
+			<div class="uap-top-rank-box" title="<?php echo $data['rank']['amount_value'].$atype.' '.esc_html__('reward', 'uap');?>"><?php echo $data['rank']['label'];?></div>
 		</div>
 		<?php endif;?>
 	</div>
 	<div class="uap-right-side">
 		<?php if (!empty($data['top-earning'])):?>
 			<div class="uap-top-earnings">
-				<div class="uap-stats-label"><?php echo __('Earnings', 'uap'); ?></div>
+				<div class="uap-stats-label"><?php echo esc_html__('Earnings', 'uap'); ?></div>
 				<div class="uap-stats-content"> <?php echo uap_format_price_and_currency($data['stats']['currency'], round($data['stats']['paid_payments_value']+$data['stats']['unpaid_payments_value'], 2)); ?></div>
 			</div>
 		<?php endif;?>
 		<?php if (!empty($data['top-referrals'])):?>
 			<div class="uap-top-referrals">
-				<div class="uap-stats-label"><?php echo __('Referrals', 'uap'); ?></div>
+				<div class="uap-stats-label"><?php echo esc_html__('Referrals', 'uap'); ?></div>
 				<div class="uap-stats-content"> <?php echo $data['stats']['referrals']; ?></div>
 			</div>
 		<?php endif;?>
 
 
-		<?php if (!empty($data['top-achievement']) && $data['achieved']>-1):?>
+		<?php if (!empty($data['top-achievement']) && $data['achieved']>-1 && isset($data['next_rank'])):?>
 			<div class="uap-clear uap-special-clear"></div>
-			<div class="uap-top-achievement">
-				<div class="uap-stats-label"><?php echo __('Until the next Rank...', 'uap'); ?></div>
-				<div class="uap-achievement-line">
-					<div class="uap-achieved" style="width:<?php echo $data['achieved']; ?>%;"></div>
-				</div>
-			</div>
+            <?php if(!empty($data['next_rank'])){ ?>
+                <div class="uap-top-achievement">
+                <?php
+                    $atype = '%';
+                        if($data['next_rank']->amount_type == 'flat'):
+                            $atype = $data['stats']['currency'];
+                        endif;
+                ?>
+                    <div class="uap-stats-label"><?php echo esc_html__('Until', 'uap'); ?> <strong title="<?php echo $data['next_rank']->amount_value.$atype.' '.esc_html__('reward', 'uap');?>"> <?php echo $data['next_rank']->label; ?></strong> <?php echo esc_html__('Rank...', 'uap'); ?></div>
+                    <div class="uap-achievement-line" title="<?php echo $data['achieved'].'% '.esc_html__('achieved', 'uap'); ?>">
+                        <div class="uap-achieved"></div>
+                    </div>
+                </div>
+            <?php } ?>
+            <div class="uap-clear uap-special-clear"></div>
 		<?php endif;?>
         <?php if (!empty($data['uap_ap_edit_show_metrics'])):?>
 			<div class="uap-top-metrics">
 				<div class="uap-stats-content">
 					<div class="uap-metris-rightside">
 						<div>
-								<?php echo __('3 months EPC: ', 'uap');
+								<?php echo esc_html__('3 months EPC: ', 'uap');
 								echo uap_format_price_and_currency($data['stats']['currency'], $data['metrics'][3]); ?>
 						</div>
 						<div>
-								<?php echo __('7 days EPC: ', 'uap');
+								<?php echo esc_html__('7 days EPC: ', 'uap');
 								echo uap_format_price_and_currency($data['stats']['currency'], $data['metrics'][7]); ;?>
 						</div>
 					</div>
 				</div>
 			</div>
+            <div class="uap-clear uap-special-clear"></div>
 		<?php endif;?>
 
 		<div class="uap-clear"></div>
 	</div>
 	<div class="uap-clear"></div>
 	<?php if (!empty($data['top-background'])):
-  	$bk_style='';
 
 		///
-		$bkStyle = '';
+		$bkStyl = '';
 		$banner = '';
 		if (!empty($data['uap_account_page_personal_header'])):
 				$banner = $data ['uap_account_page_personal_header'];
@@ -113,11 +143,11 @@ jQuery(document).ready(function(){
 			$banner = $data ['top-background-image'];
 		endif;
 		if (!empty($banner)){
-				$bkStyle = 'style="background-image:url('.$banner.');"';
+				$bkStyl = 'style = " background-image:url('.$banner.');"';
 		}
 		///
 	?>
-  <div class="uap-user-page-top-background" <?php echo $bkStyle;?> data-banner="<?php echo $banner;?>">
+  <div class="uap-user-page-top-background" <?php echo $bkStyl;?> data-banner="<?php echo $banner;?>">
 			<div class="uap-edit-top-ap-banner" id="js_uap_edit_top_ap_banner"></div>
 	</div>
   <?php endif;?>
@@ -131,21 +161,21 @@ jQuery(document).ready(function(){
 $tabs = array(
 					'overview' => array(
 						'type' => 'tab',
-						'label' => __('Overview', 'uap'),
+						'label' => esc_html__('Overview', 'uap'),
 						'slug' => 'overview',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 					'profile' => array(
 						'type' => 'tab',
-						'label' => __('Profile', 'uap'),
+						'label' => esc_html__('Profile', 'uap'),
 						'slug' => 'profile',
 						'icon_code' => '',
 						'print_link' => FALSE,
 						'children' => array(
 											'edit_account' => array(
 												'type' => 'subtab',
-												'label' => __('Edit Account', 'uap'),
+												'label' => esc_html__('Edit Account', 'uap'),
 												'slug' => 'edit_account',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -153,7 +183,7 @@ $tabs = array(
 											),
 											'change_pass' => array(
 												'type' => 'subtab',
-												'label' => __('Change Password', 'uap'),
+												'label' => esc_html__('Change Password', 'uap'),
 												'slug' => 'change_pass',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -161,7 +191,7 @@ $tabs = array(
 											),
 											'payments_settings' => array(
 												'type' => 'subtab',
-												'label' => __('Payment Settings', 'uap'),
+												'label' => esc_html__('Payment Settings', 'uap'),
 												'slug' => 'payments_settings',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -169,7 +199,7 @@ $tabs = array(
 											),
 											'custom_affiliate_slug' => array(
 												'type' => 'subtab',
-												'label' => __('Custom Affiliate Slug', 'uap'),
+												'label' => esc_html__('Custom Affiliate Slug', 'uap'),
 												'slug' => 'custom_affiliate_slug',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -177,7 +207,7 @@ $tabs = array(
 											),
 											'pushover_notifications' => array(
 												'type' => 'subtab',
-												'label' => __('Pushover Notifications', 'uap'),
+												'label' => esc_html__('Pushover Notifications', 'uap'),
 												'slug' => 'pushover_notifications',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -187,14 +217,14 @@ $tabs = array(
 					),
 					'marketing' => array(
 						'type' => 'tab',
-						'label' => __('Marketing', 'uap'),
+						'label' => esc_html__('Marketing', 'uap'),
 						'slug' => 'marketing',
 						'print_link' => FALSE,
 						'icon_code' => '',
 						'children' =>	array(
 											'affiliate_link' => array(
 												'type' => 'subtab',
-												'label' => __('Affiliate Links', 'uap'),
+												'label' => esc_html__('Affiliate Links', 'uap'),
 												'slug' => 'affiliate_link',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -202,7 +232,7 @@ $tabs = array(
 											),
 					  						'simple_links' => array(
 												'type' => 'subtab',
-												'label' => __('Simple Links', 'uap'),
+												'label' => esc_html__('Referrer Links', 'uap'),
 												'slug' => 'simple_links',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -210,7 +240,7 @@ $tabs = array(
 											),
 					  						'campaigns' => array(
 												'type' => 'subtab',
-												'label' => __('Campaigns', 'uap'),
+												'label' => esc_html__('Campaigns', 'uap'),
 												'slug' => 'campaigns',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -218,7 +248,7 @@ $tabs = array(
 											),
 											'banners' => array(
 												'type' => 'subtab',
-												'label' => __('Banners', 'uap'),
+												'label' => esc_html__('Banners', 'uap'),
 												'slug' => 'banners',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -226,7 +256,7 @@ $tabs = array(
 											),
 											'landing_pages' => array(
 												'type' => 'subtab',
-												'label' => __('Your Landing Pages', 'uap'),
+												'label' => esc_html__('Your Landing Pages', 'uap'),
 												'slug' => 'landing_pages',
 												'print_link' => true,
 												'icon_code' => '',
@@ -234,7 +264,7 @@ $tabs = array(
 											),
 											'coupons' => array(
 												'type' => 'subtab',
-												'label' => __('Coupons', 'uap'),
+												'label' => esc_html__('Coupons', 'uap'),
 												'slug' => 'coupons',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -242,7 +272,7 @@ $tabs = array(
 											),
 											'product_links'	=> array(
 												'type' 				=> 'subtab',
-												'label' 			=> __('Product Links', 'uap'),
+												'label' 			=> esc_html__('Product Links', 'uap'),
 												'slug' 				=> 'product_links',
 												'icon_code' 	=> '',
 												'print_link' 	=> TRUE,
@@ -252,35 +282,35 @@ $tabs = array(
 					),
 					'referrals' => array(
 						'type' => 'tab',
-						'label' => __('Statements', 'uap'),
+						'label' => esc_html__('Statements', 'uap'),
 						'slug' => 'referrals',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 					'payments' => array(
 						'type' => 'tab',
-						'label' => __('Earnings', 'uap'),
+						'label' => esc_html__('Earnings', 'uap'),
 						'slug' => 'payments',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 					'wallet' => array(
 						'type' => 'tab',
-						'label' => __('Wallet', 'uap'),
+						'label' => esc_html__('Wallet', 'uap'),
 						'slug' => 'wallet',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 					'reports' => array(
 						'type' => 'tab',
-						'label' => __('Reports', 'uap'),
+						'label' => esc_html__('Reports', 'uap'),
 						'slug' => 'reports',
 						'icon_code' => '',
 						'print_link' => FALSE,
 						'children' => array(
 					  						'reports' => array(
 												'type' => 'subtab',
-												'label' => __('OverAll', 'uap'),
+												'label' => esc_html__('OverAll', 'uap'),
 												'slug' => 'reports',
 												'print_link' => TRUE,
 												'icon_code' => '',
@@ -288,7 +318,7 @@ $tabs = array(
 											),
 					  					  	'visits' => array(
 												'type' => 'subtab',
-												'label' => __('Traffic Log', 'uap'),
+												'label' => esc_html__('Traffic Log', 'uap'),
 												'slug' => 'visits',
 												'print_link' => TRUE,
 												'icon_code' => '',
@@ -296,7 +326,7 @@ $tabs = array(
 											),
 										  	'campaign_reports' => array(
 												'type' => 'subtab',
-												'label' => __('Campaign Reports', 'uap'),
+												'label' => esc_html__('Campaign Reports', 'uap'),
 												'slug' => 'campaign_reports',
 												'print_link' => TRUE,
 												'icon_code' => '',
@@ -304,7 +334,7 @@ $tabs = array(
 											),
 										  	'referrals_history' => array(
 												'type' => 'subtab',
-												'label' => __('Referrals History', 'uap'),
+												'label' => esc_html__('Referrals History', 'uap'),
 												'slug' => 'referrals_history',
 												'print_link' => TRUE,
 												'icon_code' => '',
@@ -312,7 +342,7 @@ $tabs = array(
 											),
 										  	'mlm' => array(
 												'type' => 'subtab',
-												'label' => __('MLM', 'uap'),
+												'label' => esc_html__('MLM', 'uap'),
 												'slug' => 'mlm',
 												'print_link' => TRUE,
 												'icon_code' => '',
@@ -322,14 +352,14 @@ $tabs = array(
 					),
 					'info_affiliate_bar' => array(
 								'type' => 'tab',
-								'label' => __('Affiliate FlashBar', 'uap'),
+								'label' => get_option('uap_tab_info_affiliate_bar_menu_label') ? get_option('uap_tab_info_affiliate_bar_menu_label') : esc_html__('Affiliate FlashBar', 'uap'),
 								'slug' => 'info_affiliate_bar',
 								'icon_code' => '',
 								'print_link' => FALSE,
 								'children' => array(
 										'iab_settings'     => array(
 														'type'        => 'subtab',
-														'label'       => __('Settings', 'uap'),
+														'label'       => esc_html__('Settings', 'uap'),
 														'slug'        => 'iab_settings',
 														'print_link'  => true,
 														'icon_code'   => '',
@@ -337,7 +367,7 @@ $tabs = array(
 										),
 										'iab_tips'     => array(
 														'type'        => 'tips',
-														'label'       => __('Tips', 'uap'),
+														'label'       => esc_html__('Tips', 'uap'),
 														'slug'        => 'iab_tips',
 														'print_link'  => true,
 														'icon_code'   => '',
@@ -347,27 +377,26 @@ $tabs = array(
 					),
 				    'referral_notifications' => array(
 								'type' => 'tab',
-								'label' => __('Referral Notifications & Reports', 'uap'),
+								'label' => esc_html__('Referral Notifications & Reports', 'uap'),
 								'slug' => 'referral_notifications',
 								'print_link' => TRUE,
 								'icon_code' => '',
 					),
 					'help' => array(
 						'type' => 'tab',
-						'label' => __('Help', 'uap'),
+						'label' => esc_html__('Help', 'uap'),
 						'slug' => 'help',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 					'logout' => array(
 						'type' => 'tab',
-						'label' => __('LogOut', 'uap'),
+						'label' => esc_html__('LogOut', 'uap'),
 						'slug' => 'logout',
 						'print_link' => TRUE,
 						'icon_code' => '',
 					),
 );
-
 
 foreach ($custom_menu as $temp_k=>$temp_arr){
 	if (emptY($temp_arr['type'])){
@@ -377,9 +406,11 @@ foreach ($custom_menu as $temp_k=>$temp_arr){
 $tabs = array_merge($tabs, $custom_menu);
 $tabs = uap_reorder_menu_items($order, $tabs);
 
+
 $selected_parent = '';
 foreach ($tabs as $first_slug => $array){
 	/// exclude item
+
 	if (in_array($first_slug, $exclude_tabs)){
 		unset($tabs[$first_slug]);
 		continue;
@@ -406,7 +437,6 @@ foreach ($tabs as $first_slug => $array){
 		$tabs[$first_slug]['label'] = $this->account_page_settings['uap_tab_' . $first_slug . '_menu_label'];
 	}
 
-
 	if (!empty($tabs[$first_slug]['children'])){
 		foreach ($tabs[$first_slug]['children'] as $second_slug => $second_array){
 
@@ -430,8 +460,8 @@ foreach ($tabs as $first_slug => $array){
 		}
 	}
 }
-//// DO REORDER MENU ITEMS
 
+//// DO REORDER MENU ITEMS
 ?>
 		<div class="uap-ap-menu">
 			<ul>
@@ -439,10 +469,12 @@ foreach ($tabs as $first_slug => $array){
 			        <?php if ($array['type'] == 'tab'):
 							if (!empty($array['children'])){
 			        			if ($selected_parent==$slug){
-			        				$extra_style = 'display: block';
+			        				$extra_styl = 'uap-display-block';
 			        				$i_class = 'fa-account-down-uap';
+									$tab_selected = ' uap-ap-menu-tab-item-selected';
 			        			} else {
-			        				$extra_style = '';
+			        				$extra_styl = '';
+									$tab_selected = '';
 			        				$i_class = 'fa-account-right-uap';
 			        			}
 								if ($data['uap_ap_theme']=='uap-ap-theme-1'){
@@ -451,8 +483,8 @@ foreach ($tabs as $first_slug => $array){
 									$action = "";
 								}
 			        ?>
-								<li class="uap-ap-submenu-item"><div class="uap-ap-menu-tab-item" <?php echo $action;?> ><a href="javascript:void(0);"><i class="uap-ap-menu-sign fa-uap <?php echo $i_class;?>" id="<?php echo 'uap_fa_sign-' . $slug;?>"></i><?php echo $array['label'];?></a></div>
-									<ul class="uap-public-ap-menu-subtabs" style="<?php echo $extra_style;?>" id="<?php echo 'uap_public_ap_' . $slug;?>">
+								<li class="uap-ap-submenu-item<?php echo $tab_selected;?>"><div class="uap-ap-menu-tab-item" <?php echo $action;?> ><a href="javascript:void(0);"><i class="uap-ap-menu-sign fa-uap <?php echo $i_class;?>" id="<?php echo 'uap_fa_sign-' . $slug;?>"></i><?php echo $array['label'];?></a></div>
+									<ul class="uap-public-ap-menu-subtabs <?php echo $extra_styl;?>" id="<?php echo 'uap_public_ap_' . $slug;?>">
 										<?php foreach ($array['children'] as $second_slug => $second_array): ?>
 											<?php $extra_class = ($data['selected_tab']==$second_slug) ? 'uap-ap-menu-item-selected' : '';?>
 											<li class="uap-ap-menu-item <?php echo $extra_class;?>"><a href="<?php echo $data['urls'][$second_slug];?>"><i class="<?php echo 'fa-uap fa-' . $second_slug . '-account-uap';?>"></i><?php

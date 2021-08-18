@@ -1,13 +1,17 @@
 
-<div class="uap-wrapper">
-	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Payment Form', 'uap');?></span></div>
+<div class="uap-wrapper uap-payment-form-settings-wrapper">
+	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php esc_html_e('Payment Form', 'uap');?></span></div>
 	<form method="post" action="<?php echo $data['submit_link'];?>">
+
+		<input type="hidden" name="uap_admin_payment_nonce" value="<?php echo wp_create_nonce( 'uap_admin_payment_nonce' );?>" />
+
 		<div class="row">
 				<?php
 					$checked_paypal = '';
 					$checked_bt = '';
 					$checked_stripe = '';
 					$checked_stripe_v2 = '';
+					$checked_stripe_v3 = '';
 
 					if (!empty($data['affiliate_pay']) && !empty($data['affiliate_pay']['payment_gateway_data']) && !empty($data['affiliate_pay']['payment_gateway_data']['type'])){
 						switch ($data['affiliate_pay']['payment_gateway_data']['type']){
@@ -20,6 +24,9 @@
 							case 'stripe_v2':
 								$checked_stripe_v2 = 'checked';
 								break;
+							case 'stripe_v3':
+								$checked_stripe_v3 = 'checked';
+								break;
 							case 'bank_transfer':
 							default:
 								$checked_bt = 'checked';
@@ -31,71 +38,65 @@
 				?>
 				<div class="col-xs-4">
 					<div class="payment-box">
-						<h3><?php _e('Pay With', 'uap');?></h3>
-						<p><?php _e('Choose one of the Payment Gateway Option. "Bank Transfer" is an offline alternative payment.', 'uap');?></p>
+						<h3><?php esc_html_e('Pay With', 'uap');?></h3>
+						<p><?php esc_html_e('Choose one of the Payment Gateway Option. "Bank Transfer" is an offline alternative payment.', 'uap');?></p>
 						<?php if (!empty($data['paypal'])):?>
-						<div style="margin:20px 0 10px 0;" class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="paypal" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_paypal;?> /> <?php _e('PayPal', 'uap');?>
+						<div class="uap-list-affiliates-name-label">
+							<input type="radio" value="paypal" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_paypal;?> /> <?php esc_html_e('PayPal', 'uap');?>
 						</div>
 						<?php endif;?>
-						<div style="margin: 0px 0 10px 0;"  class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="bank_transfer" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_bt;?> /> <?php _e('Bank Transfer', 'uap');?>
+						<div  class="uap-list-affiliates-name-label">
+							<input type="radio" value="bank_transfer" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_bt;?> /> <?php esc_html_e('Bank Transfer', 'uap');?>
 						</div>
 						<?php if (!empty($data['stripe'])):?>
-						<div style="margin: 0px 0 10px 0;" class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="stripe" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe;?> /> <?php _e('Stripe', 'uap');?>
+						<div class="uap-list-affiliates-name-label">
+							<input type="radio" value="stripe" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe;?> /> <?php esc_html_e('Stripe', 'uap');?>
 						</div>
 						<?php endif;?>
 						<?php if (!empty($data['stripe_v2'])):?>
+						<div class="uap-list-affiliates-name-label" >
+							<input type="radio" value="stripe_v2" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe_v2;?> /> <?php esc_html_e('Stripe V2', 'uap');?>
+						</div>
+						<?php endif;?>
+						<?php if (!empty($data['stripe_v3'])):?>
 						<div class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="stripe_v2" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe_v2;?> /> <?php _e('Stripe V2', 'uap');?>
+							<input type="radio" value="stripe_v3" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe_v3;?> /> <?php esc_html_e('Stripe V3', 'uap');?>
 						</div>
 						<?php endif;?>
 					</div>
 				</div>
 
 				<div class="col-xs-4">
-					<?php $display = ($checked_bt) ? 'block' : 'none';?>
-					<div class="payment-box" id="payment_status_div" style="display: <?php echo $display;?>;">
-						<h3><?php _e('Payment Status', 'uap');?></h3>
-						<p><?php _e('As "Bank Transfer" payment option you can set for now the a temporary Payment status.', 'uap');?></p>
-						<div style="margin:20px 0 10px 0;"  class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="1" name="payment_status" /> <?php _e('Pending', 'uap');?>
+					<?php $display = ($checked_bt) ? 'uap-display-block' : 'uap-display-none';?>
+					<div class="payment-box <?php echo $display;?>" id="payment_status_div">
+						<h3><?php esc_html_e('Payment Status', 'uap');?></h3>
+						<p><?php esc_html_e('As "Bank Transfer" payment option you can set for now the a temporary Payment status.', 'uap');?></p>
+						<div  class="uap-list-affiliates-name-label">
+							<input type="radio" value="1" name="payment_status" /> <?php esc_html_e('Pending', 'uap');?>
 						</div>
 						<div class="uap-list-affiliates-name-label">
-							<input style="vertical-align: bottom;" type="radio" value="2" name="payment_status" checked/> <?php _e('Complete', 'uap');?>
+							<input type="radio" value="2" name="payment_status" checked/> <?php esc_html_e('Complete', 'uap');?>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div style="margin-top: 10px;">
-				<input type="submit" value="<?php _e('Submit', 'uap');?>" name="do_payment" class="button button-primary button-large" />
-				<button class="button button-primary button-large" onClick="window.location.href='<?php echo $data['return_url'];?>'"><?php _e('Cancel', 'uap');?></button>
+			<div class="uap-buttons-wrapper">
+				<input type="submit" value="<?php esc_html_e('Submit', 'uap');?>" name="do_payment" class="button button-primary button-large" />
+				<button class="button button-primary button-large uap-js-location-reload" data-url="<?php echo $data['return_url'];?>" ><?php esc_html_e('Cancel', 'uap');?></button>
 			</div>
 		<?php if (!empty($data['affiliate_pay'])) : ?>
-		<table class="wp-list-table widefat fixed tags" style="margin-top:30px;">
+		<table class="wp-list-table widefat fixed tags">
 						<thead>
 							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Payment Details', 'uap');?></th>
-								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('E-mail', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
+								<th><?php esc_html_e('Username', 'uap');?></th>
+								<th><?php esc_html_e('Name', 'uap');?></th>
+								<th><?php esc_html_e('Payment Type', 'uap');?></th>
+								<th><?php esc_html_e('Payment Details', 'uap');?></th>
+								<th><?php esc_html_e('Rank', 'uap');?></th>
+								<th><?php esc_html_e('E-mail', 'uap');?></th>
+								<th><?php esc_html_e('Amount', 'uap');?></th>
 							</tr>
 						</thead>
-						<tfoot>
-							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Payment Details', 'uap');?></th>
-								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('E-mail', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
-							</tr>
-						</tfoot>
 				<tbody class="ui-sortable uap-alternate">
 				<tr>
 					<td><?php echo $data['affiliate_pay']['username'];?></td>
@@ -113,7 +114,7 @@
 								case 'bt':
 									$payment_class = ($data['affiliate_pay']['payment_gateway_data']['is_active']) ? 'uap-payment-type-active-bt' : '';
 									?>
-									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>"><?php _e('Bank Transfer', 'uap');?></span>
+									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>"><?php esc_html_e('Bank Transfer', 'uap');?></span>
 									<?php
 									break;
 								case 'stripe':
@@ -137,6 +138,15 @@
 									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>">Stripe V2</span>
 									<?php
 									break;
+								case 'stripe_v3':
+										$payment_class = '';
+										if ($data['affiliate_pay']['payment_gateway_data']['is_active']){
+											$payment_class = 'uap-payment-type-active-stripe_v3';
+										}
+										?>
+										<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>">Stripe V3</span>
+										<?php
+										break;
 							endswitch;
 						} else {
 							echo '-';
@@ -148,7 +158,7 @@
 					<td><?php echo $data['affiliate_pay']['rank'];?></td>
 					<td><?php echo $data['affiliate_pay']['email'];?>
 					<input type="hidden" value="<?php echo $data['affiliate_pay']['email'];?>" name="email" /></td>
-					<td style="font-weight:bold"><?php echo $data['affiliate_pay']['amount'] . $data['currency'];?>
+					<td><strong><?php echo $data['affiliate_pay']['amount'] . $data['currency'];?></strong>
 
 				<input type="hidden" value="<?php echo $data['affiliate_pay']['amount'];?>" name="amount" />
 			<input type="hidden" value="<?php echo $data['currency'];?>" name="currency" />
@@ -158,31 +168,42 @@
 				</tr>
 
 				</tbody>
+				<tfoot>
+					<tr>
+						<th><?php esc_html_e('Username', 'uap');?></th>
+						<th><?php esc_html_e('Name', 'uap');?></th>
+						<th><?php esc_html_e('Payment Type', 'uap');?></th>
+						<th><?php esc_html_e('Payment Details', 'uap');?></th>
+						<th><?php esc_html_e('Rank', 'uap');?></th>
+						<th><?php esc_html_e('E-mail', 'uap');?></th>
+						<th><?php esc_html_e('Amount', 'uap');?></th>
+					</tr>
+				</tfoot>
 				</table>
 
 
 		<?php elseif (!empty($data['multiple_affiliates'])) :?>
-			<table class="wp-list-table widefat fixed tags" style="margin-top:30px;">
+			<table class="wp-list-table widefat fixed tags">
 						<thead>
 							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Payment Details', 'uap');?></th>
-								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('E-mail', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
+								<th><?php esc_html_e('Username', 'uap');?></th>
+								<th><?php esc_html_e('Name', 'uap');?></th>
+								<th><?php esc_html_e('Payment Type', 'uap');?></th>
+								<th><?php esc_html_e('Payment Details', 'uap');?></th>
+								<th><?php esc_html_e('Rank', 'uap');?></th>
+								<th><?php esc_html_e('E-mail', 'uap');?></th>
+								<th><?php esc_html_e('Amount', 'uap');?></th>
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
-								<th><?php _e('Username', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th><?php _e('Payment Type', 'uap');?></th>
-								<th><?php _e('Payment Details', 'uap');?></th>
-								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('E-mail', 'uap');?></th>
-								<th><?php _e('Amount', 'uap');?></th>
+								<th><?php esc_html_e('Username', 'uap');?></th>
+								<th><?php esc_html_e('Name', 'uap');?></th>
+								<th><?php esc_html_e('Payment Type', 'uap');?></th>
+								<th><?php esc_html_e('Payment Details', 'uap');?></th>
+								<th><?php esc_html_e('Rank', 'uap');?></th>
+								<th><?php esc_html_e('E-mail', 'uap');?></th>
+								<th><?php esc_html_e('Amount', 'uap');?></th>
 							</tr>
 						</tfoot>
 				<tbody class="ui-sortable uap-alternate">
@@ -204,7 +225,7 @@
 								case 'bt':
 									$payment_class = ($array['payment_gateway_data']['is_active']) ? 'uap-payment-type-active-bt' : '';
 									?>
-									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>"><?php _e('Bank Transfer', 'uap');?></span>
+									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>"><?php esc_html_e('Bank Transfer', 'uap');?></span>
 									<?php
 									break;
 								case 'stripe':
@@ -229,7 +250,7 @@
 					?></td>
 					<td><?php echo $array['rank'];?></td>
 					<td><?php echo $array['email'];?></td>
-					<td style="font-weight:bold"><?php echo uap_format_price_and_currency($data['currency'], $array['amount']);?>
+					<td><strong><?php echo uap_format_price_and_currency($data['currency'], $array['amount']);?>/<strong>
 
 				<input type="hidden" value="<?php echo $array['referrals'];?>" name="referrals[<?php echo $id;?>]" />
 				<input type="hidden" value="<?php echo $array['amount'];?>" name="amount[<?php echo $id;?>]" />

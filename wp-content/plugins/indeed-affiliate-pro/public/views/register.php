@@ -1,13 +1,23 @@
 <?php $data['template_with_cols'] = array('uap-register-6', 'uap-register-11', 'uap-register-12', 'uap-register-13');?>
 <div class="uap-register-form  <?php echo $data['template'];?>">
-	<style><?php echo stripslashes($data['css']);?></style>
-	<form action="<?php echo @$data['action'];?>" method="post" name="<?php echo $data['form_name'];?>" id="<?php echo $data['form_id'];?>" class="uap-form-create-edit" enctype="multipart/form-data" >
+
+	<?php if (!empty($data['css'])):
+						wp_register_style( 'dummy-handle', false );
+						wp_enqueue_style( 'dummy-handle' );
+						wp_add_inline_style( 'dummy-handle', stripslashes($data['css']) );
+	 endif; ?>
+
+	<form action="<?php echo (isset($data['action'])) ? $data['action'] : '';?>" method="post" name="<?php echo $data['form_name'];?>" id="<?php echo $data['form_id'];?>" class="uap-form-create-edit" enctype="multipart/form-data"  >
 
 		<?php do_action('uap_register_form_before_form_fields');?>
 
 		<?php if (!empty($data['form_fields'])):
 				$i = 0;
-				$stop = ceil(@$data['count_register_fields']/2);
+				$stop = 0;
+				if(isset($data['count_register_fields'])){
+					$stop = ceil($data['count_register_fields']/2);
+				}
+
 
 		?>
 			<?php foreach ($data['form_fields'] as $form_field): ?>
@@ -56,8 +66,10 @@
 				$pag_id = get_option('uap_general_login_default_page');
 				if($pag_id!==FALSE){
 					$login_page = get_permalink( $pag_id );
-					if (!$login_page) $login_page = get_home_url();
-					echo '<div class="uap-login-link"><a href="'.$login_page.'">'.__('LogIn', 'uap').'</a></div>';
+					if (!$login_page){
+						 $login_page = get_home_url();
+					}
+					echo '<div class="uap-login-link"><a href="'.$login_page.'">'.esc_html__('LogIn', 'uap').'</a></div>';
 				}
 			?>
             </div>
@@ -74,5 +86,8 @@
 </div>
 
 <?php if (!empty($data['js'])): ?>
-<script><?php echo $data['js'];?></script>
+	<?php
+			wp_add_inline_script( 'uap-public-dynamic', $data['js'] );
+			wp_enqueue_script( 'uap-public-dynamic' );
+	?>
 <?php endif;?>

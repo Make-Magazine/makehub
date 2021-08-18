@@ -1,3 +1,7 @@
+/*
+ *Ultimate Affiliate Pro - Account Page Banner
+ */
+"use strict";
 var UapAccountPageBanner = {
     triggerId       : '',
     saveImageTarget : '',
@@ -7,7 +11,7 @@ var UapAccountPageBanner = {
     init: function(args){
         var obj = this;
         obj.setAttributes(obj, args);
-        jQuery(document).ready(function(){
+        jQuery(window).on('load', function(){
             var options = {
               uploadUrl                 : obj.saveImageTarget,
               cropUrl                   : obj.cropImageTarget,
@@ -55,3 +59,14 @@ var UapAccountPageBanner = {
        	});
     }
 }
+
+jQuery(window).on('load', function(){
+    var uapNonce = jQuery( '.uap-js-account-page-header-details' ).attr( 'data-nonce' );
+    var uapUrl = jQuery( '.uap-js-account-page-header-details' ).attr( 'data-uap_url' );
+		UapAccountPageBanner.init({
+				triggerId					: 'js_uap_edit_top_ap_banner',
+				saveImageTarget		: uapUrl + 'public/ajax-upload.php?publicn=' + uapNonce,
+				cropImageTarget   : uapUrl + 'public/ajax-upload.php?publicn=' + uapNonce,
+				bannerClass       : 'uap-user-page-top-background'
+		})
+});

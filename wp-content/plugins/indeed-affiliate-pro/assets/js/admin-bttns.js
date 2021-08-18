@@ -1,4 +1,8 @@
+/*
+ *Ultimate Affiliate Pro - WP Editor buttons
+ */
 (function (){
+	"use strict";
 	tinymce.PluginManager.add('uap_button_forms', function(ed, url) {
         // Add a button that opens a window
         ed.addButton('uap_button_forms', {
