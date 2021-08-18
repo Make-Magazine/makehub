@@ -34,9 +34,9 @@ jQuery(document).ready(function () {
           mmap_country: 'col-country'
         },
         pagination: {
-          chunk: 5 // undocumented :(
+          chunk: 5
+        } // undocumented :(
 
-        }
       },
       filterVal: '',
       map: null,

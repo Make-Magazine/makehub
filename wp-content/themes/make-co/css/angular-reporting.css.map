@@ -1,9 +1,1 @@
-{
-	"version": 3,
-	"file": "angular-reporting.css",
-	"sources": [
-		"../scss/angular-reporting-style.scss"
-	],
-	"names": [],
-	"mappings": "AACA,OAAO,CAAP,gDAAO,CACP,OAAO,CAAP,2BAAO,CACP,OAAO,CAAP,oBAAO"
-}
+{"version":3,"sourceRoot":"","sources":["../scss/angular-reporting-style.scss"],"names":[],"mappings":"AACQ,qDACA,gCACA","file":"angular-reporting.css"}

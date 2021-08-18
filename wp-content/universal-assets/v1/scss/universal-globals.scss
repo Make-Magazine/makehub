@@ -24,6 +24,7 @@ body > div {
 }
 a { // don't let genesis molest our links
     text-decoration: none;
+	word-break: break-word;
 }
 
 #buddypanel-menu > .panel-head {
