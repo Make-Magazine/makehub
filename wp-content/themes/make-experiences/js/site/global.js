@@ -4,13 +4,13 @@ function isValidEmailAddress(emailAddress) {
 }
 
 jQuery(document).ready(function () {
-	jQuery('#LoginBtn').attr("href", function(i, href) {
+	jQuery('#LoginBtn, .bb-menu-item[href*="wp-login.php"]').attr("href", function(i, href) {
 		var redirect_url = window.location.protocol + "//" + window.location.host + "/members/me/";
 		if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to the referrer if it exists
 			if(document.referrer && document.referrer != "") { redirect_url = document.referrer; }
 			return href + '?redirect_to=' + redirect_url;
 		} else if(window.location.pathname == "/") { // if on homepage, redirect to dashboard
-			return href + '?redirect_to=' + redirect_url;
+			return href.split("?")[0] + '?redirect_to=' + redirect_url;
 		} else { // otherwise send them to where they logged in from
 			return href + '?redirect_to=' + window.location.href;
 		}
