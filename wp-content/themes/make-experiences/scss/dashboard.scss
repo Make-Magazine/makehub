@@ -111,14 +111,41 @@
 
 // makercamp class dashboard
 .ld-course-list-items .ld_course_grid {
+	margin-bottom: 30px;
 	.course {
 		display: flex;
     	flex-direction: column;
-		.bb-card-course-details {
+		height: 100%;
+		.caption {
 			flex-grow: 1;
+			display: flex;
+            flex-direction: column;
 			.ld_course_grid_button {
 				margin-top: auto !important;
 			}
+		}
+		.ld_course_grid_price {
+			height: 30px;
+			display: flex;
+			align-items: center;
+			width: 100px;
+			position: absolute;
+			justify-content: center;
+			right: 22px;
+			color: #fff;
+			&::before {
+				content: "";
+				position: absolute;
+				border-style: solid;
+				border-color: #8ff transparent transparent transparent;
+				left: -10px;
+				border-width: 22px 0 0 21px;
+				top: 4px;
+				transform: rotate(225deg);
+			}
+		}
+		.lds-meta-item {
+			display: none;
 		}
 	}
 }
