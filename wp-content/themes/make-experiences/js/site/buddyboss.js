@@ -22,8 +22,6 @@ jQuery(document).ready(function(){
 			jQuery("#event-cart-whats-next-buttons").append("<a href='/maker-campus' class='btn universal-btn' style='width:100%;'>Your Cart is Empty. Browse Events?</a>");
 		}
 	}
-	// remove dashboard courses that you aren't enrolled in'
-	jQuery(".ld_course_grid_price:not(.ribbon-enrolled)").parent().parent().remove();
 });
 
 // 
