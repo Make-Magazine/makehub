@@ -245,10 +245,12 @@ input.cmn-toggle-round:checked + label:after {
     z-index: 99;
     bottom: 10px;
     border: 2px solid white;
-/* for IE */
-  filter:alpha(opacity=80);
-  /* CSS3 standard */
-  opacity:0.8;
+	/* for IE */
+	filter:alpha(opacity=80);
+	/* CSS3 standard */
+	opacity:0.8;
+    top: 20px !important;
+    height: max-content;
 }
 
 .ui-widget-shadow {
