@@ -111,3 +111,6 @@ li.gform_validation_container, li.gform_hidden {
 }
 
  .gfield_list_icons button { background-repeat: no-repeat !important; }
+.gform_legacy_markup_wrapper.gf_browser_chrome .gfield_checkbox li input, .gform_legacy_markup_wrapper.gf_browser_chrome .gfield_checkbox li input[type=checkbox], .gform_legacy_markup_wrapper.gf_browser_chrome .gfield_radio li input[type=radio] {
+    margin-top: 0px;
+}
