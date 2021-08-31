@@ -241,4 +241,7 @@ button.ges-change, button.ges-change:hover {
 			display: flex !important;
 		}
 	}
+	&:not(.my-account) {
+		#facilitator-portal-personal-li { display: none; }
+	}
 }

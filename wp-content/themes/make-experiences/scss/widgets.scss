@@ -315,6 +315,9 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
                         margin: 0px;
                     }
                 }
+				&:first-of-type {
+					border-top: none;
+				}
             }
         }
     }

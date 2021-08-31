@@ -24,14 +24,14 @@ function make_widget_rss_output($rss, $args = array()) {
     } elseif (!is_object($rss)) {
         return;
     }
-
+    
     if (is_wp_error($rss)) {
         if (is_admin() || current_user_can('manage_options')) {
             echo '<p><strong>' . __('RSS Error:') . '</strong> ' . $rss->get_error_message() . '</p>';
         }
         return;
     }
-
+    
     $default_args = array(
         'show_author' => 0,
         'show_date' => 0,
@@ -39,7 +39,7 @@ function make_widget_rss_output($rss, $args = array()) {
         'items' => 0,
     );
     $args = wp_parse_args($args, $default_args);
-
+    
     $items = (int) $args['items']; // this is the number of items we show
     if ($items < 1 || 20 < $items) {
         $items = 10;
@@ -47,34 +47,40 @@ function make_widget_rss_output($rss, $args = array()) {
     $show_summary = (int) $args['show_summary'];
     $show_author = (int) $args['show_author'];
     $show_date = (int) $args['show_date'];
-
+    
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
         $rss->__destruct();
         unset($rss);
         return;
     }
-
+    
     $dateNow = new DateTime('now');
     
     $sortedFeed = array();
-    $feedItems = $rss->get_items(); 
-	$i = 0;
+    $feedItems = $rss->get_items();
+    $i = 0;
     foreach ($feedItems as $item) {
-        //exclude events that have already occured
-		if($item->get_item_tags('', 'event_date')[0]['data']) {
-            $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);  
-			if(date_timestamp_get($dateNow) > 	date_timestamp_get($dateString)){
-				continue; //(skip this record);
-			}
-		// if it isn't a youtube feed, exclude feed items with no date
-        } else if(strpos($args['url'], 'youtube.com/feeds') == false ) {
-			if(!$item->get_item_tags('', 'pubDate')[0]['data']){
-				continue; //(skip this record);
-			}
-            $dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
-        }
+        //exclude events that have already occurred
         
+        $date = '';
+        if(is_array($item->get_item_tags('', 'event_date'))){
+            if($item->get_item_tags('', 'event_date')[0]['data']) {
+                $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);
+                if(date_timestamp_get($dateNow) > 	date_timestamp_get($dateString)){
+                    continue; //(skip this record);
+                }
+                // if it isn't a youtube feed, exclude feed items with no date
+            } else if(strpos($args['url'], 'youtube.com/feeds') == false ) {
+                if(!$item->get_item_tags('', 'pubDate')[0]['data']){
+                    continue; //(skip this record);
+                }
+                $dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
+            }
+            if ($show_date) {
+                $date = $dateString->format('M j, Y');
+            }
+        }
         
         //get the link
         $link = $item->get_link();
@@ -96,21 +102,21 @@ function make_widget_rss_output($rss, $args = array()) {
         } else {
             $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 140, 100) . '" width="140" height="100" />';
         }
-
+        
         //set description
         $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
-        $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));        
+        $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));
         
         //summary
         $summary = '';
         if ($show_summary) {
             $summary = $desc;
-
+            
             // Change existing [...] to [&hellip;].
             if ('[...]' == substr($summary, -5)) {
                 $summary = substr($summary, 0, -5) . '[&hellip;]';
             }
-
+            
             $summary = '<div class="rssSummary">' . esc_html($summary) . '</div>';
         }
         
@@ -124,24 +130,21 @@ function make_widget_rss_output($rss, $args = array()) {
             }
         }
         
-        //date
-        $date = '';
-        if ($show_date) {
-            $date = $dateString->format('M j, Y');
-		}
-		$sortedFeed[] = array('date' => $date, 'show_date' => $show_date, 'link' => $link, 'title' => $title, 'image' => $image, 'desc' => $desc, 'summary' => $summary, 'author' => $author);
-		//sort this by date, newest first, if it's an event
-		if($item->get_item_tags('', 'event_date')[0]['data']) {
-			usort($sortedFeed, function($a, $b) {
-				return strtotime($a['date']) - strtotime($b['date']);
-			});
-		}
-		// limit by items
-		if (++$i == $items) break;
+        $sortedFeed[] = array('date' => $date, 'show_date' => $show_date, 'link' => $link, 'title' => $title, 'image' => $image, 'desc' => $desc, 'summary' => $summary, 'author' => $author);
+        //sort this by date, newest first, if it's an event
+        if(is_array($item->get_item_tags('', 'event_date'))){
+            if($item->get_item_tags('', 'event_date')[0]['data']) {
+                usort($sortedFeed, function($a, $b) {
+                    return strtotime($a['date']) - strtotime($b['date']);
+                });
+            }
+        }
+        // limit by items
+        if (++$i == $items) break;
     }
-	
-    echo '<ul class="custom-rss">';    
-    foreach ($sortedFeed as $item) {    
+    
+    echo '<ul class="custom-rss">';
+    foreach ($sortedFeed as $item) {
         $link       = $item['link'];
         $title      = $item['title'];
         $image      = $item['image'];
@@ -149,7 +152,7 @@ function make_widget_rss_output($rss, $args = array()) {
         $summary    = $item['summary'];
         $author     = $item['author'];
         
-        if ($item['show_date']) {            
+        if ($item['show_date']) {
             $date = '<date>' . $item['date'] . '</date>';
         }
         
