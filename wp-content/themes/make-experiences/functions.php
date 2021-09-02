@@ -132,6 +132,10 @@ function basicCurl($url, $headers = null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $homeurl = get_home_url();
+    if(strpos($homeurl, 'devmakehub') !== false || strpos($homeurl, 'stagemakehub') !== false) {
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    }
     $data = curl_exec($ch);
     curl_close($ch);
     return $data;

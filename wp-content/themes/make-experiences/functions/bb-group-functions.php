@@ -154,7 +154,7 @@ function group_camp_hub_screen_content() {
     
     //pull in the contents of the home page from the mc blog. 
     //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content        
-    $result = file_get_contents($mc_blog_details->siteurl.'/wp-json/MakerCamp/v1/pages/'.$mc_home_postid.'/contentElementor');
+    $result = basicCurl($mc_blog_details->siteurl.'/wp-json/MakerCamp/v1/pages/'.$mc_home_postid.'/contentElementor');
     echo json_decode($result);    
 }
 
