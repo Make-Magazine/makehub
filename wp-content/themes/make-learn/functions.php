@@ -301,6 +301,7 @@ add_action("rest_api_init", function () {
             , "/pages/(?P<id>\d+)/contentElementor"
             , [
         "methods" => "GET",
+        'permission_callback' => '__return_true',
         "callback" => function (\WP_REST_Request $req) {
 
             $contentElementor = "";

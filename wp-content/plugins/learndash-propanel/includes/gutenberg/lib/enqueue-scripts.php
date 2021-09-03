@@ -93,4 +93,4 @@ function learndash_propanel_block_categories( $block_categories = array(), $post
 	// Always return $default_block_categories.
 	return $block_categories;
 }
-add_filter( 'block_categories', 'learndash_propanel_block_categories', 30, 2 );
+add_filter( 'block_categories_all', 'learndash_propanel_block_categories', 30, 2 );

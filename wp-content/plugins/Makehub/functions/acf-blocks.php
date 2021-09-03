@@ -13,7 +13,7 @@ function acf_blocks( $categories, $post ) {
 		)
 	);
 }
-add_filter( 'block_categories', 'acf_blocks', 10, 2);
+add_filter( 'block_categories_all', 'acf_blocks', 10, 2);
 
 // register all our acf blocks here
 function custom_acf_blocks() {

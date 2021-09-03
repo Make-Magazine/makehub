@@ -13,7 +13,7 @@ function make_panels($categories, $post) {
             )
     );
 }
-add_filter('block_categories', 'make_panels', 10, 2);
+add_filter('block_categories_all', 'make_panels', 10, 2);
 
 // I'd like to get the makermedia page builder panels added as well
 function maker_media_panels($categories, $post) {
