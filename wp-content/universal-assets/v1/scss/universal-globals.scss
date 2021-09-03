@@ -249,8 +249,10 @@ input.cmn-toggle-round:checked + label:after {
 	filter:alpha(opacity=80);
 	/* CSS3 standard */
 	opacity:0.8;
-    top: 25px !important;
     height: max-content;
+}
+.makezine .tooltip {
+	top: 25px !important;
 }
 
 .ui-widget-shadow {
