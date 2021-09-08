@@ -267,6 +267,40 @@
     }
 }
 
+.buddypanel-open {
+	.newsletter-footer {
+		@media (max-width:1200px) {
+			background-position: right 37px top 10px;
+			background-size: 100px;
+		}
+		@media (max-width:1040px) {
+			background-image: none;	
+			._inline-style {
+			    float: none !important;
+			    margin-left: 0px !important;
+				height: auto !important;
+				._form-title { 
+					text-align: center;
+				}
+				._field-wrapper {
+					width: 70%;
+    				margin: 0 auto;
+					input[type="text"]{
+						width: 70% !important;
+					} 
+				}
+			}
+			._field121 {
+				margin-top: 25px !important;
+			}
+			._button-wrapper, ._field121 { 
+				width: 90%;
+				text-align: center; 
+			}
+		}
+	}
+}
+
 // Cookie stuff
 #cookie-settings-btn { 
     display: none;

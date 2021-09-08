@@ -529,7 +529,8 @@ function rolloverItems($row_layout) {
             $itemArr[] = array('image' => $url,
                 'name' => get_sub_field('item_name'),
                 'desc' => get_sub_field('item_short_description'),
-                'maker_url' => get_sub_field('more_info_url')
+                'maker_url' => get_sub_field('more_info_url'),
+                'new_tab' => get_sub_field('new_tab'),
             );
         }
     }
@@ -542,15 +543,14 @@ function rolloverItems($row_layout) {
     //loop thru item data and build the table
     foreach ($itemArr as $item) {
 		$markup = !empty($item['maker_url']) ? 'a' : 'div';
-		$href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" target="_blank"' : '';
+		$newTab = $item['new_tab'];
+		$newTab = ($newTab == true ? "target='_blank'" : "target='_self'");
+
+		$href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" ' . $newTab : '';
 		
         $return .= '<' . $markup . ' ' . $href . ' class="grid-item lazyload" data-bg="' . $item['image'] . '">';
 
         if (!empty($item['desc'])) {
-            
-            $newTab = $item;
-            $newTab = ($newTab == true ? "target='_blank'" : "target='_self'");
-            
             $return .= '<div class="grid-item-desc">
                      <div class="desc-body"><h4>' . $item['name'] . '</h4>
                      <p class="desc">' . $item['desc'] . '</p></div>';
