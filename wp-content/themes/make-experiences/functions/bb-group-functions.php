@@ -169,3 +169,14 @@ function bp_rename_group_tabs() {
 }
 
 add_action( 'bp_actions', 'bp_rename_group_tabs', 999 );
+
+
+//Automatically add certain new memberships to certain groups upon ultimate membership pro subscription
+function automatic_group_memberships( $uid, $lid ) {
+    // if school membership, add to school maker faire group
+    if($lid = 18) {
+        groups_join_group( 152, $uid );
+    }
+}
+
+add_action( 'ihc_new_subscription_action', 'automatic_group_memberships', 10, 2 );
