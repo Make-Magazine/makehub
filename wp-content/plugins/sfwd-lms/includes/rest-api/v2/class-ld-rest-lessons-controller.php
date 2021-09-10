@@ -1,33 +1,35 @@
 <?php
 /**
- * LearnDash V2 REST API Lessons Post Controller.
+ * LearnDash REST API V2 Lessons Post Controller.
  *
- * @package LearnDash
- * @subpackage REST_API
- * @since 3.3.0
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
  * This Controller class is used to GET/UPDATE/DELETE the LearnDash
  * custom post type Lessons (sfwd-lessons).
  *
  * This class extends the LD_REST_Posts_Controller_V2 class.
  *
  * @since 3.3.0
+ * @package LearnDash\REST\V2
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V2' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V2' ) ) ) {
+
 	/**
-	 * Class REST API Lessons Post Controller.
+	 * Class LearnDash REST API V2 Lessons Post Controller.
+	 *
+	 * @since 3.3.0
+	 * @uses LD_REST_Posts_Controller_V2
 	 */
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 	class LD_REST_Lessons_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+
 		/**
 		 * Public constructor for class
+		 *
+		 * @since 3.3.0
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -69,7 +71,6 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V2' ) ) && ( class_exists( 'L
 			require_once LEARNDASH_LMS_PLUGIN_DIR . '/includes/settings/settings-metaboxes/class-ld-settings-metabox-lesson-access-settings.php';
 			$this->metaboxes['LearnDash_Settings_Metabox_Lesson_Access_Settings'] = LearnDash_Settings_Metabox_Lesson_Access_Settings::add_metabox_instance();
 
-			//$this->metaboxes = apply_filters( 'learndash_post_settings_metaboxes_init_' . $this->post_type, $this->metaboxes );
 			if ( ! empty( $this->metaboxes ) ) {
 				foreach ( $this->metaboxes as $metabox ) {
 					$metabox->load_settings_values();
@@ -111,6 +112,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V2' ) ) && ( class_exists( 'L
 
 				$course_id = (int) $request['course'];
 				if ( ! empty( $course_id ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 					$GLOBALS['course_id'] = $course_id;
 				}
 
@@ -188,9 +190,8 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V2' ) ) && ( class_exists( 'L
 		 */
 		public function get_items_permissions_check( $request ) {
 			$return = parent::get_items_permissions_check( $request );
-			if ( ( true === $return ) && ( 'view' === $request['context'] ) ) {
-				$this->rest_init_request_posts( $request );
-
+			$this->rest_init_request_posts( $request );
+			if ( ( true === $return ) && ( 'view' === $request['context'] ) && ( ! learndash_is_admin_user() ) ) {
 				// If the archive setting is enabled we allow full listing.
 				if ( ! $this->rest_post_type_has_archive( $this->post_type ) ) {
 					if ( is_null( $this->course_post ) ) {
@@ -225,6 +226,10 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V2' ) ) && ( class_exists( 'L
 		 * @return array Key value array of query var to query value.
 		 */
 		public function rest_query_filter( $query_args, $request ) {
+			if ( ! $this->is_rest_request( $request ) ) {
+				return $query_args;
+			}
+
 			$query_args = parent::rest_query_filter( $query_args, $request );
 
 			if ( ! is_null( $this->course_post ) ) {

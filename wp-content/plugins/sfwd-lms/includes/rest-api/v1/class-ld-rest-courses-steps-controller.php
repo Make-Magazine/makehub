@@ -1,4 +1,11 @@
 <?php
+/**
+ * LearnDash REST API V1 Courses Steps Controller.
+ *
+ * @since 2.5.8
+ * @package LearnDash\REST\V1
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

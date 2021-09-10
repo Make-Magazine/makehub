@@ -2,33 +2,34 @@
 /**
  * LearnDash V2 REST API Users Courses Controller.
  *
- * @package LearnDash
- * @subpackage REST_API
+ * This Controller class is used to GET/UPDATE/DELETE the association
+ * between a User and the enrolled Groups (groups).
+ *
+ * This class extends the LD_REST_Posts_Controller_V2 class.
+ *
  * @since 3.3.0
+ * @package LearnDash\REST\V2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * This Controller class is used to GET/UPDATE/DELETE the association
- * between a User and the enrolled Groups (groups).
- *
- * This class extends the LD_REST_Posts_Controller_V2 class.
- *
- * @package LearnDash
- * @subpackage REST
- */
 if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V2' ) ) ) {
+
 	/**
-	 * Class REST API Courses Post Controller.
+	 * Class LearnDash V2 REST API Users Courses Controller.
+	 *
+	 * @since 3.3.0
+	 * @uses LD_REST_Posts_Controller_V2
 	 */
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 	class LD_REST_Users_Groups_Controller_V2 extends LD_REST_Posts_Controller_V2 {
 
 		/**
 		 * Public constructor for class
+		 *
+		 * @since 3.3.0
 		 */
 		public function __construct() {
 			$this->post_type  = learndash_get_post_type_slug( 'group' );
@@ -428,6 +429,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 		 * @return array Key value array of query var to query value.
 		 */
 		public function rest_query_filter( $query_args, $request ) {
+			if ( ! $this->is_rest_request( $request ) ) {
+				return $query_args;
+			}
+
 			$query_args = parent::rest_query_filter( $query_args, $request );
 
 			$route_url    = $request->get_route();

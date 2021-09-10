@@ -127,9 +127,13 @@ registerBlockType(
 				type: 'boolean',
 				default: 0
 			},
+			price_type: {
+				type: 'array',
+				default: ['free', 'paynow', 'subscribe', 'closed'],
+			},
 		},
 		edit: function( props ) {
-			const { attributes: { orderby, order, per_page, mygroups, status, show_content, show_thumbnail, group_category_name, group_cat, group_categoryselector, group_tag, group_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, progress_bar, col, preview_user_id, preview_show, example_show },
+			const { attributes: { orderby, order, per_page, mygroups, status, show_content, show_thumbnail, group_category_name, group_cat, group_categoryselector, group_tag, group_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, progress_bar, col, preview_user_id, preview_show, example_show, price_type },
 				setAttributes } = props;
 
 			let field_show_content = '';
@@ -191,8 +195,28 @@ registerBlockType(
 				);
 			//}
 
+			let panel_groups_not_public = '';
+			if ( ldlms_settings['settings']['groups_cpt']['public'] === '' ) {
+				panel_groups_not_public = (
+					<PanelBody
+						// translators: placeholder: Group.
+						title={__('Warning', 'learndash')}
+						opened={true}
+					>
+						<TextControl
+							// translators: placeholder: Groups, Groups.
+							help={sprintf(_x('%1$s are not public, please visit the %2$s Settings page and set them to Public to enable access on the front end.', 'placeholder: Groups, Groups', 'learndash'), ldlms_get_custom_label('groups'), ldlms_get_custom_label('groups'))}
+							value={''}
+							type={'hidden'}
+							className={'notice notice-error'}
+						/>
+					</PanelBody>
+				)
+			}
+
 			const panelbody_header = (
 				<PanelBody
+					className="learndash-block-controls-panel learndash-block-controls-panel-ld-group-list"
 					title={__('Settings', 'learndash')}
 				>
 					<SelectControl
@@ -244,6 +268,34 @@ registerBlockType(
 						type={'number'}
 						onChange={per_page => setAttributes({ per_page })}
 					/>
+
+					<SelectControl
+						multiple
+						key="price_type"
+						// translators: placeholder: Group Access Mode(s).
+						label={sprintf(_x('%s Access Mode(s)', 'placeholder: Group Access Mode(s)', 'learndash'), ldlms_get_custom_label('group'))}
+						help={__( 'Ctrl+click to deselect selected items.', 'placehoholder: default per page', 'learndash')}
+						value={price_type}
+						options={[
+							{
+								label: __('Free', 'learndash'),
+								value: 'free',
+							},
+							{
+								label: __('Buy Now', 'learndash'),
+								value: 'paynow',
+							},
+							{
+								label: __('Recurring', 'learndash'),
+								value: 'subscribe',
+							},
+							{
+								label: __('Closed', 'learndash'),
+								value: 'closed'
+							},
+						]}
+						onChange={price_type => setAttributes({price_type})}
+						/>
 
 					<SelectControl
 						key="mygroups"
@@ -461,6 +513,7 @@ registerBlockType(
 
 			const inspectorControls = (
 				<InspectorControls key="controls">
+					{ panel_groups_not_public }
 					{ panelbody_header }
 					{ panel_course_grid_section}
 					{ panel_group_category_section }

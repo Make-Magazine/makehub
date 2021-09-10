@@ -176,7 +176,7 @@ function automatic_group_memberships( $uid, $lid ) {
     // if school membership, add to school maker faire group
     if($lid = 18) {
         groups_join_group( 152, $uid );
-        ld_update_course_access( $uid, 8660, false );
+        //ld_update_course_access( $uid, 8660, false );
     }
 }
 

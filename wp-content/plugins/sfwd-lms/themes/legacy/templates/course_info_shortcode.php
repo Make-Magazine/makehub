@@ -10,7 +10,7 @@
  *
  * @since 2.1.0
  *
- * @package LearnDash\Course
+ * @package LearnDash\Templates\Legacy\Shortcodes
  */
 
 /**
@@ -75,20 +75,22 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 
 	<?php
 	if ( is_admin() ) {
-		$current_screen = get_current_screen();
+		if ( function_exists( 'get_current_screen' ) ) {
+			$current_screen = get_current_screen();
 
-		if ( ( 'profile.php' === $pagenow ) || ( 'user-edit.php' === $pagenow ) || ( 'learndash-lms_page_group_admin_page' === $current_screen->id ) ) {
-			echo do_shortcode( '[ld_user_course_points user_id="' . $user_id . '" context="profile"]' );
+			if ( ( 'profile.php' === $pagenow ) || ( 'user-edit.php' === $pagenow ) || ( 'learndash-lms_page_group_admin_page' === $current_screen->id ) ) {
+				echo do_shortcode( '[ld_user_course_points user_id="' . $user_id . '" context="profile"]' );
 
-			if ( ( learndash_is_admin_user() ) || ( ( learndash_is_group_leader_user() ) && ( learndash_is_group_leader_of_user( get_current_user_id(), $user_id ) ) ) ) {
-				?>
-					<p><label for="learndash-course-points-user"><strong>
-					<?php
-					// translators: placeholder: Course.
-					printf( esc_html_x( 'Extra %s points', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+				if ( ( learndash_is_admin_user() ) || ( ( learndash_is_group_leader_user() ) && ( learndash_is_group_leader_of_user( get_current_user_id(), $user_id ) ) ) ) {
 					?>
-					</strong></label> <input id="learndash-course-points-user" name="learndash_course_points" type="number" min="0" step="any" value="<?php echo learndash_format_course_points( get_user_meta( $user_id, 'course_points', true ) ); ?>" /><?php } ?></p>
-					<?php
+						<p><label for="learndash-course-points-user"><strong>
+						<?php
+						// translators: placeholder: Course.
+						printf( esc_html_x( 'Extra %s points', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						?>
+						</strong></label> <input id="learndash-course-points-user" name="learndash_course_points" type="number" min="0" step="any" value="<?php echo learndash_format_course_points( get_user_meta( $user_id, 'course_points', true ) ); ?>" /><?php } ?></p>
+						<?php
+			}
 		}
 	}
 	?>

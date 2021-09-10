@@ -1,4 +1,12 @@
 <?php
+/**
+ * LearnDash LD30 Displays a group row.
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -7,9 +15,14 @@ $has_content = ( empty( $group->post_content ) ? false : true ); ?>
 
 <div class="ld-item-list-item ld-expandable ld-item-group-item" id="<?php echo esc_attr( 'ld-expand-' . $group->ID ); ?>">
 	<div class="ld-item-list-item-preview ld-group-row">
-		<a href="<?php echo esc_url( get_the_permalink( $group->ID ) ); ?>" class="ld-item-name">
-			<span class="ld-item-name"><?php echo esc_html( get_the_title( $group->ID ) ); ?></span>
-		</a>
+		<?php if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === 'yes' ) { ?>
+			<a href="<?php echo esc_url( get_the_permalink( $group->ID ) ); ?>" class="ld-item-name">
+			<span class="ld-item-name"><?php echo esc_html( get_the_title( $group->ID ) ); ?></span></a>
+			<?php
+			} else {
+				echo esc_html( get_the_title( $group->ID ) );
+			}
+		?>
 		<?php if ( $has_content ) : ?>
 			<div class="ld-item-details">
 				<div class="ld-expand-button ld-button-alternate" data-ld-expands="<?php echo esc_attr( 'ld-expand-' . $group->ID ); ?>">

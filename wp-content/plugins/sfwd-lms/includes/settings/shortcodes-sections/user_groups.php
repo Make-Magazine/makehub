@@ -1,11 +1,20 @@
 <?php
+/**
+ * LearnDash Shortcode Section for User Groups [user_groups].
+ *
+ * @since 2.4.0
+ * @package LearnDash\Settings\Shortcodes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_user_groups' ) ) ) {
 	/**
-	 * Class for LearnDash Shortcode Section.
+	 * Class LearnDash Shortcode Section for User Groups [user_groups].
+	 *
+	 * @since 2.4.0
 	 */
 	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_user_groups extends LearnDash_Shortcodes_Section {
@@ -13,10 +22,13 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 		/**
 		 * Public constructor for class.
 		 *
+		 * @since 2.4.0
+		 *
 		 * @param array $fields_args Field Args.
 		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
+			$groups_public     = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === '' ) ? learndash_groups_get_not_public_message() : '';
 
 			$this->shortcodes_section_key   = 'user_groups';
 			$this->shortcodes_section_title = sprintf(
@@ -26,9 +38,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			);
 			$this->shortcodes_section_type        = 1;
 			$this->shortcodes_section_description = sprintf(
-				// translators: placeholder: group.
-				esc_html_x( 'This shortcode displays the list of %s users are assigned to as users or leaders.', 'placeholder: Group', 'learndash' ),
-				learndash_get_custom_label( 'group' )
+				// translators: placeholder : group.
+				esc_html_x( 'This shortcode displays the list of %1$s users are assigned to as users or leaders. %2$s', 'placeholder: Group', 'learndash' ),
+				learndash_get_custom_label( 'group' ),
+				$groups_public
 			);
 
 			parent::__construct();
@@ -36,6 +49,8 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 
 		/**
 		 * Initialize the shortcode fields.
+		 *
+		 * @since 2.4.0
 		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(

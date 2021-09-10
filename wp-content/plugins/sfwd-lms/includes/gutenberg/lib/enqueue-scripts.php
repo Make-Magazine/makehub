@@ -1,11 +1,21 @@
 <?php
+/**
+ * Enqueue scripts and stylsheets for Blocks
+ *
+ * @package LearnDash
+ * @since 2.5.8
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /**
  * Enqueues block editor styles and scripts.
  *
  * Fires on `enqueue_block_editor_assets` hook.
+ *
+ * @since 2.5.8
  */
 function learndash_editor_scripts() {
 	// Make paths variables so we don't write em twice ;).
@@ -46,6 +56,7 @@ function learndash_editor_scripts() {
 	$ldlms_settings['settings']['topics_taxonomies']  = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
 	$ldlms_settings['settings']['quizzes_taxonomies'] = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
 	$ldlms_settings['settings']['groups_taxonomies']  = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_cpt']         = array( 'public' => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) );
 
 	$ldlms_settings['plugins']['learndash-course-grid']                = array();
 	$ldlms_settings['plugins']['learndash-course-grid']['enabled']     = learndash_enqueue_course_grid_scripts();
@@ -70,6 +81,13 @@ function learndash_editor_scripts() {
 
 	$ldlms_settings['meta']                   = array();
 	$ldlms_settings['meta']['posts_per_page'] = get_option( 'posts_per_page' );
+
+	$ldlms_settings['meta']['post']              = array();
+	$ldlms_settings['meta']['post']['post_id']   = 0;
+	$ldlms_settings['meta']['post']['post_type'] = '';
+	$ldlms_settings['meta']['post']['editing']   = '';
+	$ldlms_settings['meta']['post']['course_id'] = 0;
+
 	if ( is_admin() ) {
 		$current_screen = get_current_screen();
 		if ( 'post' === $current_screen->base ) {
@@ -173,39 +191,59 @@ function learndash_enqueue_course_grid_scripts() {
  * @return array An array of block categories.
  */
 function learndash_block_categories( $block_categories = array(), $post = false ) {
-
-	$ld_block_cat_found = false;
-
-	foreach ( $block_categories as $block_cat ) {
-		if ( ( isset( $block_cat['slug'] ) ) && ( 'learndash-blocks' === $block_cat['slug'] ) ) {
-			$ld_block_cat_found = true;
-		}
-	}
-
-	if ( false === $ld_block_cat_found ) {
-		if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
-			if ( in_array( $post->post_type, LDLMS_Post_Types::get_post_types(), true ) ) {
-				$block_categories = array_merge(
+	if ( ! in_array( 'learndash-blocks', wp_list_pluck( $block_categories, 'slug' ), true ) ) {
+		if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, LDLMS_Post_Types::get_post_types(), true ) ) ) {
+			$block_categories = array_merge(
+				array(
 					array(
-						array(
-							'slug'  => 'learndash-blocks',
-							'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
-							'icon'  => false,
-						),
+						'slug'  => 'learndash-blocks',
+						'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
+						'icon'  => false,
 					),
-					$block_categories
-				);
-			} else {
-				$block_categories[] = array(
-					'slug'  => 'learndash-blocks',
-					'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
-					'icon'  => false,
-				);
-			}
+				),
+				$block_categories
+			);
+		} else {
+			$block_categories[] = array(
+				'slug'  => 'learndash-blocks',
+				'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
+				'icon'  => false,
+			);
 		}
 	}
 
 	// Always return $default_block_categories.
 	return $block_categories;
 }
-add_filter( 'block_categories_all', 'learndash_block_categories', 30, 2 );
+
+/**
+ * Registers a custom block category.
+ *
+ * Fires on `block_categories_all` hook.
+ *
+ * @since 3.4.2
+ *
+ * @param array                   $block_categories Optional. An array of current block categories. Default empty array.
+ * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
+ *
+ * @return array An array of block categories.
+ */
+function learndash_block_categories_all( $block_categories = array(), $block_editor_context ) {
+	if ( ( is_object( $block_editor_context ) ) && ( property_exists( $block_editor_context, 'post' ) ) && ( is_a( $block_editor_context->post, 'WP_Post' ) ) ) {
+		$block_categories = learndash_block_categories( $block_categories, $block_editor_context->post );
+	} else {
+		$block_categories = learndash_block_categories( $block_categories );
+	}
+
+	return $block_categories;
+}
+
+add_filter( 'learndash_init', function() {
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '5.7.99', '>' ) ) {
+		add_filter( 'block_categories_all', 'learndash_block_categories_all', 30, 2 );
+	} else {
+		add_filter( 'block_categories', 'learndash_block_categories', 30, 2 );
+	}
+});

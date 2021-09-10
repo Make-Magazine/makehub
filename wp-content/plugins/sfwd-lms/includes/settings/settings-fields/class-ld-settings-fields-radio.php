@@ -1,9 +1,9 @@
 <?php
 /**
- * LearnDash Settings administration field Radio.
+ * LearnDash Input Radio Settings Field.
  *
- * @package LearnDash
- * @subpackage Settings
+ * @since 3.0.0
+ * @package LearnDash\Settings\Field
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,12 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'LearnDash_Settings_Fields_Radio' ) ) ) {
 
 	/**
-	 * Class to create the settings field.
+	 * Class LearnDash Input Radio Settings Field.
+	 *
+	 * @since 3.0.0
+	 * @uses LearnDash_Settings_Fields
 	 */
 	class LearnDash_Settings_Fields_Radio extends LearnDash_Settings_Fields {
 
 		/**
 		 * Public constructor for class
+		 *
+		 * @since 3.0.0
 		 */
 		public function __construct() {
 			$this->field_type = 'radio';
@@ -29,7 +34,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		/**
 		 * Function to crete the settiings field.
 		 *
-		 * @since 2.4
+		 * @since 3.0.0
 		 *
 		 * @param array $field_args An array of field arguments used to process the ouput.
 		 * @return void
@@ -128,7 +133,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		/**
 		 * Validate field
 		 *
-		 * @since 2.4
+		 * @since 3.0.0
 		 *
 		 * @param mixed  $val Value to validate.
 		 * @param string $key Key of value being validated.
@@ -175,6 +180,26 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 							}
 						}
 					}
+				}
+			}
+			return $val;
+		}
+
+				/**
+		 * Convert REST submit value to internal Settings Field acceptable value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val         Value from REST to be converted to internal value.
+		 * @param string $key         Key field for value.
+		 * @param array  $fields_args Array of field args.
+		 */
+		public function rest_value_to_field_value( $val = '', $key = '', $field_args = array() ) {
+			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
+				if ( true === $val ) {
+					$val = 'on';
+				} else {
+					$val = '';
 				}
 			}
 			return $val;

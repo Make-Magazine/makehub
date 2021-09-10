@@ -216,6 +216,9 @@ class Meetings {
 			),
 			$atts, 'zoom_list_meetings'
 		);
+
+		wp_enqueue_script( 'video-conferencing-with-zoom-api-shortcode-js' );
+
 		if ( is_front_page() ) {
 			$paged = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 		} else {
@@ -291,7 +294,6 @@ class Meetings {
 		$GLOBALS['zoom_meetings']          = $zoom_meetings;
 		$GLOBALS['zoom_meetings']->columns = ! empty( $atts['cols'] ) ? absint( $atts['cols'] ) : 3;
 		ob_start();
-		$atts['meeting_type'] = "meetings";
 		vczapi_get_template( 'shortcode-listing.php', true, false, $atts );
 		$content .= ob_get_clean();
 
@@ -480,13 +482,9 @@ class Meetings {
 			return __( 'Host ID should be given when defining this shortcode.', 'video-conferencing-with-zoom-api' );
 		}
 
-		wp_enqueue_style( 'video-conferencing-with-zoom-api-datable' );
 		wp_enqueue_style( 'video-conferencing-with-zoom-api-datable-responsive' );
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-datable-responsive-js' );
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-datable-dt-responsive-js' );
-		wp_localize_script( 'video-conferencing-with-zoom-api-shortcode-js', 'vczapi_ajax', array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-		) );
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-shortcode-js' );
 
 		$meetings         = get_option( 'vczapi_user_meetings_for_' . $atts['host'] );
