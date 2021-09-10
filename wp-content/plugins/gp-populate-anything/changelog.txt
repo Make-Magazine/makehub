@@ -1,8 +1,39 @@
 # Changelog
 
+## 1.0.14
+
+	- Fixed a potential issue where LMTs may cause some forms to continuously reload.
+	- Improved compatibility with GravityFlow by hydrating the form on every step type.
+
+## 1.0.13
+
+	- Fixed potential PHP fatal error introduced in 1.0.12.
+
+## 1.0.12
+
+	- Fixed issue where Live Merge Tags referencing checkbox fields with a default value could result in PHP warnings on initial load.
+	- Fixed issue where Conditional Logic relying on a field populated with Live Merge Tags would not work in some cases.
+	- Fixed issue where Live Merge Tags pointing to choice-based fields with populated choices would show "Fill Out Other Fields" as the Merge Tag value instead of an empty string.
+
+## 1.0.11
+
+	- Added support for replacing {count} template merge tag with `0` when there are no results.
+
+## 1.0.10
+
+	- Fixed issue where arrays populated into values would not be converted to strings for non-multi-selectable-choice fields.
+
+## 1.0.9
+
+	- Fixed an issue where filtering by a custom datatabase table date field may return empty results.
+
+## 1.0.8
+
+	- Fixed an issue where GPPA would not fetch results when ordering by 'Taxonomy' or 'Parent Term'.
+
 ## 1.0.7
 
-	- Fixed issue with gppa_live_merge_tag_value` filter not using the correct `$field_id` parameter if merge tag modifiers are used.
+	- Fixed issue with `gppa_live_merge_tag_value` filter not using the correct `$field_id` parameter if merge tag modifiers are used.
 	- Fixed issue where selected choices of dynamically populated fields could be lost when navigating between form pages.
 	- Updated AJAX request to send request data as JSON to prevent issues with Merge Tag modifiers from interfering with the form data format.
 	- Fixed issue where certain calculations would not work with Populate Anything if formula fields came after the field being calculated.

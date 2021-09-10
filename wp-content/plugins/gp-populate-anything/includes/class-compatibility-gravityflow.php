@@ -11,6 +11,8 @@ class GPPA_Compatibility_GravityFlow {
 	}
 
 	public function __construct() {
+		add_filter( 'gravityflow_step_form', array( $this, 'hydrate_form' ), 10, 2 );
+
 		/* Source form is hydrated below. Target form is hydrated via "gform_form_pre_update_entry" in GPPA proper. */
 		add_filter( 'gravityflowformconnector_update_entry_form', array( $this, 'hydrate_form' ), 10, 2 );
 

@@ -6,7 +6,6 @@
 function profile_tab_dashboard_info_name() {
     global $bp;
     $user_id = bp_displayed_user_id();
-    $type = bp_get_member_type(bp_displayed_user_id());
 
     //Is this the profile for the logged in user?
     if ($user_id != 0 && wp_get_current_user()->ID == $user_id) {
@@ -44,6 +43,8 @@ function dashboard_info_content() {
     $user_slug = $current_user->user_nicename;
     $user_info = get_userdata($user_id);
     $user_meta = get_user_meta($user_id);
+    
+    $type = bp_get_member_type(bp_displayed_user_id());
     ?>
     <div class="dashboard-wrapper">
         <?php
@@ -222,7 +223,9 @@ function dashboard_info_content() {
                 <h4 class="open">My &nbsp;&nbsp;<img src="https://makerspaces.make.co/wp-content/universal-assets/v1/images/makerspaces-logo.jpg" /></h4>
                 <ul class="open">
                     <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
-                    <li><a href="/members/<?php echo $user_slug; ?>/makerspace_info/" class="btn universal-btn">See More Details</a></li>
+                    <?php if ($user_id != 0 && $type == 'makerspaces') { ?>
+                    	<li><a href="/members/<?php echo $user_slug; ?>/makerspace_info/" class="btn universal-btn">See More Details</a></li>
+                    <?php } ?>
                     <li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>
                 </ul>
             </div>

@@ -19,6 +19,6 @@ msgid_plural "Media Library IDs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class-gp-media-library.php:437
+#: ../class-gp-media-library.php:439
 msgid "GP Media Library"
 msgstr ""

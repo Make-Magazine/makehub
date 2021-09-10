@@ -213,4 +213,40 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	}
 
+	public function build_where_clause( $table, $column, $operator, $value ) {
+		$value = $this->maybe_convert_to_date( $table, $column, $value );
+		return parent::build_where_clause( $table, $column, $operator, $value );
+	}
+
+	private $tables_cache = array(); // MySQL tables format cache
+
+	/**
+	 * Converts $value to MySQL friendly date if the table column is of type date.
+	 *
+	 * @param $table  string  Table name to look up
+	 * @param $column string  Column name
+	 * @param $value  string  Value to convert
+	 *
+	 * @return string  Converted date value if applicable.
+	 */
+	private function maybe_convert_to_date( $table, $column, $value ) {
+		$is_date = false;
+		if ( isset( $this->tables_cache[ $table ] ) ) {
+			$is_date = $this->tables_cache[ $table ][ $column ] === 'date';
+		} else {
+			global $wpdb;
+			$structure = $wpdb->get_results( sprintf( 'DESCRIBE `%s`', esc_sql( $table ) ), ARRAY_N );
+			foreach ( $structure as $index => $row ) {
+				$this->tables_cache[ $table ][ $row[0] ] = $row[1];
+				if ( $row[0] === $column && $row[1] === 'date' ) {
+					$is_date = true;
+				}
+			}
+		}
+		if ( $is_date ) {
+			$value = gmdate( 'Y-m-d', strtotime( $value ) );
+		}
+		return $value;
+	}
+
 }

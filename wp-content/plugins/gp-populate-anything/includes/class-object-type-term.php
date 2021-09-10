@@ -304,6 +304,12 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 		$orderby = rgar( $ordering, 'orderby' );
 		$order   = rgar( $ordering, 'order', 'ASC' );
 
+		// Specify the table name for ordering since we're joinging terms and term_taxonomy
+		$orderby_table = $wpdb->terms;
+		if ( in_array( $orderby, array( 'taxonomy', 'parent' ), true ) ) {
+			$orderby_table = $wpdb->term_taxonomy;
+		}
+
 		return array(
 			'select'   => array( "{$wpdb->terms}.*", "{$wpdb->term_taxonomy}.*" ),
 			'from'     => $wpdb->terms,
@@ -312,7 +318,7 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 				"LEFT JOIN {$wpdb->term_taxonomy} ON ( {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id )",
 			),
 			'group_by' => "{$wpdb->terms}.term_id",
-			'order_by' => $orderby ? "{$wpdb->terms}.{$orderby}" : '', // Append terms table to make sure that `orderby` is not ambiguous. See HS#25707
+			'order_by' => $orderby ? "{$orderby_table}.{$orderby}" : '', // Append terms table to make sure that `orderby` is not ambiguous. See HS#25707
 			'order'    => $order,
 		);
 

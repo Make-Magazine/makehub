@@ -399,7 +399,9 @@ export default class GPPALiveMergeTags {
 
 					break;
 				case 'value':
-					attrVal = $el.val(value);
+					$el
+						.val(value)
+						.attr('value', value);
 					break;
 				default:
 					$el.attr(attr,  value);

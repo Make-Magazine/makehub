@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.2.19
+
+	- Added support for automatically saving to a `file` or `image` ACF field.
+
 ## 1.2.18
 
 	- Fixed issue where GF Media Library would interfere with file ordering specified by File Upload Pro's sorting.

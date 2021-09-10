@@ -84,7 +84,7 @@ class GP_Media_Library extends GWPerk {
 	public function field_settings_js() {
 		?>
 
-		<script type="">
+		<script>
 			window.gpmlSupportedFieldTypes = <?php echo json_encode( $this->get_supported_field_types() ); ?>;
 
 			(function ($) {
@@ -274,7 +274,9 @@ class GP_Media_Library extends GWPerk {
 					'file_array' => $file_array,
 					'post_id'    => 0,
 					'desc'       => null,
-					'post_data'  => array( 'post_meta' => array() )
+					'post_data'  => array(
+						'post_meta' => array(),
+					),
 				), $field, $entry );
 
 				/**
@@ -765,17 +767,49 @@ class GP_Media_Library extends GWPerk {
 	public function acf_update_field( $post_id, $acf_field_name, $gf_field, $entry ) {
 
 		$acf_field = acf_get_field( $acf_field_name );
-		if ( ! in_array( $acf_field['type'], array( 'image', 'file', 'gallery' ) ) ) {
-			return;
+		if ( ! $acf_field || ! in_array( $acf_field['type'], array( 'image', 'file', 'gallery', 'repeater' ), true ) ) {
+			return false;
 		}
 
-		$value = $this->acf_get_field_value( 'id', $entry, $gf_field, $acf_field['type'] == 'gallery' );
+		if ( $acf_field['type'] === 'repeater' ) {
+			return $this->acf_update_repeater_field( $post_id, $acf_field, $gf_field, $entry );
+		}
+
+		$value = $this->acf_get_field_value( 'id', $entry, $gf_field, $acf_field['type'] === 'gallery' );
 		if ( ! $value ) {
-			return;
+			return false;
 		}
 
-		update_field( $acf_field['key'], $value, $post_id );
+		return update_field( $acf_field['key'], $value, $post_id );
+	}
 
+	public function acf_update_repeater_field( $post_id, $acf_field_name, $gf_field, $entry ) {
+
+		$acf_field = is_array( $acf_field_name ) ? $acf_field_name : acf_get_field( $acf_field_name );
+		if ( ! $acf_field ) {
+			return false;
+		}
+
+		$target_sub_field = false;
+
+		foreach ( $acf_field['sub_fields'] as $acf_sub_field ) {
+			if ( in_array( $acf_sub_field['type'], array( 'image', 'file' ), true ) ) {
+				$target_sub_field = $acf_sub_field;
+				break;
+			}
+		}
+
+		if ( ! $target_sub_field ) {
+			return false;
+		}
+
+		$value = $this->acf_get_field_value( 'id', $entry, $gf_field, true );
+
+		foreach ( $value as $file ) {
+			add_row( $acf_field['key'], array( $target_sub_field['key'] => $file ), $post_id );
+		}
+
+		return true;
 	}
 
 
