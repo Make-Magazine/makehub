@@ -896,4 +896,102 @@ class Activecampaign_For_Woocommerce_Admin {
 		}
 	}
 
+	/**
+	 * Handles the ajax call for clear plugin settings.
+	 */
+	public function handle_clear_plugin_settings() {
+		if ( ! wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_settings_nonce_field'], 'activecampaign_for_woocommerce_settings_form' ) ) {
+			$this->logger->warning( 'Invalid nonce from the force row sync call:', [ 'request' => $_REQUEST ] );
+			wp_send_json_error( 'The nonce appears to be invalid.' );
+			return false;
+		}
+
+		if ( $this->clear_plugin_settings() ) {
+			$logger = new Logger();
+			$logger->info( 'Plugin settings have been manually cleared by the admin. The plugin will not run until new settings are saved.' );
+			wp_send_json_success( 'ActiveCampaign for WooCommerce settings have been cleared. NOTICE: The plugin will not run until new settings are saved.' );
+		} else {
+			wp_send_json_error( 'There was an issue attempting to clear the plugin settings' );
+		}
+	}
+
+	/**
+	 * Attempts to clear the plugin settings.
+	 *
+	 * @return bool
+	 */
+	private function clear_plugin_settings() {
+		try {
+			if ( delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME ) && delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME ) ) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->warning(
+				'There was an issue trying to reset the connection ID',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+			return false;
+		}
+	}
+
+	/**
+	 * Handles the ajax call for reset connection.
+	 *
+	 * @return json success/error
+	 */
+	public function handle_reset_connection_id() {
+		if ( ! wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_settings_nonce_field'], 'activecampaign_for_woocommerce_settings_form' ) ) {
+			$this->logger->warning( 'Invalid nonce from the force row sync call:', [ 'request' => $_REQUEST ] );
+			wp_send_json_error( 'The nonce appears to be invalid.' );
+			return false;
+		}
+
+		if ( $this->reset_connection_id() ) {
+			$logger = new Logger();
+			$logger->info(
+				'The connection ID has been manually reset. These are the stored options.',
+				[
+					'storage_values' => $this->get_storage(),
+					'option_values'  => get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME ),
+				]
+			);
+			wp_send_json_success( 'ActiveCampaign connection ID has been updated/repaired.' );
+		} else {
+			wp_send_json_error( 'There was an issue attempting to reset the connection ID' );
+		}
+	}
+
+	/**
+	 * Clears then attampts to grab the connection ids from Hosted.
+	 *
+	 * @return bool
+	 */
+	private function reset_connection_id() {
+		try {
+			if ( delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME ) ) {
+				do_action( 'activecampaign_for_woocommerce_admin_settings_updated' );
+				return true;
+			} else {
+				return false;
+			}
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->warning(
+				'There was an issue trying to reset the connection ID',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+			return false;
+		}
+		// a:3:{s:13:"notifications";a:0:{}s:13:"connection_id";s:1:"7";s:20:"connection_option_id";s:1:"5";}
+	}
+
 }

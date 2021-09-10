@@ -3253,10 +3253,12 @@ function bp_zoom_get_webinar_first_occurrence_date_utc( $webinar_id, $webinar_de
  */
 function bp_zoom_meeting_cron_schedules( $schedules ) {
 	if ( ! isset( $schedules['bp_zoom_5min'] ) ) {
-		$schedules['bp_zoom_5min'] = array(
-			'interval' => 5 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 5 minutes', 'buddyboss-pro' ),
-		);
+		if ( bp_zoom_is_zoom_enabled() ) {
+			$schedules['bp_zoom_5min'] = array(
+				'interval' => 5 * MINUTE_IN_SECONDS,
+				'display'  => __( 'Once in 5 minutes', 'buddyboss-pro' ),
+			);
+		}
 	}
 
 	return $schedules;
@@ -3270,11 +3272,16 @@ add_filter( 'cron_schedules', 'bp_zoom_meeting_cron_schedules' ); // phpcs:ignor
  * @since 1.0.4
  */
 function bp_zoom_meeting_schedule_cron() {
-	if ( ! wp_next_scheduled( 'bp_zoom_meeting_alerts_hook' ) ) {
-		wp_schedule_event( time(), 'bp_zoom_5min', 'bp_zoom_meeting_alerts_hook' );
-	}
-	if ( ! wp_next_scheduled( 'bp_zoom_webinar_alerts_hook' ) ) {
-		wp_schedule_event( time(), 'bp_zoom_5min', 'bp_zoom_webinar_alerts_hook' );
+	if ( bp_zoom_is_zoom_enabled() ) {
+		if ( ! wp_next_scheduled( 'bp_zoom_meeting_alerts_hook' ) ) {
+			wp_schedule_event( time(), 'bp_zoom_5min', 'bp_zoom_meeting_alerts_hook' );
+		}
+		if ( ! wp_next_scheduled( 'bp_zoom_webinar_alerts_hook' ) ) {
+			wp_schedule_event( time(), 'bp_zoom_5min', 'bp_zoom_webinar_alerts_hook' );
+		}
+	} else {
+		wp_clear_scheduled_hook( 'bp_zoom_meeting_alerts_hook' );
+		wp_clear_scheduled_hook( 'bp_zoom_webinar_alerts_hook' );
 	}
 }
 

@@ -2,27 +2,26 @@
 /**
  * LearnDash V2 REST API User Controller.
  *
- * @package LearnDash
- * @subpackage REST
+ * This Controller is used as the parent Controller for all LearnDash
+ * User related REST requests. For example Group Users, Course Users, etc.
+ *
+ * This Controller class extends the WordPress WP_REST_Users_Controller class.
+ *
  * @since 3.3.0
+ * @package LearnDash\REST\V2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- *
- * This Controller is used as the parent Controller for all LearnDash
- * User related REST requests. For example Group Users, Course Users, etc.
- *
- * This Controller class extends the WordPress WP_REST_Users_Controller class.
- *
- * @since 3.2
- */
 if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_REST_Users_Controller' ) ) ) {
+
 	/**
-	 * Class REST API User Controller.
+	 * Class LearnDash V2 REST API User Controller.
+	 *
+	 * @since 3.3.0
+	 * @uses WP_REST_Users_Controller
 	 */
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 	class LD_REST_Users_Controller_V2 extends WP_REST_Users_Controller {
@@ -54,6 +53,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 
 		/**
 		 * Protected constructor for class
+		 *
+		 * @since 3.3.0
 		 */
 		public function __construct() {
 			parent::__construct();
@@ -185,6 +186,22 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 			return $rest_base_value;
 		}
 
+		/**
+		 * Check if REST Request is for this version/route.
+		 *
+		 * @since 3.4.2
+		 *
+		 * @param object $request WP_REST_Request Request instance.
+		 *
+		 * @return bool true if match.
+		 */
+		protected function is_rest_request( WP_REST_Request $request ) {
+			$request_route_base = '/' . $this->namespace . '/' . $this->rest_base;
+			if ( strncasecmp( $request->get_route(), $request_route_base, strlen( $request_route_base ) ) === 0 ) {
+				return true;
+			}
+		}
+		
 		// End of functions.
 	}
 }

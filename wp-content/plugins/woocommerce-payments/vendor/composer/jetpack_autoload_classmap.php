@@ -10,6 +10,10 @@ return array(
 		'version' => 'dev-trunk',
 		'path'    => $baseDir . '/includes/multi-currency/RestController.php'
 	),
+	'WCPay\\MultiCurrency\\SettingsOnboardCta' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/SettingsOnboardCta.php'
+	),
 	'WCPay\\MultiCurrency\\Settings' => array(
 		'version' => 'dev-trunk',
 		'path'    => $baseDir . '/includes/multi-currency/Settings.php'
@@ -17,6 +21,18 @@ return array(
 	'WCPay\\MultiCurrency\\FrontendPrices' => array(
 		'version' => 'dev-trunk',
 		'path'    => $baseDir . '/includes/multi-currency/FrontendPrices.php'
+	),
+	'WCPay\\MultiCurrency\\PaymentMethodsCompatibility' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/PaymentMethodsCompatibility.php'
+	),
+	'WCPay\\MultiCurrency\\Geolocation' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/Geolocation.php'
+	),
+	'WCPay\\MultiCurrency\\BackendCurrencies' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/BackendCurrencies.php'
 	),
 	'WCPay\\MultiCurrency\\Notes\\NoteMultiCurrencyAvailable' => array(
 		'version' => 'dev-trunk',
@@ -29,6 +45,10 @@ return array(
 	'WCPay\\MultiCurrency\\Currency' => array(
 		'version' => 'dev-trunk',
 		'path'    => $baseDir . '/includes/multi-currency/Currency.php'
+	),
+	'WCPay\\MultiCurrency\\Analytics' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/Analytics.php'
 	),
 	'WCPay\\MultiCurrency\\Utils' => array(
 		'version' => 'dev-trunk',
@@ -57,6 +77,10 @@ return array(
 	'WCPay\\MultiCurrency\\Compatibility' => array(
 		'version' => 'dev-trunk',
 		'path'    => $baseDir . '/includes/multi-currency/Compatibility.php'
+	),
+	'WCPay\\MultiCurrency\\StorefrontIntegration' => array(
+		'version' => 'dev-trunk',
+		'path'    => $baseDir . '/includes/multi-currency/StorefrontIntegration.php'
 	),
 	'MyCLabs\\Enum\\Enum' => array(
 		'version' => '1.7.7.0',

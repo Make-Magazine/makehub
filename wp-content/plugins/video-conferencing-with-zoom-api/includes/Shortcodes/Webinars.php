@@ -108,7 +108,6 @@ class Webinars {
 			return __( 'Host ID should be given when defining this shortcode.', 'video-conferencing-with-zoom-api' );
 		}
 
-		wp_enqueue_style( 'video-conferencing-with-zoom-api-datable' );
 		wp_enqueue_style( 'video-conferencing-with-zoom-api-datable-responsive' );
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-datable-responsive-js' );
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-datable-dt-responsive-js' );
@@ -127,7 +126,7 @@ class Webinars {
 				if ( ! empty( $decoded_meetings ) && ! empty( $decoded_meetings->code ) ) {
 					return '<strong>Zoom API Error:</strong>' . $decoded_meetings->message;
 				} else {
-					return __( 'Could not retrieve meetings, check Host ID', 'video-conferencing-with-zoom-api' );
+					return __( 'Could not retrieve webinars, check Host ID', 'video-conferencing-with-zoom-api' );
 				}
 			}
 		}
@@ -191,6 +190,8 @@ class Webinars {
 			),
 			$atts, 'zoom_list_webinars'
 		);
+
+		wp_enqueue_script( 'video-conferencing-with-zoom-api-shortcode-js' );
 		if ( is_front_page() ) {
 			$paged = ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 		} else {
@@ -261,7 +262,10 @@ class Webinars {
 		unset( $GLOBALS['zoom_meetings'] );
 		$GLOBALS['zoom_meetings']          = $zoom_meetings;
 		$GLOBALS['zoom_meetings']->columns = ! empty( $atts['cols'] ) ? absint( $atts['cols'] ) : 3;
-		$atts['meeting_type']              = 'webinars';
+		//since list webinars shortcode is different from list meeting shortcode $atts['meeting_type'] needs to be defined explicitly here
+		//to be used in shortcode-listing.php otherwise it will cause issues.
+        //@todo: consider using singular webinar instead of webinars - must change code in list_meeting_ajax_handler function
+		$atts['meeting_type'] = 'webinars';  
 		ob_start();
 		vczapi_get_template( 'shortcode-listing.php', true, false, $atts );
 		$content .= ob_get_clean();

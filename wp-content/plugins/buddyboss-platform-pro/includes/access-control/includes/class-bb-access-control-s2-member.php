@@ -31,7 +31,20 @@ class BB_Access_Control_S2_Member extends BB_Access_Control_Abstract {
 	 * @since 1.1.0
 	 */
 	public function __construct() {
+		add_action( 'set_user_role', array( $this, 'bb_access_control_s2_member_add_update' ), PHP_INT_MAX, 3 );
+	}
 
+	/**
+	 * Fires after the user's role has changed.
+	 *
+	 * @param int      $user_id   The user ID.
+	 * @param string   $role      The new role.
+	 * @param string[] $old_roles An array of the user's previous roles.
+	 *
+	 * @since 1.1.5
+	 */
+	public function bb_access_control_s2_member_add_update( $user_id, $role, $old_roles ) {
+		do_action( 'bb_access_control_s2_member_add_update', $user_id, $role, $old_roles );
 	}
 
 	/**

@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.2.13',
-    'version' => '1.2.13.0',
+    'pretty_version' => '1.4.7',
+    'version' => '1.4.7.0',
     'aliases' => 
     array (
     ),
@@ -13,8 +13,8 @@
   array (
     'activecampaign/activecampaign-for-woocommerce' => 
     array (
-      'pretty_version' => '1.2.13',
-      'version' => '1.2.13.0',
+      'pretty_version' => '1.4.7',
+      'version' => '1.4.7.0',
       'aliases' => 
       array (
       ),
@@ -22,12 +22,12 @@
     ),
     'brick/math' => 
     array (
-      'pretty_version' => '0.9.2',
-      'version' => '0.9.2.0',
+      'pretty_version' => '0.9.3',
+      'version' => '0.9.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dff976c2f3487d42c1db75a3b180e2b9f0e72ce0',
+      'reference' => 'ca57d18f028f84f777b2168cd1911b0dee2343ae',
     ),
     'brick/money' => 
     array (

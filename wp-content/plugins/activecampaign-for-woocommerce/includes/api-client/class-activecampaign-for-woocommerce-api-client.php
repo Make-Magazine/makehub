@@ -420,7 +420,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			}
 		} catch ( GuzzleException $e ) {
 			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 
 			if ( isset( $e ) && 422 === $e->getCode() ) {
 				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
@@ -431,7 +431,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			return null;
 		} catch ( \Exception $e ) {
 			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 			if ( isset( $e ) && 422 === $e->getCode() ) {
 				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
 			} else {
@@ -441,7 +441,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			return null;
 		} catch ( Throwable $t ) {
 			$message     = $t->getMessage();
-			$stack_trace = $t->getTrace();
+			$stack_trace = $this->logger->clean_trace( $t->getTrace() );
 			if ( isset( $t ) && 422 === $t->getCode() ) {
 				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
 			} else {

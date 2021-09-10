@@ -1,6 +1,6 @@
 <?php
 /**
- * Displays a user's profile.
+ * LearnDash LD30 Displays a user's profile.
  *
  * Available Variables:
  *
@@ -10,9 +10,9 @@
  * $quiz_attempts  : Array of quiz attempts of the current user
  * $shortcode_atts : Array of values passed to shortcode
  *
- * @since 3.0
+ * @since 3.0.0
  *
- * @package LearnDash\User
+ * @package LearnDash\Templates\LD30
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,11 +43,12 @@ endif;
 
 
 /**
- * We don't want to include this if this is a paginated view as we'll end up with duplicates
+ * We don't want to include this if this is a paginated or search view as we'll end up with duplicates
  *
- * @var $_GET['action'] (string)    is set to ld30_ajax_pager if paginating
+ * @var $_GET['action'] (string)    is set to 'ld30_ajax_pager' if paginating or set to 'ld30_ajax_profile_search' on search.
  */
-if ( ! isset( $_GET['action'] ) || 'ld30_ajax_pager' !== $_GET['action'] ) :
+
+if ( ! isset( $_GET['action'] ) || ! in_array( $_GET['action'], array( 'ld30_ajax_pager', 'ld30_ajax_profile_search' ), true ) ) :
 	LD_QuizPro::showModalWindow();
 endif; ?>
 
@@ -84,6 +85,8 @@ endif; ?>
 					<?php
 					/**
 					 * Filters whether to show the user profile link.
+					 *
+					 * @since 2.5.8
 					 *
 					 * @param boolean $show_profile Whether to show profile link.
 					 */
@@ -126,8 +129,10 @@ endif; ?>
 					/**
 					 * Filters LearnDash user profile statistics.
 					 *
-					 * @param array $ld_profile_stats An array of profile stats data.
-					 * @param int   $user_id         User ID.
+					 * @since 3.1.0
+					 *
+					 * @param array $learndash_profile_stats An array of profile stats data.
+					 * @param int   $user_id                 User ID.
 					 */
 					$learndash_profile_stats = apply_filters( 'learndash_profile_stats', $learndash_profile_stats, $user_id );
 					if ( ( ! empty( $learndash_profile_stats ) ) && ( is_array( $learndash_profile_stats ) ) ) {

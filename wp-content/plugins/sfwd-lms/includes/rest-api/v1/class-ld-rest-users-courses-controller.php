@@ -1,5 +1,12 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
+/**
+ * LearnDash REST API V1 User Courses Controller.
+ *
+ * @since 2.5.8
+ * @package LearnDash\REST\V1
+ */
+
+ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -30,7 +37,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 		/**
 		 * Registers the routes for the objects of the controller.
 		 *
-		 * @since 4.7.0
+		 * @since 2.4.5
 		 *
 		 * @see register_rest_route()
 		 */
@@ -307,7 +314,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			 *
 			 * Enables adding extra arguments or setting defaults for a post collection request.
 			 *
-			 * @since 4.7.0
+			 * @since 2.5.8
 			 *
 			 * @link https://developer.wordpress.org/reference/classes/wp_query/
 			 *

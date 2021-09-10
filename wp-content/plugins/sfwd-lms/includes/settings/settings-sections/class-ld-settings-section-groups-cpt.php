@@ -2,8 +2,8 @@
 /**
  * LearnDash Settings Section for Groups Custom Post Type Metabox.
  *
- * @package LearnDash
- * @subpackage Settings
+ * @since 3.2.0
+ * @package LearnDash\Settings\Sections
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,12 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'LearnDash_Settings_Groups_CPT' ) ) ) {
 	/**
-	 * Class to create the settings section.
+	 * Class LearnDash Settings Section for Groups Custom Post Type Metabox.
+	 *
+	 * @since 3.2.0
 	 */
 	class LearnDash_Settings_Groups_CPT extends LearnDash_Settings_Section {
 
 		/**
 		 * Protected constructor for class
+		 *
+		 * @since 3.2.0
 		 */
 		protected function __construct() {
 
@@ -50,11 +54,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				learndash_get_custom_label( 'group' )
 			);
 
+			add_filter( 'learndash_settings_row_outside_before', array( $this, 'learndash_settings_row_outside_before' ), 30, 2 );
+
 			parent::__construct();
 		}
 
 		/**
 		 * Initialize the metabox settings values.
+		 *
+		 * @since 3.2.0
 		 */
 		public function load_settings_values() {
 			parent::load_settings_values();
@@ -64,8 +72,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values = array();
 				}
 
+				$ld_prior_version = learndash_data_upgrades_setting( 'prior_version' );
+
 				$this->setting_option_values = array(
-					'public'            => '',
+					'public'            => ( 'new' === $ld_prior_version ) ? 'yes' : '',
 					'include_in_search' => 'yes',
 					'has_archive'       => 'yes',
 					'has_feed'          => '',
@@ -100,6 +110,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 		/**
 		 * Initialize the metabox settings fields.
+		 *
+		 * @since 3.2.0
 		 */
 		public function load_settings_fields() {
 			$cpt_archive_url = home_url( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'groups' ) );
@@ -203,7 +215,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Intercept the WP options save logic and check that we have a valid nonce.
 		 *
-		 * @since 3.0
+		 * @since 3.2.0
+		 *
 		 * @param array $value Array of section fields values.
 		 * @param array $old_value Array of old values.
 		 * @param string $section_key Section option key should match $this->setting_option_key.
@@ -245,6 +258,34 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			}
 
 			return $new_values;
+		}
+
+		/**
+		 * Settings row outside before
+		 *
+		 * @since 3.2.0
+		 *
+		 * @param string $content    Content to show before row
+		 * @param array  $field_args Row field Args
+		 */
+		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
+			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'public' ), true ) ) && LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === '' ) {
+
+				$content .= '<div class="ld-settings-info-banner ld-settings-info-banner-alert">';
+
+				$message = sprintf(
+					// translators: placeholder: group.
+					esc_html_x(
+						'%s is not set to public, set to Public to allow access on the front end.',
+						'placeholder: group',
+						'learndash'
+					),
+					learndash_get_custom_label( 'group' )
+				);
+				$content .= wpautop( wptexturize( do_shortcode( $message ) ) );
+				$content .= '</div>';
+			}
+			return $content;
 		}
 
 		// End of functions.

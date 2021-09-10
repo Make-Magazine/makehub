@@ -1,10 +1,10 @@
 <?php
 /**
- * Displays the course navigation widget.
+ * LearnDash LD30 Displays the course navigation widget row.
  *
- * @since 3.0
+ * @since 3.0.0
  *
- * @package LearnDash\Course
+ * @package LearnDash\Templates\LD30\Widgets
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,15 +17,6 @@ if ( ! empty( $lessons ) ) :
 	$i        = 0;
 
 	foreach ( $lessons as $course_lesson ) :
-
-		$is_current_lesson = false;
-
-		if ( ( isset( $widget_instance['current_lesson_id'] ) ) && absint( $widget_instance['current_lesson_id'] ) === absint( $course_lesson['post']->ID ) ) {
-			$is_current_lesson = true;
-		} elseif ( get_the_ID() === absint( $is_current_lesson ) ) {
-			// Not sure how this is ever reached.
-			$is_current_lesson = true;
-		}
 
 		$all_topics = learndash_topic_dots( $course_lesson['post']->ID, false, 'array' );
 
@@ -50,7 +41,6 @@ if ( ! empty( $lessons ) ) :
 				'user_id'           => $user_id,
 				'lesson_topics'     => $lesson_topics,
 				'widget_instance'   => $widget_instance,
-				'is_current_lesson' => $is_current_lesson,
 				'has_access'        => $has_access,
 			),
 			true
@@ -74,7 +64,7 @@ if ( isset( $widget_instance['show_course_quizzes'] ) && true !== (bool) $widget
 	$show_course_quizzes = false;
 }
 
-if ( $show_course_quizzes == true ) :
+if ( true == $show_course_quizzes ) :
 	$course_quiz_list = learndash_get_course_quiz_list( $course_id, get_current_user_id() );
 
 	if ( ! empty( $course_quiz_list ) ) :

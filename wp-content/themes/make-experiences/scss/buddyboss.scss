@@ -187,6 +187,9 @@ button.ges-change, button.ges-change:hover {
     }
 }
 .directory {
+	.members-type-navs {
+		#members-group_leader, #members-student { display: none;}
+	}
     .dir-list {
         .grid.bp-list > li {
             flex: 0 0 20%;

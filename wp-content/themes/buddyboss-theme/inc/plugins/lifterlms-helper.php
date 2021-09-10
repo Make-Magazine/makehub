@@ -547,10 +547,10 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 
 			$progress = 0;
 
-			if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() && llms_is_user_enrolled( get_current_user_id(), $course_id ) ) {
 
-				$student_data = new LLMS_Student();
-				$progress     = $student_data->get_progress( $course_id, 'course' );
+				$course   = new LLMS_Course( $course_id );
+				$progress = $course->get_percent_complete();
 
 			}
 
@@ -975,7 +975,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			// Query Depend on theme setting
 			if ( ! empty( $_GET[ "filter-categories" ] ) && 'all' != $_GET['filter-categories'] ) {
 
-			    $archive_category_taxonomy = 'course_cat';
+				$archive_category_taxonomy = 'course_cat';
 
 				$tax_query[] = array(
 					'taxonomy'         => $archive_category_taxonomy,
@@ -1468,7 +1468,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			}
 		}
 
-		public function lifterlms_course_progress_bar( $progress, $link = false, $button = true, $echo = true ) {
+		public function lifterlms_course_progress_bar( $progress, $link = false, $button = true, $echo = true, $lessons = array() ) {
 
 			$progress = round( $progress, 2 );
 
@@ -1476,25 +1476,23 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			$href = ( $link ) ? ' href=" ' . $link . ' "' : '';
 
 			if ( is_singular( 'course' ) || is_singular( 'lesson' ) || is_post_type_archive( 'course' ) || is_archive() || is_singular( 'llms_quiz' ) || is_singular( 'llms_assignment' ) ) {
-
 				if ( is_singular( 'lesson' ) ) {
-					$html = $this->llms_get_progress_bar_html_course_single( $progress, 'lesson' );
+					$type = 'lesson';
 				} else {
 					if ( is_singular( 'llms_quiz' ) || is_singular( 'llms_assignment' ) ) {
-						$html = $this->llms_get_progress_bar_html_course_single( $progress, 'quiz' );
+						$type = 'quiz';
 					} else {
-						$html = $this->llms_get_progress_bar_html_course_single( $progress, 'course' );
+						$type = 'course';
 					}
 				}
 			} else {
-				$html = $this->llms_get_progress_bar_html_course_single( $progress, 'course' );
+				$type = 'course';
 			}
 
+			$html = $this->llms_get_progress_bar_html_course_single( $progress, $type, $lessons );
+
 			if ( $button ) {
-				$html .= '<' . $tag . ' class="llms-button-primary llms-purchase-button"' . $href . '>' . __(
-						'Continue',
-						'buddyboss-theme'
-					) . '(' . $progress . '%)</' . $tag . '>';
+				$html .= '<' . $tag . ' class="llms-button-primary llms-purchase-button"' . $href . '>' . __( 'Continue', 'buddyboss-theme' ) . '(' . $progress . '%)</' . $tag . '>';
 			}
 
 			if ( $echo ) {
@@ -1504,25 +1502,23 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			}
 		}
 
-		public function llms_get_progress_bar_html_course_single( $percentage, $post_type ) {
+		public function llms_get_progress_bar_html_course_single( $percentage, $post_type, $lessons = array() ) {
 
-			global $post;
+			global $post, $course;
 
-			$percentage = sprintf( '%s%%', round( $percentage ) );
-			( $percentage != 100 ) ? $completed_text = __(
-				'Complete',
-				'buddyboss-theme'
-			) : $completed_text = __( 'Completed', 'buddyboss-theme' );
+			$percentage     = round( $percentage );
+			$completed_text = ( $percentage != 100 ) ? __( 'Complete', 'buddyboss-theme' ) : __( 'Completed', 'buddyboss-theme' );
+			$last_activity  = '';
+			$student        = '';
+			$course_id      = get_the_ID();
+			$status_class   = ' ';
 
-			$student   = new LLMS_Student( get_current_user_id() );
-			$course_id = get_the_ID();
-
-			if ( $post_type == 'lesson' ) {
+			if ( 'lesson' === $post_type ) {
 				$lesson    = new LLMS_Lesson( $post );
 				$course_id = $lesson->get_parent_course();
 			}
 
-			if ( $post_type == 'quiz' ) {
+			if ( 'quiz' === $post_type ) {
 				$quiz           = llms_get_post( $post );
 				$quiz_lesson_id = $quiz->get( 'lesson_id' );
 				$post_object    = get_post( $quiz_lesson_id );
@@ -1530,66 +1526,63 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				$course_id      = $lesson->get_parent_course();
 			}
 
-			$last_activity = $student->get_events(
-				[
-					'per_page' => 1,
-					'post_id'  => $course_id,
-				]
-			);
+			if ( is_user_logged_in() ) {
+				$student       = new LLMS_Student( get_current_user_id() );
+				$last_activity = $student->get_events(
+					[
+						'per_page' => 1,
+						'post_id'  => $course_id,
+					]
+				);
+			}
 
 			if ( ( ! is_user_logged_in() ) || empty( $last_activity ) ) {
 
-				$student_data           = new LLMS_Course( $course_id );
+				if ( empty( $course ) ) {
+					$course = new LLMS_Course( $course_id );
+				}
+
 				$completed_lesson_count = 0;
 				$all_lesson_count       = 0;
+				$lessons                = ( ! empty( $lessons ) ? $lessons : $course->get_lessons( 'ids' ) );
 
-				if ( ! empty( $student_data->get_lessons( 'ids' ) ) ) {
-
-					$all_lesson_count = count( $student_data->get_lessons( 'ids' ) );
-
-					foreach ( $student_data->get_lessons( 'ids' ) as $lesson ) {
-
-						$student            = new LLMS_Student();
+				if ( ! empty( $lessons ) ) {
+					$all_lesson_count = count( $lessons );
+					foreach ( $lessons as $lesson ) {
 						$is_lesson_complete = $student->is_complete( $lesson, 'lesson' );
-
 						if ( $is_lesson_complete ) {
 							$completed_lesson_count ++;
 						}
 					}
 				} // End if().
-				$last_activity_time = $completed_lesson_count . '/' . $all_lesson_count . ' ' . __(
-						'Steps',
-						'buddyboss-theme'
-					);
+				$last_activity_time = $completed_lesson_count . '/' . $all_lesson_count . ' ' . __( 'Steps', 'buddyboss-theme' );
 			} else {
-				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date(
-						get_option( 'date_format' ),
-						strtotime( $last_activity[0]->get( 'updated_date' ) )
-					);
+				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date( get_option( 'date_format' ), strtotime( $last_activity[0]->get( 'updated_date' ) ) );
 			}
 
-			if ( $percentage == 'NAN%' ) {
-				$percentage = '0%';
+			$temp_percentage = $percentage;
+			if ( 0 === $percentage ) {
+				$temp_percentage = '0%';
+			} else {
+				$temp_percentage = $temp_percentage . '%';
 			}
 
 			$html = '';
 			$html .= '<div class="llms-progress">
-				<div class="progress__indicator"><div class="ld-progress-percentage">' . $percentage . ' ' . $completed_text . '</div><div class="ld-progress-steps">' . $last_activity_time . '</div></div>
+				<div class="progress__indicator"><div class="ld-progress-percentage">' . $temp_percentage . ' ' . $completed_text . '</div><div class="ld-progress-steps">' . $last_activity_time . '</div></div>
 				<div class="llms-progress-bar">
-					<div class="progress-bar-complete" data-progress="' . $percentage . '"  style="width:' . $percentage . '"></div>
+					<div class="progress-bar-complete" data-progress="' . $temp_percentage . '"  style="width:' . $temp_percentage . '"></div>
 				</div>';
 
 			if ( is_singular( 'course' ) && is_user_logged_in() ) :
-				$status_class = ' ';
-				if ( $percentage == '100%' ) :
-					$status       = 'Complete';
+
+				if ( 100 === $percentage ) {
+					$status       = __( 'Complete', 'buddyboss-theme' );
 					$status_class = ' status-complete';
-				else :
-					if ( $percentage != '0%' ) :
-						$status       = 'In Progress';
-						$status_class = ' status-in-progress';
-					endif;
-				endif;
+				} else {
+					$status       = __( 'In Progress', 'buddyboss-theme' );
+					$status_class = ' status-in-progress';
+				}
 
 				if ( ! empty( $status_class ) ) :
 					$html .= '<div class="' . $status_class . '">' . $status . '</div>';
@@ -1960,6 +1953,58 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			}
 
 			return ! empty( $lessons[0] ) ? $lessons[0] : false;
+		}
+
+		/** Return the lessons ids of given course id.
+         *
+		 * @param int $course_id Course ID.
+		 *
+		 * @return array
+		 */
+		public function get_course_lessons( $course_id ) {
+
+			$lessons_ids = array();
+			$sections    = new WP_Query(
+				array(
+					'meta_key'       => '_llms_order',
+					'meta_query'     => array(
+						array(
+							'key'   => '_llms_parent_course',
+							'value' => $course_id,
+						),
+					),
+					'order'          => 'ASC',
+					'orderby'        => 'meta_value_num',
+					'post_type'      => 'section',
+					'posts_per_page' => - 1,
+				)
+			);
+
+			if ( $sections->have_posts() ) {
+
+				$section_ids = wp_list_pluck( $sections->posts, 'ID' );
+				$lessons     = new WP_Query(
+					array(
+						'meta_key'       => '_llms_order',
+						'meta_query'     => array(
+							array(
+								'key'     => '_llms_parent_section',
+								'value'   => $section_ids,
+								'compare' => 'IN'
+							),
+						),
+						'order'          => 'ASC',
+						'orderby'        => 'meta_value_num',
+						'post_type'      => 'lesson',
+						'posts_per_page' => - 1,
+					)
+				);
+				$lessons_ids = wp_list_pluck( $lessons->posts, 'ID' );
+			}
+
+			return $lessons_ids;
+
+
 		}
 	}
 }

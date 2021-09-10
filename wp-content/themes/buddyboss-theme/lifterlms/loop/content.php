@@ -36,8 +36,7 @@ defined( 'ABSPATH' ) || exit;
         <div class="bb-card-course-details llms-loop-item-content__body">
 
 			<?php
-			$course            = new LLMS_Course( get_the_ID() );
-			$number_of_lessons = count( $course->get_lessons( 'ids' ) );
+			$number_of_lessons = count( buddyboss_theme()->lifterlms_helper()->get_course_lessons( get_the_ID() ) );
 			?>
 
             <div class="course-lesson-count">

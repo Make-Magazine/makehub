@@ -71,6 +71,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		add_filter( 'gform_order_summary', array( $this, 'replace_live_merge_tags_static' ), 10, 3 );
 
+		add_filter( 'gform_merge_tag_filter', array( $this, 'prevent_missing_filter_text_from_being_tag_value' ), 10, 5 );
+
 		/**
 		 * Prevent replacement of Live Merge Tags in Preview Submission.
 		 */
@@ -960,6 +962,28 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return $this->replace_live_merge_tags( $text, $form, $entry );
 
+	}
+
+	/**
+	 * If using a Live Merge Tag pointing to a choice-based field that's reliant on field filters, by default it will
+	 * try to use the "Fill Out Other Fields" text as the merge tag value as that is the choice text for the value
+	 * of an empty string. This isn't ideal as it can cause uncoupling, and it's not the expected behavior especially
+	 * if using Conditional Logic.
+	 *
+	 * @param string $value
+	 * @param $input_id
+	 * @param $modifier
+	 * @param GF_Field $field
+	 * @param string $raw_value
+	 *
+	 * @return string
+	 */
+	public function prevent_missing_filter_text_from_being_tag_value( $value, $input_id, $modifier, $field, $raw_value ) {
+		if ( $value === apply_filters( 'gppa_missing_filter_text', '&ndash; ' . esc_html__( 'Fill Out Other Fields', 'gp-populate-anything' ) . ' &ndash;', $field ) ) {
+			return $raw_value;
+		}
+
+		return $value;
 	}
 
 	public function replace_field_label_live_merge_tags_static( $form ) {

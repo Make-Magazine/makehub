@@ -122,6 +122,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gppa_process_template', array( $this, 'replace_template_count_merge_tags' ), 10, 7 );
 		add_filter( 'gppa_process_template', array( $this, 'maybe_add_currency_to_price' ), 10, 7 );
 
+		add_filter( 'gppa_no_results_value', array( $this, 'replace_no_results_template_count_merge_tags' ), 10, 4 );
+
 		add_filter( 'gppa_array_value_to_text', array( $this, 'use_commas_for_arrays' ), 10, 6 );
 		add_filter( 'gppa_array_value_to_text', array( $this, 'prepare_gf_field_array_value_to_text' ), 10, 7 );
 
@@ -895,6 +897,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
+	public function replace_no_results_template_count_merge_tags( $value, $field, $form, $templates ) {
+		if ( rgar( $templates, 'value' ) === 'gf_custom:{count}' ) {
+			$value = 0;
+		}
+		return $value;
+	}
+
 	public function maybe_convert_array_value_to_text( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
 
 		/**
@@ -903,7 +912,13 @@ class GP_Populate_Anything extends GP_Plugin {
 		 *
 		 * Without the conditional below, checkboxes and multi-selects may not repopulate correctly.
 		 */
-		if ( ( ( isset( $field->choices ) && is_array( $field->choices ) ) || rgar( $field, 'storageType' ) === 'json' ) && $populate === 'values' ) {
+		if (
+			(
+				( isset( $field->choices ) && is_array( $field->choices ) && in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) )
+				|| rgar( $field, 'storageType' ) === 'json'
+			)
+			&& $populate === 'values'
+		) {
 			return $template_value;
 		}
 
@@ -1757,19 +1772,29 @@ class GP_Populate_Anything extends GP_Plugin {
 			/**
 			 * If there's a value pre-selected, use it as the preselected choice value.
 			 */
-			foreach ( $field->choices as $choice ) {
+			foreach ( $field->choices as $choice_index => $choice ) {
 
 				if ( ! rgar( $choice, 'isSelected' ) ) {
 					continue;
 				}
 
 				if ( ! rgblank( $choice['value'] ) ) {
-					// If there are multiple pre-selections, make sure we capture them all in an array
-					if ( $preselected_choice_value ) {
-						$preselected_choice_value   = ( is_array( $preselected_choice_value ) ) ? $preselected_choice_value : array( $preselected_choice_value );
-						$preselected_choice_value[] = $choice['value'];
+					// Choice-based fields with inputs (e.g. checkboxes) use individual input values rather than
+					// an array for the checked values.
+					if ( $field->inputs ) {
+						if ( ! $preselected_choice_value ) {
+							$preselected_choice_value = array();
+						}
+
+						$preselected_choice_value[ $field->inputs[ $choice_index ]['id'] ] = $choice['value'];
+						// If there are multiple pre-selections, make sure we capture them all in an array
 					} else {
-						$preselected_choice_value = $choice['value'];
+						if ( $preselected_choice_value ) {
+							$preselected_choice_value   = ( is_array( $preselected_choice_value ) ) ? $preselected_choice_value : array( $preselected_choice_value );
+							$preselected_choice_value[] = $choice['value'];
+						} else {
+							$preselected_choice_value = $choice['value'];
+						}
 					}
 				}
 			}
@@ -2587,7 +2612,14 @@ class GP_Populate_Anything extends GP_Plugin {
 				$GLOBALS['gppa-field-values'][ $field->formId ][ $field->id ] = $hydrated_value;
 			}
 
-			$field_values[ $field->id ] = $hydrated_value;
+			// Fields with inputs/choices should be merged into the field values array adjacent to regular field values.
+			// without this, PHP warnings can arise with checkbox fields.
+			if ( $field->inputs && $field->choices && is_array( $hydrated_value ) ) {
+				$field_values = $field_values + $hydrated_value;
+			} else {
+				$field_values[ $field->id ] = $hydrated_value;
+			}
+
 			// Store hydrated value for use in other perks (currently GPRO)
 			$field->gppa_hydrated_value = $hydrated_value;
 		}

@@ -79,14 +79,22 @@
 .webinar_block_title .bb_inline_selectBox,
 .meeting_block_title .bb_inline_selectBox {
 	display: inline-block;
+	margin-bottom: 5px;
+	width: 100%;
 }
 
 .bb-meeting-id-input-container .bb_inline_selectBox .components-flex__item,
+.bb-meeting-id-input-container .bb_inline_selectBox .components-flex-item,
 .bp-meeting-block-create .bb_inline_selectBox .components-flex__item,
+.bp-meeting-block-create .bb_inline_selectBox .components-flex-item,
 .webinar_block_title .bb_inline_selectBox .components-flex__item,
-.meeting_block_title .bb_inline_selectBox .components-flex__item {
+.webinar_block_title .bb_inline_selectBox .components-flex-item,
+.meeting_block_title .bb_inline_selectBox .components-flex__item,
+.meeting_block_title .bb_inline_selectBox .components-flex-item {
 	width: 105px;
 	display: inline-block;
+	vertical-align: middle;
+	margin-left: 10px;
 }
 
 .bb-meeting-id-input-container .bb_inline_selectBox .components-input-control__container,
@@ -95,6 +103,7 @@
 .meeting_block_title .bb_inline_selectBox .components-input-control__container {
 	width: calc(100% - 115px);
 	display: inline-block;
+	min-width: 200px;
 }
 
 .popover-slot .components-popover__content {

@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6.20
-Stable tag: 1.1.3
+Stable tag: 1.1.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,21 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.5 =
+* Member Access Controls - Provided hooks to clear API cache
+
+= 1.1.4 =
+* Media - Provided 'Member Access Controls' settings to decide which members should have access to upload videos
+* Zoom - Fixed issue to run CRON only when zoom enabled
+
+= 1.1.3.2 =
+* Groups - Fixed group 'Member Access Controls' issue in Send invite screen
+* Compatibility - Fixed WordPress 8.0 compatibility issues
+* Translations - Updated German (formal) language files
+
+= 1.1.3.1 =
+* Compatibility - Fixed groups access control compatibility issue with MemberPress plugin
 
 = 1.1.3 =
 * Zoom - Improved meeting and webinar security

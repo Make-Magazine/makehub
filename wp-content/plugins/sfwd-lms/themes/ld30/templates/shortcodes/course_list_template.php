@@ -1,4 +1,12 @@
 <?php
+/**
+ * LearnDash LD30 Displays course list
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,7 +27,14 @@ if ( is_user_logged_in() ) {
 	<div class="ld-item-list">
 		<div class="ld-item-list-item">
 			<div class="ld-item-list-item-preview">
-				<a class="ld-item-name ld-primary-color-hover" href="<?php echo esc_url( learndash_get_step_permalink( get_the_ID() ) ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+				<?php if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) !== 'yes' && $shortcode_atts['post_type'] === 'groups' ) {
+					echo esc_html( get_the_title() );
+				} else {
+				?>
+					<a class="ld-item-name ld-primary-color-hover" href="<?php echo esc_url( learndash_get_step_permalink( get_the_ID() ) ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+				<?php
+				}
+				?>
 			</div>
 		</div>
 	</div>

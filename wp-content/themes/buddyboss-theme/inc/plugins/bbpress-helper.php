@@ -18,6 +18,11 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
          */
         public function __construct () {
 
+
+            if ( function_exists( 'bp_is_active' ) && ! bp_is_active( 'forums' ) ) {
+                return;
+            }
+
             add_action( 'bbp_init', array( $this, 'set_active' ) );
 
             //add_action( 'bbp_template_before_single_forum', array( $this, 'action_bbp_template_before_single_forum' ) );
@@ -31,6 +36,8 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 	        add_filter( 'bbp_get_reply_to_link', array( $this, 'reply_to_link' ), 10, 3 );
 	        add_filter( 'bbp_get_reply_edit_url', array( $this, 'bbp_get_reply_edit_url_callback' ), PHP_INT_MAX, 2 );
 	        add_filter( 'bbp_edit_reply_redirect_to', array( $this, 'bbp_edit_reply_redirect_to_callback' ), PHP_INT_MAX, 2 );
+	        add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'theme_activity_entry_buttons' ), 20, 2 );
+            add_action( 'wp_ajax_quick_reply_ajax', array( $this,'activity_quick_reply_ajax_cb' ) );
         }
 
         public function get_oembed_reply_content( $content ) {
@@ -86,6 +93,8 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 				    'reply_form_html'      => $reply_form_html,
 				    'threaded_reply'       => bbp_allow_threaded_replies(),
 				    'threaded_reply_depth' => bbp_thread_replies_depth(),
+				    'reply_to_text'        => __( 'Reply to', 'buddyboss-theme' ),
+				    'type_reply_here_text' => __( 'Type your reply here', 'buddyboss-theme' ),
 			    ) );
 		    }
 	    }
@@ -212,7 +221,9 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 		    if ( function_exists( 'bp_media_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments' ) ) {
 			    add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
 		    }
-
+		    if ( function_exists( 'bp_video_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments' ) ) {
+			    add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 999, 2 );
+		    }
 		    if ( function_exists( 'bp_document_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments' ) ) {
 			    add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
 		    }
@@ -374,7 +385,7 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
             // Put the line breaks back.
             return $content . implode( '', $embeds_array );
         }
-	
+
 	    /**
 	     * Function will add new parameter in the URL when click on forum replys.
 	     *
@@ -387,10 +398,10 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 	     */
 	    public function bbp_get_reply_edit_url_callback( $url, $reply_id ) {
 		    $url = add_query_arg( 'forum_redirect_to', ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1, $url );
-		
+
 		    return $url;
 	    }
-	
+
 	    /**
 	     * Function will work for the redirection - The page from which he would have clicked will redirect to the same page.
 	     *
@@ -413,8 +424,133 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 				    $reply_url = $topic_link . 'page/' . $_POST['bbp_redirect_page_to'] . $reply_hash;
 			    }
 		    }
-		
+
 		    return $reply_url;
+	    }
+
+	    /**
+	     * Added Quick reply button in topic activity.
+	     *
+	     * @param array $buttons     Array of buttons.
+	     * @param int   $activity_id Activity ID.
+	     *
+	     * @since 1.7.1
+	     *
+	     * @return mixed
+	     */
+	    public function theme_activity_entry_buttons( $buttons, $activity_id ) {
+		    // Get activity post data.
+		    $activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+
+		    if ( empty( $activities['activities'] ) ) {
+			    return $buttons;
+		    }
+
+		    $activity = array_shift( $activities['activities'] );
+
+		    if ( 'bbp_topic_create' === $activity->type ) {
+			    // Set topic id when the activity component is not groups.
+			    if ( 'bbpress' === $activity->component ) {
+				    $topic_id = $activity->item_id;
+			    }
+
+			    // Set topic id when the activity component is groups.
+			    if ( 'groups' === $activity->component ) {
+				    $topic_id = $activity->secondary_item_id;
+			    }
+
+			    // bbp_get_topic_author_id.
+			    $topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
+			    $user_id     = bbp_get_topic_author_id( $topic_id );
+			    $author      = bp_core_get_user_displayname( $user_id );
+
+			    // New meta button as 'Quick Reply'.
+			    $buttons['quick_reply'] = array(
+				    'id'                => 'quick_reply',
+				    'position'          => 5,
+				    'component'         => 'activity',
+				    'must_be_logged_in' => true,
+				    'button_element'    => 'a',
+				    'link_text'         => sprintf(
+					    '<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
+					    __( 'Quick Reply', 'buddyboss-theme' ),
+					    __( 'Quick Reply', 'buddyboss-theme' )
+				    ),
+				    'button_attr'       => array(
+					    'class'            => 'button bb-icon-chat bp-secondary-action',
+					    'data-btn-id'      => 'bbp-reply-form',
+					    'data-topic-title' => esc_attr( $topic_title ),
+					    'data-topic-id'    => $topic_id,
+					    'aria-expanded'    => 'false',
+					    'href'             => '#new-post',
+					    'data-author-name' => $author,
+				    ),
+			    );
+		    }
+
+		    return $buttons;
+	    }
+
+        /**
+         * Ajax callback for Quick Reply.
+         *
+         * @since 1.7.4
+         *
+         * @uses  bbp_get_template_part() Load required template.
+         *
+         * @return void
+         */
+        public function activity_quick_reply_ajax_cb() {
+            ?>
+            <div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap" data-component="activity" style="display: none;">
+                <?php
+                if( isset( $_POST['action'] ) && $_POST['action'] == 'quick_reply_ajax' ) {
+                    $_POST['action'] = 'reply';
+                }
+
+                add_filter( 'bb_forum_attachment_group_id', array( $this,'forum_attachment_group_id' ) );
+                add_filter( 'bb_forum_attachment_forum_id', array( $this,'forum_attachment_forum_id' ) );
+
+                // Timeline quick reply form template.
+                bbp_get_template_part( 'form', 'reply-activity' );
+
+                // Success message template.
+                bbp_get_template_part( 'form-reply', 'success' );
+                ?>
+            </div>
+            <?php
+            die();
+        }
+
+	    /**
+	     * @param int $group_id Group ID.
+	     *
+	     * @since 1.7.4
+	     *
+	     * @return mixed
+	     */
+	    public function forum_attachment_group_id( $group_id ) {
+		    if ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) && isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) {
+			    $group_id = $_POST['group_id'];
+		    }
+
+		    return $group_id;
+	    }
+
+	    /**
+	     * @param int $forum_id Forum ID.
+	     *
+	     * @since 1.7.4
+	     *
+	     * @return int|mixed
+	     */
+	    public function forum_attachment_forum_id( $forum_id ) {
+		    if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && isset( $_POST['topic_id'] ) && ! empty( $_POST['topic_id'] ) ) {
+			    $topic_id = $_POST['topic_id'];
+			    $forum_id = bbp_get_topic_forum_id( $topic_id );
+		    }
+
+		    return $forum_id;
 	    }
 
     }

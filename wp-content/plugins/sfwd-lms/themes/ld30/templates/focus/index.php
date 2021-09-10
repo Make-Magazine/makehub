@@ -1,4 +1,12 @@
 <?php
+/**
+ * LearnDash LD30 focus mode.
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -13,6 +21,8 @@ if ( have_posts() ) :
 
 		/**
 		 * Fires before the header in the focus template.
+		 *
+		 * @since 3.0.0
 		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.
@@ -31,6 +41,8 @@ if ( have_posts() ) :
 
 		/**
 		 * Fires before the sidebar in the focus template.
+		 *
+		 * @since 3.0.0
 		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.
@@ -53,6 +65,8 @@ if ( have_posts() ) :
 		/**
 		 * Fires before the masthead in the focus template.
 		 *
+		 * @since 3.0.0
+		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.
 		 */
@@ -71,6 +85,8 @@ if ( have_posts() ) :
 		/**
 		 * Fires after the masthead in the focus template.
 		 *
+		 * @since 3.0.0
+		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.
 		 */
@@ -82,6 +98,8 @@ if ( have_posts() ) :
 			<?php
 			/**
 			 * Fires before the title in the focus template.
+			 *
+			 * @since 3.0.0
 			 *
 			 * @param int $course_id Course ID.
 			 * @param int $user_id   User ID.
@@ -95,6 +113,8 @@ if ( have_posts() ) :
 			/**
 			 * Fires before the content in the focus template.
 			 *
+			 * @since 3.0.0
+			 *
 			 * @param int $course_id Course ID.
 			 * @param int $user_id   User ID.
 			 */
@@ -106,6 +126,8 @@ if ( have_posts() ) :
 			<?php
 			/**
 			 * Fires after the content in the focus template.
+			 *
+			 * @since 3.0.0
 			 *
 			 * @param int $course_id Course ID.
 			 * @param int $user_id   User ID.
@@ -124,26 +146,39 @@ if ( have_posts() ) :
 
 			<?php
 			/**
-			 * Filters whether to load comments in focus mode or not.
+			 * Filters whether to show existing comments when comments are not enabled.
 			 *
-			 * @param boolean $load_focus_comments Whether to comments in focus mode or not.
+			 * @since 3.4.2
+			 *
+			 * @param boolean $show_existing_comments Whether to show existing comments.
 			 */
-			if ( apply_filters( 'learndash_focus_mode_can_view_comments', is_user_logged_in() ) && comments_open() ) :
-				learndash_get_template_part(
-					'focus/comments.php',
-					array(
-						'course_id' => $course_id,
-						'user_id'   => $user_id,
-						'context'   => 'focus',
-					),
-					true
-				);
-				endif;
+			if ( comments_open() || ( apply_filters( 'learndash_focus_mode_show_existing_comments', false ) ) ) {
+				/**
+				 * Filters whether to load comments in focus mode or not.
+				 *
+				 * @since 3.1.4
+				 *
+				 * @param boolean $load_focus_comments Whether to show comments in focus mode or not.
+				 */
+				if ( apply_filters( 'learndash_focus_mode_can_view_comments', is_user_logged_in() ) ) {
+					learndash_get_template_part(
+						'focus/comments.php',
+						array(
+							'course_id' => $course_id,
+							'user_id'   => $user_id,
+							'context'   => 'focus',
+						),
+						true
+					);
+				}
+			}
 			?>
 
 			<?php
 			/**
 			 * Fires at the focus mode content end.
+			 *
+			 * @since 3.1.4
 			 *
 			 * @param int $course_id Course ID.
 			 * @param int $user_id   User ID.
@@ -157,6 +192,8 @@ if ( have_posts() ) :
 		<?php
 		/**
 		 * Fires before the footer in the focus template.
+		 *
+		 * @since 3.0.0
 		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.
@@ -175,6 +212,8 @@ if ( have_posts() ) :
 
 		/**
 		 * Fires after the footer in the focus template.
+		 *
+		 * @since 3.0.0
 		 *
 		 * @param int $course_id Course ID.
 		 * @param int $user_id   User ID.

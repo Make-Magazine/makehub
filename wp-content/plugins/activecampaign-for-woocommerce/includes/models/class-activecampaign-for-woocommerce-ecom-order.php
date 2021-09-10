@@ -59,6 +59,22 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	];
 
 	/**
+	 * The required fields for an ecom order
+	 *
+	 * @var array
+	 */
+	private $required_fields = [
+		'email',
+		'total_price',
+		'source',
+		'connectionid',
+		'order_number',
+		'customerid',
+		'currency',
+		'external_created_date',
+	];
+
+	/**
 	 * The abandoned date.
 	 *
 	 * @var string
@@ -612,7 +628,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 				[
 					'message'      => $t->getMessage(),
 					'passed_array' => $array,
-					'trace'        => $t->getTrace(),
+					'trace'        => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -645,11 +661,111 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 				'Activecampaign_For_Woocommerce_Ecom_Order: The serialize_to_array function encountered an issue. A valid order object may not exist.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 
 			return null;
 		}
+	}
+
+	/**
+	 * Validate the required fields and return a bool
+	 *
+	 * @return bool
+	 */
+	public function validate_model() {
+		$logger = new Logger();
+
+		try {
+			if ( empty( $this->email ) ) {
+				$logger->error(
+					'Activecampaign_For_Woocommerce_Ecom_Order: Email is missing from order! This call will fail to send to AC.',
+					[
+						'email' => $this->email,
+					]
+				);
+
+				return false;
+			}
+
+			// One of these is required
+			if ( empty( $this->externalcheckoutid ) && empty( $this->externalid ) ) {
+				$logger->warning(
+					'Activecampaign_For_Woocommerce_Ecom_Order: No external ID has been set. This is required.',
+					[
+						'email'        => $this->email,
+						'order_number' => $this->order_number,
+
+					]
+				);
+
+				return false;
+			}
+
+			foreach ( $this->required_fields as $field ) {
+				if ( 'source' === $field && ( '0' !== $this->{$field} && '1' !== $this->{$field} )
+				) {
+					$logger->error(
+						'Activecampaign_For_Woocommerce_Ecom_Order: The source set on the ecom order is not valid.',
+						[
+							'failed_field_name' => $field,
+							'connectionid'      => $this->connectionid,
+							'email'             => $this->email,
+							'total_price'       => $this->total_price,
+							'order_source'      => $this->source,
+							'order_number'      => $this->order_number,
+							'customerid'        => $this->customerid,
+						]
+					);
+
+					return false;
+				}
+
+				if ( 'total_price' === $field && ! isset( $this->{$field} ) ) {
+					$logger->error(
+						'Activecampaign_For_Woocommerce_Ecom_Order: Total price is not valid.',
+						[
+							'failed_field_name' => $field,
+							'connectionid'      => $this->connectionid,
+							'email'             => $this->email,
+							'total_price'       => $this->total_price,
+							'order_source'      => $this->source,
+							'order_number'      => $this->order_number,
+							'customerid'        => $this->customerid,
+						]
+					);
+
+					return false;
+				}
+
+				if ( 'total_price' !== $field && 'source' !== $field && empty( $this->{$field} ) ) {
+					$logger->error(
+						'Activecampaign_For_Woocommerce_Ecom_Order: A required field in the ecom model is not valid.',
+						[
+							'failed_field_name' => $field,
+							'connectionid'      => $this->connectionid,
+							'email'             => $this->email,
+							'total_price'       => $this->total_price,
+							'order_source'      => $this->source,
+							'order_number'      => $this->order_number,
+							'customerid'        => $this->customerid,
+						]
+					);
+
+					return false;
+				}
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'Activecampaign_For_Woocommerce_Ecom_Order: There was an error validating the ecom order model.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+
+		return true;
 	}
 }

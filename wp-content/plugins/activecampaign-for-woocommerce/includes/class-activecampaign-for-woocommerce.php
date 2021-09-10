@@ -340,9 +340,7 @@ class Activecampaign_For_Woocommerce {
 	 */
 	private function define_event_hooks() {
 		// If we can't get the config stop this function
-		if ( ! $this->admin->get_options() ) {
-			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public event hooks will not run.' );
-
+		if ( ! $this->is_configured() ) {
 			return;
 		}
 
@@ -389,18 +387,6 @@ class Activecampaign_For_Woocommerce {
 			'trigger'
 		);
 
-		$this->loader->add_action(
-			'woocommerce_order_status_processing',
-			$this->cart_updated_event,
-			'processing_trigger'
-		);
-
-		$this->loader->add_action(
-			'woocommerce_order_status_on-hold',
-			$this->cart_updated_event,
-			'processing_trigger'
-		);
-
 	}
 
 	/**
@@ -418,9 +404,7 @@ class Activecampaign_For_Woocommerce {
 		 * registering any public commands since they will not work without the
 		 * plugin being configured.
 		 */
-		if ( ! $this->admin->get_options() ) {
-			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public commands will not run.' );
-
+		if ( ! $this->is_configured() ) {
 			return;
 		}
 
@@ -540,12 +524,6 @@ class Activecampaign_For_Woocommerce {
 			'handle_settings_post'
 		);
 
-		$this->loader->add_action(
-			'wp_ajax_api_test',
-			$this->admin,
-			'handle_api_test'
-		);
-
 		$this->loader->add_filter(
 			'plugin_action_links_' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_BASE_NAME,
 			$this->admin,
@@ -578,39 +556,9 @@ class Activecampaign_For_Woocommerce {
 		}
 
 		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_dismiss_error_notice',
-			$this->admin,
-			'update_dismiss_error_notice_option'
-		);
-
-		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_clear_error_log',
-			$this->admin,
-			'clear_error_logs'
-		);
-
-		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_manual_abandonment_sync',
-			$this->admin,
-			'handle_abandon_cart_sync'
-		);
-
-		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_delete_abandoned_cart_row',
-			$this->admin,
-			'handle_abandon_cart_delete'
-		);
-
-		$this->loader->add_action(
 			'activecampaign_for_woocommerce_run_manual_abandonment_sync',
 			$this->run_abandonment_sync_command,
 			'abandoned_cart_manual_run'
-		);
-
-		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_sync_abandoned_cart_row',
-			$this->admin,
-			'handle_abandon_cart_force_row_sync'
 		);
 
 		$this->loader->add_action(
@@ -627,6 +575,64 @@ class Activecampaign_For_Woocommerce {
 	}
 
 	/**
+	 * Defines the admin ajax calls
+	 */
+	public function define_admin_ajax_hooks() {
+		$this->loader->add_action(
+			'wp_ajax_api_test',
+			$this->admin,
+			'handle_api_test'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_dismiss_error_notice',
+			$this->admin,
+			'update_dismiss_error_notice_option'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_clear_error_log',
+			$this->admin,
+			'clear_error_logs'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_clear_all_settings',
+			$this->admin,
+			'handle_clear_plugin_settings'
+		);
+
+		if ( ! $this->is_configured() ) {
+			return;
+		}
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_manual_abandonment_sync',
+			$this->admin,
+			'handle_abandon_cart_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_delete_abandoned_cart_row',
+			$this->admin,
+			'handle_abandon_cart_delete'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_sync_abandoned_cart_row',
+			$this->admin,
+			'handle_abandon_cart_force_row_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_reset_connection_id',
+			$this->admin,
+			'handle_reset_connection_id'
+		);
+
+	}
+
+	/**
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
@@ -635,23 +641,18 @@ class Activecampaign_For_Woocommerce {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
+		// end this function if not configured
+		if ( ! $this->is_configured() ) {
+			return;
+		}
+
 		/**
 		 * If the site admin has not yet configured their plugin, bail out before
 		 * registering any public commands since they will not work without the
 		 * plugin being configured.
 		 */
-		if ( $this->admin->get_options() ) {
-			$ops = $this->admin->get_options();
-		} else {
-			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public hooks will not run.' );
 
-			return;
-		}
-
-		// end this function if not configured
-		if ( ! $this->is_configured() ) {
-			return;
-		}
+		$ops = $this->admin->get_options();
 
 		$this->loader->add_action(
 			'wp_enqueue_scripts',
@@ -690,7 +691,17 @@ class Activecampaign_For_Woocommerce {
 			);
 
 		} else {
-			$this->logger->warning( 'Checkbox actions cannot be run. checkbox_display_option and/or optin_checkbox_text are not defined or not available in your theme.' );
+			$this->logger->debug( 'Checkbox actions cannot be run. checkbox_display_option and/or optin_checkbox_text are not defined or not available in your theme.' );
+		}
+
+	}
+
+	/**
+	 * Defines the public ajax calls
+	 */
+	public function define_public_ajax_hooks() {
+		if ( ! $this->is_configured() ) {
+			return;
 		}
 
 		$this->loader->add_action(
@@ -722,7 +733,9 @@ class Activecampaign_For_Woocommerce {
 		$this->define_event_hooks();
 		$this->define_command_hooks();
 		$this->define_admin_hooks();
+		$this->define_admin_ajax_hooks();
 		$this->define_public_hooks();
+		$this->define_public_ajax_hooks();
 
 		$this->loader->run();
 	}

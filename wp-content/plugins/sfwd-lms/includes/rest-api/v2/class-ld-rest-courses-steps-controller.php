@@ -1,17 +1,7 @@
 <?php
 /**
- * LearnDash V2 REST API Courses Steps Controller.
+ * LearnDash REST API V2 Courses Steps Controller.
  *
- * @package LearnDash
- * @subpackage REST_API
- * @since 3.3.0
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/**
  * This Controller class is used to GET/UPDATE/DELETE the association
  * between the LearnDash Courses (sfwd-courses) and the Course Steps.
  * Course Steps are Lessons (sfwd-lessons), Topics (sfwd-topic), and
@@ -20,20 +10,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class extends the LD_REST_Posts_Controller_V2 class.
  *
  * @since 3.3.0
+ * @package LearnDash\REST\V2
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V2' ) ) ) {
+
 	/**
-	 * Class REST API Courses Post Controller.
+	 * Class LearnDash REST API V2 Courses Steps Controller.
+	 *
+	 * @since 3.3.0
+	 * @uses LD_REST_Posts_Controller_V2
 	 */
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 	class LD_REST_Courses_Steps_Controller_V2 extends LD_REST_Posts_Controller_V2 {
 
+		/**
+		 * Supported Collection Parameters.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @var array $supported_collection_params.
+		 */
 		private $supported_collection_params = array(
 			'filter' => 'filter',
 		);
 
 		/**
 		 * Public constructor for class
+		 *
+		 * @since 3.3.0
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -149,6 +158,9 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 							'l',
 							't',
 							'r',
+							'co',
+							'sections',
+							'legacy',
 						),
 						'context'     => array( 'view', 'edit' ),
 					),
@@ -182,6 +194,9 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 					'l',
 					't',
 					'r',
+					'co',
+					'sections',
+					'legacy',
 				),
 			);
 
@@ -198,30 +213,42 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 		 * @return true|WP_Error True if the request has read access, otherwise WP_Error object.
 		 */
 		public function get_course_steps_permissions_check( $request ) {
-			if ( is_user_logged_in() ) {
-				if ( learndash_is_admin_user() ) {
-					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
-						return true;
-					}
+			if ( ! is_user_logged_in() ) {
+				/**
+				 * Filter to allow anonymous access to Course Steps REST endpoint.
+				 *
+				 * @since 3.4.2
+				 * @param bool $allow true/false.
+				 * @return bool true Return true to allow access to anonymous user. 
+				 */
+				if ( apply_filters( 'learndash_rest_course_steps_allow_anonymous_read', false ) ) {
+					return true;
 				}
+				return false;
+			}
 
-				$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
+			if ( learndash_is_admin_user() ) {
+				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+					return true;
+				}
+			}
 
-				// Ensure the user has some courses.
-				if ( ! empty( $enrolled_courses ) ) {
+			$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 
-					// Secondary check if they are wanting steps for a specific course ID.
-					$course_id = $request['id'];
-					if ( ! empty( $course_id ) ) {
-						// And if that course ID is in their enrolled courses.
-						if ( in_array( $course_id, $enrolled_courses, true ) ) {
-							$enrolled_courses = array( $course_id );
-							return true;
-						}
-					} else {
-						// If user has enrolled courses but not requesting a specific course then good to go.
+			// Ensure the user has some courses.
+			if ( ! empty( $enrolled_courses ) ) {
+
+				// Secondary check if they are wanting steps for a specific course ID.
+				$course_id = $request['id'];
+				if ( ! empty( $course_id ) ) {
+					// And if that course ID is in their enrolled courses.
+					if ( in_array( $course_id, $enrolled_courses, true ) ) {
+						$enrolled_courses = array( $course_id );
 						return true;
 					}
+				} else {
+					// If user has enrolled courses but not requesting a specific course then good to go.
+					return true;
 				}
 			}
 		}
@@ -252,12 +279,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 		 */
 		public function get_course_steps( $request ) {
 			$data = array();
-
-			$current_user_id = get_current_user_id();
-			if ( empty( $current_user_id ) ) {
-				return new WP_Error( 'rest_not_logged_in', esc_html__( 'You are not currently logged in.', 'learndash' ), array( 'status' => 401 ) );
-			}
-			$current_user = wp_get_current_user();
 
 			$course = $this->get_post( $request['id'] );
 			if ( is_wp_error( $course ) ) {

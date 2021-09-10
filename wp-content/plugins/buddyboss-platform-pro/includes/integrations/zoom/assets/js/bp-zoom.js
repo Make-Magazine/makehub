@@ -363,6 +363,8 @@ window.bp = window.bp || {};
 						if( _this.find( '.countDays .position:first' ).text().trim() == '0' ) {
 							_this.find( '.countDays .position:first' ).hide();
 							_this.find( '.countDays' ).addClass('digits-2');
+						} else {
+							_this.find( '.countDays' ).addClass('digits-3');
 						}
 					},250);
 

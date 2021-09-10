@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_AC_Contact as AC_Contact;
 use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Interacts_With_Api as Interacts_With_Api;
 use Activecampaign_For_Woocommerce_Repository_Interface as Repository;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The repository class for Contacts
@@ -130,7 +131,14 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 		$result       = $result_array;
 
 		if ( empty( $result ) ) {
-			throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception();
+			$logger = new Logger();
+			$logger->debug(
+				'ac_contact_repository: Resource not found.',
+				[
+					'endpoint' => $this->client->get_endpoint(),
+					'email'    => $email,
+				]
+			);
 		}
 
 		return $ac_contact_model->set_properties_from_serialized_array( array_values( $result )[0] );

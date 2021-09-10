@@ -56,8 +56,28 @@ registerBlockType(
 			const { attributes: { user_id, preview_user_id, preview_show },
 				setAttributes } = props;
 
+				let panel_groups_not_public = '';
+				if ( ldlms_settings['settings']['groups_cpt']['public'] === '' ) {
+					panel_groups_not_public = (
+						<PanelBody
+							// translators: placeholder: Group.
+							title={__('Warning', 'learndash')}
+							opened={true}
+						>
+							<TextControl
+								// translators: placeholder: Groups, Groups.
+								help={sprintf(_x('%1$s are not public, please visit the %2$s Settings page and set them to Public to enable access on the front end.', 'placeholder: Groups, Groups', 'learndash'), ldlms_get_custom_label('groups'), ldlms_get_custom_label('groups'))}
+								value={''}
+								type={'hidden'}
+								className={'notice notice-error'}
+							/>
+						</PanelBody>
+					)
+				}
+
 			const inspectorControls = (
 				<InspectorControls key='controls'>
+					{ panel_groups_not_public }
 					<PanelBody
 						title={ __( 'Settings', 'learndash' ) }
 					>

@@ -1,11 +1,20 @@
 <?php
+/**
+ * LearnDash Shortcode Section for Group List [ld_group_list].
+ *
+ * @since 3.2.0
+ * @package LearnDash\Settings\Shortcodes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_ld_group_list' ) ) ) {
 	/**
-	 * Class for LearnDash Shortcode Section.
+	 * Class LearnDash Shortcode Section for Group List [ld_group_list].
+	 *
+	 * @since 3.2.0
 	 */
 	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_ld_group_list extends LearnDash_Shortcodes_Section {
@@ -13,23 +22,28 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 		/**
 		 * Public constructor for class.
 		 *
+		 * @since 3.2.0
+		 *
 		 * @param array $fields_args Field Args.
 		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
+			$groups_public     = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === '' ) ? learndash_groups_get_not_public_message() : '';
 
 			$this->shortcodes_section_key = 'ld_group_list';
 			// translators: placeholder: Group.
 			$this->shortcodes_section_title = sprintf( esc_html_x( '%s List', 'placeholder: Group', 'learndash' ), LearnDash_Custom_Label::get_label( 'group' ) );
 			$this->shortcodes_section_type  = 1;
 			// translators: placeholders: groups, groups (URL slug).
-			$this->shortcodes_section_description = sprintf( wp_kses_post( _x( 'This shortcode shows list of %1$s. You can use this shortcode on any page if you do not want to use the default <code>/%2$s/</code> page.', 'placeholders: groups, groups (URL slug)', 'learndash' ) ), learndash_get_custom_label_lower( 'groups' ), LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'groups' ) );
+			$this->shortcodes_section_description = sprintf( wp_kses_post( _x( 'This shortcode shows list of %1$s. You can use this shortcode on any page if you do not want to use the default <code>/%2$s/</code> page. %3$s', 'placeholders: groups, groups (URL slug)', 'learndash' ) ), learndash_get_custom_label_lower( 'groups' ), LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'groups' ), $groups_public );
 
 			parent::__construct();
 		}
 
 		/**
 		 * Initialize the shortcode fields.
+		 *
+		 * @since 3.2.0
 		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
@@ -74,7 +88,22 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						'step' => 1,
 					),
 				),
-
+				'price_type'     => array(
+					'id'        => $this->shortcodes_section_key . '_price_type',
+					'name'      => 'price_type',
+					'type'      => 'multiselect',
+					// translators: placeholder: Group Access Mode(s)
+					'label'     => sprintf( esc_html_x( '%s Access Mode(s)', 'placeholder: Group Access Mode(s)', 'learndash' ), learndash_get_custom_label( 'groups' ) ),
+					// translators: placeholder: groups
+					'help_text' => sprintf( esc_html_x( 'Filter %s by access mode(s), Ctrl+click to deselect selected items.', 'placeholder: groups', 'learndash' ), learndash_get_custom_label_lower( 'groups' ) ),
+					'value'     => '',
+					'options'   => array(
+						'free'      => esc_html__( 'Free', 'learndash' ),
+						'paynow'    => esc_html__( 'Buy Now', 'learndash' ),
+						'subscribe' => esc_html__( 'Recurring', 'learndash' ),
+						'closed'    => esc_html__( 'Closed', 'learndash' ),
+					),
+				),
 				'mygroups'       => array(
 					'id'        => $this->shortcodes_section_key . '_mygroups',
 					'name'      => 'mygroups',
@@ -281,6 +310,11 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::init_shortcodes_section_fields();
 		}
 
+		/**
+		 * Show Shortcode section footer extra
+		 *
+		 * @since 3.2.0
+		 */
 		public function show_shortcodes_section_footer_extra() {
 			?>
 			<script>

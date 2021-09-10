@@ -181,6 +181,31 @@ function bb_access_control_upload_photos_settings() {
 }
 
 /**
+ * Function will return the upload videos field settings settings data.
+ *
+ * @since 1.1.4
+ *
+ * @return array upload videos settings data.
+ */
+function bb_access_control_upload_videos_settings() {
+    $default = array(
+        'access-control-type'           => '',
+        'plugin-access-control-type'    => '',
+        'gamipress-access-control-type' => '',
+        'access-control-options'        => array(),
+    );
+
+    $access_control_data = bp_get_option( bb_access_control_upload_video_key(), $default );
+
+    /**
+     * Filter which will return the videos settings.
+     *
+     * @since 1.1.4
+     */
+    return apply_filters( 'bb_access_control_upload_videos_settings', $access_control_data );
+}
+
+/**
  * Function will return the friends field settings settings data.
  *
  * @since 1.1.0
@@ -316,6 +341,23 @@ function bb_access_control_upload_media_key() {
 }
 
 /**
+ * Function will return the upload video field settings key.
+ *
+ * @since 1.1.4
+ *
+ * @return string upload video key.
+ */
+function bb_access_control_upload_video_key() {
+
+    /**
+     * Filter which will return the key for the upload video access control settings.
+     *
+     * @since 1.1.4
+     */
+    return apply_filters( 'bb_access_control_upload_video_key', 'bb-access-control-upload-video' );
+}
+
+/**
  * Function will return the friends field settings key.
  *
  * @since 1.1.0
@@ -430,6 +472,7 @@ function bb_access_control_single_settings_save( $new_value, $old_value ) {
 add_filter( 'pre_update_option_' . bb_access_control_create_group_key(), 'bb_access_control_single_settings_save', 10, 2 );
 add_filter( 'pre_update_option_' . bb_access_control_create_activity_key(), 'bb_access_control_single_settings_save', 10, 2 );
 add_filter( 'pre_update_option_' . bb_access_control_upload_media_key(), 'bb_access_control_single_settings_save', 10, 2 );
+add_filter( 'pre_update_option_' . bb_access_control_upload_video_key(), 'bb_access_control_single_settings_save', 10, 2 );
 add_filter( 'pre_update_option_' . bb_access_control_upload_document_key(), 'bb_access_control_single_settings_save', 10, 2 );
 add_filter( 'pre_update_option_' . bb_access_control_join_group_key(), 'bb_access_control_single_settings_save', 10, 2 );
 

@@ -304,7 +304,7 @@
 
 	};
 
-	$(document).on('ready', function () {
+	$( function() {
 		window.BuddyBossThemeBbpScrubber.init();
 	});
 

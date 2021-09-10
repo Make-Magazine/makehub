@@ -97,6 +97,21 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 					'buddyboss_theme_refresh_ld_course_enrolled_users_total',
 				], 9999, 4 );
 
+				add_action( 'ld_group_postdata_updated', [
+					$this,
+					'buddyboss_theme_refresh_ld_group_enrolled_users_total',
+				], 9999, 1 );
+
+				add_action( 'ld_removed_group_access', [
+					$this,
+					'buddyboss_theme_refresh_ld_group_access_users_total',
+				], 9999, 2 );
+
+				add_action( 'ld_added_group_access', [
+					$this,
+					'buddyboss_theme_refresh_ld_group_access_users_total',
+				], 9999, 2 );
+
 				add_action( 'wp_ajax_buddyboss_lms_get_course_participants', [
 					$this,
 					'buddyboss_lms_get_course_participants',
@@ -1702,7 +1717,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 					$completed       = ! empty( $course_progress[ $course_id ]['lessons'][ $lesson->ID ] ) && 1 === $course_progress[ $course_id ]['lessons'][ $lesson->ID ];
 
 					$navigation_urls[] = [
-						'url'      => get_permalink( $lesson->ID ),
+						'url'      => learndash_get_step_permalink( $lesson->ID, $course_id ),
 						'complete' => $completed ? 'yes' : 'no',
 					];
 
@@ -1712,7 +1727,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 							$completed = ! empty( $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ] ) && 1 === $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ];
 
 							$navigation_urls[] = [
-								'url'      => get_permalink( $lesson_topic->ID ),
+								'url'      => learndash_get_step_permalink( $lesson_topic->ID, $course_id ),
 								'complete' => $completed ? 'yes' : 'no',
 							];
 
@@ -1721,7 +1736,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 							if ( ! empty( $topic_quizzes ) ) :
 								foreach ( $topic_quizzes as $topic_quiz ) {
 									$navigation_urls[] = [
-										'url'      => get_permalink( $topic_quiz['post']->ID ),
+										'url'      => learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id ),
 										'complete' => learndash_is_quiz_complete( get_current_user_id(), $topic_quiz['post']->ID ) ? 'yes' : 'no',
 									];
 								}
@@ -1735,7 +1750,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 					if ( ! empty( $lesson_quizzes ) ) :
 						foreach ( $lesson_quizzes as $lesson_quiz ) {
 							$navigation_urls[] = [
-								'url'      => get_permalink( $lesson_quiz['post']->ID ),
+								'url'      => learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id ),
 								'complete' => learndash_is_quiz_complete( get_current_user_id(), $lesson_quiz['post']->ID ) ? 'yes' : 'no',
 							];
 						}
@@ -1748,7 +1763,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 			if ( ! empty( $course_quizzes ) ) :
 				foreach ( $course_quizzes as $course_quiz ) {
 					$navigation_urls[] = [
-						'url'      => get_permalink( $course_quiz['post']->ID ),
+						'url'      => learndash_get_step_permalink( $course_quiz['post']->ID, $course_id ),
 						'complete' => learndash_is_quiz_complete( get_current_user_id(), $course_quiz['post']->ID ) ? 'yes' : 'no',
 					];
 				}
@@ -2220,6 +2235,50 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 		public function buddyboss_theme_refresh_ld_course_enrolled_users_total( $user_id, $course_id, $course_access_list, $remove ) {
 
 			$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, $force_refresh = true );
+		}
+
+		/**
+		 * Update user course enrolled count.
+		 *
+		 * @param int $group_id Post ID of the group.
+		 *
+		 * @since 1.7.3
+		 */
+		public function buddyboss_theme_refresh_ld_group_enrolled_users_total( $group_id ) {
+
+			$group_course_ids = learndash_group_enrolled_courses( $group_id );
+			if ( ! empty( $group_course_ids ) ) {
+
+				foreach ( $group_course_ids as $course_id ) {
+
+					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, $force_refresh = true );	
+
+					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, true );
+				}
+			}
+		}
+
+		/**
+		 * Update user course enrolled count.
+		 *
+		 * @param int $user_id  User ID.
+		 * @param int $group_id Post ID of the group.
+		 *
+		 * @since 1.7.3
+		 */
+		public function buddyboss_theme_refresh_ld_group_access_users_total( $user_id, $group_id ) {
+
+			$group_course_ids = learndash_group_enrolled_courses( $group_id );
+			if ( ! empty( $group_course_ids ) ) {
+
+				// Clear LD cache for updated user list.
+				$transient_key = 'learndash_group_users_' . $group_id;
+				delete_transient( $transient_key );
+
+				foreach ( $group_course_ids as $course_id ) {
+					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, true );
+				}
+			}
 		}
 
 		public function buddyboss_theme_ld_course_enrolled_users_list( $course_id, $force_refresh = false ) {

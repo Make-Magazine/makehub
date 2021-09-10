@@ -790,6 +790,17 @@ class BB_Access_Control {
 				$args
 			);
 
+            $setting->add_field(
+                bb_access_control_upload_video_key(),
+                __( 'Upload Videos', 'buddyboss-pro' ),
+                array(
+                    $this,
+                    'bb_admin_media_access_control_setting_callback_upload_videos',
+                ),
+                'string',
+                $args
+            );
+
 			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
 				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
 			}
@@ -864,6 +875,27 @@ class BB_Access_Control {
 		);
 		self::bb_admin_print_access_control_setting( bb_access_control_upload_media_key(), bb_access_control_upload_media_key(), '', $label, $settings, false, '', $component_settings );
 	}
+
+    /**
+     * Callback function for the upload video upload settings.
+     *
+     * @since 1.1.4
+     */
+    public function bb_admin_media_access_control_setting_callback_upload_videos() {
+        $label              = __( 'Select which members should have access to upload videos, based on:', 'buddyboss-pro' );
+        $settings           = bb_access_control_upload_videos_settings();
+        $component_settings = array(
+            'component' => 'video',
+            'notices'   => array(
+                'disable_videos_creation' => array(
+                    'is_disabled' => ( ! bp_is_profile_video_support_enabled() && ! bp_is_messages_video_support_enabled() && ! bp_is_forums_video_support_enabled() ) ? true : false,
+                    'message'     => __( 'Enable upload videos settings above in either profiles or messages or forums, to control which members can upload videos in components above.', 'buddyboss-pro' ),
+                    'type'        => 'info',
+                ),
+            ),
+        );
+        self::bb_admin_print_access_control_setting( bb_access_control_upload_video_key(), bb_access_control_upload_video_key(), '', $label, $settings, false, '', $component_settings );
+    }
 
 	/**
 	 * Callback function for the upload document upload settings.
