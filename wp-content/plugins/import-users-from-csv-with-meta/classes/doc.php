@@ -30,11 +30,13 @@ class ACUI_Doc{
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e( "Passwords (column password)", 'import-users-from-csv-with-meta' ); ?></th>
+				<th scope="row"><?php _e( "Passwords (column password and user_pass)", 'import-users-from-csv-with-meta' ); ?></th>
 				<td><?php _e( "A string that contains user passwords. We have different options for this case:", 'import-users-from-csv-with-meta' ); ?>
 					<ul style="list-style:disc outside none; margin-left:2em;">
-						<li><?php _e( "If you <strong>don't create a column for passwords</strong>: passwords will be generated automatically", 'import-users-from-csv-with-meta' ); ?></li>
-						<li><?php _e( "If you <strong>create a column for passwords</strong>: if cell is empty, password won't be updated; if cell has a value, it will be used", 'import-users-from-csv-with-meta' ); ?></li>
+                        <li><?php _e( "If you <strong>create a column password</strong>: if cell is empty, password won't be updated; if cell has a value, it will be used.", 'import-users-from-csv-with-meta' ); ?></li>
+                        <li><?php _e( "If you <strong>create a column called user_pass</strong>: this will be a hashed password that will be inserted directly in database, this is the best option to move users with their passwords using export tool", 'import-users-from-csv-with-meta' ); ?></li>
+                        <li><?php _e( "If you <strong>don't create a column for passwords (nor user_pass nor password)</strong>: passwords will be generated automatically.", 'import-users-from-csv-with-meta' ); ?></li>
+                        <li><?php _e( "You should not use both columns in the same import", 'import-users-from-csv-with-meta' ); ?></li>
 					</ul>
 				</td>
 			</tr>

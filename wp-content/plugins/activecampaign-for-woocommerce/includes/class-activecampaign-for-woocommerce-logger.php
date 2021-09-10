@@ -151,14 +151,11 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	public function debug( $message, array $context = array() ) {
 		$context = $this->resolveContext( $context );
 		$message = $this->formatMessageWithContext( $message, $context );
-
-		// If debug logging is turned on in the AC plugin settings, send all debug logs via the INFO level.
-		// That way, we can record debug logs regardless of the PHP error reporting level.
 		if ( $this->ac_debug ) {
+			// If debug logging is turned on in the AC plugin settings, send all debug logs via the INFO level. Bypasses PHP settings.
 			$this->logger->info( "[ActiveCampaign Debug] $message", $context );
-		} else {
-			$this->logger->debug( $message, $context );
 		}
+		// DO NOT record debug messages if debug is off. It's a waste of log space and makes a mess.
 	}
 
 	/**
@@ -237,8 +234,62 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		// Add the request ID to the log entry
 		$context['request_id'] = RequestIdService::get_request_id();
 
+		// Make absolutely sure we sanitize sensitive data
+		$formatted = $message . "\nContext: " . wp_json_encode( $context, JSON_PRETTY_PRINT );
+		return preg_replace( '/(user_pass).*[,}]|(password).*[,}]|(cardnumber).*[,}]|(exp.date).*[,}]|(cvc).*[,}]/i', '$1\":\"*REMOVED*\"', $formatted );
+
 		// The logger doesn't seem to actually use the context array, so we'll merge it in with the message
-		return $message . "\nContext: " . wp_json_encode( $context, JSON_PRETTY_PRINT );
+		// return $message . "\nContext: " . wp_json_encode( $context, JSON_PRETTY_PRINT );
+	}
+
+
+	/**
+	 * Replaces the trace array with a clean version that only contains specific details.
+	 *
+	 * @param array $trace The stack trace.
+	 *
+	 * @return array The replacement stack trace.
+	 */
+	public function clean_trace( $trace ) {
+		$result = [];
+
+		// Only retrieve class, function, and line for the first 3 trace results
+		if ( isset( $trace[0]['class'] ) ) {
+			$result[0]['class'] = $trace[0]['class'];
+		}
+		if ( isset( $trace[0]['function'] ) ) {
+			$result[0]['function'] .= $trace[0]['function'];
+		}
+
+		if ( isset( $trace[0]['line'] ) ) {
+			$result[0]['line'] = $trace[0]['line'];
+		}
+
+		if ( isset( $trace[1]['class'] ) ) {
+			$result[1]['class'] = $trace[1]['class'];
+		}
+
+		if ( isset( $trace[1]['function'] ) ) {
+			$result[1]['function'] = $trace[1]['function'];
+		}
+
+		if ( isset( $trace[1]['line'] ) ) {
+			$result[1]['line'] = $trace[1]['line'];
+		}
+
+		if ( isset( $trace[2]['class'] ) ) {
+			$result[2]['class'] = $trace[2]['class'];
+		}
+
+		if ( isset( $trace[2]['function'] ) ) {
+			$result[2]['function'] = $trace[2]['function'];
+		}
+
+		if ( isset( $trace[2]['line'] ) ) {
+			$result[2]['line'] = $trace[2]['line'];
+		}
+
+		return $result;
 	}
 
 	/**
@@ -267,7 +318,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 				'There was an issue adding an entry to the WooCommerce log',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->clean_trace( $t->getTrace() ),
 				]
 			);
 		}

@@ -129,7 +129,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 				[
 					'terms'          => $terms,
 					'product_id'     => $product->get_id(),
-					'trace'          => $t->getTrace(),
+					'trace'          => $logger->clean_trace( $t->getTrace() ),
 					'thrown_message' => $t->getMessage(),
 				]
 			);

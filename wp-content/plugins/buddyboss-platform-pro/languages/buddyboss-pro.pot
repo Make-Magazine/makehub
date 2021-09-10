@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 1.1.3\n"
+"Project-Id-Version: BuddyBoss Platform Pro 1.1.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-06-10 15:53:39+00:00\n"
+"POT-Creation-Date: 2021-09-01 14:05:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,11 +41,11 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:448
+#: includes/access-control/bb-access-control-filters.php:483
 msgid "You don't have access to send request membership."
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:662
+#: includes/access-control/bb-access-control-filters.php:697
 #: includes/access-control/bb-access-control-rest-filters.php:448
 #: includes/access-control/bb-access-control-rest-filters.php:524
 msgid ""
@@ -53,8 +53,8 @@ msgid ""
 "sending messages to this member."
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:664
-#: includes/access-control/bb-access-control-filters.php:666
+#: includes/access-control/bb-access-control-filters.php:699
+#: includes/access-control/bb-access-control-filters.php:701
 #: includes/access-control/bb-access-control-rest-filters.php:450
 #: includes/access-control/bb-access-control-rest-filters.php:452
 #: includes/access-control/bb-access-control-rest-filters.php:526
@@ -64,13 +64,13 @@ msgid ""
 "sending messages to these members: "
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:666
+#: includes/access-control/bb-access-control-filters.php:701
 #: includes/access-control/bb-access-control-rest-filters.php:452
 #: includes/access-control/bb-access-control-rest-filters.php:528
 msgid "..."
 msgstr ""
 
-#: includes/access-control/bb-access-control-functions.php:531
+#: includes/access-control/bb-access-control-functions.php:574
 #: includes/integrations/zoom/bp-zoom-functions.php:1449
 #: includes/integrations/zoom/bp-zoom-functions.php:1478
 #: includes/integrations/zoom/bp-zoom-functions.php:1505
@@ -118,7 +118,7 @@ msgid "You don't have enough access to send the friend request to this member."
 msgstr ""
 
 #: includes/access-control/includes/class-bb-access-control-access-control.php:65
-msgid "LearnDash LMS"
+msgid "LearnDash Group"
 msgstr ""
 
 #: includes/access-control/includes/class-bb-access-control-access-control.php:70
@@ -194,8 +194,8 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:567
 #: includes/access-control/includes/class-bb-access-control.php:751
 #: includes/access-control/includes/class-bb-access-control.php:760
-#: includes/access-control/includes/class-bb-access-control.php:927
-#: includes/access-control/includes/class-bb-access-control.php:936
+#: includes/access-control/includes/class-bb-access-control.php:959
+#: includes/access-control/includes/class-bb-access-control.php:968
 msgid " — requires license"
 msgstr ""
 
@@ -212,8 +212,8 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:614
 #: includes/access-control/includes/class-bb-access-control.php:657
 #: includes/access-control/includes/class-bb-access-control.php:690
-#: includes/access-control/includes/class-bb-access-control.php:820
-#: includes/access-control/includes/class-bb-access-control.php:998
+#: includes/access-control/includes/class-bb-access-control.php:831
+#: includes/access-control/includes/class-bb-access-control.php:1030
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:17
 #. translators: %1$s - Platform Pro string, %2$s - License URL
 msgid "You need to activate a license key for %1$s to unlock this feature. %2$s"
@@ -228,8 +228,8 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:629
 #: includes/access-control/includes/class-bb-access-control.php:672
 #: includes/access-control/includes/class-bb-access-control.php:705
-#: includes/access-control/includes/class-bb-access-control.php:835
-#: includes/access-control/includes/class-bb-access-control.php:1013
+#: includes/access-control/includes/class-bb-access-control.php:846
+#: includes/access-control/includes/class-bb-access-control.php:1045
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:32
 msgid "Add License key"
 msgstr ""
@@ -248,7 +248,7 @@ msgid "Connection Request"
 msgstr ""
 
 #: includes/access-control/includes/class-bb-access-control.php:482
-#: includes/access-control/includes/class-bb-access-control.php:978
+#: includes/access-control/includes/class-bb-access-control.php:1010
 msgid "Note: These settings do not apply to administrators."
 msgstr ""
 
@@ -302,80 +302,94 @@ msgstr ""
 msgid "Upload Documents"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:804
+#: includes/access-control/includes/class-bb-access-control.php:795
+msgid "Upload Videos"
+msgstr ""
+
+#: includes/access-control/includes/class-bb-access-control.php:815
 msgid "Note: These settings do not apply to administrators or group media."
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:853
+#: includes/access-control/includes/class-bb-access-control.php:864
 msgid "Select which members should have access to upload photos, based on:"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:860
+#: includes/access-control/includes/class-bb-access-control.php:871
 msgid ""
 "Enable upload photos settings above in either profiles or messages or "
 "forums, to control which members can upload photos in components above."
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:874
+#: includes/access-control/includes/class-bb-access-control.php:885
+msgid "Select which members should have access to upload videos, based on:"
+msgstr ""
+
+#: includes/access-control/includes/class-bb-access-control.php:892
+msgid ""
+"Enable upload videos settings above in either profiles or messages or "
+"forums, to control which members can upload videos in components above."
+msgstr ""
+
+#: includes/access-control/includes/class-bb-access-control.php:906
 msgid "Select which members should have access to upload documents, based on:"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:881
+#: includes/access-control/includes/class-bb-access-control.php:913
 msgid ""
 "Enable upload documents settings above in either profiles or messages or "
 "forums, to control which members can upload documents in components above."
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:895
+#: includes/access-control/includes/class-bb-access-control.php:927
 msgid "Select which members should have access to create groups, based on:"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:903
+#: includes/access-control/includes/class-bb-access-control.php:935
 msgid ""
 "Enable social group creation by all members above to control which members "
 "can create groups."
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:926
-#: includes/access-control/includes/class-bb-access-control.php:935
+#: includes/access-control/includes/class-bb-access-control.php:958
+#: includes/access-control/includes/class-bb-access-control.php:967
 msgid "Group Access"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:948
+#: includes/access-control/includes/class-bb-access-control.php:980
 msgid "Create Groups"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:958
+#: includes/access-control/includes/class-bb-access-control.php:990
 msgid "Join Groups"
 msgstr ""
 
-#: includes/access-control/includes/class-bb-access-control.php:1030
+#: includes/access-control/includes/class-bb-access-control.php:1062
 msgid ""
 "Select which members should have access to join public groups or request "
 "access to private groups, based on:"
 msgstr ""
 
-#: includes/access-control/templates/checkboxes-selected.php:101
+#: includes/access-control/templates/checkboxes-selected.php:104
 #: includes/access-control/templates/multiple-options.php:53
 msgid "Any"
 msgstr ""
 
-#: includes/access-control/templates/checkboxes-selected.php:103
+#: includes/access-control/templates/checkboxes-selected.php:106
 #: includes/access-control/templates/multiple-options.php:60
 msgid "Specific"
 msgstr ""
 
-#: includes/access-control/templates/core-options.php:57
+#: includes/access-control/templates/core-options.php:61
 msgid "- Select -"
 msgstr ""
 
-#: includes/access-control/templates/gamipress-options.php:49
-#: includes/access-control/templates/gamipress-options.php:74
+#: includes/access-control/templates/gamipress-options.php:52
+#: includes/access-control/templates/gamipress-options.php:77
 msgid "Select GamiPress Type"
 msgstr ""
 
-#: includes/access-control/templates/plugin-options.php:48
-#: includes/access-control/templates/plugin-options.php:73
+#: includes/access-control/templates/plugin-options.php:51
+#: includes/access-control/templates/plugin-options.php:76
 msgid "- Select Membership Type -"
 msgstr ""
 
@@ -887,12 +901,12 @@ msgstr ""
 msgid "Sat"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3258
+#: includes/integrations/zoom/bp-zoom-functions.php:3259
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3761
-#: includes/integrations/zoom/bp-zoom-functions.php:3907
+#: includes/integrations/zoom/bp-zoom-functions.php:3768
+#: includes/integrations/zoom/bp-zoom-functions.php:3914
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:27
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:28
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:27
@@ -908,15 +922,15 @@ msgstr ""
 msgid " at "
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3768
+#: includes/integrations/zoom/bp-zoom-functions.php:3775
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:62
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:152
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:96
 msgid "Meeting ID"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3782
-#: includes/integrations/zoom/bp-zoom-functions.php:3928
+#: includes/integrations/zoom/bp-zoom-functions.php:3789
+#: includes/integrations/zoom/bp-zoom-functions.php:3935
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:56
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:54
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:138
@@ -924,8 +938,8 @@ msgstr ""
 msgid "Date and Time"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3790
-#: includes/integrations/zoom/bp-zoom-functions.php:3936
+#: includes/integrations/zoom/bp-zoom-functions.php:3797
+#: includes/integrations/zoom/bp-zoom-functions.php:3943
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:79
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:77
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:168
@@ -939,8 +953,8 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3800
-#: includes/integrations/zoom/bp-zoom-functions.php:3946
+#: includes/integrations/zoom/bp-zoom-functions.php:3807
+#: includes/integrations/zoom/bp-zoom-functions.php:3953
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:84
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:82
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:173
@@ -957,8 +971,8 @@ msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3804
-#: includes/integrations/zoom/bp-zoom-functions.php:3950
+#: includes/integrations/zoom/bp-zoom-functions.php:3811
+#: includes/integrations/zoom/bp-zoom-functions.php:3957
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:88
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:86
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:177
@@ -975,8 +989,8 @@ msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3817
-#: includes/integrations/zoom/bp-zoom-functions.php:3963
+#: includes/integrations/zoom/bp-zoom-functions.php:3824
+#: includes/integrations/zoom/bp-zoom-functions.php:3970
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:155
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:151
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:212
@@ -986,34 +1000,34 @@ msgstr[1] ""
 msgid "Registration Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3833
+#: includes/integrations/zoom/bp-zoom-functions.php:3840
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:168
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:225
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:206
 msgid "Meeting Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3845
+#: includes/integrations/zoom/bp-zoom-functions.php:3852
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:45
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:129
 msgid "Meeting Details"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3914
+#: includes/integrations/zoom/bp-zoom-functions.php:3921
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:60
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:151
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:96
 msgid "Webinar ID"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3979
+#: includes/integrations/zoom/bp-zoom-functions.php:3986
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:164
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:224
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:206
 msgid "Webinar Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3991
+#: includes/integrations/zoom/bp-zoom-functions.php:3998
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:44
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:128
 msgid "Webinar Details"

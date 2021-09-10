@@ -20,6 +20,7 @@ add_filter( 'bb_user_can_create_activity', 'bb_access_control_user_can_create_ac
 // add_filter( 'bp_activity_can_comment', 'bb_access_control_user_can_create_activity_comment', PHP_INT_MAX, 2 ); // phpcs:ignore.
 add_filter( 'bb_user_can_create_document', 'bb_access_control_user_can_upload_document', PHP_INT_MAX, 1 );
 add_filter( 'bb_user_can_create_media', 'bb_access_control_user_can_upload_media', PHP_INT_MAX, 1 );
+add_filter( 'bb_user_can_create_video', 'bb_access_control_user_can_upload_video', PHP_INT_MAX, 1 );
 add_filter( 'bp_get_add_friend_button', 'bb_access_control_user_can_send_friend_request', 11, 1 );
 add_filter( 'bp_nouveau_get_members_buttons', 'bb_access_control_member_header_user_can_send_friend_request', PHP_INT_MAX, 1 );
 add_filter( 'bp_nouveau_get_members_buttons', 'bb_access_control_member_header_user_can_send_message_request', PHP_INT_MAX, 1 );
@@ -113,6 +114,40 @@ function bb_access_control_user_can_upload_media( $create ) {
 	 * @since 1.1.0
 	 */
 	return apply_filters( 'bb_access_control_user_can_upload_media', $has_access );
+}
+
+/**
+ * Function will hide the upload video button if user do not have access.
+ *
+ * @param boolean $create whether user can see the upload video button or not.
+ *
+ * @since 1.1.4
+ *
+ * @return boolean $has_access whether user can see the upload video button or not.
+ */
+function bb_access_control_user_can_upload_video( $create ) {
+
+    $create_video_settings = bb_access_control_upload_videos_settings();
+    $has_access            = false;
+    if ( empty( $create_video_settings ) || ( isset( $create_video_settings['access-control-type'] ) && empty( $create_video_settings['access-control-type'] ) ) ) {
+        $has_access = $create;
+    } elseif ( is_array( $create_video_settings ) && isset( $create_video_settings['access-control-type'] ) && ! empty( $create_video_settings['access-control-type'] ) ) {
+
+        $access_controls        = BB_Access_Control::bb_get_access_control_lists();
+        $option_access_controls = $create_video_settings['access-control-type'];
+        $can_accept             = bb_access_control_has_access( bp_loggedin_user_id(), $access_controls, $option_access_controls, $create_video_settings );
+
+        if ( $can_accept ) {
+            $has_access = $create;
+        }
+    }
+
+    /**
+     * Filter which will return whether user can see the upload video button or not.
+     *
+     * @since 1.1.4
+     */
+    return apply_filters( 'bb_access_control_user_can_upload_video', $has_access );
 }
 
 /**
@@ -989,7 +1024,7 @@ function bb_access_control_groups_potential_invites( $requests ) {
 								
 								LEFT JOIN 
 								
-									{$wpdb->posts} on wp_users.ID = {$wpdb->posts}.post_author 
+									{$wpdb->posts} on {$wpdb->users}.ID = {$wpdb->posts}.post_author
 									
 								AND 
 								

@@ -183,7 +183,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 				'Update Cart: Could not process abandoned cart.',
 				[
 					'message'     => $t->getMessage(),
-					'stack_trace' => $t->getTrace(),
+					'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 
@@ -227,19 +227,19 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 			);
 		} catch ( GuzzleException $e ) {
 			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return false;
 		} catch ( \Exception $e ) {
 			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return false;
 		} catch ( Throwable $t ) {
 			$message     = $t->getMessage();
-			$stack_trace = $t->getTrace();
+			$stack_trace = $this->logger->clean_trace( $t->getTrace() );
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return false;

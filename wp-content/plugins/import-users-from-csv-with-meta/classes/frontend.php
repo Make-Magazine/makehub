@@ -269,7 +269,32 @@ class ACUI_Frontend{
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute columns', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use columns attribute to set which columns must be exported. Use a list of fields separated by commas, for example', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users columns="user_email,first_name,last_name"]</pre>
+					<td><?php _e( 'You can use columns attribute to set which columns must be exported and in which order. Use a list of fields separated by commas, for example', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users columns="user_email,first_name,last_name"]</pre>
+					</td>
+				</tr>
+
+                <tr class="form-field">
+					<th scope="row"><label for=""><?php _e( 'Attribute orderby', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td><?php _e( 'You can use orderby attribute to set the order in which users would be exported. You can use some of the next fields or a meta_key:', 'import-users-from-csv-with-meta' ); ?>
+                        <ul style="list-style:disc outside none;margin-left:2em;">
+                            <li><strong>ID</strong>: <?php _e( 'Order by user id', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>display_name</strong>: <?php _e( 'Order by user display name', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>name</strong> or <strong>user_name</strong>: <?php _e( 'Order by user name', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>login</strong> or <strong>user_login</strong>: <?php _e( 'Order by user login', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>nicename</strong> or <strong>user_nicename</strong>: <?php _e( 'Order by user nicename', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>email</strong> or <strong>user_email</strong>: <?php _e( 'Order by user email', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>url</strong> or <strong>user_url</strong>: <?php _e( 'Order by user url', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>registered</strong> or <strong>user_registered</strong>: <?php _e( 'Order by user registered date', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong>post_count</strong>: <?php _e( 'Order by user post count', 'import-users-from-csv-with-meta' ); ?></li>
+                            <li><strong><?php _e( 'Any meta_key', 'import-users-from-csv-with-meta' ); ?></strong>: <?php _e( 'Order by user meta value', 'import-users-from-csv-with-meta' ); ?></li>
+                        </ul>
+                        <?php _e( 'For example', 'import-users-from-csv-with-meta' ); ?> <pre style="display: inline-block;">[export-users orderby="user_email"]</pre>
+					</td>
+				</tr>
+
+                <tr class="form-field">
+					<th scope="row"><label for=""><?php _e( 'Attribute order', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td><?php _e( 'If you use orderby attrbute you can also use order attribute that designates the ascending or descending order of the "orderby" parameter, values can be "asc" or "desc", for example', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users orderby="display_name" order="asc"]</pre>
 					</td>
 				</tr>
 
@@ -357,7 +382,7 @@ class ACUI_Frontend{
 		wp_mail( $send_mail_admin_adress_list_frontend, '[Import and export users and customers] Frontend import has been executed', $body_mail, array( 'Content-Type: text/html; charset=UTF-8' ) );
 	}
 
-	function shortcode_import( $atts ) {
+    function shortcode_import( $atts ) {
 		$atts = shortcode_atts( array( 'role' => '', 'delete-only-specified-role' => false ), $atts );
 
 		ob_start();
@@ -449,23 +474,32 @@ class ACUI_Frontend{
 	}
 
     function shortcode_export( $atts ) {
-		$atts = shortcode_atts( array( 'role' => '', 'from' => '', 'to' => '', 'delimiter' => '', 'order-alphabetically' => '', 'columns' => '' ), $atts );
+        $atts = shortcode_atts( array( 'role' => '', 'from' => '', 'to' => '', 'delimiter' => '', 'order-alphabetically' => '', 'columns' => '', 'orderby' => '', 'order' => '' ), $atts );
 
 		ob_start();
 		
 		if( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
             wp_die( __( 'Only users who are able to create users can export them.', 'import-users-from-csv-with-meta' ) );
-		?>
-		<form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" class="acui_frontend_form">
-            <input type="hidden" name="action" value="acui_export_users_csv"/>
 
-			<?php foreach( $atts as $key => $value ): ?>
+        ACUI_Exporter::enqueue();
+        ACUI_Exporter::styles();
+		?>
+        
+		<form method="POST" class="acui_frontend_form" id="acui_exporter">
+            <input type="hidden" name="acui_frontend_export" value="1"/>
+        
+            <?php foreach( $atts as $key => $value ): ?>
             <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>"/>
             <?php endforeach; ?>
             
             <input class="acui_frontend_submit" type="submit" value="<?php _e( 'Export', 'import-users-from-csv-with-meta' ); ?>"/>
 
 			<?php wp_nonce_field( 'codection-security', 'security' ); ?>
+
+            <div class="user-exporter-progress-wrapper">
+                <progress class="user-exporter-progress" value="0" max="100"></progress>
+                <span class="user-exporter-progress-value">0%</span>
+            </div>
 		</form>
 		<?php
 		return ob_get_clean();

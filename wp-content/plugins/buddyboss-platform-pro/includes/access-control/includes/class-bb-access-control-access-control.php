@@ -62,7 +62,7 @@ class BB_Access_Control_Access_Control {
 		$access_controls = array(
 
 			'learndash'            => array(
-				'label'      => __( 'LearnDash LMS', 'buddyboss-pro' ),
+				'label'      => __( 'LearnDash Group', 'buddyboss-pro' ),
 				'is_enabled' => function_exists( 'learndash_is_user_in_group' ) ? true : false,
 				'class'      => BB_Access_Control_Learndash_Membership::class,
 			),

@@ -137,7 +137,6 @@ class Activecampaign_For_Woocommerce_User_Registered_Event implements Triggerabl
 			try {
 				// Try to find the customer in AC
 				$this->customer_ac = $this->customer_repository->find_by_email_and_connection_id( $this->customer_email, $connection_id );
-				$this->logger->debug( 'Registered event: Already found the contact in AC. Doing nothing.' );
 
 				return true;
 			} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {

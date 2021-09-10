@@ -88,7 +88,8 @@ body.bb-custom-typo {
 .bb-custom-typo .h6,
 .bb-custom-typo .bb-course-footer,
 .bb-custom-typo .ld-table-list-header .ld-text,
-.bb-custom-typo .gamipress-achievement-points {
+.bb-custom-typo .gamipress-achievement-points,
+.bb-custom-typo .vjs-modal-dialog-content {
     font-family: 'SF UI Display', sans-serif;
 }
 

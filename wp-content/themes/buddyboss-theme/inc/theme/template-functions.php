@@ -590,6 +590,10 @@ if ( ! function_exists( 'buddyboss_theme_single_template_part_content' ) ) {
 
 			get_template_part( 'template-parts/content', 'gamipress' );
 
+		elseif ( wp_learndash_course_is_post_type() ) :
+
+			get_template_part( 'template-parts/content-sfwd', $post_type );
+
 		else :
 
 			get_template_part( 'template-parts/content', $post_type );
@@ -605,6 +609,26 @@ if ( ! function_exists( 'buddyboss_theme_single_template_part_content' ) ) {
 	}
 
 	add_action( THEME_HOOK_PREFIX . '_single_template_part_content', 'buddyboss_theme_single_template_part_content' );
+}
+
+/**
+ * Check Learndash course post type
+ *
+ * @return boolean
+ * @since 1.7.3
+ *
+ * @package BuddyBoss_Theme
+ */
+if ( ! function_exists( 'wp_learndash_course_is_post_type' ) ) {
+
+	function wp_learndash_course_is_post_type() {
+
+		if ( class_exists( 'SFWD_LMS' ) && is_singular( 'sfwd-courses' ) ) {
+			return true;
+		}
+
+		return false;
+	}
 }
 
 /**

@@ -41,8 +41,8 @@ class BB_Access_Control_Member_Press extends BB_Access_Control_Abstract {
 	 *
 	 * @since 1.1.0
 	 */
-	public function bb_access_control_woo_access_control_add_update( $event ) {
-		do_action( 'bb_access_control_woo_access_control_add_update', $event );
+	public function bb_access_control_mepr_event_create( $event ) {
+		do_action( 'bb_access_control_mepr_event_create', $event );
 	}
 
 	/**

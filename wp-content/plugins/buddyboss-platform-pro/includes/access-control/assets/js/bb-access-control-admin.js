@@ -45,6 +45,7 @@ window.bp = window.bp || {};
 			$( window ).on( 'load', this.changeNotices.bind( this ) );
 			$( document ).on( 'change', 'input#bp_restrict_group_creation', this.group_creation_restrict.bind( this ) );
 			$( document ).on( 'change', 'input#bp_media_profile_media_support, input#bp_media_messages_media_support, input#bp_media_forums_media_support', this.upload_photo_restrict.bind( this ) );
+			$( document ).on( 'change', 'input#bp_video_profile_video_support, input#bp_video_messages_video_support, input#bp_video_forums_video_support', this.upload_video_restrict.bind( this ) );
 			$( document ).on( 'change', 'input#bp_media_profile_document_support, input#bp_media_messages_document_support, input#bp_media_forums_document_support', this.upload_document_restrict.bind( this ) );
 		},
 
@@ -324,6 +325,18 @@ window.bp = window.bp || {};
 				$( '#media_access_control_block tr:nth-child(2) td .bp-messages-feedback' ).show();
 				$( '#media_access_control_block tr:nth-child(2) td select:visible' ).prop( 'disabled', true );
 				$( '#media_access_control_block tr:nth-child(2) td .access-control-checkbox-list input' ).prop( 'disabled', true );
+			}
+		},
+
+		upload_video_restrict : function () {
+			if( $( 'input#bp_video_profile_video_support:checked, input#bp_video_messages_video_support:checked, input#bp_video_forums_video_support:checked' ).length >= 1 ) {
+				$( '#media_access_control_block tr:nth-child(3) td .bp-messages-feedback' ).hide();
+				$( '#media_access_control_block tr:nth-child(3) td select:visible' ).prop( 'disabled', false );
+				$( '#media_access_control_block tr:nth-child(3) td .access-control-checkbox-list input' ).prop( 'disabled', false );
+			} else if( $( 'input#bp_video_profile_video_support:checked, input#bp_video_messages_video_support:checked, input#bp_video_forums_video_support:checked' ).length === 0 ) {
+				$( '#media_access_control_block tr:nth-child(3) td .bp-messages-feedback' ).show();
+				$( '#media_access_control_block tr:nth-child(3) td select:visible' ).prop( 'disabled', true );
+				$( '#media_access_control_block tr:nth-child(3) td .access-control-checkbox-list input' ).prop( 'disabled', true );
 			}
 		}
 

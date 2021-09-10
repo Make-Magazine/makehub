@@ -3,7 +3,7 @@ Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
 Tested up to: 5.8
-Stable tag: 1.4.4
+Stable tag: 1.4.7
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,20 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.4.7 =
+* Various bug fixes and logging improvements
+
+= 1.4.6 =
+* Adds advanced helper buttons to debug connection issues and clear settings without uninstalling the plugin
+* Bugfix for zero total orders that fail validation but are supposed to be zero
+
+= 1.4.5 =
+* Adds a total value check fallback to double check we have the order total.
+* Adds validation of order before sending to ActiveCampaign.
+* Feature change for debug mode: debug messages will no longer post to the logs if debug mode in the plugin settings is off. Reduces log waste.
+* Bugfix to stop record mismatches when looking up an existing order in ActiveCampaign.
+* Bugfix for UUID reset happening at the wrong time causing some finished orders to record as abandoned carts.
 
 = 1.4.4 =
 * Bugfix to check if undefined functions wc_admin_url() & wp_get_scheduled_event() are available.

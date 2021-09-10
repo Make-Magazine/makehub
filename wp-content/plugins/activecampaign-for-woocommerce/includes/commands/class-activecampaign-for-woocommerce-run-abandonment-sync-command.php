@@ -187,7 +187,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				'Abandonment Sync: There was an error with preparing or getting abandoned cart results.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -251,7 +251,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				'Abandonment Sync: There was an error with preparing or getting abandoned cart results.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -305,7 +305,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						'Abandonment Sync: Failed to build the product: ',
 						[
 							'exception_message' => $t->getMessage(),
-							'exception_trace'   => $t->getTrace(),
+							'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
 							'product_id'        => $product_id,
 						]
 					);
@@ -322,7 +322,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					'Abandonment Sync: Failed to build the cart: ',
 					[
 						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $t->getTrace(),
+						'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
 						'cart'              => $cart,
 					]
 				);
@@ -368,7 +368,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					'Abandonment Sync: Failed to build ecom order.',
 					[
 						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $t->getTrace(),
+						'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
@@ -390,7 +390,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					'Abandonment Sync: Failed to add products to ecom order.',
 					[
 						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $t->getTrace(),
+						'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
@@ -404,17 +404,27 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					[
 						'exception_message'   => $t->getMessage(),
 						'connection_id'       => $this->admin->get_storage()['connection_id'],
-						'customer'            => $customer,
-						'customer_ac'         => $customer_ac,
+						'customer_email'      => $customer->email,
 						'externalcheckout_id' => $externalcheckout_id,
-						'exception_trace'     => $t->getTrace(),
+						'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
 
-			if ( ! isset( $order_ac ) || null === $order_ac ) {
-				// Order does not exist in AC yet
-				try {
+			try {
+				if ( isset( $order_ac ) && ! empty( $order_ac->get_id() ) ) {
+					$synced_to_ac = true;
+					$this->logger->warning(
+						'Abandonment Sync: Discovered a record with this abandoned ID already. Marking as sent, will not send to Hosted.',
+						[
+							'connection_id'       => $this->admin->get_storage()['connection_id'],
+							'ac_order_id'         => $order_ac->get_id(),
+							'customer_email'      => $customer->email,
+							'externalcheckout_id' => $externalcheckout_id,
+						]
+					);
+				} else {
+					// Order does not exist in AC yet
 					// Try to create the new order in AC
 					$this->logger->debug(
 						'Abandonment Sync: Creating abandoned cart entry in ActiveCampaign: ',
@@ -427,31 +437,19 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					if ( $order_ac ) {
 						$synced_to_ac = true;
 					}
-				} catch ( Throwable $t ) {
-					$this->logger->debug(
-						'Abandonment Sync: Order creation exception: ',
-						[
-							'exception_message'   => $t->getMessage(),
-							'exception_trace'     => $t->getTrace(),
-							'connection_id'       => $this->admin->get_storage()['connection_id'],
-							'customer'            => $customer,
-							'customer_ac'         => $customer_ac,
-							'externalcheckout_id' => $externalcheckout_id,
-						]
-					);
-					$synced_to_ac = false;
 				}
-			} else {
-				$synced_to_ac = true;
-				$this->logger->warning(
-					'Abandonment Sync: Discovered a record with this abandoned ID already. Marking as sent, will not send to Hosted.',
+			} catch ( Throwable $t ) {
+				$this->logger->debug(
+					'Abandonment Sync: Order creation exception: ',
 					[
+						'exception_message'   => $t->getMessage(),
+						'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
 						'connection_id'       => $this->admin->get_storage()['connection_id'],
-						'customer'            => $customer,
-						'customer_ac'         => $customer_ac,
+						'customer_email'      => $customer->email,
 						'externalcheckout_id' => $externalcheckout_id,
 					]
 				);
+				$synced_to_ac = false;
 			}
 
 			try {
@@ -482,7 +480,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					'Abandonment Sync: Issue in updating the abandonment record as synced: ',
 					[
 						'exception_message'   => $t->getMessage(),
-						'exception_trace'     => $t->getTrace(),
+						'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
 						'abandoned_order_id'  => $ab_order->id,
 						'externalcheckout_id' => $externalcheckout_id,
 					]
@@ -513,7 +511,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					'customer_billing_email' => $customer_billing_email,
 					'order_external_uuid'    => $order_external_uuid,
 					'message'                => $t->getMessage(),
-					'trace'                  => $t->getTrace(),
+					'trace'                  => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -545,7 +543,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				[
 					'product' => $product,
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -593,7 +591,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				'Abandonment sync: Abandon find customer exception.',
 				[
 					'exception'           => $t->getMessage(),
-					'exception_trace'     => $t->getTrace(),
+					'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
 					'customer_email'      => $customer->email,
 					'customer_first_name' => $customer->first_name,
 					'customer_last_name'  => $customer->last_name,
@@ -637,7 +635,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						'customer_last_name'  => $customer->last_name,
 						'connection_id'       => $connection_id,
 						'exception_message'   => $t->getMessage(),
-						'exception_trace'     => $t->getTrace(),
+						'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}

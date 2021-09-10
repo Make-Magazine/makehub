@@ -31,7 +31,20 @@ class BB_Access_Control_Restrict_Content_Pro_Memberships extends BB_Access_Contr
 	 * @since 1.1.0
 	 */
 	public function __construct() {
+		add_action( 'rcp_membership_post_renew', 'bb_access_control_rcp_membership_post_renew', PHP_INT_MAX, 3 );
+	}
 
+	/**
+	 * Fires after the user's membership renew.
+	 *
+	 * @param string         $expiration    New expiration date to be set.
+	 * @param int            $membership_id ID of the membership.
+	 * @param RCP_Membership $membership    Membership object.
+	 *
+	 * @since 1.1.5
+	 */
+	public function bb_access_control_rcp_membership_post_renew( $expiration, $membership_id, $membership ) {
+		do_action( 'bb_access_control_rcp_membership_post_renew', $expiration, $membership_id, $membership );
 	}
 
 	/**

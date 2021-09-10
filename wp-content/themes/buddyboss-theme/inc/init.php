@@ -226,6 +226,7 @@ if ( !class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 			require_once( $this->_inc_dir . '/theme/login.php' );
 			require_once( $this->_inc_dir . '/theme/admin-bar.php' );
 			require_once( $this->_inc_dir . '/theme/multi-post-thumbnails.php' );
+			require_once( $this->_inc_dir . '/theme/update.php' );
 
 			// BuddyPress Helper
 			require_once( $this->_inc_dir . '/plugins/buddypress-helper.php' );

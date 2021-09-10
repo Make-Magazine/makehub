@@ -704,6 +704,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
 				)
+				|| (
+					function_exists( 'bp_is_forums_video_support_enabled' )
+					&& false !== bp_is_forums_video_support_enabled()
+					&& ! empty( $request['bbp_videos'] )
+				)
 			)
 		) {
 			return new WP_Error(
@@ -881,6 +886,19 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
 					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $request['bbp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $topic_forum, 0, 'forum' );
+			if ( ! $can_send_video ) {
+				return new WP_Error(
+					'bp_rest_bbp_topic_media',
+					__( 'You don\'t have access to send the video.', 'buddyboss' ),
 					array(
 						'status' => 400,
 					)
@@ -1409,6 +1427,11 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				(
 					! empty( $request['bbp_media_gif']['url'] ) &&
 					! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_video_support_enabled' )
+					&& false !== bp_is_forums_video_support_enabled()
+					&& ! empty( $request['bbp_videos'] )
 				)
 			)
 		) {
@@ -2004,6 +2027,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		remove_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
@@ -2013,6 +2037,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
@@ -2462,7 +2487,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$params['status'] = array(
 			'description'       => __( 'Limit result set to topic assigned a specific status.', 'buddyboss' ),
-			'default'           => array( 'publish', 'private' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',

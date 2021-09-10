@@ -11,7 +11,6 @@
  */
 
 use Activecampaign_For_Woocommerce_Admin as Admin;
-use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command as Abandoned_Cart;
@@ -83,13 +82,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * @var WC_Customer
 	 */
 	private $customer_woo;
-
-	/**
-	 * The resulting existing or newly created AC ecom customer
-	 *
-	 * @var Ecom_Model
-	 */
-	private $customer_ac;
 
 	/**
 	 * Hash of the WooCommerce session ID plus the guest customer email.
@@ -164,7 +156,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		if (
 			! $this->validate_request() ||
 			! $this->setup_woocommerce_customer() ||
-			! $this->find_or_create_ac_customer() ||
 			! $this->setup_woocommerce_cart()
 		) {
 			return false;
@@ -184,7 +175,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 				'Sync Guest Abandoned Cart: Some POST information was missing from the AJAX call.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -226,7 +217,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 */
 	private function validate_request() {
 		if ( is_user_logged_in() ) {
-			$this->logger->debug( 'Abandon cart guest sync: User is logged in, cannot perform guest sync', [ 'current_user' => wp_get_current_user() ] );
+			$this->logger->debug( 'Abandon cart guest sync: User is logged in, cannot perform guest sync' );
 
 			return false;
 		}
@@ -277,73 +268,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		}
 
 		$this->customer_woo->set_email( $this->customer_email );
-
-		return true;
-	}
-
-	/**
-	 * Lookup ecom customer record in AC. If it does not exist, create it.
-	 *
-	 * @return bool Whether or not this job was successful
-	 */
-	private function find_or_create_ac_customer() {
-		$this->customer_ac = null;
-		$connection_id     = $this->admin->get_storage()['connection_id'];
-
-		try {
-			// Try to find the customer in AC
-			$this->customer_ac = $this->customer_repository->find_by_email_and_connection_id( $this->customer_email, $connection_id );
-		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
-			// Customer does not exist in AC yet
-			// Set up AC customer model
-			$new_customer = new Ecom_Customer();
-			$new_customer->set_email( $this->customer_email );
-			$new_customer->set_connectionid( $connection_id );
-			$new_customer->set_first_name( $this->customer_first_name );
-			$new_customer->set_last_name( $this->customer_last_name );
-
-			try {
-				// Try to create the new customer in AC
-				if ( $new_customer->get_email() ) {
-					$this->logger->debug(
-						'Abandon cart guest sync: Creating customer in ActiveCampaign: '
-						. \AcVendor\GuzzleHttp\json_encode( $new_customer->serialize_to_array() )
-					);
-
-					$this->customer_ac = $this->customer_repository->create( $new_customer );
-				}
-			} catch ( Exception $e ) {
-				$this->logger->debug(
-					'Abandon cart guest sync: Could not create a new customer in AC. ' . $e->getMessage()
-				);
-
-				return false;
-			} catch ( Throwable $t ) {
-				$this->logger->debug(
-					'Abandon cart guest sync: Could not create a new customer in AC. ' . $t->getMessage()
-				);
-
-				return false;
-			}
-		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Abandon cart guest sync: Could not find customer in AC. ' . $e->getMessage()
-			);
-
-			return false;
-		} catch ( Throwable $t ) {
-			$this->logger->debug(
-				'Abandon cart guest sync: Could not find customer in AC. ' . $t->getMessage()
-			);
-
-			return false;
-		}
-
-		if ( ! $this->customer_ac ) {
-			$this->logger->debug( 'Abandon cart guest sync: invalid AC customer' );
-
-			return false;
-		}
 
 		return true;
 	}

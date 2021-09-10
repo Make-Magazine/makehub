@@ -54,7 +54,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		$this->logger      = new Logger();
 		$installed_version = get_option( 'activecampaign_for_woocommerce_db_version' );
 
-		$this->logger->info(
+		$this->logger->debug(
 			'Plugin Upgrade Check...',
 			[
 				'Your DB Version'   => $installed_version,
@@ -104,7 +104,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 				'Plugin Upgrade Command: There was an exception in table verification...',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 			$table_exists = false;
@@ -152,7 +152,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 				'Plugin Upgrade install table: There was an exception creating the abandoned cart table.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}

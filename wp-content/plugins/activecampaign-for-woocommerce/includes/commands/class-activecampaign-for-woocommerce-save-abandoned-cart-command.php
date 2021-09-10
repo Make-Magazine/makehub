@@ -125,7 +125,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 				'Abandoned sync: Encountered an error on gathering customer and/or session data for the abandonment sync',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -162,7 +162,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 				'Abandoned sync: Encountered an error on gathering cart data for the abandonment sync',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -180,7 +180,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					[
 						'message'       => $t->getMessage(),
 						'customer_data' => $customer_data,
-						'trace'         => $t->getTrace(),
+						'trace'         => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
@@ -262,7 +262,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					[
 						'message'       => $t->getMessage(),
 						'customer_data' => $customer_data,
-						'trace'         => $t->getTrace(),
+						'trace'         => $this->logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
@@ -311,7 +311,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					'message'       => $t->getMessage(),
 					'stored_id'     => $stored_id,
 					'customer_data' => $data,
-					'trace'         => $t->getTrace(),
+					'trace'         => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -340,7 +340,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 				[
 					'message'     => $t->getMessage(),
 					'customer_id' => $customer_id,
-					'trace'       => $t->getTrace(),
+					'trace'       => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 
@@ -376,7 +376,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 		$order_external_uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
 
 		// If custom session is not set, create one on the cart
-		if ( ! $order_external_uuid ) {
+		if ( ! $order_external_uuid || '' === $order_external_uuid ) {
 			$order_external_uuid = uniqid( '', true );
 			wc()->session->set( 'activecampaignfwc_order_external_uuid', $order_external_uuid );
 		}

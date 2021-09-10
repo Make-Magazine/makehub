@@ -732,6 +732,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
 			'can_post'           => $this->bp_rest_user_can_post( $item ),
 			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
+			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
 		);
 
@@ -1411,6 +1412,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'create_video'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user has permission to upload video to the group or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'create_document'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user has permission to upload document to the group or not.', 'buddyboss' ),
@@ -1837,6 +1844,6 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$group_type = bp_groups_get_group_type( $group->id );
 		$group_type = bp_groups_get_group_type_object( $group_type );
 
-		return isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : __( 'Group', 'buddyboss' );
+		return isset( $group_type->labels['singular_name'] ) ? wp_specialchars_decode( $group_type->labels['singular_name'] ) : __( 'Group', 'buddyboss' );
 	}
 }

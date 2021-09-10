@@ -89,7 +89,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 					'message'       => $t->getMessage(),
 					'email'         => $customer->get_email(),
 					'cart_contents' => $cart->get_cart_contents(),
-					'trace'         => $t->getTrace(),
+					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -117,7 +117,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 					'message'       => $t->getMessage(),
 					'email'         => $customer->get_email(),
 					'cart_contents' => $cart->get_cart_contents(),
-					'trace'         => $t->getTrace(),
+					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 

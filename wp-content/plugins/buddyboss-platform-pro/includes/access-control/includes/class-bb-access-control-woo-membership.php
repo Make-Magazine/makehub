@@ -31,7 +31,6 @@ class BB_Access_Control_Woo_Membership extends BB_Access_Control_Abstract {
 	 */
 	public function __construct() {
 		add_action( 'wc_memberships_user_membership_created', array( $this, 'bb_access_control_woo_access_control_add_update' ), PHP_INT_MAX, 2 );
-
 	}
 
 	/**

@@ -1039,28 +1039,66 @@ $activecampaign_for_woocommerce_recent_log_errors               = $this->fetch_r
 				<h2>
 					<?php esc_html_e( 'Advanced Settings', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 				</h2>
-				<p>
-					<ac-input name="custom_email_field"
-							  label="<?php esc_html_e( 'Custom Email Field', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>"
-							  v-model="custom_email_field"></ac-input>
-					<?php esc_html_e( 'Default: billing_email (expects ID as input, do not include #)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-					<br/>
-					<?php esc_html_e( 'Warning: Advanced users only. Do not set this unless you are having issues with the abandoned cart not triggering on your email field.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-					<br/>
-					<?php esc_html_e( 'If you have a forced registration or a custom theme for checkout you can change which field we bind on here.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-				</p>
-				<h2>
-					<?php
-					esc_html_e( 'ActiveCampaign Debug Logging', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-					?>
-				</h2>
-				<p>
-					<?php esc_html_e( 'Select "On" to enable debug logging.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-				</p>
+				<section>
+					<div class="col-1">
+						<p>
+							<ac-input name="custom_email_field"
+									  label="<?php esc_html_e( 'Custom Email Field', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>"
+									  v-model="custom_email_field"></ac-input>
+							<?php esc_html_e( 'Default: billing_email (expects ID as input, do not include #)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							<br/>
+							<?php esc_html_e( 'Warning: Advanced users only. Do not set this unless you are having issues with the abandoned cart not triggering on your email field.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							<br/>
+							<?php esc_html_e( 'If you have a forced registration or a custom theme for checkout you can change which field we bind on here.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						</p>
+						<h2>
+						</h2>
+						<h2>
+							<?php
+							esc_html_e( 'ActiveCampaign Debug Logging', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+							?>
+						</h2>
+						<p>
+							<?php esc_html_e( 'Select "On" to enable debug logging.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						</p>
 
-				<ac-radio v-for='(label, value) in acDebugOptions' :key='value' :label='label' :value='value'
-						  name='ac_debug' :selected='ac_debug'></ac-radio>
-
+						<ac-radio v-for='(label, value) in acDebugOptions' :key='value' :label='label' :value='value'
+								  name='ac_debug' :selected='ac_debug'></ac-radio>
+					</div>
+					<div class="col-1">
+						<div class="card">
+							<h2>
+								<?php esc_html_e( 'Reset Plugin Configuration', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							</h2>
+							<p>
+								<?php esc_html_e( 'If you would like to clear all configurations stored for the ActiveCampaign for WooCommerce but retain data you can use this reset method. Please reach out to support before trying this option.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							</p>
+							<p>
+								<i>Resets the plugin without erasing abandoned carts, logs, or tables.</i>
+							</p>
+							<div class="columnbox">
+								<div id="activecampaign-run-clear-plugin-settings" class="button" @click="ajaxClearPluginSettings" :loading="loading">
+									Clear All Settings
+								</div>
+								<div id="activecampaign-run-clear-plugin-settings-status"></div>
+							</div>
+						</div>
+						<div class="card">
+							<h2>
+								<?php esc_html_e( 'Repair Connection ID', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							</h2>
+							<p>
+								<?php esc_html_e( 'This button should only be used if you are facing issues with orders not properly sending to ActiveCampaign. Please reach out to support before trying this option.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							</p>
+							<div class="columnbox">
+								<div id="activecampaign-run-fix-connection" class="button" @click="ajaxFixConnection" :loading="loading">
+									Repair Connection IDs
+								</div>
+								<div id="activecampaign-run-fix-connection-status"></div>
+							</div>
+						</div>
+					</div>
+				</section>
 			</b-tab-item>
 
 

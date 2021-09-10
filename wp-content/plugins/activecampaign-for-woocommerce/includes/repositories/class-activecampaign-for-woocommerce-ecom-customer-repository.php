@@ -98,18 +98,18 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 		/**
 		 * An Ecom Customer Model.
 		 *
-		 * @var Ecom_Customer $ecom_order_model
+		 * @var Ecom_Customer $ecom_customer_model
 		 */
-		$ecom_order_model = new Ecom_Customer();
+		$ecom_customer_model = new Ecom_Customer();
 
 		$this->get_and_set_model_properties_from_api_by_filter(
 			$this->client,
-			$ecom_order_model,
+			$ecom_customer_model,
 			$filter_name,
 			$filter_value
 		);
 
-		return $ecom_order_model;
+		return $ecom_customer_model;
 	}
 
 	/**
@@ -119,40 +119,53 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * @param string $connection_id The connection ID for the woocommerce integration.
 	 *
 	 * @return Ecom_Model|null
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
 	 */
 	public function find_by_email_and_connection_id( $email, $connection_id ) {
 		if ( ! $email ) {
 			return null;
 		}
 
+		$logger = new Logger();
+
 		try {
-			$ecom_order_model = new Ecom_Customer();
+			$ecom_customer_model = new Ecom_Customer();
 
 			$result_array = $this->get_result_set_from_api_by_filter(
 				$this->client,
 				'email',
 				$email
 			);
-			$result       = array_filter(
+
+			$result = array_filter(
 				$result_array,
-				function ( $result ) use ( $connection_id ) {
+				static function ( $result ) use ( $connection_id ) {
 					return $result['connectionid'] === $connection_id;
 				}
 			);
 
 			if ( empty( $result ) ) {
-				throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception();
+				$logger->debug(
+					'Customer Lookup: Resource not found.',
+					[
+						'connectionid' => $connection_id,
+						'email'        => $email,
+						'result'       => $result,
+					]
+				);
+
+				return null;
 			}
 
-			return $ecom_order_model->set_properties_from_serialized_array( array_values( $result )[0] );
+			if ( isset( array_values( $result )[0] ) ) {
+				return $ecom_customer_model->set_properties_from_serialized_array( array_values( $result )[0] );
+			}
 		} catch ( Throwable $t ) {
-			$logger = new Logger();
+
 			$logger->warning(
 				'find_by_email_and_connection_id: There was an issue creating the customer model or finding the contact in ActiveCampaign.',
 				[
 					'message' => $t->getMessage(),
-					'trace'   => $t->getTrace(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}

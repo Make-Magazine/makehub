@@ -31,7 +31,7 @@ class BB_Access_Control_Gender extends BB_Access_Control_Abstract {
 	 * @since 1.1.0
 	 */
 	public function __construct() {
-
+		add_action( 'xprofile_updated_profile', 'bb_access_control_gender_xprofile_updated_profile', PHP_INT_MAX, 5 );
 	}
 
 	/**

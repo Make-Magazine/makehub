@@ -128,7 +128,7 @@ class Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command implements 
 			);
 
 			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 		}
 
