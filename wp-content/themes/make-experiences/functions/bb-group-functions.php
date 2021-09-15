@@ -70,7 +70,7 @@ function custom_group_default_tabs($default_tab) {
         }
         if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
-            //$default_tab = 'group-hub';      
+            $default_tab = 'group-hub';      
         }
     endif; // end if ( class_exists( 'BP_Group_Extension' ) )
     return $default_tab;
@@ -198,17 +198,16 @@ function group_custom_hub_screen_content() {
     global $bp;
     $postid= groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true );
     $blogid = groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true );
-    //get the url of the makercamp blog
+    //get the url of the subdomain
     $blog_details = get_blog_details( array( 'blog_id' => $blogid ) );
-    //$subdomain = explode('.', $blog_details->siteurl)[0];
     
     //add elementor styling to this page
     wp_enqueue_style('elementor-style', '/wp-content/plugins/elementor/assets/css/frontend.min.css', '', 'all');
     
-    //add MC home page specific elementor styling
+    //add specific elementor styling based on subdomain and postid
     wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/sites/'.$blogid.'/elementor/css/post-'.$postid.'.css', '', 'all');
     
-    //pull in the contents of the home page from the mc blog.
+    //pull in the contents of the page
     //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content
     $result = basicCurl($blog_details->siteurl.'/wp-json/elementor/v1/pages/'.$postid.'/contentElementor');
     echo json_decode($result);

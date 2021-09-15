@@ -16,7 +16,7 @@ function landing_hub_add_group_extension() {
 					'slug'              => 'group-landing',
 					'name'              =>  __( 'Landing Hub Settings', 'buddypress' ),
 					'nav_item_position' => 200,
-					'show_tab'          => 'anyone',
+					'show_tab'          => 'noone',
 					'screens' => array(
 						'edit' => array(
 							'name'      => __( 'Landing Hub Settings', 'buddypress' ),
