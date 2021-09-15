@@ -47,7 +47,7 @@ function setup_group_nav() {
                     'slug' => 'group-hub',
                     'parent_url' => $group_link,
                     'parent_slug' => $bp->groups->current_group->slug,
-                    'screen_function' => 'bp_custom_group_hub',
+                    'screen_function' => 'bp_group_custom_hub',
                     'position' => 1,
                     'user_has_access' => $user_access,
                     'item_css_id' => 'group-hub'
