@@ -24,20 +24,6 @@ function setup_group_nav() {
                 'item_css_id' => 'event-info'
             ));
         }
-        //maker camp
-        if ($group_type == 'maker-camp') {
-            $user_access = $bp->groups->current_group->user_has_access;
-            bp_core_new_subnav_item(array(
-                'name' => __('Camp Hub', 'custom'),
-                'slug' => 'camp-hub',
-                'parent_url' => $group_link,
-                'parent_slug' => $bp->groups->current_group->slug,
-                'screen_function' => 'bp_group_camp_hub',
-                'position' => 1,
-                'user_has_access' => $user_access,
-                'item_css_id' => 'camp-hub'
-            ));
-        }
         // custom page
         if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) && 
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
@@ -64,9 +50,6 @@ function custom_group_default_tabs($default_tab) {
         global $bp;
         if (empty($group)) {
             return $default_tab;
-        }
-        if ($group_type == 'maker-camp') {
-            $default_tab = 'camp-hub';
         }
         if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
@@ -141,41 +124,6 @@ function bb_group_redirect() {
 }
 
 add_action('template_redirect', 'bb_group_redirect');
-
-//makercamp group hub info
-function bp_group_camp_hub() {
-    add_action('bp_template_title', 'group_camp_hub_screen_title');
-    add_action('bp_template_content', 'group_camp_hub_screen_content');
-
-    $templates = array('groups/single/plugins.php', 'plugin-template.php');
-    if (strstr(locate_template($templates), 'groups/single/plugins.php')) {
-        bp_core_load_template(apply_filters('bp_core_template_plugin', 'groups/single/plugins'));
-    } else {
-        bp_core_load_template(apply_filters('bp_core_template_plugin', 'plugin-template'));
-    }
-}
-
-function group_camp_hub_screen_title() {
-    echo get_the_title();
-}
-
-function group_camp_hub_screen_content() {
-    $mc_home_postid=7594;
-    $mc_blogid = 7;
-    //get the url of the makercamp blog
-    $mc_blog_details = get_blog_details( array( 'blog_id' => $mc_blogid ) );    
-
-    //add elementor styling to this page
-    wp_enqueue_style('elementor-style', '/wp-content/plugins/elementor/assets/css/frontend.min.css', '', 'all');
-    
-    //add MC home page specific elementor styling
-    wp_enqueue_style('elementor-page', $mc_blog_details->siteurl.'/wp-content/uploads/sites/'.$mc_blogid.'/elementor/css/post-'.$mc_home_postid.'.css', '', 'all');
-    
-    //pull in the contents of the home page from the mc blog. 
-    //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content        
-    $result = basicCurl($mc_blog_details->siteurl.'/wp-json/elementor/v1/pages/'.$mc_home_postid.'/contentElementor');
-    echo json_decode($result);    
-}
 
 //CUSTOM group hub info
 function bp_group_custom_hub() {

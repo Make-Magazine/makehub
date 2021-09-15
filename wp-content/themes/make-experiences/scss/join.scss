@@ -184,4 +184,21 @@
 
 .page-register {
     h1 { text-align: center; }
+	// school makerfaire registration
+	&.lid-18 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "School Maker Faire Registration Fee";
+			    display: block;
+			    visibility: visible;
+			}
+			&::after {
+				content: url('../images/SchoolMakerFaire-logo.png');
+				display: block;
+				visibility: visible;
+			}
+		}
+	}
 }
+
