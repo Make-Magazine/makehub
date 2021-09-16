@@ -184,8 +184,10 @@
 
 .page-register {
     h1 { text-align: center; }
-	label, .iump-form-line-register .iump-form-sublabel {
+	label.iump-labels-register { font-size: 18px; }
+	.iump-form-line-register .iump-form-sublabel {
 		font-size: 16px;
+		font-weight: normal;
 	}
 	// school makerfaire registration
 	&.lid-18 {
