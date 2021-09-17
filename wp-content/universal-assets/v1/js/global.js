@@ -1,22 +1,6 @@
 // All the functions and scripts that are just so good they need to be everywhere
 jQuery(window).bind("load", function () {
-    // Tooltip class gets tooltips for jquery-ui tooltip
-    jQuery(".tool-tip").tooltip({
-        content: function () {
-            return jQuery(this).attr('title');
-        }
-        /*.bind( "mouseleave", function( event ) { // if you need to leave the tooltip open for styling
-         event.stopImmediatePropagation();
-         
-         var fixed = setTimeout('jQuery("[title]").tooltip("close")', 500);
-         
-         jQuery(".ui-tooltip").hover(
-         function(){clearTimeout (fixed);},
-         function(){jQuery("[title]").tooltip("close");}
-         );
-         })
-         */
-    });
+
     // init Bootstrap Tooltips by data attr
     jQuery(function () {
         jQuery('[data-toggle="tooltip"]').tooltip();
