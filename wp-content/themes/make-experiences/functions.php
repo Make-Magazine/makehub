@@ -259,11 +259,16 @@ add_filter('doing_it_wrong_trigger_error', function () {
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
-    if (isset($post)) {
+    if (isset($post)) {    
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
+            // any query string becomes a body class too
+            parse_str($_SERVER['QUERY_STRING'], $query_array);
+            foreach($query_array as $key => $value) {
+                $classes[] = $key . "-" . $value;
+            }
         } else {
-            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
+            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));  
         }
         // let's see if your the group owner and what kind of group it is (hidden, private, etc)
         if (bp_is_groups_component()) {

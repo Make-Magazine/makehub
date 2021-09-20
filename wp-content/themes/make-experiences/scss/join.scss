@@ -184,4 +184,114 @@
 
 .page-register {
     h1 { text-align: center; }
+	label.iump-labels-register { font-size: 18px; }
+	.iump-form-line-register .iump-form-sublabel {
+		font-size: 16px;
+		font-weight: normal;
+	}
+	// school makerfaire registration
+	&.lid-18 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "School Maker Faire Registration Fee";
+			    display: block;
+			    visibility: visible;
+			}
+			&::after {
+				content: url('../images/SchoolMakerFaire-logo.png');
+				display: block;
+				visibility: visible;
+			}
+		}
+	}
+	// Educator / Student
+	&.lid-4 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Educator/Student Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Individual
+	&.lid-5 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// School / Makerspace
+	&.lid-7 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "School/Makerspace Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Make Projects School
+	&.lid-15 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "School Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Trial
+	&.lid-17 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Trial Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Patron
+	&.lid-8 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Patron Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Founder
+	&.lid-9 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Founder Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
+	// Benefactor
+	&.lid-10 {
+		h1 {
+			visibility: hidden;
+			&::before {
+				content: "Benefactor Membership Registration";
+			    display: block;
+			    visibility: visible;
+			}
+		}
+	}
 }
+
