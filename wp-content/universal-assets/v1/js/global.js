@@ -3,7 +3,12 @@ jQuery(window).bind("load", function () {
 
     // init Bootstrap Tooltips by data attr
     jQuery(function () {
-        jQuery('[data-toggle="tooltip"]').tooltip();
+        jQuery('[data-toggle="tooltip"]').tooltip({
+			position: {
+			    collision: 'none'
+			},
+			hide: false
+		});
     });
 
     /* Provide a class for Safari, the new IE */
