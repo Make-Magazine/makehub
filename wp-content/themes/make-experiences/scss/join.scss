@@ -183,7 +183,13 @@
 }
 
 .page-register {
-    h1 { text-align: center; }
+    h1 { 
+		text-align: center;
+		&::before, &::after {
+			display: block;
+			visibility: visible;
+		}
+	}
 	label.iump-labels-register { font-size: 18px; }
 	.iump-form-line-register .iump-form-sublabel {
 		font-size: 16px;
@@ -195,13 +201,10 @@
 			visibility: hidden;
 			&::before {
 				content: "School Maker Faire Registration Fee";
-			    display: block;
-			    visibility: visible;
+			
 			}
 			&::after {
-				content: url('../images/SchoolMakerFaire-logo.png');
-				display: block;
-				visibility: visible;
+				content: url('../images/SchoolMakerFaire-logo.jpg');
 			}
 		}
 	}
@@ -211,8 +214,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Educator/Student Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -222,8 +223,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -233,8 +232,6 @@
 			visibility: hidden;
 			&::before {
 				content: "School/Makerspace Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -244,8 +241,6 @@
 			visibility: hidden;
 			&::before {
 				content: "School Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -255,8 +250,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Trial Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -266,8 +259,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Patron Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -277,8 +268,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Founder Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
@@ -288,8 +277,6 @@
 			visibility: hidden;
 			&::before {
 				content: "Benefactor Membership Registration";
-			    display: block;
-			    visibility: visible;
 			}
 		}
 	}
