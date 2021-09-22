@@ -11,8 +11,8 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.4.4
+ * @package WooCommerce\Templates
+ * @version 5.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -27,28 +27,20 @@ $show_shipping = ! wc_ship_to_billing_address_only() && $order->needs_shipping_a
 		<div class="woocommerce-column woocommerce-column--1 woocommerce-column--billing-address col-1">
 
 	<?php endif; ?>
-    <div class="woocommerce-customer-details--billwrap">
-        <div class="woocommerce-customer-details--maincolumn">
-        	<h3 class="woocommerce-column__title"><?php esc_html_e( 'Billing address', 'buddyboss-theme' ); ?></h3>
-        
-        	<address>
-        		<?php echo wp_kses_post( $order->get_formatted_billing_address( esc_html__( 'N/A', 'buddyboss-theme' ) ) ); ?>
-        	</address>
-        </div>
-        
-        <div class="woocommerce-customer-details--subcolumn">
-			<h3 class="woocommerce-column__title"><?php esc_html_e( 'Additional Customer Details', 'buddyboss-theme' ); ?></h3>
-			<address>
-				<?php if ( $order->get_billing_phone() ) : ?>
-					<p class="woocommerce-customer-details--phone"><?php echo esc_html( $order->get_billing_phone() ); ?></p>
-				<?php endif; ?>
 
-				<?php if ( $order->get_billing_email() ) : ?>
-					<p class="woocommerce-customer-details--email"><?php echo esc_html( $order->get_billing_email() ); ?></p>
-				<?php endif; ?>
-			</address>
-        </div>
-    </div>
+	<h2 class="woocommerce-column__title"><?php esc_html_e( 'Billing address', 'buddyboss-theme' ); ?></h2>
+
+	<address>
+		<?php echo wp_kses_post( $order->get_formatted_billing_address( esc_html__( 'N/A', 'buddyboss-theme' ) ) ); ?>
+
+		<?php if ( $order->get_billing_phone() ) : ?>
+			<p class="woocommerce-customer-details--phone"><?php echo esc_html( $order->get_billing_phone() ); ?></p>
+		<?php endif; ?>
+
+		<?php if ( $order->get_billing_email() ) : ?>
+			<p class="woocommerce-customer-details--email"><?php echo esc_html( $order->get_billing_email() ); ?></p>
+		<?php endif; ?>
+	</address>
 
 	<?php if ( $show_shipping ) : ?>
 
@@ -58,6 +50,10 @@ $show_shipping = ! wc_ship_to_billing_address_only() && $order->needs_shipping_a
 			<h2 class="woocommerce-column__title"><?php esc_html_e( 'Shipping address', 'buddyboss-theme' ); ?></h2>
 			<address>
 				<?php echo wp_kses_post( $order->get_formatted_shipping_address( esc_html__( 'N/A', 'buddyboss-theme' ) ) ); ?>
+
+				<?php if ( $order->get_shipping_phone() ) : ?>
+					<p class="woocommerce-customer-details--phone"><?php echo esc_html( $order->get_shipping_phone() ); ?></p>
+				<?php endif; ?>
 			</address>
 		</div><!-- /.col-2 -->
 
