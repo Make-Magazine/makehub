@@ -8,7 +8,7 @@ function profile_tab_dashboard_info_name() {
     $user_id = bp_displayed_user_id();
 
     //Is this the profile for the logged in user?
-    if ($user_id != 0 && wp_get_current_user()->ID == $user_id) {
+    if (current_user_can('administrator') || $user_id != 0 && wp_get_current_user()->ID == $user_id) {
         bp_core_new_nav_item(array(
             'name' => 'Dashboard',
             'slug' => 'dashboard',
@@ -35,12 +35,12 @@ function dashboard_info_title() {
 
 function dashboard_info_content() {
     global $wpdb;
-    global $current_user;
-    $current_user = wp_get_current_user();
+    global $bp;
+    $user_id = bp_displayed_user_id();
+    $user = get_user_by('id', $user_id);
 
-    $user_email = (string) $current_user->user_email;
-    $user_id = $current_user->ID;
-    $user_slug = $current_user->user_nicename;
+    $user_email = (string) $user->user_email;
+    $user_slug = $user->user_nicename;
     $user_info = get_userdata($user_id);
     $user_meta = get_user_meta($user_id);
     
@@ -288,9 +288,11 @@ function dashboard_info_content() {
                                     </thead>
                                     <tbody>
                                         <?php
+                                        $return = "";
                                         foreach ($events as $event) {
                                             $return .= build_ee_ticket_section($event, $user_email);
                                         }
+                                        echo $return;
                                         ?>
                                     </tbody>
                                 </table>
@@ -308,7 +310,7 @@ function dashboard_info_content() {
         ///////////////////////////////////////////////    
         $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
         
-        if (groups_is_user_member(get_current_user_id(), $group_id)) {        
+        if (groups_is_user_member($user_id, $group_id)) {        
             ?>
             <div class="dashboard-box expando-box" style="width:100%">
                 <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
