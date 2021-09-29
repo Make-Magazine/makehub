@@ -28,7 +28,7 @@
             select {
                 display: none; /*hide original SELECT element:*/
             }
-        }    
+        }
     }
     .vimeography-gallery {
         .vimeography-player > div {
@@ -87,6 +87,8 @@
         left: 0;
         right: 0;
         z-index: 99;
+		// hide the Education Forum select 
+		&#4 { display: none; }
     }
     /*hide the items when the select box is closed:*/
     .select-hide {
