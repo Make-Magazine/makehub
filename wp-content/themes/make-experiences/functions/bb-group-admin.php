@@ -1,9 +1,7 @@
-<?php 
-/* example of using BP_Group_Extension
- * replace 'test' with something else -  remember that it is case-sensitive
- * checks for any selected Group Types in the 'Settings' step
+<?php
+/* Add Admin elements to pull a hub page tab for each group based on blog and post id
  */
- 
+
 function landing_hub_add_group_extension() {
 
 	if ( bp_is_active( 'groups' ) ) :
@@ -41,7 +39,7 @@ function landing_hub_add_group_extension() {
 				?>
 				<p>Choose a subdomain of make.co and a post id on that subdomain to serve as the main landing page, or hub page of this group</p>
 				<h4><?php _e( 'Subsites', 'buddypress' ); ?></h4>
-				
+
 				<select name="landing_hub_blog_id" id="landing_hub_blog_id">
 					<option value="-1"><?php _e( '--Select--', 'buddypress-subsite' ); ?></option>
 				<?php
@@ -58,8 +56,7 @@ function landing_hub_add_group_extension() {
 			    <br />
 			    <h4><?php _e( 'Post ID', 'buddypress' ); ?></h4>
 				<?php $post_id = groups_get_groupmeta( $group_id, 'landing_hub_post_id'  ); ?>
-					<input type="text" name="landing_hub_post_id" id="landing_hub_post_id" value="<?php echo $post_id; ?>" />&nbsp;
-				</div>
+				<input type="text" name="landing_hub_post_id" id="landing_hub_post_id" value="<?php echo $post_id; ?>" />
 				<br>
 				<hr />
 				<?php
