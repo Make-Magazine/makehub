@@ -47,7 +47,7 @@ $pageUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 </div>
 
 <div class="container page-content video-gallery">
-    <?php echo($galleryID);
+    <?php 
     if($galleryID != 'youtube') {
         echo(do_shortcode('[vimeography id="' . $galleryID . '"]'));
     } else { ?>
