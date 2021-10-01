@@ -1,12 +1,10 @@
 <?php
- /**
+/**
  * Template Name: Video Gallery
- *
- * @version 1.0
  */
+get_header(); ?>
 
-
-get_header();
+<?php
 $querystr = "
     SELECT $wpdb->vimeography_gallery.*
     FROM $wpdb->vimeography_gallery ORDER BY id DESC
@@ -45,7 +43,7 @@ $pageUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 </div>
 
 <div class="container page-content video-gallery">
-    <?php 
+    <?php
     if($galleryID != 'youtube') {
         echo(do_shortcode('[vimeography id="' . $galleryID . '"]'));
     } else { ?>
@@ -54,4 +52,6 @@ $pageUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <?php } ?>
 </div><!-- end .page-content -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();
+ ?>
