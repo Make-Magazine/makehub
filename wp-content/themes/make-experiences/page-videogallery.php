@@ -5,9 +5,7 @@
  * @version 1.0
  */
 
-if (!is_user_logged_in()) { // Make sure membership is active
-	auth_redirect();
-}
+
 get_header();
 $querystr = "
     SELECT $wpdb->vimeography_gallery.*
