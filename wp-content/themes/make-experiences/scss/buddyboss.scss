@@ -18,7 +18,7 @@
 }
 
 // Everything from buddyboss that we have to override with Roboto Font
-.bb-custom-typo h1, .bb-custom-typo .h1, .bb-custom-typo h2, .bb-custom-typo .h2, .bb-custom-typo h3, .bb-custom-typo .h3, .bb-custom-typo h4, .bb-custom-typo .h4, .bb-custom-typo h5, .bb-custom-typo .h5, .bb-custom-typo h6, .bb-custom-typo .h6, .bb-custom-typo .bb-course-footer, .bb-custom-typo .ld-table-list-header .ld-text, .bb-custom-typo .gamipress-achievement-points { 
+.bb-custom-typo h1, .bb-custom-typo .h1, .bb-custom-typo h2, .bb-custom-typo .h2, .bb-custom-typo h3, .bb-custom-typo .h3, .bb-custom-typo h4, .bb-custom-typo .h4, .bb-custom-typo h5, .bb-custom-typo .h5, .bb-custom-typo h6, .bb-custom-typo .h6, .bb-custom-typo .bb-course-footer, .bb-custom-typo .ld-table-list-header .ld-text, .bb-custom-typo .gamipress-achievement-points {
     font-family: 'Roboto';
     color: #333;
     font-weight: 600;
@@ -129,29 +129,40 @@ button.ges-change, button.ges-change:hover {
 }
 
 /* blue toad digital library page */
+.page-template-page-digital-library {
+	#page #content {
+		padding-left: 0px;
+		.container {
+			padding: 0px;
+			width: 100%;
+		 }
+	}
+}
 #page-content.bluetoad iframe{
-    width: 100%;
+    width: 90vw;
     height: 100vh;
     border: none;
     margin-bottom: -10px;
-    padding-bottom: 150px;
+	@media screen and (max-width: 800px) {
+		width: 100vw;
+	}
 }
 
 /* Learn Dash */
 /* Hide topic list on non mobile sites only */
 @media screen and (min-width: 768px) {
-    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
-    .sfwd-lessons .bb-ld-info-bar, 
-    .topic-page .bb-ld-info-bar, 
+    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header,
+    .sfwd-lessons .bb-ld-info-bar,
+    .topic-page .bb-ld-info-bar,
     .sfwd-lessons .bb-position,
     .topic-page .bb-position,
     .sfwd-lessons .sfwd-course-nav,
     .topic-page .sfwd-course-nav,
-    .sfwd-lessons .ld-progress, 
-    .topic-page .ld-progress, 
+    .sfwd-lessons .ld-progress,
+    .topic-page .ld-progress,
     .sfwd-lessons .ld-content-actions,
     .topic-page .ld-content-actions,
-    .sfwd-lessons .lms-header-instructor, 
+    .sfwd-lessons .lms-header-instructor,
     .topic-page .lms-header-instructor {
         display: none;
     }
