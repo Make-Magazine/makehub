@@ -25,7 +25,7 @@ function setup_group_nav() {
             ));
         }
         // custom page
-        if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) && 
+        if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
                 $user_access = $bp->groups->current_group->user_has_access;
                 bp_core_new_subnav_item(array(
@@ -53,7 +53,7 @@ function custom_group_default_tabs($default_tab) {
         }
         if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
-            $default_tab = 'group-hub';      
+            $default_tab = 'group-hub';
         }
     endif; // end if ( class_exists( 'BP_Group_Extension' ) )
     return $default_tab;
@@ -129,7 +129,7 @@ add_action('template_redirect', 'bb_group_redirect');
 function bp_group_custom_hub() {
     add_action('bp_template_title', 'group_custom_hub_screen_title');
     add_action('bp_template_content', 'group_custom_hub_screen_content');
-    
+
     $templates = array('groups/single/plugins.php', 'plugin-template.php');
     if (strstr(locate_template($templates), 'groups/single/plugins.php')) {
         bp_core_load_template(apply_filters('bp_core_template_plugin', 'groups/single/plugins'));
@@ -148,13 +148,17 @@ function group_custom_hub_screen_content() {
     $blogid = groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true );
     //get the url of the subdomain
     $blog_details = get_blog_details( array( 'blog_id' => $blogid ) );
-    
+
     //add elementor styling to this page
     wp_enqueue_style('elementor-style', '/wp-content/plugins/elementor/assets/css/frontend.min.css', '', 'all');
-    
+
     //add specific elementor styling based on subdomain and postid
-    wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/sites/'.$blogid.'/elementor/css/post-'.$postid.'.css', '', 'all');
-    
+	if($blogid == 1) {
+		wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/elementor/css/post-'.$postid.'.css', '', 'all');
+	} else {
+    	wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/sites/'.$blogid.'/elementor/css/post-'.$postid.'.css', '', 'all');
+	}
+
     //pull in the contents of the page
     //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content
     $result = basicCurl($blog_details->siteurl.'/wp-json/elementor/v1/pages/'.$postid.'/contentElementor');
@@ -164,11 +168,11 @@ function group_custom_hub_screen_content() {
 //rename group tabs
 function bp_rename_group_tabs() {
     global $bp;
-    
+
     if (bp_is_group()) {
         $bp->groups->nav->edit_nav( array('name' =>  'Activity' ),'activity', bp_current_item() );
-        $bp->groups->nav->edit_nav( array('name' =>  'Settings' ),'notifications', bp_current_item() );        
-    }        
+        $bp->groups->nav->edit_nav( array('name' =>  'Settings' ),'notifications', bp_current_item() );
+    }
 }
 
 add_action( 'bp_actions', 'bp_rename_group_tabs', 999 );
