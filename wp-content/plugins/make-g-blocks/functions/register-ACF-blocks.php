@@ -27,7 +27,7 @@ function maker_media_panels($categories, $post) {
             )
     );
 }
-add_filter('block_categories', 'maker_media_panels', 10, 2);
+add_filter('block_categories_all', 'maker_media_panels', 10, 2);
 
 add_action('acf/init', 'make_add_acf_blocks');
 
@@ -90,7 +90,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('call', 'action', 'panel'),
         ));
-		 
+
 		acf_register_block(array(
             'name' => 'one_column',
             'title' => __('Hero Panel'),
@@ -135,7 +135,7 @@ function make_add_acf_blocks() {
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('image', 'carousel'),
-        ));    
+        ));
         acf_register_block(array(
             'name' => 'static_or_carousel',
             'title' => __('Image Carousel (Rectangle)'),
@@ -164,7 +164,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('social', 'media', 'panel'),
         ));
- 
+
         //2 column video and text panel
         acf_register_block(array(
             'name' => 'two_column_video',
@@ -179,22 +179,22 @@ function make_add_acf_blocks() {
         acf_register_block(array(
             'name' => 'two_column_image',
             'title' => __('2 column Image and text Panel'),
-            'render_callback' => 'call_ACF_block_panels',            
+            'render_callback' => 'call_ACF_block_panels',
             'category' => 'make-panels',
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('image', 'panel'),
-        ));      
+        ));
 		  // Dynamic carousel with multiple columns
         acf_register_block(array(
             'name' => 'image_slider',
             'title' => __('Image Slider'),
-            'render_callback' => 'call_ACF_block_panels',            
+            'render_callback' => 'call_ACF_block_panels',
             'category' => 'make-panels',
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('image', 'panel'),
-        ));    
+        ));
 		// News Block Panel
         acf_register_block(array(
             'name' => 'news_block_panel',
@@ -204,7 +204,7 @@ function make_add_acf_blocks() {
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('makey', 'banner','panel'),
-        ));            
+        ));
 
 		//Flag Banner Separator Panel
         acf_register_block(array(
@@ -225,7 +225,7 @@ function make_add_acf_blocks() {
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('sponsors', 'panel'),
-        ));        
+        ));
         acf_register_block(array(
             'name' => 'what_is_maker_faire',
             'title' => __('What is Maker Faire'),
