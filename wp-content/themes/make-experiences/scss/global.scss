@@ -18,12 +18,12 @@ $font-light:		100;
 $font-normal:		300;
 $font-bold:			700;
 
-body { 
+body {
 	color: $color-grey;
 	font-family: 'Roboto';
 }
 
-.mobile body { 
+.mobile body {
 	position: relative !important;
 	.buddypanel { display: none !important; }
 	.bb-mobile-header-wrapper, .bb-mobile-panel-wrapper { display: inherit !important; }
@@ -31,7 +31,7 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
-a { 
+a {
 	color: $link-color;
 	&:hover {
 		color: $link-color-hover;
@@ -42,13 +42,13 @@ h1.entry-title {
 	font-weight: 400;
 	font-size: 32px;
 }
-.sticky-header #content.site-content { 
-	min-height: initial; 
+.sticky-header #content.site-content {
+	min-height: initial;
 	display: flex;
 	.container { max-width: 100%; }
 }
 @media screen and (max-width: 767px) {
-	h1, .entry-title { font-size: 2.6em; } 
+	h1, .entry-title { font-size: 2.6em; }
 }
 
 b, strong {
@@ -125,6 +125,12 @@ figure {
 .page-template-page-fullscreen .site-content>.container, .page-template-page-fullwidth-content .site-content>.container, .page-template-default .site-content>.container{
 	max-width: 100% !important;
 }
+// for the cases where the buddypanel was overlapping content at some breakpoints
+.page-template .wp-block-columns {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
 .row-eq-height {
 	flex-wrap: wrap;
 }
@@ -138,7 +144,7 @@ body.admin-bar {
 .truncated {
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
-	-webkit-box-orient: vertical; 
+	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
 
@@ -175,7 +181,7 @@ button, input[type="submit"] {
 				margin-top: -5px;
 			}
 		}
-	}		
+	}
 }
 
 // Youtube responsiveness for Jetpack shortcode
@@ -322,14 +328,14 @@ body.tax-espresso_event_categories {
 	article .post-inner-wrap {
 		display: flex;
 		align-items: center;
-		.image-wrapper { 
+		.image-wrapper {
 			min-width: 150px;
 		}
 		.entry-header { margin-bottom: 0px; }
 		.entry-content { display: none; }
 		@media screen and (max-width: 800px) {
 			flex-direction: column;
-			.image-wrapper { 
+			.image-wrapper {
 				min-width: 100%;
 				img { width: 100%; }
 			}
