@@ -53,7 +53,7 @@ get_header();
             </div>
         <?php } ?>
         <div class="entry-content">
-            <div class="event-datetimes">                
+            <div class="event-datetimes">
                 <?php
                 $eventDetails = '';
                 $datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time($post->ID, true, false, 1);
@@ -68,7 +68,7 @@ get_header();
 
                 $datetime = end($datetimes);
 
-                
+
                 if ($datetime instanceof EE_Datetime) {
                     $startmonth = $datetime->start_date('M');
                     $startday = $datetime->start_date('j');
@@ -76,11 +76,11 @@ get_header();
                     $timeData = $datetime->start_date('Y-m-d');
                     $timerange = $datetime->time_range('g:i a');
                 }
-                                                                                                
+
                 if (get_field('custom_schedule_details', $event->ID())) {
                     $eventDetails = '<div class="event-time-desc"><h2>' . get_field('custom_schedule_details', $event->ID()) . '</h2></div>';
                 } else {
-                    if ($date_count > 1) {                        
+                    if ($date_count > 1) {
                         if ($ticket_count == 1) {
                             $eventDetails .= '<div class="event-time-desc"><h2>' . $date_count . ' sessions starting on  ' . $startmonth . " " . $startday . '</h2></div>';
                         } else {
@@ -106,7 +106,7 @@ get_header();
                             </div>
                             <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
                                 <div class="event-location event-content-item">
-                                    <h4>Location:</h4> 
+                                    <h4>Location:</h4>
                                     <?php echo get_field('location') ?>
                                 </div>
                                 <?php
@@ -117,7 +117,7 @@ get_header();
                         if (array_search($user_email, array_column($userList, 'purchaser_email')) !== false) {
                             ?>
                             <hr />
-                            <h4 style="margin-top:0px;">Attendee Resources:</h4> 
+                            <h4 style="margin-top:0px;">Attendee Resources:</h4>
                             <div class="single-conference-link tribe-events-content" style="border-bottom: 0px;">
                                 <?php if (get_field('webinar_link')) { ?>
                                     <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
@@ -128,24 +128,24 @@ get_header();
                             <a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
                         <?php } ?>
                         <div class="event-description event-content-item">
-                            <h4>What You'll Do:</h4> 
+                            <h4>What You'll Do:</h4>
                             <?php echo apply_filters('the_content', $post->post_content); ?>
                         </div>
                         <?php if (get_field('basic_skills')) { ?>
                             <div class="event-skill-level event-content-item">
-                                <h4>Skill Level:</h4> 
+                                <h4>Skill Level:</h4>
                                 <?php echo get_field('basic_skills'); ?>
                             </div>
                         <?php } ?>
                         <?php if (get_field('skills_taught')) { ?>
                             <div class="event-skills-taught event-content-item">
-                                <h4>Skills you will learn:</h4> 
+                                <h4>Skills you will learn:</h4>
                                 <?php echo html_entity_decode(get_field('skills_taught')); ?>
                             </div>
                         <?php } ?>
                         <?php if (get_field('kit_required') == "Yes") { ?>
                             <div class="event-kit event-content-item">
-                                <h4>A kit is required for this program:</h4> 
+                                <h4>A kit is required for this program:</h4>
                                 <?php
                                 if (get_field('kit_price_included') == "yes") {
                                     echo " and is included in the ticket price";
@@ -164,7 +164,7 @@ get_header();
                         <?php } ?>
                         <?php if (get_field('materials')) { ?>
                             <div class="event-materials event-content-item">
-                                <h4>What You'll Need:</h4> 
+                                <h4>What You'll Need:</h4>
                                 <div class="materials-list">
                                     <?php echo html_entity_decode(get_field('materials')); ?>
                                 </div>
@@ -212,16 +212,22 @@ get_header();
                             </div>
                             <?php
                         }
-                        
+
                             ?>
+                            <?php if (get_field('what_is_included')) { ?>
+                            <div class="event-description event-content-item">
+                                <h4>What is Included:</h4>
+                                <?php echo get_field('what_is_included'); ?>
+                            </div>
+                          <?php } ?>
                             <div class="event-host event-content-item">
-                                <h4>About your Facilitator:</h4>                                 
-                                <?php //per siana, always show the about your facilitator title regardless if the program expertise is set 
+                                <h4>About your Facilitator:</h4>
+                                <?php //per siana, always show the about your facilitator title regardless if the program expertise is set
                                 if (get_field('program_expertise')) {
-                                    echo html_entity_decode(get_field('program_expertise')); 
+                                    echo html_entity_decode(get_field('program_expertise'));
                                 }?>
                             </div>
-                            <?php                       
+                            <?php
                         get_template_part('template-parts/content-espresso_events-people', 'page');
                         ?>
                     </div>
@@ -230,10 +236,10 @@ get_header();
 						<a name="tickets"></a>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
-                            <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
+                            <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
                         </div>
                         <div class="event-sidebar-item" id="event-details">
-                            <h3>Details</h3>                            
+                            <h3>Details</h3>
                             <div class="event-sidebar-field event-date">
                                 <b>Dates:</b>
                                 <?php
@@ -251,14 +257,14 @@ get_header();
                                         <ul>
                                             <?php
                                             $dates = $ticket->datetimes();
-											
+
                                             foreach ($dates as $date) {
                                                 ?>
                                                 <li>
 													<p><?php echo $date->description(); ?></p>
-                                                	<?php echo date('M j, Y',$date->get_raw( 'DTT_EVT_start')) . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+                                                	<?php echo date('M j, Y',$date->get_raw( 'DTT_EVT_start')) . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span>
                                                 </li>
-											<?php } ?>                                    
+											<?php } ?>
                                         </ul>
                                     </div>
 								<?php } ?>
@@ -276,7 +282,7 @@ get_header();
                                     <b>Age Range:</b>
                                     <?php
                                     foreach (get_field('audience') as $age) {
-                                        $ageValues = get_field_object('audience')['choices'];                                        
+                                        $ageValues = get_field_object('audience')['choices'];
                                          ?>
                                          <span class='age-item'><?php echo (isset($ageValues[$age])?$ageValues[$age]:''); ?></span>
                                 <?php } ?>

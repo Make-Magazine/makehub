@@ -1159,6 +1159,25 @@
             "min": "",
             "max": "",
             "step": ""
+        },
+        {
+            "key": "field_6164eb58bdf35",
+            "label": "What is included?",
+            "name": "what_is_included",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "<ul>\r\n \t<li>A free membership to Make: Community<\/li>\r\n \t<li>Access to discussion forums and community groups<\/li>\r\n \t<li>Post event access to session recordings<\/li>\r\n<\/ul>\r\n<strong>** Tickets are nonrefundable **<\/strong>",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         }
     ],
     "location": [
@@ -1178,5 +1197,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1622831420
+    "modified": 1634004763
 }
