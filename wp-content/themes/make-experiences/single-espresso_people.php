@@ -35,7 +35,7 @@ get_header();
 							<b>See more of <?php echo get_the_title(); ?> at:</b>
 							<?php foreach ($social_links as $link) {
 								if ($link['social_link'] != '') {
-									echo '<a href="' . $link['social_link'] . ' target="_blank">*</a>';
+									echo '<a href="' . $link['social_link'] . '" target="_blank">*</a>';
 								}
 							} ?>
 							</span>
@@ -72,9 +72,9 @@ get_header();
 										$endime = date('g:i a', strtotime($date->end_time()));
 
 										$return = '<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
+													'. ($evt->is_upcoming()?'Upcoming':'Past').' Event
 													 <div class="event-image">
 													   <div class="event-truncated-date">' . $dateFormat . '</div>
-														 '. ($evt->is_upcoming()?'Upcoming':'Past').' Event
 													   <a href="' . get_permalink($evt->ID())  . '">
 														 <img src="' . get_the_post_thumbnail_url( $evt->ID(), 'thumbnail' ) . '" />
 													   </a>
