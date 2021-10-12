@@ -26,7 +26,7 @@
 				flex-direction: column;
 				margin-right: 20px;
 				text-align: center;
-				b { 
+				b {
 					color: $color-light-blue;
 					font-size: 24px;
 				}
@@ -34,6 +34,7 @@
 		}
 		.event-info {
 			margin: 0px 20px;
+			min-width: 70%;
 			.event-title {
 				margin-top: 10px;
 				a { color: #333; }
@@ -45,6 +46,9 @@
 		.event-prices {
 			margin-top: 10px;
 			.btn { margin-right: 15px; }
+		}
+		.event-status {
+			text-align: right;
 		}
 	}
 }
