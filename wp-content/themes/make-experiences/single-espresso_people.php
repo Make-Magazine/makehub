@@ -17,9 +17,9 @@ get_header();
 		<main id="main" class="site-main">
 			<div class="host-wrapper">
 				<div class="host-photo">
-					<?php echo get_the_post_thumbnail(); ?>	
+					<?php echo get_the_post_thumbnail(); ?>
 				</div>
-				
+
 				<div class="host-meta">
 					<h1 class="host-title"><?php echo get_the_title(); ?></h1>
 					<?php if(get_field('website')) { ?>
@@ -28,7 +28,7 @@ get_header();
 							<a href="<?php echo get_field('website'); ?>" target="_blank"><?php echo get_field('website'); ?></a>
 						</div>
 					<?php } ?>
-					<?php 
+					<?php
 						$social_links = get_field('social_links', $person->ID());
 						if($social_links) { ?>
 							<span class="social-links">
@@ -47,7 +47,7 @@ get_header();
 						$content = get_field('facilitator_info');
 						$postwithbreaks = wpautop( $content, true );
 						echo $postwithbreaks;
-					?>	
+					?>
 				</div>
 
 			</div>
@@ -55,7 +55,7 @@ get_header();
 			<div class='host-events'>
 				<?php
 					$events = EEH_People_View::get_events_for_person();
-				
+
 					?>
 					<div class="eea-people-addon-person-events-container">
 						<?php if ( $events ) : ?>
@@ -66,7 +66,7 @@ get_header();
 								<div class="events-list">
 									<?php $event = array_reverse($event); // reverse this order to show upcoming first
 									foreach ( $event as $evt ) {
-										$date = $evt->first_datetime(); 
+										$date = $evt->first_datetime();
 										$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
 										$startime = date('F j, Y', strtotime($date->start_date())) . " @ " . date('g:i a', strtotime($date->start_time()));;
 										$endime = date('g:i a', strtotime($date->end_time()));
@@ -74,6 +74,7 @@ get_header();
 										$return = '<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
 													 <div class="event-image">
 													   <div class="event-truncated-date">' . $dateFormat . '</div>
+														 '. ($evt->is_upcoming()?'Upcoming':'Past').' Event
 													   <a href="' . get_permalink($evt->ID())  . '">
 														 <img src="' . get_the_post_thumbnail_url( $evt->ID(), 'thumbnail' ) . '" />
 													   </a>
@@ -85,11 +86,11 @@ get_header();
 													   </h3>
 													   <div class="event-description">' . get_field('short_description', $evt->ID()) . '</div>
 													   <div class="event-prices">';
-															$return .= event_ticket_prices($evt) . 
+															$return .= event_ticket_prices($evt) .
 													  '</div>
 													 </div>
 												   </article>';
-			
+
 										echo $return;
 
 									} ?>
