@@ -71,7 +71,7 @@ get_header();
 										$startime = date('F j, Y', strtotime($date->start_date())) . " @ " . date('g:i a', strtotime($date->start_time()));;
 										$endime = date('g:i a', strtotime($date->end_time()));
 
-										$return = '	<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
+										$return = '	<article id="post-' . $evt->ID() . '" class="'. esc_attr( implode( ' ', get_post_class() ) )  .'">
 														 			<div class="event-image">
 																  	<div class="event-truncated-date">' . $dateFormat . '</div>
 															   		<a href="' . get_permalink($evt->ID())  . '">
