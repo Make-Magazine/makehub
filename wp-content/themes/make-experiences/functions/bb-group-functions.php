@@ -151,6 +151,8 @@ function group_custom_hub_screen_content() {
 
     //add elementor styling to this page
     wp_enqueue_style('elementor-style', '/wp-content/plugins/elementor/assets/css/frontend.min.css', '', 'all');
+	wp_enqueue_script('elementor-frontend-scripts', '/wp-content/plugins/elementor/assets/js/frontend.min.js', '', 'all');
+    wp_enqueue_script('elementor-preload-scripts', '/wp-content/plugins/elementor-pro/assets/js/preloaded-elements-handlers.min.js', '', 'all');
 
     //add specific elementor styling based on subdomain and postid
 	if($blogid == 1) {
