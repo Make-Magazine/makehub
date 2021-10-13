@@ -146,25 +146,14 @@ function group_custom_hub_screen_content() {
     global $bp;
     $postid= groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true );
     $blogid = groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true );
-    //get the url of the subdomain
-    $blog_details = get_blog_details( array( 'blog_id' => $blogid ) );
-
-    //add elementor styling to this page
-    wp_enqueue_style('elementor-style', '/wp-content/plugins/elementor/assets/css/frontend.min.css', '', 'all');
-	wp_enqueue_script('elementor-frontend-scripts', '/wp-content/plugins/elementor/assets/js/frontend.min.js', '', 'all');
-    wp_enqueue_script('elementor-preload-scripts', '/wp-content/plugins/elementor-pro/assets/js/preloaded-elements-handlers.min.js', '', 'all');
-
-    //add specific elementor styling based on subdomain and postid
-	if($blogid == 1) {
-		wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/elementor/css/post-'.$postid.'.css', '', 'all');
-	} else {
-    	wp_enqueue_style('elementor-page', $blog_details->siteurl.'/wp-content/uploads/sites/'.$blogid.'/elementor/css/post-'.$postid.'.css', '', 'all');
-	}
-
-    //pull in the contents of the page
-    //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content
-    $result = basicCurl($blog_details->siteurl.'/wp-json/elementor/v1/pages/'.$postid.'/contentElementor');
-    echo json_decode($result);
+    switch_to_blog($blogid);
+        $contentElementor = "";
+        if (class_exists("\\Elementor\\Plugin")) {
+            $pluginElementor = \Elementor\Plugin::instance();
+            $contentElementor = $pluginElementor->frontend->get_builder_content($postid);
+        }
+        echo $contentElementor;
+    restore_current_blog();
 }
 
 //rename group tabs
