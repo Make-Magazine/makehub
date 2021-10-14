@@ -37,7 +37,7 @@
 	#cart-results-modal-dv {
 		padding: 10px 30px 20px;
 		#cart-results-whats-next-buttons-dv {
-			.cart-results-button { 
+			.cart-results-button {
 				width: 100%;
 			}
 		}
@@ -68,12 +68,12 @@
 	#spco-steps-display-dv {
 		background-color: $color-blue;
 		.spco-step-display-dv {
-			.spco-steps-display-hdr { 
+			.spco-steps-display-hdr {
 				font-size: 20px !important;
 				color: #fff !important;
 			}
 			&.inactive-step {
-				.spco-steps-display-hdr { 
+				.spco-steps-display-hdr {
 					color: #999;
 				}
 			}
@@ -82,6 +82,13 @@
 	h5, h4 {
 		font-size: 24px;
 		font-weight: $font-bold;
+	}
+	.spco-ticket-info-dv::after {
+	    content: "** Tickets are non-refundable **";
+	    text-align: right;
+	    width: 100%;
+	    display: block;
+	    margin-top: -10px;
 	}
 	table.spco-ticket-details {
 		@extend .nice-table;
@@ -94,8 +101,8 @@
 		}
 	}
 	#spco-attendee_information-whats-next-buttons-dv {
-		.button { 
-			min-width: 40%; 
+		.button {
+			min-width: 40%;
 			font-size: 20px;
 			height: auto;
 			padding: 12px 20px;
