@@ -2,7 +2,9 @@
 	.woocommerce-breadcrumb {
 		display: none;
 	}
-	
+	.woocommerce #content div.product div.summary {
+		padding: 2em 2.5% 0 2.5%;
+	}
 }
 
 .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce form button.button, .paypal-button.paypal-button-shape-rect {
