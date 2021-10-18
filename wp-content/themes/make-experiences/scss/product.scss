@@ -5,6 +5,11 @@
 	.woocommerce #content div.product div.summary {
 		padding: 2em 2.5% 0 2.5%;
 	}
+	.single_add_to_cart_button {
+		width: 100%;
+		font-weight: bold;
+		font-size: 20px;
+	}
 }
 
 .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce form button.button, .paypal-button.paypal-button-shape-rect {
