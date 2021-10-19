@@ -146,6 +146,9 @@ button.ges-change, button.ges-change:hover {
 	@media screen and (max-width: 800px) {
 		width: 100vw;
 	}
+	.bb-onscreen-notification-enable {
+		display: none;
+	}
 }
 
 /* Learn Dash */
