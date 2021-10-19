@@ -137,6 +137,9 @@ button.ges-change, button.ges-change:hover {
 			width: 100%;
 		 }
 	}
+	.bb-onscreen-notification-enable {
+		display: none;
+	}
 }
 #page-content.bluetoad iframe{
     width: 90vw;
@@ -145,9 +148,6 @@ button.ges-change, button.ges-change:hover {
     margin-bottom: -10px;
 	@media screen and (max-width: 800px) {
 		width: 100vw;
-	}
-	.bb-onscreen-notification-enable {
-		display: none;
 	}
 }
 
