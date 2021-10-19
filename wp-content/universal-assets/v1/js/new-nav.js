@@ -1,5 +1,5 @@
 jQuery(document).ready(function () {
-	
+
 	    // Change logo based on site
     var site = window.location.hostname
 	var sitename = "Make: Community";
@@ -10,6 +10,8 @@ jQuery(document).ready(function () {
         case "makerfaire.staging.wpengine.com":
         case "dev.makerfaire.com":
         case "stage.makerfaire.com":
+        case "mfairestage.wpengine.com":
+        case "mfairedev.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
             document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
 			sitename = "Maker Faire";
@@ -20,6 +22,8 @@ jQuery(document).ready(function () {
         case "makercamp.staging.wpengine.com":
         case "dev.makercamp.com":
         case "stage.makercamp.com":
+        case "mcampstage.wpengine.com":
+        case "mcampdev.wpengine.com":
         case "makercamp.makehub.local":
         case "makercamp.make.co":
         case "makercamp.devmakehub.wpengine.com":
@@ -34,6 +38,8 @@ jQuery(document).ready(function () {
         case "makezine.com":
         case "stage.makezine.com":
         case "dev.makezine.com":
+		case "mzinedev.wpengine.com":
+		case "mzinestage.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makezine.com");
             jQuery("#site-logo .nav-logo").css("height", "30.4px");
             jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
@@ -71,7 +77,7 @@ jQuery(document).ready(function () {
             }
             break;
     }
-	
+
     /*
      * Allow use of Array.from in implementations that don't natively support it
      function conNavArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -371,4 +377,3 @@ jQuery(document).ready(function () {
 		jQuery("#profileLinks").append(profilehtml);
 	}
 });
-
