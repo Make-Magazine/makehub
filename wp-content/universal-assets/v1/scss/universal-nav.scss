@@ -620,7 +620,12 @@ body.buddyboss-theme {
 		margin-left: 0px;
 	}
 	&.buddypanel-open {
-		#page.site { margin-left: 220px; }
+		#page.site {
+			margin-left: 220px;
+			@media screen and (max-width: 805px) {
+				margin-left: 0px;
+			}
+		}
 	}
 }
 
