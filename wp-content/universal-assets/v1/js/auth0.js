@@ -9,7 +9,7 @@ window.addEventListener('load', function () {
             break;
         }
     }
-	
+
 	if (wpLoginRequired == true) {
 
 		var userProfile;
@@ -91,11 +91,15 @@ window.addEventListener('load', function () {
 				getProfile();
 			} else {
 				jQuery("#LoginBtn").css("display", "block");
-				jQuery("#profile-view, #LogoutBtn").css('display', 'none'); 
-
+				jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 				jQuery(".login-section").css("display", "block");
 				WPlogout();
-
+			}
+			// css will hide buddyboss side panel until page loads
+			if(jQuery("body").is(".buddyboss-theme")) {
+				jQuery("body").addClass("buddypanel-open");
+				jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
+				jQuery("body.buddyboss-theme.buddypanel-open #page.site").css('margin-left', '220px');
 			}
 		}
 
@@ -120,7 +124,7 @@ window.addEventListener('load', function () {
 					document.querySelector('.dropdown-toggle img').style.display = "block";
 					document.querySelector('#LoginBtn').style.display = "none";
 					document.querySelector('.profile-email').innerHTML = userProfile.email;
-					// do we need http://makershare.com/last_name / first_name anymore 
+					// do we need http://makershare.com/last_name / first_name anymore
 					if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 						document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 					}
@@ -134,10 +138,6 @@ window.addEventListener('load', function () {
 					errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
 				}
 				jQuery(".login-section").css("display", "block");
-				// if this is a buddyboss site, we want to default the buddypanel to open on the homepage 
-				if(jQuery("body").is(".home-page.buddyboss-theme")) {
-					jQuery("body").addClass("buddypanel-open");
-				}
 			});
 		}
 
@@ -163,7 +163,7 @@ window.addEventListener('load', function () {
 					},
 				}).done(function () {
 					// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
-					if (loggedin == false) { 
+					if (loggedin == false) {
 						// reload subnavs as necessary
 						jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
 						if (jQuery('#buddypanel-menu').length) {
@@ -220,7 +220,7 @@ window.addEventListener('load', function () {
 			};
 			jQuery.post(ajax_object.ajax_url, data, function (response) {});
 		}
-		
+
 	} else {
 		jQuery(".search-separator").hide();
 	}

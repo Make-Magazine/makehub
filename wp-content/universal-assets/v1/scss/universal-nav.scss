@@ -129,7 +129,7 @@
                         height: 76px;
                         white-space: nowrap;
                         padding-left: 0px;
-                        a { 
+                        a {
                             font-size: 16px;
                             font-weight: 500;
                             color: #333;
@@ -149,7 +149,7 @@
                             &::after { display: none; }
                             &:hover {
                                 background: #f1f1f1;
-                                a { 
+                                a {
                                     color: #333;
                                     text-decoration: none;
                                 }
@@ -352,7 +352,7 @@
                         height: 50px;
                         background: transparent;
                         border: none;
-                        i { 
+                        i {
                             color: #ccc;
                             font-size: 32px;
                         }
@@ -501,7 +501,7 @@
             padding: 10px;
             align-items: center;
             font-size: 16px;
-            img { 
+            img {
                 width: 60px;
                 margin-right: 15px;
             }
@@ -542,7 +542,7 @@
                     &.menu-item-event-cart {
                         display: none;
                     }
-                    a { 
+                    a {
                         color: #333;
                         display: flex;
                         i {
@@ -551,7 +551,7 @@
                             display: block !important;
                         }
                     }
-                    
+
                     &.menu-item-has-children {
                         .ab-submenu {
                             display: none;
@@ -614,7 +614,11 @@ body.buddyboss-theme {
     .buddypanel {
         margin-top: 121px;
         z-index: 9;
+		margin-left:-220px;
     }
+	#page.site {
+		margin-left: 0px;
+	}
 }
 
 body.mobile-nav {
@@ -636,7 +640,7 @@ body.mobile-nav {
 }
 
 // SEARCH related stuff //
-#search-modal, #sb-search { 
+#search-modal, #sb-search {
     display: none;
 }
 
@@ -720,7 +724,7 @@ body.mobile-nav {
         width: 340px;
         margin: 40px auto 0px;
         text-align: center;
-        h5 { 
+        h5 {
             color: #fff;
             font-family: "Roboto-Light";
             font-size: 18px;
@@ -734,7 +738,7 @@ body.mobile-nav {
             li {
                 padding: 10px;
                 list-style: none;
-                a { 
+                a {
                     color: #ED1C24;
                     opacity: .9;
                     &:hover { opacity: 1; }
