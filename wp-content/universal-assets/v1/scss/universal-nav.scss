@@ -619,6 +619,9 @@ body.buddyboss-theme {
 	#page.site {
 		margin-left: 0px;
 	}
+	&.buddypanel-open {
+		#page.site { margin-left: 220px; }
+	}
 }
 
 body.mobile-nav {

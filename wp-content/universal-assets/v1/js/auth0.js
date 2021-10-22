@@ -94,12 +94,7 @@ window.addEventListener('load', function () {
 				jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 				jQuery(".login-section").css("display", "block");
 				WPlogout();
-			}
-			// css will hide buddyboss side panel until page loads
-			if(jQuery("body").is(".buddyboss-theme")) {
-				jQuery("body").addClass("buddypanel-open");
-				jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
-				jQuery("body.buddyboss-theme.buddypanel-open #page.site").css('margin-left', '220px');
+
 			}
 		}
 
@@ -138,6 +133,11 @@ window.addEventListener('load', function () {
 					errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
 				}
 				jQuery(".login-section").css("display", "block");
+				// css will hide buddyboss side panel until page loads
+				if(jQuery("body").is(".buddyboss-theme")) {
+					jQuery("body").addClass("buddypanel-open");
+					jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
+				}
 			});
 		}
 
@@ -211,6 +211,11 @@ window.addEventListener('load', function () {
 			}).done(function () {
 				location.href = location.href;
 			});
+			// css will hide buddyboss side panel until page loads
+			if(jQuery("body").is(".buddyboss-theme")) {
+				jQuery("body").addClass("buddypanel-open");
+				jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
+			}
 		}
 
 		function errorMsg(message) {

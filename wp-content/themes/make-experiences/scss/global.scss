@@ -275,10 +275,10 @@ button, input[type="submit"] {
     bottom: 0;
     -ms-transform: rotate(20deg);
     transform: rotate(20deg);
-    margin-bottom: -70px;
+    margin-bottom: -80px;
     margin-left: 30px;
     width: 12%;
-    z-index: 99;
+    z-index: 5;
     transition: 0.3s;
 	&:hover {
 		width: 15%;
@@ -293,6 +293,14 @@ button, input[type="submit"] {
 	}
 	@media screen and (max-width: 600px) {
 		display: none;
+	}
+}
+.buddypanel-open.bb-page-loaded {
+	#makey-sign {
+		margin-left: 180px;
+		&:hover {
+			margin-left: 200px;
+		}
 	}
 }
 
