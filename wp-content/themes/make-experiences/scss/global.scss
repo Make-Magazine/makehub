@@ -302,6 +302,7 @@ button, input[type="submit"] {
 	}
 }
 .buddypanel-open.bb-page-loaded {
+	.buddypanel { margin-left: 0px };
 	@media screen and (min-width: 805px) {
 		#makey-sign {
 			margin-left: 180px;

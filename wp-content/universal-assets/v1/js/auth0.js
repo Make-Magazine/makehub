@@ -136,7 +136,6 @@ window.addEventListener('load', function () {
 				// css will hide buddyboss side panel until page loads
 				if(jQuery("body").is(".buddyboss-theme")) {
 					jQuery("body").addClass("buddypanel-open");
-					jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
 				}
 			});
 		}
@@ -214,7 +213,6 @@ window.addEventListener('load', function () {
 			// css will hide buddyboss side panel until page loads
 			if(jQuery("body").is(".buddyboss-theme")) {
 				jQuery("body").addClass("buddypanel-open");
-				jQuery("body.buddyboss-theme .buddypanel").css('margin-left', '0px');
 			}
 		}
 
