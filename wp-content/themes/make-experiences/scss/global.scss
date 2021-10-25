@@ -301,7 +301,7 @@ button, input[type="submit"] {
 		display: none;
 	}
 }
-.buddypanel-open.bb-page-loaded {
+.buddypanel-open.bb-page-loaded.logged-in {
 	.buddypanel { margin-left: 0px };
 	@media screen and (min-width: 805px) {
 		#makey-sign {

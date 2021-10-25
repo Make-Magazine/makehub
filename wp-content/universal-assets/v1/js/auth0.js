@@ -214,6 +214,10 @@ window.addEventListener('load', function () {
 			if(jQuery("body").is(".buddyboss-theme")) {
 				jQuery("body").addClass("buddypanel-open");
 			}
+			// if we're still registered as logged in, refresh the page
+			if(jQuery("body").is(".logged-in")) {
+				location.href = location.href;
+			}
 		}
 
 		function errorMsg(message) {
