@@ -133,10 +133,6 @@ window.addEventListener('load', function () {
 					errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
 				}
 				jQuery(".login-section").css("display", "block");
-				// css will hide buddyboss side panel until page loads
-				if(jQuery("body").is(".buddyboss-theme")) {
-					jQuery("body").addClass("buddypanel-open");
-				}
 			});
 		}
 
@@ -165,9 +161,6 @@ window.addEventListener('load', function () {
 					if (loggedin == false) {
 						// reload subnavs as necessary
 						jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
-						if (jQuery('#buddypanel-menu').length) {
-							jQuery("#buddypanel-menu").load(document.URL + " aside.buddypanel > *");
-						}
 						// reload the digital libary if necessary
 						if (jQuery('.main-content').length && jQuery('.join-box').length) {
 							window.location.replace("/digital-library/");
@@ -180,6 +173,12 @@ window.addEventListener('load', function () {
 							jQuery('.page-content').load(document.URL + " .page-content > *");
 						}
 						jQuery('.universal-loading-spinner').remove();
+					}
+					// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
+					if(jQuery("body").is(".buddyboss-theme")) {
+						jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
+							jQuery("body").addClass("buddypanel-open");
+						});
 					}
 				}).fail(function (xhr, status, error) {
 					jQuery('.universal-loading-spinner').remove();
@@ -212,11 +211,9 @@ window.addEventListener('load', function () {
 			});
 			// css will hide buddyboss side panel until page loads
 			if(jQuery("body").is(".buddyboss-theme")) {
-				jQuery("body").addClass("buddypanel-open");
-			}
-			// if we're still registered as logged in, refresh the page
-			if(jQuery("body").is(".logged-in")) {
-				location.href = location.href;
+				jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
+					jQuery("body").addClass("buddypanel-open");
+				});
 			}
 		}
 
