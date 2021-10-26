@@ -623,13 +623,15 @@ body.buddyboss-theme {
 		.buddypanel { margin-left: 0px }
 		#page.site {
 			margin-left: 220px;
-			@media screen and (max-width: 805px) {
-				margin-left: 0px;
-				#makey-sign {
-					margin-left: 180px;
-					&:hover {
-						margin-left: 200px;
-					}
+		}
+		@media screen and (max-width: 805px) {
+			#page.site { margin-left: 0px; }
+		}
+		@media screen and (min-width: 805px) {
+			#makey-sign {
+				margin-left: 180px;
+				&:hover {
+					margin-left: 200px;
 				}
 			}
 		}

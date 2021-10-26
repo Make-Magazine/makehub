@@ -102,7 +102,7 @@ function ee_filter_pre_get_posts( $query ) {
 						'terms' => get_tag_ID('hidden'),
 						'operator' => 'NOT IN'
 					)
-				) 
+				)
 			);
 		}
 	}

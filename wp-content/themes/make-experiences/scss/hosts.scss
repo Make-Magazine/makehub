@@ -4,13 +4,13 @@
 		.page-title {
 			visibility: hidden;
 			margin-top: 0px;
-			span { 
+			span {
 				visibility: visible;
 				margin-left: -150px;
 			}
 		}
 	}
-	
+
 	article {
 		.post-inner-wrap {
 			display: flex;
@@ -20,6 +20,12 @@
 }
 
 .single-espresso_people {
+	._form-wrapper { display: none; }
+	#formBtn {
+		margin: 0 auto;
+		display: flex;
+		max-width: 400px;
+	 }
 	.host-wrapper {
 		margin-top: 30px;
 		border: 1px solid #d5d5d5;
@@ -56,7 +62,7 @@
 		}
 		.host-meta {
 			flex-direction: row;
-			h1 { 
+			h1 {
 				text-align: left;
 				font-weight: 600;
 			}
@@ -66,12 +72,12 @@
 			margin-top: 10px;
 			ol { list-style: decimal; }
 			ul { list-style: disc; }
-			ol, ul { 
+			ol, ul {
 				padding-top: 15px;
-				padding-left: 30px; 
+				padding-left: 30px;
 				br { display: none; }
 			}
-			a { 
+			a {
 				color: #337ab7;
 				&:hover { color: #23527c; }
 			}
@@ -79,7 +85,7 @@
 		.fas { margin-left: auto; }
 	}
 	.host-events {
-		h2 { 
+		h2 {
 			font-weight: $font-bold;
 			background: $color-navy;
 			padding: 10px 15px;

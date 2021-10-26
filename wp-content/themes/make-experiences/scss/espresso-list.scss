@@ -89,3 +89,19 @@
 		}
 	}
 }
+
+// people list
+.post-type-archive-espresso_people {
+	.post-inner-wrap {
+		display: flex;
+		padding-left: 15px;
+		.entry-content-wrap {
+			.entry-content {
+				display: -webkit-box;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+		}
+	}
+}
