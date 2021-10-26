@@ -98,6 +98,13 @@ window.addEventListener('load', function () {
 			}
 		}
 
+		// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
+		function showBuddypanel() {
+			jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
+				jQuery("body").addClass("buddypanel-open");
+			});
+		}
+
 		function getProfile() {
 			var accessToken = localStorage.getItem('access_token');
 
@@ -123,10 +130,13 @@ window.addEventListener('load', function () {
 					if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 						document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 					}
-					if (wpLoginRequired && loggedin == false && !jQuery('.logged-in').length) {
+					if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
 						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 						jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 						WPlogin();
+					} else if( jQuery("body").is(".logged-in") && jQuery("body").is(".buddyboss-theme") ) {
+						// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
+						showBuddypanel();
 					}
 				}
 				if (err) {
@@ -175,11 +185,7 @@ window.addEventListener('load', function () {
 						jQuery('.universal-loading-spinner').remove();
 					}
 					// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-					if(jQuery("body").is(".buddyboss-theme")) {
-						jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
-							jQuery("body").addClass("buddypanel-open");
-						});
-					}
+					showBuddypanel();
 				}).fail(function (xhr, status, error) {
 					jQuery('.universal-loading-spinner').remove();
 					if (status === 'timeout') {
@@ -210,11 +216,7 @@ window.addEventListener('load', function () {
 				location.href = location.href;
 			});
 			// css will hide buddyboss side panel until page loads
-			if(jQuery("body").is(".buddyboss-theme")) {
-				jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
-					jQuery("body").addClass("buddypanel-open");
-				});
-			}
+			showBuddypanel();
 		}
 
 		function errorMsg(message) {
