@@ -83,7 +83,7 @@ endif;
             <?php do_action(THEME_HOOK_PREFIX . 'before_header'); ?>
 
                 <?php
-                // Universal Nav     
+                // Universal Nav
                 require_once(WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html');
                 ?>
                 <div id="universal-subnav" class="nav-level-2">
@@ -110,5 +110,5 @@ endif;
 
                 <?php do_action(THEME_HOOK_PREFIX . 'begin_content'); ?>
 
-                <div class="container">
+                <div class="container-fluid">
                     <div class="<?php echo apply_filters('buddyboss_site_content_grid_class', 'bb-grid site-content-grid'); ?>">
