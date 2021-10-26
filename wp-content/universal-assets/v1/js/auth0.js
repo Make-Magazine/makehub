@@ -134,7 +134,7 @@ window.addEventListener('load', function () {
 						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 						jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 						WPlogin();
-					} else if( jQuery("body").is(".logged-in") && jQuery("body").is(".buddyboss-theme") ) {
+					} else if( jQuery("body").is(".buddyboss-theme") ) {
 						// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
 						showBuddypanel();
 					}
