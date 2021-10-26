@@ -88,7 +88,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 				<div class="entry-content">
 					<?php
 						$content = get_the_content();
-						echo wp_filter_nohtml_kses( $content );
+						echo sanitize_text_field( $content );
 					?>
 				</div>
 				<a href="<?php echo get_permalink();?>" class="btn universal-btn">Read More</a>
@@ -133,7 +133,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 				<div class="entry-content">
 					<?php
 						$content = get_the_content();
-						echo wp_filter_nohtml_kses( $content );
+						echo sanitize_text_field( $content );
 					?>
 				</div>
 				<a href="<?php echo get_permalink();?>" class="btn universal-btn">Read More</a>
