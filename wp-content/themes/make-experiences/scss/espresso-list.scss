@@ -114,8 +114,16 @@
 		}
 		@media screen and (max-width: 768px) {
 			flex-direction: column;
+			.image-wrapper {
+				text-align: center;
+				margin-right: 30px;
+			}
 			.entry-content-wrap {
 				padding-left: 0px;
+				.entry-header {
+					text-align: center;
+				}
+				.universal-btn { width: 100%; }
 			}
 		}
 	}
