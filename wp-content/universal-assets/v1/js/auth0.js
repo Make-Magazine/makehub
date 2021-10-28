@@ -182,6 +182,10 @@ window.addEventListener('load', function () {
 						if (jQuery('.page-content').length) {
 							jQuery('.page-content').load(document.URL + " .page-content > *");
 						}
+						// for anything else that has content that will changed if logged in
+						if (jQuery('.logged-in-refresh').length) {
+							jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
+						}
 						jQuery('.universal-loading-spinner').remove();
 					}
 					// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes

@@ -23,10 +23,10 @@ get_header();
             do_action(THEME_HOOK_PREFIX . '_template_parts_content_top');
 
             //while (have_posts()) :
-                the_post();              
+                the_post();
                 // Are there custom panels to display?
                 if (have_rows('content_panels')) {
-                    // loop through the rows of data      
+                    // loop through the rows of data
                     echo '<div class="customPanels">';
                     while (have_rows('content_panels')) {
                         the_row();

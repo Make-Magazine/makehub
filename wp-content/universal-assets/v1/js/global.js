@@ -220,6 +220,10 @@ jQuery(document).ready(function (jQuery) {
     }
 });
 
+jQuery(".login-btn").on('click', function(){
+	var _href = "//" + window.location.hostname + jQuery("#LoginBtn").attr("href");
+	window.location.href = _href;
+});
 
 // Smooth scroll all the anchor tags
 jQuery('a[href*="#"]')

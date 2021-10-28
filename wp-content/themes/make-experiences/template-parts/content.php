@@ -8,7 +8,7 @@
  */
 ?>
 
-<?php 
+<?php
 global $post;
 
 // Build an array of all images associated with the post to create a gallery out of
@@ -29,19 +29,18 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
 	<?php if ( !is_single() || is_related_posts() ) { ?>
 		<div class="post-inner-wrap">
 	<?php } ?>
 
-	<?php 
+	<?php
 	if ( ( !is_single() || is_related_posts() ) && function_exists( 'buddyboss_theme_entry_header' ) ) {
 		echo '<div class="image-wrapper"><a href="' . get_permalink() . '"><img src="' . get_the_post_thumbnail_url( $post, 'thumbnail' ) . '" /></a></div>';
-	} 
+	}
 	?>
 
 	<div class="entry-content-wrap">
-		<?php 
+		<?php
 		$featured_img_style = buddyboss_theme_get_option( 'blog_featured_img' );
 
 		if ( !empty( $featured_img_style ) && $featured_img_style == "full-fi-invert" ) {
@@ -86,7 +85,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 
 			<?php if ( !is_singular() || is_related_posts() ) { ?>
 				<div class="entry-content">
-					<?php 
+					<?php
 					if( empty($post->post_excerpt) ) {
 						the_excerpt();
 					} else {
@@ -133,7 +132,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 
 			<?php if ( !is_singular() || is_related_posts() ) { ?>
 				<div class="entry-content">
-					<?php 
+					<?php
 					if( empty($post->post_excerpt) ) {
 						the_excerpt();
 					} else {
@@ -162,7 +161,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 			<?php } ?>
 
 		<?php } ?>
-		
+
 		<?php if ( is_singular() && ! is_related_posts() ) { ?>
 			<div class="entry-content">
 			<?php

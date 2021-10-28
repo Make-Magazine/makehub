@@ -4,7 +4,7 @@ body {
     width: 100%;
     top: 0px;
     &.admin-bar {
-        margin-top: 32px;  
+        margin-top: 32px;
         overflow: visible;
         position: absolute !important;
         top: 0px !important;
@@ -19,7 +19,7 @@ body {
 body > div {
     font-size: 1rem; // undo genesis font sizing
 }
-.main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid { 
+.main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid {
     padding: 0px; // no awkward paddings on our bootstrap containers
 }
 a { // don't let genesis molest our links
@@ -61,7 +61,7 @@ a { // don't let genesis molest our links
     &:hover, &:active, &:focus { color: #fff; }
 }
 
-.btn-blue-universal { 
+.btn-blue-universal {
 	color: #1987C7;
 	border: thin solid #1987C7;
 	padding: 10px 30px;
@@ -100,7 +100,7 @@ a { // don't let genesis molest our links
     -webkit-border-radius: 2px;
     text-transform: uppercase;
     font-size: 16px;
-    font-weight: 300;      
+    font-weight: 300;
     height: 50px;
     padding: 0px 15px;
     border: solid 1px #005e9a;
@@ -204,10 +204,10 @@ input.cmn-toggle-round:checked + label:after {
 }
 
 .fancybox-overlay { z-index: 999999; }
-.fancybox-opened { 
+.fancybox-opened {
     z-index: 9999999;
     @media screen and (max-width: 768px) {
-        left: 0px !important; 
+        left: 0px !important;
         width: 100vw !important;
         .fancybox-inner {
             width: auto !important;
@@ -241,7 +241,7 @@ input.cmn-toggle-round:checked + label:after {
     background: black;
     font-size:12px;
     padding:10px;
-    color: #fff; 
+    color: #fff;
     z-index: 99;
     bottom: 10px;
     border: 2px solid white;
@@ -300,7 +300,7 @@ input.cmn-toggle-round:checked + label:after {
             }
         }
     }
-    iframe { 
+    iframe {
         width: 100%;
         height: 100%;
         position: absolute;
