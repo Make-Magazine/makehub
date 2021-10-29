@@ -22,15 +22,17 @@ get_header();
 						<h4>Introductory offer 19.99 - Renews at 59.99.</h4>-->
 					<?php } else { ?>
 						<h1>Become a Member of Make: Community</h1>
-						<a href="javascript:void();" class="login-btn"><h4>Already a member? Login now.</h4></a>
+						<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
 					<?php } ?>
-						<?php if(is_user_logged_in()){ ?>
-							<a href="/activity" class="btn universal-btn-reversed" style="margin:0 auto;width:360px;display:flex;font-size:24px;min-height:100px;padding:10px 20px;">See what's happening on Make: Community</a>
-							<!--<a href="/register/?lid=20" class="btn universal-btn-reversed membership-btn special-membership-btn">Upgrade</a>-->
-						<?php } else { ?>
-							<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">Join Today!</a>
-						<?php }  ?>
-			   		<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
+					<?php if(is_user_logged_in()){ ?>
+						<a href="/activity" class="btn universal-btn-reversed" style="margin:0 auto;width:95%px;display:flex;font-size:24px;min-height:7px;padding:10px 20px;text-transform:capitalize;">See what's happening on Make: Community</a>
+						<!--<a href="/register/?lid=20" class="btn universal-btn-reversed membership-btn special-membership-btn">Upgrade</a>-->
+					<?php } else { ?>
+						<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">Join Today!</a>
+					<?php } ?>
+					<?php if(!is_user_logged_in()){ ?>
+			   			<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
+					<?php } ?>
 				</div>
 			</header>
 
