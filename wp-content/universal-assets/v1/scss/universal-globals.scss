@@ -35,6 +35,9 @@ a { // don't let genesis molest our links
 	.site-content {
 		padding: 0 15px;
 		.bb-grid {
+			.bb-vw-container {
+				left: 60%;
+			}
 			@media screen and (max-width: 982px) {
 				flex-direction: column;
 				#primary, #secondary, #secondary-right, #item-body {
