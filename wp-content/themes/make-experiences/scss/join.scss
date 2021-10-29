@@ -68,6 +68,9 @@
                     right: -20px;
                 }
             }
+			&.special-membership-btn::after {
+                content: "$19.99";
+			}
         }
     }
     @media screen and (max-width: 768px) {

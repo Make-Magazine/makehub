@@ -19,18 +19,19 @@ get_header();
 				<header class="entry-header">
 					<div class="header-text logged-in-refresh">
 						<?php if(is_user_logged_in()){ ?>
-							<h1>To access this content, upgrade your membership today!</h1>
+							<h1>You are already a member!</h1>
+							<!--<h1>To access this content, upgrade your membership today!</h1>
+							<h4>Introductory offer 19.99 - Renews at 59.99.</h4>-->
 						<?php } else { ?>
 							<h1>Become a Member of Make: Community</h1>
 							<a href="javascript:void();" class="login-btn"><h4>Already a member? Login now.</h4></a>
 						<?php } ?>
-						<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">
 							<?php if(is_user_logged_in()){ ?>
-								Upgrade
+								<a href="/activity" class="btn universal-btn-reversed" style="margin:0 auto;width:360px;display:flex;font-size:24px;min-height:100px;padding:10px 20px;">See what's happening on Make: Community</a>
+								<!--<a href="/register/?lid=20" class="btn universal-btn-reversed membership-btn special-membership-btn">Upgrade</a>-->
 							<?php } else { ?>
-								Join Today!
+								<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">Join Today!</a>
 							<?php }  ?>
-						</a>
 				   		<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 					</div>
 				</header>
