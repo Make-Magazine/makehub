@@ -80,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	}
 
-	if ( ( $lesson_progression_enabled ) && ( ! empty( $sub_context ) || ! $previous_topic_completed || ! $previous_lesson_completed ) ) :
+	if ( ( ! learndash_is_sample( $post ) ) && ( $lesson_progression_enabled ) && ( ! empty( $sub_context ) || ! $previous_topic_completed || ! $previous_lesson_completed ) ) :
 
 		if ( 'video_progression' === $sub_context ) {
 			$previous_item = $lesson_post;

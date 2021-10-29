@@ -84,7 +84,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( ! isset( $this->setting_option_values['groups_autoenroll_managed'] ) ) {
 				$this->setting_option_values['groups_autoenroll_managed'] = '';
 			}
-			
+
 			if ( ! isset( $this->setting_option_values['courses_autoenroll'] ) ) {
 				$this->setting_option_values['courses_autoenroll'] = '';
 			}
@@ -217,7 +217,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_fields() {
 
 			$this->setting_option_fields = array(
-				'groups_autoenroll_managed'          => array(
+				'groups_autoenroll_managed'   => array(
 					'name'      => 'groups_autoenroll_managed',
 					'type'      => 'checkbox-switch',
 					'label'     => sprintf(

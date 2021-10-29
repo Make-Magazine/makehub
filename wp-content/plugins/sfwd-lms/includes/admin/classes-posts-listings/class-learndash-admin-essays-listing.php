@@ -229,6 +229,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		public function listing_table_query_vars_filter_essays( $q_vars, $post_type, $query ) {
 			if ( $post_type === $this->post_type ) {
 
+				// If we are viewing the "All" items then exclude the "draft" items.
+				if ( ( ! isset( $_GET['post_status'] ) ) && ( ! isset( $_GET['author'] ) ) ) {
+					$q_vars['post_status'] = array( 'graded', 'not_graded' );
+				}
+
 				$author_selector = $this->get_selector( 'author' );
 				$group_selector  = $this->get_selector( 'group_id' );
 				if ( ( isset( $author_selector['selected'] ) ) && ( ! empty( $author_selector['selected'] ) ) ) {
@@ -486,6 +491,21 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							jQuery('<option>').val('approve_essay').text('<?php echo esc_attr( $approve_text ); ?>').appendTo("select[name='action']");
 							jQuery('<option>').val('approve_essay').text('<?php echo esc_attr( $approve_text ); ?>').appendTo("select[name='action2']");
 						});
+
+						<?php
+							// Hide the post status select on the Quick Edit panel.
+						?>
+						jQuery( 'table.wp-list-table' ).on( 'click', 'button.editinline', function( e ) {
+							e.preventDefault();
+							var select_post_status = jQuery('.inline-edit-row').find('select[name="_status"]');
+							if ( typeof select_post_status !== 'undefined' ) {
+								var select_parent_el = select_post_status.parents('.inline-edit-group');
+								if ( typeof select_parent_el !== 'undefined' ) {
+									select_parent_el.hide();
+								}
+							}
+						});
+
 					</script>
 				<?php
 			}
@@ -599,7 +619,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							 * @since 2.5.0
 							 *
 							 * @param array $submitted_essay_data Essay data.
-	 						 */
+							 */
 							$submitted_essay_data = apply_filters( 'learndash_essay_status_data', $submitted_essay_data );
 							learndash_update_submitted_essay_data( $quiz_id, $question_id, $essay_post, $submitted_essay_data );
 
@@ -1060,8 +1080,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$this->show_selector_empty_option( $selector );
 
 			$selector_options = array();
-			$quiz_id = (int) $this->get_selector( 'quiz_id', 'selected' );
-			if ( ! empty( $quiz_id ) )  {
+			$quiz_id          = (int) $this->get_selector( 'quiz_id', 'selected' );
+			if ( ! empty( $quiz_id ) ) {
 				$quiz_questions = learndash_get_quiz_questions( $quiz_id );
 				if ( ! empty( $quiz_questions ) ) {
 					foreach ( $quiz_questions as $question_post_id => $question_pro_id ) {
@@ -1103,7 +1123,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			return $views;
 		}
-
 		// End of functions.
 	}
 }

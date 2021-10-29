@@ -3316,7 +3316,7 @@
 
 .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionList[data-type="assessment_answer"] label {
   display: inline-flex;
-  color: #728188;
+  color: var(--global--color-primary);
   padding: 0;
   border: 0;
   margin: 0 0.25em;
@@ -3824,6 +3824,7 @@
 
 .learndash-wrapper .ld-course-navigation .ld-lesson-item-preview .ld-lesson-title .ld-status-icon {
   margin-left: 0.5em;
+  pointer-events: all;
 }
 
 .learndash-wrapper .ld-course-navigation .ld-lesson-item-preview .ld-lesson-title .ld-status-icon .ld-icon {

@@ -1025,11 +1025,11 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Course_Builder' ) ) && ( class_e
 
 							$reply_data['status'] = true;
 
-							$reply_data['new_steps'][ $old_step_id ]             = array();
-							$reply_data['new_steps'][ $old_step_id ]['post_id']  = $new_step_id;
-							$reply_data['new_steps'][ $old_step_id ]['view_url'] = get_permalink( $new_step_id );
-							$reply_data['new_steps'][ $old_step_id ]['edit_url'] = get_edit_post_link( $new_step_id );
-							$reply_data['new_steps'][ $old_step_id ]['post_status']  = get_post_status( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]                = array();
+							$reply_data['new_steps'][ $old_step_id ]['post_id']     = $new_step_id;
+							$reply_data['new_steps'][ $old_step_id ]['view_url']    = get_permalink( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]['edit_url']    = get_edit_post_link( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]['post_status'] = get_post_status( $new_step_id );
 
 							if ( 'sfwd-quiz' === $post_args['post_type'] ) {
 

@@ -315,12 +315,16 @@ $cat_points    = array();
 										 *  Free Answer
 										 */
 									} elseif ( $question->getAnswerType() === 'free_answer' ) {
-										$json[ $question->getId() ]['correct'] = $quiz_view->getFreeCorrect( $v );
+										$question_answer_data = learndash_question_free_get_answer_data( $v, $question );
+										if ( ( is_array( $question_answer_data ) ) && ( ! empty( $question_answer_data ) ) ) {
+											$json[ $question->getId() ] = array_merge( $json[ $question->getId() ], $question_answer_data );
+										}
 										?>
 										<label>
 											<input class="wpProQuiz_questionInput" type="text" autocomplete="off"
 													name="question_<?php echo esc_attr( $quiz->getId() ); ?>_<?php echo esc_attr( $question->getId() ); ?>"
 													style="width: 300px;">
+											<span class="wpProQuiz_freeCorrect" style="display:none"></span>
 										</label>
 
 										<?php
@@ -350,9 +354,9 @@ $cat_points    = array();
 										 *  Cloze Answer
 										 */
 									} elseif ( $question->getAnswerType() === 'cloze_answer' ) {
-										$cloze_data = fetchQuestionCloze( $v->getAnswer() );
-
-										$quiz_view->_clozeTemp = isset( $cloze_data['data'] ) ? $cloze_data['data'] : [];
+										$cloze_data   = learndash_question_cloze_fetch_data( $v->getAnswer() );
+										$cloze_output = learndash_question_cloze_prepare_output( $cloze_data );
+										echo $cloze_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 										$json[ $question->getId() ]['correct'] = isset( $cloze_data['correct'] ) ? $cloze_data['correct'] : [];
 
@@ -360,43 +364,21 @@ $cat_points    = array();
 											$json[ $question->getId() ]['points'] = $cloze_data['points'];
 										}
 
-										// Added the wpautop in LD 2.2.1 to retain line-break formatting.
-										$cloze_data['replace'] = wpautop( $cloze_data['replace'] );
-										$cloze_data['replace'] = sanitize_post_field( 'post_content', $cloze_data['replace'], 0, 'display' );
-										$cloze_data['replace'] = do_shortcode( $cloze_data['replace'] );
-
-										$cloze = $cloze_data['replace'];
-
-										echo preg_replace_callback(
-											'#@@wpProQuizCloze@@#im',
-											array(
-												$this,
-												'clozeCallback',
-											),
-											$cloze
-										);
-
 										/**
 										 *  Assessment answer
 										 */
 									} elseif ( $question->getAnswerType() === 'assessment_answer' ) {
-										$assessment_data = $quiz_view->fetchAssessment( $v->getAnswer(), $quiz->getId(), $question->getId() );
-										$assessment      = sanitize_post_field( 'post_content', $assessment_data['replace'], 0, 'display' );
-										$assessment      = wpautop( $assessment );
-										$assessment      = do_shortcode( $assessment );
-										$assessment      = preg_replace_callback(
-											'#@@wpProQuizAssessment@@#im',
-											array(
-												$this,
-												'assessmentCallback',
-											),
-											$assessment
-										);
 
-										/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-										$assessment = apply_filters( 'learndash_quiz_question_answer_postprocess', $assessment, 'assessment' );
-										$assessment = do_shortcode( $assessment );
-										echo $assessment; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML / Shortcodes
+										$assessment_data = learndash_question_assessment_fetch_data( $v->getAnswer(), $quiz->getId(), $question->getId() );
+
+										$json[ $question->getId() ]['correct'] = isset( $assessment_data['correct'] ) ? $assessment_data['correct'] : [];
+
+										if ( $question->isAnswerPointsActivated() ) {
+											$json[ $question->getId() ]['points'] = $assessment_data['points'];
+										}
+
+										$assessment_output = learndash_question_assessment_prepare_output( $assessment_data );
+										echo $assessment_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML / Shortcodes
 
 										/**
 										 * Essay answer
@@ -496,6 +478,13 @@ $cat_points    = array();
 						}
 						?>
 					</ul>
+					<?php if ( $question->getAnswerType() === 'sort_answer' ) { ?>
+						<div class="wpProQuiz_questionList_containers">
+							<p><?php esc_html_e( 'View Answers', 'learndash' ); ?>: <input type="button" class="wpProQuiz_questionList_containers_view_student wpProQuiz_questionList_containers_view_active wpProQuiz_button2" value="<?php esc_html_e( 'Student', 'learndash' ); ?>"> <input type="button" class="wpProQuiz_questionList_containers_view_correct wpProQuiz_button2" value="<?php esc_html_e( 'Correct', 'learndash' ); ?>" /></p>
+							<div class="wpProQuiz_questionList_container_student"></div>
+							<div class="wpProQuiz_questionList_container_correct"></div>
+						</div>
+					<?php } ?>
 				</div>
 				<?php if ( ! $quiz->isHideAnswerMessageBox() ) { ?>
 					<div class="wpProQuiz_response" style="display: none;">
@@ -562,8 +551,7 @@ $cat_points    = array();
 								?>
 								</span>
 							<?php } ?>
-							<p class="wpProQuiz_AnswerMessage">
-							</p>
+							<<?php echo esc_attr( LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE ); ?> class="wpProQuiz_AnswerMessage"></<?php echo esc_attr( LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE ); ?>>
 						</div>
 						<div style="display: none;" class="wpProQuiz_incorrect">
 							<?php if ( $question->isShowPointsInBox() && $question->isAnswerPointsActivated() ) { ?>
@@ -628,7 +616,7 @@ $cat_points    = array();
 								?>
 							</span>
 							<?php } ?>
-							<p class="wpProQuiz_AnswerMessage"></p>
+							<<?php echo esc_attr( LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE ); ?> class="wpProQuiz_AnswerMessage"></<?php echo esc_attr( LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE ); ?>>
 						</div>
 					</div>
 				<?php } ?>
@@ -648,7 +636,8 @@ $cat_points    = array();
 										)
 									)
 								);
-							?></h5>
+							?>
+							</h5>
 							<?php
 							$tip_message = apply_filters( 'comment_text', $question->getTipMsg(), null, null );
 							global $wp_embed;

@@ -7,6 +7,7 @@ class WpProQuiz_Model_Statistic extends WpProQuiz_Model_Model {
 
 	protected $_statisticRefId = 0;
 	protected $_questionId     = 0;
+	protected $_questionPostId = 0;
 	protected $_correctCount   = 0;
 	protected $_incorrectCount = 0;
 	protected $_hintCount      = 0;
@@ -30,6 +31,15 @@ class WpProQuiz_Model_Statistic extends WpProQuiz_Model_Model {
 
 	public function getQuestionId() {
 		return $this->_questionId;
+	}
+
+	public function setQuestionPostId( $_questionPostId ) {
+		$this->_questionPostId = (int) $_questionPostId;
+		return $this;
+	}
+
+	public function getQuestionPostId() {
+		return $this->_questionPostId;
 	}
 
 	public function setCorrectCount( $_correctCount ) {
@@ -91,6 +101,7 @@ class WpProQuiz_Model_Statistic extends WpProQuiz_Model_Model {
 		$object_vars = array(
 			'_statisticRefId' => $this->getStatisticRefId(),
 			'_questionId'     => $this->getQuestionId(),
+			'_questionPostId' => $this->getQuestionPostId(),
 			'_correctCount'   => $this->getCorrectCount(),
 			'_incorrectCount' => $this->getIncorrectCount(),
 			'_hintCount'      => $this->getHintCount(),
@@ -113,6 +124,10 @@ class WpProQuiz_Model_Statistic extends WpProQuiz_Model_Model {
 
 				case '_questionId':
 					$this->setQuestionId( $value );
+					break;
+
+				case '_questionPostId':
+					$this->setQuestionPostId( $value );
 					break;
 
 				case '_correctCount':

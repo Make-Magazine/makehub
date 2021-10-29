@@ -62,8 +62,8 @@ function learndash_get_course_price( $course = null ) {
 
 	if ( 'subscribe' === $course_price['type'] ) {
 
-		$frequency = get_post_meta( $course->ID, 'course_price_billing_t3', true );
-		$interval  = intval( get_post_meta( $course->ID, 'course_price_billing_p3', true ) );
+		$frequency = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
+		$interval  = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
 
 		$label = '';
 
@@ -669,10 +669,12 @@ function learndash_get_lesson_content_count( $lesson, $course_id ) {
  *
  * @param int|WP_Post $lesson     Lesson `WP_Post` object or post ID. Default to global $post.
  * @param int         $has_access Whether the lesson is accessible or not.
+ * @param array       $topics     Topics within the Lesson
+ * @param array       $quizzes    Quizzes within the lesson
  *
  * @return string|void Lesson row CSS class names.
  */
-function learndash_lesson_row_class( $lesson = null, $has_access = false ) {
+function learndash_lesson_row_class( $lesson = null, $has_access = false, $topics = array(), $quizzes = array() ) {
 
 	if ( null === $lesson ) {
 		return;
@@ -688,7 +690,7 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false ) {
 	 *
 	 * @var string $lesson_class
 	 */
-	$lesson_class = 'ld-item-list-item ld-expandable ld-item-lesson-item ld-lesson-item-' . $lesson['post']->ID . ' ' . $lesson['sample'];
+	$lesson_class = 'ld-item-list-item ld-item-lesson-item ld-lesson-item-' . $lesson['post']->ID . ' ' . $lesson['sample'];
 
 	$bypass_course_limits_admin_users = learndash_can_user_bypass( get_current_user_id(), 'learndash_course_lesson_not_available' );
 	if ( true !== $bypass_course_limits_admin_users ) {
@@ -698,7 +700,7 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false ) {
 	$lesson_class .= ' ' . ( 'completed' === $lesson['status'] ? 'learndash-complete' : 'learndash-incomplete' );
 
 	// If expandable or not
-	if ( ! empty( $topics ) ) {
+	if ( ! empty( $topics ) || ! empty( $quizzes ) ) {
 		$lesson_class .= ' ld-expandable';
 	}
 
@@ -979,8 +981,8 @@ function learndash_status_icon( $status = 'not-completed', $post_type = null, $a
 	 * @param string $markup    Icon markup.
 	 * @param string $status    The current item's status.
 	 * @param string $post_type What post type we're checking against so this can be used for courses, lessons, topics, and quizzes.
- 	* @param array   $args      The arguments to get the status icon.
- 	* @param boolean $echo      True to print the output and false to return the output.
+	 * @param array   $args      The arguments to get the status icon.
+	 * @param boolean $echo      True to print the output and false to return the output.
 	 */
 	$markup = apply_filters( 'learndash_status_icon', $markup, $status, $post_type, $args, $echo );
 

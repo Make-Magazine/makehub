@@ -450,9 +450,9 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 				$quiz_post_data     = array();
 				$quiz_post_data_tmp = get_post_meta( $post->ID, '_' . $this->post_type, true );
 				if ( ! empty( $quiz_post_data_tmp ) ) {
-					foreach( $quiz_post_data_tmp as $_key => $_val ) {
+					foreach ( $quiz_post_data_tmp as $_key => $_val ) {
 						if ( substr( $_key, 0, strlen( $this->post_type . '_' ) ) === $this->post_type . '_' ) {
-							$_key = str_replace( $this->post_type . '_', '', $_key );
+							$_key                    = str_replace( $this->post_type . '_', '', $_key );
 							$quiz_post_data[ $_key ] = $_val;
 						}
 					}
@@ -460,11 +460,11 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 
 				/**
 				 * Clear ouf the form array as it will be set when saving
-				 * the Quiz post and is handled in 
+				 * the Quiz post and is handled in
 				 * includes/admin/classes-posts-edits/class-learndash-admin-quiz-edit.php
 				 */
 				$quiz_post_data['form'] = array();
-				
+
 				if ( ! isset( $quiz_post_data['post_ID'] ) ) {
 					$quiz_post_data['post_ID'] = $post->ID;
 				}

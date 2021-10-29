@@ -89,7 +89,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 * @param array  $settings_values Array of settings fields.
 		 */
 		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {
-			foreach( $settings_values as $setting_key => $setting_value ) {
+			foreach ( $settings_values as $setting_key => $setting_value ) {
 				if ( isset( $this->settings_fields_map[ $setting_key ] ) ) {
 					if ( 'quizModus_multiple_questionsPerPage' === $setting_key ) {
 						$_POST['questionsPerPage'] = $settings_values['quizModus_multiple_questionsPerPage'];
@@ -448,8 +448,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'schema' => array(
 								'field_key'   => 'materials',
 								'description' => esc_html__( 'Materials', 'learndash' ),
-								'type'        => 'string',
-								'default'     => '',
+								'type'        => 'object',
 								'properties'  => array(
 									'raw'      => array(
 										'description' => 'Content for the object, as it exists in the database.',
@@ -491,7 +490,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
-
 				'quizModus'                    => array(
 					'name'    => 'quizModus',
 					'label'   => sprintf(

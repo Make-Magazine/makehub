@@ -72,15 +72,15 @@ function learndash_course_progress( $atts = array(), $content = '' ) {
 
 	if ( ( isset( $course_progress['status'] ) ) && ( 'completed' === $course_progress['status'] ) ) {
 		$completed = $total;
-	} 
-	
+	}
+
 	if ( $total > 0 ) {
 		$percentage = intval( $completed * 100 / $total );
 		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
 	} else {
 		$percentage = 0;
 	}
-	
+
 	// translators: placeholders: completed steps, total steps.
 	$message = sprintf( esc_html_x( '%1$d out of %2$d steps completed', 'placeholders: completed steps, total steps', 'learndash' ), $completed, $total );
 

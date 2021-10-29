@@ -37,6 +37,13 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 * @since 3.1.0
 		 */
 		public function show_upgrade_action() {
+
+			/**
+			 * Don't show the data upgrade panel after the initial run.
+			 */
+			if ( true !== learndash_use_legacy_course_access_list() ) {
+				return;
+			}
 			?>
 			<tr id="learndash-data-upgrades-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-container">
 				<td class="learndash-data-upgrades-button-container">
@@ -174,7 +181,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						if ( ( isset( $this->transient_data['process_courses'] ) ) && ( ! empty( $this->transient_data['process_courses'] ) ) ) {
 							foreach ( $this->transient_data['process_courses'] as $course_idx => $course_id ) {
 								$course_id = intval( $course_id );
-								if ( ( ! isset( $this->transient_data['current_course']['course_id'] ) ) || ( empty( $this->transient_data['current_course']['course_id'] ) ) ) {
+								if ( ( ! isset( $this->transient_data['current_course'][ $course_id] ) ) || ( empty( $this->transient_data['current_course'][ $course_id ] ) ) ) {
 									$this->transient_data['current_course'][ $course_id ] = array();
 								}
 
@@ -301,6 +308,29 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				learndash_get_custom_label( 'courses' )
 			);
 
+			if ( ( isset( $this->transient_data['current_course'] ) ) && ( ! empty( $this->transient_data['current_course'] ) ) ) {
+				foreach( $this->transient_data['current_course'] as $current_course_id => $current_course_data ) {
+					$course_total_users = 0;
+					if ( isset( $current_course_data['course_total_users'] ) ) {
+						$course_total_users = absint( $current_course_data['course_total_users'] );
+					}
+
+					$course_access_list_new = 0;
+					if ( isset( $current_course_data['course_access_list_new'] ) ) {
+						$course_access_list_new = count( $current_course_data['course_access_list_new'] );
+					}
+					
+					$data['progress_label'] .= ' - ' . sprintf(
+						// translators: placeholders: placeholders: Course title, users processed, users total.
+						esc_html_x( '%1$s: %2$d of %3$d users processed', 'placeholders: Course title, users processed, users total', 'learndash' ),
+							get_the_title( $current_course_id ),
+							$course_access_list_new,
+							$course_total_users
+						);
+
+
+				}
+			}
 			return $data;
 		}
 
@@ -324,6 +354,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				if ( ! empty( $course_access_list ) ) {
 					$this->transient_data['current_course'][ $course_id ]['course_access_list'] = $course_access_list;
 				}
+				$this->transient_data['current_course'][ $course_id ]['course_total_users'] = count( $course_access_list );
 			}
 
 			if ( ( ! empty( $this->transient_data['current_course'][ $course_id ]['course_access_list'] ) ) && ( ! empty( $this->transient_data['current_course'][ $course_id ]['course_access_list'] ) ) ) {
@@ -492,14 +523,24 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ( ! empty( $course_id ) ) && ( ! empty( $user_ids ) ) ) {
-				$sql_str  = $wpdb->prepare( 'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND ( post_id = %d OR course_id = %d )', 'access', $course_id, $course_id );
 				$user_ids = array_map( 'absint', $user_ids );
-				$sql_str .= 'AND user_id NOT IN (' . implode( ',', $user_ids ) . ')';
+				$sql_str  = $wpdb->prepare( 'SELECT activity_id, user_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND ( post_id = %d OR course_id = %d )', 'access', $course_id, $course_id );
 
 				//phpcs:ignore: WordPress.DB.PreparedSQL.NotPrepared
-				$activity_ids = $wpdb->get_col( $sql_str );
-				if ( ! empty( $activity_ids ) ) {
-					learndash_report_clear_by_activity_ids( $activity_ids );
+				$activity = $wpdb->get_results( $sql_str );
+				if ( ! empty( $activity ) ) {
+					$activity_ids = array();
+					foreach( $activity as $item ) {
+						if ( in_array( absint( $item->user_id ), $user_ids, true ) !== false ) {
+							$activity_ids[] = $item->activity_id;
+						} 
+					}
+					if ( ! empty( $activity_ids ) ) {
+						$activity_ids_chunks = array_chunk( $activity_ids, 100 );
+						foreach( $activity_ids_chunks as $activity_ids_chunk ) {
+							learndash_report_clear_by_activity_ids( $activity_ids_chunk );
+						}
+					}
 				}
 			}
 		}

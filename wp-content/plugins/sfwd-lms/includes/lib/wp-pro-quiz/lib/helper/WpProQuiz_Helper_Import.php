@@ -203,6 +203,12 @@ class WpProQuiz_Helper_Import {
 
 				learndash_update_setting( $quiz_post_id, 'quiz_pro', $master->getId() );
 				$master->setPostId( $quiz_post_id );
+
+				if ( $master->isStatisticsOn() ) {
+					learndash_update_setting( $quiz_post_id, 'statisticsOn', '1' );
+				} else {
+					learndash_update_setting( $quiz_post_id, 'statisticsOn', '0' );
+				}
 			}
 
 			if ( ( isset( $o['forms'] ) ) && ( isset( $o['forms'][ $oldId ] ) ) && ( is_array( $o['forms'][ $oldId ] ) ) && ( ! empty( $o['forms'][ $oldId ] ) ) ) {

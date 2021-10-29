@@ -153,7 +153,7 @@ if ( ! function_exists( 'learndash_register_essay_grading_response_metabox' ) ) 
 	 */
 	function learndash_register_essay_grading_response_metabox() {
 		if ( function_exists( '_deprecated_function' ) ) {
-			_deprecated_function( __FUNCTION__, '3.2.3');
+			_deprecated_function( __FUNCTION__, '3.2.3' );
 		}
 	}
 }

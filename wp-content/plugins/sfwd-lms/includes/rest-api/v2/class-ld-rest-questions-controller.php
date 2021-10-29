@@ -76,20 +76,23 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 			global $learndash_question_types;
 
 			$this->fields_map = array(
-				'_quizId'                => 'quiz',
-				'_correctMsg'            => 'correct_message',
-				'_incorrectMsg'          => 'incorrect_message',
-				'_correctSameText'       => 'correct_same',
-				'_tipEnabled'            => 'hints_enabled',
-				'_tipMsg'                => 'hints_message',
-				'_points'                => 'points',
-				'_answerPointsActivated' => 'points_per_answer',
-				'_answerType'            => 'question_type',
-				'_answer_data'           => 'answer_sets',
+				'_quizId'                         => 'quiz',
+				'_answerType'                     => 'question_type',
+				'_points'                         => 'points_total',
+				'_answerPointsActivated'          => 'points_per_answer',
+				'_showPointsInBox'                => 'points_show_in_message',
+				'_answerPointsDiffModusActivated' => 'points_diff_modus',
+				'_disableCorrect'                 => 'disable_correct',
+				'_correctMsg'                     => 'correct_message',
+				'_incorrectMsg'                   => 'incorrect_message',
+				'_correctSameText'                => 'correct_same',
+				'_tipEnabled'                     => 'hints_enabled',
+				'_tipMsg'                         => 'hints_message',
+				'_answer_data'                    => 'answers',
 			);
 
 			$this->fields = array(
-				'quiz'              => array(
+				'quiz'                   => array(
 					'schema'          => array(
 						'field_key'   => 'quiz',
 						'description' => sprintf(
@@ -109,104 +112,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
 					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
 				),
-				'correct_message'   => array(
-					'schema'          => array(
-						'field_key'   => 'correct_message',
-						'description' => sprintf(
-							// translators: placeholder: question.
-							esc_html_x(
-								'Message shown when %s is correct.',
-								'placeholder: question',
-								'learndash'
-							),
-							LearnDash_Custom_Label::get_label( 'question' )
-						),
-						'type'        => 'html',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-
-				'incorrect_message' => array(
-					'schema'          => array(
-						'field_key'   => 'incorrect_message',
-						'description' => sprintf(
-							// translators: placeholder: question.
-							esc_html_x(
-								'Message shown when %s is correct.',
-								'placeholder: question',
-								'learndash'
-							),
-							LearnDash_Custom_Label::get_label( 'question' )
-						),
-						'type'        => 'string',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-				'hints_enabled'     => array(
-					'schema'          => array(
-						'field_key'   => 'hints_enabled',
-						'description' => sprintf(
-							// translators: placeholder: question.
-							esc_html_x(
-								'Activate hint for this %s.',
-								'placeholder: question',
-								'learndash'
-							),
-							LearnDash_Custom_Label::get_label( 'question' )
-						),
-						'type'        => 'boolean',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-				'hints_message'     => array(
-					'schema'          => array(
-						'field_key'   => 'hints_message',
-						'description' => esc_html__( 'Hint message.', 'learndash' ),
-						'type'        => 'boolean',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-				'points'            => array(
-					'schema'          => array(
-						'field_key'   => 'points',
-						'description' => esc_html__( 'Points amount', 'learndash' ),
-						'type'        => 'integer',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-				'points_per_answer' => array(
-					'schema'          => array(
-						'field_key'   => 'points_per_answer',
-						'description' => esc_html__( 'Points per answer enabled.', 'learndash' ),
-						'type'        => 'boolean',
-						'required'    => false,
-						'default'     => '',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
-					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
-				),
-				'question_type'     => array(
+				'question_type'          => array(
 					'schema'          => array(
 						'field_key'   => 'question_type',
 						'description' => sprintf(
@@ -227,7 +133,193 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
 					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
 				),
-				'answer_sets'       => array(
+				'points_total'           => array(
+					'schema'          => array(
+						'field_key'   => 'points_total',
+						'description' => esc_html__( 'Total Points amount', 'learndash' ),
+						'type'        => 'integer',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'points_per_answer'      => array(
+					'schema'          => array(
+						'field_key'   => 'points_per_answer',
+						'description' => esc_html__( 'Different points for each answer', 'learndash' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'points_show_in_message' => array(
+					'schema'          => array(
+						'field_key'   => 'points_show_in_message',
+						'description' => esc_html__( 'Show reached points in the correct/incorrect message?', 'learndash' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'points_diff_modus'      => array(
+					'schema'          => array(
+						'field_key'   => 'points_diff_modus',
+						'description' => esc_html__( 'Different points - modus 2 activate', 'learndash' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+
+				'disable_correct'        => array(
+					'schema'          => array(
+						'field_key'   => 'disable_correct',
+						'description' => esc_html__( 'Disable answer correct setting.', 'learndash' ),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'correct_message'        => array(
+					'schema'          => array(
+						'field_key'   => 'correct_message',
+						'description' => sprintf(
+							// translators: placeholder: question.
+							esc_html_x(
+								'Message shown when %s is correct.',
+								'placeholder: question',
+								'learndash'
+							),
+							LearnDash_Custom_Label::get_label( 'question' )
+						),
+						'type'        => 'object',
+						'required'    => false,
+						'properties'  => array(
+							'raw'      => array(
+								'description' => 'Content for the object, as it exists in the database.',
+								'type'        => 'string',
+								'context'     => array( 'edit' ),
+							),
+							'rendered' => array(
+								'description' => 'HTML content for the object, transformed for display.',
+								'type'        => 'string',
+								'context'     => array( 'view', 'edit' ),
+								'readonly'    => true,
+							),
+						),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'incorrect_message'      => array(
+					'schema'          => array(
+						'field_key'   => 'incorrect_message',
+						'description' => sprintf(
+							// translators: placeholder: question.
+							esc_html_x(
+								'Message shown when %s is correct.',
+								'placeholder: question',
+								'learndash'
+							),
+							LearnDash_Custom_Label::get_label( 'question' )
+						),
+						'type'        => 'object',
+						'required'    => false,
+						'properties'  => array(
+							'raw'      => array(
+								'description' => 'Content for the object, as it exists in the database.',
+								'type'        => 'string',
+								'context'     => array( 'edit' ),
+							),
+							'rendered' => array(
+								'description' => 'HTML content for the object, transformed for display.',
+								'type'        => 'string',
+								'context'     => array( 'view', 'edit' ),
+								'readonly'    => true,
+							),
+						),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'correct_same'           => array(
+					'schema'          => array(
+						'field_key'   => 'correct_same',
+						'description' => sprintf(
+							// translators: placeholder: question.
+							esc_html_x(
+								'Activate hint for this %s.',
+								'placeholder: question',
+								'learndash'
+							),
+							LearnDash_Custom_Label::get_label( 'question' )
+						),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'hints_enabled'          => array(
+					'schema'          => array(
+						'field_key'   => 'hints_enabled',
+						'description' => sprintf(
+							// translators: placeholder: question.
+							esc_html_x(
+								'Activate hint for this %s.',
+								'placeholder: question',
+								'learndash'
+							),
+							LearnDash_Custom_Label::get_label( 'question' )
+						),
+						'type'        => 'boolean',
+						'required'    => false,
+						'default'     => '',
+						'context'     => array( 'view', 'edit' ),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'hints_message'          => array(
+					'schema'          => array(
+						'field_key'   => 'hints_message',
+						'description' => esc_html__( 'Hint message.', 'learndash' ),
+						'type'        => 'object',
+						'required'    => false,
+						'properties'  => array(
+							'raw'      => array(
+								'description' => 'Content for the object, as it exists in the database.',
+								'type'        => 'string',
+								'context'     => array( 'edit' ),
+							),
+							'rendered' => array(
+								'description' => 'HTML content for the object, transformed for display.',
+								'type'        => 'string',
+								'context'     => array( 'view', 'edit' ),
+								'readonly'    => true,
+							),
+						),
+					),
+					'get_callback'    => array( $this, 'get_rest_settings_field_value' ),
+					'update_callback' => array( $this, 'update_rest_settings_field_value' ),
+				),
+				'answers'                => array(
 					'schema'          => array(
 						'field_key'   => 'answers',
 						'description' => sprintf(
@@ -571,12 +663,30 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 
 						case 'correct_message':
 						case 'incorrect_message':
-						case 'correct_same':
 						case 'hints_message':
 							$return = array(
 								// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 								'rendered' => apply_filters( 'the_content', $question_data[ $field_map_idx ] ),
 							);
+
+							// If the context is 'edit' we provide the raw content.
+							if ( ( 'edit' === $request['context'] ) ) {
+								$return['raw'] = $question_data[ $field_map_idx ];
+							}
+
+							break;
+
+						case 'points_per_answer':
+						case 'points_show_in_message':
+						case 'points_diff_modus':
+						case 'disable_correct':
+						case 'correct_same':
+						case 'hints_enabled':
+							$return = (bool) $question_data[ $field_map_idx ];
+							break;
+
+						case 'answers':
+							//error_log( 'question_data<pre>' . print_r( $question_data, true ) . '</pre>' );
 							break;
 
 						default:

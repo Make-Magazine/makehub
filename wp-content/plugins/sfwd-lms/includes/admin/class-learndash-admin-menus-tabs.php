@@ -941,7 +941,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					 *
 					 * @param array  $admin_tab_sets  An array of admin tab sets data.
 					 * @param string $menu_tab_key    The menu tab key.
-		 			 * @param string $current_page_id The current page id.
+					 * @param string $current_page_id The current page id.
 					 */
 					$this->admin_tab_sets[ $menu_tab_key ] = apply_filters( 'learndash_admin_tab_sets', $this->admin_tab_sets[ $menu_tab_key ], $menu_tab_key, $current_page_id );
 
@@ -1183,17 +1183,21 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'different_incorrect_answer_message' => esc_html__( 'Use different message for incorrect answer', 'learndash' ),
 					'same_answer_message'                => esc_html__( 'Currently same message is displayed as above.', 'learndash' ),
 					'incorrect_answer_message'           => esc_html__( 'Message for incorrect answer - optional', 'learndash' ),
+
+					'essay_answer_message'               => esc_html__( 'Message after Essay is submitted - optional', 'learndash' ),
+
 					'solution_hint'                      => esc_html__( 'Solution hint', 'learndash' ),
 					'points'                             => esc_html__( 'points', 'learndash' ),
 					'edit_answer'                        => esc_html__( 'Click here to edit the answer', 'learndash' ),
 					'update_answer'                      => esc_html__( 'Update Answer', 'learndash' ),
 					'answer_missing'                     => esc_html__( 'Answer is missing', 'learndash' ),
+					'correct_answer_missing'             => esc_html__( 'Required correct answer is missing', 'learndash' ),
 					'allow_html'                         => esc_html__( 'Allow HTML', 'learndash' ),
 					'correct'                            => esc_html__( 'Correct', 'learndash' ),
 					'correct_1st'                        => wp_kses_post( _x( '1<sup>st</sup>', 'First sort answer correct', 'learndash' ) ),
 					'correct_2nd'                        => wp_kses_post( _x( '2<sup>nd</sup>', 'Second sort answer correct', 'learndash' ) ),
 					'correct_3rd'                        => wp_kses_post( _x( '3<sup>rd</sup>', 'Third sort answer correct', 'learndash' ) ),
-					'correct_nth'                        => wp_kses_post( _x( '<sup>th</sup>', 'nth sort answer correct', 'learndash' ) ),
+					'correct_nth'                        => '<sup>' . esc_html_x( 'th', 'nth sort answer correct', 'learndash' ) . '</sup>',
 					'answer_updated'                     => esc_html__( 'Answer updated', 'learndash' ),
 					'edit_answer_settings'               => esc_html__( 'Edit answer settings', 'learndash' ),
 					'answer'                             => esc_html__( 'Answer:', 'learndash' ),
@@ -1259,6 +1263,11 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'question_empty'                     => sprintf(
 						/* translators: placeholders: question */
 						esc_html_x( 'The %s is empty.', 'Warning when no question was entered', 'learndash' ),
+						learndash_get_custom_label_lower( 'question' )
+					),
+					'question_data_invalid'              => sprintf(
+						/* translators: placeholders: question */
+						esc_html_x( 'The %s data is invalid.', 'placeholders: question', 'learndash' ),
 						learndash_get_custom_label_lower( 'question' )
 					),
 					'move_down'                          => esc_html_x( 'Move down', 'Move the current element down in the builder interface', 'learndash' ),
@@ -1399,7 +1408,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'essay_not_graded_full_points'       => esc_html_x( 'Not Graded, Full Points Awarded', 'Essay answer grading option', 'learndash' ),
 					'essay_graded_full_points'           => esc_html_x( 'Graded, Full Points Awarded', 'Essay answer grading option', 'learndash' ),
 					'essay_not_set'                      => esc_html_x( 'Not set', 'Essay answer grading option has not been set', 'learndash' ),
-					'supported_media_in_answers'         => esc_html_x( 'Only image, video and audio files are supported.', 'Supported media formats in question answers','learndash' ),
+					'supported_media_in_answers'         => esc_html_x( 'Only image, video and audio files are supported.', 'Supported media formats in question answers', 'learndash' ),
 				),
 			);
 
@@ -1750,7 +1759,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 										'title'      => esc_html__( 'Statistics', 'learndash' ),
 										'link'       => add_query_arg(
 											array(
-												'module'     => 'statistics',
+												'module' => 'statistics',
 												'currentTab' => 'statistics',
 											),
 											$this->get_quiz_base_url()
@@ -1769,7 +1778,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 										'title'      => esc_html__( 'Leaderboard', 'learndash' ),
 										'link'       => add_query_arg(
 											array(
-												'module'     => 'toplist',
+												'module' => 'toplist',
 												'currentTab' => 'leaderboard',
 											),
 											$this->get_quiz_base_url()
@@ -1822,7 +1831,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 						)
 					);
 
-					if ( current_user_can( 'edit_groups' ) ) {
+					if ( ( current_user_can( 'edit_groups' ) ) && ( learndash_get_total_post_count( learndash_get_post_type_slug( 'group' ) ) !== 0 ) ) {
 						/**
 						 * Filters whether to show course groups metabox or not.
 						 *

@@ -205,6 +205,12 @@ class WpProQuiz_Helper_ImportXml {
 					}
 				}
 				learndash_update_setting( $quiz_post_id, 'quiz_pro', $quiz->getId() );
+
+				if ( $quiz->isStatisticsOn() ) {
+					learndash_update_setting( $quiz_post_id, 'statisticsOn', '1' );
+				} else {
+					learndash_update_setting( $quiz_post_id, 'statisticsOn', '0' );
+				}
 			}
 
 			if ( isset( $data['forms'] ) && isset( $data['forms'][ $oldId ] ) ) {

@@ -162,7 +162,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 					if ( ! $bypass_course_limits_admin_users ) {
 
 						if ( 'sfwd-lessons' === $post->post_type ) {
-							$progress = learndash_get_course_progress( null, $post->ID );
+							$progress = learndash_get_course_progress( $this->user_id, $post->ID );
 
 							if ( ( ! empty( $progress['this'] ) ) && ( $progress['this'] instanceof WP_Post ) && ( true === (bool) $progress['this']->completed ) ) {
 								// The student has completes this step so we show the video but don't apply the logic
@@ -175,7 +175,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 									$topics = learndash_get_topic_list( $post->ID );
 									if ( ! empty( $topics ) ) {
-										$progress = learndash_get_course_progress( null, $topics[0]->ID );
+										$progress = learndash_get_course_progress( $this->user_id, $topics[0]->ID );
 										if ( ! empty( $progress ) ) {
 											$topics_completed = 0;
 											foreach ( $progress['posts'] as $topic ) {
@@ -215,7 +215,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 								}
 							}
 						} elseif ( 'sfwd-topic' === $post->post_type ) {
-							$progress = learndash_get_course_progress( null, $post->ID );
+							$progress = learndash_get_course_progress( $this->user_id, $post->ID );
 
 							if ( ( ! empty( $progress['this'] ) ) && ( $progress['this'] instanceof WP_Post ) && ( true === (bool) $progress['this']->completed ) ) {
 								// The student has completes this step so we show the video but don't apply the logic
@@ -531,12 +531,12 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 												$post_type_obj  = get_post_type_object( $post->post_type );
 												$post_type_name = $post_type_obj->labels->name;
 												$this->video_data['videos_auto_complete_delay_message'] =
-												sprintf(
+												'<p class="ld-video-delay-message">' . sprintf(
 													// translators: placeholders: 1. Lesson or Topic label, 2. span for counter.
-													wp_kses_post( _x( '<p class="ld-video-delay-message">%1$s will auto complete in %2$s seconds</p>', 'placeholders: 1. Lesson or Topic label, 2. span for counter', 'learndash' ) ),
+													esc_html_x( '%1$s will auto complete in %2$s seconds', 'placeholders: 1. Lesson or Topic label, 2. span for counter', 'learndash' ),
 													$post_type_obj->labels->singular_name,
 													'<span class="time-countdown">' . $this->video_data['videos_auto_complete_delay'] . '</span>'
-												);
+												) . '</p>';
 											}
 										}
 									}

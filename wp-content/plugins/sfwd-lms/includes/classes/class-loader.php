@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once 'class-ldlms-exception.php';
+
 require_once 'class-ldlms-model.php';
 require_once 'class-ldlms-model-post.php';
 require_once 'class-ldlms-model-course.php';
@@ -26,6 +27,11 @@ require_once 'class-ldlms-model-quiz-questions.php';
 require_once 'class-ldlms-model-user.php';
 require_once 'class-ldlms-model-user-course-progress.php';
 require_once 'class-ldlms-model-user-quiz-progress.php';
+require_once 'class-ldlms-model-user-quiz-resume.php';
+
+require_once 'class-ldlms-model-activity.php';
+
+require_once 'class-ldlms-model-activity.php';
 
 require_once 'class-ldlms-factory.php';
 require_once 'class-ldlms-factory-post.php';

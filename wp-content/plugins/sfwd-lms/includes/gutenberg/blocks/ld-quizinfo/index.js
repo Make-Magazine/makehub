@@ -142,17 +142,6 @@ if (typenow === 'sfwd-certificates') {
 					/>
 				);
 
-				let field_format = '';
-				if ( (show == 'timestamp') ) {
-					field_format = (
-						<TextControl
-							label={__('Format', 'learndash')}
-							help={__('This can be used to change the date format. Default: "F j, Y, g:i a.', 'learndash')}
-							value={format || ''}
-							onChange={format => setAttributes({ format })}
-						/>
-					);
-				}
 				let field_form_field_id = '';
 				if ((show == 'field')) {
 					field_form_field_id = (
@@ -162,6 +151,18 @@ if (typenow === 'sfwd-certificates') {
 							help={sprintf(_x('The Field ID is shown on the %s Custom Fields table.','placeholders: Quiz', 'learndash'), ldlms_get_custom_label('quiz'))}
 							value={field_id || ''}
 							onChange={field_id => setAttributes({ field_id })}
+						/>
+					);
+				}
+
+				let field_format = '';
+				if ( (show == 'timestamp') || (show == 'field') ) {
+					field_format = (
+						<TextControl
+							label={__('Format', 'learndash')}
+							help={__('This can be used to change the date format. Default: "F j, Y, g:i a.', 'learndash')}
+							value={format || ''}
+							onChange={format => setAttributes({ format })}
 						/>
 					);
 				}
@@ -202,8 +203,8 @@ if (typenow === 'sfwd-certificates') {
 						>
 							{ field_quiz_id }
 							{ field_show }
+							{ field_form_field_id }
 							{ field_format }
-							{field_form_field_id }
 						</PanelBody>
 						{ panel_preview }
 					</InspectorControls>

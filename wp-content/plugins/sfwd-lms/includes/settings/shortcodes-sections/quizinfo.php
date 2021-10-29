@@ -76,14 +76,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						'field'        => esc_html__( 'Custom Field', 'learndash' ),
 					),
 				),
-				'format'   => array(
-					'id'        => $this->shortcodes_section_key . '_format',
-					'name'      => 'format',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Format', 'learndash' ),
-					'help_text' => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) ),
-					'value'     => '',
-				),
 				'field_id' => array(
 					'id'        => $this->shortcodes_section_key . '_field_id',
 					'name'      => 'field_id',
@@ -91,6 +83,14 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'label'     => esc_html__( 'Custom Field ID', 'learndash' ),
 					// translators: placeholder: quiz.
 					'help_text' => sprintf( esc_html_x( 'The Field ID is show on the %s Custom Fields table.', 'placeholder: quiz', 'learndash' ), learndash_get_custom_label( 'quiz' ) ),
+					'value'     => '',
+				),
+				'format'   => array(
+					'id'        => $this->shortcodes_section_key . '_format',
+					'name'      => 'format',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Format', 'learndash' ),
+					'help_text' => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) ),
 					'value'     => '',
 				),
 			);
@@ -154,18 +154,28 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					if ( jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show' ).length) {
 						jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show').on( 'change', function() {
 							var selected = jQuery(this).val();
-							if ( selected == 'timestamp' ) {
-								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field').slideDown();
-							} else {
-								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field').hide();
-								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field input').val('');
-							}
 
-							if ( selected == 'field' ) {
-								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field').slideDown();
+							if ( ( selected == 'timestamp' ) || ( selected == 'field' ) ) {
+
+								// Show the format field row.
+								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field').slideDown();
+
+								// Show the custom field row.
+								if ( selected == 'field' ) {
+									jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field').slideDown();
+								} else {
+									// Hide and clear the custom field row.
+									jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field').hide();
+									jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field input').val('');
+								}
 							} else {
+								// Hide and clear the custom field row.
 								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_field_id_field input').val('');
+
+								// Hide and clear the format field row.
+								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field').hide();
+								jQuery( 'form#learndash_shortcodes_form_quizinfo #quizinfo_format_field input').val('');
 							}
 						});
 						jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show').change();

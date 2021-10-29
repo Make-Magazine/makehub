@@ -9,7 +9,7 @@
  * @package LearnDash\Templates\Legacy\Quiz
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
@@ -129,10 +129,11 @@
 				?>
 				<a href="<?php echo esc_url( add_query_arg( 'course_id', $quiz_course_id, get_edit_post_link( $quiz->ID ) ) ); ?>"><?php echo esc_html_x( '(edit)', 'profile edit quiz link label', 'learndash' ); ?></a>
 				<?php if ( learndash_show_user_course_complete( $user_id ) ) { ?>
-				<a class="remove-quiz" data-quiz-user-id="<?php echo (int) $user_id; ?>" data-quiz-nonce="<?php echo esc_attr( wp_create_nonce( 'remove_quiz_' . $user_id . '_' . $v['quiz'] . '_' . $v['time'] ) ); ?>" href="#" title="<?php
-				// translators: placeholder: quiz.
-					echo sprintf( esc_html_x( 'remove this %s item', 'placeholder: quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) )
-				?>
+				<a class="remove-quiz" data-quiz-user-id="<?php echo (int) $user_id; ?>" data-quiz-nonce="<?php echo esc_attr( wp_create_nonce( 'remove_quiz_' . $user_id . '_' . $v['quiz'] . '_' . $v['time'] ) ); ?>" href="#" title="
+																	 <?php
+																		// translators: placeholder: quiz.
+																		echo sprintf( esc_html_x( 'remove this %s item', 'placeholder: quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) )
+																		?>
 					"><?php echo esc_html_x( '(remove)', 'profile remove quiz link label', 'learndash' ); ?></a>
 					<?php
 				}

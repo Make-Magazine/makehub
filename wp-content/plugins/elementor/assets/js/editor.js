@@ -1,4 +1,4 @@
-/*! elementor - v3.4.3 - 30-08-2021 */
+/*! elementor - v3.4.6 - 19-10-2021 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -9236,7 +9236,9 @@ ControlMediaItemView = ControlBaseDataView.extend({
     this.$el.toggleClass('elementor-gallery-has-images', hasImages).toggleClass('elementor-gallery-empty', !hasImages);
     var $galleryThumbnails = this.ui.galleryThumbnails;
     $galleryThumbnails.empty();
-    this.ui.status.text(hasImages ? sprintf('%s Images Selected', imagesCount) : __('No Images Selected', 'elementor'));
+    /* translators: %s: Selected images count. */
+
+    this.ui.status.text(hasImages ? sprintf(__('%s Images Selected', 'elementor'), imagesCount) : __('No Images Selected', 'elementor'));
 
     if (!hasImages) {
       return;
@@ -13698,6 +13700,8 @@ var EditorBase = /*#__PURE__*/function (_Marionette$Applicati) {
         }
 
         devices.forEach(function (device, index) {
+          var _controlArgs$popover;
+
           var controlArgs = elementorCommon.helpers.cloneObject(controlConfig);
 
           if (controlArgs.device_args) {
@@ -13748,8 +13752,15 @@ var EditorBase = /*#__PURE__*/function (_Marionette$Applicati) {
           } else if (deleteControlDefault) {
             // In the Editor, controls without default values should have an empty string as the default value.
             controlArgs.default = '';
-          } // If the control belongs to a group control with a popover, and this control is the last one, add the
-          // popover.end = true value to it to make sure it closes the popover.
+          } // If the control is the first inside a popover, only the first device starts the popover,
+          // so the 'start' property has to be deleted from all other devices.
+
+
+          if (0 !== index && (_controlArgs$popover = controlArgs.popover) !== null && _controlArgs$popover !== void 0 && _controlArgs$popover.start) {
+            delete controlArgs.popover.start;
+          } // If the control is inside a popover, AND this control is the last one in the popover, AND this is the
+          // last device in the devices array - add the 'popover.end = true' value to it to make sure it closes
+          // the popover.
 
 
           if (index === devices.length - 1 && popoverEndProperty) {
@@ -14397,7 +14408,7 @@ BaseElementView = BaseContainer.extend({
         name: 'edit',
         icon: 'eicon-edit',
 
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Edit %s', 'elementor'), this.options.model.getTitle()),
         callback: function callback() {
           return $e.run('panel/editor/open', {
@@ -16069,24 +16080,24 @@ ColumnView = BaseElementView.extend({
     var elementData = elementor.getElementData(this.model),
         editTools = {};
     editTools.edit = {
-      /* translators: %s: Element Name. */
+      /* translators: %s: Element name. */
       title: sprintf(__('Edit %s', 'elementor'), elementData.title),
       icon: 'column'
     };
 
     if (elementor.getPreferences('edit_buttons')) {
       editTools.duplicate = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Duplicate %s', 'elementor'), elementData.title),
         icon: 'clone'
       };
       editTools.add = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Add %s', 'elementor'), elementData.title),
         icon: 'plus'
       };
       editTools.remove = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Delete %s', 'elementor'), elementData.title),
         icon: 'close'
       };
@@ -16332,28 +16343,28 @@ var SectionView = BaseElementView.extend({
 
     if (!this.isInner()) {
       editTools.add = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Add %s', 'elementor'), elementData.title),
         icon: 'plus'
       };
     }
 
     editTools.edit = {
-      /* translators: %s: Element Name. */
+      /* translators: %s: Element name. */
       title: sprintf(__('Edit %s', 'elementor'), elementData.title),
       icon: 'handle'
     };
 
     if (elementor.getPreferences('edit_buttons')) {
       editTools.duplicate = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Duplicate %s', 'elementor'), elementData.title),
         icon: 'clone'
       };
     }
 
     editTools.remove = {
-      /* translators: %s: Element Name. */
+      /* translators: %s: Element name. */
       title: sprintf(__('Delete %s', 'elementor'), elementData.title),
       icon: 'close'
     };
@@ -16620,19 +16631,19 @@ WidgetView = BaseElementView.extend({
     var elementData = elementor.getElementData(this.model),
         editTools = {};
     editTools.edit = {
-      /* translators: %s: Element Name. */
+      /* translators: %s: Element name. */
       title: sprintf(__('Edit %s', 'elementor'), elementData.title),
       icon: 'edit'
     };
 
     if (elementor.getPreferences('edit_buttons')) {
       editTools.duplicate = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Duplicate %s', 'elementor'), elementData.title),
         icon: 'clone'
       };
       editTools.remove = {
-        /* translators: %s: Element Name. */
+        /* translators: %s: Element name. */
         title: sprintf(__('Delete %s', 'elementor'), elementData.title),
         icon: 'close'
       };
@@ -20330,10 +20341,10 @@ module.exports = Marionette.ItemView.extend({
   onMouseDown: function onMouseDown() {
     var title = this.model.get('title');
     elementor.promotion.showDialog({
-      /* translators: %s: Widget Title. */
+      /* translators: %s: Widget title. */
       headerMessage: sprintf(__('%s Widget', 'elementor'), title),
 
-      /* translators: %s: Widget Title. */
+      /* translators: %s: Widget title. */
       message: sprintf(__('Use %s widget and dozens more pro features to extend your toolbox and build sites faster and better.', 'elementor'), title),
       top: '-7',
       element: this.el,
@@ -22623,7 +22634,7 @@ var Heartbeat = /*#__PURE__*/function () {
     value: function showLockMessage(lockedUser) {
       var modal = this.getModal();
       modal
-      /* translators: %s: Locked User Name. */
+      /* translators: %s: Locked user name. */
       .setMessage(sprintf(__('%s has taken over and is currently editing. Do you want to take over this page editing?', 'elementor'), lockedUser)).show();
     }
   }, {
@@ -32263,7 +32274,7 @@ var _default = /*#__PURE__*/function (_RepeaterRow) {
           globalTypeTranslatedCapitalized = 'font' === globalType ? __('Font', 'elementor') : __('Color', 'elementor'),
           globalTypeTranslatedLowercase = 'font' === globalType ? __('font', 'elementor') : __('color', 'elementor'),
 
-      /* translators: First %s: Font/Color. Second %s: typography/color */
+      /* translators: 1: Font/Color, 2: typography/color. */
       translatedMessage = sprintf(__('You\'re about to delete a Global %s. Note that if it\'s being used anywhere on your site, it will inherit a default %s.', 'elementor'), globalTypeTranslatedCapitalized, globalTypeTranslatedLowercase);
       this.confirmDeleteModal = elementorCommon.dialogsManager.createWidget('confirm', {
         className: 'e-global__confirm-delete',

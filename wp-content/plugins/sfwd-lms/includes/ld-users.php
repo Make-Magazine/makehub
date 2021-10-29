@@ -793,13 +793,13 @@ function learndash_course_item_to_activity_sync( $user_id = 0, $course_id = 0, $
 			$course_activity = (array) learndash_get_user_activity( $course_args );
 			if ( ! isset( $course_activity['activity_id'] ) ) {
 				$course_args['activity_status']    = false;
-				$course_args['activity_started']   = time();
+				$course_args['activity_started']   = learndash_activity_course_get_earliest_started( $user_id, $course_id, time() );
 				$course_args['activity_completed'] = 0;
 			} else {
 				$course_args = $course_activity;
 			}
 			if ( empty( $course_args['activity_started'] ) ) {
-				$course_args['activity_started'] = time();
+				$course_args['activity_started'] = learndash_activity_course_get_earliest_started( $user_id, $course_id, time() );
 			}
 		}
 
@@ -1209,4 +1209,36 @@ function learndash_init_admin_groups_capabilities() {
 			}
 		}
 	}
+}
+
+/**
+ * Gets all expired courses for the user via the user meta 'learndash_course_expired_XXX'.
+ *
+ * @since 3.4.2
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param int $user_id Optional. ID of the user to get meta. Default 0.
+ *
+ * @return array An array of user's expired course IDs.
+ */
+function learndash_get_expired_user_courses_from_meta( $user_id = 0 ) {
+	global $wpdb;
+
+	$expired_user_course_ids = array();
+
+	$user_id = intval( $user_id );
+	if ( ! empty( $user_id ) ) {
+		$expired_user_course_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT REPLACE(meta_key, 'learndash_course_expired_', '') FROM " . $wpdb->usermeta . ' as usermeta WHERE user_id=%d AND meta_key LIKE %s ',
+				$user_id,
+				'learndash_course_expired_%'
+			)
+		);
+		if ( ! empty( $expired_user_course_ids ) ) {
+			$expired_user_course_ids = array_map( 'intval', $expired_user_course_ids );
+		}
+	}
+	return $expired_user_course_ids;
 }

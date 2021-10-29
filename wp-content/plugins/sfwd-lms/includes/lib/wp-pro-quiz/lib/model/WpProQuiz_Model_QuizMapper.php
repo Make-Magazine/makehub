@@ -273,8 +273,17 @@ class WpProQuiz_Model_QuizMapper extends WpProQuiz_Model_Mapper {
 		return $data;
 	}
 
-	public function sumQuestionPoints( $id ) {
-		return $this->_wpdb->get_var( $this->_wpdb->prepare( "SELECT SUM(points) FROM {$this->_tableQuestion} WHERE quiz_id = %d AND online = 1", $id ) );
+	public function sumQuestionPoints( $quiz_pro_id = 0 ) {
+		$quiz_pro_id = absint( $quiz_pro_id );
+		if ( ! empty( $quiz_pro_id ) ) {
+			$quiz_post_id = learndash_get_quiz_id_by_pro_quiz_id( $quiz_pro_id );
+			if ( ! empty( $quiz_post_id ) ) {
+				$questions_post_ids = learndash_get_quiz_questions( $quiz_post_id );
+				if ( ! empty( $questions_post_ids ) ) {
+					return (int) $this->sumQuestionPointsFromArray( $questions_post_ids );
+				}
+			}
+		}
 	}
 
 	public function sumQuestionPointsFromArray( $question_ids = array() ) {
@@ -286,8 +295,17 @@ class WpProQuiz_Model_QuizMapper extends WpProQuiz_Model_Mapper {
 		}
 	}
 
-	public function countQuestion( $id ) {
-		return $this->_wpdb->get_var( $this->_wpdb->prepare( "SELECT COUNT(*) FROM {$this->_tableQuestion} WHERE quiz_id = %d AND online = 1", $id ) );
+	public function countQuestion( $quiz_pro_id = 0 ) {
+		$quiz_pro_id = absint( $quiz_pro_id );
+		if ( ! empty( $quiz_pro_id ) ) {
+			$quiz_post_id = learndash_get_quiz_id_by_pro_quiz_id( $quiz_pro_id );
+			if ( ! empty( $quiz_post_id ) ) {
+				$questions_post_ids = learndash_get_quiz_questions( $quiz_post_id );
+				if ( ( is_array( $questions_post_ids ) ) && ( ! empty( $questions_post_ids ) ) ) {
+					return count( $questions_post_ids );
+				}
+			}
+		}
 	}
 
 	public function fetchAllAsArray( $list, $outIds = array() ) {

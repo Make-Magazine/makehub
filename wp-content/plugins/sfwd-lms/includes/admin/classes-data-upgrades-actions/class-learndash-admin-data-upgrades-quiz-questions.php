@@ -286,6 +286,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								if ( true === $question_convert_complete ) {
 									$this->transient_data['current_user'] = array();
 									unset( $this->transient_data['process_users'][ $user_idx ] );
+
+									if ( ! isset( $this->transient_data['result_count'] ) ) {
+										$this->transient_data['result_count'] = 0;
+									}
 									$this->transient_data['result_count'] = (int) $this->transient_data['result_count'] + 1;
 								}
 
@@ -331,6 +335,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 			if ( ! isset( $this->transient_data['process_users'] ) ) {
 				$this->transient_data['process_users'] = array();
+			}
+
+			if ( ! isset( $this->transient_data['mismatched'] ) ) {
+				$this->transient_data['mismatched'] = false;
 			}
 
 			// Get total rows.

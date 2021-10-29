@@ -134,11 +134,12 @@ function get_quiz_data( $data ) {
 		'plural'   => esc_html__( 'points', 'learndash' ),
 	);
 	$data['labels']['questions_types_description'] = array(
-		'free_answer'       => esc_html_x( 'correct answers (one per line) (answers will be converted to lower case)', 'Question type description for Free Answers', 'learndash' ),
+		'free_answer'       => wp_kses_post( _x( 'Correct answers (one per line) (answers will be converted to lower case). If mode "Different points for each answer" is activated, you can assign points to each answer using "|". Example: One|15. The default point value is 1.', 'Question type description for Free Answers', 'learndash' ) ),
 		'sort_answer'       => esc_html_x( 'Please sort the answers in the right order with the "move" button. The answers will be displayed randomly.', 'Question type description for Sort Answers', 'learndash' ),
 		'cloze_answer'      => array(
 			wp_kses_post( __( 'Use <strong class="description-red">{ }</strong> to mark a gap and correct answer:<br /> <strong>I <span class="description-red">{</span>play<span class="description-red">}</span> soccer.</strong>', 'learndash' ) ),
 			wp_kses_post( __( 'Use <strong class="description-red">[ ]</strong> to mark multiple correct answers:<br /> <strong>I {<span class="description-red">[</span>love<span class="description-red">][</span>hate<span class="description-red">]</span>} soccer.</strong>', 'learndash' ) ),
+			wp_kses_post( __( ' If mode "Different points for each answer" is activated:<br /> <strong><span class="description-red">{</span>play|2<span class="description-red">}</span></strong> - 2 points earned.<br /> <strong><span class="description-red">{</span><span class="description-red">[</span>love|2<span class="description-red">]</span><span class="description-red">[</span>hate|5<span class="description-red">]</span><span class="description-red">}</span></strong> - 2 or 5 points earned.', 'learndash' ) ),
 		),
 		'essay'             => array(
 			esc_html__( 'How should the user submit their answer?', 'learndash' ),

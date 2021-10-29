@@ -85,7 +85,7 @@ function learndash_group_user_list( $attr = array(), $content = '' ) {
 					<?php
 					$sn = 1;
 					foreach ( $users as $user ) {
-						$name = isset( $user->display_name ) ? $user->display_name : $user->user_nicename;
+						$name       = isset( $user->display_name ) ? $user->display_name : $user->user_nicename;
 						$report_url = add_query_arg(
 							array(
 								'page'     => 'group_admin_page',

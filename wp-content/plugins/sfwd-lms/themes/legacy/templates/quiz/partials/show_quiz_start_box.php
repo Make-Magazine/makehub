@@ -16,6 +16,33 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$learndash_quiz_post_id = $quiz->getPostId();
+
+$learndash_quiz_resume_id   = 0;
+$learndash_quiz_resume_data = array();
+
+if ( ( ! empty( $learndash_quiz_post_id ) ) && ( get_current_user_id() ) ) {
+	$learndash_quiz_resume_enabled = learndash_get_setting( $learndash_quiz_post_id, 'quiz_resume' );
+	if ( true === $learndash_quiz_resume_enabled ) {
+		$learndash_course_id            = learndash_get_course_id();
+		$learndash_quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( get_current_user_id(), $learndash_quiz_post_id, $learndash_course_id );
+		if ( ( is_a( $learndash_quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $learndash_quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $learndash_quiz_resume_activity->activity_id ) ) ) {
+			$learndash_quiz_resume_id = $learndash_quiz_resume_activity->activity_id;
+			if ( ( property_exists( $learndash_quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $learndash_quiz_resume_activity->activity_meta ) ) ) {
+				$learndash_quiz_resume_data = $learndash_quiz_resume_activity->activity_meta;
+			}
+		}
+	}
+}
+
+if ( empty( $learndash_quiz_resume_data ) ) {
+	// translators: placeholder Quiz.
+	$learndash_quiz_message = sprintf( esc_html_x( 'Start %s', 'placeholder Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) );
+} else {
+	// translators: placeholder Quiz.
+	$learndash_quiz_message = sprintf( esc_html_x( 'Continue %s', 'placeholder Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) );
+}
 ?>
 <div class="wpProQuiz_text">
 	<?php
@@ -32,8 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				array(
 					'quiz_post_id' => $quiz->getID(),
 					'context'      => 'quiz_start_button_label',
-					// translators: placeholder Quiz.
-					'message'      => sprintf( esc_html_x( 'Start %s', 'placeholder Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
+					'message'      => $learndash_quiz_message,
 				)
 			)
 		); // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect

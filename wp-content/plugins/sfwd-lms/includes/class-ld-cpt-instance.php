@@ -471,32 +471,44 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 								$show_content              = true;
 								$previous_lesson_completed = true;
 							} elseif ( $lesson_progression_enabled ) {
-								if ( $bypass_course_limits_admin_users ) {
-									$previous_lesson_completed = true;
-									remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
-								} elseif ( learndash_is_sample( $post ) ) {
-									$previous_lesson_completed = true;
-								} else {
-									$previous_step_post_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
-									if ( ( $previous_step_post_id ) && ( $previous_step_post_id === $post->ID ) ) {
-										$previous_lesson_completed = true;
-									} else {
-										$previous_lesson_completed = false;
-									}
+								if ( learndash_is_sample( $post ) ) {
+									$show_content              = true;
+									$previous_lesson_completed = false;
 
-									/**
-									 * Filter to override previous step completed.
-									 *
-									 * @param bool $previous_step_completed True if previous step completed.
-									 * @param int  $step_id                 Step Post ID.
-									 * @param int  $user_id                 User ID.
-									 */
-									$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
+									if ( $has_access ) {
+										$previous_step_post_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+										if ( ( $previous_step_post_id ) && ( $previous_step_post_id === $post->ID ) ) {
+											$previous_lesson_completed = true;
+										} else {
+											$previous_lesson_completed = false;
+										}
+									}
+								} else {
+									if ( $bypass_course_limits_admin_users ) {
+										$previous_lesson_completed = true;
+										remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
+									} else {
+										$previous_step_post_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+										if ( ( $previous_step_post_id ) && ( $previous_step_post_id === $post->ID ) ) {
+											$previous_lesson_completed = true;
+										} else {
+											$previous_lesson_completed = false;
+										}
+
+										/**
+										 * Filter to override previous step completed.
+										 *
+										 * @param bool $previous_step_completed True if previous step completed.
+										 * @param int  $step_id                 Step Post ID.
+										 * @param int  $user_id                 User ID.
+										 */
+										$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
+									}
+									$show_content = $previous_lesson_completed;
 								}
-								$show_content = $previous_lesson_completed;
 							} else {
 								$show_content              = true;
-								$previous_lesson_completed = true;	
+								$previous_lesson_completed = true;
 							}
 						} else {
 							if ( ( ! learndash_is_sample( $post ) ) && ( ( learndash_get_setting( $post->ID, 'visible_after' ) ) || ( learndash_get_setting( $post->ID, 'visible_after_specific_date' ) ) ) ) {
@@ -556,46 +568,21 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							}
 
 							$started_time = time();
-							
-							// We insert the Course started record before the Lesson.
-							$course_args = array(
-								'course_id'        => $course_id,
-								'user_id'          => $current_user->ID,
-								'post_id'          => $course_id,
-								'activity_type'    => 'course',
-							);
 
-							$course_activity = learndash_get_user_activity( $course_args );
-							if ( ( ! $course_activity ) || ( empty( $course_activity->activity_started ) ) ) {
-								learndash_update_user_activity(
+							$course_earliest_completed_time = learndash_activity_course_get_earliest_started( $current_user->ID, $course_id, $started_time );
+
+							// We insert the Course started record before the Lesson.
+							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $course_earliest_completed_time );
+							if ( $course_activity ) {
+								learndash_activity_update_meta_set(
+									$course_activity->activity_id,
 									array(
-										'course_id'        => $course_id,
-										'user_id'          => $current_user->ID,
-										'post_id'          => $course_id,
-										'activity_type'    => 'course',
-										'activity_status'  => false,
-										'activity_started' => $started_time,
-										'activity_meta'    => array(
-											'steps_total'     => learndash_get_course_steps_count( $course_id ),
-											'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
-											'steps_last_id'   => $post->ID,
-										),
+										'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
+										'steps_last_id'   => $post->ID,
 									)
 								);
 							}
-
-							$lesson_args     = array(
-								'course_id'        => $course_id,
-								'user_id'          => $current_user->ID,
-								'post_id'          => $post->ID,
-								'activity_type'    => 'lesson',
-								'activity_status'  => false,
-								'activity_started' => $started_time,
-							);
-							$lesson_activity = learndash_get_user_activity( $lesson_args );
-							if ( ( ! $lesson_activity ) || ( empty( $lesson_activity->activity_started ) ) ) {
-								learndash_update_user_activity( $lesson_args );
-							}
+							learndash_activity_start_lesson( $current_user->ID, $course_id, $post->ID, $started_time );
 						}
 
 						// Added logic for Lesson Videos.
@@ -629,31 +616,33 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 								$previous_lesson_completed = true;
 								$previous_topic_completed  = true;
 							} elseif ( $lesson_progression_enabled ) {
-								if ( $bypass_course_limits_admin_users ) {
-									$previous_lesson_completed = true;
-									remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
-								} elseif ( learndash_is_sample( $lesson_post ) ) {
-									$previous_lesson_completed = true;
+								if ( learndash_is_sample( $post ) ) {
+									$show_content             = true;
+									$previous_topic_completed = false;
 								} else {
-									$previous_step_post_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
-									if ( ( $previous_step_post_id ) && ( $previous_step_post_id === $post->ID ) ) {
+									if ( $bypass_course_limits_admin_users ) {
 										$previous_lesson_completed = true;
+										remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
 									} else {
-										$previous_lesson_completed = false;
+										$previous_step_post_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+										if ( ( $previous_step_post_id ) && ( $previous_step_post_id === $post->ID ) ) {
+											$previous_lesson_completed = true;
+										} else {
+											$previous_lesson_completed = false;
+										}
+
+										/** This filter is documented in includes/class-ld-cpt-instance.php */
+										$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
+
 									}
-
-									/** This filter is documented in includes/class-ld-cpt-instance.php */
-									$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', $previous_lesson_completed, $post->ID, $user_id );
-
+									$previous_topic_completed = $previous_lesson_completed;
+									$show_content             = $previous_lesson_completed;
 								}
-								$previous_topic_completed = $previous_lesson_completed;
-								$show_content             = $previous_lesson_completed;
 							} else {
 								$previous_topic_completed  = true;
 								$previous_lesson_completed = true;
-								$show_content              = true;	
+								$show_content              = true;
 							}
-
 						} else {
 							if ( ( ! learndash_is_sample( $post ) ) && ( ( learndash_get_setting( $lesson_id, 'visible_after' ) ) || ( learndash_get_setting( $lesson_id, 'visible_after_specific_date' ) ) ) ) {
 								$previous_topic_completed  = false;
@@ -708,59 +697,20 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							$started_time = time();
 
 							// We insert the Course started record before the Topic.
-							$course_args     = array(
-								'course_id'        => $course_id,
-								'user_id'          => $current_user->ID,
-								'post_id'          => $course_id,
-								'activity_type'    => 'course',
-								'activity_status'  => false,
-								'activity_started' => $started_time,
-								'activity_meta'    => array(
-									'steps_total'     => learndash_get_course_steps_count( $course_id ),
-									'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
-									'steps_last_id'   => $post->ID,
-								),
-							);
-							$course_activity = learndash_get_user_activity( $course_args );
-							if ( ( ! $course_activity ) || ( empty( $course_activity->activity_started ) ) ) {
-								learndash_update_user_activity( $course_args );
+							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $started_time );
+							if ( $course_activity ) {
+								learndash_activity_update_meta_set(
+									$course_activity->activity_id,
+									array(
+										'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
+										'steps_last_id'   => $post->ID,
+									)
+								);
 							}
-
-							$lesson_args     = array(
-								'course_id'        => $course_id,
-								'user_id'          => $current_user->ID,
-								'post_id'          => $lesson_id,
-								'activity_type'    => 'lesson',
-								'activity_status'  => false,
-								'activity_started' => $started_time,
-								//'activity_meta'    => array(
-								//	'steps_total'     => learndash_get_course_steps_count( $course_id ),
-								//	'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
-								//),
-							);
-							$lesson_activity = learndash_get_user_activity( $lesson_args );
-							if ( ( ! $lesson_activity ) || ( empty( $lesson_activity->activity_started ) ) ) {
-								learndash_update_user_activity( $lesson_args );
-							}
-							
-							$topic_args     = array(
-								'course_id'        => $course_id,
-								'user_id'          => $current_user->ID,
-								'post_id'          => $post->ID,
-								'activity_type'    => 'topic',
-								'activity_status'  => false,
-								'activity_started' => $started_time,
-								//'activity_meta'    => array(
-								//	'steps_total'     => learndash_get_course_steps_count( $course_id ),
-								//	'steps_completed' => learndash_course_get_completed_steps( $current_user->ID, $course_id ),
-								//),
-							);
-							$topic_activity = learndash_get_user_activity( $topic_args );
-							if ( ( ! $topic_activity ) || ( empty( $topic_activity->activity_started ) ) ) {
-								learndash_update_user_activity( $topic_args );
-							}
+							learndash_activity_start_lesson( $current_user->ID, $course_id, $lesson_id, $started_time );
+							learndash_activity_start_topic( $current_user->ID, $course_id, $post->ID, $started_time );
 						}
-						// $topic_settings = learndash_get_setting( $post );
+
 						// Added logic for Lesson Videos
 						if ( ( defined( 'LEARNDASH_LESSON_VIDEO' ) ) && ( true === LEARNDASH_LESSON_VIDEO ) ) {
 							if ( $show_content ) {

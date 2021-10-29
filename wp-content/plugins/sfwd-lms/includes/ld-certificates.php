@@ -755,19 +755,19 @@ add_action( 'template_redirect', 'learndash_certificate_display', 5 );
  *
  * @param integer $post_id   Certificate Post ID.
  * @param string  $post_type Single post type slug to check.
- * 
+ *
  * @return array Array of post IDs.
  */
 function learndash_certificate_get_used_by( $post_id = 0, $post_type = '' ) {
 	$post_ids = array();
 
-	$post_id = absint( $post_id );
+	$post_id   = absint( $post_id );
 	$post_type = esc_attr( $post_type );
 
 	if ( ( ! empty( $post_id ) ) && ( ! empty( $post_type ) ) ) {
-		$transient_key = 'learndash_cert_used_' . $post_id . '_' . $post_type;
+		$transient_key      = 'learndash_cert_used_' . $post_id . '_' . $post_type;
 		$post_ids_transient = LDLMS_Transients::get( $transient_key );
-		
+
 		if ( false === $post_ids_transient ) {
 			$query_args = array(
 				'post_type'    => $post_type,

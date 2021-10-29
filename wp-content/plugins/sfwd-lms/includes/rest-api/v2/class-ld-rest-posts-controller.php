@@ -465,8 +465,6 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 
 							$metabox->save_post_meta_box( $post->ID, $post, $creating, $settings_field_updates );
 
-							//$metabox->save_fields_to_post( null, $settings_field_updates );
-
 							/**
 							 * After we save the meta data we re-initialize the metabox with the
 							 * new values. This will reload metabox->setting_option_values
@@ -702,7 +700,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 							$field_args['get_callback'] = array( $this, 'get_rest_settings_field_value' );
 						}
 
-						if ( ! isset( $rest_field_args['update_callback'] ) ) {
+						if ( ! isset( $field_args['update_callback'] ) ) {
 							$field_args['update_callback'] = array( $this, 'update_rest_settings_field_value' );
 						}
 

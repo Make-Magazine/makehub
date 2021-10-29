@@ -399,7 +399,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			return null;
 		}
 
-		if($this->isPreLockQuiz($quiz)) {
+		if ( $this->isPreLockQuiz( $quiz ) ) {
 			$lockIp     = false;
 			$lockCookie = false;
 			$cookieJson = null;
@@ -971,7 +971,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			exit;
 		}
 
-		$lockMapper->deleteOldLock(60*60*24*7, $this->_post['quizId'], time(), WpProQuiz_Model_Lock::TYPE_QUIZ, 0);
+		$lockMapper->deleteOldLock( 60 * 60 * 24 * 7, $this->_post['quizId'], time(), WpProQuiz_Model_Lock::TYPE_QUIZ, 0 );
 
 		$lockIp     = false;
 		$lockCookie = false;
@@ -979,11 +979,11 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 		$cookieJson = null;
 
 		if ( empty( $userId ) ) {
-			$lockIp = $lockMapper->isLock($this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ);
+			$lockIp = $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ );
 
-			if(isset($this->_cookie['wpProQuiz_lock']) && $userId == 0 && $quiz->isQuizRunOnceCookie()) {
+			if ( isset( $this->_cookie['wpProQuiz_lock'] ) && $userId == 0 && $quiz->isQuizRunOnceCookie() ) {
 				$cookieJson = json_decode( $this->_cookie['wpProQuiz_lock'], true );
-				$repeats = '';
+				$repeats    = '';
 				if ( ( isset( $this->_post['quiz'] ) ) && ( ! empty( $this->_post['quiz'] ) ) ) {
 					$repeats = learndash_quiz_get_repeats( $this->_post['quiz'] );
 				}
@@ -1058,7 +1058,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 				do_action( 'wp_pro_quiz_completed_quiz_100_percent' );
 			}
 
-			if(get_current_user_id() == 0 && $quiz->isQuizRunOnceCookie()) {
+			if ( get_current_user_id() == 0 && $quiz->isQuizRunOnceCookie() ) {
 				$cookieJson = false;
 				if ( isset( $this->_cookie['wpProQuiz_lock'] ) ) {
 					$cookieJson = json_decode( $this->_cookie['wpProQuiz_lock'], true );
@@ -1069,38 +1069,38 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 					$cookie_quiz = array();
 				}
 				$cookie_quiz = learndash_quiz_convert_lock_cookie( $cookie_quiz );
-				$cookieTime = $quiz->getQuizRunOnceTime();
+				$cookieTime  = $quiz->getQuizRunOnceTime();
 				if ( $cookie_quiz['time'] === $cookieTime ) {
 					$cookie_quiz['count'] += 1;
 				} else {
-					$cookie_quiz['time'] = $cookieTime;
+					$cookie_quiz['time']  = $cookieTime;
 					$cookie_quiz['count'] = 1;
 				}
 				$cookieJson[ $this->_post['quizId'] ] = $cookie_quiz;
 
-				$url = parse_url(get_bloginfo( 'url' ));
+				$url = parse_url( get_bloginfo( 'url' ) );
 
-				setcookie('wpProQuiz_lock', json_encode( $cookieJson ), time() + 60*60*24*60, empty($url['path']) ? '/' : $url['path']);
+				setcookie( 'wpProQuiz_lock', json_encode( $cookieJson ), time() + 60 * 60 * 24 * 60, empty( $url['path'] ) ? '/' : $url['path'] );
 			}
 
 			if ( empty( $userId ) ) {
 
-				if( ! $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ)) {
+				if ( ! $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ ) ) {
 
 					$lock = new WpProQuiz_Model_Lock();
 
-					$lock->setUserId(get_current_user_id());
-					$lock->setQuizId($this->_post['quizId']);
-					$lock->setLockDate(time());
-					$lock->setLockIp($this->getIp());
-					$lock->setLockType(WpProQuiz_Model_Lock::TYPE_QUIZ);
+					$lock->setUserId( get_current_user_id() );
+					$lock->setQuizId( $this->_post['quizId'] );
+					$lock->setLockDate( time() );
+					$lock->setLockIp( $this->getIp() );
+					$lock->setLockType( WpProQuiz_Model_Lock::TYPE_QUIZ );
 
-					$lockMapper->insert($lock);
+					$lockMapper->insert( $lock );
 				}
 			}
 
 			/** This action is documented in includes/lib/wp-pro-quiz/lib/controller/WpProQuiz_Controller_Quiz.php */
-			do_action('wp_pro_quiz_completed_quiz', $statisticRefMapper_id);
+			do_action( 'wp_pro_quiz_completed_quiz', $statisticRefMapper_id );
 		} else {
 			echo wp_json_encode( null );
 		}

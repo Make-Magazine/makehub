@@ -7,6 +7,8 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 
 	protected $_statisticRefId = 0;
 	protected $_quizId         = 0;
+	protected $_quizPostId     = 0;
+	protected $_coursePostId   = 0;
 	protected $_userId         = 0;
 	protected $_createTime     = 0;
 	protected $_isOld          = false;
@@ -30,6 +32,24 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 
 	public function getQuizId() {
 		return $this->_quizId;
+	}
+
+	public function setQuizPostId( $_quizPostId ) {
+		$this->_quizPostId = (int) $_quizPostId;
+		return $this;
+	}
+
+	public function getQuizPostId() {
+		return $this->_quizPostId;
+	}
+
+	public function setCoursePostId( $_coursePostId ) {
+		$this->_coursePostId = (int) $_coursePostId;
+		return $this;
+	}
+
+	public function getCoursePostId() {
+		return $this->_coursePostId;
 	}
 
 	public function setUserId( $_userId ) {
@@ -92,6 +112,8 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 		$object_vars = array(
 			'_statisticRefId' => $this->getStatisticRefId(),
 			'_quizId'         => $this->getQuizId(),
+			'_quizPostId'     => $this->getQuizPostId(),
+			'_coursePostId'   => $this->getCoursePostId(),
 			'_userId'         => $this->getUserId(),
 			'_createTime'     => $this->getCreateTime(),
 			'_isOld'          => $this->isIsOld(),
@@ -113,6 +135,14 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 
 				case '_quizId':
 					$this->setQuizId( $value );
+					break;
+
+				case '_quizPostId':
+					$this->setQuizPostId( $value );
+					break;
+
+				case '_coursePostId':
+					$this->setCoursePostId( $value );
 					break;
 
 				case '_userId':

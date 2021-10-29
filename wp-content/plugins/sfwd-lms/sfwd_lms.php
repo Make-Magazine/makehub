@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 3.4.2.1
+ * Version: 3.5.1.1
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string PHP version x.x.x or x.x.x.x format.
  */
-define( 'LEARNDASH_VERSION', '3.4.2.1' );
+define( 'LEARNDASH_VERSION', '3.5.1.1' );
 
 /**
  * Define LearnDash LMS - Set the settings database version.
@@ -208,6 +208,25 @@ if ( ! defined( 'LEARNDASH_REPORT_TRANSIENT_STORAGE' ) ) {
 	 * Define LearnDash LMS - Controls the Course/Quiz Report transient cache storage used.
 	 *
 	 * @since 3.4.1
+	 * @deprecated 3.5.0 Use {@see 'LEARNDASH_TRANSIENT_CACHE_STORAGE'} instead.
+	 *
+	 * @var string {
+	 *    Only one of the following values.
+	 *    @type bool   false   Default as of 3.5.0.
+	 *    @type string options Will use the wp_options table.
+	 *    @type string file    Will save cache data in file within `wp-content/uploads/learndash/reports/`.
+	 * }
+	 */
+	define( 'LEARNDASH_REPORT_TRANSIENT_STORAGE', false );
+}
+
+if ( ! defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) {
+	/**
+	 * Define LearnDash LMS - Controls Resource transient cache storage used.
+	 *
+	 * This is used for Data Upgrades, Reports, and other processing.
+	 *
+	 * @since 3.5.0
 	 *
 	 * @var string {
 	 *    Only one of the following values.
@@ -215,7 +234,11 @@ if ( ! defined( 'LEARNDASH_REPORT_TRANSIENT_STORAGE' ) ) {
 	 *    @type string file    Will save cache data in file within `wp-content/uploads/learndash/reports/`.
 	 * }
 	 */
-	define( 'LEARNDASH_REPORT_TRANSIENT_STORAGE', 'options' );
+	$learndash_default_resource_transient_storage = 'file';
+	if ( ( defined( 'LEARNDASH_REPORT_TRANSIENT_STORAGE' ) ) && ( in_array( LEARNDASH_REPORT_TRANSIENT_STORAGE, array( 'options', 'file' ), true ) ) ) {
+		$learndash_default_resource_transient_storage = LEARNDASH_REPORT_TRANSIENT_STORAGE;
+	}
+	define( 'LEARNDASH_TRANSIENT_CACHE_STORAGE', $learndash_default_resource_transient_storage );
 }
 
 if ( ! defined( 'LEARNDASH_DEBUG' ) ) {
@@ -772,6 +795,19 @@ if ( ! defined( 'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX' ) ) {
 	define( 'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX', 15 );
 }
 
+if ( ! defined( 'LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE' ) ) {
+	/**
+	 * Define LearnDash LMS - Set the Quiz answer message wrapper
+	 * HTML element type.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var string Default is 'div'.
+	 */
+	define( 'LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE', 'div' );
+}
+
+
 if ( ! defined( 'LEARNDASH_QUIZ_EXPORT_LEGACY' ) ) {
 	/**
 	 * Define LearnDash LMS - Use the legacy WPProQuiz import/export logic
@@ -798,7 +834,7 @@ if ( ! defined( 'LEARNDASH_QUIZ_PREREQUISITE_ALT' ) ) {
 	 *
 	 * @var bool Default is false.
 	 */
-	define( 'LEARNDASH_QUIZ_PREREQUISITE_ALT', false );
+	define( 'LEARNDASH_QUIZ_PREREQUISITE_ALT', true );
 }
 
 

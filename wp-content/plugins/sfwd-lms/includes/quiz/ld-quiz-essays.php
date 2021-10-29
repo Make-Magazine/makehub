@@ -346,7 +346,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 	// essay args defaults
 	$essay_args = array(
 		'post_title'  => $this_question->getTitle(),
-		'post_status' => 'not_graded',
+		'post_status' => 'draft',
 		'post_type'   => 'sfwd-essays',
 		'post_author' => $user->ID,
 	);
@@ -367,6 +367,8 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 			$essay_args['post_status'] = 'graded';
 			break;
 	}
+
+	$essay_args['post_status'] = 'draft';
 
 	// switch on graded type to handle the response
 	// used a switch in case we add more types
@@ -1013,6 +1015,16 @@ function learndash_quiz_submitted_update_essay( $quizdata, $user ) {
 						if ( isset( $graded_data['post_id'] ) ) {
 							$essay_post_id = absint( $graded_data['post_id'] );
 							if ( ! empty( $essay_post_id ) ) {
+
+								// Update the Essay post_status.
+								if ( isset( $graded_data['status'] ) ) {
+									$essay_post = array(
+										'ID'          => $essay_post_id,
+										'post_status' => esc_attr( $graded_data['status'] ),
+									);
+									wp_update_post( $essay_post );
+								}
+
 								$quiz_time = get_post_meta( $essay_post_id, 'quiz_time', true );
 								if ( ! $quiz_time ) {
 									update_post_meta( $essay_post_id, 'quiz_time', $quizdata['time'] );

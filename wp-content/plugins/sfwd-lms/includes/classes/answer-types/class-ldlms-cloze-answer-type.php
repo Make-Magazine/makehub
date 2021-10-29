@@ -40,7 +40,7 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 		 * @param string                            $student_answers Submitted answers' list.
 		 * @param WpProQuiz_Model_StatisticRefModel $stat_ref_model  Statistic reference model.
 		 */
-		public function __construct( WpProQuiz_Model_Question $question, $student_answers, WpProQuiz_Model_StatisticRefModel $stat_ref_model ) {
+		public function __construct( WpProQuiz_Model_Question $question, $student_answers = null, WpProQuiz_Model_StatisticRefModel $stat_ref_model = null ) {
 			parent::__construct( $question, $student_answers, $stat_ref_model );
 
 			$this->parsed_answers = $this->parse_answers();
@@ -62,33 +62,31 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 		public function get_answers() {
 			$answers = array();
 
-			foreach ( $this->parsed_answers as $key => $answer ) {
-				$answers[ $this->get_answer_key( $key ) ] = array(
-					'label' => $answer['label'],
-				);
+			foreach ( $this->parsed_answers as $key => $answer_set ) {
+				$answer_key = $this->get_answer_key( $key );
 
-				$answer_node_data = $answers[ $this->get_answer_key( (string) $key ) ];
+				if ( ( isset( $answer_set['label'] ) ) && ( is_array( $answer_set['label'] ) ) && ( ! empty( $answer_set['label'] ) ) ) {
+					$answer_label_set = array();
 
-				/**
-				 * Filters the individual answer node.
-				 *
-				 * @since 3.3.0
-				 *
-				 * @param array  $answer_node_data The answer node.
-				 * @param string $type             Whether the node is answer node or student answer node.
-				 * @param mixed  $data             Individual answer data.
-				 */
-				$answer_node_data = apply_filters(
-					'learndash_rest_statistic_answer_node_data',
-					$answer_node_data,
-					'answer',
-					$answer,
-					$this->question->getId(),
-					$key
-				);
+					foreach ( $answer_set['label'] as $label_idx => $label_val ) {
+						$answer_set_key = $answer_key . '-' . $label_idx;
 
-				$answers[ $this->get_answer_key( (string) $key ) ] = $answer_node_data;
+						$answer_label_set[ $answer_set_key ] = array(
+							'label' => $label_val,
+						);
 
+						if ( $this->question->isAnswerPointsActivated() ) {
+							$points = 1;
+							if ( isset( $answer_set['points'][ $label_idx ] ) ) {
+								$points = $answer_set['points'][ $label_idx ];
+							}
+							$answer_label_set[ $answer_set_key ]['points'] = $points;
+						}
+					}
+					$answers[ $answer_key ] = array(
+						'values' => $answer_label_set,
+					);
+				}
 			}
 
 			return $answers;
@@ -103,20 +101,35 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 			$answers = array();
 
 			foreach ( $this->student_answers as $key => $answer ) {
-				$answers[] = array(
+				$answers[ $key ] = array(
 					'answer_key' => $this->get_answer_key( $key ),
 					'answer'     => $answer,
-					'correct'    => in_array( strtolower( $answer ), array_map( 'strtolower', $this->parsed_answers[ $key ]['label'] ), true ),
+					'correct'    => false,
 				);
 
-				$answers[ $key ] = apply_filters(
-					'learndash_rest_statistic_answer_node_data',
-					$answers[ $key ],
-					'student',
-					$this->parsed_answers[ $key ],
-					$this->question->getId(),
-					$key
-				);
+				if ( ( isset( $this->parsed_answers[ $key ]['label'] ) ) && ( is_array( $this->parsed_answers[ $key ]['label'] ) ) && ( ! empty( $this->parsed_answers[ $key ]['label'] ) ) ) {
+					if ( apply_filters( 'learndash_quiz_question_cloze_answers_to_lowercase', true ) ) {
+						if ( function_exists( 'mb_strtolower' ) ) {
+							$user_answer_formatted = mb_strtolower( $answer );
+						} else {
+							$user_answer_formatted = strtolower( $answer );
+						}
+					} else {
+						$user_answer_formatted = $answer;
+					}
+
+					$correct_idx = array_search( $user_answer_formatted, $this->parsed_answers[ $key ]['label'] );
+					if ( false !== $correct_idx ) {
+						$answers[ $key ]['correct']   = true;
+						$answers[ $key ]['value_key'] = $this->get_answer_key( $key ) . '-' . $correct_idx;
+
+						if ( $this->question->isAnswerPointsActivated() ) {
+							if ( isset( $this->parsed_answers[ $key ]['points'][ $correct_idx ] ) ) {
+								$answers[ $key ]['points'] = $this->parsed_answers[ $key ]['points'][ $correct_idx ];
+							}
+						}
+					}
+				}
 			}
 
 			return $answers;
@@ -134,11 +147,6 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 		 * @return array
 		 */
 		public function maybe_add_points( array $answer_data, $answer_type, $answer, $question_id ) {
-
-			if ( ( $question_id === $this->question->getId() ) && $this->question->isAnswerPointsActivated() ) {
-				$answer_data['points'] = $answer['points'];
-			}
-
 			return $answer_data;
 		}
 
@@ -162,8 +170,25 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 			switch ( $answer_type ) {
 
 				case 'answer':
-					unset( $answer_data['label'] );
-					unset( $answer_data['points'] );
+					$labels = (array) $answer_data['label'];
+
+					foreach ( $labels as $pos => $label ) {
+						$index = $this->get_answer_key( (string) $key );
+						$index = $index . '-' . $pos;
+
+						$values[ $index ] = array(
+							'label' => $label,
+						);
+
+						if ( $this->question->isAnswerPointsActivated() ) {
+							$values[ $index ]['points'] = $answer_data['points'];
+						}
+					}
+
+					$answer_data['values'] = $values;
+					break;
+
+				case 'student':
 					break;
 			}
 
@@ -176,44 +201,23 @@ if ( ! class_exists( 'LDLMS_Cloze_Answer' ) ) {
 		 * @return array List of parsed answers.
 		 */
 		private function parse_answers() {
+
 			$answer = array();
-
 			foreach ( $this->answer_data as $index => $answer_data ) {
-				$no_markup_answer = wp_strip_all_tags( $answer_data->getAnswer() );
-				preg_match_all( '#\{(.*?)(?:\|(\d+))?(?:[\s]+)?\}#im', $no_markup_answer, $matches );
-
-				if ( $matches ) {
-
-					$points_list = array_map(
-						function ( $point ) {
-							return empty( $point ) ? 1 : intval( $point );
-						},
-						$matches[2]
-					);
-
-					$answer_fillers = array_map(
-						function( $val ) {
-
-							preg_match_all( '#\[([^\]]*)\]#im', $val, $ans_labels );
-
-							if ( ! empty( $ans_labels[1] ) ) {
-								return $ans_labels[1];
-							}
-
-							return array( $val );
-						},
-						$matches[1]
-					);
-
-					foreach ( $answer_fillers as $key => $val ) {
+				$question_answer_data = learndash_question_cloze_fetch_data( $answer_data->getAnswer() );
+				if ( isset( $question_answer_data['correct'] ) ) {
+					foreach ( $question_answer_data['correct'] as $answer_idx => $answer_labels ) {
+						$answer_points = array( 1 );
+						if ( isset( $question_answer_data['points'][ $answer_idx ] ) ) {
+							$answer_points = $question_answer_data['points'][ $answer_idx ];
+						}
 						$answer[] = array(
-							'label'  => $val,
-							'points' => $points_list[ $key ],
+							'label'  => $answer_labels,
+							'points' => $answer_points,
 						);
 					}
 				}
 			}
-
 			return $answer;
 		}
 	}

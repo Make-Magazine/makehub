@@ -26,11 +26,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			$this->fields_args = $fields_args;
 
 			$this->shortcodes_section_key   = 'ld_group';
-			$this->shortcodes_section_title = sprintf(
-				// translators: placeholder: Group
-				esc_html_x( '%s', 'placeholder: Group', 'learndash' ),
-				learndash_get_custom_label( 'group' )
-			);
+			$this->shortcodes_section_title = learndash_get_custom_label( 'group' );
 			$this->shortcodes_section_type        = 2;
 			$this->shortcodes_section_description = sprintf(
 				// translators: group

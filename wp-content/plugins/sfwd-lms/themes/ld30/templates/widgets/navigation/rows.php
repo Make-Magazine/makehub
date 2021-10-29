@@ -34,14 +34,14 @@ if ( ! empty( $lessons ) ) :
 		learndash_get_template_part(
 			'widgets/navigation/lesson-row.php',
 			array(
-				'count'             => $i,
-				'sections'          => $sections,
-				'lesson'            => $course_lesson,
-				'course_id'         => $course_id,
-				'user_id'           => $user_id,
-				'lesson_topics'     => $lesson_topics,
-				'widget_instance'   => $widget_instance,
-				'has_access'        => $has_access,
+				'count'           => $i,
+				'sections'        => $sections,
+				'lesson'          => $course_lesson,
+				'course_id'       => $course_id,
+				'user_id'         => $user_id,
+				'lesson_topics'   => $lesson_topics,
+				'widget_instance' => $widget_instance,
+				'has_access'      => $has_access,
 			),
 			true
 		);

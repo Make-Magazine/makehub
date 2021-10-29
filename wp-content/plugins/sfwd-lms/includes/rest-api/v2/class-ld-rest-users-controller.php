@@ -201,7 +201,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 				return true;
 			}
 		}
-		
+
 		// End of functions.
 	}
 }

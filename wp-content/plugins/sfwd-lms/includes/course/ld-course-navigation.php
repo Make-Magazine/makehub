@@ -534,20 +534,20 @@ function learndash_get_course_lessons_list( $course_id = null, $user_id = null, 
 			$course_lessons = $ld_course_object->get_lessons( $query_args );
 			if ( ! empty( $course_lessons ) ) {
 				$lessons_pager = $ld_course_object->get_pager( $course_id, learndash_get_post_type_slug( 'lesson' ) );
-				$sno = 1;
+				$sno           = 1;
 				if ( ( isset( $lessons_pager['per_page'] ) ) && ( isset( $lessons_pager['paged'] ) ) ) {
 					$sno = 1 + ( absint( $lessons_pager['per_page'] ) * ( absint( $lessons_pager['paged'] ) - 1 ) );
 				}
 				foreach ( $course_lessons as $lesson_post ) {
 					$lesson_item = array(
-						'sno'                   => $sno,
-						'id'                    => $lesson_post->ID,
-						'post'                  => $lesson_post,
-						'permalink'             => '',
-						'class'                 => '',
-						'status'                => '',
-						'sample'                => '',
-						'sub_title'             => '',
+						'sno'                => $sno,
+						'id'                 => $lesson_post->ID,
+						'post'               => $lesson_post,
+						'permalink'          => '',
+						'class'              => '',
+						'status'             => '',
+						'sample'             => '',
+						'sub_title'          => '',
 						'lesson_access_from' => '',
 					);
 
@@ -571,12 +571,12 @@ function learndash_get_course_lessons_list( $course_id = null, $user_id = null, 
 							$lesson_item['sub_title'] = SFWD_LMS::get_template(
 								'learndash_course_lesson_not_available',
 								array(
-									'user_id'                 => $user_id,
-									'course_id'               => $course_id,
-									'lesson_id'               => $lesson_post->ID,
-									'lesson_access_from_int'  => $lesson_item['lesson_access_from'],
+									'user_id'   => $user_id,
+									'course_id' => $course_id,
+									'lesson_id' => $lesson_post->ID,
+									'lesson_access_from_int' => $lesson_item['lesson_access_from'],
 									'lesson_access_from_date' => learndash_adjust_date_time_display( $lesson_item['lesson_access_from'] ),
-									'context'                 => 'loop_content_shortcode',
+									'context'   => 'loop_content_shortcode',
 								),
 								false
 							);

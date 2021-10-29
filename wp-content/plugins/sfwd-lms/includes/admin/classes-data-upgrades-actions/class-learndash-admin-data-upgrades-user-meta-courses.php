@@ -186,6 +186,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								if ( true === $user_complete ) {
 									$this->transient_data['current_user'] = array();
 									unset( $this->transient_data['process_users'][ $user_idx ] );
+
+									if ( ! isset( $this->transient_data['result_count'] ) ) {
+										$this->transient_data['result_count'] = 0;
+									}
 									$this->transient_data['result_count'] = (int) $this->transient_data['result_count'] + 1;
 								}
 
@@ -338,6 +342,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				ksort( $user_meta_courses_progress );
 
 				foreach ( $user_meta_courses_progress as $course_id => $course_data ) {
+
 					// Need a way to seek to a specific key starting point in an array.
 					if ( $activity_ids['last_course_id'] >= $course_id ) {
 						continue;
@@ -368,9 +373,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 										'activity_meta' => array(),
 									);
 
-									if ( ! empty( $user_course_access_from ) ) {
-										$lesson_args['activity_started'] = $user_course_access_from;
-									}
+									//if ( ! empty( $user_course_access_from ) ) {
+									//	$lesson_args['activity_started'] = $user_course_access_from;
+									//}
 
 									if ( true == $lesson_complete ) {
 										$lesson_args['activity_status'] = true;
@@ -405,9 +410,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 												'activity_meta' => array(),
 											);
 
-											if ( ! empty( $user_course_access_from ) ) {
-												$topic_args['activity_started'] = $user_course_access_from;
-											}
+											//if ( ! empty( $user_course_access_from ) ) {
+											//	$topic_args['activity_started'] = $user_course_access_from;
+											//}
 
 											if ( true == $topic_complete ) {
 												$topic_args['activity_status'] = true;
@@ -427,8 +432,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							}
 						}
 
-						$user_course_completed   = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
-						$user_course_access_from = get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
+						$user_course_completed   = (int) get_user_meta( $user_id, 'course_completed_' . $course_id, true );
+						$user_course_access_from = (int) get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
 
 						if ( ! empty( $user_course_access_from ) ) {
 							$activity_id = learndash_update_user_activity(
@@ -446,20 +451,46 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							}
 						}
 
-						$user_course_access_from = 0;
-
-						// First add the main Course entry.
-						$course_args = array(
-							'course_id'     => $course_id,
-							'post_id'       => $course_id,
-							'activity_type' => 'course',
-							'user_id'       => $user_id,
-							'data_upgrade'  => true,
-							'activity_meta' => array(
-								'steps_total'     => intval( $course_data['total'] ),
-								'steps_completed' => intval( $course_data['completed'] ),
-							),
+						$course_activity = learndash_get_user_activity(
+							array(
+								'course_id'     => $course_id,
+								'post_id'       => $course_id,
+								'activity_type' => 'course',
+								'user_id'       => $user_id,
+							)
 						);
+
+						if ( ! empty( $course_activity ) ) {
+							if ( is_object( $course_activity ) ) {
+								$course_args = json_decode( wp_json_encode( $course_activity ), true );
+							} elseif( is_array( $course_activity ) ) {
+								$course_args = $course_activity;
+							}
+						} else {
+							$course_args = array(
+								'course_id'     => $course_id,
+								'post_id'       => $course_id,
+								'activity_type' => 'course',
+								'user_id'       => $user_id,
+								'data_upgrade'  => true,
+								'activity_meta' => array(
+									'steps_total'     => intval( $course_data['total'] ),
+									'steps_completed' => intval( $course_data['completed'] ),
+								),
+							);
+						}
+
+						if ( ( ! isset( $course_args['activity_meta'] ) ) || ( ! is_array( $course_args['activity_meta'] ) ) ) {
+							$course_args['activity_meta'] = array();
+						}
+
+						if ( ! isset( $course_args['activity_meta']['steps_total'] ) ) {
+							$course_args['activity_meta']['steps_total'] = intval( $course_data['total'] );
+						}
+
+						if ( ! isset( $course_args['activity_meta']['steps_completed'] ) ) {
+							$course_args['activity_meta']['steps_completed'] = intval( $course_data['completed'] );
+						}
 
 						$steps_completed = intval( $course_data['completed'] );
 						if ( ( ! empty( $steps_completed ) ) && ( $steps_completed >= intval( $course_data['total'] ) ) ) {
@@ -474,7 +505,32 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						}
 
 						if ( isset( $course_data['last_id'] ) ) {
-							$course_args['activity_meta']['steps_last_id'] = intval( $course_data['last_id'] );
+							if ( absint( $course_data['last_id'] ) === absint( $course_id ) ) {
+								$last_activity = learndash_activity_course_get_latest_completed_step( $user_id, $course_id );
+								if ( ( isset( $last_activity['post_id'] ) ) && ( absint( $course_data['last_id'] ) !== absint( $last_activity['post_id'] ) ) ) {
+									$course_data['last_id'] = absint( $last_activity['post_id'] );
+
+									// Need to update the real user's meta course progress.
+									learndash_user_set_course_progress( $user_id, $course_id, $course_data );
+								} else {
+									$course_data['last_id'] = 0;
+								}
+							}
+							
+							if ( ! empty( $course_data['last_id'] ) ) {
+								$course_args['activity_meta']['steps_last_id'] = intval( $course_data['last_id'] );
+							}
+						}
+
+						$activity_started  = $user_course_access_from;
+						$activity_earliest = learndash_activity_course_get_earliest_started( $user_id, $course_id, 0 );
+
+						if ( ( ! empty( $activity_earliest ) ) && ( $activity_earliest > $activity_started ) ) {
+							$activity_started = $activity_earliest;
+						}
+
+						if ( (int) $activity_started !== (int) $course_args['activity_started'] ) {
+							$course_args['activity_started'] = (int) $activity_started;
 						}
 
 						$activity_id = learndash_update_user_activity( $course_args );

@@ -54,18 +54,18 @@ class WpProQuiz_Controller_QuizCompleted {
 			return;
 		}
 
-		$lockMapper->deleteOldLock(60*60*24*7, $this->_post['quizId'], time(), WpProQuiz_Model_Lock::TYPE_QUIZ, 0);
+		$lockMapper->deleteOldLock( 60 * 60 * 24 * 7, $this->_post['quizId'], time(), WpProQuiz_Model_Lock::TYPE_QUIZ, 0 );
 
 		$lockCookie = false;
 		$cookieTime = $quiz->getQuizRunOnceTime();
 		$cookieJson = null;
 
 		if ( empty( $userId ) ) {
-			$lockIp = $lockMapper->isLock($this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ);
+			$lockIp = $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ );
 
-			if(isset($this->_cookie['wpProQuiz_lock']) && $userId == 0 && $quiz->isQuizRunOnceCookie()) {
+			if ( isset( $this->_cookie['wpProQuiz_lock'] ) && $userId == 0 && $quiz->isQuizRunOnceCookie() ) {
 				$cookieJson = json_decode( $this->_cookie['wpProQuiz_lock'], true );
-				$repeats = '';
+				$repeats    = '';
 				if ( ( isset( $this->_post['quiz'] ) ) && ( ! empty( $this->_post['quiz'] ) ) ) {
 					$repeats = learndash_quiz_get_repeats( $this->_post['quiz'] );
 				}
@@ -85,7 +85,7 @@ class WpProQuiz_Controller_QuizCompleted {
 				$lockIp = false;
 			}
 		}
-		if(!$lockIp && !$lockCookie) {
+		if ( ! $lockIp && ! $lockCookie ) {
 			$statistics->save();
 
 			// @todo Add proper first parameter for the hook according to includes/lib/wp-pro-quiz/lib/controller/WpProQuiz_Controller_Quiz.php
@@ -93,10 +93,10 @@ class WpProQuiz_Controller_QuizCompleted {
 			do_action( 'wp_pro_quiz_completed_quiz', 0 );
 
 			/** This action is documented in includes/lib/wp-pro-quiz/lib/controller/WpProQuiz_Controller_QuizCompleted.php */
-			do_action('wp_pro_quiz_completed_quiz_'.$resultInPercent.'_percent');
+			do_action( 'wp_pro_quiz_completed_quiz_' . $resultInPercent . '_percent' );
 
-			if(get_current_user_id() == 0 && $quiz->isQuizRunOnceCookie()) {
-				if( isset( $this->_cookie['wpProQuiz_lock'] ) ) {
+			if ( get_current_user_id() == 0 && $quiz->isQuizRunOnceCookie() ) {
+				if ( isset( $this->_cookie['wpProQuiz_lock'] ) ) {
 					$cookieJson = json_decode( $this->_cookie['wpProQuiz_lock'], true );
 				} else {
 					$cookieJson = array();
@@ -108,32 +108,31 @@ class WpProQuiz_Controller_QuizCompleted {
 					$cookie_quiz = array();
 				}
 				$cookie_quiz = learndash_quiz_convert_lock_cookie( $cookie_quiz );
-				$cookieTime = $quiz->getQuizRunOnceTime();
+				$cookieTime  = $quiz->getQuizRunOnceTime();
 				if ( $cookie_quiz['time'] === $cookieTime ) {
 					$cookie_quiz['count'] += 1;
 				} else {
-					$cookie_quiz['time'] = $cookieTime;
+					$cookie_quiz['time']  = $cookieTime;
 					$cookie_quiz['count'] = 1;
 				}
 				$cookieJson[ $this->_post['quizId'] ] = $cookie_quiz;
 
-				$url = parse_url(get_bloginfo( 'url' ));
+				$url = parse_url( get_bloginfo( 'url' ) );
 
-
-				setcookie('wpProQuiz_lock', json_encode( $cookieJson ), time() + 60*60*24*60, empty($url['path']) ? '/' : $url['path']);
+				setcookie( 'wpProQuiz_lock', json_encode( $cookieJson ), time() + 60 * 60 * 24 * 60, empty( $url['path'] ) ? '/' : $url['path'] );
 			}
 
-			if( ! $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ)) {
+			if ( ! $lockMapper->isLock( $this->_post['quizId'], $this->getIp(), $userId, WpProQuiz_Model_Lock::TYPE_QUIZ ) ) {
 
 				$lock = new WpProQuiz_Model_Lock();
 
-				$lock->setUserId(get_current_user_id());
-				$lock->setQuizId($this->_post['quizId']);
-				$lock->setLockDate(time());
-				$lock->setLockIp($this->getIp());
-				$lock->setLockType(WpProQuiz_Model_Lock::TYPE_QUIZ);
+				$lock->setUserId( get_current_user_id() );
+				$lock->setQuizId( $this->_post['quizId'] );
+				$lock->setLockDate( time() );
+				$lock->setLockIp( $this->getIp() );
+				$lock->setLockType( WpProQuiz_Model_Lock::TYPE_QUIZ );
 
-				$lockMapper->insert($lock);
+				$lockMapper->insert( $lock );
 			}
 		}
 

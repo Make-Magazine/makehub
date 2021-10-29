@@ -191,6 +191,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								if ( true === $user_complete ) {
 									$this->transient_data['current_user'] = array();
 									unset( $this->transient_data['process_users'][ $user_idx ] );
+
+									if ( ! isset( $this->transient_data['result_count'] ) ) {
+										$this->transient_data['result_count'] = 0;
+									}
 									$this->transient_data['result_count'] = (int) $this->transient_data['result_count'] + 1;
 								}
 

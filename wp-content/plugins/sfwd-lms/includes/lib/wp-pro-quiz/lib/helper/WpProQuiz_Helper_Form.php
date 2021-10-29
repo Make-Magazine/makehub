@@ -63,7 +63,13 @@ class WpProQuiz_Helper_Form {
 			$check++;
 		}
 
-		if ( $data['year'] >= 1900 && $data['year'] <= date( 'Y' ) ) {
+		/** This filter is documented in includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php */
+		$date_year_min = (int) apply_filters( 'learndash_quiz_custom_field_year_min', 1900 );
+
+		/** This filter is documented in includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php */
+		$date_year_max = (int) apply_filters( 'learndash_quiz_custom_field_year_max', date( 'Y' ) + 20 );
+
+		if ( $data['year'] >= $date_year_min && $data['year'] <= $date_year_max ) {
 			$check++;
 		}
 

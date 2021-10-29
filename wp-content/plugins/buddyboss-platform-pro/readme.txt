@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.8
 Requires PHP: 5.6.20
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,10 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.6 =
+* Groups - Fixed Access control members issue in Group invites screen
+* Compatibility - Fixed PHP 8.0 compatibility issues
 
 = 1.1.5 =
 * Member Access Controls - Provided hooks to clear API cache

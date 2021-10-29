@@ -678,10 +678,11 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 			if ( true !== $this->meta['course_shared_steps_enabled'] ) {
 				$steps_query_args = array(
-					'post_type'      => $this->steps_post_types,
-					'posts_per_page' => -1,
-					'post_status'    => $this->get_step_post_statuses(),
-					'meta_query'     => array(
+					'post_type'        => $this->steps_post_types,
+					'suppress_filters' => 1,
+					'posts_per_page'   => -1,
+					'post_status'      => $this->get_step_post_statuses(),
+					'meta_query'       => array(
 						array(
 							'key'     => 'course_id',
 							'value'   => absint( $this->course_id ),
@@ -690,20 +691,37 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 					),
 				);
 			} else {
+				if ( empty( $all_steps_ids ) ) {
+					$this->objects_loaded = true;
+					return;
+				}
+
 				$steps_query_args = array(
-					'post_type'      => $this->steps_post_types,
-					'posts_per_page' => -1,
-					'post_status'    => $this->get_step_post_statuses(),
-					'post__in'       => $all_steps_ids,
+					'post_type'        => $this->steps_post_types,
+					'suppress_filters' => 1,
+					'posts_per_page'   => -1,
+					'post_status'      => $this->get_step_post_statuses(),
+					'post__in'         => $all_steps_ids,
 				);
 			}
 
-			$steps_query = new WP_Query( $steps_query_args );
-			if ( ( $steps_query ) && ( is_a( $steps_query, 'WP_Query' ) ) ) {
-				foreach ( $steps_query->posts as $steps_post ) {
-					$this->objects[ $steps_post->ID ] = $steps_post;
+			/**
+			 * Filters the $steps_query_args array use for Course Steps Objects Queries.
+			 *
+			 * @since 3.4.2
+			 *
+			 * @param array $steps_query_args Array of query args.
+			 * @param int   $coure_id         Course ID.
+			 */
+			$steps_query_args = apply_filters( 'learndash_course_steps_objects_query_args', $steps_query_args, $this->course_id );
+			if ( ( is_array( $steps_query_args ) ) && ( ! empty( $steps_query_args ) ) ) {
+				$steps_query = new WP_Query( $steps_query_args );
+				if ( ( $steps_query ) && ( is_a( $steps_query, 'WP_Query' ) ) ) {
+					foreach ( $steps_query->posts as $steps_post ) {
+						$this->objects[ $steps_post->ID ] = $steps_post;
+					}
+					$this->objects_loaded = true;
 				}
-				$this->objects_loaded = true;
 			}
 
 			$all_objects_ids = $this->get_objects_steps_ids();
@@ -927,6 +945,13 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 				$this->load_steps_meta();
 
+				if ( isset( $course_steps['section-heading'] ) ) {
+					$this->set_section_headings( $course_steps['section-heading'] );
+					unset( $course_steps['section-heading'] );
+				} else {
+					$this->set_section_headings( array() );
+				}
+
 				$this->steps['h'] = $course_steps;
 
 				$this->build_steps();
@@ -939,7 +964,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 				$this->save_steps_meta();
 				$this->set_steps_count_meta();
-				
+
 				$this->saving_steps = false;
 
 				if ( $this->is_steps_dirty() ) {
@@ -947,6 +972,24 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 				}
 
 				$this->steps_loaded = false;
+			}
+		}
+
+		/**
+		 * Set Course Section Headings.
+		 *
+		 * @since 3.5.0
+		 *
+		 * @param array $sections Array of Section headings.
+		 *
+		 * @return bool return from `update_post_status()`.
+		 */
+		public function set_section_headings( $sections = array() ) {
+			// This probably should call the REST endpoint.
+			if ( ! empty( $sections ) ) {
+				return update_post_meta( $this->course_id, 'course_sections', wp_json_encode( array_values( $sections ), JSON_UNESCAPED_UNICODE ) );
+			} else {
+				return delete_post_meta( $this->course_id, 'course_sections' );
 			}
 		}
 
@@ -1630,7 +1673,11 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 						if ( ! isset( $course_steps_split_keys[ $step_post_type ] ) ) {
 							$course_steps_split_keys[ $step_post_type ] = array();
 						}
-						$course_steps_split_keys[ $step_post_type ][ $step_id ] = self::steps_split_keys( $step_set, $step_post_type );
+						if ( $step_post_type === 'section-heading' ) {
+							$course_steps_split_keys[ $step_post_type ][ $step_id ] = $step_set;
+						} else {
+							$course_steps_split_keys[ $step_post_type ][ $step_id ] = self::steps_split_keys( $step_set, $step_post_type );
+						}
 					}
 				}
 			}
@@ -1647,7 +1694,12 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		protected function get_step_post_statuses() {
 			$post_status_keys = array();
 
-			$post_statuses = get_post_stati( array( 'internal' => false, '_builtin' => true ) );
+			$post_statuses = get_post_stati(
+				array(
+					'internal' => false,
+					'_builtin' => true,
+				)
+			);
 			if ( ! empty( $post_statuses ) ) {
 				$post_status_keys = array_keys( $post_statuses );
 			}

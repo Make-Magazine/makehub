@@ -103,7 +103,7 @@ jQuery( function( $ ) {
 	} );
 
 	$( window ).on( 'resize', function() {
-		if ( $( this ).width() !== windowWidth ) {
+		if ( $( this ).width() !== windowWidth && 1024 >= $( this ).width() ) {
 			setTimeout( function() {
 				focusMobileResizeCheck();
 			}, 50 );
@@ -129,16 +129,27 @@ jQuery( function( $ ) {
 	}
 
 	function focusMobileResizeCheck() {
-		if ( 960 > $( window ).width() && ! $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-collapsed' ) ) {
+		if ( 1024 > $( window ).width() && ! $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-collapsed' ) ) {
 			closeFocusSidebar();
-		} else if ( 960 <= $( window ).width() && $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-filtered' ) ) {
+		} else if ( 1024 <= $( window ).width() && $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-filtered' ) ) {
 			closeFocusSidebar();
-		} else if ( 960 <= $( window ).width() &&
+		} else if ( 1024 <= $( window ).width() &&
 			! $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-filtered' ) &&
 			$( '.ld-focus' ).hasClass( 'ld-focus-sidebar-collapsed' ) ) {
 			openFocusSidebar();
 		}
 	}
+
+	function focusMobileHandleOrientationChange( e ) {
+		if ( e.matches ) {
+			if ( 1024 <= $( window ).width() &&
+			! $( '.ld-focus' ).hasClass( 'ld-focus-sidebar-filtered' ) &&
+			$( '.ld-focus' ).hasClass( 'ld-focus-sidebar-collapsed' ) ) {
+				openFocusSidebar();
+			}
+		}
+	}
+	window.matchMedia( '(orientation: landscape)' ).addListener( focusMobileHandleOrientationChange );
 
 	function closeFocusSidebarPageLoad() {
 		$( '.ld-focus' ).addClass( 'ld-focus-sidebar-collapsed' );

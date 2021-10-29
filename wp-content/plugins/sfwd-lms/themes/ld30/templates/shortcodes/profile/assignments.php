@@ -7,7 +7,7 @@
  * @package LearnDash\Templates\LD30
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -30,9 +30,9 @@ $assignment_post_type_object = get_post_type_object( 'sfwd-assignment' ); ?>
 			$cols = apply_filters(
 				'learndash-profile-assignment-cols',
 				array(
-					'comments' => __( '', 'learndash' ),
-					'status'   => __( 'Status', 'learndash' ),
-					'date'     => __( 'Date', 'learndash' ),
+					'comments' => esc_html__( 'Comments', 'learndash' ),
+					'status'   => esc_html__( 'Status', 'learndash' ),
+					'date'     => esc_html__( 'Date', 'learndash' ),
 				)
 			);
 			foreach ( $cols as $slug => $label ) :

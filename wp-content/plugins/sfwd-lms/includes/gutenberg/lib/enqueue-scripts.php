@@ -191,24 +191,26 @@ function learndash_enqueue_course_grid_scripts() {
  * @return array An array of block categories.
  */
 function learndash_block_categories( $block_categories = array(), $post = false ) {
-	if ( ! in_array( 'learndash-blocks', wp_list_pluck( $block_categories, 'slug' ), true ) ) {
-		if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, LDLMS_Post_Types::get_post_types(), true ) ) ) {
-			$block_categories = array_merge(
-				array(
+	if ( is_array( $block_categories ) ) {
+		if ( ! in_array( 'learndash-blocks', wp_list_pluck( $block_categories, 'slug' ), true ) ) {
+			if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, LDLMS_Post_Types::get_post_types(), true ) ) ) {
+				$block_categories = array_merge(
 					array(
-						'slug'  => 'learndash-blocks',
-						'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
-						'icon'  => false,
+						array(
+							'slug'  => 'learndash-blocks',
+							'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
+							'icon'  => false,
+						),
 					),
-				),
-				$block_categories
-			);
-		} else {
-			$block_categories[] = array(
-				'slug'  => 'learndash-blocks',
-				'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
-				'icon'  => false,
-			);
+					$block_categories
+				);
+			} else {
+				$block_categories[] = array(
+					'slug'  => 'learndash-blocks',
+					'title' => esc_html__( 'LearnDash LMS Blocks', 'learndash' ),
+					'icon'  => false,
+				);
+			}
 		}
 	}
 
@@ -228,7 +230,7 @@ function learndash_block_categories( $block_categories = array(), $post = false 
  *
  * @return array An array of block categories.
  */
-function learndash_block_categories_all( $block_categories = array(), $block_editor_context ) {
+function learndash_block_categories_all( $block_categories, $block_editor_context ) {
 	if ( ( is_object( $block_editor_context ) ) && ( property_exists( $block_editor_context, 'post' ) ) && ( is_a( $block_editor_context->post, 'WP_Post' ) ) ) {
 		$block_categories = learndash_block_categories( $block_categories, $block_editor_context->post );
 	} else {
@@ -238,12 +240,15 @@ function learndash_block_categories_all( $block_categories = array(), $block_edi
 	return $block_categories;
 }
 
-add_filter( 'learndash_init', function() {
-	global $wp_version;
+add_filter(
+	'learndash_init',
+	function() {
+		global $wp_version;
 
-	if ( version_compare( $wp_version, '5.7.99', '>' ) ) {
-		add_filter( 'block_categories_all', 'learndash_block_categories_all', 30, 2 );
-	} else {
-		add_filter( 'block_categories', 'learndash_block_categories', 30, 2 );
+		if ( version_compare( $wp_version, '5.7.99', '>' ) ) {
+			add_filter( 'block_categories_all', 'learndash_block_categories_all', 30, 2 );
+		} else {
+			add_filter( 'block_categories', 'learndash_block_categories', 30, 2 );
+		}
 	}
-});
+);

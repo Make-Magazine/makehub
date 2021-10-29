@@ -108,9 +108,9 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 								do_action( 'learndash_csv_download_after_headers' );
 
 								set_time_limit( 0 );
-								$report_fp = @fopen( $report_filename, "rb" );
-								while( ! feof( $report_fp ) ) {
-									print( @fread( $report_fp, 1024*8 ) );
+								$report_fp = @fopen( $report_filename, 'rb' );
+								while ( ! feof( $report_fp ) ) {
+									print( @fread( $report_fp, 1024 * 8 ) );
 									if ( ob_get_level() > 0 ) {
 										ob_flush();
 									}
@@ -344,14 +344,16 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 		 * @param string $transient_key Unique transient key.
 		 */
 		public function get_transient( $transient_key = '' ) {
+			$transient_data = array();
+
 			if ( ! empty( $transient_key ) ) {
 				$transient_key = str_replace( '-', '_', $transient_key );
-				$options_key = 'learndash_reports_' . $transient_key;
+				$options_key   = 'learndash_reports_' . $transient_key;
 
-				if ( ( defined( 'LEARNDASH_REPORT_TRANSIENT_STORAGE' ) ) && ( 'file' === LEARNDASH_REPORT_TRANSIENT_STORAGE ) ) {
+				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
 					$wp_upload_dir = wp_upload_dir();
 
-					$ld_file_part = '/learndash/reports/learndash_reports_data_' . $transient_key . '.txt';
+					$ld_file_part = '/learndash/cache/learndash_reports_data_' . $transient_key . '.txt';
 
 					$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
 					if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
@@ -359,15 +361,17 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 						return;
 					}
 
-					$transient_fp = fopen( $ld_transient_filename, 'r' );
-					if ( $transient_fp ) {
-						$transient_data = '';
-						while ( ! feof( $transient_fp ) ) {
-							$transient_data .= fread( $transient_fp, 4096 );
-						}
-						fclose( $transient_fp );
+					if ( file_exists( $ld_transient_filename ) ) { 
+						$transient_fp = fopen( $ld_transient_filename, 'r' );
+						if ( $transient_fp ) {
+							$transient_data = '';
+							while ( ! feof( $transient_fp ) ) {
+								$transient_data .= fread( $transient_fp, 4096 );
+							}
+							fclose( $transient_fp );
 
-						$transient_data = maybe_unserialize( $transient_data );
+							$transient_data = maybe_unserialize( $transient_data );
+						}
 					}
 				} else {
 					$transient_data = get_option( $options_key );
@@ -389,13 +393,13 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 			if ( ! empty( $transient_key ) ) {
 				$transient_key = str_replace( '-', '_', $transient_key );
-				$options_key = 'learndash_reports_' . $transient_key;
+				$options_key   = 'learndash_reports_' . $transient_key;
 
 				if ( ! empty( $transient_data ) ) {
-					if ( ( defined( 'LEARNDASH_REPORT_TRANSIENT_STORAGE' ) ) && ( 'file' === LEARNDASH_REPORT_TRANSIENT_STORAGE ) ) {
+					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
 						$wp_upload_dir = wp_upload_dir();
 
-						$ld_file_part = '/learndash/reports/learndash_reports_data_' . $transient_key . '.txt';
+						$ld_file_part = '/learndash/cache/learndash_reports_data_' . $transient_key . '.txt';
 
 						$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
 						if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {

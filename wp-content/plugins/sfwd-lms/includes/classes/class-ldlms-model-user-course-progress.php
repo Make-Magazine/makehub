@@ -456,6 +456,10 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 
 			if ( ! empty( $course_id ) ) {
 
+				$course_steps_co = learndash_course_get_steps_by_type( $course_id, 'co' );
+
+				$course_activity_remove_items = array();
+
 				$activity_items = $wpdb->get_results(
 					$wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE course_id=%d AND user_id=%d', $course_id, $this->user_id ),
 					ARRAY_A
@@ -467,19 +471,18 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 						$activity_item['user_id']            = ( isset( $activity_item['user_id'] ) ) ? absint( $activity_item['user_id'] ) : 0;
 						$activity_item['post_id']            = ( isset( $activity_item['post_id'] ) ) ? absint( $activity_item['post_id'] ) : 0;
 						$activity_item['course_id']          = ( isset( $activity_item['course_id'] ) ) ? absint( $activity_item['course_id'] ) : 0;
+						$activity_item['activity_type']      = ( isset( $activity_item['activity_type'] ) ) ? esc_attr( $activity_item['activity_type'] ) : '';
 						$activity_item['activity_status']    = ( isset( $activity_item['activity_status'] ) ) ? (bool) $activity_item['activity_status'] : 0;
 						$activity_item['activity_started']   = ( isset( $activity_item['activity_started'] ) ) ? absint( $activity_item['activity_started'] ) : 0;
 						$activity_item['activity_completed'] = ( isset( $activity_item['activity_completed'] ) ) ? absint( $activity_item['activity_completed'] ) : 0;
 						$activity_item['activity_updated']   = ( isset( $activity_item['activity_updated'] ) ) ? absint( $activity_item['activity_updated'] ) : 0;
 
-						if ( ! empty( $activity_item['post_id'] ) ) {
-							if ( in_array( $activity_item['activity_type'], array( 'course', 'lesson', 'topic', 'quiz' ), true ) ) {
-								$activity_item_post_type = get_post_type( $activity_item['post_id'] );
-								if ( in_array( $activity_item_post_type, learndash_get_post_types( 'course' ), true ) ) {
+						if ( ( ! empty( $activity_item['post_id'] ) ) && ( ! empty( $activity_item['activity_type'] ) ) ) {
+							$activity_item_post_type = learndash_get_post_type_slug( $activity_item['activity_type'] );
+							if ( in_array( $activity_item_post_type, learndash_get_post_types( 'course' ), true ) ) {
+								if ( ( 'course' === $activity_item['activity_type'] ) || ( in_array( $activity_item_post_type . ':' . $activity_item['post_id'], $course_steps_co, true ) ) ) {
 									$progress_activity[ $activity_item_post_type . ':' . $activity_item['post_id'] ] = $activity_item;
 								}
-							} else {
-								$progress_activity[ $activity_item['activity_type'] . ':' . $activity_item['post_id'] ] = $activity_item;
 							}
 						}
 					}

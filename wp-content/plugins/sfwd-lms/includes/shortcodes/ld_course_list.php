@@ -824,7 +824,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 	if ( isset( $atts['price_type'] ) && ! empty( $atts['price_type'] ) ) {
 		$price_type = explode( ',', $atts['price_type'] );
 		foreach ( $price_type as $list ) {
-			$cptslug = ( learndash_get_post_type_slug( 'course' ) === $atts['post_type'] ) ? 'course' : 'group';
+			$cptslug         = ( learndash_get_post_type_slug( 'course' ) === $atts['post_type'] ) ? 'course' : 'group';
 			$pricetype_posts = array_merge( $pricetype_posts, learndash_get_posts_by_price_type( learndash_get_post_type_slug( $cptslug ), $list ) );
 		}
 		// If no posts we abort.
@@ -898,7 +898,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 				return;
 			}
 		} elseif ( 'not-enrolled' == $mycourses ) {
-			$atts['status'] = '';
+			$atts['status']   = '';
 			$courses_enrolled = learndash_user_get_enrolled_courses( $atts['user_id'] );
 			if ( ! empty( $pricetype_posts ) && ! empty( $courses_enrolled ) ) {
 				$filter_pricetype_enrolled = array_diff( $pricetype_posts, $courses_enrolled );
@@ -919,7 +919,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 	} elseif ( ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) && ( is_null( $post__in ) ) ) {
 		if ( 'enrolled' == $mygroups ) {
 			$groups_enrolled = array();
-			$user_group_ids = learndash_get_users_group_ids( $atts['user_id'] );
+			$user_group_ids  = learndash_get_users_group_ids( $atts['user_id'] );
 			if ( empty( $user_group_ids ) ) {
 				return;
 			}
@@ -956,7 +956,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 				return;
 			}
 		} elseif ( 'not-enrolled' == $mygroups ) {
-			$atts['status'] = '';
+			$atts['status']  = '';
 			$groups_enrolled = learndash_get_users_group_ids( $atts['user_id'] );
 			if ( ! empty( $pricetype_posts ) && ! empty( $groups_enrolled ) ) {
 				$filter_pricetype_enrolled = array_diff( $pricetype_posts, $groups_enrolled );
@@ -1357,7 +1357,6 @@ function ld_course_list( $attr = array(), $content = '' ) {
 	$output = learndash_ob_get_clean( $level );
 
 	$post = $post_save;
-
 
 	if ( apply_filters( 'learndash_shortcode_course_list_legacy_loop', false, $atts ) ) {
 		setup_postdata( $post_save );

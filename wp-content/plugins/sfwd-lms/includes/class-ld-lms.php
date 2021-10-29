@@ -1440,7 +1440,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 						'course_price_billing_cycle'    => array(
 							'name'         => esc_html__( 'Billing Cycle', 'learndash' ),
 							'type'         => 'html',
-							'default'      => $this->learndash_course_price_billing_cycle_html(),
+							'default'      => '',
 							'help_text'    => esc_html__( 'Billing Cycle for the recurring payments in case of a subscription.', 'learndash' ),
 							'show_in_rest' => false, // LearnDash_REST_API::enabled(),
 						),
@@ -2575,7 +2575,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 						$course_registered_query = new WP_Query( $courses_registered_query_args );
 						if ( ( isset( $course_registered_query->posts ) ) && ( ! empty( $course_registered_query->posts ) ) ) {
 							$courses_registered = $course_registered_query->posts;
-
 							if ( isset( $course_registered_query->query_vars['paged'] ) ) {
 								$courses_registered_pager['paged'] = $course_registered_query->query_vars['paged'];
 							} else {
@@ -2613,6 +2612,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 				} else {
 					$course_progress_ids = array_merge( $courses_registered_all, array_keys( $course_progress ) );
+
+					/**
+					 * Filters expired courses from course info query
+					 *
+					 * @since 3.5.0
+					 *
+					 * @param boolean      Whether to include the expired courses or not ( default: true )
+					 * @param int $user_id User ID
+					 */
+					if ( true !== apply_filters( 'learndash_user_courseinfo_courses_include_expired', '__return_true', $user_id ) ) {
+						$course_progress_ids = array_diff( $course_progress_ids, learndash_get_expired_user_courses_from_meta( $user_id ) );
+					}
 				}
 
 				// The course_info_shortcode.php template is driven be the $courses_registered array.
@@ -2966,15 +2977,24 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					$settings_prefix = 'group';
 				}
 
-				if ( isset( $_POST[ $settings_prefix . '_price_billing_p3' ] ) ) {
-					update_post_meta( $post_id, $settings_prefix . '_price_billing_p3', esc_attr( $_POST[ $settings_prefix . '_price_billing_p3' ] ) );
-				} else {
-					delete_post_meta( $post_id, $settings_prefix . '_price_billing_p3' );
-				}
+				$price_billing_t3 = '';
+				$price_billing_p3 = '';
 
 				if ( isset( $_POST[ $settings_prefix . '_price_billing_t3' ] ) ) {
-					update_post_meta( $post_id, $settings_prefix . '_price_billing_t3', esc_attr( $_POST[ $settings_prefix . '_price_billing_t3' ] ) );
+					$price_billing_t3 = strtoupper( esc_attr( $_POST[ $settings_prefix . '_price_billing_t3' ] ) );
+					$price_billing_t3 = learndash_billing_cycle_field_frequency_validate( $price_billing_t3 );
+				}
+
+				if ( isset( $_POST[ $settings_prefix . '_price_billing_p3' ] ) ) {
+					$price_billing_p3 = absint( $_POST[ $settings_prefix . '_price_billing_p3' ] );
+					$price_billing_p3 = learndash_billing_cycle_field_interval_validate( $price_billing_p3, $price_billing_t3 );
+				}
+
+				if ( ( ! empty( $price_billing_t3 ) ) && ( ! empty( $price_billing_p3 ) ) ) {
+					update_post_meta( $post_id, $settings_prefix . '_price_billing_p3', $price_billing_p3 );
+					update_post_meta( $post_id, $settings_prefix . '_price_billing_t3', $price_billing_t3 );
 				} else {
+					delete_post_meta( $post_id, $settings_prefix . '_price_billing_p3' );
 					delete_post_meta( $post_id, $settings_prefix . '_price_billing_t3' );
 				}
 			}
@@ -2988,71 +3008,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @return string
 		 */
 		public function learndash_course_price_billing_cycle_html() {
-			global $pagenow;
-			add_action( 'save_post', array( $this, 'learndash_course_price_billing_cycle_save' ), 30, 3 );
-
-			if ( 'post.php' === $pagenow && ! empty( $_GET['post'] ) ) {
-				$post_id = $_GET['post'];
-				$post    = get_post( $post_id );
-
-				if ( ( ! is_a( $post, 'WP_Post' ) ) || ( ! in_array( $post->post_type, array( learndash_get_post_type_slug( 'course' ), learndash_get_post_type_slug( 'group' ) ), true ) ) ) {
-					return;
-				}
-
-				if ( learndash_get_post_type_slug( 'course' ) === $post->post_type ) {
-					$settings_prefix = 'course';
-				} elseif ( learndash_get_post_type_slug( 'group' ) === $post->post_type ) {
-					$settings_prefix = 'group';
-				}
-
-				$price_billing_p3 = get_post_meta( $post_id, $settings_prefix . '_price_billing_p3', true );
-				$price_billing_t3 = get_post_meta( $post_id, $settings_prefix . '_price_billing_t3', true );
-				$settings         = learndash_get_setting( $post_id );
-
-				if ( ! is_array( $settings ) ) {
-					$settings = array();
-				}
-
-				if ( ! isset( $settings[ $settings_prefix . '_price_type' ] ) ) {
-					$settings[ $settings_prefix . '_price_type' ] = 'open';
-				}
-				if ( ! empty( $settings ) && 'paynow' == $settings[ $settings_prefix . '_price_type' ] && empty( $settings[ $settings_prefix . '_price' ] ) ) {
-					if ( empty( $settings[ $settings_prefix . '_join' ] ) ) {
-						learndash_update_setting( $post_id, $settings_prefix . '_price_type', 'open' );
-					} else {
-						learndash_update_setting( $post_id, $settings_prefix . 'price_type', 'free' );
-					}
-				}
-			} elseif ( 'post-new.php' === $pagenow ) {
-				if ( ( ! isset( $_GET['post_type'] ) ) || ( empty( $_GET['post_type'] ) ) || ( ! in_array( $_GET['post_type'], array( learndash_get_post_type_slug( 'course' ), learndash_get_post_type_slug( 'group' ) ), true ) ) ) {
-					return;
-				}
-
-				$post_id          = 0;
-				$price_billing_p3 = '';
-				$price_billing_t3 = '';
-
-				if ( learndash_get_post_type_slug( 'course' ) === $_GET['post_type'] ) {
-					$settings_prefix = 'course';
-				} elseif ( learndash_get_post_type_slug( 'group' ) === $_GET['post_type'] ) {
-					$settings_prefix = 'group';
-				}
-			} else {
-				return;
-			}
-
-			$selected_D = '';
-			$selected_W = '';
-			$selected_M = '';
-			$selected_Y = '';
-			${'selected_' . $price_billing_t3} = 'selected="selected"';
-			return '<input name="' . $settings_prefix . '_price_billing_p3" type="number" value="' . $price_billing_p3 . '" class="small-text" />
-					<select class="select_course_price_billing_p3" name="' . $settings_prefix . '_price_billing_t3">
-						<option value="D" ' . $selected_D . '>' . esc_html__( 'day(s)', 'learndash' ) . '</option>
-						<option value="W" ' . $selected_W . '>' . esc_html__( 'week(s)', 'learndash' ) . '</option>
-						<option value="M" ' . $selected_M . '>' . esc_html__( 'month(s)', 'learndash' ) . '</option>
-						<option value="Y" ' . $selected_Y . '>' . esc_html__( 'year(s)', 'learndash' ) . '</option>
-					</select>';
+			return learndash_billing_cycle_setting_field_html();
 		}
 
 		public static function course_progress_data( $course_id = null ) {

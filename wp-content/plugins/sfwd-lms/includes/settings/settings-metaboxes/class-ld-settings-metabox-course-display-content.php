@@ -246,8 +246,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'schema' => array(
 								'field_key'   => 'materials',
 								'description' => esc_html__( 'Materials', 'learndash' ),
-								'type'        => 'string',
-								'default'     => '',
+								'type'        => 'object',
 								'properties'  => array(
 									'raw'      => array(
 										'description' => 'Content for the object, as it exists in the database.',

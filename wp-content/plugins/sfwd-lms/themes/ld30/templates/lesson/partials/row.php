@@ -86,7 +86,7 @@ if ( isset( $sections[ $lesson['post']->ID ] ) ) :
 
 endif; ?>
 
-<div class="<?php learndash_lesson_row_class( $lesson, $has_access ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
+<div class="<?php learndash_lesson_row_class( $lesson, $has_access, $topics, $quizzes ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
 	<div class="ld-item-list-item-preview">
 		<?php
 		/**

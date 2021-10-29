@@ -245,7 +245,7 @@
 	background: transparent;
 	border: 0 ;
 	border-bottom: 1px solid ;
-	height: 1em ;
+	height: auto;
 	margin: 0 ;
 	padding: 0 4px 0 4px ;
 	color: black ;
@@ -291,6 +291,23 @@
 	margin: 20px ;
 	font-weight: bold ;
 }
+
+/* Sort question correct table listing */
+.wpProQuiz_content li.wpProQuiz_listItem .wpProQuiz_questionList_containers {
+	display: none;
+}
+.wpProQuiz_content li.wpProQuiz_listItem div.wpProQuiz_questionList_containers input[type="button"] {
+	padding: 0.15em;
+	border-radius: 5px;
+	display: inline-flex;
+	vertical-align: baseline;
+	opacity: 0.5;
+}
+.wpProQuiz_content li.wpProQuiz_listItem div.wpProQuiz_questionList_containers input.wpProQuiz_questionList_containers_view_active {
+	outline: none;
+	opacity: 1;
+}
+
 .wpProQuiz_toplistTable {
 	width: 100% ;
 	border: 1px solid #C3D1A3 ;

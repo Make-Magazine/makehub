@@ -122,6 +122,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['questions_v2'] = learndash_get_post_type_slug( 'question' );
 			}
 
+			if ( ( ! isset( $this->setting_option_values['quizzes-form-entries_v2'] ) ) || ( empty( $this->setting_option_values['quizzes-form-entries_v2'] ) ) ) {
+				$this->setting_option_values['quizzes-form-entries_v2'] = 'form-entries';
+			}
+
 			if ( ( ! isset( $this->setting_option_values['quizzes-statistics_v2'] ) ) || ( empty( $this->setting_option_values['quizzes-statistics_v2'] ) ) ) {
 				$this->setting_option_values['quizzes-statistics_v2'] = 'statistics';
 			}
@@ -378,6 +382,20 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'class'               => '-medium',
 					'placeholder'         => learndash_get_post_type_slug( 'quiz' ),
 					'child_section_state' => 'open',
+				),
+				'quizzes-form-entries_v2'         => array(
+					'name'           => 'quizzes-form-entries_v2',
+					'type'           => 'text',
+					'label'          => sprintf(
+						// translators: placeholder: Quiz.
+						esc_html_x( '%s Form Entries', 'placeholder: Quiz', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'quiz' )
+					),
+					'value'          => $this->setting_option_values['quizzes-form-entries_v2'],
+					'value_prefix'   => $value_prefix_quizzes,
+					'class'          => '-medium',
+					'placeholder'    => 'statistics',
+					'parent_setting' => 'quizzes_v2',
 				),
 				'quizzes-statistics_v2'           => array(
 					'name'           => 'quizzes-statistics_v2',

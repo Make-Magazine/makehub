@@ -72,7 +72,25 @@ class WpProQuiz_Helper_Until {
 
 		$year = ' <select name="' . $namePrefix . '_year"><option value="">' . esc_html__( 'year', 'learndash' ) . '</option>';
 
-		for ( $i = date( 'Y' ) + 20; $i >= 1900; $i-- ) {
+		/**
+		 * Filters Quiz Custom Field Year minimum value.
+		 *
+		 * @since 3.5.1
+		 *
+		 * @param int $date_year_min Default is 1900.
+		 */
+		$date_year_min = (int) apply_filters( 'learndash_quiz_custom_field_year_min', 1900 );
+
+		/**
+		 * Filters Quiz Custom Field Year maximum value.
+		 *
+		 * @since 3.5.1
+		 *
+		 * @param int $date_year_max Default is current year plus 20.
+		 */
+		$date_year_max = (int) apply_filters( 'learndash_quiz_custom_field_year_max', date( 'Y' ) + 20 );
+
+		for ( $i = $date_year_max; $i >= $date_year_min; $i-- ) {
 			$year .= '<option value="' . $i . '">' . $i . '</option>';
 		}
 

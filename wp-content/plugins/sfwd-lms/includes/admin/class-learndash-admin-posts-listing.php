@@ -1433,13 +1433,15 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @param array $selector Array of attributes used to display the filter selector.
 		 */
 		protected function show_post_type_selector( $selector = array() ) {
-			$selector = $this->build_selector_post_type_options( $selector );
+			if ( learndash_get_total_post_count( $selector['post_type'] ) !== 0 ) {
+				$selector = $this->build_selector_post_type_options( $selector );
 
-			$this->show_selector_start( $selector );
-			$this->show_selector_all_option( $selector );
-			$this->show_selector_empty_option( $selector );
-			$this->show_selector_options( $selector );
-			$this->show_selector_end( $selector );
+				$this->show_selector_start( $selector );
+				$this->show_selector_all_option( $selector );
+				$this->show_selector_empty_option( $selector );
+				$this->show_selector_options( $selector );
+				$this->show_selector_end( $selector );
+			}
 		}
 
 		/**

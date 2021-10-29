@@ -214,7 +214,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 			if ( ( isset( $schema['properties']['status']['enum'] ) ) && ( ! empty( $schema['properties']['status']['enum'] ) ) ) {
 				$schema['properties']['status']['enum'] = array_intersect( array( 'graded', 'not_graded' ), $schema['properties']['status']['enum'] );
 			}
-			
+
 			return $schema;
 		}
 
@@ -332,7 +332,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 			if ( ! $this->is_rest_request( $request ) ) {
 				return $query_args;
 			}
-			
+
 			$query_args = parent::rest_query_filter( $query_args, $request );
 
 			$meta_query = array();
@@ -773,7 +773,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 
 								$max_points = $question->getPoints();
 								$max_points = absint( $max_points );
-								
+
 								if ( isset( $submitted_essay_data['points_awarded'] ) ) {
 									$original_points_awarded = intval( $submitted_essay_data['points_awarded'] );
 								} else {

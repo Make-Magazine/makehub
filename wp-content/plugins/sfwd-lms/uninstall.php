@@ -22,7 +22,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  */
 $wpmu_plugin_dir = ( defined( 'WPMU_PLUGIN_DIR' ) && defined( 'WPMU_PLUGIN_URL' ) ) ? WPMU_PLUGIN_DIR : trailingslashit( WP_CONTENT_DIR ) . 'mu-plugins';
 if ( is_writable( $wpmu_plugin_dir ) ) {
-	$dest_file   = trailingslashit( $wpmu_plugin_dir ) . 'learndash-multisite.php';
+	$dest_file = trailingslashit( $wpmu_plugin_dir ) . 'learndash-multisite.php';
 	unlink( $dest_file );
 }
 

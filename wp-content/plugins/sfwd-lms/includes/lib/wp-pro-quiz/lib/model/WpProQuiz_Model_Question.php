@@ -2,11 +2,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 // phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 	protected $_id              = 0;
 	protected $_questionPostId  = 0;
 	protected $_quizId          = 0;
+	protected $_previousId      = 0;
+	protected $_online          = true;
 	protected $_sort            = 0;
 	protected $_title           = '';
 	protected $_question        = '';
@@ -36,6 +39,13 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 	//0.27
 	protected $_matrixSortAnswerCriteriaWidth = 20;
 
+	/**
+	 * Instance of specific question qnswer type model.
+	 *
+	 * @since 3.5.0
+	 */
+	private $specific_question_model = null;
+
 	public function setId( $_id ) {
 		$this->_id = (int) $_id;
 
@@ -44,6 +54,26 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 
 	public function getId() {
 		return $this->_id;
+	}
+
+	public function setPreviousId( $_previous_id ) {
+		$this->_previousId = (int) $_previous_id;
+
+		return $this;
+	}
+
+	public function getPreviousId() {
+		return $this->_previousId;
+	}
+
+	public function setOnline( $_online ) {
+		$this->_online = (bool) $_online;
+
+		return $this;
+	}
+
+	public function getOnline() {
+		return $this->_online;
 	}
 
 	public function setQuestionPostId( $question_post_id = 0 ) {
@@ -165,6 +195,26 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 	}
 
 	public function getPoints() {
+		/**
+		 * LEARNDASH-5717
+		 * Added to correct the issue when the disable correct/incorrect. The
+		 * points is calculated to be the max points from all answers not the
+		 * one marked as correct.
+		 */
+		if ( ( 'single' === $this->getAnswerType() ) && ( true === $this->isDisableCorrect() ) ) {
+			$_answerData = $this->getAnswerData();
+			if ( ( ! empty( $_answerData ) ) && ( is_array( $_answerData ) ) ) {
+				$question_answer_points = array();
+				foreach ( $_answerData as $a_idx => $answer ) {
+					if ( is_a( $answer, 'WpProQuiz_Model_AnswerTypes' ) ) {
+						$question_answer_points[ $a_idx ] = $answer->getPoints();
+					}
+				}
+				if ( count( $question_answer_points ) ) {
+					return max( $question_answer_points );
+				}
+			}
+		}
 		return $this->_points;
 	}
 
@@ -243,26 +293,6 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 			}
 		}
 
-		/*
-		if ( $this->_answerData === null ) {
-			return null;
-		}
-
-		if ( is_array( $this->_answerData ) || $this->_answerData instanceof WpProQuiz_Model_AnswerTypes ) {
-			if ( $serialize ) {
-				return @serialize( $this->_answerData );
-			}
-		} else {
-			if ( ! $serialize ) {
-				if ( WpProQuiz_Helper_Until::saveUnserialize( $this->_answerData, $into ) === false ) {
-					return null;
-				}
-
-				$this->_answerData = $into;
-			}
-		}
-		*/
-
 		if ( $serialize ) {
 			return @serialize( $this->_answerData );
 		} else {
@@ -320,11 +350,53 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 		return $this->_matrixSortAnswerCriteriaWidth;
 	}
 
+	/**
+	 * Initialize the specific question answer type model.
+	 *
+	 * @since 3.5.0
+	 */
+	final public function get_specific_question_model() {
+
+		if ( is_null( $this->specific_question_model ) ) {
+			$model_class = $this->get_specific_question_model_class( $this->getAnswerType() );
+			if ( ! empty( $model_class ) ) {
+				$this->specific_question_model = new $model_class( $this->get_object_as_array() );
+			}
+		}
+
+		if ( ! is_null( $this->specific_question_model ) ) {
+			return $this->specific_question_model;
+		}
+		return $this;
+	}
+
+	final public function get_specific_question_model_class( $answer_type = '' ) {
+		$model_class = '';
+
+		switch ( $answer_type ) {
+			case 'cloze_answer':
+				$model_class = 'WpProQuiz_Model_Question_Cloze';
+				break;
+
+			case 'free_answer':
+				$model_class = 'WpProQuiz_Model_Question_Free';
+				break;
+
+			default:
+				break;
+		}
+
+		return $model_class;
+	}
+
 	public function get_object_as_array() {
 
 		$object_vars = array(
 			'_id'                             => $this->getId(),
+			'_questionPostId'                 => $this->getQuestionPostId(),
 			'_quizId'                         => $this->getQuizId(),
+			'_previousId'                     => $this->getPreviousId(),
+			'_online'                         => $this->getOnline(),
 			'_sort'                           => $this->getSort(),
 			'_title'                          => $this->getTitle(),
 			'_question'                       => $this->getQuestion(),
@@ -338,7 +410,7 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 			'_answerPointsActivated'          => $this->isAnswerPointsActivated(),
 			'_answerType'                     => $this->getAnswerType(),
 			'_answerData'                     => $this->getAnswerData(),
-			'_answerPointsDiffModusActivated' => $this->isAnswerPointsDiffModusActivatedfalse(),
+			'_answerPointsDiffModusActivated' => $this->isAnswerPointsDiffModusActivated(),
 			'_disableCorrect'                 => $this->isDisableCorrect(),
 			'_matrixSortAnswerCriteriaWidth'  => $this->getMatrixSortAnswerCriteriaWidth(),
 		);
@@ -346,12 +418,16 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 		return $object_vars;
 	}
 
-	public function set_array_to_object( $array_vars = array() ) {
+	public function set_array_to_object( $array_vars = array(), $init_fields = true ) {
 
 		foreach ( $array_vars as $key => $value ) {
 			switch ( $key ) {
 				case '_id':
 					$this->setId( $value );
+					break;
+
+				case '_questionPostId':
+					$this->setQuestionPostId( $value );
 					break;
 
 				case '_quizId':
@@ -360,6 +436,14 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 
 				case '_sort':
 					$this->setSort( $value );
+					break;
+
+				case '_online':
+					$this->setOnline( $value );
+					break;
+
+				case '_previousId':
+					$this->setPreviousId( $value );
 					break;
 
 				case '_title':

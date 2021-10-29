@@ -10,31 +10,42 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 	 */
 	public $quiz;
 
-	private $_clozeTemp      = array();
-	private $_assessmetTemp  = array();
+	/**
+	 * @deprecated 3.5.0
+	 */
+	private $_clozeTemp = array();
+
+	/**
+	 * @deprecated 3.5.0
+	 */
+	private $_assessmetTemp = array();
+
 	private $_shortcode_atts = array();
 
 	public function set_shortcode_atts( $atts = array() ) {
 		$this->_shortcode_atts = $atts;
 	}
 
-	private function getFreeCorrect( $data ) {
+	private function getFreeCorrect( $data, $question = null ) {
 
-		$t = str_replace( "\r\n", "\n", strtolower( $data->getAnswer() ) );
+		$t = str_replace( "\r\n", "\n", $data->getAnswer() );
 		$t = str_replace( "\r", "\n", $t );
 		$t = explode( "\n", $t );
 
-		//return array_values( array_filter( array_map( 'trim', $t ) ) );
-		// In the consice line above we can't use the array_filter() function as
-		// this will remove answer line values that are considered empty.
-		// So for example if the answr value line is 0 (zero) then array_filter
-		// will consider it as equal to false.
-		// So instead we loop over the array (the hard way) and check for values equal to '' and removed.
-		$t = array_map( 'trim', $t );
 		foreach ( $t as $idx => $item ) {
 			$item = trim( $item );
 			if ( '' == $item ) {
 				unset( $t[ $idx ] );
+			} else {
+				/** This filter is documented in includes/quiz/ld-quiz-pro.php */
+				if ( apply_filters( 'learndash_quiz_question_free_answers_to_lowercase', true, $question ) ) {
+					if ( function_exists( 'mb_strtolower' ) ) {
+						$item = mb_strtolower( $item );
+					} else {
+						$item = strtolower( $item );
+					}
+				}
+				$t[ $idx ] = $item;
 			}
 		}
 
@@ -181,7 +192,10 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		if ( ( isset( $this->_shortcode_atts['course_id'] ) ) && ( ! empty( $this->_shortcode_atts['course_id'] ) ) ) {
 			$course_id = absint( $this->_shortcode_atts['course_id'] );
 		} else {
-			$course_id = learndash_get_course_id();
+			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) !== 'yes' ) {
+				$course_id = learndash_get_setting( $quiz_post_id, 'course' );
+				$course_id = absint( $course_id );
+			}
 		}
 		if ( ( empty( $course_id ) ) || ( is_null( $course_id ) ) ) {
 			$course_id = 0;
@@ -191,7 +205,9 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		if ( ( isset( $this->_shortcode_atts['lesson_id'] ) ) && ( ! empty( $this->_shortcode_atts['lesson_id'] ) ) ) {
 			$lesson_id = absint( $this->_shortcode_atts['lesson_id'] );
 		} else {
-			$lesson_id = learndash_course_get_single_parent_step( $course_id, $quiz_post_id, 'sfwd-lessons' );
+			if ( ! empty( $course_id ) ) {
+				$lesson_id = learndash_course_get_single_parent_step( $course_id, $quiz_post_id, 'sfwd-lessons' );
+			}
 		}
 		if ( ( empty( $lesson_id ) ) || ( is_null( $lesson_id ) ) ) {
 			$lesson_id = 0;
@@ -201,7 +217,9 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		if ( ( isset( $this->_shortcode_atts['topic_id'] ) ) && ( ! empty( $this->_shortcode_atts['topic_id'] ) ) ) {
 			$topic_id = absint( $this->_shortcode_atts['topic_id'] );
 		} else {
-			$topic_id = learndash_course_get_single_parent_step( $course_id, $quiz_post_id, 'sfwd-topic' );
+			if ( ! empty( $course_id ) ) {
+				$topic_id = learndash_course_get_single_parent_step( $course_id, $quiz_post_id, 'sfwd-topic' );
+			}
 		}
 		if ( ( empty( $topic_id ) ) || ( is_null( $topic_id ) ) ) {
 			$topic_id = 0;
@@ -212,6 +230,35 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 			$quiz_nonce = wp_create_nonce( 'sfwd-quiz-nonce-' . $quiz_post_id . '-' . $quiz_pro_id . '-' . $user_id );
 		} else {
 			$quiz_nonce = wp_create_nonce( 'sfwd-quiz-nonce-' . $quiz_post_id . '-' . $quiz_pro_id . '-0' );
+		}
+
+		$timelimitcookie = intval( $this->quiz->getTimeLimitCookie() );
+
+		$quiz_resume_id                = 0;
+		$quiz_resume_data              = array();
+		$quiz_resume_enabled           = false;
+		$quiz_resume_cookie_send_timer = 0;
+		$quiz_resume_cookie_expiration = 604800; // 7 days.
+		$quiz_resume_quiz_started      = 0;
+
+		if ( is_user_logged_in() ) {
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			if ( true === $quiz_resume_enabled ) {
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
+					$quiz_resume_id = $quiz_resume_activity->activity_id;
+					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
+						$quiz_resume_data = $quiz_resume_activity->activity_meta;
+					}
+					if ( ( property_exists( $quiz_resume_activity, 'activity_started' ) ) && ( ! empty( $quiz_resume_activity->activity_started ) ) ) {
+						$quiz_resume_quiz_started = $quiz_resume_activity->activity_started;
+					}
+				}
+
+				// Disable the legacy cookie save logic if quiz resume is enabled.
+				$timelimitcookie = 0;
+			}
 		}
 
 		echo " <script type='text/javascript'>
@@ -225,7 +272,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				mode: ' . (int) $this->quiz->getQuizModus() . ',
 				globalPoints: ' . (int) $quizData['globalPoints'] . ',
 				timelimit: ' . (int) $this->quiz->getTimeLimit() . ',
-				timelimitcookie: ' . intval( $this->quiz->getTimeLimitCookie() ) . ',
+				timelimitcookie: ' . (int) $timelimitcookie . ',
 				resultsGrade: ' . esc_attr( $resultsProzent ) . ',
 				bo: ' . (int) $bo . ',
 				passingpercentage: ' . (int) $quiz_meta_sfwd_quiz_passingpercentage . ',
@@ -274,7 +321,57 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				) . ',
 				json: ' . wp_json_encode( $quizData['json'] ) . ',
 				ld_script_debug: ' . (int) $ld_script_debug . ",
-				quiz_nonce: '" . esc_attr( $quiz_nonce ) . "'
+				quiz_nonce: '" . esc_attr( $quiz_nonce ) . "',
+				quiz_resume_enabled:  '" .
+				/**
+				 * Filters quiz resume enabled
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param int $quiz_resume_enabled Whether the quiz resume is enabled.
+				 * @param int $quiz_post_id        Quiz ID
+				 * @param int $user_id             User ID
+				 *
+				 */
+				(int) apply_filters( 'learndash_quiz_resume_enabled', $quiz_resume_enabled, $quiz_post_id, $user_id ) . "',
+				quiz_resume_id: '" . (int) $quiz_resume_id . "',
+				quiz_resume_quiz_started: '" . (int) $quiz_resume_quiz_started . "',
+				quiz_resume_data: '" .
+				/**
+				 * Filters quiz resume data sent to the front-end
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param int $quiz_resume_data Saved data sent to the front-end.
+				 * @param int $quiz_post_id     Quiz ID
+				 * @param int $user_id          User ID
+				 *
+				 */
+				wp_json_encode( apply_filters( 'learndash_quiz_resume_data', $quiz_resume_data, $quiz_post_id, $user_id ) ) . "',
+				quiz_resume_cookie_expiration: '" .
+				/**
+				 * Filters the quiz resume cookie expiration.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param int $quiz_resume_cookie_expiration Cookie expiration time in seconds.
+				 * @param int $quiz_post_id     Quiz ID
+				 * @param int $user_id          User ID
+				 *
+				 */
+				(int) apply_filters( 'learndash_quiz_resume_cookie_expiration', $quiz_resume_cookie_expiration, $quiz_post_id, $user_id ) . "',
+				quiz_resume_cookie_send_timer: '" .
+				/**
+				 * Filters interval quiz resume saves data to the server.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param int $quiz_resume_cookie_send_timer Interval data is sent to the server in miliseconds.
+				 * @param int $quiz_post_id     Quiz ID
+				 * @param int $user_id          User ID
+				 *
+				 */
+				(int) apply_filters( 'learndash_quiz_resume_cookie_send_timer', $quiz_resume_cookie_send_timer, $quiz_post_id, $user_id ) . "',
 			});
 		}
 		var loaded_wpProQuizFront" . (int) $this->quiz->getId() . ' = 0;
@@ -353,6 +450,35 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 			$quiz_nonce = wp_create_nonce( 'sfwd-quiz-nonce-' . $quiz_post_id . '-' . $this->quiz->getId() . '-0' );
 		}
 
+		$timelimitcookie = intval( $this->quiz->getTimeLimitCookie() );
+
+		$quiz_resume_id                = 0;
+		$quiz_resume_data              = array();
+		$quiz_resume_enabled           = false;
+		$quiz_resume_cookie_send_timer = 0;
+		$quiz_resume_cookie_expiration = 604800; // 7 days.
+		$quiz_resume_quiz_started      = 0;
+
+		if ( is_user_logged_in() ) {
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			if ( true === $quiz_resume_enabled ) {
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
+					$quiz_resume_id = $quiz_resume_activity->activity_id;
+					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
+						$quiz_resume_data = $quiz_resume_activity->activity_meta;
+					}
+					if ( ( property_exists( $quiz_resume_activity, 'activity_started' ) ) && ( ! empty( $quiz_resume_activity->activity_started ) ) ) {
+						$quiz_resume_quiz_started = $quiz_resume_activity->activity_started;
+					}
+				}
+
+				// Disable the legacy cookie save logic if quiz resume is enabled.
+				$timelimitcookie = 0;
+			}
+		}
+
 		echo "<script type='text/javascript'>
 		jQuery( function($) {
 			$('#wpProQuiz_" . (int) $this->quiz->getId() . "').wpProQuizFront({
@@ -363,7 +489,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				quizId: ' . (int) $this->quiz->getId() . ',
 				mode: ' . (int) $this->quiz->getQuizModus() . ',
 				timelimit: ' . (int) $this->quiz->getTimeLimit() . ',
-				timelimitcookie: ' . intval( $this->quiz->getTimeLimitCookie() ) . ',
+				timelimitcookie: ' . (int) $timelimitcookie . ',
 				resultsGrade: ' . esc_attr( $resultsProzent ) . ',
 				bo: ' . (int) $bo . ',
 				passingpercentage: ' . (int) $quiz_meta_sfwd_quiz_passingpercentage . ',
@@ -372,6 +498,20 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				formPos: ' . (int) $this->quiz->getFormShowPosition() . ',
 				ld_script_debug: ' . (int) $ld_script_debug . ",
 				quiz_nonce: '" . esc_attr( $quiz_nonce ) . "',
+				quiz_resume_enabled:  '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				(int) apply_filters( 'learndash_quiz_resume_enabled', $quiz_resume_enabled, $quiz_post_id, $user_id ) . "',
+				quiz_resume_id: '" . (int) $quiz_resume_id . "',
+				quiz_resume_quiz_started: '" . (int) $quiz_resume_quiz_started . "',
+				quiz_resume_data: '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				wp_json_encode( apply_filters( 'learndash_quiz_resume_data', $quiz_resume_data, $quiz_post_id, $user_id ) ) . "',
+				quiz_resume_cookie_expiration: '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				(int) apply_filters( 'learndash_quiz_resume_cookie_expiration', $quiz_resume_cookie_expiration, $quiz_post_id, $user_id ) . "',
+				quiz_resume_cookie_send_timer: '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				(int) apply_filters( 'learndash_quiz_resume_cookie_send_timer', $quiz_resume_cookie_send_timer, $quiz_post_id, $user_id ) . "',
 				essayUploading: '" . esc_html(
 					SFWD_LMS::get_template(
 						'learndash_quiz_messages',
@@ -518,99 +658,68 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				'shortcode_atts' => $this->_shortcode_atts,
 			)
 		);
-
 	}
 
+	/**
+	 * Fetch Fill in blank (cloze) question data.
+	 *
+	 * @deprecated 3.5.0 Use {@see 'learndash_question_cloze_fetch_data'} instead.
+	 *
+	 * @param string $answer_text Question answer text
+	 */
 	private function fetchCloze( $answer_text ) {
-		preg_match_all( '#\{(.*?)(?:\|(\d+))?(?:[\s]+)?\}#im', $answer_text, $matches, PREG_SET_ORDER );
-
-		$data = array();
-
-		foreach ( $matches as $k => $v ) {
-			$text    = $v[1];
-			$points  = ! empty( $v[2] ) ? (int) $v[2] : 1;
-			$rowText = $multiTextData = array();
-			$len     = array();
-
-			if ( preg_match_all( '#\[(.*?)\]#im', $text, $multiTextMatches ) ) {
-				foreach ( $multiTextMatches[1] as $multiText ) {
-					if ( function_exists( 'mb_strtolower' ) ) {
-						$x = mb_strtolower( trim( html_entity_decode( $multiText, ENT_QUOTES ) ) );
-					} else {
-						$x = strtolower( trim( html_entity_decode( $multiText, ENT_QUOTES ) ) );
-					}
-
-					$len[]           = strlen( $x );
-					$multiTextData[] = $x;
-					$rowText[]       = $multiText;
-				}
-			} else {
-				if ( function_exists( 'mb_strtolower' ) ) {
-					$x = mb_strtolower( trim( html_entity_decode( $text, ENT_QUOTES ) ) );
-				} else {
-					$x = strtolower( trim( html_entity_decode( $text, ENT_QUOTES ) ) );
-				}
-
-				$len[]           = strlen( $x );
-				$multiTextData[] = $x;
-				$rowText[]       = $text;
-			}
-
-			$a  = '<span class="wpProQuiz_cloze"><input data-wordlen="' . max( $len ) . '" type="text" value=""> ';
-			$a .= '<span class="wpProQuiz_clozeCorrect" style="display: none;"></span></span>';
-
-			$data['correct'][] = $multiTextData;
-			$data['points'][]  = $points;
-			$data['data'][]    = $a;
+		if ( function_exists( '_deprecated_function' ) ) {
+			_deprecated_function( __FUNCTION__, '3.5.0', 'learndash_question_cloze_fetch_data' );
 		}
 
-		$data['replace'] = preg_replace( '#\{(.*?)(?:\|(\d+))?(?:[\s]+)?\}#im', '@@wpProQuizCloze@@', $answer_text );
-
-		return $data;
+		return learndash_question_cloze_fetch_data( $answer_text, $convert_to_lower );
 	}
 
+	/**
+	 * Callback for Fill in blank (cloze) question data.
+	 *
+	 * @deprecated 3.5.0
+	 *
+	 * @param string $t placeholder string.
+	 */
 	private function clozeCallback( $t ) {
+		if ( function_exists( '_deprecated_function' ) ) {
+			_deprecated_function( __FUNCTION__, '3.5.0' );
+		}
+
 		$a = array_shift( $this->_clozeTemp );
 
 		return null === $a ? '' : $a;
 	}
 
+	/**
+	 * Fetch Assessment question data.
+	 *
+	 * @deprecated 3.5.0 Use {@see 'learndash_question_assessment_fetch_data'} instead.
+	 *
+	 * @param string $answerText Question answer text
+	 * @param int    $quizId     Quiz ID
+	 * @param int    $questionId Question ID
+	 */
 	private function fetchAssessment( $answerText, $quizId, $questionId ) {
-
-		/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-		$answerText = apply_filters( 'learndash_quiz_question_answer_preprocess', $answerText, 'assessment' );
-
-		preg_match_all( '#\{(.*?)\}#im', $answerText, $matches );
-
-		$this->_assessmetTemp = array();
-		$data                 = array();
-
-		for ( $i = 0, $ci = count( $matches[1] ); $i < $ci; $i ++ ) {
-			$match = $matches[1][ $i ];
-
-			preg_match_all( '#\[([^\|\]]+)(?:\|(\d+))?\]#im', $match, $ms );
-
-			$a = '';
-
-			for ( $j = 0, $cj = count( $ms[1] ); $j < $cj; $j ++ ) {
-				$v = $ms[1][ $j ];
-
-				$a .= '<label>
-					<input type="radio" value="' . ( $j + 1 ) . '" name="question_' . $quizId . '_' . $questionId . '_' . $i . '" class="wpProQuiz_questionInput" data-index="' . $i . '">
-					' . $v . '
-				</label>';
-
-			}
-
-			$this->_assessmetTemp[] = $a;
+		if ( function_exists( '_deprecated_function' ) ) {
+			_deprecated_function( __FUNCTION__, '3.5.0', 'learndash_question_assessment_fetch_data' );
 		}
-
-		$data['replace'] = preg_replace( '#\{(.*?)\}#im', '@@wpProQuizAssessment@@', $answerText );
-
-		return $data;
+		return learndash_question_assessment_fetch_data( $answerText, $quizId, $questionId );
 	}
 
+	/**
+	 * Callback for Assessment question data.
+	 *
+	 * @deprecated 3.5.0
+	 *
+	 * @param string $t placeholder string.
+	 */
 	private function assessmentCallback( $t ) {
+		if ( function_exists( '_deprecated_function' ) ) {
+			_deprecated_function( __FUNCTION__, '3.5.0' );
+		}
+
 		$a = array_shift( $this->_assessmetTemp );
 
 		return null === $a ? '' : $a;

@@ -23,7 +23,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 			add_filter( 'get_edit_post_link', array( $this, 'get_edit_post_link' ), 10, 3 );
 			add_filter( 'get_sample_permalink', array( $this, 'get_sample_permalink' ), 99, 5 );
 
-			add_filter( 'attachment_link', array( $this, 'attachment_link' ), 10, 2 ); 
+			add_filter( 'attachment_link', array( $this, 'attachment_link' ), 10, 2 );
 			add_action( 'comment_form_top', array( $this, 'comment_form_top' ) );
 			add_action( 'comment_post', array( $this, 'comment_post' ), 30, 3 );
 		}

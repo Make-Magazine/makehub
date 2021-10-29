@@ -10,7 +10,7 @@ class WpProQuiz_View_AdminToplist extends WpProQuiz_View_View {
 <div class="wrap wpProQuiz_toplist">
 		<?php /* ?><h2><?php esc_html_e('Leaderboard', 'learndash'); echo ': ', $this->quiz->getName(); ?></h2><?php */ ?>
 
-		<?php 
+		<?php
 		if( ! $this->quiz->isToplistActivated() ) { ?>
 			<p style="padding: 30px; background: #F7E4E4; border: 1px dotted;">
 				<span style="font-weight: bold;"><?php esc_html_e('Leaderboard not enabled.', 'learndash' ); ?></span> <?php
@@ -23,17 +23,17 @@ class WpProQuiz_View_AdminToplist extends WpProQuiz_View_View {
 							),
 							admin_url( 'post.php' )
 						); ?><a href="<?php echo $quiz_edit_url; ?>#learndash-quiz-admin-data-handling-settings_toplistActivated"><?php
-						// translators: placeholder: Quiz.
 						echo sprintf(
-							esc_html_x( 'Edit %s Settings', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' ) 
+							// translators: placeholder: Quiz.
+							esc_html_x( 'Edit %s Settings', 'placeholder: Quiz.', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' )
 						);
 						?></a><?php
 					}
 				?>
 			</p>
-		<?php 
-		return; 
-		} 
+		<?php
+		return;
+		}
 		?>
 
 	<div id="poststuff">

@@ -135,11 +135,11 @@ foreach ( $course_progress as $course_id => $coursep ) {
 		$lessons          = learndash_get_course_lessons_list( $course_id, $user_id, $lesson_query_args );
 		$course_quiz_list = learndash_get_course_quiz_list( $course_id, $user_id );
 
-		if ( ( !empty( $lessons ) ) || ( ! empty( $course_quiz_list ) ) ) {
-			$user_course_progress                 = array();
-			$user_course_progress['user_id']      = $user_id;
-			$user_course_progress['course_id']    = $course_id;
-			$user_course_progress['course_data']  = $coursep;
+		if ( ( ! empty( $lessons ) ) || ( ! empty( $course_quiz_list ) ) ) {
+			$user_course_progress                = array();
+			$user_course_progress['user_id']     = $user_id;
+			$user_course_progress['course_id']   = $course_id;
+			$user_course_progress['course_data'] = $coursep;
 
 			if ( 'completed' === $course_status_slug ) {
 				$course_checked                  = ' checked="checked" ';

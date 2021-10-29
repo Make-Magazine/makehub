@@ -13,7 +13,7 @@ class WpProQuiz_Plugin_BpAchievementsV2 {
 
 	public function setCategoryName( $category_name, $category ) {
 		$other = 'Other';
-
+		// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText, WordPress.WP.I18n.TextDomainMismatch
 		if ( __( $other, 'dpa' ) == $category_name && 'Wp-Pro-Quiz' == $category ) {
 			return 'Wp-Pro-Quiz';
 		} else {

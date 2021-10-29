@@ -8,6 +8,9 @@
 .block-editor-page #sfwd-header .ld-global-header {
   position: relative;
 }
+.block-editor-page #sfwd-header .components-popover.is-from-bottom {
+  margin-top: 32px;
+}
 
 .block-editor-page.is-fullscreen-mode #sfwd-header {
   top: unset;
@@ -25,7 +28,7 @@
 }
 @media (min-width: 782px) {
   .block-editor-page.ld-header-has-tabs .edit-post-layout.is-mode-visual.is-sidebar-opened.interface-interface-skeleton {
-    top: 0;
+    top: 30px;
   }
 }
 
@@ -151,7 +154,12 @@ body:not(.block-editor-page) .learndash-settings-page-wrap #sfwd-header {
 
 /* Default WP editor styles overrides for Gutenberg, shift down elements */
 .ld-header-has-tabs .edit-post-layout {
-  padding-top: 161px;
+  padding-top: 120px;
+}
+@media (min-width: 782px) {
+  .ld-header-has-tabs .edit-post-layout {
+    padding-top: 133px;
+  }
 }
 .ld-header-has-tabs .edit-post-layout .editor-post-publish-panel {
   top: 178px;
@@ -231,14 +239,14 @@ body:not(.block-editor-page) .learndash-settings-page-wrap #sfwd-header {
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 783px) {
   .edit-post-layout {
-    padding-top: 143px;
+    padding-top: 133px;
   }
 }
-@media (min-width: 600px) {
+@media (min-width: 783px) {
   .edit-post-layout.has-fixed-toolbar {
-    padding-top: 143px;
+    padding-top: 133px;
   }
 }
 .edit-post-layout .editor-post-publish-panel {
@@ -557,6 +565,14 @@ body:not(.block-editor-page) .components-popover__content button,
   border: 0;
   background-color: transparent;
   text-align: right;
+}
+body:not(.block-editor-page) .components-popover__content .block-editor-inserter__quick-inserter.has-search.has-expand button,
+.sfwd-quiz.block-editor-page .components-popover__content .block-editor-inserter__quick-inserter.has-search.has-expand button {
+  text-align: center;
+}
+body:not(.block-editor-page) .components-popover__content .block-editor-inserter__quick-inserter.has-search.has-expand button.components-button.block-editor-inserter__quick-inserter-expand,
+.sfwd-quiz.block-editor-page .components-popover__content .block-editor-inserter__quick-inserter.has-search.has-expand button.components-button.block-editor-inserter__quick-inserter-expand {
+  background: #1e1e1e;
 }
 body:not(.block-editor-page) .ld-popover.components-popover:after,
 body:not(.block-editor-page) .ld-popover.components-popover:before,

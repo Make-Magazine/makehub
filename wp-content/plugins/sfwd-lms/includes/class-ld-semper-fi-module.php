@@ -674,6 +674,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			$this->script_data['valid_recurring_paypal_month_range'] = esc_html__( 'Valid range is 1 to 24 when the Billing Cycle is set to months.', 'learndash' );
 			$this->script_data['valid_recurring_paypal_year_range']  = esc_html__( 'Valid range is 1 to 5 when the Billing Cycle is set to years.', 'learndash' );
 
+			$this->script_data['valid_recurring_paypal_day_max']   = learndash_billing_cycle_field_frequency_max( 'D' );
+			$this->script_data['valid_recurring_paypal_week_max']  = learndash_billing_cycle_field_frequency_max( 'W' );
+			$this->script_data['valid_recurring_paypal_month_max'] = learndash_billing_cycle_field_frequency_max( 'M' );
+			$this->script_data['valid_recurring_paypal_year_max']  = learndash_billing_cycle_field_frequency_max( 'Y' );
+
 			global $post;
 			if ( ( $post instanceof WP_Post ) && ( 'sfwd-quiz' === $post->post_type ) ) {
 				$this->script_data['quiz_pro'] = intval( learndash_get_setting( $post->ID, 'quiz_pro' ) );

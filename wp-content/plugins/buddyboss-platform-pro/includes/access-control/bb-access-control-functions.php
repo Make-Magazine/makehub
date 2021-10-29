@@ -543,7 +543,7 @@ function bb_access_control_array_flatten( $array ) {
 		if ( is_array( $value ) ) {
 			$result = array_merge( $result, bb_access_control_array_flatten( $value ) );
 		} else {
-			$result[ $key ] = $value;
+			$result[] = $value;
 		}
 	}
 

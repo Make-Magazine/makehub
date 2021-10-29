@@ -97,7 +97,7 @@ class WpProQuiz_Helper_DbUpgrade {
 
 			CREATE TABLE ' . LDLMS_DB::get_table_name( 'quiz_master' ) . " (
 			  id int(11) NOT NULL AUTO_INCREMENT,
-			  name varchar(200) NOT NULL,
+			  name text NOT NULL,
 			  text text NOT NULL,
 			  result_text text NOT NULL,
 			  result_grade_enabled tinyint(1) NOT NULL,
@@ -157,8 +157,9 @@ class WpProQuiz_Helper_DbUpgrade {
 			  id int(11) NOT NULL AUTO_INCREMENT,
 			  quiz_id int(11) NOT NULL,
 			  online tinyint(1) unsigned NOT NULL,
+			  previous_id int(11) NOT NULL,
 			  sort smallint(5) unsigned NOT NULL,
-			  title varchar(200) NOT NULL,
+			  title text NOT NULL,
 			  points int(11) NOT NULL,
 			  question text NOT NULL,
 			  correct_msg text NOT NULL,
@@ -182,6 +183,7 @@ class WpProQuiz_Helper_DbUpgrade {
 			CREATE TABLE ' . LDLMS_DB::get_table_name( 'quiz_statistic' ) . ' (
 			  statistic_ref_id int(10) unsigned NOT NULL,
 			  question_id int(11) NOT NULL,
+			  question_post_id int(11) NOT NULL,
 			  correct_count int(10) unsigned NOT NULL,
 			  incorrect_count int(10) unsigned NOT NULL,
 			  hint_count int(10) unsigned NOT NULL,
@@ -194,6 +196,8 @@ class WpProQuiz_Helper_DbUpgrade {
 			CREATE TABLE ' . LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) . ' (
 			  statistic_ref_id int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  quiz_id int(11) NOT NULL,
+			  quiz_post_id int(11) NOT NULL,
+			  course_post_id int(11) NOT NULL,
 			  user_id bigint(20) unsigned NOT NULL,
 			  create_time int(11) NOT NULL,
 			  is_old tinyint(1) unsigned NOT NULL,

@@ -32,7 +32,7 @@ if ( ! class_exists( 'LDLMS_Free_Answer' ) ) {
 		 * @param string                            $student_answers Submitted answers' list.
 		 * @param WpProQuiz_Model_StatisticRefModel $stat_ref_model  Statistic reference model.
 		 */
-		public function __construct( WpProQuiz_Model_Question $question, $student_answers, WpProQuiz_Model_StatisticRefModel $stat_ref_model ) {
+		public function __construct( WpProQuiz_Model_Question $question, $student_answers = null, WpProQuiz_Model_StatisticRefModel $stat_ref_model = null ) {
 			parent::__construct( $question, $student_answers, $stat_ref_model );
 
 			$this->parsed_answers = $this->parse_answers();
@@ -58,21 +58,31 @@ if ( ! class_exists( 'LDLMS_Free_Answer' ) ) {
 		public function get_answers() {
 			$answers = array();
 
-			/**
-			 * As of now, there can only be one field for free answer question.
-			 * So, there will always be one answer node.
-			 */
-			$answers[ $this->get_answer_key( '0' ) ] = array(
-				'label' => $this->parsed_answers,
-			);
+			$answer_label_set = array();
 
-			$answers[ $this->get_answer_key( '0' ) ] = apply_filters(
-				'learndash_rest_statistic_answer_node_data',
-				$answers[ $this->get_answer_key( '0' ) ],
-				'answer',
-				array(),
-				$this->question->getId(),
-				0
+			$answer_key = $this->get_answer_key( 0 );
+			foreach ( $this->parsed_answers as $key => $answer_set ) {
+
+				$answer_set_key = $answer_key . '-' . $key;
+
+				if ( ( isset( $answer_set['label'] ) ) && ( ! empty( $answer_set['label'] ) ) ) {
+
+					$answer_label_set[ $answer_set_key ] = array(
+						'label' => $answer_set['label'],
+					);
+
+					if ( $this->question->isAnswerPointsActivated() ) {
+						$points = 1;
+						if ( isset( $answer_set['points'] ) ) {
+							$points = $answer_set['points'];
+						}
+						$answer_label_set[ $answer_set_key ]['points'] = $points;
+					}
+				}
+			}
+
+			$answers[ $answer_key ] = array(
+				'values' => $answer_label_set,
 			);
 
 			return $answers;
@@ -86,23 +96,57 @@ if ( ! class_exists( 'LDLMS_Free_Answer' ) ) {
 		public function get_student_answers() {
 			$answers = array();
 
-			foreach ( $this->student_answers as $key => $answer ) {
-				$ans_key = array_search( strtolower( $answer ), $this->parsed_answers, true );
+			$question_answer_sets = $this->get_answers();
 
-				$answers[] = array(
-					'answer_key' => ( false !== $ans_key ) ? $this->get_answer_key( (string) $ans_key ) : '',
-					'answer'     => $answer,
-					'correct'    => (bool) ( false !== $ans_key ),
+			//$answer_sets = wp_list_pluck( $this->parsed_answers, 'label' );
+
+			foreach ( $this->student_answers as $student_answer_key => $student_answer ) {
+				$answers[ $student_answer_key ] = array(
+					'answer_key' => $this->get_answer_key( $student_answer_key ),
+					'answer'     => $student_answer,
+					'correct'    => false,
 				);
 
-				$answers[ count( $answers ) - 1 ] = apply_filters(
-					'learndash_rest_statistic_answer_node_data',
-					$answers[ count( $answers ) - 1 ],
-					'student',
-					array(),
-					$this->question->getId(),
-					$key
-				);
+				foreach ( $question_answer_sets as $question_answer_set_key => $question_answer_set ) {
+					if ( ( ! isset( $question_answer_set['values'] ) ) || ( empty( $question_answer_set['values'] ) ) ) {
+						continue;
+					}
+					foreach ( $question_answer_set['values'] as $answer_set_key => $answer_set ) {
+						if ( ( ! isset( $answer_set['label'] ) ) || ( '' === $answer_set['label'] ) ) {
+							continue;
+						}
+
+						/**
+						 * Filters whether to convert quiz question free to lowercase or not.
+						 *
+						 * @since 3.5.0
+						 *
+						 * @param boolean $conver_to_lower Whether to convert quiz question free to lower case.
+						 * @param object  $question        WpProQuiz_Model_Question Question Model instance.
+						*/
+						if ( apply_filters( 'learndash_quiz_question_free_answers_to_lowercase', true, $this->question ) ) {
+							if ( function_exists( 'mb_strtolower' ) ) {
+								$student_answer_filtered   = mb_strtolower( $student_answer );
+								$answer_set_label_filtered = mb_strtolower( $answer_set['label'] );
+							} else {
+								$student_answer_filtered   = strtolower( $student_answer );
+								$answer_set_label_filtered = strtolower( $answer_set['label'] );
+							}
+						}
+
+						if ( $student_answer_filtered == $answer_set_label_filtered ) {
+							$answers[ $student_answer_key ]['correct']   = true;
+							$answers[ $student_answer_key ]['value_key'] = $answer_set_key;
+
+							if ( $this->question->isAnswerPointsActivated() ) {
+								if ( isset( $answer_set['points'] ) ) {
+									$answers[ $student_answer_key ]['points'] = $answer_set['points'];
+								}
+							}
+							break;
+						}
+					}
+				}
 			}
 
 			return $answers;
@@ -142,16 +186,23 @@ if ( ! class_exists( 'LDLMS_Free_Answer' ) ) {
 		 * @return array List of parsed answers.
 		 */
 		private function parse_answers() {
-			$answer           = array();
-			$possible_answers = explode( PHP_EOL, $this->answer_data[0]->getAnswer() );
-
-			if ( ! empty( $possible_answers ) ) {
-				foreach ( $possible_answers as $ans ) {
-					$answer[] = trim( strtolower( $ans ) );
+			$answer = array();
+			foreach ( $this->answer_data as $index => $answer_data ) {
+				$question_answer_data = learndash_question_free_get_answer_data( $answer_data, $this->question );
+				if ( isset( $question_answer_data['correct'] ) ) {
+					foreach ( $question_answer_data['correct'] as $answer_idx => $answer_labels ) {
+						$answer_points = array( 1 );
+						if ( isset( $question_answer_data['points'][ $answer_idx ] ) ) {
+							$answer_points = $question_answer_data['points'][ $answer_idx ];
+						}
+						$answer[] = array(
+							'label'  => $answer_labels,
+							'points' => $answer_points,
+						);
+					}
 				}
 			}
-
-			return array_filter( $answer, 'strlen' );
+			return $answer;
 		}
 	}
 }

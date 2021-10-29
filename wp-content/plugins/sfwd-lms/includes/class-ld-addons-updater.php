@@ -403,14 +403,16 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 									$reply = LearnDash_Translations::install_translation( $plugin_text_domain, $locale );
 									if ( ( isset( $reply['translation_set'] ) ) && ( ! empty( $reply['translation_set'] ) ) ) {
 
-										$update_messages[ $locale ] = sprintf(
-											wp_kses_post(
-												// translators: placeholders: Translation Name, Translation Locale.
-												_x( '<h2>Updating translations for %1$s (%2$s)...</h2>', 'placeholders: Translation Name, Translation Locale', 'learndash' )
+										$update_messages[ $locale ] = '<h2>' . sprintf(
+											// translators: placeholders: Translation Name, Translation Locale.
+											esc_html_x(
+												'Updating translations for %1$s (%2$s)...',
+												'placeholders: Translation Name, Translation Locale',
+												'learndash'
 											),
 											$reply['translation_set']['english_name'],
 											$reply['translation_set']['wp_locale']
-										);
+										) . '</h2>';
 									}
 								}
 
@@ -724,7 +726,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 					} else {
 						$plugin_found = false;
 						foreach ( $all_plugins as $all_plugin_slug => $all_plugin_data ) {
-							if ( strncasecmp( $plugin_readme['slug'], $all_plugin_slug, strlen( $plugin_readme['slug'] ) ) === 0 ) {
+							if ( strncasecmp( $plugin_readme['slug'] . '/', $all_plugin_slug, strlen( $plugin_readme['slug'] . '/' ) ) === 0 ) {
 								$plugin_found = true;
 
 								$plugin_readme['wp_slug']                  = $all_plugin_slug;

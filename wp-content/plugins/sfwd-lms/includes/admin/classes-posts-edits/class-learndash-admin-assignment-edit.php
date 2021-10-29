@@ -197,10 +197,9 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						}
 					}
 					?>
-				</div><div class="sfwd_help_text_div" style="display:none" id="sfwd-assignment_lesson_tip"><label class="sfwd_help_text">
+				</div><div class="sfwd_help_text_div" style="display:none" id="sfwd-assignment_status_tip"><label class="sfwd_help_text">
 				<?php
-				// translators: placeholder: Lesson.
-				echo sprintf( esc_html_x( 'Associate with a %s.', 'placeholder: Lesson', 'learndash' ), esc_attr( LearnDash_Custom_Label::get_label( 'lesson' ) ) );
+				esc_html_e( 'Assignment status.', 'learndash' );
 				?>
 				</label></div></span><p style="clear:left"></p></div>
 			</div>

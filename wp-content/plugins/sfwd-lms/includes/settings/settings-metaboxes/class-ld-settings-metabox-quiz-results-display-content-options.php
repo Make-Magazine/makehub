@@ -58,9 +58,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		}
 
 		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {
-			foreach( $settings_values as $setting_key => $setting_value ) {
+			foreach ( $settings_values as $setting_key => $setting_value ) {
 				if ( isset( $this->settings_fields_map[ $setting_key ] ) ) {
-					$_POST[ $setting_key ] = $setting_value;	
+					$_POST[ $setting_key ] = $setting_value;
 				}
 			}
 		}
@@ -668,8 +668,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								$message_text_value,
 								'resultText_' . $i,
 								array(
-									'textarea_rows' => 3,
-									'textarea_name' => 'resultTextGrade[text][]',
+									'default_editor' => 'html',
+									'textarea_rows'  => 3,
+									'textarea_name'  => 'resultTextGrade[text][]',
 								)
 							);
 							?>

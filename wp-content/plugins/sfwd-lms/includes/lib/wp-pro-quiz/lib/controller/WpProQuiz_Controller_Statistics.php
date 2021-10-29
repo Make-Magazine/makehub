@@ -104,31 +104,35 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 
 		$quiz = $quizMapper->fetch( $quizId );
 
-		if ( has_action( 'pre_user_query', 'ure_exclude_administrators' ) ) {
-			remove_action( 'pre_user_query', 'ure_exclude_administrators' );
-
-			$users = get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ) ) );
-
-			add_action( 'pre_user_query', 'ure_exclude_administrators' );
-
+		if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
+			$users = array();
 		} else {
-			$get_users_args = array(
-				'fields' => array( 'ID', 'user_login', 'display_name' ),
-			);
+			if ( has_action( 'pre_user_query', 'ure_exclude_administrators' ) ) {
+				remove_action( 'pre_user_query', 'ure_exclude_administrators' );
 
-			if ( ! learndash_is_admin_user( get_current_user_id() ) ) {
-				if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+				$users = get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ) ) );
 
-					$include_user_ids = learndash_get_groups_leaders_users_for_course_step( $quiz->getPostId() );
-				} else {
-					$include_user_ids = array( get_current_user_id() );
+				add_action( 'pre_user_query', 'ure_exclude_administrators' );
+
+			} else {
+				$get_users_args = array(
+					'fields' => array( 'ID', 'user_login', 'display_name' ),
+				);
+
+				if ( ! learndash_is_admin_user( get_current_user_id() ) ) {
+					if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+
+						$include_user_ids = learndash_get_groups_leaders_users_for_course_step( $quiz->getPostId() );
+					} else {
+						$include_user_ids = array( get_current_user_id() );
+					}
 				}
-			}
-			if ( ( isset( $include_user_ids ) ) && ( ! empty( $include_user_ids ) ) ) {
-				$get_users_args['include'] = $include_user_ids;
-			}
+				if ( ( isset( $include_user_ids ) ) && ( ! empty( $include_user_ids ) ) ) {
+					$get_users_args['include'] = $include_user_ids;
+				}
 
-			$users = get_users( $get_users_args );
+				$users = get_users( $get_users_args );
+			}
 		}
 
 		$view->quiz  = $quiz;
@@ -144,8 +148,26 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 	public function save( $quiz = null ) {
 		learndash_quiz_debug_log_message( 'in ' . __CLASS__ . ' - ' . __FUNCTION__ );
 
-		$quizId = $this->_post['quizId'];
+		if ( isset( $this->_post['quizId'] ) ) {
+			$quizId = absint( $this->_post['quizId'] );
+		} else {
+			$quizId = 0;
+		}
 		learndash_quiz_debug_log_message( 'quizId ' . $quizId );
+
+		if ( isset( $this->_post['quiz'] ) ) {
+			$quiz_post_id = absint( $this->_post['quiz'] );
+		} else {
+			$quiz_post_id = 0;
+		}
+		learndash_quiz_debug_log_message( 'quiz_post_id ' . $quiz_post_id );
+
+		if ( isset( $this->_post['course_id'] ) ) {
+			$course_post_id = absint( $this->_post['course_id'] );
+		} else {
+			$course_post_id = 0;
+		}
+		learndash_quiz_debug_log_message( 'course_post_id ' . $course_post_id );
 
 		$array  = $this->_post['results'];
 		$lockIp = $this->getIp();
@@ -170,7 +192,7 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 
 		$values     = $this->makeDataList( $quiz, $array, $userId, $quiz->getQuizModus() );
 		$formValues = $this->makeFormData( $quiz, $userId, isset( $this->_post['forms'] ) ? $this->_post['forms'] : null );
-
+		
 		if ( false === $values ) {
 			return;
 		}
@@ -200,6 +222,8 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 		$statisticRefModel->setCreateTime( time() );
 		$statisticRefModel->setUserId( $userId );
 		$statisticRefModel->setQuizId( $quizId );
+		$statisticRefModel->setQuizPostId( $quiz_post_id );
+		$statisticRefModel->setCoursePostId( $course_post_id );
 		$statisticRefModel->setFormData( $formValues );
 
 		$statisticRefMapper = new WpProQuiz_Model_StatisticRefMapper();
@@ -305,10 +329,19 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 
 		$values = array();
 
+		$quiz_questions = array();
+		if ( ! empty( $quiz->getPostId() ) ) {
+			$ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( $quiz->getPostId() );
+			if ( $ld_quiz_questions_object ) {
+				$quiz_questions = $ld_quiz_questions_object->get_questions();
+			}
+		}
+
 		foreach ( $array as $k => $v ) {
 			$s = new WpProQuiz_Model_Statistic();
 			$s->setQuizId( $quiz->getId() );
 			$s->setQuestionId( $k );
+			$s->setQuestionPostId( absint( array_search( $k, $quiz_questions ) ) );
 			$s->setUserId( $userId );
 			$s->setHintCount( isset( $v['tip'] ) ? 1 : 0 );
 			$s->setCorrectCount( $v['correct'] ? 1 : 0 );
@@ -664,16 +697,16 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 		}
 
 		$statisticRefMapper = new WpProQuiz_Model_StatisticRefMapper();
-		$quizMapper = new WpProQuiz_Model_QuizMapper();
+		$quizMapper         = new WpProQuiz_Model_QuizMapper();
 
-		$quizId     = absint( $data['quizId'] );
-		$quiz       = absint( $data['quiz'] );
-		$page       = (isset($data['page']) && $data['page'] > 0) ? absint( $data['page'] ) : 1;
-		$limit      = absint( $data['pageLimit'] );
-		$start      = $limit * ($page - 1);
+		$quizId = absint( $data['quizId'] );
+		$quiz   = absint( $data['quiz'] );
+		$page   = ( isset( $data['page'] ) && $data['page'] > 0 ) ? absint( $data['page'] ) : 1;
+		$limit  = absint( $data['pageLimit'] );
+		$start  = $limit * ( $page - 1 );
 
-		$startTime = (int)$data['dateFrom'];
-		$endTime = (int)$data['dateTo'] ? $data['dateTo'] + 86400 : 0;
+		$startTime = (int) $data['dateFrom'];
+		$endTime   = (int) $data['dateTo'] ? $data['dateTo'] + 86400 : 0;
 
 		$statisticModel = $statisticRefMapper->fetchHistoryWithArgs(
 			array(
@@ -783,6 +816,40 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 		$formMapper          = new WpProQuiz_Model_FormMapper();
 
 		$statisticUsers = $statisticUserMapper->fetchUserStatistic( $refIdUserId, $quizId, $avg );
+
+		/**
+		 * Hack to get the statistics questions to be in the same order
+		 * as the actual Quiz. Currently no order column on statistics.
+		 */
+		$quiz_post_id = learndash_get_quiz_id_by_pro_quiz_id( $quizId );
+		$quiz_post_id = absint( $quiz_post_id );
+		if ( ( ! empty( $statisticUsers ) ) && ( ! empty( $quiz_post_id ) ) ) {
+			$quiz_questions = learndash_get_quiz_questions( $quiz_post_id );
+			if ( ! empty( $quiz_questions ) ) {
+				$questions_new = array();
+				foreach ( $quiz_questions as $question_post_id => $question_pro_id ) {
+					$question_pro_id = absint( $question_pro_id );
+					foreach ( $statisticUsers as $stat_question_idx => $stat_question ) {
+						$stat_question_id = $stat_question->getQuestionId();
+						$stat_question_id = absint( $stat_question_id );
+						if ( $question_pro_id === $stat_question_id ) {
+							unset( $statisticUsers[ $stat_question_idx ] );
+							$questions_new[] = $stat_question;
+							break;
+						}
+					}
+				}
+
+				// If there are any questions not matched we merge to the bottom.
+				if ( ! empty( $statisticUsers ) ) {
+					$questions_new = array_merge( $questions_new, $statisticUsers );
+				}
+
+				if ( ! empty( $questions_new ) ) {
+					$statisticUsers = $questions_new;
+				}
+			}
+		}
 
 		$output = array();
 

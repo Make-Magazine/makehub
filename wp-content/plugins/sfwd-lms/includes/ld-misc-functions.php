@@ -27,68 +27,6 @@ function learndash_add_theme_support() {
 add_action( 'after_setup_theme', 'learndash_add_theme_support' );
 
 /**
- * Gets the LearnDash setting for a post.
- *
- * @since 2.1.0
- *
- * @param int|WP_Post $post    The `WP_Post` object or Post ID.
- * @param string|null $setting Optional. The slug of the setting to get. Default null.
- *
- * @return string|void The value for requested setting.
- */
-function learndash_get_setting( $post, $setting = null ) {
-
-	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
-	} else {
-		if ( empty( $post ) || ! is_object( $post ) || empty( $post->ID ) ) {
-			if ( is_null( $setting ) ) {
-				return array();
-			}
-			return null;
-		}
-	}
-
-	if ( is_a( $post, 'WP_Post' ) ) {
-
-		if ( 'lesson' === $setting ) {
-			return learndash_get_lesson_id( $post->ID );
-		}
-
-		if ( 'course' === $setting ) {
-			return learndash_get_course_id( $post->ID );
-		}
-
-		$meta = get_post_meta( $post->ID, '_' . $post->post_type, true );
-		if ( ( ! empty( $meta ) ) && ( is_array( $meta ) ) ) {
-			if ( empty( $setting ) ) {
-				$settings = array();
-				foreach ( $meta as $k => $v ) {
-					$settings[ str_replace( $post->post_type . '_', '', $k ) ] = $v;
-				}
-				return $settings;
-			} else {
-				if ( isset( $meta[ $post->post_type . '_' . $setting ] ) ) {
-					return $meta[ $post->post_type . '_' . $setting ];
-				} else {
-					return '';
-				}
-			}
-		} else {
-			if ( is_null( $setting ) ) {
-				return array();
-			}
-			return '';
-		}
-	}
-	if ( is_null( $setting ) ) {
-		return array();
-	}
-}
-
-
-
-/**
  * Gets the options for a particular post type and setting.
  *
  * @since 2.1.0
@@ -139,146 +77,6 @@ function learndash_get_option( $post_type, $setting = '' ) {
 	}
 }
 
-
-
-/**
- * Updates the LearnDash setting for a post.
- *
- * @since 2.1.0
- *
- * @param int|WP_Post $post    The `WP_Post` object or Post ID.
- * @param string      $setting The slug of the setting to update.
- * @param string      $value   The new value of setting to be updated.
- *
- * @return boolean Returns true if the update was successfull otherwise false.
- */
-function learndash_update_setting( $post, $setting, $value ) {
-	$return = false;
-
-	if ( empty( $setting ) ) {
-		return $return;
-	}
-
-	// Were we sent a post ID?
-	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
-	}
-
-	// Ensure we have a post object or type WP_Post!
-	if ( is_a( $post, 'WP_Post' ) ) {
-		$meta = get_post_meta( $post->ID, '_' . $post->post_type, true );
-		if ( ! is_array( $meta ) ) {
-			$meta = array( $meta );
-		}
-
-		if ( 'course' === $setting ) {
-			$value = absint( $value );
-			if ( ! empty( $value ) ) {
-				update_post_meta( $post->ID, 'course_id', $value );
-			} else {
-				delete_post_meta( $post->ID, 'course_id' );
-			}
-		} elseif ( 'course_access_list' === $setting ) {
-			$value = learndash_convert_course_access_list( $value );
-			update_post_meta( $post->ID, 'course_access_list', $value );
-
-		} elseif ( 'course_points' === $setting ) {
-			$course_points = learndash_format_course_points( $value );
-			if ( ! empty( $course_points ) ) {
-				update_post_meta( $post->ID, 'course_points', $course_points );
-			} else {
-				delete_post_meta( $post->ID, 'course_points' );
-			}
-		} elseif ( 'course_price_type' === $setting ) {
-			update_post_meta( $post->ID, '_ld_price_type', $value );
-		} elseif ( 'group_price_type' === $setting ) {
-			update_post_meta( $post->ID, '_ld_price_type', $value );
-		} elseif ( 'certificate' === $setting ) {
-			update_post_meta( $post->ID, '_ld_certificate', $value );
-		} elseif ( 'threshold' === $setting ) {
-			update_post_meta( $post->ID, '_ld_certificate_threshold', $value );
-		} elseif ( 'lesson' === $setting ) {
-			$value = intval( $value );
-			if ( ! empty( $value ) ) {
-				update_post_meta( $post->ID, 'lesson_id', $value );
-			} else {
-				delete_post_meta( $post->ID, 'lesson_id' );
-			}
-		} elseif ( 'quiz' === $setting ) {
-			update_post_meta( $post->ID, 'quiz_id', absint( $value ) );
-		} elseif ( 'quiz_pro' === $setting ) {
-			$value = absint( $value );
-
-			// Moved from includes/class-ld-semper-fi-module.php line1052
-			$quiz_pro_id_new = $value;
-			$quiz_pro_id_org = absint( get_post_meta( $post->ID, 'quiz_pro_id', true ) );
-
-			if ( ( ! empty( $quiz_pro_id_new ) ) && ( $quiz_pro_id_org !== $quiz_pro_id_new ) ) {
-				/**
-				 * If this quiz was the primary for all shared settings. We need to
-				 * delete the primary marker then move the primary marker to another
-				 * quiz using the same shared settngs.
-				 */
-				$quiz_id_primary_org = absint( learndash_get_quiz_primary_shared( $quiz_pro_id_org, false ) );
-				if ( $quiz_id_primary_org === $post->ID ) {
-					delete_post_meta( $post->ID, 'quiz_pro_primary_' . $quiz_pro_id_org );
-					$quiz_post_ids = learndash_get_quiz_post_ids( $quiz_pro_id_org );
-					if ( ! empty( $quiz_post_ids ) ) {
-						foreach ( $quiz_post_ids as $quiz_post_id ) {
-							if ( $quiz_post_id !== $post->ID ) {
-								update_post_meta( $quiz_post_id, 'quiz_pro_primary_' . $quiz_pro_id_org, $quiz_pro_id_org );
-
-								/**
-								 * After we move the primary marker we also need to move the questions.
-								 */
-								$ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( intval( $post->ID ) );
-								if ( $ld_quiz_questions_object ) {
-									$questions = $ld_quiz_questions_object->get_questions( 'post_ids' );
-
-									$questions = get_post_meta( $post->ID, 'ld_quiz_questions', true );
-									update_post_meta( $quiz_post_id, 'ld_quiz_questions', $questions );
-								}
-								break;
-							}
-						}
-					}
-				}
-
-				$quiz_id_primary_new = absint( learndash_get_quiz_primary_shared( $quiz_pro_id_new, false ) );
-				if ( empty( $quiz_id_primary_new ) ) {
-					update_post_meta( $post->ID, 'quiz_pro_primary_' . $quiz_pro_id_new, $quiz_pro_id_new );
-					// trigger to cause reloading of the questions.
-					delete_post_meta( $post->ID, 'ld_quiz_questions' );
-				}
-
-				global $wpdb;
-				$quiz_query_results = $wpdb->query(
-					$wpdb->prepare(
-						"DELETE FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE %s",
-						absint( $post->ID ),
-						'quiz_pro_id_%'
-					)
-				);
-
-				update_post_meta( $post->ID, 'quiz_pro_id', $quiz_pro_id_new );
-				update_post_meta( $post->ID, 'quiz_pro_id_' . $quiz_pro_id_new, $quiz_pro_id_new );
-			}
-		} elseif ( 'viewProfileStatistics' === $setting ) {
-			update_post_meta( $post->ID, '_viewProfileStatistics', $value );
-		} elseif ( 'timeLimitCookie' === $setting ) {
-			update_post_meta( $post->ID, '_timeLimitCookie', absint( $value ) );
-		}
-
-		$meta[ $post->post_type . '_' . $setting ] = $value;
-
-		$return = update_post_meta( $post->ID, '_' . $post->post_type, $meta );
-	}
-
-	return $return;
-}
-
-
-
 if ( ! function_exists( 'sfwd_lms_get_post_options' ) ) {
 
 	/**
@@ -327,228 +125,6 @@ if ( ! function_exists( 'sfwd_lms_get_post_options' ) ) {
 		return $ret;
 	}
 }
-
-
-
-/**
- * Generates the LearnDash payment buttons output.
- *
- * @since 2.1.0
- *
- * @uses learndash_get_function()
- * @uses sfwd_lms_has_access()
- *
- * @param int|WP_Post $course course ID or `WP_Post` course object.
- *
- * @return string The payment buttons HTML output.
- */
-function learndash_payment_buttons( $post ) {
-
-	if ( is_numeric( $post ) ) {
-		$post_id = $post;
-		$post    = get_post( $post_id );
-	} elseif ( ! empty( $post->ID ) ) {
-		$post_id = $post->ID;
-	} else {
-		return '';
-	}
-
-	$user_id = get_current_user_id();
-
-	if ( ( ! $post ) || ( ! is_a( $post, 'WP_Post' ) ) ) {
-		return '';
-	}
-
-	if ( learndash_get_post_type_slug( 'course' ) === $post->post_type ) {
-		if ( sfwd_lms_has_access( $post->ID, $user_id ) ) {
-			return '';
-		}
-
-		$post_label_prefix = 'course';
-
-		$meta              = learndash_get_setting( $post_id );
-		$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
-		$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
-		$post_no_of_cycles = ( isset( $meta['course_no_of_cycles'] ) ) ? $meta['course_no_of_cycles'] : '';
-		$post_button_url   = ( isset( $meta['custom_button_url'] ) ) ? $meta['custom_button_url'] : '';
-		$post_button_label = ( isset( $meta['custom_button_label'] ) ) ? $meta['custom_button_label'] : '';
-
-		$post_srt = '';
-		if ( 'subscribe' === $post_price_type ) {
-			$post_price_billing_p3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_p3', true );
-			$post_price_billing_t3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_t3', true );
-			$post_srt              = intval( $post_no_of_cycles );
-		}
-
-		if ( empty( $post_button_label ) ) {
-			$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_course' );
-		} else {
-			$button_text = esc_attr( $post_button_label );
-		}
-	} elseif ( learndash_get_post_type_slug( 'group' ) === $post->post_type ) {
-		if ( learndash_is_user_in_group( $user_id, $post_id ) ) {
-			return '';
-		}
-
-		$post_label_prefix = 'group';
-
-		$meta              = learndash_get_setting( $post_id );
-		$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
-		$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
-		$post_no_of_cycles = ( isset( $meta[ $post_label_prefix . '_no_of_cycles' ] ) ) ? $meta[ $post_label_prefix . '_no_of_cycles' ] : '';
-		$post_button_url   = ( isset( $meta['custom_button_url'] ) ) ? $meta['custom_button_url'] : '';
-		$post_button_label = ( isset( $meta['custom_button_label'] ) ) ? $meta['custom_button_label'] : '';
-
-		$post_srt = '';
-		if ( 'subscribe' === $post_price_type ) {
-			$post_price_billing_p3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_p3', true );
-			$post_price_billing_t3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_t3', true );
-			$post_srt              = intval( $post_no_of_cycles );
-		}
-
-		if ( empty( $post_button_label ) ) {
-			$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_group' );
-		} else {
-			$button_text = esc_attr( $post_button_label );
-		}
-	} else {
-		return '';
-	}
-
-	// format the Course price to be proper XXX.YY no leading dollar signs or other values.
-	if ( ( 'paynow' === $post_price_type ) || ( 'subscribe' === $post_price_type ) ) {
-		if ( '' !== $post_price ) {
-			$post_price = preg_replace( '/[^0-9.]/', '', $post_price );
-			$post_price = number_format( floatval( $post_price ), 2, '.', '' );
-		}
-	}
-
-	$paypal_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
-	if ( ! empty( $paypal_settings ) ) {
-		$paypal_settings['paypal_sandbox'] = ( 'yes' === $paypal_settings['paypal_sandbox'] ) ? 1 : 0;
-	}
-
-	if ( ( ! empty( $post_price_type ) ) && ( 'closed' === $post_price_type ) ) {
-
-		if ( empty( $post_button_url ) ) {
-			$post_button = '';
-		} else {
-			$post_button_url = trim( $post_button_url );
-			/**
-			 * If the value does NOT start with [http://, https://, /] we prepend the home URL.
-			 */
-			if ( ( stripos( $post_button_url, 'http://', 0 ) !== 0 ) && ( stripos( $post_button_url, 'https://', 0 ) !== 0 ) && ( strpos( $post_button_url, '/', 0 ) !== 0 ) ) {
-				$post_button_url = get_home_url( null, $post_button_url );
-			}
-			$post_button = '<a class="btn-join" href="' . esc_url( $post_button_url ) . '" id="btn-join">' . $button_text . '</a>';
-		}
-
-		$payment_params = array(
-			'custom_button_url' => $post_button_url,
-			'post'              => $post,
-		);
-
-		/**
-		 * Filters the closed course payment button markup.
-		 *
-		 * @since 2.1.0
-		 *
-		 * @param string $custom_button  Payment button markup for closed course.
-		 * @param array  $payment_params An array of payment paramter details.
-		 */
-		return apply_filters( 'learndash_payment_closed_button', $post_button, $payment_params );
-
-	} elseif ( ! empty( $post_price ) ) {
-		include_once LEARNDASH_LMS_LIBRARY_DIR . '/paypal/enhanced-paypal-shortcodes.php';
-
-		$paypal_button = '';
-
-		if ( ! empty( $paypal_settings['paypal_email'] ) ) {
-
-			$post_title = str_replace( array( '[', ']' ), array( '', '' ), $post->post_title );
-
-			if ( empty( $post_price_type ) || 'paynow' === $post_price_type ) {
-				$shortcode_content = do_shortcode( '[paypal type="paynow" amount="' . $post_price . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $paypal_settings['paypal_currency'] . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '"]' );
-				if ( ! empty( $shortcode_content ) ) {
-					$paypal_button = wptexturize( '<div class="learndash_checkout_button learndash_paypal_button">' . $shortcode_content . '</div>' );
-				}
-			} elseif ( 'subscribe' === $post_price_type ) {
-
-				$shortcode_content = do_shortcode( '[paypal type="subscribe" a3="' . $post_price . '" p3="' . $post_price_billing_p3 . '" t3="' . $post_price_billing_t3 . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $paypal_settings['paypal_currency'] . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '" srt="' . $post_srt . '"]' );
-
-				if ( ! empty( $shortcode_content ) ) {
-					$paypal_button = wptexturize( '<div class="learndash_checkout_button learndash_paypal_button">' . $shortcode_content . '</div>' );
-				}
-			}
-		}
-
-		$payment_params = array(
-			'price' => $post_price,
-			'post'  => $post,
-		);
-
-		/**
-		 * Filters PayPal payment button markup.
-		 *
-		 * @since 2.1.0
-		 *
-		 * @param string $payment_button Payment button markup.
-		 * @param array  $payment_params An array of payment paramter details.
-		 */
-		$payment_buttons = apply_filters( 'learndash_payment_button', $paypal_button, $payment_params );
-
-		if ( ! empty( $payment_buttons ) ) {
-
-			if ( ( ! empty( $paypal_button ) ) && ( $payment_buttons != $paypal_button ) ) {
-
-				$button  = '';
-				$button .= '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">';
-				$button .= '<input id="btn-join-' . $post->ID . '" class="btn-join btn-join-' . $post->ID . ' button learndash_checkout_button" data-jq-dropdown="#jq-dropdown-' . $post->ID . '" type="button" value="' . $button_text . '" />';
-				$button .= '</div>';
-
-				global $dropdown_button;
-				// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-				$dropdown_button .= '<div id="jq-dropdown-' . esc_attr( $post->ID ) . '" class="jq-dropdown jq-dropdown-tip checkout-dropdown-button">';
-				$dropdown_button .= '<ul class="jq-dropdown-menu">';
-				$dropdown_button .= '<li>';
-				$dropdown_button .= str_replace( $button_text, esc_html__( 'Use Paypal', 'learndash' ), $payment_buttons );
-				$dropdown_button .= '</li>';
-				$dropdown_button .= '</ul>';
-				$dropdown_button .= '</div>';
-				// phpcs:enable
-
-				/**
-				 * Filters Dropdown payment button markup.
-				 *
-				 * @param string $button Dropdown payment button markup.
-				 */
-				return apply_filters( 'learndash_dropdown_payment_button', $button );
-
-			} else {
-				return '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">' . $payment_buttons . '</div>';
-			}
-		}
-	} else {
-		$join_button = '<div class="learndash_join_button"><form method="post">
-							<input type="hidden" value="' . $post->ID . '" name="' . $post_label_prefix . '_id" />
-							<input type="hidden" name="' . $post_label_prefix . '_join" value="' . wp_create_nonce( $post_label_prefix . '_join_' . get_current_user_id() . '_' . $post->ID ) . '" />
-							<input type="submit" value="' . $button_text . '" class="btn-join" id="btn-join" />
-						</form></div>';
-
-		$payment_params = array(
-			'price'                            => '0',
-			'post'                             => $post,
-			$post_label_prefix . '_price_type' => $post_price_type,
-		);
-
-		/** This filter is documented in includes/ld-misc-functions.php */
-		$payment_buttons = apply_filters( 'learndash_payment_button', $join_button, $payment_params );
-		return $payment_buttons;
-	}
-}
-
-// Yes, global var here. This var is set within the payment button processing. The var will contain HTML for a fancy dropdown
-$dropdown_button = ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 /**
  * Prints the dropdown button to the footer.
@@ -2338,4 +1914,80 @@ function learndash_put_directory_index_file( $index_filename = '' ) {
 
 		$wp_filesystem->put_contents( $index_filename, '//LearnDash is THE Best LMS', FS_CHMOD_FILE );
 	}
+}
+
+/**
+ * Utility function to control the 'the_content' process filtering.
+ *
+ * @since 3.5.0
+ *
+ * @param string $content The content to be formatted.
+ * @param string $context Optional. Some unique context ID to control logic. Recommended: the calling function name.
+ *
+ * @return string $content.
+ *
+ */
+function learndash_the_content( $content = '', $context = '' ) {
+	if ( apply_filters( 'learndash_use_wp_the_content_filters', true, $context ) ) {
+		/**
+		 * If we are using the WP 'the_filter' filters we drop here.
+		 */
+
+		/**
+		 * Action to allow custom logic before the normal 'the_content' filter is called.
+		 *
+		 * @since 3.5.0
+		 */
+		do_action( 'learndash_before_normal_the_content_filter', $context );
+
+		$content = apply_filters( 'the_content', $content );
+
+		/**
+		 * Action to allow custom logic after the normal 'the_content' filter is called.
+		 *
+		 * @since 3.5.0
+		 */
+		do_action( 'learndash_after_normal_the_content_filter', $context );
+	} else {
+		/**
+		 * If we are not using the normal WP 'the_filter' filters we setup
+		 * a custom list of formatting functions to call. This will limit the
+		 * filters used to only those from WP core and not other plugins/theme.
+		 */
+		add_filter( 'learndash_the_content', 'do_blocks', 9 );
+		add_filter( 'learndash_the_content', 'wptexturize' );
+		add_filter( 'learndash_the_content', 'convert_smilies', 20 );
+		add_filter( 'learndash_the_content', 'wpautop' );
+		add_filter( 'learndash_the_content', 'shortcode_unautop' );
+		add_filter( 'learndash_the_content', 'prepend_attachment' );
+		add_filter( 'learndash_the_content', 'wp_filter_content_tags' );
+		add_filter( 'learndash_the_content', 'wp_replace_insecure_home_url' );
+
+		/**
+		 * Action to allow custom logic before the custom 'the_content' filter is called.
+		 *
+		 * @since 3.5.0
+		 */
+		do_action( 'learndash_before_custom_the_content_filter', $context );
+
+		$content = apply_filters( 'learndash_the_content', $content );
+
+		/**
+		 * Action to allow custom logic after the custom 'the_content' filter is called.
+		 *
+		 * @since 3.5.0
+		 */
+		do_action( 'learndash_after_the_content_filter', $context );
+
+		remove_filter( 'learndash_the_content', 'do_blocks', 9 );
+		remove_filter( 'learndash_the_content', 'wptexturize' );
+		remove_filter( 'learndash_the_content', 'convert_smilies', 20 );
+		remove_filter( 'learndash_the_content', 'wpautop' );
+		remove_filter( 'learndash_the_content', 'shortcode_unautop' );
+		remove_filter( 'learndash_the_content', 'prepend_attachment' );
+		remove_filter( 'learndash_the_content', 'wp_filter_content_tags' );
+		remove_filter( 'learndash_the_content', 'wp_replace_insecure_home_url' );
+	}
+
+	return $content;
 }

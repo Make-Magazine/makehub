@@ -1087,3 +1087,141 @@ function learndash_quiz_convert_lock_cookie( $cookie_quiz = null ) {
 
 	return $cookie_quiz;
 }
+
+/**
+ * Quiz Statistics History panel users selector AJAX (select2)
+ *
+ * This function handles AJAX requests to populate the Users filter
+ * selector shown on the Quiz Statistics History panel.
+ *
+ * @since 3.5.0
+ */
+function learndash_quiz_statistics_users_select2() {
+	$reply_data = array(
+		'items'       => array(),
+		'total_items' => 0,
+		'total_pages' => 1,
+	);
+
+	if ( learndash_use_select2_lib_ajax_fetch() ) {
+		if ( ( is_user_logged_in() ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
+			if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-quiz-statistics-history' . get_current_user_id() ) ) ) {
+				$user_query_args = array(
+					'orderby'          => 'display_name',
+					'order'            => 'ASC',
+					'number'           => 10,
+					'paged'            => 1,
+					'suppress_filters' => true,
+					'search_columns'   => array( 'ID', 'user_login', 'user_nicename', 'user_email' ),
+				);
+
+				if ( ( learndash_is_group_leader_user() ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+					$included_user_ids = array();
+					if ( ( isset( $_POST['quiz_post_id'] ) ) && ( ! empty( $_POST['quiz_post_id'] ) ) ) {
+						$included_user_ids = learndash_get_groups_leaders_users_for_course_step( absint( $_POST['quiz_post_id'] ) );
+					}
+
+					if ( ! empty( $included_user_ids ) ) {
+						$user_query_args['include'] = $included_user_ids;
+					} else {
+						$user_query_args['include'] = array( 0 );
+					}
+				}
+
+				if ( ( isset( $_POST['search'] ) ) && ( ! empty( $_POST['search'] ) ) ) {
+					$user_query_args['search'] = '*' . esc_attr( $_POST['search'] ) . '*';
+				}
+				if ( ( isset( $_POST['page'] ) ) && ( ! empty( $_POST['page'] ) ) ) {
+					$user_query_args['paged'] = absint( $_POST['page'] );
+				}
+
+				/**
+				 * Filters quiz statistics user selector query arguments.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param array  $user_query_args An array of query arguments.
+				 */
+				$user_query_args = apply_filters( 'learndash_quiz_statistics_users_select2_query_args', $user_query_args );
+				if ( ! empty( $user_query_args ) ) {
+					$user_query = new WP_User_Query( $user_query_args );
+					if ( ( $user_query ) && ( is_a( $user_query, 'WP_User_Query' ) ) ) {
+						if ( ( learndash_is_admin_user() ) || ( ( learndash_is_group_leader_user() ) && ( 'advanced' === learndash_get_group_leader_manage_users() ) ) ) {
+							if ( ( $user_query_args['paged'] === 1 ) && ( ( ! isset( $user_query_args['search'] ) ) ) || ( empty( $user_query_args['search'] ) ) ) {
+								$reply_data['items'] = array(
+									array(
+										'id'       => 'filters_group',
+										'text'     => esc_html__( 'Special Filters', 'learndash' ),
+										'disabled' => 1,
+									),
+									array(
+										'id'   => '-1',
+										'text' => esc_html__( 'all users', 'learndash' ),
+									),
+									array(
+										'id'   => '-2',
+										'text' => esc_html__( 'only registered users', 'learndash' ),
+									),
+									array(
+										'id'   => '-3',
+										'text' => esc_html__( 'only anonymous users', 'learndash' ),
+									),
+									array(
+										'id'       => 'users_group',
+										'text'     => esc_html__( 'Users', 'learndash' ),
+										'disabled' => 1,
+									),
+								);
+							}
+						}
+
+						if ( property_exists( $user_query, 'results' ) ) {
+							foreach ( $user_query->results as $user ) {
+								$user_display_name = $user->display_name . ' ( ' . $user->user_email . ' )';
+
+								/**
+								 * Filters quiz statistics user selector display name.
+								 *
+								 * @since 3.5.0
+								 *
+								 * @param string $user_display_name Display name for selector option.
+								 * @param object $user              WP_User instance.
+								 */
+								$user_display_name = apply_filters( 'learndash_quiz_statistics_users_select2_display_name', $user_display_name, $user );
+								if ( ! empty( $user_display_name ) ) {
+									$reply_data['items'][] = array(
+										'id'   => $user->ID,
+										'text' => $user_display_name,
+									);
+								}
+							}
+						}
+						if ( property_exists( $user_query, 'total_users' ) ) {
+							$reply_data['total_items'] = absint( $user_query->total_users );
+
+							if ( property_exists( $user_query, 'query_vars' ) ) {
+								if ( isset( $user_query->query_vars['number'] ) ) {
+									$reply_data['total_pages'] = floor( absint( $user_query->total_users ) / absint( $user_query->query_vars['number'] ) );
+								}
+							}
+						}
+					}
+				}
+
+				/**
+				 * Filters quiz statistics user selector reply data.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param array  $reply_data      An array of reply data.
+				 * @param array  $user_query_args An array of query arguments.
+				 */
+				$reply_data = apply_filters( 'learndash_quiz_statistics_users_select2_reply_data', $reply_data, $user_query_args );
+			}
+		}
+	}
+
+	echo wp_json_encode( $reply_data );
+	wp_die(); // this is required to terminate immediately and return a proper response
+}
+add_action( 'wp_ajax_learndash_quiz_statistics_users_select2', 'learndash_quiz_statistics_users_select2' );

@@ -35,7 +35,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 		printf(
 			// translators: Question
 			esc_html_x( 'Return to %s Overview', 'placeholder: Question', 'learndash' ),
-			learndash_get_custom_label( 'question' )
+			esc_html( learndash_get_custom_label( 'question' ) )
 		)
 		?>
 		</a>
@@ -74,7 +74,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 								printf(
 									// translators: placeholder: question
 									esc_html_x( 'Points for this %s (Standard is 1 point)', 'placeholder: question', 'learndash' ),
-									learndash_get_custom_label_lower( 'question' )
+									esc_html( learndash_get_custom_label_lower( 'question' ) )
 								)
 							?>
 						</p>
@@ -86,7 +86,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 								printf(
 									// translators: placeholder: question
 									esc_html_x( 'These points will be rewarded, only if the user answers the %s correctly.', 'placeholder: question', 'learndash' ),
-									learndash_get_custom_label_lower( 'question' )
+									esc_html( learndash_get_custom_label_lower( 'question' ) )
 								)
 							?>
 						</p>
@@ -477,7 +477,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 		?>
 	<div class="answerList">
 		<p class="description">
-			<?php esc_html_e( 'correct answers (one per line) (answers will be converted to lower case)', 'learndash' ); ?>
+			<?php echo esc_html_x( 'Correct answers (one per line) (answers will be converted to lower case). If mode "Different points for each answer" is activated, you can assign points to each answer using "|". Example: One|15. The default point value is 1.', 'Question type description for Free Answers', 'learndash' ); ?>
 		</p>
 		<p style="border-bottom:1px dotted #ccc;">
 			<textarea rows="6" cols="100" class="large-text" name="answerData[][answer]"><?php echo wp_kses_post( $single->getAnswer() ); ?></textarea>
@@ -490,16 +490,19 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 		$single = $data[0];
 		?>
 		<p class="description">
-			<?php esc_html_e( 'Enclose the searched words with { } e.g. "I {play} soccer". Capital and small letters will be ignored.', 'learndash' ); ?>
+			<?php echo wp_kses_post( __( 'Enclose the searched words with <code>{</code> <code>}</code> e.g. <code>I {play} soccer</code>. Capital and small letters will be ignored.', 'learndash' ) ); ?>
 		</p>
 		<p class="description">
-			<?php wp_kses_post( _e( 'You can specify multiple options for a search word. Enclose the word with [ ] e.g. <span style="font-style: normal; letter-spacing: 2px;"> "I {[play][love][hate]} soccer" </span>. In this case answers play, love OR hate are correct.', 'learndash' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- _e is wrapped in wp_kses_post ?>
+			<?php echo wp_kses_post( __( 'You can specify multiple options for a search word. Enclose the word with <code>[</code> <code>]</code> e.g. <code>I {[play][love][hate]} soccer</code>. In this case answers "play", "love" OR "hate" are correct.', 'learndash' ) ); ?>
 		</p>
 		<p class="description" style="margin-top: 10px;">
-			<?php esc_html_e( 'If mode "Different points for every answer" is activated, you can assign points with |POINTS. Otherwise 1 point will be awarded for every answer.', 'learndash' ); ?>
+			<?php echo wp_kses_post( __( 'If mode "Different points for each answer" is activated, you can assign points to each answer using <code>|</code>. The default point value is be 1.', 'learndash' ) ); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e( 'e.g. "I {play} soccer, with a {ball|3}" - "play" gives 1 point and "ball" 3 points.', 'learndash' ); ?>
+			<?php echo wp_kses_post( '<code>I play {[football][soccer|2][golf|5]}</code>. In this example there are three possible answer, "football" is 1 point, "soccer" is 2 points, and "golf" is 5 point.', 'learndash' ); ?>
+		</p>
+		<p class="description">
+			<?php echo wp_kses_post( 'The total possible points will be the total of the highest points values from each answer set.', 'learndash' ); ?>
 		</p>
 		<?php
 			wp_editor(

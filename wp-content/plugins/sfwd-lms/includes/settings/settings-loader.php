@@ -21,6 +21,9 @@ if ( ! defined( 'LEARNDASH_SETTINGS_SECTION_TYPE' ) ) {
 	define( 'LEARNDASH_SETTINGS_SECTION_TYPE', 'metabox' );
 }
 
+require_once __DIR__ . '/settings-functions.php';
+require_once __DIR__ . '/settings-billing-functions.php';
+
 require_once __DIR__ . '/class-ld-settings-fields.php';
 require_once __DIR__ . '/class-ld-settings-pages.php';
 require_once __DIR__ . '/class-ld-settings-sections.php';

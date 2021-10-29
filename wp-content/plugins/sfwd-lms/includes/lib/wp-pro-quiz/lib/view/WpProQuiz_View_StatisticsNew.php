@@ -71,6 +71,7 @@ tr:hover .wpProQuiz_actions {
 							admin_url( 'post.php' )
 						); ?><a href="<?php echo $quiz_edit_url; ?>##learndash-quiz-admin-data-handling-settings_statisticsOn_field"><?php
 						echo sprintf(
+							// translators: placholder: Quiz.
 							esc_html_x( 'Edit %s Settings', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' )
 						);
 						?></a><?php
@@ -117,14 +118,22 @@ tr:hover .wpProQuiz_actions {
 								<li>
 									<label>
 										<?php esc_html_e( 'Which users should be displayed:', 'learndash' ); ?>
-										<?php if ( learndash_is_admin_user( get_current_user_id() ) ) { ?>
-											<select id="wpProQuiz_historyUser">
+										<select id="wpProQuiz_historyUser" autocomplete="off" data-ld-select2="1" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-quiz-statistics-history' . get_current_user_id() )); ?>" placeholder="<?php esc_html__( 'Filter by User', 'learndash' ); ?>">
+											<?php if ( ! learndash_use_select2_lib_ajax_fetch() ) { ?>
 												<optgroup label="<?php esc_html_e( 'special filter', 'learndash' ); ?>">
-													<option value="-1" selected="selected"><?php esc_html_e( 'all users', 'learndash' ); ?></option>
-													<option value="-2"><?php esc_html_e( 'only registered users', 'learndash' ); ?></option>
-													<option value="-3"><?php esc_html_e( 'only anonymous users', 'learndash' ); ?></option>
-												</optgroup>
+											<?php } ?>
+											<option value="-1" selected="selected"><?php esc_html_e( 'all users', 'learndash' ); ?></option>
 
+											<?php if ( ( learndash_is_admin_user( get_current_user_id() ) ) || ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' === learndash_get_group_leader_manage_users() ) ) ) { ?>
+												<option value="-2"><?php esc_html_e( 'only registered users', 'learndash' ); ?></option>
+												<option value="-3"><?php esc_html_e( 'only anonymous users', 'learndash' ); ?></option>
+											<?php } ?>
+
+											<?php if ( ! learndash_use_select2_lib_ajax_fetch() ) { ?>
+												</optgroup>
+											<?php } ?>
+
+											<?php if ( ! learndash_use_select2_lib_ajax_fetch() ) { ?>
 												<optgroup label="<?php esc_html_e( 'User', 'learndash' ); ?>">
 													<?php
 													foreach ( $this->users as $user ) {
@@ -134,19 +143,8 @@ tr:hover .wpProQuiz_actions {
 													}
 													?>
 												</optgroup>
-											</select>
-										<?php } elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) { ?>
-											<select id="wpProQuiz_historyUser">
-												<option value="-1" selected="selected"><?php esc_html_e( 'all users', 'learndash' ); ?></option>
-												<?php
-												foreach ( $this->users as $user ) {
-													if ( 0 !== $user->ID ) {
-														echo '<option value="' . absint( $user->ID ) . '">' . esc_attr( $user->user_login ) . ' (' . esc_attr( $user->display_name ) . ')</option>';
-													}
-												}
-												?>
-											</select>
-										<?php } ?>
+											<?php } ?>
+										</select>
 									</label>
 								</li>
 							<?php } ?>

@@ -19,9 +19,9 @@ $has_content = ( empty( $group->post_content ) ? false : true ); ?>
 			<a href="<?php echo esc_url( get_the_permalink( $group->ID ) ); ?>" class="ld-item-name">
 			<span class="ld-item-name"><?php echo esc_html( get_the_title( $group->ID ) ); ?></span></a>
 			<?php
-			} else {
-				echo esc_html( get_the_title( $group->ID ) );
-			}
+		} else {
+			echo esc_html( get_the_title( $group->ID ) );
+		}
 		?>
 		<?php if ( $has_content ) : ?>
 			<div class="ld-item-details">

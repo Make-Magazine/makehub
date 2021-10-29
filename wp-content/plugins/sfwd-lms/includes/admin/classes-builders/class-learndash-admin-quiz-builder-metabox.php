@@ -962,11 +962,11 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 
 							$reply_data['status'] = true;
 
-							$reply_data['new_steps'][ $old_step_id ]             = array();
-							$reply_data['new_steps'][ $old_step_id ]['post_id']  = $new_step_id;
-							$reply_data['new_steps'][ $old_step_id ]['view_url'] = get_permalink( $new_step_id );
-							$reply_data['new_steps'][ $old_step_id ]['edit_url'] = get_edit_post_link( $new_step_id );
-							$reply_data['new_steps'][ $old_step_id ]['post_status']  = get_post_status( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]                = array();
+							$reply_data['new_steps'][ $old_step_id ]['post_id']     = $new_step_id;
+							$reply_data['new_steps'][ $old_step_id ]['view_url']    = get_permalink( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]['edit_url']    = get_edit_post_link( $new_step_id );
+							$reply_data['new_steps'][ $old_step_id ]['post_status'] = get_post_status( $new_step_id );
 
 							learndash_update_setting( $new_step_id, 'quiz', '0' );
 							update_post_meta( $new_step_id, 'quiz_id', '0' );

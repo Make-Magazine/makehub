@@ -63,10 +63,12 @@ $lesson_class .= ( isset( $lesson['sample'] ) ? ' ' . $lesson['sample'] : '' );
  * Filters navigation widget lesson item class
  *
  * @since 3.0.0
+ * @since 3.4.1.1 Added second parameter $lesson.
  *
  * @param string $lesson_class List of lesson item CSS class.
+ * @param object $lesson       The lesson post object to evaluate
  */
-$lesson_class = apply_filters( 'learndash-nav-widget-lesson-class', $lesson_class );
+$lesson_class = apply_filters( 'learndash-nav-widget-lesson-class', $lesson_class, $lesson );
 
 if ( isset( $sections[ $lesson['post']->ID ] ) ) :
 

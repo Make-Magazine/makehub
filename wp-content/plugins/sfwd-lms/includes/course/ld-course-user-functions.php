@@ -104,6 +104,11 @@ function sfwd_lms_has_access_fn( $post_id, $user_id = null ) {
 		return true;
 	}
 
+	$status = get_post_status( $course_id );
+	if ( false === $status && ! empty( $course_id ) ) {
+		return false;
+	}
+
 	if ( ! empty( $user_id ) ) {
 		if ( learndash_can_user_autoenroll_courses( $user_id ) ) {
 			return true;
@@ -114,9 +119,20 @@ function sfwd_lms_has_access_fn( $post_id, $user_id = null ) {
 		return true;
 	}
 
-	$meta = get_post_meta( $course_id, '_sfwd-courses', true );
+	$meta = learndash_get_setting( $course_id );
 
-	if ( @$meta['sfwd-courses_course_price_type'] == 'open' || @$meta['sfwd-courses_course_price_type'] == 'paynow' && empty( $meta['sfwd-courses_course_join'] ) && empty( $meta['sfwd-courses_course_price'] ) ) {
+	if ( ( isset( $meta['course_price_type'] ) ) && ( $meta['course_price_type'] === 'open' ) ) {
+		return true;
+	}
+
+	if ( ( isset( $meta['course_price_type'] ) ) && ( $meta['course_price_type'] === 'paynow' ) ) {
+		// Allow for the course price field to be empty or not present.
+		if ( ! isset( $meta['course_price'] ) || ( empty( $meta['course_price'] ) ) ) {
+			return true;
+		}
+	}
+
+	if ( ( isset( $meta['course_join'] ) ) && ( empty( $meta['course_join'] ) ) ) {
 		return true;
 	}
 
@@ -125,8 +141,8 @@ function sfwd_lms_has_access_fn( $post_id, $user_id = null ) {
 	}
 
 	if ( true === learndash_use_legacy_course_access_list() ) {
-		if ( ! empty( $meta['sfwd-courses_course_access_list'] ) ) {
-			$course_access_list = learndash_convert_course_access_list( $meta['sfwd-courses_course_access_list'], true );
+		if ( ! empty( $meta['course_access_list'] ) ) {
+			$course_access_list = learndash_convert_course_access_list( $meta['course_access_list'], true );
 		} else {
 			$course_access_list = array();
 		}
@@ -858,4 +874,70 @@ function learndash_get_course_users_access_from_meta( $course_id = 0 ) {
 		);
 	}
 	return $course_user_ids;
+}
+
+/**
+ * Get user progress for course child steps.
+ *
+ * @since 3.4.2
+ *
+ * @param int $user_id   User ID.
+ * @param int $course_id Course post ID.
+ * @param int $step_id   Parent step post ID.
+ *
+ * @return array An array of child steps with status.
+ */
+function learndash_user_get_course_childen_progress( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+	$step_id   = absint( $step_id );
+
+	$return_steps = array();
+
+	if ( ( ! empty( $course_id ) ) && ( ! empty( $step_id ) ) && ( ! empty( $user_id ) ) ) {
+		$course_children_steps = learndash_course_get_children_of_step( $course_id, $step_id );
+		if ( ! empty( $course_children_steps ) ) {
+			$course_children_steps = array_map( 'absint', $course_children_steps );
+
+			$user_course_progress_co = learndash_user_get_course_progress( $user_id, $course_id, 'co' );
+			if ( ! empty( $user_course_progress_co ) ) {
+				foreach ( $user_course_progress_co as $step_key => $step_complete ) {
+					list( $child_post_type, $child_post_id ) = explode( ':', $step_key );
+					$child_post_type                         = esc_attr( $child_post_type );
+					$child_post_id                           = absint( $child_post_id );
+					if ( ( ! empty( $child_post_id ) ) && ( in_array( $child_post_id, $course_children_steps, true ) ) ) {
+						$return_steps[ $step_key ] = $step_complete;
+					}
+				}
+			}
+		}
+	}
+
+	return $return_steps;
+}
+
+/**
+ * Check if user has completed all course children steps.
+ *
+ * @since 3.4.2
+ *
+ * @param int $user_id   User ID.
+ * @param int $course_id Course post ID.
+ * @param int $step_id   Parent step post ID.
+ *
+ * @return bool true if all child steps are complete.
+ */
+function learndash_user_is_course_children_progress_complete( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+	$step_id   = absint( $step_id );
+
+	if ( ( ! empty( $course_id ) ) && ( ! empty( $step_id ) ) && ( ! empty( $user_id ) ) ) {
+		$user_children_progress = learndash_user_get_course_childen_progress( $user_id, $course_id, $step_id );
+		if ( ( is_array( $user_children_progress ) ) && ( array_sum( $user_children_progress ) === count( $user_children_progress ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }

@@ -140,7 +140,7 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 
 				$_cookie = stripslashes_deep( $_COOKIE );
 
-				if( isset( $_cookie['wpProQuiz_lock'] ) ) {
+				if ( isset( $_cookie['wpProQuiz_lock'] ) ) {
 					$cookieJson = json_decode( $_cookie['wpProQuiz_lock'], true );
 					if ( ( $cookieJson !== false ) && ( isset( $cookieJson[ $atts['quiz_pro_id'] ] ) ) ) {
 						$cookie_quiz = $cookieJson[ $atts['quiz_pro_id'] ];
@@ -214,11 +214,29 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 				$quiz_settings['topic']  = 0;
 
 				if ( ( ! empty( $course_id ) ) && ( ! empty( $quiz_id ) ) ) {
-					$quiz_settings['topic'] = learndash_course_get_single_parent_step( $course_id, $quiz_id, learndash_get_post_type_slug( 'topic' ) );
-					$quiz_settings['topic'] = absint( $quiz_settings['topic'] );
+					$activity_started_time = time();
 
+					$course_activity = learndash_activity_start_course( $user_id, $course_id, $activity_started_time );
+					if ( $course_activity ) {
+						learndash_activity_update_meta_set(
+							$course_activity->activity_id,
+							array(
+								'steps_completed' => learndash_course_get_completed_steps( $user_id, $course_id ),
+								'steps_last_id'   => $quiz_id,
+							)
+						);
+					}
 					$quiz_settings['lesson'] = learndash_course_get_single_parent_step( $course_id, $quiz_id, learndash_get_post_type_slug( 'lesson' ) );
 					$quiz_settings['lesson'] = absint( $quiz_settings['lesson'] );
+					if ( ! empty( $quiz_settings['lesson'] ) ) {
+						learndash_activity_start_lesson( $user_id, $course_id, $quiz_settings['lesson'], $activity_started_time );
+					}
+
+					$quiz_settings['topic'] = learndash_course_get_single_parent_step( $course_id, $quiz_id, learndash_get_post_type_slug( 'topic' ) );
+					$quiz_settings['topic'] = absint( $quiz_settings['topic'] );
+					if ( ! empty( $quiz_settings['topic'] ) ) {
+						learndash_activity_start_topic( $user_id, $course_id, $quiz_settings['topic'], $activity_started_time );
+					}
 				}
 
 				$quiz_content = wptexturize(

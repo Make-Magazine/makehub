@@ -59,7 +59,7 @@ if ( ! class_exists( 'LDLMS_Base_Answer_Type' ) ) {
 		 * @param string                            $student_answers Submitted answer data by student.
 		 * @param WpProQuiz_Model_StatisticRefModel $stat_ref_model  Statistics ref model.
 		 */
-		public function __construct( WpProQuiz_Model_Question $question, $student_answers, WpProQuiz_Model_StatisticRefModel $stat_ref_model ) {
+		public function __construct( WpProQuiz_Model_Question $question, $student_answers = null, WpProQuiz_Model_StatisticRefModel $stat_ref_model = null ) {
 
 			$this->question        = $question;
 			$this->student_answers = json_decode( $student_answers );
@@ -203,9 +203,17 @@ if ( ! class_exists( 'LDLMS_Base_Answer_Type' ) ) {
 		public function maybe_add_points( array $answer_data, $answer_type, $answer_type_model, $question_id ) {
 
 			if ( ( $question_id === $this->question->getId() ) && $this->question->isAnswerPointsActivated() && ( $answer_type_model instanceof WpProQuiz_Model_AnswerTypes ) ) {
-				$points   = $answer_type_model->getPoints();
-				$correct  = $answer_data['correct'] ? $answer_data['correct'] : null;
-				$answered = $answer_data['answer'] ? $answer_data['answer'] : null;
+				$points = $answer_type_model->getPoints();
+				if ( isset( $answer_data['correct'] ) ) {
+					$correct = $answer_data['correct'];
+				} else {
+					$correct = null;
+				}
+				if ( isset( $answer_data['answer'] ) ) {
+					$answered = $answer_data['answer'];
+				} else {
+					$answered = null;
+				}
 
 				if ( 'student' === $answer_type ) {
 
@@ -240,8 +248,6 @@ if ( ! class_exists( 'LDLMS_Base_Answer_Type' ) ) {
 				$this->question->getAnswerType(),
 				array(
 					'matrix_sort_answer',
-					'cloze_answer',
-					'free_answer',
 				),
 				true
 			) ) {

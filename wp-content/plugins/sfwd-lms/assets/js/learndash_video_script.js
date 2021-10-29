@@ -83,7 +83,6 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 			if ( learndash_video_data.video_debug === '1' ) {
 				console.log( 'YOUTUBE: in LearnDash_YT_onPlayerReady: event.target[%o]', event.target );
 			}
-
 			var ld_video_player = LearnDash_get_player_from_target( event.target );
 			if ( learndash_video_data.video_track_time === '1' ) {
 				var user_video_time = LearnDash_Video_Progress_getSetting( ld_video_player, 'video_time' );
@@ -94,7 +93,8 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 				if ( learndash_video_data.video_debug === '1' ) {
 					console.log( 'YOUTUBE: in LearnDash_YT_onPlayerReady: start user_video_time: [%o]', user_video_time );
 				}
-				event.target.seekTo( user_video_time );
+				//event.target.seekTo( user_video_time );
+
 			}
 
 			if ( learndash_video_data.videos_auto_start == true ) {
@@ -107,7 +107,12 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 				if ( learndash_video_data.video_debug === '1' ) {
 					console.log( 'YOUTUBE: in LearnDash_YT_onPlayerReady: calling pauseVideo()' );
 				}
-				event.target.pauseVideo();
+				var videoID = ld_video_player.player.playerInfo.videoData.video_id;
+				//event.target.pauseVideo();
+				event.target.cueVideoById({
+					videoId: videoID,
+					startSeconds: user_video_time,
+				});
 			}
 		}
 
@@ -675,7 +680,8 @@ function LearnDash_watchPlayers() {
 						if ( learndash_video_data.video_focus_pause === '1' ) {
 							if ( ld_video_player.player_type == 'youtube' ) {
 								if ( ld_video_state === 'focus' ) {
-									if (learndash_video_data.videos_auto_start == true) {
+									if ((learndash_video_data.videos_show_controls !== '1') && (learndash_video_data.videos_auto_start === '1')) {
+
 										if ( learndash_video_data.video_debug !== '1' ) {
 											console.log( 'YOUTUBE: Focus: calling playVideo()' );
 										}

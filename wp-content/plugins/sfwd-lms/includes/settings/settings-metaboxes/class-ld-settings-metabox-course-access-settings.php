@@ -59,6 +59,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'course_price_type_subscribe_price' => 'course_price',
 				'course_price_type_subscribe_billing_cycle' => 'course_price_billing_cycle',
 
+				'course_price_billing_t3'           => 'course_price_billing_t3',
+				'course_price_billing_p3'           => 'course_price_billing_p3',
+
 				'course_price_type_closed_custom_button_label' => 'custom_button_label',
 				'course_price_type_closed_custom_button_url' => 'custom_button_url',
 				'course_price_type_closed_price'    => 'course_price',
@@ -345,7 +348,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'  => 'course_price_type_subscribe_billing_cycle',
 					'label' => esc_html__( 'Billing Cycle', 'learndash' ),
 					'type'  => 'custom',
-					'html'  => $sfwd_lms->learndash_course_price_billing_cycle_html(),
+					'html'  => learndash_billing_cycle_setting_field_html(),
 				),
 			);
 			parent::load_settings_fields();
@@ -920,6 +923,23 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ! isset( $settings_values['course_price_type'] ) ) {
 					$settings_values['course_price_type'] = '';
+				}
+
+				if ( isset( $settings_values['course_price_billing_t3'] ) ) {
+					$settings_values['course_price_billing_t3'] = '';
+				}
+				if ( ! isset( $settings_values['course_price_billing_p3'] ) ) {
+					$settings_values['course_price_billing_p3'] = 0;
+				}
+
+				if ( isset( $_POST['course_price_billing_t3'] ) ) {
+					$settings_values['course_price_billing_t3'] = strtoupper( esc_attr( $_POST['course_price_billing_t3'] ) );
+					$settings_values['course_price_billing_t3'] = learndash_billing_cycle_field_frequency_validate( $settings_values['course_price_billing_t3'] );
+				}
+
+				if ( isset( $_POST['course_price_billing_p3'] ) ) {
+					$settings_values['course_price_billing_p3'] = absint( $_POST['course_price_billing_p3'] );
+					$settings_values['course_price_billing_p3'] = learndash_billing_cycle_field_interval_validate( $settings_values['course_price_billing_p3'], $settings_values['course_price_billing_t3'] );
 				}
 
 				if ( 'paynow' === $settings_values['course_price_type'] ) {

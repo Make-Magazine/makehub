@@ -40,7 +40,7 @@ if ( ! class_exists( 'LDLMS_Assessment_Answer' ) ) {
 		 * @param string                            $student_answers Submitted answers' list.
 		 * @param WpProQuiz_Model_StatisticRefModel $stat_ref_model  Statistic reference model.
 		 */
-		public function __construct( WpProQuiz_Model_Question $question, $student_answers, WpProQuiz_Model_StatisticRefModel $stat_ref_model ) {
+		public function __construct( WpProQuiz_Model_Question $question, $student_answers = null, WpProQuiz_Model_StatisticRefModel $stat_ref_model = null ) {
 			parent::__construct( $question, $student_answers, $stat_ref_model );
 
 			$this->parsed_answers = $this->parse_answers();
@@ -54,11 +54,21 @@ if ( ! class_exists( 'LDLMS_Assessment_Answer' ) ) {
 		public function get_answers() {
 			$answers = array();
 
-			foreach ( $this->parsed_answers as $key => $answer ) {
-				$answers[ $this->get_answer_key( $key ) ] = array(
-					'label'  => $answer,
-					'points' => ( intval( $key ) + 1 ),
-				);
+			if ( isset( $this->parsed_answers['correct'] ) ) {
+				foreach ( $this->parsed_answers['correct'] as $key => $answer ) {
+					$label = $answer;
+
+					if ( isset( $this->parsed_answers['points'][ $key ] ) ) {
+						$points = absint( $this->parsed_answers['points'][ $key ] );
+					} else {
+						$points = absint( $key ) + 1;
+					}
+
+					$answers[ $this->get_answer_key( $key ) ] = array(
+						'label'  => $answer,
+						'points' => $points,
+					);
+				}
 			}
 
 			return $answers;
@@ -76,13 +86,17 @@ if ( ! class_exists( 'LDLMS_Assessment_Answer' ) ) {
 				$student_answer = $this->student_answers[0] ? $this->student_answers[0] : 1;
 				$student_answer = intval( $student_answer ) - 1;
 
-				foreach ( $this->parsed_answers as $key => $val ) {
+				foreach ( $this->parsed_answers['correct'] as $key => $val ) {
+					if ( isset( $this->parsed_answers['points'][ $key ] ) ) {
+						$points = absint( $this->parsed_answers['points'][ $key ] );
+					} else {
+						$points = absint( $key ) + 1;
+					}
 
 					if ( $student_answer === $key ) {
 						$student_answers = array(
 							'answer_key' => $this->get_answer_key( $key ),
-							'answer'     => $this->get_answer_key( $key ),
-							'points'     => ( intval( $key ) + 1 ),
+							'points'     => $points,
 						);
 					}
 				}
@@ -100,21 +114,7 @@ if ( ! class_exists( 'LDLMS_Assessment_Answer' ) ) {
 			$answer = array();
 
 			foreach ( $this->answer_data as $index => $answer_data ) {
-				$no_markup_answer = wp_strip_all_tags( $answer_data->getAnswer() );
-				preg_match_all( '#\{(.*?)\}#im', $no_markup_answer, $matches );
-
-				foreach ( $matches[1] as $match ) {
-					preg_match_all( '#\[([^\|\]]+)(?:\|(\d+))?\]#im', $match, $ms );
-
-					/**
-					 * Currently only one set of answers are supported by LD.
-					 * So as soon as we get matches, we assign and break the loop.
-					 */
-					if ( ! empty( $ms[1] ) ) {
-						$answer = $ms[1];
-						break;
-					}
-				}
+				$answer = learndash_question_assessment_fetch_data( $answer_data->getAnswer() );
 			}
 
 			return $answer;

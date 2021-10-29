@@ -354,7 +354,7 @@ class WpProQuiz_Model_Quiz extends WpProQuiz_Model_Model {
 		} else {
 			$this->_quizRunOnceCookie = false;
 		}
-		
+
 		return $this->_quizRunOnceCookie;
 	}
 

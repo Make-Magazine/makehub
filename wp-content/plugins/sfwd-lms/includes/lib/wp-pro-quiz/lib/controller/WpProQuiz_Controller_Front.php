@@ -321,6 +321,22 @@ class WpProQuiz_Controller_Front {
 		$quiz->setPostId( absint( $quiz_post_id ) );
 
 		if ( $quiz->isShowMaxQuestion() && $quiz->getShowMaxQuestionValue() > 0 ) {
+			$learndash_quiz_resume_enabled = false;
+			$learndash_quiz_resume_data    = array();
+
+			if ( ! empty( $quiz_post_id ) && $user_id ) {
+				$learndash_quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+				if ( true === $learndash_quiz_resume_enabled ) {
+					$learndash_course_id            = learndash_get_course_id();
+					$learndash_quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $learndash_course_id );
+					if ( ( is_a( $learndash_quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $learndash_quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $learndash_quiz_resume_activity->activity_id ) ) ) {
+						$learndash_quiz_resume_id = $learndash_quiz_resume_activity->activity_id;
+						if ( ( property_exists( $learndash_quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $learndash_quiz_resume_activity->activity_meta ) ) ) {
+							$learndash_quiz_resume_data = $learndash_quiz_resume_activity->activity_meta;
+						}
+					}
+				}
+			}
 
 			$value = $quiz->getShowMaxQuestionValue();
 
@@ -330,8 +346,19 @@ class WpProQuiz_Controller_Front {
 				$value = ceil( $count * $value / 100 );
 			}
 
-			$question = $questionMapper->fetchAll( $quiz, true, $value );
-
+			if ( $learndash_quiz_resume_enabled ) {
+				if ( ! empty( $learndash_quiz_resume_data ) && isset( $learndash_quiz_resume_data['randomQuestions'] ) ) {
+					if ( isset( $learndash_quiz_resume_data['randomOrder'] ) ) {
+						foreach ( $learndash_quiz_resume_data['randomOrder'] as $id => $value ) {
+								$question[] = $questionMapper->fetchById( $value );
+						}
+					}
+				} else {
+						$question = $questionMapper->fetchAll( $quiz, true, $value );
+				}
+			} else {
+				$question = $questionMapper->fetchAll( $quiz, true, $value );
+			}
 		} else {
 			$question = $questionMapper->fetchAll( $quiz );
 		}

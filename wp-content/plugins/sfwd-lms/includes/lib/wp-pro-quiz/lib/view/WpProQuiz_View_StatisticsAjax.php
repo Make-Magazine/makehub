@@ -21,7 +21,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 		 *
 		 * @param string $history_content The History table HTML output.
 		 */
-		return apply_filters( 'ld_getHistoryTable', $content, array( $this ) );
+		return apply_filters( 'ld_getHistoryTable', $content, array( $this ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	public function showHistoryTable() {
@@ -91,9 +91,10 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 			<style type="text/css"><?php include $filepath; ?></style>
 			<?php
 		}
-		if ( ( isset( $_POST['data']['quizId'] ) ) && ( ! empty( $_POST['data']['quizId'] ) ) ) {
+
+		if ( ( isset( $_POST['data']['quizId'] ) ) && ( ! empty( $_POST['data']['quizId'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$quizMapper = new WpProQuiz_Model_QuizMapper();
-			$quiz       = $quizMapper->fetch( intval( $_POST['data']['quizId'] ) );
+			$quiz       = $quizMapper->fetch( intval( $_POST['data']['quizId'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		} else {
 			return;
 		}
@@ -125,7 +126,6 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 			<?php
 			echo WpProQuiz_Helper_Until::convertTime( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				$this->statisticModel->getCreateTime(),
-				//get_option('wpProQuiz_statisticTimeFormat', 'Y/m/d g:i A')
 				LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Management_Display', 'statistics_time_format' )
 			);
 			?>
@@ -150,10 +150,20 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 			</thead>
 			<tbody>
 				<?php
-					$gCorrect = $gIncorrect = $gHintCount = $gPoints = $gGPoints = $gTime = 0;
+					$gCorrect   = 0;
+					$gIncorrect = 0;
+					$gHintCount = 0;
+					$gPoints    = 0;
+					$gGPoints   = 0;
+					$gTime      = 0;
 
 				foreach ( $this->userStatistic as $cat ) {
-					$cCorrect = $cIncorrect = $cHintCount = $cPoints = $cGPoints = $cTime = 0;
+					$cCorrect   = 0;
+					$cIncorrect = 0;
+					$cHintCount = 0;
+					$cPoints    = 0;
+					$cGPoints   = 0;
+					$cTime      = 0;
 					?>
 				<tr class="categoryTr">
 					<th colspan="9">
@@ -174,7 +184,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 						 * @param WpProQuiz_Model_Quiz $quiz           Quiz model object.
 						 * @param array                $http_post_data An array of global http post data.
 						 */
-						$q = apply_filters( 'learndash_question_statistics_data', $q, $quiz, $_POST );
+						$q = apply_filters( 'learndash_question_statistics_data', $q, $quiz, $_POST );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
 						if ( ( empty( $q ) ) || ( ! is_array( $q ) ) ) {
 							continue;
 						}
@@ -193,7 +203,6 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 					<th>
 						<?php
 						if ( ! $this->avg && null !== $q['statistcAnswerData'] ) {
-							//echo strip_shortcodes(wp_strip_all_tags($q['questionName']));
 							/**
 							 * Changed above logic which removes all shortcodes and HTML tags. This is better served as a filter.
 							 * @since 2.4
@@ -206,7 +215,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							 * @param array  $question_data  An array of question statistics data.
 							 * @param array  $http_post_data An array of global http post data.
 							 */
-							$q['questionName'] = apply_filters( 'learndash_quiz_statistics_questionName', $q['questionName'], $q, $_POST );
+							$q['questionName'] = apply_filters( 'learndash_quiz_statistics_questionName', $q['questionName'], $q, $_POST );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ! empty( $q['questionName'] ) ) {
 								$q['questionName'] = do_shortcode( $q['questionName'] );
 							}
@@ -218,18 +227,14 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							<?php
 
 						} else {
-							//echo strip_shortcodes(wp_strip_all_tags($q['questionName']));
 							/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_View_StatisticsAjax.php */
-							$q['questionName'] = apply_filters( 'learndash_quiz_statistics_questionName', $q['questionName'], $q, $_POST );
+							$q['questionName'] = apply_filters( 'learndash_quiz_statistics_questionName', $q['questionName'], $q, $_POST );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ! empty( $q['questionName'] ) ) {
 								$q['questionName'] = do_shortcode( $q['questionName'] );
 							}
 							if ( ! empty( $q['questionName'] ) ) {
 								echo wpautop( $q['questionName'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
-							?>
-							<a href="#" class="statistic_data"><?php esc_html_e( '(view)', 'learndash' ); ?></a>
-							<?php
 						}
 						?>
 					</th>
@@ -279,14 +284,14 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							 * @param array   $question_data  An array of question statistics data.
 							 * @param array   $http_post_data An array of global http post data.
 							 */
-							$show_messages = apply_filters( 'learndash_quiz_statistics_show_feedback_messages', $q['questionShowMsgs'], $q, $quiz, $_POST );
+							$show_messages = apply_filters( 'learndash_quiz_statistics_show_feedback_messages', $q['questionShowMsgs'], $q, $quiz, $_POST );  // phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( $show_messages ) {
 								$answerText = '';
 								if ( true == $q['correct'] ) {
 									if ( ! isset( $q['questionCorrectMsg'] ) ) {
 										$q['questionCorrectMsg'] = '';
 									}
-									//echo $q['questionCorrectMsg'];
+
 									/**
 									 * Filters quiz statistics question correct message.
 									 *
@@ -294,7 +299,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 									 * @param array  $question_data   An array of question statistics data.
 									 * @param array  $http_post       An array of global http post data.
 									 */
-									$q['questionCorrectMsg'] = apply_filters( 'learndash_quiz_statistics_questionCorrectMsg', $q['questionCorrectMsg'], $q, $_POST );
+									$q['questionCorrectMsg'] = apply_filters( 'learndash_quiz_statistics_questionCorrectMsg', $q['questionCorrectMsg'], $q, $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 									if ( ! empty( $q['questionCorrectMsg'] ) ) {
 										$q['questionCorrectMsg'] = do_shortcode( $q['questionCorrectMsg'] );
 									}
@@ -305,7 +310,6 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 									if ( ! isset( $q['questionIncorrectMsg'] ) ) {
 										$q['questionIncorrectMsg'] = '';
 									}
-									//echo $q['questionIncorrectMsg'];
 
 									/**
 									 * Filters quiz statistics question incorrect message.
@@ -314,7 +318,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 									 * @param array  $question_data   An array of question statistics data.
 									 * @param array  $http_post       An array of global http post data.
 									 */
-									$q['questionIncorrectMsg'] = apply_filters( 'learndash_quiz_statistics_questionIncorrectMsg', $q['questionIncorrectMsg'], $q, $_POST );
+									$q['questionIncorrectMsg'] = apply_filters( 'learndash_quiz_statistics_questionIncorrectMsg', $q['questionIncorrectMsg'], $q, $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 									if ( ! empty( $q['questionIncorrectMsg'] ) ) {
 										$q['questionIncorrectMsg'] = do_shortcode( $q['questionIncorrectMsg'] );
 									}
@@ -452,13 +456,38 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 				</li>
 					<?php
 				} elseif ( 'free_answer' === $anserType ) {
-					$t = str_replace( "\r\n", "\n", strtolower( $qAnswerData[ $i ]->getAnswer() ) );
-					$t = str_replace( "\r", "\n", $t );
-					$t = explode( "\n", $t );
-					$t = array_values( array_filter( array_map( 'trim', $t ) ) );
+					$questionData = learndash_question_free_get_answer_data( $qAnswerData[ $i ] );
 
 					if ( ! $quiz->isDisabledAnswerMark() ) {
-						if ( isset( $sAnswerData[0] ) && in_array( strtolower( trim( $sAnswerData[0] ) ), $t ) ) {
+						$userResponse_filtered = '';
+						if ( isset( $sAnswerData[0] ) ) {
+							$userResponse_filtered = stripslashes( trim( $sAnswerData[0] ) );
+						}
+
+						$correct_answer = false;
+						if ( ( ! empty( $questionData['correct'] ) ) && ( '' !== $userResponse_filtered ) ) {
+							foreach ( $questionData['correct'] as $questionData_correct ) {
+
+								$questionData_correct_filtered = stripslashes( trim( $questionData_correct ) );
+
+								/** This filter is documented in includes/quiz/ld-quiz-pro.php */
+								if ( apply_filters( 'learndash_quiz_question_free_answers_to_lowercase', true, null ) ) {
+									if ( function_exists( 'mb_strtolower' ) ) {
+										$userResponse_filtered         = mb_strtolower( $userResponse_filtered );
+										$questionData_correct_filtered = mb_strtolower( $questionData_correct_filtered );
+									} else {
+										$userResponse_filtered         = strtolower( $userResponse_filtered );
+										$questionData_correct_filtered = strtolower( $questionData_correct_filtered );
+									}
+								}
+
+								if ( $userResponse_filtered == $questionData_correct_filtered ) {
+									$correct_answer = true;
+									break;
+								}
+							}
+						}
+						if ( true === $correct_answer ) {
 							$correct = 'wpProQuiz_answerCorrect';
 						} else {
 							$correct = 'wpProQuiz_answerIncorrect';
@@ -471,7 +500,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 					<label>
 						<input type="text" disabled="disabled" style="width: 300px; padding: 5px;margin-bottom: 5px;"
 							value="<?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-							if ( ( isset( $sAnswerData[0] ) ) && ( ! empty( $sAnswerData[0] ) ) ) {
+							if ( ( isset( $sAnswerData[0] ) ) && ( '' !== $sAnswerData[0] ) ) {
 								echo esc_attr( $sAnswerData[0] );
 							}
 							?>"> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterEnd ?>
@@ -479,11 +508,13 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 					<br>
 					<?php esc_html_e( 'Correct', 'learndash' ); ?>:
 					<?php
-					foreach ( $t as $idx => $t_ans ) {
-						$t[ $idx ] = do_shortcode( $t_ans );
+					if ( ( isset( $questionData['correct'] ) ) && ( ! empty( $questionData['correct'] ) ) ) {
+						foreach ( $questionData['correct'] as $idx => $t_ans ) {
+							$questionData['correct'][ $idx ] = do_shortcode( $t_ans );
+						}
+						echo implode( ', ', $questionData['correct'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
 					}
 					?>
-					<?php echo implode( ', ', $t ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</li>
 					<?php
 				} elseif ( 'sort_answer' === $anserType ) {
@@ -521,7 +552,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 					$sortText = '';
 
 					if ( isset( $sAnswerData[ $i ] ) && isset( $qAnswerData[ $sAnswerData[ $i ] ] ) ) {
-						if ( in_array( $sAnswerData[ $i ], $matrix[ $i ] ) ) {
+						if ( in_array( $sAnswerData[ $i ], $matrix[ $i ], true ) ) {
 							if ( ! $quiz->isDisabledAnswerMark() ) {
 								$correct = 'wpProQuiz_answerCorrect';
 							} else {
@@ -554,25 +585,13 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 				</li>
 					<?php
 				} elseif ( 'cloze_answer' == $anserType ) {
-					$clozeData = $this->fetchCloze( $qAnswerData[ $i ]->getAnswer(), $sAnswerData );
+					$cloze_data   = $this->fetchCloze( $qAnswerData[ $i ]->getAnswer(), $sAnswerData, $questionId );
+					$cloze_output = learndash_question_cloze_prepare_output( $cloze_data );
 
-					$this->_clozeTemp = $clozeData['data'];
-
-					$cloze = $clozeData['replace'];
-
-					$cloze_answer = preg_replace_callback( '#@@wpProQuizCloze@@#im', array( $this, 'clozeCallback' ), $cloze );
-
-					$cloze_answer = do_shortcode( $cloze_answer );
-
-					echo $cloze_answer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo $cloze_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 				} elseif ( 'assessment_answer' == $anserType ) {
-					$assessmentData = $this->fetchAssessment( $qAnswerData[ $i ]->getAnswer(), $sAnswerData );
-
-					/** This filter is documented in https://developer.wordpress.org/reference/hooks/comment_text/ */
-					$assessment = do_shortcode( apply_filters( 'comment_text', $assessmentData['replace'], null, null ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
-
-					$assessment = preg_replace_callback( '#@@wpProQuizAssessment@@#im', array( $this, 'assessmentCallback' ), $assessment );
+					$assessment = $this->fetchAssessment( $qAnswerData[ $i ]->getAnswer(), $sAnswerData );
 
 					/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
 					$assessment = apply_filters( 'learndash_quiz_question_answer_postprocess', $assessment, 'assessment' );
@@ -649,6 +668,14 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							</li>
 							<?php
 						}
+					} else {
+						?>
+						<li class="<?php echo esc_attr( $correct ); ?>">
+							<div class="wpProQuiz_sortable">
+							<?php echo esc_html__( 'Essay not submitted', 'learndash' ); ?>
+							</div>
+						</li>
+						<?php
 					}
 				}
 				?>
@@ -667,50 +694,32 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 
 	private function fetchAssessment( $answerText, $answerData ) {
 
-		/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-		$answerText = apply_filters( 'learndash_quiz_question_answer_preprocess', $answerText, 'assessment' );
-		preg_match_all( '#\{(.*?)\}#im', $answerText, $matches );
-
-		$this->_assessmetTemp = array();
-		$data                 = array();
-
-		for ( $i = 0, $ci = count( $matches[1] ); $i < $ci; $i++ ) {
-			$match = $matches[1][ $i ];
-
-			preg_match_all( '#\[([^\|\]]+)(?:\|(\d+))?\]#im', $match, $ms );
+		$assessment_data = learndash_question_assessment_fetch_data( $answerText, 0, 0 );
+		if ( ( isset( $assessment_data['correct'] ) ) && ( is_array( $assessment_data['correct'] ) ) && ( ! empty( $assessment_data['correct'] ) ) ) {
+			$user_ans_idx = absint( $answerData[0] ) - 1;
 
 			$a = '';
-
-			$checked = isset( $answerData[ $i ] ) ? $answerData[ $i ] - 1 : -1;
-
-			for ( $j = 0, $cj = count( $ms[1] ); $j < $cj; $j++ ) {
-				$v = $ms[1][ $j ];
-
-				$a .= '<label>
-					<input type="radio" disabled="disabled" ' . ( $checked == $j ? 'checked="checked"' : '' ) . '>
-					' . $v . '
-				</label>';
+			foreach ( $assessment_data['correct'] as $ans_idx => $ans_label ) {
+				$a .= '<label><input type="radio" disabled="disabled" ' . checked( $ans_idx, $user_ans_idx, false ) . '>' . esc_html( $ans_label ) . '</label>';
 			}
 
-			$this->_assessmetTemp[] = $a;
+			$ans_idx                                 = 0;
+			$replace_key                             = '@@wpProQuizAssessment-' . $ans_idx . '@@';
+			$assessment_data['data'][ $replace_key ] = $a;
+
+			return learndash_question_assessment_prepare_output( $assessment_data );
 		}
-
-		$data['replace'] = preg_replace( '#\{(.*?)\}#im', '@@wpProQuizAssessment@@', $answerText );
-
-		return $data;
 	}
 
 	private $_clozeTemp = array();
 
-	private function fetchCloze( $answer_text, $answerData ) {
+	private function fetchCloze( $answer_text, $answerData, $question_pro_id = 0 ) {
+		$data = array();
 
-		/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-		$answer_text = apply_filters( 'learndash_quiz_question_answer_preprocess', $answer_text, 'cloze' );
-		preg_match_all( '#\{(.*?)(?:\|(\d+))?(?:[\s]+)?\}#im', $answer_text, $matches, PREG_SET_ORDER );
+		$question_cloze_data = learndash_question_cloze_fetch_data( $answer_text );
+		$question_model      = fetchQuestionModel( $question_pro_id );
 
-		$data             = array();
-		$index            = 0;
-		$answerData_check = $answerData;
+		$answerData_check = array_map( 'trim', $answerData );
 
 		/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
 		if ( apply_filters( 'learndash_quiz_question_cloze_answers_to_lowercase', true ) ) {
@@ -721,74 +730,61 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 			}
 		}
 
-		foreach ( $matches as $k => $v ) {
-			$text    = $v[1];
-			$points  = ! empty( $v[2] ) ? (int) $v[2] : 1;
-			$rowText = $multiTextData = array();
-			$len     = array();
+		foreach ( $question_cloze_data['correct'] as $correct_key => $correct_set ) {
+			$correct_class    = 'wpProQuiz_answerIncorrect';
+			$correct_value    = '---';
+			$points           = array();
+			$answers_row_text = '';
 
-			if ( preg_match_all( '#\[(.*?)\]#im', $text, $multiTextMatches ) ) {
-				foreach ( $multiTextMatches[1] as $multiText ) {
-					$multiText_clean = trim( html_entity_decode( $multiText, ENT_QUOTES ) );
+			if ( ( is_array( $correct_set ) ) && ( ! empty( $correct_set ) ) ) {
+				if ( ( isset( $answerData_check[ $correct_key ] ) ) && ( ! empty( $answerData_check[ $correct_key ] ) ) ) {
+					$correct_value = $answerData_check[ $correct_key ];
+					$answer_idx    = array_search( $answerData_check[ $correct_key ], $correct_set, true );
+					if ( false !== $answer_idx ) {
+						$correct_class = 'wpProQuiz_answerCorrect';
 
-					/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-					if ( apply_filters( 'learndash_quiz_question_cloze_answers_to_lowercase', true ) ) {
-						if ( function_exists( 'mb_strtolower' ) ) {
-							$x = mb_strtolower( trim( html_entity_decode( $multiText, ENT_QUOTES ) ) );
-						} else {
-							$x = strtolower( trim( html_entity_decode( $multiText, ENT_QUOTES ) ) );
+						if ( isset( $question_cloze_data['points'][ $correct_key ][ $answer_idx ] ) ) {
+							$points = $question_cloze_data['points'][ $correct_key ][ $answer_idx ];
 						}
-					} else {
-						$x = $multiText_clean;
+					}
+				}
+
+				foreach ( $correct_set as $correct_set_idx => $correct_set_value ) {
+					$correct_set_text = '';
+
+					$correct_set_text = '"' . $correct_set_value . '"';
+					if ( $question_model->isAnswerPointsActivated() ) {
+						if ( isset( $question_cloze_data['points'][ $correct_key ][ $correct_set_idx ] ) ) {
+							$points = $question_cloze_data['points'][ $correct_key ][ $correct_set_idx ];
+
+							$correct_set_text .= ' <span class="wpProQuiz_cloze_answerPoints">' . sprintf(
+								// translators: placeholder points.
+								_n( '- %dpt', '- %dpts', absint( $points ), 'learndash' ),
+								number_format_i18n( $points )
+							) . '</span>';
+						}
 					}
 
-					$len[]           = strlen( $x );
-					$multiTextData[] = $x;
-					$rowText[]       = $multiText;
-				}
-			} else {
-				$text_clean = trim( html_entity_decode( $text, ENT_QUOTES ) );
-
-				/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-				if ( apply_filters( 'learndash_quiz_question_cloze_answers_to_lowercase', true ) ) {
-					if ( function_exists( 'mb_strtolower' ) ) {
-						$x = mb_strtolower( trim( html_entity_decode( $text_clean, ENT_QUOTES ) ) );
-					} else {
-						$x = strtolower( trim( html_entity_decode( $text_clean, ENT_QUOTES ) ) );
+					if ( ! empty( $answers_row_text ) ) {
+						$answers_row_text .= ', ';
 					}
-				} else {
-					$x = $text_clean;
+					$answers_row_text .= $correct_set_text;
 				}
-				$len[]           = strlen( $x );
-				$multiTextData[] = $x;
-				$rowText[]       = $text;
 			}
 
-			$correct = 'wpProQuiz_answerIncorrect';
+			$a  = '<span class="wpProQuiz_cloze ' . $correct_class . '">' . esc_html( $correct_value ) . '</span> ';
+			$a .= '<span>(' . $answers_row_text . ')</span>';
 
-			if ( isset( $answerData_check[ $index ] ) && in_array( $answerData_check[ $index ], $multiTextData ) ) {
-				$correct = 'wpProQuiz_answerCorrect';
-			}
+			$replace_key = '@@wpProQuizCloze-' . $correct_key . '@@';
 
-			//          $a = '<span class="wpProQuiz_cloze"><input data-wordlen="'.max($len).'" type="text" value=""> ';
-			//          $a .= '<span class="wpProQuiz_clozeCorrect" style="display: none;">('.implode(', ', $rowText).')</span></span>';
-			$a  = '<span class="wpProQuiz_cloze ' . $correct . '">' . esc_html(
-				isset( $answerData[ $index ] ) ? ( '' === $answerData[ $index ] ) ? '---' : $answerData[ $index ]
-				: '---'
-			) . '</span> ';
-			$a .= '<span>(' . implode( ', ', $rowText ) . ')</span>';
-
-			$data['correct'][] = $multiTextData;
-			$data['points'][]  = $points;
-			$data['data'][]    = $a;
-
-			$index++;
+			$data['correct'][]            = $correct_value;
+			$data['points'][]             = $points;
+			$data['data'][ $replace_key ] = $a;
 		}
 
-		$data['replace'] = preg_replace( '#\{(.*?)(?:\|(\d+))?(?:[\s]+)?\}#im', '@@wpProQuizCloze@@', $answer_text );
-
-		/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
-		$data['replace'] = apply_filters( 'learndash_quiz_question_answer_postprocess', $data['replace'], 'cloze' );
+		if ( isset( $question_cloze_data['replace'] ) ) {
+			$data['replace'] = $question_cloze_data['replace'];
+		}
 
 		return $data;
 	}
@@ -821,8 +817,6 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							<tbody>
 								<?php
 								foreach ( $this->forms as $form ) {
-									/* @var $form WpProQuiz_Model_Form */
-
 									if ( ! isset( $formData[ $form->getFormId() ] ) ) {
 										continue;
 									}
@@ -915,7 +909,12 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 							$time      = WpProQuiz_Helper_Until::convertToTimeString( $model->getQuestionTime() );
 							$result    = round( ( 100 * $points / $model->getGPoints() ), 2 ) . '%';
 						} else {
-							$result = $time = $hintCount = $incorrect = $correct = $points = '---';
+							$result    = '---';
+							$time      = '---';
+							$hintCount = '---';
+							$incorrect = '---';
+							$correct   = '---';
+							$points    = '---';
 						}
 
 						?>

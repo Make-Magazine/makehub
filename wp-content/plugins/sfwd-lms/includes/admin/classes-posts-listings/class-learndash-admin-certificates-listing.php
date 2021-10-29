@@ -91,7 +91,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								// translators: placeholder: Courses, Certificate.
 								esc_html_x( 'Filter %1$s by Certificate "%2$s"', 'placeholder: Courses, Certficate Post title', 'learndash' ),
 								LearnDash_Custom_Label::get_label( 'courses' ),
-								get_the_title( $post_id ) 
+								get_the_title( $post_id )
 							);
 
 							echo sprintf(
@@ -119,7 +119,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								// translators: placeholder: Quizzes, Certificate Post title.
 								esc_html_x( 'Filter %1$s by Certificate "%2$s"', 'placeholder: Quizzes, Certficate Post title', 'learndash' ),
 								LearnDash_Custom_Label::get_label( 'quizzes' ),
-								get_the_title( $post_id ) 
+								get_the_title( $post_id )
 							);
 
 							echo sprintf(
@@ -134,7 +134,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( current_user_can( 'edit_groups' ) ) {
-					if ( learndash_post_meta_processed( learndash_get_post_type_slug( 'group' ) ) ) {				
+					if ( learndash_post_meta_processed( learndash_get_post_type_slug( 'group' ) ) ) {
 						$cert_sets = learndash_certificate_get_used_by( $post_id, learndash_get_post_type_slug( 'group' ) );
 						if ( ! empty( $cert_sets ) ) {
 
@@ -150,7 +150,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								// translators: placeholder: Groups, Certificate Post title.
 								esc_html_x( 'Filter %1$s by Certificate "%2$s"', 'placeholder: Groups, Certficate Post title', 'learndash' ),
 								LearnDash_Custom_Label::get_label( 'groups' ),
-								get_the_title( $post_id ) 
+								get_the_title( $post_id )
 							);
 
 							echo sprintf(

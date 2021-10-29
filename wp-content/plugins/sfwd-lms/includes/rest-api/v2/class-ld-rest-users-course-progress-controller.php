@@ -939,7 +939,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 				$user_course_progress_header['date_completed'] = '';
 			}
 
-			$user_course_progress_header['status'] = learndash_course_status( $course_id, $user_id, true );
+			$user_course_progress_header['status']          = learndash_course_status( $course_id, $user_id, true );
 			$user_course_progress_header['progress_status'] = str_replace( '_', '-', $user_course_progress_header['status'] );
 			unset( $user_course_progress_header['status'] );
 

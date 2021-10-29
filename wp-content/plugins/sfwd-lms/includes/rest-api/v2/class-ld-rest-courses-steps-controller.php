@@ -219,7 +219,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 				 *
 				 * @since 3.4.2
 				 * @param bool $allow true/false.
-				 * @return bool true Return true to allow access to anonymous user. 
+				 * @return bool true Return true to allow access to anonymous user.
 				 */
 				if ( apply_filters( 'learndash_rest_course_steps_allow_anonymous_read', false ) ) {
 					return true;

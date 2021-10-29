@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '6f2beb6a8ca180e067394f9d2a53a0209e03706a',
+    'reference' => 'c2c54cc7c8fc1e859a43cc889313b73de17347ef',
     'name' => 'buddyboss/buddyboss-platform',
   ),
   'versions' => 
@@ -27,16 +27,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => '6f2beb6a8ca180e067394f9d2a53a0209e03706a',
+      'reference' => 'c2c54cc7c8fc1e859a43cc889313b73de17347ef',
     ),
     'composer/installers' => 
     array (
-      'pretty_version' => 'v1.11.0',
-      'version' => '1.11.0.0',
+      'pretty_version' => 'v1.12.0',
+      'version' => '1.12.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ae03311f45dfe194412081526be2e003960df74b',
+      'reference' => 'd20a64ed3c94748397ff5973488761b22f6d3f19',
     ),
     'doctrine/cache' => 
     array (

@@ -132,7 +132,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				 * During the Data Upgrade or Reporting processing there is a series of AJAX
 				 * calls made. This define controls how long the AJAX call can run before
 				 * returning and starting a new AJAX process.
-				 * 
+				 *
 				 * @since 2.3.0
 				 *
 				 * @var int Default is 80 percent.
@@ -156,7 +156,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				 * During the Data Upgrade or Reporting processing there is a series of AJAX
 				 * calls made. This define controls how long the AJAX call can run before
 				 * returning and starting a new AJAX process.
-				 * 
+				 *
 				 * @since 2.3.0
 				 *
 				 * @var int Default is 10 seconds.
@@ -569,10 +569,39 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 * @return mixed transient data.
 		 */
 		protected function get_transient( $transient_key = '' ) {
+			$transient_data = array();
 			if ( ! empty( $transient_key ) ) {
 				$options_key = $this->transient_prefix . $transient_key;
 				$options_key = str_replace( '-', '_', $options_key );
-				return get_option( $options_key );
+
+				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+					$wp_upload_dir = wp_upload_dir();
+
+					$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $options_key . '.txt';
+
+					$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
+					if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
+						$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
+						return;
+					}
+
+					if ( file_exists( $ld_transient_filename ) ) { 
+						$transient_fp = fopen( $ld_transient_filename, 'r' );
+						if ( $transient_fp ) {
+							$transient_data = '';
+							while ( ! feof( $transient_fp ) ) {
+								$transient_data .= fread( $transient_fp, 4096 );
+							}
+							fclose( $transient_fp );
+
+							$transient_data = maybe_unserialize( $transient_data );
+						}
+					}
+				} else {
+					$transient_data = get_option( $options_key );
+				}
+
+				return $transient_data;
 			}
 		}
 
@@ -590,7 +619,25 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				$options_key = str_replace( '-', '_', $options_key );
 
 				if ( ! empty( $transient_data ) ) {
-					update_option( $options_key, $transient_data );
+					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+						$wp_upload_dir = wp_upload_dir();
+
+						$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $transient_key . '.txt';
+
+						$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
+						if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
+							$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
+							return;
+						}
+
+						$transient_fp = fopen( $ld_transient_filename, 'w' );
+						if ( $transient_fp ) {
+							fwrite( $transient_fp, serialize( $transient_data ) );
+							fclose( $transient_fp );
+						}
+					} else {
+						update_option( $options_key, $transient_data );
+					}
 				} else {
 					delete_option( $options_key );
 				}

@@ -40,8 +40,8 @@ function ld_quiz_list( $attr = array(), $content = '' ) {
 	$attr['status']    = false;
 
 	// If we have a course_id. Then we set the orderby to match the items within the course.
-	if ( ( isset( $attr['course_id'] ) ) && ( ! empty( $attr['course_id'] ) ) ) {
-		$attr['course_id'] = absint( $attr['course_id'] );
+	if ( ( isset( $attr['course_id'] ) ) && ( ! empty( $attr['course_id'] ) ) || isset( $attr['lesson_id'] ) && ( ! empty( $attr['lesson_id'] ) ) ) {
+		$attr['course_id'] = isset( $attr['course_id'] ) ? absint( $attr['course_id'] ) : '';
 		$course_steps      = array();
 
 		if ( isset( $attr['lesson_id'] ) ) {

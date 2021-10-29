@@ -106,10 +106,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 					$html .= '<label class="ld-radio-input__label" for="' . esc_attr( $field_args['id'] ) . '-' . esc_attr( $option_key ) . '" >';
 					if ( is_string( $option_label ) ) {
-						$html .= '<span>' . wp_kses_post( $option_label ) . '</span></label><p>';
+						$html .= '<span>' . $option_label . '</span></label><p>';
 					} elseif ( ( is_array( $option_label ) ) && ( ! empty( $option_label ) ) ) {
 						if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<span>' . wp_kses_post( $option_label['label'] ) . '</span></label>';
+							$html .= '<span>' . $option_label['label'] . '</span></label>';
 						}
 						$html .= '</p>';
 

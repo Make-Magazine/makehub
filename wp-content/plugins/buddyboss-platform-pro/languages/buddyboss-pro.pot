@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 1.1.5\n"
+"Project-Id-Version: BuddyBoss Platform Pro 1.1.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-09-01 14:05:11+00:00\n"
+"POT-Creation-Date: 2021-10-13 13:50:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1645,7 +1645,7 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1144
 #. translators: %1$s - user link, %2$s - meeting link., %3$s - group link.
-msgid "%1$s - Zoom meeting %2$s is starting soon in the group %3$s"
+msgid "%1$s scheduled Zoom meeting %2$s starting soon in the group %3$s"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1191
@@ -2699,32 +2699,32 @@ msgstr ""
 msgid "License Keys"
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:602
+#: includes/lib/buddyboss-updater/includes/admin.php:629
 msgid "Dismiss this notice."
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:634
+#: includes/lib/buddyboss-updater/includes/admin.php:661
 msgid "activate your product licenses"
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:635
+#: includes/lib/buddyboss-updater/includes/admin.php:662
 msgid ""
 "<strong>Your BuddyBoss products are almost ready.</strong> To get started, "
 "please %s."
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:664
+#: includes/lib/buddyboss-updater/includes/admin.php:691
 msgid "here"
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:665
+#: includes/lib/buddyboss-updater/includes/admin.php:692
 msgid "This license for <strong>%1$s</strong> is invalid or incomplete. %2$s"
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:822
-#: includes/lib/buddyboss-updater/includes/admin.php:853
-#: includes/lib/buddyboss-updater/includes/admin.php:936
-#: includes/lib/buddyboss-updater/includes/admin.php:942
+#: includes/lib/buddyboss-updater/includes/admin.php:849
+#: includes/lib/buddyboss-updater/includes/admin.php:880
+#: includes/lib/buddyboss-updater/includes/admin.php:969
+#: includes/lib/buddyboss-updater/includes/admin.php:975
 msgid ""
 "Your account was successfully connected. No new activations have been made. "
 "If you are attempting to activate a new license key, please make sure that "
@@ -2732,14 +2732,14 @@ msgid ""
 "available in your BuddyBoss.com account."
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:913
+#: includes/lib/buddyboss-updater/includes/admin.php:940
 msgid ""
 "Congratulations! License keys for the following product(s) have been "
 "activated: %s"
 msgstr ""
 
-#: includes/lib/buddyboss-updater/includes/admin.php:931
-#: includes/lib/buddyboss-updater/includes/admin.php:944
+#: includes/lib/buddyboss-updater/includes/admin.php:964
+#: includes/lib/buddyboss-updater/includes/admin.php:977
 msgid ""
 "The connection was successful, however, no license key was activated. We "
 "could not find any active license in your account, for any of the installed "

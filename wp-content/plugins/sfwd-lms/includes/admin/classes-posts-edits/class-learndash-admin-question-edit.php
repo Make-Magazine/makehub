@@ -530,7 +530,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					<?php esc_html_e( 'If you enable this option, you can enter different points for every answer.', 'learndash' ); ?>
 				</p>
 			</div>
-			<div style="margin-top: 10px; display: none;" id="wpProQuiz_showPointsBox">
+			<div style="margin-top: 10px;" id="wpProQuiz_showPointsBox">
 				<label>
 					<input name="showPointsInBox" value="1" type="checkbox" <?php checked( '1', $this->pro_question_edit->isShowPointsInBox() ); ?>>
 					<?php esc_html_e( 'Show reached points in the correct- and incorrect message?', 'learndash' ); ?>

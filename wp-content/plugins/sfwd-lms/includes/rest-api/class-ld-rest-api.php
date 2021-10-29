@@ -181,6 +181,10 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quiz-statistics-controller.php',
 					),
+					'LD_REST_Quiz_Form_Entries_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quiz-form-entries-controller.php',
+					),
 					'LD_REST_Echo_Controller_V2'           => array(
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-echo-controller.php',

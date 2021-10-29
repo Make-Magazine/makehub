@@ -137,12 +137,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			$wp_date_format      = get_option( 'date_format' );
 			$wp_time_format      = get_option( 'time_format' );
-			$wp_date_time_format = $wp_date_format . ' ' . $wp_time_format;
+			$wp_date_time_format = esc_attr( $wp_date_format ) . ' ' . esc_attr( $wp_time_format );
 
 			if ( ( ! isset( $this->setting_option_values['toplist_time_format'] ) ) || ( empty( $this->setting_option_values['toplist_time_format'] ) ) ) {
 				$this->setting_option_values['toplist_time_format'] = $wp_date_time_format;
 			}
-
 			if ( ( ! isset( $this->setting_option_values['statistics_time_format'] ) ) || ( empty( $this->setting_option_values['statistics_time_format'] ) ) ) {
 				$this->setting_option_values['statistics_time_format'] = $wp_date_time_format;
 			}
@@ -410,10 +409,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
-			$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="statistics_time_format_custom" id="statistics_time_format_custom" value="' . $this->setting_option_values['statistics_time_format'] . '">';
-
 			if ( ! in_array( $this->setting_option_values['statistics_time_format'], $date_time_formats, true ) ) {
+				$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="statistics_time_format_custom" id="statistics_time_format_custom" value="' . esc_attr( $this->setting_option_values['statistics_time_format'] ) . '">';
+
 				$this->setting_option_values['statistics_time_format'] = 'custom';
+			} else {
+				$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="statistics_time_format_custom" id="statistics_time_format_custom" value="">';
 			}
 
 			$this->setting_option_fields['statistics_time_format'] = array(
@@ -427,10 +428,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'parent_setting' => 'quiz_builder_time_formats',
 			);
 
-			$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="toplist_date_format_custom" id="toplist_time_format_custom" value="' . $this->setting_option_values['toplist_time_format'] . '">';
-
 			if ( ! in_array( $this->setting_option_values['toplist_time_format'], $date_time_formats, true ) ) {
+				$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="toplist_date_format_custom" id="toplist_time_format_custom" value="' . esc_attr( $this->setting_option_values['toplist_time_format'] ) . '">';
+
 				$this->setting_option_values['toplist_time_format'] = 'custom';
+			} else {
+				$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="toplist_date_format_custom" id="toplist_time_format_custom" value="">';
+
 			}
 
 			$this->setting_option_fields['toplist_time_format'] = array(
@@ -498,7 +502,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							// phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ( isset( $_POST['statistics_time_format_custom'] ) ) && ( ! empty( $_POST['statistics_time_format_custom'] ) ) ) {
 								// phpcs:ignore WordPress.Security.NonceVerification.Missing
-								$current_values['statistics_time_format'] = esc_attr( $_POST['statistics_time_format_custom'] );
+								$current_values['statistics_time_format'] = esc_attr( stripslashes( $_POST['statistics_time_format_custom'] ) );
 							} else {
 								$current_values['statistics_time_format'] = '';
 							}
@@ -512,7 +516,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							// phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ( isset( $_POST['toplist_date_format_custom'] ) ) && ( ! empty( $_POST['toplist_date_format_custom'] ) ) ) {
 								// phpcs:ignore WordPress.Security.NonceVerification.Missing
-								$current_values['toplist_time_format'] = esc_attr( $_POST['toplist_date_format_custom'] );
+								$current_values['toplist_time_format'] = esc_attr( stripslashes( $_POST['toplist_date_format_custom'] ) );
 							} else {
 								$current_values['toplist_time_format'] = '';
 							}

@@ -119,7 +119,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 							$ld_license_info = get_option( 'nss_plugin_info_sfwd_lms' );
 							if ( ( $ld_license_info ) && ( property_exists( $ld_license_info, 'new_version' ) ) && ( ! empty( $ld_license_info->new_version ) ) ) {
-								if ( version_compare( $version, $ld_license_info->new_version, 'ne' ) ) {
+								if ( version_compare( $version, $ld_license_info->new_version, 'lt' ) ) {
 									$learndash_version_value_html = '<span style="color: red">' . $version . '</span>: ' . $version_date . ' - ' .
 									sprintf(
 										// translators: placeholder: version number.

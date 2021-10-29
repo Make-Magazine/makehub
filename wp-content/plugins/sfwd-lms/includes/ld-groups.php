@@ -121,7 +121,7 @@ function learndash_group_emails() {
 						} else {
 							wp_send_json_error(
 								array(
-									'message' => __( '<span style="color:red">Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ),
+									'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unepected condition from filter: ld_group_email_users_args', 'learndash' ) . '</span>',
 								)
 							);
 						}
@@ -130,8 +130,17 @@ function learndash_group_emails() {
 
 				wp_send_json_success(
 					array(
-						// translators: email addresses.
-						'message' => sprintf( wp_kses_post( __( '<span style="color:green">Success: Email sent to %d users.</span>', 'learndash' ) ), count( $email_addresses ) ),
+						'message' => '<span style="color:green">' .
+						sprintf(
+							// translators: total of users emailed, group.
+							esc_html__(
+								'Success: Email sent to %1$d %2$s users.',
+								'learndash'
+							),
+							count( $email_addresses ),
+							learndash_get_custom_label_lower( 'group' )
+						),
+						'</span>',
 					)
 				);
 			} else {
@@ -195,12 +204,12 @@ function learndash_group_emails() {
 						} else {
 							wp_send_json_success(
 								array(
-									'message' => sprintf(
+									'message' => '<span style="color:green">' . sprintf(
 										wp_kses_post(
-											// translators: email addresses, group.
+											// translators: total of users emailed, group.
 											_nx(
-												'<span style="color:green">Success: Email sent to %1$d %2$s user.</span>',
-												'<span style="color:green">Success: Email sent to %1$d %2$s users.</span>',
+												'Success: Email sent to %1$d %2$s user.',
+												'Success: Email sent to %1$d %2$s users.',
 												count( $email_addresses ),
 												'placeholders: email addresses, group.',
 												'learndash'
@@ -208,14 +217,14 @@ function learndash_group_emails() {
 										),
 										number_format_i18n( count( $email_addresses ) ),
 										learndash_get_custom_label_lower( 'group' )
-									),
+									) . '</span>',
 								)
 							);
 						}
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => wp_kses_post( __( '<span style="color:red">Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ) ),
+								'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ) . '</span>',
 							)
 						);
 					}
@@ -585,6 +594,18 @@ function learndash_user_group_enrolled_to_course_from( $user_id = 0, $course_id 
 
 		if ( ! empty( $group_course_enrolled_times ) ) {
 			asort( $group_course_enrolled_times );
+
+			/**
+			 * Filter the user group enrollment to course timestamps.
+			 *
+			 * @since 3.5.0
+			 *
+			 * @param array $group_course_enrolled_times Array of course to group enrollment timestamps.
+			 * @param int   $user_id                     User ID.
+			 * @param int   $course_id                   Course Post ID.
+			 */
+			$group_course_enrolled_times = apply_filters( 'learndash_user_group_enrolled_to_course_from_timestamps', $group_course_enrolled_times, $user_id, $course_id );
+
 			foreach ( $group_course_enrolled_times as $group_id => $group_course_timestamp ) {
 				$enrolled_from = $group_course_timestamp;
 				break;
@@ -1369,6 +1390,8 @@ function learndash_is_group_leader_user( $user = 0 ) {
 	if ( ( ! empty( $user_id ) ) && ( ! learndash_is_admin_user( $user_id ) ) && ( defined( 'LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK' ) ) && ( LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK != '' ) ) {
 		return user_can( $user_id, LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK );
 	}
+
+	return false;
 }
 
 /**
@@ -1392,6 +1415,8 @@ function learndash_is_admin_user( $user = 0 ) {
 	if ( ( ! empty( $user_id ) ) && ( defined( 'LEARNDASH_ADMIN_CAPABILITY_CHECK' ) ) && ( LEARNDASH_ADMIN_CAPABILITY_CHECK != '' ) ) {
 		return user_can( $user_id, LEARNDASH_ADMIN_CAPABILITY_CHECK );
 	}
+
+	return false;
 }
 
 /**
@@ -1447,6 +1472,8 @@ function learndash_is_user_in_group( $user_id = 0, $group_id = 0 ) {
 			return get_user_meta( $user_id, 'learndash_group_users_' . $group_id, true );
 		}
 	}
+
+	return false;
 }
 
 /**
@@ -1665,7 +1692,6 @@ function ld_update_leader_group_access( $user_id = 0, $group_id = 0, $remove = f
 				 */
 				do_action( 'ld_removed_leader_group_access', $user_id, $group_id );
 			}
-
 		} else {
 			$group_enrolled = get_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, true );
 			if ( empty( $group_enrolled ) ) {
@@ -2524,7 +2550,7 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 		 */
 		if ( ( 'edit-comments.php' === $pagenow ) && ( isset( $_GET['p'] ) ) ) {
 			$comment_post = get_post( absint( $_GET['p'] ) );
-			if ( ( $comment_post ) && ( is_a( $comment_post, 'WP_Post' ) ) && ( in_array( $comment_post->post_type, array( learndash_get_post_type_slug( 'assignment'), learndash_get_post_type_slug( 'essay') ), true ) ) ) {
+			if ( ( $comment_post ) && ( is_a( $comment_post, 'WP_Post' ) ) && ( in_array( $comment_post->post_type, array( learndash_get_post_type_slug( 'assignment' ), learndash_get_post_type_slug( 'essay' ) ), true ) ) ) {
 				$course_id = get_post_meta( $comment_post->ID, 'course_id', true );
 				$course_id = absint( $course_id );
 				if ( ( ! empty( $course_id ) ) && ( learndash_check_group_leader_course_user_intersect( get_current_user_id(), $comment_post->post_author, $course_id ) ) ) {

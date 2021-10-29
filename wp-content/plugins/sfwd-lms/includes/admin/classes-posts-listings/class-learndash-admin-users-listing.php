@@ -99,7 +99,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 				if ( 'user' === $this->post_type ) {
 					// Add the top nav filter selectors.
-					add_action( 'restrict_manage_users', array( $this, 'restrict_manage_users_selectors' ), 50 );
+					add_action( 'manage_users_extra_tablenav', array( $this, 'restrict_manage_users_selectors' ), 50 );
 
 					// Add the columns headers and rows.
 					add_filter( 'manage_users_columns', array( $this, 'manage_column_headers' ), 50, 1 );

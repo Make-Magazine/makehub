@@ -296,14 +296,14 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 												foreach ( $this->data_headers as $header_key => $header_data ) {
 
-													if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) ) {
+													if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) && ( is_callable( $header_data['display'] ) ) ) {
 														$row[ $header_key ] = call_user_func_array(
 															$header_data['display'],
 															array(
-																'header_value'  => $header_data['default'],
-																'header_key'    => $header_key,
-																'item'          => $result,
-																'report_user'   => $report_user,
+																$header_data['default'],
+																$header_key,
+																$result,
+																$report_user,
 															)
 														);
 													} elseif ( ( isset( $header_data['default'] ) ) && ( ! empty( $header_data['default'] ) ) ) {
@@ -323,14 +323,14 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 												foreach ( $this->data_headers as $header_key => $header_data ) {
 
-													if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) ) {
+													if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) && ( is_callable( $header_data['display'] ) ) ) {
 														$row[ $header_key ] = call_user_func_array(
 															$header_data['display'],
 															array(
-																'header_value'  => $header_data['default'],
-																'header_key'    => $header_key,
-																'item'          => new stdClass(),
-																'report_user'   => $report_user,
+																$header_data['default'],
+																$header_key,
+																new stdClass(),
+																$report_user,
 															)
 														);
 													} elseif ( ( isset( $header_data['default'] ) ) && ( ! empty( $header_data['default'] ) ) ) {

@@ -105,35 +105,48 @@ function learndash_get_course_id( $id = null, $bypass_cb = false ) {
  * @return string Lesson ID.
  */
 function learndash_get_lesson_id( $post_id = null, $course_id = null ) {
-	global $post;
+	$post_id   = absint( $post_id );
+	$course_id = absint( $course_id );
 
 	if ( empty( $post_id ) ) {
-		if ( ! is_single() || is_home() ) {
+		$the_id = get_the_id();
+		if ( empty( $the_id ) ) {
 			return false;
 		}
+		$post = get_post( $the_id );
+	} else {
+		$post = get_post( $post_id );
+	}
 
-		$post_id = $post->ID;
+	if ( ( ! $post ) || ( ! is_a( $post, 'WP_Post' ) ) || ( ! in_array( $post->post_type, learndash_get_post_types( 'course' ) ) ) ) {
+		return false;
+	}
+
+	if ( learndash_get_post_type_slug( 'lesson' ) === $post->post_type ) {
+		return $post->ID;
 	}
 
 	if ( learndash_is_course_shared_steps_enabled() ) {
-		$lesson_slug = get_query_var( 'sfwd-lessons' );
+		$lesson_slug = get_query_var( learndash_get_post_type_slug( 'lesson' ) );
 		if ( ! empty( $lesson_slug ) ) {
-			$lesson_post = learndash_get_page_by_path( $lesson_slug, 'sfwd-lessons' );
-			if ( ( $lesson_post ) && ( $lesson_post instanceof WP_Post ) ) {
+			$lesson_post = learndash_get_page_by_path( $lesson_slug, learndash_get_post_type_slug( 'lesson' ) );
+			if ( ( $lesson_post ) && ( is_a( $lesson_post, 'WP_Post' ) ) ) {
 				return $lesson_post->ID;
 			}
 		} else {
 			if ( empty( $course_id ) ) {
-				$course_id = learndash_get_course_id( $post_id );
+				$course_id = learndash_get_course_id( $post->ID );
 			}
 
 			if ( ! empty( $course_id ) ) {
-				return learndash_course_get_single_parent_step( $course_id, $post_id );
+				return learndash_course_get_single_parent_step( $course_id, $post->ID );
 			}
 		}
+	} else {
+		if ( in_array( $post->post_type, learndash_get_post_type_slug( array( 'topic', 'quiz' ) ), true ) ) {
+			return get_post_meta( $post->ID, 'lesson_id', true );
+		}
 	}
-
-	return get_post_meta( $post_id, 'lesson_id', true );
 }
 
 /**
@@ -1353,7 +1366,7 @@ function learndash_get_posts_by_price_type( $post_type = '', $price_type = '', $
 	$price_type = esc_attr( $price_type );
 
 	if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, learndash_get_post_type_slug( array( 'course', 'group' ) ), true ) ) ) {
-		
+
 		$new_logic = false;
 		if ( learndash_get_post_type_slug( 'course' ) === $post_type ) {
 			if ( empty( $price_type ) ) {
@@ -1394,11 +1407,12 @@ function learndash_get_posts_by_price_type( $post_type = '', $price_type = '', $
 				}
 			} else {
 				$sql_str = $wpdb->prepare(
-						"SELECT postmeta.post_id as post_id FROM {$wpdb->postmeta} as postmeta
-						INNER JOIN {$wpdb->posts} as posts ON posts.ID = postmeta.post_id 
-						WHERE posts.post_status='publish' AND posts.post_type=%s AND postmeta.meta_key=%s 
-						AND ( postmeta.meta_value REGEXP '\"" . $post_type . "_" . learndash_get_post_type_key( $post_type ) . "_price_type\";s:" . strlen( $price_type ) . ":\"" . $price_type . "\";' )",
-						$post_type, '_' . $post_type
+					"SELECT postmeta.post_id as post_id FROM {$wpdb->postmeta} as postmeta
+						INNER JOIN {$wpdb->posts} as posts ON posts.ID = postmeta.post_id
+						WHERE posts.post_status='publish' AND posts.post_type=%s AND postmeta.meta_key=%s
+						AND ( postmeta.meta_value REGEXP '\"" . $post_type . '_' . learndash_get_post_type_key( $post_type ) . '_price_type";s:' . strlen( $price_type ) . ':"' . $price_type . "\";' )",
+					$post_type,
+					'_' . $post_type
 				);
 
 				$post_ids = $wpdb->get_col( $sql_str );
@@ -1412,7 +1426,7 @@ function learndash_get_posts_by_price_type( $post_type = '', $price_type = '', $
 			$post_ids = $post_ids_transient;
 		}
 	}
-	
+
 	return $post_ids;
 }
 

@@ -7,7 +7,7 @@
  * @package LearnDash\Templates\LD30\Widgets
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 

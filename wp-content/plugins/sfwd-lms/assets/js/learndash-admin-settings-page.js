@@ -1,58 +1,14 @@
-jQuery( function() {
+if ((typeof learndash_admin_settings_data !== 'undefined') && (typeof learndash_admin_settings_data.json !== 'undefined')) {
+	learndash_admin_settings_data = learndash_admin_settings_data.json.replace(/&quot;/g, '"');
+	learndash_admin_settings_data = jQuery.parseJSON(learndash_admin_settings_data);
+} else {
+	learndash_admin_settings_data = {};
+}
 
-	if ((typeof learndash_admin_settings_data !== 'undefined') && (typeof learndash_admin_settings_data.json !== 'undefined')) {
-		learndash_admin_settings_data = learndash_admin_settings_data.json.replace(/&quot;/g, '"');
-		learndash_admin_settings_data = jQuery.parseJSON(learndash_admin_settings_data);
-	} else {
-		learndash_admin_settings_data = {};
-	}
+jQuery( function() {
 
 	learndash_course_edit_page_billing_cycle_javascript();
 
-	function learndash_get_base_select2_args() {
-		return {
-			theme: 'learndash',
-			ajax: null,
-			allowClear: true,
-			width: 'resolve',
-			dir: (window.isRtl) ? 'rtl' : '',
-			dropdownAutoWidth: true,
-			language: {
-				loadingMore: function () {
-					if (typeof learndash_admin_settings_data['selec2_language']['loadingMore'] !== 'undefined') {
-						return learndash_admin_settings_data['selec2_language']['loadingMore'];
-					}
-					return 'Loading more results…';
-				},
-				noResults: function () {
-					if (typeof learndash_admin_settings_data['selec2_language']['noResults'] !== 'undefined') {
-						return learndash_admin_settings_data['selec2_language']['noResults'];
-					}
-					return 'No results found';
-				},
-				searching: function () {
-					if (typeof learndash_admin_settings_data['selec2_language']['searching'] !== 'undefined') {
-						return learndash_admin_settings_data['selec2_language']['searching'];
-					}
-					return 'Searching…';
-				},
-				removeAllItems: function () {
-					if (typeof learndash_admin_settings_data['selec2_language']['removeAllItems'] !== 'undefined') {
-						return learndash_admin_settings_data['selec2_language']['removeAllItems'];
-					}
-					return 'Remove all items';
-				},
-				removeItem: function () {
-					if (typeof learndash_admin_settings_data['selec2_language']['removeItem'] !== 'undefined') {
-						return learndash_admin_settings_data['selec2_language']['removeItem'];
-					}
-					return 'Remove item';
-				}
-			}
-			//escapeMarkup: function (markup) { return markup; }
-		};
-
-	}
 	if (jQuery('.sfwd_options .sfwd_option_input select[data-ld-select2="1"]').length) {
 		jQuery('.sfwd_options .sfwd_option_input select[data-ld-select2="1"]').each(function (idx, item) {
 			var parent_ld_select = jQuery(item).parent('span.ld-select');
@@ -74,51 +30,6 @@ jQuery( function() {
 			select2_args.ajax = learndash_settings_select2_ajax(item);
 			jQuery(item).select2(select2_args);
 		});
-	}
-
-	/**
-	 * Populate Select2 dropdowns with data
-	 *
-	 * @param action
-	 * @returns {{url, dataType: string, method: string, delay: number, data: data, processResults: processResults}}
-	 */
-	function learndash_settings_select2_ajax(el) {
-		var query_data = jQuery(el).data('select2-query-data');
-
-		if ((typeof query_data === 'undefined') || (query_data === '')) {
-			return null;
-		}
-
-		// Trigger change when the selector is cleared.
-		jQuery(el).on('select2:unselect', function (e) {
-			jQuery(el).trigger('change');
-		});
-
-		return {
-			url: learndash_admin_settings_data.ajaxurl,
-			dataType: 'json',
-			method: 'post',
-			delay: 1500,
-			cache: true,
-			data: function (params) {
-				return {
-					'action': 'learndash_settings_select2_query',
-					'query_data': query_data || '',
-					'search': params.term || '',
-					'page': params.page || 1,
-				};
-			},
-			processResults: function (response, params) {
-				params.page = params.page || 1;
-
-				return {
-					results: response.items,
-					pagination: {
-						more: (params.page < response.total_pages)
-					}
-				};
-			},
-		}
 	}
 
 	if (jQuery('body.edit-php .tablenav.top select[data-ld-select2="1"], body.users-php .tablenav.top select[data-ld-select2="1"]').length) {
@@ -1295,24 +1206,39 @@ function learndash_course_edit_page_billing_cycle_javascript() {
 		function output_message() {
 			switch (billing_cycle) {
 				case "D":
-					message = sfwd_data.valid_recurring_paypal_day_range;
-					parent.append(build_notice(message));
+					message   = sfwd_data.valid_recurring_paypal_day_range;
+					max_value = sfwd_data.valid_recurring_paypal_day_max;
 					break;
+
 				case "W":
-					message = sfwd_data.valid_recurring_paypal_week_range;
-					parent.append(build_notice(message));
+					message   = sfwd_data.valid_recurring_paypal_week_range;
+					max_value = sfwd_data.valid_recurring_paypal_week_max;
 					break;
+
 				case "M":
-					message = sfwd_data.valid_recurring_paypal_month_range;
-					parent.append(build_notice(message));
+					message   = sfwd_data.valid_recurring_paypal_month_range;
+					max_value = sfwd_data.valid_recurring_paypal_month_max;
 					break;
+
 				case "Y":
-					message = sfwd_data.valid_recurring_paypal_year_range;
-					parent.append(build_notice(message));
+					message   = sfwd_data.valid_recurring_paypal_year_range;
+					max_value = sfwd_data.valid_recurring_paypal_year_max;
+					break;
+
 				default:
+					message   = '';
+					max_value = 0;
 					break;
 			}
+			parent.append(build_notice(message));
+
+			const billing_input = parent.find( 'input[name="course_price_billing_p3"');
+			if ( billing_input.val() > max_value ) {
+				billing_input.val(max_value);
+			}
+			billing_input.prop('max', max_value);
 		}
+
 		output_message();
 
 		selector.on( 'change', function (e) {
@@ -1322,6 +1248,95 @@ function learndash_course_edit_page_billing_cycle_javascript() {
 		});
 	}
 };
+
+function learndash_get_base_select2_args() {
+	return {
+		theme: 'learndash',
+		ajax: null,
+		allowClear: true,
+		width: 'resolve',
+		dir: (window.isRtl) ? 'rtl' : '',
+		dropdownAutoWidth: true,
+		language: {
+			loadingMore: function () {
+				if (typeof learndash_admin_settings_data['selec2_language']['loadingMore'] !== 'undefined') {
+					return learndash_admin_settings_data['selec2_language']['loadingMore'];
+				}
+				return 'Loading more results…';
+			},
+			noResults: function () {
+				if (typeof learndash_admin_settings_data['selec2_language']['noResults'] !== 'undefined') {
+					return learndash_admin_settings_data['selec2_language']['noResults'];
+				}
+				return 'No results found';
+			},
+			searching: function () {
+				if (typeof learndash_admin_settings_data['selec2_language']['searching'] !== 'undefined') {
+					return learndash_admin_settings_data['selec2_language']['searching'];
+				}
+				return 'Searching…';
+			},
+			removeAllItems: function () {
+				if (typeof learndash_admin_settings_data['selec2_language']['removeAllItems'] !== 'undefined') {
+					return learndash_admin_settings_data['selec2_language']['removeAllItems'];
+				}
+				return 'Remove all items';
+			},
+			removeItem: function () {
+				if (typeof learndash_admin_settings_data['selec2_language']['removeItem'] !== 'undefined') {
+					return learndash_admin_settings_data['selec2_language']['removeItem'];
+				}
+				return 'Remove item';
+			}
+		}
+		//escapeMarkup: function (markup) { return markup; }
+	};
+}
+
+/**
+ * Populate Select2 dropdowns with data
+ *
+ * @param action
+ * @returns {{url, dataType: string, method: string, delay: number, data: data, processResults: processResults}}
+ */
+function learndash_settings_select2_ajax(el) {
+	var query_data = jQuery(el).data('select2-query-data');
+
+	if ((typeof query_data === 'undefined') || (query_data === '')) {
+		return null;
+	}
+
+	// Trigger change when the selector is cleared.
+	jQuery(el).on('select2:unselect', function (e) {
+		jQuery(el).trigger('change');
+	});
+
+	return {
+		url: learndash_admin_settings_data.ajaxurl,
+		dataType: 'json',
+		method: 'post',
+		delay: 1500,
+		cache: true,
+		data: function (params) {
+			return {
+				'action': 'learndash_settings_select2_query',
+				'query_data': query_data || '',
+				'search': params.term || '',
+				'page': params.page || 1,
+			};
+		},
+		processResults: function (response, params) {
+			params.page = params.page || 1;
+
+			return {
+				results: response.items,
+				pagination: {
+					more: (params.page < response.total_pages)
+				}
+			};
+		},
+	}
+}
 
 /**
  * Trigger resize on load to trigger the resizing of

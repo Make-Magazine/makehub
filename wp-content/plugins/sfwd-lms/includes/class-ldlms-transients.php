@@ -48,7 +48,7 @@ if ( ! class_exists( 'LDLMS_Transients' ) ) {
 			$transient_data = false;
 
 			if ( ! empty( $transient_key ) ) {
-			
+
 				/**
 				 * Filters whether the to bypass cache.
 				 *
@@ -69,7 +69,7 @@ if ( ! class_exists( 'LDLMS_Transients' ) ) {
 					 * @param boolean $cache_enabled Whether the object cache is enabled.
 					 * @param string  $transient_key  Transient Key.
 					 */
-					if ( apply_filters( 'learndash_object_cache_enabled', LEARNDASH_OBJECT_CACHE_ENABLED, $transient_key ) ) { 
+					if ( apply_filters( 'learndash_object_cache_enabled', LEARNDASH_OBJECT_CACHE_ENABLED, $transient_key ) ) {
 						$transient_data = wp_cache_get( $transient_key, self::$cache_group, false, $found );
 						if ( false === $found ) {
 							$transient_data = false;
@@ -104,7 +104,7 @@ if ( ! class_exists( 'LDLMS_Transients' ) ) {
 		 * @param integer $transient_expire Expiration time for transient.
 		 */
 		public static function set( $transient_key = '', $transient_data = '', $transient_expire = MINUTE_IN_SECONDS ) {
-			
+
 			if ( ! empty( $transient_key ) ) {
 				$transient_expire = apply_filters( 'learndash_cache_expire', $transient_expire, $transient_key );
 				$transient_expire = absint( $transient_expire );

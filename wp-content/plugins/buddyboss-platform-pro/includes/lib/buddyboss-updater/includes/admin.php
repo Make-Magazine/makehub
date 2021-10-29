@@ -396,22 +396,49 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ) :
 					$this->_update_saved_licenses( $saved_licenses );
 
 					if ( $this->network_activated ) {
-						$current_plugins               = get_site_transient( 'update_plugins' );  // Get the current update info
-						$current_plugins->last_checked = 0;                     // wp_update_plugins() checks this value when determining
-						set_site_transient( 'update_plugins', $current_plugins );   // whether to actually check for updates, so we reset it to zero.
-						$current_themes               = get_site_transient( 'update_themes' );
+						// Get the current update info.
+						$current_plugins = get_site_transient( 'update_plugins' );
+						if ( empty( $current_plugins ) ) {
+							$current_plugins = new stdClass();
+						}
+						// wp_update_plugins() checks this value when determining.
+						$current_plugins->last_checked = 0;
+
+						// Whether to actually check for updates, so we reset it to zero.
+						set_site_transient( 'update_plugins', $current_plugins );
+						$current_themes = get_site_transient( 'update_themes' );
+						if ( empty( $current_themes ) ) {
+							$current_themes = new stdClass();
+						}
+						// wp_update_plugins() checks this value when determining.
 						$current_themes->last_checked = 0;
-						set_site_transient( 'update_themes', $current_themes );    // whether to actually check for updates, so we reset it to zero.
+
+						// Whether to actually check for updates, so we reset it to zero.
+						set_site_transient( 'update_themes', $current_themes );
 					} else {
-						$current_plugins = get_transient( 'update_plugins' );  // Get the current update info
-						$current_plugins->last_checked = 0;                     // wp_update_plugins() checks this value when determining
-						set_transient( 'update_plugins', $current_plugins );   // whether to actually check for updates, so we reset it to zero.
-						$current_themes  = get_transient( 'update_themes' );
+						// Get the current update info.
+						$current_plugins = get_transient( 'update_plugins' );
+						if ( empty( $current_plugins ) ) {
+							$current_plugins = new stdClass();
+						}
+						// wp_update_plugins() checks this value when determining.
+						$current_plugins->last_checked = 0;
+						// Whether to actually check for updates, so we reset it to zero.
+						set_transient( 'update_plugins', $current_plugins );
+
+						$current_themes = get_transient( 'update_themes' );
+						if ( empty( $current_themes ) ) {
+							$current_themes = new stdClass();
+						}
+						// wp_update_plugins() checks this value when determining.
 						$current_themes->last_checked = 0;
-						set_transient( 'update_themes', $current_themes );    // whether to actually check for updates, so we reset it to zero.
+
+						// whether to actually check for updates, so we reset it to zero.
+						set_transient( 'update_themes', $current_themes );
 					}
 
-					wp_update_plugins();                            // Run the internal plugin update check
+					// Run the internal plugin update check.
+					wp_update_plugins();
 					wp_update_themes();
 				}
 			}
@@ -715,7 +742,7 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ) :
 			if ( ! empty( $saved_licenses ) ) {
 				foreach ( $saved_licenses as $package_id => $license_details ) {
 					// parent plugin should be active as well
-					if ( $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
+					if ( isset( $license_details['is_active'] ) && $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
 						if ( ! empty( $license_details['product_keys'] ) && is_array( $license_details['product_keys'] ) && in_array( $product_key, $license_details['product_keys'] ) ) {
 							if ( $get_extra_info ) {
 								$valid_license_key = array(
@@ -912,13 +939,19 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ) :
 			if ( ! empty( $licenses_updated ) ) {
 				$retval['message'] = sprintf( __( 'Congratulations! License keys for the following product(s) have been activated: %s', 'buddyboss-pro' ), implode( ', ', $licenses_updated ) );
 
-				$current               = get_site_transient( 'update_plugins' );  // Get the current update info
-				$current->last_checked = 0;                     // wp_update_plugins() checks this value when determining
+				$current               	= get_site_transient( 'update_plugins' );  // Get the current update info
+				if ( empty( $current ) ) {
+					$current			= new stdClass();
+				}
+				$current->last_checked 	= 0;                     // wp_update_plugins() checks this value when determining
 				get_site_transient( 'update_plugins', $current );   // whether to actually check for updates, so we reset it to zero.
 				wp_update_plugins();                            // Run the internal plugin update check
 
-				$current               = get_site_transient( 'update_themes' );
-				$current->last_checked = 0;
+				$current               	= get_site_transient( 'update_themes' );
+				if ( empty( $current ) ) {
+					$current			= new stdClass();
+				}
+				$current->last_checked 	= 0;
 				get_site_transient( 'update_themes', $current );    // whether to actually check for updates, so we reset it to zero.
 				wp_update_themes();
 

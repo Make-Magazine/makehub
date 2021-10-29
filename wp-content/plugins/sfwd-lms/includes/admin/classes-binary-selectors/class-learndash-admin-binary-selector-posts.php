@@ -181,10 +181,11 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 							$item_title = $post->post_title;
 						}
 
-						$post_status_object = get_post_status_object( get_post_status( $post->ID ) );
-						if ( ( $post_status_object ) && ( property_exists( $post_status_object, 'name' ) ) && ( 'publish' !== $post_status_object->name ) ) {
-							if ( ( property_exists( $post_status_object, 'label' ) ) && ( ! empty( $post_status_object->label ) ) ) {
-								$item_title .= ' (' . $post_status_object->label . ')';
+						$post_status_slug = learndash_get_step_post_status_slug( $post );
+						if ( ( ! empty( $post_status_slug ) ) && ( 'publish' !== $post_status_slug ) ) {
+							$post_statuses = learndash_get_step_post_statuses();
+							if ( isset( $post_statuses[ $post_status_slug ] ) ) {
+								$item_title .= ' (' . esc_html( $post_statuses[ $post_status_slug ] ) . ')';
 							}
 						}
 

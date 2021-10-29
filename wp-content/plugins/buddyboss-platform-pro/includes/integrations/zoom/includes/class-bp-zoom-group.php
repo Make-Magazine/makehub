@@ -1141,7 +1141,7 @@ class BP_Zoom_Group {
 		if ( 'zoom_meeting_notify' === $activity->type ) {
 			$activity_action = sprintf(
 				/* translators: %1$s - user link, %2$s - meeting link., %3$s - group link.*/
-				esc_html__( '%1$s - Zoom meeting %2$s is starting soon in the group %3$s', 'buddyboss-pro' ),
+				esc_html__( '%1$s scheduled Zoom meeting %2$s starting soon in the group %3$s', 'buddyboss-pro' ),
 				$user_link,
 				$meeting_link,
 				$group_link

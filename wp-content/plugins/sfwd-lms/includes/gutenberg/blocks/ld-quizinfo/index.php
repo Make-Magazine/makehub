@@ -24,37 +24,37 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 			$this->shortcode_slug   = 'quizinfo';
 			$this->block_slug       = 'ld-quizinfo';
 			$this->block_attributes = array(
-				'show'              => array(
+				'show'            => array(
 					'type' => 'string',
 				),
-				'quiz_id'           => array(
+				'quiz_id'         => array(
 					'type' => 'string',
 				),
-				'user_id'           => array(
+				'user_id'         => array(
 					'type' => 'string',
 				),
-				'format'            => array(
+				'format'          => array(
 					'type' => 'string',
 				),
-				'field_id'          => array(
+				'field_id'        => array(
 					'type' => 'string',
 				),
-				'seconds_format'    => array(
+				'seconds_format'  => array(
 					'type' => 'string',
 				),
-				'decimals'          => array(
+				'decimals'        => array(
 					'type' => 'string',
 				),
-				'preview_show'      => array(
+				'preview_show'    => array(
 					'type' => 'boolean',
 				),
 				'preview_quiz_id' => array(
 					'type' => 'string',
 				),
-				'preview_user_id'   => array(
+				'preview_user_id' => array(
 					'type' => 'string',
 				),
-				'meta'              => array(
+				'meta'            => array(
 					'type' => 'object',
 				),
 			);
@@ -165,7 +165,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 				$shortcode_params_str = '[' . $this->shortcode_slug . $shortcode_params_str . ']';
 
-				$shortcode_out        = do_shortcode( $shortcode_params_str );
+				$shortcode_out = do_shortcode( $shortcode_params_str );
 				if ( empty( $shortcode_out ) ) {
 					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}

@@ -52,6 +52,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'group_price_type_paynow_price'            => 'group_price',
 				'group_price_type_subscribe_price'         => 'group_price',
 				'group_price_type_subscribe_billing_cycle' => 'group_price_type_subscribe_billing_cycle',
+
+				'group_price_billing_t3'                   => 'group_price_billing_t3',
+				'group_price_billing_p3'                   => 'group_price_billing_p3',
+
 				'group_price_type_closed_custom_button_label' => 'custom_button_label',
 				'group_price_type_closed_custom_button_url' => 'custom_button_url',
 				'group_price_type_closed_price'            => 'group_price',
@@ -234,7 +238,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'  => 'group_price_type_subscribe_billing_cycle',
 					'label' => esc_html__( 'Billing Cycle', 'learndash' ),
 					'type'  => 'custom',
-					'html'  => $sfwd_lms->learndash_course_price_billing_cycle_html(),
+					'html'  => learndash_billing_cycle_setting_field_html(),
 				),
 			);
 			parent::load_settings_fields();
@@ -433,6 +437,23 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ! isset( $settings_values['group_price_type'] ) ) {
 					$settings_values['group_price_type'] = '';
+				}
+
+				if ( isset( $settings_values['group_price_billing_t3'] ) ) {
+					$settings_values['group_price_billing_t3'] = '';
+				}
+				if ( ! isset( $settings_values['group_price_billing_p3'] ) ) {
+					$settings_values['group_price_billing_p3'] = 0;
+				}
+
+				if ( isset( $_POST['group_price_billing_t3'] ) ) {
+					$settings_values['group_price_billing_t3'] = strtoupper( esc_attr( $_POST['group_price_billing_t3'] ) );
+					$settings_values['group_price_billing_t3'] = learndash_billing_cycle_field_frequency_validate( $settings_values['group_price_billing_t3'] );
+				}
+
+				if ( isset( $_POST['group_price_billing_p3'] ) ) {
+					$settings_values['group_price_billing_p3'] = absint( $_POST['group_price_billing_p3'] );
+					$settings_values['group_price_billing_p3'] = learndash_billing_cycle_field_interval_validate( $settings_values['group_price_billing_p3'], $settings_values['group_price_billing_t3'] );
 				}
 
 				if ( 'paynow' === $settings_values['group_price_type'] ) {

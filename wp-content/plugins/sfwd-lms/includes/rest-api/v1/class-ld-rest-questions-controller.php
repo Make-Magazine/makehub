@@ -121,7 +121,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 		 * @return WP_Error|bool
 		 */
 		public function permissions_check( $request ) {
-			$params      = $request->get_params();
+			$params = $request->get_params();
 			if ( ( isset( $params['id'] ) ) && ( ! empty( $params['id'] ) ) ) {
 				$question_id = $params['id'];
 
@@ -140,7 +140,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 		 * @return WP_Error|WP_REST_Response
 		 */
 		public function get_items( $request ) {
-			$data = [];
+			$data = array();
 			return new WP_REST_Response( $data, 200 );
 		}
 
@@ -230,10 +230,10 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 			// Update question's post content.
 			if ( isset( $params['_question'] ) ) {
 				wp_update_post(
-					[
+					array(
 						'ID'           => $question_id,
 						'post_content' => wp_slash( $params['_question'] ),
-					]
+					)
 				);
 			}
 
@@ -269,7 +269,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 			// Get data as array.
 			$question_data = $question_model->get_object_as_array();
 
-			$answer_data = [];
+			$answer_data = array();
 
 			// Get answer data.
 			foreach ( $question_data['_answerData'] as $answer ) {
@@ -283,10 +283,10 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 			// Generate output object.
 			$data = array_merge(
 				$question_data,
-				[
+				array(
 					'question_id'         => $question_id,
 					'question_post_title' => get_the_title( $question_id ),
-				]
+				)
 			);
 
 			return $data;
