@@ -179,7 +179,7 @@ class ACUI_Columns{
 		?>
 			<tr>
 				<th><label for="<?php echo $column; ?>"><?php echo $column; ?></label></th>
-				<td><input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>" value="<?php echo esc_attr( ACUI_Helper::show_meta( $user->ID, $column ) ); ?>" class="regular-text" /></td>
+				<td><input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>" value="<?php echo esc_attr( ACUI_Helper::show_meta( $user->ID, $column ) ); ?>" class="regular-text" <?php echo apply_filters( 'acui_columns_field_extra_attributes', '', $column ); ?>/></td>
 			</tr>
 			<?php
 		endforeach;
@@ -198,15 +198,26 @@ class ACUI_Columns{
 		$acui_restricted_fields = $acui_helper->get_restricted_fields();
 		
 		if( is_array( $headers ) && count( $headers ) > 0 ):
+            $values = array();
+
 			foreach ( $headers as $column ){
 				if( in_array( $column, $acui_restricted_fields ) )
 					continue;
 	
 				$column_sanitized = str_replace(" ", "_", $column );
 
-				if( isset( $post_filtered[ $column_sanitized ] ) )
-					update_user_meta( $user_id, $column, $post_filtered[$column_sanitized] );
+				if( isset( $post_filtered[ $column_sanitized ] ) ){
+                    $old_value = get_user_meta( $user_id, $column, true );
+
+                    if( $old_value != $post_filtered[ $column_sanitized ] )
+                        $values_changed[ $column ] = $post_filtered[ $column_sanitized ];
+
+                    update_user_meta( $user_id, $column, $post_filtered[ $column_sanitized ] );
+                    $values[ $column ] = $post_filtered[ $column_sanitized ];
+                }
 			}
+
+            do_action( 'acui_columns_fields_saved', $values, $values_changed );
 		endif;
 	}
 

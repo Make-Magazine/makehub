@@ -3,8 +3,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class ACUI_Homepage{
 	function __construct(){
-		add_action( 'acui_homepage_start', array( $this, 'maybe_remove_old_csv' ) );
 	}
+
+    function hooks(){
+        add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts' ), 10, 1 );
+		add_action( 'acui_homepage_start', array( $this, 'maybe_remove_old_csv' ) );
+        add_action( 'wp_ajax_acui_delete_attachment', array( $this, 'delete_attachment' ) );
+		add_action( 'wp_ajax_acui_bulk_delete_attachment', array( $this, 'bulk_delete_attachment' ) );
+		add_action( 'wp_ajax_acui_delete_users_assign_posts_data', array( $this, 'delete_users_assign_posts_data' ) );
+    }
+
+    function load_scripts( $hook ){
+        if( $hook != 'tools_page_acui' || isset( $_GET['tab'] ) )
+            return;
+        
+        wp_enqueue_style( 'select2-css', '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css' );
+        wp_enqueue_script( 'select2-js', '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js' );
+    }
 
 	static function admin_gui(){
 		$last_roles_used = empty( get_option( 'acui_last_roles_used' ) ) ? array( 'subscriber' ) : get_option( 'acui_last_roles_used' );
@@ -51,9 +66,7 @@ class ACUI_Homepage{
 					<th scope="row"><label for="role"><?php _e( 'Default role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 					<?php 
-						$list_roles = ACUI_Helper::get_editable_roles();
-						
-						foreach ($list_roles as $key => $value) {
+						foreach ( ACUI_Helper::get_editable_roles() as $key => $value ){
 							if( in_array( $key, $last_roles_used ) )
 								echo "<label id='$key' style='margin-right:5px;'><input name='role[]' type='checkbox' checked='checked' value='$key'/>$value</label>";
 							else
@@ -166,14 +179,7 @@ class ACUI_Homepage{
 						</div>
 						<div style="margin-left:25px;">
 							<select id="delete_users_assign_posts" name="delete_users_assign_posts">
-								<option value=''><?php _e( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' ); ?></option>
-								<?php
-									$blogusers = get_users( array( 'fields' => array( 'ID', 'display_name' ) ) );
-									
-									foreach ( $blogusers as $bloguser ) {
-										echo "<option value='{$bloguser->ID}'>{$bloguser->display_name}</option>";
-									}
-								?>
+                                <option value=""><?php _e( 'Delete posts of deleted users without assigning to any user or type to search a user', 'import-users-from-csv-with-meta' ) ?></option>
 							</select>
 							<p class="description"><?php _e( 'Administrators will not be deleted anyway. After delete users, we can choose if we want to assign their posts to another user. If you do not choose some user, content will be deleted.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
@@ -188,13 +194,9 @@ class ACUI_Homepage{
 						</div>
 						<div style="margin-left:25px;">
 							<select id="change_role_not_present_role" name="change_role_not_present_role">
-								<?php
-									$list_roles = ACUI_Helper::get_editable_roles();
-						
-									foreach ($list_roles as $key => $value) {
-										echo "<option value='$key'>$value</option>";
-									}
-								?>
+								<?php foreach ( ACUI_Helper::get_editable_roles() as $key => $value ): ?>
+									<option value='<?php echo $key; ?>'><?php echo $value; ?></option>
+								<?php endforeach; ?>
 							</select>
 							<p class="description"><?php _e( 'After import users which is not present in the CSV and can be changed to a different role.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
@@ -243,12 +245,12 @@ class ACUI_Homepage{
 	</div>
 	<script type="text/javascript">
 	function check(){
-		if(document.getElementById("uploadfile").value == "" && jQuery( "#upload_file" ).is(":visible") ) {
+		if(document.getElementById( 'uploadfile' ).value == "" && jQuery( '#upload_file' ).is( ':visible' ) ) {
 		   alert("<?php _e( 'Please choose a file', 'import-users-from-csv-with-meta' ); ?>");
 		   return false;
 		}
 
-		if( jQuery( "#path_to_file" ).val() == "" && jQuery( "#introduce_path" ).is(":visible") ) {
+		if( jQuery( '#path_to_file' ).val() == "" && jQuery( '#introduce_path' ).is( ':visible' ) ) {
 		   alert("<?php _e( 'Please enter a path to the file', 'import-users-from-csv-with-meta' ); ?>");
 		   return false;
 		}
@@ -261,7 +263,7 @@ class ACUI_Homepage{
 			check_delete_users_checked();
 		});
 
-		$( ".delete_attachment" ).click( function(){
+		$( '.delete_attachment' ).click( function(){
 			var answer = confirm( "<?php _e( 'Are you sure to delete this file?', 'import-users-from-csv-with-meta' ); ?>" );
 			if( answer ){
 				var data = {
@@ -281,7 +283,7 @@ class ACUI_Homepage{
 			}
 		});
 
-		$( "#bulk_delete_attachment" ).click( function(){
+		$( '#bulk_delete_attachment' ).click( function(){
 			var answer = confirm( "<?php _e( 'Are you sure to delete ALL CSV files uploaded? There can be CSV files from other plugins.', 'import-users-from-csv-with-meta' ); ?>" );
 			if( answer ){
 				var data = {
@@ -300,22 +302,48 @@ class ACUI_Homepage{
 			}
 		});
 
-		$( ".toggle_upload_path" ).click( function( e ){
+		$( '.toggle_upload_path' ).click( function( e ){
 			e.preventDefault();
-
-			$("#upload_file,#introduce_path").toggle();
+			$( '#upload_file,#introduce_path' ).toggle();
 		} );
 
-		$("#vote_us").click(function(){
-			var win=window.open("http://wordpress.org/support/view/plugin-reviews/import-users-from-csv-with-meta?free-counter?rate=5#postform", '_blank');
+		$( '#vote_us' ).click( function(){
+			var win=window.open( 'http://wordpress.org/support/view/plugin-reviews/import-users-from-csv-with-meta?free-counter?rate=5#postform', '_blank');
 			win.focus();
-		});
+		} );
+
+        $( '#change_role_not_present_role' ).select2();
+
+        $( '#delete_users_assign_posts' ).select2({
+            ajax: {
+                url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
+                cache: true,
+                dataType: 'json',
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: { id: '', title: '<?php _e( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' )  ?>' },
+                data: function( params ) {
+                    if (params.term.trim().length < 3)
+                        throw false;
+  
+                    var query = {
+                        search: params.term,
+                        _wpnonce: '<?php echo wp_create_nonce( 'codection-security' ); ?>',
+                        action: 'acui_delete_users_assign_posts_data',
+                    }
+
+                    return query;
+                }
+            }
+        });
 
 		function check_delete_users_checked(){
-			if( $('#delete_users').is(':checked') ){
+			if( $( '#delete_users' ).is( ':checked' ) ){
+                $( '#delete_users_assign_posts' ).prop( 'disabled', false );
 				$( '#change_role_not_present' ).prop( 'disabled', true );
 				$( '#change_role_not_present_role' ).prop( 'disabled', true );				
 			} else {
+                $( '#delete_users_assign_posts' ).prop( 'disabled', true );
 				$( '#change_role_not_present' ).prop( 'disabled', false );
 				$( '#change_role_not_present_role' ).prop( 'disabled', false );
 			}
@@ -358,4 +386,79 @@ class ACUI_Homepage{
 		</div>
 		<?php endif;
 	}
+
+    function delete_attachment() {
+		check_ajax_referer( 'codection-security', 'security' );
+	
+		if( ! current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
+            wp_die( __( 'Only users who are able to create users can delete CSV attachments.', 'import-users-from-csv-with-meta' ) );
+	
+		$attach_id = absint( $_POST['attach_id'] );
+		$mime_type  = (string) get_post_mime_type( $attach_id );
+	
+		if( $mime_type != 'text/csv' )
+			_e('This plugin only can delete the type of file it manages, CSV files.', 'import-users-from-csv-with-meta' );
+	
+		$result = wp_delete_attachment( $attach_id, true );
+	
+		if( $result === false )
+			_e( 'There were problems deleting the file, please check file permissions', 'import-users-from-csv-with-meta' );
+		else
+			echo 1;
+	
+		wp_die();
+	}
+
+	function bulk_delete_attachment(){
+		check_ajax_referer( 'codection-security', 'security' );
+	
+		if( ! current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
+        wp_die( __( 'Only users who are able to create users can bulk delete CSV attachments.', 'import-users-from-csv-with-meta' ) );
+	
+		$args_old_csv = array( 'post_type'=> 'attachment', 'post_mime_type' => 'text/csv', 'post_status' => 'inherit', 'posts_per_page' => -1 );
+		$old_csv_files = new WP_Query( $args_old_csv );
+		$result = 1;
+	
+		while($old_csv_files->have_posts()) : 
+			$old_csv_files->the_post();
+	
+			$mime_type  = (string) get_post_mime_type( get_the_ID() );
+			if( $mime_type != 'text/csv' )
+				wp_die( __('This plugin only can delete the type of file it manages, CSV files.', 'import-users-from-csv-with-meta' ) );
+	
+			if( wp_delete_attachment( get_the_ID(), true ) === false )
+				$result = 0;
+		endwhile;
+		
+		wp_reset_postdata();
+	
+		echo $result;
+	
+		wp_die();
+	}
+
+    function delete_users_assign_posts_data(){
+        check_ajax_referer( 'codection-security', 'security' );
+	
+		if( ! current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
+            wp_die( __( 'Only users who are able to create users can manage this option.', 'import-users-from-csv-with-meta' ) );
+
+        $results = array( array( 'id' => '', 'value' => __( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' ) ) );
+        $search = sanitize_text_field( $_GET['search'] );
+
+        if( strlen( $search ) >= 3 ){
+            $blogusers = get_users( array( 'fields' => array( 'ID', 'display_name' ), 'search' => '*' . $search . '*' ) );
+            
+            foreach ( $blogusers as $bloguser ) {
+                $results[] = array( 'id' => $bloguser->ID, 'text' => $bloguser->display_name );
+            }
+        }
+        
+        echo json_encode( array( 'results' => $results, 'more' => 'false' ) );
+        
+        wp_die();
+    }
 }
+
+$acui_homepage = new ACUI_Homepage();
+$acui_homepage->hooks();

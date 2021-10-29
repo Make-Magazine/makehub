@@ -1,10 +1,10 @@
-=== Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream ===
+=== Embed Plus for YouTube - Embed a YouTube Gallery, Channel, Playlist, Live Stream, Facade ===
 Contributors: embedplus
 Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
-Tags: youtube gallery, video gallery, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, youtube playlist, embed live chat, lazy load, non critical javascript
+Tags: youtube gallery, video gallery, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, youtube playlist, embed live chat, lazy load, facade
 Requires at least: 4.1
-Tested up to: 5.7
-Stable tag: 13.4.3
+Tested up to: 5.8
+Stable tag: 14.0
 License: GPLv3 or later
 
 YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube live stream. With defer JavaScript options
@@ -13,6 +13,7 @@ YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlis
 
 **A WordPress YouTube embed, YouTube gallery (channel or playlist), and even YouTube livestream or premiere can be customized in a wide variety of ways. It focuses on performance with the ability to defer JavaScript, while serving minified CSS and JavaScript. Here are a few recently added features:**
 
+* YouTube gallery embeds and standard videos now support Facade Mode which improves performance by loading a lighter version of the player, until it is clicked. Then the real player loads (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases and found it to successfully improve your Lighthouse performance score by addressing  the following recommendation: "Some third-party resources can be lazy loaded with a facade - 1 facade alternative available"
 * Defer critical and non critical JavaScript - improve the initial load time of your pages by allowing this plugin's critical and non critical Javascript code to begin execution only after a page is loaded. That reasoning is the basis for the Defer CSS Javascript (styles and code) recommendation you'll see in various web profiling tools.  We plan to allow you to defer critical and non critical CSS in the near future.
 * Compatible with the WordPress Gutenberg block editor (it also stays backwards-compatible with the classic editor). Both the Gutenberg block selector and the Gutenberg classic block will show the YouTube wizard button. For the Gutenberg block selector, click on the (+) sign for the block editor list. The YouTube Wizard block is located under the "Embeds" category (make sure you choose "YouTube **Wizard**"). See more on [how to embed a YouTube video, gallery, or livestream with the WordPress Gutenberg block editor here >>](https://www.embedplus.com/embed-youtube-video-gallery-livestream-wordpress-gutenberg-block-editor.aspx) The plugin is also compatible with several popular page builders like [Elementor](https://www.youtube.com/watch?v=ldNfIGRTxDU), [Beaver Builder](https://www.youtube.com/watch?v=bPgz0jyt7TE), [SiteOrigin](https://www.youtube.com/watch?v=7QNYw_g-7WM), and [Visual Composer](https://www.youtube.com/watch?v=FWBQc9XhAqM).  For these and pretty much any other page builder with a short code widget, you can also embed your video, gallery, live stream, or premiere by creating the short code in the plugin's wizard and then embedding the code in the page builder's short code widget or text widget.
 * Privacy and Consent - Improved privacy and GDPR compliance options like YouTube no cookie, YouTube API restrictions, and a customizable GDPR consent message
@@ -150,6 +151,10 @@ You can also start and end each individual video at particular times. Like the a
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 14.0 =
+* New facade mode for lighter and faster page loads (see Performance tab)
+* CSS fixes
 
 = Embed Plus for YouTube WordPress Plugin 13.4.3 =
 * Automatically turn on default dimensions for new installations, to skip oEmbed width/height lookups. Improves performance (recommended for all users, given most YouTube videos are 16:9 ratio)

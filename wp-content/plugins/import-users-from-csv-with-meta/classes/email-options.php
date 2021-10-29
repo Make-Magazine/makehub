@@ -123,6 +123,7 @@ class ACUI_Email_Options{
 		<br/>
 		<input class="button-primary" type="submit" value="<?php _e( 'Save email template and options', 'import-users-from-csv-with-meta'); ?>" id="save_mail_template_options"/>
 		<input class="button-primary" type="button" value="<?php _e( 'Send test email', 'import-users-from-csv-with-meta'); ?>" id="send_test_email" title="<?php _e( 'This test email will be sent to the current user', 'import-users-from-csv-with-meta'); ?>"/>
+        <?php _e( 'If you send a test email, no wildcards will be replaced becuase when you test, we have no data to replace.', 'import-users-from-csv-with-meta' ); ?>
 
 		<?php wp_nonce_field( 'codection-security', 'security' ); ?>
 		

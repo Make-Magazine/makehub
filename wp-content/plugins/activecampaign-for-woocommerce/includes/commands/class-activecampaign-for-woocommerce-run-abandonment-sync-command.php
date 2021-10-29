@@ -292,7 +292,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
 					$ecom_product->set_externalid( $wc_product->get_id() );
 					$ecom_product->set_name( $wc_product->get_name() );
-					$ecom_product->set_price( Money::of( $wc_product->get_price(), get_woocommerce_currency() )->getMinorAmount() );
+					$ecom_product->set_price( Money::of( wc_format_decimal( $wc_product->get_price(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
 					$ecom_product->set_description( $wc_product->get_description() );
 					$ecom_product->set_category( $this->get_product_category( $wc_product ) );
 					$ecom_product->set_image_url( $this->get_product_image_url( $wc_product ) );
@@ -356,7 +356,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				$order->set_source( '1' );
 				$order->set_email( $customer->email );
 				$order->set_currency( get_woocommerce_currency() );
-				$order->set_total_price( Money::of( $cart_totals->subtotal, get_woocommerce_currency() )->getMinorAmount() ); // must be in cents
+				$order->set_total_price( Money::of( wc_format_decimal( $cart_totals->subtotal, 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() ); // must be in cents
 				$order->set_connectionid( $this->admin->get_storage()['connection_id'] );
 				$order->set_customerid( $customer_ac->get_id() );
 				$order->set_abandoned_date( $date->format( DATE_ATOM ) );

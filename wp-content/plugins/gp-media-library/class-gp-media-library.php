@@ -45,6 +45,9 @@ class GP_Media_Library extends GWPerk {
 		add_action( 'gform_after_create_post', array( $this, 'acf_integration' ), 10, 3 );
 		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_acf_integration' ), 10, 4 );
 		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_custom_field_integration' ), 10, 4 );
+
+		add_action( 'gform_after_create_post', array( $this, 'check_for_featured_image_custom_field' ), 10, 3 );
+
 		add_action( 'gravityview/fields/fileupload/link_content', array( $this, 'gravityview_file_upload_content' ), 10, 2 );
 
 		add_filter( 'gform_admin_pre_render', array( $this, 'add_image_merge_tags' ) );
@@ -627,6 +630,23 @@ class GP_Media_Library extends GWPerk {
 		}
 
 		return $email;
+	}
+
+	public function check_for_featured_image_custom_field( $post_id, $entry, $form ) {
+
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->type === 'post_custom_field' && $field->postCustomFieldName === '_thumbnail_id' && $this->is_applicable_field( $field ) ) {
+				$file_id = $this->get_file_ids( $entry['id'], $field->id, 0 );
+				// User reported that image did not display for them because it was unattached to the post. Consider this
+				// an exploratory addition.
+				wp_update_post( array(
+					'ID'          => $file_id,
+					'post_parent' => $post_id,
+				) );
+				set_post_thumbnail( $post_id, $file_id );
+			}
+		}
+
 	}
 
 

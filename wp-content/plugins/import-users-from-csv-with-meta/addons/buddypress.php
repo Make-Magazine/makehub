@@ -90,7 +90,8 @@ class ACUI_Buddypress{
 	}
 
 	function get_member_type( $user_id ){
-		return implode( ",", bp_get_member_type( $user_id, false ) );
+		$member_types = bp_get_member_type( $user_id, false );
+		return ( is_array( $member_types ) ) ? implode( ",", $member_types ) : $member_types;
 	}
 
 	function show_compatibility(){
@@ -157,8 +158,8 @@ class ACUI_Buddypress{
 	}
 
 	function export_data( $row, $user ){
-		foreach ( $this->fields as $key ) {
-			$row[] = ACUI_Exporter::prepare( $key, xprofile_get_field_data( $key, $user, 'comma' ), $datetime_format );
+        foreach ( $this->fields as $key ) {
+			$row[] = xprofile_get_field_data( $key, $user, 'comma' );
 		}
 
 		$row[] = $this->get_groups( $user );

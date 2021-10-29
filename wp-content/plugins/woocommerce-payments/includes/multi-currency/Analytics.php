@@ -9,11 +9,12 @@ namespace WCPay\MultiCurrency;
 
 use WC_Order;
 use WC_Order_Refund;
+use WC_Payments;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class that contains multi-currency related support for WooCommerce analytics.
+ * Class that contains Multi-Currency related support for WooCommerce analytics.
  */
 class Analytics {
 	const PRIORITY_EARLY   = 1;
@@ -23,6 +24,14 @@ class Analytics {
 	const SCRIPT_NAME      = 'WCPAY_MULTI_CURRENCY_ANALYTICS';
 
 	const SUPPORTED_CONTEXTS = [ 'orders', 'products', 'variations', 'categories', 'coupons', 'taxes' ];
+
+
+	/**
+	 * SQL string replacements made by the analytics Multi-Currency extension.
+	 *
+	 * @var array
+	 */
+	protected $sql_replacements = [];
 
 	/**
 	 * Instance of MultiCurrency.
@@ -49,6 +58,10 @@ class Analytics {
 	public function init() {
 		if ( is_admin() ) {
 			add_filter( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+		}
+
+		if ( WC_Payments::get_gateway()->is_in_dev_mode() ) {
+			add_filter( 'woocommerce_analytics_report_should_use_cache', [ $this, 'disable_report_caching' ] );
 		}
 
 		add_filter( 'woocommerce_analytics_update_order_stats_data', [ $this, 'update_order_stats_data' ], self::PRIORITY_LATEST, 2 );
@@ -96,7 +109,19 @@ class Analytics {
 	}
 
 	/**
-	 * When an order is updated in the stats table, perform a check to see if it is a multi currency order
+	 * Disables report caching. Used for development of analytics related functionality.
+	 * To disable report caching
+	 *
+	 * @param array $args Filter arguments.
+	 *
+	 * @return boolean
+	 */
+	public function disable_report_caching( $args ): bool {
+		return false;
+	}
+
+	/**
+	 * When an order is updated in the stats table, perform a check to see if it is a Multi-Currency order
 	 * and convert the information into the store's default currency if it is.
 	 *
 	 * @param array    $args  - An array of the arguments to be inserted into the order stats table.
@@ -201,7 +226,7 @@ class Analytics {
 		$exchange_rate_tbl        = $prefix . 'exchange_rate_postmeta';
 		$stripe_exchange_rate_tbl = $prefix . 'stripe_exchange_rate_postmeta';
 
-		// If this is a suppotted context, add the joins. If this is an unsupported context, see if we can add the joins.
+		// If this is a supported context, add the joins. If this is an unsupported context, see if we can add the joins.
 		if ( $this->is_supported_context( $context ) && ( in_array( $context_page, self::SUPPORTED_CONTEXTS, true ) || $this->is_order_stats_table_used_in_clauses( $clauses ) ) ) {
 			$clauses[] = "LEFT JOIN {$wpdb->postmeta} {$currency_tbl} ON {$wpdb->prefix}wc_order_stats.order_id = {$currency_tbl}.post_id AND {$currency_tbl}.meta_key = '_order_currency'";
 			$clauses[] = "LEFT JOIN {$wpdb->postmeta} {$default_currency_tbl} ON {$wpdb->prefix}wc_order_stats.order_id = {$default_currency_tbl}.post_id AND ${default_currency_tbl}.meta_key = '_wcpay_multi_currency_order_default_currency'";
@@ -210,15 +235,6 @@ class Analytics {
 		}
 
 		return $clauses;
-	}
-
-	/**
-	 * Get the SQL replacements variable.
-	 *
-	 * @return array
-	 */
-	private function get_sql_replacements(): array {
-		return $this->sql_replacements;
 	}
 
 	/**
@@ -257,7 +273,7 @@ class Analytics {
 
 	/**
 	 * Check whether the order stats table is referenced in the clauses, to work out whether
-	 * to add the JOIN columns for multi currency.
+	 * to add the JOIN columns for Multi-Currency.
 	 *
 	 * @param array $clauses The array containing the clauses used.
 	 *
@@ -307,6 +323,16 @@ class Analytics {
 	private function generate_case_when( string $variable, string $then, string $else ): string {
 		return "CASE WHEN {$variable} IS NOT NULL THEN {$then} ELSE {$else} END";
 	}
+
+	/**
+	 * Get the SQL replacements variable.
+	 *
+	 * @return array
+	 */
+	private function get_sql_replacements(): array {
+		return $this->sql_replacements;
+	}
+
 	/**
 	 * Set the SQL replacements variable.
 	 *

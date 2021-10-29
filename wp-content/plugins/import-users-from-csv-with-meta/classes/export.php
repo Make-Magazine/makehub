@@ -3,19 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class ACUI_Exporter{
 	private $path_csv;
-	private $user_data;
-    private $accepted_order_by;
-    private $woocommerce_default_user_meta_keys;
-    private $other_non_date_keys;
 
 	function __construct(){
 		$upload_dir = wp_upload_dir();
-
 		$this->path_csv = $upload_dir['basedir'] . "/export-users.csv";
-		$this->user_data = array( "user_login", "user_email", "source_user_id", "user_pass", "user_nicename", "user_url", "user_registered", "display_name" );
-        $this->accepted_order_by = array( 'ID', 'display_name', 'name', 'user_name', 'login', 'user_login', 'nicename', 'user_nicename', 'email', 'user_email', 'url', 'user_url', 'registered', 'user_registered', 'post_count' );
-		$this->woocommerce_default_user_meta_keys = array( 'billing_first_name', 'billing_last_name', 'billing_email', 'billing_phone', 'billing_country', 'billing_address_1', 'billing_city', 'billing_state', 'billing_postcode', 'shipping_first_name', 'shipping_last_name', 'shipping_country', 'shipping_address_1', 'shipping_address_2', 'shipping_city', 'shipping_state', 'shipping_postcode' );
-		$this->other_non_date_keys = array( 'shipping_phone' );
 
         add_action( 'init', array( $this, 'download_export_file' ) );
         add_action( 'admin_init', array( $this, 'download_export_file' ) );
@@ -23,13 +14,14 @@ class ACUI_Exporter{
 	}
 
     static function enqueue(){
-        wp_enqueue_script( 'acui_export_js', plugins_url( 'assets/export.js', dirname( __FILE__ ) ), false, time(), true );
+        wp_enqueue_script( 'acui_export_js', plugins_url( 'assets/export.js', dirname( __FILE__ ) ), false, ACUI_VERSION, true );
         wp_localize_script( 'acui_export_js', 'acui_export_js_object', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'starting_process' => __( 'Starting process', 'import-users-from-csv-with-meta' ),
             'step' => __( 'Step', 'import-users-from-csv-with-meta' ),
             'of_approximately' => __( 'of approximately', 'import-users-from-csv-with-meta' ),
             'steps' => __( 'steps', 'import-users-from-csv-with-meta' ),
+            'error_thrown' => __( 'Error thrown in the server, we cannot continue. Please check console to see full details about the error.', 'import-users-from-csv-with-meta' ),
         ) );
     }
 
@@ -185,7 +177,7 @@ class ACUI_Exporter{
 	}
 
     function download_export_file() {
-		if ( current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) && isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'codection-security' ) && 'download_user_csv' === wp_unslash( $_GET['action'] ) ) {
+		if( current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) && isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'codection-security' ) && 'download_user_csv' === wp_unslash( $_GET['action'] ) ) {
             $exporter = new ACUI_Batch_Exporter();
 
 			if ( !empty( $_GET['filename'] ) ){

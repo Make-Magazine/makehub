@@ -258,7 +258,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 			$result[0]['class'] = $trace[0]['class'];
 		}
 		if ( isset( $trace[0]['function'] ) ) {
-			$result[0]['function'] .= $trace[0]['function'];
+			$result[0]['function'] = $trace[0]['function'];
 		}
 
 		if ( isset( $trace[0]['line'] ) ) {

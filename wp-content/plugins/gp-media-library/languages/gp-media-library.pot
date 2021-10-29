@@ -13,12 +13,12 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../class-gp-media-library.php:127
+#: ../class-gp-media-library.php:130
 msgid "Media Library ID"
 msgid_plural "Media Library IDs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../class-gp-media-library.php:439
+#: ../class-gp-media-library.php:442
 msgid "GP Media Library"
 msgstr ""

@@ -1,18 +1,19 @@
 <?php
 /**
- * WooCommerce Payments Multi Currency Frontend Currencies
+ * WooCommerce Payments Multi-Currency Frontend Currencies
  *
  * @package WooCommerce\Payments
  */
 
 namespace WCPay\MultiCurrency;
 
+use WC_Order;
 use WC_Payments_Localization_Service;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class that formats Multi Currency currencies on the frontend.
+ * Class that formats Multi-Currency currencies on the frontend.
  */
 class FrontendCurrencies {
 	/**
@@ -30,23 +31,49 @@ class FrontendCurrencies {
 	protected $localization_service;
 
 	/**
+	 * Multi-currency utils instance.
+	 *
+	 * @var Utils
+	 */
+	protected $utils;
+
+	/**
+	 * Multi-currency compatibility instance.
+	 *
+	 * @var Compatibility
+	 */
+	protected $compatibility;
+
+	/**
 	 * Multi-Currency currency formatting map.
 	 *
 	 * @var array
 	 */
 	protected $currency_format = [];
 
+
+	/**
+	 * Order currency code.
+	 *
+	 * @var string|null
+	 */
+	protected $order_currency = null;
+
 	/**
 	 * Constructor.
 	 *
 	 * @param MultiCurrency                    $multi_currency       The MultiCurrency instance.
 	 * @param WC_Payments_Localization_Service $localization_service The Localization Service instance.
+	 * @param Utils                            $utils                Utils instance.
+	 * @param Compatibility                    $compatibility        Compatibility instance.
 	 */
-	public function __construct( MultiCurrency $multi_currency, WC_Payments_Localization_Service $localization_service ) {
+	public function __construct( MultiCurrency $multi_currency, WC_Payments_Localization_Service $localization_service, Utils $utils, Compatibility $compatibility ) {
 		$this->multi_currency       = $multi_currency;
 		$this->localization_service = $localization_service;
+		$this->utils                = $utils;
+		$this->compatibility        = $compatibility;
 
-		if ( ! is_admin() && ! defined( 'DOING_CRON' ) ) {
+		if ( ! is_admin() && ! defined( 'DOING_CRON' ) && ! Utils::is_admin_api_request() ) {
 			// Currency hooks.
 			add_filter( 'woocommerce_currency', [ $this, 'get_woocommerce_currency' ], 50 );
 			add_filter( 'wc_get_price_decimals', [ $this, 'get_price_decimals' ], 50 );
@@ -55,7 +82,10 @@ class FrontendCurrencies {
 			add_filter( 'woocommerce_price_format', [ $this, 'get_woocommerce_price_format' ], 50 );
 		}
 
+		add_filter( 'woocommerce_thankyou_order_id', [ $this, 'init_order_currency' ] );
+		add_action( 'woocommerce_account_view-order_endpoint', [ $this, 'init_order_currency' ], 9 );
 		add_filter( 'woocommerce_cart_hash', [ $this, 'add_currency_to_cart_hash' ], 50 );
+		add_filter( 'woocommerce_shipping_method_add_rate_args', [ $this, 'fix_price_decimals_for_shipping_rates' ], 50, 2 );
 	}
 
 	/**
@@ -73,6 +103,9 @@ class FrontendCurrencies {
 	 * @return string The code of the currency to be used.
 	 */
 	public function get_woocommerce_currency(): string {
+		if ( $this->compatibility->should_return_store_currency() ) {
+			return $this->multi_currency->get_default_currency()->get_code();
+		}
 		return $this->multi_currency->get_selected_currency()->get_code();
 	}
 
@@ -84,7 +117,7 @@ class FrontendCurrencies {
 	 * @return int The number of decimals.
 	 */
 	public function get_price_decimals( $decimals ): int {
-		$currency_code = $this->multi_currency->get_selected_currency()->get_code();
+		$currency_code = $this->get_currency_code();
 		if ( $currency_code !== $this->get_store_currency()->get_code() ) {
 			return absint( $this->localization_service->get_currency_format( $currency_code )['num_decimals'] );
 		}
@@ -99,7 +132,7 @@ class FrontendCurrencies {
 	 * @return string The decimal separator.
 	 */
 	public function get_price_decimal_separator( $separator ): string {
-		$currency_code = $this->multi_currency->get_selected_currency()->get_code();
+		$currency_code = $this->get_currency_code();
 		if ( $currency_code !== $this->get_store_currency()->get_code() ) {
 			return $this->localization_service->get_currency_format( $currency_code )['decimal_sep'];
 		}
@@ -114,7 +147,7 @@ class FrontendCurrencies {
 	 * @return string The thousand separator.
 	 */
 	public function get_price_thousand_separator( $separator ): string {
-		$currency_code = $this->multi_currency->get_selected_currency()->get_code();
+		$currency_code = $this->get_currency_code();
 		if ( $currency_code !== $this->get_store_currency()->get_code() ) {
 			return $this->localization_service->get_currency_format( $currency_code )['thousand_sep'];
 		}
@@ -129,7 +162,7 @@ class FrontendCurrencies {
 	 * @return string The currency format.
 	 */
 	public function get_woocommerce_price_format( $format ): string {
-		$currency_code = $this->multi_currency->get_selected_currency()->get_code();
+		$currency_code = $this->get_currency_code();
 		if ( $currency_code !== $this->get_store_currency()->get_code() ) {
 			$currency_pos = $this->localization_service->get_currency_format( $currency_code )['currency_pos'];
 
@@ -159,5 +192,66 @@ class FrontendCurrencies {
 	public function add_currency_to_cart_hash( $hash ): string {
 		$currency = $this->multi_currency->get_selected_currency();
 		return md5( $hash . $currency->get_code() . $currency->get_rate() );
+	}
+
+	/**
+	 * Inits order currency code.
+	 *
+	 * @param mixed $order Either WC_Order or the id of an order.
+	 *
+	 * @return int The order id.
+	 */
+	public function init_order_currency( $order ) {
+		if ( null !== $this->order_currency ) {
+			return;
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			$order = wc_get_order( $order );
+		}
+
+		$this->order_currency = $order->get_currency();
+
+		return $order->get_id();
+	}
+
+	/**
+	 * Fixes the decimals for the store currency when shipping rates are being determined.
+	 * Our `wc_get_price_decimals` filter returns the decimals for the selected currency during this calculation, which leads to incorrect results.
+	 *
+	 * @param array  $args   The argument array to be filtered.
+	 * @param object $method The shipping method being calculated.
+	 *
+	 * @return array
+	 */
+	public function fix_price_decimals_for_shipping_rates( array $args, $method ): array {
+		$args['price_decimals'] = absint( $this->localization_service->get_currency_format( $this->get_store_currency()->get_code() )['num_decimals'] );
+		return $args;
+	}
+
+	/**
+	 * Gets the currency code for us to use.
+	 *
+	 * @return string|null Three letter currency code.
+	 */
+	private function get_currency_code() {
+		if ( $this->should_override_currency_code() ) {
+			return $this->order_currency;
+		}
+		return $this->multi_currency->get_selected_currency()->get_code();
+	}
+
+	/**
+	 * Checks whether currency code used for formatting should be overridden.
+	 *
+	 * @return bool
+	 */
+	private function should_override_currency_code(): bool {
+		return $this->utils->is_call_in_backtrace(
+			[
+				'WC_Shortcode_My_Account::view_order',
+				'WC_Shortcode_Checkout::order_received',
+			]
+		);
 	}
 }

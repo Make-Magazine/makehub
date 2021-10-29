@@ -510,11 +510,11 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$this->ecom_order->set_customerid( $this->customer_ac->get_id() );
 				$this->ecom_order->set_currency( get_woocommerce_currency() );
 				$this->ecom_order->set_order_number( $order->get_order_number() );
-				$this->ecom_order->set_externalid( $order->get_order_number() );
-				$this->ecom_order->set_discount_amount( Money::of( $order->get_total_discount(), get_woocommerce_currency() )->getMinorAmount() );
-				$this->ecom_order->set_shipping_amount( Money::of( $order->get_shipping_total(), get_woocommerce_currency() )->getMinorAmount() );
+				$this->ecom_order->set_externalid( $order->get_id() );
+				$this->ecom_order->set_discount_amount( Money::of( wc_format_decimal( $order->get_total_discount(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
+				$this->ecom_order->set_shipping_amount( Money::of( wc_format_decimal( $order->get_shipping_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
 				$this->ecom_order->set_shipping_method( $order->get_shipping_method() );
-				$this->ecom_order->set_tax_amount( Money::of( $order->get_total_tax(), get_woocommerce_currency() )->getMinorAmount() );
+				$this->ecom_order->set_tax_amount( Money::of( wc_format_decimal( $order->get_total_tax(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
 
 				if ( ! empty( User_Meta_Service::get_current_cart_ac_id( get_current_user_id() ) ) ) {
 					$this->ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( get_current_user_id() ) );
@@ -527,13 +527,13 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 
 				// If we see the total is empty then set total from order
 				if ( empty( $this->ecom_order->get_total_price() ) ) {
-					$this->ecom_order->set_total_price( Money::of( $order->get_total(), get_woocommerce_currency() )->getMinorAmount() );
+					$this->ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
 				}
 
 				// If we see the total is still empty then re-calculate then set total from order
 				if ( empty( $this->ecom_order->get_total_price() ) ) {
 					$order->calculate_totals();
-					$this->ecom_order->set_total_price( Money::of( $order->get_total(), get_woocommerce_currency() )->getMinorAmount() );
+					$this->ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
 				}
 
 				// If it's still empty assume the total is zero

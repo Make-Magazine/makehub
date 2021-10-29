@@ -83,6 +83,7 @@
 			}
 		} ).fail( function( response ) {
 			window.console.log( response );
+            alert( acui_export_js_object.error_thrown );
 		} );
 	};
 

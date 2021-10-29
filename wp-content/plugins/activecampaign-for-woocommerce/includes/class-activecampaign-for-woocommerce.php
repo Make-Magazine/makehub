@@ -555,6 +555,27 @@ class Activecampaign_For_Woocommerce {
 			);
 		}
 
+		$disable_plugin_notice = 0;
+		if ( get_option( 'activecampaign_for_woocommerce_dismiss_plugin_notice' ) ) {
+			$notice_setting = json_decode( get_option( 'activecampaign_for_woocommerce_dismiss_plugin_notice' ), 'array' );
+			$user_id        = get_current_user_id();
+
+			if ( isset( $notice_setting[ $user_id ] ) && 1 === $notice_setting[ $user_id ] ) {
+				$disable_plugin_notice = 1;
+			}
+		}
+		if ( ! $this->is_configured() ) {
+			if ( ! $disable_plugin_notice ) {
+				$this->loader->add_filter(
+					'admin_notices',
+					$this->admin,
+					'please_configure_plugin_notice',
+					10,
+					1
+				);
+			}
+		}
+
 		$this->loader->add_action(
 			'activecampaign_for_woocommerce_run_manual_abandonment_sync',
 			$this->run_abandonment_sync_command,
@@ -588,6 +609,12 @@ class Activecampaign_For_Woocommerce {
 			'wp_ajax_activecampaign_for_woocommerce_dismiss_error_notice',
 			$this->admin,
 			'update_dismiss_error_notice_option'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_dismiss_plugin_notice',
+			$this->admin,
+			'update_dismiss_plugin_notice_option'
 		);
 
 		$this->loader->add_action(

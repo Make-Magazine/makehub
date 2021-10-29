@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.18.1
+Version:		1.18.4.4
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -13,6 +13,8 @@ Domain Path: /languages
 */
 if ( ! defined( 'ABSPATH' ) ) 
 	exit;
+
+define( 'ACUI_VERSION', '1.18.4.4' );
 
 class ImportExportUsersCustomers{
 	var $file;
@@ -41,8 +43,6 @@ class ImportExportUsersCustomers{
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10, 1 );
 		add_filter( 'plugin_action_links', array( $this, 'action_links' ), 10, 2 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-		add_action( 'wp_ajax_acui_delete_attachment', array( $this, 'delete_attachment' ) );
-		add_action( 'wp_ajax_acui_bulk_delete_attachment', array( $this, 'bulk_delete_attachment' ) );
 		add_filter( 'wp_check_filetype_and_ext', array( $this, 'wp_check_filetype_and_ext' ), PHP_INT_MAX, 4 );
 	
 		if( is_plugin_active( 'buddypress/bp-loader.php' ) && file_exists( plugin_dir_path( __DIR__ ) . 'buddypress/bp-xprofile/classes/class-bp-xprofile-group.php' ) ){
@@ -119,56 +119,6 @@ class ImportExportUsersCustomers{
 		}
 		
 		return $links;
-	}
-
-	function delete_attachment() {
-		check_ajax_referer( 'codection-security', 'security' );
-	
-		if( ! current_user_can( 'manage_options' ) )
-			wp_die( __('You are not an adminstrator', 'import-users-from-csv-with-meta' ) );
-	
-		$attach_id = absint( $_POST['attach_id'] );
-		$mime_type  = (string) get_post_mime_type( $attach_id );
-	
-		if( $mime_type != 'text/csv' )
-			_e('This plugin only can delete the type of file it manages, CSV files.', 'import-users-from-csv-with-meta' );
-	
-		$result = wp_delete_attachment( $attach_id, true );
-	
-		if( $result === false )
-			_e( 'There were problems deleting the file, please check file permissions', 'import-users-from-csv-with-meta' );
-		else
-			echo 1;
-	
-		wp_die();
-	}
-
-	function bulk_delete_attachment(){
-		check_ajax_referer( 'codection-security', 'security' );
-	
-		if( ! current_user_can( 'manage_options' ) )
-			wp_die( __('You are not an adminstrator', 'import-users-from-csv-with-meta' ) );	
-	
-		$args_old_csv = array( 'post_type'=> 'attachment', 'post_mime_type' => 'text/csv', 'post_status' => 'inherit', 'posts_per_page' => -1 );
-		$old_csv_files = new WP_Query( $args_old_csv );
-		$result = 1;
-	
-		while($old_csv_files->have_posts()) : 
-			$old_csv_files->the_post();
-	
-			$mime_type  = (string) get_post_mime_type( get_the_ID() );
-			if( $mime_type != 'text/csv' )
-				wp_die( __('This plugin only can delete the type of file it manages, CSV files.', 'import-users-from-csv-with-meta' ) );
-	
-			if( wp_delete_attachment( get_the_ID(), true ) === false )
-				$result = 0;
-		endwhile;
-		
-		wp_reset_postdata();
-	
-		echo $result;
-	
-		wp_die();
 	}
 
 	function wp_check_filetype_and_ext( $values, $file, $filename, $mimes ) {

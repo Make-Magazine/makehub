@@ -31,7 +31,6 @@ class ACUI_Batch_Exporter{
     protected $other_non_date_keys;
     
     function __construct() {
-        add_filter( 'acui_export_non_date_keys', array( $this, 'get_non_date_keys' ), 1, 1 );
         add_filter( 'acui_export_columns', array( $this, 'maybe_order_columns_alphabetacally' ), 10, 2 );
         add_filter( 'acui_export_get_key_user_data', array( $this, 'filter_key_user_id' ) );
         add_filter( 'acui_export_columns', array( $this, 'maybe_order_columns_filtered_columns_parameter' ), 11, 2 );
@@ -46,8 +45,8 @@ class ACUI_Batch_Exporter{
         $this->total_rows = $this->get_total_rows();
 	}
 
-    function get_non_date_keys( $non_date_keys ){
-		return array_merge( $non_date_keys, $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys );
+    function get_non_date_keys(){
+		return apply_filters( 'acui_export_non_date_keys', array_merge( $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys ) );
 	}
 
     function maybe_order_columns_alphabetacally( $row, $args ){
@@ -561,6 +560,8 @@ class ACUI_Batch_Exporter{
 	}
     
 	function prepare_data_to_export() {
+        $acui_helper = new ACUI_Helper();
+
 		$users = $this->get_user_id_list();
         $this->row_data = array();
         
@@ -574,7 +575,7 @@ class ACUI_Batch_Exporter{
 			}
 
             if( count( $this->get_filtered_columns() ) == 0 || in_array( 'role', $this->get_filtered_columns() ) )
-			    $row[] = $this->get_role( $user );
+			    $row['role'] = implode( ',', $acui_helper->get_roles_by_user_id( $user ) );
 
 			foreach ( $this->get_user_meta_keys( $this->get_filtered_columns() ) as $key ) {
 				$row[ $key ] = $this->prepare( $key, get_user_meta( $user, $key, true ), $this->get_datetime_format(), $user );
@@ -590,28 +591,33 @@ class ACUI_Batch_Exporter{
 	}
 
     function prepare( $key, $value, $datetime_format, $user = 0 ){
+        $acui_helper = new ACUI_Helper();
+
 		$timestamp_keys = apply_filters( 'acui_export_timestamp_keys', array( 'wc_last_active' ) );
-		$non_date_keys = apply_filters( 'acui_export_non_date_keys', array() );
 		$original_value = $value;
+		$value = $this->clean_bad_characters_formulas( $value );
+
+        if( has_filter( 'acui_export_prepare' ) ){
+            return apply_filters( 'acui_export_prepare', $value, $original_value );
+        }
 
 		if( $key == 'role' ){
-			return $this->get_role( $user );
+			return implode( ',', $acui_helper->get_roles_by_user_id( $user ) );
 		}
+
 		if( is_array( $value ) || is_object( $value ) ){
 			return serialize( $value );
 		}
-		elseif( in_array( $key, $non_date_keys ) || empty( $datetime_format ) ){
+
+		if( in_array( $key, $this->get_non_date_keys() ) || empty( $datetime_format ) ){
 			return $this->clean_bad_characters_formulas( $value );
 		}
-		elseif( strtotime( $value ) ){ // dates in datetime format
-			return date( $datetime_format, strtotime( $value ) );
-		}
-		elseif( is_int( $value ) && ( ( $this->is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ) ){ // dates in timestamp format
+
+		if( $this->get_convert_timestamp() && is_int( $value ) && ( ( $this->is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ) ){ // dates in timestamp format
 			return date( $datetime_format, $value );
 		}
-		else{
-			return apply_filters( 'acui_export_prepare', $this->clean_bad_characters_formulas( $value ), $original_value );
-		}
+
+        return $value;
 	}
 
     function clean_bad_characters_formulas( $value ){

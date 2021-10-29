@@ -103,7 +103,20 @@ class ACUI_Helper{
         return $prefix . $rnd_str;
     }
 
-    function new_error( $row, $message = '', $type = 'error' ){
+    function new_error( $row, &$errors_totals, $message = '', $type = 'error' ){
+        switch( $type ){
+            case 'error':
+                $errors_totals['errors']++;
+                break;
+
+            case 'warning':
+                $errors_totals['warnings']++;
+                break;
+            
+            case 'notice':
+                $errors_totals['notices']++;
+                break;
+        }
         return array( 'row' => $row, 'message' => $message, 'type' => $type );
     }
 
@@ -137,12 +150,9 @@ class ACUI_Helper{
 
     static function get_attachment_id_by_url( $url ) {
         $wp_upload_dir = wp_upload_dir();
-        // Strip out protocols, so it doesn't fail because searching for http: in https: dir.
         $dir = set_url_scheme( trailingslashit( $wp_upload_dir['baseurl'] ), 'relative' );
     
-        // Is URL in uploads directory?
-        if ( false !== strpos( $url, $dir ) ) {
-    
+        if ( false !== strpos( $url, $dir ) ) {    
             $file = basename( $url );
     
             $query_args = array(
@@ -332,7 +342,7 @@ class ACUI_Helper{
     function print_results( $results, $errors ){
         ?>
         <h3><?php _e( 'Results', 'import-users-from-csv-with-meta' ); ?></h3>
-        <table id="acui_errors">
+        <table id="acui_results">
             <tbody>
                 <tr>
                     <th><?php _e( 'Users processed', 'import-users-from-csv-with-meta' ); ?></th>
@@ -347,11 +357,22 @@ class ACUI_Helper{
                     <td><?php echo $results['updated']; ?></td>
                 </tr>
                 <tr>
+                    <th><?php _e( 'Users deleted', 'import-users-from-csv-with-meta' ); ?></th>
+                    <td><?php echo $results['deleted']; ?></td>
+                </tr>
+                <tr>
                     <th><?php _e( 'Errors, warnings and notices found', 'import-users-from-csv-with-meta' ); ?></td>
                     <td><?php echo count( $errors ); ?></td>
                 </tr>
             </tbody>
         </table>
+        <?php
+    }
+
+    function print_end_of_process(){
+        ?>
+        <br/>
+        <p><?php printf( __( 'Process finished you can go <a href="%s">here to see results</a> or you can do <a href="%s">a new import</a>.', 'import-users-from-csv-with-meta' ), get_admin_url( null, 'users.php' ), get_admin_url( null, 'tools.php?page=acui&tab=homepage' ) ); ?></p>
         <?php
     }
 

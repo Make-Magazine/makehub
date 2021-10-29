@@ -94,6 +94,15 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 				return new WP_Error( 'wcpay_missing_order', __( 'Order not found', 'woocommerce-payments' ), [ 'status' => 404 ] );
 			}
 
+			// Do not process orders with refund(s).
+			if ( 0 < $order->get_total_refunded() ) {
+				return new WP_Error(
+					'wcpay_refunded_order_uncapturable',
+					__( 'Payment cannot be captured for partially or fully refunded orders.', 'woocommerce-payments' ),
+					[ 'status' => 400 ]
+				);
+			}
+
 			// Do not process intents that can't be captured.
 			$intent = $this->api_client->get_intent( $intent_id );
 			if ( ! in_array( $intent->get_status(), [ 'processing', 'requires_capture' ], true ) ) {
@@ -116,6 +125,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			// Capture the intent and update order status.
 			$result = $this->gateway->capture_charge( $order );
 			if ( 'succeeded' !== $result['status'] ) {
+				$http_code = $result['http_code'] ?? 502;
 				return new WP_Error(
 					'wcpay_capture_error',
 					sprintf(
@@ -123,7 +133,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 						__( 'Payment capture failed to complete with the following message: %s', 'woocommerce-payments' ),
 						$result['message'] ?? __( 'Unknown error', 'woocommerce-payments' )
 					),
-					[ 'status' => 502 ]
+					[ 'status' => $http_code ]
 				);
 			}
 			$order->update_status( 'completed' );

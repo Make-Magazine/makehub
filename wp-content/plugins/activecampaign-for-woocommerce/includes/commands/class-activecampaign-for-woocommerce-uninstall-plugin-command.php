@@ -39,6 +39,7 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
 		delete_option( 'activecampaign_for_woocommerce_db_version' );
 		delete_option( 'activecampaign_for_woocommerce_dismiss_error_notice' );
+		delete_option( 'activecampaign_for_woocommerce_dismiss_plugin_notice' );
 
 		User_Meta_Service::delete_all_user_meta();
 

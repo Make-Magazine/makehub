@@ -3,8 +3,8 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.8
-Stable tag: 1.18.1
+Tested up to: 5.8.1
+Stable tag: 1.18.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,41 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.18.4.4 =
+*   Force version update
+
+= 1.18.4.3 =
+*   New hook added: do_action( 'acui_after_import_users', $users_created, $users_updated, $users_deleted, $users_ignored ); with 3 variables passed with a list of user IDs with users created, updated, deleted and ignored in the process
+*   Fixed bad error thrown when empty role was selected in error
+
+= 1.18.4.2 =
+*   Fixed bug in batch_exporter when using PHP 8
+
+= 1.18.4.1 =
+*   Fixed bug in batch_exporter that could create fatal errors on executing
+
+= 1.18.4 =
+*   Improved problem when deleting users, if errors happens but they are notices, we can delete now. Many of the users who have problems with deleting users not present in CSV, was created by the old conditional that checked any kind of error (including notices).
+
+= 1.18.3 =
+*   Problem solved converting data that has a format date but that is not wanted to be converted, to timestamps when exporting
+*   Fixed problems in standard import, in very big databases, there was a problem creating the list of users to assign deleted posts, now this list is created and managed using select2 and AJAX to improve performance and usability
+
+= 1.18.2.3 =
+*   Problem solved converting timestamps when exporting
+*   If an error raise in the server while exporting, instead only showing the error in the console, we throws an alert to improve user experience
+
+= 1.18.2.2 =
+*   Included a note to prevent misunderstandings when testing emails
+
+= 1.18.2.1 =
+*   Tested up to 5.8.1
+*   Fixed problem with roles export
+
+= 1.18.2 =
+*   New hooks added to manage extra profile fields
+*   Problem solved in BuddyPress addon
 
 = 1.18.1 =
 *   Fixed problem after 1.18 when exporting users

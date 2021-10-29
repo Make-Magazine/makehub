@@ -104,8 +104,16 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function enqueue_scripts() {
 		wp_register_script(
-			$this->plugin_name . 'admin',
-			plugin_dir_url( __FILE__ ) . 'js/activecampaign-for-woocommerce-admin.js',
+			$this->plugin_name . 'settings-page',
+			plugin_dir_url( __FILE__ ) . 'scripts/activecampaign-for-woocommerce-settings-page.js',
+			array( 'jquery' ),
+			$this->version,
+			true
+		);
+
+		wp_register_script(
+			$this->plugin_name . 'status-page',
+			plugin_dir_url( __FILE__ ) . 'scripts/activecampaign-for-woocommerce-status-page.js',
 			array( 'jquery' ),
 			$this->version,
 			true
@@ -127,7 +135,7 @@ class Activecampaign_For_Woocommerce_Admin {
 	 * @since    1.0.0
 	 */
 	public function add_admin_page() {
-		$ac_icon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAyNCAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0wLjQzNDYzMyAwLjIxNzMwM0MxLjM3NjI4IDAuNzk2NzggMjIuMDIwMSAxNS4yMTEzIDIyLjUyNzIgMTUuNjQ1OUMyMy4zOTY0IDE2LjIyNTQgMjMuODMxIDE2Ljk0OTcgMjMuODMxIDE3LjY3NFYxOC4xMDg3QzIzLjgzMSAxOC42ODgxIDIzLjYxMzcgMTkuNjI5OCAyMi41OTk2IDIwLjM1NDFDMjIuMTY1IDIwLjcxNjMgMC4yMTczMzggMzYgMC4yMTczMzggMzZWMzIuNTk1NkMwLjIxNzMzOCAzMS41ODE1IDAuMjg5NzM3IDMxLjA3NDQgMS40NDg2OSAzMC4zNTAxQzIuMzkwMzQgMjkuNzcwNiAxNy4zMTE5IDE5LjQxMjUgMTkuMjY3NiAxOC4wMzYyQzE4LjMzNTkgMTcuMzgwNiAxNC41MTA3IDE0LjcxOTIgMTAuNjUwOCAxMi4wMzM3QzYuNDA4NjQgOS4wODIyNCAyLjEyNDU0IDYuMTAxNiAxLjU5MzU3IDUuNzIyMzRMMS40NDg2OSA1LjY0OTlDMS4zOTM3MyA1LjYwNTkzIDEuMzM5NjEgNS41NjMyMiAxLjI4NjUxIDUuNTIxMzFDMC42Mzk3NDggNS4wMTA4OCAwLjE0NDg3NyA0LjYyMDMyIDAuMTQ0ODc3IDMuNTQ5M1YwTDAuNDM0NjMzIDAuMjE3MzAzWk0xMS4zNzIyIDE4Ljk3NzhDMTAuNzkyOCAxOS40MTI1IDEwLjIxMzMgMTkuNjI5OCA5LjYzMzg0IDE5LjYyOThDOS4xMjY4IDE5LjYyOTggOC42MTk3NSAxOS40ODQ5IDguMDQwMjcgMTkuMTIyN0M2LjczNjQ1IDE4LjI1MzUgMC4xNDQ4OTYgMTMuNjkwMSAwLjA3MjQ2MTEgMTMuNjE3N0wwIDEzLjU0NTNWMTEuMjk5OEMwIDEwLjcyMDMgMC4yODk3NTYgMTAuMzU4MSAwLjY1MTkyOSAxMC4xNDA4QzEuMDE0MSA5LjkyMzUyIDEuNTkzNiA5Ljk5NTk2IDIuMDI4MiAxMC4zNTgxQzMuMDQyMjkgMTEuMDEgMTIuNjc2MSAxNy42NzQgMTIuNzQ4NSAxNy43NDY1TDEyLjk2NTggMTcuODkxM0wxMi43NDg1IDE4LjAzNjJDMTIuNzQ4NSAxOC4wMzYyIDEyLjA5NjYgMTguNDcwOCAxMS4zNzIyIDE4Ljk3NzhaIiBmaWxsPSIjMDA0Q0ZGIi8+Cjwvc3ZnPgo=';
+		$ac_icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8dGl0bGU+R3JvdXA8L3RpdGxlPgogICAgPGcgaWQ9IlBhZ2UtMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIj4KICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZSIgb3BhY2l0eT0iMCIgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj48L3JlY3Q+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik00LjIxNzMxNjUsMS4xMDg2NTE1IEM0LjY4ODE0LDEuMzk4MzkgMTUuMDEwMDUsOC42MDU2NSAxNS4yNjM2LDguODIyOTUgQzE1LjY5ODIsOS4xMTI3IDE1LjkxNTUsOS40NzQ4NSAxNS45MTU1LDkuODM3IEwxNS45MTU1LDEwLjA1NDM1IEMxNS45MTU1LDEwLjM0NDA1IDE1LjgwNjg1LDEwLjgxNDkgMTUuMjk5OCwxMS4xNzcwNSBDMTUuMDgyNSwxMS4zNTgxNSA0LjEwODY2OSwxOSA0LjEwODY2OSwxOSBMNC4xMDg2NjksMTcuMjk3OCBDNC4xMDg2NjksMTYuNzkwNzUgNC4xNDQ4Njg1LDE2LjUzNzIgNC43MjQzNDUsMTYuMTc1MDUgQzUuMTk1MTcsMTUuODg1MyAxMi42NTU5NSwxMC43MDYyNSAxMy42MzM4LDEwLjAxODEgQzEzLjE2Nzk1LDkuNjkwMyAxMS4yNTUzNSw4LjM1OTYgOS4zMjU0LDcuMDE2ODUgQzcuMjA0MzIsNS41NDExMiA1LjA2MjI3LDQuMDUwOCA0Ljc5Njc4NSwzLjg2MTE3IEw0LjcyNDM0NSwzLjgyNDk1IEM0LjY5Njg2NSwzLjgwMjk2NSA0LjY2OTgwNSwzLjc4MTYxIDQuNjQzMjU1LDMuNzYwNjU1IEM0LjMxOTg3NCwzLjUwNTQ0IDQuMDcyNDM4NSwzLjMxMDE2IDQuMDcyNDM4NSwyLjc3NDY1IEw0LjA3MjQzODUsMSBMNC4yMTczMTY1LDEuMTA4NjUxNSBaIE05LjY4NjEsMTAuNDg4OSBDOS4zOTY0LDEwLjcwNjI1IDkuMTA2NjUsMTAuODE0OSA4LjgxNjkyLDEwLjgxNDkgQzguNTYzNCwxMC44MTQ5IDguMzA5ODc1LDEwLjc0MjQ1IDguMDIwMTM1LDEwLjU2MTM1IEM3LjM2ODIyNSwxMC4xMjY3NSA0LjA3MjQ0OCw3Ljg0NTA1IDQuMDM2MjMwNTUsNy44MDg4NSBMNCw3Ljc3MjY1IEw0LDYuNjQ5OSBDNCw2LjM2MDE1IDQuMTQ0ODc4LDYuMTc5MDUgNC4zMjU5NjQ1LDYuMDcwNCBDNC41MDcwNSw1Ljk2MTc2IDQuNzk2OCw1Ljk5Nzk4IDUuMDE0MSw2LjE3OTA1IEM1LjUyMTE0NSw2LjUwNSAxMC4zMzgwNSw5LjgzNyAxMC4zNzQyNSw5Ljg3MzI1IEwxMC40ODI5LDkuOTQ1NjUgTDEwLjM3NDI1LDEwLjAxODEgQzEwLjM3NDI1LDEwLjAxODEgMTAuMDQ4MywxMC4yMzU0IDkuNjg2MSwxMC40ODg5IFoiIGlkPSJTaGFwZSIgZmlsbD0iIzAwNENGRiI+PC9wYXRoPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+';
 
 		add_menu_page(
 			'ActiveCampaign for WooCommerce',
@@ -148,25 +156,26 @@ class Activecampaign_For_Woocommerce_Admin {
 			array( $this, 'fetch_admin_page' )
 		);
 
-		add_submenu_page(
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
-			'ActiveCampaign for WooCommerce Abandoned Carts',
-			'Abandoned Carts',
-			'manage_options',
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_abandoned_carts',
-			array( $this, 'fetch_abandoned_cart_page' )
-		);
+		$activecampaign_for_woocommerce_options = $this->get_options();
+		if ( isset( $activecampaign_for_woocommerce_options['api_url'], $activecampaign_for_woocommerce_options['api_key'] ) ) {
+			add_submenu_page(
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
+				'ActiveCampaign for WooCommerce Abandoned Carts',
+				'Abandoned Carts',
+				'manage_options',
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_abandoned_carts',
+				array( $this, 'fetch_abandoned_cart_page' )
+			);
 
-		// Temporarily keep the old menu item so users don't get confused
-		// Will be deprecated soon
-		add_submenu_page(
-			'woocommerce',
-			'ActiveCampaign for WooCommerce',
-			'ActiveCampaign for WooCommerce',
-			'manage_options',
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
-			array( $this, 'fetch_admin_page' )
-		);
+			add_submenu_page(
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
+				'ActiveCampaign for WooCommerce Status',
+				'Status',
+				'manage_options',
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_status',
+				array( $this, 'fetch_status_page' )
+			);
+		}
 	}
 
 	/**
@@ -202,9 +211,43 @@ class Activecampaign_For_Woocommerce_Admin {
 	 * @since    1.0.0
 	 */
 	public function fetch_admin_page() {
-		wp_enqueue_script( $this->plugin_name . 'admin' );
+		wp_enqueue_script( $this->plugin_name . 'settings-page' );
 		require_once plugin_dir_path( __FILE__ )
-					 . 'partials/activecampaign-for-woocommerce-admin-display.php';
+					 . 'views/activecampaign-for-woocommerce-admin-display.php';
+	}
+
+	/**
+	 * Fetch the PHP template file that is used for the admin page
+	 *
+	 * @param     array $array array for hook.
+	 *
+	 * @since    1.?
+	 */
+	public function please_configure_plugin_notice( $array ) {
+		global $pagenow;
+		global $plugin_page;
+
+		// Verify we're on an admin section
+		if (
+			'activecampaign_for_woocommerce' !== $plugin_page &&
+			current_user_can( 'administrator' ) &&
+			(
+				'admin.php' === $pagenow
+				|| 'plugins.php' === $pagenow
+				|| get_current_screen()->in_admin()
+			)
+		) {
+			require_once plugin_dir_path( __FILE__ ) . 'views/activecampaign-for-woocommerce-please-configure-plugin-notice.php';
+		}
+	}
+
+	/**
+	 * Populates an admin notice dismiss in db.
+	 */
+	public function update_dismiss_plugin_notice_option() {
+		$setting                          = json_decode( get_option( 'activecampaign_for_woocommerce_dismiss_plugin_notice' ), 'array' );
+		$setting[ get_current_user_id() ] = 1;
+		update_option( 'activecampaign_for_woocommerce_dismiss_plugin_notice', wp_json_encode( $setting ) );
 	}
 
 	/**
@@ -327,28 +370,19 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function fetch_abandoned_cart_page() {
 		wp_enqueue_script( $this->plugin_name . 'abandoned-cart' );
-
 		require_once plugin_dir_path( __FILE__ )
-					 . 'partials/activecampaign-for-woocommerce-abandoned-cart-display.php';
+					 . 'views/activecampaign-for-woocommerce-abandoned-cart-display.php';
 	}
 
 	/**
-	 * Radio options for "How long after a cart is abandoned should ActiveCampaign trigger automations?"
-	 * How long should we wait until we determine a cart is abandoned?
-	 * These options let the user decide.
+	 * Fetch the PHP template file that is used for the admin status page.
+	 *
+	 * @since    1.?
 	 */
-	public function get_ab_cart_wait_options() {
-		$options = wp_json_encode(
-			[
-				// value     // label
-				'1'  => esc_html__( '1 hour (recommended)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-				'6'  => esc_html__( '6 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-				'10' => esc_html__( '10 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-				'24' => esc_html__( '24 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-			]
-		);
-
-		return $options;
+	public function fetch_status_page() {
+		wp_enqueue_script( $this->plugin_name . 'status-page' );
+		require_once plugin_dir_path( __FILE__ )
+					 . 'views/activecampaign-for-woocommerce-status-display.php';
 	}
 
 	/**
@@ -438,44 +472,6 @@ class Activecampaign_For_Woocommerce_Admin {
 			$this->logger->warning( 'Invalid request, rowId missing from the force row sync call:', [ 'request' => $_REQUEST ] );
 			wp_send_json_error( 'The request appears to be invalid. The rowId is missing from the request.' );
 		}
-	}
-
-	/**
-	 * Radio option for toggling debug logging.
-	 */
-	public function get_ac_debug_options() {
-		return wp_json_encode(
-			[
-				// value  // label
-				'1' => esc_html__( 'On', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-				'0' => esc_html__( 'Off', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-			]
-		);
-	}
-
-	/**
-	 * Radio options for "Checkbox display options"
-	 */
-	public function get_checkbox_display_options() {
-		$options = wp_json_encode(
-			[
-				// value                          // label
-				'visible_checked_by_default'   => esc_html__(
-					'Visible, checked by default',
-					ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
-				),
-				'visible_unchecked_by_default' => esc_html__(
-					'Visible, unchecked by default',
-					ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
-				),
-				'not_visible'                  => esc_html__(
-					'Not visible',
-					ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
-				),
-			]
-		);
-
-		return $options;
 	}
 
 	/**
@@ -943,13 +939,12 @@ class Activecampaign_For_Woocommerce_Admin {
 	/**
 	 * Handles the ajax call for reset connection.
 	 *
-	 * @return json success/error
+	 * @send string json_success|json_error AJAX return for success or failure.
 	 */
 	public function handle_reset_connection_id() {
 		if ( ! wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_settings_nonce_field'], 'activecampaign_for_woocommerce_settings_form' ) ) {
 			$this->logger->warning( 'Invalid nonce from the force row sync call:', [ 'request' => $_REQUEST ] );
 			wp_send_json_error( 'The nonce appears to be invalid.' );
-			return false;
 		}
 
 		if ( $this->reset_connection_id() ) {
@@ -976,6 +971,10 @@ class Activecampaign_For_Woocommerce_Admin {
 		try {
 			if ( delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME ) ) {
 				do_action( 'activecampaign_for_woocommerce_admin_settings_updated' );
+				$update_vals = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
+				if ( empty( $update_vals['connection_id'] ) ) {
+					return false;
+				}
 				return true;
 			} else {
 				return false;
@@ -983,7 +982,7 @@ class Activecampaign_For_Woocommerce_Admin {
 		} catch ( Throwable $t ) {
 			$logger = new Logger();
 			$logger->warning(
-				'There was an issue trying to reset the connection ID',
+				'There was an issue trying to reset the connection ID. Please check the logs for details.',
 				[
 					'message' => $t->getMessage(),
 					'trace'   => $logger->clean_trace( $t->getTrace() ),

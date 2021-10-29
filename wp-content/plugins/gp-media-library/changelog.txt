@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.2.20
+
+	- Added support for setting File Upload Custom Fields as featured images. (#8)
+
 ## 1.2.19
 
 	- Added support for automatically saving to a `file` or `image` ACF field.
