@@ -49,8 +49,8 @@ a { // don't let genesis molest our links
 	}
 	.full-width-div {
 		@media screen and (min-width: 805px) {
-			width: 82vw !important;
-			left: 61.333%;
+			width: calc(100vw - 220px) !important;
+			left: calc(50% + 110px) !important;
 		}
 	}
 	// adjust the group embedded elementor to work with the open buddypanel
