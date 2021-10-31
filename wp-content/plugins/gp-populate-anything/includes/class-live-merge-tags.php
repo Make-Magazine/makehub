@@ -881,6 +881,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				$merge_tag_match_value = GFCommon::replace_variables( $merge_tag, $form, $entry_values, false, false, false, 'text' );
 			}
 
+			// The Euro symbol breaks coupling and is not being parsed correctly when applied to submit buttons.
+			// Decoding HTML entities here resolves the issue. HS#27761
+			$merge_tag_match_value = html_entity_decode( $merge_tag_match_value );
+
 			$merge_tag_modifiers = $this->extract_merge_tag_modifiers( $merge_tag );
 
 			// Do not merge the value of conditionally hidden fields

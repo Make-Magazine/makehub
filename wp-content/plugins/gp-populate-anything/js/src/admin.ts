@@ -28,6 +28,7 @@ class GPPopulateAnythingAdmin {
 				this.vm.$set(this.vm.$data.field, 'inputs', {...window.field.inputs});
 			});
 
+		this.addFilters();
 		this.initVueVM();
 
 	}
@@ -36,6 +37,79 @@ class GPPopulateAnythingAdmin {
 		this.vm.$data.field = {...field};
 		this.vm.$refs.root.refresh();
 	};
+
+	addFilters () {
+		window.gform.addFilter('gppa_is_supported_field', (isSupportedField: boolean, field: GravityFormsField, populate: 'choices' | 'values', component: any) => {
+			if (!field) {
+				return false;
+			}
+
+			/* Exclude specific field types */
+			if (['consent', 'tos'].indexOf(field.type) !== -1) {
+				return false;
+			}
+
+			switch (populate) {
+				case 'choices':
+					if (field.type === 'list') {
+						return false;
+					}
+
+					if (component.hasChoices()) {
+						/* Exclude chained selects */
+						if (field.choices[0] && 'choices' in field.choices[0]) {
+							return false;
+						}
+
+						return true;
+					}
+
+					if (['workflow_user', 'workflow_multi_user'].indexOf(field.type) !== -1) {
+						return true;
+					}
+
+					break;
+
+				case 'values':
+					if (component.hasChoices()) {
+						/* Exclude chained selects */
+						if (field.choices[0] && 'choices' in field.choices[0]) {
+							return false;
+						}
+
+						return true;
+					}
+
+					/* Single input */
+					if (component.currentFieldSettings.indexOf('.default_value_setting') !== -1) {
+						return true;
+					}
+
+					/* Textarea */
+					if (component.currentFieldSettings.indexOf('.default_value_textarea_setting') !== -1) {
+						return true;
+					}
+
+					/* Input with multiple fields */
+					if (component.currentFieldSettings.indexOf('.default_input_values_setting') !== -1) {
+						return true;
+					}
+
+					if (field.inputType === 'singleproduct') {
+						return true;
+					}
+
+					if (field.type === 'list') {
+						return true;
+					}
+
+					break;
+			}
+
+			return false;
+		});
+
+	}
 
 	initVueVM () {
 

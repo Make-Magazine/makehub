@@ -260,8 +260,8 @@
 	width: 45% !important;
 }
 
-.gppa-choices-enabled label.gfield_label,
-.gppa-values-enabled label.gfield_label {
+.gppa-choices-enabled .gfield_label,
+.gppa-values-enabled .gfield_label {
 	display: flex !important;
 }
 

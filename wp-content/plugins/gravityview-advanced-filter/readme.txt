@@ -1,7 +1,7 @@
 === GravityView - Advanced Filter Extension ===
 Tags: gravityview
 Requires at least: 4.4
-Tested up to: 5.7.2
+Tested up to: 5.8
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 3 or higher
@@ -10,7 +10,7 @@ Filter which entries are shown in a View based on their values.
 
 == Installation ==
 
-1. Upload plugin files to your plugins folder, or install using WordPress' built-in Add New Plugin installer
+1. Upload plugin files to your plugins folder, or install using WordPress's built-in Add New Plugin installer
 2. Activate the plugin
 3. Follow the instructions
 
@@ -23,6 +23,15 @@ UI was written using [Svelte](https://svelte.dev/) and requires compilation. Mak
 3. Compile assets by running `npm run build`
 
 == Changelog ==
+
+= 2.1.11 on October 25, 2021  =
+
+* Fixed: MySQL error on certain hosts when "Date Updated", "Date Created" or "Payment Date" entry meta are filtered using the "is empty" condition
+* Fixed: JavaScript error when a filter is configured for a multi-input form field that no longer exists
+
+= 2.1.10 on August 16, 2021 =
+
+* Fixed: Incorrect results returned when filtering by empty/nonempty multi-file upload fields
 
 = 2.1.9 on May 31, 2021 =
 

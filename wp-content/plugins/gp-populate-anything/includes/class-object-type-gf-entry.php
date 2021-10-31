@@ -2,10 +2,6 @@
 
 class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
-	private static $excluded_fields = array(
-		'list',
-	);
-
 	public function __construct( $id ) {
 		parent::__construct( $id );
 
@@ -150,7 +146,12 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			return null;
 		}
 
-		if ( strpos( $format, 'ymd' ) === 0 ) {
+		/**
+		 * If the date is in YYYY-MM-DD (likely coming straight from the DB), ignore the passed format
+		 */
+		if ( preg_match( '/\d{4}-\d{2}-\d{2}/', $date ) ) {
+			list( $year, $month, $day ) = explode( '-', $date );
+		} elseif ( strpos( $format, 'ymd' ) === 0 ) {
 			list( $year, $month, $day ) = explode( $delimiter, $date );
 		} elseif ( strpos( $format, 'dmy' ) === 0 ) {
 			list( $day, $month, $year ) = explode( $delimiter, $date );
@@ -416,13 +417,29 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 	 * @return string   SHA1 representation of the requested query
 	 */
 	public function query_cache_hash( $args ) {
-		return sha1( sprintf( '%s-%s-%s-%s-%s',
+		return sha1( sprintf( '%s-%s-%s-%s-%s-%s',
 			$args['field']->formId,
 			json_encode( $args['filter_groups'] ),
 			json_encode( $args['ordering'] ),
 			json_encode( $args['primary_property_value'] ),
-			json_encode( $args['unique'] )
+			json_encode( $args['unique'] ),
+			json_encode( array_filter( $args['field_values'], array( $this, 'filter_null_field_values' ) ) )
 		) );
+	}
+
+	/**
+	 * Filter null values from the field values for query cache hash. This is needed as once fields are hydrated by
+	 * Populate Anything, field_values will have a null value for any field without a value.
+	 *
+	 * As such, this makes the field_values unique for every single field during hydration which was not the original
+	 * intent.
+	 *
+	 * @param $value
+	 *
+	 * @return bool
+	 */
+	public function filter_null_field_values( $value ) {
+		return $value !== null;
 	}
 
 	public function get_forms() {
@@ -444,10 +461,6 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		$output = array();
 
 		foreach ( $form['fields'] as $field ) {
-			if ( array_search( $field['type'], self::$excluded_fields ) !== false ) {
-				continue;
-			}
-
 			/**
 			 * Use admin label when listing out fields
 			 */
@@ -553,6 +566,11 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 	public function replace_gf_merge_tags_for_entry( $template_value, $field, $template, $populate, $object, $object_type ) {
 
 		if ( $object_type->id !== $this->id ) {
+			return $template_value;
+		}
+
+		/* Replacing merge tags on a PHP serialized array will corrupt it. */
+		if ( is_serialized( $template_value ) ) {
 			return $template_value;
 		}
 

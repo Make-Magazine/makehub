@@ -374,6 +374,11 @@ export default class GPPALiveMergeTags {
 				continue;
 			}
 
+			// Merge tags on buttons cannot be decoupled
+			if ( $el.prop('type') === 'submit') {
+				canBeDecoupled = false;
+			}
+
 			/**
 			 * Handle decoupling
 			 *

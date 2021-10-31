@@ -1,5 +1,24 @@
 const $ = window.jQuery;
 
+/**
+ * serializeArray() does not include disabled inputs by default.
+ *
+ * @credit https://stackoverflow.com/q/15958671
+ */
+function serializeAll($form: JQuery) {
+	var data = $form.serializeArray();
+
+	$(':disabled[name]', $form).each((index, el) => {
+		if (!(el as HTMLInputElement).name) {
+			return;
+		}
+
+		data.push({ name: (el as HTMLInputElement).name, value: $(el).val() });
+	});
+
+	return data;
+}
+
 export default function getFormFieldValues(formId?:number|string, isGravityView:boolean = false) {
 
 	var $form = $('#gform_' + formId);
@@ -18,9 +37,7 @@ export default function getFormFieldValues(formId?:number|string, isGravityView:
 		$form = $( '.gv-widget-search' );
 	}
 
-	// @todo $form.serializeArray() excludes disabled inputs so there are sometimes issues with Live Preview if hidden
-	//   fields are shown.
-	var inputsArray = $.grep($form.serializeArray(), function (value?:JQuerySerializeArrayElement) {
+	var inputsArray = $.grep(serializeAll($form), function (value?: { name: string, value: string }) {
 		if (!value || value.name.indexOf(inputPrefix) !== 0) {
 			return false;
 		}
@@ -28,26 +45,35 @@ export default function getFormFieldValues(formId?:number|string, isGravityView:
 		return true;
 	});
 
-	var inputsObject:{ [input: string]: string[]|string } = {};
+	var inputsObject: { [input: string]: string[] | string } = {};
 
-	$.each(inputsArray, function (index, input: any) {
-		var value = input.value;
-		input = input.name.replace(inputPrefix, '');
+	for (const input of inputsArray) {
+		const { value } = input;
+		const $input = $form.find(`[name="${input.name}"]`);
+		let inputName = input.name.replace(inputPrefix, '');
+
+		/**
+		 * Do not send input value if it is not checked otherwise when hydrating values, it will be treated as if it
+		 * was checked.
+		 */
+		if ($input.is(':checkbox') && !$input.is(':checked')) {
+			continue;
+		}
 
 		/* Handle array-based inputs such as the Time field */
-		if (input.indexOf('[]') !== -1) {
-			input = input.replace('[]', '');
+		if (inputName.indexOf('[]') !== -1) {
+			inputName = inputName.replace('[]', '');
 
-			if (!(input in inputsObject)) {
-				inputsObject[input] = [];
+			if (!(inputName in inputsObject)) {
+				inputsObject[inputName] = [];
 			}
 
-			(inputsObject[input] as string[]).push(value);
-		/* Standard inputs */
+			(inputsObject[inputName] as string[]).push(value);
+			/* Standard inputs */
 		} else {
-			inputsObject[input] = value;
+			inputsObject[inputName] = value;
 		}
-	});
+	}
 
 	return inputsObject;
 

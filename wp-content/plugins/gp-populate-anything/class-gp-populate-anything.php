@@ -83,7 +83,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gform_pre_render', array( $this, 'field_value_object_js' ) );
 		add_filter( 'gform_pre_render', array( $this, 'hydrate_initial_load' ), 8, 3 );
 
-		add_filter( 'gform_pre_validation', array( $this, 'override_validation_for_populated_product_fields' ) );
+		add_filter( 'gform_pre_validation', array( $this, 'override_state_validation_for_populated_fields' ) );
 
 		add_filter( 'gform_field_input', array( $this, 'field_input_add_empty_field_value_filter' ), 10, 5 );
 
@@ -153,6 +153,11 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		add_filter( 'gform_form_pre_update_entry', array( $this, 'hydrate_form' ), 10, 2 );
 
+		/**
+		 * Exclude the "Fill Out Other Fields" choice in field map settings.
+		 */
+		add_filter( 'gform_field_map_choices', array( $this, 'exclude_error_choices_from_field_maps' ), 10, 4 );
+
 		/* Globals */
 		if ( ! isset( $GLOBALS['gppa-field-values'] ) ) {
 			$GLOBALS['gppa-field-values'] = array();
@@ -192,6 +197,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		gppa_compatibility_gravityview();
 		gppa_compatibility_gravityflow();
 		gppa_compatibility_gravitypdf();
+		gppa_compatibility_wc_product_addons();
 
 	}
 
@@ -213,6 +219,46 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * a choice-based field is reflected in the merge value rather than the value of the option itself.
 		 */
 		add_action( 'gpnf_get_nested_form', array( $this, 'hydrate_fields' ) );
+
+		/**
+		 * Easy Passthrough
+		 *
+		 * Hydrate checkboxes otherwise not all choices may be copied over.
+		 */
+		add_filter( 'gform_gp-easy-passthrough_field_value', array( $this, 'easy_passthrough_override_field_value' ), 10, 4 );
+	}
+
+	/**
+	 * Hydrate dynamically populated fields with choices and inputs (currently just checkboxes).
+	 *
+	 * @param string $field_value The current field value.
+	 * @param array  $form The current Form object.
+	 * @param array  $entry The current Entry object.
+	 * @param string $field_id The current field ID.
+	 *
+	 * @return string
+	 */
+	public function easy_passthrough_override_field_value( $field_value, $form, $entry, $field_id ) {
+		if ( ! is_numeric( $field_id ) || intval( $field_id ) != $field_id ) {
+			return $field_value;
+		}
+
+		$field = GFFormsModel::get_field( $form, absint( $field_id ) );
+
+		if ( ! $field ) {
+			return $field_value;
+		}
+
+		if ( empty( $field->choices ) || empty( $field->inputs ) || ! $this->is_field_dynamically_populated( $field ) ) {
+			return $field_value;
+		}
+
+		// Hydrate field
+		$form           = GFAPI::get_form( $field['formId'] );
+		$hydrated_field = $this->hydrate_field( $field, $form, $entry );
+		$field          = $hydrated_field['field'];
+
+		return $field->get_value_export( $entry, $field_id );
 	}
 
 	/**
@@ -732,7 +778,29 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * This may end up using more memory but will ensure that we're always returning the most
 		 * accurate results while utilizing caching for performance.
 		 */
-		$query_cache_hash      = $object_type_instance->query_cache_hash( $args );
+		/**
+		 * Filter GPPA's query cache hash.
+		 *
+		 * Warning: This modifies how GPPA hashes queries for all types. Incorrect hashing may result
+		 * in GPPA returning incorrect or stale results.
+		 *
+		 * @param string $query_cache_hash  Current hash of the query GPPA is about to execute.
+		 * @param string $object_type       The current GPPA object type (e.g. 'gf_entry').
+		 * @param array  $args              Query arguments array:
+		 *        array(
+		 *          array  filter_groups          Filters for querying/fetching the objects.
+		 *          array  ordering               Ordering settings for querying/fetching (includes 'orderby' and 'order').
+		 *          array  templates              Templates to determine how choices/values will utilize the returned objects.
+		 *          mixed  primary_property_value Current primary property value used for querying the objects. (Not all object types use primary properties.)
+		 *          string field_values           Current field values used in query.
+		 *          GF_Field field                Current field.
+		 *          bool   unique                 Return only unique results.
+		 *        )
+		 *
+		 * @since 1.0.18
+		 *
+		 */
+		$query_cache_hash      = apply_filters( 'gppa_query_cache_hash', $object_type_instance->query_cache_hash( $args ), $object_type, $args );
 		$unique_cache_hash     = ( $query_cache_hash ) ? sha1( $query_cache_hash . $field['id'] ) : null;
 		$return_unique_results = gf_apply_filters( array( "gppa_object_type_{$object_type}_unique", $field['formId'], $field['id'] ), $unique );
 
@@ -1954,6 +2022,11 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		$field = gf_apply_filters( array( 'gppa_hydrated_field', $form['id'], $field['id'] ), $field, $form );
 
+		$hydrated_value = $field_value || $field_value === '0' ? $field_value : $preselected_choice_value;
+
+		// Store hydrated value for use in other perks (currently GPRO)
+		$field->gppa_hydrated_value = $hydrated_value;
+
 		/**
 		 * Filter whether gform_pre_render should be utilized when fetching the new markup for fields when
 		 * populated via AJAX.
@@ -1997,7 +2070,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$result = array(
 			'field'       => $field,
-			'field_value' => $field_value || $field_value === '0' ? $field_value : $preselected_choice_value,
+			'field_value' => $hydrated_value,
 			'lead_id'     => rgar( $entry, 'id' ),
 			'form_id'     => $form_id,
 			'form'        => $form,
@@ -2012,7 +2085,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * gppa_hydrate_input_html is here to provide a filter with the same signature as gform_field_content as
 			 * there isn't a comparable filter for inputs.
 			 */
-			$input_html     = apply_filters( 'gppa_hydrate_input_html', GFCommon::get_field_input( $field, $field_value, rgar( $entry, 'id' ), $form_id, $form ), $field );
+			$input_html     = apply_filters( 'gppa_hydrate_input_html', GFCommon::get_field_input( $field, $result['field_value'], rgar( $entry, 'id' ), $form_id, $form ), $field );
 			$result['html'] = apply_filters( 'gppa_hydrate_field_html', $input_html, $form, $result, $field );
 			$default_value  = $field->get_value_default(); // Cache default value
 			/**
@@ -2296,7 +2369,8 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $value;
 		}
 
-		$choices = rgar( gform_get_meta( $entry_id, 'gppa_choices' ), $field['id'], array() );
+		$meta    = gform_get_meta( $entry_id, 'gppa_choices' );
+		$choices = rgar( $meta, $field['id'], array() );
 
 		return rgar( $choices, $value, $value );
 	}
@@ -2337,12 +2411,9 @@ class GP_Populate_Anything extends GP_Plugin {
 		$choices = wp_list_pluck( $hydrated_field['field']->choices, 'text', 'value' );
 
 		if ( ! empty( $gppa_choice_labels[ $field->id ] ) ) {
-			$gppa_choice_labels[ $field->id ] = array_merge(
-				$gppa_choice_labels[ $field->id ],
-				array(
-					$value => rgar( $choices, $value ),
-				)
-			);
+			$gppa_choice_labels[ $field->id ] = array(
+				$value => rgar( $choices, $value ),
+			) + $gppa_choice_labels[ $field->id ];
 		} else {
 			$gppa_choice_labels[ $field->id ] = array(
 				$value => rgar( $choices, $value ),
@@ -2619,9 +2690,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			} else {
 				$field_values[ $field->id ] = $hydrated_value;
 			}
-
-			// Store hydrated value for use in other perks (currently GPRO)
-			$field->gppa_hydrated_value = $hydrated_value;
 		}
 
 		return $form;
@@ -2654,16 +2722,11 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function modify_admin_field_values( $form, $ajax = false, $field_values = array() ) {
 
-		if ( GFCommon::is_form_editor() || $this->_getting_current_entry || ! is_array( $form ) ) {
+		if ( ! GFCommon::is_entry_detail() || $this->_getting_current_entry || ! is_array( $form ) ) {
 			return $form;
 		}
 
-		if ( GFCommon::is_entry_detail() ) {
-			// @todo Ugh, this is super messy. Not sure that an $entry should be passed as $field_values. Let's revisit.
-			$field_values = $this->get_current_entry();
-		} else {
-			$field_values = array_replace( (array) $field_values, $this->get_posted_field_values( $form ) );
-		}
+		$field_values = $this->get_current_entry();
 
 		if ( empty( $form['fields'] ) ) {
 			return $form;
@@ -3133,9 +3196,32 @@ class GP_Populate_Anything extends GP_Plugin {
 	 *
 	 * @return array $form
 	 */
-	public function override_validation_for_populated_product_fields( $form ) {
+	public function override_state_validation_for_populated_fields( $form ) {
 
 		foreach ( $form['fields'] as &$field ) {
+			/**
+			 * Bypass state validation for fields with dynamically populated choices that have filters relying on
+			 * other field values.
+			 *
+			 * This state validation was added in GF 2.5.10.1.
+			 */
+			if ( ! empty( $this->get_dependent_fields_by_filter_group( $field, 'choices' ) ) ) {
+				$field->validateState = false;
+			}
+
+			// Check for LMTs in choice based fields and skip validation as well.
+			// State validation has been expanded to more choice based fields in GF 2.5.10.1.
+			// Setting allowsRepopulate to `true` should still work, but GF recommends `validateState`.
+			// See: PR#248
+			if ( rgar( $field, 'choices' ) ) {
+				foreach ( $field->choices as $choice ) {
+					if ( preg_match( '/@{[^}]+}/', $choice['value'] ) ) {
+						$field->validateState = false;
+						break;
+					}
+				}
+			}
+
 			if ( $this->is_field_dynamically_populated( $field ) && GFCommon::is_product_field( $field->type ) ) {
 				$field->allowsPrepopulate = true;
 			} elseif ( $field->type === 'consent' && $this->live_merge_tags->has_live_merge_tag( $field->checkboxLabel . $field->description ) ) {
@@ -3209,6 +3295,33 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 		return $field_filters;
+	}
+
+	/**
+	 * Exclude the "Fill Out Other Fields" from field maps such as the one used in GP Easy Passthrough.
+	 *
+	 * @param array $choices
+	 * @param int $form_id
+	 * @param string $field_type
+	 * @param array $exclude_field_types
+	 *
+	 * @return array
+	 */
+	public function exclude_error_choices_from_field_maps( $choices, $form_id, $field_type, $exclude_field_types ) {
+		if ( empty( $choices['fields'] ) || empty( $choices['fields']['choices'] ) ) {
+			return $choices;
+		}
+
+		foreach ( $choices['fields']['choices'] as $choice_index => $choice ) {
+			$field_id            = absint( $choice['value'] );
+			$missing_filter_text = apply_filters( 'gppa_missing_filter_text', '&ndash; ' . esc_html__( 'Fill Out Other Fields', 'gp-populate-anything' ) . ' &ndash;', $field_id );
+
+			if ( $choice['label'] === $missing_filter_text ) {
+				unset( $choices['fields']['choices'][ $choice_index ] );
+			}
+		}
+
+		return $choices;
 	}
 
 }

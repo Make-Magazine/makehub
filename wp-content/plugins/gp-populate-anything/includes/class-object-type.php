@@ -418,7 +418,7 @@ abstract class GPPA_Object_Type {
 
 			case 'is_in':
 			case 'is_not_in':
-				$value = is_array( $value ) ? $value : explode( ',', $value );
+				$value = is_array( $value ) ? $value : array_map( 'trim', explode( ',', $value ) );
 				return array_map( $wpdb->esc_like, $value );
 
 			default:

@@ -1,5 +1,56 @@
 # Changelog
 
+## 1.1
+
+	- Added support for populating List field values from other List fields.
+	- Updated the GF Entry Object Type to allow using List fields as properties.
+	- Added new [`gppa_is_supported_field`](https://gravitywiz.com/documentation/gppa_is_supported_field/) JavaScript filter.
+	- Fixed issue where Live Merge Tags could get improperly populated with values from unchecked checkboxes.
+	- Fixed issue where filtering by date fields would not work if the value coming from the database was in YYYY-MM-DD format.
+
+## 1.0.23
+
+	- Fixed an issue where choice based fields with LMT values failed validation on submit.
+
+## 1.0.22
+
+	- Fixed an issue where the Euro symbol did not render correctly in LMTs.
+
+## 1.0.21
+
+	- Added compatibility for Gravity Flow multi-user fields.
+
+## 1.0.20
+
+	- Added [gppa_query_cache_hash](https://gravitywiz.com/documentation/gppa_query_cache_hash/) filter.
+	- Improved support for hydrating checkboxes that are populated with Easy Passthrough.
+
+## 1.0.19
+
+	- Fixed issue where using the "is in" operator to compare against a comma-delimited list did not correctly remove excess whitespace between values.
+	- Fixed issue where the final determined field value (including preselected options) was not passed when fetching input html during hydration.
+
+## 1.0.18
+
+	- Fixed issue where editing an entry would not always merge in the labels of the newly selected choices. This could cause the choice value to display instead of the label when viewing the entry in the Entry List or Details screens.
+	- Fixed issue where dynamically populated values could get saved as the field's default value when saving form settings.
+
+## 1.0.17
+
+	- Added compatibility layer for WC Product Addons.
+
+## 1.0.16
+
+	- Added security enhancement.
+	- Improved compatibility with new state validation for Radio Buttons fields introduced in Gravity Forms 2.5.10.1.
+	- Improved compatibility with GP Read Only in cases where Filters are dependent on read only choice-based fields.
+	- Updated `gppa_hydrated_value` field property to be set earlier so other plugins using the `gform_pre_render` filter can access it.
+	- Fixed performance issue with query caching in the GF Entry Object Type.
+
+## 1.0.15
+
+	- Fixed a potential issue where caching resulted in stale results when multiple fields are populated via GPPA and depend on previous query results.
+
 ## 1.0.14
 
 	- Fixed a potential issue where LMTs may cause some forms to continuously reload.
