@@ -4,11 +4,10 @@
 	#manage-membership-btn {
 		position: absolute;
 		right: 25px;
-		margin-top: 40px;
+		margin-top: 0px;
 		@media screen and (max-width: 480px) {
 			position: relative;
 			width: 100%;
-			margin-top: 0px;
 			right: 0px;
 		}
 	}
@@ -28,46 +27,53 @@
 			}
 		}
 	}
-	.ihc-user-page-top-ap-wrapper {
-		display: none;
-		width: 100%;
-		.ihc-middle-side {
-			margin-lefT: 0px;
-			.ihc-account-page-top-mess {
-				padding: 0px;
-				.ihc-account-page-top-extra-mess {
-					margin-bottom:0px;
+	.ihc-account-page-wrapp {
+		padding: 0px;
+		.ihc-user-page-top-ap-wrapper {
+			display: none;
+			width: 100%;
+			.ihc-middle-side {
+				margin-left: 0px;
+				.ihc-account-page-top-mess {
+					padding: 0px;
+					.ihc-account-page-top-extra-mess {
+						margin-bottom:0px;
+					}
 				}
+				.ihc-top-levels { margin: 0px; }
 			}
-			.ihc-top-levels { margin: 0px; }
+		}
+		.ihc-ap-menu {
+			display: none;
 		}
 	}
-	.ihc-ap-menu {
-		display: none;
-	}
-	.ihc-ap-wrap {
-		table.ihc-account-tranz-list {
-			border-radius: 5px;
-			overflow: hidden;
-			thead tr { 
-				background-color: $color-grey !important;
-				th { 
-					color: #fff;
-					font-size: 18px;
-					padding: 10px 5px;
-				}
-			}
-			tr:nth-child(odd){ background-color: $color-light-grey; }
-			tfoot { display: none; }
-			td {
+
+	table.ihc-account-tranz-list, table.ihc-account-subscr-list {
+		border-radius: 5px;
+		overflow: hidden;
+		thead tr {
+			background-color: $color-grey !important;
+			th, td {
+				color: #fff !important;
+				font-size: 16px !important;
 				padding: 10px 5px;
-				font-size: 16px;
-				color: $color-grey;
+				background-color: transparent;
+			}
+		}
+		tbody {
+			border-left: solid 2px #ccc;
+			border-right: solid 4px #ccc;
+		}
+		tr:nth-child(odd){ background-color: $color-light-grey; }
+		tfoot { display: none; }
+		td {
+			padding: 10px 5px;
+			font-size: 16px;
+			color: $color-grey;
+			font-family: Roboto;
+			span { font-size: 16px; }
+			&.ihc-content-oswald {
 				font-family: Roboto;
-				span { font-size: 16px; }
-				&.ihc-content-oswald {
-					font-family: Roboto;
-				}
 			}
 		}
 	}

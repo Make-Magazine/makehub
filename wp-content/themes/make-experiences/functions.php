@@ -214,13 +214,13 @@ add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
 
-    if (!$query->is_admin && $query->is_feed && $query->query['post_type']) {  
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type']) {
 		if($query->query['post_type'] == 'espresso_events') {
 			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
 			$results = $wpdb->get_results($dbSQL);
 			$suppression_IDs = array();
 
-			foreach($results as $result){         
+			foreach($results as $result){
 				$suppression_IDs[] = $result->post_id;
 			}
 
@@ -259,7 +259,7 @@ add_filter('doing_it_wrong_trigger_error', function () {
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
-    if (isset($post)) {    
+    if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
             // any query string becomes a body class too
@@ -268,7 +268,7 @@ function add_slug_body_class($classes) {
                 $classes[] = $key . "-" . $value;
             }
         } else {
-            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));  
+            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
         // let's see if your the group owner and what kind of group it is (hidden, private, etc)
         if (bp_is_groups_component()) {
@@ -316,7 +316,7 @@ add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
 
-// Set Buddypress emails from and reply to 
+// Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
     return new BP_Email_Recipient( 'community@make.co' );
 } );
@@ -333,7 +333,7 @@ function gf_add_entries_link( $wp_admin_bar ) {
 			array(
 					'id'     => 'gform-form-entries',
 					'parent' => 'gform-forms',
-					'title'  => esc_html__( "'Add Event' Entries", 'gravityforms' ),					
+					'title'  => esc_html__( "'Add Event' Entries", 'gravityforms' ),
 					'href'   => admin_url('admin.php?page=gf_entries&id=1')
 			));
 	return $wp_admin_bar;

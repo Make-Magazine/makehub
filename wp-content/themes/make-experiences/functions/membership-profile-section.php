@@ -48,32 +48,48 @@ function membership_info_content() {
 
     echo '<div class="membership-tab-wrapper">';
     echo '<h1>Make: Membership Details</h1>';
-    
-    $hasDigitalAccess = false;
-    $levels = Ihc_Db::get_user_levels($user_id, true);
-    foreach($levels as $level) {
-        if($level['level_slug'] != "community") {
-            $hasDigitalAccess = true;
-        }
-    }
-    echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");    
+
+    echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");
+	echo '<h3>Subscriptions</h3>';
+    echo do_shortcode("[ihc-account-page-subscriptions-table]");
+
     if (!is_null($customerID)) { // if customer exists in stripe
         $session = \Stripe\BillingPortal\Session::create([
             'customer' => $customerID,
             'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
         ]);
 
-        echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';        
+        echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
         if (!class_exists('ihcAccountPage')) {
             require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
         }
 
-        $obj = new ihcAccountPage();        
-        echo $obj->print_page("orders");       
+        $obj = new ihcAccountPage();
+        echo $obj->print_page("orders");
     }
-    if($hasDigitalAccess == false) {
-        echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos.</p>';
-        echo '<a href="/join" class="btn universal-btn">Upgrade your Subscription</a>';
+
+	// Decide if user can upgrade
+	$canUpgrade = true;
+    $levels = Ihc_Db::get_user_levels($user_id, true);
+    foreach($levels as $level) {
+		switch($level['level_slug']){
+		    case "school_maker_faire":
+		    case "individual_first_year_discount":
+		    case "individual":
+		    case "family":
+		    case "makerspacesmallbusiness":
+		    case "patron":
+		    case "founder":
+		    case "benefactor":
+		    case "make_projects_school":
+		    case "global_producers":
+		        $canUpgrade = false;
+		    break;
+		}
+    }
+    if($canUpgrade == true) {
+        echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Only $19.99 the first year. $59.99 each additional year.</p>';
+        echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'https://make.co/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=https%3A%2F%2Fmake.co%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
     }
 
     echo '</div>';
