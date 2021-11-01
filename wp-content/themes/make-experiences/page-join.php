@@ -25,14 +25,11 @@ get_header();
 						<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
 					<?php } ?>
 					<?php if(is_user_logged_in()){ ?>
-						<a href="/activity" class="btn universal-btn-reversed" style="margin:0 auto;width:95%px;display:flex;font-size:24px;min-height:7px;padding:10px 20px;text-transform:capitalize;">See what's happening on Make: Community</a>
-						<!--<a href="/register/?lid=20" class="btn universal-btn-reversed membership-btn special-membership-btn">Upgrade</a>-->
+						<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, 'https://make.co/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=https%3A%2F%2Fmake.co%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn">Upgrade</div>';
 					<?php } else { ?>
 						<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">Join Today!</a>
 					<?php } ?>
-					<?php if(!is_user_logged_in()){ ?>
-			   			<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
-					<?php } ?>
+			   		<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 				</div>
 			</header>
 
