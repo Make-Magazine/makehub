@@ -246,6 +246,11 @@ button.ges-change, button.ges-change:hover {
 	padding-bottom: 25px !important;
 }
 
+// buddyboss MODALS
+.mfp-wrap .modal-container {
+	position: relative;
+}
+
 // nobody needs to know when I was last on the notification page
 .member-request-list-wrap .last-activity { display: none; }
 
