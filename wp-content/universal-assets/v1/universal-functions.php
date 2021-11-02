@@ -136,7 +136,7 @@ function get_tag_ID($tag_name) {
 
 function add_universal_body_classes($classes) {
     if ( defined('EVENT_ESPRESSO_VERSION') ){
-        $classes[] = "event-espresso";  
+        $classes[] = "event-espresso";
         return $classes;
     }
 }
@@ -157,6 +157,20 @@ function disabling_emails( $args ){
 }
 */
 
+/**
+ * Eliminate some of the default admin list columns that squish the title
+ */
+ add_action( 'current_screen', function( $screen ) {
+ 	if ( ! isset( $screen->id ) ) return;
+ 	add_filter( "manage_{$screen->id}_columns", 'remove_default_columns', 99 );
+ } );
+
+ function remove_default_columns( $columns ) {
+	unset($columns['essb_shares'], $columns['essb_shareinfo']);
+ 	return $columns;
+ }
+
+
 /* This allows us to send elementor styled pages to other blogs */
 add_action("rest_api_init", function () {
     register_rest_route(
@@ -166,17 +180,17 @@ add_action("rest_api_init", function () {
             "methods" => "GET",
             'permission_callback' => '__return_true',
             "callback" => function (\WP_REST_Request $req) {
-            
+
             $contentElementor = "";
-            
+
             if (class_exists("\\Elementor\\Plugin")) {
                 $post_ID = $req->get_param("id");
-                
+
                 $pluginElementor = \Elementor\Plugin::instance();
                 $contentElementor = $pluginElementor->frontend->get_builder_content($post_ID);
             }
-            
-            
+
+
             return $contentElementor;
             },
             ]
