@@ -17,15 +17,14 @@ get_header();
 			<header class="entry-header">
 				<div class="header-text logged-in-refresh">
 					<?php if(is_user_logged_in()){ ?>
-						<h1>You are already a member!</h1>
-						<!--<h1>To access this content, upgrade your membership today!</h1>
-						<h4>Introductory offer 19.99 - Renews at 59.99.</h4>-->
+						<h1>To access this content, upgrade your membership today!</h1>
+						<h4>Introductory offer 19.99 - Renews at 59.99.</h4>
 					<?php } else { ?>
 						<h1>Become a Member of Make: Community</h1>
 						<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
 					<?php } ?>
 					<?php if(is_user_logged_in()){ ?>
-						<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, 'https://make.co/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=https%3A%2F%2Fmake.co%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn">Upgrade</div>';
+						<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, '<?php echo CURRENT_URL; ?>/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=<?php echo urlencode(CURRENT_URL); ?>%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn-reversed membership-btn">Upgrade</div>
 					<?php } else { ?>
 						<a href="/register/?lid=5" class="btn universal-btn-reversed membership-btn">Join Today!</a>
 					<?php } ?>

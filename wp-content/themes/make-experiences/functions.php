@@ -83,6 +83,14 @@ function load_admin_styles() {
     wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
 }
 
+function set_universal_asset_constants() {
+	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+    // Set the important bits as CONSTANTS that can easily be used elsewhere
+	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
+
+}
+set_universal_asset_constants();
+
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
 

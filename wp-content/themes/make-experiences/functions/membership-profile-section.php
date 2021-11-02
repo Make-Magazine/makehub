@@ -89,7 +89,7 @@ function membership_info_content() {
     }
     if($canUpgrade == true) {
         echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Only $19.99 the first year. $59.99 each additional year.</p>';
-        echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'https://make.co/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=https%3A%2F%2Fmake.co%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+        echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
     }
 
     echo '</div>';
