@@ -51,23 +51,31 @@
 	table.ihc-account-tranz-list, table.ihc-account-subscr-list {
 		border-radius: 5px;
 		overflow: hidden;
-		thead tr {
-			background-color: $color-grey !important;
-			th, td {
-				color: #fff !important;
-				font-size: 16px !important;
-				padding: 10px 5px;
-				background-color: transparent;
+		thead {
+			border: solid 2px $color-grey;
+			tr {
+				background-color: $color-grey !important;
+				th, td {
+					color: #fff !important;
+					font-size: 16px !important;
+					padding: 1em 15px !important;
+					background-color: transparent;
+					&:nth-of-type(2) {
+						min-width: 100px;
+					}
+					&:nth-of-type(3) {
+						min-width: 170px;
+					}
+				}
 			}
 		}
 		tbody {
-			border-left: solid 2px #ccc;
-			border-right: solid 4px #ccc;
+			border: solid 2px #ccc;
 		}
 		tr:nth-child(odd){ background-color: $color-light-grey; }
 		tfoot { display: none; }
 		td {
-			padding: 10px 5px;
+			padding: 10px 15px;
 			font-size: 16px;
 			color: $color-grey;
 			font-family: Roboto;
