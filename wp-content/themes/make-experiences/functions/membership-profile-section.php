@@ -8,7 +8,7 @@ function profile_tab_membership_infoname() {
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
-    if ($user_id != 0 && wp_get_current_user()->ID == $user_id) {
+    if (current_user_can('administrator') || $user_id != 0 && wp_get_current_user()->ID == $user_id ) {
         bp_core_new_nav_item(array(
             'name' => 'Membership',
             'slug' => 'membership',
