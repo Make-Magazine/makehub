@@ -87,7 +87,28 @@ function set_universal_asset_constants() {
 	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
     // Set the important bits as CONSTANTS that can easily be used elsewhere
 	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
-
+	// Decide if user can upgrade
+	$canUpgrade = true;
+	$levels = Ihc_Db::get_user_levels($user_id, true);
+	foreach($levels as $level) {
+		switch($level['level_slug']){
+			case "school_maker_faire":
+			case "individual_first_year_discount":
+			case "individual":
+			case "family":
+			case "makerspacesmallbusiness":
+			case "patron":
+			case "founder":
+			case "benefactor":
+			case "make_projects_school":
+			case "global_producers":
+				$canUpgrade = false;
+			break;
+		}
+	}
+	define('CAN_UPGRADE', $canUpgrade);
+	$url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
 }
 set_universal_asset_constants();
 

@@ -68,26 +68,7 @@ function membership_info_content() {
         echo $obj->print_page("orders");
     }
 
-	// Decide if user can upgrade
-	$canUpgrade = true;
-    $levels = Ihc_Db::get_user_levels($user_id, true);
-    foreach($levels as $level) {
-		switch($level['level_slug']){
-		    case "school_maker_faire":
-		    case "individual_first_year_discount":
-		    case "individual":
-		    case "family":
-		    case "makerspacesmallbusiness":
-		    case "patron":
-		    case "founder":
-		    case "benefactor":
-		    case "make_projects_school":
-		    case "global_producers":
-		        $canUpgrade = false;
-		    break;
-		}
-    }
-    if($canUpgrade == true) {
+    if(CAN_UPGRADE == true) {
         echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Only $19.99 the first year. $59.99 each additional year.</p>';
         echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
     }
