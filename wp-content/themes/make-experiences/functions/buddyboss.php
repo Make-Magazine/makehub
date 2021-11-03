@@ -97,3 +97,14 @@ function my_body_classes( $classes ) {
 	}
     return $classes;
 }
+
+// if a user somehow gets access to a private group url that they aren't a member of, redirect them to the main groups page
+function redirect_nongroup_member() {
+	if( CAN_UPGRADE && bp_is_group() ) {
+		if(!groups_is_user_member(get_current_user_id(), bp_get_current_group_id()) && groups_get_group(bp_get_current_group_id())->status != 'public'){
+			wp_safe_redirect( CURRENT_URL . "/groups" );
+			exit;
+		}
+	}
+}
+add_action( 'wp', 'redirect_nongroup_member' );
