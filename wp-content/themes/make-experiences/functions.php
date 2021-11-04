@@ -97,8 +97,10 @@ function set_universal_asset_constants() {
 	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
 	// Decide if user can upgrade
 	$canUpgrade = true;
-	$levels = Ihc_Db::get_user_levels($user_id, true);
+	$levels = Ihc_Db::get_user_levels(get_current_user_id(), true);
 	foreach($levels as $level) {
+		error_log("level");
+		error_log(print_r($level, TRUE));
 		switch($level['level_slug']){
 			case "school_maker_faire":
 			case "individual_first_year_discount":

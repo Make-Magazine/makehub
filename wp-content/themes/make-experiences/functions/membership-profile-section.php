@@ -8,7 +8,7 @@ function profile_tab_membership_infoname() {
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
-    if (current_user_can('administrator') || $user_id != 0 && wp_get_current_user()->ID == $user_id ) {
+    if ($user_id != 0 && wp_get_current_user()->ID == $user_id ) {
         bp_core_new_nav_item(array(
             'name' => 'Membership',
             'slug' => 'membership',
@@ -40,6 +40,7 @@ function membership_info_content() {
     $user_id = bp_displayed_user_id();
     //get the users email
     $user_info = get_userdata($user_id);
+	//var_dump(Ihc_Db::get_user_levels($user_id, true));
     $user_email = $user_info->user_email;
     require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
     \Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
@@ -73,7 +74,7 @@ function membership_info_content() {
 				            'customer' => $customerID,
 				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
 				        ]);
-				        echo '<a href="<?php echo $session->url; ?>" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+				        echo '<a href="'. $session->url .'" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
 					}
 					?>
 				</div>
