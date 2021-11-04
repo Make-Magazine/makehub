@@ -1,14 +1,50 @@
 .membership-tab-wrapper {
 	padding: 0px 15px;
 	position: relative;
-	#manage-membership-btn {
-		position: absolute;
-		right: 25px;
-		margin-top: 0px;
-		@media screen and (max-width: 480px) {
-			position: relative;
-			width: 100%;
-			right: 0px;
+	ul.nav-tabs {
+		margin-left: 0px;
+		.nav-item {
+			width: 50%;
+			.nav-link {
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+				border-top: solid 1px #ccc;
+				border-left: solid 1px #ccc;
+				border-right: solid 1px #ccc;
+				text-align: center;
+				color: $color-grey;
+				font-weight: bold;
+				background: #f1f1f1;
+				&.active {
+					background: #fff;
+				}
+			}
+			&:last-of-type {
+				.nav-link { margin-right: 0px; }
+			}
+		}
+	}
+	.tab-content {
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		border: solid 1px #ccc;
+		padding: 30px;
+		background: #fff;
+		.ihc-ap-wrap { margin-top: 0px; }
+	}
+	.membership-btns {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 15px;
+		.universal-btn {
+			width: 45%;
+		}
+		@media screen and (max-width: 768px) {
+			flex-direction: column-reverse;
+			.universal-btn {
+				width: 100%;
+				margin-bottom: 10px;
+			 }
 		}
 	}
 	.iump-wrapp-listing-levels {

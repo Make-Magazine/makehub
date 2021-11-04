@@ -84,7 +84,15 @@ function load_admin_styles() {
 }
 
 function set_universal_asset_constants() {
-	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+	if (isset($_SERVER['HTTPS']) &&
+	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+	  		$protocol = 'https://';
+	}
+	else {
+		$protocol = 'http://';
+	}
     // Set the important bits as CONSTANTS that can easily be used elsewhere
 	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
 	// Decide if user can upgrade

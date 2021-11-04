@@ -44,34 +44,55 @@ function membership_info_content() {
     require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
     \Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
     $customer = \Stripe\Customer::all(["email" => $user_email]);
-    $customerID = (isset($customer->data[0]['id']) ? $customer->data[0]['id'] : NULL);
+    $customerID = (isset($customer->data[0]['id']) ? $customer->data[0]['id'] : NULL); ?>
 
-    echo '<div class="membership-tab-wrapper">';
-    echo '<h1>Make: Membership Details</h1>';
+    <div class="membership-tab-wrapper">
+    	<h1>Make: Membership Details</h1>
 
-    echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");
-	echo '<h3>Subscriptions</h3>';
-    echo do_shortcode("[ihc-account-page-subscriptions-table]");
+    	<?php echo do_shortcode("[ihc-list-user-levels exclude_expire=true]"); ?>
 
-    if (!is_null($customerID)) { // if customer exists in stripe
-        $session = \Stripe\BillingPortal\Session::create([
-            'customer' => $customerID,
-            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
-        ]);
-
-        echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
-        if (!class_exists('ihcAccountPage')) {
-            require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
-        }
-
-        $obj = new ihcAccountPage();
-        echo $obj->print_page("orders");
-    }
-
-    if(CAN_UPGRADE == true) {
-        echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Only $19.99 the first year. $59.99 each additional year.</p>';
-        echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
-    }
-
-    echo '</div>';
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="nav-subscriptions-tab" data-toggle="tab" data-target="#nav-subscriptions" role="tab" aria-controls="nav-subscriptions" aria-selected="true">Subscriptions<</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="nav-orders-tab" data-toggle="tab" data-target="#nav-orders" role="tab" aria-controls="nav-orders" aria-selected="false">Orders</a>
+			</li>
+		</ul>
+		<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane active" id="nav-subscriptions" role="tabpanel" aria-labelledby="nav-subscriptions-tab">
+				<h3>Subscriptions</h3>
+				<?php echo do_shortcode("[ihc-account-page-subscriptions-table]"); ?>
+				<div class="membership-btns">
+					<?php
+					if(CAN_UPGRADE == true) {
+						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+					}
+					if (!is_null($customerID)) { // if customer exists in stripe
+				        $session = \Stripe\BillingPortal\Session::create([
+				            'customer' => $customerID,
+				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
+				        ]);
+				        echo '<a href="<?php echo $session->url; ?>" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+					}
+					?>
+				</div>
+				<?php if(CAN_UPGRADE == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</p>'; } ?>
+			</div>
+			<div class="tab-pane" id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
+				<?php
+				if (!is_null($customerID)) { // if customer exists in stripe
+					if (!class_exists('ihcAccountPage')) {
+						require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
+					}
+					$obj = new ihcAccountPage();
+					echo $obj->print_page("orders");
+				} else {
+					?> <h3>Orders</h3><div>No orders to display</div> <?php
+				}
+				?>
+			</div>
+		</div>
+    </div>
+<?php
 }
