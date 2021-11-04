@@ -18,7 +18,7 @@ get_header();
 				<div class="header-text logged-in-refresh">
 					<?php if(is_user_logged_in() && CAN_UPGRADE == true){ ?>
 						<h1>To access this content, upgrade your membership today!</h1>
-						<h4>Introductory offer 19.99 - Renews at 59.99.</h4>
+						<h4>Introductory offer 19.99.</h4>
 					<?php } else if(is_user_logged_in()) { ?>
 						<h1>You are already a Member!</h1>
 					<?php } else { ?>
@@ -26,7 +26,7 @@ get_header();
 						<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
 					<?php } ?>
 					<?php if(is_user_logged_in() && CAN_UPGRADE == true){ ?>
-						<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, '<?php echo CURRENT_URL; ?>/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=<?php echo urlencode(CURRENT_URL); ?>%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn-reversed membership-btn">Upgrade</div>
+						<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, '<?php echo CURRENT_URL; ?>/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=<?php echo urlencode(CURRENT_URL); ?>%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn-reversed membership-btn upgrade">Upgrade</div>
 					<?php } else if(is_user_logged_in()) { ?>
 						<a href="/activity" class="btn universal-btn-reversed" style="margin:0 auto;width:95%px;display:flex;font-size:24px;min-height:100px;padding:10px 20px;text-transform:capitalize">See what's happening on Make: Community</a>
 					<?php } else { ?>
