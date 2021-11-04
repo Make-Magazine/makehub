@@ -80,7 +80,7 @@ add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 function load_admin_styles() {
-    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
+    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.2');
 }
 
 function set_universal_asset_constants() {
