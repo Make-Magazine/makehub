@@ -18,7 +18,7 @@ get_header();
 				<div class="header-text logged-in-refresh">
 					<?php if(is_user_logged_in() && CAN_UPGRADE == true){ ?>
 						<h1>To access this content, upgrade your membership today!</h1>
-						<h4>Introductory offer 19.99.</h4>
+						<h4>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</h4>
 					<?php } else if(is_user_logged_in()) { ?>
 						<h1>You are already a Member!</h1>
 					<?php } else { ?>
