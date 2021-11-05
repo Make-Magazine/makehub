@@ -102,6 +102,8 @@ window.addEventListener('load', function () {
 		function showBuddypanel() {
 			jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
 				jQuery("body").addClass("buddypanel-open");
+				//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
+				window.dispatchEvent(new Event('resize'));
 			});
 		}
 
