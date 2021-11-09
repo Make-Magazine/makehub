@@ -20,7 +20,6 @@ function woocommerce_add_membership( $order_id ){
 	$items = $order->get_items();
 	foreach ( $items as $item ) {
 	    $product_name = $item->get_name();
-		error_log($product_name);
 		// only do this if we're purchasing a school maker faire registration
 		if($product_name == "School Maker Faire Registration") {
 			if( !$order->get_user() ){
