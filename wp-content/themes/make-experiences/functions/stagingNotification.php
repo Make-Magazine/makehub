@@ -21,7 +21,6 @@ function change_email_for_wp($email) {
         }*/
 
         $email['subject'] = 'Redirect Email sent to ' . $email['to'] . ' - ' . $email['subject'];
-		$email['headers'] .= 'Cc: ""' . "\r\n";
 
 		if(strpos($homeurl, 'makehub.local') !== false) {
 			$email['to'] = 'rio@make.co';
