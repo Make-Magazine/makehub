@@ -21,16 +21,14 @@ function change_email_for_wp($email) {
         }*/
 
         $email['subject'] = 'Redirect Email sent to ' . $email['to'] . ' - ' . $email['subject'];
-        //$email['to'] = implode(",", $newTo);
-        error_log($email['headers']);
-		$email['headers'][] = 'cc: ""';
-		if(strpos($homeurl, 'makehub.local') !== false) {
-			$email['to'] = 'rio@make.co';
-		} else if(strpos($homeurl, 'makehub.test') !== false) {
-			$email['to'] = 'alicia@make.co';
-		} else {
-        	$email['to'] = 'webmaster@make.co, dan@make.co, siana@make.co';
-		}
+
+    		if(strpos($homeurl, 'makehub.local') !== false) {
+    			$email['to'] = 'rio@make.co';
+    		} else if(strpos($homeurl, 'makehub.test') !== false) {
+    			$email['to'] = 'alicia@make.co';
+    		} else {
+          $email['to'] = 'webmaster@make.co, dan@make.co, siana@make.co';
+    		}
     }
 
     return ($email);
