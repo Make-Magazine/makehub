@@ -1,17 +1,52 @@
 <?php
 
 //This filter declaration targets form 4 - field 9 - the last digit is the column in the list field
-add_filter('gform_column_input_content_4_9_1', 'set_date_field_type', 10, 6);
-add_filter('gform_column_input_content_4_9_2', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_4_9_1', 'set_month_select', 10, 6);
+add_filter('gform_column_input_4_9_2', 'set_day_select', 10, 6);
 add_filter('gform_column_input_content_4_9_3', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_content_4_9_4', 'set_time_field_type', 10, 6);
 
 //This filter declaration targets form 4 - field 11 - the last digit is the column in the list field
-add_filter('gform_column_input_content_4_11_1', 'set_date_field_type', 10, 6);
-add_filter('gform_column_input_content_4_11_2', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_4_11_1', 'set_month_select', 10, 6);
+add_filter('gform_column_input_4_11_2', 'set_day_select', 10, 6);
 add_filter('gform_column_input_content_4_11_3', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_content_4_11_4', 'set_time_field_type', 10, 6);
 
 add_filter( 'gform_field_validation_4_9', 'validate_time', 10, 4 );
 add_filter( 'gform_field_validation_4_11', 'validate_time', 10, 4 );
+
+//reformat field as month selector
+function set_month_select( $input_info, $field, $column, $value, $form_id ) {
+    return array(
+		'type' => 'select',
+		  'choices' => array(
+			  array( 'text' => 'January', 'value' => 1),
+			  array( 'text' => 'February', 'value' => 2),
+			  array( 'text' => 'March', 'value' => 3),
+			  array( 'text' => 'April', 'value' => 4),
+			  array( 'text' => 'May', 'value' => 5),
+			  array( 'text' => 'June', 'value' => 6),
+			  array( 'text' => 'July', 'value' => 7),
+			  array( 'text' => 'August', 'value' => 8),
+			  array( 'text' => 'September', 'value' => 9),
+			  array( 'text' => 'October', 'value' => 10),
+			  array( 'text' => 'November', 'value' => 11),
+			  array( 'text' => 'December', 'value' => 12),
+		  ),
+	  );
+}
+
+//reformat field as day selector
+function set_day_select( $input_info, $field, $column, $value, $form_id ) {
+    return array(
+		'type' => 'select',
+		'choices' => array(
+			array( 'text' => 'Saturday', 'value' => 'Saturday'),
+			array( 'text' => 'Thursday', 'value' => 'Thursday'),
+		),
+	);
+}
+
 
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
@@ -32,7 +67,7 @@ function set_time_field_type($input, $input_info, $field, $text, $value, $form_i
     $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
 
 	if(!$value) { $value = "12 : 00 PM"; } // if we aren't seeing a set value, set it noon as default
-	
+
     $new_input = '<input type="text" name="' . $input_field_name . '" value="'.$value.'" ' . $tabindex . ' class="time timepicker">';
 
     return $new_input;
@@ -77,7 +112,7 @@ function getFieldByParam($paramName = '', $parameterArray = array(), $entry = ar
         $field = $parameterArray[$paramName];
         if (isset($field)) {
             $fieldID = $field->id;
-            if ($field->type == 'name' || $field->type == 'address') {                
+            if ($field->type == 'name' || $field->type == 'address') {
                 foreach ($field->inputs as $choice) {
                     if ($choice['name'] == $paramName) {
                         $fieldID = $choice['id'];
@@ -163,7 +198,7 @@ function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
     //check if facilitator exists
     global $current_user;
     $facilitator_img ='';
-    
+
     $current_user = wp_get_current_user();
     $userEmail = (string) $current_user->user_email;
     $form = gfapi::get_form($form_id);
@@ -178,9 +213,9 @@ function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
             }
         }
     }
-    
+
     $input .= '<div id="preview_input_1_118"> '
-            . '  This is the current image we have for you. If you would like to update it, please click \'Choose File\'<br/>'  
+            . '  This is the current image we have for you. If you would like to update it, please click \'Choose File\'<br/>'
             .   '<div class="preview_img-wrapper" style="background-image: url('.$facilitator_img.');"></div>'
            . '</div>';
     return $input;
@@ -194,14 +229,14 @@ function gw_conditional_requirement( $form ) {
     if ( $form['id'] != 1 ) {
        return $form;
     }
- 
-    global $current_user;        
+
+    global $current_user;
     $current_user = wp_get_current_user();
-    $userEmail = (string) $current_user->user_email;    
-    
+    $userEmail = (string) $current_user->user_email;
+
     foreach ( $form['fields'] as &$field ) {
         if ( $field->id == 118 ) {
-            $field->isRequired = false;            
+            $field->isRequired = false;
         }
     }
     return $form;
