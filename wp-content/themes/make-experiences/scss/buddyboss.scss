@@ -192,6 +192,9 @@ button.ges-change, button.ges-change:hover {
             }
         }
     }
+	#learndash_profile {
+		.learndash-course-status, .learndash-course-certificate { display: none; }
+	}
 }
 
 // Makerspace dir Page

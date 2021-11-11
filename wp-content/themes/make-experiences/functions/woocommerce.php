@@ -46,7 +46,7 @@ function woocommerce_add_membership( $order_id ){
 				$subject = 'Welcome to Make: Community.';
 				$my_groups = CURRENT_URL . '/wp-login.php?redirect_to=' . CURRENT_URL . '/members/me/groups/';
 				$message = 'Hello ' . $order->get_billing_first_name() .', <br /><br />Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire <a href="'. $my_groups .'">event group</a>. <br /><br />
-		<b>Username:</b> ' . $username . '<br />
+		<b>Email:</b> ' . $customer_email . '<br />
 		<b>Temporary Password:</b> ' . $random_password;
 				$headers = 'Content-Type: text/html; charset=ISO-8859-1' . '\r\n';
 				$headers .= 'From: Make: Community <make@make.co>' . '\r\n';
