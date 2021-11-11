@@ -155,13 +155,13 @@ if (empty($course)) {
                                         event.preventDefault();
                                         jQuery("#pleasewait").show(); //show the spinner
                                         jQuery("#topic-section").html(""); //empty out the div
-                                        var url = jQuery(this).attr('href'); //get the href from the clicked button                                       
+                                        var url = jQuery(this).attr('href'); //get the href from the clicked button
                                         jQuery("#topic-section").load(url + " .topic-page"); //load that information starting from the topic-page class
                                         jQuery("#pleasewait").hide(); //hide the spinner
                                         return false;
                                     });
                                 });
-                            </script>    
+                            </script>
 
                             <?php
                             /**
@@ -298,8 +298,8 @@ if (empty($course)) {
                             <?php
                             // Author section
                             global $post;
-                            
-                            $author_id=$post->post_author;                         
+
+                            $author_id=$post->post_author;
                             learndash_get_template_part('template-course-author.php', array(
                                 'user_id' => $author_id
                                     ), true);
@@ -307,8 +307,7 @@ if (empty($course)) {
 
                         </div><?php /* .learndash_content_wrap */ ?>
 
-                    </div> <!--/.learndash-wrapper-->
-                    <a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
+                    </div> <!--/.learndash-wrapper-->                    
 <?php } ?>
             </div><?php /* .learndash-content-body */ ?>
         </div><?php /* #learndash-page-content */ ?>
