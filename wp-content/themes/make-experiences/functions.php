@@ -99,8 +99,6 @@ function set_universal_asset_constants() {
 	$canUpgrade = true;
 	$levels = Ihc_Db::get_user_levels(get_current_user_id(), true);
 	foreach($levels as $level) {
-		error_log("level");
-		error_log(print_r($level, TRUE));
 		switch($level['level_slug']){
 			case "school_maker_faire":
 			case "individual_first_year_discount":
@@ -116,6 +114,9 @@ function set_universal_asset_constants() {
 			break;
 		}
 	}
+	$hasmembership = false;
+	if (!empty($levels)) { $hasmembership = true; }
+	define('IS_MEMBER', $hasmembership);
 	define('CAN_UPGRADE', $canUpgrade);
 	$url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
 	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
