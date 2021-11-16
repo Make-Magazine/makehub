@@ -66,7 +66,7 @@ function membership_info_content() {
 				<?php echo do_shortcode("[ihc-account-page-subscriptions-table]"); ?>
 				<div class="membership-btns">
 					<?php
-					if(CAN_UPGRADE == true) {
+					if(CAN_UPGRADE == true && IS_MEMBER == true) {
 						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
 					}
 					if (!is_null($customerID)) { // if customer exists in stripe
@@ -75,10 +75,12 @@ function membership_info_content() {
 				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
 				        ]);
 				        echo '<a href="'. $session->url .'" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+					} else {
+						echo '<div><h4>Not a Member?</h4><a href="/join" class="btn universal-btn-red">JOIN TODAY</a></div>';
 					}
 					?>
 				</div>
-				<?php if(CAN_UPGRADE == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</p>'; } ?>
+				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</p>'; } ?>
 			</div>
 			<div class="tab-pane" id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
 				<?php
