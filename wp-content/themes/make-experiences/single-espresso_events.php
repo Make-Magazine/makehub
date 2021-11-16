@@ -262,7 +262,9 @@ get_header();
                                                 ?>
                                                 <li>
 													<p><?php echo $date->description(); ?></p>
-                                                	<?php echo date('M j, Y',$date->get_raw( 'DTT_EVT_start')) . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span>
+													<?php
+														$prettyDate = new DateTime($date->start_date('Y-m-d\TH:i:sP'));
+													 	echo $prettyDate->format('M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span>
                                                 </li>
 											<?php } ?>
                                         </ul>
