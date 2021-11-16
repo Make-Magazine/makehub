@@ -101,7 +101,11 @@ window.addEventListener('load', function () {
 		// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
 		function showBuddypanel() {
 			jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
-				jQuery("body").addClass("buddypanel-open");
+				if(loggedin == false) {
+					jQuery("body").addClass("buddypanel-open");
+				} else {
+					jQuery("body").addClass("buddypanel-closed");
+				}
 				//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
 				window.dispatchEvent(new Event('resize'));
 			});

@@ -369,6 +369,11 @@ input.cmn-toggle-round:checked + label:after {
     padding: 30px 20px 20px;
 }
 
+// Smashballoon social wall
+[id^=sb-wall].sb-wall .sbsw-item-media img {
+    height: auto !important;
+}
+
 // This checkbox code is so good, we got to make it universal
 .sel-container {
     display: block;
@@ -445,6 +450,7 @@ input.cmn-toggle-round:checked + label:after {
 
 // don't print urls
 @media print {
+	header.site-header-custom { display: none; }
 	a[href]:after, a[href]:before {
 		content: none !important;
 		display: none !important;

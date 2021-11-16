@@ -83,7 +83,7 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
                 }
                 update_field($meta_field, $repeater, $post_id);
             } else if (strpos($meta_field, 'image') !== false) {
-                update_post_meta($post_id, $meta_field, attachment_url_to_postid($entry[$fieldID])); // this should hopefully use the attachment id                
+                update_post_meta($post_id, $meta_field, attachment_url_to_postid($entry[$fieldID])); // this should hopefully use the attachment id
             } else {
                 //update_post_meta($post_id, $meta_field, $entry[$fieldID]);
                 update_field($meta_field, $entry[$fieldID], $post_id);
@@ -101,11 +101,11 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
 }
 
 function event_post_meta($entry, $form, $post_id, $parameter_array) {
-    // Set the taxonomies       
+    // Set the taxonomies
     $expType = getFieldByParam('exp-type', $parameter_array, $entry);
     $expCats = getFieldByParam('exp-cats', $parameter_array, $entry);
 
-    wp_set_object_terms($post_id, $expType, 'event_types'); //program type    
+    wp_set_object_terms($post_id, $expType, 'event_types'); //program type
     wp_set_object_terms($post_id, $expCats, 'espresso_event_categories');  //event Categories
     // Set the featured Image
     set_post_thumbnail($post_id, attachment_url_to_postid($entry['9']));
@@ -114,7 +114,7 @@ function event_post_meta($entry, $form, $post_id, $parameter_array) {
 function update_organizer_data($entry, $form, $personID, $parameter_array) {
     $userSocial = getFieldByParam('user_social', $parameter_array, $entry); //this is a serialized field
     $userWebsite = getFieldByParam('user_website', $parameter_array, $entry);
-    $facilitator_info = getFieldByParam('user-bio', $parameter_array, $entry);    
+    $facilitator_info = getFieldByParam('user-bio', $parameter_array, $entry);
 
     $socialLinks = unserialize($userSocial); //TBD need to find more secure way of doing this to avoid code injection
 
@@ -124,7 +124,7 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
             $repeater[] = array("field_5f7e086a4a5a3" => $value);
         }
     }
-    // update ACF fields for the event organizer    
+    // update ACF fields for the event organizer
     update_field("social_links", $repeater, $personID);
     update_field("website", $userWebsite, $personID);
     update_field("facilitator_info", $facilitator_info, $personID);
@@ -139,15 +139,15 @@ function update_sched_ticket_acf($schedArray, $eventID) {
 function setSchedTicket($parameter_array, $entry, $eventID) {
     /* Event Date/Time and Tickets
      *      Ticket and schedule information is set in a nested form
-     *      Need to get nested form ID and then loop through the nested form information 
+     *      Need to get nested form ID and then loop through the nested form information
      */
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
-    
+
     //pull nested form to get submitted schedule/ticket
     if (isset($parameter_array['nested-form'])) {
         $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : '4');
         $nstForm = GFAPI::get_form($nstFormID);
-        
+
         //get the list of entry id's for the nested form
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
         $nstEntryArr = explode(",", $nstEntryIDs);
@@ -167,16 +167,16 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
 function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $schedArray = array();
     $eventID = $entry["post_id"];
-    
-    //Ticket Information        
+
+    //Ticket Information
     $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
     $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
 
     $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
     $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
     $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
-    $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);    
-   
+    $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
+
     //create the ticket instance
     $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
                 'TKT_description' => $ticketDesc,
@@ -191,50 +191,53 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
     $price->save();
     $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-   
+
     //Schedule Info
     $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
     $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
 
     //TBD - Note we need to do something more secure here to avoid code injection
     $prefSched = unserialize($prefSchedSer);
-    
-    //create tickets  
+
+    //create tickets
     $preferred_schedule = array();
-    foreach ($prefSched as $sched) {        
-        //Start Date        
+    foreach ($prefSched as $sched) {
+		$year = ( $sched['Month'] < date('m') )? date('Y', strtotime('+1 year')) : date("Y");
+		$date = date( "Y-m-d", strtotime('second ' . $sched['Day'] . ' of ' . $year . '-' . $sched['Month']) );
+
+        //Start Date
         $startTime = str_replace(" ", "", $sched['Start Time']); //time comes across with extra spaces
-        $date = date_create($sched['Date'] . ' ' . $startTime,timezone_open($timeZone));        
-        $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+        $dateTime = date_create($date . ' ' . $startTime, timezone_open($timeZone));
+        $start_date = new DateTime(date_format($dateTime, "Y-m-d") . 'T' . date_format($dateTime, "H:i:s"), new DateTimeZone($timeZone));
 
         //End Date
         $endTime = str_replace(" ", "", $sched['End Time']); //time comes across with extra spaces
-        $date = date_create($sched['Date'] . ' ' . $endTime);
-        $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+        $dateTime = date_create($date . ' ' . $endTime, timezone_open($timeZone));
+        $end_date = new DateTime(date_format($dateTime, "Y-m-d") . 'T' . date_format($dateTime, "H:i:s"), new DateTimeZone($timeZone));
 
         //create the date/time instance
         $d = EE_Datetime::new_instance(
-                        array('EVT_ID' => $eventID, 
-                              'DTT_name' => $ticketName, 
+                        array('EVT_ID' => $eventID,
+                              'DTT_name' => $ticketName,
                               'DTT_EVT_start' => $start_date,
                               'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
 
         $d->save();
         $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
         //set the preferred schedule for the ACF
-        $preferred_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+        $preferred_schedule[] = array('date' => $date, 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
     }
 
     //update the ticket end date with the start of the event
     $event = EEM_Event::instance()->get_one_by_ID($eventID);
     if ($event) {
-        $date = $tkt->first_datetime();                
-        
+        $date = $tkt->first_datetime();
+
         if(!is_null($date)){
-            $start_date = $date->start_date_and_time();                                    
+            $start_date = $date->start_date_and_time();
             $time = strtotime($start_date);
             $start_date = date("F j, Y h:i a", strtotime('+30 minutes', $time));
-            
+
             $tkt->set('TKT_end_date', $start_date);
             $tkt->save();
         }else{
@@ -251,7 +254,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
 
     foreach ($altSched as $sched) {
         //set the preferred schedule for the ACF
-        $alternate_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+        $alternate_schedule[] = array('month' => $sched['Month'], 'day' => $sched['Day'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
     }
 
     $schedArray = array('ticket_name' => $ticketName,

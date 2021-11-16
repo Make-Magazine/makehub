@@ -114,6 +114,9 @@ function set_universal_asset_constants() {
 			break;
 		}
 	}
+	$hasmembership = false;
+	if (!empty($levels)) { $hasmembership = true; }
+	define('IS_MEMBER', $hasmembership);
 	define('CAN_UPGRADE', $canUpgrade);
 	$url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
 	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));

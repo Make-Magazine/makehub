@@ -636,6 +636,15 @@ body.buddyboss-theme {
 			}
 		}
 	}
+	&.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px; }
+		#page.site {
+			margin-left: 68px;
+			@media screen and (max-width: 805px) {
+				margin-left: 0px;
+			}
+		}
+	}
 }
 
 body.mobile-nav {
