@@ -75,7 +75,7 @@ function membership_info_content() {
 				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
 				        ]);
 				        echo '<a href="'. $session->url .'" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
-					} else {
+					} else if(IS_MEMBER == false) {
 						echo '<div><h4>Not a Member?</h4><a href="/join" class="btn universal-btn-red">JOIN TODAY</a></div>';
 					}
 					?>
