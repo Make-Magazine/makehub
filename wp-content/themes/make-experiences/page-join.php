@@ -20,7 +20,7 @@ get_header();
 						if( CAN_UPGRADE == true ) { ?>
 							<h1>To access this content, upgrade your membership today!</h1>
 							<h4>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</h4>
-							<div onclick="ihcBuyNewLevelFromAp('Membership', '19.99', 20, '<?php echo CURRENT_URL; ?>/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=<?php echo urlencode(CURRENT_URL); ?>%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn-reversed membership-btn upgrade">Upgrade</div>
+							<div onclick="ihcBuyNewLevelFromAp('Membership', '24.99', 20, '<?php echo CURRENT_URL; ?>/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=<?php echo urlencode(CURRENT_URL); ?>%2Faccount%2F%3Fihc_ap_menu%3Dsubscription');" class="btn universal-btn-reversed membership-btn upgrade">Upgrade</div>
 							<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 						<?php } else { ?>
 							<h1>You are already a Member!</h1>
