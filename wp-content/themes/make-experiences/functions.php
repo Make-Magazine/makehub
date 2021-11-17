@@ -95,22 +95,31 @@ function set_universal_asset_constants() {
     // Set the important bits as CONSTANTS that can easily be used elsewhere
 	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
 	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
-	
+
 	// Decide if user can upgrade
-	$canUpgrade = false;
+	$canUpgrade = true;
 	$hasmembership = false;
 	$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
 	if (!empty($levels)) {
 		$hasmembership = true;
 		foreach($levels as $level) {
 			switch($level['level_slug']){
-				case "community":
-				case "annual_gift_membership":
-				case "trial":
-					$canUpgrade = true;
-				break;
+				case "school_maker_faire":
+				case "individual_first_year_discount":
+				case "individual":
+				case "family":
+				case "makerspacesmallbusiness":
+				case "patron":
+				case "founder":
+				case "benefactor":
+				case "make_projects_school":
+				case "global_producers":
+					$canUpgrade = false;
+					break;
 			}
 		}
+	} else {
+		$canUpgrade = false;
 	}
 
 	define('IS_MEMBER', $hasmembership);
