@@ -67,9 +67,9 @@ function membership_info_content() {
 				<div class="membership-btns">
 					<?php
 					if(CAN_UPGRADE == true && IS_MEMBER == true) {
-						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'24.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
 					}
-					if (!is_null($customerID)) { // if customer exists in stripe
+					if (!is_null($customerID) && IS_MEMBER == true) { // if customer exists in stripe
 				        $session = \Stripe\BillingPortal\Session::create([
 				            'customer' => $customerID,
 				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
@@ -80,7 +80,7 @@ function membership_info_content() {
 					}
 					?>
 				</div>
-				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</p>'; } ?>
+				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $24.99 the first year.</p>'; } ?>
 			</div>
 			<div class="tab-pane" id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
 				<?php
