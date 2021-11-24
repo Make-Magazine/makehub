@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Questions_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Questions_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Current Post Metaboxes Fields
@@ -33,12 +32,19 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 		 */
 		protected $fields = array();
 
+		/**
+		 * Metaboxes fields map
+		 *
+		 * @var array
+		 */
 		protected $fields_map = array();
 
 		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -371,8 +377,8 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $query_params Quest params array.
-		 * @param string $post_type    Post type string.
+		 * @param array        $query_params Quest params array.
+		 * @param WP_Post_Type $post_type    Post type string.
 		 */
 		public function rest_collection_params_filter( array $query_params, WP_Post_Type $post_type ) {
 			$query_params = parent::rest_collection_params_filter( $query_params, $post_type );
@@ -427,7 +433,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 					}
 
 					if ( ! sfwd_lms_has_access( $this->quiz_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -452,7 +458,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 
 			$query_args = parent::rest_query_filter( $query_args, $request );
 
-			// The course_post should be set in the local method get_items_permissions_check()
+			// The course_post should be set in the local method get_items_permissions_check().
 			if ( ! is_null( $this->quiz_post ) ) {
 				$questions_ids = array_keys( learndash_get_quiz_questions( $this->quiz_post->ID ) );
 				if ( ! empty( $questions_ids ) ) {
@@ -620,10 +626,10 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $postdata   Post data array.
-		 * @param string $field_name Field Name for $postdata value.
-		 * @param object $request    Request object.
-		 * @param string $post_type  Post Type for request.
+		 * @param array           $postdata   Post data array.
+		 * @param string          $field_name Field Name for $postdata value.
+		 * @param WP_REST_Request $request    Request object.
+		 * @param string          $post_type  Post Type for request.
 		 */
 		public function get_rest_settings_field_value( array $postdata, $field_name, WP_REST_Request $request, $post_type ) {
 			static $question_pro_data = array();
@@ -686,7 +692,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 							break;
 
 						case 'answers':
-							//error_log( 'question_data<pre>' . print_r( $question_data, true ) . '</pre>' );
+							// error_log( 'question_data<pre>' . print_r( $question_data, true ) . '</pre>' );
 							break;
 
 						default:
@@ -705,9 +711,9 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 

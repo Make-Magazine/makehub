@@ -229,7 +229,6 @@ function learndash_course_get_topics( $course_id = 0, $lesson_id = 0, $query_arg
  *
  * @return array of Quizzes.
  */
-
 function learndash_course_get_quizzes( $course_id = 0, $parent_id = 0, $query_args = array() ) {
 	$quizzes = array();
 
@@ -537,6 +536,8 @@ function learndash_get_courses_for_step( $step_id = 0, $return_flat_array = fals
 
 		return $course_ids;
 	}
+
+	return array();
 }
 
 /**
@@ -597,9 +598,8 @@ function learndash_get_primary_course_for_step( $step_id = 0 ) {
  *
  * @since 3.2.0
  *
- * @param integer $step_id Course step post ID.
- *
- * @return integer $course_id Primary Course ID if found.
+ * @param integer $step_id   Course step post ID.
+ * @param integer $course_id Course ID.
  */
 function learndash_set_primary_course_for_step( $step_id = 0, $course_id = 0 ) {
 	$step_id   = absint( $step_id );
@@ -707,7 +707,7 @@ function learndash_check_course_step( $wp ) {
 						}
 					}
 				} else {
-					// If we don't have a valid Course post
+					// If we don't have a valid Course post.
 					global $wp_query;
 					$wp_query->set_404();
 
@@ -718,7 +718,7 @@ function learndash_check_course_step( $wp ) {
 				if ( learndash_is_admin_user() ) {
 					return;
 				} else {
-					// If we don't have a course part of the URL then we check if the step has a primary (legacy) course
+					// If we don't have a course part of the URL then we check if the step has a primary (legacy) course.
 					$step_courses = learndash_get_courses_for_step( $post->ID, false );
 
 					// If we do have a primary (legacy) then we redirect the user there.
@@ -735,7 +735,7 @@ function learndash_check_course_step( $wp ) {
 						}
 					} else {
 						if ( learndash_is_admin_user() ) {
-							// Alow the admin to view the lesson/topic before it is added to a course
+							// Alow the admin to view the lesson/topic before it is added to a course.
 							return;
 						} elseif ( ( 'sfwd-quiz' === $post->post_type ) && ( empty( $step_courses['secondary'] ) ) ) {
 							// If here we have a quiz with no primary or secondary courses. So it is standalone and allowed.
@@ -851,6 +851,8 @@ function learndash_get_step_post_status_slug( $post ) {
 		}
 		return $post->post_status;
 	}
+
+	return '';
 }
 
 /**
@@ -862,7 +864,7 @@ function learndash_get_step_post_status_slug( $post ) {
  *
  * @since 3.4.0.3
  *
- * @param int    $post_ID Post ID.
+ * @param int    $post_id Post ID.
  * @param object $post    WP_Post object.
  * @param bool   $update  Whether this is an existing post being updated.
  */

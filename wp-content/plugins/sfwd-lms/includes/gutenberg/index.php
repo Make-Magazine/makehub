@@ -6,7 +6,7 @@
  * @package LearnDash
  */
 
-//  Exit if accessed directly.
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 // Enqueue JS and CSS.
@@ -46,3 +46,4 @@ require plugin_dir_path( __FILE__ ) . 'blocks/ld-courseinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-quizinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-groupinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-usermeta/index.php';
+require plugin_dir_path( __FILE__ ) . 'blocks/ld-registration/index.php';

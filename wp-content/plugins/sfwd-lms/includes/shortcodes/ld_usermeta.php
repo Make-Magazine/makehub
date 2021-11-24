@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $attr {
  *     An array of shortcode attributes.
  *
  *    @type string  $field   The usermeta field to show

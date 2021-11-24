@@ -84,7 +84,6 @@ foreach ( $tabs as $tab ) {
 	<?php
 	/**
 	 * If we have more than one tab, show them
-	 * @var [type]
 	 */
 	if ( $tab_count > 1 ) :
 		$i = 0;
@@ -93,7 +92,7 @@ foreach ( $tabs as $tab ) {
 			<?php
 			foreach ( $tabs as $tab ) :
 
-				// Skip if conditionally indicated
+				// Skip if conditionally indicated.
 				if ( isset( $tab['condition'] ) && ! $tab['condition'] ) {
 					continue;
 				}
@@ -142,7 +141,7 @@ foreach ( $tabs as $tab ) {
 
 		$i = 0;
 		foreach ( $tabs as $tab ) :
-			// Skip if conditionally indicated
+			// Skip if conditionally indicated.
 			if ( isset( $tab['condition'] ) && ! $tab['condition'] ) {
 				continue;
 			}

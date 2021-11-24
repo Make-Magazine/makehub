@@ -19,12 +19,26 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Section_General_REST_API extends LearnDash_Settings_Section {
 
 		/**
+		 * Setting Option Fields REST API V1
+		 *
+		 * @var array
+		 */
+		protected $setting_option_fields_v1 = array();
+
+		/**
+		 * Setting Option Fields REST API V2
+		 *
+		 * @var array
+		 */
+		protected $setting_option_fields_v2 = array();
+
+		/**
 		 * Protected constructor for class
 		 *
 		 * @since 2.5.8
 		 */
 		protected function __construct() {
-			$this->settings_page_id = 'learndash_lms_settings';
+			$this->settings_page_id = 'learndash_lms_advanced';
 
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'learndash_settings_rest_api';
@@ -36,7 +50,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_key = 'settings_rest_api';
 
 			// Section label/header.
-			$this->settings_section_label = esc_html__( 'REST API Settings', 'learndash' );
+			$this->settings_section_label     = esc_html__( 'REST API Settings', 'learndash' );
+			$this->settings_section_sub_label = esc_html__( 'REST API', 'learndash' );
 
 			$this->settings_section_description = esc_html__( 'Control and customize the REST API endpoints.', 'learndash' );
 
@@ -639,8 +654,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param string $content    Content to show before row
-		 * @param array  $field_args Row field Args
+		 * @param string $content    Content to show before row.
+		 * @param array  $field_args Row field Args.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
 			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'sfwd-courses', 'courses_v2' ), true ) ) ) {
@@ -666,7 +681,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			return $content;
 		}
 
-		// End of function
+		// End of function.
 	}
 }
 add_action(

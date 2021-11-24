@@ -44,7 +44,6 @@ do_action( 'learndash-' . $context . '-progress-bar-before', $course_id, $user_i
 
 /**
  * In the topic context we're measuring progress through a lesson, not the course itself
- * @var [type]
  */
 if ( 'topic' !== $context ) {
 
@@ -106,7 +105,7 @@ if ( $progress ) :
 					<div class="ld-progress-label">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Lesson Progress
+						// translators: placeholder: Lesson Progress.
 						esc_html_x( '%s Progress', 'Placeholder: Lesson Progress', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'lesson' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
@@ -117,7 +116,7 @@ if ( $progress ) :
 					<div class="ld-progress-percentage ld-secondary-color">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Progress percentage
+						// translators: placeholder: Progress percentage.
 						esc_html_x( '%s%% Complete', 'placeholder: Progress percentage', 'learndash' ),
 						esc_html( $progress['percentage'] )
 					);

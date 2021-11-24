@@ -202,7 +202,7 @@ switch ( $context ) {
 		break;
 
 	default:
-		// Fail silently
+		// Fail silently.
 		break;
 }
 /**

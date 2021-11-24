@@ -181,6 +181,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$content = $this->render_block_wrap( $shortcode_out );
 				return $content;
 			}
+			wp_die();
 		}
 
 		/**

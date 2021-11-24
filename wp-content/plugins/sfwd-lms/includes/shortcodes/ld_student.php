@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *     An array of shortcode attributes.
  *
  *    @type int     $course_id Course ID. Default current course ID.
@@ -29,8 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type boolean $autop     Whether to replace linebreaks with paragraph elements. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
- *
- * @param string|null $content The shortcode content. Default null
  *
  * @return string The `student` shortcode output.
  */

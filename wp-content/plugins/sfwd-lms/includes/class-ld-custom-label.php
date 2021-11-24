@@ -1,12 +1,17 @@
 <?php
 /**
  * LearnDash Custom Label class.
+ *
+ * @package LearnDash
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class LearnDash Custom Label
+ */
 class LearnDash_Custom_Label {
 	/**
 	 * Construct

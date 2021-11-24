@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -158,6 +157,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -175,6 +176,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -192,6 +195,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -334,10 +339,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -476,10 +481,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -532,9 +537,9 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 			$user_id = (int) $request['id'];

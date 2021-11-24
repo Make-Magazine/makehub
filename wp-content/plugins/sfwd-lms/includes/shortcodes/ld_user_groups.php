@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global boolean $learndash_shortcode_used
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type int $user_id User ID. Default to current user ID.

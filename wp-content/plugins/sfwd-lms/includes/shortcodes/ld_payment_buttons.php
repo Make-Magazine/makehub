@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global boolean $learndash_shortcode_used
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type int $course_id Course ID. Default 0.

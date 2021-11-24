@@ -31,9 +31,7 @@ function learndash_editor_scripts() {
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
 
-	/**
-	 * @TODO: This needs to move to an external JS library since it will be used globally.
-	 */
+	// @TODO: This needs to move to an external JS library since it will be used globally.
 	$ldlms                                       = array(
 		'settings' => array(),
 	);
@@ -50,13 +48,14 @@ function learndash_editor_scripts() {
 		}
 	}
 
-	$ldlms_settings['settings']['per_page']           = LearnDash_Settings_Section_General_Per_Page::get_section_settings_all();
-	$ldlms_settings['settings']['courses_taxonomies'] = LearnDash_Settings_Courses_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['lessons_taxonomies'] = LearnDash_Settings_Lessons_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['topics_taxonomies']  = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['quizzes_taxonomies'] = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['groups_taxonomies']  = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['groups_cpt']         = array( 'public' => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) );
+	$ldlms_settings['settings']['per_page']            = LearnDash_Settings_Section_General_Per_Page::get_section_settings_all();
+	$ldlms_settings['settings']['courses_taxonomies']  = LearnDash_Settings_Courses_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['lessons_taxonomies']  = LearnDash_Settings_Lessons_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['topics_taxonomies']   = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['quizzes_taxonomies']  = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_taxonomies']   = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_cpt']          = array( 'public' => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) );
+	$ldlms_settings['settings']['registration_fields'] = LearnDash_Settings_Section_Registration_Fields::get_section_settings_all();
 
 	$ldlms_settings['plugins']['learndash-course-grid']                = array();
 	$ldlms_settings['plugins']['learndash-course-grid']['enabled']     = learndash_enqueue_course_grid_scripts();

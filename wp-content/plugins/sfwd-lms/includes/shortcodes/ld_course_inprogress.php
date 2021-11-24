@@ -74,6 +74,7 @@ function learndash_course_inprogress_shortcode( $atts = array(), $content = '' )
 			false
 		);
 	}
+	return '';
 }
 
 add_shortcode( 'course_inprogress', 'learndash_course_inprogress_shortcode', 10, 2 );

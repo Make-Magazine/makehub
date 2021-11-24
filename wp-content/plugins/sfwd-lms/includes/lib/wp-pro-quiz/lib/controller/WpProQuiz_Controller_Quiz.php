@@ -227,7 +227,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			}
 
 			// Patch to only set Statistics on if post from form save.
-			// LEARNDASH-1434 & LEARNDASH-1481
+			// LEARNDASH-1434 & LEARNDASH-1481.
 			if ( ! isset( $this->_post['statisticsOn'] ) ) {
 				$this->_post['statisticsOn']          = '0';
 				$this->_post['viewProfileStatistics'] = '0';
@@ -353,30 +353,15 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 		return $this->view;
 	}
 
+	/**
+	 * Check Lock
+	 *
+	 * @deprecated 3.6.0
+	 */
 	public function checkLock() {
-
-		if ( $userId > 0 ) {
-			$quizIds = $prerequisiteMapper->getNoPrerequisite( $quizId, $userId );
-		} else {
-			$checkIds = $prerequisiteMapper->fetchQuizIds( $quizId );
-
-			if ( isset( $this->_post['wpProQuiz_result'] ) ) {
-				$r = wp_json_encode( $this->_post['wpProQuiz_result'], true );
-
-				if ( null !== $r && is_array( $r ) ) {
-					foreach ( $checkIds as $id ) {
-						if ( ! isset( $r[ $id ] ) || ! $r[ $id ] ) {
-							$quizIds[] = $id;
-						}
-					}
-				}
-			} else {
-				$quizIds = $checkIds;
-			}
+		if ( function_exists( '_deprecated_function' ) ) {
+			_deprecated_function( __FUNCTION__, '3.6.0' );
 		}
-
-		$names = $quizMapper->fetchCol( $quizIds, 'name' );
-
 	}
 
 	public function isLockQuiz( $quizId ) {

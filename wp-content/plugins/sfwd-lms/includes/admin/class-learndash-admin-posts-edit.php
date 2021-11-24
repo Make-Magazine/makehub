@@ -64,7 +64,8 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		 *
 		 * @since 2.6.0
 		 *
-		 * @param  mixed   $edit_post WP_Post object or post type string.
+		 * @param mixed $edit_post WP_Post object or post type string.
+		 *
 		 * @return boolean true is correct, else false.
 		 */
 		protected function post_type_check( $edit_post = null ) {
@@ -272,6 +273,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 				}
 				return $location;
 			}
+			return '';
 		}
 
 		/**

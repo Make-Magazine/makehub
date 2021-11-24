@@ -45,6 +45,6 @@ add_action(
 
 
 if ( learndash_is_active_theme( 'ld30' ) ) {
-	// Include the helper functions
+	// Include the helper functions.
 	include_once __DIR__ . '/helpers.php';
 }

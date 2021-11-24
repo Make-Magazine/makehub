@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes. Default empty array.
  *
  *    @type int $user_id User ID.

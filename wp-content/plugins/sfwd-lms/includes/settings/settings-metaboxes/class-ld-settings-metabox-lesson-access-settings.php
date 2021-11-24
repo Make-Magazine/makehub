@@ -236,7 +236,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'     => '',
 					'value'       => $this->setting_option_values['course'],
 					'lazy_load'   => true,
-					'default'     => '',
 					'options'     => $select_course_options,
 					'placeholder' => $select_course_options_default,
 					'attrs'       => array(

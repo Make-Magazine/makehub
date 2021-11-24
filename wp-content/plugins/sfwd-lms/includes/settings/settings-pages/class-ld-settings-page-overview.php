@@ -248,8 +248,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					<script>window.location.reload()</script>
 					<?php
 				} else {
-
-					/**
+					/*
 					 * @TODO : All this logic needs to be encapsulated within the ld-qutoupdate.php
 					 * code. We should not be exposing settings keys like 'nss_plugin_license_sfwd_lms'
 					 * and 'nss_plugin_license_email_sfwd_lms' spread all over the LD code.
@@ -302,7 +301,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param $toggle_state string Option value.
+		 * @param string $toggle_state Option value.
 		 *
 		 * @return string
 		 */
@@ -516,7 +515,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 											<p>
 											<?php
 											echo sprintf(
-												// translators: placeholders: Course, Lessons, Topics
+												// translators: placeholders: Course, Lessons, Topics.
 												esc_html_x( 'Now that you have your %1$s created, it is time to start adding content via %2$s and %3$s. In this video we will show how to do this and explain the various settings.', 'placeholders: Course, Lessons, Topics', 'learndash' ),
 												LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 												LearnDash_Custom_Label::get_label( 'lessons' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
@@ -564,7 +563,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 											<button class="ld-bootcamp__accordion--toggle" type="button" aria-selected="false" aria-expanded="false" aria-controls="ld-bootcamp__accordion--content-5" role="tab">
 											<?php
 											echo sprintf(
-												// translators: placeholder: Quizzes
+												// translators: placeholder: Quizzes.
 												esc_html_x( 'Creating %s', 'placeholder: Quizzes', 'learndash' ),
 												LearnDash_Custom_Label::get_label( 'quizzes' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 											);
@@ -629,7 +628,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 											<p>
 											<?php
 											echo sprintf(
-												// translators: placeholder: Courses
+												// translators: placeholder: Courses.
 												esc_html_x( 'Once you have finished creating your %s it is time to configure user registration so that people can access them! In this video we explain how to create an attractive login and registration form.', 'placeholder: Courses', 'learndash' ),
 												LearnDash_Custom_Label::get_label( 'courses' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 											);

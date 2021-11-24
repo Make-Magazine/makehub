@@ -336,6 +336,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$value = str_replace( 'http://', '', $value );
 				return untrailingslashit( $value );
 			}
+			return '';
 		}
 	}
 }

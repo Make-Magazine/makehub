@@ -30,3 +30,4 @@ import './ld-courseinfo';
 import './ld-quizinfo';
 import './ld-groupinfo';
 import './ld-usermeta';
+import './ld-registration';

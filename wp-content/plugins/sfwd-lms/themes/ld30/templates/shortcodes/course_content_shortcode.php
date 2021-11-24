@@ -71,7 +71,7 @@ if ( $has_course_content ) :
 					?>
 
 					<?php
-					// Only display if there is something to expand
+					// Only display if there is something to expand.
 					if ( $has_topics ) :
 						?>
 						<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-text="<?php echo esc_attr_e( 'Expand All', 'learndash' ); ?>" data-ld-collapse-text="<?php echo esc_attr_e( 'Collapse All', 'learndash' ); ?>">
@@ -79,7 +79,6 @@ if ( $has_course_content ) :
 							<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'learndash' ); ?></span>
 						</div> <!--/.ld-expand-button-->
 						<?php
-						// TODO @37designs Need to test this
 						/** This filter is documented in themes/ld30/templates/course.php */
 						if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_lessons_listing_main' ) ) :
 							?>

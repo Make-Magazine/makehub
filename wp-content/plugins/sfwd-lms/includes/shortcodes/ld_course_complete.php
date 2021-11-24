@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes. Default empty array.
  *
  *    @type string  $content    The shortcode content. Default empty.
@@ -75,5 +75,6 @@ function learndash_course_complete_shortcode( $atts = array(), $content = '' ) {
 			false
 		);
 	}
+	return '';
 }
 add_shortcode( 'course_complete', 'learndash_course_complete_shortcode', 10, 2 );

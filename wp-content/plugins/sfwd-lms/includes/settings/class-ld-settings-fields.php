@@ -17,7 +17,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 	 *
 	 * @since 3.0.0
 	 */
-	abstract class LearnDash_Settings_Fields {
+	class LearnDash_Settings_Fields {
 
 		/**
 		 * Array to hold all field type instances.
@@ -56,6 +56,8 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 					return self::$_instances[ $field_key ];
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -75,6 +77,8 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				}
 				return self::$_instances[ $field_key ];
 			}
+
+			return null;
 		}
 
 		/**
@@ -678,6 +682,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @since 3.0.0
 		 *
 		 * @param array $field_args main field args array. should contain element for 'attrs'.
+		 * @param bool  $wrap       Whether to create a CSS class from the field args.
 		 *
 		 * @return string of HTML representation of the attrs array attributes.
 		 */
@@ -745,7 +750,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.0.7
 		 *
-		 * @param array $field_args Array of field args
+		 * @param array $field_args Array of field args.
 		 */
 		public function get_field_error_message( $field_args = array() ) {
 			$field_attribute = '';
@@ -762,7 +767,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args Array of field args
+		 * @param array $field_args Array of field args.
 		 */
 		public function get_field_attribute_input_description( $field_args = array() ) {
 			$field_attribute = '';
@@ -779,7 +784,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args Array of field args
+		 * @param array $field_args Array of field args.
 		 */
 		public function get_field_sub_trigger( $field_args = array() ) {
 			$field_attribute = '';
@@ -796,7 +801,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args Array of field args
+		 * @param array $field_args Array of field args.
 		 */
 		public function get_field_inner_trigger( $field_args = array() ) {
 			$field_attribute = '';
@@ -833,9 +838,10 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param mixed  $val Value to validate.
-		 * @param string $key Key of value being validated.
-		 * @param array  $args Array of field args.
+		 * @param mixed  $val       Value to validate.
+		 * @param string $key       Key of value being validated.
+		 * @param array  $args      Array of field args.
+		 * @param array  $post_args Array of post args.
 		 *
 		 * @return mixed $val validated value.
 		 */
@@ -848,10 +854,10 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $val        Value from REST to be converted to internal value.
-		 * @param string $key        Key field for value.
-		 * @param array  $field_args Array of field args.
-		 * @param object $request    Request object.
+		 * @param mixed           $val        Value from REST to be converted to internal value.
+		 * @param string          $key        Key field for value.
+		 * @param array           $field_args Array of field args.
+		 * @param WP_REST_Request $request    Request object.
 		 */
 		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			return $val;

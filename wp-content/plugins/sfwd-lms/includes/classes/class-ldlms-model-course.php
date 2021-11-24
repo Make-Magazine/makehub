@@ -35,6 +35,8 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		 *
 		 * @param int $post_id Course Post ID to load.
 		 *
+		 * @throws LDLMS_Exception_NotFound When post not loaded.
+		 *
 		 * @return mixed instance of class or exception.
 		 */
 		public function __construct( $post_id = 0 ) {
@@ -67,10 +69,9 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 					$this->load_settings();
 
 					return true;
-				} else {
-					return false;
 				}
 			}
+			return false;
 		}
 
 		/**
@@ -183,7 +184,9 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param string $settings_key Setting key to return.
+		 * @param string $setting_key           Setting key to return.
+		 * @param string $setting_default_value Setting default value.
+		 * @param bool   $force                 Control reloading of setting.
 		 */
 		public function get_setting( $setting_key = '', $setting_default_value = null, $force = false ) {
 			if ( $this->load_settings() ) {

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// TODO @37designs this is a bit confusing still, as you can still navigate left / right on lessons even with topics
+// TODO @37designs this is a bit confusing still, as you can still navigate left / right on lessons even with topics.
 $parent_id                  = ( get_post_type() === 'sfwd-lessons' ? absint( $course_id ) : learndash_course_get_single_parent_step( $course_id, get_the_ID() ) );
 $learndash_previous_step_id = learndash_previous_post_link( null, 'id', $course_step_post );
 if ( ( empty( $learndash_previous_step_id ) ) && ( learndash_get_post_type_slug( 'topic' ) === $course_step_post->post_type ) ) {
@@ -155,7 +155,7 @@ if ( ! empty( $parent_lesson_id ) ) {
 	$complete_button = learndash_mark_complete( $course_step_post );
 }
 
-//if ( ! empty( $learndash_previous_nav ) || ! empty( $learndash_next_nav ) || ! empty( $complete_button ) ) : ?>
+// if ( ! empty( $learndash_previous_nav ) || ! empty( $learndash_next_nav ) || ! empty( $complete_button ) ) : ?>
 
 <div class="ld-content-actions">
 

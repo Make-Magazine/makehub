@@ -139,7 +139,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$this->columns = array(
 				'title'           => array(
 					'label' => sprintf(
-						// translators: placeholder: Essay Question Title
+						// translators: placeholder: Essay Question Title.
 						esc_html_x( 'Essay %s Title', 'placeholder: Essay Question Title', 'learndash' ),
 						learndash_get_custom_label( 'question' )
 					),
@@ -290,10 +290,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @param array  $q_vars    Array of query vars.
 		 * @param string $post_type Post Type being displayed.
-		 * @param array  $query     Main Query.
 		 */
-
-		public function learndash_listing_selector_user_query_args_essays( $q_vars, $selector, $post_type ) {
+		public function learndash_listing_selector_user_query_args_essays( $q_vars, $post_type ) {
 			if ( $post_type === $this->post_type ) {
 				$group_selector = $this->get_selector( 'group_id' );
 				if ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
@@ -323,7 +321,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -432,7 +430,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -591,7 +589,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								$quiz_score_difference = 1;
 							}
 
-							// First we update the essat post with the new post_status
+							// First we update the essat post with the new post_status.
 							$essay_post->post_status = 'graded';
 							wp_update_post( $essay_post );
 
@@ -599,7 +597,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$quiz_id     = get_post_meta( $essay_post->ID, 'quiz_id', true );
 							$question_id = get_post_meta( $essay_post->ID, 'question_id', true );
 
-							// Stole the following section ot code from learndash_save_essay_status_metabox_data();
+							// Stole the following section ot code from learndash_save_essay_status_metabox_data().
 							$submitted_essay_data = learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay_post );
 
 							if ( isset( $submitted_essay_data['points_awarded'] ) ) {
@@ -917,7 +915,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -950,7 +948,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -978,7 +976,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -1007,7 +1005,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -1046,7 +1044,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.

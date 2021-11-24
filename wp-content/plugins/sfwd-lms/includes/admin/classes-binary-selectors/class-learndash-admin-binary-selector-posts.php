@@ -48,7 +48,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 			parent::__construct( $args );
 
 			if ( ( isset( $this->args['included_ids'] ) ) && ( ! empty( $this->args['included_ids'] ) ) ) {
-				$this->query_args['include'] = $this->args['included_ids'];
+				$this->args['include'] = $this->args['included_ids'];
 			}
 		}
 

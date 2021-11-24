@@ -23,8 +23,28 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Quizzes_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Quizzes_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
+		/**
+		 * LearnDash course steps object
+		 *
+		 * @var object
+		 */
+		protected $ld_course_steps_object = null;
+
+		/**
+		 * WP ProQuiz Post placeholder
+		 *
+		 * @var array
+		 */
+		protected $_post = array();
+
+		/**
+		 * WP ProQuiz get arguments
+		 *
+		 * @var array
+		 */
+		protected $_get = array();
 
 		/**
 		 * WPProQuiz Quiz instance.
@@ -38,6 +58,8 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -119,8 +141,8 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $query_params Quest params array.
-		 * @param string $post_type    Post type string.
+		 * @param array        $query_params Quest params array.
+		 * @param WP_Post_Type $post_type    Post type string.
 		 */
 		public function rest_collection_params_filter( array $query_params, WP_Post_Type $post_type ) {
 			$query_params = parent::rest_collection_params_filter( $query_params, $post_type );
@@ -199,17 +221,17 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					$step_courses = learndash_get_courses_for_step( $request['id'], true );
 					if ( empty( $step_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$user_enrolled_courses = array_intersect( $user_enrolled_courses, array_keys( $step_courses ) );
 
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				} else {
 					// But if the course parameter is provided we need to check the user has access and also
@@ -232,17 +254,17 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );
 					$this->ld_course_steps_object->load_steps();
 					$lesson_ids = $this->ld_course_steps_object->get_children_steps( $this->course_post->ID, $this->post_type );
 					if ( empty( $lesson_ids ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					if ( ! in_array( absint( $request['id'] ), $lesson_ids, true ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -282,7 +304,7 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -372,10 +394,10 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $postdata   Post data array.
-		 * @param string $field_name Field Name for $postdata value.
-		 * @param object $request    Request object.
-		 * @param string $post_type  Post Type for request.
+		 * @param array           $postdata   Post data array.
+		 * @param string          $field_name Field Name for $postdata value.
+		 * @param WP_REST_Request $request    Request object.
+		 * @param string          $post_type  Post Type for request.
 		 */
 		public function get_rest_settings_field_value( array $postdata, $field_name, WP_REST_Request $request, $post_type ) {
 			$field_value = parent::get_rest_settings_field_value( $postdata, $field_name, $request, $post_type );
@@ -394,9 +416,9 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 
@@ -516,6 +538,6 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 			}
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

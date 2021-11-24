@@ -21,9 +21,26 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 	 */
 	class SFWD_CPT_Instance extends SFWD_CPT {
 
+		/**
+		 * Instances
+		 *
+		 * @var array
+		 */
 		public static $instances = array();
 
+		/**
+		 * Filter content
+		 *
+		 * @var boolean
+		 */
 		public $filter_content = true;
+
+		/**
+		 * Template redirect
+		 *
+		 * @var boolean
+		 */
+		public $template_redirect = true;
 
 		/**
 		 * Sets up properties for CPT to be used in plugins
@@ -51,7 +68,6 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 				$post_type = sanitize_file_name( strtolower( strtr( $slug_name, ' ', '_' ) ) );
 			}
 
-			$this->template_redirect = true;
 			if ( isset( $args['template_redirect'] ) ) {
 				$this->template_redirect = $args['template_redirect'];
 			}
@@ -441,6 +457,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 						$quiz_pro_id = get_post_meta( $post->ID, 'quiz_pro_id', true );
 						$quiz_pro_id = absint( $quiz_pro_id );
 						if ( empty( $quiz_pro_id ) ) {
+							$quiz_settings = learndash_get_setting( $post->ID );
 							if ( isset( $quiz_settings['quiz_pro'] ) ) {
 								$quiz_settings['quiz_pro'] = absint( $quiz_settings['quiz_pro'] );
 								if ( ! empty( $quiz_settings['quiz_pro'] ) ) {
@@ -711,7 +728,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							learndash_activity_start_topic( $current_user->ID, $course_id, $post->ID, $started_time );
 						}
 
-						// Added logic for Lesson Videos
+						// Added logic for Lesson Videos.
 						if ( ( defined( 'LEARNDASH_LESSON_VIDEO' ) ) && ( true === LEARNDASH_LESSON_VIDEO ) ) {
 							if ( $show_content ) {
 								$ld_course_videos = Learndash_Course_Video::get_instance();

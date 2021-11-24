@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes.
  *
  *    @type int       $user_id            User ID. Defaults to current user ID.
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function learndash_profile( $atts = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 
-	// Add check to ensure user it logged in
+	// Add check to ensure user it logged in.
 	if ( ! is_user_logged_in() ) {
 		return '';
 	}

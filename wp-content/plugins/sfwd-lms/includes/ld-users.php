@@ -351,7 +351,7 @@ function learndash_show_user_course_complete( $user_id = 0 ) {
 		}
 	}
 
-	// See example snippet of this filter https://developers.learndash.com/hook/learndash_show_user_course_complete_options/
+	// See example snippet of this filter https://developers.learndash.com/hook/learndash_show_user_course_complete_options/.
 	/**
 	 * Filters the status of whether the course is completed for a user or not.
 	 *
@@ -537,7 +537,7 @@ function learndash_save_user_course_complete( $user_id = 0 ) {
 												if ( ( $quiz_item['quiz'] == $quiz_id ) && ( true === $quiz_item['pass'] ) ) {
 													$quizz_progress[ $quiz_idx ]['pass'] = false;
 
-													// We need to update the activity database records for this quiz_id
+													// We need to update the activity database records for this quiz_id.
 													$activity_query_args = array(
 														'post_ids'      => $quiz_id,
 														'user_ids'      => $user_id,
@@ -551,7 +551,7 @@ function learndash_save_user_course_complete( $user_id = 0 ) {
 																// If the activity meta 'pass' element is set to true we want to update it to false.
 																learndash_update_user_activity_meta( $result->activity_id, 'pass', false );
 
-																// Also we need to update the 'activity_status' for this record
+																// Also we need to update the 'activity_status' for this record.
 																learndash_update_user_activity(
 																	array(
 																		'activity_id' => $result->activity_id,
@@ -634,7 +634,7 @@ function learndash_course_item_to_activity_sync( $user_id = 0, $course_id = 0, $
 		}
 	}
 
-	// First we loop over the new Course data lessons. We add any items not in the old array to the activity table
+	// First we loop over the new Course data lessons. We add any items not in the old array to the activity table.
 	if ( ( isset( $course_data_new['lessons'] ) ) && ( ! empty( $course_data_new['lessons'] ) ) ) {
 		foreach ( $course_data_new['lessons'] as $lesson_id => $lesson_complete ) {
 			$lesson_complete = (bool) $lesson_complete;
@@ -1241,4 +1241,25 @@ function learndash_get_expired_user_courses_from_meta( $user_id = 0 ) {
 		}
 	}
 	return $expired_user_course_ids;
+}
+
+/**
+ * Utility function to check if users can register for the site.
+ *
+ * @since 3.6.0
+ */
+function learndash_users_can_register() {
+	if ( is_multisite() ) {
+		$users_can_register = (bool) users_can_register_signup_filter();
+	} else {
+		$users_can_register = (bool) get_option( 'users_can_register' );
+	}
+
+	/**
+	 * Filter for users can register.
+	 *
+	 * @since 3.6.0
+	 * @param bool $users_can_register True if users can register.
+	 */
+	return (bool) apply_filters( 'learndash_users_can_register', $users_can_register );
 }
