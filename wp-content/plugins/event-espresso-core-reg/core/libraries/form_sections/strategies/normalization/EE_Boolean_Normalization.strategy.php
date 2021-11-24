@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Boolean_Normalization
  * Just casts it to a boolean (so we're assuming that we're only receiving 0 and 1s as

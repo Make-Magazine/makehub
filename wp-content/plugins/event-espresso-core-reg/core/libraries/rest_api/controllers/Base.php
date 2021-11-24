@@ -6,6 +6,7 @@ use Exception;
 use WP_Error;
 use WP_REST_Response;
 use EventEspresso\core\libraries\rest_api\RestException;
+
 use EE_Error;
 use EED_Core_Rest_Api;
 use EEH_Inflector;
@@ -328,7 +329,7 @@ class Base
         }
         if (! $success) {
             throw new EE_Error(
-                esc_html__('We could not parse the URL. Please contact Event Espresso Support', 'event_espresso'),
+                __('We could not parse the URL. Please contact Event Espresso Support', 'event_espresso'),
                 'endpoint_parsing_error'
             );
         }

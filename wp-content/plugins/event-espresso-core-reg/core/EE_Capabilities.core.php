@@ -669,8 +669,7 @@ final class EE_Capabilities extends EE_Base
         foreach ($capabilities_to_add as $role => $caps_for_role) {
             if (is_array($caps_for_role)) {
                 foreach ($caps_for_role as $cap) {
-                    if (
-                        ! $this->capHasBeenAddedToRole($role, $cap)
+                    if (! $this->capHasBeenAddedToRole($role, $cap)
                         && $this->add_cap_to_role($role, $cap, true, false)
                     ) {
                         $update_capabilities_map = true;
@@ -703,8 +702,7 @@ final class EE_Capabilities extends EE_Base
         foreach ($caps_map as $role => $caps_for_role) {
             if (is_array($caps_for_role)) {
                 foreach ($caps_for_role as $cap) {
-                    if (
-                        $this->capHasBeenAddedToRole($role, $cap)
+                    if ($this->capHasBeenAddedToRole($role, $cap)
                         && $this->remove_cap_from_role($role, $cap, false)
                     ) {
                         $update_capabilities_map = true;
@@ -819,8 +817,7 @@ final class EE_Capabilities extends EE_Base
      */
     private function capHasBeenAddedToRole($role_name = '', $cap = '', $get_index = false)
     {
-        if (
-            isset($this->capabilities_map[ $role_name ])
+        if (isset($this->capabilities_map[ $role_name ])
             && ($index = array_search($cap, $this->capabilities_map[ $role_name ], true)) !== false
         ) {
             return $get_index ? $index : true;
@@ -1052,7 +1049,7 @@ abstract class EE_Meta_Capability_Map
         if (count($map_values) !== 4) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'Incoming $map_values array should have a count of four values in it.  This is what was given: %s',
                         'event_espresso'
                     ),
@@ -1099,7 +1096,7 @@ abstract class EE_Meta_Capability_Map
         if (! $this->_model instanceof EEM_Base) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'This string passed in to %s to represent a EEM_Base model class was not able to be used to instantiate the class.   Please ensure that the string is a match for the EEM_Base model name (not including the EEM_ part). This was given: %s',
                         'event_espresso'
                     ),
@@ -1332,8 +1329,7 @@ class EE_Meta_Capability_Map_Read extends EE_Meta_Capability_Map
                 }
             }
             // yes this means that if users created the private post, they are able to see it regardless of private cap.
-            if (
-                $status_obj->private
+            if ($status_obj->private
                 && ! empty($this->private_cap)
                 && $obj->wp_user() !== $user_id
             ) {

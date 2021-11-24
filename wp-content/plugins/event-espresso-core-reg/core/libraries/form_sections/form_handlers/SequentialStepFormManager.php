@@ -4,8 +4,7 @@ namespace EventEspresso\core\libraries\form_sections\form_handlers;
 
 use EE_Error;
 use EE_Request;
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
+use EventEspresso\core\exceptions\ExceptionStackTraceDisplay;
 use EventEspresso\core\exceptions\InvalidClassException;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidEntityException;
@@ -69,7 +68,7 @@ abstract class SequentialStepFormManager
     private $progress_step_style = '';
 
     /**
-     * @var RequestInterface $request
+     * @var EE_Request $request
      */
     private $request;
 
@@ -93,12 +92,12 @@ abstract class SequentialStepFormManager
     /**
      * StepsManager constructor
      *
-     * @param string                           $base_url
-     * @param string                           $default_form_step
-     * @param string                           $form_action
-     * @param string                           $form_config
-     * @param EE_Request|RequestInterface|null $request
-     * @param string                           $progress_step_style
+     * @param string     $base_url
+     * @param string     $default_form_step
+     * @param string     $form_action
+     * @param string     $form_config
+     * @param EE_Request $request
+     * @param string     $progress_step_style
      * @throws InvalidDataTypeException
      * @throws InvalidArgumentException
      */
@@ -108,16 +107,14 @@ abstract class SequentialStepFormManager
         $form_action = '',
         $form_config = FormHandler::ADD_FORM_TAGS_AND_SUBMIT,
         $progress_step_style = 'number_bubbles',
-        $request = null
+        EE_Request $request
     ) {
         $this->setBaseUrl($base_url);
         $this->setDefaultFormStep($default_form_step);
         $this->setFormAction($form_action);
         $this->setFormConfig($form_config);
         $this->setProgressStepStyle($progress_step_style);
-        $this->request = $request instanceof RequestInterface
-            ? $request
-            : LoaderFactory::getLoader()->getShared('EventEspresso\core\services\request\RequestInterface');
+        $this->request = $request;
     }
 
 
@@ -206,18 +203,21 @@ abstract class SequentialStepFormManager
 
     /**
      * @return void
-     * @throws InvalidIdentifierException
+     * @throws \EventEspresso\core\exceptions\InvalidIdentifierException
      * @throws InvalidDataTypeException
      */
     protected function setCurrentStepFromRequest()
     {
-        $current_step_slug = $this->request()->getRequestParam($this->formStepUrlKey(), $this->defaultFormStep());
+        $current_step_slug = $this->request()->get($this->formStepUrlKey(), $this->defaultFormStep());
         if (! $this->form_steps->setCurrent($current_step_slug)) {
             throw new InvalidIdentifierException(
                 $current_step_slug,
                 $this->defaultFormStep(),
-                sprintf(
-                    esc_html__('The "%1$s" form step could not be set.', 'event_espresso'),
+                $message = sprintf(
+                    esc_html__(
+                        'The "%1$s" form step could not be set.',
+                        'event_espresso'
+                    ),
                     $current_step_slug
                 )
             );
@@ -226,7 +226,7 @@ abstract class SequentialStepFormManager
 
 
     /**
-     * @return SequentialStepFormInterface|object
+     * @return object|SequentialStepFormInterface
      * @throws InvalidFormHandlerException
      */
     public function getCurrentStep()
@@ -321,7 +321,7 @@ abstract class SequentialStepFormManager
 
 
     /**
-     * @return RequestInterface
+     * @return EE_Request
      */
     public function request()
     {
@@ -518,7 +518,7 @@ abstract class SequentialStepFormManager
         if ($return_as_string) {
             return $progress_steps;
         }
-        echo $progress_steps; // already escaped
+        echo $progress_steps;
         return '';
     }
 
@@ -533,7 +533,7 @@ abstract class SequentialStepFormManager
         if ($return_as_string) {
             return $this->getCurrentStep()->display();
         }
-        echo $this->getCurrentStep()->display(); // already escaped
+        echo $this->getCurrentStep()->display();
         return '';
     }
 
@@ -557,8 +557,7 @@ abstract class SequentialStepFormManager
             // something went wrong, convert the Exception to an EE_Error
             EE_Error::add_error($e->getMessage(), __FILE__, __FUNCTION__, __LINE__);
             // prevent redirect to next step or other if exception was thrown
-            if (
-                $current_step->redirectTo() === SequentialStepForm::REDIRECT_TO_NEXT_STEP
+            if ($current_step->redirectTo() === SequentialStepForm::REDIRECT_TO_NEXT_STEP
                 || $current_step->redirectTo() === SequentialStepForm::REDIRECT_TO_OTHER
             ) {
                 $current_step->setRedirectTo(SequentialStepForm::REDIRECT_TO_CURRENT_STEP);
@@ -588,6 +587,7 @@ abstract class SequentialStepFormManager
                 // going somewhere else, so just check out now
                 wp_safe_redirect($redirect_step->redirectUrl());
                 exit();
+                break;
             case SequentialStepForm::REDIRECT_TO_PREV_STEP:
                 $redirect_step = $this->form_steps->previous();
                 break;

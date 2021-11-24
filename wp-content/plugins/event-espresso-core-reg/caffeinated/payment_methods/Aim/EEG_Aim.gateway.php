@@ -10,7 +10,7 @@ use EventEspresso\core\services\loaders\LoaderFactory;
  * @package            Event Espresso
  * @author             Seth Shoultes
  * @copyright          (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @license            https://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
+ * @license            http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
  * @link               http://www.eventespresso.com
  * @version            4.3
  *
@@ -216,7 +216,7 @@ class EEG_Aim extends EE_Onsite_Gateway
         $this->setField('last_name', $billing_info['last_name']);
         $this->setField('email', $billing_info['email']);
         $this->setField('company', $billing_info['company']);
-        $this->setField('address', $billing_info['address'] . ' ' . $billing_info['address2']);
+        $this->setField('address', $billing_info['address'].' '.$billing_info['address2']);
         $this->setField('city', $billing_info['city']);
         $this->setField('state', $billing_info['state']);
         $this->setField('country', $billing_info['country']);
@@ -269,7 +269,7 @@ class EEG_Aim extends EE_Onsite_Gateway
             $payment->set_details(print_r($response, true));
         } else {
             $payment->set_status($this->_pay_model->failed_status());
-            $payment->set_gateway_response(esc_html__("There was no response from Authorize.net", 'event_espresso'));
+            $payment->set_gateway_response(__("There was no response from Authorize.net", 'event_espresso'));
             $payment->set_details(print_r($response, true));
         }
         return $payment;

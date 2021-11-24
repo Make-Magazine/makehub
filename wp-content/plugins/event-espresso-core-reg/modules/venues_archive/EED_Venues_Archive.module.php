@@ -12,7 +12,7 @@ use EventEspresso\core\services\loaders\LoaderFactory;
  * @ package        Event Espresso
  * @ author        Seth Shoultes
  * @ copyright    (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @ license        https://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
+ * @ license        http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
  * @ link            http://www.eventespresso.com
  * @ version        4.0
  *
@@ -95,8 +95,7 @@ class EED_Venues_Archive extends EED_Module
     public function template_include($template)
     {
         // not a custom template?
-        if (
-            EE_Registry::instance()->load_core('Front_Controller', array(), false, true)
+        if (EE_Registry::instance()->load_core('Front_Controller', array(), false, true)
                                    ->get_selected_template() != 'archive-espresso_venues.php'
         ) {
             EEH_Template::load_espresso_theme_functions();
@@ -136,8 +135,7 @@ class EED_Venues_Archive extends EED_Module
     public function venue_details($content)
     {
         global $post;
-        if (
-            $post->post_type == 'espresso_venues'
+        if ($post->post_type == 'espresso_venues'
             && ! post_password_required()
         ) {
             // since the 'content-espresso_venues-details.php' template might be used directly from within a theme,

@@ -23,10 +23,10 @@ CREATE TABLE `wp_events_answer` (
         );
         $this->_fields = array(
             'Answer'=>array(
-                'ANS_ID'=> new EE_Primary_Key_Int_Field('ANS_ID', esc_html__('Answer ID','event_espresso')),
-                'REG_ID'=>new EE_Foreign_Key_Int_Field('REG_ID', esc_html__('Registration ID','event_espresso'), false, 0, 'Registration'),
-                'QST_ID'=>new EE_Foreign_Key_Int_Field('QST_ID', esc_html__('Quesetion ID','event_espresso'), false, 0, 'Question'),
-                'ANS_value'=>new EE_Simple_HTML_Field('ANS_value', esc_html__('Answer Value','event_espresso'), false, '')
+                'ANS_ID'=> new EE_Primary_Key_Int_Field('ANS_ID', __('Answer ID','event_espresso')),
+                'REG_ID'=>new EE_Foreign_Key_Int_Field('REG_ID', __('Registration ID','event_espresso'), false, 0, 'Registration'),
+                'QST_ID'=>new EE_Foreign_Key_Int_Field('QST_ID', __('Quesetion ID','event_espresso'), false, 0, 'Question'),
+                'ANS_value'=>new EE_Simple_HTML_Field('ANS_value', __('Answer Value','event_espresso'), false, '')
             ));
 */
 
@@ -37,27 +37,27 @@ class EE_DMS_4_1_0_answers extends EE_Data_Migration_Script_Stage_Table
     public function __construct()
     {
         global $wpdb;
-        $this->_pretty_name = esc_html__("Answers", "event_espresso");
-        $this->_old_table = $wpdb->prefix . "events_answer";
+        $this->_pretty_name = __("Answers", "event_espresso");
+        $this->_old_table = $wpdb->prefix."events_answer";
         // join to attendee and then join to events table
         $this->select_expression = 'ans.*, e.event_status';
         $this->_extra_where_sql = ' AS ans 
             INNER JOIN ' . $wpdb->prefix . 'events_attendee AS att ON ans.attendee_id = att.id
             INNER JOIN ' . $wpdb->prefix . 'events_detail AS e ON att.event_id = e.id 
             WHERE e.event_status !="D"';
-        $this->_new_answer_table = $wpdb->prefix . "esp_answer";
-        $this->_new_question_table = $wpdb->prefix . "esp_question";
+        $this->_new_answer_table = $wpdb->prefix."esp_answer";
+        $this->_new_question_table = $wpdb->prefix."esp_question";
         parent::__construct();
     }
     protected function _migrate_old_row($old_row)
     {
         // get the new REGs for the old answer
         global $wpdb;
-        $old_attendee_table = $wpdb->prefix . "events_attendee";
-        $new_reg_table = $wpdb->prefix . "esp_registration";
+        $old_attendee_table = $wpdb->prefix."events_attendee";
+        $new_reg_table = $wpdb->prefix."esp_registration";
         $regs = $this->get_migration_script()->get_mapping_new_pk($old_attendee_table, $old_row['attendee_id'], $new_reg_table);
         if (! $regs) {
-            $this->add_error(sprintf(esc_html__("Could not find new registrations for old attendee %d when creating answer %s", "event_espresso"), $old_row['attendee_id'], $this->_json_encode($old_row)));
+            $this->add_error(sprintf(__("Could not find new registrations for old attendee %d when creating answer %s", "event_espresso"), $old_row['attendee_id'], $this->_json_encode($old_row)));
             return false;
         }
         // as inefficient as this sounds, we create an answer per REGISTRATION, (even if the registrations use the same attendee)
@@ -75,7 +75,7 @@ class EE_DMS_4_1_0_answers extends EE_Data_Migration_Script_Stage_Table
     private function _insert_new_answer($old_answer, $new_reg_id)
     {
         global $wpdb;
-        $old_question_table = $wpdb->prefix . "events_question";
+        $old_question_table = $wpdb->prefix."events_question";
         $new_question_id = $this->get_migration_script()->get_mapping_new_pk($old_question_table, $old_answer['question_id'], $this->_new_question_table);
 
         $question_row = $this->_get_question_type_and_system($new_question_id);
@@ -91,9 +91,9 @@ class EE_DMS_4_1_0_answers extends EE_Data_Migration_Script_Stage_Table
             $ans_value = stripslashes($old_answer['answer']);
         }
         $cols_n_values = array(
-            'REG_ID' => $new_reg_id,
-            'QST_ID' => $new_question_id,
-            'ANS_value' => $ans_value
+            'REG_ID'=>$new_reg_id,
+            'QST_ID'=>$new_question_id,
+            'ANS_value'=>$ans_value
         );
         $datatypes = array(
             '%d',// REG_ID
@@ -123,7 +123,7 @@ class EE_DMS_4_1_0_answers extends EE_Data_Migration_Script_Stage_Table
         global $wpdb;
         $row = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT QST_type, QST_system FROM " . $this->_new_question_table . " WHERE QST_ID=%d LIMIT 1",
+                "SELECT QST_type, QST_system FROM ".$this->_new_question_table." WHERE QST_ID=%d LIMIT 1",
                 $question_id
             ),
             ARRAY_A

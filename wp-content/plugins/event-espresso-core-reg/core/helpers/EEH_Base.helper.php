@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EEH_Base Helper
  *

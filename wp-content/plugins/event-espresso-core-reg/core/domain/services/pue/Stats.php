@@ -6,9 +6,6 @@ use Closure;
 use EEH_URL;
 use EE_Maintenance_Mode;
 use EEH_Template;
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\Request;
-use EventEspresso\core\services\request\RequestInterface;
 
 /**
  * Stats
@@ -105,10 +102,10 @@ class Stats
         <div class="updated data-collect-optin" id="espresso-data-collect-optin-container">
             <div id="data-collect-optin-options-container">
                 <span class="dashicons dashicons-admin-site"></span>
-                <span class="data-optin-text"><?php self::optinText(); ?></span>
+                <span class="data-optin-text"><?php echo self::optinText(); ?></span>
                 <span style="display: none" id="data-optin-nonce"><?php echo wp_create_nonce('ee-data-optin'); ?></span>
                 <button class="button-secondary data-optin-button" value="no">
-                    <?php esc_html_e('Dismiss', 'event_espresso'); ?>
+                    <?php _e('Dismiss', 'event_espresso'); ?>
                 </button>
                 <div style="clear:both"></div>
             </div>
@@ -193,11 +190,8 @@ class Stats
      */
     public function ajaxHandler()
     {
-        /** @var RequestInterface $request */
-        $request = LoaderFactory::getLoader()->getShared(RequestInterface::class);
-        $nonce = $request->getRequestParam('nonce');
         // verify nonce
-        if (! $nonce || ! wp_verify_nonce($nonce, 'ee-data-optin')) {
+        if (! isset($_POST['nonce']) || ! wp_verify_nonce($_POST['nonce'], 'ee-data-optin')) {
             exit();
         }
 

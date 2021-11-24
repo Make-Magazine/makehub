@@ -140,7 +140,7 @@ class EE_Request implements LegacyRequestInterface, InterminableInterface
 
 
     /**
-     * returns sanitized contents of $_REQUEST
+     * returns contents of $_REQUEST
      *
      * @deprecated 4.9.53
      * @return array

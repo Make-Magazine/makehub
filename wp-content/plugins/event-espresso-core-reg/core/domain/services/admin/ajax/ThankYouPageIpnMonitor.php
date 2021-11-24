@@ -75,7 +75,7 @@ class ThankYouPageIpnMonitor
             $response[ $this->heartbeat ] = array(
                 'errors' => ! empty($notices['errors'])
                     ? $notices['errors']
-                    : esc_html__(
+                    : __(
                         'No transaction information could be retrieved because the registration URL link is missing or invalid.',
                         'event_espresso'
                     ),
@@ -132,7 +132,7 @@ class ThankYouPageIpnMonitor
                 'errors' => ! empty($notices['errors'])
                     ? $notices['errors']
                     : sprintf(
-                        esc_html__(
+                        __(
                             'The information for your transaction could not be retrieved from the server or the transaction data received was invalid because of a technical reason. (%s)',
                             'event_espresso'
                         ),

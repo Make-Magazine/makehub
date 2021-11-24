@@ -28,7 +28,7 @@ class EntityNotFoundException extends \UnexpectedValueException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'The requested entity with %1$s="%2$s" was not found.',
                     'event_espresso'
                 ),

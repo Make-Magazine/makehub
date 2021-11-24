@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Select_Multiple_Input
  *

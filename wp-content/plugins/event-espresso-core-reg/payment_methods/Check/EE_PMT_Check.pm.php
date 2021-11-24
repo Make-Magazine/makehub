@@ -19,10 +19,10 @@ class EE_PMT_Check extends EE_PMT_Base
      */
     public function __construct($pm_instance = null)
     {
-        $this->_pretty_name = esc_html__("Check", 'event_espresso');
-        $this->_default_description = esc_html__('After clicking "Finalize Registration", you will be given instructions on how to complete your payment.', 'event_espresso');
+        $this->_pretty_name = __("Check", 'event_espresso');
+        $this->_default_description = __('After clicking "Finalize Registration", you will be given instructions on how to complete your payment.', 'event_espresso');
         parent::__construct($pm_instance);
-        $this->_default_button_url = $this->file_url() . 'lib/check-logo.png';
+        $this->_default_button_url = $this->file_url().'lib/check-logo.png';
     }
 
 
@@ -55,34 +55,34 @@ class EE_PMT_Check extends EE_PMT_Base
             $state = EE_Registry::instance()->load_model('State')->get_one_by_ID($organization->STA_ID);
             $country = EE_Registry::instance()->load_model('Country')->get_one_by_ID($organization->CNT_ISO) ;
             $default_address .=  $state ? $state->name() . '<br />' : '';
-            $default_address .= $country ? $country->name() . '<br />' : '';
+            $default_address .= $country ? $country->name(). '<br />' : '';
             $default_address .= $organization->zip != '' ? $organization->get_pretty('zip') : '';
         } else {
             $default_address = 'unknown';
             $organization_name = 'unknown';
         }
             return new EE_Payment_Method_Form(array(
-            'extra_meta_inputs' => array(
-                'check_title' => new EE_Text_Input(array(
-                    'html_label_text' =>  sprintf(esc_html__("Title %s", "event_espresso"), $this->get_help_tab_link()),
-                    'default' =>  esc_html__("Check/Money Order Payments", 'event_espresso'),
+            'extra_meta_inputs'=>array(
+                'check_title'=> new EE_Text_Input(array(
+                    'html_label_text'=>  sprintf(__("Title %s", "event_espresso"), $this->get_help_tab_link()),
+                    'default'=>  __("Check/Money Order Payments", 'event_espresso'),
                 )),
-                'payment_instructions' => new EE_Text_Area_Input(array(
-                    'html_label_text' =>  sprintf(esc_html__("Instructions %s", "event_espresso"), $this->get_help_tab_link()),
-                    'default' => esc_html__("Please send Check/Money Order to the address below. Payment must be received within 48 hours of event date.", 'event_espresso'),
+                'payment_instructions'=>new EE_Text_Area_Input(array(
+                    'html_label_text'=>  sprintf(__("Instructions %s", "event_espresso"), $this->get_help_tab_link()),
+                    'default'=> __("Please send Check/Money Order to the address below. Payment must be received within 48 hours of event date.", 'event_espresso'),
                     'validation_strategies' => array( new EE_Full_HTML_Validation_Strategy() ),
                 )),
-                'payable_to' => new EE_Text_Input(array(
-                    'html_label_text' =>  sprintf(esc_html__("Payable To %s", "event_espresso"), $this->get_help_tab_link()),
-                    'default' => $organization_name
+                'payable_to'=>new EE_Text_Input(array(
+                    'html_label_text'=>  sprintf(__("Payable To %s", "event_espresso"), $this->get_help_tab_link()),
+                    'default'=>$organization_name
                 )),
-                'address_to_send_payment' => new EE_Text_Area_Input(array(
-                    'html_label_text' =>  sprintf(esc_html__("Address Payable %s", "event_espresso"), $this->get_help_tab_link()),
-                    'default' => $default_address,
+                'address_to_send_payment'=>new EE_Text_Area_Input(array(
+                    'html_label_text'=>  sprintf(__("Address Payable %s", "event_espresso"), $this->get_help_tab_link()),
+                    'default'=>$default_address,
                     'validation_strategies' => array( new EE_Full_HTML_Validation_Strategy() ),
                 )),
             ),
-            'exclude' => array('PMD_debug_mode')
+            'exclude'=>array('PMD_debug_mode')
             ));
     }
 
@@ -97,7 +97,7 @@ class EE_PMT_Check extends EE_PMT_Base
     {
         return array(
             $this->get_help_tab_name() => array(
-                        'title' => esc_html__('Check Settings', 'event_espresso'),
+                        'title' => __('Check Settings', 'event_espresso'),
                         'filename' => 'payment_methods_overview_check'
                         ),
         );
@@ -116,12 +116,12 @@ class EE_PMT_Check extends EE_PMT_Base
         $extra_meta_for_payment_method = $this->_pm_instance->all_extra_meta_array();
         $template_vars = array_merge(
             array(
-                            'payment_method' => $this->_pm_instance,
-                            'payment' => $payment,
-                            'check_title' => '',
-                            'payment_instructions' => '',
-                            'payable_to' => '',
-                            'address_to_send_payment' => '',
+                            'payment_method'=>$this->_pm_instance,
+                            'payment'=>$payment,
+                            'check_title'=>'',
+                            'payment_instructions'=>'',
+                            'payable_to'=>'',
+                            'address_to_send_payment'=>'',
                             ),
             $extra_meta_for_payment_method
         );

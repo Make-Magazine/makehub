@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\libraries\rest_api\controllers\model;
 
 use EEM_Base;
@@ -53,7 +52,7 @@ class Base extends Controller_Base
         if (! $this->model_version_info) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'Cannot use model version info before setting the requested version in the controller',
                         'event_espresso'
                     )
@@ -99,7 +98,7 @@ class Base extends Controller_Base
             throw new RestException(
                 'endpoint_parsing_error',
                 sprintf(
-                    esc_html__(
+                    __(
                         'There is no model for endpoint %s. Please contact event espresso support',
                         'event_espresso'
                     ),

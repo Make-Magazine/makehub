@@ -28,7 +28,7 @@ class ServiceNotFoundException extends \RuntimeException
     ) {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__('The requested service "%1$s" could not found be found in the CoffeeShop.', 'event_espresso'),
+                __('The requested service "%1$s" could not found be found in the CoffeeShop.', 'event_espresso'),
                 $service_name
             );
         }

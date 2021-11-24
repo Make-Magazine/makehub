@@ -1,14 +1,6 @@
-<?php
-
-/**
- * Template vars in use:
- *
- * @var string $radio_list;
- */
-?>
 <div id="taxonomy-espresso_event_type" class="categorydiv">
     <ul id="espresso_event_type-tabs" class="category-tabs">
-        <li class="tabs"><a href="#espresso_event_type-all"><?php esc_html_e('All Event Types', 'event_espresso') ?></a></li>
+        <li class="tabs"><a href="#espresso_event_type-all"><?php _e('All Event Types', 'event_espresso') ?></a></li>
     </ul>
     <div id="espresso_event_type-all" class="tabs-panel">
         <?php
@@ -21,4 +13,9 @@
         </ul>
     </div>
 </div>
-
+<?php
+/**
+ * Template vars in use:
+ *
+ * $radio_list;
+ */

@@ -2,12 +2,14 @@
 
 namespace EventEspresso\modules\ticket_selector;
 
+use DomainException;
 use EE_Error;
-use EEM_Event;
+use EE_Registry;
+use EventEspresso\core\exceptions\InvalidDataTypeException;
+use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\libraries\iframe_display\Iframe;
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\CurrentPage;
-use EventEspresso\core\services\request\RequestInterface;
+use InvalidArgumentException;
+use ReflectionException;
 
 /**
  * Class TicketSelectorIframe
@@ -19,20 +21,27 @@ use EventEspresso\core\services\request\RequestInterface;
  */
 class TicketSelectorIframe extends Iframe
 {
+
     /**
      * TicketSelectorIframe constructor.
      *
-     * @param EEM_Event        $event_model
-     * @param CurrentPage      $current_page
-     * @param RequestInterface $request
+     * @throws InvalidArgumentException
+     * @throws InvalidInterfaceException
+     * @throws InvalidDataTypeException
+     * @throws DomainException
      * @throws EE_Error
+     * @throws ReflectionException
      */
-    public function __construct(EEM_Event $event_model, CurrentPage $current_page, RequestInterface $request)
+    public function __construct()
     {
-        $current_page->setEspressoPage(true);
-        $ticket_selector = LoaderFactory::getLoader()->getNew(DisplayTicketSelector::class);
-        $ticket_selector->setIframe();
-        $event = $event_model->get_one_by_ID($request->getRequestParam('event', 0, 'int'));
+        EE_Registry::instance()->REQ->set_espresso_page(true);
+        /** @type \EEM_Event $EEM_Event */
+        $EEM_Event = EE_Registry::instance()->load_model('Event');
+        $event = $EEM_Event->get_one_by_ID(
+            EE_Registry::instance()->REQ->get('event', 0)
+        );
+        $ticket_selector = new DisplayTicketSelector();
+        $ticket_selector->setIframe(true);
         parent::__construct(
             esc_html__('Ticket Selector', 'event_espresso'),
             $ticket_selector->display($event)
@@ -78,11 +87,9 @@ class TicketSelectorIframe extends Iframe
                 'FHEE__EventEspresso_modules_ticket_selector_TicketSelectorIframe__construct__localized_vars',
                 array(
                     'ticket_selector_iframe' => true,
-                    'EEDTicketSelectorMsg'   => wp_strip_all_tags(
-                        __(
-                            'Please choose at least one ticket before continuing.',
-                            'event_espresso'
-                        )
+                    'EEDTicketSelectorMsg'   => __(
+                        'Please choose at least one ticket before continuing.',
+                        'event_espresso'
                     ),
                 )
             )

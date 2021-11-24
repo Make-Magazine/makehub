@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\libraries\rest_api;
 
 /**
@@ -26,8 +25,7 @@ class RestException extends \EE_Error
 
     public function __construct($string_code, $message, $wp_error_data = array(), $previous = null)
     {
-        if (
-            is_array($wp_error_data)
+        if (is_array($wp_error_data)
             && isset($wp_error_data['status'])
         ) {
             $http_status_number = $wp_error_data['status'];

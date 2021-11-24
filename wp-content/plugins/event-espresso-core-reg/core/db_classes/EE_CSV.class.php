@@ -10,6 +10,8 @@
  * @package                   Event Espresso
  * @subpackage                includes/functions
  * @author                    Brent Christensen
+ *
+ * ------------------------------------------------------------------------
  */
 class EE_CSV
 {
@@ -103,7 +105,7 @@ class EE_CSV
         $fc = "";
         $fh = fopen($file_path, "rb");
         if (! $fh) {
-            throw new EE_Error(sprintf(esc_html__("Cannot open file for read: %s<br>\n", 'event_espresso'), $file_path));
+            throw new EE_Error(sprintf(__("Cannot open file for read: %s<br>\n", 'event_espresso'), $file_path));
         }
         $flen = filesize($file_path);
         $bc = fread($fh, $flen);
@@ -164,7 +166,7 @@ class EE_CSV
             return $csvarray;
         } else {
             EE_Error::add_error(
-                sprintf(esc_html__("An error occurred - the file: %s could not opened.", "event_espresso"), $path_to_file),
+                sprintf(__("An error occurred - the file: %s could not opened.", "event_espresso"), $path_to_file),
                 __FILE__,
                 __FUNCTION__,
                 __LINE__
@@ -260,7 +262,7 @@ class EE_CSV
                             if (! $success) {
                                 EE_Error::add_error(
                                     sprintf(
-                                        esc_html__(
+                                        __(
                                             "The column titled %s is invalid for importing. It must be be in the format of 'Nice Name[model_field_name]' in row %s",
                                             "event_espresso"
                                         ),
@@ -310,7 +312,7 @@ class EE_CSV
     {
         EE_Error::doing_it_wrong(
             'save_csv_to_db',
-            esc_html__(
+            __(
                 'Function moved to EE_Import and renamed to save_csv_data_array_to_db',
                 'event_espresso'
             ),
@@ -407,7 +409,7 @@ class EE_CSV
             if (EEH_Array::is_associative_array($data)) {
                 throw new EE_Error(
                     sprintf(
-                        esc_html__(
+                        __(
                             "top-level array must be numerically indexed. Does these look like numbers to you? %s",
                             "event_espresso"
                         ),

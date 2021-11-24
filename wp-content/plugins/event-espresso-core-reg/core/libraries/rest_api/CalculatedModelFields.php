@@ -178,8 +178,7 @@ class CalculatedModelFields
         Base $controller
     ) {
         $mapping = $this->mapping();
-        if (
-            isset($mapping[ $model->get_this_model_name() ])
+        if (isset($mapping[ $model->get_this_model_name() ])
             && isset($mapping[ $model->get_this_model_name() ][ $field_name ])
         ) {
             $classname = $mapping[ $model->get_this_model_name() ][ $field_name ];
@@ -190,7 +189,7 @@ class CalculatedModelFields
         throw new RestException(
             'calculated_field_does_not_exist',
             sprintf(
-                esc_html__('There is no calculated field %1$s on resource %2$s', 'event_espresso'),
+                __('There is no calculated field %1$s on resource %2$s', 'event_espresso'),
                 $field_name,
                 $model->get_this_model_name()
             )

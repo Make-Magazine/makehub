@@ -6,14 +6,17 @@
  * @package               Event Espresso
  * @subpackage
  * @author                Mike Nelson
- * @var EE_Change_Log     $payment_log
- * @var EE_Payment_Method $payment_method
- * @var EE_Transaction    $transaction
+ *
+ * ------------------------------------------------------------------------
  */
+/*@var EE_Change_Log $payment_Log */
+/*@var EE_Payment_Method $payment_Method*/
+/*@var EE_Transaction $transaction*/
 ?>
-<div class="padding">
-    <table class="form-table">
-        <tbody>
+    <div class="padding">
+        <table class="form-table">
+            <tbody>
+
             <tr>
                 <th>
                     <label>
@@ -21,7 +24,8 @@
                     </label>
                 </th>
                 <td>
-                    <?php echo absint($payment_log->ID()) ?>
+                    <?php echo $payment_log->ID() ?>
+
                 </td>
             </tr>
             <tr>
@@ -36,10 +40,14 @@
                         esc_html_e('Unknown', 'event_espresso');
                     } else {
                         echo $payment_method
-                            ? esc_html($payment_method->admin_name())
-                            : esc_html__("No Longer Exists", 'event_espresso');
+                        ? $payment_method->admin_name()
+                        : esc_html__(
+                            "No Longer Exists",
+                            'event_espresso'
+                        );
                     }
                     ?>
+
                 </td>
             </tr>
             <tr>
@@ -49,10 +57,8 @@
                     </label>
                 </th>
                 <td>
-                    <?php echo $transaction
-                        ? absint($transaction->ID())
-                        : esc_html__('Could not be determined', 'event_espresso');
-                    ?>
+                    <?php echo $transaction ? $transaction->ID() : esc_html__("Could not be determined", 'event_espresso'); ?>
+
                 </td>
             </tr>
             <tr>
@@ -62,9 +68,12 @@
                     </label>
                 </th>
                 <td>
-                    <?php echo $payment_log->get_pretty('LOG_message', 'as_table'); // already escaped ?>
+                    <?php echo $payment_log->e(
+                        'LOG_message',
+                        'as_table'
+                    );// EEH_Template::layout_array_as_table($payment_log->content())?>
                 </td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>

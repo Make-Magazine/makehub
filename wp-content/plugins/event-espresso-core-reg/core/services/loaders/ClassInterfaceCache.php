@@ -174,23 +174,8 @@ class ClassInterfaceCache
             return $this->getFqnForAlias($this->aliases[ (string) $for_class ][ (string) $alias ], $for_class);
         }
         if ($this->isDirectAlias($alias)) {
-            // note: changed '' to $for_class
-            return $this->getFqnForAlias($this->aliases[ (string) $alias ], $for_class);
+            return $this->getFqnForAlias($this->aliases[ (string) $alias ], '');
         }
         return $alias;
     }
-
-
-    // public function debug($for_class = '')
-    // {
-    //     if ($for_class !== '') {
-    //         if ( ! isset($this->aliases[ $for_class ])) {
-    //             \EEH_Debug_Tools::printr('NOT FOUND', "aliases[ $for_class ]", __FILE__, __LINE__);
-    //             return;
-    //         }
-    //         \EEH_Debug_Tools::printr($this->aliases[ $for_class ], "aliases[ $for_class ]", __FILE__, __LINE__);
-    //         return;
-    //     }
-    //     \EEH_Debug_Tools::printr($this->aliases, '$this->aliases', __FILE__, __LINE__);
-    // }
 }

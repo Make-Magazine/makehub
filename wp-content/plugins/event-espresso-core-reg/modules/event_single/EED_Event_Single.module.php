@@ -115,25 +115,25 @@ class EED_Event_Single extends EED_Module
         $template_parts = new EE_Template_Part_Manager();
         $template_parts->add_template_part(
             'tickets',
-            esc_html__('Ticket Selector', 'event_espresso'),
+            __('Ticket Selector', 'event_espresso'),
             'content-espresso_events-tickets.php',
             $config->display_order_tickets
         );
         $template_parts->add_template_part(
             'datetimes',
-            esc_html__('Dates and Times', 'event_espresso'),
+            __('Dates and Times', 'event_espresso'),
             'content-espresso_events-datetimes.php',
             $config->display_order_datetimes
         );
         $template_parts->add_template_part(
             'event',
-            esc_html__('Event Description', 'event_espresso'),
+            __('Event Description', 'event_espresso'),
             'content-espresso_events-details.php',
             $config->display_order_event
         );
         $template_parts->add_template_part(
             'venue',
-            esc_html__('Venue Information', 'event_espresso'),
+            __('Venue Information', 'event_espresso'),
             'content-espresso_events-venues.php',
             $config->display_order_venue
         );
@@ -175,14 +175,14 @@ class EED_Event_Single extends EED_Module
             add_filter('the_title', array('EED_Event_Single', 'the_title'), 100, 2);
         }
         // not a custom template?
-        if (
-            ! post_password_required($post)
+        if (! post_password_required($post)
             && (
                 apply_filters('FHEE__EED_Event_Single__template_include__allow_custom_selected_template', false)
                 || EE_Registry::instance()
                               ->load_core('Front_Controller')
                               ->get_selected_template() !== 'single-espresso_events.php'
             )
+
         ) {
             EEH_Template::load_espresso_theme_functions();
             // then add extra event data via hooks
@@ -269,8 +269,7 @@ class EED_Event_Single extends EED_Module
     {
         global $post;
         static $current_post_ID = 0;
-        if (
-            $current_post_ID !== $post->ID
+        if ($current_post_ID !== $post->ID
             && $post->post_type === 'espresso_events'
             && ! EED_Event_Single::$using_get_the_excerpt
             && ! post_password_required()
@@ -443,8 +442,7 @@ class EED_Event_Single extends EED_Module
     public function wp_enqueue_scripts()
     {
         // get some style
-        if (
-            apply_filters('FHEE_enable_default_espresso_css', true)
+        if (apply_filters('FHEE_enable_default_espresso_css', true)
             && apply_filters('FHEE__EED_Event_Single__wp_enqueue_scripts__enable_css', true)
         ) {
             // first check uploads folder

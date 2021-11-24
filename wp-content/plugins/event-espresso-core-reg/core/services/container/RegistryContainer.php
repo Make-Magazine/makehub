@@ -20,7 +20,7 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
     /**
      * @var array $container
      */
-    private $container = [];
+    private $container;
 
     /**
      * RegistryContainer constructor.
@@ -29,6 +29,10 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function __construct()
     {
+        $this->container = func_get_args();
+        if (func_num_args() === 0) {
+            $this->container = array();
+        }
     }
 
 
@@ -67,7 +71,7 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function offsetGet($offset)
     {
-        return $this->offsetExists($offset) ? $this->container[ $offset ] : null;
+        return isset($this->container[ $offset ]) ? $this->container[ $offset ] : null;
     }
 
 
@@ -95,7 +99,7 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function __set($offset, $value)
     {
-        $this->offsetSet($offset, $value);
+        $this->container[ $offset ] = $value;
     }
 
 
@@ -106,19 +110,19 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function __get($offset)
     {
-        if (! array_key_exists($offset, $this->container)) {
-            $trace = debug_backtrace();
-            throw new OutOfBoundsException(
-                sprintf(
-                    esc_html__('Invalid offset: %1$s %2$sCalled from %3$s on line %4$d', 'event_espresso'),
-                    $offset,
-                    '<br  />',
-                    $trace[0]['file'],
-                    $trace[0]['line']
-                )
-            );
+        if (array_key_exists($offset, $this->container)) {
+            return $this->container[ $offset ];
         }
-        return $this->offsetGet($offset);
+        $trace = debug_backtrace();
+        throw new OutOfBoundsException(
+            sprintf(
+                esc_html__('Invalid offset: %1$s %2$sCalled from %3$s on line %4$d', 'event_espresso'),
+                $offset,
+                '<br  />',
+                $trace[0]['file'],
+                $trace[0]['line']
+            )
+        );
     }
 
 
@@ -128,7 +132,7 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function __isset($offset)
     {
-        return $this->offsetExists($offset);
+        return isset($this->container[ $offset ]);
     }
 
 
@@ -137,45 +141,6 @@ class RegistryContainer implements ArrayAccess, CountableTraversableAggregate
      */
     public function __unset($offset)
     {
-        $this->offsetUnset($offset);
-    }
-
-
-    /**
-     * @param $offset
-     * @param $value
-     */
-    public function add($offset, $value)
-    {
-        $this->offsetSet($offset, $value);
-    }
-
-
-    /**
-     * @param $offset
-     */
-    public function remove($offset)
-    {
-        $this->offsetUnset($offset);
-    }
-
-
-    /**
-     * @param $offset
-     * @return bool
-     */
-    public function has($offset)
-    {
-        return $this->offsetExists($offset);
-    }
-
-
-    /**
-     * @param $offset
-     * @return mixed|null
-     */
-    public function get($offset)
-    {
-        return $this->offsetGet($offset);
+        unset($this->container[ $offset ]);
     }
 }

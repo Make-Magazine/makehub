@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EEM_Question_Group_Question
  *
@@ -23,22 +22,22 @@ class EEM_Question_Group_Question extends EEM_Base
 
     protected function __construct($timezone = null)
     {
-        $this->singular_item = esc_html__('Question Group to Question Link', 'event_espresso');
-        $this->plural_item = esc_html__('Question Group to Question Links', 'event_espresso');
+        $this->singular_item = __('Question Group to Question Link', 'event_espresso');
+        $this->plural_item = __('Question Group to Question Links', 'event_espresso');
         $this->_tables = array(
-            'Question_Group_Question' => new EE_Primary_Table('esp_question_group_question', 'QGQ_ID')
+            'Question_Group_Question'=>new EE_Primary_Table('esp_question_group_question', 'QGQ_ID')
         );
         $this->_fields = array(
-            'Question_Group_Question' => array(
-                'QGQ_ID' => new EE_Primary_Key_Int_Field('QGQ_ID', esc_html__('Question Group to Question Link ID', 'event_espresso')),
-                'QSG_ID' => new EE_Foreign_Key_Int_Field('QSG_ID', esc_html__('Question Group ID', 'event_espresso'), false, 0, 'Question_Group'),
-                'QST_ID' => new EE_Foreign_Key_Int_Field('QST_ID', esc_html__('Question Id', 'event_espresso'), false, 0, 'Question'),
-                'QGQ_order' => new EE_Integer_Field('QGQ_order', esc_html__('Question Group Question Order', 'event_espresso'), false, 0)
+            'Question_Group_Question'=>array(
+                'QGQ_ID'=>new EE_Primary_Key_Int_Field('QGQ_ID', __('Question Group to Question Link ID', 'event_espresso')),
+                'QSG_ID'=>new EE_Foreign_Key_Int_Field('QSG_ID', __('Question Group ID', 'event_espresso'), false, 0, 'Question_Group'),
+                'QST_ID'=>new EE_Foreign_Key_Int_Field('QST_ID', __('Question Id', 'event_espresso'), false, 0, 'Question'),
+                'QGQ_order' => new EE_Integer_Field('QGQ_order', __('Question Group Question Order', 'event_espresso'), false, 0)
             )
         );
         $this->_model_relations = array(
-            'Question_Group' => new EE_Belongs_To_Relation(),
-            'Question' => new EE_Belongs_To_Relation()
+            'Question_Group'=>new EE_Belongs_To_Relation(),
+            'Question'=>new EE_Belongs_To_Relation()
         );
 
         $this->_model_chain_to_wp_user = 'Question_Group';

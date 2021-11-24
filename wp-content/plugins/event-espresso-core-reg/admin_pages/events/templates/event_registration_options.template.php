@@ -1,41 +1,26 @@
-<?php
-/**
- * @var EE_Event $event
- * @var int      $additional_limit
- * @var string   $active_status
- * @var string   $additional_registration_options
- * @var string   $display_ticket_selector
- */
-?>
 <p>
-    <label><?php esc_html_e('Active Status: ', 'event_espresso'); ?></label>
-    <?php echo $active_status; // already escaped ?>
+    <label><?php _e('Active Status: ', 'event_espresso'); ?></label>
+    <?php echo $active_status; ?>
 </p>
 
 <p>
     <label for="max-registrants">
-        <?php esc_html_e(
+        <?php _e(
             'Maximum number of tickets allowed per order for this event: ',
             'event_espresso'
-        ); ?>
-    </label>
-    <input class="ee-numeric"
-           id="max-registrants"
-           name="additional_limit"
-           size="4"
-           type="text"
-           value="<?php echo esc_attr($additional_limit); ?>"
-    />
+        ); ?></label>
+    <input class="ee-numeric" type="text" id="max-registrants" name="additional_limit"
+           value="<?php echo $additional_limit; ?>" size="4"/>
 </p>
 
-<?php echo esc_html($additional_registration_options); ?>
+<?php echo $additional_registration_options; ?>
 
 <p>
-    <label><?php esc_html_e('Display Ticket Selector', 'event_espresso'); ?></label>
-    <?php echo $display_ticket_selector; // already escaped ?>
+    <label><?php _e('Display Ticket Selector', 'event_espresso'); ?></label>
+    <?php echo $display_ticket_selector; ?>
 </p>
 
 <p>
-    <label for='event_phone'><?php esc_html_e('Event Phone Number', 'event_espresso'); ?></label>
-    <input id="event_phone" name="event_phone" size="20" type="text" value="<?php echo esc_attr($event->phone()); ?>" />
+    <label><?php _e('Event Phone Number', 'event_espresso'); ?></label>
+    <input name="event_phone" size="20" type="text" value="<?php echo $_event->phone(); ?>">
 </p>

@@ -54,13 +54,12 @@ class EE_Register_Model_Extensions implements EEI_Plugin_API
     public static function register($identifier = '', array $setup_args = [])
     {
         // required fields MUST be present, so let's make sure they are.
-        if (
-            empty($identifier)
+        if (empty($identifier)
             || ! is_array($setup_args)
             || (empty($setup_args['model_extension_paths']) && empty($setup_args['class_extension_paths']))
         ) {
             throw new EE_Error(
-                esc_html__(
+                __(
                     'In order to register Model extensions with EE_Register_Model_Extensions::register(), you must include a "model_id" (a unique identifier for this set of models), and an array containing the following keys: "model_extension_paths" (an array of full server paths to folders that contain model extensions), and "class_extension_paths" (an array of full server paths to folders that contain class extensions)',
                     'event_espresso'
                 )
@@ -76,7 +75,7 @@ class EE_Register_Model_Extensions implements EEI_Plugin_API
             EE_Error::doing_it_wrong(
                 __METHOD__,
                 sprintf(
-                    esc_html__(
+                    __(
                         'An attempt was made to register "%1$s" as a Model extension has failed because it was not registered at the correct time.  Please use the "AHEE__EE_System__load_espresso_addons" hook to register models.%2$s Hook Status: %2$s "AHEE__EE_System__load_espresso_addons" : %3$s %2$s "AHEE__EE_Admin__loaded" : %4$s%2$s',
                         'event_espresso'
                     ),
@@ -103,7 +102,7 @@ class EE_Register_Model_Extensions implements EEI_Plugin_API
             }
             EEH_Autoloader::register_autoloader($class_to_filepath_map);
             foreach (array_keys($class_to_filepath_map) as $classname) {
-                self::$_extensions[ $identifier ]['models'][ $classname ] = new $classname();
+                self::$_extensions[ $identifier ]['models'][ $classname ] = new $classname;
             }
             unset($setup_args['model_extension_paths']);
         }
@@ -112,13 +111,13 @@ class EE_Register_Model_Extensions implements EEI_Plugin_API
             $class_to_filepath_map = EEH_File::get_contents_of_folders($setup_args['class_extension_paths']);
             EEH_Autoloader::register_autoloader($class_to_filepath_map);
             foreach (array_keys($class_to_filepath_map) as $classname) {
-                self::$_extensions[ $identifier ]['classes'][ $classname ] = new $classname();
+                self::$_extensions[ $identifier ]['classes'][ $classname ] = new $classname;
             }
             unset($setup_args['class_extension_paths']);
         }
         foreach ($setup_args as $unknown_key => $unknown_config) {
             throw new EE_Error(
-                sprintf(esc_html__("The key '%s' is not a known key for registering a model", "event_espresso"), $unknown_key)
+                sprintf(__("The key '%s' is not a known key for registering a model", "event_espresso"), $unknown_key)
             );
         }
     }

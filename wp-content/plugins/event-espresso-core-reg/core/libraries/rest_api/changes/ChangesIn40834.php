@@ -1,6 +1,4 @@
-<?php
-
-namespace EventEspresso\core\libraries\rest_api\changes;
+<?php namespace EventEspresso\core\libraries\rest_api\changes;
 
 use EventEspresso\core\libraries\rest_api\controllers\Base;
 
@@ -39,8 +37,7 @@ class ChangesIn40834 extends ChangesInBase
      */
     public function removeResponseHeaders($response_headers, $controller, $requested_version)
     {
-        if (
-            $controller instanceof Base
+        if ($controller instanceof Base
             && $this->appliesToVersion($requested_version)
         ) {
             return array();

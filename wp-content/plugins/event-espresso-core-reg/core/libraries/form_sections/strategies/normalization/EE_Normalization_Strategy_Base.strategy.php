@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Normalization_Strategy_Base
  *

@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\services\progress_steps\display_strategies;
 
 /**

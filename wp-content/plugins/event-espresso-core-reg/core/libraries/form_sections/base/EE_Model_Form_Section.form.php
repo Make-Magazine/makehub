@@ -1,5 +1,7 @@
 <?php
 
+
+
 /**
  * Class EE_Model_Form_Section
  * For auto-generating form sections based off a model.
@@ -39,7 +41,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
             $this->_model = $options_array['model'];
         }
         if (! $this->_model || ! $this->_model instanceof EEM_Base) {
-            throw new EE_Error(sprintf(esc_html__(
+            throw new EE_Error(sprintf(__(
                 "Model Form Sections must first specify the _model property to be a subclass of EEM_Base",
                 "event_espresso"
             )));
@@ -102,8 +104,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
             $input = null;
             switch (get_class($relation_obj)) {
                 case 'EE_HABTM_Relation':
-                    if (
-                        isset($subsection_args[ $relation_name ])
+                    if (isset($subsection_args[ $relation_name ])
                         && isset($subsection_args[ $relation_name ]['model_objects'])
                     ) {
                         $model_objects = $subsection_args[ $relation_name ]['model_objects'];
@@ -153,7 +154,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                         $input_class = 'EE_Yes_No_Input';
                         break;
                     case 'EE_Datetime_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
@@ -162,13 +163,13 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                         $input_class = 'EE_Email_Input';
                         break;
                     case 'EE_Enum_Integer_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
                         break;
                     case 'EE_Enum_Text_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
@@ -189,7 +190,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                             $model = EE_Registry::instance()->load_model($model_name);
                             $model_names = $model->get_all_names(array('limit' => 10));
                             if ($model_field->is_nullable()) {
-                                array_unshift($model_names, esc_html__("Please Select", 'event_espresso'));
+                                array_unshift($model_names, __("Please Select", 'event_espresso'));
                             }
                             $input_constructor_args[1] = $input_constructor_args[0];
                             $input_constructor_args[0] = $model_names;
@@ -201,7 +202,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                         $input_constructor_args[0]['validation_strategies'] = array(new EE_Full_HTML_Validation_Strategy());
                         break;
                     case 'EE_Infinite_Integer':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
@@ -213,7 +214,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                         $input_class = 'EE_Text_Area_Input';
                         break;
                     case 'EE_Money_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
@@ -246,19 +247,19 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
                         $input_class = 'EE_Yes_No_Input';
                         break;
                     case 'EE_WP_Post_Status_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
                         break;
                     case 'EE_WP_Post_Type_Field':
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field '%s' does not yet have a known conversion to form input",
                             "event_espresso"
                         ), get_class($model_field)));
                         break;
                     default:
-                        throw new EE_Error(sprintf(esc_html__(
+                        throw new EE_Error(sprintf(__(
                             "Model field of type '%s' does not convert to any known Form Input. Please add a case to EE_Model_Form_section's _convert_model_fields_to_inputs switch statement",
                             "event_espresso"
                         ), get_class($model_field)));
@@ -329,7 +330,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
      * After we've normalized the data as normal, set the corresponding model object
      * on the form.
      *
-     * @param array $req_data should usually be the form post/request data (the default).
+     * @param array $req_data should usually be $_REQUEST (the default).
      * @return void
      */
     public function _normalize($req_data)
@@ -362,7 +363,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
     public function save()
     {
         if (! $this->_model_object) {
-            throw new EE_Error(sprintf(esc_html__(
+            throw new EE_Error(sprintf(__(
                 "Cannot save the model form's model object (model is '%s') because there is no model object set. You must either set it, or call receive_form_submission where it is set automatically",
                 "event_espresso"
             ), get_class($this->_model)));
@@ -405,7 +406,7 @@ class EE_Model_Form_Section extends EE_Form_Section_Proper
             // if they're in this list, keep them
             // if they're not in this list, remove them
             // and lastly add all the new items
-            throw new EE_Error(sprintf(esc_html__(
+            throw new EE_Error(sprintf(__(
                 'Automatic saving of related info across a "has many" relation is not yet supported',
                 "event_espresso"
             )));

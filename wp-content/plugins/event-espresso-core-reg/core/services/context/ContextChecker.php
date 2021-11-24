@@ -2,6 +2,7 @@
 
 namespace EventEspresso\core\services\context;
 
+use Closure;
 use EventEspresso\core\domain\entities\contexts\ContextInterface;
 
 /**
@@ -32,11 +33,11 @@ class ContextChecker
     private $acceptable_values;
 
     /**
-     * Closure (or callable) that will be called to perform the evaluation within isAllowed().
+     * Closure that will be called to perform the evaluation within isAllowed().
      * If none is provided, then a simple type sensitive in_array() check will be used
      * and return true if the incoming Context::slug() is found within the array of $acceptable_values.
      *
-     * @var callable $evaluation_callback
+     * @var Closure $evaluation_callback
      */
     private $evaluation_callback;
 
@@ -46,9 +47,9 @@ class ContextChecker
      *
      * @param string       $identifier
      * @param array        $acceptable_values
-     * @param callable|null $evaluation_callback [optional]
+     * @param Closure|null $evaluation_callback [optional]
      */
-    public function __construct($identifier, array $acceptable_values, callable $evaluation_callback = null)
+    public function __construct($identifier, array $acceptable_values, Closure $evaluation_callback = null)
     {
         $this->setIdentifier($identifier);
         $this->setAcceptableValues($acceptable_values);
@@ -75,27 +76,15 @@ class ContextChecker
 
 
     /**
-     * @param callable $evaluation_callback
+     * @param Closure $evaluation_callback
      */
-    private function setEvaluationCallback(callable $evaluation_callback = null)
+    private function setEvaluationCallback(Closure $evaluation_callback = null)
     {
-        $this->evaluation_callback = is_callable($evaluation_callback)
+        $this->evaluation_callback = $evaluation_callback instanceof Closure
             ? $evaluation_callback
-            : [$this, 'evaluateContext'];
-    }
-
-
-    /**
-     * default callback for evaluating whether the supplied context exists within the supplied values
-     *
-     * @param ContextInterface $context
-     * @param array            $acceptable_values
-     * @return bool
-     * @since   4.10.14.p
-     */
-    public function evaluateContext(ContextInterface $context, array $acceptable_values = [])
-    {
-        return in_array($context->slug(), $acceptable_values, true);
+            : function (ContextInterface $context, $acceptable_values) {
+                return in_array($context->slug(), $acceptable_values, true);
+            };
     }
 
 
@@ -121,7 +110,7 @@ class ContextChecker
 
 
     /**
-     * @return callable
+     * @return Closure
      */
     protected function evaluationCallback()
     {

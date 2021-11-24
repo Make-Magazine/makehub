@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Month_Input
  *
@@ -32,7 +31,7 @@ class EE_Month_Input extends EE_Select_Input
             $input_settings
         );
     }
-
+    
     /**
      * Changes int 1 to 01, etc. Useful with array_walk
      * @param int $input

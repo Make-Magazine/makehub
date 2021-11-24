@@ -55,7 +55,8 @@ class DateFilterHeader extends AdminPageHeaderDecorator
     public function getHeaderText($text = '')
     {
         $DTT_ID = $this->request->getRequestParam('DTT_ID');
-        $DTT_ID = $this->request->getRequestParam('datetime_id', $DTT_ID, 'int');
+        $DTT_ID = $this->request->getRequestParam('datetime_id', $DTT_ID);
+        $DTT_ID = absint($DTT_ID);
         if ($DTT_ID) {
             $datetime = $this->datetime_model->get_one_by_ID($DTT_ID);
             if ($datetime instanceof EE_Datetime && $text !== '') {

@@ -1,4 +1,6 @@
 <?php
+use EventEspresso\core\services\database\TableAnalysis;
+use EventEspresso\core\services\database\TableManager;
 
 /**
  * converts DBs to 4.7
@@ -7,11 +9,8 @@
  * and recalculates esp_registration.REG_final_price to actually be the final price
  * for that registration (before this it was just the ticket's price, NOT including
  * taxes or other price modifiers)
+
  */
-
-use EventEspresso\core\services\database\TableAnalysis;
-use EventEspresso\core\services\database\TableManager;
-
 // make sure we have all the stages loaded too
 // unfortunately, this needs to be done upon INCLUSION of this file,
 // instead of construction, because it only gets constructed on first page load
@@ -48,7 +47,7 @@ class EE_DMS_Core_4_7_0 extends EE_Data_Migration_Script_Base
      */
     public function __construct(TableManager $table_manager = null, TableAnalysis $table_analysis = null)
     {
-        $this->_pretty_name = esc_html__("Data Update to Event Espresso 4.7.0", "event_espresso");
+        $this->_pretty_name = __("Data Update to Event Espresso 4.7.0", "event_espresso");
         $this->_priority = 10;
         $this->_migration_stages = array(
             new EE_DMS_4_7_0_Add_Taxes_To_REG_Final_Price(),
@@ -66,8 +65,7 @@ class EE_DMS_Core_4_7_0 extends EE_Data_Migration_Script_Base
     public function can_migrate_from_version($version_array)
     {
         $version_string = $version_array['Core'];
-        if (
-            (
+        if ((
                 version_compare($version_string, '4.7.0.decaf', '<')
                 && version_compare($version_string, '4.6.0.decaf', '>=')
             )

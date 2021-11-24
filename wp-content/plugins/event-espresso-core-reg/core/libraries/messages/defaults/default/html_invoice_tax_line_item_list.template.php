@@ -1,9 +1,7 @@
 <?php
-
 /**
  * This is the template for the html messenger and invoice message type tax_line_item_list field.
  */
-
 ?>
     </td></tr>
 <tr class="item sub-item tax-total">

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EES_Espresso_Ticket_Selector
  *
@@ -49,7 +48,7 @@ class EES_Espresso_Ticket_Selector extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            esc_html__(
+            __(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoTicketSelector instead.',
                 'event_espresso'
             ),

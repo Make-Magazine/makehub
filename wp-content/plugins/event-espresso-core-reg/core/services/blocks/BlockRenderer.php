@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\services\blocks;
 
 use EventEspresso\core\domain\DomainInterface;

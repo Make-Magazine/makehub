@@ -1,5 +1,4 @@
 <?php
-
 use EventEspresso\core\entities\interfaces\HasSchemaInterface;
 
 /**
@@ -76,7 +75,7 @@ abstract class EE_Model_Relation_Base implements HasSchemaInterface
         $this->_other_model_name = $other_model_name;
         if (is_string($this->_blocking_delete)) {
             throw new EE_Error(sprintf(
-                esc_html__(
+                __(
                     "When instantiating the relation of type %s from %s to %s, the \$block_deletes argument should be a boolean, not a string (%s)",
                     "event_espresso"
                 ),
@@ -182,7 +181,7 @@ abstract class EE_Model_Relation_Base implements HasSchemaInterface
         if ($values_already_prepared_by_model_object !== false) {
             EE_Error::doing_it_wrong(
                 'EE_Model_Relation_Base::get_all_related',
-                esc_html__('The argument $values_already_prepared_by_model_object is no longer used.', 'event_espresso'),
+                __('The argument $values_already_prepared_by_model_object is no longer used.', 'event_espresso'),
                 '4.8.1'
             );
         }
@@ -305,7 +304,7 @@ abstract class EE_Model_Relation_Base implements HasSchemaInterface
         }
         if (! $model_object_id) {
             throw new EE_Error(sprintf(
-                esc_html__(
+                __(
                     "Sorry, we cant get the related %s model objects to %s model object before it has an ID. You can solve that by just saving it before trying to get its related model objects",
                     "event_espresso"
                 ),
@@ -399,9 +398,9 @@ abstract class EE_Model_Relation_Base implements HasSchemaInterface
         if ($this->_blocking_delete_error_message) {
             return $this->_blocking_delete_error_message;
         } else {
-//          return sprintf(esc_html__('Cannot delete %1$s when there are related %2$s', "event_espresso"),$this->get_this_model()->item_name(2),$this->get_other_model()->item_name(2));
+//          return sprintf(__('Cannot delete %1$s when there are related %2$s', "event_espresso"),$this->get_this_model()->item_name(2),$this->get_other_model()->item_name(2));
             return sprintf(
-                esc_html__(
+                __(
                     'This %1$s is currently linked to one or more %2$s records. If this %1$s is incorrect, then please remove it from all %3$s before attempting to delete it.',
                     "event_espresso"
                 ),

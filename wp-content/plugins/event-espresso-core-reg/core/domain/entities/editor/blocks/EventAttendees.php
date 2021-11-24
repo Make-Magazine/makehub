@@ -42,7 +42,7 @@ class EventAttendees extends Block
         EventAttendeesBlockRenderer $renderer
     ) {
         parent::__construct($block_asset_manager, $request);
-        $this->renderer = $renderer;
+        $this->renderer= $renderer;
     }
 
 
@@ -64,7 +64,7 @@ class EventAttendees extends Block
             )
         );
         $EVT_ID = $this->request->getRequestParam('page') === 'espresso_events'
-            ? $this->request->getRequestParam('post', 0, 'int')
+            ? $this->request->getRequestParam('post', 0)
             : 0;
         $this->setAttributes(
             array(

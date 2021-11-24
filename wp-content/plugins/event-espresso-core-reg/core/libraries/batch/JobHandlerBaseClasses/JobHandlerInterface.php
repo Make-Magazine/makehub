@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * Class JobHandlerInterface
@@ -15,7 +14,6 @@
  * @since              4.8.26
  *
  */
-
 namespace EventEspressoBatchRequest\JobHandlerBaseClasses;
 
 use EventEspressoBatchRequest\Helpers\BatchRequestException;

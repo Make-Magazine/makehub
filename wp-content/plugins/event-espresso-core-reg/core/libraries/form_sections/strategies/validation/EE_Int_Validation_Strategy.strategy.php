@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Int_Validation_Strategy
  *
@@ -16,7 +15,7 @@ class EE_Int_Validation_Strategy extends EE_Validation_Strategy_Base
     public function __construct($validation_error_message = null)
     {
         if (! $validation_error_message) {
-            $validation_error_message = esc_html__("Only digits are allowed.", "event_espresso");
+            $validation_error_message = __("Only digits are allowed.", "event_espresso");
         }
         parent::__construct($validation_error_message);
     }
@@ -39,7 +38,7 @@ class EE_Int_Validation_Strategy extends EE_Validation_Strategy_Base
     public function get_jquery_validation_rule_array()
     {
         return array(
-            'number' => true,
+            'number'=>true,
             'step' => 1,
             'messages' => array(
                 'number' => $this->get_validation_error_message(),

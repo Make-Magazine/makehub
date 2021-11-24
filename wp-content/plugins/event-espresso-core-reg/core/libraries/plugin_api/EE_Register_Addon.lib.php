@@ -6,7 +6,6 @@ use EventEspresso\core\exceptions\ExceptionLogger;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
 
 /**
  * Class EE_Register_Addon
@@ -323,7 +322,7 @@ class EE_Register_Addon implements EEI_Plugin_API
         // required fields MUST be present, so let's make sure they are.
         if (empty($addon_name) || ! is_array($setup_args)) {
             throw new EE_Error(
-                esc_html__(
+                __(
                     'In order to register an EE_Addon with EE_Register_Addon::register(), you must include the "addon_name" (the name of the addon), and an array of arguments.',
                     'event_espresso'
                 )
@@ -332,7 +331,7 @@ class EE_Register_Addon implements EEI_Plugin_API
         if (! isset($setup_args['main_file_path']) || empty($setup_args['main_file_path'])) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'When registering an addon, you didn\'t provide the "main_file_path", which is the full path to the main file loaded directly by Wordpress. You only provided %s',
                         'event_espresso'
                     ),
@@ -344,7 +343,7 @@ class EE_Register_Addon implements EEI_Plugin_API
         if (isset(self::$_settings[ $addon_name ]) && ! did_action('activate_plugin')) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'An EE_Addon with the name "%s" has already been registered and each EE_Addon requires a unique name.',
                         'event_espresso'
                     ),
@@ -538,15 +537,14 @@ class EE_Register_Addon implements EEI_Plugin_API
         global $wp_version;
         $incompatibility_message = '';
         // check whether this addon version is compatible with EE core
-        if (
-            isset(EE_Register_Addon::$_incompatible_addons[ $addon_name ])
+        if (isset(EE_Register_Addon::$_incompatible_addons[ $addon_name ])
             && ! self::_meets_min_core_version_requirement(
                 EE_Register_Addon::$_incompatible_addons[ $addon_name ],
                 $addon_settings['version']
             )
         ) {
             $incompatibility_message = sprintf(
-                esc_html__(
+                __(
                     '%4$sIMPORTANT!%5$sThe Event Espresso "%1$s" addon is not compatible with this version of Event Espresso.%2$sPlease upgrade your "%1$s" addon to version %3$s or newer to resolve this issue.',
                     'event_espresso'
                 ),
@@ -556,11 +554,10 @@ class EE_Register_Addon implements EEI_Plugin_API
                 '<span style="font-weight: bold; color: #D54E21;">',
                 '</span><br />'
             );
-        } elseif (
-            ! self::_meets_min_core_version_requirement($addon_settings['min_core_version'], espresso_version())
+        } elseif (! self::_meets_min_core_version_requirement($addon_settings['min_core_version'], espresso_version())
         ) {
             $incompatibility_message = sprintf(
-                esc_html__(
+                __(
                     '%5$sIMPORTANT!%6$sThe Event Espresso "%1$s" addon requires Event Espresso Core version "%2$s" or higher in order to run.%4$sYour version of Event Espresso Core is currently at "%3$s". Please upgrade Event Espresso Core first and then re-activate "%1$s".',
                     'event_espresso'
                 ),
@@ -573,7 +570,7 @@ class EE_Register_Addon implements EEI_Plugin_API
             );
         } elseif (version_compare($wp_version, $addon_settings['min_wp_version'], '<')) {
             $incompatibility_message = sprintf(
-                esc_html__(
+                __(
                     '%4$sIMPORTANT!%5$sThe Event Espresso "%1$s" addon requires WordPress version "%2$s" or greater.%3$sPlease update your version of WordPress to use the "%1$s" addon and to keep your site secure.',
                     'event_espresso'
                 ),
@@ -587,9 +584,7 @@ class EE_Register_Addon implements EEI_Plugin_API
         if (! empty($incompatibility_message)) {
             // remove 'activate' from the REQUEST
             // so WP doesn't erroneously tell the user the plugin activated fine when it didn't
-            /** @var RequestInterface $request */
-            $request = LoaderFactory::getLoader()->getShared(RequestInterface::class);
-            $request->unSetRequestParam('activate', true);
+            unset($_GET['activate'], $_REQUEST['activate']);
             if (current_user_can('activate_plugins')) {
                 // show an error message indicating the plugin didn't activate properly
                 EE_Error::add_error($incompatibility_message, __FILE__, __FUNCTION__, __LINE__);
@@ -646,12 +641,10 @@ class EE_Register_Addon implements EEI_Plugin_API
     private static function _setup_namespaces(array $addon_settings)
     {
         //
-        if (
-            isset(
-                $addon_settings['namespace']['FQNS'],
-                $addon_settings['namespace']['DIR']
-            )
-        ) {
+        if (isset(
+            $addon_settings['namespace']['FQNS'],
+            $addon_settings['namespace']['DIR']
+        )) {
             EE_Psr4AutoloaderInit::psr4_loader()->addNamespace(
                 $addon_settings['namespace']['FQNS'],
                 $addon_settings['namespace']['DIR']
@@ -676,8 +669,7 @@ class EE_Register_Addon implements EEI_Plugin_API
             // (as the newly-activated addon wasn't around the first time addons were registered).
             // Note: the presence of pue_options in the addon registration options will initialize the $_settings
             // property for the add-on, but the add-on is only partially initialized.  Hence, the additional check.
-            if (
-                ! isset(self::$_settings[ $addon_name ])
+            if (! isset(self::$_settings[ $addon_name ])
                 || (isset(self::$_settings[ $addon_name ])
                     && ! isset(self::$_settings[ $addon_name ]['class_name'])
                 )
@@ -691,14 +683,13 @@ class EE_Register_Addon implements EEI_Plugin_API
             return true;
         }
         // make sure this was called in the right place!
-        if (
-            ! did_action('AHEE__EE_System__load_espresso_addons')
+        if (! did_action('AHEE__EE_System__load_espresso_addons')
             || did_action('AHEE__EE_System___detect_if_activation_or_upgrade__begin')
         ) {
             EE_Error::doing_it_wrong(
                 __METHOD__,
                 sprintf(
-                    esc_html__(
+                    __(
                         'An attempt to register an EE_Addon named "%s" has failed because it was not registered at the correct time.  Please use the "AHEE__EE_System__load_espresso_addons" hook to register addons.',
                         'event_espresso'
                     ),
@@ -747,8 +738,7 @@ class EE_Register_Addon implements EEI_Plugin_API
     private static function _register_models_and_extensions($addon_name)
     {
         // register new models
-        if (
-            ! empty(self::$_settings[ $addon_name ]['model_paths'])
+        if (! empty(self::$_settings[ $addon_name ]['model_paths'])
             || ! empty(self::$_settings[ $addon_name ]['class_paths'])
         ) {
             EE_Register_Model::register(
@@ -760,8 +750,7 @@ class EE_Register_Addon implements EEI_Plugin_API
             );
         }
         // register model extensions
-        if (
-            ! empty(self::$_settings[ $addon_name ]['model_extension_paths'])
+        if (! empty(self::$_settings[ $addon_name ]['model_extension_paths'])
             || ! empty(self::$_settings[ $addon_name ]['class_extension_paths'])
         ) {
             EE_Register_Model_Extensions::register(
@@ -851,8 +840,7 @@ class EE_Register_Addon implements EEI_Plugin_API
      */
     private static function _register_shortcodes($addon_name)
     {
-        if (
-            ! empty(self::$_settings[ $addon_name ]['shortcode_paths'])
+        if (! empty(self::$_settings[ $addon_name ]['shortcode_paths'])
             || ! empty(self::$_settings[ $addon_name ]['shortcode_fqcns'])
         ) {
             EE_Register_Shortcode::register(
@@ -925,8 +913,7 @@ class EE_Register_Addon implements EEI_Plugin_API
      */
     private static function _register_custom_post_types($addon_name)
     {
-        if (
-            ! empty(self::$_settings[ $addon_name ]['custom_post_types'])
+        if (! empty(self::$_settings[ $addon_name ]['custom_post_types'])
             || ! empty(self::$_settings[ $addon_name ]['custom_taxonomies'])
         ) {
             EE_Register_CPT::register(
@@ -1194,8 +1181,7 @@ class EE_Register_Addon implements EEI_Plugin_API
                     // add to list of modules to be registered
                     EE_Register_Module::deregister($addon_name);
                 }
-                if (
-                    ! empty(self::$_settings[ $addon_name ]['shortcode_paths'])
+                if (! empty(self::$_settings[ $addon_name ]['shortcode_paths'])
                     || ! empty(self::$_settings[ $addon_name ]['shortcode_fqcns'])
                 ) {
                     // add to list of shortcodes to be registered
@@ -1209,15 +1195,13 @@ class EE_Register_Addon implements EEI_Plugin_API
                     // add to list of widgets to be registered
                     EE_Register_Widget::deregister($addon_name);
                 }
-                if (
-                    ! empty(self::$_settings[ $addon_name ]['model_paths'])
+                if (! empty(self::$_settings[ $addon_name ]['model_paths'])
                     || ! empty(self::$_settings[ $addon_name ]['class_paths'])
                 ) {
                     // add to list of shortcodes to be registered
                     EE_Register_Model::deregister($addon_name);
                 }
-                if (
-                    ! empty(self::$_settings[ $addon_name ]['model_extension_paths'])
+                if (! empty(self::$_settings[ $addon_name ]['model_extension_paths'])
                     || ! empty(self::$_settings[ $addon_name ]['class_extension_paths'])
                 ) {
                     // add to list of shortcodes to be registered
@@ -1229,8 +1213,7 @@ class EE_Register_Addon implements EEI_Plugin_API
                     }
                 }
                 // deregister capabilities for addon
-                if (
-                    ! empty(self::$_settings[ $addon_name ]['capabilities'])
+                if (! empty(self::$_settings[ $addon_name ]['capabilities'])
                     || ! empty(self::$_settings[ $addon_name ]['capability_maps'])
                 ) {
                     EE_Register_Capabilities::deregister($addon_name);
@@ -1260,7 +1243,6 @@ class EE_Register_Addon implements EEI_Plugin_API
                     );
                 }
                 EE_Registry::instance()->removeAddon($class_name);
-                LoaderFactory::getLoader()->remove($class_name);
             } catch (OutOfBoundsException $addon_not_yet_registered_exception) {
                 // the add-on was not yet registered in the registry,
                 // so RegistryContainer::__get() throws this exception.

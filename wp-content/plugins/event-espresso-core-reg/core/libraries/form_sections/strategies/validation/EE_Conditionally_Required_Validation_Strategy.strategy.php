@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Conditionally_Required_Validation_Strategy
  * For having inputs' requirement depend on the value of another input in the form
@@ -29,7 +28,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
     public function __construct($validation_error_message = null, $requirement_conditions = array())
     {
         if (! $validation_error_message) {
-            $validation_error_message = esc_html__("This field is required.", "event_espresso");
+            $validation_error_message = __("This field is required.", "event_espresso");
         }
         $this->set_requirement_conditions($requirement_conditions);
         parent::__construct($validation_error_message);
@@ -48,8 +47,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
      */
     public function validate($normalized_value)
     {
-        if (
-            (
+        if ((
                 $normalized_value === ''
                 || $normalized_value === null
                 || $normalized_value === array()
@@ -71,7 +69,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
     public function get_jquery_validation_rule_array()
     {
         return array(
-            'required' => $this->_get_jquery_requirement_value(),
+            'required'=> $this->_get_jquery_requirement_value(),
             'messages' => array(
                 'required' => $this->get_validation_error_message()
             )
@@ -119,7 +117,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
         if (! is_array($conditions)) {
             EE_Error::throw_exception_if_debugging(
                 sprintf(
-                    esc_html__('Input requirement conditions must be an array. You provided %1$s', 'event_espresso'),
+                    __('Input requirement conditions must be an array. You provided %1$s', 'event_espresso'),
                     $this->_input->name()
                 ),
                 __FILE__,
@@ -131,7 +129,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
         if (count($conditions) > 1) {
             EE_Error::throw_exception_if_debugging(
                 sprintf(
-                    esc_html__('Required Validation Strategy does not yet support multiple conditions. You should add it! The related input is %1$s', 'event_espresso'),
+                    __('Required Validation Strategy does not yet support multiple conditions. You should add it! The related input is %1$s', 'event_espresso'),
                     $this->_input->name()
                 ),
                 __FILE__,
@@ -144,7 +142,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
             if (! $input instanceof EE_Form_Input_Base) {
                 EE_Error::throw_exception_if_debugging(
                     sprintf(
-                        esc_html__('Error encountered while setting requirement condition for input %1$s. The path %2$s does not correspond to a valid input', 'event_espresso'),
+                        __('Error encountered while setting requirement condition for input %1$s. The path %2$s does not correspond to a valid input', 'event_espresso'),
                         $this->_input->name(),
                         $input_path
                     ),
@@ -159,7 +157,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
             if (! $input->get_display_strategy() instanceof EE_Select_Display_Strategy) {
                 EE_Error::throw_exception_if_debugging(
                     sprintf(
-                        esc_html__('Required Validation Strategy can only depend on another input which uses the EE_Select_Display_Strategy, but you specified a field "%1$s" that uses display strategy "%2$s". If you need others, please add support for it! The related input is %3$s', 'event_espresso'),
+                        __('Required Validation Strategy can only depend on another input which uses the EE_Select_Display_Strategy, but you specified a field "%1$s" that uses display strategy "%2$s". If you need others, please add support for it! The related input is %3$s', 'event_espresso'),
                         $input->name(),
                         get_class($input->get_display_strategy()),
                         $this->_input->name()
@@ -193,7 +191,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
             if (! $input instanceof EE_Form_Input_Base) {
                 EE_Error::throw_exception_if_debugging(
                     sprintf(
-                        esc_html__('Error encountered while setting requirement condition for input %1$s. The path %2$s does not correspond to a valid input', 'event_espresso'),
+                        __('Error encountered while setting requirement condition for input %1$s. The path %2$s does not correspond to a valid input', 'event_espresso'),
                         $this->_input->name(),
                         $input_path
                     ),
@@ -231,7 +229,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
         if (! isset($op_and_value[0], $op_and_value[1])) {
                 EE_Error::throw_exception_if_debugging(
                     sprintf(
-                        esc_html__('Required Validation Strategy conditions array\'s value must be an array with two elements: an operator, and a value. It didn\'t. The related input is %1$s', 'event_espresso'),
+                        __('Required Validation Strategy conditions array\'s value must be an array with two elements: an operator, and a value. It didn\'t. The related input is %1$s', 'event_espresso'),
                         $this->_input->name()
                     ),
                     __FILE__,
@@ -244,7 +242,7 @@ class EE_Conditionally_Required_Validation_Strategy extends EE_Validation_Strate
         if ($operator !== '=') {
             EE_Error::throw_exception_if_debugging(
                 sprintf(
-                    esc_html__('Required Validation Strategy conditions can currently only use the equals operator. If you need others, please add support for it! The related input is %1$s', 'event_espresso'),
+                    __('Required Validation Strategy conditions can currently only use the equals operator. If you need others, please add support for it! The related input is %1$s', 'event_espresso'),
                     $this->_input->name()
                 ),
                 __FILE__,

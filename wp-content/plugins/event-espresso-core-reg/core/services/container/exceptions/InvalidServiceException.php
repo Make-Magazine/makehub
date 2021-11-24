@@ -26,7 +26,7 @@ class InvalidServiceException extends \UnexpectedValueException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'The "%1$s" service could not be retrieved from the CoffeeShop, but "%2$s" was received.',
                     'event_espresso'
                 ),

@@ -109,11 +109,7 @@ class ObjectIdentifier
             return '';
         }
         $identifier = '';
-        foreach ($arguments as $key => $argument) {
-            // don't include arguments used to assist with loading legacy classes
-            if (is_string($key) && strpos($key, 'EE_Registry::create') === 0) {
-                continue;
-            }
+        foreach ($arguments as $argument) {
             switch (true) {
                 case is_object($argument):
                 case $argument instanceof Closure:

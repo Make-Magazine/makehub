@@ -1,6 +1,4 @@
-<?php
-
-namespace EventEspresso\core\libraries\rest_api\changes;
+<?php namespace EventEspresso\core\libraries\rest_api\changes;
 
 use WP_REST_Request;
 use EventEspresso\core\libraries\rest_api\controllers\model\Read;
@@ -149,8 +147,7 @@ class ChangesIn40836 extends ChangesInBase
         WP_REST_Request $request,
         Read $controller
     ) {
-        if (
-            $this->appliesToVersion($controller->getModelVersionInfo()->requestedVersion())
+        if ($this->appliesToVersion($controller->getModelVersionInfo()->requestedVersion())
             && $model instanceof \EEM_CPT_Base
         ) {
             $attachment = wp_get_attachment_image_src(
@@ -179,8 +176,7 @@ class ChangesIn40836 extends ChangesInBase
         $original_value,
         $requested_value
     ) {
-        if (
-            $this->appliesToVersion($requested_value)
+        if ($this->appliesToVersion($requested_value)
             && $original_value === EE_INF
         ) {
             // return the old representation of infinity in the JSON

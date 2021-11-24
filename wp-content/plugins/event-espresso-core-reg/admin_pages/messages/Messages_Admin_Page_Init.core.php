@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Messages_Admin_Page_Init
  *
@@ -42,7 +41,7 @@ class Messages_Admin_Page_Init extends EE_Admin_Page_Init
 
     protected function _set_init_properties()
     {
-        $this->label = esc_html__('Messages System', 'event_espresso');
+        $this->label = __('Messages System', 'event_espresso');
     }
 
 
@@ -55,7 +54,7 @@ class Messages_Admin_Page_Init extends EE_Admin_Page_Init
                 'show_on_menu'    => EE_Admin_Page_Menu_Map::BLOG_ADMIN_ONLY,
                 'parent_slug'     => 'espresso_events',
                 'menu_slug'       => EE_MSG_PG_SLUG,
-                'menu_label'      => esc_html__('Messages', 'event_espresso'),
+                'menu_label'      => __('Messages', 'event_espresso'),
                 'capability'      => 'ee_read_global_messages',
                 'admin_init_page' => $this,
             )

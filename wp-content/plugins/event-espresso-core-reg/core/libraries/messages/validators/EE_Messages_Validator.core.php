@@ -12,6 +12,7 @@
  * @package        Event Espresso
  * @subpackage     includes/core/messages/validators/EE_Messages_Validator.core.php
  * @author         Darren Ethier
+ * ------------------------------------------------------------------------
  */
 abstract class EE_Messages_Validator extends EE_Base
 {
@@ -24,7 +25,6 @@ abstract class EE_Messages_Validator extends EE_Base
      * @var string
      */
     protected $_m_name;
-
     protected $_mt_name;
 
 
@@ -35,7 +35,7 @@ abstract class EE_Messages_Validator extends EE_Base
      *
      * @var array()
      */
-    private $_errors = [];
+    private $_errors = array();
 
 
     /**
@@ -96,7 +96,7 @@ abstract class EE_Messages_Validator extends EE_Base
      *
      * @var array
      */
-    protected $_specific_shortcode_excludes = [];
+    protected $_specific_shortcode_excludes = array();
 
 
     /**
@@ -141,6 +141,7 @@ abstract class EE_Messages_Validator extends EE_Base
      * that aren't handled by the defaults setup in the messenger.
      *
      * @abstract
+     * @access protected
      * @return void
      */
     abstract protected function _modify_validator();
@@ -149,7 +150,8 @@ abstract class EE_Messages_Validator extends EE_Base
     /**
      * loads all objects used by validator
      *
-     * @throws EE_Error
+     * @access private
+     * @throws \EE_Error
      */
     private function _load_objects()
     {
@@ -190,6 +192,7 @@ abstract class EE_Messages_Validator extends EE_Base
     /**
      * used to set the $_validators property
      *
+     * @access private
      * @return void
      * @throws ReflectionException
      */
@@ -211,36 +214,36 @@ abstract class EE_Messages_Validator extends EE_Base
         // in this first loop we're just getting all shortcode group indexes from the msgr_validator
         // into a single array (so we can get the appropriate shortcode objects for the groups)
         $shortcode_groups = $mt_codes;
-        $groups_per_field = [];
+        $groups_per_field = array();
 
         foreach ($msgr_validator as $field => $config) {
             if (empty($config) || ! isset($config['shortcodes'])) {
                 continue;
             }  //Nothing to see here.
             $groups_per_field[ $field ] = array_intersect($config['shortcodes'], $mt_codes);
-            $shortcode_groups           = array_merge($config['shortcodes'], $shortcode_groups);
+            $shortcode_groups         = array_merge($config['shortcodes'], $shortcode_groups);
         }
 
         $shortcode_groups = array_unique($shortcode_groups);
 
         // okay now we've got our groups.
         // Let's get the codes from the objects into an array indexed by group for easy retrieval later.
-        $codes_from_objs = [];
+        $codes_from_objs = array();
 
         foreach ($shortcode_groups as $group) {
             $ref       = ucwords(str_replace('_', ' ', $group));
             $ref       = str_replace(' ', '_', $ref);
             $classname = 'EE_' . $ref . '_Shortcodes';
             if (class_exists($classname)) {
-                $a                         = new ReflectionClass($classname);
-                $obj                       = $a->newInstance();
+                $a                       = new ReflectionClass($classname);
+                $obj                     = $a->newInstance();
                 $codes_from_objs[ $group ] = $obj->get_shortcodes();
             }
         }
 
 
         // let's just replace the $mt shortcode group indexes with the actual shortcodes (unique)
-        $final_mt_codes = [];
+        $final_mt_codes = array();
         foreach ($mt_codes as $group) {
             $final_mt_codes = array_merge($final_mt_codes, $codes_from_objs[ $group ]);
         }
@@ -265,20 +268,20 @@ abstract class EE_Messages_Validator extends EE_Base
                     $this->_valid_shortcodes_modifier[ $context ][ $field ],
                     $codes_from_objs
                 );
-            } elseif (isset($groups_per_field[ $field ])) {
-                // we have specific shortcodes for a field so we need to use them
+            } //if we have specific shortcodes for a field then we need to use them
+            elseif (isset($groups_per_field[ $field ])) {
                 $this->_validators[ $field ]['shortcodes'] = $this->_reassemble_valid_shortcodes_from_group(
                     $groups_per_field[ $field ],
                     $codes_from_objs
                 );
-            } elseif (empty($config)) {
-                // no config so we're assuming we're just going to use the shortcodes from the message type context
+            } //if empty config then we're assuming we're just going to use the shortcodes from the message type context
+            elseif (empty($config)) {
                 $this->_validators[ $field ]['shortcodes'] = $mt_codes;
-            } elseif (isset($config['specific_shortcodes'])) {
-                // we have specific shortcodes so we need to use them
+            } //if we have specific shortcodes then we need to use them
+            elseif (isset($config['specific_shortcodes'])) {
                 $this->_validators[ $field ]['shortcodes'] = $config['specific_shortcodes'];
-            } else {
-                // otherwise the shortcodes are what is set by the messenger for that field
+            } //otherwise the shortcodes are what is set by the messenger for that field
+            else {
                 foreach ($config['shortcodes'] as $group) {
                     $this->_validators[ $field ]['shortcodes'] = isset($this->_validators[ $field ]['shortcodes'])
                         ? array_merge($this->_validators[ $field ]['shortcodes'], $codes_from_objs[ $group ])
@@ -297,10 +300,7 @@ abstract class EE_Messages_Validator extends EE_Base
             }
 
             // hey! don't forget to include the type if present!
-            $this->_validators[ $field ]['type'] =
-                isset($config['type'])
-                    ? $config['type']
-                    : null;
+            $this->_validators[ $field ]['type'] = isset($config['type']) ? $config['type'] : null;
         }
     }
 
@@ -320,8 +320,8 @@ abstract class EE_Messages_Validator extends EE_Base
     /**
      * This simply returns the specific shortcode_excludes property that is set.
      *
-     * @return array
      * @since 4.5.0
+     * @return array
      */
     public function get_specific_shortcode_excludes()
     {
@@ -346,7 +346,8 @@ abstract class EE_Messages_Validator extends EE_Base
      * What it does is loop through the _fields (the ones that get validated)
      * and checks them against the shortcodes array for the field and the 'type' indicated by the
      *
-     * @return array|bool if errors present we return the array otherwise true
+     * @access public
+     * @return mixed (bool|array)  if errors present we return the array otherwise true
      */
     public function validate()
     {
@@ -354,9 +355,9 @@ abstract class EE_Messages_Validator extends EE_Base
         $template_fields = $this->_messenger->get_template_fields();
         // loop through the fields and check!
         foreach ($this->_fields as $field => $value) {
-            $this->_errors[ $field ] = [];
-            $err_msg                 = '';
-            $field_label             = '';
+            $this->_errors[ $field ] = array();
+            $err_msg               = '';
+            $field_label           = '';
             // if field is not present in the _validators array then we continue
             if (! isset($this->_validators[ $field ])) {
                 unset($this->_errors[ $field ]);
@@ -366,10 +367,12 @@ abstract class EE_Messages_Validator extends EE_Base
             // get the translated field label!
             // first check if it's in the main fields list
             if (isset($template_fields[ $field ])) {
-                // most likely the field is found in the 'extra' array.
-                $field_label = ! empty($template_fields[ $field ])
-                    ? $template_fields[ $field ]['label']
-                    : $field;
+                if (empty($template_fields[ $field ])) {
+                    $field_label = $field;
+                } //most likely the field is found in the 'extra' array.
+                else {
+                    $field_label = $template_fields[ $field ]['label'];
+                }
             }
 
             // if field label is empty OR is equal to the current field
@@ -391,8 +394,7 @@ abstract class EE_Messages_Validator extends EE_Base
             }
 
             // field is present. Let's validate shortcodes first (but only if shortcodes present).
-            if (
-                isset($this->_validators[ $field ]['shortcodes'])
+            if (isset($this->_validators[ $field ]['shortcodes'])
                 && ! empty($this->_validators[ $field ]['shortcodes'])
             ) {
                 $invalid_shortcodes = $this->_invalid_shortcodes($value, $this->_validators[ $field ]['shortcodes']);
@@ -472,9 +474,7 @@ abstract class EE_Messages_Validator extends EE_Base
         }
 
         // return any errors or just TRUE if everything validates
-        return empty($this->_errors)
-            ? true
-            : $this->_errors;
+        return empty($this->_errors) ? true : $this->_errors;
     }
 
 
@@ -482,13 +482,13 @@ abstract class EE_Messages_Validator extends EE_Base
      * Reassembles and returns an array of valid shortcodes
      * given the array of groups and array of shortcodes indexed by group.
      *
-     * @param array $groups          array of shortcode groups that we want shortcodes for
-     * @param array $codes_from_objs All the codes available.
+     * @param  array $groups          array of shortcode groups that we want shortcodes for
+     * @param  array $codes_from_objs All the codes available.
      * @return array                   an array of actual shortcodes (that will be used for validation).
      */
     private function _reassemble_valid_shortcodes_from_group($groups, $codes_from_objs)
     {
-        $shortcodes = [];
+        $shortcodes = array();
         foreach ($groups as $group) {
             $shortcodes = array_merge($shortcodes, $codes_from_objs[ $group ]);
         }
@@ -501,9 +501,9 @@ abstract class EE_Messages_Validator extends EE_Base
      * This function takes in an array of shortcodes
      * and makes sure that the given string ONLY contains shortcodes in that array.
      *
-     * @param string $value            string to evaluate
-     * @param array  $valid_shortcodes array of shortcodes that are acceptable.
-     * @return bool|string  return either a list of invalid shortcodes OR false if the shortcodes validate.
+     * @param  string $value            string to evaluate
+     * @param  array  $valid_shortcodes array of shortcodes that are acceptable.
+     * @return mixed (bool|string)  return either a list of invalid shortcodes OR false if the shortcodes validate.
      */
     protected function _invalid_shortcodes($value, $valid_shortcodes)
     {
@@ -532,14 +532,15 @@ abstract class EE_Messages_Validator extends EE_Base
 
         // made it here? then let's assemble the error message
         $invalid_shortcodes = implode('</strong>,<strong>', $diff);
-        return '<strong>' . $invalid_shortcodes . '</strong>';
+        $invalid_shortcodes = '<strong>' . $invalid_shortcodes . '</strong>';
+        return $invalid_shortcodes;
     }
 
 
     /**
      * Validates an incoming string and makes sure we have valid emails in the string.
      *
-     * @param string $value incoming value to validate
+     * @param  string $value incoming value to validate
      * @return bool        true if the string validates, false if it doesn't
      */
     protected function _validate_email($value)
@@ -592,17 +593,17 @@ abstract class EE_Messages_Validator extends EE_Base
             if (is_email($email)) {
                 continue;
             }
-            $matches  = [];
-            $validate = (bool) preg_match('/(.*)<(.+)>/', $email, $matches);
+            $matches  = array();
+            $validate = preg_match('/(.*)<(.+)>/', $email, $matches) ? true : false;
             if ($validate && is_email($matches[2])) {
                 continue;
             }
             return false;
         }
 
-        return $empty && ! $has_shortcodes
-            ? false
-            : $validate;
+        $validate = $empty && ! $has_shortcodes ? false : $validate;
+
+        return $validate;
     }
 
 
@@ -611,12 +612,12 @@ abstract class EE_Messages_Validator extends EE_Base
      * Using this to provide back compat with add-ons referencing deprecated properties.
      *
      * @param string $property Property being requested
-     * @return mixed
      * @throws Exception
+     * @return mixed
      */
     public function __get($property)
     {
-        $expected_properties_map = [
+        $expected_properties_map = array(
             /**
              * @deprecated 4.9.0
              */
@@ -625,7 +626,7 @@ abstract class EE_Messages_Validator extends EE_Base
              * @deprecated 4.9.0
              */
             '_MSGTYP' => '_message_type',
-        ];
+        );
 
         if (isset($expected_properties_map[ $property ])) {
             return $this->{$expected_properties_map[ $property ]};

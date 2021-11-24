@@ -192,7 +192,7 @@ class Recipe implements RecipeInterface
         if (! is_string($identifier) || empty($identifier)) {
             throw new InvalidIdentifierException(
                 is_object($identifier) ? get_class($identifier) : gettype($identifier),
-                esc_html__('class identifier (typically a \Fully\Qualified\ClassName)', 'event_espresso')
+                __('class identifier (typically a \Fully\Qualified\ClassName)', 'event_espresso')
             );
         }
         $this->identifier = $identifier;
@@ -220,12 +220,11 @@ class Recipe implements RecipeInterface
             throw new InvalidDataTypeException(
                 '$fqcn',
                 is_object($fqcn) ? get_class($fqcn) : gettype($fqcn),
-                esc_html__('string (Fully\Qualified\ClassName)', 'event_espresso')
+                __('string (Fully\Qualified\ClassName)', 'event_espresso')
             );
         }
         $fqcn = ltrim($fqcn, '\\');
-        if (
-            $fqcn !== Recipe::DEFAULT_ID
+        if ($fqcn !== Recipe::DEFAULT_ID
             && ! empty($fqcn)
             && empty($this->paths)
             && ! (class_exists($fqcn) || interface_exists($fqcn))
@@ -251,7 +250,7 @@ class Recipe implements RecipeInterface
             throw new InvalidDataTypeException(
                 '$ingredients',
                 is_object($ingredients) ? get_class($ingredients) : gettype($ingredients),
-                esc_html__('array of class dependencies', 'event_espresso')
+                __('array of class dependencies', 'event_espresso')
             );
         }
         $this->ingredients = array_merge($this->ingredients, $ingredients);
@@ -283,7 +282,7 @@ class Recipe implements RecipeInterface
             throw new InvalidDataTypeException(
                 '$filters',
                 is_object($filters) ? get_class($filters) : gettype($filters),
-                esc_html__('array of class aliases', 'event_espresso')
+                __('array of class aliases', 'event_espresso')
             );
         }
         $this->filters = array_merge($this->filters, $filters);
@@ -310,7 +309,7 @@ class Recipe implements RecipeInterface
             throw new InvalidDataTypeException(
                 '$path',
                 is_object($paths) ? get_class($paths) : gettype($paths),
-                esc_html__('string or array of strings (full server filepath(s))', 'event_espresso')
+                __('string or array of strings (full server filepath(s))', 'event_espresso')
             );
         }
         $paths = (array) $paths;
@@ -318,7 +317,7 @@ class Recipe implements RecipeInterface
             if (strpos($path, '*') === false && ! is_readable($path)) {
                 throw new RuntimeException(
                     sprintf(
-                        esc_html__('The following filepath is not readable: "%1$s"', 'event_espresso'),
+                        __('The following filepath is not readable: "%1$s"', 'event_espresso'),
                         $path
                     )
                 );

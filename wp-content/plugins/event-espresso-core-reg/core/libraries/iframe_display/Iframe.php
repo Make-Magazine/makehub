@@ -112,12 +112,10 @@ class Iframe
                 $this
             )
         );
-        if (
-            apply_filters(
-                'FHEE___EventEspresso_core_libraries_iframe_display_Iframe__construct__load_default_theme_stylesheet',
-                false
-            )
-        ) {
+        if (apply_filters(
+            'FHEE___EventEspresso_core_libraries_iframe_display_Iframe__construct__load_default_theme_stylesheet',
+            false
+        )) {
             $this->addStylesheets(
                 apply_filters(
                     'FHEE___EventEspresso_core_libraries_iframe_display_Iframe__construct__default_theme_stylesheet',
@@ -280,7 +278,7 @@ class Iframe
             ! empty($utm_content) ? array('utm_content' => $utm_content) : array()
         );
         EE_System::do_not_cache();
-        echo $this->getTemplate(); // already escaped
+        echo $this->getTemplate();
         exit;
     }
 
@@ -359,7 +357,7 @@ class Iframe
     public function localizeJsonVars()
     {
         $JSON = '';
-        foreach ($this->localized_vars as $var_name => $vars) {
+        foreach ((array) $this->localized_vars as $var_name => $vars) {
             $this->localized_vars[ $var_name ] = $this->encodeJsonVars($vars);
             $JSON .= "/* <![CDATA[ */ var {$var_name} = ";
             $JSON .= wp_json_encode($this->localized_vars[ $var_name ]);
@@ -371,7 +369,7 @@ class Iframe
 
     /**
      * @param bool|int|float|string|array $var
-     * @return array|string|null
+     * @return array
      */
     public function encodeJsonVars($var)
     {

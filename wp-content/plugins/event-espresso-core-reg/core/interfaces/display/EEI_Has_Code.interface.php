@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Has Code Interface
  * This interface is implemented on classes that have a "code" representation.

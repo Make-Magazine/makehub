@@ -88,10 +88,10 @@ class EE_DMS_4_6_0_payment_method_currencies extends EE_Data_Migration_Script_St
     public function __construct()
     {
         global $wpdb;
-        $this->_pretty_name = esc_html__('Payment Method Currencies', 'event_espresso');
-        $this->_payment_method_table_name = $wpdb->prefix . 'esp_payment_method';
-        $this->_currency_payment_method_table_name = $wpdb->prefix . 'esp_currency_payment_method';
-        $this->_currency_table_name = $wpdb->prefix . 'esp_currency';
+        $this->_pretty_name = __('Payment Method Currencies', 'event_espresso');
+        $this->_payment_method_table_name = $wpdb->prefix.'esp_payment_method';
+        $this->_currency_payment_method_table_name = $wpdb->prefix.'esp_currency_payment_method';
+        $this->_currency_table_name = $wpdb->prefix.'esp_currency';
         parent::__construct();
     }
 
@@ -138,10 +138,8 @@ class EE_DMS_4_6_0_payment_method_currencies extends EE_Data_Migration_Script_St
                 $currencies = $this->_get_all_currencies();
             }
             foreach ($currencies as $currency_code) {
-                if (
-                    $this->count_records_migrated() <= $iterator &&
-                        $iterator < $migrate_up_to_count
-                ) {
+                if ($this->count_records_migrated() <= $iterator &&
+                        $iterator < $migrate_up_to_count ) {
                     $relations_to_add_this_step[ $pm_slug ] [] = $currency_code;
                 }
                 $iterator++;
@@ -169,8 +167,8 @@ class EE_DMS_4_6_0_payment_method_currencies extends EE_Data_Migration_Script_St
     {
         global $wpdb;
         $cur_pm_relation = array(
-                    'CUR_code' => $currency_code,
-                    'PMD_ID' => $pm_id,
+                    'CUR_code'=>$currency_code,
+                    'PMD_ID'=>$pm_id,
                 );
         $success = $wpdb->insert(
             $this->_currency_payment_method_table_name,
@@ -181,7 +179,7 @@ class EE_DMS_4_6_0_payment_method_currencies extends EE_Data_Migration_Script_St
                 )
         );
         if (! $success) {
-            $this->add_error(sprintf(esc_html__('Could not add currency relation %s because %s', "event_espresso"), wp_json_encode($cur_pm_relation), $wpdb->last_error));
+            $this->add_error(sprintf(__('Could not add currency relation %s because %s', "event_espresso"), wp_json_encode($cur_pm_relation), $wpdb->last_error));
         }
     }
 }

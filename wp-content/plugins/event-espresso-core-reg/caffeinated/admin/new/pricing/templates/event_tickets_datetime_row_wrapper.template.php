@@ -1,11 +1,10 @@
+<?php echo $dtt_edit_row; ?>
+<?php echo $dtt_attached_tickets_row; ?>
 <?php
-
 /**
  * template vars used in template
  *
- * @var string $dtt_edit_row
- * @var string $dtt_attached_tickets_row
+ * $dtt_row
+ * $dtt_edit_row
+ * $dtt_attached_tickets_row
  */
-
-echo $dtt_edit_row;
-echo $dtt_attached_tickets_row;

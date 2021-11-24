@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Int_Normalization
  * Casts the string to an int. If the user inputs anything but numbers, we growl at them
@@ -36,7 +35,7 @@ class EE_Int_Normalization extends EE_Normalization_Strategy_Base
         if (! is_string($value_to_normalize)) {
             throw new EE_Validation_Error(
                 sprintf(
-                    esc_html__('The value "%s" must be a string submitted for normalization, it was %s', 'event_espresso'),
+                    __('The value "%s" must be a string submitted for normalization, it was %s', 'event_espresso'),
                     print_r($value_to_normalize, true),
                     gettype($value_to_normalize)
                 )

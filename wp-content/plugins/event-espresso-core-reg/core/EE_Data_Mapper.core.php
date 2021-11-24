@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * EE_Data_Mapper Class
@@ -47,8 +46,7 @@ class EE_Data_Mapper
     public function &instance()
     {
         // check if class object is instantiated
-        if (
-            self::$_instance === null
+        if (self::$_instance === null
             || ! is_object(self::$_instance)
             || ! self::$_instance instanceof EE_Data_Mapper
         ) {

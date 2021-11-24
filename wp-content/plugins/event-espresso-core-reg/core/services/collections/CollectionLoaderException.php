@@ -27,7 +27,7 @@ class CollectionLoaderException extends RuntimeException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'The following error occurred during the creation and/or loading of this collection: %1$s %2$s',
                     'event_espresso'
                 ),

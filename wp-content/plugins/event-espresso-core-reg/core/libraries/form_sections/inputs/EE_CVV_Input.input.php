@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_CCV_Input
  * Text-field, except should evaluate to a number, and should be completely emptied
@@ -32,8 +31,7 @@ class EE_CVV_Input extends EE_Text_Input
             )
         );
         parent::__construct($input_settings);
-        if (
-            ! isset($input_settings['include_whats_this_link'])
+        if (! isset($input_settings['include_whats_this_link'])
             || (
                 isset($input_settings['include_whats_this_link'])
                  && $input_settings['include_whats_this_link'] === true

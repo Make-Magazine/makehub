@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Checkbox_Dropdown_Selector_Input
  * configures a set of checkbox inputs that are initially hidden

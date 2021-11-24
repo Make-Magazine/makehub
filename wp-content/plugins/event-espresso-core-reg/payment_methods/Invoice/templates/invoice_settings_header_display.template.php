@@ -9,14 +9,13 @@
  *
  * ------------------------------------------------------------------------
  */
-
 ?>
 <table>
     <tr>
-        <th><h3><?php esc_html_e("Invoice Display Settings", 'event_espresso'); ?></h3></th>
+        <th><h3><?php _e("Invoice Display Settings", 'event_espresso'); ?></h3></th>
         <td>
             <span class="description">
-                <?php esc_html_e(
+                <?php _e(
                     "The following settings affect the content and/or appearance of the downloadable PDF invoice.",
                     'event_espresso'
                 ); ?></span>

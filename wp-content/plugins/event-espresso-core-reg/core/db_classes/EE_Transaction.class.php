@@ -95,7 +95,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
                 // but if the lock can not be removed, then throw an exception
                 throw new EE_Error(
                     sprintf(
-                        esc_html__(
+                        __(
                             'Could not lock Transaction %1$d because it is already locked, meaning another part of the system is currently editing it. It should already be unlocked by the time you read this, so please refresh the page and try again.',
                             'event_espresso'
                         ),
@@ -599,7 +599,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
      */
     public function e_pretty_status($show_icons = false)
     {
-        echo $this->pretty_status($show_icons); // already escaped
+        echo $this->pretty_status($show_icons);
     }
 
 
@@ -617,7 +617,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
     public function pretty_status($show_icons = false)
     {
         $status = EEM_Status::instance()->localized_status(
-            array($this->status_ID() => esc_html__('unknown', 'event_espresso')),
+            array($this->status_ID() => __('unknown', 'event_espresso')),
             false,
             'sentence'
         );
@@ -802,8 +802,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
         );
         foreach ($registrations as $registration) {
             // valid registration that is NOT cancelled or declined ?
-            if (
-                $registration instanceof EE_Registration
+            if ($registration instanceof EE_Registration
                 && ! in_array($registration->status_ID(), EEM_Registration::closed_reg_statuses(), true)
             ) {
                 return $registration;
@@ -1076,7 +1075,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
         $payment_method = $this->payment_method();
         if (! $payment_method) {
             EE_Error::add_error(
-                esc_html__(
+                __(
                     'Could not find billing info for transaction because no gateway has been used for it yet',
                     'event_espresso'
                 ),
@@ -1089,7 +1088,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
         $primary_reg = $this->primary_registration();
         if (! $primary_reg) {
             EE_Error::add_error(
-                esc_html__(
+                __(
                     'Cannot get billing info for gateway %s on transaction because no primary registration exists',
                     'event_espresso'
                 ),
@@ -1102,7 +1101,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
         $attendee = $primary_reg->attendee();
         if (! $attendee) {
             EE_Error::add_error(
-                esc_html__(
+                __(
                     'Cannot get billing info for gateway %s on transaction because the primary registration has no attendee exists',
                     'event_espresso'
                 ),
@@ -1229,7 +1228,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
             $new_txn_status = EEM_Transaction::incomplete_status_code;
         } else {
             throw new RuntimeException(
-                esc_html__('The total paid calculation for this transaction is inaccurate.', 'event_espresso')
+                __('The total paid calculation for this transaction is inaccurate.', 'event_espresso')
             );
         }
         if ($new_txn_status !== $this->status_ID()) {
@@ -1259,7 +1258,7 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
         EE_Error::doing_it_wrong(
             __CLASS__ . '::' . __FUNCTION__,
             sprintf(
-                esc_html__('This method is deprecated. Please use "%s" instead', 'event_espresso'),
+                __('This method is deprecated. Please use "%s" instead', 'event_espresso'),
                 'EE_Transaction_Processor::update_transaction_and_registrations_after_checkout_or_payment()'
             ),
             '4.6.0'
@@ -1628,13 +1627,11 @@ class EE_Transaction extends EE_Base_Class implements EEI_Transaction
     {
         // if TXN status has not been updated already due to a payment, and is still set as "failed" or "abandoned"...
         $txn_status = $this->status_ID();
-        if (
-            $txn_status === EEM_Transaction::failed_status_code
+        if ($txn_status === EEM_Transaction::failed_status_code
             || $txn_status === EEM_Transaction::abandoned_status_code
         ) {
             // if a contact record for the primary registrant has been created
-            if (
-                $this->primary_registration() instanceof EE_Registration
+            if ($this->primary_registration() instanceof EE_Registration
                 && $this->primary_registration()->attendee() instanceof EE_Attendee
             ) {
                 $this->set_status(EEM_Transaction::incomplete_status_code);

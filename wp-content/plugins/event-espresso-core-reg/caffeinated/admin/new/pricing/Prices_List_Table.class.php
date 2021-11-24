@@ -46,18 +46,18 @@ class Prices_List_Table extends EE_Admin_List_Table
     protected function _set_properties()
     {
         $this->_wp_list_args = array(
-            'singular' => esc_html__('price', 'event_espresso'),
-            'plural'   => esc_html__('prices', 'event_espresso'),
+            'singular' => __('price', 'event_espresso'),
+            'plural'   => __('prices', 'event_espresso'),
             'ajax'     => true,
             'screen'   => $this->_admin_page->get_current_screen()->id,
         );
 
         $this->_columns = array(
             'cb'          => '<input type="checkbox" />', // Render a checkbox instead of text
-            'name'        => esc_html__('Name', 'event_espresso'),
-            'type'        => esc_html__('Price Type', 'event_espresso'),
-            'description' => esc_html__('Description', 'event_espresso'),
-            'amount'      => esc_html__('Amount', 'event_espresso'),
+            'name'        => __('Name', 'event_espresso'),
+            'type'        => __('Price Type', 'event_espresso'),
+            'description' => __('Description', 'event_espresso'),
+            'amount'      => __('Amount', 'event_espresso'),
         );
 
         $this->_sortable_columns = array(
@@ -126,20 +126,18 @@ class Prices_List_Table extends EE_Admin_List_Table
         // Build row actions
         $actions = array();
         // edit price link
-        if (
-            EE_Registry::instance()->CAP->current_user_can(
-                'ee_edit_default_price',
-                'pricing_edit_price',
-                $item->ID()
-            )
-        ) {
+        if (EE_Registry::instance()->CAP->current_user_can(
+            'ee_edit_default_price',
+            'pricing_edit_price',
+            $item->ID()
+        )) {
             $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                 'action' => 'edit_price',
                 'id'     => $item->ID(),
             ), PRICING_ADMIN_URL);
             $actions['edit'] = '<a href="' . $edit_lnk_url . '" title="'
                                . esc_attr__('Edit Price', 'event_espresso') . '">'
-                               . esc_html__('Edit', 'event_espresso') . '</a>';
+                               . __('Edit', 'event_espresso') . '</a>';
         }
 
         $name_link = EE_Registry::instance()->CAP->current_user_can(
@@ -155,13 +153,11 @@ class Prices_List_Table extends EE_Admin_List_Table
         if ($item->type_obj()->base_type() !== 1) {
             if ($this->_view == 'all') {
                 // trash price link
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price',
-                        'pricing_trash_price',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price',
+                    'pricing_trash_price',
+                    $item->ID()
+                )) {
                     $trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'trash_price',
                         'id'       => $item->ID(),
@@ -169,16 +165,14 @@ class Prices_List_Table extends EE_Admin_List_Table
                     ), PRICING_ADMIN_URL);
                     $actions['trash'] = '<a href="' . $trash_lnk_url . '" title="'
                                         . esc_attr__('Move Price to Trash', 'event_espresso') . '">'
-                                        . esc_html__('Move to Trash', 'event_espresso') . '</a>';
+                                        . __('Move to Trash', 'event_espresso') . '</a>';
                 }
             } else {
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price',
-                        'pricing_restore_price',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price',
+                    'pricing_restore_price',
+                    $item->ID()
+                )) {
                     // restore price link
                     $restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'restore_price',
@@ -187,17 +181,15 @@ class Prices_List_Table extends EE_Admin_List_Table
                     ), PRICING_ADMIN_URL);
                     $actions['restore'] = '<a href="' . $restore_lnk_url . '" title="'
                                           . esc_attr__('Restore Price', 'event_espresso') . '">'
-                                          . esc_html__('Restore', 'event_espresso') . '</a>';
+                                          . __('Restore', 'event_espresso') . '</a>';
                 }
 
                 // delete price link
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price',
-                        'pricing_delete_price',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price',
+                    'pricing_delete_price',
+                    $item->ID()
+                )) {
                     $delete_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'delete_price',
                         'id'       => $item->ID(),
@@ -205,7 +197,7 @@ class Prices_List_Table extends EE_Admin_List_Table
                     ), PRICING_ADMIN_URL);
                     $actions['delete'] = '<a href="' . $delete_lnk_url . '" title="'
                                          . esc_attr__('Delete Price Permanently', 'event_espresso') . '">'
-                                         . esc_html__('Delete Permanently', 'event_espresso') . '</a>';
+                                         . __('Delete Permanently', 'event_espresso') . '</a>';
                 }
             }
         }

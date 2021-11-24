@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Null_Normalization
  * Replaces input with null. This is for inputs whose value should be totally ignored server-side

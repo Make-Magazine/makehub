@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Select_Multi_Model_Input
  * Just like EE_Select_Multiple_Input, except the array of options is an array of

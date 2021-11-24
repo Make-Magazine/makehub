@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Used to initialize all EE messages caffeinated functionality.
  *
@@ -349,7 +350,7 @@ class EE_Caf_Messages
 
     public function additional_attendee_shortcodes($shortcodes, $shortcode_parser)
     {
-        $shortcodes['[ANSWER_*]'] = esc_html__(
+        $shortcodes['[ANSWER_*]'] = __(
             'This is a special dynamic shortcode. Right after the "*", add the exact text of a existing question, and if there is an answer for that question for this registrant, that will take the place of this shortcode.',
             'event_espresso'
         );
@@ -361,8 +362,7 @@ class EE_Caf_Messages
     public function additional_attendee_parser($parsed, $shortcode, $data, $extra_data, $shortcode_parser)
     {
 
-        if (
-            strpos($shortcode, '[ANSWER_*') === false
+        if (strpos($shortcode, '[ANSWER_*') === false
             || ! isset($extra_data['data']->questions)
             || ! isset($extra_data['data']->registrations)
         ) {
@@ -389,8 +389,7 @@ class EE_Caf_Messages
 
         // now let's figure out which question has this text.
         foreach ($aee->questions as $ansid => $question) {
-            if (
-                $question instanceof EE_Question
+            if ($question instanceof EE_Question
                 && trim($question->display_text()) == trim($shortcode)
                 && isset($aee->registrations[ $registration->ID() ]['ans_objs'][ $ansid ])
             ) {
@@ -420,15 +419,15 @@ class EE_Caf_Messages
      */
     public function additional_datetime_shortcodes($shortcodes, $shortcode_parser)
     {
-        $shortcodes['[DTT_NAME]'] = esc_html__(
+        $shortcodes['[DTT_NAME]'] = __(
             'This will be parsed to the Title given for a Datetime',
             'event_espresso'
         );
-        $shortcodes['[DTT_DESCRIPTION]'] = esc_html__(
+        $shortcodes['[DTT_DESCRIPTION]'] = __(
             'This will be parsed to the description for a Datetime',
             'event_espresso'
         );
-        $shortcodes['[DTT_NAME_OR_DATES]'] = esc_html__(
+        $shortcodes['[DTT_NAME_OR_DATES]'] = __(
             'When parsed, if the Datetime has a name, it is used, otherwise a formatted string including the start date and end date will be used.',
             'event_espresso'
         );
@@ -478,7 +477,7 @@ class EE_Caf_Messages
 
     public function additional_recipient_details_shortcodes($shortcodes, $shortcode_parser)
     {
-        $shortcodes['[RECIPIENT_QUESTION_LIST]'] = esc_html__(
+        $shortcodes['[RECIPIENT_QUESTION_LIST]'] = __(
             'This is used to indicate where you want the list of questions and answers to show for the person receiving the message.',
             'event_espresso'
         );
@@ -586,7 +585,7 @@ class EE_Caf_Messages
 
     public function additional_primary_registration_details_shortcodes($shortcodes, $shortcode_parser)
     {
-        $shortcodes['[PRIMARY_REGISTRANT_QUESTION_LIST]'] = esc_html__(
+        $shortcodes['[PRIMARY_REGISTRANT_QUESTION_LIST]'] = __(
             'This is used to indicate the questions and answers for the primary_registrant. It should be placed in the "[attendee_list]" field',
             'event_espresso'
         );
@@ -795,8 +794,7 @@ class EE_Caf_Messages
                 // first see if the question is in our $questions array. If not then try to get from answer object.
                 $question = isset($questions[ $answer->ID() ]) ? $questions[ $answer->ID() ] : null;
                 $question = ! $question instanceof EE_Question ? $answer->question() : $question;
-                if (
-                    ! $question instanceof EE_Question
+                if (! $question instanceof EE_Question
                     || (
                         $question instanceof EE_Question
                         && $question->admin_only()

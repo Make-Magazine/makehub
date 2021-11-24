@@ -73,9 +73,8 @@ class RequestTypeContextDetector
     public function detectRequestTypeContext()
     {
         // Detect error scrapes
-        if (
-            $this->request->getRequestParam('wp_scrape_key')
-            && $this->request->getRequestParam('wp_scrape_nonce')
+        if ($this->request->getRequestParam('wp_scrape_key') !== null
+            && $this->request->getRequestParam('wp_scrape_nonce') !== null
         ) {
             return $this->factory->create(RequestTypeContext::WP_SCRAPE);
         }
@@ -89,14 +88,16 @@ class RequestTypeContextDetector
         }
         // Detect AJAX
         if ($this->getGlobalRouteCondition('DOING_AJAX', false)) {
-            return $this->isAjaxRequest();
-        }
-        // make sure these constants are defined
-        if (! defined('EE_ADMIN_AJAX')) {
-            define('EE_ADMIN_AJAX', false);
-        }
-        if (! defined('EE_FRONT_AJAX')) {
-            define('EE_FRONT_AJAX', false);
+            if (filter_var($this->request->getRequestParam('ee_front_ajax'), FILTER_VALIDATE_BOOLEAN)) {
+                return $this->factory->create(RequestTypeContext::AJAX_FRONT);
+            }
+            if (filter_var($this->request->getRequestParam('ee_admin_ajax'), FILTER_VALIDATE_BOOLEAN)) {
+                return $this->factory->create(RequestTypeContext::AJAX_ADMIN);
+            }
+            if ($this->request->getRequestParam('action') === 'heartbeat') {
+                return $this->factory->create(RequestTypeContext::AJAX_HEARTBEAT);
+            }
+            return $this->factory->create(RequestTypeContext::AJAX_OTHER);
         }
         // Detect WP_Cron
         if ($this->isCronRequest()) {
@@ -124,49 +125,13 @@ class RequestTypeContextDetector
 
 
     /**
-     * @return RequestTypeContext
-     */
-    private function isAjaxRequest()
-    {
-        if (
-            $this->request->getRequestParam('ee_front_ajax', false, 'bool')
-            || $this->request->getRequestParam('data[ee_front_ajax]', false, 'bool')
-        ) {
-            if (! defined('EE_FRONT_AJAX')) {
-                define('EE_FRONT_AJAX', true);
-            }
-            if (! defined('EE_ADMIN_AJAX')) {
-                define('EE_ADMIN_AJAX', false);
-            }
-            return $this->factory->create(RequestTypeContext::AJAX_FRONT);
-        }
-        if (
-            $this->request->getRequestParam('ee_admin_ajax', false, 'bool')
-            || $this->request->getRequestParam('data[ee_admin_ajax]', false, 'bool')
-        ) {
-            if (! defined('EE_ADMIN_AJAX')) {
-                define('EE_ADMIN_AJAX', true);
-            }
-            if (! defined('EE_FRONT_AJAX')) {
-                define('EE_FRONT_AJAX', false);
-            }
-            return $this->factory->create(RequestTypeContext::AJAX_ADMIN);
-        }
-        if ($this->request->getRequestParam('action') === 'heartbeat') {
-            return $this->factory->create(RequestTypeContext::AJAX_HEARTBEAT);
-        }
-        return $this->factory->create(RequestTypeContext::AJAX_OTHER);
-    }
-
-
-    /**
      * @return bool
      */
     private function isEspressoRestApiRequest()
     {
         // Check for URLs like http://mysite.com/?rest_route=/ee... and http://mysite.com/wp-json/ee/...
         return strpos(
-            $this->request->getRequestParam('rest_route'),
+            $this->request->getRequestParam('rest_route', false),
             '/' . Domain::API_NAMESPACE
         ) === 0
             || $this->uriPathMatches(trim(rest_get_url_prefix(), '/') . '/' . Domain::API_NAMESPACE);
@@ -180,7 +145,7 @@ class RequestTypeContextDetector
     private function isWordPressRestApiRequest()
     {
         // Check for URLs like http://mysite.com/?rest_route=/.. and http://mysite.com/wp-json/...
-        return $this->request->getRequestParam('rest_route') !== ''
+        return $this->request->getRequestParam('rest_route', false)
             || $this->uriPathMatches(trim(rest_get_url_prefix(), '/'));
     }
 

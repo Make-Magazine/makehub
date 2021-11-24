@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * Class EEH_File
@@ -41,13 +40,11 @@ class EEH_File extends EEH_Base implements EEHI_File
      */
     private static function _get_wp_filesystem($filepath = null)
     {
-        if (
-            apply_filters(
-                'FHEE__EEH_File___get_wp_filesystem__allow_using_filesystem_direct',
-                $filepath && EEH_File::is_in_uploads_folder($filepath),
-                $filepath
-            )
-        ) {
+        if (apply_filters(
+            'FHEE__EEH_File___get_wp_filesystem__allow_using_filesystem_direct',
+            $filepath && EEH_File::is_in_uploads_folder($filepath),
+            $filepath
+        ) ) {
             if (! EEH_File::$_wp_filesystem_direct instanceof WP_Filesystem_Direct) {
                 require_once(ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php');
                 $method = 'direct';
@@ -80,9 +77,9 @@ class EEH_File extends EEH_Base implements EEHI_File
              * than the server user. But both of these issues should exist in 4.4 and earlier too
              */
             if (false && ! did_action('wp_loaded')) {
-                $msg = esc_html__('An attempt to access and/or write to a file on the server could not be completed due to a lack of sufficient credentials.', 'event_espresso');
+                $msg = __('An attempt to access and/or write to a file on the server could not be completed due to a lack of sufficient credentials.', 'event_espresso');
                 if (WP_DEBUG) {
-                    $msg .= '<br />' .  esc_html__('The WP Filesystem can not be accessed until after the "wp_loaded" hook has run, so it\'s best not to attempt access until the "admin_init" hookpoint.', 'event_espresso');
+                    $msg .= '<br />' .  __('The WP Filesystem can not be accessed until after the "wp_loaded" hook has run, so it\'s best not to attempt access until the "admin_init" hookpoint.', 'event_espresso');
                 }
                 throw new EE_Error($msg);
             } else {
@@ -101,12 +98,12 @@ class EEH_File extends EEH_Base implements EEHI_File
                     // if credentials do NOT exist
                     if ($credentials === false) {
                         add_action('admin_notices', array( 'EEH_File', 'display_request_filesystem_credentials_form' ), 999);
-                        throw new EE_Error(esc_html__('An attempt to access and/or write to a file on the server could not be completed due to a lack of sufficient credentials.', 'event_espresso'));
+                        throw new EE_Error(__('An attempt to access and/or write to a file on the server could not be completed due to a lack of sufficient credentials.', 'event_espresso'));
                     } elseif (is_wp_error($wp_filesystem->errors) && $wp_filesystem->errors->get_error_code()) {
                         add_action('admin_notices', array( 'EEH_File', 'display_request_filesystem_credentials_form' ), 999);
                         throw new EE_Error(
                             sprintf(
-                                esc_html__('WP Filesystem Error: $1%s', 'event_espresso'),
+                                __('WP Filesystem Error: $1%s', 'event_espresso'),
                                 $wp_filesystem->errors->get_error_message()
                             )
                         );
@@ -150,7 +147,7 @@ class EEH_File extends EEH_Base implements EEHI_File
             $file_name = ! empty($type_of_file) ? $file_name . ' ' . $type_of_file : $file_name;
             $file_name .= ! empty($file_ext) ? ' file' : ' folder';
             $msg = sprintf(
-                esc_html__('The requested %1$s could not be found or is not readable, possibly due to an incorrect filepath, or incorrect file permissions.%2$s', 'event_espresso'),
+                __('The requested %1$s could not be found or is not readable, possibly due to an incorrect filepath, or incorrect file permissions.%2$s', 'event_espresso'),
                 $file_name,
                 '<br />'
             );
@@ -159,7 +156,7 @@ class EEH_File extends EEH_Base implements EEHI_File
             } else {
                 // no file permissions means the file was not found
                 $msg .= sprintf(
-                    esc_html__('Please ensure the following path is correct: "%s".', 'event_espresso'),
+                    __('Please ensure the following path is correct: "%s".', 'event_espresso'),
                     $full_file_path
                 );
             }
@@ -193,14 +190,14 @@ class EEH_File extends EEH_Base implements EEHI_File
             $type_of_file = ! empty($type_of_file) ? $type_of_file . ' ' : '';
             $type_of_file .= ! empty($type_of_file) ? 'file' : 'folder';
             return sprintf(
-                esc_html__('File permissions for the requested %1$s are currently set at "%2$s". The recommended permissions are 644 for files and 755 for folders.', 'event_espresso'),
+                __('File permissions for the requested %1$s are currently set at "%2$s". The recommended permissions are 644 for files and 755 for folders.', 'event_espresso'),
                 $type_of_file,
                 $perms
             );
         } else {
             // file exists but file permissions could not be read ?!?!
             return sprintf(
-                esc_html__('Please ensure that the server and/or PHP configuration allows the current process to access the following file: "%s".', 'event_espresso'),
+                __('Please ensure that the server and/or PHP configuration allows the current process to access the following file: "%s".', 'event_espresso'),
                 $full_file_path
             );
         }
@@ -239,7 +236,7 @@ class EEH_File extends EEH_Base implements EEHI_File
             } else {
                 if (! $wp_filesystem->mkdir(EEH_File::convert_local_filepath_to_remote_filepath($folder))) {
                     if (defined('WP_DEBUG') && WP_DEBUG) {
-                        $msg = sprintf(esc_html__('"%s" could not be created.', 'event_espresso'), $folder);
+                        $msg = sprintf(__('"%s" could not be created.', 'event_espresso'), $folder);
                         $msg .= EEH_File::_permissions_error_for_unreadable_filepath($folder);
                         throw new EE_Error($msg);
                     }
@@ -269,7 +266,7 @@ class EEH_File extends EEH_Base implements EEHI_File
         $full_path = EEH_File::standardise_directory_separators($full_path);
         if (! $wp_filesystem->is_writable(EEH_File::convert_local_filepath_to_remote_filepath($full_path))) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('The "%1$s" %2$s is not writable.', 'event_espresso'), $full_path, $file_or_folder);
+                $msg = sprintf(__('The "%1$s" %2$s is not writable.', 'event_espresso'), $full_path, $file_or_folder);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_path);
                 throw new EE_Error($msg);
             }
@@ -300,7 +297,7 @@ class EEH_File extends EEH_Base implements EEHI_File
             }
             if (! $wp_filesystem->touch(EEH_File::convert_local_filepath_to_remote_filepath($full_file_path))) {
                 if (defined('WP_DEBUG') && WP_DEBUG) {
-                    $msg = sprintf(esc_html__('The "%s" file could not be created.', 'event_espresso'), $full_file_path);
+                    $msg = sprintf(__('The "%s" file could not be created.', 'event_espresso'), $full_file_path);
                     $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_file_path);
                     throw new EE_Error($msg);
                 }
@@ -370,7 +367,7 @@ class EEH_File extends EEH_Base implements EEHI_File
         $folder = EEH_File::remove_filename_from_filepath($full_file_path);
         if (! EEH_File::verify_is_writable($folder, 'folder')) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('The %1$sfile located at "%2$s" is not writable.', 'event_espresso'), $file_type, $full_file_path);
+                $msg = sprintf(__('The %1$sfile located at "%2$s" is not writable.', 'event_espresso'), $file_type, $full_file_path);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_file_path);
                 throw new EE_Error($msg);
             }
@@ -381,7 +378,7 @@ class EEH_File extends EEH_Base implements EEHI_File
         // write the file
         if (! $wp_filesystem->put_contents(EEH_File::convert_local_filepath_to_remote_filepath($full_file_path), $file_contents)) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('The %1$sfile located at "%2$s" could not be written to.', 'event_espresso'), $file_type, $full_file_path);
+                $msg = sprintf(__('The %1$sfile located at "%2$s" could not be written to.', 'event_espresso'), $file_type, $full_file_path);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_file_path, 'f');
                 throw new EE_Error($msg);
             }
@@ -624,7 +621,7 @@ class EEH_File extends EEH_Base implements EEHI_File
         $full_source_path = EEH_File::standardise_directory_separators($source_file);
         if (! EEH_File::exists($full_source_path)) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('The file located at "%2$s" is not readable or doesn\'t exist.', 'event_espresso'), $full_source_path);
+                $msg = sprintf(__('The file located at "%2$s" is not readable or doesn\'t exist.', 'event_espresso'), $full_source_path);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_source_path);
                 throw new EE_Error($msg);
             }
@@ -636,7 +633,7 @@ class EEH_File extends EEH_Base implements EEHI_File
         EEH_File::ensure_folder_exists_and_is_writable($folder);
         if (! EEH_File::verify_is_writable($folder, 'folder')) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('The file located at "%2$s" is not writable.', 'event_espresso'), $full_dest_path);
+                $msg = sprintf(__('The file located at "%2$s" is not writable.', 'event_espresso'), $full_dest_path);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_dest_path);
                 throw new EE_Error($msg);
             }
@@ -646,15 +643,13 @@ class EEH_File extends EEH_Base implements EEHI_File
         // load WP_Filesystem and set file permissions
         $wp_filesystem = EEH_File::_get_wp_filesystem($destination_file);
         // write the file
-        if (
-            ! $wp_filesystem->copy(
-                EEH_File::convert_local_filepath_to_remote_filepath($full_source_path),
-                EEH_File::convert_local_filepath_to_remote_filepath($full_dest_path),
-                $overwrite
-            )
-        ) {
+        if (! $wp_filesystem->copy(
+            EEH_File::convert_local_filepath_to_remote_filepath($full_source_path),
+            EEH_File::convert_local_filepath_to_remote_filepath($full_dest_path),
+            $overwrite
+        )) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                $msg = sprintf(esc_html__('Attempted writing to file %1$s, but could not, probably because of permissions issues', 'event_espresso'), $full_source_path);
+                $msg = sprintf(__('Attempted writing to file %1$s, but could not, probably because of permissions issues', 'event_espresso'), $full_source_path);
                 $msg .= EEH_File::_permissions_error_for_unreadable_filepath($full_source_path, 'f');
                 throw new EE_Error($msg);
             }

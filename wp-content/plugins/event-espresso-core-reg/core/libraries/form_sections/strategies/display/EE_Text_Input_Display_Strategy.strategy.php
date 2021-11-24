@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Text_Input_Display_Strategy
  * Display strategy that handles how to display form inputs that represent basic
@@ -39,8 +38,7 @@ class EE_Text_Input_Display_Strategy extends EE_Display_Strategy_Base
      */
     public function get_type()
     {
-        if (
-            $this->_type === 'email'
+        if ($this->_type === 'email'
             && ! apply_filters('FHEE__EE_Text_Input_Display_Strategy__use_html5_email', false)
         ) {
             return 'text';
@@ -56,7 +54,7 @@ class EE_Text_Input_Display_Strategy extends EE_Display_Strategy_Base
      */
     public function display()
     {
-        $input = '<input type="' . $this->get_type() . '"';
+        $input = '<input type="'. $this->get_type() .'"';
         $input .= ' name="' . $this->_input->html_name() . '"';
         $input .= ' id="' . $this->_input->html_id() . '"';
         $class = $this->_input->required() ? $this->_input->required_css_class() . ' ' . $this->_input->html_class() : $this->_input->html_class();

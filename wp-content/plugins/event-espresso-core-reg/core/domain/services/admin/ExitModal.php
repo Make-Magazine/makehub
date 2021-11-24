@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\domain\services\admin;
 
 use EventEspresso\core\services\assets\Registry;
@@ -58,20 +57,24 @@ class ExitModal
             'exitModali18n',
             array(
                 'introText' => htmlspecialchars(
-                    wp_strip_all_tags(
-                        __(
-                            'Do you have a moment to share why you are deactivating Event Espresso?',
-                            'event_espresso'
-                        )
+                    __(
+                        'Do you have a moment to share why you are deactivating Event Espresso?',
+                        'event_espresso'
                     ),
                     ENT_NOQUOTES
                 ),
                 'doSurveyButtonText' => htmlspecialchars(
-                    wp_strip_all_tags(__('Sure I\'ll help', 'event_espresso')),
+                    __(
+                        'Sure I\'ll help',
+                        'event_espresso'
+                    ),
                     ENT_NOQUOTES
                 ),
                 'skipButtonText' => htmlspecialchars(
-                    wp_strip_all_tags(__('Skip', 'event_espresso')),
+                    __(
+                        'Skip',
+                        'event_espresso'
+                    ),
                     ENT_NOQUOTES
                 )
             )

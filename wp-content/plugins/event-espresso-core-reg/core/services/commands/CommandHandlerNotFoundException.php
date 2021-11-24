@@ -24,7 +24,7 @@ class CommandHandlerNotFoundException extends \OutOfBoundsException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__('The requested Command Handler "%1$s" could not be located or does not exist.', 'event_espresso'),
+                __('The requested Command Handler "%1$s" could not be located or does not exist.', 'event_espresso'),
                 $command_handler_name
             );
         }

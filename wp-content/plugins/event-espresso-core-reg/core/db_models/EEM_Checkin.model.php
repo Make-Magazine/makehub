@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Check In Model
  *
@@ -28,24 +27,24 @@ class EEM_Checkin extends EEM_Base
      */
     protected function __construct($timezone = null)
     {
-        $this->singular_item = esc_html__('Check-In', 'event_espresso');
-        $this->plural_item = esc_html__('Check-Ins', 'event_espresso');
+        $this->singular_item = __('Check-In', 'event_espresso');
+        $this->plural_item = __('Check-Ins', 'event_espresso');
 
         $this->_tables = array(
-            'Checkin' => new EE_Primary_Table('esp_checkin', 'CHK_ID')
+            'Checkin'=>new EE_Primary_Table('esp_checkin', 'CHK_ID')
         );
         $this->_fields = array(
-            'Checkin' => array(
-                'CHK_ID' => new EE_Primary_Key_Int_Field('CHK_ID', 'Check-in ID'),
-                'REG_ID' => new EE_Foreign_Key_Int_Field('REG_ID', 'Registration Id', false, 0, 'Registration'),
-                'DTT_ID' => new EE_Foreign_Key_Int_Field('DTT_ID', 'Datetime Id', false, 0, 'Datetime'),
-                'CHK_in' => new EE_Boolean_Field('CHK_in', 'Whether a person has checked in or checked out', false, true),
-                'CHK_timestamp' => new EE_Datetime_Field('CHK_timestamp', esc_html__('When the row was modified', 'event_espresso'), false, EE_Datetime_Field::now, $timezone)
+            'Checkin'=> array(
+                'CHK_ID'=>new EE_Primary_Key_Int_Field('CHK_ID', 'Check-in ID'),
+                'REG_ID'=>new EE_Foreign_Key_Int_Field('REG_ID', 'Registration Id', false, 0, 'Registration'),
+                'DTT_ID'=>new EE_Foreign_Key_Int_Field('DTT_ID', 'Datetime Id', false, 0, 'Datetime'),
+                'CHK_in'=>new EE_Boolean_Field('CHK_in', 'Whether a person has checked in or checked out', false, true),
+                'CHK_timestamp'=>new EE_Datetime_Field('CHK_timestamp', __('When the row was modified', 'event_espresso'), false, EE_Datetime_Field::now, $timezone)
             )
         );
         $this->_model_relations = array(
-            'Registration' => new EE_Belongs_To_Relation(),
-            'Datetime' => new EE_Belongs_To_Relation()
+            'Registration'=>new EE_Belongs_To_Relation(),
+            'Datetime'=>new EE_Belongs_To_Relation()
         );
         $this->_model_chain_to_wp_user = 'Registration.Event';
         parent::__construct($timezone);

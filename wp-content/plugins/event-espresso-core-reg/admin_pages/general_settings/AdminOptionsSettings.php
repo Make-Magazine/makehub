@@ -118,12 +118,10 @@ class AdminOptionsSettings extends FormHandler
                 ),
             )
         );
-        if (
-            $this->registry->CAP->current_user_can(
-                'manage_options',
-                'display_admin_settings_options_promote_and_affiliate'
-            )
-        ) {
+        if ($this->registry->CAP->current_user_can(
+            'manage_options',
+            'display_admin_settings_options_promote_and_affiliate'
+        )) {
             $form->add_subsections(
                 array(
                     'promote_ee_hdr'  => new EE_Form_Section_HTML(
@@ -157,7 +155,7 @@ class AdminOptionsSettings extends FormHandler
                         array(
                             'html_label_text' => sprintf(
                                 esc_html__('Event Espresso %1$sAffiliate%2$s ID', 'event_espresso'),
-                                '<a href="https://eventespresso.com/affiliates/" target="_blank">',
+                                '<a href="http://eventespresso.com/affiliates/" target="_blank">',
                                 '</a>'
                             ),
                             'html_help_text'  => esc_html__(

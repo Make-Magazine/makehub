@@ -1,8 +1,5 @@
 <?php
 
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
-
 /**
  * This class is used for setting scheduled tasks related to the EE_messages system.
  *
@@ -34,12 +31,10 @@ class EE_Messages_Scheduler extends EE_Base
         }
 
         // register callbacks for scheduled events (but make sure they are set only once).
-        if (
-            ! has_action(
-                'AHEE__EE_Messages_Scheduler__generation',
-                array('EE_Messages_Scheduler', 'batch_generation')
-            )
-        ) {
+        if (! has_action(
+            'AHEE__EE_Messages_Scheduler__generation',
+            array('EE_Messages_Scheduler', 'batch_generation')
+        )) {
             add_action('AHEE__EE_Messages_Scheduler__generation', array('EE_Messages_Scheduler', 'batch_generation'));
             add_action('AHEE__EE_Messages_Scheduler__sending', array('EE_Messages_Scheduler', 'batch_sending'));
             add_action('AHEE__EE_Messages_Scheduler__cleanup', array('EE_Messages_Scheduler', 'cleanup'));
@@ -59,7 +54,7 @@ class EE_Messages_Scheduler extends EE_Base
     {
         $schedules['ee_message_cron'] = array(
             'interval' => self::message_cron_schedule,
-            'display'  => esc_html__(
+            'display'  => __(
                 'This is the cron time interval for EE Message schedules (defaults to once every 5 minutes)',
                 'event_espresso'
             ),
@@ -74,8 +69,6 @@ class EE_Messages_Scheduler extends EE_Base
      *
      * @param array $tasks already existing scheduled tasks
      * @return array
-     * @throws EE_Error
-     * @throws ReflectionException
      */
     public function register_scheduled_tasks($tasks)
     {
@@ -95,12 +88,10 @@ class EE_Messages_Scheduler extends EE_Base
      */
     public static function initiate_scheduled_non_blocking_request($task)
     {
-        if (
-            apply_filters(
-                'EE_Messages_Scheduler__initiate_scheduled_non_blocking_request__do_separate_request',
-                true
-            )
-        ) {
+        if (apply_filters(
+            'EE_Messages_Scheduler__initiate_scheduled_non_blocking_request__do_separate_request',
+            true
+        )) {
             $request_url  = add_query_arg(
                 array_merge(
                     array('ee' => 'msg_cron_trigger'),
@@ -110,8 +101,7 @@ class EE_Messages_Scheduler extends EE_Base
             );
             $request_args = array(
                 'timeout'     => 300,
-                'blocking'    => (defined('DOING_CRON') && DOING_CRON)
-                                 || (defined('DOING_AJAX') && DOING_AJAX),
+                'blocking'    => (defined('DOING_CRON') && DOING_CRON) || (defined('DOING_AJAX') && DOING_AJAX) ? true : false,
                 'sslverify'   => false,
                 'redirection' => 10,
             );
@@ -151,12 +141,10 @@ class EE_Messages_Scheduler extends EE_Base
      */
     public static function initiate_immediate_request_on_cron($task)
     {
-        /** @var RequestInterface $request */
-        $request = LoaderFactory::getLoader()->getShared(RequestInterface::class);
         $request_args = EE_Messages_Scheduler::get_request_params($task);
         // set those request args in the request so it gets picked up
         foreach ($request_args as $request_key => $request_value) {
-            $request->setRequestParam($request_key, $request_value);
+            EE_Registry::instance()->REQ->set($request_key, $request_value);
         }
         EED_Messages::instance()->run_cron();
     }
@@ -170,8 +158,7 @@ class EE_Messages_Scheduler extends EE_Base
         /**
          * @see filter usage in EE_Messages_Queue::initiate_request_by_priority()
          */
-        if (
-            ! apply_filters('FHEE__EE_Messages_Processor__initiate_request_by_priority__do_immediate_processing', false)
+        if (! apply_filters('FHEE__EE_Messages_Processor__initiate_request_by_priority__do_immediate_processing', false)
             || ! EE_Registry::instance()->NET_CFG->core->do_messages_on_same_request
         ) {
             EE_Messages_Scheduler::initiate_immediate_request_on_cron('generate');
@@ -187,8 +174,7 @@ class EE_Messages_Scheduler extends EE_Base
         /**
          * @see filter usage in EE_Messages_Queue::initiate_request_by_priority()
          */
-        if (
-            ! apply_filters('FHEE__EE_Messages_Processor__initiate_request_by_priority__do_immediate_processing', false)
+        if (! apply_filters('FHEE__EE_Messages_Processor__initiate_request_by_priority__do_immediate_processing', false)
             || ! EE_Registry::instance()->NET_CFG->core->do_messages_on_same_request
         ) {
             EE_Messages_Scheduler::initiate_immediate_request_on_cron('send');
@@ -198,11 +184,8 @@ class EE_Messages_Scheduler extends EE_Base
 
     /**
      * This is the callback for the `AHEE__EE_Messages_Scheduler__cleanup` scheduled event action.
-     * This runs once a day and if cleanup is active (set via messages settings), it will (by default) delete
-     * permanently from the database messages that have a MSG_modified date older than 30 days.
-     *
-     * @throws EE_Error
-     * @throws EE_Error
+     * This runs once a day and if cleanup is active (set via messages settings), it will (by default) delete permanently
+     * from the database messages that have a MSG_modified date older than 30 days.
      */
     public static function cleanup()
     {
@@ -220,8 +203,7 @@ class EE_Messages_Scheduler extends EE_Base
 
         // check if user has cleanup turned on or if we're in maintenance mode.  If in maintenance mode we'll wait
         // until the next scheduled event.
-        if (
-            ! EE_Registry::instance()->CFG->messages->delete_threshold
+        if (! EE_Registry::instance()->CFG->messages->delete_threshold
             || ! EE_Maintenance_Mode::instance()->models_can_query()
         ) {
             return;

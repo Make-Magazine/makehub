@@ -2,20 +2,6 @@
 
 namespace EventEspresso\modules\invalid_checkout_access;
 
-use EE_Admin_Two_Column_Layout;
-use EE_Checkout;
-use EE_Config;
-use EE_Error;
-use EE_Form_Section_HTML;
-use EE_Form_Section_Proper;
-use EE_Registration_Config;
-use EE_Text_Area_Input;
-use EE_Yes_No_Input;
-use EEH_HTML;
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
-use ReflectionException;
-
 /**
  * Class InvalidCheckoutAccessForm
  * Controls and tracks invalid access to the registration checkout page
@@ -41,19 +27,18 @@ class InvalidCheckoutAccess
      * so if you're not coming from the Ticket Selector nor returning for a valid IP...
      * then where you coming from man?
      *
-     * @param EE_Checkout $checkout
+     * @param \EE_Checkout $checkout
      * @return bool true if access to registration checkout appears to be invalid
      */
-    public function checkoutAccessIsInvalid(EE_Checkout $checkout)
+    public function checkoutAccessIsInvalid(\EE_Checkout $checkout)
     {
-        if (
-            ! ($checkout->uts || $checkout->reg_url_link)
+        if (! ($checkout->uts || $checkout->reg_url_link)
             && ! (defined('DOING_AJAX') && DOING_AJAX)
-            && EE_Config::instance()->registration->track_invalid_checkout_access()
+            && \EE_Config::instance()->registration->track_invalid_checkout_access()
         ) {
-            /** @var RequestInterface $request */
-            $request = LoaderFactory::getLoader()->getShared('EventEspresso\core\services\request\RequestInterface');
-            $ip_address = $request->ipAddress();
+            /** @var \EE_Request $request */
+            $request = \EE_Registry::instance()->load_core('EE_Request');
+            $ip_address = $request->ip_address();
             $ee_bot_checkout = get_option(InvalidCheckoutAccess::OPTION_KEY);
             if ($ee_bot_checkout === false) {
                 $ee_bot_checkout = array();
@@ -62,14 +47,16 @@ class InvalidCheckoutAccess
             if (! isset($ee_bot_checkout[ $ip_address ])) {
                 $ee_bot_checkout[ $ip_address ] = array();
             }
-            $http_referer = esc_attr($request->getServerParam('HTTP_REFERER', 0));
+            $http_referer = isset($_SERVER['HTTP_REFERER'])
+                ? esc_attr($_SERVER['HTTP_REFERER'])
+                : 0;
             if (! isset($ee_bot_checkout[ $ip_address ][ $http_referer ])) {
                 $ee_bot_checkout[ $ip_address ][ $http_referer ] = 0;
             }
             $ee_bot_checkout[ $ip_address ][ $http_referer ]++;
             update_option(InvalidCheckoutAccess::OPTION_KEY, $ee_bot_checkout);
             if (WP_DEBUG) {
-                EE_Error::add_error(
+                \EE_Error::add_error(
                     esc_html__('Direct access to the registration checkout page is not allowed.', 'event_espresso'),
                     __FILE__,
                     __FUNCTION__,
@@ -85,21 +72,21 @@ class InvalidCheckoutAccess
     /**
      * _invalid_checkout_access_form
      *
-     * @return EE_Form_Section_Proper
-     * @throws EE_Error
+     * @return \EE_Form_Section_Proper
+     * @throws \EE_Error
      */
     public function getForm()
     {
-        return new EE_Form_Section_Proper(
+        return new \EE_Form_Section_Proper(
             array(
                 'name'            => 'invalid_checkout_access',
                 'html_id'         => 'invalid_checkout_access',
-                'layout_strategy' => new EE_Admin_Two_Column_Layout(),
+                'layout_strategy' => new \EE_Admin_Two_Column_Layout(),
                 'subsections'     => array(
-                    'invalid_checkout_access_hdr'   => new EE_Form_Section_HTML(
-                        EEH_HTML::h2(esc_html__('Invalid Checkout Access', 'event_espresso'))
+                    'invalid_checkout_access_hdr'   => new \EE_Form_Section_HTML(
+                        \EEH_HTML::h2(esc_html__('Invalid Checkout Access', 'event_espresso'))
                     ),
-                    'ee_bot_checkout_data'          => new EE_Text_Area_Input(
+                    'ee_bot_checkout_data'          => new \EE_Text_Area_Input(
                         array(
                             'html_label_text' => esc_html__('Invalid Checkout Data', 'event_espresso'),
                             'default'         => var_export(
@@ -113,22 +100,22 @@ class InvalidCheckoutAccess
                             ),
                         )
                     ),
-                    'track_invalid_checkout_access' => new EE_Yes_No_Input(
+                    'track_invalid_checkout_access' => new \EE_Yes_No_Input(
                         array(
-                            'html_label_text'         => esc_html__('Track Invalid Checkout Access?', 'event_espresso'),
+                            'html_label_text'         => __('Track Invalid Checkout Access?', 'event_espresso'),
                             'html_help_text'          => esc_html__(
                                 'Controls whether or not invalid attempts to directly access the registration checkout page should be tracked. Setting this to "No" means that the above data will no longer be collected.',
                                 'event_espresso'
                             ),
-                            'default'                 => EE_Config::instance()
+                            'default'                 => \EE_Config::instance()
                                 ->registration
                                 ->track_invalid_checkout_access(),
                             'display_html_label_text' => false,
                         )
                     ),
-                    'delete_invalid_checkout_data'  => new EE_Yes_No_Input(
+                    'delete_invalid_checkout_data'  => new \EE_Yes_No_Input(
                         array(
-                            'html_label_text'         => esc_html__('Reset Invalid Checkout Data', 'event_espresso'),
+                            'html_label_text'         => __('Reset Invalid Checkout Data', 'event_espresso'),
                             'html_help_text'          => esc_html__(
                                 'Setting this to "Yes" will delete all existing invalid checkout access data.',
                                 'event_espresso'
@@ -146,12 +133,10 @@ class InvalidCheckoutAccess
     /**
      * update_invalid_checkout_access_form
      *
-     * @param EE_Registration_Config $EE_Registration_Config
-     * @return EE_Registration_Config
-     * @throws EE_Error
-     * @throws ReflectionException
+     * @param \EE_Registration_Config $EE_Registration_Config
+     * @return \EE_Registration_Config
      */
-    public function processForm(EE_Registration_Config $EE_Registration_Config)
+    public function processForm(\EE_Registration_Config $EE_Registration_Config)
     {
         try {
             $invalid_checkout_access_form = $this->getForm();
@@ -164,12 +149,10 @@ class InvalidCheckoutAccess
                     // grab validated data from form
                     $valid_data = $invalid_checkout_access_form->valid_data();
                     // ensure form inputs we want are set
-                    if (
-                        isset(
-                            $valid_data['track_invalid_checkout_access'],
-                            $valid_data['delete_invalid_checkout_data']
-                        )
-                    ) {
+                    if (isset(
+                        $valid_data['track_invalid_checkout_access'],
+                        $valid_data['delete_invalid_checkout_data']
+                    )) {
                         $EE_Registration_Config->set_track_invalid_checkout_access(
                             $valid_data['track_invalid_checkout_access']
                         );
@@ -178,7 +161,7 @@ class InvalidCheckoutAccess
                             update_option(InvalidCheckoutAccess::OPTION_KEY, array());
                         }
                     } else {
-                        EE_Error::add_error(
+                        \EE_Error::add_error(
                             esc_html__(
                                 'Invalid or missing Invalid Checkout Access form data. Please refresh the form and try again.',
                                 'event_espresso'
@@ -190,7 +173,7 @@ class InvalidCheckoutAccess
                     }
                 } else {
                     if ($invalid_checkout_access_form->submission_error_message() !== '') {
-                        EE_Error::add_error(
+                        \EE_Error::add_error(
                             $invalid_checkout_access_form->submission_error_message(),
                             __FILE__,
                             __FUNCTION__,
@@ -199,7 +182,7 @@ class InvalidCheckoutAccess
                     }
                 }
             }
-        } catch (EE_Error $e) {
+        } catch (\EE_Error $e) {
             $e->get_error();
         }
         return $EE_Registration_Config;

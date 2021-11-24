@@ -28,7 +28,7 @@ class DuplicateCollectionIdentifierException extends OutOfRangeException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'The supplied identifier "%1$s" already exists within this collection.',
                     'event_espresso'
                 ),

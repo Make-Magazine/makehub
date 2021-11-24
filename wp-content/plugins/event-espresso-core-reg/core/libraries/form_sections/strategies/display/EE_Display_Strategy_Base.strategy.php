@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Display_Strategy_Base
  *

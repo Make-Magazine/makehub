@@ -9,11 +9,14 @@ use EEM_Price;
 use EEM_Registration;
 use EEM_Ticket;
 use EEM_Transaction;
+use EETests\bootstrap\CoreLoader;
 use EventEspresso\core\exceptions\InvalidClassException;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
+use EventEspresso\core\services\loaders\LoaderFactory;
 use EventEspresso\core\services\orm\tree_traversal\ModelObjNode;
 use EventEspresso\core\services\orm\tree_traversal\NodeGroupDao;
+use EventEspressoBatchRequest\Helpers\BatchRequestException;
 use EventEspressoBatchRequest\Helpers\JobParameters;
 use EventEspressoBatchRequest\Helpers\JobStepResponse;
 use EventEspressoBatchRequest\JobHandlerBaseClasses\JobHandler;
@@ -203,6 +206,7 @@ class PreviewEventDeletion extends JobHandler
      * @param JobParameters $job_parameters
      * @param int $batch_size
      * @return JobStepResponse
+     * @throws BatchRequestException
      */
     public function continue_job(JobParameters $job_parameters, $batch_size = 50)
     {
@@ -243,7 +247,7 @@ class PreviewEventDeletion extends JobHandler
                 ]
             );
         } else {
-            // Because the job size was a guess, it may have likely been proven wrong. We don't want to show more work
+            // Because the job size was a guess, it may have likely been provden wrong. We don't want to show more work
             // done than we originally said there would be. So adjust the estimate.
             if (($job_parameters->units_processed() / $job_parameters->job_size()) > .8) {
                 $job_parameters->set_job_size($job_parameters->job_size() * 2);

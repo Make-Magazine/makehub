@@ -242,7 +242,7 @@ class CollectionLoader
                         $entity,
                         $this->collection_details->getCollectionInterface(),
                         sprintf(
-                            esc_html__(
+                            __(
                                 'The current collection is configured to use a method named "%1$s" when setting or retrieving objects. The supplied entity is an instance
                                 of "%2$s", but does not contain this method.',
                                 'event_espresso'

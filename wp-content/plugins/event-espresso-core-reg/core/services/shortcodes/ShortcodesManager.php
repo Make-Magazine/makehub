@@ -14,7 +14,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\services\collections\CollectionDetails;
 use EventEspresso\core\services\collections\CollectionInterface;
 use EventEspresso\core\services\collections\CollectionLoader;
-use EventEspresso\core\services\request\CurrentPage;
 use Exception;
 
 /**
@@ -29,10 +28,6 @@ use Exception;
  */
 class ShortcodesManager
 {
-    /**
-     * @type CurrentPage
-     */
-    protected $current_page;
 
     /**
      * @var LegacyShortcodesManager $legacy_shortcodes_manager
@@ -49,24 +44,22 @@ class ShortcodesManager
      * ShortcodesManager constructor
      *
      * @param LegacyShortcodesManager $legacy_shortcodes_manager
-     * @param CurrentPage             $current_page
      */
-    public function __construct(LegacyShortcodesManager $legacy_shortcodes_manager, CurrentPage $current_page)
+    public function __construct(LegacyShortcodesManager $legacy_shortcodes_manager)
     {
         $this->legacy_shortcodes_manager = $legacy_shortcodes_manager;
-        $this->current_page              = $current_page;
         // assemble a list of installed and active shortcodes
         add_action(
             'AHEE__EE_System__register_shortcodes_modules_and_widgets',
-            [$this, 'registerShortcodes'],
+            array($this, 'registerShortcodes'),
             999
         );
         //  call add_shortcode() for all installed shortcodes
-        add_action('AHEE__EE_System__core_loaded_and_ready', [$this, 'addShortcodes']);
+        add_action('AHEE__EE_System__core_loaded_and_ready', array($this, 'addShortcodes'));
         // check content for shortcodes the old way
-        add_action('parse_query', [$this->legacy_shortcodes_manager, 'initializeShortcodes'], 5);
+        add_action('parse_query', array($this->legacy_shortcodes_manager, 'initializeShortcodes'), 5);
         // check content for shortcodes the NEW more efficient way
-        add_action('template_redirect', [$this, 'templateRedirect'], 999);
+        add_action('template_redirect', array($this, 'templateRedirect'), 999);
     }
 
 
@@ -101,14 +94,14 @@ class ShortcodesManager
     {
         $loader = new CollectionLoader(
             new CollectionDetails(
-            // collection name
+                // collection name
                 'shortcodes',
                 // collection interface
                 'EventEspresso\core\services\shortcodes\ShortcodeInterface',
                 // FQCNs for classes to add (all classes within that namespace will be loaded)
-                ['EventEspresso\core\domain\entities\shortcodes'],
+                array('EventEspresso\core\domain\entities\shortcodes'),
                 // filepaths to classes to add
-                [],
+                array(),
                 // file mask to use if parsing folder for files to add
                 '',
                 // what to use as identifier for collection entities
@@ -129,7 +122,6 @@ class ShortcodesManager
      * @throws InvalidEntityException
      * @throws InvalidDataTypeException
      * @throws InvalidClassException
-     * @throws Exception
      */
     public function registerShortcodes()
     {
@@ -160,20 +152,20 @@ class ShortcodesManager
 
     /**
      * @return void
-     * @throws Exception
      */
     public function addShortcodes()
     {
         try {
             // cycle thru shortcode folders
             foreach ($this->shortcodes as $shortcode) {
+                /** @var ShortcodeInterface $shortcode */
                 if ($shortcode instanceof EnqueueAssetsInterface) {
-                    add_action('wp_enqueue_scripts', [$shortcode, 'registerScriptsAndStylesheets'], 10);
-                    add_action('wp_enqueue_scripts', [$shortcode, 'enqueueStylesheets'], 11);
+                    add_action('wp_enqueue_scripts', array($shortcode, 'registerScriptsAndStylesheets'), 10);
+                    add_action('wp_enqueue_scripts', array($shortcode, 'enqueueStylesheets'), 11);
                 }
                 // add_shortcode() if it has not already been added
                 if (! shortcode_exists($shortcode->getTag())) {
-                    add_shortcode($shortcode->getTag(), [$shortcode, 'processShortcodeCallback']);
+                    add_shortcode($shortcode->getTag(), array($shortcode, 'processShortcodeCallback'));
                 }
             }
             $this->legacy_shortcodes_manager->addShortcodes();
@@ -198,7 +190,7 @@ class ShortcodesManager
         }
         $load_assets = false;
         // array of posts displayed in current request
-        $posts = is_array($wp_query->posts) ? $wp_query->posts : [$wp_query->posts];
+        $posts = is_array($wp_query->posts) ? $wp_query->posts : array($wp_query->posts);
         foreach ($posts as $post) {
             // now check post content and excerpt for EE shortcodes
             $load_assets = $this->parseContentForShortcodes($post->post_content)
@@ -206,7 +198,7 @@ class ShortcodesManager
                 : $load_assets;
         }
         if ($load_assets) {
-            $this->current_page->setEspressoPage(true);
+            $this->legacy_shortcodes_manager->registry()->REQ->set_espresso_page(true);
             add_filter('FHEE_load_css', '__return_true');
             add_filter('FHEE_load_js', '__return_true');
         }
@@ -228,6 +220,7 @@ class ShortcodesManager
             return $has_shortcode;
         }
         foreach ($this->shortcodes as $shortcode) {
+            /** @var ShortcodeInterface $shortcode */
             if (has_shortcode($content, $shortcode->getTag())) {
                 $shortcode->initializeShortcode();
                 $has_shortcode = true;

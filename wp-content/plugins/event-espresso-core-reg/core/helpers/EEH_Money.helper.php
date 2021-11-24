@@ -139,7 +139,7 @@ class EEH_Money extends EEH_Base
             default:
                 throw new EE_Error(
                     sprintf(
-                        esc_html__(
+                        __(
                             "Unknown operator %s in EEH_Money::compare_floats()",
                             'event_espresso'
                         ),

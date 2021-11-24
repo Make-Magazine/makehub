@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Event Espresso
  *
@@ -8,7 +7,7 @@
  * @ package            Event Espresso
  * @ author            Seth Shoultes
  * @ copyright        (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @ license            https://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
+ * @ license            http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
  * @ link                http://www.eventespresso.com
  * @ version            4.0
  *
@@ -214,7 +213,7 @@ class EED_Event_Single_Caff extends EED_Event_Single
     public static function update_event_single_order()
     {
         $config_saved = false;
-        $template_parts = EED_Event_Single_Caff::getRequest()->getRequestParam('elements');
+        $template_parts = sanitize_text_field($_POST['elements']);
         if (! empty($template_parts)) {
             $template_parts = explode(',', trim($template_parts, ','));
             foreach ($template_parts as $key => $template_part) {
@@ -226,10 +225,10 @@ class EED_Event_Single_Caff extends EED_Event_Single
             $config_saved = EE_Registry::instance()->CFG->update_espresso_config(false, false);
         }
         if ($config_saved) {
-            EE_Error::add_success(esc_html__('Display Order has been successfully updated.', 'event_espresso'));
+            EE_Error::add_success(__('Display Order has been successfully updated.', 'event_espresso'));
         } else {
             EE_Error::add_error(
-                esc_html__('Display Order was not updated.', 'event_espresso'),
+                __('Display Order was not updated.', 'event_espresso'),
                 __FILE__,
                 __FUNCTION__,
                 __LINE__

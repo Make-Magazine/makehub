@@ -283,11 +283,11 @@ class TicketSelectorRowStandard extends TicketSelectorRow
                 $this->ticket_bundle
                     ? apply_filters(
                         'FHEE__ticket_selector_chart_template__per_ticket_bundle_text',
-                        esc_html__(' / bundle', 'event_espresso')
+                        __(' / bundle', 'event_espresso')
                     )
                     : apply_filters(
                         'FHEE__ticket_selector_chart_template__per_ticket_text',
-                        esc_html__('', 'event_espresso')
+                        __('', 'event_espresso')
                     ),
                 '',
                 'smaller-text no-bold'

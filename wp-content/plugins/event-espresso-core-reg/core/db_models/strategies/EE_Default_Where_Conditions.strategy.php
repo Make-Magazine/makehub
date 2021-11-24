@@ -116,8 +116,7 @@ class EE_Default_Where_Conditions
             $where_conditions = array();
         }
         foreach ($where_conditions as $key => $value) {
-            if (
-                in_array($key, array( 'OR', 'AND', 'NOT' ))
+            if (in_array($key, array( 'OR', 'AND', 'NOT' ))
                 || strpos($key, 'OR*') !== false
                 || strpos($key, 'AND*') !== false
                 || strpos($key, 'NOT*') !== false
@@ -127,8 +126,7 @@ class EE_Default_Where_Conditions
                     $model_relation_chain
                 );
             } else {
-                if (
-                    $model_relation_chain != ''
+                if ($model_relation_chain != ''
                     && $model_relation_chain[ strlen($model_relation_chain) - 1 ] != '.'
                 ) {
                     $model_relation_chain = $model_relation_chain . ".";
@@ -142,7 +140,7 @@ class EE_Default_Where_Conditions
                     if (! $this->_model->wp_user_field_name()) {
                         throw new EE_Error(
                             sprintf(
-                                esc_html__(
+                                __(
                                     'There is no foreign key to the WP_User model on model %s. Please either modify your default where conditions, add a _model_chain_to_wp_user onto the model, or a proper EE_WP_User_Field onto the model',
                                     'event_espresso'
                                 ),

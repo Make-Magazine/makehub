@@ -25,7 +25,7 @@ class EEM_Extra_Join extends EEM_Base
 {
     // private instance of the Extra Join object
     protected static $_instance = null;
-
+    
     public function __construct($timezone = null)
     {
         $models_this_can_join = array_keys(EE_Registry::instance()->non_abstract_db_models);
@@ -34,12 +34,12 @@ class EEM_Extra_Join extends EEM_Base
         );
         $this->_fields = array(
             'Extra_Join' => array(
-                'EXJ_ID' => new EE_Primary_Key_Int_Field('EXJ_ID', esc_html__('Extra Join ID', 'event_espresso')),
-                'EXJ_first_model_ID' => new EE_Foreign_Key_String_Field('EXJ_first_model_ID', esc_html__('First Model ID', 'event_espresso'), true, 0, $models_this_can_join),
-                'EXJ_first_model_name' => new EE_Any_Foreign_Model_Name_Field('EXJ_first_model_name', esc_html__('First Model Name', 'event_espresso'), true, '', $models_this_can_join),
-                'EXJ_second_model_ID' => new EE_Foreign_Key_String_Field('EXJ_second_model_ID', esc_html__('Second Model ID', 'event_espresso'), true, 0, $models_this_can_join),
-                'EXJ_second_model_name' => new EE_Any_Foreign_Model_Name_Field('EXJ_second_model_name', esc_html__('Second Model Name', 'event_espresso'), true, '', $models_this_can_join),
-
+                'EXJ_ID' => new EE_Primary_Key_Int_Field('EXJ_ID', __('Extra Join ID', 'event_espresso')),
+                'EXJ_first_model_ID' => new EE_Foreign_Key_String_Field('EXJ_first_model_ID', __('First Model ID', 'event_espresso'), true, 0, $models_this_can_join),
+                'EXJ_first_model_name' => new EE_Any_Foreign_Model_Name_Field('EXJ_first_model_name', __('First Model Name', 'event_espresso'), true, '', $models_this_can_join),
+                'EXJ_second_model_ID' => new EE_Foreign_Key_String_Field('EXJ_second_model_ID', __('Second Model ID', 'event_espresso'), true, 0, $models_this_can_join),
+                'EXJ_second_model_name' => new EE_Any_Foreign_Model_Name_Field('EXJ_second_model_name', __('Second Model Name', 'event_espresso'), true, '', $models_this_can_join),
+                
             )
         );
         // this model is weird in that it has two foreign key columns which can point to any model/table.

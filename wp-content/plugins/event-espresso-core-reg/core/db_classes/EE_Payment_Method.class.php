@@ -1,8 +1,5 @@
 <?php
 
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\CurrentPage;
-
 /**
  * EE_Payment_Method class
  * Should be parent of all payment method classes
@@ -87,10 +84,8 @@ class EE_Payment_Method extends EE_Base_Class
     public function set_active()
     {
         $default_scopes = array(EEM_Payment_Method::scope_cart);
-        if (
-            $this->type_obj() &&
-            $this->type_obj()->payment_occurs() === EE_PMT_Base::offline
-        ) {
+        if ($this->type_obj() &&
+            $this->type_obj()->payment_occurs() === EE_PMT_Base::offline) {
             $default_scopes[] = EEM_Payment_Method::scope_admin;
         }
         $this->set_scope($default_scopes);
@@ -401,7 +396,7 @@ class EE_Payment_Method extends EE_Base_Class
                 if (! class_exists($class_name)) {
                     throw new EE_Error(
                         sprintf(
-                            esc_html__(
+                            __(
                                 'An attempt to use the "%1$s" payment method failed, so it was deactivated.%2$sWas the "%1$s" Plugin recently deactivated? It can be reactivated on the %3$sPlugins Admin Page%4$s',
                                 'event_espresso'
                             ),
@@ -417,7 +412,7 @@ class EE_Payment_Method extends EE_Base_Class
             } else {
                 throw new EE_Error(
                     sprintf(
-                        esc_html__(
+                        __(
                             'A payment method of type "%1$s" does not exist. Only ones existing are: %2$s',
                             'event_espresso'
                         ),
@@ -575,17 +570,15 @@ class EE_Payment_Method extends EE_Base_Class
     {
         $results = parent::save($set_cols_n_values);
         if ($this->get_original('PMD_scope') !== $this->get('PMD_scope')) {
-            /** @var CurrentPage $current_page */
-            $current_page = LoaderFactory::getLoader()->getShared(CurrentPage::class);
             EE_Log::instance()->log(
                 __FILE__,
                 __FUNCTION__,
                 sprintf(
-                    esc_html__('Set new scope on payment method %1$s to %2$s from %3$s on URL %4$s', 'event_espresso'),
+                    __('Set new scope on payment method %1$s to %2$s from %3$s on URL %4$s', 'event_espresso'),
                     $this->name(),
                     serialize($this->get_original('PMD_scope')),
                     serialize($this->get('PMD_scope')),
-                    $current_page->getPermalink()
+                    EE_Registry::instance()->REQ->get_current_page_permalink()
                 ),
                 'payment_method_change'
             );

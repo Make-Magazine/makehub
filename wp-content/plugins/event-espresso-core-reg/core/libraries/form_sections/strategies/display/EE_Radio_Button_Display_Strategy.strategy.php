@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Radio_Button_Display_Strategy
  * displays a set of radio buttons

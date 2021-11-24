@@ -54,8 +54,8 @@ class EEH_Array extends EEH_Base
     }
 
     /**
-     * Detects if this is a multi-dimensional array
-     * meaning that at least one top-level value is an array. Eg [ [], ...]
+     * Detects if this is a multi-dimensional array (meaning that the top-level
+     * values are themselves array. Eg array(array(...),...)
      *
      * @param mixed $arr
      * @return boolean
@@ -63,13 +63,15 @@ class EEH_Array extends EEH_Base
     public static function is_multi_dimensional_array($arr)
     {
         if (is_array($arr)) {
-            foreach ($arr as $item) {
-                if (is_array($item)) {
-                    return true; // yep, there's at least 2 levels to this array
-                }
+            $first_item = reset($arr);
+            if (is_array($first_item)) {
+                return true;// yep, there's at least 2 levels to this array
+            } else {
+                return false;// nope, only 1 level
             }
+        } else {
+            return false;// its not an array at all!
         }
-        return false; // there's only 1 level, or it's not an array at all!
     }
 
     /**
@@ -94,8 +96,7 @@ class EEH_Array extends EEH_Base
     public static function maybe_unserialize($value)
     {
         $data = maybe_unserialize($value);
-        // it's possible that this still has serialized data if it's the session.
-        //  WP has a bug, http://core.trac.wordpress.org/ticket/26118 that doesn't unserialize this automatically.
+        // it's possible that this still has serialized data if its the session.  WP has a bug, http://core.trac.wordpress.org/ticket/26118 that doesnt' unserialize this automatically.
         $token = 'C';
         $data = is_string($data) ? trim($data) : $data;
         if (is_string($data) && strlen($data) > 1 && $data[0] == $token && preg_match("/^{$token}:[0-9]+:/s", $data)) {
@@ -209,6 +210,6 @@ class EEH_Array extends EEH_Base
      */
     public static function is_array_numerically_and_sequentially_indexed(array $array)
     {
-        return empty($array) || array_keys($array) === range(0, count($array) - 1);
+        return ! empty($array) ? array_keys($array) === range(0, count($array) - 1) : true;
     }
 }

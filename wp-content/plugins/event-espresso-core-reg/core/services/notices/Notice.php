@@ -200,7 +200,7 @@ class Notice implements NoticeInterface
                 esc_html__('non empty string', 'event_espresso')
             );
         }
-        $this->message = sanitize_text_field($message);
+        $this->message = $message;
     }
 
 
@@ -217,7 +217,7 @@ class Notice implements NoticeInterface
                 esc_html__('non empty string', 'event_espresso')
             );
         }
-        $this->file = sanitize_text_field($file);
+        $this->file = $file;
     }
 
 
@@ -234,7 +234,7 @@ class Notice implements NoticeInterface
                 esc_html__('non empty string', 'event_espresso')
             );
         }
-        $this->func = sanitize_text_field($func);
+        $this->func = $func;
     }
 
 
@@ -252,7 +252,7 @@ class Notice implements NoticeInterface
                 esc_html__('integer', 'event_espresso')
             );
         }
-        $this->line = sanitize_text_field($line);
+        $this->line = $line;
     }
 
 

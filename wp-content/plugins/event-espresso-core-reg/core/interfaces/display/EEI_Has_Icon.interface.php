@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Has Icon Interface
  * This interface is implemented on classes that have will have some sort of icon used to visually classify them.

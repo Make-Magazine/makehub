@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Many_Valued_Validation_Strategy
  *

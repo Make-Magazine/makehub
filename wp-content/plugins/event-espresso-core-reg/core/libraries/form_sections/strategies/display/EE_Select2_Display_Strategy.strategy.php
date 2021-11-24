@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * Class EE_Select_Display_Strategy

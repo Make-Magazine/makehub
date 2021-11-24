@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Event Attendees shortcode class
  *
@@ -57,7 +56,7 @@ class EES_Espresso_Event_Attendees extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            esc_html__(
+            __(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoEventAttendeesShortcode instead.',
                 'event_espresso'
             ),

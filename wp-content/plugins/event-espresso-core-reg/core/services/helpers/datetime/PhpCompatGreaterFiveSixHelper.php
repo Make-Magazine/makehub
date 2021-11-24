@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\services\helpers\datetime;
 
 use DateTime;

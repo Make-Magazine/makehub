@@ -2,7 +2,6 @@
 
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
-use EventEspresso\core\services\loaders\LoaderFactory;
 
 /**
  * EED_Events_Archive_Caff
@@ -99,10 +98,8 @@ class EED_Events_Archive_Caff extends EED_Events_Archive
      */
     public static function template_settings_form()
     {
-        /** @var EE_Admin_Page_Loader $admin_page_loader */
-        $admin_page_loader = LoaderFactory::getLoader()->getShared('EE_Admin_Page_Loader');
         // grab general settings admin page and remove the existing hook callback
-        $gen_set_admin = $admin_page_loader->get_admin_page_object('general_settings');
+        $gen_set_admin = EE_Registry::instance()->LIB->EE_Admin_Page_Loader->get_admin_page_object('general_settings');
         if ($gen_set_admin instanceof General_Settings_Admin_Page) {
             remove_action(
                 'AHEE__template_settings__template__before_settings_form',
@@ -183,8 +180,7 @@ class EED_Events_Archive_Caff extends EED_Events_Archive
             ? $CFG->EED_Events_Archive
             : new EE_Events_Archive_Config();
         // unless we are resetting the config...
-        if (
-            ! isset($REQ['EED_Events_Archive_reset_event_list_settings'])
+        if (! isset($REQ['EED_Events_Archive_reset_event_list_settings'])
             || absint($REQ['EED_Events_Archive_reset_event_list_settings']) !== 1
         ) {
             $config->display_status_banner = isset($REQ['EED_Events_Archive_display_status_banner'])
@@ -242,14 +238,13 @@ class EED_Events_Archive_Caff extends EED_Events_Archive
         /** @var EE_Config $config */
         $config = EE_Registry::instance()->CFG;
         $config_saved = false;
-        $template_parts = EED_Events_Archive_Caff::getRequest()->getRequestParam('elements');
+        $template_parts = sanitize_text_field($_POST['elements']);
         if (! empty($template_parts)) {
             $template_parts = explode(',', trim($template_parts, ','));
             foreach ($template_parts as $key => $template_part) {
                 $template_part = "display_order_$template_part";
                 $priority = ($key * 10) + EED_Events_Archive::EVENT_DETAILS_PRIORITY;
-                if (
-                    $config->template_settings->EED_Events_Archive instanceof EE_Events_Archive_Config
+                if ($config->template_settings->EED_Events_Archive instanceof EE_Events_Archive_Config
                     && property_exists(
                         $config->template_settings->EED_Events_Archive,
                         $template_part
@@ -262,10 +257,10 @@ class EED_Events_Archive_Caff extends EED_Events_Archive
             $config_saved = $config->update_espresso_config(false, false);
         }
         if ($config_saved) {
-            EE_Error::add_success(esc_html__('Display Order has been successfully updated.', 'event_espresso'));
+            EE_Error::add_success(__('Display Order has been successfully updated.', 'event_espresso'));
         } else {
             EE_Error::add_error(
-                esc_html__('Display Order was not updated.', 'event_espresso'),
+                __('Display Order was not updated.', 'event_espresso'),
                 __FILE__,
                 __FUNCTION__,
                 __LINE__

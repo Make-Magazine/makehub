@@ -200,8 +200,7 @@ class EspressoEventAttendees extends EspressoShortcode
      */
     private function validateEntities(array $attributes)
     {
-        if (
-            ! $this->template_args['event'] instanceof EE_Event
+        if (! $this->template_args['event'] instanceof EE_Event
             || (
                 empty($attributes['event_id'])
                 && $attributes['datetime_id']

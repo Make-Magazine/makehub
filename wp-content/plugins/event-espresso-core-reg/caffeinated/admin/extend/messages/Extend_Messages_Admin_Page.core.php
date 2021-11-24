@@ -38,21 +38,21 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
         );
         $this->_page_config['custom_mtps'] = array(
             'nav'           => array(
-                'label' => esc_html__('Custom Message Templates', 'event_espresso'),
+                'label' => __('Custom Message Templates', 'event_espresso'),
                 'order' => 30,
             ),
             'list_table'    => 'Custom_Messages_Template_List_Table',
             'help_tabs'     => array(
                 'message_overview_message_types_help_tab' => array(
-                    'title'    => esc_html__('Message Types', 'event_espresso'),
+                    'title'    => __('Message Types', 'event_espresso'),
                     'filename' => 'messages_overview_types',
                 ),
                 'messages_overview_messengers_help_tab'   => array(
-                    'title'    => esc_html__('Messengers', 'event_espresso'),
+                    'title'    => __('Messengers', 'event_espresso'),
                     'filename' => 'messages_overview_messengers',
                 ),
                 'messages_overview_other_help_tab'        => array(
-                    'title'    => esc_html__('Messages Other', 'event_espresso'),
+                    'title'    => __('Messages Other', 'event_espresso'),
                     'filename' => 'messages_overview_other',
                 ),
             ),
@@ -124,12 +124,10 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
      */
     public function custom_mtp_create_button_column($item, $screen_id)
     {
-        if (
-            $screen_id !== 'espresso_messages_global_mtps' || ! EE_Registry::instance()->CAP->current_user_can(
-                'ee_edit_messages',
-                'espresso_messages_add_new_message_template'
-            )
-        ) {
+        if ($screen_id !== 'espresso_messages_global_mtps' || ! EE_Registry::instance()->CAP->current_user_can(
+            'ee_edit_messages',
+            'espresso_messages_add_new_message_template'
+        )) {
             return '';
         }
 
@@ -149,7 +147,7 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
         echo sprintf(
             '<a href="%s" class="button button-small">%s</a>',
             $create_link,
-            esc_html__('Create Custom', 'event_espresso')
+            __('Create Custom', 'event_espresso')
         );
     }
 
@@ -157,7 +155,7 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
     protected function _add_screen_options_custom_mtps()
     {
         $page_title = $this->_admin_page_title;
-        $this->_admin_page_title = esc_html__('Custom Message Templates', 'event_espresso');
+        $this->_admin_page_title = __('Custom Message Templates', 'event_espresso');
         $this->_per_page_screen_option();
         $this->_admin_page_title = $page_title;
     }
@@ -174,26 +172,24 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
         $this->_views = array(
             'in_use' => array(
                 'slug'        => 'in_use',
-                'label'       => esc_html__('In Use', 'event_espresso'),
+                'label'       => __('In Use', 'event_espresso'),
                 'count'       => 0,
                 'bulk_action' => array(
-                    'trash_message_template' => esc_html__('Move to Trash', 'event_espresso'),
+                    'trash_message_template' => __('Move to Trash', 'event_espresso'),
                 ),
             ),
         );
-        if (
-            EE_Registry::instance()->CAP->current_user_can(
-                'ee_delete_messages',
-                'espresso_messages_trash_message_template'
-            )
-        ) {
+        if (EE_Registry::instance()->CAP->current_user_can(
+            'ee_delete_messages',
+            'espresso_messages_trash_message_template'
+        )) {
             $this->_views['trashed'] = array(
                 'slug'        => 'trashed',
-                'label'       => esc_html__('Trash', 'event_espresso'),
+                'label'       => __('Trash', 'event_espresso'),
                 'count'       => 0,
                 'bulk_action' => array(
-                    'restore_message_template' => esc_html__('Restore From Trash', 'event_espresso'),
-                    'delete_message_template'  => esc_html__('Delete Permanently', 'event_espresso'),
+                    'restore_message_template' => __('Restore From Trash', 'event_espresso'),
+                    'delete_message_template'  => __('Delete Permanently', 'event_espresso'),
                 ),
             );
         }
@@ -202,7 +198,7 @@ class Extend_Messages_Admin_Page extends Messages_Admin_Page
 
     protected function _ee_custom_messages_overview_list_table()
     {
-        $this->_admin_page_title = esc_html__('Custom Message Templates', 'event_espresso');
+        $this->_admin_page_title = __('Custom Message Templates', 'event_espresso');
         $this->display_admin_list_table_page_with_no_sidebar();
     }
 }

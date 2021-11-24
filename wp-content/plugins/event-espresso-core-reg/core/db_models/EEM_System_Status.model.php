@@ -41,19 +41,19 @@ class EEM_System_Status
         return apply_filters(
             'FHEE__EEM_System_Status__get_system_stati',
             array(
-                'ee_version' => $this->get_ee_version(),
-                'ee_activation_history' => $this->get_ee_activation_history(),
-                'ee_config' => $this->get_ee_config(),
-                'ee_migration_history' => $this->get_ee_migration_history(),
-                'active_plugins' => $this->get_active_plugins(),
-                'wp_settings' => $this->get_wp_settings(),
+                'ee_version'=>$this->get_ee_version(),
+                'ee_activation_history'=>$this->get_ee_activation_history(),
+                'ee_config'=>$this->get_ee_config(),
+                'ee_migration_history'=>$this->get_ee_migration_history(),
+                'active_plugins'=>$this->get_active_plugins(),
+                'wp_settings'=>$this->get_wp_settings(),
                 'wp_maintenance_mode' => $this->get_wp_maintenance_mode(),
-                'https_enabled' => $this->get_https_enabled(),
+                'https_enabled'=>$this->get_https_enabled(),
                 'logging_enabled' => $this->get_logging_enabled(),
                 'remote_posting' => $this->get_remote_posting(),
-                'php_version' => $this->php_version(),
-                'php.ini_settings' => $this->get_php_ini_all(),
-                'php_info' => $this->get_php_info(),
+                'php_version'=>$this->php_version(),
+                'php.ini_settings'=>$this->get_php_ini_all(),
+                'php_info'=>$this->get_php_info(),
             ),
             $this
         );
@@ -112,33 +112,23 @@ class EEM_System_Status
     {
         $wp_memory_int = $this->let_to_num(WP_MEMORY_LIMIT);
         if ($wp_memory_int < 67108864) {
-            $wp_memory_to_display = '<mark class="error">';
-            $wp_memory_to_display .= sprintf(
-                esc_html__(
-                    '%s - We recommend setting memory to at least 64MB. See: %s Increasing memory allocated to PHP %s',
-                    'event_espresso'
-                ),
-                WP_MEMORY_LIMIT,
-                '<a href="http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP">',
-                '</a>"'
-            );
-            $wp_memory_to_display .= '</mark>';
+            $wp_memory_to_display = '<mark class="error">' . sprintf(__('%s - We recommend setting memory to at least 64MB. See: %s Increasing memory allocated to PHP %s', 'event_espresso'), WP_MEMORY_LIMIT, '<a href="http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP">', '</a>"') . '</mark>';
         } else {
             $wp_memory_to_display = '<mark class="yes">' . size_format($wp_memory_int) . '</mark>';
         }
         return array(
-            'name' => get_bloginfo('name', 'display'),
-            'is_multisite' => is_multisite(),
-            'version' =>  get_bloginfo('version', 'display'),
-            'home_url' => home_url(),
-            'site_url' => site_url(),
-            'WP_DEBUG' => WP_DEBUG,
-            'permalink_structure' => get_option('permalink_structure'),
-            'theme' => wp_get_theme(),
-            'gmt_offset' => get_option('gmt_offset'),
-            'timezone_string' => get_option('timezone_string'),
-            'admin_email' =>  get_bloginfo('admin_email', 'display'),
-            'language' => get_bloginfo('language', 'display'),
+            'name'=>get_bloginfo('name', 'display'),
+            'is_multisite'=>is_multisite(),
+            'version'=>  get_bloginfo('version', 'display'),
+            'home_url'=>home_url(),
+            'site_url'=>site_url(),
+            'WP_DEBUG'=>WP_DEBUG,
+            'permalink_structure'=>get_option('permalink_structure'),
+            'theme'=>wp_get_theme(),
+            'gmt_offset'=>get_option('gmt_offset'),
+            'timezone_string'=>get_option('timezone_string'),
+            'admin_email'=>  get_bloginfo('admin_email', 'display'),
+            'language'=>get_bloginfo('language', 'display'),
             'wp_max_upload_size' => size_format(wp_max_upload_size()),
             'wp_memory' => $wp_memory_to_display
             );
@@ -192,13 +182,13 @@ class EEM_System_Status
             '#<h1>Configuration</h1>#',  "#\r?\n#", "#</(h1|h2|h3|tr)>#", '# +<#',
             "#[ \t]+#", '#&nbsp;#', '#  +#', '# class=".*?"#', '%&#039;%',
             '#<tr>(?:.*?)" src="(?:.*?)=(.*?)" alt="PHP Logo" /></a>'
-            . '<h1>PHP Version (.*?)</h1>(?:\n+?)</td></tr>#',
+            .'<h1>PHP Version (.*?)</h1>(?:\n+?)</td></tr>#',
             '#<h1><a href="(?:.*?)\?=(.*?)">PHP Credits</a></h1>#',
             '#<tr>(?:.*?)" src="(?:.*?)=(.*?)"(?:.*?)Zend Engine (.*?),(?:.*?)</tr>#',
             "# +#", '#<tr>#', '#</tr>#'),
             array('$1', '', '', '', '</$1>' . "\n", '<', ' ', ' ', ' ', '', ' ',
-            '<h2>PHP Configuration</h2>' . "\n" . '<tr><td>PHP Version</td><td>$2</td></tr>' .
-            "\n" . '<tr><td>PHP Egg</td><td>$1</td></tr>',
+            '<h2>PHP Configuration</h2>'."\n".'<tr><td>PHP Version</td><td>$2</td></tr>'.
+            "\n".'<tr><td>PHP Egg</td><td>$1</td></tr>',
             '<tr><td>PHP Credits Egg</td><td>$1</td></tr>',
             '<tr><td>Zend Engine</td><td>$2</td></tr>' . "\n" .
             '<tr><td>Zend Egg</td><td>$1</td></tr>', ' ', '%S%', '%E%'),
@@ -220,7 +210,7 @@ class EEM_System_Status
             foreach ($askapache as $m) {
                 $m2 = isset($m[2]) ? $m[2] : null;
             }
-              $pi[ $n ][ $m[1] ] = (!isset($m[3]) || $m2 == $m[3]) ? $m2 : array_slice($m, 2);
+              $pi[ $n ][ $m[1] ]=(!isset($m[3])||$m2==$m[3]) ? $m2 : array_slice($m, 2);
         }
 
         return $pi;
@@ -237,7 +227,7 @@ class EEM_System_Status
         if ($response instanceof WP_Error) {
             $error_string = '';
             foreach ($response->errors as $short_name => $description_array) {
-                $error_string .= "<b>$short_name</b>: " . implode(", ", $description_array);
+                $error_string .= "<b>$short_name</b>: ".implode(", ", $description_array);
             }
             return $error_string;
         }
@@ -250,7 +240,7 @@ class EEM_System_Status
     public function get_wp_maintenance_mode()
     {
         $opened = file_exists(ABSPATH . '.maintenance');
-        return $opened ? sprintf(esc_html__('%s.maintenance file detected.%s Wordpress may have a failed auto-update which could prevent Event Espresso from updating the database correctly.', 'event_espresso'), '<strong>', '</strong>') : esc_html__('.maintenance file not detected. WordPress is not in maintenance mode.', 'event_espresso')  ;
+        return $opened ? sprintf(__('%s.maintenance file detected.%s Wordpress may have a failed auto-update which could prevent Event Espresso from updating the database correctly.', 'event_espresso'), '<strong>', '</strong>') : __('.maintenance file not detected. WordPress is not in maintenance mode.', 'event_espresso')  ;
     }
     /**
      * Whether or not logging is enabled
@@ -259,7 +249,7 @@ class EEM_System_Status
     public function get_logging_enabled()
     {
             $opened = @fopen(EVENT_ESPRESSO_UPLOAD_DIR . '/logs/espresso_log.txt', 'a');
-            return $opened ? esc_html__('Log Directory is writable', 'event_espresso') : sprintf(esc_html__('%sLog directory is NOT writable%s', 'event_espresso'), '<mark class="error"', '</mark>') ;
+            return $opened ? __('Log Directory is writable', 'event_espresso') : sprintf(__('%sLog directory is NOT writable%s', 'event_espresso'), '<mark class="error"', '</mark>') ;
     }
     /**
      *  Whether curl ro fsock works
@@ -270,13 +260,13 @@ class EEM_System_Status
         $fsock_works = function_exists('fsockopen');
         $curl_works = function_exists('curl_init');
         if ($fsock_works && $curl_works) {
-            $status = esc_html__('Your server has fsockopen and cURL enabled.', 'event_espresso');
+            $status = __('Your server has fsockopen and cURL enabled.', 'event_espresso');
         } elseif ($fsock_works) {
-            $status = esc_html__('Your server has fsockopen enabled, cURL is disabled.', 'event_espresso');
+            $status = __('Your server has fsockopen enabled, cURL is disabled.', 'event_espresso');
         } elseif ($curl_works) {
-            $status = esc_html__('Your server has cURL enabled, fsockopen is disabled.', 'event_espresso');
+            $status = __('Your server has cURL enabled, fsockopen is disabled.', 'event_espresso');
         } else {
-            $status = esc_html__('Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider.', 'event_espresso') . '</mark>';
+            $status = __('Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider.', 'event_espresso'). '</mark>';
         }
         return $status;
     }

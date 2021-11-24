@@ -1,5 +1,7 @@
 <?php
 
+
+
 class EE_Two_Column_Layout extends EE_Form_Section_Layout_Base
 {
 
@@ -73,8 +75,7 @@ class EE_Two_Column_Layout extends EE_Form_Section_Layout_Base
     */
     public function layout_subsection($form_section)
     {
-        if (
-            $form_section instanceof EE_Form_Section_Proper
+        if ($form_section instanceof EE_Form_Section_Proper
             || $form_section instanceof EE_Form_Section_HTML
         ) {
             return EEH_HTML::no_row($form_section->get_html());

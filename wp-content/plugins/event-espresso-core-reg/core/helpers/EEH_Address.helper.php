@@ -31,8 +31,8 @@ class EEH_Address
     ) {
         // check that incoming object implements the EEI_Address interface
         if (! $obj_with_address instanceof EEI_Address) {
-            $msg = esc_html__('The address could not be formatted.', 'event_espresso');
-            $dev_msg = esc_html__(
+            $msg = __('The address could not be formatted.', 'event_espresso');
+            $dev_msg = __(
                 'The Address Formatter requires passed objects to implement the EEI_Address interface.',
                 'event_espresso'
             );

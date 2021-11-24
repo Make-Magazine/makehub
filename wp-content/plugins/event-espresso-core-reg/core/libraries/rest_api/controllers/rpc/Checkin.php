@@ -61,7 +61,7 @@ class Checkin extends Base
                 new WP_Error(
                     'rest_registration_toggle_checkin_invalid_id',
                     sprintf(
-                        esc_html__(
+                        __(
                             'You cannot checkin registration with ID %1$s because it doesn\'t exist.',
                             'event_espresso'
                         ),
@@ -76,7 +76,7 @@ class Checkin extends Base
                 new WP_Error(
                     'rest_user_cannot_toggle_checkin',
                     sprintf(
-                        esc_html__('You are not allowed to checkin registration with ID %1$s.', 'event_espresso'),
+                        __('You are not allowed to checkin registration with ID %1$s.', 'event_espresso'),
                         $reg_id
                     ),
                     array('status' => 403)
@@ -91,7 +91,7 @@ class Checkin extends Base
                 return $this->sendResponse(
                     new WP_Error(
                         'rest_toggle_checkin_failed',
-                        esc_html__(
+                        __(
                         // @codingStandardsIgnoreStart
                             'Registration check-in failed because the registration is not approved. You may attempt to force checking in though.',
                             // @codingStandardsIgnoreEnd
@@ -103,7 +103,7 @@ class Checkin extends Base
             return $this->sendResponse(
                 new WP_Error(
                     'rest_toggle_checkin_failed_not_forceable',
-                    esc_html__('Registration checkin failed. Please see additional error data.', 'event_espresso')
+                    __('Registration checkin failed. Please see additional error data.', 'event_espresso')
                 )
             );
         }
@@ -123,7 +123,7 @@ class Checkin extends Base
                 new WP_Error(
                     'rest_toggle_checkin_error',
                     sprintf(
-                        esc_html__(
+                        __(
                         // @codingStandardsIgnoreStart
                             'Supposedly we created a new checkin object for registration %1$s at datetime %2$s, but we can\'t find it.',
                             // @codingStandardsIgnoreEnd

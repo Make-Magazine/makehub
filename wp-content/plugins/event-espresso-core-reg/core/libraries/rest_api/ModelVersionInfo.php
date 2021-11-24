@@ -260,7 +260,7 @@ class ModelVersionInfo
         } else {
             throw new \EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'Cannot load model "%1$s" because it does not exist in version %2$s of Event Espresso',
                         'event_espresso'
                     ),
@@ -287,8 +287,7 @@ class ModelVersionInfo
             $current_fields = $model->field_settings();
             // remove all fields that have been added since
             foreach ($changes as $version => $changes_in_version) {
-                if (
-                    isset($changes_in_version[ $model->get_this_model_name() ])
+                if (isset($changes_in_version[ $model->get_this_model_name() ])
                     && $changes_in_version[ $model->get_this_model_name() ] !== ModelVersionInfo::MODEL_ADDED
                 ) {
                     $current_fields = array_diff_key(

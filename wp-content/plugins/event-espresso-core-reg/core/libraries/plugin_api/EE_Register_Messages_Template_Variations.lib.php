@@ -71,9 +71,9 @@ class EE_Register_Messages_Template_Variations implements EEI_Plugin_API
      *                                                'default' => array(
      *                                                'email' => array(
      *                                                'registration_approved' => array(
-     *                                                my_ee_addon_blue_lagoon' => esc_html__('Blue Lagoon',
+     *                                                my_ee_addon_blue_lagoon' => __('Blue Lagoon',
      *                                                'text_domain'),
-     *                                                'my_ee_addon_red_sunset' => esc_html__('Red Sunset',
+     *                                                'my_ee_addon_red_sunset' => __('Red Sunset',
      *                                                'text_domain')
      *                                                )
      *                                                )
@@ -97,21 +97,20 @@ class EE_Register_Messages_Template_Variations implements EEI_Plugin_API
         // check for required params
         if (empty($identifier)) {
             throw new EE_Error(
-                esc_html__(
+                __(
                     'In order to register variations for a EE_Message_Template_Pack, you must include a value to reference the variations being registered',
                     'event_espresso'
                 )
             );
         }
 
-        if (
-            ! is_array($setup_args)
+        if (! is_array($setup_args)
             || empty($setup_args['variations'])
             || empty($setup_args['base_path'])
             || empty($setup_args['base_url'])
         ) {
             throw new EE_Error(
-                esc_html__(
+                __(
                     'In order to register variations for a EE_Message_Template_Pack, you must include an array containing the following keys: "variations", "base_path", "base_url", "extension"',
                     'event_espresso'
                 )
@@ -130,14 +129,13 @@ class EE_Register_Messages_Template_Variations implements EEI_Plugin_API
 
 
         // make sure this was called in the right place!
-        if (
-            ! did_action('EE_Brewing_Regular___messages_caf')
+        if (! did_action('EE_Brewing_Regular___messages_caf')
             || did_action('AHEE__EE_System__perform_activations_upgrades_and_migrations')
         ) {
             EE_Error::doing_it_wrong(
                 __METHOD__,
                 sprintf(
-                    esc_html__(
+                    __(
                         'Messages Templates Variations given the reference "%s" has been attempted to be registered with the EE Messages Template Pack System.  It may or may not work because it should be only called on the "EE_Brewing_Regular__messages_caf" hook.',
                         'event_espresso'
                     ),
@@ -193,7 +191,7 @@ class EE_Register_Messages_Template_Variations implements EEI_Plugin_API
                     if (isset($all_variations['default'])) {
                         throw new EE_Error(
                             sprintf(
-                                esc_html__(
+                                __(
                                     'Variations registered through the EE_Register_Messages_Template_Variations api cannot override the default variation for the default template.  Please check the code registering variations with this reference, "%s" and modify.',
                                     'event_espresso'
                                 ),
@@ -214,7 +212,7 @@ class EE_Register_Messages_Template_Variations implements EEI_Plugin_API
                             unset($validated_variations['variations'][ $template_pack ][ $messenger ][ $message_type ][ $slug ]);
                             EE_Error::add_error(
                                 sprintf(
-                                    esc_html__(
+                                    __(
                                         'Unable to register the %s variation for the %s template pack with the %s messenger and %s message_type because a variation with this slug was already registered for this template pack and messenger and message type by an addon using this key %s.',
                                         'event_espresso'
                                     ),

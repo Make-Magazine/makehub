@@ -116,11 +116,11 @@ class TicketDetails
         }
         return \EEH_HTML::link(
             '',
-            sprintf(esc_html__('show%1$sdetails%1$s+', 'event_espresso'), '&nbsp;'),
+            sprintf(__('show%1$sdetails%1$s+', 'event_espresso'), '&nbsp;'),
             esc_attr(
                 apply_filters(
                     'FHEE__ticket_selector_chart_template__show_ticket_details_link_title',
-                    esc_html__('click to show additional ticket details', 'event_espresso')
+                    __('click to show additional ticket details', 'event_espresso')
                 )
             ),
             "display-{$this->cssId()}",
@@ -129,11 +129,11 @@ class TicketDetails
             'rel="' . $this->cssId() . '"'
         ) . \EEH_HTML::link(
             '',
-            sprintf(esc_html__('hide%1$sdetails%1$s-', 'event_espresso'), '&nbsp;'),
+            sprintf(__('hide%1$sdetails%1$s-', 'event_espresso'), '&nbsp;'),
             esc_attr(
                 apply_filters(
                     'FHEE__ticket_selector_chart_template__hide_ticket_details_link_title',
-                    esc_html__('click to hide additional ticket details', 'event_espresso')
+                    __('click to hide additional ticket details', 'event_espresso')
                 )
             ),
             "hide-{$this->cssId()}",

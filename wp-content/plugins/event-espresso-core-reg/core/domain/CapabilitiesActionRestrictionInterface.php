@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\domain;
 
 use EventEspresso\core\domain\entities\Context;

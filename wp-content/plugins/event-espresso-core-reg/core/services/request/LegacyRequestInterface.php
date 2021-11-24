@@ -37,7 +37,7 @@ interface LegacyRequestInterface
 
 
     /**
-     * returns sanitized contents of $_REQUEST
+     * returns contents of $_REQUEST
      *
      * @return array
      */

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Text_Validation_Strategy
  * Optionally, a regular expression can be provided that will be used for validation.
@@ -42,7 +41,7 @@ class EE_Text_Validation_Strategy extends EE_Validation_Strategy_Base
     public function get_jquery_validation_rule_array()
     {
         if ($this->_regex !== null) {
-            return array( 'regex' => $this->regex_js(), 'messages' => array( 'regex' => $this->get_validation_error_message() ) );
+            return array( 'regex'=> $this->regex_js(), 'messages' => array( 'regex' => $this->get_validation_error_message() ) );
         } else {
             return array();
         }

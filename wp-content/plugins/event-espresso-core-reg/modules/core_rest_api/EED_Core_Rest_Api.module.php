@@ -127,15 +127,14 @@ class EED_Core_Rest_Api extends \EED_Module
         foreach ($folder_contents as $classname_in_namespace => $filepath) {
             // ignore the base parent class
             // and legacy named classes
-            if (
-                $classname_in_namespace === 'ChangesInBase'
+            if ($classname_in_namespace === 'ChangesInBase'
                 || strpos($classname_in_namespace, 'Changes_In_') === 0
             ) {
                 continue;
             }
             $full_classname = 'EventEspresso\core\libraries\rest_api\changes\\' . $classname_in_namespace;
             if (class_exists($full_classname)) {
-                $instance_of_class = new $full_classname();
+                $instance_of_class = new $full_classname;
                 if ($instance_of_class instanceof ChangesInBase) {
                     $instance_of_class->setHooks();
                 }
@@ -492,13 +491,11 @@ class EED_Core_Rest_Api extends \EED_Module
                     'args'            => $this->_get_response_selection_query_params($model, $version, true),
                 ),
             );
-            if (
-                apply_filters(
-                    'FHEE__EED_Core_Rest_Api___get_model_route_data_for_version__add_write_endpoints',
-                    EED_Core_Rest_Api::should_have_write_endpoints($model),
-                    $model
-                )
-            ) {
+            if (apply_filters(
+                'FHEE__EED_Core_Rest_Api___get_model_route_data_for_version__add_write_endpoints',
+                EED_Core_Rest_Api::should_have_write_endpoints($model),
+                $model
+            )) {
                 $model_routes[ $plural_model_route ][] = array(
                     'callback'        => array(
                         'EventEspresso\core\libraries\rest_api\controllers\model\Write',
@@ -686,7 +683,7 @@ class EED_Core_Rest_Api extends \EED_Module
                     'force' => array(
                         'required'    => false,
                         'default'     => false,
-                        'description' => esc_html__(
+                        'description' => __(
                         // @codingStandardsIgnoreStart
                             'Whether to force toggle checkin, or to verify the registration status and allowed ticket uses',
                             // @codingStandardsIgnoreEnd
@@ -917,8 +914,7 @@ class EED_Core_Rest_Api extends \EED_Module
             // remove the read-only flag. If it were read-only we wouldn't list it as an argument while writing, right?
             unset($arg_info['readonly']);
             $schema_properties = $field_obj->getSchemaProperties();
-            if (
-                isset($schema_properties['raw'])
+            if (isset($schema_properties['raw'])
                 && $field_obj->getSchemaType() === 'object'
             ) {
                 // if there's a "raw" form of this argument, use those properties instead
@@ -976,15 +972,12 @@ class EED_Core_Rest_Api extends \EED_Module
     public static function default_sanitize_callback($value, WP_REST_Request $request, $param)
     {
         $attributes = $request->get_attributes();
-        if (
-            ! isset($attributes['args'][ $param ])
-            || ! is_array($attributes['args'][ $param ])
-        ) {
+        if (! isset($attributes['args'][ $param ])
+            || ! is_array($attributes['args'][ $param ])) {
             $validation_result = true;
         } else {
             $args = $attributes['args'][ $param ];
-            if (
-                (
+            if ((
                     $value === ''
                     || $value === null
                 )
@@ -994,8 +987,7 @@ class EED_Core_Rest_Api extends \EED_Module
             ) {
                 // not required and not provided? that's cool
                 $validation_result = true;
-            } elseif (
-                isset($args['format'])
+            } elseif (isset($args['format'])
                       && $args['format'] === 'email'
             ) {
                 $validation_result = true;
@@ -1149,7 +1141,7 @@ class EED_Core_Rest_Api extends \EED_Module
         // they want to discover particular endpoints
         // also, we don't have access to the request so we have to just grab it from the superglobal
         $force_show_ee_namespace = ltrim(
-            EED_Core_Rest_Api::getRequest()->getRequestParam('force_show_ee_namespace'),
+            EEH_Array::is_set($_REQUEST, 'force_show_ee_namespace', ''),
             '/'
         );
         foreach (EED_Core_Rest_Api::get_ee_route_data() as $namespace => $relative_urls) {
@@ -1162,8 +1154,7 @@ class EED_Core_Rest_Api extends \EED_Module
                     // by default, hide "hidden_endpoint"s, unless the request indicates
                     // to $force_show_ee_namespace, in which case only show that one
                     // namespace's endpoints (and hide all others)
-                    if (
-                        ($force_show_ee_namespace !== '' && $force_show_ee_namespace !== $namespace)
+                    if (($force_show_ee_namespace !== '' && $force_show_ee_namespace !== $namespace)
                         || ($endpoint['hidden_endpoint'] && $force_show_ee_namespace === '')
                     ) {
                         $full_route = '/' . ltrim($namespace, '/');
@@ -1243,19 +1234,16 @@ class EED_Core_Rest_Api extends \EED_Module
             if ($key_versioned_endpoint === $latest_version) {
                 // don't hide the latest version in the index
                 $versions_served[ $key_versioned_endpoint ] = false;
-            } elseif (
-                version_compare($key_versioned_endpoint, $lowest_compatible_version, '>=')
+            } elseif (version_compare($key_versioned_endpoint, $lowest_compatible_version, '>=')
                 && version_compare($key_versioned_endpoint, EED_Core_Rest_Api::core_version(), '<')
             ) {
                 // include, but hide, previous versions which are still supported
                 $versions_served[ $key_versioned_endpoint ] = true;
-            } elseif (
-                apply_filters(
-                    'FHEE__EED_Core_Rest_Api__versions_served__include_incompatible_versions',
-                    false,
-                    $possibly_served_versions
-                )
-            ) {
+            } elseif (apply_filters(
+                'FHEE__EED_Core_Rest_Api__versions_served__include_incompatible_versions',
+                false,
+                $possibly_served_versions
+            )) {
                 // if a version is no longer supported, don't include it in index or list of versions served
                 $versions_served[ $key_versioned_endpoint ] = true;
             }

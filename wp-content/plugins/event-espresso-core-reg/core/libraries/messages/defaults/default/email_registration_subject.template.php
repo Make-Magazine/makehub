@@ -1,3 +1,1 @@
-<?php
-
-_e('Event Registration Details', 'event_espresso');
+<?php _e('Event Registration Details', 'event_espresso');

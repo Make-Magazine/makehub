@@ -176,8 +176,7 @@ abstract class FormHandler implements FormHandlerInterface
         }
         if ($for_display) {
             $form_config = $this->formConfig();
-            if (
-                $form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
+            if ($form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
                 || $form_config === FormHandler::ADD_FORM_SUBMIT_ONLY
             ) {
                 $this->appendSubmitButton();
@@ -419,17 +418,16 @@ abstract class FormHandler implements FormHandlerInterface
      */
     public function setFormConfig($form_config)
     {
-        if (
-            ! in_array(
-                $form_config,
-                array(
+        if (! in_array(
+            $form_config,
+            array(
                 FormHandler::ADD_FORM_TAGS_AND_SUBMIT,
                 FormHandler::ADD_FORM_TAGS_ONLY,
                 FormHandler::ADD_FORM_SUBMIT_ONLY,
                 FormHandler::DO_NOT_SETUP_FORM,
-                ),
-                true
-            )
+            ),
+            true
+        )
         ) {
             throw new DomainException(
                 sprintf(
@@ -585,8 +583,7 @@ abstract class FormHandler implements FormHandlerInterface
             ''
         );
         $form_config = $this->formConfig();
-        if (
-            $form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
+        if ($form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
             || $form_config === FormHandler::ADD_FORM_TAGS_ONLY
         ) {
             $additional_props = $this->requiresMultipartEnctype()
@@ -599,8 +596,7 @@ abstract class FormHandler implements FormHandlerInterface
             );
         }
         $form_html .= $this->form(true)->get_html();
-        if (
-            $form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
+        if ($form_config === FormHandler::ADD_FORM_TAGS_AND_SUBMIT
             || $form_config === FormHandler::ADD_FORM_TAGS_ONLY
         ) {
             $form_html .= $this->form()->form_close();

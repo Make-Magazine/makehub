@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Request_Stack
  * Basically a container class for holding EE_Middleware classes and the core application

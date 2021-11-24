@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Attendee Model
  *
@@ -22,8 +21,8 @@ class EEM_Term_Relationship extends EEM_Base
      */
     protected function __construct($timezone = null)
     {
-        $this->singular_item = esc_html__('Term Relationship', 'event_espresso');
-        $this->plural_item = esc_html__('Term Relationships', 'event_espresso');
+        $this->singular_item = __('Term Relationship', 'event_espresso');
+        $this->plural_item = __('Term Relationships', 'event_espresso');
         $this->_tables = array(
             'Term_Relationship' => new EE_Primary_Table('term_relationships'),
         );
@@ -32,14 +31,14 @@ class EEM_Term_Relationship extends EEM_Base
             'Term_Relationship' => array(
                 'object_id'        => new EE_Foreign_Key_Int_Field(
                     'object_id',
-                    esc_html__('Object(Post) ID', 'event_espresso'),
+                    __('Object(Post) ID', 'event_espresso'),
                     false,
                     0,
                     $models_this_can_attach_to
                 ),
                 'term_taxonomy_id' => new EE_Foreign_Key_Int_Field(
                     'term_taxonomy_id',
-                    esc_html__(
+                    __(
                         'Term (in context of a taxonomy) ID',
                         'event_espresso'
                     ),
@@ -49,7 +48,7 @@ class EEM_Term_Relationship extends EEM_Base
                 ),
                 'term_order'       => new EE_Integer_Field(
                     'term_order',
-                    esc_html__('Term Order', 'event_espresso'),
+                    __('Term Order', 'event_espresso'),
                     false,
                     0
                 ),

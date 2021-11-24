@@ -43,7 +43,7 @@ class TableManager extends \EE_Base
         } else {
             throw new \EE_Error(
                 sprintf(
-                    esc_html__('Table analysis class on class %1$s is not set properly.', 'event_espresso'),
+                    __('Table analysis class on class %1$s is not set properly.', 'event_espresso'),
                     get_class($this)
                 )
             );
@@ -162,8 +162,7 @@ class TableManager extends \EE_Base
         global $wpdb;
         $table_name = $this->getTableAnalysis()->ensureTableNameHasPrefix($table_name);
         $index_exists_query = "SHOW INDEX FROM {$table_name} WHERE key_name = '{$index_name}'";
-        if (
-            $this->getTableAnalysis()->tableExists($table_name)
+        if ($this->getTableAnalysis()->tableExists($table_name)
             && $wpdb->get_var($index_exists_query)
                === $table_name // using get_var with the $index_exists_query returns the table's name
         ) {
@@ -214,7 +213,7 @@ class TableManager extends \EE_Base
         } else {
             throw new \EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'The following table creation SQL does not contain valid information about the table columns: %1$s %2$s',
                         'event_espresso'
                     ),
@@ -257,10 +256,8 @@ class TableManager extends \EE_Base
             return false;
         }
         foreach ($index_entries as $index_entry) {
-            if (
-                $column_name === $index_entry->Column_name
-                && (string) $desired_index_size !== $index_entry->Sub_part
-            ) {
+            if ($column_name === $index_entry->Column_name
+                && (string) $desired_index_size !== $index_entry->Sub_part) {
                 return $this->dropIndex($table_name, $index_name);
             }
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace EventEspresso\core\services\collections\FilterIteratorsHelper;
 
 use Closure;

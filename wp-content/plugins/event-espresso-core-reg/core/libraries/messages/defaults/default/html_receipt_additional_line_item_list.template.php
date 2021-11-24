@@ -1,9 +1,7 @@
 <?php
-
 /**
  * This is the template for the html messenger and receipt message type additiona_line_item_list field.
  */
-
 ?>
     </td>
 </tr>

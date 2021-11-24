@@ -22,7 +22,7 @@ class EE_Boolean_Field extends EE_Integer_Field
      */
     public function prepare_for_get($value_of_field_on_model_object)
     {
-        return (bool) parent::prepare_for_get($value_of_field_on_model_object);
+        return (boolean) parent::prepare_for_get($value_of_field_on_model_object);
     }
 
     /**
@@ -60,7 +60,7 @@ class EE_Boolean_Field extends EE_Integer_Field
     {
         return apply_filters(
             'FHEE__EE_Boolean_Field__prepare_for_pretty_echoing__return',
-            $value_on_field_to_be_outputted ? esc_html__('Yes', 'event_espresso') : esc_html__('No', 'event_espresso'),
+            $value_on_field_to_be_outputted ? __('Yes', 'event_espresso') : __('No', 'event_espresso'),
             $value_on_field_to_be_outputted
         );
     }

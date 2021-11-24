@@ -1,13 +1,5 @@
-<?php
-/**
- * @var EE_Transaction $transaction
- * @var string[] $payments
- * @var string $gateway_content
- */
-?>
-
 <h2 class="section-heading display-box-heading">
-    <?php esc_html_e('Payment Overview', 'event_espresso'); ?>
+    <?php _e('Payment Overview', 'event_espresso'); ?>
 </h2>
 <?php do_action('AHEE__thank_you_page_payment_details_template__after_heading'); ?>
 
@@ -18,23 +10,23 @@
             <thead>
             <tr>
                 <th width="35%" class="jst-left">
-                    <?php esc_html_e('Payment Date', 'event_espresso') ?>
+                    <?php _e('Payment Date', 'event_espresso') ?>
                 </th>
                 <th width="17.5%" class="jst-left">
-                    <?php esc_html_e('Type', 'event_espresso'); ?>
+                    <?php _e('Type', 'event_espresso'); ?>
                 </th>
                 <th width="17.5%" class="jst-rght">
-                    <?php esc_html_e('Amount', 'event_espresso'); ?>
+                    <?php _e('Amount', 'event_espresso'); ?>
                 </th>
                 <th width="30%" class="jst-rght">
-                    <?php esc_html_e('Status', 'event_espresso'); ?>
+                    <?php _e('Status', 'event_espresso'); ?>
                 </th>
             </tr>
             </thead>
             <tbody>
             <?php
             foreach ($payments as $payment) {
-                echo $payment; // already escaped
+                echo $payment;
             }
             ?>
             </tbody>
@@ -45,7 +37,7 @@
             echo apply_filters(
                 'FHEE__payment_overview_template__no_payments_made',
                 sprintf(
-                    esc_html__('%sNo payments towards this transaction have been received.%s', 'event_espresso'),
+                    __('%sNo payments towards this transaction have been received.%s', 'event_espresso'),
                     '<p class="important-notice">',
                     '</p>'
                 )
@@ -55,7 +47,7 @@
             echo apply_filters(
                 'FHEE__payment_overview_template__no_payment_required',
                 sprintf(
-                    esc_html__('%sNo payment is required for this transaction.%s', 'event_espresso'),
+                    __('%sNo payment is required for this transaction.%s', 'event_espresso'),
                     '<p>',
                     '</p>'
                 )
@@ -63,7 +55,7 @@
             do_action('AHEE__thank_you_page_payment_details_template__no_payment_required');
         }
     }
-    echo $gateway_content; // already escaped
+    echo $gateway_content;
     do_action('AHEE__thank_you_page_payment_details_template__after_gateway_content', $gateway_content);
 
     ?>

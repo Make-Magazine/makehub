@@ -49,7 +49,7 @@ class CustomTaxonomyDefinitions
                     ),
                     'rewrite'           => array(
                         'slug' => EEH_URL::slugify(
-                            esc_html__('event-category', 'event_espresso'),
+                            __('event-category', 'event_espresso'),
                             'event-category'
                         )
                     ),
@@ -70,7 +70,7 @@ class CustomTaxonomyDefinitions
                     ),
                     'rewrite'           => array(
                         'slug' => EEH_URL::slugify(
-                            esc_html__('venue-category', 'event_espresso'),
+                            __('venue-category', 'event_espresso'),
                             'venue-category'
                         )
                     ),
@@ -91,7 +91,7 @@ class CustomTaxonomyDefinitions
                     ),
                     'rewrite'      => array(
                         'slug' => EEH_URL::slugify(
-                            esc_html__('event-type', 'event_espresso'),
+                            __('event-type', 'event_espresso'),
                             'event-type'
                         )
                     ),

@@ -139,9 +139,10 @@ class Support_Admin_Page extends EE_Admin_Page
             "espresso_{$box}_settings",
             $label,
             function ($post, $metabox) {
-                EEH_Template::display_template(
+                echo EEH_Template::display_template(
                     $metabox['args']['template_path'],
-                    $metabox['args']['template_args']
+                    $metabox['args']['template_args'],
+                    true
                 );
             },
             $this->_current_screen->id,

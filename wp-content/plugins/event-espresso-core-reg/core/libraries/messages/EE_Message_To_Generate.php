@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class is the signature for an object representing prepped message for queueing.
  *
@@ -297,7 +296,7 @@ class EE_Message_To_Generate
         if (! class_exists($class_name)) {
             EE_Error::add_error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'The included data handler reference (%s) does not match any valid, accessible, "EE_Messages_incoming_data" classes.  Looking for %s.',
                         'event_espresso'
                     ),

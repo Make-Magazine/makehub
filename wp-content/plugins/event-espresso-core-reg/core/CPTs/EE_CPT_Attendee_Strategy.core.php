@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Event Espresso
  *
@@ -8,7 +7,7 @@
  * @ package            Event Espresso
  * @ author            Seth Shoultes
  * @ copyright        (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @ license            https://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
+ * @ license            http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
  * @ link                    http://www.eventespresso.com
  * @ version            4.0
  *

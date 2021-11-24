@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Event List
  *
@@ -81,12 +80,11 @@ class EED_Feeds extends EED_Module
      */
     public static function parse_request()
     {
-        $request = self::getRequest();
-        if ($request->requestParamIsSet('post_type')) {
+        if (EE_Registry::instance()->REQ->is_set('post_type')) {
             // define path to templates
             define('RSS_FEEDS_TEMPLATES_PATH', str_replace('\\', '/', plugin_dir_path(__FILE__)) . 'templates/');
             // what kinda post_type are we dealing with ?
-            switch ($request->getRequestParam('post_type')) {
+            switch (EE_Registry::instance()->REQ->get('post_type')) {
                 case 'espresso_events':
                     // for rss2, atom, rss, rdf
                     add_filter('the_excerpt_rss', array('EED_Feeds', 'the_event_feed'), 10, 1);

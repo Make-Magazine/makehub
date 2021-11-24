@@ -1,8 +1,5 @@
 <?php
 
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
-
 /**
  *
  * Class EE_Log
@@ -162,13 +159,12 @@ class EE_Log
             return;
         }
 
-        /** @var RequestInterface $request */
-        $request = LoaderFactory::getLoader()->getShared(RequestInterface::class);
-        $data = 'domain=' . $request->getServerParam('HTTP_HOST');
-        $data .= '&ip=' . $request->getServerParam('SERVER_ADDR');
-        $data .= '&server_type=' . $request->getServerParam('SERVER_SOFTWARE');
+        $data = 'domain=' . $_SERVER['HTTP_HOST'];
+        $data .= '&ip=' . $_SERVER['SERVER_ADDR'];
+        $data .= '&server_type=' . $_SERVER['SERVER_SOFTWARE'];
         $data .= '&time=' . time();
         $data .= '&remote_log=' . $this->_log;
+        $data .= '&request_array=' . json_encode($_REQUEST);
         $data .= '&action=save';
 
         if (defined('EELOGGING_PASS')) {
@@ -189,7 +185,7 @@ class EE_Log
 
     /**
      * write_debug
-     * writes the contents of the current request's data to a log file.
+     * writes the contents of the current request's $_GET and $_POST arrays to a log file.
      * previous entries are overwritten
      */
     public function write_debug()
@@ -211,6 +207,6 @@ class EE_Log
      */
     public function __clone()
     {
-        trigger_error(esc_html__('Clone is not allowed.', 'event_espresso'), E_USER_ERROR);
+        trigger_error(__('Clone is not allowed.', 'event_espresso'), E_USER_ERROR);
     }
 }

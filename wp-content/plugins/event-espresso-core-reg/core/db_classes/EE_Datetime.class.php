@@ -650,7 +650,7 @@ class EE_Datetime extends EE_Soft_Delete_Base_Class
      */
     public function e_date_range($dt_frmt = '', $conjunction = ' - ')
     {
-        echo $this->date_range($dt_frmt, $conjunction); // sanitized
+        echo $this->date_range($dt_frmt, $conjunction);
     }
 
 
@@ -758,7 +758,7 @@ class EE_Datetime extends EE_Soft_Delete_Base_Class
      */
     public function e_time_range($tm_format = '', $conjunction = ' - ')
     {
-        echo $this->time_range($tm_format, $conjunction); // sanitized
+        echo $this->time_range($tm_format, $conjunction);
     }
 
 
@@ -828,7 +828,7 @@ class EE_Datetime extends EE_Soft_Delete_Base_Class
      */
     public function e_date_and_time_range($dt_format = '', $tm_format = '', $conjunction = ' - ')
     {
-        echo $this->date_and_time_range($dt_format, $tm_format, $conjunction); // sanitized
+        echo $this->date_and_time_range($dt_format, $tm_format, $conjunction);
     }
 
 
@@ -1209,14 +1209,12 @@ class EE_Datetime extends EE_Soft_Delete_Base_Class
             }
         }
         // first condition is to see if the months are different
-        if (
-            date('m', $this->get_raw('DTT_EVT_start')) !== date('m', $this->get_raw('DTT_EVT_end'))
+        if (date('m', $this->get_raw('DTT_EVT_start')) !== date('m', $this->get_raw('DTT_EVT_end'))
         ) {
             $display_date = $this->start_date('M j\, Y g:i a') . ' - ' . $this->end_date('M j\, Y g:i a');
             // next condition is if its the same month but different day
         } else {
-            if (
-                date('m', $this->get_raw('DTT_EVT_start')) === date('m', $this->get_raw('DTT_EVT_end'))
+            if (date('m', $this->get_raw('DTT_EVT_start')) === date('m', $this->get_raw('DTT_EVT_end'))
                 && date('d', $this->get_raw('DTT_EVT_start')) !== date('d', $this->get_raw('DTT_EVT_end'))
             ) {
                 $display_date = $this->start_date('M j\, g:i a') . ' - ' . $this->end_date('M j\, g:i a Y');

@@ -35,46 +35,46 @@ class EE_Event_Shortcodes extends EE_Shortcodes
 
     protected function _init_props()
     {
-        $this->label = esc_html__('Event Shortcodes', 'event_espresso');
-        $this->description = esc_html__('All shortcodes specific to event related data', 'event_espresso');
+        $this->label = __('Event Shortcodes', 'event_espresso');
+        $this->description = __('All shortcodes specific to event related data', 'event_espresso');
         $this->_shortcodes = array(
-            '[EVENT_ID]'                              => esc_html__(
+            '[EVENT_ID]'                              => __(
                 'Will be replaced by the event ID of an event',
                 'event_espresso'
             ),
-            '[EVENT]'                                 => esc_html__('The name of the event', 'event_espresso'),
-            '[EVENT_NAME]'                            => esc_html__(
+            '[EVENT]'                                 => __('The name of the event', 'event_espresso'),
+            '[EVENT_NAME]'                            => __(
                 "This also can be used for the name of the event",
                 'event_espresso'
             ),
-            '[EVENT_PHONE]'                           => esc_html__(
+            '[EVENT_PHONE]'                           => __(
                 'The phone number for the event (usually an info number)',
                 'event_espresso'
             ),
-            '[EVENT_DESCRIPTION]'                     => esc_html__('The description of the event', 'event_espresso'),
-            '[EVENT_EXCERPT]'                         => esc_html__(
+            '[EVENT_DESCRIPTION]'                     => __('The description of the event', 'event_espresso'),
+            '[EVENT_EXCERPT]'                         => __(
                 'This gets parsed to the value for the excerpt field in the event or blank if there is no excerpt.',
                 'event_espresso'
             ),
-            '[EVENT_LINK]'                            => esc_html__('A link associated with the event', 'event_espresso'),
-            '[EVENT_URL]'                             => esc_html__(
+            '[EVENT_LINK]'                            => __('A link associated with the event', 'event_espresso'),
+            '[EVENT_URL]'                             => __(
                 'A link to the event set up on the host site.',
                 'event_espresso'
             ),
-            '[VIRTUAL_URL]'                           => esc_html__(
+            '[VIRTUAL_URL]'                           => __(
                 'What was used for the "URL of Event" field in the Venue settings',
                 'event_espresso'
             ),
-            '[VIRTUAL_PHONE]'                         => esc_html__(
+            '[VIRTUAL_PHONE]'                         => __(
                 'An alternate phone number for the event. Typically used as a "call-in" number',
                 'event_espresso'
             ),
-            '[EVENT_IMAGE]'                           => esc_html__(
+            '[EVENT_IMAGE]'                           => __(
                 'This will parse to the Feature image for the event.',
                 'event_espresso'
             ),
             '[EVENT_IMAGE_*]'                         => sprintf(
-                esc_html__(
+                __(
                     'This will parse to the Feature image for the event, %1$ssize%2$s can be set to determine the size of the image loaded by the shortcode. The %1$swidth%2$s and/or %1$sheight%2$s can also be set to determine the width and height of the image when output. By default the shortcode will load the %1$sthumbnail%2$s image size.',
                     'event_espresso'
                 ),
@@ -82,34 +82,34 @@ class EE_Event_Shortcodes extends EE_Shortcodes
                 '</code>'
             ),
             '[EVENT_TOTAL_AVAILABLE_SPACES_*]'        => sprintf(
-                esc_html__(
+                __(
                     'This will parse to the total available spaces for an event. Calculating total spaces is approximate because it is dependent on the complexity of limits on your event.  There are two methods of calculation (which can be indicated by the %1$smethod%2$s param on the shortcode).  %1$scurrent%2$s which will do a more accurate calculation of total available spaces based on current sales, and %1$sfull%2$s which will be the maximum total available spaces that is on the event in optimal conditions. The shortcode will default to current.',
                     'event_espresso'
                 ),
                 '<code>',
                 '</code>'
             ),
-            '[EVENT_TOTAL_SPOTS_TAKEN]'               => esc_html__(
+            '[EVENT_TOTAL_SPOTS_TAKEN]'               => __(
                 'This shortcode will parse to the output the total approved registrations for this event',
                 'event_espresso'
             ),
-            '[EVENT_FACEBOOK_URL]'                    => esc_html__(
+            '[EVENT_FACEBOOK_URL]'                    => __(
                 'This will return the Facebook URL for the event if you have it set via custom field in your event, otherwise it will use the Facebook URL set in "Your Organization Settings". To set the facebook url in your event, add a custom field with the key as <code>event_facebook</code> and the value as your facebook url.',
                 'event_espresso'
             ),
-            '[EVENT_TWITTER_URL]'                     => esc_html__(
+            '[EVENT_TWITTER_URL]'                     => __(
                 'This will return the Twitter URL for the event if you have it set via custom field in your event, otherwise it will use the Twitter URL set in "Your Organization Settings". To set the facebook url in your event, add a custom field with the key as <code>event_twitter</code> and the value as your facebook url',
                 'event_espresso'
             ),
             '[EVENT_META_*]'                          => sprintf(
-                esc_html__(
+                __(
                     'This is a special dynamic shortcode. After the "*", add the exact name for your custom field, if there is a value set for that custom field within the event then it will be output in place of this shortcode. If you use shortcodes within your custom fields set %1$sdo_shortcode=true%2$s at the end of the shortcode to run the value through the do_shortcode function. ',
                     'event_espresso'
                 ),
                 '<code>',
                 '</code>'
             ),
-            '[REGISTRATION_LIST_TABLE_FOR_EVENT_URL]' => esc_html__(
+            '[REGISTRATION_LIST_TABLE_FOR_EVENT_URL]' => __(
                 'This parses to the url for the registration list table filtered by registrations for this event.',
                 'event_espresso'
             ),
@@ -251,8 +251,7 @@ class EE_Event_Shortcodes extends EE_Shortcodes
             }
             // Add a filter to allow all instances of EVENT_META_* to run through do_shortcode, default to false.
             // Check if a do_shortcode attribute was set to true and if so run $event_meta through that function.
-            if (
-                apply_filters('FHEE__EventEspresso_core_libraries_shortcodes_EE_Event_Shortcodes___parser__event_meta_do_shortcode', false)
+            if (apply_filters('FHEE__EventEspresso_core_libraries_shortcodes_EE_Event_Shortcodes___parser__event_meta_do_shortcode', false)
                 || !empty($attrs['do_shortcode']) && filter_var($attrs['do_shortcode'], FILTER_VALIDATE_BOOLEAN)
             ) {
                 return do_shortcode($event_meta);

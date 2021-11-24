@@ -21,7 +21,6 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
      */
     public function setRequestTypeContextChecker(RequestTypeContextCheckerInterface $type);
 
-
     /**
      * @return array
      */
@@ -47,36 +46,13 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
 
 
     /**
-     * @param string $key
-     * @param mixed|null $default
-     * @return array|int|float|string
-     */
-    public function getServerParam($key, $default = null);
-
-
-    /**
-     * @param string                 $key
-     * @param array|int|float|string $value
-     * @return void
-     */
-    public function setServerParam($key, $value);
-
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function serverParamIsSet($key);
-
-
-    /**
      * @return array
      */
     public function filesParams();
 
 
     /**
-     * returns sanitized contents of $_REQUEST
+     * returns contents of $_REQUEST
      *
      * @return array
      */
@@ -87,22 +63,19 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
      * @param string $key
      * @param string $value
      * @param bool   $override_ee
-     * @return void
+     * @return    void
      */
     public function setRequestParam($key, $value, $override_ee = false);
 
 
     /**
-     * returns   the value for a request param if the given key exists
+     * returns the value for a request param if the given key exists
      *
-     * @param string     $key
-     * @param mixed|null $default
-     * @param string     $type      the expected data type for the parameter's value, ie: string, int, bool, etc
-     * @param bool       $is_array  if true, then parameter value will be treated as an array of $type
-     * @param string     $delimiter for CSV type strings that should be returned as an array
-     * @return array|bool|float|int|string
+     * @param string $key
+     * @param null   $default
+     * @return mixed
      */
-    public function getRequestParam($key, $default = null, $type = 'string', $is_array = false, $delimiter = '');
+    public function getRequestParam($key, $default = null);
 
 
     /**
@@ -122,13 +95,10 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
      *      * to represent one or more characters of any type
      *
      * @param string     $pattern
-     * @param mixed|null $default
-     * @param string     $type      the expected data type for the parameter's value, ie: string, int, bool, etc
-     * @param bool       $is_array  if true, then parameter value will be treated as an array of $type
-     * @param string     $delimiter for CSV type strings that should be returned as an array
-     * @return array|bool|float|int|string
+     * @param null|mixed $default
+     * @return false|int
      */
-    public function getMatch($pattern, $default = null, $type = 'string', $is_array = false, $delimiter = '');
+    public function getMatch($pattern, $default = null);
 
 
     /**
@@ -157,7 +127,7 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
      * remove params
      *
      * @param array $keys
-     * @param bool  $unset_from_global_too
+     * @param bool   $unset_from_global_too
      */
     public function unSetRequestParams(array $keys, $unset_from_global_too = false);
 

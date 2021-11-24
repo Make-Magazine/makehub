@@ -2,8 +2,6 @@
 
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\RequestInterface;
 
 /**
  * Class EEH_Event_Query
@@ -43,7 +41,7 @@ class EEH_Event_Query
      *
      * @var array $_event_query_orderby
      */
-    protected static $_event_query_orderby = [];
+    protected static $_event_query_orderby = array();
 
     /**
      * direction list is sorted
@@ -57,7 +55,8 @@ class EEH_Event_Query
      *
      * @var $_query_params
      */
-    protected static $_query_params = [];
+    protected static $_query_params = array();
+
 
 
     /**
@@ -66,8 +65,9 @@ class EEH_Event_Query
     public static function add_query_filters()
     {
         // add query filters
-        add_action('pre_get_posts', ['EEH_Event_Query', 'filter_query_parts'], 10, 1);
+        add_action('pre_get_posts', array('EEH_Event_Query', 'filter_query_parts'), 10, 1);
     }
+
 
 
     /**
@@ -94,13 +94,14 @@ class EEH_Event_Query
         // our cpt strategies take care of adding things in.
         if ($WP_Query instanceof WP_Query && ! $WP_Query->is_main_query()) {
             // build event list query
-            add_filter('posts_fields', ['EEH_Event_Query', 'posts_fields'], 10, 2);
-            add_filter('posts_join', ['EEH_Event_Query', 'posts_join'], 10, 2);
-            add_filter('posts_where', ['EEH_Event_Query', 'posts_where'], 10, 2);
-            add_filter('posts_orderby', ['EEH_Event_Query', 'posts_orderby'], 10, 2);
-            add_filter('posts_clauses_request', ['EEH_Event_Query', 'posts_clauses'], 10, 2);
+            add_filter('posts_fields', array('EEH_Event_Query', 'posts_fields'), 10, 2);
+            add_filter('posts_join', array('EEH_Event_Query', 'posts_join'), 10, 2);
+            add_filter('posts_where', array('EEH_Event_Query', 'posts_where'), 10, 2);
+            add_filter('posts_orderby', array('EEH_Event_Query', 'posts_orderby'), 10, 2);
+            add_filter('posts_clauses_request', array('EEH_Event_Query', 'posts_clauses'), 10, 2);
         }
     }
+
 
 
     /**
@@ -120,13 +121,14 @@ class EEH_Event_Query
         $orderby = 'start_date',
         $sort = 'ASC'
     ) {
-        self::$_query_params                        = [];
+        self::$_query_params                        = array();
         EEH_Event_Query::$_event_query_month        = EEH_Event_Query::_display_month($month);
         EEH_Event_Query::$_event_query_category     = EEH_Event_Query::_event_category_slug($category);
         EEH_Event_Query::$_event_query_show_expired = EEH_Event_Query::_show_expired($show_expired);
         EEH_Event_Query::$_event_query_orderby      = EEH_Event_Query::_orderby($orderby);
         EEH_Event_Query::$_event_query_sort         = EEH_Event_Query::_sort($sort);
     }
+
 
 
     /**
@@ -140,8 +142,9 @@ class EEH_Event_Query
      */
     private static function _display_month($month = '')
     {
-        return self::getRequest()->getRequestParam('event_query_month', $month);
+        return sanitize_text_field(EE_Registry::instance()->REQ->get('event_query_month', $month));
     }
+
 
 
     /**
@@ -153,8 +156,9 @@ class EEH_Event_Query
      */
     private static function _event_category_slug($category = '')
     {
-        return self::getRequest()->getRequestParam('event_query_category', $category);
+        return sanitize_text_field(EE_Registry::instance()->REQ->get('event_query_category', $category));
     }
+
 
 
     /**
@@ -167,12 +171,16 @@ class EEH_Event_Query
     private static function _show_expired($show_expired = false)
     {
         // override default expired option if set via filter
-        return self::getRequest()->getRequestParam('event_query_show_expired', $show_expired, 'bool');
+        return filter_var(
+            EE_Registry::instance()->REQ->get('event_query_show_expired', $show_expired),
+            FILTER_VALIDATE_BOOLEAN
+        );
     }
 
 
+
     /**
-     * @param string $orderby
+     * @param    string $orderby
      * @return array
      * @throws InvalidArgumentException
      * @throws InvalidDataTypeException
@@ -180,13 +188,15 @@ class EEH_Event_Query
      */
     private static function _orderby($orderby = 'start_date')
     {
-        $event_query_orderby = self::getRequest()->getRequestParam('event_query_orderby', $orderby);
+        $event_query_orderby = EE_Registry::instance()->REQ->get('event_query_orderby', $orderby);
         $event_query_orderby = is_array($event_query_orderby)
             ? $event_query_orderby
             : explode(',', $event_query_orderby);
         $event_query_orderby = array_map('trim', $event_query_orderby);
-        return array_map('sanitize_text_field', $event_query_orderby);
+        $event_query_orderby = array_map('sanitize_text_field', $event_query_orderby);
+        return $event_query_orderby;
     }
+
 
 
     /**
@@ -198,11 +208,12 @@ class EEH_Event_Query
      */
     private static function _sort($sort = 'ASC')
     {
-        $sort = self::getRequest()->getRequestParam('event_query_sort', $sort);
-        return in_array($sort, ['ASC', 'asc', 'DESC', 'desc'], true)
+        $sort = EE_Registry::instance()->REQ->get('event_query_sort', $sort);
+        return in_array($sort, array('ASC', 'asc', 'DESC', 'desc'), true)
             ? strtoupper($sort)
             : 'ASC';
     }
+
 
 
     /**
@@ -220,6 +231,7 @@ class EEH_Event_Query
         }
         return $clauses;
     }
+
 
 
     /**
@@ -241,6 +253,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param array $orderby_params
      * @return string
@@ -249,7 +262,7 @@ class EEH_Event_Query
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_fields_sql_for_orderby(array $orderby_params = [])
+    public static function posts_fields_sql_for_orderby(array $orderby_params = array())
     {
         $SQL = ', MIN( ' . EEM_Datetime::instance()->table() . '.DTT_EVT_start ) as event_start_date ';
         foreach ($orderby_params as $orderby) {
@@ -275,6 +288,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param string   $SQL
      * @param WP_Query $wp_query
@@ -284,7 +298,7 @@ class EEH_Event_Query
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_join($SQL, WP_Query $wp_query)
+    public static function posts_join($SQL = '', WP_Query $wp_query)
     {
         if (EEH_Event_Query::apply_query_filters($wp_query)) {
             // Category
@@ -294,6 +308,7 @@ class EEH_Event_Query
         }
         return $SQL;
     }
+
 
 
     /**
@@ -319,6 +334,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param string $SQL
      * @param string $join_terms    pass TRUE or term string, doesn't really matter since this value doesn't really get
@@ -337,18 +353,19 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * usage:  $SQL .= EEH_Event_Query::posts_join_for_orderby( $orderby_params );
      *
-     * @param string $SQL
-     * @param array  $orderby_params
+     * @param    string $SQL
+     * @param    array  $orderby_params
      * @return string
      * @throws EE_Error
      * @throws InvalidArgumentException
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_join_for_orderby($SQL = '', array $orderby_params = [])
+    public static function posts_join_for_orderby($SQL = '', array $orderby_params = array())
     {
         foreach ($orderby_params as $orderby) {
             switch ($orderby) {
@@ -383,6 +400,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param string $SQL
      * @param string $join
@@ -402,6 +420,7 @@ class EEH_Event_Query
         }
         return '';
     }
+
 
 
     /**
@@ -441,6 +460,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param string $SQL
      * @return string
@@ -472,6 +492,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param string   $SQL
      * @param WP_Query $wp_query
@@ -481,7 +502,7 @@ class EEH_Event_Query
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_where($SQL, WP_Query $wp_query)
+    public static function posts_where($SQL = '', WP_Query $wp_query)
     {
         if (EEH_Event_Query::apply_query_filters($wp_query)) {
             // Show Expired ?
@@ -495,8 +516,9 @@ class EEH_Event_Query
     }
 
 
+
     /**
-     * @param boolean $show_expired if TRUE, then displayed past events
+     * @param    boolean $show_expired if TRUE, then displayed past events
      * @return string
      * @throws EE_Error
      * @throws InvalidArgumentException
@@ -511,6 +533,7 @@ class EEH_Event_Query
     }
 
 
+
     /**
      * @param boolean $event_category_slug
      * @return string
@@ -519,15 +542,13 @@ class EEH_Event_Query
     {
         global $wpdb;
         if (! empty($event_category_slug)) {
-            $event_category_slugs_array   = array_map('trim', explode(',', $event_category_slug));
+            $event_category_slugs_array = array_map('trim', explode(',', $event_category_slug));
             $event_category_slugs_prepare = implode(', ', array_fill(0, count($event_category_slugs_array), '%s'));
-            return $wpdb->prepare(
-                " AND {$wpdb->terms}.slug IN ({$event_category_slugs_prepare}) ",
-                $event_category_slugs_array
-            );
+            return $wpdb->prepare(" AND {$wpdb->terms}.slug IN ({$event_category_slugs_prepare}) ", $event_category_slugs_array);
         }
         return '';
     }
+
 
 
     /**
@@ -545,17 +566,18 @@ class EEH_Event_Query
             $datetime_table = EEM_Datetime::instance()->table();
             // event start date is LESS than the end of the month ( so nothing that doesn't start until next month )
             $SQL = " AND {$datetime_table}.DTT_EVT_start <= '";
-            $SQL .= date('Y-m-t 23:59:59', EEH_DTT_Helper::first_of_month_timestamp($month)) . "'";
+            $SQL .= date('Y-m-t 23:59:59', \EEH_DTT_Helper::first_of_month_timestamp($month)) . "'";
             // event end date is GREATER than the start of the month ( so nothing that ended before this month )
             $SQL .= " AND {$datetime_table}.DTT_EVT_end >= '";
-            $SQL .= date('Y-m-01 0:0:00', EEH_DTT_Helper::first_of_month_timestamp($month)) . "' ";
+            $SQL .= date('Y-m-01 0:0:00', \EEH_DTT_Helper::first_of_month_timestamp($month)) . "' ";
         }
         return $SQL;
     }
 
 
+
     /**
-     * @param string   $SQL
+     * @param string $SQL
      * @param WP_Query $wp_query
      * @return string
      * @throws EE_Error
@@ -563,7 +585,7 @@ class EEH_Event_Query
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_orderby($SQL, WP_Query $wp_query)
+    public static function posts_orderby($SQL = '', WP_Query $wp_query)
     {
         if (EEH_Event_Query::apply_query_filters($wp_query)) {
             $SQL = EEH_Event_Query::posts_orderby_sql(
@@ -573,6 +595,7 @@ class EEH_Event_Query
         }
         return $SQL;
     }
+
 
 
     /**
@@ -600,17 +623,17 @@ class EEH_Event_Query
      * @throws InvalidDataTypeException
      * @throws InvalidInterfaceException
      */
-    public static function posts_orderby_sql(array $orderby_params = [], $sort = 'ASC')
+    public static function posts_orderby_sql(array $orderby_params = array(), $sort = 'ASC')
     {
         global $wpdb;
         $SQL     = '';
         $counter = 0;
-        $sort    = in_array($sort, ['ASC', 'asc', 'DESC', 'desc'], true)
+        $sort    = in_array($sort, array('ASC', 'asc', 'DESC', 'desc'), true)
             ? strtoupper($sort)
             : 'ASC';
         // make sure 'orderby' is set in query params
         if (! isset(self::$_query_params['orderby'])) {
-            self::$_query_params['orderby'] = [];
+            self::$_query_params['orderby'] = array();
         }
         // loop thru $orderby_params (type cast as array)
         foreach ($orderby_params as $orderby) {
@@ -663,15 +686,5 @@ class EEH_Event_Query
             $counter++;
         }
         return $SQL;
-    }
-
-
-    /**
-     * @return RequestInterface
-     * @since   4.10.14.p
-     */
-    private static function getRequest()
-    {
-        return LoaderFactory::getLoader()->getShared(RequestInterface::class);
     }
 }

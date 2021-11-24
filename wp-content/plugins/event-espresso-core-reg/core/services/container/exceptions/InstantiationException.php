@@ -27,7 +27,7 @@ class InstantiationException extends BadMethodCallException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'The "%1$s" class could not be constructed.',
                     'event_espresso'
                 ),

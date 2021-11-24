@@ -1,5 +1,4 @@
 <?php
-
 /**
  * EE_Text_Normalization
  * Really does nothing to the input. It came in a string and we leave it as-such

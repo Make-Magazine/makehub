@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Checkbox_Dropdown_Selector_Display_Strategy
  * displays a set of checkbox inputs in a hidden modal box that appears when you click the button/selector

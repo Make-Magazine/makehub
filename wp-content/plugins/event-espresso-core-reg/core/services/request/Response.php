@@ -11,6 +11,7 @@ use EventEspresso\core\interfaces\ReservedInstanceInterface;
  * @package         Event Espresso
  * @subpackage      /core/
  * @author          Brent Christensen
+ * ------------------------------------------------------------------------
  */
 class Response implements ResponseInterface, ReservedInstanceInterface
 {
@@ -18,14 +19,14 @@ class Response implements ResponseInterface, ReservedInstanceInterface
     /**
      * @var array $notice
      */
-    protected $notice = [];
+    protected $notice = array();
 
     /**
      * rendered output to be returned to WP
      *
-     * @var array
+     * @var string $output
      */
-    protected $output = [];
+    protected $output = '';
 
     /**
      * @var bool
@@ -83,22 +84,16 @@ class Response implements ResponseInterface, ReservedInstanceInterface
      */
     public function addOutput($string, $append = true)
     {
-        if ($append) {
-            $this->output[] = $string;
-            return;
-        }
-        array_unshift($this->output, $string);
+        $this->output = $append ? $this->output . $string : $string . $this->output;
     }
 
 
     /**
-     * @param bool   $as_string
-     * @param string $separator
-     * @return array|string
+     * @return string
      */
-    public function getOutput($as_string = true, $separator = PHP_EOL)
+    public function getOutput()
     {
-        return $as_string ? implode($separator, $this->output) : $this->output ;
+        return $this->output;
     }
 
 

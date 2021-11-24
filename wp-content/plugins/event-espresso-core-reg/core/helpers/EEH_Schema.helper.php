@@ -61,11 +61,11 @@ class EEH_Schema
                 $event_status = 'EventScheduled';
         }
         $template_args['event_attendance_mode'] = 'OfflineEventAttendanceMode';
-        $template_args['event_status'] = 'https://schema.org/' . $event_status;
+        $template_args['event_status'] = '"https://schema.org/' . $event_status . '"';
         $template_args['currency'] = EE_Registry::instance()->CFG->currency->code;
         foreach ($event->tickets() as $original_ticket) {
             // clone tickets so that date formats don't override those for the original ticket
-            $ticket = clone $original_ticket;
+            $ticket= clone $original_ticket;
             $ID = $ticket->ID();
             $template_args['event_tickets'][ $ID ]['start_date'] = $ticket->start_date(DateTime::ATOM, null);
             $template_args['event_tickets'][ $ID ]['end_date'] = $ticket->end_date(DateTime::ATOM, null);
@@ -176,12 +176,10 @@ class EEH_Schema
     public static function postOfficeBoxNumber(EEI_Address $obj_with_address = null)
     {
         // regex check for some form of PO Box or P.O. Box, etc, etc, etc
-        if (
-            preg_match(
-                "/^\s*((P(OST)?.?\s*(O(FF(ICE)?)?)?.?\s+(B(IN|OX))?)|B(IN|OX))/i",
-                $obj_with_address->address2()
-            )
-        ) {
+        if (preg_match(
+            "/^\s*((P(OST)?.?\s*(O(FF(ICE)?)?)?.?\s+(B(IN|OX))?)|B(IN|OX))/i",
+            $obj_with_address->address2()
+        ) ) {
             return $obj_with_address->address2() !== null && $obj_with_address->address2() !== ''
                 ? '<span itemprop="postOfficeBoxNumber">' . $obj_with_address->address2() . '</span>' : '';
         } else {
@@ -295,15 +293,15 @@ class EEH_Schema
         // Check the URL includes a scheme
         $parsed_url = parse_url($url);
         if (empty($parsed_url['scheme'])) {
-            $url = 'https://' . ltrim($url, '/');
+            $url = 'http://' . ltrim($url, '/');
         }
+
         $atts = '';
         foreach ($attributes as $attribute => $value) {
             $atts .= ' ' . $attribute . '="' . $value . '"';
         }
-        $text = $text !== null && $text !== '' ? $text : esc_url($url);
-        return ! empty($url)
-            ? '<a itemprop="url" href="' . esc_url_raw($url) . '"' . $atts . '>' . $text . '</a>'
+        $text = $text !== null && $text !== '' ? $text : $url;
+        return $url !== null && $url !== '' ? '<a itemprop="url" href="' . $url . '"' . $atts . '>' . $text . '</a>'
             : '';
     }
 }

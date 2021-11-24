@@ -81,12 +81,10 @@ class Price_Types_List_Table extends EE_Admin_List_Table
     protected function _add_view_counts()
     {
         $this->_views['all']['count'] = $this->_all_data_count;
-        if (
-            EE_Registry::instance()->CAP->current_user_can(
-                'ee_delete_default_price_types',
-                'pricing_trash_price_type'
-            )
-        ) {
+        if (EE_Registry::instance()->CAP->current_user_can(
+            'ee_delete_default_price_types',
+            'pricing_trash_price_type'
+        )) {
             $this->_views['trashed']['count'] = $this->_trashed_count;
         }
     }
@@ -110,13 +108,11 @@ class Price_Types_List_Table extends EE_Admin_List_Table
         // Build row actions
         $actions = array();
         // edit price link
-        if (
-            EE_Registry::instance()->CAP->current_user_can(
-                'ee_edit_default_price_type',
-                'pricing_edit_price_type',
-                $item->ID()
-            )
-        ) {
+        if (EE_Registry::instance()->CAP->current_user_can(
+            'ee_edit_default_price_type',
+            'pricing_edit_price_type',
+            $item->ID()
+        )) {
             $edit_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                 'action' => 'edit_price_type',
                 'id'     => $item->ID(),
@@ -149,13 +145,11 @@ class Price_Types_List_Table extends EE_Admin_List_Table
         if ($item->base_type() !== 1) {
             if ($this->_view == 'all') {
                 // trash price link
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price_type',
-                        'pricing_trash_price_type',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price_type',
+                    'pricing_trash_price_type',
+                    $item->ID()
+                )) {
                     $trash_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'trash_price_type',
                         'id'       => $item->ID(),
@@ -172,13 +166,11 @@ class Price_Types_List_Table extends EE_Admin_List_Table
                 }
             } else {
                 // restore price link
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price_type',
-                        'pricing_restore_price_type',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price_type',
+                    'pricing_restore_price_type',
+                    $item->ID()
+                )) {
                     $restore_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'restore_price_type',
                         'id'       => $item->ID(),
@@ -194,13 +186,11 @@ class Price_Types_List_Table extends EE_Admin_List_Table
                                           . esc_html__('Restore', 'event_espresso') . '</a>';
                 }
                 // delete price link
-                if (
-                    EE_Registry::instance()->CAP->current_user_can(
-                        'ee_delete_default_price_type',
-                        'pricing_delete_price_type',
-                        $item->ID()
-                    )
-                ) {
+                if (EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_default_price_type',
+                    'pricing_delete_price_type',
+                    $item->ID()
+                )) {
                     $delete_lnk_url = EE_Admin_Page::add_query_args_and_nonce(array(
                         'action'   => 'delete_price_type',
                         'id'       => $item->ID(),

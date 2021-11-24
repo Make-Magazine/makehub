@@ -13,6 +13,9 @@ interface ResponseInterface
 {
 
     /**
+     *    set_notice
+     *
+     * @access    public
      * @param $key
      * @param $value
      * @return    void
@@ -20,28 +23,38 @@ interface ResponseInterface
     public function setNotice($key, $value);
 
     /**
+     *    get_notice
+     *
+     * @access    public
      * @param $key
      * @return    mixed
      */
     public function getNotice($key);
 
     /**
+     *    get_notices
+     *
+     * @access    public
      * @return    array
      */
     public function getNotices();
 
     /**
-     * @param string $string
-     * @param bool   $append
+     *    add_output
+     *
+     * @access    public
+     * @param      $string
+     * @param bool $append
      */
     public function addOutput($string, $append = true);
 
     /**
-     * @param bool   $as_string
-     * @param string $separator
-     * @return array|string
+     *    get_output
+     *
+     * @access    public
+     * @return    string
      */
-    public function getOutput($as_string = true, $separator = PHP_EOL);
+    public function getOutput();
 
     /**
      * @return boolean

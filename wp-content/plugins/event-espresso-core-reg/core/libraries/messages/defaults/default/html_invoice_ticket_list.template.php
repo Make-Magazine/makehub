@@ -1,9 +1,7 @@
 <?php
-
 /**
  * This is the template for the html messenger and invoice message type ticket_list field.
  */
-
 ?>
     </td>
 </tr>

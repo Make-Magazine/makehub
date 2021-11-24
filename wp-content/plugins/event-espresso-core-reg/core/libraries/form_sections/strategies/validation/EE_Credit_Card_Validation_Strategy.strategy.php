@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Credit_Card_Validation_Strategy
  *
@@ -20,7 +19,7 @@ class EE_Credit_Card_Validation_Strategy extends EE_Text_Validation_Strategy
     public function __construct($validation_error_message = null)
     {
         if (! $validation_error_message) {
-            $validation_error_message = esc_html__("Please enter a valid credit card number", "event_espresso");
+            $validation_error_message = __("Please enter a valid credit card number", "event_espresso");
         }
         parent::__construct(
             $validation_error_message,

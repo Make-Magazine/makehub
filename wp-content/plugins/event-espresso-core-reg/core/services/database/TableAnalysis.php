@@ -82,15 +82,14 @@ class TableAnalysis extends \EE_Base
         $EZSQL_ERROR = $ezsql_error_cache;
         // if there was a table doesn't exist error
         if (! empty($new_error)) {
-            if (
-                in_array(
-                    \EEH_Activation::last_wpdb_error_code(),
-                    array(
+            if (in_array(
+                \EEH_Activation::last_wpdb_error_code(),
+                array(
                     1051, // bad table
                     1109, // unknown table
                     117, // no such table
-                    )
                 )
+            )
                 ||
                 preg_match(
                     '~^Table .* doesn\'t exist~',
@@ -102,7 +101,7 @@ class TableAnalysis extends \EE_Base
                 // log this because that's weird. Just use the normal PHP error log
                 error_log(
                     sprintf(
-                        esc_html__(
+                        __(
                             'Event Espresso error detected when checking if table existed: %1$s (it wasn\'t just that the table didn\'t exist either)',
                             'event_espresso'
                         ),

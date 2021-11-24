@@ -56,7 +56,8 @@ class EventFilterHeader extends AdminPageHeaderDecorator
     public function getHeaderText($text = '')
     {
         $EVT_ID = $this->request->getRequestParam('EVT_ID');
-        $EVT_ID = $this->request->getRequestParam('event_id', $EVT_ID, 'int');
+        $EVT_ID = $this->request->getRequestParam('event_id', $EVT_ID);
+        $EVT_ID = absint($EVT_ID);
         if ($EVT_ID) {
             $event = $this->event_model->get_one_by_ID($EVT_ID);
             if ($event instanceof EE_Event) {

@@ -34,7 +34,7 @@ class InvalidDataTypeException extends InvalidArgumentException
                 ? $this->addIndefiniteArticle($expected) . ' was expected.'
                 : $expected;
             $message = sprintf(
-                esc_html__(
+                __(
                     'The supplied data for "%1$s" was %2$s, but %3$s',
                     'event_espresso'
                 ),

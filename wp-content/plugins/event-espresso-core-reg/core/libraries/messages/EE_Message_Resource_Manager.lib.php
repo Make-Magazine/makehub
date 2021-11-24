@@ -230,7 +230,7 @@ class EE_Message_Resource_Manager
         }
         throw new EE_Error(
             sprintf(
-                esc_html__('The "%1$s" messenger is either invalid or not installed', 'event_espresso'),
+                __('The "%1$s" messenger is either invalid or not installed', 'event_espresso'),
                 $messenger_name
             )
         );
@@ -442,7 +442,7 @@ class EE_Message_Resource_Manager
         }
         throw new EE_Error(
             sprintf(
-                esc_html__('The "%1$s" message type is either invalid or not installed', 'event_espresso'),
+                __('The "%1$s" message type is either invalid or not installed', 'event_espresso'),
                 $message_type_name
             )
         );
@@ -463,7 +463,7 @@ class EE_Message_Resource_Manager
         if (! in_array($message_type_name, $valid_message_types)) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'The message type (%1$s) sent to "%2$s" is not valid for the "%3$s" messenger.  Double-check the spelling and verify that message type has been registered as a valid type with the messenger.',
                         'event_espresso'
                     ),
@@ -634,7 +634,7 @@ class EE_Message_Resource_Manager
         if (! empty($not_installed)) {
             EE_Error::add_error(
                 sprintf(
-                    esc_html__('The following messengers are either not installed or are invalid:%1$s %2$s', 'event_espresso'),
+                    __('The following messengers are either not installed or are invalid:%1$s %2$s', 'event_espresso'),
                     '<br />',
                     implode(', ', $not_installed)
                 ),
@@ -778,8 +778,7 @@ class EE_Message_Resource_Manager
             foreach ($message_type_names as $message_type_name) {
                 // only register the message type as active IF it isn't already active
                 // and if its actually installed.
-                if (
-                    ! $this->is_message_type_active_for_messenger($messenger->name, $message_type_name)
+                if (! $this->is_message_type_active_for_messenger($messenger->name, $message_type_name)
                 ) {
                     $this->add_settings_for_message_type($messenger->name, $message_type_name);
                     $this->_set_messenger_has_activated_message_type(
@@ -966,8 +965,7 @@ class EE_Message_Resource_Manager
     {
         // get the $messengers the message type says it can be used with.
         foreach ($message_type->with_messengers() as $generating_messenger => $secondary_messengers) {
-            if (
-                $messenger->name === $generating_messenger
+            if ($messenger->name === $generating_messenger
                 && $this->is_message_type_active_for_messenger($messenger->name, $message_type->name)
             ) {
                 return true;
@@ -1087,8 +1085,7 @@ class EE_Message_Resource_Manager
         $messenger_name,
         $consider_current_state = false
     ) {
-        if (
-            $consider_current_state
+        if ($consider_current_state
             && ! $this->is_message_type_active_for_messenger($messenger_name, $message_type_name)
         ) {
             // when consider current state is true, this means we don't want to change anything on the "has_activated"

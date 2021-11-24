@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Attendee Model
  *
@@ -41,21 +40,21 @@ class EEM_Answer extends EEM_Base
      */
     protected function __construct($timezone = null)
     {
-        $this->singular_item = esc_html__('Answer', 'event_espresso');
-        $this->plural_item = esc_html__('Answers', 'event_espresso');
+        $this->singular_item = __('Answer', 'event_espresso');
+        $this->plural_item = __('Answers', 'event_espresso');
         $this->_tables = array(
-            'Answer' => new EE_Primary_Table('esp_answer', 'ANS_ID')
+            'Answer'=> new EE_Primary_Table('esp_answer', 'ANS_ID')
         );
         $this->_fields = array(
-            'Answer' => array(
-                'ANS_ID' => new EE_Primary_Key_Int_Field('ANS_ID', esc_html__('Answer ID', 'event_espresso')),
-                'REG_ID' => new EE_Foreign_Key_Int_Field('REG_ID', esc_html__('Registration ID', 'event_espresso'), false, 0, 'Registration'),
-                'QST_ID' => new EE_Foreign_Key_Int_Field('QST_ID', esc_html__('Question ID', 'event_espresso'), false, 0, 'Question'),
-                'ANS_value' => new EE_Maybe_Serialized_Simple_HTML_Field('ANS_value', esc_html__('Answer Value', 'event_espresso'), false, '')
+            'Answer'=>array(
+                'ANS_ID'=> new EE_Primary_Key_Int_Field('ANS_ID', __('Answer ID', 'event_espresso')),
+                'REG_ID'=>new EE_Foreign_Key_Int_Field('REG_ID', __('Registration ID', 'event_espresso'), false, 0, 'Registration'),
+                'QST_ID'=>new EE_Foreign_Key_Int_Field('QST_ID', __('Question ID', 'event_espresso'), false, 0, 'Question'),
+                'ANS_value'=>new EE_Maybe_Serialized_Simple_HTML_Field('ANS_value', __('Answer Value', 'event_espresso'), false, '')
             ));
         $this->_model_relations = array(
-            'Registration' => new EE_Belongs_To_Relation(),
-            'Question' => new EE_Belongs_To_Relation()
+            'Registration'=>new EE_Belongs_To_Relation(),
+            'Question'=>new EE_Belongs_To_Relation()
         );
         $this->_model_chain_to_wp_user = 'Registration.Event';
         $this->_caps_slug = 'registrations';
@@ -98,7 +97,7 @@ class EEM_Answer extends EEM_Base
      */
     public function get_registration_question_answer_object(EE_Registration $registration, $question_id = null)
     {
-        $answer_obj = $this->get_one(array( array( 'QST_ID' => $question_id, 'REG_ID' => $registration->ID() )));
+        $answer_obj = $this->get_one(array( array( 'QST_ID'=>$question_id, 'REG_ID'=>$registration->ID() )));
         return apply_filters('FHEE__EEM_Answer__get_registration_question_answer_object__answer_obj', $answer_obj, $registration, $question_id);
     }
 
@@ -132,10 +131,10 @@ class EEM_Answer extends EEM_Base
                 if ($pretty_answer) {
                     if ($field_name === 'STA_ID') {
                         $state = $registration->attendee()->state_obj();
-                        $value = $state instanceof EE_State ? $state->name() : sprintf(esc_html__('Unknown State (%s)', 'event_espresso'), $registration->attendee()->state_ID());
+                        $value = $state instanceof EE_State ? $state->name() : sprintf(__('Unknown State (%s)', 'event_espresso'), $registration->attendee()->state_ID());
                     } elseif ($field_name === 'CNT_ISO') {
                         $country = $registration->attendee()->country_obj();
-                        $value = $country instanceof EE_Country ? $country->name() : sprintf(esc_html__('Unknown Country (%s)', "event_espresso"), $registration->attendee()->country_ID());
+                        $value = $country instanceof EE_Country ? $country->name() : sprintf(__('Unknown Country (%s)', "event_espresso"), $registration->attendee()->country_ID());
                     } else {
                         $value = $registration->attendee()->get_pretty($field_name);
                     }

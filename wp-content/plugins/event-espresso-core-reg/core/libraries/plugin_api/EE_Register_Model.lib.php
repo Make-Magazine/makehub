@@ -50,7 +50,7 @@ class EE_Register_Model implements EEI_Plugin_API
         // required fields MUST be present, so let's make sure they are.
         if (empty($identifier) || ! is_array($setup_args) || empty($setup_args['model_paths'])) {
             throw new EE_Error(
-                esc_html__(
+                __(
                     'In order to register Models with EE_Register_Model::register(), you must include a "model_id" (a unique identifier for this set of models), and an array containing the following keys: "model_paths" (an array of full server paths to folders that contain models)',
                     'event_espresso'
                 )
@@ -62,15 +62,13 @@ class EE_Register_Model implements EEI_Plugin_API
             return;
         }
 
-        if (
-            ! did_action('AHEE__EE_System__load_espresso_addons')
+        if (! did_action('AHEE__EE_System__load_espresso_addons')
             || did_action('FHEE__EE_System__parse_model_names')
-            || did_action('FHEE__EE_System__parse_implemented_model_names')
-        ) {
+            || did_action('FHEE__EE_System__parse_implemented_model_names')) {
             EE_Error::doing_it_wrong(
                 __METHOD__,
                 sprintf(
-                    esc_html__(
+                    __(
                         'An attempt was made to register "%s" as a group models has failed because it was not registered at the correct time.  Please use the "AHEE__EE_System__load_espresso_addons" hook to register models.',
                         'event_espresso'
                     ),
@@ -81,13 +79,11 @@ class EE_Register_Model implements EEI_Plugin_API
         }
         self::$_model_registry[ $identifier ] = $setup_args;
 
-        if (
-            (isset($setup_args['model_paths']) && ! isset($setup_args['class_paths']))
-            || (! isset($setup_args['model_paths']) && isset($setup_args['class_paths']))
-        ) {
+        if ((isset($setup_args['model_paths']) && ! isset($setup_args['class_paths']))
+            || (! isset($setup_args['model_paths']) && isset($setup_args['class_paths']))) {
             throw new EE_Error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'You must register both "model_paths" AND "class_paths", not just one or the other You provided %s',
                         'event_espresso'
                     ),
@@ -130,7 +126,7 @@ class EE_Register_Model implements EEI_Plugin_API
         foreach ($setup_args as $unknown_key => $unknown_config) {
             self::deregister($identifier);
             throw new EE_Error(
-                sprintf(esc_html__("The key '%s' is not a known key for registering a model", "event_espresso"), $unknown_key)
+                sprintf(__("The key '%s' is not a known key for registering a model", "event_espresso"), $unknown_key)
             );
         }
     }

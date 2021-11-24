@@ -25,7 +25,7 @@ class InvalidFormHandlerException extends \UnexpectedValueException
     {
         if (empty($message)) {
             $message = sprintf(
-                esc_html__(
+                __(
                     'A valid Form Handler was expected but instead "%1$s" was received.',
                     'event_espresso'
                 ),

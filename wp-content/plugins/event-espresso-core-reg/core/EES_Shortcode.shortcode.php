@@ -1,7 +1,4 @@
 <?php
-
-use EventEspresso\core\services\loaders\LoaderFactory;
-use EventEspresso\core\services\request\CurrentPage;
 use EventEspresso\core\services\shortcodes\LegacyShortcodesManager;
 
 /**
@@ -32,9 +29,7 @@ abstract class EES_Shortcode extends EE_Base
         // assign shortcode to the preferred callback, which overwrites the "fallback shortcode processor" assigned earlier
         add_shortcode($shortcode, array($this, 'process_shortcode'));
         // make sure system knows this is an EE page
-        /** @var CurrentPage $current_page */
-        $current_page = LoaderFactory::getLoader()->getShared(CurrentPage::class);
-        $current_page->setEspressoPage(true);
+        EE_Registry::instance()->REQ->set_espresso_page(true);
     }
 
 

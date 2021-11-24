@@ -89,14 +89,14 @@ class EE_Message_Type_Collection_Loader
             if (! class_exists($message_type_class_name)) {
                 throw new EE_Error(
                     sprintf(
-                        esc_html__('The "%1$s" message type class can\'t be loaded from %2$s. Likely there is a typo in the class name or the file name.', 'event_espresso'),
+                        __('The "%1$s" message type class can\'t be loaded from %2$s. Likely there is a typo in the class name or the file name.', 'event_espresso'),
                         $message_type_class_name,
                         $file_path
                     )
                 );
             }
 
-            $this->_load_message_type(new $message_type_class_name());
+            $this->_load_message_type(new $message_type_class_name);
         }
     }
 

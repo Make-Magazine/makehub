@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class EE_Text_Input_Display_Strategy
  * Display strategy that handles how to display form file form inputs which can be used outside of the admin context.

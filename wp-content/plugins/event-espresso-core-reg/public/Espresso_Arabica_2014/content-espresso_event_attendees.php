@@ -11,16 +11,14 @@
  * @type EE_Attendee $contact
  * @type bool       $show_gravatar  whether to show gravatar or not.
  */
-
-$gravatar = $show_gravatar
-    ? get_avatar(
-        $contact->email(),
-        (int) apply_filters('FHEE__loop-espresso_attendees-shortcode__template__avatar_size', 32)
-    )
-    : '';
+if ( $show_gravatar ) {
+	$gravatar = get_avatar( $contact->email(),
+		(int) apply_filters( 'FHEE__loop-espresso_attendees-shortcode__template__avatar_size', 32 )
+		);
+} else {
+	$gravatar = '';
+}
 ?>
 <?php do_action( 'AHEE__content-espresso_event_attendees__before', $contact, $show_gravatar ); ?>
-<li><?php echo $gravatar . '&nbsp;' .  $contact->full_name(true); ?></li>
+<li><?php echo $gravatar . '&nbsp;' .  $contact->full_name(); ?></li>
 <?php do_action( 'AHEE__content-espresso_event_attendees__after', $contact, $show_gravatar ); ?>
-
-<!--<br >-->

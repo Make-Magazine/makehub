@@ -322,7 +322,7 @@ class EE_Ticket extends EE_Soft_Delete_Base_Class implements EEI_Line_Item_Objec
                 }
                 if (! empty($dtt_id) && ! isset($tickets_sold['datetime'][ $dtt_id ])) {
                     EE_Error::add_error(
-                        esc_html__(
+                        __(
                             'You\'ve requested the amount of tickets sold for a given ticket and datetime, however there are no records for the datetime id you included.  Are you SURE that is a datetime related to this ticket?',
                             'event_espresso'
                         ),
@@ -1478,7 +1478,7 @@ class EE_Ticket extends EE_Soft_Delete_Base_Class implements EEI_Line_Item_Objec
                 $datetime,
                 'EE_Datetime',
                 sprintf(
-                    esc_html__('The ticket (%s) is not associated with any valid datetimes.', 'event_espresso'),
+                    __('The ticket (%s) is not associated with any valid datetimes.', 'event_espresso'),
                     $this->name()
                 )
             );
@@ -1489,7 +1489,7 @@ class EE_Ticket extends EE_Soft_Delete_Base_Class implements EEI_Line_Item_Objec
                 $event,
                 'EE_Event',
                 sprintf(
-                    esc_html__('The ticket (%s) is not associated with a valid event.', 'event_espresso'),
+                    __('The ticket (%s) is not associated with a valid event.', 'event_espresso'),
                     $this->name()
                 )
             );

@@ -118,7 +118,7 @@ class EE_Messages_Template_Defaults extends EE_Base
         if (! class_exists($class_name)) {
             EE_Error::add_error(
                 sprintf(
-                    esc_html__(
+                    __(
                         'The template pack represented by a class corresponding to "%1$s" does not exist. Likely the autoloader for this class has the wrong path or the incoming reference is misspelled. The default template pack has been used to generate the templates instead.',
                         'event_espresso'
                     ),
@@ -131,7 +131,7 @@ class EE_Messages_Template_Defaults extends EE_Base
             $class_name = 'EE_Messages_Template_Pack_Default';
         }
         /** @type EE_Messages_Template_Pack $template_pack */
-        $template_pack = new $class_name();
+        $template_pack = new $class_name;
 
         // get all the templates from the template pack.
         $this->_templates = $template_pack->get_templates($this->_messenger, $this->_message_type);
@@ -219,7 +219,7 @@ class EE_Messages_Template_Defaults extends EE_Base
                     if (! $MTP) {
                         EE_Error::add_error(
                             sprintf(
-                                esc_html__(
+                                __(
                                     'There was an error in saving new template data for %1$s messenger, %2$s message type, %3$s context and %4$s template field.',
                                     'event_espresso'
                                 ),
