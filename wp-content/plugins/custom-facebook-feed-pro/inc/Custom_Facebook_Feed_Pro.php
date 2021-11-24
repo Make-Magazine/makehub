@@ -295,7 +295,6 @@ final class Custom_Facebook_Feed_Pro{
 			add_action( 'plugins_loaded', [ self::$instance, 'init' ], 0 );
 
 			add_action( 'wp_head', [ self::$instance, 'cff_custom_css' ] );
-			add_action( 'wp_footer', [ self::$instance, 'cff_js' ] );
 
 			add_filter( 'cron_schedules', [ self::$instance, 'cff_pro_cron_custom_interval' ] );
 
@@ -537,17 +536,6 @@ final class Custom_Facebook_Feed_Pro{
 	function cff_custom_css() {
 		$custom_css_output = '';
 		$options = get_option('cff_style_settings');
-		isset($options[ 'cff_custom_css' ]) ? $cff_custom_css = $options[ 'cff_custom_css' ] : $cff_custom_css = '';
-		if( !empty($cff_custom_css) ){
-			$custom_css_output .= '<!-- Custom Facebook Feed Custom CSS -->';
-			$custom_css_output .= "\r\n";
-			$custom_css_output .= '<style type="text/css">';
-			$custom_css_output .= "\r\n";
-			$custom_css_output .= stripslashes($cff_custom_css);
-			$custom_css_output .= "\r\n";
-			$custom_css_output .= '</style>';
-			$custom_css_output .= "\r\n";
-		}
 
 	    //Link hashtags?
 		isset($options[ 'cff_link_hashtags' ]) ? $cff_link_hashtags = $options[ 'cff_link_hashtags' ] : $cff_link_hashtags = '';
@@ -589,33 +577,11 @@ final class Custom_Facebook_Feed_Pro{
 	 *
 	 * @since 3.18
 	 * @access public
+     *
+     * @deprecated
 	 */
 	function cff_js() {
-		$custom_js_output = '';
 
-		$options = get_option('cff_style_settings');
-		isset($options[ 'cff_custom_js' ]) ? $cff_custom_js = $options[ 'cff_custom_js' ] : $cff_custom_js = '';
-	    //Replace "cff-item" with "cff-new" so that it only runs on new items loaded into the feed
-		$cff_custom_js = str_replace(".cff-item", ".cff-new", $cff_custom_js);
-		if( !empty($cff_custom_js) ){
-			$custom_js_output .= '<!-- Custom Facebook Feed JS -->';
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= '<script type="text/javascript">';
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= "function cff_custom_js($){";
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= "var $ = jQuery;";
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= stripslashes($cff_custom_js);
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= "}";
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= "cff_custom_js($);";
-			$custom_js_output .= "\r\n";
-			$custom_js_output .= '</script>';
-			$custom_js_output .= "\r\n";
-			echo $custom_js_output;
-		}
 	}
 
 

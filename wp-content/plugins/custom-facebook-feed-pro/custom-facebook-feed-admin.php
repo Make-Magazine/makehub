@@ -6710,6 +6710,14 @@ function cff_add_caps() {
 add_action( 'admin_init', 'cff_add_caps', 90 );
 
 function cff_reset_resized() {
+    check_ajax_referer( 'cff_nonce' , 'cff_nonce');
+
+    $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+    $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+    if ( ! current_user_can( $cap ) ) {
+        wp_send_json_error(); // This auto-dies.
+    }
+
     CFF_Resizer::delete_resizing_table_and_images();
     \cff_main_pro()->cff_error_reporter->add_action_log( 'Reset resizing tables.' );
     echo CFF_Resizer::create_resizing_table_and_uploads_folder();
@@ -6720,7 +6728,13 @@ add_action( 'wp_ajax_cff_reset_resized', 'cff_reset_resized' );
 
 //PPCA token checks
 function cff_ppca_token_check_flag() {
+    check_ajax_referer( 'cff_nonce' , 'cff_nonce');
 
+    $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+    $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+    if ( ! current_user_can( $cap ) ) {
+        wp_send_json_error(); // This auto-dies.
+    }
     if( get_transient('cff_ppca_access_token_invalid') ){
         print_r(true);
     } else {
@@ -6731,12 +6745,6 @@ function cff_ppca_token_check_flag() {
 }
 add_action( 'wp_ajax_cff_ppca_token_check_flag', 'cff_ppca_token_check_flag' );
 
-//Set the PPCA token transient. Is cleared when settings are saved.
-function cff_ppca_token_set_flag() {
-    set_transient('cff_ppca_access_token_invalid', true);
-    die();
-}
-add_action( 'wp_ajax_cff_ppca_token_set_flag', 'cff_ppca_token_set_flag' );
 
 function cff_after_access_token_retrieved( $page_id_val, $cff_reviews_active ) {
 if( $_GET['cff_final_response'] == 'true' ){
@@ -6972,10 +6980,12 @@ function cff_admin_modal( $admin_url_state ) {
 
 
 function cff_oembed_disable() {
-    $nonce = isset( $_POST['cff_nonce'] ) ? sanitize_text_field( $_POST['cff_nonce'] ) : '';
+     check_ajax_referer( 'cff_nonce' , 'cff_nonce');
 
-    if ( ! wp_verify_nonce( $nonce, 'cff_nonce' ) ) {
-        die ( 'You did not do this the right way!' );
+    $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+    $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+    if ( ! current_user_can( $cap ) ) {
+        wp_send_json_error(); // This auto-dies.
     }
 
     $oembed_settings = get_option( 'cff_oembed_token', array() );
@@ -6993,14 +7003,89 @@ function cff_oembed_disable() {
 }
 add_action( 'wp_ajax_cff_oembed_disable', 'cff_oembed_disable' );
 
-function cff_clear_error_log() {
 
-	\cff_main_pro()->cff_error_reporter->remove_all_errors();
+/**
+ * Adds CSS to the end of the customizer "Additonal CSS" setting
+ *
+ * @param $custom_css
+ *
+ * @return bool|int
+ *
+ * @since 4.0.2/4.0.7
+ */
+function cff_transfer_css( $custom_css ) {
+    $value   = '';
+    $post    = wp_get_custom_css_post( get_stylesheet() );
+    if ( $post ) {
+        $value = $post->post_content;
+    }
+    $value .= "\n\n/* Custom Facebook Feed */\n" . $custom_css . "\n/* Custom Facebook Feed - End */";
 
-    cff_delete_cache();
+    $r = wp_update_custom_css_post(
+        $value,
+        array(
+            'stylesheet' => get_stylesheet(),
+        )
+    );
 
-    echo "1";
+    if ( $r instanceof WP_Error ) {
+        return false;
+    }
+    $post_id = $r->ID;
 
-	die();
+    return $post_id;
 }
-add_action( 'wp_ajax_cff_clear_error_log', 'cff_clear_error_log' );
+
+/**
+ * Validates CSS to detect anything that might be harmful
+ *
+ * @param $css
+ *
+ * @return bool|WP_Error
+ *
+ * @since 4.0.2/4.0.7
+ */
+function cff_validate_css( $css ) {
+    $validity = new WP_Error();
+
+    if ( preg_match( '#</?\w+#', $css ) ) {
+        $validity->add( 'illegal_markup', __( 'Markup is not allowed in CSS.' ) );
+    }
+
+    if ( ! $validity->has_errors() ) {
+        $validity = true;
+    }
+    return $validity;
+}
+
+/**
+ * Check to see if CSS has been transferred
+ *
+ * @since 4.0.2/4.0.7
+ */
+function cff_check_custom_css() {
+    $cff_style_settings = get_option( 'cff_style_settings', array() );
+    $custom_css = isset( $cff_style_settings['cff_custom_css'] ) ? stripslashes( trim( $cff_style_settings['cff_custom_css'] ) ) : '';
+
+    // only try once
+    if ( empty( $custom_css ) ) {
+        return;
+    }
+
+    // custom css set to nothing after trying the update once
+    $cff_style_settings['cff_custom_css_read_only'] = $custom_css;
+    $cff_style_settings['cff_custom_css'] = '';
+    update_option( 'cff_style_settings', $cff_style_settings );
+    if ( ! function_exists( 'wp_get_custom_css_post' )
+        || ! function_exists( 'wp_update_custom_css_post' ) ) {
+        return;
+    }
+
+    // make sure this is valid CSS or don't transfer
+    if ( is_wp_error( cff_validate_css( $custom_css ) ) ) {
+        return;
+    }
+
+    cff_transfer_css( $custom_css );
+}
+add_action( 'init', 'cff_check_custom_css' );

@@ -160,6 +160,7 @@ class CFF_Settings_Pro {
 		if($cff_cache_time_unit == 'minutes') $cff_cache_time_unit = 60;
 		if($cff_cache_time_unit == 'hour' || $cff_cache_time_unit == 'hours') $cff_cache_time_unit = 60*60;
 		if($cff_cache_time_unit == 'days') $cff_cache_time_unit = 60*60*24;
+		$cff_cache_time = intval( $cff_cache_time ) > 0 ? intval( $cff_cache_time ) : 1;
 		$cache_seconds = $cff_cache_time * $cff_cache_time_unit;
 
 

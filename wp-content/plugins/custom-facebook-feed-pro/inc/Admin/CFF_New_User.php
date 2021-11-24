@@ -246,9 +246,15 @@ class CFF_New_User extends CFF_Notifications {
 	 * @since 4.0
 	 */
 	public function review_notice_consent() {
-		if ( ! DOING_AJAX ) {
-			return;
+		//Security Checks
+		check_ajax_referer( 'cff_nonce', 'cff_nonce' );
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
 		}
+
 		$consent = isset( $_POST[ 'consent' ] ) ? sanitize_text_field( $_POST[ 'consent' ] ) : '';
 
 		update_option( 'cff_review_consent', $consent );

@@ -81,6 +81,7 @@ cffBuilder = new Vue({
     },
 	mixins: [VueClickaway.mixin],
 	data: {
+		nonce : cff_builder.nonce,
 		plugins: cff_builder.installPluginsPopup,
 		supportPageUrl: cff_builder.supportPageUrl,
 		builderUrl 	: cff_builder.builderUrl,
@@ -373,7 +374,7 @@ cffBuilder = new Vue({
 					self.viewsActive.sourcePopup = true;
 					self.customizerFeedData.settings.sources = self.customizerScreens.sourcesChoosed;
 				}
-
+				console.log(self.selectedSources);
 				if( ajaxAction !== false ){
 					self.customizerControlAjaxAction( ajaxAction );
 				}
@@ -506,6 +507,7 @@ cffBuilder = new Vue({
 		 */
 		ajaxPost : function(data, callback){
 			var self = this;
+			data['nonce'] = this.nonce;
 			self.$http.post(self.ajaxHandler,data).then(callback);
 		},
 
@@ -1007,6 +1009,23 @@ cffBuilder = new Vue({
 				return (this.selectedFeed == 'events' && source.privilege == 'events') || (this.selectedFeed != 'events' && source.privilege != 'events');
 			}
 			return false;
+		},
+
+		//Source Ative
+		isSourceSelectActivePopup : function(source){
+			if(this.selectedSources.includes(source.account_id)){
+				return (this.customizerFeedData.settings.feedtype == 'events' && source.privilege == 'events') || (this.customizerFeedData.settings.feedtype != 'events' && source.privilege != 'events');
+			}
+			return false;
+		},
+
+		//Select & Choose the Feed Source Popup
+		checkSourceForEventsPopup : function(source){
+			return this.customizerFeedData.settings.feedtype == 'events' && source.account_type == 'page' && source.privilege != 'events';
+		},
+
+		checkTypeForGroupPopup : function(source){
+			return source.account_type === 'group' && this.customizerFeedData.settings.feedtype === 'photos';
 		},
 
 		//Select & Choose the Feed Source
@@ -1568,18 +1587,20 @@ cffBuilder = new Vue({
 			var self = this,
 			isMultifeed = (self.activeExtensions['multifeed'] !== undefined  && self.activeExtensions['multifeed'] == true),
 			sourcesListMap = Array.isArray(self.customizerFeedData.settings.sources) || self.customizerFeedData.settings.sources instanceof Object ? self.customizerFeedData.settings.sources.map(s => s.account_id) : [];
-			if(isMultifeed){
-				if(self.customizerScreens.sourcesChoosed.map(s => s.account_id).includes(source.account_id)){
-					var indexToRemove = self.customizerScreens.sourcesChoosed.findIndex(src => src.account_id === source.account_id);
-					self.customizerScreens.sourcesChoosed.splice(indexToRemove, 1);
-					if(isRemove){
-						self.customizerFeedData.settings.sources.splice(indexToRemove, 1);
+			if((self.customizerFeedData.settings.feedtype == 'events' && (source.privilege == 'events' || source.account_type == 'group')) || (self.customizerFeedData.settings.feedtype != 'events')){
+				if(isMultifeed){
+					if(self.customizerScreens.sourcesChoosed.map(s => s.account_id).includes(source.account_id)){
+						var indexToRemove = self.customizerScreens.sourcesChoosed.findIndex(src => src.account_id === source.account_id);
+						self.customizerScreens.sourcesChoosed.splice(indexToRemove, 1);
+						if(isRemove){
+							self.customizerFeedData.settings.sources.splice(indexToRemove, 1);
+						}
+					}else{
+						self.customizerScreens.sourcesChoosed.push(source);
 					}
 				}else{
-					self.customizerScreens.sourcesChoosed.push(source);
+					self.customizerScreens.sourcesChoosed = (sourcesListMap.includes(source)) ? [] : [source];
 				}
-			}else{
-				self.customizerScreens.sourcesChoosed = (sourcesListMap.includes(source)) ? [] : [source];
 			}
 			cffBuilder.$forceUpdate();
 		},

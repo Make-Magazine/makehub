@@ -19,7 +19,8 @@
                     </div>
                     <div class="cff-fb-srcs-item" v-for="(source, sourceIndex) in sourcesList" @click.prevent.default="$parent.selectSourceCustomizer(source)" :data-type="source.account_type"
                          :data-active="$parent.isSourceActiveCustomizer(source)"
-                         :data-test="(Array.isArray($parent.customizerFeedData.settings.sources.map) || $parent.customizerFeedData.settings.sources instanceof Object ) && $parent.customizerFeedData.settings.sources.map(s => s.account_id).includes(source.account_id)"
+                         :data-disabled="$parent.checkSourceForEventsPopup(source) || $parent.checkTypeForGroupPopup(source)"
+
                     >
                         <div class="cff-fb-srcs-item-chkbx">
                             <div class="cff-fb-srcs-item-chkbx-ic"></div>

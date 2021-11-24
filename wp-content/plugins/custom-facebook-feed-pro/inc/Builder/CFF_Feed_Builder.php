@@ -79,6 +79,9 @@ class CFF_Feed_Builder {
 	 * @since 4.0
 	 */
 	public static function after_dismiss_onboarding() {
+
+		check_ajax_referer( 'cff-admin' , 'nonce');
+
 		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
 		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
 

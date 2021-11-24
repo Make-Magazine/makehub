@@ -3,7 +3,7 @@ Author: Smash Balloon
 Support Website: http://smashballoon.com/custom-facebook-feed/
 Requires at least: 4.1
 Tested up to: 5.8
-Version: 4.0.6
+Version: 4.0.8
 License: Non-distributable, Not for resale
 
 The Custom Facebook Feed allows you to display a completely customizable Facebook feed of any public Facebook page on your website.
@@ -34,11 +34,23 @@ Display a **completely customizable**, **responsive** and **search engine crawla
 5. You can display multiple feeds of different Facebook pages by specifying a Page ID directly in the shortcode: [custom-facebook-feed id=smashballoon num=5].
 
 == Changelog ==
+= 4.0.8 =
+* Fix: Fixed a PHP error when a Gutenberg block was used to display a feed that didn't exist.
+* Fix: Fixed a PHP warning due to a non-number being used as the cache time.
+* Fix: Additional slashes were added to the feed name every time settings were saved if using an apostrophe.
+* Fix: Added additional plugin hardening.
+
+= 4.0.7 =
+* Important: With this update, the Custom CSS and Custom JS settings have been deprecated. Please see below for details.
+* Tweak: If any Custom CSS was being used in this field then it will be automatically moved into the native WordPress Customizer "Additional CSS" field instead and continue to work as normal.
+* Tweak: If any Custom JavaScript was being used, then this update will prevent that JavaScript from working. There are [directions here](https://smashballoon.com/doc/moving-custom-javascript-code-out-of-our-plugins/) on how you can migrate this JavaScript into a specialized plugin instead.
+
 = 4.0.6 =
 * Fix: Fixed a compatibility issue with the Complianz Cookie Consent plugin integration.
 * Fix: Locations of feeds sorted by source would not work if the source ID was not a number.
 * Fix: Fixed an issue where setting were not preserved even when using the preserve settings option and deleting the plugin.
 * Fix: Added support for "eventoffset" setting in shortcode.
+* Fix: Improved security hardening
 * Fix: Fixed locale setting causing a PHP warning if not set.
 * Fix: Fixed PHP warnings when viewing dashboard notifications.
 * Fix: Fixed some options and tables not being removed from the WordPress database on uninstall.

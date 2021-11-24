@@ -439,11 +439,11 @@ function learndash_payment_buttons( $post ) {
 					 */
 					$paypal_settings['paypal_returnurl'] = add_query_arg( 'return-success', $user_hash, $paypal_settings['paypal_notifyurl'] );
 					$paypal_settings['paypal_cancelurl'] = add_query_arg( 'return-cancel', $user_hash, $paypal_settings['paypal_notifyurl'] );
-					
+
 					// Do the 'paypal_notifyurl' last since it is used as a source on the other URLs.
 					$paypal_settings['paypal_notifyurl'] = add_query_arg( 'return-notify', $user_hash, $paypal_settings['paypal_notifyurl'] );
 				}
-				
+
 				if ( ( isset( $paypal_settings['paypal_notifyurl'] ) ) && ( ! empty( $paypal_settings['paypal_notifyurl'] ) ) ) {
 					$paypal_settings['paypal_notifyurl'] = esc_url_raw( $paypal_settings['paypal_notifyurl'] );
 				}
@@ -536,4 +536,3 @@ function learndash_payment_buttons( $post ) {
 
 	return '';
 }
-

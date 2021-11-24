@@ -73,7 +73,7 @@ var cffsupport = new Vue({
                 return;
             }
 
-            let url = this.ajax_handler + '?action=cff_export_settings_json&feed_id=' + this.exportFeed;
+            let url = this.ajax_handler + '?action=cff_export_settings_json&feed_id=' + this.exportFeed + '&nonce=' + this.nonce;
             window.location = url;
         },
         searchDoc: function() {
@@ -112,7 +112,7 @@ var cffsupport = new Vue({
         },
         /**
          * Toggle Sticky Widget view
-         * 
+         *
          * @since 4.0
          */
          toggleStickyWidget: function() {
