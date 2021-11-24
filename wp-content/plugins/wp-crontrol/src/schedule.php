@@ -16,6 +16,7 @@ namespace Crontrol\Schedule;
  * @return void
  */
 function add( $name, $interval, $display ) {
+	/** @var array<string,int|string> */
 	$old_scheds = get_option( 'crontrol_schedules', array() );
 
 	$old_scheds[ $name ] = array(
@@ -41,6 +42,7 @@ function add( $name, $interval, $display ) {
  * @return void
  */
 function delete( $name ) {
+	/** @var array<string,int|string> */
 	$scheds = get_option( 'crontrol_schedules', array() );
 	unset( $scheds[ $name ] );
 	update_option( 'crontrol_schedules', $scheds );
@@ -87,7 +89,7 @@ function get() {
 function dropdown( $current = false ) {
 	$schedules = get();
 	?>
-	<select class="postform" name="schedule" id="schedule" required>
+	<select class="postform" name="crontrol_schedule" id="crontrol_schedule" required>
 	<option <?php selected( $current, '_oneoff' ); ?> value="_oneoff"><?php esc_html_e( 'Non-repeating', 'wp-crontrol' ); ?></option>
 	<?php foreach ( $schedules as $sched_name => $sched_data ) { ?>
 		<option <?php selected( $current, $sched_name ); ?> value="<?php echo esc_attr( $sched_name ); ?>">
