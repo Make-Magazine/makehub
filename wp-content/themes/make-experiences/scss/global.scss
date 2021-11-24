@@ -162,6 +162,7 @@ button, input[type="submit"] {
 		box-shadow: none;
 	}
 }
+input[type="submit"].disabled { color: #fff !important; }
 
 .essb_links.essb_fullwidth_14_100_100 {
 	margin-top: 0px;
