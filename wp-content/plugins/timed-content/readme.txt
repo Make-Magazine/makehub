@@ -3,8 +3,8 @@
 Contributors: kjvtough, awelzel
 Tags: marketing, marketing tool, post, page, date, time, timer, timed, show, hide, content, schedule, display
 Requires at least: 3.8
-Tested up to: 5.5
-Stable tag: 2.65
+Tested up to: 5.8
+Stable tag: 2.66
 License: GPL2
 
 Plugin to show or hide portions of a Page or Post based on specific date/time characteristics.
@@ -48,6 +48,10 @@ If you want to use Timed Content with Gutenberg you have to add a "Classic" bloc
 5. The "Add Timed Content shortcode" dialog showing the Timed Content Rules tab.
 
 == Changelog ==
+
+= 2.66 =
+
+* Updated compatibility information for WordPress 5.8.
 
 = 2.65 =
 
@@ -286,7 +290,7 @@ You can find the correct shortcode from the Timed Content Rules overview page, o
 
 **Testing server side rules**
 
-For testing the behaviour of server side rules at specific times, you may use the GET parameter `tctest` in an URL, followed by date and time in the format `YYYY-MM-DD+hh:mm:ss`. This works only you are logged in with a user which has the right to edit the displayed page or post. For example: `http://mysite.example?tctest=2018-02-10+19:16:00` will show the content as if it was February 2, 2018 at 19:16.
+For testing the behaviour of server side rules at specific times, you may use the GET parameter `tctest` in an URL, followed by date and time in the format `YYYY-MM-DD+hh:mm:ss`. This works only you are logged in with a user which has the right to edit the displayed page or post. For example: `http://mysite.example?tctest=2018-02-10+19:16:00` will show the content as if it was February 10, 2018 at 19:16.
 
 == Developer Documentation ==
 
