@@ -58,7 +58,7 @@ class EE_Register_Capabilities implements EEI_Plugin_API
         // required fields MUST be present, so let's make sure they are.
         if ($identifier === null || ! is_array($setup_args) || empty($setup_args['capabilities'])) {
             throw new EE_Error(
-                __(
+                esc_html__(
                     'In order to register capabilities with EE_Register_Capabilities::register, you must include a unique name to reference the capabilities being registered, plus an array containing the following keys: "capabilities".',
                     'event_espresso'
                 )
@@ -69,13 +69,14 @@ class EE_Register_Capabilities implements EEI_Plugin_API
             return;
         }
         // make sure this is not registered too late or too early.
-        if (! did_action('AHEE__EE_System__load_espresso_addons')
+        if (
+            ! did_action('AHEE__EE_System__load_espresso_addons')
             || did_action('AHEE__EE_System___detect_if_activation_or_upgrade__begin')
         ) {
             EE_Error::doing_it_wrong(
                 __METHOD__,
                 sprintf(
-                    __(
+                    esc_html__(
                         '%s has been registered too late.  Please ensure that EE_Register_Capabilities::register has been called at some point before the "AHEE__EE_System___detect_if_activation_or_upgrade__begin" action hook has been called.',
                         'event_espresso'
                     ),
@@ -169,7 +170,7 @@ class EE_Register_Capabilities implements EEI_Plugin_API
                 if (! class_exists($cap_class)) {
                     throw new EE_Error(
                         sprintf(
-                            __(
+                            esc_html__(
                                 'An addon (%s) has tried to register a capability map improperly.  Capability map arrays must be indexed by capability map classname, and an array for the class arguments',
                                 'event_espresso'
                             ),
@@ -181,7 +182,7 @@ class EE_Register_Capabilities implements EEI_Plugin_API
                 if (count($args) !== 2) {
                     throw new EE_Error(
                         sprintf(
-                            __(
+                            esc_html__(
                                 'An addon (%s) has tried to register a capability map improperly.  Capability map arrays must be indexed by capability map classname, and an array for the class arguments.  The array should have two values the first being a string and the second an array.',
                                 'event_espresso'
                             ),

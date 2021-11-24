@@ -34,7 +34,8 @@ class EE_Infinite_Integer_Field extends EE_Model_Field_Base
 
     public function prepare_for_set($value_inputted_for_field_on_model_object)
     {
-        if ($value_inputted_for_field_on_model_object === EE_INF_IN_DB ||
+        if (
+            $value_inputted_for_field_on_model_object === EE_INF_IN_DB ||
             $value_inputted_for_field_on_model_object === EE_INF ||
             $value_inputted_for_field_on_model_object === "EE_INF" ||
             $value_inputted_for_field_on_model_object === ""
@@ -75,7 +76,7 @@ class EE_Infinite_Integer_Field extends EE_Model_Field_Base
                     return "&infin;";
                 case 'text':
                 case null:
-                    return __("Unlimited", "event_espresso");
+                    return esc_html__("Unlimited", "event_espresso");
                 default:
                     return $schema;
             }

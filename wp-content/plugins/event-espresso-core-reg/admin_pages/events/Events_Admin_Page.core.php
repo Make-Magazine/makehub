@@ -22,7 +22,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
     /**
      * This will hold the event object for event_details screen.
      *
-     * @access protected
      * @var EE_Event $_event
      */
     protected $_event;
@@ -713,7 +712,8 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
         }
         $orig_status = $event->status();
         // first check if event is active.
-        if ($orig_status === EEM_Event::cancelled
+        if (
+            $orig_status === EEM_Event::cancelled
             || $orig_status === EEM_Event::postponed
             || $event->is_expired()
             || $event->is_inactive()
@@ -794,7 +794,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
         if (! $has_timezone_string && ! EEM_Event::instance()->exists(array())) {
             EE_Error::add_attention(
                 sprintf(
-                    __(
+                    esc_html__(
                         'Your website\'s timezone is currently set to a UTC offset. We recommend updating your timezone to a city or region near you before you create an event. Change your timezone now:%1$s%2$s%3$sChange Timezone%4$s',
                         'event_espresso'
                     ),
@@ -1356,6 +1356,10 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
             $id = absint($id);
             // get the ticket for this id
             $tkt_to_remove = EE_Registry::instance()->load_model('Ticket')->get_one_by_ID($id);
+            if (! $tkt_to_remove instanceof EE_Ticket) {
+                continue;
+            }
+
             // need to get all the related datetimes on this ticket and remove from every single one of them (remember this process can ONLY kick off if there are NO tkts_sold)
             $dtts = $tkt_to_remove->get_many_related('Datetime');
             foreach ($dtts as $dtt) {
@@ -1585,7 +1589,8 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
         /** @type EE_Datetime $first_datetime */
         $first_datetime = reset($times);
         // do we get related tickets?
-        if ($first_datetime instanceof EE_Datetime
+        if (
+            $first_datetime instanceof EE_Datetime
             && $first_datetime->ID() !== 0
         ) {
             $existing_datetime_ids[] = $first_datetime->get('DTT_ID');
@@ -1668,7 +1673,10 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
         );
         $price = $ticket->ID() !== 0
             ? $ticket->get_first_related('Price', array('default_where_conditions' => 'none'))
-            : EE_Registry::instance()->load_model('Price')->create_default_object();
+            : null;
+        $price = $price instanceof EE_Price
+            ? $price
+            : EEM_Price::instance()->create_default_object();
         $price_args = array(
             'price_currency_symbol' => EE_Registry::instance()->CFG->currency->sign,
             'PRC_amount'            => $price->get('PRC_amount'),
@@ -1728,6 +1736,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
         );
         // $template_args['is_active_select'] = EEH_Form_Fields::select_input('is_active', $yes_no_values, $this->_cpt_model_obj->is_active());
         $template_args['_event'] = $this->_cpt_model_obj;
+        $template_args['event'] = $this->_cpt_model_obj;
         $template_args['active_status'] = $this->_cpt_model_obj->pretty_active_status(false);
         $template_args['additional_limit'] = $this->_cpt_model_obj->additional_limit();
         $template_args['default_registration_status'] = EEH_Form_Fields::select_input(
@@ -1857,7 +1866,8 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
             }
         }
         if (isset($this->_req_data['EVT_wp_user'])) {
-            if ($this->_req_data['EVT_wp_user'] != get_current_user_id()
+            if (
+                $this->_req_data['EVT_wp_user'] != get_current_user_id()
                 && EE_Registry::instance()->CAP->current_user_can('ee_read_others_events', 'get_events')
             ) {
                 $where['EVT_wp_user'] = $this->_req_data['EVT_wp_user'];
@@ -2345,7 +2355,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                 EE_Registry::instance()->CFG->update_espresso_config();
                 EE_Error::overwrite_success();
                 EE_Error::add_success(
-                    __('Default Event Settings were updated', 'event_espresso')
+                    esc_html__('Default Event Settings were updated', 'event_espresso')
                 );
             }
         }

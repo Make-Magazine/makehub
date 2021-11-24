@@ -44,7 +44,7 @@ class EE_URL_Validation_Strategy extends EE_Validation_Strategy_Base
         }
         $this->url_validator = $url_validator;
         if (! $validation_error_message) {
-            $validation_error_message = __("Please enter a valid URL. Eg https://eventespresso.com", "event_espresso");
+            $validation_error_message = esc_html__("Please enter a valid URL. Eg https://eventespresso.com", "event_espresso");
         }
         $this->check_file_exists = $check_file_exists;
         parent::__construct($validation_error_message);
@@ -65,14 +65,16 @@ class EE_URL_Validation_Strategy extends EE_Validation_Strategy_Base
             if (! $this->url_validator->isValid($normalized_value)) {
                 throw new EE_Validation_Error($this->get_validation_error_message(), 'invalid_url');
             } elseif (apply_filters('FHEE__EE_URL_Validation_Strategy__validate__check_remote_file_exists', $this->check_file_exists, $this->_input)) {
-                if (! EEH_URL::remote_file_exists(
-                    $normalized_value,
-                    array(
+                if (
+                    ! EEH_URL::remote_file_exists(
+                        $normalized_value,
+                        array(
                             'sslverify' => false,
                             'limit_response_size' => 4095,// we don't really care for a full response, but we do want headers at least. Lets just ask for a one block
                         )
-                )) {
-                    throw new EE_Validation_Error(sprintf(__("That URL seems to be broken. Please enter a valid URL", "event_espresso")));
+                    )
+                ) {
+                    throw new EE_Validation_Error(sprintf(esc_html__("That URL seems to be broken. Please enter a valid URL", "event_espresso")));
                 }
             }
         }
@@ -85,6 +87,6 @@ class EE_URL_Validation_Strategy extends EE_Validation_Strategy_Base
      */
     public function get_jquery_validation_rule_array()
     {
-        return array( 'validUrl'=>true, 'messages' => array( 'validUrl' => $this->get_validation_error_message() ) );
+        return array( 'validUrl' => true, 'messages' => array( 'validUrl' => $this->get_validation_error_message() ) );
     }
 }

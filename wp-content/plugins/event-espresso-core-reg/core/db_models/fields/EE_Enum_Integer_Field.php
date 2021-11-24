@@ -55,17 +55,18 @@ class EE_Enum_Integer_Field extends EE_Integer_Field
     public function prepare_for_set($value_inputted_for_field_on_model_object)
     {
         $allowed_enum_values = $this->_allowed_enum_values();
-        if ($value_inputted_for_field_on_model_object !== null
+        if (
+            $value_inputted_for_field_on_model_object !== null
             && ! array_key_exists($value_inputted_for_field_on_model_object, $allowed_enum_values)
         ) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
                 $msg = sprintf(
-                    __('System is assigning incompatible value "%1$s" to field "%2$s"', 'event_espresso'),
+                    esc_html__('System is assigning incompatible value "%1$s" to field "%2$s"', 'event_espresso'),
                     $value_inputted_for_field_on_model_object,
                     $this->_name
                 );
                 $msg2 = sprintf(
-                    __('Allowed values for "%1$s" are "%2$s". You provided "%3$s"', 'event_espresso'),
+                    esc_html__('Allowed values for "%1$s" are "%2$s". You provided "%3$s"', 'event_espresso'),
                     $this->_name,
                     implode(', ', array_keys($allowed_enum_values)),
                     $value_inputted_for_field_on_model_object
@@ -102,7 +103,7 @@ class EE_Enum_Integer_Field extends EE_Integer_Field
         return array(
             'raw' => array(
                 'description' =>  sprintf(
-                    __('%s - the value in the database.', 'event_espresso'),
+                    esc_html__('%s - the value in the database.', 'event_espresso'),
                     $this->get_nicename()
                 ),
                 'enum' => array_keys($this->_allowed_enum_values()),
@@ -110,7 +111,7 @@ class EE_Enum_Integer_Field extends EE_Integer_Field
             ),
             'pretty' => array(
                 'description' =>  sprintf(
-                    __('%s - the value for display.', 'event_espresso'),
+                    esc_html__('%s - the value for display.', 'event_espresso'),
                     $this->get_nicename()
                 ),
                 'enum' => array_values($this->_allowed_enum_values()),

@@ -71,7 +71,7 @@ class CancelTicketLineItemService extends DomainService
                 array(
                     'LIN_name'       => $ticket_line_item->name(),
                     'LIN_desc'       => sprintf(
-                        __('%1$s Cancelled: %2$s', 'event_espresso'),
+                        esc_html__('%1$s Cancelled: %2$s', 'event_espresso'),
                         $ticket_line_item->desc(),
                         date('Y-m-d h:i a')
                     ),
@@ -91,7 +91,7 @@ class CancelTicketLineItemService extends DomainService
         if (! $success) {
             throw new \RuntimeException(
                 sprintf(
-                    __('An error occurred while attempting to cancel ticket line item %1$s', 'event_espresso'),
+                    esc_html__('An error occurred while attempting to cancel ticket line item %1$s', 'event_espresso'),
                     $ticket_line_item->ID()
                 )
             );
@@ -116,7 +116,8 @@ class CancelTicketLineItemService extends DomainService
             array($ticket->ID())
         );
         foreach ($ticket_line_items as $ticket_line_item) {
-            if ($ticket_line_item instanceof \EE_Line_Item
+            if (
+                $ticket_line_item instanceof \EE_Line_Item
                 && $ticket_line_item->OBJ_type() === 'Ticket'
                 && $ticket_line_item->OBJ_ID() === $ticket->ID()
             ) {

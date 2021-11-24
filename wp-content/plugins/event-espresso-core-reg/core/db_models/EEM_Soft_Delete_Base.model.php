@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EEM_Soft_Delete_Base
  * About this class: modifies parent EEM_Base's behaviour to make usage of soft-deletable models
@@ -52,7 +53,7 @@ abstract class EEM_Soft_Delete_Base extends EEM_Base
         if ($field) {
             return $field->get_name();
         } else {
-            throw new EE_Error(sprintf(__(
+            throw new EE_Error(sprintf(esc_html__(
                 'We are trying to find the deleted flag field on %s, but none was found. Are you sure there is a field of type EE_Trashed_Flag_Field in %s constructor?',
                 'event_espresso'
             ), get_class($this), get_class($this)));
@@ -303,10 +304,11 @@ abstract class EEM_Soft_Delete_Base extends EEM_Base
         if (! $ID) {
             return false;
         }
-        if ($this->delete_or_restore(
-            $delete,
-            $this->alter_query_params_to_restrict_by_ID($ID)
-        )
+        if (
+            $this->delete_or_restore(
+                $delete,
+                $this->alter_query_params_to_restrict_by_ID($ID)
+            )
         ) {
             return true;
         } else {

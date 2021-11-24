@@ -3,53 +3,49 @@
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\services\loaders\LoaderFactory;
+use EventEspresso\core\services\request\CurrentPage;
 use EventEspresso\core\services\shortcodes\LegacyShortcodesManager;
 use EventEspresso\widgets\EspressoWidget;
 
 /**
- * Event Espresso
- * Event Registration and Management Plugin for WordPress
- * @ package            Event Espresso
- * @ author            Seth Shoultes
- * @ copyright        (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @ license            http://eventespresso.com/support/terms-conditions/   * see Plugin Licensing *
- * @ link                    http://www.eventespresso.com
- * @ version            4.0
- * ------------------------------------------------------------------------
  * EE_Front_Controller
  *
- * @package               Event Espresso
- * @subpackage            core/
- * @author                Brent Christensen
- *                        ------------------------------------------------------------------------
+ * @package     Event Espresso
+ * @subpackage  core/
+ * @author      Brent Christensen
  */
 final class EE_Front_Controller
 {
 
     /**
-     * @var string $_template_path
+     * @var string
      */
     private $_template_path;
 
     /**
-     * @var string $_template
+     * @var string
      */
     private $_template;
 
     /**
-     * @type EE_Registry $Registry
+     * @type EE_Registry
      */
     protected $Registry;
 
     /**
-     * @type EE_Request_Handler $Request_Handler
+     * @type EE_Request_Handler
      */
     protected $Request_Handler;
 
     /**
-     * @type EE_Module_Request_Router $Module_Request_Router
+     * @type EE_Module_Request_Router
      */
     protected $Module_Request_Router;
+
+    /**
+     * @type CurrentPage
+     */
+    protected $current_page;
 
 
     /**
@@ -57,20 +53,19 @@ final class EE_Front_Controller
      *    should fire after shortcode, module, addon, or other plugin's default priority init phases have run
      *
      * @access    public
-     * @param \EE_Registry              $Registry
-     * @param \EE_Request_Handler       $Request_Handler
-     * @param \EE_Module_Request_Router $Module_Request_Router
+     * @param EE_Registry              $Registry
+     * @param CurrentPage              $EspressoPage
+     * @param EE_Module_Request_Router $Module_Request_Router
      */
     public function __construct(
         EE_Registry $Registry,
-        EE_Request_Handler $Request_Handler,
+        CurrentPage $EspressoPage,
         EE_Module_Request_Router $Module_Request_Router
     ) {
-        $this->Registry = $Registry;
-        $this->Request_Handler = $Request_Handler;
+        $this->Registry              = $Registry;
+        $this->current_page          = $EspressoPage;
         $this->Module_Request_Router = $Module_Request_Router;
         // load other resources and begin to actually run shortcodes and modules
-        add_action('wp_loaded', array($this, 'wp_loaded'), 5);
         // analyse the incoming WP request
         add_action('parse_request', array($this, 'get_request'), 1, 1);
         // process request with module factory
@@ -98,9 +93,13 @@ final class EE_Front_Controller
 
     /**
      * @return EE_Request_Handler
+     * @deprecated 4.10.14.p
      */
     public function Request_Handler()
     {
+        if (! $this->Request_Handler instanceof EE_Request_Handler) {
+            $this->Request_Handler = LoaderFactory::getLoader()->getShared('EE_Request_Handler');
+        }
         return $this->Request_Handler;
     }
 
@@ -116,6 +115,7 @@ final class EE_Front_Controller
 
     /**
      * @return LegacyShortcodesManager
+     * @deprecated 4.10.14.p
      */
     public function getLegacyShortcodesManager()
     {
@@ -203,8 +203,9 @@ final class EE_Front_Controller
     public function get_request(WP $WP)
     {
         do_action('AHEE__EE_Front_Controller__get_request__start');
-        $this->Request_Handler->parse_request($WP);
+        $this->current_page->parseQueryVars($WP);
         do_action('AHEE__EE_Front_Controller__get_request__complete');
+        remove_action('parse_request', [$this, 'get_request'], 1);
     }
 
 
@@ -212,13 +213,16 @@ final class EE_Front_Controller
      *    pre_get_posts - basically a module factory for instantiating modules and selecting the final view template
      *
      * @access    public
-     * @param   WP_Query $WP_Query
+     * @param WP_Query $WP_Query
      * @return    void
+     * @throws EE_Error
+     * @throws ReflectionException
      */
     public function pre_get_posts($WP_Query)
     {
         // only load Module_Request_Router if this is the main query
-        if ($this->Module_Request_Router instanceof EE_Module_Request_Router
+        if (
+            $this->Module_Request_Router instanceof EE_Module_Request_Router
             && $WP_Query->is_main_query()
         ) {
             // cycle thru module routes
@@ -273,9 +277,9 @@ final class EE_Front_Controller
             return;
         }
         // if we already know this is an espresso page, then load assets
-        $load_assets = $this->Request_Handler->is_espresso_page();
+        $load_assets = $this->current_page->isEspressoPage();
         // if we are already loading assets then just move along, otherwise check for widgets
-        $load_assets = $load_assets ? $load_assets : $this->espresso_widgets_in_active_sidebars();
+        $load_assets = $load_assets || $this->espresso_widgets_in_active_sidebars();
         if ($load_assets) {
             add_action('wp_enqueue_scripts', array($this, 'enqueueStyle'), 10);
             add_action('wp_print_footer_scripts', array($this, 'enqueueScripts'), 10);
@@ -302,7 +306,7 @@ final class EE_Front_Controller
             }
         }
         $all_sidebar_widgets = wp_get_sidebars_widgets();
-        foreach ($all_sidebar_widgets as $sidebar_name => $sidebar_widgets) {
+        foreach ($all_sidebar_widgets as $sidebar_widgets) {
             if (is_array($sidebar_widgets) && ! empty($sidebar_widgets)) {
                 foreach ($sidebar_widgets as $sidebar_widget) {
                     foreach ($espresso_widgets as $espresso_widget) {
@@ -335,7 +339,8 @@ final class EE_Front_Controller
         // let's exclude all event type taxonomy term archive pages from search engine indexing
         // @see https://events.codebasehq.com/projects/event-espresso/tickets/10249
         // also exclude all critical pages from indexing
-        if ((
+        if (
+            (
                 is_tax('espresso_event_type')
                 && get_option('blog_public') !== '0'
             )
@@ -355,16 +360,18 @@ final class EE_Front_Controller
      * wp_print_scripts
      *
      * @return void
+     * @throws EE_Error
      */
     public function wp_print_scripts()
     {
         global $post;
-        if (isset($post->EE_Event)
+        if (
+            isset($post->EE_Event)
             && $post->EE_Event instanceof EE_Event
             && get_post_type() === 'espresso_events'
             && is_singular()
         ) {
-            \EEH_Schema::add_json_linked_data_for_event($post->EE_Event);
+            EEH_Schema::add_json_linked_data_for_event($post->EE_Event);
         }
     }
 
@@ -397,13 +404,14 @@ final class EE_Front_Controller
     {
         static $shown_already = false;
         do_action('AHEE__EE_Front_Controller__display_errors__begin');
-        if (! $shown_already
+        if (
+            ! $shown_already
             && apply_filters('FHEE__EE_Front_Controller__display_errors', true)
             && is_main_query()
             && ! is_feed()
             && in_the_loop()
             && did_action('wp_head')
-            && $this->Request_Handler->is_espresso_page()
+            && $this->current_page->isEspressoPage()
         ) {
             echo EE_Error::get_notices();
             $shown_already = true;
@@ -426,7 +434,7 @@ final class EE_Front_Controller
      */
     public function template_include($template_include_path = null)
     {
-        if ($this->Request_Handler->is_espresso_page()) {
+        if ($this->current_page->isEspressoPage()) {
             $this->_template_path = ! empty($this->_template_path)
                 ? basename($this->_template_path)
                 : basename(
@@ -442,9 +450,6 @@ final class EE_Front_Controller
 
 
     /**
-     *    get_selected_template
-     *
-     * @access    public
      * @param bool $with_path
      * @return    string
      */
@@ -455,15 +460,16 @@ final class EE_Front_Controller
 
 
     /**
-     * @deprecated 4.9.26
      * @param string $shortcode_class
-     * @param \WP    $wp
+     * @param WP     $wp
+     * @throws ReflectionException
+     * @deprecated 4.9.26
      */
     public function initialize_shortcode($shortcode_class = '', WP $wp = null)
     {
-        \EE_Error::doing_it_wrong(
+        EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\services\shortcodes\LegacyShortcodesManager::initializeShortcode() instead.',
                 'event_espresso'
             ),

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EES_Espresso_Thank_You
  *
@@ -47,7 +48,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -65,7 +66,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -84,7 +85,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -103,7 +104,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -132,7 +133,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -150,7 +151,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -169,7 +170,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -189,7 +190,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -211,7 +212,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -231,7 +232,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -250,7 +251,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -270,7 +271,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -291,7 +292,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -312,7 +313,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -333,7 +334,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -355,7 +356,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -377,7 +378,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),
@@ -399,7 +400,7 @@ class EES_Espresso_Thank_You extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoThankYou instead.',
                 'event_espresso'
             ),

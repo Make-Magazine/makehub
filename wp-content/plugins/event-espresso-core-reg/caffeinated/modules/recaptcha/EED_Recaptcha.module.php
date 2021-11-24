@@ -55,7 +55,8 @@ class EED_Recaptcha extends EED_Module
     {
         EED_Recaptcha::$config = EE_Registry::instance()->CFG->registration;
         // use_captcha ?
-        if (EED_Recaptcha::useRecaptcha()
+        if (
+            EED_Recaptcha::useRecaptcha()
             && EED_Recaptcha::notPaymentOptionsRevisit()
         ) {
             EED_Recaptcha::set_definitions();
@@ -100,9 +101,10 @@ class EED_Recaptcha extends EED_Module
         EED_Recaptcha::$config = EE_Registry::instance()->CFG->registration;
         EED_Recaptcha::set_definitions();
         // use_captcha ?
-        if (EED_Recaptcha::useRecaptcha()
+        if (
+            EED_Recaptcha::useRecaptcha()
             && EED_Recaptcha::notPaymentOptionsRevisit()
-            && EE_Registry::instance()->REQ->get('step', '') !== ''
+            && EED_Recaptcha::getRequest()->getRequestParam('step', '') !== ''
         ) {
             EED_Recaptcha::enqueue_styles_and_scripts();
             add_filter(
@@ -167,9 +169,10 @@ class EED_Recaptcha extends EED_Module
      */
     public static function notPaymentOptionsRevisit()
     {
+        $request = EED_Recaptcha::getRequest();
         return ! (
-            EE_Registry::instance()->REQ->get('step', '') === 'payment_options'
-            && (boolean) EE_Registry::instance()->REQ->get('revisit', false) === true
+            $request->getRequestParam('step', '') === 'payment_options'
+            && $request->getRequestParam('revisit', false, 'bool') === true
         );
     }
 
@@ -212,7 +215,7 @@ class EED_Recaptcha extends EED_Module
 
 
     /**
-     * @param \WP $WP
+     * @param WP $WP
      */
     public function run($WP)
     {
@@ -227,10 +230,9 @@ class EED_Recaptcha extends EED_Module
      */
     public static function not_a_robot()
     {
-        $not_a_robot = is_bool(EED_Recaptcha::$_not_a_robot)
+        return is_bool(EED_Recaptcha::$_not_a_robot)
             ? EED_Recaptcha::$_not_a_robot
             : EED_Recaptcha::recaptcha_passed();
-        return $not_a_robot;
     }
 
 
@@ -336,12 +338,13 @@ class EED_Recaptcha extends EED_Module
         if (empty($bypass_request_params_array)) {
             return false;
         }
+        $request = EED_Recaptcha::getRequest();
         // initially set bypass to TRUE
         $bypass_recaptcha = true;
         foreach ($bypass_request_params_array as $key => $value) {
             // if $key is not found or value doesn't match exactly, then toggle bypass to FALSE,
             // otherwise carry over it's value. This way, one missed setting results in no bypass
-            $bypass_recaptcha = isset($_REQUEST[ $key ]) && $_REQUEST[ $key ] === $value
+            $bypass_recaptcha = $request->getRequestParam($key) === $value
                 ? $bypass_recaptcha
                 : false;
         }
@@ -357,9 +360,8 @@ class EED_Recaptcha extends EED_Module
      */
     private static function _get_recaptcha_response()
     {
-        EED_Recaptcha::$_recaptcha_response = EE_Registry::instance()->REQ->get(
-            'g-recaptcha-response',
-            false
+        EED_Recaptcha::$_recaptcha_response = EED_Recaptcha::getRequest()->getRequestParam(
+            'g-recaptcha-response'
         );
     }
 
@@ -389,7 +391,7 @@ class EED_Recaptcha extends EED_Module
             );
             $recaptcha_response = $recaptcha->verify(
                 EED_Recaptcha::$_recaptcha_response,
-                $_SERVER['REMOTE_ADDR']
+                EED_Recaptcha::getRequest()->getServerParam('REMOTE_ADDR')
             );
         }
         return $recaptcha_response instanceof Response && $recaptcha_response->isSuccess();

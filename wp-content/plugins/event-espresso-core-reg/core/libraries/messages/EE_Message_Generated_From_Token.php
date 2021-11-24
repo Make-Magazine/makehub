@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class is the signature for an object representing prepped message for queueing.
  *
@@ -95,7 +96,7 @@ class EE_Message_Generated_From_Token extends EE_Message_To_Generate implements 
         if (! $message instanceof EE_Message) {
             throw new EE_Error(
                 sprintf(
-                    __('Unable to retrieve generated message from DB using given token: "%1$s"', 'event_espresso'),
+                    esc_html__('Unable to retrieve generated message from DB using given token: "%1$s"', 'event_espresso'),
                     $this->token
                 )
             );
@@ -106,7 +107,7 @@ class EE_Message_Generated_From_Token extends EE_Message_To_Generate implements 
             $message->set_STS_ID(EEM_Message::status_failed);
             $message->set_error_message(
                 sprintf(
-                    __('Unable to send message because the "%1$s" messenger is not active or not installed', 'event_espresso'),
+                    esc_html__('Unable to send message because the "%1$s" messenger is not active or not installed', 'event_espresso'),
                     $this->_sending_messenger
                 )
             );

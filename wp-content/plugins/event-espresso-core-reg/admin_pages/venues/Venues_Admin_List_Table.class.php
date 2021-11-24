@@ -32,20 +32,20 @@ class Venues_Admin_List_Table extends EE_Admin_List_Table
     protected function _set_properties()
     {
         $this->_wp_list_args = array(
-            'singular' => __('Event Venue', 'event_espresso'),
-            'plural'   => __('Event Venues', 'event_espresso'),
+            'singular' => esc_html__('Event Venue', 'event_espresso'),
+            'plural'   => esc_html__('Event Venues', 'event_espresso'),
             'ajax'     => true, // for now,
             'screen'   => $this->_admin_page->get_current_screen()->id,
         );
 
         $this->_columns = array(
             'cb'       => '<input type="checkbox" />',
-            'id'       => __('ID', 'event_espresso'),
-            'name'     => __('Name', 'event_espresso'),
-            'address'  => __('Address', 'event_espresso'),
-            'city'     => __('City', 'event_espresso'),
-            'capacity' => __('Capacity', 'event_espresso'),
-            // 'shortcode' => __('Shortcode', 'event_espresso'),
+            'id'       => esc_html__('ID', 'event_espresso'),
+            'name'     => esc_html__('Name', 'event_espresso'),
+            'address'  => esc_html__('Address', 'event_espresso'),
+            'city'     => esc_html__('City', 'event_espresso'),
+            'capacity' => esc_html__('Capacity', 'event_espresso'),
+            // 'shortcode' => esc_html__('Shortcode', 'event_espresso'),
         );
 
         $this->_sortable_columns = array(
@@ -135,15 +135,17 @@ class Venues_Admin_List_Table extends EE_Admin_List_Table
             $actions['edit'] = '<a href="' . $edit_link . '" title="' . esc_attr__(
                 'Edit Venue',
                 'event_espresso'
-            ) . '">' . __('Edit', 'event_espresso') . '</a>';
+            ) . '">' . esc_html__('Edit', 'event_espresso') . '</a>';
         }
 
 
-        if (EE_Registry::instance()->CAP->current_user_can(
-            'ee_delete_venue',
-            'espresso_venues_trash_venue',
-            $item->ID()
-        )) {
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_venue',
+                'espresso_venues_trash_venue',
+                $item->ID()
+            )
+        ) {
             $trash_event_query_arg = array(
                 'action' => 'trash_venue',
                 'VNU_ID' => $item->ID(),
@@ -151,11 +153,13 @@ class Venues_Admin_List_Table extends EE_Admin_List_Table
             $trash_venue_link = EE_Admin_Page::add_query_args_and_nonce($trash_event_query_arg, EE_VENUES_ADMIN_URL);
         }
 
-        if (EE_Registry::instance()->CAP->current_user_can(
-            'ee_delete_venue',
-            'espresso_venues_restore_venue',
-            $item->ID()
-        )) {
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_venue',
+                'espresso_venues_restore_venue',
+                $item->ID()
+            )
+        ) {
             $restore_venue_query_args = array(
                 'action' => 'restore_venue',
                 'VNU_ID' => $item->ID(),
@@ -166,11 +170,13 @@ class Venues_Admin_List_Table extends EE_Admin_List_Table
             );
         }
 
-        if (EE_Registry::instance()->CAP->current_user_can(
-            'ee_delete_venue',
-            'espresso_venues_delete_venue',
-            $item->ID()
-        )) {
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_venue',
+                'espresso_venues_delete_venue',
+                $item->ID()
+            )
+        ) {
             $delete_venue_query_args = array(
                 'action' => 'delete_venue',
                 'VNU_ID' => $item->ID(),
@@ -182,41 +188,47 @@ class Venues_Admin_List_Table extends EE_Admin_List_Table
 
         switch ($item->get('status')) {
             case 'trash':
-                if (EE_Registry::instance()->CAP->current_user_can(
-                    'ee_delete_venue',
-                    'espresso_venues_restore_venue',
-                    $item->ID()
-                )) {
+                if (
+                    EE_Registry::instance()->CAP->current_user_can(
+                        'ee_delete_venue',
+                        'espresso_venues_restore_venue',
+                        $item->ID()
+                    )
+                ) {
                     $actions['restore_from_trash'] = '<a href="' . $restore_venue_link . '" title="' . esc_attr__(
                         'Restore from Trash',
                         'event_espresso'
-                    ) . '">' . __('Restore from Trash', 'event_espresso') . '</a>';
+                    ) . '">' . esc_html__('Restore from Trash', 'event_espresso') . '</a>';
                 }
-                if ($item->count_related('Event') === 0 && EE_Registry::instance()->CAP->current_user_can(
-                    'ee_delete_venue',
-                    'espresso_venues_delete_venue',
-                    $item->ID()
-                )) {
+                if (
+                    $item->count_related('Event') === 0 && EE_Registry::instance()->CAP->current_user_can(
+                        'ee_delete_venue',
+                        'espresso_venues_delete_venue',
+                        $item->ID()
+                    )
+                ) {
                     $actions['delete permanently'] = '<a href="' . $delete_venue_link . '" title="' . esc_attr__(
                         'Delete Permanently',
                         'event_espresso'
-                    ) . '">' . __('Delete Permanently', 'event_espresso') . '</a>';
+                    ) . '">' . esc_html__('Delete Permanently', 'event_espresso') . '</a>';
                 }
                 break;
             default:
                 $actions['view'] = '<a href="' . $view_link . '" title="' . esc_attr__(
                     'View Venue',
                     'event_espresso'
-                ) . '">' . __('View', 'event_espresso') . '</a>';
-                if (EE_Registry::instance()->CAP->current_user_can(
-                    'ee_delete_venue',
-                    'espresso_venues_trash_venue',
-                    $item->ID()
-                )) {
+                ) . '">' . esc_html__('View', 'event_espresso') . '</a>';
+                if (
+                    EE_Registry::instance()->CAP->current_user_can(
+                        'ee_delete_venue',
+                        'espresso_venues_trash_venue',
+                        $item->ID()
+                    )
+                ) {
                     $actions['move to trash'] = '<a href="' . $trash_venue_link . '" title="' . esc_attr__(
                         'Trash Event',
                         'event_espresso'
-                    ) . '">' . __('Trash', 'event_espresso') . '</a>';
+                    ) . '">' . esc_html__('Trash', 'event_espresso') . '</a>';
                 }
         }
         return $actions;
