@@ -42,7 +42,9 @@ function membership_info_content() {
     $user_info = get_userdata($user_id);
 	//var_dump(Ihc_Db::get_user_levels($user_id, true));
     $user_email = $user_info->user_email;
-    require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
+	if(!class_exists('Stripe\Customer')) {
+    	require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
+	}
     \Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
     $customer = \Stripe\Customer::all(["email" => $user_email]);
     $customerID = (isset($customer->data[0]['id']) ? $customer->data[0]['id'] : NULL); ?>
