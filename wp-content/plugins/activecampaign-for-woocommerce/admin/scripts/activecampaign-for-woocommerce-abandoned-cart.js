@@ -23,6 +23,16 @@ jQuery(document).ready(function($) {
         }
     });
 
+    $('.activecampaign-modal-abandoned-cart').click(function (e) {
+        var data = $(e.target).parent().find('.activecampaign-more-data').html();
+        $('#abcartmodal .abandoned-cart-details').html(data).show();
+        $('#abcartmodal').show();
+    });
+
+    $('#abcartmodal .abandoned-cart-details-close .button').click(function (e) {
+        $('#abcartmodal').hide();
+    });
+
     $('.activecampaign-sync-abandoned-cart').click(function (e) {
         var row = $(e.target).parents('tr');
         var rowId = row.attr('rowid');

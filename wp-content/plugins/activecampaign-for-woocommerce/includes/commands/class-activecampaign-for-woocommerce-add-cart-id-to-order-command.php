@@ -13,6 +13,7 @@
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 
 /**
  * The Add_Cart_Id_To_Order_Command Class.
@@ -45,11 +46,11 @@ class Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command implements Exe
 		 */
 		$order = $args[0];
 
-		$user_id = get_current_user_id();
-
+		$user_id             = get_current_user_id();
+		$abandoned_cart_util = new Abandoned_Cart_Utilities();
 		if ( ! $user_id ) {
 			// Guest checkout
-			$persistant_cart_id_name = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
+			$persistant_cart_id_name = $abandoned_cart_util->generate_externalcheckoutid(
 				wc()->session->get_customer_id(),
 				$order->get_billing_email()
 			);
@@ -92,7 +93,7 @@ class Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command implements Exe
 
 				$woocommerce_session_hash = $woocommerce_session_cookie[0];
 
-				$persistant_cart_id_name = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
+				$persistant_cart_id_name = $abandoned_cart_util->generate_externalcheckoutid(
 					$woocommerce_session_hash,
 					$order->get_billing_email()
 				);
@@ -101,7 +102,7 @@ class Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command implements Exe
 
 		// This ends up as the externalcheckoutid in Hosted
 		$order->update_meta_data(
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME,
 			$persistant_cart_id_name
 		);
 

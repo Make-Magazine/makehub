@@ -81,8 +81,6 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 	 * @param Activecampaign_For_Woocommerce_Ecom_Model_Interface $model The model class.
 	 * @param string                                              $email The email address.
 	 * @param callable                                            $response_massager A callable to alter the response body.
-	 *
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception Thrown when a 404 is returned.
 	 */
 	private function get_and_set_model_properties_from_api_by_email(
 		Activecampaign_For_Woocommerce_Api_Client $client,
@@ -106,8 +104,6 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 	 * @param Activecampaign_For_Woocommerce_Ecom_Model_Interface $model The model class.
 	 * @param string                                              $externalid The externalid.
 	 * @param callable                                            $response_massager A callable to alter the response body.
-	 *
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception Thrown when a 404 is returned.
 	 */
 	private function get_and_set_model_properties_from_api_by_externalid(
 		Activecampaign_For_Woocommerce_Api_Client $client,
@@ -132,8 +128,6 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 	 * @param string                                              $filter_name The name of the filter.
 	 * @param string                                              $filter_value The value of the filter.
 	 * @param callable                                            $response_massager A callable to alter the response body.
-	 *
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception Thrown when a 404 is returned.
 	 */
 	private function get_and_set_model_properties_from_api_by_filter(
 		Activecampaign_For_Woocommerce_Api_Client $client,

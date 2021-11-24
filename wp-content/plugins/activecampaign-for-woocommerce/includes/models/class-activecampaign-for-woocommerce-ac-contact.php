@@ -14,6 +14,7 @@ use Activecampaign_For_Woocommerce_Api_Serializable as Api_Serializable;
 use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Has_Id as Has_Id;
 use Activecampaign_For_Woocommerce_Has_Email as Has_Email;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The model class for the Ecom Contact
@@ -216,4 +217,81 @@ class Activecampaign_For_Woocommerce_AC_Contact implements Ecom_Model, Has_Id, H
 		$this->phone = $phone;
 	}
 
+
+	/**
+	 * Creates the contact model from an order object.
+	 *
+	 * @param     WC_Order $order The WC Order.
+	 *
+	 * @return bool
+	 */
+	public function create_ecom_contact_from_order( WC_Order $order ) {
+		$logger = new Logger();
+		if ( isset( $order ) && $order->get_id() ) {
+			$customer = null;
+			if ( $order->get_customer_id() ) {
+				try {
+					// Use the customer information
+					$customer = new WC_Customer( $order->get_customer_id(), false );
+
+					if ( $customer->get_id() ) {
+						$this->externalid = $customer->get_id();
+					}
+
+					if ( $customer->get_email() ) {
+						$this->email = $customer->get_email();
+					} elseif ( $customer->get_billing_email() ) {
+						$this->email = $customer->get_billing_email();
+					}
+
+					if ( $customer->get_first_name() ) {
+						$this->first_name = $customer->get_first_name();
+					} elseif ( $customer->get_billing_first_name() ) {
+						$this->first_name = $customer->get_billing_first_name();
+					}
+
+					if ( $customer->get_last_name() ) {
+						$this->last_name = $customer->get_last_name();
+					} elseif ( $customer->get_billing_last_name() ) {
+						$this->last_name = $customer->get_billing_last_name();
+					}
+
+					if ( $customer->get_billing_phone() ) {
+						$this->phone = $customer->get_billing_phone();
+					}
+
+					return true;
+				} catch ( Throwable $t ) {
+					$logger->error(
+						'Activecampaign_For_Woocommerce_Historical_Sync: Could not establish WC_Customer object',
+						[
+							'message' => $t->getMessage(),
+						]
+					);
+				}
+			}
+
+			if ( ! $customer || ! $order->get_customer_id() || ! $customer->get_email() ) {
+				try {
+					$this->externalid = 0;
+					$this->email      = $order->get_billing_email();
+					$this->first_name = $order->get_billing_first_name();
+					$this->last_name  = $order->get_billing_last_name();
+					$this->phone      = $order->get_billing_phone();
+
+					return true;
+				} catch ( Throwable $t ) {
+					$logger->error(
+						'Activecampaign_For_Woocommerce_Historical_Sync: There was a problem preparing data for a record.',
+						[
+							'customer_email' => $order->get_billing_email(),
+							'message'        => $t->getMessage(),
+						]
+					);
+
+					return false;
+				}
+			}
+		}
+	}
 }

@@ -83,11 +83,11 @@ class Activecampaign_For_Woocommerce_Admin {
 	}
 
 	/**
-	 * Register the stylesheets for the admin area.
+	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles_scripts() {
 		wp_enqueue_style(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'css/activecampaign-for-woocommerce-admin.css',
@@ -95,14 +95,7 @@ class Activecampaign_For_Woocommerce_Admin {
 			$this->version,
 			'all'
 		);
-	}
 
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
 		wp_register_script(
 			$this->plugin_name . 'settings-page',
 			plugin_dir_url( __FILE__ ) . 'scripts/activecampaign-for-woocommerce-settings-page.js',
@@ -122,6 +115,14 @@ class Activecampaign_For_Woocommerce_Admin {
 		wp_register_script(
 			$this->plugin_name . 'abandoned-cart',
 			plugin_dir_url( __FILE__ ) . 'scripts/activecampaign-for-woocommerce-abandoned-cart.js',
+			array( 'jquery' ),
+			$this->version,
+			true
+		);
+
+		wp_register_script(
+			$this->plugin_name . 'historical-sync',
+			plugin_dir_url( __FILE__ ) . 'scripts/activecampaign-for-woocommerce-historical-sync.js',
 			array( 'jquery' ),
 			$this->version,
 			true
@@ -169,13 +170,22 @@ class Activecampaign_For_Woocommerce_Admin {
 
 			add_submenu_page(
 				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
-				'ActiveCampaign for WooCommerce Status',
-				'Status',
+				'ActiveCampaign for WooCommerce Historical Sync',
+				'Historical Sync',
 				'manage_options',
-				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_status',
-				array( $this, 'fetch_status_page' )
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_historical_sync',
+				array( $this, 'fetch_historical_sync_page' )
 			);
 		}
+
+		add_submenu_page(
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
+			'ActiveCampaign for WooCommerce Status',
+			'Status',
+			'manage_options',
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_status',
+			array( $this, 'fetch_status_page' )
+		);
 	}
 
 	/**
@@ -221,7 +231,7 @@ class Activecampaign_For_Woocommerce_Admin {
 	 *
 	 * @param     array $array array for hook.
 	 *
-	 * @since    1.?
+	 * @since    1.4.9
 	 */
 	public function please_configure_plugin_notice( $array ) {
 		global $pagenow;
@@ -284,16 +294,16 @@ class Activecampaign_For_Woocommerce_Admin {
 				echo '<div id="activecampaign-for-woocommerce-notice-error" class="notice notice-error is-dismissible activecampaign-for-woocommerce-error"><p>' .
 					esc_html(
 						'The ActiveCampaign for WooCommerce plugin has recorded ' . $err_count . ' ' .
-							translate_nooped_plural(
-								[
-									'singular' => 'error',
-									'plural'   => 'errors',
-									'domain'   => ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN,
-									'context'  => null,
-								],
-								$err_count
-							) .
-							   '.'
+						translate_nooped_plural(
+							[
+								'singular' => 'error',
+								'plural'   => 'errors',
+								'domain'   => ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN,
+								'context'  => null,
+							],
+							$err_count
+						) .
+						 '.'
 					) .
 					 '<br/><a href="' . esc_url( $admin_log_url ) . '">' . esc_html( 'Please check the ActiveCampaign logs for issues.' ) .
 					 '</a></p></div>
@@ -375,9 +385,118 @@ class Activecampaign_For_Woocommerce_Admin {
 	}
 
 	/**
+	 * Fetches the historical sync page view.
+	 *
+	 * @since 1.5.0
+	 */
+	public function fetch_historical_sync_page() {
+		wp_enqueue_script( $this->plugin_name . 'historical-sync' );
+		// do_action('activecampaign_for_woocommerce_run_historical_sync');
+		require_once plugin_dir_path( __FILE__ )
+					 . 'partials/activecampaign-for-woocommerce-historical-sync.php';
+
+	}
+
+	/**
+	 * Schedules the historical sync to run as a background job.
+	 *
+	 * @since 1.5.0
+	 */
+	public function schedule_historical_sync() {
+		$logger = new Logger();
+		update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME, true );
+
+		wp_schedule_single_event( time() + 10, ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME );
+		$logger->info(
+			'Schedule historical sync',
+			[
+				'current_time' => time(),
+				'schedule'     => wp_get_scheduled_event( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME ),
+			]
+		);
+	}
+
+	/**
+	 * Checks the status of historical sync and returns the result.
+	 *
+	 * @since 1.5.0
+	 */
+	public function check_historical_sync_status() {
+		$status       = json_decode( get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME ), 'array' );
+		$total_orders = $this->get_sync_ready_order_count();
+
+		if ( ! empty( wp_get_scheduled_event( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME ) ) ) {
+			// The sync is scheduled
+			wp_send_json_success( 1 );
+		}
+
+		if ( $status['is_running'] || $status['is_paused'] ) {
+			$status['percentage']   = round( ( $status['current_record'] / $total_orders ) * 100 );
+			$status['total_orders'] = $total_orders;
+			// return percentage for status bar
+			wp_send_json_success( $status );
+		} else {
+			wp_send_json_success( 0 );
+		}
+	}
+
+	/**
+	 * Sets a stop for the historical sync with a condition of cancel or pause.
+	 *
+	 * @since 1.5.0
+	 */
+	public function stop_historical_sync() {
+		$logger = new Logger();
+
+		if ( ! empty( $_REQUEST['type'] ) ) {
+			$logger->debug(
+				'Historical sync stop requested',
+				[
+					'type' => $_REQUEST['type'],
+				]
+			);
+			update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_STOP_CHECK_NAME, $_REQUEST['type'], false );
+			wp_send_json_success( 'Stop requested...' );
+		} else {
+			wp_send_json_success( 'No argument provided' );
+		}
+
+	}
+
+	/**
+	 * Resets the historical sync if it gets in a stuck position.
+	 *
+	 * @since 1.5.0
+	 */
+	public function reset_historical_sync() {
+		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME );
+		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME );
+		wp_send_json_success( 'Sync status cleared, status reset. If you continue to have sync issues please reach out to ActiveCampaign support.' );
+	}
+
+	/**
+	 * Radio options for "How long after a cart is abandoned should ActiveCampaign trigger automations?"
+	 * How long should we wait until we determine a cart is abandoned?
+	 * These options let the user decide.
+	 */
+	public function get_ab_cart_wait_options() {
+		$options = wp_json_encode(
+			[
+				// value     // label
+				'1'  => esc_html__( '1 hour (recommended)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
+				'6'  => esc_html__( '6 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
+				'10' => esc_html__( '10 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
+				'24' => esc_html__( '24 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
+			]
+		);
+
+		return $options;
+	}
+
+	/**
 	 * Fetch the PHP template file that is used for the admin status page.
 	 *
-	 * @since    1.?
+	 * @since    1.4.9
 	 */
 	public function fetch_status_page() {
 		wp_enqueue_script( $this->plugin_name . 'status-page' );
@@ -397,13 +516,13 @@ class Activecampaign_For_Woocommerce_Admin {
 		$limit  = 40;
 		$offset = $page * $limit;
 		return $wpdb->get_results(
-			// phpcs:disable
+		// phpcs:disable
 			$wpdb->prepare(
-				'SELECT id, synced_to_ac, customer_id, customer_email, customer_first_name, customer_last_name, last_access_time
+				'SELECT id, synced_to_ac, customer_id, customer_email, customer_first_name, customer_last_name, last_access_time, activecampaignfwc_order_external_uuid, cart_ref_json, customer_ref_json
         		FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` LIMIT %d,%d',
 				[ $offset, $limit ]
 			), OBJECT
-			// phpcs:enable
+		// phpcs:enable
 		);
 	}
 
@@ -610,6 +729,28 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function get_storage() {
 		return get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
+	}
+
+
+	/**
+	 * Gets the count of sync ready orders.
+	 *
+	 * @param     string $type The type to return. Expects "array".
+	 *
+	 * @return int|string|array
+	 */
+	public function get_sync_ready_order_count( $type = 'int' ) {
+		if ( 'array' === $type ) {
+			$order_totals = [
+				'processing' => wc_orders_count( 'processing' ),
+				'completed'  => wc_orders_count( 'completed' ),
+			];
+		} else {
+			$order_totals = wc_orders_count( 'processing' ) + wc_orders_count( 'completed' );
+		}
+
+		// $this->logger->debug( 'order counts', [ $order_totals ] );
+		return $order_totals;
 	}
 
 	/**
@@ -990,7 +1131,5 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 			return false;
 		}
-		// a:3:{s:13:"notifications";a:0:{}s:13:"connection_id";s:1:"7";s:20:"connection_option_id";s:1:"5";}
 	}
-
 }

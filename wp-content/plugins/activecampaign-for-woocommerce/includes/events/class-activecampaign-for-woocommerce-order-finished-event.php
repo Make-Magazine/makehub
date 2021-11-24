@@ -21,6 +21,7 @@ use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repositor
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
 use Brick\Money\Money;
 
@@ -184,6 +185,13 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	private $accepts_marketing;
 
 	/**
+	 * Abandoned cart utilities class
+	 *
+	 * @var Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities
+	 */
+	private $abandoned_cart_util;
+
+	/**
 	 * Activecampaign_For_Woocommerce_Cart_Emptied_Event constructor.
 	 *
 	 * @param     Activecampaign_For_Woocommerce_Admin|null              $admin     The Admin object.
@@ -210,17 +218,16 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 		$this->customer_repository = $customer_repository;
 		$this->contact_repository  = $contact_repository;
 		$this->logger              = $logger;
+		$this->abandoned_cart_util = new Abandoned_Cart_Utilities();
 	}
 
 	/**
-	 * Called when an order checkout is completed and meta can be added to the final order.
+	 * Called when an order checkout is completed so that we can process and send data to Hosted.
 	 * Directly called via hook action.
 	 *
-	 * @param     order_id $order_id     The order ID.
-	 *
-	 * @throws Throwable Does not stop.
+	 * @param     int $order_id     $order_id     The order ID.
 	 */
-	public function checkout_meta( $order_id ) {
+	public function checkout_completed( $order_id ) {
 		try {
 			$this->logger = $this->logger ?: new Logger();
 
@@ -232,7 +239,17 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 
 				if ( isset( $order ) && $order->get_id() && $order->get_billing_email() && $this->verify_order_status( $order->get_status() ) ) {
 					// init functions
-					$this->customer_email = $order->get_billing_email();
+					if ( is_user_logged_in() ) {
+						$this->customer_email      = wc()->customer->get_email();
+						$this->customer_first_name = wc()->customer->get_first_name();
+						$this->customer_last_name  = wc()->customer->get_last_name();
+					}
+
+					if ( ! isset( $this->customer_email ) ) {
+						$this->customer_email      = $order->get_billing_email();
+						$this->customer_first_name = $order->get_billing_first_name();
+						$this->customer_last_name  = $order->get_billing_last_name();
+					}
 
 					// Check order for accepts marketing meta info
 					if ( is_user_logged_in() ) {
@@ -263,10 +280,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 						}
 					}
 
-					$this->customer_woo        = $this->customer;
-					$this->customer_email      = $order->get_billing_email();
-					$this->customer_first_name = $order->get_billing_first_name();
-					$this->customer_last_name  = $order->get_billing_last_name();
+					$this->customer_woo = $this->customer;
 
 					if ( empty( $this->customer_phone ) && ! empty( $order->get_billing_phone() ) ) {
 						$this->customer_phone = $order->get_billing_phone();
@@ -278,6 +292,9 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 					// we need the order data
 					// see if the order exists in AC already
 					$this->get_ac_order( $order );
+
+					// Update the order with the correct external checkout ID
+					$order->update_meta_data( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME, $this->external_checkout_id );
 
 					$find_or_create_ac_order = $this->setup_woocommerce_order( $order );
 
@@ -298,26 +315,48 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 							]
 						);
 					} else {
+						// Redundant update the order with the correct external checkout ID in case we find the order ref
+						update_post_meta( $order->get_id(), ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME, $this->external_checkout_id );
+
 						// Mark the sync time in the order
 						$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 						try {
-							add_post_meta( $order_id, 'activecampaign_for_woocommerce_last_synced', $date->format( 'Y-m-d H:i:s e' ), true );
+							update_post_meta( $order->get_id(), 'activecampaign_for_woocommerce_last_synced', $date->format( 'Y-m-d H:i:s e' ) );
 						} catch ( Throwable $t ) {
 							$this->logger->warning(
-								'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not create datetime or save sync metadata to the order',
+								'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not create datetime or save sync metadata to the order.',
 								[
 									'message'  => $t->getMessage(),
 									'date'     => $date->format( 'Y-m-d H:i:s e' ),
-									'order_id' => $order_id,
+									'order_id' => $order->get_id(),
 									'trace'    => $this->logger->clean_trace( $t->getTrace() ),
 								]
 							);
 						}
 
-						$this->cleanup_activecampaignfwc_order_external_uuid();
+						$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
 
-						if ( ! $this->remove_abandoned_cart_entry( $order ) ) {
-							$this->logger->warning( 'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not reliably delete the abandoned cart entry from table.' );
+						if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_order( $order ) ) {
+							$this->logger->warning(
+								'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by order.',
+								[
+									'customer_id' => $order->get_customer_id(),
+									'user_id'     => $order->get_user_id(),
+								]
+							);
+
+							if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_customer() ) {
+								$this->logger->warning( 'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by customer.' );
+
+								if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_filter( 'activecampaignfwc_order_external_uuid', wc()->session->get_session_data()->activecampaignfwc_order_external_uuid ) ) {
+									$this->logger->warning(
+										'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by AC UUID.',
+										[
+											'activecampaignfwc_order_external_uuid' => wc()->session->get_session_data()->activecampaignfwc_order_external_uuid,
+										]
+									);
+								}
+							}
 						}
 					}
 				}
@@ -336,103 +375,6 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 					'connection_id' => $this->connection_id,
 					'message'       => $t->getMessage(),
 					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
-		}
-	}
-
-	/**
-	 * Resets our UUID
-	 */
-	private function cleanup_activecampaignfwc_order_external_uuid() {
-		$logger = new Logger();
-		if ( isset( wc()->session ) && wc()->session->get( 'activecampaignfwc_order_external_uuid' ) ) {
-			wc()->session->set( 'activecampaignfwc_order_external_uuid', false );
-			$logger->debug( 'Reset the activecampaignfwc_order_external_uuid on cart' );
-		}
-	}
-
-	/**
-	 * Removes a record from abandoned cart by passing it the customer ID.
-	 * This should only be used for a processed order.
-	 *
-	 * @param WC_Order $order The order object.
-	 *
-	 * @return bool
-	 */
-	private function remove_abandoned_cart_entry( $order ) {
-		global $wpdb;
-		try {
-			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
-			// Try to delete by order directly
-			$this->delete_from_table( $order->get_customer_id(), $table_name );
-		} catch ( Throwable $t ) {
-			$this->logger->warning(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: could not delete the abandoned cart entry.',
-				[
-					'message'  => $t->getMessage(),
-					'order'    => $order->get_data(),
-					'session'  => wc()->session->get_session_data(),
-					'customer' => wc()->customer->get_data(),
-					'trace'    => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
-		}
-
-		// If the previous delete didn't work try the customer method
-		if ( isset( wc()->customer ) && wc()->customer->get_id() && $this->delete_from_table( wc()->customer->get_id(), $table_name ) ) {
-			return true;
-		}
-
-		// If the previous delete didn't work try the session method
-		if ( isset( wc()->session ) && wc()->session->get_customer_id() && $this->delete_from_table( wc()->session->get_customer_id(), $table_name ) ) {
-			return true;
-		}
-		return false;
-	}
-
-
-	/**
-	 * Deletes entry from abandoned cart table.
-	 *
-	 * @param string $customer_id The customer id.
-	 * @param string $table_name The table name.
-	 *
-	 * @return bool
-	 */
-	private function delete_from_table( $customer_id, $table_name ) {
-		global $wpdb;
-		try {
-			if ( ! empty( $customer_id ) ) {
-				$wpdb->delete(
-					$table_name,
-					[
-						'customer_id' => $customer_id,
-					]
-				);
-
-				if ( ! empty( $wpdb->last_error ) ) {
-					$this->logger->error(
-						'Activecampaign_For_Woocommerce_Order_Finished_Event: There was an error removing the abandoned cart record.',
-						[
-							'customer_id'     => $customer_id,
-							'wpdb_last_error' => $wpdb->last_error,
-						]
-					);
-
-					return false;
-				}
-
-				return true;
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->warning(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: could not delete the abandoned cart entry.',
-				[
-					'message'  => $t->getMessage(),
-					'session'  => wc()->session->get_session_data(),
-					'customer' => wc()->customer->get_data(),
-					'trace'    => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -636,11 +578,10 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 					]
 				);
 
-				// A new order should never have an externalcheckoutid
+				// A new order that was never abandoned should never have an externalcheckoutid, do not send this to hosted
 				$this->ecom_order->set_externalcheckoutid( null );
 
-				// An order was created, remove persistent cart ID
-				$order->delete_meta_data( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME );
+				// Make sure all meta data was saved
 				$order->save_meta_data();
 
 				// Try to create the new order in AC
@@ -686,7 +627,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$customer_id = wc()->session->get_customer_id();
 			}
 
-			$this->external_checkout_id = self::generate_externalcheckoutid(
+			$this->external_checkout_id = $this->abandoned_cart_util->generate_externalcheckoutid(
 				$customer_id,
 				$this->customer_email
 			);
@@ -1063,32 +1004,6 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	}
 
 	/**
-	 * Generate the externalcheckoutid hash which
-	 * is used to tie together pending and complete
-	 * orders in Hosted (so we don't create duplicate orders).
-	 * This has been modified to accurately work with woo commerce not independently
-	 * tracking cart session vs order session
-	 *
-	 * @param     string $customer_id     The unique WooCommerce cart session ID.
-	 * @param     string $billing_email     The guest customer's email address.
-	 *
-	 * @return string The hash used as the externalcheckoutid value
-	 */
-	public static function generate_externalcheckoutid( $customer_id, $billing_email ) {
-		// Get the custom session if it exists
-		$order_external_uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
-
-		// If custom session is not set, create one on the cart
-		if ( ! $order_external_uuid || '' === $order_external_uuid ) {
-			$order_external_uuid = uniqid( '', true );
-			wc()->session->set( 'activecampaignfwc_order_external_uuid', $order_external_uuid );
-		}
-
-		// Generate the hash we'll use
-		return md5( $customer_id . $billing_email . $order_external_uuid );
-	}
-
-	/**
 	 * Verifies the status of the order for sending to AC
 	 *
 	 * @param     string $status     The order status.
@@ -1096,6 +1011,10 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	 * @return bool Whether or not the order passes.
 	 */
 	private function verify_order_status( $status ) {
+		if ( WP_ENVIRONMENT_TYPE === 'development' ) {
+			return true;
+		}
+
 		if ( ! empty( $status ) ) {
 			$accepted_statuses = [ 'completed', 'processing' ];
 

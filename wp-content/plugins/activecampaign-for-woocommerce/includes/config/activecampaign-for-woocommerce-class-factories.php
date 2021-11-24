@@ -14,6 +14,7 @@
  * @subpackage Activecampaign_For_Woocommerce/includes/config
  */
 
+use Activecampaign_For_Woocommerce_AC_Contact_Repository as Contact_Repository;
 use Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command as Add_Cart_Id_To_Order;
 use Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Command as Add_Accepts_Marketing_To_Customer_Meta;
 use Activecampaign_For_Woocommerce_Admin as Admin;
@@ -32,6 +33,9 @@ use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repositor
 use Activecampaign_For_Woocommerce_I18n as I18n;
 use Activecampaign_For_Woocommerce_Loader as Loader;
 use Activecampaign_For_Woocommerce_Logger as Log;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
+use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
+use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
 use Activecampaign_For_Woocommerce_Public as AC_Public;
 use Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command as Run_Abandonment_Sync_Command;
@@ -40,6 +44,7 @@ use Activecampaign_For_Woocommerce_Update_Cart_Command as Update_Cart_Command;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
 use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
 use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
+use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
 use AcVendor\Psr\Container\ContainerInterface;
 use AcVendor\Psr\Log\LoggerInterface;
 
@@ -64,7 +69,11 @@ return array(
 		Order_Finished $order_finished_event,
 		User_Registered $user_registered_event,
 		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
-		Plugin_Upgrade_Command $plugin_upgrade_command
+		Plugin_Upgrade_Command $plugin_upgrade_command,
+		Historical_Sync $historical_sync,
+		Order_Utilities $order_utilities,
+		Customer_Utilities $customer_utilities,
+		Abandoned_Cart_Utilities $abandoned_cart_utilities
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -96,7 +105,11 @@ return array(
 			$order_finished_event,
 			$user_registered_event,
 			$run_abandonment_sync_command,
-			$plugin_upgrade_command
+			$plugin_upgrade_command,
+			$historical_sync,
+			$order_utilities,
+			$customer_utilities,
+			$abandoned_cart_utilities
 		);
 	},
 
@@ -192,6 +205,17 @@ return array(
 		LoggerInterface $logger
 	) {
 		return new Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command( $logger );
+	},
+
+	Historical_Sync::class                            => function (
+		LoggerInterface $logger,
+		Order_Utilities $order_utilities,
+		Customer_Utilities $customer_utilities,
+		Contact_Repository $contact_repository,
+		Ecom_Customer_Repository $customer_repository,
+		Ecom_Order_Repository $order_repository
+	) {
+		return new Historical_Sync( $logger, $order_utilities, $customer_utilities, $contact_repository, $customer_repository, $order_repository );
 	},
 
 	LoggerInterface::class                            => AcVendor\DI\factory(

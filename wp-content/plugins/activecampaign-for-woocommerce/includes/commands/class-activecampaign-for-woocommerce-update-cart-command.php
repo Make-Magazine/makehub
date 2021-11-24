@@ -141,9 +141,9 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		$this->init();
 
 		// If the customer is not logged in, there is nothing to do
-		if ( ! ( $this->customer instanceof WC_Customer ) || $this->customer->get_email() === null ) {
+		if ( ! ( $this->customer instanceof WC_Customer ) || empty( $this->customer->get_email() ) ) {
 			$this->logger->debug(
-				'Update Cart Command: Customer not logged in. Do nothing.',
+				'Update Cart Command: Customer not logged in or unknown. Do nothing.',
 				[
 					'cart' => $this->cart,
 				]
@@ -155,8 +155,8 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		// First, make sure we have the ID for the ActiveCampaign customer record
 		try {
 			if ( ! $this->verify_ac_customer_id( $this->customer->get_id() ) ) {
-				$this->logger->warning(
-					'Update Cart Command: Verify AC customer - Missing id for ActiveCampaign customer record.',
+				$this->logger->debug(
+					'Update Cart Command: Verify AC customer - Cannot verify without a customer ID, continuing.',
 					[
 						'customer_email' => $this->customer->get_email(),
 						'customer_id'    => $this->customer->get_id(),
@@ -166,7 +166,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 
 			$this->create_customer();
 		} catch ( Throwable $t ) {
-			$this->logger->warning( 'Update Cart Command: There was an issue creating a customer or reading order.' );
+			$this->logger->warning( 'Update Cart Command: There was an issue creating a customer or reading order, continuing.' );
 		}
 
 		// If we already have an AC ID, then this is an update. Otherwise, it's a create.

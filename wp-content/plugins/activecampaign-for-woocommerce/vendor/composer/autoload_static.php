@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a
+class ComposerStaticInit098bf0457b2064f5f8cb77de034c18a0
 {
     public static $files = array (
         '3235689ae520774249788ae5d5475c84' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/functions_include.php',
@@ -270,6 +270,7 @@ class ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a
         'Activecampaign_For_Woocommerce' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce.php',
         'Activecampaign_For_Woocommerce_AC_Contact' => __DIR__ . '/../..' . '/includes/models/class-activecampaign-for-woocommerce-ac-contact.php',
         'Activecampaign_For_Woocommerce_AC_Contact_Repository' => __DIR__ . '/../..' . '/includes/repositories/class-activecampaign-for-woocommerce-ac-contact-repository.php',
+        'Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities' => __DIR__ . '/../..' . '/includes/abandoned_carts/class-activecampaign-for-woocommerce-abandoned-cart-utilities.php',
         'Activecampaign_For_Woocommerce_Activator' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-activator.php',
         'Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-add-accepts-marketing-to-customer-meta-command.php',
         'Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-add-cart-id-to-order-command.php',
@@ -287,6 +288,7 @@ class ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a
         'Activecampaign_For_Woocommerce_Connection_Repository' => __DIR__ . '/../..' . '/includes/repositories/class-activecampaign-for-woocommerce-connection-repository.php',
         'Activecampaign_For_Woocommerce_Create_And_Save_Cart_Id_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-create-and-save-cart-id-command.php',
         'Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-create-or-update-connection-option-command.php',
+        'Activecampaign_For_Woocommerce_Customer_Utilities' => __DIR__ . '/../..' . '/includes/customers/class-activecampaign-for-woocommerce-customer-utilities.php',
         'Activecampaign_For_Woocommerce_Deactivator' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-deactivator.php',
         'Activecampaign_For_Woocommerce_Delete_Cart_Id_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-delete-cart-id-command.php',
         'Activecampaign_For_Woocommerce_Ecom_Customer' => __DIR__ . '/../..' . '/includes/models/class-activecampaign-for-woocommerce-ecom-customer.php',
@@ -300,11 +302,13 @@ class ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a
         'Activecampaign_For_Woocommerce_Executable_Interface' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-executable-interface.php',
         'Activecampaign_For_Woocommerce_Has_Email' => __DIR__ . '/../..' . '/includes/models/interfaces/class-activecampaign-for-woocommerce-has-email.php',
         'Activecampaign_For_Woocommerce_Has_Id' => __DIR__ . '/../..' . '/includes/models/interfaces/class-activecampaign-for-woocommerce-has-id.php',
+        'Activecampaign_For_Woocommerce_Historical_Sync_Job' => __DIR__ . '/../..' . '/includes/orders/class-activecampaign-for-woocommerce-historical-sync-job.php',
         'Activecampaign_For_Woocommerce_I18n' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-i18n.php',
         'Activecampaign_For_Woocommerce_Interacts_With_Api' => __DIR__ . '/../..' . '/includes/traits/class-activecampaign-for-woocommerce-interacts-with-api-trait.php',
         'Activecampaign_For_Woocommerce_Loader' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-loader.php',
         'Activecampaign_For_Woocommerce_Logger' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-logger.php',
         'Activecampaign_For_Woocommerce_Order_Finished_Event' => __DIR__ . '/../..' . '/includes/events/class-activecampaign-for-woocommerce-order-finished-event.php',
+        'Activecampaign_For_Woocommerce_Order_Utilities' => __DIR__ . '/../..' . '/includes/orders/class-activecampaign-for-woocommerce-order-utilities.php',
         'Activecampaign_For_Woocommerce_Plugin_Upgrade_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-plugin-upgrade-command.php',
         'Activecampaign_For_Woocommerce_Public' => __DIR__ . '/../..' . '/public/class-activecampaign-for-woocommerce-public.php',
         'Activecampaign_For_Woocommerce_Repository_Interface' => __DIR__ . '/../..' . '/includes/repositories/interfaces/class-activecampaign-for-woocommerce-repository-interface.php',
@@ -366,9 +370,9 @@ class ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit04687cd8c2b88cfa1e60c78bdaf1562a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit098bf0457b2064f5f8cb77de034c18a0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit098bf0457b2064f5f8cb77de034c18a0::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit098bf0457b2064f5f8cb77de034c18a0::$classMap;
 
         }, null, ClassLoader::class);
     }
