@@ -159,7 +159,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			);
 
 			foreach ( $merge_tag_matches as $match ) {
-				$merge_tag = preg_replace( '/^@/', '', $match[0] );
+				$merge_tag = html_entity_decode( preg_replace( '/^@/', '', $match[0] ), ENT_QUOTES );
 
 				if ( isset( $this->_lmt_whitelist[ $form['id'] ][ $merge_tag ] ) ) {
 					continue;
@@ -833,23 +833,24 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			 * @param array    $form  The current form.
 			 */
 			if ( ! gf_apply_filters( array( 'gppa_allow_all_lmts', $form['id'] ), false, $form ) ) {
+				$_merge_tag = html_entity_decode( $merge_tag_match[0], ENT_QUOTES );
 				/**
 				 * Verify that LMT was supplied by trusted source and not injected.
 				 */
-				$nonce_action = 'gppa-lmt-' . $form['id'] . '-' . $merge_tag;
+				$nonce_action = 'gppa-lmt-' . $form['id'] . '-' . $_merge_tag;
 
 				$lmt_whitelist = $this->get_lmt_whitelist( $form );
 
 				if ( $lmt_nonces ) {
-					if ( ! wp_verify_nonce( rgar( $lmt_nonces, $merge_tag ), $nonce_action ) ) {
-						gp_populate_anything()->log_debug( 'Live Merge Tag is not valid for merge tag: ' . $merge_tag );
-						$output = str_replace( $merge_tag, '', $output );
+					if ( ! wp_verify_nonce( rgar( $lmt_nonces, $_merge_tag ), $nonce_action ) ) {
+						gp_populate_anything()->log_debug( 'Live Merge Tag is not valid for merge tag: ' . $_merge_tag );
+						$output = str_replace( $_merge_tag, '', $output );
 
 						continue;
 					}
-				} elseif ( ! isset( $lmt_whitelist[ $merge_tag ] ) ) {
-					gp_populate_anything()->log_debug( 'Live Merge Tag nonce not found for merge tag: ' . $merge_tag );
-					$output = str_replace( $merge_tag, '', $output );
+				} elseif ( ! isset( $lmt_whitelist[ $_merge_tag ] ) ) {
+					gp_populate_anything()->log_debug( 'Live Merge Tag nonce not found for merge tag: ' . $_merge_tag );
+					$output = str_replace( $_merge_tag, '', $output );
 
 					continue;
 				}

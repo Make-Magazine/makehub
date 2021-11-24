@@ -39,7 +39,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	private $_getting_current_entry = false;
 
 	/* Used for storing and passing around the $field_values passed to gform_pre_render */
-	private $_prepopulate_fields_values = array();
+	public $prepopulate_fields_values = array();
 
 	/**
 	 * @var array Hydrated fields cached _only_ during submission to reduce the time to submit.
@@ -2153,7 +2153,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$ajax_id         = intval( rgar( $_POST, 'form-id', - 1 ) );
 		$parse_request   = ( $form_id === $gform_submit_id || $form_id === $ajax_id );
 
-		$field_values = $this->get_prepopulate_values( $form, rgar( $this->_prepopulate_fields_values, $form_id, array() ) );
+		$field_values = $this->get_prepopulate_values( $form, rgar( $this->prepopulate_fields_values, $form_id, array() ) );
 		$field_values = array_replace( $field_values, $this->get_save_and_continue_values( rgar( $_REQUEST, 'gf_token' ) ) );
 
 		if ( isset( $GLOBALS['gppa-field-values'][ $form_id ] ) ) {
@@ -2169,7 +2169,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				/**
 				 * If value is directly posted, use it.
 				 */
-				if ( $parse_request && rgpost( "input_{$field->id}" ) ) {
+				if ( $parse_request && ( rgpost( "input_{$field->id}" ) ) ) {
 					$field_value = rgpost( "input_{$field->id}" );
 
 					/**
@@ -2211,7 +2211,7 @@ class GP_Populate_Anything extends GP_Plugin {
 					$field_value = isset( $field_values[ $other ] ) ? $field_values[ $other ] : rgpost( 'input_' . $other );
 				}
 
-				if ( $field_value ) {
+				if ( $field_value || $field_value === '' ) {
 					$field_values[ $field->id ] = $field_value;
 				}
 			}
@@ -2258,9 +2258,9 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		$this->_prepopulate_fields_values[ $form['id'] ] = array_replace( $field_values, array_filter( $prepopulate_values ) );
+		$this->prepopulate_fields_values[ $form['id'] ] = array_replace( $field_values, array_filter( $prepopulate_values ) );
 
-		return $this->_prepopulate_fields_values[ $form['id'] ];
+		return $this->prepopulate_fields_values[ $form['id'] ];
 
 	}
 
@@ -2586,19 +2586,63 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		foreach ( $save_and_continue_values as $input_id => $value ) {
 			if ( absint( $field->id ) === absint( $input_id ) ) {
-				return true;
+				/**
+				 * Determine whether or not a passed field value is used rather than the dynamically populated value.
+				 * This can be useful for preferring dynamically populated values over values already set in an entry.
+				 *
+				 * @param $should_force_use_field_value boolean Whether or not to use the field value provided from an
+				 *    outside source such as Save & Continue or if editing an entry.
+				 * @param $field GF_Field The current field.
+				 *
+				 * @since 1.1.5
+				 */
+				return gf_apply_filters( array(
+					'gppa_should_force_use_field_value',
+					$field->formId,
+					$field->id,
+				), true, $field );
 			}
 		}
 
-		if ( ! empty( $this->_prepopulate_fields_values[ $field->formId ] ) ) {
-			foreach ( $this->_prepopulate_fields_values[ $field->formId ] as $input_id => $value ) {
+		if ( ! empty( $this->prepopulate_fields_values[ $field->formId ] ) ) {
+			foreach ( $this->prepopulate_fields_values[ $field->formId ] as $input_id => $value ) {
 				if ( absint( $field->id ) === absint( $input_id ) ) {
-					return true;
+					return gf_apply_filters( array(
+						'gppa_should_force_use_field_value',
+						$field->formId,
+						$field->id,
+					), true, $field );
 				}
 			}
 		}
 
-		return false;
+		/*
+		 * Check for posted values and use them if they're present. This will prevent blanked out values on multi-page
+		 * forms from being reset back to their populated value.
+		 */
+		if ( (int) rgpost( 'gform_submit' ) === (int) $field->formId ) {
+			foreach ( $_POST as $posted_key => $posted_value ) {
+				if ( strpos( $posted_key, 'input_' ) !== 0 ) {
+					continue;
+				}
+
+				$input_id = str_replace( 'input_', '', $posted_key );
+
+				if ( absint( $field->id ) === absint( $input_id ) ) {
+					return gf_apply_filters( array(
+						'gppa_should_force_use_field_value',
+						$field->formId,
+						$field->id,
+					), true, $field );
+				}
+			}
+		}
+
+		return gf_apply_filters( array(
+			'gppa_should_force_use_field_value',
+			$field->formId,
+			$field->id,
+		), false, $field );
 
 	}
 
@@ -2617,7 +2661,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		if ( ! empty( $field_values ) && is_array( $field_values ) ) {
-			$this->_prepopulate_fields_values[ $form['id'] ] = $field_values;
+			$this->prepopulate_fields_values[ $form['id'] ] = $field_values;
 			$GLOBALS['gppa-field-values'][ $form['id'] ]     = $field_values;
 		}
 

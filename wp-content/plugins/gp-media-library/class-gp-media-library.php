@@ -699,10 +699,7 @@ class GP_Media_Library extends GWPerk {
 
 				foreach ( $acf_fields as $acf_field ) {
 
-					if ( $acf_field['name'] != $field->postCustomFieldName || ! in_array( $acf_field['type'], array(
-							'image',
-							'file'
-						) ) ) {
+					if ( $acf_field['name'] != $field->postCustomFieldName || ! in_array( $acf_field['type'], $this->acf_get_supported_fields_types() ) ) {
 						continue;
 					}
 
@@ -786,8 +783,9 @@ class GP_Media_Library extends GWPerk {
 
 	public function acf_update_field( $post_id, $acf_field_name, $gf_field, $entry ) {
 
-		$acf_field = acf_get_field( $acf_field_name );
-		if ( ! $acf_field || ! in_array( $acf_field['type'], array( 'image', 'file', 'gallery', 'repeater' ), true ) ) {
+		$acf_field       = acf_get_field( $acf_field_name );
+		$acf_field_types = array_merge( $this->acf_get_supported_fields_types(), array( 'repeater' ) );
+		if ( ! $acf_field || ! in_array( $acf_field['type'], $acf_field_types, true ) ) {
 			return false;
 		}
 
@@ -813,7 +811,7 @@ class GP_Media_Library extends GWPerk {
 		$target_sub_field = false;
 
 		foreach ( $acf_field['sub_fields'] as $acf_sub_field ) {
-			if ( in_array( $acf_sub_field['type'], array( 'image', 'file' ), true ) ) {
+			if ( in_array( $acf_sub_field['type'], $this->acf_get_supported_fields_types(), true ) ) {
 				$target_sub_field = $acf_sub_field;
 				break;
 			}
@@ -830,6 +828,17 @@ class GP_Media_Library extends GWPerk {
 		}
 
 		return true;
+	}
+
+	public function acf_get_supported_fields_types() {
+		/**
+		 * Filter which Advanced Custom Fields field types are supported by GP Media Library.
+		 *
+		 * @since 1.2.21
+		 *
+		 * @param array $supported_field_types An array of supported ACF field types.
+		 */
+		return apply_filters( 'gpml_supported_acf_field_types', array( 'image', 'file', 'image_aspect_ratio_crop', 'gallery' ) );
 	}
 
 

@@ -56,8 +56,35 @@ abstract class GPPA_Object_Type {
 		$this->id = $id;
 
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'replace_gf_field_value' ), 10, 2 );
+		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'parse_date_in_filter_value' ), 10, 7 );
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'replace_special_values' ), 10 );
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'clean_numbers' ), 10 );
+	}
+
+	public function parse_date_in_filter_value( $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property ) {
+		$property_id = ! empty( $property['group'] ) ? $property['group'] . '_' . $property['value'] : $property['value'];
+
+		/**
+		 * @todo This should be documented and potentially be made into a generic gppa_parse_filter_value_as_date.
+		 */
+		if ( ! gf_apply_filters(
+			array(
+				'gppa_parse_' . $this->id . '_filter_value_as_date',
+				$property_id,
+			),
+			false,
+			$filter_value,
+			$filter,
+			$field,
+			$property
+		) ) {
+			return $filter_value;
+		}
+
+		$date_time    = strtotime( $filter_value );
+		$filter_value = date( 'Y-m-d', $date_time );
+
+		return $filter_value;
 	}
 
 	public function get_primary_property() {
@@ -419,7 +446,7 @@ abstract class GPPA_Object_Type {
 			case 'is_in':
 			case 'is_not_in':
 				$value = is_array( $value ) ? $value : array_map( 'trim', explode( ',', $value ) );
-				return array_map( $wpdb->esc_like, $value );
+				return array_map( array( $wpdb, 'esc_like' ), $value );
 
 			default:
 				return $value;
