@@ -2,7 +2,6 @@
 
 /**
  * BuddyPress Helper Functions
- *
  */
 
 namespace BuddyBossTheme;
@@ -11,7 +10,7 @@ use DOMDocument;
 use WP_Admin_Bar;
 use BP_Search;
 
-if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
+if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 	Class BuddyPressHelper {
 
@@ -22,11 +21,11 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		 */
 		public function __construct() {
 
-			// Avatar Sizes
-			define ( 'BP_AVATAR_THUMB_WIDTH', 150 );
-			define ( 'BP_AVATAR_THUMB_HEIGHT', 150 );
-			define ( 'BP_AVATAR_FULL_WIDTH', 300 );
-			define ( 'BP_AVATAR_FULL_HEIGHT', 300 );
+			// Avatar Sizes.
+			define( 'BP_AVATAR_THUMB_WIDTH', 150 );
+			define( 'BP_AVATAR_THUMB_HEIGHT', 150 );
+			define( 'BP_AVATAR_FULL_WIDTH', 300 );
+			define( 'BP_AVATAR_FULL_HEIGHT', 300 );
 
 			add_action( 'bp_init', array( $this, 'set_active' ) );
 		}
@@ -35,10 +34,10 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			$this->_is_active = true;
 
 			add_action( THEME_HOOK_PREFIX . 'header_user_menu_items', array( $this, 'render_header_menu' ), 8 );
-			add_action( 'bp_after_member_header', [ $this, 'change_sitewide_notices' ] );
+			add_action( 'bp_after_member_header', array( $this, 'change_sitewide_notices' ) );
 
-			if ( function_exists('bp_disable_advanced_profile_search') && false === bp_disable_advanced_profile_search() ) {
-				// Remove profile search form
+			if ( function_exists( 'bp_disable_advanced_profile_search' ) && false === bp_disable_advanced_profile_search() ) {
+				// Remove profile search form.
 				remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
 				add_action( THEME_HOOK_PREFIX . 'before_members_widgets', 'bp_profile_search_show_form' );
 			}
@@ -47,23 +46,20 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			add_filter( 'bp_get_message_thread_excerpt', array( $this, 'get_message_thread_excerpt' ), 10, 2 );
 			add_filter( 'bp_before_has_message_threads_parse_args', array( $this, 'has_message_threads_parse_args' ), 10 );
 
-			add_filter( 'bp_search_js_settings', [ $this, 'filter_search_js_settings' ] );
-			add_filter( 'bp_search_results_group_start_html', [
-				$this,
-				'filter_bp_search_results_group_start_html',
-			], 10, 2 );
-			add_action( 'bp_before_search_members_html', [ $this, 'action_before_search_member' ] );
-			add_action( 'bp_after_search_members_html', [ $this, 'action_after_search_member' ] );
-			add_action( 'bp_before_search_groups_html', [ $this, 'action_before_search_group' ] );
-			add_action( 'bp_after_search_groups_html', [ $this, 'action_after_search_group' ] );
-			add_action( 'bp_before_search_activity_html', [ $this, 'action_before_search_activity' ] );
-			add_action( 'bp_after_search_activity_html', [ $this, 'action_after_search_activity' ] );
-			add_action( 'wp_footer', [ $this, 'admin_toolbar_cloner' ] );
+			add_filter( 'bp_search_js_settings', array( $this, 'filter_search_js_settings' ) );
+			add_filter( 'bp_search_results_group_start_html', array( $this, 'filter_bp_search_results_group_start_html', ), 10, 2 );
+			add_action( 'bp_before_search_members_html', array( $this, 'action_before_search_member' ) );
+			add_action( 'bp_after_search_members_html', array( $this, 'action_after_search_member' ) );
+			add_action( 'bp_before_search_groups_html', array( $this, 'action_before_search_group' ) );
+			add_action( 'bp_after_search_groups_html', array( $this, 'action_after_search_group' ) );
+			add_action( 'bp_before_search_activity_html', array( $this, 'action_before_search_activity' ) );
+			add_action( 'bp_after_search_activity_html', array( $this, 'action_after_search_activity' ) );
+			add_action( 'wp_footer', array( $this, 'admin_toolbar_cloner' ) );
 
-			add_filter( 'heartbeat_received', [ $this, 'heartbeat_unread_notifications' ], 11 );
-			add_filter( 'heartbeat_nopriv_received', [ $this, 'heartbeat_unread_notifications' ], 11 );
+			add_filter( 'heartbeat_received', array( $this, 'heartbeat_unread_notifications' ), 11 );
+			add_filter( 'heartbeat_nopriv_received', array( $this, 'heartbeat_unread_notifications' ), 11 );
 
-			add_action( 'admin_footer', [ $this, 'buddyboss_theme_header_menu_admin_js'], 999 ); // For back-end
+			add_action( 'admin_footer', array( $this, 'buddyboss_theme_header_menu_admin_js' ), 999 ); // For back-end.
 		}
 
 		public function is_active() {
@@ -75,34 +71,29 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		 * @param type $slug
 		 */
 		protected function _get_tooltip_for_menu_item( $slug = '' ) {
-			$text = !empty( $slug ) ? ucfirst( $slug ) : '';
+			$text = ! empty( $slug ) ? ucfirst( $slug ) : '';
 			return esc_attr( $text );
 		}
 
 		protected function _get_icon_for_menu_item( $slug = '' ) {
 			$icons = array(
-				'activity'		 => 'bb-icon-home-small',
-				'profile'		 => 'bb-icon-user',
-				'messages'		 => 'bb-icon-inbox-small',
-				'notifications'	 => 'bb-icon-bell-small',
+				'activity'      => 'bb-icon-home-small',
+				'profile'       => 'bb-icon-user',
+				'messages'      => 'bb-icon-inbox-small',
+				'notifications' => 'bb-icon-bell-small',
 			);
 
 			return isset( $icons[ $slug ] ) ? $icons[ $slug ] : '';
 		}
 
 		protected function _get_count_from_nav_name( $name ) {
-			$count = "";
+			$count = '';
 
 			$start = strpos( $name, '<span class="count"' );
 			if ( $start ) {
-				$count_html	 = substr( $name, $start );
-				$count		 = strip_tags( $count );
+				$count_html = substr( $name, $start );
+				$count      = strip_tags( $count );
 			}
-
-			/* $start = strpos( $name, '<span class="no-count"' );
-			  if( $start ){
-			  $count = 0;
-			  } */
 
 			return $count;
 		}
@@ -139,7 +130,8 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			static $bb_memory_admin_bar_step = null;
 			global $menu_template;
 
-			if ( ! empty( $menu_template ) ) { //avoid multiple run
+			// Avoid multiple run.
+			if ( ! empty( $menu_template ) ) {
 				return false;
 			}
 
@@ -165,39 +157,47 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 				return '';
 			}
 
-			$members = new \BP_Group_Member_Query( array(
-				'group_id'       => $group_id,
-				'per_page'       => 3,
-				'page'           => 1,
-				'group_role'     => $role,
-				'exclude'        => false,
-				'search_terms'   => false,
-				'type'           => 'active',
-			) );
+			$members = new \BP_Group_Member_Query(
+				array(
+					'group_id'     => $group_id,
+					'per_page'     => 3,
+					'page'         => 1,
+					'group_role'   => $role,
+					'exclude'      => false,
+					'search_terms' => false,
+					'type'         => 'active',
+				)
+			);
 
-			$total = $members->total_users;
+			$total   = $members->total_users;
 			$members = array_values( $members->results );
 
-			if( ! empty( $members ) ) {
-				?><span class="bs-group-members"><?php
-				foreach( $members as $member ) {
-					$avatar = bp_core_fetch_avatar( array(
-						'item_id'    => $member->ID,
-						'avatar_dir' => 'avatars',
-						'object'     => 'user',
-						'type'       => 'thumb',
-						'html'       => false
-					) );
+			if ( ! empty( $members ) ) {
+				?><span class="bs-group-members">
+				<?php
+				foreach ( $members as $member ) {
+					$avatar = bp_core_fetch_avatar(
+						array(
+							'item_id'    => $member->ID,
+							'avatar_dir' => 'avatars',
+							'object'     => 'user',
+							'type'       => 'thumb',
+							'html'       => false,
+						)
+					);
 					?>
-					<img src="<?php echo $avatar; ?>" alt="<?php echo $member->display_name; ?>" class="round" />
+					<img src="<?php echo $avatar; ?>"
+						 alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round"/>
 					<?php
 				}
-				?></span>
-				<?php if ( $total - sizeof( $members ) != 0 ) {
+				?>
+				</span>
+				<?php
+				if ( $total - sizeof( $members ) != 0 ) {
 					$member_count = $total - sizeof( $members );
 					?>
 					<span class="members">
-						<span class="members-count-g">+<?php echo $member_count; ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+						<span class="members-count-g">+<?php echo esc_html( $member_count  ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
 					</span>
 					<?php
 				}
@@ -206,7 +206,7 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		}
 
 		function get_group_description_excerpt( $excerpt, $group ) {
-			$group_link = ' <a href="'. esc_url( bp_get_group_permalink( $group ) ) .'" class="bb-more-link">' . __( 'more', 'buddyboss-theme' ) . '<i class="bb-icon-chevron-right"></i></a>';
+			$group_link = ' <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'more', 'buddyboss-theme' ) . '<i class="bb-icon-chevron-right"></i></a>';
 			return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
 		}
 
@@ -224,37 +224,39 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 		/**
 		 * BP Search filter autocomplete and search forms
-		 * @param $settings
 		 *
-		 * @return mixed
+		 * @param array $settings Settings array.
+		 *
+		 * @return array
 		 */
-        function filter_search_js_settings( $settings ) {
+		function filter_search_js_settings( $settings ) {
 			$settings['autocomplete_selector'] = '.header-search-wrap .search-form';
-			$settings['form_selector'] = '.widget_search .search-form';
+			$settings['form_selector']         = '.widget_search .search-form';
 			return $settings;
 		}
 
-        public function buddyboss_theme_show_private_message_button( $user, $user2 ) {
+		public function buddyboss_theme_show_private_message_button( $user, $user2 ) {
 
-	        if( bp_is_active('messages') ) {
-		        if ( function_exists('bp_force_friendship_to_message') && true === bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-			        $member_friend_status = friends_check_friendship_status( $user, $user2 );
-			        if ( 'is_friend' === $member_friend_status ) {
-				        return 'yes';
-			        } else {
-				        return 'no';
-			        }
-		        }
-	        } else {
-		        return 'no';
-            }
-	        return 'yes';
-        }
+			if ( bp_is_active( 'messages' ) ) {
+				if ( function_exists( 'bp_force_friendship_to_message' ) && true === bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+					$member_friend_status = friends_check_friendship_status( $user, $user2 );
+					if ( 'is_friend' === $member_friend_status ) {
+						return 'yes';
+					} else {
+						return 'no';
+					}
+				}
+			} else {
+				return 'no';
+			}
+			return 'yes';
+		}
 
 		/**
 		 * Display result group title on the search subset pages
-		 * @param $start_html
-		 * @param $search_subset
+		 *
+		 * @param string $start_html    HTML.
+		 * @param string $search_subset Search subset.
 		 *
 		 * @return string
 		 */
@@ -263,20 +265,20 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			if ( ! empty( $_REQUEST['subset'] ) ) {
 				ob_start();
 
-				// Total count
+				// Total count.
 				$instance      = BP_Search::instance();
 				$total_results = $instance->search_helpers[ $search_subset ]->get_total_match_count( $_REQUEST['s'] );
 
-				// Label
+				// Label.
 				$search_items = bp_search_items();
-				$label        = isset ( $search_items[ $search_subset ] ) ? $search_items[ $search_subset ] : $search_subset;
+				$label        = isset( $search_items[ $search_subset ] ) ? $search_items[ $search_subset ] : $search_subset;
 				$label        = apply_filters( 'bp_search_label_search_type', $label );
 				?>
 				<header class="results-group-header clearfix">
 					<h3 class="results-group-title">
-						<span><?php echo $label ?></span>
+						<span><?php echo esc_html( $label ); ?></span>
 					</h3>
-					<span class="total-results"><?php printf( _n( '%d result', '%d results', $total_results, 'buddyboss-theme' ), $total_results ) ?></span>
+					<span class="total-results"><?php printf( _n( '%d result', '%d results', $total_results, 'buddyboss-theme' ), $total_results ); ?></span>
 				</header>
 				<?php
 				$start_html .= ob_get_clean();
@@ -289,48 +291,48 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		 * Set default members avatar to display in search results
 		 */
 		function action_before_search_member() {
-			add_action( 'bp_core_default_avatar_user', [ $this, 'filter_search_default_avatar_member' ], 999, 1 );
+			add_action( 'bp_core_default_avatar_user', array( $this, 'filter_search_default_avatar_member' ), 999, 1 );
 		}
 
 		/**
 		 * Unset default members avatar set to display in search results
 		 */
 		function action_after_search_member() {
-			remove_action( 'bp_core_default_avatar_user', [ $this, 'filter_search_default_avatar_member' ], 999, 1 );
+			remove_action( 'bp_core_default_avatar_user', array( $this, 'filter_search_default_avatar_member' ), 999, 1 );
 		}
 
 		/**
 		 * Set default members avatar to display in search results
 		 */
 		function action_before_search_activity() {
-			add_action( 'bp_core_default_avatar_user', [ $this, 'filter_search_default_avatar_member' ], 999, 1 );
+			add_action( 'bp_core_default_avatar_user', array( $this, 'filter_search_default_avatar_member' ), 999, 1 );
 		}
 
 		/**
 		 * Unset default members avatar set to display in search results
 		 */
 		function action_after_search_activity() {
-			remove_action( 'bp_core_default_avatar_user', [ $this, 'filter_search_default_avatar_member' ], 999, 1 );
+			remove_action( 'bp_core_default_avatar_user', array( $this, 'filter_search_default_avatar_member' ), 999, 1 );
 		}
 
 		/**
 		 * Set default groups avatar to display in search results
 		 */
 		function action_before_search_group() {
-			add_action( 'bp_core_default_avatar_group', [ $this, 'filter_search_default_avatar_group' ], 999, 1 );
+			add_action( 'bp_core_default_avatar_group', array( $this, 'filter_search_default_avatar_group' ), 999, 1 );
 		}
 
 		/**
 		 * Unset default groups avatar set to display in search results
 		 */
 		function action_after_search_group() {
-			remove_action( 'bp_core_default_avatar_group', [ $this, 'filter_search_default_avatar_group' ], 999, 1 );
+			remove_action( 'bp_core_default_avatar_group', array( $this, 'filter_search_default_avatar_group' ), 999, 1 );
 		}
 
 		/**
 		 * Group default avatar callback
 		 *
-		 * @param $url
+		 * @param string $url Avatar URL.
 		 *
 		 * @return string
 		 */
@@ -341,7 +343,7 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		/**
 		 * Members default avatar callback
 		 *
-		 * @param $url
+		 * @param string $url Avatar URL.
 		 *
 		 * @return string
 		 */
@@ -350,13 +352,11 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		}
 
 		/**
-		*
-		* Clone Admin Toolbar Menu to Profile Dropdown Menu
-		*
-		*/
+		 *
+		 * Clone Admin Toolbar Menu to Profile Dropdown Menu
+		 */
 		function admin_toolbar_cloner() {
-			if (is_admin_bar_showing())
-			{
+			if ( is_admin_bar_showing() ) {
 				?>
 					<script type="text/javascript">
 						jQuery(document).ready(function($){
@@ -375,7 +375,6 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		 * Gets all unread notifications && messages
 		 *
 		 * @param array $response Array containing Heartbeat API response.
-		 * @param array $data Array containing data for Heartbeat API response.
 		 *
 		 * @return array $response
 		 */
@@ -403,14 +402,14 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		function buddyboss_theme_header_menu_admin_js() {
 
 			$menu = wp_nav_menu(
-				array (
+				array(
 					'theme_location' => 'header-my-account',
-					'echo' => FALSE,
-					'fallback_cb' => '__return_false'
+					'echo'           => false,
+					'fallback_cb'    => '__return_false',
 				)
 			);
 
-			if ( ! empty ( $menu ) ) {
+			if ( ! empty( $menu ) ) {
 				?>
 				<script type="text/javascript">
 					jQuery(document).ready( function(){
@@ -442,11 +441,11 @@ if ( !class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 
 		/**
-         * Override message threads per page to 20.
-         *
-		 * @param $args
+		 * Override message threads per page to 20.
 		 *
-		 * @return mixed
+		 * @param array $args Arguments.
+		 *
+		 * @return array
 		 */
 		public function has_message_threads_parse_args( $args ) {
 			$args['per_page'] = 20;

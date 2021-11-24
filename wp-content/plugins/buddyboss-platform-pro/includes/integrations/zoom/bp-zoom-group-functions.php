@@ -45,6 +45,9 @@ function bp_zoom_groups_send_meeting_notifications( $meeting, $notification = fa
 	// Get members ids.
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
+
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Do not sent notification for meeting creator.
@@ -91,7 +94,13 @@ function bp_zoom_groups_send_meeting_notifications( $meeting, $notification = fa
 				),
 			);
 
-			bp_send_email( 'zoom-scheduled-meeting-email', $user_id, $args );
+			if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+				bb_email_queue()->add_record( 'zoom-scheduled-meeting-email', $user_id, $args );
+				// call email background process.
+				bb_email_queue()->bb_email_background_process();
+			} else {
+				bp_send_email( 'zoom-scheduled-meeting-email', $user_id, $args );
+			}
 		}
 	}
 }
@@ -131,6 +140,9 @@ function bp_zoom_groups_send_webinar_notifications( $webinar, $notification = fa
 
 	// Get members ids.
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
+
+	// check if it has enough recipients to use batch emails.
+	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
 
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -178,7 +190,13 @@ function bp_zoom_groups_send_webinar_notifications( $webinar, $notification = fa
 				),
 			);
 
-			bp_send_email( 'zoom-scheduled-webinar-email', $user_id, $args );
+			if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+				bb_email_queue()->add_record( 'zoom-scheduled-webinar-email', $user_id, $args );
+				// call email background process.
+				bb_email_queue()->bb_email_background_process();
+			} else {
+				bp_send_email( 'zoom-scheduled-webinar-email', $user_id, $args );
+			}
 		}
 	}
 }

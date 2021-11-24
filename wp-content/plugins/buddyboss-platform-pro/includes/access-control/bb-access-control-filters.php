@@ -614,6 +614,11 @@ function bb_access_control_member_header_user_can_send_message_request( $buttons
 		return $buttons;
 	}
 
+	//Bail if user is not logged in
+	if ( ! is_user_logged_in() ) {
+		return $buttons;
+	}
+
 	if ( is_array( $buttons ) && isset( $buttons['private_message'] ) && isset( $buttons['private_message']['key'] ) && 'private_message' !== $buttons['private_message']['id'] ) {
 		return $buttons;
 	}

@@ -34,7 +34,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 			if ( bp_is_active( 'activity' ) ) {
         		// Located in the Activity Directory left column. Left column only appears if widgets are added.
         		register_sidebar( array(
-        			'name'			 => __( 'Activity &rarr; Directory Left', 'buddyboss-theme' ),
+        			'name'			 => __( 'Activity → Directory Left', 'buddyboss-theme' ),
         			'id'			 => 'activity_left',
         			'description'	 => __( 'Widgets in this area will be shown on the News Feed page.', 'buddyboss-theme' ),
         			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -45,7 +45,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
         		// Located in the Activity Directory right column. Right column only appears if widgets are added.
         		register_sidebar( array(
-        			'name'			 => __( 'Activity &rarr; Directory Right', 'buddyboss-theme' ),
+        			'name'			 => __( 'Activity → Directory Right', 'buddyboss-theme' ),
         			'id'			 => 'activity_right',
         			'description'	 => __( 'Widgets in this area will be shown on the News Feed page.', 'buddyboss-theme' ),
         			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -57,7 +57,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
             // Located in the Members Directory right column. Right column only appears if widgets are added.
     		register_sidebar( array(
-    			'name'			 => __( 'Members &rarr; Directory', 'buddyboss-theme' ),
+    			'name'			 => __( 'Members → Directory', 'buddyboss-theme' ),
     			'id'			 => 'members',
 				'description'	 => __( 'Widgets in this area will be shown on the Members directory.', 'buddyboss-theme' ),
     			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -68,7 +68,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
     		// Located in the Individual Member Profile right column. Right column only appears if widgets are added.
     		register_sidebar( array(
-    			'name'			 => __( 'Members &rarr; Single Profile', 'buddyboss-theme' ),
+    			'name'			 => __( 'Members → Single Profile', 'buddyboss-theme' ),
     			'id'			 => 'profile',
 				'description'	 => __( 'Widgets in this area will be shown on individual member profiles.', 'buddyboss-theme' ),
     			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -79,7 +79,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
 			if ( bp_is_active( 'activity' ) ) {
 				register_sidebar( array(
-					'name'			 => __( 'Members &rarr; User Activity', 'buddyboss-theme' ),
+					'name'			 => __( 'Members → User Activity', 'buddyboss-theme' ),
 					'id'			 => 'user_activity',
 					'description'	 => __( 'Widgets in this area will be shown on the user activity page.', 'buddyboss-theme' ),
 					'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -92,7 +92,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
             if ( bp_is_active( 'groups' ) ) {
                 // Located in the Groups Directory right column. Right column only appears if widgets are added.
         		register_sidebar( array(
-        			'name'			 => __( 'Groups &rarr; Directory', 'buddyboss-theme' ),
+        			'name'			 => __( 'Groups → Directory', 'buddyboss-theme' ),
         			'id'			 => 'groups',
 					'description'	 => __( 'Widgets in this area will be shown on the Groups directory.', 'buddyboss-theme' ),
         			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -103,7 +103,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
         		// Located in the Individual Group right column. Right column only appears if widgets are added.
         		register_sidebar( array(
-        			'name'			 => __( 'Groups &rarr; Single Group', 'buddyboss-theme' ),
+        			'name'			 => __( 'Groups → Single Group', 'buddyboss-theme' ),
         			'id'			 => 'group',
 					'description'	 => __( 'Widgets in this area will be shown on individual groups.', 'buddyboss-theme' ),
         			'before_widget'	 => '<aside id="%1$s" class="widget %2$s"><div class="inner">',
@@ -114,7 +114,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 
         		// Located in the Individual Group right column. Right column only appears if widgets are added.
         		register_sidebar( array(
-        			'name'			 => __( 'Groups &rarr; Group Activity', 'buddyboss-theme' ),
+        			'name'			 => __( 'Groups → Group Activity', 'buddyboss-theme' ),
         			'id'			 => 'group_activity',
 					'description'	 => __( 'Widgets in this area will be shown on group activity.', 'buddyboss-theme' ),
         			'before_widget'	 => '<aside id="%1$s" class="widget %2$s"><div class="inner">',
@@ -128,7 +128,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
         if ( function_exists('is_bbpress') ) {
     		// Located in the Forums Directory right column. Left column only appears if widgets are added.
     		register_sidebar( array(
-    			'name'			 => __( 'Forums &rarr; Directory & Single', 'buddyboss-theme' ),
+    			'name'			 => __( 'Forums → Directory & Single', 'buddyboss-theme' ),
     			'id'			 => 'forums',
 				'description'	 => __( 'Widgets in this area will be shown on Forum Discussions Directory and single pages.', 'buddyboss-theme' ),
     			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -141,7 +141,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 		// Dedicated sidebar for WooCommerce
         if ( class_exists( 'WooCommerce' ) ) {
             register_sidebar( array(
-    			'name'			 => __( 'WooCommerce &rarr; Shop', 'buddyboss-theme' ),
+    			'name'			 => __( 'WooCommerce → Shop', 'buddyboss-theme' ),
     			'id'			 => 'woo_sidebar',
 				'description'	 => __( 'Widgets in this area will be shown on Shop directory.', 'buddyboss-theme' ),
     			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -154,7 +154,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
         // LearnDash
         if ( class_exists( 'SFWD_LMS' ) ) {
             register_sidebar( array(
-    			'name'			 => __( 'LearnDash &rarr; Courses Directory', 'buddyboss-theme' ),
+    			'name'			 => __( 'LearnDash → Courses Directory', 'buddyboss-theme' ),
     			'id'			 => 'learndash_sidebar',
 				'description'	 => __( 'Widgets in this area will be shown on Courses directory.', 'buddyboss-theme' ),
     			'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
@@ -165,14 +165,14 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 			
 			// Located in Single Course Pages
 			register_sidebar( array(
-    			'name'			 => __( 'LearnDash &rarr; Course Sidebar', 'buddyboss-theme' ),
+    			'name'			 => __( 'LearnDash → Course Sidebar', 'buddyboss-theme' ),
     			'id'			 => 'learndash_course_sidebar',
 				'description'	 => __( 'Widgets in this area will be shown on individual courses.', 'buddyboss-theme' ),
 			) );
 
 			// Located in Single Lesson Pages
 			register_sidebar( array(
-    			'name'			 => __( 'LearnDash &rarr; Lesson Sidebar', 'buddyboss-theme' ),
+    			'name'			 => __( 'LearnDash → Lesson Sidebar', 'buddyboss-theme' ),
     			'id'			 => 'learndash_lesson_sidebar',
 				'description'	 => __( 'Widgets in this area will be shown on individual Lessons, Topics, and Quizzes.', 'buddyboss-theme' ),
 			) );
@@ -181,7 +181,7 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 		// Lifter LMS
 		if ( class_exists( 'LifterLMS' ) ) {
 			register_sidebar( array(
-				'name'			 => __( 'Lifter &rarr; Courses', 'buddyboss-theme' ),
+				'name'			 => __( 'Lifter → Courses', 'buddyboss-theme' ),
 				'id'			 => 'lifter_sidebar',
 				'description'	 => __( 'Widgets in this area will be shown on courses page.', 'buddyboss-theme' ),
 				'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',

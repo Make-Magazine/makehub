@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:47:05+00:00\n"
+"POT-Creation-Date: 2021-11-15 07:11:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "404"
 msgstr ""
 
-#: archive-sfwd-courses.php:30 archive-sfwd-courses.php:31
+#: archive-sfwd-courses.php:30 archive-sfwd-courses.php:31 bbpress.php:40
 #: inc/admin/options-init.php:312 inc/admin/options-init.php:353
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:97
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1857
@@ -63,7 +63,7 @@ msgstr ""
 #: inc/plugins/elementor/widgets/courses/templates/learndash-courses-template.php:36
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-courses-template.php:45
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:281
-#: learndash/ld30/shortcodes/profile.php:119
+#: learndash/ld30/shortcodes/profile.php:167
 #: lifterlms/course/course-index.php:20
 #: lifterlms/membership/membership-index.php:20 searchform.php:15
 #: template-parts/bbpress-banner.php:108 template-parts/header-aside.php:93
@@ -129,10 +129,6 @@ msgstr ""
 msgid "Sorry, no courses were found."
 msgstr ""
 
-#: bbpress/content-single-forum.php:39
-msgid "Main Forum"
-msgstr ""
-
 #: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:67
 #: sidebar-bbpress.php:18
 msgid "New discussion"
@@ -146,8 +142,8 @@ msgstr ""
 msgid "Original Post"
 msgstr ""
 
-#: bbpress/content-single-topic.php:73 learndash/ld30/lesson.php:109
-#: learndash/ld30/quiz.php:85
+#: bbpress/content-single-topic.php:73 learndash/ld30/lesson.php:118
+#: learndash/ld30/quiz.php:99
 #: lifterlms/assignment/template-single-assignment-content.php:61
 #: lifterlms/lesson/template-single-lesson-content.php:63
 #: lifterlms/quiz/template-single-quizz-content.php:61
@@ -411,6 +407,7 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:232
 #: inc/theme/template-functions.php:1862 inc/theme/template-functions.php:1875
 #: inc/theme/template-functions.php:1983 inc/theme/template-functions.php:1998
+#: learndash/ld30/focus/comments_list.php:120
 msgid "Reply"
 msgstr ""
 
@@ -552,6 +549,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#: bbpress.php:39 template-parts/bbpress-banner.php:107
+msgid "Search forums..."
+msgstr ""
+
 #: buddypress/common/nav/directory-nav.php:10 docs/tabs-nouveau.php:2
 msgid "Directory menu"
 msgstr ""
@@ -601,7 +602,7 @@ msgstr ""
 #: buddypress/groups/single/members/leaders.php:15
 #: buddypress/groups/single/members-loop.php:15
 #: buddypress/members/members-loop.php:16
-#: learndash/ld30/template-course-author-details.php:52
+#: learndash/ld30/template-course-author-details.php:49
 msgid "Message"
 msgstr ""
 
@@ -687,7 +688,7 @@ msgstr ""
 #: inc/lib/buddyboss-updater/includes/views/package.php:68
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:684
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:689
-#: inc/theme/login.php:168 learndash/ld30/modules/login-modal.php:246
+#: inc/theme/login.php:168 learndash/ld30/modules/login-modal.php:389
 #: paid-memberships-pro/pages/account.php:107
 msgid "Email"
 msgstr ""
@@ -792,11 +793,9 @@ msgstr ""
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:717
 #: inc/plugins/lifterlms-helper.php:1710 inc/plugins/lifterlms-helper.php:1789
 #: inc/theme/login.php:406 inc/theme/template-functions.php:722
-#: learndash/ld30/learndash-sidebar.php:195
-#: learndash/ld30/lesson/partials/row.php:117
-#: learndash/ld30/lesson/partials/row.php:137
-#: learndash/ld30/shortcodes/course_list_template.php:284
-#: learndash/ld30/shortcodes/course_list_template.php:335
+#: learndash/ld30/learndash-sidebar.php:198
+#: learndash/ld30/shortcodes/course_list_template.php:288
+#: learndash/ld30/shortcodes/course_list_template.php:339
 #: learndash/ld30/template-course-item.php:80
 #: learndash/ld30/template-course-item.php:102
 #: lifterlms/loop/featured-image.php:44
@@ -1193,7 +1192,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: inc/admin/options/custom-css.php:4342
+#: inc/admin/options/custom-css.php:4399
 msgid "Quiz Progress"
 msgstr ""
 
@@ -3225,32 +3224,32 @@ msgstr ""
 msgid "License Keys"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:526
+#: inc/lib/buddyboss-updater/includes/admin.php:532
 msgid "Dismiss this notice."
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:558
+#: inc/lib/buddyboss-updater/includes/admin.php:564
 msgid "activate your product licenses"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:559
+#: inc/lib/buddyboss-updater/includes/admin.php:565
 msgid ""
 "<strong>Your BuddyBoss products are almost ready.</strong> To get started, "
 "please %s."
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:588
+#: inc/lib/buddyboss-updater/includes/admin.php:594
 msgid "here"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:589
+#: inc/lib/buddyboss-updater/includes/admin.php:595
 msgid "This license for <strong>%s</strong> is invalid or incomplete. %s"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:746
-#: inc/lib/buddyboss-updater/includes/admin.php:778
-#: inc/lib/buddyboss-updater/includes/admin.php:862
-#: inc/lib/buddyboss-updater/includes/admin.php:868
+#: inc/lib/buddyboss-updater/includes/admin.php:752
+#: inc/lib/buddyboss-updater/includes/admin.php:784
+#: inc/lib/buddyboss-updater/includes/admin.php:874
+#: inc/lib/buddyboss-updater/includes/admin.php:880
 msgid ""
 "Your account was successfully connected. No new activations have been made. "
 "If you are attempting to activate a new license key, please make sure that "
@@ -3258,14 +3257,14 @@ msgid ""
 "available in your BuddyBoss.com account."
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:839
+#: inc/lib/buddyboss-updater/includes/admin.php:845
 msgid ""
 "Congratulations! License keys for the following product(s) have been "
 "activated: %s"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/admin.php:857
-#: inc/lib/buddyboss-updater/includes/admin.php:870
+#: inc/lib/buddyboss-updater/includes/admin.php:869
+#: inc/lib/buddyboss-updater/includes/admin.php:882
 msgid ""
 "The connection was successful, however, no license key was activated. We "
 "could not find any active license in your account, for any of the installed "
@@ -5453,7 +5452,7 @@ msgid "Log In"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1437
-#: inc/theme/functions.php:1447 inc/theme/template-functions.php:1464
+#: inc/theme/functions.php:1393 inc/theme/template-functions.php:1464
 #: template-parts/header-mobile.php:163
 #: template-parts/header-profile-menu.php:491
 msgid "Log Out"
@@ -6402,6 +6401,7 @@ msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:164
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:137
+#: learndash/ld30/lesson/partials/row.php:299
 msgid "Collapse"
 msgstr ""
 
@@ -7331,7 +7331,7 @@ msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:750
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2292
-#: learndash/ld30/shortcodes/profile/course-row.php:52
+#: learndash/ld30/shortcodes/profile/course-row.php:78
 #: learndash/ld30/template-single-course-sidebar.php:352
 msgid "Certificate"
 msgstr ""
@@ -8042,9 +8042,10 @@ msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1940
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:142
-#: learndash/ld30/lesson/listing.php:81
-#: learndash/ld30/lesson/partials/row.php:209
-#: learndash/ld30/shortcodes/profile/course-row.php:39
+#: learndash/ld30/lesson/listing.php:159
+#: learndash/ld30/lesson/partials/row.php:299
+#: learndash/ld30/lesson/partials/row.php:301
+#: learndash/ld30/shortcodes/profile/course-row.php:64
 msgid "Expand"
 msgstr ""
 
@@ -9268,7 +9269,7 @@ msgstr[1] ""
 msgid "more"
 msgstr ""
 
-#: inc/plugins/buddypress-helper.php:279
+#: inc/plugins/buddypress-helper.php:281
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
@@ -10964,7 +10965,7 @@ msgstr ""
 
 #: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:116
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-activity-template.php:103
-#: learndash/ld30/learndash-sidebar.php:212
+#: learndash/ld30/learndash-sidebar.php:215
 msgid "% Completed"
 msgstr ""
 
@@ -11332,7 +11333,7 @@ msgid "Sorry, no members were found."
 msgstr ""
 
 #: inc/plugins/learndash-compat.php:31
-#: learndash/ld30/focus/comments_list.php:42
+#: learndash/ld30/focus/comments_list.php:79
 msgid "Your response is awaiting for approval."
 msgstr ""
 
@@ -11400,14 +11401,14 @@ msgid "Continue"
 msgstr ""
 
 #: inc/plugins/lifterlms-helper.php:1510
-#: learndash/ld30/learndash-sidebar.php:208
-#: learndash/ld30/learndash-sidebar.php:268
-#: learndash/ld30/learndash-sidebar.php:299
-#: learndash/ld30/learndash-sidebar.php:348
-#: learndash/ld30/learndash-sidebar.php:402
-#: learndash/ld30/shortcodes/course_list_template.php:127
-#: learndash/ld30/shortcodes/course_list_template.php:134
-#: learndash/ld30/shortcodes/profile.php:85
+#: learndash/ld30/learndash-sidebar.php:211
+#: learndash/ld30/learndash-sidebar.php:271
+#: learndash/ld30/learndash-sidebar.php:302
+#: learndash/ld30/learndash-sidebar.php:351
+#: learndash/ld30/learndash-sidebar.php:405
+#: learndash/ld30/shortcodes/course_list_template.php:131
+#: learndash/ld30/shortcodes/course_list_template.php:138
+#: learndash/ld30/shortcodes/profile.php:106
 #: learndash/ld30/template-single-course-sidebar.php:146
 msgid "Completed"
 msgstr ""
@@ -11513,39 +11514,39 @@ msgstr ""
 msgid "Titlebar"
 msgstr ""
 
-#: inc/theme/functions.php:419
+#: inc/theme/functions.php:365
 msgid "Share on Facebook"
 msgstr ""
 
-#: inc/theme/functions.php:420
+#: inc/theme/functions.php:366
 msgid "Tweet"
 msgstr ""
 
-#: inc/theme/functions.php:422
+#: inc/theme/functions.php:368
 msgid "Your comment has been posted."
 msgstr ""
 
-#: inc/theme/functions.php:423
+#: inc/theme/functions.php:369
 msgid "Please Wait..."
 msgstr ""
 
-#: inc/theme/functions.php:424
+#: inc/theme/functions.php:370
 msgid "Choose a file"
 msgstr ""
 
-#: inc/theme/functions.php:467
+#: inc/theme/functions.php:413
 msgid "Choose or Upload an Image"
 msgstr ""
 
-#: inc/theme/functions.php:468
+#: inc/theme/functions.php:414
 msgid "Use this image"
 msgstr ""
 
-#: inc/theme/functions.php:1312
+#: inc/theme/functions.php:1258
 msgid "Start typing to search..."
 msgstr ""
 
-#: inc/theme/functions.php:1358
+#: inc/theme/functions.php:1304
 msgid "Stick to Bottom"
 msgstr ""
 
@@ -11566,7 +11567,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: inc/theme/login.php:167 learndash/ld30/modules/login-modal.php:242
+#: inc/theme/login.php:167 learndash/ld30/modules/login-modal.php:385
 #: paid-memberships-pro/pages/account.php:106
 #: woocommerce/myaccount/form-login.php:92
 msgid "Username"
@@ -11653,7 +11654,7 @@ msgid "Widgets in this area will be shown on Pages."
 msgstr ""
 
 #: inc/theme/sidebars.php:37
-msgid "Activity &rarr; Directory Left"
+msgid "Activity → Directory Left"
 msgstr ""
 
 #: inc/theme/sidebars.php:39 inc/theme/sidebars.php:50
@@ -11661,11 +11662,11 @@ msgid "Widgets in this area will be shown on the News Feed page."
 msgstr ""
 
 #: inc/theme/sidebars.php:48
-msgid "Activity &rarr; Directory Right"
+msgid "Activity → Directory Right"
 msgstr ""
 
 #: inc/theme/sidebars.php:60
-msgid "Members &rarr; Directory"
+msgid "Members → Directory"
 msgstr ""
 
 #: inc/theme/sidebars.php:62
@@ -11673,7 +11674,7 @@ msgid "Widgets in this area will be shown on the Members directory."
 msgstr ""
 
 #: inc/theme/sidebars.php:71
-msgid "Members &rarr; Single Profile"
+msgid "Members → Single Profile"
 msgstr ""
 
 #: inc/theme/sidebars.php:73
@@ -11681,7 +11682,7 @@ msgid "Widgets in this area will be shown on individual member profiles."
 msgstr ""
 
 #: inc/theme/sidebars.php:82
-msgid "Members &rarr; User Activity"
+msgid "Members → User Activity"
 msgstr ""
 
 #: inc/theme/sidebars.php:84
@@ -11689,7 +11690,7 @@ msgid "Widgets in this area will be shown on the user activity page."
 msgstr ""
 
 #: inc/theme/sidebars.php:95
-msgid "Groups &rarr; Directory"
+msgid "Groups → Directory"
 msgstr ""
 
 #: inc/theme/sidebars.php:97
@@ -11697,7 +11698,7 @@ msgid "Widgets in this area will be shown on the Groups directory."
 msgstr ""
 
 #: inc/theme/sidebars.php:106
-msgid "Groups &rarr; Single Group"
+msgid "Groups → Single Group"
 msgstr ""
 
 #: inc/theme/sidebars.php:108
@@ -11705,7 +11706,7 @@ msgid "Widgets in this area will be shown on individual groups."
 msgstr ""
 
 #: inc/theme/sidebars.php:117
-msgid "Groups &rarr; Group Activity"
+msgid "Groups → Group Activity"
 msgstr ""
 
 #: inc/theme/sidebars.php:119
@@ -11713,7 +11714,7 @@ msgid "Widgets in this area will be shown on group activity."
 msgstr ""
 
 #: inc/theme/sidebars.php:131
-msgid "Forums &rarr; Directory & Single"
+msgid "Forums → Directory & Single"
 msgstr ""
 
 #: inc/theme/sidebars.php:133
@@ -11723,7 +11724,7 @@ msgid ""
 msgstr ""
 
 #: inc/theme/sidebars.php:144
-msgid "WooCommerce &rarr; Shop"
+msgid "WooCommerce → Shop"
 msgstr ""
 
 #: inc/theme/sidebars.php:146
@@ -11731,7 +11732,7 @@ msgid "Widgets in this area will be shown on Shop directory."
 msgstr ""
 
 #: inc/theme/sidebars.php:157
-msgid "LearnDash &rarr; Courses Directory"
+msgid "LearnDash → Courses Directory"
 msgstr ""
 
 #: inc/theme/sidebars.php:159
@@ -11739,7 +11740,7 @@ msgid "Widgets in this area will be shown on Courses directory."
 msgstr ""
 
 #: inc/theme/sidebars.php:168
-msgid "LearnDash &rarr; Course Sidebar"
+msgid "LearnDash → Course Sidebar"
 msgstr ""
 
 #: inc/theme/sidebars.php:170
@@ -11747,7 +11748,7 @@ msgid "Widgets in this area will be shown on individual courses."
 msgstr ""
 
 #: inc/theme/sidebars.php:175
-msgid "LearnDash &rarr; Lesson Sidebar"
+msgid "LearnDash → Lesson Sidebar"
 msgstr ""
 
 #: inc/theme/sidebars.php:177
@@ -11757,7 +11758,7 @@ msgid ""
 msgstr ""
 
 #: inc/theme/sidebars.php:184
-msgid "Lifter &rarr; Courses"
+msgid "Lifter → Courses"
 msgstr ""
 
 #: inc/theme/sidebars.php:186
@@ -12254,49 +12255,44 @@ msgstr ""
 msgid "Apply for job"
 msgstr ""
 
-#: learndash/ld30/assignment/partials/row.php:42
+#: learndash/ld30/assignment/partials/row.php:59
 msgid "Delete this uploaded Assignment"
 msgstr ""
 
-#: learndash/ld30/assignment/partials/row.php:43
+#: learndash/ld30/assignment/partials/row.php:60
 msgid "Delete Assignment"
 msgstr ""
 
-#: learndash/ld30/assignment/partials/row.php:58
-#: learndash/ld30/shortcodes/profile/assignment-row.php:9
+#: learndash/ld30/assignment/partials/row.php:81
+#: learndash/ld30/shortcodes/profile/assignment-row.php:25
 msgid "Download Assignment"
 msgstr ""
 
-#: learndash/ld30/assignment/partials/row.php:134
-#: learndash/ld30/shortcodes/profile/assignment-row.php:75
+#: learndash/ld30/assignment/partials/row.php:179
+#: learndash/ld30/shortcodes/profile/assignment-row.php:89
 msgid "Waiting Review"
 msgstr ""
 
-#: learndash/ld30/assignment/partials/row.php:148
-#: learndash/ld30/shortcodes/profile/assignment-row.php:89
-msgid "%s/%s Points Awarded "
-msgstr ""
-
-#: learndash/ld30/assignment/partials/row.php:151
-#: learndash/ld30/shortcodes/profile/assignment-row.php:92
+#: learndash/ld30/assignment/partials/row.php:203
+#: learndash/ld30/shortcodes/profile/assignment-row.php:113
 msgid "Approved"
 msgstr ""
 
-#: learndash/ld30/course.php:104
+#: learndash/ld30/course.php:119
 msgid "You've earned a certificate!"
 msgstr ""
 
-#: learndash/ld30/course.php:108 learndash/ld30/modules/certificate-link.php:6
+#: learndash/ld30/course.php:123 learndash/ld30/modules/certificate-link.php:31
 msgid "Download Certificate"
 msgstr ""
 
-#: learndash/ld30/course.php:202 learndash/ld30/course.php:204
-#: learndash/ld30/shortcodes/profile.php:121
-#: learndash/ld30/shortcodes/profile.php:123
+#: learndash/ld30/course.php:245 learndash/ld30/course.php:247
+#: learndash/ld30/shortcodes/profile.php:171
+#: learndash/ld30/shortcodes/profile.php:174
 msgid "Expand All"
 msgstr ""
 
-#: learndash/ld30/course.php:202 learndash/ld30/shortcodes/profile.php:121
+#: learndash/ld30/course.php:245 learndash/ld30/shortcodes/profile.php:172
 msgid "Collapse All"
 msgstr ""
 
@@ -12305,46 +12301,46 @@ msgstr ""
 msgid "Light Mode"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:137
-#: learndash/ld30/learndash-sidebar.php:387
-#: learndash/ld30/lesson/partials/row.php:29
-#: learndash/ld30/quiz/partials/row.php:21
+#: learndash/ld30/learndash-sidebar.php:140
+#: learndash/ld30/learndash-sidebar.php:390
+#: learndash/ld30/lesson/partials/row.php:40
+#: learndash/ld30/quiz/partials/row.php:32
 msgid "You don't currently have access to this content"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:210
-#: learndash/ld30/learndash-sidebar.php:274
-#: learndash/ld30/learndash-sidebar.php:307
-#: learndash/ld30/learndash-sidebar.php:354
-#: learndash/ld30/learndash-sidebar.php:408
+#: learndash/ld30/learndash-sidebar.php:213
+#: learndash/ld30/learndash-sidebar.php:277
+#: learndash/ld30/learndash-sidebar.php:310
+#: learndash/ld30/learndash-sidebar.php:357
+#: learndash/ld30/learndash-sidebar.php:411
 msgid "Not Completed"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:427
+#: learndash/ld30/learndash-sidebar.php:430
 #: lifterlms/lesson/template-single-lesson-sidebar.php:107
 msgid "Participants"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:476
+#: learndash/ld30/learndash-sidebar.php:479
 #: lifterlms/lesson/template-single-lesson-sidebar.php:146
 msgid "Show more"
 msgstr ""
 
-#: learndash/ld30/lesson/partials/row.php:38
+#: learndash/ld30/lesson/partials/row.php:61
 msgid "Please login to view sample content"
 msgstr ""
 
-#: learndash/ld30/lesson.php:125 learndash/ld30/quiz.php:95
-#: learndash/ld30/topic.php:137
+#: learndash/ld30/lesson.php:134 learndash/ld30/quiz.php:109
+#: learndash/ld30/topic.php:141
 msgid "Expires at"
 msgstr ""
 
-#: learndash/ld30/lesson.php:125 learndash/ld30/quiz.php:95
-#: learndash/ld30/topic.php:137
+#: learndash/ld30/lesson.php:134 learndash/ld30/quiz.php:109
+#: learndash/ld30/topic.php:141
 msgid "Expired at"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:25
+#: learndash/ld30/modules/login-modal.php:59
 #: learndash/ld30/template-single-course-sidebar.php:251
 #: woocommerce/myaccount/form-login.php:29
 #: woocommerce/myaccount/form-login.php:46
@@ -12352,68 +12348,60 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:35
-msgid "Accessing this course requires a login, please enter your credentials below!"
-msgstr ""
-
-#: learndash/ld30/modules/login-modal.php:51
+#: learndash/ld30/modules/login-modal.php:97
 msgid "Incorrect username or password. Please try again"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:68
+#: learndash/ld30/modules/login-modal.php:116
 msgid "Please check your email for the password reset link."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:114
+#: learndash/ld30/modules/login-modal.php:174
 msgid "Lost Your Password?"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:143
-#: learndash/ld30/modules/login-modal.php:262
+#: learndash/ld30/modules/login-modal.php:208
+#: learndash/ld30/modules/login-modal.php:456
 #: woocommerce/myaccount/form-login.php:83
 #: woocommerce/myaccount/form-login.php:120
 msgid "Register"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:153
+#: learndash/ld30/modules/login-modal.php:216
 msgid "Don't have an account? Register one!"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:169
+#: learndash/ld30/modules/login-modal.php:271
 msgid "Registration requires a username."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:170
+#: learndash/ld30/modules/login-modal.php:272
 msgid "Registration requires a valid email."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:171
+#: learndash/ld30/modules/login-modal.php:273
 msgid "Invalid username."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:172
+#: learndash/ld30/modules/login-modal.php:274
 msgid "Invalid email."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:209
+#: learndash/ld30/modules/login-modal.php:307
 msgid "Registration successful, please check your email to set your password."
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:221
+#: learndash/ld30/modules/login-modal.php:339
 msgid "Register an Account"
 msgstr ""
 
-#: learndash/ld30/modules/login-modal.php:259
+#: learndash/ld30/modules/login-modal.php:454
 msgid "Registration confirmation will be emailed to you."
 msgstr ""
 
-#: learndash/ld30/modules/progress.php:74
-msgid "%s/%s Steps"
-msgstr ""
-
-#: learndash/ld30/shortcodes/course_list_template.php:78
-#: learndash/ld30/shortcodes/course_list_template.php:115
-#: learndash/ld30/shortcodes/course_list_template.php:274
+#: learndash/ld30/shortcodes/course_list_template.php:82
+#: learndash/ld30/shortcodes/course_list_template.php:119
+#: learndash/ld30/shortcodes/course_list_template.php:278
 #: learndash/ld30/template-course-item.php:91
 #: learndash/ld30/template-single-course-sidebar.php:191
 #: learndash/ld30/template-single-course-sidebar.php:278
@@ -12421,47 +12409,52 @@ msgstr ""
 msgid "Free"
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:124
-#: learndash/ld30/shortcodes/course_list_template.php:131
+#: learndash/ld30/shortcodes/course_list_template.php:128
+#: learndash/ld30/shortcodes/course_list_template.php:135
 msgid "Enrolled"
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:278
+#: learndash/ld30/shortcodes/course_list_template.php:282
 #: learndash/ld30/template-course-item.php:95
 #: learndash/ld30/template-single-course-sidebar.php:129
 #: lifterlms/course/course-index-loop.php:70
 msgid "Not Enrolled"
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:283
+#: learndash/ld30/shortcodes/course_list_template.php:287
 #: learndash/ld30/template-course-item.php:79
 #: learndash/ld30/template-course-item.php:101
 msgid "Start "
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:321
+#: learndash/ld30/shortcodes/course_list_template.php:325
 #: learndash/ld30/template-course-item.php:120
 #: learndash/ld30/template-course-item.php:125
 msgid "%1$s %2$s"
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:326
+#: learndash/ld30/shortcodes/course_list_template.php:330
 msgid "%1$s %2$s "
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:335
+#: learndash/ld30/shortcodes/course_list_template.php:339
 msgid "0 "
 msgstr ""
 
-#: learndash/ld30/shortcodes/profile.php:72
+#: learndash/ld30/shortcodes/profile/assignment-row.php:107
+#. translators: placeholder: %1$s: Current points, %2$s: Maximum points
+msgid "%1$s/%2$s Points Awarded "
+msgstr ""
+
+#: learndash/ld30/shortcodes/profile.php:93
 msgid "Edit profile"
 msgstr ""
 
-#: learndash/ld30/shortcodes/profile.php:90
+#: learndash/ld30/shortcodes/profile.php:111
 msgid "Certificates"
 msgstr ""
 
-#: learndash/ld30/shortcodes/profile.php:97
+#: learndash/ld30/shortcodes/profile.php:119
 msgid "Points"
 msgstr ""
 
@@ -12593,23 +12586,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: lifterlms/course/course-index-loop.php:190
-#: lifterlms/membership/membership-index-loop.php:100
+#: lifterlms/membership/membership-index-loop.php:101
 msgid "Starts from"
 msgstr ""
 
 #: lifterlms/course/course-index-loop.php:193
 #: lifterlms/course/template-single-course-sidebar.php:101
-#: lifterlms/membership/membership-index-loop.php:103
+#: lifterlms/membership/membership-index-loop.php:104
 msgid "See Plans"
 msgstr ""
 
 #: lifterlms/course/course-index-loop.php:223
-#: lifterlms/membership/membership-index-loop.php:127
+#: lifterlms/membership/membership-index-loop.php:129
 msgid "Enrolled on"
 msgstr ""
 
 #: lifterlms/course/course-index-loop.php:232
-#: lifterlms/membership/membership-index-loop.php:131
+#: lifterlms/membership/membership-index-loop.php:133
 msgid "Expires on"
 msgstr ""
 
@@ -12941,10 +12934,6 @@ msgstr ""
 msgid "Remove bookmark"
 msgstr ""
 
-#: template-parts/bbpress-banner.php:107
-msgid "Search forums..."
-msgstr ""
-
 #: template-parts/content-bbpress.php:34
 #: template-parts/content-buddypress.php:41 template-parts/content-page.php:33
 #: template-parts/content-sfwd-assignment.php:18
@@ -12987,6 +12976,22 @@ msgstr ""
 
 #: template-parts/content-llms_course.php:68
 msgid "View course details"
+msgstr ""
+
+#: template-parts/content-maintenance.php:61
+msgid "Days"
+msgstr ""
+
+#: template-parts/content-maintenance.php:65
+msgid "Hours"
+msgstr ""
+
+#: template-parts/content-maintenance.php:69
+msgid "Minutes"
+msgstr ""
+
+#: template-parts/content-maintenance.php:73
+msgid "Seconds"
 msgstr ""
 
 #: template-parts/content-none.php:13
@@ -13986,7 +13991,7 @@ msgid " and "
 msgstr ""
 
 #: inc/plugins/learndash-compat.php:49
-#: learndash/ld30/focus/comments_list.php:60
+#: learndash/ld30/focus/comments_list.php:102
 #. translators: placeholders: %1$s: Comment Date, %2$s: Comment Time
 msgctxt "placeholders: comment date, comment time"
 msgid "%1$s at %2$s"
@@ -14016,8 +14021,21 @@ msgctxt "as in: \"version nr unknown\""
 msgid "unknown"
 msgstr ""
 
-#: learndash/ld30/course.php:179
-msgctxt "Course Content Label"
+#: learndash/ld30/assignment/partials/row.php:146
+#. translators: placeholder: comment count.
+msgctxt "placeholder: comment count"
+msgid "%d Comments"
+msgstr ""
+
+#: learndash/ld30/assignment/partials/row.php:197
+#. translators: placeholders: points current, points max.
+msgctxt "placeholders: points current, points max"
+msgid "%1$s/%2$s Points Awarded "
+msgstr ""
+
+#: learndash/ld30/course.php:209
+#. translators: placeholder: Course.
+msgctxt "placeholder: Course"
 msgid "%s Content"
 msgstr ""
 
@@ -14026,64 +14044,106 @@ msgctxt "link: Back to Course"
 msgid "Back to %s"
 msgstr ""
 
-#: learndash/ld30/lesson/listing.php:53
+#: learndash/ld30/lesson/listing.php:76
 #. translators: Course Status Label.
 msgctxt "Lesson Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: learndash/ld30/lesson/listing.php:66
+#: learndash/ld30/lesson/listing.php:110
+#. translators: placeholder: Lesson Complete Percentage
 msgctxt "Lesson Complete Percentage"
 msgid "%s%% Complete"
 msgstr ""
 
-#: learndash/ld30/lesson/listing.php:67
-msgctxt "Lesson Steps Complete"
+#: learndash/ld30/lesson/listing.php:134
+#. translators: placeholder: %1$s: Lesson Steps Complete %2$s: Total lesson
+#. steps
+msgctxt "%1$s: Lesson Steps Complete %2$s: Total lesson steps"
 msgid "%1$d/%2$d Steps"
 msgstr ""
 
-#: learndash/ld30/modules/progress.php:50
+#: learndash/ld30/lesson/partials/row.php:169
+#. translators: placeholders: Topic Count, Topic/Topics Label.
+msgctxt "placeholders: Topic Count, Topic/Topics Label"
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: learndash/ld30/lesson/partials/row.php:195
+#. translators: placeholders: Quiz Count, Quiz/Quizzes Label.
+msgctxt "placeholders: Quiz Count, Quiz/Quizzes Label"
+msgid "%1$d %2$s"
+msgid_plural "%1$d %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: learndash/ld30/modules/login-modal.php:75
+#. translators: placeholder: course.
+msgctxt "placeholder: course"
+msgid "Accessing this %s requires a login. Please enter your credentials below!"
+msgstr ""
+
+#: learndash/ld30/modules/progress.php:108
+#. translators: placeholder: Lesson Progress
 msgctxt "Placeholder: Lesson Progress"
 msgid "%s Progress"
 msgstr ""
 
-#: learndash/ld30/modules/progress.php:58
+#: learndash/ld30/modules/progress.php:124
+#. translators: placeholder: Progress percentage
 msgctxt "placeholder: Progress percentage"
 msgid "%s%% Complete"
 msgstr ""
 
-#: learndash/ld30/modules/progress.php:72
+#: learndash/ld30/modules/progress.php:145
+#. translators: Last activity date in infobar.
 msgctxt "Last activity date in infobar"
 msgid "Last activity on %s"
 msgstr ""
 
-#: learndash/ld30/quiz.php:229
+#: learndash/ld30/modules/progress.php:151
+#. translators: placeholders: completed steps, total steps.
+msgctxt "placeholders: completed steps, total steps"
+msgid "%1$d/%2$d Steps"
+msgstr ""
+
+#: learndash/ld30/quiz.php:284
+#. translators: placeholders: quiz, attempts count.
 msgctxt "placeholders: quiz, attempts count"
 msgid "You have already taken this %1$s %2$d time(s) and may not take it again."
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:260
+#: learndash/ld30/shortcodes/course_list_template.php:264
 msgctxt "Start ribbon"
 msgid "%s"
 msgstr ""
 
-#: learndash/ld30/shortcodes/course_list_template.php:265
+#: learndash/ld30/shortcodes/course_list_template.php:269
 msgctxt "Start ribbon"
 msgid "Start %s "
 msgstr ""
 
-#: learndash/ld30/shortcodes/profile.php:116
+#: learndash/ld30/shortcodes/profile/assignment-row.php:60
+#. translators: placeholder: commentd count.
+msgctxt "placeholder: commented count"
+msgid "%d Comments"
+msgstr ""
+
+#: learndash/ld30/shortcodes/profile.php:160
+#. translators: Profile Course Content Label
 msgctxt "Profile Course Content Label"
 msgid "Your %s"
 msgstr ""
 
-#: learndash/ld30/shortcodes/profile.php:152
+#: learndash/ld30/shortcodes/profile.php:214
 #. translators: placeholder: Courses.
 msgctxt "placeholder: Courses"
 msgid "No %s found"
 msgstr ""
 
-#: learndash/ld30/template-banner.php:48
+#: learndash/ld30/template-banner.php:57
 msgctxt "link: View Course details"
 msgid "View %s details"
 msgstr ""

@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8
+Tested up to: 5.8.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,11 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.7 =
+* Zoom - Added support to Send emails in Batches in the Background to Group members for Meeting and Webinar notifications
+* Zoom - Fixed meeting and webinar timeout issue in the group by updating Client WebSDK
+* Member Access Controls - Fixed minor UI issue in profile when message access configured
 
 = 1.1.6 =
 * Groups - Fixed Access control members issue in Group invites screen

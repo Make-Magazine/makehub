@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 5.8
-Version: 1.7.4
+Tested up to: 5.8.2
+Version: 1.7.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,64 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.7.9 =
+* Profiles - Cross-browser compatibility added for profile picture image quality
+* LearnDash - Fixed course sidebar issue not showing quiz completed
+* LearnDash - Learndash templates updated to the latest version
+* Elementor - Minor fix to load right size profile picture on the dashboard template
+* GamiPress - Fixed UI issues with the latest update
+* Compatibility - Fixed LearnDash courses search compatibility issue with ‘LearnDash Ratings, Reviews, and Feedback’ plugin
+* Compatibility - Fixed WordPress minor compatibility UI issue in Widgets screen
+
+= 1.7.8.1 =
+* Coding Standards - Fixed critical code refactoring issue
+
+= 1.7.8 =
+* Groups - Fixed Groups directory screen search icon issue
+* Forums - Fixed forum reply edit history UI issue
+* Forums - Search enabled for forums when ‘Allow forum wide search’ checked
+* Activity - Fixed sidebar UI issue on activity feed scroll
+* Text Editor - Fixed emojis popup UI issue to show properly in the responsive view
+* Theme Options - Fixed custom code fields overlapping issue
+* Post Types - Fixed HTML hierarchy rule on a single post and custom post types
+* Elementor - Fixed blocks and widgets background color issue
+* LearnDash - Fixed course page instructor avatar issue
+* LearnDash - Fixed [ld_course_list] shortcode UI issues to make it consistent
+* LearnDash - Fixed [ld_profile] shortcode profile statistics modal UI issue
+* LearnDash - Fixed lessons assignment not showing issue when comments disabled
+* LearnDash - Fixed lessons sidebar UI issue in iPad device
+* LearnDash - Fixed dropdown issue for lessons with just quiz on single course and sidebar
+* LifterLMS - Fixed LifterLMS membership listing right sales price not showing issue
+* WP Job Manager - Fixed 'Recent Job Listings' widget UI issues
+* WP Job Manager - Fixed single job listing image UI issue
+* Compatibility - Fixed 'BuddyPress User Blog' bookmark button UI issue
+* Compatibility - Fixed 'Activity Reactions For BuddyPress' plugin compatibility issues
+* Compatibility - Code refactoring to fix Cross-Site Scripting and PHP 8 compatibility issues
+
+= 1.7.7 =
+* BuddyPanel - Fixed BuddyPanel menu tooltip alignment issue
+* Elementor - Provided WordPress Widgets styling support in Elementor pages
+* Elementor - Fixed Elementor multiple header menu issue in Mobile view
+* Elementor - Fixed Elementor 404 page template compatibility issue
+* Compatibility - Fixed 'Contact Form 7' UI issue
+
+= 1.7.6 =
+* Forums - Added Breadcrumbs for sub-forums inside forum associated with the group
+* Network Search - Fixed search dropdown UI issue on the search results page
+* Theme Options - Fixed footer link color issue not working with theme options
+* Menus - Fixed long dropdown bad UI/UX issue
+* Coding Standards - Fixed bunch of non-translatable strings
+* LearnDash - Fixed course category link in the course template
+* LearnDash - Fixed lesson and topic sticky header issue
+* Elementor - Fixed [bbp-topic-form] shortcode compatibility UI issue
+* MemberPress - Fixed file upload compatibility issue on the signup page
+
+= 1.7.5 =
+* LearnDash - Fixed lessons pagination issue with non-English language
+* WooCommerce - Fixed outdated template notice after WooCommerce latest update
+* Events Calendar Pro - Added support for 'updated calendar design' templates
+* Compatibility - Fixed 'Loco Translate' plugin translation issue
 
 = 1.7.4 =
 * Forums - Fixed issue with discussion tags not getting saved on update

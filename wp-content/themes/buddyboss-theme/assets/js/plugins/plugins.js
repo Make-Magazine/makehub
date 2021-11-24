@@ -179,4 +179,26 @@
         $('.entry-content form[name="export_orders"] + h2 + table.table').addClass('wc_table-export_orders').wrap('<div class="wc_table-export_orders_wrap"></div>')
     }
 
+    //Activity Reaction plugin support
+    jQuery(document).on({
+        mouseenter: function(){
+           jQuery(this).closest('.activity-meta').find('.main_smiley_div').stop().fadeIn();
+        },
+        mouseleave: function(){
+            jQuery(this).closest('.activity-meta').find('.main_smiley_div').stop().fadeOut();
+        }
+    }, '.ai_bp_reactions_default,#ai_bp_ul');
+    //For Mobile tap
+    jQuery(document).on('tap click', '.ai_bp_reactions_default', function(e){
+        e.preventDefault();
+        var $this = jQuery(this);
+        if (e.type == "tap") {
+            if(jQuery(this).parents('.activity-meta').find('.main_smiley_div').css('display') == 'none') {
+                jQuery(this).parents('.activity-meta').find('.main_smiley_div').stop().fadeIn();
+            } else {
+                jQuery(this).parents('.activity-meta').find('.main_smiley_div').stop().fadeOut();		
+            }
+        }
+    });
+
 } )( jQuery );

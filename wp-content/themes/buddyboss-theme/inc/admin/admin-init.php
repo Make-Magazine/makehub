@@ -328,10 +328,10 @@ if ( !function_exists('redux_options_buddyboss_theme_saved' ) ) {
 }
 
 if ( ! function_exists( 'buddyboss_theme_compressed_transient_delete' ) ) {
-	
+
 	/**
 	 * Delete theme compressed transient.
-	 * 
+	 *
 	 * @since 1.6.7
 	 *
 	 * @return void
@@ -765,4 +765,29 @@ if ( buddyboss_theme_get_theme_sudharo() ) {
             die();
         }
     }
+}
+
+if ( ! function_exists( 'buddyboss_theme_sync_forum_search' ) ) {
+	/**
+	 * Sync Forum search options with BuddyBoss Platform.
+	 *
+	 * @param mixed $value set/saved option value
+	 */
+	function buddyboss_theme_sync_forum_search( $value ) {
+		$bbpress_banner_search  = buddyboss_theme_get_option( 'bbpress_banner_search' );
+		update_option( '_bbp_allow_search', $bbpress_banner_search );
+	}
+	add_action( 'redux/options/buddyboss_theme_options/saved', 'buddyboss_theme_sync_forum_search', 10, 1 );
+}
+
+if ( ! function_exists( 'buddyboss_theme_sync_platform_forum_search' ) ) {
+	/**
+	 * Sync Forum search options with BuddyBoss Platform.
+	 *
+	 * @param mixed $value set/saved option value
+	 */
+	function buddyboss_theme_sync_platform_forum_search( $old_value, $value, $option ) {
+		Redux::setOption( 'buddyboss_theme_options', 'bbpress_banner_search', $value );
+	}
+	add_action( 'update_option__bbp_allow_search', 'buddyboss_theme_sync_platform_forum_search', 10, 3 );
 }

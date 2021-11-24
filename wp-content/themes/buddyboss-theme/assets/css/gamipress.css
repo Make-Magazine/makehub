@@ -754,6 +754,35 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
 .single-achievement.gamipress-layout-none .gamipress-achievement-image {
   margin-bottom: 20px; }
 
+.single-achievement .gamipress-achievement-description h4 {
+  margin-top: 0; }
+
+.single-achievement .gamipress-achievement-description .gamipress-required-achievements li {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  margin-bottom: 5px; }
+  .single-achievement .gamipress-achievement-description .gamipress-required-achievements li:before {
+    vertical-align: middle;
+    top: initial; }
+
+.widget .gamipress-achievement-points .gamipress-points-thumbnail,
+.single-achievement .gamipress-achievement-points .gamipress-points-thumbnail {
+  height: 25px;
+  width: auto;
+  margin-right: 5px; }
+
+.widget .gamipress-achievement-description .gamipress-required-achievements li .gamipress-mark-as-completed-button,
+.single-achievement .gamipress-achievement-description .gamipress-required-achievements li .gamipress-mark-as-completed-button {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 90%;
+  padding: 8px 10px; }
+
+.widget .gamipress-achievements-list .gamipress-achievements-container .gamipress-achievement-unlock-with-points-button {
+  font-size: 83%;
+  padding: 10px 8px; }
+
 .gamipress-achievements-list .gamipress-achievements-container.gamipress-columns-1 > .gamipress-achievement {
   width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px); }

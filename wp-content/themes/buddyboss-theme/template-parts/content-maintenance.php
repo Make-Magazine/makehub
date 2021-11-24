@@ -57,17 +57,20 @@ $contact_button_text = buddyboss_theme_get_option( 'contact_button_text' );
 			<?php if( $maintenance_countdown && !empty( $maintenance_time ) ) { ?>
 				<div id="clockdiv" data-date="<?php echo $maintenance_time; ?>">
 					<div>
-					  <span class="days"></span>
-					  <div class="smalltext">Days</div>
-					</div><div>
-					  <span class="hours"></span>
-					  <div class="smalltext">Hours</div>
-					</div><div>
-					  <span class="minutes"></span>
-					  <div class="smalltext">Minutes</div>
-					</div><div>
-					  <span class="seconds"></span>
-					  <div class="smalltext">Seconds</div>
+						<span class="days"></span>
+					  	<div class="smalltext"><?php echo __( 'Days', 'buddyboss-theme' )?></div>
+					</div>
+					<div>
+					  	<span class="hours"></span>
+					  	<div class="smalltext"><?php echo __( 'Hours', 'buddyboss-theme' )?></div>
+					</div>
+					<div>
+					  	<span class="minutes"></span>
+					  	<div class="smalltext"><?php echo __( 'Minutes', 'buddyboss-theme' )?></div>
+					</div>
+					<div>
+					  	<span class="seconds"></span>
+					  	<div class="smalltext"><?php echo __( 'Seconds', 'buddyboss-theme' )?></div>
 					</div>
 				</div>
 			<?php } ?>

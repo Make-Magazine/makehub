@@ -569,12 +569,12 @@ label.ui-button {
 }
 
 @media (min-width: 782px) {
-    body:not(.wp-customizer) #buddyboss_theme_options-boss_tracking_code {
+    body:not(.wp-customizer) #buddyboss_theme_options-boss_tracking_code,
+    body:not(.wp-customizer) #buddyboss_theme_options-boss_custom_js {
         margin-top: -50px;
     }
 
-    body:not(.wp-customizer) #buddyboss_theme_options-boss_custom_css,
-    body:not(.wp-customizer) #buddyboss_theme_options-boss_custom_js {
+    body:not(.wp-customizer) #buddyboss_theme_options-boss_custom_css {
         margin-top: -70px;
     }
 

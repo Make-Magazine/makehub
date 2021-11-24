@@ -24,7 +24,7 @@ $logo_class = ( $logo_align <= 1 && ( !buddyboss_is_learndash_inner() && !buddyb
 			$logo_dark		 = ( $show && $show_dark && $logo_dark_id ) ? wp_get_attachment_image( $logo_dark_id, 'full', '', array( 'class' => 'bb-mobile-logo bb-mobile-logo-dark' ) ) : '';
 
 			// This is for better SEO
-			$elem = ( is_front_page() && is_home() ) ? 'h1' : 'h2';
+			$elem = ( is_front_page() && is_home() ) ? 'h1' : 'div';
 			?>
 
 			<<?php echo $elem; ?> class="site-title">

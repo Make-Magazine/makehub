@@ -17,16 +17,13 @@ $course = $post;
             <div class="bb-instructor-wrap flex">
                 <div class="bb-avatar-wrap">
     				<div>
-    					<?php $avatar = get_avatar_url( get_the_author_meta( 'email', $course->post_author ), array( 'size' => 300 ) ); ?>
-    					<?php if( ! empty( $avatar ) ) : ?>
-                            <?php if ( class_exists( 'BuddyPress' ) ) { ?>
-            				<a href="<?php echo bp_core_get_user_domain( get_the_author_meta( 'ID', $post->post_author ) ); ?>">
-                			<?php } else { ?>
-                			     <a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ), get_the_author_meta( 'user_nicename', $post->post_author ) ); ?>">
-                			<?php } ?>
-    						<img class="round avatar" src="<?php echo $avatar; ?>" />
-                            </a>
-    					<?php endif; ?>
+						<?php if ( class_exists( 'BuddyPress' ) ) { ?>
+						<a href="<?php echo bp_core_get_user_domain( get_the_author_meta( 'ID', $post->post_author ) ); ?>">
+						<?php } else { ?>
+							<a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID', $post->post_author ), get_the_author_meta( 'user_nicename', $post->post_author ) ); ?>">
+						<?php } ?>
+							<?php echo get_avatar( get_the_author_meta( 'ID', $course->post_author ), 300, '', '', array('class' => array('round', 'avatar'))  ); ?>
+						</a>
     				</div>
     			</div>
     			<div class="bb-content-wrap">

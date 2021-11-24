@@ -32,7 +32,6 @@ if ( !class_exists( '\BuddyBossTheme\ElementorHelperPro' ) ) {
 	        add_action( THEME_HOOK_PREFIX . 'header', array( $this, 'do_header' ), 0 );
 	        add_action( THEME_HOOK_PREFIX . 'footer', array( $this, 'do_footer' ), 0 );
 			add_action( THEME_HOOK_PREFIX . 'before_header', array( $this, 'remove_theme_header_class' ), 0 );
-
 	        add_action( THEME_HOOK_PREFIX . '_template_parts_content_top', array( $this, 'do_template_parts' ), 0 );
         }
 
@@ -51,7 +50,9 @@ if ( !class_exists( '\BuddyBossTheme\ElementorHelperPro' ) ) {
 	     * @return void
 	     */
 	    public function register_locations( $manager ) {
-		    $manager->register_all_core_location();
+		    if ( ! function_exists( 'is_404' ) || ! is_404() ) {
+			    $manager->register_all_core_location();
+		    }
 	    }
 
 	    /**

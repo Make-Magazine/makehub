@@ -1,11 +1,15 @@
 <?php
 /**
- * Template part for displaying LearnDash Course Grid [ld_course_list]
+ * LearnDash LD30 Displays course list
  *
- * @link https://www.learndash.com/add-on/course-grid/
+ * @since 3.0.0
  *
- * @package BuddyBoss_Theme
+ * @package LearnDash\Templates\LD30
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 global $post;
 
@@ -28,7 +32,7 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'learndash-cours
 	$embed_code           = get_post_meta( $post->ID, '_learndash_course_grid_video_embed_code', true );
 	$button_text          = get_post_meta( $post->ID, '_learndash_course_grid_custom_button_text', true );
 
-	// Retrive oembed HTML if URL provided
+	// Retrive oembed HTML if URL provided.
 	if ( preg_match( '/^http/', $embed_code ) ) {
 		$embed_code = wp_oembed_get(
 			$embed_code,
@@ -373,13 +377,13 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'learndash-cours
 					} else {
 						$is_enrolled = false;
 					}
-					// Price
+					// Price.
 					if ( ! empty( $course_price ) && ! $is_enrolled ) {
 						?>
 						<div class="bb-course-footer bb-course-pay">
 						<span class="course-fee">
 						<?php
-						if ( $course_pricing['type'] !== 'closed' ) :
+						if ( 'closed' !== $course_pricing['type'] ) :
 							echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
 						endif;
 						?>
@@ -412,7 +416,7 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'learndash-cours
 		<div class="ld-item-list">
 			<div class="ld-item-list-item">
 				<div class="ld-item-list-item-preview">
-					<a class="ld-item-name ld-primary-color-hover" href="<?php echo esc_attr( learndash_get_step_permalink( get_the_ID() ) ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+					<a class="ld-item-name ld-primary-color-hover" href="<?php echo esc_url( learndash_get_step_permalink( get_the_ID() ) ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
 				</div>
 			</div>
 		</div>

@@ -4,7 +4,7 @@
  */
 if ( ! function_exists( 'boss_generate_option_css' ) ) {
 
-	function boss_generate_option_css() {
+    function boss_generate_option_css() {
 
 		$custom_css = array();
 		if ( is_customize_preview() ) {
@@ -28,6 +28,8 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 		$header_shadow = buddyboss_theme_get_option( 'header_shadow' );
 		$header_sticky = buddyboss_theme_get_option( 'header_sticky' );
 
+		$header_lesson_topic = get_body_class();
+
 		$tooltip_background = buddyboss_theme_get_option( 'tooltip_background' );
 		$tooltip_color      = buddyboss_theme_get_option( 'tooltip_color' );
 
@@ -38,10 +40,10 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 		$warning_color        = buddyboss_theme_get_option( 'warning_notice_bg_color' );
 		$default_notice_color = buddyboss_theme_get_option( 'default_notice_bg_color' );
 
-		?>
-		<style id="buddyboss_theme-style">
+        ?>
+        <style id="buddyboss_theme-style">
 
-		<?php ob_start(); ?>
+        <?php ob_start(); ?>
 
 			<?php if ( buddyboss_theme_get_option( 'logo_size' ) ) { ?>
 				#site-logo .site-title img {
@@ -156,6 +158,44 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				}
 			<?php } ?>
 
+			<?php
+            if( ( in_array('single-sfwd-lessons', $header_lesson_topic) || in_array('single-sfwd-topic', $header_lesson_topic) )  && empty($header_sticky) ) { ?>
+                @media screen and (min-width: 800px) {
+                    .bb-buddypanel.buddypanel-open.single-sfwd-lessons .site-header,
+                    .bb-buddypanel.buddypanel-open.single-sfwd-topic .site-header {
+                        width: -webkit-calc(100% - 220px);
+                        width: calc(100% - 220px);
+                        -webkit-transition: all .2s;
+                        transition: all .2s;
+                    }
+                }
+
+                .single-sfwd-lessons .site-header,
+                .single-sfwd-topic .site-header {
+                    position: fixed;
+                    z-index: 610;
+                    width: 100%;
+                    -webkit-transition: all .2s;
+                    transition: all .2s;
+                }
+
+                .single-sfwd-lessons .site-header.has-scrolled,
+                .single-sfwd-topic .site-header.has-scrolled {
+                    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05), 0 5px 10px 0 rgba(0, 0, 0, 0.15);
+                    -webkit-transition: all .2s;
+                    transition: all .2s;
+                }
+
+                .single-sfwd-lessons .site-content,
+                .single-sfwd-topic .site-content {
+                    <?php if ( $header_height ) {
+                        echo "padding-top:" . $header_height . "px !important";
+                    } else {
+                        echo "padding-top: 76px !important;";
+                    } ?>
+                }                
+            <?php } ?>
+
 			<?php if ( ! empty( $header_sticky ) ) { ?>
 				.sticky-header .site-header {
 					position: fixed;
@@ -163,9 +203,9 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 					width: 100%;
 				}
 
-				.sticky-header .bp-search-ac-header {
-					position: fixed;
-				}
+                .sticky-header .bp-search-ac-header {
+                    position: fixed;
+                }
 
 				.sticky-header .site-content,
 				body.buddypress.sticky-header .site-content,
@@ -200,9 +240,9 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				height: <?php echo $header_height; ?>px;
 			}
 
-			.sticky-header .bp-feedback.bp-sitewide-notice {
-				top: <?php echo $header_height; ?>px;
-			}
+            .sticky-header .bp-feedback.bp-sitewide-notice {
+                top: <?php echo $header_height; ?>px;
+            }
 
       @media screen and (max-width: 767px) {
           .bb-mobile-header {
@@ -395,14 +435,14 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				background-color: <?php echo $primary_color; ?>;
 			}
 
-			.toggle-sap-widgets:hover .cls-1 {
-				fill: <?php echo $primary_color; ?>;
-			}
+            .toggle-sap-widgets:hover .cls-1 {
+                fill: <?php echo $primary_color; ?>;
+            }
 
-			.bb-cover-photo,
-			.bb-cover-photo .progress {
-				background: <?php echo buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ); ?>;
-			}
+            .bb-cover-photo,
+            .bb-cover-photo .progress {
+                background: <?php echo buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ); ?>;
+            }
 
 			input[type="submit"],
 			a.subscription-toggle,
@@ -416,9 +456,9 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				border-color: <?php echo $primary_color; ?>;
 			}
 
-			.header-button.underlined {
-				box-shadow: 0 -1px 0 <?php echo $primary_color; ?> inset;
-			}
+            .header-button.underlined {
+                box-shadow: 0 -1px 0 <?php echo $primary_color; ?> inset;
+            }
 
 			/* Tooltips */
 			[data-balloon]:after,
@@ -501,6 +541,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.site-header .sub-menu .current-menu-ancestor > a,
 			.site-header .sub-menu .current-menu-item > a,
 			.site-header .sub-menu .current-menu-item > a > i,
+			.site-header #primary-navbar .primary-menu .ab-submenu .bb-sub-menu .menu-item a:hover,
 			.bp-messages-content .actions .message_actions .message_action__list li a:hover,
 			.user-wrap.menu-item-has-children #header-my-account-menu a:hover,
 			.user-wrap.menu-item-has-children #header-my-account-menu a:hover > i {
@@ -556,7 +597,14 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.top-meta a,
 			.top-meta .like-count,
 			.bs-dropdown-wrap .bs-dropdown a,
-			.bb-follow-links a {
+			.bb-follow-links a,
+			.elementor-widget-wp-widget-bbp_views_widget ul li a,
+			.elementor-widget-wp-widget-recent-posts ul li a,
+			.elementor-element.widget.bp-latest-activities ul li a,
+			.elementor-widget-wp-widget-bbp_replies_widget ul li a,
+			.elementor-widget-wp-widget-bbp_forums_widget ul li a,
+			.elementor-widget-wp-widget-bbp_topics_widget ul li a,
+			ul.wp-block-latest-posts li a  {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_link_color' ); ?>;
 			}
 
@@ -565,16 +613,24 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.top-meta a:hover,
 			.top-meta .like-count:hover,
 			.bs-dropdown-wrap .bs-dropdown a:hover,
-			.bb-follow-links a:hover {
+			.bb-follow-links a:hover,
+			.elementor-widget-wp-widget-bbp_views_widget ul li a:hover,
+			.elementor-widget-wp-widget-recent-posts ul li a:hover,
+			.elementor-element.widget.bp-latest-activities ul li a:hover,
+			.elementor-widget-wp-widget-bbp_replies_widget ul li a:hover,
+			.elementor-widget-wp-widget-bbp_forums_widget ul li a:hover,
+			.elementor-widget-wp-widget-bbp_topics_widget ul li a:hover,
+			ul.wp-block-latest-posts li a:hover {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_link_hover' ); ?>;
 			}
 
-			/* Footer links colors */
-			.bb-footer .widget ul li a,
-			.bb-footer li a,
-			.bb-footer .widget_nav_menu .sub-menu a {
-				color: <?php echo buddyboss_theme_get_option( 'footer_links' ); ?>;
-			}
+            /* Footer links colors */
+            .bb-footer .widget ul li a,
+            .bb-footer li a,
+            .bb-footer .footer-menu li a,
+            .bb-footer .widget_nav_menu .sub-menu a {
+                color: <?php echo buddyboss_theme_get_option( 'footer_links' ); ?>;
+            }
 
 			.bb-footer .widget ul li a:hover,
 			.bb-footer li a:hover,
@@ -707,25 +763,26 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			h1, h2, h3, h4, h5, h6,
 			.entry-title,
 			.widget-title,
+			.elementor-widget .elementor-widget-container > h5,
 			.show-support h6,
 			label,
 			h4 .bp-reported-type {
 				color: <?php echo buddyboss_theme_get_option( 'heading_text_color' ); ?>;
 			}
 
-			.site-title, .site-title a {
-				color: <?php echo buddyboss_theme_get_option( 'sitetitle_color' ); ?>;
-			}
+            .site-title, .site-title a {
+                color: <?php echo buddyboss_theme_get_option( 'sitetitle_color' ); ?>;
+            }
 
-			/* Layout colors */
+            /* Layout colors */
 
-			<?php $body_bgr_color = buddyboss_theme_get_option( 'body_background' ); ?>
+            <?php $body_bgr_color = buddyboss_theme_get_option( 'body_background' ); ?>
 
-			body,
-			body #main-wrap,
-			.formatted-content {
-				background-color: <?php echo $body_bgr_color; ?>;
-			}
+            body,
+            body #main-wrap,
+            .formatted-content {
+                background-color: <?php echo $body_bgr_color; ?>;
+            }
 
 			.bb_processing_overlay {
 				background-color: <?php echo color2rgba( $body_bgr_color, 0.8 ); ?>;
@@ -905,7 +962,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				border-radius: 0 <?php echo $button_radius; ?>px <?php echo $button_radius; ?>px 0;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -915,16 +972,16 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
-		echo $css;
+        echo $css;
 
 		if ( ! is_array( $custom_css ) ) {
 			$custom_css = array();
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -932,15 +989,15 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_custom_css', $custom_css );
 
-	}
+    }
 
-	/* Add Action */
-	add_action( 'wp_head', 'boss_generate_option_css', 99 );
+    /* Add Action */
+    add_action( 'wp_head', 'boss_generate_option_css', 99 );
 }
 
 if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 
-	function boss_generate_option_bp_css() {
+    function boss_generate_option_bp_css() {
 
 		if ( is_customize_preview() ) {
 			$custom_css = '';
@@ -950,15 +1007,15 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-bp-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-bp-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color   = buddyboss_theme_get_option( 'accent_color' );
 		$secondary_color = buddyboss_theme_get_option( 'accent_hover' );
@@ -970,10 +1027,10 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 		$admin_logoimg                 = buddyboss_theme_get_option( 'admin_logo_media' );
 		$admin_logowidth               = buddyboss_theme_get_option( 'admin_logo_width' );
 
-		?>
-		<style id="buddyboss_theme-bp-style">
+        ?>
+        <style id="buddyboss_theme-bp-style">
 
-		<?php ob_start(); ?>
+        <?php ob_start(); ?>
 
 			/* Primary color */
 			#send-private-message.generic-button a:before,
@@ -1182,9 +1239,9 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 				fill: <?php echo buddyboss_theme_get_option( 'alternate_link_color' ); ?>;
 			}
 
-			.bb-groups-messages-left-inner .input:focus + .bp-group-message-slider {
-				box-shadow: 0 0 1px <?php echo $primary_color; ?>;
-			}
+            .bb-groups-messages-left-inner .input:focus + .bp-group-message-slider {
+                box-shadow: 0 0 1px <?php echo $primary_color; ?>;
+            }
 
 			.bp-navs ul li a:hover,
 			nav#object-nav a:hover,
@@ -1445,11 +1502,11 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 				background-color: <?php echo buddyboss_theme_get_option( 'body_blocks' ); ?>;
 			}
 
-			@media screen and (max-width: 640px) {
-				#buddypress .bp-settings-container .bp-navs a {
-					color: <?php echo $primary_color; ?>;
-				}
-			}
+            @media screen and (max-width: 640px) {
+                #buddypress .bp-settings-container .bp-navs a {
+                    color: <?php echo $primary_color; ?>;
+                }
+            }
 
 			@media screen and (min-width: 768px) {
 				.groups.group-create .buddypress-wrap #group-create-tabs.tabbed-links .group-create-buttons li.current {
@@ -1678,7 +1735,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 				border-bottom-color: <?php echo $body_bgr_color; ?>;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -1688,16 +1745,16 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
-		echo $css;
+        echo $css;
 
 		if ( ! is_array( $custom_css ) ) {
 			$custom_css = array();
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -1705,7 +1762,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_bp_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( function_exists( 'bp_is_active' ) ) {
@@ -1724,22 +1781,22 @@ if ( ! function_exists( 'boss_generate_option_forums_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-forums-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-forums-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
-		$primary_color = buddyboss_theme_get_option( 'accent_color' );
+        $primary_color = buddyboss_theme_get_option( 'accent_color' );
 
-		?>
-		<style id="buddyboss_theme-forums-style">
+        ?>
+        <style id="buddyboss_theme-forums-style">
 
-		<?php ob_start(); ?>
+        <?php ob_start(); ?>
 
 			a.bbp-topic-reply-link,
 			.bs-meta-item,
@@ -1856,7 +1913,7 @@ if ( ! function_exists( 'boss_generate_option_forums_css' ) ) {
 				background-color: <?php echo color2rgba( textToColor( bbp_get_topic_forum_title() ), 0.5 ); ?>;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -1866,7 +1923,7 @@ if ( ! function_exists( 'boss_generate_option_forums_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -1874,7 +1931,7 @@ if ( ! function_exists( 'boss_generate_option_forums_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -1882,7 +1939,7 @@ if ( ! function_exists( 'boss_generate_option_forums_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_forums_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'bbPress' ) ) {
@@ -1901,15 +1958,15 @@ if ( ! function_exists( 'boss_generate_option_learndash_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-learndash-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-learndash-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color        = buddyboss_theme_get_option( 'accent_color' );
 		$success_color        = buddyboss_theme_get_option( 'success_notice_bg_color' );
@@ -2412,7 +2469,7 @@ if ( ! function_exists( 'boss_generate_option_learndash_css' ) ) {
 			}
 
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -2422,16 +2479,16 @@ if ( ! function_exists( 'boss_generate_option_learndash_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
-		echo $css;
+        echo $css;
 
 		if ( ! is_array( $custom_css ) ) {
 			$custom_css = array();
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -2439,7 +2496,7 @@ if ( ! function_exists( 'boss_generate_option_learndash_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_learndash_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'SFWD_LMS' ) ) {
@@ -2458,15 +2515,15 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-woocommerce-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-woocommerce-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color   = buddyboss_theme_get_option( 'accent_color' );
 		$highlight_color = buddyboss_theme_get_option( 'highlight_color' );
@@ -2475,8 +2532,8 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 
 		$button_radius = buddyboss_theme_get_option( 'button_default_radius' );
 
-		?>
-		<style id="buddyboss_theme-woocommerce-style">
+        ?>
+        <style id="buddyboss_theme-woocommerce-style">
 
 		<?php ob_start(); ?>
 
@@ -2582,11 +2639,11 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 				color: <?php echo buddyboss_theme_get_option( 'accent_hover' ); ?>;
 			}
 
-			.woocommerce-checkout [type='checkbox']:checked + span:before {
-				-webkit-box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
-				-moz-box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
-				box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
-			}
+            .woocommerce-checkout [type='checkbox']:checked + span:before {
+                -webkit-box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
+                -moz-box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
+                box-shadow: 0px 0px 0px 1px <?php echo $primary_color; ?>;
+            }
 
 			.woocommerce .woocommerce-MyAccount-navigation ul li a,
 			.woocommerce table.my_account_orders tbody td.woocommerce-orders-table__cell-order-number a,
@@ -2759,7 +2816,7 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 				border-radius: <?php echo $button_radius; ?>px;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -2769,7 +2826,7 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -2777,7 +2834,7 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -2785,7 +2842,7 @@ if ( ! function_exists( 'boss_generate_option_woocommerce_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_woocommerce_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( function_exists( 'WC' ) ) {
@@ -2804,21 +2861,21 @@ if ( ! function_exists( 'boss_generate_option_jobsmanager_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-jobsmanager-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-jobsmanager-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color = buddyboss_theme_get_option( 'accent_color' );
 		$danger_color  = buddyboss_theme_get_option( 'error_notice_bg_color' );
 
-		?>
-		<style id="buddyboss_theme-jobsmanager-style">
+        ?>
+        <style id="buddyboss_theme-jobsmanager-style">
 
 		<?php ob_start(); ?>
 
@@ -2900,7 +2957,7 @@ if ( ! function_exists( 'boss_generate_option_jobsmanager_css' ) ) {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?>;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -2910,7 +2967,7 @@ if ( ! function_exists( 'boss_generate_option_jobsmanager_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -2918,7 +2975,7 @@ if ( ! function_exists( 'boss_generate_option_jobsmanager_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -2926,7 +2983,7 @@ if ( ! function_exists( 'boss_generate_option_jobsmanager_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_jobsmanager_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'WP_Job_Manager' ) ) {
@@ -2945,15 +3002,15 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-events-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-events-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color   = buddyboss_theme_get_option( 'accent_color' );
 		$secondary_color = buddyboss_theme_get_option( 'accent_hover' );
@@ -2961,8 +3018,8 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 
 		$button_radius = buddyboss_theme_get_option( 'button_default_radius' );
 
-		?>
-		<style id="buddyboss_theme-events-style">
+        ?>
+        <style id="buddyboss_theme-events-style">
 
 		<?php ob_start(); ?>
 
@@ -3116,7 +3173,7 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 			}
 
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3126,7 +3183,7 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -3134,7 +3191,7 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -3142,7 +3199,7 @@ if ( ! function_exists( 'boss_generate_option_events_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_events_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'Tribe__Events__Main' ) ) {
@@ -3161,23 +3218,23 @@ if ( ! function_exists( 'boss_generate_option_gamipress_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-gamipress-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-gamipress-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color  = buddyboss_theme_get_option( 'accent_color' );
 		$body_bgr_color = buddyboss_theme_get_option( 'body_background' );
 
-		?>
-		<style id="buddyboss_theme-gamipress-style">
+        ?>
+        <style id="buddyboss_theme-gamipress-style">
 
-		<?php ob_start(); ?>
+        <?php ob_start(); ?>
 
 			/* Headings link color */
 			.gamipress-achievement-description .gamipress-achievement-title a,
@@ -3265,7 +3322,7 @@ if ( ! function_exists( 'boss_generate_option_gamipress_css' ) ) {
 			}
 
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3275,7 +3332,7 @@ if ( ! function_exists( 'boss_generate_option_gamipress_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -3283,7 +3340,7 @@ if ( ! function_exists( 'boss_generate_option_gamipress_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -3291,7 +3348,7 @@ if ( ! function_exists( 'boss_generate_option_gamipress_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_gamipress_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'GamiPress' ) ) {
@@ -3310,22 +3367,22 @@ if ( ! function_exists( 'boss_generate_option_badgeos_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-badgeos-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-badgeos-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
-		$primary_color = buddyboss_theme_get_option( 'accent_color' );
+        $primary_color = buddyboss_theme_get_option( 'accent_color' );
 
-		?>
-		<style id="buddyboss_theme-badgeos-style">
+        ?>
+        <style id="buddyboss_theme-badgeos-style">
 
-		<?php ob_start(); ?>
+        <?php ob_start(); ?>
 
 			/* Headings link color */
 			#badgeos-achievements-container .badgeos-achievements-list-item .badgeos-item-title a {
@@ -3349,7 +3406,7 @@ if ( ! function_exists( 'boss_generate_option_badgeos_css' ) ) {
 				border-color: <?php echo buddyboss_theme_get_option( 'body_blocks_border' ); ?>;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3359,7 +3416,7 @@ if ( ! function_exists( 'boss_generate_option_badgeos_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -3367,7 +3424,7 @@ if ( ! function_exists( 'boss_generate_option_badgeos_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -3375,7 +3432,7 @@ if ( ! function_exists( 'boss_generate_option_badgeos_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_badgeos_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'BadgeOS' ) ) {
@@ -3394,20 +3451,20 @@ if ( ! function_exists( 'boss_generate_option_pmpro_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-pmpro-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-pmpro-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
-		$primary_color = buddyboss_theme_get_option( 'accent_color' );
+        $primary_color = buddyboss_theme_get_option( 'accent_color' );
 
-		?>
-		<style id="buddyboss_theme-pmpro-style">
+        ?>
+        <style id="buddyboss_theme-pmpro-style">
 
 		<?php ob_start(); ?>
 
@@ -3440,7 +3497,7 @@ if ( ! function_exists( 'boss_generate_option_pmpro_css' ) ) {
 				border-color: <?php echo buddyboss_theme_get_option( 'body_blocks_border' ); ?>;
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3450,7 +3507,7 @@ if ( ! function_exists( 'boss_generate_option_pmpro_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -3458,7 +3515,7 @@ if ( ! function_exists( 'boss_generate_option_pmpro_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -3466,7 +3523,7 @@ if ( ! function_exists( 'boss_generate_option_pmpro_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_pmpro_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( defined( 'PMPRO_VERSION' ) ) {
@@ -3485,22 +3542,22 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-plugins-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-plugins-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color = buddyboss_theme_get_option( 'accent_color' );
 		$danger_color  = buddyboss_theme_get_option( 'error_notice_bg_color' );
 		$success_color = buddyboss_theme_get_option( 'success_notice_bg_color' );
 
-		?>
-		<style id="buddyboss_theme-plugins-style">
+        ?>
+        <style id="buddyboss_theme-plugins-style">
 
 		<?php ob_start(); ?>
 
@@ -3599,10 +3656,10 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
 			/* Headings link color */
 
 
-			/* Body Text color */
+            /* Body Text color */
 
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3612,7 +3669,7 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -3620,7 +3677,7 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -3628,7 +3685,7 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_plugins_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'BuddyForms' ) || class_exists( 'WPCF7' ) || class_exists( 'Easy_Digital_Downloads' ) || class_exists( 'GFForms' ) || class_exists( 'LifterLMS' ) || class_exists( 'IT_Exchange' ) || class_exists( 'Ninja_Forms' ) || class_exists( 'WPForms' ) ) {
@@ -3641,11 +3698,11 @@ if ( ! function_exists( 'boss_generate_option_plugins_css' ) ) {
  */
 if ( ! function_exists( 'boss_generate_option_custom_css' ) ) {
 
-	function boss_generate_option_custom_css() {
+    function boss_generate_option_custom_css() {
 
 		global $post;
 
-		$fullscreen_page_padding = false;
+        $fullscreen_page_padding = false;
 
 		if ( ! empty( $post ) ) {
 			$fullscreen_page_padding = get_post_meta( $post->ID, '_wp_page_padding', true );
@@ -3669,7 +3726,7 @@ if ( ! function_exists( 'boss_generate_option_custom_css' ) ) {
 		}
 
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -3679,7 +3736,7 @@ if ( ! function_exists( 'boss_generate_option_custom_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		?>
@@ -3687,7 +3744,7 @@ if ( ! function_exists( 'boss_generate_option_custom_css' ) ) {
 		</style>
 		<?php
 
-	}
+    }
 
 	/* Add Action */
 	add_action( 'wp_head', 'boss_generate_option_custom_css', 99 );
@@ -3836,15 +3893,15 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 
 		if ( ! empty( $custom_css ) && isset( $custom_css['css'] ) ) {
 
-			echo "
-			<style id=\"buddyboss_theme-lifterLMS-style\">
-				{$custom_css["css"]}
-			</style>
-			";
+            echo "
+            <style id=\"buddyboss_theme-lifterLMS-style\">
+                {$custom_css["css"]}
+            </style>
+            ";
 
-			return false;
+            return false;
 
-		}
+        }
 
 		$primary_color = buddyboss_theme_get_option( 'accent_color' );
 		$success_color = buddyboss_theme_get_option( 'success_notice_bg_color' );
@@ -3853,8 +3910,8 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 
 		$button_radius = buddyboss_theme_get_option( 'button_default_radius' );
 
-		?>
-		<style id="buddyboss_theme-lifterLMS-style">
+        ?>
+        <style id="buddyboss_theme-lifterLMS-style">
 
 		<?php ob_start(); ?>
 
@@ -4342,7 +4399,7 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 				content: "<?php echo __( 'Quiz Progress', 'buddyboss-theme' ); ?>";
 			}
 
-		<?php
+        <?php
 
 		$css = ob_get_contents();
 		// Remove comments
@@ -4352,7 +4409,7 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 		// Remove whitespace
 		$css = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $css );
 
-		ob_end_clean();
+        ob_end_clean();
 
 		echo $css;
 		if ( ! is_array( $custom_css ) ) {
@@ -4360,7 +4417,7 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 		}
 		$custom_css['css'] = $css;
 
-		?>
+        ?>
 
 		</style>
 		<?php
@@ -4368,7 +4425,7 @@ if ( ! function_exists( 'boss_generate_option_lifterLMS_css' ) ) {
 		// save processed css.
 		set_transient( 'buddyboss_theme_compressed_lifterLMS_custom_css', $custom_css );
 
-	}
+    }
 
 	/* Add Action */
 	if ( class_exists( 'lifterLMS' ) ) {

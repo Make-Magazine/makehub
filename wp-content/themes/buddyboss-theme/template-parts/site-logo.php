@@ -8,7 +8,7 @@ $logo		  = ( $show && $logo_id ) ? wp_get_attachment_image( $logo_id, 'full', ''
 $logo_dark    = ( $show && $show_dark && $logo_dark_id ) ? wp_get_attachment_image( $logo_dark_id, 'full', '', array( 'class' => 'bb-logo bb-logo-dark' ) ) : '';
 
 // This is for better SEO
-$elem = ( is_front_page() && is_home() ) ? 'h1' : 'h2';
+$elem = ( is_front_page() && is_home() ) ? 'h1' : 'div';
 ?>
 
 <div id="site-logo" class="site-branding">

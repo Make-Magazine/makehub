@@ -13,7 +13,7 @@
 	echo 'single-with-sub-forum ';
 } ?>">
 
-	<?php if ( ! empty( $post->post_parent ) && bbp_is_single_forum() && ! bp_is_group_single() ) {
+	<?php if ( ! empty( $post->post_parent ) && bbp_is_single_forum() ) {
 		$post_parent_title = '';
 		if ( $post->post_parent != $post->ID ) {
 			$post_parent_title = sprintf( '<a href="%s" class="bbp-breadcrumb-forum">%s</a> <span class="bb-icon-angle-right"></span> ', get_the_permalink( $post->post_parent ), get_the_title( $post->post_parent ) );
@@ -36,7 +36,7 @@
     <div class="bbp-forum-buttons-wrap">
 		<?php
 		if ( ( bp_is_group_single() || bbp_is_single_forum() ) && bbp_has_forums() && ! bbp_is_forum_category() ) { ?>
-            <h3 class="bb-main-forum-title"><?php _e( 'Main Forum', 'buddyboss-theme' ); ?></h3><?php
+            <h3 class="bb-main-forum-title"><?php the_title(); ?></h3><?php
 		}
 
 		if ( ( ! is_active_sidebar( 'forums' ) || bp_is_groups_component() ) && bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>

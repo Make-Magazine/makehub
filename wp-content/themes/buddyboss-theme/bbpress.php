@@ -16,7 +16,7 @@ if ( ! $is_buddyboss_bbpress && ! bbp_is_single_user() ) {
 } ?>
 
 <?php
-$sidebar_position = buddyboss_theme_get_option('forums');
+$sidebar_position = buddyboss_theme_get_option( 'forums' );
 
 if ( ! function_exists( 'buddyboss_bbpress' ) && 'left' == $sidebar_position ) {
 	get_sidebar( 'bbpress' );
@@ -26,15 +26,26 @@ if ( ! function_exists( 'buddyboss_bbpress' ) && 'left' == $sidebar_position ) {
 <div id="primary" class="content-area">
 	<?php
 	$bbpress_banner = buddyboss_theme_get_option( 'bbpress_banner_switch' );
-	
-	if ( bbp_is_forum_archive() && !$bbpress_banner ) {
-	?>
-	    <header class="entry-header">
-	        <h1 class="entry-title"><?php echo get_the_title(); ?></h1>
-	    </header>
-    <?php 
+
+	if ( bbp_is_forum_archive() && ! $bbpress_banner ) {
+		?>
+		<header class="entry-header">
+			<h1 class="entry-title"><?php echo get_the_title(); ?></h1>
+
+			<?php if ( bbp_allow_search() ) : ?>
+				<div id="forums-dir-search" role="search" class="bs-dir-search bs-forums-search">
+					<form class="bs-search-form" role="search" method="get" id="bbp-search-form" action="<?php bbp_search_url(); ?>">
+						<input type="hidden" name="action" value="bbp-search-request"/>
+						<input tabindex="<?php bbp_tab_index(); ?>" type="text" value="<?php echo esc_attr( bbp_get_search_terms() ); ?>" name="bbp_search" id="bbp_search" placeholder="<?php esc_attr_e( 'Search forums...', 'buddyboss-theme' ); ?>"/>
+						<input tabindex="<?php bbp_tab_index(); ?>" class="button hide" type="submit" id="bbp_search_submit" value="<?php esc_attr_e( 'Search', 'buddyboss-theme' ); ?>"/>
+					</form>
+				</div>
+			<?php endif; ?>
+
+		</header>
+		<?php
 	}
-    ?>
+	?>
 	<main id="main" class="site-main">
 
 		<?php if ( have_posts() ) : ?>
@@ -54,7 +65,7 @@ if ( ! function_exists( 'buddyboss_bbpress' ) && 'left' == $sidebar_position ) {
 			?>
 
 			<?php
-		//buddyboss_pagination();
+			// buddyboss_pagination();
 
 		else :
 			get_template_part( 'template-parts/content', 'none' );

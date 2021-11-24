@@ -249,15 +249,17 @@ window.bp = window.bp || {};
 						if ( response.success && typeof response.data !== 'undefined' ) {
 							var recording_hidden = $(document).find('#bp-zoom-meeting-recording-' + recording_elements[index]);
 							recording_hidden.replaceWith(response.data.contents);
-							jQuery('.show-recordings').magnificPopup({
-								type: 'inline',
-								midClick: true,
-								callbacks: {
-									open: function () {
-										self.autoScrollToDateInRecordingPopup();
-									},
-								}
-							});
+							if (typeof jQuery.fn.magnificPopup !== 'undefined') {
+								jQuery('.show-recordings').magnificPopup({
+									type: 'inline',
+									midClick: true,
+									callbacks: {
+										open: function () {
+											self.autoScrollToDateInRecordingPopup();
+										},
+									}
+								});
+							}
 							//Append recording count into meeting list item on group pages.
 							if ( response.data.id > 0 ) {
 								var meeting_item = $( '#meetings-list' ).find( 'li.meeting-item[data-id="' + response.data.id + '"]' );

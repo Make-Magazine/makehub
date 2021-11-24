@@ -91,6 +91,146 @@ class BB_Elementor_Widgets {
 				wp_enqueue_script( 'elementor-bb-editor', get_template_directory_uri() . '/inc/plugins/elementor/assets/js/editor.js', array( 'jquery' ), '1.6.8', true );
 			}
 		);
+
+		add_action( 'elementor/element/after_add_attributes', array( $this, 'bb_elementor_widgets_add_custom_class' ) );
+	}
+
+	public function bb_elementor_widgets_add_custom_class( $data ) {
+		$classes  = array();
+		$controls = $data->get_controls();
+		if ( ! empty( $controls ) && ! empty( $controls['wp']['id_base'] ) ) {
+			$min = bp_core_get_minified_asset_suffix();
+			if ( 'bp_xprofile_profile_completion_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget_bp_profile_completion_widget',
+					'widget',
+				);
+			}
+			if ( 'bp_core_members_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_core_members_widget',
+				);
+			}
+			if ( 'bp_groups_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_groups_widget',
+				);
+				// enqueue script if it is not yet enqueued
+				if ( ! wp_script_is( 'groups_widget_groups_list-js', 'enqueued' ) ) {
+					wp_enqueue_script( 'groups_widget_groups_list-js', buddypress()->plugin_url . "bp-groups/js/widget-groups{$min}.js", array( 'jquery' ), bp_get_version() );
+				}
+			}
+			if ( 'bbp_login_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'bbp_widget_login',
+				);
+			}
+			if ( 'bp_core_whos_online_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_core_whos_online_widget',
+				);
+			}
+			if ( 'bp_core_friends_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_core_friends_widget',
+				);
+				// enqueue script if it is not yet enqueued
+				if ( ! wp_script_is( 'bp_core_widget_friends-js', 'enqueued' ) ) {
+					wp_enqueue_script( 'bp_core_widget_friends-js', buddypress()->plugin_url . "bp-friends/js/widget-friends{$min}.js", array( 'jquery' ), bp_get_version() );
+				}
+			}
+			if ( 'bp_core_follow_following_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_follow_following_widget',
+				);
+			}
+			if ( 'bp_core_follow_follower_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_bp_follow_follower_widget',
+				);
+			}
+			if ( 'bbp_search_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_display_search',
+				);
+			}
+			if ( 'lduserstatus' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_lduserstatus ',
+				);
+			}
+			if ( 'ldcourseinfo' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_ldcourseinfo',
+				);
+			}
+			if ( 'boss-recent-posts' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'bb_widget_recent_posts',
+				);
+			}
+			if ( 'bp_latest_activities' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'bp-latest-activities',
+				);
+			}
+			if ( 'recent-posts' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'bp-latest-activities',
+				);
+			}
+			if ( 'bbp_views_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_display_views',
+				);
+			}
+			if ( 'bbp_forums_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_display_forums',
+				);
+			}
+			if ( 'bbp_topics_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_display_topics',
+				);
+			}
+			if ( 'bbp_replies_widget' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_display_replies',
+				);
+			}
+			if ( 'recent-comments' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+					'widget_recent_comments',
+				);
+			}
+			if ( 'bbp_stats_widget' === $controls['wp']['id_base'] || 'bp_core_recently_active_widget' === $controls['wp']['id_base'] || 'boss-follow-us' === $controls['wp']['id_base'] || 'widget_recent_jobs' === $controls['wp']['id_base'] ) {
+				$classes = array(
+					'widget',
+				);
+			}
+		}
+		if ( ! empty( $classes ) ) {
+			$data->add_render_attribute( '_wrapper', 'class', $classes );
+		}
 	}
 
 	/**

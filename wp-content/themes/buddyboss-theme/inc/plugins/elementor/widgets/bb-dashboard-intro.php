@@ -353,7 +353,7 @@ class BBP_Dashboard_Intro extends Widget_Base {
 		<div class="bb-dash">
 
 			<div class="flex align-items-center">
-				<div class="bb-dash__avatar"><?php echo get_avatar( get_current_user_id() ); ?></div>
+				<div class="bb-dash__avatar"><?php echo get_avatar( get_current_user_id(), 300 ); ?></div>
 				<div class="bb-dash__intro">
 					<h2 class="bb-dash__prior">
 						<span class="bb-dash__intro"><?php echo $settings['heading']; ?></span>
