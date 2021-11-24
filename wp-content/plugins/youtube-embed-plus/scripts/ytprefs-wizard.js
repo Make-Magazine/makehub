@@ -110,7 +110,7 @@ window._EPYTWIZ_ = window._EPYTWIZ_ || {};
         $('form.wizform').each(function ()
         {
             $thisForm = $(this);
-            $thisForm.find('.txturlpastecustom').on('paste', function ()
+            $thisForm.find('.txturlpastecustom').on('paste change', function ()
             {
                 $thisTxtUrl = $(this);
                 setTimeout(function ()
@@ -119,7 +119,7 @@ window._EPYTWIZ_ = window._EPYTWIZ_ || {};
                     var badpaste = /<.*/i;
                     if (badpaste.test(thepaste))
                     {
-                        var reg = new RegExp('(?:https?://)?(?:www\\.)?(?:youtu\\.be/|youtube\\.com(?:/embed/|/v/|/watch\\?v=))([\\w-]{10,12})', 'ig');
+                        var reg = new RegExp('(?:https?://)?(?:www\\.)?(?:youtu\\.be/|youtube\\.com(?:/embed/|/shorts/|/v/|/watch\\?v=))([\\w-]{10,12})', 'ig');
                         //get matches found for the regular expression
                         var matches = reg.exec(thepaste);
                         //check if we have found a match for a YouTube video
@@ -169,6 +169,19 @@ window._EPYTWIZ_ = window._EPYTWIZ_ || {};
         $epyt_wiz_wrap.on('click', '.moviecontainer a.closeme', function ()
         {
             window._EPYTWIZ_.closeme($(this).data('vid'));
+        });
+
+        $epyt_wiz_wrap.on('paste change input propertychange', '#txtUrlChannel', function ()
+        {
+            if ($(this).val().indexOf('/c/') > 0)
+            {
+                $('.error-channel-format').addClass('orange bold');
+                $(this).val('');
+            }
+            else
+            {
+                $('.error-channel-format').removeClass('orange bold');
+            }
         });
 
     });

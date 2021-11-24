@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus for YouTube - Embed a YouTube Gallery, Channel, Playlist, Live Stream, Facade
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.0
+  Version: 14.0.1.1
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
   Requires at least: 4.1
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.0';
+    public static $version = '14.0.1.1';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -732,6 +732,11 @@ class YouTubePrefs
                         {
                             throw new Exception();
                         }
+                        else
+                        {
+                            // cleanup
+                            $search = str_replace('/shorts/', '/watch?v=', $search);
+                        }
                         if (preg_match(self::$justurlregex, $search))
                         {
                             //$search = esc_url($search);
@@ -1201,11 +1206,11 @@ class YouTubePrefs
                 <div class="wiz-accordion">
                     <h3 class="header-go"> <a href="<?php echo admin_url('admin.php?page=youtube-my-preferences#jumpdefaults'); ?>">Check my general YouTube embedding instructions and settings. </a></h3>
                     <div class="header-go-content"></div>
-                    <h3 id="h3_video"> <a href="#">Embed a single video.</a></h3>
+                    <h3 id="h3_video"> <a href="#"><?php _e('Embed a single video, or YouTube short.', 'text_domain'); ?></a></h3>
                     <div>
                         <h4 class="center">Single video directions</h4>
                         <p>
-                            Paste the url of a single video below (example: <em>https://www.youtube.com/watch?v=YVvn8dpSAt0</em> )
+                            <?php _e('Paste the url of a single video below (examples: <em>https://www.youtube.com/watch?v=YVvn8dpSAt0</em> or <em>https://www.youtube.com/shorts/J38Yq85ZoyY</em>)', 'text_domain'); ?>
                         </p>
                         <form name="wizform_video" method="post" action="" class="wizform" id="wizform_video">
                             <?php wp_nonce_field('_epyt_wiz', '_epyt_nonce', true); ?>
@@ -1273,7 +1278,7 @@ class YouTubePrefs
                         {
                             ?>
                             <p>
-                                If you already know the direct link to the channel ID, enter it below. <br>Example: https://www.youtube.com/<strong>channel</strong>/UCnM5iMGiKsZg-iOlIO2ZkdQ <p class="smallnote">Note: the following format will not work:  https://www.youtube.com<strong>/c/</strong>customchannelname  If you cannot locate the proper channel ID format above, then try the other method below.</p>
+                                <?php _e('If you already know the direct link to the channel ID, enter it below. <br>Example: https://www.youtube.com<strong>/channel/</strong>UCnM5iMGiKsZg-iOlIO2ZkdQ <p class="error-channel-format smallnote">Note: the following format will not work:  https://www.youtube.com<strong>/c/</strong>customchannelname  If you cannot locate the proper channel ID format above, then try the other method below.</p> ', 'text_domain'); ?>
                             </p>
                             <p>
                                 Or, simply enter a link to any single video that belongs to the user's channel, and the plugin will find the channel for you.<br>Example: https://www.youtube.com/watch?v=YVvn8dpSAt0
@@ -2820,12 +2825,12 @@ class YouTubePrefs
 
         $code1 = $begin_gb_wrapper . $begin_responsive;
         $code_iframe1 = $code_iframe2 = '';
-        if ($videoidoutput != 'live_stream'  && $finalparams[self::$opt_facade_mode] == 1)
+        if ($videoidoutput != 'live_stream' && $finalparams[self::$opt_facade_mode] == 1)
         {
             $facade_img_src = '';
             if (!empty($videoidoutput))
             {
-                $facade_img_src = ' src="https://i.ytimg.com/vi/' . $videoidoutput . '/hqdefault.jpg" ';
+                $facade_img_src = ' src="https://i.ytimg.com/vi/' . $videoidoutput . '/maxresdefault.jpg" ';
             }
             else if (isset($finalparams['list']))
             {
@@ -3219,7 +3224,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update adds a new facade mode for lighter and faster page loads (see Performance tab) and fixes a CSS issue on both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update increases resolution for facade images, fixes a CSS issue with GDPR embeds, and adds YouTube Shorts compatibility for both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions (discounts throughout the holidays)</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -3256,7 +3261,7 @@ class YouTubePrefs
             <a class="nav-tab" href="#jumpapikey">API Key</a>
             <a class="nav-tab" href="#jumpwiz">Wizard</a>
             <a class="nav-tab" href="#jumpgallery">Galleries</a>
-            <a class="nav-tab href-link" style="background-color: #daebf1;" rel="#jumpupgrade" target="_blank" href="<?php echo self::$epbase . "/dashboard/pro-easy-video-analytics.aspx?ref=protab" ?>">Upgrade?</a>
+            <a class="nav-tab href-link" style="background-color: #daebf1;"  target="_blank" href="<?php echo self::$epbase . "/dashboard/pro-easy-video-analytics.aspx?ref=protab" ?>">Upgrade?</a>
             <?php
             if (false)//(!(bool) (self::$alloptions[self::$opt_vi_hide_monetize_tab]) && self::vi_ever_logged_in())
             {
@@ -4490,6 +4495,7 @@ class YouTubePrefs
                             <label for="<?php echo self::$opt_facade_mode ?>">
                                 <b class="chktitle"><?php _e('Facade Mode:', 'youtube-embed-plus'); ?> <sup class="orange">new</sup></b> 
                                 <?php _e('This improves performance by loading a lighter version of the player, until it is clicked. Then the real player loads (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases and found it to successfully improve your Lighthouse performance score by addressing  the following recommendation: "Some third-party resources can be lazy loaded with a facade."', 'youtube-embed-plus'); ?>
+                                <a href="https://www.youtube.com/watch?v=W7PKUjVBDNE" target="_blank"><?php _e('See an example of this feature at work.', 'youtube-embed-plus'); ?></a>
                             </label>                       
                             <div class="p box_facade_mode">
                                 <input name="<?php echo self::$opt_facade_autoplay; ?>" id="<?php echo self::$opt_facade_autoplay; ?>" type="checkbox" class="checkbox" <?php checked($all[self::$opt_facade_autoplay], 1); ?>>
@@ -4825,15 +4831,14 @@ class YouTubePrefs
                     $(document).on('click', '.wrap-ytprefs .nav-tab-wrapper a, .epyt-jumptab', function ()
                     {
                         $a = $(this);
-                        $('.wrap-ytprefs .nav-tab-wrapper a').removeClass('nav-tab-active');
-                        $a.addClass('nav-tab-active');
-                        $('.wrap-ytprefs section').hide();
-                        $('.wrap-ytprefs section').filter($a.attr('rel') ? $a.attr('rel') : $a.attr('href')).fadeIn(200);
                         if (!$a.hasClass('href-link'))
                         {
+                            $('.wrap-ytprefs .nav-tab-wrapper a').removeClass('nav-tab-active');
+                            $a.addClass('nav-tab-active');                        
+                            $('.wrap-ytprefs section').hide();
+                            $('.wrap-ytprefs section').filter($a.attr('rel') ? $a.attr('rel') : $a.attr('href')).fadeIn(200);
                             return false;
                         }
-
                     });
 
                     if (window.location.hash && window.location.hash == '#jumpmonetize')
@@ -5576,6 +5581,7 @@ class YouTubePrefs
                                 <label for="<?php echo self::$opt_facade_mode ?>">
                                     <b class="chktitle"><?php _e('Facade Mode:', 'youtube-embed-plus'); ?> <sup class="orange">new</sup></b> 
                                     <?php _e('This improves performance by loading a lighter version of the player, until it is clicked. Then the real player loads (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases and found it to successfully improve your Lighthouse performance score by addressing  the following recommendation: "Some third-party resources can be lazy loaded with a facade."', 'youtube-embed-plus'); ?>
+                                    <a href="https://www.youtube.com/watch?v=W7PKUjVBDNE" target="_blank"><?php _e('See an example of this feature at work.', 'youtube-embed-plus'); ?></a>
                                 </label>                       
                                 <div class="p box_facade_mode">
                                     <input value="1" name="<?php echo self::$opt_facade_autoplay; ?>" id="<?php echo self::$opt_facade_autoplay; ?>" type="checkbox" class="checkbox" <?php checked($all[self::$opt_facade_autoplay], 1); ?>>
