@@ -1,12 +1,12 @@
 <?php
 
-namespace threewp_broadcast;
+namespace threewp_broadcast\broadcasting_data;
 
 /**
 	@brief		Storage class for equivalent posts on various blogs.
 	@since		2014-09-21 11:53:45
 **/
-class equivalent_posts
+class Equivalent_Posts
 {
 	/**
 		@brief		An array of parent blogs IDs => parent post IDs => child blog IDs => child post IDs.
@@ -29,11 +29,34 @@ class equivalent_posts
 	}
 
 	/**
+		@brief		Broadcast this post only once. If it has already been broadcasted, get the equivalent.
+		@since		2021-10-22 19:55:57
+	**/
+	public function broadcast_once( $parent_blog, $parent_post, $child_blog = null )
+	{
+		if ( $child_blog === null )
+			$child_blog = get_current_blog_id();
+
+		if ( ! isset( $this->equivalents[ $parent_blog ][ $parent_post ][ $child_blog ] ) )
+		{
+			switch_to_blog( $parent_blog );
+			$new_bcd = ThreeWP_Broadcast()->api()->broadcast_children( $parent_post, [ $child_blog ] );
+			restore_current_blog();
+			$child_id = $new_bcd->new_post( 'ID' );
+			$this->set( $parent_blog, $parent_post, $child_blog, $child_id );
+		}
+		return $this->equivalents[ $parent_blog ][ $parent_post ][ $child_blog ];
+	}
+
+	/**
 		@brief		Retrieve the equivalent post on a blog for a specific parent blog/post.
 		@since		2014-09-21 11:54:04
 	**/
-	public function get( $parent_blog, $parent_post, $child_blog )
+	public function get( $parent_blog, $parent_post, $child_blog = null )
 	{
+		if ( $child_blog === null )
+			$child_blog = get_current_blog_id();
+
 		if ( ! isset( $this->equivalents[ $parent_blog ][ $parent_post ][ $child_blog ] ) )
 		{
 			$broadcast_data = $this->broadcast()->get_parent_post_broadcast_data( $parent_blog, $parent_post );
@@ -47,8 +70,11 @@ class equivalent_posts
 		@brief		Either retrieve the existing equivalent, or broadcast the post making a new equivalent.
 		@since		2017-10-25 16:44:53
 	**/
-	public function get_or_broadcast( $parent_blog, $parent_post, $child_blog )
+	public function get_or_broadcast( $parent_blog, $parent_post, $child_blog = null )
 	{
+		if ( $child_blog === null )
+			$child_blog = get_current_blog_id();
+
 		$child_post = $this->get( $parent_blog, $parent_post, $child_blog );
 		if ( ! $child_post )
 		{

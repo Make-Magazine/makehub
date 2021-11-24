@@ -69,8 +69,9 @@ trait terms_and_taxonomies
 		] );
 		foreach( $new_terms as $new_term )
 		{
-			unset( $wanted_terms[ $new_term->term_id ] );
-			$o->terms[ $new_term->term_id ] = $new_term;
+			$term_id = $new_term->term_id;
+			unset( $wanted_terms[ $term_id ] );
+			$o->terms[ $term_id ] = $new_term;
 		}
 
 		if ( count( $wanted_terms ) > 0 )
@@ -184,18 +185,16 @@ trait terms_and_taxonomies
 			$bcd->parent_blog_taxonomies[ $taxonomy ][ 'equivalent_terms' ] = [];
 
 		// Select only those terms that exist in the blog. We select them by slugs.
-		$needed_slugs = [];
-		foreach( $source_terms as $source_term )
-			$needed_slugs[ $source_term->slug ] = true;
 		$target_terms = get_terms( [
-			'slug' => array_keys( $needed_slugs ),
 			'hide_empty' => false,
 			'taxonomy' => $taxonomy,
 		] );
 		$target_terms = $this->array_rekey( $target_terms, 'term_id' );
 
 		if ( count( $target_terms ) < 100 )
-			$this->debug( 'Target terms: %s', $target_terms );
+		{
+			$this->debug( 'Target terms: %s', $bcd->taxonomies()->build_nice_terms_list( $target_terms ) );
+		}
 		else
 			$this->debug( 'Target terms: %d of them', count( $target_terms ) );
 
@@ -398,7 +397,7 @@ trait terms_and_taxonomies
 
 		foreach( $bcd->parent_blog_taxonomies as $parent_blog_taxonomy => $taxonomy )
 		{
-			if ( isset( $bcd->post->ID ) )
+			if ( isset( $bcd->post->ID ) && ( $bcd->post->ID > 0 ) )
 				$taxonomy_terms = get_the_terms( $bcd->post->ID, $parent_blog_taxonomy );
 			else
 				$taxonomy_terms = get_terms( [
@@ -411,6 +410,13 @@ trait terms_and_taxonomies
 				$taxonomy_terms = [];
 
 			$bcd->parent_post_taxonomies[ $parent_blog_taxonomy ] = $this->array_rekey( $taxonomy_terms, 'term_id' );
+
+			// Add the terms to the index.
+			$index_count = $bcd->taxonomies()
+				->get_term_index()
+				->add_terms( $taxonomy_terms )
+				->count();
+			$this->debug( '%s terms indexed.', $index_count );
 
 			// Parent blog taxonomy terms are used for creating missing target term ancestors
 			$o = (object)[];
@@ -457,7 +463,15 @@ trait terms_and_taxonomies
 					->set( $term->term_id, $meta );
 			}
 		}
-		$this->debug( 'Taxonomy term meta: %s', $bcd->taxonomy_term_meta->collection( $bcd->parent_blog_id )->collection( 'terms' ) );
+
+		$nice_taxonomy_term_meta = [];
+		foreach( $bcd->taxonomy_term_meta->collection( $bcd->parent_blog_id )->collection( 'terms' ) as $term_id => $term )
+		{
+			if ( count( $term ) < 1 )
+				continue;
+			$nice_taxonomy_term_meta[ $term_id ] = $term->to_array();
+		}
+		$this->debug( 'Taxonomy term meta: %s', $nice_taxonomy_term_meta );
 	}
 
 	/**
@@ -573,8 +587,8 @@ trait terms_and_taxonomies
 					// Is this term protected?
 					if ( $bcd->taxonomies()->protectlist_has( $action->taxonomy, $action->new_term->slug, $key ) )
 					{
-						$current_value = get_term_meta( $new_term_id, $key, true);
-						if ( $current_value )
+						$values = get_term_meta( $new_term_id, $key );
+						if ( count( $values ) > 0 )
 						{
 							$this->debug( 'Taxonomy term %s (%s) already has a %s term meta value. Skipping.', $action->new_term->slug, $action->new_term->term_id, $key );
 							continue;
