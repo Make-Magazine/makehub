@@ -221,11 +221,11 @@ class InvoiceService extends \Stripe\Service\AbstractService
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection
+     * @return \Stripe\Invoice
      */
     public function upcomingLines($params = null, $opts = null)
     {
-        return $this->requestCollection('get', '/v1/invoices/upcoming/lines', $params, $opts);
+        return $this->request('get', '/v1/invoices/upcoming/lines', $params, $opts);
     }
 
     /**

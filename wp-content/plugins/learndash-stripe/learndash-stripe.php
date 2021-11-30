@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS - Stripe Integration
  * Plugin URI:
  * Description:	Integrate Stripe payment gateway with LearnDash.
- * Version: 1.9.1
+ * Version: 1.8.1
  * Author: LearnDash
  * Author URI: http://www.learndash.com/
  * Text Domain: learndash-stripe
@@ -75,7 +75,7 @@ final class LearnDash_Stripe {
 
 		// Plugin version
 		if ( ! defined( 'LEARNDASH_STRIPE_VERSION' ) ) {
-			define( 'LEARNDASH_STRIPE_VERSION', '1.9.1' );
+			define( 'LEARNDASH_STRIPE_VERSION', '1.8.1' );
 		}
 
 		// Plugin file
@@ -151,7 +151,6 @@ final class LearnDash_Stripe {
 
 		if ( is_admin() ) {
 			include LEARNDASH_STRIPE_PLUGIN_PATH . '/includes/admin/settings/class-settings.php';
-			include LEARNDASH_STRIPE_PLUGIN_PATH . '/includes/admin/settings/class-settings-section-stripe.php';
 		}
 
 		include LEARNDASH_STRIPE_PLUGIN_PATH . '/includes/class-update.php';

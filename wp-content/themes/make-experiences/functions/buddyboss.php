@@ -217,7 +217,7 @@ if( ! function_exists( 'wp_new_user_notification' ) ) {
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 
 		/* translators: %s: user login */
-		$message  = '<p><b>Please set your password and login to access classes, directories and more.</b></p>';
+		$message  = '<p><b>Please set your password and login to access courses, events, directories and more.</b></p>';
 		$message  = '<p>' . sprintf( __( 'Username: %s', 'buddyboss' ), $user->user_login ) . '</p>';
 		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) ) . '</p>';
 		$message .= wp_login_url();

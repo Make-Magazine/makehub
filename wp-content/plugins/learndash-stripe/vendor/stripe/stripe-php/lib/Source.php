@@ -155,7 +155,7 @@ class Source extends ApiResource
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Source the verified source
+     * @return Source the verified source
      */
     public function verify($params = null, $opts = null)
     {

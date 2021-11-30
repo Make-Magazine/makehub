@@ -21,10 +21,6 @@ class ApiRequestor
      * @var HttpClient\ClientInterface
      */
     private static $_httpClient;
-    /**
-     * @var HttpClient\StreamingClientInterface
-     */
-    private static $_streamingHttpClient;
 
     /**
      * @var RequestTelemetry
@@ -125,28 +121,6 @@ class ApiRequestor
         $resp = new ApiResponse($rbody, $rcode, $rheaders, $json);
 
         return [$resp, $myApiKey];
-    }
-
-    /**
-     * @param string     $method
-     * @param string     $url
-     * @param callable $readBodyChunkCallable
-     * @param null|array $params
-     * @param null|array $headers
-     *
-     * @throws Exception\ApiErrorException
-     *
-     * @return array tuple containing (ApiReponse, API key)
-     */
-    public function requestStream($method, $url, $readBodyChunkCallable, $params = null, $headers = null)
-    {
-        $params = $params ?: [];
-        $headers = $headers ?: [];
-        list($rbody, $rcode, $rheaders, $myApiKey) =
-        $this->_requestRawStreaming($method, $url, $params, $headers, $readBodyChunkCallable);
-        if ($rcode >= 300) {
-            $this->_interpretResponse($rbody, $rcode, $rheaders);
-        }
     }
 
     /**
@@ -354,7 +328,18 @@ class ApiRequestor
         ];
     }
 
-    private function _prepareRequest($method, $url, $params, $headers)
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $params
+     * @param array $headers
+     *
+     * @throws Exception\AuthenticationException
+     * @throws Exception\ApiConnectionException
+     *
+     * @return array
+     */
+    private function _requestRaw($method, $url, $params, $headers)
     {
         $myApiKey = $this->_apiKey;
         if (!$myApiKey) {
@@ -431,24 +416,6 @@ class ApiRequestor
             $rawHeaders[] = $header . ': ' . $value;
         }
 
-        return [$absUrl, $rawHeaders, $params, $hasFile, $myApiKey];
-    }
-
-    /**
-     * @param string $method
-     * @param string $url
-     * @param array $params
-     * @param array $headers
-     *
-     * @throws Exception\AuthenticationException
-     * @throws Exception\ApiConnectionException
-     *
-     * @return array
-     */
-    private function _requestRaw($method, $url, $params, $headers)
-    {
-        list($absUrl, $rawHeaders, $params, $hasFile, $myApiKey) = $this->_prepareRequest($method, $url, $params, $headers);
-
         $requestStartMs = Util\Util::currentTimeMillis();
 
         list($rbody, $rcode, $rheaders) = $this->httpClient()->request(
@@ -457,46 +424,6 @@ class ApiRequestor
             $rawHeaders,
             $params,
             $hasFile
-        );
-
-        if (isset($rheaders['request-id'])
-        && \is_string($rheaders['request-id'])
-        && \strlen($rheaders['request-id']) > 0) {
-            self::$requestTelemetry = new RequestTelemetry(
-                $rheaders['request-id'],
-                Util\Util::currentTimeMillis() - $requestStartMs
-            );
-        }
-
-        return [$rbody, $rcode, $rheaders, $myApiKey];
-    }
-
-    /**
-     * @param string $method
-     * @param string $url
-     * @param array $params
-     * @param array $headers
-     * @param callable $readBodyChunk
-     * @param mixed $readBodyChunkCallable
-     *
-     * @throws Exception\AuthenticationException
-     * @throws Exception\ApiConnectionException
-     *
-     * @return array
-     */
-    private function _requestRawStreaming($method, $url, $params, $headers, $readBodyChunkCallable)
-    {
-        list($absUrl, $rawHeaders, $params, $hasFile, $myApiKey) = $this->_prepareRequest($method, $url, $params, $headers);
-
-        $requestStartMs = Util\Util::currentTimeMillis();
-
-        list($rbody, $rcode, $rheaders) = $this->streamingHttpClient()->requestStream(
-            $method,
-            $absUrl,
-            $rawHeaders,
-            $params,
-            $hasFile,
-            $readBodyChunkCallable
         );
 
         if (isset($rheaders['request-id'])
@@ -578,16 +505,6 @@ class ApiRequestor
     /**
      * @static
      *
-     * @param HttpClient\StreamingClientInterface $client
-     */
-    public static function setStreamingHttpClient($client)
-    {
-        self::$_streamingHttpClient = $client;
-    }
-
-    /**
-     * @static
-     *
      * Resets any stateful telemetry data
      */
     public static function resetTelemetry()
@@ -605,17 +522,5 @@ class ApiRequestor
         }
 
         return self::$_httpClient;
-    }
-
-    /**
-     * @return HttpClient\StreamingClientInterface
-     */
-    private function streamingHttpClient()
-    {
-        if (!self::$_streamingHttpClient) {
-            self::$_streamingHttpClient = HttpClient\CurlClient::instance();
-        }
-
-        return self::$_streamingHttpClient;
     }
 }

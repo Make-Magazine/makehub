@@ -31,11 +31,9 @@ class LearnDash_Stripe_Settings {
 		add_action( 'admin_init', array( $this, 'check_learndash_plugin' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		if ( defined( 'LEARNDASH_VERSION' ) && version_compare( LEARNDASH_VERSION, '3.6', '<' ) ) {
-			add_action( 'admin_menu', array( $this, 'admin_menu') );
-			add_filter( 'learndash_admin_tabs', array( $this, 'admin_tabs' ), 10, 1 );
-			add_filter( 'learndash_admin_tabs_on_page', array( $this, 'admin_tabs_on_page' ), 10, 3 );
-		}
+		add_action( 'admin_menu', array( $this, 'admin_menu') );
+		add_filter( 'learndash_admin_tabs', array( $this, 'admin_tabs' ), 10, 1 );
+		add_filter( 'learndash_admin_tabs_on_page', array( $this, 'admin_tabs_on_page' ), 10, 3 );
 	}
 
 	/**
@@ -121,13 +119,11 @@ class LearnDash_Stripe_Settings {
 	 * @return array         Sanitized inputs
 	 */
 	public function sanitize_settings( $inputs ) {
-		if ( is_array( $inputs ) ) {
-			foreach ( $inputs as $key => $input ) {
-				if ( is_array( $input ) ) {
-					$inputs[ $key ] = array_map( 'sanitize_text_field', $input );
-				} else {
-					$inputs[ $key ] = sanitize_text_field( $input );
-				}
+		foreach ( $inputs as $key => $input ) {
+			if ( is_array( $input ) ) {
+				$inputs[ $key ] = array_map( 'sanitize_text_field', $input );
+			} else {
+				$inputs[ $key ] = sanitize_text_field( $input );
 			}
 		}
 
@@ -167,7 +163,7 @@ class LearnDash_Stripe_Settings {
 	 * @return array                     Currenct active tabs
 	 */
 	public function admin_tabs_on_page( $admin_tabs_on_page, $admin_tabs, $current_page_id ) {
-
+		
 		// $admin_tabs_on_page['admin_page_learndash-stripe-settings'] = array_merge( $admin_tabs_on_page['sfwd-courses_page_sfwd-lms_sfwd_lms_post_type_sfwd-courses'], (array) $admin_tabs_on_page['admin_page_learndash-stripe-settings'] );
 
 		foreach ( $admin_tabs as $key => $value ) {
@@ -217,7 +213,7 @@ class LearnDash_Stripe_Settings {
 											</span>
 											<span class="sfwd_option_input">
 												<div class="sfwd_option_div">
-
+													
 													<?php $callback = $option['type'] . '_callback'; ?>
 
 													<?php $this->$callback( $option ); ?>
@@ -231,7 +227,7 @@ class LearnDash_Stripe_Settings {
 									<?php endforeach; ?>
 								</div>
 							</div>
-
+						
 						</div>
 					</div>
 				</div>
@@ -242,14 +238,14 @@ class LearnDash_Stripe_Settings {
 		</div>
 		<?php
 	}
-
+	
 
 	/**
 	 * Define settings fields
 	 * @return array Settings of the plugin
 	 */
 	public function get_stripe_settings() {
-
+		
 		$settings = array(
 			'test_mode' => array(
 				'name'  => __( 'Test Mode', 'learndash-stripe' ),
@@ -334,7 +330,7 @@ class LearnDash_Stripe_Settings {
 				'type'  => 'text',
 				'value' => isset( $this->options['return_url'] ) ? $this->options['return_url'] : '',
 			),
-
+			
 		);
 
 		return apply_filters( 'learndash_stripe_settings', $settings );

@@ -20,9 +20,7 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
      * @return void
      */
     public function set_session( $course_id = null ) {
-        $args = $this->get_course_args( $course_id );
-  
-        extract( $args );
+        extract( $this->get_course_args( $course_id ) );
 
         $this->config();
 
@@ -32,7 +30,7 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
         try {
             $stripe_customer = ! empty( $stripe_customer_id ) ? \Stripe\Customer::retrieve( $stripe_customer_id ) : null;
         } catch ( Exception $e ) {
-            error_log( 'Error retrieving user when setting up session: ' . print_r( $e->getMessage(), true ) );
+            error_log( 'Error retrieving user when setting up session: ' . print_r( $e->getJsonBody(), true ) );
         }
 
         $customer = ! empty( $stripe_customer->id ) && empty( $stripe_customer->deleted ) && ! empty( $stripe_customer_id ) ? $stripe_customer_id : null;
@@ -47,10 +45,14 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
             'session_id' => '{CHECKOUT_SESSION_ID}',
         ), $success_url );
         $course_images = ! empty( $course_image ) ? array( $course_image ) : null;
-        $metadata = array(
+        $client_reference_id = array(
             'course_id' => $course_id,
             'user_id'   => $user_id,
         );
+        $client_reference_id = array_map( function( $key, $value ) {
+            return "{$key}={$value}";
+        }, array_keys( $client_reference_id ), $client_reference_id );
+        $client_reference_id = implode( ';', $client_reference_id );
 
         $line_items = array( array(
             'name' => $course_name,
@@ -64,7 +66,6 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
         if ( 'paynow' === $course_price_type ) {
             $payment_intent_data = array(
                 'receipt_email' => $user_email,
-                'metadata' => $metadata,
             );
         }
 
@@ -154,80 +155,35 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
                 add_post_meta( $course_id, 'stripe_plan_id', $plan_id, false );
             }
 
-            $trial_period_days = null;
-            if ( ! empty( $course_trial_interval_count ) && ! empty( $course_trial_interval ) ) {
-                switch ( $course_trial_interval ) {
-                    case 'day':
-                        $trial_period_days = $course_trial_interval_count * 1;
-                        break;
-                    
-                    case 'week':
-                        $trial_period_days = $course_trial_interval_count * 7;
-                        break;
-
-                    case 'month':
-                        $trial_period_days = $course_trial_interval_count * 30;
-                        break;
-
-                    case 'year':
-                        $trial_period_days = $course_trial_interval_count * 365;
-                        break;
-                }
-            }
-
-            if ( ! empty( $trial_period_days ) ) {
-                if ( ! empty( $course_trial_price ) ) {
-                    $line_items = [
-                        [
-                            'name' => sprintf( _n( '%d Day Trial', '%d Days Trial', $trial_period_days, 'learndash-course-grid' ), $trial_period_days ),
-                            'amount' => $course_trial_price,
-                            'currency' => $currency,
-                            'quantity' => 1,
-                        ]
-                    ];
-                } else {
-                    $line_items = null;
-                }
-
-                $metadata['has_trial'] = true;
-            } else {
-                $line_items = null;
-            }
-
-            if ( ! empty( $course_recurring_times ) ) {
-                $metadata['has_recurring_limit'] = true;
-            }
-
             $subscription_data = array(
-                'metadata' => $metadata,
                 'items' => array( array(
                     'plan' => $plan_id
-                ) ),
-                'trial_period_days' => $trial_period_days,
+                ) )
             );
+
+            $line_items = null;
         }
 
         $session = false;
-        $session_args = apply_filters( 'learndash_stripe_session_args',
-            array(
-                'allow_promotion_codes' => true,
-                'customer'              => $customer,
-                'payment_method_types'  => $this->get_payment_methods(),
-                'line_items'            => $line_items,
-                'metadata'              => $metadata,
-                'success_url'           => $success_url,
-                'cancel_url'            => $course_page_url,
-                'payment_intent_data'   => $payment_intent_data,
-                'subscription_data'     => $subscription_data,
-            )
-        );
-
-
         try {
-            $session = \Stripe\Checkout\Session::create( $session_args );
+            $session = \Stripe\Checkout\Session::create(
+                apply_filters( 'learndash_stripe_session_args',
+                    array(
+                        'allow_promotion_codes' => true,
+                        'customer'              => $customer,
+                        'payment_method_types'  => $this->get_payment_methods(),
+                        'line_items'            => $line_items,
+                        'client_reference_id'   => $client_reference_id,
+                        'success_url'           => $success_url,
+                        'cancel_url'            => $course_page_url,
+                        'payment_intent_data'   => $payment_intent_data,
+                        'subscription_data'     => $subscription_data,
+                    )
+                )
+            );
         } catch ( Exception $e ) {
             error_log( $e );
-            return $e->getMessage();
+            return $e->getJsonBody();
         }
 
         if ( is_object( $session ) && is_a( $session, 'Stripe\Checkout\Session' ) ) {
@@ -389,13 +345,15 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
      * @param  string $user_email   Email of the user
      */
     public function record_transaction( $session, $course_id, $user_id, $user_email ) {
-        $currency = $session->currency;
-        $amount   = $session->amount;
+        // ld_debug( 'Starting Transaction Creation.' );
+
+        $currency = $session->display_items[0]->currency;
+        $amount   = $session->display_items[0]->amount;
 
         $transaction = array(
             'stripe_nonce' => 'n/a',
             'stripe_sesion_id' => $session->id,
-            'stripe_metadata' => $session->metadata,
+            'stripe_client_reference_id' => $session->client_reference_id,
             'stripe_customer' => $session->customer,
             'stripe_payment_intent' => $session->payment_intent,
             'customer_email' => $user_email,
@@ -409,7 +367,7 @@ class LearnDash_Stripe_Checkout_Integration extends LearnDash_Stripe_Integration
 
         // ld_debug( 'Course Title: ' . $course_title );
 
-        $post_id = wp_insert_post( array( 'post_title' => "Course {$transaction['stripe_name']} Purchased By {$user_email}", 'post_type' => 'sfwd-transactions', 'post_status' => 'publish', 'post_author' => $user_id ) );
+        $post_id = wp_insert_post( array( 'post_title' => "Course {$transaction['course_title']} Purchased By {$user_email}", 'post_type' => 'sfwd-transactions', 'post_status' => 'publish', 'post_author' => $user_id ) );
 
         // ld_debug( 'Created Transaction. Post Id: ' . $post_id );
         foreach ( $transaction as $key => $value ) {

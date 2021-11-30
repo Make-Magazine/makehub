@@ -48,11 +48,6 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 			} else {
 				$course_id = 0;
 			}
-
-			if ( empty( $course_id ) ) {
-				return;
-			}
-
 			$transaction_status['course_id'] = $course_id;
 
 			if ( ! $this->is_transaction_legit() ) {
@@ -112,11 +107,6 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 			}
 
 			$site_name = get_bloginfo( 'name' );
-			$metadata = [
-				'user_id' => $user_id,
-				'course_id' => $course_id,
-			];
-
 			if ( 'paynow' == $_POST['stripe_price_type'] ) {
 				try {
 					$charge = \Stripe\Charge::create( array(
@@ -184,7 +174,7 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 					$this->show_notification( $transaction_status );
 
 				} catch ( Exception $e ) {
-					$body  = $e->getMessage();
+					$body  = $e->getJsonBody();
 					$error = $body['error'];
 
 					$transaction_status['stripe_message_type'] = 'error';
@@ -193,177 +183,122 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 				}
 
 			} elseif ( 'subscribe' == $_POST['stripe_price_type'] ) {
-				$course_args = $this->get_course_args( $course_id );
-				extract( $course_args );
 
-				if ( empty( $course_interval ) || empty( $course_interval_count ) || empty( $course_price ) ) {
-					return;
-				}
-	
-				$plan_id = get_post_meta( $course_id, 'stripe_plan_id', false );
-				$plan_id = end( $plan_id );
-	
-				if ( ! empty( $plan_id ) ) {
-					try {
-						$plan = \Stripe\Plan::retrieve( array(
-							'id'     => $plan_id,
-							'expand' => array( 'product' ),
-						) );
-						// error_log('plan<pre>'. print_r($plan, true) .'</pre>'."\r\n", 3, ABSPATH .'/ld_debug.log');
-	
-						if (
-							( isset( $plan ) && is_object( $plan ) ) &&
-							$plan->amount         != $course_price ||
-							$plan->currency       != strtolower( $currency ) ||
-							$plan->id             != $plan_id ||
-							$plan->interval       != $course_interval ||
-							htmlspecialchars_decode( $plan->product->name )           != stripslashes( sanitize_text_field( $course_name ) ) ||
-							$plan->interval_count != $course_interval_count
-						) {
-							// Don't delete the old plan as old subscription may
-							// still attached to it
-	
+				$id = sanitize_text_field( $_POST['stripe_plan_id'] ) . '-' . substr( md5( time() ), 0, 5 );
+				$interval = sanitize_text_field( $_POST['stripe_interval'] );
+
+				try {
+					$plan_ids = get_post_meta( $course_id, 'stripe_plan_id', false );		
+					// error_log('plan_id['. $plan_id.']'."\r\n", 3, ABSPATH .'/ld_debug.log');
+
+					if ( empty( $plan_ids ) ) {
+
+						$plan_args = array(
+							// Required
+							'amount'   => sanitize_text_field( $_POST['stripe_price'] ),
+							'currency' => strtolower( $this->options['currency'] ),
+							'id'       => $id,
+							'interval' => $interval,
+							'product'  => array(
+								'name'     => stripslashes( sanitize_text_field( $_POST['stripe_name'] ) ),
+							),
+							// Optional
+							'interval_count' => sanitize_text_field( $_POST['stripe_interval_count'] ),
+						);
+						//error_log('plan_args<pre>'. print_r($plan_args, true) .'</pre>'."\r\n", 3, ABSPATH .'/ld_debug.log');
+						
+						$plan = \Stripe\Plan::create( $plan_args );
+						//error_log('in create plan<pre>'. print_r($plan, true) .'</pre>'."\r\n", 3, ABSPATH .'/ld_debug.log');
+
+						add_post_meta( $course_id, 'stripe_plan_id', $id, false );
+
+						$current_id = $id;
+
+					} else {
+						try {
+							$last_id = end( $plan_ids );
+							reset( $plan_ids );
+
+							$plan = \Stripe\Plan::retrieve( array( 
+								'id'     => $last_id, 
+								'expand' => array( 'product' ),
+							) );
+							// error_log('plan<pre>'. print_r($plan, true) .'</pre>'."\r\n", 3, ABSPATH .'/ld_debug.log');
+
+							if ( 
+								$plan->amount         != $_POST['stripe_price'] ||
+								$plan->currency       != strtolower( $this->options['currency'] ) ||
+								$plan->id       	  != $last_id ||
+								$plan->interval       != $interval ||
+								htmlspecialchars_decode( $plan->product->name )           != stripslashes( sanitize_text_field( $_POST['stripe_name'] ) ) ||
+								$plan->interval_count != $_POST['stripe_interval_count']
+							) {
+								// Delete the old plan first
+								// Don't delete the old plan as old subscription may 
+								// still attached to it
+								// $plan->delete();
+
+								// Create a new plan
+								$plan = \Stripe\Plan::create( array(
+									// Required
+									'amount'   => sanitize_text_field( $_POST['stripe_price'] ),
+									'currency' => strtolower( $this->options['currency'] ),
+									'id'       => $id,
+									'interval' => $interval,
+									'product'  => array(
+										'name'     => stripslashes( sanitize_text_field( $_POST['stripe_name'] ) ),
+									),
+									// Optional
+									'interval_count' => sanitize_text_field( $_POST['stripe_interval_count'] ),
+								) );
+
+								add_post_meta( $course_id, 'stripe_plan_id', $id, false );
+
+								$current_id = $id;
+							} else {
+								$current_id = $last_id;
+							}
+
+						} catch ( Exception $e ) {
 							// Create a new plan
 							$plan = \Stripe\Plan::create( array(
 								// Required
-								'amount'   => esc_attr( $course_price ),
-								'currency' => strtolower( $currency ),
-								'id'       => $course_plan_id . '-' . $this->generate_random_string( 5 ),
-								'interval' => $course_interval,
+								'amount'   => sanitize_text_field( $_POST['stripe_price'] ),
+								'currency' => strtolower( $this->options['currency'] ),
+								'id'       => $id,
+								'interval' => $interval,
 								'product'  => array(
-									'name'     => stripslashes( sanitize_text_field( $course_name ) ),
+									'name'     => stripslashes( sanitize_text_field( $_POST['stripe_name'] ) ),
 								),
 								// Optional
-								'interval_count' => esc_attr( $course_interval_count ),
+								'interval_count' => sanitize_text_field( $_POST['stripe_interval_count'] ),
 							) );
-	
-							$plan_id = $plan->id;
-	
-							add_post_meta( $course_id, 'stripe_plan_id', $plan_id, false );
+
+							add_post_meta( $course_id, 'stripe_plan_id', $id, false );
+
+							$current_id = $id;
 						}
-					} catch ( Exception $e ) {
-						// Create a new plan
-						$plan = \Stripe\Plan::create( array(
-							// Required
-							'amount'   => esc_attr( $course_price ),
-							'currency' => strtolower( $currency ),
-							'id'       => $course_plan_id . '-' . $this->generate_random_string( 5 ),
-							'interval' => $course_interval,
-							'product'  => array(
-								'name' => stripslashes( sanitize_text_field( $course_name ) ),
-							),
-							// Optional
-							'interval_count' => esc_attr( $course_interval_count ),
-						) );
-	
-						$plan_id = $plan->id;
-	
-						add_post_meta( $course_id, 'stripe_plan_id', $plan_id, false );
 					}
-				} else {
-					// Create a new plan
-					$plan = \Stripe\Plan::create( array(
-						// Required
-						'amount'   => esc_attr( $course_price ),
-						'currency' => strtolower( $currency ),
-						'id'       => $course_plan_id,
-						'interval' => $course_interval,
-						'product'  => array(
-							'name' => stripslashes( sanitize_text_field( $course_name ) ),
-						),
-						// Optional
-						'interval_count' => esc_attr( $course_interval_count ),
+
+					$subscription = \Stripe\Subscription::create( array(
+						'customer' => $customer_id,
+						'items' => array(
+							array(
+								'plan' => $current_id
+							)
+						)
 					) );
-	
-					$plan_id = $plan->id;
-	
-					add_post_meta( $course_id, 'stripe_plan_id', $plan_id, false );
-				}
-	
-				$trial_period_days = null;
-				if ( ! empty( $course_trial_interval_count ) && ! empty( $course_trial_interval ) ) {
-					switch ( $course_trial_interval ) {
-						case 'day':
-							$trial_period_days = $course_trial_interval_count * 1;
-							break;
-						
-						case 'week':
-							$trial_period_days = $course_trial_interval_count * 7;
-							break;
-	
-						case 'month':
-							$trial_period_days = $course_trial_interval_count * 30;
-							break;
-	
-						case 'year':
-							$trial_period_days = $course_trial_interval_count * 365;
-							break;
-					}
-				}
-	
-				if ( ! empty( $trial_period_days ) ) {
-					if ( ! empty( $course_trial_price ) ) {
-						$trial_product = $this->stripe->products->create( [
-							'name' => sprintf( _n( '%d Day Trial', '%d Days Trial', $trial_period_days, 'learndash-course-grid' ), $trial_period_days ), 
-						] );
-
-						$line_items = [
-							[
-								'price_data' => [
-									'currency' => $currency,
-									'product' => $trial_product->id,
-									// 'name' => sprintf( _n( '%d Day Trial', '%d Days Trial', $trial_period_days, 'learndash-course-grid' ), $trial_period_days ),
-									// 'product' => '',
-									'unit_amount' => $course_trial_price,
-								],
-								'quantity' => 1,
-							]
-						];
-					} else {
-						$line_items = null;
-					}
-	
-					$metadata['has_trial'] = true;
-				} else {
-					$line_items = null;
-				}
-	
-				if ( ! empty( $course_recurring_times ) ) {
-					$metadata['has_recurring_limit'] = true;
-				}
-	
-				$subscription_data = array(
-					'add_invoice_items' => $line_items,
-					'customer' => $customer_id,
-					'metadata' => $metadata,
-					'items' => array( array(
-						'plan' => $plan_id
-					) ),
-					'trial_period_days' => $trial_period_days,
-				);
-
-				try {
-					$subscription = \Stripe\Subscription::create( $subscription_data );
 
 					// Bail if susbscription is not active
-					if ( empty( $subscription->id ) ) {
+					if ( $subscription->status != 'active' ) {
 						$transaction_status['stripe_message_type'] = 'error';
 						$transaction_status['stripe_message'] = __( 'Failed to create a subscription. Please check your card and try it again later.', 'learndash-stripe' );
 						$this->show_notification( $transaction_status );
 					}
 
-					if ( ! empty( $trial_product->id ) )  {
-						$this->stripe->products->update( 
-							$trial_product->id, 
-							[
-								'active' => false,
-							]
-						);
-					}
-
 					add_user_meta( $user_id, 'stripe_subscription_id', $subscription->id, false );
 
-					add_user_meta( $user_id, 'stripe_plan_id', $plan_id, false );
+					add_user_meta( $user_id, 'stripe_plan_id', $current_id, false );
 
 				} catch ( \Stripe\Error\Card $e ) {
 					// Card is declined
@@ -420,9 +355,7 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 					$this->show_notification( $transaction_status );
 
 				} catch ( Exception $e ) {
-					// Generic error
-					$body  = $e->getJsonBody();
-					$error = $body['error']['message'];
+					$error = __( 'Unknown error.', 'learndash-stripe' );
 
 					$transaction_status['stripe_message_type'] = 'error';
 					$transaction_status['stripe_message'] = $error . ' ' . __( 'Please try again later.', 'learndash-stripe' );
@@ -516,25 +449,9 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 			jQuery( document ).ready( function( $ ) {
 				var Stripe_Handler = {
 					init: function( form_ref ) {
-						var price = $( 'input[name="stripe_price"]', form_ref ).val(),
-							price_type = $( 'input[name="stripe_price_type"]', form_ref ).val();
-						
-						if ( 'subscribe' == price_type ) {
-							var trial_price = $( 'input[name="stripe_trial_price"]', form_ref ).val(),
-								trial_interval_count = $( 'input[name="stripe_trial_interval_count"]', form_ref ).val();
-
-							if ( trial_interval_count > 0 ) {
-								if ( trial_price > 0 ) {
-									price = trial_price;
-								} else {
-									price = 0;
-								}
-							}
-						}
-
 						var handler = StripeCheckout.configure({
 							key         : '<?php echo $this->get_publishable_key() ?>',
-							amount      : parseInt( price ),
+							amount      : parseInt( $( 'input[name="stripe_price"]', form_ref ).val() ),
 							currency    : $( 'input[name="stripe_currency"]', form_ref ).val(),
 							description : $( 'input[name="stripe_name"]', form_ref ).val(),
 							email       : $( 'input[name="stripe_email"]', form_ref ).val(),
@@ -587,14 +504,9 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 		$this->config();
 
 		if ( ! empty( $customer_id ) && ! empty( $user_id ) ) {
-			try {
-				$customer = \Stripe\Customer::retrieve( $customer_id );
-			} catch ( Exception $e ) {
-				$customer = null;
-				error_log( 'Error retrieving user when adding customer for Legacy Checkout: ' . print_r( $e->getMessage(), true ) );
-			}
+			$customer = \Stripe\Customer::retrieve( $customer_id );
 
-			if ( ! isset( $customer ) || ( isset( $customer->deleted ) && $customer->deleted ) ) {
+			if ( isset( $customer->deleted ) && $customer->deleted ) {
 				$customer = \Stripe\Customer::create( array(
 					'email'  => $token_email,
 					'source' => $token_id,
@@ -617,7 +529,7 @@ class LearnDash_Stripe_Legacy_Checkout_Integration extends LearnDash_Stripe_Inte
 					update_user_meta( $user_id, $this->stripe_customer_id_meta_key, $customer_id );
 				}
 			} catch ( Exception $e ) {
-				$body  = $e->getMessage();
+				$body  = $e->getJsonBody();
 				$error = $body['error'];
 
 				$transaction_status['stripe_message_type'] = 'error';

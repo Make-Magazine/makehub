@@ -98,11 +98,11 @@ class CreditNoteService extends \Stripe\Service\AbstractService
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \Stripe\Collection
+     * @return \Stripe\CreditNote
      */
     public function previewLines($params = null, $opts = null)
     {
-        return $this->requestCollection('get', '/v1/credit_notes/preview/lines', $params, $opts);
+        return $this->request('get', '/v1/credit_notes/preview/lines', $params, $opts);
     }
 
     /**

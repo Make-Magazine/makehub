@@ -93,7 +93,7 @@ class RequestOptions
     public static function parse($options, $strict = false)
     {
         if ($options instanceof self) {
-            return clone $options;
+            return $options;
         }
 
         if (null === $options) {
