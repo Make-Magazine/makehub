@@ -184,6 +184,9 @@
                                     display: none;
                                 }
                             }
+							&.menu-item-has-children.special-menu-item > a {
+								color: #EA002A !important;
+							}
                             .sub-menu {
                                 li.menu-item {
                                     font-weight: 400;
@@ -877,6 +880,7 @@ body.mobile-nav {
 }
 
 .menu-item.invisible { display: none; }
+
 
 // for the facilitators
 body:not(.facilitator-user) {
