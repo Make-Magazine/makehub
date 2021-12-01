@@ -250,14 +250,14 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 						} ?>
 	                </div>
 				<?php } // after if logged in
-				if ( false === $is_enrolled ) {
+				if ( false === $is_enrolled  ) {
 					if ( $course_price_type == 'paynow' ) {
 						?><h4 class="bb-course-type bb-course-type-paynow text-center">Price
 						<?php
 							echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
 							echo wp_kses_post( $course_pricing['price'] ); ?></h4>
 						<?php
-					} else {
+					} else if ( $course_price_type == 'subscribe' ) {
 						$course_price_billing_p3 = get_post_meta( $course_id, 'course_price_billing_p3', true );
 						$course_price_billing_t3 = get_post_meta( $course_id, 'course_price_billing_t3', true );
 						if ( $course_price_billing_t3 == 'D' ) {

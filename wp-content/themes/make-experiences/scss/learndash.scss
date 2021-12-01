@@ -310,13 +310,20 @@
 	}
 }
 
-.learndash-stripe-checkout-button {
-	font-size: 20px !important;
-	margin-bottom: 15px !important;
- }
- .bb-course-type-paynow {
-	 font-size: 18px !important;
-	 color: #333 !important;
+.single-sfwd-courses .learndash-wrapper .bb-single-course-sidebar {
+	.ld-status {
+		font-size: 16px;
+		margin-top: 5px;
+	}
+	.learndash-stripe-checkout-button {
+		font-size: 20px;
+		margin-bottom: 15px;
+		border-radius: 2px;
+	 }
+	 .bb-course-type-paynow {
+		 font-size: 18px;
+		 color: #333;
+	 }
  }
 
 // EXCEPTIONS
@@ -327,7 +334,7 @@
 body.cat-education {
 	.widget_follow_us { display: none; }
 	.learndash-wrapper {
-		.btn-advance.ld-primary-background, .ld-section-heading, .lds-btn-primary, .lds-grid-banners-thumbnail {
+		.btn-advance.ld-primary-background, .ld-section-heading, .lds-btn-primary, .lds-grid-banners-thumbnail, .btn-join {
 			background-color: #07757A !important;
 		}
 	}
