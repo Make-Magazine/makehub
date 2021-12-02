@@ -174,7 +174,6 @@ function automatic_group_memberships( $uid, $lid ) {
     // if school membership, add to school maker faire group and school lms course
     if($lid == 18) {
         groups_join_group( 152, $uid );
-		error_log("the hits keep coming");
         //ld_update_course_access( $uid, 8660, false ); not necessary if we have the groups synced, eh?
     }
 }

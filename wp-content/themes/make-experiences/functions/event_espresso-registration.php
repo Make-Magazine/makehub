@@ -18,35 +18,8 @@ function attendee_approved( $registration) {
     $user = get_user_by('email', $attendeeEmail);
 
     if(!$user) {
-        //create a user
-        $username = strstr($attendeeEmail, '@', true); //first try username being the first part of the email
-        if(username_exists( $username )){  //username exists try something else
-            $count=1;
-            $exists = true;
-            while($exists){
-                $username = $username.$count;
-                if(!username_exists($username)){
-                    $exists = false;
-                }
-                $count++;
-            }
-        }
-
-        //generate random password, create user, send email
-        $random_password = wp_generate_password( 12, false );
-        $user_id = wp_create_user( $username, $random_password, $attendeeEmail );
-		update_user_meta( $user_id, 'first_name', $attendee->fname() );
-		update_user_meta( $user_id, 'last_name', $attendee->lname() );
-
-		$subject = 'Welcome to Maker Campus on Make: Community.';
-		$my_groups = 'https://make.co/wp-login.php?redirect_to='.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
-		$message = 'Hello ' . $attendee->fname().', <br /><br />Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
-<b>Email:</b> ' . $attendeeEmail. '<br />
-<b>Temporary Password:</b> ' . $random_password;
-		$headers = array('Content-Type: text/html; charset=ISO-8859-1','From: Make: Community <make@make.co>');
-		wp_mail( $attendeeEmail, $subject, $message, $headers );
-
-    }else{        
+		create_new_user('Welcome to Maker Campus on Make: Community', $attendee->fname(), $attendee->lname(), "Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make: Community. This is where you will find the event information, resources and community. Please login to access Make: Community and your Maker Campus", $attendeeEmail);
+    }else{
         $user_id = $user->ID;
     }
 
@@ -84,4 +57,35 @@ add_filter('FHEE__EED_Multi_Event_Registration__return_to_events_list_btn_txt','
 function change_return_to_event_text($text){
     $text = 'Return to Event';
     return $text;
+}
+
+// here's our function for creating a user and sending them a registration email
+function create_new_user($subject, $first_name, $last_name, $message, $email) {
+	//create a user
+	$username = strstr($email, '@', true); //first try username being the first part of the email
+	if(username_exists( $username )){  //username exists try something else
+		$count=1;
+		$exists = true;
+		while($exists){
+			$username = $username.$count;
+			if(!username_exists($username)){
+				$exists = false;
+			}
+			$count++;
+		}
+	}
+	//generate random password, create user, send email
+	$random_password = wp_generate_password( 12, false );
+	$user_id = wp_create_user( $username, $random_password, $email, );
+	update_user_meta( $user_id, 'first_name', $first_name );
+	update_user_meta( $user_id, 'last_name', $last_name );
+
+	$subject = $subject;
+	$my_groups = CURRENT_URL . '/wp-login.php?redirect_to=' . CURRENT_URL . '/members/me/groups/';
+	$message = 'Hello ' . $first_name .', <br /><br />' . $message .' <a href="'. $my_groups .'">event group</a>. <br /><br />
+	<b>Email:</b> ' . $email . '<br />
+	<b>Temporary Password:</b> ' . $random_password;
+	$headers = 'Content-Type: text/html; charset=ISO-8859-1' . '\r\n';
+	$headers .= 'From: Make: Community <make@make.co>' . '\r\n';
+	wp_mail($customer_email, $subject, $message, $headers );
 }
