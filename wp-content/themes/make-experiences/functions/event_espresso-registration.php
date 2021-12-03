@@ -18,7 +18,7 @@ function attendee_approved( $registration) {
     $user = get_user_by('email', $attendeeEmail);
 
     if(!$user) {
-		create_new_user('Welcome to Maker Campus on Make: Community', $attendee->fname(), $attendee->lname(), "Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make: Community. This is where you will find the event information, resources and community. Please login to access Make: Community and your Maker Campus", $attendeeEmail);
+		$user_id = create_new_user('Welcome to Maker Campus on Make: Community', $attendee->fname(), $attendee->lname(), "Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make: Community. This is where you will find the event information, resources and community. Please login to access Make: Community and your Maker Campus", $attendeeEmail);
     }else{
         $user_id = $user->ID;
     }
@@ -88,4 +88,6 @@ function create_new_user($subject, $first_name, $last_name, $message, $email) {
 	$headers = 'Content-Type: text/html; charset=ISO-8859-1' . '\r\n';
 	$headers .= 'From: Make: Community <make@make.co>' . '\r\n';
 	wp_mail($customer_email, $subject, $message, $headers );
+
+	return $user_id;
 }
