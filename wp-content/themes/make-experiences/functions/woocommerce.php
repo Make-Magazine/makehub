@@ -100,14 +100,14 @@ function woocommerce_add_membership( $order_id ){
 	    $product_id = $item->get_product_id();
 		// only do this if we're purchasing a school maker faire registration
 		if($product_id == "8624") {
-			if( !$order->get_user() ){
+			if( !$order->get_user() && !get_user_by('email', $order->get_billing_email()) ){
 				// Although we are taking new fields, these fields are not going into the order's post meta
 				$user_id = create_new_user('Welcome to Make: Community', $order->get_billing_first_name(), $order->get_billing_last_name(), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', $order->get_billing_email());
 				//$user_id = create_new_user('Welcome to Make: Community', get_post_meta($order_id, 'member_first_name', true ), get_post_meta( $order_id, 'member_last_name', true ), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', get_post_meta( $order_id, 'member_email', true ));
 				bp_set_member_type( $user_id, 'member742' );
 				assign_schoolmakerfaire_level($user_id);
 			} else {
-				$user = $order->get_user();
+				$user = get_user_by('email', $order->get_billing_email());
 				assign_schoolmakerfaire_level($user->ID);
 			}
 		}
