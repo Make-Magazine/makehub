@@ -13,6 +13,12 @@ function woo_remove_empty_tabs( $tabs ) {
 	return $tabs;
 }
 
+add_filter( 'woocommerce_billing_fields', 'wps_remove_filter_phone', 10, 1 );
+function wps_remove_filter_phone( $address_fields ) {
+  $address_fields['billing_phone']['required'] = false;
+  return $address_fields;
+}
+
 /*
 // Add some extra checkout fields
 add_filter( 'woocommerce_checkout_fields' , 'add_custom_checkout_fields' );
