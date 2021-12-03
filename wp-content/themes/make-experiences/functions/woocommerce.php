@@ -67,12 +67,26 @@ function checkout_custom_headings( $field, $key ){
 //Display order custom fields in the admin as well
 add_action( 'woocommerce_admin_order_data_after_shipping_address', 'custom_checkout_field_display_admin_order_meta', 10, 1 );
 function custom_checkout_field_display_admin_order_meta($order){
-    echo '<p><strong>'.__('Member Email').':</strong> ' . get_post_meta( $order->get_id(), '_member_email', true ) . '</p><span>Changing this won\'t change the member\'s email. Their Membership has been created already.';
+    echo '<p><strong>'.__('Member Email').':</strong> ' . get_post_meta( $order->get_id(), 'member_email', true ) . '</p><span>Changing this won\'t change the member\'s email. Their Membership has been created already.';
 }
-*/
+
+add_action('woocommerce_checkout_update_order_meta', 'custom_checkout_field_update_order_meta', 10, 2 );
+function custom_checkout_field_update_order_meta( $order_id ) {
+	$order = wc_get_order( $order_id );
+	$items = $order->get_items();
+	foreach ( $items as $item ) {
+	    $product_id = $item->get_product_id();
+		// only do this if we're purchasing a school maker faire registration
+		if($product_id == "8624") {
+			update_post_meta( $order_id, 'member_first_name', esc_attr($_POST['member_first_name']));
+			update_post_meta( $order_id, 'member_last_name', esc_attr($_POST['member_last_name']));
+			update_post_meta( $order_id, 'member_email', esc_attr($_POST['member_email']));
+		}
+	}
+}*/
 
 // add membership when order is completed
-add_action( 'woocommerce_payment_complete', 'woocommerce_add_membership' );
+add_action( 'woocommerce_payment_complete', 'woocommerce_add_membership', 10, 2 );
 function woocommerce_add_membership( $order_id ){
     $order = wc_get_order( $order_id );
 	$items = $order->get_items();
@@ -82,10 +96,8 @@ function woocommerce_add_membership( $order_id ){
 		if($product_id == "8624") {
 			if( !$order->get_user() ){
 				// Although we are taking new fields, these fields are not going into the order's post meta
-				//error_log(print_r($order, TRUE));
-				//error_log("Email is: " .  get_post_meta($order_id, '_member_email', true ));
 				$user_id = create_new_user('Welcome to Make: Community', $order->get_billing_first_name(), $order->get_billing_last_name(), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', $order->get_billing_email());
-				//$user_id = create_new_user(get_post_meta($order_id, '_member_first_name', true ), get_post_meta( $order_id, '_member_last_name', true ), get_post_meta( $order_id, '_member_email', true ), 'Welcome to Make: Community', 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire');
+				//$user_id = create_new_user('Welcome to Make: Community', get_post_meta($order_id, 'member_first_name', true ), get_post_meta( $order_id, 'member_last_name', true ), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', get_post_meta( $order_id, 'member_email', true ));
 				assign_schoolmakerfaire_level($user_id);
 			} else {
 				$user = $order->get_user();
