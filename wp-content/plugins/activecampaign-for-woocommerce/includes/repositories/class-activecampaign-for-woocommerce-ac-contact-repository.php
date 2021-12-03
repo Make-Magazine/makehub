@@ -62,7 +62,6 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 * @param     string|int $id     The ID to find the resource by.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
 	 */
 	public function find_by_id( $id ) {
 		/**
@@ -88,7 +87,6 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 * @param     string $filter_value     The filter value.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
 	 */
 	public function find_by_filter( $filter_name, $filter_value ) {
 		/**
@@ -114,13 +112,13 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 * @param     string $email     The email to find the resource by.
 	 *
 	 * @return Ecom_Model|null
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
 	 */
 	public function find_by_email( $email ) {
 		if ( ! $email ) {
 			return null;
 		}
 
+		$logger           = new Logger();
 		$ac_contact_model = new AC_Contact();
 
 		$result_array = $this->get_result_set_from_api_by_filter(
@@ -150,7 +148,6 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 * @param     Ecom_Model $model     The model to be created remotely.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Unprocessable_Exception A 422 exception.
 	 */
 	public function create( Ecom_Model $model ) {
 		$this->create_and_set_model_properties_from_api(
@@ -167,8 +164,6 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 * @param     Ecom_Model $model     The model to be updated remotely.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 exception.
-	 * @throws Activecampaign_For_Woocommerce_Resource_Unprocessable_Exception A 422 exception.
 	 */
 	public function update( Ecom_Model $model ) {
 		$this->update_and_set_model_properties_from_api(

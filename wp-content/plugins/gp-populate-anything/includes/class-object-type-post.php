@@ -9,8 +9,6 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		add_action( 'gppa_pre_object_type_query_post', array( $this, 'add_filter_hooks' ) );
 
-		add_filter( 'gppa_replace_filter_value_variables_post', array( $this, 'parse_date_in_filter_value' ), 10, 7 );
-
 		/**
 		 * Parse the following property's filter values as dates for The Events Calendar
 		 *
@@ -33,29 +31,6 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 	 */
 	public function query_cache_hash( $args ) {
 		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
-	}
-
-	public function parse_date_in_filter_value( $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property ) {
-		$property_id = ! empty( $property['group'] ) ? $property['group'] . '_' . $property['value'] : $property['value'];
-
-		if ( ! gf_apply_filters(
-			array(
-				'gppa_parse_post_filter_value_as_date',
-				$property_id,
-			),
-			false,
-			$filter_value,
-			$filter,
-			$field,
-			$property
-		) ) {
-			return $filter_value;
-		}
-
-		$date_time    = strtotime( $filter_value );
-		$filter_value = date( 'Y-m-d', $date_time );
-
-		return $filter_value;
 	}
 
 	/**
@@ -510,6 +485,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 				'label'    => $taxonomy->labels->singular_name,
 				'value'    => $taxonomy->name,
 				'group'    => 'taxonomies',
+				'orderby'  => true,
 				'callable' => array( $this, 'get_taxonomy_terms' ),
 			);
 		}
@@ -590,6 +566,22 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 							WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id
 							AND {$wpdb->postmeta}.meta_key = '{$meta_key}'
 					)";
+		}
+
+		/**
+		 * Support ordering by taxonomy.
+		 */
+		if ( strpos( $orderby, 'taxonomy_' ) === 0 ) {
+			$taxonomy = str_replace( 'taxonomy_', '', $orderby );
+
+			$query_args['order_by'] = $wpdb->prepare("(
+				SELECT {$wpdb->terms}.name
+				    FROM {$wpdb->term_relationships}
+				    JOIN {$wpdb->terms} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->terms}.term_id
+				    JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_id
+					WHERE {$wpdb->term_taxonomy}.taxonomy = %s
+						AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
+			)", $taxonomy );
 		}
 
 		return $query_args;

@@ -135,16 +135,14 @@ class CFF_Blocks {
 		$return = '';
 
 		$shortcode_settings = isset( $attr['shortcodeSettings'] ) ? $attr['shortcodeSettings'] : '';
-		$cff_statuses = get_option( 'cff_statuses', array() );
 
 		if ( empty( $cff_statuses['support_legacy_shortcode'] ) ) {
 			if ( empty( $shortcode_settings ) || strpos( $shortcode_settings, 'feed=' ) === false ){
-				\CustomFacebookFeed\Builder\get_feed_list();
-				$shortcode_settings = 'feed="1"';
+				$feeds = \CustomFacebookFeed\Builder\CFF_Feed_Builder::get_feed_list();
+				$feed_id = $feeds[0]['id'];
+				$shortcode_settings .= ' feed="' . (int)$feed_id . '"';
 			}
 		}
-
-
 
 		$shortcode_settings = str_replace(array( '[custom-facebook-feed', ']' ), '', $shortcode_settings);
 

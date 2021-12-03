@@ -101,11 +101,9 @@ class CFF_Notifications {
 		}
 
 		$current_screen = get_current_screen();
-
-		$base = wp_doing_ajax() ? 'ajax' : $current_screen->base;
 		// if we are one single feed page then return
-		if ( $base == "facebook-feed_page_cff-feed-builder" && isset( $_GET['feed_id'] ) ) {
-			return;
+		if ( is_object( $current_screen ) && $current_screen->base == "facebook-feed_page_cff-feed-builder" && isset( $_GET['feed_id'] ) ) {
+			$access = false;
 		}
 
 		return apply_filters( 'cff_admin_notifications_has_access', $access );
@@ -186,6 +184,11 @@ class CFF_Notifications {
 				continue;
 			}
 
+			// Ignore if min version has not been reached
+			if ( ! empty( $notification['minver'] ) && version_compare( $notification['minver'],  CFFVER ) >= 0 ) {
+				continue;
+			}
+
 			// The message and license should never be empty, if they are, ignore.
 			if ( empty( $notification['content'] ) || empty( $notification['type'] ) ) {
 				continue;
@@ -246,6 +249,11 @@ class CFF_Notifications {
 
 			// Ignore if max version has been reached
 			if ( ! empty( $notification['maxver'] ) && version_compare( $notification['maxver'],  CFFVER ) <= 0 ) {
+				unset( $notifications[ $key ] );
+			}
+
+			// Ignore if min version has not been reached
+			if ( ! empty( $notification['minver'] ) && version_compare( $notification['minver'],  CFFVER ) >= 0 ) {
 				unset( $notifications[ $key ] );
 			}
 		}
@@ -497,7 +505,7 @@ class CFF_Notifications {
 					$image_html .= '</svg>';
 				} else {
 					$image_html = '<div class="thumb">';
-					$img_src = SBY_PLUGIN_URL . 'admin/assets/img/' . sanitize_text_field( $notification['image'] );
+					$img_src = CFF_PLUGIN_URL . 'admin/assets/img/' . sanitize_text_field( $notification['image'] );
 					$image_html .= '<img src="'.esc_url( $img_src ).'" alt="notice">';
 
 					if ( isset( $notification['image_overlay'] ) ) {

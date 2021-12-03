@@ -19,10 +19,10 @@ if ( !function_exists( 'buddyboss_theme_setup' ) ) {
 		/*
 		 * Make theme available for translation.
 		 * Translations can be filed in the /languages/ directory.
-		 * If you're building a theme based on BuddyBoss Theme, use a find and replace
+		 * If you're building a theme based on Buddyboss Theme, use a find and replace
 		 * to change 'buddyboss-theme' to the name of your theme in all the template files.
 		 */
-		buddyboss_theme_load_textdomain();
+		load_theme_textdomain( 'buddyboss-theme', get_template_directory() . '/languages' );
 
 		// This theme styles the visual editor with editor-style.css to match the theme style.
 		add_editor_style();
@@ -117,60 +117,6 @@ if ( ! function_exists( 'buddyboss_theme_customize_register' ) ) {
     }
 
 	add_action( 'customize_register', 'buddyboss_theme_customize_register', 99 );
-}
-
-/**
- * Load the buddyboss translation file for current language.
- *
- * @since BuddyPress 1.0.2
- *
- * @see load_textdomain() for a description of return values.
- *
- * @return bool True on success, false on failure.
- */
-function buddyboss_theme_load_textdomain() {
-	$domain = 'buddyboss-theme';
-
-	/**
-	 * Filters the locale to be loaded for the language files.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddyboss_theme_locale', get_locale() ) );
-
-	/**
-	 * Filters the author locale to be loaded for the language files.
-	 *
-	 * @since BuddyBoss 1.7.1
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_author = sprintf( '%s.mo', apply_filters( 'buddyboss_theme_author_locale', get_locale() ) );
-
-	/**
-	 * Filters the locations to load language files from.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $value Array of directories to check for language files in.
-	 */
-	$locations = apply_filters( 'buddyboss_theme_locale_locations', array(
-		trailingslashit( WP_LANG_DIR . '/' . $domain  ),
-		trailingslashit( WP_LANG_DIR ),
-		trailingslashit( get_template_directory() . '/languages' ),
-	) );
-
-	// Try custom locations in WP_LANG_DIR.
-	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss-theme', $location . $mofile_custom ) || load_textdomain( 'buddyboss-theme', $location . $mofile_author ) ) {
-			return true;
-		}
-	}
-
-	// Default to WP and glotpress.
-	return load_theme_textdomain( $domain );
 }
 
 /**
@@ -395,7 +341,7 @@ function buddyboss_theme_scripts() {
 	if ( defined('ELEMENTOR_VERSION') ) {
 		wp_enqueue_script( 'buddyboss-theme-elementor-js', get_template_directory_uri() . '/assets/js/plugins/elementor' . $minjs . '.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	}
-    if ( function_exists( 'buddyboss_global_search_init' ) || class_exists( 'WPForms' ) || class_exists( 'IT_Exchange' ) || class_exists( 'Ninja_Forms' ) || class_exists( 'WC_Vendors' )){
+    if ( function_exists( 'buddyboss_global_search_init' ) || class_exists( 'WPForms' ) || class_exists( 'IT_Exchange' ) || class_exists( 'Ninja_Forms' ) || class_exists( 'WC_Vendors' ) || class_exists( 'arete_buddypress_smileys_setting' )){
         wp_enqueue_script( 'buddyboss-theme-plugins-js', get_template_directory_uri() . '/assets/js/plugins/plugins' . $minjs . '.js', array( 'jquery' ), buddyboss_theme()->version(), true );
     }
 

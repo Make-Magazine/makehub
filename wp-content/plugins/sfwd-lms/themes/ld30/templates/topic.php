@@ -61,7 +61,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	/**
 	 * If the user needs to complete the previous lesson AND topic display an alert
-	 *
 	 */
 
 	$sub_context = '';

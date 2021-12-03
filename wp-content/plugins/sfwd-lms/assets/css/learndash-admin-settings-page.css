@@ -1230,19 +1230,21 @@ Quiz Edit Result Text lists
   font-weight: bold;
 }
 
-
-.sfwd_options .ld-settings-info-banner {
+/**
+Sections/Settings Info banners.
+*/
+.ld_settings_postbox .ld-settings-info-banner {
   display: block;
   padding: 5px 10px 5px 10px;
   margin: 5px 0;
 }
 
-.sfwd_options .ld-settings-info-banner p::before {
+.ld_settings_postbox .ld-settings-info-banner p::before {
   font: normal 20px/1 dashicons;
   float: left;
 }
 
-.sfwd_options .ld-settings-info-banner p {
+.ld_settings_postbox .ld-settings-info-banner p {
   margin: .5em 0;
   padding: 0;
 	font-size: 13px;
@@ -1252,23 +1254,49 @@ Quiz Edit Result Text lists
 	vertical-align: top;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-alert {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-alert {
   background-color: #fbeaea;
   border-left-color: #dc3232;
   border-left-width: 2px;
   border-left-style: solid;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-alert p::before {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-alert p::before {
 	color: #dc3232;
   content: "\f534";
   margin-right: 6px;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-success {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-success {
   border-color: #46b450;
   border-width: 0 0 1px 2px;
   border-style: solid;
+}
+
+/* LearnDash Settings Sub menu */
+ul.learndash-settings-sub {
+  float: none;
+}
+
+ul.learndash-settings-sub li.learndash-settings-sub-current a {
+  font-weight: bold;
+}
+
+/* LearnDash Settings Table general styles */
+table.learndash-settings-table th {
+  font-weight: bold;
+}
+
+table.learndash-settings-table td.col-valign-middle {
+  vertical-align: middle;
+}
+
+table.learndash-settings-table-sortable .ui-sortable-helper {
+    display: table;
+}
+
+table.learndash-settings-table-sortable td.col-name-move {
+  cursor: grab;
 }
 
 /*

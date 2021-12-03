@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type string     $show     The quiz info field to display. Default empty.

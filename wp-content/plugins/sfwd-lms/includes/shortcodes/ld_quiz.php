@@ -265,7 +265,7 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		$content = learndash_ob_get_clean( $level );
 
 		// Added this defined wrap in v2.1.8 as it was effecting <pre></pre>, <code></code> and other formatting of the content.
-		// See wrike https://www.wrike.com/open.htm?id=77352698 as to why this define exists
+		// See wrike https://www.wrike.com/open.htm?id=77352698 as to why this define exists.
 		if ( ( defined( 'LEARNDASH_NEW_LINE_AND_CR_TO_SPACE' ) ) && ( LEARNDASH_NEW_LINE_AND_CR_TO_SPACE == true ) ) {
 
 			// Why is this here?

@@ -308,6 +308,7 @@ get_header();
                             Have questions or comments? Email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
                             <br /><br />
                         </div>
+						<div class="text-center" style="padding: 0px 10px;"><b>Maker Campus session recordings will be made available to all paid registrants.</b></div>
                         <?php
                         $relevents = get_field('events');
                         if ($relevents && is_singular(array('espresso_events'))) {

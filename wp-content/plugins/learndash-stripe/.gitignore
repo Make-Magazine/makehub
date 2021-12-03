@@ -1,0 +1,10 @@
+sfwd-stripe/
+learndash-stripe/
+*.zip
+sftp-config.json
+vendor/stripe/stripe-php/.editorconfig
+\.bowerrc
+snippet*
+
+*.sublime-project
+*.sublime-workspace

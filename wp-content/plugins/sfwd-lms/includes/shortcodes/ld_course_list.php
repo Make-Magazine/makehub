@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type string          $include_outer_wrapper Whether to include outer wrapper.  Default 'true'.
@@ -214,7 +214,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 		} else {
 			$atts['course_status'] = null;
 		}
-		//unset( $atts['status'] );
+		// unset( $atts['status'] );
 	} elseif ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) {
 		if ( ( 'true' === $atts['mygroups'] ) || ( 'enrolled' === $atts['mygroups'] ) ) {
 			if ( is_user_logged_in() ) {
@@ -255,7 +255,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 		} else {
 			$atts['group_status'] = null;
 		}
-		//unset( $atts['status'] );
+		// unset( $atts['status'] );
 	}
 
 	if ( '' === $atts['post__in'] ) {
@@ -1013,7 +1013,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 
 		if ( ( isset( $_GET['catid'] ) ) && ( ! empty( $_GET['catid'] ) ) ) {
 			$atts['cat'] = intval( $_GET['catid'] );
-			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756
+			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756.
 			$attr_org['cat'] = intval( $_GET['catid'] );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -1093,7 +1093,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 		$atts['categoryselector'];
 	}
 
-		// We can only support one of the other category OR course_category selectors
+		// We can only support one or the other: category OR course_category selectors.
 	if ( ( trim( $atts[ $post_type_slug . '_categoryselector' ] ) == 'true' ) && ( empty( $categoryselector ) )
 		&& ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) ) {
 		$ld_cats = array();
@@ -1101,7 +1101,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 		if ( ( isset( $_GET[ $post_type_slug . '_catid' ] ) ) && ( ! empty( $_GET[ $post_type_slug . '_catid' ] ) ) ) {
 
 			$atts[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
-			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756
+			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756.
 			$attr_org[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -1223,7 +1223,7 @@ function ld_course_list( $attr = array(), $content = '' ) {
 					<label for="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select">' . esc_html( $tax_object->labels->name ) . '</label>
 					<select id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select" name="' . esc_attr( $post_type_slug ) . '_catid" onChange="jQuery(\'#ld_' . esc_attr( $post_type_slug ) . '_categorydropdown form\').submit()">';
 			$ld_categorydropdown .= '<option value="">' . sprintf(
-				// translators: placeholder: LD Category label
+				// translators: placeholder: LD Category label.
 				esc_html_x( 'Select %s', 'placeholder: LD Category label', 'learndash' ),
 				esc_attr( $tax_object->labels->name )
 			) . '</option>';

@@ -185,7 +185,7 @@ msgstr ""
 msgid "Too many values to display."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:1310, ../class-gp-populate-anything.php:3317, ../includes/class-live-merge-tags.php:986
+#: ../class-gp-populate-anything.php:1310, ../class-gp-populate-anything.php:3361, ../includes/class-live-merge-tags.php:987
 msgid "Fill Out Other Fields"
 msgstr ""
 
@@ -217,63 +217,63 @@ msgstr ""
 msgid "Fields"
 msgstr ""
 
-#: ../includes/class-object-type-gf-entry.php:40
+#: ../includes/class-object-type-gf-entry.php:41
 msgid "Entry Meta"
 msgstr ""
 
-#: ../includes/class-object-type-gf-entry.php:48
+#: ../includes/class-object-type-gf-entry.php:50
 msgid "Form"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:78
+#: ../includes/class-object-type-post.php:53
 msgid "Post"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:91
+#: ../includes/class-object-type-post.php:66
 msgid "Post Taxonomies"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:100
+#: ../includes/class-object-type-post.php:75
 msgid "Post Meta"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:376
+#: ../includes/class-object-type-post.php:351
 msgid "Author"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:383
+#: ../includes/class-object-type-post.php:358
 msgid "Post Status"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:389
+#: ../includes/class-object-type-post.php:364
 msgid "Post Title"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:396
+#: ../includes/class-object-type-post.php:371
 msgid "Post Content"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:402
+#: ../includes/class-object-type-post.php:377
 msgid "Post Excerpt"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:409
+#: ../includes/class-object-type-post.php:384
 msgid "Post Name (Slug)"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:416
+#: ../includes/class-object-type-post.php:391
 msgid "Post ID"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:423
+#: ../includes/class-object-type-post.php:398
 msgid "Post Type"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:430
+#: ../includes/class-object-type-post.php:405
 msgid "Post Date"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:437
+#: ../includes/class-object-type-post.php:412
 msgid "Parent Post"
 msgstr ""
 

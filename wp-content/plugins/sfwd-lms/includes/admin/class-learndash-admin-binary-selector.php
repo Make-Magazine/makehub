@@ -381,6 +381,16 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 		}
 
 		/**
+		 * Build selector section options HTML.
+		 *
+		 * @since 2.2.1
+		 *
+		 * @param string $position Value for 'left' or 'right' position.
+		 */
+		protected function build_options_html( $position = '' ) {
+		}
+
+		/**
 		 * Get selector section items.
 		 *
 		 * @since 2.2.1
@@ -492,12 +502,14 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 		 *
 		 * @param string $class_name Class name to check.
 		 *
-		 * @return true if valid.
+		 * @return bool true if valid.
 		 */
 		public static function check_class( $class_name ) {
 			if ( ( ! empty( $class_name ) ) && ( in_array( $class_name, static::$allowed_classes, true ) ) ) {
 				return true;
 			}
+
+			return false;
 		}
 	}
 }

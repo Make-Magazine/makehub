@@ -334,7 +334,9 @@ class CFF_Error_Reporter
 
 			$directions = '<p class="cff-error-directions">';
 			$directions .= $error_message_array['backend_directions'];
-			$directions .= '<button data-url="'.get_the_permalink( $error_message_array['post_id'] ).'" class="cff-clear-errors-visit-page cff-space-left cff-btn cff-notice-btn cff-btn-grey">' . __( 'View Feed and Retry', 'custom-facebook-feed' )  . '</button>';
+			if ( ! empty( $error_message_array['post_id'] ) ) {
+				$directions .= '<button data-url="'.get_the_permalink( $error_message_array['post_id'] ).'" class="cff-clear-errors-visit-page cff-space-left cff-btn cff-notice-btn cff-btn-grey">' . __( 'View Feed and Retry', 'custom-facebook-feed' )  . '</button>';
+			}
 			$directions .=	'</p>';
 		}else{
 
@@ -571,6 +573,12 @@ class CFF_Error_Reporter
 	public function dismiss_critical_notice() {
 
 		check_ajax_referer( 'cff-critical-notice', 'nonce' );
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 
 		update_option( 'cff_dismiss_critical_notice', 1, false );
 

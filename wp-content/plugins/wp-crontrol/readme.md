@@ -4,7 +4,7 @@ Contributors: johnbillion, scompt
 Tags: cron, wp-cron, crontrol, debug  
 Requires at least: 4.2  
 Tested up to: 5.8  
-Stable tag: 1.11.0  
+Stable tag: 1.12.0  
 Requires PHP: 5.3  
 Donate link: https://github.com/sponsors/johnbillion
 
@@ -157,6 +157,11 @@ The photo was taken by <a href="https://www.flickr.com/photos/michaelpardo/21453
 
 ## Changelog ##
 
+### 1.12.0 ###
+
+* Fix the PHP cron event management.
+* More "namespacing" of query variables to avoid conflicts with other cron management plugins.
+
 ### 1.11.0 ###
 
 * Introduced an `Export` feature to the event listing screen for exporting the list of events as a CSV file.
@@ -274,12 +279,6 @@ The photo was taken by <a href="https://www.flickr.com/photos/michaelpardo/21453
 - Add the ability for a PHP cron event to be given an optional display name.
 - Better UX for users who cannot edit files and therefore cannot add or edit PHP cron events.
 - Terminology and i18n improvements.
-
-
-### 1.3.1 ###
-
-- Display a less scary looking message when `DISABLE_WP_CRON` is defined.
-- Correct the example code for cron event arguments.
 
 
 ### 1.3 ###

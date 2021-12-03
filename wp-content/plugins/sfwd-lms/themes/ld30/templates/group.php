@@ -21,7 +21,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-//$group_course_ids = learndash_group_enrolled_courses( $group_id );
+// $group_course_ids = learndash_group_enrolled_courses( $group_id );
 ?>
 <div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
 
@@ -191,7 +191,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					 */
 					do_action( 'learndash_group_expand_before', $group_id, $user_id );
 
-					// Only display if there is something to expand
+					// Only display if there is something to expand.
 					if ( ( isset( $group_courses ) ) && ( ! empty( $group_courses ) ) ) {
 						?>
 						<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $group_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $group_id ); ?>" data-ld-expand-text="<?php echo esc_attr_e( 'Expand All', 'learndash' ); ?>" data-ld-collapse-text="<?php echo esc_attr_e( 'Collapse All', 'learndash' ); ?>">
@@ -199,7 +199,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'learndash' ); ?></span>
 						</div> <!--/.ld-expand-button-->
 						<?php
-						// TODO @37designs Need to test this
 						/**
 						 * Filters whether to expand all course steps by default. Default is false.
 						 *

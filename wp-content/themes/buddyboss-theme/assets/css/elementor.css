@@ -318,7 +318,8 @@
 
 .elementor-widget-wp-widget-bp_core_recently_active_widget .item-avatar img,
 .elementor-widget-wp-widget-bp_core_whos_online_widget .item-avatar img,
-.elementor-widget-wp-widget-bp_core_follow_following_widget .item-avatar img {
+.elementor-widget-wp-widget-bp_core_follow_following_widget .item-avatar img,
+.elementor-widget-wp-widget-bp_core_follow_follower_widget .item-avatar img {
   border-radius: 50%; }
 
 .uael-subscribe-bar .fluid-width-video-wrapper {
@@ -611,6 +612,34 @@ div.elementor-price-table__ribbon-inner {
 
 .bb-sfwd-aside .site > .elementor-location-header {
   z-index: initial !important; }
+
+.elementor-element-edit-mode .elementor-widget-wp-widget-bp_core_whos_online_widget a#online-members {
+  border-bottom: 1px solid #ed7e00;
+  color: #007CFF;
+  font-weight: 600;
+  margin-bottom: -1px;
+  color: #122B46; }
+
+.elementor-element-edit-mode .elementor-widget-wp-widget-bp_core_whos_online_widget #boss_whos_online_widget_connections {
+  display: none; }
+
+.elementor-widget.elementor-widget-wp-widget-bp_core_friends_widget ul a {
+  font-size: 14px; }
+
+.elementor-widget.elementor-widget-wp-widget-bp_core_friends_widget .item-meta {
+  display: none; }
+
+.elementor-widget.elementor-widget-wp-widget-bp_core_friends_widget .item-list .item-avatar {
+  margin-right: 12px; }
+
+.elementor-element-edit-mode.elementor-widget[class*="wp-widget"] {
+  background: #fff;
+  border: 1px solid #E7E9EC;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem 0.9375rem; }
 
 /** header bar widget */
 .site-header.site-header--elementor,

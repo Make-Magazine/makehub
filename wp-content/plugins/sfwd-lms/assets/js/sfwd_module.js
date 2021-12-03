@@ -1594,6 +1594,25 @@ jQuery( function() {
 			jQuery( 'form#posts-filter input.learndash-award-points[data-learndash-input-changed="1"]' ).attr( 'disabled', false );
 		} );
 	}
+
+	if ( jQuery( 'body.wp-admin.edit-php.post-type-sfwd-transactions form#posts-filter' ).length ) {
+		if ( jQuery( 'form#posts-filter button.ld_remove_access_single' ).length ) {
+			jQuery( 'form#posts-filter button.ld_remove_access_single' ).on( 'click', function( e ) {
+				e.preventDefault();
+				var transaction_id = jQuery( this ).attr( 'id' ).replace( 'ld_remove_access_', '' );
+
+				if ( ( typeof transaction_id !== 'undefined' ) && ( transaction_id != '' ) ) {
+					if ( jQuery( 'form#posts-filter input#cb-select-' + transaction_id ).length ) {
+						jQuery( 'form#posts-filter input#cb-select-' + transaction_id ).prop( 'checked', true );
+					}
+					if ( jQuery( 'form#posts-filter select#bulk-action-selector-top' ).length ) {
+						jQuery( 'form#posts-filter select#bulk-action-selector-top' ).val( 'remove_access' );
+					}
+					jQuery( 'form#posts-filter input#doaction' ).trigger( 'click' );
+				}
+			} );
+		}
+	}
 } );
 
 jQuery( function() {

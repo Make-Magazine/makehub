@@ -33,6 +33,10 @@ use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Gue
 use Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command as Run_Abandonment_Sync_Command;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
+use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
+use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
+use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 
 /**
  * The core plugin class.
@@ -208,6 +212,38 @@ class Activecampaign_For_Woocommerce {
 	private $plugin_upgrade_command;
 
 	/**
+	 * Handles historical sync.
+	 *
+	 * @since 1.5.0
+	 * @var Historical_Sync The historical sync class.
+	 */
+	private $historical_sync;
+
+	/**
+	 * Order utility class.
+	 *
+	 * @since 1.5.0
+	 * @var Order_Utilities The order utility class.
+	 */
+	private $order_utilities;
+
+	/**
+	 * Customer utility class.
+	 *
+	 * @since 1.5.0
+	 * @var Customer_Utilities The customer utility class.
+	 */
+	private $customer_utilities;
+
+	/**
+	 * Abandoned cart utility class.
+	 *
+	 * @since 1.5.0
+	 * @var Abandoned_Cart_Utilities The abandoned cart utility class.
+	 */
+	private $abandoned_cart_utilities;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -234,6 +270,10 @@ class Activecampaign_For_Woocommerce {
 	 * @param     User_Registered                            $user_registered_event     The user registered event class.
 	 * @param     Run_Abandonment_Sync_Command               $run_abandonment_sync_command     The scheduled runner to sync abandonments.
 	 * @param     Plugin_Upgrade_Command                     $plugin_upgrade_command     The plugin installation and upgrade commands.
+	 * @param     Historical_Sync                            $historical_sync The historical sync commands.
+	 * @param     Order_Utilities                            $order_utilities The order utility functions.
+	 * @param     Customer_Utilities                         $customer_utilities The customer utility functions.
+	 * @param     Abandoned_Cart_Utilities                   $abandoned_cart_utilities The abandoned cart utility functions.
 	 *
 	 * @since    1.0.0
 	 */
@@ -259,7 +299,11 @@ class Activecampaign_For_Woocommerce {
 		Order_Finished $order_finished_event,
 		User_Registered $user_registered_event,
 		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
-		Plugin_Upgrade_Command $plugin_upgrade_command
+		Plugin_Upgrade_Command $plugin_upgrade_command,
+		Historical_Sync $historical_sync,
+		Order_Utilities $order_utilities,
+		Customer_Utilities $customer_utilities,
+		Abandoned_Cart_Utilities $abandoned_cart_utilities
 	) {
 		$this->version                                    = $version;
 		$this->plugin_name                                = $plugin_name;
@@ -283,6 +327,10 @@ class Activecampaign_For_Woocommerce {
 		$this->user_registered_event                          = $user_registered_event;
 		$this->run_abandonment_sync_command                   = $run_abandonment_sync_command;
 		$this->plugin_upgrade_command                         = $plugin_upgrade_command;
+		$this->historical_sync                                = $historical_sync;
+		$this->order_utilities                                = $order_utilities;
+		$this->customer_utilities                             = $customer_utilities;
+		$this->abandoned_cart_utilities                       = $abandoned_cart_utilities;
 	}
 
 	/**
@@ -372,7 +420,8 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'woocommerce_payment_complete',
 			$this->order_finished_event,
-			'checkout_meta'
+			'checkout_completed',
+			41
 		);
 
 		$this->loader->add_action(
@@ -441,6 +490,13 @@ class Activecampaign_For_Woocommerce {
 			$this->clear_user_meta_command,
 			'execute'
 		);
+
+		$this->loader->add_action(
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME,
+			$this->historical_sync,
+			'execute'
+		);
+
 	}
 
 	/**
@@ -501,13 +557,7 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'admin_enqueue_scripts',
 			$this->admin,
-			'enqueue_styles'
-		);
-
-		$this->loader->add_action(
-			'admin_enqueue_scripts',
-			$this->admin,
-			'enqueue_scripts'
+			'enqueue_styles_scripts'
 		);
 
 		// add menu item to bottom of WooCommerce menu
@@ -657,6 +707,35 @@ class Activecampaign_For_Woocommerce {
 			'handle_reset_connection_id'
 		);
 
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_schedule_historical_sync',
+			$this->admin,
+			'schedule_historical_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_check_historical_sync_status',
+			$this->admin,
+			'check_historical_sync_status'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_cancel_historical_sync',
+			$this->admin,
+			'stop_historical_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_pause_historical_sync',
+			$this->admin,
+			'stop_historical_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_reset_historical_sync',
+			$this->admin,
+			'reset_historical_sync'
+		);
 	}
 
 	/**
@@ -684,13 +763,7 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'wp_enqueue_scripts',
 			$this->public,
-			'enqueue_styles'
-		);
-
-		$this->loader->add_action(
-			'wp_enqueue_scripts',
-			$this->public,
-			'enqueue_scripts'
+			'enqueue_styles_scripts'
 		);
 
 		// Verify the checkbox should display

@@ -519,7 +519,7 @@ var cffSettings = new Vue({
                 return;
             }
 
-            let url = this.ajaxHandler + '?action=cff_export_settings_json&feed_id=' + this.exportFeed;
+            let url = this.ajaxHandler + '?action=cff_export_settings_json&feed_id=' + this.exportFeed + '&nonce=' + this.nonce;
             window.location = url;
         },
         saveSettings: function() {
@@ -748,6 +748,7 @@ var cffSettings = new Vue({
          */
         ajaxPost : function(data, callback){
             var self = this;
+            data['nonce'] = self.nonce;
             self.$http.post(self.ajaxHandler,data).then(callback);
         },
 

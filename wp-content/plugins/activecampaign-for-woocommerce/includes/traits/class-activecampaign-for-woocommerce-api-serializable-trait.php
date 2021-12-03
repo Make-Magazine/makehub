@@ -72,4 +72,13 @@ trait Activecampaign_For_Woocommerce_Api_Serializable {
 
 		return $this;
 	}
+
+	/**
+	 * Converts a serialized array to json
+	 *
+	 * @return false|string
+	 */
+	public function customer_to_json() {
+		return wp_json_encode( $this->serialize_to_array() );
+	}
 }

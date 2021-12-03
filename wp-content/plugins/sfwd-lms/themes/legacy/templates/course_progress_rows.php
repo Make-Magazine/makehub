@@ -80,7 +80,7 @@ foreach ( $course_progress as $course_id => $coursep ) {
 		}
 	}
 
-	// Display the Course Access if expired or expiring
+	// Display the Course Access if expired or expiring.
 	$expire_access = learndash_get_setting( $course_id, 'expire_access' );
 	if ( ! empty( $expire_access ) ) {
 		$expired           = ld_course_access_expired( $course_id, $user_id );

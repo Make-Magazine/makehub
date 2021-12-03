@@ -261,7 +261,8 @@ class Galleries extends \WP_REST_Controller
 
     register_rest_route($namespace, '/' . $base . '/schema', array(
       'methods' => \WP_REST_Server::READABLE,
-      'callback' => array($this, 'get_public_item_schema')
+      'callback' => array($this, 'get_public_item_schema'),
+      'permission_callback' => '__return_true'
     ));
   }
 
@@ -427,6 +428,23 @@ class Galleries extends \WP_REST_Controller
     $params = $request->get_params();
     $data = array();
     $format = array();
+    global $wpdb;
+
+    if (isset($params['title']) && $params['title'] !== "") {
+      $result = $wpdb->update(
+        $wpdb->vimeography_gallery,
+        array('title' => $params['title']),
+        array('id' => $params['id']),
+        array('%s'),
+        array('%d')
+      );
+
+      if ($result === false) {
+        return new \WP_Error('cant-update', __('Could not update gallery title', 'vimeography'), array(
+          'status' => 500
+        ));
+      }
+    }
 
     if (isset($params['cache_timeout'])) {
       $data['cache_timeout'] = $params['cache_timeout'];
@@ -448,7 +466,19 @@ class Galleries extends \WP_REST_Controller
       $format[] = '%s';
     }
 
-    global $wpdb;
+    if (isset($params['source_url']) && $params['source_url'] !== "") {
+      try {
+        $data['resource_uri'] = \Vimeography::validate_vimeo_source( $params['source_url'] );
+        $format[] = '%s';
+
+        $data['source_url'] = $params['source_url'];
+        $format[] = '%s';
+      } catch (Error $e) {
+        return new \WP_Error('cant-update', __('Invalid Vimeo collection URL.', 'vimeography'), array(
+          'status' => 500
+        ));
+      }
+    }
 
     $result = $wpdb->update(
       $wpdb->vimeography_gallery_meta,
@@ -459,7 +489,7 @@ class Galleries extends \WP_REST_Controller
     );
 
     if ($result === false) {
-      return new \WP_Error('cant-update', __('message', 'text-domain'), array(
+      return new \WP_Error('cant-update', __('Could not update gallery metadata', 'vimeography'), array(
         'status' => 500
       ));
     }
@@ -928,6 +958,8 @@ class Galleries extends \WP_REST_Controller
           }
         } elseif (function_exists('wp_update_custom_css_post')) {
           // if 4.7+, find styles in db and copy to new gallery.
+          // These are saved in the `wp_posts` table with a `post_title`
+          // of vimeography_gallery_{n}
           $styles = wp_get_custom_css('vimeography_gallery_' . $id); // returns css string
 
           if ($styles) {

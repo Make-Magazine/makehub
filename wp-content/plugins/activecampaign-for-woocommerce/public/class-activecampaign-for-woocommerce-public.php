@@ -92,11 +92,13 @@ class Activecampaign_For_Woocommerce_Public {
 	}
 
 	/**
-	 * Register the stylesheets for the public-facing side of the site.
+	 * Register the CSS & JavaScript for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles_scripts() {
+		$this->init();
+
 		wp_enqueue_style(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'css/activecampaign-for-woocommerce-public.css',
@@ -104,29 +106,32 @@ class Activecampaign_For_Woocommerce_Public {
 			$this->version,
 			'all'
 		);
-	}
 
-	/**
-	 * Register the JavaScript for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
-		$this->init();
-		$options            = $this->admin->get_options();
 		$custom_email_field = 'billing_email';
-		if ( isset( $options['custom_email_field'] ) ) {
-			$setting = $options['custom_email_field'];
 
-			/**
-			 * There are three settings available, but only this one results in not displaying the checkbox at all.
-			 */
-			if ( ! is_null( $setting ) && ! empty( $setting ) ) {
-				$custom_email_field = $setting;
+		try {
+			$options = $this->admin->get_options();
+			if ( isset( $options['custom_email_field'] ) ) {
+				$setting = $options['custom_email_field'];
+
+				/**
+				 * There are three settings available, but only this one results in not displaying the checkbox at all.
+				 */
+				if ( ! empty( $setting ) && ! is_null( $setting ) ) {
+					$custom_email_field = $setting;
+				}
+			} else {
+				$this->logger->error( 'custom_email_field not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
 			}
-		} else {
-			$this->logger->error( 'custom_email_field not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
+		} catch ( Throwable $t ) {
+			$this->logger->debug(
+				'Activecampaign_For_Woocommerce_Public: There was an issue reading the custom email field.',
+				[
+					'message' => $t->getMessage(),
+				]
+			);
 		}
+
 		wp_register_script(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'js/activecampaign-for-woocommerce-public.js?custom_email_field=' . $custom_email_field,

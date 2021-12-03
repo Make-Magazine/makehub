@@ -19,6 +19,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Metabox_Quiz_Access_Settings extends LearnDash_Settings_Metabox {
 
 		/**
+		 * Quiz edit object
+		 *
+		 * @var object
+		 */
+		public $quiz_edit = null;
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.0.0

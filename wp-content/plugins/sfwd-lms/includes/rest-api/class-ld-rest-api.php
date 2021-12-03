@@ -3,7 +3,7 @@
  * LearnDash REST API loader
  *
  * @since 2.4.5
-* @package LearnDash\REST
+ * @package LearnDash\REST
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -235,9 +235,9 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		 *
 		 * @return The *Singleton* instance.
 		 */
-		public static function get_instance() {
+		final public static function get_instance() {
 			if ( null === static::$instance ) {
-				static::$instance = new static();
+				static::$instance = new self();
 			}
 
 			return static::$instance;
@@ -308,7 +308,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		}
 
 		/**
-		 * get REST controller for post type.
+		 * Get REST controller for post type.
 		 *
 		 * @since 2.5.8
 		 *

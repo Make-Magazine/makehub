@@ -26,7 +26,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $course Either course_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function course( $course = null, $reload = false ) {
 			if ( ! empty( $course ) ) {
@@ -46,6 +46,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $course_id, $course_id );
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -54,7 +56,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $lesson Either lesson_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Lesson
+		 * @return new instance of LDLMS_Model_Lesson or null
 		 */
 		public static function lesson( $lesson = null, $reload = false ) {
 			if ( ! empty( $lesson ) ) {
@@ -74,8 +76,16 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $lesson_id, $lesson_id );
 				}
 			}
+
+			return null;
 		}
 
+		/**
+		 * Get Course.
+		 *
+		 * @param mixed $course Either course_id integer or WP_Post instance.
+		 */
+		public static function get_course( $course ) {}
 
 		/**
 		 * Get Course Lessons.
@@ -83,7 +93,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param mixed $course Either course_id integer or WP_Post instance.
 		 * @param mixed $lesson Either lesson_id integer or WP_Post instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course.
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function get_course_lessons( $course = null, $lesson = null ) {
 			if ( ! empty( $course ) ) {
@@ -102,6 +112,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return $course_lesson;
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -110,7 +122,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param mixed   $quiz Either quiz_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Quiz_Questions or null
 		 */
 		public static function quiz_questions( $quiz = null, $reload = false ) {
 			if ( ! empty( $quiz ) ) {
@@ -131,6 +143,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $quiz_id, $quiz_id );
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -160,6 +174,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $course_id, $course_id );
 				}
 			}
+
+			return null;
 		}
 	}
 }

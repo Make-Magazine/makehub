@@ -19,6 +19,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Metabox_Group_Membership_Post_Settings extends LearnDash_Settings_Metabox {
 
 		/**
+		 * Array of post types
+		 *
+		 * @var array
+		 */
+		protected $post_types = array();
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.2.0
@@ -55,7 +62,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// New fields
+				// New fields.
 				'groups_membership_enabled'  => 'groups_membership_enabled',
 				'groups_membership_groups'   => 'groups_membership_groups',
 				'groups_membership_compare'  => 'groups_membership_compare',
@@ -113,7 +120,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					),
 				);
 				if ( ( is_array( $select_groups_options ) ) && ( ! empty( $select_groups_options ) ) ) {
-					$select_groups_options = $select_groups_options_default + $select_group_options;
+					$select_groups_options = $select_groups_options_default + $select_groups_options;
 				} else {
 					$select_groups_options = $select_groups_options_default;
 				}

@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// New fields
+				// New fields.
 				'group_materials_enabled'        => 'group_materials_enabled',
 				'group_materials'                => 'group_materials',
 				'certificate'                    => 'certificate',

@@ -23,13 +23,14 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V2' ) ) && ( class_exists( 'L
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -135,9 +136,9 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 

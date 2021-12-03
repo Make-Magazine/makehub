@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 1.1.6\n"
+"Project-Id-Version: BuddyBoss Platform Pro 1.1.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-10-13 13:50:43+00:00\n"
+"POT-Creation-Date: 2021-11-15 07:19:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "You don't have access to send request membership."
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:697
+#: includes/access-control/bb-access-control-filters.php:702
 #: includes/access-control/bb-access-control-rest-filters.php:448
 #: includes/access-control/bb-access-control-rest-filters.php:524
 msgid ""
@@ -53,8 +53,8 @@ msgid ""
 "sending messages to this member."
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:699
-#: includes/access-control/bb-access-control-filters.php:701
+#: includes/access-control/bb-access-control-filters.php:704
+#: includes/access-control/bb-access-control-filters.php:706
 #: includes/access-control/bb-access-control-rest-filters.php:450
 #: includes/access-control/bb-access-control-rest-filters.php:452
 #: includes/access-control/bb-access-control-rest-filters.php:526
@@ -64,7 +64,7 @@ msgid ""
 "sending messages to these members: "
 msgstr ""
 
-#: includes/access-control/bb-access-control-filters.php:701
+#: includes/access-control/bb-access-control-filters.php:706
 #: includes/access-control/bb-access-control-rest-filters.php:452
 #: includes/access-control/bb-access-control-rest-filters.php:528
 msgid "..."
@@ -1033,12 +1033,12 @@ msgstr ""
 msgid "Webinar Details"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-group-functions.php:229
+#: includes/integrations/zoom/bp-zoom-group-functions.php:247
 #. translators: %1$s - user link, %2$s - group link.
 msgid "%1$s scheduled a Zoom meeting in the group %2$s"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-group-functions.php:314
+#: includes/integrations/zoom/bp-zoom-group-functions.php:332
 #. translators: %1$s - user link, %2$s - group link.
 msgid "%1$s scheduled a Zoom webinar in the group %2$s"
 msgstr ""

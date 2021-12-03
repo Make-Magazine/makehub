@@ -33,7 +33,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 	public static function get_current_cart_id( $user_id ) {
 		return get_user_meta(
 			$user_id,
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME,
 			true
 		);
 	}
@@ -49,7 +49,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 	public static function set_current_cart_id( $user_id ) {
 		update_user_meta(
 			$user_id,
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME,
 			static::generate_random_cart_id(),
 			true
 		);
@@ -63,7 +63,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 	 * @since  1.0.0
 	 */
 	public static function generate_random_cart_id() {
-		return uniqid();
+		return uniqid( '', true );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 	public static function delete_current_cart_id( $user_id ) {
 		delete_user_meta(
 			$user_id,
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME
 		);
 	}
 

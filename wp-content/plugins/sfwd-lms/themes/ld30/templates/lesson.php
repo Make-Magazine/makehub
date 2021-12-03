@@ -66,11 +66,10 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 
 	/**
 	 * If the user needs to complete the previous lesson display an alert
-	 *
 	 */
 	if ( ( ! learndash_is_sample( $post ) ) && ( @$lesson_progression_enabled && ! @$previous_lesson_completed ) ) :
 
-		//$previous_item = learndash_get_previous( $post );
+		// $previous_item = learndash_get_previous( $post );
 		$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
 		if ( ! empty( $previous_item_id ) ) {
 			learndash_get_template_part(
@@ -197,11 +196,10 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 
 		endif;
 
-	endif; // end $show_content
+	endif; // end $show_content.
 
 	/**
 	 * Set a variable to switch the next button to complete button
-	 * @var $can_complete [bool] - can the user complete this or not?
 	 */
 	$can_complete = false;
 

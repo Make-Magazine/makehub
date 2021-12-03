@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.1.7
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
- *    Default empty array. {@see 'ld_course_list'}
- * }
+ *    Default empty array {@see 'ld_course_list'}.
+ * }.
  * @param string $content The shortcode content. Default empty.
  *
  * @return string The `ld_topic_list` shortcode output.

@@ -1,6 +1,11 @@
 
 # Changelog
 
+## 1.2.21
+
+	- Added [gpml_supported_acf_field_types](https://gravitywiz.com/documentation/gpml_supported_acf_field_types/) filter to allow enabling support for other ACF field types.
+	- Added support for Image Aspect Ratio Crop ACF field type.
+
 ## 1.2.20
 
 	- Added support for setting File Upload Custom Fields as featured images. (#8)

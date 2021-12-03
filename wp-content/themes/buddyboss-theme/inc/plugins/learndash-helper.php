@@ -479,7 +479,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 			}
 
 			foreach ( $quizzes as $quiz ) {
-				if ( learndash_is_quiz_complete( $user_id, $quiz['post']->ID ) ) {
+				if ( learndash_is_quiz_complete( $user_id, $quiz['post']->ID, $course_id ) ) {
 					$completed ++;
 				}
 			}
@@ -1645,17 +1645,17 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 					$lesson_topics = learndash_get_topic_list( $lesson->ID );
 
-					$navigation_urls[] = trailingslashit( get_permalink( $lesson->ID ) );
+					$navigation_urls[] = urldecode( trailingslashit( get_permalink( $lesson->ID ) ) );
 
 					if ( ! empty( $lesson_topics ) ) :
 						foreach ( $lesson_topics as $lesson_topic ) {
-							$navigation_urls[] = trailingslashit( get_permalink( $lesson_topic->ID ) );
+							$navigation_urls[] = urldecode( trailingslashit( get_permalink( $lesson_topic->ID ) ) );
 
 							$topic_quizzes = learndash_get_lesson_quiz_list( $lesson_topic->ID );
 
 							if ( ! empty( $topic_quizzes ) ) :
 								foreach ( $topic_quizzes as $topic_quiz ) {
-									$navigation_urls[] = trailingslashit( get_permalink( $topic_quiz['post']->ID ) );
+									$navigation_urls[] = urldecode( trailingslashit( get_permalink( $topic_quiz['post']->ID ) ) );
 								}
 							endif;
 
@@ -1666,7 +1666,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 					if ( ! empty( $lesson_quizzes ) ) :
 						foreach ( $lesson_quizzes as $lesson_quiz ) {
-							$navigation_urls[] = trailingslashit( get_permalink( $lesson_quiz['post']->ID ) );
+							$navigation_urls[] = urldecode( trailingslashit( get_permalink( $lesson_quiz['post']->ID ) ) );
 						}
 					endif;
 				}
@@ -1676,7 +1676,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 			$course_quizzes = learndash_get_course_quiz_list( $course_id );
 			if ( ! empty( $course_quizzes ) ) :
 				foreach ( $course_quizzes as $course_quiz ) {
-					$navigation_urls[] = trailingslashit( get_permalink( $course_quiz['post']->ID ) );
+					$navigation_urls[] = urldecode( trailingslashit( get_permalink( $course_quiz['post']->ID ) ) );
 				}
 			endif;
 
@@ -1737,7 +1737,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 								foreach ( $topic_quizzes as $topic_quiz ) {
 									$navigation_urls[] = [
 										'url'      => learndash_get_step_permalink( $topic_quiz['post']->ID, $course_id ),
-										'complete' => learndash_is_quiz_complete( get_current_user_id(), $topic_quiz['post']->ID ) ? 'yes' : 'no',
+										'complete' => learndash_is_quiz_complete( get_current_user_id(), $topic_quiz['post']->ID, $course_id ) ? 'yes' : 'no',
 									];
 								}
 							endif;
@@ -1751,7 +1751,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 						foreach ( $lesson_quizzes as $lesson_quiz ) {
 							$navigation_urls[] = [
 								'url'      => learndash_get_step_permalink( $lesson_quiz['post']->ID, $course_id ),
-								'complete' => learndash_is_quiz_complete( get_current_user_id(), $lesson_quiz['post']->ID ) ? 'yes' : 'no',
+								'complete' => learndash_is_quiz_complete( get_current_user_id(), $lesson_quiz['post']->ID, $course_id ) ? 'yes' : 'no',
 							];
 						}
 					endif;
@@ -1764,7 +1764,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				foreach ( $course_quizzes as $course_quiz ) {
 					$navigation_urls[] = [
 						'url'      => learndash_get_step_permalink( $course_quiz['post']->ID, $course_id ),
-						'complete' => learndash_is_quiz_complete( get_current_user_id(), $course_quiz['post']->ID ) ? 'yes' : 'no',
+						'complete' => learndash_is_quiz_complete( get_current_user_id(), $course_quiz['post']->ID, $course_id ) ? 'yes' : 'no',
 					];
 				}
 			endif;
@@ -1800,7 +1800,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				$current_url = trailingslashit( $current_url );
 			}
 
-			$key = array_search( $current_url, $url_arr );
+			$key = array_search( urldecode( $current_url ), $url_arr );
 
 
 			$url = [];
@@ -1810,8 +1810,8 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 			$last_element = array_values( array_slice( $url_arr, - 1 ) )[0];
 
-			$url['next'] = ( isset( $next ) && $last_element != $current_url ) ? '<a href="' . $next . '" class="next-link" rel="next">Next  <span class="meta-nav" data-balloon-pos="up" data-balloon="' . __( 'Next', 'buddyboss-theme' ) . '">&rarr;</span></a>' : '';
-			$url['prev'] = ( isset( $prev ) && $last_element != $prev ) ? '<a href="' . $prev . '" class="prev-link" rel="prev"><span class="meta-nav" data-balloon-pos="up" data-balloon="' . __( 'Previous', 'buddyboss-theme' ) . '">&larr;</span> Previous</a>' : '';
+			$url['next'] = ( isset( $next ) && $last_element != $current_url ) ? '<a href="' . $next . '" class="next-link" rel="next">' . esc_html__( 'Next', 'buddyboss-theme' ) . '<span class="meta-nav" data-balloon-pos="up" data-balloon="' . esc_attr__( 'Next', 'buddyboss-theme' ) . '">&rarr;</span></a>' : '';
+			$url['prev'] = ( isset( $prev ) && $last_element != $prev ) ? '<a href="' . $prev . '" class="prev-link" rel="prev"><span class="meta-nav" data-balloon-pos="up" data-balloon="' . esc_attr__( 'Previous', 'buddyboss-theme' ) . '">&larr;</span> ' . esc_html__( 'Previous', 'buddyboss-theme' ) . '</a>' : '';
 
 
 			return $url;

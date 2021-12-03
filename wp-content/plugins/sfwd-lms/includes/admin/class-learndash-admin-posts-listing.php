@@ -337,13 +337,13 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					}
 
 					if ( 'category' === $taxonomy_slug ) {
-						$query_arg  = 'cat';           // Used for WP_Query filtering
-						$field_name = 'category_name'; // Used for Selector name
-						$field_id   = 'category_name'; // Used for Selector ID
+						$query_arg  = 'cat';           // Used for WP_Query filtering.
+						$field_name = 'category_name'; // Used for Selector name.
+						$field_id   = 'category_name'; // Used for Selector ID.
 					} elseif ( 'post_tag' === $taxonomy_slug ) {
-						$query_arg  = 'tag_id';        // Used for WP_Query filtering
-						$field_name = 'tag';           // Used for Selector name
-						$field_id   = 'tag_id';        // Used for Selector ID
+						$query_arg  = 'tag_id';        // Used for WP_Query filtering.
+						$field_name = 'tag';           // Used for Selector name.
+						$field_id   = 'tag_id';        // Used for Selector ID.
 					} else {
 						$query_arg  = $taxonomy_slug;
 						$field_name = $taxonomy_slug;
@@ -546,7 +546,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 							 * @since 3.2.3
 							 *
 							 * @param string $selected_value Selected value for Selector.
-							 * @param string $selector       Array for Selector.
+							 * @param array $selector       Array for Selector.
 							 */
 							$selector['selected'] = apply_filters( 'learndash_listing_selector_value', $selector['selected'], $selector );
 						}
@@ -579,7 +579,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 							 * @since 3.2.3
 							 *
 							 * @param string $selected_value Selected value for Selector.
-							 * @param string $selector       Array for Selector.
+							 * @param array $selector       Array for Selector.
 							 */
 							$selector['selected'] = apply_filters( 'learndash_listing_selector_value', $selector['selected'], $selector );
 						}
@@ -1665,7 +1665,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 
 					if ( ( property_exists( $selector['query_results'], 'query_vars' ) ) && ( isset( $selector['query_results']->query_vars['number'] ) ) ) {
 						if ( $selector['query_results']->query_vars['number'] > 0 ) {
-							$selector['pager_results']['total_pages'] = floor( $selector['query_results']->total_users / absint( $selector['query_results']->query_vars['number'] ) );
+							$selector['pager_results']['total_pages'] = ceil( $selector['query_results']->total_users / absint( $selector['query_results']->query_vars['number'] ) );
 						}
 					}
 				}
@@ -1760,7 +1760,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 								 */
 								do_action_deprecated(
 									'learndash_post_listing_after_option',
-									array( $p, $selector_args['query_args'], $this->post_type ),
+									array( $p, $selector['query_args'], $this->post_type ),
 									'3.2.3',
 									'learndash_listing_selector_post_type_option_after'
 								);
@@ -1885,7 +1885,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 */
 				$selector_args['query_args'] = apply_filters_deprecated(
 					'learndash_show_post_type_selector_filter',
-					array( $selector_args['query_args'], $this->post_type ),
+					array( $selector['query_args'], $this->post_type ),
 					'3.2.3',
 					'learndash_listing_filter_query_args'
 				);
@@ -2160,7 +2160,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table .
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -2185,7 +2185,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -2227,7 +2227,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -2379,7 +2379,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -2491,7 +2491,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -2534,7 +2534,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.4.2
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.

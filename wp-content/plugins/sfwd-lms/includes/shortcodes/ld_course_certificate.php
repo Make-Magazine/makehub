@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts The ld_course_certificate shortcode attributes.
  * @param array  $atts {
  *    An array of shortcode attributes.
  *

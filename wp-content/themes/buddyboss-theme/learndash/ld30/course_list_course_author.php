@@ -8,6 +8,6 @@
 		<?php echo get_avatar( get_the_author_meta( 'email', $post->post_author ), 80, '', '', array() ); ?>
 	</a>
 	<strong>
-		<a href="<?php echo $user_link; ?>"><?php echo get_the_author_meta( 'display_name', $post->post_author ); ?></a>
+		<a href="<?php echo esc_url( $user_link ); ?>"><?php echo get_the_author_meta( 'display_name', $post->post_author ); ?></a>
 	</strong>
 </div>

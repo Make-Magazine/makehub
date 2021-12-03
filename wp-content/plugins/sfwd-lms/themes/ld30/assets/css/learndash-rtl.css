@@ -867,6 +867,106 @@
   animation: ldrotating 1.2s infinite linear;
 }
 
+.learndash-wrapper .order-overview {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  box-shadow: 0px 6px 6px #cccccc;
+  font-size: 18px;
+  margin-bottom: 30px;
+  padding: 35px 25px 20px 25px;
+}
+
+.learndash-wrapper .order-overview .order-overview-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.learndash-wrapper .order-overview .purchase-title {
+  font-size: 22px;
+  margin-bottom: 22px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.learndash-wrapper .order-overview .purchase-price, .learndash-wrapper .order-overview .purchase-trial {
+  clear: both;
+  margin-bottom: 7px;
+  min-height: 50px;
+}
+
+.learndash-wrapper .order-overview .purchase-field-text {
+  float: right;
+  font-weight: bold;
+}
+
+.learndash-wrapper .order-overview .purchase-field-price {
+  float: left;
+}
+
+.learndash-wrapper .order-overview .learndash_checkout_buttons {
+  margin: 15px auto 15px auto;
+}
+
+.learndash-wrapper .order-overview .learndash_checkout_buttons .learndash_checkout_button #btn-join {
+  border-radius: 5px;
+  margin: 15px auto 15px auto;
+}
+
+.learndash-wrapper .order-overview .order-overview-return {
+  clear: both;
+  padding-top: 30px;
+  text-align: center;
+}
+
+.learndash-wrapper .ld-course-status.ld-course-status-not-enrolled .ld-course-status-mode-subscribe .ld-course-status-price {
+  color: #728188;
+  font-size: 24px;
+}
+
+.learndash-wrapper .ld-course-status .ld-course-status-mode-subscribe .ld-text {
+  color: #728188;
+  font-weight: bold;
+}
+
+.learndash-wrapper #learndash-registration-wrapper {
+  /**
+ 		* Password strength meter
+ 		*/
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-strength {
+  text-align: center;
+  font-weight: 600;
+  padding: 3px 0.5em;
+  font-size: 1em;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-strength.strong {
+  background-color: #c1e1b9;
+  border-color: #83c373;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-strength.short {
+  background-color: #f1adad;
+  border-color: #e35b5b;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-strength.bad {
+  background-color: #fbc5a9;
+  border-color: #f78b53;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-strength.good {
+  background-color: #ffe399;
+  border-color: #ffc733;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .learndash-password-hint {
+  margin: 0.5em 0 0;
+  display: block;
+}
+
 @keyframes ldrotating {
   100% {
     transform: rotate(-360deg);
@@ -5342,6 +5442,7 @@ body.ld-in-focus-mode.admin-bar {
 
 .learndash-wrapper .ld-course-status.ld-course-status-not-enrolled .ld-course-status-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   text-align: center;
@@ -5362,7 +5463,7 @@ body.ld-in-focus-mode.admin-bar {
 }
 
 .learndash-wrapper .ld-course-status.ld-course-status-not-enrolled .ld-course-status-price .ld-text {
-  font-size: 14px;
+  font-size: 18px;
   margin-right: 8px;
   font-weight: normal;
 }
@@ -5502,6 +5603,24 @@ body.ld-in-focus-mode.admin-bar {
 .learndash-wrapper .ld-course-status .ld-status.ld-status-complete {
   background: #019e7c;
   color: #fff;
+}
+
+.learndash-wrapper .ld-course-status-seg-price .ld-course-status-trial-price, .learndash-wrapper .ld-course-status-seg-price .ld-course-status-course-price {
+  text-align: center;
+  width: 100%;
+}
+
+.learndash-wrapper .ld-course-status-seg-price .ld-course-status-trial-price {
+  margin-bottom: 10px;
+}
+
+.learndash-wrapper .ld-course-status-seg-price .ld-course-status-content .ld-text {
+  font-size: 16px;
+  margin-bottom: 0px;
+}
+
+.learndash-wrapper .ld-course-status-seg-price .ld-course-status-content .ld-pricing {
+  font-size: 12px;
 }
 
 .learndash-wrapper .ld-course-certificate {
@@ -5915,6 +6034,37 @@ body.ld-in-focus-mode.admin-bar {
 
 .learndash-wrapper .ld-button.ld-login-button.ld-login .ld-icon {
   margin-left: 10px;
+}
+
+.learndash-wrapper #learndash-registration-wrapper {
+  margin: auto;
+}
+
+.learndash-wrapper #learndash-registration-wrapper .registration-login-link {
+  margin-bottom: 1em;
+}
+
+.learndash-wrapper #learndash-registration-wrapper #learndash_registerform label {
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+
+.learndash-wrapper #learndash-registration-wrapper #learndash_registerform .learndash-required-field {
+  color: red;
+}
+
+.learndash-wrapper #learndash-registration-wrapper #learndash_registerform input {
+  border: solid 2px #a1a1a1;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-right: 0px;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+.learndash-wrapper #learndash-registration-wrapper #learndash_registerform #wp-submit {
+  margin-top: 30px;
 }
 
 /**

@@ -39,7 +39,7 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 
 	$pager_json = htmlspecialchars( wp_json_encode( $pager_results ) );
 
-	// Generic wrappers. These can be changes via the switch below
+	// Generic wrappers. These can be changes via the switch below.
 	$wrapper_before = '<div class="ld-pagination ld-pagination-page-' . esc_attr( $pager_context ) . '" data-pager-nonce="' . wp_create_nonce( 'ld30_ajax_pager' ) . '" data-pager-results="' . $pager_json . '">
 						<div class="ld-pages">';
 	$wrapper_after  = '</div>
@@ -135,9 +135,9 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 		</span>
 		<span>
 		<?php
-		// translators: placeholder: current page numer of total pages
+		// translators: placeholder: current page numer of total pages.
 		echo sprintf(
-			// translators: placeholder: current page number of total pages
+			// translators: placeholder: current page number of total pages.
 			esc_html_x( '%1$d of %2$d', 'placeholder: current page numer of total pages', 'learndash' ),
 			esc_html( $pager_results['paged'] ),
 			esc_html( $pager_results['total_pages'] )

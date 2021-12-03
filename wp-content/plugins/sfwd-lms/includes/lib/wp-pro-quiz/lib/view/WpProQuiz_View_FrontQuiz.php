@@ -261,6 +261,8 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 			}
 		}
 
+		$quiz_resume_data = learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data );
+		
 		echo " <script type='text/javascript'>
 		function load_wpProQuizFront" . esc_attr( $this->quiz->getId() ) . "() {
 			jQuery('#wpProQuiz_" . esc_attr( $this->quiz->getId() ) . "').wpProQuizFront({
@@ -322,6 +324,32 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				json: ' . wp_json_encode( $quizData['json'] ) . ',
 				ld_script_debug: ' . (int) $ld_script_debug . ",
 				quiz_nonce: '" . esc_attr( $quiz_nonce ) . "',
+				scrollSensitivity: '" .
+				/**
+				 * Filters quiz scroll sensitivity.
+				 *
+				 * Used for Sort and Matrix question types.
+				 *
+				 * @since 3.5.1.1
+				 *
+				 * @param int $sensitivity  Default 10 of 20 max.
+				 * @param int $quiz_post_id Quiz ID
+				 * @param int $user_id      User ID
+				 */
+				(int) apply_filters( 'learndash_quiz_scroll_sensitivity', 10, $quiz_post_id, $user_id ) . "',
+				scrollSpeed: '" .
+				/**
+				 * Filters quiz scroll speed.
+				 *
+				 * Used for Sort and Matrix question types.
+				 *
+				 * @since 3.5.1.1
+				 *
+				 * @param int $speed        Default 10 of 20 max.
+				 * @param int $quiz_post_id Quiz ID
+				 * @param int $user_id      User ID
+				 */
+				(int) apply_filters( 'learndash_quiz_scroll_speed', 10, $quiz_post_id, $user_id ) . "',
 				quiz_resume_enabled:  '" .
 				/**
 				 * Filters quiz resume enabled
@@ -347,7 +375,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				 * @param int $user_id          User ID
 				 *
 				 */
-				wp_json_encode( apply_filters( 'learndash_quiz_resume_data', $quiz_resume_data, $quiz_post_id, $user_id ) ) . "',
+				wp_json_encode( apply_filters( 'learndash_quiz_resume_data', $quiz_resume_data, $quiz_post_id, $user_id ), JSON_HEX_APOS ) . "',
 				quiz_resume_cookie_expiration: '" .
 				/**
 				 * Filters the quiz resume cookie expiration.
@@ -479,6 +507,8 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 			}
 		}
 
+		$quiz_resume_data = learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data );
+
 		echo "<script type='text/javascript'>
 		jQuery( function($) {
 			$('#wpProQuiz_" . (int) $this->quiz->getId() . "').wpProQuizFront({
@@ -498,6 +528,12 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				formPos: ' . (int) $this->quiz->getFormShowPosition() . ',
 				ld_script_debug: ' . (int) $ld_script_debug . ",
 				quiz_nonce: '" . esc_attr( $quiz_nonce ) . "',
+				scrollSensitivity: '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				(int) apply_filters( 'learndash_quiz_scroll_sensitivity', 10, $quiz_post_id, $user_id ) . "',
+				scrollSpeed: '" .
+				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
+				(int) apply_filters( 'learndash_quiz_scroll_speed', 10, $quiz_post_id, $user_id ) . "',
 				quiz_resume_enabled:  '" .
 				/** This filter is documented in includes/lib/wp-pro-quiz/lib/view/WpProQuiz_ViewFrontQuiz.php */
 				(int) apply_filters( 'learndash_quiz_resume_enabled', $quiz_resume_enabled, $quiz_post_id, $user_id ) . "',
@@ -665,14 +701,14 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 	 *
 	 * @deprecated 3.5.0 Use {@see 'learndash_question_cloze_fetch_data'} instead.
 	 *
-	 * @param string $answer_text Question answer text
+	 * @param string $answer_text Question answer text.
 	 */
 	private function fetchCloze( $answer_text ) {
 		if ( function_exists( '_deprecated_function' ) ) {
 			_deprecated_function( __FUNCTION__, '3.5.0', 'learndash_question_cloze_fetch_data' );
 		}
 
-		return learndash_question_cloze_fetch_data( $answer_text, $convert_to_lower );
+		return learndash_question_cloze_fetch_data( $answer_text );
 	}
 
 	/**

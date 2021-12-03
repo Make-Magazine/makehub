@@ -79,7 +79,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_save_settings() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		$data = $_POST;
 		$model = isset( $data[ 'model' ] ) ? $data['model'] : null;
 
@@ -115,7 +123,7 @@ class CFF_Global_Settings {
 				}
 			}
 		}
-		
+
 		$model = (array) \json_decode( \stripslashes( $model ) );
 		$general = (array) $model['general'];
 		$feeds = (array) $model['feeds'];
@@ -126,8 +134,6 @@ class CFF_Global_Settings {
 		$cff_locale 							= sanitize_text_field( $feeds['selectedLocale'] );
 		$cff_style_settings 					= get_option( 'cff_style_settings' );
 		$cff_style_settings[ 'cff_timezone' ] 	= sanitize_text_field( $feeds['selectedTimezone'] );
-		$cff_style_settings[ 'cff_custom_css' ] = $feeds['customCSS'];
-		$cff_style_settings[ 'cff_custom_js' ] 	= $feeds['customJS'];
 		$cff_style_settings[ 'gdpr' ] 			= sanitize_text_field( $feeds['gdpr'] );
 		$cachingType 							= sanitize_text_field( $feeds['cachingType'] );
 		$cronInterval 							= sanitize_text_field( $feeds['cronInterval'] );
@@ -198,7 +204,13 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_activate_license() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
 		// do the form validation to check if license_key is not empty
 		if ( empty( $_POST[ 'license_key' ] ) ) {
 			new CFF_Response( false, array(
@@ -210,7 +222,7 @@ class CFF_Global_Settings {
 		$cff_license_data = $this->get_license_data( $license_key, 'activate_license', WPW_SL_ITEM_NAME );
 		// update the license data
 		if( !empty( $cff_license_data ) ) {
-			update_option( 'cff_license_data', $cff_license_data ); 
+			update_option( 'cff_license_data', $cff_license_data );
 		}
 		// update the licnese key only when the license status is activated
 		update_option( 'cff_license_key', $license_key );
@@ -236,12 +248,18 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_deactivate_license() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
 		$license_key = trim( get_option( 'cff_license_key' ) );
 		$cff_license_data = $this->get_license_data( $license_key, 'deactivate_license', WPW_SL_ITEM_NAME );
 		// update the license data
 		if( !empty( $cff_license_data ) ) {
-			update_option( 'cff_license_data', $cff_license_data ); 
+			update_option( 'cff_license_data', $cff_license_data );
 		}
 		if ( ! $cff_license_data['success'] ) {
 			new CFF_Response( false, array() );
@@ -264,7 +282,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_activate_extension_license() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		// do the form validation to check if license_key is not empty
 		if ( empty( $_POST[ 'license_key' ] ) ) {
 			new CFF_Response( false, array(
@@ -298,7 +324,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_deactivate_extension_license() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		$extension_name = sanitize_text_field( $_POST[ 'extension_name' ] );
 		$extension_item_name = sanitize_text_field( $_POST[ 'extension_item_name' ] );
 		$license_key = get_option( 'cff_license_key_' . $extension_name );
@@ -311,7 +345,7 @@ class CFF_Global_Settings {
 		}
 
 		// remove the license keys and update license key status
-		if( $cff_license_data['license'] == 'deactivated' ) {		
+		if( $cff_license_data['license'] == 'deactivated' ) {
 			delete_option( 'cff_license_status_' . $extension_name );
 			$data = array(
 				'licenseStatus' => $cff_license_data['license']
@@ -319,7 +353,7 @@ class CFF_Global_Settings {
 			new CFF_Response( true, $data );
 		}
 	}
-	
+
 	/**
 	 * CFF Test Connection
 	 *
@@ -328,7 +362,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_test_connection() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		$license_key = get_option( 'cff_license_key' );
 		$cff_api_params = array(
 			'edd_action'=> 'check_license',
@@ -353,7 +395,7 @@ class CFF_Global_Settings {
 			'hasError' => false
 		) );
 	}
-	
+
 	/**
 	 * CFF Re-Check License
 	 *
@@ -362,7 +404,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_recheck_connection() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		// Do the form validation
 		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( $_POST['license_key'] ) : '';
 		$item_name = isset( $_POST['item_name'] ) ? sanitize_text_field( $_POST['item_name'] ) : '';
@@ -373,7 +423,7 @@ class CFF_Global_Settings {
 
 		// make the remote license check API call
 		$cff_license_data = $this->get_license_data( $license_key, 'check_license', $item_name );
-	
+
 		// update options data
 		$license_changed = $this->update_recheck_license_data( $cff_license_data, $item_name, $option_name );
 
@@ -386,13 +436,13 @@ class CFF_Global_Settings {
 
 	/**
 	 * Update License Data
-	 * 
+	 *
 	 * @since 4.0
-	 * 
+	 *
 	 * @param array $license_data
 	 * @param string $item_name
 	 * @param string $option_name
-	 * 
+	 *
 	 * @return bool $license_changed
 	 */
 	public function update_recheck_license_data( $license_data, $item_name, $option_name ) {
@@ -432,7 +482,15 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_import_settings_json() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		$filename = $_FILES['file']['name'];
 		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 		if ( 'json' !== $ext ) {
@@ -471,22 +529,30 @@ class CFF_Global_Settings {
 	 * @return CFF_Response
 	 */
 	public function cff_export_settings_json() {
-		CFF_Feed_Builder::check_privilege( false );
-		if ( ! isset( $_GET['feed_id'] ) ) {
-			return;
+		//Security Checks
+		if(check_ajax_referer( 'cff_admin_nonce' , 'nonce', false) || check_ajax_referer( 'cff-admin' , 'nonce', false) ){
+
+			$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+			$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+			if ( ! current_user_can( $cap ) ) {
+				wp_send_json_error(); // This auto-dies.
+			}
+			if ( ! isset( $_GET['feed_id'] ) ) {
+				return;
+			}
+			$feed_id = filter_var( $_GET['feed_id'], FILTER_SANITIZE_NUMBER_INT );
+			$feed = CFF_Feed_Saver_Manager::get_export_json( $feed_id );
+			$feed_info = CFF_Db::feeds_query( array('id' => $feed_id) );
+			$feed_name = strtolower( $feed_info[0]['feed_name'] );
+			$filename = 'cff-feed-' . $feed_name . '.json';
+			// create a new empty file in the php memory
+			$file  = fopen( 'php://memory', 'w' );
+			fwrite( $file, $feed );
+			fseek( $file, 0 );
+			header( 'Content-type: application/json' );
+			header( 'Content-disposition: attachment; filename = "' . $filename . '";' );
+			fpassthru( $file );
 		}
-		$feed_id = filter_var( $_GET['feed_id'], FILTER_SANITIZE_NUMBER_INT );
-		$feed = CFF_Feed_Saver_Manager::get_export_json( $feed_id );
-		$feed_info = CFF_Db::feeds_query( array('id' => $feed_id) );
-		$feed_name = strtolower( $feed_info[0]['feed_name'] );
-		$filename = 'cff-feed-' . $feed_name . '.json';
-		// create a new empty file in the php memory
-		$file  = fopen( 'php://memory', 'w' );
-		fwrite( $file, $feed );
-		fseek( $file, 0 );
-		header( 'Content-type: application/json' );
-		header( 'Content-disposition: attachment; filename = "' . $filename . '";' );
-		fpassthru( $file );
 		exit;
 	}
 
@@ -496,7 +562,15 @@ class CFF_Global_Settings {
 	 * @since 4.0
 	 */
 	public function cff_clear_cache() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		// Get the updated cron schedule interval and time settings from user input and update the database
 		$model = isset( $_POST[ 'model' ] ) ? sanitize_text_field( $_POST['model'] ) : null;
 		if ( $model !== null ) {
@@ -558,7 +632,16 @@ class CFF_Global_Settings {
 	 * @since 4.0
 	 */
 	public function clear_stored_caches() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
+
 		global $wpdb;
 
 		$cache_table_name = $wpdb->prefix . 'cff_feed_caches';
@@ -623,7 +706,15 @@ class CFF_Global_Settings {
 	 * @since 4.0
 	 */
 	public function cff_clear_image_resize_cache() {
-		CFF_Feed_Builder::check_privilege( 'nonce', 'cff_admin_nonce' );
+		//Security Checks
+		check_ajax_referer( 'cff_admin_nonce', 'nonce'  );
+
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error(); // This auto-dies.
+		}
+
 		CFF_Resizer::delete_resizing_table_and_images();
 		\cff_main_pro()->cff_error_reporter->add_action_log( 'Reset resizing tables.' );
 		if ( !CFF_Resizer::create_resizing_table_and_uploads_folder() ) {
@@ -966,10 +1057,12 @@ class CFF_Global_Settings {
 				'customCSSBox' => array(
 					'title'	=> __( 'Custom CSS', 'custom-facebook-feed' ),
 					'placeholder' => __( 'Enter any custom CSS here', 'custom-facebook-feed' ),
+					'message' => sprintf( __( 'The Custom CSS field has been deprecated. Your CSS has been moved into the native WordPress Custom CSS field instead. This is located %shere%s at <i>Appearance > Customize > Additional CSS.</i>', '' ), '<a href="' . esc_url( wp_customize_url() ) . '" target="_blank" rel="noopener noreferrer">', '</a>' )
 				),
 				'customJSBox' => array(
 					'title'	=> __( 'Custom JS', 'custom-facebook-feed' ),
 					'placeholder' => __( 'Enter any custom JS here', 'custom-facebook-feed' ),
+					'message' => sprintf( __( 'The Custom JS field has been deprecated. Your JavaScript is displayed below. To continue using this JavaScript, please first review the code below and follow the directions in %sthis doc%s.', '' ), '<a href="https://smashballoon.com/doc/moving-custom-javascript-code-out-of-our-plugins/?utm_campaign=facebook-pro&utm_source=settings&utm_medium=move-js" target="_blank" rel="noopener noreferrer">', '</a>' )
 				)
 			),
 			'translationTab' => array(
@@ -1167,9 +1260,9 @@ class CFF_Global_Settings {
 
 	/**
 	 * Get Extensions License Information
-	 * 
+	 *
 	 * @since 4.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_extensions_license() {
@@ -1258,7 +1351,7 @@ class CFF_Global_Settings {
 				'licenseStatus' => $license_status,
 			);
 		}
-		
+
 		// If carousel extension is activated
 		if ( $carousel_active ) {
 			$license_key = get_option( 'cff_license_key_ext_carousel' );
@@ -1403,6 +1496,32 @@ class CFF_Global_Settings {
 
         // Force enable the disable resize images option when GDPR is enabled.
         $cff_style_settings[ 'cff_disable_resize' ] = ( $cff_style_settings[ 'gdpr' ] !== 'no') ? false : $cff_style_settings[ 'cff_disable_resize' ];
+		$custom_js_text = ! empty( $cff_style_settings['cff_custom_js'] ) && trim( wp_unslash( $cff_style_settings['cff_custom_js'] ) ) !== '' ? wp_unslash( $cff_style_settings['cff_custom_js'] ) : '';
+		if ( ! empty( $custom_js_text ) ) {
+			$js_wrapper_array = [
+				esc_html('<!-- Custom Facebook Feed JS -->')  . "\n",
+				esc_html('<script type="text/javascript">' ) . "\n",
+				esc_html('function cff_custom_js($){' ) . "\n",
+				esc_html('    var $ = jQuery;' ) . "\n",
+				esc_html('}cff_custom_js($);')  . "\n",
+				esc_html('</script>' ) . "\n"
+			];
+			foreach ($js_wrapper_array as $single_wrapper) {
+				$custom_js_text = str_replace($single_wrapper, '', $custom_js_text);
+			}
+
+			$js_html = esc_html( '<!-- Custom Facebook Feed JS -->' ) . "\n";
+			$js_html .= esc_html( '<script type="text/javascript">' ) . "\n";
+			$js_html .= esc_html( 'function cff_custom_js($){' ) . "\n";
+			$js_html .= esc_html( '    var $ = jQuery;' ) . "\n";
+			$js_html .= esc_html( $custom_js_text ) . "\n";
+			$js_html .= esc_html( '}cff_custom_js($);' ) . "\n";
+			$js_html .= esc_html( '</script>' ) . "\n";
+
+
+
+			$custom_js_text = $js_html;
+		}
 
 		return array(
 			'general' => array(
@@ -1417,8 +1536,8 @@ class CFF_Global_Settings {
 				'cronAmPm'			=> $cff_cache_cron_am_pm,
 				'gdpr'				=> $cff_style_settings['gdpr'],
 				'gdprPlugin'		=> $active_gdpr_plugin,
-				'customCSS'			=> isset( $cff_style_settings['cff_custom_css'] ) ? stripslashes( $cff_style_settings['cff_custom_css'] ) : '',
-				'customJS'			=> stripslashes( isset( $cff_style_settings['cff_custom_js'] ) ? $cff_style_settings['cff_custom_js'] : '' ),
+				'customCSS'			=> isset( $cff_style_settings['cff_custom_css_read_only'] ) ? esc_html( stripslashes( trim( $cff_style_settings['cff_custom_css_read_only'] ) ) ) : '',
+				'customJS'			=> $custom_js_text,
 			),
 			'translation' => array(
 				'cff_see_more_text' => $cff_style_settings['cff_see_more_text'],

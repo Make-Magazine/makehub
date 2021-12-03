@@ -108,3 +108,161 @@ function redirect_nongroup_member() {
 	}
 }
 add_action( 'wp', 'redirect_nongroup_member' );
+
+
+if( ! function_exists( 'wp_new_user_notification' ) ) {
+	/**
+	 * Email login credentials to a newly-registered user.
+	 *
+	 * A new user registration notification is also sent to admin email.
+	 *
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyPress 4.3.0 The `$plaintext_pass` parameter was changed to `$notify`.
+	 * @since BuddyPress 4.3.1 The `$plaintext_pass` parameter was deprecated. `$notify` added as a third parameter.
+	 * @since BuddyPress 4.6.0 The `$notify` parameter accepts 'user' for sending notification only to the user created.
+	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 * @global PasswordHash $wp_hasher Portable PHP password hashing framework instance.
+	 *
+	 * @param int    $user_id    User ID.
+	 * @param null   $deprecated Not used (argument deprecated).
+	 * @param string $notify     Optional. Type of notification that should happen. Accepts 'admin' or an empty
+	 *                           string (admin only), 'user', or 'both' (admin and user). Default empty.
+	 */
+	function wp_new_user_notification( $user_id, $deprecated = null, $notify = '' ) {
+		if ( $deprecated !== null ) {
+			_deprecated_argument( __FUNCTION__, '4.3.1' );
+		}
+
+		global $wpdb, $wp_hasher;
+		$user = get_userdata( $user_id );
+
+		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
+		// we want to reverse this for the plain text arena of emails.
+		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+
+		if ( 'user' !== $notify ) {
+			$switched_locale = switch_to_locale( get_locale() );
+
+			/* translators: %s: site title */
+			$message = '<p>' . sprintf( __( 'New user registration on your site %s:', 'buddyboss' ), $blogname ) . '</p>';
+			/* translators: %s: user login */
+			$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss' ), $user->user_login ) . '</p>';
+			/* translators: %s: user email address */
+			$message .= '<p>' . sprintf( __( 'Email: <b>%s</b>', 'buddyboss' ), $user->user_email ) . '</p>';
+
+			$wp_new_user_notification_email_admin = array(
+				'to'      => get_option( 'admin_email' ),
+				/* translators: Password change notification email subject. %s: Site title */
+				'subject' => __( '[%s] New User Registration', 'buddyboss' ),
+				'message' => $message,
+				'headers' => '',
+			);
+
+			/**
+			 * Filters the contents of the new user notification email sent to the site admin.
+			 *
+			 * @since BuddyPress 4.9.0
+			 *
+			 * @param array   $wp_new_user_notification_email {
+			 *     Used to build wp_mail().
+			 *
+			 *     @type string $to      The intended recipient - site admin email address.
+			 *     @type string $subject The subject of the email.
+			 *     @type string $message The body of the email.
+			 *     @type string $headers The headers of the email.
+			 * }
+			 * @param WP_User $user     User object for new user.
+			 * @param string  $blogname The site title.
+			 */
+			$wp_new_user_notification_email_admin = apply_filters( 'wp_new_user_notification_email_admin', $wp_new_user_notification_email_admin, $user, $blogname );
+
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+			$wp_new_user_notification_email_admin['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email_admin['message'], $user );
+
+			@wp_mail(
+				$wp_new_user_notification_email_admin['to'],
+				wp_specialchars_decode( sprintf( $wp_new_user_notification_email_admin['subject'], $blogname ) ),
+				$wp_new_user_notification_email_admin['message'],
+				$wp_new_user_notification_email_admin['headers']
+			);
+
+			remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+			if ( $switched_locale ) {
+				restore_previous_locale();
+			}
+		}
+
+		// `$deprecated was pre-4.3 `$plaintext_pass`. An empty `$plaintext_pass` didn't sent a user notification.
+		if ( 'admin' === $notify || ( empty( $deprecated ) && empty( $notify ) ) ) {
+			return;
+		}
+
+		// Generate something random for a password reset key.
+		$key = wp_generate_password( 20, false );
+
+		/** This action is documented in wp-login.php */
+		do_action( 'retrieve_password_key', $user->user_login, $key );
+
+		// Now insert the key, hashed, into the DB.
+		if ( empty( $wp_hasher ) ) {
+			require_once ABSPATH . WPINC . '/class-phpass.php';
+			$wp_hasher = new PasswordHash( 8, true );
+		}
+		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+		$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+		$switched_locale = switch_to_locale( get_user_locale( $user ) );
+
+		/* translators: %s: user login */
+		$message  = '<p><b>Please set your password and login to access courses, events, directories and more.</b></p>';
+		$message  = '<p>' . sprintf( __( 'Username: %s', 'buddyboss' ), $user->user_login ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) ) . '</p>';
+		$message .= wp_login_url();
+
+		$wp_new_user_notification_email = array(
+			'to'      => $user->user_email,
+			/* translators: Password change notification email subject. %s: Site title */
+			'subject' => __( '[%s] Your username and password info', 'buddyboss' ),
+			'message' => $message,
+			'headers' => '',
+		);
+
+		/**
+		 * Filters the contents of the new user notification email sent to the new user.
+		 *
+		 * @since BuddyPress 4.9.0
+		 *
+		 * @param array   $wp_new_user_notification_email {
+		 *     Used to build wp_mail().
+		 *
+		 *     @type string $to      The intended recipient - New user email address.
+		 *     @type string $subject The subject of the email.
+		 *     @type string $message The body of the email.
+		 *     @type string $headers The headers of the email.
+		 * }
+		 * @param WP_User $user     User object for new user.
+		 * @param string  $blogname The site title.
+		 */
+		$wp_new_user_notification_email = apply_filters( 'wp_new_user_notification_email', $wp_new_user_notification_email, $user, $blogname );
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+		$wp_new_user_notification_email['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email['message'], $user );
+
+		wp_mail(
+			$wp_new_user_notification_email['to'],
+			wp_specialchars_decode( sprintf( $wp_new_user_notification_email['subject'], $blogname ) ),
+			$wp_new_user_notification_email['message'],
+			$wp_new_user_notification_email['headers']
+		);
+
+		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+		if ( $switched_locale ) {
+			restore_previous_locale();
+		}
+	}
+}

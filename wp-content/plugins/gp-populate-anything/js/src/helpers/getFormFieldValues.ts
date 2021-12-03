@@ -1,80 +1,137 @@
 const $ = window.jQuery;
 
 /**
- * serializeArray() does not include disabled inputs by default.
+ * Based on jQuery.serializeArray() but contains the following changes:
+ * 	* Includes disabled inputs
+ * 	* Includes the elements in the output
  *
- * @credit https://stackoverflow.com/q/15958671
+ * @see https://github.com/jquery/jquery/blob/a684e6ba836f7c553968d7d026ed7941e1a612d8/src/serialize.js#L98
+ * @param  $form
  */
-function serializeAll($form: JQuery) {
-	var data = $form.serializeArray();
+function serializeAll(
+	$form: JQuery< HTMLFormElement >
+): { name: string; value: string; el: HTMLInputElement }[] {
+	const rcheckableType = /^(?:checkbox|radio)$/i;
+	const rCRLF = /\r?\n/g;
+	const rsubmitterTypes = /^(?:submit|button|image|reset|file)$/i;
+	const rsubmittable = /^(?:input|select|textarea|keygen)/i;
 
-	$(':disabled[name]', $form).each((index, el) => {
-		if (!(el as HTMLInputElement).name) {
-			return;
-		}
+	const formElements: HTMLInputElement[] = $.makeArray(
+		$form.prop( 'elements' )
+	);
 
-		data.push({ name: (el as HTMLInputElement).name, value: $(el).val() });
-	});
+	const inputElements = formElements.filter( ( el: HTMLInputElement ) => {
+		const type = el.type;
 
-	return data;
+		return (
+			el.name &&
+			rsubmittable.test( el.nodeName ) &&
+			! rsubmitterTypes.test( type ) &&
+			( el.checked || ! rcheckableType.test( type ) )
+		);
+	} );
+
+	/**
+	 * This spread/concat is a cheap way to flatMap without a polyfill.
+	 */
+	return ( [] as (
+		| { name: string; value: string; el: HTMLInputElement }
+		| undefined
+	 )[] )
+		.concat(
+			...inputElements.map( ( el: HTMLInputElement ) => {
+				// eslint-disable-next-line eqeqeq
+				if ( el == null ) {
+					return undefined;
+				}
+
+				const val = $( el ).val();
+
+				if ( Array.isArray( val ) ) {
+					return $.map( val, function ( individualVal ) {
+						return {
+							name: el.name,
+							value: individualVal?.replace( rCRLF, '\r\n' ),
+							el,
+						};
+					} );
+				}
+
+				return {
+					name: el.name,
+					value: ( val as string )?.replace( rCRLF, '\r\n' ),
+					el,
+				};
+			} )
+		)
+		.filter( Boolean ) as {
+		name: string;
+		value: string;
+		el: HTMLInputElement;
+	}[];
 }
 
-export default function getFormFieldValues(formId?:number|string, isGravityView:boolean = false) {
+export default function getFormFieldValues(
+	formId?: number | string,
+	isGravityView: boolean = false
+) {
+	let $form: JQuery< HTMLFormElement > = $( '#gform_' + formId );
+	let inputPrefix = 'input_';
 
-	var $form = $('#gform_' + formId);
-	var inputPrefix = 'input_';
-
-	if (isGravityView) {
+	if ( isGravityView ) {
 		inputPrefix = 'filter_';
 	}
 
 	/* Use entry form if we're in the Gravity Forms admin entry view. */
-	if ( $('#wpwrap #entry_form').length ) {
-		$form = $('#entry_form');
+	if ( $( '#wpwrap #entry_form' ).length ) {
+		$form = $( '#entry_form' );
 	}
 
 	if ( isGravityView ) {
 		$form = $( '.gv-widget-search' );
 	}
 
-	var inputsArray = $.grep(serializeAll($form), function (value?: { name: string, value: string }) {
-		if (!value || value.name.indexOf(inputPrefix) !== 0) {
-			return false;
+	const inputsArray = serializeAll( $form ).filter(
+		( value?: { name: string; value: string } ) => {
+			if ( ! value || value.name?.indexOf( inputPrefix ) !== 0 ) {
+				return false;
+			}
+
+			return true;
 		}
+	);
 
-		return true;
-	});
+	const inputsObject: { [ input: string ]: string[] | string } = {};
 
-	var inputsObject: { [input: string]: string[] | string } = {};
-
-	for (const input of inputsArray) {
-		const { value } = input;
-		const $input = $form.find(`[name="${input.name}"]`);
-		let inputName = input.name.replace(inputPrefix, '');
+	for ( const input of inputsArray ) {
+		const { value, el } = input;
+		let inputName = input.name.replace( inputPrefix, '' );
 
 		/**
 		 * Do not send input value if it is not checked otherwise when hydrating values, it will be treated as if it
 		 * was checked.
 		 */
-		if ($input.is(':checkbox') && !$input.is(':checked')) {
+		if (
+			( el?.type === 'radio' || el?.type === 'checkbox' ) &&
+			! el?.checked
+		) {
 			continue;
 		}
 
 		/* Handle array-based inputs such as the Time field */
-		if (inputName.indexOf('[]') !== -1) {
-			inputName = inputName.replace('[]', '');
+		if ( inputName.indexOf( '[]' ) !== -1 ) {
+			inputName = inputName.replace( '[]', '' );
 
-			if (!(inputName in inputsObject)) {
-				inputsObject[inputName] = [];
+			if ( ! ( inputName in inputsObject ) ) {
+				inputsObject[ inputName ] = [];
 			}
 
-			(inputsObject[inputName] as string[]).push(value);
+			( inputsObject[ inputName ] as string[] ).push( value );
 			/* Standard inputs */
 		} else {
-			inputsObject[inputName] = value;
+			inputsObject[ inputName ] = value;
 		}
 	}
 
 	return inputsObject;
-
 }

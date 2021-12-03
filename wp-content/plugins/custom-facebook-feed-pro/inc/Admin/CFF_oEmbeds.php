@@ -70,13 +70,20 @@ class CFF_oEmbeds {
 
 	/**
 	 * Disable Facebook oEmbed
-	 * 
+	 *
 	 * @since 4.0
-	 * 
+	 *
 	 * @return CFF_Response
 	 */
 	public function disable_facebook_oembed () {
-		\CustomFacebookFeed\Builder\CFF_Feed_Builder::check_privilege( 'nonce' );
+		// Run a security check.
+		check_ajax_referer( 'cff-admin', 'nonce' );
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		// Check for permissions.
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error();
+		}
 
 		$oembed_settings = get_option( 'cff_oembed_token', array() );
 		$oembed_settings['access_token'] = '';
@@ -90,13 +97,20 @@ class CFF_oEmbeds {
 
 	/**
 	 * Disable Instagram oEmbed
-	 * 
+	 *
 	 * @since 4.0
-	 * 
+	 *
 	 * @return CFF_Response
 	 */
 	public function disable_instagram_oembed () {
-		\CustomFacebookFeed\Builder\CFF_Feed_Builder::check_privilege( 'nonce' );
+		// Run a security check.
+		check_ajax_referer( 'cff-admin', 'nonce' );
+		$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+		$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+		// Check for permissions.
+		if ( ! current_user_can( $cap ) ) {
+			wp_send_json_error();
+		}
 
 		$oembed_settings = get_option( 'sbi_oembed_token', array() );
 		$oembed_settings['access_token'] = '';

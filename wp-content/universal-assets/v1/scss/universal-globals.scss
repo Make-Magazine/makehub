@@ -450,7 +450,7 @@ input.cmn-toggle-round:checked + label:after {
 
 // don't print urls
 @media print {
-	header.site-header-custom { display: none; }
+	header.site-header-custom, footer.universal-footer { display: none; }
 	a[href]:after, a[href]:before {
 		content: none !important;
 		display: none !important;

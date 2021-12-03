@@ -19,26 +19,36 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 	class LearnDash_Gutenberg_Block {
 
 		/**
+		 * Block base
+		 *
 		 * @var string $block_base
 		 */
 		protected $block_base = 'learndash';
 
 		/**
+		 * Shortcode slug
+		 *
 		 * @var string $shortcode_slug
 		 */
 		protected $shortcode_slug;
 
 		/**
+		 * Block slug
+		 *
 		 * @var string $block_slug
 		 */
 		protected $block_slug;
 
 		/**
+		 * Block attributes
+		 *
 		 * @var array $block_attributes
 		 */
 		protected $block_attributes;
 
 		/**
+		 * Self closing
+		 *
 		 * @var boolean $self_closing
 		 */
 		protected $self_closing;

@@ -608,6 +608,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * @param array $array The serialized array.
 	 */
 	public function set_properties_from_serialized_array( array $array ) {
+		$logger = new Logger();
 		try {
 			$this->set_all_but_products_as_properties_from_serialized_array( $array );
 			if ( isset( $array['orderProducts'] ) ) {
@@ -622,9 +623,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 				}
 			}
 		} catch ( Throwable $t ) {
-			$logger = new Logger();
-			$logger->warning(
-				'Activecampaign_For_Woocommerce_Ecom_Order: The set_properties_from_serialized_array function encountered an issue. The orderProducts array may not exist.',
+			$logger->error(
+				'There was an issue setting properties from serialized array',
 				[
 					'message'      => $t->getMessage(),
 					'passed_array' => $array,
@@ -767,5 +767,14 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 		}
 
 		return true;
+	}
+
+	/**
+	 * Converts the order to json.
+	 *
+	 * @return false|string
+	 */
+	public function order_to_json() {
+		return wp_json_encode( $this->serialize_to_array() );
 	}
 }

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.1.4
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes.
  *
  *    @type int      $course_id Course ID. Default 0.

@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 3.5.1.1
+ * Version: 3.6.0
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string PHP version x.x.x or x.x.x.x format.
  */
-define( 'LEARNDASH_VERSION', '3.5.1.1' );
+define( 'LEARNDASH_VERSION', '3.6.0' );
 
 /**
  * Define LearnDash LMS - Set the settings database version.
@@ -1257,6 +1257,16 @@ require_once dirname( __FILE__ ) . '/includes/admin/ld-gutenberg.php';
 require_once dirname( __FILE__ ) . '/includes/settings/settings-loader.php';
 
 /**
+ * LearnDash Registration Form Functions
+ */
+require_once LEARNDASH_LMS_PLUGIN_DIR . '/includes/payments/ld-login-registration-functions.php';
+
+/**
+ * LearnDash Emails Functions
+ */
+require_once dirname( __FILE__ ) . '/includes/payments/ld-emails-functions.php';
+
+/**
  * LearnDash Shortcodes Base
  */
 require_once dirname( __FILE__ ) . '/includes/shortcodes/shortcodes-loader.php';
@@ -1311,23 +1321,38 @@ if ( ( true === LEARNDASH_ADDONS_UPDATER ) && ( true === LEARNDASH_UPDATES_ENABL
 	 */
 	if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 		/**
+		 * Dummy class
+		 *
 		 * @ignore
 		 */
 		class LearnDash_Addon_Updater {
+			/**
+			 * Instance
+			 *
+			 * @var object
+			 * @ignore
+			 */
 			protected static $instance = null;
 
 			/**
+			 * Get instance
+			 *
 			 * @ignore
 			 */
 			public static function get_instance() {
 				if ( ! isset( static::$instance ) ) {
-					static::$instance = new static();
+					static::$instance = new self();
 				}
 
 				return static::$instance;
 			}
 
 			/**
+			 * Call
+			 *
+			 * @param string $name      Name.
+			 * @param array  $arguments Arguments.
+			 *
 			 * @ignore
 			 */
 			public function __call( $name, $arguments ) {

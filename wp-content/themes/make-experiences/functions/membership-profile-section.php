@@ -42,7 +42,9 @@ function membership_info_content() {
     $user_info = get_userdata($user_id);
 	//var_dump(Ihc_Db::get_user_levels($user_id, true));
     $user_email = $user_info->user_email;
-    require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
+	if(!class_exists('Stripe\Customer')) {
+    	require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
+	}
     \Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
     $customer = \Stripe\Customer::all(["email" => $user_email]);
     $customerID = (isset($customer->data[0]['id']) ? $customer->data[0]['id'] : NULL); ?>
@@ -66,19 +68,21 @@ function membership_info_content() {
 				<?php echo do_shortcode("[ihc-account-page-subscriptions-table]"); ?>
 				<div class="membership-btns">
 					<?php
-					if(CAN_UPGRADE == true) {
-						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'19.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+					if(CAN_UPGRADE == true && IS_MEMBER == true) {
+						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'24.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
 					}
-					if (!is_null($customerID)) { // if customer exists in stripe
+					if (!is_null($customerID) && IS_MEMBER == true) { // if customer exists in stripe
 				        $session = \Stripe\BillingPortal\Session::create([
 				            'customer' => $customerID,
 				            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
 				        ]);
 				        echo '<a href="'. $session->url .'" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+					} else if(IS_MEMBER == false) {
+						echo '<div><h4>Not a Member?</h4><a href="/join" class="btn universal-btn-red">JOIN TODAY</a></div>';
 					}
 					?>
 				</div>
-				<?php if(CAN_UPGRADE == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $19.99 the first year.</p>'; } ?>
+				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $24.99 the first year.</p>'; } ?>
 			</div>
 			<div class="tab-pane" id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
 				<?php

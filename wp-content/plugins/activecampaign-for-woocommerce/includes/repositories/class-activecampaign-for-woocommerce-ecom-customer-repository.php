@@ -64,8 +64,6 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * @param string|int $id The ID to find the resource by.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
-	 * @throws GuzzleException A general Guzzle Exception.
 	 */
 	public function find_by_id( $id ) {
 		/**
@@ -91,8 +89,6 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * @param string $filter_value The filter value.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 response.
-	 * @throws GuzzleException A general Guzzle Exception.
 	 */
 	public function find_by_filter( $filter_name, $filter_value ) {
 		/**
@@ -177,8 +173,6 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * @param Ecom_Model $model The model to be created remotely.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Unprocessable_Exception A 422 exception.
-	 * @throws GuzzleException A general Guzzle exception.
 	 */
 	public function create( Ecom_Model $model ) {
 		$this->create_and_set_model_properties_from_api(
@@ -195,9 +189,6 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * @param Ecom_Model $model The model to be updated remotely.
 	 *
 	 * @return Ecom_Model
-	 * @throws Activecampaign_For_Woocommerce_Resource_Not_Found_Exception A 404 exception.
-	 * @throws Activecampaign_For_Woocommerce_Resource_Unprocessable_Exception A 422 exception.
-	 * @throws GuzzleException A general Guzzle exception.
 	 */
 	public function update( Ecom_Model $model ) {
 		$this->update_and_set_model_properties_from_api(

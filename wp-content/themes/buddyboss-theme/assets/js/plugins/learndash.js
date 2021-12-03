@@ -431,6 +431,12 @@
                 return false;
             } );
 
+            $( '#bb-courses-directory-form #bs_members_search' ).on( 'keypress' , function(e){
+                if( e.which == 13 ) {
+                    $( '#bb-courses-directory-form' ).submit();
+                }
+            } );
+
         },
 
         toggleTheme: function() {

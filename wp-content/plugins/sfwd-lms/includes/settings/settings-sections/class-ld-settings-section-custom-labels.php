@@ -24,7 +24,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * @since 2.4.0
 		 */
 		protected function __construct() {
-			$this->settings_page_id = 'learndash_lms_settings_custom_labels';
+			$this->settings_page_id = 'learndash_lms_advanced';
 
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'learndash_settings_custom_labels';
@@ -236,9 +236,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param array $new_values Array of section fields values.
-		 * @param array $old_values Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $new_values         Array of section fields values.
+		 * @param array  $old_values         Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
 			if ( $setting_option_key === $this->setting_option_key ) {

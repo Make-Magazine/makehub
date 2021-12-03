@@ -18,6 +18,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Metabox_Quiz_Progress_Settings extends LearnDash_Settings_Metabox {
 
+		/**
+		 * Quiz edit
+		 *
+		 * @var object
+		 */
 		protected $quiz_edit = null;
 		/**
 		 * Public constructor for class
@@ -300,7 +305,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'max' => '100',
 					),
 					'value'          => $this->setting_option_values['threshold'],
-					'class'          => '-small',
 					'parent_setting' => 'certificate',
 					'rest'           => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),

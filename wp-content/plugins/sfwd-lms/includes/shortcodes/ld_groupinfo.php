@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.2.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type string     $show           The course info field to display. Default 'course_title'.
@@ -189,5 +189,6 @@ function learndash_groupinfo_shortcode( $attr = array(), $content = '' ) {
 				break;
 		}
 	}
+	return '';
 }
 add_shortcode( 'groupinfo', 'learndash_groupinfo_shortcode', 10, 2 );

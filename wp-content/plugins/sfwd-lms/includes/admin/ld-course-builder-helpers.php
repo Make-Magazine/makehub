@@ -208,6 +208,26 @@ function learndash_get_course_data( $data ) {
 
 			if ( ( is_array( $sections ) ) && ( ! empty( $sections ) ) ) {
 				foreach ( $sections as $section ) {
+					if ( ! is_object( $section ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'ID' ) ) || ( empty( $section->ID ) ) ) {
+						continue;
+					}
+					
+					if ( ! property_exists( $section, 'order' ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'post_title' ) ) || ( empty( $section->post_title ) ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'type' ) ) || ( empty( $section->type ) ) ) {
+						continue;
+					}
+					
 					array_splice( $output_lessons, (int) $section->order, 0, array( $section ) );
 				}
 			}

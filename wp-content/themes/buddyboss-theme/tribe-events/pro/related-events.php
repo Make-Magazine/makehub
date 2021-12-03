@@ -51,14 +51,14 @@ if ( is_array( $posts ) && ! empty( $posts ) ) : ?>
                         </div>
                         <h3 class="tribe-related-events-title"><a href="<?php echo tribe_get_event_link( $post ); ?>" class="tribe-event-url" rel="bookmark"><?php echo get_the_title( $post->ID ); ?></a></h3>
                         <div class="bs-related-location">
-                        <?php 
+                        <?php
                         $venue_details = tribe_get_venue_details($post->ID);
                         if ( $venue_details ) : ?>
                 			<!-- Venue Display Info -->
                 			<div class="tribe-events-venue-details">
                 			<?php
                 				//$address_delimiter = empty( $venue_address ) ? ' ' : ', ';
-                				echo $venue_details[address];
+                				echo $venue_details['address'];
                 			?>
                 			</div> <!-- .tribe-events-venue-details -->
                 		<?php endif; ?>

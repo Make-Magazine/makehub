@@ -384,14 +384,20 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 
 					$this->_update_saved_licenses( $saved_licenses );
 
-					$current = get_site_transient( 'update_plugins' );	//Get the current update info
-					$current->last_checked = 0;						//wp_update_plugins() checks this value when determining
-					set_site_transient( 'update_plugins', $current );	//whether to actually check for updates, so we reset it to zero.
-					wp_update_plugins();							//Run the internal plugin update check
+					$current = get_site_transient( 'update_plugins' ); // Get the current update info
+					if ( empty( $current ) ) {
+						$current = new stdClass();
+					}
+					$current->last_checked = 0; // wp_update_plugins() checks this value when determining
+					set_site_transient( 'update_plugins', $current ); // Whether to actually check for updates, so we reset it to zero.
+					wp_update_plugins(); // Run the internal plugin update check
 
 					$current = get_site_transient( 'update_themes' );
+					if ( empty( $current ) ) {
+						$current = new stdClass();
+					}
 					$current->last_checked = 0;
-					set_site_transient( 'update_themes', $current );	//whether to actually check for updates, so we reset it to zero.
+					set_site_transient( 'update_themes', $current ); // Whether to actually check for updates, so we reset it to zero.
 					wp_update_themes();
 				}
 			}
@@ -838,14 +844,20 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 			if ( ! empty( $licenses_updated ) ) {
 				$retval['message'] = sprintf( __( 'Congratulations! License keys for the following product(s) have been activated: %s', 'buddyboss-theme' ), implode( ', ', $licenses_updated ) );
 
-				$current = get_site_transient( 'update_plugins' );	//Get the current update info
-				$current->last_checked = 0;						//wp_update_plugins() checks this value when determining
-				get_site_transient( 'update_plugins', $current );	//whether to actually check for updates, so we reset it to zero.
-				wp_update_plugins();							//Run the internal plugin update check
+				$current = get_site_transient( 'update_plugins' );    // Get the current update info.
+				if ( empty( $current ) ) {
+					$current = new stdClass();
+				}
+				$current->last_checked = 0;    // wp_update_plugins() checks this value when determining.
+				get_site_transient( 'update_plugins', $current ); // Whether to actually check for updates, so we reset it to zero.
+				wp_update_plugins(); // Run the internal plugin update check
 
 				$current = get_site_transient( 'update_themes' );
+				if ( empty( $current ) ) {
+					$current = new stdClass();
+				}
 				$current->last_checked = 0;
-				get_site_transient( 'update_themes', $current );	//whether to actually check for updates, so we reset it to zero.
+				get_site_transient( 'update_themes', $current ); // Whether to actually check for updates, so we reset it to zero.
 				wp_update_themes();
 
 			} else {

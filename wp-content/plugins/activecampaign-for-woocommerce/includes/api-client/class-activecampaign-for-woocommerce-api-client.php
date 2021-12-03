@@ -412,6 +412,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 				$this->logger->debug(
 					'Received response',
 					[
+						'endpoint'             => $this->endpoint,
 						'response_status_code' => $response->getStatusCode(),
 						'response_headers'     => $response->getHeaders(),
 						'response_body'        => $response->getBody()->getContents(),
@@ -423,7 +424,11 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 
 			if ( isset( $e ) && 422 === $e->getCode() ) {
-				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+				if ( strpos( $message, 'duplicate' ) !== false ) {
+					$this->logger->debug( $message );
+				} else {
+					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+				}
 			} else {
 				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 			}
@@ -433,7 +438,26 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			$message     = $e->getMessage();
 			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 			if ( isset( $e ) && 422 === $e->getCode() ) {
-				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+				if ( strpos( $message, 'duplicate' ) !== false ) {
+					$this->logger->debug( $message );
+				} else {
+					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+				}
+			} else {
+				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+			}
+
+			return null;
+		} catch ( Throwable $t ) {
+			$message     = $t->getMessage();
+			$stack_trace = $t->getTrace();
+			if ( isset( $e ) && 422 === $t->getCode() ) {
+				if ( strpos( $message, 'duplicate' ) !== false ) {
+					// Don't waste log space with stack traces if it's just a duplicate
+					$this->logger->debug( $message );
+				} else {
+					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+				}
 			} else {
 				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 			}

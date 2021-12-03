@@ -94,7 +94,7 @@ function bp_zoom_enqueue_scripts_and_styles() {
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/redux-thunk.min.js' ),
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/lodash.min.js' ),
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/jquery.min.js' ),
-				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/zoom-meeting-1.9.0.min.js' ),
+				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/zoom-meeting-2.0.1.min.js' ),
 			),
 			'styles'                  => array(
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/bootstrap.css' ),

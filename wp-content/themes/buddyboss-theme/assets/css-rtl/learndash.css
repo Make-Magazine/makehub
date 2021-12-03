@@ -2359,6 +2359,10 @@ div.bb-lms-header.quiz-fix .bb-position {
 .lms-topic-sidebar-wrapper.lms-topic-sidebar-close {
   margin-right: -370px;
   /*margin-left: -40%;*/ }
+  .lms-topic-sidebar-wrapper.lms-topic-sidebar-close .lms-topic-sidebar-data {
+    right: -370px; }
+    .buddypanel-open .lms-topic-sidebar-wrapper.lms-topic-sidebar-close .lms-topic-sidebar-data {
+      right: -370px; }
 
 .lms-header-instructor .bb-about-instructor {
   margin: 0;
@@ -3923,6 +3927,27 @@ body.bb-custom-ld-focus-mode-enabled.admin-bar {
         -ms-flex: 0 0 140px;
             flex: 0 0 140px; } }
 
+.ld-course-list-content.list-view .ld_course_grid .course {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+  .ld-course-list-content.list-view .ld_course_grid .course .bb-course-cover,
+  .ld-course-list-content.list-view .ld_course_grid .course .bb-card-course-details {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+  .ld-course-list-content.list-view .ld_course_grid .course .bb-course-cover a {
+    width: 100%;
+    border-radius: 0 3px 3px 0; }
+
+.ld-course-list-content .ld_course_grid .course .bb-card-course-details {
+  padding: 16px 20px; }
+  .ld-course-list-content .ld_course_grid .course .bb-card-course-details .ld_course_grid_button .btn {
+    width: auto; }
+  @media screen and (max-width: 420px) {
+    .ld-course-list-content .ld_course_grid .course .bb-card-course-details .bb-course-title {
+      font-size: 16px !important; } }
+
 ul.bb-lms-user-profile-tabs {
   margin: 0;
   list-style: none; }
@@ -4694,9 +4719,15 @@ ul.bb-lms-user-profile-tabs {
     padding: 15px 0;
     font-size: 15px;
     position: fixed;
+    right: 0;
+    -webkit-transition: right 0.4s ease;
+            transition: right 0.4s ease;
     width: 370px;
     overflow: auto;
     z-index: 111; }
+    @media screen and (min-width: 800px) {
+      .buddypanel-open .lms-topic-sidebar-wrapper .lms-topic-sidebar-data {
+        right: 220px; } }
   .lms-topic-sidebar-wrapper .lms-links {
     border-top: 1px solid #E7E9EC;
     margin: 25px 30px 0;
@@ -5200,31 +5231,38 @@ ul.bb-lms-user-profile-tabs {
 .widget_sfwd-courses-widget ul li:last-of-type {
   margin-bottom: 0; }
 
-.widget-area .widget_lduserstatus .ld-user-status.ld-is-widget,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-user-status.ld-is-widget,
+.widget.widget_lduserstatus .ld-user-status.ld-is-widget,
 .ld-sidebar-widgets .widget_lduserstatus .ld-user-status.ld-is-widget {
   margin: 0; }
-  .widget-area .widget_lduserstatus .ld-user-status.ld-is-widget .ld-item-list .ld-item-list-item:last-child,
+  .elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-user-status.ld-is-widget .ld-item-list .ld-item-list-item:last-child,
+  .widget.widget_lduserstatus .ld-user-status.ld-is-widget .ld-item-list .ld-item-list-item:last-child,
   .ld-sidebar-widgets .widget_lduserstatus .ld-user-status.ld-is-widget .ld-item-list .ld-item-list-item:last-child {
     padding-bottom: 0; }
 
-.widget-area .widget_lduserstatus div.ld-item-list,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus div.ld-item-list,
+.widget.widget_lduserstatus div.ld-item-list,
 .ld-sidebar-widgets .widget_lduserstatus div.ld-item-list {
   margin: 0; }
 
-.widget-area .widget_lduserstatus .ld-item-list-item-preview,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-item-list-item-preview,
+.widget.widget_lduserstatus .ld-item-list-item-preview,
 .ld-sidebar-widgets .widget_lduserstatus .ld-item-list-item-preview {
   background: transparent !important;
   border-radius: 4px !important; }
 
-.widget-area .widget_lduserstatus .ld-item-title,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-item-title,
+.widget.widget_lduserstatus .ld-item-title,
 .ld-sidebar-widgets .widget_lduserstatus .ld-item-title {
   display: block; }
 
-.widget-area .widget_lduserstatus .ld-status-icon,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-status-icon,
+.widget.widget_lduserstatus .ld-status-icon,
 .ld-sidebar-widgets .widget_lduserstatus .ld-status-icon {
   margin-left: 10px !important; }
 
-.widget-area .widget_lduserstatus .ld-section-heading,
+.elementor-element-edit-mode.elementor-widget-wp-widget-lduserstatus .ld-section-heading,
+.widget.widget_lduserstatus .ld-section-heading,
 .ld-sidebar-widgets .widget_lduserstatus .ld-section-heading {
   margin-bottom: 0; }
 
@@ -6455,6 +6493,9 @@ p.wpProQuiz_quiz_time {
     height: 30px;
     padding: 0;
     opacity: 0; }
+    [dir="rtl"] .wpProQuiz_modal_window #wpProQuiz_overlay_close {
+      left: 59px;
+      right: initial !important; }
   .wpProQuiz_modal_window #wpProQuiz_loadUserData {
     margin-right: 0 !important;
     margin-left: 0 !important;

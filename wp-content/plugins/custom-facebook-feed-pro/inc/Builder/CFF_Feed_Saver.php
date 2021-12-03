@@ -241,7 +241,7 @@ class CFF_Feed_Saver {
 
 		$this->sanitized_and_sorted_data['feeds'][] = array(
 			'key' => 'feed_name',
-			'values' => [sanitize_text_field($this->feed_name)]
+			'values' => [sanitize_text_field(wp_unslash($this->feed_name))]
 		);
 
 		$success = CFF_Db::feeds_update( $this->sanitized_and_sorted_data['feeds'], $args );

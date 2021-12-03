@@ -62,29 +62,26 @@ function learndash_get_course_price( $course = null ) {
 
 	if ( 'subscribe' === $course_price['type'] ) {
 
-		$frequency = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
-		$interval  = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
+		$interval        = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
+		$frequency       = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
+		$repeats         = learndash_get_setting( $course->ID, 'course_no_of_cycles' );
+		$trial_interval  = learndash_get_setting( $course->ID, 'course_trial_duration_p1' );
+		$trial_frequency = learndash_get_setting( $course->ID, 'course_trial_duration_t1' );
 
-		$label = '';
+		$course_price['interval']  = $interval;
+		$course_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
 
-		switch ( $frequency ) {
-			case ( 'D' ):
-				$label = _n( 'day', 'days', $interval, 'learndash' );
-				break;
-			case ( 'W' ):
-				$label = _n( 'week', 'weeks', $interval, 'learndash' );
-				break;
-			case ( 'M' ):
-				$label = _n( 'month', 'months', $interval, 'learndash' );
-				break;
-			case ( 'Y' ):
-				$label = _n( 'year', 'years', $interval, 'learndash' );
-				break;
+		if ( ! empty( $repeats ) ) {
+			$course_price['repeats']          = $repeats;
+			$course_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
 		}
 
-		$course_price['frequency'] = $label;
-		$course_price['interval']  = $interval;
+		$course_price['trial_price'] = ! empty( learndash_get_setting( $course->ID, 'course_trial_price' ) ) ? learndash_get_setting( $course->ID, 'course_trial_price' ) : '';
 
+		if ( ! empty( $trial_interval ) ) {
+			$course_price['trial_interval']  = $trial_interval;
+			$course_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
+		}
 	}
 
 	/**
@@ -96,6 +93,102 @@ function learndash_get_course_price( $course = null ) {
 	 */
 	return apply_filters( 'learndash_get_course_price', $course_price );
 
+}
+
+/**
+ * Get group price
+ *
+ * Return an array of price type, amount and cycle
+ *
+ * @since 3.2.0
+ *
+ * @param  int/object $group
+ * @return array      price details
+ */
+function learndash_get_group_price( $group = null ) {
+
+	if ( null === $group ) {
+		global $post;
+		$group = $post;
+	}
+
+	if ( is_numeric( $group ) ) {
+		$group = get_post( $group );
+	}
+	if ( ! is_a( $group, 'WP_Post' ) ) {
+		return false;
+	}
+
+	// Get the course price
+	$meta = get_post_meta( $group->ID, '_groups', true );
+
+	$group_price = array(
+		'type'  => ! empty( $meta['groups_group_price_type'] ) ? $meta['groups_group_price_type'] : LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
+		'price' => ! empty( $meta['groups_group_price'] ) ? $meta['groups_group_price'] : '',
+	);
+
+	if ( 'subscribe' === $group_price['type'] ) {
+
+		$frequency       = learndash_get_setting( $group->ID, 'group_price_billing_t3', true );
+		$interval        = learndash_get_setting( $group->ID, 'group_price_billing_p3', true );
+		$repeats         = learndash_get_setting( $group->ID, 'post_no_of_cycles' );
+		$trial_interval  = learndash_get_setting( $group->ID, 'group_trial_duration_p1' );
+		$trial_frequency = learndash_get_setting( $group->ID, 'group_trial_duration_t1' );
+
+		$group_price['interval']  = $interval;
+		$group_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
+
+		if ( ! empty( $repeats ) ) {
+			$group_price['repeats']          = $repeats;
+			$group_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
+		}
+
+		$group_price['trial_price'] = ! empty( learndash_get_setting( $group->ID, 'group_trial_price' ) ) ? learndash_get_setting( $group->ID, 'group_trial_price' ) : '';
+
+		if ( ! empty( $trial_interval ) ) {
+			$group_price['trial_interval']  = $trial_interval;
+			$group_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
+		}
+	}
+
+	/**
+	 * Filter Group Price details.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array $group_price Group Price Details array.
+	 */
+	return apply_filters( 'learndash_get_group_price', $group_price );
+
+}
+
+/**
+ * Get the singular or plural label for recurring payment intervals
+ *
+ * @since 3.6.0
+ *
+ * @param string $interval  Number of payment intervals.
+ * @param string $frequency PayPal symbol for day, week, month or year.
+ *
+ * @return string
+ */
+function learndash_get_grammatical_number_label_for_interval( $interval, $frequency ) {
+	switch ( $frequency ) {
+		case ( 'D' ):
+			return _n( 'day', 'days', $interval, 'learndash' );
+
+		case ( 'W' ):
+			return _n( 'week', 'weeks', $interval, 'learndash' );
+
+		case ( 'M' ):
+			return _n( 'month', 'months', $interval, 'learndash' );
+
+		case ( 'Y' ):
+			return _n( 'year', 'years', $interval, 'learndash' );
+
+		default:
+			return '';
+	}
 }
 
 /**
@@ -704,7 +797,7 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false, $topic
 		$lesson_class .= ' ld-expandable';
 	}
 
-	if ( ( isset( $is_current_lesson ) && $is_current_lesson ) || ( isset( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) && absint( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) === absint( $lesson['post']->ID ) ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Data is only used for conditional and not further processed.
+	if ( ( isset( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) && absint( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) === absint( $lesson['post']->ID ) ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Data is only used for conditional and not further processed.
 		$lesson_class .= ' ld-current-lesson';
 	}
 
@@ -1876,6 +1969,7 @@ function learndash_30_custom_colors() {
 		.learndash-wrapper .ld-alert-success {
 			border-color: <?php echo esc_attr( $colors['secondary'] ); ?>;
 			background-color: transparent !important;
+			color: <?php echo esc_attr( $colors['secondary'] ); ?>;
 		}
 
 		.learndash-wrapper .wpProQuiz_content .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionSolved,
@@ -3144,74 +3238,3 @@ add_filter(
 	30,
 	3
 );
-
-
-/**
- * Get group price
- *
- * Return an array of price type, amount and cycle
- *
- * @since 3.2.0
- *
- * @param  int/object $group
- * @return array      price details
- */
-function learndash_get_group_price( $group = null ) {
-
-	if ( null === $group ) {
-		global $post;
-		$group = $post;
-	}
-
-	if ( is_numeric( $group ) ) {
-		$group = get_post( $group );
-	}
-	if ( ! is_a( $group, 'WP_Post' ) ) {
-		return false;
-	}
-
-	// Get the course price
-	$meta = get_post_meta( $group->ID, '_groups', true );
-
-	$group_price = array(
-		'type'  => ! empty( $meta['groups_group_price_type'] ) ? $meta['groups_group_price_type'] : LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
-		'price' => ! empty( $meta['groups_group_price'] ) ? $meta['groups_group_price'] : '',
-	);
-
-	if ( 'subscribe' === $group_price['type'] ) {
-
-		$frequency = get_post_meta( $group->ID, 'group_price_billing_t3', true );
-		$interval  = intval( get_post_meta( $group->ID, 'group_price_billing_p3', true ) );
-
-		$label = '';
-
-		switch ( $frequency ) {
-			case ( 'D' ):
-				$label = _n( 'day', 'days', $interval, 'learndash' );
-				break;
-			case ( 'W' ):
-				$label = _n( 'week', 'weeks', $interval, 'learndash' );
-				break;
-			case ( 'M' ):
-				$label = _n( 'month', 'months', $interval, 'learndash' );
-				break;
-			case ( 'Y' ):
-				$label = _n( 'year', 'years', $interval, 'learndash' );
-				break;
-		}
-
-		$group_price['frequency'] = $label;
-		$group_price['interval']  = $interval;
-
-	}
-
-	/**
-	 * Filter Group Price details.
-	 *
-	 * @since 3.2.0
-	 *
-	 * @param array $group_price Group Price Details array.
-	 */
-	return apply_filters( 'learndash_get_group_price', $group_price );
-
-}

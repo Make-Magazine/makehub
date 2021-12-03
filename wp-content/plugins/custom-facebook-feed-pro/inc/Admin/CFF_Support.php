@@ -129,9 +129,9 @@ class CFF_Support {
 
     /**
      * Page Data to use in front end
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return array
      */
     public function page_data() {
@@ -256,7 +256,7 @@ class CFF_Support {
 
     /**
      * Get System Info
-     * 
+     *
      * @since 4.0
      */
     public function get_system_info() {
@@ -298,9 +298,9 @@ class CFF_Support {
 
     /**
      * Get Site and Server Info
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_site_n_server_info() {
@@ -327,9 +327,9 @@ class CFF_Support {
 
     /**
      * Get Active Plugins
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_active_plugins_info() {
@@ -350,9 +350,9 @@ class CFF_Support {
 
     /**
      * Get Global Settings
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_global_settings_info() {
@@ -455,9 +455,9 @@ class CFF_Support {
 
     /**
      * Get Feeds Settings
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_feeds_settings_info() {
@@ -498,20 +498,20 @@ class CFF_Support {
             $i++;
         }
         $output .= "</br>";
-        
+
         return $output;
     }
-    
+
     /**
      * Get Image Resizing Info
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_image_resizing_info() {
         $output = "## IMAGE RESIZING: ##" . "</br>";
-        
+
         $upload  = wp_upload_dir();
         $upload_dir = $upload['basedir'];
         $upload_dir = trailingslashit( $upload_dir ) . CFF_UPLOADS_NAME;
@@ -524,15 +524,15 @@ class CFF_Support {
             }
         }
         $output .= "</br>";
-        
+
         return $output;
     }
 
     /**
      * Get Posts Table Info
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_posts_table_info() {
@@ -582,9 +582,9 @@ class CFF_Support {
 
     /**
      * CFF Get Errors Info
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_errors_info() {
@@ -613,9 +613,9 @@ class CFF_Support {
 
     /**
      * Get Action Logs Info
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_action_logs_info() {
@@ -627,15 +627,15 @@ class CFF_Support {
             endforeach;
         endif;
         $output .= "</br>";
-        
+
         return $output;
     }
 
     /**
      * Get Feeds Settings
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string
      */
     public static function get_oembeds_info() {
@@ -650,9 +650,9 @@ class CFF_Support {
 
     /**
      * CFF Get Support URL
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string $url
      */
     public function get_support_url() {
@@ -680,32 +680,39 @@ class CFF_Support {
 	 * @return CFF_Response
 	 */
 	public function cff_export_settings_json() {
-		if ( ! isset( $_GET['feed_id'] ) ) {
-			return;
-		}
-		$feed_id = filter_var( $_GET['feed_id'], FILTER_SANITIZE_NUMBER_INT );
-		$feed = CFF_Feed_Saver_Manager::get_export_json( $feed_id );
-		$feed_info = CFF_Db::feeds_query( array('id' => $feed_id) );
-		$feed_name = strtolower( $feed_info[0]['feed_name'] );
-		$filename = 'cff-feed-' . $feed_name . '.json';
-		// Creates a new csv file and store it in tmp directory
-		$file = fopen( '/tmp/' . $filename, 'w' );
-		fwrite($file, $feed);
-		fclose($file);
-		// output headers so that the file is downloaded rather than displayed
-		header( "Content-type: application/json" );
-		header( "Content-disposition: attachment; filename = " . $filename );
-		readfile( "/tmp/" . $filename );
+        if(check_ajax_referer( 'cff_admin_nonce' , 'nonce', false) || check_ajax_referer( 'cff-admin' , 'nonce', false) ){
+            $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+            $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+            if ( ! current_user_can( $cap ) ) {
+                wp_send_json_error(); // This auto-dies.
+            }
+    		if ( ! isset( $_GET['feed_id'] ) ) {
+    			return;
+    		}
+    		$feed_id = filter_var( $_GET['feed_id'], FILTER_SANITIZE_NUMBER_INT );
+    		$feed = CFF_Feed_Saver_Manager::get_export_json( $feed_id );
+    		$feed_info = CFF_Db::feeds_query( array('id' => $feed_id) );
+    		$feed_name = strtolower( $feed_info[0]['feed_name'] );
+    		$filename = 'cff-feed-' . $feed_name . '.json';
+    		// Creates a new csv file and store it in tmp directory
+    		$file = fopen( '/tmp/' . $filename, 'w' );
+    		fwrite($file, $feed);
+    		fclose($file);
+    		// output headers so that the file is downloaded rather than displayed
+    		header( "Content-type: application/json" );
+    		header( "Content-disposition: attachment; filename = " . $filename );
+    		readfile( "/tmp/" . $filename );
+        }
 		exit;
 	}
 
     /**
      * CFF Get Whitespace
-     * 
+     *
      * @since 4.0
-     * 
-     * @param int $times 
-     * 
+     *
+     * @param int $times
+     *
      * @return string
      */
     public static function get_whitespace( $times ) {

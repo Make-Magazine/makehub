@@ -1,0 +1,275 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: LearnDash LMS - Stripe Integration\n"
+"POT-Creation-Date: 2021-02-03 17:42+0800\n"
+"PO-Revision-Date: 2021-02-03 17:42+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: learndash-stripe.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: includes/admin/settings/class-settings.php:54
+msgid ""
+"LearnDash plugin is required to activate LearnDash Stripe add-on plugin. "
+"Please activate it first."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:137
+#: includes/admin/settings/class-settings.php:139
+#: includes/admin/settings/class-settings.php:150
+#: includes/admin/settings/class-settings.php:193
+#: includes/admin/settings/class-settings.php:199
+msgid "Stripe Settings"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:186
+msgid "Cheatin huh?"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:198
+msgid "Click to toggle"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:235
+msgid "Update Options »"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:251
+msgid "Test Mode"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:252
+msgid "Check this box to enable test mode."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:257
+msgid "Integration Type"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:258
+msgid "Stripe integration used on this site."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:261
+msgid "Legacy Checkout"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:262
+msgid "Checkout (Support SCA)"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:267
+msgid "Test Publishable Key"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:268
+msgid "Test publishable key used in test mode."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:273
+msgid "Test Secret Key"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:274
+msgid "Test secret key used in test mode."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:279
+msgid "Live Publishable Key"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:280
+msgid "Live publishable key used in real transaction."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:285
+msgid "Live Secret Key"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:286
+msgid "Live secret key used in real transaction."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:291
+msgid "Webhook URL"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:292
+msgid "This URL needs to pasted to your Stripe account's webhook settings."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:301
+msgid "Endpoint Secret"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:302
+msgid "Secret strings from your Stripe's webhook settings."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:307
+msgid "Test Endpoint Secret"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:308
+msgid "Test secret strings from your Stripe's webhook settings."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:313
+msgid "Currency"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:314
+#, php-format
+msgid ""
+"3-letter ISO code for currency, <a href=\"%1$s\" target=\"%2$s\">click here</"
+"a> for more information."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:319
+msgid "Payment Methods"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:320
+msgid "Stripe payment methods to be enabled on the site."
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:323
+msgid "Credit Card"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:324
+msgid "Ideal"
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:328
+msgid "Return URL "
+msgstr ""
+
+#: includes/admin/settings/class-settings.php:329
+msgid ""
+"Redirect the user to a specifici URL after the purchase. Leave blank to let "
+"user remain on the Course page"
+msgstr ""
+
+#: includes/class-stripe-checkout-integration.php:196
+msgid "Cheatin' huh?"
+msgstr ""
+
+#: includes/class-stripe-checkout-integration.php:305
+msgid "Your transaction was successful. Please log in to access your course."
+msgstr ""
+
+#: includes/class-stripe-integration-base.php:216
+msgid "Use a Credit Card"
+msgstr ""
+
+#: includes/class-stripe-integration-base.php:226
+msgid "Take This Course"
+msgstr ""
+
+#: includes/class-stripe-integration-base.php:228
+msgid "Enroll in Group"
+msgstr ""
+
+#: includes/class-stripe-integration-base.php:351
+#: includes/class-stripe-integration-base.php:367
+msgid "Error "
+msgstr ""
+
+#: includes/class-stripe-integration-base.php:353
+msgid "Error"
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:33
+msgid "No token found. Please activate javascript to make a purchase."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:55
+msgid ""
+"The course form data doesn't match with the official course data. Cheatin' "
+"huh?"
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:98
+msgid "Failed to create a new user account. Please try again. Reason: "
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:146
+#: includes/class-stripe-legacy-checkout-integration.php:155
+#: includes/class-stripe-legacy-checkout-integration.php:327
+#: includes/class-stripe-legacy-checkout-integration.php:336
+msgid "Please contact website administrator."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:164
+#: includes/class-stripe-legacy-checkout-integration.php:173
+#: includes/class-stripe-legacy-checkout-integration.php:181
+#: includes/class-stripe-legacy-checkout-integration.php:345
+#: includes/class-stripe-legacy-checkout-integration.php:354
+#: includes/class-stripe-legacy-checkout-integration.php:361
+msgid "Please try again later."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:295
+msgid ""
+"Failed to create a subscription. Please check your card and try it again "
+"later."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:358
+msgid "Unknown error."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:387
+msgid ""
+"The transaction was successful. Please check your email and log in to access "
+"the course."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:390
+msgid "The transaction was successful. You now have access the course."
+msgstr ""
+
+#: includes/class-stripe-legacy-checkout-integration.php:392
+msgid "The transaction was successful. Please log in to access the course."
+msgstr ""
+
+#: includes/class-translations-ld-stripe.php:16
+msgid "LearnDash Samcart"
+msgstr ""
+
+#: learndash-stripe.php:138
+msgid ""
+"LearnDash LMS - Stripe Integration Add-on requires the following plugin(s) "
+"to be active:"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "LearnDash LMS - Stripe Integration"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Integrate Stripe payment gateway with LearnDash."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "LearnDash"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.learndash.com/"
+msgstr ""

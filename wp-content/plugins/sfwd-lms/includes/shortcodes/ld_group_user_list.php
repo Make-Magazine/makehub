@@ -26,6 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Group user list
+ *
+ * @param array  $attr     Array of attributes.
+ * @param string $content Content.
+ *
+ * @return string
+ */
 function learndash_group_user_list( $attr = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
@@ -113,5 +121,6 @@ function learndash_group_user_list( $attr = array(), $content = '' ) {
 			}
 		}
 	}
+	return '';
 }
 add_shortcode( 'learndash_group_user_list', 'learndash_group_user_list', 10, 2 );

@@ -27,6 +27,34 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		protected $theme_key = null;
 
 		/**
+		 * Theme Base Directory
+		 *
+		 * @var string
+		 */
+		protected $theme_base_dir = '';
+
+		/**
+		 * Theme Base URL
+		 *
+		 * @var string
+		 */
+		protected $theme_base_url = '';
+
+		/**
+		 * Theme Template Directory
+		 *
+		 * @var string
+		 */
+		protected $theme_template_dir = '';
+
+		/**
+		 * Theme Template URL
+		 *
+		 * @var string
+		 */
+		protected $theme_template_url = '';
+
+		/**
 		 * Is theme selectable. Controls if it shows in the Setting selector.
 		 *
 		 * @since 3.0
@@ -74,6 +102,11 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 */
 		protected static $_init_called = false; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
+		/**
+		 * Theme settings sections
+		 *
+		 * @var array
+		 */
 		protected $theme_settings_sections = array();
 
 		/**
@@ -110,6 +143,8 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 					return self::$_instances[ $theme_key ];
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -128,6 +163,8 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 				}
 				return self::$_instances[ $theme_key ];
 			}
+
+			return null;
 		}
 
 		/**
@@ -150,7 +187,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 *
 		 * @since 3.0
 		 * @param string $theme_key Key/Slug for theme to check.
-		 * @param string $section_ket Key for Settincs Section.
+		 * @param string $section_key Key for Settincs Section.
 		 * @param object $section_instance Instance of settings section.
 		 */
 		final public static function register_theme_settings_section( $theme_key, $section_key, $section_instance ) {
@@ -275,7 +312,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string directory path of active theme templates.
 		 */
 		final public static function get_active_theme_dir() {
-			return self::get_theme_template_dir();
+			return self::get_active_theme_template_dir();
 		}
 
 		/**
@@ -285,7 +322,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string URL of active theme templates.
 		 */
 		final public static function get_active_theme_url() {
-			return self::get_theme_template_url();
+			return self::get_active_theme_template_url();
 		}
 
 		/**
@@ -306,9 +343,9 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * Get the Slug of the current theme.
 		 *
 		 * @since 3.0
+		 *
 		 * @return string Key (slug) for a theme.
 		 */
-
 		public function get_theme_key() {
 			return $this->theme_key;
 		}
@@ -354,6 +391,16 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		}
 
 		/**
+		 * Get the template URL of the current theme.
+		 *
+		 * @since 3.0
+		 * @return string template URL of current theme.
+		 */
+		public function get_theme_template_url() {
+			return $this->theme_template_url;
+		}
+
+		/**
 		 * Get the template directory of the current theme.
 		 *
 		 * @since 3.0
@@ -391,7 +438,9 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * Get Theme instance names
 		 *
 		 * @since 3.0
-		 * @param boolean only return selectable themes.
+		 *
+		 * @param boolean $selectable only return selectable themes.
+		 *
 		 * @return array Array of themes by theme_key.
 		 */
 		final public static function get_themes( $selectable = true ) {

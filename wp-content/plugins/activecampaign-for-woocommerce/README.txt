@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.8
-Stable tag: 1.4.9
+Tested up to: 5.9
+Stable tag: 1.5.3
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,6 +16,10 @@ ActiveCampaign for WooCommerce automatically syncs your customers and their purc
 
 ActiveCampaign for WooCommerce gives you the power to:
 - Sync all customers and their purchase data into ActiveCampaign in real time
+- Sync existing data from WooCommerce into ActiveCampaign
+-- Take control of your historical data sync with visibility to each order that is synced
+-- Start, pause, and cancel your historical data sync at your convenience; no need to worry about syncs running during high traffic periods
+-- Confirmation of orders being synced once complete, with transparency around any order that fails to sync
 - Configure how long until a cart should be considered abandoned
 - Provide an opt-in checkbox on your checkout form for customers to opt-in to marketing
 - Configure what the opt-in checkbox says and if it's checked by default
@@ -44,6 +48,25 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.5.3 =
+* Hotfix for urgent abandoned cart bug
+
+= 1.5.2 =
+* Hotfix for bad build that caused composer to miss a class that autoload of abandoned cart to be missing
+
+= 1.5.1 =
+* Bugfix for completed orders being marked as abandoned cart orders in ActiveCampaign
+* Adds a backup method to make sure an order that failed to send to ActiveCampaign will resend during the abandoned cart sync
+
+= 1.5.0 =
+* Adds a first version historical sync page where a historical sync can be run as a background process within Wordpress instead of ActiveCampaign.
+* Allows direct sync from WooCommerce to the Hosted API.
+* Allows the admin to view progress of historical sync & cancel/pause the sync process within the ActiveCampaign plugin historical sync page.
+
+= 1.4.10 =
+* Bugfix for checkbox and JS not loading on the checkout page in some cases
+* Bugfix for an abandoned cart that has already been synced becoming a new abandoned cart
 
 = 1.4.9 =
 * Updated activation and setup to make configuration easier

@@ -147,6 +147,8 @@ function learndash_get_lesson_id( $post_id = null, $course_id = null ) {
 			return get_post_meta( $post->ID, 'lesson_id', true );
 		}
 	}
+
+	return '';
 }
 
 /**
@@ -284,6 +286,7 @@ function learndash_set_course_prerequisite( $course_id = 0, $course_prerequisite
 
 		return learndash_update_setting( $course_id, 'course_prerequisite', (array) $course_prerequisites );
 	}
+	return false;
 }
 
 /**
@@ -653,7 +656,7 @@ function learndash_get_course_meta_setting( $course_id = 0, $setting_key = '' ) 
 		$meta = array();
 	}
 
-	// we only want/need to reformat the access list of we are returning ALL setting or just the access list
+	// we only want/need to reformat the access list of we are returning ALL setting or just the access list.
 	if ( ( empty( $setting_key ) ) || ( 'course_access_list' === $setting_key ) ) {
 		if ( ! isset( $meta['sfwd-courses_course_access_list'] ) ) {
 			$meta['sfwd-courses_course_access_list'] = '';
@@ -672,7 +675,7 @@ function learndash_get_course_meta_setting( $course_id = 0, $setting_key = '' ) 
 			$meta['sfwd-courses_course_access_list'] = array();
 		}
 
-		// Need to remove the empty '0' items
+		// Need to remove the empty '0' items.
 		$meta['sfwd-courses_course_access_list'] = array_diff( $meta['sfwd-courses_course_access_list'], array( 0, '' ) );
 	}
 
@@ -1352,8 +1355,8 @@ function learndash_is_course_shared_steps_enabled() {
  *
  * @since 3.4.1
  *
- * @param string  $price_type       Price Type: open, free, closed, paynow, etc.
  * @param string  $post_type        Post Type slug: sfwd-courses or group.
+ * @param string  $price_type       Price Type: open, free, closed, paynow, etc.
  * @param boolean $bypass_transient Optional. Whether to bypass transient cache. Default false.
  *
  * @return @array Array of Course IDs.
@@ -1453,9 +1456,10 @@ function learndash_post_meta_processed( $post_type = '' ) {
 		 *
 		 * @since 3.4.1
 		 *
-		 * @param boolean $process   True or Fals to process post meta.
+		 * @param boolean $process   True or False to process post meta.
 		 * @param string  $post_type The post type slug.
 		 */
 		return apply_filters( 'learndash_post_meta_processed', $post_meta_processed, $post_type );
 	}
+	return false;
 }

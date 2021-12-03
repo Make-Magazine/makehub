@@ -64,8 +64,6 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 
 	/**
 	 * Certificate link
-	 *
-	 *
 	 */
 
 	if ( ! empty( $course_certficate_link ) ) :
@@ -138,7 +136,6 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 
 	/**
 	 * Identify if we should show the course content listing
-	 * @var $show_course_content [bool]
 	 */
 	$show_course_content = ( ! $has_access && 'on' === $course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
 
@@ -197,7 +194,7 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 					?>
 
 					<?php
-					// Only display if there is something to expand
+					// Only display if there is something to expand.
 					if ( $has_topics || $has_lesson_quizzes ) :
 						?>
 						<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-text="<?php echo esc_attr_e( 'Expand All', 'learndash' ); ?>" data-ld-collapse-text="<?php echo esc_attr_e( 'Collapse All', 'learndash' ); ?>">
@@ -205,7 +202,6 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 							<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'learndash' ); ?></span>
 						</div> <!--/.ld-expand-button-->
 						<?php
-						// TODO @37designs Need to test this
 						/**
 						 * Filters whether to expand all course steps by default. Default is false.
 						 *

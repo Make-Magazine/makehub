@@ -13,8 +13,8 @@ use Activecampaign_For_Woocommerce_Admin as Admin;
 use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
-use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 
 /**
  * Ecom Order Factory
@@ -67,12 +67,11 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 			$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
 			$order->set_id( $this->get_ac_id() );
-
-			$external_id = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
+			$abc         = new Abandoned_Cart_Utilities();
+			$external_id = $abc->generate_externalcheckoutid(
 				wc()->session->get_customer_id(),
 				$customer->get_email()
 			);
-
 			$order->set_externalcheckoutid( $external_id );
 			$order->set_source( '1' );
 			$order->set_email( $customer->get_email() );

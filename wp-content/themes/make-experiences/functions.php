@@ -89,37 +89,41 @@ function set_universal_asset_constants() {
 	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
 	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
 	  		$protocol = 'https://';
-	}
-	else {
+	} else {
 		$protocol = 'http://';
 	}
     // Set the important bits as CONSTANTS that can easily be used elsewhere
 	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
+	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
+
 	// Decide if user can upgrade
 	$canUpgrade = true;
-	$levels = Ihc_Db::get_user_levels(get_current_user_id(), true);
-	foreach($levels as $level) {
-		switch($level['level_slug']){
-			case "school_maker_faire":
-			case "individual_first_year_discount":
-			case "individual":
-			case "family":
-			case "makerspacesmallbusiness":
-			case "patron":
-			case "founder":
-			case "benefactor":
-			case "make_projects_school":
-			case "global_producers":
-				$canUpgrade = false;
-			break;
-		}
-	}
 	$hasmembership = false;
-	if (!empty($levels)) { $hasmembership = true; }
+	$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
+	if (!empty($levels)) {
+		$hasmembership = true;
+		foreach($levels as $level) {
+			switch($level['level_slug']){
+				case "school_maker_faire":
+				case "individual_first_year_discount":
+				case "individual":
+				case "family":
+				case "makerspacesmallbusiness":
+				case "patron":
+				case "founder":
+				case "benefactor":
+				case "make_projects_school":
+				case "global_producers":
+					$canUpgrade = false;
+					break;
+			}
+		}
+	} else {
+		$canUpgrade = false;
+	}
+
 	define('IS_MEMBER', $hasmembership);
 	define('CAN_UPGRADE', $canUpgrade);
-	$url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
-	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
 }
 set_universal_asset_constants();
 
@@ -310,6 +314,12 @@ function add_slug_body_class($classes) {
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
+		if ( $post->post_type == "sfwd-courses" && get_post_primary_category($post->ID, 'ld_course_category')['primary_category']) {
+			$classes[] = 'cat-' . get_post_primary_category($post->ID, 'ld_course_category')['primary_category']->slug;
+		}
+		if ( $post->post_type == "sfwd-lessons" && get_post_primary_category($post->ID, 'ld_lesson_category')['primary_category'] ) {
+			$classes[] = 'cat-' . get_post_primary_category($post->ID, 'ld_lesson_category')['primary_category']->slug;
+		}
         // let's see if your the group owner and what kind of group it is (hidden, private, etc)
         if (bp_is_groups_component()) {
             $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
@@ -380,4 +390,32 @@ function gf_add_entries_link( $wp_admin_bar ) {
 }
 
 add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
+
+// get the main category of a post
+function get_post_primary_category($post_id, $term='category', $return_all_categories=false){
+    $return = array();
+    if (class_exists('WPSEO_Primary_Term')){
+        // Show Primary category by Yoast if it is enabled & set
+        $wpseo_primary_term = new WPSEO_Primary_Term( $term, $post_id );
+        $primary_term = get_term($wpseo_primary_term->get_primary_term());
+        if (!is_wp_error($primary_term)){
+            $return['primary_category'] = $primary_term;
+        }
+    }
+    if (empty($return['primary_category']) || $return_all_categories){
+        $categories_list = get_the_terms($post_id, $term);
+        if (empty($return['primary_category']) && !empty($categories_list)){
+            $return['primary_category'] = $categories_list[0];  //get the first category
+        }
+        if ($return_all_categories){
+            $return['all_categories'] = array();
+            if (!empty($categories_list)){
+                foreach($categories_list as &$category){
+                    $return['all_categories'][] = $category->term_id;
+                }
+            }
+        }
+    }
+    return $return;
+}
 ?>

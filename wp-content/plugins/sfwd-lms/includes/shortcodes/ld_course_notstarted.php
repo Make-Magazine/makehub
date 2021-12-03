@@ -75,5 +75,6 @@ function learndash_course_notstarted_shortcode( $atts = array(), $content = '' )
 			false
 		);
 	}
+	return '';
 }
 add_shortcode( 'course_notstarted', 'learndash_course_notstarted_shortcode', 10, 2 );

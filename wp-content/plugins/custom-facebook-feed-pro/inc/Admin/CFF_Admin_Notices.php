@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use CustomFacebookFeed\CFF_Response;
 use CustomFacebookFeed\CFF_HTTP_Request;
 
-class CFF_Admin_Notices 
+class CFF_Admin_Notices
 {
 
     /**
@@ -34,14 +34,18 @@ class CFF_Admin_Notices
 		add_action( 'in_admin_header', [ $this, 'remove_admin_notices' ] );
 		add_action( 'cff_admin_notices', [ $this, 'cff_license_notices' ] );
 		add_action( 'admin_notices', [ $this, 'cff_license_notices' ] );
+		add_action( 'cff_admin_notices', [ $this, 'cff_custom_cssjs_notice' ] );
+		add_action( 'admin_notices', [ $this, 'cff_custom_cssjs_notice' ] );
 		add_action( 'wp_ajax_cff_check_license', [ $this, 'cff_check_license' ] );
 		add_action( 'wp_ajax_cff_dismiss_license_notice', [ $this, 'cff_dismiss_license_notice' ] );
+		add_action( 'wp_ajax_cff_dismiss_custom_cssjs_notice', [ $this, 'cff_dismiss_custom_cssjs_notice' ] );
+
 	}
 
     /**
      * Remove admin notices from inside our plugin screens so we can show our customized notices
-     * 
-     * @since 4.0 
+     *
+     * @since 4.0
      */
     public function remove_admin_notices() {
         $current_screen = get_current_screen();
@@ -62,9 +66,9 @@ class CFF_Admin_Notices
 
     /**
      * CFF Get Renew License URL
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string $url
      */
     public function get_renew_url() {
@@ -83,14 +87,21 @@ class CFF_Admin_Notices
 
     /**
      * CFF Check License
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return CFF_Response
      */
     public function cff_check_license() {
         $cff_license = trim( get_option( 'cff_license_key' ) );
+        check_ajax_referer( 'cff_nonce' , 'cff_nonce');
 
+        $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+        $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+        if ( ! current_user_can( $cap ) ) {
+            wp_send_json_error(); // This auto-dies.
+        }
+        $user_id = get_current_user_id();
         // Check the API
         $cff_api_params = array(
             'edd_action'=> 'check_license',
@@ -101,7 +112,7 @@ class CFF_Admin_Notices
         $cff_license_data = (array) json_decode( wp_remote_retrieve_body( $cff_response ) );
         // Update the updated license data
         update_option( 'cff_license_data', $cff_license_data );
-        
+
         $cff_todays_date = date('Y-m-d');
         // Check whether it's active
         if( $cff_license_data['license'] !== 'expired' && ( strtotime( $cff_license_data['expires'] ) > strtotime($cff_todays_date) ) ) {
@@ -124,18 +135,48 @@ class CFF_Admin_Notices
 
     /**
      * CFF Dismiss Notice
-     * 
+     *
      * @since 4.0
      */
     public function cff_dismiss_license_notice() {
+        check_ajax_referer( 'cff_nonce' , 'cff_nonce');
+
+        $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+        $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+        if ( ! current_user_can( $cap ) ) {
+            wp_send_json_error(); // This auto-dies.
+        }
+
         global $current_user;
         $user_id = $current_user->ID;
         update_user_meta( $user_id, 'cff_ignore_dashboard_license_notice', true );
     }
 
+	/**
+	 * Dismiss Custom JS and CSS deprecation notice (AJAX)
+	 *
+	 * @since 4.0.2/4.0.7
+	 */
+    public function cff_dismiss_custom_cssjs_notice() {
+	    check_ajax_referer( 'cff_nonce' , 'cff_nonce');
+
+        $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+        $cap = apply_filters( 'cff_settings_pages_capability', $cap );
+        if ( ! current_user_can( $cap ) ) {
+            wp_send_json_error(); // This auto-dies.
+        }
+
+	    //Only display notice to admins
+	    if ( !current_user_can( $cap ) ) return;
+
+	    $cff_statuses_option = get_option( 'cff_statuses', array() );
+	    $cff_statuses_option['custom_js_css_dismissed'] = true;
+        update_option( 'cff_statuses', $cff_statuses_option, false );
+    }
+
     /**
      * Display license expire related notices in the plugin's pages
-     * 
+     *
      * @since 4.0
      */
     public function cff_license_notices() {
@@ -157,7 +198,7 @@ class CFF_Admin_Notices
 
         $user_id = $current_user->ID;
         $ignored_on_dashboard_page = get_user_meta( $user_id, 'cff_ignore_dashboard_license_notice', true );
-    
+
         // We will display the license notice only on those allowed screens
         if ( !in_array( $current_screen->base, $allowed_screens )  ) {
             return;
@@ -204,13 +245,13 @@ class CFF_Admin_Notices
 
         //Number of days until license expires
         //If expires param isn't set yet then set it to be a date to avoid PHP notice
-        $cff_license_expires_date = isset( $cff_license_data['expires'] ) ? $cff_license_data['expires'] : '2036-12-31 23:59:59'; 
+        $cff_license_expires_date = isset( $cff_license_data['expires'] ) ? $cff_license_data['expires'] : '2036-12-31 23:59:59';
         if ( $cff_license_expires_date == 'lifetime' ) {
             $cff_license_expires_date = '2036-12-31 23:59:59';
         }
         $cff_todays_date = date('Y-m-d');
         //-1 day to make sure auto-renewal has run before showing expired
-        $cff_interval = round( abs( strtotime( $cff_todays_date  . ' -1 day') - strtotime( $cff_license_expires_date ) ) / 86400 ); 
+        $cff_interval = round( abs( strtotime( $cff_todays_date  . ' -1 day') - strtotime( $cff_license_expires_date ) ) / 86400 );
 
         //Is license expired?
         if( $cff_interval == 0 || strtotime( $cff_license_expires_date ) < strtotime( $cff_todays_date ) ) {
@@ -298,11 +339,50 @@ class CFF_Admin_Notices
         echo $this->get_modal_content();
     }
 
+	/**
+	 * Custom JS and CSS deprecation notice
+     *
+     * @since 4.0.2/4.0.7
+	 */
+    public function cff_custom_cssjs_notice() {
+	    $cff_statuses_option = get_option( 'cff_statuses', array() );
+	    if ( ! empty( $cff_statuses_option['custom_js_css_dismissed'] ) ) {
+	        return;
+        }
+
+	    if ( ! empty( $_GET['cff_dismiss_notice'] ) && $_GET['cff_dismiss_notice'] === 'customjscss' ) {
+		    $cff_statuses_option['custom_js_css_dismissed'] = true;
+		    update_option( 'cff_statuses', $cff_statuses_option, false );
+		    return;
+        }
+	    $cff_style_settings 					= get_option( 'cff_style_settings' );
+
+	    $custom_js_not_empty = ! empty( $cff_style_settings['cff_custom_js'] ) && trim($cff_style_settings['cff_custom_js']) !== '';
+	    $custom_css_not_empty = ! empty( $cff_style_settings['cff_custom_css_read_only'] ) && trim($cff_style_settings['cff_custom_css_read_only']) !== '';
+
+	    if ( ! $custom_js_not_empty && ! $custom_css_not_empty ) {
+	        return;
+        }
+	    $close_href = add_query_arg( array( 'cff_dismiss_notice' => 'customjscss' ) );
+
+	    ?>
+	    <div class="notice notice-warning is-dismissible cff-dismissible">
+            <p><?php if ( $custom_js_not_empty ) : ?>
+            <?php echo sprintf( __( 'You are currently using Custom CSS or JavaScript in the Custom Facebook Feed plugin, however, these settings have now been deprecated. To continue using any custom code, please go to the Custom CSS and JS settings %shere%s and follow the directions.', 'custom-facebook-feed' ), '<a href="' . admin_url( 'admin.php?page=cff-settings&view=feeds' ) . '">', '</a>' ); ?>
+		    <?php else : ?>
+            <?php echo sprintf( __( 'You are currently using Custom CSS in the Custom Facebook Feed plugin, however, this setting has now been deprecated. Your CSS has been moved to the "Additional CSS" field in the WordPress Customizer %shere%s instead.', 'custom-facebook-feed' ), '<a href="' . esc_url( wp_customize_url() ) . '">', '</a>' ); ?>
+		    <?php endif; ?>
+            &nbsp;<a href="<?php echo esc_attr( $close_href ); ?>"><?php echo __( 'Dismiss', 'custom-facebook-feed' ); ?></a>
+            </p>
+        </div>
+		<?php
+    }
+
     /**
      * Get content for expired license notice
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string $output
      */
     public function get_expired_license_notice_content() {
@@ -342,9 +422,9 @@ class CFF_Admin_Notices
 
     /**
      * Get content for successfully renewed license notice
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string $output
      */
     public function get_renewed_license_notice_content() {
@@ -371,9 +451,9 @@ class CFF_Admin_Notices
 
     /**
      * Get modal content that will trigger by "Why Renew" button
-     * 
+     *
      * @since 4.0
-     * 
+     *
      * @return string $output
      */
     public function get_modal_content() {

@@ -1,11 +1,11 @@
 <?php
-
 /**
  * LearnDash Admin Shortcods Section Class.
  *
  * @since 2.4.0
  * @package LearnDash\Settings\Shortcodes
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -131,7 +131,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param array $fields_args Field Args.
+		 * @param array $field_args Field Args.
 		 */
 		public function field_element_create( $field_args = array() ) {
 			$field_html = '';
@@ -189,7 +189,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 * @since 2.4.0
 		 */
 		public function show_shortcodes_section_footer_extra() {
-			// This is a hook called after the section closing </div> to allow adding JS/CSS
+			// This is a hook called after the section closing </div> to allow adding JS/CSS.
 		}
 
 		/**
@@ -247,6 +247,8 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 * Get Shortcode field by key;
 		 *
 		 * @since 3.1.4
+		 *
+		 * @param string $field_key Field key.
 		 */
 		public function get_shortcodes_section_field( $field_key = '' ) {
 			if ( ( ! empty( $field_key ) ) && ( isset( $this->shortcodes_option_fields[ $field_key ] ) ) ) {

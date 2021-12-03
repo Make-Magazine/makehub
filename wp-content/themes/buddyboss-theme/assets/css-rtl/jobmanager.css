@@ -52,6 +52,22 @@ ul.job_listings .listing-bookmarked div.position:after {
         -ms-transform: none;
             transform: none; } }
 
+@media (max-width: 544px) {
+  .job_manager ul.job_listings li.job_listing a {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column; } }
+
+.job_manager ul.job_listings li.job_listing a img.company_logo {
+  visibility: visible; }
+
 ul.job_listings {
   border-top: 0; }
   ul.job_listings.loading {
@@ -67,7 +83,10 @@ ul.job_listings {
     ul.job_listings li.job_listing:last-child {
       border-radius: 0 0 4px 4px; }
     .widget ul.job_listings li.job_listing {
-      border-width: 0 0 1px 0; }
+      border-width: 0 0 1px 0;
+      margin: 0; }
+      .widget ul.job_listings li.job_listing:last-child {
+        border: 0; }
     ul.job_listings li.job_listing a {
       position: relative;
       -webkit-transition: all linear .2s;
@@ -92,10 +111,16 @@ ul.job_listings {
         .widget ul.job_listings li.job_listing a:hover {
           box-shadow: none;
           background-color: #fff; }
+      ul.job_listings li.job_listing a .image {
+        margin-left: 15px; }
       ul.job_listings li.job_listing a img.company_logo {
         border-radius: 100%;
         width: 44px;
-        height: 44px; }
+        height: auto;
+        margin: 0;
+        padding: 0;
+        max-width: inherit;
+        object-fit: cover; }
       @media (max-width: 800px) {
         ul.job_listings li.job_listing a img.company_logo {
           visibility: visible; } }
@@ -228,6 +253,40 @@ ul.job_listings {
       color: #bdbdbd;
       line-height: 18px;
       padding-top: 5px; }
+    .elementor-widget ul.job_listings li.job_listing {
+      border-width: 0 0 1px 0;
+      margin: 0; }
+      .elementor-widget ul.job_listings li.job_listing:last-child {
+        border: 0; }
+      .elementor-widget ul.job_listings li.job_listing a {
+        padding: 1em 0; }
+      .elementor-widget ul.job_listings li.job_listing .image {
+        float: right; }
+        .elementor-widget ul.job_listings li.job_listing .image img {
+          right: 0;
+          position: relative; }
+      .elementor-widget ul.job_listings li.job_listing .content {
+        overflow: hidden; }
+      .elementor-widget ul.job_listings li.job_listing .position {
+        float: none;
+        width: auto;
+        padding: 0; }
+      .elementor-widget ul.job_listings li.job_listing ul.meta {
+        float: none;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        text-align: right; }
+        .elementor-widget ul.job_listings li.job_listing ul.meta li {
+          float: none;
+          display: inline;
+          padding: 0;
+          margin: 0 0 0 .5em;
+          font-weight: normal; }
+          .elementor-widget ul.job_listings li.job_listing ul.meta li.job-type {
+            padding: 4px 10px; }
+          .elementor-widget ul.job_listings li.job_listing ul.meta li:after {
+            padding: 0 .5em 0 0; }
   ul.job_listings li.no_job_listings_found {
     background-color: #fff;
     border: 1px solid #E7EAEC;
@@ -237,10 +296,8 @@ ul.job_listings {
 @media (min-width: 544px) {
   ul.job_listings:not(.job_listings_grid) li.job_listing a img.company_logo {
     /* IE11 fix*/
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%); } }
+    /* top: 50%;
+            transform: translateY(-50%); */ } }
 
 .job_filters {
   background-color: transparent;
@@ -1267,7 +1324,8 @@ article.job_listing .entry-content .single_job_listing .company {
     width: 52px;
     height: 52px;
     right: 0;
-    position: relative; }
+    position: relative;
+    object-fit: cover; }
   article.job_listing .entry-content .single_job_listing .company p.name {
     margin-right: 52px;
     padding-right: 10px; }
@@ -1539,7 +1597,8 @@ article.job_listing .entry-content-job .application input.apply-with-facebook {
           margin: 0 auto 10px;
           visibility: visible;
           -webkit-clip-path: circle(49% at 50% 50%);
-          clip-path: circle(49% at 50% 50%); }
+          clip-path: circle(49% at 50% 50%);
+          object-fit: cover; }
         .post-related-jobs ul.job_listings_grid.slick-initialized li.job_listing .job_box_related div.position {
           width: 100%;
           padding: 0;
@@ -2303,7 +2362,8 @@ body.single-resume .resume-aside {
       border-radius: 100%;
       float: none;
       width: 8em;
-      height: 8em; }
+      height: 8em;
+      object-fit: cover; }
   body.single-resume .resume-aside .bb-candidate-data {
     padding: 3.5em 0 0; }
     body.single-resume .resume-aside .bb-candidate-data > h3 {

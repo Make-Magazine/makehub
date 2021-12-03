@@ -32,4 +32,12 @@ interface Activecampaign_For_Woocommerce_Ecom_Model_Interface {
 	 * @param array $array The array of serialized data to set properties from.
 	 */
 	public function set_properties_from_serialized_array( array $array );
+
+	/**
+	 * Gets the ID for the model.
+	 *
+	 * @return mixed The id for the model.
+	 */
+	public function get_id();
+
 }

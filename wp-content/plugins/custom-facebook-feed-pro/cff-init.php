@@ -80,13 +80,7 @@ function cff_ppca_check_notice_dismiss() {
 
 
 
-function cff_reset_log() {
-	\cff_main_pro()->cff_error_reporter->add_action_log( 'View feed and retry button clicked.' );
-	cff_delete_cache();
 
-	die();
-}
-add_action( 'wp_ajax_cff_reset_log', 'cff_reset_log' );
 
 
 //Remove masonry extension

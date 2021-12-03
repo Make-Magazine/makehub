@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
+	/**
+	 * Class to update LearnDash
+	 */
 	class nss_plugin_updater_sfwd_lms {
 
 		/**
@@ -50,8 +53,18 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 */
 		public $code;
 
+		/**
+		 * Updater object
+		 *
+		 * @var object
+		 */
 		private $ld_updater;
 
+		/**
+		 * Upgrade notice
+		 *
+		 * @var array
+		 */
 		private $upgrade_notice = array();
 
 
@@ -60,8 +73,8 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param string $update_path
-		 * @param string $plugin_slug
+		 * @param string $update_path Update path.
+		 * @param string $plugin_slug Plugin slug.
 		 */
 		public function __construct( $update_path, $plugin_slug ) {
 
@@ -96,13 +109,13 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 				}
 			}
 
-			// Add Menu
+			// Add Menu.
 			add_action( 'admin_menu', array( $this, 'nss_plugin_license_menu' ), 1 );
 
-			// define the alternative API for updating checking
+			// define the alternative API for updating checking.
 			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
-			// Define the alternative response for information checking
+			// Define the alternative response for information checking.
 			add_filter( 'plugins_api', array( $this, 'check_info' ), 50, 3 );
 			add_action( 'in_admin_header', array( $this, 'check_notice' ) );
 
@@ -120,7 +133,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 */
 		public function nss_plugin_license_update() {
 			// See if the user has posted us some information
-			// If they did, this hidden field will be set to 'Y'
+			// If they did, this hidden field will be set to 'Y'.
 			if ( ( isset( $_POST['ld_plugin_license_nonce'] ) ) && ( ! empty( $_POST['ld_plugin_license_nonce'] ) ) && ( wp_verify_nonce( $_POST['ld_plugin_license_nonce'], 'update_nss_plugin_license_' . $this->code ) ) ) {
 				$license = '';
 				if ( ( isset( $_POST[ 'nss_plugin_license_' . $this->code ] ) ) && ( ! empty( $_POST[ 'nss_plugin_license_' . $this->code ] ) ) ) {
@@ -132,7 +145,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 					$email = $_POST[ 'nss_plugin_license_email_' . $this->code ];
 				}
 
-				// Save the posted value in the database
+				// Save the posted value in the database.
 				update_option( 'nss_plugin_license_' . $this->code, trim( $license ) );
 				update_option( 'nss_plugin_license_email_' . $this->code, trim( $email ) );
 
@@ -143,6 +156,12 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			}
 		}
 
+		/**
+		 * Show upgrade notification
+		 *
+		 * @param array $current_plugin_metadata Current metadata.
+		 * @param array $new_plugin_metadata     New metadata.
+		 */
 		public function show_upgrade_notification( $current_plugin_metadata, $new_plugin_metadata ) {
 			$upgrade_notice = $this->get_plugin_upgrade_notice();
 			if ( ! empty( $upgrade_notice ) ) {
@@ -154,9 +173,9 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * Utility function to the status of the license.
 		 */
 		public function is_license_valid() {
-			//if ( ! learndash_updates_enabled() ) {
-			//	return true;
-			//}
+			// if ( ! learndash_updates_enabled() ) {
+			// return true;
+			// }
 
 			$license = get_option( 'nss_plugin_remote_license_' . $this->slug );
 			if ( ( isset( $license['value'] ) ) && ( '1' === $license['value'] ) ) {
@@ -297,7 +316,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param $transient
+		 * @param mixed $transient Value of transient.
 		 *
 		 * @return object $transient
 		 */
@@ -315,7 +334,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 				$license        = '';
 			}
 
-			// Get the remote version
+			// Get the remote version.
 			if ( empty( $remote_version ) ) {
 				$info = $this->getRemote_information();
 				if ( ( $info ) && ( property_exists( $info, 'new_version' ) ) ) {
@@ -331,7 +350,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 				update_option( 'nss_plugin_remote_license_' . $this->slug, $license );
 			}
 
-			// If a newer version is available, add the update
+			// If a newer version is available, add the update.
 			if ( version_compare( $this->current_version, $remote_version, '<' ) ) {
 				$obj              = new stdClass();
 				$obj->slug        = $this->slug;
@@ -348,7 +367,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
 				$plugin_readme = $this->get_plugin_readme();
 				if ( ! empty( $plugin_readme ) ) {
-					// First we remove the properties we DON'T want from the support site
+					// First we remove the properties we DON'T want from the support site.
 					foreach ( array( 'sections', 'requires', 'tested', 'last_updated' ) as $property_key ) {
 						if ( property_exists( $obj, $property_key ) ) {
 							unset( $obj->$property_key );
@@ -379,6 +398,9 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			return $transient;
 		}
 
+		/**
+		 * Get plugin readme
+		 */
 		public function get_plugin_readme() {
 			$override_cache = false;
 			if ( isset( $_GET['force-check'] ) ) {
@@ -394,6 +416,11 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			}
 		}
 
+		/**
+		 * Get plugin upgrade notice
+		 *
+		 * @param string $admin Which upgrade notice to process.
+		 */
 		public function get_plugin_upgrade_notice( $admin = 'upgrade_notice' ) {
 			$upgrade_notice = '';
 
@@ -431,9 +458,9 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param boolean $false
-		 * @param array   $action
-		 * @param object  $arg
+		 * @param bool   $false  $false.
+		 * @param array  $action Action to perform.
+		 * @param object $arg    Object of arguments.
 		 *
 		 * @return bool|object
 		 */
@@ -509,7 +536,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
 					$plugin_readme = $this->get_plugin_readme();
 					if ( ! empty( $plugin_readme ) ) {
-						// First we remove the properties we DON'T want from the support site
+						// First we remove the properties we DON'T want from the support site.
 						foreach ( array( 'sections', 'requires', 'tested', 'last_updated' ) as $property_key ) {
 							if ( property_exists( $information, $property_key ) ) {
 								unset( $information->$property_key );
@@ -614,12 +641,12 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		public function nss_plugin_license_menupage() {
 			$code = $this->code;
 
-			// must check that the user has the required capability
+			// must check that the user has the required capability.
 			if ( ! learndash_is_admin_user() ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'learndash' ) );
 			}
 
-			// Read in existing option value from database
+			// Read in existing option value from database.
 			$license = get_option( 'nss_plugin_license_' . $code );
 			$email   = get_option( 'nss_plugin_license_email_' . $code );
 
@@ -703,7 +730,6 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 					 * The dynamic part of the hook `$code` refers to the slug of the plugin.
 					 *
 					 * @since 2.1.0
-					 *
 					 */
 					do_action( esc_attr( $code ) . '-nss_license_footer' );
 
@@ -754,6 +780,8 @@ function learndash_is_learndash_license_valid() {
 	if ( ( $updater_sfwd_lms ) && ( is_a( $updater_sfwd_lms, 'nss_plugin_updater_sfwd_lms' ) ) ) {
 		return $updater_sfwd_lms->is_license_valid();
 	}
+
+	return false;
 }
 
 

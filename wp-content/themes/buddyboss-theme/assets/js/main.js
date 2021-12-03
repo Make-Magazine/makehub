@@ -278,13 +278,17 @@
 
 			var $document = $( document ),
 				$elementHeader = $( '.sticky-header .site-header' ),
-				$elementPanel = $( '.bb-sfwd-aside .buddypanel' ),
-				className = 'has-scrolled';
+				$elementPanel  = $( '.bb-sfwd-aside .buddypanel' ),
+				$LMSlessonsHeader = $( '.single-sfwd-lessons .site-header' ),
+				$LMStopicHeader = $( '.single-sfwd-topic .site-header' ),
+				className      = 'has-scrolled';
 
 			$document.scroll(
 				function () {
 					$elementHeader.toggleClass( className, $document.scrollTop() >= 1 );
 					$elementPanel.toggleClass( className, $document.scrollTop() >= 5 );
+					$LMSlessonsHeader.toggleClass( className, $document.scrollTop() >= 1 );
+					$LMStopicHeader.toggleClass( className, $document.scrollTop() >= 1 );
 				}
 			);
 
@@ -669,7 +673,7 @@
 			// whenever we hover over a menu item that has a submenu
 			$( '.user-wrap li.parent, .user-wrap .menu-item-has-children' ).on(
 				'mouseover',
-				function () {
+				function () {					
 					var $menuItem = $( this ),
 						$submenuWrapper = $( '> .wrapper', $menuItem );
 
@@ -776,12 +780,12 @@
 			}
 
 			if ( $( window ).width() > 1081 ) {
-				$( '.bb-sticky-sidebar' ).stick_in_parent( { offset_top: offsetTop, spacer: false } );
+				$( '.bb-sticky-sidebar' ).stick_in_parent( { spacer: false, offset_top: offsetTop } );
 			}
 
 			$( window ).resize( function () {
 				if ( $( window ).width() > 1081 ) {
-					$( '.bb-sticky-sidebar' ).stick_in_parent( { offset_top: offsetTop, spacer: false } );
+					$( '.bb-sticky-sidebar' ).stick_in_parent( { spacer: false, offset_top: offsetTop } );
 				} else {
 					$( '.bb-sticky-sidebar' ).trigger( "sticky_kit:detach" );
 				}
@@ -2350,3 +2354,22 @@ var BBGetUrlParameter = BBGetUrlParameter || function ( url, parameter_name ) {
 	return results === null ? '' : decodeURIComponent( results[1].replace( /\+/g, ' ' ) );
 };
 
+// whenever we hover over a menu item that has a submenu
+setTimeout(
+	function() {
+		jQuery( '#site-navigation #navbar-collapse #navbar-extend .menu-item-has-children' ).on( 'mouseover', function () {					
+			var $menuItem = jQuery( this ),				
+				$submenuWrapper = jQuery(this).children( '.ab-submenu' );				
+
+			// grab the menu item's position relative to its positioned parent
+			var menuItemPos = $menuItem.position();
+
+			// place the submenu in the correct position relevant to the menu item
+			$submenuWrapper.css(
+				{
+					top: menuItemPos.top
+				}
+			);
+		}
+	);
+}, 500);

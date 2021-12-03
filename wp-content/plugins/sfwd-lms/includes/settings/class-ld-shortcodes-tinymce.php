@@ -72,7 +72,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 		 *
 		 * @since 3.0.7
 		 *
-		 * @param array $editor_args Editor args array
+		 * @param array $editor_args Editor args array.
 		 */
 		public function wp_enqueue_editor( $editor_args = array() ) {
 			$this->shortcodes_assets_init();
@@ -130,6 +130,10 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 		 * Add TinyMCE support
 		 *
 		 * @since 2.4.0
+		 *
+		 * @param array $plugin_array Array of TinyMCE plugins.
+		 *
+		 * @return array
 		 */
 		public function add_tinymce_plugin( $plugin_array ) {
 			$plugin_array['learndash_shortcodes_tinymce'] = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-shortcodes-tinymce' . learndash_min_asset() . '.js';
@@ -142,9 +146,8 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @var array $buttons Array of buttons
+		 * @param array $buttons Array of buttons.
 		 */
-
 		public function register_button( $buttons ) {
 			array_push( $buttons, 'learndash_shortcodes_tinymce' );
 			return $buttons;
@@ -338,6 +341,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/usermeta.php';
 			$shortcode_sections['usermeta'] = new LearnDash_Shortcodes_Section_usermeta( $fields_args );
 
+			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_registration.php';
+			$shortcode_sections['ld_registration'] = new LearnDash_Shortcodes_Section_ld_registration( $fields_args );
+
 				/**
 				 * Filters TinyMCE shortcode content arguments.
 				 *
@@ -368,7 +374,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 					die();
 		}
 
-		// End of functions
+		// End of functions.
 
 	}
 }

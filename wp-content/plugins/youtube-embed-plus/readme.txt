@@ -1,17 +1,17 @@
 === Embed Plus for YouTube - Embed a YouTube Gallery, Channel, Playlist, Live Stream, Facade ===
 Contributors: embedplus
 Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
-Tags: youtube gallery, video gallery, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, youtube playlist, embed live chat, lazy load, facade
+Tags: youtube gallery, youtube wordpress plugin, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, lazy load, facade
 Requires at least: 4.1
 Tested up to: 5.8
-Stable tag: 14.0
+Stable tag: 14.0.1.1
 License: GPLv3 or later
 
 YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube live stream. With defer JavaScript options
 
 == Description ==
 
-**A WordPress YouTube embed, YouTube gallery (channel or playlist), and even YouTube livestream or premiere can be customized in a wide variety of ways. It focuses on performance with the ability to defer JavaScript, while serving minified CSS and JavaScript. Here are a few recently added features:**
+**YouTube WordPress Plugin** to embed and customize a YouTube gallery (channel or playlist),  YouTube livestream (and premiere), YouTube short, or standard YouTube video.  The plugin can be customized in a wide variety of ways. It also focuses on performance with the ability to lazy load with a facade and defer JavaScript while serving minified CSS and JavaScript. Here are a few recently added features:
 
 * YouTube gallery embeds and standard videos now support Facade Mode which improves performance by loading a lighter version of the player, until it is clicked. Then the real player loads (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases and found it to successfully improve your Lighthouse performance score by addressing  the following recommendation: "Some third-party resources can be lazy loaded with a facade - 1 facade alternative available"
 * Defer critical and non critical JavaScript - improve the initial load time of your pages by allowing this plugin's critical and non critical Javascript code to begin execution only after a page is loaded. That reasoning is the basis for the Defer CSS Javascript (styles and code) recommendation you'll see in various web profiling tools.  We plan to allow you to defer critical and non critical CSS in the near future.
@@ -37,7 +37,7 @@ YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlis
 * General playlist embedding support
 * YouTube plugin migration support
 
-**Click the Download button to start exploring now, or take a look at some more introductory details below.**
+**Click the Download button to start exploring this YouTube WordPress plugin**, or take a look at some more introductory details below.
 
 This plugin helps you easily manage the growing complexity of YouTube embedding. It provides a spectrum of basic and advanced features of the YouTube embedded player and will have you posting videos in seconds after installing it.
 
@@ -74,7 +74,7 @@ You can also start and end each individual video at particular times. Like the a
 * start - Sets the time (in seconds) to start the video. Example: `"https://www.youtube.com/watch?v=quwebVjAEJA&width=500&height=350&start=20"`
 * end - Sets the time (in seconds) to stop the video. Example: `"https://www.youtube.com/watch?v=quwebVjAEJA&width=500&height=350&end=100"`
 
-> **About [YouTube PRO](https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=readme)**
+> **About the Pro version of the [YouTube WordPress Plugin](https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=readme)**
 >
 > If you like this free version, you may even upgrade to a separate Pro plugin with features like:
 >
@@ -102,7 +102,7 @@ You can also start and end each individual video at particular times. Like the a
 
 See more details after installing. Enjoy!
 
-[Maintained by Embed Plus for YouTube >>](https://www.embedplus.com/)
+[This WordPress plugin is maintained by Embed Plus for YouTube >>](https://www.embedplus.com/)
 
 == Installation ==
 
@@ -151,6 +151,14 @@ You can also start and end each individual video at particular times. Like the a
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 14.0.1.1 =
+* Patch for 14.0.1, higher resolution for facade images
+
+= Embed Plus for YouTube WordPress Plugin 14.0.1 =
+* Higher resolution for facade images
+* Fix CSS issue with GDPR embeds
+* YouTube shorts support
 
 = Embed Plus for YouTube WordPress Plugin 14.0 =
 * New facade mode for lighter and faster page loads (see Performance tab)
