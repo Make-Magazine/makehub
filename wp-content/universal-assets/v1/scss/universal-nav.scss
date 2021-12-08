@@ -647,6 +647,10 @@ body.buddyboss-theme {
 				margin-left: 0px;
 			}
 		}
+		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
+		&.single-sfwd-lessons #page.site {
+			margin-left: 0px;
+		}
 	}
 }
 
