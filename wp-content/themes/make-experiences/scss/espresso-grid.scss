@@ -121,16 +121,23 @@
 		min-width: 160px;
         float: right;
         ul.products {
-            li.product { 
+            li.product {
                 max-width: 100%;
                 width: 100%;
                 margin: 0 10px 20px;
             }
         }
+		.widget_media_image {
+			padding: 3px 0px 0xp 0px;
+			figcaption {
+				font-family: 'Roboto Bold';
+				font-size: 16px;
+			}
+		}
     }
     @media screen and ( max-width: 768px ) {
         flex-direction: column;
-        .espresso-grid-revised, .events-grid-sidebar { 
+        .espresso-grid-revised, .events-grid-sidebar {
             width: 100%;
             ul.products {
                 margin: 0px 15px;
@@ -143,7 +150,7 @@
         }
     }
     @media screen and (max-width: 480px) {
-        .events-grid-sidebar { 
+        .events-grid-sidebar {
             ul.products {
                 li.product {
                     width: 100%;
