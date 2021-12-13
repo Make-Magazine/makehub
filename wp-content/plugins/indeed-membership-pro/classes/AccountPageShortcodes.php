@@ -22,6 +22,7 @@ class AccountPageShortcodes
         add_shortcode( 'ihc-account-page-subscriptions-table', [ $this, 'subscriptionTable' ] );
         add_shortcode( 'ihc-account-page-pushover-form', [ $this, 'pushoverNotificationsForm' ] );
         add_shortcode( 'ihc-edit-profile-form', [ $this, 'editAccountPage' ] );
+        add_shortcode( 'ihc-change-password-form', [ $this, 'ChangePasswordPage' ] );
         add_shortcode( 'ihc-account-page-orders-table', [ $this, 'ordersTable' ] );
 
         add_shortcode( 'ihc-social-links-profile', [ $this, 'socialShareBttn'] );
@@ -102,6 +103,40 @@ class AccountPageShortcodes
         $data['uid']  = $uid;
 
   			$template = IHC_PATH . 'public/views/edit-profile-form.php';
+
+        $view = new \Indeed\Ihc\IndeedView();
+        return $view->setTemplate( $template )
+                    ->setContentData( $data )
+                    ->getOutput();
+    }
+    
+    /**
+     * @param none
+     * @return string
+     */
+    public function ChangePasswordPage()
+    {
+        global $current_user, $ihc_error_register;
+        $uid = isset( $current_user->ID ) ? $current_user->ID : 0;
+        if ( !$uid ){
+            return '';
+        }
+        $this->setSettings();
+
+        $template = get_option('ihc_register_template');
+        $custom_css = get_option('ihc_register_custom_css');
+        if(get_option('ihc_profile_form_template')!==FALSE){
+          $template = get_option('ihc_profile_form_template');
+        }
+        if(get_option('ihc_profile_form_custom_css')!==FALSE){
+          $custom_css = get_option('ihc_profile_form_custom_css');
+        }
+        $data['template'] = $template;
+  			$data['style'] = $custom_css;
+  			$data['style'] = stripslashes($data['style']);
+        $data['uid']  = $uid;
+
+  			$template = IHC_PATH . 'public/views/change-password-form.php';
 
         $view = new \Indeed\Ihc\IndeedView();
         return $view->setTemplate( $template )

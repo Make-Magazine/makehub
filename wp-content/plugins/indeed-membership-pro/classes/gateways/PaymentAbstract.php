@@ -32,11 +32,12 @@ abstract class PaymentAbstract
 	  */
     protected $paymentRules                   = [
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
-                'canDoTrial'							                    => false, // does current payment gateway supports trial subscription
-                'canDoTrialFree'						                  => false, // does current payment gateway supports free trial subscription
-                'canApplyCouponOnRecurringForFirstPayment'		=> false, // if current payment gateway support coupons on recurring payments only for the first transaction
-                'canApplyCouponOnRecurringForFirstFreePayment'=> false, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
-                'canApplyCouponOnRecurringForEveryPayment'	  => false, // if current payment gateway support coupons on recurring payments for every transaction
+                'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
+                'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
+                'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
+                'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
+                'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction
                 'paymentMetaSlug'                             => '', // payment gateway slug. exenple: paypal, stripe, etc.
                 'returnUrlAfterPaymentOptionName'             => '', // option name ( in wp_option table ) where it's stored the return URL after a payment is done.
                 'returnUrlOnCancelPaymentOptionName'          => '', // option name ( in wp_option table ) where it's stored the return URL after a payment is canceled.
@@ -177,6 +178,8 @@ abstract class PaymentAbstract
 
     /**
     * This is optional feature. depends on payment gateway. It creates the URL where to return after the payment is made.
+    * Updated on v.10.1: Thank You page redirect have been added
+    *
     * @param none
     * @return string
     */
@@ -185,6 +188,11 @@ abstract class PaymentAbstract
         if ( !empty( $this->paymentRules['returnUrlAfterPaymentOptionName'] ) ){
             $this->returnUrlAfterPayment = get_option( $this->paymentRules['returnUrlAfterPaymentOptionName'] );
         }
+
+        if ( empty( $this->returnUrlAfterPayment ) || $this->returnUrlAfterPayment == -1 ){
+          $this->returnUrlAfterPayment = get_option('ihc_thank_you_page');
+        }
+
         if ( empty( $this->returnUrlAfterPayment ) || $this->returnUrlAfterPayment == -1 ){
             $this->returnUrlAfterPayment = get_option( 'page_on_front' );
         }
@@ -243,6 +251,7 @@ abstract class PaymentAbstract
         // Set the Level data and Redirect URL
         $this->setLevelData();
         $this->setDefaultRedirect();
+
         return $this;
     }
 
@@ -257,37 +266,54 @@ abstract class PaymentAbstract
             return [];
         }
         $this->levelData = \Indeed\Ihc\Db\Memberships::getOne( $this->inputData['lid'] );
+
+        // since version 10.3
+        $this->levelData = apply_filters( 'ihc_filter_prepare_payment_level_data', $this->levelData, $this->inputData );
+
         \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Set Level Data - Values: ', 'ihc') . serialize( $this->levelData ), 'payments' );
         return $this;
     }
 
 	 /**
-	 *
+	  *
+    * Updated on v.10.1: Thank You page redirect have been added
+    *
     * @param none
     * @return object
     */
     protected function setDefaultRedirect()
     {
-        if ( isset( $this->inputData['defaultRedirect'] ) ){
+        if ( isset( $this->inputData['defaultRedirect'] ) && $this->inputData['defaultRedirect'] !='' ){
            $this->redirectUrl = $this->inputData['defaultRedirect'];
            return $this;
         }
+
         $this->redirectUrl = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        $redirect = get_option('ihc_general_register_redirect');
-        if (!$redirect || $redirect>-1){
-            return $this;
+
+        //Thank You Page
+        $redirect = get_option('ihc_thank_you_page');
+        if (!$redirect || $redirect < 0){
+
+          //Default Register Page
+          $redirect = get_option('ihc_general_register_redirect');
+          if (!$redirect || $redirect < 0){
+              return $this;
+          }
         }
+
         $url = get_permalink( $redirect );
         if ($url){
             $this->redirectUrl = $url;
         }
+
         if ( !empty( $this->inputData['is_register'] ) ){
             $this->redirectUrl = apply_filters('ihc_register_redirect_filter', $this->redirectUrl, $this->inputData['uid'], $this->inputData['lid']);
         }
         $url = ihc_get_redirect_link_by_label($redirect, $this->inputData['uid']);
-        if ( strpos( $url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] ) !== 0 ){
+        if ( $url && strpos( $url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] ) !== 0 ){
             $this->redirectUrl = $url;
         }
+
         return $this;
     }
 
@@ -370,6 +396,8 @@ abstract class PaymentAbstract
 
     /**
      * Create $paymentOutputData for single payment.
+     * Updated on v.10.1: $dynamicPrice, $dynamicPriceUsed, $initialPrice, $key Params have been calculated and added to paymentOutputData
+     *
      * @param none
      * @return object
      */
@@ -377,10 +405,15 @@ abstract class PaymentAbstract
     {
         // Membership Amount
         $amount = $this->levelData['price'];
+        $initialPrice = $amount;
+
         $couponApplied = false;
 
         // If Dynamic Price is On: Replace default Membership Amount with chosen amount.
-        $amount = $this->dynamicPrice( $amount );
+        $dynamicPrceData = $this->dynamicPrice( $amount );
+        $amount = $dynamicPrceData['amount'];
+        $dynamicPrice = $dynamicPrceData['amount'];
+        $dynamicPriceUsed = $dynamicPrceData['used'];
 
         // Apply Coupon if exist
         if ( isset( $this->inputData['ihc_coupon'] ) && $this->inputData['ihc_coupon'] != '' ){
@@ -410,17 +443,20 @@ abstract class PaymentAbstract
                                       'customer_name'       => \Ihc_Db::getUserFulltName( $this->inputData['uid'] ),
                                       'lid'                 => $this->inputData['lid'],
                                       'level_label'         => isset( $this->levelData['label'] ) ? $this->levelData['label'] : '',
-                                      'level_description'   => isset( $this->levelData['description'] ) ? $this->levelData['description'] : '',
+                                      'level_description'   => isset( $this->levelData['short_description'] ) ? $this->levelData['short_description'] : '',
+                                      'initial_price'       => $initialPrice,
                                       'amount'              => $amount,
                                       'base_price'          => $amount - $taxes,
                                       'currency'            => $this->inputData['currency'],
                                       'taxes_amount'        => $taxes,
                                       'taxes_details'       => $taxesDetails,
                                       'dynamic_price'       => isset( $dynamicPrice ) ? $dynamicPrice : false,
+                                      'dynamic_price_used'  => isset( $dynamicPriceUsed ) ? $dynamicPriceUsed : false,
                                       'coupon_used'         => isset( $this->inputData['ihc_coupon'] ) ? $this->inputData['ihc_coupon'] : false,
                                       'discount_value'      => isset( $discount ) ? $discount : false,
                                       'is_recurring'        => false,
                                       'couponApplied'       => $couponApplied,
+                                      'key'                 => strtolower(md5($this->inputData['uid'].$this->inputData['lid'].date( 'Y-m-d H:i:s' ).uniqid( 'ihc', true ))),
         ];
 
         // if the amount is 0, the system will stop the process before redirect to payment, and make the order and level completed.
@@ -431,6 +467,8 @@ abstract class PaymentAbstract
     }
 
     /**
+     * Updated on v.10.1: $dynamicPrice, $dynamicPriceUsed, $initialPrice, $initialfirstAmount, $key Params have been calculated and added to paymentOutputData
+     *
      * @param none
      * @return object
      */
@@ -453,6 +491,7 @@ abstract class PaymentAbstract
 
 		    // Subscription Price
         $amount = $this->levelData['price'];
+        $initialPrice = $amount;
 
 		    //Billing Recurrences setup
         if ( $this->levelData['billing_type'] == 'bl_ongoing' && isset( $this->intervalSubscriptionRules['forceMaximumRecurrenceLimit'] ) &&
@@ -480,8 +519,17 @@ abstract class PaymentAbstract
 
         		if ( !empty( $this->paymentRules['canDoTrialFree'] ) && $this->levelData['access_trial_price'] == 0 ){
         				$firstAmount = 0;
-        		} else if ( $this->levelData['access_trial_price'] > 0  ) {
-        			  $firstAmount = $this->levelData['access_trial_price'];
+                $initialfirstAmount = 0;
+        		} else if ( $this->levelData['access_trial_price'] > 0 ) {
+
+              if ( !empty( $this->paymentRules['canDoTrialPaid'] ) ){
+          			  $firstAmount = $this->levelData['access_trial_price'];
+                  $initialfirstAmount = $firstAmount;
+              }else{
+                  $firstAmount = 0;
+                  $initialfirstAmount = 0;
+              }
+
         		}
 
         		if ( isset( $firstAmount ) ){
@@ -493,7 +541,10 @@ abstract class PaymentAbstract
         }
 
         // If Dynamic Price is On: Replace default Subscription Amount with chosen amount.
-        $amount = $this->dynamicPrice( $amount );
+        $dynamicPrceData = $this->dynamicPrice( $amount );
+        $amount = $dynamicPrceData['amount'];
+        $dynamicPrice = $dynamicPrceData['amount'];
+        $dynamicPriceUsed = $dynamicPrceData['used'];
 
         // Apply Coupon if exist
         $couponApplied = false;
@@ -542,6 +593,7 @@ abstract class PaymentAbstract
                         $temporaryAmount = $firstAmount - $temporaryDiscount;
                     } else {
                          // Create First Amount
+                        $initialfirstAmount =  $amount;
                         $temporaryDiscount = $couponObject->getDiscountValue( $amount );
                         $temporaryAmount = $amount - $temporaryDiscount;
                         ///!!!! - Trial/First payment Interval must be created based on default Subscription intervals
@@ -566,13 +618,15 @@ abstract class PaymentAbstract
                         if ( !empty( $this->paymentRules['canApplyCouponOnRecurringForFirstFreePayment'] ) ){
                             $firstAmount = $temporaryAmount;
                             $firstDiscount = $temporaryDiscount;
+                            $couponApplied = true;
                         }
-                    } else {
+                    } else if ( !empty( $this->paymentRules['canDoTrialPaid'] ) ){
                         // If Trial/First Payment charge required
                         $firstAmount = $temporaryAmount;
                         $firstDiscount = $temporaryDiscount;
+                        $couponApplied = true;
                     }
-                    $couponApplied = true;
+
                 }
             }
         }
@@ -595,7 +649,8 @@ abstract class PaymentAbstract
                                       'customer_name'               => \Ihc_Db::getUserFulltName( $this->inputData['uid'] ),
                                       'lid'                         => $this->inputData['lid'],
                                       'level_label'                 => isset( $this->levelData['label'] ) ? $this->levelData['label'] : '',
-                                      'level_description'           => isset( $this->levelData['description'] ) ? $this->levelData['description'] : '',
+                                      'level_description'           => isset( $this->levelData['short_description'] ) ? $this->levelData['short_description'] : '',
+                                      'initial_price'               => $initialPrice,
                                       'amount'                      => $amount,
                                       'base_price'                  => $amount - $taxes,
                                       'discount_value'              => isset( $discount ) ? $discount : false,
@@ -603,16 +658,19 @@ abstract class PaymentAbstract
                                       'taxes'                       => $taxes,
                                       'taxes_details'               => $taxesDetails,
                                       'dynamic_price'               => isset( $dynamicPrice ) ? $dynamicPrice : false,
+                                      'dynamic_price_used'          => isset( $dynamicPriceUsed ) ? $dynamicPriceUsed : false,
                                       'coupon_used'                 => isset( $this->inputData['ihc_coupon'] ) ? $this->inputData['ihc_coupon'] : '',
-                                      'first_amount'                => isset( $firstAmount ) ? $firstAmount : false,
+                                      'initial_first_amount'        => isset( $initialfirstAmount ) ? $initialfirstAmount : false,
+                                      'first_amount'                => isset( $firstAmount ) ? $firstAmount : false, // used for trial/coupon
                                       'first_amount_taxes'          => isset( $taxesForFirstAmount ) ? $taxesForFirstAmount : false,
-                                      'first_amount_taxes_details'  => isset( $taxesForFirstAmount ) ? $taxesForFirstAmount : false,
+                                      'first_amount_taxes_details'  => isset( $taxesForFirstAmountDetails ) ? $taxesForFirstAmountDetails : false,
                                       'first_discount'              => isset( $firstDiscount ) ? $firstDiscount : false,
                                       'is_recurring'                => true,
                                       'interval_value'              => $intervals['intervalValue'],
                                       'interval_type'               => $intervals['intervalSymbol'],
                                       'subscription_cycles_limit'   => $intervals['subscriptionCyclesLimit'],
                                       'couponApplied'               => $couponApplied,
+                                      'key'                         => strtolower(md5($this->inputData['uid'].$this->inputData['lid'].date( 'Y-m-d H:i:s' ).uniqid( 'ihc', true ))),
         ];
 
 		    //Set Trial/First Payment if exist
@@ -657,24 +715,24 @@ abstract class PaymentAbstract
             if ( empty( $rules['daysSupport'] ) ){
                 $data = $this->convertInterval( 'D', $intervalValue, $rules );
             } else {
-                if ( $this->intervalSubscriptionRules['daysMinLimit'] != '' && $data['intervalValue'] < $this->intervalSubscriptionRules['daysMinLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['daysMinLimit'];
+                if ( $rules['daysMinLimit'] != '' && $data['intervalValue'] < $rules['daysMinLimit'] ){
+                    $data['intervalValue'] = $rules['daysMinLimit'];
                 }
-                if ( $this->intervalSubscriptionRules['daysMaxLimit'] != '' && $data['intervalValue'] > $this->intervalSubscriptionRules['daysMaxLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['daysMaxLimit'];
+                if ( $rules['daysMaxLimit'] != '' && $data['intervalValue'] > $rules['daysMaxLimit'] ){
+                    $data['intervalValue'] = $rules['daysMaxLimit'];
                 }
-                $data['intervalSymbol'] = $this->intervalSubscriptionRules['daysSymbol'];
+                $data['intervalSymbol'] = $rules['daysSymbol'];
             }
             break;
           case 'W':
             if ( empty( $rules['weeksSupport'] ) ){
                 $data = $this->convertInterval( 'W', $intervalValue, $rules );
             } else {
-                if ( $this->intervalSubscriptionRules['weeksMinLimit'] != '' && $data['intervalValue'] < $this->intervalSubscriptionRules['weeksMinLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['weeksMinLimit'];
+                if ( $rules['weeksMinLimit'] != '' && $data['intervalValue'] < $rules['weeksMinLimit'] ){
+                    $data['intervalValue'] = $rules['weeksMinLimit'];
                 }
-                if ( $this->intervalSubscriptionRules['weeksMaxLimit'] != '' && $data['intervalValue'] > $this->intervalSubscriptionRules['weeksMaxLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['weeksMaxLimit'];
+                if ( $rules['weeksMaxLimit'] != '' && $data['intervalValue'] > $rules['weeksMaxLimit'] ){
+                    $data['intervalValue'] =$rules['weeksMaxLimit'];
                 }
                 $data['intervalSymbol'] = $rules['weeksSymbol'];
             }
@@ -683,11 +741,11 @@ abstract class PaymentAbstract
             if ( empty( $rules['monthsSupport'] ) ){
                 $data = $this->convertInterval( 'M', $intervalValue, $rules );
             } else {
-                if ( $this->intervalSubscriptionRules['monthsMinLimit'] != '' && $data['intervalValue'] < $this->intervalSubscriptionRules['monthsMinLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['monthsMinLimit'];
+                if ( $rules['monthsMinLimit'] != '' && $data['intervalValue'] < $rules['monthsMinLimit'] ){
+                    $data['intervalValue'] = $rules['monthsMinLimit'];
                 }
-                if ( $this->intervalSubscriptionRules['monthsMaxLimit'] != '' && $data['intervalValue'] > $this->intervalSubscriptionRules['monthsMaxLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['monthsMaxLimit'];
+                if ( $rules['monthsMaxLimit'] != '' && $data['intervalValue'] > $rules['monthsMaxLimit'] ){
+                    $data['intervalValue'] = $rules['monthsMaxLimit'];
                 }
                 $data['intervalSymbol'] = $rules['monthsSymbol'];
             }
@@ -696,11 +754,11 @@ abstract class PaymentAbstract
             if ( empty( $rules['yearsSupport'] ) ){
                 $data = $this->convertInterval( 'Y', $intervalValue, $rules );
             } else {
-                if ( $this->intervalSubscriptionRules['yearsMinLimit'] != '' && $data['intervalValue'] < $this->intervalSubscriptionRules['yearsMinLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['yearsMinLimit'];
+                if ( $rules['yearsMinLimit'] != '' && $data['intervalValue'] < $rules['yearsMinLimit'] ){
+                    $data['intervalValue'] = $rules['yearsMinLimit'];
                 }
-                if ( $this->intervalSubscriptionRules['yearsMaxLimit'] != '' && $data['intervalValue'] > $this->intervalSubscriptionRules['yearsMaxLimit'] ){
-                    $data['intervalValue'] = $this->intervalSubscriptionRules['yearsMaxLimit'];
+                if ( $rules['yearsMaxLimit'] != '' && $data['intervalValue'] > $rules['yearsMaxLimit'] ){
+                    $data['intervalValue'] = $rules['yearsMaxLimit'];
                 }
                 $data['intervalSymbol'] = $rules['yearsSymbol'];
             }
@@ -725,6 +783,7 @@ abstract class PaymentAbstract
 
         if ( $this->levelData['access_trial_type'] == 1 && $this->intervalTrialRules['supportCertainPeriod'] ){
             // certain period
+
             $temporary = $this->getIntervalValues( $this->levelData['access_trial_time_value'], $this->levelData['access_trial_time_type'], $this->intervalTrialRules );
             if ( isset( $temporary['intervalValue'] ) && isset( $temporary['intervalSymbol'] ) ){
                 $data = [
@@ -748,7 +807,7 @@ abstract class PaymentAbstract
             }
         } else if ( $this->levelData['access_trial_type'] == 2  && !$this->intervalTrialRules['supportCycles'] && $this->intervalTrialRules['supportCertainPeriod'] ){
             // force couple of cycles to certain period type
-            
+
             $temporary = $this->getIntervalValues( $this->levelData['access_regular_time_value'], $this->levelData['access_regular_time_type'], $this->intervalTrialRules );
             if ( isset( $temporary['intervalValue'] ) && isset( $temporary['intervalSymbol'] ) ){
                 $data = [
@@ -788,7 +847,7 @@ abstract class PaymentAbstract
             case 'D': ////// days to weeks, months or years
               // weeks
               if ( !empty( $rules['weeksSupport'] ) ){
-                  $data['intervalSymbol'] = 'W';
+                  $data['intervalSymbol'] = $rules['weeksSymbol'];//'W';
                   $data['intervalValue'] = $currentValue / 7;
                   if ( isset( $rules['weeksMinLimit'] ) && $rules['weeksMinLimit'] != '' && $data['intervalValue'] < $rules['weeksMinLimit'] ){
                       $data['intervalValue'] = $rules['weeksMinLimit'];
@@ -799,7 +858,7 @@ abstract class PaymentAbstract
               }
               // months
               if ( empty( $data ) && !empty( $rules['monthsSupport'] ) ){
-                  $data['intervalSymbol'] = 'M';
+                  $data['intervalSymbol'] = $rules['monthsSymbol'];//'M';
                   $data['intervalValue'] = $currentValue / 30;
                   if ( isset( $rules['monthsMinLimit'] ) && $rules['monthsMinLimit'] != '' && $data['intervalValue'] < $rules['monthsMinLimit'] ){
                       $data['intervalValue'] = $rules['monthsMinLimit'];
@@ -810,7 +869,7 @@ abstract class PaymentAbstract
               }
               // years
               if ( empty( $data ) && !empty( $rules['yearsSupport'] ) ){
-                  $data['intervalSymbol'] = 'Y';
+                  $data['intervalSymbol'] = $rules['yearsSymbol'];//'Y';
                   $data['intervalValue'] = $currentValue / 365;
                   if ( isset( $rules['yearsMinLimit'] ) && $rules['yearsMinLimit'] != '' && $data['intervalValue'] < $rules['yearsMinLimit'] ){
                       $data['intervalValue'] = $rules['yearsMinLimit'];
@@ -823,7 +882,7 @@ abstract class PaymentAbstract
             case 'W': ////// weeks to days, months or years
               // days
               if ( !empty( $rules['daysSupport'] ) ){
-                  $data['intervalSymbol'] = 'D';
+                  $data['intervalSymbol'] = $rules['daysSymbol'];//'D';
                   $data['intervalValue'] = $currentValue * 7;
                   if ( isset( $rules['daysMinLimit'] ) && $rules['daysMinLimit'] != '' && $data['intervalValue'] < $rules['daysMinLimit'] ){
                       $data['intervalValue'] = $rules['daysMinLimit'];
@@ -834,7 +893,7 @@ abstract class PaymentAbstract
               }
               // months
               if ( empty( $data ) && !empty( $rules['monthsSupport'] ) ){
-                  $data['intervalSymbol'] = 'M';
+                  $data['intervalSymbol'] = $rules['monthsSymbol'];//'M';
                   $data['intervalValue'] = $currentValue / 4;
                   if ( isset( $rules['monthsMinLimit'] ) && $rules['monthsMinLimit'] != '' && $data['intervalValue'] < $rules['monthsMinLimit'] ){
                       $data['intervalValue'] = $rules['monthsMinLimit'];
@@ -845,7 +904,7 @@ abstract class PaymentAbstract
               }
               // years
               if ( empty( $data ) && !empty( $rules['yearsSupport'] ) ){
-                  $data['intervalSymbol'] = 'Y';
+                  $data['intervalSymbol'] = $rules['yearsSymbol'];//'Y';
                   $data['intervalValue'] = $currentValue / 52;
                   if ( isset( $rules['yearsMinLimit'] ) && $rules['yearsMinLimit'] != '' && $data['intervalValue'] < $rules['yearsMinLimit'] ){
                       $data['intervalValue'] = $rules['yearsMinLimit'];
@@ -858,7 +917,7 @@ abstract class PaymentAbstract
             case 'M': ////// moths to days, weeks or years
               // days
               if ( !empty( $rules['daysSupport'] ) ){
-                  $data['intervalSymbol'] = 'D';
+                  $data['intervalSymbol'] = $rules['daysSymbol'];//'D';
                   $data['intervalValue'] = $currentValue * 30;
                   if ( isset( $rules['daysMinLimit'] ) && $rules['daysMinLimit'] != '' && $data['intervalValue'] < $rules['daysMinLimit'] ){
                       $data['intervalValue'] = $rules['daysMinLimit'];
@@ -869,7 +928,7 @@ abstract class PaymentAbstract
               }
               // weeks
               if ( empty( $data ) && !empty( $rules['weeksSupport'] ) ){
-                  $data['intervalSymbol'] = 'W';
+                  $data['intervalSymbol'] = $rules['weeksSymbol'];//'W';
                   $data['intervalValue'] = $currentValue * 4;
                   if ( isset( $rules['weeksMinLimit'] ) && $rules['weeksMinLimit'] != '' && $data['intervalValue'] < $rules['weeksMinLimit'] ){
                       $data['intervalValue'] = $rules['weeksMinLimit'];
@@ -880,7 +939,7 @@ abstract class PaymentAbstract
               }
               // years
               if ( empty( $data ) && !empty( $rules['yearsSupport'] ) ){
-                  $data['intervalSymbol'] = 'Y';
+                  $data['intervalSymbol'] = $rules['yearsSymbol'];//'Y';
                   $data['intervalValue'] = $currentValue / 12;
                   if ( isset( $rules['yearsMinLimit'] ) && $rules['yearsMinLimit'] != '' && $data['intervalValue'] < $rules['yearsMinLimit'] ){
                       $data['intervalValue'] = $rules['yearsMinLimit'];
@@ -893,7 +952,7 @@ abstract class PaymentAbstract
             case 'Y': ////// years to days, weeks or months
               // days
               if ( !empty( $rules['daysSupport'] ) ){
-                  $data['intervalSymbol'] = 'D';
+                  $data['intervalSymbol'] = $rules['daysSymbol'];//'D';
                   $data['intervalValue'] = $currentValue * 365;
                   if ( isset( $rules['daysMinLimit'] ) && $rules['daysMinLimit'] != '' && $data['intervalValue'] < $rules['daysMinLimit'] ){
                       $data['intervalValue'] = $rules['daysMinLimit'];
@@ -904,7 +963,7 @@ abstract class PaymentAbstract
               }
               // weeks
               if ( empty( $data ) && !empty( $rules['weeksSupport'] ) ){
-                  $data['intervalSymbol'] = 'W';
+                  $data['intervalSymbol'] = $rules['weeksSymbol'];//'W';
                   $data['intervalValue'] = $currentValue * 52;
                   if ( isset( $rules['weeksMinLimit'] ) && $rules['weeksMinLimit'] != '' && $data['intervalValue'] < $rules['weeksMinLimit'] ){
                       $data['intervalValue'] = $rules['weeksMinLimit'];
@@ -915,7 +974,7 @@ abstract class PaymentAbstract
               }
               // months
               if ( empty( $data ) && !empty( $rules['monthsSupport'] ) ){
-                  $data['intervalSymbol'] = 'M';
+                  $data['intervalSymbol'] = $rules['monthsSymbol'];//'M';
                   $data['intervalValue'] = $currentValue * 12;
                   if ( isset( $rules['monthsMinLimit'] ) && $rules['monthsMinLimit'] != '' && $data['intervalValue'] < $rules['monthsMinLimit'] ){
                       $data['intervalValue'] = $rules['monthsMinLimit'];
@@ -982,26 +1041,39 @@ abstract class PaymentAbstract
     }
 
     /**
-	* Check if a dynamic Price have been submitted and replace the default Subscription amount value
+	   * Check if a dynamic Price have been submitted and replace the default Subscription amount value
+     * Updated on v.10.1: Will return the altered amount and what dynamic price have been used.
+     *
     * @param int or float
     * @return int or float
     */
     protected function dynamicPrice( $amount=0 )
     {
         // dynamic price
+        $dynamicPrceData = array();
+        $dynamicPrceData = [
+                  'amount'    => $amount,
+                  'used'   => '',
+        ];
+
         if ( !isset( $this->inputData['ihc_dynamic_price'] ) || $this->inputData['ihc_dynamic_price'] == '' ){
-            return $amount;
+            return $dynamicPrceData;
         }
         $dynamicPriceObject = new \Indeed\Ihc\DynamicPrice();
         if ( $dynamicPriceObject->checkPrice( $this->inputData['lid'], $this->inputData['ihc_dynamic_price'] ) ){
-            $amount = $this->inputData['ihc_dynamic_price'];
+            $dynamicPrceData['amount'] = $this->inputData['ihc_dynamic_price'];
+            $dynamicPrceData['used'] = $this->inputData['ihc_dynamic_price'];
+
             \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__(' : Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->inputData['currency'], 'payments');
         }
-        return $amount;
+
+        return $dynamicPrceData;
     }
 
     /**
 	   * save Order into the system once the  payment have been Prepared and before Charging.
+     * Updated on v.10.1: setCookieKey() step have been added
+     *
      * @param none
      * @return object
      */
@@ -1053,6 +1125,9 @@ abstract class PaymentAbstract
         // at this point we must increment the coupon use.
         $this->submitCoupon();
 
+        //Setup Payment Key into Cookies for further use
+        $this->setCookieKey();
+
 		    do_action( 'ihc_action_before_after_order', $this->paymentOutputData );
         \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Save Order process - Finish.', 'ihc'), 'payments');
 
@@ -1065,14 +1140,30 @@ abstract class PaymentAbstract
      */
     protected function submitCoupon()
     {
-        if ( !isset($this->paymentOutputData['coupon_used']) || $this->paymentOutputData['coupon_used'] == '' || empty($this->paymentOutputData['couponApplied']) ){
-            return false;
-        }
-        $couponObject = new \Indeed\Ihc\Payments\Coupons();
-        return $couponObject->setCode( $this->paymentOutputData['coupon_used']  )
-                            ->setLid( $this->inputData['lid'] )
-                            ->setUid( $this->inputData['uid'] )
-                            ->submitCode();
+      if ( !isset($this->paymentOutputData['coupon_used']) || $this->paymentOutputData['coupon_used'] == '' || empty($this->paymentOutputData['couponApplied']) ){
+          return false;
+      }
+      $couponObject = new \Indeed\Ihc\Payments\Coupons();
+      return $couponObject->setCode( $this->paymentOutputData['coupon_used']  )
+                          ->setLid( $this->inputData['lid'] )
+                          ->setUid( $this->inputData['uid'] )
+                          ->submitCode();
+
+    }
+
+    /**
+      * Set Cookie for buyer when his Order have been saved. Will be used for Thank Page template.
+      * Added on v.10.1
+      *
+     * @param none
+     * @return bool
+     */
+    protected function setCookieKey()
+    {
+      if ( ! headers_sent() ) {
+          return  setcookie( 'ihc_payment', $this->paymentOutputData['key'], time() + 3600 * 1, COOKIEPATH, COOKIE_DOMAIN );
+      }
+      return false;
     }
 
     /**
@@ -1088,6 +1179,7 @@ abstract class PaymentAbstract
   		  if ( $this->stopProcess ){
   			  return $this;
   		  }
+
   		  // free level
   		  if ( $this->isLevelFree() ){
   			  $this->completeLevelPayment( $this->paymentOutputData );
@@ -1356,13 +1448,13 @@ abstract class PaymentAbstract
 			     \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Webhook Insert Order - No Parent Order have been found. Return ', 'ihc'), 'payments');
            return $orderId;
         }
-        $metas = $orderMeta->getAllByOrderId( $parentOrderId ); ///!!!!!!!! NU EIXSTA
+        $metas = $orderMeta->getAllByOrderId( $parentOrderId ); ///!!!!!!!! DOES NOT EXIST
         if ( !$metas ){
 			      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Webhook Insert Order - No Metas for Parent Order have been found. Return', 'ihc'), 'payments');
             return $orderId;
         }
 		    \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Webhook Insert Order - Save additional Order Metas: ', 'ihc').json_encode( $metas), 'payments');
-        $exclude = [  'order_id', 'order_identificator', 'transaction_id', 'is_trial', 'is_parent_order' ];
+        $exclude = [  'order_id', 'order_identificator', 'transaction_id', 'txn_id', 'is_trial', 'is_parent_order', 'code', 'ihc_payment_type' ];
         foreach ( $metas as $metaKey => $metaValue ){
             if ( in_array( $metaKey, $exclude ) || $metaValue === false ){
                 continue;
@@ -1507,6 +1599,92 @@ abstract class PaymentAbstract
         return false;
     }
 
+    /**
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function pauseSubscription( $uid=0, $lid=0, $transactionId='' )
+    {
+    	  $pauseSubscription = apply_filters( 'ihc_filter_pause_subscription', true, $uid, $lid );
+        do_action( 'ihc_action_payments_before_pause', $uid, $lid );
+        \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Trigger Pause Subscription.', 'ihc'), 'payments');
+
+        if ( $pauseSubscription ){
+            do_action( 'ihc_action_pause_subscription', $uid, $lid );
+            return $this->pause( $uid, $lid, $transactionId );
+        }
+  	    return false;
+    }
+
+    /**
+     * Rewrite this method on each payment type if is necessary
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function pause( $uid=0, $lid=0, $transactionId='' )
+    {
+  	    return;
+    }
+
+    /**
+     * Rewrite this method on each payment type if is necessary
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function canDoPause( $uid=0, $lid=0, $transactionId='' )
+    {
+        return false;
+    }
+
+    /**
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function resumeSubscription( $uid=0, $lid=0, $transactionId='' )
+    {
+    	  $resumeSubscription = apply_filters( 'ihc_filter_resume_subscription', true, $uid, $lid );
+        do_action( 'ihc_action_payments_before_resume', $uid, $lid );
+        \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Trigger Resume Subscription.', 'ihc'), 'payments');
+
+        if ( $resumeSubscription ){
+            do_action( 'ihc_action_resume_subscription', $uid, $lid );
+            return $this->resume( $uid, $lid, $transactionId );
+        }
+  	    return false;
+    }
+
+    /**
+     * Rewrite this method on each payment type if is necessary
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function resume( $uid=0, $lid=0, $transactionId='' )
+    {
+  	    return;
+    }
+
+
+    /**
+	   * Rewrite this method on each payment type if is necessary
+     * @param int
+     * @param int
+     * @param string
+     * @return bool
+     */
+    public function canDoResume( $uid=0, $lid=0, $transactionId='' )
+    {
+        return false;
+    }
     /*
     Mandatory $paymentData should cointain [
                        'uid'                           => 0,// @var int
@@ -1517,7 +1695,10 @@ abstract class PaymentAbstract
                        'amount_type'                   => 'USD',// @var string
    ];
    */
-    /**
+      /**
+     *
+     * Updated on v.10.1: Check if paymentData has transaction_id in case of free payments.
+     *
      * @param array
      * @return none
      */
@@ -1550,18 +1731,21 @@ abstract class PaymentAbstract
         //Step 2: Make Order completed
         \Ihc_Db::updateOrderStatus( $paymentData['order_id'], 'Completed' );
         // add transaction_id to order meta
-        $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
-        $orderMeta->save( $paymentData['order_id'], 'transaction_id', $paymentData['transaction_id'] );
+        if(isset($paymentData['transaction_id'])){
+          $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
+          $orderMeta->save( $paymentData['order_id'], 'transaction_id', $paymentData['transaction_id'] );
 
-        //Step 3: Store Transaction !!!!!!!!!!!!!!!!!!!!!!!!!! DEPRECATED !!!!!!!!!!!!!!!!!!!!!!
+          //Step 3: Store Transaction !!!!!!!!!!!!!!!!!!!!!!!!!! DEPRECATED !!!!!!!!!!!!!!!!!!!!!!
 
-        $IndeedMembersPayments = new \Indeed\Ihc\Db\IndeedMembersPayments();
-        $IndeedMembersPayments->setTxnId( $paymentData['transaction_id'] )
-                              ->setUid( $paymentData['uid'] )
-                              ->setPaymentData( $paymentData )
-                              ->setHistory( $paymentData )
-                              ->setOrders( $paymentData['order_id'] )
-                              ->save();
+          $IndeedMembersPayments = new \Indeed\Ihc\Db\IndeedMembersPayments();
+          $IndeedMembersPayments->setTxnId( $paymentData['transaction_id'] )
+                                ->setUid( $paymentData['uid'] )
+                                ->setPaymentData( $paymentData )
+                                ->setHistory( $paymentData )
+                                ->setOrders( $paymentData['order_id'] )
+                                ->save();
+        }
+
 
 
         //Step 4: Extra Actions during Payment Complete process

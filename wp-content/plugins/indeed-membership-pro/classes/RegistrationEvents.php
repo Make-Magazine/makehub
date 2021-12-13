@@ -127,6 +127,11 @@ class RegistrationEvents
      */
     public function checkEmail( $errorMessages=[], $postData=[], $registerFields=[], $uid=0 )
     {
+        //Change Password
+        if(isset($postData['ChangePass'])){
+          return $errorMessages;
+        }
+
         if ( !is_email( $postData['user_email'] ) ) {
           $errorMessages['user_email'] = get_option( 'ihc_register_invalid_email_msg' );
         }
@@ -350,7 +355,10 @@ class RegistrationEvents
     {
         if ( ($uid && empty( $postData['pass1'] )) || $uid ) {
             // edit profile.
-            return $errorMessages;
+            //Change Password
+            if(!isset($postData['ChangePass'])){
+              return $errorMessages;
+            }
         }
 
         if ( !isset( $postData['pass1'] ) ){
@@ -393,6 +401,7 @@ class RegistrationEvents
                 $errorMessages['pass2'] = get_option( 'ihc_register_pass_not_match_msg' );
             }
         }
+
         return $errorMessages;
     }
 
@@ -468,9 +477,13 @@ class RegistrationEvents
             //If Opt In it's enable, put the email address somewhere
             // Not available when double email verification it's enabled
 
+            if ( !isset( $registerFields['ihc_user_fields'] ) ){
+                return;
+            }
             // check if user accept to be in opt-in list
-            $optinAccept = ihc_array_value_exists( $registerFields, 'ihc_optin_accept', 'name' );
-            if ( $optinAccept && !empty( $registerFields[ $optinAccept ][ 'display_public_reg' ] ) && ( !isset( $postData['ihc_optin_accept']) || $postData['ihc_optin_accept'] != 1 ) ){
+            $optinAccept = ihc_array_value_exists( $registerFields['ihc_user_fields'], 'ihc_optin_accept', 'name' );
+
+            if ( $optinAccept === false || empty( $registerFields['ihc_user_fields'][ $optinAccept ][ 'display_public_reg' ] ) ||  !isset( $postData['ihc_optin_accept']) || $postData['ihc_optin_accept'] === 0  ){
                 return;
             }
             ihc_run_opt_in($postData['user_email']);
@@ -577,7 +590,11 @@ class RegistrationEvents
   							}
   					} else if ( isset( $postData[$name] ) ){
   							/// sanitize
-  							$postData[$name] = ihcSanitizeValue( $postData[$name], $registerField['type'] );
+                if ( empty( $registerField['type'] ) ){
+  							         $postData[$name] = ihcSanitizeValue( $postData[$name], '' );
+                       }else{
+                         $postData[$name] = ihcSanitizeValue( $postData[$name], $registerField['type'] );
+                       }
   							if ( empty( $registerField['native_wp'] ) ){
   							 	//custom field
   								if ( is_array( $postData[$name] ) ){

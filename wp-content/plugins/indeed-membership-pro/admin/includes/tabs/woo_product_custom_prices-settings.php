@@ -57,8 +57,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<input type="hidden" name="ihc_woo_product_custom_prices_like_discount" value="<?php echo $data['metas']['ihc_woo_product_custom_prices_like_discount'];?>" id="ihc_woo_product_custom_prices_like_discount" />
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

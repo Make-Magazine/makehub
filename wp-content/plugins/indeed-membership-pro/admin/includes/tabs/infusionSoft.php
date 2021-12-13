@@ -48,9 +48,9 @@ $tags = $object->getContactGroups();
       <h5><?php esc_html_e('Step 2: Create Tags for users into your InfusionSoft account', 'ihc');?></h5>
 
       </div>
-			<div class="ihc-submit-form">
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 				<h5><?php esc_html_e('Step 3: Submit credentials with "Save Changes" button in order to syncronize UMP with Infusionsoft settings.', 'ihc');?></h5>
-                <input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+                <input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 
 			</div>
 		</div>
@@ -72,7 +72,7 @@ $tags = $object->getContactGroups();
 									</select>
 								</div>
 						<?php endforeach;?>
-					<div class="ihc-submit-form">
+					<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
 				<?php else :?>

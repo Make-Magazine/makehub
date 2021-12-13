@@ -346,6 +346,8 @@ class ihcAccountPage{
 		{
 				$key = $this->tab;
 				$data['content'] = get_option('ihc_ap_aff_msg');
+				$data['content'] = ihc_format_str_like_wp($data['content']);
+				$data['content'] = htmlspecialchars_decode($data['content']);
 				$data['content'] = ihc_replace_constants($data['content'] , $this->current_user->ID);
 				$data['title'] = get_option('ihc_ap_affiliate_title');
 				$data['title'] = ihc_replace_constants($data['title'], $this->current_user->ID);

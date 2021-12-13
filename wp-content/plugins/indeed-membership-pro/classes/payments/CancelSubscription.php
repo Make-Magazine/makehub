@@ -72,9 +72,9 @@ class CancelSubscription
 		switch ( $paymentGatewayType ){
     		case 'paypal':
   				// paypal standard can be canceled after a redirect, so we cancel first time in out db and then redirect to paypal
+          \Indeed\Ihc\UserSubscriptions::updateStatus( $this->uid, $this->lid, 5 );// mark status as Cancellation pending
   				$object = new \Indeed\Ihc\Gateways\PayPalStandard();
   				$object->cancelSubscription( $this->uid, $this->lid, $transactionId );// cancel( $this->uid, $this->lid );
-          \Indeed\Ihc\UserSubscriptions::updateStatus( $this->uid, $this->lid, 5 );// mark status as Cancellation pending
     			break;
     		case 'stripe':
           // old implementation
@@ -86,8 +86,6 @@ class CancelSubscription
 				  $this->modifyStatusInDb();
     			break;
     		case 'twocheckout':
-          // old implementation
-    			//ihc_cancel_twocheckout_subscription( $transactionId );
           $object = new \Indeed\Ihc\Gateways\TwoCheckout();
 				  $unsubscribe = $object->cancelSubscription( $this->uid, $this->lid, $transactionId );
           //after we cancel the subscription in payment service, we must modify the status in our db
@@ -135,6 +133,13 @@ class CancelSubscription
         case 'bank_transfer':
           $this->modifyStatusInDb();
           break;
+        case 'stripe_connect':
+  			  $object = new \Indeed\Ihc\Gateways\StripeConnect();
+  			  $unsubscribe = $object->cancelSubscription( $this->uid, $this->lid, $transactionId );
+          if ( $unsubscribe ){
+              $this->modifyStatusInDb();
+          }
+  			  break;  
 			  default:
 				  $paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $paymentGatewayType );
 

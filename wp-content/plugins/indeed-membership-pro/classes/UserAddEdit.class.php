@@ -39,6 +39,7 @@ class UserAddEdit
 		private $preview 																	= FALSE;
 		private $authorize_txn_id 												= FALSE;
 		private $is_modal																	= false;
+		private $is_change_password												= false;
 
 		/////////
 		public function __construct(){
@@ -79,11 +80,12 @@ class UserAddEdit
 				} else {
 					$this->display_type = 'display_public_ap';
 				}
+				//OLD Workflow --> START
 				/// TAXES
 				$taxes_settings = ihc_return_meta_arr('ihc_taxes_settings');
 				$this->taxes_enabled = $taxes_settings['ihc_enable_taxes'];
 				$this->show_taxes = $taxes_settings['ihc_show_taxes'];
-
+				//OLD Workflow --> END
 
 			/////SET CURRENT LEVEL (lid can be in get)
 			if ($this->type=='create' && !$this->disabled_submit_form){
@@ -99,6 +101,7 @@ class UserAddEdit
 				$this->current_level = isset($_REQUEST['lid']) ? $_REQUEST['lid'] : $standard_level;
 			}
 
+			//OLD Workflow --> START
 			if ($this->rewrite_payment_gateway && $this->current_level && ihc_is_magic_feat_active('level_restrict_payment')){
 				/// set default payment type
 				$this->payment_gateway = Ihc_Db::get_default_payment_gateway_for_level($this->current_level, $this->payment_gateway);
@@ -116,6 +119,7 @@ class UserAddEdit
 					}
 				}
 			}
+			//OLD Workflow --> END
 		}
 
 		private function set_register_fields(){
@@ -123,8 +127,26 @@ class UserAddEdit
 			 * @param none
 			 * @return none
 			 */
+
 			$this->register_fields = ihc_get_user_reg_fields();//register fields
 			ksort($this->register_fields);
+
+			if(ihcCheckCheckoutSetup()){
+					//NEW CHECKOUT
+				$key = ihc_array_value_exists($this->register_fields, 'ihc_coupon', 'name');
+				if ($key!==FALSE){
+					unset($this->register_fields[$key]);
+				}
+				$key = ihc_array_value_exists($this->register_fields, 'ihc_dynamic_price', 'name');
+				if ($key!==FALSE){
+					unset($this->register_fields[$key]);
+				}
+				$key = ihc_array_value_exists($this->register_fields, 'payment_select', 'name');
+				if ($key!==FALSE){
+					unset($this->register_fields[$key]);
+				}
+
+			}
 
 			/// REMOVE USERNAME FROM EDIT
 			if ($this->type=='edit'){
@@ -134,7 +156,16 @@ class UserAddEdit
 				}
 			}
 
+			//Change Password Form
+			if($this->is_change_password == true){
+				foreach($this->register_fields as $k => $value){
+					if ($value['name'] != 'pass1' && $value['name'] != 'pass2' ){
+						unset($this->register_fields[$k]);
+					}
+				}
 
+			}
+			//OLD Workflow --> START
 			/// REMOVE COUPUN FROM PUBLIC - EDIT, ADMIN - ADD NEW, ADMIN - EDIT
 			if ($this->type!='create' ){
 				$key = ihc_array_value_exists($this->register_fields, 'ihc_coupon', 'name');
@@ -142,6 +173,7 @@ class UserAddEdit
 					unset($this->register_fields[$key]);
 				}
 			}
+			//OLD Workflow --> END
 
 			$key = ihc_array_value_exists($this->register_fields, 'ihc_invitation_code_field', 'name');
 			if ( $key!==FALSE && (!ihc_is_magic_feat_active('invitation_code') || !Ihc_Db::invitation_code_does_exist_codes() || $this->type!='create') ){
@@ -184,7 +216,8 @@ class UserAddEdit
 			}
 
 			foreach ($this->register_fields as $v){
-				if ( isset($v[$this->display_type]) && $v[$this->display_type]>0){
+				//Change Password
+				if ( (isset($v[$this->display_type]) && $v[$this->display_type]>0) || $this->is_change_password){
 					$i++;
 						if ($this->register_template == 'ihc-register-6' || $this->register_template == 'ihc-register-11'
 							|| $this->register_template == 'ihc-register-12' || $this->register_template == 'ihc-register-13'){
@@ -227,6 +260,11 @@ class UserAddEdit
 						}
 					}
 
+					//Change Password Form
+					//if(($v['name'] == 'pass1' || $v['name'] == 'pass2') && $this->type == 'edit' && $this->is_change_password == false){
+							//continue;
+					//}
+
 					switch ($v['name']){
 						case 'tos':
 							if ($this->tos){
@@ -259,6 +297,7 @@ class UserAddEdit
 								//continue ;
 							//}
 							break;
+							//OLD Workflow --> START
 						case 'payment_select':
 							$payments_available = ihc_get_active_payments_services();
 							if ( $this->type=='create' && $this->current_level!=-1 && $level_data['payment_type']=='payment'
@@ -288,10 +327,10 @@ class UserAddEdit
 										if (!empty($payments_available['stripe'])){
 											$include_stripe = TRUE;
 										}
-										if (!empty($payments_available['authorize'])){
+										if ( !empty($payments_available['authorize']) && !ihcCheckCheckoutSetup() ){
 											$include_authorize = TRUE;
 										}
-										if (!empty($payments_available['braintree'])){
+										if (!empty($payments_available['braintree']) && !ihcCheckCheckoutSetup() ){
 											$include_braintree = TRUE;
 										}
 
@@ -303,6 +342,7 @@ class UserAddEdit
 
 							}
 							break;
+							//OLD Workflow --> END
 						case 'ihc_optin_accept':
 						case 'ihc_memberlist_accept':
 								$disabled = '';
@@ -357,7 +397,7 @@ class UserAddEdit
 								if (!empty($v['req'])){
 									$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
 								}
-								
+
 							break;
 						default:
 								$str .= $this->print_fields($v);
@@ -376,6 +416,7 @@ class UserAddEdit
 					$str .= '<input type="hidden" name="ihc_payment_gateway" value="' . $the_selected_payment . '" />';
 				}
 				/*******************************PUBLIC****************************/
+				//OLD Workflow --> START
 				//SPECIAL PAYMENTS (authorize, stripe)
 				if (isset($this->current_level) && $level_data!==false && $level_data['payment_type']=='payment'){
 						if ( ($this->payment_gateway == 'authorize' || !empty($include_authorize)) && ihc_check_payment_available('authorize') && isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
@@ -412,7 +453,7 @@ class UserAddEdit
 							}
 						}
 
-						if (($this->payment_gateway=='braintree' || !empty($include_braintree)) && ihc_check_payment_available('braintree')){
+						if (($this->payment_gateway=='braintree' || !empty($include_braintree)) && ihc_check_payment_available('braintree') && !ihcCheckCheckoutSetup() ){
 							require_once IHC_PATH . 'classes/PaymentGateways/Ihc_Braintree.class.php';
 							$braintree = new Ihc_Braintree();
 							$display_braintree = ($this->payment_gateway=='braintree') ? '' : 'ihc-display-none';
@@ -424,6 +465,7 @@ class UserAddEdit
 							$str .= '</div>';
 						}
 				}
+				//OLD Workflow --> END
 
 				//ACTIONS
 				if ($this->type=='edit'){
@@ -441,7 +483,8 @@ class UserAddEdit
 				$str .= '<div class="impu-temp7-row">';
 			}
 
-			$str = apply_filters('ump_before_submit_form', $str, true, $this->type ); // str, isPublic, type
+			//IMPORTANT
+			$str = apply_filters('ump_before_submit_form', $str, true, $this->type, $this->current_level ); // str, isPublic, type
 
 			$str .= '<div class="iump-submit-form">';
 
@@ -503,6 +546,11 @@ class UserAddEdit
 			}
 			$str .= '<input type="hidden" name="ihcFormType" value="' . $umpFormType . '" />';
 
+			//Change Password
+			if ( $this->is_change_password ){
+				$str .= '<input type="hidden" name="ChangePass" value="1" />';
+			}
+
 			$str = indeed_form_start( $this->action, 'post', $form_detail) . $str . indeed_form_end();
 
 			//SOCIAL LOGGER
@@ -510,8 +558,10 @@ class UserAddEdit
 				$str .= $this->ihc_social_form();
 			}
 
+			//OLD Workflow --> START
 			//MESSAGE ABOUT LEVEL
 			$str .= $this->add_level_details_on_register_form();
+			//OLD Workflow --> END
 
 			//CSS
 			$this->global_css .= get_option('ihc_register_custom_css'); //add custom css to global css
@@ -572,8 +622,396 @@ class UserAddEdit
 			return $str;
 		}
 
+	protected function print_fields($v=array()){
+		/*
+		 * @param array
+		 * @return string
+		 */
+		$str = '';
+		$disabled = '';
+		$placeholder = '';
+		$callback = '';
+		 if ( $this->type=='edit' && $v['name']=='user_login'){
+		 	$disabled = 'disabled';
+		 }
+		 $parent_id = 'ihc_reg_' . $v['type'] . '_' . rand(1,10000);
 
-		/////////
+
+		 $this->check_for_conditional_logic($v, $parent_id);
+
+		 if ($v['type']=='date'){
+		 	if (!empty($v['req']) || $v['type']=='conditional_text'){
+		 		$callback = 'ihcRegisterCheckViaAjax("'.$v['name'].'");'; /// require field
+		 		$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
+		 	}
+		 } else {
+
+			//OLD Workflow --> START
+			/// DYNAMIC PRICE MODULE
+			if ($v['type']=='ihc_dynamic_price'){
+				if (!ihc_is_magic_feat_active('level_dynamic_price')){
+					return '';
+				}
+				$temp_dynamic_settings = ihc_return_meta_arr('level_dynamic_price');//getting metas
+				if (empty($temp_dynamic_settings['ihc_level_dynamic_price_levels_on'][$this->current_level])){
+					return '';
+				}
+			}
+			/// DYNAMIC PRICE MODULE
+			//OLD Workflow --> END
+
+			/// REQUIRE INPUT
+		 	if (!empty($v['req']) || $v['type']=='conditional_text'){
+		 		$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
+		 	}
+			/// REQUIRE INPUT
+
+		 }
+
+		 switch ($this->register_template){
+			 case 'ihc-register-3':
+			 case 'ihc-register-8':
+			 case 'ihc-register-9':
+			 case 'ihc-register-11':
+			 case 'ihc-register-12':
+			  //////// FORM FIELD
+			 	 $temp_type_class = 'iump-form-' . $v['type'];
+				 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
+				 if ($v['type'] == 'text' || $v['type'] == 'password'){
+				 	if ($v['req']){
+						 $placeholder .= '*';
+					 }
+					if (isset($v['native_wp']) && $v['native_wp']){
+						$placeholder .= esc_html__($v['label'], 'ihc');
+					 } else {
+						$placeholder .= ihc_correct_text($v['label']);
+					 }
+				 } else {
+					 $str .= '<label class="iump-labels-register">';
+					 if ($v['req']){
+						 $str .= '<span class="ihc-required-sign">*</span>';
+					 }
+					 if (isset($v['native_wp']) && $v['native_wp']){
+						$str .= esc_html__($v['label'], 'ihc');
+					 } else {
+					 	$str .= ihc_correct_text($v['label']);
+					 }
+					 $str .= '</label>';
+				 }
+				 $val = '';
+				 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
+				 	$val = $this->user_data[$v['name']];
+				 } elseif (isset($_POST[$v['name']])) {
+					 	$val = $_POST[$v['name']];
+				 }
+		 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
+				 	$val = $v['plain_text_value'];
+				 }
+
+				 $multiple_values = FALSE;
+				 if (isset($v['values']) && $v['values']){
+				 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
+				 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
+				 }
+
+				 if (empty($v['sublabel'])){
+				 	$v['sublabel'] = '';
+				 }
+				 if (empty($v['class'])){
+				 	$v['class'] = '';
+				 }
+
+				 $str .= indeed_create_form_element(array(	'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
+				 											'disabled' => $disabled, 'placeholder' => $placeholder, 'multiple_values'=>$multiple_values,
+				 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
+				 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
+				 											'is_public' => true, 'ihc_form_type' => $this->type,
+														 	'is_modal' => $this->is_modal )
+				 );
+		 		 if (!empty($this->print_errors[$v['name']])){
+				 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
+				 }
+				 $str .= '</div>';
+			 break;
+			 case 'ihc-register-4':
+			  //////// FORM FIELD
+			  $add_class = '';
+				if ($v['type'] == 'select' || $v['type'] == 'multi_select' || $v['type'] == 'file' || $v['type'] == 'upload_image' || $v['type'] == 'ihc_country'){
+					$add_class ='ihc-no-backs';
+				}
+				$temp_type_class = 'iump-form-' . $v['type'];
+				 $str .= '<div class="iump-form-line-register '.$add_class.' ' . $temp_type_class . '" id="' . $parent_id . '">';
+				 if ($v['type'] == 'text' || $v['type'] == 'password' || $v['type'] == 'unique_value_text' || $v['type'] == 'ihc_invitation_code_field' || $v['type'] == 'date'){
+				 	if ($v['req']){
+						 $placeholder .= '*';
+					 }
+					if (isset($v['native_wp']) && $v['native_wp']){
+						$placeholder .= esc_html__($v['label'], 'ihc');
+					 } else {
+						$placeholder .= ihc_correct_text($v['label']);
+					 }
+				 } else {
+						 $str .= '<label class="iump-labels-register">';
+						 if ($v['req']){
+							 $str .= '<span class="ihc-required-sign">*</span>';
+						 }
+						 if (isset($v['native_wp']) && $v['native_wp']){
+							$str .= esc_html__($v['label'], 'ihc');
+						 } else {
+							$str .= ihc_correct_text($v['label']);
+						 }
+						 $str .= '</label>';
+				 }
+				 $val = '';
+				 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
+				 	$val = $this->user_data[$v['name']];
+				 } elseif (isset($_POST[$v['name']])) {
+					 	$val = $_POST[$v['name']];
+				 }
+		 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
+				 	$val = $v['plain_text_value'];
+				 }
+
+		 		 $multiple_values = FALSE;
+				 if (isset($v['values']) && $v['values']){
+				 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
+				 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
+				 }
+
+				 if (empty($v['sublabel'])){
+				 	$v['sublabel'] = '';
+				 }
+				 if (empty($v['class'])){
+				 	$v['class'] = '';
+				 }
+
+				 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
+				 										    'disabled' => $disabled, 'placeholder' => $placeholder, 'multiple_values'=>$multiple_values,
+				 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
+				 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
+				 											'is_public' => true, 'ihc_form_type' => $this->type,
+														'is_modal' => $this->is_modal ));
+		 		 if (!empty($this->print_errors[$v['name']])){
+				 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
+				 }
+				 $str .= '</div>';
+			 break;
+
+			  case 'ihc-register-6':
+			  	 //////// FORM FIELD
+			  	 $temp_type_class = 'iump-form-' . $v['type'];
+				 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
+				 $str .= '<label class="iump-labels-register">';
+				 if ($v['req']){
+					 $str .= '<span class="ihc-required-sign">*</span>';
+				 }
+				 if (isset($v['native_wp']) && $v['native_wp']){
+					$str .= esc_html__($v['label'], 'ihc');
+				 } else {
+					$str .= ihc_correct_text($v['label']);
+				 }
+				 $str .= '</label>';
+
+				 $val = '';
+				 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']]) ){
+				 		$val = $this->user_data[$v['name']];
+				 } elseif (isset($_POST[$v['name']])) {
+					 	$val = $_POST[$v['name']];
+				 }
+		 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
+				 	$val = $v['plain_text_value'];
+				 }
+
+				 $multiple_values = FALSE;
+				 if (isset($v['values']) && $v['values']){
+				 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
+				 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
+				 }
+
+				 if (empty($v['sublabel'])){
+				 	$v['sublabel'] = '';
+				 }
+
+				 if (empty($v['class'])){
+				 	$v['class'] = '';
+				 }
+
+				 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
+				 										    'disabled' => $disabled, 'multiple_values'=>$multiple_values,
+				 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
+				 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
+				 											'is_public' => true, 'ihc_form_type' => $this->type,
+														'is_modal' => $this->is_modal ));
+				 if (!empty($this->print_errors[$v['name']])){
+				 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
+				 }
+				 $str .= '</div>';
+			 break;
+
+			 default:
+				 //////// FORM FIELD
+				 $temp_type_class = 'iump-form-' . $v['type'];
+				 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
+				 $str .= '<label class="iump-labels-register">';
+				 if ($v['req']){
+					 $str .= '<span class="ihc-required-sign">*</span>';
+				 }
+				 if (isset($v['native_wp']) && $v['native_wp']){
+					$str .= esc_html__($v['label'], 'ihc');
+				 } else {
+				 	$str .= ihc_correct_text($v['label']);
+				 }
+				 $str .= '</label>';
+
+				 $val = '';
+				 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
+				 	$val = $this->user_data[$v['name']];
+				 }elseif(isset($_POST[$v['name']])){
+					$val =  $_POST[$v['name']];
+				 }
+
+				 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
+				 	$val = $v['plain_text_value'];
+				 }
+
+				 $multiple_values = FALSE;
+				 if (isset($v['values']) && $v['values']){
+				 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
+				 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
+				 }
+
+				 if (empty($v['sublabel'])){
+				 	$v['sublabel'] = '';
+				 }
+
+				 if (empty($v['class'])){
+				 	$v['class'] = '';
+				 }
+
+				 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
+				 										    'disabled' => $disabled, 'multiple_values'=>$multiple_values,
+				 										    'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
+				 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
+				 											'is_public' => true,
+				 											'ihc_form_type' => $this->type,
+														'is_modal' => $this->is_modal ));
+				 if (!empty($this->print_errors[$v['name']])){
+				 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
+				 }
+				 $str .= '</div>';
+			 break;
+		 }
+		return $str;
+	}
+
+	private function edit_ap_check_conditional_logic($field_data=array()){
+		$value = get_user_meta($this->user_id, $field_data['conditional_logic_corresp_field'], TRUE);
+
+		if ($field_data['conditional_logic_cond_type']=='has'){
+			//has value
+			if ($field_data['conditional_logic_corresp_field_value']==$value){
+				return 1;
+			}
+		} else {
+			//contain value
+			if ( is_string( $value ) && is_string( $field_data['conditional_logic_corresp_field_value'] )
+						&& strpos($value, $field_data['conditional_logic_corresp_field_value'])!==FALSE){
+				return 1;
+			}
+		}
+
+		return 0;
+	}
+
+	private function check_for_conditional_logic($field_arr, $field_id){
+		/*
+		 * @param string, string
+		 * @return none
+		 */
+		if (!empty($field_arr['conditional_logic_corresp_field']) && $field_arr['conditional_logic_corresp_field']!=-1){
+			//so this field is correlated with another
+
+			////Js ACTION
+			$key = ihc_array_value_exists($this->register_fields, $field_arr['conditional_logic_corresp_field'], 'name');
+			if ($key!==FALSE && !empty($this->register_fields[$key]['type'])){
+				$show = ($field_arr['conditional_logic_show']=='yes') ? 1 : 0;
+
+				if ($this->type=='edit'){
+					if ($show){
+						/// 'yes'
+						$no_on_edit = $this->edit_ap_check_conditional_logic($field_arr);
+					} else {
+						/// 'no'
+						$no_on_edit = !$this->edit_ap_check_conditional_logic($field_arr);
+					}
+				}
+
+				switch ($this->register_fields[$key]['type']){
+					case 'text':
+					case 'textarea':
+					case 'number':
+					case 'password':
+					case 'date':
+					case 'conditional_text':
+					case 'unique_value_text':
+						$js_function = 'ihcAjaxCheckFieldConditionOnblurOnclick("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
+						$this->global_js .= '
+							jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("blur", function(){
+								' . $js_function . '
+							});
+						';
+						break;
+					case 'checkbox':
+						$js_function = 'ihcAjaxCheckOnClickFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", "checkbox", ' . $show . ');';
+						$this->global_js .= '
+							jQuery(".ihc-form-create-edit [name=\''.$field_arr['conditional_logic_corresp_field'].'[]\'], .ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("click", function(){
+								' . $js_function . '
+							});
+						';
+						break;
+					case 'radio':
+						$js_function = 'ihcAjaxCheckOnClickFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", "radio", ' . $show . ');';
+						$this->global_js .= '
+							jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("click", function(){
+								' . $js_function . '
+							});
+						';
+						break;
+					case 'select':
+						$js_function = 'ihcAjaxCheckFieldConditionOnblurOnclick("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
+						$this->global_js .= '
+							jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("change", function(){
+								' . $js_function . '
+							});
+						';
+						break;
+					case 'multi_select':
+						$js_function = 'ihcAjaxCheckOnChangeMultiselectFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
+						$this->global_js .= '
+							jQuery(".ihc-form-create-edit [name=\''.$field_arr['conditional_logic_corresp_field'].'[]\']").on("change", function(){
+								' . $js_function . '
+							});
+						';
+						break;
+				}
+				if (!empty($js_function)){
+					$this->global_js .= 'jQuery( window ).on( "load", function(){' . $js_function . '});';
+				}
+			}
+
+			//conditional logic & required => add new exception
+			if ($field_arr['req']){
+				$this->exception_fields[] = $field_arr['name'];
+			}
+
+			if (empty($show) || !empty($no_on_edit)){
+				//// hide the conditional logic only for public create
+				//we must hide this field and show only when correlated field it's completed with desired value
+				$this->global_css .= "#$field_id{display: none;}";
+			}
+		}
+	}
+
 		public function userdata(){
 			//setting $user_data for current user
 			if ($this->user_id){
@@ -601,8 +1039,10 @@ class UserAddEdit
 				///user levels
 				$this->user_data['ihc_user_levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUserAsList( $this->user_id );
 
+				//OLD Workflow --> START
 				//remove coupon data
 				unset($this->user_data['ihc_coupon']);
+				//OLD Workflow --> END
 			} else {
 				/// CREATE
 				$user_fields = ihc_get_user_reg_fields();
@@ -621,456 +1061,6 @@ class UserAddEdit
 					}
 				$this->user_data['ihc_user_levels'] = '';
 				$this->user_data['role'] = '';
-			}
-		}
-
-		/**
-		 * @param none
-		 * @return string
-		 */
-		protected function printNonce()
-		{
-				$nonce = wp_create_nonce( 'ihc_user_add_edit_nonce' );
-				return "<input type='hidden' name='ihc_user_add_edit_nonce' value='$nonce' />";
-		}
-
-		private function edit_ap_check_conditional_logic($field_data=array()){
-			$value = get_user_meta($this->user_id, $field_data['conditional_logic_corresp_field'], TRUE);
-
-			if ($field_data['conditional_logic_cond_type']=='has'){
-				//has value
-				if ($field_data['conditional_logic_corresp_field_value']==$value){
-					return 1;
-				}
-			} else {
-				//contain value
-				if ( is_string( $value ) && is_string( $field_data['conditional_logic_corresp_field_value'] )
-							&& strpos($value, $field_data['conditional_logic_corresp_field_value'])!==FALSE){
-					return 1;
-				}
-			}
-
-			return 0;
-		}
-
-		private function check_for_conditional_logic($field_arr, $field_id){
-			/*
-			 * @param string, string
-			 * @return none
-			 */
-			if (!empty($field_arr['conditional_logic_corresp_field']) && $field_arr['conditional_logic_corresp_field']!=-1){
-				//so this field is correlated with another
-
-				////Js ACTION
-				$key = ihc_array_value_exists($this->register_fields, $field_arr['conditional_logic_corresp_field'], 'name');
-				if ($key!==FALSE && !empty($this->register_fields[$key]['type'])){
-					$show = ($field_arr['conditional_logic_show']=='yes') ? 1 : 0;
-
-					if ($this->type=='edit'){
-						if ($show){
-							/// 'yes'
-							$no_on_edit = $this->edit_ap_check_conditional_logic($field_arr);
-						} else {
-							/// 'no'
-							$no_on_edit = !$this->edit_ap_check_conditional_logic($field_arr);
-						}
-					}
-
-					switch ($this->register_fields[$key]['type']){
-						case 'text':
-						case 'textarea':
-						case 'number':
-						case 'password':
-						case 'date':
-						case 'conditional_text':
-						case 'unique_value_text':
-							$js_function = 'ihcAjaxCheckFieldConditionOnblurOnclick("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
-							$this->global_js .= '
-								jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("blur", function(){
-									' . $js_function . '
-								});
-							';
-							break;
-						case 'checkbox':
-							$js_function = 'ihcAjaxCheckOnClickFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", "checkbox", ' . $show . ');';
-							$this->global_js .= '
-								jQuery(".ihc-form-create-edit [name=\''.$field_arr['conditional_logic_corresp_field'].'[]\'], .ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("click", function(){
-									' . $js_function . '
-								});
-							';
-							break;
-						case 'radio':
-							$js_function = 'ihcAjaxCheckOnClickFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", "radio", ' . $show . ');';
-							$this->global_js .= '
-								jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("click", function(){
-									' . $js_function . '
-								});
-							';
-							break;
-						case 'select':
-							$js_function = 'ihcAjaxCheckFieldConditionOnblurOnclick("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
-							$this->global_js .= '
-								jQuery(".ihc-form-create-edit [name='.$field_arr['conditional_logic_corresp_field'].']").on("change", function(){
-									' . $js_function . '
-								});
-							';
-							break;
-						case 'multi_select':
-							$js_function = 'ihcAjaxCheckOnChangeMultiselectFieldCondition("' . $field_arr['conditional_logic_corresp_field'] . '", "#' . $field_id . '", "' . $field_arr['name'] . '", ' . $show . ');';
-							$this->global_js .= '
-								jQuery(".ihc-form-create-edit [name=\''.$field_arr['conditional_logic_corresp_field'].'[]\']").on("change", function(){
-									' . $js_function . '
-								});
-							';
-							break;
-					}
-					if (!empty($js_function)){
-						$this->global_js .= 'jQuery( window ).on( "load", function(){' . $js_function . '});';
-					}
-				}
-
-				//conditional logic & required => add new exception
-				if ($field_arr['req']){
-					$this->exception_fields[] = $field_arr['name'];
-				}
-
-				if (empty($show) || !empty($no_on_edit)){
-					//// hide the conditional logic only for public create
-					//we must hide this field and show only when correlated field it's completed with desired value
-					$this->global_css .= "#$field_id{display: none;}";
-				}
-			}
-		}
-
-		protected function print_fields($v=array()){
-			/*
-			 * @param array
-			 * @return string
-			 */
-			$str = '';
-			$disabled = '';
-			$placeholder = '';
-			$callback = '';
-			 if ( $this->type=='edit' && $v['name']=='user_login'){
-			 	$disabled = 'disabled';
-			 }
-			 $parent_id = 'ihc_reg_' . $v['type'] . '_' . rand(1,10000);
-
-
-			 $this->check_for_conditional_logic($v, $parent_id);
-
-			 if ($v['type']=='date'){
-			 	if (!empty($v['req']) || $v['type']=='conditional_text'){
-			 		$callback = 'ihcRegisterCheckViaAjax("'.$v['name'].'");'; /// require field
-			 		$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
-			 	}
-			 } else {
-
-				/// DYNAMIC PRICE MODULE
-				if ($v['type']=='ihc_dynamic_price'){
-					if (!ihc_is_magic_feat_active('level_dynamic_price')){
-						return '';
-					}
-					$temp_dynamic_settings = ihc_return_meta_arr('level_dynamic_price');//getting metas
-					if (empty($temp_dynamic_settings['ihc_level_dynamic_price_levels_on'][$this->current_level])){
-						return '';
-					}
-				}
-				/// DYNAMIC PRICE MODULE
-
-				/// REQUIRE INPUT
-			 	if (!empty($v['req']) || $v['type']=='conditional_text'){
-			 		$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
-			 	}
-				/// REQUIRE INPUT
-
-			 }
-
-			 switch ($this->register_template){
-				 case 'ihc-register-3':
-				 case 'ihc-register-8':
-				 case 'ihc-register-9':
-				  //////// FORM FIELD
-				 	 $temp_type_class = 'iump-form-' . $v['type'];
-					 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
-					 if ($v['type'] == 'text' || $v['type'] == 'password'){
-					 	if ($v['req']){
-							 $placeholder .= '*';
-						 }
-						if (isset($v['native_wp']) && $v['native_wp']){
-							$placeholder .= esc_html__($v['label'], 'ihc');
-						 } else {
-							$placeholder .= ihc_correct_text($v['label']);
-						 }
-					 } else {
-						 $str .= '<label class="iump-labels-register">';
-						 if ($v['req']){
-							 $str .= '<span class="ihc-required-sign">*</span>';
-						 }
-						 if (isset($v['native_wp']) && $v['native_wp']){
-							$str .= esc_html__($v['label'], 'ihc');
-						 } else {
-						 	$str .= ihc_correct_text($v['label']);
-						 }
-						 $str .= '</label>';
-					 }
-					 $val = '';
-					 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
-					 	$val = $this->user_data[$v['name']];
-					 } elseif (isset($_POST[$v['name']])) {
-						 	$val = $_POST[$v['name']];
-					 }
-			 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
-					 	$val = $v['plain_text_value'];
-					 }
-
-					 $multiple_values = FALSE;
-					 if (isset($v['values']) && $v['values']){
-					 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
-					 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
-					 }
-
-					 if (empty($v['sublabel'])){
-					 	$v['sublabel'] = '';
-					 }
-					 if (empty($v['class'])){
-					 	$v['class'] = '';
-					 }
-
-					 $str .= indeed_create_form_element(array(	'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
-					 											'disabled' => $disabled, 'placeholder' => $placeholder, 'multiple_values'=>$multiple_values,
-					 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
-					 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
-					 											'is_public' => true, 'ihc_form_type' => $this->type,
-															 	'is_modal' => $this->is_modal )
-					 );
-			 		 if (!empty($this->print_errors[$v['name']])){
-					 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
-					 }
-					 $str .= '</div>';
-				 break;
-				 case 'ihc-register-4':
-				  //////// FORM FIELD
-				  $add_class = '';
-					if ($v['type'] == 'select' || $v['type'] == 'multi_select' || $v['type'] == 'file' || $v['type'] == 'upload_image' || $v['type'] == 'ihc_country'){
-						$add_class ='ihc-no-backs';
-					}
-					$temp_type_class = 'iump-form-' . $v['type'];
-					 $str .= '<div class="iump-form-line-register '.$add_class.' ' . $temp_type_class . '" id="' . $parent_id . '">';
-					 if ($v['type'] == 'text' || $v['type'] == 'password' || $v['type'] == 'unique_value_text' || $v['type'] == 'ihc_invitation_code_field' || $v['type'] == 'date'){
-					 	if ($v['req']){
-							 $placeholder .= '*';
-						 }
-						if (isset($v['native_wp']) && $v['native_wp']){
-							$placeholder .= esc_html__($v['label'], 'ihc');
-						 } else {
-							$placeholder .= ihc_correct_text($v['label']);
-						 }
-					 } else {
-							 $str .= '<label class="iump-labels-register">';
-							 if ($v['req']){
-								 $str .= '<span class="ihc-required-sign">*</span>';
-							 }
-							 if (isset($v['native_wp']) && $v['native_wp']){
-								$str .= esc_html__($v['label'], 'ihc');
-							 } else {
-								$str .= ihc_correct_text($v['label']);
-							 }
-							 $str .= '</label>';
-					 }
-					 $val = '';
-					 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
-					 	$val = $this->user_data[$v['name']];
-					 } elseif (isset($_POST[$v['name']])) {
-						 	$val = $_POST[$v['name']];
-					 }
-			 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
-					 	$val = $v['plain_text_value'];
-					 }
-
-			 		 $multiple_values = FALSE;
-					 if (isset($v['values']) && $v['values']){
-					 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
-					 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
-					 }
-
-					 if (empty($v['sublabel'])){
-					 	$v['sublabel'] = '';
-					 }
-					 if (empty($v['class'])){
-					 	$v['class'] = '';
-					 }
-
-					 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
-					 										    'disabled' => $disabled, 'placeholder' => $placeholder, 'multiple_values'=>$multiple_values,
-					 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
-					 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
-					 											'is_public' => true, 'ihc_form_type' => $this->type,
-															'is_modal' => $this->is_modal ));
-			 		 if (!empty($this->print_errors[$v['name']])){
-					 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
-					 }
-					 $str .= '</div>';
-				 break;
-
-				  case 'ihc-register-6':
-				  	 //////// FORM FIELD
-				  	 $temp_type_class = 'iump-form-' . $v['type'];
-					 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
-					 $str .= '<label class="iump-labels-register">';
-					 if ($v['req']){
-						 $str .= '<span class="ihc-required-sign">*</span>';
-					 }
-					 if (isset($v['native_wp']) && $v['native_wp']){
-						$str .= esc_html__($v['label'], 'ihc');
-					 } else {
-						$str .= ihc_correct_text($v['label']);
-					 }
-					 $str .= '</label>';
-
-					 $val = '';
-					 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']]) ){
-					 		$val = $this->user_data[$v['name']];
-					 } elseif (isset($_POST[$v['name']])) {
-						 	$val = $_POST[$v['name']];
-					 }
-			 		 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
-					 	$val = $v['plain_text_value'];
-					 }
-
-					 $multiple_values = FALSE;
-					 if (isset($v['values']) && $v['values']){
-					 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
-					 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
-					 }
-
-					 if (empty($v['sublabel'])){
-					 	$v['sublabel'] = '';
-					 }
-
-					 if (empty($v['class'])){
-					 	$v['class'] = '';
-					 }
-
-					 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
-					 										    'disabled' => $disabled, 'multiple_values'=>$multiple_values,
-					 											'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
-					 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
-					 											'is_public' => true, 'ihc_form_type' => $this->type,
-															'is_modal' => $this->is_modal ));
-					 if (!empty($this->print_errors[$v['name']])){
-					 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
-					 }
-					 $str .= '</div>';
-				 break;
-
-				 default:
-					 //////// FORM FIELD
-					 $temp_type_class = 'iump-form-' . $v['type'];
-					 $str .= '<div class="iump-form-line-register ' . $temp_type_class . '" id="' . $parent_id . '">';
-					 $str .= '<label class="iump-labels-register">';
-					 if ($v['req']){
-						 $str .= '<span class="ihc-required-sign">*</span>';
-					 }
-					 if (isset($v['native_wp']) && $v['native_wp']){
-						$str .= esc_html__($v['label'], 'ihc');
-					 } else {
-					 	$str .= ihc_correct_text($v['label']);
-					 }
-					 $str .= '</label>';
-
-					 $val = '';
-					 if (isset($this->user_data[$v['name']]) && !empty($this->user_data[$v['name']])){
-					 	$val = $this->user_data[$v['name']];
-					 }elseif(isset($_POST[$v['name']])){
-						$val =  $_POST[$v['name']];
-					 }
-
-					 if (empty($val) && $v['type']=='plain_text'){ //maybe it's plain text
-					 	$val = $v['plain_text_value'];
-					 }
-
-					 $multiple_values = FALSE;
-					 if (isset($v['values']) && $v['values']){
-					 	//is checkbox, select or radio input field, so we have to include multiple+_values into indeed_create_form_elelemt
-					 	$multiple_values = ihc_from_simple_array_to_k_v($v['values']);
-					 }
-
-					 if (empty($v['sublabel'])){
-					 	$v['sublabel'] = '';
-					 }
-
-					 if (empty($v['class'])){
-					 	$v['class'] = '';
-					 }
-
-					 $str .= indeed_create_form_element(array(  'type'=>$v['type'], 'name'=>$v['name'], 'value' => $val,
-					 										    'disabled' => $disabled, 'multiple_values'=>$multiple_values,
-					 										    'user_id'=>$this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'],
-					 											'callback' => $callback, 'form_type' => $this->type, 'lid' => $this->current_level,
-					 											'is_public' => true,
-					 											'ihc_form_type' => $this->type,
-															'is_modal' => $this->is_modal ));
-					 if (!empty($this->print_errors[$v['name']])){
-					 	$str .= '<div class="ihc-register-notice">' . $this->print_errors[$v['name']] . '</div>';
-					 }
-					 $str .= '</div>';
-				 break;
-			 }
-			return $str;
-		}
-
-
-		private function print_tos($v=array()){
-				$str = '';
-				$tos_msg = stripslashes(get_option('ihc_register_terms_c'));//getting tos message
-				$tos_page_id = get_option('ihc_general_tos_page');
-				$tos_link = get_permalink($tos_page_id);
-				if (!$tos_msg || !$tos_page_id){
-						return '';
-				}
-				$view = new \Indeed\Ihc\IndeedView();
-				$data = array(
-						'class' 						=> (empty($v['class'])) ? '' : $v['class'],
-						'id'								=> 'ihc_tos_field_parent_' . rand(1,1000),
-						'tos_msg' 					=> $tos_msg,
-						'tos_link'					=> $tos_link,
-						'tos_page_id'				=> $tos_page_id,
-				);
-				return $view->setTemplate(IHC_PATH . 'public/views/register-tos.php')->setContentData($data, true)->getOutput();
-		}
-
-
-
-		//////
-		private function print_captcha($v=array()){
-			$type = get_option( 'ihc_recaptcha_version' );
-			if ( $type !== false && $type == 'v3' ){
-					$key = get_option('ihc_recaptcha_public_v3');
-			} else {
-					$key = get_option('ihc_recaptcha_public');
-			}
-
-			if (empty($key)){
-					return '';
-			}
-			$view = new \Indeed\Ihc\IndeedView();
-			$data = array(
-					'class' 		=> (empty($v['class'])) ? '' : $v['class'],
-					'key'				=> $key,
-					'langCode'	=> indeed_get_current_language_code(),
-					'type'			=> $type,
-			);
-			return $view->setTemplate(IHC_PATH . 'public/views/register-captcha.php')->setContentData($data, true)->getOutput();
-		}
-
-		private function add_level_details_on_register_form(){
-			/*
-			 * @param level id
-			 * @return string
-			 */
-			if ($this->current_level>-1){ /// get_option("ihc_register_show_level_price") &&
-				$this->global_js .= 'jQuery( window ).on( "load", function(){ihcUpdateCart();});';
 			}
 		}
 
@@ -1106,7 +1096,9 @@ class UserAddEdit
 			// filter the form fields. It's called in classses/RegistrationEvents.php
 			$this->register_fields = apply_filters( 'ihc_filter_register_process_form_fields', $this->register_fields, $_POST, $this->user_id );
 
+			//OLD Workflow --> START
 			$this->set_coupon();
+			//OLD Workflow --> end
 
 			$this->fields = [];
 			// filter the form values ( only the fields that are native in wp ) that will be stored in wp_users. It's called in classses/RegistrationEvents.php
@@ -1125,9 +1117,11 @@ class UserAddEdit
 
 			//PAY CHECK
 			$paid = 0;
-			if (!empty($this->payment_gateway) && ihc_check_payment_available($this->payment_gateway) && isset($_POST['lid'])){//ihcpay
+			if (!empty($this->payment_gateway) && ihc_check_payment_available($this->payment_gateway)
+						&& isset($_POST['lid']) && !ihcCheckCheckoutSetup() ){//ihcpay
 				do {
 
+					//OLD Workflow --> START
 					//======================== if price after discount is 0
 					$level_data = ihc_get_level_by_id($_POST['lid']);
 					if (ihc_dont_pay_after_discount($_POST['lid'], $this->coupon, $level_data)){
@@ -1135,14 +1129,17 @@ class UserAddEdit
 						break;
 					}
 					//========================
+					//OLD Workflow --> END
+
 					if ($level_data['payment_type']!='payment'){ /// extra check for braintree
 						break; /// free level
 					}
 
+					//OLD Workflow --> START
 					switch ($this->payment_gateway){//ihcpay
 						case 'authorize':
 							/*************** AUTHORIZE *****************/
-							if (!ihc_is_level_reccuring($_POST['lid'])){
+							if (!ihc_is_level_reccuring($_POST['lid']) || ihcCheckCheckoutSetup() ){
 								break;
 							}
 							global $ihc_pay_error;
@@ -1273,13 +1270,16 @@ class UserAddEdit
 							break;
 						case 'braintree':
 							/*************** BRAINTREE *****************/
+							if ( ihcCheckCheckoutSetup() ){
+									break;
+							}
 							$pay_errors = '';
 							global $ihc_pay_error;
 							foreach ($_POST as $key => $vals){
 								if (strpos($key, 'ihc_braintree')===0){
 									if (empty($_POST[$key])){
 										$ihc_pay_error['braintree']['not_empty'][$key] = $this->register_metas['ihc_register_err_req_fields'];
-										
+
 										$pay_errors = 1;
 									}
 								}
@@ -1335,6 +1335,7 @@ class UserAddEdit
 							}
 							break;
 					}
+					//OLD Workflow --> END
 				} while (FALSE);
 			}
 
@@ -1349,8 +1350,8 @@ class UserAddEdit
 			//wp native user
 			if ($this->type=='create'){
 				//add new user
-				
-				if ( !isset( $this->fields['user_login'] ) || $this->fields['user_login'] === '' ){
+
+				if ( !isset( $this->fields['user_login'] ) || $this->fields['user_login'] === '' ||  !isset( $this->fields['user_pass'] ) || $this->fields['user_pass'] === '' ){
 					  $this->set_password_and_username();
 				}
 				$this->fields = apply_filters('ump_before_register_new_user', $this->fields);
@@ -1369,11 +1370,13 @@ class UserAddEdit
 				// @description run on user update his profile. @param user id (integer)
 			}
 
+			//OLD Workflow --> START
 			//PAY SAVE only authorize && stripe
 			if($paid == 1){
 				$dont_save_order = TRUE;
 				ihc_insert_update_transaction($this->user_id, $trans_id, $trans_info, $dont_save_order);
 			}
+			//OLD Workflow --> END
 
 			//custom user meta
 			if ($custom_meta_user){
@@ -1419,6 +1422,7 @@ class UserAddEdit
 
 			$this->set_levels();//USER LEVELS
 
+			//OLD Workflow --> START
 			/// set the correct expire time for authorize recurring levels
 			if ( !empty($paid) && $this->payment_gateway=='authorize'){//ihcpay
 				//only authorize with recurring
@@ -1429,6 +1433,7 @@ class UserAddEdit
 					$this->insert_the_order('Completed');///Save Order
 				}
 			}
+			//OLD Workflow --> END
 
 			if ($this->send_password_via_mail){
 				$this->notify_user_send_password();
@@ -1454,23 +1459,6 @@ class UserAddEdit
 		}
 
 
-		private function ihc_is_req_conditional_field($field_meta=array()){
-			/*
-			 * @param array
-			 * @return none
-			 */
-			if (!empty($field_meta['type']) && $field_meta['type']=='conditional_text' ){
-				$field_name = $field_meta['name'];
-				if ($field_meta['conditional_text']!=$_POST[$field_name]){
-					if (!empty($field_meta['error_message'])){
-						$this->errors[$field_name] = ihc_correct_text($field_meta['error_message']);
-					} else {
-						$this->errors[$field_name] = esc_html__("Error");
-					}
-				}
-			}
-		}
-
 		public function update_level($url_return=''){
 			/*
 			 * used only in public section (ihc_acquire_new_level() in IHC_PATH/functions.php), for add new levels to user
@@ -1485,6 +1473,7 @@ class UserAddEdit
 
 					if ($level_data['payment_type']=='payment'){
 
+						//OLD Workflow --> START
 						//======================== if price after discount is 0
 						if (ihc_dont_pay_after_discount($lid, $this->coupon, $level_data, TRUE)){
 							$this->handle_levels_assign($lid);
@@ -1497,8 +1486,10 @@ class UserAddEdit
 							}
 						}
 						//========================
+						//OLD Workflow --> END
 
 						switch ($this->payment_gateway){
+							//OLD Workflow --> START
 							case 'authorize':
 								//redirect to payment
 								if (isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
@@ -1552,86 +1543,13 @@ class UserAddEdit
 								break;
 							case 'twocheckout':
 								$this->handle_levels_assign($lid);
+								return $this->goToPayment();
 
-								if ( ihc_payment_workflow() == 'new' ){
-										// new
-										return $this->goToPayment();
-								}
-
-								if ( ihc_check_payment_available('twocheckout') ){
-									$this->insert_the_order();
-									if ($this->taxes_enabled){
-										$ihc_country = get_user_meta($this->user_id, 'ihc_country', TRUE);
-									} else {
-										$ihc_country = FALSE;
-									}
-									ihc_twocheckout_submit($this->user_id, $lid, $this->coupon, $ihc_country);
-								} else {
-									$redirect_back = TRUE;
-								}
 								break;
 							case 'bank_transfer':
-								$this->handle_levels_assign($lid);
-
-								if ( ihc_payment_workflow() == 'new' ){
-										// new
+										$this->handle_levels_assign($lid);
 										return $this->goToPayment();
-								}
 
-								if ( ihc_check_payment_available('bank_transfer') ){
-									if ($url_return){
-										$url = $url_return;
-										$bt_params = array( 'ihc_success_bt' => true,
-															'ihc_lid' => $lid,
-															'ihc_uid' => $this->user_id,
-										);
-										if ($this->coupon){
-											$coupon_data = ihc_check_coupon($this->coupon, $lid);
-											if ($coupon_data){
-												if ($coupon_data['discount_type']=='percentage'){
-													$bt_params['cp'] = $coupon_data['discount_value'];
-												} else {
-													$bt_params['cc'] = $coupon_data['discount_value'];
-												}
-												ihc_submit_coupon($this->coupon);
-											}
-										}
-
-										//country
-										if ($this->taxes_enabled){
-											$ihc_country = get_user_meta($this->user_id, 'ihc_country', TRUE);
-											$bt_params['ihc_country'] = $ihc_country;
-											$state = get_user_meta($this->user_id, 'ihc_state', TRUE);
-											$bt_params['ihc_state'] = $state;
-										}
-
-										$this->insert_the_order();
-										$dynamic_data = array('order_id'=>$this->order_id);
-
-										/*************************** DYNAMIC PRICE ***************************/
-										if (ihc_is_magic_feat_active('level_dynamic_price') && isset($_POST['ihc_dynamic_price'])){
-											$temp_amount = $_POST['ihc_dynamic_price'];
-											if (ihc_check_dynamic_price_from_user($lid, $temp_amount)){
-												$bt_params['ihc_dynamic_price'] = $temp_amount;
-												$dynamic_data['ihc_dynamic_price'] = $temp_amount;
-											}
-										}
-										/**************************** DYNAMIC PRICE ***************************/
-
-										do_action( 'ihc_bank_transfer_charge', array_merge( [ 'uid' => $this->user_id, 'lid' => $lid ], $dynamic_data )  );
-
-										$url = add_query_arg($bt_params, $url);
-										$url .= '#ihc_bt_success_msg';
-
-										Ihc_User_Logs::set_user_id($this->user_id);
-										Ihc_User_Logs::set_level_id((isset($this->current_level)) ? $this->current_level : '');
-										Ihc_User_Logs::write_log( esc_html__('Bank Transfer Payment: Start process.', 'ihc'), 'payments');
-										wp_redirect($url);
-										exit();
-									}
-								} else {
-									$redirect_back = TRUE;
-								}
 								break;
 							case 'stripe':
 								if ( ihc_check_payment_available('stripe') ){
@@ -1681,7 +1599,7 @@ class UserAddEdit
 									$redirect_back = TRUE;
 								}
 								break;
-
+								//OLD Workflow --> END
 							default:
 									$this->handle_levels_assign($lid);
 									$this->goToPayment();
@@ -1712,17 +1630,22 @@ class UserAddEdit
 					$this->handle_levels_assign($_POST['lid']);
 					$level_data = ihc_get_level_by_id($_POST['lid']);
 
+					//OLD Workflow --> START
 					//======================== if price after discount is 0
-
 					if (ihc_dont_pay_after_discount($_POST['lid'], $this->coupon, $level_data, TRUE)){
 						\Indeed\Ihc\UserSubscriptions::makeComplete( $this->user_id, esc_sql( $_POST['lid'] ) );
 						return;
 					}
 					//========================
+					//OLD Workflow --> END
 
 					if ($level_data['payment_type']=='payment'){
 						switch ($this->payment_gateway){
+							//OLD Workflow --> START
 							case 'authorize':
+								if ( ihcCheckCheckoutSetup() ){
+										return $this->goToPayment();
+								}
 								if (isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
 								} else {
 									if ( ihc_check_payment_available('authorize') ){
@@ -1747,43 +1670,21 @@ class UserAddEdit
 								}
 								break;
 							case 'twocheckout':
-								if ( ihc_payment_workflow() == 'new' ){
-										// new
-										return $this->goToPayment();
-								}
-								if ( ihc_check_payment_available('twocheckout') ){
-									/// SAVE THE ORDER
-									$this->insert_the_order();
-									if (!empty($_POST['ihc_country']) && $this->taxes_enabled){
-										$ihc_country = $_POST['ihc_country'];
-									} else {
-										$ihc_country = FALSE;
-									}
-									ihc_twocheckout_submit($this->user_id, $_POST['lid'], $this->coupon, $ihc_country);
-								}
+								return $this->goToPayment();
+
 								break;
 							case 'bank_transfer':
-								if ( ihc_payment_workflow() == 'new' ){
-										// new
 										return $this->goToPayment();
-								}
 
-								if ( ihc_check_payment_available('bank_transfer') ){
-									/// SAVE THE ORDER
-									Ihc_User_Logs::set_user_id($this->user_id);
-									Ihc_User_Logs::set_level_id((isset($this->current_level)) ? $this->current_level : '');
-									Ihc_User_Logs::write_log( esc_html__('Bank Transfer Payment: Start process.', 'ihc'), 'payments');
-									$this->insert_the_order();
-									$dynamic_data = array('order_id'=>$this->order_id);
-									do_action( 'ihc_bank_transfer_charge', array_merge( [ 'uid' => $this->user_id, 'lid' => $_POST['lid'] ], $dynamic_data )  );
-									$this->bank_transfer_message = TRUE;
-								}
 								break;
 							case 'stripe':
 								$this->insert_the_order();
 								break;
 							case 'braintree':
 								if (ihc_check_payment_available('braintree')){
+									if ( ihcCheckCheckoutSetup() ){
+											return $this->goToPayment();
+									}
 									$post_data = $_POST;
 									$post_data['uid'] = $this->user_id;
 									$post_data['lid'] = $_POST['lid'];
@@ -1808,6 +1709,7 @@ class UserAddEdit
 
 								}
 								break;
+								//OLD Workflow --> END
 							default:
 								$this->goToPayment();
 								break;
@@ -1817,6 +1719,304 @@ class UserAddEdit
 
 		}
 
+		/**
+		 * @param string with all level ids separated by comma
+		 * @param bool (if the action it's made by admin)
+		 * @return none
+		 */
+		private function handle_levels_assign($request_levels)
+		{
+				$levels = explode(',', $request_levels);
+				if ( empty( $levels ) ){
+						return;
+				}
+				foreach ( $levels as $lid ){
+						if ( \Indeed\Ihc\UserSubscriptions::getOne( $this->user_id, $lid )
+								&& strtotime( \Indeed\Ihc\UserSubscriptions::getExpireTimeForSubscription( $this->user_id, $lid ) ) > current_time( 'timestamp' ) ){
+								continue;
+						}
+						\Indeed\Ihc\UserSubscriptions::assign( $this->user_id, $lid );
+						$levelData = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+
+						if ( 	$levelData['payment_type'] == 'free' ){
+								\Indeed\Ihc\UserSubscriptions::makeComplete( $this->user_id, $lid, false );
+						}
+				}
+
+		}//end of handle_levels_assign()
+
+
+		protected function notify_user_send_password(){
+			/*
+			 * @param none
+			 * @return none
+			 */
+			 do_action( 'ihc_register_lite_action', $this->user_id, [ '{NEW_PASSWORD}' => $this->fields['user_pass'] ] );
+
+		}
+
+		///// RETURN ERROR
+		protected function return_errors(){
+			/*
+			 * set the global variable with the error string
+			 */
+			if (!empty($this->errors)){
+				global $ihc_error_register;
+				$ihc_error_register = $this->errors;
+			}
+		}
+
+		private function count_register_fields(){
+			$count = 0;
+			foreach ($this->register_fields as $v){
+				if ($v[$this->display_type] > 0){
+					$count++;
+				}
+			}
+			return $count;
+		}
+
+		protected function succes_message(){
+			/*
+			 * @param none
+			 * @return none
+			 */
+			if ($this->type=='create'){
+				$q_arg = 'create_message';
+			} else {
+				$q_arg = 'update_message';
+			}
+
+			//Change password
+			if(isset($_POST['ChangePass'])){
+				$q_arg = 'update_password';
+			}
+			$redirect = get_option('ihc_general_register_redirect');
+			$redirect = apply_filters( 'ump_public_filter_redirect_page_after_register', $redirect );
+
+			if ($redirect && $redirect!=-1 && $this->type=='create'){
+				//custom redirect
+				$url = get_permalink($redirect);
+				if (!$url){
+					$url = ihc_get_redirect_link_by_label($redirect, $this->user_id);
+					if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){
+						//if it's a external custom redirect we don't want to add extra params in url, so let's redirect from here
+						wp_redirect($url);
+						exit();
+					}
+				}
+			}
+
+			if (empty($url)){
+				$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			}
+
+			if ( $this->type=='create') {
+					$url = apply_filters('ihc_register_redirect_filter', $url, $this->user_id, (isset($_POST['lid'])) ? $_POST['lid'] : 0);
+			}
+
+
+			if ($this->bank_transfer_message){
+				/// bt redirect only to same page
+				$bt_params = array( 'ihc_register' => $q_arg,
+									'ihcbt' => 'true',
+									'ihc_lid' => $_POST['lid'],
+									'ihc_uid' => $this->user_id
+				);
+				if ($this->coupon){
+					$coupon_data = ihc_check_coupon($this->coupon, $_POST['lid']);
+					if ($coupon_data){
+						if ($coupon_data['discount_type']=='percentage'){
+							$bt_params['cp'] = $coupon_data['discount_value'];
+						} else {
+							$bt_params['cc'] = $coupon_data['discount_value'];
+						}
+						ihc_submit_coupon($this->coupon);
+					}
+				}
+
+				//country
+				if (!empty($_POST['ihc_country'])){
+					$bt_params['ihc_country'] = $_POST['ihc_country'];
+				}
+				if (!empty($_POST['ihc_state'])){
+					$bt_params['ihc_state'] = $_POST['ihc_state'];
+				}
+				$url = add_query_arg($bt_params, $url);
+			} else {
+				$url = add_query_arg( array( 'ihc_register' => $q_arg ), $url );
+			}
+
+			if (!empty($bt_params)){
+				$url .= '#ihc_bt_success_msg';
+			}
+
+			wp_redirect($url);
+			exit();
+		}
+
+		/**
+		 * @param none
+		 * @return string
+		 */
+		protected function printNonce()
+		{
+				$nonce = wp_create_nonce( 'ihc_user_add_edit_nonce' );
+				return "<input type='hidden' name='ihc_user_add_edit_nonce' value='$nonce' />";
+		}
+		private function print_tos($v=array()){
+				$str = '';
+				$tos_msg = stripslashes(get_option('ihc_register_terms_c'));//getting tos message
+				$tos_page_id = get_option('ihc_general_tos_page');
+				$tos_link = get_permalink($tos_page_id);
+				if (!$tos_msg || !$tos_page_id){
+						return '';
+				}
+				$view = new \Indeed\Ihc\IndeedView();
+				$data = array(
+						'class' 						=> (empty($v['class'])) ? '' : $v['class'],
+						'id'								=> 'ihc_tos_field_parent_' . rand(1,1000),
+						'tos_msg' 					=> $tos_msg,
+						'tos_link'					=> $tos_link,
+						'tos_page_id'				=> $tos_page_id,
+				);
+				return $view->setTemplate(IHC_PATH . 'public/views/register-tos.php')->setContentData($data, true)->getOutput();
+		}
+
+		private function print_captcha($v=array()){
+			$type = get_option( 'ihc_recaptcha_version' );
+			if ( $type !== false && $type == 'v3' ){
+					$key = get_option('ihc_recaptcha_public_v3');
+			} else {
+					$key = get_option('ihc_recaptcha_public');
+			}
+
+			if (empty($key)){
+					return '';
+			}
+			$view = new \Indeed\Ihc\IndeedView();
+			$data = array(
+					'class' 		=> (empty($v['class'])) ? '' : $v['class'],
+					'key'				=> $key,
+					'langCode'	=> indeed_get_current_language_code(),
+					'type'			=> $type,
+			);
+			return $view->setTemplate(IHC_PATH . 'public/views/register-captcha.php')->setContentData($data, true)->getOutput();
+		}
+
+		////SOCIAL MEDIA
+		private function social_register_request_data(){
+			$str = '';
+			if ($this->is_public){
+				if (!empty($_GET['ihc_fb'])){
+					$ihc_register_sm_value = 'fb';
+					$ihc_sm_value = $_GET['ihc_fb'];
+					$ihc_sm_name = 'ihc_fb';
+				} else if (!empty($_GET['ihc_tw'])){
+					$ihc_register_sm_value = 'tw';
+					$ihc_sm_value = $_GET['ihc_tw'];
+					$ihc_sm_name = 'ihc_tw';
+				} else if (!empty($_GET['ihc_in'])){
+					$ihc_register_sm_value = 'in';
+					$ihc_sm_value = $_GET['ihc_in'];
+					$ihc_sm_name = 'ihc_in';
+				} else if (!empty($_GET['ihc_tbr'])){
+					$ihc_register_sm_value = 'tbr';
+					$ihc_sm_value = $_GET['ihc_tbr'];
+					$ihc_sm_name = 'ihc_tbr';
+				} else if (!empty($_GET['ihc_ig'])){
+					$ihc_register_sm_value = 'ig';
+					$ihc_sm_value = $_GET['ihc_ig'];
+					$ihc_sm_name = 'ihc_ig';
+				} else if (!empty($_GET['ihc_vk'])){
+					$ihc_register_sm_value = 'vk';
+					$ihc_sm_value = $_GET['ihc_vk'];
+					$ihc_sm_name = 'ihc_vk';
+				} else if (!empty($_GET['ihc_goo'])){
+					$ihc_register_sm_value = 'goo';
+					$ihc_sm_value = $_GET['ihc_goo'];
+					$ihc_sm_name = 'ihc_goo';
+				}
+				if (!empty($ihc_register_sm_value) && !empty($ihc_sm_value) && !empty($ihc_sm_name)){
+					$str .= indeed_create_form_element(array('name'=>'ihc_sm_register', 'value'=>$ihc_register_sm_value, 'type'=>'hidden'));
+					$str .= indeed_create_form_element(array('name'=>$ihc_sm_name, 'value'=>$ihc_sm_value, 'type'=>'hidden'));
+				}
+			}
+			return $str;
+		}
+
+		private function register_with_social(){
+			/*
+			 * test if user was register with social. If true generate a password if it's not set
+			 * @param none
+			 * @return none
+			 */
+				if (isset($_POST['ihc_sm_register'])){
+					//generate password if it's not set
+					if (empty($_POST['pass1'])){
+						$password = wp_generate_password();
+						$_POST['pass1'] = $password;
+						$_POST['pass2'] = $password;
+					}
+
+					//add social key to current register_fields array
+					$name = 'ihc_' . $_POST['ihc_sm_register'];
+					$this->register_fields[] = array('name' => $name);
+
+				}
+		}//end of register_with_social
+
+		private function ihc_social_form()
+		{
+			 $view = new \Indeed\Ihc\IndeedView();
+			 return $view->setTemplate( IHC_PATH . 'public/views/register-social_form.php' )
+			 						 ->setContentData(array('url' => IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), true)
+									 ->getOutput();
+		}
+
+
+		public function goToPayment()
+		{
+				$lid = isset( $_POST['lid'] ) ? esc_sql( $_POST['lid'] ) : '';
+				if ( $lid === '' && isset( $_GET['lid'] ) ){
+						// in some rare cases ( payment for ulp course ), the level id is found in GET
+						$lid = $_GET['lid'];
+				}
+
+				if(isset($_POST['checkout-form']) && $_POST['checkout-form'] == 1){
+					//Checkout Section Inside
+					$options = array(
+							'uid'										=> $this->user_id,
+							'lid'										=> $lid,
+							'ihc_coupon'	  				=> esc_sql( (isset($_POST['coupon_used'])) ? $_POST['coupon_used'] : '' ),
+							'ihc_country'						=> esc_sql( (isset($_POST['ihc_country'])) ? $_POST['ihc_country'] : '' ),
+							'ihc_state'							=> esc_sql( (isset($_POST['ihc_state'])) ? $_POST['ihc_state'] : '' ),
+							'ihc_dynamic_price'			=> esc_sql( (isset($_POST['dynamic_price_set'])) ? $_POST['dynamic_price_set'] : '' ),
+							'defaultRedirect'				=> '',
+							'is_register'						=> $this->type == 'create' ? true : false,
+					);
+					$this->payment_gateway = esc_sql( (isset($_POST['payment_selected'])) ? $_POST['payment_selected'] : '' );
+
+				}else{
+					//OLD Workflow --> START
+					$options = array(
+							'uid'										=> $this->user_id,
+							'lid'										=> $lid,
+							'ihc_coupon'	  				=> $this->coupon,
+							'ihc_country'						=> esc_sql( (isset($_POST['ihc_country'])) ? $_POST['ihc_country'] : '' ),
+							'ihc_state'							=> get_user_meta( $this->user_id, 'ihc_state', true ),
+							'ihc_dynamic_price'			=> esc_sql( (isset($_POST['ihc_dynamic_price'])) ? $_POST['ihc_dynamic_price'] : '' ),
+							'defaultRedirect'				=> '',
+							'is_register'						=> $this->type == 'create' ? true : false,
+					);
+					//OLD Workflow --> END
+				}
+
+				$paymentObject = new \Indeed\Ihc\DoPayment( $options, $this->payment_gateway );
+				$paymentObject->processing();
+		}
+
+		//OLD Workflow --> START
 		private function insert_the_order($status='pending'){
 			/*
 			 * @param none
@@ -1896,266 +2096,61 @@ class UserAddEdit
 			}
 		}
 
-		/**
-		 * @param string with all level ids separated by comma
-		 * @param bool (if the action it's made by admin)
-		 * @return none
-		 */
-		private function handle_levels_assign($request_levels)
-		{
-				$levels = explode(',', $request_levels);
-				if ( empty( $levels ) ){
-						return;
+				private function add_level_details_on_register_form(){
+					/*
+					 * @param level id
+					 * @return string
+					 */
+					 if(ihcCheckCheckoutSetup()){
+							//NEW CHECKOUT
+							return;
+					 }
+
+					if ($this->current_level>-1){ /// get_option("ihc_register_show_level_price") &&
+						$this->global_js .= 'jQuery( window ).on( "load", function(){ihcUpdateCart();});';
+					}
 				}
-				foreach ( $levels as $lid ){
-						if ( \Indeed\Ihc\UserSubscriptions::getOne( $this->user_id, $lid )
-								&& strtotime( \Indeed\Ihc\UserSubscriptions::getExpireTimeForSubscription( $this->user_id, $lid ) ) > current_time( 'timestamp' ) ){
-								continue;
+
+				////COUPONS
+				public function set_coupon($coupon='')
+				{
+					$this->coupon = (isset($_POST['ihc_coupon'])) ? $_POST['ihc_coupon'] : $coupon;
+					if ($this->coupon){
+						$this->coupon = str_replace(' ', '', $this->coupon);
+						if (!empty($this->register_fields)){
+							$ihc_coupon = ihc_array_value_exists($this->register_fields, 'ihc_coupon', 'name');
+							if (isset($ihc_coupon) && $ihc_coupon!==FALSE){
+								unset($this->register_fields[$ihc_coupon]);
+							}
 						}
-						\Indeed\Ihc\UserSubscriptions::assign( $this->user_id, $lid );
-						$levelData = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+					}
+				}
 
-						if ( 	$levelData['payment_type'] == 'free' ){
-								\Indeed\Ihc\UserSubscriptions::makeComplete( $this->user_id, $lid, false );
+				public function save_coupon()
+				{
+						if ($this->coupon && $this->user_id){
+								$user_coupons = array();
+								$user_coupons[] = get_user_meta($this->user_id, 'ihc_coupon', TRUE);
+								$user_coupons[] = $this->coupon;
+								update_user_meta($this->user_id, 'ihc_coupon', $user_coupons);
 						}
 				}
-
-		}//end of handle_levels_assign()
-
-		///deprecated
-		protected function notify_user(){
-				//email notification to user
-				if ($this->type=='create'){
-					if (!empty($this->register_metas['ihc_register_new_user_role']) && $this->register_metas['ihc_register_new_user_role']=='pending_user'){
-						//PENDING
-						do_action( 'ihc_action_create_user_review_request', $this->user_id, (isset($_POST['lid'] )) ?  : 0);
-					} else {
-						do_action( 'ihc_action_create_user_register', $this->user_id, (isset($_POST['lid'] )) ?  : 0 );
-					}
-				} else {
-					do_action( 'ihc_action_update_user', $this->user_id );
-				}
-		}
-
-		protected function notify_user_send_password(){
-			/*
-			 * @param none
-			 * @return none
-			 */
-			 do_action( 'ihc_register_lite_action', $this->user_id, [ '{NEW_PASSWORD}' => $this->fields['user_pass'] ] );
-
-		}
-
-		///// RETURN ERROR
-		protected function return_errors(){
-			/*
-			 * set the global variable with the error string
-			 */
-			if (!empty($this->errors)){
-				global $ihc_error_register;
-				$ihc_error_register = $this->errors;
-			}
-		}
-
-		private function count_register_fields(){
-			$count = 0;
-			foreach ($this->register_fields as $v){
-				if ($v[$this->display_type] > 0){
-					$count++;
-				}
-			}
-			return $count;
-		}
-
-		protected function succes_message(){
-			/*
-			 * @param none
-			 * @return none
-			 */
-			if ($this->type=='create'){
-				$q_arg = 'create_message';
-			} else {
-				$q_arg = 'update_message';
-			}
-
-			$redirect = get_option('ihc_general_register_redirect');
-			$redirect = apply_filters( 'ump_public_filter_redirect_page_after_register', $redirect );
-
-			if ($redirect && $redirect!=-1 && $this->type=='create'){
-				//custom redirect
-				$url = get_permalink($redirect);
-				if (!$url){
-					$url = ihc_get_redirect_link_by_label($redirect, $this->user_id);
-					if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){ 
-						//if it's a external custom redirect we don't want to add extra params in url, so let's redirect from here
-						wp_redirect($url);
-						exit();
-					}
-				}
-			}
-
-			if (empty($url)){
-				$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; 
-			}
-
-			if ( $this->type=='create') {
-					$url = apply_filters('ihc_register_redirect_filter', $url, $this->user_id, (isset($_POST['lid'])) ? $_POST['lid'] : 0);
-			}
-
-
-			if ($this->bank_transfer_message){
-				/// bt redirect only to same page
-				$bt_params = array( 'ihc_register' => $q_arg,
-									'ihcbt' => 'true',
-									'ihc_lid' => $_POST['lid'],
-									'ihc_uid' => $this->user_id
-				);
-				if ($this->coupon){
-					$coupon_data = ihc_check_coupon($this->coupon, $_POST['lid']);
-					if ($coupon_data){
-						if ($coupon_data['discount_type']=='percentage'){
-							$bt_params['cp'] = $coupon_data['discount_value'];
-						} else {
-							$bt_params['cc'] = $coupon_data['discount_value'];
+				//DEPRECATED
+				private function ihc_is_req_conditional_field($field_meta=array()){
+					/*
+					 * @param array
+					 * @return none
+					 */
+					if (!empty($field_meta['type']) && $field_meta['type']=='conditional_text' ){
+						$field_name = $field_meta['name'];
+						if ($field_meta['conditional_text']!=$_POST[$field_name]){
+							if (!empty($field_meta['error_message'])){
+								$this->errors[$field_name] = ihc_correct_text($field_meta['error_message']);
+							} else {
+								$this->errors[$field_name] = esc_html__("Error");
+							}
 						}
-						ihc_submit_coupon($this->coupon);
 					}
 				}
-
-				//country
-				if (!empty($_POST['ihc_country'])){
-					$bt_params['ihc_country'] = $_POST['ihc_country'];
-				}
-				if (!empty($_POST['ihc_state'])){
-					$bt_params['ihc_state'] = $_POST['ihc_state'];
-				}
-				$url = add_query_arg($bt_params, $url);
-			} else {
-				$url = add_query_arg( array( 'ihc_register' => $q_arg ), $url );
-			}
-
-			if (!empty($bt_params)){
-				$url .= '#ihc_bt_success_msg';
-			}
-
-			wp_redirect($url);
-			exit();
-		}
-
-		////SOCIAL MEDIA
-		private function social_register_request_data(){
-			$str = '';
-			if ($this->is_public){
-				if (!empty($_GET['ihc_fb'])){
-					$ihc_register_sm_value = 'fb';
-					$ihc_sm_value = $_GET['ihc_fb'];
-					$ihc_sm_name = 'ihc_fb';
-				} else if (!empty($_GET['ihc_tw'])){
-					$ihc_register_sm_value = 'tw';
-					$ihc_sm_value = $_GET['ihc_tw'];
-					$ihc_sm_name = 'ihc_tw';
-				} else if (!empty($_GET['ihc_in'])){
-					$ihc_register_sm_value = 'in';
-					$ihc_sm_value = $_GET['ihc_in'];
-					$ihc_sm_name = 'ihc_in';
-				} else if (!empty($_GET['ihc_tbr'])){
-					$ihc_register_sm_value = 'tbr';
-					$ihc_sm_value = $_GET['ihc_tbr'];
-					$ihc_sm_name = 'ihc_tbr';
-				} else if (!empty($_GET['ihc_ig'])){
-					$ihc_register_sm_value = 'ig';
-					$ihc_sm_value = $_GET['ihc_ig'];
-					$ihc_sm_name = 'ihc_ig';
-				} else if (!empty($_GET['ihc_vk'])){
-					$ihc_register_sm_value = 'vk';
-					$ihc_sm_value = $_GET['ihc_vk'];
-					$ihc_sm_name = 'ihc_vk';
-				} else if (!empty($_GET['ihc_goo'])){
-					$ihc_register_sm_value = 'goo';
-					$ihc_sm_value = $_GET['ihc_goo'];
-					$ihc_sm_name = 'ihc_goo';
-				}
-				if (!empty($ihc_register_sm_value) && !empty($ihc_sm_value) && !empty($ihc_sm_name)){
-					$str .= indeed_create_form_element(array('name'=>'ihc_sm_register', 'value'=>$ihc_register_sm_value, 'type'=>'hidden'));
-					$str .= indeed_create_form_element(array('name'=>$ihc_sm_name, 'value'=>$ihc_sm_value, 'type'=>'hidden'));
-				}
-			}
-			return $str;
-		}
-
-		private function register_with_social(){
-			/*
-			 * test if user was register with social. If true generate a password if it's not set
-			 * @param none
-			 * @return none
-			 */
-				if (isset($_POST['ihc_sm_register'])){
-					//generate password if it's not set
-					if (empty($_POST['pass1'])){
-						$password = wp_generate_password();
-						$_POST['pass1'] = $password;
-						$_POST['pass2'] = $password;
-					}
-
-					//add social key to current register_fields array
-					$name = 'ihc_' . $_POST['ihc_sm_register'];
-					$this->register_fields[] = array('name' => $name);
-
-				}
-		}//end of register_with_social
-
-		private function ihc_social_form()
-		{
-			 $view = new \Indeed\Ihc\IndeedView();
-			 return $view->setTemplate( IHC_PATH . 'public/views/register-social_form.php' )
-			 						 ->setContentData(array('url' => IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), true)
-									 ->getOutput();
-		}
-
-		////COUPONS
-		public function set_coupon($coupon='')
-		{
-			$this->coupon = (isset($_POST['ihc_coupon'])) ? $_POST['ihc_coupon'] : $coupon;
-			if ($this->coupon){
-				$this->coupon = str_replace(' ', '', $this->coupon);
-				if (!empty($this->register_fields)){
-					$ihc_coupon = ihc_array_value_exists($this->register_fields, 'ihc_coupon', 'name');
-					if (isset($ihc_coupon) && $ihc_coupon!==FALSE){
-						unset($this->register_fields[$ihc_coupon]);
-					}
-				}
-			}
-		}
-
-		public function save_coupon()
-		{
-				if ($this->coupon && $this->user_id){
-						$user_coupons = array();
-						$user_coupons[] = get_user_meta($this->user_id, 'ihc_coupon', TRUE);
-						$user_coupons[] = $this->coupon;
-						update_user_meta($this->user_id, 'ihc_coupon', $user_coupons);
-				}
-		}
-
-		public function goToPayment()
-		{
-				$lid = isset( $_POST['lid'] ) ? esc_sql( $_POST['lid'] ) : '';
-				if ( $lid === '' && isset( $_GET['lid'] ) ){
-						// in some rare cases ( payment for ulp course ), the level id is found in GET
-						$lid = $_GET['lid'];
-				}
-				$options = array(
-						'uid'										=> $this->user_id,
-						'lid'										=> $lid,
-						'ihc_coupon'	  				=> $this->coupon,
-						'ihc_country'						=> esc_sql( (isset($_POST['ihc_country'])) ? $_POST['ihc_country'] : '' ),
-						'ihc_state'							=> get_user_meta( $this->user_id, 'ihc_state', true ),
-						'ihc_dynamic_price'			=> esc_sql( (isset($_POST['ihc_dynamic_price'])) ? $_POST['ihc_dynamic_price'] : '' ),
-						'defaultRedirect'				=> '',
-						'is_register'						=> $this->type == 'create' ? true : false,
-				);
-				$paymentObject = new \Indeed\Ihc\DoPayment( $options, $this->payment_gateway );
-				$paymentObject->processing();
-		}
 
 }

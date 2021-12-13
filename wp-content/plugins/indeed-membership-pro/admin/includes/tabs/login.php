@@ -1,6 +1,6 @@
 <?php $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'design';?>
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item <?php echo ($subtab =='design') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=design';?>"><?php esc_html_e('Login Showcase', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($subtab =='design') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=design';?>"><?php esc_html_e('Login Form Showcase', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($subtab =='msg') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=msg';?>"><?php esc_html_e('Custom Messages', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
@@ -47,13 +47,13 @@
 			</div>
 			<form  method="post" >
 				<input type="hidden" name="ihc_admin_login_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_login_settings_nonce' );?>" />
-				<div class="ihc-login-showcase-sectionone">
+				<div class="ihc-login-showcase-sectionone1">
 					<div class="ihc-stuffbox">
-						<h3><?php esc_html_e('Showcase Display', 'ihc');?></h3>
+						<h3><?php esc_html_e('Login Form Display', 'ihc');?></h3>
 						<div class="inside">
 						  <div class="iump-register-select-template">
-						  <?php esc_html_e('Login Template:', 'ihc');?>
-							<select name="ihc_login_template" id="ihc_login_template" onChange="ihcLoginPreview();">
+						  <?php esc_html_e('Login Form Template:', 'ihc');?>
+							<select name="ihc_login_template" id="ihc_login_template" onChange="ihcLoginPreview();" class="ihc_profile_form_template-st">
 							<?php
 								foreach ($login_templates as $k=>$value){
 									echo '<option value="ihc-login-template-'.$k.'"'. ($meta_arr['ihc_login_template']=='ihc-login-template-'.$k ? 'selected': '') .'>'.$value.'</option>';
@@ -65,16 +65,16 @@
 							<div id="ihc-preview-login"></div>
 						</div>
 							<div class="ihc-wrapp-submit-bttn">
-								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
 							</div>
 						</div>
 					</div>
 
 
 				</div>
-			   <div class="ihc-login-showcase-sectiontwo">
+			   <div class="ihc-login-showcase-sectiontwo2">
 				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Additional Display Options', 'ihc');?></h3>
+					<h3><?php esc_html_e('Additional Options', 'ihc');?></h3>
 					<div class="inside">
 							<div class="iump-form-line iump-no-border">
 									<input type="checkbox" onClick="checkAndH(this, '#ihc_login_remember_me');ihcLoginPreview();" <?php if($meta_arr['ihc_login_remember_me']==1){
@@ -122,16 +122,16 @@
 									<input type="hidden" name="ihc_login_show_recaptcha" value="<?php echo $meta_arr['ihc_login_show_recaptcha'];?>" id="ihc_login_show_recaptcha"/>
 							</div>
 							<div class="ihc-wrapp-submit-bttn">
-								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
 							</div>
 						</div>
 				  </div>
 				  <div class="ihc-stuffbox">
-						<h3><?php esc_html_e('Custom CSS', 'ihc');?></h3>
+						<h3><?php esc_html_e('Additional Custom CSS', 'ihc');?></h3>
 						<div class="inside">
-							<textarea id="ihc_login_custom_css" name="ihc_login_custom_css" onBlur="ihcLoginPreview();" class="ihc-dashboard-textarea"><?php echo stripslashes($meta_arr['ihc_login_custom_css']);?></textarea>
+							<textarea id="ihc_login_custom_css" name="ihc_login_custom_css" onBlur="ihcLoginPreview();" class="ihc-dashboard-textarea-full"><?php echo stripslashes($meta_arr['ihc_login_custom_css']);?></textarea>
 							<div class="ihc-wrapp-submit-bttn">
-								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
 							</div>
 						</div>
 					</div>
@@ -147,10 +147,10 @@
 			<form  method="post" >
 				<input type="hidden" name="ihc_admin_login_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_login_settings_nonce' );?>" />
 				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Messages:', 'ihc');?></h3>
+					<h3><?php esc_html_e('Custom Message:', 'ihc');?></h3>
 					<div class="inside">
 						<div class="ihc-custom-messages-sectionone">
-							<h2><?php esc_html_e('Login Messages', 'ihc');?></h2>
+							<h4><?php esc_html_e('Login Form Messages:', 'ihc');?></h4>
 							<div>
 								<div class="iump-labels-special"><?php esc_html_e('Successfully Message:', 'ihc');?></div>
 								<textarea name="ihc_login_succes" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_login_succes']);?></textarea>
@@ -174,7 +174,7 @@
 						</div>
 
 						<div class="ihc-custom-messages-sectiontwo">
-							<h2><?php esc_html_e('Reset Password Messages', 'ihc');?></h2>
+							<h4><?php esc_html_e('Reset Password Messages:', 'ihc');?></h4>
 							<div>
 								<div class="iump-labels-special"><?php esc_html_e('Successfully Message:', 'ihc');?></div>
 								<textarea name="ihc_reset_msg_pass_ok" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_reset_msg_pass_ok']);?></textarea>
@@ -198,7 +198,7 @@
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
 						</div>
 					</div>
 				</div>

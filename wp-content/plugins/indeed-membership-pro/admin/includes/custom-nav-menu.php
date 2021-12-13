@@ -1,12 +1,12 @@
 <?php
 add_action( 'wp_nav_menu_item_custom_fields', 'ihc_wp_menu_custom_settings', 999, 5 );
 if ( !function_exists( 'ihc_wp_menu_custom_settings' ) ):
-function ihc_wp_menu_custom_settings( $item_id, $item, $depth, $args, $id )
+function ihc_wp_menu_custom_settings( $item_id=0, $item=null, $depth=null, $args=[], $id=0 )
 {
 	?>
 	<!---------------------------- INDEED CUSTOM SECTION  -------------------------------------------->
 							<span class="ihc-js-custom-nav-menu-labels" data-remove="<?php esc_html_e('Removing tag', 'ihc');?>"></span>
-							<?php wp_enqueue_script( 'ihc-custom-nav-menu', IHC_URL . 'admin/assets/js/custom-nav-menu.js', [], 1.1 );?>
+							<?php wp_enqueue_script( 'ihc-custom-nav-menu', IHC_URL . 'admin/assets/js/custom-nav-menu.js', ['jquery'], 10.1 );?>
 
 							<div>
 								<h5>Ultimate Membership Pro - <?php esc_html_e('Menu item Restriction', 'ihc');?></h5>

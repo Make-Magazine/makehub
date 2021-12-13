@@ -35,8 +35,11 @@ class ZapierSendData
             return false;
         }
         $data = array(
+            'user_id'             => $uid,
+            'user_email'          => \Ihc_Db::user_get_email($uid),
             'user_full_name'      => \Ihc_Db::getUserFulltName($uid),
-            'level_name'          => \Ihc_Db::get_level_name_by_lid($lid)
+            'membership_id'       => $lid,
+            'membership_name'     => \Ihc_Db::get_level_name_by_lid($lid)
         );
         $data = $data + \Ihc_Db::getLastOrderDataByUserAndLevel( $uid, $lid );
         $endpoint = $this->settings['ihc_zapier_new_order_webhook'];
@@ -49,8 +52,11 @@ class ZapierSendData
             return false;
         }
         $data = array(
+            'user_id'             => $uid,
+            'user_email'          => \Ihc_Db::user_get_email($uid),
             'user_full_name'      => \Ihc_Db::getUserFulltName($uid),
-            'level_name'          => \Ihc_Db::get_level_name_by_lid($lid)
+            'membership_id'       => $lid,
+            'membership_name'     => \Ihc_Db::get_level_name_by_lid($lid)
         );
         $data = $data + \Ihc_Db::getLastOrderDataByUserAndLevel( $uid, $lid );
         $endpoint = $this->settings['ihc_zapier_order_completed_webhook'];

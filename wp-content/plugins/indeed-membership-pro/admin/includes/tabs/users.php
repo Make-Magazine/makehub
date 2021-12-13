@@ -6,8 +6,8 @@
 	<div class="ihc-clear"></div>
 </div>
 <?php
-wp_enqueue_script('ihcAdminSendEmail', IHC_URL . 'admin/assets/js/ihcAdminSendEmail.js', array(), null );
-wp_enqueue_script( 'ihcSearchUsers', IHC_URL . 'admin/assets/js/search_users.js', array(), null );
+wp_enqueue_script( 'ihcAdminSendEmail', IHC_URL . 'admin/assets/js/ihcAdminSendEmail.js', ['jquery'], 10.1 );
+wp_enqueue_script( 'ihcSearchUsers', IHC_URL . 'admin/assets/js/search_users.js', ['jquery'], 10.1 );
 
 echo ihc_inside_dashboard_error_license();
 $is_uap_active = ihc_is_uap_active();

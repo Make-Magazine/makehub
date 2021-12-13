@@ -34,8 +34,8 @@ if ( substr( $url, -1 ) != '/' ){
 				<input type="hidden" name="ihc_direct_login_enabled" value="<?php echo $data['metas']['ihc_direct_login_enabled'];?>" id="ihc_direct_login_enabled" />
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>
@@ -69,7 +69,7 @@ if ( substr( $url, -1 ) != '/' ){
           <div class="iump-form-line">
               <h2 id="direct_link_value"></h2>
           </div>
-          <div class="ihc-submit-form">
+          <div class="ihc-wrapp-submit-bttn ihc-submit-form">
             <button class="button button-primary button-large" id="direct_link_generate_link"><?php esc_html_e('Generate link', 'ihc');?></button>
           </div>
       </div>

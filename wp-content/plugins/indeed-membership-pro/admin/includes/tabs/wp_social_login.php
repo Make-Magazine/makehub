@@ -110,8 +110,8 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 					<a href="<?php echo admin_url('options-general.php?page=wordpress-social-login');?>"><?php esc_html_e('Wordpress Social Login - Settings', 'ihc');?></a>
 				</div>
 
-				<div class="ihc-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 
 			<?php endif;?>

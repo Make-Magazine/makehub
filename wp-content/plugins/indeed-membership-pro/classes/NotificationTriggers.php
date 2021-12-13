@@ -41,6 +41,9 @@ class NotificationTriggers
         add_action( 'ihc_do_action_on_login', [ $this, 'onLogin' ], 999, 1 );
         // Before Subscription Payment due
         add_action( 'ihc_action_subscription_payment_due', [ $this, 'beforeSubscriptionPaymentDue'], 999, 2 );
+        
+        // Upcoming Card Expiry Reminders
+        add_action( 'ihc_action_card_expire_reminder', [ $this, 'beforeCardExpire'], 999, 2 );
     }
 
     /**
@@ -77,9 +80,9 @@ class NotificationTriggers
      */
     public function bankTransferCharge( $args=[] )
     {
-        if ( isset( $args['first_amount'] ) && $args['first_amount'] !=='' ){
-            $args['amount'] = $args['first_amount'];
-        }
+      if (isset($args['order_id'])){
+        $args['amount'] = \Ihc_Db::getOrderAmount($args['order_id']);
+     }   
         $notification = new \Indeed\Ihc\Notifications();
         $notification->setUid( $args['uid'] )
                      ->setLid( $args['lid'] )
@@ -515,6 +518,22 @@ class NotificationTriggers
                              ->setType( 'user_before_subscription_payment_due' )
                              ->setMessageVariables( [] )
                              ->send();
+    }
+    
+    /**
+     * @param int
+     * @param int
+     * @return string
+     */
+    public function beforeCardExpire( $uid=0, $lid=0 )
+    {
+        $notification = new \Indeed\Ihc\Notifications();
+        $sent = $notification->setUid( $uid )
+                             ->setLid( $lid )
+                             ->setType( 'upcoming_card_expiry_reminder' )
+                             ->setMessageVariables( [] )
+                             ->send();
+
     }
 
 }

@@ -207,6 +207,9 @@ class PayPalExpressCheckoutNVP
     public function redirectToSuccessPage()
     {
         $successPage = get_option( 'ihc_paypal_express_return_page' );
+        if ( empty( $successPage ) || $successPage == -1 ){
+          $successPage = get_option('ihc_thank_you_page');
+        }
         if ( $successPage ){
             $successPage = get_permalink( $successPage );
         }

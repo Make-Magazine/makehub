@@ -17,6 +17,9 @@ class Crons
         // used in due payment notification
         add_action( 'ihc_check_subscription_payment_due', [ $this, 'onSubscriptionPaymentDue' ], 82 );
 
+        // used in Card Expiry Reminder notification
+        add_action( 'ihc_check_card_expire_time', [ $this, 'onCardExpiryReminder' ], 82 );
+
         // used in "user enter in grace period" notification
         add_action( 'ihc_check_subscription_enter_grace_period', [ $this, 'onSubscriptionEnterGracePeriod'], 82 );
 
@@ -57,6 +60,11 @@ class Crons
         // used in due payment notification
         if ( !wp_get_schedule( 'ihc_check_subscription_payment_due' ) ){
             wp_schedule_event( time(), 'daily', 'ihc_check_subscription_payment_due' );
+        }
+
+        // used in Card Expiry Reminder notification
+        if ( !wp_get_schedule( 'ihc_check_card_expire_time' ) ){
+            wp_schedule_event( time(), 'daily', 'ihc_check_card_expire_time' );
         }
 
         // used in "user enter in grace period" notification
@@ -169,6 +177,56 @@ class Crons
         }
     }
 
+    /**
+     * Used in Card Expiry Reminder Notification.
+     * Run every 24hours
+     * @param none
+     * @return none
+     */
+    public function onCardExpiryReminder()
+    {
+        /*
+        $lastRunTime = get_option( 'ihc_check_card_expiry_time-last_run_time' );
+        $dayOfMonth = get_option( 'ihc_notification_card_expiry_time_interval' );
+        return;
+        //Check any Card that will expire on the next Calendar Month.
+
+        $currentTime = indeed_get_unixtimestamp_with_timezone();
+        if ( $lastRunTime === false ){
+            $lastRunTime = $currentTime - 24 * 3600;
+        }
+        // update last time run
+        update_option( 'ihc_check_card_expiry_time-last_run_time', $currentTime );
+
+
+        if ( $timeDiff === false ){
+            $timeDiff = 1;
+        }
+        $timeDiff = $timeDiff * 24 * 60 * 60;
+        $startTime = $lastRunTime + $timeDiff;
+        $endTime = $currentTime + $timeDiff;
+        */
+        $dayOfMonth = get_option( 'ihc_notification_card_expiry_time_interval' );
+        $currentDay = date( 'd' );
+        if ( (int)$dayOfMonth !== (int)$currentDate ){
+            return;
+        }
+
+        //Check for expired Cards
+        $month = date( 'm', strtotime("next month") );
+        $year = date( 'y', strtotime("next month") );
+        $subscriptions = \Ihc_Db::stripeConnectGetCardsThatWillExpire( $month, $year );
+
+        //Check for exp_year and exp_month and return uid & lid
+
+        if ( !$subscriptions ){
+            return;
+        }
+        foreach ( $subscriptions as $subscription ){
+            do_action( 'ihc_action_card_expire_reminder', $subscription['uid'], $subscription['lid'] );
+        }
+
+    }
     /**
       * Used in Enter Grace Period Notification.
       * Run every 12hours

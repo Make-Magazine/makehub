@@ -7,7 +7,7 @@ if ($dashboard_notifications!==FALSE && $dashboard_notifications!=0){
 
 $url = get_admin_url() . 'admin.php?page=ihc_manage';
 
-wp_enqueue_script( 'ihc-manage-page', IHC_URL . 'admin/assets/js/manage-page.js', [], 1.1 );
+wp_enqueue_script( 'ihc-manage-page', IHC_URL . 'admin/assets/js/manage-page.js', ['jquery'], 10.1 );
 $tab = 'dashboard';
 if(isset($_REQUEST['tab'])){
 	 $tab = $_REQUEST['tab'];
@@ -30,7 +30,8 @@ $tabs_arr = array(
 				  );
 ?>
 <span class="ihc-js-admin-messages"
-			data-delete_level="<?php esc_html_e( 'Are you sure that you want to delete this level?', 'ihc' );?>"
+			data-delete_user="<?php esc_html_e( 'Are you sure that you want to delete this Member?', 'ihc' );?>"
+			data-delete_level="<?php esc_html_e( 'Are you sure that you want to delete this Membership?', 'ihc' );?>"
 			data-delete_transaction="<?php esc_html_e( 'Are you sure that you want to delete this transaction?', 'ihc' );?>"
 			data-delete_item="<?php esc_html_e( 'Are you sure that you want to delete this item?', 'ihc' );?>"
 			data-delete_order="<?php esc_html_e( 'Are you sure that you want to delete this order?', 'ihc' );?>"
@@ -376,6 +377,9 @@ $tabs_arr = array(
 			case 'profile-form':
 				require_once IHC_PATH . 'admin/includes/tabs/profile-form.php';
 				break;
+			case 'thank-you-page':
+				require_once IHC_PATH . 'admin/includes/tabs/thank-you-page.php';
+				break;
 			default :
 				do_action( 'ump_print_admin_page', $tab );
 				break;
@@ -386,12 +390,12 @@ $tabs_arr = array(
 </div>
 <div class="ihc-footer-wrap">
 	<div class="ihc-additional-help">
-	<div class="ihc-footer-text"><strong>Ultimate Membership Pro v. <?php echo $plugin_vs; ?></strong> Wordpress Plugin by <a href="https://codecanyon.net/user/azzaroco/portfolio?ref=azzaroco" target="_blank">azzaroco</a></div>
-	<a href="https://codecanyon.net/item/ultimate-membership-pro-wordpress-plugin/12159253?ref=azzaroco" target="_blank" title="Support us with 5-stars Rating for further development" class="button float_right ihc-black-button"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 5-stars Rating </a>
-	<a href="http://help.wpindeed.com/ultimate-membership-pro/" target="_blank" title="Knowledge Base" class="button float_right ihc-green-button"><i class="fa fa-book"></i> Knowledge Base</a>
+	<div class="ihc-footer-text"><strong>Ultimate Membership Pro v. <?php echo $plugin_vs; ?></strong> Wordpress Plugin by <a href="https://wpindeed.com/envato-portfolio" target="_blank">azzaroco</a></div>
+	<a href="https://wpindeed.com/ultimate-membership-pro" target="_blank" title="Support us with 5-stars Rating for further development" class="button float_right ihc-black-button"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 5-stars Rating </a>
+	<a href="https://help.wpindeed.com/ultimate-membership-pro/" target="_blank" title="Knowledge Base" class="button float_right ihc-green-button"><i class="fa fa-book"></i> Knowledge Base</a>
     <a href="https://www.youtube.com/playlist?list=PLmOiaKgLhsFlhpkMb_fHKV45u4qZ1IZHd" target="_blank" title="Video Tutorials" class="button float_right ihc-red-button"><i class="fa fa-book"></i> Video Tutorials</a>
     <a href="https://store.wpindeed.com/addon/category/ultimate-membership-pro/" target="_blank" title="Video Tutorials" class="button float_right ihc-blue-button"><i class="fa fa-book"></i> Extra AddOns</a>
-	<a href="http://codecanyon.net/downloads/" target="_blank" title="Download Item" class="button float_right"><i class="fa fa-download"></i> Download</a>
+	<a href="https://codecanyon.net/downloads/" target="_blank" title="Download Item" class="button float_right"><i class="fa fa-download"></i> Download</a>
 	</div>
 </div>
 <div class="ihc-right-menu">

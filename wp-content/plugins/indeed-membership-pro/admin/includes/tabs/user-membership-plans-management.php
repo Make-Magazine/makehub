@@ -3,7 +3,7 @@ $level_select_options[-1] = '...';
 foreach ( $subscriptions as $k=>$v ){
     $level_select_options[$k] = $v['label'];
 }
-wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'admin/assets/js/user-memberships-management.js' );
+wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'admin/assets/js/user-memberships-management.js', ['jquery'], 10.1 );
 ?>
 
 <a id="ihc_membeship_select_wrapper"></a>
@@ -32,7 +32,7 @@ wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'admin/assets/js/
 
       <h2><?php esc_html_e( 'Membership Plans', 'ihc');?></h2>
       <p><?php esc_html_e( 'Member signed memberships list', 'ihc');?></p>
-      
+
 
       <?php $extraTableClass = empty( $userSubscriptions ) ? 'ihc-display-none' : '';?>
       <table class="wp-list-table widefat fixed tags ihc-js-membership-table <?php echo $extraTableClass;?>" >
@@ -149,14 +149,14 @@ wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'admin/assets/js/
 
 
                         <?php if ( $subscription['expire_time'] != '0000-00-00 00:00:00' ):?>
-
+                            <?php $StripeSubscription = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscription[ 'id' ], 'ihc_stripe_subscription_id' ); ?>
                             <?php // Pause Button ?>
-                            <?php if ( ( $accessType == 'unlimited' || $accessType == 'limited' || $accessType == 'date_interval'  ) && strtotime( $subscription['expire_time'] ) > indeed_get_unixtimestamp_with_timezone() ):?>
+                            <?php if ( ( $accessType == 'unlimited' || $accessType == 'limited' || $accessType == 'date_interval' || isset($StripeSubscription) ) && strtotime( $subscription['expire_time'] ) > indeed_get_unixtimestamp_with_timezone() ):?>
                                 <div class='ihc-js-pause-user-level ihc-pointer' data-lid='<?php echo $subscription['level_id'];?>' data-subscription_id="<?php echo $subscription[ 'id' ];?>" ><?php esc_html_e( 'Pause', 'ihc' );?></div>
                             <?php endif;?>
 
                             <?php // Resume Button ?>
-                            <?php if ( ( $accessType == 'unlimited' || $accessType == 'limited' || $accessType == 'date_interval'  ) && $subscriptionStatus['status'] == 4 ):?>
+                            <?php if ( ( $accessType == 'unlimited' || $accessType == 'limited' || $accessType == 'date_interval' || isset($StripeSubscription) ) && $subscriptionStatus['status'] == 4 ):?>
                                   <div class='ihc-js-reactivate-user-level ihc-pointer' data-lid='<?php echo $subscription['level_id'];?>' data-subscription_id="<?php echo $subscription[ 'id' ];?>" ><?php esc_html_e( 'Resume', 'ihc' );?></div>
                             <?php endif;?>
 

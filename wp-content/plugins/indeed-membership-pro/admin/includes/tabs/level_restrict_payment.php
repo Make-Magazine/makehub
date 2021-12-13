@@ -37,8 +37,8 @@ $payments = ihc_get_active_payments_services();
 				<input type="hidden" name="ihc_level_restrict_payment_enabled" value="<?php echo $data['metas']['ihc_level_restrict_payment_enabled'];?>" id="ihc_level_restrict_payment_enabled" />
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -102,8 +102,8 @@ $payments = ihc_get_active_payments_services();
 						<input type="hidden" name="ihc_level_restrict_payment_values[<?php echo $id;?>]" value="<?php echo $excluded_values;?>" id="<?php echo $id . 'excludedforlevel';?>"/>
 				</div>
 
-				<div class="ihc-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>

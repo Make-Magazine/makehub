@@ -113,7 +113,7 @@ if ( !$orderId || !$orderData ):?>
     </div>
 
 			<div class="ihc-wrapp-submit-bttn">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="save_edit_order" class="button button-primary button-large" />
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="save_edit_order" class="button button-primary button-large" />
 			</div>
     </div>
     <div class="ihc-order-edit-rightside">
@@ -183,6 +183,14 @@ if ( !$orderId || !$orderData ):?>
                               $transactionLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
                             }
                             break;
+                          case 'stripe_connect':
+                          $key = get_option( 'ihc_stripe_connect_live_mode' );
+                          if ( $key == false ){
+                              $transactionLink = 'https://dashboard.stripe.com/test/payments/' . $transactionId;
+                            } else {
+                              $transactionLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
+                            }
+                            break;
                           case 'mollie':
                             $transactionLink = 'https://www.mollie.com/dashboard/payments/' . $transactionId;
                             break;
@@ -193,6 +201,20 @@ if ( !$orderId || !$orderData ):?>
                             }
                             $transactionLink = 'https://secure.2checkout.com/cpanel/order_info.php?refno=' . $transactionId;
                             break;
+                          case 'braintree':
+      											if(get_option( 'ihc_braintree_merchant_id' )){
+      												$merchantID = get_option( 'ihc_braintree_merchant_id' );
+      												if ( get_option( 'ihc_braintree_sandbox' )){
+      													$transactionLink = 'https://sandbox.braintreegateway.com/merchants/'.$merchantID.'/transactions/' . $transactionId;
+      												}else{
+      													$transactionLink = 'https://braintreegateway.com/merchants/'.$merchantID.'/transactions/' . $transactionId;
+      												}
+      											}
+
+      											break;
+                        default:
+                            	$transactionLink = '#';
+                              break;
                     }
                     ?>
                     (<a target="_blank" title="<?php esc_html_e('Check Transaction on '.$payment_gateway.'', 'ihc'); ?>" href="<?php echo $transactionLink;?>"><?php echo $transactionId;?></a>)
@@ -221,7 +243,7 @@ if ( !$orderId || !$orderData ):?>
             <?php endif;?>
         <div class="ihc-order-edit-box-links">
           <?php if ( isset( $orderMeta['ihc_payment_type'] )
-                && in_array( $orderMeta['ihc_payment_type'], [ 'stripe', 'paypal', 'paypal_express_checkout', 'stripe_checkout_v2', 'mollie', 'twocheckout' ] ) ) :?>
+                && in_array( $orderMeta['ihc_payment_type'], [ 'stripe', 'paypal', 'paypal_express_checkout', 'stripe_checkout_v2', 'stripe_connect', 'mollie', 'twocheckout' ] ) ) :?>
             <?php
             $chargingPlan = '';
             $refundLink = '';
@@ -259,6 +281,20 @@ if ( !$orderId || !$orderData ):?>
                 case 'stripe_checkout_v2':
                   $key = get_option( 'ihc_stripe_checkout_v2_publishable_key' );
                   if ( strpos( $key, 'pk_test' ) !== false ){
+                    if ( !empty( $orderMeta['is_recurring'] ) && isset( $orderMeta['subscription_id'] ) && $orderMeta['subscription_id'] != '' ){
+                        $chargingPlan = 'https://dashboard.stripe.com/test/subscriptions/' . $orderMeta['subscription_id'];
+                    }
+                    $refundLink = 'https://dashboard.stripe.com/test/payments/' . $transactionId;
+                  } else {
+                    if ( !empty( $orderMeta['is_recurring'] ) && isset( $orderMeta['subscription_id'] ) && $orderMeta['subscription_id'] != '' ){
+                        $chargingPlan = 'https://dashboard.stripe.com/subscriptions/' . $orderMeta['subscription_id'];
+                    }
+                    $refundLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
+                  }
+                  break;
+                case 'stripe_connect':
+                $key = get_option( 'ihc_stripe_connect_live_mode' );
+                if ( $key == false ){
                     if ( !empty( $orderMeta['is_recurring'] ) && isset( $orderMeta['subscription_id'] ) && $orderMeta['subscription_id'] != '' ){
                         $chargingPlan = 'https://dashboard.stripe.com/test/subscriptions/' . $orderMeta['subscription_id'];
                     }

@@ -43,8 +43,8 @@ endforeach;
 				<input type="hidden" name="ihc_account_page_menu_enabled" value="<?php echo $data['metas']['ihc_account_page_menu_enabled'];?>" id="ihc_account_page_menu_enabled" />
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -89,8 +89,8 @@ endforeach;
 			 </div>
 
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -154,8 +154,8 @@ endforeach;
 				</table>
 			</div>
 
-			<div class="ihc-submit-form"">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

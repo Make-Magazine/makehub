@@ -63,7 +63,9 @@ class IndeedImport{
 				foreach ($xml_object->$entity_name->children() as $object_key=>$object){
 					$user_data = (array)$object;
 					$user = get_user_by('ID', $user_data['ID']);
+					
 					if ($user){
+						
 						continue;
 					}
 					$user = get_user_by('user_login', $user_data['user_login']);
@@ -74,8 +76,10 @@ class IndeedImport{
 					if ($user){
 						continue;
 					}
+					
 					Ihc_Db::custom_insert_user_with_ID($user_data);
 				}
+				
 				break;
 			case 'options':
 					foreach ($xml_object->$entity_name->children() as $meta_name=>$meta_value){
@@ -96,19 +100,20 @@ class IndeedImport{
 				break;
 			case 'usermeta':
 					foreach ($xml_object->$entity_name->children() as $meta_key=>$object){
-						if (!Ihc_Db::does_usermeta_exists($object->user_id, $object->meta_key)){
+						if (!Ihc_Db::does_usermeta_exists((int) $object->user_id, (string) $object->meta_key)){
 							/// post meta does not exists
-							Ihc_Db::custom_insert_usermeta($object->user_id, $object->meta_key, $object->meta_value);
+							Ihc_Db::custom_insert_usermeta((int) $object->user_id, (string) $object->meta_key, (string) $object->meta_value);
 						}
 					}
+				
 				break;
 			case 'indeed_wp_capabilities':
 					global $wpdb;
 					$meta_key = $wpdb->get_blog_prefix() . 'capabilities';
 					foreach ($xml_object->$entity_name->children() as $object){
-						if (!Ihc_Db::does_usermeta_exists($object->user_id, $meta_key)){
+						if (!Ihc_Db::does_usermeta_exists((int) $object->user_id, $meta_key)){
 							/// post meta does not exists
-							Ihc_Db::custom_insert_usermeta($object->user_id, $meta_key, $object->meta_value);
+							Ihc_Db::custom_insert_usermeta((int) $object->user_id, $meta_key, (string) $object->meta_value);
 						}
 					}
 				break;

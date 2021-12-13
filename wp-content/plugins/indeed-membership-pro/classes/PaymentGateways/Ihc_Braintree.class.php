@@ -254,7 +254,7 @@ class Ihc_Braintree{
 		 * @param none
 		 * @return none
 		 */
-		require_once IHC_PATH . 'classes/PaymentGateways/braintree/lib/Braintree.php';
+		require_once IHC_PATH . 'classes/gateways/libraries/braintree_v1/lib/Braintree.php';
 		$meta = ihc_return_meta_arr('payment_braintree');
 		if ($meta['ihc_braintree_sandbox']){
 			Braintree_Configuration::environment('sandbox');
@@ -379,6 +379,94 @@ class Ihc_Braintree{
 		return $str;
 	}
 
+	public function getCheckoutform(){
+		/*
+		 * @param none
+		 * @return string
+		 */
+		$str = '';
+		$meta = ihc_return_meta_arr('payment_braintree');
+	
+		$months = array();
+		for ($i=1; $i<13; $i++){
+			$months[$i] = $i;
+		}
+		$y = date("y");
+		$payment_fields = array(
+								1 => array(
+											'name' => 'ihc_braintree_card_number',
+											'type' => 'number',
+											'label' => esc_html__('Card Number', 'ihc'),
+								),
+								2 => array(
+											'name' => 'ihc_braintree_card_expire_month',
+											'type' => 'select',
+											'label' => esc_html__('Expiration Month', 'ihc'),
+											'multiple_values' => $months,
+											'value' => '',
+								),
+								3 => array(
+											'name' => 'ihc_braintree_card_expire_year',
+											'type' => 'number',
+											'label' => esc_html__('Expiration Year', 'ihc'),
+											'min' => $y,
+											'max' => 2099,
+											'value' => $y,
+								),
+								4 => array(
+											'name' => 'ihc_braintree_cvv',
+											'type' => 'number',
+											'label' => esc_html__('CVV', 'ihc'),
+											'max' => 9999,
+											'min' => 1,
+								),
+								5 => array(
+											'name' => 'ihc_braintree_cardholderName',
+											'type' => 'text',
+											'label' => esc_html__('Name on the Card', 'ihc'),
+								),
+		);
+		
+		$fields = array(
+								'ihc_braintree_cardholderName' => array(
+											'value' => '',
+								),
+								'ihc_braintree_card_number' => array(
+											'value' => '',
+								),
+								'ihc_braintree_card_expire_month' => array(
+											'value' => '',
+								),
+								'ihc_braintree_card_expire_year' => array(
+											'value' => '',
+											'min' => $y,
+											'max' => 99,
+								),
+								'ihc_braintree_cvv' => array(
+											'value' => '',
+								),
+								
+		);
+		if ($meta['ihc_braintree_sandbox']){
+			$fields['ihc_braintree_cardholderName']['value'] = 'John Doe';
+			$fields['ihc_braintree_card_number']['value'] = '4500600000000061';
+			$fields['ihc_braintree_card_expire_month']['value'] = '12';
+			$fields['ihc_braintree_card_expire_year']['value'] = date('y', strtotime('+1 year'));
+			$fields['ihc_braintree_cvv']['value'] = '123';
+		}
+		
+		
+		$params = [
+												'metaData'                       => $meta,
+												'fields'                         => $fields,
+		];
+		
+		 $view = new \Indeed\Ihc\IndeedView();
+		return $view->setTemplate( IHC_PATH . 'public/views/checkout/checkout-braintree-form.php' )
+								->setContentData( $params )
+								->getOutput();
+								
+	}
 
 }
 

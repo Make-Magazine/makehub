@@ -6,6 +6,9 @@
 		<h3><?php esc_html_e('Add New Order', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
+				<h5><?php esc_html_e('Manually Create and assign a New Payment Order to specific Customer. Keep in mind that a such order will not charge him and makes any changes inside his Account.', 'ihc');?></h5>
+			</div>
+			<div class="iump-form-line">
       <div class="row">
       		<div class="col-xs-5">
       		    <div class="input-group">
@@ -108,7 +111,7 @@
 		</div>
 
 			<div class="ihc-wrapp-submit-bttn">
-				<input type="submit" value="<?php esc_html_e('Add Order', 'ihc');?>" name="save_order" class="button button-primary button-large" />
+				<input type="submit" value="<?php esc_html_e('Add New Order', 'ihc');?>" name="save_order" class="button button-primary button-large ihc_submit_bttn" />
 			</div>
 		</div>
 

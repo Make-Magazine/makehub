@@ -48,6 +48,7 @@ class UserSubscriptionsMeta
                                   PRIMARY KEY (`id`),
                                   INDEX idx_ihc_user_subscriptions_meta_subscription_id (`subscription_id`)
             )
+            ENGINE=MyISAM
 						CHARACTER SET utf8 COLLATE utf8_general_ci;
             ";
             dbDelta ( $sql );
@@ -177,5 +178,31 @@ class UserSubscriptionsMeta
       }
       $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_user_subscriptions_meta WHERE subscription_id=%d;", $subscriptionId );
       return $wpdb->query( $query );
+    }
+
+    /**
+     * @param string
+     * @param string
+     * @return int
+     */
+    public static function getSubscriptionIdByMeta( $metaKey='', $metaValue='' )
+    {
+        global $wpdb;
+        if ( $metaKey === '' ){
+            return false;
+        }
+        $query = $wpdb->prepare( "SELECT subscription_id
+                                      FROM {$wpdb->prefix}ihc_user_subscriptions_meta
+                                      WHERE
+                                      meta_key=%s
+                                      AND
+                                      meta_value=%s
+                                      ORDER BY id DESC LIMIT 1
+        ", $metaKey, $metaValue );
+        $id = $wpdb->get_var( $query );
+        if ( $id === null ){
+            return false;
+        }
+        return $id;
     }
 }

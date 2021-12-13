@@ -165,14 +165,11 @@ function ihc_save_post_meta($post_id){
 add_action ( 'admin_menu', 'ihc_menu', 81 );
 function ihc_menu() {
 		if ( current_user_can( 'manage_options' ) ){
-				add_menu_page ( 'Ultimate Membership Pro', 'Membership Pro Ultimate WP', 'manage_options',	'ihc_manage', 'ihc_manage', 'dashicons-universal-access-alt' );
+				add_menu_page ( 'Ultimate Membership Pro', 'Ultimate Membership Pro', 'manage_options',	'ihc_manage', 'ihc_manage', 'dashicons-universal-access-alt' );
 		}
 }
 
 $ext_menu = 'ihc_manage';
-//include_once plugin_dir_path(__FILE__) . 'extensions_plus/index.php';
-
-
 
 function ihc_manage(){
 		if ( current_user_can( 'manage_options' ) ){
@@ -181,15 +178,37 @@ function ihc_manage(){
 		}
 }
 
+if (!ihc_is_uap_active()){
+	add_action( 'admin_menu' , 'ihc_manage_affiliates' );
+	add_action( 'admin_head', 'ihc_manage_affiliates_add_jquery' );
+}
+
+
+function ihc_manage_affiliates(){
+	global $submenu;
+
+	$submenu['ihc_manage'][100] = array( 'Ultimate Membership Pro', 'manage_options' , 'ihc_manage', 'Ultimate Membership Pro' );
+	$submenu['ihc_manage'][200] = array( 'Ultimate Affiliate Pro', 'manage_options' , 'https://wpindeed.com/ultimate-affiliate-pro', 'ihc-uap-link-wrapp', 'ihc-uap-link-wrapp', '_blank' );
+}
+function ihc_manage_affiliates_add_jquery(){
+	?>
+    <script type="text/javascript">
+        jQuery( function() {
+            jQuery('.ihc-uap-link-wrapp').attr('target','_blank');
+        });
+    </script>
+    <?php
+}
+
 add_action("admin_enqueue_scripts", 'ihc_head');
 function ihc_head(){
 	global $pagenow, $wp_version;
-	wp_enqueue_style( 'ihc_admin_style', IHC_URL . 'admin/assets/css/style.css', array(),  9.9   );
-	wp_enqueue_style( 'ihc_public_style', IHC_URL . 'assets/css/style.min.css', array(),  9.9   );
-	wp_enqueue_style( 'ihc-font-awesome', IHC_URL . 'assets/css/font-awesome.css', array(),  9.9  );
-	wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css', array(),  9.9  );
+	wp_enqueue_style( 'ihc_admin_style', IHC_URL . 'admin/assets/css/style.css', array(), 10.2 );
+	wp_enqueue_style( 'ihc_public_style', IHC_URL . 'assets/css/style.min.css', array(), 10.2 );
+	wp_enqueue_style( 'ihc-font-awesome', IHC_URL . 'assets/css/font-awesome.css', array(), 10.2 );
+	wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css', array(), 10.2 );
 	wp_enqueue_media();
-	wp_register_script( 'ihc-back_end', IHC_URL . 'admin/assets/js/back_end.min.js', array(),  9.9   );
+	wp_register_script( 'ihc-back_end', IHC_URL . 'admin/assets/js/back_end.min.js', [ 'jquery' ], 10.2 );
 
 	if ( version_compare ( $wp_version , '5.7', '>=' ) ){
 			wp_add_inline_script( 'ihc-back_end', "var ihc_site_url='" . get_site_url() . "';" );
@@ -201,33 +220,32 @@ function ihc_head(){
 			wp_localize_script( 'ihc-back_end', 'ihcAdminAjaxNonce', wp_create_nonce( 'ihcAdminAjaxNonce' ) );
 	}
 
-
-	wp_enqueue_script('jquery-ui-datepicker');
+	wp_enqueue_script( 'jquery-ui-datepicker' );
 
 	if (isset($_REQUEST['page']) && $_REQUEST['page']=='ihc_manage'){
-		wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css', array(),  9.9  );
-		wp_enqueue_style( 'ihc_bootstrap-slider', IHC_URL . 'admin/assets/css/bootstrap-slider.css', array(),  9.9   );
-		wp_enqueue_script( 'ihc-bootstrap-slider', IHC_URL . 'admin/assets/js/bootstrap-slider.js', array(),  9.9   );
+		wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css', array(), 10.2 );
+		wp_enqueue_style( 'ihc_bootstrap-slider', IHC_URL . 'admin/assets/css/bootstrap-slider.css', array(), 10.2 );
+		wp_enqueue_script( 'ihc-bootstrap-slider', IHC_URL . 'admin/assets/js/bootstrap-slider.js', [ 'jquery' ], 10.2 );
 
 		if (!empty($_GET['tab']) && $_GET['tab']!='orders'){
-			wp_enqueue_style( 'ihc_bootstrap', IHC_URL . 'admin/assets/css/bootstrap.css', array(),  9.9   );
+			wp_enqueue_style( 'ihc_bootstrap', IHC_URL . 'admin/assets/css/bootstrap.css', array(), 10.2 );
 		}
-		wp_enqueue_style( 'ihc_bootstrap-res', IHC_URL . 'admin/assets/css/bootstrap-responsive.min.css', array(),  9.9   );
+		wp_enqueue_style( 'ihc_bootstrap-res', IHC_URL . 'admin/assets/css/bootstrap-responsive.min.css', array(), 10.2 );
 
-		wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 9.9 );
-		wp_enqueue_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', array(),  9.9   );
+		wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 10.2 );
+		wp_enqueue_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', array(), 10.2 );
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'jquery-ui-autocomplete' );
-		wp_enqueue_script( 'ihc-flot', IHC_URL . 'admin/assets/js/jquery.flot.js', array(),  9.9   );
-		wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js', array(),  9.9   );
+		wp_enqueue_script( 'ihc-flot', IHC_URL . 'admin/assets/js/jquery.flot.js', [ 'jquery' ], 10.2 );
+		wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js', [ 'jquery' ], 10.2 );
 
 		//wp_enqueue_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), 9.9 );
 		//wp_enqueue_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), 9.9 );
 
 		//wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), 9.9 );
-		wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), 9.9 );
+		wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', [ 'jquery' ], 10.2 );
 	}
 	if ( $pagenow == 'plugins.php' ){
 			if ( version_compare ( $wp_version , '5.7', '>=' ) ){
@@ -235,18 +253,18 @@ function ihc_head(){
 			} else {
 					wp_localize_script( 'ihc-back_end', 'ihcKeepData', get_option('ihc_keep_data_after_delete') );
 			}
-			wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js', array(), 9.9 );
-			wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css', array(), 9.9 );
+			wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js', [ 'jquery' ], 10.2 );
+			wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css', array(), 10.2 );
 	}
 	if ( $pagenow == 'post.php' ){
-			wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 9.9 );
+			wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 10.2 );
 	}
 	wp_enqueue_script( 'ihc-back_end' );
-	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', array(), 9.9 );
-	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), 9.9 );
-	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), 9.9 );
-	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), 9.9 );
-	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), 9.9 );
+	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', [], 10.2 );
+	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', [ 'jquery' ], 10.2 );
+	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', [ 'jquery' ], 10.2 );
+	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', [ 'jquery' ], 10.2 );
+	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', [ 'jquery' ], 10.2 );
 }
 
 ///CUSTOM NAV MENU
@@ -324,6 +342,40 @@ function ihc_ajax_admin_popup_the_forms()
 		}
 		include_once IHC_PATH . 'admin/includes/popup-forms.php';
 		die;
+}
+
+add_action( 'wp_ajax_ihc_ajax_notification_send_test_email', 'ihc_ajax_notification_send_test_email');
+function ihc_ajax_notification_send_test_email()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+			 echo 0;
+			 die;
+		}
+		include_once IHC_PATH . 'admin/includes/notification-send-email-test.php';
+		die;
+}
+
+add_action( 'wp_ajax_ihc_ajax_do_send_notification_test', 'ihc_ajax_do_send_notification_test' );
+function ihc_ajax_do_send_notification_test()
+{
+	if ( !indeedIsAdmin() ){
+			echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+		 echo 0;
+		 die;
+	}
+	$notificationId = isset($_POST['id']) ? $_POST['id'] : 0;
+	$email = isset($_POST['email']) ? $_POST['email'] : '';
+	$notification = new \Indeed\Ihc\Notifications();
+	$notification->sendTestNotification( $notificationId, $email );
+	echo 1;
+	die;
 }
 
 //AJAX CALL PREVIEW TEMPLATE IN POPUP
@@ -697,6 +749,8 @@ function ihc_custom_column_dashboard_print($states, $post)
 				$user_page = get_option('ihc_general_user_page');
 				$tos = get_option('ihc_general_tos_page');
 				$subscription_plan = get_option('ihc_subscription_plan_page');
+				$checkout_page = get_option('ihc_checkout_page');
+				$thank_you_page = get_option('ihc_thank_you_page');
 				$view_user_page = get_option('ihc_general_register_view_user');
 
 				switch($post->ID){
@@ -724,6 +778,12 @@ function ihc_custom_column_dashboard_print($states, $post)
 					case $subscription_plan:
 						$print = esc_html__('Subscription Plan Page', 'ihc');
 						break;
+					case $checkout_page:
+							$print = esc_html__('Checkout Page', 'ihc');
+							break;
+					case $thank_you_page:
+									$print = esc_html__('Thank You Page', 'ihc');
+									break;
 					case $view_user_page:
 						$print = esc_html__('Visitor Inside User Page', 'ihc');
 						break;
@@ -1091,11 +1151,23 @@ function ihc_run_custom_process()
 add_action( 'admin_head-nav-menus.php', 'ihc_nav_menu_hook', 99 );
 function ihc_nav_menu_hook()
 {
-		add_meta_box( 'ihc_nav_menu_custom', esc_html__( 'Indeed Membership Pro', 'ihc' ), 'ihc_print_custom_nav_menu', 'nav-menus', 'side', 'default' );
+		add_meta_box( 'ihc_nav_menu_custom', esc_html__( 'Ultimate Membership Pro', 'ihc' ), 'ihc_print_custom_nav_menu', 'nav-menus', 'side', 'default' );
 }
 function ihc_print_custom_nav_menu()
 {
 		require_once IHC_PATH . 'admin/includes/tabs/custom_nav_menu_box.php';
+}
+
+add_action( 'ihc_admin_dashboard_after_top_menu', 'ihcCheckDeprecatedStripe' );
+function ihcCheckDeprecatedStripe( )
+{
+	$checkModule = get_option('ihc_stripe_status');
+
+	if(isset($checkModule) && $checkModule == 1){
+			echo '<div class="ihc-warning-box">' . esc_html__('Stripe Standard Payment Service have been shut down. Turn off this payment service and switch to latest Stripe Payment Service.', 'ihc') . '</div>';
+	}
+
+	//return TRUE;
 }
 
 add_action( 'ihc_admin_dashboard_after_top_menu', 'ihc_check_allow_fopen' );
@@ -1252,6 +1324,31 @@ function ihc_admin_delete_payment_transaction()
 		ihc_delete_payment_entry( $_POST['id'] );
 		die;
 }
+
+/**
+ * Plugin row meta links
+ *
+ * @param array $input already defined meta links
+ * @param string $file plugin file path and name being processed
+ * @return array $input
+ */
+function ump_plugin_row_meta( $input, $file ) {
+
+	if ( $file != 'indeed-membership-pro/indeed-membership-pro.php' ) {
+		return $input;
+	}
+
+	$links = [
+		'<a href="https://help.wpindeed.com/ultimate-membership-pro/knowledge-base/" target="_blank">' . esc_html__( 'Knowledge Base', 'ihc' ) . '</a>',
+		'<a href="https://store.wpindeed.com/addon/category/ultimate-membership-pro/" target="_blank">' . esc_html__( 'Pro Extensions', 'ihc' ) . '</a>',
+		'<a href="https://demoiump.wpindeed.com/changelog/" target="_blank">' . esc_html__( 'ChangeLog', 'ihc' ) . '</a>'
+	];
+
+	$input = array_merge( $input, $links );
+
+	return $input;
+}
+add_filter( 'plugin_row_meta', 'ump_plugin_row_meta', 10, 2 );
 
 // on user delete - delete his media files
 $ihcHandleDeleteMedia = new \Indeed\Ihc\Admin\HandleDeleteMedia();

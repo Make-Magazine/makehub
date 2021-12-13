@@ -2,23 +2,24 @@
 $data['icon_prin_id'] = rand(1,1000) . 'printdiv';
 $data['wrapp_id'] = rand(1,1000) . 'ihccard';
 ?>
-<?php if(isset($data['metas']['ihc_membership_card_background_color']) && $data['metas']['ihc_membership_card_background_color'] != ''){
-	$custom_css = '';
-	$custom_css .= "
-	.ihc-membership-card-wrapp{
-		background-color:".$data['metas']['ihc_membership_card_background_color'].";
-	}
-	";
-	wp_register_style( 'dummy-handle', false );
-	wp_enqueue_style( 'dummy-handle' );
-	wp_add_inline_style( 'dummy-handle', $custom_css );
 
-	?>
-<?php } ?>
 
 <div id="<?php echo $data['wrapp_id'];?>" onmouseover="ihcShowPrint('<?php echo '#' . $data['icon_prin_id'];?>');" onMouseOut="ihcHidePrint('<?php echo '#' . $data['icon_prin_id'];?>');" class="ihc-membership-card-wrapp <?php echo (isset($data['metas']['ihc_membership_card_size'])) ? $data['metas']['ihc_membership_card_size'] : '';?>
 	 <?php echo (isset($data['metas']['ihc_membership_card_template'])) ? $data['metas']['ihc_membership_card_template'] : '';?>">
+	 <?php if(isset($data['metas']['ihc_membership_card_background_color']) && $data['metas']['ihc_membership_card_background_color'] != ''){
+	 	$custom_css = '';
+	 	$custom_css .= "
+	 	.ihc-membership-card-wrapp{
+	 		background-color:".$data['metas']['ihc_membership_card_background_color']." !important;
+	 	}
+	 	";
+	 	wp_register_style( 'dummy-handle', false );
+	 	wp_enqueue_style( 'dummy-handle' );
+	 	wp_add_inline_style( 'dummy-handle', $custom_css );
 
+	 	?>
+		<style><?php echo $custom_css;?></style>
+	 <?php } ?>
 <?php switch ($data['metas']['ihc_membership_card_template']) {
 	case 'ihc-membership-card-2':
 	case 'ihc-membership-card-3': ?>

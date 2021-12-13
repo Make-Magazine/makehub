@@ -9,7 +9,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 	<div class="iump-page-title">
 		Ultimate Membership Pro -
 		<span class="second-text">
-			<?php esc_html_e('Subscription Plan', 'ihc');?>
+			<?php esc_html_e('Subscriptions Plan', 'ihc');?>
 		</span>
 	</div>
 	<div class="ihc-stuffbox">
@@ -30,10 +30,14 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 						<input type="hidden" name="ihc_admin_subscription_plan_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_subscription_plan_nonce' );?>" />
 
 						<div class="ihc-stuffbox">
-							<h3> <?php esc_html_e("'Select Subscription' Showcase:", 'ihc');?></h3>
+							<h3> <?php esc_html_e("Subscriptions Plan Settings", 'ihc');?></h3>
 							<div class="inside">
 							 <div class="iump-register-select-template">
-								<?php esc_html_e('Select Template:', 'ihc');?> <select name="ihc_level_template" id="ihc_level_template" onChange="ihcPreviewSelectLevels();">
+								<div class="iump-form-line iump-no-border">
+									<h2><?php esc_html_e('Subscriptions Plan Template', 'ihc');?></h2>
+								</div>
+								<div class="iump-form-line iump-no-border">
+								<?php esc_html_e('Select Subscriptions Plan Template:', 'ihc');?> <select name="ihc_level_template" id="ihc_level_template" onChange="ihcPreviewSelectLevels();">
 									<?php
 										$templates = array(
 															'ihc_level_template_9'=>'(#9) '.esc_html__('Modern Theme', 'ihc'),
@@ -57,22 +61,23 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 										}
 									?>
 								</select>
+								</div>
 							  </div>
 								<div>
 									<div id="ihc_preview_levels"></div>
 								</div>
 
 								<div class="ihc-wrapp-submit-bttn">
-									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
 								</div>
 							</div>
 						</div>
 						<div class="ihc-stuffbox">
-							<h3><?php esc_html_e('Custom CSS', 'ihc');?></h3>
+							<h3><?php esc_html_e('Additional Custom CSS', 'ihc');?></h3>
 							<div class="inside">
 								<textarea id="ihc_select_level_custom_css" onBlur="ihcPreviewSelectLevels();" name="ihc_select_level_custom_css" class="ihc-dashboard-textarea-full"><?php echo (isset($meta_arr['ihc_select_level_custom_css'])) ? $meta_arr['ihc_select_level_custom_css'] : '';?></textarea>
 								<div class="ihc-wrapp-submit-bttn">
-									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn">
 								</div>
 							</div>
 						</div>

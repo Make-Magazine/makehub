@@ -1,5 +1,5 @@
 <?php
-require_once IHC_PATH . 'classes/PaymentGateways/braintree/lib/Braintree.php';
+require_once IHC_PATH . 'classes/gateways/libraries/braintree_v1/lib/Braintree.php';
 
 Ihc_User_Logs::write_log( esc_html__('Braintree Payment Webhook: Start process', 'ihc'), 'payments');
 

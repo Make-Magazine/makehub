@@ -218,7 +218,7 @@ $show_invoices = get_option('ihc_invoices_on');
       <div class="iump-form-line"></div>
 
 <?php endif;?>
-<div class="ihc-submit-form">
+<div class="ihc-wrapp-submit-bttn ihc-submit-form">
   <input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 </div>
     </div>

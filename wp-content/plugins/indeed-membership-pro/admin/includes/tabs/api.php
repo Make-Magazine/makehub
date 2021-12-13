@@ -42,8 +42,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<span class="ihc-generate-coupon-button" onclick="ihcGenerateCode('#ihc_api_hash', <?php echo rand(25, 35);?>);ihcDoUpdateHashField();"><?php esc_html_e('Generate Code', 'ihc');?></span>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -184,8 +184,8 @@ foreach ($actions as $slug=>$array):?>
 				<div><?php echo '<span>'.esc_html__('Return : ', 'ihc').'</span>' . $array['return'];?></div>
 			</div>
 		</div>
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

@@ -1,8 +1,8 @@
 
 <?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 9.7 );?>
-<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
-<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', array(), null );?>
-<?php wp_enqueue_script( 'ihc-image_croppic', IHC_URL . 'assets/js/image_croppic.js', array(), null );?>
+<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', ['jquery'], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', ['jquery'], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-image_croppic', IHC_URL . 'assets/js/image_croppic.js', ['jquery'], 10.1 );?>
 
 <span class="ihc-js-admin-upload-image-data"
       data-rand="<?php echo $data['rand'];?>"

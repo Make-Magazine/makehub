@@ -44,7 +44,7 @@
 		$meta_arr = ihc_get_coupon_by_id((isset($_GET['id'])) ? $_GET['id'] : 0);
 		?>
 
-			<div class="iump-page-title"><?php  esc_html_e("Coupons", 'ihc');?></div>
+			<div class="iump-page-title"><?php  esc_html_e("Discount Coupons", 'ihc');?></div>
 			<form method="post" action="<?php echo $url.'&tab='.$tab.'&subtab=manage';?>">
 
 				<input type="hidden" name="ihc_admin_coupons_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_coupons_nonce' );?>" />
@@ -54,7 +54,7 @@
 					<h3><?php esc_html_e("Edit", 'ihc');?></h3>
 					<input type="hidden" name="id" value="<?php echo $_GET['id'];?>" />
 					<?php } else { ?>
-					<h3><?php esc_html_e("Add New", 'ihc');?></h3>
+					<h3><?php esc_html_e("Add New Coupon", 'ihc');?></h3>
 					<?php } ?>
 					<div class="inside">
 						<?php
@@ -62,23 +62,45 @@
 								//////////////// MULTIPLE COUPONS ////////////
 								?>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php esc_html_e("Code prefix", 'ihc');?></label>
-									<input type="text" value="" name="code_prefix" />
+									<h2><?php esc_html_e("Generate Bulk Discount Codes", 'ihc');?></h2>
+									<p><?php esc_html_e("Choose the Discount Code format and how many you wish to generate and Ultimate Membership Pro will generate them for you.", 'ihc');?></p>
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php esc_html_e("Length", 'ihc');?></label>
-									<input type="number" min="2" value="10" name="code_length" />
-								</div>
-								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php esc_html_e("Number of Codes", 'ihc');?></label>
-									<input type="number" min="2" value="2" name="how_many_codes" />
+									<h4><?php esc_html_e("Initial Discount Code prefix", 'ihc');?></h4>
+									<div class="row">
+								      <div class="col-xs-4">
+								                 <div class="input-group">
+								                    <span class="input-group-addon"><?php esc_html_e('Prefix', 'ihc');?></span>
+								                    <input class="form-control"  type="text" value="" name="code_prefix">
+								                 </div>
+								         </div>
+								     </div>
+									<h4><?php esc_html_e("Discount Code Length", 'ihc');?></h4>
+									<div class="row">
+								      <div class="col-xs-4">
+								                 <div class="input-group">
+								                    <span class="input-group-addon"><?php esc_html_e('Prefix', 'ihc');?></span>
+								                    <input class="form-control"  type="number" min="2" value="10" name="code_length" />
+								                 </div>
+								         </div>
+								     </div>
+									<h4><?php esc_html_e("Number of Generated Discount Codes", 'ihc');?></h4>
+									<div class="row">
+								      <div class="col-xs-4">
+								                 <div class="input-group">
+								                    <span class="input-group-addon"><?php esc_html_e('Prefix', 'ihc');?></span>
+								                    <input class="form-control"   type="number" min="2" value="2" name="how_many_codes" />
+								                 </div>
+								         </div>
+								     </div>
 								</div>
 								<?php
 							} else {
 								/////////////// ONE /////////////
 								?>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php esc_html_e("Code", 'ihc');?></label>
+									<h4><?php esc_html_e("Coupon Code", 'ihc');?></h4>
+									<p><?php esc_html_e("Choose the Coupon Code that will be used on Checkout Page for getting discounted price. Only alphanumeric characters are allowed.", 'ihc');?></p>
 									<input type="text" value="<?php echo $meta_arr['code'];?>" name="code" id="ihc_the_coupon_code" /> <span class="ihc-generate-coupon-button" onClick="ihcGenerateCode('#ihc_the_coupon_code', 10);"><?php esc_html_e("Generate Code", "ihc");?></span>
 								</div>
 								<?php
@@ -86,12 +108,17 @@
 						?>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Description", 'ihc');?></label>
+							<h4><?php esc_html_e("Short Description", 'ihc');?></h4>
 							<textarea name="description" class="ihc-coupon-description"><?php echo (isset($meta_arr['description'])) ? $meta_arr['description'] : '';?></textarea>
 						</div>
 
-						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Type of discount", 'ihc');?></label>
+						<div class="iump-special-line">
+							<div class=" iump-form-line">
+								<h2><?php esc_html_e("Discount Management", 'ihc');?></h2>
+								<p><?php esc_html_e("Choose how discount will be calculated based on Membership price or Flat Amount and the value of it", 'ihc');?></p>
+							</div>
+							<div class=" iump-form-line">
+							<h4><?php esc_html_e("Type of Discount", 'ihc');?></h4>
 							<select name="discount_type" onChange="ihcDiscountType(this.value);"><?php
 								$arr = array('price' => esc_html__("Price", 'ihc'), 'percentage'=>"Percentage (%)");
 								foreach ($arr as $k=>$v){
@@ -102,8 +129,8 @@
 								}
 							?></select>
 						</div>
-						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Discount Value", 'ihc');?></label>
+						<div class=" iump-form-line">
+							<h4><?php esc_html_e("Discount Value", 'ihc');?></h4>
 							<input type="number" step="0.01" value="<?php echo $meta_arr['discount_value'];?>" name="discount_value"/>
 
 							<span id="discount_currency" class="<?php if ($meta_arr['discount_type']=='price'){
@@ -120,9 +147,14 @@
 								 echo 'ihc-display-none';
 							}
 							?>">%</span>
+						</div>	
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Period Type", 'ihc');?></label>
+							<h2><?php esc_html_e("Discount Campaign", 'ihc');?></h2>
+							<p><?php esc_html_e("You may have the Discount Coupon available only for certain period of time, between specific Dates and how many times may be used", 'ihc');?></p>
+						</div>	
+						<div class="iump-form-line">
+							<h4><?php esc_html_e("Available Time", 'ihc');?></h4>
 							<select name="period_type" onChange="ihcSelectShDiv(this, '#the_date_range', 'date_range');"><?php
 								$arr = array('date_range' => esc_html__("Date Range", 'ihc'), 'unlimited'=>esc_html__("Unlimited", 'ihc'));
 								foreach ($arr as $k=>$v){
@@ -133,21 +165,31 @@
 								}
 							?></select>
 						</div>
-						<div class="iump-form-line" id="the_date_range" class="<?php if ($meta_arr['period_type']=='date_range'){
+						<div id="the_date_range" class="iump-form-line <?php if (isset($meta_arr['period_type']) && $meta_arr['period_type']=='date_range'){
 							 echo 'ihc-display-block';
 						}else{
 							 echo 'ihc-display-none';
 						}
 						?>">
-							<label class="iump-labels-special"><?php esc_html_e("Date Range", 'ihc');?></label>
+							<h4><?php esc_html_e("Date Range", 'ihc');?></h4>
 							<input type="text" name="start_time" id="ihc_start_time" value="<?php echo $meta_arr['start_time'];?>" /> - <input type="text" name="end_time" id="ihc_end_time" value="<?php echo $meta_arr['end_time'];?>" />
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Repeat", 'ihc');?></label>
-							<input type="number" value="<?php echo $meta_arr['repeat'];?>" name="repeat" min="1" />
+							<h4><?php esc_html_e("Max Uses", 'ihc');?></h4>
+							<p><?php esc_html_e("The maximum number of times this Discount Code can be used. Leave blank for unlimited.", 'ihc');?></p>
+							
+						  <div class="row">
+						      <div class="col-xs-4">
+						                 <div class="input-group">
+						                    <span class="input-group-addon"><?php esc_html_e('Limit', 'ihc');?></span>
+						                    <input class="form-control"type="number" value="<?php echo $meta_arr['repeat'];?>" name="repeat" min="1"/>
+						                 </div>
+						         </div>
+						     </div>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("Target Membership", 'ihc');?></label>
+							<h2><?php esc_html_e("Memberships Requirement", 'ihc');?></h2>
+							<p><?php esc_html_e("Select Membership targeted to this discount. If is selected All, this Discount code can be used on any Membership.", 'ihc');?></p>
 							<select name="target_level"><?php
 								$levels = \Indeed\Ihc\Db\Memberships::getAll();
 								if ($levels && count($levels)){
@@ -165,9 +207,10 @@
 							?></select>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e("On Subscriptions with Billing Recurrence apply the Discount:", 'ihc');?></label>
+							<h4><?php esc_html_e("On Recurring Subscriptions Behaviour", 'ihc');?></h4>
+							<p><?php esc_html_e("Choose if you wish to apply discount only for Initial Payment or entire Billing Recurrence period", 'ihc');?></p>
 							<select name="reccuring"><?php
-								$arr = array(0 => esc_html__("Just Once", 'ihc'), 1 => esc_html__("Forever", 'ihc'));
+								$arr = array(0 => esc_html__("Just for Initial Payment", 'ihc'), 1 => esc_html__("Entire Billing Period", 'ihc'));
 								foreach ($arr as $k=>$v){
 									$selected = ($meta_arr['reccuring']==$k) ? 'selected' : '';
 									?>
@@ -178,7 +221,7 @@
 						</div>
 						<input type="hidden" name="box_color" value="<?php echo $meta_arr['box_color'];?>" />
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
+							<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

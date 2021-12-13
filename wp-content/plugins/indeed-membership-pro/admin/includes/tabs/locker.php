@@ -46,25 +46,28 @@ $subtab = isset( $_REQUEST['subtab'] ) ? $_REQUEST['subtab']  : 'lockers_list';
 				<input type="hidden" name="ihc_admin_locker_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_locker_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Locker Name', 'ihc');?></h3>
+					<h3><?php esc_html_e('Add New Inside Locker', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line iump-no-border">
-						<input type="text" value="<?php echo $meta_arr['ihc_locker_name'];?>" name="ihc_locker_name" />
+							<h2><?php esc_html_e('Inside Locker Template Name', 'ihc');?></h2>
+							<p><?php esc_html_e('Name of the Locker Template will be used for Administration purpose only when you will use a such template to restrict partial content inside WordPress Pages.', 'ihc');?></p>	
+							<div class="row">
+                	<div class="col-xs-4">
+                             <div class="input-group">
+                                <span class="input-group-addon"><?php esc_html_e('Template Name', 'ihc');?></span>
+                                <input class="form-control" type="text" value="<?php echo $meta_arr['ihc_locker_name'];?>" name="ihc_locker_name" placeholder="<?php esc_html_e('suggestive Locker Template Name', 'ihc');?>">
+                             </div>
+                     </div>
+                 </div>
 						</div>
-						<div class="ihc-stuffbox-submit-wrap">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Locker Theme', 'ihc');?></h3>
-					<div class="inside">
-						<div class="iump-form-line iump-no-border">
+					
+						<div class="iump-special-line">
+							<h2><?php esc_html_e('Inside Locker Theme', 'ihc');?></h2>
+							<p><?php esc_html_e('Choose the best Theme for your website or particular page. You can customize it further with using Custom CSS Box.', 'ihc');?></p>
 							<?php
 								$templates = array(1=>'Default', 2=>'Basic', 3=>'Zipped', 4=>'Zone', 5=>'Majic Transparent', 6=>'Star', 7=>'Clouddy', 8=>'Darks');
 							?>
-							<select name="ihc_locker_template" id="ihc_locker_template" onChange="setAddVal(this, '#ihc_locker_login_template');ihcLockerPreview();">
+							<select name="ihc_locker_template" id="ihc_locker_template" onChange="setAddVal(this, '#ihc_locker_login_template');ihcLockerPreview();" class="ihc_profile_form_template-st">
 								<?php
 									foreach($templates as $k=>$v){
 										?>
@@ -81,17 +84,11 @@ $subtab = isset( $_REQUEST['subtab'] ) ? $_REQUEST['subtab']  : 'lockers_list';
 							<input type="hidden" id="ihc_locker_login_template" name="ihc_locker_login_template" value="<?php echo $meta_arr['ihc_locker_login_template'];?>" />
 						</div>
 
-						<div class="ihc-stuffbox-submit-wrap">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-
-				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Additional Display Options', 'ihc');?></h3>
-					<div class="inside">
 						<div class="iump-form-line iump-no-border">
+							<h2><?php esc_html_e('Additional Display Options', 'ihc');?></h2>
+							<p><?php esc_html_e('Choose what options will be available inside Locker box for who has no access to the content. Uncheck all if you wish just to hide the content from Page.', 'ihc');?></p>
+						</div>
+						<div class="iump-form-line iump-no-border">	
 							<input type="checkbox" onClick="checkAndH(this, '#ihc_locker_login_form');ihcLockerPreview();" <?php if($meta_arr['ihc_locker_login_form']==1){
 								echo 'checked';
 							}?>
@@ -116,16 +113,9 @@ $subtab = isset( $_REQUEST['subtab'] ) ? $_REQUEST['subtab']  : 'lockers_list';
 							<input type="hidden" id="ihc_locker_display_sm" name="ihc_locker_display_sm" value="<?php echo (isset($meta_arr['ihc_locker_display_sm'])) ? $meta_arr['ihc_locker_display_sm']  : '';?>" />
 						</div>
 
-						<div class="ihc-stuffbox-submit-wrap">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-				<div class="ihc-stuffbox">
-					<h3><?php esc_html_e('Locker Messsage', 'ihc');?></h3>
-					<div class="inside">
-						<div>
+						<div class="iump-form-line iump-no-border">
+							<h2><?php esc_html_e('Inside Locker Messsage', 'ihc');?></h2>
+							<p><?php esc_html_e('This Message will show up on the top of Locker Box. You can inform members why this content is restrict and what they should do to access it.', 'ihc');?></p>
 							<?php
 								$settings = array(
 										'media_buttons' => true,
@@ -138,10 +128,14 @@ $subtab = isset( $_REQUEST['subtab'] ) ? $_REQUEST['subtab']  : 'lockers_list';
 								$meta_arr['ihc_locker_custom_content'] = ihc_correct_text($meta_arr['ihc_locker_custom_content']);
 								wp_editor( $meta_arr['ihc_locker_custom_content'], 'ihc_locker_custom_content', $settings );
 							?>
+							
 						</div>
-						<input type="button" onClick="ihcUpdateTextarea()" id="ihc-update-bttn-show-edit" value="<?php esc_html_e('Update', 'ihc');?>" class="ihc-custom-mini-bttn ihc-display-none"/>
-						<div class="ihc-stuffbox-submit-wrap">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
+						
+						<div class="iump-form-line">
+								<input type="button" onClick="ihcUpdateTextarea()" id="ihc-update-bttn-show-edit" value="<?php esc_html_e('Update Message', 'ihc');?>" class="button button-primary button-large ihc-notification-list-logs ihc-display-none"/>
+						</div>
+						<div class="ihc-wrapp-submit-bttn ihc-stuffbox-submit-wrap">
+							<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
@@ -158,7 +152,7 @@ $subtab = isset( $_REQUEST['subtab'] ) ? $_REQUEST['subtab']  : 'lockers_list';
 					<div class="inside">
 						<textarea id="ihc_locker_custom_css" name="ihc_locker_custom_css" onBlur="ihcLockerPreview();" class="ihc-dashboard-textarea-full"><?php echo stripslashes($meta_arr['ihc_locker_custom_css']);?></textarea>
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
+							<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

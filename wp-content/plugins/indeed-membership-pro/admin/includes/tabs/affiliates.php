@@ -11,13 +11,14 @@ if ($is_uap_active):
 <?php endif;?>
 
 <div class="iump-wrapper">
+	<?php if ($is_uap_active): ?>
 		<div class="ihc-dashboard-title">
 			Ultimate Membership Pro -
 			<span class="second-text">
 				<?php esc_html_e('Affiliates', 'ihc');?>
 			</span>
 		</div>
-
+	<?php endif; ?>
 
 		<?php if ($is_uap_active):?>
 				<?php
@@ -335,59 +336,40 @@ if ($is_uap_active):
 		<?php else:?>
 		<div class="metabox-holder indeed">
 		<div class="ihc-stuffbox ihc-aff-message">
-			<h2>
-				<label class="ihc-aff-message-label">
-					To get this section Available the <a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729" target="_blank">Ultimate Affiliate Pro</a> system needs to be activated on your WordPress system.
-				</label>
-			</h2>
-			<p><strong>Ultimate Affiliate Pro</strong> is the newest and most completed Affiliate WordPress Plugin that allow you provide a premium platform for your Affiliates with different rewards and amounts based on Ranks or special Offers.
-			<br/>You can turn on your Website into a REAL business and an income machine where you just need to sit down and let the others to work for you!
-			</p>
-			<p><a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729?ref=azzaroco" target="_blank">
-						<img src="<?php echo IHC_URL;?>admin/assets/images/uap-image-preview.jpg" class="ihc-display-block"/>
-						</a>
-			<br/><h2>You can find more details <a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729" target="_blank">here</a></h2>
-			</p>
-			<div class="ihc-aff-message-st">
-			<?php
-			$url = 'http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729';
-
-					$html = @file_get_contents($url);
-
-
-			$get1 = explode( '<div class="item-preview">' , $html );
-			if (isset($get1[1])){
-				$get2 = explode( '</div>' , $get1[1] );
-			}
-
-			if (isset($get2[0])){
-				preg_match_all('/<img.*?>/', $get2[0], $out);
-			}
-
-			if (isset($out) && count($out) > 0){
-				foreach($out as $value){
-					echo '<div class="top-preview">'.$value[0].'</div>';
-				}
-			}
-
-			$get3 = explode( '<div class="user-html">' , $html );
-			$get4 = isset($get3[1]) ? explode( '</div>' , $get3[1] ) : '';
-
-			$images = array();
-			if ( isset($get4[0]) ){
-					preg_match_all('/<img.*?>/', $get4[0], $images);
-			}
-
-			if(isset($images) && count($images) > 0){
-				foreach($images as $img){
-					foreach($img as $value){
-						if (strpos($value,'preview') === false && strpos($value,'button') === false)
-						echo '<a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729" target="_blank">'.$value.'</a>';
-					}
-				}
-			}
-			?>
+			<div class="ihc-warning-box">
+					To get this section Available <a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">Ultimate Affiliate Pro</a> Plugin needs to be activated on your WordPress website.
 			</div>
+			<div class="ihc-aff-message-name">Ultimate Affiliate Pro </div>
+			<div class="ihc-aff-message-title">The most Complete Affiliate Program Plugin for WordPress</div>
+			<div class="ihc-aff-message-description">
+				<p><strong>Ultimate Affiliate Pro</strong> is the newest and most completed Affiliate WordPress Plugin that allow you provide a premium platform for your Affiliates with different rewards and amounts based on Ranks or special Offers.</p>
+				<p>You can turn on your Website into a REAL business and an income machine where you just need to sit down and let the others to work for you!</p>
+				<p>Each Affiliate can creates his own marketing Campaign and brings more Affiliates via the <strong>“Multi-Level-Marketing”</strong> strategy.</p>
+				
+				<div><a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank"  id="ihc_submit_bttn">Get Ultimate Affiliate Pro Now</a></div>
+			</div>
+			<div class="ihc-aff-message-additional">
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap-image-preview.jpg" class="ihc-display-block"/>
+				</a>
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap_prev1.png" class="ihc-display-block"/>
+				</a>
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap_prev2.png" class="ihc-display-block"/>
+				</a>
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap_prev3.png" class="ihc-display-block"/>
+				</a>
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap_prev4.png" class="ihc-display-block"/>
+				</a>
+				<a href="https://wpindeed.com/ultimate-affiliate-pro" target="_blank">
+					<img src="<?php echo IHC_URL;?>admin/assets/images/uap_prev5.png" class="ihc-display-block"/>
+				</a>
+										
+			</div>
+			
 		</div>
 		</div>
 		<?php endif;?>

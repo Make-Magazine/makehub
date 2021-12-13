@@ -120,7 +120,7 @@ class UserSubscriptions
             $expireTime = strtotime( $userSubscription['expire_time'] );
             if ( $expireTime < 0 ){
                 $firstTime = true;
-            } else {
+            } else if ( $expireTime > $currentTime ) {
                 $currentTime = $expireTime;
             }
         }
@@ -1261,6 +1261,26 @@ class UserSubscriptions
             self::assign( $uid, $lid );
             self::makeComplete( $uid, $lid, false, $args );
         }
+    }
+
+    /**
+     * @param int
+     * @return array
+     */
+    public static function getLastForUid( $uid=0 )
+    {
+        global $wpdb;
+        if ( !$uid ){
+            return false;
+        }
+        $query = $wpdb->prepare( "SELECT level_id
+                                    FROM {$wpdb->prefix}ihc_user_levels
+                                    WHERE user_id=%d ORDER BY id DESC LIMIT 1;", $uid );
+        $result = $wpdb->get_var( $query );
+        if ( $result === null ){
+            return false;
+        }
+        return $result;
     }
 
 }

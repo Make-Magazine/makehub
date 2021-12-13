@@ -32,6 +32,7 @@ class Ihc_Db{
 															PRIMARY KEY (`id`),
 															INDEX idx_ihc_user_levels_user_id (`user_id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;
 				";
 				dbDelta ( $sql );
@@ -49,6 +50,7 @@ class Ihc_Db{
 							insert_time datetime,
 							PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta ( $sql );
 			}
@@ -68,6 +70,7 @@ class Ihc_Db{
 							paydate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 							INDEX idx_indeed_members_payments_uid (`u_id`)
 					)
+					ENGINE=MyISAM
 					CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -89,6 +92,7 @@ class Ihc_Db{
 							status TINYINT(1),
 							PRIMARY KEY (`id`)
 						)
+						ENGINE=MyISAM
 						CHARACTER SET utf8 COLLATE utf8_general_ci;
 				";
 				dbDelta($sql);
@@ -108,6 +112,7 @@ class Ihc_Db{
 							status tinyint(1),
 							PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta ( $sql );
 			}
@@ -130,6 +135,7 @@ class Ihc_Db{
 											PRIMARY KEY (`id`),
 											INDEX idx_ihc_orders_uid (`uid`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -148,6 +154,7 @@ class Ihc_Db{
 											PRIMARY KEY (`id`),
 											INDEX idx_ihc_orders_meta_order_id (`order_id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -168,6 +175,7 @@ class Ihc_Db{
 											status TINYINT(1),
 											PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -182,6 +190,7 @@ class Ihc_Db{
 							type VARCHAR(40) NOT NULL,
 							value INT(11) DEFAULT 0
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 
@@ -202,6 +211,7 @@ class Ihc_Db{
 							uid INT(11) NOT NULL,
 							hash VARCHAR(40) NOT NULL
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -221,6 +231,7 @@ class Ihc_Db{
 							status tinyint(1),
 							PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta ( $sql );
 			}
@@ -237,6 +248,7 @@ class Ihc_Db{
 							status TINYINT(2),
 							PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta ( $sql );
 			}
@@ -255,6 +267,7 @@ class Ihc_Db{
 												locked TINYINT(1),
 												PRIMARY KEY (`id`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -274,6 +287,7 @@ class Ihc_Db{
 												PRIMARY KEY (`id`),
 												INDEX idx_ihc_user_logs_uid (`uid`)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -294,6 +308,7 @@ class Ihc_Db{
 											settings TEXT,
 											status TINYINT(1) DEFAULT 0
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -311,6 +326,7 @@ class Ihc_Db{
 											woo_item INT(11),
 											woo_item_type VARCHAR(200)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -328,6 +344,7 @@ class Ihc_Db{
 											uid INT(11),
 											lid INT(11)
 				)
+				ENGINE=MyISAM
 				CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -344,6 +361,7 @@ class Ihc_Db{
 											lid INT(11) NOT NULL,
 											download_limit INT(11) NOT NULL
 							)
+							ENGINE=MyISAM
 							CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -361,6 +379,7 @@ class Ihc_Db{
 											action_type VARCHAR(30),
 											action_date INT(10)
 							)
+							ENGINE=MyISAM
 							CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -380,6 +399,7 @@ class Ihc_Db{
 											lid INT(11) NOT NULL,
 											create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 							)
+							ENGINE=MyISAM
 							CHARACTER SET utf8 COLLATE utf8_general_ci;";
 				dbDelta($sql);
 			}
@@ -690,6 +710,14 @@ class Ihc_Db{
 											'title' => esc_html__('Subscription Plan', 'ihc'),
 											'content' => '[ihc-select-level]',
 						),
+						'ihc_checkout_page' => array(
+											'title' => esc_html__('Checkout Page', 'ihc'),
+											'content' => '[ihc-checkout-page]',
+						),
+						'ihc_thank_you_page' => array(
+											'title' => esc_html__('Thank You Page', 'ihc'),
+											'content' => '[ihc-thank-you-page]',
+						),
 						'ihc_general_tos_page' => array(
 											'title' => esc_html__('Member TOS Page', 'ihc'),
 											'content' => 'Terms of Services',
@@ -764,6 +792,8 @@ class Ihc_Db{
 					'ihc_general_logout_page'									=> get_option( 'ihc_general_logout_page' ),
 					'ihc_general_lost_pass_page'							=> get_option( 'ihc_general_lost_pass_page' ),
 					'ihc_subscription_plan_page'							=> get_option( 'ihc_subscription_plan_page' ),
+					'ihc_checkout_page'												=> get_option( 'ihc_checkout_page' ),
+					'ihc_thank_you_page'											=> get_option( 'ihc_thank_you_page' ),
 					'ihc_general_register_view_user'					=> get_option( 'ihc_general_register_view_user' ),
 					'ihc_general_tos_page'										=> get_option( 'ihc_general_tos_page' ),
 			);
@@ -779,6 +809,7 @@ class Ihc_Db{
 		 $register = get_option('ihc_general_register_default_page');
 		 $logout = get_option('ihc_general_logout_page');
 		 $lost_password = get_option('ihc_general_lost_pass_page');
+		 $checkoutPage = get_option( 'ihc_checkout_page' );
 		 if ($login){
 		 	/// LOGIN
 		 	update_post_meta($login, 'ihc_mb_type', 'show');
@@ -813,6 +844,13 @@ class Ihc_Db{
 		 	update_post_meta($lost_password, 'ihc_mb_who', 'unreg');
 			update_post_meta($lost_password, 'ihc_mb_block_type', 'redirect');
 			update_post_meta($lost_password, 'ihc_mb_redirect_to', $account_page);
+		 }
+		 if ( $checkoutPage ){
+			 	// checkout page
+				update_post_meta($checkoutPage, 'ihc_mb_type', 'show');
+				update_post_meta($checkoutPage, 'ihc_mb_who', 'reg');
+				update_post_meta($checkoutPage, 'ihc_mb_block_type', 'redirect');
+				update_post_meta($checkoutPage, 'ihc_mb_redirect_to', $register );
 		 }
 	}
 
@@ -2190,6 +2228,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 * @return string
 		 */
 		 if ($level_id>-1){
+			 if ( !get_option( 'ihc_level_restrict_payment_enabled' ) ){
+				 	return;
+			 }
 		 	 $data = get_option('ihc_level_restrict_payment_values');
 			 if ($data && !empty($data[$level_id])){
 			 	return $data[$level_id];
@@ -2780,6 +2821,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 								'ihc_general_user_page' 								=> '',
 								'ihc_general_tos_page' 									=> '',
 								'ihc_subscription_plan_page' 						=> '',
+								'ihc_checkout_page' 										=> '',
+								'ihc_thank_you_page' 										=> '',
 								'ihc_general_register_view_user' 				=> '',
 			];
 			$array = [];
@@ -3831,6 +3874,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	 */
 	public static function does_usermeta_exists($uid=0, $key_meta=''){
 	 	 global $wpdb;
+		 if ( $key_meta == ''){
+				 return FALSE;
+		 }
 		 $table = $wpdb->prefix . 'usermeta';
 		 $q = $wpdb->prepare("SELECT umeta_id FROM $table WHERE user_id=%d AND meta_key=%s ", $uid, $key_meta);
 		 $data = $wpdb->get_row($q);
@@ -4598,7 +4644,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			if ( !$uid || !$lid ){
 					return false;
 			}
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT amount_type,amount_value,automated_payment,status,create_date
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT id,amount_type,amount_value,automated_payment,status,create_date
 																									FROM {$wpdb->prefix}ihc_orders WHERE uid=%d AND lid=%d ORDER BY id DESC LIMIT 1;", $uid, $lid ) );
 			return (array)$data;
 	}
@@ -5058,6 +5104,34 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 						return $result->txn_id;
 					}
 			}
+	}
+
+	/**
+	 * @param int
+	 * @param int
+	 * @return object
+	 */
+	public static function stripeConnectGetCardsThatWillExpire( $month=0, $year=0 )
+	{
+			global $wpdb;
+			$query = $wpdb->prepare( "SELECT user_id as uid, level_id as lid
+										FROM {$wpdb->prefix}ihc_user_levels a
+										INNER JOIN
+										{$wpdb->prefix}ihc_user_subscriptions_meta b
+										ON a.id=b.subscription_id
+										INNER JOIN
+										{$wpdb->prefix}ihc_user_subscriptions_meta c
+										ON a.id=c.subscription_id
+										WHERE
+										b.meta_key='payment_method_exp_month'
+										AND
+										b.meta_value=%d
+										AND
+										c.meta_key='payment_method_exp_year'
+										AND
+										c.meta_value=%d
+			", $month, $year );
+			return $wpdb->get_results( $query, ARRAY_A );
 	}
 
 

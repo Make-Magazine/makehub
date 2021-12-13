@@ -108,7 +108,7 @@ if (!class_exists('ListingUsers')){
 			$this->set_filter_form_fields();
 
 			//// FILTER
-			if (!empty($_GET['iump_filter'])){ 
+			if (!empty($_GET['iump_filter'])){
 				foreach ($_GET as $get_key=>$get_value){
 					$get_key = sanitize_text_field( $get_key );
 					if (isset($this->filter_form_fields[$get_key]) && $_GET[$get_key]!=''){
@@ -641,7 +641,7 @@ if (!class_exists('ListingUsers')){
 			 */
 			$str = '';
 			if (!empty($this->args['slider_set']) && !defined('IHC_SLIDER_LOAD_JS')){
-				wp_enqueue_script( 'ihc-owl-carousel', IHC_URL . 'public/listing_users/assets/js/owl.carousel.js', [], 1.1 );
+				wp_enqueue_script( 'ihc-owl-carousel', IHC_URL . 'public/listing_users/assets/js/owl.carousel.js', [ 'jquery' ], 10.1 );
 				define('IHC_SLIDER_LOAD_JS', TRUE);
 			}
 			return $str;
@@ -655,7 +655,7 @@ if (!class_exists('ListingUsers')){
 			$str = '';
 			$current_page = (empty($this->args['current_page'])) ? 1 : $this->args['current_page'];
 			$this->total_pages = ceil($this->total_users/$this->args['entries_per_page']);
-		
+
 			$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			$str = '';
 
@@ -855,7 +855,7 @@ if (!class_exists('ListingUsers')){
 								$extra_fields_str .= $this->users[$uid][$value];
 							}
 						}
-						
+
 						$extra_fields_str .= '</span>';
 						$extra_fields_str .= '<div class="ihc-clear"></div>';
 						if (!empty($extra_fields_str)){
@@ -908,7 +908,7 @@ if (!class_exists('ListingUsers')){
 				 		$temporary_array['type'] = ihc_register_field_get_type_by_slug($field);
 						$temporary_array['label'] = ihc_get_custom_field_label($field);
 						$temporary_array['name'] = $field;
-					
+
 						$field_temp_array[$field] = $temporary_array;
 			 		}
 					/// let's reorder the field so will look like on register form
@@ -1130,7 +1130,7 @@ if (!class_exists('ListingUsers')){
 			$order_type = $this->args['order_type'];
 
 			//// FILTER
-			if (!empty($_GET['iump_filter'])){ 
+			if (!empty($_GET['iump_filter'])){
 				foreach ($_GET as $get_key=>$get_value){
 					$get_key = sanitize_text_field( $get_key );
 					if (isset($this->filter_form_fields[$get_key]) && $_GET[$get_key]!=''){
@@ -1150,7 +1150,7 @@ if (!class_exists('ListingUsers')){
 
 			//////////TOTAL USERS
 			$this->get_users($order_by, $order_type, -1, -1, TRUE, $inner_join_levels, $search_by, $search_q, TRUE);
-		
+
 		}
 
 

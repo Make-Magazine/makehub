@@ -121,8 +121,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<textarea name="ihc_login_security_extended_lockout_message" class="ihc-login-security-textare"><?php echo stripslashes($data['metas']['ihc_login_security_extended_lockout_message']);?></textarea>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class=" ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

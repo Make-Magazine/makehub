@@ -66,27 +66,27 @@ $meta_arr = ihc_return_meta_arr('profile-form-settings'); // getting metas
         </div>
       </div>
 
-      <div>
+      <div class="inside">
         <p><?php esc_html_e('In order to decide what type of fields will be available in Form Profile, you may access ', 'ihc');?><a target='_blank' href='<?php echo $url."&tab=register&subtab=custom_fields";?>'><?php esc_html_e('Custom Fields', 'ihc'); ?></a></p>
       </div>
 
       <div class="ihc-wrapp-submit-bttn">
-        <input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+        <input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
       </div>
      </div>
   </div>
 
   <!-- custom css -->
   <div class="ihc-stuffbox">
-    <h3><?php esc_html_e('Custom CSS:', 'ihc');?></h3>
+    <h3><?php esc_html_e('Additional Custom CSS', 'ihc');?></h3>
     <div class="inside">
       <div>
-        <textarea name="ihc_profile_form_custom_css" id="ihc_register_custom_css" class="ihc-dashboard-textarea" onBlur="ihcRegisterLockerPreview();"><?php
+        <textarea name="ihc_profile_form_custom_css" id="ihc_register_custom_css" class="ihc-dashboard-textarea ihc-dashboard-textarea-full" onBlur="ihcRegisterLockerPreview();"><?php
         echo stripslashes($meta_arr['ihc_profile_form_custom_css']);
         ?></textarea>
       </div>
-      <div>
-        <input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+      <div class="ihc-wrapp-submit-bttn">
+        <input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn" />
       </div>
     </div>
 

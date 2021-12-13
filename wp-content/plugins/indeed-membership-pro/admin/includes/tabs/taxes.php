@@ -62,8 +62,8 @@ $data['metas'] = ihc_return_meta_arr('ihc_taxes_settings');
 				</div>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="Save Changes" name="save_settings" class="button button-primary button-large">
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input type="submit" id="ihc_submit_bttn" value="Save Changes" name="save_settings" class="button button-primary button-large">
 			</div>
 		</div>
 	</div>

@@ -156,6 +156,7 @@ var IhcUserMembershipManagement = {
                        action                 : 'ihc_user_level_pause',
                        levelId                : level,
                        uid                    : jQuery( '.ihc-select-level' ).attr( 'data-uid' ),
+                       subscriptionId         : subscriptionId,
                        currentExpireTime      : jQuery( '.ihc-js-user-level-row-' + level + ' .expire_input_text ' ).val()
             },
             success: function ( response ) {
@@ -179,7 +180,9 @@ var IhcUserMembershipManagement = {
             url : decodeURI(window.ihc_site_url) + '/wp-admin/admin-ajax.php',
             data : {
                        action                 : 'ihc_user_level_reactivate',
-                       subscriptionId         : jQuery( e.target ).attr( 'data-subscription_id' )
+                       levelId                : level,
+                       uid                    : jQuery( '.ihc-select-level' ).attr( 'data-uid' ),
+                       subscriptionId         : subscriptionId
             },
             success: function ( response ) {
                 if ( response ){

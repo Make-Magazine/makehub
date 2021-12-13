@@ -12,8 +12,10 @@
 	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-sign-out-ihc"></i><?php esc_html_e('Logout Button', 'ihc');?><span>[ihc-logout-link]</span></div>
 	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-unlock-ihc"></i><?php esc_html_e('Password Recovery', 'ihc');?><span>[ihc-pass-reset]</span></div>
 	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-user-ihc"></i><?php esc_html_e('My Account Page', 'ihc');?><span>[ihc-user-page]</span></div>
-	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-user-plus-ihc"></i><?php esc_html_e('Subscriptions Plan', 'ihc');?><span>[ihc-select-level]</span></div>
-	            <div class="ihc-popup-shortcodevalue ihc-shortcode-visitor"> <i class="fa-ihc fa-user-ihc"></i><?php esc_html_e('Visitor Inside User Page', 'ihc');?><span>[ihc-visitor-inside-user-page]</span></div>
+	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-levels-ihc"></i><?php esc_html_e('Subscriptions Plan', 'ihc');?><span>[ihc-select-level]</span></div>
+	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-checkout-ihc"></i><?php esc_html_e('Checkout Page', 'ihc');?><span>[ihc-checkout-page]</span></div>
+	            <div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-thank-you-ihc"></i><?php esc_html_e('Thank You Page', 'ihc');?><span>[ihc-thank-you-page]</span></div>
+	            <div class="ihc-popup-shortcodevalue ihc-shortcode-visitor"> <i class="fa-ihc fa-user-ihc"></i><?php esc_html_e('Public Individual Page', 'ihc');?><span>[ihc-visitor-inside-user-page]</span></div>
 				<div class="ihc-clear"></div>
         	</div>
     	</div>
@@ -44,6 +46,11 @@
 						<td><?php esc_html_e('Profile Form', 'ihc');?></td>
 						<td>[ihc-edit-profile-form]</td>
 						<td><?php esc_html_e('Profile Form display', 'ihc');?></td>
+					</tr>
+					<tr>
+						<td><?php esc_html_e('Change Password', 'ihc');?></td>
+						<td>[ihc-change-password-form]</td>
+						<td><?php esc_html_e('Change Password Form display', 'ihc');?></td>
 					</tr>
 					<tr>
 						<td><?php esc_html_e('Subscriptions Table', 'ihc');?></td>
@@ -280,7 +287,7 @@
 						<tr>
 							<td><?php echo $v['name'];?></td>
 							<td>
-								[ihc-level-link id=<?php echo $k;?>] <span><?php esc_html_e('SignUp', 'ihc');?></span> [/ihc-level-link]
+								[ihc-purchase-link id=<?php echo $k;?>] <span><?php esc_html_e('SignUp', 'ihc');?></span> [/ihc-purchase-link]
 							</td>
 							<td>
 								[ihc-hide-content membership=<?php echo $k;?>] <span><?php esc_html_e('Your Content Here', 'ihc');?></span> [/ihc-hide-content]

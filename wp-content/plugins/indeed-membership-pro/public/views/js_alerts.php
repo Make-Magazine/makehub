@@ -1,7 +1,7 @@
 <?php
-wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css' );
-wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js' );
-wp_enqueue_script( 'ihc-alerts', IHC_URL . 'assets/js/alerts.js' );
+wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css', [], 10.1 );
+wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js', [ 'jquery' ], 10.1 );
+wp_enqueue_script( 'ihc-alerts', IHC_URL . 'assets/js/alerts.js', [ 'jquery' ], 10.1 );
 ?>
 <span class="ihc-js-public-alerts-data"
       data-error_title="<?php esc_html_e('Error', 'ihc');?>"

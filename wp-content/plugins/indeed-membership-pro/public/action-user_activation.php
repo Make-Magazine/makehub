@@ -37,6 +37,7 @@ if (!empty($_GET['uid']) && !empty($_GET['ihc_code'])){
 			Ihc_User_Logs::write_log(esc_html__('E-mail address has become active for ', 'ihc') . $username, 'user_logs');
 			//opt in
 			if (!empty($user_data->data->user_email)){
+
 				$doOptIn = get_option('ihc_register_opt-in');
 				$registerField = ihc_get_user_reg_fields();
 				if ( $registerField ){

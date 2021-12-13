@@ -34,8 +34,8 @@ if (!empty($_POST['url'])){
 				</div>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>

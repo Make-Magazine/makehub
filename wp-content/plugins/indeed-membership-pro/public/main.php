@@ -17,14 +17,14 @@ add_action('wp_enqueue_scripts', 'ihc_public_head');
 function ihc_public_head(){
 	global $wp_version;
 
-	wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.min.css', array(), 9.9);
+	wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.min.css', array(), 10.2 );
 
-	wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 9.9 );
+	wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 10.2 );
 
 	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'ihc-jquery-ui', IHC_URL . 'assets/js/jquery-ui.min.js', array(),  9.9  );
+	wp_enqueue_script( 'ihc-jquery-ui', IHC_URL . 'assets/js/jquery-ui.min.js', ['jquery'], 10.2  );
 
-	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), 9.9 );
+	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.min.js', ['jquery'], 10.2 );
 
 	if ( version_compare ( $wp_version , '5.7', '>=' ) ){
 			wp_add_inline_script( 'ihc-front_end_js', "var ihc_site_url='" . get_site_url() . "';" );
@@ -40,21 +40,21 @@ function ihc_public_head(){
 			wp_localize_script( 'ihc-front_end_js', 'ihcStripeMultiply', "" . ihcStripeMultiplyForCurrency( get_option( 'ihc_currency' ) ) . "" );
 	}
 
-	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', array(),  9.9 );
-	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(),  9.9  );
-	wp_register_style( 'ihc_iziModal', IHC_URL . 'assets/css/iziModal.min.css', array(),  9.9 );
-	wp_register_script( 'ihc_iziModal_js', IHC_URL . 'assets/js/iziModal.min.js', array(),  9.9  );
-	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(),  9.9  );
-	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(),  9.9  );
-	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(),  9.9  );
-	wp_register_script( 'ihc-public-dynamic', IHC_URL . 'assets/js/public.js', array(),  9.9  );
+	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css', [], 10.2 );
+	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', ['jquery'], 10.2 );
+	wp_register_style( 'ihc_iziModal', IHC_URL . 'assets/css/iziModal.min.css', [], 10.2 );
+	wp_register_script( 'ihc_iziModal_js', IHC_URL . 'assets/js/iziModal.min.js', ['jquery'], 10.2 );
+	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', ['jquery'], 10.2 );
+	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', ['jquery'], 10.2 );
+	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', ['jquery'], 10.2 );
+	wp_register_script( 'ihc-public-dynamic', IHC_URL . 'assets/js/public.js', ['jquery'], 10.2 );
 }
 
 function ihcJavascriptLabels()
 {
 		return array(
-				'delete_level'					=> esc_html__('Are you sure you want to delete this level?', 'ihc'),
-				'cancel_level'					=> esc_html__('Are you sure you want to cancel this level?', 'ihc'),
+				'delete_level'					=> esc_html__('Are you sure you want to delete this membership?', 'ihc'),
+				'cancel_level'					=> esc_html__('Are you sure you want to cancel this membership?', 'ihc'),
 		);
 }
 

@@ -8,10 +8,12 @@ if (!empty($_POST['ihc_save'])){
 	/// RESTRICT LEVELs
 	$restrict_arr = array();
 	$conditions = array();
-	foreach ($levels as $id=>$level){
-		$restrict_arr[$id] = (isset($_POST['ihc_level_subscription_plan_settings_restr_levels'][$id])) ? $_POST['ihc_level_subscription_plan_settings_restr_levels'][$id] : '';
-		$conditions[$id] = (isset($_POST['ihc_level_subscription_plan_settings_condt'][$id])) ? $_POST['ihc_level_subscription_plan_settings_condt'][$id] : '';
-	}
+	if (isset($levels) && is_array($levels) && count($levels)>0 && $levels !== false){
+			foreach ($levels as $id=>$level){
+				$restrict_arr[$id] = (isset($_POST['ihc_level_subscription_plan_settings_restr_levels'][$id])) ? $_POST['ihc_level_subscription_plan_settings_restr_levels'][$id] : '';
+				$conditions[$id] = (isset($_POST['ihc_level_subscription_plan_settings_condt'][$id])) ? $_POST['ihc_level_subscription_plan_settings_condt'][$id] : '';
+			}
+}
 	update_option('ihc_level_subscription_plan_settings_restr_levels', $restrict_arr);
 	update_option('ihc_level_subscription_plan_settings_condt', $conditions);
 }
@@ -42,8 +44,8 @@ have membership A and B. Another example would be: a user cannot purchase member
 
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -96,8 +98,8 @@ have membership A and B. Another example would be: a user cannot purchase member
 						<input type="hidden" name="ihc_level_subscription_plan_settings_condt[<?php echo $id;?>]" id="<?php echo 'level' . $id . 'cond';?>" value="<?php echo $hidden_value;?>" />
 					</div>
 
-					<div class="ihc-submit-form">
-						<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+						<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>

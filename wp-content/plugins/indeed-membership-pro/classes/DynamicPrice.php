@@ -34,8 +34,14 @@ class DynamicPrice
         if ( !$this->isActive ){
             return false;
         }
+        if ( empty($this->settings['ihc_level_dynamic_price_levels_on'][$lid]) ){
+            return false;
+        }
+        $levelData = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+
         $minimumPrice = isset($this->settings['ihc_level_dynamic_price_levels_min'][$lid]) ? $this->settings['ihc_level_dynamic_price_levels_min'][$lid] : 0;
-        if ( $minimumPrice <= $price ){
+        $maximumPrice = isset($this->settings['ihc_level_dynamic_price_levels_max'][$lid]) ? $this->settings['ihc_level_dynamic_price_levels_max'][$lid] : $levelData['price'];
+        if ( $minimumPrice <= $price && $maximumPrice >= $price ){
             return true;
         }
         return false;

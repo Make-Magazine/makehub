@@ -97,7 +97,6 @@ class Ihc_Indeed_Import extends IndeedImport{
 			case 'ihc_orders_meta':
 				foreach ($xml_object->$entity_name->children() as $meta_key=>$object){
 						$insert_string = "VALUES(null,
-												'" . $this->esc_sql( (string)( $object->id ) ) . "',
 												'" . $this->esc_sql( (string)( $object->order_id ) ) . "',
 												'" . $this->esc_sql( (string)( $object->meta_key ) ) . "',
 												'" . $this->esc_sql( (string)( $object->meta_value ) ) . "'

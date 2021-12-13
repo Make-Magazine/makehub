@@ -9,6 +9,7 @@ class TwoCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
                 'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
                 'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
                 'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
                 'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
                 'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction
@@ -80,10 +81,6 @@ class TwoCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
         $secretKey = $this->paymentSettings['ihc_twocheckout_private_key']; //
         $sellerId = $this->paymentSettings['ihc_twocheckout_account_number']; //
         $secretWord = $this->paymentSettings['ihc_twocheckout_secret_word']; //
-        $returnUrl = site_url();
-        if ( $this->returnUrlAfterPayment != '' ){
-            $returnUrl = $this->returnUrlAfterPayment;
-        }
 
         $params = [
             //Billing information
@@ -109,7 +106,7 @@ class TwoCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
             'type'									=> 'PRODUCT',
             'tangible'							=> 0,
             //Cart behavior
-            'return-url'						=> $returnUrl,
+            'return-url'						=> $this->returnUrlAfterPayment,
             'return-type'						=> 'redirect',
         		'tpl'										=> 'one-column', // default/one-column
             'language'							=> 'en',

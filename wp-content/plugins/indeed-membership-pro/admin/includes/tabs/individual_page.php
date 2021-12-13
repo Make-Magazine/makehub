@@ -84,7 +84,7 @@ $pages = ihc_get_all_pages();//getting pages
 			</div>
 
 			<div class="ihc-wrapp-submit-bttn iump-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 			</div>
 
 		</div>

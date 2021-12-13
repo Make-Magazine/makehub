@@ -27,8 +27,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				</label>
 				<input type="hidden" name="ihc_zapier_enabled" value="<?php echo $data['metas']['ihc_zapier_enabled'];?>" id="ihc_zapier_enabled" />
 			</div>
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>
@@ -81,7 +81,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<input type="hidden" name="ihc_zapier_order_completed_enabled" value="<?php echo $data['metas']['ihc_zapier_order_completed_enabled'];?>" id="ihc_zapier_order_completed_enabled" />
       </div>
 
-			<div class="ihc-submit-form">
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>

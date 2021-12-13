@@ -136,7 +136,9 @@ class Notifications
           'payment' => esc_html__('Payment confirmation received - Order Completed', 'ihc'),
           'bank_transfer' => esc_html__('Bank Transfer Payment Details', 'ihc'),
           'user_before_subscription_payment_due'				=> esc_html__( 'Before Subscription Payment due', 'ihc' ),
-
+          
+          //Stripe dbx_connect
+          'upcoming_card_expiry_reminder'				=> esc_html__( 'Upcoming Card Expiry Reminder', 'ihc' ),
           //Drip Content
           'drip_content-user' => esc_html__('When Post become Available', 'ihc'),
         ];
@@ -227,10 +229,10 @@ class Notifications
                   $message = (isset($data->message)) ? $data->message : '';
 
                   $domain = 'ihc';
-                  $languageCode = get_user_meta( $u_id, 'ihc_locale_code', true );
-                  $wmplName = $this->type . '_title_' . $l_id;
+                  $languageCode = get_user_meta( $this->uid, 'ihc_locale_code', true );
+                  $wmplName = $this->type . '_title_' . $this->lid;
                   $this->subject = apply_filters( 'wpml_translate_single_string', $subject, $domain, $wmplName, $languageCode );
-                  $wmplName = $this->type . '_message_' . $l_id;
+                  $wmplName = $this->type . '_message_' . $this->lid;
                   $this->message = apply_filters( 'wpml_translate_single_string', $message, $domain, $wmplName, $languageCode );
               }
           }
@@ -398,475 +400,860 @@ class Notifications
        switch ($type){
          case 'register':
    $template['subject'] = '{blogname}: Welcome to {blogname}';
-   $template['content'] = '<p>Hi {username},</p><br/>
-
-   <p>Thanks for registering on {blogname}. Your account is now active.</p><br/>
-
-   <p>To login please fill out your credentials on:<br/>
-   {login_page}</p><br/>
-
-   <p>Your Username: {username}</p><br/><br/>
-
-
-   <p>Have a nice day!</p>';
+   $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+     <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+   <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+     <div>Hello {first_name} {last_name},</div>
+     <div style="padding-top:30px"></div>
+     <div>Thanks for registering on {blogname}. Your account is now active.</div>
+     <div>To login please fill out your credentials on </div>
+     <div style="padding-top:30px"></div>
+     <div style="display: inline-block; text-align: center;"><a style="background: #90A09A; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 3px; letter-spacing: 0.3px;" href="{login_page}">Login</a></div>
+     <div style="padding-top:30px"></div>
+     <div>Have a nice day!</div>
+   <div style="padding-top:30px"></div>
+   </div>
+   <div style="background: #545454; color: #fff; padding: 20px 30px;">
+   <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+   </div>
+   </div>';
    $template['explanation'] = esc_html__( 'Notification is sent first time when member Register on website and account does not requires to be Approved.', 'ihc' );
            break;
 
          case 'review_request':
    $template['subject'] = '{blogname}: Welcome to {blogname}';
-   $template['content'] = '<p>Hi {username},</p><br/>
-
-   <p>Thanks for registering on {blogname}. Your account is waiting to be approved.</p><br/>
-
-   <p>Once your Account is approved you can login using your credentials on:<br/>
-   <a href="{login_page}">{login_page}</a></p><br/>
-
-   <p>Your Username: {username}</p><br/><br/>
-
-
-   <p>Have a nice day!</p>';
+   $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+     <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+   <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+     <div>Hello {username},</div>
+     <div style="padding-top:30px"></div>
+     <div>Thanks for registering on {blogname}. Your account is waiting to be approved.</div>
+     <div>Once your Account is approved you can login using your credentials on:
+     <a style="color: #68aeff; text-decoration: none;" href="{login_page}">{login_page}</a></div>
+     <div>Your Username: {username}</div>
+     <div style="padding-top:30px"></div>
+     <div>Have a nice day!</div>
+   <div style="padding-top:30px"></div>
+   </div>
+   <div style="background: #545454; color: #fff; padding: 20px 30px;">
+   <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+   </div>
+   </div>
+';
    $template['explanation'] = esc_html__( 'Notification is sent first time when member Register on website and account requires to be Approved.', 'ihc' );
            break;
 
          case 'payment':
            $template['subject'] = '{blogname}: Payment proceed';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>You have proceed a new Payment into your account on {blogname}.</p><br/><br/>
-
-
-   <p>Thanks for your payment!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>You have proceed a new Payment into your account on {blogname}.</div>
+             <div>Thanks for your payment!</div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Every time when a Payment confirmation is received and Order becomes Completed', 'ihc' );
            break;
 
          case 'user_update':
            $template['subject'] = '{blogname}: Your Account has been Updated';
-           $template['content'] = '<p>Hi {username},</p><br/>
-
-   <p>Your Account has been Updated.</p><br/>
-
-   <p>To visit your Profile page follow the next link:<br/>
-   <a href="{account_page}">{account_page}</a></p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {username},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Account has been Updated.</div>
+             <div>To visit your Profile page follow the next link:
+             <a style="color: #68aeff; text-decoration: none;" href="{account_page}">{account_page}</a></div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Notification is sent everytime member update his Account details via My Account page', 'ihc' );
            break;
 
          case 'before_expire':
            $template['subject'] = '{blogname}: Your Subscription Expire';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>To update your Subscriptions, please, visit your Profile page on:<br/>
-   <a href="{account_page}">{account_page}</a></p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</div>
+             <div>To update your Subscriptions, please, visit your Profile page on:
+             <a style="color: #68aeff; text-decoration: none;" href="{account_page}">{account_page}</a></div>
+             <div><strong> Email:</strong> {user_email}</div>
+             <div><strong> Membership:</strong> {level_name}</div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Reminder notification sent before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'second_before_expire':
            $template['subject'] = '{blogname}: Your Subscription Expire';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>To update your Subscriptions, please, visit your Profile page on:<br/>
-   <a href="{account_page}">{account_page}</a></p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</div>
+             <div>To update your Subscriptions, please, visit your Profile page on:<a href="{account_page}">{account_page}</a></div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Second Reminder notification sent before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'third_before_expire':
            $template['subject'] = '{blogname}: Your Subscription Expire';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>To update your Subscriptions, please, visit your Profile page on:<br/>
-   <a href="{account_page}">{account_page}</a></p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</div>
+             <div>To update your Subscriptions, please, visit your Profile page on:
+             <a style="color: #68aeff; text-decoration: none;" href="{account_page}">{account_page}</a></div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Third Reminder notification sent before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'expire':
            $template['subject'] = '{blogname}: Your Subscription has Expired';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your Subscription {current_level} has expired on {current_level_expire_date}.</p><br/>
-
-   <p>To update your Subscriptions, please, visit your Profile page on:<br/>
-   <a href="{account_page}">{account_page}</a></p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Subscription {current_level} has expired on {current_level_expire_date}.</div>
+             <div>To update your Subscriptions, please, visit your Profile page on:
+             <a style="color: #68aeff; text-decoration: none;" href="{account_page}">{account_page}</a></div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'Notification is sent after member membership has expired. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
 
          case 'email_check':
            $template['subject'] = '{blogname}: Email Verification';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>You must confirm/validate your Email Account before logging in.</p><br/>
-
-   <p>Please click on the following link to successfully activate your account:<br/>
-   <a href="{verify_email_address_link}">click here</a></p><br/>
-
-   <p>Have a nice day!</p><br/>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>You must confirm/validate your Email Account before logging in.</div>
+             <div>Please click on the following link to successfully activate your account: <a style="color: #68aeff; text-decoration: none;" href="{verify_email_address_link}">click here</a> </div>
+             <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'When Double Email Verification setting is turned on, after member registration this first email is sent with a generated confirmation link inside that will allow member to confirm that his email is real.', 'ihc' );
            break;
 
          case 'email_check_success':
            $template['subject'] = '{blogname}: Email Verification Successfully';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your account is now verified at {blogname}.</p><br/>
-
-   <p>Have a nice day!</p><br/>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your account is now verified at {blogname}.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'When Double Email Verification setting is turned on, after member confirmed his email address a successful confirmation notification is sent.', 'ihc' );
            break;
 
          case 'reset_password_process':
            $template['subject'] = '{blogname}: Reset Password request';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p></br>
-
-   <p>You or someone else has requested to change password for your account: {username}</p></br>
-
-   <p>To confirm this request click <a href="{password_reset_link}">here</a></p></br>
-
-   <p>A new generated Password will be sent via Email next after the request was confirmed.</p>
-
-   <p>If you did not request for a new password, please ignore this Email notification.</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>You or someone else has requested to change password for your account: {username}.</div>
+             <div>To confirm this request click <a style="color: #68aeff; text-decoration: none;" href="{password_reset_link}">here</a></div>
+             <div style="padding-top:30px"></div>
+             <div>A new generated Password will be sent via Email next after the request was confirmed.</div>
+             <div>If you did not request for a new password, please ignore this Email notification.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'When member wants to reset his password, this notification is sent first time in order user to confirm this request. A generated link for request confirmation will be sent. This will guarantee that request was something by current member and not someone else. ', 'ihc' );
            break;
 
          case 'reset_password':
            $template['subject'] = '{blogname}: New Password generated';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p></br>
-
-   <p>You or someone else has requested to change password for your account: {username}</p></br>
-
-   <p>Your new Password is: <strong>{NEW_PASSWORD}</strong></p></br>
-
-   <p>To update your Password once you are logged from your Profile Page:
-   <a href="{account_page}">{account_page}</a></p></br>
-
-   <p>If you did not request for a new password, please ignore this Email notification.</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>You or someone else has requested to change password for your account: {username}.</div>
+             <div>Your new Password is: <strong>{NEW_PASSWORD}</strong></div>
+             <div style="padding-top:30px"></div>
+             <div>To update your Password once you are logged from your Profile Page: <a style="color: #68aeff; text-decoration: none;">{account_page}</a></div>
+             <div style="padding-top:30px"></div>
+             <div>If you did not request for a new password, please ignore this Email notification.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'After member confirms his reset passwrod request a random password will be generated for him and sent via this second Notification.', 'ihc' );
            break;
 
          case 'change_password':
            $template['subject'] = '{blogname}: Your Password has been changed';
-           $template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-   <p>Your Password has been changed.</p><br/>
-
-   <p>To login please fill out your credentials on:<br/>
-   <a href="{login_page}">{login_page}</a></p><br/>
-
-   <p>Your Username: {username}</p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your Password has been changed.</div>
+             <div>To login please fill out your credentials on: <a style="color: #68aeff; text-decoration: none;" href="{login_page}">{login_page}</a></div>
+             <div>Your Username: {username}</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'After WordPress user password have been successfully changed this notification will be sent.', 'ihc' );
            break;
 
          case 'delete_account':
            $template['subject'] = '{blogname}: Your Account has been deleted';
-           $template['content'] = '<p>Hi {username},</p><br/>
-
-   <p>Your account has been deleted from {blogname}.</p><br/>
-
-   <p>Have a nice day!</p>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {username},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your account has been deleted from {blogname}.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
    $template['explanation'] = esc_html__( 'When member WordPress account have been deleted his is notified via email.', 'ihc' );
            break;
 
          case 'bank_transfer':
              $template['subject'] = '{blogname}: Payment Inform';
-             $template['content'] = 'Hi {username},
-
-   Please proceed the bank transfer payment for: {currency}{amount}
-
-   <strong>Payment Details:</strong> Subscription {level_name} for {username} with Identification: {user_id}_{level_id}
-
-   &nbsp;
-
-   <strong>Bank Details:</strong>
-
-   IBAN:xxxxxxxxxxxxxxxxxxxx
-
-   Bank NAME';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},</div>
+               <div style="padding-top:30px"></div>
+               <div>Please proceed the bank transfer payment for: {currency}{amount}</div>
+               <div><strong>Payment Details:</strong> Subscription {level_name} for {username} with Identification: {user_id}_{level_id}</div>
+               <div><strong>Bank Details:</strong></div>
+               <div><strong>IBAN</strong>:xxxxxxxxxxxxxxxxxxxx</div>
+               <div>Bank NAME</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
    $template['explanation'] = esc_html__( 'If member choose to pay via Bank Transfer he will receives a notification with all details that needs to be followed in order to complete the payment.', 'ihc' );
            break;
 
          case 'approve_account':
              $template['subject'] = '{blogname}: Your Account has been activated';
-             $template['content'] = '<p>Hi {username},</p><br/>
-
-   <p>Your Account has been activated!</p><br/>
-
-   <p>Have a nice day!</p>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},</div>
+               <div style="padding-top:30px"></div>
+               <div>Your Account has been activated!</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
    $template['explanation'] = esc_html__( 'If new registered account needs to be approved, after Administrator approve member account he will be notified via Email.', 'ihc' );
            break;
 
          case 'admin_user_register':
            /// ADMIN - USER REGISTER
              $template['subject'] = '{blogname}: New Membership User registration';
-             $template['content'] = '<html><head></head><body><p>New Membership User registration on: <strong> {blogname} </strong></p>
-
-   <p><strong> Username:</strong> {username}</p>
-
-   <p><strong> Email:</strong> {user_email}</p>
-
-   <p><strong> Membership:</strong> {level_name}</p>
-
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>New Membership User registration on: <strong> {blogname} </strong></div>
+               <div><strong> Username:</strong> {username}</div>
+               <div><strong> Email:</strong> {user_email}</div>
+               <div><strong> Membership:</strong> {level_name}</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Notification is sent to Administrator first time when member Register on website.', 'ihc' );
            break;
 
          case 'admin_before_user_expire_level':
            /// ADMIN - Before Membership Expire
              $template['subject'] = '{blogname}: User Membership Expire';
-             $template['content'] = '<html><head></head><body>
-   <p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Reminder notification sent to Administator before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
 
          case 'admin_second_before_user_expire_level':
            /// ADMIN - Before Membership Expire
              $template['subject'] = '{blogname}: User Membership Expire';
-             $template['content'] = '<html><head></head><body>
-   <p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Second Reminder notification sent to Administator before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
 
          case 'admin_third_before_user_expire_level':
            /// ADMIN - Before Membership Expire
              $template['subject'] = '{blogname}: User Membership Expire';
-             $template['content'] = '<html><head></head><body>
-   <p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Third Reminder notification sent to Administator before member membership is going to expire. You can choose how many days before notification should be triggered. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
 
          case 'admin_user_expire_level':
            /// ADMIN - After Membership Expired
              $template['subject'] = '{blogname}: User Membership Expired';
-             $template['content'] = '<html><head></head><body>
-   <p>Subscription {current_level} for<strong> Username: {username}</strong> has expired on {current_level_expire_date}.</p>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>Subscription {current_level} for<strong> Username: {username}</strong> has expired on {current_level_expire_date}.</div>
+               <div style="padding-top:30px"></div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Notification is sent to Administrator after member membership has expired. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
 
          case 'admin_user_payment':
            /// ADMIN - New Payment Completed
              $template['subject'] = '{blogname}: New Payment Completed';
-             $template['content'] = '<html><head></head><body>
-   <p><strong> User: {username}</strong> has completed a new payment.</p>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div><strong> User: {username}</strong> has completed a new payment.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Every time when a Payment confirmation is received and Order becomes Completed sent to Administrator', 'ihc' );
            break;
          case 'admin_user_profile_update':
            /// ADMIN - User Profile Update
              $template['subject'] = '{blogname}: User Update Profile';
-             $template['content'] = '<html><head></head><body>
-   <p><strong> User: {username}</strong> has updated his profile.</p>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div><strong> User: {username}</strong> has updated his profile.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Notification is sent to Administrator everytime member update his Account details via My Account page ', 'ihc' );
            break;
          case 'register_lite_send_pass_to_user':
              $template['subject'] = '{blogname}: Your Password';
-             $template['content'] = '<html><head></head><body>
-   <p>Hi {username}</p>
-   <p>Your password for {blogname} is {NEW_PASSWORD}</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},</div>
+               <div style="padding-top:30px"></div>
+               <div>Your password for {blogname} is {NEW_PASSWORD}</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Notification is sent first time when member Register via Register Lite form or when password is not required during register step. A generated password is sent to member via Email.', 'ihc' );
            break;
 
          case 'ihc_cancel_subscription_notification-admin':
              $template['subject'] = '{blogname}: Subscription Canceled';
-             $template['content'] = '<html><head></head><body>
-   <p>{current_level} for {username} was canceled.</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>{current_level} for {username} was canceled.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When Member cancels a Subscription Administrator is notified via Email.', 'ihc' );
            break;
          case 'ihc_delete_subscription_notification-admin':
              $template['subject'] = '{blogname}: Subscription Deleted';
-             $template['content'] = '<html><head></head><body>
-   <p>{current_level} for {username} was deleted.</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>{current_level} for {username} was deleted.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When Member deletes a Subscription Administrator is notified via Email.', 'ihc' );
            break;
          case 'ihc_order_placed_notification-admin':
              $template['subject'] = '{blogname}: New Order placed';
-             $template['content'] = '<html><head></head><body>
-   <p>{username} has placed a new order.</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>{username} has placed a new order.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When a new Order is placed into the system Administrator is notified via Email. Orders will initially have Pending status.', 'ihc' );
            break;
          case 'ihc_new_subscription_assign_notification-admin':
              $template['subject'] = '{blogname}: New Subscription assigned';
-             $template['content'] = '<html><head></head><body>
-   <p><strong>{username}</strong> subscribed on {current_level} Subscription.</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div><strong>{username}</strong> subscribed on {current_level} Subscription.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Everytime when a new Subscription is assigned to member Administrator is notified. Subscription is set on Hold mode.', 'ihc' );
            break;
          case 'ihc_new_subscription_assign_notification':
                $template['subject'] = '{blogname}: New Subscription assigned to your Account';
-               $template['content'] = '<html><head></head><body>
-               <p>Hi {first_name} {last_name},</p><br/>
-               <p>You have subscribed  <strong>{current_level}</strong>.</p><br/><br/>
-               <p>Have a nice day!</p>
-               </body></html>';
+               $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+                 <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+               <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+                 <div>Hello {username},</div>
+                 <div style="padding-top:30px"></div>
+                 <div>You have subscribed <strong>{current_level}</strong>.</div>
+                 <div>Have a nice day!</div>
+               <div style="padding-top:30px"></div>
+               </div>
+               <div style="background: #545454; color: #fff; padding: 20px 30px;">
+               <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+               </div>
+               </div>';
                $template['explanation'] = esc_html__( 'Everytime when a new Subscription is assigned Member is notified. Subscription is set on Hold mode.e', 'ihc' );
            break;
          case 'ihc_order_placed_notification-user':
              $template['subject'] = '{blogname}: New Order placed';
-             $template['content'] = '<html><head></head><body>
-             <p>Hi {first_name} {last_name},</p><br/>
-             <p>You just placed a new order on <strong> {blogname} </strong>.</p><br/><br/>
-             <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {first_name} {last_name},</div>
+               <div style="padding-top:30px"></div>
+               <div>You just placed a new order on <strong> {blogname} </strong>.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When a new Order is placed into the system Member is notified via Email. Orders will initially have Pending status.', 'ihc' );
            break;
          case 'ihc_subscription_activated_notification':
              $template['subject'] = '{blogname}: Subscription Activated';
-             $template['content'] = '<html><head></head><body>
-             <p>Hi {first_name} {last_name},</p><br/>
-   <p>Your subscription on <strong> {blogname} </strong> just got activated.</p><br/><br/>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {first_name} {last_name},</div>
+               <div style="padding-top:30px"></div>
+               <div>Your subscription on <strong> {blogname} </strong> just got activated.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'Once a Subscription is Activated and receives a valid Expire Time, member is notified.', 'ihc' );
            break;
        case 'admin_user_subscription_first_time_activation':
            $template['subject'] = '{blogname}: Subscription Activated';
-           $template['content'] = '<html><head></head><body>
-     <p>Subscription for {username} has just got activated.</p>
-     <p>Have a nice day!</p>
-           </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello,</div>
+             <div style="padding-top:30px"></div>
+             <div>Subscription for {username} has just got activated.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'Administrator is notified when member Subscription is Activated first time.', 'ihc' );
              break;
          case 'ihc_delete_subscription_notification-user':
              $template['subject'] = '{blogname}: Subscription deleted';
-             $template['content'] = '<html><head></head><body>
-   <p>Hello {username}! One of Your subscriptioms on <strong> {blogname} </strong> was completely deleted.</p>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},</div>
+               <div style="padding-top:30px"></div>
+               <div>One of Your subscriptions on <strong> {blogname} </strong> was completely deleted.</div>
+                 <div style="padding-top:30px"></div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When Member deletes a Subscription is notified via Email.', 'ihc' );
            break;
          case 'ihc_cancel_subscription_notification-user':
              $template['subject'] = '{blogname}: Subscription cancel';
-             $template['content'] = '<html><head></head><body>
-   <p>Hello {username}! One of Your subscriptioms on <strong> {blogname} </strong> was canceled.</p>
-   <p>Have a nice day!</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},</div>
+               <div style="padding-top:30px"></div>
+               <div>One of Your subscriptions on <strong> {blogname} </strong> was canceled.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When Member cancels a Subscription is notified via Email.', 'ihc' );
            break;
          case 'drip_content-user':
            $template['subject'] = '{blogname}: A new Post has become available';
-             $template['content'] = '<html><head></head><body>
-   <p>Hello {username}! A new Post has become available. Check this out: {POST_LINK}</p>
-             </body></html>';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {username},,</div>
+               <div style="padding-top:30px"></div>
+               <div>A new Post has become available.</div>
+               <div>Check this out: {POST_LINK}</div>
+                 <div style="padding-top:30px"></div
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'When Drip Content Notifications module is enabled, members will be notified everytime a post becomes available. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'user_enter_grace_period':
            $template['subject'] = '{blogname}: Subscription enter in Grace Period';
-           $template['content'] = '<html><head></head><body>
-   <p>Hi {first_name} {last_name},</p><br/>
-   <p>Your <strong>{current_level}</strong> membership has just expired.</p><br/>
-   <p>But you can still access our website without any problem.</p><br/>
-   <p>If you want to renew/update your membership plan you can do that from My Account page.</p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your <strong>{current_level}</strong> membership has just expired.</div>
+             <div>But you can still access our website without any problem.</div>
+             <div>If you want to renew/update your membership plan you can do that from My Account page.</div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'After a Subscription expired and if a Grace Period is available, Member is notified that his grace period started. This process is handled by a WP Cron running periodically.', 'ihc' );
            break;
          case 'admin_user_enter_grace_period':
              $template['subject'] = '{blogname}: Subscription enter in Grace Period for {username}';
-             $template['content'] = '<html><head></head><body>
-   <p>Hi,</p><br/>
-   <p>Customer <strong>{username}</strong> has entered in Grace Period for <strong>{current_level}</strong> membership. </p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>
-   ';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello,</div>
+               <div style="padding-top:30px"></div>
+               <div>Customer <strong>{username}</strong> has entered in Grace Period for <strong>{current_level}</strong> membership.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>';
              $template['explanation'] = esc_html__( 'After a Subscription expired and if a Grace Period is available, Administrator is notified that member grace period started. This process is handled by a WP Cron running periodically.', 'ihc' );
              break;
          case 'admin_user_subscription_renew':
            $template['subject'] = '{blogname}: Renewal Processed Successfully for {username}';
-           $template['content'] = '<html><head></head><body>
-   <p>Hi,</p><br/>
-   <p><strong>{current_level}</strong> subscription for <strong>{username}</strong> customer has been extended.</p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>
-   ';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello,</div>
+             <div style="padding-top:30px"></div>
+             <div><strong>{current_level}</strong> subscription for <strong>{username}</strong> customer has been extended.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'Administrator is notified when member Subscription is Renewed.', 'ihc' );
            break;
          case 'user_subscription_renew':
            $template['subject'] = '{blogname}: Renewal Processed Successfully!';
-           $template['content'] = '<html><head></head><body>
-   <p>Hi {first_name} {last_name},</p><br/>
-   <p>Your <strong>{current_level}</strong>  subscription has been extended.</p><br/>
-   <p>This ensures you have continued access to valuable content.</p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Your <strong>{current_level}</strong> subscription has been extended.</div>
+             <div>This ensures you have continued access to valuable content.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'Member is notified when his Subscription is Renewed.', 'ihc' );
            break;
          case 'admin_user_login':
            $template['subject'] = '{blogname}: User {username} Login alert';
-           $template['content'] = '<html><head></head><body>
-   <p>Hi,</p><br/>
-   <p>Customer <strong>{username}</strong> just logged into your Website. </p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>
-   ';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello,</div>
+             <div style="padding-top:30px"></div>
+             <div>Customer <strong>{username}</strong> just logged into your Website.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'Administrator is notified everytime a member logs into current Website.', 'ihc' );
            break;
          case 'admin_before_subscription_payment_due':
            $template['subject'] = '{blogname}: Payment due for {username} soon';
-           $template['content'] = '<html><head></head><body>
-   <p>Hi,</p><br/>
-   <p>Customer <strong>{username}</strong> will be automtically charged soon.</p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello,</div>
+             <div style="padding-top:30px"></div>
+
+             <div>Customer <strong>{username}</strong> will be automtically charged soon.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'Before a member is gonna be charged, Administrator is notified via Email with several days before. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'user_before_subscription_payment_due':
              $template['subject'] = '{blogname}: Your Renewal payment for {current_level}';
-             $template['content'] = '<html><head></head><body>
-   <p>Hi {first_name} {last_name},</p><br/>
-   <p>We’re emailing to let you know that your renewal payment for {current_level} will be automatically processed soon.</p><br/>
-   <p>If you are no longer using {current_level} and wish to cancel your subscription, you may do so at anytime from your My Account page before your renewal is processed.</p><br/><br/>
-   <p>Have a nice day!</p>
-   </body></html>
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {first_name} {last_name},</div>
+               <div style="padding-top:30px"></div>
+               <div>We’re emailing to let you know that your renewal payment for {current_level} will be automatically processed soon.</div>
+               <div style="padding-top:30px"></div>
+               <div>If you are no longer using {current_level} and wish to cancel your subscription, you may do so at anytime from your My Account page before your renewal is processed.</div>
+               <div style="padding-top:30px"></div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>
    ';
              $template['explanation'] = esc_html__( 'Before a he is gonna be charged, Member is notified via Email with several days before. This process is handled by a WP Cron running daily.', 'ihc' );
            break;
          case 'user_subscription_trial_expired':
            $template['subject'] = '{blogname}: Your Trial period for  {current_level} has Finished';
-           $template['content'] = '<html><head></head><body>
-     <p>Hi {first_name} {last_name},</p><br/>
-     <p>Trial period for <strong>{current_level}</strong> has finished. </p><br/><br/>
-     <p>Have a nice day!</p>
-     </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello {first_name} {last_name},</div>
+             <div style="padding-top:30px"></div>
+             <div>Trial period for <strong>{current_level}</strong> has finished.</div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'If Member has any Subscription with Trial and his trial period finished he will be notified. This process is handled by a WP Cron running periodically.', 'ihc' );
            break;
          case 'admin_user_subscription_trial_expired':
            $template['subject'] = '{blogname}: Subscription Trial period for {username} has Finished';
-           $template['content'] = '<html><head></head><body>
-     <p>Hi,</p><br/>
-     <p>Customer <strong>{username}</strong> has finished Trial Period for <strong>{current_level}</strong> Subscription. </p><br/><br/>
-     <p>Have a nice day!</p>
-     </body></html>';
+           $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+             <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+           <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+             <div>Hello,</div>
+             <div style="padding-top:30px"></div>
+             <div>Customer <strong>{username}</strong> has finished Trial Period for <strong>{current_level}</strong> Subscription.</div>
+             <div style="padding-top:30px"></div>
+             <div>Have a nice day!</div>
+           <div style="padding-top:30px"></div>
+           </div>
+           <div style="background: #545454; color: #fff; padding: 20px 30px;">
+           <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+           </div>
+           </div>';
            $template['explanation'] = esc_html__( 'If Member has any Subscription with Trial and his trial period finished ADministrator will be notified. This process is handled by a WP Cron running periodically.', 'ihc' );
            break;
+         case 'upcoming_card_expiry_reminder':
+             $template['subject'] = '{blogname}: Upcoming Card Expiry Reminder';
+             $template['content'] = '<div style="max-width: 600px; padding: 20px; border-radius: 5px; margin: 40px auto; font-family: Open Sans,Helvetica,Arial; font-size: 15px; color: #5d5d5d;">
+               <div style="background:#eaeaea; text-align: left; font-weight: 600; font-size: 26px; padding: 30px 30px 30px 30px; color: #5d5d5d;"">{blogname}</div>
+             <div style="background:#fff;font-size:18px; text-align: left; line-height: 40px; color: #5d5d5d; padding: 30px 25px;">
+               <div>Hello {first_name} {last_name},</div>
+               <div style="padding-top:30px"></div>
+               <div>Your card will expire soon.</div>
+               <div style="padding-top:30px"></div>
+               <div>Important! The card that you used to purchase Subscription is due to expire soon. If you don’t update your card details before this date, you may lose access to the services you have paid for.</div>
+               <div style="padding-top:30px"></div>
+               <div>Change your Card from your Account. If your card details are up-to-date, your service will not be interrupted.</div>
+               <div>Have a nice day!</div>
+             <div style="padding-top:30px"></div>
+             </div>
+             <div style="background: #545454; color: #fff; padding: 20px 30px;">
+             <div>Thank you, The <a style="color: #fff;" href="{blogurl}">{blogname}</a> Team</div>
+             </div>
+             </div>
+   ';
+             $template['explanation'] = esc_html__( 'For Stripe Connect Payment Service only: Member is notified via Email with several days before an assigned card to his Subscription is gonna to expire. This process is handled by a WP Cron running daily.', 'ihc' );
+           break;  
        }
        $template = apply_filters( 'ihc_admin_filter_notification_template', $template, $type );
        return $template;
@@ -944,7 +1331,9 @@ class Notifications
           'payment'                                           => 'Instant',
           'bank_transfer'                                     => 'Instant',
           'user_before_subscription_payment_due'				      => 'Daily',
-
+          
+          //Stripe Connect
+          'upcoming_card_expiry_reminder'				               => 'Daily',
           //Drip Content
           'drip_content-user'                                 => 'Daily',
         ];
@@ -1022,5 +1411,38 @@ class Notifications
             return [];
         }
         return (array)$data;
+    }
+
+    public function sendTestNotification( $notificationId=0, $email="" )
+    {
+        global $wpdb;
+        if ( $notificationId === 0 || $email === '' ){
+            return;
+        }
+        $q = $wpdb->prepare( "SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM " . $wpdb->prefix . "ihc_notifications
+                    WHERE 1=1
+                    AND id=%s;", $notificationId );
+        $data = $wpdb->get_row($q);
+
+        if ( $data ){
+          $subject = (isset($data->subject)) ? $data->subject : '';
+          $message = (isset($data->message)) ? $data->message : '';
+        }
+        $message = stripslashes( htmlspecialchars_decode( ihc_format_str_like_wp( $message ) ) );
+
+        $message = "<html><head></head><body>" . $message . "</body></html>";
+        if ( $subject == '' && $message == '' ){
+            return false;
+        }
+
+        $fromName = $this->getFromName();
+        $fromEmail = $this->getFromEmail();
+
+        if ( !empty( $fromEmail ) && !empty( $fromName ) ){
+          $headers[] = "From: $fromName <$fromEmail>";
+        }
+        $headers[] = 'Content-Type: text/html; charset=UTF-8';
+        $sent = wp_mail( $email, $subject, $message, $headers );
+        return $sent;
     }
 }

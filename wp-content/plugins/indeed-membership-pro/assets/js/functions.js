@@ -764,7 +764,7 @@ function ihcInitiateOwl(selector)
 		});
 }
 
-jQuery( document ).on( 'ready', function(){
+jQuery( document ).on( 'load', function(){
 
         // Listing Members
         if ( jQuery( '.ihc-js-owl-settings-data' ).length ){
@@ -1024,5 +1024,20 @@ jQuery( window ).on( 'load', function(){
                 return false;
               }
           });
+      }
+
+      if ( jQuery( '.ihc-hide-pw' ).length > 0 ){
+        jQuery('.ihc-hide-pw').each(function(index, button) {
+          jQuery(button).on( 'click', function () {
+            var pass = jQuery(button).prev();
+            if ( 'password' === pass.attr( 'type' ) ) {
+              pass.attr( 'type', 'text' );
+              jQuery( this ).children().removeClass( 'dashicons-visibility' ).addClass('dashicons-hidden');
+            } else {
+              pass.attr( 'type', 'password' );
+              jQuery( this ).children().removeClass( 'dashicons-hidden' ).addClass('dashicons-visibility');
+            }
+          });
+        });
       }
 });

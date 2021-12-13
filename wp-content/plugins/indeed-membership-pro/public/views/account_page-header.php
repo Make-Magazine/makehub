@@ -4,10 +4,10 @@
 	wp_add_inline_style( 'dummy-handle', stripslashes($data['custom_css']) );
  endif;?>
 
-<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 9.7 );?>
-<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
-<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', array(), null );?>
-<?php wp_enqueue_script( 'ihc-account_page-banner', IHC_URL . 'assets/js/account_page-banner.js', array(), null );?>
+<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 10.1 );?>
+<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', [ 'jquery' ], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', [ 'jquery' ], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-account_page-banner', IHC_URL . 'assets/js/account_page-banner.js', [ 'jquery' ], 10.1 );?>
 
 <span class="ihc-js-account-page-account-banner-data"
 			data-url_target="<?php echo IHC_URL . 'public/ajax-upload.php?ihcpublicn=' . wp_create_nonce( 'ihcpublicn' );?>" ></spam>

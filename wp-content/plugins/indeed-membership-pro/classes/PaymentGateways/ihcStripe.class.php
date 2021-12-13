@@ -56,8 +56,8 @@ if(!class_exists('ihcStripe')){
 				} else {
 						$bind = 0;
 				}
-				wp_enqueue_script( 'ihc-stripe-checkout', 'https://checkout.stripe.com/checkout.js', [], 1.1 );
-				wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', [], 1.1 );
+				wp_enqueue_script( 'ihc-stripe-checkout', 'https://checkout.stripe.com/checkout.js', [ 'jquery' ], 10.1 );
+				wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', [ 'jquery' ], 10.1 );
 				$str = '<span class="ihc-js-stripe-v1-data"
 										data-key="' . $this->publishable_key . '"
 										data-locale="' . $locale . '"

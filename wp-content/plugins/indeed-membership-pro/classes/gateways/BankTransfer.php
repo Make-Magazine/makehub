@@ -9,6 +9,7 @@ class BankTransfer extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
                 'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
                 'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
                 'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
                 'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
                 'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction
@@ -77,8 +78,6 @@ class BankTransfer extends \Indeed\Ihc\Gateways\PaymentAbstract
      */
     public function charge()
     {
-        $this->redirectUrl = '';// url for payment gateway. ex : https://www.sandbox.paypal.com/cgi-bin/webscr with params
-
         if ( !empty( $this->inputData['is_register'] ) ){
            // purchase was made from register page
            $redirect = get_option('ihc_general_register_redirect');
@@ -92,7 +91,10 @@ class BankTransfer extends \Indeed\Ihc\Gateways\PaymentAbstract
 
         if ( !isset( $url ) ){
             // redirect after register is not set or user has purchased level from account page
-            if ( isset( $_GET['urlr'] ) ){
+             $redirect = get_option('ihc_thank_you_page');
+             if ( isset($redirect) && $redirect > 0){
+               $url = get_permalink( $redirect );
+             }elseif ( isset( $_GET['urlr'] ) ){
                 $url = urldecode($_GET['urlr']);
             } else {
                 $url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];

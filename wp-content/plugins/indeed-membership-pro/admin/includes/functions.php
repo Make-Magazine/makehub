@@ -99,6 +99,7 @@ function ihc_save_update_metas($group){
 	}
 }
 
+
 function ihc_save_update_metas_general_defaults($post_data=array()){
 	/*
 	 * @param array ($_POST)
@@ -128,6 +129,8 @@ function ihc_check_default_pages_set($meta_box=false){
 					'ihc_general_user_page' 									=>  esc_html__('Account User', 'ihc'),
 					'ihc_general_tos_page' 										=>  esc_html__('TOS', 'ihc'),
 					'ihc_subscription_plan_page' 							=>  esc_html__('Subscription Plan', 'ihc'),
+					'ihc_checkout_page' 											=>  esc_html__('Checkout', 'ihc'),
+					'ihc_thank_you_page' 											=>  esc_html__('Thank You', 'ihc'),
 					'ihc_general_register_view_user' 					=>  esc_html__('Visitor Inside User', 'ihc')
 				);
 	$str = '';
@@ -142,7 +145,7 @@ function ihc_check_default_pages_set($meta_box=false){
 				}
 
 				if($value==FALSE || $value==-1){
-					$str .= '<div class="ihc-not-set">' .  esc_html__('Default', 'ihc') . ' '.$label.' ' .  esc_html__('Page', 'ihc') . ' <strong>' .  esc_html__('Not set!', 'ihc') . '</strong></div>';
+					$str .= '<div class="ihc-not-set">' .  esc_html__('Default', 'ihc') . ' '.$label.' ' .  esc_html__('Page', 'ihc') . ' <strong>' .  esc_html__('is missing!', 'ihc') . '</strong></div>';
 				}
 			}
 			//return string for metabox
@@ -164,7 +167,7 @@ function ihc_check_default_pages_set($meta_box=false){
 			}
 			//for general settings
 			if($str){
-				$str = '<div class="ihc-not-set"><strong>' .  esc_html__('Some of the Default Pages are NOT Set:', 'ihc') . ' </strong>' . $str . '.</div>';
+				$str = '<div class="ihc-not-set"><strong>' .  esc_html__('Current Ultimate Membership Pro Default Pages are missing:', 'ihc') . ' </strong>' . $str . '.</div>';
 			}
 		}
 	return $str;
@@ -194,6 +197,8 @@ function ihc_meta_box_page_type_message(){
 		$user_page = get_option('ihc_general_user_page');
 		$tos = get_option('ihc_general_tos_page');
 		$subscription_plan = get_option('ihc_subscription_plan_page');
+		$checkout_page = get_option('ihc_checkout_page');
+		$thank_you_page = get_option('ihc_thank_you_page');
 		$view_user_page = get_option('ihc_general_register_view_user');
 
 		switch ($post->ID){
@@ -221,6 +226,15 @@ function ihc_meta_box_page_type_message(){
 			case $subscription_plan:
 				$str .=  esc_html__('Subscription Plan Page', 'ihc');
 			break;
+			case $subscription_plan:
+				$str .=  esc_html__('Subscription Plan Page', 'ihc');
+			break;
+			case $checkout_page:
+					$print = esc_html__('Checkout Page', 'ihc');
+			break;
+			case $thank_you_page:
+					$print = esc_html__('Thank you Page', 'ihc');
+			break;
 			case $view_user_page:
 				$str .=  esc_html__('Visitor Inside User Page', 'ihc');
 			break;
@@ -246,6 +260,8 @@ function ihc_get_default_pages_il($return_set=false){
 						 'ihc_general_user_page' =>  esc_html__('Account User', 'ihc'),
 						 'ihc_general_tos_page' =>  esc_html__('TOS', 'ihc'),
 						 'ihc_subscription_plan_page' =>  esc_html__('Subscription', 'ihc'),
+						 'ihc_checkout_page' =>  esc_html__('Checkout', 'ihc'),
+						 'ihc_thank_you_page' =>  esc_html__('Thank You', 'ihc'),
 						 'ihc_general_register_view_user' =>  esc_html__('Visitor Inside User', 'ihc')
 						);
 	foreach($arr_labels as $name=>$label){
@@ -686,6 +702,17 @@ function ihc_check_payment_status($p_type=''){
 					$return['settings'] = 'Completed';
 			}
 			break;
+		case 'stripe_connect':
+		  $arr = ihc_return_meta_arr('payment_stripe_connect');
+		  if ($arr['ihc_stripe_connect_status'] == 1){
+					$return['active'] = 'stripe-connect-active';
+					$return['status'] = 1;
+			}
+		  if (($arr['ihc_stripe_connect_publishable_key'] != '' && $arr['ihc_stripe_connect_client_secret'] != '' && $arr['ihc_stripe_connect_account_id'] != '') ||
+					($arr['ihc_stripe_connect_test_publishable_key'] != '' && $arr['ihc_stripe_connect_test_client_secret'] != '' && $arr['ihc_stripe_connect_test_account_id'] != '') ){
+				 $return['settings'] = 'Completed';
+			}
+		  break;
 	}
 	$return = apply_filters( 'ihc_payment_gateway_box_status', $return, $p_type );
 	// @description

@@ -165,14 +165,14 @@
                             					$update_cart = '';
                             				}
 
-                            				$onchange = 'onChange="ihcUpdateStateField();';
+                            				$onchange = 'onChange="ihcUpdateStateField();' . $update_cart . '"';
 
                             				if ( empty( $fieldValue ) ){
                             						$fieldValue = ihcGetDefaultCountry();
                             				}
                                     ?>
                                     <label class="iump-labels-register"><?php echo $field['label'];?></label>
-                                    <select name="<?php echo $fieldName;?>" id="<?php echo  $field['id'];?>" <?php echo $onchange;?> <?php echo $update_cart;?> >
+                                    <select name="<?php echo $fieldName;?>" id="<?php echo  $field['id'];?>" <?php echo $onchange;?> >
                                     <?php	foreach ($countries as $k=>$v): ?>
                             					<?php $selected = ($fieldValue==$k) ? 'selected' : '';?>
                                       <option value="<?php echo $k;?>" <?php echo $selected;?>><?php echo $v;?></option>
@@ -204,7 +204,7 @@
                                 <div class="iump-form-line-register iump-form-date">
                                   <label class="iump-labels-register"><?php echo $field['label'];?></label>
                                     <?php
-                              				wp_enqueue_script('jquery-ui-datepicker');
+                              				wp_enqueue_script('jquery-ui-datepicker', ['jquery'] );
                               				if (empty($field['class'])){
                               					$field['class'] = 'ihc-date-field';
                               				}

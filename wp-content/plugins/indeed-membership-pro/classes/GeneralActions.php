@@ -10,6 +10,10 @@ class GeneralActions
         add_action( 'ihc_before_user_save_custom_field', array( $this, 'changeAvatar' ), 999, 3 );
 
         add_action( 'ihc_action_general_init', [ $this, 'restrictEntireWebsiteWithoutLogin' ], 999, 1 );
+
+        // checkout page - redirect
+        add_action( 'ihc_action_general_init', [ $this, 'checkoutPageRestriction' ], 9999, 1 );
+
     }
 
     /**
@@ -70,5 +74,33 @@ class GeneralActions
         exit;
     }
 
+    /**
+     * @param int
+     * @return none
+     */
+    public function checkoutPageRestriction( $postId=0 )
+    {
+        global $current_user;
+        if ( isset( $current_user->ID ) &&  $current_user->ID > 0 ){
+            // user is logged in
+            return;
+        }
+        $checkoutPageId = get_option( 'ihc_checkout_page' );
+        $checkoutPageId = (int)$checkoutPageId;
+        if ( !$checkoutPageId ){
+            // checkout page doesnt exists
+            return;
+        }
+        if ( $checkoutPageId === $postId ){
+            $register = get_option('ihc_general_register_default_page');
+            $registerPage = get_permalink( $register );
+            if ( $registerPage === false ){
+                // current page is checkout page and user is not logged in so do the redirect
+                return;
+            }
+            wp_redirect( $registerPage );
+            exit;
+        }
+    }
 
 }

@@ -112,7 +112,7 @@ if(!class_exists('ihcAuthorizeNet')){
 
 					"x_amount"			=> $amount,
 					"x_tax" 			=> 0,
-					"x_description"		=> "Level " . $current_level['label'],
+					"x_description"		=> "Membership " . $current_level['label'],
 
 					"x_first_name"		=> $data['ihcpay_first_name'],
 					"x_last_name"		=> $data['ihcpay_last_name'],
@@ -391,7 +391,46 @@ if(!class_exists('ihcAuthorizeNet')){
 
 			return $str;
 		}
-
+		
+		public function getCheckoutform(){
+			
+			
+			$fields = array(
+									'ihcpay_cardholderName' => array(
+												'value' => '',
+									),
+									'ihcpay_card_number' => array(
+												'value' => '',
+									),
+									'ihcpay_card_expire' => array(
+												'value' => '',
+									),
+									
+			);
+			if($this->sandbox){
+				$fields = array(
+										'ihcpay_cardholderName' => array(
+													'value' => 'John Dow',
+										),
+										'ihcpay_card_number' => array(
+													'value' => '4111111111111111',
+										),
+										'ihcpay_card_expire' => array(
+													'value' => date('my', strtotime('+1 year')),
+										),
+										
+				);
+			}
+			
+			$params = [
+													'sandbox'                       => $this->sandbox,
+													'fields'                         => $fields,
+			];
+			$view = new \Indeed\Ihc\IndeedView();
+ 			return $view->setTemplate( IHC_PATH . 'public/views/checkout/checkout-authorize-form.php' )
+ 								->setContentData( $params )
+ 								->getOutput();
+		}
 		private function convertUnit($level){
 
 		  switch($level['access_regular_time_type']){

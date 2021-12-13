@@ -258,12 +258,23 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 	$orderMeta = new \Indeed\Ihc\Db\OrderMeta();
 	foreach ($data['orders'] as $array):?>
 		<?php
+				$firstChage = false;
+				$firstAmount = false;
+				$firstAmount = $orderMeta->get( $array['id'], 'first_amount' );
+				if(isset($firstAmount) && $firstAmount == $array['amount_value']){
+					$firstChage = true;
+				}
 				$taxes = $orderMeta->get( $array['id'], 'taxes_amount' );
 				if ( $taxes == null ){
 						$taxes = $orderMeta->get( $array['id'], 'tax_value' );
 				}
 				if ( $taxes == null ){
-						$taxes = $orderMeta->get( $array['id'], 'taxes' );
+						if(isset($firstChage) && $firstChage == true){
+							$taxes = $orderMeta->get( $array['id'], 'first_amount_taxes' );
+						}else{
+							$taxes = $orderMeta->get( $array['id'], 'taxes' );
+						}
+						
 				}
 		?>
 		<tr  class="<?php if($i%2==0){
@@ -285,15 +296,23 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			<td><div  class="ihc-order-membership"><?php echo $array['level'];?></div></td>
 			<?php if ( ihc_is_magic_feat_active( 'taxes' ) ):?>
 			<td>
-				<?php $value = $orderMeta->get( $array['id'], 'base_price' );?>
-				<?php if ( $value !== null ):?>
-						<?php echo $value . ' ' . $array['amount_type'];?>
-				<?php elseif ( $taxes != false ):?>
-						<?php $netAmount = $array['amount_value'] - $taxes;?>
-						<?php echo $netAmount . ' ' . $array['amount_type'];?>
-				<?php else :?>
-						<?php echo $array['amount_value'] . ' ' . $array['amount_type'];?>
-				<?php endif;?>
+				<?php if(isset($firstChage) && $firstChage == true && isset($firstAmount)){
+						$netAmount = $firstAmount;
+						if ( $taxes != false ){
+							$netAmount = $firstAmount - $taxes;
+						}
+						echo $netAmount . ' ' . $array['amount_type'];
+				 }else{ ?>	
+					<?php $value = $orderMeta->get( $array['id'], 'base_price' );?>
+					<?php if ( $value !== null ):?>
+							<?php echo $value . ' ' . $array['amount_type'];?>
+					<?php elseif ( $taxes != false ):?>
+							<?php $netAmount = $array['amount_value'] - $taxes;?>
+							<?php echo $netAmount . ' ' . $array['amount_type'];?>
+					<?php else :?>
+							<?php echo $array['amount_value'] . ' ' . $array['amount_type'];?>
+					<?php endif;?>
+				<?php } ?>
 			</td>
 			<td>
 				<?php if ( $taxes !== null ):?>
@@ -356,6 +375,15 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 													$transactionLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
 												}
 												break;
+											case 'stripe_connect':
+											$key = get_option( 'ihc_stripe_connect_live_mode' );
+											if ( $key == false ){
+													$transactionLink = 'https://dashboard.stripe.com/test/payments/' . $transactionId;
+												} else {
+													$transactionLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
+												}
+												break;	
+												
 											case 'mollie':
 												$transactionLink = 'https://www.mollie.com/dashboard/payments/' . $transactionId;
 												break;
@@ -366,6 +394,19 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 												}
 												$transactionLink = 'https://secure.2checkout.com/cpanel/order_info.php?refno=' . $transactionId;
 												break;
+											case 'braintree':
+											if(get_option( 'ihc_braintree_merchant_id' )){
+												$merchantID = get_option( 'ihc_braintree_merchant_id' );
+												if ( get_option( 'ihc_braintree_sandbox' )){
+													$transactionLink = 'https://sandbox.braintreegateway.com/merchants/'.$merchantID.'/transactions/' . $transactionId;
+												}else{
+													$transactionLink = 'https://braintreegateway.com/merchants/'.$merchantID.'/transactions/' . $transactionId;
+												}
+											}					
+											break;
+									default:
+												$transactionLink = '#';
+												break;  	
 									}
 								}
 			?><a target="_blank" title="<?php esc_html_e('Check Transaction on '.$payment_gateway.'', 'ihc'); ?>" href="<?php echo $transactionLink;?>"><?php echo $transactionId;?></a></td>
@@ -412,7 +453,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 						<i class="fa-ihc ihc-icon-edit-e"></i>
 					</a>
 					<?php if ( isset( $array['metas']['ihc_payment_type'] )
-								&& in_array( $array['metas']['ihc_payment_type'], [ 'stripe', 'paypal', 'paypal_express_checkout', 'stripe_checkout_v2', 'mollie', 'twocheckout' ] ) ) :?>
+								&& in_array( $array['metas']['ihc_payment_type'], [ 'stripe', 'paypal', 'paypal_express_checkout', 'stripe_checkout_v2', 'stripe_connect', 'mollie', 'twocheckout','braintree' , 'authorize' ] ) ) :?>
 						<?php
 						$chargingPlan = '';
 						$refundLink = '';
@@ -461,6 +502,20 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 										$refundLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
 									}
 									break;
+								case 'stripe_connect':
+									$key = get_option( 'ihc_stripe_connect_live_mode' );
+									if ( $key == false ){
+										if ( $subscriptionId != '' ){
+												$chargingPlan = 'https://dashboard.stripe.com/test/subscriptions/' . $subscriptionId;
+										}
+										$refundLink = 'https://dashboard.stripe.com/test/payments/' . $transactionId;
+									} else {
+										if ( $subscriptionId != '' ){
+												$chargingPlan = 'https://dashboard.stripe.com/subscriptions/' . $subscriptionId;
+										}
+										$refundLink = 'https://dashboard.stripe.com/payments/' . $transactionId;
+									}
+									break;	
 								case 'mollie':
 									$customerId = $orderMeta->get( $array['id'], 'customer_id' );
 									if ( $customerId != '' ){
@@ -473,6 +528,27 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 											$chargingPlan = 'https://secure.2checkout.com/cpanel/license_info.php?refno=' . $subscriptionId;
 									}
 									break;
+								case 'braintree':
+								if(get_option( 'ihc_braintree_merchant_id' )){
+									$merchantID = get_option( 'ihc_braintree_merchant_id' );
+									if ( $subscriptionId != '' ){
+										if ( get_option( 'ihc_braintree_sandbox' )){
+											$chargingPlan = 'https://sandbox.braintreegateway.com/merchants/'.$merchantID.'/subscriptions/' . $subscriptionId;
+										}else{
+											$chargingPlan = 'https://braintreegateway.com/merchants/'.$merchantID.'/subscriptions/' . $subscriptionId;
+										}
+									}
+								}					
+								break;	
+								case 'authorize':
+									if ( $subscriptionId != '' ){
+										if ( get_option( 'ihc_authorize_sandbox' ) == 1){
+											$chargingPlan = 'https://sandbox.authorize.net/ui/themes/sandbox/ARB/SubscriptionDetail.aspx?SubscrID=' . $subscriptionId;
+										}else{
+											$chargingPlan = 'https://authorize.net/ui/themes/sandbox/ARB/SubscriptionDetail.aspx?SubscrID=' . $subscriptionId;
+										}
+									}					
+								break;
 						}
 						if ( $refundLink != '' ):?>
 							<a title="<?php esc_html_e( 'Refund', 'ihc' );?>" href="<?php echo $refundLink;?>" target="_blank" ><i class="fa-ihc ihc-icon-refund-e"></i></a>

@@ -714,17 +714,12 @@ function ihc_init_form_action($url){
 				$username = Ihc_Db::get_username_by_wpuid($current_user->ID);
 				$level_name = Ihc_Db::get_level_name_by_lid($_POST['ihc_cancel_level']);
 				Ihc_User_Logs::write_log(__('User ', 'ihc') . $username .esc_html__(' cancel Level ', 'ihc') . $level_name, 'user_logs', $_POST['ihc_cancel_level']);
-				if ( ihc_payment_workflow() == 'standard' ){
-						// old way cancel
-						$cancel = new \Indeed\Ihc\CancelSubscription($current_user->ID, $_POST['ihc_cancel_level']);
-						$cancel->proceed();
-				} else {
-						// new way cancel
-						$cancel = new \Indeed\Ihc\Payments\CancelSubscription();
-						$cancel->setUid( $current_user->ID )
-									 ->setLid( esc_sql( $_POST['ihc_cancel_level'] ) )
-									 ->proceed();
-				}
+
+				$cancel = new \Indeed\Ihc\Payments\CancelSubscription();
+				$cancel->setUid( $current_user->ID )
+							 ->setLid( esc_sql( $_POST['ihc_cancel_level'] ) )
+							 ->proceed();
+
 
 			}
 			// ----------------------------- END OF CANCEL LEVEL ----------------------------
@@ -748,7 +743,7 @@ function ihc_init_form_action($url){
 											'bank_transfer',
 											'twocheckout',
 					];
-					if ( in_array( $paymentType, $newWay ) && ihc_payment_workflow() == 'new' ){
+					if ( in_array( $paymentType, $newWay )){
 							// new way
 							$finishPayment = new \Indeed\Ihc\Payments\FinishUnpaidPayments();
 							$finishPayment->setInput([
@@ -862,8 +857,8 @@ function ihc_add_stripe_public_form($content='', $doPrint=false){
 							data-currency="' . $currency . '"
 							data-form=".ihc-stripe-form-payment"
 	></span>';
-	wp_enqueue_script( 'ihc-stripe-checkout', "https://checkout.stripe.com/checkout.js", [], 1.1 );
-	wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', [], 1.1 );
+	wp_enqueue_script( 'ihc-stripe-checkout', "https://checkout.stripe.com/checkout.js", [ 'jquery' ], 10.1 );
+	wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', [ 'jquery' ], 10.1 );
 
 	if ($doPrint){
 			echo do_shortcode($content) . $str;
@@ -997,7 +992,6 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 			ihc_insert_update_transaction($u_id, $trans_id, $trans_info);
 			break;
 		case 'twocheckout':
-			if ( ihc_payment_workflow() == 'new' ){
 					$options = array(
 							'uid'										=> $u_id,
 							'lid'										=> $l_id,
@@ -1010,12 +1004,7 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 					);
 					$paymentObject = new \Indeed\Ihc\DoPayment( $options, $payment_type );
 					$paymentObject->processing();
-			} else {
-					$ihc_coupon = (empty($_REQUEST['ihc_coupon'])) ? '' : $_REQUEST['ihc_coupon'];
-					$ihc_country_value = (isset($ihc_country)) ? $ihc_country : FALSE;
-					insert_order_from_renew_level($u_id, $l_id, (isset($_REQUEST['ihc_coupon'])) ? $_REQUEST['ihc_coupon'] : '', (isset($ihc_country)) ? $ihc_country : '', $payment_type, 'pending');
-					ihc_twocheckout_submit($u_id, $l_id, $ihc_coupon, $ihc_country_value);
-			}
+
 			break;
 		case 'authorize':
 			$level_data = ihc_get_level_by_id($l_id);
@@ -1038,7 +1027,6 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 			exit();
 			break;
 		case 'bank_transfer':
-	 		if ( ihc_payment_workflow() == 'new' ){
 					$options = array(
 							'uid'										=> $u_id,
 							'lid'										=> $l_id,
@@ -1051,20 +1039,7 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 					);
 					$paymentObject = new \Indeed\Ihc\DoPayment( $options, $payment_type );
 					$paymentObject->processing();
-			} else {
-					$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ///  $_SERVER['SERVER_NAME']
-					$url = add_query_arg('ihc_success_bt', true, $url);
-					$url = add_query_arg('ihc_lid', $l_id, $url);
-					if (isset($ihc_country)){
-						$url = add_query_arg('ihc_country', $ihc_country, $url);
-					}
-					$url .= '#ihc_bt_success_msg';
-					$order_id = insert_order_from_renew_level($u_id, $l_id, (isset($_REQUEST['ihc_coupon'])) ? $_REQUEST['ihc_coupon'] : '', (isset($ihc_country)) ? $ihc_country : '', $payment_type, 'pending');
 
-					do_action( 'ihc_bank_transfer_charge', [ 'uid' => $u_id, 'lid' => $l_id, 'order_id' => $order_id ]  );
-					wp_redirect($url);
-					exit();
-			}
 
 			break;
 		case 'braintree':

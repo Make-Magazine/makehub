@@ -56,8 +56,8 @@ $items= $reasonDbObject->get( $limit, $offset );
 					<p><?php esc_html_e("Write values separated by comma ','.", 'ihc');?></p>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -83,7 +83,7 @@ $items= $reasonDbObject->get( $limit, $offset );
                 <td><?php echo $itemData->user_login;?></td>
                 <td><?php echo \Ihc_Db::get_level_name_by_lid( $itemData->lid );?></td>
                 <td><?php echo $itemData->action_type;?></td>
-                <td><?php echo $itemData->reason;?></td>
+                <td><?php echo stripslashes($itemData->reason);?></td>
                 <td><?php echo date( 'Y-m-d h:i:s', $itemData->action_date );?></td>
             </tr>
         <?php endforeach;?>

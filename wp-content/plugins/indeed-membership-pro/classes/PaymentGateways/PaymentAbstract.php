@@ -179,7 +179,7 @@ abstract class PaymentAbstract
       }
       $this->defaultRedirect = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
       $redirect = get_option('ihc_general_register_redirect');
-      if (!$redirect || $redirect>-1){
+      if (!$redirect || $redirect < 0){
           return;
       }
       $url = get_permalink($redirect);

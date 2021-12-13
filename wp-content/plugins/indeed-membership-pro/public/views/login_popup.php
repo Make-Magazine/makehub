@@ -2,7 +2,7 @@
     <?php
         wp_enqueue_style( 'ihc_iziModal' );
         wp_enqueue_script( 'ihc_iziModal_js' );
-        wp_enqueue_script( 'ihc_login_modal', IHC_URL . 'assets/js/IhcLoginModal.js', array(), false, false );
+        wp_enqueue_script( 'ihc_login_modal', IHC_URL . 'assets/js/IhcLoginModal.js', ['jquery'], 10.1 );
     ?>
 
     <?php if ( $content ):?>

@@ -57,6 +57,7 @@ class Memberships
     															PRIMARY KEY (`id`),
     															INDEX idx_ihc_memberships_id (`id`)
     				)
+            ENGINE=MyISAM
 						CHARACTER SET utf8 COLLATE utf8_general_ci;
     				";
     				dbDelta ( $sql );
@@ -73,6 +74,7 @@ class Memberships
                                   PRIMARY KEY (`id`),
                                   INDEX idx_ihc_memberships_meta_membership_id (`membership_id`)
             )
+            ENGINE=MyISAM
 						CHARACTER SET utf8 COLLATE utf8_general_ci;
             ";
             dbDelta ( $sql );
@@ -175,7 +177,7 @@ class Memberships
         }
 
         $data['name'] = ihc_make_string_simple( $data['name'] );
-        
+
         // no slug provided
         if ( $data['name'] === '' ){
             return [
@@ -265,6 +267,7 @@ class Memberships
             }
             self::saveMeta( $data['level_id'], $key, $value );
         }
+        do_action( 'ihc_action_admin_save_membership', $data );
         return [
                   'success'     => true,
                   'reason'      => esc_html__( 'Membership has been saved.', 'ihc' ),
@@ -588,8 +591,13 @@ class Memberships
               break;
             case 'limited':
               if (!empty($levelData['access_limited_time_type']) && !empty($levelData['access_limited_time_value'])){
+                //Deprecated
                 $multiply = ihc_get_multiply_time_value($levelData['access_limited_time_type']);
                 $endTime = $currentTime + $multiply * $levelData['access_limited_time_value'];
+
+                $multiplyToAdd = $levelData['access_limited_time_type'];
+                $endTime = self::getExtraTime($multiplyToAdd, $levelData['access_limited_time_value'], $currentTime);
+
               }
               break;
             case 'date_interval':
@@ -599,8 +607,13 @@ class Memberships
               break;
             case 'regular_period':
               if (!empty($levelData['access_regular_time_type']) && !empty($levelData['access_regular_time_value'])){
+                //Deprecated
                 $multiply = ihc_get_multiply_time_value($levelData['access_regular_time_type']);
                 $endTime = $currentTime + $multiply * $levelData['access_regular_time_value'];
+
+                $multiplyToAdd = $levelData['access_regular_time_type'];
+
+                $endTime = self::getExtraTime($multiplyToAdd, $levelData['access_regular_time_value'], $currentTime);
               }
               break;
         }
@@ -620,19 +633,75 @@ class Memberships
         }
 
         if ( $levelData['access_trial_type'] == 1 ){
+            //Deprecated
             $multiply = ihc_get_multiply_time_value( $levelData['access_trial_time_type'] );
+
+            $multiplyToAdd = $levelData['access_trial_time_type'];
+
             $timeToAdd = $levelData['access_trial_time_value'];
         } else {
             ///couple of circles
+            //Deprecated
             $multiply = ihc_get_multiply_time_value( $levelData['access_regular_time_type'] );
+
+            $multiplyToAdd = $levelData['access_regular_time_type'];
+
             if ( $levelData['access_trial_couple_cycles'] != '' && $levelData['access_trial_couple_cycles'] > 1 ){
-                $timeToAdd = $levelData['access_regular_time_value'] * $levelData['access_trial_couple_cycles']; 
+                $timeToAdd = $levelData['access_regular_time_value'] * $levelData['access_trial_couple_cycles'];
             } else {
                 $timeToAdd = $levelData['access_regular_time_value'];
             }
         }
+        //Deprecated
         $endTime = $currentTime + $multiply * $timeToAdd;
+
+        $endTime = self::getExtraTime($multiplyToAdd, $timeToAdd, $currentTime);
+
         return $endTime;
+    }
+
+    /**
+     * @param string
+     * @param int
+     * @param string
+     * @return int
+     */
+    public static function getExtraTime( $time_type='', $timeToAdd=0, $currentTime='' )
+    {
+      /*
+       * @param string D,W,M,Y
+       * @return time in seconds
+       */
+       if(!isset($currentTime) || $currentTime == ''){
+         $currentTime = indeed_get_unixtimestamp_with_timezone();
+       }
+
+       $extraTime = FALSE;
+
+      if(!isset($time_type) || $time_type == '' && !isset($timeToAdd) && $timeToAdd == 0){
+        return $extraTime;
+      }
+
+      $date = new \DateTime();
+  		$date->setTimestamp( $currentTime);
+
+      switch ($time_type){
+        case 'D':
+          $date->modify( '+'.$timeToAdd.' days');
+        break;
+        case 'W':
+          $date->modify( '+'.$timeToAdd.' weeks');
+        break;
+        case 'M':
+          $date->modify( '+'.$timeToAdd.' months');
+        break;
+        case 'Y':
+          $date->modify( '+'.$timeToAdd.' years');
+        break;
+      }
+
+       $time = $date->format('Y-m-d H:i:s');
+       return strtotime( $time );
     }
 
     public static function isTrial( $lid=0 )
@@ -690,6 +759,22 @@ class Memberships
               break;
         }
         return $string;
+    }
+
+    /**
+     * @param int
+     * @return bool
+     */
+    public static function isRecurring( $lid=0 )
+    {
+        $levelData = self::getOne( $lid );
+        if ( !$levelData ){
+            return false;
+        }
+        if ( isset( $levelData['access_type'] ) && $levelData['access_type'] == 'regular_period' ){
+            return true;
+        }
+        return false;
     }
 
 }

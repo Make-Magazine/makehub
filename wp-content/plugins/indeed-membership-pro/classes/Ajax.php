@@ -34,6 +34,37 @@ class Ajax
 
         add_action( 'wp_ajax_ihc_user_put_subscrition_resume', [ $this, 'userPutSubscriptionResume' ] );
         add_action( 'wp_ajax_nopriv_ihc_user_put_subscrition_resume', [ $this, 'userPutSubscriptionResume' ] );
+
+        add_action( 'wp_ajax_ihc_stripe_connect_form_fields', [ $this, 'ihc_stripe_connect_form_fields'] );
+        add_action( 'wp_ajax_nopriv_ihc_stripe_connect_form_fields', [ $this, 'ihc_stripe_connect_form_fields'] );
+
+        add_action( 'wp_ajax_ihc_stripe_connect_generate_payment_intent', [ $this, 'ihc_stripe_connect_generate_payment_intent'] );
+        add_action( 'wp_ajax_nopriv_ihc_stripe_connect_generate_payment_intent', [ $this, 'ihc_stripe_connect_generate_payment_intent'] );
+
+        add_action( 'wp_ajax_ihc_ajax_check_braintree_form_fields', [ $this, 'ihc_ajax_check_braintree_form_fields'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_check_braintree_form_fields', [ $this, 'ihc_ajax_check_braintree_form_fields'] );
+
+        add_action( 'wp_ajax_ihc_ajax_check_authorize_form_fields', [ $this, 'ihc_ajax_check_authorize_form_fields'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_check_authorize_form_fields', [ $this, 'ihc_ajax_check_authorize_form_fields'] );
+
+        add_action( 'wp_ajax_ihc_ajax_deauth_from_stripe_connect', [ $this, 'ihc_ajax_deauth_from_stripe_connect'] );
+
+        add_action( 'wp_ajax_ihc_ajax_get_stripe_connect_change_card_fields', [ $this, 'ihc_ajax_get_stripe_connect_change_card_fields'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_get_stripe_connect_change_card_fields', [ $this, 'ihc_ajax_get_stripe_connect_change_card_fields'] );
+
+        add_action( 'wp_ajax_ihc_ajax_do_stripe_connect_change_card', [ $this, 'ihc_ajax_do_stripe_connect_change_card'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_do_stripe_connect_change_card', [ $this, 'ihc_ajax_do_stripe_connect_change_card'] );
+
+        add_action( 'wp_ajax_ihc_ajax_stripe_connect_generate_payment_intent', [ $this, 'ihc_ajax_stripe_connect_generate_payment_intent'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_stripe_connect_generate_payment_intent', [ $this, 'ihc_ajax_stripe_connect_generate_payment_intent'] );
+
+        add_action( 'wp_ajax_ihc_ajax_stripe_connect_generate_setup_intent', [ $this, 'ihc_ajax_stripe_connect_generate_setup_intent'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_stripe_connect_generate_setup_intent', [ $this, 'ihc_ajax_stripe_connect_generate_setup_intent'] );
+
+        add_action( 'wp_ajax_ihc_ajax_stripe_connect_generate_setup_intent_no_payment', [ $this, 'ihc_ajax_stripe_connect_generate_setup_intent_no_payment'] );
+        add_action( 'wp_ajax_nopriv_ihc_ajax_stripe_connect_generate_setup_intent_no_payment', [ $this, 'ihc_ajax_stripe_connect_generate_setup_intent_no_payment'] );
+
+
     }
 
     /**
@@ -436,20 +467,45 @@ class Ajax
         if ( !indeedIsAdmin() ){
             die;
         }
-        if ( !isset( $_POST['levelId'] ) || !isset( $_POST['uid'] ) || !isset( $_POST['currentExpireTime'] ) ){
+        if ( !isset( $_POST['levelId'] ) || !isset( $_POST['uid'] ) || !isset( $_POST['currentExpireTime'] )  || !isset( $_POST['subscriptionId'] ) ){
             die;
         }
         $expireTime = strtotime( $_POST['currentExpireTime'] );
         if ( indeed_get_unixtimestamp_with_timezone() > $expireTime ){
             die;
         }
-        echo json_encode(
-          [
-                  'remain_time'       => $expireTime - indeed_get_unixtimestamp_with_timezone(),
-                  'expire_time'       => date( 'Y-m-d H:i:s', indeed_get_unixtimestamp_with_timezone() ),
-                  'new_status'        => esc_html__( 'Paused', 'ihc' ),
-          ]
-        );
+
+        $pause = true;
+        $uid = $_POST['uid'];
+        $lid = $_POST['levelId'];
+        $subscriptionId = $_POST['subscriptionId'];
+        //Pause Recurring Subscription
+        $subscriptionPayment = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'payment_gateway' );
+        if( $subscriptionPayment ){
+            switch ( $subscriptionPayment ){
+                  case 'stripe_connect':
+                    $object = new \Indeed\Ihc\Gateways\StripeConnect();
+                    $pause = $object->pause( $uid, $lid,  $subscriptionId );
+                    break;
+                default:
+                  $paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $subscriptionPayment );
+                  if ( $paymentObject !== false && method_exists ( $paymentObject , 'pause' ) ){
+                      $pause = $object->pause( $uid, $lid,  $subscriptionId );
+                  }
+                  break;
+            }
+        }
+
+        if($pause){
+          echo json_encode(
+            [
+                    'remain_time'       => $expireTime - indeed_get_unixtimestamp_with_timezone(),
+                    'expire_time'       => date( 'Y-m-d H:i:s', indeed_get_unixtimestamp_with_timezone() ),
+                    'new_status'        => esc_html__( 'Paused', 'ihc' ),
+            ]
+          );
+        }
+
         die;
     }
 
@@ -462,19 +518,44 @@ class Ajax
           if ( !indeedIsAdmin() ){
               die;
           }
-          if ( !isset( $_POST['subscriptionId'] ) ){
+          if ( !isset( $_POST['levelId'] ) || !isset( $_POST['uid'] ) || !isset( $_POST['subscriptionId'] ) ){
               die;
           }
           $currentTime = indeed_get_unixtimestamp_with_timezone();
           $remainTime = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( esc_sql($_POST['subscriptionId']), 'remain_time' );
           $expireTime = $currentTime + $remainTime;
-          echo json_encode(
-            [
-                    'start_time'        => date( 'Y-m-d H:i:s', $currentTime ),
-                    'expire_time'       => date( 'Y-m-d H:i:s', $expireTime ),
-                    'new_status'        => esc_html__( 'Active', 'ihc' ),
-            ]
-          );
+
+          $resume = true;
+          $uid = $_POST['uid'];
+          $lid = $_POST['levelId'];
+          $subscriptionId = $_POST['subscriptionId'];
+          //Pause Recurring Subscription
+          $subscriptionPayment = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'payment_gateway' );
+          if( $subscriptionPayment ){
+              switch ( $subscriptionPayment ){
+                    case 'stripe_connect':
+                      $object = new \Indeed\Ihc\Gateways\StripeConnect();
+                      $pause = $object->resume( $uid, $lid,  $subscriptionId );
+                      break;
+                  default:
+                    $paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $subscriptionPayment );
+                    if ( $paymentObject !== false && method_exists ( $paymentObject , 'resume' ) ){
+                        $pause = $object->resume( $uid, $lid,  $subscriptionId );
+                    }
+                    break;
+              }
+          }
+
+          if($resume){
+            echo json_encode(
+              [
+                      'start_time'        => date( 'Y-m-d H:i:s', $currentTime ),
+                      'expire_time'       => date( 'Y-m-d H:i:s', $expireTime ),
+                      'new_status'        => esc_html__( 'Active', 'ihc' ),
+              ]
+            );
+          }
+
           die;
     }
 
@@ -512,11 +593,29 @@ class Ajax
         if ( $remainTime < 0 ){
             die;
         }
-
-        $currentTime = date( 'Y-m-d H:i:s', $currentTime );
-        \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $currentTime, [] );
-        \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 4 );
-        \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', $remainTime );
+        $pause = true;
+        //Pause Recurring Subscription
+        $subscriptionPayment = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'payment_gateway' );
+        if( $subscriptionPayment ){
+            switch ( $subscriptionPayment ){
+                  case 'stripe_connect':
+                    $object = new \Indeed\Ihc\Gateways\StripeConnect();
+                    $pause = $object->pause( $uid, $lid,  $subscriptionId );
+                    break;
+                default:
+                  $paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $subscriptionPayment );
+                  if ( $paymentObject !== false && method_exists ( $paymentObject , 'pause' ) ){
+                      $pause = $object->pause( $uid, $lid,  $subscriptionId );
+                  }
+                  break;
+            }
+        }
+        if($pause){
+            $currentTime = date( 'Y-m-d H:i:s', $currentTime );
+            \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $currentTime, [] );
+            \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 4 );
+            \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', $remainTime );
+        }
     }
 
     /**
@@ -547,9 +646,315 @@ class Ajax
         $expireTime = $currentTime + $remainTime;
         $expireTime = date( 'Y-m-d H:i:s', $expireTime );
 
-        \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $expireTime, [] );
-        \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 1 );
-        \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', '' );
+        $resume = true;
+        //Resume Recurring Subscription
+        $subscriptionPayment = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'payment_gateway' );
+        if( $subscriptionPayment ){
+            switch ( $subscriptionPayment ){
+                  case 'stripe_connect':
+                    $object = new \Indeed\Ihc\Gateways\StripeConnect();
+                    $pause = $object->resume( $uid, $lid,  $subscriptionId );
+                    break;
+                default:
+                  $paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $subscriptionPayment );
+                  if ( $paymentObject !== false && method_exists ( $paymentObject , 'resume' ) ){
+                      $pause = $object->resume( $uid, $lid,  $subscriptionId );
+                  }
+                  break;
+            }
+        }
+        if($resume){
+          \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $expireTime, [] );
+          \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 1 );
+          \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', '' );
+        }
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_stripe_connect_form_fields()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        $stripeConnect = new \Indeed\Ihc\Gateways\StripeConnect();
+        $response = $stripeConnect->getFormFields();
+        echo $response;
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_stripe_connect_generate_payment_intent()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        $data = []; // amount, currency, subscription_type ( single payment or recurring )
+        $stripeConnect = new \Indeed\Ihc\Gateways\StripeConnect();
+        $response = $stripeConnect->generatePaymentSecret( $data );
+        echo json_encode( $response );
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_ajax_check_braintree_form_fields()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        $braintree = new \Indeed\Ihc\Gateways\Braintree();
+        $response = $braintree->checkFields( $_POST );
+        echo json_encode( $response );
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_ajax_check_authorize_form_fields()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        $authorize = new \Indeed\Ihc\Gateways\Authorize();
+        $response = $authorize->checkFields( $_POST );
+        echo json_encode( $response );
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_ajax_deauth_from_stripe_connect()
+    {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        $response = wp_remote_get( $_POST['url'] );
+        $code = isset( $response['response']['code'] ) ? $response['response']['code'] : false;
+        if ( $code === false || !isset( $response['body'] ) ){
+        	echo json_encode([
+        										'code'        => 400,
+        										'message'     => 'Error',
+        	]);
+        	die;
+        }
+        $responseBody = json_decode( $response['body'], true );
+
+        if ( !isset( $responseBody['message'] ) || !isset( $responseBody['env'] ) ){
+        	echo json_encode([
+        										'code'        => $code,
+        										'message'     => isset( $response['body'] ) ? $response['body'] : 'Error',
+        	]);
+        }
+        if ( $code === 200 && $responseBody['message'] === 'Deauthorize completed' ){
+        		// remove stripe keys
+        		if ( $responseBody['env'] === 'sandbox' ){
+        				// sandbox
+        				update_option( 'ihc_stripe_connect_test_publishable_key', '' );
+        				update_option( 'ihc_stripe_connect_test_client_secret', '' );
+        				update_option( 'ihc_stripe_connect_test_account_id', '' );
+        		} else {
+        				// live
+        				update_option( 'ihc_stripe_connect_publishable_key', '' );
+        				update_option( 'ihc_stripe_connect_client_secret', '' );
+        				update_option( 'ihc_stripe_connect_account_id', '' );
+        		}
+        }
+        echo json_encode([
+        									'code'        => $code,
+        									'message'     => isset( $responseBody['message'] ) ? $responseBody['message'] : 'Error',
+        ]);
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function ihc_ajax_get_stripe_connect_change_card_fields()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        require_once IHC_PATH . 'public/views/stripe-connect-change-card.php';
+        die;
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    public function ihc_ajax_do_stripe_connect_change_card()
+    {
+        global $current_user;
+        if ( !ihcPublicVerifyNonce() ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+
+        $paymentMethodId = isset( $_POST['payment_method_id'] ) ? esc_sql( $_POST['payment_method_id'] ) : false;
+        $umpSubscriptionId = isset( $_POST['ump_subscription_id'] ) ? esc_sql( $_POST['ump_subscription_id'] ) : false;
+        $uid = isset( $_POST['uid'] ) ? esc_sql( $_POST['uid'] ) : false;
+
+
+        $stripe = new \Indeed\Ihc\Gateways\StripeConnect();
+        $result = $stripe->changePaymentMethodForUser( $paymentMethodId, $umpSubscriptionId );
+
+        echo json_encode( $result );
+        die;
+    }
+
+    /**
+      * @param none
+      * @return none
+      */
+    public function ihc_ajax_stripe_connect_generate_payment_intent()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        if ( !isset( $_POST['session'] ) || $_POST['session'] === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $checkoutHash = base64_decode( $_POST['session'] );
+        if ( $checkoutHash === false || $checkoutHash === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        try {
+            $checkoutData = unserialize( $checkoutHash );
+        } catch ( \Exception $e ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        if ( !isset( $checkoutData['amount'] ) || !isset( $checkoutData['lid'] ) ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $checkoutData['payment_method'] = isset( $_POST['payment_method'] ) ? $_POST['payment_method'] : '';
+        if ( $checkoutData['payment_method'] === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $stripeConnect = new \Indeed\Ihc\Gateways\StripeConnect();
+        $response = $stripeConnect->createPaymentIntent( $checkoutData );
+        echo json_encode( $response );
+        die;
+    }
+
+    /**
+      * @param none
+      * @return none
+      */
+    public function ihc_ajax_stripe_connect_generate_setup_intent()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        if ( !isset( $_POST['session'] ) || $_POST['session'] === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $checkoutHash = base64_decode( $_POST['session'] );
+        if ( $checkoutHash === false || $checkoutHash === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        try {
+            $checkoutData = unserialize( $checkoutHash );
+        } catch ( \Exception $e ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        if ( !isset( $checkoutData['lid'] ) ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $checkoutData['payment_method'] = isset( $_POST['payment_method'] ) ? $_POST['payment_method'] : '';
+        if ( $checkoutData['payment_method'] === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $stripeConnect = new \Indeed\Ihc\Gateways\StripeConnect();
+        $response = $stripeConnect->createSetupIntent( $checkoutData );
+        echo json_encode( $response );
+        die;
+    }
+
+    public function ihc_ajax_stripe_connect_generate_setup_intent_no_payment()
+    {
+        if ( !ihcPublicVerifyNonce() ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $data['payment_method'] = isset( $_POST['payment_method'] ) ? $_POST['payment_method'] : '';
+        if ( $data['payment_method'] === '' ){
+            echo json_encode( [
+                                'status'        => 0,
+                                'message'       => esc_html__( 'Error. Please try again!', 'ihc' ),
+            ] );
+            die;
+        }
+        $stripeConnect = new \Indeed\Ihc\Gateways\StripeConnect();
+        $response = $stripeConnect->createSetupIntent( $data );
+        echo json_encode( $response );
+        die;
     }
 
 }

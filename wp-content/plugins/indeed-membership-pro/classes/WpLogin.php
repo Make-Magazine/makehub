@@ -26,7 +26,7 @@ class WpLogin
 
     public function loginHead()
     {
-        wp_enqueue_style( 'ihc_wp_login_style', IHC_URL . 'assets/css/wp_login_custom.css', array(), false, 'all' );
+        wp_enqueue_style( 'ihc_wp_login_style', IHC_URL . 'assets/css/wp_login_custom.css', array(), 10.1, 'all' );
         $customLogo = get_option( 'ihc_wp_login_logo_image' );
         if ( $customLogo ):?>
         <?php
@@ -40,7 +40,7 @@ class WpLogin
       	wp_enqueue_style( 'dummy-handle' );
       	wp_add_inline_style( 'dummy-handle', stripslashes($custom_css) );
         endif;
-        wp_enqueue_script( 'ihc-wp-login', IHC_URL . 'assets/js/wp-login.js', [], 1.1 );
+        wp_enqueue_script( 'ihc-wp-login', IHC_URL . 'assets/js/wp-login.js', [ 'jquery' ], 10.1 );
 
     }
 

@@ -419,7 +419,7 @@ function ihcDhSelector(id, display){
 
 function ihcDeleteUserPrompot(i){
 		swal({
-			title: "Are you sure that you want to delete this user?",
+			title: jQuery('.ihc-js-admin-messages').attr('data-delete_user'),
 			text: "",
 			type: "warning",
 			showCancelButton: true,
@@ -989,7 +989,7 @@ function ihcAdminDeleteUserLevelRelationship(l_id, u_id){
 
 function ihcFirstConfirmThenRedirect(u){
 	swal({
-			title: "Are You sure You want to delete this Level?",
+			title: "Are You sure You want to delete this Membership?",
 			text: "",
 			type: "warning",
 			showCancelButton: true,
@@ -2201,10 +2201,26 @@ jQuery(window).on('load', function(){
 			// notifications - add
 			ihcChangeNotificationTemplate();
 	}
-
-	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications ' ) !== -1 ){
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications' ) !== -1 ){
 			// notifications - list
 				ihcNotificationLevelOnlyFor();
+
+				if ( jQuery( '.ihc-js-notifications-fire-notification-test' ).length > 0 ){
+						jQuery( '.ihc-js-notifications-fire-notification-test' ).on( 'click', function(){
+								var notificationId = jQuery( this ).attr( 'data-notification_id' );
+								jQuery.ajax({
+										type 			: 'post',
+										url 			: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+										data 			: {
+															 action : 'ihc_ajax_notification_send_test_email',
+															 id			: notificationId
+										},
+										success		: function (data) {
+												jQuery(data).hide().appendTo('body').fadeIn('normal');
+										}
+							 });
+						});
+				}
 	}
 
 	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=register' ) !== -1 ){
@@ -2486,4 +2502,61 @@ jQuery(window).on('load', function(){
 			iumpAdminPreviewInvoice();
 	}
 
+	if ( jQuery('.ihc-js-deauth-from-stripe-checkout-bttn').length > 0 ){
+			//
+			jQuery( '.ihc-js-deauth-from-stripe-checkout-bttn' ).on( 'click', function(){
+					// make the request to wpindeed
+					jQuery.ajax({
+								type : "post",
+								url : decodeURI( window.ihc_site_url ) + '/wp-admin/admin-ajax.php',
+								data : {
+												 action						: "ihc_ajax_deauth_from_stripe_connect",
+												 url						  : jQuery( this ).attr('data-url'),
+								},
+								success: function (response) {
+										var responseObject = jQuery.parseJSON(response);
+										if ( responseObject.code === 200 ){
+												window.location.href = jQuery( '.ihc-js-deauth-from-stripe-checkout-bttn' ).attr('data-refresh_url');
+										} else {
+												window.location.href = jQuery( '.ihc-js-deauth-from-stripe-checkout-bttn' ).attr('data-refresh_url') + '&error_deauth=1';
+										}
+								}
+					});
+
+			});
+	}
+
 }); // end of document load
+
+function ihcSendNotificationTest()
+{
+		jQuery.ajax({
+					type : "post",
+					url : decodeURI( window.ihc_site_url ) + '/wp-admin/admin-ajax.php',
+					data : {
+									 action						: "ihc_ajax_do_send_notification_test",
+									 id								: jQuery('.ihc-js-notification-test-id').val(),
+									 email						:jQuery( '.ihc-js-notification-test-email' ).val()
+					},
+					success: function (data) {
+							ihcClosePopup();
+					}
+		});
+}
+
+function ihcUpdateStripeConnectAuthUrl()
+{
+		jQuery( '.ihc-js-stripe-connect-live' ).removeClass( 'ihc-display-block' );
+		jQuery( '.ihc-js-stripe-connect-live' ).removeClass( 'ihc-display-none' );
+		jQuery( '.ihc-js-stripe-connect-sandbox' ).removeClass( 'ihc-display-block' );
+		jQuery( '.ihc-js-stripe-connect-sandbox' ).removeClass( 'ihc-display-none' );
+		if ( jQuery('#ihc_stripe_connect_live_mode').val() == 1 ){
+				// live mode
+				jQuery( '.ihc-js-stripe-connect-live' ).addClass( 'ihc-display-block' );
+				jQuery( '.ihc-js-stripe-connect-sandbox' ).addClass( 'ihc-display-none' );
+		} else {
+				// sandbox mode
+				jQuery( '.ihc-js-stripe-connect-live' ).addClass( 'ihc-display-none' );
+				jQuery( '.ihc-js-stripe-connect-sandbox' ).addClass( 'ihc-display-block' );
+		}
+}

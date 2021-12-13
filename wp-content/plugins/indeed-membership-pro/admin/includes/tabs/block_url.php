@@ -12,10 +12,10 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 ?>
 <div class="ihc-subtab-menu">
 	<a class="ihc-subtab-menu-item <?php echo ( $subtab === 'post_types' ) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=post_types';?>"><?php esc_html_e('All Posts', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'cats') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=cats';?>"><?php esc_html_e('All Categories', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'cats') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=cats';?>"><?php esc_html_e('All Posts based on Categories', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'files') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=files';?>"><?php esc_html_e('Specific Files', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'entire_url') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=entire_url';?>"><?php esc_html_e('Specific URL', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'keyword') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=keyword';?>"><?php esc_html_e('All URL (based on Keywords)', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($subtab === 'keyword') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=keyword';?>"><?php esc_html_e('All URLs (based on Keywords)', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 
@@ -29,7 +29,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 <div class="iump-wrapper">
 <div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
-								<?php esc_html_e('Lock Rules', 'ihc');?>
+								<?php esc_html_e('Access Rules', 'ihc');?>
 							</span>
 </div>
 <form method="post"  id="block_url_form">
@@ -46,10 +46,19 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 			<div class="ihc-stuffbox">
 				<h3><?php esc_html_e('Add new Restriction', 'ihc');?></h3>
 				<div class="inside">
-
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Full URL:', 'ihc');?></label>
-							<input type="text" value="" name="ihc_block_url_entire-url" class="ihc-block-url-full-url"/>
+							<h2><?php esc_html_e('Restrict Based on URL Path', 'ihc');?></h2>
+							<p><?php esc_html_e('You may restrict any URL running through your WordPress website even if not about a static Post or Page.', 'ihc');?></p>
+						</div>	
+						<div class="iump-form-line">
+							<div class="row">
+                	<div class="col-xs-8">
+                             <div class="input-group">
+                                <span class="input-group-addon"><?php esc_html_e('Full URL', 'ihc');?></span>
+                                <input class="ihc-block-url-full-url form-control" type="text"  value="" name="ihc_block_url_entire-url" placeholder="<?php esc_html_e('copy the entire Link from your browser', 'ihc');?>">
+                             </div>
+                     </div>
+                 </div>
 						</div>
 
 						<div class="iump-form-line iump-special-line">
@@ -61,7 +70,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 															'show' =>esc_html__('Show Only', 'ihc'),
 									);
 								?>
-								<label class="iump-labels-special"><?php esc_html_e('Restrict type:', 'ihc');?></label>
+								<h4><?php esc_html_e('Restriction type:', 'ihc');?></h4>
 								<select name="block_or_show">
 									<?php foreach ($type_values as $k=>$v):?>
 										<option value="<?php echo $k;?>"><?php echo $v;?></option>
@@ -70,7 +79,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 
 							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Target Users:', 'ihc');?></label>
+								<h4><?php esc_html_e('Target Members:', 'ihc');?></h4>
 								<select id="ihc-change-target-user-set" onChange="ihcWriteTagValue(this, '#ihc_block_url_entire-target_users', '#ihc_tags_field1', 'ihc_select_tag_' );" class="ihc-block-url-select">
 									<option value="-1" selected>...</option>
 									<?php
@@ -87,7 +96,8 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Redirect to:', 'ihc');?></label>
+							<h4><?php esc_html_e('Redirect after', 'ihc');?></h4>
+							<p><?php esc_html_e('If access is restrict choose where members will be redirected. If no specific option is selected Default Redirect Page will be used.', 'ihc');?></p>
 							<select name="ihc_block_url_entire-redirect">
 								<option value="-1" selected >...</option>
 								<?php
@@ -106,7 +116,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 					<input type="hidden" value="" name="delete_block_url" id="delete_block_url" />
 
 					<div class="ihc-wrapp-submit-bttn">
-						<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save_block_url" class="button button-primary button-large" />
+						<input type="submit" value="<?php esc_html_e('Add New Rule', 'ihc');?>" name="ihc_save_block_url" class="button button-primary button-large ihc_submit_bttn" />
 					</div>
 				</div>
 			</div>
@@ -199,11 +209,21 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 				<div class="ihc-stuffbox">
 					<h3><?php esc_html_e('Add new Restriction', 'ihc');?></h3>
 					<div class="inside">
-
-							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Keyword:', 'ihc');?></label>
-								<input type="text" value="" name="ihc_block_url_word-url" />
-							</div>
+						<div class="iump-form-line">
+							<h2><?php esc_html_e('Restrict any URL based on Keywords', 'ihc');?></h2>
+							<p><?php esc_html_e('You may restrict multiple URLs running through your WordPress website based on specific keyword found inside the Link. Avoid to common keywords that may restrict more links and is expected.', 'ihc');?></p>
+						</div>	
+						<div class="iump-form-line">
+							<div class="row">
+									<div class="col-xs-4">
+														 <div class="input-group">
+																<span class="input-group-addon"><?php esc_html_e('Keyword', 'ihc');?></span>
+																<input class="form-control" type="text" value="" name="ihc_block_url_word-url">
+														 </div>
+										 </div>
+								 </div>
+						</div>
+							
 
 							<div class="iump-form-line iump-special-line">
 								<div class="iump-form-line">
@@ -213,7 +233,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 																'show' =>esc_html__('Show Only', 'ihc'),
 										);
 									?>
-									<label class="iump-labels-special"><?php esc_html_e('Restrict type:', 'ihc');?></label>
+									<h4><?php esc_html_e('Restriction type:', 'ihc');?></h4>
 									<select name="block_or_show">
 										<?php foreach ($type_values as $k=>$v):?>
 											<option value="<?php echo $k;?>"><?php echo $v;?></option>
@@ -222,7 +242,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 								</div>
 
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php esc_html_e('Target Users:', 'ihc');?></label>
+									<h4><?php esc_html_e('Target Members:', 'ihc');?></h4>
 									<select id="ihc-change-target-user-set-regex" onChange="ihcWriteTagValue(this, '#ihc_block_url_word-target_users', '#ihc_tags_field2', 'ihc_select_tag_regex_' );" class="ihc-block-url-select">
 										<option value="-1" selected>...</option>
 										<?php
@@ -239,7 +259,8 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 
 							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Redirect to:', 'ihc');?></label>
+								<h4><?php esc_html_e('Redirect after', 'ihc');?></h4>
+								<p><?php esc_html_e('If access is restrict choose where members will be redirected. If no specific option is selected Default Redirect Page will be used.', 'ihc');?></p>
 								<select name="ihc_block_url_word-redirect">
 									<option value="-1" selected >...</option>
 									<?php
@@ -256,7 +277,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 							<input type="hidden" value="" name="delete_block_regex" id="delete_block_regex" />
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save_block_url" class="button button-primary button-large" />
+							<input type="submit" value="<?php esc_html_e('Add New Rule', 'ihc');?>" name="ihc_save_block_url" class="button button-primary button-large ihc_submit_bttn" />
 						</div>
 					</div>
 				</div>
@@ -362,7 +383,8 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 					<h3><?php esc_html_e('Block All Posts By Type', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Post Type:', 'ihc');?></label>
+							<h4><?php esc_html_e('Custom Post Type', 'ihc');?></h4>
+							<p><?php esc_html_e('Choose one of existent custom post types registered into your WordPress website.', 'ihc');?></p>
 							<select name="post_type">
 							<?php
 								global $wp_post_types;
@@ -396,7 +418,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 															'show' =>esc_html__('Show Only', 'ihc'),
 									);
 								?>
-								<label class="iump-labels-special"><?php esc_html_e('Restrict type:', 'ihc');?></label>
+								<h4><?php esc_html_e('Restriction type:', 'ihc');?></h4>
 								<select name="block_or_show">
 									<?php foreach ($type_values as $k=>$v):?>
 										<option value="<?php echo $k;?>"><?php echo $v;?></option>
@@ -405,7 +427,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 
 							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Target Users:', 'ihc');?></label>
+								<h4><?php esc_html_e('Target Members:', 'ihc');?></h4>
 								<select id="ihc-change-target-user-set-regex" onChange="ihcWriteTagValue(this, '#target_users', '#ihc_tags_field2', 'ihc_select_tag_regex_' );" class="ihc-block-url-select">
 									<option value="-1" selected>...</option>
 									<?php
@@ -423,8 +445,8 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 
-						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Redirect to:', 'ihc');?></label>
+						<div class="iump-form-line"><h4><?php esc_html_e('Redirect after', 'ihc');?></h4>
+						<p><?php esc_html_e('If access is restrict choose where members will be redirected. If no specific option is selected Default Redirect Page will be used.', 'ihc');?></p>
 							<select name="redirect">
 								<option value="-1" selected >...</option>
 								<?php
@@ -441,7 +463,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+							<input type="submit" value="<?php esc_html_e('Add New Rule', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn">
 						</div>
 					</div>
 				</div>
@@ -559,7 +581,11 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 					<h3><?php esc_html_e('Block All Posts By Category Name', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Category:', 'ihc');?></label>
+						  <h2><?php esc_html_e('Restrict all Posts from certain Category', 'ihc');?></h2>
+						  <p><?php esc_html_e('Set mass restriction over all Posts from a certain Category. This option is available for any type of Posts, from WordPress Posts to Products. If you wish to restrict Category page, you may use Full URL section.', 'ihc');?></p>
+						</div>
+						<div class="iump-form-line">
+							<h4><?php esc_html_e('Category:', 'ihc');?></h4>
 							<select name="cat_id">
 							<?php
 								$terms = ihc_get_all_terms_with_names();
@@ -586,7 +612,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 															'show' =>esc_html__('Show Only', 'ihc'),
 									);
 								?>
-								<label class="iump-labels-special"><?php esc_html_e('Restrict type:', 'ihc');?></label>
+								<h4><?php esc_html_e('Restriction type:', 'ihc');?></h4>
 								<select name="block_or_show">
 									<?php foreach ($type_values as $k=>$v):?>
 										<option value="<?php echo $k;?>"><?php echo $v;?></option>
@@ -594,7 +620,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 								</select>
 							</div>
 							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Target Users:', 'ihc');?></label>
+								<h4><?php esc_html_e('Target Members:', 'ihc');?></h4>
 								<select id="ihc-change-target-user-set-regex" onChange="ihcWriteTagValue(this, '#target_users', '#ihc_tags_field2', 'ihc_select_tag_regex_' );" class="ihc-block-url-select">
 									<option value="-1" selected>...</option>
 									<?php
@@ -610,8 +636,8 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 						</div>
 
-						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Redirect to:', 'ihc');?></label>
+						<div class="iump-form-line"><h4><?php esc_html_e('Redirect after', 'ihc');?></h4>
+						<p><?php esc_html_e('If access is restrict choose where members will be redirected. If no specific option is selected Default Redirect Page will be used.', 'ihc');?></p>
 							<select name="redirect">
 								<option value="-1" selected >...</option>
 								<?php
@@ -628,7 +654,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+							<input type="submit" value="<?php esc_html_e('Add New Rule', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn">
 						</div>
 					</div>
 				</div>
@@ -752,10 +778,19 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 				<div class="ihc-stuffbox">
 					<h3><?php esc_html_e('Block Files By URL', 'ihc');?></h3>
 					<div class="inside">
-
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('File URL Path:', 'ihc');?></label>
-							<input type="text" name="file_url" value="" class="ihc-block-url-file-url"/>
+						  <h2><?php esc_html_e('Restrict Physical Files stored on your WordPress', 'ihc');?></h2>
+						  <p><?php esc_html_e('Restriction rule is applied only on additional media files stored inside  your WordPress with mp3|mp4|avi|pdf|zip|rar|doc|gz|tar|docx|xls|xlsx|PDF extension. ', 'ihc');?></p>
+						</div>
+						<div class="iump-form-line">
+						  <div class="row">
+						      <div class="col-xs-8">
+						                 <div class="input-group">
+						                    <span class="input-group-addon"><?php esc_html_e('Full File Link', 'ihc');?></span>
+						                    <input class="ihc-block-url-file-url form-control" type="text"  value="" name="file_url" placeholder="<?php esc_html_e('copy the entire File Link from your browser', 'ihc');?>">
+						                 </div>
+						         </div>
+						     </div>
 						</div>
 
 						<div class="iump-form-line iump-special-line">
@@ -767,7 +802,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 															'show' =>esc_html__('Show Only', 'ihc'),
 									);
 								?>
-								<label class="iump-labels-special"><?php esc_html_e('Restrict type:', 'ihc');?></label>
+								<h4><?php esc_html_e('Restriction type:', 'ihc');?></h4>
 								<select name="block_or_show">
 									<?php foreach ($type_values as $k=>$v):?>
 										<option value="<?php echo $k;?>"><?php echo $v;?></option>
@@ -776,7 +811,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 							</div>
 
 							<div class="iump-form-line">
-								<label class="iump-labels-special"><?php esc_html_e('Target Users:', 'ihc');?></label>
+								<h4><?php esc_html_e('Target Members:', 'ihc');?></h4>
 								<select id="ihc-change-target-user-set-regex" onChange="ihcWriteTagValue(this, '#target_users', '#ihc_tags_field2', 'ihc_select_tag_regex_' );" class="ihc-block-url-select">
 									<option value="-1" selected>...</option>
 									<?php
@@ -794,7 +829,9 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Redirect to:', 'ihc');?></label>
+							
+							<h4><?php esc_html_e('Redirect after', 'ihc');?></h4>
+							<p><?php esc_html_e('If access is restrict choose where members will be redirected. If no specific option is selected Default Redirect Page will be used.', 'ihc');?></p>
 							<select name="redirect">
 								<option value="-1" selected >...</option>
 								<?php
@@ -811,7 +848,7 @@ $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'post_types';
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php esc_html_e('Add New', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+							<input type="submit" value="<?php esc_html_e('Add New Rule', 'ihc');?>" name="ihc_save" class="button button-primary button-large ihc_submit_bttn">
 						</div>
 					</div>
 				</div>

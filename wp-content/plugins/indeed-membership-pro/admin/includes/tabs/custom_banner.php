@@ -4,10 +4,10 @@ $fieldValue = isset( $data['userData']['ihc_user_custom_banner_src'] ) ? $data['
 $rand = rand( 1, 10000000);
 ?>
 
-<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 9.7 );?>
-<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', [], null );?>
-<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', array(), null );?>
-<?php wp_enqueue_script( 'ihc-account_page-banner', IHC_URL . 'admin/assets/js/ihc_image_upload.js', [], null );?>
+<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 10.1 );?>
+<?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', ['jquery'], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', ['jquery'], 10.1 );?>
+<?php wp_enqueue_script( 'ihc-account_page-banner', IHC_URL . 'admin/assets/js/ihc_image_upload.js', ['jquery'], 10.1 );?>
 
 <span class="ihc-js-custom-banner-data"
 data-trigger_id="<?php echo 'ihc_js_upload_image_' . $rand;?>"

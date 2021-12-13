@@ -26,7 +26,7 @@ $basic_currencies = ihc_get_currencies_list('custom');
 					<input type="text" value="" name="new_currency_name" />
 				</div>
 				<div class="ihc-wrapp-submit-bttn iump-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>

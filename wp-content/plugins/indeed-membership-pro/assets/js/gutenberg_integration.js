@@ -33,6 +33,32 @@ registerBlockType( 'indeed-membership-pro/login', {
     },
 });
 
+registerBlockType( 'indeed-membership-pro/checkout', {
+    title                 : 'UMP - Checkout Page',
+    icon                  : 'universal-access-alt',
+    category              : 'ihc-shortcodes',
+
+    edit: function() {
+        return el( 'p', '', '[ihc-checkout-page]' );
+    },
+    save: function() {
+        return el( 'p', '', '[ihc-checkout-page]' );
+    },
+});
+
+registerBlockType( 'indeed-membership-pro/thankyou', {
+    title                 : 'UMP - Thank You Page',
+    icon                  : 'universal-access-alt',
+    category              : 'ihc-shortcodes',
+
+    edit: function() {
+        return el( 'p', '', '[ihc-thank-you-page]' );
+    },
+    save: function() {
+        return el( 'p', '', '[ihc-thank-you-page]' );
+    },
+});
+
 registerBlockType( 'indeed-membership-pro/logout', {
     title                 : 'UMP - Logout',
     icon                  : 'universal-access-alt',

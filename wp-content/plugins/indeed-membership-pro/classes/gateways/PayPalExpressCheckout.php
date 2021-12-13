@@ -9,12 +9,13 @@ class PayPalExpressCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
                 'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
                 'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
                 'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
                 'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
                 'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction
                 'paymentMetaSlug'                             => 'payment_paypal_express_checkout', // payment gateway slug. exenple: paypal, stripe, etc.
-                'returnUrlAfterPaymentOptionName'             => 'ihc_paypal_express_checkout_return_page', // option name ( in wp_option table ) where it's stored the return URL after a payment is done.
-                'returnUrlOnCancelPaymentOptionName'          => '', // option name ( in wp_option table ) where it's stored the return URL after a payment is canceled.
+                'returnUrlAfterPaymentOptionName'             => 'ihc_paypal_express_return_page', // option name ( in wp_option table ) where it's stored the return URL after a payment is done.
+                'returnUrlOnCancelPaymentOptionName'          => 'ihc_paypal_express_return_page_on_cancel', // option name ( in wp_option table ) where it's stored the return URL after a payment is canceled.
                 'paymentGatewayLanguageCodeOptionName'        => '', // option name ( in wp_option table ) where it's stored the language code.
     ]; // some payment does not support all our features
     protected $intervalSubscriptionRules      = [

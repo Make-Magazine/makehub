@@ -9,6 +9,7 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
                 'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
                 'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
                 'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
                 'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
                 'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction
@@ -219,7 +220,7 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
     private function setLocale()
     {
         $this->locale = $this->paymentSettings['ihc_stripe_checkout_v2_locale_code'];
-        
+
         if ( empty( $this->locale ) ){
             $this->locale = 'auto';
         }
@@ -315,6 +316,20 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
                                           'payment_details'             => $responseData,
                                           'payment_status'              => 'completed',
               ];
+
+              // update stripe subscription
+              $service =  isset( $metaData['service'] ) ? $metaData['service'] : '';
+              if ( $service !== '' && $service === 'stripe_connect'){
+                  return;
+              }
+              //$this->updateStripeSubscriptionDetails( $responseData );
+              // update stripe subscription - set the cancel at
+              $this->updateSubscriptionSetCancel([
+                    'uid'                         => isset( $metaData['uid'] ) ? $metaData['uid'] : 0,
+                    'lid'                         => isset( $metaData['lid'] ) ? $metaData['lid'] : 0,
+                    'subscription_id'             => isset( $subscriptionId ) ? $subscriptionId : '',
+              ]);
+
               break;
 
             case 'charge.refunded':
@@ -552,7 +567,8 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
      */
     public function canDoCancel( $uid=0, $lid=0, $transactionId='' )
     {
-        include IHC_PATH . 'classes/gateways/libraries/stripe-checkout/vendor/autoload.php';
+        //include IHC_PATH . 'classes/gateways/libraries/stripe-checkout/vendor/autoload.php';
+        require_once IHC_PATH . 'classes/gateways/libraries/stripe-sdk/init.php';
 
         if ( !$transactionId ){
             return false;
@@ -635,4 +651,97 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
 
         return false;
     }
+
+    /**
+     * this will update stripe subscription
+     * @param array
+     * @return none
+     */
+    public function updateStripeSubscriptionDetails( $transactionDetails=[] )
+    {
+        \Stripe\Stripe::setApiKey( $this->paymentSettings['ihc_stripe_checkout_v2_secret_key'] );
+        if ( !isset( $transactionDetails['data']['object']['attempted'] ) || $transactionDetails['data']['object']['attempted'] != 1 ){
+            return;
+        }
+        $subscriptionId = \Indeed\Ihc\UserSubscriptions::getIdForUserSubscription( $this->webhookData['uid'], $this->webhookData['lid'] );
+        $billing_type = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'billing_type' );
+        $billing_limit_num = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'billing_limit_num' );
+        if ( $billing_type == 'bl_limited' && $billing_limit_num != '' ){
+            return \Stripe\SubscriptionSchedule::create([
+                    'customer'    => $transactionDetails['data']['object']['customer'],
+                    'start_date'  => $transactionDetails['data']['object']['created'],
+                    'end_behavior' => 'cancel',
+                    'phases'      => [
+
+                                        [
+
+                                          'items' => [
+                                            [
+                                              'price'     => (isset($transactionDetails['data']['object']['lines']['data'][0]['plan']['id'])) ? $transactionDetails['data']['object']['lines']['data'][0]['plan']['id'] : '',
+                                          //    'plan'      => (isset($transactionDetails['data']['object']['lines']['data'][0]['plan']['id'])) ? $transactionDetails['data']['object']['lines']['data'][0]['plan']['id'] : '',
+                                              'quantity'  => 1,
+                                            ],
+                                          ],
+
+
+                                          'iterations' => $billing_limit_num,
+                                        ],
+                    ],
+            ]);
+        }
+    }
+
+    /**
+     * @param array [ 'subscription_id' => '', 'uid' => '', 'lid' => '' ]
+     * @return none
+     */
+    public function updateSubscriptionSetCancel( $attr='' )
+    {
+        require_once IHC_PATH . 'classes/gateways/libraries/stripe-sdk/init.php';
+        if ( $attr['subscription_id'] === '' || $attr['uid'] === 0 || $attr['lid'] === 0 ){
+            return false;
+        }
+
+        $stripe = new \Stripe\StripeClient( $this->paymentSettings['ihc_stripe_checkout_v2_secret_key'] );
+
+        try {
+            $subscriptionObject = $stripe->subscriptions->retrieve( $attr['subscription_id'], [] );
+        } catch ( \Exception $e ){
+            return false;
+        }
+
+        $subscriptionIdInDb = \Indeed\Ihc\UserSubscriptions::getIdForUserSubscription( $attr['uid'], $attr['lid'] );
+        $created = isset( $subscriptionObject->created ) ? $subscriptionObject->created : '';
+        if ( $created === '' ){
+            $created = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'created_at' );
+        }
+        $intervalType = isset( $subscriptionObject->plan->interval ) ? $subscriptionObject->plan->interval : '';
+        if ( $intervalType === '' ){
+            $intervalType = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'interval_type' );
+        }
+        $intervalValue = isset( $subscriptionObject->plan->interval_count ) ? $subscriptionObject->plan->interval_count : '';
+        if ( $intervalValue === '' ){
+            $intervalValue = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'interval_value' );
+        }
+        $cyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'subscription_cycles_limit' );
+        if ( $cyclesLimit === false ){
+            $cyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_limit_num' );
+        }
+        $intervalValue = (int)$intervalValue * (int)$cyclesLimit;
+        try {
+            $cancelAt = strtotime('+' . $intervalValue . ' ' . $intervalType, (int)$created );
+        } catch ( \Exception $e ){
+            return false;
+        }
+
+        try {
+            $stripe->subscriptions->update(
+                $attr['subscription_id'],
+                [ 'cancel_at' => $cancelAt ]
+            );
+        } catch ( \Exception $e ){
+            return false;
+        }
+    }
+
 }

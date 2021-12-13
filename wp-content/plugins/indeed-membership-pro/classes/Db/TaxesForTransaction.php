@@ -142,6 +142,7 @@ class TaxesForTransaction
             return false;
       	}
         $item['label'] = $taxesSettings['ihc_default_tax_label'];
+        $item['percentage'] = $taxesSettings['ihc_default_tax_value'];
         $item['value'] = $taxesSettings['ihc_default_tax_value'] * $this->amount / 100;
         $item['value'] = round($item['value'], $this->decimalsNumber );
         $item['print_value'] = ihc_format_price_and_currency($this->currency, $item['value']);

@@ -329,7 +329,7 @@ if (isset($_POST['ihc_save_level']) && isset( $_POST['save_level'] ) && wp_verif
 											unset($additional_levels[$_GET['edit_level']]);
 										}
 									}
-										if (isset($additional_levels) && count($additional_levels)){
+										if (isset($additional_levels) && is_array($additional_levels) && count($additional_levels)){
 											foreach ($additional_levels as $k=>$v){
 													$selected = ($level_data['afterexpire_level']==$k) ? 'selected' : '';
 													?>
@@ -374,7 +374,7 @@ if (isset($_POST['ihc_save_level']) && isset( $_POST['save_level'] ) && wp_verif
 											unset($additional_levels[$_GET['edit_level']]);
 										}
 									}
-										if (isset($additional_levels) && count($additional_levels)){
+										if (isset($additional_levels) && is_array($additional_levels)  && count($additional_levels)){
 											foreach ($additional_levels as $k=>$v){
 													$selected = ($level_data['aftercancel_level']==$k) ? 'selected' : '';
 													?>
@@ -1052,7 +1052,7 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 																<?php if(isset($memberships_counts[$k])) echo '<a href="'.$url.'&tab=users&ihc_limit=25&levels='.$k.'">'.$memberships_counts[$k].'</a>'; ?>
 														</td>
 											      <td class="column">
-											      	<div>[ihc-level-link id=<?php echo $k;?>]<?php echo  esc_html__('SignUp', 'ihc') ;?>[/ihc-level-link]</div>
+											      	<div>[ihc-purchase-link id=<?php echo $k;?>]<?php echo  esc_html__('SignUp', 'ihc') ;?>[/ihc-purchase-link]</div>
 											      </td>
 														<td class="column">
 											      	<div>[ihc-hide-content membership=<?php echo $k;?>]...[/ihc-hide-content]</div>

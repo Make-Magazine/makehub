@@ -20,11 +20,14 @@ add_shortcode( 'ihc-user-page', 'ihc_user_page_shortcode' );
 add_shortcode( 'ihc-select-level', 'ihc_user_select_level' );
 add_shortcode( 'ihc-visitor-inside-user-page', 'ihc_public_visitor_inside_user_page' );
 
+add_shortcode( 'ihc-thank-you-page', 'ihc_thank_you_page_shortcode' );
+
 add_shortcode( 'ihc-list-users', 'ihc_public_listing_users' );
 add_shortcode( 'ihc-hide-content', 'ihc_hide_content_shortcode' );
 
 add_shortcode( 'ihc-user', 'ihc_print_user_data' );
 add_shortcode( 'ihc-level-link', 'ihc_print_level_link' );
+add_shortcode( 'ihc-purchase-link', 'ihc_print_level_link' );
 
 add_shortcode( 'ihc-lgoin-fb', 'ihc_print_fb_login' );
 
@@ -419,7 +422,8 @@ function ihc_user_select_level($attr=array()){
 		$str = '';
 
 		$u_type = ihc_get_user_type();
-		if ($u_type!='unreg' && $u_type!='pending' && $levels ){
+		if ($u_type!='unreg' && $u_type!='pending' && $levels && ihcCheckCheckoutSetup() == FALSE){
+			//DEPRECATED
 			global $current_user;
 			$taxes = Ihc_Db::get_taxes_rate_for_user((isset($current_user->ID)) ? $current_user->ID : 0);
 			$register_template = get_option('ihc_register_template');
@@ -503,34 +507,50 @@ function ihc_print_level_link( $attr=null, $content='', $print_payments=false, $
 		$u_type = ihc_get_user_type();
 		if ($u_type!='unreg' && $u_type!='pending'){
 			///////////////////////////////// REGISTERED USER
-			$payments_available = ihc_get_active_payments_services(TRUE);
-			$level_data = ihc_get_level_by_id($attr['id']);
 
-			if (in_array('stripe', $payments_available) || get_option('ihc_payment_selected')=='stripe'){
-				/****************** STRIPE *********************/
-				if ($level_data['payment_type']=='payment'){
-					add_filter("the_content", "ihc_add_stripe_public_form", 80, 1);//available in functions.php
-					add_action("ulp_after_single_course", "ihc_add_stripe_public_form", 99, 2);
+			if(ihcCheckCheckoutSetup()){
+
+					if (isset($attr['checkout_page'])){
+						$url = add_query_arg( 'lid', $attr['id'], $attr['checkout_page'] );
+					} else {
+						$page = get_option('ihc_checkout_page');
+						$url = get_permalink($page);
+						$url = add_query_arg( 'lid', $attr['id'], $url );
+					}
+
+				return '<div onClick="ihcBuyNewLevel(\'' . $url . '\');" class="ihc-level-item-link ' . $attr['item_class'] . ' ihc-cursor-pointer">' . $str . '</div>';
+
+			}else{
+				//DEPRECATED
+				$payments_available = ihc_get_active_payments_services(TRUE);
+				$level_data = ihc_get_level_by_id($attr['id']);
+
+				if (in_array('stripe', $payments_available) || get_option('ihc_payment_selected')=='stripe'){
+					/****************** STRIPE *********************/
+					if ($level_data['payment_type']=='payment'){
+						add_filter("the_content", "ihc_add_stripe_public_form", 80, 1);//available in functions.php
+						add_action("ulp_after_single_course", "ihc_add_stripe_public_form", 99, 2);
+					}
 				}
+
+					$page = get_option('ihc_general_user_page');
+					$url = get_permalink($page);
+					$url = add_query_arg('ihcnewlevel', 'true', $url );
+					$url = add_query_arg('lid', $attr['id'], $url );
+					$url = add_query_arg('urlr', urlencode(IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), $url );
+
+					$onClick = 'ihcBuyNewLevelFromAp(\''.$level_data['label'].'\', \''.$level_data['price'].'\', '.$attr['id'].', \'' . $url . '\');';
+
+					if (!defined('IHC_HIDDEN_PAYMENT_PRINT')){
+						$default_payment = get_option('ihc_payment_selected');
+						$the_payment_type = ( ihc_check_payment_available($default_payment) ) ? $default_payment : '';
+						$str .= '<input type=hidden name=ihc_payment_gateway value=' . $the_payment_type . ' />';
+						define('IHC_HIDDEN_PAYMENT_PRINT', TRUE);
+					}
+
+
+				return '<div onClick="' . $onClick . '" class="ihc-level-item-link ' . $attr['item_class'] . ' ihc-cursor-pointer">' . $str . '</div>';
 			}
-
-				$page = get_option('ihc_general_user_page');
-				$url = get_permalink($page);
-				$url = add_query_arg('ihcnewlevel', 'true', $url );
-				$url = add_query_arg('lid', $attr['id'], $url );
-				$url = add_query_arg('urlr', urlencode(IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), $url );
-
-				$onClick = 'ihcBuyNewLevelFromAp(\''.$level_data['label'].'\', \''.$level_data['price'].'\', '.$attr['id'].', \'' . $url . '\');';
-
-				if (!defined('IHC_HIDDEN_PAYMENT_PRINT')){
-					$default_payment = get_option('ihc_payment_selected');
-					$the_payment_type = ( ihc_check_payment_available($default_payment) ) ? $default_payment : '';
-					$str .= '<input type=hidden name=ihc_payment_gateway value=' . $the_payment_type . ' />';
-					define('IHC_HIDDEN_PAYMENT_PRINT', TRUE);
-				}
-
-
-			return '<div onClick="' . $onClick . '" class="ihc-level-item-link ' . $attr['item_class'] . ' ihc-cursor-pointer">' . $str . '</div>';
 
 		} else {
 			//////////////////////////////// NEW USER
@@ -1227,5 +1247,70 @@ function ihc_register_popup( $attr=array(), $content='' )
 
 		$view = new \Indeed\Ihc\IndeedView();
 		return $view->setTemplate( $template )->setContentData( $data, true )->getOutput();
+}
+endif;
+
+if (!function_exists('ihc_thank_you_page_shortcode')):
+function ihc_thank_you_page_shortcode($attr=array()){
+	/*
+	 * @param array
+	 * @return string
+	 */
+	 $meta_arr = ihc_return_meta_arr('thank-you-page-settings');
+	$str = '';
+	if( isset( $_COOKIE['ihc_payment']) && $_COOKIE['ihc_payment'] !== '' ){
+		wp_enqueue_script( 'ihc-cookie', IHC_URL . 'assets/js/cookies.js', [ 'jquery' ], 10.1 ); 
+		$paymentKey = $_COOKIE['ihc_payment'];
+
+		$orderMetaObject = new \Indeed\Ihc\Db\OrderMeta();
+		$orderID = $orderMetaObject->getIdFromMetaNameMetaValue( 'key', $paymentKey );
+		$orderID = (int)$orderID;
+		if(!empty($orderID)){
+			$orderObject = new \Indeed\Ihc\Db\Orders();
+			$orderData = $orderObject->setId( $orderID )
+			                         ->fetch()
+			                         ->get();
+			$orderMeta =	$orderMetaObject->getAllByOrderId( $orderID );
+
+			$payment_gateways = ihc_list_all_payments();
+			$payment_gateways['woocommerce'] = esc_html__( 'WooCommerce', 'ihc' );
+
+			$outputData = [
+					'customer_id'						=> isset( $orderData->uid ) ? $orderData->uid : 0,
+					'customer_email'				=> isset( $orderMeta['customer_email'] ) ? $orderMeta['customer_email'] : '',
+					'customer_name'					=> isset( $orderMeta['customer_name'] ) ? $orderMeta['customer_name'] : '',
+
+					'membership_id'					=> isset( $orderData->lid ) ? $orderData->lid : 0,
+					'membership_name'				=> isset( $orderMeta['level_label'] ) ? $orderMeta['level_label'] : '',
+
+					'amount'								=> isset( $orderData->amount_value ) ? $orderData->amount_value : 0,
+					'currency'							=> isset( $orderData->amount_type ) ? $orderData->amount_type : '',
+
+					'order_code'						=> isset( $orderMeta['code'] ) ? $orderMeta['code'] : 0,
+					'order_date'						=> isset( $orderData->create_date ) ? ihc_convert_date_time_to_us_format($orderData->create_date) : '',
+
+					'order_payment_method'	=> isset( $orderMeta['ihc_payment_type'] ) ? $orderMeta['ihc_payment_type'] : '-'
+
+			];
+
+			if(isset($outputData['order_payment_method']) && $outputData['order_payment_method'] != '-' && isset($payment_gateways) && is_array($payment_gateways) && count($payment_gateways) > 0){
+				$outputData['order_payment_method'] = isset( $payment_gateways[$outputData['order_payment_method']] ) ? $payment_gateways[$outputData['order_payment_method']] : '-';
+			}
+
+			$meta_arr['ihc_thank_you_message'] = ihc_format_str_like_wp($meta_arr['ihc_thank_you_message']);
+			$meta_arr['ihc_thank_you_message'] = htmlspecialchars_decode($meta_arr['ihc_thank_you_message']);
+			$meta_arr['ihc_thank_you_message'] = stripslashes($meta_arr['ihc_thank_you_message']);
+
+			$str = ihc_replace_constants($meta_arr['ihc_thank_you_message'], $outputData['customer_id'], $outputData['membership_id'] , $outputData['membership_id'], $outputData );
+
+		}else{
+			$str = $meta_arr['ihc_thank_you_error_message'];
+		}
+
+
+	}else{
+		$str = $meta_arr['ihc_thank_you_error_message'];
+	}
+	return $str;
 }
 endif;

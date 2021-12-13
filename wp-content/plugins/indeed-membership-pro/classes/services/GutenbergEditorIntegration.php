@@ -11,7 +11,7 @@ class GutenbergEditorIntegration
         if ( !function_exists( 'register_block_type' ) ) {
             return;
         }
-        add_filter( 'block_categories_all', array( $this, 'registerCategory'), 10, 2 ); //
+        add_filter( 'block_categories', array( $this, 'registerCategory'), 10, 2 ); //
         add_action( 'in_admin_footer', array($this, 'assets') );
     }
 
@@ -39,14 +39,14 @@ class GutenbergEditorIntegration
         if ( !method_exists($current_screen, 'is_block_editor') || !$current_screen->is_block_editor() ) {
             return;
         }
-        wp_register_script( 'ihc-gutenberg-locker-integration', IHC_URL . 'assets/js/gutenberg_locker_integration.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'), null );
+        wp_register_script( 'ihc-gutenberg-locker-integration', IHC_URL . 'assets/js/gutenberg_locker_integration.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'jquery' ), 10.1 );
         //wp_localize_script( 'ihc-gutenberg-locker-integration', 'ihc_locker_options', $this->lockerOptions() );
         if ( version_compare ( $wp_version , '5.7', '>=' ) ){
             wp_localize_script( 'ihc-gutenberg-locker-integration', 'ihc_locker_options', $this->lockerOptions( false ) );
         } else {
             wp_localize_script( 'ihc-gutenberg-locker-integration', 'ihc_locker_options', $this->lockerOptions() );
         }
-        wp_enqueue_script( 'ihc-gutenberg-integration', IHC_URL . 'assets/js/gutenberg_integration.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'), null );
+        wp_enqueue_script( 'ihc-gutenberg-integration', IHC_URL . 'assets/js/gutenberg_integration.js', array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'jquery' ), 10.1 );
         wp_enqueue_script( 'ihc-gutenberg-locker-integration' );
     }
 

@@ -1,4 +1,6 @@
 <?php
+global $ihc_error_register;
+
 if (empty($ihc_error_register)){
 		$ihc_error_register = array();
 }

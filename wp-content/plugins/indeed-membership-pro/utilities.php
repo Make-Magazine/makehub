@@ -107,6 +107,9 @@ function ihc_return_meta_arr($type=null, $only_name=false, $return_default=false
 	 * @return array
 	 */
 	//all metas
+	if (!defined('IHC_URL')){
+		define('IHC_URL', plugin_dir_url(__FILE__));
+	}
 	switch ($type){
 		case 'payment':
 			$arr = array(
@@ -267,6 +270,25 @@ Bank NAME<br/>',
 						'ihc_stripe_checkout_v2_use_user_email'			=> 0,
 			);
 			break;
+		case 'payment_stripe_connect':
+			$arr = array(
+							'ihc_stripe_connect_status'									=> 0,
+							'ihc_stripe_connect_payment_request'				=> 0,
+							'ihc_stripe_connect_saved_cards'						=> 0,
+							'ihc_stripe_connect_live_mode'							=> 0,
+							'ihc_stripe_connect_publishable_key'				=> '',
+							'ihc_stripe_connect_client_secret'					=> '',
+							'ihc_stripe_connect_account_id'							=> '',
+							'ihc_stripe_connect_test_publishable_key'		=> '',
+							'ihc_stripe_connect_test_client_secret'			=> '',
+							'ihc_stripe_connect_test_account_id'				=> '',
+							'ihc_stripe_connect_select_order' 					=> 1,
+							'ihc_stripe_connect_short_description' 			=> '',
+							'ihc_stripe_connect_descriptor'							=> '',
+							'ihc_stripe_connect_locale_code' 						=> 'auto',
+							'ihc_stripe_connect_label' 									=> 'Credit Card',
+			);
+			break;
 		case 'login':
 			$arr = array(
 						   'ihc_login_remember_me' => 1,
@@ -301,6 +323,8 @@ Bank NAME<br/>',
 							'ihc_general_user_page' => '',
 							'ihc_general_tos_page' => '',
 							'ihc_subscription_plan_page' => '',
+							'ihc_checkout_page' => '',
+							'ihc_thank_you_page' => '',
 							'ihc_general_register_view_user' => '',
 							//redirects
 							'ihc_general_redirect_default_page' => '',
@@ -330,7 +354,7 @@ Bank NAME<br/>',
 		break;
 		case 'general-msg':
 			$arr = array(
-							'ihc_general_update_msg' => 'Successfully Update!',
+							'ihc_general_update_msg' => 'Successfully Updated!',
 						);
 		break;
 		case 'register':
@@ -431,6 +455,7 @@ Bank NAME<br/>',
 							'ihc_notification_before_time_second' => 3,
 							'ihc_notification_before_time_third' => 1,
 							'ihc_notification_payment_due_time_interval'	=> 1,
+							'ihc_notification_card_expiry_time_interval'	=> 1,
 							'ihc_notification_name' => '',
 							'ihc_notification_email_addresses' => '',
 						);
@@ -677,6 +702,7 @@ Bank NAME<br/>',
 							'ihc_use_buddypress_avatar' 					=> 0,
 							'ihc_email_blacklist' 								=> '',
 							'ihc_default_country'									=> 'US',
+							'ihc_pretty_links'										=> 0
 			);
 			break;
 	  case 'security':
@@ -1045,15 +1071,21 @@ The content of your website don't satisfy me"
 			break;
 		case 'checkout-settings':
 			$arr = [
-					'ihc_checkout_enable ' 										=> 0,
+					'ihc_checkout_enable'  										=> 1,
+					'ihc_checkout_inital'  										=> 0,
 					'ihc_checkout_template'										=> 'ihc_checkout_template_1',
 					'ihc_checkout_column_structure'						=> 1,
 					'ihc_checkout_customer_information'				=> 0,
 					'ihc_checkout_customer_fields'						=> '',
+					'ihc_checkout_payment_section'  					=> 1,
+					'ihc_checkout_payment_theme'  						=> 'ihc-select-payment-theme-2',
 					'ihc_checkout_membership_price_details'		=> 1,
-					'ihc_checkout_taxes_display_section'  		=> 1,
-					'ihc_checkout_privacy_policy_option'			=> 1,
-					'ihc_checkout_privacy_policy_message'			=> '',
+					'ihc_checkout_dynamic_price'							=> 0,
+					'ihc_checkout_coupon'											=> 1,
+					'ihc_checkout_taxes_display_section'  		=> 0,
+					'ihc_checkout_privacy_policy_option'			=> 0,
+					'ihc_checkout_privacy_policy_message'			=> 'Your personal data will be used to process your order, support your experience throughout this website, and for other purposes',
+					'ihc_checkout_avoid_free_membership'			=> 0,
 					'ihc_checkout_custom_css'									=> ''
 				];
 				break;
@@ -1061,20 +1093,40 @@ The content of your website don't satisfy me"
 				$arr = [
 					'ihc_checkout_customer_title' 								=> 'Customer Information',
 					'ihc_checkout_payment_title'									=> 'Payment Method',
+					'ihc_checkout_taxes_title'										=> 'Taxes',
+					'ihc_checkout_coupon_field_message'						=> 'If you have a coupon code, please apply it below',
+					'ihc_checkout_coupon_field_used'							=> 'Coupon',
+					'ihc_checkout_apply_button'  									=> 'Apply',
 					'ihc_checkout_price_initial'									=> 'Initial Payment',
 					'ihc_checkout_price_then'											=> 'Then',
+					'ihc_checkout_price_fee'											=> 'Fee',
+					'ihc_checkout_price_free'											=> 'Free',
+					'ihc_checkout_price_discount'									=> 'Discount',
+					'ihc_checkout_price_every'							  		=> 'every',
+					'ihc_checkout_price_for'							  			=> 'for',
 					'ihc_checkout_dynamic_field_message'					=> 'Choose how much you wish to pay for it.',
-					'ihc_checkout_coupon_field_message'						=> 'If you have a coupon code, please apply it below',
-					'ihc_checkout_apply_button'  									=> 'Apply',
-					'ihc_checkout_taxes_title'										=> 'Taxes',
+					'ihc_checkout_dynamic_price-set'			  			=> 'Chosen Price',
+					'ihc_checkout_dynamic_field_button'			  		=> 'Apply',
 					'ihc_checkout_subtotal_title'									=> 'Subtotal',
-					'ihc_checkout_purchase_button'								=> 'Complete Purchase'
+					'ihc_checkout_purchase_button'								=> 'Complete Purchase',
+					'ihc_checkout_free_button'										=> 'Free Access',
+					'ihc_checkout_remove'													=> '[Remove]'
 					];
 					break;
 			case 'profile-form-settings':
 				$arr = [
 					'ihc_profile_form_template'			=> 'ihc-register-9',
 					'ihc_profile_form_custom_css'		=> ''
+				];
+				break;
+			case 'thank-you-page-settings':
+				$arr = [
+					'ihc_thank_you_message'			    => '<h5 class="primary">Thank you for your purchase!</h5>
+<p>&nbsp;</p><div><p><strong>Hello {customer_name},</strong></p> <p>This is a confirmation that we have just received your secure online payment ({amount}{currency}) through {order_payment_method} for <strong>{membership_name}</strong>.</p>
+<p>Your Order <strong>#{order_code}</strong> have been placed. Check your Inbox on <strong>{customer_email}</strong> for further details.</p>
+<p>Thank you for your trust.</p></div>',
+					'ihc_thank_you_error_message'		=> 'Sorry! Not enough information available.',
+					'ihc_thank_you_custom_css'		  => ''
 				];
 				break;
 		default:
@@ -1337,6 +1389,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').':</span>'
 				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
@@ -1393,6 +1448,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//SUBMIT BUTTON
@@ -1454,6 +1512,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1510,6 +1571,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').':</span>'
 				. '<input type="password" value="" id="' . $password_field_id . '" name="pwd" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		$str .=    '<div class="impu-temp5-row">';
@@ -1573,6 +1637,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').':</span>'
 				. '<input type="password" value="" id="' . $password_field_id . '" name="pwd" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
@@ -1635,6 +1702,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').':</span>'
 				. '<input type="password" value="" id="' . $password_field_id . '" name="pwd" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
@@ -1696,6 +1766,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1753,6 +1826,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1793,7 +1869,7 @@ function ihc_print_form_login($meta_arr=null){
 					if (!$register_page){
 						 $register_page = get_home_url();
 					}
-					$str .= '<div class="impu-form-links-reg">'. esc_html__('Dont have an account?', 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
+					$str .= '<div class="impu-form-links-reg">'. esc_html__("Don't have an account?", 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
 				}
 			}
 
@@ -1810,6 +1886,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1850,7 +1929,7 @@ function ihc_print_form_login($meta_arr=null){
 					if (!$register_page){
 						 $register_page = get_home_url();
 					}
-					$str .= '<div class="impu-form-links-reg">'. esc_html__('Dont have an account?', 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
+					$str .= '<div class="impu-form-links-reg">'. esc_html__("Don't have an account?", 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -1865,6 +1944,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1905,7 +1987,7 @@ function ihc_print_form_login($meta_arr=null){
 					if (!$register_page){
 						 $register_page = get_home_url();
 					}
-					$str .= '<div class="impu-form-links-reg">'. esc_html__('Dont have an account?', 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
+					$str .= '<div class="impu-form-links-reg">'. esc_html__("Don't have an account?", 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
 				}
 			}
 
@@ -1923,6 +2005,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">'
 				. '<i class="fa-ihc fa-pass-ihc"></i><input type="password" value="" id="' . $password_field_id . '" name="pwd" placeholder="'. esc_html__('Password', 'ihc').'"/>'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		//<<<< REMEMBER ME
@@ -1963,7 +2048,7 @@ function ihc_print_form_login($meta_arr=null){
 					if (!$register_page){
 						 $register_page = get_home_url();
 					}
-					$str .= '<div class="impu-form-links-reg">'. esc_html__('Dont have an account?', 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
+					$str .= '<div class="impu-form-links-reg">'. esc_html__("Don't have an account?", 'ihc').'<a href="'.$register_page.'">'. esc_html__('Sign Up', 'ihc').'</a></div>';
 				}
 			}
 		$str .= '</div>';
@@ -1979,6 +2064,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').'</span>'
 				. '<input type="password" value="" id="' . $password_field_id . '" name="pwd" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 
@@ -2048,6 +2136,9 @@ function ihc_print_form_login($meta_arr=null){
 				. '</div>'
 				. '<div class="impu-form-line-fr">' . '<span class="impu-form-label-fr impu-form-label-pass">'. esc_html__('Password', 'ihc').':</span>'
 				. '<input type="password" value="" name="pwd" id="' . $password_field_id . '" />'
+				. '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>'
 				. '</div>';
 		//>>>>
 		$str .= $sm_string;
@@ -2386,8 +2477,8 @@ function indeed_create_form_element($attr=array()){
 
 			case 'password':
 				global $wp_version;
-				wp_register_script( 'ihc_passwordStrength', IHC_URL . 'assets/js/passwordStrength.js', array(), null );
-
+				wp_register_script( 'ihc_passwordStrength', IHC_URL . 'assets/js/passwordStrength.js', ['jquery'], 10.1 );
+				wp_enqueue_style( 'dashicons' );
 				if ( version_compare ( $wp_version , '5.7', '>=' ) ){
 						wp_localize_script( 'ihc_passwordStrength', 'ihcPasswordStrengthLabels', array( esc_html__('Very Weak', 'ihc'), esc_html__('Weak', 'ihc'), esc_html__('Good', 'ihc'), esc_html__('Strong', 'ihc') ) );
 				} else {
@@ -2400,6 +2491,9 @@ function indeed_create_form_element($attr=array()){
 
 				$id_field = (isset($attr['id']) && $attr['id'] != "" ) ? 'id="'.$attr['id'].'"' : '';
 				$str .= '<input type="password" name="'.$attr['name'].'" '. $id_field .' class="'.$attr['class'].'" value="'.$attr['value'].'" placeholder="'.$attr['placeholder'].'" '.$attr['other_args'].' data-rules="' . $ruleOne . ',' . $ruleTwo . '"/>';
+				$str .= '<span type="button" class="ihc-hide-pw hide-if-no-js" data-toggle="0" aria-label="Show password">
+						<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+					</span>';
 				$str .= '<div class="ihc-strength-wrapper">';
 				$str .= '<ul class="ihc-strength"><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul>';
 				$str .= '<div class="ihc-strength-label"></div>';
@@ -2647,11 +2741,13 @@ function indeed_create_form_element($attr=array()){
 				if (isset($attr['ihc_form_type']) && $attr['ihc_form_type']=='edit'){
 					$onchange = 'onChange="ihcUpdateStateField();';
 				}
+				$onchange .= $update_cart;
+				$onchange .= '"';
 
 				if ( empty( $attr['value'] ) ){
 						$attr['value'] = ihcGetDefaultCountry();
 				}
-				$str .= '<select name="' . $attr['name'] . '" id="' . $attr['id'] . '" ' . $onchange . ' ' . $update_cart . '">'; /// onChange="ihc_update_tax_field();
+				$str .= '<select name="' . $attr['name'] . '" id="' . $attr['id'] . '" ' . $onchange . ' >'; /// onChange="ihc_update_tax_field();
 				foreach ($countries as $k=>$v):
 					$selected = ($attr['value']==$k) ? 'selected' : '';
 					$str .= '<option value="' . $k . '" ' . $selected . '>' . $v . '</option>';
@@ -2753,7 +2849,7 @@ function ihc_reorder_arr($arr=[]){
 	 * @param array
 	 * @return array
 	 */
-	if (isset($arr) && count($arr)>0 && $arr !== false){
+	if (isset($arr) && is_array($arr) && count($arr)>0 && $arr !== false){
 		$new_arr = false;
 		foreach ($arr as $k=>$v){
 			$order = isset( $v['the_order'] ) ? $v['the_order'] : false;
@@ -3319,170 +3415,6 @@ function ihc_get_lid_uid_by_txn_id($txn_id=''){
 	return array();
 }
 
-function ihc_twocheckout_submit($u_id, $l_id, $code='', $ihc_country=FALSE){
-	/*
-	 * Redirect to 2checkout payment
-	 * @param int, int, string, string
-	 * @return none
-	 */
-
-	Ihc_User_Logs::set_user_id($u_id);
-	Ihc_User_Logs::set_level_id($l_id);
-	Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: Start process', 'ihc'), 'payments');
-
-	$level_data = \Indeed\Ihc\Db\Memberships::getAll();
-	$amount = $level_data[$l_id]['price'];
-	$currency = get_option('ihc_currency');
-	$checkout_account_num = get_option('ihc_twocheckout_account_number');
-	$custom_currency_code = get_option('ihc_custom_currency_code');
-	if ($custom_currency_code){
-		$currency = $custom_currency_code;
-	}
-
-	/*************************** DYNAMIC PRICE ***************************/
-	if (ihc_is_magic_feat_active('level_dynamic_price') && isset($_POST['ihc_dynamic_price'])){
-		$temp_amount = $_POST['ihc_dynamic_price'];
-		if (ihc_check_dynamic_price_from_user($l_id, $temp_amount)){
-			$amount = $temp_amount;
-			Ihc_User_Logs::write_log( esc_html__('2Chekcout Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $currency, 'payments');
-		}
-	}
-	/**************************** DYNAMIC PRICE ***************************/
-
-	//========= DISCOUNT
-	if ($code){
-		$coupon_data = ihc_check_coupon($code, $l_id);
-		if ($coupon_data){
-			Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: the user used the following coupon: ', 'ihc') . $code, 'payments');
-			if (isset($level_data[$l_id]['access_type']) && $level_data[$l_id]['access_type']=='regular_period'){
-				//discount on recurring payment
-				if (empty($coupon_data['reccuring'])){
-					//just one time
-					$discount_once = -($amount - ihc_coupon_return_price_after_decrease($amount, $coupon_data, TRUE, $u_id, $l_id));
-				} else {
-					//on every payment
-					$amount = ihc_coupon_return_price_after_decrease($amount, $coupon_data, TRUE, $u_id, $l_id);
-				}
-			} else {
-				//discount on single payment
-				$amount = ihc_coupon_return_price_after_decrease($amount, $coupon_data, TRUE, $u_id, $l_id);
-			}
-		}
-	}
-
-	///TAXES
-	$state = get_user_meta($u_id, 'ihc_state', TRUE);
-	$country = ($ihc_country==FALSE) ? '' : $ihc_country;
-	$taxes_data = ihc_get_taxes_for_amount_by_country($country, $state, $amount);
-	if ($taxes_data && !empty($taxes_data['total'])){
-		$taxes = $taxes_data['total'];
-		$amount += $taxes;
-		Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: taxes value: ', 'ihc') . $taxes . $currency, 'payments');
-	}
-
-	$li_0_name = (empty($level_data[$l_id]['label'])) ? 'Membership ' . $l_id : $level_data[$l_id]['label'];
-
-	Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: amount set @ ', 'ihc') . $amount . $currency, 'payments');
-
-	$params_arr = array(
-			'sid' => $checkout_account_num,
-			'mode' => '2CO',
-			'pay_method' => 'CC',
-			'li_0_type' => 'product',
-			'li_0_name' => $li_0_name,
-			'li_0_product_id' => $l_id,
-			'li_0_quantity' => 1,
-			'li_0_price' => $amount,
-			'li_0_tangible' => 'N',
-			'li_0_description' => json_encode(array("u_id" => $u_id, "l_id" => $l_id)),
-			'currency_code' => $currency,
-			'x_receipt_link_url' => admin_url("admin-ajax.php") . "?action=ihc_twocheckout_ins",//
-			'purchase_step' => 'billing-information',
-	);
-
-	//====================== RECURRING
-	if (isset($level_data[$l_id]['access_type']) && $level_data[$l_id]['access_type']=='regular_period'){
-
-		switch ($level_data[$l_id]['access_regular_time_type']){
-			case 'D':
-				$weeks = $level_data[$l_id]['access_regular_time_value'] / 7;
-				if ($weeks<1){
-					$weeks = 1;
-				}
-				$reccurence_time = ceil($weeks) . ' Week';
-				$billing = ceil($weeks) . ' Week';
-				break;
-			case 'W':
-				$reccurence_time = $level_data[$l_id]['access_regular_time_value'] . ' Week';
-				$billing = $level_data[$l_id]['billing_limit_num'] . ' Week';
-				break;
-			case 'M':
-				$reccurence_time = $level_data[$l_id]['access_regular_time_value'] . ' Month';
-				$billing = $level_data[$l_id]['billing_limit_num'] . ' Month';
-				break;
-			case 'Y':
-				$reccurence_time = $level_data[$l_id]['access_regular_time_value'] . ' Year';
-				$billing = $level_data[$l_id]['billing_limit_num'] . ' Year';
-				break;
-		}
-		$params_arr['li_0_recurrence'] = $reccurence_time;//billing frequency. Ex. �1 Week� to bill order once a week. (Can use # Week, # Month, or # Year)
-		$params_arr['li_0_duration'] = $billing;//how long to continue billing. Ex. �1 Year�, to continue billing for 1 year. (Forever or # Week, # Month, # Year)
-
-		//trial for a single subscribe payment
-		if (isset($level_data[$l_id]['access_trial_type']) && $level_data[$l_id]['access_trial_type']==2 && isset($level_data[$l_id]['access_trial_couple_cycles']) && $level_data[$l_id]['access_trial_couple_cycles']>0){
-			////DISCOUNT
-			$params_arr['li_0_startup_fee'] = $level_data[$l_id]['access_trial_price'] - $amount;
-			if (!empty($discount_once)){
-				//discount just once on recurring with trial period
-				$params_arr['li_0_startup_fee'] = $params_arr['li_0_startup_fee'] + $discount_once;
-			}
-		} else if (!empty($discount_once)){
-			//discount just once on recurring without trial period
-			$params_arr['li_0_startup_fee'] = $discount_once;
-		}
-
-		/// TAXES
-		if (isset($params_arr['li_0_startup_fee']) && !empty($ihc_country)){
-			$state = get_user_meta($u_id, 'ihc_state', TRUE);
-			$country = ($ihc_country==FALSE) ? '' : $ihc_country;
-			$taxes_data = ihc_get_taxes_for_amount_by_country($country, $state, $params_arr['li_0_startup_fee']);
-			if ($taxes_data && !empty($taxes_data['total'])){
-				$taxes = $taxes_data['total'];
-				$params_arr['li_0_startup_fee'] += $taxes;
-				Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: taxes value: ', 'ihc') . $taxes . $currency, 'payments');
-			}
-		}
-	}
-
-	$sandbox = get_option('ihc_twocheckout_sandbox');
-	if ($sandbox){
-
-		$base_url = "www.2checkout.com";
-		$params_arr['demo'] = 'Y';
-		Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: Set Sandbox mode.', 'ihc'), 'payments');
-	} else {
-		$base_url = "www.2checkout.com";
-		Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: Set Live mode.', 'ihc'), 'payments');
-	}
-
-	$params_str = '';
-	foreach ($params_arr as $k=>$v){
-		if (empty($params_str)){
-			$params_str = '?';
-		} else {
-			$params_str .= '&';
-		}
-		$params_str .= urlencode($k) . "=" . urlencode($v);
-	}
-
-	Ihc_User_Logs::write_log( esc_html__('2Checkout Payment: Submit data to 2checkout.', 'ihc'), 'payments');
-	$redirect_url = 'https://' . $base_url . '/checkout/purchase' . $params_str;
-
-	//logout user...
-	//wp_logout();
-	wp_redirect( $redirect_url );
-	exit();
-}
 
 function ihc_print_bank_transfer_order($u_id, $l_id){
 	/*
@@ -3969,48 +3901,6 @@ function ihc_generate_alias_name($length=6, $check=array()){
 	return $str;
 }
 
-function ihc_cancel_twocheckout_subscription($transaction_id){
-	/*
-	 * @param string
-	 * @return boolean
-	 */
-	require_once IHC_PATH . 'classes/PaymentGateways/twocheckout/Twocheckout.php';
-	//set API connection vars
-	$api_user = get_option('ihc_twocheckout_api_user');
-	$api_pass = get_option('ihc_twocheckout_api_pass');
-	$api_private_key = get_option('ihc_twocheckout_private_key');
-	$account_num = get_option('ihc_twocheckout_account_number');
-	$sandbox = get_option('ihc_twocheckout_sandbox');
-
-	Twocheckout::sellerId($account_num);
-	Twocheckout::privateKey($api_private_key);
-	Twocheckout::username($api_user);
-	Twocheckout::password($api_pass);
-	Twocheckout::$verifySSL = false;
-
-	$params = array();
-	$params['sale_id'] = $transaction_id;
-	if($sandbox){
-		Twocheckout::sandbox(true);
-		$params['demo'] = 'Y';
-	} else {
-		Twocheckout::sandbox(false);
-	}
-	try {
-		$result = Twocheckout_Sale::stop( $params );
-	} catch(Exception $e){
-
-	}
-
-	// Successfully cancelled
-	if (isset($result['response_code']) && $result['response_code'] === 'OK') {
-		return true;
-	} else {
-		//fail
-		return false;
-	}
-}
-
 /**
  * @param string
  * @return string
@@ -4043,8 +3933,8 @@ function ihc_stripe_renew_script($form_id='')
 		$multiply =  ihcStripeMultiplyForCurrency( $currency );
 
 		$str ='';
-		wp_enqueue_script( 'ihc-stripe-checkout', 'https://checkout.stripe.com/checkout.js', [], 1.1 );
-		wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', [], 1.1 );
+		wp_enqueue_script( 'ihc-stripe-checkout', 'https://checkout.stripe.com/checkout.js', ['jquery'], 10.1 );
+		wp_enqueue_script( 'ihc-stripe-custom', IHC_URL . 'assets/js/stripe.js', ['jquery'], 10.1 );
 		$str .= '<span class="ihc-js-stripe-v1-data"
 								data-key="' . $publishable_key . '"
 								data-locale="' . $locale . '"
@@ -4574,24 +4464,33 @@ function ihc_run_opt_in($email='', $target_opt_in=''){
 			case 'get_response':
 				$api_key = get_option('ihc_getResponse_api_key');
 				$token = get_option('ihc_getResponse_token');
-				if ( $api_key == '' || $token == '' ){
+				if ( $api_key === '' || $token === '' ){
 						return false;
 				}
-				// sincer ump v 8.6
-				require_once IHC_PATH . 'classes/services/email_services/get_response_v3/vendor/autoload.php';
-				require_once IHC_PATH . 'classes/services/email_services/get_response_v3/vendor/getresponse/sdk-php-client/vendor/autoload.php';
-				require_once IHC_PATH . 'classes/services/email_services/get_response_v3/vendor/getresponse/sdk-php/vendor/autoload.php';
-
-				$client = \Getresponse\Sdk\GetresponseClientFactory::createWithApiKey( $api_key );
-				$newContact = new \Getresponse\Sdk\Operation\Model\NewContact(
-				       new \Getresponse\Sdk\Operation\Model\CampaignReference( $token ),
-				       $email
+				$addcontacturl = 'https://api.getresponse.com/v3/contacts/';
+				$getcontacturl = 'https://api.getresponse.com/v3/contacts?query[email]='.$email;
+				$fullName = $firstName . ' ' . $lastName;
+				$data = array (
+				'name' 				=> $fullName,
+				'email' 			=> $email,
+				'dayOfCycle' 	=> 0,
+				'campaign' 		=> array( 'campaignId' => $token ),
+				'ipAddress'		=>  $_SERVER['REMOTE_ADDR'],
 				);
-				if ( $firstName && $lastName ){
-						$newContact->setName( $firstName . ' ' . $lastName );
-				}
-				$createContact = new \Getresponse\Sdk\Operation\Contacts\CreateContact\CreateContact($newContact);
-				$createContactResponse = $client->call($createContact);
+
+				$dataString = json_encode($data);
+
+				$ch = curl_init($addcontacturl);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString );
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+						    'Content-Type: application/json',
+						    'X-Auth-Token: api-key '.$api_key,
+						)
+				);
+
+				$result = curl_exec($ch);
 				break;
 
 			case 'campaign_monitor':
@@ -4671,47 +4570,6 @@ function ihc_get_custom_constant_fields(){
 	return $fields;
 }
 
-/*
- * Update Stripe Transactions ID, run this just once on update plugin.
- * @param none
- * @return none
- */
-function ihc_update_stripe_subscriptions()
-{
-	global $wpdb;
-	//No query parameters required, Safe query. prepare() method without parameters can not be called
-	$query = "SELECT id, txn_id, payment_data FROM {$wpdb->prefix}indeed_members_payments
-									WHERE txn_id LIKE 'ch_%';";
-	$data = $wpdb->get_results( $query );
-	if (count($data)){
-
-		//loading stripe libs
-		require_once IHC_PATH . 'classes/stripe/init.php';
-		$secret_key = get_option('ihc_stripe_secret_key');
-		\Stripe\Stripe::setApiKey($secret_key);
-
-		foreach ($data as $obj){
-			$payment_data = json_decode($obj->payment_data);
-			if (!empty($payment_data->customer)){
-				$replace_txn_id = $payment_data->customer;
-			} else {
-				$stripe_obj = \Stripe\Charge::retrieve($obj->txn_id);
-				if (!empty($stripe_obj->customer)){
-					$replace_txn_id = $stripe_obj->customer;
-				}
-				unset($stripe_obj);
-			}
-			if (!empty($replace_txn_id)){
-				$query = $wpdb->prepare( "UPDATE {$wpdb->prefix}indeed_members_payments
-																		SET txn_id=%s
-																		WHERE id=%d;
-				", $replace_txn_id, $obj->id );
-				$wpdb->query( $query );
-				unset($replace_txn_id);
-			}
-		}//end foreach
-	}
-}
 
 function ihc_get_active_payments_services($only_keys=FALSE){
 	/*
@@ -4804,7 +4662,7 @@ function ihc_print_payment_select($default_payment='', $field_data=array(), $pay
 	$str .= '</label>';
 
 	if ($field_data['theme']=='ihc-select-payment-theme-3') {
-		$str .= '<select onChange="ihcPaymentGatewayUpdate(this.value, ' . $is_reccurence . ');">';
+		$str .= '<select class="ihc-js-payment-select-drop-down" onChange="ihcPaymentGatewayUpdate(this.value, ' . $is_reccurence . ');">';
 	}
 
 	foreach ($payments_available as $k => $v){
@@ -4827,7 +4685,7 @@ function ihc_print_payment_select($default_payment='', $field_data=array(), $pay
 			$onclick = "ihcPaymentSelectIcon('".$k."');" . $onclick;
 			$class = ($default_payment==$k) ? 'ihc-payment-select-img-selected' : '';
 			$str .= '<div class="iump-form-paybox" onClick="' . $onclick . '" class="ihc-payment-icon-wrap">';
-			$str .= '<img src="'.$paymentLogo.'" class="ihc-payment-icon ' . $class . '" id="ihc_payment_icon_' . $k . '"/>';
+			$str .= '<img src="'.$paymentLogo.'" data-type="' . $k . '" class="ihc-payment-icon ' . $class . '" id="ihc_payment_icon_' . $k . '"/>';
 			$str .= '</div>';
 		} else if ($field_data['theme']=='ihc-select-payment-theme-3'){
 			$selected = ($default_payment==$k) ? 'selected' : '';
@@ -4907,6 +4765,14 @@ function ihc_check_payment_available($type=''){
 						$status = true;
 				}
 				break;
+			case 'stripe_connect':
+				if (
+					( (!empty($payment_metas['ihc_stripe_connect_publishable_key']) && !empty($payment_metas['ihc_stripe_connect_client_secret']) && !empty($payment_metas['ihc_stripe_connect_account_id'])) ||
+						(!empty($payment_metas['ihc_stripe_connect_test_publishable_key']) && !empty($payment_metas['ihc_stripe_connect_test_client_secret']) && !empty($payment_metas['ihc_stripe_connect_test_account_id'])) )
+						&& !empty($payment_metas['ihc_stripe_connect_status'])){
+						$status = true;
+				}
+				break;
 		}
 	}
 	$status = apply_filters( 'ihc_payment_gateway_status', $status, $type );
@@ -4936,7 +4802,8 @@ function ihc_switch_role_for_user($uid=0){
 			}
 			$arr['role'] = $role;
 			$arr['ID'] = $uid;
-			wp_update_user($arr);
+			$userObject = new \WP_User( $uid );
+			$userObject->set_role( $role );
 		}
 	}
 }
@@ -5988,8 +5855,10 @@ function ihc_suspend_account($uid=0){
 		 if ($levels){
 		 	 foreach ($levels as $lid=>$array){
 				 \Indeed\Ihc\UserSubscriptions::deleteOne( $uid, $lid );
-				 $cancel = new \Indeed\Ihc\CancelSubscription($uid, $lid);
-				 $cancel->stopRedirectIfCase(true)->proceed();
+				 $cancel = new \Indeed\Ihc\Payments\CancelSubscription();
+				 $cancel->setUid( $uid )
+								->setLid( esc_sql( $lid ) )
+								->proceed();
 		 	 }
 		 }
 
@@ -6269,21 +6138,32 @@ if ( !function_exists( 'ihc_list_all_payments' ) ):
 function ihc_list_all_payments()
 {
 		$paymentGateways = array(
+								'stripe_connect'						=> 'Stripe',
 								'paypal' 										=> 'PayPal Standard',
-							  'authorize' 								=> 'Authorize',
-							  'stripe' 										=> 'Stripe Standard',
+								'paypal_express_checkout'		=> 'PayPal Express Checkout',
 								'stripe_checkout_v2'				=> 'Stripe Checkout',
 							  'twocheckout' 							=> '2Checkout',
-							 	'bank_transfer' 						=> 'Bank Transfer',
-								'braintree' 								=> 'Braintree',
 								'mollie'										=> 'Mollie',
+							 	'bank_transfer' 						=> 'Bank Transfer',
 								'pagseguro'									=> 'Pagseguro',
-								'paypal_express_checkout'		=> 'PayPal Express Checkout',
+								'braintree' 								=> 'Braintree',
+							  'authorize' 								=> 'Authorize',
+							  'stripe' 										=> 'Stripe Standard',
 		);
 		$paymentGateways = apply_filters( 'ihc_payment_gateways_list', $paymentGateways );
+
 		// @description List of payment gateways. @param list of payment gateways ( array )
+		foreach ( $paymentGateways as $paymentSlug => $paymentLabel ){
+			$label = get_option('ihc_' . $paymentSlug . '_label');
+
+			if (!empty($label)){
+				$paymentGateways[$paymentSlug] = $label;
+			}
+		}
+
 
 		return $paymentGateways;
+
 }
 endif;
 
@@ -6446,7 +6326,7 @@ function ihc_prepare_level_show_format( $item=array() )
 	}else{
 			$item ['start_time_format'] = date_i18n('M j', $start_time);
 		}
-	if ($item['expire_time'] > 0){
+	if ($expire_time > 0){
 		if ($current_time>$expire_time){
 			$item ['level_status'] = 'expired';
 		}
@@ -6589,36 +6469,92 @@ function ihcGetListOfMagicFeatures()
 														'description' => '',
 														'enabled' => ihc_is_magic_feat_active('woo_payment'),
 									),
-									'redirect_links' => array(
-														'label' => esc_html__('Redirect Links', 'ihc'),
-														'description' => esc_html__('Set custom links from inside or outside of your website that can be used for redirects inside the system', 'ihc'),
-														'icon' => 'fa-links-ihc',
+									'gifts' => array(
+														'label' => esc_html__('Membership Gifts', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=gifts') : '',
+														'icon' => 'fa-gifts-ihc',
 														'extra_class' => '',
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=redirect_links') : '',
-														'enabled' => TRUE,
+														'description' => esc_html__('Allow your customers to buy Memberships as gifts', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('gifts'),
 									),
-									'bp_account_page' => array(
-														'label' => esc_html__('BuddyPress Account Page Integration', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=bp_account_page') : '',
-														'icon' => 'fa-bp-ihc',
+									'badges' => array(
+														'label' => esc_html__('Membership Badges', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=badges') : '',
+														'icon' => 'fa-badges-ihc',
 														'extra_class' => '',
-														'description' => '',
-														'enabled' => ihc_is_magic_feat_active('bp_account_page'),
+														'description' => esc_html__('Add a custom badge for each Membership for a better approach', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('badges'),
 									),
-									'woo_account_page' => array(
-														'label' => esc_html__('WooCommerce Account Page Integration', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=woo_account_page') : '',
+									'individual_page' => array(
+														'label' => esc_html__('Individual Page', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=individual_page') : '',
+														'icon' => 'fa-individual_page-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Each Member will have an individual page accessible only by him and Administrator', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('individual_page'),
+									),
+									'reason_for_cancel'			=> array(
+														'label'						=> esc_html__('Reason for Cancelling', 'ihc'),
+														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=reason_for_cancel') : '',
+														'icon'						=> 'fa-reason_for_cancel-ihc',
+														'extra_class' 		=> '',
+														'description'			=> esc_html__('Track the reasons why Members wish to cancel/delete their Subscriptions', 'ihc'),
+														'enabled'					=> ihc_is_magic_feat_active('reason_for_cancel'),
+									),
+									'woo_product_custom_prices' => array(
+														'label' => esc_html__('WooCommerce Products Discount', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices') : '',
 														'icon' => 'fa-woo-ihc',
-														'extra_class' => '',
+														'extra_class' => 'iump-woo-discounts-special-color',
 														'description' => '',
-														'enabled' => ihc_is_magic_feat_active('woo_account_page'),
+														'enabled' => ihc_is_magic_feat_active('woo_product_custom_prices'),
+									),
+									'level_dynamic_price' => array(
+														'label' => esc_html__('Membership Dynamic Price', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_dynamic_price') : '',
+														'icon' => 'fa-level_dynamic_price-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Mimic Donations by letting the client decide how much to pay for Memberships', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('level_dynamic_price'),
+									),
+									'level_restrict_payment' => array(
+														'label' => esc_html__('Memberships vs Payments', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_restrict_payment') : '',
+														'icon' => 'fa-level_restrict_payment-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Restrict each Membership to be paid only through a specific Payment Service', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('level_restrict_payment'),
+									),
+									'level_subscription_plan_settings' => array(
+														'label' => esc_html__('Memberships Plus', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_subscription_plan_settings') : '',
+														'icon' => 'fa-level_subscription_paln_settings-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Decide which Memberships should be available, based on the user current assigned Membership', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('level_subscription_plan_settings'),
+									),
+									'user_sites' => array(
+														'label' => esc_html__('WP MultiSite Subscriptions', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=user_sites') : '',
+														'icon' => 'fa-user_sites-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Provides Single Sites based on purchased subscriptions. You can sell Single Sites via memberships.', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('user_sites'),
+									),
+									'drip_content_notifications' => array(
+														'label' => esc_html__('Drip Content Notifications', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=drip_content_notifications') : '',
+														'icon' => 'fa-drip_content_notifications-ihc',
+														'extra_class' => 'iump-dripcontentnotifications-special-color',
+														'description' => esc_html__('Alert Members when a new post is released by “Drip Content” strategy.', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('drip_content_notifications'),
 									),
 									'membership_card' => array(
 														'label' => esc_html__('Membership Card', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=membership_card') : '',
 														'icon' => 'fa-membership_card-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Printable membership cards for assigned active Memberships', 'ihc'),
+														'description' => esc_html__('Members will find their Membership Cards into My Account page and may Print them for further usage', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('membership_card'),
 									),
 									'cheat_off' => array(
@@ -6630,75 +6566,27 @@ function ihcGetListOfMagicFeatures()
 														'enabled' => ihc_is_magic_feat_active('cheat_off'),
 									),
 									'invitation_code' => array(
-														'label' => esc_html__('Invitation Code', 'ihc'),
+														'label' => esc_html__('Invitation Codes', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=invitation_code') : '',
 														'icon' => 'fa-invitation_code-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Restrict register process to only allow invited users who have a valid code.', 'ihc'),
+														'description' => esc_html__(' Restrict register process to only allow invited persons who have a valid Invitation code', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('invitation_code'),
 									),
-									'download_monitor_integration' => array(
-														'label' => esc_html__('Download Monitor Integration', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=download_monitor_integration') : '',
-														'icon' => 'fa-download_monitor_integration-ihc',
+									'import_users' => array(
+														'label' => esc_html__('Import Users&Memberships', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=import_users') : '',
+														'icon' => 'fa-import_users-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Restrict the number of downloads based on subscription', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('download_monitor_integration'),
-									),
-									'register_lite' => array(
-														'label' => esc_html__('Register Lite', 'ihc'),
-														'link' => admin_url('admin.php?page=ihc_manage&tab=register_lite'),
-														'icon' => 'fa-register_lite-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Let your users register by using only their email address', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('register_lite'),
-									),
-									'individual_page' => array(
-														'label' => esc_html__('Individual Page', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=individual_page') : '',
-														'icon' => 'fa-individual_page-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Each user will have an individual page', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('individual_page'),
-									),
-									'woo_product_custom_prices' => array(
-														'label' => esc_html__('WooCommerce Products Discount', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices') : '',
-														'icon' => 'fa-woo-ihc',
-														'extra_class' => 'iump-woo-discounts-special-color',
-														'description' => '',
-														'enabled' => ihc_is_magic_feat_active('woo_product_custom_prices'),
-									),
-									'level_restrict_payment' => array(
-														'label' => esc_html__('Memberships vs Payments', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_restrict_payment') : '',
-														'icon' => 'fa-level_restrict_payment-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Restrict each Membership to be paid only through a specific payment gateway', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('level_restrict_payment'),
-									),
-									'level_subscription_plan_settings' => array(
-														'label' => esc_html__('Memberships Plus', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_subscription_plan_settings') : '',
-														'icon' => 'fa-level_subscription_paln_settings-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Decide which Memberships should be available, based on the user current assigned Membership', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('level_subscription_plan_settings'),
-									),
-									'gifts' => array(
-														'label' => esc_html__('Membership Gifts', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=gifts') : '',
-														'icon' => 'fa-gifts-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Your customers will be able to buy Memberships as gifts', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('gifts'),
+														'description' => esc_html__('Allows to import new Members, update current Members main data or to assign/change Members Memberships', 'ihc'),
+														'enabled' => TRUE,
 									),
 									'login_level_redirect' => array(
 														'label' => esc_html__('Login Redirects+', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=login_level_redirect') : '',
 														'icon' => 'fa-sign-in-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Set a custom redirect after login based on the user assigned Membership(s)', 'ihc'),
+														'description' => esc_html__('Replace the default redirect after login with a custom one based on the member assigned membership', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('login_level_redirect'),
 									),
 									'wp_social_login' => array(
@@ -6706,7 +6594,7 @@ function ihcGetListOfMagicFeatures()
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=wp_social_login') : '',
 														'icon' => 'fa-wp_social_login-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Integrated for a lite register/login with social accounts', 'ihc'),
+														'description' => esc_html__('Integrated with WP Social Login free Plugin for a lite register/login with social accounts', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('wp_social_login'),
 									),
 									'list_access_posts' => array(
@@ -6733,14 +6621,6 @@ function ihcGetListOfMagicFeatures()
 														'link' => admin_url('admin.php?page=ihc_manage&tab=custom_currencies'),
 														'enabled' => TRUE,
 									),
-									'badges' => array(
-														'label' => esc_html__('Membership Badges', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=badges') : '',
-														'icon' => 'fa-badges-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Add a custom badge for each Membership for a better approach', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('badges'),
-									),
 									'login_security' => array(
 														'label' => esc_html__('Security Login', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=login_security') : '',
@@ -6754,7 +6634,7 @@ function ihcGetListOfMagicFeatures()
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=workflow_restrictions') : '',
 														'icon' => 'fa-workflow_restrictions-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Limit post views, WP post submissions, WP comments based on Memberships', 'ihc'),
+														'description' => esc_html__('You can restrict how many posts can be viewed, released and how many comments can be submitted for each Membership', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('workflow_restrictions'),
 									),
 									'subscription_delay' => array(
@@ -6762,37 +6642,65 @@ function ihcGetListOfMagicFeatures()
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=subscription_delay') : '',
 														'icon' => 'fa-subscription_delay-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Set a delay for each Membership start time', 'ihc'),
+														'description' => esc_html__('Each Membership will become active after a custom delay time instead of when it was assigned', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('subscription_delay'),
 									),
-
-									'level_dynamic_price' => array(
-														'label' => esc_html__('Membership Dynamic Price', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=level_dynamic_price') : '',
-														'icon' => 'fa-level_dynamic_price-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Mimic Donations by letting the client decide how much to pay for Memberships', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('level_dynamic_price'),
-									),
-
 									'user_reports' => array(
-														'label' => esc_html__('User Reports', 'ihc'),
+														'label' => esc_html__('Members Reports', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=user_reports') : '',
 														'icon' => 'fa-user_reports-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Follow the actions of the most important users', 'ihc'),
+														'description' => esc_html__('Follow the most important actions and activities done by members such Membership Assignation, Orders Placed, etc', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('user_reports'),
 									),
-
 									'pushover' => array(
 														'label' => esc_html__('Pushover Notifications', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=pushover') : '',
 														'icon' => 'fa-pushover-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Users receive notifications on mobile via Pushover', 'ihc'),
+														'description' => esc_html__('Members may receives notifications ontheir Mobile Devices via Pushover App', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('pushover'),
 									),
-
+									'weekly_summary_email'			=> array(
+														'label'						=> esc_html__('Weekly Summary Email', 'ihc'),
+														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=weekly_summary_email') : '',
+														'icon'						=> 'fa-weekly_summary_email-ihc',
+														'extra_class' 		=> '',
+														'description'			=> esc_html__('A brief report on a one-week period will be sent to Administrator about number of Orders, Total Revenue and not only', 'ihc'),
+														'enabled'					=> ihc_is_magic_feat_active('weekly_summary_email'),
+									),
+									'mycred' => array(
+														'label' => esc_html__('MyCred Points', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=mycred') : '',
+														'icon' => 'fa-mycred-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Reward with MyCred points when a Membership is purchased', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('mycred'),
+									),
+									'zapier'	=> array(
+														'label'						=> esc_html__('Zapier Integration', 'ihc'),
+														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=zapier') : '',
+														'icon'						=> 'fa-zapier-ihc',
+														'extra_class' 		=> '',
+														'description'			=> esc_html__('Connect UMP with other apps via Zapier platform with multiple triggers available', 'ihc'),
+														'enabled'					=> ihc_is_magic_feat_active('zapier'),
+									),
+									'redirect_links' => array(
+														'label' => esc_html__('Redirect Links', 'ihc'),
+														'description' => esc_html__('Set custom links from inside or outside of your website that can be used for redirects inside the system', 'ihc'),
+														'icon' => 'fa-links-ihc',
+														'extra_class' => '',
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=redirect_links') : '',
+														'enabled' => TRUE,
+									),
+									'register_lite' => array(
+														'label' => esc_html__('Register Lite', 'ihc'),
+														'link' => admin_url('admin.php?page=ihc_manage&tab=register_lite'),
+														'icon' => 'fa-register_lite-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Let your Members register by using only their Email Address. A Generated Password for their account will be sent out via Email', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('register_lite'),
+									),
 									'account_page_menu' => array(
 														'label' => esc_html__('Account Custom Tabs', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=account_page_menu') : '',
@@ -6801,85 +6709,36 @@ function ihcGetListOfMagicFeatures()
 														'description' => esc_html__('Create and reorder account page menu items', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('account_page_menu'),
 									),
-
-									'mycred' => array(
-														'label' => esc_html__('MyCred Points', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=mycred') : '',
-														'icon' => 'fa-mycred-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Reward with myCred points when a subscription is purchased', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('mycred'),
-									),
-
 									'api' => array(
 														'label' => esc_html__('API Gate', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=api') : '',
 														'icon' => 'fa-api-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Manage UMP details via API module', 'ihc'),
+														'description' => esc_html__('Manage your membership system and access data from it through an API with access based on URL calls', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('api'),
 									),
-
-									'drip_content_notifications' => array(
-														'label' => esc_html__('Drip Content Notifications', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=drip_content_notifications') : '',
-														'icon' => 'fa-drip_content_notifications-ihc',
-														'extra_class' => 'iump-dripcontentnotifications-special-color',
-														'description' => esc_html__('Alert members when a new post is released by Drip Content', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('drip_content_notifications'),
-									),
-
-									'user_sites' => array(
-														'label' => esc_html__('MultiSite Subscriptions', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=user_sites') : '',
-														'icon' => 'fa-user_sites-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Provides SingleSites based on purchased subscriptions', 'ihc'),
-														'enabled' => ihc_is_magic_feat_active('user_sites'),
-									),
-
-									'import_users' => array(
-														'label' => esc_html__('Import Users&Memberships', 'ihc'),
-														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=import_users') : '',
-														'icon' => 'fa-import_users-ihc',
-														'extra_class' => '',
-														'description' => esc_html__('Import and update main users details and Memberships', 'ihc'),
-														'enabled' => TRUE,
-									),
-
 									'register_redirects_by_level' => array(
 														'label' => esc_html__('Register Redirects+', 'ihc'),
 														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=register_redirects_by_level') : '',
 														'icon' => 'fa-register_redirects_by_level-ihc',
 														'extra_class' => '',
-														'description' => esc_html__('Set a custom redirect after register based on the user assigned Membership', 'ihc'),
+														'description' => esc_html__('Choose a custom redirect after register based on the member assigned Membership', 'ihc'),
 														'enabled' => ihc_is_magic_feat_active('register_redirects_by_level'),
 									),
-
-									'zapier'	=> array(
-														'label'						=> esc_html__('Zapier', 'ihc'),
-														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=zapier') : '',
-														'icon'						=> 'fa-zapier-ihc',
-														'extra_class' 		=> '',
-														'description'			=> esc_html__('Connect UMP with other apps via Zapier platform with multiple triggers available', 'ihc'),
-														'enabled'					=> ihc_is_magic_feat_active('zapier'),
-									),
-
 									'infusionSoft'	=> array(
 														'label'						=> esc_html__('Infusion Soft', 'ihc'),
 														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=infusionSoft') : '',
 														'icon'						=> 'fa-infusionSoft-ihc',
 														'extra_class' 		=> '',
-														'description'			=> esc_html__('Synchronize your InfusionSoft contacts based on Tags. For each user status or Membership a Tag is associated.', 'ihc'),
+														'description'			=> esc_html__('Synchronize your InfusionSoft contacts based on Tags. For each user status or Membership a Tag is associated', 'ihc'),
 														'enabled'					=> ihc_is_magic_feat_active('infusionSoft'),
 									),
-
 									'kissmetrics'		=> array(
-														'label'						=> esc_html__('Kissmetrics', 'ihc'),
+														'label'						=> esc_html__('Kissmetrics Integration', 'ihc'),
 														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=kissmetrics') : '',
 														'icon'						=> 'fa-kissmetrics-ihc',
 														'extra_class' 		=> '',
-														'description'			=> esc_html__('Track multiple membership events and User actions with Kissmetrics service', 'ihc'),
+														'description'			=> esc_html__('Track multiple Membership events and Member actions with Kissmetrics service', 'ihc'),
 														'enabled'					=> ihc_is_magic_feat_active('kissmetrics'),
 									),
 									'direct_login'		=> array(
@@ -6887,24 +6746,32 @@ function ihcGetListOfMagicFeatures()
 														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=direct_login') : '',
 														'icon'						=> 'fa-direct_login-ihc',
 														'extra_class' 		=> '',
-														'description'			=> esc_html__('Users can login without standard credentials but with a special temporary link available', 'ihc'),
+														'description'			=> esc_html__('Members can login without standard credentials but with a special temporary link available', 'ihc'),
 														'enabled'					=> ihc_is_magic_feat_active('direct_login'),
 									),
-									'reason_for_cancel'			=> array(
-														'label'						=> esc_html__('Reason for Cancelling', 'ihc'),
-														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=reason_for_cancel') : '',
-														'icon'						=> 'fa-reason_for_cancel-ihc',
-														'extra_class' 		=> '',
-														'description'			=> esc_html__('Track the reasons why users cancel/delete their Subscriptions.', 'ihc'),
-														'enabled'					=> ihc_is_magic_feat_active('reason_for_cancel'),
+									'download_monitor_integration' => array(
+														'label' => esc_html__('Download Monitor Integration', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=download_monitor_integration') : '',
+														'icon' => 'fa-download_monitor_integration-ihc',
+														'extra_class' => '',
+														'description' => esc_html__('Limit the number of downloads (per file or per user) for each Membership', 'ihc'),
+														'enabled' => ihc_is_magic_feat_active('download_monitor_integration'),
 									),
-									'weekly_summary_email'			=> array(
-														'label'						=> esc_html__('Weekly Summary Email', 'ihc'),
-														'link' 						=> (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=weekly_summary_email') : '',
-														'icon'						=> 'fa-weekly_summary_email-ihc',
-														'extra_class' 		=> '',
-														'description'			=> esc_html__('A brief report on a one-week period will be sent to admin.', 'ihc'),
-														'enabled'					=> ihc_is_magic_feat_active('weekly_summary_email'),
+									'bp_account_page' => array(
+														'label' => esc_html__('BuddyPress Account Page Integration', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=bp_account_page') : '',
+														'icon' => 'fa-bp-ihc',
+														'extra_class' => '',
+														'description' => '',
+														'enabled' => ihc_is_magic_feat_active('bp_account_page'),
+									),
+									'woo_account_page' => array(
+														'label' => esc_html__('WooCommerce Account Page Integration', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=woo_account_page') : '',
+														'icon' => 'fa-woo-ihc',
+														'extra_class' => '',
+														'description' => '',
+														'enabled' => ihc_is_magic_feat_active('woo_account_page'),
 									),
 	);
 	$list = apply_filters( 'ihc_magic_feature_list', $list );
@@ -7351,5 +7218,79 @@ function ihcAdminUserDetailsPage( $uid=0 )
 				return '';
 		}
 		return admin_url( 'admin.php?page=ihc_manage&tab=user-details&uid=' . $uid );
+}
+endif;
+
+if ( !function_exists( 'ihcCheckCheckoutPage' ) ):
+function ihcCheckCheckoutPage( )
+{
+	$value = get_option('ihc_checkout_page');
+	$shortcode = '[ihc-checkout-page]';
+	//if page does not exists
+	if($value!=-1 && (!get_post_status($value) || get_post_status($value)=='trash') ){
+		$value = -1;
+	}
+	if($value==FALSE || $value==-1){
+			return FALSE;
+	}else{
+			$post = get_post_field('post_content', $value);
+			if(strpos( $post,  $shortcode) === false) {
+          return FALSE;
+      }
+		}
+		return TRUE;
+}
+endif;
+
+if ( !function_exists( 'ihcCheckCheckoutSetup' ) ):
+function ihcCheckCheckoutSetup( )
+{
+
+	$payments_not_allowed = [];
+	//$payments_not_allowed = ['stripe'];
+
+	$allServices = ihc_get_active_payments_services();
+	$default_payment = get_option('ihc_payment_selected');
+
+	$checkPage = ihcCheckCheckoutPage();
+
+	if($checkPage === FALSE){
+		return FALSE;
+	}
+
+	$checkModule = get_option( 'ihc_checkout_enable', 1 );
+
+	if(!isset($checkModule) || $checkModule != 1){
+			return FALSE;
+	}
+	foreach ($allServices as $key => $value) {
+		if(in_array($key, $payments_not_allowed)){
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+
+}
+endif;
+
+if ( !function_exists( 'ihcCheckCheckoutPage' ) ):
+function ihcCheckThankYouPage( )
+{
+	$value = get_option('ihc_thank_you_page');
+	$shortcode = '[ihc-thank-you-page]';
+	//if page does not exists
+	if($value!=-1 && (!get_post_status($value) || get_post_status($value)=='trash') ){
+		$value = -1;
+	}
+	if($value==FALSE || $value==-1){
+			return FALSE;
+	}else{
+			$post = get_post_field('post_content', $value);
+			if(strpos( $post,  $shortcode) === false) {
+          return FALSE;
+      }
+		}
+		return TRUE;
 }
 endif;

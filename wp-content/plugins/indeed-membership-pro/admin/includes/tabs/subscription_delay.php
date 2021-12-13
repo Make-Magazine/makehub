@@ -43,8 +43,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<input type="hidden" name="ihc_subscription_delay_on" value="<?php echo $data['metas']['ihc_subscription_delay_on'];?>" id="ihc_subscription_delay_on" />
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input  id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -80,8 +80,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 					</div>
 				  <?php endforeach;?>
 				</div>
-				<div class="ihc-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+					<input  id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>

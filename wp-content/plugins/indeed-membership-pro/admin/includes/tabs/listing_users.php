@@ -1,6 +1,6 @@
 <?php
 $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'shortcode_generator';
-wp_enqueue_script( 'ihc-owl-carousel', IHC_URL . 'public/listing_users/assets/js/owl.carousel.js', [], 1.1 );
+wp_enqueue_script( 'ihc-owl-carousel', IHC_URL . 'public/listing_users/assets/js/owl.carousel.js', ['jquery'], 10.1 );
 ?>
 <div class="ihc-subtab-menu">
 	<a class="ihc-subtab-menu-item <?php echo ($subtab =='shortcode_generator') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&shortcode_generator';?>"><?php esc_html_e('Shortcode Generator', 'ihc');?></a>
@@ -654,7 +654,7 @@ $meta_arr = array(
 						</select></div>
 					</div>
 					<div class="ihc-wrapp-submit-bttn">
-		            	<input type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+		            	<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 		            </div>
 				</div>
 			</div>
@@ -674,7 +674,7 @@ $meta_arr = array(
 						</div>
 					</div>
 					<div class="ihc-wrapp-submit-bttn">
-			           	<input type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+			           	<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 			           </div>
 				</div>
 			</div>
@@ -687,7 +687,7 @@ $meta_arr = array(
 						<div class="ihc-general-options-link-pages"><textarea name="ihc_listing_users_custom_css" class="ihc-custom-css-textarea"><?php echo stripslashes($meta_arr['ihc_listing_users_custom_css']);?></textarea></div>
 					</div>
 					<div class="ihc-wrapp-submit-bttn">
-		            	<input type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+		            	<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 		            </div>
 				</div>
 			</div>
@@ -977,7 +977,7 @@ $meta_arr = array(
 
 
 						<div class="ihc-wrapp-submit-bttn">
-			            	<input type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+			            	<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 			            </div>
 					</div>
 				</div>
@@ -989,7 +989,7 @@ $meta_arr = array(
 							<div class="ihc-general-options-link-pages"><textarea name="ihc_listing_users_inside_page_custom_css" class="ihc-custom-css-textarea"><?php echo stripslashes($meta_arr['ihc_listing_users_inside_page_custom_css']);?></textarea></div>
 						</div>
 						<div class="ihc-wrapp-submit-bttn">
-			            	<input type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+			            	<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 			            </div>
 					</div>
 				</div>

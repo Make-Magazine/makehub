@@ -29,8 +29,7 @@ class DoPayment
 		switch ($this->paymentGateway){
 			case 'paypal':
         if (ihc_check_payment_available('paypal')){
-            if ( ihc_payment_workflow() == 'new' ){
-            	// new
+
               $paymentGatewayObject = new \Indeed\Ihc\Gateways\PayPalStandard();
               return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                           ->check()
@@ -38,17 +37,12 @@ class DoPayment
                                           ->saveOrder()
                                           ->chargePayment()
                                           ->redirect(); // redirect to payment service
-            } else {
-            	// standard
-              $this->insertOrder();
-              $paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\PayPalStandard();
-            }
+
         }
 				break;
 			case 'mollie':
         if ( ihc_check_payment_available( 'mollie' ) ){
-            if ( ihc_payment_workflow() == 'new' ){
-              // new
+
               $paymentGatewayObject = new \Indeed\Ihc\Gateways\Mollie();
               return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                           ->check()
@@ -56,17 +50,12 @@ class DoPayment
                                           ->saveOrder()
                                           ->chargePayment()
                                           ->redirect(); // redirect to payment service
-            } else {
-              // standard
-              $this->insertOrder();
-              $paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\Mollie();
-            }
+
         }
 				break;
       case 'paypal_express_checkout':
         if (ihc_check_payment_available('paypal_express_checkout')){
-            if ( ihc_payment_workflow() == 'new' ){
-              // new
+
               $paymentGatewayObject = new \Indeed\Ihc\Gateways\PayPalExpressCheckout();
               return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                           ->check()
@@ -74,17 +63,12 @@ class DoPayment
                                           ->saveOrder()
                                           ->chargePayment()
                                           ->redirect(); // redirect to payment service
-            } else {
-              // standard
-              $this->insertOrder();
-              $paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckout();
-            }
+
         }
         break;
       case 'pagseguro':
         if (ihc_check_payment_available('pagseguro')){
-            if ( ihc_payment_workflow() == 'new' ){
-              // new
+
               $paymentGatewayObject = new \Indeed\Ihc\Gateways\Pagseguro();
               return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                           ->check()
@@ -92,17 +76,12 @@ class DoPayment
                                           ->saveOrder()
                                           ->chargePayment()
                                           ->redirect(); // redirect to payment service
-            } else {
-              // standard
-              $this->insertOrder();
-              $paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\Pagseguro();
-            }
+
         }
         break;
       case 'stripe_checkout_v2':
         if ( ihc_check_payment_available( 'stripe_checkout_v2' ) ){
-            if ( ihc_payment_workflow() == 'new' ){
-              // new
+
               $paymentGatewayObject = new \Indeed\Ihc\Gateways\StripeCheckout();
               return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                           ->check()
@@ -110,11 +89,7 @@ class DoPayment
                                           ->saveOrder()
                                           ->chargePayment()
                                           ->redirect(); // redirect to payment service
-            } else {
-              // standard
-              $this->insertOrder();
-              $paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
-            }
+
         }
         break;
       case 'bank_transfer':
@@ -137,6 +112,33 @@ class DoPayment
                                     ->chargePayment()
                                     ->redirect(); // redirect to payment service
         break;
+      case 'braintree':
+        $paymentGatewayObject = new \Indeed\Ihc\Gateways\Braintree();
+        return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
+                                    ->check()
+                                    ->preparePayment()
+                                    ->saveOrder()
+                                    ->chargePayment()
+                                    ->redirect(); // redirect to payment service
+        break;
+      case 'authorize':
+        $paymentGatewayObject = new \Indeed\Ihc\Gateways\Authorize();
+        return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
+                                    ->check()
+                                    ->preparePayment()
+                                    ->saveOrder()
+                                    ->chargePayment()
+                                    ->redirect(); // redirect to payment service
+        break;
+      case 'stripe_connect':
+        $paymentGatewayObject = new \Indeed\Ihc\Gateways\StripeConnect();
+        return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
+                                    ->check()
+                                    ->preparePayment()
+                                    ->saveOrder()
+                                    ->chargePayment()
+                                    ->redirect(); // redirect to payment service
+        break;
       default:
         $paymentGatewayObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $this->paymentGateway );
         // @description
@@ -147,19 +149,13 @@ class DoPayment
         break;
 		}
     if (!empty($paymentGatewayObject)){
-      if ( ihc_payment_workflow() == 'new' ){
           return $paymentGatewayObject->setInputData($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
                                       ->check()
                                       ->preparePayment()
                                       ->saveOrder()
                                       ->chargePayment()
                                       ->redirect(); // redirect to payment service
-      } else {
-          return $paymentGatewayObject->setAttributes($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
-                                      ->initDoPayment() // logs, check if level is not free
-                                      ->doPayment() // processing payment data
-                                      ->redirect(); // redirect to payment service
-      }
+
 
     }
 	}

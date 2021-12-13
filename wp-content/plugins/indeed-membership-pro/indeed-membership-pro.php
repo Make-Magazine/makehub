@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Indeed Ultimate Membership Pro
-Plugin URI: https://www.wpindeed.com/
+Plugin URI: https://https://ultimatemembershippro.com/
 Description: The most complete and easy to use Membership Plugin, ready to allow or restrict your content, Page for certain Users.
-Version: 10.0
+Version: 10.3
 Author: WPIndeed Development
 Author URI: https://www.wpindeed.com
 Text Domain: ihc
@@ -127,6 +127,7 @@ $ihcRegistrationEvents = new \Indeed\Ihc\RegistrationEvents();
 
 $ihcAccountPageShortcodes = new \Indeed\Ihc\AccountPageShortcodes();
 
+
 /******************** END MODULES **************************/
 
 //on activating the plugin
@@ -187,17 +188,6 @@ function ihc_admin_global_notice(){
 	}
 }
 add_action('admin_notices', 'ihc_admin_global_notice');
-
-
-
-
-//2checkout ajax ins
-add_action('wp_ajax_ihc_twocheckout_ins', 'twocheckout_ins_ihc');
-add_action('wp_ajax_nopriv_ihc_twocheckout_ins', 'twocheckout_ins_ihc');
-function twocheckout_ins_ihc(){
-	require_once IHC_PATH . "twocheckout_ins.php";
-	exit;
-}
 
 
 //delete attachment ajax
@@ -801,21 +791,27 @@ function ihc_add_custom_top_menu_dashboard(){
 	///ITEMS
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_pages', 'title'=>esc_html__('Membership Pages', 'ihc'), 'href'=>'#', 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_showcases', 'title'=>esc_html__('Showcases', 'ihc'), 'href'=>'#', 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_payment_gateways', 'title'=>esc_html__('Payment Gateways', 'ihc'), 'href'=>'#', 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_payment_gateways', 'title'=>esc_html__('Payment Services', 'ihc'), 'href'=>'#', 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'magic_feat', 'title'=>esc_html__('Extensions', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=magic_feat'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_levels', 'title'=>esc_html__('Memberships', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=levels'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_notifications', 'title'=>esc_html__('Email Notifications', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=notifications'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_shortcodes', 'title'=>esc_html__('Shortcodes', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=user_shortcodes'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'block_url', 'title'=>esc_html__('Access Rules', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=block_url'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'general', 'title'=>esc_html__('General Options', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=general'), 'meta'=>array()));
-	
+	if(!ihc_is_uap_active()){
+		$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc-uap-link', 'title'=>'Ultimate Affiliate Pro', 'href'=>'https://wpindeed.com/ultimate-affiliate-pro', 'meta'=>array('target' => '_blank')));
+	}
+
 	/// SHOWCASES
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_rf', 'title'=>esc_html__('Register Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=register'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lf', 'title'=>esc_html__('Login Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=login'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_sp', 'title'=>esc_html__('Subscriptions Plan', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=subscription_plan'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_cp', 'title'=>esc_html__('Checkout Page', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=checkout'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ap', 'title'=>esc_html__('My Account Page', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=account_page'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_pf', 'title'=>esc_html__('Profile Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=profile-form'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_st', 'title'=>esc_html__('Subscriptions Table', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=manage_subscription_table'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ot', 'title'=>esc_html__('Orders Table', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=manage_order_table'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ty', 'title'=>esc_html__('Thank You Page', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=thank-you-page'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lu', 'title'=>esc_html__('Members Directory', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=listing_users'), 'meta'=>array()));
 
 	/// PAYMENT GATEWAYS
@@ -836,9 +832,11 @@ function ihc_add_custom_top_menu_dashboard(){
 					'ihc_general_login_default_page' 				=> esc_html__('Login', 'ihc'),
 					'ihc_general_register_default_page' 		=> esc_html__('Register', 'ihc'),
 					'ihc_subscription_plan_page' 						=> esc_html__('Subscription Plan', 'ihc'),
+					'ihc_checkout_page' 										=> esc_html__('Checkout Page', 'ihc'),
+					'ihc_general_user_page' 								=> esc_html__('My Account Page', 'ihc'),
 					'ihc_general_lost_pass_page' 						=> esc_html__('Lost Password', 'ihc'),
+					'ihc_thank_you_page' 										=> esc_html__('Thank You Page', 'ihc'),
 					'ihc_general_logout_page' 							=> esc_html__('LogOut', 'ihc'),
-					'ihc_general_user_page' 								=> esc_html__('User Account Page', 'ihc'),
 					'ihc_general_tos_page' 									=> esc_html__('TOS', 'ihc'),
 	);
 	foreach ($array as $k=>$v){
@@ -932,58 +930,86 @@ function ihc_payment_gate_check(){
 	 if (!empty($ihc_action)){
 	 	$no_load = TRUE;
 	 	switch ($ihc_action){
+			case 'stripe_checkout':
+				// Stripe Checkout - Webhook
+				$enabled = get_option('ihc_stripe_checkout_v2_status');
+				if ( empty( $enabled ) ){
+						return;
+				}
+				$object = new \Indeed\Ihc\Gateways\StripeCheckout();
+				$object->webhookPayment();
+				break;
 			case 'paypal':
 				// PayPal Standard - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\PayPalStandard();
+				$object = new \Indeed\Ihc\Gateways\PayPalStandard();
+				$object->webhookPayment();
+				break;
+			case 'paypal_express_complete_payment':
+				// PayPal Express - Complete Recurring Payment
+				$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+				$object->confirmAuthorization()
+								 ->getExpressCheckoutDetails()
+								 ->createRecurringProfile()
+								 ->redirectToSuccessPage();
+				break;
+			case 'paypal_express_single_payment_complete_payment':
+				// PayPal Express - Complete Single Payment
+				$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+				$object->completeSinglePayment()
+								 ->redirectToSuccessPage();
+				break;
+			case 'paypal_express_checkout_ipn':
+				// PayPal Express - Webhook
+				$object = new \Indeed\Ihc\Gateways\PayPalExpressCheckout();
+				$object->webhookPayment();
+				break;
+			case 'paypal_express_cancel_payment':
+				// PayPal Express - Cancel Payment
+				$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+				$object->redirectHome();
+				break;
+			case 'twocheckout':
+				// TwoCheckout - Webhook
+				$object = new \Indeed\Ihc\Gateways\TwoCheckout();
+				$object->webhookPayment();
+				break;
+			case 'mollie':
+				// Mollie - Webhook
+				$object = new \Indeed\Ihc\Gateways\Mollie();
+				$object->webhookPayment();
+				break;
+			case 'pagseguro':
+				// Pagseguro - Webhook
+					$object = new \Indeed\Ihc\Gateways\Pagseguro();
 					$object->webhookPayment();
+				break;
+			case 'authorize':
+				// Authorize - Webhook
+				if ( ihcCheckCheckoutSetup() ){
+						$object = new \Indeed\Ihc\Gateways\Authorize();
+						$object->webhookPayment();
 				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\PayPalStandard();
-					$object->webhook();
+						require_once IHC_PATH . 'classes/PaymentGateways/authorize_response.php';
+				}
+				break;
+			case 'braintree':
+				// Braintree - Webhook
+				if ( ihcCheckCheckoutSetup() ){
+						$object = new \Indeed\Ihc\Gateways\Braintree();
+						$object->webhookPayment();
+				} else {
+					if ( version_compare( phpversion(), '7.2', '>=' ) ){
+							// braintree v2
+							require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook_v2.php';
+					} else {
+							// braintree v1
+							require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook.php';
+					}
 				}
 				break;
 			case 'stripe':
 				// Stripe Standard - Webhook
 				require_once IHC_PATH . 'classes/PaymentGateways/stripe_webhook.php';
-				break;
-			case 'twocheckout':
-				// TwoCheckout - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\TwoCheckout();
-					$object->webhookPayment();
-				} else {
-					// standard
-					require_once IHC_PATH . 'classes/PaymentGateways/twocheckout_ins.php';
-				}
-				break;
-			case 'authorize':
-				// Authorize - Webhook
-				require_once IHC_PATH . 'classes/PaymentGateways/authorize_response.php';
-				break;
-			case 'braintree':
-				// Braintree - Webhook
-				if ( version_compare( phpversion(), '7.2', '>=' ) ){
-						// braintree v2
-						require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook_v2.php';
-				} else {
-						// braintree v1
-						require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook.php';
-				}
-				break;
-			case 'mollie':
-				// Mollie - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\Mollie();
-					$object->webhookPayment();
-				} else {
-					// standard
-					$paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\Mollie();
-					$paymentGatewayObject->webhook();
-				}
 				break;
 			case 'arrive':
 				require_once IHC_PATH . 'public/action-reset_password.php';
@@ -991,107 +1017,30 @@ function ihc_payment_gate_check(){
 			case 'user_activation':
 				require_once IHC_PATH . 'public/action-user_activation.php';
 				break;
-			case 'paypal_express_complete_payment':
-				// PayPal Express - Complete Recurring Payment
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
-					$object->confirmAuthorization()
-								 ->getExpressCheckoutDetails()
-								 ->createRecurringProfile()
-								 ->redirectToSuccessPage();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-					$object->confirmAuthorization()
-								 ->getExpressCheckoutDetails()
-								 ->createRecurringProfile()
-								 ->redirectHome();
-				}
-				break;
-			case 'paypal_express_single_payment_complete_payment':
-				// PayPal Express - Complete Single Payment
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
-					$object->completeSinglePayment()
-								 ->redirectToSuccessPage();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-					$object->completeSinglePayment()
-								 ->redirectHome();
-				}
-				break;
-			case 'paypal_express_checkout_ipn':
-				// PayPal Express - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\PayPalExpressCheckout();
-					$object->webhookPayment();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckout();
-					$object->webhook();
-				}
-				break;
-			case 'paypal_express_cancel_payment':
-				// PayPal Express - Cancel Payment
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
-					$object->redirectHome();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-					$object->redirectHome();
-				}
-				break;
-			case 'pagseguro':
-				// Pagseguro - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\Pagseguro();
-					$object->webhookPayment();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\Pagseguro();
-					$object->webhook();
-				}
-				break;
 			case 'dl':
 				$token = isset($_GET['token']) ? $_GET['token'] : '';
 				$directLogin = new \Indeed\Ihc\Services\DirectLogin();
 				$directLogin->handleRequest($token);
 				break;
-			case 'stripe_checkout':
-				// Stripe Checkout - Webhook
-				if ( ihc_payment_workflow() == 'new' ){
-					// new
-					$object = new \Indeed\Ihc\Gateways\StripeCheckout();
-					$object->webhookPayment();
-				} else {
-					// standard
-					$object = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
-					$object->webhook();
-				}
-				break;
 			case 'social_login':
 				$ihcLoadWp = true;
 				require IHC_PATH . 'public/social_handler.php';
+				break;
+			case 'stripe_connect':
+				// Stripe Checkout - Webhook
+				$enabled = get_option('ihc_stripe_connect_status');
+				if ( empty( $enabled ) ){
+						return;
+				}
+				$object = new \Indeed\Ihc\Gateways\StripeConnect();
+				$object->webhookPayment();
 				break;
 			default:
 				$paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $ihc_action );
 				// @description
 
 				if ( $paymentObject ){
-					if ( ihc_payment_workflow() == 'new' ){
-						// new
 						$paymentObject->webhookPayment();
-					} else {
-						// standard
-						$paymentObject->webhook();
-					}
 				} else {
 						$home = get_home_url();
 						wp_safe_redirect($home);
@@ -1279,6 +1228,16 @@ function ihcStyleForTopNotifications()
 					-webkit-border-radius: 10px !important;
 					border-radius: 10px !important;
 					z-index: 26 !important;
+	}
+	li.ihc-uap-link-wrapp, li#wp-admin-bar-ihc-uap-link{
+    display: block;
+     width: 100%;
+     background-color: #ed5a4c !important;
+     color: #fff !important;
+     padding: 5px 0 5px 4px;
+  }
+	li.ihc-uap-link-wrapp a,  li#wp-admin-bar-ihc-uap-link a{
+		color:#fff !important;
 	}';
 
 	wp_register_style( 'dummy-handle', false );

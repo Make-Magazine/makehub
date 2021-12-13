@@ -269,7 +269,7 @@ wp_enqueue_script( 'ihc-print-this' );
                             <th><?php esc_html_e( 'Plan Details', 'ihc');?></th>
                             <th><?php esc_html_e( 'Amount', 'ihc');?></th>
                             <th><?php esc_html_e( 'Payment Service', 'ihc');?></th>
-                            <th><?php esc_html_e( 'Trial Period<', 'ihc');?>/th>
+                            <th><?php esc_html_e( 'Trial Period', 'ihc');?></th>
                             <th><?php esc_html_e( 'Grace Period', 'ihc');?></th>
                             <th><?php esc_html_e( 'Next Payment Due', 'ihc');?></th>
                             <th><?php esc_html_e( 'Starts On', 'ihc');?></th>
@@ -283,7 +283,7 @@ wp_enqueue_script( 'ihc-print-this' );
                                 $subscriptionMetas = \Indeed\Ihc\Db\UserSubscriptionsMeta::getAllForSubscription( $subscription['id'] );
                                 $membershipData = \Indeed\Ihc\Db\Memberships::getOne( $subscription['level_id'] );
                                 $accessType = ihcGetValueFromTwoPossibleArrays( $subscriptionMetas, $membershipData, 'access_type' );
-                                
+
                                 $orderId = \Ihc_Db::getLastOrderIdByUserAndLevel( $subscription['user_id'], $subscription['level_id'] );
                                 $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
                             ?>
@@ -507,7 +507,9 @@ wp_enqueue_script( 'ihc-print-this' );
                       </tr>
                   </thead>
                   <tbody>
-                      <?php foreach ( $data['gifts'] as $gift ):?>
+                      <?php foreach ( $data['gifts'] as $gift ):
+                        if(!isset($gift['code'])) continue;
+                        ?>
                           <tr>
                             <td><?php echo $gift['code'];?></td>
                             <td><?php
@@ -586,7 +588,7 @@ wp_enqueue_script( 'ihc-print-this' );
                       <?php foreach ( $data['reasons_for_cancel'] as $reason ):?>
                           <tr>
                             <td><?php echo \Ihc_Db::get_level_name_by_lid( $reason->lid );?></td>
-                            <td><?php echo $reason->reason;?></td>
+                            <td><?php echo stripslashes($reason->reason);?></td>
                             <td><?php echo date( 'Y-m-d h:i:s', $reason->action_date );?></td>
                           </tr>
                       <?php endforeach;?>

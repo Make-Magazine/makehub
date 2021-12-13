@@ -21,6 +21,13 @@ class NotificationLogs
         if ( !isset( $data['lid'] ) ){
             $data['lid'] = '';
         }
+        $time = time();
+        $date = new \DateTime();
+    		$date->setTimestamp( $time );
+    		$date->setTimezone( new \DateTimeZone('UTC') );
+    		$time = $date->format('Y-m-d H:i:s');
+        $time = get_date_from_gmt( $time, 'Y-m-d H:i:s' );
+        $currentDate = $time;
         $query = $wpdb->prepare( "INSERT INTO {$wpdb->prefix}ihc_notifications_logs VALUES(
           null,
           %s,
@@ -29,14 +36,15 @@ class NotificationLogs
           %s,
           %s,
           %s,
-          null
+          %s
         );",
             $data['notification_type'],
             $data['email_address'],
             $data['subject'],
             $data['message'],
             $data['uid'],
-            $data['lid']
+            $data['lid'],
+            $currentDate
         );
         return $wpdb->query( $query );
     }

@@ -91,12 +91,25 @@
 
 				<?php
 				foreach ($data['orders'] as $k=>$array){
+					
+					$firstChage = false;
+					$firstAmount = false;
+					
+					$firstAmount = $orderMeta->get( $array['id'], 'first_amount' );
+					if(isset($firstAmount) && $firstAmount == $array['amount_value']){
+						$firstChage = true;
+					}
+					
 					$taxes = $orderMeta->get( $array['id'], 'taxes_amount' );
 						if ( $taxes == null ){
 								$taxes = $orderMeta->get( $array['id'], 'tax_value' );
 						}
 						if ( $taxes == null ){
+							if(isset($firstChage) && $firstChage == true){
+								$taxes = $orderMeta->get( $array['id'], 'first_amount_taxes' );
+							}else{
 								$taxes = $orderMeta->get( $array['id'], 'taxes' );
+							}
 						}
 					?>
 					<tr>
@@ -115,15 +128,23 @@
 						<?php if ( ihc_is_magic_feat_active( 'taxes' ) ):?>
 								<?php	if( !empty( $data['settings']['ihc_show_taxes_column']) ): ?>
 						<td>
-							<?php $value = $orderMeta->get( $array['id'], 'base_price' );?>
-							<?php if ( $value !== null ):?>
-									<?php echo $value . ' ' . $array['amount_type'];?>
-							<?php elseif ( $taxes != false ):?>
-									<?php $netAmount = $array['amount_value'] - $taxes;?>
-									<?php echo $netAmount . ' ' . $array['amount_type'];?>
-							<?php else :?>
-									<?php echo $array['amount_value'] . ' ' . $array['amount_type'];?>
-							<?php endif;?>
+							<?php if(isset($firstChage) && $firstChage == true && isset($firstAmount)){
+									$netAmount = $firstAmount;
+									if ( $taxes != false ){
+										$netAmount = $firstAmount - $taxes;
+									}
+									echo $netAmount . ' ' . $array['amount_type'];
+							 }else{ ?>	
+										<?php $value = $orderMeta->get( $array['id'], 'base_price' );?>
+										<?php if ( $value !== null ):?>
+												<?php echo $value . ' ' . $array['amount_type'];?>
+										<?php elseif ( $taxes != false ):?>
+												<?php $netAmount = $array['amount_value'] - $taxes;?>
+												<?php echo $netAmount . ' ' . $array['amount_type'];?>
+										<?php else :?>
+												<?php echo $array['amount_value'] . ' ' . $array['amount_type'];?>
+										<?php endif;?>
+						<?php } ?>
 						</td>
 
 						<td>

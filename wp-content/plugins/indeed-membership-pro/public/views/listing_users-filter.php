@@ -1,5 +1,5 @@
 <?php if ($this->filter_form_fields):?>
-<?php wp_enqueue_script( 'ihc-listing-users-filter', IHC_URL . '/assets/js/listing-users-filter.js', [], 1.1 );?>
+<?php wp_enqueue_script( 'ihc-listing-users-filter', IHC_URL . '/assets/js/listing-users-filter.js', ['jquery'], 10.1 );?>
 <div class="iump-listing-users-filter">
 <div class="iump-filter-title"><?php esc_html_e("Search for specific Members", 'ihc');?></div>
 <form action="<?php echo $base_url;?>" method="get" class="ihc-js-listing-user-filter-form" data-base_url="<?php echo $base_url;?>" >
@@ -59,7 +59,7 @@
 				<?php
 				break;
 			case 'select':
-					
+
 					?>
 						<div class="iump-filter-row iump-filter-country">
 							<label><?php echo $field['label'];?></label>
@@ -79,10 +79,10 @@
 							</select>
 						</div>
 					<?php
-					
+
 				break;
 			case 'ihc_country':
-					
+
 					?>
 						<div class="iump-filter-row iump-filter-country">
 							<label><?php echo $field['label'];?></label>
@@ -102,10 +102,10 @@
 							</select>
 						</div>
 					<?php
-					
+
 				break;
 			case 'multi_select':
-				
+
 				?>
 				<div class="iump-filter-row iump-filter-multi">
 					<label><?php echo $field['label'];?></label>
@@ -123,7 +123,7 @@
 					</select>
 				</div>
 				<?php
-			
+
 				break;
 			case 'radio':
 				if ($field['values']):

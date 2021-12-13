@@ -65,6 +65,16 @@ function ihc_message_update_profile_form_html($content='')
 		return $content;
 }
 
+//Change Password
+add_filter('ihc_update_password_form_html', 'ihc_message_update_password_form_html', 1, 1);
+function ihc_message_update_password_form_html($content='')
+{
+		if (!empty($_REQUEST['ihc_register']) && $_REQUEST['ihc_register']=='update_password'){
+				return '<div class="ihc-reg-update-msg">' . ihc_correct_text(get_option('ihc_general_update_msg')) . '</div>' . $content;
+		}
+		return $content;
+}
+
 add_filter('the_content', 'ihc_print_message', 99);
 function ihc_print_message($content){
 	/*

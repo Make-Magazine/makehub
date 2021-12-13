@@ -1,6 +1,6 @@
 <?php
 wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css');
-wp_enqueue_script( 'ihc-drip-content', IHC_URL . 'admin/assets/js/drip-content.js', [], 1.1 );
+wp_enqueue_script( 'ihc-drip-content', IHC_URL . 'admin/assets/js/drip-content.js', ['jquery'], 10.1 );
 global $post;
 $meta_arr = ihc_post_metas($post->ID);
 

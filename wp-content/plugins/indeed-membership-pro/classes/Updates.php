@@ -70,10 +70,17 @@ class Updates
           }
         }
 
+        if ( version_compare( '10.2', $versionValueInDatabase ) == 1 ){
+          \Ihc_Db::create_default_pages();
+        }
+
+
         if ( version_compare( $currentVersion, $versionValueInDatabase )==1 ){
             $this->updateRegisterFields();
             update_option( $this->optionName, $currentVersion );
         }
+
+
 
     }
 
@@ -371,8 +378,6 @@ class Updates
             /// NOTIFICATIONS
             \Ihc_Db::create_notifications();
 
-            //UPDATE STRIPE TRANSACTIONS
-            ihc_update_stripe_subscriptions();
             update_option('ihc_update_version13', 1);//ihc_update_version
         }
     }

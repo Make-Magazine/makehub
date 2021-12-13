@@ -1,6 +1,6 @@
 <?php
 if ( !empty( $data['settings']['ihc_show_pause_resume_link'] ) || !empty( $data['settings']['ihc_show_finish_payment'] ) ){
-    wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'assets/js/user-membership-management.js', [], 1.2, false );
+    wp_enqueue_script( 'ihc-user-membership-management', IHC_URL . 'assets/js/user-membership-management.js', ['jquery'], 10.1, false );
 }
 $needReasons = ihc_is_magic_feat_active( 'reason_for_cancel' );
 $paymentGateways = ihc_list_all_payments();
@@ -232,6 +232,16 @@ $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
                       </div>
                   <?php endif;?>
 
+              <!-- Update Stripe Card -->
+              <?php if ( \Indeed\Ihc\SubscriptionActionsButtons::showStripeChangeCard( $subscriptionData['user_id'], $subscriptionData['level_id'], $subscriptionData['id'] ) ):?>
+                  <div class="iump-subscription-table-button">
+                      <span class="ihc-js-stripe-connect-change-card" data-subscription_id="<?php echo $subscriptionData['id'];?>" data-uid="<?php echo $subscriptionData['user_id'];?>"><?php
+                        esc_html_e( 'Change Card', 'ihc' );
+                      ?></span>
+                  </div>
+                  <?php $printStripeConnect = true;?>
+              <?php endif;?>
+
           </div>
 
         </td>
@@ -264,9 +274,42 @@ $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
     }
 ?>
 
+<!-- Stripe Connect -->
+<?php
+global $wp_version, $current_user;
+$settings = ihc_return_meta_arr( 'payment_stripe_connect' );
+if ( $settings['ihc_stripe_connect_live_mode'] ){
+    $accountNumber = $settings['ihc_stripe_connect_account_id'];
+    $publicKey = $settings['ihc_stripe_connect_publishable_key'];
+} else {
+    $accountNumber = $settings['ihc_stripe_connect_test_account_id'];
+    $publicKey = $settings['ihc_stripe_connect_test_publishable_key'];
+}
+
+$lang = get_option( 'ihc_stripe_connect_locale_code' );
+if ( $lang === false || $lang === null || $lang === '' ){
+    $lang = 'en';
+}
+
+wp_enqueue_script( 'ihc-stripe-v3', 'https://js.stripe.com/v3/', [], false );
+wp_register_script( 'ihc-stripe-connect-change-card', IHC_URL . 'assets/js/stripe-connect-change-card.js', [ 'jquery' ], 1.1 );
+if ( version_compare ( $wp_version , '5.7', '>=' ) ){
+    wp_add_inline_script( 'ihc-stripe-connect-change-card', "window.ihcStripeConnectAcctNumber='" . $accountNumber . "';" );
+    wp_add_inline_script( 'ihc-stripe-connect-change-card', "window.ihcStripeConnectPublicKey='" . $publicKey . "';" );
+    wp_add_inline_script( 'ihc-stripe-connect-change-card', "window.ihcStripeConnectLang='" . $lang . "';" );
+} else {
+    wp_localize_script( 'ihc-stripe-connect-change-card', 'window.ihcStripeConnectAcctNumber', $accountNumber );
+    wp_localize_script( 'ihc-stripe-connect-change-card', "window.ihcStripeConnectPublicKey", $publicKey );
+    wp_localize_script( 'ihc-stripe-connect-change-card', "window.ihcStripeConnectLang", $lang );
+}
+wp_enqueue_script( 'ihc-stripe-connect-change-card' );
+?>
+<!-- Stripe Connect Change Card -->
+
+
 <?php if ( $needReasons && !empty( $data['subscriptions'] ) ): ?>
 	<?php $prefedinedReasons = stripslashes(get_option('ihc_reason_for_cancel_resons'));?>
-	<div id="ihc_reasons_modal">
+	<div id="ihc_reasons_modal" class="ihc-display-none">
 			<label><?php esc_html_e( 'Reason', 'ihc' );?></label>
 			<?php if ( $prefedinedReasons ):?>
 				<?php $reasons = explode( ',', $prefedinedReasons );?>
@@ -287,9 +330,10 @@ $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
 	</div>
 <?php endif;?>
 
+
 <!-- Trigger to open Modal -->
 <?php
 wp_enqueue_style( 'ihc_iziModal' );
 wp_enqueue_script( 'ihc_iziModal_js' );
-wp_enqueue_script( 'IhcRemoveCancelLevels', IHC_URL . 'assets/js/IhcRemoveCancelLevels.js', array(), null );
+wp_enqueue_script( 'IhcRemoveCancelLevels', IHC_URL . 'assets/js/IhcRemoveCancelLevels.js', ['jquery'], 10.1 );
 ?>

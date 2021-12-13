@@ -25,8 +25,8 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 					<input type="hidden" name="ihc_user_sites_enabled" value="<?php echo $data['metas']['ihc_user_sites_enabled'];?>" id="ihc_user_sites_enabled" />
                     <p><strong><?php esc_html_e('If a user has multiple memberships that allow him to create a SingleSite, he can create one SingleSite for each membership. If a membership is about to expire, the SingleSite assigned to it will be deactivated. It will be activated again when the membership is also active.', 'ihc');?></strong></p>
 				</div>
-				<div class="ihc-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>
@@ -56,8 +56,8 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 
 				<?php endforeach;?>
 				</div>
-                <div class="ihc-submit-form">
-					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+                <div class="ihc-wrapp-submit-bttn ihc-submit-form">
+					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>

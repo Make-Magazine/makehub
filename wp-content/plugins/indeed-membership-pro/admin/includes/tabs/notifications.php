@@ -30,11 +30,11 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 			}
 		?>
 		<div class="ihc-stuffbox">
-			<h3><?php esc_html_e('Add new Notification', 'ihc');?></h3>
+			<h3><?php esc_html_e('Add new Email Notification', 'ihc');?></h3>
 			<div class="inside">
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Notification Type:', 'ihc');?></label>
-					<select name="notification_type" id="notification_type" class="ump-js-change-notification-type">
+					<h2><?php esc_html_e('Email Notification Action', 'ihc');?></h2>
+					<select name="notification_type" id="notification_type" class="ump-js-change-notification-type iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 						<?php
 							foreach ($notification_arr as $k=>$v){
 								//Manually set optGroups
@@ -101,7 +101,7 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 									case 'delete_account':
 									case 'ihc_delete_subscription_notification':
 									case 'expire':
-									case 'user_before_subscription_payment_due':
+									case 'upcoming_card_expiry_reminder':
 									case 'drip_content-user':
 										echo ' </optgroup>';
 										break;
@@ -117,10 +117,10 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 					?>
 					<div id="ihc_notification_explanation"><?php echo $explanation;?></div>
 				</div>
-				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Membership:', 'ihc');?></label>
+				<div class="iump-special-line">
+					<h2><?php esc_html_e('Membership Target', 'ihc');?></h2>
 
-					<select name="level_id">
+					<select name="level_id" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 						<option value="-1" <?php echo ($meta_arr['level_id']==-1) ? 'selected' : ''; ?>><?php esc_html_e( 'All', 'ihc' );?></option>
 						<?php
 						$levels = \Indeed\Ihc\Db\Memberships::getAll();
@@ -149,11 +149,11 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 					;?></div>
 				</div>
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Subject:', 'ihc');?></label>
-					<input type="text" name="subject" value="<?php echo $meta_arr['subject'];?>" id="notification_subject" />
+					<h2 class="ihc-notification-edit-headline"><?php esc_html_e('Email Subject', 'ihc');?></h2>
+					<input type="text" class="ihc-edit-notification-subject iump-form-select ihc-form-element ihc-form-element-select ihc-form-select" name="subject" value="<?php echo $meta_arr['subject'];?>" id="notification_subject" />
 				</div>
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Message:', 'ihc');?></label>
+					<h2 class="ihc-notification-edit-headline"><?php esc_html_e('Email Message', 'ihc');?></h2>
 				</div>
 				<div class="ihc-notification-edit-message">
 					<?php wp_editor( $meta_arr['message'], 'ihc_message', array('textarea_name'=>'message', 'quicktags'=>TRUE) );?>
@@ -178,24 +178,24 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 				</div>
 
 				<div class="ihc-clear"></div>
-				<div class="ihc-submit-form">
+				<div class="ihc-stuffbox-submit-wrap iump-submit-form">
 					<input type="submit"
 					value="<?php if ($notification_id){
-						esc_html_e('Update', 'ihc');
+						esc_html_e('Save Changes', 'ihc');
 					} else{
-						esc_html_e('Add New', 'ihc');
+						esc_html_e('Save Changes', 'ihc');
 					}?>
-					" name="ihc_save" class="button button-primary button-large">
+					" name="ihc_save" id="ihc_submit_bttn" class="button button-primary button-large ihc_submit_bttn">
 				</div>
 			</div>
 		</div>
 				<!-- PUSHOVER -->
 				<?php if (ihc_is_magic_feat_active('pushover')):?>
 				<div class="ihc-stuffbox ihc-stuffbox-magic-feat">
-					<h3><?php esc_html_e('Pushover Notification', 'ihc');?></h3>
+					<h3><?php esc_html_e('Pushover Mobile Notification', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php esc_html_e('Send Pushover Notification', 'ihc');?></span>
+							<h2><?php esc_html_e('Send Pushover Mobile Notification', 'ihc');?></h2>
 							<label class="iump_label_shiwtch ihc-switch-button-margin">
 								<?php $checked = (empty($meta_arr['pushover_status'])) ? '' : 'checked';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#pushover_status');" <?php echo $checked;?> />
@@ -205,20 +205,20 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 						</div>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php esc_html_e('Pushover Message:', 'ihc');?></label>
+							<h2><?php esc_html_e('Pushover Message:', 'ihc');?></h2>
 							<textarea name="pushover_message" class="ihc-notification-edit-pushmessage" onBlur="ihcCheckFieldLimit(1024, this);"><?php echo stripslashes((isset($meta_arr['pushover_message'])) ? $meta_arr['pushover_message'] : '');?></textarea>
 							<div><?php esc_html_e('Only Plain Text and up to ', 'ihc');?><span>1024</span><?php esc_html_e(' characters are available!', 'ihc');?></div>
 						</div>
-						<div class="ihc-submit-form">
+						<div class="ihc-stuffbox-submit-wrap iump-submit-form">
 							<input type="submit"
 							value="
 							<?php if ($notification_id){
-								esc_html_e('Update', 'ihc');
+								esc_html_e('Save Changes', 'ihc');
 							} else{
-								esc_html_e('Add New', 'ihc');
+								esc_html_e('Save Changes', 'ihc');
 							}
 							?>
-							" name="ihc_save" class="button button-primary button-large">
+							" name="ihc_save" id="ihc_submit_bttn" class="button button-primary button-large ihc_submit_bttn">
 						</div>
 					</div>
 				</div>
@@ -254,6 +254,7 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 			<a href="<?php echo $url.'&tab=notifications&add_notification=true';?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php esc_html_e('Add New Notification', 'ihc');?></a>
 			<span class="ihc-top-message"><?php esc_html_e('...create your notification Templates!', 'ihc');?></span>
 			<a href="javascript:void(0)" title="<?php esc_html_e('Let you know if your website is able to send emails independently of UMP settings. A test email should be received on Admin email address.', 'ihc');?>" class="button button-primary button-large ihc-remove-group-button ihc-notification-list-check" onClick="ihcCheckEmailServer();"><?php esc_html_e('Check SMTP Mail Server', 'ihc');?></a>
+			<a class="button button-primary button-large ihc-notification-list-check ihc-notification-list-logs" href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=notification-logs' );?>" target="_blank"><?php esc_html_e( 'Notifications Logs', 'ihc' );?></a>
 			<div class="ihc-clear"></div>
 			<?php
 			if ($data){
@@ -267,14 +268,15 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 					<table class="wp-list-table widefat fixed tags ihc-admin-tables" id="ihc-levels-table">
 						<thead>
 							<tr>
-								<th class="manage-column"><?php esc_html_e('Subject', 'ihc');?></th>
-								<th class="manage-column"><?php esc_html_e('Action', 'ihc');?></th>
+								<th class="manage-column ihc-notification-table-subject"><?php esc_html_e('Subject', 'ihc');?></th>
+								<th class="manage-column ihc-notification-table-action"><?php esc_html_e('Action', 'ihc');?></th>
 								<th class="manage-column"><?php esc_html_e('Goes to', 'ihc');?></th>
 								<th class="manage-column"><?php esc_html_e('RunTime', 'ihc');?></th>
-								<th class="manage-column ihc-text-center"><?php esc_html_e('Target Memberships', 'ihc');?></th>
+								<th class="manage-column ihc-text-center"><?php esc_html_e('Memberships Target', 'ihc');?></th>
 								<?php if (ihc_is_magic_feat_active('pushover')):?>
 									<th class="manage-column ihc-text-center"><?php esc_html_e('Mobile Notification', 'ihc');?></th>
 								<?php endif;?>
+								<th class="manage-column" ><?php esc_html_e('Options', 'ihc');?></th>
 							</tr>
 						</thead>
 
@@ -284,10 +286,11 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 								<th class="manage-column"><?php esc_html_e('Action', 'ihc');?></th>
 								<th class="manage-column"><?php esc_html_e('Goes to', 'ihc');?></th>
 								<th class="manage-column"><?php esc_html_e('RunTime', 'ihc');?></th>
-								<th class="manage-column ihc-text-center"><?php esc_html_e('Target Memberships', 'ihc');?></th>
+								<th class="manage-column ihc-text-center"><?php esc_html_e('Memberships Target', 'ihc');?></th>
 								<?php if (ihc_is_magic_feat_active('pushover')):?>
 									<th class="manage-column ihc-text-center"><?php esc_html_e('Mobile Notification', 'ihc');?></th>
 								<?php endif;?>
+								<th class="manage-column" ><?php esc_html_e('Actions', 'ihc');?></th>
 							</tr>
 						</tfoot>
 
@@ -344,6 +347,13 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 											<?php endif;?>
 										</td>
 									<?php endif;?>
+
+									<td>
+											<div class="ihc-js-notifications-fire-notification-test ihc-notifications-list-send"
+														data-notification_id="<?php echo $item->id;?>"
+														data-email="<?php echo get_option( 'admin_email' );?>"
+											><?php esc_html_e('Send Test Email', 'ihc');?></div>
+									</td>
 								</tr>
 							<?php
 								}
@@ -357,7 +367,7 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 				?>
 
 		</div>
-		<div><a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=notification-logs' );?>" target="_blank"><?php esc_html_e( 'Notifications Logs', 'ihc' );?></a></div>
+		
 <?php
 }
 ?>

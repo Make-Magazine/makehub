@@ -9,6 +9,7 @@ class Mollie extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'canDoRecurring'						                  => true, // does current payment gateway supports recurring payments.
                 'canDoTrial'							                    => true, // does current payment gateway supports trial subscription
                 'canDoTrialFree'						                  => true, // does current payment gateway supports free trial subscription
+                'canDoTrialPaid'						                  => true, // does current payment gateway supports paid trial subscription
                 'canApplyCouponOnRecurringForFirstPayment'		=> true, // if current payment gateway support coupons on recurring payments only for the first transaction
                 'canApplyCouponOnRecurringForFirstFreePayment'=> true, // if current payment gateway support coupons with 100% discount on recurring payments only for the first transaction.
                 'canApplyCouponOnRecurringForEveryPayment'	  => true, // if current payment gateway support coupons on recurring payments for every transaction

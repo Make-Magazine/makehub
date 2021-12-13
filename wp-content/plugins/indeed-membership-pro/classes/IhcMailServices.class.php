@@ -4,23 +4,7 @@ if (!class_exists('IhcMailServices')){
 		public $dir_path = '';
 
 		public function indeed_getResponse($api_key=null, $token=null, $e_mail=null, $full_name=''){
-			if (!class_exists('jsonRPCClient')){
-				require_once $this->dir_path . '/services/email_services/getresponse/jsonRPCClient.php';
-			}
-			$api = new jsonRPCClient('http://api2.getresponse.com');
-			$args = array(
-					'campaign'  => $token,
-					'email' => $e_mail,
-			);
-			if(!empty($full_name)){
-				$args['name'] = $full_name;
-			}
-			$res = $api->add_contact($api_key, $args);
-			if($res){
-				return 1;
-			}else{
-				return 0;
-			}
+			
 		}
 
 		public function indeed_mailChimp($mailchimp_api=null, $mailchimp_id_list=null, $e_mail=null, $first_name='', $last_name=''){

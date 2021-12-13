@@ -3,7 +3,7 @@ $id = empty($_GET['edit']) ? 0 : $_GET['edit'];
 $data['metas'] = Ihc_Db::get_tax($id);
 require_once IHC_PATH . 'public/static-data.php';
 $data['countries'] = ihc_get_countries();
-wp_enqueue_script( 'ihc-select2' );
+wp_enqueue_script( 'ihc-select2', ['jquery'] );
 ?>
 	<form method="post" action="<?php echo admin_url('admin.php?page=ihc_manage&tab=taxes');?>">
 		<input type="hidden" name="id" value="<?php echo $data['metas']['id'];?>" />

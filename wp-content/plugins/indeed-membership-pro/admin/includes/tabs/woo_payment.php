@@ -26,8 +26,8 @@ $data['items'] = Ihc_Db::get_woo_product_level_relations();
 				<p><strong><?php esc_html_e('The user will have an active membership only when the WooCommerce order will be set as completed (manually or automatically).', 'ihc');?></strong></p>
 			</div>
 
-			<div class="ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
+				<input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

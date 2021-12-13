@@ -128,6 +128,11 @@ class IhcWooProductCustomPrices{
 
 					foreach ($this->user_levels as $lid){
 						$settings = Ihc_Db::ihc_woo_products_get_discount_by_lid_prodid($product_id, $lid, $cats_ids);
+						if ( empty( $settings ) && $product->get_parent_id() ){
+							$cats = Ihc_Db::woo_get_product_terms_as_string( $product->get_parent_id() );
+							$cats_ids = empty($cats) ? array() : explode(',', $cats);
+							$settings = Ihc_Db::ihc_woo_products_get_discount_by_lid_prodid($product->get_parent_id(), $lid, $cats_ids);
+						}
 						if ($settings){
 							$temp_possible = $this->get_possible_prices($price, $settings);
 							if ($temp_possible>-1){

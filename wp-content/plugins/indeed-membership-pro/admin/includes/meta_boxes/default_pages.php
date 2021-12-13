@@ -12,7 +12,7 @@ if ($set_arr && count($set_arr) && in_array($post->ID, $set_arr)) {
 			//the select
 			?>
 			<div class="ihc-padding">
-			<div class="ihc-bold"><?php esc_html_e('Set the Page as:', 'ihc');?></div>
+			<div class="ihc-bold"><?php esc_html_e('Set this Page as:', 'ihc');?></div>
 			<select class="ihc-fullwidth ihc-select" name="ihc_set_page_as_default_something">
 				<option value="-1">...</option>
 				<?php
@@ -32,7 +32,7 @@ if ($set_arr && count($set_arr) && in_array($post->ID, $set_arr)) {
 		echo '</div>';
 	} else {
 		?>
-		<div class="ihc-meta-box-message"><?php echo esc_html__('All the required pages are properly set, to change them click', 'ihc') . '<a href="' . admin_url('admin.php?page=ihc_manage&tab=general') . '">here</a>.';?></div>
+		<div class="ihc-meta-box-message"><?php echo esc_html__('All the required pages are properly set, to change them click ', 'ihc') . '<a href="' . admin_url('admin.php?page=ihc_manage&tab=general') . '">here</a>.';?></div>
 		<?php
 	}
 }
