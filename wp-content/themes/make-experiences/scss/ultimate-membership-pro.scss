@@ -124,3 +124,41 @@
 		}
 	}
 }
+
+.page-checkout-page, .page-register {
+	.entry-header {
+		text-align: center;
+	}
+	.ihc-product-details-table .ihc-product-description, .ihc-checkout-page-additional-info {
+		font-size: 16px;
+	}
+	.ihc-checkout-page-apply {
+		min-height: 35px !important;
+	}
+	#ihc-checout-page-purchase-payment-method-section{
+		.ihc-checkout-page-box-wrapper {
+			.ihc-checkout-page-box-title, .ihc-checkout-page-payment-selection{ display: none; }
+		}
+	}
+	input[type="submit"].ihc-complete-purchase-button, input[type="submit"]#ihc_submit_bttn {
+		background-color: $color-blue !important;
+		border: $color-blue 1px solid;
+		font-family: Roboto, Arial, Helvetica, sans-serif !important;
+		font-size: 18px;
+		&:hover {
+			color: $color-blue !important;
+			background-color: #fff !important;
+		}
+	}
+}
+.page-checkout-page {
+	.ihc-product-details-table:not(.ihc-subtotal-table) {
+		td { width: 100%; }
+		tr { display: none; }
+		.ihc-product-details-table-name-row { display: block; }
+		.ihc-product-name {
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+	}
+}

@@ -69,7 +69,18 @@ function membership_info_content() {
 				<div class="membership-btns">
 					<?php
 					if(CAN_UPGRADE == true && IS_MEMBER == true) {
-						echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'24.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+						if(ihcCheckCheckoutSetup()){
+							if (isset($attr['checkout_page'])){
+								$url = add_query_arg( 'lid', $attr['id'], $attr['checkout_page'] );
+							} else {
+								$page = get_option('ihc_checkout_page');
+								$url = get_permalink($page);
+								$url = add_query_arg( 'lid', '20', $url );
+							}
+							echo '<div onclick="ihcBuyNewLevel(\'' . $url . '\');" class="btn universal-btn">Upgrade</div>';
+						} else {
+							echo '<div onclick="ihcBuyNewLevelFromAp(\'Membership\', \'24.99\', 20, \'' .CURRENT_URL. '/account/?ihcnewlevel=true&amp;lid=20&amp;urlr=' .urlencode(CURRENT_URL). '%2Faccount%2F%3Fihc_ap_menu%3Dsubscription\');" class="btn universal-btn">Upgrade</div>';
+						}
 					}
 					if (!is_null($customerID) && IS_MEMBER == true) { // if customer exists in stripe
 				        $session = \Stripe\BillingPortal\Session::create([
