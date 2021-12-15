@@ -76,7 +76,7 @@ function spaces_map_loop() {
          </div>
          <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
             <h4>See an error or need to update your info?</h4>
-            <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>					
+            <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>
          </div>
 			<div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
 				<h4>Join Make: Community</h4>
@@ -84,9 +84,9 @@ function spaces_map_loop() {
 			</div>
       </div>
    </div>
-</div>  
+</div>
 
-<?php echo do_shortcode('[make_rss title="Makerspace", feed="https://makezine.com/tag/makerspaces/feed/", moreLink="http://makezine.com/tag/makerspaces/", number=4]'); ?>
+<?php echo do_shortcode('[make_rss title="Makerspace" feed="https://makezine.com/tag/makerspaces/feed/" moreLink="http://makezine.com/tag/makerspaces/" number=4]'); ?>
 
 <?php
 } //end function
