@@ -24,7 +24,7 @@ function ihc_public_head(){
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'ihc-jquery-ui', IHC_URL . 'assets/js/jquery-ui.min.js', ['jquery'], 10.2  );
 
-	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.min.js', ['jquery'], 10.2 );
+	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', ['jquery'], 10.2 );
 
 	if ( version_compare ( $wp_version , '5.7', '>=' ) ){
 			wp_add_inline_script( 'ihc-front_end_js', "var ihc_site_url='" . get_site_url() . "';" );
