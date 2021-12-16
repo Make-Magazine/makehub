@@ -87,7 +87,7 @@ function dispLayout($row_layout) {
 function get3ColLayout() {
     $return = '';
 
-    $return .= '<section class="content-panel three-column">                
+    $return .= '<section class="content-panel three-column">
                 <div class="container">';
 
     GLOBAL $acf_blocks;
@@ -111,7 +111,7 @@ function get3ColLayout() {
             case 'image':     // Image with optional link
                 $alignment = $data['column_list_alignment'];
                 $imageArr = $data['column_image_field'];
-                $image = '<img alt="' . $imageArr['alt'] . '" class="img-responsive lazyload" src="' . $imageArr['url'] . '" />';
+                $image = '<img alt="' . $imageArr['alt'] . '" class="img-responsive" src="' . $imageArr['url'] . '" />';
 
                 $cta_link = $data['image_cta'];
                 $ctaText = $data['image_cta_text'];
@@ -196,13 +196,13 @@ function get6ColLayout() {
 
         if (!empty($cta_link)) {
             if (!empty($imageArr['url'])) {
-                $columnInfo = '<a class="six-col-img lazyload" href="' . $cta_link . '" ' . $imgStyle . '></a>';
+                $columnInfo = '<a class="six-col-img" href="' . $cta_link . '" ' . $imgStyle . '></a>';
             }
             if (!empty($ctaText)) {
                 $columnInfo .= '<p class="text-center sub-caption-bottom ' . $bgColor . '"><a href="' . $cta_link . '" target="_blank">' . $ctaText . '</a></p>';
             }
         } else {
-            $columnInfo = '<div class="six-col-img lazyload" ' . $imgStyle . '></div>';
+            $columnInfo = '<div class="six-col-img" ' . $imgStyle . '></div>';
         }
 
         $return .= $columnInfo;
@@ -246,7 +246,7 @@ function get1ColWYSIWYG() {
     }
 
     $return .= '  </div>
-          
+
         </section>';
     return $return;
 }
@@ -268,7 +268,7 @@ function get1ColLayout() {
             $hero_image_random = get_sub_field('hero_image_random');
             $hero_image_url = $hero_image_random["url"];
 
-            $image = '<div class="hero-img lazyload" data-bg="' . $hero_image_url . '"></div>';
+            $image = '<div class="hero-img" style="background:(' . $hero_image_url . ');"></div>';
             $cta_link = get_sub_field('image_cta');
 
             if (!empty($cta_link)) {
@@ -342,7 +342,7 @@ function getVideoPanel() {
             $return .= '  </div>';
             $return .= '  <div class="col-sm-8 col-xs-12">
 			                 <div class="embed-youtube">
-									 <iframe class="lazyload" src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+									 <iframe src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 								  </div>
 			              </div>';
             $return .= '</div>';
@@ -350,7 +350,7 @@ function getVideoPanel() {
             $return .= '<div class="row">';
             $return .= '  <div class="col-sm-8 col-xs-12">
 								  <div class="embed-youtube">
-									 <iframe class="lazyload" src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+									 <iframe src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 								  </div>
 							  </div>';
             $return .= '  <div class="col-sm-4 col-xs-12">
@@ -400,7 +400,7 @@ function getImagePanel() {
             if ($image['image_overlay']['image_overlay_link']) {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
-            $return .= '			 <img class="img-responsive lazyload" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
+            $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
             if ($image['image_overlay']['image_overlay_text']) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
                 ;
@@ -418,7 +418,7 @@ function getImagePanel() {
             if ($image['image_overlay']['image_overlay_link']) {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
-            $return .= '			 <img class="img-responsive lazyload" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
+            $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
             if ($image['image_overlay']['image_overlay_text']) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
             }
@@ -484,8 +484,8 @@ function getCTApanel() {
     $return .= '   <div class="container">
                      <div class="row text-center">
                         <div class="col-xs-12">
-                           <h3>                              
-                              <span>' . $cta_title . '</span>                              
+                           <h3>
+                              <span>' . $cta_title . '</span>
                            </h3>
                         </div>
                      </div>
@@ -543,14 +543,14 @@ function rolloverItems($row_layout) {
     foreach ($itemArr as $item) {
 		$markup = !empty($item['maker_url']) ? 'a' : 'div';
 		$href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" target="_blank"' : '';
-		
-        $return .= '<' . $markup . ' ' . $href . ' class="grid-item lazyload" data-bg="' . $item['image'] . '">';
+
+        $return .= '<' . $markup . ' ' . $href . ' class="grid-item" style="background:(' . $item['image'] . ');">';
 
         if (!empty($item['desc'])) {
-            
+
             $newTab = $item;
             $newTab = ($newTab == true ? "target='_blank'" : "target='_self'");
-            
+
             $return .= '<div class="grid-item-desc">
                      <div class="desc-body"><h4>' . $item['name'] . '</h4>
                      <p class="desc">' . $item['desc'] . '</p></div>';
@@ -565,7 +565,7 @@ function rolloverItems($row_layout) {
                     </div>';
         $return .= '</' . $markup . '>'; //close .grid-item
     }
-    $return .= '</div>';  //close 
+    $return .= '</div>';  //close
     //check if we should display a more maker button
 
     if ($cta_url) {
@@ -592,7 +592,7 @@ function rolloverItems($row_layout) {
                                      if( 561 > jQuery(window).width() ) {
                                        jQuery(jQuery(this).find(".desc-body")).css("mask-image", "none");
                                             jQuery(jQuery(this).find(".desc-body")).css("height", "auto");
-                                     } else { 
+                                     } else {
                                             jQuery(jQuery(this).find(".desc-body")).css("height", availableHeight);
                                      }
                              });
@@ -874,7 +874,7 @@ function getSliderPanel() {
     }
     $return .= '   </div>
 	            </section>
-					
+
 					<script type="text/javascript">
 					   jQuery(document).ready(function() {
 					   	// slideshow carousel
@@ -892,7 +892,7 @@ function getSliderPanel() {
 								 0: {
 									items: 1
 								 },
-								 600: { 
+								 600: {
 								   items: ' . $tabletSlides . '
 								 },
 								 1000: {

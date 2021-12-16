@@ -39,9 +39,6 @@ function dispLayout($row_layout) {
             case 'news_block_panel':  // NEWS BLOCK PANEL
                 $return = getNewsBlockpanel();
                 break;
-            case 'tint_social_block_panel':  // NEWS BLOCK PANEL
-                $return = getTintSocialBlockpanel();
-                break;
             case 'ribbon_separator_panel':  // CTA PANEL
                 $return = getRibbonSeparatorpanel();
                 break;
@@ -52,9 +49,9 @@ function dispLayout($row_layout) {
                 $return = getImgCarouselSquare();
                 break;
 			case 'panel_rollover_items': // FEATURED Items
-				$return = rolloverItems($row_layout);            
+				$return = rolloverItems($row_layout);
 				break;
-			case 'what_is_maker_faire': // WHAT IS MAKER FAIRE PANEL    
+			case 'what_is_maker_faire': // WHAT IS MAKER FAIRE PANEL
 				$return = getWhatisMF();
 				break;
             case 'newsletter_panel':  // NEWSLETTER PANEL
@@ -210,7 +207,7 @@ function rolloverItems($row_layout) {
 function get3ColLayout() {
     $return = '';
 
-    $return .= '<section class="content-panel three-column">                
+    $return .= '<section class="content-panel three-column">
                 <div class="container">';
 
     //gutenburg blocks use get_field, ACF panels use get_sub_field
@@ -236,7 +233,7 @@ function get3ColLayout() {
             case 'image':     // Image with optional link
                 $alignment = $data['column_list_alignment'];
                 $imageArr = $data['column_image_field'];
-                $image = '<img alt="' . $imageArr['alt'] . '" class="img-responsive lazyload" src="' . $imageArr['url'] . '" />';
+                $image = '<img alt="' . $imageArr['alt'] . '" class="img-responsive" src="' . $imageArr['url'] . '" />';
 
                 $cta_link = $data['image_cta'];
                 $ctaText = $data['image_cta_text'];
@@ -319,9 +316,9 @@ function get6ColLayout() {
         $columnInfo = '';
         //$image = '<img height="" width="" alt="'.$imageArr['alt'].'" class="ximg-responsive" src="' . $imageArr['url'] . '" />';
         //echo $imageArr['url'];
-                
+
         $imgStyle = 'style="background-image:url(' . $imageArr['url'] . ');height:' . $imageHeight . ';"';
-        
+
         $cta_link = $data['image_cta'];
         $ctaText = $data['image_cta_text'];
 
@@ -334,7 +331,7 @@ function get6ColLayout() {
 
         if (!empty($cta_link)) {
             if (!empty($imageArr['url'])) {
-                $columnInfo = '<a class="six-col-img lazyload" href="' . $cta_link . '" ' . $imgStyle . ' target="' . $target . '"></a>';
+                $columnInfo = '<a class="six-col-img" href="' . $cta_link . '" ' . $imgStyle . ' target="' . $target . '"></a>';
             }
             if (!empty($ctaText)) {
                 $columnInfo .= '<h4 class="text-center sub-caption-bottom ' . $bgColor . '"><a href="' . $cta_link . '" target="' . $target . '">' . $ctaText . '</a></h4>';
@@ -382,7 +379,7 @@ function get1ColWYSIWYG() {
     }
 
     $return .= '  </div>
-          
+
         </section>';
     return $return;
 }
@@ -431,7 +428,7 @@ function get1ColLayout() {
             $hero_image_random = get_sub_field('hero_image_random');
             $hero_image_url = $hero_image_random["url"];
 
-            $image = '<div class="hero-img lazyload" data-bg="' . $hero_image_url . '"></div>';
+            $image = '<div class="hero-img" style="background:url(' . $hero_image_url . ');"></div>';
             $cta_link = get_sub_field('image_cta');
 
             if (!empty($cta_link)) {
@@ -446,7 +443,7 @@ function get1ColLayout() {
     }
 
     $hero_text      = ($acf_blocks ? get_field('column_title') : get_sub_field('column_title'));
-  
+
     //build output
     $return = '';
     $return .= '<section class="hero-panel">';    // create content-panel section
@@ -463,7 +460,7 @@ function get1ColLayout() {
     $return .= '        ' . $hero_image .
             '     </div>' .
             '   </div>';
-    
+
 
     // Because of the aggressive caching on prod, it makes more sense to shuffle the array in javascript
     $return .= '</section><script type="text/javascript">var heroArray = ' . json_encode($hero_array) . ';heroArray.sort(function(a, b){return 0.5 - Math.random()});jQuery(document).ready(function(){jQuery(".hero-img").replaceWith(heroArray[0]);});</script>';
@@ -498,7 +495,7 @@ function getVideoPanel() {
             $return .= '  </div>';
             $return .= '  <div class="col-sm-8 col-xs-12">
 			                 <div class="embed-youtube">
-									 <iframe class="lazyload" src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+									 <iframe src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 								  </div>
 			              </div>';
             $return .= '</div>';
@@ -506,7 +503,7 @@ function getVideoPanel() {
             $return .= '<div class="row">';
             $return .= '  <div class="col-sm-8 col-xs-12">
 								  <div class="embed-youtube">
-									 <iframe class="lazyload" src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+									 <iframe src="https://www.youtube.com/embed/' . $video['video_code'] . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 								  </div>
 							  </div>';
             $return .= '  <div class="col-sm-4 col-xs-12">
@@ -637,8 +634,8 @@ function getCTApanel() {
     $return .= '   <div class="container">
                      <div class="row text-center">
                         <div class="col-xs-12">
-                           <h3>                              
-                              <span>' . $cta_title . '</span>                              
+                           <h3>
+                              <span>' . $cta_title . '</span>
                            </h3>
                         </div>
                      </div>
@@ -683,20 +680,6 @@ function getNewsBlockpanel() {
     return do_news_block($args);
 }
 
-/* * *************************************************** */
-/* Function to return Tint Social Block panel           */
-/* * *************************************************** */
-
-function getTintSocialBlockpanel() {
-    GLOBAL $acf_blocks;
-    $args = [
-        'personalization_id' => ($acf_blocks ? get_field('personalization_id') : get_sub_field('personalization_id')),
-        'title' => ($acf_blocks ? get_field('title') : get_sub_field('title')),
-        'hashtags' => ($acf_blocks ? get_field('hashtags') : get_sub_field('hashtags'))
-    ];
-    require_once 'MF-Social-Block.php';
-    return do_social_block($args);
-}
 
 /* * *************************************************** */
 /* Function to return IMAGE CAROUSEL (RECTANGLE)        */
@@ -725,8 +708,8 @@ function getImgCarousel() {
         while (have_rows('images')) {
             the_row();
 
-            $text = ($acf_blocks ? get_field('text') : get_sub_field('text')); 
-            $url = ($acf_blocks ? get_field('url') : get_sub_field('url')); 
+            $text = ($acf_blocks ? get_field('text') : get_sub_field('text'));
+            $url = ($acf_blocks ? get_field('url') : get_sub_field('url'));
             $image = get_sub_field('image');
 
             if ($i == 0) {
@@ -736,7 +719,7 @@ function getImgCarousel() {
                     $return .= '<a href="' . $url . '">';
                 }
                 $return .= '
-            <img class="lazyload" src="' . $image['url'] . '" alt="' . $image['alt'] . '" />';
+            <img src="' . $image['url'] . '" alt="' . $image['alt'] . '" />';
                 if ($text) {
                     $return .= '
               <div class="carousel-caption">
@@ -750,7 +733,7 @@ function getImgCarousel() {
         </div>';
             } else {
                 $return .= '<div class="item">
-          <img class="lazyload" src="' . $image['url'] . '" alt="' . $image['alt'] . '" />';
+          <img src="' . $image['url'] . '" alt="' . $image['alt'] . '" />';
 		  if ($text) {
                     $return .= '
           <div class="carousel-caption">
@@ -800,7 +783,7 @@ function getImgCarouselSquare() {
             $text = get_sub_field('text');
             $url = get_sub_field('url');
             $image = get_sub_field('image');
-            $return .= '<div class="mtm-car-image lazyload" data-bg="' . $image["url"] . '" style="background-repeat: no-repeat; background-position: center center;background-size: cover;"></div>';
+            $return .= '<div class="mtm-car-image" style="background:url(' . $image["url"] . ');background-repeat: no-repeat; background-position: center center;background-size: cover;"></div>';
         }
         $return .= '
     </div>
@@ -921,7 +904,7 @@ function getSliderPanel() {
     }
     $return .= '   </div>
 	            </section>
-					
+
 					<script type="text/javascript">
 					   jQuery(document).ready(function() {
 					   	// slideshow carousel
@@ -939,7 +922,7 @@ function getSliderPanel() {
 								 0: {
 									items: 1
 								 },
-								 600: { 
+								 600: {
 								   items: ' . $tabletSlides . '
 								 },
 								 1000: {
@@ -1045,7 +1028,7 @@ function getNewsletterPanel() {
                   <div class="col-xs-12 col-sm-6 align-middle">
                      <div class="row row-eq-height" style="width:100%">
                         <div class="col-xs-12 col-sm-2 align-middle">
-                   <!--        <img class="img-responsive lazyload" src="/wp-content/themes/makerfaire/img/makey_outlined.svg" />-->
+                   <!--        <img class="img-responsive" src="/wp-content/themes/makerfaire/img/makey_outlined.svg" />-->
                         </div>
                         <div class="col-xs-12 col-sm-10 align-middle">
                            <input id="wc-email" class="form-control nl-panel-input" name="email" placeholder="' . __('Enter your Email', 'MiniMakerFaire') . '" required type="email">
@@ -1139,22 +1122,22 @@ function getSponsorPanel() {
     $id = url_to_postid($url);
 
     $title = ($acf_blocks ? get_field('title_sponsor_panel') : get_sub_field('title_sponsor_panel'));
-    if($title=='')  $title = 'Thank you to our sponsors';    
-    
+    if($title=='')  $title = 'Thank you to our sponsors';
+
     // IF CUSTOM FIELD FOR SPONSOR SLIDER HAS A URL THEN SHOW THAT URL'S SPONSORS
     if (have_rows('goldsmith_sponsors', $id) || have_rows('silversmith_sponsors', $id) || have_rows('coppersmith_sponsors', $id) || have_rows('media_sponsors', $id)) {
         $return .= '
    <div class="sponsor-slide">
       <div class="container">
          <div class="row">
-            <div class="col-xs-12 text-center padbottom">               
+            <div class="col-xs-12 text-center padbottom">
                <h2 class="sponsor-slide-title">' . $title . '</h2>
             </div>
          </div>
          <div class="row">
             <div class="col-sm-12">
                <h4 class="sponsor-slide-title">' . ($year ? $year . ' ' : '') . 'Maker Faire Sponsors: <br /> <span class="sponsor-slide-cat"></span></h4>
-            </div>            
+            </div>
          </div>
          <div class="row">
             <div class="col-xs-12">
@@ -1188,7 +1171,7 @@ function getSponsorPanel() {
                     if (get_sub_field('url')) {
                         $return .= '      <a href="' . $sub_field_2 . '" target="_blank">';
                     }
-                    $return .= '            <img class="lazyload" src="' . $sub_field_1 . '" alt="Maker Faire sponsor logo" />';
+                    $return .= '            <img src="' . $sub_field_1 . '" alt="Maker Faire sponsor logo" />';
                     if (get_sub_field('url')) {
                         $return .= '      </a>';
                     }
@@ -1242,14 +1225,14 @@ function getSponsorPanel() {
 
 function getFeatFairePanel() {
     GLOBAL $acf_blocks;
-    
+
     $return = '';
     $return .= '<section class="featured-panel white-back"> ';
 
     //build the container div
     $return .= '<div class="container featured-faire-landing">';
 
-    // Display the panel title    
+    // Display the panel title
     $title = ($acf_blocks ? get_field('featured_faires_title') : get_sub_field('featured_faires_title'));
     $return .= '<div class="row text-center">
                   <div class="panel-title title-w-border-y yellow-underline">
@@ -1277,7 +1260,7 @@ function getFeatFairePanel() {
             if (!get_sub_field('past_event')) {
                 $faires_shown++;
 
-                $faire_title = get_sub_field('faire_title'); //Title            
+                $faire_title = get_sub_field('faire_title'); //Title
                 $faire_url = get_sub_field('faire_url'); //URL
                 $faire_photo = get_sub_field('faire_photo'); //Photo
                 $faire_date = get_sub_field('faire_date'); //Date
@@ -1287,7 +1270,7 @@ function getFeatFairePanel() {
                 if ($faire_url != '') {
                     $return .= '<a href="' . $faire_url . '">';
                 }
-                $return .= '<img src="' . $faire_photo['url'] . '" alt="Featured Maker Faire Image" class="img-responsive lazyload" />';
+                $return .= '<img src="' . $faire_photo['url'] . '" alt="Featured Maker Faire Image" class="img-responsive" />';
                 //$return .=   '<p class="featured-faire-above-title">Maker Faire</p>';
                 $return .= '<h4 class="featured-faire-date">' . $faire_date . '</h4>';
                 $return .= '<h3 class="featured-faire-title clear">' . $faire_title . '</h3>';
@@ -1429,14 +1412,14 @@ function getFlagBannerPanel() {
 
 function getMakeyBanner() {
     GLOBAL $acf_blocks;
-    
+
     $title  = ($acf_blocks ? get_field('title_link_text') : get_sub_field('title_link_text'));
     $URL    = ($acf_blocks ? get_field('link_url') : get_sub_field('link_url'));
 
     $content = '<div class="makey-banner ' . ($acf_blocks ? get_field('background-color') : get_sub_field('background-color')) . '">';
     $content .= '   <div class="container">';
     $content .= '      <div class="picture-holder">';
-    $content .= '         <img alt="Maker Robot" height="74" class="lazyload" src="/wp-content/uploads/2015/04/maker-robot.png" width="53">';
+    $content .= '         <img alt="Maker Robot" height="74" src="/wp-content/uploads/2015/04/maker-robot.png" width="53">';
     $content .= '      </div>';
     $content .= '      <a href="' . $URL . '">' . $title . ' <i class="icon-arrow-right"></i></a>';
     $content .= '   </div>';
