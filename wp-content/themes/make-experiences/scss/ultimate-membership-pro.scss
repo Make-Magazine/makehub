@@ -124,13 +124,13 @@
 		}
 		.ihc-js-renew-level-bttn { display: none; }
 	}
+}
 
-	div#ihc-js-stripe-connect-card-element {
-		border: solid 1px #ccc;
-		border-radius: 5px;
-		background: rgba(0,0,0,.03);
-		padding: 0px 10px !important;
-	}
+div#ihc-js-stripe-connect-card-element {
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	background: rgba(0,0,0,.03);
+	padding: 0px 10px !important;
 }
 
 .page-checkout-page, .page-register {
