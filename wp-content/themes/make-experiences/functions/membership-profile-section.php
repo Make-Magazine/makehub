@@ -56,7 +56,7 @@ function membership_info_content() {
 
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<li class="nav-item">
-				<a class="nav-link active" id="nav-subscriptions-tab" data-toggle="tab" data-target="#nav-subscriptions" role="tab" aria-controls="nav-subscriptions" aria-selected="true">Subscriptions<</a>
+				<a class="nav-link active" id="nav-subscriptions-tab" data-toggle="tab" data-target="#nav-subscriptions" role="tab" aria-controls="nav-subscriptions" aria-selected="true">Subscriptions</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" id="nav-orders-tab" data-toggle="tab" data-target="#nav-orders" role="tab" aria-controls="nav-orders" aria-selected="false">Orders</a>
