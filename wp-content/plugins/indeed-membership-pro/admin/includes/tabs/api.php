@@ -16,7 +16,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - API Gate', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('API Gate', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">

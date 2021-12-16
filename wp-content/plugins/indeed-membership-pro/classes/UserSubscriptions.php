@@ -1265,9 +1265,10 @@ class UserSubscriptions
 
     /**
      * @param int
+     * @param string
      * @return array
      */
-    public static function getLastForUid( $uid=0 )
+    public static function getLastForUid( $uid=0, $exclude='' )
     {
         global $wpdb;
         if ( !$uid ){
@@ -1275,7 +1276,11 @@ class UserSubscriptions
         }
         $query = $wpdb->prepare( "SELECT level_id
                                     FROM {$wpdb->prefix}ihc_user_levels
-                                    WHERE user_id=%d ORDER BY id DESC LIMIT 1;", $uid );
+                                    WHERE user_id=%d AND status=1 ", $uid );
+        if ( $exclude !== '' ){
+            $query .= $wpdb->prepare( " AND level_id!=%d ", $exclude );
+        }
+        $query .= " ORDER BY id DESC LIMIT 1;";
         $result = $wpdb->get_var( $query );
         if ( $result === null ){
             return false;

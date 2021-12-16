@@ -12,7 +12,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="inside">
 
 			<div class="iump-form-line">
-					<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+					<h2><?php esc_html_e('Activate/Hold WooCommerce Account Page', 'ihc');?></h2>
 					<p><?php esc_html_e('Fully integrate a user account with their "WooCommerce MyAccount". Once activated, a new tab in their Woo "MyAccount" menu will show up.', 'ihc');?></p>
 
 				<label class="iump_label_shiwtch ihc-switch-button-margin">

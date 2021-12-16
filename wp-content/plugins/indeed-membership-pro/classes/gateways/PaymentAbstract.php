@@ -268,7 +268,7 @@ abstract class PaymentAbstract
         $this->levelData = \Indeed\Ihc\Db\Memberships::getOne( $this->inputData['lid'] );
 
         // since version 10.3
-        $this->levelData = apply_filters( 'ihc_filter_prepare_payment_level_data', $this->levelData, $this->inputData );
+        $this->levelData = apply_filters( 'ihc_filter_prepare_payment_level_data', $this->levelData, $this->inputData, $this->paymentType );
 
         \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Set Level Data - Values: ', 'ihc') . serialize( $this->levelData ), 'payments' );
         return $this;

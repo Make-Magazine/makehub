@@ -118,13 +118,13 @@ if (  ( !isset($data['preparePaymentData']['first_amount']) || $data['preparePay
         </div>
 
         <div class="ihc-stripe-connect-form-card-number-wrap" >
-            <div id="ihc-js-stripe-connect-card-element" class="ihc-stripe-connect-form-card-number-input" data-client="<?php echo $clientSecret;?>" ></div>
+            <div id="ihc-js-stripe-connect-card-element" class="ihc-stripe-connect-form-card-number-input" ></div>
             <div id="ihc-js-stripe-connect-card-errors" class="ihc-stripe-connect-form-card-errors"  role="alert"></div>
         </div>
         <div class="ihc-stripe-connect-form-wallets-wrap" id="ihc-stripe-connect-payment-request-button-wrap">
             <div id="ihc-stripe-connect-payment-request-button"></div>
         </div>
-        
+
     </div>
 
     <?php if ( !empty( $doPaymentIntent ) ): ?>

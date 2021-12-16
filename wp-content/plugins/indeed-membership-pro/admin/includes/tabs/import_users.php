@@ -29,7 +29,7 @@ if (!empty($_POST['import']) && !empty($_FILES['import_file'])){
 
 	<div class="ihc-stuffbox">
 
-		<h3 class="ihc-h3"><?php esc_html_e('Import Users&Memberships', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Import Users & Memberships', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
             	<p><strong><?php esc_html_e('Allos to import new Members, update current Members main data or to assign/change Members Memberships and update their start and expire time. Only main Members data and memberships are handled via specific CSV file format.', 'ihc');?></strong></p>

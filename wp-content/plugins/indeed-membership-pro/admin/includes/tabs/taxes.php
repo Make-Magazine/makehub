@@ -17,7 +17,7 @@ $data['metas'] = ihc_return_meta_arr('ihc_taxes_settings');
 <div class="iump-wrapper">
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3><?php esc_html_e('Tax Settings', 'ihc');?></h3>
+		<h3><?php esc_html_e('Taxes', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
 				<h2><?php esc_html_e('Activate/Hold Taxes', 'ihc');?></h2>

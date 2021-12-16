@@ -15,7 +15,7 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Membership Membership Badges', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Membership Badges', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">

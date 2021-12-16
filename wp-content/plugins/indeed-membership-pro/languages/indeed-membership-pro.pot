@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Indeed Ultimate Membership Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-10 15:28+0000\n"
+"POT-Creation-Date: 2021-12-16 14:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -151,20 +151,20 @@ msgstr ""
 msgid " cycles then "
 msgstr ""
 
-#: utilities.php:7173
+#: utilities.php:7192
 msgid " day"
 msgstr ""
 
-#: utilities.php:7171 admin/includes/functions.php:1002
+#: utilities.php:7190 admin/includes/functions.php:1002
 #: admin/includes/functions.php:1048
 msgid " days"
 msgstr ""
 
-#: utilities.php:6361
+#: utilities.php:6370
 msgid " days Grace Period included"
 msgstr ""
 
-#: utilities.php:6265
+#: utilities.php:6274
 msgid " days left"
 msgstr ""
 
@@ -245,7 +245,7 @@ msgid ""
 "in Your Braintree Account Page with Plan ID set as  "
 msgstr ""
 
-#: utilities.php:1020 classes/services/Kissmetrics.php:99
+#: utilities.php:1026 classes/services/Kissmetrics.php:99
 msgid " has been removed from this user."
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid " here"
 msgstr ""
 
-#: utilities.php:6257
+#: utilities.php:6266
 msgid " hours left"
 msgstr ""
 
@@ -304,7 +304,7 @@ msgstr ""
 msgid " Login in to "
 msgstr ""
 
-#: utilities.php:6249
+#: utilities.php:6258
 msgid " minutes left"
 msgstr ""
 
@@ -312,16 +312,16 @@ msgstr ""
 msgid " module"
 msgstr ""
 
-#: utilities.php:7187
+#: utilities.php:7206
 msgid " month"
 msgstr ""
 
-#: utilities.php:7185 admin/includes/functions.php:1016
+#: utilities.php:7204 admin/includes/functions.php:1016
 #: admin/includes/functions.php:1062
 msgid " months"
 msgstr ""
 
-#: utilities.php:6281
+#: utilities.php:6290
 msgid " months left"
 msgstr ""
 
@@ -347,6 +347,10 @@ msgstr ""
 
 #: admin/includes/tabs/social_login.php:645
 msgid " on register page."
+msgstr ""
+
+#: admin/includes/tabs/opt_in.php:13
+msgid " Opt-In Settings "
 msgstr ""
 
 #: admin/includes/tabs/payment_settings.php:1580
@@ -387,7 +391,7 @@ msgstr ""
 msgid " redirect URL."
 msgstr ""
 
-#: utilities.php:6573
+#: utilities.php:6582
 msgid ""
 " Restrict register process to only allow invited persons who have a valid "
 "Invitation code"
@@ -439,7 +443,7 @@ msgid ""
 " system with extra features and functionality. Check additional available "
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:133
+#: admin/includes/tabs/register_lite.php:153
 msgid " tab."
 msgstr ""
 
@@ -474,16 +478,16 @@ msgstr ""
 msgid " Verify "
 msgstr ""
 
-#: utilities.php:7180
+#: utilities.php:7199
 msgid " week"
 msgstr ""
 
-#: utilities.php:7178 admin/includes/functions.php:1009
+#: utilities.php:7197 admin/includes/functions.php:1009
 #: admin/includes/functions.php:1055
 msgid " weeks"
 msgstr ""
 
-#: utilities.php:6273
+#: utilities.php:6282
 msgid " weeks left"
 msgstr ""
 
@@ -493,16 +497,16 @@ msgid ""
 "information -> PayPal Merchant ID."
 msgstr ""
 
-#: utilities.php:7194
+#: utilities.php:7213
 msgid " year"
 msgstr ""
 
-#: utilities.php:7192 admin/includes/functions.php:1023
+#: utilities.php:7211 admin/includes/functions.php:1023
 #: admin/includes/functions.php:1069
 msgid " years"
 msgstr ""
 
-#: utilities.php:6289
+#: utilities.php:6298
 msgid " years left"
 msgstr ""
 
@@ -709,15 +713,15 @@ msgstr ""
 msgid "1 day"
 msgstr ""
 
-#: utilities.php:6263
+#: utilities.php:6272
 msgid "1 day left"
 msgstr ""
 
-#: utilities.php:6255
+#: utilities.php:6264
 msgid "1 hour left"
 msgstr ""
 
-#: utilities.php:6246
+#: utilities.php:6255
 msgid "1 minute left"
 msgstr ""
 
@@ -725,7 +729,7 @@ msgstr ""
 msgid "1 month"
 msgstr ""
 
-#: utilities.php:6279
+#: utilities.php:6288
 msgid "1 month left"
 msgstr ""
 
@@ -733,7 +737,7 @@ msgstr ""
 msgid "1 week"
 msgstr ""
 
-#: utilities.php:6271
+#: utilities.php:6280
 msgid "1 week left"
 msgstr ""
 
@@ -741,7 +745,7 @@ msgstr ""
 msgid "1 year"
 msgstr ""
 
-#: utilities.php:6287
+#: utilities.php:6296
 msgid "1 year left"
 msgstr ""
 
@@ -1144,7 +1148,7 @@ msgstr ""
 msgid "[Ultimate Membership Pro] Your summary report for last week"
 msgstr ""
 
-#: utilities.php:6669
+#: utilities.php:6678
 msgid ""
 "A brief report on a one-week period will be sent to Administrator about "
 "number of Orders, Total Revenue and not only"
@@ -1203,7 +1207,7 @@ msgid ""
 "active"
 msgstr ""
 
-#: indeed-membership-pro.php:799 admin/includes/manage-page.php:25
+#: indeed-membership-pro.php:798 admin/includes/manage-page.php:25
 #: admin/includes/tabs/block_url.php:32
 msgid "Access Rules"
 msgstr ""
@@ -1216,7 +1220,7 @@ msgstr ""
 msgid "Access Type"
 msgstr ""
 
-#: utilities.php:6705
+#: utilities.php:6714 admin/includes/tabs/account_page_menu.php:33
 msgid "Account Custom Tabs"
 msgstr ""
 
@@ -1235,10 +1239,6 @@ msgstr ""
 
 #: admin/includes/tabs/affiliates.php:310
 msgid "Account Page - Affiliate Options"
-msgstr ""
-
-#: admin/includes/tabs/account_page_menu.php:33
-msgid "Account Page - Customize Menu"
 msgstr ""
 
 #: admin/includes/functions.php:129 admin/includes/functions.php:260
@@ -1386,13 +1386,7 @@ msgstr ""
 msgid "Activate Vkontakte Service"
 msgstr ""
 
-#: admin/includes/tabs/level_restrict_payment.php:30
 #: admin/includes/tabs/woo_product_custom_prices-add_edit.php:39
-#: admin/includes/tabs/download_monitor_integration.php:28
-#: admin/includes/tabs/register_lite.php:18
-#: admin/includes/tabs/individual_page.php:19
-#: admin/includes/tabs/woo_account_page.php:15
-#: admin/includes/tabs/cheat_off.php:15
 #: admin/includes/tabs/wp_social_login.php:29
 msgid "Activate/Hold"
 msgstr ""
@@ -1401,52 +1395,72 @@ msgstr ""
 msgid "Activate/Hold "
 msgstr ""
 
+#: admin/includes/tabs/account_page_menu.php:37
+msgid "Activate/Hold Account Custom Tabs"
+msgstr ""
+
 #: admin/includes/tabs/api.php:23
 msgid "Activate/Hold API Gate"
 msgstr ""
 
-#: admin/includes/tabs/login_level_redirect.php:52
-msgid "Activate/Hold Custom Redirects action"
+#: admin/includes/tabs/bp_account_page.php:15
+msgid "Activate/Hold BuddyPress Account Page Integration"
 msgstr ""
 
-#: admin/includes/tabs/account_page_menu.php:37
-msgid "Activate/Hold Customize Menu"
+#: admin/includes/tabs/cheat_off.php:15
+msgid "Activate/Hold Cheat Off"
 msgstr ""
 
 #: admin/includes/tabs/direct_login.php:26
 msgid "Activate/Hold Direct Login"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:19
+#: admin/includes/tabs/download_monitor_integration.php:28
+msgid "Activate/Hold Download Monitor Integration"
+msgstr ""
+
+#: admin/includes/tabs/drip_content_notifications.php:18
 msgid "Activate/Hold Drip Content Notifications"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:47
-msgid "Activate/Hold Drip notificaiton Logs"
+#: admin/includes/tabs/drip_content_notifications.php:46
+msgid "Activate/Hold Drip notification Logs"
+msgstr ""
+
+#: admin/includes/tabs/individual_page.php:19
+msgid "Activate/Hold Individual Page"
 msgstr ""
 
 #: admin/includes/tabs/infusionSoft.php:22
 msgid "Activate/Hold InfusionSoft"
 msgstr ""
 
-#: admin/includes/tabs/invoices.php:22
-msgid "Activate/Hold Invoices module"
+#: admin/includes/tabs/invitation_code.php:36
+msgid "Activate/Hold Invitation Codes"
 msgstr ""
 
 #: admin/includes/tabs/kissmetrics.php:18
-msgid "Activate/Hold Kissmetrics"
+msgid "Activate/Hold Kissmetrics Integration"
 msgstr ""
 
 #: admin/includes/tabs/list_access_posts.php:18
 msgid "Activate/Hold List Access Posts"
 msgstr ""
 
+#: admin/includes/tabs/login_level_redirect.php:52
+msgid "Activate/Hold Login Redirects"
+msgstr ""
+
 #: admin/includes/tabs/badges.php:22
 msgid "Activate/Hold Memberhsip Badges"
 msgstr ""
 
+#: admin/includes/tabs/user_reports.php:20
+msgid "Activate/Hold Members Reports"
+msgstr ""
+
 #: admin/includes/tabs/membership_card.php:44
-msgid "Activate/Hold Membership Cards"
+msgid "Activate/Hold Membership Card"
 msgstr ""
 
 #: admin/includes/tabs/level_dynamic_price.php:34
@@ -1457,8 +1471,24 @@ msgstr ""
 msgid "Activate/Hold Membership Gifts"
 msgstr ""
 
+#: admin/includes/tabs/level_subscription_plan_settings.php:32
+msgid "Activate/Hold Memberships Plus"
+msgstr ""
+
+#: admin/includes/tabs/level_restrict_payment.php:30
+msgid "Activate/Hold Memberships vs Payments"
+msgstr ""
+
 #: admin/includes/tabs/mycred.php:15
 msgid "Activate/Hold MyCred Points"
+msgstr ""
+
+#: admin/includes/tabs/invoices.php:22
+msgid "Activate/Hold Order Invoices"
+msgstr ""
+
+#: admin/includes/tabs/prorate_subscription.php:15
+msgid "Activate/Hold Pro-rate Subscription"
 msgstr ""
 
 #: admin/includes/tabs/pushover.php:22
@@ -1466,16 +1496,15 @@ msgid "Activate/Hold Pushover Notifications"
 msgstr ""
 
 #: admin/includes/tabs/reason_for_cancel.php:41
-msgid "Activate/Hold Reason for cancel/delete Membership"
+msgid "Activate/Hold Reason for Cancelling"
+msgstr ""
+
+#: admin/includes/tabs/register_lite.php:18
+msgid "Activate/Hold Register Lite"
 msgstr ""
 
 #: admin/includes/tabs/magic_feat_custom_register_redirects.php:35
-msgid "Activate/Hold Rediger Redirects+ action"
-msgstr ""
-
-#: admin/includes/tabs/bp_account_page.php:15
-#: admin/includes/tabs/invitation_code.php:40
-msgid "Activate/Hold Section"
+msgid "Activate/Hold Register Redirects+ action"
 msgstr ""
 
 #: admin/includes/tabs/login_security.php:18
@@ -1490,24 +1519,16 @@ msgstr ""
 msgid "Activate/Hold Taxes"
 msgstr ""
 
-#: admin/includes/tabs/level_subscription_plan_settings.php:32
-msgid "Activate/Hold this feature"
-msgstr ""
-
 #: admin/includes/tabs/workflow_restrictions.php:44
 msgid "Activate/Hold this WP WorkFlow Restrictions"
 msgstr ""
 
-#: admin/includes/tabs/user_reports.php:19
-msgid "Activate/Hold User Reports"
-msgstr ""
-
-#: admin/includes/tabs/user_sites.php:17
-msgid "Activate/Hold User Sites"
-msgstr ""
-
 #: admin/includes/tabs/weekly_summary_email.php:16
 msgid "Activate/Hold Weekley Summary Email"
+msgstr ""
+
+#: admin/includes/tabs/woo_account_page.php:15
+msgid "Activate/Hold WooCommerce Account Page"
 msgstr ""
 
 #: admin/includes/tabs/woo_payment.php:18
@@ -1518,8 +1539,12 @@ msgstr ""
 msgid "Activate/Hold WooCommerce Products Custom Prices"
 msgstr ""
 
+#: admin/includes/tabs/user_sites.php:17
+msgid "Activate/Hold WP MultiSite Subscriptions"
+msgstr ""
+
 #: admin/includes/tabs/zapier.php:21
-msgid "Activate/Hold Zapier"
+msgid "Activate/Hold Zapier Integration"
 msgstr ""
 
 #: classes/Notifications.php:75 classes/Notifications.php:125
@@ -1552,7 +1577,7 @@ msgid ""
 "it will take effect!"
 msgstr ""
 
-#: utilities.php:6485
+#: utilities.php:6494
 msgid "Add a custom badge for each Membership for a better approach"
 msgstr ""
 
@@ -1568,7 +1593,7 @@ msgid ""
 "using the Country field."
 msgstr ""
 
-#: utilities.php:6450
+#: utilities.php:6459
 msgid ""
 "Add additional tax charges which can be based on the user location by using "
 "the Country field"
@@ -1605,12 +1630,8 @@ msgstr ""
 msgid "Add New Coupon"
 msgstr ""
 
-#: utilities.php:6618 admin/includes/tabs/custom_currencies.php:17
+#: utilities.php:6627 admin/includes/tabs/custom_currencies.php:17
 msgid "Add new currencies (with custom symbols) alongside the predefined list"
-msgstr ""
-
-#: admin/includes/tabs/custom_currencies.php:14
-msgid "Add new Currency"
 msgstr ""
 
 #: admin/includes/tabs/woo_product_custom_prices-manage.php:37
@@ -1621,7 +1642,7 @@ msgstr ""
 msgid "Add new Email Notification"
 msgstr ""
 
-#: utilities.php:6781
+#: utilities.php:6800
 msgid "Add new Extensions"
 msgstr ""
 
@@ -1771,7 +1792,7 @@ msgstr ""
 msgid "Additional Links"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:14
+#: admin/includes/tabs/opt_in.php:18
 msgid "Additional Main E-Mail"
 msgstr ""
 
@@ -2028,11 +2049,11 @@ msgstr ""
 msgid "Albania"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:20
+#: admin/includes/tabs/drip_content_notifications.php:19
 msgid "Alert members when a new post is released by \"Drip Content\" strategy."
 msgstr ""
 
-#: utilities.php:6549
+#: utilities.php:6558
 msgid "Alert Members when a new post is released by “Drip Content” strategy."
 msgstr ""
 
@@ -2130,7 +2151,7 @@ msgid ""
 "with Apple and a domain association file will be hosted on your site"
 msgstr ""
 
-#: utilities.php:6477
+#: utilities.php:6486
 msgid "Allow your customers to buy Memberships as gifts"
 msgstr ""
 
@@ -2140,11 +2161,11 @@ msgid ""
 "other users or used by themselves."
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:29
+#: admin/includes/tabs/login_security.php:31
 msgid "Allowed Retries"
 msgstr ""
 
-#: utilities.php:6581
+#: utilities.php:6590
 msgid ""
 "Allows to import new Members, update current Members main data or to "
 "assign/change Members Memberships"
@@ -2246,12 +2267,12 @@ msgstr ""
 msgid "Antigua and Barbuda"
 msgstr ""
 
-#: utilities.php:6713
+#: utilities.php:6722 admin/includes/tabs/api.php:19
 msgid "API Gate"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:126 admin/includes/tabs/opt_in.php:173
-#: admin/includes/tabs/opt_in.php:220
+#: admin/includes/tabs/opt_in.php:109 admin/includes/tabs/opt_in.php:140
+#: admin/includes/tabs/opt_in.php:170
 msgid "API Key"
 msgstr ""
 
@@ -2265,7 +2286,7 @@ msgstr ""
 msgid "API key:"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:39 admin/includes/tabs/opt_in.php:491
+#: admin/includes/tabs/opt_in.php:41 admin/includes/tabs/opt_in.php:387
 msgid "Api Key:"
 msgstr ""
 
@@ -2294,7 +2315,7 @@ msgstr ""
 msgid "API Signature:"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:31
+#: admin/includes/tabs/opt_in.php:35
 msgid "Api URL"
 msgstr ""
 
@@ -2303,11 +2324,11 @@ msgstr ""
 msgid "API Username:"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:275
+#: admin/includes/tabs/opt_in.php:209
 msgid "App ID"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:292
+#: admin/includes/tabs/opt_in.php:218
 msgid "App Password"
 msgstr ""
 
@@ -2395,7 +2416,7 @@ msgstr ""
 msgid "Aruba"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:126
+#: admin/includes/tabs/list_access_posts.php:140
 msgid "ASC"
 msgstr ""
 
@@ -2433,7 +2454,7 @@ msgstr ""
 msgid "Austria"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:68
+#: admin/includes/tabs/opt_in.php:67
 msgid "Auth Code"
 msgstr ""
 
@@ -2582,7 +2603,7 @@ msgid ""
 "Verification request keep this option Off."
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:143
+#: admin/includes/tabs/register_lite.php:163
 msgid "Auto Login after Registration"
 msgstr ""
 
@@ -2660,7 +2681,7 @@ msgid "Azerbaijan"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:44 admin/includes/tabs/register.php:66
-#: admin/includes/tabs/register_lite.php:38
+#: admin/includes/tabs/register_lite.php:42
 msgid "BackBox Theme"
 msgstr ""
 
@@ -2713,7 +2734,7 @@ msgid "Basic Full Background Theme"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:49 admin/includes/tabs/register.php:71
-#: admin/includes/tabs/register_lite.php:43 admin/includes/tabs/login.php:26
+#: admin/includes/tabs/register_lite.php:47 admin/includes/tabs/login.php:26
 msgid "Basic Theme"
 msgstr ""
 
@@ -2721,7 +2742,7 @@ msgstr ""
 msgid "Be sure that your notifications for "
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:133
+#: admin/includes/tabs/register_lite.php:153
 msgid ""
 "Be sure that your notifications for Double Email Verification are properly "
 "set up. Make sure to check the settings from the "
@@ -2734,7 +2755,7 @@ msgid ""
 "contact your host regarding how to get SSL on your site if needed."
 msgstr ""
 
-#: admin/includes/tabs/login_level_redirect.php:90
+#: admin/includes/tabs/login_level_redirect.php:97
 msgid ""
 "Because UMP is a MultiMembership system, a user can have multiple "
 "memberships assigned but only one redirect can take place. You can set "
@@ -2829,7 +2850,7 @@ msgstr ""
 msgid "Biography"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:102
+#: admin/includes/tabs/login_security.php:76
 msgid "Black IP list"
 msgstr ""
 
@@ -2872,7 +2893,7 @@ msgid "Block Username on SignUp"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:48 admin/includes/tabs/register.php:70
-#: admin/includes/tabs/register_lite.php:42
+#: admin/includes/tabs/register_lite.php:46
 msgid "Blue Box Theme"
 msgstr ""
 
@@ -2897,7 +2918,7 @@ msgid "Bonaire, Saint Eustatius and Saba"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:38 admin/includes/tabs/register.php:60
-#: admin/includes/tabs/register_lite.php:32
+#: admin/includes/tabs/register_lite.php:36
 msgid "BootStrap Theme"
 msgstr ""
 
@@ -3013,11 +3034,7 @@ msgstr ""
 msgid "Brunei"
 msgstr ""
 
-#: admin/includes/tabs/bp_account_page.php:11
-msgid "BuddyPress Account Page"
-msgstr ""
-
-#: utilities.php:6761
+#: utilities.php:6770 admin/includes/tabs/bp_account_page.php:11
 msgid "BuddyPress Account Page Integration"
 msgstr ""
 
@@ -3025,7 +3042,7 @@ msgstr ""
 msgid "Bugle"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:76
+#: admin/includes/tabs/individual_page.php:80
 msgid "Build Users Pages"
 msgstr ""
 
@@ -3117,18 +3134,18 @@ msgstr ""
 msgid "Cape Verde"
 msgstr ""
 
-#: utilities.php:2235
+#: utilities.php:2241
 msgid "Captcha Error"
 msgstr ""
 
-#: classes/gateways/StripeConnect.php:293
+#: classes/gateways/StripeConnect.php:298
 msgid "Card has been succesfully changed!"
 msgstr ""
 
-#: classes/gateways/StripeConnect.php:251
-#: classes/gateways/StripeConnect.php:259
-#: classes/gateways/StripeConnect.php:274
-#: classes/gateways/StripeConnect.php:298
+#: classes/gateways/StripeConnect.php:256
+#: classes/gateways/StripeConnect.php:264
+#: classes/gateways/StripeConnect.php:279
+#: classes/gateways/StripeConnect.php:303
 msgid ""
 "Card has not changed. Please try again later or contact the Administrator"
 msgstr ""
@@ -3223,7 +3240,7 @@ msgstr ""
 msgid "Charging Type"
 msgstr ""
 
-#: utilities.php:6561 admin/includes/tabs/cheat_off.php:11
+#: utilities.php:6570 admin/includes/tabs/cheat_off.php:11
 msgid "Cheat Off"
 msgstr ""
 
@@ -3263,7 +3280,7 @@ msgstr ""
 msgid "Checkout"
 msgstr ""
 
-#: indeed-membership-pro.php:809 indeed-membership-pro.php:835
+#: indeed-membership-pro.php:808 indeed-membership-pro.php:834
 #: classes/Ihc_Db.class.php:714 admin/Main.php:782
 #: admin/includes/functions.php:233 admin/includes/tabs/showcases.php:18
 #: admin/includes/tabs/checkout.php:83 admin/includes/tabs/general.php:194
@@ -3320,7 +3337,7 @@ msgstr ""
 msgid "Choose a category of the app from 'Category' list."
 msgstr ""
 
-#: utilities.php:6725
+#: utilities.php:6734
 msgid ""
 "Choose a custom redirect after register based on the member assigned "
 "Membership"
@@ -3457,12 +3474,12 @@ msgstr ""
 msgid "Classical"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:66
-#: admin/includes/tabs/user_reports.php:38 admin/includes/tabs/general.php:902
+#: admin/includes/tabs/drip_content_notifications.php:67
+#: admin/includes/tabs/user_reports.php:42 admin/includes/tabs/general.php:902
 msgid "Clean Up"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:59
+#: admin/includes/tabs/drip_content_notifications.php:60
 msgid "Clean Up Logs older than:"
 msgstr ""
 
@@ -3470,7 +3487,7 @@ msgstr ""
 msgid "Clean Up Payment logs older then:"
 msgstr ""
 
-#: admin/includes/tabs/user_reports.php:31
+#: admin/includes/tabs/user_reports.php:33
 msgid "Clean Up Users Reports older then:"
 msgstr ""
 
@@ -3505,11 +3522,11 @@ msgid ""
 "click the \"Sign in\" button at the top."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:316
+#: admin/includes/tabs/opt_in.php:231
 msgid "Click on the list name and get the ID from the URL"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:312
+#: admin/includes/tabs/opt_in.php:228
 msgid "Click on the list name:"
 msgstr ""
 
@@ -3534,7 +3551,7 @@ msgstr ""
 #: admin/includes/tabs/general.php:1227
 #: admin/includes/tabs/user-details.php:385 admin/includes/tabs/orders.php:161
 #: admin/includes/tabs/orders.php:211
-#: admin/includes/tabs/invitation_code.php:71
+#: admin/includes/tabs/invitation_code.php:72
 msgid "Code"
 msgstr ""
 
@@ -3542,7 +3559,7 @@ msgstr ""
 msgid "Code prefix"
 msgstr ""
 
-#: admin/includes/tabs/custom_currencies.php:20
+#: admin/includes/tabs/custom_currencies.php:23
 msgid "Code:"
 msgstr ""
 
@@ -3654,7 +3671,7 @@ msgstr ""
 msgid "Congratulation! Your Stripe Account is connected in Test Mode"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:107
+#: admin/includes/tabs/opt_in.php:88
 msgid "Connect"
 msgstr ""
 
@@ -3665,7 +3682,7 @@ msgid ""
 "website."
 msgstr ""
 
-#: utilities.php:6685
+#: utilities.php:6694
 msgid ""
 "Connect UMP with other apps via Zapier platform with multiple triggers "
 "available"
@@ -3759,7 +3776,7 @@ msgstr ""
 msgid "Coupon"
 msgstr ""
 
-#: indeed-membership-pro.php:1069
+#: indeed-membership-pro.php:1068
 msgid "Coupon applied successfully."
 msgstr ""
 
@@ -3776,7 +3793,7 @@ msgstr ""
 msgid "Coupon Code"
 msgstr ""
 
-#: indeed-membership-pro.php:1070
+#: indeed-membership-pro.php:1069
 msgid "Coupon code is not valid."
 msgstr ""
 
@@ -3800,7 +3817,7 @@ msgstr ""
 msgid "Create an app."
 msgstr ""
 
-#: utilities.php:6709
+#: utilities.php:6718
 msgid "Create and reorder account page menu items"
 msgstr ""
 
@@ -3916,11 +3933,11 @@ msgstr ""
 
 #: admin/includes/tabs/membership_card.php:268
 #: admin/includes/tabs/badges.php:33
-#: admin/includes/tabs/list_access_posts.php:136
+#: admin/includes/tabs/list_access_posts.php:152
 #: admin/includes/tabs/invoices.php:132
 #: admin/includes/tabs/listing_users.php:683
 #: admin/includes/tabs/listing_users.php:985 admin/includes/tabs/locker.php:151
-#: admin/includes/tabs/register_lite.php:159
+#: admin/includes/tabs/register_lite.php:179
 #: admin/includes/tabs/social_login.php:758
 msgid "Custom CSS"
 msgstr ""
@@ -3930,7 +3947,7 @@ msgstr ""
 msgid "Custom CSS:"
 msgstr ""
 
-#: utilities.php:6617
+#: utilities.php:6626 admin/includes/tabs/custom_currencies.php:14
 msgid "Custom Currencies"
 msgstr ""
 
@@ -3993,11 +4010,11 @@ msgstr ""
 msgid "Custom Post Type"
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:147
+#: admin/includes/tabs/register_lite.php:167
 msgid "Custom Redirect:"
 msgstr ""
 
-#: admin/includes/tabs/login_level_redirect.php:65
+#: admin/includes/tabs/login_level_redirect.php:68
 #: admin/includes/tabs/magic_feat_custom_register_redirects.php:47
 msgid "Custom Redirections:"
 msgstr ""
@@ -4218,7 +4235,7 @@ msgstr ""
 #: admin/includes/tabs/general.php:664 admin/includes/tabs/general.php:669
 #: admin/includes/tabs/general.php:674 admin/includes/tabs/general.php:689
 #: admin/includes/tabs/general.php:1343
-#: admin/includes/tabs/subscription_delay.php:70
+#: admin/includes/tabs/subscription_delay.php:72
 #: admin/includes/tabs/cheat_off.php:28
 msgid "Days"
 msgstr ""
@@ -4236,7 +4253,7 @@ msgstr ""
 msgid "Deauthentificate from Test Stripe Connect: "
 msgstr ""
 
-#: utilities.php:6533
+#: utilities.php:6542
 msgid ""
 "Decide which Memberships should be available, based on the user current "
 "assigned Membership"
@@ -4260,7 +4277,7 @@ msgstr ""
 msgid "default"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:63
+#: admin/includes/tabs/individual_page.php:67
 msgid "Default Content"
 msgstr ""
 
@@ -4373,7 +4390,7 @@ msgstr ""
 msgid "Denmark"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:126
+#: admin/includes/tabs/list_access_posts.php:140
 msgid "DESC"
 msgstr ""
 
@@ -4423,7 +4440,8 @@ msgstr ""
 msgid "Direct Email"
 msgstr ""
 
-#: utilities.php:6745 admin/includes/tabs/users.php:682
+#: utilities.php:6754 admin/includes/tabs/direct_login.php:22
+#: admin/includes/tabs/users.php:682
 msgid "Direct Login"
 msgstr ""
 
@@ -4488,7 +4506,7 @@ msgstr ""
 msgid "Discount: "
 msgstr ""
 
-#: utilities.php:6605 admin/includes/tabs/list_access_posts.php:19
+#: utilities.php:6614 admin/includes/tabs/list_access_posts.php:19
 msgid "Display all the posts that a user can see based on his subscriptions"
 msgstr ""
 
@@ -4546,7 +4564,7 @@ msgid "Do Nothing (recommended)"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:42 admin/includes/tabs/register.php:64
-#: admin/includes/tabs/register_lite.php:36
+#: admin/includes/tabs/register_lite.php:40
 msgid "Dobule Radius Theme"
 msgstr ""
 
@@ -4567,17 +4585,17 @@ msgstr ""
 msgid "Dominican Republic"
 msgstr ""
 
-#: utilities.php:1872 utilities.php:1932 utilities.php:1990 utilities.php:2051
+#: utilities.php:1878 utilities.php:1938 utilities.php:1996 utilities.php:2057
 msgid "Don't have an account?"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:41 admin/includes/tabs/register.php:63
-#: admin/includes/tabs/register_lite.php:35
+#: admin/includes/tabs/register_lite.php:39
 msgid "Double BootStrap Theme"
 msgstr ""
 
 #: admin/includes/tabs/register.php:248
-#: admin/includes/tabs/register_lite.php:131
+#: admin/includes/tabs/register_lite.php:151
 msgid "Double E-mail Verification"
 msgstr ""
 
@@ -4591,7 +4609,7 @@ msgstr ""
 
 #: admin/includes/tabs/general.php:8 admin/includes/tabs/general.php:1016
 #: admin/includes/tabs/register.php:241
-#: admin/includes/tabs/register_lite.php:124
+#: admin/includes/tabs/register_lite.php:144
 msgid "Double Email Verification"
 msgstr ""
 
@@ -4600,12 +4618,12 @@ msgid "Double Long Theme"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:43 admin/includes/tabs/register.php:65
-#: admin/includes/tabs/register_lite.php:37
+#: admin/includes/tabs/register_lite.php:41
 msgid "Double Simple Border Theme"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:45 admin/includes/tabs/register.php:67
-#: admin/includes/tabs/register_lite.php:39
+#: admin/includes/tabs/register_lite.php:43
 msgid "Double Strong Theme"
 msgstr ""
 
@@ -4619,7 +4637,7 @@ msgstr ""
 msgid "Download CSV Sample"
 msgstr ""
 
-#: utilities.php:6753 admin/includes/tabs/download_monitor_integration.php:25
+#: utilities.php:6762 admin/includes/tabs/download_monitor_integration.php:25
 msgid "Download Monitor Integration"
 msgstr ""
 
@@ -4627,7 +4645,7 @@ msgstr ""
 msgid "Downloaded Files"
 msgstr ""
 
-#: utilities.php:6545 admin/includes/tabs/drip_content_notifications.php:15
+#: utilities.php:6554 admin/includes/tabs/drip_content_notifications.php:15
 msgid "Drip Content Notifications"
 msgstr ""
 
@@ -4668,7 +4686,7 @@ msgid "E-mail address has become active for "
 msgstr ""
 
 #: admin/includes/tabs/register.php:218
-#: admin/includes/tabs/register_lite.php:102
+#: admin/includes/tabs/register_lite.php:118
 msgid "E-mail List"
 msgstr ""
 
@@ -4676,7 +4694,7 @@ msgstr ""
 msgid "E-mail Pending:"
 msgstr ""
 
-#: utilities.php:6493
+#: utilities.php:6502
 msgid ""
 "Each Member will have an individual page accessible only by him and "
 "Administrator"
@@ -4695,7 +4713,7 @@ msgid ""
 "Each membership may have a different payment method selected by default."
 msgstr ""
 
-#: utilities.php:6645
+#: utilities.php:6654
 msgid ""
 "Each Membership will become active after a custom delay time instead of when "
 "it was assigned"
@@ -4785,7 +4803,7 @@ msgstr ""
 msgid "Email Notification Action"
 msgstr ""
 
-#: indeed-membership-pro.php:797 admin/includes/manage-page.php:27
+#: indeed-membership-pro.php:796 admin/includes/manage-page.php:27
 msgid "Email Notifications"
 msgstr ""
 
@@ -4830,7 +4848,7 @@ msgid "Enable Memberships:"
 msgstr ""
 
 #: admin/includes/tabs/register.php:208
-#: admin/includes/tabs/register_lite.php:92
+#: admin/includes/tabs/register_lite.php:107
 msgid "Enable Opt-In"
 msgstr ""
 
@@ -4866,7 +4884,7 @@ msgid ""
 "Total number : "
 msgstr ""
 
-#: utilities.php:1310
+#: utilities.php:1316
 msgid "Enter your username or email"
 msgstr ""
 
@@ -4890,7 +4908,7 @@ msgstr ""
 msgid "Eritrea"
 msgstr ""
 
-#: utilities.php:2205 utilities.php:2217 classes/RegistrationEvents.php:555
+#: utilities.php:2211 utilities.php:2223 classes/RegistrationEvents.php:555
 #: public/views/orders-table.php:241 public/views/js_alerts.php:7
 #: admin/classes/Ihc_Create_Orders_Manually.php:59
 #: admin/includes/tabs/user-details.php:480 admin/includes/tabs/orders.php:437
@@ -4898,7 +4916,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: admin/includes/tabs/invitation_code.php:51
+#: admin/includes/tabs/invitation_code.php:49
 msgid "Error Message"
 msgstr ""
 
@@ -5099,7 +5117,7 @@ msgstr ""
 msgid "Except: "
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:82
+#: admin/includes/tabs/list_access_posts.php:91
 msgid "Excerpt"
 msgstr ""
 
@@ -5159,7 +5177,7 @@ msgstr ""
 msgid "Expire soon"
 msgstr ""
 
-#: utilities.php:3564
+#: utilities.php:3570
 msgid "Expire time"
 msgstr ""
 
@@ -5170,7 +5188,7 @@ msgstr ""
 msgid "Expire Time: "
 msgstr ""
 
-#: utilities.php:6381 classes/UserSubscriptions.php:753
+#: utilities.php:6390 classes/UserSubscriptions.php:753
 #: classes/UserSubscriptions.php:817 classes/UserSubscriptions.php:825
 #: admin/includes/manage-page.php:39 admin/includes/tabs/users.php:160
 msgid "Expired"
@@ -5183,7 +5201,7 @@ msgstr ""
 msgid "Expires On"
 msgstr ""
 
-#: utilities.php:745
+#: utilities.php:751
 msgid "Expires On: "
 msgstr ""
 
@@ -5196,11 +5214,11 @@ msgstr ""
 msgid "Extend your "
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:120
+#: admin/includes/tabs/login_security.php:97
 msgid "Extended Locked Message"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:66
+#: admin/includes/tabs/login_security.php:52
 msgid "Extended Locked Time"
 msgstr ""
 
@@ -5208,7 +5226,7 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
-#: indeed-membership-pro.php:795 admin/includes/manage-page.php:28
+#: indeed-membership-pro.php:794 admin/includes/manage-page.php:28
 #: admin/includes/tabs/levels.php:754
 msgid "Extensions"
 msgstr ""
@@ -5252,7 +5270,7 @@ msgstr ""
 msgid "Fail"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:109
+#: admin/includes/tabs/login_security.php:84
 msgid "Fail Login Attempt Message"
 msgstr ""
 
@@ -5272,7 +5290,7 @@ msgstr ""
 msgid "Faroe Islands"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:83
+#: admin/includes/tabs/list_access_posts.php:92
 msgid "Feature Image"
 msgstr ""
 
@@ -5308,7 +5326,7 @@ msgstr ""
 msgid "Field Unique Slug:"
 msgstr ""
 
-#: utilities.php:6629
+#: utilities.php:6638
 msgid ""
 "Fight against brute-force attacks by blocking login for the IP after it "
 "reaches the maximum allowed retries"
@@ -5429,7 +5447,7 @@ msgstr ""
 msgid "Flat Value"
 msgstr ""
 
-#: utilities.php:6653
+#: utilities.php:6662
 msgid ""
 "Follow the most important actions and activities done by members such "
 "Membership Assignation, Orders Placed, etc"
@@ -5496,7 +5514,7 @@ msgstr ""
 msgid "France"
 msgstr ""
 
-#: indeed-membership-pro.php:646 admin/includes/functions.php:933
+#: indeed-membership-pro.php:645 admin/includes/functions.php:933
 #: admin/includes/functions.php:1039 admin/includes/tabs/checkout.php:444
 #: admin/includes/tabs/levels.php:477
 msgid "Free"
@@ -5603,8 +5621,8 @@ msgstr ""
 msgid "Gender:"
 msgstr ""
 
-#: indeed-membership-pro.php:800 admin/includes/manage-page.php:29
-#: admin/includes/tabs/levels.php:398 admin/includes/tabs/register_lite.php:133
+#: indeed-membership-pro.php:799 admin/includes/manage-page.php:29
+#: admin/includes/tabs/levels.php:398 admin/includes/tabs/register_lite.php:153
 msgid "General Options"
 msgstr ""
 
@@ -5630,7 +5648,7 @@ msgstr ""
 msgid "Generate link"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:75
+#: admin/includes/tabs/individual_page.php:79
 msgid "Generate Pages for existing Users"
 msgstr ""
 
@@ -5651,20 +5669,20 @@ msgstr ""
 msgid "Germany"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:358
+#: admin/includes/tabs/opt_in.php:266
 msgid "Get Lists"
 msgstr ""
 
-#: utilities.php:1247 utilities.php:1256 utilities.php:1265 utilities.php:1274
-#: utilities.php:1283 utilities.php:1292 utilities.php:1301 utilities.php:1323
+#: utilities.php:1253 utilities.php:1262 utilities.php:1271 utilities.php:1280
+#: utilities.php:1289 utilities.php:1298 utilities.php:1307 utilities.php:1329
 msgid "Get New Password"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:98
+#: admin/includes/tabs/opt_in.php:82
 msgid "Get Unique List ID"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:81
+#: admin/includes/tabs/opt_in.php:73
 msgid "Get Your Auth Code From Here"
 msgstr ""
 
@@ -5810,7 +5828,7 @@ msgstr ""
 msgid "Going to expire"
 msgstr ""
 
-#: utilities.php:2483 utilities.php:2485
+#: utilities.php:2489 utilities.php:2491
 msgid "Good"
 msgstr ""
 
@@ -5893,7 +5911,7 @@ msgstr ""
 msgid "Heard Island and McDonald Islands"
 msgstr ""
 
-#: classes/Ihc_Db.class.php:3030 admin/includes/manage-page.php:406
+#: classes/Ihc_Db.class.php:3030 admin/includes/manage-page.php:409
 msgid "Help"
 msgstr ""
 
@@ -5909,7 +5927,7 @@ msgstr ""
 #: admin/includes/tabs/checkout.php:230 admin/includes/tabs/general.php:379
 #: admin/includes/tabs/general.php:401 admin/includes/tabs/general.php:764
 #: admin/includes/tabs/user_shortcodes.php:207
-#: admin/includes/tabs/individual_page.php:71
+#: admin/includes/tabs/individual_page.php:75
 #: admin/includes/tabs/wp_social_login.php:25
 msgid "here"
 msgstr ""
@@ -5940,9 +5958,9 @@ msgstr ""
 msgid "Hong Kong"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:71
-#: admin/includes/tabs/login_security.php:83
-#: admin/includes/tabs/subscription_delay.php:70
+#: admin/includes/tabs/login_security.php:54
+#: admin/includes/tabs/login_security.php:62
+#: admin/includes/tabs/subscription_delay.php:72
 msgid "Hours"
 msgstr ""
 
@@ -5985,7 +6003,7 @@ msgstr ""
 msgid "Hungary"
 msgstr ""
 
-#: utilities.php:1192
+#: utilities.php:1198
 msgid "I would like to subscribe to newsletter list "
 msgstr ""
 
@@ -6014,7 +6032,7 @@ msgstr ""
 msgid "ID DESC"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:143
+#: admin/includes/tabs/opt_in.php:118
 msgid "ID List"
 msgstr ""
 
@@ -6148,7 +6166,7 @@ msgid ""
 msgstr ""
 
 #: admin/includes/tabs/register.php:146
-#: admin/includes/tabs/register_lite.php:81
+#: admin/includes/tabs/register_lite.php:96
 msgid ""
 "If the \"Pending\" role is set, the user will not able to login until the "
 "admin manually approves it."
@@ -6208,11 +6226,15 @@ msgstr ""
 msgid "Import procedure"
 msgstr ""
 
-#: utilities.php:6577 admin/includes/tabs/import_users.php:32
+#: admin/includes/tabs/import_users.php:32
+msgid "Import Users & Memberships"
+msgstr ""
+
+#: utilities.php:6586
 msgid "Import Users&Memberships"
 msgstr ""
 
-#: admin/includes/manage-page.php:405
+#: admin/includes/manage-page.php:408
 msgid "Import/Export"
 msgstr ""
 
@@ -6437,7 +6459,7 @@ msgstr ""
 msgid "India"
 msgstr ""
 
-#: utilities.php:6489 public/shortcodes.php:968
+#: utilities.php:6498 public/shortcodes.php:968
 #: admin/includes/tabs/user-details.php:119
 #: admin/includes/tabs/individual_page.php:15 admin/includes/tabs/users.php:693
 msgid "Individual Page"
@@ -6463,7 +6485,7 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: utilities.php:6729
+#: utilities.php:6738 admin/includes/tabs/infusionSoft.php:19
 msgid "Infusion Soft"
 msgstr ""
 
@@ -6484,7 +6506,7 @@ msgstr ""
 msgid "Input Data is not provided."
 msgstr ""
 
-#: admin/includes/tabs/custom_currencies.php:22
+#: admin/includes/tabs/custom_currencies.php:26
 msgid "Insert a valid Currency Code, ex: "
 msgstr ""
 
@@ -6531,7 +6553,7 @@ msgid ""
 "{constants} for a dynamic and complete description"
 msgstr ""
 
-#: utilities.php:6597
+#: utilities.php:6606
 msgid ""
 "Integrated with WP Social Login free Plugin for a lite register/login with "
 "social accounts"
@@ -6547,12 +6569,8 @@ msgstr ""
 msgid "Invalid card number"
 msgstr ""
 
-#: admin/includes/tabs/invitation_code_add_new.php:16
-#: admin/includes/tabs/invitation_code.php:31
-msgid "Invitation Code"
-msgstr ""
-
-#: utilities.php:6569
+#: utilities.php:6578 admin/includes/tabs/invitation_code_add_new.php:16
+#: admin/includes/tabs/invitation_code.php:32
 msgid "Invitation Codes"
 msgstr ""
 
@@ -6578,7 +6596,7 @@ msgstr ""
 msgid "Invoice Template"
 msgstr ""
 
-#: admin/includes/tabs/invoices.php:18 admin/includes/tabs/orders.php:194
+#: admin/includes/tabs/orders.php:194
 msgid "Invoices"
 msgstr ""
 
@@ -6624,7 +6642,7 @@ msgstr ""
 msgid "Italy"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:77
+#: admin/includes/tabs/list_access_posts.php:86
 msgid "Item Details"
 msgstr ""
 
@@ -6652,7 +6670,7 @@ msgstr ""
 msgid "Jersey"
 msgstr ""
 
-#: utilities.php:3566 admin/includes/tabs/affiliates.php:234
+#: utilities.php:3572 admin/includes/tabs/affiliates.php:234
 #: admin/includes/tabs/affiliates.php:249
 msgid "Join Date"
 msgstr ""
@@ -6683,7 +6701,7 @@ msgstr ""
 msgid "Kazakhstan"
 msgstr ""
 
-#: utilities.php:2076
+#: utilities.php:2082
 msgid "Keep me signed in"
 msgstr ""
 
@@ -6699,7 +6717,7 @@ msgstr ""
 msgid "Kiribati"
 msgstr ""
 
-#: utilities.php:6737
+#: utilities.php:6746 admin/includes/tabs/kissmetrics.php:14
 msgid "Kissmetrics Integration"
 msgstr ""
 
@@ -6818,13 +6836,13 @@ msgid ""
 "settings. A test email should be received on Admin email address."
 msgstr ""
 
-#: utilities.php:6701
+#: utilities.php:6710
 msgid ""
 "Let your Members register by using only their Email Address. A Generated "
 "Password for their account will be sent out via Email"
 msgstr ""
 
-#: utilities.php:3562 public/views/user-sites-table.php:6
+#: utilities.php:3568 public/views/user-sites-table.php:6
 #: public/views/account_page-transactions.php:17
 #: public/views/account_page-transactions.php:52
 #: public/views/account_page-transactions.php:133
@@ -6868,7 +6886,7 @@ msgstr ""
 msgid "Life Time"
 msgstr ""
 
-#: utilities.php:6359 classes/UserSubscriptions.php:887
+#: utilities.php:6368 classes/UserSubscriptions.php:887
 #: classes/Db/Memberships.php:752 admin/includes/tabs/user-details.php:313
 msgid "LifeTime"
 msgstr ""
@@ -6882,7 +6900,7 @@ msgstr ""
 msgid "Limit"
 msgstr ""
 
-#: utilities.php:6757
+#: utilities.php:6766
 msgid ""
 "Limit the number of downloads (per file or per user) for each Membership"
 msgstr ""
@@ -6920,7 +6938,7 @@ msgstr ""
 msgid "Link this product to a Ultimate Membership Pro Level"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:79
+#: admin/includes/tabs/individual_page.php:83
 msgid "Link to Individual Page (Shortcode):"
 msgstr ""
 
@@ -6944,16 +6962,16 @@ msgstr ""
 msgid "LinkedIn Settings"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:364
+#: admin/includes/tabs/opt_in.php:270
 msgid "List"
 msgstr ""
 
-#: utilities.php:6601 admin/includes/tabs/list_access_posts.php:14
+#: utilities.php:6610 admin/includes/tabs/list_access_posts.php:14
 #: admin/includes/tabs/user_shortcodes.php:138
 msgid "List Access Posts"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:237 admin/includes/tabs/opt_in.php:300
+#: admin/includes/tabs/opt_in.php:179 admin/includes/tabs/opt_in.php:224
 msgid "List ID"
 msgstr ""
 
@@ -6961,7 +6979,7 @@ msgstr ""
 msgid "List ID:"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:499
+#: admin/includes/tabs/opt_in.php:392
 msgid "List Name:"
 msgstr ""
 
@@ -6999,7 +7017,7 @@ msgstr ""
 msgid "List of Users that have a certain Membership. (Array)"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:190
+#: admin/includes/tabs/opt_in.php:149
 msgid "List token"
 msgstr ""
 
@@ -7023,11 +7041,11 @@ msgstr ""
 msgid "Live Webhook"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:115
+#: admin/includes/tabs/login_security.php:91
 msgid "Locked Message"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:41
+#: admin/includes/tabs/login_security.php:38
 msgid "Locked Time"
 msgstr ""
 
@@ -7040,14 +7058,14 @@ msgstr ""
 msgid "Locker Preview"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:59
+#: admin/includes/tabs/login_security.php:47
 msgid "Lockouts"
 msgstr ""
 
-#: utilities.php:1439 utilities.php:1465 utilities.php:1534 utilities.php:1622
-#: utilities.php:1690 utilities.php:1754 utilities.php:1788 utilities.php:1858
-#: utilities.php:1918 utilities.php:1976 utilities.php:2037 utilities.php:2089
-#: utilities.php:2187
+#: utilities.php:1445 utilities.php:1471 utilities.php:1540 utilities.php:1628
+#: utilities.php:1696 utilities.php:1760 utilities.php:1794 utilities.php:1864
+#: utilities.php:1924 utilities.php:1982 utilities.php:2043 utilities.php:2095
+#: utilities.php:2193
 msgid "Log In"
 msgstr ""
 
@@ -7069,14 +7087,14 @@ msgstr ""
 msgid "LogIn"
 msgstr ""
 
-#: indeed-membership-pro.php:832 public/views/login_popup.php:14
+#: indeed-membership-pro.php:831 public/views/login_popup.php:14
 #: admin/includes/functions.php:125 admin/includes/functions.php:257
 #: admin/includes/popup-forms.php:19
 #: admin/includes/tabs/custom_nav_menu_box.php:7
 msgid "Login"
 msgstr ""
 
-#: indeed-membership-pro.php:807 admin/includes/vc_map.php:25
+#: indeed-membership-pro.php:806 admin/includes/vc_map.php:25
 #: admin/includes/vc_map.php:28 admin/includes/popup-forms.php:11
 #: admin/includes/tabs/showcases.php:16 admin/includes/tabs/locker.php:96
 #: admin/includes/tabs/user_shortcodes.php:11 admin/includes/tabs/login.php:40
@@ -7091,7 +7109,7 @@ msgstr ""
 msgid "Login form inside a Modal"
 msgstr ""
 
-#: utilities.php:891
+#: utilities.php:897
 msgid "Login Form is locked for 15 minutes."
 msgstr ""
 
@@ -7129,10 +7147,10 @@ msgid "Login Page"
 msgstr ""
 
 #: admin/includes/tabs/login_level_redirect.php:48
-msgid "Login Redirects based on MEmbership(s)"
+msgid "Login Redirects"
 msgstr ""
 
-#: utilities.php:6585
+#: utilities.php:6594
 msgid "Login Redirects+"
 msgstr ""
 
@@ -7150,7 +7168,7 @@ msgstr ""
 msgid "Login/Register Redirect"
 msgstr ""
 
-#: indeed-membership-pro.php:839 admin/includes/functions.php:128
+#: indeed-membership-pro.php:838 admin/includes/functions.php:128
 #: admin/includes/functions.php:259
 msgid "LogOut"
 msgstr ""
@@ -7173,7 +7191,7 @@ msgstr ""
 msgid "Look after 'My Apps' and 'Add a New App'."
 msgstr ""
 
-#: indeed-membership-pro.php:837 classes/Ihc_Db.class.php:706
+#: indeed-membership-pro.php:836 classes/Ihc_Db.class.php:706
 #: admin/includes/functions.php:127 admin/includes/functions.php:256
 msgid "Lost Password"
 msgstr ""
@@ -7187,10 +7205,10 @@ msgstr ""
 msgid "Lost your password"
 msgstr ""
 
-#: utilities.php:1424 utilities.php:1496 utilities.php:1558 utilities.php:1606
-#: utilities.php:1666 utilities.php:1738 utilities.php:1813 utilities.php:1846
-#: utilities.php:1906 utilities.php:1964 utilities.php:2025 utilities.php:2120
-#: utilities.php:2171 utilities.php:2351
+#: utilities.php:1430 utilities.php:1502 utilities.php:1564 utilities.php:1612
+#: utilities.php:1672 utilities.php:1744 utilities.php:1819 utilities.php:1852
+#: utilities.php:1912 utilities.php:1970 utilities.php:2031 utilities.php:2126
+#: utilities.php:2177 utilities.php:2357
 msgid "Lost your password?"
 msgstr ""
 
@@ -7320,7 +7338,7 @@ msgstr ""
 msgid "Manage your discount coupons "
 msgstr ""
 
-#: utilities.php:6717
+#: utilities.php:6726
 msgid ""
 "Manage your membership system and access data from it through an API with "
 "access based on URL calls"
@@ -7369,11 +7387,11 @@ msgstr ""
 msgid "Max Uses"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:106
+#: admin/includes/tabs/list_access_posts.php:119
 msgid "Max. No. of Posts"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:54
+#: admin/includes/tabs/login_security.php:45
 msgid "Maximum number of Lockouts"
 msgstr ""
 
@@ -7427,7 +7445,7 @@ msgstr ""
 msgid "Member Field"
 msgstr ""
 
-#: utilities.php:748
+#: utilities.php:754
 msgid "Member ID:"
 msgstr ""
 
@@ -7472,7 +7490,7 @@ msgstr ""
 msgid "Member since:"
 msgstr ""
 
-#: utilities.php:742
+#: utilities.php:748
 msgid "Member Since: "
 msgstr ""
 
@@ -7492,7 +7510,7 @@ msgid ""
 "check their Payments."
 msgstr ""
 
-#: utilities.php:6749
+#: utilities.php:6758
 msgid ""
 "Members can login without standard credentials but with a special temporary "
 "link available"
@@ -7536,7 +7554,7 @@ msgid ""
 "using "
 msgstr ""
 
-#: indeed-membership-pro.php:815 admin/includes/tabs/showcases.php:24
+#: indeed-membership-pro.php:814 admin/includes/tabs/showcases.php:24
 #: admin/includes/tabs/listing_users.php:65
 #: admin/includes/tabs/user_shortcodes.php:205
 msgid "Members Directory"
@@ -7568,7 +7586,7 @@ msgstr ""
 msgid "Members may pick one of available Memberships and sign up on it."
 msgstr ""
 
-#: utilities.php:6661
+#: utilities.php:6670
 msgid ""
 "Members may receives notifications ontheir Mobile Devices via Pushover App"
 msgstr ""
@@ -7585,11 +7603,11 @@ msgid ""
 "Members may see their signed Memberships directly the top of My Account page"
 msgstr ""
 
-#: utilities.php:6649
+#: utilities.php:6658 admin/includes/tabs/user_reports.php:15
 msgid "Members Reports"
 msgstr ""
 
-#: utilities.php:6557
+#: utilities.php:6566
 msgid ""
 "Members will find their Membership Cards into My Account page and may Print "
 "them for further usage"
@@ -7620,23 +7638,16 @@ msgstr ""
 msgid "Membership"
 msgstr ""
 
-#: utilities.php:1020
+#: utilities.php:1026
 msgid "Membership "
-msgstr ""
-
-#: admin/includes/tabs/level_restrict_payment.php:26
-msgid "Membership - Payment Gateways restriction"
-msgstr ""
-
-#: admin/includes/tabs/level_subscription_plan_settings.php:28
-msgid "Membership - Subscription Plan Display Details"
 msgstr ""
 
 #: admin/includes/tabs/levels.php:207
 msgid "Membership Access"
 msgstr ""
 
-#: utilities.php:6481 admin/includes/tabs/levels.php:841
+#: utilities.php:6490 admin/includes/tabs/badges.php:18
+#: admin/includes/tabs/levels.php:841
 msgid "Membership Badges"
 msgstr ""
 
@@ -7644,7 +7655,8 @@ msgstr ""
 msgid "Membership Billing"
 msgstr ""
 
-#: utilities.php:6553 admin/includes/tabs/user_shortcodes.php:106
+#: utilities.php:6562 admin/includes/tabs/membership_card.php:40
+#: admin/includes/tabs/user_shortcodes.php:106
 msgid "Membership Card"
 msgstr ""
 
@@ -7652,7 +7664,7 @@ msgstr ""
 msgid "Membership Card Logo"
 msgstr ""
 
-#: classes/Ihc_Db.class.php:3027 admin/includes/tabs/membership_card.php:40
+#: classes/Ihc_Db.class.php:3027
 msgid "Membership Cards"
 msgstr ""
 
@@ -7673,7 +7685,7 @@ msgstr ""
 msgid "Membership direct Purchase Link"
 msgstr ""
 
-#: utilities.php:6513 admin/includes/tabs/checkout.php:215
+#: utilities.php:6522 admin/includes/tabs/checkout.php:215
 #: admin/includes/tabs/level_dynamic_price.php:31
 msgid "Membership Dynamic Price"
 msgstr ""
@@ -7686,7 +7698,7 @@ msgstr ""
 msgid "Membership Gift"
 msgstr ""
 
-#: utilities.php:6473 classes/Ihc_Db.class.php:3026
+#: utilities.php:6482 classes/Ihc_Db.class.php:3026
 #: admin/includes/tabs/gifts.php:24 admin/includes/tabs/user-details.php:498
 msgid "Membership Gifts"
 msgstr ""
@@ -7705,10 +7717,6 @@ msgstr ""
 msgid "Membership Members"
 msgstr ""
 
-#: admin/includes/tabs/badges.php:18
-msgid "Membership Membership Badges"
-msgstr ""
-
 #: admin/includes/tabs/levels.php:173
 #: admin/includes/tabs/user_shortcodes.php:278
 msgid "Membership Name"
@@ -7718,7 +7726,7 @@ msgstr ""
 msgid "Membership Name is required."
 msgstr ""
 
-#: indeed-membership-pro.php:792
+#: indeed-membership-pro.php:791
 msgid "Membership Pages"
 msgstr ""
 
@@ -7776,14 +7784,14 @@ msgid ""
 "Memberships: "
 msgstr ""
 
-#: utilities.php:743 admin/includes/tabs/level_restrict_payment.php:66
+#: utilities.php:749 admin/includes/tabs/level_restrict_payment.php:66
 #: admin/includes/tabs/level_subscription_plan_settings.php:58
 #: admin/includes/tabs/level_dynamic_price.php:65
 #: admin/includes/tabs/order_details.php:17
 msgid "Membership: "
 msgstr ""
 
-#: indeed-membership-pro.php:796 public/views/orders-table.php:18
+#: indeed-membership-pro.php:795 public/views/orders-table.php:18
 #: public/views/orders-table.php:264 admin/includes/manage-page.php:19
 #: admin/includes/tabs/manage_order_table.php:55
 #: admin/includes/tabs/woo_product_custom_prices-add_edit.php:98
@@ -7803,11 +7811,12 @@ msgstr ""
 msgid "Memberships limits"
 msgstr ""
 
-#: utilities.php:6529
+#: utilities.php:6538
+#: admin/includes/tabs/level_subscription_plan_settings.php:28
 msgid "Memberships Plus"
 msgstr ""
 
-#: admin/includes/tabs/login_level_redirect.php:88
+#: admin/includes/tabs/login_level_redirect.php:95
 msgid "Memberships Priorities:"
 msgstr ""
 
@@ -7824,7 +7833,8 @@ msgstr ""
 msgid "Memberships Target"
 msgstr ""
 
-#: utilities.php:6521 admin/includes/tabs/checkout.php:187
+#: utilities.php:6530 admin/includes/tabs/level_restrict_payment.php:26
+#: admin/includes/tabs/checkout.php:187
 msgid "Memberships vs Payments"
 msgstr ""
 
@@ -7886,7 +7896,7 @@ msgstr ""
 msgid "Micronesia"
 msgstr ""
 
-#: utilities.php:6517
+#: utilities.php:6526
 msgid ""
 "Mimic Donations by letting the client decide how much to pay for Memberships"
 msgstr ""
@@ -7895,7 +7905,7 @@ msgstr ""
 msgid "Minimum Price"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:46
+#: admin/includes/tabs/login_security.php:40
 msgid "Minutes"
 msgstr ""
 
@@ -7983,10 +7993,6 @@ msgstr ""
 msgid "Multisite is not installed."
 msgstr ""
 
-#: admin/includes/tabs/user_sites.php:14
-msgid "MultiSite Subscriptions"
-msgstr ""
-
 #: admin/includes/tabs/register.php:782
 msgid ""
 "must be unique and based on lowercase characters only without special "
@@ -8001,7 +8007,7 @@ msgstr ""
 msgid "My Account Menu"
 msgstr ""
 
-#: indeed-membership-pro.php:810 indeed-membership-pro.php:836
+#: indeed-membership-pro.php:809 indeed-membership-pro.php:835
 #: admin/includes/popup-forms.php:14 admin/includes/tabs/showcases.php:19
 #: admin/includes/tabs/general.php:123
 #: admin/includes/tabs/user_shortcodes.php:14
@@ -8016,7 +8022,7 @@ msgstr ""
 msgid "Myanmar"
 msgstr ""
 
-#: utilities.php:6673 admin/includes/tabs/mycred.php:11
+#: utilities.php:6682 admin/includes/tabs/mycred.php:11
 msgid "MyCred Points"
 msgstr ""
 
@@ -8062,7 +8068,7 @@ msgid "Name on the Card *"
 msgstr ""
 
 #: admin/includes/tabs/redirect_links.php:20
-#: admin/includes/tabs/custom_currencies.php:25
+#: admin/includes/tabs/custom_currencies.php:30
 msgid "Name:"
 msgstr ""
 
@@ -8129,7 +8135,7 @@ msgstr ""
 msgid "New Order Created"
 msgstr ""
 
-#: indeed-membership-pro.php:766
+#: indeed-membership-pro.php:765
 msgid "New Orders"
 msgstr ""
 
@@ -8153,7 +8159,7 @@ msgstr ""
 msgid "New user"
 msgstr ""
 
-#: indeed-membership-pro.php:760
+#: indeed-membership-pro.php:759
 msgid "New Users"
 msgstr ""
 
@@ -8233,11 +8239,11 @@ msgstr ""
 msgid "No level provided."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:464
+#: admin/includes/tabs/opt_in.php:363
 msgid "No List available"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:424
+#: admin/includes/tabs/opt_in.php:326
 msgid "No List available "
 msgstr ""
 
@@ -8277,7 +8283,7 @@ msgstr ""
 msgid "No Orders have been made yet. Look for available "
 msgstr ""
 
-#: utilities.php:6390
+#: utilities.php:6399
 msgid "No payment confirmation received"
 msgstr ""
 
@@ -8323,7 +8329,7 @@ msgstr ""
 msgid "No Webhooks Notifications have been received. Check your Webhook setup "
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:101
+#: admin/includes/tabs/list_access_posts.php:113
 msgid "No. of Posts per page"
 msgstr ""
 
@@ -8436,7 +8442,7 @@ msgstr ""
 msgid "Notifications Settings"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:90
+#: admin/includes/tabs/login_security.php:68
 msgid "Notify Admin after"
 msgstr ""
 
@@ -8496,7 +8502,7 @@ msgstr ""
 msgid "On Admin"
 msgstr ""
 
-#: utilities.php:6388 admin/includes/tabs/users.php:161
+#: utilities.php:6397 admin/includes/tabs/users.php:161
 msgid "On hold"
 msgstr ""
 
@@ -8619,18 +8625,18 @@ msgid ""
 "Clik on "
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:62
-#: admin/includes/tabs/user_reports.php:34 admin/includes/tabs/general.php:898
+#: admin/includes/tabs/drip_content_notifications.php:63
+#: admin/includes/tabs/user_reports.php:36 admin/includes/tabs/general.php:898
 msgid "One Day"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:64
-#: admin/includes/tabs/user_reports.php:36 admin/includes/tabs/general.php:900
+#: admin/includes/tabs/drip_content_notifications.php:65
+#: admin/includes/tabs/user_reports.php:38 admin/includes/tabs/general.php:900
 msgid "One Month"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:63
-#: admin/includes/tabs/user_reports.php:35 admin/includes/tabs/general.php:899
+#: admin/includes/tabs/drip_content_notifications.php:64
+#: admin/includes/tabs/user_reports.php:37 admin/includes/tabs/general.php:899
 msgid "One Week"
 msgstr ""
 
@@ -8657,16 +8663,16 @@ msgid "Open 'Public Individual Page' in new Window"
 msgstr ""
 
 #: admin/includes/tabs/register.php:210
-#: admin/includes/tabs/register_lite.php:94
+#: admin/includes/tabs/register_lite.php:110
 msgid "Opt-In Destination:"
 msgstr ""
 
-#: utilities.php:6457
+#: utilities.php:6466
 msgid "Opt-in Settings"
 msgstr ""
 
 #: admin/includes/tabs/register.php:200
-#: admin/includes/tabs/register_lite.php:84
+#: admin/includes/tabs/register_lite.php:99
 msgid "Opt-In Subscription"
 msgstr ""
 
@@ -8732,7 +8738,7 @@ msgstr ""
 msgid "Order Invoice Prefix Code"
 msgstr ""
 
-#: utilities.php:6609
+#: utilities.php:6618 admin/includes/tabs/invoices.php:18
 msgid "Order Invoices"
 msgstr ""
 
@@ -8776,7 +8782,7 @@ msgstr ""
 msgid "Orders Settings"
 msgstr ""
 
-#: indeed-membership-pro.php:813 admin/includes/tabs/showcases.php:22
+#: indeed-membership-pro.php:812 admin/includes/tabs/showcases.php:22
 #: admin/includes/tabs/user_shortcodes.php:61
 msgid "Orders Table"
 msgstr ""
@@ -8810,11 +8816,11 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:58
+#: admin/includes/tabs/individual_page.php:60
 msgid "Page Slug Prefix"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:53
+#: admin/includes/tabs/individual_page.php:54
 msgid "Page Title Prefix"
 msgstr ""
 
@@ -8886,15 +8892,15 @@ msgstr ""
 msgid "Params available:"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:29
+#: admin/includes/tabs/individual_page.php:30
 msgid "Parent Page"
 msgstr ""
 
-#: utilities.php:1390 utilities.php:1450 utilities.php:1514 utilities.php:1572
-#: utilities.php:1638 utilities.php:1703 utilities.php:1768 utilities.php:1828
-#: utilities.php:1888 utilities.php:1946 utilities.php:2007 utilities.php:2065
-#: utilities.php:2137 classes/UserAddEdit.class.php:202
-#: admin/includes/tabs/opt_in.php:347
+#: utilities.php:1396 utilities.php:1456 utilities.php:1520 utilities.php:1578
+#: utilities.php:1644 utilities.php:1709 utilities.php:1774 utilities.php:1834
+#: utilities.php:1894 utilities.php:1952 utilities.php:2013 utilities.php:2071
+#: utilities.php:2143 classes/UserAddEdit.class.php:202
+#: admin/includes/tabs/opt_in.php:259
 msgid "Password"
 msgstr ""
 
@@ -9019,7 +9025,7 @@ msgstr ""
 msgid "Payment Service:"
 msgstr ""
 
-#: indeed-membership-pro.php:794 admin/includes/manage-page.php:20
+#: indeed-membership-pro.php:793 admin/includes/manage-page.php:20
 msgid "Payment Services"
 msgstr ""
 
@@ -9148,7 +9154,7 @@ msgid "Pitcairn"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:47 admin/includes/tabs/register.php:69
-#: admin/includes/tabs/register_lite.php:41
+#: admin/includes/tabs/register_lite.php:45
 msgid "PlaceHolder Theme"
 msgstr ""
 
@@ -9163,7 +9169,7 @@ msgstr ""
 msgid "Play in Loop"
 msgstr ""
 
-#: utilities.php:2251
+#: utilities.php:2257
 msgid "Please complete all require fields!"
 msgstr ""
 
@@ -9218,12 +9224,12 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:85
+#: admin/includes/tabs/list_access_posts.php:94
 msgid "Post Author"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:84
-#: admin/includes/tabs/list_access_posts.php:114
+#: admin/includes/tabs/list_access_posts.php:93
+#: admin/includes/tabs/list_access_posts.php:127
 msgid "Post Date"
 msgstr ""
 
@@ -9231,7 +9237,7 @@ msgstr ""
 msgid "Post Settings"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:114
+#: admin/includes/tabs/list_access_posts.php:127
 msgid "Post Title"
 msgstr ""
 
@@ -9251,11 +9257,11 @@ msgstr ""
 msgid "Posted"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:112
+#: admin/includes/tabs/list_access_posts.php:125
 msgid "Posts Order by"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:124
+#: admin/includes/tabs/list_access_posts.php:138
 msgid "Posts Order Type"
 msgstr ""
 
@@ -9271,7 +9277,7 @@ msgstr ""
 msgid "Predefined Wordpress Role Assign to new Registered Users:"
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:67
+#: admin/includes/tabs/register_lite.php:77
 #: admin/includes/tabs/wp_social_login.php:52
 msgid "Predefined Wordpress Role Assign to new Users:"
 msgstr ""
@@ -9293,7 +9299,7 @@ msgstr ""
 msgid "Pretty Links"
 msgstr ""
 
-#: utilities.php:6565
+#: utilities.php:6574
 msgid ""
 "Prevent your customers from sharing their login credentials by keeping only "
 "one user logged in at a time"
@@ -9346,7 +9352,11 @@ msgstr ""
 msgid "Pro Extensions"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:41
+#: admin/includes/tabs/prorate_subscription.php:11
+msgid "Pro-rate Subscription"
+msgstr ""
+
+#: admin/includes/tabs/drip_content_notifications.php:40
 msgid "Proceed the Notification script manually"
 msgstr ""
 
@@ -9371,7 +9381,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: indeed-membership-pro.php:811 admin/includes/tabs/showcases.php:20
+#: indeed-membership-pro.php:810 admin/includes/tabs/showcases.php:20
 #: admin/includes/tabs/profile-form.php:18
 #: admin/includes/tabs/user_shortcodes.php:46
 msgid "Profile Form"
@@ -9401,7 +9411,7 @@ msgstr ""
 msgid "Provides existent Customers to pay with previous used Cards"
 msgstr ""
 
-#: utilities.php:6613
+#: utilities.php:6622
 msgid ""
 "Provides printable invoices for each order in the account page or system "
 "dashboard"
@@ -9413,7 +9423,7 @@ msgid ""
 "dashboard."
 msgstr ""
 
-#: utilities.php:6541
+#: utilities.php:6550
 msgid ""
 "Provides Single Sites based on purchased subscriptions. You can sell Single "
 "Sites via memberships."
@@ -9484,7 +9494,7 @@ msgstr ""
 msgid "Pushover Mobile Notification"
 msgstr ""
 
-#: utilities.php:6657 classes/Ihc_Db.class.php:3028
+#: utilities.php:6666 classes/Ihc_Db.class.php:3028
 #: admin/includes/tabs/pushover.php:18
 msgid "Pushover Notifications"
 msgstr ""
@@ -9498,7 +9508,7 @@ msgid "Radius Gradient Theme"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:39 admin/includes/tabs/register.php:61
-#: admin/includes/tabs/register_lite.php:33
+#: admin/includes/tabs/register_lite.php:37
 msgid "Radius Theme"
 msgstr ""
 
@@ -9516,7 +9526,8 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-#: utilities.php:6497 admin/includes/tabs/user-details.php:577
+#: utilities.php:6506 admin/includes/tabs/reason_for_cancel.php:37
+#: admin/includes/tabs/user-details.php:577
 msgid "Reason for Cancelling"
 msgstr ""
 
@@ -9586,7 +9597,7 @@ msgstr ""
 msgid "Redirect after"
 msgstr ""
 
-#: utilities.php:6689 admin/includes/tabs/redirect_links.php:12
+#: utilities.php:6698 admin/includes/tabs/redirect_links.php:12
 #: admin/includes/tabs/redirect_links.php:14
 msgid "Redirect Links"
 msgstr ""
@@ -9627,9 +9638,9 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
-#: utilities.php:1414 utilities.php:1486 utilities.php:1548 utilities.php:1596
-#: utilities.php:1656 utilities.php:1728 utilities.php:1803 utilities.php:2102
-#: utilities.php:2161 utilities.php:2341 indeed-membership-pro.php:833
+#: utilities.php:1420 utilities.php:1492 utilities.php:1554 utilities.php:1602
+#: utilities.php:1662 utilities.php:1734 utilities.php:1809 utilities.php:2108
+#: utilities.php:2167 utilities.php:2347 indeed-membership-pro.php:832
 #: classes/LiteRegister.class.php:50 classes/Ihc_Db.class.php:702
 #: classes/UserAddEdit.class.php:499 public/views/register_popup.php:14
 #: admin/includes/functions.php:126 admin/includes/functions.php:255
@@ -9650,7 +9661,7 @@ msgstr ""
 msgid "Register Date"
 msgstr ""
 
-#: indeed-membership-pro.php:806 admin/includes/vc_map.php:5
+#: indeed-membership-pro.php:805 admin/includes/vc_map.php:5
 #: admin/includes/vc_map.php:8 admin/includes/popup-forms.php:10
 #: admin/includes/tabs/showcases.php:15 admin/includes/tabs/register.php:41
 #: admin/includes/tabs/user_shortcodes.php:10
@@ -9681,7 +9692,7 @@ msgstr ""
 msgid "Register Link"
 msgstr ""
 
-#: utilities.php:6697 admin/includes/tabs/register_lite.php:14
+#: utilities.php:6706 admin/includes/tabs/register_lite.php:14
 #: admin/includes/tabs/user_shortcodes.php:124
 msgid "Register Lite"
 msgstr ""
@@ -9699,15 +9710,12 @@ msgstr ""
 msgid "Register Process"
 msgstr ""
 
+#: utilities.php:6730
 #: admin/includes/tabs/magic_feat_custom_register_redirects.php:31
-msgid "Register Redirects based on Membership(s)"
-msgstr ""
-
-#: utilities.php:6721
 msgid "Register Redirects+"
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:47
+#: admin/includes/tabs/register_lite.php:51
 msgid "Register Template:"
 msgstr ""
 
@@ -9736,7 +9744,7 @@ msgstr ""
 msgid "Registered Users without any payment proceeded."
 msgstr ""
 
-#: utilities.php:1012 classes/services/Kissmetrics.php:38
+#: utilities.php:1018 classes/services/Kissmetrics.php:38
 msgid "Registered!"
 msgstr ""
 
@@ -9759,9 +9767,9 @@ msgstr ""
 msgid "Release Time"
 msgstr ""
 
-#: utilities.php:1400 utilities.php:1472 utilities.php:1522 utilities.php:1583
-#: utilities.php:1676 utilities.php:1715 utilities.php:1776 utilities.php:1836
-#: utilities.php:1896 utilities.php:1954 utilities.php:2015
+#: utilities.php:1406 utilities.php:1478 utilities.php:1528 utilities.php:1589
+#: utilities.php:1682 utilities.php:1721 utilities.php:1782 utilities.php:1842
+#: utilities.php:1902 utilities.php:1960 utilities.php:2021
 #: admin/includes/tabs/login.php:86
 msgid "Remember Me"
 msgstr ""
@@ -9780,13 +9788,13 @@ msgid ""
 "triggered. This process is handled by a WP Cron running daily."
 msgstr ""
 
-#: utilities.php:2653 classes/Ajax.php:433 public/views/upload_image.php:30
+#: utilities.php:2659 classes/Ajax.php:433 public/views/upload_image.php:30
 #: public/views/subscription-table.php:230
 #: admin/includes/tabs/upload_image.php:30 admin/includes/tabs/checkout.php:484
 #: admin/includes/tabs/orders.php:563 admin/includes/tabs/upload_file.php:62
 #: admin/includes/tabs/locker.php:194 admin/includes/tabs/custom_banner.php:45
-#: admin/includes/tabs/invitation_code.php:74
-#: admin/includes/tabs/invitation_code.php:106
+#: admin/includes/tabs/invitation_code.php:75
+#: admin/includes/tabs/invitation_code.php:107
 #: admin/includes/tabs/list_payments.php:167
 #: admin/includes/tabs/list_payments.php:213
 #: admin/includes/tabs/user-membership-plans-management.php:165
@@ -9841,7 +9849,7 @@ msgid "ReOrder Menu Items"
 msgstr ""
 
 #: admin/includes/tabs/invitation_code_add_new.php:52
-#: admin/includes/tabs/invitation_code.php:72
+#: admin/includes/tabs/invitation_code.php:73
 msgid "Repeat"
 msgstr ""
 
@@ -9857,7 +9865,7 @@ msgstr ""
 msgid "Replace the Content"
 msgstr ""
 
-#: utilities.php:6589
+#: utilities.php:6598
 msgid ""
 "Replace the default redirect after login with a custom one based on the "
 "member assigned membership"
@@ -9897,7 +9905,11 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: utilities.php:1313
+#: admin/includes/tabs/prorate_subscription.php:27
+msgid "Reset Billing Period"
+msgstr ""
+
+#: utilities.php:1319
 msgid "Reset my password"
 msgstr ""
 
@@ -9917,7 +9929,7 @@ msgstr ""
 msgid "Reset Password Messages:"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:78
+#: admin/includes/tabs/login_security.php:60
 msgid "Reset Retries after"
 msgstr ""
 
@@ -9956,7 +9968,7 @@ msgid ""
 "specific memberships or for an identical membership but with a higher price."
 msgstr ""
 
-#: utilities.php:6525
+#: utilities.php:6534
 msgid ""
 "Restrict each Membership to be paid only through a specific Payment Service"
 msgstr ""
@@ -10017,11 +10029,11 @@ msgstr ""
 msgid "Resume Recurring Subscriptions"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:34
+#: admin/includes/tabs/login_security.php:33
 msgid "Retries"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:95
+#: admin/includes/tabs/login_security.php:70
 msgid "retries"
 msgstr ""
 
@@ -10047,7 +10059,7 @@ msgstr ""
 msgid "Reward"
 msgstr ""
 
-#: utilities.php:6677
+#: utilities.php:6686
 msgid "Reward with MyCred points when a Membership is purchased"
 msgstr ""
 
@@ -10082,7 +10094,7 @@ msgstr ""
 msgid "Rremove"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:42
+#: admin/includes/tabs/drip_content_notifications.php:41
 msgid "Run Now"
 msgstr ""
 
@@ -10169,17 +10181,18 @@ msgstr ""
 #: admin/includes/tabs/thank-you-page.php:87
 #: admin/includes/tabs/level_restrict_payment.php:41
 #: admin/includes/tabs/level_restrict_payment.php:106
-#: admin/includes/tabs/login_security.php:125
+#: admin/includes/tabs/login_security.php:104
 #: admin/includes/tabs/account_page.php:190
 #: admin/includes/tabs/account_page.php:502
 #: admin/includes/tabs/account_page.php:553
 #: admin/includes/tabs/account_page.php:566
+#: admin/includes/tabs/prorate_subscription.php:40
 #: admin/includes/tabs/account_page_menu.php:47
 #: admin/includes/tabs/account_page_menu.php:93
 #: admin/includes/tabs/account_page_menu.php:158
 #: admin/includes/tabs/pushover.php:86 admin/includes/tabs/pushover.php:125
 #: admin/includes/tabs/membership_card.php:281
-#: admin/includes/tabs/drip_content_notifications.php:75
+#: admin/includes/tabs/drip_content_notifications.php:80
 #: admin/includes/tabs/workflow_restrictions.php:68
 #: admin/includes/tabs/workflow_restrictions.php:104
 #: admin/includes/tabs/workflow_restrictions.php:130
@@ -10221,25 +10234,25 @@ msgstr ""
 #: admin/includes/tabs/payment_settings.php:2075
 #: admin/includes/tabs/payment_settings.php:2168
 #: admin/includes/tabs/badges.php:38 admin/includes/tabs/woo_payment.php:30
-#: admin/includes/tabs/list_access_posts.php:148
-#: admin/includes/tabs/invoices.php:138 admin/includes/tabs/opt_in.php:19
-#: admin/includes/tabs/opt_in.php:56 admin/includes/tabs/opt_in.php:114
-#: admin/includes/tabs/opt_in.php:161 admin/includes/tabs/opt_in.php:208
-#: admin/includes/tabs/opt_in.php:255 admin/includes/tabs/opt_in.php:327
-#: admin/includes/tabs/opt_in.php:387 admin/includes/tabs/opt_in.php:431
-#: admin/includes/tabs/opt_in.php:471 admin/includes/tabs/opt_in.php:508
+#: admin/includes/tabs/list_access_posts.php:164
+#: admin/includes/tabs/invoices.php:138 admin/includes/tabs/opt_in.php:23
+#: admin/includes/tabs/opt_in.php:55 admin/includes/tabs/opt_in.php:97
+#: admin/includes/tabs/opt_in.php:128 admin/includes/tabs/opt_in.php:159
+#: admin/includes/tabs/opt_in.php:189 admin/includes/tabs/opt_in.php:242
+#: admin/includes/tabs/opt_in.php:291 admin/includes/tabs/opt_in.php:333
+#: admin/includes/tabs/opt_in.php:370 admin/includes/tabs/opt_in.php:399
 #: admin/includes/tabs/reason_for_cancel.php:60
 #: admin/includes/tabs/woo_product_custom_prices-settings.php:61
 #: admin/includes/tabs/coupons.php:224
 #: admin/includes/tabs/woo_product_custom_prices-add_edit.php:282
 #: admin/includes/tabs/level_subscription_plan_settings.php:48
 #: admin/includes/tabs/level_subscription_plan_settings.php:102
-#: admin/includes/tabs/login_level_redirect.php:83
-#: admin/includes/tabs/login_level_redirect.php:112
+#: admin/includes/tabs/login_level_redirect.php:90
+#: admin/includes/tabs/login_level_redirect.php:127
 #: admin/includes/tabs/checkout.php:289 admin/includes/tabs/checkout.php:304
 #: admin/includes/tabs/checkout.php:510 admin/includes/tabs/infusionSoft.php:53
 #: admin/includes/tabs/infusionSoft.php:76
-#: admin/includes/tabs/user_reports.php:46
+#: admin/includes/tabs/user_reports.php:52
 #: admin/includes/tabs/edit-user-subscriptions.php:59
 #: admin/includes/tabs/invitation_code_add_new.php:57
 #: admin/includes/tabs/general.php:229 admin/includes/tabs/general.php:330
@@ -10268,7 +10281,7 @@ msgstr ""
 #: admin/includes/tabs/levels.php:793 admin/includes/tabs/levels.php:827
 #: admin/includes/tabs/levels.php:849
 #: admin/includes/tabs/weekly_summary_email.php:26
-#: admin/includes/tabs/custom_currencies.php:29
+#: admin/includes/tabs/custom_currencies.php:38
 #: admin/includes/tabs/bp_account_page.php:48
 #: admin/includes/tabs/locker.php:138 admin/includes/tabs/locker.php:155
 #: admin/includes/tabs/download_monitor_integration.php:77
@@ -10280,16 +10293,16 @@ msgstr ""
 #: admin/includes/tabs/manage_subscription_table.php:293
 #: admin/includes/tabs/subscription_plan.php:71
 #: admin/includes/tabs/subscription_plan.php:80
-#: admin/includes/tabs/register_lite.php:174
-#: admin/includes/tabs/invitation_code.php:56
+#: admin/includes/tabs/register_lite.php:194
+#: admin/includes/tabs/invitation_code.php:57
 #: admin/includes/tabs/subscription_delay.php:47
-#: admin/includes/tabs/subscription_delay.php:84
+#: admin/includes/tabs/subscription_delay.php:86
 #: admin/includes/tabs/member-form.php:345 admin/includes/tabs/api.php:46
 #: admin/includes/tabs/api.php:188 admin/includes/tabs/zapier.php:31
 #: admin/includes/tabs/zapier.php:85 admin/includes/tabs/order-edit.php:116
-#: admin/includes/tabs/individual_page.php:87
+#: admin/includes/tabs/individual_page.php:91
 #: admin/includes/tabs/woo_account_page.php:50
-#: admin/includes/tabs/cheat_off.php:57 admin/includes/tabs/login.php:68
+#: admin/includes/tabs/cheat_off.php:61 admin/includes/tabs/login.php:68
 #: admin/includes/tabs/login.php:125 admin/includes/tabs/login.php:134
 #: admin/includes/tabs/login.php:201 admin/includes/tabs/user_sites.php:29
 #: admin/includes/tabs/user_sites.php:60
@@ -10313,7 +10326,7 @@ msgstr ""
 #: admin/includes/tabs/social_login.php:753
 #: admin/includes/tabs/social_login.php:764
 #: admin/includes/tabs/wp_social_login.php:114
-#: admin/includes/tabs/magic_feat_custom_register_redirects.php:66
+#: admin/includes/tabs/magic_feat_custom_register_redirects.php:71
 #: admin/includes/tabs/notifications.php:184
 #: admin/includes/tabs/notifications.php:186
 #: admin/includes/tabs/notifications.php:216
@@ -10337,7 +10350,7 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:514
+#: admin/includes/tabs/opt_in.php:405
 msgid "Saved E-mail List"
 msgstr ""
 
@@ -10445,7 +10458,7 @@ msgstr ""
 msgid "Security alert on "
 msgstr ""
 
-#: utilities.php:6625 admin/includes/tabs/login_security.php:14
+#: utilities.php:6634 admin/includes/tabs/login_security.php:14
 msgid "Security Login"
 msgstr ""
 
@@ -10487,11 +10500,11 @@ msgid ""
 "Discount code can be used on any Membership."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:443
+#: admin/includes/tabs/opt_in.php:344
 msgid "Select MyMail List:"
 msgstr ""
 
-#: utilities.php:4660
+#: utilities.php:4666
 msgid "Select Payment Method"
 msgstr ""
 
@@ -10517,11 +10530,11 @@ msgid ""
 "Select which post types show up, you can select specific ones or all of them."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:399
+#: admin/includes/tabs/opt_in.php:303
 msgid "Select Wysija List:"
 msgstr ""
 
-#: utilities.php:2766 admin/includes/tabs/member-form.php:186
+#: utilities.php:2772 admin/includes/tabs/member-form.php:186
 msgid "Select Your Country"
 msgstr ""
 
@@ -10605,7 +10618,7 @@ msgstr ""
 msgid "Set as Canceled"
 msgstr ""
 
-#: utilities.php:6690
+#: utilities.php:6699
 msgid ""
 "Set custom links from inside or outside of your website that can be used for "
 "redirects inside the system"
@@ -10676,7 +10689,6 @@ msgstr ""
 #: admin/includes/tabs/woo_product_custom_prices-add_edit.php:3
 #: admin/includes/tabs/gifts.php:2 admin/includes/tabs/listing_users.php:663
 #: admin/includes/tabs/import_export.php:27
-#: admin/includes/tabs/invitation_code.php:36
 #: admin/includes/tabs/add_new_gift.php:2
 #: admin/includes/tabs/social_login.php:13
 msgid "Settings"
@@ -10787,12 +10799,12 @@ msgid "shortcode inside."
 msgstr ""
 
 #: admin/includes/tabs/membership_card.php:275
-#: admin/includes/tabs/list_access_posts.php:140
-#: admin/includes/tabs/register_lite.php:165
+#: admin/includes/tabs/list_access_posts.php:156
+#: admin/includes/tabs/register_lite.php:185
 msgid "Shortcode: "
 msgstr ""
 
-#: indeed-membership-pro.php:798
+#: indeed-membership-pro.php:797
 msgid "Shortcodes"
 msgstr ""
 
@@ -10883,7 +10895,7 @@ msgstr ""
 msgid "Show more"
 msgstr ""
 
-#: utilities.php:1193
+#: utilities.php:1199
 msgid "Show my profile on public Members Directory"
 msgstr ""
 
@@ -11009,11 +11021,11 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:72
+#: admin/includes/tabs/list_access_posts.php:79
 msgid "Showcase Title"
 msgstr ""
 
-#: indeed-membership-pro.php:793 admin/includes/manage-page.php:22
+#: indeed-membership-pro.php:792 admin/includes/manage-page.php:22
 msgid "Showcases"
 msgstr ""
 
@@ -11025,7 +11037,7 @@ msgstr ""
 msgid "Sign for "
 msgstr ""
 
-#: utilities.php:1872 utilities.php:1932 utilities.php:1990 utilities.php:2051
+#: utilities.php:1878 utilities.php:1938 utilities.php:1996 utilities.php:2057
 #: public/shortcodes.php:490
 msgid "Sign Up"
 msgstr ""
@@ -11048,7 +11060,7 @@ msgid "Simple BootStrap Theme"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:40 admin/includes/tabs/register.php:62
-#: admin/includes/tabs/register_lite.php:34
+#: admin/includes/tabs/register_lite.php:38
 msgid "Simple Border Theme"
 msgstr ""
 
@@ -11258,7 +11270,7 @@ msgid "Standard Fields constants"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:50 admin/includes/tabs/register.php:72
-#: admin/includes/tabs/register_lite.php:44 admin/includes/tabs/login.php:27
+#: admin/includes/tabs/register_lite.php:48 admin/includes/tabs/login.php:27
 msgid "Standard Theme"
 msgstr ""
 
@@ -11273,7 +11285,7 @@ msgid ""
 "Start sending notifications for posts that are available on current date."
 msgstr ""
 
-#: utilities.php:3563
+#: utilities.php:3569
 msgid "Start time"
 msgstr ""
 
@@ -11348,7 +11360,7 @@ msgstr ""
 msgid "Stop On Hover"
 msgstr ""
 
-#: utilities.php:6458
+#: utilities.php:6467
 msgid ""
 "Store your subscribers email address in a well known email marketing platform"
 msgstr ""
@@ -11500,12 +11512,12 @@ msgstr ""
 msgid "Stripe: Card is not valid"
 msgstr ""
 
-#: utilities.php:2483 utilities.php:2485
+#: utilities.php:2489 utilities.php:2491
 msgid "Strong"
 msgstr ""
 
 #: admin/includes/tabs/profile-form.php:46 admin/includes/tabs/register.php:68
-#: admin/includes/tabs/register_lite.php:40
+#: admin/includes/tabs/register_lite.php:44
 msgid "Strong Theme"
 msgstr ""
 
@@ -11553,27 +11565,27 @@ msgstr ""
 msgid "Subscription Cycle:"
 msgstr ""
 
-#: utilities.php:6641 admin/includes/tabs/subscription_delay.php:32
+#: utilities.php:6650 admin/includes/tabs/subscription_delay.php:32
 msgid "Subscription Delay"
 msgstr ""
 
-#: utilities.php:6361
+#: utilities.php:6370
 msgid "Subscription has "
 msgstr ""
 
-#: utilities.php:6365
+#: utilities.php:6374
 msgid "Subscription is on Grace Period"
 msgstr ""
 
-#: utilities.php:6370
+#: utilities.php:6379
 msgid "Subscription is on Grace Period and will expire soon"
 msgstr ""
 
-#: utilities.php:6382
+#: utilities.php:6391
 msgid "Subscription period has expired"
 msgstr ""
 
-#: indeed-membership-pro.php:834 classes/Ihc_Db.class.php:710
+#: indeed-membership-pro.php:833 classes/Ihc_Db.class.php:710
 #: admin/includes/functions.php:131 admin/includes/vc_map.php:105
 #: admin/includes/popup-forms.php:15 admin/includes/tabs/register.php:109
 msgid "Subscription Plan"
@@ -11600,7 +11612,7 @@ msgstr ""
 msgid "Subscription Settings"
 msgstr ""
 
-#: utilities.php:6373
+#: utilities.php:6382
 msgid "Subscription will expire soon"
 msgstr ""
 
@@ -11608,7 +11620,7 @@ msgstr ""
 msgid "Subscriptions"
 msgstr ""
 
-#: indeed-membership-pro.php:808 admin/includes/tabs/showcases.php:17
+#: indeed-membership-pro.php:807 admin/includes/tabs/showcases.php:17
 #: admin/includes/tabs/subscription_plan.php:12
 #: admin/includes/tabs/user_shortcodes.php:15
 msgid "Subscriptions Plan"
@@ -11622,7 +11634,7 @@ msgstr ""
 msgid "Subscriptions Plan Template"
 msgstr ""
 
-#: indeed-membership-pro.php:812 admin/includes/tabs/showcases.php:21
+#: indeed-membership-pro.php:811 admin/includes/tabs/showcases.php:21
 #: admin/includes/tabs/user_shortcodes.php:56
 msgid "Subscriptions Table"
 msgstr ""
@@ -11703,7 +11715,7 @@ msgstr ""
 msgid "Symbol"
 msgstr ""
 
-#: utilities.php:6733
+#: utilities.php:6742
 msgid ""
 "Synchronize your InfusionSoft contacts based on Tags. For each user status "
 "or Membership a Tag is associated"
@@ -11824,10 +11836,6 @@ msgstr ""
 msgid "Targeting Subscriptions"
 msgstr ""
 
-#: admin/includes/tabs/taxes.php:20
-msgid "Tax Settings"
-msgstr ""
-
 #: admin/includes/tabs/taxes.php:84
 msgid "Tax Value (%)"
 msgstr ""
@@ -11836,10 +11844,10 @@ msgstr ""
 msgid "Tax Value:"
 msgstr ""
 
-#: utilities.php:6449 public/views/orders-table.php:29
+#: utilities.php:6458 public/views/orders-table.php:29
 #: public/views/orders-table.php:276 admin/includes/tabs/checkout.php:245
 #: admin/includes/tabs/user-details.php:388 admin/includes/tabs/orders.php:174
-#: admin/includes/tabs/orders.php:224
+#: admin/includes/tabs/orders.php:224 admin/includes/tabs/taxes.php:20
 msgid "Taxes"
 msgstr ""
 
@@ -11856,19 +11864,19 @@ msgid "Taxes Section"
 msgstr ""
 
 #: classes/services/Elementor/Elementor_Ihc_Locker_Widget.php:103
-#: admin/includes/tabs/list_access_posts.php:61
+#: admin/includes/tabs/list_access_posts.php:63
 #: admin/includes/tabs/checkout.php:158 admin/includes/tabs/register.php:959
 msgid "Template"
 msgstr ""
 
 #: admin/includes/tabs/membership_card.php:62
-#: admin/includes/tabs/list_access_posts.php:63
+#: admin/includes/tabs/list_access_posts.php:65
 #: admin/includes/tabs/invoices.php:47
 msgid "Template 1"
 msgstr ""
 
 #: admin/includes/tabs/membership_card.php:63
-#: admin/includes/tabs/list_access_posts.php:63
+#: admin/includes/tabs/list_access_posts.php:65
 #: admin/includes/tabs/invoices.php:47
 msgid "Template 2"
 msgstr ""
@@ -11955,7 +11963,7 @@ msgstr ""
 msgid "Thank You"
 msgstr ""
 
-#: indeed-membership-pro.php:814 indeed-membership-pro.php:838
+#: indeed-membership-pro.php:813 indeed-membership-pro.php:837
 #: classes/Ihc_Db.class.php:718 admin/Main.php:785
 #: admin/includes/popup-forms.php:17 admin/includes/tabs/thank-you-page.php:18
 #: admin/includes/tabs/showcases.php:23 admin/includes/tabs/general.php:211
@@ -12026,7 +12034,7 @@ msgid ""
 "restriction will be set with a Pending Review status"
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:121
+#: admin/includes/tabs/register_lite.php:139
 msgid "The user email address is sent to your OptIn destination."
 msgstr ""
 
@@ -12094,7 +12102,7 @@ msgid ""
 "triggered. This process is handled by a WP Cron running daily."
 msgstr ""
 
-#: utilities.php:5023
+#: utilities.php:5029
 msgid ""
 "This is a Trial Version of Ultimate Membership Pro plugin. Please add your "
 "purchase code into Licence section to enable the Full Ultimate Membership "
@@ -12129,7 +12137,7 @@ msgid ""
 "SSL/TLS toolkit). "
 msgstr ""
 
-#: indeed-membership-pro.php:295 indeed-membership-pro.php:515
+#: indeed-membership-pro.php:294 indeed-membership-pro.php:514
 msgid "This value already exists."
 msgstr ""
 
@@ -12141,7 +12149,7 @@ msgstr ""
 msgid "Three different predefined sizes are available."
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:30
+#: admin/includes/tabs/drip_content_notifications.php:33
 msgid "Time between notifications"
 msgstr ""
 
@@ -12157,7 +12165,7 @@ msgstr ""
 msgid "Timor-Leste"
 msgstr ""
 
-#: admin/includes/tabs/list_access_posts.php:81
+#: admin/includes/tabs/list_access_posts.php:90
 #: admin/includes/tabs/checkout.php:333 admin/includes/tabs/checkout.php:344
 #: admin/includes/tabs/checkout.php:382
 msgid "Title"
@@ -12171,7 +12179,7 @@ msgstr ""
 msgid "to "
 msgstr ""
 
-#: utilities.php:2654
+#: utilities.php:2660
 msgid "To add a new image please remove the previous one!"
 msgstr ""
 
@@ -12189,7 +12197,7 @@ msgid ""
 "and verify your Business on Facebook."
 msgstr ""
 
-#: utilities.php:1307
+#: utilities.php:1313
 msgid ""
 "To reset your password, please enter your email address or username below"
 msgstr ""
@@ -12222,7 +12230,7 @@ msgstr ""
 msgid "Top Section"
 msgstr ""
 
-#: indeed-membership-pro.php:840 admin/includes/functions.php:130
+#: indeed-membership-pro.php:839 admin/includes/functions.php:130
 #: admin/includes/functions.php:261
 msgid "TOS"
 msgstr ""
@@ -12272,7 +12280,7 @@ msgstr ""
 msgid "Total users affected: "
 msgstr ""
 
-#: utilities.php:6741
+#: utilities.php:6750
 msgid ""
 "Track multiple Membership events and Member actions with Kissmetrics service"
 msgstr ""
@@ -12282,7 +12290,7 @@ msgid ""
 "Track multiple membership events and User actions with Kissmetrics service "
 msgstr ""
 
-#: utilities.php:6501
+#: utilities.php:6510
 msgid "Track the reasons why Members wish to cancel/delete their Subscriptions"
 msgstr ""
 
@@ -12463,57 +12471,29 @@ msgstr ""
 
 #: admin/includes/tabs/account_page.php:208
 #: admin/includes/tabs/profile-form.php:37 admin/includes/tabs/register.php:59
-#: admin/includes/tabs/register_lite.php:31 admin/includes/tabs/login.php:15
+#: admin/includes/tabs/register_lite.php:35 admin/includes/tabs/login.php:15
 msgid "Ultimate Member"
 msgstr ""
 
-#: indeed-membership-pro.php:1179 classes/Ihc_Custom_BP_Endpoint.class.php:43
+#: indeed-membership-pro.php:1178 classes/Ihc_Custom_BP_Endpoint.class.php:43
 #: admin/Main.php:1154
 msgid "Ultimate Membership Pro"
 msgstr ""
 
-#: admin/includes/tabs/api.php:19
-msgid "Ultimate Membership Pro - API Gate"
-msgstr ""
-
-#: indeed-membership-pro.php:1180
+#: indeed-membership-pro.php:1179
 msgid "Ultimate Membership Pro - buy level hook."
-msgstr ""
-
-#: admin/includes/tabs/direct_login.php:22
-msgid "Ultimate Membership Pro - Direct Login"
 msgstr ""
 
 #: admin/includes/tabs/hooks.php:7
 msgid "Ultimate Membership Pro - Filters & Hooks"
 msgstr ""
 
-#: admin/includes/tabs/infusionSoft.php:19
-msgid "Ultimate Membership Pro - InfusionSoft"
-msgstr ""
-
-#: admin/includes/tabs/kissmetrics.php:14
-msgid "Ultimate Membership Pro - Kissmetrics"
-msgstr ""
-
 #: classes/services/GutenbergEditorIntegration.php:27
 msgid "Ultimate Membership Pro - Locker"
 msgstr ""
 
-#: admin/includes/tabs/reason_for_cancel.php:37
-msgid "Ultimate Membership Pro - Reason for cancel/delete Membership"
-msgstr ""
-
 #: classes/services/GutenbergEditorIntegration.php:22
 msgid "Ultimate Membership Pro - Shortcodes"
-msgstr ""
-
-#: admin/includes/tabs/weekly_summary_email.php:13
-msgid "Ultimate Membership Pro - Weekley Summary Email"
-msgstr ""
-
-#: admin/includes/tabs/zapier.php:17
-msgid "Ultimate Membership Pro - Zapier"
 msgstr ""
 
 #: admin/includes/tabs/social_login.php:209
@@ -12627,8 +12607,8 @@ msgid ""
 "Check all of them if no restriction is applied."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:87
-msgid "Unique List ID:"
+#: admin/includes/tabs/opt_in.php:78
+msgid "Unique List ID"
 msgstr ""
 
 #: classes/Db/Memberships.php:185
@@ -12726,7 +12706,7 @@ msgstr ""
 msgid "Updated users: "
 msgstr ""
 
-#: utilities.php:2646 public/views/upload_image.php:10
+#: utilities.php:2652 public/views/upload_image.php:10
 #: public/views/upload_image.php:28 admin/includes/tabs/upload_image.php:10
 #: admin/includes/tabs/upload_image.php:28
 #: admin/includes/tabs/upload_file.php:14
@@ -12763,7 +12743,7 @@ msgstr ""
 msgid "Uruguay"
 msgstr ""
 
-#: admin/includes/tabs/custom_currencies.php:22
+#: admin/includes/tabs/custom_currencies.php:26
 msgid "USD, EUR, CAD."
 msgstr ""
 
@@ -12801,7 +12781,7 @@ msgstr ""
 
 #: public/views/listing_gifts.php:32 admin/includes/tabs/list_gift_codes.php:94
 #: admin/includes/tabs/user-details.php:527
-#: admin/includes/tabs/invitation_code.php:73
+#: admin/includes/tabs/invitation_code.php:74
 msgid "Used"
 msgstr ""
 
@@ -12826,7 +12806,7 @@ msgstr ""
 msgid "User get level "
 msgstr ""
 
-#: utilities.php:1014
+#: utilities.php:1020
 msgid "User get Membership "
 msgstr ""
 
@@ -12838,11 +12818,11 @@ msgstr ""
 msgid "User has finish the payment for level "
 msgstr ""
 
-#: utilities.php:1016
+#: utilities.php:1022
 msgid "User has finish the payment for Membership "
 msgstr ""
 
-#: utilities.php:1018
+#: utilities.php:1024
 msgid "User has login. "
 msgstr ""
 
@@ -12887,8 +12867,7 @@ msgstr ""
 msgid "User Register"
 msgstr ""
 
-#: admin/includes/tabs/user_reports.php:15 admin/includes/tabs/users.php:689
-#: admin/includes/tabs/view_user_logs.php:16
+#: admin/includes/tabs/users.php:689 admin/includes/tabs/view_user_logs.php:16
 msgid "User Reports"
 msgstr ""
 
@@ -12916,11 +12895,11 @@ msgstr ""
 msgid "UserName"
 msgstr ""
 
-#: utilities.php:1387 utilities.php:1447 utilities.php:1511 utilities.php:1569
-#: utilities.php:1635 utilities.php:1700 utilities.php:1765 utilities.php:1825
-#: utilities.php:1885 utilities.php:1943 utilities.php:2004 utilities.php:2134
+#: utilities.php:1393 utilities.php:1453 utilities.php:1517 utilities.php:1575
+#: utilities.php:1641 utilities.php:1706 utilities.php:1771 utilities.php:1831
+#: utilities.php:1891 utilities.php:1949 utilities.php:2010 utilities.php:2140
 #: classes/UserAddEdit.class.php:198 admin/includes/tabs/list_gift_codes.php:57
-#: admin/includes/tabs/opt_in.php:267 admin/includes/tabs/opt_in.php:339
+#: admin/includes/tabs/opt_in.php:200 admin/includes/tabs/opt_in.php:253
 #: admin/includes/tabs/reason_for_cancel.php:73
 #: admin/includes/tabs/direct_login.php:54
 #: admin/includes/tabs/direct_login.php:85
@@ -12940,16 +12919,16 @@ msgstr ""
 msgid "Username DESC"
 msgstr ""
 
-#: utilities.php:1244 utilities.php:1253 utilities.php:1262 utilities.php:1271
-#: utilities.php:1280 utilities.php:1289 utilities.php:1298 utilities.php:1319
+#: utilities.php:1250 utilities.php:1259 utilities.php:1268 utilities.php:1277
+#: utilities.php:1286 utilities.php:1295 utilities.php:1304 utilities.php:1325
 msgid "Username or E-mail"
 msgstr ""
 
-#: utilities.php:2062
+#: utilities.php:2068
 msgid "Username or Email"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:483
+#: admin/includes/tabs/opt_in.php:382
 msgid "Username Or Email:"
 msgstr ""
 
@@ -13035,7 +13014,7 @@ msgstr ""
 msgid "Verified"
 msgstr ""
 
-#: utilities.php:2483 utilities.php:2485
+#: utilities.php:2489 utilities.php:2491
 msgid "Very Weak"
 msgstr ""
 
@@ -13050,7 +13029,7 @@ msgstr ""
 msgid "View all"
 msgstr ""
 
-#: admin/includes/tabs/user_reports.php:41
+#: admin/includes/tabs/user_reports.php:47
 msgid "View All User Reports"
 msgstr ""
 
@@ -13058,7 +13037,7 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: admin/includes/tabs/drip_content_notifications.php:69
+#: admin/includes/tabs/drip_content_notifications.php:74
 #: admin/includes/tabs/general.php:905
 msgid "View Logs"
 msgstr ""
@@ -13096,7 +13075,7 @@ msgstr ""
 msgid "Warning Message"
 msgstr ""
 
-#: admin/includes/tabs/cheat_off.php:35
+#: admin/includes/tabs/cheat_off.php:38
 msgid "Warning Redirect:"
 msgstr ""
 
@@ -13128,7 +13107,7 @@ msgstr ""
 msgid "We recommend to use"
 msgstr ""
 
-#: utilities.php:2483 utilities.php:2485
+#: utilities.php:2489 utilities.php:2491
 msgid "Weak"
 msgstr ""
 
@@ -13153,12 +13132,16 @@ msgstr ""
 msgid "WeekEnd"
 msgstr ""
 
+#: admin/includes/tabs/weekly_summary_email.php:13
+msgid "Weekley Summary Email"
+msgstr ""
+
 #: classes/UserSubscriptions.php:876 classes/Crons.php:529
 #: classes/Db/Memberships.php:741 admin/includes/tabs/user-details.php:302
 msgid "Weekly"
 msgstr ""
 
-#: utilities.php:6665
+#: utilities.php:6674
 msgid "Weekly Summary Email"
 msgstr ""
 
@@ -13311,27 +13294,27 @@ msgid ""
 "restrict the extensions of files that may be uploaded."
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:231
+#: admin/includes/tabs/opt_in.php:174 admin/includes/tabs/opt_in.php:204
 msgid "Where can I find API Key ?"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:154 admin/includes/tabs/opt_in.php:248
+#: admin/includes/tabs/opt_in.php:122 admin/includes/tabs/opt_in.php:183
 msgid "Where can I find List ID?"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:201
+#: admin/includes/tabs/opt_in.php:153
 msgid "Where can I find List token?"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:137 admin/includes/tabs/opt_in.php:184
+#: admin/includes/tabs/opt_in.php:113 admin/includes/tabs/opt_in.php:144
 msgid "Where can I find my API Key?"
 msgstr ""
 
-#: admin/includes/tabs/opt_in.php:286
+#: admin/includes/tabs/opt_in.php:213
 msgid "Where can I get my App ID?"
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:111
+#: admin/includes/tabs/login_security.php:87
 msgid "Where {number} is the remaining numbers of retries."
 msgstr ""
 
@@ -13363,7 +13346,7 @@ msgstr ""
 msgid "WooCommerce Account Page"
 msgstr ""
 
-#: utilities.php:6769
+#: utilities.php:6778
 msgid "WooCommerce Account Page Integration"
 msgstr ""
 
@@ -13371,7 +13354,7 @@ msgstr ""
 msgid "WooCommerce Discounts"
 msgstr ""
 
-#: utilities.php:6465 admin/includes/tabs/woo_payment.php:14
+#: utilities.php:6474 admin/includes/tabs/woo_payment.php:14
 msgid "WooCommerce Payment Integration"
 msgstr ""
 
@@ -13387,7 +13370,7 @@ msgstr ""
 msgid "WooCommerce Product - Level Relation"
 msgstr ""
 
-#: utilities.php:6505
+#: utilities.php:6514
 #: admin/includes/tabs/woo_product_custom_prices-manage.php:32
 #: admin/includes/tabs/woo_product_custom_prices-settings.php:17
 msgid "WooCommerce Products Discount"
@@ -13437,7 +13420,7 @@ msgstr ""
 msgid "WP Member Role"
 msgstr ""
 
-#: utilities.php:6537
+#: utilities.php:6546 admin/includes/tabs/user_sites.php:14
 msgid "WP MultiSite Subscriptions"
 msgstr ""
 
@@ -13445,12 +13428,12 @@ msgstr ""
 msgid "WP Native"
 msgstr ""
 
-#: admin/includes/tabs/register_lite.php:66
+#: admin/includes/tabs/register_lite.php:76
 #: admin/includes/tabs/wp_social_login.php:51
 msgid "WP Role"
 msgstr ""
 
-#: utilities.php:6593 admin/includes/tabs/wp_social_login.php:20
+#: utilities.php:6602 admin/includes/tabs/wp_social_login.php:20
 msgid "Wp Social Login Integration"
 msgstr ""
 
@@ -13458,11 +13441,11 @@ msgstr ""
 msgid "Wp Social Login it's not active on Your system. You can find "
 msgstr ""
 
-#: utilities.php:3565
+#: utilities.php:3571
 msgid "WP User Roles"
 msgstr ""
 
-#: utilities.php:6633 admin/includes/tabs/workflow_restrictions.php:41
+#: utilities.php:6642 admin/includes/tabs/workflow_restrictions.php:41
 msgid "WP Workflow Restrictions"
 msgstr ""
 
@@ -13489,7 +13472,7 @@ msgstr ""
 msgid "Write values separated by comma ','."
 msgstr ""
 
-#: admin/includes/tabs/login_security.php:104
+#: admin/includes/tabs/login_security.php:80
 msgid "Write values separated by comma. Spaces are not allowed."
 msgstr ""
 
@@ -13551,7 +13534,7 @@ msgstr ""
 msgid "You are not allowed to see this Page."
 msgstr ""
 
-#: utilities.php:2228
+#: utilities.php:2234
 msgid "You are not registered with this social network. Please register first!"
 msgstr ""
 
@@ -13568,7 +13551,7 @@ msgstr ""
 msgid "You can add new currencies from"
 msgstr ""
 
-#: admin/includes/tabs/individual_page.php:70
+#: admin/includes/tabs/individual_page.php:74
 msgid "You can add specific user shortcodes which can be found "
 msgstr ""
 
@@ -13585,7 +13568,7 @@ msgstr ""
 msgid "You can only Replace the content."
 msgstr ""
 
-#: utilities.php:6637
+#: utilities.php:6646
 msgid ""
 "You can restrict how many posts can be viewed, released and how many "
 "comments can be submitted for each Membership"
@@ -13609,7 +13592,7 @@ msgstr ""
 msgid "You have just revoke your license for Ultimate Membership Pro plugin."
 msgstr ""
 
-#: utilities.php:892
+#: utilities.php:898
 msgid ""
 "You have made too many failed login attempts. Login Form will be locked for "
 "24 hours."
@@ -13621,7 +13604,7 @@ msgid ""
 "the following levels: "
 msgstr ""
 
-#: utilities.php:890
+#: utilities.php:896
 msgid "You have {number} login attempts remain."
 msgstr ""
 
@@ -13630,6 +13613,12 @@ msgid ""
 "You may activate this option in order to receive a report about number of "
 "Orders, Total Revenue and number of new Subcriptions. This report will be "
 "made over a period of 7 days and will be sent every monday."
+msgstr ""
+
+#: admin/includes/tabs/reason_for_cancel.php:42
+msgid ""
+"You may activate this option in order to track the reason why a member wants "
+"to cancel their subscription or even delete it"
 msgstr ""
 
 #: admin/includes/tabs/general.php:768
@@ -13694,7 +13683,7 @@ msgid ""
 "while it is in 'Development Mode'."
 msgstr ""
 
-#: utilities.php:763 indeed-membership-pro.php:539
+#: utilities.php:769 indeed-membership-pro.php:538
 #: classes/RegistrationEvents.php:447
 msgid "Your Invitation Code is wrong."
 msgstr ""
@@ -13723,7 +13712,7 @@ msgstr ""
 msgid "Zambia"
 msgstr ""
 
-#: utilities.php:6681
+#: utilities.php:6690 admin/includes/tabs/zapier.php:17
 msgid "Zapier Integration"
 msgstr ""
 

@@ -25,7 +25,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<h3><?php esc_html_e('Download Monitor Integration', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Download Monitor Integration', 'ihc');?></h2>
 				<p><?php esc_html_e('Limit the number of downloads (per file or per user) for each membership / subscription.', 'ihc');?></p>
 
 				<label class="iump_label_shiwtch ihc-switch-button-margin">

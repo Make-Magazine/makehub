@@ -19,7 +19,7 @@ if ( substr( $url, -1 ) != '/' ){
 <div class="iump-wrapper">
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - Direct Login', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Direct Login', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">

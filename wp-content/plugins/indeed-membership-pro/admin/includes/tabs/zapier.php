@@ -14,11 +14,11 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 <form class="ihc-zapier-wrapper" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - Zapier', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Zapier Integration', 'ihc');?></h3>
 
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Zapier', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Zapier Integration', 'ihc');?></h2>
 				<p><?php esc_html_e('Connect Ultimate Membership Pro with other apps via Zapier platform. A "Trigger" will send data to Zapier when changes are in action on your website.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_zapier_enabled']) ? 'checked' : '';?>

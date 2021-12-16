@@ -254,6 +254,18 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
         switch ( $responseData['type'] ){
             case 'charge.succeeded':
               /// Single Payment
+
+              // check if it's made from stripe connect
+              $metaData = isset( $responseData['data']['object']['lines']['data'][0]['metadata'] ) ? $responseData['data']['object']['lines']['data'][0]['metadata'] : '';
+              if ( empty( $metaData ) ){
+                  $metaData = isset( $responseData['data']['object']['lines']['data'][1]['metadata'] ) ? $responseData['data']['object']['lines']['data'][1]['metadata'] : '';
+              }
+              $service = isset( $metaData['service'] ) ? $metaData['service'] : false;
+              if ( $service === 'stripe_connect' ){
+                  return;
+              }
+              // end of check if it's made from stripe connect 
+
               $transactionId = isset($responseData['data']['object']['payment_intent']) ? $responseData['data']['object']['payment_intent'] : false;
               $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
               $orderId = $orderMeta->getIdFromMetaNameMetaValue( 'order_identificator', $transactionId );
@@ -725,7 +737,13 @@ class StripeCheckout extends \Indeed\Ihc\Gateways\PaymentAbstract
         }
         $cyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'subscription_cycles_limit' );
         if ( $cyclesLimit === false ){
-            $cyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_limit_num' );
+            $billingType = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_type' );
+            if(isset($billingType) && $billingType == 'bl_limited'){
+              $cyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_limit_num' );
+            }
+        }
+        if ( $cyclesLimit === false || $cyclesLimit < 1){
+          return false;
         }
         $intervalValue = (int)$intervalValue * (int)$cyclesLimit;
         try {

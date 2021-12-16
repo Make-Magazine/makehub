@@ -11,20 +11,29 @@ $basic_currencies = ihc_get_currencies_list('custom');
 <div class="iump-wrapper">
 <form  method="post">
 		<div class="ihc-stuffbox">
-			<h3><?php esc_html_e('Add new Currency', 'ihc');?></h3>
+			<h3><?php esc_html_e('Custom Currencies', 'ihc');?></h3>
 			<div class="inside">
 			<h2><?php esc_html_e('Custom Currency', 'ihc');?></h2>
 		<p><?php esc_html_e('Add new currencies (with custom symbols) alongside the predefined list', 'ihc');?></p>
 
+		<div class="row ihc-row-no-margin">
+		 <div class="col-xs-5 ihc-col-no-padding">
+
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Code:', 'ihc');?></label>
-					<input type="test" value="" name="new_currency_code" />
+					<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Code:', 'ihc');?></span>
+					<input type="test" value="" name="new_currency_code" class="form-control"/>
+				</div>
 					<p><?php esc_html_e('Insert a valid Currency Code, ex: ', 'ihc');?><span><strong><?php esc_html_e('USD, EUR, CAD.', 'ihc');?></strong></span></p>
 				</div>
+
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php esc_html_e('Name:', 'ihc');?></label>
-					<input type="text" value="" name="new_currency_name" />
+					<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Name:', 'ihc');?></span>
+					<input type="text" value="" name="new_currency_name" class="form-control"/>
 				</div>
+				</div>
+			</div>
+		</div>
+
 				<div class="ihc-wrapp-submit-bttn iump-submit-form">
 					<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>

@@ -57,9 +57,11 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 			<div class="iump-form-line">
 			</div>
 			<div class="iump-register-select-template">
+				<div class="row ihc-row-no-margin">
+				 <div class="col-xs-5 ihc-col-no-padding">
 				<div class="iump-form-line">
-				<h4><?php esc_html_e('Template', 'ihc');?></h4>
-				<select name="ihc_list_access_posts_template"><?php
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Template', 'ihc');?></span>
+				<select name="ihc_list_access_posts_template" class="form-control"><?php
 					foreach (array('iump-list-posts-template-1'=> esc_html__('Template 1', 'ihc'), 'iump-list-posts-template-2'=> esc_html__('Template 2', 'ihc')) as $k=>$v){
 						$selected = ($data['metas']['ihc_list_access_posts_template']==$k) ? 'selected' : '';
 						?>
@@ -68,10 +70,17 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 					}
 				?></select>
 			</div>
-			<div class="iump-form-line">
-				<h4><?php esc_html_e('Showcase Title', 'ihc');?></h4>
-				<input type="text" name="ihc_list_access_posts_title" value="<?php echo $data['metas']['ihc_list_access_posts_title'];?>"  />
 			</div>
+		</div>
+	</div>
+	<div class="row ihc-row-no-margin">
+	 <div class="col-xs-5 ihc-col-no-padding">
+			<div class="iump-form-line">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Showcase Title', 'ihc');?></span>
+				<input type="text" name="ihc_list_access_posts_title" value="<?php echo $data['metas']['ihc_list_access_posts_title'];?>"  class="form-control"/></div>
+			</div>
+		</div>
+	</div>
 
 			<div class="iump-form-line">
 				<h4><?php esc_html_e('Item Details', 'ihc');?></h4>
@@ -97,20 +106,24 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 			</div>
 			</div>
 
+			<div class="row ihc-row-no-margin">
+			 <div class="col-xs-5 ihc-col-no-padding">
+
 			<div class="iump-form-line">
-				<h4><?php esc_html_e('No. of Posts per page', 'ihc');?></h4>
-				<input type="number" name="ihc_list_access_posts_per_page_value" value="<?php echo $data['metas']['ihc_list_access_posts_per_page_value'];?>" min="1" />
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('No. of Posts per page', 'ihc');?></span>
+				<input type="number" name="ihc_list_access_posts_per_page_value" value="<?php echo $data['metas']['ihc_list_access_posts_per_page_value'];?>" min="1" class="form-control"/>
+			</div>
 			</div>
 
 			<div class="iump-form-line">
-				<h4><?php esc_html_e('Max. No. of Posts', 'ihc');?></h4>
-				<input type="number" name="ihc_list_access_posts_order_limit" value="<?php echo $data['metas']['ihc_list_access_posts_order_limit'];?>" min="1" />
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Max. No. of Posts', 'ihc');?></span>
+				<input type="number" name="ihc_list_access_posts_order_limit" value="<?php echo $data['metas']['ihc_list_access_posts_order_limit'];?>" min="1" class="form-control"/>
 			</div>
-
+		</div>
 
 			<div class="iump-form-line">
-				<h4><?php esc_html_e('Posts Order by', 'ihc');?></h4>
-				<select name="ihc_list_access_posts_order_by"><?php
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Posts Order by', 'ihc');?></span>
+				<select name="ihc_list_access_posts_order_by" class="form-control"><?php
 					foreach (array('post_title'=> esc_html__('Post Title', 'ihc'), 'post_date'=> esc_html__('Post Date', 'ihc')) as $k=>$v){
 						$selected = ($data['metas']['ihc_list_access_posts_order_by']==$k) ? 'selected' : '';
 						?>
@@ -119,9 +132,10 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 					}
 				?></select>
 			</div>
+			</div>
 
 			<div class="iump-form-line">
-				<h4><?php esc_html_e('Posts Order Type', 'ihc');?></h4>
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Posts Order Type', 'ihc');?></span>
 				<select name="ihc_list_access_posts_order_type"><?php
 					foreach (array('asc'=> esc_html__('ASC', 'ihc'), 'desc'=> esc_html__('DESC', 'ihc')) as $k=>$v){
 						$selected = ($data['metas']['ihc_list_access_posts_order_type']==$k) ? 'selected' : '';
@@ -131,7 +145,9 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 					}
 				?></select>
 			</div>
-
+			</div>
+		</div>
+		</div>
 			<div class="iump-form-line">
 				<h2><?php esc_html_e('Custom CSS', 'ihc');?></h2>
 				<textarea name="ihc_list_access_posts_custom_css" class="ihc-custom-css-box"><?php echo stripslashes($data['metas']['ihc_list_access_posts_custom_css']);?></textarea>

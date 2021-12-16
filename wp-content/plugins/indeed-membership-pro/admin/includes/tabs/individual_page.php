@@ -16,7 +16,7 @@ $pages = ihc_get_all_pages();//getting pages
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Individual Page', 'ihc');?></h2>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_individual_page_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_individual_page_enabled');" <?php echo $checked;?> />
@@ -24,10 +24,11 @@ $pages = ihc_get_all_pages();//getting pages
 				</label>
 				<input type="hidden" name="ihc_individual_page_enabled" value="<?php echo $data['metas']['ihc_individual_page_enabled'];?>" id="ihc_individual_page_enabled" />
 			</div>
-
+			<div class="row ihc-row-no-margin">
+			 <div class="col-xs-5 ihc-col-no-padding">
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Parent Page', 'ihc');?></h2>
-				<select name="ihc_individual_page_parent">
+				 <div class="input-group"><span class="input-group-addon"><?php esc_html_e('Parent Page', 'ihc');?></span>
+				<select name="ihc_individual_page_parent" class="form-control">
 					<option value="-1" <?php if($data['metas']['ihc_individual_page_parent']==-1){
 						echo 'selected';
 					}
@@ -45,20 +46,23 @@ $pages = ihc_get_all_pages();//getting pages
 							}
 						}
 					?>
-				</select>
+				</select></div>
 				<?php echo ihc_general_options_print_page_links($data['metas']['ihc_individual_page_parent']);?>
 			</div>
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Page Title Prefix', 'ihc');?></h2>
-			    <input type="text" value="<?php echo $data['metas']['ihc_individual_page_title'];?>" name="ihc_individual_page_title" />
+				 <div class="input-group"><span class="input-group-addon"><?php esc_html_e('Page Title Prefix', 'ihc');?></span>
+			    <input type="text" value="<?php echo $data['metas']['ihc_individual_page_title'];?>" name="ihc_individual_page_title" class="form-control"/>
+				</div>
 			</div>
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Page Slug Prefix', 'ihc');?></h2>
-			    <input type="text" value="<?php echo $data['metas']['ihc_individual_page_slug_prefix'];?>" name="ihc_individual_page_slug_prefix" />
+				 <div class="input-group"><span class="input-group-addon"><?php esc_html_e('Page Slug Prefix', 'ihc');?></span>
+			    <input type="text" value="<?php echo $data['metas']['ihc_individual_page_slug_prefix'];?>" name="ihc_individual_page_slug_prefix" class="form-control"/>
+				</div>
 			</div>
-
+		</div>
+	</div>
 			<div class="iump-form-line">
 				<h2><?php esc_html_e('Default Content', 'ihc');?></h2>
 			</div>

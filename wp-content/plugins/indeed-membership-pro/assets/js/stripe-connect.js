@@ -103,7 +103,7 @@ var IhcStripeConnect = {
     initStripeObject                  : function(){
       // initiate stripe
       self.IhcStripeConnect.stripeObject = Stripe( window.ihcStripeConnectPublicKey, { stripeAccount: window.ihcStripeConnectAcctNumber, locale: window.ihcStripeConnectLang } );
-      var clientSecret = jQuery('#ihc-js-stripe-connect-card-element').attr('data-client');
+      //var clientSecret = jQuery('#ihc-js-stripe-connect-card-element').attr('data-client');
 
       self.IhcStripeConnect.elements = self.IhcStripeConnect.stripeObject.elements( );
 

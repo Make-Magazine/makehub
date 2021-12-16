@@ -11,10 +11,10 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 <div class="iump-wrapper">
 	<form  method="post">
 		<div class="ihc-stuffbox">
-			<h3 class="ihc-h3"><?php esc_html_e('MultiSite Subscriptions', 'ihc');?></h3>
+			<h3 class="ihc-h3"><?php esc_html_e('WP MultiSite Subscriptions', 'ihc');?></h3>
 			<div class="inside">
 				<div class="iump-form-line">
-					<h2><?php esc_html_e('Activate/Hold User Sites', 'ihc');?></h2>
+					<h2><?php esc_html_e('Activate/Hold WP MultiSite Subscriptions', 'ihc');?></h2>
                     <p><?php esc_html_e('Provides SingleSites based on purchased subscriptions. You can sell SingleSites via memberships. Once a user buys a specific membership he will be able to create his own SingleSite. The user will be set as administrator for that site. ', 'ihc');?></p>
 
 					<label class="iump_label_shiwtch ihc-switch-button-margin">

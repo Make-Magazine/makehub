@@ -12,7 +12,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Cheat Off', 'ihc');?></h2>
 				<p><?php esc_html_e('Prevent your customers from sharing their login credentials by keeping only one user logged in at a time. If a new user logs in using the same credentials, the previous one will be logged out and redirected to a "Warning Page".', 'ihc');?></p>
 
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
@@ -32,8 +32,11 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			$pages = ihc_get_all_pages() + ihc_get_redirect_links_as_arr_for_select();
 			?>
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Warning Redirect:', 'ihc');?></label>
-				<select name="ihc_cheat_off_redirect">
+				<div class="row ihc-row-no-margin">
+				 <div class="col-xs-5 ihc-col-no-padding">
+
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Warning Redirect:', 'ihc');?></span>
+				<select name="ihc_cheat_off_redirect" class="form-control">
 					<option value="-1" <?php if($data['metas']['ihc_cheat_off_redirect']==-1){
 						echo 'selected';
 					}
@@ -50,9 +53,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 							}
 						}
 					?>
-				</select>
+				</select></div>
 			</div>
-
+		</div>
+	</div>
 			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>

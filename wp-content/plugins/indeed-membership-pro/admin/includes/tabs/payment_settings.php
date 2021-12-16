@@ -217,7 +217,7 @@ if (empty($_GET['subtab'])){
 						<h3><?php esc_html_e('PayPal Standard Settings:', 'ihc');?></h3>
 
 						<div class="inside">
-                         <div class="row ihc-row-no-margin">
+               <div class="row ihc-row-no-margin">
                   			<div class="col-xs-6">
 							<div class="iump-form-line input-group">
 								<span class="input-group-addon" ><?php esc_html_e('PayPal Merchant Email:', 'ihc');?></span>

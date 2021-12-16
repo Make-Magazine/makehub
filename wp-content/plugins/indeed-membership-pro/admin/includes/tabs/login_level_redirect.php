@@ -45,11 +45,11 @@ $pages_arr[-1] = '...';
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Login Redirects based on MEmbership(s)', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Login Redirects', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Custom Redirects action', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Login Redirects', 'ihc');?></h2>
 				<p><?php esc_html_e('Replace the default redirect after login with a custom one based on the user assigned membership. Because UMP is a MultiMembership system, a user can have multiple memberships assigned but only one redirect can take place. You can set membership priorities to manage that.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($check) ? 'checked' : '';?>
@@ -61,24 +61,31 @@ $pages_arr[-1] = '...';
 			<p ><strong><?php esc_html_e('Important: In order for the custom Login Redirect to work, the membership of the user needs to be active. If expired or on hold, the custom redirect will not work.', 'ihc');?></strong></p>
 
 			<?php if ($levels):?>
+
 				<div class="iump-form-line">
+					<div class="row ihc-row-no-margin">
+						<div class="col-xs-5 ihc-col-no-padding">
 				<h2><?php esc_html_e('Custom Redirections:', 'ihc');?></h2>
 				<?php foreach ($levels as $id=>$array):?>
 					<?php
 						$value = (isset($values[$id])) ? $values[$id] : $default;
 					?>
+
+
 					<div class="iump-form-line">
-						<span class="iump-labels-special"><?php echo $array['label'];?></span>
-						<select name="ihc_login_level_redirect_rules[<?php echo $id;?>]">
+						<div class="input-group"><span class="input-group-addon"><?php echo $array['label'];?></span>
+						<select name="ihc_login_level_redirect_rules[<?php echo $id;?>]" class="form-control">
 							<?php foreach ($pages_arr as $post_id=>$title):?>
 								<?php $selected = ($value==$post_id) ? 'selected' : '';?>
 								<option value="<?php echo $post_id;?>" <?php echo $selected;?> ><?php echo $title;?></option>
 							<?php endforeach;?>
 						</select>
 					</div>
+					</div>
 				<?php endforeach;?>
 				</div>
-
+			</div>
+		</div>
 			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
@@ -88,6 +95,9 @@ $pages_arr[-1] = '...';
 		<h3><?php esc_html_e('Memberships Priorities:', 'ihc');?></h3>
 		<div class="inside">
 					<p><?php esc_html_e('Because UMP is a MultiMembership system, a user can have multiple memberships assigned but only one redirect can take place. You can set membership priorities to manage that.', 'ihc');?></p>
+					<div class="row ihc-row-no-margin">
+					 <div class="col-xs-5 ihc-col-no-padding">
+
 					<?php $i = 1;?>
 					<?php foreach ($levels as $id=>$array):?>
 						<?php
@@ -101,15 +111,20 @@ $pages_arr[-1] = '...';
 								$priority = $i;
 							}
 						?>
-						<span class="iump-labels-special"><?php echo $array['label'];?></span>
-						<input type="number" min="1" name="ihc_login_level_redirect_priority[<?php echo $id;?>]" value="<?php echo $priority;?>" />
+						<div class="iump-form-line">
+						<div class="input-group"><span class="input-group-addon"><?php echo $array['label'];?></span>
+						<input type="number" min="1" name="ihc_login_level_redirect_priority[<?php echo $id;?>]" value="<?php echo $priority;?>" class="form-control" />
+						</div>
+						</div>
 						<?php $i++;?>
 					<?php endforeach;?>
 
 			<?php endif;?>
 
+					</div>
+				</div>
 			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
-				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

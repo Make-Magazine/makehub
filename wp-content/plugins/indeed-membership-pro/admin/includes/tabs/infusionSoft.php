@@ -16,7 +16,7 @@ $tags = $object->getContactGroups();
 <form  method="post">
 
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - InfusionSoft', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Infusion Soft', 'ihc');?></h3>
 		<div class="inside">
 		<div class="iump-form-line">
 				<h2><?php esc_html_e('Activate/Hold InfusionSoft', 'ihc');?></h2>

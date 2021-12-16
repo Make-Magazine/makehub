@@ -37,11 +37,11 @@ if (!in_array($v['name'], $exclude_names) && !in_array($v['type'], $exclude_tyes
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Membership Cards', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Membership Card', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Membership Cards', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Membership Card', 'ihc');?></h2>
 				<p><?php esc_html_e('Members will find their Membership Cards into My Account page, under Membership Cards special tab, and may print them for further usage out of the website.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_membership_card_enable']) ? 'checked' : '';?>

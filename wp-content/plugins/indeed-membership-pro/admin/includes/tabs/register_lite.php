@@ -15,7 +15,7 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Register Lite', 'ihc');?></h2>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_register_lite_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_lite_enabled');" <?php echo $checked;?> />
@@ -25,6 +25,10 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 			</div>
 
 			<div class="iump-register-select-template">
+			<div class="iump-form-line">
+				<div class="row ihc-row-no-margin">
+				 <div class="col-xs-5 ihc-col-no-padding">
+
 				<?php
 					$templates = array(
 
@@ -44,8 +48,8 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 								'ihc-register-1'=>'(#1) '.esc_html__('Standard Theme', 'ihc')
 								);
 				?>
-				<?php esc_html_e('Register Template:', 'ihc');?>
-				<select name="ihc_register_lite_template" id="ihc_register_lite_template">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Register Template:', 'ihc');?></span>
+				<select name="ihc_register_lite_template" id="ihc_register_lite_template" class="form-control">
 					<?php
 						foreach ($templates as $k=>$v){
 						?>
@@ -61,11 +65,17 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 						?>
 				</select>
 			</div>
+			</div>
+			</div>
+		</div>
+	</div>
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('WP Role', 'ihc');?></h2>
-				<div><strong><?php esc_html_e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></strong></div>
-					<select name="ihc_register_lite_user_role">
+				<div class="row ihc-row-no-margin">
+				 <div class="col-xs-5 ihc-col-no-padding">
+			<h2><?php esc_html_e('WP Role', 'ihc');?></h2>
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></span>
+					<select name="ihc_register_lite_user_role" class="form-control">
 					<?php
 						$roles = ihc_get_wp_roles_list();
 						if ($roles){
@@ -78,7 +88,12 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 						}
 					?>
 					</select>
-					<p><?php esc_html_e('If the "Pending" role is set, the user will not able to login until the admin manually approves it.', 'ihc');?></p>
+				</div>
+
+				</div>
+
+			</div>
+			<p><?php esc_html_e('If the "Pending" role is set, the user will not able to login until the admin manually approves it.', 'ihc');?></p>
 			</div>
 						<div class="iump-form-line">
 							<h2><?php esc_html_e('Opt-In Subscription', 'ihc');?></h2>
@@ -90,9 +105,10 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 								</label>
 								<input type="hidden" name="ihc_register_lite_opt_in" value="<?php echo $data['metas']['ihc_register_lite_opt_in'];?>" id="ihc_register_lite_opt_in" />
 								<?php esc_html_e('Enable Opt-In', 'ihc');?>
-								<div>
-								<div><strong><?php esc_html_e('Opt-In Destination:', 'ihc');?></strong></div>
-                                <select name="ihc_register_lite_opt_in_type">
+								<div class="row ihc-row-no-margin">
+								 <div class="col-xs-5 ihc-col-no-padding">
+									 <div class="input-group"><span class="input-group-addon"><?php esc_html_e('Opt-In Destination:', 'ihc');?></span>
+                                <select name="ihc_register_lite_opt_in_type" class="form-control">
                                     <?php
                                         $subscribe_types = array(
                                                                     'active_campaign' => 'Active Campaign',
@@ -117,9 +133,13 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
                                         }
                                     ?>
                                 </select>
+															</div>
 							</div>
-							<p><?php esc_html_e('The user email address is sent to your OptIn destination.', 'ihc');?></p>
 						</div>
+						<p><?php esc_html_e('The user email address is sent to your OptIn destination.', 'ihc');?></p>
+					</div>
+
+
 						<div class="iump-form-line">
 							<h2><?php esc_html_e('Double Email Verification', 'ihc');?></h2>
 							<label class="iump_label_shiwtch ihc-switch-button-margin">
@@ -133,7 +153,7 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 							<p><?php esc_html_e('Be sure that your notifications for Double Email Verification are properly set up. Make sure to check the settings from the ', 'ihc');?> <a href="admin.php?page=ihc_manage&tab=general&subtab=double_email_verification" target="_blank"><?php esc_html_e('General Options', 'ihc');?></a><?php esc_html_e(' tab.', 'ihc');?></p>
 						</div>
 
-			<div>
+			<div class="iump-form-line">
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_register_lite_auto_login']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_lite_auto_login');" <?php echo $checked;?> />
@@ -145,14 +165,14 @@ $pages_arr = array(-1 => '...') + ihc_get_all_pages() + ihc_get_redirect_links_a
 
 			<div class="iump-form-line">
 				<h2><?php esc_html_e('Custom Redirect:', 'ihc');?></h2>
-				<div class="iump-form-line">
+
 					<select name="ihc_register_lite_redirect">
 						<?php foreach ($pages_arr as $post_id=>$title):?>
 							<?php $selected = ($data['metas']['ihc_register_lite_redirect']==$post_id) ? 'selected' : '';?>
 							<option value="<?php echo $post_id;?>" <?php echo $selected;?> ><?php echo $title;?></option>
 						<?php endforeach;?>
 					</select>
-				</div>
+
 			</div>
 
 			<div class="iump-form-line">

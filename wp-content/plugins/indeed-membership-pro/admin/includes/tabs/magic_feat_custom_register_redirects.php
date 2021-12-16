@@ -28,11 +28,11 @@ $pages_arr[-1] = '...';
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Register Redirects based on Membership(s)', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Register Redirects+', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Rediger Redirects+ action', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Register Redirects+ action', 'ihc');?></h2>
 				<p><?php esc_html_e('Replace the default redirect after register with a custom one based on the user assigned Membership.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($check) ? 'checked' : '';?>
@@ -45,21 +45,26 @@ $pages_arr[-1] = '...';
 			<?php if ($levels):?>
 				<div class="iump-form-line">
 				<h2><?php esc_html_e('Custom Redirections:', 'ihc');?></h2>
+				<div class="row ihc-row-no-margin">
+				 <div class="col-xs-5 ihc-col-no-padding">
 				<?php foreach ($levels as $id=>$array):?>
 					<?php
 						$value = (isset($values[$id])) ? $values[$id] : $default;
 					?>
 					<div class="iump-form-line">
-						<span class="iump-labels-special"><?php echo $array['label'];?></span>
-						<select name="ihc_register_redirects_by_level_rules[<?php echo $id;?>]">
+						<div class="input-group"><span class="input-group-addon"><?php echo $array['label'];?></span>
+						<select name="ihc_register_redirects_by_level_rules[<?php echo $id;?>]" class="form-control">
 							<?php foreach ($pages_arr as $post_id=>$title):?>
 								<?php $selected = ($value==$post_id) ? 'selected' : '';?>
 								<option value="<?php echo $post_id;?>" <?php echo $selected;?> ><?php echo $title;?></option>
 							<?php endforeach;?>
 						</select>
 					</div>
+					</div>
 				<?php endforeach;?>
 				</div>
+			</div>
+		</div>
       <?php endif;?>
 
 			<div class="ihc-wrapp-submit-bttn ihc-submit-form">

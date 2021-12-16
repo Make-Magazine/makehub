@@ -26,18 +26,14 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 $items = Ihc_Db::invitation_code_get_all();
 ?>
 <div class="iump-wrapper">
-<div class="iump-page-title">Ultimate Membership Pro -
-				<span class="second-text">
-					<?php  esc_html_e("Invitation Code", 'ihc');?>
-				</span>
-		</div>
+
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Settings', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Invitation Codes', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Section', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Invitation Codes', 'ihc');?></h2>
 
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_invitation_code_enable']) ? 'checked' : '';?>
@@ -47,10 +43,15 @@ $items = Ihc_Db::invitation_code_get_all();
 				<input type="hidden" name="ihc_invitation_code_enable" value="<?php echo $data['metas']['ihc_invitation_code_enable'];?>" id="ihc_invitation_code_enable" />
 			</div>
 
+			<div class="row ihc-row-no-margin">
+			 <div class="col-xs-5 ihc-col-no-padding">
 			<div class="iump-form-line">
-				<label><?php esc_html_e('Error Message', 'ihc');?></label>
-				<input type="text" name="ihc_invitation_code_err_msg" value="<?php echo $data['metas']['ihc_invitation_code_err_msg'];?>" />
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Error Message', 'ihc');?></span>
+				<input type="text" name="ihc_invitation_code_err_msg" value="<?php echo $data['metas']['ihc_invitation_code_err_msg'];?>" class="form-control" />
 			</div>
+			</div>
+		</div>
+	</div>
 
 			<div class="ihc-wrapp-submit-bttn ihc-submit-form">
 				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />

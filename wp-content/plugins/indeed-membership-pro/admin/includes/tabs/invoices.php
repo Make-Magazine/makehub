@@ -15,11 +15,11 @@ if ( $invoiceCss !== false && $invoiceCss != '' ){
 ?>
 <form method="post" id="invoice_form">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Invoices', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Order Invoices', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Invoices module', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Order Invoices', 'ihc');?></h2>
 				<p><?php esc_html_e('Provides printable invoices for each order in the account page or system dashboard.', 'ihc'); ?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_invoices_on']) ? 'checked' : '';?>

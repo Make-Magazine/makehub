@@ -3,7 +3,7 @@
 Plugin Name: Indeed Ultimate Membership Pro
 Plugin URI: https://https://ultimatemembershippro.com/
 Description: The most complete and easy to use Membership Plugin, ready to allow or restrict your content, Page for certain Users.
-Version: 10.3
+Version: 10.3.1
 Author: WPIndeed Development
 Author URI: https://www.wpindeed.com
 Text Domain: ihc
@@ -126,7 +126,6 @@ $ihcCrons = new \Indeed\Ihc\Crons();
 $ihcRegistrationEvents = new \Indeed\Ihc\RegistrationEvents();
 
 $ihcAccountPageShortcodes = new \Indeed\Ihc\AccountPageShortcodes();
-
 
 /******************** END MODULES **************************/
 

@@ -23,11 +23,11 @@ $payments = ihc_get_active_payments_services();
 ?>
 <form method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Membership - Payment Gateways restriction', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Memberships vs Payments', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Memberships vs Payments', 'ihc');?></h2>
 				<p><?php esc_html_e('Restrict each Membership to be paid only through a specific payment gateway. For example, you can provide the Bank Transfer payment option only for specific memberships or for an identical membership but with a higher price.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_level_restrict_payment_enabled']) ? 'checked' : '';?>

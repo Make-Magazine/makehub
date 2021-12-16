@@ -11,7 +11,7 @@ class GutenbergEditorIntegration
         if ( !function_exists( 'register_block_type' ) ) {
             return;
         }
-        add_filter( 'block_categories', array( $this, 'registerCategory'), 10, 2 ); //
+        add_filter( 'block_categories_all', array( $this, 'registerCategory'), 10, 2 ); //
         add_action( 'in_admin_footer', array($this, 'assets') );
     }
 

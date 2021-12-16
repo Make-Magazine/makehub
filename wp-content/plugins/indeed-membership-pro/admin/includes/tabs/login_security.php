@@ -25,107 +25,88 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<input type="hidden" name="ihc_login_security_on" value="<?php echo $data['metas']['ihc_login_security_on'];?>" id="ihc_login_security_on" />
 			</div>
 
+			<div class="row ihc-row-no-margin">
+			 <div class="col-xs-5 ihc-col-no-padding">
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Allowed Retries', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Allowed Retries', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0" value="<?php echo $data['metas']['ihc_login_security_allowed_retries'];?>" name="ihc_login_security_allowed_retries" />
 						<div class="input-group-addon"><?php esc_html_e('Retries', 'ihc');?></div>
-					</div>
-				</div>
 				</div>
 			</div>
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Locked Time', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Locked Time', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0" value="<?php echo $data['metas']['ihc_login_security_lockout_time'];?>" name="ihc_login_security_lockout_time" />
 						<div class="input-group-addon"><?php esc_html_e('Minutes', 'ihc');?></div>
 					</div>
-				</div>
-				</div>
-
 			</div>
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Maximum number of Lockouts', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Maximum number of Lockouts', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0" value="<?php echo $data['metas']['ihc_login_security_max_lockouts'];?>" name="ihc_login_security_max_lockouts" />
 						<div class="input-group-addon"><?php esc_html_e('Lockouts', 'ihc');?></div>
 					</div>
-				</div>
-				</div>
 			</div>
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Extended Locked Time', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Extended Locked Time', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0" value="<?php echo $data['metas']['ihc_login_security_extended_lockout_time'];?>" name="ihc_login_security_extended_lockout_time"/>
 						<div class="input-group-addon"><?php esc_html_e('Hours', 'ihc');?></div>
 					</div>
-				</div>
-				</div>
 			</div>
 
+
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Reset Retries after', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Reset Retries after', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0" value="<?php echo $data['metas']['ihc_login_security_reset_retries'];?>" name="ihc_login_security_reset_retries" />
 						<div class="input-group-addon"><?php esc_html_e('Hours', 'ihc');?></div>
 					</div>
 				</div>
-				</div>
-			</div>
+
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Notify Admin after', 'ihc');?></label>
-				<div class="row">
-				<div class="col-xs-3">
-					<div class="input-group">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Notify Admin after', 'ihc');?></span>
 						<input type="number" class="form-control"  min="0"  value="<?php echo $data['metas']['ihc_login_security_notify_admin'];?>" name="ihc_login_security_notify_admin"  />
 						<div class="input-group-addon"><?php esc_html_e('retries', 'ihc');?></div>
 					</div>
 				</div>
-				</div>
-			</div>
+
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Black IP list', 'ihc');?></label>
-				<textarea name="ihc_login_security_black_list"  class="ihc-login-security-textare"><?php echo $data['metas']['ihc_login_security_black_list'];?></textarea>
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Black IP list', 'ihc');?></span>
+				<textarea name="ihc_login_security_black_list"  class="form-control"><?php echo $data['metas']['ihc_login_security_black_list'];?></textarea>
+
+			</div>
 				<div class="ihc-general-options-link-pages"><?php esc_html_e('Write values separated by comma. Spaces are not allowed.', 'ihc');?></div>
-			</div>
-
-
-			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Fail Login Attempt Message', 'ihc');?></label>
-				<textarea name="ihc_login_security_lockout_attempt_message" class="ihc-login-security-textare"><?php echo stripslashes($data['metas']['ihc_login_security_lockout_attempt_message']);?></textarea>
-				<div class="ihc-general-options-link-pages"><?php esc_html_e('Where {number} is the remaining numbers of retries.', 'ihc');?></div>
-			</div>
+		</div>
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Locked Message', 'ihc');?></label>
-				<textarea name="ihc_login_security_lockout_message" class="ihc-login-security-textare"><?php echo stripslashes($data['metas']['ihc_login_security_lockout_message']);?></textarea>
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Fail Login Attempt Message', 'ihc');?></span>
+				<textarea name="ihc_login_security_lockout_attempt_message" class="form-control"><?php echo stripslashes($data['metas']['ihc_login_security_lockout_attempt_message']);?></textarea>
 			</div>
+			<div class="ihc-general-options-link-pages"><?php esc_html_e('Where {number} is the remaining numbers of retries.', 'ihc');?></div>
+		</div>
 
 			<div class="iump-form-line">
-				<label class="iump-labels-special"><?php esc_html_e('Extended Locked Message', 'ihc');?></label>
-				<textarea name="ihc_login_security_extended_lockout_message" class="ihc-login-security-textare"><?php echo stripslashes($data['metas']['ihc_login_security_extended_lockout_message']);?></textarea>
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Locked Message', 'ihc');?></span>
+				<textarea name="ihc_login_security_lockout_message" class="form-control"><?php echo stripslashes($data['metas']['ihc_login_security_lockout_message']);?></textarea>
 			</div>
+		</div>
 
-			<div class=" ihc-wrapp-submit-bttn ihc-submit-form">
-				<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="iump-form-line">
+				<div class="input-group"><span class="input-group-addon"><?php esc_html_e('Extended Locked Message', 'ihc');?></span>
+				<textarea name="ihc_login_security_extended_lockout_message" class="form-control"><?php echo stripslashes($data['metas']['ihc_login_security_extended_lockout_message']);?></textarea>
 			</div>
-
+		</div>
 		</div>
 	</div>
+	<div class=" ihc-wrapp-submit-bttn ihc-submit-form">
+		<input id="ihc_submit_bttn" type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+	</div>
+		</div>
+
+	</div>
+
+
 
 </form>

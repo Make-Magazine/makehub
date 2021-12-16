@@ -25,11 +25,11 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <form method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Membership - Subscription Plan Display Details', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Memberships Plus', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold this feature', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Memberships Plus', 'ihc');?></h2>
 				<p><?php esc_html_e('Restrict the purchase of a membership if the user has not made any purchases yet, or has already purchased certain memberships.', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_level_subscription_plan_settings_enabled']) ? 'checked' : '';?>

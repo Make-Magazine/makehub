@@ -13,7 +13,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 <div class="iump-wrapper">
 		<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
-					<?php  esc_html_e("Invitation Code", 'ihc');?>
+					<?php  esc_html_e("Invitation Codes", 'ihc');?>
 				</span>
 		</div>
 			<form method="post" action="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code');?>">

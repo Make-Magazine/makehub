@@ -380,6 +380,9 @@ $tabs_arr = array(
 			case 'thank-you-page':
 				require_once IHC_PATH . 'admin/includes/tabs/thank-you-page.php';
 				break;
+			case 'prorate_subscription':
+				require_once IHC_PATH . 'admin/includes/tabs/prorate_subscription.php';
+				break;
 			default :
 				do_action( 'ump_print_admin_page', $tab );
 				break;

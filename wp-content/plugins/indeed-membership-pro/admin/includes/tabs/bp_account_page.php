@@ -8,11 +8,11 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('BuddyPress Account Page', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('BuddyPress Account Page Integration', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-					<h2><?php esc_html_e('Activate/Hold Section', 'ihc');?></h2>
+					<h2><?php esc_html_e('Activate/Hold BuddyPress Account Page Integration', 'ihc');?></h2>
 					<p><?php esc_html_e('Fully integrate a user account with their "BuddyPress Account Page". Once activated, a new tab in their "BuddyPress" menu will show up.', 'ihc');?></p>
 
 				<label class="iump_label_shiwtch ihc-switch-button-margin">

@@ -34,12 +34,12 @@ $items= $reasonDbObject->get( $limit, $offset );
 ?>
 <form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - Reason for cancel/delete Membership', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Reason for Cancelling', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php esc_html_e('Activate/Hold Reason for cancel/delete Membership', 'ihc');?></h2>
-				<p><?php //esc_html_e('', 'ihc');?></p>
+				<h2><?php esc_html_e('Activate/Hold Reason for Cancelling', 'ihc');?></h2>
+				<p><?php esc_html_e('You may activate this option in order to track the reason why a member wants to cancel their subscription or even delete it', 'ihc');?></p>
 				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_reason_for_cancel_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_reason_for_cancel_enabled');" <?php echo $checked;?> />

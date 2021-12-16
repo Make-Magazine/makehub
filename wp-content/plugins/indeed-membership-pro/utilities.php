@@ -723,6 +723,12 @@ Bank NAME<br/>',
 							'ihc_woo_account_page_menu_position' => 5,
 			);
 			break;
+		case 'prorate_subscription':
+			$arr = array(
+							'ihc_prorate_subscription_enabled' 										=> 0,
+							'ihc_prorate_subscription_reset_billing_period'				=> 0,
+			);
+			break;
 		case 'ihc_bp':
 			$arr = array(
 							'ihc_bp_account_page_enable' => 0,
@@ -5529,6 +5535,9 @@ function ihc_is_magic_feat_active($type=''){
 			case 'weekly_summary_email':
 				$active = get_option('ihc_reason_for_weekly_email_enabled');
 				break;
+			case 'prorate_subscription':
+				$active = get_option('ihc_prorate_subscription_enabled');
+				break;
 	 	}
 	 }
 	 $active = apply_filters( 'ihc_is_magic_feat_active_filter', $active, $type );
@@ -6773,6 +6782,16 @@ function ihcGetListOfMagicFeatures()
 														'description' => '',
 														'enabled' => ihc_is_magic_feat_active('woo_account_page'),
 									),
+									/*
+									'prorate_subscription'		=> [
+														'label' => esc_html__('Pro-rate Subscription', 'ihc'),
+														'link' => (IHCACTIVATEDMODE) ? admin_url('admin.php?page=ihc_manage&tab=prorate_subscription') : '',
+														'icon' => 'fa-level_subscription_paln_settings-ihc',
+														'extra_class' => '',
+														'description' => '',
+														'enabled' => ihc_is_magic_feat_active('prorate_subscription'),
+									],
+									*/
 	);
 	$list = apply_filters( 'ihc_magic_feature_list', $list );
 	// @description Magic feature list. @param list of magic features ( array )

@@ -65,8 +65,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 							<input type="number" min="0" class="form-control" value="<?php echo $value;?>" name="ihc_subscription_delay_time[<?php echo $id;?>]" />
 						   </div>
 						</div>
-						<div class="col-xs-3">
-							<select name="ihc_subscription_delay_type[<?php echo $id;?>]" class="ihc-subscription-delay"><?php
+						<div class="col-xs-3 ihc-col-no-padding">
+						</div>
+						<div class="col-xs-4 ihc-col-no-padding">
+							<select name="ihc_subscription_delay_type[<?php echo $id;?>]" class="form-control"><?php
 								$possible_values = array('h' =>esc_html__('Hours', 'ihc'), 'd' =>esc_html__('Days', 'ihc'));
 								foreach ($possible_values as $type=>$label):
 									$value = (isset($data['metas']['ihc_subscription_delay_type'][$id])) ? $data['metas']['ihc_subscription_delay_type'][$id] : '';

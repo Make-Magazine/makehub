@@ -154,6 +154,11 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
               'payment_method'            => $data['payment_method'],
         ];
 
+        // maybe prorate
+        if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+            $paymentIntentArgs['metadata']['upgrade_from'] = $this->levelData['upgrade_from'];
+        }
+
         // set uid
         if ( isset( $data['uid'] ) && $data['uid'] !== 0){
               $paymentIntentArgs['metadata']['uid'] = $data['uid'];
@@ -424,6 +429,11 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
                 ],
               ];
 
+              // maybe prorate
+              if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+                  $paymentIntentArgs['metadata']['upgrade_from'] = $this->levelData['upgrade_from'];
+              }
+
               if ( $this->paymentOutputData['level_label'] !== '' ){
                 $paymentIntentArgs['description'] = $this->paymentOutputData['level_label'];
               }
@@ -464,6 +474,12 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
           if ( isset( $charge->status ) && $charge->status === 'succeeded' ){
               $this->paymentOutputData['transaction_id'] = $paymentIntentId;
               $this->completeLevelPayment( $this->paymentOutputData );
+
+              // maybe prorate
+              if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+                  $this->webhookDoCancel( $this->paymentOutputData['uid'], $this->levelData['upgrade_from'] );
+              }
+
               return;
           }
     }
@@ -645,6 +661,12 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
                 'confirm'                   => true,
                 'off_session'               => true,
             ];
+
+            // maybe prorate
+            if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+                $initialPaymentParams['metadata']['upgrade_from'] = $this->levelData['upgrade_from'];
+            }
+
             $statementDescriptor = $this->getStatementDescriptor();
             if ( $statementDescriptor !== null ){
                 $initialPaymentParams['statement_descriptor'] = $this->getStatementDescriptor();
@@ -678,6 +700,11 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
                                                 'service'                   => 'stripe_connect',
                 ],
         ];
+
+        // maybe prorate
+        if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+            $subscriptionParams['metadata']['upgrade_from'] = $this->levelData['upgrade_from'];
+        }
 
         $cancelAt = $this->getCancelAt();
         if ( $cancelAt !== false ){
@@ -738,6 +765,12 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
           if ( isset( $charge->status ) && $charge->status === 'succeeded' ){
               $this->paymentOutputData['transaction_id'] = $paymentIntentId;
               $this->completeLevelPayment( $this->paymentOutputData );
+
+              // maybe prorate
+              if ( isset( $this->levelData['upgrade_from'] ) && $this->levelData['upgrade_from'] !== '' ){
+                  $this->webhookDoCancel( $this->paymentOutputData['uid'], $this->levelData['upgrade_from'] );
+              }
+
               return;
           }
         }
@@ -931,9 +964,14 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
               $transactionId = isset($responseData['data']['object']['payment_intent']) ? $responseData['data']['object']['payment_intent'] : false;
               $skipWebhook = isset( $responseData['data']['object']['lines']['data'][0]['metadata']['skip_webhook'] ) ? $responseData['data']['object']['lines']['data'][0]['metadata']['skip_webhook'] : '';
               $service = isset( $responseData['data']['object']['lines']['data'][0]['metadata']['service'] ) ? $responseData['data']['object']['lines']['data'][0]['metadata']['service'] : '';
+              $maybeProrate = isset( $responseData['data']['object']['lines']['data'][0]['metadata']['upgrade_from'] ) ? $responseData['data']['object']['lines']['data'][0]['metadata']['upgrade_from'] : false;
               if ( $skipWebhook === 1 ){
                   break;
               }
+              if ( $service === '' ){
+                  return;
+              }
+              
               $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
               $orderId = $orderMeta->getIdFromMetaNameMetaValue( 'order_identificator', $transactionId );
               if ( !isset($orderId) || $orderId == false ){
@@ -950,6 +988,11 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
               $amount = isset( $responseData['data']['object']['amount'] ) ? $responseData['data']['object']['amount'] : 0;
               if ( $amount > 0 ){
                   $amount = $amount / $this->multiply;
+              }
+              // maybe prorate
+              if ( $maybeProrate !== false ){
+                  $uid = isset( $orderData->uid ) ? $orderData->uid : 0;
+                  $this->webhookDoCancel( $uid, $maybeProrate );
               }
               $this->webhookData = [
                                       'transaction_id'              => $transactionId,
@@ -984,6 +1027,7 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
               $customerId = $responseData['data']['object']['customer'];
              // set the invoice id
 
+              // check if it's made from stripe connect
               $service = isset( $responseData['data']['object']['lines']['data'][0]['metadata']['service'] ) ? $responseData['data']['object']['lines']['data'][0]['metadata']['service'] : '';
 
               $invoiceId = $responseData['data']['object']['id'];
@@ -1040,17 +1084,22 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
 
               // switch to connect if it's case
               $stripeCheckoutEnabled = get_option( 'ihc_stripe_checkout_v2_status' );
-              if ( $service === '' && empty( $stripeCheckoutEnabled ) ){
-                  $this->migrateToConnect( [
-                      'uid'                 => isset( $orderData->uid ) ? $orderData->uid : 0,
-                      'lid'                 => isset( $orderData->lid ) ? $orderData->lid : 0,
-                      'service' 				    => $service,
-                      'level_label' 			  => '',
-                      'level_description' 	=> '',
-                      'subscription_id' 		=> $subscriptionId,
-                      'order_identificator' => $orderIdentificator,
-                      'order_id' 				    => $orderId,
-                  ], $stripe );
+              if ( $service === '' ){
+                  if ( empty( $stripeCheckoutEnabled ) ){
+                    $this->migrateToConnect( [
+                        'uid'                 => isset( $orderData->uid ) ? $orderData->uid : 0,
+                        'lid'                 => isset( $orderData->lid ) ? $orderData->lid : 0,
+                        'service' 				    => $service,
+                        'level_label' 			  => '',
+                        'level_description' 	=> '',
+                        'subscription_id' 		=> $subscriptionId,
+                        'order_identificator' => $orderIdentificator,
+                        'order_id' 				    => $orderId,
+                    ], $stripe );
+                  } else {
+                      // payment from stripe checkout
+                      return;
+                  }
               }
 
               // make subscription completed
@@ -1361,7 +1410,7 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
                     'pause_collection' => [
                                             'behavior' => 'void',
                                           ],
-                  ],
+                  ]
                 );
             } catch ( \Exception $e ){
                 return false;
@@ -1440,7 +1489,7 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
                 $StripeSubscriptionId,
                 [
                   'pause_collection' => '',
-                ],
+                ]
               );
             } catch ( \Exception $e ){
                 return false;
@@ -1539,9 +1588,17 @@ class StripeConnect extends \Indeed\Ihc\Gateways\PaymentAbstract
         if ( $created === '' ){
             $created = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'created_at' );
         }
+        // subscriptions cycles
         $subscriptionCyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'subscription_cycles_limit' );
         if ( $subscriptionCyclesLimit === false ){
-            $subscriptionCyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_limit_num' );
+            $billingType = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_type' );
+            if(isset($billingType) && $billingType == 'bl_limited'){
+              $subscriptionCyclesLimit = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionIdInDb, 'billing_limit_num' );
+            }
+        }
+
+        if ( $subscriptionCyclesLimit === false || $subscriptionCyclesLimit < 1){
+          return false;
         }
 
         // Create price for product
