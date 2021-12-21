@@ -21,7 +21,7 @@ jQuery(document).ready(function () {
         jQuery(this).addClass('highlighted');
         setTimeout(function () {
             jQuery('#ihc_submit_bttn').removeClass('highlighted');
-        }, 2000);
+        }, 3500);
     });
 });
 
