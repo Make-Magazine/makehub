@@ -287,3 +287,8 @@
 		}
 	}
 }
+
+.page-register input[type="submit"]#ihc_submit_bttn.highlighted {
+	background-color: #ccc !important;
+	pointer-events: none;
+}
