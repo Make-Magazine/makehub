@@ -28,7 +28,7 @@ function return_makershed_widget(){
   global $user_email;
 
   $api_url      = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
-  $customer_api = $api_url . '/admin/customers/search.json?query=email:"' . $user_email . '"&fields=id';
+  $customer_api = $api_url . '/admin/customers/search.json?query=email:ken@nmhu.edu&fields=id';
   $customer_content = basicCurl($customer_api);
 
   // Decode the JSON in the file
@@ -44,7 +44,8 @@ function return_makershed_widget(){
               $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
               $orders_content = basicCurl($orders_api);
               $orderJson = json_decode($orders_content, true);
-              if (isset($orders_content) && !empty($orders_content)) {
+			  //var_dump($orderJson);
+              if ( empty($orderJson["orders"]) ) {
                   ?>
                   <li>
                       <p>Looks like you haven't placed any orders yet...</p><br />

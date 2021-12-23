@@ -46,6 +46,10 @@
         color: $color-red;
         font-size: 17px;
     }
+	.ihc-membership-card-img img {
+		border: 0px;
+		border-radius: 0px;
+	}
 }
 
 .expando-box {
@@ -56,7 +60,7 @@
         display: flex;
         position: relative;
         align-items: center;
-        img { 
+        img {
 			margin-right: 10px;
 			max-height: 50px;
 		}
