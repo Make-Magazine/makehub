@@ -99,27 +99,29 @@ function set_universal_asset_constants() {
 	// Decide if user can upgrade
 	$canUpgrade = true;
 	$hasmembership = false;
-	$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
-	if (!empty($levels)) {
-		$hasmembership = true;
-		foreach($levels as $level) {
-			switch($level['level_slug']){
-				case "school_maker_faire":
-				case "individual_first_year_discount":
-				case "individual":
-				case "family":
-				case "makerspacesmallbusiness":
-				case "patron":
-				case "founder":
-				case "benefactor":
-				case "make_projects_school":
-				case "global_producers":
-					$canUpgrade = false;
-					break;
+	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
+		$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
+		if (!empty($levels)) {
+			$hasmembership = true;
+			foreach($levels as $level) {
+				switch($level['level_slug']){
+					case "school_maker_faire":
+					case "individual_first_year_discount":
+					case "individual":
+					case "family":
+					case "makerspacesmallbusiness":
+					case "patron":
+					case "founder":
+					case "benefactor":
+					case "make_projects_school":
+					case "global_producers":
+						$canUpgrade = false;
+						break;
+				}
 			}
+		} else {
+			$canUpgrade = false;
 		}
-	} else {
-		$canUpgrade = false;
 	}
 
 	define('IS_MEMBER', $hasmembership);
@@ -258,22 +260,22 @@ add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
 
-    if (isset($query->query['post_type']) && !$query->is_admin && $query->is_feed && $query->query['post_type']) {
-  		if($query->query['post_type'] == 'espresso_events') {
-  			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
-  			$results = $wpdb->get_results($dbSQL);
-  			$suppression_IDs = array();
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type']) {
+		if($query->query['post_type'] == 'espresso_events') {
+			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
+			$results = $wpdb->get_results($dbSQL);
+			$suppression_IDs = array();
 
-  			foreach($results as $result){
-  				$suppression_IDs[] = $result->post_id;
-  			}
+			foreach($results as $result){
+				$suppression_IDs[] = $result->post_id;
+			}
 
-  			$exclude = implode(",", $suppression_IDs);
+			$exclude = implode(",", $suppression_IDs);
 
-  			if (!empty($exclude)) {
-  				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
-  			}
-  		}
+			if (!empty($exclude)) {
+				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+			}
+		}
     }
     return $where;
 }
@@ -390,6 +392,16 @@ function gf_add_entries_link( $wp_admin_bar ) {
 }
 
 add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
+
+// add the ability to add tags or categories to pages
+function register_taxonomies() {
+    // Add tag metabox to page
+    register_taxonomy_for_object_type('post_tag', 'page');
+    // Add category metabox to page
+    register_taxonomy_for_object_type('category', 'page');
+}
+ // Add to the admin_init hook of your theme functions.php file
+add_action( 'init', 'register_taxonomies' );
 
 // get the main category of a post
 function get_post_primary_category($post_id, $term='category', $return_all_categories=false){

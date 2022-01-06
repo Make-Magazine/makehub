@@ -1,0 +1,5681 @@
+# Copyright (C) 2016 Affiliate Royale
+# This file is distributed under the same license as the Affiliate Royale package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Affiliate Royale 1.4.5b4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-affiliate\n"
+"POT-Creation-Date: 2021-05-18T07:09:15-06:00\n"
+"PO-Revision-Date: 2021-06-10 11:13-0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: app/Controllers/AppCtrl.php:304 app/Controllers/AppCtrl.php:305
+msgid "Easy Affiliate"
+msgstr "Easy Affiliate"
+
+#. Plugin URI of the plugin
+msgid "https://easyaffiliate.com/"
+msgstr "https://easyaffiliate.com/"
+
+#. Description of the plugin
+msgid ""
+"A complete Affiliate Program plugin for WordPress. Use it to start an "
+"Affiliate Program for your products to dramatically increase traffic, "
+"attention and sales."
+msgstr ""
+"Un programa completa de afiliados para WordPress. Úselo para iniciar un "
+"programa de afiliados para sus productos para aumentar drásticamente el "
+"tráfico, la atención y las ventas."
+
+#. Author of the plugin
+msgid "Caseproof, LLC"
+msgstr "Caseproof, LLC"
+
+#. Author URI of the plugin
+msgid "https://caseproof.com/"
+msgstr "https://caseproof.com/"
+
+#: app/config/integrations.php:7
+msgid "MemberPress"
+msgstr "MemberPress"
+
+#: app/config/integrations.php:13
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: app/config/integrations.php:20
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads"
+
+#: app/config/integrations.php:26
+msgid "PayPal"
+msgstr "PayPal"
+
+#: app/Controllers/AddonsCtrl.php:26 app/views/admin/addons/addons.php:37
+#: app/views/affiliates/row.php:47
+msgid "Active"
+msgstr "Activado"
+
+#: app/Controllers/AddonsCtrl.php:27 app/views/admin/addons/addons.php:43
+#: app/views/affiliates/row.php:43
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: app/Controllers/AddonsCtrl.php:28 app/Helpers/AppHelper.php:302
+#: app/views/admin/addons/addons.php:90
+msgid "Activate"
+msgstr "Activar"
+
+#: app/Controllers/AddonsCtrl.php:29 app/views/admin/addons/addons.php:86
+msgid "Deactivate"
+msgstr "Desactivar"
+
+#: app/Controllers/AddonsCtrl.php:30 app/Controllers/AddonsCtrl.php:116
+#: app/Controllers/AppCtrl.php:96
+msgid ""
+"Could not install add-on. Please download from easyaffiliate.com and install "
+"manually."
+msgstr ""
+"No se pudo instalar el add-on. Descárguelo de easyaffiliate.com e instálelo "
+"manualmente."
+
+#: app/Controllers/AddonsCtrl.php:31 app/Controllers/AddonsCtrl.php:114
+msgid "Could not install plugin. Please download and install manually."
+msgstr "No se pudo instalar el plugin. Descarga e instalalo manualmente."
+
+#: app/Controllers/AddonsCtrl.php:46 app/Controllers/AddonsCtrl.php:77
+#: app/Controllers/AddonsCtrl.php:100 app/Controllers/OptionsCtrl.php:25
+#: app/Controllers/OptionsCtrl.php:47 app/Controllers/PaymentsCtrl.php:157
+#: app/Controllers/PaymentsCtrl.php:173 app/Controllers/PaymentsCtrl.php:212
+#: app/Controllers/PaymentsCtrl.php:228 app/Controllers/PaymentsCtrl.php:311
+#: app/Controllers/PaymentsCtrl.php:327 app/Controllers/UsersCtrl.php:284
+msgid "Bad request."
+msgstr "Solicitud incorrecta."
+
+#: app/Controllers/AddonsCtrl.php:50 app/Controllers/AddonsCtrl.php:81
+#: app/Controllers/AddonsCtrl.php:104 app/Controllers/OptionsCtrl.php:33
+#: app/Controllers/OptionsCtrl.php:55 app/Controllers/OptionsCtrl.php:74
+#: app/Controllers/OptionsCtrl.php:118 app/Controllers/PaymentsCtrl.php:161
+#: app/Controllers/PaymentsCtrl.php:216 app/Controllers/PaymentsCtrl.php:315
+#: app/Controllers/PaymentsCtrl.php:388 app/Controllers/ReportsCtrl.php:63
+#: app/Controllers/ReportsCtrl.php:89 app/Controllers/TransactionsCtrl.php:386
+#: app/Controllers/UsersCtrl.php:169 app/Controllers/UsersCtrl.php:288
+#: app/Controllers/WizardCtrl.php:103 app/Controllers/WizardCtrl.php:117
+msgid "Sorry, you don't have permission to do this."
+msgstr "Lo siento, no tienes permiso para hacer esto."
+
+#: app/Controllers/AddonsCtrl.php:54 app/Controllers/AddonsCtrl.php:85
+#: app/Controllers/AddonsCtrl.php:108 app/Controllers/OptionsCtrl.php:29
+#: app/Controllers/OptionsCtrl.php:51 app/Controllers/OptionsCtrl.php:78
+#: app/Controllers/OptionsCtrl.php:122 app/Controllers/PaymentsCtrl.php:165
+#: app/Controllers/PaymentsCtrl.php:220 app/Controllers/PaymentsCtrl.php:319
+#: app/Controllers/PaymentsCtrl.php:392 app/Controllers/ReportsCtrl.php:67
+#: app/Controllers/ReportsCtrl.php:93 app/Controllers/TransactionsCtrl.php:390
+#: app/Controllers/UsersCtrl.php:173 app/Controllers/UsersCtrl.php:292
+#: app/Controllers/WizardCtrl.php:107 app/Controllers/WizardCtrl.php:121
+msgid "Security check failed."
+msgstr "La comprobación de seguridad ha fallado."
+
+#: app/Controllers/AddonsCtrl.php:62
+msgid ""
+"Could not activate plugin. Please activate from the Plugins page manually."
+msgstr ""
+"No se pudo activar el plugin. Por favor, actívelo desde la página de Plugins."
+
+#: app/Controllers/AddonsCtrl.php:64
+msgid ""
+"Could not activate add-on. Please activate from the Plugins page manually."
+msgstr ""
+"No se pudo activar el add-on. Por favor, actívelo desde la página de Plugins."
+
+#: app/Controllers/AddonsCtrl.php:69
+msgid "Plugin activated."
+msgstr "Plugin activado."
+
+#: app/Controllers/AddonsCtrl.php:71
+msgid "Add-on activated."
+msgstr "Add-on activado."
+
+#: app/Controllers/AddonsCtrl.php:92
+msgid "Plugin deactivated."
+msgstr "Plugin desactivado."
+
+#: app/Controllers/AddonsCtrl.php:94
+msgid "Add-on deactivated."
+msgstr "Add-on desactivado."
+
+#: app/Controllers/AddonsCtrl.php:167
+msgid "Plugin installed & activated."
+msgstr "Plugin instalado y activado."
+
+#: app/Controllers/AddonsCtrl.php:167
+msgid "Add-on installed & activated."
+msgstr "Add-on instalado y activado."
+
+#: app/Controllers/AddonsCtrl.php:175
+msgid "Plugin installed."
+msgstr "Plugin instalado."
+
+#: app/Controllers/AddonsCtrl.php:175
+msgid "Add-on installed."
+msgstr "Add-on instalado."
+
+#: app/Controllers/AffiliateApplicationCtrl.php:98
+#: app/views/admin/onboarding.php:82
+msgid "Affiliate Applications"
+msgstr "Solicitudes de Afiliados"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:99
+#: app/Controllers/AffiliateApplicationCtrl.php:233
+msgid "Affiliate Application"
+msgstr "Solicitud de Afiliados"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:100
+msgid "Add New Affiliate Application"
+msgstr "Agregar Nueva Solicitud de Afiliado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:101
+msgid "Edit Affiliate Application"
+msgstr "Editar Solicitud de Afiliado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:102
+msgid "New Affiliate Application"
+msgstr "Nueva Solicitud de Afiliado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:103
+msgid "View Affiliate Application"
+msgstr "Ver Solicitud de Afiliado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:104
+msgid "Search Affiliate Applications"
+msgstr "Buscar las Solicitudes de Afiliados"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:105
+msgid "No Affiliate Applications found"
+msgstr "No Se Encontraron Solicitudes de Afiliados"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:106
+msgid "No Affiliate Applications found in Trash"
+msgstr "No Se Encontraron Solicitudes de Afiliados en la Papelera"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:107
+msgid "Parent Affiliate Application:"
+msgstr "Solicitudes de Afiliados de Padres:"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:130
+#: app/Controllers/CreativesCtrl.php:125 app/Lib/AffiliatesTable.php:24
+#: app/Lib/TransactionsTable.php:31
+#: app/views/dashboard/creatives/text-links.php:14
+msgid "ID"
+msgstr "ID"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:131
+#: app/Lib/AffiliatesTable.php:26 app/views/admin/wizard/creatives.php:16
+#: app/views/admin/wizard/creatives.php:40 app/views/payments/owed.php:25
+#: app/views/payments/receipt.php:26
+msgid "Name"
+msgstr "Nombre"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:132
+#: app/views/admin/affiliate_applications/meta_box.php:37
+#: app/views/affiliate_applications/form.php:40 app/views/signup/form.php:54
+msgid "Email"
+msgstr "Email"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:133
+#: app/Helpers/OptionsHelper.php:428 app/Lib/AffiliatesTable.php:27
+#: app/views/admin/affiliate_applications/meta_box.php:9
+#: app/views/payments/owed.php:26
+msgid "Status"
+msgstr "Estado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:134 app/Lib/ClicksTable.php:28
+#: app/Lib/PaymentsTable.php:41 app/Lib/TransactionsTable.php:33
+#: app/views/options/memberpress_coupon_meta_box.php:8
+#: app/views/payments/owed.php:24 app/views/payments/receipt.php:25
+#: app/views/transactions/edit.php:57
+#: app/views/transactions/new-commission.php:15
+#: app/views/transactions/row.php:116
+msgid "Affiliate"
+msgstr "Afiliado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:135
+msgid "Submitted"
+msgstr "Enviada"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:158
+#: app/Helpers/OptionsHelper.php:226 app/Helpers/OptionsHelper.php:227
+#: app/views/transactions/row.php:101
+msgid "Edit"
+msgstr "Editar"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:165
+msgid "Approve"
+msgstr "Aprobar"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:172
+msgid "Ignore"
+msgstr "Ignorar"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:203
+#: app/Controllers/AffiliateApplicationCtrl.php:267
+#: app/Controllers/AffiliateApplicationCtrl.php:339
+#: app/Controllers/AffiliateApplicationCtrl.php:379
+#: app/views/admin/affiliate_applications/meta_box.php:13
+msgid "Awaiting Approval"
+msgstr "Esperando Aprobación"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:206
+#: app/Controllers/AffiliateApplicationCtrl.php:268
+#: app/Controllers/AffiliateApplicationCtrl.php:344
+#: app/Controllers/AffiliateApplicationCtrl.php:382
+#: app/views/admin/affiliate_applications/meta_box.php:14
+msgid "Approved"
+msgstr "Aprobado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:209
+#: app/Controllers/AffiliateApplicationCtrl.php:269
+#: app/Controllers/AffiliateApplicationCtrl.php:349
+#: app/Controllers/AffiliateApplicationCtrl.php:385
+#: app/views/admin/affiliate_applications/meta_box.php:15
+msgid "Ignored"
+msgstr "Ignorado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:214
+#: app/Controllers/UsersCtrl.php:152 app/Helpers/OptionsHelper.php:19
+#: app/Models/Creative.php:332 app/views/dashboard/memberpress-coupons.php:35
+msgid "None"
+msgstr "Ninguno"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:266
+#: app/Controllers/CreativesCtrl.php:218 app/views/transactions/edit.php:100
+msgid "Update"
+msgstr "Actualizar"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:370
+msgid "Show all statuses"
+msgstr "Mostrar todos los estados"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:432
+msgid "Forbidden"
+msgstr "Prohibido"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:436
+msgid "Must specify an application"
+msgstr "Debe especificar una aplicación"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:440
+msgid "id must be an integer"
+msgstr "Debe ser un número entero"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:446
+msgid "Invalid application"
+msgstr "Solicitud Invalida"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:450
+msgid "Must specify a status"
+msgstr "Debe especificar un estado"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:456
+msgid "Must specify a valid status"
+msgstr "Debe especificar un estado válido"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:463
+msgid "Internal Error: %s"
+msgstr "Error interno: %s"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:466
+msgid "The status of the Affiliate Application was successfully changed"
+msgstr "El estado de la Solicitud de Afiliado se cambió con éxito"
+
+#: app/Controllers/AffiliateApplicationCtrl.php:486
+msgid "Affiliate applications are disabled."
+msgstr "Las aplicaciones de afiliados están deshabilitadas."
+
+#: app/Controllers/AppCtrl.php:76 app/Controllers/AppCtrl.php:133
+#: app/Controllers/AppCtrl.php:324 app/Controllers/AppCtrl.php:325
+#: app/Controllers/ReportsCtrl.php:28 app/Helpers/ReportsHelper.php:82
+#: app/views/clicks/list.php:9 app/views/dashboard/home.php:42
+#: app/views/dashboard/home.php:77 app/views/dashboard/home.php:117
+#: app/views/payments/owed.php:105 app/views/reports/stats.php:13
+msgid "Clicks"
+msgstr "Clics"
+
+#: app/Controllers/AppCtrl.php:77 app/Controllers/ReportsCtrl.php:29
+#: app/Helpers/ReportsHelper.php:83 app/views/reports/stats.php:14
+msgid "Uniques"
+msgstr "Unicos"
+
+#: app/Controllers/AppCtrl.php:78 app/Controllers/ReportsCtrl.php:30
+#: app/views/payments/owed.php:105 app/views/reports/stats.php:15
+msgid "Sales"
+msgstr "Ventas"
+
+#: app/Controllers/AppCtrl.php:97
+msgid ""
+"Add-on installed successfully. Please refresh the page to enable the "
+"functionality."
+msgstr ""
+"Add-on instalado correctamente. Por favor, actualice la página para "
+"habilitar la funcionalidad."
+
+#: app/Controllers/AppCtrl.php:98
+msgid ""
+"Add-on activated successfully. Please refresh the page to enable the "
+"functionality."
+msgstr ""
+"Add-on activado correctamente. Por favor, actualice la página para habilitar "
+"la funcionalidad."
+
+#: app/Controllers/AppCtrl.php:127 app/Controllers/AppCtrl.php:315
+#: app/Controllers/AppCtrl.php:316
+msgid "Reports"
+msgstr "Informes"
+
+#: app/Controllers/AppCtrl.php:141 app/Controllers/AppCtrl.php:335
+#: app/Controllers/AppCtrl.php:336 app/views/affiliates/list.php:9
+#: app/views/options/form.php:23
+msgid "Affiliates"
+msgstr "Afiliados"
+
+#: app/Controllers/AppCtrl.php:147
+msgid "Applications"
+msgstr "Solicitudes"
+
+#: app/Controllers/AppCtrl.php:153
+msgid "&larr; Back to Applications"
+msgstr "&larr; Volver a las Aplicaciones"
+
+#: app/Controllers/AppCtrl.php:160
+msgid "Creatives (Links & Banners)"
+msgstr "Creatividades (Enlaces y Banners)"
+
+#: app/Controllers/AppCtrl.php:166 app/Controllers/CampaignsCtrl.php:18
+#: app/Controllers/CampaignsCtrl.php:20 app/Controllers/CreativesCtrl.php:133
+msgid "Campaigns"
+msgstr "Campañas"
+
+#: app/Controllers/AppCtrl.php:172
+msgid "&larr; Back to Creatives Listing"
+msgstr "&larr; Volver a la Lista de Creatividades"
+
+#: app/Controllers/AppCtrl.php:178
+msgid "&larr; Back to Transactions"
+msgstr "&larr; Volver a Transacciones"
+
+#: app/Controllers/AppCtrl.php:184 app/Controllers/AppCtrl.php:368
+#: app/Controllers/AppCtrl.php:369 app/views/payments/owed.php:15
+msgid "Pay Affiliates"
+msgstr "Pagar los Afiliados"
+
+#: app/Controllers/AppCtrl.php:190
+msgid "Payout History"
+msgstr "Historial de Pago"
+
+#: app/Controllers/AppCtrl.php:346 app/Controllers/AppCtrl.php:347
+#: app/Controllers/CreativesCtrl.php:93 app/views/admin/wizard/creatives.php:7
+msgid "Creatives"
+msgstr "Creatividades"
+
+#: app/Controllers/AppCtrl.php:357 app/Controllers/AppCtrl.php:358
+#: app/Helpers/ReportsHelper.php:84
+msgid "Transactions"
+msgstr "Transacciones"
+
+#: app/Controllers/AppCtrl.php:377 app/Controllers/AppCtrl.php:378
+#: app/Helpers/DashboardHelper.php:35 app/views/pro-dashboard/dashboard.php:25
+msgid "Payments"
+msgstr "Pagos"
+
+#: app/Controllers/AppCtrl.php:388 app/Controllers/AppCtrl.php:389
+msgid "Settings"
+msgstr "Ajustes"
+
+#: app/Controllers/AppCtrl.php:399 app/Controllers/AppCtrl.php:400
+msgid "Add-ons"
+msgstr "Add-ons"
+
+#: app/Controllers/AppCtrl.php:410 app/Controllers/AppCtrl.php:411
+msgid "Onboarding"
+msgstr "Onboarding"
+
+#: app/Controllers/AppCtrl.php:419 app/Controllers/AppCtrl.php:420
+msgid "Wizard"
+msgstr "Asistente"
+
+#: app/Controllers/AppCtrl.php:646
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+#. translators: %s: copy button combo e.g. Ctrl-C
+#: app/Controllers/AppCtrl.php:648
+msgid "Press %s to copy"
+msgstr "Presione %s para copiar"
+
+#: app/Controllers/AppCtrl.php:649
+msgid "No support :("
+msgstr "Sin soporte :("
+
+#: app/Controllers/AppCtrl.php:650
+msgid "An error occurred creating the custom link"
+msgstr "Se produjo un error al crear el enlace personalizado."
+
+#: app/Controllers/AppCtrl.php:651
+msgid "An error occurred updating the custom link"
+msgstr "Se produjo un error al actualizar el enlace personalizado."
+
+#: app/Controllers/AppCtrl.php:791
+msgid "Easy Affiliate Weekly Stats"
+msgstr "Estadísticas Semanales de Easy Affiliate"
+
+#: app/Controllers/CampaignsCtrl.php:21
+msgid "Campaign"
+msgstr "Campaña"
+
+#: app/Controllers/CampaignsCtrl.php:22
+msgid "Search Campaigns"
+msgstr "Buscar las Campañas"
+
+#: app/Controllers/CampaignsCtrl.php:23
+msgid "Popular Campaigns"
+msgstr "Campañas Populares"
+
+#: app/Controllers/CampaignsCtrl.php:24
+msgid "All Campaigns"
+msgstr "Todas las Campañas"
+
+#: app/Controllers/CampaignsCtrl.php:25
+msgid "Edit Campaign"
+msgstr "Editar Campaña"
+
+#: app/Controllers/CampaignsCtrl.php:26
+msgid "View Campaign"
+msgstr "Ver Campaña"
+
+#: app/Controllers/CampaignsCtrl.php:27
+msgid "Update Campaign"
+msgstr "Actualizar Campaña"
+
+#: app/Controllers/CampaignsCtrl.php:28
+msgid "Add New Campaign"
+msgstr "Agregar Nueva Campaña"
+
+#: app/Controllers/CampaignsCtrl.php:29
+msgid "Separate campaigns with commas"
+msgstr "Separar las campañas con comas"
+
+#: app/Controllers/CampaignsCtrl.php:30
+msgid "Add or remove campaigns"
+msgstr "Agregar o quitar campañas"
+
+#: app/Controllers/CampaignsCtrl.php:31
+msgid "Choose from the most used campaigns"
+msgstr "Elija entre las campañas más utilizadas"
+
+#: app/Controllers/CampaignsCtrl.php:32
+msgid "No campaigns found"
+msgstr "No se han encontrado campañas"
+
+#: app/Controllers/CampaignsCtrl.php:33
+msgid "No campaigns"
+msgstr "Todavía no hay campañas"
+
+#: app/Controllers/CampaignsCtrl.php:34
+msgid "&larr; Back to Campaigns"
+msgstr "&larr; Volver a las Campañas"
+
+#: app/Controllers/ClicksCtrl.php:34
+msgid "Clicks per page"
+msgstr "Clics por página"
+
+#: app/Controllers/CreativesCtrl.php:94 app/views/admin/wizard/creatives.php:18
+#: app/views/admin/wizard/creatives.php:81
+msgid "Creative"
+msgstr "Creativo"
+
+#: app/Controllers/CreativesCtrl.php:95
+msgid "Add New Creative"
+msgstr "Agregar Nueva Creativo"
+
+#: app/Controllers/CreativesCtrl.php:96
+msgid "Edit Creative"
+msgstr "Editar Creativo"
+
+#: app/Controllers/CreativesCtrl.php:97
+msgid "New Creative"
+msgstr "Nuevo Creativo"
+
+#: app/Controllers/CreativesCtrl.php:98
+msgid "View Creative"
+msgstr "Ver Creativo"
+
+#: app/Controllers/CreativesCtrl.php:99
+msgid "Search Creatives"
+msgstr "Buscar Creatividades"
+
+#: app/Controllers/CreativesCtrl.php:100
+msgid "No Creatives found"
+msgstr "No se encontraron Creatividades"
+
+#: app/Controllers/CreativesCtrl.php:101
+msgid "No Creatives found in Trash"
+msgstr "No se encontraron Creatividades en la Papelera"
+
+#: app/Controllers/CreativesCtrl.php:102
+msgid "Parent Creative:"
+msgstr "Creativo de Padres: "
+
+#: app/Controllers/CreativesCtrl.php:126
+msgid "Title"
+msgstr "Título"
+
+#: app/Controllers/CreativesCtrl.php:127 app/views/creatives/options.php:132
+msgid "Hidden"
+msgstr "Oculto"
+
+#: app/Controllers/CreativesCtrl.php:128 app/views/creatives/options.php:35
+msgid "Type"
+msgstr "﻿Tipo"
+
+#: app/Controllers/CreativesCtrl.php:129 app/Lib/ClicksTable.php:29
+#: app/views/admin/wizard/creatives.php:17
+#: app/views/admin/wizard/creatives.php:52
+#: app/views/dashboard/creatives/custom-links.php:28
+msgid "URL"
+msgstr "URL"
+
+#: app/Controllers/CreativesCtrl.php:130
+msgid "Image"
+msgstr "Imagen"
+
+#: app/Controllers/CreativesCtrl.php:131
+msgid "Image Width"
+msgstr "Ancho de Imagen"
+
+#: app/Controllers/CreativesCtrl.php:132
+msgid "Image Height"
+msgstr "Altura de Imagen"
+
+#: app/Controllers/CreativesCtrl.php:134
+msgid "Created"
+msgstr "Creado"
+
+#: app/Controllers/CreativesCtrl.php:165 app/Controllers/CreativesCtrl.php:173
+#: app/Controllers/CreativesCtrl.php:181
+msgid "N/A"
+msgstr "N/A"
+
+#: app/Controllers/CreativesCtrl.php:198
+msgid "Creative Options"
+msgstr "Opciones de Creatividades"
+
+#: app/Controllers/CreativesCtrl.php:219 app/Controllers/WizardCtrl.php:54
+msgid "Choose or Upload a Banner"
+msgstr "Elija o Cargue un Banner"
+
+#: app/Controllers/CreativesCtrl.php:220 app/Controllers/OptionsCtrl.php:173
+#: app/Controllers/WizardCtrl.php:55
+msgid "Use this image"
+msgstr "Utilizar la imagen seleccionada"
+
+#: app/Controllers/CreativesCtrl.php:292 app/Controllers/CreativesCtrl.php:330
+#: app/views/admin/wizard/creatives.php:76
+#: app/views/admin/wizard/creatives.php:92 app/views/creatives/options.php:49
+msgid "Text"
+msgstr "Texto"
+
+#: app/Controllers/CreativesCtrl.php:297 app/Controllers/CreativesCtrl.php:333
+#: app/Helpers/CreativesHelper.php:31 app/views/admin/wizard/creatives.php:69
+#: app/views/creatives/options.php:50
+msgid "Banner"
+msgstr "Banner"
+
+#: app/Controllers/CreativesCtrl.php:318
+msgid "Show all link types"
+msgstr "Mostrar todos los tipos de enlace"
+
+#: app/Controllers/DashboardCtrl.php:94 app/Controllers/SignupCtrl.php:80
+msgid "Sorry, affiliate registration is private."
+msgstr "Lo sentimos, el registro de afiliado es privado."
+
+#: app/Controllers/DashboardCtrl.php:109 app/Controllers/DashboardCtrl.php:134
+msgid "You are not currently logged in"
+msgstr "No has iniciado sesión"
+
+#: app/Controllers/DashboardCtrl.php:113 app/Controllers/DashboardCtrl.php:138
+msgid "You are not currently an affiliate"
+msgstr "Actualmente no eres un afiliado"
+
+#: app/Controllers/DashboardCtrl.php:119 app/Controllers/DashboardCtrl.php:145
+msgid "Invalid URL"
+msgstr "URL inválida"
+
+#: app/Controllers/DashboardCtrl.php:151
+msgid "Custom link not found"
+msgstr "Enlace personalizado no encontrado"
+
+#: app/Controllers/DashboardCtrl.php:164 app/Controllers/DashboardCtrl.php:493
+#: app/Controllers/DashboardCtrl.php:528 app/Controllers/DashboardCtrl.php:558
+msgid "Not logged in"
+msgstr "No se inició sesión"
+
+#: app/Controllers/DashboardCtrl.php:168 app/Controllers/DashboardCtrl.php:497
+#: app/Controllers/DashboardCtrl.php:532 app/Controllers/DashboardCtrl.php:562
+msgid "Not an affiliate"
+msgstr "No es un afiliado"
+
+#: app/Controllers/DashboardCtrl.php:172 app/Controllers/DashboardCtrl.php:215
+msgid "Invalid dates"
+msgstr "Las fechas no son válidas"
+
+#: app/Controllers/DashboardCtrl.php:364
+#: app/Models/AffiliateApplication.php:194 app/Models/User.php:655
+msgid "You must enter a First Name"
+msgstr "Debe introducir un Nombre"
+
+#: app/Controllers/DashboardCtrl.php:368
+#: app/Models/AffiliateApplication.php:198 app/Models/User.php:659
+msgid "You must enter a Last Name"
+msgstr "Debe introducir un Apellido"
+
+#: app/Controllers/DashboardCtrl.php:373 app/Models/User.php:713
+msgid "PayPal email address is required"
+msgstr "Se requiere la dirección de correo electrónico de PayPal"
+
+#: app/Controllers/DashboardCtrl.php:376 app/Models/User.php:716
+msgid ""
+"PayPal email address must be a real and properly formatted email address"
+msgstr ""
+"Dirección de correo electrónico de PayPal es necesario y debe ser una "
+"dirección de correo real y con el formato correcto"
+
+#: app/Controllers/DashboardCtrl.php:382 app/Models/User.php:685
+msgid "You must enter an Address"
+msgstr "Debe introducir una Dirección de Correo Electrónico."
+
+#: app/Controllers/DashboardCtrl.php:386 app/Models/User.php:689
+msgid "You must enter a City"
+msgstr "Debe introducir una Ciudad"
+
+#: app/Controllers/DashboardCtrl.php:390 app/Models/User.php:693
+msgid "You must enter a State/Province"
+msgstr "Debe introducir una Estado/Provincia"
+
+#: app/Controllers/DashboardCtrl.php:394 app/Models/User.php:697
+msgid "You must enter a Zip/Postal Code"
+msgstr "Debe introducir un Código Postal"
+
+#: app/Controllers/DashboardCtrl.php:398 app/Models/User.php:701
+msgid "You must enter a Country"
+msgstr "Debe introducir un País"
+
+#: app/Controllers/DashboardCtrl.php:404 app/Models/User.php:707
+msgid "You must enter an SSN / Tax ID or International Tax ID"
+msgstr ""
+"Debe ingresar un número de seguro social / número de identificación fiscal o "
+"número de identificación fiscal internacional"
+
+#: app/Controllers/DashboardCtrl.php:485 app/Controllers/DashboardCtrl.php:520
+#: app/Controllers/DashboardCtrl.php:550 app/Controllers/OptionsCtrl.php:70
+#: app/Controllers/OptionsCtrl.php:114 app/Controllers/PaymentsCtrl.php:384
+#: app/Controllers/ReportsCtrl.php:59 app/Controllers/ReportsCtrl.php:85
+#: app/Controllers/TransactionsCtrl.php:382 app/Controllers/UsersCtrl.php:165
+#: app/Controllers/UsersCtrl.php:298 app/Controllers/WizardCtrl.php:99
+#: app/Controllers/WizardCtrl.php:113 app/Controllers/WizardCtrl.php:175
+#: app/Controllers/WizardCtrl.php:181 app/Controllers/WizardCtrl.php:327
+msgid "Bad request"
+msgstr "Solicitud incorrecta"
+
+#: app/Controllers/DashboardCtrl.php:709
+msgid "Easy Affiliate Pro Dashboard"
+msgstr "Easy Affiliate Pro Dashboard"
+
+#: app/Controllers/DashboardCtrl.php:715 app/views/options/affiliates.php:238
+msgid "Brand Color"
+msgstr "Color de su Brand"
+
+#: app/Controllers/DashboardCtrl.php:719 app/views/options/affiliates.php:254
+msgid "Accent Color"
+msgstr "Color de Acento"
+
+#: app/Controllers/DashboardCtrl.php:723 app/views/options/affiliates.php:270
+msgid "Menu Text Color"
+msgstr "Color del Texto de Menú"
+
+#: app/Controllers/DashboardCtrl.php:727 app/views/options/affiliates.php:286
+msgid "Menu Text Highlight Color"
+msgstr "Color de resaltado del texto del menú"
+
+#: app/Controllers/DashboardCtrl.php:762 app/views/options/affiliates.php:302
+msgid "Logo"
+msgstr "Logo"
+
+#: app/Controllers/GoogleCaptchaCtrl.php:44
+msgid "Easy Affiliate application form"
+msgstr "Formulario de solicitud de Easy Affiliate"
+
+#: app/Controllers/GoogleCaptchaCtrl.php:45
+msgid "Easy Affiliate signup form"
+msgstr "Formulario de registro de Easy Affiliate"
+
+#: app/Controllers/GoogleCaptchaCtrl.php:46
+msgid "Easy Affiliate login form"
+msgstr "Formulario de inicio de sesión de Easy Affiliate"
+
+#: app/Controllers/GoogleCaptchaCtrl.php:47
+msgid "Easy Affiliate forgot password form"
+msgstr "Formulario de contraseña olvidada de Easy Affiliate"
+
+#: app/Controllers/GoogleCaptchaCtrl.php:64
+msgid "Captcha verification failed"
+msgstr "Error de verificación del Captcha"
+
+#: app/Controllers/LoginCtrl.php:179
+msgid "Login failed. Please double check your username and password."
+msgstr "Fallo al iniciar sesión. Verifique su nombre de usuario y contraseña."
+
+#: app/Controllers/MemberPressCtrl.php:172
+msgid "Easy Affiliate Commissions"
+msgstr "Comisiones de Easy Affiliate"
+
+#: app/Controllers/MemberPressCtrl.php:240
+msgid "%s Commission Group"
+msgstr "%s Grupo de Comisión"
+
+#: app/Controllers/MemberPressCtrl.php:291
+msgid "Associate Affiliate"
+msgstr "Asociar un Afiliado"
+
+#: app/Controllers/OptionsCtrl.php:65
+msgid "Your test email was successfully sent."
+msgstr "Su email de prueba fue enviado exitosamente."
+
+#: app/Controllers/OptionsCtrl.php:95
+msgid "The license was successfully activated."
+msgstr "La licencia fue activada exitosamente."
+
+#: app/Controllers/OptionsCtrl.php:102
+msgid "The license information is not available, try refreshing the page."
+msgstr ""
+"La información de la licencia no está disponible, intente actualizar la "
+"página."
+
+#: app/Controllers/OptionsCtrl.php:135
+msgid "The license was successfully deactivated."
+msgstr "Tu licencia fue desactivada con éxito."
+
+#: app/Controllers/OptionsCtrl.php:168
+msgid "An error occurred activating the license."
+msgstr "Se ha producido un error al activar la licencia."
+
+#: app/Controllers/OptionsCtrl.php:169
+msgid ""
+"Are you sure? Automatic updates of Easy Affiliate will not be available on "
+"%s if this License Key is deactivated."
+msgstr ""
+"Está seguro? Las actualizaciones automáticas de Easy Affiliate no estarán "
+"disponibles en %s si esta clave de licencia se desactiva."
+
+#: app/Controllers/OptionsCtrl.php:171
+msgid "An error occurred deactivating license."
+msgstr "Ocurrió un error al desactivar la licencia."
+
+#: app/Controllers/OptionsCtrl.php:172
+msgid "Choose or Upload an Image"
+msgstr "Elige o sube una imagen"
+
+#: app/Controllers/OptionsCtrl.php:226 app/Controllers/WizardCtrl.php:274
+msgid "Affiliate Dashboard"
+msgstr "Dashboard de Afiliados"
+
+#: app/Controllers/OptionsCtrl.php:230 app/Controllers/WizardCtrl.php:278
+#: app/views/pro-dashboard/signup.php:11
+msgid "Affiliate Signup"
+msgstr "Registro de Afiliados"
+
+#: app/Controllers/OptionsCtrl.php:234 app/Controllers/WizardCtrl.php:282
+#: app/views/payments/manual_bulk_file.php:17
+#: app/views/pro-dashboard/login.php:9
+msgid "Affiliate Login"
+msgstr "Página de inicio de sesión de afiliados"
+
+#: app/Controllers/PaymentsCtrl.php:38
+msgid ""
+"An error occurred during payout, please check the PayPal account to confirm "
+"that the affiliates were paid before trying again."
+msgstr ""
+"Se produjo un error durante el pago, verifique la cuenta de PayPal para "
+"confirmar que los afiliados recibieron el pago antes de volver a intentarlo."
+
+#: app/Controllers/PaymentsCtrl.php:39
+msgid ""
+"An error occurred creating the payments, please return to the Pay Affiliates "
+"page and try again."
+msgstr ""
+"Se produjo un error al crear los pagos, regrese a la página Pagar Afiliados "
+"e intente nuevamente."
+
+#: app/Controllers/PaymentsCtrl.php:40
+msgid "Are you sure you want to permanently delete this payment?"
+msgstr "¿Estás seguro de que quieres borrar este pago permanentemente?"
+
+#: app/Controllers/PaymentsCtrl.php:42
+msgid "An error occurred deleting the payment"
+msgstr "Ha ocurrido un error intentando borrar el pago"
+
+#: app/Controllers/PaymentsCtrl.php:43
+msgid "Are you sure you want to permanently delete the selected payments?"
+msgstr ""
+"¿Estás seguro de que desea eliminar de forma permanente los pagos "
+"seleccionados?"
+
+#: app/Controllers/PaymentsCtrl.php:78
+msgid "Your Commission Payout on %s"
+msgstr "El pago de su comisión el %s"
+
+#: app/Controllers/PaymentsCtrl.php:254
+msgid "No valid payouts found."
+msgstr "No se encontraron pagos válidos."
+
+#: app/Controllers/PaymentsCtrl.php:257
+msgid ""
+"The number of payouts exceeds the limit of 15000, please split them into "
+"smaller batches."
+msgstr ""
+"El número de pagos supera el límite de 15000, por favor divídalos en lotes "
+"más pequeños."
+
+#: app/Controllers/PaymentsCtrl.php:281
+msgid "Invalid data"
+msgstr "Datos inválidos"
+
+#: app/Controllers/PaymentsCtrl.php:377
+msgid "%s payment permanently deleted."
+msgid_plural "%s payments permanently deleted."
+msgstr[0] "%s pago eliminado de forma permanente."
+msgstr[1] "%s pagos eliminado de forma permanente."
+
+#: app/Controllers/PaymentsCtrl.php:420
+msgid "Sorry, you are not allowed to do this."
+msgstr "Lo siento, no estás permitido hacer esta operación."
+
+#: app/Controllers/PaymentsCtrl.php:466
+msgid "Payments per page"
+msgstr "Pagos por página"
+
+#. translators: In this string, %s is the Blog Name/Title
+#: app/Controllers/PayPalCtrl.php:243
+msgid "[%s] PayPal Debug Email"
+msgstr "[%s] Correo electrónico de PayPal depuración"
+
+#: app/Controllers/ReportsCtrl.php:31 app/views/dashboard/home.php:227
+msgid "Last 30 Days"
+msgstr "Últimos 30 días"
+
+#: app/Controllers/ReportsCtrl.php:32 app/views/dashboard/home.php:228
+msgid "Last Month"
+msgstr "Último mes"
+
+#: app/Controllers/ReportsCtrl.php:33
+msgid "2 Months Ago"
+msgstr "Hace 2 meses atrás"
+
+#: app/Controllers/ReportsCtrl.php:34
+msgid "3 Months Ago"
+msgstr "Hace 3 meses atrás"
+
+#: app/Controllers/ReportsCtrl.php:35
+msgid "Last 6 Months"
+msgstr "Ultimos seis (6) meses"
+
+#: app/Controllers/ReportsCtrl.php:36 app/views/dashboard/home.php:232
+msgid "This Year"
+msgstr "Este año"
+
+#: app/Controllers/ReportsCtrl.php:37 app/views/dashboard/home.php:233
+msgid "Last Year"
+msgstr "Último Año"
+
+#: app/Controllers/ReportsCtrl.php:39
+msgid "An error occurred updating the report data"
+msgstr "Se produjo un error al actualizar los datos del informe."
+
+#: app/Controllers/ReportsCtrl.php:52
+msgid "Sorry, the reports could not be displayed due to a critical error"
+msgstr ""
+"Lo sentimos, los informes no se pudieron mostrar debido a un error crítico"
+
+#: app/Controllers/ReportsCtrl.php:79 app/Controllers/ReportsCtrl.php:104
+msgid "The given dates were invalid"
+msgstr "Las fechas dadas no son válidas"
+
+#: app/Controllers/SignupCtrl.php:66
+msgid "Your application is still pending"
+msgstr "Su solicitud está pendiente"
+
+#: app/Controllers/SignupCtrl.php:69
+msgid "An unknown error occurred with your application"
+msgstr "Ha ocurrido un error desconocido"
+
+#: app/Controllers/TransactionsCtrl.php:33
+msgid "Are you sure you want to delete this transaction?"
+msgstr "¿Seguro de que desea eliminar esta transacción?"
+
+#: app/Controllers/TransactionsCtrl.php:35
+msgid "An error occurred deleting the transaction"
+msgstr "Ha ocurrido un error intentando borrar el pago"
+
+#: app/Controllers/TransactionsCtrl.php:95
+msgid "Transaction not found"
+msgstr "Transacción no encontrada."
+
+#: app/Controllers/TransactionsCtrl.php:172
+msgid "Affiliate referrer must not be empty"
+msgstr "Afiliado que refiere no debe estar vacío"
+
+#: app/Controllers/TransactionsCtrl.php:177
+msgid "Affiliate referrer must be a valid WordPress user"
+msgstr "Afiliado que refiere debe ser un usuario válido de WordPress"
+
+#: app/Controllers/TransactionsCtrl.php:182
+msgid "The customer email address is not valid"
+msgstr "La dirección de correo electrónico no es válida"
+
+#: app/Controllers/TransactionsCtrl.php:186
+msgid "The product must not be empty"
+msgstr "Nombre del producto no debe estar vacío"
+
+#: app/Controllers/TransactionsCtrl.php:190
+msgid "The unique order ID must not be empty"
+msgstr "ID de Orden Unico no debe estar vacío"
+
+#: app/Controllers/TransactionsCtrl.php:194
+msgid "The source must not be empty"
+msgstr "La fuente no debe estar vacía"
+
+#: app/Controllers/TransactionsCtrl.php:198
+msgid "The sale amount cannot be less than zero"
+msgstr "El monto de la venta no puede ser menor que cero"
+
+#: app/Controllers/TransactionsCtrl.php:202
+msgid "The refund amount cannot be less than zero"
+msgstr "El monto de reembolso de esta transacción no puede ser menor que cero"
+
+#: app/Controllers/TransactionsCtrl.php:219
+msgid "Commission Levels within a transaction must be unique"
+msgstr "Niveles de Comisiones dentro de una transacción deben ser únicos"
+
+#: app/Controllers/TransactionsCtrl.php:223
+msgid "Commission level must be a number greater than zero"
+msgstr "Nivel de la comisión debe ser un número mayor que cero"
+
+#: app/Controllers/TransactionsCtrl.php:227
+msgid "Commission affiliate referrer must not be empty"
+msgstr "Afiliado que refiere no debe estar vacío"
+
+#: app/Controllers/TransactionsCtrl.php:232
+msgid "Commission affiliate referrer must be a valid WordPress user"
+msgstr "Afiliado que refiere debe ser un usuario válido de WordPress"
+
+#: app/Controllers/TransactionsCtrl.php:237
+msgid "Commission must not be empty"
+msgstr "La comisión no debe estar vacía"
+
+#: app/Controllers/TransactionsCtrl.php:241
+msgid "Commission must be formatted #.##"
+msgstr "La comisión debe ser con formato #. ##"
+
+#: app/Controllers/TransactionsCtrl.php:271
+msgid "Your transaction was created successfully"
+msgstr "Su transacción se ha creado correctamente"
+
+#: app/Controllers/TransactionsCtrl.php:364
+msgid "Your transaction was updated successfully"
+msgstr "Su transacción fue actualizada correctamente"
+
+#: app/Controllers/TransactionsCtrl.php:404
+msgid "You do not have access."
+msgstr "No tiene acceso."
+
+#: app/Controllers/TransactionsCtrl.php:408
+msgid "Could not delete commission"
+msgstr "No se pudo eliminar la comisión"
+
+#: app/Controllers/TransactionsCtrl.php:423
+msgid "Add New Commission"
+msgstr "Añadir Nueva Comisión"
+
+#: app/Controllers/TransactionsCtrl.php:449
+msgid "Transactions per page"
+msgstr "Transacciones por página"
+
+#: app/Controllers/UpdateCtrl.php:261 app/Lib/AddonUpdates.php:199
+msgid ""
+"You can access in-depth information about Easy Affiliate at %1$sthe Easy "
+"Affiliate User Manual%2$s."
+msgstr ""
+"Usted puede acceder a información detallada acerca de Easy Affiliate en "
+"%1$sel Manual del usuario de Easy Affiliate%2$s."
+
+#: app/Controllers/UpdateCtrl.php:262
+msgid "See the %1$splugin changelog%2$s."
+msgstr "Consulte el %1$sregistro de cambios del plugin%2$s."
+
+#: app/Controllers/UpdateCtrl.php:293
+msgid "You had an HTTP error connecting to Caseproof's Mothership API"
+msgstr "Tenía un error HTTP al conectar al Mothership API de Caseproof"
+
+#: app/Controllers/UpdateCtrl.php:305
+msgid "Your License Key was invalid"
+msgstr "Su Clave de Licencia no es válida"
+
+#: app/Controllers/UsersCtrl.php:39
+msgid "An error occurred saving the notes"
+msgstr "Ocurrió un error al guardar las notas"
+
+#: app/Controllers/UsersCtrl.php:133
+msgid "Is Affiliate"
+msgstr "Es un Afiliado"
+
+#: app/Controllers/UsersCtrl.php:134 app/views/users/admin_profile.php:48
+msgid "Affiliate Referrer"
+msgstr "Afiliado Referente"
+
+#: app/Controllers/UsersCtrl.php:157 app/Models/User.php:840
+msgid "Yes"
+msgstr "Sí"
+
+#: app/Controllers/UsersCtrl.php:157 app/Models/User.php:840
+msgid "No"
+msgstr "No"
+
+#: app/Controllers/UsersCtrl.php:179
+msgid "Message sent"
+msgstr "Mensaje enviado"
+
+#: app/Controllers/UsersCtrl.php:259
+msgid "Affiliates per page"
+msgstr "Afiliados por página"
+
+#: app/Controllers/UsersCtrl.php:358
+msgid "User Override"
+msgstr "Sobreescribir el Usuario"
+
+#: app/Controllers/WizardCtrl.php:36
+msgid "An error occurred verifying the license key."
+msgstr "Se produjo un error al verificar la clave de licencia."
+
+#: app/Controllers/WizardCtrl.php:38
+msgid "An error occurred during the AffiliateWP migration."
+msgstr "Se produjo un error durante la migración de AffiliateWP."
+
+#: app/Controllers/WizardCtrl.php:39
+msgid "Migration Complete"
+msgstr "Migración Completada"
+
+#: app/Controllers/WizardCtrl.php:41
+msgid "An error occurred during the Affiliate Royale migration."
+msgstr "Se produjo un error durante la migración de Affiliate Royale."
+
+#: app/Controllers/WizardCtrl.php:43
+msgid "An error occurred saving the eCommerce Setup."
+msgstr "Se produjo un error al guardar la configuración de eCommerce."
+
+#: app/Controllers/WizardCtrl.php:45
+msgid "An error occurred saving the Business Information."
+msgstr "Se produjo un error al guardar la información comercial."
+
+#: app/Controllers/WizardCtrl.php:47
+msgid "An error occurred saving the Affiliate Registration Information."
+msgstr ""
+"Se produjo un error al guardar la información de registro de afiliados."
+
+#: app/Controllers/WizardCtrl.php:48 app/Models/Options.php:825
+msgid "The commission amount in level %d must be a number."
+msgstr "El monto de la comisión en el nivel %d debe ser un número."
+
+#: app/Controllers/WizardCtrl.php:49 app/Models/Options.php:828
+msgid ""
+"The commission amount in level %d is a percentage so it must be a number "
+"from 0 to 100."
+msgstr ""
+"El monto de la comisión en el nivel %d es un porcentaje. Por eso, debe ser "
+"un número entre 0 y 100."
+
+#: app/Controllers/WizardCtrl.php:50
+msgid "The PayPal Client ID is required."
+msgstr "Se requiere el ID de cliente de PayPal."
+
+#: app/Controllers/WizardCtrl.php:51
+msgid "The PayPal Secret Key is required."
+msgstr "Se requiere la clave secreta de PayPal."
+
+#: app/Controllers/WizardCtrl.php:53
+msgid "An error occurred saving the Commissions & Payouts."
+msgstr "Se produjo un error al guardar las comisiones y pagos."
+
+#: app/Controllers/WizardCtrl.php:56
+msgid "A banner image is required"
+msgstr "Se requiere una imagen de banner"
+
+#: app/Controllers/WizardCtrl.php:57
+msgid "This field is required"
+msgstr "Este campo es obligatorio"
+
+#: app/Controllers/WizardCtrl.php:59
+#: app/views/admin/wizard/affiliate-registration.php:115
+#: app/views/admin/wizard/business.php:85
+#: app/views/admin/wizard/commissions-payouts.php:138
+#: app/views/admin/wizard/ecommerce.php:26
+#: app/views/admin/wizard/license.php:25 app/views/admin/wizard/migrate.php:33
+msgid "Save and Continue &rarr;"
+msgstr "Guardar y Continuar &rarr;"
+
+#: app/Controllers/WizardCtrl.php:145
+msgid "AffiliateWP was not detected."
+msgstr "No se detectó AffiliateWP."
+
+#: app/Controllers/WizardCtrl.php:157
+msgid "Affiliate Royale was not detected."
+msgstr "No se detectó Affiliate Royale."
+
+#: app/Helpers/AppHelper.php:129
+msgid "Support"
+msgstr "Apoyo"
+
+#: app/Helpers/AppHelper.php:156
+msgid "Commissions (%s)"
+msgstr "Comisiones (%s)"
+
+#: app/Helpers/AppHelper.php:158 app/Helpers/ReportsHelper.php:85
+#: app/views/dashboard/home.php:57 app/views/options/form.php:24
+#: app/views/transactions/row.php:117
+msgid "Commissions"
+msgstr "Comisiones"
+
+#: app/Helpers/AppHelper.php:164 app/Helpers/OptionsHelper.php:118
+msgctxt "commission level"
+msgid "Level %s:"
+msgstr "Nivel %s:"
+
+#: app/Helpers/AppHelper.php:178
+#: app/views/admin/wizard/commissions-payouts.php:17
+#: app/views/options/commissions.php:16 app/views/transactions/edit.php:65
+#: app/views/transactions/new-commission.php:19
+msgid "Commission Type"
+msgstr "Tipo de Comisión"
+
+#: app/Helpers/AppHelper.php:182
+#: app/views/admin/wizard/commissions-payouts.php:21
+#: app/views/options/commissions.php:20
+msgid "Base commissions on fixed amounts or on percentages of sales."
+msgstr "Basar las comisiones en montos fijos o en porcentajes de ventas."
+
+#: app/Helpers/AppHelper.php:187
+#: app/views/admin/wizard/commissions-payouts.php:27
+#: app/views/options/commissions.php:26 app/views/transactions/edit.php:69
+#: app/views/transactions/new-commission.php:22
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#: app/Helpers/AppHelper.php:188
+#: app/views/admin/wizard/commissions-payouts.php:28
+#: app/views/options/commissions.php:27 app/views/transactions/edit.php:70
+#: app/views/transactions/new-commission.php:23
+msgid "Fixed Amount"
+msgstr "Cantidad Fija"
+
+#: app/Helpers/AppHelper.php:193 app/Lib/TransactionsTable.php:38
+#: app/views/admin/wizard/commissions-payouts.php:34
+#: app/views/options/commissions.php:33 app/views/transactions/edit.php:78
+#: app/views/transactions/new-commission.php:28
+msgid "Commission"
+msgstr "Comisión"
+
+#: app/Helpers/AppHelper.php:197
+#: app/views/admin/wizard/commissions-payouts.php:38
+#: app/views/options/commissions.php:37
+msgid ""
+"Configure what percentage or fixed amount you want to pay your affiliates "
+"per sale."
+msgstr ""
+"Configura qué porcentaje o monto fijo quieres pagar a tus afiliados por "
+"venta."
+
+#: app/Helpers/AppHelper.php:212
+#: app/views/admin/wizard/commissions-payouts.php:55
+#: app/views/options/commissions.php:54
+msgid "Subscription Commissions"
+msgstr "Comisiones de Suscripción"
+
+#: app/Helpers/AppHelper.php:216
+#: app/views/admin/wizard/commissions-payouts.php:59
+#: app/views/options/commissions.php:58
+msgid "For subscriptions, choose which transactions to pay commissions on."
+msgstr "Para las suscripciones, elija en qué transacciones pagar comisiones."
+
+#: app/Helpers/AppHelper.php:221
+msgid "Pay commission on first sale only"
+msgstr "Pagar comisión solo en la primera venta"
+
+#: app/Helpers/AppHelper.php:222
+msgid "Pay commission on all sales"
+msgstr "Pagar comisión sobre todas las ventas"
+
+#: app/Helpers/AppHelper.php:251
+msgid "Please select"
+msgstr "Por favor selecciona"
+
+#: app/Helpers/AppHelper.php:283 app/Helpers/AppHelper.php:293
+msgid "Add Level"
+msgstr "Añadir nivel"
+
+#: app/Helpers/AppHelper.php:287
+msgid "Commission Levels are a Plus Feature"
+msgstr "Niveles de Comisiones son funciones del version Plus de Easy Affiliate"
+
+#: app/Helpers/AppHelper.php:288
+msgid ""
+"We're sorry, Commission Levels are not available on your plan. Please "
+"upgrade to the Plus plan to unlock all these awesome features."
+msgstr ""
+"Lo sentimos, los niveles de comisión no están disponibles en su plan. "
+"Actualice al plan Plus para desbloquear todas estas increíbles funciones."
+
+#: app/Helpers/AppHelper.php:289
+msgid "Upgrade to Plus"
+msgstr "Actualice a Plus"
+
+#: app/Helpers/AppHelper.php:298
+msgid "Activate Commission Levels Add-on"
+msgstr "Activar el Add-on de Niveles de Comisión"
+
+#: app/Helpers/AppHelper.php:299
+msgid ""
+"The Commission Levels add-on is installed but not currently active. Do you "
+"want to activate this add-on to enable Commission Levels?"
+msgstr ""
+"El Add-on Niveles de Comisión está instalado pero no está activo "
+"actualmente. ¿Quieres activar este add-on para habilitar los niveles de "
+"comisión?"
+
+#: app/Helpers/AppHelper.php:301 app/Helpers/AppHelper.php:309
+#: app/views/options/affiliates/auto-generate-agreement.php:47
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: app/Helpers/AppHelper.php:306
+msgid "Install Commission Levels Add-on"
+msgstr "Instalar el Add-on de Niveles de Comisión"
+
+#: app/Helpers/AppHelper.php:307
+msgid ""
+"The Commission Levels add-on is available on your plan but not currently "
+"installed. Do you want to install and activate this add-on to enable "
+"Commission Levels?"
+msgstr ""
+"El Add-on Niveles de Comisión está disponible pero no está instalado "
+"actualmente. ¿Quieres instalar y activar este add-on para habilitar los "
+"niveles de comisión?"
+
+#: app/Helpers/AppHelper.php:310
+msgid "Install"
+msgstr "Instalar"
+
+#: app/Helpers/CampaignsHelper.php:14 app/Helpers/CreativesHelper.php:15
+msgid "Any"
+msgstr "Sin Preferencia"
+
+#: app/Helpers/CreativesHelper.php:33
+msgid "Text Link"
+msgstr "Enlace de Texto"
+
+#: app/Helpers/CreativesHelper.php:50
+msgid "My Affiliate Link:"
+msgstr "Mi Enlace de Afiliado:"
+
+#: app/Helpers/CreativesHelper.php:78
+msgid "Text Links (%s)"
+msgstr "Enlaces de Texto (%s)"
+
+#: app/Helpers/CreativesHelper.php:79
+msgid "Banners (%s)"
+msgstr "Banners (%s)"
+
+#: app/Helpers/CreativesHelper.php:80
+msgid "Coupons (%s)"
+msgstr "Cupones (%s)"
+
+#: app/Helpers/CreativesHelper.php:81
+msgid "Custom Links (%s)"
+msgstr "Enlace Personalizados (%s)"
+
+#: app/Helpers/CreativesHelper.php:103
+#: app/views/dashboard/memberpress-coupons.php:28
+msgid "Get Link"
+msgstr "Obtener Enlace"
+
+#: app/Helpers/DashboardHelper.php:25 app/views/pro-dashboard/dashboard.php:15
+msgid "Menu"
+msgstr "Menú"
+
+#: app/Helpers/DashboardHelper.php:30 app/views/pro-dashboard/dashboard.php:20
+msgid "Home"
+msgstr "Inicio"
+
+#: app/Helpers/DashboardHelper.php:32 app/views/dashboard/creatives.php:5
+#: app/views/pro-dashboard/dashboard.php:22
+msgid "Links & Banners"
+msgstr "Enlaces y Banners"
+
+#: app/Helpers/DashboardHelper.php:34 app/views/pro-dashboard/dashboard.php:24
+msgid "Account"
+msgstr "Cuenta"
+
+#: app/Helpers/DashboardHelper.php:40 app/views/pro-dashboard/dashboard.php:30
+#: app/views/pro-dashboard/header.php:45
+msgid "Logout"
+msgstr "Cerrar Sesión"
+
+#: app/Helpers/ExportHelper.php:149
+msgid "Export all as CSV (%s records)"
+msgstr "Exportar todo como CSV (%s archivos)"
+
+#: app/Helpers/ExportHelper.php:151
+msgid "Export table as CSV (%s records)"
+msgstr "Exportar la tabla como CSV (%s archivos)"
+
+#: app/Helpers/OptionsHelper.php:23
+msgid "- Auto Create New Page -"
+msgstr "- Auto Crear Nueva Página -"
+
+#: app/Helpers/OptionsHelper.php:44
+msgid "Edit page"
+msgstr "Editar página"
+
+#: app/Helpers/OptionsHelper.php:47
+msgid "View page"
+msgstr "Ver página"
+
+#: app/Helpers/OptionsHelper.php:189 app/Models/Commission.php:246
+msgid "Payment"
+msgstr "Pago"
+
+#: app/Helpers/OptionsHelper.php:190
+msgid "Example Product"
+msgstr "Ejemplo de Producto"
+
+#: app/Helpers/OptionsHelper.php:227
+msgid "Hide Editor"
+msgstr "Ocultar el Editor"
+
+#: app/Helpers/OptionsHelper.php:234
+msgid "Send Test"
+msgstr "Enviar Prueba"
+
+#: app/Helpers/OptionsHelper.php:241
+msgid "Reset to Default"
+msgstr "Restablecer al Opciones por Defecto"
+
+#: app/Helpers/OptionsHelper.php:251
+msgid "Subject"
+msgstr "Asunto"
+
+#: app/Helpers/OptionsHelper.php:259
+msgid "Body"
+msgstr "Cuerpo"
+
+#: app/Helpers/OptionsHelper.php:275
+msgid "Insert &uarr;"
+msgstr "Insertar &uarr;"
+
+#: app/Helpers/OptionsHelper.php:279
+msgid "Use default template"
+msgstr "Usar la plantilla predeterminada"
+
+#: app/Helpers/OptionsHelper.php:283
+msgid ""
+"When this is checked the body of this email will be wrapped in the default "
+"email template."
+msgstr ""
+"Cuando este esta marcado, el cuerpo de este email será envueltas en la "
+"plantilla de correo electrónico predeterminado."
+
+#: app/Helpers/OptionsHelper.php:309
+msgid "ActiveCampaign Add-on"
+msgstr "Add-on de ActiveCampaign"
+
+#: app/Helpers/OptionsHelper.php:310
+msgid "ActiveCampaign Signup Integration"
+msgstr "Integración de registro de ActiveCampaign"
+
+#: app/Helpers/OptionsHelper.php:311
+msgid "Integrate ActiveCampaign with Easy Affiliate"
+msgstr "Integrar ActiveCampaign con Easy Affiliate"
+
+#: app/Helpers/OptionsHelper.php:319
+msgid "ConvertKit Add-on"
+msgstr "Add-on de ConvertKit"
+
+#: app/Helpers/OptionsHelper.php:320
+msgid "ConvertKit Signup Integration"
+msgstr "Integración del Inscripción de ConvertKit"
+
+#: app/Helpers/OptionsHelper.php:321
+msgid "Integrate ConvertKit with Easy Affiliate"
+msgstr "Integrar ConvertKit con Easy Affiliate"
+
+#: app/Helpers/OptionsHelper.php:329
+msgid "Mailchimp Add-on"
+msgstr "Add-on de Mailchimp"
+
+#: app/Helpers/OptionsHelper.php:330
+msgid "Mailchimp Signup Integration"
+msgstr "Integración del registro de MailChimp"
+
+#: app/Helpers/OptionsHelper.php:331
+msgid "Integrate Mailchimp with Easy Affiliate"
+msgstr "Integrar Mailchimp con Easy Affiliate"
+
+#: app/Helpers/OptionsHelper.php:368
+msgid "%s has been detected and payment integration is active."
+msgstr "Se ha detectado %s y la integración de pagos está activa."
+
+#: app/Helpers/OptionsHelper.php:371
+msgid "%s has been detected and payment integration is not active."
+msgstr "Se ha detectado %s y la integración de pagos no está activa."
+
+#: app/Helpers/OptionsHelper.php:375
+msgid "%s has not been detected and payment integration is not active."
+msgstr "%s no se ha detectado y la integración de pagos no está activa."
+
+#: app/Helpers/OptionsHelper.php:381
+msgid "%s payment integration is active."
+msgstr "La integración de pagos de %s está activa."
+
+#: app/Helpers/OptionsHelper.php:384
+msgid "%s payment integration is not active."
+msgstr "La integración de pagos de %s no está activa."
+
+#: app/Helpers/OptionsHelper.php:429
+msgid "Active on %s"
+msgstr "<b>Activo en %s</b>"
+
+#: app/Helpers/OptionsHelper.php:432 app/Helpers/OptionsHelper.php:475
+#: app/views/admin/wizard/license.php:8
+msgid "License Key"
+msgstr "Clave de Licencia:"
+
+#: app/Helpers/OptionsHelper.php:436 app/Lib/TransactionsTable.php:36
+msgid "Product"
+msgstr "Producto"
+
+#: app/Helpers/OptionsHelper.php:440
+msgid "Activations"
+msgstr "Activaciones:"
+
+#. translators: %1$s: open strong tag, %2$d: activation count, %3$s: max activations, %4$s: close strong tag
+#: app/Helpers/OptionsHelper.php:445
+msgid "%1$s%2$d of %3$s%4$s sites have been activated with this license key"
+msgstr "%1$s%2$d de %3$s%4$s sitios se han activado con esta clave de licencia"
+
+#: app/Helpers/OptionsHelper.php:456
+msgid "Deactivate License Key on %s"
+msgstr "Desactivar la Clave de Licencia en %s"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/Helpers/OptionsHelper.php:481 app/views/admin/wizard/license.php:13
+msgid ""
+"Add your Easy Affiliate license key from the email receipt or account area. "
+"%1$sRetrieve your license key.%2$s"
+msgstr ""
+"Agregue su clave de licencia de Easy Affiliate desde el recibo de correo "
+"electrónico o el área de la cuenta. %1$sRecupera tu clave de licencia%2$s."
+
+#: app/Helpers/ReportsHelper.php:81 app/views/dashboard/payments.php:15
+msgid "Date"
+msgstr "Fecha"
+
+#: app/Helpers/ReportsHelper.php:86
+msgid "Voided"
+msgstr "Anulado"
+
+#: app/Helpers/ReportsHelper.php:87 app/Lib/TransactionsTable.php:37
+#: app/views/payments/receipt.php:54
+msgid "Total"
+msgstr "Total"
+
+#: app/Helpers/ReportsHelper.php:116
+msgid "Totals"
+msgstr "Totales"
+
+#: app/Helpers/ReportsHelper.php:127
+msgid "Export table as CSV (%s record)"
+msgid_plural "Export table as CSV (%s records)"
+msgstr[0] "Exportar tabla como CSV (registro %s)"
+msgstr[1] "Exportar tabla como CSV (registros %s)"
+
+#: app/Helpers/WizardHelper.php:77
+msgid ""
+"No eCommerce Plugins Were Detected. We recommend using Easy Affiliate with "
+"one of our supported eCommerce plugins"
+msgstr ""
+"No se detectaron plugins de comercio electrónico. Recomendamos usar Easy "
+"Affiliate con uno de nuestros complementos de comercio electrónico "
+"compatibles"
+
+#: app/Lib/AddonUpdates.php:200
+msgid "See the %1$sEasy Affiliate changelog%2$s."
+msgstr "Consulte el %1$sregistro de cambios de Easy Affiliate%2$s."
+
+#: app/Lib/AffiliatesTable.php:25 app/views/shared/login_form.php:9
+#: app/views/signup/form.php:46
+msgid "Username"
+msgstr "Nombre de Usuario"
+
+#: app/Lib/AffiliatesTable.php:28
+msgid "MTD Clicks"
+msgstr "Clics del més"
+
+#: app/Lib/AffiliatesTable.php:29
+msgid "YTD Clicks"
+msgstr "Clics del año"
+
+#: app/Lib/AffiliatesTable.php:30
+msgid "MTD Commissions"
+msgstr "Comisiones del més"
+
+#: app/Lib/AffiliatesTable.php:31
+msgid "YTD Commissions"
+msgstr "Comisiones del año"
+
+#: app/Lib/AffiliatesTable.php:32
+msgid "Signup Date"
+msgstr "Fecha de Ingresar"
+
+#: app/Lib/AffiliatesTable.php:33 app/Lib/ClicksTable.php:31
+#: app/Lib/TransactionsTable.php:39
+msgid "Referrer"
+msgstr "Referente"
+
+#: app/Lib/AffiliatesTable.php:34 app/views/creatives/options.php:150
+msgid "Notes"
+msgstr "Notas"
+
+#: app/Lib/BaseModel.php:326 app/Lib/BaseModel.php:332
+msgid "%s must not be empty"
+msgstr "%s cantidad no debe estar vacía"
+
+#: app/Lib/BaseModel.php:338
+msgid "%s must be true or false"
+msgstr "%s debe ser verdadera o falsa"
+
+#: app/Lib/BaseModel.php:344
+msgid "%s must be an array"
+msgstr "%s debe ser una matriz"
+
+#: app/Lib/BaseModel.php:350
+msgid "%1$s must be %2$s NOT %3$s"
+msgstr "%1$s debe ser %2$s NO %3$s"
+
+#: app/Lib/BaseModel.php:350
+msgid "or"
+msgstr "o"
+
+#: app/Lib/BaseModel.php:356
+msgid "%1$s (%2$s) must be a valid url"
+msgstr "%1$s (%2$s) tiene que ser una URL válida"
+
+#: app/Lib/BaseModel.php:362
+msgid "%1$s (%2$s) must be a valid representation of currency"
+msgstr "%1$s (%2$s) debe ser una representación válida de la moneda"
+
+#: app/Lib/BaseModel.php:368
+msgid "%1$s (%2$s) must be a valid number"
+msgstr "%1$s (%2$s) debe ser un número válido"
+
+#: app/Lib/BaseModel.php:374
+msgid "%1$s (%2$s) must be a valid email"
+msgstr "%1$s (%2$s) debe ser un email válido"
+
+#: app/Lib/BaseModel.php:380
+msgid "%1$s (%2$s) must be a valid phone number"
+msgstr "%1$s (%2$s) debe ser un número de teléfono válido"
+
+#: app/Lib/BaseModel.php:386
+msgid "%1$s (%2$s) must be a valid IP Address"
+msgstr "%1$s (%2$s) debe ser una dirección IP válida"
+
+#: app/Lib/BaseModel.php:392
+msgid "%1$s (%2$s) must be a valid date"
+msgstr "%1$s (%2$s) debe ser una fecha válida"
+
+#: app/Lib/BaseModel.php:399
+msgid "%1$s (%2$s) must be a valid timestamp"
+msgstr "%1$s (%2$s) debe ser una marca de tiempo válida"
+
+#: app/Lib/BaseModel.php:405
+msgid "%1$s (%2$s) must match the regex pattern: %3$s"
+msgstr "%1$s (%2$s) debe coincidir con el patrón de regex: %3$s"
+
+#: app/Lib/ClicksTable.php:27 app/Lib/PaymentsTable.php:37
+#: app/Lib/TransactionsTable.php:32
+msgid "Time"
+msgstr "Tiempo"
+
+#: app/Lib/ClicksTable.php:30
+msgid "IP"
+msgstr "IP"
+
+#: app/Lib/Config.php:12
+msgid "A config file for %s wasn\\'t found"
+msgstr "Un archivo de configuración para %s no puede ser encontrado"
+
+#. translators: %1$s: post type name, %2$s: open link tag, %3$s: close link tag
+#: app/Lib/CptCtrl.php:35
+msgid "%1$s updated. %2$sView %1$s%3$s"
+msgstr "%1$s actualizado. %2$sVer %1$s%3$s"
+
+#: app/Lib/CptCtrl.php:42
+msgid "%1$s updated."
+msgstr "%1$s actualizado."
+
+#: app/Lib/CptCtrl.php:45
+msgid "Custom field updated."
+msgstr "Campo personalizado actualizado."
+
+#: app/Lib/CptCtrl.php:46
+msgid "Custom field deleted."
+msgstr "Campo personalizado borrado."
+
+#: app/Lib/CptCtrl.php:47
+msgid "%s updated."
+msgstr "%s actualizado."
+
+#: app/Lib/CptCtrl.php:48
+msgid "%1$s restored to revision from %2$s"
+msgstr "%1$s restaurado a la revisión desde %2$s."
+
+#. translators: %1$s: post type name, %2$s: open link tag, %3$s: close link tag
+#: app/Lib/CptCtrl.php:53
+msgid "%1$s published. %2$sView %1$s%3$s"
+msgstr "%1$s publicado. %2$sVer %1$s%3$s"
+
+#: app/Lib/CptCtrl.php:60
+msgid "%1$s published."
+msgstr "%1$s publicado."
+
+#: app/Lib/CptCtrl.php:63
+msgid "%s saved."
+msgstr "%s guardado."
+
+#. translators: %1$s: post type name, %2$s: open link tag, %3$s: close link tag
+#: app/Lib/CptCtrl.php:68
+msgid "%1$s submitted. %2$sPreview %1$s%3$s"
+msgstr "%1$s enviado. %2$sVista previa de %1$s%3$s"
+
+#. translators: %1$s: post type name, %2$s: scheduled date, %3$s: open link tag, %4$s: close link tag
+#: app/Lib/CptCtrl.php:76
+msgid "%1$s scheduled for: %2$s. %3$sPreview %1$s%4$s"
+msgstr "%1$s programado para: %2$s. %3$sVista previa %1$s%4$s"
+
+#. translators: %1$s: post type name, %2$s: open link tag, %3$s: close link tag
+#: app/Lib/CptCtrl.php:85
+msgid "%1$s draft updated. %2$sPreview %1$s%3$s"
+msgstr "%1$s proyecto actualizado. %2$sVista previa %1$s%3$s"
+
+#: app/Lib/CptCtrl.php:92
+msgid "%s submitted."
+msgstr "%s enviado."
+
+#. translators: %1$s: post type name, %2$s: scheduled date
+#: app/Lib/CptCtrl.php:95
+msgid "%1$s scheduled for: %2$s."
+msgstr "%1$s programado/a para el: %2$s."
+
+#: app/Lib/CptCtrl.php:99
+msgid "%s draft updated."
+msgstr "%s proyecto actualizado."
+
+#: app/Lib/CptModel.php:156 app/Lib/CtaxModel.php:164
+msgid "This was unable to be deleted."
+msgstr "Esto no se pudo eliminar."
+
+#: app/Lib/CtaxModel.php:107 app/Lib/CtaxModel.php:129
+msgid "%s was unable to be saved: %s"
+msgstr "%s no pudo ser guardado: %s"
+
+#: app/Lib/CtrlFactory.php:21
+msgid "Ctrl wasn't found"
+msgstr "No se encontró Ctrl"
+
+#: app/Lib/Db.php:329
+msgid "Creative:"
+msgstr "Creativo:"
+
+#: app/Lib/Db.php:357 app/Models/Creative.php:251
+msgid "Affiliate Link"
+msgstr "Enlace de Afiliado"
+
+#: app/Lib/JobFactory.php:10
+msgid "Job class wasn't found for %s"
+msgstr "Clase de trabajo no se encontró para %s"
+
+#: app/Lib/JobFactory.php:19
+msgid "%s is not a valid job object."
+msgstr "%s no es un objeto de trabajo válido."
+
+#: app/Lib/JobFactory.php:27
+msgid "Job Paths %s"
+msgstr "Caminos de Trabajos %s"
+
+#: app/Lib/Jobs.php:52
+msgid "Easy Affiliate Jobs Worker"
+msgstr "Caminos de trabajos de Easy Affiliate"
+
+#: app/Lib/Jobs.php:57
+msgid "Easy Affiliate Jobs Cleanup"
+msgstr "Limpieza de los caminos de trabajos de Easy Affiliate"
+
+#: app/Lib/Jobs.php:75
+msgid "Starting Job - %1$s (%2$s): %3$s"
+msgstr "Empezando el trabajo - %1$s (%2$s): %3$s"
+
+#: app/Lib/Jobs.php:77
+msgid "Job Completed - %1$s (%2$s)"
+msgstr "Trabajo Completado - %1$s (%2$s)"
+
+#: app/Lib/Jobs.php:81
+msgid "No class was specified in the job config"
+msgstr "No hay clase especificado en la configuración del job"
+
+#: app/Lib/Jobs.php:82
+msgid "Job Failed: No class"
+msgstr "El Trabajo Falló: No hay clase"
+
+#: app/Lib/Jobs.php:87
+msgid "Job Failed: %s"
+msgstr "El Trabajo Falló: %s"
+
+#: app/Lib/Jobs.php:283
+msgid "Background Jobs"
+msgstr "Jobs en Fondo"
+
+#: app/Lib/Jobs.php:288
+msgid "Asynchronous Emails"
+msgstr "Emails Asincrónicos"
+
+#. translators: %1$s: open strong tag, %2$s: close strong tag
+#: app/Lib/Jobs.php:294
+msgid ""
+"This option will allow you to send all Easy Affiliate emails asynchronously. "
+"This option can increase the speed & performance of the checkout process but "
+"may also result in a delay in when emails are received. %1$sNote:%2$s This "
+"option requires wp-cron to be enabled and working."
+msgstr ""
+"Esta opción le permitirá enviar todos los correos electrónicos de Easy "
+"Affiliate de forma asincrónica. Esta opción puede aumentar la velocidad y el "
+"rendimiento del proceso de pago, pero también puede provocar un retraso en "
+"la recepción de los correos electrónicos. %1$sNota:%2$s esta opción requiere "
+"que wp-cron esté habilitado y funcionando."
+
+#: app/Lib/ModelFactory.php:11
+msgid "A model for %s wasn't found"
+msgstr "No se encontró un modelo para %s"
+
+#: app/Lib/ModelFactory.php:19 app/Lib/ModelFactory.php:22
+#: app/Lib/ModelFactory.php:25
+msgid "There was no %s with an id of %d found"
+msgstr "No se encontraron %s con una identificación de %d"
+
+#: app/Lib/PaymentsTable.php:38
+msgid "Number of Sales"
+msgstr "Número de Ventas"
+
+#: app/Lib/PaymentsTable.php:39
+msgid "Net Sales Amount"
+msgstr "Importe Neto de Ventas"
+
+#: app/Lib/PaymentsTable.php:40
+msgid "Payout Amount"
+msgstr "Importe del Pago"
+
+#: app/Lib/PaymentsTable.php:42 app/Lib/TransactionsTable.php:40
+#: app/views/dashboard/creatives/text-links.php:18
+msgid "Actions"
+msgstr "Acciones"
+
+#: app/Lib/PaymentsTable.php:53
+msgid "Delete permanently"
+msgstr "Borrar Permanentemente"
+
+#: app/Lib/PaymentsTable.php:69
+msgid "Select payment"
+msgstr "Seleccionar Pago"
+
+#: app/Lib/TransactionsTable.php:34
+msgid "Invoice"
+msgstr "Factura"
+
+#: app/Lib/TransactionsTable.php:35
+msgid "Source"
+msgstr "Fuente"
+
+#: app/Lib/Utils.php:699
+msgid ""
+"*** Easy Affiliate Error\n"
+"==========\n"
+"%s\n"
+"==========\n"
+msgstr ""
+"*** Error de Easy Affiliate\n"
+"==========\n"
+"%s\n"
+"==========\n"
+
+#: app/Lib/Utils.php:709
+msgid "*** Easy Affiliate Debug: %s"
+msgstr "*** Easy Affiliate Depuración: %s"
+
+#: app/Models/AffiliateApplication.php:202 app/Models/User.php:673
+msgid "You must enter an Email Address"
+msgstr "Debe introducir una Dirección de Correo Electrónico."
+
+#: app/Models/AffiliateApplication.php:205 app/Models/User.php:676
+msgid "Email must be a real and properly formatted email address"
+msgstr "Email debe ser real y con el formato correcto"
+
+#: app/Models/AffiliateApplication.php:209
+msgid "You must enter at least one Promotion Website"
+msgstr "Debe ingresar al menos un sitio web de promoción"
+
+#: app/Models/AffiliateApplication.php:213
+msgid "You must enter a Promotion Strategy"
+msgstr "Debes ingresar una estrategia de promoción"
+
+#: app/Models/AffiliateApplication.php:217 app/Models/User.php:735
+msgid "You must be a human to sign up for this site"
+msgstr "Debe ser un ser humano para registrarse para este sitio"
+
+#: app/Models/Commission.php:246
+msgid "Subscription Payment"
+msgstr "Pago de Suscripción"
+
+#: app/Models/Commission.php:293
+msgid "Global"
+msgstr "Global"
+
+#: app/Models/Event.php:142
+msgid "%s doesn't appear to be a valid model."
+msgstr "%s no parece ser un modelo válido."
+
+#: app/Models/Event.php:193
+msgid "%s isn't a valid event model."
+msgstr "%s no es un modelo de evento válido."
+
+#: app/Models/Options.php:430
+msgid "Thank you for your application"
+msgstr "íGracias por haber presentado su solicitud!"
+
+#: app/Models/Options.php:432
+msgid ""
+"We'll review your affiliate application and get back to you shortly if your "
+"application is approved."
+msgstr ""
+"Revisaremos su solicitud de afiliado y nos comunicaremos con usted en breve "
+"si se aprueba su solicitud."
+
+#: app/Models/Options.php:572
+msgid "Welcome to %s's Affiliate Program."
+msgstr "Bienvenido al Programa de Afiliados de %s."
+
+#: app/Models/Options.php:791
+msgid "Business Name is required."
+msgstr "Nombre de la empresa se requiere."
+
+#: app/Models/Options.php:795
+msgid "Business Address Line 1 is required."
+msgstr "Dirección Línea 1 de su empresa es obligatoria."
+
+#: app/Models/Options.php:799
+msgid "Business City is required."
+msgstr "La ciudad de su empresa es obligatoria."
+
+#: app/Models/Options.php:803
+msgid "Business State is required."
+msgstr "El estado de su empresa es obligatorio."
+
+#: app/Models/Options.php:807
+msgid "Business Postcode is required."
+msgstr "Se requiere el código postal de su empresa."
+
+#: app/Models/Options.php:811
+msgid "Business Country is required."
+msgstr "El país de su empresa es obligatorio."
+
+#: app/Models/Options.php:815
+msgid "You must enable at least one eCommerce Payment Integration."
+msgstr ""
+"Debe habilitar al menos una Integración de pago de comercio electrónico."
+
+#: app/Models/Options.php:819
+msgid "The Commission Amount must not be empty."
+msgstr "El monto de la comisión no debe estar vacío."
+
+#: app/Models/Options.php:837
+msgid "One or more of your PayPal email addresses is not a valid email."
+msgstr ""
+"Uno o más de sus direcciones de correo electrónico de PayPal no son "
+"direcciones válidas."
+
+#: app/Models/Options.php:850
+msgid "One or more of the PayPal IPN source hosts is not a valid IP address."
+msgstr "Uno o más de la fuente IPN de PayPal no es una dirección IP válida."
+
+#: app/Models/Options.php:862
+msgid "One or more of the PayPal destination IPN URLs is not a valid URL."
+msgstr ""
+"Uno o más de los destinos de PayPal IPN URLs no son direcciones de URLs "
+"válidas."
+
+#: app/Models/Options.php:1004
+msgid "Welcome to the Affiliate Program on {$site_name}!"
+msgstr "Bienvenido al Programa de Afiliación en {$site_name}!"
+
+#: app/Models/Options.php:1007
+msgid "** Affiliate Sale"
+msgstr "** Venta de Afiliado"
+
+#: app/Models/Options.php:1010
+msgid "** Affiliate Commission"
+msgstr "** Comisión de Afiliado"
+
+#: app/Models/Options.php:1013
+msgid "** Someone Applied to Become an Affiliate"
+msgstr "** Alguien solicitó convertirse en afiliado"
+
+#: app/Models/Options.php:1016
+msgid "** You've Been Approved!"
+msgstr "** ¡Has sido aprobado!"
+
+#: app/Models/User.php:279
+msgid "Failed to delete Affiliate %d"
+msgstr "No se pudo eliminar el afiliado %d"
+
+#. translators: In this string, %s is the Blog Name/Title
+#: app/Models/User.php:345
+msgid "[%s] New Affiliate Signup"
+msgstr "[%s] Nuevo Registro de Afiliado"
+
+#. translators: In this string, %1$s is the blog's name/title, %2$s is the user's real name, %3$s is the user's username and %4$s is the user's email
+#: app/Models/User.php:348
+msgid ""
+"A new user just joined your Affiliate Program at %1$s!\n"
+"\n"
+"Name: %2$s\n"
+"Username: %3$s\n"
+"E-Mail: %4$s"
+msgstr ""
+"Un nuevo usuario se ha unido a su programa de afiliados %1$s!\n"
+"\n"
+"Nombre: %2$s\n"
+"Usuario: %3$s\n"
+"Correo Electronico: %4$s"
+
+#. translators: In this string, %s is the Blog Name/Title
+#: app/Models/User.php:405
+msgid "[%s] Affiliate Password Reset"
+msgstr "[%s] Restablecimiento de la Contraseña del Afiliado"
+
+#. translators: In this string, %1$s is the user's username, %2$s is the blog's name/title, %3$s is the blog's url, %4$s the reset password link
+#: app/Models/User.php:408
+msgid ""
+"Someone requested to reset your password for %1$s on the Affiliate Program "
+"at %2$s at %3$s\n"
+"\n"
+"To reset your password visit the following address, otherwise just ignore "
+"this email and nothing will happen.\n"
+"\n"
+"%4$s"
+msgstr ""
+"Alguien solicito restablecer su contraseña para %1$s en el  Programa de "
+"Afiliados en %2$s en %3$s\n"
+"\n"
+"Para restablecer su contraseña, visite la siguiente dirección, o solo ignore "
+"a este mensaje y nada pasará.\n"
+"\n"
+"%4$s"
+
+#. translators: In this string, %s is the Blog Name/Title
+#: app/Models/User.php:423
+msgid "[%s] Affiliate Password Lost/Changed"
+msgstr "[%s] Contraseña de Afiliado Perdida/Cambiada"
+
+#. translators: In this string, %1$s is the user's username
+#: app/Models/User.php:426
+msgid "Affiliate Password Lost and Changed for user: %1$s"
+msgstr "Contraseña Perdida y Cambiada para el usuario: %1$s"
+
+#. translators: In this string, %s is the Blog Name/Title
+#: app/Models/User.php:436
+msgid "[%s] Your new Affiliate Password"
+msgstr "[%s] Su nueva Contraseña de Afiliado"
+
+#. translators: In this string, %1$s is the user's first name, %2$s is the blog's name/title, %3$s is the user's username, and %4$s is the blog's URL...
+#: app/Models/User.php:439
+msgid ""
+"%1$s,\n"
+"\n"
+"Your password was successfully reset on %2$s!\n"
+"\n"
+"Username: %3$s\n"
+"\n"
+"You can log in here: %4$s"
+msgstr ""
+"%1$s,\n"
+"\n"
+"Tu contraseña de afiliado se restablecido correctamente %2$s!\n"
+"\n"
+"Usuario: %3$s\n"
+"\n"
+"Puedes Ingresar aquí: %4$s"
+
+#: app/Models/User.php:663 app/Models/User.php:747
+msgid "Username must not be blank"
+msgstr "El nombre de usuario no debe estar vacío"
+
+#: app/Models/User.php:666
+msgid "Username must only contain letters, numbers, dashes and/or underscores"
+msgstr ""
+"El nombre de usuario debe contener sólo letras, números y/o caracteres de "
+"subrayado"
+
+#: app/Models/User.php:669
+msgid "Username is already taken"
+msgstr "El nombre de usuario ya existe."
+
+#: app/Models/User.php:679
+msgid "Email Address has already been used by another user"
+msgstr "Dirección de correo electrónico ya ha sido utilizada por otro usuario."
+
+#: app/Models/User.php:722
+msgid "You must enter a Password"
+msgstr "Debe poner una contraseña."
+
+#: app/Models/User.php:726
+msgid "You must enter a Password Confirmation"
+msgstr "Debe poner una confirmación de contraseña."
+
+#: app/Models/User.php:730
+msgid "Your Password and Password Confirmation don't match"
+msgstr "Su contraseña y confirmación de contraseña no coinciden."
+
+#: app/Models/User.php:739
+msgid "You must agree to the Affiliate Signup Agreement"
+msgstr "Debe aceptar el Acuerdo de Registro de Afiliados"
+
+#: app/Models/User.php:751
+msgid "Username was not found"
+msgstr "Este Nombre de Usuario o Email no se encontró."
+
+#: app/Models/User.php:759
+msgid "You must enter a Username or Email"
+msgstr "Debe ingresar su Nombre del Usuario o Email"
+
+#: app/Models/User.php:766
+msgid "That Username or Email wasn't found."
+msgstr "Este Nombre de Usuario o Email no se encontró."
+
+#: app/Models/User.php:777
+msgid "You must enter a Password."
+msgstr "Debe poner una contraseña."
+
+#: app/Models/User.php:781
+msgid "You must enter a Password Confirmation."
+msgstr "Debe poner una confirmación de contraseña."
+
+#: app/Models/User.php:785
+msgid "Your Password and Password Confirmation don't match."
+msgstr "Su contraseña y confirmación de contraseña no coinciden."
+
+#: app/views/admin/addons/addons.php:5
+msgid "Easy Affiliate Add-ons"
+msgstr "Easy Affiliate Add-ons"
+
+#: app/views/admin/addons/addons.php:5
+msgid "Refresh Add-ons"
+msgstr "Actualizar Add-ons"
+
+#: app/views/admin/addons/addons.php:5
+msgid "Search add-ons"
+msgstr "Buscar Add-ons"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/admin/addons/addons.php:11
+msgid ""
+"Improve your affiliate program with our premium add-ons. Missing an add-on "
+"that you think you should be able to see? Click the %1$sRefresh Add-ons%2$s "
+"button above."
+msgstr ""
+"Mejore su programa de afiliados con nuestros add-ons premium. ¿Falta un add-"
+"on que cree que debería poder ver? Haga clic en el botón %1$sActualizar Add-"
+"ons%2$s que se encuentra arriba."
+
+#: app/views/admin/addons/addons.php:18
+msgid "Available Add-ons"
+msgstr "Add-ons disponibles"
+
+#: app/views/admin/addons/addons.php:40
+msgid "Not Installed"
+msgstr "No se ha Instalado"
+
+#. translators: %s: add-on status label
+#: app/views/admin/addons/addons.php:66
+msgid "Status: %s"
+msgstr "Estado: %s"
+
+#: app/views/admin/addons/addons.php:94
+msgid "Install Add-on"
+msgstr "Instalar Add-on"
+
+#: app/views/admin/addons/addons.php:98 app/views/admin/onboarding.php:228
+#: app/views/admin/onboarding.php:272
+msgid "Upgrade Now"
+msgstr "Actualizar Ahora"
+
+#: app/views/admin/addons/addons.php:115
+msgid "There were no Add-ons found for your license or lack thereof..."
+msgstr "No había ningún Add-ons encontrados para su licencia o falta de ella…"
+
+#: app/views/admin/affiliate_applications/meta_box.php:21
+#: app/views/affiliate_applications/form.php:24
+#: app/views/dashboard/account.php:25 app/views/signup/form.php:30
+msgid "First Name"
+msgstr "Nombres"
+
+#: app/views/admin/affiliate_applications/meta_box.php:29
+#: app/views/affiliate_applications/form.php:32
+#: app/views/dashboard/account.php:31 app/views/signup/form.php:38
+msgid "Last Name"
+msgstr "Apellido(s)"
+
+#: app/views/admin/affiliate_applications/meta_box.php:45
+msgid "Please list the websites you'll use to promote us."
+msgstr "Por favor, enumere los sitios web que utilizará para promocionarnos."
+
+#: app/views/admin/affiliate_applications/meta_box.php:53
+#: app/views/affiliate_applications/form.php:56
+msgid "How are you planning to promote us?"
+msgstr "¿Cómo planeas promocionarnos?"
+
+#: app/views/admin/onboarding.php:4
+msgid "Welcome to Easy Affiliate"
+msgstr "Bienvenido a Easy Affiliate"
+
+#: app/views/admin/onboarding.php:5
+msgid "Thank you for choosing us! We can't wait to see what you'll do."
+msgstr "¡Gracias por elegirnos! No podemos esperar a ver qué harás."
+
+#: app/views/admin/onboarding.php:14
+msgid "Getting Started With Easy Affiliate"
+msgstr "Empezando con Easy Affiliate"
+
+#: app/views/admin/onboarding.php:15
+msgid "Watch The Video"
+msgstr "Mire el Video"
+
+#: app/views/admin/onboarding.php:23
+msgid ""
+"Easy Affiliate makes it easy to create your own salesforce of worker bees "
+"using WordPress. Watch the video tutorial or use our 3 minute setup wizard."
+msgstr ""
+"Easy Affiliate facilita la creación de su propia fuerza de ventas de abejas "
+"obreras utilizando WordPress. Vea el video tutorial o use nuestro asistente "
+"de configuración de 3 minutos."
+
+#: app/views/admin/onboarding.php:25 app/views/admin/onboarding.php:271
+msgid "Launch the Wizard"
+msgstr "Iniciar al Asistente"
+
+#: app/views/admin/onboarding.php:26
+msgid "Read the Full Guide"
+msgstr "Lee la Guía Completa"
+
+#: app/views/admin/onboarding.php:33
+msgid "Easy Affiliate's BUZZ-Worthy Features"
+msgstr "Características mejores de Easy Affiliate"
+
+#: app/views/admin/onboarding.php:34
+msgid ""
+"These are the features that make Easy Affiliate the most powerful and user-"
+"friendly WordPress affiliate plugin on the market."
+msgstr ""
+"Estas son las características que hacen de Easy Affiliate el complemento de "
+"afiliados de WordPress más potente y fácil de usar del mercado."
+
+#: app/views/admin/onboarding.php:42
+msgid "Super-Simple Setup"
+msgstr "Configuración Súper Simple"
+
+#: app/views/admin/onboarding.php:43
+msgid ""
+"If you know how to install a WordPress Plugin, you know how to launch an "
+"affiliate program with Easy Affiliate."
+msgstr ""
+"Si sabe cómo instalar un Plugin de WordPress, sabe cómo iniciar un programa "
+"de afiliados con Easy Affiliate."
+
+#: app/views/admin/onboarding.php:51
+msgid "Personalized Affiliate Dashboard"
+msgstr "Panel de Afiliados Personalizado"
+
+#: app/views/admin/onboarding.php:52
+msgid ""
+"The Affiliate Dashboard comes pre-styled and can be adjusted to fix your "
+"brand using the WordPress Customizer."
+msgstr ""
+"El Panel de Afiliados viene con un diseño previo y se puede ajustar para "
+"arreglar su marca usando el Personalizador de WordPress."
+
+#: app/views/admin/onboarding.php:62
+msgid "Perfect Payment Integration"
+msgstr "Integración de Perfect Payment"
+
+#: app/views/admin/onboarding.php:63
+msgid ""
+"Set up tracking for initial and recurring payments from MemberPress, "
+"WooCommerce, and Easy Digital Downloads."
+msgstr ""
+"Configure el seguimiento para pagos iniciales y recurrentes de MemberPress, "
+"WooCommerce y Easy Digital Downloads."
+
+#: app/views/admin/onboarding.php:71
+msgid "Powerful Admin"
+msgstr "Potente Administrador"
+
+#: app/views/admin/onboarding.php:72
+msgid ""
+"You'll find everything you need to run your affiliate program right in your "
+"WordPress admin."
+msgstr ""
+"Encontrará todo lo que necesita para ejecutar su programa de afiliados "
+"directamente en su administrador de WordPress."
+
+#: app/views/admin/onboarding.php:83
+msgid ""
+"Approve, ignore, or reject any application as it comes in with Easy "
+"Affiliate's built-in Affiliate Application process."
+msgstr ""
+"Apruebe, ignore o rechace cualquier solicitud, ya que viene con el proceso "
+"de solicitud de afiliados integrado de Easy Affiliate."
+
+#: app/views/admin/onboarding.php:91
+msgid "Commissions Tracking"
+msgstr "Seguimiento de Comisiones"
+
+#: app/views/admin/onboarding.php:92
+msgid ""
+"Set your commission rate and customize it per user - even set multiple "
+"commission levels."
+msgstr ""
+"Establezca su tasa de comisión y personalícela por usuario, incluso "
+"establezca varios niveles de comisión."
+
+#: app/views/admin/onboarding.php:102
+msgid "Advanced Security"
+msgstr "Seguridad Avanzada"
+
+#: app/views/admin/onboarding.php:103
+msgid ""
+"We're the most secure affiliate plugin on the market. Rest assured that your "
+"commissions are being tracked and your affiliate program is safe against "
+"attack."
+msgstr ""
+"Somos el plugin de afiliados más seguro del mercado. Tenga la confianza de "
+"que sus comisiones están siendo rastreadas y su programa de afiliados está a "
+"salvo de ataques."
+
+#: app/views/admin/onboarding.php:111
+msgid "Fraud Detection"
+msgstr "Detección de Fraude"
+
+#: app/views/admin/onboarding.php:112
+msgid ""
+"Easy Affiliate makes fraud detection simple by flagging or rejecting "
+"suspicious affiliate behavior BEFORE you pay out."
+msgstr ""
+"Easy Affiliate simplifica la detección de fraudes marcando o rechazando el "
+"comportamiento sospechoso de un afiliado ANTES de pagar."
+
+#: app/views/admin/onboarding.php:122
+msgid "Complete Creative Management"
+msgstr "Gestión Creativa Completa"
+
+#: app/views/admin/onboarding.php:123
+msgid ""
+"With our full-featured creative asset management platform, your marketing is "
+"always on point because you're in control of it."
+msgstr ""
+"Con nuestra plataforma de gestión de activos creativos con todas las "
+"funciones, su marketing siempre está funcionando al 100% porque usted lo "
+"controla."
+
+#: app/views/admin/onboarding.php:131
+msgid "Custom Link Generation"
+msgstr "Generación de Enlaces Personalizados"
+
+#: app/views/admin/onboarding.php:132
+msgid ""
+"Built-in support for Pretty Links means your affiliates' custom links will "
+"always be short and look great."
+msgstr ""
+"El soporte integrado para Pretty Links significa que los enlaces "
+"personalizados de sus afiliados siempre serán cortos y se verán geniales."
+
+#: app/views/admin/onboarding.php:142
+msgid "Pay Affiliates Confidently"
+msgstr "Pague a los afiliados con confianza"
+
+#: app/views/admin/onboarding.php:143
+msgid ""
+"With support for PayPal Mass Payment files, offline payments and One Click "
+"payments via PayPal, paying affiliates is a breeze."
+msgstr ""
+"Con soporte para archivos de pago masivo de PayPal, pagos fuera de línea y "
+"pagos con un clic a través de PayPal, pagar a los afiliados es muy sencillo."
+
+#: app/views/admin/onboarding.php:151
+msgid "Intuitive Email Marketing"
+msgstr "Marketing por correo electrónico que es intuitivo"
+
+#: app/views/admin/onboarding.php:152
+msgid ""
+"Easy Affiliate integrates seamlessly with major email marketing services "
+"like Mailchimp, ActiveCampaign, and ConvertKit."
+msgstr ""
+"Easy Affiliate se integra a la perfección con los principales servicios de "
+"marketing por correo electrónico como Mailchimp, ActiveCampaign y ConvertKit."
+
+#: app/views/admin/onboarding.php:162
+msgid "Stellar Support"
+msgstr "Soporte Estelar"
+
+#: app/views/admin/onboarding.php:163
+msgid ""
+"In case you need us, out amazing support team is ready and willing to help. "
+"We won't leave you hanging."
+msgstr ""
+"En caso de que nos necesite, nuestro increíble equipo de soporte está listo "
+"y dispuesto a ayudar. No te dejaremos sin ayuda."
+
+#: app/views/admin/onboarding.php:169
+msgid "See All Features"
+msgstr "Ver todas las características"
+
+#: app/views/admin/onboarding.php:173
+msgid "Upgrade to PRO"
+msgstr "Actualizar a PRO"
+
+#: app/views/admin/onboarding.php:177
+msgid "Use of Easy Affiliate on 5 websites"
+msgstr "Uso de Easy Affiliate en 5 sitios web"
+
+#: app/views/admin/onboarding.php:181
+msgid "Access to Commission Rules Add-On"
+msgstr "Acceso al add-on de reglas de la comisión"
+
+#: app/views/admin/onboarding.php:185
+msgid "Access to ActiveCampaign Add-On"
+msgstr "Acceso al add-on ActiveCampaign"
+
+#: app/views/admin/onboarding.php:189
+msgid "Access to Developer Tools Add-On"
+msgstr "Acceso al Add-on de Herramientas para Desarrolladores"
+
+#: app/views/admin/onboarding.php:194
+msgid "PRO"
+msgstr "PRO"
+
+#. translators: %s: the normal price before discount
+#: app/views/admin/onboarding.php:202
+msgid "Normally %s"
+msgstr "Normalmente %s"
+
+#. translators: %s: the price (per year)
+#: app/views/admin/onboarding.php:213
+msgid "%s/year"
+msgstr "%s/año"
+
+#. translators: %s: the savings amount
+#: app/views/admin/onboarding.php:222
+msgid "%s Savings*"
+msgstr "%s Capacidad de Ahorro*"
+
+#. translators: %s: love heart
+#: app/views/admin/onboarding.php:239
+msgid "Our Customers %s Easy Affiliate"
+msgstr "Nuestros Clientes %s Easy Affiliate"
+
+#: app/views/admin/onboarding.php:246
+msgid ""
+"A simple yet powerful affiliate tracking and network management software."
+msgstr ""
+"Un software de gestión de redes y seguimiento de afiliados sencillo pero "
+"potente."
+
+#: app/views/admin/onboarding.php:254
+msgid ""
+"Easy Affiliate has been instrumental in boosting our revenue by allowing us "
+"to tap into the marketing power of our affiliates."
+msgstr ""
+"Easy Affiliate ha sido fundamental para aumentar nuestros ingresos al "
+"permitirnos aprovechar el poder de marketing de nuestros afiliados."
+
+#: app/views/admin/onboarding.php:262
+msgid ""
+"If you're looking for a simple but powerful plugin that'll give you what you "
+"need to create and run your own successful affiliate program, Easy Affiliate "
+"is the answer."
+msgstr ""
+"Si está buscando un plugin simple pero poderoso que le brinde lo que "
+"necesita para crear y ejecutar su propio programa de afiliados exitoso, Easy "
+"Affiliate es la respuesta."
+
+#: app/views/admin/wizard.php:7
+msgid "Exit Setup"
+msgstr "Salir de la configuración"
+
+#: app/views/admin/wizard/affiliate-registration.php:7
+msgid "Affiliate Registration Information"
+msgstr "Información de Registro de Afiliados"
+
+#: app/views/admin/wizard/affiliate-registration.php:8
+msgid "Set up your initial Affiliate Registration settings."
+msgstr "Configure su configuración inicial de registro de afiliado."
+
+#: app/views/admin/wizard/affiliate-registration.php:16
+#: app/views/options/affiliates.php:54
+msgid "Application"
+msgstr "Solicitud"
+
+#: app/views/admin/wizard/affiliate-registration.php:17
+msgid "Affiliates must apply and be approved by you"
+msgstr "Los afiliados deben postularse y ser aprobados por usted"
+
+#: app/views/admin/wizard/affiliate-registration.php:24
+#: app/views/options/affiliates.php:62
+msgid "Public"
+msgstr "Público"
+
+#: app/views/admin/wizard/affiliate-registration.php:25
+msgid "Anyone can instantly become an affiliate without approval"
+msgstr ""
+"Cualquiera puede convertirse instantáneamente en afiliado sin aprobación"
+
+#: app/views/admin/wizard/affiliate-registration.php:32
+#: app/views/options/affiliates.php:58
+msgid "Private"
+msgstr "Privado"
+
+#: app/views/admin/wizard/affiliate-registration.php:33
+msgid "Affiliates can only be manually added by you"
+msgstr "Solo usted puede agregar afiliados manualmente"
+
+#: app/views/admin/wizard/affiliate-registration.php:41
+msgid "Collect Affiliate Addresses"
+msgstr "Recopilar Direcciones de Afiliados"
+
+#: app/views/admin/wizard/affiliate-registration.php:48
+#: app/views/admin/wizard/affiliate-registration.php:72
+#: app/views/options/affiliates.php:114 app/views/options/affiliates.php:144
+msgid "On Registration"
+msgstr "En el Registro"
+
+#: app/views/admin/wizard/affiliate-registration.php:53
+#: app/views/admin/wizard/affiliate-registration.php:77
+#: app/views/options/affiliates.php:119 app/views/options/affiliates.php:149
+msgid "On Account"
+msgstr "En la Página de Cuenta"
+
+#: app/views/admin/wizard/affiliate-registration.php:58
+#: app/views/admin/wizard/affiliate-registration.php:82
+#: app/views/options/affiliates.php:124 app/views/options/affiliates.php:154
+msgid "Require"
+msgstr "Requiere"
+
+#: app/views/admin/wizard/affiliate-registration.php:65
+msgid "Collect Tax Info"
+msgstr "Recopilar Información Fiscal"
+
+#: app/views/admin/wizard/affiliate-registration.php:91
+#: app/views/options/affiliates.php:163
+msgid "Show Affiliate Agreement on Registration Page"
+msgstr "Mostrar Acuerdo de Afiliado en la Página de Registro"
+
+#: app/views/admin/wizard/affiliate-registration.php:101
+#: app/views/options/affiliates.php:179
+msgid "Affiliate Agreement"
+msgstr "Acuerdo de Afiliado"
+
+#: app/views/admin/wizard/affiliate-registration.php:106
+#: app/views/options/affiliates.php:184
+msgid "HTML is allowed"
+msgstr "HTML está permitido"
+
+#: app/views/admin/wizard/business.php:8
+msgid "Business Information"
+msgstr "Información de Empresa"
+
+#: app/views/admin/wizard/business.php:9
+msgid "Set up your Easy Affiliate business information."
+msgstr "Configure su información comercial de Easy Affiliate."
+
+#: app/views/admin/wizard/business.php:16 app/views/options/general.php:31
+msgid "Business Name"
+msgstr "Nombre de Empresa"
+
+#: app/views/admin/wizard/business.php:24 app/views/dashboard/account.php:48
+#: app/views/options/general.php:39 app/views/signup/form.php:63
+msgid "Address Line 1"
+msgstr "Dirección Línea 1"
+
+#: app/views/admin/wizard/business.php:32 app/views/dashboard/account.php:54
+#: app/views/options/general.php:47 app/views/signup/form.php:73
+msgid "Address Line 2"
+msgstr "Dirección Línea 2"
+
+#: app/views/admin/wizard/business.php:40 app/views/dashboard/account.php:60
+#: app/views/options/general.php:55 app/views/signup/form.php:80
+#: app/views/users/admin_profile.php:17
+msgid "City"
+msgstr "Ciudad"
+
+#: app/views/admin/wizard/business.php:48 app/views/options/general.php:63
+#: app/views/users/admin_profile.php:21
+msgid "State"
+msgstr "Estado"
+
+#: app/views/admin/wizard/business.php:56 app/views/options/general.php:71
+msgid "Postcode"
+msgstr "Código Postal"
+
+#: app/views/admin/wizard/business.php:64 app/views/dashboard/account.php:78
+#: app/views/options/general.php:79 app/views/signup/form.php:110
+#: app/views/users/admin_profile.php:29
+msgid "Country"
+msgstr "País"
+
+#: app/views/admin/wizard/business.php:72 app/views/options/general.php:87
+msgid "SSN/EIN"
+msgstr "SSN/EIN"
+
+#: app/views/admin/wizard/business.php:78 app/views/options/general.php:93
+msgid "Change SSN/EIN"
+msgstr "Cambiar SSN/EIN"
+
+#: app/views/admin/wizard/commissions-payouts.php:9
+msgid "Commissions & Payouts"
+msgstr "Comisiones y Pagos"
+
+#: app/views/admin/wizard/commissions-payouts.php:10
+msgid "Configure your initial affiliate commissions & payouts."
+msgstr "Configure sus comisiones y pagos iniciales de afiliados."
+
+#: app/views/admin/wizard/commissions-payouts.php:67
+#: app/views/options/commissions.php:66
+msgid "Pay Commission on First Sale Only"
+msgstr "Pagar comisión solo en la primera venta"
+
+#: app/views/admin/wizard/commissions-payouts.php:71
+#: app/views/options/commissions.php:70
+msgid "Pay Commission on All Sales"
+msgstr "Pagar comisión sobre todas las ventas"
+
+#: app/views/admin/wizard/commissions-payouts.php:78
+#: app/views/options/commissions.php:102
+msgid "Payout Method"
+msgstr "Método de Pago"
+
+#: app/views/admin/wizard/commissions-payouts.php:82
+#: app/views/options/commissions.php:106
+msgid "What method will you use to pay your affiliates?"
+msgstr "¿Qué método utilizará para pagar a sus afiliados?"
+
+#: app/views/admin/wizard/commissions-payouts.php:90
+#: app/views/options/commissions.php:114
+msgid "PayPal Mass Payment File"
+msgstr "Descargar el Archivo de Pago en Serie de PayPal"
+
+#: app/views/admin/wizard/commissions-payouts.php:94
+#: app/views/options/commissions.php:118
+msgid "PayPal 1-Click"
+msgstr "PayPal con 1 clic"
+
+#: app/views/admin/wizard/commissions-payouts.php:98
+#: app/views/options/commissions.php:122
+msgid "Offline"
+msgstr "Fuera de Línea"
+
+#: app/views/admin/wizard/commissions-payouts.php:110
+#: app/views/options/commissions.php:134
+msgid "PayPal App Client ID"
+msgstr "ID de Cliente de la aplicación PayPal"
+
+#: app/views/admin/wizard/commissions-payouts.php:114
+#: app/views/options/commissions.php:138
+msgid "PayPal App Client ID that you can get when creating your PayPal app"
+msgstr ""
+"ID de Cliente de la aplicación de PayPal que puede obtener al crear su "
+"aplicación de PayPal"
+
+#: app/views/admin/wizard/commissions-payouts.php:123
+#: app/views/options/commissions.php:147
+msgid "PayPal App Secret Key"
+msgstr "Clave secreta de la aplicación PayPal"
+
+#: app/views/admin/wizard/commissions-payouts.php:127
+#: app/views/options/commissions.php:151
+msgid "PayPal App Secret Key that you can get when creating your PayPal app"
+msgstr ""
+"Clave secreta de la aplicación de PayPal que puede obtener al crear su "
+"aplicación de PayPal"
+
+#: app/views/admin/wizard/creatives.php:8
+msgid "Add and view your banner and text creatives."
+msgstr "Agregue y vea su banner y creatividades de texto."
+
+#: app/views/admin/wizard/creatives.php:11
+msgid "+ Add"
+msgstr "+ Agregar"
+
+#: app/views/admin/wizard/creatives.php:22
+msgid "View All Creatives"
+msgstr "Ver todas las creatividades"
+
+#: app/views/admin/wizard/creatives.php:25
+msgid "Skip and Continue &rarr;"
+msgstr "Saltar y Continuar &rarr;"
+
+#: app/views/admin/wizard/creatives.php:34
+msgid "Upload Creative"
+msgstr "Subir Creatividad"
+
+#: app/views/admin/wizard/creatives.php:44
+msgid "The name of this creative (displayed to affiliates)."
+msgstr "El nombre de esta creatividad (que se muestra a los afiliados)."
+
+#: app/views/admin/wizard/creatives.php:56 app/views/creatives/options.php:13
+msgid "The destination URL for this creative."
+msgstr "La URL de destino de esta creatividad."
+
+#: app/views/admin/wizard/creatives.php:84 app/views/options/affiliates.php:322
+msgid "Choose Image"
+msgstr "Elegir una Imagen"
+
+#: app/views/admin/wizard/creatives.php:87 app/views/options/affiliates.php:319
+msgid "Remove"
+msgstr "Remover"
+
+#: app/views/admin/wizard/creatives.php:96 app/views/creatives/options.php:115
+msgid "The text of the link."
+msgstr "Texto del link."
+
+#: app/views/admin/wizard/creatives.php:103
+msgid "+ Add Creative"
+msgstr "+ Añadir Creatividad"
+
+#: app/views/admin/wizard/ecommerce.php:9
+msgid "eCommerce Setup"
+msgstr "Configuración de Comercio Electrónico"
+
+#: app/views/admin/wizard/ecommerce.php:10
+msgid ""
+"What eCommerce Plugins do you want Easy Affiliate to track Affiliate Sales "
+"with?"
+msgstr ""
+"¿Con qué Plugins de comercio electrónico desea que Easy Affiliate realice un "
+"seguimiento de las ventas de afiliados?"
+
+#: app/views/admin/wizard/finish.php:7
+msgid "Awesome, You're All Set!"
+msgstr "¡Impresionante, estás listo!"
+
+#: app/views/admin/wizard/finish.php:8
+msgid "Easy Affiliate is all set up and ready to use."
+msgstr "Easy Affiliate está todo configurado y listo para usar."
+
+#. translators: %s: the link URL to the affiliate signup form
+#: app/views/admin/wizard/finish.php:16
+msgid ""
+"Affiliates can now apply to your Affiliate Program by applying at the "
+"following URL: %s"
+msgstr ""
+"Los afiliados ahora pueden postularse a su Programa de Afiliados mediante la "
+"solicitud en la siguiente URL: %s"
+
+#. translators: %s: the link URL to the affiliate dashboard
+#: app/views/admin/wizard/finish.php:25
+msgid "You can check out your new Affiliate Dashboard here: %s"
+msgstr "Puede consultar su nuevo Panel de Afiliados aquí: %s"
+
+#: app/views/admin/wizard/finish.php:30
+msgid ""
+"You are now fully setup to track Affiliate Commissions on your sales as soon "
+"as your Affiliates start sharing your link!"
+msgstr ""
+"¡Ahora está completamente configurado para rastrear las comisiones de "
+"afiliados en sus ventas tan pronto como sus afiliados comiencen a compartir "
+"su enlace!"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/admin/wizard/finish.php:35
+msgid ""
+"%1$sSubscribe to the Easy Affiliate blog%2$s for tips on how to get the most "
+"out of your Affiliate Program."
+msgstr ""
+"%1$sSuscríbase al blog Easy Affiliate%2$s para obtener sugerencias sobre "
+"cómo aprovechar al máximo su Programa de Afiliados."
+
+#: app/views/admin/wizard/finish.php:43
+msgid "Finish Setup & Exit Wizard &rarr;"
+msgstr "Finalizar el asistente de configuración y Salir &rarr;"
+
+#: app/views/admin/wizard/license.php:4
+msgid "Connect Easy Affiliate to Your Website"
+msgstr "Conecte Easy Affiliate a su sitio web"
+
+#: app/views/admin/wizard/license.php:5
+msgid ""
+"Easy Affiliate connects to WordPress and helps you create an organic sales "
+"force."
+msgstr ""
+"Easy Affiliate se conecta a WordPress y le ayuda a crear una fuerza de "
+"ventas orgánica."
+
+#: app/views/admin/wizard/migrate.php:7
+msgid "Migrate Affiliate Program"
+msgstr "Migrar Programa de Afiliados"
+
+#: app/views/admin/wizard/migrate.php:8
+msgid "Migrate your affiliate program to Easy Affiliate with one click."
+msgstr "Migre su programa de afiliados a Easy Affiliate con un solo clic."
+
+#: app/views/admin/wizard/migrate.php:13
+msgid "AffiliateWP Detected"
+msgstr "AffiliateWP Detectado"
+
+#: app/views/admin/wizard/migrate.php:14
+msgid "Migrate AffiliateWP Data, Settings and Links into Easy Affiliate"
+msgstr ""
+"Migre los datos, la configuración y los enlaces de AffiliateWP a Easy "
+"Affiliate"
+
+#: app/views/admin/wizard/migrate.php:16
+msgid "Migrating From AffiliateWP"
+msgstr "Migrando desde AffiliateWP"
+
+#: app/views/admin/wizard/migrate.php:21
+msgid "Affiliate Royale Detected"
+msgstr "Affiliate Royale Detectado"
+
+#: app/views/admin/wizard/migrate.php:22
+msgid "Migrate Affiliate Royale Data, Settings and Links into Easy Affiliate"
+msgstr ""
+"Migre los datos, la configuración y los enlaces de Affiliate Royale a Easy "
+"Affiliate"
+
+#: app/views/admin/wizard/migrate.php:24
+msgid "Migrating From Affiliate Royale"
+msgstr "Migrando desde Affiliate Royale"
+
+#: app/views/admin/wizard/migrate.php:29
+msgid ""
+"You don't currently have a known Affiliate Program plugin installed to "
+"migrate from."
+msgstr ""
+"Actualmente, no tiene instalado un complemento del Programa de Afiliados "
+"conocido para migrar."
+
+#: app/views/affiliates/list.php:17
+msgid "Save"
+msgstr "Guardar"
+
+#: app/views/affiliates/row.php:40 app/views/payments/owed.php:81
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#. translators: %1s: username, %2$s: email address
+#: app/views/affiliates/row.php:83
+msgid "Notes for affiliate %1s (%2$s)"
+msgstr "Notas para el afiliado %1s (%2$s)"
+
+#: app/views/affiliate_applications/form.php:9
+#: app/views/dashboard/account.php:18 app/views/shared/errors.php:7
+#: app/views/shared/frontend-errors.php:7 app/views/signup/form.php:17
+msgid "ERROR"
+msgstr "ERROR"
+
+#: app/views/affiliate_applications/form.php:14
+msgid "Please fill out this form to apply for our Affiliate Program:"
+msgstr "Por favor, rellene este formulario para presentar su solicitud."
+
+#: app/views/affiliate_applications/form.php:25
+#: app/views/affiliate_applications/form.php:33
+#: app/views/affiliate_applications/form.php:49
+#: app/views/affiliate_applications/form.php:57 app/views/signup/form.php:31
+#: app/views/signup/form.php:39 app/views/signup/form.php:47
+#: app/views/signup/form.php:65 app/views/signup/form.php:82
+#: app/views/signup/form.php:92 app/views/signup/form.php:102
+#: app/views/signup/form.php:112 app/views/signup/form.php:139
+#: app/views/signup/form.php:151
+msgid "Required"
+msgstr "Requerido"
+
+#: app/views/affiliate_applications/form.php:41 app/views/signup/form.php:55
+msgid "Required and must be a valid email address"
+msgstr "Requerido y debe ser una dirección de correo electrónico válida"
+
+#: app/views/affiliate_applications/form.php:48
+msgid "Please list the websites you'll use to promote us"
+msgstr "Por favor, enumere los sitios web que utilizará para promocionarnos."
+
+#: app/views/affiliate_applications/form.php:64 app/views/signup/form.php:185
+msgid "Field should be empty"
+msgstr "Este campo debe estar vacío"
+
+#: app/views/affiliate_applications/form.php:68
+msgid "Apply to become an Affiliate"
+msgstr "Solicitar convertirse en afiliado"
+
+#: app/views/affiliate_applications/form.php:70 app/views/signup/form.php:191
+msgid "Please fix the errors above"
+msgstr "Por favor, corrija los errores arriba"
+
+#: app/views/clicks/row.php:37 app/views/transactions/row.php:58
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: app/views/creatives/options.php:9
+#: app/views/dashboard/creatives/custom-links.php:41
+msgid "Destination URL"
+msgstr "URL de Destino"
+
+#: app/views/creatives/options.php:22
+msgid "A valid URL is required"
+msgstr "Se requiere una URL válida."
+
+#: app/views/creatives/options.php:39
+msgid "Choose whether this creative is a text link or a banner."
+msgstr "Elija si esta creatividad es un enlace de texto o un banner."
+
+#: app/views/creatives/options.php:87
+msgid "Set banner"
+msgstr "Establecer banner"
+
+#: app/views/creatives/options.php:96
+msgid "Remove banner"
+msgstr "Eliminar banner"
+
+#: app/views/creatives/options.php:111
+msgid "Link Text"
+msgstr "Enlace del Texto"
+
+#: app/views/creatives/options.php:136
+msgid ""
+"This will prevent the creative from displaying on the affiliate's dashboard."
+msgstr "Esto evitará que la creatividad se muestre en el panel del afiliado."
+
+#: app/views/creatives/options.php:154
+msgid "Additional information about the creative (not visible to affiliates)."
+msgstr ""
+"Información adicional sobre la creatividad (no visible para los afiliados)."
+
+#: app/views/dashboard/account.php:7
+msgid "Affiliate Profile"
+msgstr "Perfil de Afiliado"
+
+#: app/views/dashboard/account.php:12
+msgid "Your account was successfully saved"
+msgstr "¡Su cuenta de fue guardado correctamente!"
+
+#: app/views/dashboard/account.php:39 app/views/payments/owed.php:28
+#: app/views/payments/receipt.php:27 app/views/signup/form.php:138
+msgid "PayPal Email"
+msgstr "Email de PayPal"
+
+#: app/views/dashboard/account.php:66 app/views/signup/form.php:90
+msgid "State/Province"
+msgstr "Estado/Provincia"
+
+#: app/views/dashboard/account.php:72
+msgid "Zip/Postal Code"
+msgstr "Código Postal"
+
+#: app/views/dashboard/account.php:87 app/views/signup/form.php:122
+#: app/views/users/admin_profile.php:37
+msgid "SSN / Tax ID"
+msgstr "Identificación Fiscal"
+
+#: app/views/dashboard/account.php:90
+msgid "US Residents"
+msgstr "Residentes de los Estados Unidos"
+
+#: app/views/dashboard/account.php:94 app/views/signup/form.php:129
+msgid "International Tax ID"
+msgstr "ID Fiscal Internacional"
+
+#: app/views/dashboard/account.php:97
+msgid "Non-US Residents"
+msgstr "Residentes que no son Estadounidenses"
+
+#: app/views/dashboard/account.php:104
+msgid "Save Profile"
+msgstr "Guardar Perfil"
+
+#: app/views/dashboard/become.php:5
+msgid ""
+"Only affiliates can access this page. If you would like to become an "
+"affiliate, please click the button below:"
+msgstr ""
+"Solo los afiliados pueden acceder a esta página. Si desea convertirse en "
+"afiliado, haga clic en el botón a continuación:"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/dashboard/become.php:11
+msgid ""
+"By clicking the button below, you agree to the %1$sAffiliate Sign-up "
+"Agreement%2$s."
+msgstr ""
+"Al hacer clic en el botón a continuación, acepta el %1$sAcuerdo de Registro "
+"de Afiliados%2$s."
+
+#: app/views/dashboard/become.php:24
+msgid "Become an Affiliate"
+msgstr "Hacerse Afiliado"
+
+#: app/views/dashboard/blocked.php:2
+msgid "Your Affiliate Account Has Been Blocked"
+msgstr "Su cuenta de afiliado ha sido bloqueada"
+
+#: app/views/dashboard/creatives/banners.php:10
+msgid "Click a thumbnail to copy & paste code"
+msgstr "Haga clic en una miniatura para copiar y pegar el código"
+
+#: app/views/dashboard/creatives/banners.php:20
+msgid "Banner ID:"
+msgstr "Banner ID:"
+
+#: app/views/dashboard/creatives/banners.php:25
+#: app/views/dashboard/creatives/text-links.php:29
+#: app/views/dashboard/memberpress-coupons.php:44
+msgid "Copy and Paste code"
+msgstr "Copiar y Pegar el Código"
+
+#: app/views/dashboard/creatives/banners.php:31
+#: app/views/dashboard/creatives/text-links.php:35
+#: app/views/dashboard/memberpress-coupons.php:50
+msgid "Copy All"
+msgstr "Copiar Todo"
+
+#: app/views/dashboard/creatives/banners.php:35
+#: app/views/dashboard/creatives/text-links.php:39
+#: app/views/dashboard/memberpress-coupons.php:54
+msgid "Copy URL Only"
+msgstr "Copiar Solamente el URL"
+
+#: app/views/dashboard/creatives/banners.php:41
+msgid "No banners found."
+msgstr "No se encontraron banners"
+
+#: app/views/dashboard/creatives/custom-links.php:11
+msgid "Custom Link Generator"
+msgstr "Generador de Enlaces Personalizados"
+
+#: app/views/dashboard/creatives/custom-links.php:12
+#: app/views/dashboard/creatives/custom-links.php:27
+msgid ""
+"Browse this website and find pages or products that you want to link to "
+"directly."
+msgstr ""
+"Navegue por este sitio web y busque páginas o productos a los que desee "
+"vincular directamente."
+
+#: app/views/dashboard/creatives/custom-links.php:13
+msgid "Paste URL"
+msgstr "Pegar URL"
+
+#: app/views/dashboard/creatives/custom-links.php:19
+msgid "Create custom link"
+msgstr "Crear enlace personalizado"
+
+#: app/views/dashboard/creatives/custom-links.php:26
+msgid "Your Custom Link"
+msgstr "Su Enlace Personalizado"
+
+#: app/views/dashboard/creatives/custom-links.php:34
+msgid "Update link"
+msgstr "Actualizar enlace"
+
+#: app/views/dashboard/creatives/custom-links.php:40
+msgid "Custom Link"
+msgstr "Personalizar Enlace"
+
+#: app/views/dashboard/creatives/custom-links.php:42
+msgid "Date Created"
+msgstr "Fecha de Creación:"
+
+#: app/views/dashboard/creatives/text-links.php:15
+msgid "Description"
+msgstr "Descripción"
+
+#: app/views/dashboard/creatives/text-links.php:16
+msgid "Example"
+msgstr "Ejemplo"
+
+#: app/views/dashboard/creatives/text-links.php:17
+msgid "Modified"
+msgstr "Modificada"
+
+#: app/views/dashboard/creatives/text-links.php:46
+msgid "No text links found."
+msgstr "No se han encontrado enlaces de texto."
+
+#: app/views/dashboard/home.php:14
+msgid "My Affiliate Dashboard"
+msgstr "Mi Panel de Afiliado"
+
+#: app/views/dashboard/home.php:22 app/views/dashboard/payments.php:8
+msgid "Current Balance"
+msgstr "Saldo Actual"
+
+#: app/views/dashboard/home.php:28
+msgid "Estimated Next Payout"
+msgstr "Próximo pago Estimado"
+
+#: app/views/dashboard/home.php:34
+msgid "Generate Custom Link"
+msgstr "Generar Enlace Personalizado"
+
+#: app/views/dashboard/home.php:47 app/views/dashboard/home.php:83
+#: app/views/dashboard/home.php:187
+msgid "Conversions"
+msgstr "Conversiones"
+
+#: app/views/dashboard/home.php:52
+msgid "Revenue"
+msgstr "Ventas"
+
+#: app/views/dashboard/home.php:62
+msgid "Voids"
+msgstr "Nulos"
+
+#: app/views/dashboard/home.php:67
+msgid "Earns Per Click (EPC)"
+msgstr "Ganancias por Clic (EPC)"
+
+#: app/views/dashboard/home.php:229 app/views/dashboard/home.php:230
+msgid "%d Months Ago"
+msgstr "%d Meses Atras"
+
+#: app/views/dashboard/home.php:231
+msgid "Last %d Months"
+msgstr "Últimos %d Meses"
+
+#: app/views/dashboard/memberpress-coupons.php:6
+msgid "Coupon Code"
+msgstr "Código de Cupón"
+
+#: app/views/dashboard/memberpress-coupons.php:7
+msgid "Valid Products"
+msgstr "Productos Válidos"
+
+#: app/views/dashboard/payments.php:5
+msgid "Payment History"
+msgstr "Historial de Pago"
+
+#: app/views/dashboard/payments.php:16
+msgid "Payout"
+msgstr "Pago"
+
+#: app/views/dashboard/payments.php:33
+msgid "No payments found."
+msgstr "No se han encontrado pagos."
+
+#: app/views/login/forgot_password.php:5
+msgid "Request a Password Reset"
+msgstr "Solicite un restablecimiento de contraseña"
+
+#: app/views/login/forgot_password.php:9
+msgid "Enter Your Username or Email Address"
+msgstr "Introduzca su nombre de usuario o email"
+
+#: app/views/login/forgot_password.php:16
+msgid "Request Password Reset"
+msgstr "Petición para recomponer contraseña"
+
+#: app/views/login/forgot_password_requested.php:2
+msgid "Successfully requested password reset"
+msgstr "Recomponer contraseña solicitud fue exitoso"
+
+#: app/views/login/forgot_password_requested.php:3
+msgid ""
+"Please click on the confirmation link that was just sent to your email "
+"address."
+msgstr ""
+"Por favor, haga clic en el enlace de confirmación que se ha enviado a su "
+"dirección de email."
+
+#: app/views/login/reset_password.php:2
+msgid "Enter your new password"
+msgstr "Introduzca su nueva contraseña"
+
+#: app/views/login/reset_password.php:6 app/views/shared/login_form.php:15
+msgid "Password"
+msgstr "Contraseña"
+
+#: app/views/login/reset_password.php:12 app/views/signup/form.php:158
+msgid "Password Confirmation"
+msgstr "Confirmar Contraseña"
+
+#: app/views/login/reset_password.php:17
+msgid "Reset Password"
+msgstr "Restablecer Contraseña"
+
+#: app/views/login/reset_password_thankyou.php:5
+msgid "Password successfully reset"
+msgstr "Contraseña recomponido correctamente"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/login/reset_password_thankyou.php:10
+msgid "You can now %1$slog in%2$s with your new password."
+msgstr "Ahora puedes %1$s iniciar sesión%2$s  con tu nueva contraseña."
+
+#: app/views/options/advanced.php:9
+msgid "Send a Welcome Email to Affiliates"
+msgstr "Enviar un correo electrónico de bienvenida a los afiliados"
+
+#: app/views/options/advanced.php:10
+msgid ""
+"When this is checked, Easy Affiliate will send a welcome email to each "
+"affiliate when they're accepted into your affiliate program."
+msgstr ""
+"Cuando se marca esta opción, Easy Affiliate enviará un correo electrónico de "
+"bienvenida a cada afiliado cuando sean aceptados en su programa de afiliados."
+
+#: app/views/options/advanced.php:12
+msgid "Send Welcome Email"
+msgstr "Enviar Email de Bienvenida"
+
+#: app/views/options/advanced.php:22
+msgid "Send a Sale Notification Email to Affiliates"
+msgstr "Envíe un correo electrónico de notificación de venta a los afiliados"
+
+#: app/views/options/advanced.php:23
+msgid ""
+"When this is checked, Easy Affiliate will send a sale notification email to "
+"each affiliate when they've referred a sale and are entitled to a commission."
+msgstr ""
+"Cuando se marca esta opción, Easy Affiliate enviará un correo electrónico de "
+"notificación de venta a cada afiliado cuando hayan recomendado una venta y "
+"tengan derecho a una comisión."
+
+#: app/views/options/advanced.php:25
+msgid "Send Affiliate Sale Email"
+msgstr "Enviar correo electrónico de venta de afiliados"
+
+#: app/views/options/advanced.php:35
+msgid "Send an Affiliate Commission Notification Email to the Admin"
+msgstr ""
+"Envíe un correo electrónico de notificación de la Comisión de afiliados al "
+"administrador"
+
+#: app/views/options/advanced.php:36
+msgid ""
+"When this is checked, Easy Affiliate will send a commission notification "
+"email to the Admin when an affiliate has referred a sale."
+msgstr ""
+"Cuando se marca esta opción, Easy Affiliate enviará un correo electrónico de "
+"notificación de comisión al administrador cuando un afiliado haya "
+"recomendado una venta."
+
+#: app/views/options/advanced.php:38
+msgid "Send Admin Commission Email"
+msgstr "Enviar correo electrónico de comisión al Admin"
+
+#: app/views/options/advanced.php:51
+msgid "Email Notifications"
+msgstr "Notificaciónes de Correo Electrónico"
+
+#: app/views/options/advanced.php:63
+msgid "Email Settings"
+msgstr "Ajustes de Email"
+
+#: app/views/options/advanced.php:70
+msgid "Admin Email Addresses"
+msgstr "Direcciones de correo electrónico de administrador"
+
+#: app/views/options/advanced.php:74
+msgid ""
+"A comma separated list of email addresses that will receive admin "
+"notifications."
+msgstr ""
+"Una lista separada por comas de direcciones de correo electrónico que "
+"recibirán notificaciones de administrador."
+
+#: app/views/options/advanced.php:84
+msgid "From Name"
+msgstr "Nombre del Remitente"
+
+#: app/views/options/advanced.php:88
+msgid "The name of the email sender."
+msgstr "El nombre del remitente del correo electrónico."
+
+#: app/views/options/advanced.php:98
+msgid "From Email"
+msgstr "Email del Remitente"
+
+#: app/views/options/advanced.php:102
+msgid "The email address of the email sender."
+msgstr "La dirección de correo electrónico del remitente del email."
+
+#: app/views/options/advanced.php:116
+msgid "International Settings"
+msgstr "Configuraciones Internacionales"
+
+#: app/views/options/advanced.php:123
+msgid "Currency Code"
+msgstr "Codigo de Moneda"
+
+#: app/views/options/advanced.php:131
+msgid "Currency Symbol"
+msgstr "Símbolo de Moneda"
+
+#: app/views/options/advanced.php:139
+msgid "Currency Format"
+msgstr "Formato de Moneda"
+
+#: app/views/options/advanced.php:151
+msgid "Dashboard Navigation"
+msgstr "Navegación del Panel de Afiliado"
+
+#: app/views/options/advanced.php:160
+msgid "Custom Nav Pages"
+msgstr "Páginas de Navegación Personalizadas"
+
+#: app/views/options/advanced.php:163
+msgid "Customize Nav page links that will appear on the Affiliate Dashboard."
+msgstr ""
+"Personalice los enlaces de la página de navegación que aparecerán en el "
+"Panel de afiliados."
+
+#: app/views/options/advanced.php:170
+msgid "Add Page"
+msgstr "Añadir Página"
+
+#: app/views/options/advanced.php:171
+msgid "Remove Page"
+msgstr "Eliminar Página"
+
+#: app/views/options/advanced.php:181
+msgid "Updates"
+msgstr "Actualizaciones"
+
+#: app/views/options/advanced.php:190
+msgid "Include Easy Affiliate edge (development) releases in automatic updates"
+msgstr ""
+"Incluya lanzamientos de Easy Affiliate edge (desarrollo) en actualizaciones "
+"automáticas"
+
+#: app/views/options/advanced.php:194
+msgid ""
+"When checked, automatic updates will include edge (development) releases "
+"(not recommended for production websites)."
+msgstr ""
+"Cuando se marca, las actualizaciones automáticas incluirán lanzamientos edge "
+"(desarrollo) (no recomendado para sitios web de producción)."
+
+#: app/views/options/affiliates.php:9
+msgid "Affiliate Applied Admin Notice"
+msgstr "Enviar Aviso al Admin al Recibir un Solicitud"
+
+#: app/views/options/affiliates.php:10
+msgid ""
+"When this is checked, an email will be sent to the Admin when an affiliate "
+"applies to your Affiliate Program."
+msgstr ""
+"Cuando se marca esta opción, se enviará un correo electrónico al "
+"administrador cuando un afiliado aplique a su Programa de Afiliados."
+
+#: app/views/options/affiliates.php:12
+msgid "Send Affiliate Applied Email"
+msgstr ""
+"Enviar correo electrónico cuando algien solicita convertirse en afiliado"
+
+#: app/views/options/affiliates.php:22
+msgid "Affiliate Approved Notice"
+msgstr "Aviso de Afiliado Aprobado"
+
+#: app/views/options/affiliates.php:23
+msgid ""
+"When this is checked, an email will be sent to the Applicant when an Admin "
+"approves an affiliate application"
+msgstr ""
+"Cuando se marca esto, se enviará un correo electrónico al solicitante cuando "
+"un administrador apruebe una solicitud de afiliado."
+
+#: app/views/options/affiliates.php:25
+msgid "Send Affiliate Approved Email"
+msgstr "Enviar correo electrónico cuando un solicitud de afiliado es aprobado"
+
+#: app/views/options/affiliates.php:38
+msgid "Registration Type"
+msgstr "Tipo de Registración"
+
+#. translators: %1$s: br tag
+#: app/views/options/affiliates.php:44
+msgid ""
+"When this option is set to 'Public' anyone will be able to signup and "
+"automatically become an affiliate.%1$s%1$sWhen this option is set to "
+"'Application', affiliates will have to fill out an affiliate application "
+"before they can become an affiliate. You as an administrator will have to "
+"approve each application before the person can become an affiliate.%1$s"
+"%1$sWhen this option is set to 'Private' the only way for an affiliate to "
+"register will be to have an administrator add them manually."
+msgstr ""
+"Cuando se fija esta opcion a 'Publico', cualquiera podra registrarse y "
+"convetirse a un afiliado automaticamente.%1$s%1$sCuando se fija esta opcion "
+"a 'Solicitud', afiliados tendran que completar un solicitud antes de que "
+"pueden convetirse a un afiliado. Usted como admin tendra que aprobar el "
+"usuario antes de que pueden convetirse a un afiliado.%1$s%1$s Cuando se fija "
+"esta opcion a 'Privada', la unica manera de convetirse a un afiliado sera "
+"por medio de un admin anadirlo manualmente. "
+
+#: app/views/options/affiliates.php:75
+msgid "Application Thank You"
+msgstr "Expresion de Gratitud por un Solicitud"
+
+#: app/views/options/affiliates.php:79
+msgid ""
+"This will be the HTML that will be shown to the Affiliate applicant after "
+"they submit an application."
+msgstr ""
+"Este será el HTML que se mostrará al solicitante afiliado después de que "
+"presente una solicitud."
+
+#: app/views/options/affiliates.php:94
+msgid "Form Fields"
+msgstr "Campos de Formulario"
+
+#: app/views/options/affiliates.php:101
+msgid "Show Address Fields"
+msgstr "Mostrar Campos de Dirección"
+
+#: app/views/options/affiliates.php:105
+msgid "Collect address information from your affiliates?"
+msgstr "¿Recopila información de dirección de sus afiliados?"
+
+#: app/views/options/affiliates.php:131
+msgid "Show Tax ID Fields"
+msgstr "Mostrar campos de identificación fiscal"
+
+#: app/views/options/affiliates.php:135
+msgid "Collect Tax ID #'s from your affiliates?"
+msgstr "Recoger Identificación de impuestos de sus afiliados?"
+
+#: app/views/options/affiliates.php:167
+msgid ""
+"Display an Affiliate Signup Agreement on the affiliate registration page."
+msgstr ""
+"Muestre un Acuerdo de Registro de Afiliado en la página de registro de "
+"afiliado."
+
+#: app/views/options/affiliates.php:198
+msgid "Auto-Add Affiliates"
+msgstr "Agregar Afiliados Automáticamente"
+
+#: app/views/options/affiliates.php:202
+msgid "Automatically make each new user an Affiliate?"
+msgstr "¿Convertir automáticamente en afiliado a cada nuevo usuario?"
+
+#: app/views/options/affiliates.php:213
+msgid "Dashboard"
+msgstr "Panel de Control"
+
+#: app/views/options/affiliates.php:222
+msgid "Enable Pro Dashboard"
+msgstr "Habilitar el Panel de Control Pro"
+
+#: app/views/options/affiliates.php:226
+msgid ""
+"Enables the Pro Affiliate Dashboard, which converts the affiliate dashboard "
+"to a full page layout."
+msgstr ""
+"Habilita el Panel de Control Pro, que convierte el panel de afiliados en un "
+"diseño de página completo."
+
+#: app/views/options/affiliates.php:242
+msgid "This controls the background color of the header and sidebar menu."
+msgstr ""
+"Esto controla el color de fondo del encabezado y el menú de la barra lateral."
+
+#: app/views/options/affiliates.php:258
+msgid ""
+"This controls the background color of the highlighted menu item in the "
+"sidebar."
+msgstr ""
+"Esto controla el color de fondo del elemento de menú resaltado en la barra "
+"lateral."
+
+#: app/views/options/affiliates.php:274
+msgid "This controls the text color in the header and sidebar menu."
+msgstr ""
+"Esto controla el color del texto en el encabezado y el menú de la barra "
+"lateral."
+
+#: app/views/options/affiliates.php:290
+msgid ""
+"This controls the text color of the highlighted menu item in the sidebar."
+msgstr ""
+"Esto controla el color del texto del elemento de menú resaltado en la barra "
+"lateral."
+
+#: app/views/options/affiliates.php:306
+msgid ""
+"Set a logo for the header, which will replace the site title displayed there."
+msgstr ""
+"Establezca un logo para el encabezado, que reemplazará el título del sitio "
+"que se muestra allí."
+
+#: app/views/options/affiliates.php:334
+msgid "Welcome Message"
+msgstr "Mensaje de Bienvenida"
+
+#: app/views/options/affiliates.php:338
+msgid ""
+"This is the customized message your affiliates will see on their Affiliate "
+"Dashboard welcome page."
+msgstr ""
+"Este es el mensaje personalizado que sus afiliados podrán ver en su página "
+"de bienvenida de afiliados en el panel de control."
+
+#: app/views/options/affiliates/auto-generate-agreement.php:1
+msgid "Auto-Generate Default Affiliate Agreement"
+msgstr "Generar automáticamente un Acuerdo de Afiliación predeterminado"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:9
+msgid "Company"
+msgstr "Empresa"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:13
+msgid "e.g. Caseproof, LLC"
+msgstr "por ejemplo, Caseproof, LLC"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:18
+msgid "Company nickname"
+msgstr "Apodo de la empresa"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:22
+msgid "e.g. Caseproof"
+msgstr "por ejemplo, Caseproof"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:27
+msgid "Governing law"
+msgstr "Ley aplicable"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:31
+msgid "e.g. the laws of the United States"
+msgstr "por ejemplo, las leyes de los Estados Unidos"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:36
+msgid "Jurisdiction"
+msgstr "Jurisdicción"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:40
+msgid "e.g. Orange County, California"
+msgstr "por ejemplo, Orange County, California"
+
+#: app/views/options/affiliates/auto-generate-agreement.php:46
+msgid "Generate Agreement"
+msgstr "Generar Acuerdo"
+
+#: app/views/options/commissions.php:9
+msgid "Tracking"
+msgstr "Seguimiento"
+
+#: app/views/options/commissions.php:77
+msgid "Expire Cookie"
+msgstr "Caducar Cookie"
+
+#: app/views/options/commissions.php:81
+msgid ""
+"The length of time that you'll allow before the affiliate cookie expires"
+msgstr ""
+"El período de tiempo que permitirá antes de que caduque la cookie de afiliado"
+
+#: app/views/options/commissions.php:86
+msgid "Days"
+msgstr "Días"
+
+#: app/views/options/commissions.php:95
+msgid "Payouts"
+msgstr "Pagos"
+
+#: app/views/options/commissions.php:167
+msgid "Require Minimum Payout"
+msgstr "Requerir Pago Mínimo"
+
+#: app/views/options/commissions.php:171
+msgid ""
+"If this box is checked, an affiliate won't be eligible to get commissions "
+"until they've acquired a minimum amount of commissions"
+msgstr ""
+"Si esta opcion está marcada, un afiliado no será elegible para recibir "
+"comisiones hasta que haya adquirido una cantidad mínima de comisiones."
+
+#: app/views/options/commissions.php:183
+msgid "Minimum Payout"
+msgstr "Pago Mínimo"
+
+#: app/views/options/commissions.php:199
+msgid "Pretty Affiliate Links"
+msgstr "Enlaces de Afiliados Bonitos"
+
+#: app/views/options/commissions.php:203
+msgid "Enable Pretty Affiliate Links"
+msgstr "Habilitar Enlaces de Afiliados Bonitos"
+
+#: app/views/options/ecommerce.php:10
+msgid "eCommerce Payment Integration"
+msgstr "Integración de Pagos eCommerce"
+
+#: app/views/options/ecommerce.php:14
+msgid "No payment integrations were found."
+msgstr "No se encontraron integraciones de pago."
+
+#: app/views/options/form.php:14 app/views/options/form.php:82
+msgid "Update Options"
+msgstr "Actualizar Ajustes"
+
+#: app/views/options/form.php:22
+msgid "General"
+msgstr "General"
+
+#: app/views/options/form.php:25
+msgid "eCommerce"
+msgstr "Comercial Electrónico"
+
+#: app/views/options/form.php:26
+msgid "Integrations"
+msgstr "Integraciones"
+
+#: app/views/options/form.php:27
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: app/views/options/form.php:36
+msgid "Settings saved."
+msgstr "¡Ajustes guardados!"
+
+#: app/views/options/general.php:9
+msgid "License"
+msgstr "Licencia"
+
+#: app/views/options/general.php:24
+msgid "Business Info"
+msgstr "Información de la Empresa"
+
+#: app/views/options/general.php:103
+msgid "Affiliate Pages"
+msgstr "Páginas Afialiado"
+
+#: app/views/options/general.php:110
+msgid "Dashboard Page"
+msgstr "Página del Panel de Control"
+
+#: app/views/options/general.php:114
+msgid ""
+"This is the WordPress page that Easy Affiliate will use as the Affiliate's "
+"Dashboard."
+msgstr ""
+"Esta es la página de WordPress que Easy Affiliate utilizará como Panel de "
+"Control del Afiliado."
+
+#: app/views/options/general.php:124
+msgid "Signup Page"
+msgstr "Página de Registro"
+
+#: app/views/options/general.php:128
+msgid ""
+"This is the WordPress page that Easy Affiliate will use as the affiliate "
+"signup page."
+msgstr ""
+"Esta es la página de WordPress que Easy Affiliate utilizará como página de "
+"registro de afiliados."
+
+#: app/views/options/general.php:138
+msgid "Login Page"
+msgstr "Pagina de Inicio de Sesión"
+
+#: app/views/options/general.php:142
+msgid ""
+"This is the WordPress page that Easy Affiliate will use as the affiliate "
+"login page."
+msgstr ""
+"Esta es la página de WordPress que Easy Affiliate utilizará como página de "
+"inicio de sesión de afiliado."
+
+#: app/views/options/general.php:156
+msgid "Setup Wizard"
+msgstr "Asistente de Configuración"
+
+#: app/views/options/general.php:159
+msgid ""
+"Use our configuration wizard to properly setup Easy Affiliate (with just a "
+"few clicks)."
+msgstr ""
+"Utilice nuestro asistente de configuración para configurar Easy Affiliate "
+"correctamente (con solo unos pocos clics)."
+
+#: app/views/options/general.php:161
+msgid "Launch Setup Wizard"
+msgstr "Iniciar el Asistente de Configuración"
+
+#: app/views/options/integrations.php:28
+msgid "Connected"
+msgstr "Conectado(a)"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/options/integrations.php:45
+msgid ""
+"No integrations were found, integrations can be installed on the %1$sAdd-ons "
+"page%2$s."
+msgstr ""
+"No se encontraron integraciones, las integraciones se pueden instalar en la "
+"%1$sPágina de Add-ons%2$s."
+
+#. translators: %1$s: add-on name, %2$s: either Pro or Plus
+#: app/views/options/integrations.php:58
+msgid "%1$s is a %2$s Feature"
+msgstr "%1$s es una %2$s Función"
+
+#. translators: %1$s: add-on name, %2$s: either Pro or Plus
+#: app/views/options/integrations.php:64
+msgid ""
+"We're sorry, the %1$s is not available on your plan. Please upgrade to the "
+"%2$s plan to unlock all these awesome features."
+msgstr ""
+"Lo sentimos, %1$s no está disponible en su plan. Actualice al plan %2$s para "
+"desbloquear todas estas increíbles funciones."
+
+#: app/views/options/integrations.php:67
+msgid "Upgrade to %s"
+msgstr "Actualízate al plan %s"
+
+#: app/views/options/memberpress_coupon_meta_box.php:5
+msgid "Associate an Affiliate"
+msgstr "Asociar un Afiliado"
+
+#: app/views/options/memberpress_product_meta_box.php:7
+msgid "Enable Commission Group"
+msgstr "Activar Grupo de Comisión"
+
+#. translators: %1$s: br tag
+#: app/views/options/memberpress_product_meta_box.php:13
+msgid ""
+"If enabled, purchasers of this product will be added to your Easy Affiliate "
+"affiliate program and will be enrolled in a special commission group set "
+"here.%1$s%1$sCommissions for these affiliates will be calculated based on "
+"this commission structure."
+msgstr ""
+"Si está habilitado, los compradores de este producto se agregarán a su "
+"programa de afiliados Easy Affiliate y se inscribirán en un grupo de "
+"comisión especial establecido aquí. %1$s%1$sLas comisiones para estos "
+"afiliados se calcularán en función de esta estructura de comisiones."
+
+#: app/views/options/paypal_config.php:4
+msgid ""
+"Here are the steps you'll need to follow to integrate Easy Affiliate with "
+"PayPal"
+msgstr ""
+"Estos son los pasos que debe seguir para integrar Easy Affiliate con PayPal"
+
+#: app/views/options/paypal_config.php:5
+msgid "To create your payment button:"
+msgstr "Para crear su botón de pago:"
+
+#: app/views/options/paypal_config.php:7
+msgid "Log Into Your PayPal Account"
+msgstr "Inicie sesión en su Cuenta de PayPal"
+
+#. translators: %s: PayPal Buttons URL
+#: app/views/options/paypal_config.php:12
+msgid "Go to %s"
+msgstr "Ir a %s"
+
+#: app/views/options/paypal_config.php:17
+msgid "Create either a \"Buy Now\" or \"Subscribe\" Button"
+msgstr "Crear un Botón “Comprar Ahora” o “Suscribirse”"
+
+#: app/views/options/paypal_config.php:18
+msgid "Make Sure You Uncheck \"Save Button at PayPal\" in Step 2"
+msgstr "Asegúrese de desactivar, “Guardar Botón en PayPal,” el segundo paso."
+
+#: app/views/options/paypal_config.php:19
+msgid ""
+"Make Sure \"Add advanced variables\" is checked in Step 3 and add the "
+"following text into the \"Advanced Variables\" text area:"
+msgstr ""
+"Asegúrese de que, “Añadir las variables avanzadas,” está marcada en el "
+"tercero paso y que el siguiente texto está añadido en la, “Variables "
+"avanzadas,” área de texto:"
+
+#: app/views/options/paypal_config.php:24
+msgid "Click \"Create Button\""
+msgstr "Haga clic en el botón ‘Crear’"
+
+#: app/views/options/paypal_config.php:25
+msgid "Click \"Remove code protection\""
+msgstr "Haga clic sobre “Eliminar código de protección”"
+
+#: app/views/options/paypal_config.php:26
+msgid ""
+"Now you can copy your button's code and paste it somewhere on this site. "
+"Note: the button must reside on this site in a page or post in order for the "
+"affiliate tracking to work properly."
+msgstr ""
+"Ahora puede copiar el código de su botón y pegarlo en algún lugar de este "
+"sitio. Nota: el botón debe residir en este sitio en una página o publicación "
+"para que el seguimiento de afiliados funcione correctamente."
+
+#. translators: %1$s: first code to replace, %2$s first code replacement, %3$s second code to replace, %4$s second code replacement
+#: app/views/options/paypal_config.php:31
+msgid ""
+"Lastly you'll need to edit the HTML you copied onto your page and replace "
+"%1$s with just %2$s and %3$s with just %4$s. This is required to get around "
+"a change made to shortcode processing in WordPress 4.2.3 and later."
+msgstr ""
+"Por último, deberá editar el HTML que copió en su página y reemplazar %1$s "
+"con solo %2$s y %3$s con solo %4$s. Esto es necesario para evitar un cambio "
+"realizado en el procesamiento de códigos cortos en WordPress 4.2.3 y "
+"versiones posteriores."
+
+#: app/views/options/paypal_config.php:40
+msgid ""
+"(Optional) Setup Easy Affiliate to automatically record refunds and process "
+"recurring payments:"
+msgstr ""
+"(Opcional) Configuración de Easy Affiliate para grabar automáticamente los "
+"reembolsos y procesar los pagos recurrentes:"
+
+#: app/views/options/paypal_config.php:42
+msgid ""
+"Go to \"My Account\" -> \"Profile\" -> \"Instant Payment Notification "
+"Preferences\" in PayPal"
+msgstr ""
+"Vaya a \"Mi cuenta\" -> \"Perfil\" -> \"Preferencias de Notificación de Pago "
+"Instantáneo\" en PayPal"
+
+#: app/views/options/paypal_config.php:43
+msgid "Make sure IPN is enabled"
+msgstr "Asegúrese que IPN está habilitado"
+
+#: app/views/options/paypal_config.php:44
+msgid ""
+"Paste the following URL into the Notification URL text field and hit save:"
+msgstr ""
+"Pegue la siguiente URL en el campo de texto URL de notificación y pulse "
+"guardar:"
+
+#: app/views/options/paypal_config.php:48
+msgid "Valid PayPal Email Addresses (recommended)"
+msgstr "Dirección de correo electrónico de PayPal valido (recomendado)"
+
+#: app/views/options/paypal_config.php:50
+msgid ""
+"This is a list of valid paypal email addresses that IPN requests can be "
+"recieved from. If this is left blank then any valid IPN request will be "
+"recorded as a transaction. It is recommended that you enter all the paypal "
+"email addresses (comma separated) that could be used to send IPN requests to "
+"your affiliate commission tracker to prevent fraud."
+msgstr ""
+"Esta es una lista de direcciones de correo electrónico válida de las "
+"solicitudes de PayPal IPN que se pueden recibir. Si se deja en blanco, a "
+"continuación, cualquier solicitud IPN será registrada como una transacción. "
+"Se recomienda que se introduzca todas las direcciones de correo electrónico "
+"de Paypal (separadas por comas) que se pueden usar para enviar IPN "
+"solicitudes a la comisión de seguimiento para evitar el fraude."
+
+#: app/views/options/paypal_config.php:51
+msgid "Use PayPal Sandbox"
+msgstr "Usar PayPal Sandbox"
+
+#: app/views/options/paypal_config.php:52
+msgid "Recieve IPN Requests from hosts other than PayPal:"
+msgstr "IPN recibe las peticiones de otros hosts además de PayPal:"
+
+#: app/views/options/paypal_config.php:54
+msgid ""
+"Please enter the IP Addresses, separated by commas, of hosts authorized for "
+"Easy Affiliate to receive IPN requests from. If this is left blank then only "
+"IPN requests coming directly from PayPal will be recorded."
+msgstr ""
+"Por favor, introduzca las direcciones IP, separadas por comas, de hosts "
+"autorizados para Easy Affiliate para recibir las solicitudes de IPN. Si se "
+"deja en blanco a continuación, sólo se grabarán las solicitudes IPN "
+"procedentes directamente de PayPal."
+
+#: app/views/options/paypal_config.php:55
+msgid "Forward IPN Requests to additional URLs:"
+msgstr "Reenvíe solicitudes de IPN a URL adicionales:"
+
+#: app/views/options/paypal_config.php:57
+msgid ""
+"Please enter URLs to forward IPN requests to. Each URL should be on its own "
+"line. If this is left blank then IPN requests will not be forwarded."
+msgstr ""
+"Introduzca las URLs a las que reenviar las solicitudes de IPN. Cada URL debe "
+"estar en su propia línea. Si se deja en blanco, las solicitudes de IPN no se "
+"reenviarán."
+
+#: app/views/options/woocommerce_config.php:8
+msgid "Processing"
+msgstr "Procesando"
+
+#: app/views/options/woocommerce_config.php:9
+msgid "Completed"
+msgstr "Completado"
+
+#: app/views/options/woocommerce_config.php:14
+msgid "Order status"
+msgstr "Estado de Orden"
+
+#: app/views/options/woocommerce_config.php:17
+msgid ""
+"The order status in WooCommerce which will generate the affiliate commission"
+msgstr ""
+"El estado del orden en WooCommerce que generará la comisión de afiliado."
+
+#: app/views/payments/list.php:9
+msgid "Payments sent to affiliates"
+msgstr "Pagos a Afiliados"
+
+#: app/views/payments/manual_bulk_file.php:16
+msgid "Affiliate ID"
+msgstr "ID de Afiliado"
+
+#: app/views/payments/manual_bulk_file.php:18
+msgid "Affiliate Email"
+msgstr "Email del Afiliado"
+
+#: app/views/payments/manual_bulk_file.php:19
+msgid "Payment Amount"
+msgstr "Monto de Pago"
+
+#: app/views/payments/owed.php:20
+msgid "Select the period you want to view"
+msgstr "Seleccione el período que desea ver"
+
+#: app/views/payments/owed.php:20 app/views/users/admin_profile.php:84
+msgid "Loading..."
+msgstr "Cargando…"
+
+#: app/views/payments/owed.php:30
+msgid "Net Commissions"
+msgstr "Ingreso Neto por Comisiones"
+
+#: app/views/payments/owed.php:31
+msgid "Pay"
+msgstr "Pagar"
+
+#: app/views/payments/owed.php:39
+msgid "No Payments are due for this period."
+msgstr "No hay pendientes de pago para este periodo"
+
+#: app/views/payments/owed.php:78
+msgid "Not Affiliate"
+msgstr "No Afiliado"
+
+#: app/views/payments/owed.php:84
+msgid "No PayPal Email"
+msgstr "No Correo Electrónico de PayPal"
+
+#: app/views/payments/owed.php:87
+msgid "Below Minimum"
+msgstr "Por debajo de mínimos"
+
+#: app/views/payments/owed.php:90
+msgid "Eligible"
+msgstr "Elegible"
+
+#: app/views/payments/owed.php:109 app/views/payments/receipt.php:45
+msgid "none"
+msgstr "ninguna"
+
+#: app/views/payments/owed.php:119
+msgid "Pay Selected Commissions &rarr;"
+msgstr "Pagar Comisiones Seleccionadas &rarr;"
+
+#: app/views/payments/owed.php:126
+msgid "Previous Payments"
+msgstr "Pagos Anteriores"
+
+#: app/views/payments/owed.php:133
+msgid "Next Payments"
+msgstr "Siguientes Pagos"
+
+#: app/views/payments/receipt.php:7
+msgid "Affiliate Commission Summary"
+msgstr "Resumen de los Comisiones de Afiliado"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/payments/receipt.php:14
+msgid ""
+"You must enter a PayPal Client ID and Secret Key in the %1$sEasy Affiliate "
+"settings%2$s to use PayPal 1-Click payouts."
+msgstr ""
+"Debe ingresar un ID de Cliente y una Clave Secreta de PayPal en la "
+"%1$sConfiguración de Easy Affiliate%2$s para utilizar los pagos de PayPal "
+"con 1 clic."
+
+#: app/views/payments/receipt.php:28
+msgid "Amount"
+msgstr "Cantidad"
+
+#: app/views/payments/receipt.php:62 app/views/payments/receipt.php:68
+msgid "Mark Commissions as Paid"
+msgstr "Marcar Comisión Pagada"
+
+#: app/views/payments/receipt.php:74
+msgid "Pay with PayPal 1-Click"
+msgstr "Pagar con PayPal 1-Click"
+
+#: app/views/payments/receipt.php:81 app/views/payments/receipt.php:92
+msgid "Success! You've just marked your Affiliates commission as paid."
+msgstr "¡Éxito! Acaba de marcar su comisión de afiliados como pagada."
+
+#: app/views/payments/receipt.php:84 app/views/payments/receipt.php:96
+#: app/views/payments/receipt.php:107
+msgid "Download Payouts to CSV"
+msgstr "Descargar pagos a CSV"
+
+#: app/views/payments/receipt.php:87 app/views/payments/receipt.php:99
+#: app/views/payments/receipt.php:110
+msgid "Finish"
+msgstr "Finalizar"
+
+#: app/views/payments/receipt.php:95
+msgid "Download PayPal Mass Payment File"
+msgstr "Descargar el Archivo de Pago en Serie de PayPal"
+
+#: app/views/payments/receipt.php:104
+msgid "Success! You've just paid your Affiliates' commissions."
+msgstr "¡Éxito! Acaba de pagar las comisiones de sus afiliados."
+
+#: app/views/payments/receipt.php:115
+msgid "Oops! There was an error paying with PayPal"
+msgstr "¡Se ha producido un error al pagar con PayPal!"
+
+#: app/views/payments/receipt.php:119
+msgid "Try Again"
+msgstr "Intenta de Nuevo"
+
+#: app/views/payments/receipt.php:120
+msgid "Pay with Mass Payment File"
+msgstr "Descargar el Archivo de Pago en Serie de PayPal"
+
+#: app/views/payments/receipt.php:125
+msgid "Sorry, there was an error marking the commissions as paid."
+msgstr "Lo sentimos, hubo un error al marcar las comisiones como pagadas."
+
+#: app/views/payments/row.php:44 app/views/transactions/row.php:102
+msgid "Delete"
+msgstr "Borrar"
+
+#: app/views/reports/stats.php:11
+msgid "Affiliate Stats"
+msgstr "Estadísticas de Afiliados"
+
+#: app/views/reports/weekly_stats.php:3
+msgid "Your 7 day Affiliate activity:"
+msgstr "Tus 7 días de actividad como afiliado:"
+
+#: app/views/reports/weekly_stats.php:7
+msgid "View More Easy Affiliate Reports"
+msgstr "Ver Informes de Afiliados más Sencillos"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/shared/already_logged_in.php:11
+msgid "You're already logged in. %1$sLog out.%2$s"
+msgstr "Ya ha iniciado sesión. %1$sCierre sesión.%2$s"
+
+#: app/views/shared/login_form.php:20
+msgid "Remember Me"
+msgstr "Recuérdeme"
+
+#: app/views/shared/login_form.php:24
+msgid "Log In"
+msgstr "Ingresar"
+
+#: app/views/shared/login_form.php:31
+msgid "Register"
+msgstr "Registrarse"
+
+#: app/views/shared/login_form.php:32
+msgid "Lost Password?"
+msgstr "¿Ha perdido su contraseña?"
+
+#: app/views/shared/must_configure.php:7
+msgid "Your Affiliate Program must be configured. Go to the %s to set it up."
+msgstr ""
+"Su programa de afiliados debe ser configurado. Ir a %s para configurarlo."
+
+#: app/views/shared/must_configure.php:11
+msgid "Easy Affiliate Wizard"
+msgstr "Asistente para Easy Affiliate"
+
+#: app/views/shared/table-controls.php:5
+msgid "Search ..."
+msgstr "Buscar …"
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/shared/unauthorized.php:6
+msgid ""
+"You're unauthorized to view this page. Please %1$slog in%2$s and try again."
+msgstr ""
+"No está autorizado a ver esta página. ¿Por qué no %1$sIngese%2$s y vuelva a "
+"intentarlo?"
+
+#: app/views/shared/unknown_error.php:2
+msgid "An Unknown Error Occurred"
+msgstr "Ha Ocurrido un Error Desconocido"
+
+#: app/views/signup/form.php:100
+msgid "Zip/Postcode"
+msgstr "Código Postal"
+
+#: app/views/signup/form.php:150
+msgid "Create a Password"
+msgstr "Crear una contraseña"
+
+#: app/views/signup/form.php:159
+msgid "Required and must match password"
+msgstr "Obligatorio y debe coincidir con la contraseña"
+
+#. translators: %1$s: open link tag, %2$s close link tag
+#: app/views/signup/form.php:171
+msgid "I agree to the %1$sAffiliate Sign-up Agreement%2$s"
+msgstr "Estoy de acuerdo con el %1$sAcuerdo de Afiliados%2$s."
+
+#: app/views/signup/form.php:189
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#: app/views/signup/thankyou.php:5
+msgid "Thanks for Registering for our Affiliate Program!"
+msgstr "¡Gracias por registrarse en nuestro programa de afiliados!"
+
+#: app/views/signup/thankyou.php:6
+msgid ""
+"You should shortly receive a confirmation email with your login information."
+msgstr "En breve recibirás un email de confirmación con tus datos de acceso."
+
+#: app/views/signup/thankyou.php:9
+msgid "View your Affiliate Dashboard"
+msgstr "Ver su Panel de Afiliados"
+
+#: app/views/signup/thankyou.php:11
+msgid "Log in to your Affiliate Dashboard"
+msgstr "Inicie sesión en su Panel de Afiliados"
+
+#: app/views/transactions/edit.php:11
+msgid "Edit Transaction"
+msgstr "Editar Transacción"
+
+#: app/views/transactions/edit.php:23
+msgid "Transaction ID:"
+msgstr "ID de Transacción:"
+
+#: app/views/transactions/edit.php:24
+msgid "Created:"
+msgstr "Creado:"
+
+#: app/views/transactions/edit.php:29
+msgid "Edit Recorded Commissions"
+msgstr "Editar Comisiones Registradas"
+
+#: app/views/transactions/edit.php:39
+msgid "Paid on %s"
+msgstr "Pagado el %s"
+
+#: app/views/transactions/edit.php:49
+#: app/views/transactions/new-commission.php:11
+msgid "Commission Level"
+msgstr "Nivel de Comisión"
+
+#: app/views/transactions/edit.php:86 app/views/transactions/row.php:119
+msgid "Voided Amount"
+msgstr "Monto Anulado"
+
+#: app/views/transactions/edit.php:90 app/views/transactions/row.php:118
+msgid "Commission Amount"
+msgstr "Cantidad de la Comisión"
+
+#: app/views/transactions/list.php:10
+msgid "Transactions referred by Affiliates"
+msgstr "Transacciones referidas por Afiliados"
+
+#: app/views/transactions/list.php:14
+msgid "Add New"
+msgstr "Añadir Nuevo"
+
+#: app/views/transactions/new.php:7
+msgid "Add New Affiliate Transaction"
+msgstr "Añadir Nueva Transacción de Afiliado"
+
+#: app/views/transactions/new.php:12
+msgid ""
+"Creating a new transaction here will calculate and record commissions based "
+"on the affiliate selected. Also, any commission notification emails that are "
+"enabled will be sent out."
+msgstr ""
+"Creación de una nueva transacción aquí calculará y registrará las comisiones "
+"basado en el afiliado seleccionado. Además, los correos electrónicos de "
+"notificación de comisión que están habilitados serán enviados."
+
+#: app/views/transactions/new.php:21
+msgid "Create"
+msgstr "Crear"
+
+#: app/views/transactions/row.php:100
+msgid "View details"
+msgstr "Ver los detalles"
+
+#: app/views/transactions/row.php:105
+msgid "Recorded Commissions"
+msgstr "Comisiones Registradas"
+
+#: app/views/transactions/row.php:114
+msgid "Level"
+msgstr "Nivel"
+
+#: app/views/transactions/_form.php:15
+msgid "Affiliate*:"
+msgstr "Afiliado*:"
+
+#: app/views/transactions/_form.php:19
+msgid "The affiliate who referred this transaction."
+msgstr "El afiliado que refirió esta transacción."
+
+#: app/views/transactions/_form.php:24
+msgid "Customer Name (optional):"
+msgstr "Nombre del Cliente (opcional):"
+
+#: app/views/transactions/_form.php:27
+msgid "The Customer's Full Name. Not required."
+msgstr "Nombre completo del cliente. No es requerido."
+
+#: app/views/transactions/_form.php:32
+msgid "Customer Email (optional):"
+msgstr "Correo Electrónico del Cliente (opcional):"
+
+#: app/views/transactions/_form.php:35
+msgid "The Customer's Email Address. Not required."
+msgstr "La Dirección de Correo Electrónico. No es requerido."
+
+#: app/views/transactions/_form.php:40
+msgid "Product*:"
+msgstr "Producto*:"
+
+#: app/views/transactions/_form.php:43
+msgid "The product that was purchased"
+msgstr "El producto que se compró"
+
+#: app/views/transactions/_form.php:48
+msgid "Unique Order ID*:"
+msgstr "ID Unico de Orden*:"
+
+#: app/views/transactions/_form.php:51
+msgid "The unique order id of this transaction."
+msgstr "ID único de la orden de esta transacción."
+
+#: app/views/transactions/_form.php:56
+msgid "Source*:"
+msgstr "Fuente*:"
+
+#: app/views/transactions/_form.php:63
+msgid "The source of this transaction."
+msgstr "La fuente de esta transacción."
+
+#: app/views/transactions/_form.php:68
+msgid "Amount*:"
+msgstr "Cantidad:"
+
+#: app/views/transactions/_form.php:72
+msgid "The sale amount of this transaction"
+msgstr "La cantidad de esta transacción"
+
+#: app/views/transactions/_form.php:77
+msgid "Refund Amount*:"
+msgstr "Monto de Reembolso*:"
+
+#: app/views/transactions/_form.php:81
+msgid "The refund amount of this transaction"
+msgstr "El monto de reembolso de esta transacción"
+
+#: app/views/update/activation_warning.php:5
+msgid "Error with EASY_AFFILIATE_LICENSE_KEY: %s"
+msgstr "Error con EASY_AFFILIATE_LICENSE_KEY: %s"
+
+#. translators: %1$s: open b tag, %2$s: close b tag, %3$s: open link tag, %4$s: close link tag
+#: app/views/update/activation_warning.php:14
+msgid ""
+"%1$sEasy Affiliate hasn't been activated yet.%2$s Go to the Easy Affiliate "
+"%3$sSettings page%4$s to activate it."
+msgstr ""
+"%1$sEasy Affiliate aún no se ha activado.%2$s Vaya a la página de "
+"configuración %3$sEasy Affiliate%4$s para activarlo."
+
+#: app/views/users/admin_profile.php:5
+msgid "Affiliate Settings"
+msgstr "Ajustes de Afiliado"
+
+#: app/views/users/admin_profile.php:9
+msgid "Address 1"
+msgstr "Dirección 1"
+
+#: app/views/users/admin_profile.php:13
+msgid "Address 2"
+msgstr "Dirección 2"
+
+#: app/views/users/admin_profile.php:25
+msgid "Zip"
+msgstr "Código Postal"
+
+#: app/views/users/admin_profile.php:41
+msgid "Int'l Tax ID"
+msgstr "Número de Identificación Fiscal Internacional"
+
+#: app/views/users/admin_profile.php:48
+msgid "(login name)"
+msgstr "(Nombre de Usuario)"
+
+#: app/views/users/admin_profile.php:52
+msgid "User is an Affiliate"
+msgstr "El Usuario es un Afiliado"
+
+#: app/views/users/admin_profile.php:53
+msgid "Is this user an Affiliate?"
+msgstr "¿Este usuario es un Afiliado?"
+
+#: app/views/users/admin_profile.php:56
+msgid "User is Blocked"
+msgstr "El usuario está Bloqueado."
+
+#: app/views/users/admin_profile.php:59
+msgid "Is this user blocked?"
+msgstr "¿Este usuario está bloqueado?"
+
+#: app/views/users/admin_profile.php:61
+msgid "Affiliate Blocked Message:"
+msgstr "Mensaje de Afiliado Bloqueado:"
+
+#: app/views/users/admin_profile.php:67
+msgid "Affiliate Notes"
+msgstr "Notas del Afiliado"
+
+#: app/views/users/admin_profile.php:71
+msgid "Commission Override"
+msgstr "Anulación de Comisión"
+
+#: app/views/users/admin_profile.php:73
+msgid "Enable commission override for this user"
+msgstr "Habilitar la anulación de la comisión para este usuario"
+
+#: app/views/users/admin_profile.php:84
+msgid "Resend Affiliate Program Welcome Email"
+msgstr "Reenviar Correo Electrónico de Bienvenida a Afiliado"
+
+#: easy-affiliate.php:91
+msgid ""
+"Your site is running an %1$sinsecure version%2$s of PHP that is no longer "
+"supported. Please contact your web hosting provider to update your PHP "
+"version. %1$sEasy Affiliate is disabled%2$s on your site until you fix the "
+"issue."
+msgstr ""
+"Su sitio ejecuta una %1$sversión insegura%2$s de PHP que ya no es "
+"compatible. Comuníquese con su proveedor de alojamiento web para actualizar "
+"su versión de PHP. %1$sEasy Affiliate está inhabilitado%2$s en su sitio "
+"hasta que solucione el problema."
+
+#: i18n/countries.php:5
+msgid "Afghanistan"
+msgstr "Afghanistán"
+
+#: i18n/countries.php:6
+msgid "&#197;land Islands"
+msgstr "&#197;Islas de Tierra"
+
+#: i18n/countries.php:7
+msgid "Albania"
+msgstr "Albania"
+
+#: i18n/countries.php:8
+msgid "Algeria"
+msgstr "Algeria"
+
+#: i18n/countries.php:9
+msgid "Andorra"
+msgstr "Andorra"
+
+#: i18n/countries.php:10
+msgid "Angola"
+msgstr "Angola"
+
+#: i18n/countries.php:11
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: i18n/countries.php:12
+msgid "Antarctica"
+msgstr "Antártida"
+
+#: i18n/countries.php:13
+msgid "Antigua and Barbuda"
+msgstr "Antigua y Barbuda"
+
+#: i18n/countries.php:14
+msgid "Argentina"
+msgstr "Argentina"
+
+#: i18n/countries.php:15
+msgid "Armenia"
+msgstr "Armenia"
+
+#: i18n/countries.php:16
+msgid "Aruba"
+msgstr "Aruba"
+
+#: i18n/countries.php:17
+msgid "Australia"
+msgstr "Australia"
+
+#: i18n/countries.php:18
+msgid "Austria"
+msgstr "Austria"
+
+#: i18n/countries.php:19
+msgid "Azerbaijan"
+msgstr "Azerbaiyán"
+
+#: i18n/countries.php:20
+msgid "Bahamas"
+msgstr "Bahamas"
+
+#: i18n/countries.php:21
+msgid "Bahrain"
+msgstr "Bahréin"
+
+#: i18n/countries.php:22
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+#: i18n/countries.php:23
+msgid "Barbados"
+msgstr "Barbados"
+
+#: i18n/countries.php:24
+msgid "Belarus"
+msgstr "Bielorusia"
+
+#: i18n/countries.php:25
+msgid "Belgium"
+msgstr "Bélgica"
+
+#: i18n/countries.php:26
+msgid "Belau"
+msgstr "Belau"
+
+#: i18n/countries.php:27
+msgid "Belize"
+msgstr "Belice"
+
+#: i18n/countries.php:28
+msgid "Benin"
+msgstr "Benín"
+
+#: i18n/countries.php:29
+msgid "Bermuda"
+msgstr "Bermuda"
+
+#: i18n/countries.php:30
+msgid "Bhutan"
+msgstr "Bután"
+
+#: i18n/countries.php:31
+msgid "Bolivia"
+msgstr "Bolivia"
+
+#: i18n/countries.php:32
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr "Bonaire, San Eustaquio y Saba"
+
+#: i18n/countries.php:33
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia y Herzegovina"
+
+#: i18n/countries.php:34
+msgid "Botswana"
+msgstr "Botswana"
+
+#: i18n/countries.php:35
+msgid "Bouvet Island"
+msgstr "Isla Bouvet"
+
+#: i18n/countries.php:36
+msgid "Brazil"
+msgstr "Brasil"
+
+#: i18n/countries.php:37
+msgid "British Indian Ocean Territory"
+msgstr "Territorio Británico del Océano Índico"
+
+#: i18n/countries.php:38
+msgid "British Virgin Islands"
+msgstr "Islas Vírgenes Británicas"
+
+#: i18n/countries.php:39
+msgid "Brunei"
+msgstr "Brunei"
+
+#: i18n/countries.php:40
+msgid "Bulgaria"
+msgstr "Búlgara"
+
+#: i18n/countries.php:41
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#: i18n/countries.php:42
+msgid "Burundi"
+msgstr "Burundi"
+
+#: i18n/countries.php:43
+msgid "Cambodia"
+msgstr "Camboya"
+
+#: i18n/countries.php:44
+msgid "Cameroon"
+msgstr "Camerún"
+
+#: i18n/countries.php:45
+msgid "Canada"
+msgstr "Canadá"
+
+#: i18n/countries.php:46
+msgid "Cape Verde"
+msgstr "Cabo Verde"
+
+#: i18n/countries.php:47
+msgid "Cayman Islands"
+msgstr "Islas Caimán"
+
+#: i18n/countries.php:48
+msgid "Central African Republic"
+msgstr "República de Africa Central"
+
+#: i18n/countries.php:49
+msgid "Chad"
+msgstr "Chad"
+
+#: i18n/countries.php:50
+msgid "Chile"
+msgstr "Chile"
+
+#: i18n/countries.php:51
+msgid "China"
+msgstr "China"
+
+#: i18n/countries.php:52
+msgid "Christmas Island"
+msgstr "Isla de Pascua"
+
+#: i18n/countries.php:53
+msgid "Cocos (Keeling) Islands"
+msgstr "Islas Cocos (Keeling)"
+
+#: i18n/countries.php:54
+msgid "Colombia"
+msgstr "Colombia"
+
+#: i18n/countries.php:55
+msgid "Comoros"
+msgstr "Comoras"
+
+#: i18n/countries.php:56
+msgid "Congo (Brazzaville)"
+msgstr "República del Congo (Brazzaville)"
+
+#: i18n/countries.php:57
+msgid "Congo (Kinshasa)"
+msgstr "República Democrática del Congo (Kinshasa)"
+
+#: i18n/countries.php:58
+msgid "Cook Islands"
+msgstr "Islas Cook"
+
+#: i18n/countries.php:59
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#: i18n/countries.php:60
+msgid "Croatia"
+msgstr "Croacia"
+
+#: i18n/countries.php:61
+msgid "Cuba"
+msgstr "Cuba"
+
+#: i18n/countries.php:62
+msgid "Cura&Ccedil;ao"
+msgstr "Cura&ccedil;ao"
+
+#: i18n/countries.php:63
+msgid "Cyprus"
+msgstr "Chipre"
+
+#: i18n/countries.php:64
+msgid "Czech Republic"
+msgstr "República Checa"
+
+#: i18n/countries.php:65
+msgid "Denmark"
+msgstr "Dinamarca"
+
+#: i18n/countries.php:66
+msgid "Djibouti"
+msgstr "Yibuti"
+
+#: i18n/countries.php:67
+msgid "Dominica"
+msgstr "Dominica"
+
+#: i18n/countries.php:68
+msgid "Dominican Republic"
+msgstr "Repúlica Dominicana"
+
+#: i18n/countries.php:69
+msgid "Ecuador"
+msgstr "Ecuador"
+
+#: i18n/countries.php:70
+msgid "Egypt"
+msgstr "Egipto"
+
+#: i18n/countries.php:71
+msgid "El Salvador"
+msgstr "El Salvador"
+
+#: i18n/countries.php:72
+msgid "Equatorial Guinea"
+msgstr "Guinea Equatorial"
+
+#: i18n/countries.php:73
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#: i18n/countries.php:74
+msgid "Estonia"
+msgstr "Estonia"
+
+#: i18n/countries.php:75
+msgid "Ethiopia"
+msgstr "Etiopía"
+
+#: i18n/countries.php:76
+msgid "Falkland Islands"
+msgstr "Islas Malvinas"
+
+#: i18n/countries.php:77
+msgid "Faroe Islands"
+msgstr "Islas Faroe"
+
+#: i18n/countries.php:78
+msgid "Fiji"
+msgstr "Fiyi"
+
+#: i18n/countries.php:79
+msgid "Finland"
+msgstr "Finlandia"
+
+#: i18n/countries.php:80
+msgid "France"
+msgstr "Francia"
+
+#: i18n/countries.php:81
+msgid "French Guiana"
+msgstr "Guayana Francesa"
+
+#: i18n/countries.php:82
+msgid "French Polynesia"
+msgstr "Polinesia Francesa"
+
+#: i18n/countries.php:83
+msgid "French Southern Territories"
+msgstr "Territorios del sur Franceses"
+
+#: i18n/countries.php:84
+msgid "Gabon"
+msgstr "Gabón"
+
+#: i18n/countries.php:85
+msgid "Gambia"
+msgstr "Gambia"
+
+#: i18n/countries.php:86
+msgid "Georgia"
+msgstr "Georgia"
+
+#: i18n/countries.php:87
+msgid "Germany"
+msgstr "Alemania"
+
+#: i18n/countries.php:88
+msgid "Ghana"
+msgstr "Gana"
+
+#: i18n/countries.php:89
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: i18n/countries.php:90
+msgid "Greece"
+msgstr "Grecia"
+
+#: i18n/countries.php:91
+msgid "Greenland"
+msgstr "Groenlandia"
+
+#: i18n/countries.php:92
+msgid "Grenada"
+msgstr "Granada"
+
+#: i18n/countries.php:93
+msgid "Guadeloupe"
+msgstr "Guadalupe"
+
+#: i18n/countries.php:94
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: i18n/countries.php:95
+msgid "Guernsey"
+msgstr "Guernsey"
+
+#: i18n/countries.php:96
+msgid "Guinea"
+msgstr "Guinea"
+
+#: i18n/countries.php:97
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+#: i18n/countries.php:98
+msgid "Guyana"
+msgstr "Guyana"
+
+#: i18n/countries.php:99
+msgid "Haiti"
+msgstr "Haiti"
+
+#: i18n/countries.php:100
+msgid "Heard Island and McDonald Islands"
+msgstr "Islas Heard y McDonald"
+
+#: i18n/countries.php:101
+msgid "Honduras"
+msgstr "Honduras"
+
+#: i18n/countries.php:102
+msgid "Hong Kong"
+msgstr "Hong Kong"
+
+#: i18n/countries.php:103
+msgid "Hungary"
+msgstr "Hungría"
+
+#: i18n/countries.php:104
+msgid "Iceland"
+msgstr "Islandia"
+
+#: i18n/countries.php:105
+msgid "India"
+msgstr "India"
+
+#: i18n/countries.php:106
+msgid "Indonesia"
+msgstr "Indonesia"
+
+#: i18n/countries.php:107
+msgid "Iran"
+msgstr "Irán"
+
+#: i18n/countries.php:108
+msgid "Iraq"
+msgstr "Irak"
+
+#: i18n/countries.php:109
+msgid "Republic of Ireland"
+msgstr "República de Irlanda"
+
+#: i18n/countries.php:110
+msgid "Isle of Man"
+msgstr "Isla de Man"
+
+#: i18n/countries.php:111
+msgid "Israel"
+msgstr "Israel"
+
+#: i18n/countries.php:112
+msgid "Italy"
+msgstr "Italia"
+
+#: i18n/countries.php:113
+msgid "Ivory Coast"
+msgstr "Costa de Marfil"
+
+#: i18n/countries.php:114
+msgid "Jamaica"
+msgstr "Jamaica"
+
+#: i18n/countries.php:115
+msgid "Japan"
+msgstr "Japón"
+
+#: i18n/countries.php:116
+msgid "Jersey"
+msgstr "Jersey"
+
+#: i18n/countries.php:117
+msgid "Jordan"
+msgstr "Jordania"
+
+#: i18n/countries.php:118
+msgid "Kazakhstan"
+msgstr "Kazajistán"
+
+#: i18n/countries.php:119
+msgid "Kenya"
+msgstr "Kenia"
+
+#: i18n/countries.php:120
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#: i18n/countries.php:121
+msgid "Kuwait"
+msgstr "Kuwait"
+
+#: i18n/countries.php:122
+msgid "Kyrgyzstan"
+msgstr "Kirguistán"
+
+#: i18n/countries.php:123
+msgid "Laos"
+msgstr "República Democrática Popular de Laos"
+
+#: i18n/countries.php:124
+msgid "Latvia"
+msgstr "Latvia"
+
+#: i18n/countries.php:125
+msgid "Lebanon"
+msgstr "Líbano"
+
+#: i18n/countries.php:126
+msgid "Lesotho"
+msgstr "Lesoto"
+
+#: i18n/countries.php:127
+msgid "Liberia"
+msgstr "Liberia"
+
+#: i18n/countries.php:128
+msgid "Libya"
+msgstr "Libia"
+
+#: i18n/countries.php:129
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#: i18n/countries.php:130
+msgid "Lithuania"
+msgstr "Lituania"
+
+#: i18n/countries.php:131
+msgid "Luxembourg"
+msgstr "Luxemburgo"
+
+#: i18n/countries.php:132
+msgid "Macao S.A.R., China"
+msgstr "RAE de Macao, China"
+
+#: i18n/countries.php:133
+msgid "Macedonia"
+msgstr "Macedonia"
+
+#: i18n/countries.php:134
+msgid "Madagascar"
+msgstr "Madagascar"
+
+#: i18n/countries.php:135
+msgid "Malawi"
+msgstr "Malawi"
+
+#: i18n/countries.php:136
+msgid "Malaysia"
+msgstr "Malasia"
+
+#: i18n/countries.php:137
+msgid "Maldives"
+msgstr "Maldivas"
+
+#: i18n/countries.php:138
+msgid "Mali"
+msgstr "Malí"
+
+#: i18n/countries.php:139
+msgid "Malta"
+msgstr "Malta"
+
+#: i18n/countries.php:140
+msgid "Marshall Islands"
+msgstr "Islas Marshall"
+
+#: i18n/countries.php:141
+msgid "Martinique"
+msgstr "Martinica"
+
+#: i18n/countries.php:142
+msgid "Mauritania"
+msgstr "Mauritania"
+
+#: i18n/countries.php:143
+msgid "Mauritius"
+msgstr "Mauricio"
+
+#: i18n/countries.php:144
+msgid "Mayotte"
+msgstr "Mayote"
+
+#: i18n/countries.php:145
+msgid "Mexico"
+msgstr "México"
+
+#: i18n/countries.php:146
+msgid "Micronesia"
+msgstr "Micronesia"
+
+#: i18n/countries.php:147
+msgid "Moldova"
+msgstr "Moldavia"
+
+#: i18n/countries.php:148
+msgid "Monaco"
+msgstr "Mónaco"
+
+#: i18n/countries.php:149
+msgid "Mongolia"
+msgstr "Mongolia"
+
+#: i18n/countries.php:150
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#: i18n/countries.php:151
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#: i18n/countries.php:152
+msgid "Morocco"
+msgstr "Marruecos"
+
+#: i18n/countries.php:153
+msgid "Mozambique"
+msgstr "Mozambique"
+
+#: i18n/countries.php:154
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: i18n/countries.php:155
+msgid "Namibia"
+msgstr "Namibia"
+
+#: i18n/countries.php:156
+msgid "Nauru"
+msgstr "Nauru"
+
+#: i18n/countries.php:157
+msgid "Nepal"
+msgstr "Nepal"
+
+#: i18n/countries.php:158
+msgid "Netherlands"
+msgstr "Países Bajos"
+
+#: i18n/countries.php:159
+msgid "Netherlands Antilles"
+msgstr "Antillas Holandesas"
+
+#: i18n/countries.php:160
+msgid "New Caledonia"
+msgstr "Nueva Caledonia"
+
+#: i18n/countries.php:161
+msgid "New Zealand"
+msgstr "Nueva Recordatorio"
+
+#: i18n/countries.php:162
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+#: i18n/countries.php:163
+msgid "Niger"
+msgstr "Níger"
+
+#: i18n/countries.php:164
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#: i18n/countries.php:165
+msgid "Niue"
+msgstr "Niue"
+
+#: i18n/countries.php:166
+msgid "Norfolk Island"
+msgstr "Isla Norfolk"
+
+#: i18n/countries.php:167
+msgid "North Korea"
+msgstr "Corea del Norte"
+
+#: i18n/countries.php:168
+msgid "Norway"
+msgstr "Noruega"
+
+#: i18n/countries.php:169
+msgid "Oman"
+msgstr "Omán"
+
+#: i18n/countries.php:170
+msgid "Pakistan"
+msgstr "Pakistán"
+
+#: i18n/countries.php:171
+msgid "Palestinian Territory"
+msgstr "Territorios Palestinos"
+
+#: i18n/countries.php:172
+msgid "Panama"
+msgstr "Panamá"
+
+#: i18n/countries.php:173
+msgid "Papua New Guinea"
+msgstr "Papúa Nueva Guinea"
+
+#: i18n/countries.php:174
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#: i18n/countries.php:175
+msgid "Peru"
+msgstr "Perú"
+
+#: i18n/countries.php:176
+msgid "Philippines"
+msgstr "Filipinas"
+
+#: i18n/countries.php:177
+msgid "Pitcairn"
+msgstr "Islas Pitcairn"
+
+#: i18n/countries.php:178
+msgid "Poland"
+msgstr "Polonia"
+
+#: i18n/countries.php:179
+msgid "Portugal"
+msgstr "Portugal"
+
+#: i18n/countries.php:180
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#: i18n/countries.php:181
+msgid "Qatar"
+msgstr "Catar"
+
+#: i18n/countries.php:182
+msgid "Reunion"
+msgstr "Reunión"
+
+#: i18n/countries.php:183
+msgid "Romania"
+msgstr "Rumanía"
+
+#: i18n/countries.php:184
+msgid "Russia"
+msgstr "Rusia"
+
+#: i18n/countries.php:185
+msgid "Rwanda"
+msgstr "Ruanda"
+
+#: i18n/countries.php:186
+msgid "Saint Barth&eacute;lemy"
+msgstr "San Bartolomé"
+
+#: i18n/countries.php:187
+msgid "Saint Helena"
+msgstr "Santa Elena"
+
+#: i18n/countries.php:188
+msgid "Saint Kitts and Nevis"
+msgstr "San Cristobal y Nieves"
+
+#: i18n/countries.php:189
+msgid "Saint Lucia"
+msgstr "Santa Lucía"
+
+#: i18n/countries.php:190
+msgid "Saint Martin (French part)"
+msgstr "Saint Martin (Parte Francesa)"
+
+#: i18n/countries.php:191
+msgid "Saint Martin (Dutch part)"
+msgstr "Saint Martin (Parte alemana)"
+
+#: i18n/countries.php:192
+msgid "Saint Pierre and Miquelon"
+msgstr "San Pedro y Miguelón"
+
+#: i18n/countries.php:193
+msgid "Saint Vincent and the Grenadines"
+msgstr "San Vicente y las Granadinas"
+
+#: i18n/countries.php:194
+msgid "San Marino"
+msgstr "San Marino"
+
+#: i18n/countries.php:195
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
+msgstr "Santo Tomé y Príncipe"
+
+#: i18n/countries.php:196
+msgid "Saudi Arabia"
+msgstr "Arabia Saudita"
+
+#: i18n/countries.php:197
+msgid "Senegal"
+msgstr "Senegal"
+
+#: i18n/countries.php:198
+msgid "Serbia"
+msgstr "Serbia"
+
+#: i18n/countries.php:199
+msgid "Seychelles"
+msgstr "Seychelles"
+
+#: i18n/countries.php:200
+msgid "Sierra Leone"
+msgstr "Sierra Leona"
+
+#: i18n/countries.php:201
+msgid "Singapore"
+msgstr "Singapur"
+
+#: i18n/countries.php:202
+msgid "Slovakia"
+msgstr "Eslovaquia"
+
+#: i18n/countries.php:203
+msgid "Slovenia"
+msgstr "Eslovenia"
+
+#: i18n/countries.php:204
+msgid "Solomon Islands"
+msgstr "Islas Salomón"
+
+#: i18n/countries.php:205
+msgid "Somalia"
+msgstr "Somalia"
+
+#: i18n/countries.php:206
+msgid "South Africa"
+msgstr "Sudáfrica"
+
+#: i18n/countries.php:207
+msgid "South Georgia/Sandwich Islands"
+msgstr "Georgia del Sur / Islas Sandwich"
+
+#: i18n/countries.php:208
+msgid "South Korea"
+msgstr "Corea del Sur"
+
+#: i18n/countries.php:209
+msgid "South Sudan"
+msgstr "Sudán del Sur"
+
+#: i18n/countries.php:210
+msgid "Spain"
+msgstr "España"
+
+#: i18n/countries.php:211
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#: i18n/countries.php:212
+msgid "Sudan"
+msgstr "Sudán"
+
+#: i18n/countries.php:213
+msgid "Suriname"
+msgstr "Surinam"
+
+#: i18n/countries.php:214
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard y Jan Mayen"
+
+#: i18n/countries.php:215
+msgid "Swaziland"
+msgstr "Suazilandia"
+
+#: i18n/countries.php:216
+msgid "Sweden"
+msgstr "Suecia"
+
+#: i18n/countries.php:217
+msgid "Switzerland"
+msgstr "Suiza"
+
+#: i18n/countries.php:218
+msgid "Syria"
+msgstr "Siria"
+
+#: i18n/countries.php:219
+msgid "Taiwan"
+msgstr "Taiwán"
+
+#: i18n/countries.php:220
+msgid "Tajikistan"
+msgstr "Tayikistán"
+
+#: i18n/countries.php:221
+msgid "Tanzania"
+msgstr "Tanzania"
+
+#: i18n/countries.php:222
+msgid "Thailand"
+msgstr "Tailandia"
+
+#: i18n/countries.php:223
+msgid "Timor-Leste"
+msgstr "Timor Oriental"
+
+#: i18n/countries.php:224
+msgid "Togo"
+msgstr "Togo"
+
+#: i18n/countries.php:225
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#: i18n/countries.php:226
+msgid "Tonga"
+msgstr "Tonga"
+
+#: i18n/countries.php:227
+msgid "Trinidad and Tobago"
+msgstr "Trinidad y Tobago"
+
+#: i18n/countries.php:228
+msgid "Tunisia"
+msgstr "Túnez"
+
+#: i18n/countries.php:229
+msgid "Turkey"
+msgstr "Turquía"
+
+#: i18n/countries.php:230
+msgid "Turkmenistan"
+msgstr "Turkmenistán"
+
+#: i18n/countries.php:231
+msgid "Turks and Caicos Islands"
+msgstr "Islas Turcas y Caicos"
+
+#: i18n/countries.php:232
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#: i18n/countries.php:233
+msgid "Uganda"
+msgstr "Uganda"
+
+#: i18n/countries.php:234
+msgid "Ukraine"
+msgstr "Ucrania"
+
+#: i18n/countries.php:235
+msgid "United Arab Emirates"
+msgstr "Emiratos Árabes Unidos"
+
+#: i18n/countries.php:236
+msgid "United Kingdom (UK)"
+msgstr "Reino Unido (UK)"
+
+#: i18n/countries.php:237
+msgid "United States (US)"
+msgstr "Los Estados Unidos"
+
+#: i18n/countries.php:238
+msgid "Uruguay"
+msgstr "Urugüay"
+
+#: i18n/countries.php:239
+msgid "Uzbekistan"
+msgstr "Uzbekistán"
+
+#: i18n/countries.php:240
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#: i18n/countries.php:241
+msgid "Vatican"
+msgstr "Vaticano"
+
+#: i18n/countries.php:242
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#: i18n/countries.php:243
+msgid "Vietnam"
+msgstr "Vietnam"
+
+#: i18n/countries.php:244
+msgid "Wallis and Futuna"
+msgstr "Wallis y Futuna"
+
+#: i18n/countries.php:245
+msgid "Western Sahara"
+msgstr "Sahara"
+
+#: i18n/countries.php:246
+msgid "Western Samoa"
+msgstr "Samoa Oriental"
+
+#: i18n/countries.php:247
+msgid "Yemen"
+msgstr "Yemen"
+
+#: i18n/countries.php:248
+msgid "Zambia"
+msgstr "Zambia"
+
+#: i18n/countries.php:249
+msgid "Zimbabwe"
+msgstr "Zimbawe"
+
+#~ msgid "Standard Payment"
+#~ msgstr "Pago Normal"
+
+#~ msgid "[%s] Authorize.Net Debug Email"
+#~ msgstr "[%s] Correo electrónico de la depuración de Authorize.Net"
+
+#~ msgid "AWeber List Name"
+#~ msgstr "Nombre de la Lista de AWeber"
+
+#~ msgid ""
+#~ "Enter the AWeber mailing list name that you want users signed up for when "
+#~ "they sign up for Affiliate Royale."
+#~ msgstr ""
+#~ "Escriba el nombre de la lista de AWeber que quiere que su usuarios sean "
+#~ "ingresados cuando se registren por Affiliate Royale."
+
+#~ msgid "Signup Checkbox Label"
+#~ msgstr "Etiqueta del Checkbox de Inscripción "
+
+#~ msgid ""
+#~ "This is the text that will display on the signup page next to your "
+#~ "mailing list opt-out checkbox."
+#~ msgstr ""
+#~ "Éste es el texto que será demostrado en la página de registro al lado de "
+#~ "su opt-out checkbox para la lista de mailing."
+
+#~ msgid "Sign Up for the %s Newsletter"
+#~ msgstr "Registrarse para el %s Boletín Informativo"
+
+#~ msgid "We Respect Your Privacy"
+#~ msgstr "Respetamos Su Privacidad"
+
+#~ msgid "You're Almost Done - Activate Your Newsletter Subscription!"
+#~ msgstr "¡Ya casi termina - Active su suscripción a nuestro Newsletter!"
+
+#~ msgid ""
+#~ "You've just been sent an email that contains a <strong>confirm link</"
+#~ "strong>."
+#~ msgstr ""
+#~ "Ya le hemos enviado un correo electrónico que contiene un <strong>enlace "
+#~ "de confirmar</strong>."
+
+#~ msgid ""
+#~ "In order to activate your subscription, check your email and click on the "
+#~ "link in that email.\n"
+#~ "           You will not receive your subscription until you <strong>click "
+#~ "that link to activate it</strong>."
+#~ msgstr ""
+#~ "Para activar su suscripción, revise su correo electrónico y haga clic en "
+#~ "el enlace en ese correo electronico.\n"
+#~ "           Usted no recibirá su suscripción hasta <strong>hacer clic en "
+#~ "ese enlace para activarla</strong>."
+
+#~ msgid ""
+#~ "If you don't see that email in your inbox shortly, fill out the form "
+#~ "again to have another copy of it sent to you."
+#~ msgstr ""
+#~ "Si usted no ve el correo electrónico en su inbox dentro hace poco, revise "
+#~ "su bandeja de “coreano deseado,” o “spam”, o llene el formulario de nuevo "
+#~ "para tener otra copia del mismo mensaje."
+
+#~ msgid "ConvertKit API Secret"
+#~ msgstr "ConvertKit Secreto API"
+
+#~ msgid ""
+#~ "This is the text that will display on the signup page next to your "
+#~ "mailing list opt-in checkbox."
+#~ msgstr ""
+#~ "Éste es el texto que será demostrado en la página de registro al lado de "
+#~ "su opt-out checkbox para la lista de mailing."
+
+#~ msgid "Sign Up for our newsletter"
+#~ msgstr "Suscríbase a nuestra newsletter"
+
+#~ msgid "DigLabs Stripe Payment"
+#~ msgstr "Pago DigLabs Stripe"
+
+#~ msgid "E-Commerce Purchase"
+#~ msgstr "Compra de E-Commerce"
+
+#~ msgid "EDD Purchase"
+#~ msgstr "Compra EDD"
+
+#~ msgid "GetResponse Signup Integration"
+#~ msgstr "Integración del Inscripción de GetResponse"
+
+#~ msgid "GetResponse API Key"
+#~ msgstr "GetResponse Clave de API:"
+
+#~ msgid "GetResponse Campaign Token"
+#~ msgstr "Identificador (token) de campaña de GetResponse"
+
+#~ msgid "Jigoshop Purchase"
+#~ msgstr "Dompra de Jigoshop"
+
+#~ msgid ""
+#~ "You can find your API key under your Account settings at MailChimp.com."
+#~ msgstr ""
+#~ "Usted puede encontrar su clave de API bajo la configuración de tu Cuenta "
+#~ "en MailChimp.com."
+
+#~ msgid "MailChimp List ID"
+#~ msgstr "ID de su lista de MailChimp"
+
+#~ msgid "You can find your List ID under your list's settings."
+#~ msgstr ""
+#~ "Usted puede encontrar su ID de la lista en la configuración de la lista."
+
+#~ msgid "Enable Double Opt-in"
+#~ msgstr "Activar Doble Opt-in"
+
+#~ msgid ""
+#~ "Members will have to click a confirmation link in an email before being "
+#~ "added to your list."
+#~ msgstr ""
+#~ "Los miembros tendrán que hacer clic en un enlace en un correo electrónico "
+#~ "de confirmación antes de ser añadido a su lista."
+
+#~ msgid "MarketPress Purchase"
+#~ msgstr "Compra de MarketPress"
+
+#~ msgid "Products"
+#~ msgstr "Productos"
+
+#~ msgid "Level %d:"
+#~ msgstr "Nivel %d:"
+
+#~ msgid "Shopp Purchase"
+#~ msgstr "Compra de Shopp"
+
+#~ msgid "Could not delete subscription"
+#~ msgstr "No se pudo borrar la suscripción"
+
+#~ msgid "Amount must be formatted #.##"
+#~ msgstr "Cantidad debe ser con formato #. ##"
+
+#~ msgid "Refund Amount must not be empty"
+#~ msgstr "Cantidad de reembolso no debe estar vacío"
+
+#~ msgid "Refund amount must be formatted #.##"
+#~ msgstr "Cantidad de reembolso debe ser con formato #. ##"
+
+#~ msgid "Commission level cannot be empty"
+#~ msgstr "Nivel de la comisión no puede estar vacío"
+
+#~ msgid "Why you creepin'?"
+#~ msgstr "Oye tú, ¿por qué estás molestando?"
+
+#~ msgid "Check for Update"
+#~ msgstr "Buscar actualización del producto"
+
+#~ msgid "Membership"
+#~ msgstr "Membresía"
+
+#~ msgid "Membership Software"
+#~ msgstr "Software de la Membresía"
+
+#~ msgid "Rule"
+#~ msgstr "Regla"
+
+#~ msgid "Lock"
+#~ msgstr "Bloquear"
+
+#~ msgid "Access"
+#~ msgstr "Acceso"
+
+#~ msgid "Community"
+#~ msgstr "Comunidad"
+
+#~ msgid "Admin"
+#~ msgstr "Admin"
+
+#~ msgid "Plugin"
+#~ msgstr "Plugin"
+
+#~ msgid "No Additional information right now"
+#~ msgstr "No hay información adicional en este momento"
+
+#~ msgid "Edge updates couldn't be updated."
+#~ msgstr "Actualizaciones de Edge no podrán ser actualizadas."
+
+#~ msgid "Unauthorized to resend message"
+#~ msgstr "No autorizado volver a enviar este mensaje"
+
+#~ msgid "Cannot resend message"
+#~ msgstr "No se puede volver a enviar el mensaje"
+
+#~ msgid "Woo Commerce Purchase"
+#~ msgstr "Compra de Woo Commerce"
+
+#~ msgid "Never"
+#~ msgstr "Nunca"
+
+#~ msgid "Affiliate: <b>%s</b>"
+#~ msgstr "Afiliado: <b>%s</b>"
+
+#~ msgid "info"
+#~ msgstr "Info"
+
+#~ msgid "Affiliate?"
+#~ msgstr "Afiliado?"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Stats"
+#~ msgstr "Stats"
+
+#~ msgid "Referrals"
+#~ msgstr "Referidos"
+
+#~ msgid "Other"
+#~ msgstr "Otros"
+
+#~ msgid "Start Date"
+#~ msgstr "Fecha de Inicio"
+
+#~ msgid "Subscription ID"
+#~ msgstr "ID de Suscripción"
+
+#~ msgid "Target URL can't be blank"
+#~ msgstr "URL de destino no puede estar vacío"
+
+#~ msgid "Target URL must be a valid URL"
+#~ msgstr "URL de destino debe ser una dirección URL válida"
+
+#~ msgid "The slug must be unique to this link"
+#~ msgstr "El slug debe ser único a este enlace"
+
+#~ msgid "The Commission Amount Must Not Be Blank."
+#~ msgstr "El monto de la comisión no debe estar vacío."
+
+#~ msgid "Edit Subscription"
+#~ msgstr "Editar Suscripción"
+
+#~ msgid "New Subscription"
+#~ msgstr "Nueva Suscripción"
+
+#~ msgid "View Subscription"
+#~ msgstr "Ver Suscripción"
+
+#~ msgid "Search Subscription"
+#~ msgstr "Buscar Suscripción"
+
+#~ msgid "*** The password you created at signup ***"
+#~ msgstr "***La contraseña que creó al registrarse ***"
+
+#~ msgid "You must fill out the tax ID field before you can begin promoting"
+#~ msgstr ""
+#~ "Usted debe completar el campo de ID de impuesto antes de comenzar "
+#~ "promocionando"
+
+#~ msgid "You must enter your PayPal Email before you can begin promoting"
+#~ msgstr "Debe introducir su PayPal Email antes de comenzar promocionando"
+
+#~ msgid "Clicks referred by affiliates"
+#~ msgstr "Clics referidos por los afiliados"
+
+#~ msgid "Corrections"
+#~ msgstr "Correcciones"
+
+#~ msgid "Paid"
+#~ msgstr "Pagado"
+
+#~ msgid "Newer Clicks"
+#~ msgstr "Más Nuevo Clics"
+
+#~ msgid "Older Clicks"
+#~ msgstr "Clics más Antiguos"
+
+#~ msgid "Sales Referred"
+#~ msgstr "Ventas Referidas"
+
+#~ msgid "No data available"
+#~ msgstr "No hay datos disponibles"
+
+#~ msgid "Registration is currently not allowed on this site."
+#~ msgstr "Registros no están permitidos en este sitio."
+
+#~ msgid "E-mail"
+#~ msgstr "Correo Electrónico"
+
+#~ msgid "US Residents (###-##-#### or ##-#######)"
+#~ msgstr "Residentes de Estados Unidos (###-##-#### or ##-#######)"
+
+#~ msgid "Display"
+#~ msgstr "Mostrar"
+
+#~ msgid "entries"
+#~ msgstr "entradas"
+
+#~ msgid ""
+#~ "Your WordPress registration settings do not currently allow user "
+#~ "registrations.. Go to the %s to enable registrations."
+#~ msgstr ""
+#~ "La configuración de registro de WordPress no permiten actualmente "
+#~ "registros de usuarios. Por favor vaya a la %s para permitir registros."
+
+#~ msgid "General Wordpress Settings Page"
+#~ msgstr "Ajustes de Pagina Generales de Wordpress"
+
+#~ msgid "Subscriptions referred by affiliates"
+#~ msgstr "Suscripciones referidas por los afiliados"
+
+#~ msgid "Delete this Subscription."
+#~ msgstr "Borrar esta Suscripción."
+
+#~ msgid "Percentages"
+#~ msgstr "Porcentajes"
+
+#~ msgid "Fixed Amounts"
+#~ msgstr "Cantidades Fijas"
+
+#~ msgid "Correction Amount"
+#~ msgstr "Cantidad de la Corrección"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Delete this Transaction."
+#~ msgstr "Eliminar esta Transacción."
+
+#~ msgid ""
+#~ "You must have a License Key to enable automatic updates for Affiliate "
+#~ "Royale.<br/><br/>If you don't have a license please go to %1$s or %2$s to "
+#~ "get one.<br/><br/>If you don't have a license you can login at %3$s or "
+#~ "%4$s to manage your licenses and site activations."
+#~ msgstr ""
+#~ "Debe tener una clave de licencia para activar las actualizaciones "
+#~ "automáticas para Affiliate Royale. <br/><br/> Si usted no tiene una "
+#~ "licencia por favor vaya a %1$s o %2$s para conseguir una. <br/><br/> Si "
+#~ "usted no tiene una licencia, puede ingresar %3$s o %4$s para gestionar "
+#~ "sus licencias y activaciones del sitio."
+
+#~ msgid "Enter Your Affiliate Royale or MemberPress License Key:"
+#~ msgstr "Ingrese su clave de licencia de Affiliate Royale o MemberPress:"
+
+#~ msgid "Activate License Key on %s"
+#~ msgstr "Activar Clave de Licencia en %s"
+
+#~ msgid "Active License Key Information:"
+#~ msgstr "Información de la Clave de Licencia Activada:"
+
+#~ msgid "Product:"
+#~ msgstr "Producto:"
