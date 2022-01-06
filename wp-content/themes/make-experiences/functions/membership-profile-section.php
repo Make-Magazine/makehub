@@ -94,7 +94,7 @@ function membership_info_content() {
 					}
 					?>
 				</div>
-				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your membership and unlock all the features of Make: Community for only $24.99 for your first year, including the complete Make: Magazine digital magazine and archive.<br /><span style="color:#666;font-size:15px;">Note: You received a complimentary limited access membership when registering for Maker Campus and or Maker Camp.</span></p>'; } ?>
+				<?php if(CAN_UPGRADE == true && IS_MEMBER == true) { echo '<p>Upgrade your membership and unlock all the features of Make: Community for only $24.99 for your first year, including the complete Make: Magazine digital magazine and archive.<br /><span style="color:#666;font-size:15px;">Note: You received a complimentary limited access membership when registering for Maker Campus and/or Maker Camp.</span></p>'; } ?>
 			</div>
 			<div class="tab-pane" id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
 				<?php
