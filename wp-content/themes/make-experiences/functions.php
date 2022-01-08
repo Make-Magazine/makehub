@@ -98,7 +98,11 @@ function set_universal_asset_constants() {
 
 	// Decide if user can upgrade
 	$canUpgrade = true;
-	$hasmembership = false;
+	$hasMembership = false;
+	// this is a list of memberships that can't be upgraded further
+	$fullMemberships = array("Membership", "School Maker Faire Membership", "Global Producer Membership", "Makerspace Membership", "School Membership");
+	$currentMemberships = array();
+
 	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
 		$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
 		if (!empty($levels)) {
@@ -119,12 +123,32 @@ function set_universal_asset_constants() {
 						break;
 				}
 			}
-		} else {
-			$canUpgrade = false;
+		}
+	} else if( class_exists('MeprUtils') ) {
+	    $mepr_current_user = MeprUtils::get_currentuserinfo();
+	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
+	    $table = MeprSubscription::account_subscr_table(
+	      'created_at', 'DESC',
+	      1, '', 'any', 0, false,
+	      array(
+	        'member' => $mepr_current_user->user_login,
+	      ),
+	      $sub_cols
+	    );
+	    $subscriptions = $table['results'];
+		foreach($subscriptions as $subscription) {
+			if($subscription->status == "active") {
+				$hasMembership = true;
+				$currentMemberships[] = $subscription->product_name;
+				if( in_array($subscription->product_name, $fullMemberships) ) {
+					$canUpgrade ==false;
+				}
+			}
 		}
 	}
 
-	define('IS_MEMBER', $hasmembership);
+	define('CURRENT_MEMBERSHIPS', $currentMemberships);
+	define('IS_MEMBER', $hasMembership);
 	define('CAN_UPGRADE', $canUpgrade);
 }
 set_universal_asset_constants();

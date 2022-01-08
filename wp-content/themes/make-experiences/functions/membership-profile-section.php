@@ -4,6 +4,8 @@
  * View and/or edit your membership subscription
  */
 
+ if( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ){
+
 function profile_tab_membership_infoname() {
     global $bp;
     $user_id = bp_displayed_user_id();
@@ -40,8 +42,9 @@ function membership_info_content() {
     $user_id = bp_displayed_user_id();
     //get the users email
     $user_info = get_userdata($user_id);
-	//var_dump(Ihc_Db::get_user_levels($user_id, true));
     $user_email = $user_info->user_email;
+
+
 	if(!class_exists('Stripe\Customer')) {
     	require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
 	}
@@ -112,4 +115,6 @@ function membership_info_content() {
 		</div>
     </div>
 <?php
+}
+
 }

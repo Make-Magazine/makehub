@@ -9,6 +9,3 @@
 #espresso-default-admin #mtp_extra_actions p::after {
 	content: " Too BAD"
 }
-.ihc-js-membership-table td, .ihc-js-membership-table th{
-	width: 100% !important;
-}

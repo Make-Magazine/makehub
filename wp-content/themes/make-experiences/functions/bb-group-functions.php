@@ -178,4 +178,4 @@ function automatic_group_memberships( $uid, $lid ) {
     }
 }
 
-add_action( 'ihc_action_after_subscription_activated', 'automatic_group_memberships', 10, 2 );
+add_action( 'mepr-event-transaction-completed', 'automatic_group_memberships', 10, 2 );
