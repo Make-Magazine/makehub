@@ -201,6 +201,10 @@ function basicCurl($url, $headers = null) {
     if ($headers != null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
+	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    }
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $homeurl = get_home_url();
     if(strpos($homeurl, 'devmakehub') !== false || strpos($homeurl, 'stagemakehub') !== false) {
@@ -209,6 +213,60 @@ function basicCurl($url, $headers = null) {
     $data = curl_exec($ch);
     curl_close($ch);
     return $data;
+}
+
+function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00') {
+	$url = CURRENT_URL . '/wp-json/mp/v1/members';
+	$ch = curl_init($url);
+
+	$data_string = json_encode(
+	  [
+	    'email'               => $email,
+	    'username'            => $userName,
+	    'first_name'          => $firstName,
+	    'last_name'           => $lastName,
+	    'send_welcome_email'  => $sendWelcomeEmail,
+	    'transaction'         => [
+	      'membership'  => $membership, // ID of the Membership
+	      'amount'      => '0.00',
+	      'total'       => '0.00',
+	      'tax_amount'  => '0.00',
+	      'tax_rate'    => '0.000',
+	      'trans_num'   => 'mp-txn-'.uniqid(),
+	      'status'      => 'complete',
+	      'gateway'     => 'free',
+	      'created_at'  => date("Y-m-d H:i:s"),
+	      'expires_at'  => $expiresAt
+	    ]
+	  ]
+	);
+
+	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt(
+	  $ch,
+	  CURLOPT_POSTFIELDS,
+	  $data_string
+	);
+
+	$header = array();
+	$header[] = 'MEMBERPRESS-API-KEY: 0n8p2YkomO'; // Your API KEY from MemberPress Developer Tools Here
+	$header[] = 'Content-Type: application/json';
+	$header[] = 'Content-Length: ' . strlen($data_string);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+	$response = curl_exec($ch);
+
+	if(curl_errno($ch)){
+	  throw new Exception(curl_error($ch));
+	}
+	echo $response;
+	curl_close($ch);
+
 }
 
 function parse_yturl($url) {
