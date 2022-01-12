@@ -100,7 +100,7 @@ function set_universal_asset_constants() {
 	$canUpgrade = true;
 	$hasMembership = false;
 	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Membership", "School Maker Faire Membership", "Global Producer Membership", "Makerspace Membership", "School Membership");
+	$fullMemberships = array("Membership", "School Maker Faire", "Global Producer", "Makerspace/School");
 	$currentMemberships = array();
 
 	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
