@@ -126,6 +126,7 @@ function set_universal_asset_constants() {
 		}
 	} else if( class_exists('MeprUtils') ) {
 	    $mepr_current_user = MeprUtils::get_currentuserinfo();
+		// see if you can get the "slug" in this query and test against that in the $fullMemberships list
 	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
 	    $table = MeprSubscription::account_subscr_table(
 	      'created_at', 'DESC',
@@ -201,15 +202,12 @@ function basicCurl($url, $headers = null) {
     if ($headers != null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
-	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
+	if (strpos(CURRENT_URL, '.local') > -1 || strpos(CURRENT_URL, '.test') > -1 ) { // wpengine local environments
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     }
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $homeurl = get_home_url();
-    if(strpos($homeurl, 'devmakehub') !== false || strpos($homeurl, 'stagemakehub') !== false) {
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    }
     $data = curl_exec($ch);
     curl_close($ch);
     return $data;
@@ -435,8 +433,10 @@ function filter_gettext($translation, $text, $domain) {
     }
     return $translation;
 }
-
 add_filter('gettext', 'filter_gettext', 10, 4);
+
+// Disable automatic plugin updates
+add_filter( 'auto_update_plugin', '__return_false' );
 
 // don't lazyload on the project print template
 function lazyload_exclude() {

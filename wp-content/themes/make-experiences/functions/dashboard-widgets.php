@@ -8,10 +8,6 @@ function return_membership_widget($user){
 	$user_id   = $user->ID;
 	$user_meta = get_user_meta($user_id);
 
-	if(!current_user_can('memberpress_authorized')) {
-		addFreeMembership($user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, 9614, false);
-	}
-
 	if ( isset($user_meta['ihc_user_levels'][0]) && class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
 		$return  = '<div class="dashboard-box expando-box">';
 		$return .= '  <h4 class="open"><img style="max-width:100px;" src="'. get_stylesheet_directory_uri().'/images/make-community-logo.png" /> Membership Details</h4>';

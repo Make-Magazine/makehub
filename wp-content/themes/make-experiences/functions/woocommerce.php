@@ -103,21 +103,22 @@ function woocommerce_add_membership( $order_id ){
 			if( !$order->get_user() && !get_user_by('email', $order->get_billing_email()) ){
 				// Although we are taking new fields, these fields are not going into the order's post meta
 				$user_id = create_new_user('Welcome to Make: Community', $order->get_billing_first_name(), $order->get_billing_last_name(), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', $order->get_billing_email());
-				//$user_id = create_new_user('Welcome to Make: Community', get_post_meta($order_id, 'member_first_name', true ), get_post_meta( $order_id, 'member_last_name', true ), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', get_post_meta( $order_id, 'member_email', true ));
-				bp_set_member_type( $user_id, 'member742' );
-				assign_schoolmakerfaire_level($user_id);
+				$user = get_user_by( 'id', $user_id);
+				// add school mf membership if user doesn't have it already
+				$school_membership = get_page_by_path('school-maker-faire', OBJECT, 'memberpressproduct');
+				if(!user_can($user->ID, 'memberpress_authorized_' . $school_membership->ID)) {
+					addFreeMembership( $user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
+				}
+				groups_join_group( 152, $user_id);
 			} else {
 				$user = get_user_by('email', $order->get_billing_email());
-				assign_schoolmakerfaire_level($user->ID);
+				// add school mf membership if user doesn't have it already
+				$school_membership = get_page_by_title('School Maker Faire', OBJECT, 'memberpressproduct');
+				if(!user_can($user->ID, 'memberpress_authorized_' . $school_membership->ID)) {
+					addFreeMembership( $user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
+				}
+				groups_join_group( 152, $user_id);
 			}
 		}
 	}
-}
-
-function assign_schoolmakerfaire_level($user_id) {
-	// give them a school maker faire membership
-	$assignLevel = \Indeed\Ihc\UserSubscriptions::assign( $user_id, 18 );
-	$activateLevel = \Indeed\Ihc\UserSubscriptions::makeComplete( $user_id, 18 );
-	// add them to the school maker faire group
-	groups_join_group( 152, $user_id);
 }
