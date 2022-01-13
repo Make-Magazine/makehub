@@ -113,7 +113,7 @@ function update_entry_status($entry_id, $status) {
 		$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
 		$mepr_user = new MeprUser( $userID );
 		if(!$mepr_user->is_already_subscribed_to( $community_membership->ID)) {
-			addFreeMembership($user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $community_membership->ID, true);
+			addFreeMembership($user->data->user_email, $user->data->user_login, $mepr_user->user_firstname, $mepr_user->user_lastname, $community_membership->ID, true);
 		}
     }
 }
