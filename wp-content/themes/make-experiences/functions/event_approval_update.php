@@ -105,13 +105,15 @@ function update_entry_status($entry_id, $status) {
         update_field('group_id', $group_id, $event_id);
 
         $userID = $entry['created_by'];
-        // now, give the user a basic membership level, if they don't have one already
+		$user = get_user_by('id', $userID);
+		// now, give the user a basic membership level, if they don't have one already
         $user_meta = get_user_meta($userID);
 
         // assign community membership if user has none already
 		$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
-		if(!user_can($user->ID, 'memberpress_authorized_' . $community_membership->ID)) {
-			$result = addFreeMembership($user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $community_membership->ID, true);
+		$mepr_user = new MeprUser( $userID );
+		if(!$mepr_user->is_already_subscribed_to( $community_membership->ID)) {
+			addFreeMembership($user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $community_membership->ID, true);
 		}
     }
 }
