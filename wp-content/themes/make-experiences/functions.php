@@ -512,4 +512,7 @@ function get_post_primary_category($post_id, $term='category', $return_all_categ
     }
     return $return;
 }
+
+// prevent password changed email
+add_filter( 'send_password_change_email', '__return_false' );
 ?>

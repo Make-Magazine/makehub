@@ -11,13 +11,13 @@ function disable_post_creation($is_disabled, $form, $entry) {
 add_action('gform_after_submission_1', 'create_event', 10, 2);
 
 function create_event($entry, $form) {
-    //get current user info     
+    //get current user info
     //global $current_user;
     $current_user = get_user_by('id', $entry['created_by']);
     $userID = $entry['created_by'];
     $userEmail = (string) $current_user->user_email;
 
-    //find all fields set with a parameter name 
+    //find all fields set with a parameter name
     $parameter_array = find_field_by_parameter($form);
 
     //first create the event
@@ -41,31 +41,31 @@ function create_event($entry, $form) {
     //set the post id
     global $wpdb;
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
-    $entry['post_id'] = $eventID;    
-    
-    // assign basic questions to primary registrant    
+    $entry['post_id'] = $eventID;
+
+    // assign basic questions to primary registrant
     $eQgroup = EE_Event_Question_Group::new_instance(
                     array('EVT_ID' => $eventID,
                         'QSG_ID' => 3,
                         'EQG_primary' => 1
     ));
-    $eQgroup->save();    
+    $eQgroup->save();
     $event->_add_relation_to($eQgroup, 'Event_Question_Group'); //link the question group
-        
-    // assign personal questions to additional registrant    
+
+    // assign personal questions to additional registrant
     $eQgroup = EE_Event_Question_Group::new_instance(
                     array('EVT_ID' => $eventID,
                         'QSG_ID' => 1,
                         'EQG_primary' => 1,
                         'EQG_additional' => 1
     ));
-    $eQgroup->save();    
+    $eQgroup->save();
     $event->_add_relation_to($eQgroup, 'Event_Question_Group'); //link the question group
-    
-    //set ticket schedue
+
+    //set ticket schedule
     setSchedTicket($parameter_array, $entry, $eventID);
 
-    $userBio = getFieldByParam('user-bio', $parameter_array, $entry);    
+    $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
     $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
     $userLname = getFieldByParam('user-lname', $parameter_array, $entry);
 
@@ -101,7 +101,7 @@ function create_event($entry, $form) {
     /*
      * Now that the event is created, let's transfer data from the entry to the event
      */
-    event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
-    update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data    
-    
+    event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc
+    update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data
+
 }
