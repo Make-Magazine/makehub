@@ -252,7 +252,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	);
 
 	$header = array();
-	$header[] = 'MEMBERPRESS-API-KEY: HnwEUWNLRu'; // Your API KEY from MemberPress Developer Tools Here 0n8p2YkomO for local
+	$header[] = 'MEMBERPRESS-API-KEY: HnwEUWNLRu'; // Your API KEY from MemberPress Developer Tools Here 0n8p2YkomO for local HnwEUWNLRu for stage
 	$header[] = 'Content-Type: application/json';
 	$header[] = 'Content-Length: ' . strlen($data_string);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $header);

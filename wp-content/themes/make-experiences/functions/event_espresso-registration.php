@@ -33,8 +33,8 @@ function attendee_approved( $registration) {
     // give them a free membership if they don't have one already
 	$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
 	$mepr_user = new MeprUser( $user->ID );
-	if(!$mepr_user->is_already_subscribed_to( $community_membership->ID)) {
-		addFreeMembership($user->data->user_email, $user->data->user_login, $mepr_user->user_firstname, $mepr_user->user_lastname, $community_membership->ID, true);
+	if(!$mepr_user->is_already_subscribed_to( $community_membership->ID )) {
+		addFreeMembership($user->data->user_email, $user->data->user_login, $mepr_user->first_name, $mepr_user->last_name, $community_membership->ID, true);
 	}
 
     //add them to the event group
