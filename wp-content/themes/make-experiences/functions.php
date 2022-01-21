@@ -138,7 +138,7 @@ function set_universal_asset_constants() {
 	    );
 	    $subscriptions = $table['results'];
 		foreach($subscriptions as $subscription) {
-			if($subscription->status == "active") {
+			if($subscription->active == '<span class="mepr-active">Yes</span>') {
 				$hasMembership = true;
 				$currentMemberships[] = $subscription->product_name;
 				if( in_array($subscription->product_name, $fullMemberships) ) {

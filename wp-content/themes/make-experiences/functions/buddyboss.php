@@ -303,13 +303,3 @@ function add_featured_ms_class_directory($classes) {
 }
 
 add_filter('bp_get_member_class', 'add_featured_ms_class_directory');
-
-function add_featured_ms_class_profile($classes) {
-	foreach (CURRENT_MEMBERSHIPS as $membership) {
-	    if (strpos('Makerspace', $membership) !== FALSE) {
-	        $classes[] = "member-level-makerspace";
-	    }
-	}
-    return $classes;
-}
-add_filter('body_class', 'add_featured_ms_class_profile', 12);

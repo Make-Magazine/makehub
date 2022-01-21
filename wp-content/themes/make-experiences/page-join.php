@@ -56,7 +56,7 @@ get_header();
 						if( CAN_UPGRADE == true ) { ?>
 							<h1>To access this content, upgrade your membership today!</h1>
 							<h4>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $24.99 the first year.</h4>
-							<a href="/register/membership" class="btn universal-btn membership-btn upgrade">Upgrade</div>
+							<a href="/register/membership?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade</a>
 							<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 						<?php } else { ?>
 							<h1>You are already a Member!</h1>
