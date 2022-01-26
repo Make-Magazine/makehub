@@ -50,7 +50,7 @@ function make_experiences_scripts_styles() {
      * */
     // Styles
     wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
-    wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.39/jquery.fancybox.css', '', 'all');
+    wp_enqueue_style('fancybox', get_stylesheet_directory_uri() . '/node-modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css', '', 'all');
     ### UNIVERSAL STYLES ###
     wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
     ### SUBTHEME STYLES ###
