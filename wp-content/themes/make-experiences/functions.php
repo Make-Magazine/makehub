@@ -99,27 +99,29 @@ function set_universal_asset_constants() {
 	// Decide if user can upgrade
 	$canUpgrade = true;
 	$hasmembership = false;
-	$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
-	if (!empty($levels)) {
-		$hasmembership = true;
-		foreach($levels as $level) {
-			switch($level['level_slug']){
-				case "school_maker_faire":
-				case "individual_first_year_discount":
-				case "individual":
-				case "family":
-				case "makerspacesmallbusiness":
-				case "patron":
-				case "founder":
-				case "benefactor":
-				case "make_projects_school":
-				case "global_producers":
-					$canUpgrade = false;
-					break;
+	if(class_exists("\Indeed\Ihc\UserSubscriptions")) {
+		$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
+		if (!empty($levels)) {
+			$hasmembership = true;
+			foreach($levels as $level) {
+				switch($level['level_slug']){
+					case "school_maker_faire":
+					case "individual_first_year_discount":
+					case "individual":
+					case "family":
+					case "makerspacesmallbusiness":
+					case "patron":
+					case "founder":
+					case "benefactor":
+					case "make_projects_school":
+					case "global_producers":
+						$canUpgrade = false;
+						break;
+				}
 			}
+		} else {
+			$canUpgrade = false;
 		}
-	} else {
-		$canUpgrade = false;
 	}
 
 	define('IS_MEMBER', $hasmembership);
