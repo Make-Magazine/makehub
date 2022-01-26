@@ -124,6 +124,7 @@ figure {
 
 .page-template-page-fullscreen .site-content>.container, .page-template-page-fullwidth-content .site-content>.container, .page-template-default .site-content>.container{
 	max-width: 100% !important;
+	width: 100%;
 }
 // for the cases where the buddypanel was overlapping content at some breakpoints
 .page-template .wp-block-columns {
