@@ -196,3 +196,11 @@ add_action("rest_api_init", function () {
             ]
         );
 });
+
+
+add_action('elementor/widgets/widgets_registered', function( $widget_manager ){
+	$widget_manager->unregister_widget_type('form');
+	$widget_manager->unregister_widget_type('uael-table-of-contents');
+	$widget_manager->unregister_widget_type('uael-registration-form');
+	$widget_manager->unregister_widget_type('uael-login-form');
+}, 15);
