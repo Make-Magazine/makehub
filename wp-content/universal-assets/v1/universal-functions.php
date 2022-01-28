@@ -203,4 +203,6 @@ add_action('elementor/widgets/widgets_registered', function( $widget_manager ){
 	$widget_manager->unregister_widget_type('uael-table-of-contents');
 	$widget_manager->unregister_widget_type('uael-registration-form');
 	$widget_manager->unregister_widget_type('uael-login-form');
+	$widget_manager->unregister_widget_type('wp-widget-members-widget-login');
+	$widget_manager->unregister_widget_type('uael-gf-styler');
 }, 15);
