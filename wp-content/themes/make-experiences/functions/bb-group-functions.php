@@ -168,7 +168,7 @@ function bp_rename_group_tabs() {
 
 add_action( 'bp_actions', 'bp_rename_group_tabs', 999 );
 
-
+/*
 //Automatically add certain new memberships to certain groups & courses upon ultimate membership pro subscription
 function automatic_group_memberships( $uid, $lid ) {
     // if school membership, add to school maker faire group and school lms course
@@ -178,4 +178,4 @@ function automatic_group_memberships( $uid, $lid ) {
     }
 }
 
-add_action( 'mepr-event-transaction-completed', 'automatic_group_memberships', 10, 2 );
+add_action( 'mepr-event-transaction-completed', 'automatic_group_memberships', 10, 2 );*/
