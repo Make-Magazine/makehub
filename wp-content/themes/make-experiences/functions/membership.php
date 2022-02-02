@@ -3,7 +3,7 @@
 // Remove Member Press->Info SubMenu and make the subscriptions subnav item the default
 function change_memberpress_subnav(){
 	global $bp;
-	if(class_exists(MpBuddyPress)){
+	if(class_exists('MpBuddyPress')){
 		$mp_buddyboss = new MpBuddyPress;
 		if ( $bp->current_component == 'mp-membership' ) {
 			bp_core_remove_subnav_item( 'mp-membership', 'mp-info' );
