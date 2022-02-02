@@ -168,7 +168,6 @@ class IndeedExport{
 						{$options['where_clause']}
 						{$options['limit']}
 			";
-			error_log($q);
 			$data = $wpdb->get_results($q);
 
 			if ($data){
