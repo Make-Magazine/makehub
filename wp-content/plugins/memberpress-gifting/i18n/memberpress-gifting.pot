@@ -1,0 +1,482 @@
+# Copyright (C) 2021 MemberPress
+# This file is distributed under the same license as the Memberpress Gifting plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Memberpress Gifting 1.1.14\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-gifting\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-12-22T18:19:42+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: memberpress-gifting\n"
+
+#. Plugin Name of the plugin
+msgid "Memberpress Gifting"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://memberpress.com/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Allow your MemberPress Memberships to be gifted"
+msgstr ""
+
+#. Author of the plugin
+msgid "MemberPress"
+msgstr ""
+
+#: app/controllers/Account.php:135
+msgid "Gifts"
+msgstr ""
+
+#: app/controllers/Account.php:180
+msgid "Could not send email. Please try again later."
+msgstr ""
+
+#: app/controllers/Account.php:191
+msgid "Email sent"
+msgstr ""
+
+#: app/controllers/App.php:112
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: app/controllers/App.php:113
+msgid "Copied!"
+msgstr ""
+
+#: app/controllers/App.php:114
+msgid "Oops, Copy Failed!"
+msgstr ""
+
+#: app/controllers/Checkout.php:370
+msgctxt "ui"
+msgid "Since you already have an active membership, we are assuming that this is a gift purchase."
+msgstr ""
+
+#: app/controllers/Emails.php:59
+msgid "You do not have access."
+msgstr ""
+
+#: app/controllers/Emails.php:63
+msgid "Email couldn't be set to default"
+msgstr ""
+
+#: app/controllers/Emails.php:102
+msgid "You do not have access to send a test email."
+msgstr ""
+
+#: app/controllers/Emails.php:106
+msgid "Can't send your email ... refresh the page and try it again."
+msgstr ""
+
+#: app/controllers/Emails.php:136
+msgid "John"
+msgstr ""
+
+#: app/controllers/Emails.php:137
+msgid "Doe"
+msgstr ""
+
+#: app/controllers/Emails.php:138
+msgid "John Doe"
+msgstr ""
+
+#: app/controllers/Emails.php:140
+msgid "111 Cool Avenue"
+msgstr ""
+
+#: app/controllers/Emails.php:141
+msgid "New York, NY 10005"
+msgstr ""
+
+#: app/controllers/Emails.php:142
+msgid "United States"
+msgstr ""
+
+#: app/controllers/Emails.php:143
+msgid "User Meta Field: $1"
+msgstr ""
+
+#: app/controllers/Emails.php:144
+#: app/controllers/Emails.php:146
+msgid "Bronze Edition"
+msgstr ""
+
+#: app/controllers/Emails.php:151
+#: app/controllers/Emails.php:158
+msgid "Credit Card (Stripe)"
+msgstr ""
+
+#: app/controllers/Emails.php:159
+msgid "%s / month"
+msgstr ""
+
+#: app/controllers/Emails.php:171
+msgid "Subscription Expiring"
+msgstr ""
+
+#: app/controllers/Emails.php:172
+msgid "Subscription Expiring in 2 Days"
+msgstr ""
+
+#: app/controllers/Emails.php:177
+msgid "Tax"
+msgstr ""
+
+#: app/controllers/Emails.php:196
+msgid "Your test email was successfully sent."
+msgstr ""
+
+#: app/controllers/Product.php:104
+#: app/controllers/Product.php:107
+msgid "Allow this membership to be gifted"
+msgstr ""
+
+#: app/controllers/Product.php:108
+msgid "When this box is checked, the Membership can be purchased as a gift for another member."
+msgstr ""
+
+#: app/controllers/Reminders.php:192
+msgid "Gift Membership Expired"
+msgstr ""
+
+#: app/controllers/Reminders.php:193
+msgid "Gift Membership expired %d %s ago"
+msgstr ""
+
+#: app/controllers/Reminders.php:202
+msgctxt "ui"
+msgid "after Gifted Membership Expires"
+msgstr ""
+
+#: app/emails/GiftClaimEmail.php:11
+msgid "<b>Claim Gift</b> Email"
+msgstr ""
+
+#: app/emails/GiftClaimEmail.php:12
+msgid "This email is sent to a user when payment completes for one of your memberships in her behalf."
+msgstr ""
+
+#: app/emails/GiftClaimEmail.php:16
+msgid "** {$gifter_name} has sent you a gift!"
+msgstr ""
+
+#: app/emails/UserGiftExpiresReminderEmail.php:12
+msgid "Gifted Membership Reminder Email to User"
+msgstr ""
+
+#: app/emails/UserGiftExpiresReminderEmail.php:13
+msgid "This email is sent to the user when triggered."
+msgstr ""
+
+#: app/emails/UserGiftExpiresReminderEmail.php:17
+msgid "** Your %1$s"
+msgstr ""
+
+#: app/emails/UserGiftExpiresReminderEmail.php:33
+msgid "Gift Membership Expiring"
+msgstr ""
+
+#: app/emails/UserGiftExpiresReminderEmail.php:34
+msgid "Gift Membership Expiring in 2 days"
+msgstr ""
+
+#: app/helpers/AppHelper.php:11
+msgid "Invalid"
+msgstr ""
+
+#: app/helpers/AppHelper.php:13
+msgid "Claimed"
+msgstr ""
+
+#: app/helpers/AppHelper.php:15
+msgid "Unclaimed"
+msgstr ""
+
+#: app/helpers/AppHelper.php:17
+msgid "Unknown"
+msgstr ""
+
+#: app/lib/BaseCptModel.php:180
+msgid "This was unable to be deleted."
+msgstr ""
+
+#: app/lib/BaseEmail.php:93
+msgid "No email recipient has been set."
+msgstr ""
+
+#: app/lib/BaseEmail.php:211
+msgid "Privacy Policy"
+msgstr ""
+
+#: app/lib/CtrlFactory.php:28
+msgid "Ctrl: %s wasn't found"
+msgstr ""
+
+#: app/lib/EmailFactory.php:15
+msgid "Email wasn't found"
+msgstr ""
+
+#: app/lib/EmailFactory.php:25
+msgid "Not a valid email object: %1$s is not an instance of %2$s"
+msgstr ""
+
+#: app/lib/Utils.php:357
+msgid ""
+"*** MemberPress Gifting Error\n"
+"==========\n"
+"%s\n"
+"==========\n"
+""
+msgstr ""
+
+#: app/lib/Utils.php:367
+msgid "*** MemberPress Courses Debug: %s"
+msgstr ""
+
+#: app/models/Reminder.php:73
+msgid "Gifted Membership Expires"
+msgstr ""
+
+#: app/models/Reminder.php:92
+msgid "%d %s %s %s"
+msgstr ""
+
+#: app/models/Reminder.php:132
+msgid "All Memberships"
+msgstr ""
+
+#: app/views/account/gift-list.php:12
+#: app/views/account/gift-list.php:31
+msgctxt "ui"
+msgid "Date"
+msgstr ""
+
+#: app/views/account/gift-list.php:13
+#: app/views/account/gift-list.php:34
+msgctxt "ui"
+msgid "Total"
+msgstr ""
+
+#: app/views/account/gift-list.php:14
+#: app/views/account/gift-list.php:38
+#: app/views/account/gift-list.php:40
+msgctxt "ui"
+msgid "Membership"
+msgstr ""
+
+#: app/views/account/gift-list.php:15
+#: app/views/account/gift-list.php:42
+msgctxt "ui"
+msgid "Method"
+msgstr ""
+
+#: app/views/account/gift-list.php:16
+#: app/views/account/gift-list.php:43
+msgctxt "ui"
+msgid "Status"
+msgstr ""
+
+#: app/views/account/gift-list.php:17
+#: app/views/account/gift-list.php:96
+msgctxt "ui"
+msgid "Invoice"
+msgstr ""
+
+#: app/views/account/gift-list.php:19
+msgctxt "ui"
+msgid "Download"
+msgstr ""
+
+#: app/views/account/gift-list.php:42
+msgctxt "ui"
+msgid "Unknown"
+msgstr ""
+
+#: app/views/account/gift-list.php:46
+msgctxt "ui"
+msgid "Copy Gift URL"
+msgstr ""
+
+#: app/views/account/gift-list.php:47
+#: app/views/account/gift-list.php:51
+msgctxt "ui"
+msgid "Send Gift Email"
+msgstr ""
+
+#: app/views/account/gift-list.php:51
+#: app/views/admin/emails/options.php:32
+msgid "Loading..."
+msgstr ""
+
+#: app/views/account/gift-list.php:58
+msgctxt "ui"
+msgid "From (Name):"
+msgstr ""
+
+#: app/views/account/gift-list.php:59
+msgctxt "ui"
+msgid "From (Name) Required"
+msgstr ""
+
+#: app/views/account/gift-list.php:66
+msgctxt "ui"
+msgid "To (Name):"
+msgstr ""
+
+#: app/views/account/gift-list.php:67
+msgctxt "ui"
+msgid "To (Name) Required"
+msgstr ""
+
+#: app/views/account/gift-list.php:74
+msgctxt "ui"
+msgid "To (Email):"
+msgstr ""
+
+#: app/views/account/gift-list.php:75
+msgctxt "ui"
+msgid "Empty or Invalid Email"
+msgstr ""
+
+#: app/views/account/gift-list.php:82
+msgctxt "ui"
+msgid "Note:"
+msgstr ""
+
+#: app/views/account/gift-list.php:88
+msgctxt "ui"
+msgid "Send"
+msgstr ""
+
+#: app/views/account/gift-list.php:110
+msgctxt "ui"
+msgid "PDF"
+msgstr ""
+
+#: app/views/admin/emails/options.php:8
+msgid "Send %s"
+msgstr ""
+
+#: app/views/admin/emails/options.php:16
+#: app/views/admin/emails/options.php:17
+msgid "Edit"
+msgstr ""
+
+#: app/views/admin/emails/options.php:17
+msgid "Hide Editor"
+msgstr ""
+
+#: app/views/admin/emails/options.php:24
+msgid "Send Test"
+msgstr ""
+
+#: app/views/admin/emails/options.php:31
+msgid "Reset to Default"
+msgstr ""
+
+#: app/views/admin/emails/options.php:37
+msgid "Subject"
+msgstr ""
+
+#: app/views/admin/emails/options.php:41
+msgid "Body"
+msgstr ""
+
+#: app/views/admin/emails/options.php:55
+msgid "Insert &uarr;"
+msgstr ""
+
+#: app/views/admin/emails/options.php:63
+msgid "Use default template"
+msgstr ""
+
+#: app/views/admin/emails/options.php:65
+msgid "Default Email Template"
+msgstr ""
+
+#: app/views/admin/emails/options.php:66
+msgid "When this is checked the body of this email will be wrapped in the default email template."
+msgstr ""
+
+#: app/views/admin/transactions/search_box.php:2
+msgid "All Types"
+msgstr ""
+
+#: app/views/admin/transactions/search_box.php:3
+msgid "Gifts Purchased"
+msgstr ""
+
+#: app/views/admin/transactions/search_box.php:4
+msgid "Gifts Claimed"
+msgstr ""
+
+#: app/views/checkout/gift-signup-checkbox.php:4
+msgid "Is this a gift?"
+msgstr ""
+
+#: app/views/emails/gift-claim-email.php:3
+msgctxt "ui"
+msgid "Hi {$giftee_name}"
+msgstr ""
+
+#: app/views/emails/gift-claim-email.php:6
+msgctxt "ui"
+msgid "%1$s has sent you a gift for %2$s membership content."
+msgstr ""
+
+#: app/views/emails/gift-claim-email.php:10
+msgctxt "ui"
+msgid "You can claim your gift here: <a href=\"%1$s\">%2$s</a>"
+msgstr ""
+
+#: app/views/emails/gift-claim-email.php:12
+#: app/views/emails/user-gift-expires-reminder-email.php:10
+msgctxt "ui"
+msgid "Cheers!"
+msgstr ""
+
+#: app/views/emails/gift-claim-email.php:14
+msgctxt "ui"
+msgid "The %s Team"
+msgstr ""
+
+#: app/views/emails/user-gift-expires-reminder-email.php:7
+msgctxt "ui"
+msgid "Hi %s,"
+msgstr ""
+
+#: app/views/emails/user-gift-expires-reminder-email.php:8
+msgctxt "ui"
+msgid "Just a friendly reminder that your %1$s on <strong>%2$s</strong>."
+msgstr ""
+
+#: app/views/emails/user-gift-expires-reminder-email.php:9
+msgctxt "ui"
+msgid "We wouldn't want you to miss out on any of the great content we're working on so <strong>make sure you %1$srenew it today%2$s</strong>."
+msgstr ""
+
+#: app/views/emails/user-gift-expires-reminder-email.php:11
+msgctxt "ui"
+msgid "The {$blog_name} Team"
+msgstr ""
+
+#: app/views/shared/notice.php:8
+msgctxt "ui"
+msgid "NOTE"
+msgstr ""
+
+#: memberpress-gifting.php:156
+msgid "MemberPress Gifting"
+msgstr ""
+
+#: memberpress-gifting.php:157
+msgid "Gifting add-on for MemberPress."
+msgstr ""
