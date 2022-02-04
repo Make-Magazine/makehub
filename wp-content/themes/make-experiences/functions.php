@@ -100,7 +100,7 @@ function set_universal_asset_constants() {
 	$canUpgrade = true;
 	$hasMembership = false;
 	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Membership", "School Maker Faire", "Global Producer", "Makerspace/School");
+	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producer", "Multi-Seat Membership");
 	$currentMemberships = array();
 
 	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
@@ -128,23 +128,27 @@ function set_universal_asset_constants() {
 	    $mepr_current_user = MeprUtils::get_currentuserinfo();
 		// see if you can get the "slug" in this query and test against that in the $fullMemberships list
 	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
-	    $table = MeprSubscription::account_subscr_table(
-	      'created_at', 'DESC',
-	      1, '', 'any', 0, false,
-	      array(
-	        'member' => $mepr_current_user->user_login,
-	      ),
-	      $sub_cols
-	    );
-	    $subscriptions = $table['results'];
-		foreach($subscriptions as $subscription) {
-			if($subscription->active == '<span class="mepr-active">Yes</span>') {
-				$hasMembership = true;
-				$currentMemberships[] = $subscription->product_name;
-				if( in_array($subscription->product_name, $fullMemberships) ) {
-					$canUpgrade ==false;
+		if($mepr_current_user) {
+		    $table = MeprSubscription::account_subscr_table(
+		      'created_at', 'DESC',
+		      1, '', 'any', 0, false,
+		      array(
+		        'member' => $mepr_current_user->user_login,
+		      ),
+		      $sub_cols
+		    );
+		    $subscriptions = $table['results'];
+			foreach($subscriptions as $subscription) {
+				if($subscription->active == '<span class="mepr-active">Yes</span>') {
+					$hasMembership = true;
+					$currentMemberships[] = $subscription->product_name;
+					if( in_array($subscription->product_name, $fullMemberships) ) {
+						$canUpgrade == false;
+					}
 				}
 			}
+		} else {
+			$canUpgrade == false;
 		}
 	}
 
