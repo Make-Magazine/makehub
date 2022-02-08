@@ -18,9 +18,10 @@ function return_membership_widget($user){
 		$return .= '</div>';
 	} else if( class_exists('MeprUtils') ) {
 		$mepr_current_user = MeprUtils::get_currentuserinfo();
+
 	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
 		$user = bp_get_displayed_user();
-		//var_dump($user);
+
 	    $table = MeprSubscription::account_subscr_table(
 	      'created_at', 'DESC',
 	      1, '', 'any', 0, false,
@@ -31,9 +32,10 @@ function return_membership_widget($user){
 	    );
 	    $subscriptions = $table['results'];
 		foreach($subscriptions as $subscription) {
-			if($subscription->status == "active") {
+			if($subscription->status == "active" || $subscription->status == "None") {
 				$subscribe_date = date("Y/m/d H:i:s", strtotime($subscription->created_at));
 				$expire_date = isset($subscription->expires_at) ? date("Y/m/d H:i:s", strtotime($subscription->expires_at)) : 'Never';
+				if($expire_date == "-0001/11/30 00:00:00") { $expire_date = "Never"; }
 				$return  = '<div class="dashboard-box expando-box">';
 				$return .= '  <h4 class="open"><img style="max-width:100px;" src="'. get_stylesheet_directory_uri().'/images/make-community-logo.png" /> Membership Details</h4>';
 				$return .= '  <ul class="open">';
@@ -44,7 +46,7 @@ function return_membership_widget($user){
 				$return .= '        <div class="mebr-startdate"><label>Member Since:</label> ' . $subscribe_date . '</div>';
 				$return .= '        <div class="mebr-expiredate"><label>Expiration Date:</label> ' . $expire_date . '</div>';
 				$return .= '    </div></li>';
-				$return .= '    <li><a href="'. $user->domain . 'membership/" class="btn universal-btn">See More Details</a></li>';
+				$return .= '    <li><a href="'. $user->domain . 'mp-membership/" class="btn universal-btn">See More Details</a></li>';
 				$return .= '  </ul>';
 				$return .= '</div>';
 			}
