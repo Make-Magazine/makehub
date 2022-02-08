@@ -56,7 +56,7 @@ get_header();
 						if( CAN_UPGRADE == true ) { ?>
 							<h1>To access this content, upgrade your membership today!</h1>
 							<h4>Upgrade your subscription for digital Make: Magazine access and exclusive videos. Introductory offer $24.99 the first year.</h4>
-							<a href="/register/membership?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade</a>
+							<a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade</a>
 							<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 						<?php } else { ?>
 							<h1>You are already a Member!</h1>
@@ -65,7 +65,7 @@ get_header();
 					<?php } else { ?>
 						<h1>Become a Member of Make: Community</h1>
 						<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
-						<a href="/register/membership" class="btn universal-btn-reversed membership-btn">Join Today!</a>
+						<a href="/register/premium-subscriber" class="btn universal-btn-reversed membership-btn">Join Today!</a>
 						<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 					<?php } ?>
 				<?php } // end MeprUtils if ?>
