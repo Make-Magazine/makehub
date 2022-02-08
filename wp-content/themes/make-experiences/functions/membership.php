@@ -1,5 +1,44 @@
 <?php
 
+function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00') {
+	$url = CURRENT_URL . '/wp-json/mp/v1/members';
+
+	$datastring = json_encode(
+	  [
+		'first_name'          => $firstName,
+  	    'last_name'           => $lastName,
+	    'email'               => $email,
+	    'username'            => $userName,
+	    'send_welcome_email'  => $sendWelcomeEmail,
+	    'transaction'         => [
+	      'membership'  => $membership, // ID of the Membership
+	      'amount'      => '0.00',
+	      'total'       => '0.00',
+	      'tax_amount'  => '0.00',
+	      'tax_rate'    => '0.000',
+	      'trans_num'   => 'mp-txn-'.uniqid(),
+	      'status'      => 'complete',
+	      'gateway'     => 'free',
+	      'created_at'  => date("Y-m-d H:i:s"),
+	      'expires_at'  => $expiresAt
+	    ]
+	  ]
+	);
+
+	$headers = setMemPressHeaders($datastring);
+
+	postCurl($url, $headers, $datastring);
+}
+function setMemPressHeaders($datastring = null) {
+	$headers = array();
+	$headers[] = 'MEMBERPRESS-API-KEY: FGLzhqujP4'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local FGLzhqujP4 for stage
+	$headers[] = 'Content-Type: application/json';
+	if($datastring){
+		$headers[] = 'Content-Length: ' . strlen($datastring);
+	}
+	return $headers;
+}
+
 // Remove Member Press->Info SubMenu and make the subscriptions subnav item the default
 function change_memberpress_subnav(){
 	global $bp;

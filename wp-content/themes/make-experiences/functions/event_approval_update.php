@@ -106,14 +106,16 @@ function update_entry_status($entry_id, $status) {
 
         $userID = $entry['created_by'];
 		$user = get_user_by('id', $userID);
-		// now, give the user a basic membership level, if they don't have one already
-        $user_meta = get_user_meta($userID);
 
-        // assign community membership if user has none already
+		$first_name = get_user_meta( $userID, 'first_name', true );
+		$last_name = get_user_meta( $userID, 'last_name', true );
+
+		// give them a free membership if they don't have one already
 		$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
-		$mepr_user = new MeprUser( $userID );
-		if(!$mepr_user->is_already_subscribed_to( $community_membership->ID)) {
-			addFreeMembership($user->data->user_email, $user->data->user_login, $mepr_user->user_firstname, $mepr_user->user_lastname, $community_membership->ID, true);
+		$mpInfo = json_decode(basicCurl(CURRENT_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+
+		if(empty($mpInfo->active_memberships)) {
+			addFreeMembership($user->data->user_email, $user->data->user_login, $first_name, $last_name, $community_membership->ID, true);
 		}
     }
 }

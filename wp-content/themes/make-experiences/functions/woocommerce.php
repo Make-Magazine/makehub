@@ -104,21 +104,26 @@ function woocommerce_add_membership( $order_id ){
 				// Although we are taking new fields, these fields are not going into the order's post meta
 				$user_id = create_new_user('Welcome to Make: Community', $order->get_billing_first_name(), $order->get_billing_last_name(), 'Thank you for registering for our School Maker Faire Program.  Included with your purchase is a free membership to Make: Community. This is where you will find the event information, resources and community.  Please login to access Make: Community and your School Maker Faire', $order->get_billing_email());
 				$user = get_user_by( 'id', $user_id);
-				// add school mf membership if user doesn't have it already
-				$school_membership = get_page_by_path('school-maker-faire', OBJECT, 'memberpressproduct');
-				if(!user_can($user->ID, 'memberpress_authorized_' . $school_membership->ID)) {
-					addFreeMembership( $user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
-				}
-				groups_join_group( 152, $user_id);
 			} else {
 				$user = get_user_by('email', $order->get_billing_email());
-				// add school mf membership if user doesn't have it already
-				$school_membership = get_page_by_title('School Maker Faire', OBJECT, 'memberpressproduct');
-				if(!user_can($user->ID, 'memberpress_authorized_' . $school_membership->ID)) {
-					addFreeMembership( $user->user_email, $user->user_login, $user->user_firstname, $user->user_lastname, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
-				}
-				groups_join_group( 152, $user_id);
 			}
+			// add school mf membership if user doesn't have it already
+			$school_membership = get_page_by_path('school-maker-faire', OBJECT, 'memberpressproduct');
+			$mpInfo = json_decode(basicCurl(CURRENT_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+			$first_name = get_user_meta( $user->ID, 'first_name', true );
+			$last_name = get_user_meta( $user->ID, 'last_name', true );
+
+			$hasSchoolMembership = false;
+			foreach($mpInfo->active_memberships as $membership) {
+				if($membership->title == 'School Maker Faire') {
+					$hasSchoolMembership = true;
+				}
+			}
+
+			if($hasSchoolMembership == false) {
+				addFreeMembership( $user->user_email, $user->user_login, $first_name, $last_name, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
+			}
+			groups_join_group( 152, $user_id);
 		}
 	}
 }
