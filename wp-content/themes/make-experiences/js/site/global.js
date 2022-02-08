@@ -23,7 +23,7 @@ jQuery(document).ready(function () {
             jQuery('#ihc_submit_bttn').removeClass('highlighted');
         }, 3500);
     });
-	if(window.location.pathname == '/register/premium-membership/') {
+	if(window.location.pathname == '/register/premium-subscriber/') {
 		if(GetURLParameter('upgrade')) {
 			jQuery('.have-coupon-link').css('display', 'none');
 			jQuery('.mepr-coupon-code').attr('value', GetURLParameter('upgrade'));
