@@ -100,7 +100,7 @@ function set_universal_asset_constants() {
 	$canUpgrade = true;
 	$hasMembership = false;
 	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producer", "Multi-Seat Membership");
+	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
 	$currentMemberships = array();
 
 	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
@@ -143,15 +143,15 @@ function set_universal_asset_constants() {
 					$hasMembership = true;
 					$currentMemberships[] = $subscription->product_name;
 					if( in_array($subscription->product_name, $fullMemberships) ) {
-						$canUpgrade == false;
+						$canUpgrade = false;
 					}
 				}
 			}
 		} else {
-			$canUpgrade == false;
+			$canUpgrade = false;
 		}
 	}
-
+	error_log($canUpgrade);
 	define('CURRENT_MEMBERSHIPS', $currentMemberships);
 	define('IS_MEMBER', $hasMembership);
 	define('CAN_UPGRADE', $canUpgrade);
