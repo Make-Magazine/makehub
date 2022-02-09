@@ -151,7 +151,6 @@ function set_universal_asset_constants() {
 			$canUpgrade = false;
 		}
 	}
-	error_log($canUpgrade);
 	define('CURRENT_MEMBERSHIPS', $currentMemberships);
 	define('IS_MEMBER', $hasMembership);
 	define('CAN_UPGRADE', $canUpgrade);
