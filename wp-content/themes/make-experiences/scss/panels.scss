@@ -7,7 +7,7 @@
 	background: #fff;
 	color: #333;
 	a.grid-item-desc { color: #fff; }
-	.btn-outlined { 
+	.btn-outlined {
 		background: #fff;
 		color: #005e9a;
 		border-color: #005e9a;
@@ -67,7 +67,7 @@
 		display: flex;
 		justify-content: center;
 		margin-bottom: 15px;
-		h2 { 
+		h2 {
 			color: #fff;
 			text-align: center;
 			padding-bottom: 10px;
@@ -123,8 +123,8 @@
 					margin: 0;
 				}
 				.slide-title.top { top: 0px; }
-				.slide-title.bottom { 
-					bottom: 0px; 
+				.slide-title.bottom {
+					bottom: 0px;
 				}
 				.slide-title.center { bottom: 40%; }
 				a {
@@ -385,7 +385,7 @@
 		display: table;
 		margin: 0 auto;
 		padding-top: 10px;
-		h2 { 
+		h2 {
 			font-size: inherit;
 			text-align: center;
 			@media screen and (max-width: 992px) {
@@ -405,7 +405,7 @@
 			.grid-item-desc {
 				display: flex;
 			}
-			h4 { 
+			h4 {
 				display: block;
 				height: auto;
 				overflow: visible;
@@ -422,7 +422,7 @@
 		}
 		.grid-item {
 			background-position: top;
-			background-size: cover;
+			background-size: cover !important;
 		}
 	}
 
@@ -435,7 +435,7 @@
 		margin-top: 40px;
 		&:hover {
 			color: #00597E;
-			background-color: #fff; 
+			background-color: #fff;
 		}
 	}
 	.cta-btn {
@@ -632,7 +632,7 @@
 		@media (max-width:700px) {
 			font-size: 22px;
 		}
-		span { 
+		span {
 			padding: 0px 10px;
 			@media (max-width:614px) {
 				padding: 0px;
@@ -1141,7 +1141,7 @@
 
 			li {
 				margin: 0em 0.5em;
-				&:before {      
+				&:before {
 					color: #48b8ef;
 					content: "\2022";
 					font-size: 2em;
@@ -1347,7 +1347,7 @@
 	}
 	.blueFlag {
 		font-family: "Roboto Condensed";
-		color: #fff;                     
+		color: #fff;
 		margin-bottom: 0px;
 
 		.container {
@@ -1371,20 +1371,20 @@
 			border-top: 39px solid #00AEEF;
 			border-bottom: 39px solid #00AEEF;
 			border-right: 39px solid transparent;
-		}         
-		@media screen and (max-width: 767px) {            
-			.arrow-right {            
+		}
+		@media screen and (max-width: 767px) {
+			.arrow-right {
 				border-top: 30px solid #00AEEF;
 				border-bottom: 30px solid #00AEEF;
 				border-right: 30px solid transparent;
-			}         
+			}
 			.container {
-				height: 60px; 
+				height: 60px;
 				margin-right: 30px;
 			}
 			h2 { font-size: 26px; }
 			h5 { font-size: 16px; }
-		}         
+		}
 	}
 	.top_left img {
 		height: 54px;
@@ -1671,9 +1671,9 @@
 			 overflow: visible;
 			 display: block;
 		}
-		p { 
-			color: #fff; 
-			font-size: 1.1em; 
+		p {
+			color: #fff;
+			font-size: 1.1em;
 		}
 		h4 {
 			display: none;
@@ -1688,9 +1688,9 @@
 			h4 {
 				font-size: 34px;
 				display: block;
-				sup { 
-					font-size: 18px; 
-					line-height: 20px; 
+				sup {
+					font-size: 18px;
+					line-height: 20px;
 					margin-bottom: 5px;
 				}
 			}
