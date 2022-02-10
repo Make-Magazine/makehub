@@ -21,8 +21,8 @@ bp_nouveau_before_loop(); ?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 
-	<?php while ( bp_members() ) : bp_the_member(); ?>
-
+	<?php while ( bp_members() ) : bp_the_member();
+		if(xprofile_get_field_data("I wish to remain anonymous and opt out of the Member Directory", bp_get_member_user_id()) != 'on') { ?>
 		<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
 			<div class="list-wrap">
 
@@ -66,7 +66,8 @@ bp_nouveau_before_loop(); ?>
 			</div>
 		</li>
 
-	<?php endwhile; ?>
+	<?php } // END OF OPT OUT CONDITIONAL
+		endwhile; ?>
 
 	</ul>
 

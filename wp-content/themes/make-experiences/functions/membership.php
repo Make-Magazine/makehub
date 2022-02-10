@@ -66,3 +66,18 @@ function add_membership_class_profile($classes) {
     return $classes;
 }
 add_filter('body_class', 'add_membership_class_profile', 12);
+
+// Take all the membership fields for a new member and add them to the xprofile buddyboss fields
+function mepr_capture_new_member_added($event) {
+	$user = $event->get_data();
+	$userInfo = $user->rec;
+	xprofile_set_field_data("Address", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-one', true));
+	xprofile_set_field_data("Address 2", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-two', true));
+	xprofile_set_field_data("City", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-city', true));
+	xprofile_set_field_data("State / Province", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-state', true));
+	xprofile_set_field_data("Country", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-country', true));
+	xprofile_set_field_data("Zip", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-zip', true));
+	xprofile_set_field_data("Testimonial", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr_testimonial', true));
+	xprofile_set_field_data("I wish to remain anonymous and opt out of the Member Directory ", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr_i_wish_to_remain_anonymous_and_opt_out_of_the_member_directory', true));
+}
+add_action('mepr-event-member-signup-completed', 'mepr_capture_new_member_added', 12);
