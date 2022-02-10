@@ -78,6 +78,33 @@ function mepr_capture_new_member_added($event) {
 	xprofile_set_field_data("Country", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-country', true));
 	xprofile_set_field_data("Zip", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr-address-zip', true));
 	xprofile_set_field_data("Testimonial", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr_testimonial', true));
-	xprofile_set_field_data("I wish to remain anonymous and opt out of the Member Directory ", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr_i_wish_to_remain_anonymous_and_opt_out_of_the_member_directory', true));
+	xprofile_set_field_data("I wish to remain anonymous and opt out of the Member Directory", $userInfo->ID, get_user_meta( $userInfo->ID, 'mepr_i_wish_to_remain_anonymous_and_opt_out_of_the_member_directory', true));
 }
 add_action('mepr-event-member-signup-completed', 'mepr_capture_new_member_added', 12);
+
+/**
+ * Exclude Members from BuddyPress Members List.
+*/
+function bp_exclude_users( $qs = '', $object = '' ) {
+	global $wpdb;
+    // list of users to exclude.
+	$optOutFieldID = xprofile_get_field_id_from_name( 'I wish to remain anonymous and opt out of the Member Directory' );
+	$excluded_users = $wpdb->get_col("SELECT user_id FROM wp_bp_xprofile_data WHERE field_id = $optOutFieldID AND value = 'on'");
+    if ( $object != 'members' ) {
+        return $qs;
+    }
+    $args = wp_parse_args( $qs );
+    // check if we are listing friends?, do not exclude in this case.
+    if ( ! empty( $args['user_id'] ) ) {
+        return $qs;
+    }
+    if ( ! empty( $args['exclude'] ) ) {
+        $args['exclude'] = $args['exclude'] . ',' . $excluded_users;
+    } else {
+        $args['exclude'] = $excluded_users;
+    }
+    $qs = build_query( $args );
+    return $qs;
+}
+
+add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
