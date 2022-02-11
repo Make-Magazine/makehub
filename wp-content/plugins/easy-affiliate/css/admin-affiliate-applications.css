@@ -1,0 +1,8 @@
+/* Admin Applications Styles */
+
+#submitdiv #misc-publishing-actions,
+#submitdiv #minor-publishing-actions,
+.view-switch {
+  display: none;
+}
+

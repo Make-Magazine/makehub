@@ -23,6 +23,20 @@ jQuery(document).ready(function () {
             jQuery('#ihc_submit_bttn').removeClass('highlighted');
         }, 3500);
     });
+	if(window.location.pathname == '/register/premium-subscriber/') {
+		if(GetURLParameter('upgrade')) {
+			jQuery('.have-coupon-link').css('display', 'none');
+			jQuery('.mepr-coupon-code').attr('value', GetURLParameter('upgrade'));
+			jQuery('h1.entry-title').prepend('Upgrade ');
+			jQuery('.mepr_price_cell').before('24.99 the first year then &nbsp;');
+			jQuery('.mepr-signup-form').attr('action', jQuery('.mepr-signup-form').attr('action') + '-' + GetURLParameter('upgrade'));
+		}
+		if (window.location.href.indexOf('mepr_jump-65WSJ3T3GY') > -1) {
+			jQuery('h1.entry-title').prepend('Upgrade ');
+			jQuery('.mp_price_str').text(jQuery('.mp_price_str').text().replace('with coupon 65WSJ3T3GY',''));
+			jQuery('.mp-table tbody tr:eq(1) td:eq(0)').text("Upgrade Discount");
+		}
+   }
 });
 
 function GetURLParameter(sParam) {

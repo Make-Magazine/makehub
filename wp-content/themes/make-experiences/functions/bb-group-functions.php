@@ -167,15 +167,3 @@ function bp_rename_group_tabs() {
 }
 
 add_action( 'bp_actions', 'bp_rename_group_tabs', 999 );
-
-
-//Automatically add certain new memberships to certain groups & courses upon ultimate membership pro subscription
-function automatic_group_memberships( $uid, $lid ) {
-    // if school membership, add to school maker faire group and school lms course
-    if($lid == 18) {
-        groups_join_group( 152, $uid );
-        //ld_update_course_access( $uid, 8660, false ); not necessary if we have the groups synced, eh?
-    }
-}
-
-add_action( 'ihc_action_after_subscription_activated', 'automatic_group_memberships', 10, 2 );

@@ -1,0 +1,29 @@
+.mpgft-white-popup {
+  position: relative !important;
+  background: #FFF !important;
+  padding: 20px !important;
+  width: auto !important;
+  max-width: 500px !important;
+  margin: 20px auto !important;
+}
+
+.mpgft-white-popup .mp-form-row{
+  margin-bottom: 10px;
+}
+
+.mpgft-white-popup form h3{
+  margin-bottom: 10px;
+}
+
+.mpgft-white-popup form input{
+  width: 50%;
+}
+
+.mpgft-white-popup form input[type=submit]{
+  width: 100%;
+}
+
+.mpgft-send-gift-form h3 .mpgft-loader{
+  margin-left: 15px;
+}
+

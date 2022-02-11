@@ -1,0 +1,544 @@
+@font-face {
+  font-family: 'Bebas Neue Pro';
+  src: url('../fonts/BebasNeuePro-Bold.eot');
+  src: local('../fonts/Bebas Neue Pro Bold'), local('BebasNeuePro-Bold'),
+  url('../fonts/BebasNeuePro-Bold.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/BebasNeuePro-Bold.woff2') format('woff2'),
+  url('../fonts/BebasNeuePro-Bold.woff') format('woff'),
+  url('../fonts/BebasNeuePro-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Bebas Neue Pro SemiExp Book';
+  src: url('../fonts/BebasNeuePro-SemiExpBook.eot');
+  src: local('../fonts/Bebas Neue Pro Bold'), local('BebasNeuePro-SemiExpBook'),
+  url('../fonts/BebasNeuePro-SemiExpBook.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/BebasNeuePro-SemiExpBook.woff2') format('woff2'),
+  url('../fonts/BebasNeuePro-SemiExpBook.woff') format('woff'),
+  url('../fonts/BebasNeuePro-SemiExpBook.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+/* roboto-regular - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/roboto-v27-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('../fonts/roboto-v27-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/roboto-v27-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../fonts/roboto-v27-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../fonts/roboto-v27-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../fonts/roboto-v27-latin-regular.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-italic - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../fonts/roboto-v27-latin-italic.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('../fonts/roboto-v27-latin-italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/roboto-v27-latin-italic.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../fonts/roboto-v27-latin-italic.woff') format('woff'), /* Modern Browsers */
+  url('../fonts/roboto-v27-latin-italic.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../fonts/roboto-v27-latin-italic.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-300 - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../fonts/roboto-v27-latin-300.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('../fonts/roboto-v27-latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/roboto-v27-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../fonts/roboto-v27-latin-300.woff') format('woff'), /* Modern Browsers */
+  url('../fonts/roboto-v27-latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../fonts/roboto-v27-latin-300.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-700 - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/roboto-v27-latin-700.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('../fonts/roboto-v27-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/roboto-v27-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../fonts/roboto-v27-latin-700.woff') format('woff'), /* Modern Browsers */
+  url('../fonts/roboto-v27-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../fonts/roboto-v27-latin-700.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-900italic - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 900;
+  src: url('../fonts/roboto-v27-latin-900italic.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('../fonts/roboto-v27-latin-900italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/roboto-v27-latin-900italic.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../fonts/roboto-v27-latin-900italic.woff') format('woff'), /* Modern Browsers */
+  url('../fonts/roboto-v27-latin-900italic.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../fonts/roboto-v27-latin-900italic.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+body[class*="_page_easy-affiliate-onboarding"] {
+  background-color: #ffffff;
+}
+.esaf-onboarding, .esaf-onboarding * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.esaf-onboarding {
+  margin-top: 0;
+  margin-bottom: 60px;
+}
+.esaf-onboarding .notice {
+  display: none;
+}
+.esaf-onboarding .esaf-container {
+  width: 916px;
+}
+.esaf-onboarding h1 {
+  font-family: 'Bebas Neue Pro';
+  font-size: 71px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 69px;
+  letter-spacing: 0;
+  text-align: center;
+  margin: 0 0 71px 0;
+  padding: 0;
+  color: #000;
+}
+.esaf-onboarding h2 {
+  font-family: 'Bebas Neue Pro';
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 43px;
+  margin: 0 0 25px 0;
+  color: #000;
+  text-align: center;
+}
+.esaf-onboarding p {
+  font-family: 'Roboto';
+  text-align: center;
+  font-size: 20px;
+  line-height: 30px;
+  margin: 0 0 25px 0;
+  color: #000;
+}
+.esaf-onboarding p a:link,
+.esaf-onboarding p a:visited,
+.esaf-onboarding p a:hover,
+.esaf-onboarding p a:active,
+.esaf-onboarding p a:focus {
+  text-decoration: underline;
+  color: #2530A7;
+  font-weight: bold;
+}
+.esaf-onboarding p a:hover {
+  text-decoration: none;
+}
+.esaf-onboarding-logo {
+  width: 375px;
+  margin: 0 auto;
+  max-width: 100%;
+}
+.esaf-onboarding-logo svg {
+  width: 100%;
+  height: auto;
+}
+.esaf-onboarding-hero {
+  margin: 0 -20px 27px -20px;
+  background-image: url(../images/onboarding/hexagons.svg);
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.esaf-onboarding-hero .esaf-container {
+  text-align: center;
+  position: relative;
+}
+.esaf-onboarding-hero .esaf-container > svg {
+  display: block;
+  max-width: 100%;
+}
+.esaf-onboarding-hero img {
+  max-width: 100%;
+}
+.esaf-onboarding p a.esaf-onboarding-button,
+.esaf-onboarding p a:link.esaf-onboarding-button,
+.esaf-onboarding p a:visited.esaf-onboarding-button,
+.esaf-onboarding p a:hover.esaf-onboarding-button,
+.esaf-onboarding p a:active.esaf-onboarding-button,
+.esaf-onboarding p a:focus.esaf-onboarding-button {
+  font-family: 'Roboto';
+  display: inline-block;
+  padding: 15px 47px 15px 47px;
+  border-radius: 25px;
+  background-color: #609D62;
+  color: #fff;
+  font-size: 21px;
+  line-height: 21px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.esaf-onboarding-padded-container {
+  padding: 0 50px;
+}
+.esaf-onboarding-launch-wizard-button {
+  text-align: center;
+  padding-top: 15px;
+}
+.esaf-onboarding-launch-wizard-button a {
+  font-family: 'Roboto';
+  display: inline-block;
+  background: #609D62;
+  border: 2px solid #406A42;
+  border-radius: 8px;
+  padding: 26px 92px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: none;
+}
+.esaf-onboarding-launch-wizard-button a i {
+  font-size: 21px;
+  color: #fff;
+  margin-left: 10px;
+  position: relative;
+  top: -2px;
+}
+.esaf-onboarding-launch-wizard-button a:hover i {
+  color: #fff;
+}
+.esaf-onboarding-features {
+  margin: 120px auto;
+  padding: 52px 80px;
+  border-radius: 13px;
+  box-shadow: 0 0 27px rgba(0, 0, 0, 0.17);
+}
+.esaf-onboarding-features > p {
+  padding: 0 62px;
+}
+.esaf-onboarding-features > p:last-child {
+  margin-bottom: 0;
+}
+.esaf-features {
+  margin: 70px 0;
+}
+.esaf-feature-row {
+  display: flex;
+  margin-bottom: 49px;
+}
+.esaf-feature {
+  display: flex;
+  width: 50%;
+}
+.esaf-feature:first-child {
+  padding-right: 25px;
+}
+.esaf-feature:last-child {
+  padding-left: 25px;
+}
+.esaf-feature .esaf-feature-icon {
+  width: 52px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+.esaf-feature .esaf-feature-icon svg {
+  max-width: 100%;
+  height: auto;
+}
+.esaf-feature-details {
+  flex-grow: 1;
+}
+.esaf-feature h4 {
+  font-family: 'Roboto';
+  margin: 0 0 10px 0;
+  color: #000;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 18px;
+}
+.esaf-feature p {
+  font-family: 'Roboto';
+  font-size: 15px;
+  line-height: 20px;
+  color: #000;
+  text-align: left;
+}
+.esaf-onboarding-cta {
+  position: relative;
+  margin: 0 -20px 0 -22px;
+  color: #000;
+}
+.esaf-onboarding-cta:before {
+  position: absolute;
+  content: '';
+  background-color: #FCF2D0;
+  top: 82px;
+  left: 0;
+  bottom: 82px;
+  right: 0;
+}
+.esaf-onboarding-cta-inner {
+  position: relative;
+  background-image: url(../images/onboarding/hexagons-small.svg);
+  background-position: calc(50% - 258px) 0;
+  background-repeat: no-repeat;
+}
+.esaf-onboarding-cta-inner > .esaf-container {
+  display: flex;
+  padding: 35px 0 35px 35px;
+  margin: 85px auto;
+}
+.esaf-onboarding-cta-left {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 0;
+  box-shadow: 0 0 27px rgba(0, 0, 0, 0.17);
+  border-radius: 20px;
+  background-color: #fff;
+  align-items: center;
+}
+.esaf-onboarding-cta h2 {
+  text-align: left;
+}
+.esaf-onboarding-cta-features {
+  padding: 30px 40px;
+}
+.esaf-onboarding-cta-feature {
+  font-family: 'Roboto';
+  font-size: 15.36px;
+  line-height: 16px;
+  margin-bottom: 10px;
+}
+.esaf-onboarding-cta-feature i {
+  color: #000;
+}
+.esaf-onboarding-cta-feature strong {
+  font-weight: 700;
+}
+.esaf-onboarding-cta-right {
+  padding: 26px 0 26px 110px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.esaf-onboarding-cta-right h2 {
+  font-family: 'Bebas Neue Pro';
+  font-size: 63px;
+  line-height: 57px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+.esaf-onboarding-cta-right p {
+  font-family: 'Roboto';
+  font-size: 18px;
+  line-height: 25px;
+  text-align: left;
+}
+.esaf-onboarding p a.esaf-see-all-features-button,
+.esaf-onboarding p a:link.esaf-see-all-features-button,
+.esaf-onboarding p a:visited.esaf-see-all-features-button,
+.esaf-onboarding p a:hover.esaf-see-all-features-button,
+.esaf-onboarding p a:active.esaf-see-all-features-button,
+.esaf-onboarding p a:focus.esaf-see-all-features-button {
+  font-size: 15.36px;
+  line-height: 16px;
+  color: #000;
+  margin-left: 10px;
+  position: relative;
+  top: -4px;
+}
+.esaf-onboarding-cta-pro {
+  font-family: 'Roboto';
+  font-size: 35px;
+  line-height: 41px;
+  margin: 8px 0;
+  font-weight: 700;
+  text-align: center;
+}
+.esaf-onboarding-cta-price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background-color: #EFEFEF;
+}
+.esaf-onboarding-cta-normally {
+  font-family: 'Roboto';
+  color: #f00;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 23px;
+  text-decoration: line-through;
+}
+.esaf-onboarding-cta-normally span {
+  color: #000;
+}
+.esaf-onboarding-cta-price {
+  font-family: 'Bebas Neue Pro SemiExp Book';
+  font-size: 25px;
+  line-height: 30px;
+  margin-left: 38px;
+}
+.esaf-onboarding-cta-price > span {
+  font-size: 74px;
+  line-height: 89px;
+}
+.esaf-onboarding-cta-price > span > span {
+  font-size: 40px;
+  line-height: 49px;
+  vertical-align: super;
+  position: relative;
+  top: 4px;
+}
+.esaf-onboarding-cta-savings {
+  font-family: 'Roboto';
+  background-color: #FFFF00;
+  padding: 5px 12px;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-bottom: 10px;
+}
+.esaf-onboarding-cta .esaf-onboarding-button {
+  padding: 8px 35px 13px 35px;
+}
+.esaf-onboarding-testimonials-container h2 {
+  font-family: 'Bebas Neue Pro';
+  font-size: 71px;
+  line-height: 65px;
+  margin-bottom: 120px;
+}
+.esaf-onboarding-testimonials-container h2 svg {
+  margin: 0 15px;
+}
+.esaf-onboarding-testimonials {
+  display: inline-flex;
+  gap: 30px;
+}
+.esaf-onboarding-testimonial {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  color: #fff;
+  background-color: #3E3E3E;
+  border-radius: 13px;
+  width: 33.33333333%
+}
+.esaf-onboarding-testimonial svg {
+  margin-top: 38px;
+  margin-bottom: 30px;
+}
+.esaf-onboarding-testimonial-quote {
+  font-family: 'Roboto';
+  font-size: 21px;
+  line-height: 31px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 30px;
+  padding-right: 7px;
+}
+.esaf-onboarding-testimonial-quote strong {
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 40px;
+}
+.esaf-onboarding-testimonial-cite {
+  font-family: 'Roboto';
+  font-size: 17px;
+  line-height: 20px;
+  margin-top: auto;
+  margin-bottom: 30px;
+  display: inline-flex;
+  align-items: center;
+}
+.esaf-onboarding-testimonial-cite-left,
+.esaf-onboarding-testimonial-cite-right {
+  width: 50%;
+}
+.esaf-onboarding-testimonial-cite-left {
+  text-align: center;
+}
+.esaf-onboarding-testimonial-cite-right {
+  padding-left: 5px;
+}
+.esaf-onboarding-testimonial-cite img {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.esaf-onboarding-buttons {
+  margin-top: 120px !important;
+  text-align: center;
+}
+@media (max-width: 782px) {
+  .esaf-onboarding-launch-wizard-button a {
+    padding: 16px 42px;
+  }
+  .esaf-onboarding-features {
+    padding: 30px;
+    width: auto !important;
+  }
+  .esaf-onboarding-features > p {
+    padding: 0;
+  }
+  .esaf-features {
+    margin-bottom: 0;
+  }
+  .esaf-feature-row {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+  .esaf-feature {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .esaf-feature:first-child,
+  .esaf-feature:last-child {
+    padding: 0;
+  }
+  .esaf-onboarding-cta-inner > .esaf-container {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .esaf-onboarding-cta-left {
+    width: 355px;
+    max-width: 100%;
+  }
+  .esaf-onboarding-cta-right {
+    padding: 56px 50px 86px 50px;
+  }
+  .esaf-onboarding-cta-right h2 {
+    text-align: center;
+  }
+  .esaf-onboarding-cta-right p {
+    text-align: center;
+  }
+  .esaf-onboarding-testimonials {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 40px;
+  }
+  .esaf-onboarding-testimonial {
+    width: auto;
+  }
+}

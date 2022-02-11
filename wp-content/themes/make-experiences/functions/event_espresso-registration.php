@@ -19,25 +19,29 @@ function attendee_approved( $registration) {
 
     if(!$user) {
 		$user_id = create_new_user('Welcome to Maker Campus on Make: Community', $attendee->fname(), $attendee->lname(), "Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make: Community. This is where you will find the event information, resources and community. Please login to access Make: Community and your Maker Campus", $attendeeEmail);
-    }else{
-        $user_id = $user->ID;
+		$user = get_user_by( 'id', $user_id);
     }
 
     //add wp_EE_Attendee_ID usermeta
     //is wp_EE_Attendee_ID set?
-    $havemeta = get_user_meta($user_id, 'wp_EE_Attendee_ID', true);
+    $havemeta = get_user_meta($user->ID, 'wp_EE_Attendee_ID', true);
     if(!$havemeta){
         $attendeeID = $attendee->get('ATT_ID');
-        add_user_meta($user_id,'wp_EE_Attendee_ID',$attendeeID);
+        add_user_meta($user->ID,'wp_EE_Attendee_ID',$attendeeID);
     }
 
-    // give them a free membership
-    $result = ihc_do_complete_level_assign_from_ap($user_id, 14, 0, 0);
+    // give them a free membership if they don't have one already
+	$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
+	$mpInfo = json_decode(basicCurl(CURRENT_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+
+	if(empty($mpInfo->active_memberships)) {
+		addFreeMembership($user->data->user_email, $user->data->user_login, $attendee->fname(), $attendee->lname(), $community_membership->ID, true);
+	}
 
     //add them to the event group
     $group_id = get_field('group_id', $eventID);
 
-    groups_join_group( $group_id, $user_id);
+    groups_join_group( $group_id, $user->ID);
 
     return $registration;
 }

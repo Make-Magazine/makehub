@@ -266,3 +266,40 @@ if( ! function_exists( 'wp_new_user_notification' ) ) {
 		}
 	}
 }
+
+//********************************************//
+//           Member type: Members             //
+//********************************************//
+// make each user a 'Member' user type when they successfully subscribe
+add_action('mepr-event-transaction-completed', 'default_member_type', 10, 1);
+
+function default_member_type($user_id) {
+    if (!bp_get_member_type($user_id)) {
+        bp_set_member_type($user_id, 'member');
+    }
+}
+
+// if membership lapses, is canceled or deleted, remove the member type so they don't show up in the members directory count
+add_action('mepr-event-subscription-stopped', 'remove_member_types', 10, 1); // this captures cancels and removals
+add_action('mepr-transaction-expired', 'remove_member_types', 10, 1);
+
+function remove_member_types($user_id) {
+    if (bp_get_member_type($user_id) == 'member') {
+        bp_set_member_type($user_id, '');
+    }
+}
+
+//********************************************//
+//        Makerspace related functions        //
+//********************************************//
+// if the membership level is makerspace/smallbusiness, add a class to the user card
+function add_featured_ms_class_directory($classes) {
+	foreach (CURRENT_MEMBERSHIPS as $membership) {
+	    if (strpos('Makerspace', $membership) !== FALSE) {
+	        $classes[] = "member-level-makerspace";
+	    }
+	}
+    return $classes;
+}
+
+add_filter('bp_get_member_class', 'add_featured_ms_class_directory');

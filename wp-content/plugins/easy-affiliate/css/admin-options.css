@@ -1,0 +1,301 @@
+/* Admin Options Styles */
+body[class*="_page_easy-affiliate-settings"] {
+  background-color: #ebf9f9;
+}
+body[class*="_page_easy-affiliate-settings"] #wpcontent,
+body[class*="_page_easy-affiliate-settings"].auto-fold #wpcontent {
+  padding-left: 0;
+}
+.esaf-settings-page,
+.esaf-settings-page * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.esaf-settings-header {
+  background: #fff;
+  border-top: 3px solid #F5D10E;
+  border-bottom: 1px solid #e4e5e8;
+  padding: 20px 0 20px 0;
+}
+.esaf-settings-header .esaf-container {
+  display: flex;
+  align-items: center;
+}
+.esaf-settings-header-image {
+  flex-grow: 1;
+}
+.esaf-settings-navigation {
+  background-color: #fff;
+  border-bottom: 1px solid #e4e5e8;
+}
+.esaf-settings-nav a {
+  color: #393f4c;
+  text-decoration: none;
+  padding: 17px 0 13px;
+  border-bottom: 4px solid #fff;
+  font-size: 14px;
+  display: inline-block;
+  margin-right: 25px;
+  line-height: 1;
+  outline: none;
+  cursor: pointer;
+}
+.esaf-settings-nav a:hover,
+.esaf-settings-nav .esaf-active {
+  color: #07429e;
+  border-bottom: 4px solid #07429e;
+}
+.esaf-settings-nav .esaf-active {
+  font-weight: 700;
+}
+.esaf-page {
+  margin-top: 25px;
+  display: none;
+}
+.esaf-page:first-child {
+  display: block;
+}
+.esaf-settings-section {
+  background-color: #fff;
+  border: 1px solid #e4e5e8;
+  margin-bottom: 25px;
+}
+.esaf-settings-section-title {
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #393f4c;
+  padding: 15px 25px;
+  border-bottom: 1px solid #e4e5e8;
+}
+.esaf-settings-section-content {
+  padding: 10px 25px;
+}
+.form-table > tbody > tr > td > .esaf-toggle-switch:first-child + label {
+  margin-top: 11px;
+}
+.esaf-container > .notice {
+  margin: 25px 0;
+}
+.esaf-options-license-key-field {
+  position: relative;
+}
+.esaf-options-license-key-field > i {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  margin-top: -11px;
+  color: #a7a7a7;
+  font-size: 15px;
+}
+.esaf-license-active {
+  margin-bottom: 20px;
+}
+.esaf .esaf-license-active .form-table td {
+  padding-top: 25px;
+}
+#esaf-license-deactivate {
+  margin-top: 20px;
+}
+.esaf-settings-section-content > .notice {
+  margin-left: 0;
+  margin-right: 0;
+}
+.esaf-affiliate-application-box {
+  margin-top: 15px;
+  border-top: 1px solid #e4e5e8;
+}
+.esaf-affiliate-pages-table {
+  width: 100%;
+}
+.esaf .esaf-affiliate-pages-table tr td {
+  padding: 0;
+}
+.esaf-affiliate-pages-table tr td:nth-child(2) {
+  width: 80px;
+  text-align: right;
+}
+.esaf-affiliate-pages-table a {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+.esaf-affiliate-pages-table a i {
+  color: #007cba;
+  font-size: 19px;
+}
+.esaf-affiliate-pages-table a i:hover {
+  color: #0071a1;
+}
+#esaf-pro-dashboard-logo-preview {
+  max-width: 300px;
+  max-height: 300px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+#esaf-pro-dashboard-logo-preview img {
+  max-width: 100%;
+}
+.esaf-payment-integrations {
+  margin-top: 20px;
+}
+.esaf-payment-integration {
+  margin-bottom: 50px;
+}
+.esaf-payment-integration:last-child {
+  margin-bottom: 20px;
+}
+.esaf-payment-integration > input.esaf-toggle-switch + label {
+  margin: 0 15px 0 0;
+  top: 1px;
+}
+.esaf-payment-integration label,
+.esaf-payment-integration a {
+  vertical-align: middle;
+}
+.esaf-expand-payment-integration {
+  float: right;
+}
+.esaf-payment-integration .esaf-sub-box-white {
+  padding-left: 47px;
+  padding-top: 20px;
+}
+.esaf-payment-integration-config a {
+  vertical-align: baseline;
+}
+.esaf-payment-integration-config pre {
+  overflow: auto;
+}
+.esaf-payment-integration-disabled input[type="checkbox"].esaf-hidden {
+  display: none;
+}
+.esaf-payment-integration-disabled label {
+  opacity: 0.5;
+}
+.esaf-payment-integration-extra-config {
+  overflow: hidden;
+}
+.esaf-payment-integration-extra-config > label {
+   float: left;
+   width: 120px;
+   line-height: 3em;
+}
+.esaf-payment-integration-extra-config .esaf-extra-config-input {
+  margin-left: 120px;
+}
+.esaf button.esaf-edit-email-toggle,
+.esaf button.esaf-send-test-email,
+.esaf button.esaf-reset-email {
+  position: relative;
+  top: -4px;
+}
+.esaf button.esaf-edit-email-toggle {
+  margin-left: 10px;
+}
+.esaf-email-editor > .form-table > tbody > tr > th {
+  width: 100px;
+}
+.esaf-integration {
+  border-bottom: 1px solid #e4e5e8;
+  padding: 20px 0;
+}
+.esaf-integration:last-child {
+  border-bottom: 0;
+}
+.esaf-integration-header {
+  cursor: pointer;
+}
+.esaf-integration-arrow {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -10px;
+}
+.esaf-integration-logo {
+  float: left;
+  position: relative;
+}
+.esaf-integration-logo i {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  font-size: 19px;
+  margin: -10px 0 0 0;
+}
+.esaf-integration-logo img {
+  background-color: #fff;
+  border: 1px solid #e4e5e8;
+  max-width: 90px;
+  display: block;
+  margin: 0 0 0 30px;
+}
+.esaf-integration-details {
+  margin: 0 0 0 140px;
+  position: relative;
+  padding: 20px 0 0;
+}
+.esaf-integration-details h3 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.esaf-integration-details p {
+  margin: 0;
+  font-size: 14px;
+}
+.esaf-integration-connected {
+  color: #007cba;
+  border: 1px solid #007cba;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 16px;
+  position: absolute;
+  top: 28px;
+  right: 0;
+}
+.esaf-integration-connected i {
+  color: #007cba;
+  margin-right: 4px;
+}
+.esaf-integration-settings {
+  margin: 20px 0 0 140px;
+  display: none;
+}
+.esaf-integration-upgrade {
+  opacity: 0.4;
+}
+.esaf-email-editor .esaf-insert-email-var-menu {
+  width: auto;
+  min-height: 30px;
+  padding: 0 25px 0 8px;
+}
+.esaf-send-test-email i,
+.esaf-reset-email i,
+#esaf-license-deactivate button i {
+  color: inherit;
+  font-size: inherit;
+}
+.esaf-integration-loader-field {
+  position: relative;
+}
+.esaf-integration-loader-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  opacity: 0.5;
+}
+.esaf-integration-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -13px 0 0 -13px;
+}
+.esaf-integration-response-message {
+  color: #ed4337;
+  font-size: 12px;
+}

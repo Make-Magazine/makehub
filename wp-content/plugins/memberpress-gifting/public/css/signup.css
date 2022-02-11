@@ -1,0 +1,21 @@
+.mpgft_notice, .mpgft_updated {
+  padding: 5px 5px 5px 15px !important;
+  margin-bottom: 25px !important;
+  width: 95%;
+}
+
+.mpgft_notice {
+  background-color: #fefdb9 !important;
+  border: 1px solid #d4bf00 !important;
+}
+
+.mpgft_notice ul {
+  padding: 0 0 5px 0 !important;
+  margin: 0 !important;
+}
+
+.mpgft_notice ul li {
+  list-style-type: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

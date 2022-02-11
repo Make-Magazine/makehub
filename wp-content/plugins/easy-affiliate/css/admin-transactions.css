@@ -1,0 +1,43 @@
+.wp_list_wafp_transactions .column-col_id {
+  width: 70px;
+}
+.wp_list_wafp_transactions .column-col_actions {
+  width: 100px;
+}
+.wp_list_wafp_transactions .column-col_actions > i,
+.wp_list_wafp_transactions .column-col_actions > a {
+  margin-left: 5px;
+}
+.wp_list_wafp_transactions .column-col_actions > i:first-child {
+  margin-left: 0;
+}
+.wp_list_wafp_transactions .column-col_actions > i,
+.wp_list_wafp_transactions .column-col_actions > a > i {
+  color: #75B1CE;
+  font-size: 19px;
+  cursor: pointer;
+}
+.wp_list_wafp_transactions .column-col_actions > i:hover,
+.wp_list_wafp_transactions .column-col_actions > a:hover > i {
+  color: #124964;
+}
+.wafp-commissions-table table tr > td {
+  width: 150px;
+}
+.wafp-commissions-level-row {
+  display: none;
+}
+.wafp-has-multiple-commissions .wafp-commissions-level-row {
+  display: table-row;
+}
+.esaf-view-transaction-details-popup h3 {
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 0;
+}
+.esaf-flagged-txn {
+  background: #ffdada !important;
+}
+.esaf-flagged-txn td i {
+  color: red;
+}

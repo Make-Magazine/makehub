@@ -79,7 +79,7 @@ add_action('bp_after_directory_members', 'yzc_members_directory_sidebar');
  * If there is certain text in Youzer that isn't descriptive enough, we can change it here
  */
 function yz_translate_youzer_text($translated_text) {
-	
+
     switch ($translated_text) {
         case 'Widgets Settings' :
         case 'widgets settings' :
@@ -130,25 +130,25 @@ function buddydev_exclude_users( $args ) {
     if ( ! is_array( $excluded ) ) {
         $excluded = explode( ',', $excluded );
     }
-	
+
 	 $query_args = array(
-    		  'meta_key' => 'registryoptout', 
+    		  'meta_key' => 'registryoptout',
 			  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
     		  'fields' => 'ID'
     	  );
     $user_ids = get_users($query_args);
- 
+
     $excluded = array_merge( $excluded, $user_ids );
     $args['exclude'] = $excluded;
     return $args;
 }
- 
+
 add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
 
 // Exclude user from count as well
 function exclude_users_from_count(){
 	$query_args = array(
-		  'meta_key' => 'registryoptout', 
+		  'meta_key' => 'registryoptout',
 		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
 		  'fields' => 'ID'
 	  );
@@ -203,7 +203,7 @@ add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15);
 //           Member type: Members             //
 //********************************************//
 // make each user a 'Member' user type when they successfully subscribe
-add_action('ihc_action_after_subscription_activated', 'default_member_type', 10, 1);
+add_action('mepr-event-transaction-completed', 'default_member_type', 10, 1);
 
 function default_member_type($user_id) {
     if (!bp_get_member_type($user_id)) {
@@ -212,9 +212,8 @@ function default_member_type($user_id) {
 }
 
 // if membership lapses, is canceled or deleted, remove the member type so they don't show up in the members directory count
-add_action('ihc_action_after_cancel_subscription,', 'remove_member_types', 10, 1);
-add_action('ihc_action_after_subscription_delete', 'remove_member_types', 10, 1);
-add_action('iihc_action_level_has_expired', 'remove_member_types', 10, 1);
+add_action('mepr-event-subscription-stopped', 'remove_member_types', 10, 1); // this captures cancels and removals
+add_action('mepr-transaction-expired', 'remove_member_types', 10, 1);
 
 function remove_member_types($user_id) {
     if (bp_get_member_type($user_id) == 'member') {
@@ -227,33 +226,23 @@ function remove_member_types($user_id) {
 //        Makerspace related functions        //
 //********************************************//
 // if the membership level is makerspace/smallbusiness, add a class to the user card
-// we can then see if they have the member type class and level class to determine if they should be featured
 function add_featured_ms_class_directory($classes) {
-    global $members_template;
-    $uid = $members_template->member->ID;
-    $user_meta = get_user_meta($uid);
-    $user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
-    $time_data = ihc_get_start_expire_date_for_user_level($uid, $user_level);
-    if (!empty($user_meta['ihc_user_levels']) && strtotime($time_data['expire_time']) > time()) {
-        if ($user_level == 7) {
-            $classes[] = "member-level-makerspace";
-        }
-    }
+	foreach (CURRENT_MEMBERSHIPS as $membership) {
+	    if (strpos('Membership', $membership) !== FALSE) {
+	        $classes[] = "member-level-makerspace";
+	    }
+	}
     return $classes;
 }
 
 add_filter('bp_get_member_class', 'add_featured_ms_class_directory');
 
 function add_featured_ms_class_profile($classes) {
-    $uid = bp_displayed_user_id();
-    $user_meta = get_user_meta($uid);
-    $user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
-    $time_data = ihc_get_start_expire_date_for_user_level($uid, $user_level);
-    if (!empty($user_meta['ihc_user_levels']) && strtotime($time_data['expire_time']) > time()) {
-        if ($user_level == 7) {
-            $classes[] = "member-level-makerspace";
-        }
-    }
+	foreach (CURRENT_MEMBERSHIPS as $membership) {
+	    if (strpos('Membership', $membership) !== FALSE) {
+	        $classes[] = "member-level-makerspace";
+	    }
+	}
     return $classes;
 }
 

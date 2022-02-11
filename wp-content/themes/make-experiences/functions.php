@@ -123,8 +123,8 @@ function set_universal_asset_constants() {
 			$canUpgrade = false;
 		}
 	}
-
-	define('IS_MEMBER', $hasmembership);
+	define('CURRENT_MEMBERSHIPS', $currentMemberships);
+	define('IS_MEMBER', $hasMembership);
 	define('CAN_UPGRADE', $canUpgrade);
 }
 set_universal_asset_constants();
@@ -177,14 +177,47 @@ function basicCurl($url, $headers = null) {
     if ($headers != null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $homeurl = get_home_url();
-    if(strpos($homeurl, 'devmakehub') !== false || strpos($homeurl, 'stagemakehub') !== false) {
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	if (strpos(CURRENT_URL, '.local') > -1 || strpos(CURRENT_URL, '.test') > -1 ) { // wpengine local environments
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     }
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
     $data = curl_exec($ch);
     curl_close($ch);
     return $data;
+}
+
+function postCurl($url, $headers = null, $datastring = null) {
+	$ch = curl_init($url);
+
+	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+
+	if($datastring != null) {
+		curl_setopt(
+		  $ch,
+		  CURLOPT_POSTFIELDS,
+		  $datastring
+		);
+	}
+
+	if ($headers != null) {
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	}
+
+	$response = curl_exec($ch);
+
+	if(curl_errno($ch)){
+	  throw new Exception(curl_error($ch));
+	}
+
+	echo $response;
+	curl_close($ch);
 }
 
 function parse_yturl($url) {
@@ -260,22 +293,22 @@ add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
 
-    if (isset($query->query['post_type']) && !$query->is_admin && $query->is_feed && $query->query['post_type']) {
-  		if($query->query['post_type'] == 'espresso_events') {
-  			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
-  			$results = $wpdb->get_results($dbSQL);
-  			$suppression_IDs = array();
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type']) {
+		if($query->query['post_type'] == 'espresso_events') {
+			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
+			$results = $wpdb->get_results($dbSQL);
+			$suppression_IDs = array();
 
-  			foreach($results as $result){
-  				$suppression_IDs[] = $result->post_id;
-  			}
+			foreach($results as $result){
+				$suppression_IDs[] = $result->post_id;
+			}
 
-  			$exclude = implode(",", $suppression_IDs);
+			$exclude = implode(",", $suppression_IDs);
 
-  			if (!empty($exclude)) {
-  				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
-  			}
-  		}
+			if (!empty($exclude)) {
+				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+			}
+		}
     }
     return $where;
 }
@@ -353,8 +386,10 @@ function filter_gettext($translation, $text, $domain) {
     }
     return $translation;
 }
-
 add_filter('gettext', 'filter_gettext', 10, 4);
+
+// Disable automatic plugin updates
+add_filter( 'auto_update_plugin', '__return_false' );
 
 // don't lazyload on the project print template
 function lazyload_exclude() {
@@ -393,6 +428,16 @@ function gf_add_entries_link( $wp_admin_bar ) {
 
 add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
 
+// add the ability to add tags or categories to pages
+function register_taxonomies() {
+    // Add tag metabox to page
+    register_taxonomy_for_object_type('post_tag', 'page');
+    // Add category metabox to page
+    register_taxonomy_for_object_type('category', 'page');
+}
+ // Add to the admin_init hook of your theme functions.php file
+add_action( 'init', 'register_taxonomies' );
+
 // get the main category of a post
 function get_post_primary_category($post_id, $term='category', $return_all_categories=false){
     $return = array();
@@ -420,4 +465,7 @@ function get_post_primary_category($post_id, $term='category', $return_all_categ
     }
     return $return;
 }
+
+// prevent password changed email
+add_filter( 'send_password_change_email', '__return_false' );
 ?>

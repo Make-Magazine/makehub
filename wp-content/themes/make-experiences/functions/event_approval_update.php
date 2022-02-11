@@ -22,10 +22,10 @@ function update_entry_status($entry_id, $status) {
         );
         wp_update_post($post_data);
     }
-    
+
     //if the event is approved, create an event
     if ($status == 1) {
-        //find all fields set with a parameter name 
+        //find all fields set with a parameter name
         $entry = GFAPI::get_entry($entry_id);
         $form = GFAPI::get_form($entry['form_id']);
         $parameter_array = find_field_by_parameter($form);
@@ -48,12 +48,12 @@ function update_entry_status($entry_id, $status) {
         /*
          * link to event listing at least (so registrants can help promote)
          * Basic event information - dates, times
-         */        
+         */
         $webinar_link = getFieldByParam('webinar_link', $parameter_array, $entry);
         if ($webinar_link == '')
             $webinar_link = 'Coming Soon';
 
-        
+
         //Add Event Link and webinar link to the description of the event
         $description = wpautop(' <span><a href="' . $event->get_permalink() . '">' . $eventName . '</a></span>
                                  <p>Webinar Link - ' . $webinar_link . '</p>');
@@ -70,15 +70,15 @@ function update_entry_status($entry_id, $status) {
         );
         $group_id = groups_create_group($groupArgs);
         bp_groups_set_group_type($group_id,'maker-campus');
-        
+
         //set the group image
         $file = get_the_post_thumbnail_url($event_id, 'full');
         $pathinfo = pathinfo($file);
 
         $uploads = wp_get_upload_dir();
-        $uploadDir = $uploads['basedir'];        
+        $uploadDir = $uploads['basedir'];
 
-        //make the necessary directories to place the images in        
+        //make the necessary directories to place the images in
         wp_mkdir_p($uploadDir . '/group-avatars/' . $group_id . '/');
         wp_mkdir_p($uploadDir . '/buddypress/groups/' . $group_id . '/cover-image/' . $group_id);
 
@@ -86,7 +86,7 @@ function update_entry_status($entry_id, $status) {
         $bpthumb = $uploadDir . '/group-avatars/' . $group_id . '/' . $pathinfo['filename'] . '-bpthumb.' . $pathinfo['extension'];
         $bpcover = $uploadDir . '/buddypress/groups/' . $group_id . '/cover-image/' . $pathinfo['filename'] . '-bp-cover-image.' . $pathinfo['extension'];
 
-        //get absolute path of featured image               
+        //get absolute path of featured image
         $file_path = str_replace($uploads['baseurl'], $uploads['basedir'], $file);
 
         if (!copy($file_path, $avatar)) {
@@ -103,12 +103,19 @@ function update_entry_status($entry_id, $status) {
 
         //write the new group id to event acf
         update_field('group_id', $group_id, $event_id);
-        
-        $userID = $entry['created_by'];
-        // now, give the user a basic membership level, if they don't have one already
-        $user_meta = get_user_meta($userID);
 
-        // assign community membership
-        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);              
+        $userID = $entry['created_by'];
+		$user = get_user_by('id', $userID);
+
+		$first_name = get_user_meta( $userID, 'first_name', true );
+		$last_name = get_user_meta( $userID, 'last_name', true );
+
+		// give them a free membership if they don't have one already
+		$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
+		$mpInfo = json_decode(basicCurl(CURRENT_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+
+		if(empty($mpInfo->active_memberships)) {
+			addFreeMembership($user->data->user_email, $user->data->user_login, $first_name, $last_name, $community_membership->ID, true);
+		}
     }
 }

@@ -37,18 +37,24 @@
     }
 }
 
-.ihc-membership-card-wrapp {
+.ihc-membership-card-wrapp, .membership-card {
     background: $color-grey;
     width: 90%;
     margin: 0 auto;
     font-size: 16px;
+	color: #fff;
+	border-radius: 5px;
+	padding: 10px 15px;
+	h3 { color: #fff; }
     label {
         color: $color-red;
         font-size: 17px;
     }
-	.ihc-membership-card-img img {
+	img {
 		border: 0px;
 		border-radius: 0px;
+		max-width: 120px;
+		margin-bottom: 10px;
 	}
 }
 
