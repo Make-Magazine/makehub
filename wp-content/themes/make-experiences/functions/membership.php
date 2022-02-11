@@ -31,7 +31,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 }
 function setMemPressHeaders($datastring = null) {
 	$headers = array();
-	$headers[] = 'MEMBERPRESS-API-KEY: FGLzhqujP4'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local FGLzhqujP4 for stage
+	$headers[] = 'MEMBERPRESS-API-KEY: qbMnTDu4E6'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local qbMnTDu4E6 for stage
 	$headers[] = 'Content-Type: application/json';
 	if($datastring){
 		$headers[] = 'Content-Length: ' . strlen($datastring);
