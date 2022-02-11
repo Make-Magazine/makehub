@@ -1,42 +1,44 @@
-<?php
-
-/**
- * Provide a admin header view for the plugin
- *
- * @link       http://www.webfactoryltd.com
- * @since      0.1
- */
-
-if (!defined('WPINC')) {
-	die;
-}
-?>
-
-<div class="signals-cnt-fix">
-	<div class="signals-fix-wp38">
-		<div class="signals-header signals-clearfix">
-			<img src="<?php echo CSMM_URL; ?>/framework/admin/img/mm-icon-dark.png" class="signals-logo">
+<div class="csmm-cnt-fix">
+	<div class="csmm-fix-wp38">
+		<div class="csmm-header csmm-clearfix">
+            <?php
+            if(csmm_get_rebranding() !== false){
+                echo '<img src="' . csmm_get_rebranding('logo_url') . '" class="csmm-logo" style="max-width:none;max-height:50px;" />';
+            } else {
+                echo '<img src="' . CSMM_URL . '/framework/admin/img/mm-icon-dark.png" class="csmm-logo" />';
+            }
+            ?>
+			
 			<p>
-				<strong><?php _e( 'Minimal Coming Soon &amp; Maintenance Mode', 'signals' ); ?></strong>
-				<span><?php _e( 'by', 'signals' ); ?> <a href="http://www.webfactoryltd.com/" target="_blank"><?php _e( 'WebFactory Ltd', 'signals' ); ?></a></span>
+            <?php
+            if(csmm_get_rebranding() !== false){
+                echo '<strong>' . csmm_get_rebranding('name') . '</strong>';
+            } else {
+                echo '<strong>Coming Soon &amp; Maintenance Mode </strong><strong style="color: #fe2929;">PRO</strong>';
+            }
+            
+            if(csmm_get_rebranding() !== false){
+                $plugin_by = '<span>by <a href="' . csmm_get_rebranding('url') . '" target="_blank"> ' . csmm_get_rebranding('company_name') . '</a></span>';
+            } else {
+                $plugin_by = '<span>by <a href="https://www.webfactoryltd.com/" target="_blank">WebFactory Ltd</a></span>';
+            }
+
+            if(csmm_whitelabel_filter()){
+                echo $plugin_by;
+            }
+            ?>
 			</p>
 
-<?php
-  if ($signals_csmm_options['status']== '1') {
-    $action_url = add_query_arg(array('action' => 'csmm_change_status', 'new_status' => 'disabled', 'redirect' => urlencode($_SERVER['REQUEST_URI'])), admin_url('admin.php'));
-    $action_url = wp_nonce_url($action_url, 'csmm_change_status');
-  } else {
-    $action_url = add_query_arg(array('action' => 'csmm_change_status', 'new_status' => 'enabled', 'redirect' => urlencode($_SERVER['REQUEST_URI'])), admin_url('admin.php'));
-    $action_url = wp_nonce_url($action_url, 'csmm_change_status');
-  }
-
-  /*
-  <div id="header-status" title="Click to change the Coming Soon status" data-action-url="<?php echo $action_url; ?>">
-          <label for="">Coming Soon Status:</label> <div class="csmm-status-wrapper <?php echo ($signals_csmm_options['status'] != '1')? 'off': 'on'; ?>"><span class="csmm-status-btn csmm-status-off">OFF</span><span class="csmm-status-btn csmm-status-on">ON</span></div>
+      <?php
+      global $csmm_lc;
+      if ($csmm_lc->is_active()) {
+      ?>
+        <div id="header-right">
+        <div id="header-status" title="Click to change Coming Soon status">
+          <label for="">Coming Soon Mode Status:</label> <div class="csmm-status-wrapper <?php echo ($signals_csmm_options['status']== '0')? 'off': 'on'; ?>"><span class="csmm-status-btn csmm-status-off">OFF</span><span class="csmm-status-btn csmm-status-on">ON</span></div>
         </div>
-        */
-?>
-<div id="header-right">
-        <a href="#pro" class="csmm-change-tab">Get a lifetime <b>PRO</b> license<br>for only $39</a>
-      </div>
-		</div><!-- .signals-header -->
+        </div>
+      <?php
+      }
+      ?>
+        </div><!-- .csmm-header -->

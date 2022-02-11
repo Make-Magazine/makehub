@@ -1,7 +1,7 @@
 /*
  * CSMM
  * Backend GUI pointers
- * (c) Web factory Ltd, 2016 - 2021
+ * (c) Web factory Ltd, 2016 - 2018
  */
 
 jQuery(document).ready(function($){
@@ -14,7 +14,7 @@ jQuery(document).ready(function($){
       return true;
     }
     $(pointer.target).pointer({
-        content: '<h3>Minimal Coming Soon &amp; Maintenance Mode</h3><p>' + pointer.content + '</p>',
+        content: '<h3>Coming Soon &amp; Maintenance Mode PRO</h3><p>' + pointer.content + '</p>',
         pointerWidth: 380,
         position: {
             edge: pointer.edge,

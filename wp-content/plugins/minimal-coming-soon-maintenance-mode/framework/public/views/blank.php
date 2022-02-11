@@ -7,9 +7,6 @@
  * @since      1.0
  */
 
-if (!defined('WPINC')) {
-    die;
-}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -45,6 +42,7 @@ if (!defined('WPINC')) {
     }
 
     ?>
+    <?php echo stripslashes($options['custom_head_code']); ?>
 </head>
 
 <body>
@@ -52,62 +50,131 @@ if (!defined('WPINC')) {
 
     // Custom html
     // Nothing else will be included here since we are serving a blank template
-    $custom_html = stripslashes($options['custom_html']);
+    $custom_html = stripslashes($options['custom_html_layout']);
 
     // form
     if (!empty($custom_html) && false !== strpos($custom_html, '{{form}}')) {
         if (!empty($options['mailchimp_api']) && !empty($options['mailchimp_list'])) {
             // Checking if the form is submitted or not
+            // Checking if the form is submitted or not
             if (isset($_POST['signals_email'])) {
                 // Processing begins
                 $signals_email = strip_tags($_POST['signals_email']);
+                $signals_name = strip_tags($_POST['signals_name']);
+
+
+
 
                 if ('' === $signals_email) {
                     $code         = 'danger';
-                    $response     = __('Please provide your email address.', 'signals');
+                    $response     = $options['message_noemail'];
+                } elseif ('' === $signals_name && isset($_POST['signals_name'])) {
+                    $code         = 'danger';
+                    $response     = $options['signals_csmm_message_no_name'];
                 } else {
                     $signals_email = filter_var(strtolower(trim($signals_email)), FILTER_SANITIZE_EMAIL);
+                    $signals_name = sanitize_text_field(trim($signals_name));
 
-                    if (strpos($signals_email, '@')) {
-                        require_once CSMM_PATH . '/framework/admin/include/classes/class-mailchimp.php';
 
-                        $MailChimp = new Signals_MailChimp($options['mailchimp_api']);
-                        $api_url  = "/lists/" . $options['mailchimp_list'] . "/members";
+                    // procesing email send
+                    // mailchimp
+                    if ($options['mail_system_to_use'] == 'mc') {
+                        if (strpos($signals_email, '@')) {
+                            require_once CSMM_PATH . '/framework/admin/include/classes/class-mailchimp.php';
 
-                        $out_array =  array(
-                            'email_address' => $signals_email,
-                            'status' => 'pending'
-                        );
 
-                        $result = $MailChimp->post($api_url, $out_array);
-
-                        if ($result['status'] == 400) {
-                            $code         = 'danger';
-                            if ($result['title'] == 'Member Exists') {
-                                $response     = $options['message_subscribed'];
+                            if ($options['signals_double_optin'] == '1') {
+                                $out_array =  [
+                                    'email_address' => $signals_email,
+                                    'merge_fields' => ['FNAME' => $signals_name],
+                                    'status'        => 'pending',
+                                ];
                             } else {
-                                $response     = $result['detail'];
+                                $out_array =  [
+                                    'email_address' => $signals_email,
+                                    'merge_fields' => ['FNAME' => $signals_name],
+                                    'status'        => 'subscribed',
+                                ];
                             }
-                        } elseif (isset($result['unique_email_id'])) {
-                            $code         = 'success';
-                            $response     = $options['message_done'];
+
+                            $MailChimp = new MailChimp($options['mailchimp_api']);
+                            $api_url  = "/lists/" . $options['mailchimp_list'] . "/members";
+
+
+                            $result = $MailChimp->post($api_url, $out_array);
+                            /*
+						// adding to list
+						if( substr_count( $options['mailchimp_list'], '|' ) > 0 ){
+							$tmp = explode( '|', $options['mailchimp_list'] );
+							$api_url = "/lists/".trim($tmp[0])."/segments/".trim($tmp[1])."/members";
+							$result = $MailChimp->post( $api_url, $out_array );
+						}
+					 */
+
+                            if ($result['status'] == 400) {
+                                $code         = 'danger';
+                                $response     = $result['detail'];
+                            } elseif (isset($result['unique_email_id'])) {
+                                $code         = 'success';
+                                $response     = $options['message_done'];
+                            }
+                        } else {
+                            $code             = 'danger';
+                            $response         = $options['message_noemail'];
                         }
-                    } else {
-                        $code             = 'danger';
-                        $response         = $options['message_noemail'];
+                    }
+
+                    // zapier
+                    if ($options['mail_system_to_use'] == 'zapier') {
+                        $fields = array();
+                        $fields['name'] =    sanitize_text_field($_POST['signals_name']);
+                        $fields['email'] =    sanitize_email($_POST['signals_email']);
+
+                        $res =  mcsm_zapier_send($fields);
+                        if (!is_wp_error($res)) {
+                            $code         = 'success';
+                            $response     = $options['message_subscribed'];
+                        } else {
+                            $code         = 'danger';
+                            $response     = $options['message_wrong'];
+                        }
+                    }
+
+                    // universal autoresponder
+                    if ($options['mail_system_to_use'] == 'ua') {
+                        $fields = array();
+                        $fields['name'] =    sanitize_text_field($_POST['signals_name']);
+                        $fields['email'] =    sanitize_email($_POST['signals_email']);
+
+
+                        $res =  mcsm_autoresponder_send($fields);
+                        if (!is_wp_error($res)) {
+                            $code         = 'success';
+                            $response     = $options['message_subscribed'];
+                        } else {
+                            $code         = 'danger';
+                            $response     = $options['message_wrong'];
+                        }
                     }
                 }
             } // signals_email
 
             // Subscription form
             // Displaying errors as well if they are set
-            $subscription_form = '<div class="subscription">';
+            $subscription_form = '<div class="subscription ">';
 
             if (isset($code) && isset($response)) {
-                $subscription_form .= '<div class="signals-alert signals-alert-' . $code . '">' . $response . '</div>';
+                $subscription_form .= '<div class="csmm-alert csmm-alert-' . $code . '">' . $response . '</div>';
             }
 
-            $subscription_form .= '<form role="form" method="post">
+            $subscription_form .= '<form role="form" method="post">';
+
+            if ($options['signals_show_name'] == '1') {
+                $subscription_form .= '<input type="text" name="signals_name" placeholder="' . esc_attr($options['signals_csmm_message_noname']) . '" >';
+            }
+
+
+            $subscription_form .= '
 					<input type="text" name="signals_email" placeholder="' . esc_attr($options['input_text']) . '">
 					<input type="submit" name="submit" value="' . esc_attr($options['button_text']) . '">
 				</form>';
@@ -122,6 +189,14 @@ if (!defined('WPINC')) {
     echo $custom_html;
 
     ?>
+
+    <?php
+    if (false === csmm_get_rebranding()) {
+        echo '<!-- Coming Soon plugin by WebFactory Ltd (http://www.webfactoryltd.com) -->';
+    }
+    ?>
+
+    <?php echo stripslashes($options['custom_foot_code']); ?>
 </body>
 
 </html>

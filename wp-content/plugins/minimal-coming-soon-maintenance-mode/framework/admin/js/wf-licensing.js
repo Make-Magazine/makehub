@@ -1,5 +1,4 @@
-function wf_csmm_licensing_verify_licence_ajax(prefix, license_key, button) {
-
+function wf_licensing_verify_licence_ajax(prefix, license_key, button) {
   data = window['wf_licensing_' + prefix];
   if (!data) {
     alert('Licensing data is missing. Please reload the page and try again.');
@@ -24,7 +23,7 @@ function wf_csmm_licensing_verify_licence_ajax(prefix, license_key, button) {
         if (response.success) {
           location.reload();
         } else {
-          wf_csmm_licensing_verify_licence_ajax_alternative(data.prefix, license_key, button);
+          wf_licensing_verify_licence_ajax_alternative(data.prefix, license_key, button);
         }
       }
     )
@@ -34,9 +33,9 @@ function wf_csmm_licensing_verify_licence_ajax(prefix, license_key, button) {
     .always(function() {
       jQuery(button).removeClass('loading');
     });
-} // wf_csmm_licensing_verify_licence_ajax
+} // wf_licensing_verify_licence_ajax
 
-function wf_csmm_licensing_deactivate_licence_ajax(prefix, license_key, button) {
+function wf_licensing_deactivate_licence_ajax(prefix, license_key, button) {
   data = window['wf_licensing_' + prefix];
   if (!data) {
     alert('Licensing data is missing. Please reload the page and try again.');
@@ -61,7 +60,7 @@ function wf_csmm_licensing_deactivate_licence_ajax(prefix, license_key, button) 
         if (response.success) {
           location.reload();
         } else {
-            wf_csmm_licensing_deactivate_licence_ajax_alternative(data.prefix, license_key, button);
+          wf_licensing_deactivate_licence_ajax_alternative(data.prefix, license_key, button);
         }
       }
     )
@@ -71,13 +70,13 @@ function wf_csmm_licensing_deactivate_licence_ajax(prefix, license_key, button) 
     .always(function() {
       jQuery(button).removeClass('loading');
     });
-} // wf_csmm_licensing_deactivate_licence_ajax
+} // wf_licensing_deactivate_licence_ajax
 
-function wf_csmm_licensing_deactivate_licence_ajax_alternative(prefix, licence_key) {
+function wf_licensing_deactivate_licence_ajax_alternative(prefix, licence_key) {
   console.log('deactivate alternative');
 }
 
-function wf_csmm_licensing_verify_licence_ajax_alternative(prefix, licence_key) {
+function wf_licensing_verify_licence_ajax_alternative(prefix, licence_key) {
   data = window['wf_licensing_' + prefix];
   if (!data) {
     alert('Licensing data is missing. Please reload the page and try again.');
@@ -129,4 +128,4 @@ function wf_csmm_licensing_verify_licence_ajax_alternative(prefix, licence_key) 
     .always(function() {
       jQuery(button).removeClass('loading');
     });
-} // wf_csmm_licensing_verify_licence_ajax_alternative
+} // wf_licensing_verify_licence_ajax_alternative
