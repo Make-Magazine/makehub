@@ -83,6 +83,7 @@ function load_admin_styles() {
     wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.2');
 }
 
+
 function set_universal_asset_constants() {
 	if (isset($_SERVER['HTTPS']) &&
 	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
@@ -98,8 +99,12 @@ function set_universal_asset_constants() {
 
 	// Decide if user can upgrade
 	$canUpgrade = true;
-	$hasmembership = false;
-	if(class_exists("\Indeed\Ihc\UserSubscriptions")) {
+	$hasMembership = false;
+	// this is a list of memberships that can't be upgraded further
+	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
+	$currentMemberships = array();
+
+	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
 		$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
 		if (!empty($levels)) {
 			$hasmembership = true;
@@ -117,6 +122,30 @@ function set_universal_asset_constants() {
 					case "global_producers":
 						$canUpgrade = false;
 						break;
+				}
+			}
+		}
+	} else if( class_exists('MeprUtils') ) {
+	    $mepr_current_user = MeprUtils::get_currentuserinfo();
+		// see if you can get the "slug" in this query and test against that in the $fullMemberships list
+	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
+		if($mepr_current_user) {
+		    $table = MeprSubscription::account_subscr_table(
+		      'created_at', 'DESC',
+		      1, '', 'any', 0, false,
+		      array(
+		        'member' => $mepr_current_user->user_login,
+		      ),
+		      $sub_cols
+		    );
+		    $subscriptions = $table['results'];
+			foreach($subscriptions as $subscription) {
+				if($subscription->active == '<span class="mepr-active">Yes</span>') {
+					$hasMembership = true;
+					$currentMemberships[] = $subscription->product_name;
+					if( in_array($subscription->product_name, $fullMemberships) ) {
+						$canUpgrade = false;
+					}
 				}
 			}
 		} else {
@@ -293,22 +322,22 @@ add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
 
-    if (!$query->is_admin && $query->is_feed && $query->query['post_type']) {
-		if($query->query['post_type'] == 'espresso_events') {
-			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
-			$results = $wpdb->get_results($dbSQL);
-			$suppression_IDs = array();
+    if (isset($query->query['post_type']) && !$query->is_admin && $query->is_feed && $query->query['post_type']) {
+  		if($query->query['post_type'] == 'espresso_events') {
+  			$dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
+  			$results = $wpdb->get_results($dbSQL);
+  			$suppression_IDs = array();
 
-			foreach($results as $result){
-				$suppression_IDs[] = $result->post_id;
-			}
+  			foreach($results as $result){
+  				$suppression_IDs[] = $result->post_id;
+  			}
 
-			$exclude = implode(",", $suppression_IDs);
+  			$exclude = implode(",", $suppression_IDs);
 
-			if (!empty($exclude)) {
-				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
-			}
-		}
+  			if (!empty($exclude)) {
+  				$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+  			}
+  		}
     }
     return $where;
 }
