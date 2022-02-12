@@ -89,7 +89,7 @@ function bp_exclude_users( $qs = '', $object = '' ) {
 	global $wpdb;
     // list of users to exclude.
 	$optOutFieldID = xprofile_get_field_id_from_name( 'I wish to remain anonymous and opt out of the Member Directory' );
-	$excluded_users = $wpdb->get_col("SELECT user_id FROM wp_bp_xprofile_data WHERE field_id = $optOutFieldID AND value = 'on'");
+	$excluded_users = $wpdb->get_col("SELECT user_id FROM wp_bp_xprofile_data WHERE field_id = $optOutFieldID AND value LIKE '%on%'");
     if ( $object != 'members' ) {
         return $qs;
     }
