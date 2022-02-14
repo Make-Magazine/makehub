@@ -12,17 +12,17 @@ get_header(); ?>
 
       <h1 class="page-title"><?php the_title() ;?></h1>
 
-      <?php 
+      <?php
       $description = get_field( "description" );
       echo '<div class="crew-description">' . $description . '</div>';
 
-      if( have_rows('crew_members') ): 
+      if( have_rows('crew_members') ):
 
         $count = 0; ?>
 
         <div class="row crew-members-cont">
 
-        <?php while( have_rows('crew_members') ): the_row(); 
+        <?php while( have_rows('crew_members') ): the_row();
           $image = get_sub_field('image');
           $name = get_sub_field('name');
           $job_title = get_sub_field('job_title');
@@ -35,7 +35,7 @@ get_header(); ?>
 
         <div class="crew-member">
           <?php if ($aboutdescription) { ?>
-            <a href="#<?php echo $i; ?>" class="fancybox">
+            <a data-fancybox data-src="#<?php echo $i; ?>">
           <?php } ?>
               <img class="img-responsive" src="<?php echo $photon; ?>" />
               <h3><?php echo $name; ?></h3>
@@ -43,7 +43,7 @@ get_header(); ?>
           <?php if ($aboutdescription) { ?>
             </a>
           <?php } ?>
-          <div id="<?php echo $i; ?>" style="display:none;width:300px;">
+          <div id="<?php echo $i; ?>" style="display:none;min-width:300px;max-width:80%;height:auto;">
             <div class="crew-modal">
               <div class="col-sm-4">
                 <img class="img-responsive" src="<?php echo $photon; ?>" />
@@ -70,10 +70,10 @@ get_header(); ?>
               </div>
             </div>
           </div>
-        
+
         </div>
 
-        <?php 
+        <?php
         $count++;
         endwhile; ?>
 
@@ -87,17 +87,5 @@ get_header(); ?>
 
 </div><!-- end .page-content -->
 
-<script>
-jQuery(function() {
-  jQuery(".fancybox").fancybox({
-    autoSize    : false,
-    width       : '80%',
-    height      : 'auto',
-    afterLoad   : function() {
-      this.content = this.content.html();
-    }
-  });
-});
-</script>
 
 <?php get_footer(); ?>
