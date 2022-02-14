@@ -447,7 +447,7 @@ class MpBuddyPress {
     $enabled      = get_option($this->enabled_str, 0);
     $main_slug    = MeprHooks::apply_filters('mepr-bp-info-main-nav-slug', 'mp-membership');
 
-    if($enabled && isset($current_post->ID) && $current_post->ID == $mepr_options->account_page_id && $_GET["action"] != "gifts") {
+    if($enabled && isset($current_post->ID) && $current_post->ID == $mepr_options->account_page_id && $_GET["action"] != "gifts" && $_GET["action"] != "manage_sub_accounts") {
       if($current_user !== false) {
         MeprUtils::wp_redirect($bp->loggedin_user->domain . $main_slug . '/');
       }

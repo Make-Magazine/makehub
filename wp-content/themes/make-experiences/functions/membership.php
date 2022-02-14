@@ -82,9 +82,30 @@ function mepr_capture_new_member_added($event) {
 }
 add_action('mepr-event-member-signup-completed', 'mepr_capture_new_member_added', 12);
 
-/**
- * Exclude Members from BuddyPress Members List.
+/*
+ * Only list active MemberPress members in the members directory.
+ * sources:
+ * https://buddydev.com/hiding-users-on-buddypress-based-site
+ * https://buddypress.org/support/topic/member-loop-only-memberpress-members/
+ * @param array $args args.
+ *
+ * @return array
+
+function tmp_only_show_members_in_directory( $args ) {
+    // do not exclude in admin.
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+        return $args;
+    }
+    global $wpdb;
+    $member_ids = $wpdb->get_col("SELECT DISTINCT user_id FROM ".$wpdb->prefix."mepr_transactions WHERE status IN('confirmed','complete') AND (expires_at >= NOW() OR expires_at = '0000-00-00 00:00:00')");
+    $args['include'] = $member_ids;
+
+    return $args;
+}
+add_filter( 'bp_after_has_members_parse_args', 'tmp_only_show_members_in_directory' );
 */
+
+/* Exclude opted out Members from BuddyPress Members List. */
 function bp_exclude_users( $qs = '', $object = '' ) {
 	global $wpdb;
     // list of users to exclude.
