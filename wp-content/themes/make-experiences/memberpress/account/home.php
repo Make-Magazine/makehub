@@ -1,6 +1,6 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 
-<div class="mp_wrapper">
+<div class="mp_wrapper mp-info-tab">
   <?php if(!empty($welcome_message)): ?>
     <div id="mepr-account-welcome-message">
       <h2>Membership Information</h2>
