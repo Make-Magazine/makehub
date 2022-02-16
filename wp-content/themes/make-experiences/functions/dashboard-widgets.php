@@ -46,7 +46,7 @@ function return_membership_widget($user){
 				$return .= '        <div class="mebr-startdate"><label>Member Since:</label> ' . $subscribe_date . '</div>';
 				$return .= '        <div class="mebr-expiredate"><label>Expiration Date:</label> ' . $expire_date . '</div>';
 				$return .= '    </div></li>';
-				$return .= '    <li><a href="'. $user->domain . 'mp-membership/" class="btn universal-btn">See More Details</a></li>';
+				$return .= '    <li><a href="'. $user->domain . 'mp-membership/" class="btn universal-btn membership-btn">See More Details</a></li>';
 				$return .= '  </ul>';
 				$return .= '</div>';
 			}

@@ -1,3 +1,15 @@
-.mp-membership.mp-payments {
-	.mp_wrapper_subscriptions { display: none; }
+.page-members-support-mp-membership {
+	.dashboard-box {
+		h4, .membership-btn {
+			display: none;
+		}
+	}
+}
+.mpca-fat-bottom {
+	margin-bottom: 15px;
+}
+#mpca_import_sub_accounts {
+	#mpca_sub_accounts_csv {
+		margin-bottom: 15px;
+	}
 }
