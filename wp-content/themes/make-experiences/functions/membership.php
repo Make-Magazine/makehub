@@ -50,6 +50,12 @@ function add_membership_class_profile($classes) {
 }
 add_filter('body_class', 'add_membership_class_profile', 12);
 
+function change_profile_submenu_tabs(){
+	global $bp;
+	$bp->bp_options_nav['mp-membership']['mp-info']['name'] = 'Membership Details';
+}
+add_action('bp_setup_nav', 'change_profile_submenu_tabs', 999);
+
 // Take all the membership fields for a new member and add them to the xprofile buddyboss fields
 function mepr_capture_new_member_added($event) {
 	$user = $event->get_data();
