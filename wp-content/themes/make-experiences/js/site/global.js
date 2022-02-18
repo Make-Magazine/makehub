@@ -27,7 +27,7 @@ jQuery(document).ready(function () {
 		if(GetURLParameter('upgrade')) {
 			jQuery('.have-coupon-link').css('display', 'none');
 			jQuery('.mepr-coupon-code').attr('value', GetURLParameter('upgrade'));
-			jQuery("label[name='mpgft-signup-gift-checkbox1']").remove();
+			jQuery("label[for='mpgft-signup-gift-checkbox1']").remove();
 			jQuery('h1.entry-title').prepend('Upgrade ');
 			jQuery('.mepr_price_cell').before('24.99 the first year then &nbsp;');
 			jQuery('.mepr-signup-form').attr('action', jQuery('.mepr-signup-form').attr('action') + '-' + GetURLParameter('upgrade'));
