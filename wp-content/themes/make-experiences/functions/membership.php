@@ -31,7 +31,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 }
 function setMemPressHeaders($datastring = null) {
 	$headers = array();
-	$headers[] = 'MEMBERPRESS-API-KEY: qbMnTDu4E6'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local qbMnTDu4E6 for stage
+	$headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
 	$headers[] = 'Content-Type: application/json';
 	if($datastring){
 		$headers[] = 'Content-Length: ' . strlen($datastring);
@@ -50,6 +50,7 @@ function add_membership_class_profile($classes) {
 }
 add_filter('body_class', 'add_membership_class_profile', 12);
 
+// Rename the Info subnav tab for
 function change_profile_submenu_tabs(){
 	global $bp;
 	$bp->bp_options_nav['mp-membership']['mp-info']['name'] = 'Membership Details';
