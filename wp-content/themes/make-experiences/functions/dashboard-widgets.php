@@ -213,10 +213,13 @@ function return_makerfaire_widget(){
 ////////////////////////////////////////
 //       Makerspace List Widget       //
 ////////////////////////////////////////
-function return_makerspace_widget(){
+function return_makerspace_widget($user){
   global $wpdb;
   global $user_email;
-
+	global $bp;
+	$user_id = bp_displayed_user_id();
+	$type = bp_get_member_type(bp_displayed_user_id());
+	
   //pull makerspace information from the makerspace site
   $sql = 'SELECT meta_key, meta_value from wp_3_gf_entry_meta '
           . ' where entry_id = (select entry_id FROM `wp_3_gf_entry_meta` '
@@ -229,7 +232,7 @@ function return_makerspace_widget(){
           <h4 class="open">My &nbsp;&nbsp;<img src="https://makerspaces.make.co/wp-content/universal-assets/v1/images/makerspaces-logo.jpg" /></h4>
           <ul class="open">
               <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
-              <?php if ($user_id != 0 && $type == 'makerspaces') { ?>
+              <?php if ($user->ID != 0 && $type == 'makerspaces') { ?>
                 <li><a href="/members/<?php echo $user_slug; ?>/makerspace_info/" class="btn universal-btn">See More Details</a></li>
               <?php } ?>
               <li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>

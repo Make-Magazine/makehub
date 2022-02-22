@@ -49,7 +49,7 @@ function dashboard_info_content() {
         echo return_membership_widget($user);
         echo return_makershed_widget();
         //echo return_makerfaire_widget($user);
-        echo return_makerspace_widget();
+        echo return_makerspace_widget($user);
         echo return_ee_events_widget();
         echo return_ee_tickets_widget($user);
         echo return_makercamp_widget($user);
