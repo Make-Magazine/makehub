@@ -39,8 +39,6 @@ function setMemPressHeaders($datastring = null) {
 	return $headers;
 }
 
-add_action( 'wp', 'change_memberpress_subnav', 5 );
-
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
 function add_membership_class_profile($classes) {
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
