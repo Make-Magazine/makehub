@@ -23,10 +23,15 @@
 					scrolltimer: null,
 					handleani: null, // keep handle any end event.
 					draggie: null,
+					total_item: parseInt( $( scrubber ).data( 'total-item' ), 10 ),
+					total_page: parseInt( $( scrubber ).data( 'total-page' ), 10 ),
+					current_page: parseInt( $( scrubber ).data( 'current-page' ), 10 ),
+					from: parseInt( $( scrubber ).data( 'from' ), 10 ),
+					to: parseInt( $( scrubber ).data( 'to' ), 10 ),
 				};
 
-				if ( self.scrubbers[scrubber_key].total < 3 ) {
-					$(scrubber).addClass( 'light' );
+				if ( self.scrubbers[ scrubber_key ].total < 10 ) {
+					$( scrubber ).addClass( 'light' );
 				}
 
 				self.init_draggabilly(scrubber_key);
@@ -86,20 +91,36 @@
 			self.updateDataOnFront(scrubber_key);
 		},
 
-		updateDataOnFront: function (scrubber_key) {
+		updateDataOnFront: function ( scrubber_key ) {
 			var self = window.BuddyBossThemeBbpScrubber;
-			var $scrubber = $('.scrubber[data-key="'+scrubber_key+'"]');
+			var $scrubber = $( '.scrubber[data-key="' + scrubber_key + '"]' );
 
 			if ( ! $scrubber.length ) {
 				return false;
 			}
 
-			self.scrubbers[scrubber_key].total = $scrubber.closest('#bbpress-forums').find('.scrubberpost').length;
-			$scrubber.find('#currentpost').text(self.scrubbers[scrubber_key].currentnum);
-			$scrubber.find('#totalposts').text(self.scrubbers[scrubber_key].total);
+			var list = [];
+			for ( var i = self.scrubbers[ scrubber_key ].from; i <= self.scrubbers[ scrubber_key ].to; i++ ) {
+				list.push( i );
+			}
 
-			var $current_element = $scrubber.closest('#bbpress-forums').find('.scrubberpost').eq(self.scrubbers[scrubber_key].currentnum-1);
-			$scrubber.find('#date').text($current_element.data('date'));
+			if ( self.scrubbers[ scrubber_key ].total_page > 1 ) {
+				if ( 1 === self.scrubbers[ scrubber_key ].current_page ) {
+					$( '.lastpostbtn svg' ).next().html( '' );
+				} else if ( self.scrubbers[ scrubber_key ].current_page === self.scrubbers[ scrubber_key ].total_page ) {
+					$( '.firstpostbtn svg' ).next().html( '' );
+				} else if ( self.scrubbers[ scrubber_key ].current_page > 1 && self.scrubbers[ scrubber_key ].current_page < self.scrubbers[ scrubber_key ].total_page ) {
+					$( '.firstpostbtn svg' ).next().html( '' );
+					$( '.lastpostbtn svg' ).next().html( '' );
+				}
+			}
+
+			self.scrubbers[ scrubber_key ].total = $scrubber.closest( '#bbpress-forums' ).find( '.scrubberpost' ).length;
+			$scrubber.find( '#currentpost' ).text( list[ self.scrubbers[ scrubber_key ].currentnum - 1 ] );
+			$scrubber.find( '#totalposts' ).text( self.scrubbers[ scrubber_key ].total_item );
+
+			var $current_element = $scrubber.closest( '#bbpress-forums' ).find( '.scrubberpost' ).eq( self.scrubbers[ scrubber_key ].currentnum - 1 );
+			$scrubber.find( '#date' ).text( $current_element.data( 'date' ) );
 		},
 
 		goToPost: function (post, index, scrubber_key) {

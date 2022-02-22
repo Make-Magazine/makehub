@@ -45,7 +45,7 @@ if ( empty( $course_id ) ) {
 		$course_id = (int) buddyboss_theme()->learndash_helper()->ld_30_get_course_id( $lesson_data->ID );
 	}
 }
-$lession_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
+$lession_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1, 'orderby' => 'menu_order' ) );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
 $content_urls            = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination( $course_id, $lession_list );
 $pagination_urls         = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url( $content_urls );

@@ -24,6 +24,11 @@ if ( ! function_exists( 'buddyboss_theme_update' ) ) {
 				bb_theme_update_1_7_3();
 			}
 
+			// Call to backup default cover images.
+			if ( version_compare( $current_version, '1.8.2', '>' ) && function_exists( 'bb_theme_update_1_8_3' ) ) {
+				bb_theme_update_1_8_3();
+			}
+
 			// update not to run twice.
 			update_option( 'buddyboss_theme_version', $current_version );
 		}
@@ -50,4 +55,35 @@ function bb_theme_update_1_7_3() {
 			delete_site_transient( $cache_name );
 		}
 	}
+}
+
+/**
+ * Backup default cover images.
+ *
+ * @since 1.8.4
+ */
+function bb_theme_update_1_8_3() {
+	global $buddyboss_theme_options;
+
+	$theme_default_member_cover = '';
+	$theme_default_group_cover  = '';
+
+	/* Check if options are set */
+	if ( ! isset( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
+		$theme_default_member_cover = $buddyboss_theme_options['buddyboss_profile_cover_default'];
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
+		$theme_default_group_cover = $buddyboss_theme_options['buddyboss_group_cover_default'];
+	}
+
+	update_option( 'buddyboss_profile_cover_default_migration', $theme_default_member_cover );
+	update_option( 'buddyboss_group_cover_default_migration', $theme_default_group_cover );
+
+	// Delete custom css transient.
+	delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
 }

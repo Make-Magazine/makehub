@@ -70,16 +70,16 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				.bb-custom-ld-focus-mode-enabled:not(.bb-custom-ld-logo-enabled) .site-header-container .ld-focus-custom-logo .bb-logo.bb-logo-dark,
 				.bb-dark-theme.bb-custom-ld-focus-mode-enabled:not(.bb-custom-ld-logo-enabled) .site-header-container .ld-focus-custom-logo img,
 				.bb-sfwd-aside.bb-dark-theme:not(.bb-custom-ld-logo-enabled) .site-header-container #site-logo .bb-logo,
-				.buddypanel .site-branding h2 img.bb-logo.bb-logo-dark,
-				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding h2 img.bb-logo,
+				.buddypanel .site-branding div img.bb-logo.bb-logo-dark,
+				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding div img.bb-logo,
 				.buddypanel .site-branding h1 img.bb-logo.bb-logo-dark,
 				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding h1 img.bb-logo{display:none;}
 
 				.llms-sidebar.bb-dark-theme .site-header-container #site-logo .bb-logo.bb-logo-dark,
 				.bb-dark-theme.bb-custom-ld-focus-mode-enabled:not(.bb-custom-ld-logo-enabled) .site-header-container .ld-focus-custom-logo .bb-logo.bb-logo-dark,
 				.bb-sfwd-aside.bb-dark-theme .site-header-container #site-logo .bb-logo.bb-logo-dark,
-				.buddypanel .site-branding h2 img.bb-logo,
-				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding h2 img.bb-logo.bb-logo-dark,
+				.buddypanel .site-branding div img.bb-logo,
+				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding div img.bb-logo.bb-logo-dark,
 				.buddypanel .site-branding h1 img.bb-logo,
 				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding h1 img.bb-logo.bb-logo-dark{display:inline;}
 
@@ -100,7 +100,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				.llms-sidebar.bb-dark-theme #site-logo .site-title img.bb-logo.bb-logo-dark,
 				.bb-sfwd-aside.bb-dark-theme #site-logo .site-title img.bb-logo.bb-logo-dark,
 				.bb-custom-ld-focus-mode-enabled .site-header-container .ld-focus-custom-logo .bb-logo.bb-logo-dark,
-				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding h2 img.bb-logo.bb-logo-dark {
+				.bb-sfwd-aside.bb-dark-theme .buddypanel .site-branding div img.bb-logo.bb-logo-dark {
 					width: <?php echo buddyboss_theme_get_option( 'logo_dark_size' ); ?>px;
 				}
 			<?php } ?>
@@ -365,7 +365,8 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			/* Primary color */
 			a,
 			.notification-header .mark-read-all,
-			.notification-footer .delete-all {
+			.notification-footer .delete-all,
+			span.atwho-inserted {
 				color: <?php echo $primary_color; ?>;
 			}
 
@@ -504,7 +505,9 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.bb-header-buttons a.button.outline,
 			.primary-menu > .menu-item-has-children:not(.hideshow):after,
 			.site-header .hideshow .more-button > i,
-			.site-header i, .site-header .notification-dropdown i, .site-header .header-search-wrap i,
+			.site-header i, 
+			.site-header .notification-dropdown i, 
+			.site-header .header-search-wrap i,
 			.user-wrap.menu-item-has-children #header-my-account-menu a {
 				color: <?php echo buddyboss_theme_get_option( 'header_links' ); ?>;
 			}
@@ -604,7 +607,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.elementor-widget-wp-widget-bbp_replies_widget ul li a,
 			.elementor-widget-wp-widget-bbp_forums_widget ul li a,
 			.elementor-widget-wp-widget-bbp_topics_widget ul li a,
-			ul.wp-block-latest-posts li a  {
+			ul.wp-block-latest-posts li a {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_link_color' ); ?>;
 			}
 
@@ -724,6 +727,11 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				color: <?php echo buddyboss_theme_get_option( 'body_text_color' ); ?>;
 			}
 
+			#whats-new-textarea-placeholder [contenteditable="true"]:empty:before, 
+			#whats-new-textarea [contenteditable="true"]:empty:before {
+				color: <?php echo color2rgba( buddyboss_theme_get_option( 'body_text_color' ), 0.5 ); ?>;
+			}
+
 			.post-grid .entry-content,
 			.post-author-details .author-desc,
 			.show-support p,
@@ -755,8 +763,85 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.error-404 .desc,
 			.sub-menu .user-mention,
 			.bb-footer,
-			table caption {
+			table caption,
+			.atwho-view ul li .username,
+			#whats-new-form.focus-in #bp-activity-privacy-point,
+			.dropzone .dz-default .dz-button:before, 
+			.dropzone .dz-default .dz-button:hover:before,
+			.dropzone .dz-remove,
+			.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-progress-ring-wrap .bb-icon,
+			.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-ring-wrap .bb-icon,
+			.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail) .dz-progress-count,
+			.dropzone.video-dropzone .dz-preview:not(.dz-has-thumbnail):not(.dz-complete) .dz-remove,
+			.dropzone.document-dropzone .dz-preview.dz-complete .dz-details .dz-icon [class*="bb-icon"],
+			.dropzone.document-dropzone .dz-preview .dz-details .dz-filename,
+			.dropzone.document-dropzone .dz-preview .dz-details .dz-size,
+			.dropzone.document-dropzone .dz-preview:not(.dz-complete) .dz-progress-ring-wrap .bb-icon,
+			.bp-activity-privacy__label .privacy-sub-label,
+			.bp-activity-privacy__label .privacy-figure {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?>;
+			}
+
+			.ac-reply-toolbar a .bb-icon,
+			#whats-new-toolbar a .bb-icon,
+			#whats-new-messages-toolbar a .bb-icon,
+			.ac-reply-toolbar .emojionearea .emojionearea-button,
+			#whats-new-toolbar .emojionearea .emojionearea-button,
+			#whats-new-messages-toolbar .emojionearea .emojionearea-button,
+			#editor-toolbar .bb-icon,
+			#editor-toolbar .emojionearea-button:before,
+			.medium-editor-toolbar .medium-editor-toolbar-actions button,
+			.buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button,
+			#buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button,
+			.medium-editor-toolbar-form a,
+			.bp-nouveau-activity-form-placeholder- .bb-model-header a .bb-icon-close,
+			.activity-update-form .bb-model-header a .bb-icon-close,
+			#buddypress input#privacy-status-back,
+			#buddypress input#privacy-status-group-back {
+				color: <?php echo color2rgba( buddyboss_theme_get_option( 'heading_text_color' ), 0.5 ); ?>;
+			}
+
+			.ac-reply-toolbar a:hover .bb-icon,
+			#whats-new-toolbar a:hover .bb-icon,
+			#whats-new-messages-toolbar a:hover .bb-icon,
+			.ac-reply-toolbar a.active .bb-icon,
+			#whats-new-toolbar a.active .bb-icon,
+			#whats-new-messages-toolbar a.active .bb-icon,
+			.ac-reply-toolbar .active a .bb-icon,
+			#whats-new-toolbar .active a .bb-icon,
+			#whats-new-messages-toolbar .active a .bb-icon,
+			.ac-reply-toolbar a.open .bb-icon,
+			#whats-new-toolbar a.open .bb-icon,
+			#whats-new-messages-toolbar a.open .bb-icon,
+			.ac-reply-toolbar .emojionearea .emojionearea-button.active,
+			#whats-new-toolbar .emojionearea .emojionearea-button.active,
+			#whats-new-messages-toolbar .emojionearea .emojionearea-button.active,
+			#editor-toolbar .emojionearea-button.active:before,
+			#editor-toolbar .active .bb-icon:before,
+			.medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
+			.buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
+			#buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
+			.medium-editor-toolbar-form a:hover,
+			.bp-nouveau-activity-form-placeholder- .bb-model-header a:hover .bb-icon-close,
+			.activity-update-form .bb-model-header a:hover .bb-icon-close,
+			#buddypress input#privacy-status-back:hover,
+			#buddypress input#privacy-status-group-back:hover {
+				color: <?php echo color2rgba( buddyboss_theme_get_option( 'heading_text_color' ), 1 ); ?>;
+			}
+
+			.dropzone.document-dropzone .dz-preview .dz-remove,
+			.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:after {
+				color: <?php echo color2rgba( buddyboss_theme_get_option( 'alternate_text_color' ), 0.8 ); ?>;
+			}
+
+			.dropzone.document-dropzone .dz-preview .dz-remove:hover,
+			.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove:hover:after {
+				color: <?php echo color2rgba( buddyboss_theme_get_option( 'alternate_text_color' ), 1 ); ?>;
+			}
+
+			.dropzone .dz-default .dz-button,
+			.dropzone .dz-default .dz-button:hover {
+				color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?> !important;
 			}
 
 			/* Heading Text color */
@@ -766,7 +851,10 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.elementor-widget .elementor-widget-container > h5,
 			.show-support h6,
 			label,
-			h4 .bp-reported-type {
+			h4 .bp-reported-type,
+			.dropzone .dz-default .dz-button > strong, 
+			.dropzone .dz-default .dz-button:hover > strong,
+			.activity-link-preview-title {
 				color: <?php echo buddyboss_theme_get_option( 'heading_text_color' ); ?>;
 			}
 
@@ -794,8 +882,14 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				background: <?php echo buddyboss_theme_get_option( 'body_blocks' ); ?>;
 			}
 
-			.bs-item-list.list-view .bs-item-wrap {
+			.bs-item-list.list-view .bs-item-wrap,
+			.atwho-view {
 				background-color: <?php echo buddyboss_theme_get_option( 'body_blocks' ); ?>;
+			}
+
+			.dropzone .dz-remove,
+			.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview .dz-remove {
+				background-color: <?php echo buddyboss_theme_get_option( 'light_background_blocks' ); ?>;
 			}
 
 			.widget,
@@ -803,7 +897,10 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.comment-respond,
 			.bs-item-list.list-view .bs-item-wrap,
 			.post-author-details,
-			.widget.widget_bp_profile_completion_widget .profile_completion_wrap .pc_detailed_progress_wrap .single_section_wrap {
+			.widget.widget_bp_profile_completion_widget .profile_completion_wrap .pc_detailed_progress_wrap .single_section_wrap,
+			.dropzone .dz-default,
+			.atwho-view,
+			#whats-new-form #bp-activity-privacy-point {
 				border-color: <?php echo buddyboss_theme_get_option( 'body_blocks_border' ); ?>;
 			}
 
@@ -1157,7 +1254,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.group-invites .bp-dir-hori-nav:not(.bp-vertical-navs) #item-body #group-invites-container .subnav li.selected,
 			#buddypress .generic-button a.outline,
 			#buddypress .standard-form button.outline,
-			#buddypress .standard-form button.outline:hover {
+			#buddypress .standard-form button.outline:hover,
+			.bb-radio-style input[type="radio"]:checked + span:before {
 				border-color: <?php echo $primary_color; ?>;
 			}
 
@@ -1197,7 +1295,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#item-body #group-invites-container .bp-invites-content #send-invites-editor #bp-send-invites-form .action button#bp-invites-send,
 			#message-threads li.unread .thread-date time:after,
 			.buddypress-wrap .bp-subnavs ul #bp-zoom-switch-type .bb-toggle-switch .bb-toggle-slider,			
-			#bbpress-forums div.bbp-reply-content a.bp-video-thumbnail-submit {
+			#bbpress-forums div.bbp-reply-content a.bp-video-thumbnail-submit,
+			.bb-radio-style input[type="radio"]:checked + span:after {
 				background-color: <?php echo $primary_color; ?>;
 			}
 
@@ -1340,7 +1439,9 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.messages-wrapper #inbox-personal-li a,
 			.bp-messages-content #bp-message-thread-list .message-metadata .user-link,
 			.widget.activity_update .activity-update p a:not(.activity-time-since),
-			.bp-messages-content .thread-participants .participants-name a {
+			.bp-messages-content .thread-participants .participants-name a,
+			.bp-activity-huddle a.activity-post-user-name,
+			.atwho-view small {
 				color: <?php echo buddyboss_theme_get_option( 'heading_text_color' ); ?>;
 			}
 
@@ -1352,14 +1453,30 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.messages-wrapper #inbox-personal-li a:hover,
 			.bp-messages-content #bp-message-thread-list .message-metadata .user-link:hover,
 			.widget.activity_update .activity-update p a:not(.activity-time-since):hover,
-			.bp-messages-content .thread-participants .participants-name a:hover {
+			.bp-messages-content .thread-participants .participants-name a:hover,
+			.bp-activity-huddle a.activity-post-user-name:hover {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_link_hover' ); ?>;
 			}
 
-			#header-cover-image,
-			.bs-group-cover a:after {
-				background-color: <?php echo buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ); ?>;
+			<?php
+			if ( function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.8.5', '>' ) ) {
+				?>
+				#buddypress #header-cover-image.has-default,
+				#buddypress #header-cover-image.has-default .guillotine-window img,
+				.bs-group-cover.has-default a {
+					background-color: <?php echo buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ); ?>;
+				}
+
+			<?php } else { ?>
+
+				#buddypress #header-cover-image,
+				#buddypress #header-cover-image .guillotine-window img,
+				.bs-group-cover a {
+					background-color: <?php echo buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' ); ?>;
+				}
+				<?php
 			}
+			?>
 
 			/* Body Text color */
 			.buddypress-wrap .bp-feedback,
@@ -1423,7 +1540,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#buddypress .bb-bp-invites-content .invite-info,
 			#buddypress .bb-bp-invites-content label,
 			.bp_ld_report_table_wrapper .bp_ld_report_table thead th,
-			.widget.activity_update .activity-update p {
+			.widget.activity_update .activity-update p,
+			#buddypress input#privacy-status-group-back {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?>;
 			}
 
@@ -1441,12 +1559,12 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 				color: <?php echo buddyboss_theme_get_option( 'heading_text_color' ); ?>;
 			}
 
-            nav#object-nav,
+            pre,
+			code,
+			nav#object-nav,
             #buddypress .bp-navs.bb-bp-tab-nav,
             .groups.group-admin #buddypress #item-body .bp-navs.group-subnav,
             #item-body #group-invites-container .bp-navs.group-subnav,
-            .bp-nouveau-activity-form-placeholder- #whats-new-avatar,
-            .activity-update-form #whats-new-avatar,
             #item-body > div.profile p.bp-feedback,
             .groups.group-create .buddypress-wrap #group-create-tabs,
             .groups.group-create .buddypress-wrap #drag-drop-area,
@@ -1457,7 +1575,30 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
             #buddypress .activity-update-form .bpfb_form_container .bpfb_actions_container,
             .activity-list li.blogs .activity-content .activity-inner .bb-content-wrp,
             .activity-list li.bbp_topic_create .bb-content-inr-wrap,
-            .activity-list li.bbp_reply_create .bb-content-inr-wrap {
+            .activity-list li.bbp_reply_create .bb-content-inr-wrap,
+			.bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
+			.activity-update-form .whats-new-form-footer,
+			.gif-search-query,
+			.emojionearea .emojionearea-picker .emojionearea-filters,
+			.privacy-status-form-footer,
+			.bp-activity-privacy__label .privacy-figure,
+			.bp-activity-privacy__label:hover,
+			#whats-new-form #whats-new-post-in-box .bp-activity-object:hover,
+			div .activity-update-form #whats-new-content .medium-editor-toolbar.active,
+			.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar,
+			.activity-update-form #whats-new-form #whats-new-toolbar,
+			.medium-editor-element blockquote:not(.wp-embedded-content),
+			.bs-forum-content blockquote:not(.wp-embedded-content),
+			.activity-list .activity-item .activity-inner blockquote:not(.wp-embedded-content),
+			ul#bp-message-thread-list .bp-message-content-wrap blockquote,
+			.atwho-view .cur,
+			#whats-new-form #bp-activity-privacy-point,
+			.dropzone .dz-default,
+			.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-image,
+			.dropzone.video-dropzone .dz-preview,
+			.dropzone.video-dropzone .dz-preview.dz-complete.dz-file-preview:not(.dz-has-thumbnail),
+			.dropzone .dz-preview.dz-file-preview .dz-details,
+			.dropzone .dz-preview .dz-image {
                 background-color: <?php echo buddyboss_theme_get_option( 'light_background_blocks' ); ?>;
 			}
 
@@ -1471,12 +1612,14 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.bb-bp-settings-container,
 			.buddypress-wrap .bp-feedback,
 			#item-body #group-invites-container,
-			#buddypress .custom-homepage-info.info {
+			#buddypress .custom-homepage-info.info,
+			#cover-image-container #item-header-avatar img {
 				background: <?php echo buddyboss_theme_get_option( 'body_blocks' ); ?>;
 			}
 
 			#whats-new-form-placeholder,
 			#whats-new-form,
+			#whats-new-form .medium-editor-toolbar .medium-editor-toolbar-form-active,
 			.activity-anonymous-options,
 			.buddypress-wrap .bp-tables-user,
 			.meeting-item-container,
@@ -1498,7 +1641,16 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.reply-edit #bbpress-forums .bbp-reply-form .bbp-form .bbp-form #whats-new-toolbar,
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper,
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments,
-			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar {
+			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar,
+			.activity-form .medium-editor-element,
+			.activity-form .bb-model-header,
+			.gif-media-search-dropdown,
+			.emojionearea .emojionearea-picker,
+			.emojionearea .emojionearea-picker .emojionearea-scroll-area .emojionearea-category-title,
+			.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.active,
+			.bp-messages-content #bp-message-content .medium-editor-toolbar,
+			.medium-editor-element, 
+			.medium-editor-placeholder {
 				background-color: <?php echo buddyboss_theme_get_option( 'body_blocks' ); ?>;
 			}
 
@@ -1514,6 +1666,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 				}
 			}
 
+			pre,
+			code,
 			#buddypress .activity-list.bp-list .activity-item,
 			.activity-anonymous-options,
 			#cover-image-container,
@@ -1587,7 +1741,29 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar,
 			.bp-step-nav-main .bp-step-nav ul,
 			.bp-step-nav-main .bp-step-nav li.selected > a,
-			.bp-messages-content-wrapper.has_error .bp-messages-feedback {
+			.bp-messages-content-wrapper.has_error .bp-messages-feedback,
+			.video-type-navs.main-navs,
+			.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar,
+			.activity-update-form #whats-new-form #whats-new-toolbar,
+			.bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
+			.activity-update-form .whats-new-form-footer,
+			.gif-media-search-dropdown,
+			.gif-search-query,
+			.bp-nouveau-activity-form-placeholder- .activity-form.focus-in #editor-toolbar, 
+			.activity-update-form .activity-form.focus-in #editor-toolbar,
+			#whats-new-form.focus-in--attm #editor-toolbar, 
+			#whats-new-form.focus-in--scroll #editor-toolbar,
+			.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form, 
+			.activity-update-form.modal-popup #whats-new-form,
+			#whats-new-form .bb-model-header,
+			.medium-editor-element blockquote:not(.wp-embedded-content),
+			.bs-forum-content blockquote:not(.wp-embedded-content),
+			.activity-list .activity-item .activity-inner blockquote:not(.wp-embedded-content),
+			ul#bp-message-thread-list .bp-message-content-wrap blockquote,
+			.emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.active,
+			.dropzone .dz-preview.dz-file-preview .dz-details,
+			.dropzone .dz-preview .dz-image,
+			.emojionearea .emojionearea-picker .emojionearea-filters {
 				border-color: <?php echo buddyboss_theme_get_option( 'body_blocks_border' ); ?>;
 			}
 

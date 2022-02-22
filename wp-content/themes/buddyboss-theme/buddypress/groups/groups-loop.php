@@ -9,10 +9,10 @@
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>
-    <div class="bp-feedback info">
-    <span class="bp-icon" aria-hidden="true"></span>
+	<div class="bp-feedback info">
+	<span class="bp-icon" aria-hidden="true"></span>
 	<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
-    </div>
+	</div>
 <?php endif; ?>
 
 <?php $cover_class = bp_disable_group_cover_image_uploads() ? 'bb-cover-disabled' : 'bb-cover-enabled'; ?>
@@ -26,21 +26,25 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_groups() ) :
 		bp_the_group();
-	?>
+		?>
 
 		<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 			<div class="list-wrap">
 
-				<?php if( !bp_disable_group_cover_image_uploads() ) { ?>
+				<?php if ( ! bp_disable_group_cover_image_uploads() ) { ?>
 					<?php
-					$group_cover_image_url = bp_attachments_get_attachment( 'url', array(
-						'object_dir' => 'groups',
-						'item_id'    => bp_get_group_id(),
-					) );
+					$group_cover_image_url = bp_attachments_get_attachment(
+						'url',
+						array(
+							'object_dir' => 'groups',
+							'item_id'    => bp_get_group_id(),
+						)
+					);
 					$default_group_cover   = buddyboss_theme_get_option( 'buddyboss_group_cover_default', 'url' );
 					$group_cover_image_url = $group_cover_image_url ?: $default_group_cover;
+					$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' ) : '';
 					?>
-					<div class="bs-group-cover only-grid-view"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo $group_cover_image_url; ?>"></a></div>
+					<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover ); ?>"><a href="<?php bp_group_permalink(); ?>"><img src="<?php echo esc_url( $group_cover_image_url ); ?>"></a></div>
 				<?php } ?>
 
 				<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
@@ -61,9 +65,11 @@ bp_nouveau_before_loop(); ?>
 						<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
 							<p class="item-meta group-details only-list-view"><?php bp_nouveau_group_meta(); ?></p>
-							<p class="item-meta group-details only-grid-view"><?php
+							<p class="item-meta group-details only-grid-view">
+							<?php
 								$meta = bp_nouveau_get_group_meta();
-								echo $meta['status']; ?>
+								echo $meta['status'];
+							?>
 							</p>
 						<?php endif; ?>
 
@@ -79,7 +85,7 @@ bp_nouveau_before_loop(); ?>
 
 					</div>
 
-					<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false , 150 ) ?></div>
+					<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
 
 					<?php bp_nouveau_groups_loop_item(); ?>
 

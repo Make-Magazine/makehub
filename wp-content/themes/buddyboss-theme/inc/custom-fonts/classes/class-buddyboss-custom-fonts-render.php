@@ -70,6 +70,8 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 
 			// Add font files style.
 			add_action( 'wp_head', array( $this, 'add_style' ) );
+			add_action( 'login_head', array( $this, 'add_style' ) );
+
 			if ( is_admin() ) {
 				if ( ! empty( $_GET['page'] ) && 'buddyboss_theme_options' === $_GET['page'] ) {
 					add_action( 'admin_head', array( $this, 'add_style' ) );
@@ -165,7 +167,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 				}
 				?>
                 <style type="text/css">
-                    <?php echo strip_tags( $this->font_css ); ?>
+                    <?php echo wp_strip_all_tags( $this->font_css ); ?>
                 </style>
 				<?php
 			}
@@ -232,8 +234,3 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 	BuddyBoss_Custom_Fonts_Render::get_instance();
 
 endif;
-
-
-
-
-

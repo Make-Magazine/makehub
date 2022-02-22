@@ -953,7 +953,18 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 		 * @since BuddyBossTheme 1.0.0
 		 */
 		public function get_all_courses_count() {
-			$courses = new \WP_Query( [ 'post_type' => 'sfwd-courses', 'post_status' => 'publish' ] );
+
+			// Added hook so on page load of course archive page shows course count correctly when filters applied to courses.
+			add_action( 'pre_get_posts', array( $this, 'filter_query_ajax_get_courses' ), 999 );
+
+			$courses = new \WP_Query(
+				array(
+					'post_type'   => 'sfwd-courses',
+					'post_status' => 'publish',
+				)
+			);
+
+			remove_action( 'pre_get_posts', array( $this, 'filter_query_ajax_get_courses' ), 999 );
 
 			return ! empty( $courses->found_posts ) ? $courses->found_posts : 0;
 		}
@@ -964,14 +975,17 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 		 * @since BuddyBossTheme 1.0.0
 		 */
 		public function get_my_courses_count( $user_id = false, $tax_query = array() ) {
-			$user_id = empty ( $user_id ) ? get_current_user_id() : $user_id;
+			$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
 
 			if ( empty( $user_id ) ) {
 				return 0;
 			}
 
+			// Added hook so on page load of course archive page shows course count correctly when filters applied to courses.
+			add_action( 'pre_get_posts', array( $this, 'filter_query_ajax_get_courses' ), 999 );
+
 			$course_args = array();
-			if ( ! empty( $tax_query ) ){
+			if ( ! empty( $tax_query ) ) {
 				$course_args['tax_query'] = $tax_query;
 			}
 
@@ -985,6 +999,8 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 			 */
 
 			$course_ids = ld_get_mycourses( $user_id, $course_args );
+
+			remove_action( 'pre_get_posts', array( $this, 'filter_query_ajax_get_courses' ), 999 );
 
 			return empty( $course_ids ) ? 0 : count( $course_ids );
 		}

@@ -178,7 +178,15 @@ if ( ( isset( $_COOKIE['lessonpanel'] ) && 'closed' === $_COOKIE['lessonpanel'] 
 									if ( ! empty( $lesson_topics ) ) :
 										?>
 										<div class="bb-lesson-topics-count">
-											<?php echo count( $lesson_topics ); ?><?php echo count( $lesson_topics ) > 1 ? LearnDash_Custom_Label::get_label( 'topics' ) : LearnDash_Custom_Label::get_label( 'topic' ); ?>
+											<?php
+											echo sprintf( esc_html__( '%s', 'buddyboss-theme' ), count( $lesson_topics ) ) . ' ' .
+												_n(
+													sprintf( esc_html__( '%s', 'buddyboss-theme' ), LearnDash_Custom_Label::get_label('topic') ),
+													sprintf( esc_html__( '%s', 'buddyboss-theme' ), LearnDash_Custom_Label::get_label('topics') ),
+													count( $lesson_topics ),
+													'buddyboss-theme'
+												);
+											?>
 										</div>
 										<?php
 									endif;

@@ -91,6 +91,9 @@
                     $this.wrap( '<div class="fluid-width-video-wrapper"></div>' ).parent( '.fluid-width-video-wrapper' ).css( 'padding-top', ( aspectRatio * 100 ) + '%' );
                     $this.closest( 'div' ).addClass( "fluid-width-video-wrapper" ).css( 'padding-top', ( aspectRatio * 100 ) + '%' );
                 }
+                if( $this.closest( '.ld-video' ).length ){
+                    $this.closest( '.ld-video' ).css( 'padding-bottom', ( aspectRatio * 100 ) + '%' );
+                }
                 $this.closest( '.fluid-width-video-wrapper' ).parent( 'p' ).addClass('bb-video-wrapper');
                 $this.removeAttr( 'height' ).removeAttr( 'width' );
             } );

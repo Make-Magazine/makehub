@@ -151,8 +151,7 @@ var BBLMS_Sidebar;
                 if( $('#wpadminbar').length ) {
                     adminbarHeight = $('#wpadminbar').height();
                 }
-                //Reset Page scroll
-                $( window ).scrollTop(0);
+
                 //Scroll to active Lesson, Topic or Quiz
                 if( activeTopic.length ) {
                     $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: activeTopic.offset().top - ( headerStickyHeight + adminbarHeight ) });

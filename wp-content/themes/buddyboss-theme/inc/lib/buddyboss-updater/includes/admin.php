@@ -645,7 +645,7 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 			if ( ! empty( $saved_licenses ) ) {
 				foreach ( $saved_licenses as $package_id => $license_details ) {
 					//parent plugin should be active as well
-					if ( $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
+					if ( isset( $license_details['is_active'] ) && $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
 						if ( ! empty( $license_details['product_keys'] ) && is_array( $license_details['product_keys'] ) && in_array( $product_key, $license_details['product_keys'] ) ) {
 							if ( $get_extra_info ) {
 								$valid_license_key = array(

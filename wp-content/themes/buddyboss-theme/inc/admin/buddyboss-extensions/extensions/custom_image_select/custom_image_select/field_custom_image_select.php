@@ -18,13 +18,13 @@
  * @author      Dovy Paukstys
  * @version     3.0.0
  */
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 // Don't duplicate me!
-if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
+if ( ! class_exists( 'ReduxFramework_custom_image_select' ) ) {
 
 	/**
 	 * Main ReduxFramework_custom_image_select class
@@ -42,9 +42,9 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 		 * @return      void
 		 */
 		function __construct( $field, $value, $parent ) {
-			$this->parent	 = $parent;
-			$this->field	 = $field;
-			$this->value	 = $value;
+			$this->parent = $parent;
+			$this->field  = $field;
+			$this->value  = $value;
 
 			if ( empty( $this->extension_dir ) ) {
 				$this->extension_dir = trailingslashit( str_replace( '\\', '/', dirname( __FILE__ ) ) );
@@ -52,12 +52,12 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 			}
 
 			// Set default args for this field to avoid bad indexes. Change this to anything you use.
-			$defaults	 = array(
-				'options'			 => array(),
-				'stylesheet'		 => '',
-				'output'			 => true,
-				'enqueue'			 => true,
-				'enqueue_frontend'	 => true
+			$defaults    = array(
+				'options'          => array(),
+				'stylesheet'       => '',
+				'output'           => true,
+				'enqueue'          => true,
+				'enqueue_frontend' => true,
 			);
 			$this->field = wp_parse_args( $this->field, $defaults );
 		}
@@ -72,48 +72,48 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 		 */
 		public function render() {
 
-			if ( !empty( $this->field[ 'options' ] ) ) {
+			if ( ! empty( $this->field['options'] ) ) {
 				echo '<div class="redux-table-container">';
 				echo '<ul class="redux-image-select">';
 
 				$x = 1;
 
-				foreach ( $this->field[ 'options' ] as $k => $v ) {
+				foreach ( $this->field['options'] as $k => $v ) {
 
-					if ( !is_array( $v ) ) {
+					if ( ! is_array( $v ) ) {
 						$v = array( 'img' => $v );
 					}
 
-					if ( !isset( $v[ 'title' ] ) ) {
-						$v[ 'title' ] = '';
+					if ( ! isset( $v['title'] ) ) {
+						$v['title'] = '';
 					}
 
-					if ( !isset( $v[ 'alt' ] ) ) {
-						$v[ 'alt' ] = $v[ 'title' ];
+					if ( ! isset( $v['alt'] ) ) {
+						$v['alt'] = $v['title'];
 					}
 
-					if ( !isset( $v[ 'class' ] ) ) {
-						$v[ 'class' ] = '';
+					if ( ! isset( $v['class'] ) ) {
+						$v['class'] = '';
 					}
 
 					$style = '';
 
-					if ( !empty( $this->field[ 'width' ] ) ) {
-						$style .= 'width: ' . $this->field[ 'width' ];
+					if ( ! empty( $this->field['width'] ) ) {
+						$style .= 'width: ' . $this->field['width'];
 
-						if ( is_numeric( $this->field[ 'width' ] ) ) {
+						if ( is_numeric( $this->field['width'] ) ) {
 							$style .= 'px';
 						}
 
 						$style .= ';';
 					} else {
-						$style .= " width: 100%; ";
+						$style .= ' width: 100%; ';
 					}
 
-					if ( !empty( $this->field[ 'height' ] ) ) {
-						$style .= 'height: ' . $this->field[ 'height' ];
+					if ( ! empty( $this->field['height'] ) ) {
+						$style .= 'height: ' . $this->field['height'];
 
-						if ( is_numeric( $this->field[ 'height' ] ) ) {
+						if ( is_numeric( $this->field['height'] ) ) {
 							$style .= 'px';
 						}
 
@@ -121,82 +121,82 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 					}
 
 					$theValue = $k;
-					if ( !empty( $this->field[ 'tiles' ] ) && $this->field[ 'tiles' ] == true ) {
-						$theValue = $v[ 'img' ];
+					if ( ! empty( $this->field['tiles'] ) && $this->field['tiles'] == true ) {
+						$theValue = $v['img'];
 					}
 
 					$selected = ( checked( $this->value, $theValue, false ) != '' ) ? ' redux-image-select-selected' : '';
 
-					$presets	 = '';
-					$is_preset	 = false;
+					$presets   = '';
+					$is_preset = false;
 
-					$this->field[ 'class' ] .= ' noUpdate ';
-					if ( isset( $this->field[ 'presets' ] ) && $this->field[ 'presets' ] !== false ) {
-						$this->field[ 'class' ] = trim( $this->field[ 'class' ] );
-						if ( !isset( $v[ 'presets' ] ) ) {
-							$v[ 'presets' ] = array();
+					$this->field['class'] .= ' noUpdate ';
+					if ( isset( $this->field['presets'] ) && $this->field['presets'] !== false ) {
+						$this->field['class'] = trim( $this->field['class'] );
+						if ( ! isset( $v['presets'] ) ) {
+							$v['presets'] = array();
 						}
 
-						if ( !is_array( $v[ 'presets' ] ) ) {
-							$v[ 'presets' ] = json_decode( $v[ 'presets' ], true );
+						if ( ! is_array( $v['presets'] ) ) {
+							$v['presets'] = json_decode( $v['presets'], true );
 						}
 
-						// Only highlight the preset if it's the same
+						// Only highlight the preset if it's the same.
 						if ( $selected ) {
-							if ( empty( $v[ 'presets' ] ) ) {
+							if ( empty( $v['presets'] ) ) {
 								$selected = false;
 							} else {
-								foreach ( $v[ 'presets' ] as $pk => $pv ) {
-									if ( isset( $v[ 'merge' ] ) && $v[ 'merge' ] !== false ) {
-										if ( ( $v[ 'merge' ] === true || in_array( $pk, $v[ 'merge' ] ) ) && is_array( $this->parent->options[ $pk ] ) ) {
+								foreach ( $v['presets'] as $pk => $pv ) {
+									if ( isset( $v['merge'] ) && $v['merge'] !== false ) {
+										if ( ( $v['merge'] === true || in_array( $pk, $v['merge'] ) ) && is_array( $this->parent->options[ $pk ] ) ) {
 											$pv = array_merge( $this->parent->options[ $pk ], $pv );
 										}
 									}
 
-									if ( empty( $pv ) && isset( $this->parent->options[ $pk ] ) && !empty( $this->parent->options[ $pk ] ) ) {
+									if ( empty( $pv ) && isset( $this->parent->options[ $pk ] ) && ! empty( $this->parent->options[ $pk ] ) ) {
 										$selected = false;
-									} else if ( !empty( $pv ) && !isset( $this->parent->options[ $pk ] ) ) {
+									} elseif ( ! empty( $pv ) && ! isset( $this->parent->options[ $pk ] ) ) {
 										$selected = false;
-									} else if ( isset( $this->parent->options[ $pk ] ) && $this->parent->options[ $pk ] != $pv ) {
+									} elseif ( isset( $this->parent->options[ $pk ] ) && $this->parent->options[ $pk ] != $pv ) {
 										$selected = false;
 									}
 
-									if ( !$selected ) { // We're still not using the same preset. Let's unset that shall we?
-										$this->value = "";
+									if ( ! $selected ) { // We're still not using the same preset. Let's unset that shall we?
+										$this->value = '';
 										break;
 									}
 								}
 							}
 						}
 
-						$v[ 'presets' ][ 'redux-backup' ] = 1;
+						$v['presets']['redux-backup'] = 1;
 
-						$presets	 = ' data-presets="' . htmlspecialchars( json_encode( $v[ 'presets' ] ), ENT_QUOTES, 'UTF-8' ) . '"';
-						$is_preset	 = true;
+						$presets   = ' data-presets="' . htmlspecialchars( json_encode( $v['presets'] ), ENT_QUOTES, 'UTF-8' ) . '"';
+						$is_preset = true;
 
-						$this->field[ 'class' ] = trim( $this->field[ 'class' ] ) . ' redux-presets';
+						$this->field['class'] = trim( $this->field['class'] ) . ' redux-presets';
 					}
 
 					$is_preset_class = $is_preset ? '-preset-' : ' ';
 
 					$merge = '';
-					if ( isset( $v[ 'merge' ] ) && $v[ 'merge' ] !== false ) {
-						$merge	 = is_array( $v[ 'merge' ] ) ? implode( '|', $v[ 'merge' ] ) : 'true';
-						$merge	 = ' data-merge="' . htmlspecialchars( $merge, ENT_QUOTES, 'UTF-8' ) . '"';
+					if ( isset( $v['merge'] ) && $v['merge'] !== false ) {
+						$merge = is_array( $v['merge'] ) ? implode( '|', $v['merge'] ) : 'true';
+						$merge = ' data-merge="' . htmlspecialchars( $merge, ENT_QUOTES, 'UTF-8' ) . '"';
 					}
 
 					echo '<li class="redux-image-select">';
-					echo '<label class="' . $selected . ' redux-image-select' . $is_preset_class . $this->field[ 'id' ] . '_' . $x . '" for="' . $this->field[ 'id' ] . '_' . ( array_search( $k, array_keys( $this->field[ 'options' ] ) ) + 1 ) . '">';
+					echo '<label class="' . $selected . ' redux-image-select' . $is_preset_class . $this->field['id'] . '_' . $x . '" for="' . $this->field['id'] . '_' . ( array_search( $k, array_keys( $this->field['options'] ) ) + 1 ) . '">';
 
-					echo '<input type="radio" class="' . $this->field[ 'class' ] . '" id="' . $this->field[ 'id' ] . '_' . ( array_search( $k, array_keys( $this->field[ 'options' ] ) ) + 1 ) . '" name="' . $this->field[ 'name' ] . $this->field[ 'name_suffix' ] . '" value="' . $theValue . '" ' . checked( $this->value, $theValue, false ) . $presets . $merge . '/>';
-					if ( !empty( $this->field[ 'tiles' ] ) && $this->field[ 'tiles' ] == true ) {
-						echo '<span class="tiles ' . $v[ 'class' ] . '" style="background-image: url(' . $v[ 'img' ] . ');" rel="' . $v[ 'img' ] . '"">&nbsp;</span>';
+					echo '<input type="radio" class="' . $this->field['class'] . '" id="' . $this->field['id'] . '_' . ( array_search( $k, array_keys( $this->field['options'] ) ) + 1 ) . '" name="' . $this->field['name'] . $this->field['name_suffix'] . '" value="' . $theValue . '" ' . checked( $this->value, $theValue, false ) . $presets . $merge . '/>';
+					if ( ! empty( $this->field['tiles'] ) && $this->field['tiles'] == true ) {
+						echo '<span class="tiles ' . $v['class'] . '" style="background-image: url(' . $v['img'] . ');" rel="' . $v['img'] . '"">&nbsp;</span>';
 					} else {
-						echo '<img src="' . $v[ 'img' ] . '" alt="' . $v[ 'alt' ] . '" class="' . $v[ 'class' ] . '" style="' . $style . '"' . $presets . $merge . ' /><span class="bb-scheme-name">' . $v[ 'alt' ] . '</span>';
+						echo '<img src="' . $v['img'] . '" alt="' . $v['alt'] . '" class="' . $v['class'] . '" style="' . $style . '"' . $presets . $merge . ' /><span class="bb-scheme-name">' . $v['alt'] . '</span>';
 					}
 
-					if ( $v[ 'title' ] != '' ) {
-						echo '<br /><span>' . $v[ 'title' ] . '</span>';
+					if ( $v['title'] != '' ) {
+						echo '<br /><span>' . $v['title'] . '</span>';
 					}
 
 					echo '</label>';
@@ -220,22 +220,32 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 		 */
 		public function enqueue() {
 			wp_enqueue_script( 'redux-field-custom-image-select-js', $this->extension_url . 'field_custom_image_select.js', array( 'jquery', 'redux-js' ), time(), true );
+
+			wp_localize_script(
+				'redux-field-custom-image-select-js',
+				'REDUX_CUSTOM_IMAGE_ADMIN',
+				array(
+					'cover_notice'     => esc_html__( 'Changing cover image settings will reset the positioning of all existing cover photos.', 'buddyboss-theme' ),
+					'cover_btn_notice' => esc_html__( 'Okay', 'buddyboss-theme' ),
+				)
+			);
+
 			wp_enqueue_style( 'redux-field-custom-image-select-css', $this->extension_url . 'field_custom_image_select.css', array(), time(), 'all' );
 		}
 
 		public function getCSS( $mode = '' ) {
-			$css	 = '';
-			$value	 = $this->value;
+			$css   = '';
+			$value = $this->value;
 
 			$output = '';
-			if ( !empty( $value ) && !is_array( $value ) ) {
+			if ( ! empty( $value ) && ! is_array( $value ) ) {
 				switch ( $mode ) {
 					case 'background-image':
 						$output = "background-image: url('" . $value . "');";
 						break;
 
 					default:
-						$output = $mode . ": " . $value . ";";
+						$output = $mode . ': ' . $value . ';';
 				}
 			}
 
@@ -245,25 +255,25 @@ if ( !class_exists( 'ReduxFramework_custom_image_select' ) ) {
 		}
 
 		public function output() {
-			$mode = ( isset( $this->field[ 'mode' ] ) && !empty( $this->field[ 'mode' ] ) ? $this->field[ 'mode' ] : 'background-image' );
+			$mode = ( isset( $this->field['mode'] ) && ! empty( $this->field['mode'] ) ? $this->field['mode'] : 'background-image' );
 
-			if ( (!isset( $this->field[ 'output' ] ) || !is_array( $this->field[ 'output' ] ) ) && (!isset( $this->field[ 'compiler' ] ) ) ) {
+			if ( ( ! isset( $this->field['output'] ) || ! is_array( $this->field['output'] ) ) && ( ! isset( $this->field['compiler'] ) ) ) {
 				return;
 			}
 
 			$style = $this->getCSS( $mode );
 
-			if ( !empty( $style ) ) {
+			if ( ! empty( $style ) ) {
 
-				if ( !empty( $this->field[ 'output' ] ) && is_array( $this->field[ 'output' ] ) ) {
-					$keys	 = implode( ",", $this->field[ 'output' ] );
-					$style	 = $keys . "{" . $style . '}';
+				if ( ! empty( $this->field['output'] ) && is_array( $this->field['output'] ) ) {
+					$keys                     = implode( ',', $this->field['output'] );
+					$style                    = $keys . '{' . $style . '}';
 					$this->parent->outputCSS .= $style;
 				}
 
-				if ( !empty( $this->field[ 'compiler' ] ) && is_array( $this->field[ 'compiler' ] ) ) {
-					$keys	 = implode( ",", $this->field[ 'compiler' ] );
-					$style	 = $keys . "{" . $style . '}';
+				if ( ! empty( $this->field['compiler'] ) && is_array( $this->field['compiler'] ) ) {
+					$keys                       = implode( ',', $this->field['compiler'] );
+					$style                      = $keys . '{' . $style . '}';
 					$this->parent->compilerCSS .= $style;
 				}
 			}

@@ -19,7 +19,7 @@
         var parentElem = $( element ).parents( '.redux-main' );
 
         if ( parentElem.find( '.bb-confirm-dialog-wrapper.cover_image' ).length === 0 ) {
-            parentElem.append( '<div class="bb-confirm-dialog-wrapper cover_image"><div class="bb-confirm-dialog-overlay"></div><div class="bb-confirm-dialog">Changing Member Profiles / Social Groups setting will reset all members / groups cover photo position. <div class="bb-button-wrap"><button class="bb-confirm button button-primary" type="button" data-action="confirm">Okay</button></div></div></div>' );
+            parentElem.append( '<div class="bb-confirm-dialog-wrapper cover_image"><div class="bb-confirm-dialog-overlay"></div><div class="bb-confirm-dialog">' + REDUX_CUSTOM_IMAGE_ADMIN.cover_notice + '<div class="bb-button-wrap"><button class="bb-confirm button button-primary" type="button" data-action="confirm">' + REDUX_CUSTOM_IMAGE_ADMIN.cover_btn_notice + '</button></div></div></div>' );
         }
 
         $( document ).on( 'click', '.cover_image .bb-button-wrap .button', function () {
@@ -34,14 +34,16 @@
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
     var trackChange = function(element) {
-        var observer = new MutationObserver( function(mutations, observer) {
-            if(mutations[0].attributeName == "value") {
-                coverImageOptionChanged( element );
-            }
-        });
+      if ( undefined !== element ) {
+        var observer = new MutationObserver( function ( mutations, observer ) {
+          if ( mutations[0].attributeName == "value" ) {
+            coverImageOptionChanged( element );
+          }
+        } );
         observer.observe( element, {
-            attributes: true
-        });
+          attributes: true
+        } );
+      }
     }
     
     trackChange( $( '#buddyboss_theme_options-buddyboss_profile_cover_default > #buddyboss_theme_options_buddyboss_profile_cover_default_thumbnail' )[0] );
@@ -49,7 +51,9 @@
 
     $( document ).on( 'change', '#buddyboss_profile_cover_width-select, #buddyboss_profile_cover_height-select, #buddyboss_group_cover_width-select, #buddyboss_group_cover_height-select, #buddyboss_theme_options-buddyboss_profile_cover_default > #buddyboss_theme_options_buddyboss_profile_cover_default_thumbnail, #buddyboss_theme_options-buddyboss_group_cover_default > #buddyboss_theme_options_buddyboss_group_cover_default_thumbnail', function(){
 
-        coverImageOptionChanged($(this)[0]);
+        if( $(this).val() !== '' ) { // Do not show warning if value is empty
+            coverImageOptionChanged($(this)[0]);
+        }
 
     });
 

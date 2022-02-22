@@ -12,7 +12,7 @@ use BP_Search;
 
 if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
-	Class BuddyPressHelper {
+	class BuddyPressHelper {
 
 		protected $_is_active = false;
 
@@ -22,10 +22,21 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		public function __construct() {
 
 			// Avatar Sizes.
-			define( 'BP_AVATAR_THUMB_WIDTH', 150 );
-			define( 'BP_AVATAR_THUMB_HEIGHT', 150 );
-			define( 'BP_AVATAR_FULL_WIDTH', 300 );
-			define( 'BP_AVATAR_FULL_HEIGHT', 300 );
+			if ( ! defined( 'BP_AVATAR_THUMB_WIDTH' ) ) {
+				define( 'BP_AVATAR_THUMB_WIDTH', 150 );
+			}
+
+			if ( ! defined( 'BP_AVATAR_THUMB_HEIGHT' ) ) {
+				define( 'BP_AVATAR_THUMB_HEIGHT', 150 );
+			}
+
+			if ( ! defined( 'BP_AVATAR_FULL_WIDTH' ) ) {
+				define( 'BP_AVATAR_FULL_WIDTH', 300 );
+			}
+
+			if ( ! defined( 'BP_AVATAR_FULL_HEIGHT' ) ) {
+				define( 'BP_AVATAR_FULL_HEIGHT', 300 );
+			}
 
 			add_action( 'bp_init', array( $this, 'set_active' ) );
 		}
@@ -47,7 +58,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			add_filter( 'bp_before_has_message_threads_parse_args', array( $this, 'has_message_threads_parse_args' ), 10 );
 
 			add_filter( 'bp_search_js_settings', array( $this, 'filter_search_js_settings' ) );
-			add_filter( 'bp_search_results_group_start_html', array( $this, 'filter_bp_search_results_group_start_html', ), 10, 2 );
+			add_filter( 'bp_search_results_group_start_html', array( $this, 'filter_bp_search_results_group_start_html' ), 10, 2 );
 			add_action( 'bp_before_search_members_html', array( $this, 'action_before_search_member' ) );
 			add_action( 'bp_after_search_members_html', array( $this, 'action_after_search_member' ) );
 			add_action( 'bp_before_search_groups_html', array( $this, 'action_before_search_group' ) );
@@ -106,7 +117,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			global $wp_admin_bar;
 
 			/* Load the admin bar class code ready for instantiation */
-			require_once( ABSPATH . WPINC . '/class-wp-admin-bar.php' );
+			require_once ABSPATH . WPINC . '/class-wp-admin-bar.php';
 
 			/**
 			 * Filters the admin bar class to instantiate.
@@ -197,7 +208,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 					$member_count = $total - sizeof( $members );
 					?>
 					<span class="members">
-						<span class="members-count-g">+<?php echo esc_html( $member_count  ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
+						<span class="members-count-g">+<?php echo esc_html( $member_count ); ?></span> <?php printf( _n( 'member', 'members', $member_count, 'buddyboss-theme' ) ); ?>
 					</span>
 					<?php
 				}

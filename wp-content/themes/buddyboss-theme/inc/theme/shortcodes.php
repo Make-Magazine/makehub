@@ -44,5 +44,5 @@ if ( ! function_exists( 'bb_theme_current_year_display' ) ) {
 	}
 
 	add_shortcode( 'boss_current_year', 'bb_theme_current_year_display' );
-
+	add_shortcode( 'buddyboss_current_year', 'bb_theme_current_year_display' );
 }

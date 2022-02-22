@@ -162,11 +162,25 @@ jQuery(
 						reset_reply_form( $bbpress_forums_element, video_element_key, video );
 
 						var scrubberposts = $bbpress_forums_element.find( '.scrubberpost' );
-						
+
 						if ( scrubberposts.length ) {
 							for ( var k in scrubberposts ) {
-								if ( $( scrubberposts[k] ).hasClass( 'post-' + response.reply_id ) ) {
-									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k,10 ) + 1,'' );
+								if ( $( scrubberposts[ k ] ).hasClass( 'post-' + response.reply_id ) ) {
+
+									var scrubbers_obj, scrubber_key;
+									$( '.scrubber' ).each(
+										function ( i, scrubber ) {
+											scrubber_key = $( scrubber ).data( 'key' );
+
+											if ( typeof window.BuddyBossThemeBbpScrubber.scrubbers[ scrubber_key ] !== 'undefined' ) {
+												scrubbers_obj = window.BuddyBossThemeBbpScrubber.scrubbers[ scrubber_key ];
+												return false;
+											}
+										}
+									);
+									scrubbers_obj.total_item = parseInt( scrubbers_obj.total_item, 10 ) + 1;
+									scrubbers_obj.to = parseInt( scrubbers_obj.to, 10 ) + 1;
+									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, 'last', scrubber_key );
 									break;
 								}
 							}
@@ -497,7 +511,10 @@ jQuery(
 										cleanTags: ['meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav'],
 										unwrapTags: ['ul', 'ol', 'li']
 									},
-									imageDragging: false
+									imageDragging: false,
+									anchor: {
+										linkValidation: true
+									}
 								}
 							);
 

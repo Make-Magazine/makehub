@@ -9,6 +9,11 @@ if ( is_user_logged_in() ) {
 	if ( bp_is_active( 'xprofile' ) ) {
 		// Profile link.
 		$profile_link = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
+
+		$is_enable_profile_avatar = true;
+		if ( function_exists( 'bp_disable_group_avatar_uploads' ) && bp_disable_avatar_uploads() ) {
+			$is_enable_profile_avatar = false;
+		}
 		?>
 		<li id="wp-admin-bar-my-account-xprofile" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $profile_link ); ?>">
@@ -22,7 +27,7 @@ if ( is_user_logged_in() ) {
 					<li id="wp-admin-bar-my-account-xprofile-edit">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $profile_link . 'edit' ) ); ?>"><?php esc_html_e( 'Edit', 'buddyboss-theme' ); ?></a>
 					</li>
-					<?php if ( buddypress()->avatar->show_avatars ) { ?>
+					<?php if ( $is_enable_profile_avatar && buddypress()->avatar->show_avatars ) { ?>
 					<li id="wp-admin-bar-my-account-xprofile-change-avatar">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-theme' ); ?></a>
 					</li>
@@ -69,20 +74,20 @@ if ( is_user_logged_in() ) {
 						</a>
 					</li>
 					<?php if ( bp_is_active( 'moderation' ) && function_exists( 'bp_is_moderation_member_blocking_enable' ) && bp_is_moderation_member_blocking_enable() ) { ?>
-                        <li id="wp-admin-bar-my-account-settings-blocked-members">
-                            <a class="ab-item"
-                               href="<?php echo trailingslashit( $settings_link . 'blocked-members' ); ?>">
-                                <?php _e( 'Blocked Members', 'buddyboss-theme' ); ?>
-                            </a>
-                        </li>
+						<li id="wp-admin-bar-my-account-settings-blocked-members">
+							<a class="ab-item"
+							   href="<?php echo esc_url( trailingslashit( $settings_link . 'blocked-members' ) ); ?>">
+								<?php esc_html_e( 'Blocked Members', 'buddyboss-theme' ); ?>
+							</a>
+						</li>
 					<?php } ?>
-                    <?php if ( function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) {  ?>
-                        <li id="wp-admin-bar-my-account-settings-group-invites">
-                            <a class="ab-item" href="<?php echo trailingslashit( $settings_link . 'invites' ); ?>">
-			                    <?php _e( 'Group Invites', 'buddyboss-theme' ); ?>
-                            </a>
-                        </li>
-                    <?php } ?>
+					<?php if ( function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) { ?>
+						<li id="wp-admin-bar-my-account-settings-group-invites">
+							<a class="ab-item" href="<?php echo esc_url( trailingslashit( $settings_link . 'invites' ) ); ?>">
+								<?php esc_html_e( 'Group Invites', 'buddyboss-theme' ); ?>
+							</a>
+						</li>
+					<?php } ?>
 					<li id="wp-admin-bar-my-account-settings-export">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $settings_link . 'export/' ) ); ?>">
 							<?php esc_html_e( 'Export Data', 'buddyboss-theme' ); ?>
@@ -487,8 +492,8 @@ if ( is_user_logged_in() ) {
 	do_action( THEME_HOOK_PREFIX . 'after_bb_profile_menu' );
 
 	?>
-    <li class="logout-link">
-        <a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php echo esc_html_e( 'Log Out', 'buddyboss-theme' ); ?></a>
-    </li>
-    <?php
+	<li class="logout-link">
+		<a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php echo esc_html_e( 'Log Out', 'buddyboss-theme' ); ?></a>
+	</li>
+	<?php
 }

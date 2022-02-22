@@ -44,7 +44,7 @@ $course = $post;
             </div>
             <div class="bb-instructor-message">
                 <?php
-                if ( ( ( bp_is_active( 'messages' ) && function_exists('bp_force_friendship_to_message') && ! bp_force_friendship_to_message() ) ||
+                if ( bp_is_active( 'messages' ) && ( ( function_exists('bp_force_friendship_to_message') && ! bp_force_friendship_to_message() ) ||
                            ( function_exists('bp_force_friendship_to_message') && bp_force_friendship_to_message() && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $course->post_author ) ) ) && is_user_logged_in() && ( get_current_user_id() != get_the_author_meta( 'ID', $course->post_author ) ) ) { ?>
 					<a href="<?php echo apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( $course->post_author ) ) ); ?>" class="button small push-bottom"><i class="bb-icons bb-icon-chat"></i><?php _e( 'Message', 'buddyboss-theme' ); ?></a>
 				<?php } ?>
