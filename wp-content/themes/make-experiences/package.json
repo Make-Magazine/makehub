@@ -1,6 +1,6 @@
 {
    "name": "Make-Experiences",
-   "version": "1.0.703",
+   "version": "1.0.711",
    "author": "Make: Community",
    "license": "UNLICENSED",
    "private": true,
@@ -30,9 +30,13 @@
    },
    "dependencies": {
       "@fancyapps/fancybox": "^3.5.7",
+      "ansi-regex": "^6.0.1",
       "anymatch": "^3.1.2",
       "bootstrap": "^4.6.1",
+      "cliui": "^7.0.4",
+      "is-fullwidth-code-point": "^4.0.0",
       "jquery": "^3.6.0",
-      "sass": "^1.49.7"
+      "sass": "^1.49.7",
+      "strip-ansi": "^6.0.1"
    }
 }
