@@ -14,7 +14,7 @@
       "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
       "scss:fe:compile": "sass scss/style.scss css/style.min.css --style compressed",
       "js:fe:uglify": "uglifyjs js/site/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
-      "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/bootstrap-dialog/dist/js/bootstrap-dialog.min.js node_modules/jquery.cookie/jquery.cookie.js node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
+      "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
       "onchange:scss:fe": "onchange 'scss/*.scss' -- npm run scss:fe:compile",
       "onchange:js:fe": "onchange 'js/site/*.js' -- npm run js:fe:uglify",
       "onchange:js:libs": "onchange 'js/libs-src/*.js' -- npm run js:libs:uglify",
@@ -24,24 +24,15 @@
    },
    "devDependencies": {
       "npm-run-all": "^4.1.5",
-      "onchange": "^5.2.0",
-      "replace-in-file": "^3.4.4",
+      "onchange": "^7.1.0",
+      "replace-in-file": "^6.3.2",
       "uglify-js": "^3.15.1"
    },
    "dependencies": {
       "@fancyapps/fancybox": "^3.5.7",
-      "angular-animate": "^1.8.2",
-      "angular-filter": "^0.5.17",
-      "angular-route": "^1.8.2",
-      "angular-sanitize": "^1.8.2",
-      "angular-ui-bootstrap": "^2.5.6",
-      "angular-ui-grid": "^4.11.0",
-      "angular-utils-pagination": "^0.11.1",
+      "anymatch": "^3.1.2",
       "bootstrap": "^4.6.1",
-      "bootstrap-dialog": "^1.34.6",
-      "hammerjs": "^2.0.8",
       "jquery": "^3.6.0",
-      "jquery.cookie": "^1.4.1",
       "sass": "^1.49.7"
    }
 }

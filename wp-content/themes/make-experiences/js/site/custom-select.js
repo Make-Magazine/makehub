@@ -25,7 +25,7 @@ if ( jQuery( "#vimeography-galleries" ).length ) {
 		jQuery(".select-items").toggleClass("select-hide");
 		jQuery(this).toggleClass("select-arrow-active");
 	});
-	
+
 	function closeAllSelect(elmnt) {
 	  var x, y, i, arrNo = [];
 	  x = document.getElementsByClassName("select-items");
