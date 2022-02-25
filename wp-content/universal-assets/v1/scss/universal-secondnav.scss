@@ -27,6 +27,7 @@
                 align-items: center;
                 opacity: 1;
 				word-break: normal;
+				font-size: 16px;
                 &:hover, &:focus, &:active {
                     background: transparent;
                     opacity: .7;
@@ -76,7 +77,7 @@
             position: relative !important;
             transform: none !important;
             top: 0px;
-            li { 
+            li {
                 border: 0px;
                 &:hover {
                     background: #666;
