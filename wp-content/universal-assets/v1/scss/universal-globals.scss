@@ -16,9 +16,7 @@ body {
 		padding: 0px !important;
 	}
 }
-body > div {
-    font-size: 1rem; // undo genesis font sizing
-}
+
 .main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid {
     padding: 0px; // no awkward paddings on our bootstrap containers
 }
