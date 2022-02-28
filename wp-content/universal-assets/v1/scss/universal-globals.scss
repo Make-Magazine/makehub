@@ -16,6 +16,10 @@ body {
 		padding: 0px !important;
 	}
 }
+// no chrome outlines on focus for links or form elements
+:focus {
+    outline: none !important;
+}
 
 .main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid {
     padding: 0px; // no awkward paddings on our bootstrap containers
@@ -58,6 +62,11 @@ a { // don't let genesis molest our links
 			padding-left: 0px !important;
 			left: 0% !important;
 		}
+	}
+}
+.buddypanel {
+	[data-balloon][data-balloon-pos=right]:after {
+		margin-top: 15px;
 	}
 }
 
