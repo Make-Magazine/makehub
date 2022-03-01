@@ -12,7 +12,6 @@ window.addEventListener('load', function () {
     }
 
 	if (wpLoginRequired == true) {
-
 		var userProfile;
 		var webAuth = new auth0.WebAuth({
 			domain: AUTH0_CUSTOM_DOMAIN,
@@ -40,22 +39,6 @@ window.addEventListener('load', function () {
 				}
 		);
 
-		// if the auth0 plugin is not present, we need to hijack the login buttons ourselves
-		if (wpLoginRequired == false) {
-			jQuery("#LoginBtn").on('click', function (e) {
-				e.preventDefault();
-				// these can probably be removed if we're sticking to the same page
-				setCookie("login_referer", url, .05);
-				localStorage.setItem('redirect_to', url);
-				webAuth.authorize(); //login to auth0
-			});
-			jQuery("#LogoutBtn").on('click', function (e) {
-				e.preventDefault();
-				clearLocalStorage()
-				//redirect to auth0 logout page
-				window.location.href = 'https://login.make.co/v2/logout?returnTo=' + templateUrl + '&client_id=' + AUTH0_CLIENT_ID;
-			});
-		} else {
 			// otherwise we need a fool proof system to detect if the user is logged in
 			var loggedin = false;
 			var loggedin_data = {action: 'is_user_logged_in'};
@@ -64,7 +47,6 @@ window.addEventListener('load', function () {
 					loggedin = true;
 				}
 			});
-		}
 	}
 
   //place functions here so they can access the variables inside the event addEventListener
