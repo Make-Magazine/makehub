@@ -125,6 +125,20 @@ final class EE_System implements ResettableInterface
      */
     private $request_type;
 
+    /**
+     * @param EventEspresso\core\domain\services\custom_post_types\RegisterCustomPostTypes
+     */
+    private $register_custom_post_types;
+
+    /**
+     * @param EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomies
+     */
+    private $register_custom_taxonomies;
+
+    /**
+     * @param EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomyTerms
+     */
+    private $register_custom_taxonomy_terms;
 
     /**
      * @singleton method used to instantiate class object
@@ -227,6 +241,11 @@ final class EE_System implements ResettableInterface
             'AHEE__EE_Bootstrap__load_core_configuration',
             array($this, 'loadRouteMatchSpecifications')
         );
+        // load specifications for custom post types
+        add_action(
+            'AHEE__EE_Bootstrap__load_core_configuration',
+            array($this, 'loadCustomPostTypes')
+        );
         // load EE_Config, EE_Textdomain, etc
         add_action(
             'AHEE__EE_Bootstrap__register_shortcodes_modules_and_widgets',
@@ -305,7 +324,6 @@ final class EE_System implements ResettableInterface
         // set autoloaders for all of the classes implementing EEI_Plugin_API
         // which provide helpers for EE plugin authors to more easily register certain components with EE.
         EEH_Autoloader::instance()->register_autoloaders_for_each_file_in_folder(EE_LIBRARIES . 'plugin_api');
-        $this->loader->getShared('EE_Request_Handler');
     }
 
 
@@ -334,7 +352,7 @@ final class EE_System implements ResettableInterface
                 require_once ABSPATH . 'wp-admin/includes/plugin.php';
             }
             deactivate_plugins(plugin_basename(constant($plugin_file_constant)));
-            unset($_GET['activate'], $_REQUEST['activate'], $_GET['activate-multi'], $_REQUEST['activate-multi']);
+            $this->request->unSetRequestParams(['activate', 'activate-multi'], true);
             EE_Error::add_error(
                 sprintf(
                     esc_html__(
@@ -386,7 +404,8 @@ final class EE_System implements ResettableInterface
         // also, don't load the basic auth when a plugin is getting activated, because
         // it could be the basic auth plugin, and it doesn't check if its methods are already defined
         // and causes a fatal error
-        if (($this->request->isWordPressApi() || $this->request->isApi())
+        if (
+            ($this->request->isWordPressApi() || $this->request->isApi())
             && $this->request->getRequestParam('activate') !== 'true'
             && ! function_exists('json_basic_auth_handler')
             && ! function_exists('json_basic_auth_error')
@@ -571,7 +590,8 @@ final class EE_System implements ResettableInterface
         } else {
             EE_Data_Migration_Manager::instance()->enqueue_db_initialization_for('Core');
         }
-        if ($request_type === EE_System::req_type_new_activation
+        if (
+            $request_type === EE_System::req_type_new_activation
             || $request_type === EE_System::req_type_reactivation
             || (
                 $request_type === EE_System::req_type_upgrade
@@ -789,9 +809,11 @@ final class EE_System implements ResettableInterface
                     $times_activated = array($times_activated);
                 }
                 foreach ($times_activated as $an_activation) {
-                    if ($an_activation !== 'unknown-date'
+                    if (
+                        $an_activation !== 'unknown-date'
                         && $an_activation
-                           > $most_recently_active_version_activation) {
+                           > $most_recently_active_version_activation
+                    ) {
                         $most_recently_active_version = $version;
                         $most_recently_active_version_activation = $an_activation === 'unknown-date'
                             ? '1970-01-01 00:00:00'
@@ -813,7 +835,8 @@ final class EE_System implements ResettableInterface
     {
         $notices = EE_Error::get_notices(false);
         // if current user is an admin and it's not an ajax or rest request
-        if (! isset($notices['errors'])
+        if (
+            ! isset($notices['errors'])
             && $this->request->isAdmin()
             && apply_filters(
                 'FHEE__EE_System__redirect_to_about_ee__do_redirect',
@@ -952,6 +975,30 @@ final class EE_System implements ResettableInterface
 
 
     /**
+     * loading CPT related classes earlier so that their definitions are available
+     * but not performing any actual registration with WP core until load_CPTs_and_session() is called
+     *
+     * @since   4.10.21.p
+     */
+    public function loadCustomPostTypes()
+    {
+        $this->register_custom_taxonomies = $this->loader->getShared(
+            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomies'
+        );
+        $this->register_custom_post_types = $this->loader->getShared(
+            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomPostTypes'
+        );
+        $this->register_custom_taxonomy_terms = $this->loader->getShared(
+            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomyTerms'
+        );
+        // integrate WP_Query with the EE models
+        $this->loader->getShared('EE_CPT_Strategy');
+        // load legacy EE_Request_Handler in case add-ons still need it
+        $this->loader->getShared('EE_Request_Handler');
+    }
+
+
+    /**
      * register_shortcodes_modules_and_widgets
      * generate lists of shortcodes and modules, then verify paths and classes
      * This is hooked into 'AHEE__EE_Bootstrap__register_shortcodes_modules_and_widgets'
@@ -964,18 +1011,8 @@ final class EE_System implements ResettableInterface
     public function register_shortcodes_modules_and_widgets()
     {
         if ($this->request->isFrontend() || $this->request->isIframe() || $this->request->isAjax()) {
-            try {
-                // load, register, and add shortcodes the new way
-                $this->loader->getShared(
-                    'EventEspresso\core\services\shortcodes\ShortcodesManager',
-                    array(
-                        // and the old way, but we'll put it under control of the new system
-                        EE_Config::getLegacyShortcodesManager(),
-                    )
-                );
-            } catch (Exception $exception) {
-                new ExceptionStackTraceDisplay($exception);
-            }
+            // load, register, and add shortcodes the new way
+            $this->loader->getShared('EventEspresso\core\services\shortcodes\ShortcodesManager');
         }
         do_action('AHEE__EE_System__register_shortcodes_modules_and_widgets');
         // check for addons using old hook point
@@ -998,7 +1035,7 @@ final class EE_System implements ResettableInterface
             'AHEE__EE_System__register_shortcodes_modules_and_addons'
         );
         if (! empty($class_names)) {
-            $msg = __(
+            $msg = esc_html__(
                 'The following plugins, addons, or modules appear to be incompatible with this version of Event Espresso and were automatically deactivated to avoid fatal errors:',
                 'event_espresso'
             );
@@ -1012,7 +1049,7 @@ final class EE_System implements ResettableInterface
                         ) . '</b></li>';
             }
             $msg .= '</ul>';
-            $msg .= __(
+            $msg .= esc_html__(
                 'Compatibility issues can be avoided and/or resolved by keeping addons and plugins updated to the latest version.',
                 'event_espresso'
             );
@@ -1083,7 +1120,7 @@ final class EE_System implements ResettableInterface
             foreach ($active_plugins as $active_plugin) {
                 foreach ($incompatible_addons as $incompatible_addon) {
                     if (strpos($active_plugin, $incompatible_addon) !== false) {
-                        unset($_GET['activate']);
+                        $this->request->unSetRequestParams(['activate'], true);
                         espresso_deactivate_plugin($active_plugin);
                     }
                 }
@@ -1111,21 +1148,9 @@ final class EE_System implements ResettableInterface
     public function load_CPTs_and_session()
     {
         do_action('AHEE__EE_System__load_CPTs_and_session__start');
-        /** @var EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomies $register_custom_taxonomies */
-        $register_custom_taxonomies = $this->loader->getShared(
-            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomies'
-        );
-        $register_custom_taxonomies->registerCustomTaxonomies();
-        /** @var EventEspresso\core\domain\services\custom_post_types\RegisterCustomPostTypes $register_custom_post_types */
-        $register_custom_post_types = $this->loader->getShared(
-            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomPostTypes'
-        );
-        $register_custom_post_types->registerCustomPostTypes();
-        /** @var EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomyTerms $register_custom_taxonomy_terms */
-        $register_custom_taxonomy_terms = $this->loader->getShared(
-            'EventEspresso\core\domain\services\custom_post_types\RegisterCustomTaxonomyTerms'
-        );
-        $register_custom_taxonomy_terms->registerCustomTaxonomyTerms();
+        $this->register_custom_taxonomies->registerCustomTaxonomies();
+        $this->register_custom_post_types->registerCustomPostTypes();
+        $this->register_custom_taxonomy_terms->registerCustomTaxonomyTerms();
         // load legacy Custom Post Types and Taxonomies
         $this->loader->getShared('EE_Register_CPTs');
         do_action('AHEE__EE_System__load_CPTs_and_session__complete');
@@ -1145,7 +1170,8 @@ final class EE_System implements ResettableInterface
     {
         do_action('AHEE__EE_System__load_controllers__start');
         // let's get it started
-        if (! $this->maintenance_mode->level()
+        if (
+            ! $this->maintenance_mode->level()
             && ($this->request->isFrontend() || $this->request->isFrontAjax())
         ) {
             do_action('AHEE__EE_System__load_controllers__load_front_controllers');
@@ -1170,7 +1196,8 @@ final class EE_System implements ResettableInterface
      */
     public function core_loaded_and_ready()
     {
-        if ($this->request->isAdmin()
+        if (
+            $this->request->isAdmin()
             || $this->request->isFrontend()
             || $this->request->isIframe()
             || $this->request->isWordPressApi()
@@ -1187,14 +1214,13 @@ final class EE_System implements ResettableInterface
                 new ExceptionStackTraceDisplay($exception);
             }
         }
-        if ($this->request->isAdmin()
+        if (
+            $this->request->isAdmin()
             || $this->request->isEeAjax()
             || $this->request->isFrontend()
         ) {
             $this->loader->getShared('EE_Session');
         }
-        // integrate WP_Query with the EE models
-        $this->loader->getShared('EE_CPT_Strategy');
         do_action('AHEE__EE_System__core_loaded_and_ready');
         // always load template tags, because it's faster than checking if it's a front-end request, and many page
         // builders require these even on the front-end
@@ -1233,8 +1259,10 @@ final class EE_System implements ResettableInterface
         );
         $rewrite_rules->flushRewriteRules();
         add_action('admin_bar_init', array($this, 'addEspressoToolbar'));
-        if (($this->request->isAjax() || $this->request->isAdmin())
-            && $this->maintenance_mode->models_can_query()) {
+        if (
+            ($this->request->isAjax() || $this->request->isAdmin())
+            && $this->maintenance_mode->models_can_query()
+        ) {
             $this->loader->getShared('EventEspresso\core\services\privacy\export\PersonalDataExporterManager');
             $this->loader->getShared('EventEspresso\core\services\privacy\erasure\PersonalDataEraserManager');
         }

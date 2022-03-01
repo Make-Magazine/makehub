@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 5.8.3
-Version: 1.8.5
+Version: 1.8.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,12 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.8.6 =
+* Forums - Improved discussion labels logic to show group name when forum associated with the group
+* Forums - Removed discussion labels on a single forum and discussion screen
+* Forums - Show proper notification and button text on a forum and discussion screen for logged out users
+* Activity - Improved activity form upload media UI
 
 = 1.8.5 =
 * Groups - Fixed default avatar issue in messages and notifications screen when group avatar is disabled

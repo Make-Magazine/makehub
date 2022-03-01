@@ -22,7 +22,7 @@ class EE_PMT_Aim extends EE_PMT_Base
         $this->_setup_properties();
         parent::__construct($pm_instance);
     }
-    
+
     /**
      * Sets up payment method type properties for this gateway, which is normally
      * done in the constructor, but we want this to be easy for similar gateways to override
@@ -31,10 +31,10 @@ class EE_PMT_Aim extends EE_PMT_Base
      */
     protected function _setup_properties()
     {
-        require_once($this->file_folder().'EEG_Aim.gateway.php');
+        require_once($this->file_folder() . 'EEG_Aim.gateway.php');
         $this->_gateway = new EEG_Aim();
-        $this->_pretty_name = __("Authorize.net AIM", 'event_espresso');
-        $this->_default_description = __('Please provide the following billing information.', 'event_espresso');
+        $this->_pretty_name = esc_html__("Authorize.net AIM", 'event_espresso');
+        $this->_default_description = esc_html__('Please provide the following billing information.', 'event_espresso');
         $this->_requires_https = true;
     }
 
@@ -50,34 +50,34 @@ class EE_PMT_Aim extends EE_PMT_Base
     public function generate_new_billing_form(EE_Transaction $transaction = null)
     {
         $billing_form = new EE_Billing_Attendee_Info_Form($this->_pm_instance, array(
-            'name'=>'AIM_Form',
-            'subsections'=>array(
-                'credit_card'=>new EE_Credit_Card_Input(array(
-                    'required'=>true,
-                    'html_label_text' => __('Card Number', 'event_espresso')
+            'name' => 'AIM_Form',
+            'subsections' => array(
+                'credit_card' => new EE_Credit_Card_Input(array(
+                    'required' => true,
+                    'html_label_text' => esc_html__('Card Number', 'event_espresso')
                 )),
-                'exp_month'=>new EE_Credit_Card_Month_Input(true, array(
-                    'required'=>true,
-                    'html_label_text' => __('Expiry Month', 'event_espresso')
+                'exp_month' => new EE_Credit_Card_Month_Input(true, array(
+                    'required' => true,
+                    'html_label_text' => esc_html__('Expiry Month', 'event_espresso')
                 )),
-                'exp_year'=>new EE_Credit_Card_Year_Input(array(
-                    'required'=>true,
-                    'html_label_text' => __('Expiry Year', 'event_espresso')
+                'exp_year' => new EE_Credit_Card_Year_Input(array(
+                    'required' => true,
+                    'html_label_text' => esc_html__('Expiry Year', 'event_espresso')
                 )),
-                'cvv'=>new EE_CVV_Input(array(
-                    'required'=>true,
-                    'html_label_text' => __('CVV', 'event_espresso') )),
+                'cvv' => new EE_CVV_Input(array(
+                    'required' => true,
+                    'html_label_text' => esc_html__('CVV', 'event_espresso') )),
             )
         ));
         $billing_form->add_subsections(array(
             'company' => new EE_Text_Input(array(
-                'html_label_text' => __('Company', 'event_espresso')
+                'html_label_text' => esc_html__('Company', 'event_espresso')
             ))
         ), 'email', false);
         $billing_form->add_subsections(
             array(
                     'fax' => new EE_Text_Input(array(
-                        'html_label_text' => __('Fax', 'event_espresso')
+                        'html_label_text' => esc_html__('Fax', 'event_espresso')
                     ))
                 ),
             'phone',
@@ -118,7 +118,8 @@ class EE_PMT_Aim extends EE_PMT_Base
      */
     public function apply_billing_form_debug_settings(EE_Billing_Info_Form $billing_form)
     {
-        if ($this->_pm_instance->debug_mode()
+        if (
+            $this->_pm_instance->debug_mode()
             || $this->_pm_instance->get_extra_meta('test_transactions', true, false)
         ) {
             $billing_form->get_input('credit_card')->set_default('4007000000027');
@@ -133,7 +134,7 @@ class EE_PMT_Aim extends EE_PMT_Base
             $billing_form->add_subsections(
                 array(
                     'debug_content' => new EE_Form_Section_HTML_From_Template(
-                        __DIR__.'/templates/authorize_net_aim_debug_info.template.php'
+                        __DIR__ . '/templates/authorize_net_aim_debug_info.template.php'
                     )
                 ),
                 'first_name'
@@ -153,21 +154,21 @@ class EE_PMT_Aim extends EE_PMT_Base
         $billing_input_names = $this->billing_input_names();
         return new EE_Payment_Method_Form(
             array(
-                'extra_meta_inputs'=>array(
-                    'login_id'=>new EE_Text_Input(
+                'extra_meta_inputs' => array(
+                    'login_id' => new EE_Text_Input(
                         array(
-                            'html_label_text'=>  sprintf(__("Authorize.net API Login ID %s", "event_espresso"), $this->get_help_tab_link()),
+                            'html_label_text' =>  sprintf(esc_html__("Authorize.net API Login ID %s", "event_espresso"), $this->get_help_tab_link()),
                             'required' => true )
                     ),
-                    'transaction_key'=>new EE_Text_Input(
+                    'transaction_key' => new EE_Text_Input(
                         array(
-                            'html_label_text'=> sprintf(__("Authorize.net Transaction Key %s", "event_espresso"), $this->get_help_tab_link()),
+                            'html_label_text' => sprintf(esc_html__("Authorize.net Transaction Key %s", "event_espresso"), $this->get_help_tab_link()),
                             'required' => true )
                     ),
-                    'test_transactions'=>new EE_Yes_No_Input(
+                    'test_transactions' => new EE_Yes_No_Input(
                         array(
-                            'html_label_text'=>  sprintf(__("Send test transactions? %s", 'event_espresso'), $this->get_help_tab_link()),
-                            'html_help_text'=>  __("Send test transactions, even to live server", 'event_espresso'),
+                            'html_label_text' =>  sprintf(esc_html__("Send test transactions? %s", 'event_espresso'), $this->get_help_tab_link()),
+                            'html_help_text' =>  esc_html__("Send test transactions, even to live server", 'event_espresso'),
                             'default' => false,
                             'required' => true
                         )
@@ -175,7 +176,7 @@ class EE_PMT_Aim extends EE_PMT_Base
                     'excluded_billing_inputs' => new EE_Checkbox_Multi_Input(
                         $billing_input_names,
                         array(
-                        'html_label_text' => sprintf(__("Excluded Payment Form Fields %s", 'event_espresso'), $this->get_help_tab_link()),
+                        'html_label_text' => sprintf(esc_html__("Excluded Payment Form Fields %s", 'event_espresso'), $this->get_help_tab_link()),
                         'default' => array(
                             'company',
                             'fax',
@@ -185,19 +186,19 @@ class EE_PMT_Aim extends EE_PMT_Base
                     'required_billing_inputs' => new EE_Checkbox_Multi_Input(
                         $billing_input_names,
                         array(
-                            'html_label_text' => sprintf(__("Required Payment Form Fields %s", 'event_espresso'), $this->get_help_tab_link()),
+                            'html_label_text' => sprintf(esc_html__("Required Payment Form Fields %s", 'event_espresso'), $this->get_help_tab_link()),
                             'default' => array_diff(
                                 array_keys($billing_input_names),
                                 array( 'address2', 'phone', 'company', 'fax' )
                             ),
-                            'html_help_text' => __('Note: if fields are excluded they cannot be required.', 'event_espresso')
+                            'html_help_text' => esc_html__('Note: if fields are excluded they cannot be required.', 'event_espresso')
                         )
                     ),
                 )
             )
         );
     }
-    
+
     /**
      * Returns an array where keys are the slugs for billing inputs, and values
      * are their i18n names
@@ -206,22 +207,22 @@ class EE_PMT_Aim extends EE_PMT_Base
     public function billing_input_names()
     {
         return array(
-            'first_name' => __('First Name', 'event_espresso'),
-            'last_name' => __('Last Name', 'event_espresso'),
-            'email' => __('Email', 'event_espresso'),
-            'company' => __('Company', 'event_espresso'),
-            'address' => __('Address', 'event_espresso'),
-            'address2' => __('Address2', 'event_espresso'),
-            'city' => __('City', 'event_espresso'),
-            'state' => __('State', 'event_espresso'),
-            'country' => __('Country', 'event_espresso'),
-            'zip' =>  __('Zip', 'event_espresso'),
-            'phone' => __('Phone', 'event_espresso'),
-            'fax' => __('Fax', 'event_espresso'),
-            'cvv' => __('CVV', 'event_espresso')
+            'first_name' => esc_html__('First Name', 'event_espresso'),
+            'last_name' => esc_html__('Last Name', 'event_espresso'),
+            'email' => esc_html__('Email', 'event_espresso'),
+            'company' => esc_html__('Company', 'event_espresso'),
+            'address' => esc_html__('Address', 'event_espresso'),
+            'address2' => esc_html__('Address2', 'event_espresso'),
+            'city' => esc_html__('City', 'event_espresso'),
+            'state' => esc_html__('State', 'event_espresso'),
+            'country' => esc_html__('Country', 'event_espresso'),
+            'zip' =>  esc_html__('Zip', 'event_espresso'),
+            'phone' => esc_html__('Phone', 'event_espresso'),
+            'fax' => esc_html__('Fax', 'event_espresso'),
+            'cvv' => esc_html__('CVV', 'event_espresso')
         );
     }
-    
+
     /**
      * Overrides parent so we always have all billing inputs in the returned array,
      * not just the ones included at the time. This helps simplify the gateway code
@@ -252,7 +253,7 @@ class EE_PMT_Aim extends EE_PMT_Base
     {
         return array(
             $this->get_help_tab_name() => array(
-                'title' => __('Authorize.net AIM Settings', 'event_espresso'),
+                'title' => esc_html__('Authorize.net AIM Settings', 'event_espresso'),
                 'filename' => 'payment_methods_overview_aim'
             ),
         );

@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * EEM_CPT_Base
  * For shared functionality between models internally implemented
@@ -53,7 +52,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
      * format:
      * array(
      *        'status_name' => array(
-     *            'label' => __('Status Name', 'event_espresso'),
+     *            'label' => esc_html__('Status Name', 'event_espresso'),
      *            'public' => TRUE //whether a public status or not.
      *        )
      * )
@@ -88,7 +87,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['status'])) {
             $this->_fields[ $primary_table_name ]['status'] = new EE_WP_Post_Status_Field(
                 'post_status',
-                __("Event Status", "event_espresso"),
+                esc_html__("Event Status", "event_espresso"),
                 false,
                 'draft'
             );
@@ -96,7 +95,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['to_ping'])) {
             $this->_fields[ $primary_table_name ]['to_ping'] = new EE_DB_Only_Text_Field(
                 'to_ping',
-                __('To Ping', 'event_espresso'),
+                esc_html__('To Ping', 'event_espresso'),
                 false,
                 ''
             );
@@ -104,7 +103,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['pinged'])) {
             $this->_fields[ $primary_table_name ]['pinged'] = new EE_DB_Only_Text_Field(
                 'pinged',
-                __('Pinged', 'event_espresso'),
+                esc_html__('Pinged', 'event_espresso'),
                 false,
                 ''
             );
@@ -112,7 +111,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['comment_status'])) {
             $this->_fields[ $primary_table_name ]['comment_status'] = new EE_Plain_Text_Field(
                 'comment_status',
-                __('Comment Status', 'event_espresso'),
+                esc_html__('Comment Status', 'event_espresso'),
                 false,
                 'open'
             );
@@ -120,7 +119,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['ping_status'])) {
             $this->_fields[ $primary_table_name ]['ping_status'] = new EE_Plain_Text_Field(
                 'ping_status',
-                __('Ping Status', 'event_espresso'),
+                esc_html__('Ping Status', 'event_espresso'),
                 false,
                 'open'
             );
@@ -128,7 +127,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if (! isset($this->_fields[ $primary_table_name ]['post_content_filtered'])) {
             $this->_fields[ $primary_table_name ]['post_content_filtered'] = new EE_DB_Only_Text_Field(
                 'post_content_filtered',
-                __('Post Content Filtered', 'event_espresso'),
+                esc_html__('Post Content Filtered', 'event_espresso'),
                 false,
                 ''
             );
@@ -171,7 +170,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
     {
         throw new EE_Error(
             sprintf(
-                __(
+                esc_html__(
                     "EEM_CPT_Base should nto call deleted_field_name! It should instead use post_status_field_name",
                     "event_espresso"
                 )
@@ -194,7 +193,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         } else {
             throw new EE_Error(
                 sprintf(
-                    __(
+                    esc_html__(
                         'We are trying to find the post status flag field on %s, but none was found. Are you sure there is a field of type EE_Trashed_Flag_Field in %s constructor?',
                         'event_espresso'
                     ),
@@ -476,7 +475,8 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         foreach ($this->_get_other_tables() as $table_obj) {
             $fields_for_that_table = $this->_get_fields_for_table($table_obj->get_table_alias());
             foreach ($fields_for_that_table as $field_obj) {
-                if (! isset($post[ $field_obj->get_table_column() ])
+                if (
+                    ! isset($post[ $field_obj->get_table_column() ])
                     && ! isset($post[ $field_obj->get_qualified_column() ])
                 ) {
                     $has_all_necessary_fields_for_table = false;
@@ -507,7 +507,8 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         foreach ($this->get_tables() as $table_obj) {
             $fields_for_that_table = $this->_get_fields_for_table($table_obj->get_table_alias());
             foreach ($fields_for_that_table as $field_obj) {
-                if (! isset($post[ $field_obj->get_table_column() ])
+                if (
+                    ! isset($post[ $field_obj->get_table_column() ])
                     && ! isset($post[ $field_obj->get_qualified_column() ])
                 ) {
                     $tables_needing_to_be_queried[ $table_obj->get_table_alias() ] = $table_obj;
@@ -516,7 +517,8 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         }
         // if we don't have all the fields we need, then just fetch the proper model from the DB
         if ($tables_needing_to_be_queried) {
-            if (count($tables_needing_to_be_queried) == 1
+            if (
+                count($tables_needing_to_be_queried) == 1
                 && reset($tables_needing_to_be_queried)
                    instanceof
                    EE_Secondary_Table
@@ -564,7 +566,7 @@ abstract class EEM_CPT_Base extends EEM_Soft_Delete_Base
         if ($post_type_field == null) {
             throw new EE_Error(
                 sprintf(
-                    __(
+                    esc_html__(
                         "CPT Model %s should have a field of type EE_WP_Post_Type, but doesnt",
                         "event_espresso"
                     ),

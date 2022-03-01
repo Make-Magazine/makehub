@@ -7137,6 +7137,19 @@ body.activity-permalink .activity-comments > ul {
   color: inherit;
 }
 
+.activity-form:not(.focus-in) .medium-editor-element,
+.activity-form:not(.focus-in) .medium-editor-placeholder {
+  background-color: transparent;
+}
+.activity-form:not(.focus-in) .whats-new-form-header {
+  border-radius: 4px 4px 0 0;
+  -webkit-transition: background-color 0.5s;
+          transition: background-color 0.5s;
+}
+.activity-form:not(.focus-in):hover .whats-new-form-header {
+  background-color: #FBFBFC;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity.buddypress .bp-single-vert-nav .item-body {
     overflow: inherit;
@@ -9140,6 +9153,27 @@ p.activity-date {
 }
 .activity-anonymous-options label input {
   margin-right: 5px;
+}
+
+.dropzone.media-dropzone .dz-preview.dz-error .dz-image,
+.dropzone.video-dropzone .dz-preview.dz-error.dz-preview .dz-details,
+.dropzone.document-dropzone .dz-preview.dz-error.dz-preview .dz-details {
+  border-color: #EF3E46;
+}
+
+.dropzone .dz-preview .dz-error-message:after {
+  border-bottom-color: #EF3E46;
+}
+
+.dropzone .dz-preview.dz-error .dz-error-title {
+  color: #EF3E46;
+}
+
+.dropzone .dz-preview .dz-error-message {
+  background: #EF3E46;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EF3E46), to(#EF3E46));
+  background: -webkit-linear-gradient(top, #EF3E46, #EF3E46);
+  background: linear-gradient(to bottom, #EF3E46, #EF3E46);
 }
 
 @media only screen and (min-width: 1081px) {
@@ -13740,6 +13774,9 @@ ul#group-admins li .avatar {
   padding-right: 10px;
 }
 .groups h3.bbp-topic-title {
+  display: none;
+}
+.groups .bs-single-forum-list .bs-header-item .bs-forums-meta {
   display: none;
 }
 .groups #bbpress-forums {

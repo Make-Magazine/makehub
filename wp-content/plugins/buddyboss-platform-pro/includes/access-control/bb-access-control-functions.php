@@ -188,21 +188,21 @@ function bb_access_control_upload_photos_settings() {
  * @return array upload videos settings data.
  */
 function bb_access_control_upload_videos_settings() {
-    $default = array(
-        'access-control-type'           => '',
-        'plugin-access-control-type'    => '',
-        'gamipress-access-control-type' => '',
-        'access-control-options'        => array(),
-    );
+	$default = array(
+		'access-control-type'           => '',
+		'plugin-access-control-type'    => '',
+		'gamipress-access-control-type' => '',
+		'access-control-options'        => array(),
+	);
 
-    $access_control_data = bp_get_option( bb_access_control_upload_video_key(), $default );
+	$access_control_data = bp_get_option( bb_access_control_upload_video_key(), $default );
 
-    /**
-     * Filter which will return the videos settings.
-     *
-     * @since 1.1.4
-     */
-    return apply_filters( 'bb_access_control_upload_videos_settings', $access_control_data );
+	/**
+	 * Filter which will return the videos settings.
+	 *
+	 * @since 1.1.4
+	 */
+	return apply_filters( 'bb_access_control_upload_videos_settings', $access_control_data );
 }
 
 /**
@@ -349,12 +349,12 @@ function bb_access_control_upload_media_key() {
  */
 function bb_access_control_upload_video_key() {
 
-    /**
-     * Filter which will return the key for the upload video access control settings.
-     *
-     * @since 1.1.4
-     */
-    return apply_filters( 'bb_access_control_upload_video_key', 'bb-access-control-upload-video' );
+	/**
+	 * Filter which will return the key for the upload video access control settings.
+	 *
+	 * @since 1.1.4
+	 */
+	return apply_filters( 'bb_access_control_upload_video_key', 'bb-access-control-upload-video' );
 }
 
 /**

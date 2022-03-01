@@ -101,7 +101,7 @@ class CFF_Blocks {
 		);
 
 		if ( ! empty( $_GET['cff_wizard'] ) ) {
-			$shortcodeSettings = 'feed="' . (int)$_GET['cff_wizard'] . '"';
+			$shortcodeSettings = 'feed="' . (int)sanitize_text_field( wp_unslash( $_GET['cff_wizard'] ) ) . '"';
 		}
 
 		wp_localize_script(

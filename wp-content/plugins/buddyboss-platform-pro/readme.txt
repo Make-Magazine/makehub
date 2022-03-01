@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 5.6.20
-Stable tag: 1.1.7
+Stable tag: 1.1.9.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,15 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.9.1 =
+* Member Access Controls - Fixed member profile header showing string 'array' issue
+
+= 1.1.9 =
+* Zoom - Fixed Gutenberg block issues on adding existing webinar
+
+= 1.1.8 =
+* Zoom - Fixed create meeting/webinar password validation issue when it doesn't match requirements from Zoom settings
 
 = 1.1.7 =
 * Zoom - Added support to Send emails in Batches in the Background to Group members for Meeting and Webinar notifications

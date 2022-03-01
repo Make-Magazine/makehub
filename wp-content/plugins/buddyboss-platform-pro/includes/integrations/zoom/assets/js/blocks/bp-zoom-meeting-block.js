@@ -2105,7 +2105,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 					if ( !isUndefined( webinar.password ) ) {
 						setPassword( webinar.password );
 					}
-					if ( !isUndefined( webinar.type ) && [ 5, 9 ].includes( webinar.type ) ) {
+					if ( !isUndefined( webinar.type ) && [ 6, 9 ].includes( webinar.type ) ) {
 						setRecurring( true );
 					} else {
 						setRecurring( false );
@@ -2460,7 +2460,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 													webinar_data['bp-zoom-webinar-repeat-interval'] = repeat_interval;
 													webinar_data['bp-zoom-webinar-type'] = 9;
 												} else {
-													webinar_data['bp-zoom-webinar-type'] = 5;
+													webinar_data['bp-zoom-webinar-type'] = 6;
 												}
 											}
 
@@ -2485,6 +2485,10 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 
 											if ( authentication ) {
 												webinar_data['bp-zoom-webinar-authentication'] = 1;
+											}
+
+											if ( practiceSession ) {
+												webinar_data['bp-zoom-webinar-practice-session'] = 1;
 											}
 
 											wp.ajax.send( 'zoom_webinar_block_add', {

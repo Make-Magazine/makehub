@@ -18,11 +18,12 @@ abstract class EE_Field_With_Model_Name extends EE_Model_Field_Base
 
     /**
      * @param string  $table_column  name fo column for field
-     * @param string  $nicename      should eb internationalized with __('blah','event_espresso')
+     * @param string  $nicename      should eb internationalized with esc_html__('blah','event_espresso')
      * @param boolean $nullable
      * @param mixed   $default_value if this is a integer field, it shoudl be an int. if it's a string field, it shoul
      *                               dbe a string
-     * @param string  $model_name    eg 'Event','Answer','Term', etc. Basically its the model class's name without the
+     * @param string|string[]  $model_name    eg 'Event','Answer','Term', etc. Basically its the model class's name
+     *                               without the
      *                               "EEM_"
      */
     public function __construct($table_column, $nicename, $nullable, $default_value, $model_name)
@@ -41,7 +42,7 @@ abstract class EE_Field_With_Model_Name extends EE_Model_Field_Base
     {
         EE_Error::doing_it_wrong(
             'get_model_name_pointed_to',
-            __(
+            esc_html__(
                 'This method has been deprecated in favour of instead using get_model_names_pointed_to, which consistently returns an array',
                 'event_espresso'
             ),

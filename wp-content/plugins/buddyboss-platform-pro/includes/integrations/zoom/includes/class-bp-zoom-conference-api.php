@@ -108,10 +108,12 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response      = wp_remote_retrieve_body( $response );
+			$response_body = in_array( $response_code, array( 400, 401 ), true ) ? simplexml_load_string( $response ) : json_decode( $response );
 
 			return array(
 				'response' => json_decode( $response ),
 				'code'     => $response_code,
+				'body'     => $response_body,
 			);
 		}
 

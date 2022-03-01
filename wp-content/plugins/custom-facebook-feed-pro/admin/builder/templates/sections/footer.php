@@ -22,7 +22,7 @@
 		$smashballoon_info = CustomFacebookFeed\Builder\CFF_Feed_Builder::get_smashballoon_info();
 	?>
 	<div class="cff-stck-pop">
-		
+
 		<div class="cff-stck-el cff-stck-el-upgrd cff-fb-fs sb-btn-orange">
 			<div class="cff-stck-el-icon"><?php echo $icons[$smashballoon_info['upgrade']['icon']] ?></div>
 			<div class="cff-stck-el-txt sb-small-p sb-bold" style="color: #fff;"><?php echo __('Get All Access Bundle','custom-facebook-feed') ?></div>
@@ -35,7 +35,7 @@
 		</div>
 
 		<div class="cff-stck-title cff-fb-fs sb-small-p sb-bold sb-dark-text"><?php echo __('Our Feeds for other platforms','custom-facebook-feed') ?></div>
-	
+
 		<div class="cff-stck-el-list cff-fb-fs">
 			<?php foreach ($smashballoon_info['platforms'] as $platform): ?>
 				<div class="cff-stck-el cff-fb-fs">
@@ -70,6 +70,7 @@
 <?php
 	include_once CFF_BUILDER_DIR . 'templates/sections/popup/add-source-popup.php';
 	include_once CFF_BUILDER_DIR . 'templates/sections/popup/extensions-popup.php';
+	include_once CFF_BUILDER_DIR . 'templates/sections/popup/feedtemplates-popup.php';
 	include_once CFF_BUILDER_DIR . 'templates/sections/popup/feedtypes-popup.php';
 	include_once CFF_BUILDER_DIR . 'templates/sections/popup/embed-popup.php';
 	include_once CFF_BUILDER_DIR . 'templates/sections/popup/confirm-dialog-popup.php';
@@ -100,6 +101,7 @@
 :selected-feed="selectedFeed"
 :svg-icons="svgIcons"
 :links="links"
+ref="addSourceRef"
 >
 </sb-add-source-component>
 

@@ -1,4 +1,5 @@
 <?php
+
 use EventEspresso\core\services\loaders\Loader;
 use EventEspresso\core\services\orm\ModelFieldFactory;
 
@@ -202,7 +203,7 @@ class EEM_Attendee extends EEM_CPT_Base
                 ),
                 'password' => new EE_Password_Field(
                     'post_password',
-                    __('Password', 'event_espresso'),
+                    esc_html__('Password', 'event_espresso'),
                     false,
                     '',
                     array(

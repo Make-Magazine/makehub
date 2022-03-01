@@ -37,9 +37,6 @@
         <div class="cff-tab-form-field">
             <div class="sb-form-field">
                 <div class="mb-10 caching-form-fields-group">
-                    <select id="cff-caching-options" class="cff-select size-sm mr-3" v-model="model.feeds.cachingType">
-                        <option value="background">{{feedsTab.cachingBox.inTheBackground}}</option>
-                    </select>
                     <select id="cff-caching-intervals" class="cff-select size-sm mr-3" v-model="model.feeds.cronInterval">
                         <option v-for="(name, key) in feedsTab.cachingBox.inTheBackgroundOptions" :value="key">{{name}}</option>
                     </select>

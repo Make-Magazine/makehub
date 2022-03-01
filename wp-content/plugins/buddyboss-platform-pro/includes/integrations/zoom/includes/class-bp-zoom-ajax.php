@@ -551,6 +551,11 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 				$zoom_meeting = bp_zoom_conference()->create_meeting( $data );
 			}
 
+			if ( ! empty( $zoom_meeting['body'] ) && ! empty( $zoom_meeting['body']->errors ) && ! empty( $zoom_meeting['body']->errors->message ) ) {
+				$response_error = array( 'error' => (string) $zoom_meeting['body']->errors->message );
+				wp_send_json_error( $response_error );
+			}
+
 			if ( ! empty( $zoom_meeting['code'] ) && in_array( $zoom_meeting['code'], array( 300, 400, 404 ), true ) ) {
 				$response_error = array( 'error' => __( 'Something went wrong. If passcode is entered then please make sure it matches Zoom Passcode requirements and try again.', 'buddyboss-pro' ) );
 

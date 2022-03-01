@@ -66,6 +66,8 @@ var settings_data = {
     uploadStatus: null,
     clearCacheStatus: null,
     optimizeCacheStatus: null,
+    clearErrorLogStatus: null,
+    dpaResetStatus: null,
     pressedBtnName: null,
     loading: false,
     hasError: cff_settings.hasError,
@@ -78,7 +80,7 @@ var settings_data = {
     sourceToDelete : {},
     viewsActive : {
         sourcePopup : false,
-        sourcePopupScreen : 'step_1',
+        sourcePopupScreen : 'redirect_1',
         sourcePopupType : 'creation',
         instanceSourceActive : null,
     },
@@ -611,6 +613,62 @@ var cffSettings = new Vue({
                 }.bind(this), 3000);
             });
         },
+        resetErrorLog: function() {
+            this.clearErrorLogStatus = 'loading';
+            let data = new FormData();
+            data.append( 'action', 'cff_clear_error_log' );
+            data.append( 'nonce', this.nonce );
+            fetch(this.ajaxHandler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if ( ! data.success ) {
+                    this.clearErrorLogStatus = 'error';
+                    return;
+                }
+                this.clearErrorLogStatus = 'success';
+                setTimeout(function() {
+                    this.clearErrorLogStatus = null;
+                }.bind(this), 3000);
+            });
+        },
+        dpaReset: function() {
+            this.dpaResetStatus = 'loading';
+            let data = new FormData();
+            data.append( 'action', 'cff_dpa_reset' );
+            data.append( 'nonce', this.nonce );
+            fetch(this.ajaxHandler, {
+                method: "POST",
+                credentials: 'same-origin',
+                body: data
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if ( data.success == false ) {
+                        this.dpaResetStatus = 'error';
+                        return;
+                    }
+                    this.dpaResetStatus = 'success';
+                    setTimeout(function() {
+                        this.dpaResetStatus = null;
+                    }.bind(this), 3000);
+                });
+        },
+         dpaResetStatusIcon: function() {
+            if ( this.dpaResetStatus === null ) {
+                return;
+            }
+            if ( this.dpaResetStatus == 'loading' ) {
+                return this.loaderSVG;
+            } else if ( this.dpaResetStatus == 'success' ) {
+                return this.checkmarkSVG;
+            } else if ( this.dpaResetStatus == 'error' ) {
+                return `<i class="fa fa-times-circle"></i>`;
+            }
+        },
         saveChangesIcon: function() {
             if ( this.btnStatus == 'loading' ) {
                 return this.loaderSVG;
@@ -653,6 +711,18 @@ var cffSettings = new Vue({
             } else if ( this.optimizeCacheStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.optimizeCacheStatus == 'error' ) {
+                return `<i class="fa fa-times-circle"></i>`;
+            }
+        },
+        resetErrorLogIcon: function() {
+            if ( this.clearErrorLogStatus === null ) {
+                return;
+            }
+            if ( this.clearErrorLogStatus == 'loading' ) {
+                return this.loaderSVG;
+            } else if ( this.clearErrorLogStatus == 'success' ) {
+                return this.checkmarkSVG;
+            } else if ( this.clearErrorLogStatus == 'error' ) {
                 return `<i class="fa fa-times-circle"></i>`;
             }
         },
@@ -714,6 +784,12 @@ var cffSettings = new Vue({
         activateView : function(viewName, sourcePopupType = 'creation', ajaxAction = false){
             var self = this;
             self.viewsActive[viewName] = (self.viewsActive[viewName] == false ) ? true : false;
+             if(viewName == 'sourcePopup' && sourcePopupType == 'creationRedirect'){
+                self.viewsActive.sourcePopupScreen = 'redirect_1';
+                setTimeout(function(){
+                    self.$refs.addSourceRef.processFBConnect()
+                },3500);
+            }
         },
 
         /**

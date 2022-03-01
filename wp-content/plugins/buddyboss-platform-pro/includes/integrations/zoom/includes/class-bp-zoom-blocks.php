@@ -630,6 +630,11 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				$zoom_meeting = bp_zoom_conference()->create_meeting( $data );
 			}
 
+			if ( ! empty( $zoom_meeting['body'] ) && ! empty( $zoom_meeting['body']->errors ) && ! empty( $zoom_meeting['body']->errors->message ) ) {
+				$response_error = array( 'error' => (string) $zoom_meeting['body']->errors->message );
+				wp_send_json_error( $response_error );
+			}
+
 			if ( ! empty( $zoom_meeting['code'] ) && in_array( $zoom_meeting['code'], array( 201, 204 ), true ) ) {
 				if ( ! empty( $zoom_meeting['response'] ) && null !== $zoom_meeting['response'] ) {
 					delete_transient( 'bp_zoom_meeting_block_' . $zoom_meeting['response']->id );
@@ -1116,6 +1121,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				'alternative_host_ids'   => $alternative_host_ids,
 				'title'                  => $title,
 				'description'            => $description,
+				'type'                   => $type,
 			);
 
 			$recurrence_obj = array();
@@ -1169,7 +1175,6 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 				$recurrence_obj['repeat_interval'] = $repeat_interval;
 
-				$data['type']              = $type;
 				$data['recurrence']        = $recurrence_obj;
 				$data['registration_type'] = $registration_type;
 			}

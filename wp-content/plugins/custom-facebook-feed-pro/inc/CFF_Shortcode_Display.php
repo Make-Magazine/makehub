@@ -24,6 +24,8 @@ class CFF_Shortcode_Display {
 	 * @since 3.18
 	 */
 	public function display_cff( $feed_options ) {
+		do_action( 'cff_before_display_facebook' );
+
 		$original_atts 					= (array)$feed_options;
     	$data_att_html 					= $this->cff_get_shortcode_data_attribute_html( $feed_options );
     	if( isset($feed_options['accesstoken']) ) $feed_options['ownaccesstoken'] = 'on';
@@ -194,7 +196,7 @@ class CFF_Shortcode_Display {
 	        $masonry = false;
 	    }
 	    if( $masonry || $masonry == 'true' ) {
-	        $this->feed_options['headeroutside'] = true;
+	        #$this->feed_options['headeroutside'] = true;
 
 	        // Carousel feeds are incompatible with the columns setting for the main plugin
 	        $this->feed_options['columnscompatible'] = false;
@@ -207,11 +209,7 @@ class CFF_Shortcode_Display {
 		$colsmobile = (int)$this->feed_options['colsmobile'];
 
 		if ( $this->feed_options['feedlayout'] === 'masonry' ) {
-			if ( $cols > 1
-			     || $colstablet > 1
-			     || $colsmobile > 1) {
-				$masonry = true;
-			}
+			$masonry = true;
         }
 
 
@@ -249,12 +247,11 @@ class CFF_Shortcode_Display {
 	    //If there are more than one page id then use the first one
 	    $like_box_page_id = explode(",", str_replace(' ', '', $this->feed_options['id']) );
 	    $cff_like_box_position = $this->feed_options[ 'likeboxpos' ];
-	    $cff_like_box_outside = $this->feed_options[ 'likeboxoutside' ];
+	    $cff_like_box_outside = CFF_Utils::check_if_on($this->feed_options[ 'likeboxoutside' ]);
 	    $cff_likebox_bg_color = $this->feed_options[ 'likeboxcolor' ];
 	    $cff_like_box_text_color = $this->feed_options[ 'likeboxtextcolor' ];
 	    $cff_like_box_colorscheme = 'light';
 	    if ($cff_like_box_text_color == 'white') $cff_like_box_colorscheme = 'dark';
-
 
 	    $cff_locale = $this->feed_options[ 'locale' ];
 	    if ( empty($cff_locale) || !isset($cff_locale) || $cff_locale == '' ) $cff_locale = 'en_US';
@@ -423,7 +420,9 @@ class CFF_Shortcode_Display {
 
 	    //Timeline pagination method
 	    $cff_timeline_pag = $this->feed_options['timelinepag'];
-	    if( $cff_timeline_pag == 'paging' ) $cff_content .= ' data-timeline-pag="true"';
+	    if( $cff_timeline_pag == 'paging' || ( $this->feed_options['feedtype'] == 'events' && CFF_Utils::check_if_on( $this->feed_options['pastevents'] )) ) {
+	    	$cff_content .= ' data-timeline-pag="true"';
+	    }
 
 	    //Using own token - pass to connect.php
 	    if( $this->feed_options['ownaccesstoken'] ) $cff_content .= ' data-own-token="true"';
@@ -548,7 +547,13 @@ class CFF_Shortcode_Display {
 	    //Don't show the load more button or credit link if there's an error
 	    ( !empty($cff_error_notice) && strpos($cff_error_notice, 'cff-warning-notice') == false ) ? $cff_is_error = true : $cff_is_error = false;
 
+	    $translations = get_option( 'cff_style_settings', false );
+		$atts['nomoretext'] = isset( $translations[ 'cff_no_more_posts_text' ] ) ? stripslashes( esc_attr( $translations[ 'cff_no_more_posts_text' ] ) ) : __( 'No more posts', 'custom-facebook-feed' );
+
+
 	    if( !$cff_is_error ){
+
+	        if ($cff_like_box_position == 'bottom' && $cff_show_like_box && !$cff_like_box_outside) $cff_content .= $like_box;
 
 	        //If the load more is enabled and the number of posts is not set to be zero then show the load more button
 	        if( $cff_load_more && $pag_num > 0 ){
@@ -557,11 +562,9 @@ class CFF_Shortcode_Display {
 	        }
 
 	        //Add the Like Box inside
-	        if ($cff_like_box_position == 'bottom' && $cff_show_like_box && !$cff_like_box_outside) $cff_content .= $like_box;
-	        	$cff_posttext_link_color = str_replace('#', '', $this->feed_options['textlinkcolor'] );
+	        	$cff_posttext_link_style = $this->get_style_attribute ('text_link');
 	    		$cff_content .= CFF_Utils::print_template_part( 'credit', get_defined_vars());
 	    } // !$cff_is_error
-
 
 	    //End the feed
 	    $cff_content .= '</div>';
@@ -720,7 +723,7 @@ class CFF_Shortcode_Display {
 		$output .= '<ul style="word-break: break-all;">';
 
 		$output .= '<li>Optimize Images: ';
-        $output .= isset( $cff_options[ 'cff_disable_resize' ] ) && $cff_options[ 'cff_disable_resize' ] == 'on' ? 'Enabled' : 'Disabled';
+        $output .= isset( $cff_options[ 'cff_disable_resize' ] ) && $cff_options[ 'cff_disable_resize' ] == false ? 'Enabled' : 'Disabled';
         $output .= "</li>";
         $output .= "</li>";
         $output .= '<li>AJAX theme loading fix: ';
@@ -739,12 +742,29 @@ class CFF_Shortcode_Display {
 
 		$output .= '<p>Feed Options</p>';
 		$public_settings_keys = CFF_Shortcode_Display::get_public_db_settings_keys();
+		$elements_array = [
+			'author',
+			'text',
+			'date',
+			'media',
+			'social',
+			'eventtitle',
+			'eventdetails',
+			'date',
+			'link',
+			'sharedlinks'
+		];
 
 		$output .= '<ul style="word-break: break-all;">';
 		foreach( $feed_options as $key => $option ) {
-			if ( is_array( $option ) ) continue;
-			if ( in_array( $key, $public_settings_keys, true ) ) {
-				$output .= sprintf('<li>%s: %s</li>', esc_html( $key ), esc_html( $option ) );
+			if( $key == 'exclude' ){
+				$exclude_array = array_diff( $elements_array , explode( ',' , $feed_options['include'] ) );
+				$output .= sprintf('<li>%s: %s</li>', esc_html( $key ), esc_html( implode(',', $exclude_array) ) );
+			}else{
+				if ( is_array( $option ) ) continue;
+				if ( in_array( $key, $public_settings_keys, true ) ) {
+					$output .= sprintf('<li>%s: %s</li>', esc_html( $key ), esc_html( $option ) );
+				}
 			}
 		}
 		$output .= '</ul>';
@@ -1051,7 +1071,7 @@ class CFF_Shortcode_Display {
 	public function style_compiler( $style_array ){
 		$style = '';
 		foreach ($style_array as $single_style) {
-			if( !empty($single_style['value']) && $single_style['value'] != '#' && $single_style['value'] != 'inherit' && $single_style['value'] != '0' ){
+			if( ! empty( $single_style['value'] ) && str_replace(' ', '', $single_style['value']) != '#' && $single_style['value'] != 'inherit' && $single_style['value'] != '0' ){
 				$style .= 	$single_style['css_name'] . ':' .
 							(isset($single_style['pref']) ? $single_style['pref'] : '') .
 							$single_style['value'] .
@@ -1180,7 +1200,23 @@ class CFF_Shortcode_Display {
 					['css_name' => 'color', 'value' => str_replace('#', '', $this->feed_options['textlinkcolor']), 'pref' => '#']
 				];
 			break;
-
+			case 'title_style':
+				$style_array = [
+					['css_name' => 'color', 'value' => str_replace('#', '', $this->feed_options['headertextcolor']), 'pref' => '#'],
+					['css_name' => 'font-size', 'value' => $this->feed_options['headertextsize'], 'suff' => 'px'],
+				];
+			break;
+			case 'bio_style':
+				$style_array = [
+					['css_name' => 'color', 'value' => str_replace('#', '', $this->feed_options['headerbiocolor']), 'pref' => '#'],
+					['css_name' => 'font-size', 'value' => $this->feed_options['headerbiosize'], 'suff' => 'px'],
+				];
+			break;
+			case 'meta_link_style':
+				$style_array = [
+					['css_name' => 'color', 'value' => str_replace('#', '', $this->feed_options['sociallinkcolor']), 'pref' => '#'],
+				];
+			break;
 
 		}
 
@@ -1216,7 +1252,7 @@ class CFF_Shortcode_Display {
 		$cut_class = ($cff_show_like_box && !$cff_like_box_outside) ? " cff-item" : '';
 		$cut_class = "";
 
-		return "cff-likebox" . ( $atts[ 'likeboxoutside' ] ? " cff-outside" : '' ) . ( $atts[ 'likeboxpos' ] == 'top' ? ' cff-top' : ' cff-bottom' ) . $cut_class;
+		return "cff-likebox" . ( $cff_show_like_box ? " cff-outside" : '' ) . ( $atts[ 'likeboxpos' ] == 'top' ? ' cff-top' : ' cff-bottom' ) . $cut_class;
 	}
 
 	static function get_likebox_tag( $atts ){
@@ -1234,9 +1270,6 @@ class CFF_Shortcode_Display {
 	 */
 	static function get_load_more_button_attr( $atts ){
 	    $palette = ! empty( $atts['colorpalette'] ) ? $atts['colorpalette'] : '';
-		$translations = get_option( 'cff_style_settings', false );
-
-		$atts['nomoretext'] = isset( $translations[ 'cff_no_more_posts_text' ] ) ? stripslashes( esc_attr( $translations[ 'cff_no_more_posts_text' ] ) ) : __( 'No more posts', 'custom-facebook-feed' );
 
 	    if ( ! empty( $palette )
              && ($palette === 'dark' || $palette === 'light') ) {
@@ -1534,16 +1567,16 @@ class CFF_Shortcode_Display {
 		return $cff_post_text_to_share;
 	}
 
-	static function get_post_link_text_link( $atts, $cff_post_type ){
+	static function get_post_link_text_link( $atts, $cff_post_type, $translations ){
 		$cff_facebook_link_text = $atts[ 'facebooklinktext' ];
-		$link_text = ($cff_facebook_link_text != '' && !empty($cff_facebook_link_text))  ? $cff_facebook_link_text : esc_html__('View on Facebook', 'custom-facebook-feed');
+		$link_text = ($cff_facebook_link_text != '' && !empty($cff_facebook_link_text))  ? $cff_facebook_link_text : $translations['cff_facebook_link_text'];
 		//If it's an offer post then change the text
 		if ($cff_post_type == 'offer') $link_text = esc_html__('View Offer', 'custom-facebook-feed');
 		return $link_text;
 	}
 
-	static function get_post_link_fb_share_text( $atts ){
-		return ( $atts[ 'sharelinktext' ] ) ? $atts[ 'sharelinktext' ]  : esc_html__('Share', 'custom-facebook-feed');
+	static function get_post_link_fb_share_text( $atts, $translations ){
+		return ( $atts[ 'sharelinktext' ] ) ? $atts[ 'sharelinktext' ]  : $translations['cff_facebook_share_text'];
 	}
 
 	static function get_post_share_link( $atts, $news, $cff_post_type, $page_id, $PostID ){

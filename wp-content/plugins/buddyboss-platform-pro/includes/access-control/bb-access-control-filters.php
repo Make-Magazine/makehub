@@ -127,27 +127,27 @@ function bb_access_control_user_can_upload_media( $create ) {
  */
 function bb_access_control_user_can_upload_video( $create ) {
 
-    $create_video_settings = bb_access_control_upload_videos_settings();
-    $has_access            = false;
-    if ( empty( $create_video_settings ) || ( isset( $create_video_settings['access-control-type'] ) && empty( $create_video_settings['access-control-type'] ) ) ) {
-        $has_access = $create;
-    } elseif ( is_array( $create_video_settings ) && isset( $create_video_settings['access-control-type'] ) && ! empty( $create_video_settings['access-control-type'] ) ) {
+	$create_video_settings = bb_access_control_upload_videos_settings();
+	$has_access            = false;
+	if ( empty( $create_video_settings ) || ( isset( $create_video_settings['access-control-type'] ) && empty( $create_video_settings['access-control-type'] ) ) ) {
+		$has_access = $create;
+	} elseif ( is_array( $create_video_settings ) && isset( $create_video_settings['access-control-type'] ) && ! empty( $create_video_settings['access-control-type'] ) ) {
 
-        $access_controls        = BB_Access_Control::bb_get_access_control_lists();
-        $option_access_controls = $create_video_settings['access-control-type'];
-        $can_accept             = bb_access_control_has_access( bp_loggedin_user_id(), $access_controls, $option_access_controls, $create_video_settings );
+		$access_controls        = BB_Access_Control::bb_get_access_control_lists();
+		$option_access_controls = $create_video_settings['access-control-type'];
+		$can_accept             = bb_access_control_has_access( bp_loggedin_user_id(), $access_controls, $option_access_controls, $create_video_settings );
 
-        if ( $can_accept ) {
-            $has_access = $create;
-        }
-    }
+		if ( $can_accept ) {
+			$has_access = $create;
+		}
+	}
 
-    /**
-     * Filter which will return whether user can see the upload video button or not.
-     *
-     * @since 1.1.4
-     */
-    return apply_filters( 'bb_access_control_user_can_upload_video', $has_access );
+	/**
+	 * Filter which will return whether user can see the upload video button or not.
+	 *
+	 * @since 1.1.4
+	 */
+	return apply_filters( 'bb_access_control_user_can_upload_video', $has_access );
 }
 
 /**
@@ -614,8 +614,12 @@ function bb_access_control_member_header_user_can_send_message_request( $buttons
 		return $buttons;
 	}
 
-	//Bail if user is not logged in
+	// Bail if user is not logged in.
 	if ( ! is_user_logged_in() ) {
+		return $buttons;
+	}
+
+	if ( function_exists( 'bp_is_my_profile' ) && bp_is_my_profile() ) {
 		return $buttons;
 	}
 
@@ -636,7 +640,7 @@ function bb_access_control_member_header_user_can_send_message_request( $buttons
 		if ( $can_create ) {
 			$has_access = $buttons;
 		} else {
-			unset( $buttons['private_message'] );
+			$buttons['private_message'] = array();
 			$has_access = $buttons;
 		}
 	}

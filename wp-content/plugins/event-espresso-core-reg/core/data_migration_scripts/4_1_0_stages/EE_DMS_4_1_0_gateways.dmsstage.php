@@ -45,9 +45,9 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
                 global $wpdb;
                 // yeah we could do this all in one query... and if you're reading this and would liek to, go ahead. Although you'll
                 // only be saving users 50 milliseconds the one time this runs...
-                $wpdb->query($wpdb->prepare("UPDATE ".$wpdb->options." SET autoload='no' WHERE option_name=%s", $old_gateway_wp_option_name));
+                $wpdb->query($wpdb->prepare("UPDATE " . $wpdb->options . " SET autoload='no' WHERE option_name=%s", $old_gateway_wp_option_name));
             }
-        
+
             $items_actually_migrated++;
         }
         // if we can keep going, and it hasn' tbeen done yet, convert active gateways
@@ -56,7 +56,7 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
             $this->_converted_active_gateways = true;
             $items_actually_migrated++;
         }
-    
+
         EE_Config::instance()->update_espresso_config(false, false);
         if ($this->count_records_migrated() + $items_actually_migrated >= $this->count_records_to_migrate()) {
             $this->set_completed();
@@ -73,7 +73,7 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
     }
     public function __construct()
     {
-        $this->_pretty_name = __("Gateways", "event_espresso");
+        $this->_pretty_name = esc_html__("Gateways", "event_espresso");
         parent::__construct();
     }
 
@@ -121,7 +121,7 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
         $option_name = $this->_get_old_gateway_option_name($new_gateway_slug);
         $settings =  get_option($option_name, null);
     //  if( ! $settings){
-    //      $this->add_error(sprintf(__("There is no wordpress option named %s for gateway %s", "event_espresso"),$option_name,$new_gateway_slug));
+    //      $this->add_error(sprintf(esc_html__("There is no wordpress option named %s for gateway %s", "event_espresso"),$option_name,$new_gateway_slug));
     //  }
         return $settings;
     }
@@ -139,31 +139,31 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
         $normal_option_postfix = '_settings';
         switch ($new_gateway_slug) {
             case 'Bank':
-                $option_name = $normal_option_prefix.'bank_deposit'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'bank_deposit' . $normal_option_postfix;
                 break;
             case 'Aim':
-                $option_name = $normal_option_prefix.'authnet_aim'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'authnet_aim' . $normal_option_postfix;
                 break;
             case 'Check':
-                $option_name = $normal_option_prefix.'check_payment'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'check_payment' . $normal_option_postfix;
                 break;
             case 'Ideal':
-                $option_name = $normal_option_prefix.'ideal_mollie'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'ideal_mollie' . $normal_option_postfix;
                 break;
             case 'Invoice':
-                $option_name = $normal_option_prefix.'invoice_payment'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'invoice_payment' . $normal_option_postfix;
                 break;
             case 'Purchase_Order':
-                $option_name = $normal_option_prefix.'purchase_order_payment'.$normal_option_postfix;
+                $option_name = $normal_option_prefix . 'purchase_order_payment' . $normal_option_postfix;
                 break;
             case 'USAePay_Offsite':
-                $option_name = 'espresso_usaepay_offsite'.$normal_option_postfix;
+                $option_name = 'espresso_usaepay_offsite' . $normal_option_postfix;
                 break;
             case 'USAePay_Onsite':
-                $option_name = 'espresso_usaepay_onsite'.$normal_option_postfix;
+                $option_name = 'espresso_usaepay_onsite' . $normal_option_postfix;
                 break;
             default:
-                $option_name = apply_filters('FHEE__EE_DMS_4_1_0_gateways__get_old_gateway_option', $normal_option_prefix.$old_gateway_slug.$normal_option_postfix);
+                $option_name = apply_filters('FHEE__EE_DMS_4_1_0_gateways__get_old_gateway_option', $normal_option_prefix . $old_gateway_slug . $normal_option_postfix);
         }
         return $option_name;
     }
@@ -175,58 +175,58 @@ class EE_DMS_4_1_0_gateways extends EE_Data_Migration_Script_Stage
         $new_active_gateways = EE_Config::instance()->gateway->active_gateways;
         foreach ($old_active_gateways as $old_gateway_slug => $filepath) {
             if (! isset($this->_gateways_we_know_how_to_migrate[ $old_gateway_slug ])) {
-                $this->add_error(sprintf(__("The %s gateway does not exist in EE 4.1", "event_espresso"), $old_gateway_slug));
+                $this->add_error(sprintf(esc_html__("The %s gateway does not exist in EE 4.1", "event_espresso"), $old_gateway_slug));
                 continue;
             }
             $new_gateway_slug = $this->_gateways_we_know_how_to_migrate[ $old_gateway_slug ];
-        
+
             // in the new format we can also upload gateways to the uploads directory and
             $new_active_gateways[ $new_gateway_slug ] = false;
         }
         EE_Config::instance()->gateway->active_gateways = $new_active_gateways;
     }
-    
+
     protected $_gateways_we_know_how_to_migrate = array(
-        'aim'=>'Aim',
-        'bank'=>'Bank',
-        'check'=>'Check',
-        'invoice'=>'Invoice',
-        'paypal'=>'Paypal_Standard',
-        'paypal_pro'=>'Paypal_Pro',
+        'aim' => 'Aim',
+        'bank' => 'Bank',
+        'check' => 'Check',
+        'invoice' => 'Invoice',
+        'paypal' => 'Paypal_Standard',
+        'paypal_pro' => 'Paypal_Pro',
 
     );
-    
+
     protected $_gateways_we_leave_alone = array(
-        '2checkout'=>'2checkout',
-        'anz'=>'Anz',
-        'atos'=>'Atos',
-        'authnet'=>'Authnet',
-        'beanstream'=>'Beanstream',
-        'evertec'=>'Evertec',
-        'eway'=>'Eway',
-        'eway_rapid3'=>'Eway_Rapid3',
-        'exact'=>'Exact',
-        'firstdata'=>'Firstdata',
-        'firstdat_e4'=>'Firstdata_E4',
-        'ideal'=>'Ideal',
-        'infusion_payment'=>'InfusionSoft',
-        'luottokunta'=>'Luottokunta',
-        'megasoft'=>'Megasoft',
-        'moneris_hpp'=>'Moneris_HPP',
-        'mwarrior'=>'Mwarrior',
-        'nab'=>'NAB',
-        'paychoice'=>'Paychoice',
-        'paytrace'=>'Paytrace',
-        'psigate'=>'Psigate',
-        'purchase_order'=>'Purchase_Order',
-        'qbms'=>'QBMS',
-        'quickpay'=>'Quickpay',
-        'realauth'=>'Realauth',
-        'securepay_aus'=>'Securepay_Aus',
-        'stripe'=>'Stripe',
-        'usaepay_offsite'=>'USAePay_Offsite',
-        'usaepay_onsite'=>'USAePay_Onsite',
-        'wepay'=>'Wepay',
-        'worldpay'=>'Worldpay'
+        '2checkout' => '2checkout',
+        'anz' => 'Anz',
+        'atos' => 'Atos',
+        'authnet' => 'Authnet',
+        'beanstream' => 'Beanstream',
+        'evertec' => 'Evertec',
+        'eway' => 'Eway',
+        'eway_rapid3' => 'Eway_Rapid3',
+        'exact' => 'Exact',
+        'firstdata' => 'Firstdata',
+        'firstdat_e4' => 'Firstdata_E4',
+        'ideal' => 'Ideal',
+        'infusion_payment' => 'InfusionSoft',
+        'luottokunta' => 'Luottokunta',
+        'megasoft' => 'Megasoft',
+        'moneris_hpp' => 'Moneris_HPP',
+        'mwarrior' => 'Mwarrior',
+        'nab' => 'NAB',
+        'paychoice' => 'Paychoice',
+        'paytrace' => 'Paytrace',
+        'psigate' => 'Psigate',
+        'purchase_order' => 'Purchase_Order',
+        'qbms' => 'QBMS',
+        'quickpay' => 'Quickpay',
+        'realauth' => 'Realauth',
+        'securepay_aus' => 'Securepay_Aus',
+        'stripe' => 'Stripe',
+        'usaepay_offsite' => 'USAePay_Offsite',
+        'usaepay_onsite' => 'USAePay_Onsite',
+        'wepay' => 'Wepay',
+        'worldpay' => 'Worldpay'
     );
 }

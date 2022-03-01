@@ -204,12 +204,14 @@
 
 <?php else : ?>
 
-	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
-		<div class="bp-feedback info">
-			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html__( 'You cannot reply to this discussion.', 'buddyboss-theme' ) : esc_html__( 'Log in  to reply.', 'buddyboss-theme' ); ?></p>
+	<?php if ( is_user_logged_in() ) : ?>
+		<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
+			<div class="bp-feedback info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-theme' ); ?></p>
+			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 
 <?php endif; ?>
 

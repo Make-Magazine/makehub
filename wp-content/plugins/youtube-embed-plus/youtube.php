@@ -1,16 +1,16 @@
 <?php
 /*
-  Plugin Name: Embed Plus for YouTube - Embed a YouTube Gallery, Channel, Playlist, Live Stream, Facade
+  Plugin Name: Embed Plus Plugin for YouTube, with YouTube Gallery, Channel, Playlist, Live Stream, Facade
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.0.1.1
+  Version: 14.0.1.4
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
-  Requires at least: 4.1
+  Requires at least: 4.5
  */
 
 /*
-  Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
+  Embed Plus Plugin for YouTube, with YouTube Gallery, Channel, Playlist, Live Stream, Facade
   Copyright (C) 2021 EmbedPlus.com
 
   This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.0.1.1';
+    public static $version = '14.0.1.4';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -2842,7 +2842,7 @@ class YouTubePrefs
                     'data-facadesrc="https://www.' . $youtubebaseurl . '.com/embed/' . $videoidoutput . '?';
             $code_iframe2 = '" class="__youtube_prefs__ epyt-facade' . ($iscontent ? '' : ' __youtube_prefs_widget__ ') . ($isoverride ? ' epyt-is-override ' : '') . ' no-lazyload"' .
                     $voloutput . $galleryid_ifm_data . $facade_autoplay . '><img class="epyt-facade-poster" loading="lazy" ' . $acctitle . $facade_img_src . ' />' .
-                    '<button class="epyt-facade-play" aria-label="Play"><svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%"><path class="ytp-large-play-button-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path><path d="M 45,24 27,14 27,34" fill="#fff"></path></svg></button>' .
+                    '<button class="epyt-facade-play" aria-label="Play"><svg data-no-lazy="1" height="100%" version="1.1" viewBox="0 0 68 48" width="100%"><path class="ytp-large-play-button-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path><path d="M 45,24 27,14 27,34" fill="#fff"></path></svg></button>' .
                     '</div>';
         }
         else
@@ -3224,7 +3224,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update increases resolution for facade images, fixes a CSS issue with GDPR embeds, and adds YouTube Shorts compatibility for both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions (discounts throughout the holidays)</a>.";
+        $new_pointer_content .= "This update adds compatibility to the YouTube Wizard in WordPress 5.9 for both free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -4152,9 +4152,17 @@ class YouTubePrefs
                                 <iframe src="https://www.youtube.com/embed/FWBQc9XhAqM?rel=0" allowfullscreen="" frameborder="0"></iframe>
                             </div>
                         </div>
-                        <p>
-                            If you don't see your page builder listed above, don't worry. For pretty much any page builder with a short code widget, you can also embed your video, gallery, live stream, or premiere by creating the short code using the plugin's wizard and then embedding the code in the short code widget or text widget of your page builder of choice.
-                        </p>
+                        <div class="wiztab-pagebuilder">
+                            <h3>WPBakery</h3>
+                            <div class="epyt-fitvid">
+                                <iframe src="https://www.youtube.com/embed/7T5wPoEujN8?rel=0" allowfullscreen="" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="wiztab-pagebuilder">
+                            <p>
+                                If you don't see your page builder listed above, don't worry. For pretty much any page builder with a short code widget, you can also embed your video, gallery, live stream, or premiere by creating the short code using the plugin's wizard and then embedding the code in the short code widget or text widget of your page builder of choice.
+                            </p>
+                        </div>
                     </section>
 
                     <section class="pattern" id="jumpgallery">

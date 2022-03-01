@@ -8,9 +8,13 @@
  *
  * @since 2.0/4.0
  */
-
 namespace CustomFacebookFeed;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use CustomFacebookFeed\SB_Facebook_Data_Encryption;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 
 class CFF_Post_Record{
 	/**
@@ -43,6 +47,11 @@ class CFF_Post_Record{
 	private $connected_account;
 
 	/**
+	 * @var object|SB_Facebook_Data_Encryption
+	 */
+	private $encryption;
+
+	/**
 	 * SB_Instagram_Post constructor.
 	 *
 	 * @param string $instagram_post_id from the Instagram API
@@ -60,6 +69,7 @@ class CFF_Post_Record{
 		$this->images_done = ! empty( $feed_id_match ) && isset( $feed_id_match[0]['images_done'] ) ? $feed_id_match[0]['images_done'] === '1' : 0;
 		$this->feed_id = $feed_id;
 		$this->connected_account = $connected_account;
+		$this->encryption = new SB_Facebook_Data_Encryption();
 	}
 
 	/**
@@ -278,7 +288,7 @@ class CFF_Post_Record{
 			'created_on' => $db_data['created_on'],
 			'last_requested' => $db_data['last_requested'],
 			'time_stamp' => $db_data['time_stamp'],
-			'json_data' => $db_data['json_data'],
+			'json_data' => $this->encryption->encrypt( CFF_Utils::cff_json_encode( $db_data['json_data'] ) ),
 			'media_id' => $db_data['media_id'],
 			'sizes' => $db_data['sizes'],
 			'aspect_ratio' => $db_data['aspect_ratio'],
@@ -355,13 +365,17 @@ class CFF_Post_Record{
 	 * @since 2.0/4.0
 	 */
 	private function get_db_data() {
-
+		if ( is_string( $this->api_data ) && $this->encryption->decrypt( $this->api_data ) ) {
+			$api_data = $this->encryption->decrypt( $this->api_data );
+		} else {
+			$api_data = $this->api_data;
+		}
 		$db_data = array(
 			'facebook_id' => $this->api_post_id,
 			'created_on' => date( 'Y-m-d H:i:s' ),
 			'time_stamp' => date( 'Y-m-d H:i:s', CFF_Parse_Pro::get_timestamp( $this->api_data ) ),
 			'last_requested' => date( 'Y-m-d H:i:s' ),
-			'json_data' => CFF_Utils::cff_json_encode( $this->api_data ),
+			'json_data' =>  CFF_Utils::cff_json_encode( $api_data ) ,
 			'media_id' => '',
 			'sizes' => '{}',
 			'aspect_ratio' => 1,

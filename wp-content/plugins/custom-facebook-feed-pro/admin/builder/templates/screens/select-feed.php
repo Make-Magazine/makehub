@@ -12,6 +12,7 @@
 		<?php
 		include_once CFF_BUILDER_DIR . 'templates/sections/feeds-type.php';
 		include_once CFF_BUILDER_DIR . 'templates/sections/select-source.php';
+		include_once CFF_BUILDER_DIR . 'templates/sections/select-template.php';
 		include_once CFF_BUILDER_DIR . 'templates/sections/create-feed/single-album.php';
 		include_once CFF_BUILDER_DIR . 'templates/sections/create-feed/featured-post.php';
 		include_once CFF_BUILDER_DIR . 'templates/sections/create-feed/videos.php';

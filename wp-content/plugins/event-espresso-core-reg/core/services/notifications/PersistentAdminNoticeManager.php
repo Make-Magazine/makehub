@@ -128,12 +128,14 @@ class PersistentAdminNoticeManager
         if (! empty($persistent_admin_notices)) {
             foreach ($persistent_admin_notices as $name => $details) {
                 if (is_array($details)) {
-                    if (! isset(
-                        $details['message'],
-                        $details['capability'],
-                        $details['cap_context'],
-                        $details['dismissed']
-                    )) {
+                    if (
+                        ! isset(
+                            $details['message'],
+                            $details['capability'],
+                            $details['cap_context'],
+                            $details['dismissed']
+                        )
+                    ) {
                         throw new DomainException(
                             sprintf(
                                 esc_html__(
@@ -263,9 +265,11 @@ class PersistentAdminNoticeManager
             array(
                 'return_url'    => urlencode($this->return_url),
                 'ajax_url'      => WP_AJAX_URL,
-                'unknown_error' => esc_html__(
-                    'An unknown error has occurred on the server while attempting to dismiss this notice.',
-                    'event_espresso'
+                'unknown_error' => wp_strip_all_tags(
+                    __(
+                        'An unknown error has occurred on the server while attempting to dismiss this notice.',
+                        'event_espresso'
+                    )
                 ),
             )
         );

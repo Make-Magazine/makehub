@@ -287,6 +287,9 @@ trait broadcasting
 		$action->broadcasting_data = $bcd;
 		$action->execute();
 
+		// Prevent filtering of perfectly normal tags such as iframes.
+		kses_remove_filters();
+
 		// Prune the unused parent blog terms.
 		if ( $bcd->taxonomies )
 		{

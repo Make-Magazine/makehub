@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EE_Float_Normalization
  * Casts to float, and allows spaces, commas, and periods in the inputted string
@@ -35,7 +36,7 @@ class EE_Float_Normalization extends EE_Normalization_Strategy_Base
         if (! is_string($value_to_normalize)) {
             throw new EE_Validation_Error(
                 sprintf(
-                    __('The value "%s" must be a string submitted for normalization, it was %s', 'event_espresso'),
+                    esc_html__('The value "%s" must be a string submitted for normalization, it was %s', 'event_espresso'),
                     print_r($value_to_normalize, true),
                     gettype($value_to_normalize)
                 )

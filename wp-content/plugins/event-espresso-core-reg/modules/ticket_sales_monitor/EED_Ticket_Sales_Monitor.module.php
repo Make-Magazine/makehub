@@ -181,6 +181,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     public static function release_tickets_for_expired_carts()
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '()';
         }
@@ -252,6 +253,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
         if ($qty > 0) {
             $qty = EED_Ticket_Sales_Monitor::instance()->_validate_ticket_sale($ticket, $qty);
         }
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '()';
             echo self::$nl . self::$nl . '<b> RETURNED QTY: ' . $qty . '</b>';
@@ -271,6 +273,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _validate_ticket_sale(EE_Ticket $ticket, $qty = 1)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
         }
@@ -323,6 +326,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _reserve_ticket(EE_Ticket $ticket, $quantity = 1)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . ' . . . INCREASE RESERVED: ' . $quantity;
         }
@@ -338,6 +342,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _release_reserved_ticket(EE_Ticket $ticket, $quantity = 1)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . ' . . . ticket->ID: ' . $ticket->ID();
             echo self::$nl . ' . . . ticket->reserved before: ' . $ticket->reserved();
@@ -360,6 +365,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _ticket_sold_out(EE_Ticket $ticket)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
             echo self::$nl . ' . . ticket->name: ' . $this->_get_ticket_and_event_name($ticket);
@@ -378,6 +384,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _ticket_quantity_decremented(EE_Ticket $ticket)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
             echo self::$nl . ' . . ticket->name: ' . $this->_get_ticket_and_event_name($ticket);
@@ -488,24 +495,25 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _post_notices()
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
         }
         $refresh_msg = '';
         $none_added_msg = '';
         if (defined('DOING_AJAX') && DOING_AJAX) {
-            $refresh_msg = __(
+            $refresh_msg = esc_html__(
                 'Please refresh the page to view updated ticket quantities.',
                 'event_espresso'
             );
-            $none_added_msg = __('No tickets were added for the event.', 'event_espresso');
+            $none_added_msg = esc_html__('No tickets were added for the event.', 'event_espresso');
         }
         if (! empty($this->sold_out_tickets)) {
             EE_Error::add_attention(
                 sprintf(
                     apply_filters(
                         'FHEE__EED_Ticket_Sales_Monitor___post_notices__sold_out_tickets_notice',
-                        __(
+                        esc_html__(
                             'We\'re sorry...%1$sThe following items have sold out since you first viewed this page, and can no longer be registered for:%1$s%1$s%2$s%1$s%1$sPlease note that availability can change at any time due to cancellations, so please check back again later if registration for this event(s) is important to you.%1$s%1$s%3$s%1$s%4$s%1$s',
                             'event_espresso'
                         )
@@ -528,7 +536,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
                 sprintf(
                     apply_filters(
                         'FHEE__EED_Ticket_Sales_Monitor___ticket_quantity_decremented__notice',
-                        __(
+                        esc_html__(
                             'We\'re sorry...%1$sDue to sales that have occurred since you first viewed the last page, the following items have had their quantities adjusted to match the current available amount:%1$s%1$s%2$s%1$s%1$sPlease note that availability can change at any time due to cancellations, so please check back again later if registration for this event(s) is important to you.%1$s%1$s%3$s%1$s%4$s%1$s',
                             'event_espresso'
                         )
@@ -559,6 +567,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _release_all_reserved_tickets_for_transaction(EE_Transaction $transaction)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
             echo self::$nl . ' . transaction->ID: ' . $transaction->ID();
@@ -605,7 +614,8 @@ class EED_Ticket_Sales_Monitor extends EED_Module
             }
             if (! empty($registrations)) {
                 foreach ($registrations as $registration) {
-                    if ($registration instanceof EE_Registration
+                    if (
+                        $registration instanceof EE_Registration
                         && $this->_release_reserved_ticket_for_registration($registration, $transaction)
                     ) {
                         $count++;
@@ -638,13 +648,15 @@ class EED_Ticket_Sales_Monitor extends EED_Module
         EE_Transaction $transaction
     ) {
         $STS_ID = $transaction->status_ID();
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
             echo self::$nl . ' . . registration->ID: ' . $registration->ID();
             echo self::$nl . ' . . registration->status_ID: ' . $registration->status_ID();
             echo self::$nl . ' . . transaction->status_ID(): ' . $STS_ID;
         }
-        if (// release Tickets for Failed Transactions and Abandoned Transactions
+        if (
+// release Tickets for Failed Transactions and Abandoned Transactions
             $STS_ID === EEM_Transaction::failed_status_code
             || $STS_ID === EEM_Transaction::abandoned_status_code
             || (
@@ -687,6 +699,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
         if (did_action('AHEE__EE_Session__reset_checkout__before_reset')) {
             return;
         }
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
         }
@@ -725,6 +738,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _session_cart_reset(EE_Cart $cart, EE_Session $session)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
         }
@@ -798,6 +812,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
      */
     protected function _session_checkout_reset(EE_Checkout $checkout)
     {
+        // self::debug hardcoded to false
         if (self::debug) {
             echo self::$nl . self::$nl . __LINE__ . ') ' . __METHOD__ . '() ';
         }
@@ -839,6 +854,7 @@ class EED_Ticket_Sales_Monitor extends EED_Module
     {
         // is this TXN free or has any money been paid towards this TXN? If so, then leave it alone
         if ($transaction->is_free() || $transaction->paid() > 0) {
+            // self::debug hardcoded to false
             if (self::debug) {
                 // DEBUG LOG
                 EEH_Debug_Tools::log(
@@ -1008,7 +1024,8 @@ class EED_Ticket_Sales_Monitor extends EED_Module
             $expired_reservations_count = $ticket_with_reservations->reserved();
             // Now reduce that number using the list of current valid reservations.
             foreach ($valid_reserved_ticket_line_items as $valid_reserved_ticket_line_item) {
-                if ($valid_reserved_ticket_line_item instanceof EE_Line_Item
+                if (
+                    $valid_reserved_ticket_line_item instanceof EE_Line_Item
                     && $valid_reserved_ticket_line_item->OBJ_ID() === $ticket_with_reservations->ID()
                 ) {
                     $expired_reservations_count -= $valid_reserved_ticket_line_item->quantity();

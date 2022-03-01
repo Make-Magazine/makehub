@@ -293,8 +293,16 @@ class CFF_Error_Reporter
 
 	}
 
+
+
 	public function remove_all_errors() {
 		delete_option( $this->reporter_key );
+	}
+
+	public function reset_api_errors() {
+		$this->errors['connection'] = array();
+		$this->errors['accounts'] = array();
+		update_option( $this->reporter_key, $this->errors, false );
 	}
 
 	/**
