@@ -1,13 +1,14 @@
 window.addEventListener('load', function () {
+    //set variable defaults
+    var userProfile;
+    var loggedin = false;
+    var wpLoginRequired = true;
 
+    //do not show the login button on makezine or makercamp
     var url = new URL(location.href).hostname;
-    var wplogin_domains = ["makerfaire", "campus", "makerspaces", "community", "makehub", "experiencestage", "learn", "make.co", 'mfairestage', 'mfairedev'];
-    var wpLoginRequired = false;
-    for (var i = 0, ln = wplogin_domains.length; i < ln; i++) {
-        if (url.indexOf(wplogin_domains[i]) !== -1) {
-            wpLoginRequired = true;
-            break;
-        }
+    if(url.indexOf('makezine')!== -1 || url.indexOf('makercamp')!== -1 ) {
+      wpLoginRequired = false;
+      jQuery(".search-separator").hide();
     }
 
 	if (wpLoginRequired == true) {
@@ -64,8 +65,6 @@ window.addEventListener('load', function () {
 				}
 			});
 		}
-	} else {
-		jQuery(".search-separator").hide();
 	}
 
   //place functions here so they can access the variables inside the event addEventListener
