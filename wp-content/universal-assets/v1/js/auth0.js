@@ -49,6 +49,7 @@ window.addEventListener('load', function () {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
   }
+
   function setSession(authResult) {
     if (authResult) {
       // Set the time that the access token will expire at
