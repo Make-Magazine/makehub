@@ -12,7 +12,10 @@ window.addEventListener('load', function () {
     }
 
 	if (wpLoginRequired == true) {
-		var userProfile;
+    //check if logged into Wordpress
+    if(document.body.classList.contains( 'logged-in' )){
+		    loggedin = true;
+    }
 		var webAuth = new auth0.WebAuth({
 			domain: AUTH0_CUSTOM_DOMAIN,
 			clientID: AUTH0_CLIENT_ID,
@@ -38,15 +41,6 @@ window.addEventListener('load', function () {
 					displayButtons();
 				}
 		);
-
-			// otherwise we need a fool proof system to detect if the user is logged in
-			var loggedin = false;
-			var loggedin_data = {action: 'is_user_logged_in'};
-			jQuery.post(ajax_object.ajax_url, loggedin_data, function (response) {
-				if (response == 'yes') {
-					loggedin = true;
-				}
-			});
 	}
 
   //place functions here so they can access the variables inside the event addEventListener
