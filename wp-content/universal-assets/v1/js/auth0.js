@@ -15,32 +15,36 @@ window.addEventListener('load', function () {
     //check if logged into Wordpress
     if(document.body.classList.contains( 'logged-in' )){
 		    loggedin = true;
-    }
-		var webAuth = new auth0.WebAuth({
-			domain: AUTH0_CUSTOM_DOMAIN,
-			clientID: AUTH0_CLIENT_ID,
-			redirectUri: AUTH0_CALLBACK_URL,
-			audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
-			responseType: 'token id_token',
-			scope: 'openid profile email user_metadata',
-			//scope of data pulled by auth0
-			leeway: 60
-		});
+        //let's set up the dropdowns
+        displayButtons();
+    }else{
+      //ok let's check auth0 instead
+      var webAuth = new auth0.WebAuth({
+        domain: AUTH0_CUSTOM_DOMAIN,
+        clientID: AUTH0_CLIENT_ID,
+        redirectUri: AUTH0_CALLBACK_URL,
+        audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
+        responseType: 'token id_token',
+        scope: 'openid profile email user_metadata',
+        //scope of data pulled by auth0
+        leeway: 60
+      });
 
-		//check if logged in another place
-		webAuth.checkSession({},
-				function (err, result) {
-					if (err) {
-						if (err.error !== 'login_required') {
-							errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-						}
-						clearLocalStorage();
-					} else {
-						setSession(result);
-					}
-					displayButtons();
-				}
-		);
+      //check if logged in another place
+      webAuth.checkSession({},
+          function (err, result) {
+            if (err) {
+              if (err.error !== 'login_required') {
+                errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+              }
+              clearLocalStorage();
+            } else {
+              setSession(result);
+            }
+            displayButtons();
+          }
+      );
+    }
 	}
 
   //place functions here so they can access the variables inside the event addEventListener
@@ -65,7 +69,7 @@ window.addEventListener('load', function () {
   }
 
   function displayButtons() {
-    if (localStorage.getItem('expires_at')) {
+    if (localStorage.getItem('expires_at') || loggedin) {
       jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
       getProfile();
     } else {
@@ -79,7 +83,8 @@ window.addEventListener('load', function () {
 
   // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
   function showBuddypanel() {
-    jQuery("#buddypanel-menu").load(document.URL + " #buddypanel-menu > *", function(){
+    //does this site have a bb left hand panel?
+    if(document.body.classList.contains( 'bb-buddypanel' )){
       if(loggedin == false) {
         jQuery("body").addClass("buddypanel-open");
       } else {
@@ -87,48 +92,60 @@ window.addEventListener('load', function () {
       }
       //simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
       window.dispatchEvent(new Event('resize'));
-    });
+    }
   }
 
   function getProfile() {
-    var accessToken = localStorage.getItem('access_token');
+    if(loggedin){
+      //user is logged into wordpress at this point. let's display wordpress data
+      document.querySelector('.dropdown-toggle img').src = ajax_object.wp_user_avatar;
+      document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
+      document.querySelector('.dropdown-toggle img').style.display = "block";
+      document.querySelector('#LoginBtn').style.display = "none";
+      document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
+      document.querySelector('.profile-info .profile-name').innerHTML = ajax_object.wp_user_nicename;
+      showBuddypanel();
+    }else{
+      //get info from auth0
+      var accessToken = localStorage.getItem('access_token');
 
-    if (!accessToken) {
-      console.log('Access token must exist to fetch profile');
-      errorMsg('Login attempted without Access Token');
+      if (!accessToken) {
+        console.log('Access token must exist to fetch profile');
+        errorMsg('Login attempted without Access Token');
+      }
+
+      webAuth.client.userInfo(accessToken, function (err, profile) {
+        if (profile) {
+          userProfile = profile;
+          // make sure that there isn't a wordpress acount with a different user logged in
+          if (ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
+            WPlogout();
+          }
+          // display the avatar
+          document.querySelector('.dropdown-toggle img').src = userProfile.picture;
+          document.querySelector('.profile-info img').src = userProfile.picture;
+          document.querySelector('.dropdown-toggle img').style.display = "block";
+          document.querySelector('#LoginBtn').style.display = "none";
+          document.querySelector('.profile-email').innerHTML = userProfile.email;
+          // do we need http://makershare.com/last_name / first_name anymore
+          if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
+            document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
+          }
+          if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
+            // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+            jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+            WPlogin();
+          } else if( jQuery("body").is(".buddyboss-theme") ) {
+            // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
+            showBuddypanel();
+          }
+        }
+        if (err) {
+          errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
+        }
+      });
     }
-
-    webAuth.client.userInfo(accessToken, function (err, profile) {
-      if (profile) {
-        userProfile = profile;
-        // make sure that there isn't a wordpress acount with a different user logged in
-        if (ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
-          WPlogout();
-        }
-        // display the avatar
-        document.querySelector('.dropdown-toggle img').src = userProfile.picture;
-        document.querySelector('.profile-info img').src = userProfile.picture;
-        document.querySelector('.dropdown-toggle img').style.display = "block";
-        document.querySelector('#LoginBtn').style.display = "none";
-        document.querySelector('.profile-email').innerHTML = userProfile.email;
-        // do we need http://makershare.com/last_name / first_name anymore
-        if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
-          document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
-        }
-        if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
-          // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-          jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-          WPlogin();
-        } else if( jQuery("body").is(".buddyboss-theme") ) {
-          // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-          showBuddypanel();
-        }
-      }
-      if (err) {
-        errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
-      }
-      jQuery(".login-section").css("display", "block");
-    });
+    jQuery(".login-section").css("display", "block");
   }
 
   function WPlogin() {
