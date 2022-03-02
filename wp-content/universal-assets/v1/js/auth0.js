@@ -76,8 +76,7 @@ window.addEventListener('load', function () {
       jQuery("#LoginBtn").css("display", "block");
       jQuery("#profile-view, #LogoutBtn").css('display', 'none');
       jQuery(".login-section").css("display", "block");
-      WPlogout();
-
+      //WPlogout();
     }
   }
 
