@@ -1,7 +1,7 @@
 <?php
 /* * ********************************** */
 
-//       Fancy RSS Feed Widget       // 
+//       Fancy RSS Feed Widget       //
 /* * ********************************** */
 // Like the normal RSS feed widget, but with Featured Images and good styling
 
@@ -17,7 +17,7 @@ class fancy_rss_widget extends WP_Widget {
             'width' => 400,
             'height' => 200,
         );
-        parent::__construct('fancy_rss', __('Custom RSS'), $widget_ops, $control_ops);
+        parent::__construct('fancy_rss', __('Make: Custom RSS'), $widget_ops, $control_ops);
     }
 
     public function widget($args, $instance) {
@@ -96,10 +96,10 @@ class fancy_rss_widget extends WP_Widget {
 
         // Widget admin form
         ?>
-        <p><label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('Enter the RSS feed URL here:'); ?></label> 
+        <p><label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('Enter the RSS feed URL here:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('url'); ?>" name="<?php echo $this->get_field_name('url'); ?>" type="text" value="<?php echo esc_attr($url); ?>" /></p>
 
-        <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Give the feed a title (optional):'); ?></label> 
+        <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Give the feed a title (optional):'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
 
         <p><label for="<?php echo $this->get_field_id('link'); ?>"><?php _e('Provide a link (defaults to site):'); ?></label>

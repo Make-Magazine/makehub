@@ -12,14 +12,14 @@ class upcoming_mfaires_widget extends WP_Widget {
                 // Base ID of your widget
                 'upcoming_mfaires_widget',
                 // Widget name will appear in UI
-                __('Upcoming Maker Faires Widget', 'upcoming_mfaires_widget_domain'),
+                __('Make: Upcoming Maker Faires Widget', 'upcoming_mfaires_widget_domain'),
                 // Widget description
                 array('description' => __('Display Upcoming Maker Faires', 'upcoming_mfaires_widget_domain'),)
         );
     }
 
     public function widget($args, $instance) {
-        $title = apply_filters('widget_title', $instance['title']);
+        $title = (isset($instance['title'])?apply_filters('widget_title', $instance['title']):'');
         // before and after widget arguments are defined by themes
         echo $args['before_widget'];
         echo("<a href='https://makerfaire.com/map' target='_blank'><img class='mf-logo' src='/wp-content/themes/make-experiences/images/makerfaire-logo.png' /></a>");
@@ -27,7 +27,7 @@ class upcoming_mfaires_widget extends WP_Widget {
             echo $args['before_title'] . "<a href='https://makerfaire.com/map' target='_blank'>" . $title . "</a>" . $args['after_title'];
         }
         // Set variables
-        $number = $instance['number'];
+        $number = (isset($instance['number'])?$instance['number']:5);
         $api_url = 'https://makerfaire.com/query/?type=map&upcoming=true&number=' . $number;
 
         $faire_content = @file_get_contents($api_url);
@@ -56,7 +56,7 @@ class upcoming_mfaires_widget extends WP_Widget {
         echo $args['after_widget'];
     }
 
-    // Widget Backend 
+    // Widget Backend
     public function form($instance) {
         if (isset($instance['title'])) {
             $title = $instance['title'];
@@ -71,11 +71,11 @@ class upcoming_mfaires_widget extends WP_Widget {
         // Widget admin form
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Faires to Show:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Faires to Show:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo esc_attr($number); ?>" />
         </p>
         <?php
@@ -89,4 +89,8 @@ class upcoming_mfaires_widget extends WP_Widget {
         return $instance;
     }
 
+    /* */
+    public function get_categories() {
+  		return [ 'make-category' ];
+  	}
 }
