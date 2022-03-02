@@ -39,6 +39,7 @@ window.addEventListener('load', function () {
               }
               clearLocalStorage();
             } else {
+              console.log('SSO set session');
               setSession(result);
             }
             displayButtons();
@@ -77,6 +78,7 @@ window.addEventListener('load', function () {
       jQuery("#profile-view, #LogoutBtn").css('display', 'none');
       jQuery(".login-section").css("display", "block");
       //WPlogout();
+      showBuddypanel();
     }
   }
 
