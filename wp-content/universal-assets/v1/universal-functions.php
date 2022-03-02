@@ -200,18 +200,22 @@ add_action("rest_api_init", function () {
 // alphabetize menu items
 add_action('admin_init','sort_admin_menu');
 function sort_admin_menu() {
-    global $menu;
-    // alphabetize submenu items
-    usort( $menu, function ( $a, $b ) {
-        if(isset($a['5']) && $a[5]!='menu-dashboard'){
-          // format of a submenu item is [ 'My Item', 'read', 'manage-my-items', 'My Item' ]
-          return strcasecmp( strip_tags($a[0]), strip_tags($b[0]) );
-        }
-    } );
-    //remove separators
-    $menu = array_filter($menu, function($item) {
-        return $item[0] != '';
-    });
+	if(is_admin()) {
+	    global $menu;
+	    // alphabetize submenu items
+		if($menu) {
+		    usort( $menu, function ( $a, $b ) {
+		        if(isset($a['5']) && $a[5]!='menu-dashboard'){
+		          // format of a submenu item is [ 'My Item', 'read', 'manage-my-items', 'My Item' ]
+		          return strcasecmp( strip_tags($a[0]), strip_tags($b[0]) );
+		        }
+		    } );
+		    //remove separators
+		    $menu = array_filter($menu, function($item) {
+		        return $item[0] != '';
+		    });
+		}
+	}
 }
 
 

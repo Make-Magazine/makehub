@@ -130,13 +130,13 @@ $wp_query = new EE_Grid_Template_Query($attributes);
                                 <?php echo event_ticket_prices($event); ?>
                             </div> <!-- end .event-prices -->
                         </div> <!-- end .event-info -->
-                    </article>                    
+                    </article>
                     <?php
                 endwhile;
                 ?>
             </div>
             <?php
-            espresso_pagination();
+            // espresso_pagination();
             // allow moar other stuff
             do_action('AHEE__archive_espresso_events_template__after_loop');
         else :
