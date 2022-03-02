@@ -76,7 +76,6 @@ function getUrlParam(name) {
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 }
-;
 
 // Once you got your event trigger named and linked in GTM, you can just use this to set it off
 function triggerGTMevent(eventName) {
