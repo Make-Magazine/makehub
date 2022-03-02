@@ -91,6 +91,20 @@ abstract class Controls_Stack extends Base_Object {
 	private $config;
 
 	/**
+	 * The additional configuration.
+	 *
+	 * Holds additional configuration that has been set using `set_config` method.
+	 * The `config` property is not modified directly while using the method because
+	 * it's used to check whether the initial config already loaded (in `get_config`).
+	 * After the initial config loaded, the additional config is merged into it.
+	 *
+	 * @access private
+	 *
+	 * @var null|array
+	 */
+	private $additional_config = [];
+
+	/**
 	 * Current section.
 	 *
 	 * Holds the current section while inserting a set of controls sections.
@@ -948,11 +962,7 @@ abstract class Controls_Stack extends Base_Object {
 	 * @param string $id Responsive control ID.
 	 */
 	final public function remove_responsive_control( $id ) {
-		$devices = [
-			Breakpoints_Manager::BREAKPOINT_KEY_DESKTOP,
-			Breakpoints_Manager::BREAKPOINT_KEY_TABLET,
-			Breakpoints_Manager::BREAKPOINT_KEY_MOBILE,
-		];
+		$devices = Plugin::$instance->breakpoints->get_active_devices_list( [ 'reverse' => true ] );
 
 		foreach ( $devices as $device_name ) {
 			$id_suffix = Breakpoints_Manager::BREAKPOINT_KEY_DESKTOP === $device_name ? '' : '_' . $device_name;
@@ -996,9 +1006,33 @@ abstract class Controls_Stack extends Base_Object {
 			} else {
 				$this->config = $this->get_initial_config();
 			}
+
+			foreach ( $this->additional_config as $key => $value ) {
+				if ( isset( $this->config[ $key ] ) ) {
+					$this->config[ $key ] = wp_parse_args( $value, $this->config[ $key ] );
+				} else {
+					$this->config[ $key ] = $value;
+				}
+			}
 		}
 
 		return $this->config;
+	}
+
+	/**
+	 * Set a config property.
+	 *
+	 * Set a specific property of the config list for this controls-stack.
+	 *
+	 * @since 3.5.0
+	 * @access public
+	 */
+	public function set_config( $key, $value ) {
+		if ( isset( $this->additional_config[ $key ] ) ) {
+			$this->additional_config[ $key ] = wp_parse_args( $value, $this->additional_config[ $key ] );
+		} else {
+			$this->additional_config[ $key ] = $value;
+		}
 	}
 
 	/**
@@ -1387,7 +1421,7 @@ abstract class Controls_Stack extends Base_Object {
 	 * @param array  $args       Section arguments Optional.
 	 */
 	public function start_controls_section( $section_id, array $args = [] ) {
-		$section_name = $this->get_name();
+		$stack_name = $this->get_name();
 
 		/**
 		 * Before section start.
@@ -1407,14 +1441,14 @@ abstract class Controls_Stack extends Base_Object {
 		 *
 		 * Fires before Elementor section starts in the editor panel.
 		 *
-		 * The dynamic portions of the hook name, `$section_name` and `$section_id`, refers to the section name and section ID, respectively.
+		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
 		 * @since 1.4.0
 		 *
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$section_name}/{$section_id}/before_section_start", $this, $args );
+		do_action( "elementor/element/{$stack_name}/{$section_id}/before_section_start", $this, $args );
 
 		$args['type'] = Controls_Manager::SECTION;
 
@@ -1448,14 +1482,14 @@ abstract class Controls_Stack extends Base_Object {
 		 *
 		 * Fires after Elementor section starts in the editor panel.
 		 *
-		 * The dynamic portions of the hook name, `$section_name` and `$section_id`, refers to the section name and section ID, respectively.
+		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
 		 * @since 1.4.0
 		 *
 		 * @param Controls_Stack $this The control.
 		 * @param array          $args Section arguments.
 		 */
-		do_action( "elementor/element/{$section_name}/{$section_id}/after_section_start", $this, $args );
+		do_action( "elementor/element/{$stack_name}/{$section_id}/after_section_start", $this, $args );
 	}
 
 	/**
@@ -1526,7 +1560,7 @@ abstract class Controls_Stack extends Base_Object {
 		 *
 		 * Fires after Elementor section ends in the editor panel.
 		 *
-		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the section name and section ID, respectively.
+		 * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
 		 *
 		 * @since 1.4.0
 		 *
