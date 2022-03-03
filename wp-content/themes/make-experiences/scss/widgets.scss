@@ -369,3 +369,137 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
         content: " >>";
     }
 }
+
+
+// our Custom RSS feed widget styling
+.widget_fancy_rss {
+	.custom-rss {
+		margin-left: 0px;
+		li {
+			display: inline-flex;
+			padding: 7.5px 0px;
+			width: 100%;
+			border-bottom: 0px;
+			&:before { content: ""; }
+			&:first-of-type { padding-top: 0px; }
+			.rss-image-link {
+				display: inline-flex;
+				img {
+					max-height: 100px;
+					min-height: 100px;
+					max-width: 140px;
+					min-width: 140px;
+					object-fit: cover;
+					margin-right: 15px;
+				}
+			}
+			.rss-widget-text {
+				display: flex;
+				a.rsswidget {
+					color: #333;
+					display: inline-flex;
+					justify-content: center;
+					flex-direction: column;
+					text-align: left;
+				}
+				.rssTitle {
+					margin-right: 15px;
+					display: -webkit-box;
+					-webkit-line-clamp: 3;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+					margin-bottom: 5px;
+					font-family: 'Roboto Bold';
+				}
+				cite {
+					font-size: 14px;
+					line-height: 15px;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+}
+
+.make-projects-widget {
+	ul {
+		margin: 0px;
+		margin-top: 10px;
+		li {
+			list-style: none;
+			padding: 15px 0px 0px;
+			width: 100%;
+			text-align: left;
+			&:first-of-type { padding-top: 0px; }
+			&:last-of-type { border-bottom: 0px; }
+			a {
+				color: #333;
+				display: flex;
+				align-items: center;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 16px;
+				img {
+					margin-right: 15px;
+				}
+				.mp-title {
+					display: -webkit-box;
+					-webkit-line-clamp: 4;
+					-webkit-box-orient: vertical;
+					overflow: hidden;
+					margin-bottom: 5px;
+				}
+				cite {
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}
+
+.widget_upcoming_mfaires_widget {
+	background: #000;
+	padding-top: 15px;
+	.mf-logo {
+		padding: 0 15px;
+	}
+	.nv-block-title {
+		background: #000;
+		text-transform: uppercase;
+		display: flex;
+		flex-direction: column;
+		height: auto;
+		padding-top: 10px;
+		font-size: 1.65vw;
+		@media screen and ( min-width: 1660px ) {
+			font-size: 23px;
+		}
+		@media screen and ( max-width: 982px ) {
+			font-size: 23px;
+		}
+	}
+	.upcoming-makerfaires-feed {
+		margin-top: -10px;
+		ul {
+			margin: 0px;
+			li {
+				list-style: none;
+				padding: 10px 15px;
+				text-align: left;
+				@media screen and ( max-width: 982px ) {
+					text-align: center;
+				}
+				a {
+					color: #fff;
+					font-size: 14px;
+					h4 {
+						font-size: 18px;
+						color: $color-light-blue;
+						margin: 0px;
+						text-align: left;
+					}
+				}
+			}
+		}
+	}
+}
