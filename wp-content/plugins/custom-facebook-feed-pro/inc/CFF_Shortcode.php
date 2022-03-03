@@ -7,6 +7,7 @@
 
 namespace CustomFacebookFeed;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use CustomFacebookFeed\SB_Facebook_Data_Encryption;
 
 
 class CFF_Shortcode extends CFF_Shortcode_Display{
@@ -484,9 +485,9 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 			// Masonry and Carousel feeds are incompatible so we check to see if carousel is active
 			// and set Masonry to false if it is
 			if ( $settings['carousel'] ) {
-				$settings['headeroutside']  = true;
-				$settings['likeboxoutside'] = true;
-				$settings['masonry']        = false;
+				#$settings['headeroutside']  = true;
+				#$settings['likeboxoutside'] = true;
+				#$settings['masonry']        = false;
 
 				// Carousel feeds are incompatible with the columns setting for the main plugin
 				$settings['columnscompatible'] = false;
@@ -685,35 +686,38 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	 * @since 3.18
 	 */
 	function cff_get_shortcode_data_attribute_html( $feed_options ) {
-	    //If an access token is set in the shortcode then set "use own access token" to be enabled
-	    if( isset($feed_options['accesstoken']) ){
-	    	//Add an encryption string to protect token
-	    	if ( strpos($feed_options['accesstoken'], ',') !== false ) {
-	    		//If there are multiple tokens then just add the string after the colon to avoid having to de/reconstruct the array
-		        $feed_options['accesstoken'] = str_replace(":", ":02Sb981f26534g75h091287a46p5l63", $feed_options['accesstoken']);
-	    	} else {
-	    		//Add an encryption string to protect token
-		        $feed_options['accesstoken'] = substr_replace($feed_options['accesstoken'], '02Sb981f26534g75h091287a46p5l63', 25, 0);
-	    	}
-	    	$feed_options['ownaccesstoken'] = 'on';
-	    }
+	    return self::cff_get_shortcode_data_attribute_html_static( $feed_options );
+	}
 
-	    if( !empty($feed_options) ){
-	        $json_data = '{';
-	        $i = 0;
-	        $len = count($feed_options);
-	        foreach( $feed_options as $key => $value ) {
-	            if ($i == $len - 1) {
-	                $json_data .= '&quot;'.$key.'&quot;: &quot;'.$value.'&quot;';
-	            } else {
-	                $json_data .= '&quot;'.$key.'&quot;: &quot;'.$value.'&quot;, ';
-	            }
-	            $i++;
-	        }
-	        $json_data .= '}';
+	public static function cff_get_shortcode_data_attribute_html_static( $feed_options ) {
+		//If an access token is set in the shortcode then set "use own access token" to be enabled
+		if( isset($feed_options['accesstoken']) ){
+			//Add an encryption string to protect token
+			if ( strpos($feed_options['accesstoken'], ',') !== false ) {
+				//If there are multiple tokens then just add the string after the colon to avoid having to de/reconstruct the array
+				$feed_options['accesstoken'] = str_replace(":", ":02Sb981f26534g75h091287a46p5l63", $feed_options['accesstoken']);
+			} else {
+				//Add an encryption string to protect token
+				$feed_options['accesstoken'] = substr_replace($feed_options['accesstoken'], '02Sb981f26534g75h091287a46p5l63', 25, 0);
+			}
+			$feed_options['ownaccesstoken'] = 'on';
+		}
 
-		    return $json_data;
-	    }
+		if( !empty($feed_options) ){
+			$json_data = '{';
+			$i = 0;
+			$len = count($feed_options);
+			foreach( $feed_options as $key => $value ) {
+				if ($i == $len - 1) {
+					$json_data .= '&quot;'.$key.'&quot;: &quot;'.$value.'&quot;';
+				} else {
+					$json_data .= '&quot;'.$key.'&quot;: &quot;'.$value.'&quot;, ';
+				}
+				$i++;
+			}
+			$json_data .= '}';
+			return $json_data;
+		}
 	}
 
 	/**
@@ -723,8 +727,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	 * @since 3.18
 	 */
 	static function cff_get_json_data( $feed_options, $next_urls_arr_safe, $data_att_html, $is_customizer = false ) {
+
 	    //Define vars
 		$access_token = $feed_options['accesstoken'];
+
 	    //If the 'Enter my own Access Token' box is unchecked then don't use the user's access token, even if there's one in the field
 	    $feed_options['ownaccesstoken'] ? $cff_show_access_token = true : $cff_show_access_token = true;
 	    //Reviews Access Token
@@ -838,7 +844,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    if($cff_cache_time_unit == 'minutes') $cff_cache_time_unit = 60;
 	    if($cff_cache_time_unit == 'hour' || $cff_cache_time_unit == 'hours') $cff_cache_time_unit = 60*60;
 	    if($cff_cache_time_unit == 'days') $cff_cache_time_unit = 60*60*24;
-	    $cache_seconds = $cff_cache_time * $cff_cache_time_unit;
+		if ( intval( $cff_cache_time ) < 1 ) {
+			$cff_cache_time = 1;
+		}
+		$cache_seconds = intval( $cff_cache_time ) * intval( $cff_cache_time_unit );
 
 
 	    //********************************************//
@@ -921,8 +930,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	            //Can be used to display group events passed their start time. Default is 6 hours.
 	            $cff_event_offset_time = '-' . $cff_event_offset . ' hours';
-	            $curtimeplus = strtotime($cff_event_offset_time, time());
-
+	            $curtimeplus = strtotime($cff_event_offset_time, time() );
 	            //Start time string
 	            $cff_start_time_string = '';
 	            $cff_get_upcoming_events = "&time_filter=upcoming";
@@ -940,11 +948,12 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	            }
 
 	            //Events URL
+	            $events_post_limit = isset( $feed_options['eventspostlimit'] ) ? $feed_options['eventspostlimit'] : 250;
 	            $event_fields = 'id,name,attending_count,cover,start_time,end_time,event_times,timezone,place,description,ticket_uri,interested_count,updated_time,created_time';
 	            if ( $include_extras ) {
 		            $event_fields .= ',owner{picture,id,name,link}';
 	            }
-	            $cff_events_json_url = "https://graph.facebook.com/v3.2/".$page_id."/events/?fields=".$event_fields.$cff_start_time_string.$cff_get_upcoming_events."&limit=250&access_token=" . $access_token . "&format=json-strings" . $cff_ssl;
+	            $cff_events_json_url = "https://graph.facebook.com/v3.2/".$page_id."/events/?fields=".$event_fields.$cff_start_time_string.$cff_get_upcoming_events."&limit=" . $events_post_limit . "&access_token=" . $access_token . "&format=json-strings" . $cff_ssl;
 
 	            //Past events
 	            ( $cff_past_events !== 'false' && $cff_past_events != false ) ? $cff_past_events = true : $cff_past_events = false;
@@ -1167,7 +1176,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	        $cff_more_posts = true;
 
             // Set number of posts to API limit to ensure filtering properly works for group feeds.
-            if($cff_is_group){                
+            if($cff_is_group){
                 $show_posts_number = ( isset( $feed_options['limit'] ) && $feed_options['apipostlimit'] == 'manual' ) ? $feed_options['limit'] : $show_posts_number;
             }
 
@@ -1200,6 +1209,15 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	            if( $cff_more_posts ){
 	                //If it's a reviews feed then use the reviews token
 	                ( $cff_reviews ) ? $feed_token = $feed_options['pagetoken'] : $feed_token = $access_token;
+
+					// for multifeed
+		            if ( is_array( $feed_token ) ) {
+			            if ( isset( $feed_token[ $page_id ] ) ) {
+				            $feed_token = $feed_token[ $page_id ];
+			            } else {
+				            $feed_token = reset( $feed_token );
+			            }
+		            }
 
 	                //Replace the Access Token placeholder with the actual token
 	                $cff_api_url = str_replace("x_cff_hide_token_x",$feed_token,$next_url_safe);
@@ -1344,6 +1362,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	}
 
 	public static function get_single_event_data( $eventID, $access_token ) {
+		$encryption = new SB_Facebook_Data_Encryption();
 
 		//Is it SSL?
 		$cff_ssl = '';
@@ -1356,13 +1375,13 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		$transient_name = 'cff_tle_' . $eventID;
 		$transient_name = substr($transient_name, 0, 45);
 
-		if ( false === ( $event_json = get_transient( $transient_name ) ) || $event_json === null ) {
+		if ( false === ( $event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) ) ) || $event_json === null ) {
 			//Get the contents of the Facebook page
 			$event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 			//Cache the JSON for 180 days as the timeline event info probably isn't going to change
-			set_transient( $transient_name, $event_json, 60 * 60 * 24 * 180 );
+			set_transient( $transient_name, $encryption->maybe_encrypt( $event_json ) , 60 * 60 * 24 * 180 );
 		} else {
-			$event_json = get_transient( $transient_name );
+			$event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) );
 			//If we can't find the transient then fall back to just getting the json from the api
 			if ($event_json == false) $event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 		}
@@ -1513,6 +1532,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	 * @since 3.18
 	 */
 	function cff_get_post_set_html( $feed_options, $json_data_arr, $original_atts = array() ) {
+		$encryption  = new SB_Facebook_Data_Encryption();
 		if ( ! empty( $feed_options['feederror'] ) ) {
 			return false;
 		}
@@ -1522,7 +1542,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		$this->cff_add_translations();
 
 		$feed_options = $this->feed_options;
-
+		$translations = get_option( 'cff_style_settings', false );
 	    //Active extensions
 	    $cff_ext_multifeed_active 	= $this->feed_options[ 'multifeedactive' ];
 	    $cff_ext_date_active 		= $this->feed_options[ 'daterangeactive' ];
@@ -1569,6 +1589,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    if ( CFF_Utils::stripos($cff_types, 'album') !== false ) $cff_show_albums_type = true;
 	    if ( CFF_Utils::stripos($cff_types, 'status') !== false ) $cff_show_status_type = true;
 	    if ( CFF_Utils::stripos($cff_types, 'review') !== false && $cff_reviews_active ) $cff_reviews = true;
+
 
 	    //Only events
 	    $cff_events_source = $this->feed_options[ 'eventsource' ];
@@ -1692,6 +1713,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 
 	    $cff_meta_link_color = '#' . str_replace('#', '', $this->feed_options['sociallinkcolor']);
+	    $cff_meta_link_styles = $this->get_style_attribute( 'meta_link_style' );
 
 	    /********** TYPOGRAPHY **********/
 	    //See More text
@@ -1931,6 +1953,13 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    if($cff_cache_time_unit == 'minutes') $cff_cache_time_unit = 60;
 	    if($cff_cache_time_unit == 'hours') $cff_cache_time_unit = 60*60;
 	    if($cff_cache_time_unit == 'days') $cff_cache_time_unit = 60*60*24;
+
+		if ( intval( $cff_cache_time_unit ) === 0 ) {
+			$cff_cache_time_unit = 3600;
+		}
+		if ( intval( $cff_cache_time ) === 0 ) {
+			$cff_cache_time = 1;
+		}
 	    $cache_seconds = $cff_cache_time * $cff_cache_time_unit;
 
 	    //Extension settings
@@ -2684,13 +2713,13 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                        $transient_name = 'cff_tle_' . $eventID;
 	                        $transient_name = substr($transient_name, 0, 45);
 
-	                        if ( false === ( $event_json = get_transient( $transient_name ) ) || $event_json === null ) {
+	                        if ( false === ( $event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) ) ) || $event_json === null ) {
 	                            //Get the contents of the Facebook page
 	                            $event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 	                            //Cache the JSON for 180 days as the timeline event info probably isn't going to change
-	                            set_transient( $transient_name, $event_json, 60 * 60 * 24 * 180 );
+	                            set_transient( $transient_name, $encryption->maybe_encrypt( $event_json ), 60 * 60 * 24 * 180 );
 	                        } else {
-	                            $event_json = get_transient( $transient_name );
+	                            $event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) );
 	                            //If we can't find the transient then fall back to just getting the json from the api
 	                            if ($event_json == false) $event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 	                        }
@@ -2858,14 +2887,12 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                $post_text_message = '';
 
 	                                //STORY TAGS
-	                                $cff_post_tags = $this->feed_options[ 'posttags' ];
-
+	                                $cff_post_tags = CFF_Utils::check_if_on($this->feed_options[ 'posttags' ]);
 	                                //Use the story
 	                                if (!empty($news->story)) {
 	                                    $cff_story_raw = $news->story;
 	                                    $post_text_story .= htmlspecialchars($cff_story_raw);
 	                                    $cff_post_text_type = 'story';
-
 
 	                                    //Add message and story tags if there are any and the post text is the message or the story
 	                                    if( $cff_post_tags && isset($news->story_tags) && !$cff_title_link){
@@ -2940,7 +2967,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                                        //Don't use the story tag in this case otherwise it changes '__ created an event' to '__ created an Name Of Event'
 	                                                        //Don't use the story tag if it's a page as it causes an issue when sharing a page: Smash Balloon Dev shared a Smash Balloon.
 	                                                    } else {
-	                                                        $b = '<a href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" target="_blank" '.$cff_nofollow.'>' . $message_tags_arr[$tag]['name'] . '</a>';
+	                                                        $b = '<a  href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" target="_blank" '.$cff_nofollow.'>' . $message_tags_arr[$tag]['name'] . '</a>';
 	                                                        $c = $message_tags_arr[$tag]['offset'];
 	                                                        $d = $message_tags_arr[$tag]['length'];
 	                                                        $post_text_story = CFF_Utils::cff_mb_substr_replace( $post_text_story, $b, $c, $d);
@@ -2981,7 +3008,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    if( $cff_post_tags && isset($news->message_tags) && !$cff_title_link){
 
 	                                        $text_tags = $news->message_tags;
-
 	                                        //Does the Post Text contain any html tags? - the & symbol is the best indicator of this
 	                                        $cff_html_check_array = array('&lt;', '’', '“', '&quot;', '&amp;', '&gt;&gt;', '&gt;');
 
@@ -3027,7 +3053,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                            usort($message_tags_arr, "CustomFacebookFeed\CFF_Utils::cffSortTags");
 
 	                                            for($tag = count($message_tags_arr)-1; $tag >= 0; $tag--) {
-
 	                                                //If the name is blank (aka the story tag doesn't work properly) then don't use it
 	                                                if( $message_tags_arr[$tag]['name'] !== '' ) {
 
@@ -3035,10 +3060,9 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
                                                             // The message_tag['offset'] isn't always accurate when searching the post text due to formatting so we have to find the correct position
                                                             $post_tag_position = strpos( strtolower( $post_text_message ), strtolower( $message_tags_arr[$tag]['name'] ) );
-
                                                             $original_text_offset = substr($post_text_message, $post_tag_position, $message_tags_arr[$tag]['length']);
 
-	                                                        $b = '<a href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" '.$cff_nofollow.'>' . $original_text_offset . '</a>';
+	                                                        $b = '<a href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" '.$cff_nofollow.'>' . substr($message_tags_arr[$tag]['name'], 0 , $message_tags_arr[$tag]['length']). '</a>';
 	                                                        $c = $message_tags_arr[$tag]['offset'];
 	                                                        $d = $message_tags_arr[$tag]['length'];
 	                                                        $post_text_message = CFF_Utils::cff_mb_substr_replace( $post_text_message, $b, $c, $d);
@@ -3208,13 +3232,13 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        $transient_name = 'cff_tle_' . $eventID;
 	                                        $transient_name = substr($transient_name, 0, 45);
 
-	                                        if ( false === ( $event_json = get_transient( $transient_name ) ) || $event_json === null ) {
+	                                        if ( false === ( $event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) ) ) || $event_json === null ) {
 	                                            //Get the contents of the Facebook page
 	                                            $event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 	                                            //Cache the JSON for 180 days as the timeline event info probably isn't going to change
-	                                            set_transient( $transient_name, $event_json, 60 * 60 * 24 * 180 );
+	                                            set_transient( $transient_name, $encryption->maybe_encrypt( $event_json ), 60 * 60 * 24 * 180 );
 	                                        } else {
-	                                            $event_json = get_transient( $transient_name );
+	                                            $event_json = $encryption->maybe_decrypt( get_transient( $transient_name ) );
 	                                            //If we can't find the transient then fall back to just getting the json from the api
 	                                            if ($event_json == false) $event_json = CFF_Utils::cff_fetchUrl($event_json_url);
 	                                        }
@@ -3319,8 +3343,8 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    $transient_name = 'cff_tle_' . $cff_post_id;
 	                                    $transient_name = substr($transient_name, 0, 45);
 
-	                                    if ( false !== ( $cff_note_json = get_transient( $transient_name ) ) ) {
-	                                        $cff_note_json = get_transient( $transient_name );
+	                                    if ( false !== ( $cff_note_json = $encryption->maybe_decrypt( get_transient( $transient_name ) )  ) ) {
+	                                        $cff_note_json = $encryption->maybe_decrypt( get_transient( $transient_name ) );
 
 	                                        //Interpret data with JSON
 	                                        $cff_note_obj = json_decode($cff_note_json);
@@ -3861,7 +3885,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        if( isset($PostID[1]) ) $cff_post_id = $PostID[1];
 
 	                                        if($cff_video_action == 'facebook') $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" target="_blank" '.$cff_nofollow.' class="cff-media-overlay"></a>';
-
 	                                        //Add image as it's needed for lightbox ordering for embedded iframe videos
 		                                    if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
 			                                    $cff_media_video .= '<img src="'.$picture.'" alt="Video image" class="cff-iframe-img" />';
@@ -3911,10 +3934,8 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                    //Else use a video player
 	                                    } else {
-
 	                                        //Don't use full post ID as link to Facebook post no longer works
 	                                        if( isset($PostID[1]) ) $cff_post_id = $PostID[1];
-
 	                                        //Show play button over video thumbnail
 	                                        isset($news->source) ? $vid_link = $news->source : $vid_link = '';
 	                                        //Check whether the video source contains an mp4, as the HTML5 video player can't play any other type
@@ -4067,17 +4088,14 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                        } else { // Lightbox disabled
 
-
 	                                            //Link to Facebook post
 	                                            if( $cff_video_action == 'facebook' ){
 
 	                                                $cff_media_video .= $cff_vid_link;
 
 	                                            } else { //Play in feed
-
 	                                                //Use HTML5 player
 	                                                if( isset( $news->source ) && $cff_mp4_check && $cff_video_player == 'standard' ){
-
 	                                                    $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" class="cff-html5-play" '.$cff_nofollow.'>' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '</a>';
 	                                                    //If pagination is enabled then display the poster image over the video element as in Chrome there's a video flicker when loading more posts
 	                                                    if( $this->feed_options['loadmore'] ) $cff_media_video .= '<img class="cff-poster" src="' . $poster_img . '" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" style="position: absolute; top: 0; left: 0; z-index: 7;" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" />';
@@ -4290,7 +4308,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		                                $shortened_description = ! empty( $description_text ) ? CFF_Utils::cff_maybe_shorten_text( $description_text ) : $cff_post_id;
 
 	                                    //Comment on Facebook link
-	                                    $cff_comments .= '<p class="cff-comments cff-comment-on-facebook" ' . $cff_meta_styles . '><a href="'.$link.'" '.$target.$cff_nofollow.' style="color:'.$cff_meta_link_color.'"><span class="cff-icon">'.$cff_comment_svg.'</span>'.$cff_translate_comment_on_facebook_text.'</a></p>';
+	                                    $cff_comments .= '<p class="cff-comments cff-comment-on-facebook" ' . $cff_meta_styles . '><a href="'.$link.'" '.$target.$cff_nofollow.' '.$cff_meta_link_styles.'><span class="cff-icon">'.$cff_comment_svg.'</span>'.$cff_translate_comment_on_facebook_text.'</a></p>';
 
 	                                    $cff_comments .= '<div class="cff-comments-wrap" ' . $cff_meta_styles . '>';
 
@@ -4319,7 +4337,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    $cff_elipsis_svg = '<svg width="24px" height="24px" role="img" aria-hidden="true" aria-label="ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 150 320 200"><path d="M192 256c0 17.7-14.3 32-32 32s-32-14.3-32-32 14.3-32 32-32 32 14.3 32 32zm88-32c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32zm-240 0c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32z"></path></svg>';
 	                                    $cff_translate_view_previous_comments_text = $cff_elipsis_svg . '<span class="cff-screenreader">View more comments</span>';
 
-	                                    if ( $comment_count > $cff_comments_num ) $cff_comments .= '<p class="cff-comments cff-show-more-comments" ' . $cff_meta_styles . '><a class="cff-show-more-comments-a" href="javascript:void(0);" style="color:'.$cff_meta_link_color.'">'.$cff_translate_view_previous_comments_text.'</a></p>';
+	                                    if ( $comment_count > $cff_comments_num ) $cff_comments .= '<p class="cff-comments cff-show-more-comments" ' . $cff_meta_styles . '><a class="cff-show-more-comments-a" href="javascript:void(0);" '.$cff_meta_link_styles.'>'.$cff_translate_view_previous_comments_text.'</a></p>';
 
 	                                    $cff_comments .= '</div>';
 
@@ -4688,8 +4706,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                }
 
 	                                //Encode text after filtering
+	                                /*
 	                                $description_text = htmlentities($description_text, ENT_QUOTES, 'UTF-8');
 	                                $video_name = htmlentities($video_name, ENT_QUOTES, 'UTF-8');
+	                                */
 
 	                                if ( isset( $news->published ) && $news->published === false ) $cff_show_post = false;
 
@@ -4735,7 +4755,22 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    isset($news->source) ? $cff_vid_source = $news->source : $cff_vid_source = '';
 		                                $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 
-	                                    $cff_post_item .= '<a href="https://facebook.com/' . $news->id . '" class="cff-album-cover cff-video" ' . $target . $cff_nofollow .$media_src_set_att. ' id="' . $news->id . '" data-source="' . $cff_vid_source . '">' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster ) . '" data-orig-source="' . $poster . '" alt="' . htmlspecialchars($poster_alt) . '" data-querystring="'.$cff_picture_querystring.'" /></a>';
+		                                if( $cff_video_action == 'post' && $cff_disable_lightbox){
+		                                	$cff_post_item .= '<div class="cff-vidLink cff-video-player cff-only-vids">';
+		                                	$cff_post_item .= '<div class="fb-video" data-href="'.$news->source.'" data-show-text="false" fb-xfbml-state="rendered">';
+		                                	if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
+		                                		$cff_post_item .= '<iframe src="'.$news->source.'" title="Facebook video player" allowfullscreen frameborder="0" webkitallowfullscreen mozallowfullscreen></iframe></div>';
+		                                	} else {
+		                                		$cff_post_item .= '<span class="cff-iframe-placeholder" data-src="'.$news->source.'" data-type="facebook" style="display: none;">placeholder</span></div>';
+		                                	}
+
+		                                	$cff_post_item .= '<img class="cff-poster" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" alt="' . htmlspecialchars($vid_title) . '"'.$media_src_set_att.' />';
+		                                	$cff_post_item .= '</div>';
+		                                }else{
+	                                    	$cff_post_item .= '<a href="https://facebook.com/' . $news->id . '" class="cff-album-cover cff-video" ' . $target . $cff_nofollow .$media_src_set_att. ' id="' . $news->id . '" data-source="' . $cff_vid_source . '">' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster ) . '" data-orig-source="' . $poster . '" alt="' . htmlspecialchars($poster_alt) . '" data-querystring="'.$cff_picture_querystring.'" /></a>';
+
+		                                }
+
 
 	                                    if($cff_show_video_name) $cff_post_item .= '<div class="cff-album-info">';
 	                                        if( $cff_show_video_name && !empty($video_name) ) $cff_post_item .= '<h4><a href="https://facebook.com/' . $news->id . '" '.$target.$cff_nofollow.'>' . $video_name . '</a></h4>';
@@ -4894,10 +4929,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	        //If no events then add notice
 	        if ( empty($cff_posts_array) ) $cff_posts_array = CFF_Utils::cff_array_push_assoc($cff_posts_array, 1, '<p class="cff-no-events">'.stripslashes(__( $cff_no_events_text, 'custom-facebook-feed' ) ).'</p>');
 	    }
-
-	    $cff_load_more = $this->feed_options['loadmore'];
-	    ($cff_load_more || $cff_load_more == 'true' || $cff_load_more == 'on') ? $cff_load_more = true : $cff_load_more = false;
-	    if( $this->feed_options[ 'loadmore' ] === 'false' ) $cff_load_more = false;
+	    $cff_load_more = CFF_Utils::check_if_on( $this->feed_options['loadmore'] );
 
 	    //Output the posts array
 	    if($cff_photos_only && empty($cff_album_id)){
@@ -4940,10 +4972,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 			die( 'invalid feed ID');
 		}
 
-		$feed_id = sanitize_text_field( $_POST['feed_id'] );
+		$feed_id = sanitize_text_field( wp_unslash( $_POST['feed_id'] ) );
 		$images_need_resizing_raw = isset( $_POST['needs_resizing'] ) ? $_POST['needs_resizing'] : array();
 		if ( is_array( $images_need_resizing_raw ) ) {
-			array_map( 'sanitize_text_field', $images_need_resizing_raw );
+			array_map( array( 'CustomFacebookFeed\CFF_Utils', 'sanitize_post_ids'), $images_need_resizing_raw );
 		} else {
 			$images_need_resizing_raw = array();
 		}
@@ -5023,7 +5055,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 			}
 		}
 
-		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
+		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : 'unknown';
 		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
 		$feed_details = array(
 			'feed_id' => $feed_options['id'],
@@ -5058,8 +5090,8 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    $facebook_settings = new CFF_Settings_Pro( $feed_options );
 		$facebook_settings->set_feed_type_and_terms();
 
-		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
-		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
+		$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : 'unknown';
+		$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)sanitize_text_field( wp_unslash($_POST['post_id'])) : 'unknown';
 		$feed_details = array(
 			'feed_id' => $feed_options['id'],
 			'atts' => $shortcode_data,

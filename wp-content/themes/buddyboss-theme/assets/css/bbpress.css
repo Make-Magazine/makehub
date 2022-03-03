@@ -872,9 +872,12 @@ body .bs-meta-item.bs-meta-item a {
 .bs-meta-item.color.no-action:hover {
   opacity: 1;
 }
-.bs-meta-item span.no-links {
+.bs-meta-item .no-links {
   padding: 4px 10px;
   display: inline-block;
+}
+.bs-meta-item .no-links.forum-label__is-single {
+  display: none;
 }
 
 .bs-replied a {
@@ -2218,8 +2221,10 @@ body:not(.logged-in) .bbp-form-fields-bottom-wrap.bb-tags-field-container {
 }
 .bb-topic-subscription-link-wrap.mobile-only .subscription-toggle,
 .bb-topic-subscription-link-wrap.mobile-only .bbp-topic-reply-link,
+.bb-topic-subscription-link-wrap.mobile-only .bbp-topic-login-link,
 .bb-topic-reply-link-wrap.mobile-only .subscription-toggle,
-.bb-topic-reply-link-wrap.mobile-only .bbp-topic-reply-link {
+.bb-topic-reply-link-wrap.mobile-only .bbp-topic-reply-link,
+.bb-topic-reply-link-wrap.mobile-only .bbp-topic-login-link {
   max-width: 300px;
 }
 
@@ -2250,8 +2255,9 @@ body:not(.logged-in) .bbp-form-fields-bottom-wrap.bb-tags-field-container {
   margin-bottom: 10px;
 }
 
-a.bbp-topic-reply-link,
-a.subscription-toggle {
+.bbp-topic-reply-link,
+.subscription-toggle,
+.bbp-topic-login-link {
   font-size: 15px;
   color: #fff;
   background-color: #007CFF;
@@ -2274,22 +2280,25 @@ a.subscription-toggle {
   -webkit-transition: all linear 0.2s;
           transition: all linear 0.2s;
 }
-a.bbp-topic-reply-link:hover,
-a.subscription-toggle:hover {
+.bbp-topic-reply-link:hover,
+.subscription-toggle:hover,
+.bbp-topic-login-link:hover {
   outline: none;
   text-decoration: none;
   color: #fff;
   box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.1);
 }
-a.bbp-topic-reply-link:active,
-a.subscription-toggle:active {
+.bbp-topic-reply-link:active,
+.subscription-toggle:active,
+.bbp-topic-login-link:active {
   outline: none;
   text-decoration: none;
   color: #fff;
   box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.1);
 }
-a.bbp-topic-reply-link.disabled,
-a.subscription-toggle.disabled {
+.bbp-topic-reply-link.disabled,
+.subscription-toggle.disabled,
+.bbp-topic-login-link.disabled {
   cursor: default;
   font-style: normal;
   color: #C8CBCF;
@@ -2297,24 +2306,24 @@ a.subscription-toggle.disabled {
   opacity: 1;
 }
 
-a.subscription-toggle {
+.subscription-toggle {
   background: none;
   color: #007CFF;
   border-color: #007CFF;
 }
-a.subscription-toggle:hover {
+.subscription-toggle:hover {
   background: none;
   color: #0070e6;
   border-color: #0070e6;
   box-shadow: none;
 }
-a.subscription-toggle:active {
+.subscription-toggle:active {
   background: none;
   color: #3d9bff;
   border-color: #3d9bff;
   box-shadow: none;
 }
-a.subscription-toggle:disabled, a.subscription-toggle.disabled {
+.subscription-toggle:disabled, .subscription-toggle.disabled {
   background: #f5f5f5;
   color: #DEDFE2;
   border-color: #DEDFE2;
@@ -2670,14 +2679,17 @@ div.bbp-submit-wrapper .button.submit {
   margin-left: 0;
 }
 
-.bbpress .color.bs-meta-item {
+.bbpress .color.bs-meta-item,
+#bbpress-forums .color.bs-meta-item {
   -webkit-transition: 0.2s linear all;
           transition: 0.2s linear all;
 }
-.bbpress .color.bs-meta-item:hover {
+.bbpress .color.bs-meta-item:hover,
+#bbpress-forums .color.bs-meta-item:hover {
   opacity: 0.8;
 }
-.bbpress .color.bs-meta-item a:hover {
+.bbpress .color.bs-meta-item a:hover,
+#bbpress-forums .color.bs-meta-item a:hover {
   color: inherit;
 }
 

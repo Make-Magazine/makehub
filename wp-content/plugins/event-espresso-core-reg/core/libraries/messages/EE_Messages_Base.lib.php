@@ -29,8 +29,8 @@ abstract class EE_Messages_Base extends EE_Base
      * that will be used whenever the messenger is referenced in the ui
      *
      * array(
-     *  'singular' => __('something'),
-     *  'plural' => __('somethings')
+     *  'singular' => esc_html__('something'),
+     *  'plural' => esc_html__('somethings')
      * )
      *
      * @var array
@@ -192,7 +192,8 @@ abstract class EE_Messages_Base extends EE_Base
         /**
          * This determines what will be used for the getting the settings.
          */
-        if (! empty($messenger)
+        if (
+            ! empty($messenger)
             && $Message_Resource_Manager->is_message_type_active_for_messenger($messenger, $this->name)
         ) {
             $settings_to_use = $active_messengers[ $messenger ]['settings'][ $messenger . '-message_types' ];

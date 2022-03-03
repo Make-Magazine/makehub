@@ -16,7 +16,7 @@ class CFF_Notifications {
 	 *
 	 * @var string
 	 */
-	const SOURCE_URL = 'http://plugin.smashballoon.com/notifications.json';
+	const SOURCE_URL = 'https://plugin.smashballoon.com/notifications.json';
 
 	/**
 	 * @var string
@@ -189,6 +189,16 @@ class CFF_Notifications {
 				continue;
 			}
 
+			// Ignore if a specific cff_status is empty or false
+			if ( ! empty( $notification['statuscheck'] ) ) {
+				$status_key          = sanitize_key( $notification['statuscheck'] );
+				$cff_statuses_option = get_option( 'cff_statuses', array() );
+
+				if ( empty( $cff_statuses_option[ $status_key ] ) ) {
+					continue;
+				}
+			}
+
 			// The message and license should never be empty, if they are, ignore.
 			if ( empty( $notification['content'] ) || empty( $notification['type'] ) ) {
 				continue;
@@ -255,6 +265,16 @@ class CFF_Notifications {
 			// Ignore if min version has not been reached
 			if ( ! empty( $notification['minver'] ) && version_compare( $notification['minver'],  CFFVER ) >= 0 ) {
 				unset( $notifications[ $key ] );
+			}
+
+			// Ignore if a specific cff_status is empty or false
+			if ( ! empty( $notification['statuscheck'] ) ) {
+				$status_key          = sanitize_key( $notification['statuscheck'] );
+				$cff_statuses_option = get_option( 'cff_statuses', array() );
+
+				if ( empty( $cff_statuses_option[ $status_key ] ) ) {
+					unset( $notifications[ $key ] );
+				}
 			}
 		}
 
@@ -417,7 +437,7 @@ class CFF_Notifications {
 			'{slug}' => 'custom-facebook-feed',
 			'{campaign}' => 'facebook-free'
 		);
-		
+
 		if ( CFF_Utils::cff_is_pro_version() ) {
 			$merge_fields['{campaign}'] = 'facebook-pro';
 			$merge_fields['{plugin}'] = 'Custom Facebook Feed Pro';
@@ -482,7 +502,7 @@ class CFF_Notifications {
 						! empty( $btn['url'] ) ? esc_url( $this->replace_merge_fields( $btn['url'], $notification ) ) : '',
 						$btn_type === 'primary' ? 'cff-btn-orange' : 'cff-btn-grey',
 						! empty( $btn['target'] ) && $btn['target'] === '_blank' ? ' target="_blank" rel="noopener noreferrer"' : '',
-						! empty( $btn['text'] ) ? sanitize_text_field( $btn['text'] ) : ''
+						! empty( $btn['text'] ) ? sanitize_text_field( wp_unslash( $btn['text'] ) ) : ''
 					);
 				}
 				$buttons_html = ! empty( $buttons_html ) ? '<div class="buttons">' . $buttons_html . '</div>' : '';
@@ -505,7 +525,7 @@ class CFF_Notifications {
 					$image_html .= '</svg>';
 				} else {
 					$image_html = '<div class="thumb">';
-					$img_src = CFF_PLUGIN_URL . 'admin/assets/img/' . sanitize_text_field( $notification['image'] );
+					$img_src = CFF_PLUGIN_URL . 'admin/assets/img/' . sanitize_text_field( wp_unslash( $notification['image'] ) );
 					$image_html .= '<img src="'.esc_url( $img_src ).'" alt="notice">';
 
 					if ( isset( $notification['image_overlay'] ) ) {
@@ -523,10 +543,10 @@ class CFF_Notifications {
 					<p class="content">%2$s</p>
 					%3$s
 				</div>',
-				! empty( $notification['title'] ) ? $this->replace_merge_fields( sanitize_text_field( $notification['title'] ), $notification ) : '',
+				! empty( $notification['title'] ) ? $this->replace_merge_fields( sanitize_text_field( wp_unslash( $notification['title'] ) ), $notification ) : '',
 				! empty( $notification['content'] ) ? wp_kses( $this->replace_merge_fields( $notification['content'], $notification ), $content_allowed_tags ) : '',
 				$buttons_html,
-				! empty( $notification['id'] ) ? esc_attr( sanitize_text_field( $notification['id'] ) ) : 0,
+				! empty( $notification['id'] ) ? esc_attr( sanitize_text_field( wp_unslash( $notification['id'] ) ) ) : 0,
 				$current_class
 			);
 

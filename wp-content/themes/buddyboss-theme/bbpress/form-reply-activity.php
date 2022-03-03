@@ -187,7 +187,7 @@
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-theme' ) : esc_html_e( 'Log in  to reply.', 'buddyboss-theme' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-theme' ) : esc_html_e( 'Log in to reply.', 'buddyboss-theme' ); ?></p>
 		</div>
 	</div>
 

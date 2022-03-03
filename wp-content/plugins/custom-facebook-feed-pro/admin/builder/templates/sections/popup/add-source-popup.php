@@ -11,7 +11,7 @@
                 <h3>{{selectSourceScreen.updateHeading}}</h3>
                 <div class="cff-fb-srcs-desc">{{selectSourceScreen.updateDescription}}</div>
                 <div class="cff-fb-srcslist-ctn cff-fb-fs">
-                    <div class="cff-fb-srcs-item cff-fb-srcs-new" @click.prevent.default="$parent.activateView('sourcePopupType', 'creation')">
+                    <div class="cff-fb-srcs-item cff-fb-srcs-new" @click.prevent.default="$parent.activateView('sourcePopupType', 'creationRedirect')">
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.66634 5.66634H5.66634V9.66634H4.33301V5.66634H0.333008V4.33301H4.33301V0.333008H5.66634V4.33301H9.66634V5.66634Z" fill="#0096CC"/>
                         </svg>
@@ -71,14 +71,14 @@
         </div>
         <!--END Source Popup on the Customizer-->
 
-        <div class="cff-fb-source-popup cff-fb-popup-inside"  v-if="viewsActive.sourcePopupType != 'customizer'">
-            <div class="cff-fb-popup-cls" @click.prevent.default="$parent.activateView('sourcePopup')">
+        <div class="cff-fb-source-popup cff-fb-popup-inside" :data-step="viewsActive.sourcePopupScreen"  v-if="viewsActive.sourcePopupType != 'customizer'">
+            <div class="cff-fb-popup-cls" @click.prevent.default="$parent.activateView('sourcePopup')" v-if="viewsActive.sourcePopupScreen != 'redirect_1'">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#141B38"/>
                 </svg>
             </div>
             <!-- Step One Select Source -->
-            <div class="cff-fb-source-step1 cff-fb-fs" v-if="viewsActive.sourcePopupScreen == 'step_1'">
+            <div class="cff-fb-source-step1 cff-fb-fs" v-if="viewsActive.sourcePopupScreen == 'step_1_event'">
                 <div class="cff-fb-source-top cff-fb-fs">
                     <div class=" cff-fb-fs">
                         <div class="cff-fb-src-back-top" @click.prevent.default="$parent.activateView('sourcePopup', 'updateCustomizer')">
@@ -89,6 +89,7 @@
                         </div>
                     </div>
                     <h3>{{selectSourceScreen.modal.addNew}}</h3>
+                    <!--
                     <div class="cff-fb-stp1-elm cff-fb-fs">
                         <div class="cff-fb-stp1-elm-ic">1</div>
                         <div class="cff-fb-stp1-elm-txt">
@@ -115,6 +116,7 @@
                             </div>
                         </div>
                     </div>
+                     -->
                     <div class="cff-fb-stp1-elm cff-fb-fs" v-if="(addNewSource.typeSelected == 'group' && selectedFeed == 'events') || selectedFeed != 'events'">
                         <div class="cff-fb-stp1-elm-ic">2</div>
                         <div class="cff-fb-stp1-elm-txt">
@@ -133,7 +135,7 @@
                     <div class="cff-fb-fs" v-if="(addNewSource.typeSelected == 'page' && selectedFeed == 'events')">
                         <!--Add Event Source-->
                         <div class="cff-fb-stp1-elm cff-fb-stp1-event cff-fb-fs">
-                            <div class="cff-fb-stp1-elm-ic">2</div>
+                            <div class="cff-fb-stp1-elm-ic">1</div>
                             <div class="cff-fb-stp1-elm-txt">
                                 <div class="cff-fb-stp1-elm-head sb-small-p sb-bold sb-dark-text">{{selectSourceScreen.modal.enterEventToken}}</div>
                                 <div class="cff-fb-stp1-elm-desc sb-caption sb-caption-lighter" v-html="selectSourceScreen.modal.enterEventTokenDescription"></div>
@@ -173,11 +175,20 @@
                 </div>
             </div>
 
+            <div class="cff-fb-source-redirect cff-fb-fs" v-if="viewsActive.sourcePopupScreen == 'redirect_1'" >
+                <div class="cff-fb-source-redirect-ld cff-fb-fs">
+                    <div></div>
+                </div>
+                <div class="cff-fb-source-redirect-info cff-fb-fs">
+                    <strong class="cff-fb-fs">{{genericText.redirectLoading.heading}}</strong>
+                    <p class="cff-fb-fs">{{genericText.redirectLoading.description}}</p>
+                </div>
+            </div>
             <!-- Step Two Show Pages Connected to -->
             <div class="cff-fb-source-step2 cff-fb-fs" v-if="viewsActive.sourcePopupScreen == 'step_2'">
                 <div class="cff-fb-source-top cff-fb-fs">
                     <div class=" cff-fb-fs">
-                        <div class="cff-fb-src-back-top" @click.prevent.default="$parent.switchScreen('sourcePopupScreen','step_1')">
+                        <div class="cff-fb-src-back-top" @click.prevent.default="$parent.customizerFeedData != undefined ? $parent.switchScreen('sourcePopupType', 'customizer') : $parent.activateView('sourcePopup')">
                             <svg width="6" height="9" viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.27398 1.44L4.33398 0.5L0.333984 4.5L4.33398 8.5L5.27398 7.56L2.22065 4.5L5.27398 1.44Z" fill="#434960"/>
                             </svg>
@@ -249,7 +260,7 @@
             <div class="cff-fb-source-step3 cff-fb-fs" v-if="viewsActive.sourcePopupScreen == 'step_3'">
                 <div class="cff-fb-source-top cff-fb-fs">
                     <div class=" cff-fb-fs">
-                        <div class="cff-fb-src-back-top" @click.prevent.default="$parent.switchScreen('sourcePopupScreen','step_1')">
+                        <div class="cff-fb-src-back-top" @click.prevent.default="$parent.customizerFeedData != undefined ? $parent.switchScreen('sourcePopupType', 'customizer') : $parent.activateView('sourcePopup')"">
                             <svg width="6" height="9" viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.27398 1.44L4.33398 0.5L0.333984 4.5L4.33398 8.5L5.27398 7.56L2.22065 4.5L5.27398 1.44Z" fill="#434960"/>
                             </svg>
@@ -279,7 +290,7 @@
                     <button class="cff-fb-source-btn cff-fb-fs sb-btn-blue sb-account-connection-button" @click.prevent.default="addSourceManually()" :data-active="checkManualEmpty() && loadingAjax == false ? 'true' : 'false'">
                         <div v-if="loadingAjax === false" class="cff-fb-icon-success"></div>
                         <span v-if="loadingAjax === false">{{genericText.add}}</span>
-                        <span v-if="loadingAjax" class="spinner" style="display: inline-block;visibility: visible;margin: 1px;"></span>
+                        <span v-if="loadingAjax" v-html="cff_settings.loaderSVG"></span>
                     </button>
 
                 </div>
@@ -305,6 +316,7 @@
                                 <p class="sb-step-text sb-small-p"><span v-html="addAppStep"></span><span v-if="index === 0"><a id="cff-group-admin-link" :href="'https://www.facebook.com/groups/'+selectedSourcesToConnect[0]+'/apps/store'" target="_blank" rel="noopener noreferrer" v-html="$parent.genericText.clickingHere"></a></span></p>
                             </div>
                         </div>
+                        <p style="margin-top: 25px;"><span style="color: red; font-weight: bold;">Important:</span> {{selectSourceScreen.modal.reconnectingAppDir}}</p>
                     </div>
 
                     <div v-if="typeof window.cffSelected !== 'undefined' && window.cffSelected.indexOf(false) > -1 " class="sb-directions-wrap">

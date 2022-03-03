@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Class EE_Select_Display_Strategy
@@ -22,7 +23,7 @@ class EE_Select_Display_Strategy extends EE_Display_Strategy_Base
     public function display()
     {
         if (! $this->_input instanceof EE_Form_Input_With_Options_Base) {
-            throw new EE_Error(sprintf(__('Cannot use Select Display Strategy with an input that doesn\'t have options', 'event_espresso')));
+            throw new EE_Error(sprintf(esc_html__('Cannot use Select Display Strategy with an input that doesn\'t have options', 'event_espresso')));
         }
 
         $html = EEH_HTML::nl(0, 'select');
@@ -47,10 +48,10 @@ class EE_Select_Display_Strategy extends EE_Display_Strategy_Base
             }
             EEH_HTML::indent(-1, 'optgroup');
         } else {
-            $html.=$this->_display_options($this->_input->options());
+            $html .= $this->_display_options($this->_input->options());
         }
 
-        $html.= EEH_HTML::nl(0, 'select') . '</select>';
+        $html .= EEH_HTML::nl(0, 'select') . '</select>';
         return $html;
     }
 
@@ -70,7 +71,7 @@ class EE_Select_Display_Strategy extends EE_Display_Strategy_Base
             // PHP will have converted it to a PHP integer (eg 123). So we need to make sure it's a string
             $unnormalized_value = $this->_input->get_normalization_strategy()->unnormalize_one($value);
             $selected = $this->_check_if_option_selected($unnormalized_value) ? ' selected="selected"' : '';
-            $html.= EEH_HTML::nl(0, 'option') . '<option value="' . esc_attr($unnormalized_value) . '"' . $selected . '>' . $display_text . '</option>';
+            $html .= EEH_HTML::nl(0, 'option') . '<option value="' . esc_attr($unnormalized_value) . '"' . $selected . '>' . $display_text . '</option>';
         }
         EEH_HTML::indent(-1, 'option');
         return $html;

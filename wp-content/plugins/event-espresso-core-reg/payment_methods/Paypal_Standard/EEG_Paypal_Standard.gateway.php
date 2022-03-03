@@ -168,7 +168,7 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
                 $total_discounts_to_cart_total += abs($itemized_sum_diff_from_txn_total);
             } elseif ($itemized_sum_diff_from_txn_total > 0) {
                 $redirect_args[ 'item_name_' . $item_num ] = substr(
-                    __('Other charges', 'event_espresso'),
+                    esc_html__('Other charges', 'event_espresso'),
                     0,
                     127
                 );
@@ -205,9 +205,9 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
         if ($this->_debug_mode) {
             $redirect_args[ 'item_name_' . $item_num ] = 'DEBUG INFO (this item only added in sandbox mode';
             $redirect_args[ 'amount_' . $item_num ] = 0;
-            $redirect_args[ 'on0_'.$item_num ] = 'NOTIFY URL';
+            $redirect_args[ 'on0_' . $item_num ] = 'NOTIFY URL';
             $redirect_args[ 'os0_' . $item_num ] = $notify_url;
-            $redirect_args[ 'on1_'.$item_num ] = 'RETURN URL';
+            $redirect_args[ 'on1_' . $item_num ] = 'RETURN URL';
             $redirect_args[ 'os1_' . $item_num ] = $return_url;
 //          $redirect_args['option_index_' . $item_num] = 1; // <-- dunno if this is needed ?
             $redirect_args[ 'shipping_' . $item_num ] = '0';
@@ -236,7 +236,7 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
         $this->log(
             array(
                 'message'     => sprintf(
-                    __('PayPal payment request initiated.', 'event_espresso')
+                    esc_html__('PayPal payment request initiated.', 'event_espresso')
                 ),
                 'transaction' => $transaction->model_field_array(),
             ),
@@ -265,7 +265,7 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
                 array(
                     'message'     => sprintf(
                         // @codingStandardsIgnoreStart
-                        __('PayPal IPN response is missing critical payment data. This may indicate a PDT request and require your PayPal account settings to be corrected.', 'event_espresso')
+                        esc_html__('PayPal IPN response is missing critical payment data. This may indicate a PDT request and require your PayPal account settings to be corrected.', 'event_espresso')
                         // @codingStandardsIgnoreEnd
                     ),
                     'update_info' => $update_info,
@@ -291,7 +291,8 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
         }
         // kill request here if this is a refund, we don't support them yet (we'd need to adjust the transaction,
         // registrations, ticket counts, etc)
-        if ((
+        if (
+            (
                 $update_info['payment_status'] === 'Refunded'
                 || $update_info['payment_status'] === 'Partially_Refunded'
             )
@@ -451,7 +452,8 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
             )
         );
         // then check the response
-        if (array_key_exists('body', $response)
+        if (
+            array_key_exists('body', $response)
             && ! is_wp_error($response)
             && strcmp($response['body'], "VERIFIED") === 0
         ) {
@@ -534,7 +536,8 @@ class EEG_Paypal_Standard extends EE_Offsite_Gateway
             );
             return;
         }
-        if (! is_array($update_info)
+        if (
+            ! is_array($update_info)
             || ! isset($update_info['mc_shipping'])
             || ! isset($update_info['tax'])
         ) {

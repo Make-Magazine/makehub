@@ -451,8 +451,8 @@ class EE_Question extends EE_Soft_Delete_Base_Class implements EEI_Duplicatable
     {
         $new_question = clone $this;
         $new_question->set('QST_ID', null);
-        $new_question->set_display_text(sprintf(__('%s **Duplicate**', 'event_espresso'), $this->display_text()));
-        $new_question->set_admin_label(sprintf(__('%s **Duplicate**', 'event_espresso'), $this->admin_label()));
+        $new_question->set_display_text(sprintf(esc_html__('%s **Duplicate**', 'event_espresso'), $this->display_text()));
+        $new_question->set_admin_label(sprintf(esc_html__('%s **Duplicate**', 'event_espresso'), $this->admin_label()));
         $new_question->set_system_ID(null);
         $new_question->set_wp_user(get_current_user_id());
         // if we're duplicating a trashed question, assume we don't want the new one to be trashed
@@ -515,7 +515,8 @@ class EE_Question extends EE_Soft_Delete_Base_Class implements EEI_Duplicatable
             $answer = EEM_Answer::instance()->get_registration_question_answer_object($registration, $this->ID());
         }
         // has this question been answered ?
-        if ($answer instanceof EE_Answer
+        if (
+            $answer instanceof EE_Answer
             && $answer->value() !== ''
         ) {
             // answer gets htmlspecialchars called on it, undo that please
@@ -530,11 +531,13 @@ class EE_Question extends EE_Soft_Delete_Base_Class implements EEI_Duplicatable
             $input_constructor_args['default'] = $default_value;
         }
         $max_max_for_question = EEM_Question::instance()->absolute_max_for_system_question($this->system_ID());
-        if (in_array(
-            $this->type(),
-            EEM_Question::instance()->questionTypesWithMaxLength(),
-            true
-        )) {
+        if (
+            in_array(
+                $this->type(),
+                EEM_Question::instance()->questionTypesWithMaxLength(),
+                true
+            )
+        ) {
             $input_constructor_args['validation_strategies'][] = new EE_Max_Length_Validation_Strategy(
                 null,
                 min($max_max_for_question, $this->max())

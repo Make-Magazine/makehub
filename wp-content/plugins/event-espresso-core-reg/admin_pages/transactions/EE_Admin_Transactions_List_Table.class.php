@@ -52,23 +52,23 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
     protected function _set_properties()
     {
         $this->_wp_list_args = array(
-            'singular' => __('transaction', 'event_espresso'),
-            'plural'   => __('transactions', 'event_espresso'),
+            'singular' => esc_html__('transaction', 'event_espresso'),
+            'plural'   => esc_html__('transactions', 'event_espresso'),
             'ajax'     => true,
             'screen'   => $this->_admin_page->get_current_screen()->id,
         );
-        $ID_column_name = __('ID', 'event_espresso');
+        $ID_column_name = esc_html__('ID', 'event_espresso');
         $ID_column_name .= ' : <span class="show-on-mobile-view-only" style="float:none">';
-        $ID_column_name .= __('Transaction Date', 'event_espresso');
+        $ID_column_name .= esc_html__('Transaction Date', 'event_espresso');
         $ID_column_name .= '</span> ';
         $this->_columns = array(
             'TXN_ID'        => $ID_column_name,
-            'TXN_timestamp' => __('Transaction Date', 'event_espresso'),
-            'TXN_total'     => __('Total', 'event_espresso'),
-            'TXN_paid'      => __('Paid', 'event_espresso'),
-            'ATT_fname'     => __('Primary Registrant', 'event_espresso'),
-            'event_name'    => __('Event', 'event_espresso'),
-            'actions'       => __('Actions', 'event_espresso'),
+            'TXN_timestamp' => esc_html__('Transaction Date', 'event_espresso'),
+            'TXN_total'     => esc_html__('Total', 'event_espresso'),
+            'TXN_paid'      => esc_html__('Paid', 'event_espresso'),
+            'ATT_fname'     => esc_html__('Primary Registrant', 'event_espresso'),
+            'event_name'    => esc_html__('Event', 'event_espresso'),
+            'actions'       => esc_html__('Actions', 'event_espresso'),
         );
 
         $this->_sortable_columns = array(
@@ -131,11 +131,21 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
         ob_start();
         ?>
         <label for="txn-filter-start-date">Display Transactions from </label>
-        <input id="txn-filter-start-date" class="datepicker" type="text" value="<?php echo $start_date; ?>"
-               name="txn-filter-start-date" size="15"/>
+        <input class="datepicker"
+               id="txn-filter-start-date"
+               name="txn-filter-start-date"
+               size="15"
+               type="text"
+               value="<?php echo esc_html($start_date); ?>"
+        />
         <label for="txn-filter-end-date"> until </label>
-        <input id="txn-filter-end-date" class="datepicker" type="text" value="<?php echo $end_date; ?>"
-               name="txn-filter-end-date" size="15"/>
+        <input class="datepicker"
+               id="txn-filter-end-date"
+               name="txn-filter-end-date"
+               size="15"
+               type="text"
+               value="<?php echo esc_html($end_date); ?>"
+        />
         <?php
         $filters[] = ob_get_contents();
         ob_end_clean();
@@ -192,7 +202,8 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
     protected function _get_txn_timestamp(EE_Transaction $transaction)
     {
         // is TXN less than 2 hours old ?
-        if (($transaction->failed() || $transaction->is_abandoned())
+        if (
+            ($transaction->failed() || $transaction->is_abandoned())
             && $this->session_lifespan->expiration() < $transaction->datetime(false, true)
         ) {
             $timestamp = esc_html__('TXN in progress...', 'event_espresso');
@@ -420,7 +431,8 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
                     'EVT_ID' => $event->ID(),
                 )
             );
-            if (empty($this->_req_data['EVT_ID'])
+            if (
+                empty($this->_req_data['EVT_ID'])
                 && EE_Registry::instance()->CAP->current_user_can(
                     'ee_edit_event',
                     'espresso_events_edit',
@@ -531,7 +543,8 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
         if ($registration instanceof EE_Registration) {
             $url = $registration->invoice_url();
             // only show invoice link if message type is active.
-            if ($registration->attendee() instanceof EE_Attendee
+            if (
+                $registration->attendee() instanceof EE_Attendee
                 && EEH_MSG_Template::is_mt_active('invoice')
             ) {
                 return '
@@ -560,8 +573,10 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
         if ($registration instanceof EE_Registration) {
             $url = $registration->receipt_url();
             // only show receipt link if message type is active.
-            if ($registration->attendee() instanceof EE_Attendee
-                && EEH_MSG_Template::is_mt_active('receipt')) {
+            if (
+                $registration->attendee() instanceof EE_Attendee
+                && EEH_MSG_Template::is_mt_active('receipt')
+            ) {
                 return '
 			<li>
 				<a title="' . esc_attr__('View Transaction Receipt', 'event_espresso') . '"'
@@ -627,7 +642,8 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
     protected function get_send_payment_reminder_trigger_link(EE_Transaction $transaction)
     {
         $registration = $transaction->primary_registration();
-        if ($registration instanceof EE_Registration
+        if (
+            $registration instanceof EE_Registration
             && $registration->attendee() instanceof EE_Attendee
             && EEH_MSG_Template::is_mt_active('payment_reminder')
             && ! in_array(
@@ -695,7 +711,8 @@ class EE_Admin_Transactions_List_Table extends EE_Admin_List_Table
     protected function get_payment_overview_link(EE_Transaction $transaction)
     {
         $registration = $transaction->primary_registration();
-        if ($registration instanceof EE_Registration
+        if (
+            $registration instanceof EE_Registration
             && $transaction->status_ID() !== EEM_Transaction::complete_status_code
             && $registration->owes_monies_and_can_pay()
         ) {

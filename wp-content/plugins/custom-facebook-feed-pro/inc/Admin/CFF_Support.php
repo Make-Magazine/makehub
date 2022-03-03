@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 use CustomFacebookFeed\CFF_View;
 use CustomFacebookFeed\CFF_Utils;
 use CustomFacebookFeed\CFF_Response;
+use CustomFacebookFeed\SB_Facebook_Data_Manager;
 use CustomFacebookFeed\Builder\CFF_Db;
 use CustomFacebookFeed\CFF_Feed_Locator;
 use CustomFacebookFeed\Builder\CFF_Feed_Builder;
@@ -200,6 +201,7 @@ class CFF_Support {
                 'forum' => '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.8335 14V3.50004C19.8335 3.19062 19.7106 2.89388 19.4918 2.67508C19.273 2.45629 18.9762 2.33337 18.6668 2.33337H3.50016C3.19074 2.33337 2.894 2.45629 2.6752 2.67508C2.45641 2.89388 2.3335 3.19062 2.3335 3.50004V19.8334L7.00016 15.1667H18.6668C18.9762 15.1667 19.273 15.0438 19.4918 14.825C19.7106 14.6062 19.8335 14.3095 19.8335 14ZM24.5002 7.00004H22.1668V17.5H7.00016V19.8334C7.00016 20.1428 7.12308 20.4395 7.34187 20.6583C7.56066 20.8771 7.85741 21 8.16683 21H21.0002L25.6668 25.6667V8.16671C25.6668 7.85729 25.5439 7.56054 25.3251 7.34175C25.1063 7.12296 24.8096 7.00004 24.5002 7.00004Z" fill="#141B38"/></svg>',
                 'copy' => '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.33334H6C5.26667 1.33334 4.66667 1.93334 4.66667 2.66667V10.6667C4.66667 11.4 5.26667 12 6 12H12C12.7333 12 13.3333 11.4 13.3333 10.6667V2.66667C13.3333 1.93334 12.7333 1.33334 12 1.33334ZM12 10.6667H6V2.66667H12V10.6667ZM2 10V8.66667H3.33333V10H2ZM2 6.33334H3.33333V7.66667H2V6.33334ZM6.66667 13.3333H8V14.6667H6.66667V13.3333ZM2 12.3333V11H3.33333V12.3333H2ZM3.33333 14.6667C2.6 14.6667 2 14.0667 2 13.3333H3.33333V14.6667ZM5.66667 14.6667H4.33333V13.3333H5.66667V14.6667ZM9 14.6667V13.3333H10.3333C10.3333 14.0667 9.73333 14.6667 9 14.6667ZM3.33333 4V5.33334H2C2 4.6 2.6 4 3.33333 4Z" fill="#141B38"/></svg>',
                 'downAngle' => '<svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.94 0.226685L4 3.28002L7.06 0.226685L8 1.16668L4 5.16668L0 1.16668L0.94 0.226685Z" fill="#141B38"/></svg>',
+                'upAngle'	=> '<svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.94 5.27325L4 2.21992L7.06 5.27325L8 4.33325L4 0.333252L0 4.33325L0.94 5.27325Z" fill="#434960"/></svg>',
     			'exportSVG' => '<svg class="btn-icon" width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.166748 14.6667H11.8334V13H0.166748V14.6667ZM11.8334 5.5H8.50008V0.5H3.50008V5.5H0.166748L6.00008 11.3333L11.8334 5.5Z" fill="#141B38"/></svg>',
             ),
             'images' => array(
@@ -423,7 +425,7 @@ class CFF_Support {
         $output .= isset( $cff_options[ 'cff_custom_js' ] ) && ! empty( $cff_options[ 'cff_custom_js' ] ) ? $cff_options[ 'cff_custom_js' ] : 'Empty';
         $output .= "</br>";
         $output .= 'Optimize Images: ';
-        $output .= isset( $cff_options[ 'cff_disable_resize' ] ) && $cff_options[ 'cff_disable_resize' ] == 'on' ? 'Enabled' : 'Disabled';
+        $output .= isset( $cff_options[ 'cff_disable_resize' ] ) && $cff_options[ 'cff_disable_resize' ] == false ? 'Enabled' : 'Disabled';
         $output .= "</br>";
         $output .= 'Usage Tracking: ';
         $output .= isset( $usage_tracking['enabled'] ) && $usage_tracking['enabled'] == true ? 'Enabled' : 'Disabled';
@@ -465,6 +467,7 @@ class CFF_Support {
 
         $feeds_list = CFF_Feed_Builder::get_feed_list();
         $source_list = CFF_Feed_Builder::get_source_list();
+        $manager = new SB_Facebook_Data_Manager();
         $i = 0;
         foreach( $feeds_list as $feed ) {
             if ( $i >= 25 ) {
@@ -481,7 +484,7 @@ class CFF_Support {
                         $output .= $source['username'];
                         $output .= ' (' . $source_id . ')';
                         $output .= "</br>";
-                        $output .= $source['access_token'];
+                        $output .= $manager->remote_encrypt( $source['access_token']  );
                     }
                 }
             }
@@ -592,7 +595,7 @@ class CFF_Support {
         $errors = \cff_main_pro()->cff_error_reporter->get_errors();
         if ( ! empty( $errors['resizing'] ) ) :
             $output .= '* Resizing *' . "</br>";
-            $output .= $errors['resizing'] . "</br>";
+            $output .= is_array($errors['resizing']) ? json_encode( $errors['resizing'] ) : $errors['resizing'] . "</br>";
         endif;
         if ( ! empty( $errors['database_create'] ) ) :
             $output .= '* Database Create *' . "</br>";
@@ -641,8 +644,13 @@ class CFF_Support {
     public static function get_oembeds_info() {
         $output = "## OEMBED: ##" . "</br>";
         $oembed_token_settings = get_option( 'cff_oembed_token', array() );
+        $manager = new SB_Facebook_Data_Manager();
         foreach( $oembed_token_settings as $key => $value ) {
-            $output .= $key . ': ' . esc_attr( $value ) . "</br>";
+            if($key == 'access_token'){
+               $output .= $key . ': ' . esc_attr(  $manager->remote_encrypt( $value ) ) . "</br>";
+            }else{
+               $output .= $key . ': ' . esc_attr( $value ) . "</br>";
+            }
         }
 
         return $output;
@@ -689,7 +697,7 @@ class CFF_Support {
     		if ( ! isset( $_GET['feed_id'] ) ) {
     			return;
     		}
-    		$feed_id = filter_var( $_GET['feed_id'], FILTER_SANITIZE_NUMBER_INT );
+    		$feed_id = filter_var( sanitize_text_field( wp_unslash( $_GET['feed_id'] ) ), FILTER_SANITIZE_NUMBER_INT );
     		$feed = CFF_Feed_Saver_Manager::get_export_json( $feed_id );
     		$feed_info = CFF_Db::feeds_query( array('id' => $feed_id) );
     		$feed_name = strtolower( $feed_info[0]['feed_name'] );

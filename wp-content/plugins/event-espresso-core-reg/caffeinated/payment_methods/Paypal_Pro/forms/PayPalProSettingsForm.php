@@ -1,4 +1,5 @@
 <?php
+
 namespace EventEspresso\caffeinated\payment_methods\PayPal_Pro\forms;
 
 use EE_Checkbox_Multi_Input;
@@ -31,7 +32,7 @@ class PayPalProSettingsForm extends PayPalSettingsForm
                     'credit_card_types' => new EE_Checkbox_Multi_Input(
                         EE_PMT_Paypal_Pro::card_types_supported(),
                         array(
-                            'html_label_text' => __('Card Types Supported', 'event_espresso'),
+                            'html_label_text' => esc_html__('Card Types Supported', 'event_espresso'),
                             'required' => true
                         )
                     ),

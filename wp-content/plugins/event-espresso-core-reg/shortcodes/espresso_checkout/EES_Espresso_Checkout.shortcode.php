@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EES_Espresso_Checkout
  *
@@ -60,7 +61,7 @@ class EES_Espresso_Checkout extends EES_Shortcode
     {
         \EE_Error::doing_it_wrong(
             __METHOD__,
-            __(
+            esc_html__(
                 'Usage is deprecated. Please use \EventEspresso\core\domain\entities\shortcodes\EspressoCheckout::processShortcode() instead.',
                 'event_espresso'
             ),

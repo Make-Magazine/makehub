@@ -9,7 +9,7 @@
  * Description: Adds premium features to BuddyBoss Platform.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.1.7
+ * Version:     1.1.9.1
  * Text Domain: buddyboss-pro
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class EE_Required_Validation_Strategy
  *
@@ -19,7 +20,7 @@ class EE_Required_Validation_Strategy extends EE_Validation_Strategy_Base
     public function __construct($validation_error_message = null)
     {
         if (! $validation_error_message) {
-            $validation_error_message = __("This field is required.", "event_espresso");
+            $validation_error_message = esc_html__("This field is required.", "event_espresso");
         }
         parent::__construct($validation_error_message);
     }
@@ -37,7 +38,8 @@ class EE_Required_Validation_Strategy extends EE_Validation_Strategy_Base
      */
     public function validate($normalized_value)
     {
-        if ($normalized_value === ''
+        if (
+            $normalized_value === ''
             || $normalized_value === null
             || $normalized_value === array()
         ) {
@@ -56,7 +58,7 @@ class EE_Required_Validation_Strategy extends EE_Validation_Strategy_Base
     public function get_jquery_validation_rule_array()
     {
         return array(
-            'required'=> true,
+            'required' => true,
             'messages' => array(
                 'required' => $this->get_validation_error_message()
             )

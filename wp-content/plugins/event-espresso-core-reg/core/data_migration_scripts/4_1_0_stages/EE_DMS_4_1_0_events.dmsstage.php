@@ -1,4 +1,5 @@
 <?php
+
 /**
  * migrates old 3.1 events, and start_end entries to 4.1 event CPTs, tickets (although doesn't assign them any prices, only datetimes; also
  * this is run BEFORE migrating prices), and datetimes.
@@ -95,33 +96,33 @@ CREATE TABLE `wp_events_detail` (
 
         $this->_fields = array(
             'Event_CPT'=>array(
-                'EVT_ID'=>new EE_Primary_Key_Int_Field('ID', __('Post ID for Event','event_espresso')),
-                'EVT_name'=>new EE_Plain_Text_Field('post_title', __('Event Name','event_espresso'), false, ''),
-                'EVT_desc'=>new EE_Simple_HTML_Field('post_content', __("Event Description", "event_espresso"), false, ''),
-                'EVT_slug'=>new EE_Slug_Field('post_name', __("Event Slug", "event_espresso"), false, ''),
-                'EVT_created'=>new EE_Datetime_Field('post_date', __("Date/Time Event Created", "event_espresso"), false, time()),
-                'EVT_short_desc'=>new EE_Simple_HTML_Field('post_excerpt', __("Event Short Description", "event_espresso"), false,''),
-                'EVT_modified'=>new EE_Datetime_Field('post_modified', __("Date/Time Event Modified", "event_espresso"), true, time()),
-                'EVT_wp_user'=>new EE_Integer_Field('post_author', __("Wordpress User ID", "event_espresso"), false,1),
-                'parent'=>new EE_Integer_Field('post_parent', __("Event Parent ID", "event_espresso"), true),
-                'EVT_order'=>new EE_Integer_Field('menu_order', __("Event Menu Order", "event_espresso"), false, 1),
-                'post_type'=>new EE_Plain_Text_Field('post_type', __("Event Post Type", "event_espresso"), false, 'espresso_events'),
-                'status' => new EE_WP_Post_Status_Field('post_status', __("Event Status", "event_espresso"), false, 'draft', $custom_stati)
+                'EVT_ID'=>new EE_Primary_Key_Int_Field('ID', esc_html__('Post ID for Event','event_espresso')),
+                'EVT_name'=>new EE_Plain_Text_Field('post_title', esc_html__('Event Name','event_espresso'), false, ''),
+                'EVT_desc'=>new EE_Simple_HTML_Field('post_content', esc_html__("Event Description", "event_espresso"), false, ''),
+                'EVT_slug'=>new EE_Slug_Field('post_name', esc_html__("Event Slug", "event_espresso"), false, ''),
+                'EVT_created'=>new EE_Datetime_Field('post_date', esc_html__("Date/Time Event Created", "event_espresso"), false, time()),
+                'EVT_short_desc'=>new EE_Simple_HTML_Field('post_excerpt', esc_html__("Event Short Description", "event_espresso"), false,''),
+                'EVT_modified'=>new EE_Datetime_Field('post_modified', esc_html__("Date/Time Event Modified", "event_espresso"), true, time()),
+                'EVT_wp_user'=>new EE_Integer_Field('post_author', esc_html__("Wordpress User ID", "event_espresso"), false,1),
+                'parent'=>new EE_Integer_Field('post_parent', esc_html__("Event Parent ID", "event_espresso"), true),
+                'EVT_order'=>new EE_Integer_Field('menu_order', esc_html__("Event Menu Order", "event_espresso"), false, 1),
+                'post_type'=>new EE_Plain_Text_Field('post_type', esc_html__("Event Post Type", "event_espresso"), false, 'espresso_events'),
+                'status' => new EE_WP_Post_Status_Field('post_status', esc_html__("Event Status", "event_espresso"), false, 'draft', $custom_stati)
             ),
             'Event_Meta'=>array(
-                'EVTM_ID'=> new EE_DB_Only_Float_Field('EVTM_ID', __('Event Meta Row ID','event_espresso'), false),
-                'EVT_ID_fk'=>new EE_DB_Only_Int_Field('EVT_ID', __("Foreign key to Event ID from Event Meta table", "event_espresso"), false),
-                'EVT_display_desc'=>new EE_Boolean_Field('EVT_display_desc', __("Display Description Flag", "event_espresso"), false, 1),
-                'EVT_display_ticket_selector'=>new EE_Boolean_Field('EVT_display_ticket_selector', __("Display Display Ticket Selector Flag", "event_espresso"), false, 1),
-                'EVT_visible_on'=>new EE_Datetime_Field('EVT_visible_on', __("Event Visible Date", "event_espresso"), true, time()),
-                'EVT_additional_limit'=>new EE_Integer_Field('EVT_additional_limit', __("Limit of Additional Registrations on Same Transaction", "event_espresso"), true),
-                'EVT_default_registration_status'=>new EE_Enum_Text_Field('EVT_default_registration_status', __("Default Registration Status on this Event", "event_espresso"), false, EEM_Registration::status_id_pending_payment, EEM_Registration::reg_status_array()),
-                'EVT_member_only'=>new EE_Boolean_Field('EVT_member_only', __("Member-Only Event Flag", "event_espresso"), false, false),
-                'EVT_phone'=> new EE_Plain_Text_Field('EVT_phone', __('Event Phone Number', 'event_espresso'), false ),
-                'EVT_allow_overflow'=>new EE_Boolean_Field('EVT_allow_overflow', __("Allow Overflow on Event", "event_espresso"), false, false),
-                'EVT_timezone_string'=>new EE_Plain_Text_Field('EVT_timezone_string', __("Timezone (name) for Event times", "event_espresso"), false),
-                'EVT_external_URL'=>new EE_Plain_Text_Field('EVT_external_URL', __("URL of Event Page if hosted elsewhere", "event_espresso"), true),
-                'EVT_donations'=>new EE_Boolean_Field('EVT_donations', __("Accept Donations?", "event_espresso"), false, false)
+                'EVTM_ID'=> new EE_DB_Only_Float_Field('EVTM_ID', esc_html__('Event Meta Row ID','event_espresso'), false),
+                'EVT_ID_fk'=>new EE_DB_Only_Int_Field('EVT_ID', esc_html__("Foreign key to Event ID from Event Meta table", "event_espresso"), false),
+                'EVT_display_desc'=>new EE_Boolean_Field('EVT_display_desc', esc_html__("Display Description Flag", "event_espresso"), false, 1),
+                'EVT_display_ticket_selector'=>new EE_Boolean_Field('EVT_display_ticket_selector', esc_html__("Display Display Ticket Selector Flag", "event_espresso"), false, 1),
+                'EVT_visible_on'=>new EE_Datetime_Field('EVT_visible_on', esc_html__("Event Visible Date", "event_espresso"), true, time()),
+                'EVT_additional_limit'=>new EE_Integer_Field('EVT_additional_limit', esc_html__("Limit of Additional Registrations on Same Transaction", "event_espresso"), true),
+                'EVT_default_registration_status'=>new EE_Enum_Text_Field('EVT_default_registration_status', esc_html__("Default Registration Status on this Event", "event_espresso"), false, EEM_Registration::status_id_pending_payment, EEM_Registration::reg_status_array()),
+                'EVT_member_only'=>new EE_Boolean_Field('EVT_member_only', esc_html__("Member-Only Event Flag", "event_espresso"), false, false),
+                'EVT_phone'=> new EE_Plain_Text_Field('EVT_phone', esc_html__('Event Phone Number', 'event_espresso'), false ),
+                'EVT_allow_overflow'=>new EE_Boolean_Field('EVT_allow_overflow', esc_html__("Allow Overflow on Event", "event_espresso"), false, false),
+                'EVT_timezone_string'=>new EE_Plain_Text_Field('EVT_timezone_string', esc_html__("Timezone (name) for Event times", "event_espresso"), false),
+                'EVT_external_URL'=>new EE_Plain_Text_Field('EVT_external_URL', esc_html__("URL of Event Page if hosted elsewhere", "event_espresso"), true),
+                'EVT_donations'=>new EE_Boolean_Field('EVT_donations', esc_html__("Accept Donations?", "event_espresso"), false, false)
 
             ));
 
@@ -146,16 +147,16 @@ CREATE TABLE `wp_events_start_end` (
         );
         $this->_fields = array(
             'Datetime'=>array(
-                'DTT_ID'=> new EE_Primary_Key_Int_Field('DTT_ID', __('Datetime ID','event_espresso')),
-                'EVT_ID'=>new EE_Foreign_Key_Int_Field('EVT_ID', __('Event ID','event_espresso'), false, 0, 'Event'),
-                'DTT_EVT_start'=>new EE_Datetime_Field('DTT_EVT_start', __('Start time/date of Event','event_espresso'), false, time(), $timezone ),
-                'DTT_EVT_end'=>new EE_Datetime_Field('DTT_EVT_end', __('End time/date of Event','event_espresso'), false, time(), $timezone ),
-                'DTT_reg_limit'=>new EE_Integer_Field('DTT_reg_limit', __('Registration Limit for this time','event_espresso'), true, 999999),
-                'DTT_sold'=>new EE_Integer_Field('DTT_sold', __('How many sales for this Datetime that have occurred', 'event_espresso'), true, 0 ),
-                'DTT_is_primary'=>new EE_Boolean_Field('DTT_is_primary', __("Flag indicating datetime is primary one for event", "event_espresso"), false,false),
-                'DTT_order' => new EE_Integer_Field('DTT_order', __('The order in which the Datetime is displayed', 'event_espresso'), false, 0),
-                'DTT_parent' => new EE_Integer_Field('DTT_parent', __('Indicates what DTT_ID is the parent of this DTT_ID'), true, 0 ),
-                'DTT_deleted' => new EE_Trashed_Flag_Field('DTT_deleted', __('Flag indicating datetime is archived', 'event_espresso'), false, false ),
+                'DTT_ID'=> new EE_Primary_Key_Int_Field('DTT_ID', esc_html__('Datetime ID','event_espresso')),
+                'EVT_ID'=>new EE_Foreign_Key_Int_Field('EVT_ID', esc_html__('Event ID','event_espresso'), false, 0, 'Event'),
+                'DTT_EVT_start'=>new EE_Datetime_Field('DTT_EVT_start', esc_html__('Start time/date of Event','event_espresso'), false, time(), $timezone ),
+                'DTT_EVT_end'=>new EE_Datetime_Field('DTT_EVT_end', esc_html__('End time/date of Event','event_espresso'), false, time(), $timezone ),
+                'DTT_reg_limit'=>new EE_Integer_Field('DTT_reg_limit', esc_html__('Registration Limit for this time','event_espresso'), true, 999999),
+                'DTT_sold'=>new EE_Integer_Field('DTT_sold', esc_html__('How many sales for this Datetime that have occurred', 'event_espresso'), true, 0 ),
+                'DTT_is_primary'=>new EE_Boolean_Field('DTT_is_primary', esc_html__("Flag indicating datetime is primary one for event", "event_espresso"), false,false),
+                'DTT_order' => new EE_Integer_Field('DTT_order', esc_html__('The order in which the Datetime is displayed', 'event_espresso'), false, 0),
+                'DTT_parent' => new EE_Integer_Field('DTT_parent', esc_html__('Indicates what DTT_ID is the parent of this DTT_ID'), true, 0 ),
+                'DTT_deleted' => new EE_Trashed_Flag_Field('DTT_deleted', esc_html__('Flag indicating datetime is archived', 'event_espresso'), false, false ),
             ));
  */
 class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
@@ -175,12 +176,12 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
     public function __construct()
     {
         global $wpdb;
-        $this->_old_table = $wpdb->prefix."events_detail";
-        $this->_old_start_end_table = $wpdb->prefix."events_start_end";
-        $this->_new_table = $wpdb->prefix."posts";
-        $this->_new_meta_table = $wpdb->prefix."esp_event_meta";
-        $this->_new_datetime_table = $wpdb->prefix."esp_datetime";
-        $this->_pretty_name = __("Events", "event_espresso");
+        $this->_old_table = $wpdb->prefix . "events_detail";
+        $this->_old_start_end_table = $wpdb->prefix . "events_start_end";
+        $this->_new_table = $wpdb->prefix . "posts";
+        $this->_new_meta_table = $wpdb->prefix . "esp_event_meta";
+        $this->_new_datetime_table = $wpdb->prefix . "esp_datetime";
+        $this->_pretty_name = esc_html__("Events", "event_espresso");
         parent::__construct();
     }
 
@@ -193,7 +194,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
     public function _count_records_to_migrate()
     {
         global $wpdb;
-        $count = $wpdb->get_var("SELECT COUNT(*) FROM ".$this->_old_table . ' WHERE event_status !="D"');
+        $count = $wpdb->get_var("SELECT COUNT(*) FROM " . $this->_old_table . ' WHERE event_status !="D"');
         return intval($count);
     }
 
@@ -212,7 +213,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
     {
         global $wpdb;
         // because the migration of each event can be a LOT more work, make each step smaller
-        $num_items_to_migrate = max(1, $num_items_to_migrate/5);
+        $num_items_to_migrate = max(1, $num_items_to_migrate / 5);
         $events = $wpdb->get_results($wpdb->prepare("SELECT * FROM $this->_old_table WHERE event_status!='D' LIMIT %d,%d", $this->count_records_migrated(), $num_items_to_migrate), ARRAY_A);
         $items_migrated_this_step = 0;
 
@@ -271,7 +272,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
             if ($meta_key) {// if the meta key is just an empty string, ignore it
                 $success = add_post_meta($post_id, $meta_key, $meta_value, true);
                 if (! $success) {
-                    $this->add_error(sprintf(__("Could not add post meta for CPT with ID #%d. Meta key: '%s',meta value:'%d' for 3.1 event: %s", "event_espresso"), $post_id, $meta_key, $meta_value, implode(",", $old_event)));
+                    $this->add_error(sprintf(esc_html__("Could not add post meta for CPT with ID #%d. Meta key: '%s',meta value:'%d' for 3.1 event: %s", "event_espresso"), $post_id, $meta_key, $meta_value, implode(",", $old_event)));
                 }
             }
         }
@@ -312,7 +313,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
         global $wpdb;
         $query = $wpdb->prepare("SELECT COUNT(ID) FROM {$this->_new_table} WHERE event_status != 'D' AND post_name = %s", $slug);
         $count = $wpdb->get_var($query);
-        return (boolean) intval($count);
+        return (bool) intval($count);
     }
 
 
@@ -326,7 +327,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
         global $wpdb;
         // convert 3.1 event status to 4.1 CPT status
         // for reference, 3.1 event stati available for setting are:
-//      $status = array(array('id' => 'A', 'text' => __('Public', 'event_espresso')), array('id' => 'S', 'text' => __('Waitlist', 'event_espresso')), array('id' => 'O', 'text' => __('Ongoing', 'event_espresso')), array('id' => 'R', 'text' => __('Draft', 'event_espresso')), array('id' => 'D', 'text' => __('Deleted', 'event_espresso')));
+//      $status = array(array('id' => 'A', 'text' => esc_html__('Public', 'event_espresso')), array('id' => 'S', 'text' => esc_html__('Waitlist', 'event_espresso')), array('id' => 'O', 'text' => esc_html__('Ongoing', 'event_espresso')), array('id' => 'R', 'text' => esc_html__('Draft', 'event_espresso')), array('id' => 'D', 'text' => esc_html__('Deleted', 'event_espresso')));
 //      and the json api uses the following to convert from 3.1 to 4.0
 //      'S'=>'secondary/waitlist',
 //      'A'=>'active',
@@ -340,15 +341,15 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
 //      (publish,future,draft,pending,private,trash,auto-draft,inherit)
 //      and 3 custom ones: cancelled,postponed,sold_out
         $status_conversions = array(
-            'R'=>'draft',
-            'X'=>'draft',// 4.1 doesn't have a "not approved for publishing" status. this is what posts are set to that aren't approved
-            'P'=>'pending',
-            'IA'=>'draft',// draft and in the past
+            'R' => 'draft',
+            'X' => 'draft',// 4.1 doesn't have a "not approved for publishing" status. this is what posts are set to that aren't approved
+            'P' => 'pending',
+            'IA' => 'draft',// draft and in the past
 // IA=inactive in 3.1: events were switched to this when they expired. in 4.1 that's just calculated
-            'O'=>'publish',// @todo: will be an event type later; if this is the status, set the end date WAAAY later; and add term for 'ongoing'
-            'A'=>'publish',
-            'S'=>'draft',// @todo: is it ok to just mark secondary/waitlist events as DRAFTS?
-            'D'=>'trash',
+            'O' => 'publish',// @todo: will be an event type later; if this is the status, set the end date WAAAY later; and add term for 'ongoing'
+            'A' => 'publish',
+            'S' => 'draft',// @todo: is it ok to just mark secondary/waitlist events as DRAFTS?
+            'D' => 'trash',
         );
         $post_status = $status_conversions[ $old_event['event_status'] ];
         // check if we've sold out
@@ -357,19 +358,19 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
         }
 //      FYI postponed and cancelled don't exist in 3.1
         $cols_n_values = array(
-            'post_title'=>stripslashes($old_event['event_name']),// EVT_name
-            'post_content'=>stripslashes($old_event['event_desc']),// EVT_desc
-            'post_name'=>$this->_find_unique_slug($old_event['event_name'], $old_event['event_identifier'], $post_status),// EVT_slug
-            'post_date'=>$old_event['submitted'],// EVT_created NOT
-            'post_date_gmt'=>get_gmt_from_date($old_event['submitted']),
-            'post_excerpt'=>'',// EVT_short_desc
-            'post_modified'=>$old_event['submitted'],// EVT_modified
-            'post_modified_gmt'=>get_gmt_from_date($old_event['submitted']),
-            'post_author'=>$old_event['wp_user'],// EVT_wp_user
-            'post_parent'=>0,// parent maybe get this from some REM field?
-            'menu_order'=>0,// EVT_order
-            'post_type'=>'espresso_events',// post_type
-            'post_status'=>$post_status,// status
+            'post_title' => stripslashes($old_event['event_name']),// EVT_name
+            'post_content' => stripslashes($old_event['event_desc']),// EVT_desc
+            'post_name' => $this->_find_unique_slug($old_event['event_name'], $old_event['event_identifier'], $post_status),// EVT_slug
+            'post_date' => $old_event['submitted'],// EVT_created NOT
+            'post_date_gmt' => get_gmt_from_date($old_event['submitted']),
+            'post_excerpt' => '',// EVT_short_desc
+            'post_modified' => $old_event['submitted'],// EVT_modified
+            'post_modified_gmt' => get_gmt_from_date($old_event['submitted']),
+            'post_author' => $old_event['wp_user'],// EVT_wp_user
+            'post_parent' => 0,// parent maybe get this from some REM field?
+            'menu_order' => 0,// EVT_order
+            'post_type' => 'espresso_events',// post_type
+            'post_status' => $post_status,// status
         );
         $cols_n_values_with_no_invalid_text = array();
         foreach ($cols_n_values as $col => $value) {
@@ -441,18 +442,18 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
 // );
         $default_reg_status = $this->get_migration_script()->convert_3_1_payment_status_to_4_1_STS_ID(isset($event_meta['default_payment_status']) ? $event_meta['default_payment_status'] : '', intval($old_event['require_pre_approval']));
         $cols_n_values = array(
-            'EVT_ID'=>$new_cpt_id,// EVT_ID_fk
-            'EVT_display_desc'=> 'Y' == $old_event['display_desc'],
-            'EVT_display_ticket_selector'=> 'Y'== $old_event['display_reg_form'],
-            'EVT_visible_on'=> $this->get_migration_script()->convert_date_string_to_utc($this, $old_event, current_time('mysql'), $old_event['timezone_string']),// don't use the old 'visible_on', as it wasn't ever used
-            'EVT_additional_limit'=> $old_event['allow_multiple'] == 'N' ? 1 : $old_event['additional_limit'],
+            'EVT_ID' => $new_cpt_id,// EVT_ID_fk
+            'EVT_display_desc' => 'Y' == $old_event['display_desc'],
+            'EVT_display_ticket_selector' => 'Y' == $old_event['display_reg_form'],
+            'EVT_visible_on' => $this->get_migration_script()->convert_date_string_to_utc($this, $old_event, current_time('mysql'), $old_event['timezone_string']),// don't use the old 'visible_on', as it wasn't ever used
+            'EVT_additional_limit' => $old_event['allow_multiple'] == 'N' ? 1 : $old_event['additional_limit'],
             'EVT_default_registration_status' => $default_reg_status,
-            'EVT_member_only'=>$old_event['member_only'],
-            'EVT_phone'=> $old_event['phone'],
+            'EVT_member_only' => $old_event['member_only'],
+            'EVT_phone' => $old_event['phone'],
             'EVT_allow_overflow' => 'Y' == $old_event['allow_overflow'],
-            'EVT_timezone_string'=> $old_event['timezone_string'],
-            'EVT_external_URL'=>$old_event['externalURL'],
-            'EVT_donations'=>false// doesnt exist in 3.1
+            'EVT_timezone_string' => $old_event['timezone_string'],
+            'EVT_external_URL' => $old_event['externalURL'],
+            'EVT_donations' => false// doesnt exist in 3.1
 
         );
         $datatypes = array(
@@ -489,7 +490,8 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
      */
     private function _maybe_create_venue($old_event)
     {
-        if ($old_event['address'] ||
+        if (
+            $old_event['address'] ||
                 $old_event['address2'] ||
                 $old_event['city'] ||
                 $old_event['state'] ||
@@ -500,7 +502,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
                 $old_event['venue_phone'] ||
                 $old_event['virtual_url'] ||
                 $old_event['virtual_phone']
-                ) {
+        ) {
             $old_id = $this->_duplicate_venue_exists($old_event);
             if ($old_id) {
                 return $old_id;
@@ -533,11 +535,11 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
             'VNU_address2' => $old_event['address2'],
             'VNU_city' => $old_event['city'],
             'VNU_zip' => $old_event['zip'],
-            'post_title'=> $this->_get_venue_title_for_event($old_event),
-            'VNU_phone'=>$old_event['venue_phone'],// VNU_phone
-            'VNU_url'=>$old_event['venue_url'],// VNU_url
-            'VNU_virtual_phone'=>$old_event['virtual_phone'],// VNU_virtual_phone
-            'VNU_virtual_url'=>$old_event['virtual_url'],// VNU_virtual_url
+            'post_title' => $this->_get_venue_title_for_event($old_event),
+            'VNU_phone' => $old_event['venue_phone'],// VNU_phone
+            'VNU_url' => $old_event['venue_url'],// VNU_url
+            'VNU_virtual_phone' => $old_event['virtual_phone'],// VNU_virtual_phone
+            'VNU_virtual_url' => $old_event['virtual_url'],// VNU_virtual_url
         );
         $sql_conditions = array();
         foreach ($conditions as $column => $value) {
@@ -559,7 +561,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
      */
     protected function _get_venue_title_for_event($event_data_array)
     {
-        return $event_data_array['venue_title'] ? stripslashes($event_data_array['venue_title']) : stripslashes(sprintf(__('Venue of %s', 'event_espresso'), $event_data_array['event_name']));
+        return $event_data_array['venue_title'] ? stripslashes($event_data_array['venue_title']) : stripslashes(sprintf(esc_html__('Venue of %s', 'event_espresso'), $event_data_array['event_name']));
     }
 
     /**
@@ -572,18 +574,18 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
     {
         global $wpdb;
         $insertion_array = array(
-                    'post_title'=> $this->_get_venue_title_for_event($old_event),// VNU_name
-                    'post_content'=>'',// VNU_desc
-                    'post_name'=> $this->_find_unique_slug($old_event['venue_title'], sanitize_title('venue-of-' . $old_event['event_name'])),// VNU_identifier
-                    'post_date'=>current_time('mysql'),// VNU_created
-                    'post_date_gmt'=>get_gmt_from_date(current_time('mysql')),
-                    'post_excerpt'=>'',// VNU_short_desc arbitrary only 50 characters
-                    'post_modified'=>current_time('mysql'),// VNU_modified
-                    'post_modified_gmt'=>get_gmt_from_date(current_time('mysql')),
-                    'post_author'=>$old_event['wp_user'],// VNU_wp_user
-                    'post_parent'=>0,// parent
-                    'menu_order'=>0,// VNU_order
-                    'post_type'=>'espresso_venues'// post_type
+                    'post_title' => $this->_get_venue_title_for_event($old_event),// VNU_name
+                    'post_content' => '',// VNU_desc
+                    'post_name' => $this->_find_unique_slug($old_event['venue_title'], sanitize_title('venue-of-' . $old_event['event_name'])),// VNU_identifier
+                    'post_date' => current_time('mysql'),// VNU_created
+                    'post_date_gmt' => get_gmt_from_date(current_time('mysql')),
+                    'post_excerpt' => '',// VNU_short_desc arbitrary only 50 characters
+                    'post_modified' => current_time('mysql'),// VNU_modified
+                    'post_modified_gmt' => get_gmt_from_date(current_time('mysql')),
+                    'post_author' => $old_event['wp_user'],// VNU_wp_user
+                    'post_parent' => 0,// parent
+                    'menu_order' => 0,// VNU_order
+                    'post_type' => 'espresso_venues'// post_type
                 );
         $datatypes_array = array(
                     '%s',// VNU_name
@@ -651,20 +653,20 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
         }
         // now insert into meta table
         $insertion_array = array(
-            'VNU_ID'=>$cpt_id,// VNU_ID_fk
-            'VNU_address'=>stripslashes($old_event['address']),// VNU_address
-            'VNU_address2'=>stripslashes($old_event['address2']),// VNU_address2
-            'VNU_city'=>stripslashes($old_event['city']),// VNU_city
-            'STA_ID'=>$state_id,// STA_ID
-            'CNT_ISO'=>$country_iso,// CNT_ISO
-            'VNU_zip'=>$old_event['zip'],// VNU_zip
-            'VNU_phone'=>$old_event['venue_phone'],// VNU_phone
-            'VNU_capacity'=>-1,// VNU_capacity
-            'VNU_url'=>$old_event['venue_url'],// VNU_url
-            'VNU_virtual_phone'=>$old_event['virtual_phone'],// VNU_virtual_phone
-            'VNU_virtual_url'=>$old_event['virtual_url'],// VNU_virtual_url
-            'VNU_google_map_link'=>'',// VNU_google_map_link
-            'VNU_enable_for_gmap'=>true // VNU_enable_for_gmap
+            'VNU_ID' => $cpt_id,// VNU_ID_fk
+            'VNU_address' => stripslashes($old_event['address']),// VNU_address
+            'VNU_address2' => stripslashes($old_event['address2']),// VNU_address2
+            'VNU_city' => stripslashes($old_event['city']),// VNU_city
+            'STA_ID' => $state_id,// STA_ID
+            'CNT_ISO' => $country_iso,// CNT_ISO
+            'VNU_zip' => $old_event['zip'],// VNU_zip
+            'VNU_phone' => $old_event['venue_phone'],// VNU_phone
+            'VNU_capacity' => -1,// VNU_capacity
+            'VNU_url' => $old_event['venue_url'],// VNU_url
+            'VNU_virtual_phone' => $old_event['virtual_phone'],// VNU_virtual_phone
+            'VNU_virtual_url' => $old_event['virtual_url'],// VNU_virtual_url
+            'VNU_google_map_link' => '',// VNU_google_map_link
+            'VNU_enable_for_gmap' => true // VNU_enable_for_gmap
         );
         $datatypes = array(
             '%d',// VNU_ID_fk
@@ -682,7 +684,7 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
             '%s',// VNU_google_map_link
             '%d',// VNU_enable_for_gmap
         );
-        $success = $wpdb->insert($wpdb->prefix."esp_venue_meta", $insertion_array, $datatypes);
+        $success = $wpdb->insert($wpdb->prefix . "esp_venue_meta", $insertion_array, $datatypes);
         if (! $success) {
             $this->add_error($this->get_migration_script()->_create_error_message_for_db_insertion($this->_old_table, $old_event, $this->_new_meta_table, $insertion_array, $datatypes));
             return 0;
@@ -701,24 +703,24 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
     {
         global $wpdb;
         if (! $new_event_id) {
-            $this->add_error(sprintf(__("Could not find 4.1 event id for 3.1 event #%d.", "event_espresso"), $new_event_id));
+            $this->add_error(sprintf(esc_html__("Could not find 4.1 event id for 3.1 event #%d.", "event_espresso"), $new_event_id));
             return 0;
         }
         if (! $new_venue_id) {
-            $this->add_error(sprintf(__("Could not find 4.1 venue id for 3.1 venue #%d.", "event_espresso"), $new_venue_id));
+            $this->add_error(sprintf(esc_html__("Could not find 4.1 venue id for 3.1 venue #%d.", "event_espresso"), $new_venue_id));
             return 0;
         }
         $cols_n_values = array(
-            'EVT_ID'=>$new_event_id,
-            'VNU_ID'=>$new_venue_id,
-            'EVV_primary'=>true
+            'EVT_ID' => $new_event_id,
+            'VNU_ID' => $new_venue_id,
+            'EVV_primary' => true
         );
         $datatypes = array(
             '%d',// EVT_ID
             '%d',// VNU_ID
             '%d',// EVT_primary
         );
-        $success = $wpdb->insert($wpdb->prefix."esp_event_venue", $cols_n_values, $datatypes);
+        $success = $wpdb->insert($wpdb->prefix . "esp_event_venue", $cols_n_values, $datatypes);
         if (! $success) {
             $this->add_error(
                 $this->get_migration_script()->_create_error_message_for_db_insertion(
@@ -779,15 +781,15 @@ class EE_DMS_4_1_0_events extends EE_Data_Migration_Script_Stage
         $start_datetime_utc = $this->get_migration_script()->convert_date_string_to_utc($this, $start_end_time_row, "$start_date $start_time:00", $old_event_row['timezone_string']);
         $end_datetime_utc = $this->get_migration_script()->convert_date_string_to_utc($this, $start_end_time_row, "$end_date $end_time:00", $old_event_row['timezone_string']);
         $cols_n_values = array(
-            'EVT_ID'=>$new_cpt_id,// EVT_ID
-            'DTT_EVT_start'=>$start_datetime_utc,// DTT_EVT_start
-            'DTT_EVT_end'=> $end_datetime_utc,// DTT_EVT_end
-            'DTT_reg_limit'=>intval($start_end_time_row['reg_limit']) ? $start_end_time_row['reg_limit'] : $old_event_row['reg_limit'],// DTT_reg_limit
-            'DTT_sold'=>0,// note: we will increment this as registrations are added during the migration
+            'EVT_ID' => $new_cpt_id,// EVT_ID
+            'DTT_EVT_start' => $start_datetime_utc,// DTT_EVT_start
+            'DTT_EVT_end' => $end_datetime_utc,// DTT_EVT_end
+            'DTT_reg_limit' => intval($start_end_time_row['reg_limit']) ? $start_end_time_row['reg_limit'] : $old_event_row['reg_limit'],// DTT_reg_limit
+            'DTT_sold' => 0,// note: we will increment this as registrations are added during the migration
 //          'DTT_is_primary'=> 0 == $existing_datetimes ,//DTT_is_primary... if count==0, then we'll call it the 'primary'
-            'DTT_order'=> $existing_datetimes,// DTT_order, just give it the same order as the count of how many datetimes already exist
-            'DTT_parent'=>0,
-            'DTT_deleted'=>false
+            'DTT_order' => $existing_datetimes,// DTT_order, just give it the same order as the count of how many datetimes already exist
+            'DTT_parent' => 0,
+            'DTT_deleted' => false
         );
         $datatypes = array(
             '%d',// EVT_Id

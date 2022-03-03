@@ -60,6 +60,13 @@ var cffsupport = new Vue({
         expandSystemInfo: function() {
             this.systemInfoBtnStatus = ( this.systemInfoBtnStatus == 'collapsed' ) ? 'expanded' : 'collapsed';
         },
+        expandBtnArrow: function() {
+            if ( this.systemInfoBtnStatus == 'collapsed' ) {
+                return this.icons.downAngle;
+            } else if ( this.systemInfoBtnStatus == 'expanded' ) {
+                return this.icons.upAngle;
+            }
+        },
         expandBtnText: function() {
             if ( this.systemInfoBtnStatus == 'collapsed' ) {
                 return this.buttons.expand;

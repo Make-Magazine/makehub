@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-08 11:46:18+00:00\n"
+"POT-Creation-Date: 2022-02-24 06:02:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -138,11 +138,15 @@ msgstr ""
 msgid "Sub Forums"
 msgstr ""
 
-#: bbpress/content-single-topic.php:84
+#: bbpress/content-single-topic.php:49 bbpress/content-single-topic.php:75
+msgid "Log In to Reply"
+msgstr ""
+
+#: bbpress/content-single-topic.php:98
 msgid "Start of Discussion"
 msgstr ""
 
-#: bbpress/content-single-topic.php:88 learndash/ld30/lesson.php:118
+#: bbpress/content-single-topic.php:102 learndash/ld30/lesson.php:118
 #: learndash/ld30/quiz.php:99
 #: lifterlms/assignment/template-single-assignment-content.php:61
 #: lifterlms/lesson/template-single-lesson-content.php:63
@@ -150,15 +154,15 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: bbpress/content-single-topic.php:88
+#: bbpress/content-single-topic.php:102
 msgid "posts"
 msgstr ""
 
-#: bbpress/content-single-topic.php:89
+#: bbpress/content-single-topic.php:103
 msgid "June 2018"
 msgstr ""
 
-#: bbpress/content-single-topic.php:96
+#: bbpress/content-single-topic.php:110
 msgid "Now"
 msgstr ""
 
@@ -242,12 +246,12 @@ msgstr ""
 msgid "The forum &#8216;%s&#8217; is closed to new discussions and replies."
 msgstr ""
 
-#: bbpress/form-reply-activity.php:190 bbpress/form-reply.php:210
+#: bbpress/form-reply-activity.php:190 bbpress/form-reply.php:211
 msgid "You cannot reply to this discussion."
 msgstr ""
 
-#: bbpress/form-reply-activity.php:190 bbpress/form-reply.php:210
-msgid "Log in  to reply."
+#: bbpress/form-reply-activity.php:190
+msgid "Log in to reply."
 msgstr ""
 
 #: bbpress/form-reply-success.php:21 bbpress/form-topic.php:67
@@ -275,7 +279,7 @@ msgid "Cancel"
 msgstr ""
 
 #: bbpress/form-reply.php:164 bbpress/form-topic.php:211
-#: bbpress/loop-replies.php:148
+#: bbpress/loop-replies.php:157
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:100
 #: lifterlms/card-new-share.php:28
 msgid "Post"
@@ -343,41 +347,39 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: bbpress/loop-replies.php:49 bbpress/loop-replies.php:65
+#: bbpress/loop-replies.php:52 bbpress/loop-replies.php:71
 msgid "Unstick"
 msgstr ""
 
-#: bbpress/loop-replies.php:53 bbpress/loop-search-topic.php:14
-#: bbpress/loop-topic-list.php:15
+#: bbpress/loop-replies.php:58 bbpress/loop-search-topic.php:16
+#: bbpress/loop-topic-list.php:17
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:1154
 msgid "Sticky"
 msgstr ""
 
-#: bbpress/loop-replies.php:71 bbpress/loop-search-topic.php:12
-#: bbpress/loop-topic-list.php:13
+#: bbpress/loop-replies.php:77 bbpress/loop-search-topic.php:14
+#: bbpress/loop-topic-list.php:15
 msgid "Super Sticky"
 msgstr ""
 
-#: bbpress/loop-replies.php:83 bbpress/loop-replies.php:84
-#: bbpress/loop-replies.php:91
+#: bbpress/loop-replies.php:88 bbpress/loop-replies.php:94
 msgid "Unfavorite"
 msgstr ""
 
-#: bbpress/loop-replies.php:85 bbpress/loop-replies.php:90
-#: bbpress/loop-replies.php:92
+#: bbpress/loop-replies.php:88 bbpress/loop-replies.php:94
 msgid "Favorite"
 msgstr ""
 
-#: bbpress/loop-replies.php:102
+#: bbpress/loop-replies.php:104
 msgid "More Options"
 msgstr ""
 
-#: bbpress/loop-replies.php:127 functions.php:100
+#: bbpress/loop-replies.php:135 functions.php:100
 msgid "updated"
 msgstr ""
 
-#: bbpress/loop-replies.php:133 bbpress/loop-search-topic.php:39
-#: bbpress/loop-topic-list.php:40
+#: bbpress/loop-replies.php:141 bbpress/loop-search-topic.php:54
+#: bbpress/loop-topic-list.php:55
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1492
 #: inc/plugins/elementor/widgets/bb-forums.php:565
 #: inc/plugins/elementor/widgets/members/bb-members.php:44
@@ -386,22 +388,22 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
-#: bbpress/loop-replies.php:133 bbpress/loop-search-topic.php:39
-#: bbpress/loop-topic-list.php:40
+#: bbpress/loop-replies.php:141 bbpress/loop-search-topic.php:54
+#: bbpress/loop-topic-list.php:55
 #: inc/plugins/elementor/widgets/bb-forums.php:565
 msgid "Member"
 msgstr ""
 
-#: bbpress/loop-replies.php:145 bbpress/loop-search-topic.php:50
-#: bbpress/loop-search-topic.php:53 bbpress/loop-topic-list.php:51
-#: bbpress/loop-topic-list.php:54
+#: bbpress/loop-replies.php:154 bbpress/loop-search-topic.php:66
+#: bbpress/loop-search-topic.php:69 bbpress/loop-topic-list.php:67
+#: bbpress/loop-topic-list.php:70
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1817
 msgid "Replies"
 msgstr ""
 
-#: bbpress/loop-replies.php:145 bbpress/loop-search-topic.php:50
-#: bbpress/loop-search-topic.php:53 bbpress/loop-topic-list.php:51
-#: bbpress/loop-topic-list.php:54
+#: bbpress/loop-replies.php:154 bbpress/loop-search-topic.php:66
+#: bbpress/loop-search-topic.php:69 bbpress/loop-topic-list.php:67
+#: bbpress/loop-topic-list.php:70
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1812
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3142
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:232
@@ -411,7 +413,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: bbpress/loop-replies.php:148 template-parts/header-profile-menu.php:124
+#: bbpress/loop-replies.php:157 template-parts/header-profile-menu.php:124
 msgid "Posts"
 msgstr ""
 
@@ -420,8 +422,8 @@ msgstr ""
 msgid "created %s"
 msgstr ""
 
-#: bbpress/loop-search-reply.php:17 bbpress/loop-search-topic.php:34
-#: bbpress/loop-topic-list.php:35
+#: bbpress/loop-search-reply.php:17 bbpress/loop-search-topic.php:49
+#: bbpress/loop-topic-list.php:50
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:928
 #: inc/plugins/elementor/widgets/bb-forums.php:559
 msgid "replied"
@@ -432,7 +434,7 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-#: bbpress/loop-search-topic.php:20 bbpress/loop-topic-list.php:21
+#: bbpress/loop-search-topic.php:24 bbpress/loop-topic-list.php:25
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:282
 msgid "Subscribed"
 msgstr ""
@@ -449,19 +451,20 @@ msgstr ""
 msgid "More actions"
 msgstr ""
 
-#: bbpress/loop-topics.php:29
+#: bbpress/loop-topics.php:32
+#. translators: Discussions tags.
 msgid "Discussions tagged with '%s' "
 msgstr ""
 
-#: bbpress/loop-topics.php:32
+#: bbpress/loop-topics.php:37
 msgid "Popular Discussions"
 msgstr ""
 
-#: bbpress/loop-topics.php:34
+#: bbpress/loop-topics.php:39
 msgid "Unanswered Discussions"
 msgstr ""
 
-#: bbpress/loop-topics.php:36
+#: bbpress/loop-topics.php:41
 msgid "All Discussions"
 msgstr ""
 
@@ -1336,7 +1339,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: inc/admin/options/custom-css.php:4575
+#: inc/admin/options/custom-css.php:4604
 msgid "Quiz Progress"
 msgstr ""
 

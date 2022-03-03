@@ -244,7 +244,7 @@
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html__( 'You cannot create new discussions.', 'buddyboss-theme' ) : esc_html__( 'You must be logged in to create new discussions.', 'buddyboss-theme' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss-theme' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss-theme' ); ?></p>
 		</div>
 	</div>
 

@@ -903,11 +903,9 @@ if(!cff_js_exists){
                 masonryEnabled = false;
 
             if (windowWidth > 800) {
-                if ($self.hasClass('masonry-1-desktop')) {
-                    $self.addClass('cff-disable-masonry');
-                } else {
-                    masonryEnabled = true;
-                    $self.addClass('cff-masonry cff-masonry-js').removeClass('cff-disable-masonry');
+                if (! $self.hasClass('masonry-1-desktop')) {
+                  masonryEnabled = true;
+                  $self.addClass('cff-masonry cff-masonry-js').removeClass('cff-disable-masonry');
                 }
             } else if (windowWidth > 400) {
                 if ($self.hasClass('masonry-2-tablet')
@@ -917,16 +915,12 @@ if(!cff_js_exists){
                     || $self.hasClass('masonry-6-tablet')) {
                     masonryEnabled = true;
                     $self.addClass('cff-masonry cff-masonry-js').removeClass('cff-disable-masonry');
-                } else {
-                    $self.addClass('cff-disable-masonry');
                 }
             } else {
                 if ($self.hasClass('masonry-2-mobile')
                     || $self.hasClass('masonry-3-mobile')) {
                     masonryEnabled = true;
                     $self.addClass('cff-masonry cff-masonry-js').removeClass('cff-disable-masonry');
-                } else {
-                    $self.addClass('cff-disable-masonry');
                 }
             }
 
@@ -1009,6 +1003,23 @@ if(!cff_js_exists){
         this.needsResizing = [];
         this.imagesWaiting = 0;
     }
+
+    function CFFLocationGuess($cff = false) {
+            var $feed = ($cff == false) ? jQuery(this.el) : $cff,
+                location = 'content';
+
+            if ($feed.closest('footer').length) {
+                location = 'footer';
+            } else if ($feed.closest('.header').length
+                || $feed.closest('header').length) {
+                location = 'header';
+            } else if ($feed.closest('.sidebar').length
+                || $feed.closest('aside').length) {
+                location = 'sidebar';
+            }
+
+            return location;
+        }
 
     CffFeed.prototype = {
         init: function() {
@@ -1176,7 +1187,7 @@ if(!cff_js_exists){
                     feed_id: feed.settings.feedID,
                     atts: feed.settings.shortCodeAtts,
                     pag_url: feed.pag_url,
-                    location: feed.locationGuess(),
+                    location: CFFLocationGuess(),
                     post_id: feed.settings.postID,
                 };
                 var onSuccess = function(data) {
@@ -1213,7 +1224,7 @@ if(!cff_js_exists){
                         action: 'cff_do_locator',
                         feed_id: feed.settings.feedID,
                         atts: feed.settings.shortCodeAtts,
-                        location: feed.locationGuess(),
+                        location: CFFLocationGuess(),
                         post_id: feed.settings.postID
                     };
                     var onSuccess = function(data) {
@@ -1296,7 +1307,6 @@ if(!cff_js_exists){
                     currentRes = typeof $imgWrapItem.attr('data-current') === 'undefined' ? 0 : parseInt($imgWrapItem.attr('data-current')),
                     neededRes = feed.getTargetWidth($imgWrapItem,$item,i),
                     changeToRes = false;
-
                 if (currentRes < neededRes && typeof imgSrcSet[i] !== 'undefined') {
                     var foundBestRes = false;
                     jQuery.each(imgSrcSet[i], function (ii, value) {
@@ -1332,7 +1342,7 @@ if(!cff_js_exists){
                         if($lightboxAnchor.parent('div').hasClass('cff-html5-video')){
                             //$lightboxAnchor.attr('href',$lightboxAnchor.parent('.cff-html5-video').attr('data-cff-video-link'));
                         }else{
-                            $lightboxAnchor.attr('href',feed.getMaxResImage(imgSrcSet,i));
+                            //$lightboxAnchor.attr('href',feed.getMaxResImage(imgSrcSet,i));
                         }
                     }
 
@@ -1358,7 +1368,7 @@ if(!cff_js_exists){
                         if($lightboxAnchor.parent('div').hasClass('cff-html5-video')){
                             // $lightboxAnchor.attr('href',$lightboxAnchor.parent('.cff-html5-video').attr('data-cff-video-link'));
                         }else{
-                            $lightboxAnchor.attr('href',feed.getMaxResImage(imgSrcSet,i));
+                            //$lightboxAnchor.attr('href',feed.getMaxResImage(imgSrcSet,i));
                         }
                     }
                 }
@@ -1485,7 +1495,9 @@ if(!cff_js_exists){
 
             var returnSrcSet = srcSet;
             if (typeof feed.resizedImages[id] === 'undefined' && id.indexOf('_') === -1) {
+              if ( typeof $item.attr('data-page-id') !== 'undefined') {
                 id = $item.attr('data-page-id') + '_' + id;
+              }
             }
             if (typeof feed.resizedImages[id] !== 'undefined'
                 && feed.resizedImages[id].id !== 'pending'
@@ -1717,23 +1729,7 @@ if(!cff_js_exists){
                     feed.afterResize();
                 },500);
             }
-        },
-        locationGuess: function($cff = false) {
-                var $feed = ($cff == false) ? jQuery(this.el) : $cff,
-                    location = 'content';
-
-                if ($feed.closest('footer').length) {
-                    location = 'footer';
-                } else if ($feed.closest('.header').length
-                    || $feed.closest('header').length) {
-                    location = 'header';
-                } else if ($feed.closest('.sidebar').length
-                    || $feed.closest('aside').length) {
-                    location = 'sidebar';
-                }
-
-                return location;
-            }
+        }
     };
 
     function cffAjax(submitData, onSuccess) {
@@ -2382,7 +2378,7 @@ if(!cff_js_exists){
                 //Masonry
                 if( $cff.hasClass('cff-masonry-js' && ! $cff.hasClass('cff-all-reviews') ) ){
 
-                    if( $cff.find('.cff-album-item').length ){
+                    if( $cff.find('.cff-album-item').length && ! $cff.hasClass('cff-masonry')){
                         $cff.removeClass('cff-masonry-js');
                         return;
                     }
@@ -2451,10 +2447,12 @@ if(!cff_js_exists){
                 //Albums only
                 //Resize image height
                 function cffResizeAlbum(last){
+                  if ( $cff.hasClass('cff-masonry') || $cff.hasClass('cff-disable-liquid')) {
+                    return;
+                  }
                     var cffAlbumWidth = $cff.find('.cff-album-item').eq(0).find('a').innerWidth();
-                    if ( !$cff.hasClass('cff-masonry')) {
-                        $cff.find('.cff-album-item a').css('height', cffAlbumWidth);
-                    }
+
+                    $cff.find('.cff-album-item a').css('height', cffAlbumWidth);
                     //Crops event images when selected
                     $cff.find('.cff-photo.cff-crop').css( 'height', $cff.find('.cff-photo.cff-crop').width() );
 
@@ -2511,9 +2509,29 @@ if(!cff_js_exists){
                 //PAGINATION
                 //Events JS pagination
                 var num_events = parseInt( $cff.attr('data-pag-num') ),
-                    show_events = num_events; //Iterated for each set
-                //Show first set of events
-                $cff.find('.cff-event').slice(0, num_events).css('display', 'inline-block');
+                    show_events = num_events, //Iterated for each set
+                    cff_total_events = $cff.find('.cff-event').length,
+                    cff_visible_events = $('.cff-event:visible' ).length;                    
+
+                    //Show first set of events
+                    $cff.find('.cff-event').slice(0, num_events).css('display', 'inline-block');
+                    
+                    if ( cff_total_events > num_events ) {
+                        $('.cff-no-more-posts').replaceWith(function () {
+                            return $("<a href='javascript:void(0)' class='cff-load-more' />").append($(this).contents()).html('Load More');
+                        })
+                        $('.cff').on('click', '.cff-load-more', function(){                  
+                            cff_visible_events = $(".cff-event:visible").length;
+                            if ( cff_visible_events + 2 < cff_total_events ) {                        
+                                $cff.find('.cff-event').slice(0, num_events + $(".cff-event:visible").length).css('display', 'inline-block');                   
+                            } else {
+                                $('.cff-load-more').replaceWith(function () {
+                                    return $('<p class="cff-no-more-posts">No more posts</p>');
+                                });
+                            }
+                        });
+                    }
+
                 //cffResizeAlbum(); //Correctly recalcs height of event images when using eventimage=cropped
 
                 //Review JS pagination
@@ -2569,7 +2587,7 @@ if(!cff_js_exists){
                         pag_url = $paginationURL.attr('data-cff-pag-url'),
                         feed_id = $paginationURL.attr('data-transient-name'),
                         post_id = $paginationURL.attr('data-post-id'),
-                        location = CffFeed.prototype.locationGuess($cff);
+                        location = CFFLocationGuess($cff);
                     //Upmcoming events JS pagination
                     var events_count = $cff.find('.cff-upcoming-event').length;
                     //If it's an event feed
@@ -2859,7 +2877,7 @@ if(!cff_js_exists){
                 }
 
                 //Remove the masonry css class if it's a grid feed
-                if( $cff.find('.cff-album-item').length ){
+                if( $cff.find('.cff-album-item').length && ! $cff.hasClass('cff-masonry')){
                     $cff.removeClass('cff-masonry cff-masonry-js cff-masonry-css');
                 }
 
@@ -2894,7 +2912,7 @@ if(!cff_js_exists){
                             feedID : $cffPagUrl.attr('data-feed-id'),
                             postID : $cffPagUrl.attr('data-post-id'),
                             shortCodeAtts : $(this).attr('data-cff-shortcode').trim() == '' ? {} : JSON.parse($(this).attr('data-cff-shortcode')),
-                            location : CffFeed.prototype.locationGuess($(this))
+                            location : CFFLocationGuess($(this))
                         };
                         feedLocatorData.push(singleFeedLocatorData);
                     });
@@ -3711,7 +3729,7 @@ if(!cff_js_exists){
                         responsive: true,                   /* Only for use with BackgroundSize false (or old browsers) */
                         delay: false,                           /* Only for use with BackgroundSize false (or old browsers) */
                         fadeInTime: false,                      /* Only for use with BackgroundSize false (or old browsers) */
-                        removeBoxBackground: true,          /* Only for use with BackgroundSize false (or old browsers) */
+                        removeBoxBackground: false,          /* Only for use with BackgroundSize false (or old browsers) */
                         hardPixels: true,                   /* Only for use with BackgroundSize false (or old browsers) */
                         responsiveCheckTime: 500,           /* Only for use with BackgroundSize false (or old browsers) */ /* time to check div resize */
                         timecheckvisibility: 500,           /* Only for use with BackgroundSize false (or old browsers) */ /* time to recheck if visible/loaded */
@@ -3989,7 +4007,9 @@ if(!cff_js_exists){
                             if (!$img.data('imgLiquid_oldProcessed')) {
                                 $img.fadeTo(settings.fadeInTime, 1);
                                 $img.data('imgLiquid_oldProcessed', true);
-                                if (settings.removeBoxBackground) $imgBoxCont.css('background-image', 'none');
+                               // if (settings.removeBoxBackground) $imgBoxCont.css('background-image', 'none');
+                                var sourceImage = $img.attr('src');
+                                $imgBoxCont.css({'background-image': 'url(' + sourceImage + ')'});
                                 $imgBoxCont.addClass('imgLiquid_nobgSize');
                                 $imgBoxCont.addClass('imgLiquid_ready');
                             }
@@ -4455,6 +4475,7 @@ if(!cff_js_exists){
 
 
                     this.$lightbox.hide().on('click', function(event) {
+                        self.album.length = 0;
                         if ($(event.target).attr('id') === 'cff-lightbox-wrapper') {
                             self.end();
                             if( cff_supports_video() && $('#cff-lightbox-wrapper video.cff-lightbox-video').length ) $('#cff-lightbox-wrapper video.cff-lightbox-video')[0].pause();
@@ -4467,6 +4488,7 @@ if(!cff_js_exists){
                     });
                     this.$outerContainer.on('click', function(event) {
                         if ($(event.target).attr('id') === 'cff-lightbox-wrapper') {
+                            self.album.length = 0;
                             self.end();
                             if( cff_supports_video() && $('#cff-lightbox-wrapper video.cff-lightbox-video').length ) $('#cff-lightbox-wrapper video.cff-lightbox-video')[0].pause();
                             $('#cff-lightbox-wrapper iframe').attr('src', '');
@@ -4534,6 +4556,7 @@ if(!cff_js_exists){
 
 
                     this.$lightbox.find('.cff-lightbox-loader, .cff-lightbox-close').on('click', function() {
+                        self.album.length = 0;
                         self.end();
                         if( cff_supports_video() ) $('#cff-lightbox-wrapper video.cff-lightbox-video')[0].pause();
                         $('#cff-lightbox-wrapper iframe').attr('src', '');
@@ -4578,7 +4601,7 @@ if(!cff_js_exists){
 
                         if ( typeof albumClassName !== 'undefined' ) {
                             linkParentPostID = $link.closest('.'+albumClassName.split(' ')[0]).attr('id');
-                            linkParentPostID = linkParentPostID.replace('cff_','')
+                            linkParentPostID = (linkParentPostID !== 'undefined') ? linkParentPostID.replace('cff_','') : linkParentPostID;
                         }
 
                         //If an image with the same href has already been added then don't add it to the lightbox order again
@@ -4933,6 +4956,7 @@ if(!cff_js_exists){
 
                         this.$lightbox.find('.cff-lightbox-close').on('click', function() {
                             self.end();
+                            self.album.length = 0;
                             if( cff_supports_video() ) $('#cff-lightbox-wrapper video.cff-lightbox-video')[0].pause();
                             $('#cff-lightbox-wrapper iframe').attr('src', '');
                             if ($('body').length) {

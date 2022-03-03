@@ -39,10 +39,10 @@ class EE_Html_messenger extends EE_messenger
     {
         // set properties
         $this->name = 'html';
-        $this->description = __('This messenger outputs a message to a browser for display.', 'event_espresso');
+        $this->description = esc_html__('This messenger outputs a message to a browser for display.', 'event_espresso');
         $this->label = array(
-            'singular' => __('html', 'event_espresso'),
-            'plural' => __('html', 'event_espresso'),
+            'singular' => esc_html__('html', 'event_espresso'),
+            'plural' => esc_html__('html', 'event_espresso'),
         );
         $this->activate_on_install = true;
         // add the "powered by EE" credit link to the HTML receipt and invoice
@@ -270,7 +270,7 @@ class EE_Html_messenger extends EE_messenger
         $this->_template_fields = array(
             'subject' => array(
                 'input' => 'text',
-                'label' => __('Page Title', 'event_espresso'),
+                'label' => esc_html__('Page Title', 'event_espresso'),
                 'type' => 'string',
                 'required' => true,
                 'validation' => true,
@@ -283,7 +283,7 @@ class EE_Html_messenger extends EE_messenger
                 'content' => array(
                     'main' => array(
                         'input' => 'wp_editor',
-                        'label' => __('Main Content', 'event_espresso'),
+                        'label' => esc_html__('Main Content', 'event_espresso'),
                         'type' => 'string',
                         'required' => true,
                         'validation' => true,
@@ -313,7 +313,7 @@ class EE_Html_messenger extends EE_messenger
                     ),
                     'ticket_line_item_no_pms' => array(
                         'input' => 'textarea',
-                        'label' => '[TICKET_LINE_ITEM_LIST] <br>' . __(
+                        'label' => '[TICKET_LINE_ITEM_LIST] <br>' . esc_html__(
                             'Ticket Line Item List with no Price Modifiers',
                             'event_espresso'
                         ),
@@ -327,7 +327,7 @@ class EE_Html_messenger extends EE_messenger
                     ),
                     'ticket_line_item_pms' => array(
                         'input' => 'textarea',
-                        'label' => '[TICKET_LINE_ITEM_LIST] <br>' . __(
+                        'label' => '[TICKET_LINE_ITEM_LIST] <br>' . esc_html__(
                             'Ticket Line Item List with Price Modifiers',
                             'event_espresso'
                         ),
@@ -473,7 +473,7 @@ class EE_Html_messenger extends EE_messenger
         );
         $this->_deregister_wp_hooks();
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts_styles'));
-        echo $this->_get_main_template();
+        echo $this->_get_main_template(); // already escaped
         exit();
     }
 
@@ -544,7 +544,8 @@ class EE_Html_messenger extends EE_messenger
         $content_again = '',
         EE_message_type $incoming_message_type
     ) {
-        if (($incoming_message_type->name === 'invoice' || $incoming_message_type->name === 'receipt')
+        if (
+            ($incoming_message_type->name === 'invoice' || $incoming_message_type->name === 'receipt')
             && apply_filters('FHEE_EE_Html_messenger__add_powered_by_credit_link_to_receipt_and_invoice', true)
         ) {
             $content .= \EEH_Template::powered_by_event_espresso(

@@ -935,12 +935,20 @@
 }
 
 .sb-tab-box.sb-caching-box .cff-caching-btn .loading path,
-.sb-tab-box.sb-optimize-box .optimize-image-btn .loading path {
+.sb-tab-box.sb-optimize-box .optimize-image-btn .loading path,
+.sb-tab-box.sb-dpa-clear-box-style .loading path {
     fill: rgb(23 22 22 / 95%)
 }
 .sb-tab-box.sb-caching-box .cff-caching-btn .success svg,
-.sb-tab-box.sb-optimize-box .optimize-image-btn .success svg {
+.sb-tab-box.sb-optimize-box .optimize-image-btn .success svg,
+.sb-tab-box.sb-dpa-clear-box-style .success svg {
     stroke: rgb(23 22 22 / 95%)
+}
+
+.sb-tab-content .sb-tab-box.sb-reset-box-style .cff-tab-form-field .cff-btn,
+.sb-tab-content .sb-tab-box.sb-dpa-clear-box-style .cff-tab-form-field .cff-btn {
+    transform: none;
+    margin-bottom: 15px;
 }
 
 /* Translation Tab */

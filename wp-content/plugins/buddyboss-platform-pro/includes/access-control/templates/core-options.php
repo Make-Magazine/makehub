@@ -32,14 +32,14 @@ if ( ! empty( $component_settings ) ) {
 		$is_default_disabled = true;
 		bb_access_control_display_feedback( $component_settings['notices']['disable_group_creation']['message'], $component_settings['notices']['disable_group_creation']['type'] );
 	}
-    if ( 'bp-media' === $current_tab && bb_access_control_upload_media_key() === $db_option_key && isset( $component_settings['component'] ) && 'media' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_photos_creation']['is_disabled'] ) && $component_settings['notices']['disable_photos_creation']['is_disabled'] ) {
-        $is_default_disabled = true;
-        bb_access_control_display_feedback( $component_settings['notices']['disable_photos_creation']['message'], $component_settings['notices']['disable_photos_creation']['type'] );
-    }
-    if ( 'bp-media' === $current_tab && bb_access_control_upload_video_key() === $db_option_key && isset( $component_settings['component'] ) && 'video' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_videos_creation']['is_disabled'] ) && $component_settings['notices']['disable_videos_creation']['is_disabled'] ) {
-        $is_default_disabled = true;
-        bb_access_control_display_feedback( $component_settings['notices']['disable_videos_creation']['message'], $component_settings['notices']['disable_videos_creation']['type'] );
-    }
+	if ( 'bp-media' === $current_tab && bb_access_control_upload_media_key() === $db_option_key && isset( $component_settings['component'] ) && 'media' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_photos_creation']['is_disabled'] ) && $component_settings['notices']['disable_photos_creation']['is_disabled'] ) {
+		$is_default_disabled = true;
+		bb_access_control_display_feedback( $component_settings['notices']['disable_photos_creation']['message'], $component_settings['notices']['disable_photos_creation']['type'] );
+	}
+	if ( 'bp-media' === $current_tab && bb_access_control_upload_video_key() === $db_option_key && isset( $component_settings['component'] ) && 'video' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_videos_creation']['is_disabled'] ) && $component_settings['notices']['disable_videos_creation']['is_disabled'] ) {
+		$is_default_disabled = true;
+		bb_access_control_display_feedback( $component_settings['notices']['disable_videos_creation']['message'], $component_settings['notices']['disable_videos_creation']['type'] );
+	}
 	if ( 'bp-media' === $current_tab && bb_access_control_upload_document_key() === $db_option_key && isset( $component_settings['component'] ) && 'document' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_document_creation']['is_disabled'] ) && $component_settings['notices']['disable_document_creation']['is_disabled'] ) {
 		$is_default_disabled = true;
 		bb_access_control_display_feedback( $component_settings['notices']['disable_document_creation']['message'], $component_settings['notices']['disable_document_creation']['type'] );

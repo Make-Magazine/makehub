@@ -113,7 +113,7 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
             if (isset($old_org_options[ $option_name ])) {
                 $this->_handle_org_option($option_name, $old_org_options[ $option_name ]);
             }
-            if ($option_name=='surcharge') {
+            if ($option_name == 'surcharge') {
                 $this->_insert_new_global_surcharge_price($old_org_options);
             }
             $items_actually_migrated++;
@@ -121,7 +121,7 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
 
         $success = EE_Config::instance()->update_espresso_config(false, true);
         if (! $success) {
-            $this->add_error(sprintf(__('Could not save EE Config during org options stage. Reason: %s', 'event_espresso'), EE_Error::get_notices(false)));
+            $this->add_error(sprintf(esc_html__('Could not save EE Config during org options stage. Reason: %s', 'event_espresso'), EE_Error::get_notices(false)));
             EE_Error::overwrite_errors();
         }
         EE_Network_Config::instance()->update_config(false, false);
@@ -139,7 +139,7 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
     }
     public function __construct()
     {
-        $this->_pretty_name = __("Organization Options/Config", "event_espresso");
+        $this->_pretty_name = esc_html__("Organization Options/Config", "event_espresso");
         $this->_org_options_we_know_how_to_migrate = apply_filters('FHEE__EE_DMS_4_1_0_org_options__org_options_we_know_how_to_migrate', $this->_org_options_we_know_how_to_migrate);
         parent::__construct();
     }
@@ -179,11 +179,11 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
                 $c->registration->default_STS_ID =  $this->get_migration_script()->convert_3_1_payment_status_to_4_1_STS_ID($value);
                 break;
             case 'organization_country':
-                $iso =$this->get_migration_script()->get_iso_from_3_1_country_id($value);
+                $iso = $this->get_migration_script()->get_iso_from_3_1_country_id($value);
                 $c->organization->CNT_ISO = $iso;
                 $country_row = $this->get_migration_script()->get_or_create_country($iso);
                 if (! $country_row) {
-                    $this->add_error(sprintf(__("Could not set country's currency config because no country exists for ISO %s", "event_espresso"), $iso));
+                    $this->add_error(sprintf(esc_html__("Could not set country's currency config because no country exists for ISO %s", "event_espresso"), $iso));
                 }
                 // can't use EE_Currency_Config's handy constructor because the models are off-limits right now (and it uses them)
                 $c->currency->code = $country_row['CNT_cur_code'];          // currency code: USD, CAD, EUR
@@ -277,7 +277,7 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
     {
         $amount = floatval($org_options['surcharge']);
         // dont createa a price if the surcharge is 0
-        if ($amount <=.01) {
+        if ($amount <= .01) {
             return 0;
         }
         if ($org_options['surcharge_type'] == 'flat_rate') {
@@ -287,14 +287,14 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
         }
         global $wpdb;
         $cols_n_values = array(
-            'PRT_ID'=>$price_type,
-            'PRC_amount'=>$amount,
-            'PRC_name'=>  $org_options['surcharge_text'],
-            'PRC_is_default'=>true,
-            'PRC_overrides'=>false,
-            'PRC_order'=>100,
-            'PRC_deleted'=>false,
-            'PRC_parent'=>null
+            'PRT_ID' => $price_type,
+            'PRC_amount' => $amount,
+            'PRC_name' =>  $org_options['surcharge_text'],
+            'PRC_is_default' => true,
+            'PRC_overrides' => false,
+            'PRC_order' => 100,
+            'PRC_deleted' => false,
+            'PRC_parent' => null
 
         );
         $datatypes = array(
@@ -307,15 +307,15 @@ class EE_DMS_4_1_0_org_options extends EE_Data_Migration_Script_Stage
             '%d',// PRC_deleted
             '%d',// PRC_parent
         );
-        $price_table = $wpdb->prefix."esp_price";
+        $price_table = $wpdb->prefix . "esp_price";
         $success = $wpdb->insert($price_table, $cols_n_values, $datatypes);
         if (! $success) {
             $this->add_error($this->get_migration_script()->_create_error_message_for_db_insertion(
                 'org_options',
                 array(
-                        'surcharge'=>$org_options['surcharge'],
-                        'surcharge_type'=>$org_options['surcharge_type'],
-                        'surcharge_text'=>$org_options['surcharge_text']),
+                        'surcharge' => $org_options['surcharge'],
+                        'surcharge_type' => $org_options['surcharge_type'],
+                        'surcharge_text' => $org_options['surcharge_text']),
                 $price_table,
                 $cols_n_values,
                 $datatypes

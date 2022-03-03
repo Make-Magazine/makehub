@@ -23,7 +23,7 @@ function cff_deactivate_addon() {
 	}
 
 	if ( isset( $_POST['plugin'] ) ) {
-		$plugin = sanitize_text_field( $_POST['plugin'] );
+		$plugin = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
 
 		// check if intended to disable extension from extensions bundle
 		if ( isset( $_POST['extensions_bundle'] ) && true == $_POST['extensions_bundle'] ) {
@@ -31,7 +31,7 @@ function cff_deactivate_addon() {
 			$cff_ext_options[ $plugin ] = '';
 			$activate = update_option('cff_extensions_status', $cff_ext_options);
 		} else {
-			$activate = deactivate_plugins( $_POST['plugin'] );
+			$activate = deactivate_plugins( sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) );
 		}
 
 		if ( 'plugin' === $type ) {
@@ -66,7 +66,7 @@ function cff_activate_addon() {
 		if ( ! empty( $_POST['type'] ) ) {
 			$type = sanitize_key( $_POST['type'] );
 		}
-		$plugin = sanitize_text_field( $_POST['plugin'] );
+		$plugin = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
 
 		// check if intended to enable extension from extensions bundle
 		if ( isset( $_POST['extensions_bundle'] ) && true == $_POST['extensions_bundle'] ) {
@@ -74,7 +74,7 @@ function cff_activate_addon() {
 			$cff_ext_options[ $plugin ] = 'on';
 			$activate = update_option('cff_extensions_status', $cff_ext_options);
 		} else {
-			$activate = activate_plugins( $_POST['plugin'] );
+			$activate = activate_plugins( sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) );
 		}
 
 		if ( ! is_wp_error( $activate ) ) {
@@ -151,7 +151,7 @@ function cff_install_addon() {
 		wp_send_json_error( $error );
 	}
 
-	$installer->install( $_POST['plugin'] ); // phpcs:ignore
+	$installer->install( sanitize_text_field( wp_unslash( $_POST['plugin'] ) ) ); // phpcs:ignore
 
 	// Flush the cache and return the newly installed plugin basename.
 	wp_cache_flush();

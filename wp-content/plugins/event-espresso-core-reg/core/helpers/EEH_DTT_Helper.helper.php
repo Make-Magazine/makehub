@@ -746,7 +746,8 @@ class EEH_DTT_Helper
     public static function dates_represent_one_24_hour_date($date_1, $date_2)
     {
 
-        if ((! $date_1 instanceof DateTime || ! $date_2 instanceof DateTime)
+        if (
+            (! $date_1 instanceof DateTime || ! $date_2 instanceof DateTime)
             || ($date_1->format(EE_Datetime_Field::mysql_time_format) !== '00:00:00'
                 || $date_2->format(
                     EE_Datetime_Field::mysql_time_format
@@ -839,7 +840,7 @@ class EEH_DTT_Helper
             $hour_fraction = (float) ('0.' . $parts[1]);
             $parts[1]      = (string) $hour_fraction * 60;
         }
-        return sprintf(__('UTC%1$s', 'event_espresso'), $prefix . implode(':', $parts));
+        return sprintf(esc_html__('UTC%1$s', 'event_espresso'), $prefix . implode(':', $parts));
     }
 
 
@@ -966,7 +967,7 @@ class EEH_DTT_Helper
         usort($zone_data, '_wp_timezone_choice_usort_callback');
         $structure = array();
         if (empty($selected_zone)) {
-            $structure[] = '<option selected="selected" value="">' . __('Select a city', 'event_espresso') . '</option>';
+            $structure[] = '<option selected="selected" value="">' . esc_html__('Select a city', 'event_espresso') . '</option>';
         }
         foreach ($zone_data as $key => $zone) {
             // Build value in an array to join later
@@ -997,7 +998,8 @@ class EEH_DTT_Helper
                            . esc_html($display)
                            . '</option>';
             // Close continent optgroup
-            if (! empty($zone['city'])
+            if (
+                ! empty($zone['city'])
                 && (
                     ! isset($zone_data[ $key + 1 ])
                     || (isset($zone_data[ $key + 1 ]) && $zone_data[ $key + 1 ]['continent'] !== $zone['continent'])

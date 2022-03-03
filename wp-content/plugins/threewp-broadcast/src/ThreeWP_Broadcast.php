@@ -117,6 +117,8 @@ class ThreeWP_Broadcast
 		if ( ! $this->is_network )
 			return;
 
+		$this->__loaded = false;
+
 		if ( defined( 'WP_CLI' ) && WP_CLI )
 		{
 			$cli = new cli\Broadcast();
@@ -173,6 +175,9 @@ class ThreeWP_Broadcast
 
 	public function activate()
 	{
+		if ( ! is_multisite() )
+			throw new Exception( 'Broadcast requires a Wordpress network install. It does not support single installs.' );
+
 		if ( !$this->is_network )
 			return;
 
@@ -445,7 +450,15 @@ class ThreeWP_Broadcast
 			$broadcast_data = $this->get_post_broadcast_data( $parent[ 'blog_id' ], $parent[ 'post_id' ] );
 		}
 		else
-			$this->debug( $prefix . 'No linked parent.' );
+		{
+			$this->debug( $prefix . 'On the parent.' );
+			$o = (object)[];
+			$o->post_id = $action->post_id;
+			$o->post = get_post( $o->post_id );
+			$this->debug( $prefix . '' );
+			foreach( $action->callbacks as $callback )
+				$callback( $o );
+		}
 
 		if ( $action->on_children )
 		{

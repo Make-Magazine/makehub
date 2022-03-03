@@ -41,11 +41,14 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 
 .widget_shopify_widget {
     &::before {
-        content: url("/wp-content/themes/make-experiences/images/makershed-logo-lrg.jpg");
-        width:100%;
-        text-align: center;
-        display: block;
-        margin-bottom: -5px;
+		background: url(/wp-content/themes/make-experiences/images/makershed-logo-lrg.jpg);
+	    width: 100%;
+	    display: block;
+	    height: 50px;
+	    margin-bottom: -5px;
+	    content: "";
+	    background-size: contain;
+	    background-repeat: no-repeat;
     }
     h2.widget-title, h4.mx-block-title {
         height: 0px;
@@ -64,6 +67,7 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
             overflow: hidden;
             img {
                 object-fit: cover;
+				width: 100%;
             }
         }
         .product-info {
@@ -90,11 +94,7 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 .events-grid-sidebar {
 	.widget_shopify_widget {
 		&::before {
-			transform: scale(.435);
-			margin-top: -20px;
-			margin-left: -7px;
-			margin-bottom: -5px;
-			width: 20%;
+			margin-top: -5px;
 		}
 		h2.widgettitle {
 			display: none;
@@ -103,8 +103,10 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 			display: flex;
 			flex-direction: column;
 			.product-image {
-				min-width: 130px;
-				max-width: 130px;
+				max-width: 100%;
+				@media screen and (max-width: 768px) {
+					max-height: 175px;
+				}
 			}
 			.product-info {
 				padding: 10px 0px 0px;

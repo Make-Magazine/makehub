@@ -3,12 +3,12 @@
 Plugin Name: Custom Facebook Feed Pro Smash
 Plugin URI: https://smashballoon.com/custom-facebook-feed
 Description: Add a completely customizable Facebook feed to your WordPress site
-Version: 4.0.8
+Version: 4.2.2
 Author: Smash Balloon
-Author URI: http://smashballoon.com/
+Author URI: https://smashballoon.com/
 */
 /*
-Copyright 2021 Smash Balloon (email: hey@smashballoon.com)
+Copyright 2022 Smash Balloon (email: hey@smashballoon.com)
 This program is paid software; you may not redistribute it under any
 circumstances without the expressed written consent of the plugin author.
 This program is distributed in the hope that it will be useful,
@@ -18,7 +18,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-define( 'CFFVER', '4.0.8' );
+define( 'CFFVER', '4.2.2' );
 define( 'CFFWELCOME_VER', '3.17' );
 define( 'WPW_SL_STORE_URL', 'https://smashballoon.com/' );
 define( 'WPW_SL_ITEM_NAME', 'Custom Facebook Feed WordPress Plugin Smash' ); //*!*Update Plugin Name at top of file*!*
@@ -37,7 +37,7 @@ if ( ! defined( 'CFF_PLUGIN_URL' ) ) {
 }
 
 if ( ! defined( 'CFF_DBVERSION' ) ) {
-	define( 'CFF_DBVERSION', '2.2' );
+	define( 'CFF_DBVERSION', '2.4' );
 }
 
 if ( ! defined( 'CFF_UPLOADS_NAME' ) ) {
@@ -89,6 +89,8 @@ if ( ! defined( 'CFF_VIEWS_DIR' ) ) {
 if ( ! defined( 'CFF_VIEWS_URL' ) ) {
     define( 'CFF_VIEWS_URL', CFF_PLUGIN_URL . 'admin/views/' );
 }
+
+//update_option( 'cff_db_version', 2.2 );
 
 /**
  * Check PHP version

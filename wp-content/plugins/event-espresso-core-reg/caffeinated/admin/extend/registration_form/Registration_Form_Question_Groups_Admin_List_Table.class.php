@@ -8,7 +8,7 @@
  * @package         Event Espresso
  * @author          Seth Shoultes
  * @copyright    (c)2009-2012 Event Espresso All Rights Reserved.
- * @license         http://eventespresso.com/support/terms-conditions/  ** see Plugin Licensing **
+ * @license         https://eventespresso.com/support/terms-conditions/  ** see Plugin Licensing **
  * @link            http://www.eventespresso.com
  * @version         3.2.P
  *
@@ -50,19 +50,19 @@ class Registration_Form_Question_Groups_Admin_List_Table extends EE_Admin_List_T
     protected function _set_properties()
     {
         $this->_wp_list_args = array(
-            'singular' => __('question group', 'event_espresso'),
-            'plural'   => __('question groups', 'event_espresso'),
+            'singular' => esc_html__('question group', 'event_espresso'),
+            'plural'   => esc_html__('question groups', 'event_espresso'),
             'ajax'     => true, // for now,
             'screen'   => $this->_admin_page->get_current_screen()->id,
         );
 
         $this->_columns = array(
             'cb'              => '<input type="checkbox" />',
-            'id'              => __('ID', 'event_espresso'),
-            'name'            => __('Group Name', 'event_espresso'),
-            'description'     => __('Description', 'event_espresso'),
-            'show_group_name' => __('Show Name', 'event_espresso'),
-            'show_group_desc' => __('Show Desc', 'event_espresso'),
+            'id'              => esc_html__('ID', 'event_espresso'),
+            'name'            => esc_html__('Group Name', 'event_espresso'),
+            'description'     => esc_html__('Description', 'event_espresso'),
+            'show_group_name' => esc_html__('Show Name', 'event_espresso'),
+            'show_group_desc' => esc_html__('Show Desc', 'event_espresso'),
         );
 
         $this->_sortable_columns = array(
@@ -92,10 +92,12 @@ class Registration_Form_Question_Groups_Admin_List_Table extends EE_Admin_List_T
             $this->_current_page,
             true
         );
-        if (EE_Registry::instance()->CAP->current_user_can(
-            'ee_delete_question_groups',
-            'espresso_registration_form_trash_question_group'
-        )) {
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_delete_question_groups',
+                'espresso_registration_form_trash_question_group'
+            )
+        ) {
             $this->_views['trash']['count'] = $this->_admin_page->get_trashed_question_groups(
                 $this->_per_page,
                 $this->_current_page,
@@ -177,49 +179,57 @@ class Registration_Form_Question_Groups_Admin_List_Table extends EE_Admin_List_T
         $restore_link = EE_Admin_Page::add_query_args_and_nonce($restore_query_args, EE_FORMS_ADMIN_URL);
         $delete_link = EE_Admin_Page::add_query_args_and_nonce($delete_query_args, EE_FORMS_ADMIN_URL);
 
-        if (EE_Registry::instance()->CAP->current_user_can(
-            'ee_edit_question_group',
-            'espresso_registration_form_edit_question_group',
-            $item->ID()
-        )) {
+        if (
+            EE_Registry::instance()->CAP->current_user_can(
+                'ee_edit_question_group',
+                'espresso_registration_form_edit_question_group',
+                $item->ID()
+            )
+        ) {
             $actions = array(
                 'edit' => '<a href="' . $edit_link . '" title="'
                           . esc_attr__('Edit Question Group', 'event_espresso') . '">'
-                          . __('Edit', 'event_espresso') . '</a>',
+                          . esc_html__('Edit', 'event_espresso') . '</a>',
             );
         }
-        if ($item->get('QSG_system') < 1
+        if (
+            $item->get('QSG_system') < 1
             && $this->_view != 'trash'
             && EE_Registry::instance()->CAP->current_user_can(
                 'ee_delete_question_group',
                 'espresso_registration_form_trash_question_group',
                 $item->ID()
-            )) {
+            )
+        ) {
             $actions['delete'] = '<a href="' . $trash_link . '" title="'
                                  . esc_attr__('Delete Question Group', 'event_espresso') . '">'
-                                 . __('Trash', 'event_espresso') . '</a>';
+                                 . esc_html__('Trash', 'event_espresso') . '</a>';
         }
 
         if ($this->_view == 'trash') {
-            if (EE_Registry::instance()->CAP->current_user_can(
-                'ee_delete_question_group',
-                'espresso_registration_form_restore_question_group',
-                $item->ID()
-            )) {
+            if (
+                EE_Registry::instance()->CAP->current_user_can(
+                    'ee_delete_question_group',
+                    'espresso_registration_form_restore_question_group',
+                    $item->ID()
+                )
+            ) {
                 $actions['restore'] = '<a href="' . $restore_link . '" title="'
                                       . esc_attr__('Restore Question Group', 'event_espresso') . '">'
-                                      . __('Restore', 'event_espresso') . '</a>';
+                                      . esc_html__('Restore', 'event_espresso') . '</a>';
             }
 
-            if (! $item->has_questions_with_answers()
+            if (
+                ! $item->has_questions_with_answers()
                 && EE_Registry::instance()->CAP->current_user_can(
                     'ee_delete_question_group',
                     'espresso_registration_form_delete_question_group',
                     $item->ID()
-                )) {
+                )
+            ) {
                     $actions['delete'] = '<a href="' . $delete_link . '" title="'
                                          . esc_attr__('Delete Question Group Permanently', 'event_espresso') . '">'
-                                         . __('Delete Permanently', 'event_espresso') . '</a>';
+                                         . esc_html__('Delete Permanently', 'event_espresso') . '</a>';
             }
         }
 

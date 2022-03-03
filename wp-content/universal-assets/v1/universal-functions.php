@@ -9,7 +9,6 @@ function universal_scripts() {
     //auth0
     wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
 }
-
 add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
 
 // check if user is logged in
@@ -17,7 +16,6 @@ function ajax_check_user_logged_in() {
     echo is_user_logged_in() ? 'yes' : 'no';
     die();
 }
-
 add_action('wp_ajax_is_user_logged_in', 'ajax_check_user_logged_in');
 add_action('wp_ajax_nopriv_is_user_logged_in', 'ajax_check_user_logged_in');
 
@@ -26,28 +24,26 @@ require_once('lib/wp_bootstrap_navwalker.php');
 
 // check if user is a user, but isn't a user of the current blog, and add them if they aren't
 function create_user_on_blog($user_object) {
-    $user_id = $user_object->ID;
-    $blog_id = get_current_blog_id();
-    if ($user_id && !is_user_member_of_blog($user_id, $blog_id)) {
-        add_user_to_blog($blog_id, $user_id, "subscriber");
-    }
+	$blog_id = get_current_blog_id();
+   	if ( $blog_id == 3 || $blog_id == 3 ) {
+	    $user_id = $user_object->ID;
+	    $blog_id = get_current_blog_id();
+	    if ($user_id && !is_user_member_of_blog($user_id, $blog_id)) {
+	        add_user_to_blog($blog_id, $user_id, "subscriber");
+	    }
+	}
 }
-
 add_action('auth0_before_login', 'create_user_on_blog', 10, 6);
 
 /** Set up the Ajax WP Logout */
-add_action('wp_ajax_mm_wplogout', 'MM_wordpress_logout');
-add_action('wp_ajax_nopriv_mm_wplogout', 'MM_wordpress_logout');
-
 function MM_wordpress_logout() {
     //check_ajax_referer( 'ajax-logout-nonce', 'ajaxsecurity' );
     wp_logout();
     ob_clean(); // probably overkill for this, but good habit
     wp_send_json_success();
 }
-
-add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
-add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
+add_action('wp_ajax_mm_wplogout', 'MM_wordpress_logout');
+add_action('wp_ajax_nopriv_mm_wplogout', 'MM_wordpress_logout');
 
 /** Set up the Ajax WP Login */
 function MM_WPlogin() {
@@ -79,49 +75,45 @@ function MM_WPlogin() {
         wp_send_json_error();
     }
 }
-
-// Making error logs for ajax to call
-add_action('wp_ajax_make_error_log', 'make_error_log');
-add_action('wp_ajax_nopriv_make_error_log', 'make_error_log');
+add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
+add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 
 // Write to the php error log by request
 function make_error_log() {
     $error = filter_input(INPUT_POST, 'make_error', FILTER_SANITIZE_STRING);
     error_log(print_r($error, TRUE));
 }
+add_action('wp_ajax_make_error_log', 'make_error_log');
+add_action('wp_ajax_nopriv_make_error_log', 'make_error_log');
 
 function randomString() {
     $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
     return substr(str_shuffle($permitted_chars), 0, 10);
 }
 
-// prevent non admin users from seeing the admin dashboard
-add_action('init', 'blockusers_init');
-
-function blockusers_init() {
+// prevent non admin users from seeing the admin dashboard -- I don't believe this is necessary anymore. - Rio 3/2/22
+/*I function blockusers_init() {
     if (is_admin() && !current_user_can('administrator') && !( defined('DOING_AJAX') && DOING_AJAX )) {
         wp_redirect(home_url());
         exit;
     }
 }
+add_action('init', 'blockusers_init');*/
 
 function timezone_abbr_from_name($timezone_name) {
     $dateTime = new DateTime();
     $dateTime->setTimeZone(new DateTimeZone($timezone_name));
     return $dateTime->format('T');
 }
-
 add_action('admin_bar_menu', 'toolbar_link_to_mypage', 999);
 
 function toolbar_link_to_mypage($wp_admin_bar) {
-
     $args = [
         'id' => 'wp-submit-asana-bug',
         'title' => '<span class="wp-menu-image dashicons-before dashicons-buddicons-replies"></span>' . 'Report a Bug',
         'meta' => array('target' => '_blank'),
         'href' => 'https://form.asana.com/?hash=936d55d2283dea9fe2382a75e80722675681f3881416d93f7f75e8a4941c6d47&id=1149238253861292',
     ];
-
     $wp_admin_bar->add_menu($args);
 }
 
@@ -140,7 +132,6 @@ function add_universal_body_classes($classes) {
         return $classes;
     }
 }
-
 add_filter('body_class', 'add_universal_body_classes');
 
 // don't just use the auth0 email field for the wpuser name
@@ -198,22 +189,25 @@ add_action("rest_api_init", function () {
 });
 
 // alphabetize menu items
-add_action('admin_init','sort_admin_menu');
 function sort_admin_menu() {
-    global $menu;
-    // alphabetize submenu items
-    usort( $menu, function ( $a, $b ) {
-        if(isset($a['5']) && $a[5]!='menu-dashboard'){
-          // format of a submenu item is [ 'My Item', 'read', 'manage-my-items', 'My Item' ]
-          return strcasecmp( strip_tags($a[0]), strip_tags($b[0]) );
-        }
-    } );
-    //remove separators
-    $menu = array_filter($menu, function($item) {
-        return $item[0] != '';
-    });
+	if(is_admin()) {
+	    global $menu;
+	    // alphabetize submenu items
+		if($menu) {
+		    usort( $menu, function ( $a, $b ) {
+		        if(isset($a['5']) && $a[5]!='menu-dashboard'){
+		          // format of a submenu item is [ 'My Item', 'read', 'manage-my-items', 'My Item' ]
+		          return strcasecmp( strip_tags($a[0]), strip_tags($b[0]) );
+		        }
+		    } );
+		    //remove separators
+		    $menu = array_filter($menu, function($item) {
+		        return $item[0] != '';
+		    });
+		}
+	}
 }
-
+add_action('admin_init','sort_admin_menu');
 
 add_action('elementor/widgets/widgets_registered', function( $widget_manager ){
 	$widget_manager->unregister_widget_type('form');

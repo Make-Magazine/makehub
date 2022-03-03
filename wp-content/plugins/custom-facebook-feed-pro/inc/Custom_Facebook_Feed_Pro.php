@@ -8,6 +8,7 @@
  */
 namespace CustomFacebookFeed;
 use CustomFacebookFeed\CFF_Widget;
+use CustomFacebookFeed\SB_Facebook_Data_Manager;
 use CustomFacebookFeed\Admin\CFF_Tracking;
 use CustomFacebookFeed\Admin\CFF_Admin_Notices;
 use CustomFacebookFeed\Admin\CFF_Notifications;
@@ -1111,6 +1112,37 @@ return $wpdb->get_var( "show tables like '$table_name'" ) === $table_name;
 			}
 			update_option( 'cff_db_version', CFF_DBVERSION );
 		}
+
+		if ( (float) $db_ver < 2.3 ) {
+			$manager = new SB_Facebook_Data_Manager();
+			$manager->update_db_for_dpa();
+			update_option( 'cff_db_version', CFF_DBVERSION );
+		}
+
+		if ( version_compare( $db_ver, '2.4', '<' ) ) {
+			update_option( 'cff_db_version', CFF_DBVERSION );
+
+			$groups = \CustomFacebookFeed\Builder\CFF_Db::source_query( array( 'type' => 'group' ) );
+
+			$cff_statuses_option                       = get_option( 'cff_statuses', array() );
+			$cff_statuses_option['groups_need_update'] = false;
+
+			if ( empty( $groups ) ) {
+				update_option( 'cff_statuses', $cff_statuses_option, false );
+			} else {
+				$encryption         = new \CustomFacebookFeed\SB_Facebook_Data_Encryption();
+				$groups_need_update = false;
+				foreach ( $groups as $source ) {
+					$info   = ! empty( $source['info'] ) ? json_decode( $encryption->decrypt( $source['info'] ) ) : array();
+					if ( \CustomFacebookFeed\Builder\CFF_Source::needs_update( $source, $info ) ) {
+						$groups_need_update = true;
+					}
+				}
+				$cff_statuses_option['groups_need_update'] = $groups_need_update;
+				update_option( 'cff_statuses', $cff_statuses_option, false );
+			}
+		}
+
 	}
 
 	/**

@@ -1,4 +1,5 @@
 <?php
+
 class EE_Text_Area_Display_Strategy extends EE_Display_Strategy_Base
 {
 
@@ -29,11 +30,12 @@ class EE_Text_Area_Display_Strategy extends EE_Display_Strategy_Base
         $html .= esc_textarea($raw_value);
         $html .= '</textarea>';
         foreach ($this->_input->get_validation_strategies() as $validation_strategy) {
-            if ($validation_strategy instanceof EE_Simple_HTML_Validation_Strategy
+            if (
+                $validation_strategy instanceof EE_Simple_HTML_Validation_Strategy
                 || $validation_strategy instanceof EE_Full_HTML_Validation_Strategy
             ) {
                 $html .= sprintf(
-                    __('%1$s(allowed tags: %2$s)%3$s', 'event_espresso'),
+                    esc_html__('%1$s(allowed tags: %2$s)%3$s', 'event_espresso'),
                     '<p class="ee-question-desc">',
                     $validation_strategy->get_list_of_allowed_tags(),
                     '</p>'

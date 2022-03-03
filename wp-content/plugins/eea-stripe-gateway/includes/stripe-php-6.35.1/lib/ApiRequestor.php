@@ -399,9 +399,9 @@ class ApiRequestor
             $hasFile
         );
 
-        if (array_key_exists('request-id', $rheaders)) {
+        if ($rheaders->offsetExists('request-id')) {
             self::$requestTelemetry = new RequestTelemetry(
-                $rheaders['request-id'],
+                $rheaders->offsetGet('request-id'),
                 Util\Util::currentTimeMillis() - $requestStartMs
             );
         }

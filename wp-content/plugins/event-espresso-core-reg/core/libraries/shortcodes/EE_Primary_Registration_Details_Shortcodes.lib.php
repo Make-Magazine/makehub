@@ -21,66 +21,66 @@ class EE_Primary_Registration_Details_Shortcodes extends EE_Shortcodes
 
     protected function _init_props()
     {
-        $this->label = __('Primary_Registration Details Shortcodes', 'event_espresso');
-        $this->description = __('All shortcodes specific primary registrant data', 'event_espresso');
+        $this->label = esc_html__('Primary_Registration Details Shortcodes', 'event_espresso');
+        $this->description = esc_html__('All shortcodes specific primary registrant data', 'event_espresso');
         $this->_shortcodes = array(
-            '[PRIMARY_REGISTRANT_FNAME]'                  => __(
+            '[PRIMARY_REGISTRANT_FNAME]'                  => esc_html__(
                 'Parses to the first name of the primary registration for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_LNAME]'                  => __(
+            '[PRIMARY_REGISTRANT_LNAME]'                  => esc_html__(
                 'Parses to the last name of the primary registration for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_EMAIL]'                  => __(
+            '[PRIMARY_REGISTRANT_EMAIL]'                  => esc_html__(
                 'Parses to the email address of the primary registration for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_REGISTRATION_ID]'        => __(
+            '[PRIMARY_REGISTRANT_REGISTRATION_ID]'        => esc_html__(
                 'Parses to the registration ID of the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_REGISTRATION_CODE]'      => __(
+            '[PRIMARY_REGISTRANT_REGISTRATION_CODE]'      => esc_html__(
                 'Parses to the registration code of the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_PHONE_NUMBER]'           => __(
+            '[PRIMARY_REGISTRANT_PHONE_NUMBER]'           => esc_html__(
                 'The Phone Number for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_ADDRESS]'                => __(
+            '[PRIMARY_REGISTRANT_ADDRESS]'                => esc_html__(
                 'The Address for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_ADDRESS2]'               => __(
+            '[PRIMARY_REGISTRANT_ADDRESS2]'               => esc_html__(
                 'Whatever was in the address 2 field for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_CITY]'                   => __(
+            '[PRIMARY_REGISTRANT_CITY]'                   => esc_html__(
                 'The city for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_ZIP_PC]'                 => __(
+            '[PRIMARY_REGISTRANT_ZIP_PC]'                 => esc_html__(
                 'The ZIP (or Postal) Code for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_ADDRESS_STATE]'          => __(
+            '[PRIMARY_REGISTRANT_ADDRESS_STATE]'          => esc_html__(
                 'The state/province for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_COUNTRY]'                => __(
+            '[PRIMARY_REGISTRANT_COUNTRY]'                => esc_html__(
                 'The country for the primary registrant for the transaction.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_REGISTRATION_DATE]'      => __(
+            '[PRIMARY_REGISTRANT_REGISTRATION_DATE]'      => esc_html__(
                 'The date the registration occured for the primary registration.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_FRONTEND_EDIT_REG_LINK]' => __(
+            '[PRIMARY_REGISTRANT_FRONTEND_EDIT_REG_LINK]' => esc_html__(
                 'Generates a link for the given registration to edit this registration details on the frontend.',
                 'event_espresso'
             ),
-            '[PRIMARY_REGISTRANT_ANSWER_*]'               => __(
+            '[PRIMARY_REGISTRANT_ANSWER_*]'               => esc_html__(
                 'This is a special dynamic shortcode.  After the "*", add the exact text of an existing question, and if there is an answer for that question for this primary registrant, then it will be output in place of this shortcode.',
                 'event_espresso'
             ),
@@ -184,29 +184,30 @@ class EE_Primary_Registration_Details_Shortcodes extends EE_Shortcodes
             }
 
             foreach ($primary_registration->questions as $ansid => $question) {
-                if ($question instanceof EE_Question
+                if (
+                    $question instanceof EE_Question
                     && trim($question->get('QST_display_text')) === trim($shortcode)
                     && isset($primary_registration->registrations[ $primary_reg->ID() ]['ans_objs'][ $ansid ])
                 ) {
                     $primary_reg_ansid = $primary_registration->registrations[ $primary_reg->ID() ]['ans_objs'][ $ansid ];
-                    
+
                     // what we show for the answer depends on the question type!
                     switch ($question->get('QST_type')) {
                         case EEM_Question::QST_type_state:
                             $state = EEM_State::instance()->get_one_by_ID($primary_reg_ansid->get('ANS_value'));
                             $answer = $state instanceof EE_State ? $state->name() : '';
                             break;
-    
+
                         case EEM_Question::QST_type_country:
                             $country = EEM_Country::instance()->get_one_by_ID($primary_reg_ansid->get('ANS_value'));
                             $answer = $country instanceof EE_Country ? $country->name() : '';
                             break;
-    
+
                         default:
                             $answer = $primary_reg_ansid->get_pretty('ANS_value', 'no_wpautop');
                             break;
                     }
-                    
+
                     return $answer;
                     break;
                 }

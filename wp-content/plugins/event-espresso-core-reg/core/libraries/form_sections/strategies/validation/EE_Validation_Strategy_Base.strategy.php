@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class EE_Validation_Strategy_Base
  *
@@ -21,7 +22,7 @@ abstract class EE_Validation_Strategy_Base extends EE_Form_Input_Strategy_Base
     public function __construct($validation_error_message = null)
     {
         $this->_validation_error_message = $validation_error_message === null
-            ? __('Input invalid', 'event_espresso')
+            ? esc_html__('Input invalid', 'event_espresso')
             : $validation_error_message;
         parent::__construct();
     }
@@ -96,7 +97,7 @@ abstract class EE_Validation_Strategy_Base extends EE_Form_Input_Strategy_Base
     {
         return $other_js_data;
     }
-    
+
     /**
      * Opportunity for this display strategy to call wp_enqueue_script and wp_enqueue_style.
      * This should be called during wp_enqueue_scripts
