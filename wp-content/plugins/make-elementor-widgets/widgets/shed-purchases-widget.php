@@ -118,6 +118,8 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
+		$settings = $this->get_settings_for_display();
+		
     global $user_email;
     //if we are in the elementor admin, use this email as an example
     if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {

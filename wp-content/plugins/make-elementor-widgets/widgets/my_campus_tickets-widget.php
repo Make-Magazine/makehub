@@ -79,6 +79,9 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
 	 * Render widget output on the frontend.
 	 */
 	protected function render() {
+		$settings = $this->get_settings_for_display();
+		echo '<h4>'.$settings['title'].'</h4>';
+
     $user = wp_get_current_user();
     $user_email = (string) $user->user_email;
 
@@ -87,8 +90,8 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
     if ($events) {
         ?>
         <div class="dashboard-box expando-box" style="width:100%">
-            <h4 class="open"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makercampus-logo.jpg" />Tickets</h4>
-            <ul class="open">
+            <h4 class="close"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Tickets');?></h4>
+            <ul class="close">
                 <li>
                     <div class="espresso-my-events evetn_section_container">
                         <div class="espresso-my-events-inner-content">

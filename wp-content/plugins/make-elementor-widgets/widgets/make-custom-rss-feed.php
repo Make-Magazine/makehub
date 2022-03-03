@@ -4,48 +4,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Elementor my Makerspaces Widget
+ * Elementor Make: Custom RSS feed
  *
- * Elementor widget that lists the makerspaces that you have submitted and links back to edit them
+ * Elementor widget that allows you to pull in an RSS feed and customize the look and feel
  *
  * @since 1.0.0
  */
-class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
+class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget name.
-	 *
-	 * Retrieve myMspaces_Widget widget name.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'mymspaces';
+		return 'makecustomrss';
 	}
 
 	/**
 	 * Get widget title.
-	 *
-	 * Retrieve myMspaces_Widget widget title.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'My MakerSpaces listing', 'elementor-make-widget' );
+		return esc_html__( 'Make: Custom RSS feed', 'elementor-make-widget' );
 	}
 
 	/**
 	 * Get widget icon.
-	 *
-	 * Retrieve myMspaces_Widget widget icon.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget icon.
 	 */
 	public function get_icon() {
 		return 'eicon-custom';
@@ -53,12 +35,6 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget categories.
-	 *
-	 * Retrieve the list of categories the myMspaces_Widget widget belongs to.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array Widget categories.
 	 */
 	public function get_categories() {
 		return [ 'make-category' ];
@@ -66,27 +42,15 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Get widget keywords.
-	 *
-	 * Retrieve the list of keywords the myMspaces_Widget widget belongs to.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return [ 'make', 'makerspaces'];
+		return [ 'make', 'custom', 'rss'];
 	}
 
 	/**
-	 * Register myMspaces_Widget widget controls.
-	 *
-	 * Add input fields to allow the user to customize the widget settings.
-	 *
-	 * @since 1.0.0
-	 * @access protected
+	 * Register widget controls.
 	 */
 	protected function register_controls() {
-
 		$this->start_controls_section(
 			'content_section',
 			[
@@ -98,23 +62,62 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
     $this->add_control(
     			'title',
     			[
-    				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
+    				'label' => esc_html__( 'Title (optional)', 'elementor-make-widget' ),
     				'type' => \Elementor\Controls_Manager::TEXT,
     				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
     			]
     		);
 
+				$this->add_control(
+							'border_style',
+							[
+								'label' => esc_html__( 'Items to display', 'plugin-name' ),
+								'type' => \Elementor\Controls_Manager::SELECT,
+								'default' => 'solid',
+								'options' => [
+									'1'  => esc_html__( '1', 'elementor-make-widget' ),
+									'2' => esc_html__( '2', 'elementor-make-widget' ),
+									'3' => esc_html__( '3', 'elementor-make-widget' ),
+									'4' => esc_html__( '4', 'elementor-make-widget' ),
+									'5' => esc_html__( '5', 'elementor-make-widget' ),
+									'6' => esc_html__( '6', 'elementor-make-widget' ),
+									'7' => esc_html__( '7', 'elementor-make-widget' ),
+									'8' => esc_html__( '8', 'elementor-make-widget' ),
+									'9' => esc_html__( '9', 'elementor-make-widget' ),
+									'10' => esc_html__( '10', 'elementor-make-widget' ),
+								],
+							]
+						);
+						$this->add_control(
+								'text_align',
+								[
+									'label' => esc_html__( 'Display Order', 'elementor-make-widget' ),
+									'type' => \Elementor\Controls_Manager::CHOOSE,
+									'options' => [
+										'random' => [
+											'title' => esc_html__( 'Random', 'elementor-make-widget' ),
+											'icon' => 'eicon-text-align-left',
+										],
+										'center' => [
+											'title' => esc_html__( 'Date', 'elementor-make-widget' ),
+											'icon' => 'eicon-date',
+										],
+										'right' => [
+											'title' => esc_html__( 'Author', 'elementor-make-widget' ),
+											'icon' => 'eicon-person',
+										],
+									],
+									'default' => 'center',
+									'toggle' => true,
+								]
+							);
 		$this->end_controls_section();
 
 	}
 
 	/**
-	 * Render myMspaces_Widget widget output on the frontend.
-	 *
+	 * Render widget output on the frontend.
 	 * Written in PHP and used to generate the final HTML.
-	 *
-	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render() {
     $settings = $this->get_settings_for_display();

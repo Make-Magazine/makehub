@@ -118,8 +118,9 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
     $settings = $this->get_settings_for_display();
+		echo '<h4>'.$settings['title'].'</h4>';
 
-    global $user_email;
+		global $user_email;
     $hosted_events = EEM_Event::instance()->get_all(
             array(
                 //'limit' => 10,
@@ -132,8 +133,8 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
     if (!empty($hosted_events)) {
         ?>
         <div class="dashboard-box expando-box">
-            <h4 class="open">($settings['title']!=''?$settings['title']:'<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makercampus-logo.jpg" /> Facilitator');?></h4>
-            <ul class="open">
+            <h4 class="close"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Facilitator');?></h4>
+            <ul class="close">
                 <?php
                 foreach ($hosted_events as $event) {
                     ?>
