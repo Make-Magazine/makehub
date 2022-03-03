@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Make: Elementor Widgets
- * Description: This plugin adds some common Make: dashboard widgets including: Makershed purchases, My Makerspace listings, Facilitator Event listings, Maker Campus tickets, Maker camp projects 
+ * Description: This plugin adds some common Make: dashboard widgets including: Makershed purchases, My Makerspace listings, Facilitator Event listings, Maker Campus tickets, Maker camp projects
  * Version:     1.0.0
  * Author:      Alicia Williams
  * Text Domain: elementor-make-widget
@@ -34,6 +34,7 @@ function register_make_widgets( $widgets_manager ) {
   $widgets_manager->register( new \Elementor_MakeFacilitatorEvents_Widget() );
   $widgets_manager->register( new \Elementor_MyCampusTickets_Widget() );
   $widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );
+  $widgets_manager->register( new \makeCustomRss() );
 
 }
 add_action( 'elementor/widgets/register', 'register_make_widgets' );
