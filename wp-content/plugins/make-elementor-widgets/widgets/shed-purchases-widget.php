@@ -96,14 +96,13 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'url',
-			[
-				'label' => esc_html__( 'URL to embed', 'elementor-make-widget' ),
-				'type' => \Elementor\Controls_Manager::TEXT,
-				'input_type' => 'url',
-				'placeholder' => esc_html__( 'https://your-link.com', 'elementor-mshedpurch-widget' ),
-			]
-		);
+    			'title',
+    			[
+    				'label' => esc_html__( 'Title (optional)', 'elementor-make-widget' ),
+    				'type' => \Elementor\Controls_Manager::TEXT,
+    				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
+    			]
+    		);
 
 		$this->end_controls_section();
 
@@ -119,7 +118,7 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		
+
     global $user_email;
     //if we are in the elementor admin, use this email as an example
     if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
@@ -134,7 +133,7 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
     ?>
     <div class="dashboard-box expando-box">
-        <h4 class="open"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makershed-logo.jpg" /> Orders</h4>
+        <h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
         <ul class="open">
             <?php
             if (!empty($customer['customers'])) {
