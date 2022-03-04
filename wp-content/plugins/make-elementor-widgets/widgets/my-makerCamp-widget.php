@@ -62,14 +62,38 @@ class Elementor_MyMakerCamp_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-    $this->add_control(
-    			'title',
-    			[
-    				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
-    				'type' => \Elementor\Controls_Manager::TEXT,
-    				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
-    			]
-    		);
+    	$this->add_control(
+			'title',
+			[
+				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			[
+				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					'after' => esc_html__( 'After', 'elementor' ),
+					'before' => esc_html__( 'Before', 'elementor' ),
+				],
+				'default' => 'after',
+				'prefix_class' => 'expandobox-align-',
+			]
+		);
 
 		$this->end_controls_section();
 
@@ -85,9 +109,9 @@ class Elementor_MyMakerCamp_Widget extends \Elementor\Widget_Base {
 
     if (groups_is_user_member($user_id, $group_id)) {
         ?>
-        <div class="dashboard-box expando-box" style="width:100%">
-            <h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'<img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" />');?></h4>
-            <ul class="open">
+        <div class="dashboard-box make-elementor-expando-box" style="width:100%">
+            <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'<img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" />');?></h4>
+            <ul class="closed">
                 <li>
                     <?php
                     $prev_blog_id = get_current_blog_id();

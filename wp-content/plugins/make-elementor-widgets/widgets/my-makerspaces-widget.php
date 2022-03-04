@@ -95,7 +95,7 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-    $this->add_control(
+    	$this->add_control(
     			'title',
     			[
     				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
@@ -103,6 +103,30 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
     				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
     			]
     		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			[
+				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					'after' => esc_html__( 'After', 'elementor' ),
+					'before' => esc_html__( 'Before', 'elementor' ),
+				],
+				'default' => 'after',
+				'prefix_class' => 'expandobox-align-',
+			]
+		);
 
 		$this->end_controls_section();
 
@@ -118,7 +142,6 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
     $settings = $this->get_settings_for_display();
-		echo '<h4>'.$settings['title'].'</h4>';
 
     global $wpdb;
     global $bp;
@@ -135,9 +158,9 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 
     if (!empty($ms_results)) {
         ?>
-        <div class="dashboard-box expando-box">
-            <h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'My Makerspace listings');?></h4>
-            <ul class="open">
+        <div class="dashboard-box make-elementor-expando-box">
+            <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'My Makerspace listings');?></h4>
+            <ul class="closed">
                 <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
                 <li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>
             </ul>

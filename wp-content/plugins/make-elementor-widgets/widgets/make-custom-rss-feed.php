@@ -59,73 +59,158 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-    $this->add_control(
-    			'title',
-    			[
-    				'label' => esc_html__( 'Title (optional)', 'elementor-make-widget' ),
-    				'type' => \Elementor\Controls_Manager::TEXT,
-    				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
-    			]
-    		);
-		$this->add_control(
-		    			'link',
-		    			[
-		    				'label' => esc_html__( 'Link (defaults to site)', 'elementor-make-widget' ),
-		    				'type' => \Elementor\Controls_Manager::TEXT,
-		    				'placeholder' => esc_html__( 'Provide a link', 'elementor-make-widget' ),
-		    			]
+    	$this->add_control(
+			'title',
+			[
+				'label' => esc_html__( 'Title (optional)', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
+			]
 		);
 		$this->add_control(
-		    			'rss_url',
-		    			[
-		    				'label' => esc_html__( 'Enter the full RSS feed URL', 'elementor-make-widget' ),
-		    				'type' => \Elementor\Controls_Manager::TEXT,
-		    				'placeholder' => esc_html__( 'https://', 'elementor-make-widget' ),
-		    			]
+			'link',
+			[
+				'label' => esc_html__( 'Link (defaults to site)', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Provide a link', 'elementor-make-widget' ),
+			]
 		);
-				$this->add_control(
-							'num_display',
-							[
-								'label' => esc_html__( 'Items to display', 'plugin-name' ),
-								'type' => \Elementor\Controls_Manager::SELECT,
-								'default' => 'solid',
-								'options' => [
-									'1'  => esc_html__( '1', 'elementor-make-widget' ),
-									'2' => esc_html__( '2', 'elementor-make-widget' ),
-									'3' => esc_html__( '3', 'elementor-make-widget' ),
-									'4' => esc_html__( '4', 'elementor-make-widget' ),
-									'5' => esc_html__( '5', 'elementor-make-widget' ),
-									'6' => esc_html__( '6', 'elementor-make-widget' ),
-									'7' => esc_html__( '7', 'elementor-make-widget' ),
-									'8' => esc_html__( '8', 'elementor-make-widget' ),
-									'9' => esc_html__( '9', 'elementor-make-widget' ),
-									'10' => esc_html__( '10', 'elementor-make-widget' ),
-								],
-							]
-						);
-						$this->add_control(
-								'disp_order',
-								[
-									'label' => esc_html__( 'Display Order', 'elementor-make-widget' ),
-									'type' => \Elementor\Controls_Manager::CHOOSE,
-									'options' => [
-										'random' => [
-											'title' => esc_html__( 'Random', 'elementor-make-widget' ),
-											'icon' => 'eicon-text-align-left',
-										],
-										'center' => [
-											'title' => esc_html__( 'Date', 'elementor-make-widget' ),
-											'icon' => 'eicon-date',
-										],
-										'right' => [
-											'title' => esc_html__( 'Author', 'elementor-make-widget' ),
-											'icon' => 'eicon-person',
-										],
-									],
-									'default' => 'center',
-									'toggle' => true,
-								]
-							);
+		$this->add_control(
+			'rss_url',
+			[
+				'label' => esc_html__( 'Enter the full RSS feed URL', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'https://', 'elementor-make-widget' ),
+			]
+		);
+		$this->add_control(
+			'num_display',
+			[
+				'label' => esc_html__( 'Items to display', 'plugin-name' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'default' => 'solid',
+				'options' => [
+					'1'  => esc_html__( '1', 'elementor-make-widget' ),
+					'2' => esc_html__( '2', 'elementor-make-widget' ),
+					'3' => esc_html__( '3', 'elementor-make-widget' ),
+					'4' => esc_html__( '4', 'elementor-make-widget' ),
+					'5' => esc_html__( '5', 'elementor-make-widget' ),
+					'6' => esc_html__( '6', 'elementor-make-widget' ),
+					'7' => esc_html__( '7', 'elementor-make-widget' ),
+					'8' => esc_html__( '8', 'elementor-make-widget' ),
+					'9' => esc_html__( '9', 'elementor-make-widget' ),
+					'10' => esc_html__( '10', 'elementor-make-widget' ),
+				],
+			]
+		);
+		$this->add_control(
+			'disp_order',
+			[
+				'label' => esc_html__( 'Display Order', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::CHOOSE,
+				'options' => [
+					'random' => [
+						'title' => esc_html__( 'Random', 'elementor-make-widget' ),
+						'icon' => 'eicon-text-align-left',
+					],
+					'center' => [
+						'title' => esc_html__( 'Date', 'elementor-make-widget' ),
+						'icon' => 'eicon-date',
+					],
+					'right' => [
+						'title' => esc_html__( 'Author', 'elementor-make-widget' ),
+						'icon' => 'eicon-person',
+					],
+				],
+				'default' => 'center',
+				'toggle' => true,
+			]
+		);
+		$this->add_control(
+			'show_author',
+			[
+				'label' => esc_html__( 'Show Author', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'Hide', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			]
+		);
+		$this->add_control(
+			'show_date',
+			[
+				'label' => esc_html__( 'Show Date', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'Hide', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			]
+		);
+		$this->add_control(
+			'show_summary',
+			[
+				'label' => esc_html__( 'Show Summary', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'Hide', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			]
+		);
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'header_bg_color',
+			[
+				'label' => esc_html__( 'Header Background Color', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'default' => '#005e9a',
+				'selectors' => [
+					'{{WRAPPER}} h4' => 'background-color: {{VALUE}}',
+				],
+			]
+		);
+		$this->add_control(
+			'header_text_color',
+			[
+				'label' => esc_html__( 'Header Text Color', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'default' => '#ffff',
+				'selectors' => [
+					'{{WRAPPER}} h4 a' => 'color: {{VALUE}}',
+				],
+			]
+		);
+		$this->add_control(
+			'title_position',
+			[
+				'label' => esc_html__( 'Title Position', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::CHOOSE,
+				'options' => [
+					'top' => [
+						'title' => esc_html__( 'Top', 'elementor-make-widget' ),
+						'icon' => 'eicon-arrow-up',
+					],
+					'bottom' => [
+						'title' => esc_html__( 'Bottom', 'elementor-make-widget' ),
+						'icon' => 'eicon-arrow-down',
+					],
+				],
+				'default' => 'top',
+				'toggle' => true,
+			]
+		);
+
 		$this->end_controls_section();
 
 	}
@@ -139,50 +224,49 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 		$num_display = $settings['num_display'];
 		$disp_order = $settings['disp_order'];
 		$title = $settings['title'];
-		echo '<h4>'.$settings['title'].'</h4>';
 
 		$url = !empty($settings['rss_url']) ? $settings['rss_url'] : '';
 		while (stristr($url, 'http') != $url) {
-				$url = substr($url, 1);
+			$url = substr($url, 1);
 		}
 		if (empty($url)) {
-				return;
+			return;
 		}
 
 		// self-url destruction sequence
 		if (in_array(untrailingslashit($url), array(site_url(), home_url()))) {
-				return;
+			return;
 		}
 
 		$rss = fetch_feed($url);
 		$desc = '';
 
 		if (!is_wp_error($rss)) {
-				$desc = esc_attr(strip_tags(@html_entity_decode($rss->get_description(), ENT_QUOTES, get_option('blog_charset'))));
-				if (empty($title)) {
-						$title = strip_tags($rss->get_title());
+			$desc = esc_attr(strip_tags(@html_entity_decode($rss->get_description(), ENT_QUOTES, get_option('blog_charset'))));
+			if (empty($title)) {
+				$title = strip_tags($rss->get_title());
+			}
+			if (empty($link)) {
+				$link = strip_tags($rss->get_permalink());
+				while (stristr($link, 'http') != $link) {
+					$link = substr($link, 1);
 				}
-				if (empty($link)) {
-						$link = strip_tags($rss->get_permalink());
-						while (stristr($link, 'http') != $link) {
-								$link = substr($link, 1);
-						}
-				}
+			}
 		}
 
 		if (empty($title)) {
-				$title = !empty($desc) ? $desc : __('Unknown Feed');
+			$title = !empty($desc) ? $desc : __('Unknown Feed');
 		}
 
-		$url = strip_tags($url);
-		if ($title) {
-				$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
+		if ($link) {
+			$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
 		}
+		echo '<h4>'.$title.'</h4>';
 
 		makewidget_rss_output($rss, $settings);
 
 		if (!is_wp_error($rss)) {
-				$rss->__destruct();
+			$rss->__destruct();
 		}
 		unset($rss);
 

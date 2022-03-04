@@ -24,24 +24,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function register_make_widgets( $widgets_manager ) {
-  // Include all function files in the makerfaire/functions directory:
-  foreach (glob(__DIR__ . '/widgets/*.php') as $file) {
-      require_once($file);
-  }
+	// Include all function files in the makerfaire/functions directory:
+	foreach (glob(__DIR__ . '/widgets/*.php') as $file) {
+		require_once($file);
+	}
 
 	$widgets_manager->register( new \Elementor_mShedPurch_Widget() );
-  $widgets_manager->register( new \Elementor_myMspaces_Widget() );
-  $widgets_manager->register( new \Elementor_MakeFacilitatorEvents_Widget() );
-  $widgets_manager->register( new \Elementor_MyCampusTickets_Widget() );
-  $widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );
-  $widgets_manager->register( new \Elementor_makeCustomRss_Widget() );
+	$widgets_manager->register( new \Elementor_myMspaces_Widget() );
+	$widgets_manager->register( new \Elementor_MakeFacilitatorEvents_Widget() );
+	$widgets_manager->register( new \Elementor_MyCampusTickets_Widget() );
+	$widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );
+	$widgets_manager->register( new \Elementor_makeCustomRss_Widget() );
 
 }
 add_action( 'elementor/widgets/register', 'register_make_widgets' );
 
 /* Add new Make: category for our widgets */
 function add_elementor_widget_categories( $elements_manager ) {
-  error_log('function add_elementor_widget_categories');
 	$elements_manager->add_category(
 		'make-category',
 		[
@@ -125,7 +124,7 @@ function build_ee_ticket_section($event, $user_email) {
 
     return $return;
 }
-function makewidget_rss_output($rss,$settings) {
+function makewidget_rss_output($rss, $settings) {
     if (is_string($rss)) {
         $rss = fetch_feed($rss);
     } elseif (is_array($rss) && isset($rss['url'])) {
@@ -153,9 +152,10 @@ function makewidget_rss_output($rss,$settings) {
     if ($items < 1 || 20 < $items) {
         $items = 10;
     }
-    $show_summary = (int) $args['show_summary'];
-    $show_author = (int) $args['show_author'];
-    $show_date = (int) $args['show_date'];
+    $show_summary = $settings['show_summary'];
+    $show_author = $settings['show_author'];
+    $show_date = $settings['show_date'];
+	$title_position = $settings['title_position'];
 
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
@@ -191,7 +191,7 @@ function makewidget_rss_output($rss,$settings) {
                 }
                 $dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
             }
-            if ($show_date) {
+            if ($show_date == 'yes') {
                 $date = $dateString->format('M j, Y');
             }
         }
@@ -223,20 +223,18 @@ function makewidget_rss_output($rss,$settings) {
 
         //summary
         $summary = '';
-        if ($show_summary) {
+        if ($show_summary == 'yes') {
             $summary = $desc;
-
             // Change existing [...] to [&hellip;].
             if ('[...]' == substr($summary, -5)) {
                 $summary = substr($summary, 0, -5) . '[&hellip;]';
             }
-
             $summary = '<div class="rssSummary">' . esc_html($summary) . '</div>';
         }
 
         //author
         $author = '';
-        if ($show_author) {
+        if ($show_author == 'yes') {
             $author = $item->get_author();
             if (is_object($author)) {
                 $author = $author->get_name();
@@ -257,7 +255,7 @@ function makewidget_rss_output($rss,$settings) {
         if (++$i == $items) break;
     }
 
-    echo '<ul class="custom-rss">';
+    echo '<ul class="custom-rss-elementor">';
     foreach ($sortedFeed as $item) {
         $link       = $item['link'];
         $title      = $item['title'];
@@ -266,19 +264,39 @@ function makewidget_rss_output($rss,$settings) {
         $summary    = $item['summary'];
         $author     = $item['author'];
 
-        if ($item['show_date']) {
-            $date = '<date>' . $item['date'] . '</date>';
+		echo "<li style='list-style:none;'>";
+        if ($link != '') {
+            echo "<a class='rss-link' href='$link' target='_blank'>";
+		}
+		if ($title_position == "top") {
+            echo "{$title}";
         }
-
-        if ($link == '') {
-            echo "<li style='list-style:none;'>{$image}<div class='rss-widget-text'>$title{$date}{$summary}{$author}</div></li>";
-        } elseif ($show_summary) {
-            echo "<li style='list-style:none;'><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$summary}{$author}</a></div></li>";
-        } else {
-            echo "<li style='list-style:none;'><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$author}</a></div></li>";
+		echo 	"<div class='rss-image-wrapper'>{$image}</div>";
+		if ($title_position == "bottom") {
+            echo "{$title}";
         }
+		if ($show_summary == "yes") {
+            echo "{$summary}";
+        }
+		if ($item['show_date'] == 'yes') {
+            echo '<date>' . $item['date'] . '</date>';
+        }
+		if ($show_author == "yes") {
+            echo "{$author}";
+        }
+		if ($link != '') {
+            echo "</a>";
+		}
+		echo "</li>";
     }
     echo '</ul>';
     $rss->__destruct();
     unset($rss);
+}
+
+
+add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
+function make_elementor_enqueue_scripts() {
+	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $my_version );
+    wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(), $my_version );
 }

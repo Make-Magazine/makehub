@@ -95,7 +95,7 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-    $this->add_control(
+    	$this->add_control(
     			'title',
     			[
     				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
@@ -103,6 +103,30 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
     				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
     			]
     		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			[
+				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					'after' => esc_html__( 'After', 'elementor' ),
+					'before' => esc_html__( 'Before', 'elementor' ),
+				],
+				'default' => 'after',
+				'prefix_class' => 'expandobox-align-',
+			]
+		);
 
 		$this->end_controls_section();
 
@@ -117,35 +141,35 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-    $settings = $this->get_settings_for_display();
+	    $settings = $this->get_settings_for_display();
 		echo '<h4>'.$settings['title'].'</h4>';
 
 		global $user_email;
-    $hosted_events = EEM_Event::instance()->get_all(
-            array(
-                //'limit' => 10,
-                'order_by' => array('EVT_visible_on' => 'DESC'),
-                array(
-                    'Person.PER_email' => $user_email
-                )
-            )
-    );
-    if (!empty($hosted_events)) {
-        ?>
-        <div class="dashboard-box expando-box">
-            <h4 class="close"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Facilitator');?></h4>
-            <ul class="close">
-                <?php
-                foreach ($hosted_events as $event) {
-                    ?>
-                    <li><b><?php echo $event->name(); ?></b> - <a href="<?php echo $event->get_permalink(); ?>">View</a></li>
-                    <?php
-                }
-                ?>
-                <li><a class="btn universal-btn" href="/facilitator-portal/">Facilitator Portal</a></li>
-            </ul>
-        </div>
-        <?php
-    }
+	    $hosted_events = EEM_Event::instance()->get_all(
+	            array(
+	                //'limit' => 10,
+	                'order_by' => array('EVT_visible_on' => 'DESC'),
+	                array(
+	                    'Person.PER_email' => $user_email
+	                )
+	            )
+	    );
+	    if (!empty($hosted_events)) {
+	        ?>
+	        <div class="dashboard-box make-elementor-expando-box">
+	            <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Facilitator');?></h4>
+	            <ul class="closed">
+	                <?php
+	                foreach ($hosted_events as $event) {
+	                    ?>
+	                    <li><b><?php echo $event->name(); ?></b> - <a href="<?php echo $event->get_permalink(); ?>">View</a></li>
+	                    <?php
+	                }
+	                ?>
+	                <li><a class="btn universal-btn" href="/facilitator-portal/">Facilitator Portal</a></li>
+	            </ul>
+	        </div>
+	        <?php
+	    }
 	}
 }

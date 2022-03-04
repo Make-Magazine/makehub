@@ -62,7 +62,7 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-    $this->add_control(
+    	$this->add_control(
     			'title',
     			[
     				'label' => esc_html__( 'Title', 'elementor-make-widget' ),
@@ -70,6 +70,30 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
     				'placeholder' => esc_html__( 'Enter your title', 'elementor-make-widget' ),
     			]
     		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			[
+				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					'after' => esc_html__( 'After', 'elementor' ),
+					'before' => esc_html__( 'Before', 'elementor' ),
+				],
+				'default' => 'after',
+				'prefix_class' => 'expandobox-align-',
+			]
+		);
 
 		$this->end_controls_section();
 
@@ -89,9 +113,9 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
     $events = EEM_Event::instance()->get_all(array(array('Attendee.ATT_email' => $user_email)));
     if ($events) {
         ?>
-        <div class="dashboard-box expando-box" style="width:100%">
-            <h4 class="close"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Tickets');?></h4>
-            <ul class="close">
+        <div class="dashboard-box make-elementor-expando-box" style="width:100%">
+            <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Maker Campus Tickets');?></h4>
+            <ul class="closed">
                 <li>
                     <div class="espresso-my-events evetn_section_container">
                         <div class="espresso-my-events-inner-content">

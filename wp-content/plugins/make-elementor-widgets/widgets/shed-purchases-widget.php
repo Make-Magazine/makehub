@@ -106,6 +106,30 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
+		$this->start_controls_section(
+			'section_style',
+			[
+				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			[
+				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					'after' => esc_html__( 'After', 'elementor' ),
+					'before' => esc_html__( 'Before', 'elementor' ),
+				],
+				'default' => 'after',
+				'prefix_class' => 'expandobox-align-',
+			]
+		);
+
+		$this->end_controls_section();
+
 	}
 
 	/**
@@ -130,13 +154,12 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
     // Decode the JSON in the file
     $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
-
+	if (!empty($customer['customers'])) {
     ?>
-    <div class="dashboard-box expando-box">
-        <h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
-        <ul class="open">
+    <div class="dashboard-box make-elementor-expando-box">
+        <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
+        <ul class="closed">
             <?php
-            if (!empty($customer['customers'])) {
                 $customerID = $customer['customers'][0]['id'];
                 $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
                 $orders_content = basicCurl($orders_api);
@@ -164,19 +187,11 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
                         <?php
                     }
                 }
-            } else {
-                ?>
-                <li>
-                    <p>Looks like you haven't placed any orders yet...</p><br />
-                    <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
-                </li>
-                <?php
-            }
             ?>
         </ul>
-
+	</div>
     <?php
-
+	} // end if no content
 
 	}
 

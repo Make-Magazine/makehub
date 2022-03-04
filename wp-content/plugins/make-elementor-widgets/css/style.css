@@ -1,0 +1,97 @@
+.make-elementor-expando-box {
+	border-bottom: solid 2px #ccc;
+}
+.make-elementor-expando-box h4 {
+	 font-family: 'Roboto Bold';
+	 color: red;
+	 font-size: 22px;
+	 margin: 10px 5px 15px !important;
+	 display: flex;
+	 position: relative;
+	 align-items: center;
+}
+.make-elementor-expando-box h4 img {
+	 margin-right: 10px;
+	 max-height: 50px;
+}
+.expandobox-align-after .make-elementor-expando-box h4::after, .expandobox-align-before .make-elementor-expando-box h4::before {
+	font-family: FontAwesome;
+	content: "\f078";
+}
+.expandobox-align-after .make-elementor-expando-box h4::after {
+	position: absolute;
+	right: 0px;
+}
+.expandobox-align-before .make-elementor-expando-box h4::before {
+	left: 0px;
+	margin-right: 10px;
+}
+.expandobox-align-after .make-elementor-expando-box h4:not(.closed)::after, .expandobox-align-before .make-elementor-expando-box h4:not(.closed)::before {
+	 content: "\f077";
+}
+.make-elementor-expando-box h4:not(.closed) {
+	 border-bottom: solid 2px #ccc;
+	 padding-bottom: 15px;
+}
+.make-elementor-expando-box ul {
+	 list-style: none;
+	 margin-left: 15px;
+	 transition: max-height 0.5s;
+	 max-height: 0px;
+	 height: 0px;
+	 overflow: hidden;
+	 margin-bottom: 0px;
+}
+.make-elementor-expando-box ul li {
+	 margin-bottom: 10px;
+}
+.make-elementor-expando-box ul li p {
+	 margin: 0px;
+}
+.make-elementor-expando-box ul:not(.closed) {
+	 max-height: 3000px;
+	 height: auto;
+	 margin-top: auto;
+}
+
+/* Elementor Widget Custom RSS */
+.elementor-widget-makecustomrss .elementor-widget-container h4 {
+	margin: 0px;
+	padding: 15px 25px;
+	text-transform: uppercase;
+	color: #fff;
+	background: #005e9a;
+}
+.elementor-widget-makecustomrss .elementor-widget-container h4 a {
+	color: #fff;
+}
+
+.elementor-widget-makecustomrss ul.custom-rss-elementor {
+	margin: 0px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li {
+	border: 1px solid #e3e3e3;
+	box-shadow: 3px 3px 13px -5px rgba(0,0,0,.75);
+	padding: 15px 20px;
+	margin: 30px 0px;
+	display: flex;
+	flex-direction: column;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li a {
+	color: #333;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper {
+	overflow: hidden;
+	aspect-ratio: 2 / 1.25;
+	margin-bottom: 10px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper img {
+	width: 100%;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rssTitle {
+	font-size: 20px;
+	line-height: 22px;
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
