@@ -97,6 +97,10 @@
 }
 
 /* Upcoming Maker Faires widget */
+.elementor-widget-upcomingmakerfaires .upcoming-makerfaires-feed > img {
+	width: 100%;
+	padding: 10px;
+}
 .elementor-widget-upcomingmakerfaires ul {
 	list-style: none;
 	margin: 0px;

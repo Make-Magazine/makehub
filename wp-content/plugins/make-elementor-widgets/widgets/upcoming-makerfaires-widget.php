@@ -135,7 +135,7 @@ class Elementor_upcomingMakerFaires_Widget extends \Elementor\Widget_Base {
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'default' => '#000',
 				'selectors' => [
-					'{{WRAPPER}} ul' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} .upcoming-makerfaires-feed' => 'background-color: {{VALUE}}',
 				],
 			]
 		);
@@ -180,7 +180,7 @@ class Elementor_upcomingMakerFaires_Widget extends \Elementor\Widget_Base {
         $faire_content = @file_get_contents($api_url);
         // Decode the JSON in the file
         $faires = json_decode($faire_content, true);
-		$title = ''?'<img src="https://make.co/wp-content/themes/make-experiences/images/makerfaire-logo.png">':'<h4>'.$settings['title'].'</h4>';
+		$title = $title==''?'<img src="https://make.co/wp-content/themes/make-experiences/images/makerfaire-logo.png">':'<h4>'.$settings['title'].'</h4>';
 		if ($link) {
 			$title = '<a target="_blank" class="upcomingFairesLink" href="' . esc_url($link) . '">' . $title . '</a>';
 		}
