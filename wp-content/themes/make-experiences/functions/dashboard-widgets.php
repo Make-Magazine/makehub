@@ -55,6 +55,67 @@ function return_membership_widget($user){
 	return $return;
 }
 
+//////////////////////////////////////
+//     Maker Shed Orders widget     //
+//////////////////////////////////////
+function return_makershed_widget(){
+  $return       = '';
+  global $user_email;
+
+  $api_url      = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
+  $customer_api = $api_url . '/admin/customers/search.json?query=email:"' . $user_email /* 'ken@nmhu.edu' */ . '"&fields=id';
+  $customer_content = basicCurl($customer_api);
+
+  // Decode the JSON in the file
+  $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
+
+  ?>
+  <div class="dashboard-box expando-box">
+      <h4 class="open"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makershed-logo.jpg" /> Orders</h4>
+      <ul class="open">
+          <?php
+          if (!empty($customer['customers'])) {
+              $customerID = $customer['customers'][0]['id'];
+              $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
+              $orders_content = basicCurl($orders_api);
+              $orderJson = json_decode($orders_content, true);
+			  //var_dump($orderJson);
+              if ( empty($orderJson["orders"]) ) {
+                  ?>
+                  <li>
+                      <p>Looks like you haven't placed any orders yet...</p><br />
+                      <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
+                  </li>
+                  <?php
+              } else {
+                  foreach ($orderJson['orders'] as $order) {
+                      ?>
+                      <li><p><b><a href="<?php echo $order['order_status_url']; ?>">Order #<?php echo $order['id']; ?></a></b></p>
+                          <?php
+                          foreach ($order['line_items'] as $line_item) {
+                              ?>
+                              <p><?php echo $line_item['name'] ?> - $<?php echo $line_item['price']; ?></p>
+                              <?php
+                          }
+                          ?>
+                      </li>
+                      <?php
+                  }
+              }
+          } else {
+              ?>
+              <li>
+                  <p>Looks like you haven't placed any orders yet...</p><br />
+                  <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
+              </li>
+              <?php
+          }
+          ?>
+      </ul>
+  </div>
+
+  <?php
+}
 
 ////////////////////////////////////////
 //     Maker Faire Entries Widget     //
@@ -146,5 +207,144 @@ function return_makerfaire_widget(){
       $return .= '</ul>
       </div>';
     }
+  }
+}
+
+////////////////////////////////////////
+//       Makerspace List Widget       //
+////////////////////////////////////////
+function return_makerspace_widget(){
+  global $wpdb;
+  global $user_email;
+
+  //pull makerspace information from the makerspace site
+  $sql = 'SELECT meta_key, meta_value from wp_3_gf_entry_meta '
+          . ' where entry_id = (select entry_id FROM `wp_3_gf_entry_meta` '
+          . '                    WHERE `meta_key` LIKE "141" and meta_value like "' . $user_email . '")';
+  $ms_results = $wpdb->get_results($sql);
+
+  if (!empty($ms_results)) {
+      ?>
+      <div class="dashboard-box expando-box">
+          <h4 class="open">My &nbsp;&nbsp;<img src="https://makerspaces.make.co/wp-content/universal-assets/v1/images/makerspaces-logo.jpg" /></h4>
+          <ul class="open">
+              <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
+              <?php if ($user_id != 0 && $type == 'makerspaces') { ?>
+                <li><a href="/members/<?php echo $user_slug; ?>/makerspace_info/" class="btn universal-btn">See More Details</a></li>
+              <?php } ?>
+              <li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>
+          </ul>
+      </div>
+      <?php
+  }
+}
+
+///////////////////////////////////////////////
+//       Event Espresso Events Widget        //
+//  List all events submitted by this user   //
+///////////////////////////////////////////////
+function return_ee_events_widget(){
+  global $user_email;
+  $hosted_events = EEM_Event::instance()->get_all(
+          array(
+              //'limit' => 10,
+              'order_by' => array('EVT_visible_on' => 'DESC'),
+              array(
+                  'Person.PER_email' => $user_email
+              )
+          )
+  );
+  if (!empty($hosted_events)) {
+      ?>
+      <div class="dashboard-box expando-box">
+          <h4 class="open"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makercampus-logo.jpg" /> Facilitator</h4>
+          <ul class="open">
+              <?php
+              foreach ($hosted_events as $event) {
+                  ?>
+                  <li><b><?php echo $event->name(); ?></b> - <a href="<?php echo $event->get_permalink(); ?>">View</a></li>
+                  <?php
+              }
+              ?>
+              <li><a class="btn universal-btn" href="/facilitator-portal/">Facilitator Portal</a></li>
+          </ul>
+      </div>
+      <?php
+  }
+}
+///////////////////////////////////////////////
+//       Event Espresso Tickets Widget       //
+//  List all tickets purchased by this user  //
+///////////////////////////////////////////////
+function return_ee_tickets_widget($user){
+  global $user_email;
+  //if this individual is an attenddee
+  $events = EEM_Event::instance()->get_all(array(array('Attendee.ATT_email' => $user_email)));
+  if ($events) {
+      ?>
+      <div class="dashboard-box expando-box" style="width:100%">
+          <h4 class="open"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makercampus-logo.jpg" />Tickets</h4>
+          <ul class="open">
+              <li>
+                  <div class="espresso-my-events evetn_section_container">
+                      <div class="espresso-my-events-inner-content">
+                          <table class="espresso-my-events-table event_section_table">
+                              <thead>
+                                  <tr>
+                                      <th width="45%" scope="col" class="espresso-my-events-event-th">Event Group</th>
+                                      <th width="35%" scope="col" class="espresso-my-events-datetime-range-th">When</th>
+                                      <th width="5%" scope="col" class="espresso-my-events-tickets-num-th">#</th>
+                                      <th width="15%" scope="col" class="espresso-my-events-actions-th">Attendee(s)</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <?php
+                                  $return = "";
+                                  foreach ($events as $event) {
+                                      $return .= build_ee_ticket_section($event, $user_email);
+                                  }
+                                  echo $return;
+                                  ?>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </li>
+          </ul>
+      </div>
+      <?php
+  }
+}
+
+///////////////////////////////////////////////
+//           Maker Camp Widget               //
+//  Adventures enrolled & favorite content   //
+///////////////////////////////////////////////
+function return_makercamp_widget($user){
+  $user_id   = $user->ID;
+  $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
+
+  if (groups_is_user_member($user_id, $group_id)) {
+      ?>
+      <div class="dashboard-box expando-box" style="width:100%">
+          <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
+          <ul class="open">
+              <li>
+                  <?php
+                  $prev_blog_id = get_current_blog_id();
+
+                  //switch to makercamp blog
+                  switch_to_blog(7);
+
+                  echo do_shortcode('[favorite_content]');
+                  echo do_shortcode('[ld_course_list mycourses="true" num="10"]');
+
+                  //switch back to main blog
+                  switch_to_blog($prev_blog_id);
+                  ?>
+              </li>
+          </ul>
+      </div>
+      <?php
   }
 }

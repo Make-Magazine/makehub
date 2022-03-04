@@ -55,7 +55,7 @@
 }
 
 /* Elementor Widget Custom RSS */
-.elementor-widget-makecustomrss .elementor-widget-container h4 {
+.elementor-widget-makecustomrss .elementor-widget-container h4, .elementor-widget-upcomingmakerfaires .elementor-widget-container h4 {
 	margin: 0px;
 	padding: 15px 25px;
 	text-transform: uppercase;
@@ -94,4 +94,28 @@
 	text-align: center;
 	font-weight: bold;
 	margin-bottom: 10px;
+}
+
+/* Upcoming Maker Faires widget */
+.elementor-widget-upcomingmakerfaires ul {
+	list-style: none;
+	margin: 0px;
+	padding: 20px;
+}
+.elementor-widget-upcomingmakerfaires ul li {
+	margin-bottom: 15px;
+}
+.elementor-widget-upcomingmakerfaires ul h5 {
+	font-size: 18px;
+	margin-top: 0px;
+}
+
+/* makercamp widget shouldn't get bunched up if it's already in a narrow column */
+.elementor-col-33 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{
+	max-width: 100%;
+	flex: 100%;
+}
+.elementor-col-50 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{
+	max-width: 50%;
+	flex: 0 0 50%;
 }

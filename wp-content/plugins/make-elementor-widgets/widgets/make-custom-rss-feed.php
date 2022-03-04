@@ -164,7 +164,7 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'section_style',
 			[
-				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'label' => esc_html__( 'Style', 'elementor-make-widget' ),
 				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);

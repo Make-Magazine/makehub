@@ -76,7 +76,7 @@ class Elementor_MyMakerCamp_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'section_style',
 			[
-				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'label' => esc_html__( 'Style', 'elementor-make-widget' ),
 				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -108,6 +108,7 @@ class Elementor_MyMakerCamp_Widget extends \Elementor\Widget_Base {
     $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
 
     if (groups_is_user_member($user_id, $group_id)) {
+		$settings = $this->get_settings_for_display();
         ?>
         <div class="dashboard-box make-elementor-expando-box" style="width:100%">
             <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'<img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" />');?></h4>

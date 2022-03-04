@@ -109,7 +109,7 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'section_style',
 			[
-				'label' => esc_html__( 'Style', 'plugin-name' ),
+				'label' => esc_html__( 'Style', 'elementor-make-widget' ),
 				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -117,11 +117,11 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'icon_alignment',
 			[
-				'label' => esc_html__( 'Icon Alignment', 'elementor' ),
+				'label' => esc_html__( 'Icon Alignment', 'elementor-make-widget' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'options' => [
-					'after' => esc_html__( 'After', 'elementor' ),
-					'before' => esc_html__( 'Before', 'elementor' ),
+					'after' => esc_html__( 'After', 'elementor-make-widget' ),
+					'before' => esc_html__( 'Before', 'elementor-make-widget' ),
 				],
 				'default' => 'after',
 				'prefix_class' => 'expandobox-align-',
