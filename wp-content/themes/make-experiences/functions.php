@@ -470,4 +470,10 @@ function get_post_primary_category($post_id, $term='category', $return_all_categ
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
+
+//allow us to have a drop down menu for social list fields
+add_filter( 'gform_column_input_8_39_1', 'set_column', 10, 5 );
+function set_column( $input_info, $field, $column, $value, $form_id ) {
+    return array( 'type' => 'select', 'choices' => 'Instagram,Facebook, Twitter, YouTube, TikTok' );
+}
 ?>
