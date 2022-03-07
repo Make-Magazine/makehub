@@ -159,7 +159,6 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
         <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
         <ul class="closed">
             <?php
-			var_dump($customer['customers']);
 			if (!$customer['customers']) {
                 $customerID = $customer['customers'][0]['id'];
                 $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
