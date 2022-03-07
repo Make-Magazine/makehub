@@ -29,7 +29,6 @@ function make_experiences_languages() {
     // Change 'buddyboss-theme' instances in all child theme files to 'make_experiences'.
     // load_theme_textdomain( 'make_experiences', get_stylesheet_directory() . '/languages' );
 }
-
 add_action('after_setup_theme', 'make_experiences_languages');
 
 /**
@@ -73,16 +72,12 @@ function make_experiences_scripts_styles() {
             )
     );
 }
-
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
-
-
-add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 function load_admin_styles() {
     wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.2');
 }
-
+add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 function set_universal_asset_constants() {
 	if (isset($_SERVER['HTTPS']) &&
@@ -160,7 +155,6 @@ set_universal_asset_constants();
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
-
 //clean up the top black nav bar in admin
 function experiences_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('wp-logo');
@@ -172,9 +166,7 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('uap_dashboard_menu'); //ultimate affiliate pro
     $wp_admin_bar->remove_node('elementor_inspector'); // elementor debugger
     $wp_admin_bar->remove_node('essb'); // easy social share buttons
-
 }
-
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
 // Include all function files in the make-experiences/functions directory:
@@ -194,11 +186,10 @@ foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
 //* Disable email match check for all users - this error would keep users from registering users already in our system
 add_filter('EED_WP_Users_SPCO__verify_user_access__perform_email_user_match_check', '__return_false');
 
-add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
-
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
 }
+add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function basicCurl($url, $headers = null) {
     $ch = curl_init();
@@ -284,12 +275,11 @@ function get_first_image_url($html) {
         return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
 }
 
-add_action('after_setup_theme', 'new_image_sizes');
-
 function new_image_sizes() {
     add_image_size('grid-cropped', 300, 300, true);
     add_image_size('medium-large', 600, 600);
 }
+add_action('after_setup_theme', 'new_image_sizes');
 
 function featuredtoRSS($content) {
     global $post;
@@ -298,13 +288,11 @@ function featuredtoRSS($content) {
     }
     return $content;
 }
-
 add_filter('the_excerpt_rss', 'featuredtoRSS', 20, 1);
 add_filter('the_content_feed', 'featuredtoRSS', 20, 1);
 
 function add_event_date_to_rss() {
     global $post;
-
     if (get_post_type() == 'espresso_events') {
         //determine start date
         $event = EEM_Event::instance()->get_one_by_ID($post->ID);
@@ -315,7 +303,6 @@ function add_event_date_to_rss() {
         <?php
     }
 }
-
 add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 
 // Exclude espresso_events from rss feed if marked for supression
@@ -343,8 +330,6 @@ function filter_posts_from_rss($where, $query = NULL) {
 }
 add_filter( 'posts_where', 'filter_posts_from_rss', 1, 4 );
 
-add_action('rest_api_init', 'register_ee_attendee_id_meta');
-
 function register_ee_attendee_id_meta() {
     global $wpdb;
     $args = array(
@@ -358,6 +343,7 @@ function register_ee_attendee_id_meta() {
             $args
     );
 }
+add_action('rest_api_init', 'register_ee_attendee_id_meta');
 
 //do not display doing it wrong errors
 add_filter('doing_it_wrong_trigger_error', function () {
@@ -394,7 +380,6 @@ function add_slug_body_class($classes) {
         return $classes;
     }
 }
-
 add_filter('body_class', 'add_slug_body_class');
 
 /*
@@ -420,17 +405,6 @@ add_filter('gettext', 'filter_gettext', 10, 4);
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
 
-// don't lazyload on the project print template
-function lazyload_exclude() {
-    if (is_page_template('project-print-template.php') == true) {
-        return false;
-    } else {
-        return true;
-    }
-}
-add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
-add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
-add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
 
 // Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
@@ -454,7 +428,6 @@ function gf_add_entries_link( $wp_admin_bar ) {
 			));
 	return $wp_admin_bar;
 }
-
 add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
 
 // add the ability to add tags or categories to pages
@@ -497,4 +470,10 @@ function get_post_primary_category($post_id, $term='category', $return_all_categ
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
+
+//allow us to have a drop down menu for social list fields
+add_filter( 'gform_column_input_8_39_1', 'set_column', 10, 5 );
+function set_column( $input_info, $field, $column, $value, $form_id ) {
+    return array( 'type' => 'select', 'choices' => 'Instagram,Facebook, Twitter, YouTube, TikTok' );
+}
 ?>
