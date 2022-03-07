@@ -145,9 +145,9 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
     global $user_email;
     //if we are in the elementor admin, use this email as an example
-    if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-      $user_email = "ken@nmhu.edu";
-    }
+    if ( \Elementor\Plugin::$instance->editor->is_edit_mode() && current_user_can('administrator')) {
+    	$user_email = "ken@nmhu.edu";
+	}
     $api_url      = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
     $customer_api = $api_url . '/admin/customers/search.json?query=email:"' . $user_email /* 'ken@nmhu.edu' */ . '"&fields=id';
     $customer_content = basicCurl($customer_api);
