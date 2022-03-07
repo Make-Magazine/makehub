@@ -135,7 +135,7 @@ class Elementor_upcomingMakerFaires_Widget extends \Elementor\Widget_Base {
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'default' => '#000',
 				'selectors' => [
-					'{{WRAPPER}} .upcoming-makerfaires-feed' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} .upcoming-makerfaires-feed ul' => 'background-color: {{VALUE}}',
 				],
 			]
 		);

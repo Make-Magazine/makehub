@@ -142,7 +142,6 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function render() {
 	    $settings = $this->get_settings_for_display();
-		echo '<h4>'.$settings['title'].'</h4>';
 
 		global $user_email;
 	    $hosted_events = EEM_Event::instance()->get_all(

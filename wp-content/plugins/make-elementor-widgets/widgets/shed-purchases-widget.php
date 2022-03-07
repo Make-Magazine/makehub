@@ -154,17 +154,18 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
     // Decode the JSON in the file
     $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
-	if (!empty($customer['customers'])) {
     ?>
     <div class="dashboard-box make-elementor-expando-box">
         <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
         <ul class="closed">
             <?php
+			var_dump($customer['customers']);
+			if (!$customer['customers']) {
                 $customerID = $customer['customers'][0]['id'];
                 $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
                 $orders_content = basicCurl($orders_api);
                 $orderJson = json_decode($orders_content, true);
-  			  //var_dump($orderJson);
+  			  	//var_dump($orderJson);
                 if ( empty($orderJson["orders"]) ) {
                     ?>
                     <li>
@@ -187,11 +188,18 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
                         <?php
                     }
                 }
-            ?>
+			} else {
+				?>
+				<li>
+					<p>Looks like you haven't placed any orders yet...</p><br />
+					<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
+				</li>
+				<?php
+			}
+			?>
         </ul>
 	</div>
     <?php
-	} // end if no content
 
 	}
 

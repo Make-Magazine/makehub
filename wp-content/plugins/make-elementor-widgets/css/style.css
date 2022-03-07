@@ -106,6 +106,9 @@
 	margin: 0px;
 	padding: 20px;
 }
+.elementor-widget-upcomingmakerfaires h4 {
+	border-bottom: 30px solid #FAFBFD;
+}
 .elementor-widget-upcomingmakerfaires ul li {
 	margin-bottom: 15px;
 }
