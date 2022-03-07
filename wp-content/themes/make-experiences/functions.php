@@ -472,4 +472,44 @@ function get_post_primary_category($post_id, $term='category', $return_all_categ
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
+
+
+/**
+ * Allow shortcode use in the nav menu's. Filters all menu item URLs for a #placeholder#.
+ *
+ * @param WP_Post[] $menu_items All of the nave menu items, sorted for display.
+ * @return WP_Post[] The menu items with any placeholders properly filled in.
+ */
+function my_dynamic_menu_items( $menu_items ) {
+    // A list of placeholders to replace.
+    // You can add more placeholders to the list as needed.
+    $placeholders = array(
+        '#auth0_modal#' => array(
+            'shortcode' => 'auth0',
+            'atts' => array("show_as_modal"=>"1", "modal_trigger_name"=>"Login"), // Shortcode attributes.
+            'content' => '', // Content for the shortcode.
+        ),
+    );
+
+    foreach ( $menu_items as $menu_item ) {
+        if ( isset( $placeholders[ $menu_item->url ] ) ) {
+            global $shortcode_tags;
+
+            $placeholder = $placeholders[ $menu_item->url ];
+            if ( isset( $shortcode_tags[ $placeholder['shortcode'] ] ) ) {
+              //var_dump($menu_item);
+              $menu_item->title = do_shortcode('[auth0 show_as_modal="1" modal_trigger_name="Login button: This text is configurable!"]');
+                /*$menu_item->url = call_user_func(
+                    $shortcode_tags[ $placeholder['shortcode'] ]
+                    , $placeholder['atts']
+                    , $placeholder['content']
+                    , $placeholder['shortcode']
+                );*/
+            }
+        }
+    }
+
+    return $menu_items;
+}
+add_filter( 'wp_nav_menu_objects', 'my_dynamic_menu_items' );
 ?>

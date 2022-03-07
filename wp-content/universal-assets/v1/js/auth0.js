@@ -15,38 +15,74 @@ window.addEventListener('load', function () {
     //check if logged into Wordpress
     if(document.body.classList.contains( 'logged-in' )){
 		    loggedin = true;
+        console.log('logged in through wordpress');
         //let's set up the dropdowns
         displayButtons();
     }else{
+      console.log('not logged in through wordpress');
+      displayButtons();
+      /*
       //ok let's check auth0 instead
-      var webAuth = new auth0.WebAuth({
-        domain: AUTH0_CUSTOM_DOMAIN,
-        clientID: AUTH0_CLIENT_ID,
-        redirectUri: AUTH0_CALLBACK_URL,
-        audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
-        responseType: 'token id_token',
-        scope: 'openid profile email user_metadata',
-        //scope of data pulled by auth0
-        leeway: 60
-      });
 
+      //defining Auth0 options
+      var options = {
+        theme: {
+          logo: 'https://make.co/wp-content/themes/memberships/img/make-co-logo.png',
+          primaryColor: '#005E9A'
+        },
+        //autoclose: true,
+        allowShowPassword: true,
+        auth: {
+          redirect: true, // rather than redirect, let's reload the page later
+          redirectUrl: AUTH0_CALLBACK_URL,
+        },
+      }
+      // Initializing our Auth0Lock
+      var lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_CUSTOM_DOMAIN, options);
+      console.log('before check session');
       //check if logged in another place
-      webAuth.checkSession({},
-          function (err, result) {
-            if (err) {
-              if (err.error !== 'login_required') {
-                errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-              }
-              clearLocalStorage();
-            } else {
-              console.log('SSO set session');
-              setSession(result);
-            }
-            displayButtons();
+      lock.checkSession({},
+        function(err, authResult) {
+          // handle error or new tokens
+          if (err) {
+            console.log('not logged in through auth0');
+            console.log(err);
+            clearLocalStorage();
+          }else{
+            console.log('logged in through auth0');
+            setSession(result);
           }
-      );
+          displayButtons();
+          console.log('after check session');
+        });*/
     }
 	}
+
+/*
+  jQuery("#LoginBtn").on('click', function(e) {
+		e.preventDefault();
+		setCookie("login_referer", url, .05);
+		localStorage.setItem('redirect_to',url);
+		lock.show({
+		  auth: {
+			params: {
+			  state: window.location.pathname
+			}
+		  }
+		});
+	});
+
+  jQuery("#LogoutBtn").on('click', function(e) {
+		e.preventDefault();
+		clearLocalStorage();
+		if(wpLoginRequired == true) {
+			WPlogout();
+		} else {
+			lock.logout({
+				returnTo: AUTH0_CALLBACK_URL //AUTH0_REDIRECT_URL
+			});
+		}
+	});*/
 
   //place functions here so they can access the variables inside the event addEventListener
   function clearLocalStorage() {
@@ -107,19 +143,16 @@ window.addEventListener('load', function () {
       document.querySelector('.profile-info .profile-name').innerHTML = ajax_object.wp_user_nicename;
       showBuddypanel();
     }else{
-      //get info from auth0
       var accessToken = localStorage.getItem('access_token');
-
       if (!accessToken) {
         console.log('Access token must exist to fetch profile');
         errorMsg('Login attempted without Access Token');
       }
-
-      webAuth.client.userInfo(accessToken, function (err, profile) {
+      lock.getUserInfo(accessToken, function(err, profile) {
         if (profile) {
           userProfile = profile;
           // make sure that there isn't a wordpress acount with a different user logged in
-          if (ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
+          if(ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
             WPlogout();
           }
           // display the avatar
@@ -129,16 +162,13 @@ window.addEventListener('load', function () {
           document.querySelector('#LoginBtn').style.display = "none";
           document.querySelector('.profile-email').innerHTML = userProfile.email;
           // do we need http://makershare.com/last_name / first_name anymore
-          if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
-            document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
+          if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
+          document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
           }
-          if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
+          if(wpLoginRequired && loggedin == false && !jQuery( '.logged-in' ).length ) {
             // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-            jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+            jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
             WPlogin();
-          } else if( jQuery("body").is(".buddyboss-theme") ) {
-            // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-            showBuddypanel();
           }
         }
         if (err) {
