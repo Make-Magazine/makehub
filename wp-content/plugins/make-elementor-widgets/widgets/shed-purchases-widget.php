@@ -144,63 +144,54 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 		$settings = $this->get_settings_for_display();
 		$current_user = wp_get_current_user();
 		$user_email = $current_user->user_email;
-    	
+
     //if we are in the elementor admin, use this email as an example
     if ( \Elementor\Plugin::$instance->editor->is_edit_mode() && current_user_can('administrator')) {
     	$user_email = "ken@nmhu.edu";
 		}
+
     $api_url      = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
-    $customer_api = $api_url . '/admin/customers/search.json?query=email:"' . $user_email /* 'ken@nmhu.edu' */ . '"&fields=id';
-    $customer_content = basicCurl($customer_api);
+    $customer_api = $api_url . '/admin/customers/search.json?query=email:' . $user_email  . '&fields=id';
+		$customer_content = basicCurl($customer_api);
 
     // Decode the JSON in the file
-    $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
-    ?>
-    <div class="dashboard-box make-elementor-expando-box">
-        <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'Makershed Orders');?></h4>
-        <ul class="closed">
-            <?php
-			if (!$customer['customers']) {
-                $customerID = $customer['customers'][0]['id'];
-                $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
-                $orders_content = basicCurl($orders_api);
-                $orderJson = json_decode($orders_content, true);
-  			  	//var_dump($orderJson);
-                if ( empty($orderJson["orders"]) ) {
-                    ?>
-                    <li>
-                        <p>Looks like you haven't placed any orders yet...</p><br />
-                        <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
-                    </li>
-                    <?php
-                } else {
-                    foreach ($orderJson['orders'] as $order) {
-                        ?>
-                        <li><p><b><a href="<?php echo $order['order_status_url']; ?>">Order #<?php echo $order['id']; ?></a></b></p>
-                            <?php
-                            foreach ($order['line_items'] as $line_item) {
-                                ?>
-                                <p><?php echo $line_item['name'] ?> - $<?php echo $line_item['price']; ?></p>
-                                <?php
-                            }
-                            ?>
-                        </li>
-                        <?php
-                    }
-                }
-			} else {
-				?>
-				<li>
-					<p>Looks like you haven't placed any orders yet...</p><br />
-					<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here's your chance!</a>
-				</li>
-				<?php
-			}
-			?>
-        </ul>
-	</div>
-    <?php
+    $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : array());
+		$output = "";
+		$output = '<div class="dashboard-box make-elementor-expando-box">';
+    $output .= 	'<h4 class="closed">'. ($settings['title']!=''?$settings['title']:'Makershed Orders').'</h4>';
+    $output .= 	'<ul class="closed">';
 
+		if (isset($customer['customers']) && !empty($customer['customers']) ) {
+        $customerID = $customer['customers'][0]['id'];
+        $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
+        $orders_content = basicCurl($orders_api);
+        $orderJson = json_decode($orders_content, true);
+  			if ( empty($orderJson["orders"]) ) {
+        	$output .= 	'<li>
+                        <p>Looks like you haven\'t placed any orders yet...</p><br />
+                        <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
+                    </li>';
+
+        } else {
+          foreach ($orderJson['orders'] as $order) {
+          	$output .= 	'<li><p><b><a href="'. $order['order_status_url'].'">Order #'. $order['id'].'</a></b></p>';
+            foreach ($order['line_items'] as $line_item) {
+							$output .= 	'<p>'. $line_item['name'] .' - $'. $line_item['price'].'</p>';
+            }
+            $output .= 	'</li>';
+					}
+        }
+			} else {
+				$output .=
+				'<li>
+					<p> Looks like you haven\'t placed any orders yet...</p><br />
+					<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
+				</li>';
+			}
+			$output .=
+      '</ul>
+		</div>';
+    echo $output;
 	}
 
 }
