@@ -115,17 +115,23 @@ class Elementor_makeInitatives_Widget extends \Elementor\Widget_Base {
 		$repeater->add_control(
 			'content_link',
 			[
-				'label' => esc_html__( 'Link', 'elementor-make-widget' ),
-				'type' => \Elementor\Controls_Manager::URL,
-				'placeholder' => esc_html__( 'https://your-link.com', 'elementor-make-widget' ),
-				'default' => [
-					'url' => '',
-					'is_external' => true,
-					'nofollow' => true,
-					'custom_attributes' => '',
-				],
+				'label' => __( 'Content Link', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'default' => __( '#' , 'elementor-make-widget' ),
+				'show_label' => true,
 			]
 		);
+
+		//content title
+		$repeater->add_control(
+			'content_title', [
+				'label' => esc_html__( 'Content Title', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'default' => esc_html__( 'Read More' , 'elementor-make-widget' ),
+				'label_block' => true,
+			]
+		);
+
 
 		$this->add_control(
 			'list',
@@ -196,20 +202,19 @@ class Elementor_makeInitatives_Widget extends \Elementor\Widget_Base {
 			echo '<div class="make-initiatives-widget">';
 			foreach (array_slice($settings['list'], 0, $settings['num_show'])   as $item ) {
 				echo '<div class="make-list-item">';
-				if ( ! empty( $item['website_link']['url'] ) ) {
-							$this->add_link_attributes( 'website_link', $item['website_link'] );
-				}
-					echo '<a '. $this->get_render_attribute_string( 'content_link' ) .'>';
+					echo '<div class="make-image-area">';
+					echo 	'<a href="'. $item['content_link'] .'">';
 					echo 		'<div class="make-image">'. wp_get_attachment_image( $item['image']['id'], 'thumbnail' ).'</div>';
-					echo '</a>';
+					echo 	'</a>';
+					echo '</div>';
 
-					echo '<div>';
+					echo '<div class="make-content-area">';
 					echo 		'<h3 class="make-post-title">';
-					echo 			'<a '. $this->get_render_attribute_string( 'content_link' ) .'>'.$item['list_title'].'</a>';
+					echo 			'<a href="'. $item['content_link'] .'">'.$item['list_title'].'</a>';
 					echo 		'</h3>';
 					echo 		'<div class="make-description">'.$item['item_description'].'</div>';
 					echo 		'<div class="make-link">';
-					echo 			'<a '. $this->get_render_attribute_string( 'content_link' ) .'>Read More</a>';
+					echo 			'<a href="'. $item['content_link'] .'">'.$item['content_title'].'</a>';
 					echo 		'</div>';
 					echo '</div>';
 				echo '</div>';

@@ -129,5 +129,43 @@
 
 /* make:  initiatives widget */
 .make-initiatives-widget .make-list-item {
-	display: inline-flex;
+	background-color: #FFFFFF;
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: #CCCCCC;
+  padding: 0px 0px 0px 0px;
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 1px 1px 3px -2px rgb(0 0 0 / 50%);
+	flex-direction: row;
+	display: flex;
+  width: 100%;
+	margin-bottom: 20px;
+}
+
+.make-initiatives-widget  .make-list-item .make-image-area {
+	width: 27%;
+	display: flex;
+	flex-direction: column;
+}
+.make-initiatives-widget  .make-list-item .make-image-area img{
+	display: block;
+  width: 100%;
+  max-height: none;
+  max-width: none;
+}
+
+.make-initiatives-widget  .make-list-item .make-content-area {
+	width: calc( 100% - 27% );
+	display: flex;
+	flex-direction: column;
+}
+.make-initiatives-widget  .make-list-item .make-content-area .make-title {
+	font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+}
+.make-initiatives-widget  .make-list-item .make-content-area .make-description {
+	font-size: 18px;
+  font-weight: 500;
+  color: #333333;
 }
