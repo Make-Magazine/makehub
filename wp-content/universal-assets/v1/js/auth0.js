@@ -98,9 +98,9 @@ window.addEventListener('load', function () {
 		if(loggedin){
 			//user is logged into wordpress at this point. let's display wordpress data
 			if(ajax_object.wp_user_avatar != undefined) {
-				document.querySelector('.dropdown-toggle img').src =  ajax_object.wp_user_nicename;
+				document.querySelector('.dropdown-toggle img').src =  ajax_object.wp_user_avatar;
+				document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
 			}
-			document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
 			document.querySelector('.dropdown-toggle img').style.display = "block";
 			document.querySelector('#LoginBtn').style.display = "none";
 			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
