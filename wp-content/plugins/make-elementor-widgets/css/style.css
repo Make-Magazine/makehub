@@ -158,14 +158,26 @@
 	width: calc( 100% - 27% );
 	display: flex;
 	flex-direction: column;
+	padding: 0.6rem 0.75rem;
 }
-.make-initiatives-widget  .make-list-item .make-content-area .make-title {
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title {
 	font-size: 18px;
   font-weight: 500;
   color: #333333;
+	margin: 0px;
+	padding: 0px 0px 6px 0px;
+}
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title a {
+	color: #333333;
 }
 .make-initiatives-widget  .make-list-item .make-content-area .make-description {
-	font-size: 18px;
-  font-weight: 500;
+	font-size: 16px;
   color: #333333;
+	padding: 0px 0px 6px 0px;
+}
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title a {
+	color: #333333;
+}
+.make-initiatives-widget  .make-list-item .make-content-area .make-link {
+	margin-top: auto;
 }
