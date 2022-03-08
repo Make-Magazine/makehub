@@ -14,38 +14,37 @@ window.addEventListener('load', function () {
 	if (wpLoginRequired == true) {
     //check if logged into Wordpress
     if(document.body.classList.contains( 'logged-in' )){
-		    loggedin = true;
+		loggedin = true;
         //let's set up the dropdowns
         displayButtons();
     }else{
-      //ok let's check auth0 instead
-      var webAuth = new auth0.WebAuth({
-        domain: AUTH0_CUSTOM_DOMAIN,
-        clientID: AUTH0_CLIENT_ID,
-        redirectUri: AUTH0_CALLBACK_URL,
-        audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
-        responseType: 'token id_token',
-        scope: 'openid profile email user_metadata',
-        //scope of data pulled by auth0
-        leeway: 60
-      });
+		//ok let's check auth0 instead
+			var webAuth = new auth0.WebAuth({
+			domain: AUTH0_CUSTOM_DOMAIN,
+			clientID: AUTH0_CLIENT_ID,
+			redirectUri: AUTH0_CALLBACK_URL,
+			audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
+			responseType: 'token id_token',
+			scope: 'openid profile email user_metadata',
+			//scope of data pulled by auth0
+			leeway: 60
+		});
 
-      //check if logged in another place
-      webAuth.checkSession({},
-          function (err, result) {
-            if (err) {
-              if (err.error !== 'login_required') {
-                errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-              }
-              clearLocalStorage();
-            } else {
-              console.log('SSO set session');
-              setSession(result);
-            }
-            displayButtons();
-          }
-      );
-    }
+		//check if logged in another place
+		webAuth.checkSession({},
+			function (err, result) {
+				if (err) {
+					if (err.error !== 'login_required') {
+						errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+					}
+					clearLocalStorage();
+				} else {
+					console.log('SSO set session');
+					setSession(result);
+				}
+				displayButtons();
+			});
+		}
 	}
 
 	//place functions here so they can access the variables inside the event addEventListener
@@ -77,7 +76,6 @@ window.addEventListener('load', function () {
 			jQuery("#LoginBtn").css("display", "block");
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			jQuery(".login-section").css("display", "block");
-			//WPlogout();
 			showBuddypanel();
 		}
 	}
@@ -89,14 +87,10 @@ window.addEventListener('load', function () {
 			if(loggedin == false) {
 				jQuery("body").addClass("buddypanel-open");
 			} else {
-				// if the non-logged in buddypanel is showing for a logged in user, refresh it
-				if(jQuery("#buddypanel-menu .bp-login-nav").length) {
-					jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *");
-				}
 				jQuery("body").addClass("buddypanel-closed");
 			}
 			//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
-		window.dispatchEvent(new Event('resize'));
+			window.dispatchEvent(new Event('resize'));
 		}
 	}
 
@@ -192,6 +186,11 @@ window.addEventListener('load', function () {
 					// for anything else that has content that will changed if logged in
 					if (jQuery('.logged-in-refresh').length) {
 						jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
+					}
+					// if the non-logged in buddypanel is showing for a logged in user, refresh it
+					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
+						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *");
+						jQuery("body").addClass("buddypanel-closed");
 					}
 					jQuery('.universal-loading-spinner').remove();
 				}
