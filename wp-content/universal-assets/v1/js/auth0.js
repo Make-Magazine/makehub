@@ -97,12 +97,14 @@ window.addEventListener('load', function () {
 	function getProfile() {
 		if(loggedin){
 			//user is logged into wordpress at this point. let's display wordpress data
-			document.querySelector('.dropdown-toggle img').src = ajax_object.wp_user_avatar;
+			if(ajax_object.wp_user_avatar != undefined) {
+				document.querySelector('.dropdown-toggle img').src =  ajax_object.wp_user_nicename;
+			}
 			document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
 			document.querySelector('.dropdown-toggle img').style.display = "block";
 			document.querySelector('#LoginBtn').style.display = "none";
 			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
-			document.querySelector('.profile-info .profile-name').innerHTML = ajax_object.wp_user_nicename;
+			document.querySelector('.profile-info .profile-name').innerHTML = (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename;
 			showBuddypanel();
 		}else{
 			//get info from auth0
