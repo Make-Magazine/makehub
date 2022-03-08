@@ -36,6 +36,7 @@ function register_make_widgets( $widgets_manager ) {
 	$widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );
 	$widgets_manager->register( new \Elementor_makeCustomRss_Widget() );
 	$widgets_manager->register( new \Elementor_upcomingMakerFaires_Widget() );
+	$widgets_manager->register( new \Elementor_makeInitatives_Widget() );
 
 }
 add_action( 'elementor/widgets/register', 'register_make_widgets' );
@@ -156,7 +157,7 @@ function makewidget_rss_output($rss, $settings) {
     $show_summary = $settings['show_summary'];
     $show_author = $settings['show_author'];
     $show_date = $settings['show_date'];
-	$title_position = $settings['title_position'];
+		$title_position = $settings['title_position'];
 
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
