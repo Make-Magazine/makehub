@@ -7,7 +7,7 @@ require_once(ABSPATH . 'wp-load.php');
 // Can we load the universal scripts this way
 function universal_scripts() {
     //auth0
-    //wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/lock/11.30/lock.min.js', array(), false, true);
+    wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
 }
 add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
 
