@@ -160,6 +160,20 @@ class Elementor_makeInitatives_Widget extends \Elementor\Widget_Base {
 				'default' => 'yes',
 			]
 		);
+
+		//number to show
+		$this->add_control(
+			'num_show',
+			[
+				'type' => \Elementor\Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Number to Display', 'elementor-make-widget' ),
+				'placeholder' => '0',
+				'min' => 0,
+				'max' => 10,
+				'step' => 1,
+				'default' => 5,
+			]
+		);
 		$this->end_controls_section();
 	}
 
@@ -180,7 +194,7 @@ class Elementor_makeInitatives_Widget extends \Elementor\Widget_Base {
 				shuffle($settings['list']);
 
 			echo '<div class="make-initiatives-widget">';
-			foreach (  $settings['list'] as $item ) {
+			foreach (array_slice($settings['list'], 0, $settings['num_show'])   as $item ) {
 				echo '<div class="make-list-item">';
 				if ( ! empty( $item['website_link']['url'] ) ) {
 							$this->add_link_attributes( 'website_link', $item['website_link'] );

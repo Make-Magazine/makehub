@@ -127,7 +127,7 @@
 	flex: 0 0 50%;
 }
 
-/* make initiatives widget */
-.make-initiatives-widget.make-list-item {
+/* make:  initiatives widget */
+.make-initiatives-widget .make-list-item {
 	display: inline-flex;
 }
