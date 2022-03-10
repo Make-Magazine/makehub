@@ -17,12 +17,6 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
-	jQuery('#ihc_submit_bttn').click(function () {
-        jQuery(this).addClass('highlighted');
-        setTimeout(function () {
-            jQuery('#ihc_submit_bttn').removeClass('highlighted');
-        }, 3500);
-    });
 	if(window.location.pathname == '/register/premium-subscriber/') {
 		if(GetURLParameter('upgrade')) {
 			jQuery('.have-coupon-link').css('display', 'none');
@@ -37,6 +31,9 @@ jQuery(document).ready(function () {
 			jQuery('.mp_price_str').text(jQuery('.mp_price_str').text().replace('with coupon 65WSJ3T3GY',''));
 			jQuery('.mp-table tbody tr:eq(1) td:eq(0)').text("Upgrade Discount");
 		}
+   }
+   if(window.location.pathname == '/register/contest/') {
+	   jQuery("label[for='mpgft-signup-gift-checkbox1']").remove();
    }
 });
 

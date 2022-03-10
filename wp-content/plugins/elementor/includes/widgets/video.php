@@ -672,6 +672,7 @@ class Widget_Video extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-custom-embed-play i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .elementor-custom-embed-play svg' => 'fill: {{VALUE}}',
 				],
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -692,7 +693,9 @@ class Widget_Video extends Widget_Base {
 					],
 				],
 				'selectors' => [
+					// Not using a CSS vars because the default size value is coming from a global scss file.
 					'{{WRAPPER}} .elementor-custom-embed-play i' => 'font-size: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .elementor-custom-embed-play svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'show_image_overlay' => 'yes',
@@ -751,6 +754,7 @@ class Widget_Video extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button' => 'color: {{VALUE}}',
+					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button svg' => 'fill: {{VALUE}}',
 				],
 			]
 		);
@@ -762,6 +766,7 @@ class Widget_Video extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button:hover' => 'color: {{VALUE}}',
+					'#elementor-lightbox-{{ID}} .dialog-lightbox-close-button:hover svg' => 'fill: {{VALUE}}',
 				],
 				'separator' => 'after',
 			]
@@ -915,6 +920,7 @@ class Widget_Video extends Widget_Base {
 					$this->add_render_attribute( 'image-overlay', [
 						'data-elementor-open-lightbox' => 'yes',
 						'data-elementor-lightbox' => wp_json_encode( $lightbox_options ),
+						'e-action-hash' => Plugin::instance()->frontend->create_action_hash( 'lightbox', $lightbox_options ),
 					] );
 
 					if ( Plugin::$instance->editor->is_edit_mode() ) {
@@ -939,7 +945,12 @@ class Widget_Video extends Widget_Base {
 					<?php endif; ?>
 					<?php if ( 'yes' === $settings['show_play_icon'] ) : ?>
 						<div class="elementor-custom-embed-play" role="button">
-							<i class="eicon-play" aria-hidden="true"></i>
+							<?php
+								Icons_Manager::render_icon( [
+									'library' => 'eicons',
+									'value' => 'eicon-play',
+								], [ 'aria-hidden' => 'true' ] );
+							?>
 							<span class="elementor-screen-only"><?php echo esc_html__( 'Play Video', 'elementor' ); ?></span>
 						</div>
 					<?php endif; ?>
@@ -1173,8 +1184,9 @@ class Widget_Video extends Widget_Base {
 		}
 
 		$video_params = $this->get_hosted_params();
+		/* Sometimes the video url is base64, therefore we use `esc_attr` in `src`. */
 		?>
-		<video class="elementor-video" src="<?php echo esc_url( $video_url ); ?>" <?php Utils::print_html_attributes( $video_params ); ?>></video>
+		<video class="elementor-video" src="<?php echo esc_attr( $video_url ); ?>" <?php Utils::print_html_attributes( $video_params ); ?>></video>
 		<?php
 	}
 }

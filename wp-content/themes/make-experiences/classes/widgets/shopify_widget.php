@@ -12,7 +12,7 @@ class shopify_widget extends WP_Widget {
                 // Base ID of your widget
                 'shopify_widget',
                 // Widget name will appear in UI
-                __('Shopify Widget', 'shopify_widget_domain'),
+                __('Make: Shopify Widget', 'shopify_widget_domain'),
                 // Widget description
                 array('description' => __('Pull data from Makershed based on collection ID', 'shopify_widget_domain'),)
         );
@@ -120,7 +120,7 @@ class shopify_widget extends WP_Widget {
         echo $args['after_widget'];
     }
 
-    // Widget Backend 
+    // Widget Backend
     public function form($instance) {
         if (isset($instance['title'])) {
             $title = $instance['title'];
@@ -145,19 +145,19 @@ class shopify_widget extends WP_Widget {
         // Widget admin form
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('URL:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('URL:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('url'); ?>" name="<?php echo $this->get_field_name('url'); ?>" type="text" value="<?php echo esc_attr($url); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('collection_id'); ?>"><?php _e('Shopify Collection ID:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('collection_id'); ?>"><?php _e('Shopify Collection ID:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('collection_id'); ?>" name="<?php echo $this->get_field_name('collection_id'); ?>" type="text" value="<?php echo esc_attr($collection_id); ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Products to Show:'); ?></label> 
+            <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Products to Show:'); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo esc_attr($number); ?>" />
         </p>
         <?php

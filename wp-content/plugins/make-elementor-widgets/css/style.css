@@ -1,0 +1,199 @@
+.make-elementor-expando-box {
+	border-bottom: solid 2px #ccc;
+}
+.make-elementor-expando-box h4 {
+	 font-family: 'Roboto Bold';
+	 color: red;
+	 font-size: 22px;
+	 margin: 10px 5px 15px !important;
+	 display: flex;
+	 position: relative;
+	 align-items: center;
+}
+.make-elementor-expando-box h4 img {
+	 margin-right: 10px;
+	 max-height: 50px;
+}
+.expandobox-align-after .make-elementor-expando-box h4::after, .expandobox-align-before .make-elementor-expando-box h4::before {
+	font-family: FontAwesome;
+	content: "\f078";
+}
+.expandobox-align-after .make-elementor-expando-box h4::after {
+	position: absolute;
+	right: 0px;
+}
+.expandobox-align-before .make-elementor-expando-box h4::before {
+	left: 0px;
+	margin-right: 10px;
+}
+.expandobox-align-after .make-elementor-expando-box h4:not(.closed)::after, .expandobox-align-before .make-elementor-expando-box h4:not(.closed)::before {
+	 content: "\f077";
+}
+.make-elementor-expando-box h4:not(.closed) {
+	 border-bottom: solid 2px #ccc;
+	 padding-bottom: 15px;
+}
+.make-elementor-expando-box ul {
+	 list-style: none;
+	 margin-left: 15px;
+	 transition: max-height 0.5s;
+	 max-height: 0px;
+	 height: 0px;
+	 overflow: hidden;
+	 margin-bottom: 0px;
+}
+.make-elementor-expando-box ul li {
+	 margin-bottom: 10px;
+}
+.make-elementor-expando-box ul li p {
+	 margin: 0px;
+}
+.make-elementor-expando-box ul:not(.closed) {
+	 max-height: 3000px;
+	 height: auto;
+	 margin-top: auto;
+}
+
+/* Elementor Widget Custom RSS */
+.elementor-widget-makecustomrss .elementor-widget-container h4, .elementor-widget-upcomingmakerfaires .elementor-widget-container h4 {
+	margin: 0px;
+	padding: 15px 25px;
+	text-transform: uppercase;
+	color: #fff;
+	background: #005e9a;
+}
+.elementor-widget-makecustomrss .elementor-widget-container h4 a {
+	color: #fff;
+}
+
+.elementor-widget-makecustomrss ul.custom-rss-elementor {
+	margin: 0px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li {
+	border: 1px solid #e3e3e3;
+	box-shadow: 3px 3px 13px -5px rgba(0,0,0,.75);
+	padding: 15px 20px;
+	margin: 30px 0px;
+	display: flex;
+	flex-direction: column;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li a {
+	color: #333;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper {
+	overflow: hidden;
+	aspect-ratio: 2 / 1.25;
+	margin-bottom: 10px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper img {
+	width: 100%;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor li .rssTitle {
+	font-size: 20px;
+	line-height: 22px;
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 10px;
+	min-height: 45px;
+}
+
+/* Upcoming Maker Faires widget */
+.elementor-widget-upcomingmakerfaires .upcoming-makerfaires-feed > img {
+	width: 100%;
+	padding: 10px;
+}
+.elementor-widget-upcomingmakerfaires ul {
+	list-style: none;
+	margin: 0px;
+	padding: 20px;
+}
+.elementor-widget-upcomingmakerfaires h4 {
+	border-bottom: 30px solid #FAFBFD;
+}
+.elementor-widget-upcomingmakerfaires ul li {
+	margin-bottom: 15px;
+}
+.elementor-widget-upcomingmakerfaires ul h5 {
+	font-size: 18px;
+	margin-top: 0px;
+}
+@media screen and (max-width:981px) {
+	.dashboard-3-column .elementor-column.elementor-col-33 {
+		width: 100%;
+	}
+}
+
+/* makercamp widget shouldn't get bunched up if it's already in a narrow column */
+.elementor-col-33 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{
+	max-width: 100%;
+	flex: 100%;
+}
+.elementor-col-50 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{
+	max-width: 50%;
+	flex: 0 0 50%;
+}
+
+/* make:  initiatives widget */
+.make-initiatives-widget .make-list-item {
+	background-color: #FFFFFF;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #CCCCCC;
+	padding: 0px 0px 0px 0px;
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 1px 1px 3px -2px rgb(0 0 0 / 50%);
+	flex-direction: row;
+	display: flex;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.make-initiatives-widget  .make-list-item .make-image-area {
+	width: 27%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background: #e4e4e4;
+}
+.make-initiatives-widget  .make-list-item .make-image-area img{
+	display: block;
+	width: 100%;
+	max-height: none;
+	max-width: none;
+}
+
+.make-initiatives-widget  .make-list-item .make-content-area {
+	width: calc( 100% - 27% );
+	display: flex;
+	flex-direction: column;
+	padding: 0.6rem 0.75rem;
+}
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title {
+	font-size: 18px;
+	font-weight: 500;
+	color: #333333;
+	margin: 0px;
+	padding: 0px 0px 6px 0px;
+}
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title a {
+	color: #333333;
+}
+.make-initiatives-widget  .make-list-item .make-content-area .make-description {
+	font-size: 16px;
+	color: #333333;
+	padding: 0px 0px 6px 0px;
+}
+.make-initiatives-widget  .make-list-item .make-content-area h3.make-post-title a {
+	color: #333333;
+}
+.make-initiatives-widget  .make-list-item .make-content-area .make-link {
+	margin-top: auto;
+}
+
+.before-chevron-link a:before {
+    font-family: FontAwesome;
+    content: "\f054";
+    font-size:24px;
+    position:relative;
+    left:-10px;
+}
