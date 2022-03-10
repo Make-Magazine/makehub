@@ -106,10 +106,13 @@
                 </th>
                 <td>
                     <input id="event_details_map_zoom"
-                           type="text"
+                           type="number"
                            size=""
                            name="event_details_map_zoom"
                            value="<?php echo esc_attr($map_settings->event_details_map_zoom); ?>"
+                           min="1"
+                           max="19"
+                           step="1"
                     />
                 </td>
             </tr>
@@ -159,7 +162,7 @@
                                type="radio"
                                name="event_details_control_type"
                                value="default"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Default', 'event_espresso') ?>
                     </label>
@@ -172,7 +175,7 @@
                                type="radio"
                                name="event_details_control_type"
                                value="horizontal"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Horizontal', 'event_espresso') ?>
                     </label>
@@ -185,7 +188,7 @@
                                type="radio"
                                name="event_details_control_type"
                                value="dropdown"
-                            <?php echo esc_attr($checked); ?>/>
+                            <?php echo $checked; ?>/>
                         <?php esc_html_e(' Dropdown', 'event_espresso') ?>
                     </label>
                 </td>
@@ -204,7 +207,7 @@
                                type="radio"
                                name="event_details_map_align"
                                value="none"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' None', 'event_espresso') ?>
                     </label>
@@ -217,7 +220,7 @@
                                type="radio"
                                name="event_details_map_align"
                                value="left"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Left', 'event_espresso') ?>
                     </label>
@@ -230,7 +233,7 @@
                                type="radio"
                                name="event_details_map_align"
                                value="center"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Center', 'event_espresso') ?>
                     </label>
@@ -243,7 +246,7 @@
                                type="radio"
                                name="event_details_map_align"
                                value="right"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Right', 'event_espresso') ?>
                     </label>
@@ -296,10 +299,13 @@
                 </th>
                 <td>
                     <input id="event_list_map_zoom"
-                           type="text"
+                           type="number"
                            size=""
                            name="event_list_map_zoom"
                            value="<?php echo esc_attr($map_settings->event_list_map_zoom); ?>"
+                           min="1"
+                           max="19"
+                           step="1"
                     />
                 </td>
             </tr>
@@ -348,7 +354,7 @@
                                type="radio"
                                name="event_list_control_type"
                                value="default"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Default', 'event_espresso') ?>
                     </label>
@@ -361,7 +367,7 @@
                                type="radio"
                                name="event_list_control_type"
                                value="horizontal"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Horizontal', 'event_espresso') ?>
                     </label>
@@ -375,7 +381,7 @@
                                type="radio"
                                name="event_list_control_type"
                                value="dropdown"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Dropdown', 'event_espresso') ?>
                     </label>
@@ -396,7 +402,7 @@
                                type="radio"
                                name="event_list_map_align"
                                value="none"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' None', 'event_espresso') ?>
                     </label>
@@ -409,7 +415,7 @@
                                type="radio"
                                name="event_list_map_align"
                                value="left"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Left', 'event_espresso') ?>
                     </label>
@@ -422,7 +428,7 @@
                                type="radio"
                                name="event_list_map_align"
                                value="center"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Center', 'event_espresso') ?>
                     </label>
@@ -435,7 +441,7 @@
                                type="radio"
                                name="event_list_map_align"
                                value="right"
-                            <?php echo esc_attr($checked); ?>
+                            <?php echo $checked; ?>
                         />
                         <?php esc_html_e(' Align Right', 'event_espresso') ?>
                     </label>
