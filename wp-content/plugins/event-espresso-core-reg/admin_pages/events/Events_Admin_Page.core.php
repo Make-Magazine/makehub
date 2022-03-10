@@ -286,11 +286,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'events_overview_other',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array(
-                //     'Event_Overview_Help_Tour',
-                //     // 'New_Features_Test_Help_Tour' for testing multiple help tour
-                // ),
                 'qtips'         => [
                     'EE_Event_List_Table_Tips',
                 ],
@@ -345,10 +340,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'event_editor_other',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array(
-                //     'Event_Editor_Help_Tour',
-                // ),
                 'qtips'         => ['EE_Event_Editor_Decaf_Tips'],
                 'require_nonce' => false,
             ],
@@ -433,8 +424,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'events_default_settings_max_tickets',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Event_Default_Settings_Help_Tour'),
                 'require_nonce' => false,
             ],
             // template settings
@@ -450,8 +439,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'general_settings_templates',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Templates_Help_Tour'),
                 'require_nonce' => false,
             ],
             // event category stuff
@@ -467,8 +454,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'events_add_category',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Event_Add_Category_Help_Tour'),
                 'metaboxes'     => ['_publish_post_box'],
                 'require_nonce' => false,
             ],
@@ -490,7 +475,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'events_edit_category',
                     ],
                 ],
-                /*'help_tour' => array('Event_Edit_Category_Help_Tour'),*/
                 'metaboxes'     => ['_publish_post_box'],
                 'require_nonce' => false,
             ],
@@ -518,10 +502,6 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'events_categories_other',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array(
-                //     'Event_Categories_Help_Tour',
-                // ),
                 'metaboxes'     => $this->_default_espresso_metaboxes,
                 'require_nonce' => false,
             ],
@@ -1211,7 +1191,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
             //  Otherwise we instantiate a new object for save.
             if (! empty($datetime_data['DTT_ID'])) {
                 $datetime = EEM_Datetime::instance($event_timezone)->get_one_by_ID($datetime_data['DTT_ID']);
-                if (! $datetime instanceof EE_Ticket) {
+                if (! $datetime instanceof EE_Datetime) {
                     throw new RuntimeException(
                         sprintf(
                             esc_html__(
@@ -2209,7 +2189,11 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
      */
     private function getEventIdsFromRequest()
     {
-        return $this->request->getRequestParam('EVT_IDs', [], 'int', true, ',');
+        if ($this->request->requestParamIsSet('EVT_IDs')) {
+            return $this->request->getRequestParam('EVT_IDs', [], 'int', true);
+        } else {
+            return $this->request->getRequestParam('EVT_ID', [], 'int', true);
+        }
     }
 
 

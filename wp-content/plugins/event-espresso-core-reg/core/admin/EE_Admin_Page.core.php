@@ -53,11 +53,6 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
 
     protected $_default_nav_tab_name;
 
-    /**
-     * @var array $_help_tour
-     */
-    protected $_help_tour = [];
-
 
     // template variables (used by templates)
     protected $_template_path;
@@ -363,29 +358,11 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
      *            'help_sidebar' => 'callback_for_sidebar_content', //this is used for setting up the sidebar in the
      *            help tab area on an admin page. @return void
      *
-     * @link
-     *                http://make.wordpress.org/core/2011/12/06/help-and-screen-api-changes-in-3-3/
-     *                'help_tour' => array(
-     *                'name_of_help_tour_class', //all help tours should be a child class of EE_Help_Tour and located
-     *                in a folder for this admin page named "help_tours", a file name matching the key given here
-     *                (name_of_help_tour_class.class.php), and class matching key given here (name_of_help_tour_class)
-     *                ),
-     *                'require_nonce' => TRUE //this is used if you want to set a route to NOT require a nonce (default
-     *                is true if it isn't present).  To remove the requirement for a nonce check when this route is
-     *                visited just set
-     *                'require_nonce' to FALSE
-     *                )
-     *                )
-     *
      * @abstract
      */
     abstract protected function _set_page_config();
 
 
-
-
-
-    /** end sample help_tour methods **/
     /**
      * _add_screen_options
      * Child classes can add any extra wp_screen_options within this method using built-in WP functions/methods for
@@ -727,8 +704,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
         if (method_exists($this, $add_screen_options)) {
             $this->{$add_screen_options}();
         }
-        // add help tab(s) and tours- set via page_config and qtips.
-        // $this->_add_help_tour();
+        // add help tab(s) - set via page_config and qtips.
         $this->_add_help_tabs();
         $this->_add_qtips();
         // add feature_pointers - global, page child class, and view specific
@@ -1040,7 +1016,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                 $args['admin_page_object'] = $this;
             }
             if (
-// is it a method on a class that doesn't work?
+                // is it a method on a class that doesn't work?
                 (
                     (
                         method_exists($class, $method)
@@ -1161,7 +1137,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                 if (strpos($key, 'nonce') !== false) {
                     continue;
                 }
-                $args[ 'wp_referer[' . $key . ']' ] = htmlspecialchars($value);
+                $args[ 'wp_referer[' . $key . ']' ] = is_string($value) ? htmlspecialchars($value) : $value;
             }
         }
         return EEH_URL::add_query_args_and_nonce($args, $url, $exclude_nonce);
@@ -1200,28 +1176,8 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
      */
     protected function _add_help_tabs()
     {
-        $tour_buttons = '';
         if (isset($this->_page_config[ $this->_req_action ])) {
             $config = $this->_page_config[ $this->_req_action ];
-            // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-            // is there a help tour for the current route?  if there is let's setup the tour buttons
-            // if (isset($this->_help_tour[ $this->_req_action ])) {
-            //     $tb = array();
-            //     $tour_buttons = '<div class="ee-abs-container"><div class="ee-help-tour-restart-buttons">';
-            //     foreach ($this->_help_tour['tours'] as $tour) {
-            //         // if this is the end tour then we don't need to setup a button
-            //         if ($tour instanceof EE_Help_Tour_final_stop || ! $tour instanceof EE_Help_Tour) {
-            //             continue;
-            //         }
-            //         $tb[] = '<button id="trigger-tour-'
-            //                 . $tour->get_slug()
-            //                 . '" class="button-primary trigger-ee-help-tour">'
-            //                 . $tour->get_label()
-            //                 . '</button>';
-            //     }
-            //     $tour_buttons .= implode('<br />', $tb);
-            //     $tour_buttons .= '</div></div>';
-            // }
             // let's see if there is a help_sidebar set for the current route and we'll set that up for usage as well.
             if (is_array($config) && isset($config['help_sidebar'])) {
                 // check that the callback given is valid
@@ -1241,24 +1197,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                     'FHEE__' . get_class($this) . '__add_help_tabs__help_sidebar',
                     $this->{$config['help_sidebar']}()
                 );
-                $content .= $tour_buttons; // add help tour buttons.
-                // do we have any help tours setup?  Cause if we do we want to add the buttons
                 $this->_current_screen->set_help_sidebar($content);
-            }
-            // if we DON'T have config help sidebar and there ARE tour buttons then we'll just add the tour buttons to the sidebar.
-            if (! isset($config['help_sidebar']) && ! empty($tour_buttons)) {
-                $this->_current_screen->set_help_sidebar($tour_buttons);
-            }
-            // handle if no help_tabs are set so the sidebar will still show for the help tour buttons
-            if (! isset($config['help_tabs']) && ! empty($tour_buttons)) {
-                $_ht['id']      = $this->page_slug;
-                $_ht['title']   = esc_html__('Help Tours', 'event_espresso');
-                $_ht['content'] = '<p>'
-                                  . esc_html__(
-                                      'The buttons to the right allow you to start/restart any help tours available for this page',
-                                      'event_espresso'
-                                  ) . '</p>';
-                $this->_current_screen->add_help_tab($_ht);
             }
             if (! isset($config['help_tabs'])) {
                 return;
@@ -1353,109 +1292,6 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                 $this->_current_screen->add_help_tab($_ht);
             }
         }
-    }
-
-
-    /**
-     * This basically checks loaded $_page_config property to see if there are any help_tours defined.  "help_tours" is
-     * an array with properties for setting up usage of the joyride plugin
-     *
-     * @link   http://zurb.com/playground/jquery-joyride-feature-tour-plugin
-     * @see    instructions regarding the format and construction of the "help_tour" array element is found in the
-     *         _set_page_config() comments
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws InvalidDataTypeException
-     * @throws InvalidInterfaceException
-     */
-    protected function _add_help_tour()
-    {
-        // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-        // $tours = array();
-        // $this->_help_tour = array();
-        // // exit early if help tours are turned off globally
-        // if ((defined('EE_DISABLE_HELP_TOURS') && EE_DISABLE_HELP_TOURS)
-        //     || ! EE_Registry::instance()->CFG->admin->help_tour_activation
-        // ) {
-        //     return;
-        // }
-        // // loop through _page_config to find any help_tour defined
-        // foreach ($this->_page_config as $route => $config) {
-        //     // we're only going to set things up for this route
-        //     if ($route !== $this->_req_action) {
-        //         continue;
-        //     }
-        //     if (isset($config['help_tour'])) {
-        //         foreach ($config['help_tour'] as $tour) {
-        //             $file_path = $this->_get_dir() . '/help_tours/' . $tour . '.class.php';
-        //             // let's see if we can get that file...
-        //             // if not its possible this is a decaf route not set in caffeinated
-        //             // so lets try and get the caffeinated equivalent
-        //             $file_path = ! is_readable($file_path) ? EE_ADMIN_PAGES
-        //                                                      . basename($this->_get_dir())
-        //                                                      . '/help_tours/'
-        //                                                      . $tour
-        //                                                      . '.class.php' : $file_path;
-        //             // if file is STILL not readable then let's do a EE_Error so its more graceful than a fatal error.
-        //             if (! is_readable($file_path)) {
-        //                 EE_Error::add_error(
-        //                     sprintf(
-        //                         esc_html__(
-        //                             'The file path given for the help tour (%s) is not a valid path.  Please check that the string you set for the help tour on this route (%s) is the correct spelling',
-        //                             'event_espresso'
-        //                         ),
-        //                         $file_path,
-        //                         $tour
-        //                     ),
-        //                     __FILE__,
-        //                     __FUNCTION__,
-        //                     __LINE__
-        //                 );
-        //                 return;
-        //             }
-        //             require_once $file_path;
-        //             if (! class_exists($tour)) {
-        //                 $error_msg[] = sprintf(
-        //                     esc_html__('Something went wrong with loading the %s Help Tour Class.', 'event_espresso'),
-        //                     $tour
-        //                 );
-        //                 $error_msg[] = $error_msg[0] . "\r\n"
-        //                                . sprintf(
-        //                                    esc_html__(
-        //                                        'There is no class in place for the %s help tour.%s Make sure you have <strong>%s</strong> defined in the "help_tour" array for the %s route of the % admin page.',
-        //                                        'event_espresso'
-        //                                    ),
-        //                                    $tour,
-        //                                    '<br />',
-        //                                    $tour,
-        //                                    $this->_req_action,
-        //                                    get_class($this)
-        //                                );
-        //                 throw new EE_Error(implode('||', $error_msg));
-        //             }
-        //             $tour_obj = new $tour($this->_is_caf);
-        //             $tours[] = $tour_obj;
-        //             $this->_help_tour[ $route ][] = EEH_Template::help_tour_stops_generator($tour_obj);
-        //         }
-        //         // let's inject the end tour stop element common to all pages... this will only get seen once per machine.
-        //         $end_stop_tour = new EE_Help_Tour_final_stop($this->_is_caf);
-        //         $tours[] = $end_stop_tour;
-        //         $this->_help_tour[ $route ][] = EEH_Template::help_tour_stops_generator($end_stop_tour);
-        //     }
-        // }
-        //
-        // if (! empty($tours)) {
-        //     $this->_help_tour['tours'] = $tours;
-        // }
-        // // that's it!  Now that the $_help_tours property is set (or not)
-        // // the scripts and html should be taken care of automatically.
-        //
-        // /**
-        //  * Allow extending the help tours variable.
-        //  *
-        //  * @param Array $_help_tour The array containing all help tour information to be displayed.
-        //  */
-        // $this->_help_tour = apply_filters('FHEE__EE_Admin_Page___add_help_tour___help_tour', $this->_help_tour);
     }
 
 
@@ -1700,11 +1536,6 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
         </div>
         ';
 
-        // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-        // help tour stuff?
-        // if (isset($this->_help_tour[ $this->_req_action ])) {
-        //     echo implode('<br />', $this->_help_tour[ $this->_req_action ]);
-        // }
         // current set timezone for timezone js
         echo '<span id="current_timezone" class="hidden">' . esc_html(EEH_DTT_Helper::get_timezone()) . '</span>';
     }
@@ -1748,7 +1579,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                     )
                 );
             }
-            // we're good so let'd setup the template vars and then assign parsed template content to our content.
+            // we're good so let's setup the template vars and then assign parsed template content to our content.
             $template_args = [
                 'help_popup_id'      => $trigger,
                 'help_popup_title'   => $help['title'],
@@ -1825,7 +1656,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                     'event_espresso'
                 ),
             ];
-            $help_content              = $this->_set_help_popup_content($help_array, false);
+            $help_content              = $this->_set_help_popup_content($help_array);
         }
         // let's setup the trigger
         $content = '<a class="ee-dialog" href="?height='
@@ -1928,10 +1759,6 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
             EVENT_ESPRESSO_VERSION,
             true
         );
-        // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-        // if (EE_Registry::instance()->CFG->admin->help_tour_activation) {
-        //     add_filter('FHEE_load_joyride', '__return_true');
-        // }
         // script for sorting tables
         wp_register_script(
             'espresso_ajax_table_sorting',
@@ -1990,8 +1817,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
             'google-charts',
             'https://www.gstatic.com/charts/loader.js',
             [],
-            EVENT_ESPRESSO_VERSION,
-            false
+            EVENT_ESPRESSO_VERSION
         );
         // ENQUEUE ALL BASICS BY DEFAULT
         wp_enqueue_style('ee-admin-css');
@@ -2012,33 +1838,6 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
             ['espresso_news_post_box_content']
         );
         wp_localize_script('ee_admin_js', 'eeLazyLoadingContainers', $lazy_loader_container_ids);
-        // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-        // /**
-        //  * help tour stuff
-        //  */
-        // if (! empty($this->_help_tour)) {
-        //     // register the js for kicking things off
-        //     wp_enqueue_script(
-        //         'ee-help-tour',
-        //         EE_ADMIN_URL . 'assets/ee-help-tour.js',
-        //         array('jquery-joyride'),
-        //         EVENT_ESPRESSO_VERSION,
-        //         true
-        //     );
-        //     $tours = array();
-        //     // setup tours for the js tour object
-        //     foreach ($this->_help_tour['tours'] as $tour) {
-        //         if ($tour instanceof EE_Help_Tour) {
-        //             $tours[] = array(
-        //                 'id'      => $tour->get_slug(),
-        //                 'options' => $tour->get_options(),
-        //             );
-        //         }
-        //     }
-        //     wp_localize_script('ee-help-tour', 'EE_HELP_TOUR', array('tours' => $tours));
-        //     // admin_footer_global will take care of making sure our help_tour skeleton gets printed via the info stored in $this->_help_tour
-        // }
-
         add_filter(
             'admin_body_class',
             function ($classes) {
@@ -2767,7 +2566,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
     /**
      * facade for add_meta_box
      *
-     * @param string  $action        where the metabox get's displayed
+     * @param string  $action        where the metabox gets displayed
      * @param string  $title         Title of Metabox (output in metabox header)
      * @param string  $callback      If not empty and $create_fun is set to false then we'll use a custom callback
      *                               instead of the one created in here.
@@ -3239,12 +3038,14 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
         $this->_nav_tabs                                   = $this->_get_main_nav_tabs();
         $this->_template_args['nav_tabs']                  = $this->_nav_tabs;
         $this->_template_args['admin_page_title']          = $this->_admin_page_title;
+
         $this->_template_args['before_admin_page_content'] = apply_filters(
             "FHEE_before_admin_page_content{$this->_current_page}{$this->_current_view}",
             isset($this->_template_args['before_admin_page_content'])
                 ? $this->_template_args['before_admin_page_content']
                 : ''
         );
+
         $this->_template_args['after_admin_page_content']  = apply_filters(
             "FHEE_after_admin_page_content{$this->_current_page}{$this->_current_view}",
             isset($this->_template_args['after_admin_page_content'])
@@ -3252,24 +3053,22 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                 : ''
         );
         $this->_template_args['after_admin_page_content']  .= $this->_set_help_popup_content();
-        // load settings page wrapper template
-        $template_path = ! $this->request->isAjax()
-            ? EE_ADMIN_TEMPLATE . 'admin_wrapper.template.php'
-            : EE_ADMIN_TEMPLATE . 'admin_wrapper_ajax.template.php';
-        // about page?
-        $template_path = $about
-            ? EE_ADMIN_TEMPLATE . 'about_admin_wrapper.template.php'
-            : $template_path;
+
         if ($this->request->isAjax()) {
             $this->_template_args['admin_page_content'] = EEH_Template::display_template(
-                $template_path,
+                // $template_path,
+                EE_ADMIN_TEMPLATE . 'admin_wrapper_ajax.template.php',
                 $this->_template_args,
                 true
             );
             $this->_return_json();
-        } else {
-            EEH_Template::display_template($template_path, $this->_template_args);
         }
+        // load settings page wrapper template
+        $template_path = $about
+            ? EE_ADMIN_TEMPLATE . 'about_admin_wrapper.template.php'
+            : EE_ADMIN_TEMPLATE . 'admin_wrapper.template.php';
+
+        EEH_Template::display_template($template_path, $this->_template_args);
     }
 
 
@@ -3342,13 +3141,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
         // make sure $text and $actions are in an array
         $text          = (array) $text;
         $actions       = (array) $actions;
-        $referrer_url  = empty($referrer)
-            ? '<input type="hidden" id="save_and_close_referrer" name="save_and_close_referrer" value="'
-              . $this->request->getServerParam('REQUEST_URI')
-              . '" />'
-            : '<input type="hidden" id="save_and_close_referrer" name="save_and_close_referrer" value="'
-              . $referrer
-              . '" />';
+        $referrer_url  = ! empty($referrer) ? $referrer : $this->request->getServerParam('REQUEST_URI');
         $button_text   = ! empty($text)
             ? $text
             : [
@@ -3356,23 +3149,22 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
                 esc_html__('Save and Close', 'event_espresso'),
             ];
         $default_names = ['save', 'save_and_close'];
-        // add in a hidden index for the current page (so save and close redirects properly)
-        $this->_template_args['save_buttons'] = $referrer_url;
+        $buttons = '';
         foreach ($button_text as $key => $button) {
-            $ref                                  = $default_names[ $key ];
-            $this->_template_args['save_buttons'] .= '<input type="submit" class="button-primary '
-                                                     . $ref
-                                                     . '" value="'
-                                                     . $button
-                                                     . '" name="'
-                                                     . (! empty($actions) ? $actions[ $key ] : $ref)
-                                                     . '" id="'
-                                                     . $this->_current_view . '_' . $ref
-                                                     . '" />';
+            $ref     = $default_names[ $key ];
+            $name    = ! empty($actions) ? $actions[ $key ] : $ref;
+            $buttons .= '<input type="submit" class="button-primary ' . $ref . '" '
+                        . 'value="' . $button . '" name="' . $name . '" '
+                        . 'id="' . $this->_current_view . '_' . $ref . '" />';
             if (! $both) {
                 break;
             }
         }
+        // add in a hidden index for the current page (so save and close redirects properly)
+        $buttons .= '<input type="hidden" id="save_and_close_referrer" name="save_and_close_referrer" value="'
+                   . $referrer_url
+                   . '" />';
+        $this->_template_args['save_buttons'] = $buttons;
     }
 
 
@@ -3433,7 +3225,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
         // generate form fields
         $form_fields = $this->_generate_admin_form_fields($hidden_fields, 'array');
         // add fields to form
-        foreach ((array) $form_fields as $field_name => $form_field) {
+        foreach ((array) $form_fields as $form_field) {
             $this->_template_args['before_admin_page_content'] .= "\n\t" . $form_field['field'];
         }
         // close form
@@ -4097,7 +3889,7 @@ abstract class EE_Admin_Page extends EE_Base implements InterminableInterface
             update_option('ee_ueip_has_notified', true);
         }
         // and save it (note we're also doing the network save here)
-        $net_saved    = is_main_site() ? EE_Network_Config::instance()->update_config(false, false) : true;
+        $net_saved    = ! is_main_site() || EE_Network_Config::instance()->update_config(false, false);
         $config_saved = EE_Config::instance()->update_espresso_config(false, false);
         if ($config_saved && $net_saved) {
             EE_Error::add_success(sprintf(esc_html__('"%s" have been successfully updated.', 'event_espresso'), $tab));

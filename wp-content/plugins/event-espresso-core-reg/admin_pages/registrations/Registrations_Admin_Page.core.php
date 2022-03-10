@@ -569,8 +569,6 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'registrations_overview_other',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Registration_Overview_Help_Tour'),
                 'qtips'         => ['Registration_List_Table_Tips'],
                 'list_table'    => 'EE_Registrations_List_Table',
                 'require_nonce' => false,
@@ -602,8 +600,6 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'registrations_details_registrant_details',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Registration_Details_Help_Tour'),
                 'metaboxes'     => array_merge(
                     $this->_default_espresso_metaboxes,
                     ['_registration_details_metaboxes']
@@ -671,8 +667,6 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                         'filename' => 'registrations_contact_list_other',
                     ],
                 ],
-                // disabled temporarily. see: https://github.com/eventespresso/eventsmart.com-website/issues/836
-                // 'help_tour'     => array('Contact_List_Help_Tour'),
                 'metaboxes'     => [],
                 'require_nonce' => false,
             ],
@@ -3278,15 +3272,19 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                 )
             );
         } else {
-            $new_request_args = [
+            // Pull the current request params
+            $request_args = $this->request->requestParams();
+            // Set the required request_args to be passed to the export
+            $required_request_args = [
                 'export' => 'report',
                 'action' => 'registrations_report_for_event',
                 'EVT_ID' => $EVT_ID,
             ];
-            $this->request->mergeRequestParams($new_request_args);
+            // Merge required request args, overriding any currently set
+            $request_args = array_merge($request_args, $required_request_args);
             if (is_readable(EE_CLASSES . 'EE_Export.class.php')) {
                 require_once(EE_CLASSES . 'EE_Export.class.php');
-                $EE_Export = EE_Export::instance($this->request->requestParams());
+                $EE_Export = EE_Export::instance($request_args);
                 $EE_Export->export();
             }
         }
