@@ -292,7 +292,7 @@ jQuery(document).ready(function () {
 	if(jQuery("body").hasClass("buddyboss-theme")) {
 		var profilehtml = '<ul id="header-my-account-menu" class="bb-my-account-menu has-icon">' +
                         '<li class="menu-item icon-added">' +
-                            '<a href="/members/me/dashboard">' +
+                            '<a href="/dashboard">' +
                                 '<i class="_mi _before buddyboss bb-icon-board-list" aria-hidden="true"></i><span>My Dashboard</span>' +
                             '</a>' +
                         '</li>' +
