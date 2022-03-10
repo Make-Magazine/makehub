@@ -176,21 +176,16 @@ class Elementor_upcomingMakerFaires_Widget extends \Elementor\Widget_Base {
 		$title = $settings['title'];
 		$link = $settings['link'];
 
-		$api_url = 'https://makerfaire.com/query/?type=map&upcoming=true&number=' . $number;
+		$api_url = 'https://makerfaire.com/query/?type=map&upcoming=true&number=' . $number . '&categories=mini,featured,flagship';
         $faire_content = @file_get_contents($api_url);
         // Decode the JSON in the file
         $faires = json_decode($faire_content, true);
+
 		$title = $title==''?'<img src="https://make.co/wp-content/themes/make-experiences/images/makerfaire-logo.png">':'<h4>'.$settings['title'].'</h4>';
 		if ($link) {
 			$title = '<a target="_blank" class="upcomingFairesLink" href="' . esc_url($link) . '">' . $title . '</a>';
 		}
 
-		$api_url = 'https://makerfaire.com/query/?type=map&upcoming=true&number=' . $number;
-
-        $faire_content = @file_get_contents($api_url);
-
-        // Decode the JSON in the file
-        $faires = json_decode($faire_content, true);
 
         $return = '<div class="upcoming-makerfaires-feed">'.$title.'<ul>';
 
