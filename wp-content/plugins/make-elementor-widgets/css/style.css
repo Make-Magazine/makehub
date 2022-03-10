@@ -117,6 +117,11 @@
 	font-size: 18px;
 	margin-top: 0px;
 }
+@media screen and (max-width:981px) {
+	.dashboard-3-column .elementor-column.elementor-col-33 {
+		width: 100%;
+	}
+}
 
 /* makercamp widget shouldn't get bunched up if it's already in a narrow column */
 .elementor-col-33 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{
@@ -147,6 +152,8 @@
 	width: 27%;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	background: #e4e4e4;
 }
 .make-initiatives-widget  .make-list-item .make-image-area img{
 	display: block;
@@ -181,4 +188,16 @@
 }
 .make-initiatives-widget  .make-list-item .make-content-area .make-link {
 	margin-top: auto;
+}
+
+.before-chevron:before {
+    font-family: FontAwesome;
+    content: "\f054";
+    font-size:24px;
+    position:relative;
+    top:-6px;
+    left:5px;
+}
+.before-chevron {
+    display: flex;
 }
