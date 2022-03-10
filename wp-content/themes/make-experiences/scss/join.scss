@@ -71,6 +71,11 @@
 			&.upgrade::after {
                 content: "$24.99";
 			}
+			&.free::after {
+                content: "FREE";
+				top: -15px;
+				height: 120px;
+			}
         }
     }
     @media screen and (max-width: 768px) {

@@ -270,3 +270,12 @@ button.ges-change, button.ges-change:hover {
 		#facilitator-portal-personal-li { display: none; }
 	}
 }
+
+// Member directory
+#members-list {
+	// hide this until we figure out why people are getting assigned as students
+	.bp-member-type { display: none; }
+	.bp-generic-meta .friendship-button.generic-button {
+		margin-right: 0px !important;
+	}
+}
