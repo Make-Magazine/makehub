@@ -6,7 +6,7 @@ function isValidEmailAddress(emailAddress) {
 jQuery(document).ready(function () {
 	jQuery('#LoginBtn, .bb-menu-item[href*="wp-login.php"]').attr("href", function(i, href) {
 		if(jQuery(this).attr("data-balloon") != "Log Out") {
-			var redirect_url = window.location.protocol + "//" + window.location.host + "/members/me/";
+			var redirect_url = window.location.protocol + "//" + window.location.host + "/dashboard/";
 			if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to the referrer if it exists
 				if(document.referrer && document.referrer != "") { redirect_url = document.referrer; }
 				return href.split("?")[0] + '?redirect_to=' + redirect_url;

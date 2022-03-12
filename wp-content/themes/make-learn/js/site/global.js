@@ -6,7 +6,7 @@ function isValidEmailAddress(emailAddress) {
 jQuery(document).ready(function () {
 	jQuery('#LoginBtn').attr("href", function(i, href) {
 		if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to the referrer if it exists
-			var redirect_url = window.location.protocol + "//" + window.location.host + "/members/me/";
+			var redirect_url = window.location.protocol + "//" + window.location.host + "/dashboard/";
 			if(document.referrer && document.referrer != "") { redirect_url = document.referrer; }
 			return href + '?redirect_to=' + redirect_url;
 		} else { // otherwise send them to where they logged in from
@@ -53,11 +53,11 @@ jQuery("#scrollToTop").click(function() {
 });
 
 // Default all accordions to closed
-jQuery(document).ready(function($) { 
+jQuery(document).ready(function($) {
 	if( $(".elementor-widget-accordion")[0] ){
-		var delay = 100; setTimeout(function() { 
+		var delay = 100; setTimeout(function() {
 		$('.elementor-tab-title').removeClass('elementor-active');
-		$('.elementor-tab-content').css('display', 'none'); }, delay); 
+		$('.elementor-tab-content').css('display', 'none'); }, delay);
 	}
 	if($(".event-info")[0]) {
 		$(".event-info").find('a').each(function() {
@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
 	jQuery("#flip-card").flip({
 	  trigger: 'manual'
 	});
-}); 
+});
 jQuery(".flip-toggle").click(function(){
 	jQuery("#flip-card .back").toggleClass('smaller');
 	jQuery("#flip-card").flip('toggle');
@@ -93,9 +93,9 @@ jQuery(document).ready(function () {
 });
 
 jQuery(".expando-box h4").click(function(){
-	jQuery(this).toggleClass( "open" ); 
-	jQuery(this).next().toggleClass( "open" ); 
-}); 
+	jQuery(this).toggleClass( "open" );
+	jQuery(this).next().toggleClass( "open" );
+});
 
 // universal treatment for info buttons to pull up their related "modal"
 jQuery(document).on('gpnf_post_render', function(){
