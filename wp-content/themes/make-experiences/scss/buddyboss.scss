@@ -273,6 +273,9 @@ button.ges-change, button.ges-change:hover {
 
 // Member directory
 #members-list {
+	.item-avatar img {
+		min-width: 126px;
+	}
 	// hide this until we figure out why people are getting assigned as students
 	.bp-member-type, .last-activity, .follow-button { display: none; }
 	.bp-generic-meta .generic-button {
