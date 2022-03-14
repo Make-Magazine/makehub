@@ -190,7 +190,7 @@
 	margin-top: auto;
 }
 
-.befire-chevron link {
+.before-chevron-link .elementor-widget-container {
 	margin-left: -4px;
 }
 .before-chevron-link a:before {
