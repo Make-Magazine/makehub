@@ -203,18 +203,18 @@ class Elementor_makeInitatives_Widget extends \Elementor\Widget_Base {
 			foreach (array_slice($settings['list'], 0, $settings['num_show'])   as $item ) {
 				echo '<div class="make-list-item">';
 					echo '<div class="make-image-area">';
-					echo 	'<a href="'. $item['content_link'] .'">';
+					echo 	'<a target="_blank" href="'. $item['content_link'] .'">';
 					echo 		'<div class="make-image">'. wp_get_attachment_image( $item['image']['id'], 'thumbnail' ).'</div>';
 					echo 	'</a>';
 					echo '</div>';
 
 					echo '<div class="make-content-area">';
 					echo 		'<h3 class="make-post-title">';
-					echo 			'<a href="'. $item['content_link'] .'">'.$item['list_title'].'</a>';
+					echo 			'<a target="_blank" href="'. $item['content_link'] .'">'.$item['list_title'].'</a>';
 					echo 		'</h3>';
 					echo 		'<div class="make-description">'.$item['item_description'].'</div>';
 					echo 		'<div class="make-link">';
-					echo 			'<a href="'. $item['content_link'] .'">'.$item['content_title'].'</a>';
+					echo 			'<a target="_blank" href="'. $item['content_link'] .'">'.$item['content_title'].'</a>';
 					echo 		'</div>';
 					echo '</div>';
 				echo '</div>';
