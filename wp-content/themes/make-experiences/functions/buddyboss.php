@@ -16,22 +16,6 @@ function remove_profile_nav() {
 }
 add_action('bp_init', 'remove_profile_nav');
 
-// for logged in users, change the default tab to their dashboard page
-function bp_set_dashboard_for_me() {
-    $default = 'dashboard';
-    if (bp_is_my_profile()) {
-        if ($default && defined('BP_PLATFORM_VERSION')) {
-            add_filter('bp_member_default_component', function () use ( $default ) {
-                return $default;
-            });
-        } elseif ($default && !defined('BP_DEFAULT_COMPONENT')) {
-            define('BP_DEFAULT_COMPONENT', $default);
-            buddypress()->active_components[$default] = 1;
-        }
-    }
-}
-add_action('bp_setup_globals', 'bp_set_dashboard_for_me');
-
 add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
 function ad_filter_menu($sorted_menu_objects, $args) {
     //check if current user is a facilitator
