@@ -269,7 +269,13 @@
 }
 
 .buddypanel-open {
+	.magazine-footer .container { max-width: 100%; }
 	.newsletter-footer {
+		._form_4 {
+			._form-title {
+				font-size: 22px !important;
+			}
+		}
 		@media (max-width:1200px) {
 			background-position: right 37px top 10px;
 			background-size: 100px;
