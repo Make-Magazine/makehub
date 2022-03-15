@@ -165,7 +165,6 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('customize');
     $wp_admin_bar->remove_node('comments');
     $wp_admin_bar->remove_node('bp-notifications'); //buddypress notifications
-    $wp_admin_bar->remove_node('uap_dashboard_menu'); //ultimate affiliate pro
     $wp_admin_bar->remove_node('elementor_inspector'); // elementor debugger
     $wp_admin_bar->remove_node('essb'); // easy social share buttons
 }
