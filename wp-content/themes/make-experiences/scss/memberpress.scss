@@ -15,3 +15,33 @@
 }
 
 .mepr-login-form-wrap { display: none; }
+
+//hide or show certain elementor content based on membership level
+
+/* hide paid member and free member content by default,
+   nonMember content is displayed by default */
+.paidMember, .freeMember { display: none;}
+
+//display freeMember content
+.member-level-community,
+.member-level-amazing-maker-awards {
+	.freeMember {
+			display: block;
+	}
+	.paidMember, .nonMember {
+		display:none;
+	}
+}
+
+//if a paid membership type, display the paidMember content and hide freeMember and non Member content
+.member-level-premium-subscriber,
+.member-level-global-producers,
+.member-level-multi-seat-membership,
+.member-level-school-maker-faire {
+	.paidMember {
+			display: block;
+	}
+	.freeMember, .nonMember {
+			display: none;
+	}
+}
