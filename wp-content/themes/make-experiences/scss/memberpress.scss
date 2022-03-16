@@ -26,3 +26,36 @@
 		margin: 15px 0;
 	}
 }
+
+//hide or show certain elementor content based on membership level
+
+/* hide paid member and free member content by default,
+   nonMember content is displayed by default */
+.paidMember, .freeMember { display: none;}
+
+//display freeMember content
+.member-level-community,
+.member-level-amazing-maker-awards {
+	.freeMember {
+			display: flex;
+	}
+	.nonMember {
+		display:none;
+	}
+}
+
+//if a paid membership type, display the paidMember content and hide freeMember and non Member content
+.member-level-premium-subscriber,
+.member-level-global-producers,
+.member-level-multi-seat-membership,
+.member-level-school-maker-faire {
+	.paidMember {
+			display: flex;
+	}
+	/* a user can be both a paid and a free member.
+	   in this instance, we want to hide the free membership content and only display the paid membership content
+	*/
+	.freeMember, .nonMember {
+			display: none;
+	}
+}
