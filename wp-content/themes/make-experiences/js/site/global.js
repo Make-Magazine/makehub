@@ -39,7 +39,7 @@ jQuery(document).ready(function () {
 		jQuery(".mepr-account-update").each(function(){
 			var updateLink = jQuery(this).attr("href");
 			var insertPoint = updateLink.lastIndexOf("?");
-			updateLink = updateLink.substring(0,insertPoint) + '/mp-subscriptions/' + updateLink.substring(insertPoint);
+			updateLink = updateLink.substring(0,insertPoint) + 'mp-subscriptions/' + updateLink.substring(insertPoint);
 			jQuery(this).attr("href", updateLink);
 		});
 	}
