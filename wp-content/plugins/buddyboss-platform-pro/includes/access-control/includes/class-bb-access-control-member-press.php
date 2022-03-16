@@ -123,7 +123,7 @@ class BB_Access_Control_Member_Press extends BB_Access_Control_Abstract {
 							break;
 						}
 
-						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							$has_access = true;
 							break;
 						}
@@ -139,7 +139,7 @@ class BB_Access_Control_Member_Press extends BB_Access_Control_Abstract {
 									break;
 								}
 							}
-							if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+							if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 								foreach ( $user_memberships as $user_membership ) {
 									if ( in_array( $user_membership, wp_list_pluck( self::get_level_lists(), 'id' ), true ) ) {
 										$has_access = true;

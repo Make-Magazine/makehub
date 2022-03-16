@@ -144,7 +144,7 @@ class BB_Access_Control_Wishlist_Member extends BB_Access_Control_Abstract {
 							$has_access = true;
 							break;
 						}
-						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							$has_access = true;
 							break;
 						}
@@ -159,7 +159,7 @@ class BB_Access_Control_Wishlist_Member extends BB_Access_Control_Abstract {
 								}
 							}
 						}
-						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							foreach ( wp_list_pluck( self::get_level_lists(), 'id' ) as $level ) {
 								$level_data = wlmapi_get_level_members( $level );
 								if ( ! empty( $level_data['success'] ) && ! empty( $level_data['members']['member'] ) ) {

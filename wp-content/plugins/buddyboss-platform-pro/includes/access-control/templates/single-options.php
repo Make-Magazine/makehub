@@ -22,9 +22,7 @@ if ( 'disabled' === trim( $disable ) && 'checked' === trim( $checked ) ) {
 }
 ?>
 <div>
-	<input <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> id="<?php echo esc_attr( $key ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>"
-		   value="<?php echo esc_attr( $option['id'] ); ?>"
-		   name="<?php echo esc_attr( $key ); ?>[access-control-options][]" type="checkbox">
+	<input <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> id="<?php echo esc_attr( $key ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>" value="<?php echo esc_attr( $option['id'] ); ?>" name="<?php echo esc_attr( $key ); ?>[access-control-options][]" type="checkbox">
 	<label for="<?php echo esc_attr( $key ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>"><?php echo esc_html( $option['text'] ); ?></label>
 </div>
 

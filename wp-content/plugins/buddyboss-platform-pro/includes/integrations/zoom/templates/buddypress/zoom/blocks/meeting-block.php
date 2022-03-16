@@ -71,7 +71,7 @@ if ( is_user_logged_in() ) {
 $meeting_number = esc_attr( $meeting_id );
 $api_key        = bp_zoom_api_key();
 $api_secret     = bp_zoom_api_secret();
-$role           = $can_start_meeting ? 1 : 0;
+$role           = $can_start_meeting ? 1 : 0; // phpcs:ignore
 $sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
 
 $meeting_date_raw   = false;

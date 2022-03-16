@@ -44,7 +44,7 @@ if ( isset( $access_control_settings ) && isset( $access_control_settings['acces
 	?>
 	<select data-label="<?php echo esc_attr( $label ); ?>"
 			data-sub-label="<?php echo esc_attr( $sub_label ); ?>"
-			data-component-settings="<?php echo esc_attr( json_encode( $component_settings ) ); ?>"
+			data-component-settings="<?php echo esc_attr( wp_json_encode( $component_settings ) ); ?>"
 			class="access-control-plugin-select-box <?php echo esc_attr( $multiple ); ?>"
 			data-id="<?php echo esc_attr( $db_option_key ); ?>"
 			name="<?php echo esc_attr( $option_name ); ?>[plugin-access-control-type]" <?php echo $is_default_disabled ? 'disabled' : ''; ?> >
@@ -69,7 +69,7 @@ if ( isset( $access_control_settings ) && isset( $access_control_settings['acces
 	?>
 	<select data-label="<?php echo esc_attr( $label ); ?>"
 			data-sub-label="<?php echo esc_attr( $sub_label ); ?>"
-			data-component-settings="<?php echo esc_attr( json_encode( $component_settings ) ); ?>"
+			data-component-settings="<?php echo esc_attr( wp_json_encode( $component_settings ) ); ?>"
 			class="access-control-plugin-select-box <?php echo esc_attr( $class ); ?> <?php echo esc_attr( $multiple ); ?>"
 			data-id="<?php echo esc_attr( $db_option_key ); ?>"
 			name="<?php echo esc_attr( $option_name ); ?>[plugin-access-control-type]">

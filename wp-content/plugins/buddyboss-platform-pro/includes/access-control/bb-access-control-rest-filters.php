@@ -14,7 +14,6 @@ add_action( 'bb_rest_before_get_group_members', 'bb_access_control_rest_before_g
 
 // Activity Support.
 add_filter( 'bp_rest_activity_create_item_permissions_check', 'bb_access_control_rest_activity_item_permissions', PHP_INT_MAX, 2 );
-// add_filter( 'bp_rest_activity_comment_create_item_permissions_check', 'bb_access_control_rest_activity_item_permissions', PHP_INT_MAX, 2 ); // phpcs:ignore.
 add_filter( 'bp_rest_activity_update_item_permissions_check', 'bb_access_control_rest_activity_item_single_permissions', PHP_INT_MAX, 2 );
 add_filter( 'bp_rest_activity_delete_item_permissions_check', 'bb_access_control_rest_activity_item_single_permissions', PHP_INT_MAX, 2 );
 add_filter( 'bp_rest_activity_prepare_value', 'bb_access_control_rest_activity_prepare_value', PHP_INT_MAX, 3 );

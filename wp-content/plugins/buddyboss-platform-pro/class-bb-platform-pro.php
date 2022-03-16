@@ -81,6 +81,7 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 			$this->includes();
 			// Set up localisation.
 			$this->load_plugin_textdomain();
+			$this->setup_actions();
 		}
 
 		/** Private Methods *******************************************************/
@@ -114,8 +115,8 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		 * @since 1.0.0
 		 */
 		private function setup_globals() {
-			$this->version        = '1.1.9.1';
-			$this->db_version     = 231;
+			$this->version        = '1.2.0';
+			$this->db_version     = 241;
 			$this->db_version_raw = (int) bp_get_option( '_bbp_pro_db_version' );
 
 			// root directory.
@@ -131,6 +132,10 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 			// Access Control.
 			$this->access_control_dir = $this->plugin_dir . 'includes/access-control';
 			$this->access_control_url = $this->plugin_url . 'includes/access-control';
+
+			// Platform Settings.
+			$this->platform_settings_dir = $this->plugin_dir . 'includes/platform-settings';
+			$this->platform_settings_url = $this->plugin_url . 'includes/platform-settings';
 		}
 
 		/**
@@ -196,6 +201,27 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 					require $path;
 				}
 			}
+		}
+
+		/**
+		 * Add actions.
+		 *
+		 * @since 1.2.0
+		 */
+		private function setup_actions() {
+			// add actions.
+			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+		}
+
+		/**
+		 * Enqueue related scripts and styles.
+		 *
+		 * @since 1.2.0
+		 */
+		public function enqueue_scripts_styles() {
+			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$rtl_css = is_rtl() ? '-rtl' : '';
+			wp_enqueue_style( 'bb-pro-enqueue-scripts', $this->plugin_url . 'assets/css/index' . $rtl_css . $min . '.css', false, bb_platform_pro()->version );
 		}
 	}
 }

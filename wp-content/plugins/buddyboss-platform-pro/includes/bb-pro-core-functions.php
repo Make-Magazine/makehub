@@ -242,3 +242,4 @@ if ( ! function_exists( 'wp_timezone_string' ) ) {
 		return $tz_offset;
 	}
 }
+
