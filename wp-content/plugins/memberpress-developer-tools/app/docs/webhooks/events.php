@@ -195,6 +195,11 @@ return array(
     'desc'  => __('Sent when any Before Credit Card Expires reminder fires.', 'memberpress-developer-tools'),
     'type'  => 'subscription' //These are subs yo
   ),
+  'before-sub-trial-ends' => (object)array(
+    'label' => __('Before Subscription Trial Ends', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when any Before Subscription Trial Ends reminder fires.', 'memberpress-developer-tools'),
+    'type'  => 'subscription' //These are subs yo
+  ),
 
   /** Events for Corporate Accounts */
   'sub-account-added' => (object)array(

@@ -119,7 +119,7 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
           <div class="notice"><?php echo wpautop( $invoice->notes ); ?></div>
         </td>
         <td>
-          <img class="img-responsivel" style="width:150px; float:right" src="<?php echo esc_url($invoice->paid_logo_url); ?>" alt="paid-stamp">
+          <img class="img-responsivel" style="width:150px; float:right" src="<?php echo esc_attr($invoice->paid_logo_url); ?>" alt="paid-stamp">
         </td>
       </tr>
     </table>

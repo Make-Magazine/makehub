@@ -79,7 +79,7 @@ abstract class BaseCptModel extends BaseBuiltinModel {
     if( null === $post || (isset($post['post_type']) && $post['post_type'] != $cpt) ) {
       // TODO: Should we do this or throw an error?
       //$this->initialize_new_cpt();
-      error_log('load_cpt_from_id didn\'t find ID='.$id);
+      //error_log('load_cpt_from_id didn\'t find ID='.$id); //Removing so it doesn't confuse users, but leaving if statement so I don't mess anything up
     }
     else {
       $this->rec = (object)array_merge((array)$this->rec,(array)$post);

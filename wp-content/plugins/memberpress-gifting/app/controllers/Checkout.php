@@ -41,9 +41,13 @@ class Checkout extends lib\BaseCtrl {
     static $unique_suffix = 0;
     $unique_suffix++;
 
-    // Dont show checkbox if there is a valid coupon
-    if ( isset( $_GET['coupon'] ) && models\Gift::is_valid_coupon($_GET['coupon'], $prd_id) ) {
-      return false;
+    if ( isset( $_GET['coupon'] ) && models\Gift::is_valid_coupon( $_GET['coupon'], $prd_id ) ) {
+      $coupon = \MeprCoupon::get_one_from_code( $_GET['coupon'] );
+
+      // Dont show checkbox if there is a valid gift coupon
+      if ( $coupon && models\Gift::is_gift_coupon( $coupon->ID, $prd_id ) ) {
+        return false;
+      }
     }
 
     if( models\Gift::is_product_giftable($prd) ){

@@ -314,6 +314,8 @@ class MPCA_Corporate_Account extends MeprBaseModel {
       $transaction_id = MPCA_Sync_Transactions::update_transaction($transaction->id, $parent_transaction->id);
     }
 
+    do_action('mpca_add_sub_account', $transaction_id, $parent_transaction->id);
+
     MPCA_Event::record_event('sub-account-added', $transaction_id, MPCA_Event::$transactions_str);
     return new MeprTransaction($transaction_id);
   }

@@ -1,17 +1,17 @@
-# Copyright (C) 2021 Caseproof, LLC
+# Copyright (C) 2022 Caseproof, LLC
 # This file is distributed under the same license as the MemberPress Corporate Accounts plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Corporate Accounts 1.5.19\n"
+"Project-Id-Version: MemberPress Corporate Accounts 1.5.20\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-corporate\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-07-21T20:22:53+00:00\n"
+"POT-Creation-Date: 2022-02-18T16:55:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.5.0\n"
+"X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: memberpress-corporate\n"
 
 #. Plugin Name of the plugin
@@ -67,44 +67,48 @@ msgstr ""
 msgid "Cannot manage sub-accounts. Account disabled."
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:168
+#: app/controllers/class-mpca-account-controller.php:172
 msgid "Error uploading file"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:194
+#: app/controllers/class-mpca-account-controller.php:198
 msgid "Sub Accounts"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:204
+#: app/controllers/class-mpca-account-controller.php:208
 msgid "This action can only happen from the Manage Sub Account page"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:208
+#: app/controllers/class-mpca-account-controller.php:212
 msgid "There was an issue uploading your CSV file"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:258
+#: app/controllers/class-mpca-account-controller.php:262
 msgid "Row %d failed for reason: %s"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:273
+#: app/controllers/class-mpca-account-controller.php:277
 msgid "Imported: %d successful. %d failed"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:306
+#: app/controllers/class-mpca-account-controller.php:310
 msgid "Cannot Add Existing User"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:312
-#: app/controllers/class-mpca-signup-controller.php:37
+#: app/controllers/class-mpca-account-controller.php:316
+#: app/controllers/class-mpca-signup-controller.php:55
 msgid "Cannot Add Yourself as Sub Account"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:317
+#: app/controllers/class-mpca-account-controller.php:321
 msgid "Existing User Not Found"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:355
+#: app/controllers/class-mpca-account-controller.php:330
+msgid "Sub Account Must Have an Email"
+msgstr ""
+
+#: app/controllers/class-mpca-account-controller.php:371
 msgid "You successfully added a sub account"
 msgstr ""
 
@@ -138,11 +142,11 @@ msgstr ""
 msgid "Corp Account"
 msgstr ""
 
-#: app/controllers/class-mpca-signup-controller.php:55
+#: app/controllers/class-mpca-signup-controller.php:73
 msgid "Invalid corporate account (2)"
 msgstr ""
 
-#: app/controllers/class-mpca-signup-controller.php:87
+#: app/controllers/class-mpca-signup-controller.php:105
 msgid "Invalid corporate account (3)"
 msgstr ""
 
@@ -183,12 +187,12 @@ msgid "Corporate Account"
 msgstr ""
 
 #: app/importers/MpimpCorporateSubAccountsImporter.php:35
-#: app/views/mpca-manage-account-template.php:151
+#: app/views/mpca-manage-account-template.php:156
 msgid "Send NEW members a password reset link (does not email existing members)"
 msgstr ""
 
 #: app/importers/MpimpCorporateSubAccountsImporter.php:39
-#: app/views/mpca-manage-account-template.php:154
+#: app/views/mpca-manage-account-template.php:159
 msgid "Send NEW members the welcome email if they haven't received it already for the membership."
 msgstr ""
 
@@ -348,7 +352,7 @@ msgid "Import Sub Accounts"
 msgstr ""
 
 #: app/views/mpca-edit-user-template.php:69
-#: app/views/mpca-manage-account-template.php:125
+#: app/views/mpca-manage-account-template.php:128
 msgid "Export Sub Accounts"
 msgstr ""
 
@@ -360,106 +364,106 @@ msgstr ""
 msgid "Add Sub Account"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:24
+#: app/views/mpca-manage-account-template.php:25
 msgid "Existing Username"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:32
+#: app/views/mpca-manage-account-template.php:33
 msgid "OR"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:36
+#: app/views/mpca-manage-account-template.php:37
 msgid "Username"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:42
+#: app/views/mpca-manage-account-template.php:43
 msgid "Email"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:48
+#: app/views/mpca-manage-account-template.php:49
 msgid "First Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:52
+#: app/views/mpca-manage-account-template.php:53
 msgid "Last Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:59
+#: app/views/mpca-manage-account-template.php:60
 msgid "Send NEW members the welcome email"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:62
+#: app/views/mpca-manage-account-template.php:65
 msgid "Submit"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:69
+#: app/views/mpca-manage-account-template.php:72
 msgid "Search Sub Accounts..."
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:76
+#: app/views/mpca-manage-account-template.php:79
 msgid "Page %1$s of %2$s (%3$s Sub Accounts)"
-msgstr ""
-
-#: app/views/mpca-manage-account-template.php:82
-msgctxt "ui"
-msgid "Username"
-msgstr ""
-
-#: app/views/mpca-manage-account-template.php:83
-msgctxt "ui"
-msgid "Email"
-msgstr ""
-
-#: app/views/mpca-manage-account-template.php:84
-msgctxt "ui"
-msgid "First Name"
 msgstr ""
 
 #: app/views/mpca-manage-account-template.php:85
 msgctxt "ui"
+msgid "Username"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:86
+msgctxt "ui"
+msgid "Email"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:87
+msgctxt "ui"
+msgid "First Name"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:88
+msgctxt "ui"
 msgid "Last Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:99
+#: app/views/mpca-manage-account-template.php:102
 msgid "Remove"
-msgstr ""
-
-#: app/views/mpca-manage-account-template.php:112
-msgctxt "ui"
-msgid "Previous Page"
 msgstr ""
 
 #: app/views/mpca-manage-account-template.php:115
 msgctxt "ui"
+msgid "Previous Page"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:118
+msgctxt "ui"
 msgid "Next Page"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:121
+#: app/views/mpca-manage-account-template.php:124
 msgctxt "ui"
 msgid "You have no sub accounts to display."
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:129
+#: app/views/mpca-manage-account-template.php:132
 msgid "Signup URL"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:130
+#: app/views/mpca-manage-account-template.php:133
 msgid "People signing up with this link will be automatically added to your account"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:137
+#: app/views/mpca-manage-account-template.php:140
 msgid "Import Sub Accounts via CSV"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:138
+#: app/views/mpca-manage-account-template.php:141
 msgid "(Maximum 200 Sub Accounts per CSV file)"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:157
+#: app/views/mpca-manage-account-template.php:164
 msgid "Upload CSV"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:160
+#: app/views/mpca-manage-account-template.php:167
 msgid "Importing sub accounts..."
 msgstr ""
 

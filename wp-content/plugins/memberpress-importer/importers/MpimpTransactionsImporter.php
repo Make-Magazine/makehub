@@ -11,7 +11,7 @@ class MpimpTransactionsImporter extends MpimpBaseImporter {
 
   public function import($row,$args) {
     $required = array(
-      array('any' => array('username','email')),
+      array('any' => array('username','email','user_email')),
       'product_id', 'amount', 'total'
     );
     $this->check_required('transactions', array_keys($row), $required);
@@ -62,6 +62,7 @@ class MpimpTransactionsImporter extends MpimpBaseImporter {
           break;
         case "username":
         case "email":
+        case "user_email":
           $this->fail_if_empty($col, $cell);
           $usr = new MeprUser();
 
@@ -101,6 +102,7 @@ class MpimpTransactionsImporter extends MpimpBaseImporter {
           $txn->{$col} = empty($cell)?'standard':$cell;
           break;
         case 'sub_num':
+        case 'subscr_id':
           if(!empty($cell) && strtolower($cell) != 'none') {
             $this->fail_if_not_valid_sub_num($cell);
             if($sub = MeprSubscription::get_one_by_subscr_id($cell)) {
@@ -109,12 +111,14 @@ class MpimpTransactionsImporter extends MpimpBaseImporter {
           }
           break;
         case 'payment_method':
+        case 'gateway_id':
           if(!empty($cell)) {
             $this->fail_if_not_valid_payment_method($cell);
             $txn->gateway = $cell;
           }
           break;
         case 'coupon_code':
+        case 'coupon':
           if(!empty($cell) and $cpn = MeprCoupon::get_one_from_code($cell)) {
             $this->fail_if_not_valid_coupon_code($cell);
             $txn->coupon_id = $cpn->ID;

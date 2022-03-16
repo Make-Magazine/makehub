@@ -311,6 +311,11 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
 
     if ( $coupon = $txn->coupon() ) {
       $amount     = $txn->total;
+      $prd = new MeprProduct($txn->product_id);
+      if ($prd) {
+        $amount = $prd->price; //Note, this is not 100% acurrate, but its the best we can do right now.
+      }
+
       $cpn_id     = $coupon->ID;
       $cpn_desc   = sprintf( esc_html__( "Coupon Code '%s'", 'memberpress-pdf-invoice' ), $coupon->post_title );
       $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount );

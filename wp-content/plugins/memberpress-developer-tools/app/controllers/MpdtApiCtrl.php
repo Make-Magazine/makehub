@@ -5,8 +5,10 @@ class MpdtApiCtrl extends MpdtBaseCtrl {
   public function load_hooks() {
     add_action('rest_api_init', array($this, 'api_init'));
     add_action('admin_init', array($this, 'maybe_generate_api_key'));
+    add_action('admin_init', array($this, 'maybe_generate_webhook_key'));
     add_action('wp_ajax_mpdt_api_data',array($this,'ajax_api_data'));
     add_action('wp_ajax_mpdt_regen_api_key', array($this, 'regenerate_api_key'));
+    add_action('wp_ajax_mpdt_regen_webhook_key', array( $this, 'regenerate_webhook_key' ) );
   }
 
   // Build Routes
@@ -64,6 +66,35 @@ class MpdtApiCtrl extends MpdtBaseCtrl {
     }
 
     return $api_key;
+  }
+
+
+  /**
+  * Used to regenerate a new Webhook Key via ajax
+  * @see add_action('wp_ajax_mpdt_regen_webhook_key')
+  * @return string JSON response containing webhook_key
+  */
+  public function regenerate_webhook_key() {
+    check_ajax_referer( 'webhook_key', 'regen_webhook_key_nonce' );
+    $webhook_key = $this->maybe_generate_webhook_key( true );
+
+    wp_send_json_success( array( 'webhook_key' => $webhook_key ) );
+  }
+
+  /**
+  * Used to store the mpdt_webhook_key option
+  * @see add_action('admin_init')
+  * @param bool $regenerate Force the key to be regenerated
+  * @return string $webhook_key
+  */
+  public function maybe_generate_webhook_key( $regenerate = false ) {
+    $webhook_key = get_option('mpdt_webhook_key', '');
+    if( empty( $webhook_key ) || true === $regenerate ) {
+      $webhook_key = $this->generate_api_key();
+      update_option( 'mpdt_webhook_key', $webhook_key );
+    }
+
+    return $webhook_key;
   }
 
   /**

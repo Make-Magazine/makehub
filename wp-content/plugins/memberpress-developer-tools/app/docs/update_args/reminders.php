@@ -28,7 +28,7 @@ return array(
     'type' => 'string',
     'default' => 'sub-expires',
     'required' => false,
-    'valid_values' => __('sub-expires, cc-expires, member-signup, signup-abandoned, sub-renews', 'memberpress-developer-tools'),
+    'valid_values' => __('sub-expires, cc-expires, member-signup, signup-abandoned, sub-renews', 'memberpress-developer-tools', 'sub-trial-ends'),
     'desc' => __('The event which should trigger this Reminder to be sent out.', 'memberpress-developer-tools')
   ),
 );

@@ -52,7 +52,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
     if(MeprUtils::is_memberpress_admin_page()) {
       $option = get_option( 'mepr_notifications' );
-      $notifications = $option['feed'];
+      $notifications = ! empty($option) ? $option['feed'] : array();
       ?>
       <div id="mp-admin-header">
         <img class="mp-logo" src="<?php echo MEPR_IMAGES_URL . '/memberpress-logo-color.svg'; ?>" />
@@ -391,10 +391,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
     $txn_ctrl = new MeprTransactionsCtrl();
     $sub_ctrl = new MeprSubscriptionsCtrl();
     $menu_title = 'MemberPress';
-
-    if ( MeprUtils::is_black_friday_time() && empty( get_option( 'mp_2021_bf_dismissed' ) ) ) {
-      $menu_title .= '<span class="memberpress-menu-pulse green"></span>';
-    }
 
     add_menu_page('MemberPress', $menu_title, $capability, 'memberpress', 'MeprAppCtrl::toplevel_menu_route', MEPR_IMAGES_URL."/memberpress-16@2x.png", 775677);
 

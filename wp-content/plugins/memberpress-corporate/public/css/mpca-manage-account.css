@@ -2,6 +2,10 @@
   margin-bottom: 50px;
 }
 
+.mpca-fat-top {
+  margin-top: 50px;
+}
+
 input[type=text][readonly].mpca-readonly {
   color: #aaa;
   pointer-events: none;
