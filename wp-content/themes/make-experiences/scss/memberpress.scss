@@ -10,9 +10,9 @@
 .mepr-login-form-wrap { display: none; }
 
 .memberpressproduct-premium-subscriber, .memberpressproduct-multi-seat-membership {
-	.mepr_custom_field.mepr_mepr-address-one::after {
-		content: "Address fields are required to receive Make: Magazine subscription";
-		padding: 10px;
+	.mepr_custom_field.mepr_mepr-address-one::before {
+		content: "Address fields are required to receive your print Make: Magazine subscription (limited to US residents only)";
+		padding: 10px 0px;
 		display: block;
 		font-style: italic;
 	}
