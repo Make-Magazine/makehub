@@ -42,7 +42,7 @@ function setMemPressHeaders($datastring = null) {
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
 function add_membership_class_profile($classes) {
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
-	    $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
+	    $classes[] = "member-level-" . strtolower($membership);
 	}
     return $classes;
 }
@@ -117,3 +117,14 @@ function bp_exclude_users( $qs = '', $object = '' ) {
 }
 
 add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
+
+// Remove Member Press subscription and payment tabs
+function change_memberpress_subnav(){
+	global $bp;
+	$mp_buddyboss = new MpBuddyPress;
+	if ( $bp->current_component == 'mp-membership' ) {
+		bp_core_remove_subnav_item( 'mp-membership', 'mp-subscriptions' );
+		bp_core_remove_subnav_item( 'mp-membership', 'mp-payments' );
+	}
+}
+add_action( 'wp', 'change_memberpress_subnav', 5 );
