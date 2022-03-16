@@ -10,13 +10,11 @@
 .mepr-login-form-wrap { display: none; }
 
 .memberpressproduct-premium-subscriber {
-	.mp-form-row {
-		.mepr_custom_field.mepr_mepr-address-one::after {
-			content: "Address fields are required to receive Magazine subscription";
-			padding: 10px;
-			display: block;
-			font-style: italic;
-		}
+	.mepr_custom_field.mepr_mepr-address-one::after {
+		content: "Address fields are required to receive Magazine subscription";
+		padding: 10px;
+		display: block;
+		font-style: italic;
 	}
 }
 
