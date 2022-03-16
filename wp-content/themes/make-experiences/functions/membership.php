@@ -117,14 +117,3 @@ function bp_exclude_users( $qs = '', $object = '' ) {
 }
 
 add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
-
-// Remove Member Press subscription and payment tabs
-function change_memberpress_subnav(){
-	global $bp;
-	$mp_buddyboss = new MpBuddyPress;
-	if ( $bp->current_component == 'mp-membership' ) {
-		bp_core_remove_subnav_item( 'mp-membership', 'mp-subscriptions' );
-		bp_core_remove_subnav_item( 'mp-membership', 'mp-payments' );
-	}
-}
-add_action( 'wp', 'change_memberpress_subnav', 5 );
