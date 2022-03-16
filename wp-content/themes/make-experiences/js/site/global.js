@@ -38,7 +38,7 @@ jQuery(document).ready(function () {
 	if (window.location.href.indexOf('mp-membership') > -1) {
 		jQuery(".mepr-account-update").each(function(){
 			var updateLink = jQuery(this).attr("href");
-			var insertPoint = updateLink.lastIndexOf("?") + 1;
+			var insertPoint = updateLink.lastIndexOf("?");
 			updateLink = updateLink.substring(0,insertPoint) + '/mp-subscriptions/' + updateLink.substring(insertPoint);
 			jQuery(this).attr("href", updateLink);
 		});
