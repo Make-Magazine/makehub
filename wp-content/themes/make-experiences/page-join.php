@@ -18,7 +18,7 @@ get_header();
 				<div class="header-text logged-in-refresh">
 
 					<?php if( class_exists('MeprUtils') ) { ?>
-						<?php if($_GET["mepr-unauth-page"]) {
+						<?php if(isset($_GET["mepr-unauth-page"])) {
 							echo(do_shortcode('[mepr-unauthorized-message]'));
 						} ?>
 						<div class="join-membership-wrapper">

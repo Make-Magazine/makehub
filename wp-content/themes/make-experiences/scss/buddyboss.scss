@@ -276,8 +276,8 @@ button.ges-change, button.ges-change:hover {
 	.item-avatar img {
 		min-width: 126px;
 	}
-	// hide this until we figure out why people are getting assigned as students
-	.bp-member-type, .last-activity, .follow-button { display: none; }
+	// hide last activity
+	.last-activity { display: none; }
 	.bp-generic-meta .generic-button {
 		margin-right: 0px !important;
 	}
