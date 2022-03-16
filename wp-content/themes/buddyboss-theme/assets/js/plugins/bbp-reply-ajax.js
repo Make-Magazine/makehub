@@ -612,6 +612,11 @@ jQuery(
 												}
 												$('#'+elem_id)[0].emojioneArea.hidePicker();
 											},
+											search_keypress: function() {
+												var _this = this;
+												var small = _this.search.val().toLowerCase();
+												_this.search.val(small);
+											},
 										}
 									}
 								);

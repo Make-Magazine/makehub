@@ -3,172 +3,138 @@
 /*global redux_change, redux*/
 
 ( function ( $ ) {
-    "use strict";
+	"use strict";
 
-    redux.field_objects = redux.field_objects || { };
-    redux.field_objects.custom_image_select = redux.field_objects.custom_image_select || { };
+	redux.field_objects                     = redux.field_objects || { };
+	redux.field_objects.custom_image_select = redux.field_objects.custom_image_select || { };
 
-    $( document ).ready(
-        function () {
-            //redux.field_objects.custom_image_select.init();
-        }
-    );
+	$( document ).ready(
+		function () {
+			// redux.field_objects.custom_image_select.init();
+		}
+	);
 
-    function coverImageOptionChanged( element ) {
+	redux.field_objects.custom_image_select.init = function ( selector ) {
 
-        var parentElem = $( element ).parents( '.redux-main' );
+		if ( ! selector ) {
+			selector = $( document ).find( ".redux-group-tab:visible" ).find( '.redux-container-custom_image_select:visible' );
+		}
 
-        if ( parentElem.find( '.bb-confirm-dialog-wrapper.cover_image' ).length === 0 ) {
-            parentElem.append( '<div class="bb-confirm-dialog-wrapper cover_image"><div class="bb-confirm-dialog-overlay"></div><div class="bb-confirm-dialog">' + REDUX_CUSTOM_IMAGE_ADMIN.cover_notice + '<div class="bb-button-wrap"><button class="bb-confirm button button-primary" type="button" data-action="confirm">' + REDUX_CUSTOM_IMAGE_ADMIN.cover_btn_notice + '</button></div></div></div>' );
-        }
+		$( selector ).each(
+			function () {
+				var el     = $( this );
+				var parent = el;
+				if ( ! el.hasClass( 'redux-field-container' ) ) {
+					parent = el.parents( '.redux-field-container:first' );
+				}
+				if ( parent.is( ":hidden" ) ) { // Skip hidden fields.
+					return;
+				}
+				if ( parent.hasClass( 'redux-field-init' ) ) {
+					parent.removeClass( 'redux-field-init' );
+				} else {
+					return;
+				}
+				// On label click, change the input and class.
+				el.find( '.redux-image-select label img, .redux-image-select label .tiles' ).click(
+					function ( e ) {
+						var id = $( this ).closest( 'label' ).attr( 'for' );
 
-        $( document ).on( 'click', '.cover_image .bb-button-wrap .button', function () {
+						$( this ).parents( "fieldset:first" ).find( '.redux-image-select-selected' ).removeClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr(
+							"checked",
+							false
+						);
+						$( this ).closest( 'label' ).find( 'input[type="radio"]' ).prop( 'checked' );
 
-            $( '.bb-confirm-dialog-wrapper.cover_image' ).remove();
+						if ( $( this ).closest( 'label' ).hasClass( 'redux-image-select-preset-' + id ) ) { // If they clicked on a preset, import!
+							e.preventDefault();
 
-        } );
+							var presets = $( this ).closest( 'label' ).find( 'input' );
+							var data    = presets.data( 'presets' );
+							var merge   = presets.data( 'merge' );
 
-    }
+							if ( merge !== undefined && merge !== null ) {
+								if ( $.type( merge ) === 'string' ) {
+									merge = merge.split( '|' );
+								}
 
-    //Trigger change for hidden inputs
-    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+								$.each(
+									data,
+									function ( index, value ) {
+										if ( ( merge === true || $.inArray( index, merge ) != -1 ) && $.type( redux.options[index] ) === 'object' ) {
+											data[index] = $.extend( redux.options[index], data[index] );
+										}
+									}
+								);
+							}
 
-    var trackChange = function(element) {
-      if ( undefined !== element ) {
-        var observer = new MutationObserver( function ( mutations, observer ) {
-          if ( mutations[0].attributeName == "value" ) {
-            coverImageOptionChanged( element );
-          }
-        } );
-        observer.observe( element, {
-          attributes: true
-        } );
-      }
-    }
-    
-    trackChange( $( '#buddyboss_theme_options-buddyboss_profile_cover_default > #buddyboss_theme_options_buddyboss_profile_cover_default_thumbnail' )[0] );
-    trackChange( $( '#buddyboss_theme_options-buddyboss_group_cover_default > #buddyboss_theme_options_buddyboss_group_cover_default_thumbnail' )[0] );
+							if ( presets !== undefined && presets !== null ) {
 
-    $( document ).on( 'change', '#buddyboss_profile_cover_width-select, #buddyboss_profile_cover_height-select, #buddyboss_group_cover_width-select, #buddyboss_group_cover_height-select, #buddyboss_theme_options-buddyboss_profile_cover_default > #buddyboss_theme_options_buddyboss_profile_cover_default_thumbnail, #buddyboss_theme_options-buddyboss_group_cover_default > #buddyboss_theme_options_buddyboss_group_cover_default_thumbnail', function(){
+								var parentElem = $( this ).parents( '.redux-main' );
 
-        if( $(this).val() !== '' ) { // Do not show warning if value is empty
-            coverImageOptionChanged($(this)[0]);
-        }
+								if ( parentElem.find( '.bb-confirm-dialog-wrapper' ).length === 0 ) {
+									parentElem.append( '<div class="bb-confirm-dialog-wrapper"><div class="bb-confirm-dialog-overlay"></div><div class="bb-confirm-dialog">' + REDUX_CUSTOM_IMAGE_ADMIN.confirm_dialog_notice + '<div class="bb-button-wrap"><button class="bb-confirm button button-primary" type="button" data-action="confirm">' + REDUX_CUSTOM_IMAGE_ADMIN.confirm_dialog_accept_btn + '</button><button class="bb-cancel button" type="button" data-action="cancel">' + REDUX_CUSTOM_IMAGE_ADMIN.confirm_dialog_reject_btn + '</button></div></div></div>' );
+								}
 
-    });
+								$( document ).on(
+									'click',
+									'.bb-button-wrap .button',
+									function () {
 
-    redux.field_objects.custom_image_select.init = function ( selector ) {
+										var action = $( this ).data( 'action' );
+										$( '.bb-confirm-dialog-wrapper' ).remove();
 
-        if ( !selector ) {
-            selector = $( document ).find( ".redux-group-tab:visible" ).find( '.redux-container-custom_image_select:visible' );
-        }
+										if ( action === 'confirm' ) {
+											el.find( 'label[for="' + id + '"]' ).addClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr( "checked", true );
+											if ( $( '#import-code-value' ).length === 0 ) {
+												$( this ).append( '<textarea id="import-code-value" style="display:none;" name="' + redux.args.opt_name + '[import_code]">' + JSON.stringify( data ) + '</textarea>' );
+											} else {
+												$( '#import-code-value' ).val( JSON.stringify( data ) );
+											}
+											if ( $( '#publishing-action #publish' ).length !== 0 ) {
+												$( '#publish' ).click();
+											} else {
+												$( '#redux-import' ).click();
+											}
+										} else {
 
-        $( selector ).each(
-            function () {
-                var el = $( this );
-                var parent = el;
-                if ( !el.hasClass( 'redux-field-container' ) ) {
-                    parent = el.parents( '.redux-field-container:first' );
-                }
-                if ( parent.is( ":hidden" ) ) { // Skip hidden fields
-                    return;
-                }
-                if ( parent.hasClass( 'redux-field-init' ) ) {
-                    parent.removeClass( 'redux-field-init' );
-                } else {
-                    return;
-                }
-                // On label click, change the input and class
-                el.find( '.redux-image-select label img, .redux-image-select label .tiles' ).click(
-                    function ( e ) {
-                        var id = $( this ).closest( 'label' ).attr( 'for' );
+										}
 
-                        $( this ).parents( "fieldset:first" ).find( '.redux-image-select-selected' ).removeClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr(
-                            "checked", false
-                            );
-                        $( this ).closest( 'label' ).find( 'input[type="radio"]' ).prop( 'checked' );
+									}
+								);
 
-                        if ( $( this ).closest( 'label' ).hasClass( 'redux-image-select-preset-' + id ) ) { // If they clicked on a preset, import!
-                            e.preventDefault();
+							} else {
+							}
 
-                            var presets = $( this ).closest( 'label' ).find( 'input' );
-                            var data = presets.data( 'presets' );
-                            var merge = presets.data( 'merge' );
+							return false;
+						} else {
+							el.find( 'label[for="' + id + '"]' ).addClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr(
+								"checked",
+								true
+							).trigger( 'change' );
 
-                            if ( merge !== undefined && merge !== null ) {
-                                if ( $.type( merge ) === 'string' ) {
-                                    merge = merge.split( '|' );
-                                }
+							redux_change( $( this ).closest( 'label' ).find( 'input[type="radio"]' ) );
+						}
+					}
+				);
 
-                                $.each( data, function ( index, value ) {
-                                    if ( ( merge === true || $.inArray( index, merge ) != -1 ) && $.type( redux.options[index] ) === 'object' ) {
-                                        data[index] = $.extend( redux.options[index], data[index] );
-                                    }
-                                } );
-                            }
+				// Used to display a full image preview of a tile/pattern.
+				el.find( '.tiles' ).qtip(
+					{
+						content: {
+							text: function ( event, api ) {
+								return "<img src='" + $( this ).attr( 'rel' ) + "' style='max-width:150px;' alt='' />";
+							},
+						},
+						style: 'qtip-tipsy',
+						position: {
+							my: 'top center', // Position my top left...
+							at: 'bottom center', // at the bottom right of...
+						}
+					}
+				);
+			}
+		);
 
-                            if ( presets !== undefined && presets !== null ) {
-
-                                var parentElem = $( this ).parents( '.redux-main' );
-
-                                if ( parentElem.find( '.bb-confirm-dialog-wrapper' ).length === 0 ) {
-                                    parentElem.append( '<div class="bb-confirm-dialog-wrapper"><div class="bb-confirm-dialog-overlay"></div><div class="bb-confirm-dialog">Your current options will be replaced with the values of this preset. Would you like to proceed? <div class="bb-button-wrap"><button class="bb-confirm button button-primary" type="button" data-action="confirm">Yes</button><button class="bb-cancel button" type="button" data-action="cancel">Cancel</button></div></div></div>' );
-                                }
-
-                                $( document ).on( 'click', '.bb-button-wrap .button', function () {
-
-                                    var action = $( this ).data( 'action' );
-                                    $( '.bb-confirm-dialog-wrapper' ).remove();
-
-                                    if ( action === 'confirm' ) {
-                                        el.find( 'label[for="' + id + '"]' ).addClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr( "checked", true );
-                                        if ( $( '#import-code-value' ).length === 0 ) {
-                                            $( this ).append( '<textarea id="import-code-value" style="display:none;" name="' + redux.args.opt_name + '[import_code]">' + JSON.stringify( data ) + '</textarea>' );
-                                        } else {
-                                            $( '#import-code-value' ).val( JSON.stringify( data ) );
-                                        }
-                                        if ( $( '#publishing-action #publish' ).length !== 0 ) {
-                                            $( '#publish' ).click();
-                                        } else {
-                                            $( '#redux-import' ).click();
-                                        }
-                                    } else {
-
-                                    }
-
-                                } );
-
-                            } else {
-                            }
-
-                            return false;
-                        } else {
-                            el.find( 'label[for="' + id + '"]' ).addClass( 'redux-image-select-selected' ).find( "input[type='radio']" ).attr(
-                                "checked", true
-                                ).trigger( 'change' );
-
-                            redux_change( $( this ).closest( 'label' ).find( 'input[type="radio"]' ) );
-                        }
-                    }
-                );
-
-                // Used to display a full image preview of a tile/pattern
-                el.find( '.tiles' ).qtip(
-                    {
-                        content: {
-                            text: function ( event, api ) {
-                                return "<img src='" + $( this ).attr( 'rel' ) + "' style='max-width:150px;' alt='' />";
-                            },
-                        },
-                        style: 'qtip-tipsy',
-                        position: {
-                            my: 'top center', // Position my top left...
-                            at: 'bottom center', // at the bottom right of...
-                        }
-                    }
-                );
-            }
-        );
-
-    };
+	};
 } )( jQuery );
