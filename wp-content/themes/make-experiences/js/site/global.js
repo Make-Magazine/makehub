@@ -32,9 +32,17 @@ jQuery(document).ready(function () {
 			jQuery('.mp-table tbody tr:eq(1) td:eq(0)').text("Upgrade Discount");
 		}
    }
-   if(window.location.pathname == '/register/contest/') {
+	if(window.location.pathname == '/register/contest/') {
 	   jQuery("label[for='mpgft-signup-gift-checkbox1']").remove();
-   }
+	}
+	if (window.location.href.indexOf('mp-membership') > -1) {
+		jQuery(".mepr-account-update").each(function(){
+			var updateLink = jQuery(this).attr("href");
+			var insertPoint = updateLink.lastIndexOf("?") + 1;
+			updateLink = updateLink.substring(0,n) + '/mp-subscriptions/' + updateLink.substring(n);
+			jQuery(this).attr("href", updateLink);
+		});
+	}
 });
 
 function GetURLParameter(sParam) {

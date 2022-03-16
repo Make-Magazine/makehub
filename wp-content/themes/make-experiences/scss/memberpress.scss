@@ -19,9 +19,9 @@
 }
 
 // Buddypress membership tab
-.my-account.mp-membership.mp-info {
-	h3 {
-		margin: 15px 0;
+.my-account.mp-membership {
+	.bb-profile-grid h3 {
+		margin: 15px 0 !important;
 	}
 	.bp-subnavs { display: none; }
 }
