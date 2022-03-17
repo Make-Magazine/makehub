@@ -101,7 +101,16 @@ abstract class GravityView_Field {
 	public $contexts = array( 'single', 'multiple', 'edit', 'export' );
 
 	/**
-	 * @var string An icon that represents the field type in the field picker
+	 * @var string An icon that represents the field type in the field picker.
+	 *
+	 * Supports these icon formats:
+	 * - Gravity Forms icon class: The string starts with "gform-icon". Note: the site must be running GF 2.5+. No need to also pass "gform-icon".
+	 * - Dashicons: The string starts with "dashicons". No need to also pass "dashicons".
+	 * - Inline SVG: Starts with "data:"
+	 * - If not matching those formats, the value will be used as a CSS class in a `<i>` element.
+	 *
+	 * @since 2.8.1
+	 * @see GravityView_Admin_View_Item::getOutput
 	 */
 	public $icon = 'dashicons-admin-generic';
 
@@ -141,7 +150,7 @@ abstract class GravityView_Field {
 		 */
 		add_filter( sprintf( 'gravityview_template_%s_options', $this->name ), array( &$this, 'field_options' ), 10, 6 );
 
-		add_filter( 'gravityview/sortable/field_blacklist', array( $this, '_filter_sortable_fields' ), 1 );
+		add_filter( 'gravityview/sortable/field_blocklist', array( $this, '_filter_sortable_fields' ), 1 );
 
 		if( $this->entry_meta_key ) {
 			add_filter( 'gform_entry_meta', array( $this, 'add_entry_meta' ) );
@@ -320,7 +329,7 @@ abstract class GravityView_Field {
 	 *
 	 * @return array Modified merge tags
 	 */
-	public function _filter_gform_custom_merge_tags( $custom_merge_tags = array(), $form_id, $fields = array(), $element_id = '' ) {
+	public function _filter_gform_custom_merge_tags( $custom_merge_tags = array(), $form_id = 0, $fields = array(), $element_id = '' ) {
 
 		$form = GVCommon::get_form( $form_id );
 
@@ -460,7 +469,13 @@ abstract class GravityView_Field {
 		return apply_filters( 'gravityview_field_support_options', $options );
 	}
 
-	function add_field_support( $key = '', &$field_options ) {
+	/**
+	 * @param string $key
+	 * @param array $field_options
+	 *
+	 * @return array
+	 */
+	function add_field_support( $key, &$field_options ) {
 
 		$options = $this->field_support_options();
 

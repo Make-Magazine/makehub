@@ -118,7 +118,7 @@ class Views_Route extends Route {
 		}
 
 		/**
-		 * @filter `gravityview/rest/entry/fields` Whitelist more entry fields that are output in regular REST requests.
+		 * @filter `gravityview/rest/entry/fields` Allow more entry fields that are output in regular REST requests.
 		 * @param[in,out] array $allowed The allowed ones, default by_visible, by_position( "context_*" ), i.e. as set in the view.
 		 * @param \GV\View $view The view.
 		 * @param \GV\Entry $entry The entry.
@@ -140,7 +140,7 @@ class Views_Route extends Route {
 		$return = array();
 
 		$renderer = new \GV\Field_Renderer();
-		
+
 		$used_ids = array();
 
 		foreach ( $allowed as $field ) {
@@ -438,9 +438,9 @@ class Views_Route extends Route {
 				case 'not_public':
 				case 'embed_only':
 				case 'no_direct_access':
-					return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this content.', 'gravityview' ) );
+					return new \WP_Error( 'rest_forbidden_access_denied', __( 'You are not allowed to access this content.', 'gravityview' ) );
 				case 'no_form_attached':
-					return new \WP_Error( 'rest_forbidden', __( 'This View is not configured properly.', 'gravityview' ) );
+					return new \WP_Error( 'rest_forbidden_no_form_attached', __( 'This View is not configured properly.', 'gravityview' ) );
 				default:
 					return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to access this content.', 'gravityview' ) );
 			}
