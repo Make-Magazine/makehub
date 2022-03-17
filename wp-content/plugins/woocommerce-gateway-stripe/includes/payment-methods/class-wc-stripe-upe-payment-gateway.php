@@ -20,7 +20,9 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 		WC_Stripe_UPE_Payment_Method_Giropay::class,
 		WC_Stripe_UPE_Payment_Method_Eps::class,
 		WC_Stripe_UPE_Payment_Method_Bancontact::class,
+		WC_Stripe_UPE_Payment_Method_Boleto::class,
 		WC_Stripe_UPE_Payment_Method_Ideal::class,
+		WC_Stripe_UPE_Payment_Method_Oxxo::class,
 		WC_Stripe_UPE_Payment_Method_Sepa::class,
 		WC_Stripe_UPE_Payment_Method_P24::class,
 		WC_Stripe_UPE_Payment_Method_Sofort::class,
@@ -119,7 +121,7 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 		$this->maybe_init_pre_orders();
 
 		$main_settings              = get_option( 'woocommerce_stripe_settings' );
-		$this->title                = $this->get_option( 'title_upe' );
+		$this->title                = ! empty( $this->get_option( 'title_upe' ) ) ? $this->get_option( 'title_upe' ) : $this->form_fields['title_upe']['default'];
 		$this->description          = '';
 		$this->enabled              = $this->get_option( 'enabled' );
 		$this->saved_cards          = 'yes' === $this->get_option( 'saved_cards' );
@@ -156,6 +158,23 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 	}
 
 	/**
+	 * Hides refund through stripe when payment method does not allow refund
+	 *
+	 * @param WC_Order $order
+	 *
+	 * @return array|bool
+	 */
+	public function can_refund_order( $order ) {
+		$upe_payment_type = $order->get_meta( '_stripe_upe_payment_type' );
+
+		if ( ! $upe_payment_type ) {
+			return true;
+		}
+
+		return $this->payment_methods[ $upe_payment_type ]->can_refund_via_stripe();
+	}
+
+	/**
 	 * Return the gateway icon - None for UPE.
 	 */
 	public function get_icon() {
@@ -173,23 +192,18 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 	}
 
 	/**
-	 * Maybe override the parent admin_options method.
-	 */
-	public function admin_options() {
-		if ( ! WC_Stripe_Feature_Flags::is_upe_settings_redesign_enabled() ) {
-			parent::admin_options();
-
-			return;
-		}
-
-		do_action( 'wc_stripe_gateway_admin_options_wrapper', $this );
-	}
-
-	/**
 	 * Outputs scripts used for stripe payment
 	 */
 	public function payment_scripts() {
-		if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) && ! is_add_payment_method_page() ) {
+		if (
+			! is_product()
+			&& ! WC_Stripe_Helper::has_cart_or_checkout_on_current_page()
+			&& ! isset( $_GET['pay_for_order'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			&& ! is_add_payment_method_page() ) {
+			return;
+		}
+
+		if ( is_product() && ! WC_Stripe_Helper::should_load_scripts_on_product_page() ) {
 			return;
 		}
 
@@ -329,7 +343,7 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 		// Pre-orders and free trial subscriptions don't require payments.
 		$stripe_params['isPaymentNeeded'] = $this->is_payment_needed( isset( $order_id ) ? $order_id : null );
 
-		return $stripe_params;
+		return array_merge( $stripe_params, WC_Stripe_Helper::get_localized_messages() );
 	}
 
 	/**
@@ -420,10 +434,13 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 			<?php if ( $this->testmode ) : ?>
 				<p class="testmode-info">
 					<?php
-					echo sprintf(
-						/* translators: link to Stripe testing page */
-						__( '<strong>Test mode:</strong> use the test VISA card 4242424242424242 with any expiry date and CVC. Other payment methods may redirect to a Stripe test page to authorize payment. More test card numbers are listed <a href="%s" target="_blank">here</a>.', 'woocommerce-gateway-stripe' ),
-						'https://stripe.com/docs/testing'
+					printf(
+					/* translators: 1) HTML strong open tag 2) HTML strong closing tag 3) HTML anchor open tag 2) HTML anchor closing tag */
+						esc_html__( '%1$sTest mode:%2$s use the test VISA card 4242424242424242 with any expiry date and CVC. Other payment methods may redirect to a Stripe test page to authorize payment. More test card numbers are listed %3$shere%4$s.', 'woocommerce-gateway-stripe' ),
+						'<strong>',
+						'</strong>',
+						'<a href="https://stripe.com/docs/testing" target="_blank">',
+						'</a>'
 					);
 					?>
 				</p>
@@ -489,6 +506,17 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 		$save_payment_method       = $this->has_subscription( $order_id ) || ! empty( $_POST[ 'wc-' . self::ID . '-new-payment-method' ] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$selected_upe_payment_type = ! empty( $_POST['wc_stripe_selected_upe_payment_type'] ) ? wc_clean( wp_unslash( $_POST['wc_stripe_selected_upe_payment_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+		$statement_descriptor                  = ! empty( $this->get_option( 'statement_descriptor' ) ) ? str_replace( "'", '', $this->get_option( 'statement_descriptor' ) ) : '';
+		$short_statement_descriptor            = ! empty( $this->get_option( 'short_statement_descriptor' ) ) ? str_replace( "'", '', $this->get_option( 'short_statement_descriptor' ) ) : '';
+		$is_short_statement_descriptor_enabled = ! empty( $this->get_option( 'is_short_statement_descriptor_enabled' ) ) && 'yes' === $this->get_option( 'is_short_statement_descriptor_enabled' );
+		$descriptor                            = null;
+		if ( 'card' === $selected_upe_payment_type && $is_short_statement_descriptor_enabled && ! ( empty( $short_statement_descriptor ) && empty( $statement_descriptor ) ) ) {
+			// Use the shortened statement descriptor for card transactions only
+			$descriptor = WC_Stripe_Helper::get_dynamic_statement_descriptor( $short_statement_descriptor, $order, $statement_descriptor );
+		} elseif ( ! empty( $statement_descriptor ) ) {
+			$descriptor = WC_Stripe_Helper::clean_statement_descriptor( $statement_descriptor );
+		}
+
 		if ( $payment_intent_id ) {
 			if ( $payment_needed ) {
 				$amount           = $order->get_total();
@@ -496,10 +524,11 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 				$converted_amount = WC_Stripe_Helper::get_stripe_amount( $amount, $currency );
 
 				$request = [
-					'amount'      => $converted_amount,
-					'currency'    => $currency,
+					'amount'               => $converted_amount,
+					'currency'             => $currency,
+					'statement_descriptor' => $descriptor,
 					/* translators: 1) blog name 2) order number */
-					'description' => sprintf( __( '%1$s - Order %2$s', 'woocommerce-gateway-stripe' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() ),
+					'description'          => sprintf( __( '%1$s - Order %2$s', 'woocommerce-gateway-stripe' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() ),
 				];
 
 				// Get user/customer for order.
@@ -515,6 +544,10 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 				if ( '' !== $selected_upe_payment_type ) {
 					// Only update the payment_method_types if we have a reference to the payment type the customer selected.
 					$request['payment_method_types'] = [ $selected_upe_payment_type ];
+					$this->set_payment_method_title_for_order( $order, $selected_upe_payment_type );
+					if ( ! $this->payment_methods[ $selected_upe_payment_type ]->is_allowed_on_country( $order->get_billing_country() ) ) {
+						throw new \Exception( __( 'This payment method is not available on the selected country', 'woocommerce-gateway-stripe' ) );
+					}
 				}
 
 				if ( $save_payment_method ) {
@@ -522,6 +555,11 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 				}
 
 				$request['metadata'] = $this->get_metadata_from_order( $order );
+
+				WC_Stripe_Helper::add_payment_intent_to_order( $payment_intent_id, $order );
+				$order->update_status( 'pending', __( 'Awaiting payment.', 'woocommerce-gateway-stripe' ) );
+				$order->update_meta_data( '_stripe_upe_payment_type', $selected_upe_payment_type );
+				$order->save();
 
 				$this->stripe_request(
 					"payment_intents/$payment_intent_id",
@@ -677,7 +715,7 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 			} else {
 				$order->payment_complete();
 			}
-			$this->set_payment_method_title_for_order( $order, $payment_method_type, $payment_method_details );
+			$this->set_payment_method_title_for_order( $order, $payment_method_type );
 
 			// Remove cart.
 			if ( isset( WC()->cart ) ) {
@@ -887,7 +925,7 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 			$order->payment_complete();
 		}
 		$this->save_intent_to_order( $order, $intent );
-		$this->set_payment_method_title_for_order( $order, $payment_method_type, $payment_method_details );
+		$this->set_payment_method_title_for_order( $order, $payment_method_type );
 		$order->update_meta_data( '_stripe_upe_redirect_processed', true );
 		$order->save();
 	}
@@ -1086,12 +1124,11 @@ class WC_Stripe_UPE_Payment_Gateway extends WC_Gateway_Stripe {
 	 *
 	 * @param WC_Order   $order WC Order being processed.
 	 * @param string     $payment_method_type Stripe payment method key.
-	 * @param array|bool $payment_method_details Array of payment method details from charge or false.
 	 *
 	 * @since 5.5.0
 	 * @version 5.5.0
 	 */
-	public function set_payment_method_title_for_order( $order, $payment_method_type, $payment_method_details ) {
+	public function set_payment_method_title_for_order( $order, $payment_method_type ) {
 		if ( ! isset( $this->payment_methods[ $payment_method_type ] ) ) {
 			return;
 		}

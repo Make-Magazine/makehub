@@ -404,14 +404,17 @@ class WC_Stripe_Intent_Controller {
 		if ( $payment_intent_id ) {
 
 			$request = [
-				'amount'   => WC_Stripe_Helper::get_stripe_amount( $amount, strtolower( $currency ) ),
-				'currency' => strtolower( $currency ),
-				'metadata' => $gateway->get_metadata_from_order( $order ),
+				'amount'      => WC_Stripe_Helper::get_stripe_amount( $amount, strtolower( $currency ) ),
+				'currency'    => strtolower( $currency ),
+				'metadata'    => $gateway->get_metadata_from_order( $order ),
+				/* translators: 1) blog name 2) order number */
+				'description' => sprintf( __( '%1$s - Order %2$s', 'woocommerce-gateway-stripe' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() ),
 			];
 
 			if ( '' !== $selected_upe_payment_type ) {
 				// Only update the payment_method_types if we have a reference to the payment type the customer selected.
 				$request['payment_method_types'] = [ $selected_upe_payment_type ];
+				$order->update_meta_data( '_stripe_upe_payment_type', $selected_upe_payment_type );
 			}
 			if ( ! empty( $customer ) && $customer->get_id() ) {
 				$request['customer'] = $customer->get_id();
@@ -428,6 +431,10 @@ class WC_Stripe_Intent_Controller {
 				$level3_data,
 				$order
 			);
+
+			$order->update_status( 'pending', __( 'Awaiting payment.', 'woocommerce-gateway-stripe' ) );
+			$order->save();
+			WC_Stripe_Helper::add_payment_intent_to_order( $payment_intent_id, $order );
 		}
 
 		return [
@@ -569,7 +576,7 @@ class WC_Stripe_Intent_Controller {
 			if ( empty( $intent_id_received ) || $intent_id_received !== $intent_id ) {
 				$note = sprintf(
 					/* translators: %1: transaction ID of the payment or a translated string indicating an unknown ID. */
-					esc_html__( 'A payment with ID %s was used in an attempt to pay for this order. This payment intent ID does not match any payments for this order, so it was ignored and the order was not updated.', 'woocommerce-gateway-stripe' ),
+					__( 'A payment with ID %s was used in an attempt to pay for this order. This payment intent ID does not match any payments for this order, so it was ignored and the order was not updated.', 'woocommerce-gateway-stripe' ),
 					$intent_id_received
 				);
 				$order->add_order_note( $note );

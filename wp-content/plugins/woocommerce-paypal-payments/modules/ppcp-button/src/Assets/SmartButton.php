@@ -45,6 +45,13 @@ class SmartButton implements SmartButtonInterface {
 	private $module_url;
 
 	/**
+	 * The assets version.
+	 *
+	 * @var string
+	 */
+	private $version;
+
+	/**
 	 * The Session Handler.
 	 *
 	 * @var SessionHandler
@@ -115,9 +122,17 @@ class SmartButton implements SmartButtonInterface {
 	private $payment_token_repository;
 
 	/**
+	 * 3-letter currency code of the shop.
+	 *
+	 * @var string
+	 */
+	private $currency;
+
+	/**
 	 * SmartButton constructor.
 	 *
 	 * @param string                 $module_url The URL to the module.
+	 * @param string                 $version                            The assets version.
 	 * @param SessionHandler         $session_handler The Session Handler.
 	 * @param Settings               $settings The Settings.
 	 * @param PayerFactory           $payer_factory The Payer factory.
@@ -129,9 +144,11 @@ class SmartButton implements SmartButtonInterface {
 	 * @param Environment            $environment The environment object.
 	 * @param PaymentTokenRepository $payment_token_repository The payment token repository.
 	 * @param SettingsStatus         $settings_status The Settings status helper.
+	 * @param string                 $currency 3-letter currency code of the shop.
 	 */
 	public function __construct(
 		string $module_url,
+		string $version,
 		SessionHandler $session_handler,
 		Settings $settings,
 		PayerFactory $payer_factory,
@@ -142,10 +159,12 @@ class SmartButton implements SmartButtonInterface {
 		MessagesApply $messages_apply,
 		Environment $environment,
 		PaymentTokenRepository $payment_token_repository,
-		SettingsStatus $settings_status
+		SettingsStatus $settings_status,
+		string $currency
 	) {
 
 		$this->module_url               = $module_url;
+		$this->version                  = $version;
 		$this->session_handler          = $session_handler;
 		$this->settings                 = $settings;
 		$this->payer_factory            = $payer_factory;
@@ -157,6 +176,7 @@ class SmartButton implements SmartButtonInterface {
 		$this->environment              = $environment;
 		$this->payment_token_repository = $payment_token_repository;
 		$this->settings_status          = $settings_status;
+		$this->currency                 = $currency;
 	}
 
 	/**
@@ -205,11 +225,12 @@ class SmartButton implements SmartButtonInterface {
 				function ( array $default_fields, $id ) use ( $subscription_helper ) : array {
 					if ( is_user_logged_in() && $this->settings->has( 'vault_enabled' ) && $this->settings->get( 'vault_enabled' ) && CreditCardGateway::ID === $id ) {
 
-						if ( ! $subscription_helper->cart_contains_subscription() ) {
-							$default_fields['card-vault'] = sprintf(
-								'<p class="form-row form-row-wide"><label for="vault"><input class="ppcp-credit-card-vault" type="checkbox" id="ppcp-credit-card-vault" name="vault">%s</label></p>',
-								esc_html__( 'Save your Credit Card', 'woocommerce-paypal-payments' )
-							);
+						$default_fields['card-vault'] = sprintf(
+							'<p class="form-row form-row-wide"><label for="ppcp-credit-card-vault"><input class="ppcp-credit-card-vault" type="checkbox" id="ppcp-credit-card-vault" name="vault">%s</label></p>',
+							esc_html__( 'Save your Credit Card', 'woocommerce-paypal-payments' )
+						);
+						if ( $subscription_helper->cart_contains_subscription() || $subscription_helper->order_pay_contains_subscription() ) {
+							$default_fields['card-vault'] = '';
 						}
 
 						$tokens = $this->payment_token_repository->all_for_user_id( get_current_user_id() );
@@ -381,9 +402,6 @@ class SmartButton implements SmartButtonInterface {
 		if ( ! is_checkout() && ! $buttons_enabled ) {
 			return false;
 		}
-		if ( ! $this->can_save_vault_token() && $this->has_subscriptions() ) {
-			return false;
-		}
 
 		$load_script = false;
 		if ( is_checkout() && $this->settings->has( 'dcc_enabled' ) && $this->settings->get( 'dcc_enabled' ) ) {
@@ -396,17 +414,17 @@ class SmartButton implements SmartButtonInterface {
 		if ( in_array( $this->context(), array( 'pay-now', 'checkout' ), true ) && $this->can_render_dcc() ) {
 			wp_enqueue_style(
 				'ppcp-hosted-fields',
-				$this->module_url . '/assets/css/hosted-fields.css',
+				untrailingslashit( $this->module_url ) . '/assets/css/hosted-fields.css',
 				array(),
-				1
+				$this->version
 			);
 		}
 		if ( $load_script ) {
 			wp_enqueue_script(
 				'ppcp-smart-button',
-				$this->module_url . '/assets/js/button.js',
+				untrailingslashit( $this->module_url ) . '/assets/js/button.js',
 				array( 'jquery' ),
-				'1.3.2',
+				$this->version,
 				true
 			);
 
@@ -431,6 +449,12 @@ class SmartButton implements SmartButtonInterface {
 				|| ! $product->is_in_stock()
 			)
 		) {
+			return;
+		}
+
+		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+
+		if ( ! isset( $available_gateways['ppcp-gateway'] ) ) {
 			return;
 		}
 
@@ -560,11 +584,12 @@ class SmartButton implements SmartButtonInterface {
 			return;
 		}
 
-		$label = 'checkout' === $this->context() ? __( 'Place order', 'woocommerce-paypal-payments' ) : __( 'Pay for order', 'woocommerce-paypal-payments' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		$label = 'checkout' === $this->context() ? apply_filters( 'woocommerce_order_button_text', __( 'Place order', 'woocommerce' ) ) : __( 'Pay for order', 'woocommerce' );
 
 		printf(
 			'<div id="%1$s" style="display:none;">
-                        <button class="button alt">%2$s</button>
+                        <button class="button alt ppcp-dcc-order-button">%2$s</button>
                     </div><div id="payments-sdk__contingency-lightbox"></div><style id="ppcp-hide-dcc">.payment_method_ppcp-credit-card-gateway {display:none;}</style>',
 			esc_attr( $id ),
 			esc_html( $label )
@@ -587,7 +612,7 @@ class SmartButton implements SmartButtonInterface {
 			return false;
 		}
 
-		return is_user_logged_in();
+		return true;
 	}
 
 	/**
@@ -602,6 +627,10 @@ class SmartButton implements SmartButtonInterface {
 		if ( is_product() ) {
 			return $this->subscription_helper->current_product_is_subscription();
 		}
+		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+			return $this->subscription_helper->order_pay_contains_subscription();
+		}
+
 		return $this->subscription_helper->cart_contains_subscription();
 	}
 
@@ -634,10 +663,11 @@ class SmartButton implements SmartButtonInterface {
 		$localize = array(
 			'script_attributes'              => $this->attributes(),
 			'data_client_id'                 => array(
-				'set_attribute' => ( is_checkout() && $this->dcc_is_enabled() ) || $this->can_save_vault_token(),
-				'endpoint'      => home_url( \WC_AJAX::get_endpoint( DataClientIdEndpoint::ENDPOINT ) ),
-				'nonce'         => wp_create_nonce( DataClientIdEndpoint::nonce() ),
-				'user'          => get_current_user_id(),
+				'set_attribute'     => ( is_checkout() && $this->dcc_is_enabled() ) || $this->can_save_vault_token(),
+				'endpoint'          => home_url( \WC_AJAX::get_endpoint( DataClientIdEndpoint::ENDPOINT ) ),
+				'nonce'             => wp_create_nonce( DataClientIdEndpoint::nonce() ),
+				'user'              => get_current_user_id(),
+				'has_subscriptions' => $this->has_subscriptions(),
 			),
 			'redirect'                       => wc_get_checkout_url(),
 			'context'                        => $this->context(),
@@ -684,17 +714,18 @@ class SmartButton implements SmartButtonInterface {
 				'wrapper'           => '#ppcp-hosted-fields',
 				'mini_cart_wrapper' => '#ppcp-hosted-fields-mini-cart',
 				'labels'            => array(
-					'credit_card_number' => '',
-					'cvv'                => '',
-					'mm_yy'              => __( 'MM/YY', 'woocommerce-paypal-payments' ),
-					'fields_not_valid'   => __(
+					'credit_card_number'       => '',
+					'cvv'                      => '',
+					'mm_yy'                    => __( 'MM/YY', 'woocommerce-paypal-payments' ),
+					'fields_not_valid'         => __(
 						'Unfortunately, your credit card details are not valid.',
 						'woocommerce-paypal-payments'
 					),
-					'card_not_supported' => __(
+					'card_not_supported'       => __(
 						'Unfortunately, we do not support your credit card.',
 						'woocommerce-paypal-payments'
 					),
+					'cardholder_name_required' => __( 'Cardholder\'s first and last name are required, please fill the checkout form required fields.', 'woocommerce-paypal-payments' ),
 				),
 				'valid_cards'       => $this->dcc_applies->valid_cards(),
 				'contingency'       => $this->get_3ds_contingency(),
@@ -749,7 +780,7 @@ class SmartButton implements SmartButtonInterface {
 
 		$params = array(
 			'client-id'        => $this->client_id,
-			'currency'         => get_woocommerce_currency(),
+			'currency'         => $this->currency,
 			'integration-date' => PAYPAL_INTEGRATION_DATE,
 			'components'       => implode( ',', $this->components() ),
 			'vault'            => $this->can_save_vault_token() ? 'true' : 'false',
@@ -997,38 +1028,50 @@ class SmartButton implements SmartButtonInterface {
 	}
 
 	/**
-	 * Return action name PayPal buttons will be rendered at on checkout page.
+	 * Returns the action name that PayPal button will use for rendering on the checkout page.
 	 *
 	 * @return string Action name.
 	 */
 	private function checkout_button_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal button will use for rendering on the checkout page.
+		 */
 		return (string) apply_filters( 'woocommerce_paypal_payments_checkout_button_renderer_hook', 'woocommerce_review_order_after_payment' );
 	}
 
 	/**
-	 * Return action name PayPal DCC button will be rendered at on checkout page.
+	 * Returns the action name that PayPal DCC button will use for rendering on the checkout page.
 	 *
 	 * @return string
 	 */
 	private function checkout_dcc_button_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal DCC button will use for rendering on the checkout page.
+		 */
 		return (string) apply_filters( 'woocommerce_paypal_payments_checkout_dcc_renderer_hook', 'woocommerce_review_order_after_submit' );
 	}
 
 	/**
-	 * Return action name PayPal button and Pay Later message will be rendered at on pay-order page.
+	 * Returns the action name that PayPal button and Pay Later message will use for rendering on the pay-order page.
 	 *
 	 * @return string
 	 */
 	private function pay_order_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal button and Pay Later message will use for rendering on the pay-order page.
+		 */
 		return (string) apply_filters( 'woocommerce_paypal_payments_pay_order_dcc_renderer_hook', 'woocommerce_pay_order_after_submit' );
 	}
 
 	/**
-	 * Return action name PayPal button will be rendered next to Proceed to checkout button (normally displayed in cart).
+	 * Returns action name that PayPal button will use for rendering next to Proceed to checkout button (normally displayed in cart).
 	 *
 	 * @return string
 	 */
 	private function proceed_to_checkout_button_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal button will use for rendering next to Proceed to checkout button (normally displayed in cart).
+		 */
 		return (string) apply_filters(
 			'woocommerce_paypal_payments_proceed_to_checkout_button_renderer_hook',
 			'woocommerce_proceed_to_checkout'
@@ -1036,11 +1079,14 @@ class SmartButton implements SmartButtonInterface {
 	}
 
 	/**
-	 * Return action name PayPal button will be rendered in the WC mini cart.
+	 * Returns the action name that PayPal button will use for rendering in the WC mini cart.
 	 *
 	 * @return string
 	 */
 	private function mini_cart_button_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal button will use for rendering in the WC mini cart.
+		 */
 		return (string) apply_filters(
 			'woocommerce_paypal_payments_mini_cart_button_renderer_hook',
 			'woocommerce_widget_shopping_cart_after_buttons'
@@ -1048,11 +1094,14 @@ class SmartButton implements SmartButtonInterface {
 	}
 
 	/**
-	 * Return action name PayPal button and Pay Later message will be rendered at on the single product page.
+	 * Returns the action name that PayPal button and Pay Later message will use for rendering on the single product page.
 	 *
 	 * @return string
 	 */
 	private function single_product_renderer_hook(): string {
+		/**
+		 * The filter returning the action name that PayPal button and Pay Later message will use for rendering on the single product page.
+		 */
 		return (string) apply_filters( 'woocommerce_paypal_payments_single_product_renderer_hook', 'woocommerce_single_product_summary' );
 	}
 }

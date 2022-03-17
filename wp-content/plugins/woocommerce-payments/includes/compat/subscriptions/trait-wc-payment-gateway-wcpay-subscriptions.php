@@ -37,7 +37,7 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 	/**
 	 * Process the payment for a given order.
 	 *
-	 * @param WC_Cart                   $cart Cart.
+	 * @param WC_Cart|null              $cart Cart.
 	 * @param WCPay\Payment_Information $payment_information Payment info.
 	 * @param array                     $additional_api_parameters Any additional fields required for payment method to pass to API.
 	 *
@@ -92,21 +92,43 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 			return;
 		}
 
-		$this->supports = array_merge(
-			$this->supports,
-			[
-				'subscriptions',
-				'subscription_cancellation',
-				'subscription_suspension',
-				'subscription_reactivation',
-				'subscription_amount_changes',
-				'subscription_date_changes',
-				'subscription_payment_method_change',
-				'subscription_payment_method_change_customer',
-				'subscription_payment_method_change_admin',
-				'multiple_subscriptions',
-			]
-		);
+		/*
+		 * Base set of subscription features to add.
+		 * The WCPay payment gateway supports these feautres
+		 * for both WCPay Subscriptions and WooCommerce Subscriptions.
+		 */
+		$payment_gateway_features = [
+			'multiple_subscriptions',
+			'subscription_cancellation',
+			'subscription_payment_method_change_admin',
+			'subscription_payment_method_change_customer',
+			'subscription_payment_method_change',
+			'subscription_reactivation',
+			'subscription_suspension',
+			'subscriptions',
+		];
+
+		if ( $this->is_subscriptions_plugin_active() ) {
+			/*
+			 * Subscription amount & date changes are only supported
+			 * when WooCommerce Subscriptions is active.
+			 */
+			$payment_gateway_features = array_merge(
+				$payment_gateway_features,
+				[
+					'subscription_amount_changes',
+					'subscription_date_changes',
+				]
+			);
+		} else {
+			/*
+			 * The gateway_scheduled_payments feature is only supported
+			 * for WCPay Subscriptions.
+			 */
+			$payment_gateway_features[] = 'gateway_scheduled_payments';
+		}
+
+		$this->supports = array_merge( $this->supports, $payment_gateway_features );
 
 		add_filter( 'woocommerce_email_classes', [ $this, 'add_emails' ], 20 );
 		add_filter( 'woocommerce_available_payment_gateways', [ $this, 'prepare_order_pay_page' ] );
@@ -236,6 +258,7 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 		$token = $this->get_payment_token( $renewal_order );
 		if ( is_null( $token ) && ! WC_Payments::is_network_saved_cards_enabled() ) {
 			Logger::error( 'There is no saved payment token for order #' . $renewal_order->get_id() );
+			// TODO: Update to use Order_Service->mark_payment_failed.
 			$renewal_order->update_status( 'failed' );
 			return;
 		}
@@ -245,7 +268,7 @@ trait WC_Payment_Gateway_WCPay_Subscriptions_Trait {
 			$this->process_payment_for_order( null, $payment_information );
 		} catch ( API_Exception $e ) {
 			Logger::error( 'Error processing subscription renewal: ' . $e->getMessage() );
-
+			// TODO: Update to use Order_Service->mark_payment_failed.
 			$renewal_order->update_status( 'failed' );
 
 			if ( ! empty( $payment_information ) ) {

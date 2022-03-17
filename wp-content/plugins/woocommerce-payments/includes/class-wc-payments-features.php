@@ -18,33 +18,6 @@ class WC_Payments_Features {
 	const WCPAY_SUBSCRIPTIONS_FLAG_NAME = '_wcpay_feature_subscriptions';
 
 	/**
-	 * Checks whether the Giropay gateway feature is enabled
-	 *
-	 * @return bool
-	 */
-	public static function is_giropay_enabled() {
-		return '1' === get_option( '_wcpay_feature_giropay', '0' );
-	}
-
-	/**
-	 * Checks whether the Sepa gateway feature is enabled
-	 *
-	 * @return bool
-	 */
-	public static function is_sepa_enabled() {
-		return '1' === get_option( '_wcpay_feature_sepa', '0' );
-	}
-
-	/**
-	 * Checks whether the Sofort gateway feature is enabled
-	 *
-	 * @return bool
-	 */
-	public static function is_sofort_enabled() {
-		return '1' === get_option( '_wcpay_feature_sofort', '0' );
-	}
-
-	/**
 	 * Checks whether the UPE gateway is enabled
 	 *
 	 * @return bool
@@ -117,6 +90,15 @@ class WC_Payments_Features {
 	}
 
 	/**
+	 * Checks whether platform checkout is enabled.
+	 *
+	 * @return bool
+	 */
+	public static function is_platform_checkout_enabled() {
+		return '1' === get_option( '_wcpay_feature_platform_checkout', '0' );
+	}
+
+	/**
 	 * Returns feature flags as an array suitable for display on the front-end.
 	 *
 	 * @return bool[]
@@ -128,6 +110,7 @@ class WC_Payments_Features {
 				'upeSettingsPreview'      => self::is_upe_settings_preview_enabled(),
 				'multiCurrency'           => self::is_customer_multi_currency_enabled(),
 				'accountOverviewTaskList' => self::is_account_overview_task_list_enabled(),
+				'platformCheckout'        => self::is_platform_checkout_enabled(),
 			]
 		);
 	}

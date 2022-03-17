@@ -46,10 +46,14 @@ class WC_Payments_Account {
 		add_action( 'admin_init', [ $this, 'maybe_handle_onboarding' ] );
 		add_action( 'admin_init', [ $this, 'maybe_redirect_to_onboarding' ], 11 ); // Run this after the WC setup wizard and onboarding redirection logic.
 		add_action( 'woocommerce_payments_account_refreshed', [ $this, 'handle_instant_deposits_inbox_note' ] );
+		add_action( 'woocommerce_payments_account_refreshed', [ $this, 'handle_loan_approved_inbox_note' ] );
 		add_action( self::INSTANT_DEPOSITS_REMINDER_ACTION, [ $this, 'handle_instant_deposits_inbox_reminder' ] );
 		add_action( self::ACCOUNT_CACHE_REFRESH_ACTION, [ $this, 'handle_account_cache_refresh' ] );
 		add_filter( 'allowed_redirect_hosts', [ $this, 'allowed_redirect_hosts' ] );
 		add_action( 'jetpack_site_registered', [ $this, 'clear_cache' ] );
+
+		// Add capital offer redirection.
+		add_action( 'admin_init', [ $this, 'maybe_redirect_to_capital_offer' ] );
 	}
 
 	/**
@@ -102,7 +106,7 @@ class WC_Payments_Account {
 	 *
 	 * @return bool True if the account is connected, false otherwise, $on_error on error.
 	 */
-	public function is_stripe_connected( $on_error = false ) {
+	public function is_stripe_connected( bool $on_error = false ): bool {
 		try {
 			return $this->try_is_stripe_connected();
 		} catch ( Exception $e ) {
@@ -116,19 +120,29 @@ class WC_Payments_Account {
 	 * @return bool      True if the account is connected, false otherwise.
 	 * @throws Exception Throws exception when unable to detect connection status.
 	 */
-	public function try_is_stripe_connected() {
+	public function try_is_stripe_connected(): bool {
 		$account = $this->get_cached_account_data();
-
 		if ( false === $account ) {
 			throw new Exception( __( 'Failed to detect connection status', 'woocommerce-payments' ) );
 		}
 
-		if ( is_array( $account ) && empty( $account ) ) {
-			// empty means no account.
+		// The empty array indicates that account is not connected yet.
+		return [] !== $account;
+	}
+
+	/**
+	 * Checks if the account has been rejected, assumes the value of false on any account retrieval error.
+	 * Returns false if the account is not connected.
+	 *
+	 * @return bool True if the account is connected and rejected, false otherwise or on error.
+	 */
+	public function is_account_rejected(): bool {
+		if ( ! $this->is_stripe_connected() ) {
 			return false;
 		}
 
-		return true;
+		$account = $this->get_cached_account_data();
+		return strpos( $account['status'] ?? '', 'rejected' ) === 0;
 	}
 
 	/**
@@ -171,9 +185,99 @@ class WC_Payments_Account {
 	 *
 	 * @return string Account statement descriptor.
 	 */
-	public function get_statement_descriptor() {
+	public function get_statement_descriptor() : string {
 		$account = $this->get_cached_account_data();
 		return ! empty( $account ) && isset( $account['statement_descriptor'] ) ? $account['statement_descriptor'] : '';
+	}
+
+	/**
+	 * Gets the business name.
+	 *
+	 * @return string Business profile name.
+	 */
+	public function get_business_name() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['name'] ) ? $account['business_profile']['name'] : '';
+	}
+
+	/**
+	 * Gets the business url.
+	 *
+	 * @return string Business profile url.
+	 */
+	public function get_business_url() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['url'] ) ? $account['business_profile']['url'] : '';
+	}
+
+	/**
+	 * Gets the business support address.
+	 *
+	 * @return array Business profile support address.
+	 */
+	public function get_business_support_address() : array {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_address'] ) ? $account['business_profile']['support_address'] : [];
+	}
+
+	/**
+	 * Gets the business support email.
+	 *
+	 * @return string Business profile support email.
+	 */
+	public function get_business_support_email() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_email'] ) ? $account['business_profile']['support_email'] : '';
+	}
+
+	/**
+	 * Gets the business support phone.
+	 *
+	 * @return string Business profile support phone.
+	 */
+	public function get_business_support_phone() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_phone'] ) ? $account['business_profile']['support_phone'] : '';
+	}
+
+	/**
+	 * Gets the branding logo.
+	 *
+	 * @return string branding logo.
+	 */
+	public function get_branding_logo() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['logo'] ) ? $account['branding']['logo'] : '';
+	}
+
+	/**
+	 * Gets the branding icon.
+	 *
+	 * @return string branding icon.
+	 */
+	public function get_branding_icon() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['icon'] ) ? $account['branding']['icon'] : '';
+	}
+
+	/**
+	 * Gets the branding primary color.
+	 *
+	 * @return string branding primary color.
+	 */
+	public function get_branding_primary_color() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['primary_color'] ) ? $account['branding']['primary_color'] : '';
+	}
+
+	/**
+	 * Gets the branding secondary color.
+	 *
+	 * @return string branding secondary color.
+	 */
+	public function get_branding_secondary_color() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['secondary_color'] ) ? $account['branding']['secondary_color'] : '';
 	}
 
 	/**
@@ -194,6 +298,30 @@ class WC_Payments_Account {
 	public function get_fees() {
 		$account = $this->get_cached_account_data();
 		return ! empty( $account ) && isset( $account['fees'] ) ? $account['fees'] : [];
+	}
+
+	/**
+	 * Gets the current account loan data for rendering on the settings pages.
+	 *
+	 * @return array loan data.
+	 */
+	public function get_capital() {
+		$account = $this->get_cached_account_data();
+		return ! empty( $account ) && isset( $account['capital'] ) && ! empty( $account['capital'] ) ? $account['capital'] : [
+			'loans'              => [],
+			'has_active_loan'    => false,
+			'has_previous_loans' => false,
+		];
+	}
+
+	/**
+	 * Gets the current account email for rendering on the settings page.
+	 *
+	 * @return string Email.
+	 */
+	public function get_account_email(): string {
+		$account = $this->get_cached_account_data();
+		return $account['email'] ?? '';
 	}
 
 	/**
@@ -233,6 +361,46 @@ class WC_Payments_Account {
 			$filtered_services_config[ $service_id ] = apply_filters( 'wcpay_prepare_fraud_config', $config, $service_id );
 		}
 		return $filtered_services_config;
+	}
+
+	/**
+	 * Checks if the request is for the Capital view offer redirection page, and redirects to the offer if so.
+	 *
+	 * Only admins are be able to perform this action. The redirect doesn't happen if the request is an AJAX request.
+	 * This method will end execution after the redirect if the user requests and is allowed to view the loan offer.
+	 */
+	public function maybe_redirect_to_capital_offer() {
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
+		// Safety check to prevent non-admin users to be redirected to the view offer page.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		// This is an automatic redirection page, used to authenticate users that come from the offer email. For this reason
+		// we're not using a nonce. The GET parameter accessed here is just to indicate that we should process the redirection.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['wcpay-loan-offer'] ) ) {
+			return;
+		}
+
+		$return_url  = $this->get_overview_page_url();
+		$refresh_url = add_query_arg( [ 'wcpay-loan-offer' => '' ], admin_url( 'admin.php' ) );
+
+		try {
+			$capital_link = $this->payments_api_client->get_capital_link( 'capital_financing_offer', $return_url, $refresh_url );
+
+			$this->redirect_to( $capital_link['url'] );
+		} catch ( API_Exception $e ) {
+			$error_url = add_query_arg(
+				[ 'wcpay-loan-offer-error' => '1' ],
+				self::get_overview_page_url()
+			);
+
+			$this->redirect_to( $error_url );
+		}
 	}
 
 	/**
@@ -320,7 +488,7 @@ class WC_Payments_Account {
 	 * Handle onboarding (login/init/redirect) routes
 	 */
 	public function maybe_handle_onboarding() {
-		if ( ! is_admin() ) {
+		if ( ! is_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
 
@@ -406,10 +574,13 @@ class WC_Payments_Account {
 	/**
 	 * Get Stripe connect url
 	 *
+	 * @see WC_Payments_Account::get_onboarding_return_url(). The $wcpay_connect_from param relies on this function returning the corresponding URL.
+	 * @param string $wcpay_connect_from Optional. A page ID representing where the user should be returned to after connecting. Default is '1' - redirects back to the WC Payments overview page.
+	 *
 	 * @return string Stripe account login url.
 	 */
-	public static function get_connect_url() {
-		return wp_nonce_url( add_query_arg( [ 'wcpay-connect' => '1' ] ), 'wcpay-connect' );
+	public static function get_connect_url( $wcpay_connect_from = '1' ) {
+		return wp_nonce_url( add_query_arg( [ 'wcpay-connect' => $wcpay_connect_from ], admin_url( 'admin.php' ) ), 'wcpay-connect' );
 	}
 
 	/**
@@ -482,6 +653,18 @@ class WC_Payments_Account {
 	}
 
 	/**
+	 * Calls wp_safe_redirect and exit.
+	 *
+	 * This method will end the execution immediately after the redirection.
+	 *
+	 * @param string $location The URL to redirect to.
+	 */
+	protected function redirect_to( $location ) {
+		wp_safe_redirect( $location );
+		exit;
+	}
+
+	/**
 	 * Starts the Jetpack connection flow if it's not already fully connected.
 	 *
 	 * @param string $wcpay_connect_from - where the user should be returned to after connecting.
@@ -524,11 +707,29 @@ class WC_Payments_Account {
 	 * @return string
 	 */
 	private function get_onboarding_return_url( $wcpay_connect_from ) {
+		$is_from_subscription_product_publish = preg_match(
+			'/WC_SUBSCRIPTIONS_PUBLISH_PRODUCT_(\d+)/',
+			$wcpay_connect_from,
+			$matches
+		);
+
+		if ( 1 === $is_from_subscription_product_publish ) {
+			return add_query_arg(
+				[ 'wcpay-subscriptions-onboarded' => '1' ],
+				get_edit_post_link( $matches[1], 'url' )
+			);
+		}
+
 		// If connection originated on the WCADMIN payment task page, return there.
 		// else goto the overview page, since now it is GA (earlier it was redirected to plugin settings page).
-		return 'WCADMIN_PAYMENT_TASK' === $wcpay_connect_from
-			? $this->get_payments_task_page_url()
-			: $this->get_overview_page_url();
+		switch ( $wcpay_connect_from ) {
+			case 'WCADMIN_PAYMENT_TASK':
+				return $this->get_payments_task_page_url();
+			case 'WC_SUBSCRIPTIONS_TABLE':
+				return admin_url( add_query_arg( [ 'post_type' => 'shop_subscription' ], 'edit.php' ) );
+			default:
+				return $this->get_overview_page_url();
+		}
 	}
 
 	/**
@@ -609,8 +810,9 @@ class WC_Payments_Account {
 		delete_transient( 'wcpay_stripe_onboarding_state' );
 		$this->clear_cache();
 
-		WC_Payments::get_gateway()->update_option( 'enabled', 'yes' );
-		WC_Payments::get_gateway()->update_option( 'test_mode', 'test' === $mode ? 'yes' : 'no' );
+		$gateway = WC_Payments::get_gateway();
+		$gateway->update_option( 'enabled', 'yes' );
+		$gateway->update_option( 'test_mode', 'test' === $mode ? 'yes' : 'no' );
 
 		// Store a state after completing KYC for tracks. This is stored temporarily in option because
 		// user might not have agreed to TOS yet.
@@ -916,6 +1118,38 @@ class WC_Payments_Account {
 	}
 
 	/**
+	 * Handles adding a note if the merchant has an loan approved.
+	 *
+	 * @param array $account The account data.
+	 *
+	 * @return void
+	 */
+	public function handle_loan_approved_inbox_note( $account ) {
+		require_once WCPAY_ABSPATH . 'includes/notes/class-wc-payments-notes-loan-approved.php';
+
+		// If the account cache is empty, don't try to create an inbox note.
+		if ( empty( $account ) ) {
+			return;
+		}
+
+		// Delete the loan note when the user doesn't have an active loan.
+		if ( ! isset( $account['capital']['has_active_loan'] ) || ! $account['capital']['has_active_loan'] ) {
+			WC_Payments_Notes_Loan_Approved::possibly_delete_note();
+			return;
+		}
+
+		// Get the loan summary.
+		try {
+			$loan_details = $this->payments_api_client->get_active_loan_summary();
+		} catch ( API_Exception $ex ) {
+			return;
+		}
+
+		WC_Payments_Notes_Loan_Approved::set_loan_details( $loan_details );
+		WC_Payments_Notes_Loan_Approved::possibly_add_note();
+	}
+
+	/**
 	 * Handles removing note about merchant Instant Deposits eligibility.
 	 * Hands off to handle_instant_deposits_inbox_note to add the new note.
 	 *
@@ -960,7 +1194,7 @@ class WC_Payments_Account {
 	 * @return bool
 	 */
 	private function is_instant_deposits_eligible( array $account ): bool {
-		if ( ! isset( $account['instant_deposits_eligible'] ) || ! $account['instant_deposits_eligible'] ) {
+		if ( empty( $account['instant_deposits_eligible'] ) ) {
 			return false;
 		}
 
@@ -970,7 +1204,7 @@ class WC_Payments_Account {
 	/**
 	 * Read the account from the WP option we cache it in.
 	 *
-	 * @return array|string|bool
+	 * @return array|bool
 	 */
 	private function read_account_from_cache() {
 		$account_cache = get_option( self::ACCOUNT_OPTION );

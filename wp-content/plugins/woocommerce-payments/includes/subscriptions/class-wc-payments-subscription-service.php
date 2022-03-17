@@ -6,6 +6,7 @@
  */
 
 use WCPay\Exceptions\API_Exception;
+use WCPay\Exceptions\Amount_Too_Small_Exception;
 use WCPay\Logger;
 
 /**
@@ -78,10 +79,14 @@ class WC_Payments_Subscription_Service {
 	 */
 	private $supports = [
 		'gateway_scheduled_payments',
-		'subscriptions',
-		'subscription_suspension',
-		'subscription_reactivation',
+		'multiple_subscriptions',
 		'subscription_cancellation',
+		'subscription_payment_method_change_admin',
+		'subscription_payment_method_change_customer',
+		'subscription_payment_method_change',
+		'subscription_reactivation',
+		'subscription_suspension',
+		'subscriptions',
 	];
 
 	/**
@@ -375,6 +380,19 @@ class WC_Payments_Subscription_Service {
 			}
 		} catch ( \Exception $e ) {
 			Logger::log( sprintf( 'There was a problem creating the WCPay subscription. %s', $e->getMessage() ) );
+
+			if ( $e instanceof Amount_Too_Small_Exception ) {
+				throw new Exception(
+					sprintf(
+						// Translators: The %1 placeholder is a currency formatted price string ($0.50). The %2 and %3 placeholders are opening and closing strong HTML tags.
+						__( 'There was a problem creating your subscription. %1$s doesn\'t meet the %2$sminimum recurring amount%3$s this payment method can process.', 'woocommerce-payments' ),
+						wc_price( $subscription->get_total() ),
+						'<strong>',
+						'</strong>'
+					)
+				);
+			}
+
 			throw new Exception( $checkout_error_message );
 		}
 	}
@@ -601,9 +619,11 @@ class WC_Payments_Subscription_Service {
 		global $theorder;
 
 		if ( wcs_is_subscription( $theorder ) && self::is_wcpay_subscription( $theorder ) ) {
-			unset( $actions['wcs_create_pending_parent'] );
-			unset( $actions['wcs_create_pending_renewal'] );
-			unset( $actions['wcs_process_renewal'] );
+			unset(
+				$actions['wcs_create_pending_parent'],
+				$actions['wcs_create_pending_renewal'],
+				$actions['wcs_process_renewal']
+			);
 		}
 		return $actions;
 	}
@@ -611,7 +631,7 @@ class WC_Payments_Subscription_Service {
 	/**
 	 * Show WCPay Subscription ID on Edit Subscription page.
 	 *
-	 * @param WC_Order $order The order object.
+	 * @param WC_Order|WC_Subscription $order The order object.
 	 */
 	public function show_wcpay_subscription_id( WC_Order $order ) {
 		if ( ! wcs_is_subscription( $order ) || ! self::is_wcpay_subscription( $order ) ) {
@@ -774,7 +794,7 @@ class WC_Payments_Subscription_Service {
 
 		foreach ( $subscription->get_items() as $item ) {
 			$product           = $item->get_product();
-			$sign_up_fee       = floatval( WC_Subscriptions_Product::get_sign_up_fee( $product ) );
+			$sign_up_fee       = (float) WC_Subscriptions_Product::get_sign_up_fee( $product );
 			$one_time_shipping = WC_Subscriptions_Product::needs_one_time_shipping( $product );
 
 			if ( $sign_up_fee ) {
@@ -909,7 +929,7 @@ class WC_Payments_Subscription_Service {
 	/**
 	 * Generates the metadata for a given WC_Order_Item
 	 *
-	 * @param WC_Order_Item $item The order item to generate the meta data for. Can be any order item type including tax, shipping and fees.
+	 * @param WC_Order_Item|WC_Order_Item_Tax $item The order item to generate the metadata for. Can be any order item type including tax, shipping and fees.
 	 * @return array Item metadata.
 	 */
 	private function get_item_metadata( WC_Order_Item $item ) {
