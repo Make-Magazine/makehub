@@ -8,7 +8,7 @@ Tags: integration, payment gateway, stripe
 Requires at least: 5.0
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.8.1
+Stable tag: 1.9.2
 
 Integrate LearnDash LMS with Stripe.
 
@@ -39,6 +39,32 @@ Alternatively, you always have the option to update manually. Please note, a ful
 1. Activate the add-on plugin via the PLUGINS menu.
 
 == Changelog ==
+
+= 1.9.2 =
+
+* Fixed PHP notice in legacy checkout
+* Fixed empty amount in transaction record for recurring payments
+* Fixed incorrect label on translations page
+* Fixed Stripe payment button not honoring the "active" status for the gateway to be active or inactive
+* Fixed LearnDash purchase emails not sending 
+* Fixed checkout not working for amounts under 10 in any currency
+
+= 1.9.1 =
+
+* Fixed error when the Stripe API key was not filled in
+
+= 1.9.0 =
+
+* Added LD 3.6 subscription trial and recurring payment limit support
+* Updated Stripe PHP SDK package
+* Updated don't remove course access on subscription with recurring limit and add filter hook to change its behavior
+* Fixed PHP warning error when saving settings
+* Fixed double account creation and timeout error
+
+= 1.8.2 = 
+
+* Fixed typo in stripe customer id meta key name for live mode
+* Fixed uncaught exception and undefined methods
 
 = 1.8.1 =
 

@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 add_shortcode( 'social-wall', 'sbsw_feed_init' );
 function sbsw_feed_init( $atts, $content = null ) {
+	do_action( 'sbi_before_display_instagram' );
+
 	wp_enqueue_script( 'sbsw_scripts' );
 	$plugins_with_atts = sbsw_parse_shortcodes( $content );
 	$database_settings = sbsw_get_database_settings();
@@ -823,7 +825,7 @@ function sbsw_background_processing() {
         $social_wall_feed->cache_feed_data( SBSW_CRON_UPDATE_CACHE_TIME, $wall_next_pages );
 	}
 
-	if ( isset( $_POST['posts']['twitter'] ) && function_exists( 'ctf_twitter_cards' ) ) {
+	if ( isset( $_POST['posts']['twitter'] ) && class_exists( 'CTF_Twitter_Card_Manager' ) ) {
 		$url_item_batch = array();
 		if ( isset( $_POST['posts']['twitter']['cards'] ) ) {
             foreach ( $_POST['posts']['twitter']['cards'] as $tc_item ) {

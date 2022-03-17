@@ -13,7 +13,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( !class_exists( 'Learn
 			$this->settings_section_key				= 	'settings_translations_'. $this->project_slug;
 		
 			// Section label/header
-			$this->settings_section_label			=	__( 'LearnDash Samcart', 'learndash-stripe' );
+			$this->settings_section_label			=	__( 'LearnDash LMS - Stripe Integration', 'learndash-stripe' );
 		
 			// Class LearnDash_Translations add LD v2.5.0
 			if ( class_exists( 'LearnDash_Translations' ) ) {

@@ -5,6 +5,7 @@ sftp-config.json
 vendor/stripe/stripe-php/.editorconfig
 \.bowerrc
 snippet*
+*.code-workspace
 
 *.sublime-project
 *.sublime-workspace

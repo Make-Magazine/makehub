@@ -1205,3 +1205,17 @@ textarea[readonly].sbsw-multiple-shortcode{
     border: none;
     resize: none;
 }
+
+
+.sbsw-default-feed-wrap #sbi_admin button.button{
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+}
+.sbsw-default-feed-wrap button.button:hover,
+.sbsw-default-feed-wrap button.button:active{
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+    opacity: .7;
+}
