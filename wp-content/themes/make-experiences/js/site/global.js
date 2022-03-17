@@ -35,6 +35,7 @@ jQuery(document).ready(function () {
 	if(window.location.pathname == '/register/contest/') {
 	   jQuery("label[for='mpgft-signup-gift-checkbox1']").remove();
 	}
+	// if the update credit card button occurs on any mp-membership page other than the mp-subscriptions page, the link has to be updated to point to mp-subscriptions
 	if (window.location.href.indexOf('mp-membership') > -1) {
 		jQuery(".mepr-account-update").each(function(){
 			var updateLink = jQuery(this).attr("href");
