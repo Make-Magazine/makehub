@@ -245,6 +245,19 @@ class SBI_Feed_Saver_Manager {
 			$feed_cache->clear( 'posts' );
 		}
 
+		if ( ! empty( $_POST['previewSettings'] ) && ! empty( $_POST['previewSettings']['hashtag'] ) ) {
+			global $sb_instagram_posts_manager;
+			if ( is_array( $_POST['previewSettings']['hashtag'] ) ) {
+				foreach ( $_POST['previewSettings']['hashtag'] as $hashtag ) {
+					$hashtag = str_replace( '#', '', sanitize_text_field( $hashtag ) );
+					$sb_instagram_posts_manager->clear_top_post_request( $hashtag );
+				}
+			} elseif ( is_string( $_POST['previewSettings']['hashtag'] ) ) {
+				$hashtag = str_replace( '#', '', sanitize_text_field( $_POST['previewSettings']['hashtag'] ) );
+				$sb_instagram_posts_manager->clear_top_post_request( $hashtag );
+			}
+		}
+
 		self::feed_customizer_fly_preview();
 		wp_die();
 
@@ -455,7 +468,6 @@ class SBI_Feed_Saver_Manager {
 
 			if ( $moderation_shoppable && strpos( $return['feed_html'], 'id="sbi_mod_error"' ) && $preview_settings['offset'] > 0 ) {
 				echo '<div id="sbi_mod_error" style="display: block;"><strong>' . esc_html__("That's it!. No more posts to load.", 'instagram-feed' ) . '</strong></div>';
-
 			} else {
 				echo $return['feed_html'];
 			}

@@ -184,6 +184,22 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['group_leader'] ) ? $this->setting_option_values['group_leader'] : '',
 					'class'     => 'regular-text',
 				),
+				'exam'                          => array(
+					'name'      => 'exam',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Challenge Exam', 'learndash' ),
+					'help_text' => esc_html__( 'Label to replace "challenge exam" (singular).', 'learndash' ),
+					'value'     => $this->setting_option_values['exam'] ?? '',
+					'class'     => 'regular-text',
+				),
+				'exams'                         => array(
+					'name'      => 'exams',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Challenge Exams', 'learndash' ),
+					'help_text' => esc_html__( 'Label to replace "challenge exams" (plural).', 'learndash' ),
+					'value'     => $this->setting_option_values['exams'] ?? '',
+					'class'     => 'regular-text',
+				),
 				'button_take_this_course'       => array(
 					'name'      => 'button_take_this_course',
 					'type'      => 'text',
@@ -252,6 +268,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$old_values['group_leader'] = '';
 				}
 
+				if ( empty( $new_values['group_leader'] ) ) {
+					$new_values['group_leader'] = esc_html__( 'Group Leader', 'learndash' );
+				}
 				if ( $old_values['group_leader'] !== $new_values['group_leader'] ) {
 					$group_leader = get_role( 'group_leader' );
 					if ( ! is_null( $group_leader ) ) {

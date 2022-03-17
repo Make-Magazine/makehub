@@ -169,6 +169,11 @@ if ( ! class_exists( 'Brainstorm_Update_Astra_Pro_Sites' ) ) :
 			// Is file 'version.yml' exist?
 			if ( is_file( $bsf_core_version_file ) ) {
 				global $bsf_core_version, $bsf_core_path;
+
+				if ( null === $bsf_core_version ) {
+					$bsf_core_version = '1.0.0';
+				}
+
 				$bsf_core_dir = realpath( dirname( __FILE__ ) . '/admin/bsf-core/' );
 				// @codingStandardsIgnoreStart
 				$version      = file_get_contents( $bsf_core_version_file );

@@ -39,7 +39,8 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 	 * The plural resource name as it maps to the AC API.
 	 */
 	const RESOURCE_NAME_PLURAL = 'ecomCustomers';
-
+	const ENDPOINT_NAME        = 'ecomCustomer';
+	const ENDPOINT_NAME_PLURAL = 'ecomCustomers';
 	/**
 	 * The API client.
 	 *

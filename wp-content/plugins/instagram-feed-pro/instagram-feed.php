@@ -3,7 +3,7 @@
 Plugin Name: Instagram Feed Pro Developer
 Plugin URI: https://smashballoon.com/instagram-feed
 Description: Display beautifully clean, customizable, and responsive Instagram feeds
-Version: 6.0.3
+Version: 6.0.4
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -32,7 +32,7 @@ if( !class_exists( '\InstagramFeed\EDD_SL_Plugin_Updater' ) ) {
 }
 
 if ( ! defined( 'SBIVER' ) ) {
-	define( 'SBIVER', '6.0.3' );
+	define( 'SBIVER', '6.0.4' );
 }
 // Db version.
 if ( ! defined( 'SBI_DBVERSION' ) ) {

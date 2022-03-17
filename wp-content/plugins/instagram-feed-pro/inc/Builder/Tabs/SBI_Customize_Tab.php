@@ -119,6 +119,20 @@ class SBI_Customize_Tab {
 	 * @return array
 	*/
 	public static function get_customize_feedlayout_controls() {
+		$columns_options = array(
+			'1' => '1',
+			'2' => '2',
+			'3' => '3',
+			'4' => '4',
+			'5' => '5',
+			'6' => '6',
+			'7' => '7',
+			'8' => '8',
+			'9' => '9',
+			'10' => '10',
+
+		);
+
 		return array(
 			array(
 				'type'      => 'toggleset',
@@ -380,19 +394,7 @@ class SBI_Customize_Tab {
 				'strongHeading' => 'false',
 				'heading'       => __( 'Desktop', 'instagram-feed' ),
 				'stacked'       => 'true',
-				'options'       => array(
-					'1' => '1',
-					'2' => '2',
-					'3' => '3',
-					'4' => '4',
-					'5' => '5',
-					'6' => '6',
-					'7' => '7',
-					'8' => '8',
-					'9' => '9',
-					'10' => '10',
-
-				),
+				'options'       => $columns_options
 			),
 
 			array(
@@ -404,18 +406,7 @@ class SBI_Customize_Tab {
 				'strongHeading' => 'false',
 				'heading'       => __( 'Tablet', 'instagram-feed' ),
 				'stacked'       => 'true',
-				'options'       => array(
-					'1' => '1',
-					'2' => '2',
-					'3' => '3',
-					'4' => '4',
-					'5' => '5',
-					'6' => '6',
-					'7' => '7',
-					'8' => '8',
-					'9' => '9',
-					'10' => '10',
-				),
+				'options'       => $columns_options
 			),
 			array(
 				'type'          => 'select',
@@ -426,11 +417,7 @@ class SBI_Customize_Tab {
 				'strongHeading' => 'false',
 				'heading'       => __( 'Mobile', 'instagram-feed' ),
 				'stacked'       => 'true',
-				'options'       => array(
-					'1' => '1',
-					'2' => '2',
-					'3' => '3',
-				),
+				'options'       => $columns_options
 			),
 
 		);

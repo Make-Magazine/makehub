@@ -1,12 +1,17 @@
 <?php
 
 class ACUI_Import{
-    public function show(){
+    function __construct(){
+    }
+
+    function show(){
         if ( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) ) {
             wp_die( __( 'You are not allowed to see this content.', 'import-users-from-csv-with-meta' ));
         }
     
         $tab = ( isset ( $_GET['tab'] ) ) ? $_GET['tab'] : 'homepage';
+        $sections = $this->get_sections_from_tab( $tab );
+	    $section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
     
         if( isset( $_POST ) && !empty( $_POST ) ):
             if ( !wp_verify_nonce( $_POST['security'], 'codection-security' ) ) {
@@ -40,7 +45,8 @@ class ACUI_Import{
               }
         endif;
         
-        ACUI_Import::admin_tabs( $tab );
+        $this->admin_tabs( $tab );
+        $this->secondary_admin_tabs( $tab, $section, $sections );
         
           switch ( $tab ){
               case 'homepage' :
@@ -88,12 +94,12 @@ class ACUI_Import{
             break;
     
             default:
-                do_action( 'acui_tab_action_' . $tab );
+                do_action( 'acui_tab_action_' . $tab, $section );
             break;
         }
     }
 
-    static function admin_tabs( $current = 'homepage' ) {
+    function admin_tabs( $current = 'homepage' ) {
         $tabs = array( 
                 'homepage' => __( 'Import', 'import-users-from-csv-with-meta' ),
                 'export' => __( 'Export', 'import-users-from-csv-with-meta' ),
@@ -129,6 +135,57 @@ class ACUI_Import{
     
         }
         echo '</h2>';
+    }
+
+    static function secondary_admin_tabs( $active_tab = '', $section = '', $sections = array() ){
+        if( empty( $sections ) )
+            return;
+
+        $links = array();
+
+        foreach ( $sections as $section_id => $section_name ) {
+            $tab_url = add_query_arg(
+                array(
+                    'page'      => 'acui',
+                    'tab'       => $active_tab,
+                    'section'   => $section_id,
+                ),
+                admin_url( 'tools.php' )
+            );
+
+            $class = ( $section === $section_id ) ? 'current' : '';
+            $links[ $section_id ] = '<li class="' . esc_attr( $class ) . '"><a class="' . esc_attr( $class ) . '" href="' . esc_url( $tab_url ) . '">' . esc_html( $section_name ) . '</a><li>';
+        } ?>
+
+        <div class="wp-clearfix">
+            <ul class="acui-subsubsub">
+                <?php echo implode( '', $links ); ?>
+            </ul>
+        </div>
+
+        <?php
+    }
+
+    function get_sections_from_tab( $tab ){
+        switch ( $tab ){
+            case 'homepage':
+            case 'export':
+            case 'frontend':
+            case 'columns':
+            case 'meta-keys':
+            case 'doc':
+            case 'mail-options':
+            case 'cron':
+            case 'donate':
+            case 'help':
+            case 'new_features':
+              return array();
+          break;
+  
+          default:
+              return apply_filters( 'acui_tab_section_' . $tab, array() );
+          break;
+      }
     }
 
     function fileupload_process( $form_data, $is_cron = false, $is_frontend  = false ) {
@@ -262,7 +319,7 @@ class ACUI_Import{
                         $data = apply_filters( 'pre_acui_import_header', $data );
     
                         // check min columns username - email
-                        if(count( $data ) < 2){
+                        if( count( $data ) < 2 ){
                             echo "<div id='message' class='error'>" . __( 'File must contain at least 2 columns: username and email', 'import-users-from-csv-with-meta' ) . "</div>";
                             break;
                         }
@@ -302,11 +359,15 @@ class ACUI_Import{
                             continue;
                         endif;
     
-                        do_action('pre_acui_import_single_user', $headers, $data );
-                        $data = apply_filters('pre_acui_import_single_user_data', $data, $headers);
+                        do_action( 'pre_acui_import_single_user', $headers, $data );
+
+                        $data = apply_filters( 'pre_acui_import_single_user_data', $data, $headers );
     
-                        $username = empty( $data[0] ) ? $acui_helper->get_random_unique_username( 'user_' ) : $data[0];
-                        $email = $data[1];
+                        $username = apply_filters( 'pre_acui_import_single_user_username', $data[0] );
+                        $data[0] = ( $username == $data[0] ) ? $username : sprintf( __( '<em>Converted to: %s</em>', 'import-users-from-csv-with-meta' ), $username );
+                        $email = apply_filters( 'pre_acui_import_single_user_email', $data[1] );
+                        $data[1] = ( $email == $data[1] ) ? $email : sprintf( __( '<em>Converted to: %s</em>', 'import-users-from-csv-with-meta' ), $email );
+
                         $user_id = 0;
                         $password_position = $positions["password"];
                         $password_changed = false;

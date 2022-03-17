@@ -252,6 +252,27 @@ function learndash_update_setting( $post, $setting, $value ) {
 			}
 		} elseif ( 'certificate' === $setting ) {
 			update_post_meta( $post->ID, '_ld_certificate', $value );
+		} elseif ( 'exam_challenge' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				learndash_update_course_exam_challenge( $post->ID, $value, false );
+			} else {
+				learndash_update_course_exam_challenge( $post->ID, $value, true );
+			}
+		} elseif ( 'exam_challenge_course_show' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, $setting, $value );
+			} else {
+				delete_post_meta( $post->ID, $setting );
+			}
+		} elseif ( 'exam_challenge_course_passed' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, $setting, $value );
+			} else {
+				delete_post_meta( $post->ID, $setting );
+			}
 		} elseif ( 'threshold' === $setting ) {
 			update_post_meta( $post->ID, '_ld_certificate_threshold', $value );
 		} elseif ( 'lesson' === $setting ) {

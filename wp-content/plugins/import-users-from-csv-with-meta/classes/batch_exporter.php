@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class ACUI_Batch_Exporter{
+	protected $path = '';
 	protected $filename = 'user-export.csv';
 	protected $limit = 50;
 	protected $exported_row_count = 0;
@@ -120,6 +121,14 @@ class ACUI_Batch_Exporter{
 
 		$this->set_columns_to_export( apply_filters( 'acui_export_columns', $row, array( 'order_fields_alphabetically' => $this->get_order_fields_alphabetically(), 'double_encapsulate_serialized_values' => $this->get_double_encapsulate_serialized_values(), 'filtered_columns' => $this->get_filtered_columns() ) ) );
     }
+
+	function set_path( $path ){
+		$this->path = $path;
+	}
+
+	function get_path(){
+		return $this->path;
+	}
 
     function set_columns_to_export( $columns ) {
 		$this->columns_to_export = $columns;
@@ -356,7 +365,7 @@ class ACUI_Batch_Exporter{
 	}
 
 	function set_limit( $limit ) {
-		$this->limit = absint( $limit );
+		$this->limit = ( $limit == -1 ) ? $limit : absint( $limit );
 	}
 
 	function escape_data( $data ) {
@@ -409,6 +418,9 @@ class ACUI_Batch_Exporter{
 	}
 
     protected function get_file_path() {
+		if( !empty( $this->get_path() ) )
+			return $this->get_path();
+		
 		$upload_dir = wp_upload_dir();
 		return trailingslashit( $upload_dir['basedir'] ) . $this->get_filename();
 	}
@@ -515,8 +527,8 @@ class ACUI_Batch_Exporter{
     function get_user_id_list( $calculate_total = false ){
         $args = array( 'fields' => array( 'ID' ), 'order' => $this->get_order() );
 
-        if( !$calculate_total ){
-            $args['number' ] = $this->get_limit();
+        if( !$calculate_total && $this->get_limit() != -1 ){
+            $args['number'] = $this->get_limit();
             $args['offset'] = ($this->get_page() - 1) * $this->get_limit();
         }
 
@@ -610,7 +622,7 @@ class ACUI_Batch_Exporter{
 		}
 
 		if( in_array( $key, $this->get_non_date_keys() ) || empty( $datetime_format ) ){
-			return $this->clean_bad_characters_formulas( $value );
+			return $value;
 		}
 
 		if( $this->get_convert_timestamp() && is_int( $value ) && ( ( $this->is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ) ){ // dates in timestamp format
@@ -621,6 +633,9 @@ class ACUI_Batch_Exporter{
 	}
 
     function clean_bad_characters_formulas( $value ){
+        if( is_array( $value ) )
+            return $value;
+
 		if( strlen( $value ) == 0 )
 			return $value;
 

@@ -63,13 +63,14 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			add_action( 'wp_ajax_astra-sites-import-end', array( $this, 'import_end' ) );
 
 			// Hooks in AJAX.
-			add_action( 'astra_sites_import_complete', array( $this, 'after_batch_complete' ) );
+			add_action( 'astra_sites_import_complete', array( $this, 'clear_related_cache' ) );
 			add_action( 'init', array( $this, 'load_importer' ) );
 
 			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing.php';
 
 			add_action( 'wp_ajax_astra-sites-set-start-flag', array( $this, 'set_start_flag' ) );
-			add_action( 'astra_sites_image_import_complete', array( $this, 'after_batch_complete' ) );
+			add_action( 'astra_sites_batch_process_complete', array( $this, 'clear_related_cache' ) );
+			add_action( 'astra_sites_batch_process_complete', array( $this, 'delete_related_transient' ) );
 
 			// Reset Customizer Data.
 			add_action( 'wp_ajax_astra-sites-reset-customizer-data', array( $this, 'reset_customizer_data' ) );
@@ -87,6 +88,16 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 
 			add_action( 'init', array( $this, 'disable_default_woo_pages_creation' ), 2 );
 			add_filter( 'upgrader_package_options', array( $this, 'plugin_install_clear_directory' ) );
+		}
+
+		/**
+		 * Delete related transients
+		 *
+		 * @since 3.1.3
+		 */
+		public function delete_related_transient() {
+			delete_transient( 'astra_sites_batch_process_started' );
+			delete_option( 'astra_sites_import_data' );
 		}
 
 		/**
@@ -675,6 +686,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 					wp_send_json_error( __( 'You are not allowed to perform this action', 'astra-sites' ) );
 				}
 			}
+			do_action( 'st_before_start_import_process' );
 			set_transient( 'astra_sites_import_started', 'yes', HOUR_IN_SECONDS );
 			wp_send_json_success();
 		}
@@ -684,29 +696,24 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 		 *
 		 * @since  1.0.9
 		 */
-		public function after_batch_complete() {
+		public function clear_related_cache() {
 
 			// Clear 'Builder Builder' cache.
 			if ( is_callable( 'FLBuilderModel::delete_asset_cache_for_all_posts' ) ) {
 				FLBuilderModel::delete_asset_cache_for_all_posts();
+				Astra_Sites_Importer_Log::add( 'Cache for Beaver Builder cleared.' );
 			}
 
 			// Clear 'Astra Addon' cache.
 			if ( is_callable( 'Astra_Minify::refresh_assets' ) ) {
 				Astra_Minify::refresh_assets();
+				Astra_Sites_Importer_Log::add( 'Cache for Astra Addon cleared.' );
 			}
 
 			$this->update_latest_checksums();
 
 			// Flush permalinks.
 			flush_rewrite_rules();
-
-			/**
-			 * Not deleting the Demo data after import, in order to avoid customizer data empty issue.
-			 * delete_option( 'astra_sites_import_data' );
-			 */
-
-			Astra_Sites_Importer_Log::add( 'Complete ' );
 		}
 
 		/**

@@ -461,13 +461,16 @@ class SBI_Notifications {
 	public function output() {
 		$current_screen = get_current_screen();
 		// if we are one single feed page then return
-		if ( $current_screen->base == "instagram-feed_page_sbi-feed-builder" && isset( $_GET['feed_id'] ) ) {
-			return;
-		}
 
 		$notifications = $this->get();
 
 		if ( empty( $notifications ) ) {
+			return;
+		}
+
+		$is_review_notice = ! empty( $notifications[0] ) && ! empty( $notifications[0]['id'] ) && $notifications[0]['id'] === 'review';
+
+		if ( ! $is_review_notice && ! empty( $_GET['feed_id'] ) ) {
 			return;
 		}
 

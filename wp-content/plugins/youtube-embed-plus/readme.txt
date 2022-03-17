@@ -4,16 +4,16 @@ Plugin Name: Embed Plus Plugin for YouTube, with YouTube Gallery, Channel, Playl
 Tags: youtube gallery, youtube wordpress plugin, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, lazy load, facade
 Requires at least: 4.5
 Tested up to: 5.9
-Stable tag: 14.0.1.4
+Stable tag: 14.1
 License: GPLv3 or later
 
-YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube live stream. With defer JavaScript options
+YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube livestream. Defer JavaScript
 
 == Description ==
 
 **YouTube WordPress Plugin** to embed and customize a YouTube gallery (channel or playlist),  YouTube livestream (and premiere), YouTube short, or standard YouTube video. This YouTube WordPress plugin can be customized in a wide variety of ways. The plugin also focuses on performance with the ability to lazy load with a facade and defer JavaScript while serving minified CSS and JavaScript. Here are a few recently added features to all versions (free and Pro) of this WordPress plugin:
 
-* YouTube gallery embeds and standard videos now support Facade Mode which improves plugin performance by loading a lighter version of the player, until it is clicked. The plugin then loads the real YouTube embed after clicking (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases with a mix of other WordPress plugins, and we found it to successfully improve your Lighthouse performance score by addressing the following recommendation: "Some third-party resources can be lazy loaded with a facade - 1 facade alternative available"
+* YouTube gallery embeds and standard videos now support Facade Mode which improves plugin performance by loading a lighter version of the player, until it is clicked. The plugin then loads the real YouTube embed after clicking (note: for live streams, the real player is always loaded).  We have tested this feature in multiple cases with a mix of other WordPress plugins, and we found it to successfully improve your Lighthouse performance score by addressing the following recommendation: "Some third-party resources can be lazy loaded with a facade - 1 facade alternative available." You can demo this facade feature on our [YouTube Plugin WordPress](https://youtube-wordpress-plugin.embedplus.com/) test site.
 * Defer critical and non critical JavaScript - improve the initial load time of your pages by allowing this plugin's critical and non critical Javascript code to begin execution only after a page is loaded. That reasoning is the basis for the Defer CSS Javascript (styles and code) recommendation you'll see in various web profiling tools.  We plan to add a plugin feature that will defer critical and non critical CSS in the future.
 * Compatible with the WordPress Gutenberg block editor (it also stays backwards-compatible with the classic editor WordPress plugin). Both the Gutenberg block selector and the Gutenberg classic block will show the YouTube wizard button. For the Gutenberg block selector, click on the (+) sign for the block editor list. The YouTube Wizard block is located under the "Embeds" category (make sure you choose "YouTube **Wizard**"). See more on [how to embed a YouTube video, gallery, or livestream with the WordPress Gutenberg block editor here >>](https://www.embedplus.com/embed-youtube-video-gallery-livestream-wordpress-gutenberg-block-editor.aspx) The plugin is also compatible with several popular page builders like [Elementor](https://www.youtube.com/watch?v=ldNfIGRTxDU), [Beaver Builder](https://www.youtube.com/watch?v=bPgz0jyt7TE), [SiteOrigin](https://www.youtube.com/watch?v=7QNYw_g-7WM), and [Visual Composer](https://www.youtube.com/watch?v=FWBQc9XhAqM).  For these and pretty much any other page builder with a short code widget, you can also embed your video, gallery, live stream, or premiere by creating the short code in the plugin's wizard and then embedding the code in the page builder's short code widget or text widget.
 * Privacy and Consent - Improved privacy and GDPR compliance options like YouTube no cookie, YouTube API restrictions, and a customizable GDPR consent message. Note: if you have a full-blown consent plugin installed on your WordPress site, you may not need these particular features of this YouTube plugin.
@@ -109,7 +109,7 @@ See more details after installing. Enjoy!
 1. Use the WordPress plugin installer to install the plugin.  Alternatively, you can just extract the folder in our download package and upload it to your plugin directory.
 1. Access the Plugins admin menu to activate the YouTube embed plugin.
 1. Make your default settings after clicking the new YouTube menu item that shows up in your admin panel. This is where you can make global settings on the appearance of each video and gallery, as well as activate: defer JavaScript  (defer CSS coming soon), GDPR mode, user restrictions, and more.
-1. To embed videos in your post, uuse the wizard to embed the shortcode. Example: `[embedyt]https://www.youtube.com/watch?v=ABCDEFGHIJK&width=400&height=250[/embedyt]` If you don't know exactly which video you want to embed, use the free built-in search feature to find and insert one.
+1. To embed videos in your post, use the wizard to embed the shortcode. Example: `[embedyt]https://www.youtube.com/watch?v=ABCDEFGHIJK&width=400&height=250[/embedyt]` If you don't know exactly which video you want to embed, use the free built-in search feature to find and insert one.
 1. You can also [embed a playlist and channel gallery with this plugin >>](https://www.embedplus.com/responsive-youtube-playlist-channel-gallery-for-wordpress.aspx).  Please install the plugin and visit the settings page for instructions.
 1. To get video SEO, an analytics dashboard and many other premium features, [sign up for one of the options here >>](https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=readme)
 
@@ -137,6 +137,41 @@ You can also start and end each individual video at particular times. Like the a
 * Make sure the url is not an active hyperlink (i.e., it should just be plain text). Otherwise, highlight the url and click the "unlink" button in your editor.
 * Make sure you did **not** format or align the url in any way. If your url still appears in your actual post instead of a video, highlight it and click the "remove formatting" button (formatting can be invisible sometimes).
 * Finally, there's a slight chance your custom theme is the issue, if you have one. To know for sure, we suggest temporarily switching to one of the default WordPress themes (e.g., "Twenty Thirteen") just to see if your video does appear. If it suddenly works, then your custom theme is the issue. You can switch back when done testing.
+ 
+== Frequently Asked Questions ==
+
+= How do I add this YouTube plugin to WordPress? =
+
+Watch the following YouTube video which shows the process for our specific plugin: 
+
+https://www.youtube.com/watch?v=9RveWWsrmuw
+
+= How do I embed a YouTube video with a facade? =
+
+See a demo on this [YouTube WordPress Test Page](https://youtube-wordpress-plugin.embedplus.com/youtube-embed-with-facade/)
+
+= How do I create a YouTube gallery in WordPress? =
+
+Here's a video that shows the steps with our YouTube plugin, along with the full set of gallery features:
+
+https://www.youtube.com/watch?v=iMX5TMobCw4
+
+= Why use a YouTube plugin? =
+
+You can certainly embed YouTube videos in WordPress with oembed using the default embedder. However, a good YouTube WordPress plugin helps you easily embed and customize a video, playlist, channel, gallery, premiere, live stream, and facade.  The premium version of this plugin has additional features like embed playback analytics.
+
+= How to get a YouTube API key? =
+
+To embed a gallery, livestream, schema tags, and more, you'll need to get a YouTube API key from Google. The Data API is free and comes with a decent quota, which can be extended.  See here for [steps on creating a YouTube API key](https://www.embedplus.com/how-to-create-a-youtube-api-key.aspx).
+
+You can also learn plenty of other tips on the [EmbedPlus How To Page](https://www.embedplus.com/youtube-plugin-documentation.aspx).
+
+= How do I embed a YouTube livestream on WordPress? =
+
+Assuming you already have the EmbedPlus plugin active, you can embed a YouTube stream (premiere or livestream) in a very similar manner.
+
+* [Steps for a premiere](https://www.youtube.com/watch?v=PqroYZ1qVtY}
+* [Steps for a standard live stream](https://www.youtube.com/watch?v=PQ5mY2WaqcI&t=218s)
 
 == Screenshots ==
 
@@ -151,6 +186,9 @@ You can also start and end each individual video at particular times. Like the a
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 14.1 =
+* Adds the live stream fallback feature to channel-based live stream embeds
 
 = Embed Plus for YouTube WordPress Plugin 14.0.1.4 =
 * YouTube Wizard compatibility for WordPress 5.9+
@@ -297,7 +335,7 @@ Improved GDPR compliance, with new Privacy section containing:
 * Helps with GDPR compliance by allowing you to choose when YouTube.com's API is loaded
 
 = Embed Plus for YouTube WordPress Plugin 11.8.6.1 =
-* Rollback jQuery Updater plugin compatability
+* Rollback jQuery Updater plugin compatibility
 
 = Embed Plus for YouTube WordPress Plugin 11.8.6 =
 * Updated YouTube API key video tutorial
@@ -315,8 +353,8 @@ Improved GDPR compliance, with new Privacy section containing:
 * Changes localized script dependency to jquery
 
 = Embed Plus for YouTube WordPress Plugin 11.8.3 =
-* Improved compatability with PHP 7
-* Improved compatability with Divi theme
+* Improved compatibility with PHP 7
+* Improved compatibility with Divi theme
 * Improved AJAX compatibility
 * Improved accessibility
 * Fix gallery scrolling
@@ -332,7 +370,7 @@ Improved GDPR compliance, with new Privacy section containing:
 * Fix playlist gallery issue
 
 = Embed Plus for YouTube WordPress Plugin 11.8 =
-* Improved AJAX theme compatability
+* Improved AJAX theme compatibility
 * Ability to choose which roles can use the editor wizard
 * Volume + autoplay fix
 
@@ -348,7 +386,7 @@ Improved GDPR compliance, with new Privacy section containing:
 = Embed Plus for YouTube WordPress Plugin 11.6 =
 * Fixed issue where Free version had some remnants of Pro analytics codebase supporting features here: https://www.embedplus.com/dashboard/easy-youtube-analytics-preview.aspx?platform=sim
 * New feature: live streaming from a channel
-* Optimized player and gallery loading that may improve GTMetrix reports
+* Optimized player and gallery loading that may improve Lighthouse reports
 * Improved compatibility with pagebuilders
 * Improved compatibility with later versions of jQuery
 * Removed frameborder for W3C validation
@@ -467,7 +505,7 @@ This update features improved responsive theme support for both Free and PRO ver
 Now compatible with WordPress 3.9.
 
 = Embed Plus for YouTube WordPress Plugin 8.2 =
-An at a glance regex impromevent (all users). Dashboard now warns you of embeds that are blocked from your visitors in other countries (PRO).
+An at a glance regex improvement (all users). Dashboard now warns you of embeds that are blocked from your visitors in other countries (PRO).
 
 = Embed Plus for YouTube WordPress Plugin 8.1 =
 Fixes rare YouTube ID issue.

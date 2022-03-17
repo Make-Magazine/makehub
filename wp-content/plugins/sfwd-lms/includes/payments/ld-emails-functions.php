@@ -63,7 +63,12 @@ function learndash_send_purchase_success_email( $user_id = 0, $post_id = 0 ) {
 	 */
 	$placeholders = apply_filters( 'learndash_purchase_email_placeholders', $placeholders, $user_id, $post_id );
 
-	$email_setting = LearnDash_Settings_Section_Emails_Course_Purchase_Success::get_section_settings_all();
+	if ( in_array( $post->post_type, learndash_get_post_type_slug( array( 'course' ) ), true ) ) {
+		$email_setting = LearnDash_Settings_Section_Emails_Course_Purchase_Success::get_section_settings_all();
+	} elseif ( in_array( $post->post_type, learndash_get_post_type_slug( array( 'group' ) ), true ) ) {
+		$email_setting = LearnDash_Settings_Section_Emails_Group_Purchase_Success::get_section_settings_all();
+	}
+
 	if ( 'on' === $email_setting['enabled'] ) {
 
 		/**

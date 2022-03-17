@@ -38,6 +38,9 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 	 */
 	const RESOURCE_NAME_PLURAL = 'contacts';
 
+	const ENDPOINT_NAME        = 'contact';
+	const ENDPOINT_NAME_PLURAL = 'contacts';
+
 	/**
 	 * The API client.
 	 *

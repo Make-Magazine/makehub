@@ -11,9 +11,9 @@
  */
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
-
-use AcVendor\Psr\Log\LoggerInterface;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Add_Accepts_Marketing_To_Customer_Meta_Command Class.
@@ -31,17 +31,21 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 	/**
 	 * The Logger interface.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
 	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Command constructor.
 	 *
-	 * @param LoggerInterface $logger The Logger interface.
+	 * @param Logger $logger The Logger interface.
 	 */
-	public function __construct( LoggerInterface $logger ) {
-		$this->logger = $logger;
+	public function __construct( Logger $logger ) {
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	/**
@@ -58,22 +62,32 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 	 * @return WC_Order
 	 */
 	public function execute( ...$args ) {
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 		/**
 		 * An instance of the WC_Order class being passed through the filter.
 		 *
 		 * @var WC_Order $order
 		 */
+		if ( ! isset( $args[0] ) ) {
+			$this->logger->error( 'Accepts Marketing: Valid order not passed in args.' );
+			return;
+		}
+
 		$order = $args[0];
 
 		if ( ! $this->nonce_is_valid() ) {
-			$this->logger->error( 'Accepts Marketing: Invalid checkout nonce' );
-
-			return $order;
+			$this->logger->warning(
+				'Accepts Marketing: Invalid WooCommerce checkout nonce. The accepts marketing data may not have come from the WC checkout.',
+				[
+					'order'        => $order->get_id(),
+					'order_number' => $order->get_order_number(),
+				]
+			);
 		}
 
 		$accepts_marketing = $this->extract_accepts_marketing_value();
-
-		$this->logger->debug( "Accepts Marketing: Extracted accepts marketing value: $accepts_marketing" );
 
 		$id = $order->get_customer_id();
 
@@ -85,8 +99,10 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 			$this->update_order_accepts_marketing( $order, $accepts_marketing );
 
 			$this->logger->debug(
-				'Updated order with accepts marketing meta data: '
-				. $order->get_meta( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME )
+				'Updated order with accepts marketing meta data: ',
+				[
+					'accepts_marketing' => $order->get_meta( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME ),
+				]
 			);
 		} else {
 			$this->logger->debug( "Accepts Marketing: ID found for customer: $id. Setting accepts marketing on the customer record." );
@@ -103,12 +119,19 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 	 */
 	private function nonce_is_valid() {
 		// see: https://github.com/woocommerce/woocommerce/blob/master/includes/class-wc-checkout.php#L1076
-		$nonce_value = wc_get_var( $_REQUEST['woocommerce-process-checkout-nonce'], wc_get_var( $_REQUEST['_wpnonce'], '' ) );
-
-		$valid = (bool) wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' );
+		$checkout_nonce = AC_Utilities::get_request_data( 'woocommerce-process-checkout-nonce' );
+		$wp_nonce       = AC_Utilities::get_request_data( '_wpnonce' );
+		$nonce_value    = wc_get_var( $checkout_nonce, wc_get_var( $wp_nonce, '' ) );
+		$valid          = (bool) wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' );
 
 		if ( ! $valid ) {
-			$this->logger->debug( 'Accepts Marketing: Invalid nonce', [ 'nonce_value' => $nonce_value ] );
+			$this->logger->error(
+				'Accepts Marketing: Invalid nonce',
+				[
+					'checkout_nonce' => $checkout_nonce,
+					'nonce_value'    => $nonce_value,
+				]
+			);
 		}
 
 		return $valid;
@@ -120,9 +143,12 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 	 * @return int
 	 */
 	private function extract_accepts_marketing_value() {
-		return isset( $_POST['activecampaign_for_woocommerce_accepts_marketing'] ) ?
-			(int) $_POST['activecampaign_for_woocommerce_accepts_marketing'] :
-			0;
+		$accepts_marketing = AC_Utilities::get_request_data( 'activecampaign_for_woocommerce_accepts_marketing' );
+		if ( isset( $accepts_marketing ) && ( '1' === $accepts_marketing || 1 === $accepts_marketing ) ) {
+			return 1;
+		}
+
+		return 0;
 	}
 
 	/**

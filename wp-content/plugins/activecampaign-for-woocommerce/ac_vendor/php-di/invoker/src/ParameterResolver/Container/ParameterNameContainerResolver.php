@@ -1,21 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AcVendor\Invoker\ParameterResolver\Container;
 
-use AcVendor\Interop\Container\ContainerInterface;
 use AcVendor\Invoker\ParameterResolver\ParameterResolver;
+use AcVendor\Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract;
 
 /**
  * Inject entries from a DI container using the parameter names.
- *
- * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
 class ParameterNameContainerResolver implements ParameterResolver
 {
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
 
     /**
@@ -30,7 +26,7 @@ class ParameterNameContainerResolver implements ParameterResolver
         ReflectionFunctionAbstract $reflection,
         array $providedParameters,
         array $resolvedParameters
-    ) {
+    ): array {
         $parameters = $reflection->getParameters();
 
         // Skip parameters already resolved

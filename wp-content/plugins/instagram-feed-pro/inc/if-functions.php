@@ -1499,7 +1499,7 @@ function sbi_get_account_and_feed_info() {
 
 	$instagram_feed_settings->set_feed_type_and_terms();
 	$if_feed_type_and_terms = $instagram_feed_settings->get_feed_type_and_terms();
-	$connected_accounts = $instagram_feed_settings->get_connected_accounts_in_feed();
+	$connected_accounts = SB_Instagram_Connected_Account::get_all_connected_accounts();
 
 	$type_and_terms = array(
 		'type' => '',
@@ -1524,10 +1524,19 @@ function sbi_get_account_and_feed_info() {
 
 	}
 
+	$sbi_statuses = get_option( 'sbi_statuses', array() );
+	if ( empty( $sbi_statuses['support_legacy_shortcode'] ) ) {
+		$return['support_legacy'] = false;
+	} else {
+		$return['support_legacy'] = true;
+	}
+
+	$return['feeds'] = \InstagramFeed\Builder\SBI_Db::feeds_query( array( 'social_wall_summary' => 1 ) );;
+
 	$type_and_terms['terms'] =  $terms_array;
 
 	$return['type_and_terms'] = $type_and_terms;
-	$return['connected_accounts'] = $instagram_feed_settings->get_connected_accounts();
+	$return['connected_accounts'] = $connected_accounts;
 	$return['available_types'] = array(
         'user' => array(
             'label' => 'User',
@@ -1550,7 +1559,7 @@ function sbi_get_account_and_feed_info() {
 			'term_shortcode' => 'tagged',
 			'key' => 'username',
 			'input' => 'connected'
-		),
+		)
     );
 	$return['settings'] = array(
         'type' => 'type'
@@ -1822,7 +1831,7 @@ add_action( 'wp_enqueue_scripts', 'sb_instagram_scripts_enqueue', 2 );
 
 function sb_instagram_media_vine_js_register() {
 	//Register the script to make it available
-	wp_register_script( 'sb_instagram_mediavine_scripts', trailingslashit( SBI_PLUGIN_URL ) . 'js/sb-instagram-mediavine.js', array( 'jquery', 'sb_instagram_scripts' ), SBIVER, true );
+	wp_register_script( 'sb_instagram_mediavine_scripts', trailingslashit( SBI_PLUGIN_URL ) . 'js/sb-instagram-mediavine.js', array( 'jquery', 'sbi_scripts' ), SBIVER, true );
 }
 add_action( 'wp_enqueue_scripts', 'sb_instagram_media_vine_js_register' );
 

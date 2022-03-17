@@ -157,30 +157,34 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V1' ) ) && ( class_exists( 'L
 		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
-
-			$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
-
-			$links = array();
-			if ( ! isset( $response->links['steps'] ) ) {
-				$links['steps'] = array(
-					'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/steps',
-					'embeddable' => true,
-				);
-			}
-			if ( ! isset( $response->links['users'] ) ) {
-				$links['users'] = array(
-					'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
-					'embeddable' => true,
-				);
-			}
-			if ( ! isset( $response->links['groups'] ) ) {
-				$links['groups'] = array(
-					'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/groups',
-					'embeddable' => true,
-				);
-			}
-			if ( ! empty( $links ) ) {
-				$response->add_links( $links );
+			if ( $this->post_type === $post->post_type ) {
+				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$request_route = $request->get_route();
+				
+				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
+					$links = array();
+					if ( ! isset( $response->links['steps'] ) ) {
+						$links['steps'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/steps',
+							'embeddable' => true,
+						);
+					}
+					if ( ! isset( $response->links['users'] ) ) {
+						$links['users'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
+							'embeddable' => true,
+						);
+					}
+					if ( ! isset( $response->links['groups'] ) ) {
+						$links['groups'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/groups',
+							'embeddable' => true,
+						);
+					}
+					if ( ! empty( $links ) ) {
+						$response->add_links( $links );
+					}	
+				}
 			}
 
 			return $response;

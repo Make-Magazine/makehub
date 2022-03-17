@@ -51,6 +51,35 @@ class ACUI_Helper{
         return $list_editable_roles;
     }
 
+    static function get_csv_delimiters_titles(){
+        return array(
+            'COMMA' => __( 'Comma', 'import-users-from-csv-with-meta' ),
+            'COLON' => __( 'Colon', 'import-users-from-csv-with-meta' ),
+            'SEMICOLON' => __( 'Semicolon', 'import-users-from-csv-with-meta' ),
+            'TAB' => __( 'Tab', 'import-users-from-csv-with-meta' ),
+        );
+    }
+
+    static function get_list_users_with_display_name(){
+        $blogusers = get_users( array( 'fields' => array( 'ID', 'display_name' ) ) );
+        $result = array();
+									
+        foreach ( $blogusers as $bloguser )
+            $result[ $bloguser->ID ] = $bloguser->display_name;
+
+        return $result;
+    }
+
+    static function get_loaded_periods(){
+        $loaded_periods = wp_get_schedules();
+        $result = array();
+
+        foreach ( $loaded_periods as $key => $value )
+            $result[ $key ] = $value['display'];
+
+        return $result;
+    }
+
     static function get_errors_by_row( $errors, $row, $type = 'error' ){
         $errors_found = array();
 
@@ -282,7 +311,7 @@ class ACUI_Helper{
                 foreach( $element as $it => $el ){
                     if( is_wp_error( $el ) )
                         $element_string .= $el->get_error_message();
-                    elseif( is_array( $el ) )
+                    elseif( is_array( $el ) || is_object( $el ) )
                         $element_string .= serialize( $el );
                     elseif( !is_int( $it ) )
                         $element_string .= $it . "=>" . $el;
@@ -297,7 +326,7 @@ class ACUI_Helper{
                 $element = $element_string;
             }
 
-            $element = sanitize_textarea_field( $element );
+            $element = wp_kses_post( $element );
             echo "<td>$element</td>";
         }
 

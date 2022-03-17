@@ -88,14 +88,14 @@ class ACUI_Options{
         elseif( $is_frontend ){
             $form_data["send_mail_admin_frontend_address_list"] = isset( $form_data["send_mail_admin_frontend_address_list"] ) ? $form_data["send_mail_admin_frontend_address_list"] : '';
 
-            update_option( "acui_frontend_send_mail", isset( $form_data["send-mail-frontend"] ) && $form_data["send-mail-frontend"] == "yes" );
-            update_option( "acui_frontend_send_mail_updated", isset( $form_data["send-mail-updated-frontend"] ) && $form_data["send-mail-updated-frontend"] == "yes" );
-            update_option( "acui_frontend_mail_admin", isset( $form_data["send_mail_admin_frontend"] ) && $form_data["send_mail_admin_frontend"] == "yes" );
-            update_option( "acui_frontend_force_user_reset_password", isset( $form_data["force_user_reset_password"] ) && $form_data["force_user_reset_password"] == "yes" );
+            update_option( "acui_frontend_send_mail", isset( $form_data["send-mail-frontend"] ) && $form_data["send-mail-frontend"] == "1" );
+            update_option( "acui_frontend_send_mail_updated", isset( $form_data["send-mail-updated-frontend"] ) && $form_data["send-mail-updated-frontend"] == "1" );
+            update_option( "acui_frontend_mail_admin", isset( $form_data["send_mail_admin_frontend"] ) && $form_data["send_mail_admin_frontend"] == "1" );
+            update_option( "acui_frontend_force_user_reset_password", isset( $form_data["force_user_reset_password"] ) && $form_data["force_user_reset_password"] == "1" );
             update_option( "acui_frontend_send_mail_admin_address_list", sanitize_text_field( $form_data["send_mail_admin_frontend_address_list"] ) );
-            update_option( "acui_frontend_delete_users", isset( $form_data["delete_users_frontend"] ) && $form_data["delete_users_frontend"] == "yes" );
+            update_option( "acui_frontend_delete_users", isset( $form_data["delete_users_frontend"] ) && $form_data["delete_users_frontend"] == "1" );
             update_option( "acui_frontend_delete_users_assign_posts", sanitize_text_field( $form_data["delete-users-assign-posts-frontend"] ) );
-            update_option( "acui_frontend_change_role_not_present", isset( $form_data["change_role_not_present_frontend"] ) && $form_data["change_role_not_present_frontend"] == "yes" );
+            update_option( "acui_frontend_change_role_not_present", isset( $form_data["change_role_not_present_frontend"] ) && $form_data["change_role_not_present_frontend"] == "1" );
             update_option( "acui_frontend_change_role_not_present_role", sanitize_text_field( $form_data["change_role_not_present_role_frontend"] ) );
             update_option( "acui_frontend_activate_users_wp_members", isset( $form_data["activate-users-wp-members-frontend"] ) ? sanitize_text_field( $form_data["activate-users-wp-members-frontend"] ) : 'no_activate' );
 

@@ -438,7 +438,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 				$events[ $key ] = $time;
 			}
 
-			$expired = get_transient( 'astra-sites-import-check' );
+			$expired = get_site_transient( 'astra-sites-import-check' );
 			if ( $expired ) {
 				global $wpdb;
 				$transient = 'astra-sites-import-check';

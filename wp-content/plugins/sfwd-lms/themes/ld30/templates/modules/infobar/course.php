@@ -285,7 +285,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 									printf(
 										// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 										esc_html__( 'for %1$s %2$s', 'learndash' ),
-										absint( $course_pricing['repeats'] ),
+										// Get correct total time by multiplying interval by number of repeats
+										absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
 										esc_html( $course_pricing['repeat_frequency'] )
 									);
 								}
@@ -321,7 +322,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 										printf(
 											// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 											esc_html__( ' for %1$s %2$s', 'learndash' ),
-											absint( $course_pricing['repeats'] ),
+											// Get correct total time by multiplying interval by number of repeats
+											absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
 											esc_html( $course_pricing['repeat_frequency'] )
 										);
 									}

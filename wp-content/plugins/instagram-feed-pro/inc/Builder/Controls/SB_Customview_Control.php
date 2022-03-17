@@ -209,7 +209,7 @@ class SB_Customview_Control extends SB_Controls_Base {
 						<div class="sb-control-elem-heading sb-small-p sb-dark-text">{{genericText.moderationModeEnterPostId}}</div>
 					</div>
 					<div class="sbi-fb-fs">
-						<textarea class="sb-control-input-textrea sbi-fb-fs" v-model="customBlockModerationlistTemp" :placeholder="genericText.moderationModeTextareaPlaceholder"></textarea>
+						<textarea class="sb-control-input-textrea sbi-fb-fs" v-model="customBlockModerationlistTemp" :placeholder="genericText.moderationModePostIdPlaceholder"></textarea>
 					</div>
 				</div>
 

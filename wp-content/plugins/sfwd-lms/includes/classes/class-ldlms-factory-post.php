@@ -177,5 +177,74 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 
 			return null;
 		}
+
+		/**
+		 * Get a Exam.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param integer $exam   Either exam_id integer or WP_Post instance.
+		 * @param array   $atts   Array of attributes (course_id, user_id).
+		 * @param boolean $reload To force reload of instance.
+		 *
+		 * @return new instance of LDLMS_Model_Exam or null
+		 */
+		public static function exam( $exam = null, $atts = array(), $reload = false ) {
+			if ( ! empty( $exam ) ) {
+				$model = 'LDLMS_Model_Exam';
+
+				$exam_id = 0;
+				if ( ( is_a( $exam, 'WP_Post' ) ) && ( learndash_get_post_type_slug( 'exam' ) === $exam->post_type ) ) {
+					$exam_id = absint( $exam->ID );
+				} else {
+					$exam_id = absint( $exam );
+				}
+
+				if ( ! empty( $exam_id ) ) {
+					$model_key = $exam_id;
+					if ( ( is_array( $atts ) ) && ( ! empty( $atts ) ) ) {
+						ksort( $atts );
+						$model_key = $exam_id . '-' . md5( serialize( $atts ) );
+					}
+
+					if ( true === $reload ) {
+						self::remove_instance( $model, $model_key );
+					}
+					return self::add_instance( $model, $model_key, $exam_id, $atts );
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * Get a Exam Question.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array   $exam_question_block Array of question attributes.
+		 * @param boolean $reload              To force reload of instance.
+		 *
+		 * @return new instance of LDLMS_Model_Exam_Question or null
+		 */
+		public static function exam_question( $exam_question_block = array(), $reload = false ) {
+			if ( ! empty( $exam_question_block ) ) {
+				if ( isset( $exam_question_block['attrs']['question_type'] ) ) {
+					$exam_question_key = $exam_question_block['attrs']['question_type'] . '-' . ( isset( $exam_question_block['attrs']['exam_id'] ) ? $exam_question_block['attrs']['exam_id'] : '0' ) . '-' . ( isset( $exam_question_block['attrs']['question_idx'] ) ? $exam_question_block['attrs']['question_idx'] : '0' );
+
+					$model = LDLMS_Model_Exam_Question::get_model_by_type( $exam_question_block['attrs']['question_type'] );
+					if ( $model ) {
+						if ( true === $reload ) {
+							self::remove_instance( $model, $exam_question_key );
+						}
+						return self::add_instance( $model, $exam_question_key, $exam_question_block );
+					}
+				}
+			}
+
+			return null;
+		}
+
+		// End of functions.
 	}
 }

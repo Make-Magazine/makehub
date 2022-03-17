@@ -13,7 +13,8 @@
         ajax_compat: false,
         usingdefault: true,
         ytapi_load: 'light',
-        pause_others: false
+        pause_others: false,
+        not_live_on_channel: false
     };
 
     window._EPYT_.touchmoved = false;
@@ -87,11 +88,21 @@
 
                         try
                         {
-                            var apiVideoId = event.target.getIframe().getAttribute("id");
+                            var apiVideoIframe = event.target.getIframe();
+                            var apiVideoId = apiVideoIframe.getAttribute("id");
                             window._EPYT_.apiVideos[apiVideoId] = event.target;
+
+                            if (window._EPYT_.not_live_on_channel && event.target.getVideoUrl().indexOf('live_stream') > 0)
+                            {
+                                window._EPADashboard_.doLiveFallback(apiVideoIframe);
+                            }
                         }
-                        catch (idErr)
+                        catch (liveErr)
                         {
+                        }
+                        finally
+                        {
+                            $(event.target.getIframe()).css('opacity', 1);
                         }
                     },
                     onPlayerStateChange: function (event)
@@ -159,6 +170,54 @@
                     isMobile: function ()
                     {
                         return /Mobi|Android/i.test(navigator.userAgent);
+                    },
+                    base64DecodeUnicode: function (str)
+                    {
+                        str = str.replace(/\s/g, '');
+                        return decodeURIComponent(Array.prototype.map.call(atob(str), function (c)
+                        {
+                            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                        }).join(''))
+                    },
+                    doLiveFallback: function (playerIframe)
+                    {
+                        var $swapBlock = $(playerIframe).closest('.wp-block-embed');
+                        if (!$swapBlock.length)
+                        {
+                            $swapBlock = $(playerIframe).closest('.epyt-live-chat-wrapper');
+                        }
+                        if (!$swapBlock.length)
+                        {
+                            $swapBlock = $(playerIframe).closest('.epyt-video-wrapper');
+                        }
+
+                        if ($swapBlock.length)
+                        {
+                            var $liveFallbackBlock = $('#epyt-live-fallback');
+                            if ($liveFallbackBlock.length)
+                            {
+                                var fallbackHtml = '';
+                                try
+                                {
+                                    fallbackHtml = window._EPADashboard_.base64DecodeUnicode($liveFallbackBlock.get(0).innerHTML);
+                                }
+                                catch (fallbackErr)
+                                {
+                                }
+                                if (fallbackHtml)
+                                {
+                                    var $swapBlockParent = $swapBlock.parent();
+                                    window._EPADashboard_.loadYTAPI();
+                                    $swapBlock.replaceWith(fallbackHtml);
+                                    window._EPADashboard_.apiInit();
+                                    window._EPADashboard_.pageReady();
+                                    setTimeout(function ()
+                                    {
+                                        $($swapBlockParent).fitVidsEP();
+                                    }, 1);
+                                }
+                            }
+                        }
                     },
                     videoEqual: function (a, b)
                     {
@@ -330,6 +389,14 @@
                     },
                     pageReady: function ()
                     {
+                        if (window._EPYT_.not_live_on_channel && window._EPYT_.ytapi_load !== 'never')
+                        {
+                            $('.epyt-live-channel').css('opacity', 0);
+                            setTimeout(function ()
+                            {
+                                $('.epyt-live-channel').css('opacity', 1);
+                            }, 4000);
+                        }
                         $('.epyt-gallery').each(function ()
                         {
                             var $container = $(this);

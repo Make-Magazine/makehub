@@ -75,6 +75,9 @@ class SB_Instagram_Posts_Manager {
 	 * @since 2.7/5.10
 	 */
 	public function add_connected_account_error( $connected_account, $error_type, $details ) {
+		if ( empty( $connected_account ) ) {
+			return;
+		}
 		$account_id = $connected_account['user_id'];
 		$this->errors['accounts'][ $account_id ][ $error_type ] = $details;
 
@@ -150,7 +153,7 @@ class SB_Instagram_Posts_Manager {
 			$this->errors['connection'] = $connection_details;
 		}
 
-		if ( $type === 'hashtag' ) {
+		if ( $type === 'hashtag' || $type === 'hashtag_limit' ) {
 			$hashtag_details = array(
 				'error_id' => '',
 				'hashtag'  => isset( $details['hashtag'] ) ? $details['hashtag'] : '',
@@ -373,9 +376,14 @@ class SB_Instagram_Posts_Manager {
 				$error_message_return['admin_only']          = $response['error']['error_user_msg'];
 				$error_message_return['frontend_directions'] = '<a href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>';
 			} else {
+				if ( (int) $response['error']['code'] === 999 ) {
+					$url = 'https://smashballoon.com/doc/error-999-access-token-could-not-be-decrypted/';
+				} else {
+					$url = 'https://smashballoon.com/instagram-feed/docs/errors/' . $hash;
+				}
 				$error_message_return['error_message']       = __( 'There has been a problem with your Instagram Feed.', 'instagram-feed' );
 				$error_message_return['admin_only']          = sprintf( __( 'API error %s:', 'instagram-feed' ), $response['error']['code'] ) . ' ' . $response['error']['message'];
-				$error_message_return['frontend_directions'] = '<a href="https://smashballoon.com/instagram-feed/docs/errors/' . $hash . '" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>';
+				$error_message_return['frontend_directions'] = '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>';
 			}
 		} else {
 			$error_message_return['error_message'] = __( 'An unknown error has occurred.', 'instagram-feed' );
@@ -405,7 +413,7 @@ class SB_Instagram_Posts_Manager {
 		} elseif ( $type === 'hashtag' ) {
 			$this->display_error['hashtag'][] = $error;
 		} elseif ( $type === 'hashtag_limit' ) {
-			if ( empty( $this->display_error['connection'] ) ) {
+			if ( empty( $this->display_error['connection'] ) && empty( $this->display_error['hashtag_limit'] ) ) {
 				$this->display_error['hashtag_limit'] = $error;
 			}
 		}
@@ -628,6 +636,22 @@ class SB_Instagram_Posts_Manager {
 		$list_of_top_hashtags = get_option( 'sbi_top_api_calls', array() );
 
 		return in_array( $hashtag, $list_of_top_hashtags, true );
+	}
+
+	/**
+	 * Remove a hashtag from the top API calls already made.
+	 *
+	 * @param string $hashtag
+	 *
+	 * @return bool
+	 */
+	public static function clear_top_post_request( $hashtag ) {
+		$list_of_top_hashtags = get_option( 'sbi_top_api_calls', array() );
+
+		if ( in_array( $hashtag, $list_of_top_hashtags, true ) ) {
+			unset( $list_of_top_hashtags[ array_search( $hashtag, $list_of_top_hashtags ) ] );
+			update_option( 'sbi_top_api_calls', $list_of_top_hashtags );
+		}
 	}
 
 	/**
@@ -1031,7 +1055,12 @@ class SB_Instagram_Posts_Manager {
 						if ( is_admin() ) {
 							$retry = '<button data-url="'.get_the_permalink( $this->errors['connection']['post_id'] ).'" class="sbi-clear-errors-visit-page sbi-space-left sbi-btn sbi-notice-btn sbi-btn-grey">' . __( 'View Feed and Retry', 'instagram-feed' )  . '</button>';
 						}
-						$error_message .= '<p class="sbi-error-directions"><a class="sbi-license-btn sbi-btn-blue sbi-notice-btn" href="https://smashballoon.com/instagram-feed/docs/errors/" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>' . $retry. '</p>';
+						if ( ! empty( $this->errors['connection']['error_id'] ) && $this->errors['connection']['error_id'] === 999 ) {
+							$url = 'https://smashballoon.com/doc/error-999-access-token-could-not-be-decrypted/';
+						} else {
+							$url = 'https://smashballoon.com/instagram-feed/docs/errors/';
+						}
+						$error_message .= '<p class="sbi-error-directions"><a class="sbi-license-btn sbi-btn-blue sbi-notice-btn" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>' . $retry. '</p>';
 					}
 				}
 			}

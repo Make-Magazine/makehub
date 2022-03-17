@@ -245,6 +245,8 @@ class SBI_Feed_Builder {
 					'svgIcons'             => $this->builder_svg_icons(),
 					'installPluginsPopup'  => $this->install_plugins_popup(),
 					'feeds'                => self::get_feed_list(),
+					'itemsPerPage'			=> SBI_Db::RESULTS_PER_PAGE,
+			        'feedsCount' 			=> SBI_Db::feeds_count(),
 					'sources'              => self::get_source_list(),
 					'sourceConnectionURLs' => SBI_Source::get_connection_urls(),
 
@@ -574,6 +576,7 @@ class SBI_Feed_Builder {
 			'moderateFeedSaveExit'              => __( 'Save and Exit', 'instagram-feed' ),
 			'moderationMode'                    => __( 'Moderation Mode', 'instagram-feed' ),
 			'moderationModeEnterPostId'         => __( 'Or Enter Post IDs to hide manually', 'instagram-feed' ),
+			'moderationModePostIdPlaceholder'   => __( 'Add Post IDs here, separated by comma, to hide posts with a specific ID', 'instagram-feed' ),
 			'moderationModeTextareaPlaceholder' => __( 'Add words here to hide any posts containing these words', 'instagram-feed' ),
 			'filtersAndModeration'              => __( 'Filters & Moderation', 'instagram-feed' ),
 			'topRated'                          => __( 'Top Rated', 'instagram-feed' ),

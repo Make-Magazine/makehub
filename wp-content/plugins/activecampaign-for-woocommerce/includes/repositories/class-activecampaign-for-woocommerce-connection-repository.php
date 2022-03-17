@@ -39,7 +39,8 @@ class Activecampaign_For_Woocommerce_Connection_Repository implements Repository
 	 * The plural resource name as it maps to the AC API.
 	 */
 	const RESOURCE_NAME_PLURAL = 'connections';
-
+	const ENDPOINT_NAME        = 'connection';
+	const ENDPOINT_NAME_PLURAL = 'connections';
 	/**
 	 * The API client.
 	 *
@@ -74,11 +75,11 @@ class Activecampaign_For_Woocommerce_Connection_Repository implements Repository
 		 */
 		$connection_model = new Connection();
 
-		$this->get_and_set_model_properties_from_api_by_id(
-			$this->client,
-			$connection_model,
-			(string) $id
-		);
+			$this->get_and_set_model_properties_from_api_by_id(
+				$this->client,
+				$connection_model,
+				(string) $id
+			);
 
 		return $connection_model;
 	}

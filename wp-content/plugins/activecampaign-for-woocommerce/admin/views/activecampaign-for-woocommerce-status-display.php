@@ -6,8 +6,13 @@
 	 * @package    Activecampaign_For_Woocommerce
 	 */
 
+	use Activecampaign_For_Woocommerce_Logger;
+	use Automattic\WooCommerce\Blocks\Package as Block_Package;
+
 	global $wpdb;
 
+	$activecampaign_for_woocommerce_logger = new Activecampaign_For_Woocommerce_Logger();
+try {
 	$activecampaign_for_woocommerce_wc_report                       = wc()->api->get_endpoint_data( '/wc/v3/system_status' );
 	$activecampaign_for_woocommerce_wc_environment                  = $activecampaign_for_woocommerce_wc_report['environment'];
 	$activecampaign_for_woocommerce_wc_database                     = $activecampaign_for_woocommerce_wc_report['database'];
@@ -18,10 +23,27 @@
 	$activecampaign_for_woocommerce_wc_webhooks                     = $wpdb->get_results( 'SELECT name, status FROM ' . $wpdb->prefix . 'wc_webhooks;' );
 	$activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_results( 'SELECT description, last_access, permissions FROM ' . $wpdb->prefix . 'woocommerce_api_keys;' );
 	$activecampaign_for_woocommerce_recent_log_errors               = $this->fetch_recent_log_errors();
+
+	$activecampaign_for_woocommerce_plugins = get_plugin_updates();
+
+	if ( count( $activecampaign_for_woocommerce_plugins ) > 0 && isset( $activecampaign_for_woocommerce_plugins['activecampaign-for-woocommerce/activecampaign-for-woocommerce.php'] ) ) {
+		$activecampaign_for_woocommerce_plugin_data = $activecampaign_for_woocommerce_plugins['activecampaign-for-woocommerce/activecampaign-for-woocommerce.php'];
+		$activecampaign_for_woocommerce_plugin_data = (object) _get_plugin_data_markup_translate( 'activecampaign-for-woocommerce/activecampaign-for-woocommerce.php', (array) $activecampaign_for_woocommerce_plugin_data, false, true );
+	}
+} catch ( Throwable $t ) {
+	$activecampaign_for_woocommerce_logger->warning(
+		'ActiveCampaign status page threw an error',
+		[
+			'message' => $t->getMessage(),
+		]
+	);
+}
+
+
 ?>
 <div id="activecampaign_status" label="
 	<?php
-		use Automattic\WooCommerce\Blocks\Package as Block_Package;
+
 		esc_html_e( 'Status', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 	?>
 	">
@@ -41,6 +63,22 @@
 		</tr>
 		</thead>
 		<tbody>
+		<tr>
+			<td>
+				<?php
+				esc_html_e( 'ActiveCampaign for WooCommerce installed version: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+				?>
+			</td>
+			<td>
+				<?php echo esc_html( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION ); ?>
+				<?php if ( isset( $activecampaign_for_woocommerce_plugin_data->update ) && ! empty( $activecampaign_for_woocommerce_plugin_data->update->new_version ) && ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION !== $activecampaign_for_woocommerce_plugin_data->update->new_version ) : ?>
+					<span class="notice error">
+						<?php echo esc_html_e( 'Your plugin is outdated. Please update to version ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						<?php echo esc_html( $activecampaign_for_woocommerce_plugin_data->update->new_version ); ?>
+					</span>
+				<?php endif; ?>
+			</td>
+		</tr>
 		<tr>
 			<td>
 				<?php
@@ -312,7 +350,7 @@
 					$activecampaign_for_woocommerce_version        = WC_ADMIN_VERSION_NUMBER;
 					$activecampaign_for_woocommerce_package_active = false;
 				} elseif ( class_exists( 'Admin_Package' ) ) {
-					if ( WC()->is_wc_admin_active() ) {
+					if ( $activecampaign_for_woocommerce_is_wc_admin_active ) {
 						// Fully active package version of WC Admin.
 						$activecampaign_for_woocommerce_version        = Admin_Package::get_active_version();
 						$activecampaign_for_woocommerce_package_active = Admin_Package::is_package_active();
@@ -338,7 +376,7 @@
 							$activecampaign_for_woocommerce_wc_admin_path = __( 'Active Plugin', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 						}
 					}
-					if ( WC()->is_wc_admin_active() ) {
+					if ( $activecampaign_for_woocommerce_is_wc_admin_active ) {
 						echo '<mark class="yes"><span class="dashicons dashicons-yes"></span> ' . esc_html( $activecampaign_for_woocommerce_version ) . ' <code class="private">' . esc_html( $activecampaign_for_woocommerce_wc_admin_path ) . '</code></mark> ';
 					} else {
 						echo '<span class="dashicons dashicons-no-alt"></span> ' . esc_html( $activecampaign_for_woocommerce_version ) . ' <code class="private">' . esc_html( $activecampaign_for_woocommerce_wc_admin_path ) . '</code> ';
@@ -701,7 +739,7 @@
 					$activecampaign_for_woocommerce_version        = WC_ADMIN_VERSION_NUMBER;
 					$activecampaign_for_woocommerce_package_active = false;
 				} elseif ( class_exists( 'Admin_Package' ) ) {
-					if ( WC()->is_wc_admin_active() ) {
+					if ( $activecampaign_for_woocommerce_is_wc_admin_active ) {
 						// Fully active package version of WC Admin.
 						$activecampaign_for_woocommerce_version        = Admin_Package::get_active_version();
 						$activecampaign_for_woocommerce_package_active = Admin_Package::is_package_active();
@@ -727,7 +765,7 @@
 							$activecampaign_for_woocommerce_wc_admin_path = __( 'Active Plugin', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 						}
 					}
-					if ( WC()->is_wc_admin_active() ) {
+					if ( $activecampaign_for_woocommerce_is_wc_admin_active ) {
 						echo '<mark class="yes"><span class="dashicons dashicons-yes"></span> ' . esc_html( $activecampaign_for_woocommerce_version ) . ' <code class="private">' . esc_html( $activecampaign_for_woocommerce_wc_admin_path ) . '</code></mark> ';
 					} else {
 						echo '<span class="dashicons dashicons-no-alt"></span> ' . esc_html( $activecampaign_for_woocommerce_version ) . ' <code class="private">' . esc_html( $activecampaign_for_woocommerce_wc_admin_path ) . '</code> ';

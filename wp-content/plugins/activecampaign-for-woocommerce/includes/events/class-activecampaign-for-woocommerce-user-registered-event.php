@@ -93,7 +93,9 @@ class Activecampaign_For_Woocommerce_User_Registered_Event implements Triggerabl
 	 * @since 1.0.0
 	 */
 	public function trigger( ...$args ) {
-		$this->logger = $this->logger ?: new Logger();
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 
 		// Step 1: Verify user
 		if ( isset( $args[0] ) ) {
@@ -113,7 +115,7 @@ class Activecampaign_For_Woocommerce_User_Registered_Event implements Triggerabl
 					update_user_meta( $user_data->ID, $meta_key, true );
 
 					$meta_key = 'activecampaign_for_woocommerce_contact_last_synced';
-					update_user_meta( $user_data->ID, $meta_key, date( 'Y-m-d H:i:s' ) );
+					update_user_meta( $user_data->ID, $meta_key, gmdate( 'Y-m-d H:i:s' ) );
 
 				} else {
 					$meta_key = 'activecampaign_for_woocommerce_contact_synced';

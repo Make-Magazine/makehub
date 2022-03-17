@@ -72,6 +72,52 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Widgets' ) ) :
 
 			// Process text widget data.
 			$this->widget_text();
+
+			// Process WP Forms widget data.
+			$this->widget_wpform();
+		}
+
+		/**
+		 * Widget WP Forms
+		 *
+		 * @since 3.1.3
+		 * @return void
+		 */
+		public function widget_wpform() {
+
+			$data = get_option( 'widget_wpforms-widget', null );
+
+			if ( empty( $data ) ) {
+				return;
+			}
+
+			Astra_Sites_Importer_Log::add( '---- Processing Contact Form Mapping from WP Forms Widgets -----' );
+
+			foreach ( $data as $key => $value ) {
+
+				if ( isset( $value['form_id'] ) && ! empty( $value['form_id'] ) ) {
+
+					$content = $value['form_id'];
+
+					// Empty mapping? Then return.
+					if ( ! empty( $this->wpforms_ids_mapping ) ) {
+						// Replace ID's.
+						foreach ( $this->wpforms_ids_mapping as $old_id => $new_id ) {
+							if ( $old_id === $content ) {
+								$content = $new_id;
+							}
+						}
+					}
+
+					$data[ $key ]['form_id'] = $content;
+
+					if ( defined( 'WP_CLI' ) ) {
+						WP_CLI::line( 'Updating Contact Form Mapping from WP Forms Widgets' );
+					}
+				}
+			}
+
+			update_option( 'widget_wpforms-widget', $data );
 		}
 
 		/**
@@ -88,7 +134,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Widgets' ) ) :
 				return;
 			}
 
-			Astra_Sites_Importer_Log::add( '---- Processing Contact Form Mapping from Widgets -----' );
+			Astra_Sites_Importer_Log::add( '---- Processing Contact Form Mapping from Text Widgets -----' );
 
 			foreach ( $data as $key => $value ) {
 
@@ -108,7 +154,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Widgets' ) ) :
 					$data[ $key ]['text'] = $content;
 
 					if ( defined( 'WP_CLI' ) ) {
-						WP_CLI::line( 'Updating Contact Form Mapping' );
+						WP_CLI::line( 'Updating Contact Form Mapping from Text Widgets' );
 					}
 				}
 			}

@@ -57,8 +57,17 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		Ecom_Product_Factory $product_factory,
 		Logger $logger = null
 	) {
-		$this->product_factory = $product_factory ?: new Ecom_Product_Factory();
-		$this->logger          = $logger ?: new Logger();
+		if ( ! $product_factory ) {
+			$this->product_factory = new Ecom_Product_Factory();
+		} else {
+			$this->product_factory = $product_factory;
+		}
+
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	/**
@@ -69,6 +78,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		if ( ! empty( $admin_storage ) && isset( $admin_storage['connection_id'] ) ) {
 			$this->connection_id = $admin_storage['connection_id'];
 		}
+
 		if ( ! $this->product_factory ) {
 			$this->product_factory = new Ecom_Product_Factory();
 		}
@@ -83,13 +93,17 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 * @throws Exception Does not stop.
 	 * @return Ecom_Order $ecom_order
 	 */
-	public function setup_woocommerce_order_from_admin( WC_Order $order, $historical_sync = false ) {
+	public function setup_woocommerce_order_from_admin( $order, $historical_sync = false ) {
 		// Setup the woocommerce cart
 		$this->init();
 
 		try {
 			// setup the ecom order
 			$ecom_order = new Ecom_Order();
+
+			if ( ! method_exists( $order, 'get_order' ) && ! method_exists( $order, 'get_order_number' ) ) {
+				return null;
+			}
 
 			/**
 			 * Source is a method of sync marker indicating it's historical
@@ -109,12 +123,12 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			$ecom_order->set_order_number( $order->get_order_number() );
 			$ecom_order->set_externalid( $order->get_id() );
 			$ecom_order->set_order_url( $order->get_edit_order_url() );
-			$ecom_order->set_discount_amount( Money::of( $order->get_total_discount(), get_woocommerce_currency() )->getMinorAmount() );
-			$ecom_order->set_shipping_amount( Money::of( $order->get_shipping_total(), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_discount_amount( Money::of( wc_format_decimal( $order->get_total_discount(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_shipping_amount( Money::of( wc_format_decimal( $order->get_shipping_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
 			$ecom_order->set_shipping_method( $order->get_shipping_method() );
-			$ecom_order->set_tax_amount( Money::of( $order->get_total_tax(), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_tax_amount( Money::of( wc_format_decimal( $order->get_total_tax(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
 			$ecom_order->set_externalcheckoutid( null );
-			$ecom_order->set_total_price( Money::of( $order->get_total(), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
 
 			// Set the order dates by the time set from WC
 			$created_date = new DateTime( $order->get_date_created(), new DateTimeZone( 'UTC' ) );
@@ -132,7 +146,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			if ( empty( $ecom_order->get_total_price() ) ) {
 				$order->calculate_totals();
-				$ecom_order->set_total_price( Money::of( $order->get_total(), get_woocommerce_currency() )->getMinorAmount() );
+				$ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
 			}
 
 			return $ecom_order;
@@ -157,17 +171,32 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 *
 	 * @return Activecampaign_For_Woocommerce_Ecom_Order|null
 	 */
-	public function build_products_for_order( WC_Order $order, Ecom_Order $ecom_order ) {
+	public function build_products_for_order( $order, Ecom_Order $ecom_order ) {
 		try {
 			// There is no cart object, build the products and add to the order
 			$products = [];
-			// Get and Loop Over Order Items to populate products
-			foreach ( $order->get_items() as $item_id => $item ) {
-				$products[ $item_id ] = $this->build_ecom_product( $item );
+			if ( method_exists( $order, 'get_items' ) ) {
+				// Get and Loop Over Order Items to populate products
+				foreach ( $order->get_items() as $item_id => $item ) {
+					$product = $this->build_ecom_product( $item, $item_id );
+					if ( null !== $product ) {
+						$products[ $item_id ] = $product;
+					} else {
+						$this->logger->warning(
+							'Order Utilities: A product passed back as null.',
+							[
+								'item_id' => $item_id,
+								'item'    => $item,
+							]
+						);
+					}
+				}
 			}
 
-			// Add products to list
-			array_walk( $products, [ $ecom_order, 'push_order_product' ] );
+			if ( count( $products ) > 0 ) {
+				// Add products to list
+				array_walk( $products, [ $ecom_order, 'push_order_product' ] );
+			}
 
 			return $ecom_order;
 		} catch ( Throwable $t ) {
@@ -221,34 +250,43 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	/**
 	 * Builds an ecom product from the item passed in.
 	 *
-	 * @param     object $item     The product object.
+	 * @param     object          $item     The product object.
+	 * @param     int|string|null $item_id The item ID.
 	 *
 	 * @return Activecampaign_For_Woocommerce_Ecom_Product
 	 */
-	private function build_ecom_product( $item ) {
+	private function build_ecom_product( $item, $item_id = null ) {
 		try {
+			$product_data = null;
+			$product      = null;
 
-			$product = [
-				'data'         => WC()->product_factory->get_product( $item->get_product_id() ),
-				'product_id'   => $item->get_product_id(),
-				'variation_id' => $item->get_variation_id(),
-				'product'      => $item->get_data_store(),
-				'name'         => $item->get_name(),
-				'quantity'     => $item->get_quantity(),
-				'subtotal'     => $item->get_subtotal(),
-				'total'        => $item->get_total(),
-				'tax'          => $item->get_subtotal_tax(),
-				'taxclass'     => $item->get_tax_class(),
-				'taxstat'      => $item->get_tax_status(),
-				'allmeta'      => $item->get_meta_data(),
-				'somemeta'     => $item->get_meta( '_whatever', true ),
-				'type'         => $item->get_type(),
-			];
+			if ( ! empty( $item_id ) ) {
+				$product_data = $this->get_wc_product_from_id( $item_id );
+			}
 
-			$product = $this->product_factory->product_from_cart_content( $product );
+			if ( ! $product_data instanceof WC_Product && ! empty( $item->get_product_id() ) ) {
+				$product_data = $this->get_wc_product_from_id( $item->get_product_id() );
+			}
 
-			if ( $product ) {
-				return $product;
+			if ( $product_data instanceof WC_Product ) {
+				$product = [
+					'data'         => $product_data,
+					'product_id'   => $item->get_product_id(),
+					'variation_id' => $item->get_variation_id(),
+					'product'      => $item->get_data_store(),
+					'name'         => $item->get_name(),
+					'quantity'     => $item->get_quantity(),
+					'subtotal'     => $item->get_subtotal(),
+					'total'        => $item->get_total(),
+					'tax'          => $item->get_subtotal_tax(),
+					'taxclass'     => $item->get_tax_class(),
+					'taxstat'      => $item->get_tax_status(),
+					'allmeta'      => $item->get_meta_data(),
+					'somemeta'     => $item->get_meta( '_whatever', true ),
+					'type'         => $item->get_type(),
+				];
+
+				$product = $this->product_factory->product_from_cart_content( $product );
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->error(
@@ -256,11 +294,53 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				[
 					'message'     => $t->getMessage(),
 					'item'        => $item,
-					'stack_trace' => $t->getTrace(),
+					'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 
 			return null;
+		}
+
+		return $product;
+	}
+
+	/**
+	 * Tries every method to get a product from the product ID.
+	 *
+	 * @param string|int $id The product id.
+	 *
+	 * @return bool|false|WC_Product|null
+	 */
+	public function get_wc_product_from_id( $id ) {
+		$logger = new Logger();
+		try {
+			if ( is_string( $id ) && is_numeric( $id ) ) {
+				$id = (int) $id;
+			}
+
+			$product = wc_get_product( $id );
+
+			if ( ! $product instanceof WC_Product ) {
+				$product = WC()->product_factory->get_product( $id );
+			}
+
+			if ( ! $product instanceof WC_Product ) {
+				$_pf     = new WC_Product_Factory();
+				$product = $_pf->get_product( $id );
+			}
+
+			if ( $product instanceof WC_Product ) {
+				return $product;
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an error getting WC_Product from id.',
+				[
+					'id'             => $id,
+					'thrown_message' => $t->getMessage(),
+					'trace'          => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
 		}
 
 		return null;
@@ -299,51 +379,171 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 *
 	 * @return string|null
 	 */
-	public function get_product_image_url( WC_Product $product ) {
-		$post         = get_post( $product->get_id() );
-		$thumbnail_id = get_post_thumbnail_id( $post );
-		$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
-
-		if ( ! is_array( $image_src ) ) {
-			return null;
-		}
-
-		// The first element is the actual URL
-		return $image_src[0];
-	}
-
-
-	/**
-	 * Gets the product category list.
-	 *
-	 * @param     WC_Product $product     The product object.
-	 *
-	 * @return string|null
-	 */
-	public function get_product_category( WC_Product $product ) {
+	public function get_product_image_url( $product ) {
 		try {
-			$terms = get_the_terms( $product->get_id(), 'product_cat' );
+			if ( method_exists( $product, 'get_id' ) ) {
+				$post         = get_post( $product->get_id() );
+				$thumbnail_id = get_post_thumbnail_id( $post );
+				$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
 
-			if ( ! is_array( $terms ) ) {
-				return null;
-			}
+				if ( ! is_array( $image_src ) ) {
+					return null;
+				}
 
-			$term = array_pop( $terms );
-			if ( $term instanceof WP_Term ) {
-				return $term->name;
+				// The first element is the actual URL
+				return $image_src[0];
 			}
 		} catch ( Throwable $t ) {
 			$logger = new Logger();
 			$logger->warning(
-				'Abandonment sync: Could not generate get the terms for this product.',
+				'Could not retrieve product image URL',
 				[
-					'product' => $product,
 					'message' => $t->getMessage(),
-					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+					'product' => method_exists( $product, 'get_data' ) ? $product->get_data() : null,
 				]
 			);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Parse the results of the all of a product's categories and return all as separated list
+	 *
+	 * @param WC_Product $product The WC Product.
+	 *
+	 * @return string|null
+	 */
+	public function get_product_category( $product ) {
+		$logger = new Logger();
+		try {
+			if ( method_exists( $product, 'get_id' ) ) {
+				$terms = get_the_terms( $product->get_id(), 'product_cat' );
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'Could not get the terms/categories for a product.',
+				[
+					'message' => $t->getMessage(),
+					'product' => $product,
+				]
+			);
+		}
+
+		$cat_list = [];
+		try {
+			// go through the categories and make a named list
+			if ( ! empty( $terms ) && is_array( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$product_cat_id   = $term->term_id;
+					$product_cat_name = $term->name;
+					if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
+						$cat_list[] = $product_cat_name;
+					} else {
+						$logger->warning(
+							'A product category attached to this product does not have a valid category and/or name.',
+							[
+								'product_id' => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+								'term_id'    => $term->term_id,
+								'term_name'  => $term->name,
+							]
+						);
+					}
+				}
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an error getting all product categories.',
+				[
+					'terms'          => $terms,
+					'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+					'trace'          => $logger->clean_trace( $t->getTrace() ),
+					'thrown_message' => $t->getMessage(),
+				]
+			);
+		}
+
+		if ( ! empty( $cat_list ) ) {
+			// Convert to a comma separated string
+			return implode( ', ', $cat_list );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Checks if the order contains a refund.
+	 *
+	 * @param string|WC_Order|object $order The order object.
+	 *
+	 * @return bool
+	 */
+	public function is_refund_order( $order ) {
+		try {
+			if ( $order->get_item_count_refunded() > 0 ) {
+				// refunds don't work yet
+				$this->logger->debug(
+					'Historical sync cannot currently sync refund data. This order will be ignored.',
+					[
+						'order_id'            => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
+						'item_count_refunded' => $order->get_item_count_refunded(),
+					]
+				);
+
+				return true;
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Historical sync had an error processing a refund order.',
+				[
+					'message'     => $t->getMessage(),
+					'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Cleans a description field by removing tags and shortening the number of words to a max amount.
+	 *
+	 * @param string $description The description.
+	 *
+	 * @return string
+	 */
+	public function clean_description( $description ) {
+		$logger = new Logger();
+
+		try {
+			$plain_description = str_replace( array( "\r", "\n", '&nbsp;' ), ' ', $description );
+			$plain_description = trim( wp_strip_all_tags( $plain_description, false ) );
+			$plain_description = preg_replace( '/\s+/', ' ', $plain_description );
+			$wrap_description  = wordwrap( $plain_description, 300 );
+			$description_arr   = explode( "\n", $wrap_description );
+			if ( isset( $description_arr[0] ) ) {
+				$fin_description = $description_arr[0] . '...';
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an issue cleaning the description field.',
+				[
+					'message'     => $t->getMessage(),
+					'description' => $description,
+				]
+			);
+		}
+
+		if ( ! empty( $fin_description ) ) {
+			return $fin_description;
+		}
+
+		if ( ! empty( $plain_description ) ) {
+			return $plain_description;
+		}
+
+		return $description;
 	}
 }

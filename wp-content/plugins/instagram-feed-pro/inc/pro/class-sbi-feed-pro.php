@@ -189,6 +189,8 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 
 		$posts_table_name       = $wpdb->prefix . SBI_INSTAGRAM_POSTS_TYPE;
 		$feeds_posts_table_name = $wpdb->prefix . SBI_INSTAGRAM_FEEDS_POSTS;
+
+
 		// this will help cover small changes in the number of posts requested
 		// as well as posts stored when in moderation mode
 		$feed_id_variant_1 = substr( $feed_id, 0, -1 );
@@ -215,20 +217,40 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 		 */
 		$additional_where = apply_filters( 'sbi_db_query_additional_where', $additional_where, $feed_id );
 
-		$results = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT p.json_data FROM $posts_table_name AS p INNER JOIN $feeds_posts_table_name AS f ON p.id = f.id
-			WHERE BINARY f.feed_id = %s
-			$additional_where
-			AND p.time_stamp < '$max_timestamp'
-			GROUP BY p.instagram_id
-			ORDER BY p.time_stamp
-			DESC LIMIT %d, %d",
-				$feed_id,
-				$offset,
-				$num_posts
-			)
-		);
+		if ( strpos( $feed_id, '*' ) === 0 ) {
+			if ( ! empty( $hashtag ) ) {
+				$hashtag = esc_sql( $hashtag );
+				$results = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT p.json_data FROM $posts_table_name AS p INNER JOIN $feeds_posts_table_name AS f ON p.id = f.id
+							WHERE BINARY f.hashtag IN ('$hashtag')
+							AND p.time_stamp < '$max_timestamp'
+							GROUP BY p.instagram_id
+							ORDER BY p.time_stamp
+							DESC LIMIT %d, %d",
+						$offset,
+						$num_posts
+					)
+				);
+			} else {
+				$results = array();
+			}
+		} else {
+			$results = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT p.json_data FROM $posts_table_name AS p INNER JOIN $feeds_posts_table_name AS f ON p.id = f.id
+						WHERE BINARY f.feed_id = %s
+						$additional_where
+						AND p.time_stamp < '$max_timestamp'
+						GROUP BY p.instagram_id
+						ORDER BY p.time_stamp
+						DESC LIMIT %d, %d",
+					$feed_id,
+					$offset,
+					$num_posts
+				)
+			);
+		}
 
 		return $results;
 	}

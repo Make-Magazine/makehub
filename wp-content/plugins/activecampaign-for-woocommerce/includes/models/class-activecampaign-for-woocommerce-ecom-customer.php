@@ -225,10 +225,10 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	 *
 	 * @return bool
 	 */
-	public function create_ecom_customer_from_order( WC_Order $order ) {
+	public function create_ecom_customer_from_order( $order ) {
 		$logger = new Logger();
 		if ( isset( $order ) && $order->get_id() ) {
-			if ( $order->get_customer_id() ) {
+			if ( method_exists( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				try {
 					// Use the customer information
 					$customer = new WC_Customer( $order->get_customer_id(), false );
@@ -264,7 +264,13 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 				}
 			}
 
-			if ( ! $order->get_customer_id() || ! $customer || ! $customer->get_email() ) {
+			if (
+				! isset( $customer ) ||
+				! method_exists( $order, 'get_customer_id' ) ||
+				! method_exists( $customer, 'get_email' ) ||
+				! $order->get_customer_id() ||
+				! $customer->get_email()
+			) {
 				try {
 					// This customer doesn't have a customer or user dataset, set externalid to zero
 					$this->externalid = 0;
@@ -275,7 +281,7 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 					$logger->error(
 						'Activecampaign_For_Woocommerce_Ecom_Customer: There was a problem preparing data for a record.',
 						[
-							'customer_email' => $order->get_billing_email(),
+							'customer_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 							'message'        => $t->getMessage(),
 						]
 					);

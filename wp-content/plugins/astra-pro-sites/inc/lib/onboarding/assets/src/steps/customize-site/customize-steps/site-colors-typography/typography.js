@@ -77,7 +77,10 @@ const TypographyWrapper = () => {
 
 			if ( bodyFont ) {
 				bodyFont = getFontName( bodyFont );
-				bodyFont = bodyFont.replace( ' ', '+' );
+				bodyFont =
+					undefined !== bodyFont
+						? bodyFont.replace( ' ', '+' )
+						: bodyFont;
 				fontsName.push( `family=${ bodyFont }${ bodyFontWeight }` );
 			}
 
@@ -91,7 +94,10 @@ const TypographyWrapper = () => {
 
 			if ( headingFont ) {
 				headingFont = getFontName( headingFont, bodyFont );
-				headingFont = headingFont.replace( ' ', '+' );
+				headingFont =
+					undefined !== headingFont
+						? headingFont.replace( ' ', '+' )
+						: headingFont;
 				fontsName.push(
 					`family=${ headingFont }${ headingFontWeight }`
 				);

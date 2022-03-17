@@ -38,6 +38,11 @@ class Activecampaign_For_Woocommerce_Request_Id_Service {
 	 * @return string
 	 */
 	public static function get_request_id() {
-		return static::$request_id ?: static::$request_id = uniqid( 'ac_woocommerce_', true );
+		if ( static::$request_id ) {
+			return static::$request_id;
+		}
+
+		static::$request_id = uniqid( 'ac_woocommerce_', true );
+		return static::$request_id;
 	}
 }

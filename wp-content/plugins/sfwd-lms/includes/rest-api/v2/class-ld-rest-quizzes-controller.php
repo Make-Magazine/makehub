@@ -421,34 +421,39 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
+			if ( $this->post_type === $post->post_type ) {
+				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$request_route = $request->get_route();
+				
+				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
 
-			$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
+					$links = array();
 
-			$links = array();
+					if ( ! isset( $response->links['statistics'] ) ) {
+						$quiz_pro_id = get_post_meta( $post->ID, 'quiz_pro_id', true );
+						$quiz_pro_id = absint( $quiz_pro_id );
+						if ( ! empty( $quiz_pro_id ) ) {
+							$quiz_pro_statistics_on = learndash_get_setting( $post, 'statisticsOn', true );
+							if ( $quiz_pro_statistics_on ) {
+								$links['statistics'] = array(
+									'href'       => rest_url( trailingslashit( $base ) . $post->ID . '/' . $this->get_rest_base( 'quizzes-statistics' ) ),
+									'embeddable' => true,
+								);
+							}
+						}
+					}
 
-			if ( ! isset( $response->links['statistics'] ) ) {
-				$quiz_pro_id = get_post_meta( $post->ID, 'quiz_pro_id', true );
-				$quiz_pro_id = absint( $quiz_pro_id );
-				if ( ! empty( $quiz_pro_id ) ) {
-					$quiz_pro_statistics_on = learndash_get_setting( $post, 'statisticsOn', true );
-					if ( $quiz_pro_statistics_on ) {
-						$links['statistics'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID . '/' . $this->get_rest_base( 'quizzes-statistics' ) ),
+					if ( ! isset( $response->links['users'] ) ) {
+						$links['users'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
 							'embeddable' => true,
 						);
 					}
+
+					if ( ! empty( $links ) ) {
+						$response->add_links( $links );
+					}
 				}
-			}
-
-			if ( ! isset( $response->links['users'] ) ) {
-				$links['users'] = array(
-					'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
-					'embeddable' => true,
-				);
-			}
-
-			if ( ! empty( $links ) ) {
-				$response->add_links( $links );
 			}
 
 			return $response;

@@ -127,6 +127,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_filter( 'sfwd_cpt_loop', array( $this, 'cpt_loop_filter' ) );
 			add_filter( 'edit_term_count', array( $this, 'tax_term_count' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'i18nize' ) );
+			add_action( 'init', array( $this, 'add_stripe' ) );
 
 			add_filter( 'all_plugins', array( $this, 'all_plugins_proc' ) );
 			add_action( 'pre_current_active_plugins', array( $this, 'pre_current_active_plugins_proc' ) );
@@ -135,7 +136,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_filter( 'pre_update_option_active_plugins', array( $this, 'pre_update_option_active_plugins' ) );
 			add_filter( 'pre_update_site_option_active_sitewide_plugins', array( $this, 'pre_update_site_option_active_sitewide_plugins' ) );
 
-			add_action( 'after_setup_theme', array( $this, 'load_template_functions' ) );
+			add_action( 'after_setup_theme', array( $this, 'load_template_functions' ), 50 );
 
 			add_filter( 'category_row_actions', array( $this, 'ld_course_category_row_actions' ), 10, 2 );
 			add_filter( 'post_tag_row_actions', array( $this, 'ld_course_category_row_actions' ), 10, 2 );
@@ -162,6 +163,11 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				 * WP-admin pionters functions
 				 */
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/class-learndash-admin-pointers.php';
+
+				/**
+				 * Setup Wizard
+				 */
+				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/class-ld-setup-wizard.php';
 			}
 
 			add_action( 'wp_ajax_select_a_lesson', array( $this, 'select_a_lesson_ajax' ) );
@@ -173,7 +179,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * Triggered actions
 		 */
 		public function trigger_actions() {
-			global $learndash_course_statuses, $learndash_question_types;
+			global $learndash_course_statuses, $learndash_question_types, $learndash_exam_challenge_statuses;
 
 			$learndash_course_statuses = array(
 				'not_started' => esc_html__( 'Not Started', 'learndash' ),
@@ -190,6 +196,12 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'cloze_answer'       => esc_html__( 'Fill in the blank', 'learndash' ),
 				'assessment_answer'  => esc_html__( 'Assessment', 'learndash' ),
 				'essay'              => esc_html__( 'Essay / Open Answer', 'learndash' ),
+			);
+
+			$learndash_exam_challenge_statuses = array(
+				'not_taken' => esc_html__( 'Not Taken', 'learndash' ),
+				'passed'    => esc_html__( 'Passed', 'learndash' ),
+				'failed'    => esc_html__( 'Failed', 'learndash' ),
 			);
 
 			$this->upgrade_plugin();
@@ -227,6 +239,20 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				 */
 				do_action( 'learndash_settings_pages_init' );
 			}
+
+			/**
+			 * Fires to trigger active theme/template to load.
+			 *
+			 * @since 4.0.0
+			 */
+			do_action( 'learndash_themes_load' );
+
+			/**
+			 * Fires when LearnDash core is loaded.
+			 *
+			 * @since 4.0.0
+			 */
+			do_action( 'learndash_loaded' );
 		}
 
 		/**
@@ -713,7 +739,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			}
 		}
 
+		/**
+		 * Includes Stripe Connect. Fired on action 'init'.
+		 *
+		 * @since 4.0.0
+		 */
+		public function add_stripe() {
+			$enabled = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Stripe_Connect', 'enabled' );
 
+			if ( 'yes' === $enabled ) {
+				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/payments/class-learndash-stripe-connect-checkout-integration.php';
+			}
+		}
 
 		/**
 		 * Adds paypal to already generated rewrite rules
@@ -917,13 +954,13 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				// translators: placeholder: Lesson.
 				'view_item'                => sprintf( esc_html_x( 'View %s', 'placeholder: Lesson', 'learndash' ), $lcl_lesson ),
 				// translators: placeholder: Lessons.
-				'view_items'               => sprintf( esc_html_x( 'View %s', 'placeholder: Lessons', 'learndash' ), $lcl_lessons ),
+				'view_items'               => sprintf( esc_html_x( 'View %s', 'placeholder: Lessons.', 'learndash' ), $lcl_lessons ),
 				// translators: placeholder: Lessons.
-				'search_items'             => sprintf( esc_html_x( 'Search %s', 'placeholder: Lessons', 'learndash' ), $lcl_lessons ),
+				'search_items'             => sprintf( esc_html_x( 'Search %s', 'placeholder: Lessons.', 'learndash' ), $lcl_lessons ),
 				// translators: placeholder: Lessons.
-				'not_found'                => sprintf( esc_html_x( 'No %s found', 'placeholder: Lessons', 'learndash' ), $lcl_lessons ),
+				'not_found'                => sprintf( esc_html_x( 'No %s found', 'placeholder: Lessons.', 'learndash' ), $lcl_lessons ),
 				// translators: placeholder: Lessons.
-				'not_found_in_trash'       => sprintf( esc_html_x( 'No %s found in Trash', 'placeholder: Lessons', 'learndash' ), $lcl_lessons ),
+				'not_found_in_trash'       => sprintf( esc_html_x( 'No %s found in Trash', 'placeholder: Lessons.', 'learndash' ), $lcl_lessons ),
 				'parent_item_colon'        => '',
 				'menu_name'                => $lcl_lessons,
 				// translators: placeholder: Lesson.
@@ -936,6 +973,45 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'item_scheduled'           => sprintf( esc_html_x( '%s Scheduled', 'placeholder: Lesson', 'learndash' ), $lcl_lesson ),
 				// translators: placeholder: Lesson.
 				'item_updated'             => sprintf( esc_html_x( '%s Updated', 'placeholder: Lesson', 'learndash' ), $lcl_lesson ),
+			);
+
+			$lcl_exam  = LearnDash_Custom_Label::get_label( 'exam' );
+			$lcl_exams = LearnDash_Custom_Label::get_label( 'exams' );
+
+			$exam_labels = array(
+				'name'                     => $lcl_exams,
+				'singular_name'            => $lcl_exam,
+				// translators: placeholder: Exam.
+				'add_new'                  => esc_html_x( 'Add New', 'placeholder: Exam', 'learndash' ),
+				// translators: placeholder: Exam.
+				'add_new_item'             => sprintf( esc_html_x( 'Add New %s', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'edit_item'                => sprintf( esc_html_x( 'Edit %s', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'new_item'                 => sprintf( esc_html_x( 'New %s', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				'all_items'                => $lcl_exams,
+				// translators: placeholder: Exam.
+				'view_item'                => sprintf( esc_html_x( 'View %s', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exams.
+				'view_items'               => sprintf( esc_html_x( 'View %s', 'placeholder: Lessons', 'learndash' ), $lcl_exams ),
+				// translators: placeholder: Exams.
+				'search_items'             => sprintf( esc_html_x( 'Search %s', 'placeholder: Lessons', 'learndash' ), $lcl_exams ),
+				// translators: placeholder: Exams.
+				'not_found'                => sprintf( esc_html_x( 'No %s found', 'placeholder: Lessons', 'learndash' ), $lcl_exams ),
+				// translators: placeholder: Exams.
+				'not_found_in_trash'       => sprintf( esc_html_x( 'No %s found in Trash', 'placeholder: Lessons', 'learndash' ), $lcl_exams ),
+				'parent_item_colon'        => '',
+				'menu_name'                => $lcl_exams,
+				// translators: placeholder: Exam.
+				'item_published'           => sprintf( esc_html_x( '%s Published', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'item_published_privately' => sprintf( esc_html_x( '%s Published Privately', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'item_reverted_to_draft'   => sprintf( esc_html_x( '%s Reverted to Draft', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'item_scheduled'           => sprintf( esc_html_x( '%s Scheduled', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
+				// translators: placeholder: Exam.
+				'item_updated'             => sprintf( esc_html_x( '%s Updated', 'placeholder: Exam', 'learndash' ), $lcl_exam ),
 			);
 
 			$lcl_course  = LearnDash_Custom_Label::get_label( 'course' );
@@ -1446,6 +1522,8 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'orderby' => LearnDash_Settings_Section::get_section_setting_select_option_label( 'LearnDash_Settings_Section_Lessons_Display_Order', 'orderby' ),
 				'order'   => LearnDash_Settings_Section::get_section_setting_select_option_label( 'LearnDash_Settings_Section_Lessons_Display_Order', 'order' ),
 			);
+
+			$exam_post_type_slug = learndash_get_post_type_slug( 'exam' );
 
 			$this->post_args = array(
 				'sfwd-courses'  => array(
@@ -2139,7 +2217,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 							'name'      => esc_html__( 'Associated Settings', 'learndash' ),
 							'type'      => 'select',
 							// translators: placeholder: quiz.
-							'help_text' => sprintf( esc_html_x( 'If you imported a %s, use this field to select it. Otherwise, create new settings below. After saving or publishing, you will be able to add questions.', 'placeholder: quiz', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ) ) . '<a style="display:none" id="advanced_quiz_preview" class="wpProQuiz_prview" href="#">' . esc_html__( 'Preview', 'learndash' ) . '</a>',
+							'help_text' => sprintf( esc_html_x( 'If you imported a %s, use this field to select it. Otherwise, create new settings below. After saving or publishing, you will be able to add questions.', 'placeholder: quiz.', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ) ) . '<a style="display:none" id="advanced_quiz_preview" class="wpProQuiz_prview" href="#">' . esc_html__( 'Preview', 'learndash' ) . '</a>',
 							'default'   => '',
 						),
 					),
@@ -2183,6 +2261,35 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 					),
 					'default_options'    => array(),
+				),
+				$exam_post_type_slug          => array(
+					'plugin_name'        => LearnDash_Custom_Label::get_label( 'exam' ),
+					'slug_name'          => $exam_post_type_slug,
+					'post_type'          => $exam_post_type_slug,
+					'template_redirect'  => true,
+					'taxonomies'         => array(),
+					'cpt_options'        => array(
+						'public'              => true,
+						'hierarchical'        => false,
+						'has_archive'         => false,
+						'supports'            => array( 'title', 'editor', 'custom-fields', 'thumbnail', 'revisions' ),
+						'labels'              => $exam_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => true,
+						'show_in_nav_menus'   => false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => LearnDash_REST_API::enabled( $exam_post_type_slug ) || LearnDash_REST_API::gutenberg_enabled( $exam_post_type_slug ),
+						'template'            => array(
+							array( 'learndash/ld-exam' ),
+						),
+					),
+					'options_page_title' => sprintf(
+						// translators: placeholder: Exam.
+						esc_html_x( 'LearnDash %s Settings', 'placeholder: Exam', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'exam' )
+					),
+					'fields'             => array(),
 				),
 			);
 
@@ -2722,7 +2829,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					 * @param boolean      Whether to include the expired courses or not ( default: true )
 					 * @param int $user_id User ID
 					 */
-					if ( true !== apply_filters( 'learndash_user_courseinfo_courses_include_expired', '__return_true', $user_id ) ) {
+					if ( true !== apply_filters( 'learndash_user_courseinfo_courses_include_expired', true, $user_id ) ) {
 						$course_progress_ids = array_diff( $course_progress_ids, learndash_get_expired_user_courses_from_meta( $user_id ) );
 					}
 				}
@@ -4073,12 +4180,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 					if ( true === $include_default ) {
 						if ( true == $include_topics ) {
-							/**
-							 * Filters whether the select2 is loaded or not.
-							 *
-							 * @param boolean $learndash_select2 whether the select2 library is loaded or not.
-							 */
-							if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+							if ( learndash_use_select2_lib() ) {
 								$post_array = array(
 									'-1' => sprintf(
 										// translators: placeholders: Lesson, Topic.
@@ -4098,8 +4200,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 								);
 							}
 						} else {
-							/** This filter is documented in includes/class-ld-lms.php */
-							if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+							if ( learndash_use_select2_lib() ) {
 								$post_array = array(
 									'-1' => sprintf(
 										// translators: placeholder: Lesson.
@@ -4121,7 +4222,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 					if ( ! empty( $posts ) ) {
 						foreach ( $posts as $p ) {
-							$lesson_post_title = wp_strip_all_tags( $p->post_title );
+							$lesson_post_title = learndash_format_step_post_title_with_status_label( $p );
 							if ( empty( $lesson_post_title ) ) {
 								$lesson_post_title = $p->ID . ' - /' . $p->post_name;
 							}
@@ -4130,7 +4231,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 								$topics_array = learndash_get_topic_list( $p->ID, $course_id );
 								if ( ! empty( $topics_array ) ) {
 									foreach ( $topics_array as $topic ) {
-										$topic_post_title = wp_strip_all_tags( $topic->post_title );
+										$topic_post_title = learndash_format_step_post_title_with_status_label( $topic );
 										if ( empty( $topic_post_title ) ) {
 											$topic_post_title = $topic->ID . ' - /' . $topic->post_name;
 										}
@@ -4220,8 +4321,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			}
 
 			$posts = get_posts( $opt );
-			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$post_array = array(
 					'-1' => sprintf(
 						// translators: placeholder: Lesson.

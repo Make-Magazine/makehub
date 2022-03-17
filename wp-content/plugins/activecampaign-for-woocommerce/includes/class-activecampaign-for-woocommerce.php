@@ -37,6 +37,8 @@ use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
+use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The core plugin class.
@@ -244,36 +246,53 @@ class Activecampaign_For_Woocommerce {
 	private $abandoned_cart_utilities;
 
 	/**
+	 * The bulksync repository class.
+	 *
+	 * @since 1.6.0
+	 * @var Activecampaign_For_Woocommerce_Bulksync_Repository
+	 */
+	private $bulksync_repository;
+
+	/**
+	 * The AC Utility class.
+	 *
+	 * @var Activecampaign_For_Woocommerce_Utilities
+	 */
+	private $ac_utilities;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 *
-	 * @param     string                                     $version     The current version of the plugin.
-	 * @param     string                                     $plugin_name     The kebab-case name of the plugin.
-	 * @param     Loader                                     $loader     The loader class.
-	 * @param     Admin                                      $admin     The admin class.
-	 * @param     AC_Public                                  $public     The public class.
-	 * @param     I18n                                       $i18n     The internationalization class.
-	 * @param     Logger                                     $logger     The logger.
-	 * @param     Cart_Updated                               $cart_updated_event     The cart update event class.
-	 * @param     Cart_Emptied                               $cart_emptied_event     The cart emptied event class.
-	 * @param     Set_Connection_Id_Cache_Command            $set_connection_id_cache_command     The connection id cache command class.
-	 * @param     Create_Or_Update_Connection_Option_Command $c_or_u_co_command     The connection option command class.
-	 * @param     Create_And_Save_Cart_Id                    $create_and_save_cart_id_command     The cart id command class.
-	 * @param     Update_Cart_Command                        $update_cart_command     The update cart command class.
-	 * @param     Delete_Cart_Id                             $delete_cart_id_command     The delete cart id command class.
-	 * @param     Add_Cart_Id_To_Order                       $add_cart_id_to_order_command     The add cart id to order command class.
-	 * @param     Add_Accepts_Marketing_To_Customer_Meta     $add_am_to_meta_command     The accepts marketing command class.
-	 * @param     Clear_User_Meta_Command                    $clear_user_meta_command     The clear user meta command class.
-	 * @param     Sync_Guest_Abandoned_Cart_Command          $sync_guest_abandoned_cart_command     The sync guest abandoned cart command class.
-	 * @param     Order_Finished                             $order_finished_event     The order finished event class.
-	 * @param     User_Registered                            $user_registered_event     The user registered event class.
-	 * @param     Run_Abandonment_Sync_Command               $run_abandonment_sync_command     The scheduled runner to sync abandonments.
-	 * @param     Plugin_Upgrade_Command                     $plugin_upgrade_command     The plugin installation and upgrade commands.
-	 * @param     Historical_Sync                            $historical_sync The historical sync commands.
-	 * @param     Order_Utilities                            $order_utilities The order utility functions.
-	 * @param     Customer_Utilities                         $customer_utilities The customer utility functions.
-	 * @param     Abandoned_Cart_Utilities                   $abandoned_cart_utilities The abandoned cart utility functions.
+	 * @param     string                                             $version     The current version of the plugin.
+	 * @param     string                                             $plugin_name     The kebab-case name of the plugin.
+	 * @param     Loader                                             $loader     The loader class.
+	 * @param     Admin                                              $admin     The admin class.
+	 * @param     AC_Public                                          $public     The public class.
+	 * @param     I18n                                               $i18n     The internationalization class.
+	 * @param     Logger                                             $logger     The logger.
+	 * @param     Cart_Updated                                       $cart_updated_event     The cart update event class.
+	 * @param     Cart_Emptied                                       $cart_emptied_event     The cart emptied event class.
+	 * @param     Set_Connection_Id_Cache_Command                    $set_connection_id_cache_command     The connection id cache command class.
+	 * @param     Create_Or_Update_Connection_Option_Command         $c_or_u_co_command     The connection option command class.
+	 * @param     Create_And_Save_Cart_Id                            $create_and_save_cart_id_command     The cart id command class.
+	 * @param     Update_Cart_Command                                $update_cart_command     The update cart command class.
+	 * @param     Delete_Cart_Id                                     $delete_cart_id_command     The delete cart id command class.
+	 * @param     Add_Cart_Id_To_Order                               $add_cart_id_to_order_command     The add cart id to order command class.
+	 * @param     Add_Accepts_Marketing_To_Customer_Meta             $add_am_to_meta_command     The accepts marketing command class.
+	 * @param     Clear_User_Meta_Command                            $clear_user_meta_command     The clear user meta command class.
+	 * @param     Sync_Guest_Abandoned_Cart_Command                  $sync_guest_abandoned_cart_command     The sync guest abandoned cart command class.
+	 * @param     Order_Finished                                     $order_finished_event     The order finished event class.
+	 * @param     User_Registered                                    $user_registered_event     The user registered event class.
+	 * @param     Run_Abandonment_Sync_Command                       $run_abandonment_sync_command     The scheduled runner to sync abandonments.
+	 * @param     Plugin_Upgrade_Command                             $plugin_upgrade_command     The plugin installation and upgrade commands.
+	 * @param     Historical_Sync                                    $historical_sync     The historical sync commands.
+	 * @param     Order_Utilities                                    $order_utilities     The order utility functions.
+	 * @param     Customer_Utilities                                 $customer_utilities     The customer utility functions.
+	 * @param     Abandoned_Cart_Utilities                           $abandoned_cart_utilities     The abandoned cart utility functions.
+	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository $bulksync_repository     The bulksync repository.
+	 * @param     AC_Utilities                                       $ac_utilities The global AC utility class.
 	 *
 	 * @since    1.0.0
 	 */
@@ -303,7 +322,9 @@ class Activecampaign_For_Woocommerce {
 		Historical_Sync $historical_sync,
 		Order_Utilities $order_utilities,
 		Customer_Utilities $customer_utilities,
-		Abandoned_Cart_Utilities $abandoned_cart_utilities
+		Abandoned_Cart_Utilities $abandoned_cart_utilities,
+		Bulksync_Repository $bulksync_repository,
+		AC_Utilities $ac_utilities
 	) {
 		$this->version                                    = $version;
 		$this->plugin_name                                = $plugin_name;
@@ -331,6 +352,8 @@ class Activecampaign_For_Woocommerce {
 		$this->order_utilities                                = $order_utilities;
 		$this->customer_utilities                             = $customer_utilities;
 		$this->abandoned_cart_utilities                       = $abandoned_cart_utilities;
+		$this->bulksync_repository                            = $bulksync_repository;
+		$this->ac_utilities                                   = $ac_utilities;
 	}
 
 	/**
@@ -494,7 +517,9 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME,
 			$this->historical_sync,
-			'execute'
+			'execute',
+			1,
+			2
 		);
 
 	}
@@ -528,12 +553,6 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_filter(
 			'woocommerce_checkout_create_order',
 			$this->add_cart_id_to_order_command,
-			'execute'
-		);
-
-		$this->loader->add_filter(
-			'woocommerce_checkout_create_order',
-			$this->add_accepts_marketing_to_customer_meta_command,
 			'execute'
 		);
 
@@ -614,6 +633,7 @@ class Activecampaign_For_Woocommerce {
 				$disable_plugin_notice = 1;
 			}
 		}
+
 		if ( ! $this->is_configured() ) {
 			if ( ! $disable_plugin_notice ) {
 				$this->loader->add_filter(
@@ -626,23 +646,25 @@ class Activecampaign_For_Woocommerce {
 			}
 		}
 
-		$this->loader->add_action(
-			'activecampaign_for_woocommerce_run_manual_abandonment_sync',
-			$this->run_abandonment_sync_command,
-			'abandoned_cart_manual_run'
-		);
+		if ( $this->is_connected() ) {
+			$this->loader->add_action(
+				'activecampaign_for_woocommerce_run_manual_abandonment_sync',
+				$this->run_abandonment_sync_command,
+				'abandoned_cart_manual_run'
+			);
 
-		$this->loader->add_action(
-			'activecampaign_for_woocommerce_run_force_row_abandonment_sync',
-			$this->run_abandonment_sync_command,
-			'force_sync_row'
-		);
+			$this->loader->add_action(
+				'activecampaign_for_woocommerce_run_force_row_abandonment_sync',
+				$this->run_abandonment_sync_command,
+				'force_sync_row'
+			);
 
-		$this->loader->add_action(
-			'activecampaign_for_woocommerce_run_manual_abandonment_delete',
-			$this->run_abandonment_sync_command,
-			'abandoned_cart_manual_delete'
-		);
+			$this->loader->add_action(
+				'activecampaign_for_woocommerce_run_manual_abandonment_delete',
+				$this->run_abandonment_sync_command,
+				'abandoned_cart_manual_delete'
+			);
+		}
 	}
 
 	/**
@@ -679,7 +701,14 @@ class Activecampaign_For_Woocommerce {
 			'handle_clear_plugin_settings'
 		);
 
-		if ( ! $this->is_configured() ) {
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_reset_connection_id',
+			$this->admin,
+			'handle_reset_connection_id'
+		);
+
+		// Anything below this is disabled if the plugin is not configured
+		if ( ! $this->is_configured() || ! $this->is_connected() ) {
 			return;
 		}
 
@@ -702,21 +731,21 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_reset_connection_id',
+			'wp_ajax_activecampaign_for_woocommerce_schedule_bulk_historical_sync',
 			$this->admin,
-			'handle_reset_connection_id'
-		);
-
-		$this->loader->add_action(
-			'wp_ajax_activecampaign_for_woocommerce_schedule_historical_sync',
-			$this->admin,
-			'schedule_historical_sync'
+			'schedule_bulk_historical_sync'
 		);
 
 		$this->loader->add_action(
 			'wp_ajax_activecampaign_for_woocommerce_check_historical_sync_status',
 			$this->admin,
 			'check_historical_sync_status'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_fetch_last_historical_sync',
+			$this->admin,
+			'fetch_last_historical_sync'
 		);
 
 		$this->loader->add_action(
@@ -770,26 +799,32 @@ class Activecampaign_For_Woocommerce {
 		if (
 			$ops['checkbox_display_option']
 			&& $ops['optin_checkbox_text']
-			&& 'not_visible' !== $ops['checkbox_display_option']
 			&& ! empty( $ops['checkbox_display_option'] )
 			&& ! empty( $ops['optin_checkbox_text'] )
 		) {
-			// Add the checkbox to the billing form
-			$this->loader->add_action(
-				'woocommerce_after_checkout_billing_form',
-				$this->public,
-				'handle_woocommerce_checkout_form',
-				5
-			);
+			if ( 'not_visible' !== $ops['checkbox_display_option'] ) {
+				$this->loader->add_filter(
+					'woocommerce_checkout_create_order',
+					$this->add_accepts_marketing_to_customer_meta_command,
+					'execute'
+				);
 
-			// this hook is a fallback method in case we can't find the billing form hook
-			$this->loader->add_action(
-				'woocommerce_after_checkout_form',
-				$this->public,
-				'handle_woocommerce_checkout_form',
-				5
-			);
+				// Add the checkbox to the billing form
+				$this->loader->add_action(
+					'woocommerce_after_checkout_billing_form',
+					$this->public,
+					'handle_woocommerce_checkout_form',
+					5
+				);
 
+				// this hook is a fallback method in case we can't find the billing form hook
+				$this->loader->add_action(
+					'woocommerce_after_checkout_form',
+					$this->public,
+					'handle_woocommerce_checkout_form',
+					5
+				);
+			}
 		} else {
 			$this->logger->debug( 'Checkbox actions cannot be run. checkbox_display_option and/or optin_checkbox_text are not defined or not available in your theme.' );
 		}
@@ -827,7 +862,9 @@ class Activecampaign_For_Woocommerce {
 	 * @since    1.0.0
 	 */
 	public function run() {
-		$this->logger = $this->logger ?: new Logger();
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 		$this->set_locale();
 		$this->plugin_updates();
 		$this->define_event_hooks();
@@ -878,10 +915,29 @@ class Activecampaign_For_Woocommerce {
 	 */
 	private function is_configured() {
 		$ops = $this->admin->get_options();
-		if ( ! $ops || ! $ops['api_key'] || ! $ops['api_url'] ) {
+		if ( ! $ops ||
+			 ! $ops['api_key'] ||
+			 ! $ops['api_url']
+		) {
 			return false;
 		}
 
+		return true;
+	}
+
+	/**
+	 * Verify our plugin has connection_id and connection_option_id
+	 *
+	 * @return bool
+	 */
+	private function is_connected() {
+		if (
+			! isset( $this->admin->get_storage()['connection_id'], $this->admin->get_storage()['connection_option_id'] ) ||
+			empty( $this->admin->get_storage()['connection_id'] ) ||
+			empty( $this->admin->get_storage()['connection_option_id'] )
+		) {
+			return false;
+		}
 		return true;
 	}
 }

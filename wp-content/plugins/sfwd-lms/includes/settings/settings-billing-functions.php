@@ -330,8 +330,8 @@ function learndash_payment_buttons( $post ) {
 
 		$post_srt = '';
 		if ( 'subscribe' === $post_price_type ) {
-			$post_price_billing_p3 = learndash_get_setting( $post_id, 'course_price_billing_p3' );
-			$post_price_billing_t3 = learndash_get_setting( $post_id, 'course_price_billing_t3' );
+			$post_price_billing_p3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_p3', true );
+			$post_price_billing_t3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_t3', true );
 			$post_price_trial_a1   = learndash_get_setting( $post_id, 'group_trial_price' );
 			$post_price_trial_p1   = learndash_get_setting( $post_id, 'group_trial_duration_p1' );
 			$post_price_trial_t1   = learndash_get_setting( $post_id, 'group_trial_duration_t1' );
@@ -364,12 +364,8 @@ function learndash_payment_buttons( $post ) {
 		$paypal_settings['paypal_sandbox'] = ( 'yes' === $paypal_settings['paypal_sandbox'] ) ? 1 : 0;
 	}
 
-	if ( ! isset( $paypal_settings['enabled'] ) ) {
-		if ( ( isset( $paypal_settings['paypal_email'] ) ) && ( ! empty( $paypal_settings['paypal_email'] ) ) ) {
-			$paypal_settings['enabled'] = 'on';
-		} else {
-			$paypal_settings['enabled'] = '';
-		}
+	if ( ! isset( $paypal_settings['enabled'] ) || ! isset( $paypal_settings['paypal_email'] ) || empty( $paypal_settings['paypal_email'] ) ) {
+		$paypal_settings['enabled'] = '';
 	}
 
 	if ( ( ! empty( $post_price_type ) ) && ( 'closed' === $post_price_type ) ) {
@@ -517,7 +513,7 @@ function learndash_payment_buttons( $post ) {
 			}
 		}
 	} else {
-		$join_button = '<div class="learndash_join_button"><form method="post">
+		$join_button = '<div class="learndash_join_button"><form action="' . get_permalink( $post->ID ) . '" method="post">
 							<input type="hidden" value="' . $post->ID . '" name="' . $post_label_prefix . '_id" />
 							<input type="hidden" name="' . $post_label_prefix . '_join" value="' . wp_create_nonce( $post_label_prefix . '_join_' . get_current_user_id() . '_' . $post->ID ) . '" />
 							<input type="submit" value="' . $button_text . '" class="btn-join" id="btn-join" />
@@ -536,3 +532,4 @@ function learndash_payment_buttons( $post ) {
 
 	return '';
 }
+

@@ -52,7 +52,12 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 	public function __construct(
 		Logger $logger = null
 	) {
-		$this->logger              = $this->logger ?: new Logger();
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
+
 		$this->abandoned_cart_util = new Abandoned_Cart_Utilities();
 	}
 
@@ -61,6 +66,10 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 	 * This is the initialization event which triggers on any cart change.
 	 */
 	public function init() {
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
+
 		// Store the cart
 		$this->store_abandoned_cart_data();
 		// Schedule single event for a logged in user if there's a cart
@@ -76,6 +85,10 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 	 * @return bool
 	 */
 	public function init_data( $data ) {
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
+
 		// Schedule single event for a logged in user if there's a cart
 		if ( ! empty( $data ) ) {
 			$this->passed_data = $data;

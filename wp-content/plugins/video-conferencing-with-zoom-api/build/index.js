@@ -11104,7 +11104,7 @@ function EditLiveMeeting(props) {
           key: i,
           className: className,
           onClick: function onClick() {
-            get_live_meetings(host, {
+            get_live_meetings(host.value, shouldShow, {
               page_number: i
             });
             setCurrentPage(i);

@@ -202,6 +202,9 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 			self::ipn_debug( 'IPN Post vars<pre>' . print_r( self::$ipn_transaction_data, true ) . '</pre>' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 
 			self::ipn_debug( 'IPN Get vars<pre>' . print_r( $_GET, true ) . '</pre>' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+
+			self::ipn_debug( 'LearnDash Version: '. LEARNDASH_VERSION ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+
 		}
 
 		/**
@@ -230,10 +233,11 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					self::$hash_nonce = sanitize_text_field( wp_unslash( $_GET['return-notify'] ) );
 				} else {
-					self::ipn_exit();
+					self::$hash_action = 'return-notify';
+					return true;
 				}
 
-				if ( ! self::hash_verify_nonce() ) {
+				if ( ( ! empty( self::$hash_nonce) ) && ( ! self::hash_verify_nonce() ) ) {
 					self::ipn_debug( 'DEBUG: hash verify nonce failed.' );
 					self::ipn_exit();
 				}

@@ -86,7 +86,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 			add_filter( 'astra_sites_image_importer_skip_image', array( $this, 'skip_image' ), 10, 2 );
 			add_action( 'astra_sites_import_complete', array( $this, 'start_process' ) );
 			add_action( 'astra_sites_process_single', array( $this, 'start_process_single' ) );
-			add_action( 'admin_init', array( $this, 'start_importer' ) );
+			add_action( 'admin_head', array( $this, 'start_importer' ) );
 			add_action( 'wp_ajax_astra-sites-update-library', array( $this, 'update_library' ) );
 			add_action( 'wp_ajax_astra-sites-update-library-complete', array( $this, 'update_library_complete' ) );
 			add_action( 'wp_ajax_astra-sites-import-all-categories-and-tags', array( $this, 'import_all_categories_and_tags' ) );
@@ -99,6 +99,15 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 			add_action( 'wp_ajax_astra-sites-import-sites', array( $this, 'import_sites' ) );
 			add_action( 'wp_ajax_astra-sites-get-all-categories', array( $this, 'get_all_categories' ) );
 			add_action( 'wp_ajax_astra-sites-get-all-categories-and-tags', array( $this, 'get_all_categories_and_tags' ) );
+
+			add_action( 'astra_sites_site_import_batch_complete', array( $this, 'sync_batch_complete' ) );
+		}
+
+		/**
+		 * Update the latest checksum after all the import batch processes are done.
+		 */
+		public function sync_batch_complete() {
+			Astra_Sites_Importer::get_instance()->update_latest_checksums();
 		}
 
 		/**
@@ -134,7 +143,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 			// Prepare Misc.
 			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-misc.php';
 
-			// Prepare Misc.
+			// Prepare Customizer.
 			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-customizer.php';
 
 			// Process Importer.
@@ -367,13 +376,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 
 			$is_fresh_site = get_site_option( 'astra-sites-fresh-site', '' );
 
-			// Process initially for the fresh user.
-			if ( isset( $_GET['reset'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-				// Process import.
-				$this->process_batch();
-
-			} elseif ( empty( $is_fresh_site ) && '' === $is_fresh_site ) {
+			if ( empty( $is_fresh_site ) && '' === $is_fresh_site ) {
 				$dir = ASTRA_SITES_DIR . 'inc/json';
 
 				// First time user save the data of sites, pages, categories etc from the JSON file.
@@ -390,26 +393,9 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 				// Also, Trigger the batch to get latest data.
 				// If batch failed then user have at least the data from the JSON file.
 				update_site_option( 'astra-sites-fresh-site', 'no' );
-
-				$this->process_batch();
-
-				// If not fresh user then trigger batch import on the transient and option
-				// Only on the Astra Sites page.
-			} else {
-
-				$current_screen = get_current_screen();
-
-				// Bail if not on Astra Sites screen.
-				if ( ! is_object( $current_screen ) && null === $current_screen ) {
-					return;
-				}
-
-				if ( 'appearance_page_starter-templates' === $current_screen->id ) {
-
-					// Process import.
-					$this->process_import();
-				}
 			}
+
+			$this->process_import();
 		}
 
 		/**
@@ -646,15 +632,15 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 			}
 
 			// Check batch expiry.
-			$expired = get_transient( 'astra-sites-import-check' );
+			$expired = get_site_transient( 'astra-sites-import-check' );
 			if ( false !== $expired ) {
 				return;
 			}
 
 			// For 1 week.
-			set_transient( 'astra-sites-import-check', 'true', apply_filters( 'astra_sites_sync_check_time', WEEK_IN_SECONDS ) );
+			set_site_transient( 'astra-sites-import-check', 'true', apply_filters( 'astra_sites_sync_check_time', WEEK_IN_SECONDS ) );
 
-			update_site_option( 'astra-sites-batch-status', 'in-process', 'no' );
+			update_site_option( 'astra-sites-batch-status', 'in-process' );
 
 			// Process batch.
 			$this->process_batch();
@@ -849,6 +835,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 		 * @return void
 		 */
 		public function start_process() {
+			set_transient( 'astra_sites_batch_process_started', 'yes', HOUR_IN_SECONDS );
 
 			/** WordPress Plugin Administration API */
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';

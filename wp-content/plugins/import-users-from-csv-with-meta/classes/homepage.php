@@ -1,5 +1,6 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; 
+if ( ! defined( 'ABSPATH' ) ) 
+    exit; 
 
 class ACUI_Homepage{
 	function __construct(){
@@ -38,10 +39,12 @@ class ACUI_Homepage{
 		<div style="clear:both;"></div>
 
 		<div id="acui_form_wrapper" class="main_bar">
-			<form method="POST" enctype="multipart/form-data" action="" accept-charset="utf-8" onsubmit="return check();">
+			<form method="POST" id="acui_form" enctype="multipart/form-data" action="" accept-charset="utf-8">
 			<h2 id="acui_file_header"><?php _e( 'File', 'import-users-from-csv-with-meta'); ?></h2>
 			<table  id="acui_file_wrapper" class="form-table">
 				<tbody>
+
+				<?php do_action( 'acui_homepage_before_file_rows' ); ?>
 
 				<tr class="form-field form-required">
 					<th scope="row"><label for="uploadfile"><?php _e( 'CSV file <span class="description">(required)</span></label>', 'import-users-from-csv-with-meta' ); ?></th>
@@ -56,40 +59,49 @@ class ACUI_Homepage{
 						</div>
 					</td>
 				</tr>
+
+				<?php do_action( 'acui_homepage_after_file_rows' ); ?>
+
 				</tbody>
 			</table>
 				
 			<h2 id="acui_roles_header"><?php _e( 'Roles', 'import-users-from-csv-with-meta'); ?></h2>
-			<table  id="acui_roles_wrapper" class="form-table">
+			<table id="acui_roles_wrapper" class="form-table">
 				<tbody>
+
+				<?php do_action( 'acui_homepage_before_roles_rows' ); ?>
+
 				<tr class="form-field">
 					<th scope="row"><label for="role"><?php _e( 'Default role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 					<?php 
-						foreach ( ACUI_Helper::get_editable_roles() as $key => $value ){
-							if( in_array( $key, $last_roles_used ) )
-								echo "<label id='$key' style='margin-right:5px;'><input name='role[]' type='checkbox' checked='checked' value='$key'/>$value</label>";
-							else
-								echo "<label id='$key' style='margin-right:5px;'><input name='role[]' type='checkbox' value='$key'/>$value</label>";
-						}
-					?>
-
+                        foreach ( ACUI_Helper::get_editable_roles() as $key => $value )
+                           ACUIHTML()->checkbox( array( 'label' => $value, 'name' => 'role[]', 'compare_value' => $last_roles_used, 'current' => $key, 'array' => true, 'class' => 'roles' ) );
+                    ?>
 					<p class="description"><?php _e( 'You can also import roles from a CSV column. Please read documentation tab to see how it can be done. If you choose more than one role, the roles would be assigned correctly but you should use some plugin like <a href="https://wordpress.org/plugins/user-role-editor/">User Role Editor</a> to manage them.', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
+
+				<?php do_action( 'acui_homepage_after_roles_rows' ); ?>
+
 				</tbody>
 			</table>
 
 			<h2 id="acui_options_header"><?php _e( 'Options', 'import-users-from-csv-with-meta'); ?></h2>
-			<table  id="acui_options_wrapper" class="form-table">
+			<table id="acui_options_wrapper" class="form-table">
 				<tbody>
-				<tr  id="acui_empty_cell_wrapper" class="form-field form-required">
+
+				<?php do_action( 'acui_homepage_before_options_rows' ); ?>
+
+				<tr id="acui_empty_cell_wrapper" class="form-field form-required">
 					<th scope="row"><label for="empty_cell_action"><?php _e( 'What should the plugin do with empty cells?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="empty_cell_action">
-							<option value="leave"><?php _e( 'Leave the old value for this metadata', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="delete"><?php _e( 'Delete the metadata', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'leave' => __( 'Leave the old value for this metadata', 'import-users-from-csv-with-meta' ), 'delete' => __( 'Delete the metadata', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'empty_cell_action',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 
@@ -97,12 +109,10 @@ class ACUI_Homepage{
 					<th scope="row"><label for="user_login"><?php _e( 'Send mail', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<p id="sends_email_wrapper">
-							<?php _e( 'Do you wish to send a mail with credentials and other data?', 'import-users-from-csv-with-meta' ); ?> 
-							<input type="checkbox" name="sends_email" value="yes" <?php if( get_option( 'acui_manually_send_mail' ) ): ?> checked="checked" <?php endif; ?>>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'sends_email', 'label' => __( 'Do you wish to send a mail from this plugin with credentials and other data? <a href="' . admin_url( 'tools.php?page=acui&tab=mail-options' ) . '">(email template found here)</a>', 'import-users-from-csv-with-meta' ), 'current' => 'yes', 'compare_value' => get_option( 'acui_manually_send_mail' ) ) ); ?>
 						</p>
 						<p id="send_email_updated_wrapper">
-							<?php _e( 'Do you wish to send this mail also to users that are being updated? (not only to the one which are being created)', 'import-users-from-csv-with-meta' ); ?>
-							<input type="checkbox" name="send_email_updated" value="yes" <?php if( get_option( 'acui_manually_send_mail_updated' ) ): ?> checked="checked" <?php endif; ?>>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'send_email_updated', 'label' => __( 'Do you wish to send this mail also to users that are being updated? (not only to the one which are being created)', 'import-users-from-csv-with-meta' ), 'current' => 'yes', 'compare_value' => get_option( 'acui_manually_send_mail_updated' ) ) ); ?>
 						</p>
 					</td>
 				</tr>
@@ -110,10 +120,12 @@ class ACUI_Homepage{
                 <tr class="form-field form-required">
 					<th scope="row"><label for=""><?php _e( 'Force users to reset their passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<input type="checkbox" name="force_user_reset_password" value="yes" <?php checked( get_option( 'acui_manually_force_user_reset_password' ) ); ?>/>
-                        <p class="description"><?php _e( 'If a password is set to an user and you activate this option, the user will be forced to reset their password in their first login', 'import-users-from-csv-with-meta' ); ?></p>
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'force_user_reset_password', 'label' => __( 'If a password is set to an user and you activate this option, the user will be forced to reset their password in their first login', 'import-users-from-csv-with-meta' ), 'current' => 'yes', 'compare_value' => get_option( 'acui_manually_force_user_reset_password' ) ) ); ?>
 					</td>
 				</tr>
+
+				<?php do_action( 'acui_homepage_after_options_rows' ); ?>
+
 				</tbody>
 			</table>
 
@@ -121,24 +133,30 @@ class ACUI_Homepage{
 
 			<table id="acui_update_users_wrapper" class="form-table">
 				<tbody>
+
+				<?php do_action( 'acui_homepage_before_update_users_rows' ); ?>
+
 				<tr id="acui_update_existing_users_wrapper" class="form-field form-required">
 					<th scope="row"><label for="update_existing_users"><?php _e( 'Update existing users?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_existing_users">
-							<option value="yes"><?php _e( 'Yes', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="no"><?php _e( 'No', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'yes' => __( 'Yes', 'import-users-from-csv-with-meta' ), 'no' => __( 'No', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_existing_users',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 
 				<tr id="acui_update_emails_existing_users_wrapper" class="form-field form-required">
 					<th scope="row"><label for="update_emails_existing_users"><?php _e( 'Update emails?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_emails_existing_users">
-							<option value="yes"><?php _e( 'Yes', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="create"><?php _e( 'No, but create a new user with a prefix in the username', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="no"><?php _e( 'No, skip this user', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'yes' => __( 'Yes', 'import-users-from-csv-with-meta' ), 'create' => __( 'No, but create a new user with a prefix in the username', 'import-users-from-csv-with-meta' ), 'no' => __( 'No', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_emails_existing_users',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 						<p class="description"><?php _e( 'What the plugin should do if the plugin find an user, identified by their username, with a different email', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
@@ -146,23 +164,29 @@ class ACUI_Homepage{
 				<tr id="acui_update_roles_existing_users_wrapper" class="form-field form-required">
 					<th scope="row"><label for="update_roles_existing_users"><?php _e( 'Update roles for existing users?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_roles_existing_users">
-							<option value="no"><?php _e( 'No', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="yes"><?php _e( 'Yes, update and override existing roles', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="yes_no_override"><?php _e( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'no' => __( 'No', 'import-users-from-csv-with-meta' ), 'yes' => __( 'Yes, update and override existing roles', 'import-users-from-csv-with-meta' ), 'yes_no_override' => __( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_roles_existing_users',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 
 				<tr id="acui_update_allow_update_passwords_wrapper" class="form-field form-required">
 					<th scope="row"><label for="update_allow_update_passwords"><?php _e( 'Never update passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_allow_update_passwords">
-							<option value="yes"><?php _e( 'Update passwords as it is described in documentation', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="no"><?php _e( 'Never update passwords when updating a user', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'yes' => __( 'Update passwords as it is described in documentation', 'import-users-from-csv-with-meta' ), 'no' => __( 'Never update passwords when updating a user', 'import-users-from-csv-with-meta' ), 'yes_no_override' => __( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_allow_update_passwords',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
+
+				<?php do_action( 'acui_homepage_after_update_users_rows' ); ?>
+
 				</tbody>
 			</table>
 
@@ -170,17 +194,22 @@ class ACUI_Homepage{
 
 			<table id="acui_users_not_present_wrapper" class="form-table">
 				<tbody>
+
+				<?php do_action( 'acui_homepage_before_users_not_present_rows' ); ?>
 				
 				<tr id="acui_delete_users_wrapper" class="form-field form-required">
 					<th scope="row"><label for="delete_users"><?php _e( 'Delete users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="delete_users" id="delete_users" value="yes"/>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'delete_users', 'current' => 'yes' ) ); ?>
 						</div>
 						<div style="margin-left:25px;">
-							<select id="delete_users_assign_posts" name="delete_users_assign_posts">
-                                <option value=""><?php _e( 'Delete posts of deleted users without assigning to any user or type to search a user', 'import-users-from-csv-with-meta' ) ?></option>
-							</select>
+                            <?php ACUIHTML()->select( array(
+                                'options' => array( 'no' => __( 'Never update passwords when updating a user', 'import-users-from-csv-with-meta' ), 'yes_no_override' => __( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ) ),
+                                'name' => 'delete_users_assign_posts',
+                                'show_option_all' => false,
+                                'show_option_none' => __( 'Delete posts of deleted users without assigning to any user or type to search a user', 'import-users-from-csv-with-meta' ),
+                            )); ?>
 							<p class="description"><?php _e( 'Administrators will not be deleted anyway. After delete users, we can choose if we want to assign their posts to another user. If you do not choose some user, content will be deleted.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
 					</td>
@@ -190,18 +219,21 @@ class ACUI_Homepage{
 					<th scope="row"><label for="change_role_not_present"><?php _e( 'Change role of users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="change_role_not_present" id="change_role_not_present" value="yes"/>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'change_role_not_present', 'current' => 'yes' ) ); ?>
 						</div>
 						<div style="margin-left:25px;">
-							<select id="change_role_not_present_role" name="change_role_not_present_role">
-								<?php foreach ( ACUI_Helper::get_editable_roles() as $key => $value ): ?>
-									<option value='<?php echo $key; ?>'><?php echo $value; ?></option>
-								<?php endforeach; ?>
-							</select>
+                            <?php ACUIHTML()->select( array(
+                                'options' => ACUI_Helper::get_editable_roles(),
+                                'name' => 'change_role_not_present_role',
+                                'show_option_all' => false,
+                                'show_option_none' => false,
+                            )); ?>
 							<p class="description"><?php _e( 'After import users which is not present in the CSV and can be changed to a different role.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
 					</td>
 				</tr>
+
+				<?php do_action( 'acui_homepage_after_users_not_present_rows' ); ?>
 
 				</tbody>
 			</table>
@@ -216,48 +248,54 @@ class ACUI_Homepage{
 
 		<div class="sidebar">
 			<div class="sidebar_section become_patreon">
-		    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/carazo" role="button">
+		    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/carazo" role="button" target="_blank">
 		    		<div><span><?php _e( 'Become a patron', 'import-users-from-csv-with-meta'); ?></span></div>
 		    	</a>
 		    </div>
+
+			<div class="sidebar_section buy_me_a_coffee">
+		    	<a class="ko-fi" color="primary" type="button" name="buy-me-a-coffee" data-tag="buy-me-a-button" href="https://ko-fi.com/codection" role="button" target="_blank">
+		    		<div><span><?php _e( 'Buy me a coffee', 'import-users-from-csv-with-meta'); ?></span></div>
+		    	</a>
+		    </div>
+
+			<div class="sidebar_section vote_us">
+		    	<a class="vote-us" color="primary" type="button" name="vote-us" data-tag="vote_us" href="https://wordpress.org/support/plugin/import-users-from-csv-with-meta/reviews/" role="button" target="_blank">
+		    		<div><span><?php _e( 'If you like it', 'import-users-from-csv-with-meta'); ?> <?php _e( 'Please vote and support us', 'import-users-from-csv-with-meta'); ?></span></div>
+		    	</a>
+		    </div>
+
+			<div class="sidebar_section donate">
+		    	<a class="donate-button" color="primary" type="button" name="donate-button" data-tag="donate" href="https://paypal.me/imalrod" role="button" target="_blank">
+		    		<div><span><?php _e( 'If you want to help us to continue developing it and give the best support you can donate', 'import-users-from-csv-with-meta'); ?></span></div>
+		    	</a>
+		    </div>
 			
-			<div class="sidebar_section" id="vote_us">
-				<h3><?php _e( 'Rate Us', 'import-users-from-csv-with-meta'); ?></h3>
-				<ul>
-					<li><label><?php _e( 'If you like it', 'import-users-from-csv-with-meta'); ?>, <a href="https://wordpress.org/support/plugin/import-users-from-csv-with-meta/reviews/"><?php _e( 'Please vote and support us', 'import-users-from-csv-with-meta'); ?></a>.</label></li>
-				</ul>
-			</div>
 			<div class="sidebar_section">
-				<h3>Having Issues?</h3>
+				<h3><?php _e( 'Having issues?', 'import-users-from-csv-with-meta'); ?></h3>
 				<ul>
-					<li><label>You can create a ticket</label> <a target="_blank" href="http://wordpress.org/support/plugin/import-users-from-csv-with-meta"><label>WordPress support forum</label></a></li>
-					<li><label>You can ask for premium support</label> <a target="_blank" href="mailto:contacto@codection.com"><label>contacto@codection.com</label></a></li>
-				</ul>
-			</div>
-			<div class="sidebar_section">
-				<h3>Donate</h3>
-				<ul>
-					<li><label>If you appreciate our work and you want to help us to continue developing it and giving the best support</label> <a target="_blank" href="https://paypal.me/imalrod"><label>donate</label></a></li>
+					<li><label><?php _e( 'You can create a ticket', 'import-users-from-csv-with-meta'); ?></label> <a target="_blank" href="http://wordpress.org/support/plugin/import-users-from-csv-with-meta"><label><?php _e( 'WordPress support forum', 'import-users-from-csv-with-meta'); ?></label></a></li>
+					<li><label><?php _e( 'You can ask for premium support', 'import-users-from-csv-with-meta'); ?></label> <a target="_blank" href="mailto:contacto@codection.com"><label>contacto@codection.com</label></a></li>
 				</ul>
 			</div>
 		</div>
 
 	</div>
 	<script type="text/javascript">
-	function check(){
-		if(document.getElementById( 'uploadfile' ).value == "" && jQuery( '#upload_file' ).is( ':visible' ) ) {
-		   alert("<?php _e( 'Please choose a file', 'import-users-from-csv-with-meta' ); ?>");
-		   return false;
-		}
-
-		if( jQuery( '#path_to_file' ).val() == "" && jQuery( '#introduce_path' ).is( ':visible' ) ) {
-		   alert("<?php _e( 'Please enter a path to the file', 'import-users-from-csv-with-meta' ); ?>");
-		   return false;
-		}
-	}
-
 	jQuery( document ).ready( function( $ ){
 		check_delete_users_checked();
+
+        $( '#acui_form' ).submit( function(){
+            if( $( '#uploadfile' ).val() == "" && $( '#upload_file' ).is( ':visible' ) ) {
+                alert("<?php _e( 'Please choose a file', 'import-users-from-csv-with-meta' ); ?>");
+                return false;
+            }
+
+            if( $( '#path_to_file' ).val() == "" && $( '#introduce_path' ).is( ':visible' ) ) {
+                alert("<?php _e( 'Please enter a path to the file', 'import-users-from-csv-with-meta' ); ?>");
+                return false;
+            }
+        } );
 
 		$( '#delete_users' ).on( 'click', function() {
 			check_delete_users_checked();

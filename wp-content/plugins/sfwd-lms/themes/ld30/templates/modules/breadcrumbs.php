@@ -20,7 +20,7 @@ do_action( 'learndash-breadcrumbs-before' ); ?>
 
 <div class="ld-breadcrumbs-segments">
 	<?php
-	$breadcrumbs = learndash_get_breadcrumbs();
+	$breadcrumbs = learndash_get_breadcrumbs( $post );
 
 	/**
 	 * Filter Breadcrumb keys

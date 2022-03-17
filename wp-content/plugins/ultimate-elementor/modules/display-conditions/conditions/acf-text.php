@@ -109,7 +109,7 @@ class Acf_Text extends Condition {
 	 * @since  1.35.1
 	 * @return array
 	 */
-	public function get_repeater_control( $condition ) {
+	public function get_repeater_control( array $condition ) {
 		return array(
 			$this->get_acf_field_value(),
 			'type'        => Controls_Manager::TEXT,
@@ -138,7 +138,9 @@ class Acf_Text extends Condition {
 		$show = false;
 
 		// Handle string value for correct comparison boolean (true_false) acf field.
-		$value = ( 'true_false' === get_field_object( $key )['type'] && 'true' === $value ) ? true : false;
+		if ( ( 'true_false' === get_field_object( $key )['type'] ) && 'true' === $value ) {
+			$value = true;
+		}
 
 		global $post;
 

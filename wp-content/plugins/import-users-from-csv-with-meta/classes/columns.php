@@ -196,6 +196,7 @@ class ACUI_Columns{
 		$acui_helper = new ACUI_Helper();
 		$headers = get_option("acui_columns");
 		$acui_restricted_fields = $acui_helper->get_restricted_fields();
+		$values_changed = array();
 		
 		if( is_array( $headers ) && count( $headers ) > 0 ):
             $values = array();
