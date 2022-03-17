@@ -8,7 +8,7 @@ class GP_Read_Only extends GWPerk {
 	protected $min_wp_version            = '3.0';
 
 	private $unsupported_field_types  = array( 'hidden', 'html', 'captcha', 'page', 'section' );
-	private $disable_attr_field_types = array( 'radio', 'select', 'checkbox', 'multiselect', 'time', 'address', 'workflow_user', 'workflow_role', 'workflow_assignee_select' );
+	private $disable_attr_field_types = array( 'radio', 'select', 'checkbox', 'multiselect', 'time', 'date', 'name', 'address', 'workflow_user', 'workflow_role', 'workflow_assignee_select' );
 
 	public function init() {
 
@@ -137,6 +137,8 @@ class GP_Read_Only extends GWPerk {
 				break;
 			case 'time':
 			case 'address':
+			case 'name':
+			case 'date':
 				$search = array(
 					'<input'  => "<input readonly='readonly'",
 					'<select' => "<select disabled='disabled'",
@@ -176,7 +178,7 @@ class GP_Read_Only extends GWPerk {
 			if ( $disable_datepicker ) {
 				// Find 'datepicker' CSS class and replace it with our custom class indicating that we've disabled it.
 				// This class is used by Conditional Logic Dates to identify read-only Datepicker fields.
-				$search['\'datepicker '] = 'gpro-disabled-datepicker ';
+				$search['class=\'datepicker '] = 'class=\'gpro-disabled-datepicker ';
 			}
 		}
 
@@ -196,8 +198,28 @@ class GP_Read_Only extends GWPerk {
 					case 'time':
 						$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', array_pop( $value ) );
 						break;
+					case 'date':
+						switch ( rgar( $field, 'dateFormat' ) ) {
+							case 'mdy':
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.1', rgar( $value, 'm' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.2', rgar( $value, 'd' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', rgar( $value, 'y' ) );
+								break;
+							case 'dmy':
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.1', rgar( $value, 'd' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.2', rgar( $value, 'm' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', rgar( $value, 'y' ) );
+								break;
+							case 'ymd':
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.1', rgar( $value, 'y' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.2', rgar( $value, 'm' ) );
+								$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', rgar( $value, 'd' ) );
+								break;
+						}
+
+						break;
 					case 'address':
-						$input_id         = sprintf( '%d.%d', $field->id, $this->get_address_select_input_id( $field ) );
+						$input_id        = sprintf( '%d.%d', $field->id, $this->get_address_select_input_id( $field ) );
 						$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $input_id, rgar( $value, $input_id ) );
 						break;
 					default:
@@ -284,6 +306,21 @@ class GP_Read_Only extends GWPerk {
 
 					$full_value[] = $value;
 					$value        = $full_value;
+					break;
+				// date drop downs are in array format in the POST
+				case 'date':
+					$full_input_id = $field_id;
+					$full_value    = array(
+						rgpost( 'gwro_hidden_capture_' . $form_id . '_' . $field_id . '_1' ),
+						rgpost( 'gwro_hidden_capture_' . $form_id . '_' . $field_id . '_2' ),
+						rgpost( 'gwro_hidden_capture_' . $form_id . '_' . $field_id . '_3' ),
+					);
+
+					if ( count( array_filter( $full_value ) ) !== 3 ) {
+						break;
+					}
+
+					$value = $full_value;
 					break;
 				default:
 					// gets "5_1" from an array like array( 5, 1 ) or "5" from an array like array( 5, false )

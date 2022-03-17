@@ -1,6 +1,10 @@
 /**
 * Nested Forms, mama!
 */
+import * as focusTrap from 'focus-trap';
+import tingle from 'tingle.js';
+
+const ko = window.ko;
 
 ( function( $ ) {
 
@@ -9,17 +13,26 @@
 		var self = this;
 
 		// copy all args to current object: formId, fieldId
-		for ( prop in args ) {
+		for ( const prop in args ) {
 			if ( args.hasOwnProperty( prop ) ) {
 				self[prop] = args[prop];
 			}
+		}
+
+		self.destroy = function() {
+			self.modal.destroy();
+			$( document ).off( '.{0}'.format( self.getNamespace() ) );
+			window.gform.removeHook( 'action', 'gform_list_post_item_add', 10, self.getNamespace() );
+			window.gform.removeHook( 'action', 'gform_list_post_item_delete', 10, self.getNamespace() );
+			gform.removeFilter( 'gform_calculation_formula', 10, 'gpnf_{0}_{1}'.format( self.formId, self.fieldId ) );
+			ko.cleanNode(self.$fieldContainer[0]);
 		}
 
 		self.init = function() {
 
 			self.id 				  = self.getDebugId();
 			self.$fieldContainer      = $( '#field_{0}_{1}'.format( self.formId, self.fieldId ) );
-			self.$parentFormContainer = $( '#gform_wrapper_{0}'.format( self.formId ) );
+			self.$parentFormContainer = self.$fieldContainer.parents('form').first();
 			self.$currentPage 		  = self.$parentFormContainer.find('.gform_page:visible');
 			self.$modalSource         = $( '.gpnf-nested-form-{0}-{1}'.format( self.formId, self.fieldId ) );
 			self.isActive             = false;
@@ -31,13 +44,8 @@
 			if ( typeof window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.fieldId ) ] !== 'undefined' ) {
 				var oldGPNF  = window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.fieldId ) ];
 				self.entries = oldGPNF.entries;
-				oldGPNF.modal.destroy();
-				$( document ).off( '.{0}'.format( self.getNamespace() ) );
-				window.gform.removeHook( 'action', 'gform_list_post_item_add', 10, self.getNamespace() );
-				window.gform.removeHook( 'action', 'gform_list_post_item_delete', 10, self.getNamespace() );
-				gform.removeFilter( 'gform_calculation_formula', 10, 'gpnf_{0}_{1}'.format( self.formId, self.fieldId ) );
-				/* Hack: fixes issue when Beaver Builder triggers ready event again without reloading UI */
-				self.viewModel = oldGPNF.viewModel;
+
+				oldGPNF.destroy();
 			}
 
 			/**
@@ -116,14 +124,36 @@
 				cssClass: [ self.modalClass, 'gpnf-modal', 'gpnf-modal-{0}-{1}'.format( self.formId, self.fieldId ) ],
 				onOpen: function() {
 					self.isActive = true;
-					self.$modal.find( 'input, select, textarea' ).filter( ':visible' ).first().focus();
+
+					if ( ! self.trap && self.enableFocusTrap ) {
+						self.trap = focusTrap.createFocusTrap( self.modal.modalBox.parentElement, {
+							escapeDeactivates: false,
+							allowOutsideClick: true,
+						} );
+					}
+
+					if ( self.trap ) {
+						self.trap.activate();
+					}
 				},
 				onClose: function() {
 					self.clearModalContent();
 					self.setParentFocus();
+
+					if ( self.trap ) {
+						self.trap.deactivate();
+					}
+
 					self.isActive = false;
 				},
-				beforeOpen: function() { },
+				beforeOpen: function() {
+					self.$modal
+						.attr( 'role', 'dialog' )
+						.attr( 'aria-label', self.getModalTitle() )
+						.attr( 'aria-modal', 'true' );
+					self.$modal.find( '.tingle-modal__close' )
+						.attr( 'aria-label', self.modalLabels.closeScreenReaderLabel );
+				},
 				beforeClose: function() { return true; }
 			}, self.formId, self.fieldId, self );
 
@@ -156,8 +186,30 @@
 					// Don't re-init buttons on the confirmation page; currentPage is undefined on the confirmation page.
 					if ( currentPage ) {
 						self.initFormScripts(currentPage);
+						// Set the focus on the first focusable field on each page render of the child form. Timeout
+						// helps with Mac's VoiceOver which does not consistently follow the focus without it.
+						setTimeout( function () {
+							const $firstInput = self.$modal.find( 'input, select, textarea' ).filter( ':visible' ).first();
+
+							if ( $firstInput.hasClass( 'datepicker' ) ) {
+								const inputAlreadyDisabled = $firstInput.prop( 'disabled' );
+								$firstInput?.datepicker( 'disable' );
+
+								/* Disabling datepicker() also sets disabled on the input. We don't want that, we only want to disable the datepicker so it doesn't show on initial focus. */
+								if ( !inputAlreadyDisabled ) {
+									$firstInput.prop( 'disabled', false );
+								}
+							}
+
+							$firstInput.focus();
+
+							if ( $firstInput.hasClass( 'datepicker' ) ) {
+								$firstInput?.datepicker( 'enable' );
+							}
+						} );
 						self.addModalButtons();
 						self.observeDefaultButtons();
+						self.triggerButtonAnimationOnSubmit();
 					}
 
 				}
@@ -235,10 +287,7 @@
 
 			switch ( typeof self.parentFocus ) {
 				case 'undefined':
-					// Currently, editing does not return the user to the edit button. Knockout refresh the view after
-					// the entry is edited. Idea is to pass trigger as a function so we can look up the last edited
-					// entry and refresh. Lastly, we will want to leave this in place in the future for 3rd-parties
-					// calling openModal() without padding a trigger.
+					// This is here to account for 3rd-parties calling openModal() without adding a trigger.
 					return;
 				case 'function':
 					$focus = self.parentFocus.apply();
@@ -279,6 +328,23 @@
 				} );
 			} );
 		};
+
+		/**
+		 * Trigger spinner on Submit/Next buttons when form submission is triggered by Enter keypress.
+		 *
+		 * This is an accessibility/usability improvement that provides a better visual indicator that the form is being submitted.
+		 */
+		self.triggerButtonAnimationOnSubmit = function() {
+			self.$modal.on( 'keypress', function( event ) {
+				self.$modal.data( 'gpnfEnterPressed', event.which === 13 );
+			} );
+			self.$modal.find( 'form' ).on( 'submit', function() {
+				if ( self.$modal.data( 'gpnfEnterPressed' ) ) {
+					self.$modal.data( 'gpnfEnterPressed', false );
+					$( self.modal.modalBoxFooter ).find( '.gpnf-btn-submit, .gpnf-btn-next' ).addClass( 'gpnf-spinner' );
+				}
+			} );
+		}
 
 		self.setModalContent = function( html, mode ) {
 
@@ -430,7 +496,7 @@
 								.text( self.modalArgs.labels.delete );
 						}, 3000 );
 					} else {
-						self.getEntryRow( self.getCurrentEntryId() ).find( '.delete a' ).click();
+						self.getEntryRow( self.getCurrentEntryId() ).find( '.delete-button' ).click();
 						self.modal.close();
 					}
 				} );
@@ -483,7 +549,11 @@
 		 * @return object   jQuery object containing default buttons
 		 */
 		self.getDefaultButtons = function() {
-			return $( '#gform_page_{0}_{1} .gform_page_footer, #gform_{0} .gform_footer'.format( self.nestedFormId, self.getCurrentPage() ) ).find( 'input[type="button"], input[type="submit"], input[type="image"], button' );
+			/*
+			 * The .first() call here is used in the event that the parent form markup is on the page more than one time. This can happen with
+			 * third-party plugins such as wpDataTables.
+			 */
+			return $( '#gform_page_{0}_{1} .gform_page_footer, #gform_{0} .gform_footer'.format( self.nestedFormId, self.getCurrentPage() ) ).first().find( 'input[type="button"], input[type="submit"], input[type="image"], button' );
 		};
 
 		self.handleCancelClick = function( $button ) {
@@ -608,7 +678,8 @@
 
 					self.setModalContent( response, 'edit' );
 					self.openModal( function() {
-						return self.$parentFormContainer.find( '[data-entryid="' + entryId + '"]' ).find('a')[0];
+						// This is the element to which the focus should be returned after the modal is closed.
+						return self.$parentFormContainer.find( '[data-entryid="' + entryId + '"]' ).find( '.edit' ).find( 'a, button' );
 					} );
 
             } );
@@ -616,6 +687,21 @@
 		};
 
 		self.deleteEntry = function( item, $trigger ) {
+
+			/**
+			 * Filter whether the child entry should be deleted. Useful for
+			 * adding custom confirmations before deleting.
+			 *
+			 * @since 1.0-rc-1.10
+			 *
+			 * @param boolean 			shouldDelete 		Whether the child entry should be deleted.
+			 * @param object 			item 			    The child entry being deleted.
+			 * @param JQuery           	$trigger 			The element that triggered the deletion.
+			 * @param {GPNestedForms} 	gpnf      			Current instance of the GPNestedForms object.
+			 */
+			if ( window.gform.applyFilters( 'gpnf_should_delete', true, item, $trigger, self ) === false ) {
+				return;
+			}
 
 			var $spinner = new AjaxSpinner( $trigger, self.spinnerUrl, '' );
 			$trigger.css( { visibility: 'hidden' } );
@@ -720,6 +806,30 @@
 			$( document ).trigger( 'gform_post_render', [ self.nestedFormId, currentPage ] );
 
 			if ( window['gformInitDatepicker'] ) {
+				/*
+				 * Disable focusTrap if interacting with date picker. Even though we have allowOutsideClick enabled, this addresses
+				 * a bug with Firefox where the selects cannot be interacted with.
+				 */
+				if (self.trap) {
+					gform.addFilter( 'gform_datepicker_options_pre_init', function ( optionsObj, formId ) {
+						if ( formId != self.nestedFormId ) {
+							return optionsObj;
+						}
+
+						var origBeforeShow = optionsObj.beforeShow;
+						optionsObj.beforeShow = function ( input, inst ) {
+							origBeforeShow( input, inst );
+							self.trap.deactivate({ returnFocus: false });
+						}
+						var origOnClose = optionsObj.onClose;
+						optionsObj.onClose = function ( input, inst ) {
+							origOnClose( input, inst );
+							self.trap.activate();
+						}
+						return optionsObj;
+					} );
+				}
+
 				self.$modal.find( '.datepicker' ).each( function() {
 					// Remove 'hasDatepicker' before initializing. This seems to be added when viewing
 					// in a Gravity Flow Inbox page and breaks jQuery's Date Picker.
@@ -730,12 +840,12 @@
 
 			self.handleParentMergeTag();
 
-			$( document ).on( 'gform_post_conditional_logic.{0}'.format( self.getNamespace() ), function( event, formId, fieldIds ) {
+			gform.addAction('gform_post_conditional_logic_field_action', function (formId, action, targetId, defaultValues, isInit) {
 				if ( self.nestedFormId == formId ) {
-					self.handleParentMergeTag( fieldIds );
+					var fieldId = gf_get_input_id_by_html_id(targetId);
+					self.handleParentMergeTag( [fieldId] );
 				}
-			} );
-
+			});
 		};
 
 		/**
@@ -746,6 +856,10 @@
 		};
 
 		self.parseCalcs = function( formula, formulaField, formId, calcObj ) {
+
+			if ( formId != self.formId ) {
+				return formula;
+			}
 
 			var matches = getMatchGroups( formula, /{[^{]*?:([0-9]+):(sum|total|count)=?([0-9]*)}/i );
 			$.each( matches, function( i, group ) {
@@ -758,6 +872,14 @@
 
 				if ( nestedFormFieldId != self.fieldId ) {
 					return;
+				}
+
+				/*
+				 * Return 0 if the Nested Form field is hidden with Conditional Logic.
+				 * This matches the backend behavior of discarding any child entries if the Nested Form field is hidden.
+				 */
+				if ( gformIsHidden( self.$fieldContainer.find('> :first-child') ) ) {
+					return 0;
 				}
 
 				switch ( func ) {
@@ -793,11 +915,6 @@
 
 		self.handleParentMergeTag = function ( fieldIds ) {
 
-			// Do not process merge tags if the form was submitted and contains errors
-			if ( self.$modal.find( '.gform_validation_error' ).length !== 0 ) {
-				return;
-			}
-
 			var $inputs;
 
 			if ( typeof fieldIds !== 'undefined' ) {
@@ -818,27 +935,30 @@
 					return true;
 				}
 
+
 				/**
-				 * Filter whether GPNF should re-populate any parent merge tags  when editing an entry
-				 *
-				 * @since 1.0-beta-9.28
-				 *
-				 * @param boolean 			replace_parent_merge_tag   Whether or not to re-apply parent merge tags
-				 * @param int           	formId 				       The parent form ID.
+				 * Removes parent merge tags for child/parent values that are empty
+				 * so when editing or if a validation error comes up, there
+				 * aren't fields still showing {Parent} merge tags.
 				 */
-				if ( self.mode === 'edit' && ! gform.applyFilters( 'gpnf_replace_parent_merge_tag_on_edit', false, self.formId ) ) {
-					// Skip processing edited/populated merge tags.
-					// One exception here is that we need to ensure that `{parent}` merge tags are removed.
-					// This can occur when editing a child entry with an empty field and an empty parent field value.
-					// See: HS#27251
-					value = $( this ).val();
-					var parentMergeTagEdit = self.getParentMergeTags( value );
-					if ( parentMergeTagEdit.length ) {
-						for ( var i = 0, max = parentMergeTagEdit.length; i < max; i ++ ) {
-							value = value.replace( parentMergeTagEdit[i][0], '' );
+				function clearEmptyParentMergeTags(el) {
+					var $el = $(el);
+					value = $el.val();
+
+					var parentMergeTags = self.getParentMergeTags( value );
+
+					if ( parentMergeTags.length ) {
+						for ( var i = 0, max = parentMergeTags.length; i < max; i ++ ) {
+							value = value.replace( parentMergeTags[i][0], '' );
 						}
-						$( this ).val( value ).change().trigger("chosen:updated");
+
+						$el.val( value ).change().trigger("chosen:updated");
 					}
+				}
+
+				/* Do not copy in parent merge tag values, only clear out ones with empty values */
+				if ( self.$modal.find( '.gform_validation_error' ).length !== 0 ) {
+					clearEmptyParentMergeTags(this);
 					return true;
 				}
 
@@ -903,10 +1023,46 @@
 
 				var currentValue = $( this ).val();
 
-				if ( currentValue != value ) {
-					$( this ).val( value ).change().trigger("chosen:updated");
+				/**
+				 * Filter whether GPNF should re-populate any parent merge tags  when editing an entry
+				 *
+				 * @since 1.0-beta-9.28
+				 *
+				 * @param boolean 			replace_parent_merge_tag   Whether or not to re-apply parent merge tags
+				 * @param int           	formId 				       The parent form ID.
+				 */
+				if ( self.mode === 'edit' && ! gform.applyFilters( 'gpnf_replace_parent_merge_tag_on_edit', false, self.formId ) ) {
+					// Skip processing edited/populated merge tags.
+					// One exception here is that we need to ensure that `{parent}` merge tags are removed.
+					// This can occur when editing a child entry with an empty field and an empty parent field value.
+					// See: HS#27251
+					clearEmptyParentMergeTags(this);
+
+					// Update GP Read Only hidden capture to the current value of the input that way when editing it doesn't revert to
+					// the parent merge tag as the value.
+					$( this ).siblings( `input[name^="gwro_hidden_capture_"]` )
+					         .val( currentValue );
+
+					return true;
+				} else {
+					// Update GP Read Only hidden capture to the new value of the input from the parent merge tag.
+					$( this ).siblings( `input[name^="gwro_hidden_capture_"]` )
+					         .val( value );
 				}
 
+				if ( currentValue != value ) {
+					$( this ).val( value ).change().trigger( "chosen:updated" );
+
+					// TinyMCE appears to initialize _before_ the parent merge tags are handled. Instead of changing priority, reset the TinyMCE editor content accordingly.
+					const inputIdBits = $( this ).prop( 'id' )?.split( '_' );
+					const fieldId = inputIdBits?.[2];
+
+					const tinyMCEEditor = window?.tinyMCE?.editors?.[`input_${self.nestedFormId}_${fieldId}`];
+
+					if ( tinyMCEEditor ) {
+						tinyMCEEditor.setContent( value );
+					}
+				}
 			});
 
 		};
@@ -1011,7 +1167,7 @@
 			/** @var \GPNestedForms gpnf */
 			var gpnf = window[ 'GPNestedForms_{0}_{1}'.format( args.formId, args.fieldId ) ];
 
-			entry    = gpnf.prepareEntryForKnockout( args.fieldValues );
+			const entry    = gpnf.prepareEntryForKnockout( args.fieldValues );
 			entry.id = args.entryId;
 
 			// edit
@@ -1049,7 +1205,9 @@
 
 			}
 
-			gpnf.modal.close();
+			if ( gpnf.isActive ) {
+				gpnf.modal.close();
+			}
 
 		};
 

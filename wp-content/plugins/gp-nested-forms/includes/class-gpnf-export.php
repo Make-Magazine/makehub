@@ -183,7 +183,9 @@ class GPNF_Export {
 			}
 		}
 
-		return gp_nested_forms()->get_field_value( GFAPI::get_form( $nested_form_id ), $nested_form_entry, $nested_field_id );
+		$field_value = gp_nested_forms()->get_field_value( GFAPI::get_form( $nested_form_id ), $nested_form_entry, $nested_field_id );
+
+		return apply_filters( 'gform_export_field_value', $field_value, $nested_form_id, $nested_field_id, $nested_form_entry );
 	}
 
 	public function escape_value( $value ) {

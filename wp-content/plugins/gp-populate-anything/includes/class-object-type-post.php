@@ -97,6 +97,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
@@ -120,24 +121,25 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		switch ( $filter['operator'] ) {
 			case '>=':
 			case '>':
-				$filter_value = date( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
+				$filter_value = gmdate( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
 				break;
 			case '<=':
 			case '<':
-				$filter_value = date( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
+				$filter_value = gmdate( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
 				break;
 			case 'is': // `post_date` is a DATETIME column which includes time, ensure date is within range (see HS#24545)
-				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>=', date( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
-				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<=', date( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>=', gmdate( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<=', gmdate( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
 				return $query_builder_args;
 			case 'isnot': // Same as is, just inverse and make sure it's outside of the 24 hours range
-				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<', date( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
-				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>', date( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<', gmdate( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>', gmdate( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
 				return $query_builder_args;
 		}
 
@@ -159,6 +161,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$meta_operator      = $this->get_sql_operator( $filter['operator'] );
@@ -168,6 +171,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		$this->meta_query_counter++;
 		$as_table = 'mq' . $this->meta_query_counter;
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )", rgar( $property, 'value' ), $meta_value );
 		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$wpdb->postmeta} AS {$as_table} ON ( {$wpdb->posts}.ID = {$as_table}.post_id )";
 
@@ -187,6 +191,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		/**
@@ -292,6 +297,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 		 * @var $filter_groups array
 		 * @var $ordering array
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		if ( count( $query_builder_args['where'] ) === 0 ) {
@@ -347,72 +353,79 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		return array_merge(
 			array(
-				'post_author'  => array(
+				'post_author'        => array(
 					'label'    => esc_html__( 'Author', 'gp-populate-anything' ),
 					'value'    => 'post_author',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_author' ),
 					'orderby'  => true,
 				),
-				'post_status'  => array(
+				'post_status'        => array(
 					'label'    => esc_html__( 'Post Status', 'gp-populate-anything' ),
 					'value'    => 'post_status',
 					'callable' => 'get_post_statuses',
 					'orderby'  => true,
 				),
-				'post_title'   => array(
+				'post_title'         => array(
 					'label'    => esc_html__( 'Post Title', 'gp-populate-anything' ),
 					'value'    => 'post_title',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_title' ),
 					'orderby'  => true,
 				),
-				'post_content' => array(
+				'post_content'       => array(
 					'label'    => esc_html__( 'Post Content', 'gp-populate-anything' ),
 					'value'    => 'post_content',
 					'callable' => '__return_empty_array',
 					'orderby'  => true,
 				),
-				'post_excerpt' => array(
+				'post_excerpt'       => array(
 					'label'    => esc_html__( 'Post Excerpt', 'gp-populate-anything' ),
 					'value'    => 'post_excerpt',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_excerpt' ),
 					'orderby'  => true,
 				),
-				'post_name'    => array(
+				'post_name'          => array(
 					'label'    => esc_html__( 'Post Name (Slug)', 'gp-populate-anything' ),
 					'value'    => 'post_name',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_name' ),
 					'orderby'  => true,
 				),
-				'ID'           => array(
+				'ID'                 => array(
 					'label'    => esc_html__( 'Post ID', 'gp-populate-anything' ),
 					'value'    => 'ID',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'ID' ),
 					'orderby'  => true,
 				),
-				'post_type'    => array(
+				'post_type'          => array(
 					'label'    => esc_html__( 'Post Type', 'gp-populate-anything' ),
 					'value'    => 'post_type',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_type' ),
 					'orderby'  => true,
 				),
-				'post_date'    => array(
+				'post_date'          => array(
 					'label'    => esc_html__( 'Post Date', 'gp-populate-anything' ),
 					'value'    => 'post_date',
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'post_date' ),
 					'orderby'  => true,
 				),
-				'post_parent'  => array(
+				'post_parent'        => array(
 					'label'    => esc_html__( 'Parent Post', 'gp-populate-anything' ),
 					'value'    => 'post_parent',
 					'callable' => array( $this, 'get_posts' ),
 					'orderby'  => true,
+				),
+				'featured_image_url' => array(
+					'label'              => esc_html__( 'Featured Image URL', 'gp-populate-anything' ),
+					'value'              => 'featured_image_url',
+					'orderby'            => false,
+					'supports_filters'   => false,
+					'supports_templates' => true,
 				),
 			),
 			$this->get_post_taxonomies_properties(),
@@ -422,6 +435,15 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 	}
 
 	public function get_object_prop_value( $object, $prop ) {
+
+		/* Featured Image */
+		if ( $prop === 'featured_image_url' ) {
+			if ( ! $object->{'_thumbnail_id'} ) {
+				return null;
+			}
+
+			return wp_get_attachment_url( $object->{'_thumbnail_id'} );
+		}
 
 		/* Taxonomies */
 		if ( strpos( $prop, 'taxonomy_' ) === 0 ) {
@@ -524,6 +546,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 		 * @var $ordering array
 		 * @var $field array
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$orderby = rgar( $ordering, 'orderby' );
@@ -559,12 +582,14 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 							FROM {$wpdb->postmeta}
 							WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id
 							AND {$wpdb->postmeta}.meta_key = '{$meta_key}'
+							LIMIT 1
 					) {$order},
 					(
 						SELECT ({$wpdb->postmeta}.meta_value)
 							FROM {$wpdb->postmeta}
 							WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id
 							AND {$wpdb->postmeta}.meta_key = '{$meta_key}'
+							LIMIT 1
 					)";
 		}
 
@@ -581,6 +606,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 				    JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_id
 					WHERE {$wpdb->term_taxonomy}.taxonomy = %s
 						AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
+					LIMIT 1
 			)", $taxonomy );
 		}
 

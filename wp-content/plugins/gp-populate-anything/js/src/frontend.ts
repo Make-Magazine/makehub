@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* Polyfills */
 import 'core-js/es/array/includes';
 import 'core-js/es/object/assign';
@@ -60,8 +61,12 @@ for ( const [ formId, fieldMap ] of Object.entries( gppaMergedFieldMaps ) ) {
 jQuery( 'form[id^="gform_"], div[id^="gform_wrapper_"]' ).each(
 	( index, el ) => {
 		const formId = jQuery( el )
-			.attr( 'id' )
-			.replace( /^gform_(wrapper_)?/, '' );
+			?.attr( 'id' )
+			?.replace( /^gform_(wrapper_)?/, '' );
+
+		if ( ! formId ) {
+			return;
+		}
 
 		maybeRegisterForm( formId );
 	}

@@ -220,6 +220,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		if ( ! isset( $gf_query_where[ $filter_group_index ] ) ) {
@@ -339,7 +340,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 						$time = strtotime( $filter_value );
 					}
 
-					$filter_value = date( 'Y-m-d', $time );
+					$filter_value = gmdate( 'Y-m-d', $time );
 				}
 
 				// If we're querying `date_created` or `date_updated` we need a new WHERE clause that uses a date
@@ -393,7 +394,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				) );
 		}
 
-		return new WP_Error('Unsupported operator for sql_date_range.');
+		return new WP_Error( 'Unsupported operator for sql_date_range.' );
 	}
 
 	public function include_active_entries( $where_filter_groups ) {
@@ -417,6 +418,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 * @var $ordering array
 		 * @var $field GF_Field
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		if ( ! $primary_property_value ) {
@@ -548,7 +550,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			$use_admin_label_prev = $field->get_context_property( 'use_admin_label' );
 			$field->set_context_property( 'use_admin_label', true );
 
-			if ( empty( $field['inputs'] ) || in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types() ) ) {
+			if ( empty( $field['inputs'] ) || in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
 				$output[] = array(
 					'value' => $field['id'],
 					'label' => GFCommon::get_label( $field ),
@@ -580,9 +582,8 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$entry_meta_table = GFFormsModel::get_entry_meta_table_name();
 
-		$sql = "SELECT meta_value from $entry_meta_table WHERE form_id = %d AND meta_key = %s";
-
-		return $wpdb->get_col( $wpdb->prepare( $sql, $form_id, $input_id ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return $wpdb->get_col( $wpdb->prepare( "SELECT meta_value from $entry_meta_table WHERE form_id = %d AND meta_key = %s", $form_id, $input_id ) );
 
 	}
 
@@ -638,7 +639,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			}
 		}
 
-		$output = array_unique( array_filter( $output ) );
+		$output = array_filter( $output );
 
 		return json_encode( $output );
 
@@ -663,7 +664,9 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			return $template_value;
 		}
 
-		if ( empty( $object->form_id ) || ! $form = GFAPI::get_form( $object->form_id ) ) {
+		$form = GFAPI::get_form( $object->form_id );
+
+		if ( empty( $object->form_id ) || ! $form ) {
 			return $template_value;
 		}
 

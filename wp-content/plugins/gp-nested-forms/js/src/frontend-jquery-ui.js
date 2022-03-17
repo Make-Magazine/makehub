@@ -1,6 +1,7 @@
 /**
 * Nested Forms, mama!
 */
+const ko = window.ko;
 
 ( function( $ ) {
 
@@ -9,7 +10,7 @@
 		var self = this;
 
 		// copy all args to current object: formId, fieldId
-		for( prop in args ) {
+		for( const prop in args ) {
 			if( args.hasOwnProperty( prop ) )
 				self[prop] = args[prop];
 		}
@@ -448,7 +449,7 @@
 
 			var gpnf = $( '#gform_wrapper_' + args.formId ).data( 'GPNestedForms_' + args.fieldId );
 
-			entry = gpnf.prepareEntryForKnockout( args.fieldValues );
+			const entry = gpnf.prepareEntryForKnockout( args.fieldValues );
 			entry.id = args.entryId;
 
 			// edit

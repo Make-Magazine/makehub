@@ -36,10 +36,7 @@ class GPPopulateAnythingAdmin {
 		this.initVueVM();
 	}
 
-	onLoadFieldSettings = (
-		event: JQueryEventObject,
-		field: GravityFormsField
-	) => {
+	onLoadFieldSettings = ( event: JQuery.Event, field: GravityFormsField ) => {
 		this.vm.$data.field = { ...field };
 		this.vm.$refs.root.refresh();
 	};

@@ -21,6 +21,10 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	 * @return string|number
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
+		if ( empty( $object ) || ! isset( $object->ID ) ) {
+			return -1;
+		}
+
 		return $object->ID;
 	}
 
@@ -67,6 +71,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->users, rgar( $property, 'value' ), $filter['operator'], $filter_value );
@@ -87,6 +92,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$meta_value = $this->get_sql_value( 'contains', '"' . $filter_value . '"' );
@@ -94,6 +100,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		$blog_id  = get_current_blog_id();
 		$operator = rgar( $filter, 'operator' ) === 'isnot' ? 'NOT LIKE' : 'LIKE';
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$where = $wpdb->prepare( "( {$wpdb->usermeta}.meta_key = %s AND {$wpdb->usermeta}.meta_value {$operator} %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities', $meta_value );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $where;
@@ -123,6 +130,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$meta_operator      = $this->get_sql_operator( $filter['operator'] );
@@ -132,6 +140,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		$this->meta_query_counter++;
 		$as_table = 'mq' . $this->meta_query_counter;
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )", rgar( $property, 'value' ), $meta_value );
 		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$wpdb->usermeta} AS {$as_table} ON ( {$wpdb->users}.ID = {$as_table}.user_id )";
 
@@ -151,6 +160,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$data_operator      = $this->get_sql_operator( $filter['operator'] );
@@ -162,6 +172,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		$as_table = 'bp_data';
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.field_id = %s AND {$as_table}.value {$data_operator} {$data_specification} )", rgar( $property, 'value' ), $data_value );
 		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$bp_data_table} AS {$as_table} ON ( {$wpdb->users}.ID = {$as_table}.user_id )";
 
@@ -228,7 +239,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	public function get_object_prop_value( $object, $prop ) {
 
-		if ( in_array( $prop, self::$blacklisted_props ) ) {
+		if ( in_array( $prop, self::$blacklisted_props, true ) ) {
+			return null;
+		}
+
+		if ( empty( $object ) ) {
 			return null;
 		}
 
@@ -327,7 +342,9 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		$xprofile_properties = array();
 		$bp_prefix           = bp_core_get_table_prefix();
-		$query_results       = $wpdb->get_results( "SELECT id, name FROM {$bp_prefix}bp_xprofile_fields" );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query_results = $wpdb->get_results( "SELECT id, name FROM {$bp_prefix}bp_xprofile_fields" );
 
 		foreach ( $query_results as $field ) {
 			$xprofile_properties[ 'bp_xprofile_' . $field->id ] = array(
@@ -353,8 +370,9 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		global $wpdb;
 
 		$bp_prefix = bp_core_get_table_prefix();
-		$query     = $wpdb->prepare( "SELECT DISTINCT value FROM {$bp_prefix}bp_xprofile_data WHERE field_id = %d", $field_id );
-		$result    = $wpdb->get_col( $query );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT value FROM {$bp_prefix}bp_xprofile_data WHERE field_id = %d", $field_id ) );
 
 		return is_array( $result ) ? $this->filter_values( $result ) : array();
 
@@ -383,6 +401,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $ordering array
 		 * @var $field array
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$orderby = rgar( $ordering, 'orderby' );
@@ -416,12 +435,14 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 							FROM {$wpdb->usermeta}
 							WHERE {$wpdb->users}.ID = {$wpdb->usermeta}.user_id
 							AND {$wpdb->usermeta}.meta_key = '{$meta_key}'
+							LIMIT 1
 					) {$order},
 					(
 						SELECT ({$wpdb->usermeta}.meta_value)
 							FROM {$wpdb->usermeta}
 							WHERE {$wpdb->users}.ID = {$wpdb->usermeta}.user_id
 							AND {$wpdb->usermeta}.meta_key = '{$meta_key}'
+							LIMIT 1
 					)";
 		}
 
@@ -454,6 +475,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $filter_groups array
 		 * @var $ordering array
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		if ( ! is_multisite() || ! apply_filters( 'gppa_object_type_user_limit_to_current_site', true ) ) {
@@ -499,6 +521,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 			return $_cache[ $query ];
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$users = $wpdb->get_results( $query );
 
 		foreach ( $users as $key => $user ) {

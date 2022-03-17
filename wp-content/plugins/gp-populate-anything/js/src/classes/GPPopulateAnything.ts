@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, no-shadow */
 import {
 	disableSubmitButton,
 	enableSubmitButton,
@@ -50,8 +51,7 @@ export default class GPPopulateAnything {
 		rounding: string;
 	}[] = [];
 
-	private _lastRequestPromise: { [ inputId: string ]: JQueryXHR } = {};
-
+	// eslint-disable-next-line no-shadow
 	constructor( public formId: formId, public fieldMap: fieldMap ) {
 		if ( 'GPPA_POSTED_VALUES_' + formId in window ) {
 			this.postedValues = ( window as any )[
@@ -69,6 +69,7 @@ export default class GPPopulateAnything {
 			'gform_post_render',
 			this.postRenderSetCurrentPage
 		);
+
 		jQuery( document ).on( 'gform_post_render', this.postRender );
 
 		// Update prices when fields are updated. By default, Gravity Forms does not trigger recalculations when
@@ -180,7 +181,7 @@ export default class GPPopulateAnything {
 	}
 
 	postRenderSetCurrentPage = (
-		event: JQueryEventObject,
+		event: JQuery.Event,
 		formId: any,
 		currentPage: number
 	) => {
@@ -188,10 +189,11 @@ export default class GPPopulateAnything {
 	};
 
 	postRender = (
-		event: JQueryEventObject | null,
+		event: JQuery.Event | null,
 		formId: any,
 		currentPage: number
 	) => {
+		// eslint-disable-next-line eqeqeq
 		if ( formId != this.formId ) {
 			return;
 		}
@@ -260,22 +262,25 @@ export default class GPPopulateAnything {
 
 				if (
 					event.type === 'keyup' &&
-					ignoredKeyUpKeys.indexOf( event.key ) !== -1
+					ignoredKeyUpKeys.indexOf( event.key! ) !== -1
 				) {
 					// eslint-disable-next-line no-console
 					console.debug( 'not firing due to ignored keyup' );
 					return;
 				}
 
+				const lastFieldValues = this.processInputValuesForComparison(
+					$form.data( lastFieldValuesDataId )
+				);
+
+				const currentFieldValues = this.processInputValuesForComparison(
+					getFormFieldValues( this.formId, !! this.gravityViewMeta )
+				);
+
 				// Do not fire if values didn't change
 				if (
-					JSON.stringify( $form.data( lastFieldValuesDataId ) ) ===
-					JSON.stringify(
-						getFormFieldValues(
-							this.formId,
-							!! this.gravityViewMeta
-						)
-					)
+					JSON.stringify( lastFieldValues ) ===
+					JSON.stringify( currentFieldValues )
 				) {
 					// eslint-disable-next-line no-console
 					console.debug(
@@ -325,12 +330,13 @@ export default class GPPopulateAnything {
 						'input[type=text], input[type=number], input[type=time], textarea'
 					)
 				) {
+					// eslint-disable-next-line eqeqeq
 					if ( $el.data( 'lastValue' ) == $el.val() ) {
 						return;
 					}
 				}
 
-				$el.data( 'lastValue', $el.val() );
+				$el.data( 'lastValue', $el.val()! );
 
 				this.onChange( inputId );
 			}
@@ -341,14 +347,20 @@ export default class GPPopulateAnything {
 				.find( '[name^="' + inputPrefix + '"]' )
 				.each( ( index, el: Element ) => {
 					const $el = $( el );
-					const id = $el.attr( 'name' ).replace( inputPrefix, '' );
+					const id = $el.attr( 'name' )?.replace( inputPrefix, '' );
+
+					if ( ! id ) {
+						return;
+					}
+
 					const fieldId = parseInt( id );
 
+					// eslint-disable-next-line eqeqeq
 					if ( this.getFieldPage( fieldId ) != this.currentPage ) {
 						return;
 					}
 
-					this.postedValues[ id ] = $el.val();
+					this.postedValues[ id ] = $el.val() as string;
 				} );
 		} );
 
@@ -506,6 +518,31 @@ export default class GPPopulateAnything {
 		);
 	}
 
+	/*
+	 * Run the field values through various transformations to make comparisons more accurate.
+	 *
+	 * An example is to round numbers to a reasonable decimal as calculations on the frontend can calculate with more
+	 * precision than what gets saved thus triggering a re-fetch of values/choices when it shouldn't.
+	 */
+	processInputValuesForComparison( formValues: {
+		[ inputId: string ]: any;
+	} ): { [ inputId: string ]: any } {
+		for ( let [ inputId, value ] of Object.entries( formValues ) ) {
+			/**
+			 * Set all numbers to a precision of 10.
+			 */
+			if ( value && ! isNaN( value ) ) {
+				if ( typeof value !== 'number' ) {
+					value = parseFloat( value );
+				}
+
+				formValues[ inputId ] = value.toPrecision( 10 );
+			}
+		}
+
+		return formValues;
+	}
+
 	getFieldFilterValues( $form: JQuery, filters: fieldMapFilter[] ) {
 		let prefix = 'input_';
 
@@ -650,10 +687,10 @@ export default class GPPopulateAnything {
 				.find( 'input[type="hidden"][name="choices_' + fieldID + '"]' )
 				.remove();
 
-			let isEmpty =
-					$fieldContainer.find( '.gppa-requires-interaction' )
-						.length > 0,
-				addClass = isEmpty ? 'gppa-empty' : '';
+			const isEmpty =
+				$fieldContainer.find( '.gppa-requires-interaction' ).length > 0;
+
+			let addClass = isEmpty ? 'gppa-empty' : '';
 
 			addClass += ' gppa-loading';
 
@@ -661,13 +698,13 @@ export default class GPPopulateAnything {
 			 * Specify which element is used to indicate that a field is about to be replaced with
 			 * fresh data and which element will be replaced when that data is fetched.
 			 *
-			 * @param          array  targetMeta
+			 * @param                 array  targetMeta
 			 *
-			 *      @member {jQuery} $fieldContainer    The element that should show the loading indicator and be replaced.
+			 *      @member {window.jQuery} $fieldContainer    The element that should show the loading indicator and be replaced.
 			 *      @member string   loadingClass       The class that will be applied to the target element.
 			 *
-			 * @param {jQuery} $el    The field element. By default, the the field container will start pulsing.
-			 * @param          string context  The context of the target meta. Will be 'loading' or 'replace'.
+			 * @param {window.jQuery} $el    The field element. By default, the the field container will start pulsing.
+			 * @param                 string context  The context of the target meta. Will be 'loading' or 'replace'.
 			 */
 			[ $fieldContainer, addClass ] = window.gform.applyFilters(
 				'gppa_loading_field_target_meta',
@@ -907,7 +944,7 @@ export default class GPPopulateAnything {
 
 					/* Simply using .focus() will set the cursor at the beginning instead of the end. */
 					$focus.val( '' );
-					$focus.val( focusVal );
+					$focus.val( focusVal as string );
 					$focus.focus();
 				}
 			}
@@ -942,8 +979,6 @@ export default class GPPopulateAnything {
 			);
 
 			input.each( function () {
-				// @ts-ignore
-				const $this: JQuery = $( this );
 				// @ts-ignore - _data is not in JQueryStatic typings but it's been around for as long as I can remember.
 				const events: { [ event: string ]: any } = jQuery._data(
 					this,
@@ -953,6 +988,8 @@ export default class GPPopulateAnything {
 				if ( ! events ) {
 					return;
 				}
+
+				const $this: JQuery = $( this );
 
 				for ( const [ event, eventHandlers ] of Object.entries(
 					events
@@ -1074,6 +1111,7 @@ export default class GPPopulateAnything {
 		for ( const inputId of Object.keys( this.postedValues ) ) {
 			const currentFieldId = parseInt( inputId );
 
+			// eslint-disable-next-line eqeqeq
 			if ( currentFieldId == fieldId ) {
 				hasPostedField = true;
 

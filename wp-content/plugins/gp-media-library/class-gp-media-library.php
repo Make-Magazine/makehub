@@ -44,11 +44,17 @@ class GP_Media_Library extends GWPerk {
 
 		add_action( 'gform_after_create_post', array( $this, 'acf_integration' ), 10, 3 );
 		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_acf_integration' ), 10, 4 );
-		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_custom_field_integration' ), 10, 4 );
+		add_action( 'gform_advancedpostcreation_post_after_creation', array(
+			$this,
+			'apc_custom_field_integration'
+		), 10, 4 );
 
 		add_action( 'gform_after_create_post', array( $this, 'check_for_featured_image_custom_field' ), 10, 3 );
 
-		add_action( 'gravityview/fields/fileupload/link_content', array( $this, 'gravityview_file_upload_content' ), 10, 2 );
+		add_action( 'gravityview/fields/fileupload/link_content', array(
+			$this,
+			'gravityview_file_upload_content'
+		), 10, 2 );
 
 		add_filter( 'gform_admin_pre_render', array( $this, 'add_image_merge_tags' ) );
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_image_merge_tags' ), 5, 7 );
@@ -90,24 +96,26 @@ class GP_Media_Library extends GWPerk {
 		<script>
 			window.gpmlSupportedFieldTypes = <?php echo json_encode( $this->get_supported_field_types() ); ?>;
 
-			(function ($) {
+			(
+				function ( $ ) {
 
-				$(document).ready(function () {
-					for (fieldType in fieldSettings) {
-						if (
-							fieldSettings.hasOwnProperty(fieldType)
-							&& $.inArray(fieldType, window.gpmlSupportedFieldTypes) !== -1
-						) {
-							fieldSettings[fieldType] += ', .gpml-field-setting';
+					$( document ).ready( function () {
+						for ( fieldType in fieldSettings ) {
+							if (
+								fieldSettings.hasOwnProperty( fieldType )
+								&& $.inArray( fieldType, window.gpmlSupportedFieldTypes ) !== - 1
+							) {
+								fieldSettings[fieldType] += ', .gpml-field-setting';
+							}
 						}
-					}
-				});
+					} );
 
-				$(document).bind('gform_load_field_settings', function (event, field, form) {
-					$('#gpml-enable').prop('checked', field['uploadMediaLibrary'] == true);
-				});
+					$( document ).bind( 'gform_load_field_settings', function ( event, field, form ) {
+						$( '#gpml-enable' ).prop( 'checked', field['uploadMediaLibrary'] == true );
+					} );
 
-			})(jQuery);
+				}
+			)( jQuery );
 		</script>
 
 		<?php
@@ -127,8 +135,8 @@ class GP_Media_Library extends GWPerk {
 		 */
 		foreach ( $form['fields'] as $field ) {
 			if ( $this->is_applicable_field( $field ) ) {
-				$label = _n( 'Media Library ID', 'Media Library IDs', $field->multipleFiles ? 2 : 1, 'gp-media-library' );
-				$label = sprintf( '%s (%s)', $label, $field->get_field_label( false, '' ) );
+				$label                                                    = _n( 'Media Library ID', 'Media Library IDs', $field->multipleFiles ? 2 : 1, 'gp-media-library' );
+				$label                                                    = sprintf( '%s (%s)', $label, $field->get_field_label( false, '' ) );
 				$entry_meta[ $this->get_file_ids_meta_key( $field->id ) ] = array(
 					'label'             => esc_html( $label ),
 					'is_default_column' => false,
@@ -144,6 +152,7 @@ class GP_Media_Library extends GWPerk {
 		if ( strpos( $field_id, 'gpml_ids_' ) !== false && is_array( $entry[ $field_id ] ) ) {
 			$value = implode( ', ', $entry[ $field_id ] );
 		}
+
 		return $value;
 	}
 
@@ -292,7 +301,23 @@ class GP_Media_Library extends GWPerk {
 					unset( $GLOBALS['post'] );
 				}
 
+				$intermediate_image_sizes_filter = function ( $image_sizes ) use ( $field ) {
+					/**
+					 * Filter the image sizes to create after files are uploaded
+					 *
+					 * @param $image_sizes array Names of image sizes to allow
+					 *
+					 * @since 1.2.23
+					 */
+					return gf_apply_filters(
+						array( 'gpml_image_sizes', $field->formId, $field->id ),
+						$image_sizes
+					);
+				};
+
+				add_filter( 'intermediate_image_sizes', $intermediate_image_sizes_filter );
 				$id = media_handle_sideload( $media_data['file_array'], $media_data['post_id'], $media_data['desc'], $media_data['post_data'] );
+				remove_filter( 'intermediate_image_sizes', $intermediate_image_sizes_filter );
 
 				// Restore the WordPress post global if it was unset above.
 				if ( isset( $_globals_post ) ) {
@@ -362,10 +387,13 @@ class GP_Media_Library extends GWPerk {
 		$field_id   = intval( rgpost( 'field_id' ) );
 		$file_index = intval( rgpost( 'file_index' ) );
 
-		$file_id = $this->get_file_ids( $entry_id, $field_id, $file_index );
+		$file_ids = $this->get_file_ids( $entry_id, $field_id );
+		$file_id  = array_splice( $file_ids, $file_index, 1 );
+		$file_id  = array_pop( $file_id );
 
 		if ( ! empty( $file_id ) ) {
 			wp_delete_attachment( $file_id, true );
+			$this->update_file_ids( $entry_id, $field_id, $file_ids );
 		}
 
 	}
@@ -432,26 +460,31 @@ class GP_Media_Library extends GWPerk {
 
 		<script type="text/javascript">
 
-			(function ($) {
+			(
+				function ( $ ) {
 
-				var imageMergeTags = <?php echo json_encode( $this->get_image_merge_tags( $form ) ); ?>;
+					var imageMergeTags = <?php echo json_encode( $this->get_image_merge_tags( $form ) ); ?>;
 
-				if (window.gform) {
+					if ( window.gform ) {
 
-					gform.addFilter('gform_merge_tags', function (mergeTags, elementId, hideAllFields, excludeFieldTypes, isPrepop, option) {
-						mergeTags['gpml'] = {label: '<?php _e( 'GP Media Library', 'gp-media-library' ); ?>', tags: []};
-						for (var i = 0; i < imageMergeTags.length; i++) {
-							mergeTags['gpml'].tags.push({
-								tag: imageMergeTags[i].tag,
-								label: imageMergeTags[i].label
-							});
-						}
-						return mergeTags;
-					});
+						gform.addFilter( 'gform_merge_tags', function ( mergeTags, elementId, hideAllFields, excludeFieldTypes, isPrepop, option ) {
+							mergeTags['gpml'] = {
+								label: '<?php _e( 'GP Media Library', 'gp-media-library' ); ?>',
+								tags: []
+							};
+							for ( var i = 0; i < imageMergeTags.length; i ++ ) {
+								mergeTags['gpml'].tags.push( {
+									tag: imageMergeTags[i].tag,
+									label: imageMergeTags[i].label
+								} );
+							}
+							return mergeTags;
+						} );
+
+					}
 
 				}
-
-			})(jQuery);
+			)( jQuery );
 
 		</script>
 
@@ -614,9 +647,9 @@ class GP_Media_Library extends GWPerk {
 
 		if ( rgar( $notification, 'enableAttachments' ) ) {
 
-			$form = GFAPI::get_form( $entry['form_id'] );
+			$form     = GFAPI::get_form( $entry['form_id'] );
 			$file_ids = $this->get_file_ids_by_entry( $entry, $form );
-			$ids  = ( count( $file_ids ) > 0 ) ? call_user_func_array( 'array_merge', $file_ids ) : array();
+			$ids      = ( count( $file_ids ) > 0 ) ? call_user_func_array( 'array_merge', $file_ids ) : array();
 
 			foreach ( $ids as $id ) {
 				$url = wp_get_attachment_url( $id );
@@ -834,11 +867,17 @@ class GP_Media_Library extends GWPerk {
 		/**
 		 * Filter which Advanced Custom Fields field types are supported by GP Media Library.
 		 *
+		 * @param array $supported_field_types An array of supported ACF field types.
+		 *
 		 * @since 1.2.21
 		 *
-		 * @param array $supported_field_types An array of supported ACF field types.
 		 */
-		return apply_filters( 'gpml_supported_acf_field_types', array( 'image', 'file', 'image_aspect_ratio_crop', 'gallery' ) );
+		return apply_filters( 'gpml_supported_acf_field_types', array(
+			'image',
+			'file',
+			'image_aspect_ratio_crop',
+			'gallery'
+		) );
 	}
 
 
@@ -948,6 +987,7 @@ class GP_Media_Library extends GWPerk {
 		}
 
 		return $ids;
+
 	}
 
 	public function update_file_ids( $entry_id, $field_id, $file_ids ) {

@@ -7,7 +7,7 @@ class GPPA_Compatibility_GravityPDF {
 	private $_current_entry = null;
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self;
 		}
 
