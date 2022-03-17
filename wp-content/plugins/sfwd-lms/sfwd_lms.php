@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 4.0.0
+ * Version: 4.0.1
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string PHP version x.x.x or x.x.x.x format.
  */
-define( 'LEARNDASH_VERSION', '4.0.0' );
+define( 'LEARNDASH_VERSION', '4.0.1' );
 
 /**
  * Define LearnDash LMS - Set the settings database version.

@@ -67,9 +67,12 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	 */
 
 	if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-		$shortcode_out = do_shortcode( '[ld_certificate course_id="' . $course_id . '" user_id="' . $user_id . '" display_as="banner"]' );
-		if ( ! empty( $shortcode_out ) ) {
-			echo $shortcode_out;
+		$shown_content_key = 'learndash-shortcode-wrap-ld_certificate-' . absint( $course_id ) . '_' . absint( $user_id );
+		if ( false === strstr( $content, $shown_content_key ) ) {
+			$shortcode_out = do_shortcode( '[ld_certificate course_id="' . $course_id . '" user_id="' . $user_id . '" display_as="banner"]' );
+			if ( ! empty( $shortcode_out ) ) {
+				echo $shortcode_out;
+			}
 		}
 	} else {
 		if ( ! empty( $course_certficate_link ) ) :
@@ -102,9 +105,12 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	do_action( 'learndash-course-certificate-link-after', $course_id, $user_id );
 
 	if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-		$shortcode_out = do_shortcode( '[ld_infobar course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
-		if ( ! empty( $shortcode_out ) ) {
-			echo $shortcode_out;
+		$shown_content_key = 'learndash-shortcode-wrap-ld_infobar-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
+		if ( false === strstr( $content, $shown_content_key ) ) {
+			$shortcode_out = do_shortcode( '[ld_infobar course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
+			if ( ! empty( $shortcode_out ) ) {
+				echo $shortcode_out;
+			}
 		}
 	} else {
 		/**
@@ -153,9 +159,12 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	if ( $has_course_content && $show_course_content ) :
 
 		if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-			$shortcode_out = do_shortcode( '[course_content course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
-			if ( ! empty( $shortcode_out ) ) {
-				echo $shortcode_out;
+			$shown_content_key = 'learndash-shortcode-wrap-course_content-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
+			if ( false === strstr( $content, $shown_content_key ) ) {
+				$shortcode_out = do_shortcode( '[course_content course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
+				if ( ! empty( $shortcode_out ) ) {
+					echo $shortcode_out;
+				}
 			}
 		} else {
 		

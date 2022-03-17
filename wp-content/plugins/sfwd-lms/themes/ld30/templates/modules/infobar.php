@@ -143,7 +143,7 @@ switch ( $context ) {
 				learndash_get_template_part(
 					'modules/progress.php',
 					array(
-						'context'   => 'lesson',
+						'context'   => 'topic',
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
 						'post'	    => $post,

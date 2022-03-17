@@ -111,18 +111,22 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 
 	if ( ! empty( $atts['group_id'] ) ) {
 		$shown_content_key = $atts['group_id'] . '_' . $atts['user_id'];
+		/*
 		if ( isset( $shown_content[ $shown_content_key ] ) ) {
 			if ( ( absint( $atts['group_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['group_id'] ) === learndash_get_post_type_slug( 'group' ) ) ) {
 				return $content;
 			}
 		}
+		*/
 	} elseif ( ! empty( $atts['course_id'] ) ) {
 		$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
+		/*
 		if ( isset( $shown_content[ $shown_content_key ] ) ) {
 			if ( ( ! empty( $atts['post_id'] ) ) && ( absint( $atts['post_id'] ) === absint( get_the_ID() ) ) && ( in_array( get_post_type( $atts['post_id'] ), learndash_get_post_types( 'course' ), true ) ) ) {
 				return $content;
 			}
 		}
+		*/
 	}
 
 	if ( ( ! isset( $shown_content_key ) ) || ( empty( $shown_content_key ) ) ) {
@@ -399,7 +403,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 	}
 
 	if ( ( isset( $shown_content[ $shown_content_key ] ) ) && ( ! empty( $shown_content[ $shown_content_key ] ) ) ) {
-		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap">' . $shown_content[ $shown_content_key ] . '</div>';
+		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $shown_content[ $shown_content_key ] . '</div>';
 		$learndash_shortcode_used = true;
 	}
 

@@ -53,9 +53,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 * Certificate link
 	 */
 	if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-		$shortcode_out = do_shortcode( '[ld_certificate group_id="' . $group_id . '" user_id="' . $user_id . '" display_as="banner"]' );
-		if ( ! empty( $shortcode_out ) ) {
-			echo $shortcode_out;
+		$shown_content_key = 'learndash-shortcode-wrap-ld_certificate-' . absint( $group_id ) . '_' . absint( $user_id );
+		if ( false === strstr( $content, $shown_content_key ) ) {
+			$shortcode_out = do_shortcode( '[ld_certificate group_id="' . $group_id . '" user_id="' . $user_id . '" display_as="banner"]' );
+			if ( ! empty( $shortcode_out ) ) {
+				echo $shortcode_out;
+			}
 		}
 	} else {
 		if ( $group_certficate_link && ! empty( $group_certficate_link ) ) :
@@ -93,9 +96,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 * Course info bar
 	 */
 	if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-		$shortcode_out = do_shortcode( '[ld_infobar group_id="' . $group_id . '" user_id="' . $user_id . '"]' );
-		if ( ! empty( $shortcode_out ) ) {
-			echo $shortcode_out;
+		$shown_content_key = 'learndash-shortcode-wrap-ld_infobar-' . absint( $group_id ) . '_' . absint( $user_id );
+		if ( false === strstr( $content, $shown_content_key ) ) {
+			$shortcode_out = do_shortcode( '[ld_infobar group_id="' . $group_id . '" user_id="' . $user_id . '"]' );
+			if ( ! empty( $shortcode_out ) ) {
+				echo $shortcode_out;
+			}
 		}
 	} else {
 		learndash_get_template_part(
@@ -153,9 +159,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	if ( $has_group_content && $show_group_content ) :
 
 		if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
-			$shortcode_out = do_shortcode( '[course_content group_id="' . $group_id . '" user_id="' . $user_id . '"]' );
-			if ( ! empty( $shortcode_out ) ) {
-				echo $shortcode_out;
+			$shown_content_key = 'learndash-shortcode-wrap-course_content-' . absint( $group_id ) . '_' . absint( $user_id );
+			if ( false === strstr( $content, $shown_content_key ) ) {
+				$shortcode_out = do_shortcode( '[course_content group_id="' . $group_id . '" user_id="' . $user_id . '"]' );
+				if ( ! empty( $shortcode_out ) ) {
+					echo $shortcode_out;
+				}
 			}
 		} else {
 			?>

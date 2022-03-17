@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LearnDash LMS plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LearnDash LMS 4.0\n"
+"Project-Id-Version: LearnDash LMS 4.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/learndash-core\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-15T14:05:48+00:00\n"
+"POT-Creation-Date: 2022-03-16T20:53:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: learndash\n"
@@ -228,10 +228,10 @@ msgid "Search"
 msgstr ""
 
 #: includes/admin/class-learndash-admin-builder.php:305
-#: themes/ld30/templates/course.php:219
-#: themes/ld30/templates/course.php:221
-#: themes/ld30/templates/group.php:217
-#: themes/ld30/templates/group.php:219
+#: themes/ld30/templates/course.php:228
+#: themes/ld30/templates/course.php:230
+#: themes/ld30/templates/group.php:226
+#: themes/ld30/templates/group.php:228
 #: themes/ld30/templates/shortcodes/course_content_shortcode.php:82
 #: themes/ld30/templates/shortcodes/course_content_shortcode.php:84
 #: themes/ld30/templates/shortcodes/group_content_shortcode.php:42
@@ -247,8 +247,8 @@ msgid "Expand All"
 msgstr ""
 
 #: includes/admin/class-learndash-admin-builder.php:307
-#: themes/ld30/templates/course.php:219
-#: themes/ld30/templates/group.php:217
+#: themes/ld30/templates/course.php:228
+#: themes/ld30/templates/group.php:226
 #: themes/ld30/templates/shortcodes/course_content_shortcode.php:82
 #: themes/ld30/templates/shortcodes/group_content_shortcode.php:42
 #: themes/ld30/templates/shortcodes/profile.php:182
@@ -1626,7 +1626,7 @@ msgstr ""
 
 #. translators: placeholders: Group, Courses.
 #: includes/admin/classes-binary-selectors/class-learndash-admin-binary-selector-group-courses.php:39
-#: themes/ld30/templates/group.php:181
+#: themes/ld30/templates/group.php:190
 #: themes/ld30/templates/shortcodes/group_content_shortcode.php:29
 msgctxt "placeholders: Group, Courses"
 msgid "%1$s %2$s"
@@ -12699,7 +12699,7 @@ msgstr ""
 #. translators: placeholder: Course.
 #: includes/settings/settings-metaboxes/class-ld-settings-metabox-course-display-content.php:364
 #: includes/settings/shortcodes-sections/course_content.php:34
-#: themes/ld30/templates/course.php:183
+#: themes/ld30/templates/course.php:192
 #: themes/ld30/templates/shortcodes/course_content_shortcode.php:60
 #: themes/legacy/templates/course.php:141
 #: themes/legacy/templates/course_content_shortcode.php:43
@@ -20327,15 +20327,15 @@ msgctxt "placeholder: course"
 msgid "This shortcode shows the content if the user is not enrolled in the %s. The shortcode can be used on <strong>any</strong> page or widget area."
 msgstr ""
 
-#: includes/shortcodes/ld_certificate.php:177
-#: themes/ld30/templates/course.php:81
-#: themes/ld30/templates/group.php:68
+#: includes/shortcodes/ld_certificate.php:183
+#: themes/ld30/templates/course.php:84
+#: themes/ld30/templates/group.php:71
 msgid "You've earned a certificate!"
 msgstr ""
 
-#: includes/shortcodes/ld_certificate.php:181
-#: themes/ld30/templates/course.php:85
-#: themes/ld30/templates/group.php:72
+#: includes/shortcodes/ld_certificate.php:187
+#: themes/ld30/templates/course.php:88
+#: themes/ld30/templates/group.php:75
 #: themes/ld30/templates/modules/certificate-link.php:32
 msgid "Download Certificate"
 msgstr ""
@@ -21198,7 +21198,7 @@ msgid "%1$d/%2$d Steps"
 msgstr ""
 
 #. translators: placeholders: quiz, attempts count.
-#: themes/ld30/templates/quiz.php:232
+#: themes/ld30/templates/quiz.php:235
 #: themes/legacy/templates/quiz.php:100
 msgctxt "placeholders: quiz, attempts count"
 msgid "You have already taken this %1$s %2$d time(s) and may not take it again."

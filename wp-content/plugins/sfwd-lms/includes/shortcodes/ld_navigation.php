@@ -78,12 +78,14 @@ function learndash_navigation_shortcode( $atts = array(), $content = '', $shortc
 
 	$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
 
+	/*
 	if ( isset( $shown_content[ $shown_content_key ] ) ) {
 		if ( ( ! empty( $atts['post_id'] ) ) && ( absint( $atts['post_id'] ) === absint( get_the_ID() ) ) && ( in_array( get_post_type( $atts['post_id'] ), learndash_get_post_types( 'course' ), true ) ) ) {
 			return $content;
 		}
 	}
-
+	*/
+	
 	$shown_content[ $shown_content_key ] = '';
 
 	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['post_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
@@ -119,7 +121,7 @@ function learndash_navigation_shortcode( $atts = array(), $content = '', $shortc
 
 		$shortcode_out = learndash_ob_get_clean( $level );
 		if ( ! empty( $shortcode_out ) ) {
-			$shown_content[ $shown_content_key ] .= '<div class="learndash-wrapper">' . $shortcode_out . '</div>';
+			$shown_content[ $shown_content_key ] .= '<div class="learndash-wrapper learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $shortcode_out . '</div>';
 		}
 	}
 

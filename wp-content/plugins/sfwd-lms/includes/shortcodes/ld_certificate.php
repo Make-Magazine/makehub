@@ -99,25 +99,31 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 
 	if ( ! empty( $atts['group_id'] ) ) {
 		$shown_content_key = $atts['group_id'] . '_' . $atts['user_id'];
+		/*
 		if ( isset( $shown_content[ $shown_content_key ] ) ) {
 			if ( ( absint( $atts['group_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['group_id'] ) === learndash_get_post_type_slug( 'group' ) ) ) {
 				return $content;
 			}
 		}
+		*/
 	} elseif ( ! empty( $atts['course_id'] ) ) {
 		$shown_content_key = $atts['course_id'] . '_' . $atts['user_id'];
+		/*
 		if ( isset( $shown_content[ $shown_content_key ] ) ) {
 			if ( ( absint( $atts['course_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['course_id'] ) === learndash_get_post_type_slug( 'course' ) ) ) {
 				return $content;
 			}
 		}
+		*/
 	} elseif ( ! empty( $atts['quiz_id'] ) ) {
 		$shown_content_key = $atts['quiz_id'] . '_' . $atts['user_id'];
+		/*
 		if ( isset( $shown_content[ $shown_content_key ] ) ) {
 			if ( ( ! empty( $atts['quiz_id'] ) ) && ( absint( $atts['quiz_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['quiz_id'] ) === learndash_get_post_type_slug( 'quiz' ) ) ) {
 				return $content;
 			}
 		}
+		*/
 	}
 
 	if ( ( ! isset( $shown_content_key ) ) || ( empty( $shown_content_key ) ) ) {
@@ -224,7 +230,7 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 			$cert_button_html = apply_filters( 'learndash_certificate_html', $cert_button_html, $atts, $content );
 
 			if ( ! empty( $cert_button_html ) ) {
-				$cert_button_html                    = '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap">' . $cert_button_html . '</div>';
+				$cert_button_html                    = '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $cert_button_html . '</div>';
 				$shown_content[ $shown_content_key ] = $cert_button_html;
 				$content                            .= $cert_button_html;
 			}

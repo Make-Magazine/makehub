@@ -61,7 +61,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 * @param array         $parsed_block The block being rendered.
 		 * @param WP_Block|null $parent_block If this is a nested block, a reference to the parent block.
 		 */
-		public function pre_render_block( $content, $parsed_block, $parent_block='' ) {
+		public function pre_render_block( $content, $parsed_block = array(), $parent_block = null ) {
 			if ( ( isset( $parsed_block['blockName'] ) ) && ( $this->block_base . '/' . $this->block_slug === $parsed_block['blockName'] ) ) {
 				$current_post_id   = (int) get_the_ID();
 				$current_post_type = get_post_type( $current_post_id );
