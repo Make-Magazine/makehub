@@ -477,4 +477,28 @@ add_filter( 'gform_column_input_8_39_1', 'set_column', 10, 5 );
 function set_column( $input_info, $field, $column, $value, $form_id ) {
     return array( 'type' => 'select', 'choices' => 'Instagram,Facebook, Twitter, YouTube, TikTok' );
 }
+
+//fix error that was keeping regular admins (non super admins, from being able to edit users)
+function mc_admin_users_caps( $caps, $cap, $user_id, $args ){
+    foreach( $caps as $key => $capability ){
+        if( $capability != 'do_not_allow' )
+            continue;
+
+        switch( $cap ) {
+            case 'edit_user':
+            case 'edit_users':
+                $caps[$key] = 'edit_users';
+                break;
+            case 'delete_user':
+            case 'delete_users':
+                $caps[$key] = 'delete_users';
+                break;
+            case 'create_users':
+                $caps[$key] = $cap;
+                break;
+        }
+    }
+    return $caps;
+}
+add_filter( 'map_meta_cap', 'mc_admin_users_caps', 10, 4 );
 ?>
