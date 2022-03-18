@@ -53,6 +53,10 @@
 		.item {
 			padding-bottom: 25px;
 		}
+		.item-avatar .group-avatar-wrap {
+			aspect-ratio: 1;
+			overflow: hidden;
+		}
 		.group-item-wrap {
 			.item-meta-wrap {
 				.last-activity { display: none !important; }
