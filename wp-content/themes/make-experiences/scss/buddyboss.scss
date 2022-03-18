@@ -142,7 +142,7 @@ button.ges-change, button.ges-change:hover {
 	}
 }
 #page-content.bluetoad iframe{
-    width: 95vw;
+    width: calc(100vw - 68px);
     height: calc(100vh - 120px);
     border: none;
     margin-bottom: -10px;
