@@ -52,26 +52,26 @@
 			.item-meta-wrap {
 				.last-activity { display: none !important; }
 			}
-			.group-footer-wrap  {
-			    position: relative;
-			    left: 0px;
-			    display: flex;
-			    flex-direction: column;
-			    align-items: start;
-				.footer-button-wrap {
-					width: 100%;
-					.groups-meta {
-						flex-flow: nowrap !important;
-						margin-top: 10px;
-						.generic-button {
-							flex: 1;
-							max-width: fit-content;
-						}
-						.group-subscription-div  {
-							margin-top: -20px;
-							button {
-								min-height: 10px
-							}
+		}
+		.group-footer-wrap  {
+			position: relative;
+			left: 0px;
+			display: flex;
+			flex-direction: column;
+			align-items: start;
+			.footer-button-wrap {
+				width: 100%;
+				.groups-meta {
+					flex-flow: nowrap !important;
+					margin-top: 10px;
+					.generic-button {
+						flex: 1;
+						max-width: fit-content;
+					}
+					.group-subscription-div  {
+						margin-top: -20px;
+						button {
+							min-height: 10px
 						}
 					}
 				}
