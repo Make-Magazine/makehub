@@ -48,7 +48,7 @@ get_header();
                 echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium-large" order="DESC" orderby="ID"]');
                 if (count($post_image_ids) != 1) {
                     ?>
-                    <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
+                    <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_items:first-of-type a').click())"><i class="fas fa-images"></i></a>
                 <?php } ?>
             </div>
         <?php } ?>
