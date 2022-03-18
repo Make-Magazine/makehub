@@ -57,16 +57,11 @@ if(!empty($payments)) {
     <div style="clear:both"></div>
   </div>
   <?php
-  if(CAN_UPGRADE == true) { ?>
-	  <a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade to Premium Subscriber</a>
-  <?php
-  }
 }
 else {
   ?><div class="mp_wrapper mp-no-subs"><?php
     _ex('You have no completed payments to display.', 'ui', 'buddyboss-theme');
   ?>
-  	<br /><br /><a href="/join" class="btn universal-btn">Join Make: Community Now</a>
 	</div><?php
 }
 

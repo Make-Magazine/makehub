@@ -142,12 +142,17 @@ button.ges-change, button.ges-change:hover {
 	}
 }
 #page-content.bluetoad iframe{
-    width: 90vw;
-    height: 100vh;
+    width: 100vw;
+    height: calc(100vh - 120px);
     border: none;
     margin-bottom: -10px;
 	@media screen and (max-width: 800px) {
 		width: 100vw;
+	}
+}
+.buddypanel-open {
+	#page-content.bluetoad iframe{
+		width: calc(100vw - 220px);
 	}
 }
 
