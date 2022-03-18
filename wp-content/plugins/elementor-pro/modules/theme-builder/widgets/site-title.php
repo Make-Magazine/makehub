@@ -19,7 +19,7 @@ class Site_Title extends Widget_Heading {
 	}
 
 	public function get_title() {
-		return __( 'Site Title', 'elementor-pro' );
+		return esc_html__( 'Site Title', 'elementor-pro' );
 	}
 
 	public function get_icon() {
@@ -32,6 +32,15 @@ class Site_Title extends Widget_Heading {
 
 	public function get_keywords() {
 		return [ 'site', 'title', 'name' ];
+	}
+
+	public function get_inline_css_depends() {
+		return [
+			[
+				'name' => 'heading',
+				'is_core_dependency' => true,
+			],
+		];
 	}
 
 	protected function register_controls() {

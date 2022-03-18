@@ -394,6 +394,14 @@ class SBI_Db {
 	public static function feeds_query( $args = array() ) {
 		global $wpdb;
 		$feeds_table_name = $wpdb->prefix . 'sbi_feeds';
+		if ( isset( $args['social_wall_summary'] ) ) {
+			$sql = "
+			SELECT id, feed_name FROM $feeds_table_name;
+		 ";
+
+			return $wpdb->get_results( $sql, ARRAY_A );
+		}
+
 		$page             = 0;
 		if ( isset( $args['page'] ) ) {
 			$page = (int) $args['page'] - 1;

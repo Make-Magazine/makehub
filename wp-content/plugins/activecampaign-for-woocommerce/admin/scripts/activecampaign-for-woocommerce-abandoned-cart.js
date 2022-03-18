@@ -73,7 +73,12 @@ jQuery(document).ready(function($) {
                 type: 'POST',
                 data: data
             }).done(response => {
-                row.remove();
+                if(response.success) {
+                    row.remove();
+                }else{
+                    alert('Error: There was an issue deleting the row.');
+                    row.find('.activecampaign-delete-abandoned-cart').css('color', '#bf0404').css('border-color', '#bf0404');
+                }
             });
             
             return false;

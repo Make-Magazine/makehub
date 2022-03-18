@@ -10,6 +10,7 @@
  */
 
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
+use AcVendor\GuzzleHttp\Exception\BadResponseException;
 use AcVendor\Psr\Http\Message\StreamInterface;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 
@@ -38,31 +39,57 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 		callable $response_massager = null
 	) {
 		$logger = new Logger();
+
 		try {
 			$result = $client
-				->get( self::RESOURCE_NAME_PLURAL, (string) $id )
+				->get( self::ENDPOINT_NAME_PLURAL, (string) $id )
 				->execute();
-		} catch ( AcVendor\GuzzleHttp\Exception\ClientException $e ) {
+		} catch ( Throwable $t ) {
 			$logger->debug(
-				'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was not found.',
+				'The resource was not found in Hosted. This may not be an error. Check response_message to confirm.',
 				[
-					'resource'    => self::RESOURCE_NAME,
-					'found_by'    => 'id',
-					'value'       => $id,
-					'status_code' => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
+					'resource_name'    => self::RESOURCE_NAME,
+					'endpoint_name'    => self::ENDPOINT_NAME,
+					'found_by'         => 'id',
+					'value'            => $id,
+					'response_message' => $t->getMessage(),
+					'status_code'      => $t->getResponse() ? $t->getResponse()->getStatusCode() : '',
 				]
 			);
 		}
+
 		if ( isset( $result ) ) {
 			try {
-				$resource_array = \AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
 
-				if ( $response_massager ) {
-					$resource_array = $response_massager( $resource_array );
+				if ( ! is_object( $result ) || ! method_exists( $result, 'getBody' ) ) {
+					$logger->debug(
+						$result,
+						[
+							'resource_name' => self::RESOURCE_NAME,
+							'endpoint_name' => self::ENDPOINT_NAME,
+						]
+					);
+				} else {
+					$resource_array = json_decode( $result->getBody(), true );
+
+					if ( $response_massager ) {
+						$resource_array = $response_massager( $resource_array );
+					}
+
+					if ( isset( $resource_array ) && is_array( $resource_array ) ) {
+						$resource = $resource_array[ self::RESOURCE_NAME ];
+						$model->set_properties_from_serialized_array( $resource );
+					} else {
+						$logger->error(
+							'Resource returned is invalid or empty. Host may be unreachable.',
+							[
+								'result'        => $result,
+								'resource_name' => self::RESOURCE_NAME,
+								'result_body'   => method_exists( $result, 'getBody' ) ? $result->getBody() : null,
+							]
+						);
+					}
 				}
-
-				$resource = $resource_array[ self::RESOURCE_NAME ];
-				$model->set_properties_from_serialized_array( $resource );
 			} catch ( Throwable $t ) {
 				$logger->error(
 					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource thrown error.',
@@ -71,6 +98,18 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 					]
 				);
 			}
+		} else {
+			$logger->error(
+				'There was an issue contacting hosted, request returned an empty or null result.',
+				[
+					'client'        => $client,
+					'function'      => 'get_and_set_model_properties_from_api_by_id',
+					'resource_name' => self::RESOURCE_NAME,
+					'endpoint_name' => self::ENDPOINT_NAME,
+					'found_by'      => 'id',
+					'value'         => $id,
+				]
+			);
 		}
 	}
 
@@ -175,34 +214,45 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 		$client->with_body( '' );
 		$logger = new Logger();
 		$result = $client
-			->get( self::RESOURCE_NAME_PLURAL )
+			->get( self::ENDPOINT_NAME_PLURAL )
 			->with_filter( $filter_name, $filter_value )
 			->execute();
 
 		if ( $result ) {
 			try {
-				$resources_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
-
-				if ( count( $resources_array[ self::RESOURCE_NAME_PLURAL ] ) < 1 ) {
+				if ( ! is_object( $result ) || ! method_exists( $result, 'getBody' ) ) {
 					$logger->debug(
-						'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was not found.',
+						$result,
 						[
-							'resource' => self::RESOURCE_NAME,
-							'found_by' => $filter_name,
-							'value'    => $filter_value,
-							'response' => $result->getBody() instanceof StreamInterface
-								? $result->getBody()->getContents()
-								: null,
-							'code'     => 404,
+							'resource_name' => self::RESOURCE_NAME,
+							'endpoint_name' => self::ENDPOINT_NAME,
 						]
 					);
-				}
+				} else {
+					$resources_array = json_decode( $result->getBody(), true );
 
-				if ( $response_massager ) {
-					$resources_array = $response_massager( $resources_array );
-				}
+					if ( count( $resources_array[ self::RESOURCE_NAME_PLURAL ] ) < 1 ) {
+						$logger->debug(
+							'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was not found. This may not be an error.',
+							[
+								'resource_name' => self::RESOURCE_NAME,
+								'endpoint_name' => self::ENDPOINT_NAME,
+								'found_by'      => $filter_name,
+								'value'         => $filter_value,
+								'response'      => $result->getBody() instanceof StreamInterface
+									? $result->getBody()->getContents()
+									: null,
+								'code'          => 404,
+							]
+						);
+					}
 
-				return $resources_array[ self::RESOURCE_NAME_PLURAL ];
+					if ( $response_massager ) {
+						$resources_array = $response_massager( $resources_array );
+					}
+
+					return $resources_array[ self::RESOURCE_NAME_PLURAL ];
+				}
 			} catch ( Throwable $t ) {
 				$logger->debug(
 					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource thrown error.',
@@ -235,50 +285,59 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			self::RESOURCE_NAME => $resource,
 		];
 
-		$body_as_string = AcVendor\GuzzleHttp\json_encode( $body );
+		$body_as_string = wp_json_encode( $body );
 
 		try {
 			$result = $client
-				->post( self::RESOURCE_NAME_PLURAL )
+				->post( self::ENDPOINT_NAME_PLURAL )
 				->with_body( $body_as_string )
 				->execute();
 		} catch ( AcVendor\GuzzleHttp\Exception\ClientException $e ) {
 			$logger->warning(
 				'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was unprocessable.',
 				[
-					'message'     => $e->getMessage(),
-					'resource'    => self::RESOURCE_NAME,
-					'context'     => $body_as_string,
-					'response'    => $e->getResponse()
+					'message'       => $e->getMessage(),
+					'resource_name' => self::RESOURCE_NAME,
+					'endpoint_name' => self::ENDPOINT_NAME,
+					'context'       => $body_as_string,
+					'response'      => method_exists( $e->getResponse(), 'getBody' )
 						? $e->getResponse()->getBody()->getContents()
 						: '',
 					// Make sure the clean trace ends up in the logs
-					'trace'       => $logger->clean_trace( $e->getTrace() ),
-					'status_code' => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
+					'trace'         => $logger->clean_trace( $e->getTrace() ),
+					'status_code'   => method_exists( $e->getResponse(), 'getStatusCode' ) ? $e->getResponse()->getStatusCode() : '',
 				]
 			);
 		}
 
-		if ( isset( $result ) ) {
+		if ( isset( $result ) && method_exists( $result, 'getBody' ) ) {
 			try {
-				$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+				$resource_array = json_decode( $result->getBody(), true );
 
 				if ( $response_massager ) {
 					$resource_array = $response_massager( $resource_array );
 				}
 
-				$resource = $resource_array[ self::RESOURCE_NAME ];
-				$model->set_properties_from_serialized_array( $resource );
+				if ( isset( $resource_array[ self::RESOURCE_NAME ] ) ) {
+					$resource = $resource_array[ self::RESOURCE_NAME ];
+					$model->set_properties_from_serialized_array( $resource );
+				}
 			} catch ( Throwable $t ) {
 				$logger = new Logger();
 				$logger->error(
-					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource thrown error.',
+					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource error thrown.',
 					[
-						'result' => $result,
+						'message' => $t->getMessage(),
+						'result'  => $result,
+						'trace'   => $logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
+
+			return $result;
 		}
+
+		return false;
 	}
 
 	/**
@@ -311,18 +370,19 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 		} catch ( AcVendor\GuzzleHttp\Exception\ClientException $e ) {
 			if ( $e->getCode() === 404 ) {
 				$logger->debug(
-					'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was not found.',
+					'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was not found. This is likely not an error.',
 					[
-						'message'     => $e->getMessage(),
-						'resource'    => self::RESOURCE_NAME,
-						'found_by'    => 'id',
-						'value'       => $model->get_id(),
-						'response'    => $e->getResponse()
+						'message'       => $e->getMessage(),
+						'resource_name' => self::RESOURCE_NAME,
+						'endpoint_name' => self::ENDPOINT_NAME,
+						'found_by'      => 'id',
+						'value'         => $model->get_id(),
+						'response'      => $e->getResponse()
 							? $e->getResponse()->getBody()->getContents()
 							: '',
 						// Make sure the trace ends up in the logs
-						'trace'       => $logger->clean_trace( $e->getTrace() ),
-						'status_code' => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
+						'trace'         => $logger->clean_trace( $e->getTrace() ),
+						'status_code'   => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
 					]
 				);
 			}
@@ -330,20 +390,21 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			$logger->warning(
 				'Activecampaign_For_Woocommerce_Interacts_With_Api: The resource was unprocessable.',
 				[
-					'message'     => $e->getMessage(),
-					'resource'    => self::RESOURCE_NAME,
-					'context'     => $body_as_string,
-					'response'    => $e->getResponse()
+					'message'       => $e->getMessage(),
+					'resource_name' => self::RESOURCE_NAME,
+					'endpoint_name' => self::ENDPOINT_NAME,
+					'context'       => $body_as_string,
+					'response'      => $e->getResponse()
 						? $e->getResponse()->getBody()->getContents()
 						: '',
-					'status_code' => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
+					'status_code'   => $e->getResponse() ? $e->getResponse()->getStatusCode() : '',
 				]
 			);
 		}
 
-		if ( isset( $result ) && null !== $result ) {
+		if ( isset( $result ) && null !== $result && method_exists( $result, 'getBody' ) ) {
 			try {
-				$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+				$resource_array = json_decode( $result->getBody(), true );
 
 				if ( $response_massager ) {
 					$resource_array = $response_massager( $resource_array );

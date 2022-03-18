@@ -11,9 +11,8 @@
  */
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
-
-use AcVendor\Psr\Log\LoggerInterface;
 
 /**
  * The Create_And_Save_Cart_Id_Command Class.
@@ -27,17 +26,21 @@ class Activecampaign_For_Woocommerce_Create_And_Save_Cart_Id_Command implements 
 	/**
 	 * The Logger interface.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
 	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Create_And_Save_Cart_Id_Command constructor.
 	 *
-	 * @param LoggerInterface $logger The Logger interface.
+	 * @param Logger $logger The Logger interface.
 	 */
-	public function __construct( LoggerInterface $logger = null ) {
-		$this->logger = $logger;
+	public function __construct( Logger $logger = null ) {
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
@@ -53,27 +56,37 @@ class Activecampaign_For_Woocommerce_Create_And_Save_Cart_Id_Command implements 
 	 * @since 1.0.0
 	 */
 	public function execute( ...$args ) {
-		$user_id = get_current_user_id();
+		try {
+			$user_id = get_current_user_id();
 
-		if ( ! $user_id ) {
-			$this->logger->debug( 'Create and save cart id: missing user id' );
+			if ( ! $user_id ) {
+				$this->logger->debug( 'Create and save cart id: missing user id' );
 
-			return;
+				return;
+			}
+
+			$current_cart_id = User_Meta_Service::get_current_cart_id( $user_id );
+
+			/**
+			 * The function get_user_meta will return an empty string if the key is not set.
+			 * If there's an existing cart id, return early.
+			 */
+			if ( '' !== $current_cart_id ) {
+				$this->logger->info( 'Create and save cart id: cart already exists' );
+
+				return;
+			}
+
+			User_Meta_Service::set_current_cart_id( $user_id );
+		} catch ( Throwable $t ) {
+			$this->logger->warning(
+				'There was an issue trying to add additional info to user meta.',
+				[
+					'class'   => 'Activecampaign_For_Woocommerce_Create_And_Save_Cart_Id_Command',
+					'message' => $t->getMessage(),
+				]
+			);
 		}
-
-		$current_cart_id = User_Meta_Service::get_current_cart_id( $user_id );
-
-		/**
-		 * The function get_user_meta will return an empty string if the key is not set.
-		 * If there's an existing cart id, return early.
-		 */
-		if ( '' !== $current_cart_id ) {
-			$this->logger->info( 'Create and save cart id: cart already exists' );
-
-			return;
-		}
-
-		User_Meta_Service::set_current_cart_id( $user_id );
 	}
 	// phpcs:enable
 }

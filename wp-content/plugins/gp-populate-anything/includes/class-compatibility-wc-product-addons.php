@@ -5,7 +5,7 @@ class GPPA_Compatibility_WC_Product_Addons {
 	private static $instance = null;
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self;
 		}
 
@@ -53,7 +53,7 @@ class GPPA_Compatibility_WC_Product_Addons {
 		if ( ! rgblank( $wc_form ) && ! rgblank( $lead ) ) {
 			$form = GFAPI::get_form( $wc_form['id'] );
 
-			$GLOBALS['gppa-field-values'][ $form['id'] ] = array();
+			$GLOBALS['gppa-field-values'][ $form['id'] ]                     = array();
 			gp_populate_anything()->prepopulate_fields_values[ $form['id'] ] = array();
 		}
 

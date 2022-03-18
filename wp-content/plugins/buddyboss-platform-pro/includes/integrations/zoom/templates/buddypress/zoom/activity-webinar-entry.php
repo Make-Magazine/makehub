@@ -237,21 +237,21 @@ $webinar_date_unix = $webinar_date_obj->format( 'U' );
 			</div>
 		<?php endif; ?>
 		<?php
-			if ( 'started' === bp_get_zoom_webinar_current_status() || ( $show_join_webinar_button && $current_date < $webinar_date_unix ) ) :
-				$webinar_number = esc_attr( bp_get_zoom_webinar_zoom_webinar_id() );
-				$api_key        = bb_zoom_group_api_key( bp_get_zoom_webinar_group_id () );
-				$api_secret     = bb_zoom_group_api_secret( bp_get_zoom_webinar_group_id() );
-				$role           = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ) ? 1 : 0;
-				$sign           = bb_get_meeting_signature( $api_key, $api_secret, $webinar_number, $role );
-		?>
+		if ( 'started' === bp_get_zoom_webinar_current_status() || ( $show_join_webinar_button && $current_date < $webinar_date_unix ) ) :
+			$webinar_number = esc_attr( bp_get_zoom_webinar_zoom_webinar_id() );
+			$api_key        = bb_zoom_group_api_key( bp_get_zoom_webinar_group_id() );
+			$api_secret     = bb_zoom_group_api_secret( bp_get_zoom_webinar_group_id() );
+			$role           = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ) ? 1 : 0;  // phpcs:ignore
+			$sign           = bb_get_meeting_signature( $api_key, $api_secret, $webinar_number, $role );
+			?>
 			<div class="webinar-actions">
-				<?php $can_host = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ); ?>
-				<?php if ( ! $can_host && ! bp_get_zoom_webinar_authentication() && ! bp_get_zoom_webinar_registration_url() ) : ?>
+			<?php $can_host = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ); ?>
+			<?php if ( ! $can_host && ! bp_get_zoom_webinar_authentication() && ! bp_get_zoom_webinar_registration_url() ) : ?>
 					<a href="#" class="button small outline join-webinar-in-browser" data-webinar-id="<?php bp_zoom_webinar_zoom_webinar_id(); ?>" data-webinar-pwd="<?php bp_zoom_webinar_password(); ?>" data-is-host="<?php echo $can_host ? esc_attr( '1' ) : esc_attr( '0' ); ?>" data-meeting-sign="<?php echo esc_attr( $sign ); ?>">
 						<?php esc_html_e( 'Join Webinar in Browser', 'buddyboss-pro' ); ?>
 					</a>
 				<?php endif; ?>
-				<?php if ( ! bp_zoom_is_zoom_hide_webinar_urls_enabled() || ( $can_host || ( ! $can_host && ( bp_get_zoom_webinar_authentication() || bp_get_zoom_webinar_registration_url() ) ) ) ) : ?>
+			<?php if ( ! bp_zoom_is_zoom_hide_webinar_urls_enabled() || ( $can_host || ( ! $can_host && ( bp_get_zoom_webinar_authentication() || bp_get_zoom_webinar_registration_url() ) ) ) ) : ?>
 					<a class="button small primary join-webinar-in-app" target="_blank" href="<?php echo $can_host ? esc_url( bp_get_zoom_webinar_zoom_start_url() ) : esc_url( bp_get_zoom_webinar_zoom_join_url() ); ?>">
 						<?php if ( $can_host ) : ?>
 							<?php esc_html_e( 'Host Webinar in Zoom', 'buddyboss-pro' ); ?>

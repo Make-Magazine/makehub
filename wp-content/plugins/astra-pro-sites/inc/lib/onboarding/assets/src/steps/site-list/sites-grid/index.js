@@ -80,7 +80,6 @@ const SiteGrid = ( { sites } ) => {
 				dispatch( {
 					type: 'set',
 					currentIndex: currentIndex + 1,
-					templateId: item.id,
 					selectedTemplateName: item.title,
 					selectedTemplateType: item[ 'astra-sites-type' ],
 				} );

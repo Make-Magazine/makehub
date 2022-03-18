@@ -13,10 +13,9 @@
 use Activecampaign_For_Woocommerce_Api_Client as Client;
 use Activecampaign_For_Woocommerce_Connection_Repository as Connection_Repository;
 use Activecampaign_For_Woocommerce_Resource_Not_Found_Exception as Resource_Not_Found;
-
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use AcVendor\GuzzleHttp\Exception\ClientException;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
-use AcVendor\Psr\Log\LoggerInterface;
 
 /**
  * Handles validating changes to the admin settings for this plugin.
@@ -50,21 +49,21 @@ class Activecampaign_For_Woocommerce_Admin_Settings_Validator {
 	/**
 	 * Our PSR-3 compliant logger.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
-	private $log;
+	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Admin_Settings_Validator constructor.
 	 *
-	 * @param Activecampaign_For_Woocommerce_Api_Client $client The API Client.
-	 * @param Connection_Repository                     $connection_repository The repository for connections.
-	 * @param LoggerInterface                           $log PSR-3 Logger.
+	 * @param     Activecampaign_For_Woocommerce_Api_Client $client     The API Client.
+	 * @param     Connection_Repository                     $connection_repository     The repository for connections.
+	 * @param     Activecampaign_For_Woocommerce_Logger     $logger The logger class.
 	 */
-	public function __construct( Client $client, Connection_Repository $connection_repository, LoggerInterface $log ) {
+	public function __construct( Client $client, Connection_Repository $connection_repository, Logger $logger ) {
 		$this->client                = $client;
 		$this->connection_repository = $connection_repository;
-		$this->log                   = $log;
+		$this->logger                = $logger;
 	}
 
 	/**
@@ -78,24 +77,35 @@ class Activecampaign_For_Woocommerce_Admin_Settings_Validator {
 	 */
 	public function validate( $new_data, $current_data, $api_only = false ) {
 		$this->errors = [];
+		try {
+			if ( ! $api_only ) {
 
-		if ( ! $api_only ) {
+				$this->validate_accepts_marketing_checkbox_text( $new_data, $current_data );
 
-			$this->validate_accepts_marketing_checkbox_text( $new_data, $current_data );
+				$this->validate_api_key( $new_data, $current_data );
 
-			$this->validate_api_key( $new_data, $current_data );
+				$this->validate_api_url( $new_data, $current_data );
 
-			$this->validate_api_url( $new_data, $current_data );
+				$this->validate_ab_cart_wait_time( $new_data, $current_data );
 
-			$this->validate_ab_cart_wait_time( $new_data, $current_data );
+			}
 
+			if ( empty( $this->errors ) ) {
+				$this->validate_changing_api_details( $new_data, $current_data );
+			}
+
+			return $this->errors;
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an issue validating the api.',
+				[
+					'message'      => $t->getMessage(),
+					'new data'     => $new_data,
+					'current_data' => $current_data,
+				]
+			);
 		}
 
-		if ( empty( $this->errors ) ) {
-			$this->validate_changing_api_details( $new_data, $current_data );
-		}
-
-		return $this->errors;
 	}
 
 	/**

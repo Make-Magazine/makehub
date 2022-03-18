@@ -2,8 +2,8 @@
 Contributors: facebook, automattic, woothemes
 Tags: facebook, shop, catalog, advertise, pixel, product
 Requires at least: 4.4
-Tested up to: 5.8
-Stable tag: 2.6.7
+Tested up to: 5.9
+Stable tag: 2.6.12
 Requires PHP: 5.6 or greater
 MySQL: 5.6 or greater
 License: GPLv2 or later
@@ -37,7 +37,29 @@ When opening a bug on GitHub, please give us as many details as possible.
 * Your website URL
 * Current version of Facebook-for-WooCommerce, WooCommerce, Wordpress, PHP
 
-== Changelog =
+== Changelog ==
+
+= 2.6.12 - 2022-03-08 =
+* Add - Filter to change Facebook Retailer ID, wc_facebook_fb_retailer_id.
+
+= 2.6.11 - 2022-02-28 =
+* Fix - The syntax parsing error "unexpected ')'" in facebook-for-woocommerce.php.
+
+= 2.6.10 - 2022-02-22 =
+* Add - Filter to block full catalog batch API sync 'facebook_for_woocommerce_block_full_batch_api_sync'.
+* Update - Deprecate 'facebook_for_woocommerce_allow_full_batch_api_sync' filter.
+* Update - Facebook Marketing API from v11.0 to v12.0.
+
+= 2.6.9 - 2022-01-14 =
+* Fix - Replace is_ajax with wp_doing_ajax
+* Tweak - Update contributor guidelines
+* Tweak - WC 6.1 compatibility
+
+= 2.6.8 - 2021-12-21 =
+* Fix - Bump template from 1.0.4 to 1.0.5. #2115
+* Fix - Fix empty "value" for variable products. #1784
+* Tweak - WC 6.0 compatibility.
+* Tweak - WP 5.9 compatibility.
 
 = 2.6.7 - 2021-11-04 =
 * Fix - Parameter overloading error for PHP70 #2112

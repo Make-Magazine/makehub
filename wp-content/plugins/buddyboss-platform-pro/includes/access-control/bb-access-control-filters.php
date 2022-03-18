@@ -363,7 +363,7 @@ function bb_access_control_has_join_group_access( $button, $group ) {
 		)
 	);
 
-	if ( in_array( $button['id'], $exclude_buttons ) ) {
+	if ( in_array( $button['id'], $exclude_buttons ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 		return $button;
 	}
 
@@ -641,7 +641,7 @@ function bb_access_control_member_header_user_can_send_message_request( $buttons
 			$has_access = $buttons;
 		} else {
 			$buttons['private_message'] = array();
-			$has_access = $buttons;
+			$has_access                 = $buttons;
 		}
 	}
 
@@ -1385,7 +1385,7 @@ function bb_access_control_groups_potential_invites( $requests ) {
 				);
 			} elseif ( 'woo-membership' === $join_group_settings['plugin-access-control-type'] && $access_controls[ $option_access_controls ]['is_enabled'] ) {
 				foreach ( $join_group_settings['access-control-options'] as $level ) {
-					$results = $wpdb->get_results( "SELECT DISTINCT um.user_id, u.user_email, u.display_name, p2.post_title, p2.post_type FROM {$wpdb->prefix}posts AS p LEFT JOIN {$wpdb->prefix}posts AS p2 ON p2.ID = p.post_parent LEFT JOIN {$wpdb->prefix}users AS u ON u.id = p.post_author LEFT JOIN {$wpdb->prefix}usermeta AS um ON u.id = um.user_id WHERE p.post_type = 'wc_user_membership' AND p.post_status IN ('wcm-active') AND p2.post_type = 'wc_membership_plan' AND p.post_parent = {$level}" );
+					$results = $wpdb->get_results( "SELECT DISTINCT um.user_id, u.user_email, u.display_name, p2.post_title, p2.post_type FROM {$wpdb->prefix}posts AS p LEFT JOIN {$wpdb->prefix}posts AS p2 ON p2.ID = p.post_parent LEFT JOIN {$wpdb->prefix}users AS u ON u.id = p.post_author LEFT JOIN {$wpdb->prefix}usermeta AS um ON u.id = um.user_id WHERE p.post_type = 'wc_user_membership' AND p.post_status IN ('wcm-active') AND p2.post_type = 'wc_membership_plan' AND p.post_parent = {$level}" ); // phpcs:ignore
 					if ( $results ) {
 						$results    = wp_list_pluck( $results, 'user_id' );
 						$user_ids[] = $results;

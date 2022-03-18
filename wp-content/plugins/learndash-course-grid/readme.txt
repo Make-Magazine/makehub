@@ -6,9 +6,9 @@ LD Requires at least: 3.0
 Slug: learndash-course-grid
 Tags: grid, view, display
 Requires at least: 5.0
-Tested up to: 5.6
+Tested up to: 5.8.2
 Requires PHP: 7.0
-Stable tag: 1.7.0
+Stable tag: 2.0.4
 
 Transform the course list created with shortcode [ld_course_list] to grid view.
 
@@ -40,7 +40,51 @@ Alternatively, you always have the option to update manually. Please note, a ful
 
 == Changelog ==
 
-= 1.7.0 =
+= 2.0.4 =
+
+* Added icon supported element for cards
+* Added conditional for element color selector
+* Added custom color selector for ribbon, icon, and button elements
+* Updated not started label text on CG 2.0 templates based on user activity for LD lesson and topic post type
+* Updated not Started label based on user activity for lesson and topic
+* Fixed card layouts and styles
+* Fixed minor cards layout and CSS styles
+* Fixed block editor meta setting value is not passed to front end templates
+* Fixed incorrect variable name
+* Fixed translations meta box on translations setting page is not loaded
+* Fixed update translations metabox to match with plugin name
+* Fixed undefined index error
+* Fixed undefined JS function
+* Fixed missing translation slug
+* Fixed legacy v1 course grid is not detected if the shortcode already stored in HTML format in DB
+
+= 2.0.3 =
+
+* Updated masonry script
+* Updated grid skin selector
+* Fixed PHP deprecated notice
+* Fixed legacy v1 assets are not loaded when using ld course list block
+* Fixed compatibility error with Elementor for v1 course grid element
+
+= 2.0.2 =
+
+* Fixed asset loading for legacy course grids
+
+= 2.0.1 =
+
+* Added course enrollment status attributes and block option
+* Udated removed fixed 4:3 aspect ratio to prevent distorted images
+* Fixed course grid assets not loading when Elementor is being used
+
+= 2.0.0 =
+
+* Added course grid Gutenberg block
+* Added learndash_course_grid shortcode
+* Added learndash_course_grid_filter shortcode
+* Added ability to add and use custom template
+* Added support for CG 1.0 shortcode
+
+= 1.7.0 = 
 
 * Added ability to use HTML in the short description box
 * Added custom text support for groups in the Course Grid

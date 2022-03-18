@@ -236,14 +236,15 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				if ( ( isset( $_POST['update_nss_plugin_license_sfwd_lms'], $_POST['ld_bootcamp_license_form_nonce'] ) )
 					&& ( wp_verify_nonce( sanitize_key( $_POST['ld_bootcamp_license_form_nonce'] ), 'ld_bootcamp_license_form_nonce' ) ) ) {
 					// Read their posted value.
-					$license = isset( $_POST['nss_plugin_license_sfwd_lms'] ) ? sanitize_text_field( wp_unslash( $_POST['nss_plugin_license_sfwd_lms'] ) ) : '';
-					$email   = isset( $_POST['nss_plugin_license_email_sfwd_lms'] ) ? sanitize_email( wp_unslash( $_POST['nss_plugin_license_email_sfwd_lms'] ) ) : '';
+					$license = isset( $_POST['nss_plugin_license_sfwd_lms'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['nss_plugin_license_sfwd_lms'] ) ) ) : '';
+					$email   = isset( $_POST['nss_plugin_license_email_sfwd_lms'] ) ? trim( sanitize_email( wp_unslash( $_POST['nss_plugin_license_email_sfwd_lms'] ) ) ) : '';
 
 					// Save the posted value in the database.
 					update_option( 'nss_plugin_license_sfwd_lms', $license );
 					update_option( 'nss_plugin_license_email_sfwd_lms', $email );
 
 					$updater->reset();
+					$updater->getRemote_license();
 					?>
 					<script>window.location.reload()</script>
 					<?php

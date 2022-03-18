@@ -38,6 +38,9 @@ class BB_Platform_Pro_Core {
 		// Load Access Control.
 		$this->load_access_control();
 
+		// Load Platform Settings.
+		$this->load_platform_settings();
+
 		// Load Integrations.
 		$this->load_integrations();
 
@@ -132,5 +135,26 @@ class BB_Platform_Pro_Core {
 		if ( ! function_exists( 'buddyboss_updater_init' ) && ! ( 'plugins.php' === $pagenow && ( isset( $action ) && 'activate' === $action ) ) ) {
 			require_once bb_platform_pro()->plugin_dir . '/includes/lib/buddyboss-updater/buddyboss-updater.php';
 		}
+	}
+
+	/**
+	 * Load platform settings files.
+	 *
+	 * @since 1.2.0
+	 */
+	private function load_platform_settings() {
+		$bb_platform_pro = bb_platform_pro();
+
+		$file = "{$bb_platform_pro->platform_settings_dir}/bp-platform-settings-loader.php";
+		if ( file_exists( $file ) ) {
+			require $file;
+		}
+
+		/**
+		 * Fires after the loading of individual platform settings.
+		 *
+		 * @since 1.2.0
+		 */
+		do_action( 'bb_platform_pro_platform_settings_included' );
 	}
 }

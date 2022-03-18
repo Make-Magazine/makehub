@@ -89,8 +89,8 @@ class ACUI_Email_Template{
 	}
 	
 	function refresh_enable_email_templates(){
-		check_ajax_referer( 'codection-security', 'security' );
-		update_option( 'acui_enable_email_templates', ( $_POST[ 'enable' ] == "true" ) );
+        check_ajax_referer( 'codection-security', 'security' );
+        update_option( 'acui_enable_email_templates', ( $_POST[ 'enable' ] == "true" ) );
 		wp_die();
 	}
 	

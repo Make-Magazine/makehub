@@ -225,8 +225,9 @@ if ( ! class_exists( 'ReduxFramework_custom_image_select' ) ) {
 				'redux-field-custom-image-select-js',
 				'REDUX_CUSTOM_IMAGE_ADMIN',
 				array(
-					'cover_notice'     => esc_html__( 'Changing cover image settings will reset the positioning of all existing cover photos.', 'buddyboss-theme' ),
-					'cover_btn_notice' => esc_html__( 'Okay', 'buddyboss-theme' ),
+					'confirm_dialog_notice'     => esc_html__( 'Your current options will be replaced with the values of this preset. Would you like to proceed?', 'buddyboss-theme' ),
+					'confirm_dialog_accept_btn' => esc_html__( 'Yes', 'buddyboss-theme' ),
+					'confirm_dialog_reject_btn' => esc_html__( 'Cancel', 'buddyboss-theme' ),
 				)
 			);
 

@@ -3,8 +3,8 @@ Contributors: woocommerce, automattic, woothemes, allendav, kellychoffman, jkudi
 Tags: shipping, stamps, usps, woocommerce, taxes, payment, dhl, labels
 Requires at least: 4.6
 Requires PHP: 5.3
-Tested up to: 5.8
-Stable tag: 1.25.20
+Tested up to: 5.9
+Stable tag: 1.25.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,26 @@ The source code is freely available [in GitHub](https://github.com/Automattic/wo
 6. Checking and exporting the label purchase reports
 
 == Changelog ==
+
+= 1.25.24 - 2022-03-17 =
+* Fix - Empty document is opened when Firefox is set to open PDF file using another program.
+* Fix - Label purchase modal sections getting cut off.
+
+= 1.25.23 - 2022-02-10 =
+* Tweak - Make "Name" field optional if "Company" field is not empty.
+* Fix   - Added "Delete California tax rates" tool.
+* Fix   - Extract WC_Connect_TaxJar_Integration::backup_existing_tax_rates() for re-usability.
+
+= 1.25.22 - 2022-02-02 =
+* Fix   - TaxJar does not get the tax if the cart has non-taxable item.
+* Tweak - Bump WP tested version to 5.9 and WC tested version to 6.1.
+
+= 1.25.21 - 2022-01-26 =
+* Fix - Use 'native' pdf support feature for Firefox version 94 or later.
+* Fix - Only call WC Subscriptions API when "access_token_secret" value is saved in database.
+* Fix - Add name field to fields sent for EasyPost API address verification.
+* Fix - Display company name under origin and destination address when create shipping label.
+* Fix - Don't override general "Enable Tax" setting with WC Services Automated Taxes setting.
 
 = 1.25.20 - 2021-11-15 =
 * Fix - Hide "Shipping Label" and "Shipment Tracking" metabox when the label setting is disabled.

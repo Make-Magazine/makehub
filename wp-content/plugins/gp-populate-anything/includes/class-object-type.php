@@ -6,6 +6,11 @@ abstract class GPPA_Object_Type {
 
 	protected $_restricted = false;
 
+	/**
+	 * @var bool Whether the NULL special value should be shown for Filter Values.
+	 */
+	public $supports_null_filter_value = false;
+
 	abstract public function query( $args );
 
 	abstract public function get_label();
@@ -48,7 +53,19 @@ abstract class GPPA_Object_Type {
 		return gf_apply_filters( array( 'gppa_object_type_properties', $this->id ), $this->get_properties( $primary_property_value ), $this->id );
 	}
 
+	public function is_restricted() {
+		return apply_filters( 'gppa_object_type_restricted_' . $this->id, $this->_restricted );
+	}
+
+	/**
+	 * @depecated 1.1.12
+	 *
+	 * @return boolean
+	 */
+	// phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 	public function isRestricted() {
+		_deprecated_function( 'GPPA_Object_Type::isRestricted', '1.1.12', 'GPPA_Object_Type::is_restricted' );
+
 		return apply_filters( 'gppa_object_type_restricted_' . $this->id, $this->_restricted );
 	}
 
@@ -82,7 +99,7 @@ abstract class GPPA_Object_Type {
 		}
 
 		$date_time    = strtotime( $filter_value );
-		$filter_value = date( 'Y-m-d', $date_time );
+		$filter_value = gmdate( 'Y-m-d', $date_time );
 
 		return $filter_value;
 	}
@@ -106,12 +123,13 @@ abstract class GPPA_Object_Type {
 	public function to_simple_array() {
 
 		$output = array(
-			'id'         => $this->id,
-			'label'      => $this->get_label(),
-			'properties' => array(),
-			'groups'     => $this->get_groups(),
-			'templates'  => $this->get_default_templates(),
-			'restricted' => $this->isRestricted(),
+			'id'                      => $this->id,
+			'label'                   => $this->get_label(),
+			'properties'              => array(),
+			'groups'                  => $this->get_groups(),
+			'templates'               => $this->get_default_templates(),
+			'restricted'              => $this->is_restricted(),
+			'supportsNullFilterValue' => $this->supports_null_filter_value,
 		);
 
 		if ( $this->get_primary_property() ) {
@@ -170,16 +188,21 @@ abstract class GPPA_Object_Type {
 
 				break;
 			case 'current_post':
-				$post    = get_post();
-				$referer = rgar( $_SERVER, 'HTTP_REFERER' );
+				$post            = get_post();
+				$referer         = rgar( $_SERVER, 'HTTP_REFERER' );
+				$referer_post_id = url_to_postid( $referer );
 
-				if ( ! $post && $referer && $referer_post_id = url_to_postid( $referer ) ) {
+				if ( ! $post && $referer && $referer_post_id ) {
 					$post = get_post( $referer_post_id );
 				}
 
 				if ( $post ) {
 					return $post->{$special_value_parts[1]};
 				}
+
+				break;
+			case 'null':
+				return null;
 
 				break;
 		}
@@ -242,6 +265,7 @@ abstract class GPPA_Object_Type {
 			return $_cache[ $query ];
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$result = $wpdb->get_col( $query );
 
 		$_cache[ $query ] = is_array( $result ) ? $this->filter_values( $result ) : array();
@@ -253,8 +277,8 @@ abstract class GPPA_Object_Type {
 
 		global $wpdb;
 
-		$query  = $wpdb->prepare( "SELECT DISTINCT meta_value FROM $table WHERE meta_key = '%s'", $meta_key );
-		$result = $wpdb->get_col( $query );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $table WHERE meta_key = %s", $meta_key ) );
 
 		return is_array( $result ) ? $this->filter_values( $result ) : array();
 
@@ -269,6 +293,7 @@ abstract class GPPA_Object_Type {
 		 * @var $ordering array
 		 * @var $field array
 		 */
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
 		$properties = $this->get_properties_filtered( $primary_property_value );
@@ -297,7 +322,9 @@ abstract class GPPA_Object_Type {
 				$filter_value   = apply_filters( 'gppa_replace_filter_value_variables_' . $this->id, $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property );
 				$wp_filter_name = 'gppa_object_type_' . $this->id . '_filter_' . $filter['property'];
 
-				if ( ! has_filter( $wp_filter_name ) && $group = rgar( $property, 'group' ) ) {
+				$group = rgar( $property, 'group' );
+
+				if ( ! has_filter( $wp_filter_name ) && $group ) {
 					$wp_filter_name = 'gppa_object_type_' . $this->id . '_filter_group_' . $group;
 				}
 
@@ -405,6 +432,7 @@ abstract class GPPA_Object_Type {
 		// Regex check ensures that strings mimicing scientific notation like "1e4465" are not cast
 		// to infinity which breaks SQL.
 		if ( is_numeric( $value ) && ! preg_match( '/[a-z]/i', $value ) ) {
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 			$value = ( $value == (int) $value ) ? (int) $value : (float) $value;
 		}
 
@@ -497,6 +525,12 @@ abstract class GPPA_Object_Type {
 
 		$ident = self::esc_property_to_ident( "{$table}.{$column}" );
 
+		if ( $value === null && in_array( $operator, array( 'is', 'isnot' ), true ) ) {
+			$null_operator = $operator === 'isnot' ? 'IS NOT' : 'IS';
+			return "{$ident} {$null_operator} NULL";
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		return $wpdb->prepare( "{$ident} {$sql_operator} {$specification}", $value );
 
 	}
@@ -537,8 +571,8 @@ abstract class GPPA_Object_Type {
 	 * Escapes property for an SQL query
 	 *
 	 * Prepares $property for use in an SQL statement. 'table.name' would be escaped as '`table`.`name`'.
-	 * If 'order_by' is passed in $clause and $property contained spaces, this function will return $property
-	 * without any modifications.
+	 * If 'order_by' is passed in $clause and $property contains SELECT, this function will return $property
+	 * without any modifications to maintain the proper syntax for the subquery.
 	 *
 	 * @param string $property String to escape
 	 * @param string $clause Current clause being processed (accepts 'order_by')
@@ -546,7 +580,7 @@ abstract class GPPA_Object_Type {
 	 * @return string
 	 */
 	public static function esc_property_to_ident( $property, $clause = '' ) {
-		if ( preg_match( '/\s/', $property ) && $clause === 'order_by' ) {
+		if ( strpos( $property, 'SELECT ' ) !== false && $clause === 'order_by' ) {
 			return $property;
 		}
 		return implode( '.', self::esc_sql_ident( explode( '.', $property ) ) );

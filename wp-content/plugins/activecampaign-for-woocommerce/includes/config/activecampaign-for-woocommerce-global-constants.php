@@ -25,7 +25,7 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PARENT_MENU_NAME' ) ) {
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.5.3' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.6.11' );
 }
 
 /**
@@ -57,7 +57,9 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME' ) ) {
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB' ) ) {
 	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB', 'activecampaign-for-woocommerce' );
 }
-
+if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB' ) ) {
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB', 'activecampaign-for-woocommerce-errors' );
+}
 /**
  * The name of the plugin in snake case (e.g., this_is_snake_case).
  *

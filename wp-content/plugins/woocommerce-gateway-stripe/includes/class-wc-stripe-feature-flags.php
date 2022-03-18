@@ -13,7 +13,7 @@ class WC_Stripe_Feature_Flags {
 	 * @return bool
 	 */
 	public static function is_upe_preview_enabled() {
-		return 'yes' === get_option( '_wcstripe_feature_upe', 'yes' ) || self::is_upe_settings_redesign_enabled();
+		return 'yes' === get_option( '_wcstripe_feature_upe', 'yes' );
 	}
 
 	/**
@@ -23,7 +23,8 @@ class WC_Stripe_Feature_Flags {
 	 */
 	public static function is_upe_checkout_enabled() {
 		$stripe_settings = get_option( 'woocommerce_stripe_settings', null );
-		return ! empty( $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ] ) && 'yes' === $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ];
+		return ! empty( $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ] )
+			&& 'yes' === $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ];
 	}
 
 	/**
@@ -34,14 +35,5 @@ class WC_Stripe_Feature_Flags {
 	public static function did_merchant_disable_upe() {
 		$stripe_settings = get_option( 'woocommerce_stripe_settings', null );
 		return ! empty( $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ] ) && 'disabled' === $stripe_settings[ self::UPE_CHECKOUT_FEATURE_ATTRIBUTE_NAME ];
-	}
-
-	/**
-	 * Checks whether the feature flag used for the new settings + UPE is enabled.
-	 *
-	 * @return bool
-	 */
-	public static function is_upe_settings_redesign_enabled() {
-		return 'yes' === get_option( '_wcstripe_feature_upe_settings', 'yes' );
 	}
 }

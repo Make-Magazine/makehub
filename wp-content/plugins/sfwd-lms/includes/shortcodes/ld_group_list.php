@@ -23,10 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    Default empty array {@see 'ld_course_list'}.
  * }.
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_group_list'.
  *
  * @return string The `ld_topic_list` shortcode output.
  */
-function ld_group_list( $attr = array(), $content = '' ) {
+function ld_group_list( $attr = array(), $content = '', $shortcode_slug = 'ld_group_list' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -36,8 +37,11 @@ function ld_group_list( $attr = array(), $content = '' ) {
 
 	$attr['post_type'] = learndash_get_post_type_slug( 'group' );
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
+
 	return ld_course_list( $attr );
 
 }
 
-add_shortcode( 'ld_group_list', 'ld_group_list', 10, 2 );
+add_shortcode( 'ld_group_list', 'ld_group_list', 10, 3 );

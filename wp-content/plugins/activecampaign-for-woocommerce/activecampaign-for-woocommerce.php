@@ -16,7 +16,7 @@
  * Plugin Name:          ActiveCampaign for WooCommerce
  * Plugin URI:           https://www.activecampaign.com/
  * Description:          Add Abandoned Cart functionality to your WooCommerce store, synchronize order & customer information using ActiveCampaign.
- * Version:              1.5.3
+ * Version:              1.6.11
  * Author:               ActiveCampaign
  * Author URI:           https://www.activecampaign.com/
  * License:              GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:          activecampaign-for-woocommerce
  * Domain Path:          /languages
  * WC requires at least: 3.6.0
- * WC tested up to:      5.9.0
+ * WC tested up to:      6.3.0
  */
 
 use AcVendor\DI\Container;
@@ -93,8 +93,8 @@ register_deactivation_hook( __FILE__, 'activecampaign_for_woocommerce_deactivate
  *
  * @param Container $container The PHP DI container instance.
  *
- * @throws \DI\DependencyException Dependency exception.
- * @throws \DI\NotFoundException Not found exception.
+ * @throws \AcVendor\DI\DependencyException Dependency exception.
+ * @throws \AcVendor\DI\NotFoundException Not found exception.
  */
 function activecampaign_for_woocommerce_run( Container $container ) {
 	$plugin = $container->get( Activecampaign_For_Woocommerce::class );

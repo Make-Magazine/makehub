@@ -127,7 +127,7 @@ class BB_Access_Control_Lifter_Membership extends BB_Access_Control_Abstract {
 						$has_access = true;
 						break;
 					}
-					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$has_access = true;
 						break;
 					}

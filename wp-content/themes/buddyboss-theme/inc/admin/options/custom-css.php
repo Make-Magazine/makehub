@@ -348,8 +348,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			}
 
 			/* Warning color */
-			.warning,
-			.item-header-wrap span.group-visibility.hidden:before {
+			.warning {
 				color: <?php echo $warning_color; ?>;
 			}
 
@@ -672,6 +671,8 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
             .bb-recent-posts h4 a.bb-title,
             .widget .item-list .item-title a,
             .comment-respond .comment-author,
+			.followers-wrap strong,
+			.following-wrap strong,
             .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap,
             .activity-list li.bbp_topic_create .activity-content .activity-inner .activity-discussion-title-wrap a,
             .activity-list li.bbp_reply_create .activity-content .activity-inner .activity-discussion-title-wrap a,
@@ -802,6 +803,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button,
 			#buddypress .medium-editor-toolbar .medium-editor-toolbar-actions button,
 			.medium-editor-toolbar-form a,
+			.bb-action-popup .bb-model-close-button,
 			.bp-nouveau-activity-form-placeholder- .bb-model-header a .bb-icon-close,
 			.activity-update-form .bb-model-header a .bb-icon-close,
 			#buddypress input#privacy-status-back,
@@ -832,6 +834,7 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			.medium-editor-toolbar-form a:hover,
 			.bp-nouveau-activity-form-placeholder- .bb-model-header a:hover .bb-icon-close,
 			.activity-update-form .bb-model-header a:hover .bb-icon-close,
+			.bb-action-popup .bb-model-close-button:hover,
 			#buddypress input#privacy-status-back:hover,
 			#buddypress input#privacy-status-group-back:hover {
 				color: <?php echo color2rgba( buddyboss_theme_get_option( 'heading_text_color' ), 1 ); ?>;
@@ -1152,6 +1155,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#buddypress .activity-list .action.activity-meta .button:hover,
 			#buddypress .activity-list .action.activity-meta .button:hover span,
 			#groups-list.bp-list.grid.bb-cover-enabled .item-avatar .generic-button .group-button,
+			#groups-list.bp-list .item-entry .list-wrap .group-footer-wrap .footer-button-wrap .group-button:not(.generic-button),
 			#buddypress .only-grid-view .follow-button .follow-button,
 			.groups-header #item-header-content .generic-button .group-button,
 			.mepr-price-menu.custom .mepr-price-box-benefits-item:before,
@@ -1185,6 +1189,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#buddypress .standard-form button.outline,
 			#buddypress .standard-form button.outline:hover,
 			.video-js .vjs-play-progress:before,
+			body #buddypress .member-header-actions > .generic-button > *.awaiting_response_friend,
+			#groups-list.bp-list .item-entry .list-wrap .group-footer-wrap .footer-button-wrap .group-button:not(.generic-button),
 			#video-stream.video .bb-item-thumb .item-action-wrap .item-action_list ul li a:hover,
 			#media-stream.media .bb-video-thumb .item-action-wrap .item-action_list ul li a:hover,
 			.bb-activity-video-wrap .bb-activity-video-elem .item-action-wrap .item-action_list ul li a:hover,
@@ -1220,6 +1226,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#certificate_list .bb-certificate-download a:hover,
 			.bp-search-results-wrap .view-all-link:hover,
 			.bp-search-results-wrap .view-all-link:hover:after,
+			#buddypress .members-list > li .primary-action .generic-button > *,
 			.activity-list .activity-item .bp-generic-meta.action .open-close-activity:hover:before,
 			.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity:hover:before,
 			.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity_cancel:hover:before,
@@ -1257,6 +1264,13 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#buddypress a.button.outline:hover,
 			#buddypress input#bp_invites_reset,
 			input:checked+.bb-time-meridian,
+			#buddypress .members-list > li .primary-action .generic-button > *,
+			body #buddypress .member-header-actions > .generic-button > *:hover,
+			.groups-header #item-header-content .generic-button .group-button.join-group,
+			.groups-header #item-header-content .generic-button .group-button:focus,
+			.groups-header #item-header-content .generic-button .group-button.request-membership,
+			.item-header-wrap .bp-group-meta .group-type,
+			body #buddypress .member-header-actions > .generic-button > *.awaiting_response_friend,
 			.groups .bp-single-vert-nav #item-body #subnav .subnav .current a,
 			.groups.group-admin #buddypress.buddypress-wrap.bp-single-vert-nav #item-body .bp-navs.group-subnav .selected a,
 			.groups-header #item-header-content .generic-button .group-button:hover,
@@ -1295,11 +1309,29 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			#buddypress .follow-button button,
 			#buddypress .follow-button button:hover,
 			#buddypress .follow-button button:focus,
+			#groups-list.bp-list .item-entry .list-wrap .group-footer-wrap .footer-button-wrap .group-button:not(.generic-button):hover,
 			.mepr-price-menu.custom .mepr-price-box-button a,
 			body #buddypress .bp-list .action .generic-button .leave-group,
 			body #buddypress a.export-csv,
 			input:checked+.bb-time-meridian,
 			input:checked+.bb-toggle-slider,
+			.members-list .bp-member-type,
+			.users-header .bp-member-type,
+			body #buddypress .member-header-actions > .generic-button > *.awaiting_response_friend:hover,
+			.groups-header #item-header-content .generic-button .group-button.join-group:hover,
+			.groups-header #item-header-content .generic-button .group-button.join-group:focus,
+			.groups-header #item-header-content .generic-button .group-button.request-membership:hover,
+			.groups-header #item-header-content .generic-button .group-button.request-membership:focus,
+			#buddypress .members-list > li .primary-action .generic-button > *:hover,
+			body #buddypress .member-header-actions > .generic-button > *:hover,
+			body #buddypress .member-header-actions > .generic-button > *:focus,
+			body #buddypress .member-header-actions > .generic-button > *.pending_friend:hover,
+			body #buddypress .member-header-actions > .generic-button > *.is_friend:hover,
+			body #buddypress .member-header-actions > .generic-button > *.following:hover,
+			.groups-header #item-header-content .generic-button .group-button.join-group,
+			.groups-header #item-header-content .generic-button .group-button.request-membership,
+			.item-header-wrap .bp-group-meta .group-type,
+			.groups-header #item-header-content .generic-button .group-button.leave-group:hover,
 			.bb-groups-messages-left-inner input:checked + .bp-group-message-slider,
 			.widget_bp_core_login_widget.buddypress #bp-login-widget-form #bp-login-widget-submit.bp-login-btn-active,
 			#item-body #group-invites-container .bp-invites-content #send-invites-editor #bp-send-invites-form .action button#bp-invites-send,
@@ -1311,6 +1343,10 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			}
 
 			#bbpress-forums .bbp-reply-form.bb-modal a#bbp-close-btn:hover,
+			body #buddypress .member-header-actions > .generic-button > *.pending_friend,
+			body #buddypress .member-header-actions > .generic-button > *.is_friend,
+			body #buddypress .member-header-actions > .generic-button > *.following,
+			.groups-header #item-header-content .generic-button .group-button:focus,
 			.bbp-reply-form-success-modal .bbp-reply-form-success .reply-content .content-title .close .js-modal-close:hover,
 			.activity-list .activity-item .activity-inner .activity-inner-meta .button.bb-icon-arrow-circle .comment-count:before,
 			.activity-list .activity-item .activity-inner .activity-inner-meta .button.bb-icon-arrow-circle .text:before,
@@ -1499,6 +1535,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.buddypress-wrap .bp-feedback,
 			#buddypress .bb-bp-settings-content label,
 			.groups.group-admin #buddypress #item-body #group-settings-form label,
+			.item-header-wrap .bp-group-meta span,
 			.group-description,
 			#media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name,
 			.bp-zoom-group-show-instructions .bb-group-zoom-settings-container .bb-field-wrap label {
@@ -1541,10 +1578,14 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.buddypress-wrap .item-list.groups-list .item-meta,
 			.group-members-wrap.only-grid-view,
 			.buddypress-wrap .bp-list li .last-activity,
+			.bp_group .last-activity,
 			.buddypress-wrap .bp-list li .member-type,
+			.buddypress-wrap .members-list li .list-wrap .last-activity,
+			.buddypress-wrap .members-list li .list-wrap .followers-wrap,
 			#message-threads li .thread-date,
 			.bp-messages-content #bp-message-thread-list .message-metadata time,
 			.bp-single-message-content .bp-message-content-wrap p.joined,
+			#buddypress .single-headers .item-meta,
 			#buddypress .single-headers .item-meta span,
 			.buddypress-wrap .item-header-wrap .bp-title,
 			#buddypress .bb-bp-invites-content .invite-info,
@@ -1553,6 +1594,11 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.widget.activity_update .activity-update p,
 			#buddypress input#privacy-status-group-back {
 				color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?>;
+			}
+
+			.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta + .item-meta.last-activity:before,
+			.buddypress-wrap ul.bp-list.groups-dir-list .list-wrap .item-meta-wrap .item-meta .group-visibility + .group-type:before {
+				background-color: <?php echo buddyboss_theme_get_option( 'alternate_text_color' ); ?>;
 			}
 
 			.groups.group-create .buddypress-wrap .group-create-buttons li:not(:last-child) span:after {
@@ -1593,6 +1639,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.privacy-status-form-footer,
 			.bp-activity-privacy__label .privacy-figure,
 			.bp-activity-privacy__label:hover,
+			#buddypress .only-grid-view.button-wrap.member-button-wrap.footer-button-wrap,
 			#whats-new-form #whats-new-post-in-box .bp-activity-object:hover,
 			div .activity-update-form #whats-new-content .medium-editor-toolbar.active,
 			.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder #whats-new-toolbar,
@@ -1603,6 +1650,8 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			ul#bp-message-thread-list .bp-message-content-wrap blockquote,
 			.atwho-view .cur,
 			#whats-new-form #bp-activity-privacy-point,
+			.bb-action-popup .bb-model-header,
+			.bb-action-popup .bb-model-footer,
 			.dropzone .dz-default,
 			.dropzone.media-dropzone .dz-preview:not(.dz-image-preview) .dz-image,
 			.dropzone.video-dropzone .dz-preview,
@@ -1619,6 +1668,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.item-list.bp-search-results-list .list-wrap,
 			#item-body > div.profile,
 			.activity-update-form #whats-new-textarea textarea,
+			.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .list-wrap,
 			.bb-bp-settings-container,
 			.buddypress-wrap .bp-feedback,
 			#item-body #group-invites-container,
@@ -1749,6 +1799,7 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper,
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments,
 			.topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar,
+			.buddypress-wrap ul.bp-list.groups-dir-list:not(.grid) .item-entry .list-wrap,
 			.bp-step-nav-main .bp-step-nav ul,
 			.bp-step-nav-main .bp-step-nav li.selected > a,
 			.bp-messages-content-wrapper.has_error .bp-messages-feedback,
@@ -1766,6 +1817,9 @@ if ( ! function_exists( 'boss_generate_option_bp_css' ) ) {
 			.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form, 
 			.activity-update-form.modal-popup #whats-new-form,
 			#whats-new-form .bb-model-header,
+			.bb-leave-group-popup .bb-model-footer,
+			.bb-leave-group-popup .bb-model-header,
+			.modal-container,
 			.medium-editor-element blockquote:not(.wp-embedded-content),
 			.bs-forum-content blockquote:not(.wp-embedded-content),
 			.activity-list .activity-item .activity-inner blockquote:not(.wp-embedded-content),

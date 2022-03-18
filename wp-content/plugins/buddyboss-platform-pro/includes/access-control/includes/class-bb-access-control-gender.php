@@ -156,13 +156,13 @@ class BB_Access_Control_Gender extends BB_Access_Control_Abstract {
 					$has_access = true;
 				}
 
-				if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+				if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					if ( in_array( $gender, wp_list_pluck( self::get_level_lists(), 'id' ), true ) ) {
 						$has_access = true;
 					}
 				}
 
-				if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+				if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					$has_access = true;
 				}
 			}

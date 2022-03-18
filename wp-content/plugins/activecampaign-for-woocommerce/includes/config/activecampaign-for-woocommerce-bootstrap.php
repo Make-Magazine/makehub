@@ -28,7 +28,7 @@ require_once __DIR__ . '/activecampaign-for-woocommerce-global-constants.php';
  * @see   includes/config/activecampaign-for-woocommerce-class-factories.php
  * @since 1.0.0
  *
- * @return \DI\Container
+ * @return AcVendor\DI\Container
  */
 function activecampaign_for_woocommerce_build_container() {
 

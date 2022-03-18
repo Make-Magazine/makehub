@@ -38,7 +38,15 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 		 * @since  2.0.0
 		 * @var (String) URL
 		 */
-		public $search_url;
+		public $search_analytics_url;
+
+		/**
+		 * Import Analytics API URL
+		 *
+		 * @since  3.1.4
+		 * @var (String) URL
+		 */
+		public $import_analytics_url;
 
 		/**
 		 * API URL which is used to get the response from Pixabay.
@@ -146,10 +154,11 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 				'astra-sites-favorite' => 'add_to_favorite',
 				'astra-sites-api-request' => 'api_request',
 				'astra-sites-remote-request' => 'remote_request',
-				'astra-page-elementor-batch-process' => 'elementor_batch_process',
+				'astra-page-elementor-insert-page' => 'elementor_process_import_for_page',
 				'astra-sites-update-subscription' => 'update_subscription',
 				'astra-sites-update-analytics' => 'update_analytics',
 				'astra-sites-filesystem-permission' => 'filesystem_permission',
+				'astra-sites-generate-analytics-lead' => 'push_to_import_analytics',
 			);
 
 			foreach ( $this->ajax as $ajax_hook => $ajax_callback ) {
@@ -329,10 +338,54 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 					'type'   => 'astra-sites',
 				),
 			);
-			$result                             = wp_remote_post( $this->search_url, $args );
+			$result                             = wp_remote_post( $this->search_analytics_url, $args );
 			$response['ast-sites-search-terms'] = wp_remote_retrieve_body( $result );
 
 			return $response;
+		}
+
+		/**
+		 * Push Data to Import Analytics API.
+		 *
+		 * @since  3.1.4
+		 */
+		public function push_to_import_analytics() {
+
+			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( 'You are not allowed to perform this action', 'astra-sites' );
+			}
+
+			$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+
+			if ( 0 === $id ) {
+				wp_send_json_error(
+					array(
+						/* translators: %d is the Template ID. */
+						'message' => sprintf( __( 'Invalid Template ID - %d', 'astra-sites' ), $id ),
+						'code'    => 'Error',
+					)
+				);
+			}
+
+			$data = array(
+				'id' => $id,
+				'import_attempts' => isset( $_POST['try-again-count'] ) ? absint( $_POST['try-again-count'] ) : 0,
+				'import_status' => isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'true',
+				'type' => isset( $_POST['type'] ) ? sanitize_text_field( $_POST['type'] ) : 'astra-sites',
+				'page_builder' => isset( $_POST['page-builder'] ) ? sanitize_text_field( $_POST['page-builder'] ) : 'gutenberg',
+			);
+
+			$result = Astra_Sites_Reporting::get_instance()->report( $data );
+
+			if ( $result['status'] ) {
+				delete_option( 'astra_sites_has_sent_error_report' );
+				delete_option( 'astra_sites_cached_import_error' );
+				wp_send_json_success( $result['data'] );
+			}
+
+			wp_send_json_error( $result['data'] );
 		}
 
 		/**
@@ -393,7 +446,7 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 		 *
 		 * @since 2.0.0
 		 */
-		public function elementor_batch_process() {
+		public function elementor_process_import_for_page() {
 
 			// Verify Nonce.
 			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
@@ -491,6 +544,7 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 			$api_args = apply_filters(
 				'astra_sites_api_params', array(
 					'template_status' => '',
+					'version' => ASTRA_SITES_VER,
 				)
 			);
 
@@ -1380,7 +1434,8 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 			$this->api_domain = trailingslashit( self::get_api_domain() );
 			$this->api_url    = apply_filters( 'astra_sites_api_url', $this->api_domain . 'wp-json/wp/v2/' );
 
-			$this->search_url = apply_filters( 'astra_sites_search_api_url', $this->api_domain . 'wp-json/analytics/v2/search/' );
+			$this->search_analytics_url = apply_filters( 'astra_sites_search_api_url', $this->api_domain . 'wp-json/analytics/v2/search/' );
+			$this->import_analytics_url = apply_filters( 'astra_sites_import_analytics_api_url', $this->api_domain . 'wp-json/analytics/v2/import/' );
 
 			$this->pixabay_url     = 'https://pixabay.com/api/';
 			$this->pixabay_api_key = '2727911-c4d7c1031949c7e0411d7e81e';
@@ -1890,6 +1945,7 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 				array(
 					'plugin_name'                => Astra_Sites_White_Label::get_instance()->get_white_label_name(),
 					'sites'                      => astra_sites_get_api_params(),
+					'version'                    => ASTRA_SITES_VER,
 					'settings'                   => array(),
 					'page-builders'              => array(),
 					'categories'                 => array(),

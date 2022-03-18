@@ -225,6 +225,11 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				$field_class .= ' learndash-row-disabled';
 			}
 
+			// Adds a required class to the field row container.
+			if ( ( isset( $field['args']['required'] ) ) && ( 'required' === $field['args']['required'] ) ) {
+				$field_class .= ' learndash-settings-input-required';
+			}
+
 			if ( ( isset( $field['args']['type'] ) ) && ( 'hidden' !== $field['args']['type'] ) ) {
 				/**
 				 * Filters the HTML content to be echoed before outside row settings.
@@ -391,6 +396,14 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 							?>
 							<div class="sfwd_option_div">
 								<?php call_user_func( $field['args']['display_callback'], $field['args'] ); ?>
+
+								<?php
+								if ( isset( $field['args']['input_note'] ) && ! empty( $field['args']['input_note'] ) ) {
+									?>
+									<span class="sfwd_option_input_note"><?php echo wp_kses_post( $field['args']['input_note'] ); ?></span>
+									<?php
+								}
+								?>
 							</div>
 							<?php
 						}
@@ -607,7 +620,14 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 			$field_attribute = '';
 
 			if ( ( isset( $field_args['placeholder'] ) ) && ( ! empty( $field_args['placeholder'] ) ) ) {
-				$field_attribute .= ' placeholder="' . esc_html( $field_args['placeholder'] ) . '" ';
+				if ( is_string( $field_args['placeholder'] ) ) {
+					$field_attribute .= ' placeholder="' . esc_html( $field_args['placeholder'] ) . '" ';
+				} elseif ( is_array( $field_args['placeholder'] ) ) {
+					foreach( $field_args['placeholder'] as $placeholder_key => $placeholder_value ) {
+						$field_attribute .= ' placeholder="' . esc_html( $placeholder_value ) . '" ';
+						break;
+					}
+				}
 			}
 
 			return $field_attribute;

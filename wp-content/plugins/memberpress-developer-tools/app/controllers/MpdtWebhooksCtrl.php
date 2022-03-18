@@ -100,6 +100,13 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
         return false;
       }
 
+      $webhook_key  = get_option('mpdt_webhook_key', '');
+
+      // Add Webhook key to  HTTP header if available.
+      if( '' !== $webhook_key ){
+        $args[ 'headers' ][ 'MEMBERPRESS-WEBHOOK-KEY' ] = $webhook_key;
+      }
+
       $res = wp_remote_post($webhook['url'], $args);
 
       if(is_wp_error($res)) {

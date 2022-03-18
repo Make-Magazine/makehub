@@ -1,14 +1,17 @@
 <h3><?php _e( 'Configure', $text_domain ); ?></h3>
 
 <?php
-if ( isset( $_POST['sbi_connect_username'] ) ) {
-	$new_user_name = sanitize_text_field( $_POST['sbi_connect_username'] );
-	$new_account_details = json_decode( stripslashes( $_POST['sbi_account_json'] ), true );
-	array_map( 'sanitize_text_field', $new_account_details );
+if ( isset( $_GET['sbi_access_token'] ) && isset( $_GET['sbi_account_type'] ) ) {
+	$connected_accounts = SBI_Account_Connector::stored_connected_accounts();
+	sbi_get_personal_connection_modal( $connected_accounts, 'admin.php?page=sbsw' );
+} elseif ( isset( $_POST['sbi_connect_username'] ) ) {
+    $new_user_name = sanitize_text_field( $_POST['sbi_connect_username'] );
+    $new_account_details = json_decode( stripslashes( $_POST['sbi_account_json'] ), true );
+    array_map( 'sanitize_text_field', $new_account_details );
 
-	$updated_options = sbi_connect_basic_account( $new_account_details );
-	$connected_accounts = $updated_options['connected_accounts'];
-	$user_feed_ids = $updated_options['sb_instagram_user_id'];
+    $updated_options = sbi_connect_basic_account( $new_account_details );
+    $updated_if_connected_accounts = $updated_options['connected_accounts'];
+    $user_feed_ids = $updated_options['sb_instagram_user_id'];
 }
 if( isset($_GET['cff_access_token']) && isset($_GET['cff_final_response']) ) {
 	$page_id                = 'cff_page_id';
@@ -125,11 +128,14 @@ $json_array = array();
 	    <?php if ( $if_active && $if_compatible ) :
 
             $account_and_feed_info = sbi_get_account_and_feed_info();
+
             $default_type_and_terms = $account_and_feed_info['type_and_terms'];
-		    $connected_accounts = $account_and_feed_info['connected_accounts'];
+		    $connected_accounts = isset( $updated_if_connected_accounts ) ? $updated_if_connected_accounts : $account_and_feed_info['connected_accounts'];
 		    $if_connected_accounts = $connected_accounts;
 
 		    $available_types = $account_and_feed_info['available_types'];
+
+			$feeds = ! empty( $account_and_feed_info['feeds'] ) ? $account_and_feed_info['feeds'] : array();
 
 		    $empty_connected_accounts = empty( $connected_accounts );
 
@@ -160,18 +166,22 @@ $json_array = array();
 
                 <h4 class="sbsw-platform-name"><?php echo SW_Display_Elements::get_icon( 'instagram' ); ?>Instagram</h4>
 
-                <?php if ( $empty_connected_accounts ) :
+                <?php if ( $empty_connected_accounts && empty ( $feeds ) ) :
     	            $json_array['instagram']['exclude'] = true; ?>
                     <div id="sbi_admin" style="margin-top: 15px;">
                         <div id="sbi_config">
                         <?php sbi_get_connect_account_button( 'admin.php?page=sbsw' ); ?>
                         </div>
                     </div>
-                <?php else: ?>
-                    
+                <?php elseif ( empty ( $feeds ) && isset( $account_and_feed_info['support_legacy'] ) ): ?>
+					<div id="sbi_admin" class="sbsw-connect-account-btn-small">
+						<div id="sbi_config">
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=sbi-feed-builder' ) ); ?>" class="sbi_new_feed sbi_admin_btn"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.66537 5.66659H5.66536V9.66659H4.33203V5.66659H0.332031V4.33325H4.33203V0.333252H5.66536V4.33325H9.66537V5.66659Z" fill="white"></path></svg> <?php esc_html_e( 'Create a New Feed', 'social-wall' ); ?></a>
+						</div>
+					</div>
                 <?php endif; ?>
-                
-            <?php if ( ! $empty_connected_accounts ) : ?>
+
+            <?php if ( ! $empty_connected_accounts && ! empty( $account_and_feed_info['support_legacy'] ) ) : ?>
 
             <div class="sbsw-feed-settings">
                 <div class="sbsw-feed-type">
@@ -212,12 +222,14 @@ $json_array = array();
                         </div>
                         <?php endforeach; ?>
                     </div>
+                	<?php if ( empty ( $feeds ) ) : ?>
 
                     <div id="sbi_admin" class="sbsw-connect-account-btn-small">
                         <div id="sbi_config">
                             <?php sbi_get_connect_account_button( 'admin.php?page=sbsw' ); ?>
                         </div>
                     </div>
+					<?php endif; ?>
                 </div>
 
                 <div class="sbsw-text-input-wrap">
@@ -227,6 +239,51 @@ $json_array = array();
                 </div>
             </div>
             <?php endif; ?>
+
+			<?php if ( ! empty( $feeds ) && empty( $account_and_feed_info['support_legacy'] ) ) :
+				$json_array['instagram'] = array(
+					'current' => array(
+						'type' => 'feed',
+						'term' => (int)$feeds[0]['id']
+					),
+					'available_types' => $available_types,
+					'settings' => $account_and_feed_info['settings']
+				);
+				?>
+
+				<div class="sbsw-feed-settings">
+
+					<div class="sbsw-connected-accounts-wrap">
+						<div class="sbsw-connected-accounts-inner">
+							<h4><?php echo __( 'Select Feed for Wall:', 'social-wall' ); ?></h4>
+							<?php
+							foreach ( $feeds as $key => $feed ) :
+								$is_default = false;
+								$wrap_class = '';
+								$button_class = '';
+								$button_text = __( 'Use', 'social-wall' );
+								if ( $key === 0 ) {
+									$wrap_class = ' sbsw-selected';
+									$button_class = ' sbsw-is-default';
+									$button_text = __( 'Selected', 'social-wall' );
+								}
+								?>
+
+								<div class="sbsw-connected-account<?php echo esc_attr( $wrap_class ); ?>" data-id="<?php echo esc_attr( $feed['id'] ); ?>" data-user="<?php echo esc_attr( $feed['id'] ); ?>">
+									<button class="sbsw-add-remove-account button<?php echo esc_attr( $button_class ); ?>"><?php echo esc_html( $button_text ); ?></button>
+									<p><?php echo esc_html( $feed['feed_name'] ); ?></p>
+								</div>
+							<?php endforeach; ?>
+						</div>
+
+						<div id="sbi_admin" class="sbsw-connect-account-btn-small">
+							<div id="sbi_config">
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=sbi-feed-builder' ) ); ?>" class="sbi_new_feed sbi_admin_btn"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.66537 5.66659H5.66536V9.66659H4.33203V5.66659H0.332031V4.33325H4.33203V0.333252H5.66536V4.33325H9.66537V5.66659Z" fill="white"></path></svg> <?php esc_html_e( 'Create a New Feed', 'social-wall' ); ?></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
 
         </div>
         <?php endif; ?>
@@ -258,7 +315,7 @@ $json_array = array();
                 <div class="sbsw-platform-label">
                     <span class="sbsw-added">
                         <?php echo SW_Display_Elements::get_icon( 'yes' ); ?>
-                        <?php echo __( 'Added to Wall', 'social-wall' ); ?>  
+                        <?php echo __( 'Added to Wall', 'social-wall' ); ?>
                     </span>
                     <span class="sbsw-removed">
                         <?php echo SW_Display_Elements::get_icon( 'no' ); ?>
@@ -266,7 +323,7 @@ $json_array = array();
                     </span>
                     <button class="sbsw-add-remove-plugin button">
                         <?php echo __( 'Remove', 'social-wall' ); ?>
-                            
+
                         </button>
                 </div>
             <?php } ?>
@@ -360,7 +417,7 @@ $json_array = array();
                     <div class="sbsw-platform-label">
                         <span class="sbsw-added">
                             <?php echo SW_Display_Elements::get_icon( 'yes' ); ?>
-                            <?php echo __( 'Added to Wall', 'social-wall' ); ?>  
+                            <?php echo __( 'Added to Wall', 'social-wall' ); ?>
                         </span>
                         <span class="sbsw-removed">
                             <?php echo SW_Display_Elements::get_icon( 'no' ); ?>
@@ -369,7 +426,7 @@ $json_array = array();
                         <button class="sbsw-add-remove-plugin button"><?php echo __( 'Remove', 'social-wall' ); ?></button>
                     </div>
                 <?php } ?>
-            
+
                 <h4 class="sbsw-platform-name"><?php echo SW_Display_Elements::get_icon( 'twitter' ); ?>Twitter</h4>
 
 			    <?php if ( empty( $connected_accounts ) ) :
@@ -435,7 +492,7 @@ $json_array = array();
                     <div class="sbsw-platform-label">
                         <span class="sbsw-added">
                             <?php echo SW_Display_Elements::get_icon( 'yes' ); ?>
-                            <?php echo __( 'Added to Wall', 'social-wall' ); ?>  
+                            <?php echo __( 'Added to Wall', 'social-wall' ); ?>
                         </span>
                         <span class="sbsw-removed">
                             <?php echo SW_Display_Elements::get_icon( 'no' ); ?>
@@ -443,11 +500,11 @@ $json_array = array();
                         </span>
                         <button class="sbsw-add-remove-plugin button">
                             <?php echo __( 'Remove', 'social-wall' ); ?>
-                                
+
                             </button>
                     </div>
                 <?php } ?>
-                
+
                 <h4 class="sbsw-platform-name"><?php echo SW_Display_Elements::get_icon( 'youtube' ); ?>YouTube</h4>
 
 			    <?php if ( $empty_connected_accounts ) :
@@ -579,7 +636,8 @@ $json_array = array();
 	<?php endforeach; ?>
 </form>
 
-<?php if( isset($_GET['access_token']) && isset($_GET['graph_api']) && empty($_POST) ) { ?>
+<?php if( isset($_GET['sbi_access_token']) && isset($_GET['sbi_graph_api']) && empty($_POST) ) {
+    ?>
 <div id="sbi_admin" class="wrap sbsw-reload" data-reload="<?php echo esc_attr( admin_url('admin.php?page=sbsw') ); ?>">
     <?php sbi_get_business_account_connection_modal( '' ); ?>
 </div>

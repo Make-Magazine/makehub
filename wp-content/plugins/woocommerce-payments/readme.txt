@@ -1,10 +1,10 @@
 === WooCommerce Payments ===
 Contributors: woocommerce, automattic
 Tags: woocommerce, payment, payment request, credit card, automattic
-Requires at least: 5.6
-Tested up to: 5.8.1
+Requires at least: 5.7
+Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 3.3.0
+Stable tag: 3.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,8 +38,8 @@ Our global support team is available to answer questions you may have about WooC
 
 = Requirements =
 
-* WordPress 5.6 or newer.
-* WooCommerce 5.5 or newer.
+* WordPress 5.7 or newer.
+* WooCommerce 6.0 or newer.
 * PHP version 7.0 or newer. PHP 7.2 or newer is recommended.
 
 = Try it now =
@@ -98,12 +98,125 @@ Please note that our support for the checkout block is still experimental and th
 
 == Changelog ==
 
+= 3.8.2 - 2022-03-03 =
+* Fix - Fix fatal error when a subscription renews automatically.
+
+= 3.8.1 - 2022-03-03 =
+* Fix - Fix JavaScript error in blocks checkout and Customizer.
+
+= 3.8.0 - 2022-03-02 =
+* Add - Add a preview of uploaded logo and icon on terminal card reader receipt settings page.
+* Add - Add endpoint to retrieve a file content via API.
+* Add - Add jetpack-sync package to support Woo Mobile.
+* Add - Add jetpack-tracking module to track platform-checkout events.
+* Add - Add logic and UI to accept and see information about business loans, powered by Stripe Capital.
+* Add - Add merchant branding logo to print receipt.
+* Add - Add Preview printed version of IPP receipt to Card Readers settings page.
+* Add - Introduce `wcpay_payment_request_payment_method_title_suffix` filter. Allows plugins to replace "(WooCommerce Payments)" suffix on title of payment request buttons.
+* Fix - Conditionally add subscription payment gateway features.
+* Fix - Fix email download for deposit transactions.
+* Fix - Fix Stripe Level 3 data API limit when basket size is more than 200 items.
+* Fix - Styling issue in the subscription product publish modal.
+* Update - Add tracking for enabling and disabling platform checkout.
+* Update - Bump minimum required version of WooCommerce from 4.6 to 4.8.
+* Update - Enable capture terminal payment for succeeded intents.
+* Dev - Use Jetpack Changelogger to manage changelog files.
+* Tweak - Only add admin notes on non-AJAX requests.
+* Tweak - Refactor to add Order Service for updating order statuses.
+
+= 3.7.0 - 2022-02-10 =
+* Add - Filter by currency in disputes list
+* Add - Link to customer in disputes list
+* Update - Bump minimum required version of WordPress from 5.6 to 5.7.
+* Update - Bump minimum required version of WooCommerce from 4.5 to 4.6.
+* Add - Introduce sorting on disputes page.
+* Fix - Currency name not translated the Overview card title.
+* Add - Introduce advance filters on disputes page.
+* Add - UPE payment methods - BECS Direct Debit.
+* Fix - Missing currency field in disputes export file.
+* Add - Implement Jetpack Identity Crisis / Safe Mode banner.
+* Fix - Checkout with block-based themes.
+* Add - UPE payment method - EPS.
+* Fix - Replace uses of is_ajax() with wp_doing_ajax() in subscriptions-core.
+* Update - Improve handling of session data.
+* Fix - When changing the payment method, make sure the subscription total returns $0 when `subscriptions-core` is loaded after the `woocommerce_loaded` action hook.
+
+= 3.6.1 - 2022-01-27 =
+* Fix - Remove packages not compatible with PHP 7.0
+* Update - Security update.
+
+= 3.6.0 - 2022-01-20 =
+* Update - Bump minimum required version of WooCommerce from 4.4 to 4.5.
+* Fix - UPE validation error visibility on checkout page.
+* Tweak - Load translations for js files directly from lang-pack json files.
+* Add - Add support for full transaction exports.
+* Fix - Simple subscription elements on the product edit page not shown/hidden when necessary.
+* Fix - Prevent fatal errors on the admin subscriptions screen when a subscription fails to load.
+* Fix - Compatibility issue when loading subscriptions templates.
+* Fix - Flag emoji rendering in currency switcher block widget
+* Fix - Error when saved Google Pay payment method does not have billing address name
+* Update - Update Payment Element from beta version to release version.
+* Fix - Ensure order is always associated with corresponding transaction in UPE Checkout.
+* Tweak - Display a more specific error message when a customer attempts to purchase a WCPay Subscription below the minimum transact-able amount.
+* Add - Add handling for payment_failed webhooks.
+* Add - Disputes pagination.
+* Add - Show a warning when attempting to create a subscription product with a price below the minimum amount.
+* Fix - When viewing a WCPay Subscription product page, make sure other gateway's express payment buttons aren't shown.
+* Fix - When viewing a WC Product page with a WCPay subscription product in cart, make sure other gateway's express payment buttons are shown.
+* Fix - Don't limit subscription products being created with an interval of more than one year when the WC Subscriptions plugin is active.
+* Fix - Subscriptions not renewing with subscription products that use a free trial period.
+* Fix - "Fees" column values are different in the downloaded CSV file for the transaction table
+
+= 3.5.0 - 2021-12-29 =
+* Fix - Error when renewing subscriptions with saved payment methods disabled.
+* Add - JS error boundaries to admin screens.
+* Update - Remove task from the overview list for setting up multiple currencies.
+* Update - Return to task "Set up payments" after finishing KYC from WC-Admin.
+* Fix - Improve race condition checks to prevent duplicate order status changes.
+* Fix - Explicit currency formatting in customer-facing emails.
+* Fix - Update tooltip wording when deleting product variation.
+* Fix - Remove references to WooCommerce Subscriptions extension in the tooltips found on the Payment Methods settings table.
+* Fix - Update the Automatic Recurring Payments column on the Payment Methods table to only show which payment methods are supported by WooCommerce Subscriptions Core.
+* Fix - Prevent deprecation warnings when purchasing subscriptions products using WooCommerce Blocks.
+* Tweak - Update recurring payments copy on payment gateways page.
+* Fix - Incorrect text when filtering subscriptions to no results.
+* Changed - Subscription products must have a recurring amount greater than $0.
+* Fix - Return correct product prices datatype in WCPay.
+* Fix - Stop errors when viewing Subscription details when purchased via SEPA Direct Debit.
+* Fix - Force currency check when preparing a payment intent to request even when is_admin() returns true.
+* Update - Bump minimum supported version of WooCommerce from 5.5 to 5.8.
+
+= 3.4.0 - 2021-12-08 =
+* Add - Allow UI customizations on checkout payment fields.
+* Add - Introduce `wcpay_payment_request_is_product_supported` filter. Allow plugins to conditionally disable payment request buttons on products that do not support them.
+* Update - Display hardware costs for the period in the transaction list with link to the details page
+* Fix - Incorrect customer links on Transactions page.
+* Fix - Incorrect prices in Payment Request Button for certain currencies.
+* Fix - Updates to fraud protection.
+* Add - Add support for suggested gateway methods in WC-Admin.
+* Fix - Prevent Payment Request buttons from showing up in Composite Product pages.
+* Update - Updated @woocommerce/experimental package to v2.1.0.
+* Add - Add support for suggested gateway methods in WC-Admin.
+* Add - Onboarding flows on the admin WooCommerce > Subscriptions screen for stores with no subscriptions yet.
+* Add - Card Reader receipt settings page.
+* Fix - Fatal error on thank you page for deleted orders.
+* Add - Error messages when dispute evidence exceeds Stripe limits.
+* Add - Export Disputes to CSV
+* Update - Remove "Boost your sales by accepting new payment methods" from the overview tasks list.
+* Fix - Onboarding must be completed before Subscriptions products can be published.
+* Fix - Show the prices in the correct currency when using the "All Products" block.
+* Add - Support business account branding settings.
+* Update - Capture order-related metadata not captured by mobile app for in-person payment transactions.
+* Add - REST endpoint to print IPP receipts.
+* Add - Deposit Status to Transaction export.
+
 = 3.3.0 - 2021-11-18 =
 * Add - Add Idempotency Key to POST headers.
 * Add - Add dispute order notes to Edit Order page.
 * Fix - Show a specific message instead of a generic one in the checkout block when non-UPE payment processing fails.
 * Update - Avoid having invalid intervals (greater than 1 year) in subscription products.
 * Update - The subscription fee label in the transaction timeline.
+* Update - Show red setup badge after 3 days instead of 7
 * Add - Add compatibility between Multi-Currency and WooCommerce Bookings.
 * Add - Add compatibility between Multi-Currency and WooCommerce Pre-Orders.
 * Fix - Do not show default currency selector on Account Details page when only one currency is available.
@@ -139,13 +252,19 @@ Please note that our support for the checkout block is still experimental and th
 
 = 3.2.0 - 2021-10-28 =
 * Add - Add subscriptions functionality via Stripe Billing and WC Subscriptions core.
+* Add - UPE track on upgrade and on setting toggle.
 * Fix - Prevent currency switcher to show when enabled currencies list is empty.
 * Fix - Show currency switcher notice until customer explicitly dismisses it.
+* Update - Switch the PaymentIntent ID and the Charge ID in the order notes and transaction details pages.
+* Fix - Track 'wcpay_payment_request_settings_change' for when updating the Payment Requests setting not being recorded.
 * Update - Fee breakdown when there's only a base fee
 * Fix - Inconsistent shipping options in Payment Request popup.
+* Fix - Payment methods checkbox UI looking off when Gutenberg is active.
+* Update - Remove unused "wcpay_deposits_summary_empty_state_click" track.
 * Fix - Border style not being applied properly on Multi-Currency block widget.
 * Fix - Applied sentence case on all strings
-* Fix - Missing customer information after guest checkout via Checkout Block
+* Fix - Missing customer information after guest checkout via Checkout Block.
+* Fix - Show correct payment method name during checkout using upe methods.
 * Fix - Multi-Currency settings rounding option and preview.
 * Fix - Payment failure on checkout block with UPE when phone number field is hidden
 * Update - Adds a scheduled action which makes updating the account cache more efficient
@@ -202,6 +321,7 @@ Please note that our support for the checkout block is still experimental and th
 * Fix - Fix subscription change payment method errors after entering a payment method that fails.
 * Fix - Prevent duplicate account onboarding requests.
 * Fix - Filter out merchant-facing payment errors from customer error notices.
+* Fix - Add primary action to high priority tasks.
 
 = 2.9.1 - 2021-09-07 =
 * Fix - Error while checking out with UPE when fields are hidden.
@@ -292,13 +412,13 @@ Please note that our support for the checkout block is still experimental and th
 * Add - When setting WooCommerce Payments up, inform if merchant business country is not supported.
 * Update - Bump minimum supported version of WooCommerce from 4.8 to 5.2.
 * Add - Introduce advance filters on deposits page.
-* Update: Prefill OAuth flow with WC store country
+* Update - Prefill OAuth flow with WC store country.
 
 = 2.5.0 - 2021-06-02 =
 * Fix - Fix hover dialog for close button on modals, unify styling and layout of modal buttons.
 * Update - Use Site Language when rendering Stripe elements.
 * Update - Use blog ID for authenticating most of the requests.
-* Fix: Misaligned columns on Deposits page.
+* Fix - Misaligned columns on Deposits page.
 * Add - Tracking for returning from OAuth connection.
 * Fix - Transactions and deposits counts on the table summary are rendered as "undefined".
 * Update - Deposit overview details.
@@ -526,7 +646,7 @@ Please note that our support for the checkout block is still experimental and th
 * Fix - Add logging for OAuth initialization failures
 
 = 0.9.0 - 2020-04-08 =
-* Release for Public Beta
+* Add - Release for Public Beta.
 
 = 0.8.2 - 2020-03-10 =
 * Add - Dispute file evidence upload support
@@ -537,10 +657,10 @@ Please note that our support for the checkout block is still experimental and th
 * Fix - Improve Jetpack connection checking
 
 = 0.8.1 - 2020-02-25 =
-* Update link to test card documentation
+* Update - Link to test card documentation.
 
 = 0.8.0 - 2020-02-24 =
-* First beta release
+* Add - First beta release.
 
 = 0.7.0 - 2020-02-05 =
-* Alpha release
+* Add - Alpha release.

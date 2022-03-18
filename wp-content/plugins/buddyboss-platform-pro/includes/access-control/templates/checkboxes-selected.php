@@ -76,7 +76,14 @@ if ( '' !== $option_access_controls && isset( $access_control_settings ) && ( ( 
 					if ( isset( $access_control_settings['access-control-options'] ) ) {
 						?>
 							<input
-								<?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> class="access-control-threaded-input" id="<?php echo esc_attr( $option_name ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>" type="checkbox" <?php checked( in_array( $option['id'], $access_control_settings['access-control-options'] ) ); ?> value="<?php echo esc_attr( $option['id'] ); ?>" data-id="<?php echo esc_attr( sanitize_title( $option['id'] ) ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-options][]">
+								<?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> class="access-control-threaded-input" id="<?php echo esc_attr( $option_name ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>" type="checkbox"
+										<?php
+											checked(
+							                    // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+												in_array( $option['id'], $access_control_settings['access-control-options'] )
+											);
+										?>
+										value="<?php echo esc_attr( $option['id'] ); ?>" data-id="<?php echo esc_attr( sanitize_title( $option['id'] ) ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-options][]">
 							<?php
 					} else {
 						?>
@@ -92,11 +99,14 @@ if ( '' !== $option_access_controls && isset( $access_control_settings ) && ( ( 
 					$key                = 'access-control-' . $option['id'] . '-options';
 					$is_hide_default    = ( ! array_key_exists( $key, $access_control_settings ) ) ? 'access-control-hide-div' : '';
 					$is_default_checked = ( ! array_key_exists( $key, $access_control_settings ) ) ? 'checked' : '';
+					$in_array           = in_array( $option['id'], $access_control_settings['access-control-options'] ) // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					?>
-					<div class="access-control-checkbox-list child-<?php echo esc_attr( sanitize_title( $option['id'] ) ); ?> <?php echo esc_attr( in_array( $option['id'], $access_control_settings['access-control-options'] ) ? '' : 'access-control-hide-div' ); ?>">
+					<div class="access-control-checkbox-list child-<?php echo esc_attr( sanitize_title( $option['id'] ) ); ?> <?php echo esc_attr( $in_array ? '' : 'access-control-hide-div' ); ?>">
 						<p class="description"><?php echo esc_html( $sub_label ); ?></p>
 					<?php
-					$all_checked      = ( isset( $access_control_settings['access-control-options'] ) && isset( $access_control_settings[ $key ] ) && in_array( 'all', $access_control_settings[ $key ] ) ) ? 'checked' : '';
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					$all_checked = ( isset( $access_control_settings['access-control-options'] ) && isset( $access_control_settings[ $key ] ) && in_array( 'all', $access_control_settings[ $key ] ) ) ? 'checked' : '';
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					$specific_checked = ( isset( $access_control_settings['access-control-options'] ) && isset( $access_control_settings[ $key ] ) && ! in_array( 'all', $access_control_settings[ $key ] ) ) ? 'checked' : '';
 					?>
 						<div class="multiple_options">
@@ -108,6 +118,7 @@ if ( '' !== $option_access_controls && isset( $access_control_settings ) && ( ( 
 					<?php
 					$def_disable = false;
 					if ( isset( $access_control_settings['access-control-options'] ) ) {
+						// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$def_disable = in_array( $option['id'], $access_control_settings['access-control-options'] );
 					}
 
@@ -122,8 +133,9 @@ if ( '' !== $option_access_controls && isset( $access_control_settings ) && ( ( 
 							<div class="sub-child-<?php echo esc_attr( sanitize_title( $option['id'] ) ); ?> <?php echo esc_attr( $is_hide ); ?> <?php echo esc_attr( $is_hide_default ); ?>">
 							<?php
 							if ( isset( $access_control_settings[ 'access-control-' . $option['id'] . '-options' ] ) ) {
+								$in_array = in_array( $child_option['id'], $access_control_settings[ 'access-control-' . $option['id'] . '-options' ] ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 								?>
-									<input data-parent="<?php echo esc_attr( $option['id'] ); ?>" class="click_class" <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> <?php checked( in_array( $child_option['id'], $access_control_settings[ 'access-control-' . $option['id'] . '-options' ] ) ); ?> id="<?php echo esc_attr( $option_name ) . '_' . esc_attr( $option['id'] ); ?>_access-control-options_<?php echo esc_attr( $child_option['id'] ); ?>_sub" value="<?php echo esc_attr( $child_option['id'] ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-<?php echo esc_attr( $option['id'] ); ?>-options][]" type="checkbox">
+									<input data-parent="<?php echo esc_attr( $option['id'] ); ?>" class="click_class" <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> <?php checked( $in_array ); ?> id="<?php echo esc_attr( $option_name ) . '_' . esc_attr( $option['id'] ); ?>_access-control-options_<?php echo esc_attr( $child_option['id'] ); ?>_sub" value="<?php echo esc_attr( $child_option['id'] ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-<?php echo esc_attr( $option['id'] ); ?>-options][]" type="checkbox">
 									<?php
 							} else {
 								$is_disabled = ( ! $def_disable ) ? 'disabled' : '';
@@ -145,8 +157,9 @@ if ( '' !== $option_access_controls && isset( $access_control_settings ) && ( ( 
 					<div>
 				<?php
 				if ( isset( $access_control_settings['access-control-options'] ) ) {
+					$in_array = in_array( $option['id'], $access_control_settings['access-control-options'] ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					?>
-							<input <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> id="<?php echo esc_attr( $option_name ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>" <?php checked( in_array( $option['id'], $access_control_settings['access-control-options'] ) ); ?> value="<?php echo esc_attr( $option['id'] ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-options][]" type="checkbox">
+							<input <?php echo esc_attr( $disable ); ?> <?php echo esc_attr( $checked ); ?> id="<?php echo esc_attr( $option_name ); ?>_access-control-options_<?php echo esc_attr( $option['id'] ); ?>" <?php checked( $in_array ); ?> value="<?php echo esc_attr( $option['id'] ); ?>" name="<?php echo esc_attr( $option_name ); ?>[access-control-options][]" type="checkbox">
 						<?php
 				} else {
 					?>

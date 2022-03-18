@@ -12,6 +12,7 @@
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The Uninstall_Plugin_Command Class.
@@ -53,7 +54,13 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 			$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME );
 			// phpcs:enable
 		} catch ( Throwable $t ) {
-			// If this fails we should add an admin message to notify there could be an abandoned table.
+			$logger = new Logger();
+			$logger->error(
+				'There was an issue removing the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table from your database.',
+				[
+					'message' => $t->getMessage(),
+				]
+			);
 		}
 	}
 	// phpcs:enable

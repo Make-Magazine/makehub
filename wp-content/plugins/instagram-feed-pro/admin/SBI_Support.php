@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+use InstagramFeed\Builder\SBI_Source;
 use InstagramFeed\SBI_View;
 use InstagramFeed\Builder\SBI_Db;
 use InstagramFeed\Builder\SBI_Feed_Builder;
@@ -184,9 +185,9 @@ class SBI_Support {
 				'collapse'     => __( 'Collapse', 'instagram-feed' ),
 			),
 			'icons'               => array(
-				'rocket'       => SBI_PLUGIN_URL . 'admin/assets/img/rocket-icon.png',
-				'book'         => SBI_PLUGIN_URL . 'admin/assets/img/book-icon.png',
-				'save'         => SBI_PLUGIN_URL . 'admin/assets/img/save-plus-icon.png',
+				'rocket'       => SBI_PLUGIN_URL . 'admin/assets/img/rocket-icon.svg',
+				'book'         => SBI_PLUGIN_URL . 'admin/assets/img/book-icon.svg',
+				'save'         => SBI_PLUGIN_URL . 'admin/assets/img/save-plus-icon.svg',
 				'magnify'      => '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.91667 0.5C7.35326 0.5 8.73101 1.07068 9.74683 2.08651C10.7627 3.10233 11.3333 4.48008 11.3333 5.91667C11.3333 7.25833 10.8417 8.49167 10.0333 9.44167L10.2583 9.66667H10.9167L15.0833 13.8333L13.8333 15.0833L9.66667 10.9167V10.2583L9.44167 10.0333C8.45879 10.8723 7.20892 11.3333 5.91667 11.3333C4.48008 11.3333 3.10233 10.7627 2.08651 9.74683C1.07068 8.73101 0.5 7.35326 0.5 5.91667C0.5 4.48008 1.07068 3.10233 2.08651 2.08651C3.10233 1.07068 4.48008 0.5 5.91667 0.5ZM5.91667 2.16667C3.83333 2.16667 2.16667 3.83333 2.16667 5.91667C2.16667 8 3.83333 9.66667 5.91667 9.66667C8 9.66667 9.66667 8 9.66667 5.91667C9.66667 3.83333 8 2.16667 5.91667 2.16667Z" fill="#141B38"/></svg>',
 				'rightAngle'   => '<svg width="7" height="11" viewBox="0 0 5 8" fill="#000" xmlns="http://www.w3.org/2000/svg"><path d="M1.00006 0L0.0600586 0.94L3.11339 4L0.0600586 7.06L1.00006 8L5.00006 4L1.00006 0Z" fill="#000"/></svg>',
 				'linkIcon'     => '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.166626 10.6583L8.99163 1.83329H3.49996V0.166626H11.8333V8.49996H10.1666V3.00829L1.34163 11.8333L0.166626 10.6583Z" fill="#141B38"/></svg>',
@@ -341,7 +342,7 @@ class SBI_Support {
 		$sbi_license_status = get_option( 'sbi_license_status' );
 		$sbi_settings       = get_option( 'sb_instagram_settings', array() );
 
-		$usage_tracking     = get_option(
+		$usage_tracking = get_option(
 			'sbi_usage_tracking',
 			array(
 				'last_send' => 0,
@@ -452,7 +453,7 @@ class SBI_Support {
 		$source_list = SBI_Feed_Builder::get_source_list();
 		$manager     = new \SB_Instagram_Data_Manager();
 
-		$i           = 0;
+		$i = 0;
 		foreach ( $feeds_list as $feed ) {
 
 			$type = ! empty( $feed['settings']['type'] ) ? $feed['settings']['type'] : 'user';
@@ -461,8 +462,8 @@ class SBI_Support {
 			}
 			$output .= $feed['feed_name'];
 			if ( isset( $feed['settings'] ) ) {
-				$output   .= ' - ' . ucfirst( $type );
-				$output   .= '</br>';
+				$output .= ' - ' . ucfirst( $type );
+				$output .= '</br>';
 				if ( ! empty( $feed['settings']['sources'] ) ) {
 					foreach ( $feed['settings']['sources'] as $id => $source ) {
 						$output .= esc_html( $source['username'] );
@@ -476,7 +477,7 @@ class SBI_Support {
 			if ( isset( $feed['location_summary'] ) && count( $feed['location_summary'] ) > 0 ) {
 				$first_feed = $feed['location_summary'][0];
 				if ( ! empty( $first_feed['link'] ) ) {
-					$output    .= esc_html( $first_feed['link'] ) . '?sb_debug';
+					$output .= esc_html( $first_feed['link'] ) . '?sb_debug';
 					$output .= '</br>';
 				}
 			}
@@ -511,6 +512,13 @@ class SBI_Support {
 			$output .= 'Type: ' . esc_html( $source['account_type'] );
 			$output .= '</br>';
 			$output .= 'Username: ' . esc_html( $source['username'] );
+			if ( $source['account_type'] === 'business' ) {
+				$connected_account = SBI_Source::convert_sources_to_connected_accounts( array( $source ) );
+				$account           = new \SB_Instagram_Connected_Account( reset( $connected_account ) );
+				$recently_searched = $account->recently_searched_hashtags_count();
+				$output           .= '</br>';
+				$output           .= 'Recently Searched Hashtags: ' . esc_html( $recently_searched );
+			}
 			$output .= '</br>';
 			$output .= 'Error: ' . esc_html( $source['error'] );
 			$output .= '</br>';
@@ -532,32 +540,30 @@ class SBI_Support {
 	 * @return string
 	 */
 	public static function get_cron_report() {
-		$output = '## Cron Cache Report: ## </br>';
+		$output      = '## Cron Cache Report: ## </br>';
 		$cron_report = get_option( 'sbi_cron_report', array() );
 		if ( ! empty( $cron_report ) ) {
 			$output .= 'Time Ran: ' . esc_html( $cron_report['notes']['time_ran'] );
-			$output .= "</br>";
+			$output .= '</br>';
 			$output .= 'Found Feeds: ' . esc_html( $cron_report['notes']['num_found_transients'] );
-			$output .= "</br>";
-			$output .= "</br>";
+			$output .= '</br>';
+			$output .= '</br>';
 
 			foreach ( $cron_report as $key => $value ) {
 				if ( $key !== 'notes' ) {
 					$output .= esc_html( $key ) . ':';
-					$output .= "</br>";
+					$output .= '</br>';
 					if ( ! empty( $value['last_retrieve'] ) ) {
 						$output .= 'Last Retrieve: ' . esc_html( $value['last_retrieve'] );
-						$output .= "</br>";
+						$output .= '</br>';
 					}
 					$output .= 'Did Update: ' . esc_html( $value['did_update'] );
-					$output .= "</br>";
-					$output .= "</br>";
+					$output .= '</br>';
+					$output .= '</br>';
 				}
-
 			}
-
 		} else {
-			$output .= "</br>";
+			$output .= '</br>';
 		}
 
 		$cron = _get_cron_array();
@@ -566,16 +572,16 @@ class SBI_Support {
 			foreach ( $data as $key2 => $val ) {
 				if ( strpos( $key2, 'sbi' ) !== false || strpos( $key2, 'sb_instagram' ) !== false ) {
 					$is_target = true;
-					$output .= esc_html( $key2 );
-					$output .= "</br>";
+					$output   .= esc_html( $key2 );
+					$output   .= '</br>';
 				}
 			}
 			if ( $is_target ) {
 				$output .= esc_html( date( 'Y-m-d H:i:s', $key ) );
-				$output .= "</br>";
+				$output .= '</br>';
 				$output .= esc_html( 'Next Scheduled: ' . round( ( (int) $key - time() ) / 60 ) . ' minutes' );
-				$output .= "</br>";
-				$output .= "</br>";
+				$output .= '</br>';
+				$output .= '</br>';
 			}
 		}
 
@@ -737,9 +743,9 @@ class SBI_Support {
 			if ( $key === 'access_token' ) {
 				$manager = new \SB_Instagram_Data_Manager();
 
-				$output .= esc_html(  $key ) . ': ' . esc_html( $manager->remote_encrypt( $value ) ) . '</br>';
+				$output .= esc_html( $key ) . ': ' . esc_html( $manager->remote_encrypt( $value ) ) . '</br>';
 			} else {
-				$output .= esc_html(  $key ) . ': ' . esc_html( $value ) . '</br>';
+				$output .= esc_html( $key ) . ': ' . esc_html( $value ) . '</br>';
 			}
 		}
 

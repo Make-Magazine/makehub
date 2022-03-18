@@ -28,6 +28,10 @@
         gap: 8px;
         display: block;
     }
+    .ist-import-error-secondary-wrap {
+        overflow: scroll;
+        max-height: 200px;
+    }
     pre {
         text-align: left;
         padding: 10px 0;

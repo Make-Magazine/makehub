@@ -52,7 +52,7 @@ if ( ! empty( $component_settings ) ) {
 
 <select data-label="<?php echo esc_attr( $label ); ?>"
 		data-sub-label="<?php echo esc_attr( $sub_label ); ?>"
-		data-component-settings="<?php echo esc_attr( json_encode( $component_settings ) ); ?>"
+		data-component-settings="<?php echo esc_attr( wp_json_encode( $component_settings ) ); ?>"
 		class="access-control-select-box <?php echo esc_attr( $multiple ); ?>"
 		id="<?php echo esc_attr( $db_option_key ); ?>"
 		name="<?php echo esc_attr( $option_name ); ?>[access-control-type]"

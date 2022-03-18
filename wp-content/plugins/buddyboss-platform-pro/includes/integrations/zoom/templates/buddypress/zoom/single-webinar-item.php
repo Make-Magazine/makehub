@@ -266,11 +266,11 @@
 		$webinar_date_obj = new DateTime( bp_get_zoom_webinar_start_date_utc(), new DateTimeZone( 'UTC' ) );
 		$webinar_date_obj->modify( '+' . bp_get_zoom_webinar_duration() . ' minutes' );
 		$webinar_date_unix = $webinar_date_obj->format( 'U' );
-		$meeting_number = esc_attr( bp_get_zoom_webinar_zoom_webinar_id() );
-		$api_key        = bb_zoom_group_api_key( bp_get_zoom_webinar_group_id () );
-		$api_secret     = bb_zoom_group_api_secret( bp_get_zoom_webinar_group_id() );
-		$role           = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ) ? 1 : 0;
-		$sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
+		$meeting_number    = esc_attr( bp_get_zoom_webinar_zoom_webinar_id() );
+		$api_key           = bb_zoom_group_api_key( bp_get_zoom_webinar_group_id() );
+		$api_secret        = bb_zoom_group_api_secret( bp_get_zoom_webinar_group_id() );
+		$role              = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ) ? 1 : 0; // phpcs:ignore
+		$sign              = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
 
 		?>
 

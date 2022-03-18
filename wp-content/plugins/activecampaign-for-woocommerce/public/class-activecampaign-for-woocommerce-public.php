@@ -87,8 +87,13 @@ class Activecampaign_For_Woocommerce_Public {
 	 * Initialize injections that are still null
 	 */
 	public function init() {
-		$this->logger             = $this->logger ?: new Logger();
-		$this->checkbox_populated = $this->checkbox_populated ?: false;
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
+
+		if ( ! $this->checkbox_populated ) {
+			$this->checkbox_populated = false;
+		}
 	}
 
 	/**

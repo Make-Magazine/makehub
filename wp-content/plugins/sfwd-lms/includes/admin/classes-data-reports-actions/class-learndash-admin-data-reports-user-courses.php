@@ -122,7 +122,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		public function show_report_action() {
 			?>
 			<tr id="learndash-data-reports-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-reports-container">
-				<td class="learndash-data-reports-button-container" style="width:20%">
+				<td class="learndash-data-reports-button-container" style="width: 20%">
 					<button class="learndash-data-reports-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-reports-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 					printf(

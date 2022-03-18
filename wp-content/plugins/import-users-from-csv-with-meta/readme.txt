@@ -3,14 +3,16 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.8.1
-Stable tag: 1.18.4.4
+Tested up to: 5.9
+Stable tag: 1.19.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Import and export users and customers using CSV files including custom user meta and roles. Integrations with lots of other plugins. Frontend upload, cron import and much more.
 
 == Description ==
+
+**Try it out on your free dummy site: Click here => [https://demo.tastewp.com/import-users-from-csv-with-meta](https://demo.tastewp.com/import-users-from-csv-with-meta)**
 
 Clean and easy-to-use import and export users and customer plugin, for WordPress and WooCommerce. It includes custom user meta to be included automatically from a CSV file and delimitation auto-detector. It also is able to send a mail to each user imported and all the meta data imported is ready to edit into user profile.
 
@@ -102,6 +104,43 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.19.1.9 =
+*   Improved some labels to avoid misunderstandings with email options, thanks to @blakemiller
+
+= 1.19.1.8 =
+*   Fixed warnings in "Meta keys" tab
+
+= 1.19.1.7 =
+*   New hooks added to homepage tab to include more options using addons
+
+= 1.19.1.6 =
+*   New hooks to filter username and password of every users being imported
+
+= 1.19.1.5 =
+*   Improved BuddyBoss compatibility, now when we include class-bp-xprofile-group.php, we check if BuddyPress is the plugin active or BuddyBoss
+
+= 1.19.1.4 =
+*   Changed appearence of some buttons in the right panel
+*   Included new strings to localize 
+
+= 1.19.1.3 =
+*   Improved ACF addon, now you can use relationships with IDs in addition to slugs 
+
+= 1.19.1.2 =
+*   Fixed fatal error 
+
+= 1.19.1.1 =
+*   Fixed warning in screen with import results
+*   Ko-fi donation link added
+
+= 1.19.1 =
+*   Export now allow to choose which columns export also in "Export" tab and not only in frontend
+
+= 1.19 =
+*   New class to create diffent HTML elements to standarize plugin code
+*   Different fixes in export function to avoid errors
+*   New secondary tab section prepared
 
 = 1.18.4.4 =
 *   Force version update

@@ -20,6 +20,7 @@
     <form action="" method="post" id="mpca-add-sub-user-form" class="mpca-hidden">
       <input type="hidden" name="action" value="manage_sub_accounts" />
       <input type="hidden" name="manage_sub_accounts_form" value="add" />
+      <input type="hidden" name="mepr_product_id" value="<?php echo esc_attr($product_id); ?>" />
       <label>
         <span><?php _e('Existing Username', 'memberpress-corporate'); ?> </span>
       </label>
@@ -54,12 +55,14 @@
         </label>
       <?php endif ?>
 
-      <label class="mpca-fat-bottom">
+      <label>
         <input type="checkbox" name="userdata[welcome]" <?php checked($sub_welcome_checked); ?> />
         <span><?php _e('Send NEW members the welcome email', 'memberpress-corporate'); ?></span>
       </label>
 
-      <input type="submit" value="<?php _e('Submit', 'memberpress-corporate') ?>" />
+      <?php MeprHooks::do_action('mepr-user-signup-fields'); ?>
+
+      <input class="mpca-fat-top" type="submit" value="<?php _e('Submit', 'memberpress-corporate') ?>" />
     </form>
   </div>
 
@@ -146,12 +149,16 @@
       <input type="hidden" name="action" value="manage_sub_accounts" />
       <input type="hidden" name="manage_sub_accounts_form" value="import" />
       <input type="hidden" name="ca" value="<?php echo $ca->uuid; ?>" />
+      <input type="hidden" name="mepr_product_id" value="<?php echo esc_attr($product_id); ?>" />
+
       <br/>
       <input type="checkbox" name="notice" <?php checked($csv_notice_checked); ?> />
       <?php _e('Send NEW members a password reset link (does not email existing members)', 'memberpress-corporate'); ?>
       <br/>
       <input type="checkbox" name="welcome" <?php checked($csv_welcome_checked); ?> />
       <?php _e('Send NEW members the welcome email if they haven\'t received it already for the membership.', 'memberpress-corporate'); ?>
+      <br/>
+      <?php MeprHooks::do_action('mepr-user-signup-fields'); ?>
       <br/><br/>
       <input type="file" name="mpca_sub_accounts_csv" id="mpca_sub_accounts_csv">
       <input type="submit" value="<?php _e('Upload CSV', 'memberpress-corporate'); ?>" name="submit">

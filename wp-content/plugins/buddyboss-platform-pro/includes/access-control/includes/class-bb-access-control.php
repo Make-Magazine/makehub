@@ -250,7 +250,7 @@ class BB_Access_Control {
 		$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		$rtl_css = is_rtl() ? '-rtl' : '';
 		wp_enqueue_style( 'bb-access-control-admin', bb_access_control_url( '/assets/css/bb-access-control-admin' . $rtl_css . $min . '.css' ), array(), bb_platform_pro()->version );
-		wp_enqueue_script( 'bb-access-control-admin', bb_access_control_url( '/assets/js/bb-access-control-admin' . $min . '.js' ), array(), bb_platform_pro()->version );
+        wp_enqueue_script( 'bb-access-control-admin', bb_access_control_url( '/assets/js/bb-access-control-admin' . $min . '.js' ), array(), bb_platform_pro()->version ); // phpcs:ignore
 		wp_localize_script(
 			'bb-access-control-admin',
 			'bbAccessControlAdminVars',
@@ -1144,6 +1144,7 @@ class BB_Access_Control {
 			);
 
 			foreach ( $paths as $path ) {
+                // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				if ( @is_file( $slashed_path . $path ) ) {
 					require $slashed_path . $path;
 					break;

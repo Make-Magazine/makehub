@@ -6,6 +6,7 @@ document.getElementById('activecampaign-for-woocommerce-clear-error-log').addEve
     if (!jQuery(e.target).hasClass('button-disabled')) {
         jQuery.ajax({
             url: ajaxurl,
+            type:'POST',
             data: {
                 action: "activecampaign_for_woocommerce_clear_error_log"
             }

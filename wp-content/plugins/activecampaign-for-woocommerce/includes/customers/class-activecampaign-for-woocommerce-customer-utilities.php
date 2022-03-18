@@ -39,7 +39,11 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	public function __construct(
 		Logger $logger = null
 	) {
-		$this->logger = $logger ?: new Logger();
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	/**
@@ -51,9 +55,9 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 *
 	 * @return Ecom_Order|null
 	 */
-	public function add_customer_to_order( WC_Order $order, Ecom_Order $ecom_order, $is_admin = false ) {
+	public function add_customer_to_order( $order, Ecom_Order $ecom_order, $is_admin = false ) {
 		try {
-			if ( $order->get_user_id() ) {
+			if ( method_exists( $order, 'get_user_id' ) && $order->get_user_id() ) {
 				// Set if the AC id is set
 				$ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( $order->get_user_id() ) );
 				if ( get_user_meta( $order->get_user_id(), 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
@@ -61,7 +65,7 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 					$ac_customerid = get_user_meta( $order->get_user_id(), 'activecampaign_for_woocommerce_ac_customer_id' );
 					$ecom_order->set_customerid( $ac_customerid );
 				}
-			} elseif ( $order->get_customer_id() ) {
+			} elseif ( method_exists( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				$ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( $order->get_customer_id() ) );
 				if ( get_user_meta( $order->get_customer_id(), 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
 					$ac_customerid = get_user_meta( $order->get_customer_id(), 'activecampaign_for_woocommerce_ac_customer_id' );
@@ -69,14 +73,14 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 				}
 			}
 
-			if ( ! $is_admin && wc()->customer && wc()->customer->get_email() ) {
+			if ( ! $is_admin && wc()->customer && method_exists( wc()->customer, 'get_email' ) && wc()->customer->get_email() ) {
 				// Set the email address from customer
 				$ecom_order->set_email( wc()->customer->get_email() );
-			} elseif ( get_user_meta( $order->get_user_id(), 'email' ) ) {
+			} elseif ( method_exists( $order, 'get_user_id' ) && get_user_meta( $order->get_user_id(), 'email' ) ) {
 				$email = get_user_meta( $order->get_user_id(), 'email' );
 				// Set the email address from user
 				$ecom_order->set_email( $email );
-			} elseif ( $order->get_billing_email() ) {
+			} elseif ( method_exists( $order, 'get_billing_email' ) && $order->get_billing_email() ) {
 				// Set the email address from order
 				$ecom_order->set_email( $order->get_billing_email() );
 			}
@@ -102,29 +106,29 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 *
 	 * @return bool|string
 	 */
-	public function get_customer_id( WC_Order $order = null ) {
-		if ( is_null( $order ) && ! empty( wc()->session->get_customer_id() ) ) {
+	public function get_customer_id( $order = null ) {
+		if ( is_null( $order ) && method_exists( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
 			return wc()->session->get_customer_id();
 		}
 
-		if ( ! is_null( $order ) && ! empty( $order->get_customer_id() ) ) {
+		if ( ! is_null( $order ) && method_exists( $order, 'get_customer_id' ) && ! empty( $order->get_customer_id() ) ) {
 			return $order->get_customer_id();
 		}
 
-		if ( isset( wc()->customer ) && ! empty( wc()->customer->get_id() ) ) {
+		if ( isset( wc()->customer ) && method_exists( wc()->customer, 'get_id' ) && ! empty( wc()->customer->get_id() ) ) {
 			return wc()->customer->get_id();
 		}
 
-		if ( isset( wc()->session ) && ! empty( wc()->session->get_customer_id() ) ) {
+		if ( isset( wc()->session ) && method_exists( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
 			return wc()->session->get_customer_id();
 		}
 
 		$this->logger->error(
 			'Customer Utilities: Could not find a customer ID.',
 			[
-				'id'            => $order->get_id(),
-				'order_number'  => $order->get_order_number(),
-				'billing_email' => $order->get_billing_email(),
+				'id'            => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
+				'order_number'  => method_exists( $order, 'get_order_number' ) ? $order->get_order_number() : null,
+				'billing_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 			]
 		);
 

@@ -80,7 +80,6 @@ class ACUI_Exporter{
     }
 
 	static function admin_gui(){
-		$roles = ACUI_Helper::get_editable_roles();
 	?>
 	<h3 id="acui_export_users_header"><?php _e( 'Export users', 'import-users-from-csv-with-meta' ); ?></h3>
 	<form id="acui_exporter">
@@ -89,51 +88,58 @@ class ACUI_Exporter{
 				<tr id="acui_role_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Role', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<select name="role">
-							<option value=''><?php _e( 'All roles', 'import-users-from-csv-with-meta' ); ?></option>
-						<?php foreach ( $roles as $key => $value ): ?>
-							<option value='<?php echo $key; ?>'><?php echo $value; ?></option>
-						<?php endforeach; ?>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => ACUI_Helper::get_editable_roles(),
+                            'name' => 'role',
+                            'show_option_all' => false,
+                            'show_option_none' => __( 'All roles', 'import-users-from-csv-with-meta' ),
+                        )); ?>
+					</td>
+				</tr>
+				<tr id="acui_columns" valign="top">
+					<th scope="row"><?php _e( 'Columns', 'import-users-from-csv-with-meta' ); ?></th>
+					<td>
+						<?php ACUIHTML()->textarea( array( 'name' => 'columns' ) ); ?>
+						<span class="description"><?php _e( 'You can use this field to set which columns must be exported and in which order.  If you leave it empty, all columns will be exported. Use a list of fields separated by commas, for example', 'import-users-from-csv-with-meta' ); ?>: user_email,first_name,last_name</span>
 					</td>
 				</tr>
 				<tr id="acui_user_created_wrapper" valign="top">
 					<th scope="row"><?php _e( 'User created', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<label for="from">from <input name="from" type="date" value=""/></label>
-						<label for="to">to <input name="to" type="date" value=""/></label>
+						<label for="from">from <?php ACUIHTML()->text( array( 'type' => 'date', 'name' => 'from', 'class' => '' ) ); ?></label>
+						<label for="to">to <?php ACUIHTML()->text( array( 'type' => 'date', 'name' => 'to', 'class' => '' ) ); ?></label>
 					</td>
 				</tr>
 				<tr id="acui_delimiter_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Delimiter', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<select name="delimiter">
-							<option value='COMMA'><?php _e( 'Comma', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value='COLON'><?php _e( 'Colon', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value='SEMICOLON'><?php _e( 'Semicolon', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value='TAB'><?php _e( 'Tab', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => ACUI_Helper::get_csv_delimiters_titles(),
+                            'name' => 'delimiter',
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 				<tr id="acui_timestamp_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Convert timestamp data to date format', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<input type="checkbox" name="convert_timestamp" id="convert_timestamp" value="1" checked="checked">
-						<input name="datetime_format" id="datetime_format" type="text" value="Y-m-d H:i:s"/> 
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'convert_timestamp', 'current' => 0 ) ); ?>
+						<?php ACUIHTML()->text( array( 'name' => 'datetime_format', 'value' => 'Y-m-d H:i:s', 'class' => '' ) ); ?>
                         <span class="description"><a href="https://www.php.net/manual/en/datetime.formats.php"><?php _e( 'accepted formats', 'import-users-from-csv-with-meta' ); ?></a> <?php _e( 'If you have problems and you get some value exported as a date that should not be converted to date, please deactivate this option. If this option is not activated, datetime format will be ignored.', 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>
 				<tr id="acui_order_fields_alphabetically_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Order fields alphabetically', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<input type="checkbox" name="order_fields_alphabetically" value="1">
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'order_fields_alphabetically', 'current' => 0 ) ); ?>
 						<span class="description"><?php _e( "Order all columns alphabetically to check easier your data. First two columns won't be affected", 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>
                 <tr id="acui_order_fields_double_encapsulate_serialized_values" valign="top">
 					<th scope="row"><?php _e( 'Double encapsulate serialized values', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<input type="checkbox" name="double_encapsulate_serialized_values" value="1">
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'double_encapsulate_serialized_values', 'current' => 0 ) ); ?>                    
 						<span class="description"><?php _e( "Serialized values sometimes can have problems being displayed in Microsoft Excel or LibreOffice, we can double encapsulate this kind of data but you would not be able to import this data beucase instead of serialized data it would be managed as strings", 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>

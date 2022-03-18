@@ -1,6 +1,6 @@
 import { enableSubmitButton } from '../helpers/toggleSubmitButton';
 import loUniq from 'lodash/uniq';
-import { fieldID, formId } from './GPPopulateAnything';
+import type { fieldID, formId } from './GPPopulateAnything';
 
 const $ = window.jQuery;
 
@@ -14,6 +14,7 @@ export default class GPPALiveMergeTags {
 	public liveAttrsOnPage: string[] = [];
 	public currentMergeTagValues: ILiveMergeTagValues = {};
 
+	// eslint-disable-next-line no-shadow
 	constructor( formId: formId ) {
 		this.formId = formId;
 
@@ -32,6 +33,7 @@ export default class GPPALiveMergeTags {
 			'gform_reset_pre_conditional_logic_field_action',
 			(
 				reset: boolean,
+				// eslint-disable-next-line no-shadow
 				formId: number,
 				targetId: string,
 				defaultValues: string | string[],
@@ -279,6 +281,7 @@ export default class GPPALiveMergeTags {
 				return;
 			}
 
+			// eslint-disable-next-line eqeqeq
 			if ( targetFieldId != triggerInputId ) {
 				return;
 			}
@@ -294,13 +297,13 @@ export default class GPPALiveMergeTags {
 			 * Specify which element is used to indicate that a live merge tag is about to be replaced with
 			 * fresh data and which element will be replaced when that data is fetched.
 			 *
-			 * @param          array    targetMeta
+			 * @param                 array    targetMeta
 			 *
-			 *      @member {jQuery} $target      The element that should show the loading indicator and be replaced.
+			 *      @member {window.jQuery} $target      The element that should show the loading indicator and be replaced.
 			 *      @member string   loadingClass The class that will be applied to the target element.
 			 *
-			 * @param {jQuery} $element The live merge tag element. By default, the live merge tag's parent element will get the loading indicator.
-			 * @param          string   context  The context of the target meta. Will be 'loading' or 'replace'.
+			 * @param {window.jQuery} $element The live merge tag element. By default, the live merge tag's parent element will get the loading indicator.
+			 * @param                 string   context  The context of the target meta. Will be 'loading' or 'replace'.
 			 */
 			[ $target, loadingClass ] = window.gform.applyFilters(
 				'gppa_loading_target_meta',
@@ -314,7 +317,7 @@ export default class GPPALiveMergeTags {
 	}
 
 	replaceMergeTagValues = ( mergeTagValues: ILiveMergeTagValues ) => {
-		this.getRegisteredEls().each( ( _, el: Element ) => {
+		this.getRegisteredEls().each( ( _, el: HTMLElement ) => {
 			const $el = $( el );
 
 			if ( $el.data( 'gppa-live-merge-tag' ) ) {
@@ -342,8 +345,9 @@ export default class GPPALiveMergeTags {
 			return;
 		}
 
-		let value = mergeTagValues[ elementMergeTag ],
-			removeClass = 'gppa-loading gppa-empty',
+		const value = mergeTagValues[ elementMergeTag ];
+
+		let removeClass = 'gppa-loading gppa-empty',
 			$target = $el
 				.parents(
 					'label, .gfield_html, .ginput_container, .gfield_description'
@@ -365,7 +369,7 @@ export default class GPPALiveMergeTags {
 			$el.val( mergeTagValues[ elementMergeTag ] );
 		}
 
-		const isMergeTagSpecific = $target == $el,
+		const isMergeTagSpecific = $target === $el,
 			isEmpty = isMergeTagSpecific
 				? ! value && value !== 0
 				: ! $target.text(),
@@ -377,6 +381,11 @@ export default class GPPALiveMergeTags {
 	handleElementLiveAttr( $el: JQuery, mergeTagValues: ILiveMergeTagValues ) {
 		for ( const liveAttr of this.liveAttrsOnPage ) {
 			const elementMergeTag = $el.attr( liveAttr );
+
+			if ( ! elementMergeTag ) {
+				continue;
+			}
+
 			const attr = liveAttr.replace( /^data-gppa-live-merge-tag-/, '' );
 			let attrVal;
 			let canBeDecoupled = true;
@@ -413,8 +422,9 @@ export default class GPPALiveMergeTags {
 					break;
 			}
 
-			let value = mergeTagValues[ elementMergeTag ],
-				removeClass = 'gppa-loading',
+			const value = mergeTagValues[ elementMergeTag ];
+
+			let removeClass = 'gppa-loading',
 				$target = $el
 					.parents(
 						'label, .gfield_html, .ginput_container, .gfield_description'
@@ -448,7 +458,9 @@ export default class GPPALiveMergeTags {
 			 */
 			if (
 				elementMergeTag in this.currentMergeTagValues &&
+				// eslint-disable-next-line eqeqeq
 				attrVal != this.currentMergeTagValues[ elementMergeTag ] &&
+				// eslint-disable-next-line eqeqeq
 				attrVal != elementMergeTag &&
 				canBeDecoupled
 			) {

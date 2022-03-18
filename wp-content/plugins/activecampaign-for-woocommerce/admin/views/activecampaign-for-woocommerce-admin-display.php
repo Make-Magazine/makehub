@@ -6,13 +6,14 @@
  * This file is used to markup the admin-facing aspects of the plugin.
  *
  * @link       https://www.activecampaign.com/
- * @since      1.?
+ * @since      1.5.0
  *
  * @package    Activecampaign_For_Woocommerce
  * @subpackage Activecampaign_For_Woocommerce/admin/partials
  */
 
-$activecampaign_for_woocommerce_options    = $this->get_options();
+$activecampaign_for_woocommerce_options = $this->get_options();
+
 $activecampaign_for_woocommerce_configured = false;
 if ( isset( $activecampaign_for_woocommerce_options['api_url'], $activecampaign_for_woocommerce_options['api_key'] ) ) {
 	$activecampaign_for_woocommerce_configured = true;
@@ -353,7 +354,7 @@ $activecampaign_for_woocommerce_checkbox_display_options = [
 							<p>
 								<i>Resets the plugin without erasing abandoned carts, logs, or tables.</i>
 							</p>
-							<div class="columnbox">
+							<div>
 								<div id="activecampaign-run-clear-plugin-settings" class="button">
 									Clear All Settings
 								</div>
@@ -365,9 +366,30 @@ $activecampaign_for_woocommerce_checkbox_display_options = [
 								<?php esc_html_e( 'Repair Connection ID', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 							</h2>
 							<p>
+								<?php
+								esc_html_e( 'ActiveCampaign connection ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+								?>
+								<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_id'] ) ) : ?>
+									<?php esc_html_e( 'Error: No connection ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+								<?php else : ?>
+									<?php echo esc_html( $this->get_storage()['connection_id'] ); ?>
+								<?php endif; ?>
+							</p>
+							<p>
+								<?php
+								esc_html_e( 'ActiveCampaign connection option ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+								?>
+								<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_option_id'] ) ) : ?>
+									<?php esc_html_e( 'Error: No connection option ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+								<?php else : ?>
+									<?php echo esc_html( $this->get_storage()['connection_option_id'] ); ?>
+								<?php endif; ?>
+							</p>
+							<hr/>
+							<p>
 								<?php esc_html_e( 'This button should only be used if you are facing issues with orders not properly sending to ActiveCampaign. Please reach out to support before trying this option.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 							</p>
-							<div class="columnbox">
+							<div>
 								<div id="activecampaign-run-fix-connection" class="button">
 									Repair Connection IDs
 								</div>

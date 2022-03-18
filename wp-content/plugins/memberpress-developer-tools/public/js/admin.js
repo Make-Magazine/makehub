@@ -273,4 +273,38 @@ jQuery(document).ready(function($) {
       touchstart: true
     }
   });
+
+
+  $('.mpdt-regenerate-webhook').on('click', function(e) {
+    e.preventDefault();
+    let confirmation = confirm('Are you sure? If you proceed, your existing webhook key will no longer work and all applications using it will need to be updated with the newly regenerated key.');
+    if(confirmation) {
+      let args = {
+        'action': 'mpdt_regen_webhook_key',
+        'regen_webhook_key_nonce': MPDT.regen_webhook_key_nonce,
+      };
+      $.get(ajaxurl, args, function(response) {
+        let tooltip = $('.mpdt-regenerate-webhook').tooltipster('instance');
+        tooltip.content('Webhook Key Generated!')
+        .one('after', function(){
+          tooltip.content('Regenerate Webhook Key');
+        });
+        $('#mpdt_webhook_key').val(response.data.webhook_key);
+      });
+    }
+  });
+
+  $('.mpdt-regenerate-webhook').tooltipster({
+    theme: 'tooltipster-borderless',
+    content: 'Regenerate Webhook Key',
+    trigger: 'custom',
+    triggerClose: {
+      mouseleave: true,
+      touchleave: true
+    },
+    triggerOpen: {
+      mouseenter: true,
+      touchstart: true
+    }
+  });
 });

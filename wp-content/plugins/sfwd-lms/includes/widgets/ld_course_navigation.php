@@ -168,7 +168,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 			$show_lesson_quizzes = isset( $instance['show_lesson_quizzes'] ) ? (bool) $instance['show_lesson_quizzes'] : false;
 			$show_topic_quizzes  = isset( $instance['show_topic_quizzes'] ) ? (bool) $instance['show_topic_quizzes'] : false;
 			$show_course_quizzes = isset( $instance['show_course_quizzes'] ) ? (bool) $instance['show_course_quizzes'] : false;
-
+			learndash_replace_widgets_alert();
 			?>
 				<p>
 					<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>

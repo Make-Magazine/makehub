@@ -62,7 +62,7 @@ if ( class_exists( 'WP_Background_Process' ) ) :
 
 			parent::complete();
 
-			do_action( 'astra_sites_image_import_complete' );
+			do_action( 'astra_sites_single_page_batch_process_complete' );
 
 		}
 

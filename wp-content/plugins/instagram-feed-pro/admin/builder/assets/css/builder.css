@@ -2156,8 +2156,10 @@ Source Screen
 }
 .sbi-fd-lst-bulk-ctn{
     margin-bottom: 8px;
+    /*
     display: flex;
     align-items: center;
+    */
 }
 .sbi-fd-lst-pagination-ctn{
     float: right;

@@ -59,35 +59,37 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 	 *
 	 * @return Ecom_Order
 	 */
-	public function from_woocommerce( WC_Cart $cart, WC_Customer $customer ) {
+	public function from_woocommerce( $cart, $customer ) {
 		$order  = new Ecom_Order();
 		$logger = new Logger();
 
 		try {
-			$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+			if ( method_exists( $cart, 'get_cart_contents' ) && ! $cart->is_empty() && method_exists( $customer, 'get_email' ) ) {
+				$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
-			$order->set_id( $this->get_ac_id() );
-			$abc         = new Abandoned_Cart_Utilities();
-			$external_id = $abc->generate_externalcheckoutid(
-				wc()->session->get_customer_id(),
-				$customer->get_email()
-			);
-			$order->set_externalcheckoutid( $external_id );
-			$order->set_source( '1' );
-			$order->set_email( $customer->get_email() );
-			$order->set_total_price( $this->get_cart_total( $cart ) );
-			$order->set_currency( $this->get_woocommerce_currency() );
-			$order->set_connectionid( $this->admin->get_storage()['connection_id'] );
-			$order->set_customerid( $this->get_ac_customer_id() );
-			$order->set_order_date( $date->format( DATE_ATOM ) );
-			$order->set_order_url( wc_get_cart_url() );
+				$order->set_id( $this->get_ac_id() );
+				$abc         = new Abandoned_Cart_Utilities();
+				$external_id = $abc->generate_externalcheckoutid(
+					wc()->session->get_customer_id(),
+					$customer->get_email()
+				);
+				$order->set_externalcheckoutid( $external_id );
+				$order->set_source( '1' );
+				$order->set_email( $customer->get_email() );
+				$order->set_total_price( $this->get_cart_total( $cart ) );
+				$order->set_currency( $this->get_woocommerce_currency() );
+				$order->set_connectionid( $this->admin->get_storage()['connection_id'] );
+				$order->set_customerid( $this->get_ac_customer_id() );
+				$order->set_order_date( $date->format( DATE_ATOM ) );
+				$order->set_order_url( wc_get_cart_url() );
+			}
 		} catch ( Throwable $t ) {
 			$logger->warning(
 				'Order Factory from_woocommerce: There was an error creating the order.',
 				[
 					'message'       => $t->getMessage(),
-					'email'         => $customer->get_email(),
-					'cart_contents' => $cart->get_cart_contents(),
+					'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
+					'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -104,8 +106,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 				$logger->warning(
 					'Order Factory: Could not create product from cart contents.',
 					[
-						'email'         => $customer->get_email(),
-						'cart_contents' => $cart->get_cart_contents(),
+						'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
+						'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					]
 				);
 			}
@@ -114,8 +116,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 				'Order Factory: Could not create product from cart contents.',
 				[
 					'message'       => $t->getMessage(),
-					'email'         => $customer->get_email(),
-					'cart_contents' => $cart->get_cart_contents(),
+					'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
+					'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -161,7 +163,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 	 *
 	 * @return int
 	 */
-	private function get_cart_total( WC_Cart $cart ) {
+	private function get_cart_total( $cart ) {
 		$totals = new WC_Cart_Totals( $cart );
 
 		return $totals->get_total( 'total', true );

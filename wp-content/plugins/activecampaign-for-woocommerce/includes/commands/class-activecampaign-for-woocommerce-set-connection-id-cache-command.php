@@ -16,8 +16,7 @@ use Activecampaign_For_Woocommerce_Connection_Repository as Repository;
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
 use Activecampaign_For_Woocommerce_Resource_Not_Found_Exception as Resource_Not_Found;
-
-use AcVendor\Psr\Log\LoggerInterface;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The Set Connection Id Cache Command Class.
@@ -47,23 +46,28 @@ class Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command implements 
 	/**
 	 * The logger interface.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
 	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command constructor.
 	 *
-	 * @param Admin                $admin The admin singleton instance.
-	 * @param Repository           $repository The connection repository instance.
-	 * @param LoggerInterface|null $logger The Logger interface.
+	 * @param Admin       $admin The admin singleton instance.
+	 * @param Repository  $repository The connection repository instance.
+	 * @param Logger|null $logger The Logger interface.
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct( Admin $admin, Repository $repository, LoggerInterface $logger = null ) {
+	public function __construct( Admin $admin, Repository $repository, Logger $logger = null ) {
 		$this->repository = $repository;
 		$this->admin      = $admin;
-		$this->logger     = $logger;
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
+
 	}
 
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter

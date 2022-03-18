@@ -29,7 +29,19 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return array
 	 */
 	public function create_products_from_cart_contents( $cart_contents ) {
-		return array_map( [ $this, 'product_from_cart_content' ], $cart_contents );
+		try {
+			return array_map( [ $this, 'product_from_cart_content' ], $cart_contents );
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->error(
+				'Product factory could not create products from cart contents.',
+				[
+					'message'  => $t->getMessage(),
+					'function' => 'create_products_from_cart_contents',
+					'trace'    => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
 	}
 
 	/**
@@ -40,9 +52,27 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return Activecampaign_For_Woocommerce_Ecom_Product
 	 */
 	public function product_from_cart_content( $content ) {
-		$ecom_product = $this->convert_wc_product_to_ecom_product( $content['data'] );
-		$ecom_product->set_quantity( $content['quantity'] );
-		return $ecom_product;
+		try {
+			if ( $content['data'] instanceof WC_Product ) {
+				$ecom_product = $this->convert_wc_product_to_ecom_product( $content['data'] );
+				$ecom_product->set_quantity( $content['quantity'] );
+
+				return $ecom_product;
+			}
+
+			return null;
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->error(
+				'Product factory could not create products from cart contents.',
+				[
+					'message'  => $t->getMessage(),
+					'function' => 'product_from_cart_content',
+					'trace'    => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+			return null;
+		}
 	}
 
 	/**
@@ -50,46 +80,83 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 *
 	 * @param WC_Product $product The WC Product.
 	 *
-	 * @return Activecampaign_For_Woocommerce_Ecom_Product
+	 * @return Activecampaign_For_Woocommerce_Ecom_Product|null
 	 */
-	private function convert_wc_product_to_ecom_product( WC_Product $product ) {
-		/**
-		 * An instance of the Ecom Product class.
-		 *
-		 * @var Activecampaign_For_Woocommerce_Ecom_Product $ecom_product
-		 */
-		$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
+	private function convert_wc_product_to_ecom_product( $product ) {
+		try {
+			if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+				$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
 
-		$ecom_product->set_externalid( $product->get_id() );
-		$ecom_product->set_name( $product->get_name() );
-		$ecom_product->set_price( $product->get_price() * 100 );
-		$ecom_product->set_description( $product->get_description() );
-		$ecom_product->set_category( $this->get_product_all_categories( $product ) );
-		$ecom_product->set_image_url( $this->get_product_image_url( $product ) );
-		$ecom_product->set_product_url( $this->get_product_url( $product ) );
-		$ecom_product->set_sku( $this->get_sku( $product ) );
+				$ecom_product->set_externalid( $product->get_id() );
+				$ecom_product->set_name( $product->get_name() );
+				$ecom_product->set_price( $product->get_price() * 100 );
+				$ecom_product->set_category( $this->get_product_all_categories( $product ) );
+				$ecom_product->set_image_url( $this->get_product_image_url( $product ) );
+				$ecom_product->set_product_url( $this->get_product_url( $product ) );
+				$ecom_product->set_sku( $this->get_sku( $product ) );
 
-		return $ecom_product;
+				if ( ! empty( $product->get_short_description() ) ) {
+								$description = $product->get_short_description();
+				} else {
+					$description = $product->get_description();
+				}
+
+				$ecom_product->set_description( $this->clean_description( $description ) );
+
+				return $ecom_product;
+			}
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->error(
+				'Product factory could not convert a WC_Product to an ecom_product.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+
+		return null;
 	}
 
 	/**
-	 * Parse the results of the all of a product's categories and return the first one
+	 * Cleans a description field by removing tags and shortening the number of words to a max amount.
 	 *
-	 * @param WC_Product $product The WC Product.
+	 * @param string $description The description.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	private function get_product_first_category( WC_Product $product ) {
-		$terms = get_the_terms( $product->get_id(), 'product_cat' );
+	public function clean_description( $description ) {
+		$logger = new Logger();
 
-		if ( ! is_array( $terms ) ) {
-			return null;
+		try {
+			$plain_description = str_replace( array( "\r", "\n", '&nbsp;' ), ' ', $description );
+			$plain_description = trim( wp_strip_all_tags( $plain_description, false ) );
+			$plain_description = preg_replace( '/\s+/', ' ', $plain_description );
+			$wrap_description  = wordwrap( $plain_description, 300 );
+			$description_arr   = explode( "\n", $wrap_description );
+			if ( isset( $description_arr[0] ) ) {
+				$fin_description = $description_arr[0] . '...';
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an issue cleaning the description field.',
+				[
+					'message'     => $t->getMessage(),
+					'description' => $description,
+				]
+			);
 		}
 
-		$term = array_pop( $terms );
-		if ( $term instanceof WP_Term ) {
-			return $term->name;
+		if ( ! empty( $fin_description ) ) {
+			return $fin_description;
 		}
+
+		if ( ! empty( $plain_description ) ) {
+			return $plain_description;
+		}
+
+		return $description;
 	}
 
 	/**
@@ -99,45 +166,47 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 *
 	 * @return string|null
 	 */
-	private function get_product_all_categories( WC_Product $product ) {
-		$logger   = new Logger();
-		$terms    = get_the_terms( $product->get_id(), 'product_cat' );
-		$cat_list = [];
-		try {
-			// go through the categories and make a named list
-			if ( ! empty( $terms ) && is_array( $terms ) ) {
-				foreach ( $terms as $term ) {
-					$product_cat_id   = $term->term_id;
-					$product_cat_name = $term->name;
-					if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
-						$cat_list[] = $product_cat_name;
-					} else {
-						$logger->warning(
-							'A product category attached to this product does not have a valid category and/or name.',
-							[
-								'product_id' => $product->get_id(),
-								'term_id'    => $term->term_id,
-								'term_name'  => $term->name,
-							]
-						);
+	private function get_product_all_categories( $product ) {
+		$logger = new Logger();
+		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			$terms    = get_the_terms( $product->get_id(), 'product_cat' );
+			$cat_list = [];
+			try {
+				// go through the categories and make a named list
+				if ( ! empty( $terms ) && is_array( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$product_cat_id   = $term->term_id;
+						$product_cat_name = $term->name;
+						if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
+							$cat_list[] = $product_cat_name;
+						} else {
+							$logger->warning(
+								'A product category attached to this product does not have a valid category and/or name.',
+								[
+									'product_id' => $product->get_id(),
+									'term_id'    => $term->term_id,
+									'term_name'  => $term->name,
+								]
+							);
+						}
 					}
 				}
+			} catch ( Throwable $t ) {
+				$logger->warning(
+					'There was an error getting all product categories.',
+					[
+						'terms'          => $terms,
+						'product_id'     => $product->get_id(),
+						'trace'          => $logger->clean_trace( $t->getTrace() ),
+						'thrown_message' => $t->getMessage(),
+					]
+				);
 			}
-		} catch ( Throwable $t ) {
-			$logger->warning(
-				'There was an error getting all product categories.',
-				[
-					'terms'          => $terms,
-					'product_id'     => $product->get_id(),
-					'trace'          => $logger->clean_trace( $t->getTrace() ),
-					'thrown_message' => $t->getMessage(),
-				]
-			);
-		}
 
-		if ( ! empty( $cat_list ) ) {
-			// Convert to a comma separated string
-			return implode( ', ', $cat_list );
+			if ( ! empty( $cat_list ) ) {
+				// Convert to a comma separated string
+				return implode( ', ', $cat_list );
+			}
 		}
 
 		return null;
@@ -149,18 +218,21 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @param WC_Product $product The WC Product.
 	 * @return string|null
 	 */
-	private function get_product_image_url( WC_Product $product ) {
-		$post         = get_post( $product->get_id() );
-		$thumbnail_id = get_post_thumbnail_id( $post );
-		$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
+	private function get_product_image_url( $product ) {
+		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			$post         = get_post( $product->get_id() );
+			$thumbnail_id = get_post_thumbnail_id( $post );
+			$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
 
-		if ( ! is_array( $image_src ) ) {
-			// Right now this is null by default, we could go looking for a fallback.
-			return null;
+			if ( ! is_array( $image_src ) ) {
+				// Right now this is null by default, we could go looking for a fallback.
+				return null;
+			}
+
+			// The first element is the actual URL
+			return $image_src[0];
 		}
-
-		// The first element is the actual URL
-		return $image_src[0];
+		return null;
 	}
 
 
@@ -170,15 +242,18 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @param  WC_Product $product The WC Product.
 	 * @return false|string|null
 	 */
-	private function get_product_url( WC_Product $product ) {
-		$product_id = get_post( $product->get_id() );
-		$url        = get_permalink( $product_id );
+	private function get_product_url( $product ) {
+		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			$product_id = get_post( $product->get_id() );
+			$url        = get_permalink( $product_id );
 
-		if ( is_null( $url ) || empty( $url ) ) {
-			return null;
+			if ( is_null( $url ) || empty( $url ) ) {
+				return null;
+			}
+
+			return $url;
 		}
-
-		return $url;
+		return null;
 	}
 
 	/**
@@ -187,13 +262,16 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @param WC_Product $product The WC Product.
 	 * @return string|null
 	 */
-	private function get_sku( WC_Product $product ) {
-		$sku = $product->get_sku();
+	private function get_sku( $product ) {
+		if ( method_exists( $product, 'get_sku' ) && ! empty( $product->get_sku() ) ) {
+			$sku = $product->get_sku();
 
-		if ( is_null( $sku ) || empty( $sku ) ) {
-			return null;
+			if ( is_null( $sku ) || empty( $sku ) ) {
+				return null;
+			}
+
+			return $sku;
 		}
-
-		return $sku;
+		return null;
 	}
 }

@@ -4,8 +4,8 @@ Contributors: smashballoon
 Support Website: http://smashballoon/social-wall/
 Tags: Social Media, Instagram, Twitter, Facebook, YouTube
 Requires at least: 3.4
-Tested up to: 5.8
-Stable tag: 1.0.4
+Tested up to: 5.9
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,11 +78,18 @@ You can embed your social wall feed directly into a template file by using the W
 
 = Will Social Wall work with W3 Total Cache or other caching plugins? =
 
-The Social WAll plugin should work in compatibility with most, if not all, caching plugins, but you may need to tweak the settings in order to allow the social media feeds to update successfully and display your latest posts.  If you are experiencing problems with your social media feeds not updating then try disabling either 'Page Caching' or 'Object Caching' in W3 Total Cache (or any other similar caching plugin) to see whether that fixes the problem.
+The Social Wall plugin should work in compatibility with most, if not all, caching plugins, but you may need to tweak the settings in order to allow the social media feeds to update successfully and display your latest posts.  If you are experiencing problems with your social media feeds not updating then try disabling either 'Page Caching' or 'Object Caching' in W3 Total Cache (or any other similar caching plugin) to see whether that fixes the problem.
 
 == Screenshots ==
 
 == Changelog ==
+= 1.0.6 =
+* Fix: Updated the shortcode generator on the "Configure" tab to work with feeds created in version 6.0 of Instagram Feed.
+
+= 1.0.5 =
+* Fix: Instagram Feed accounts only being used with Social Wall would be removed after a period of time.
+* Fix: Fixed inability to disable some advanced settings once they were enabled.
+
 = 1.0.4 =
 * Fix: Added compatibility with version 4.0 of the Custom Facebook Feed plugin.
 

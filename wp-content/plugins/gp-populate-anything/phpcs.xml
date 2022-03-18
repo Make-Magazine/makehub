@@ -17,11 +17,16 @@
 	<!-- Handled by ESLint -->
 	<exclude-pattern>*.js</exclude-pattern>
 
+	<!-- Run against the PHPCompatibility ruleset -->
+	<rule ref="PHPCompatibility"/>
+	<config name="testVersion" value="5.6-"/>
+
 	<!-- Turns on the WordPress Standard -->
 	<rule ref="WordPress-Core">
 		<exclude name="WordPress.PHP.YodaConditions.NotYoda" />
 		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
 		<exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />

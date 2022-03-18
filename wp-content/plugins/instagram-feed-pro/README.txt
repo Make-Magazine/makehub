@@ -3,8 +3,8 @@ Contributors: smashballoon
 Support Website: https://smashballoon/instagram-feed/
 Requires at least: 4.1
 Tested up to: 5.9
-Stable tag: 6.0.3
-Version: 6.0.3
+Stable tag: 6.0.4
+Version: 6.0.4
 License: Non-distributable, Not for resale
 
 Display beautifully clean, customizable, and responsive feeds from multiple Instagram accounts
@@ -40,6 +40,18 @@ Display Instagram photos from any non-private Instagram accounts, either in the 
 5. You can display multiple Instagram feeds by using shortcode options, for example: `[instagram-feed id=YOUR_USER_ID_HERE cols=3 width=50 widthunit=%]`
 
 == Changelog ==
+= 6.0.4 =
+* Tweak: After clearing the cache for a hashtag feed, the plugin will now also try to get older posts for that feed using a different API method.
+* Tweak: Removed sorting by "likes" for hashtag feeds as sorting by likes is unreliable for this feed type due to limitations of the Instagram API.
+* Tweak: You can now have up to 10 columns for feeds displayed on mobile devices.
+* Fix: Switching the source for a feed would sometimes result in posts from the previous source being added to the feed.
+* Fix: Fixed an issue where our Social Wall plugin was not showing all available Instagram sources.
+* Fix: Pagination for showing more than 20 feeds was not displaying on the "All Feeds" page.
+* Fix: An error would not display if a connected business account had reached the 30 day limit for new hashtag feeds.
+* Fix: Backup method of retrieving video thumbnails was not working in all circumstances.
+* Fix: Dashboard notices were displaying when customizing a feed.
+* Fix: Added support for the shortcode "mediavine=true" to trigger our Media Vine integration features.
+
 = 6.0.3 =
 * Tweak: Updated our logo throughout the plugin to match our new [website](https://smashballoon.com/).
 * Tweak: Changed how the hover color for follow and load more buttons is applied to prevent theme conflicts.

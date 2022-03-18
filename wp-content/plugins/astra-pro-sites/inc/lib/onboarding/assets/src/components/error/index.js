@@ -152,7 +152,7 @@ const ErrorScreen = () => {
 						</p>
 					) ) }
 			</div>
-			{ importErrorMessages.tryAgain && tryAgainCount < 4 && (
+			{ importErrorMessages.tryAgain && tryAgainCount < 3 && (
 				<Button className="ist-button" after onClick={ tryAgain }>
 					{ __( 'Try Importing Again', 'astra-sites' ) }
 				</Button>

@@ -39,6 +39,9 @@ class Activecampaign_For_Woocommerce_Connection_Option_Repository implements Rep
 	 */
 	const RESOURCE_NAME_PLURAL = 'connectionOptions';
 
+	const ENDPOINT_NAME        = 'connectionOption';
+	const ENDPOINT_NAME_PLURAL = 'connectionOptions';
+
 	/**
 	 * The API client.
 	 *

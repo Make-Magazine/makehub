@@ -150,7 +150,7 @@ class BB_Access_Control_S2_Member extends BB_Access_Control_Abstract {
 						$has_access = true;
 						break;
 					}
-					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$has_access = true;
 						break;
 					}
@@ -160,7 +160,7 @@ class BB_Access_Control_S2_Member extends BB_Access_Control_Abstract {
 							break;
 						}
 					}
-					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						foreach ( wp_list_pluck( self::get_level_lists(), 'id' ) as $level ) {
 							if ( user_is( $user_id, 's2member_level' . $level ) ) {
 								$has_access = true;

@@ -14,8 +14,12 @@
 
 $activecampaign_for_woocommerce_limit = 40;
 
-if ( isset( $_REQUEST['offset'] ) ) {
-	$activecampaign_for_woocommerce_offset = $_REQUEST['offset'];
+if (
+		isset( $_REQUEST['activecampaign_for_woocommerce_abandoned_cart_nonce_field'] )
+		&& isset( $_GET['offset'] )
+		&& wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_abandoned_cart_nonce_field'], 'activecampaign_for_woocommerce_abandoned_form' )
+) {
+	$activecampaign_for_woocommerce_offset = $_GET['offset'];
 } else {
 	$activecampaign_for_woocommerce_offset = 0;
 }
@@ -28,6 +32,8 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 	$activecampaign_for_woocommerce_pages = ceil( $activecampaign_for_woocommerce_total / $activecampaign_for_woocommerce_limit );
 }
 
+$activecampaign_for_woocommerce_page_nonce = wp_create_nonce( 'activecampaign_for_woocommerce_abandoned_form' );
+
 /**
  * Parses an array from abandoned cart to display decently.
  *
@@ -36,6 +42,7 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
  * @return string
  */
 function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocommerce_array_data ) {
+	if ( is_array( $activecampaign_for_woocommerce_array_data ) ) {
 		return implode(
 			",\r\n",
 			array_map(
@@ -54,66 +61,11 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 				array_values( $activecampaign_for_woocommerce_array_data )
 			)
 		);
+	} else {
+		return null;
+	}
 }
 ?>
-<style>
-	button.button.ac-spinner {
-		background-image: url(images/spinner.gif) !important;
-		background-size: 20px 20px;
-		opacity: .7;
-		background-repeat: no-repeat !important;
-		background-position: center !important;
-	}
-	button.button.success {
-		border-color: #008a20;
-		color: #008a20;
-	}
-	button.button.fail {
-		border-color: #8a151f;
-		color: #8a151f;
-	}
-	.activecampaign-more-data{
-		display:none;
-	}
-	.abandoned-cart-detail-container{
-		display: block;
-		position: fixed;
-		top: 20%;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display:none;
-		box-sizing: border-box;
-	}
-	.abandoned-cart-details-close{
-		width:100%;
-		text-align: right;
-		display: block;
-		background: #eee;
-		padding: 15px;
-		box-sizing: border-box;
-	}
-	.abandoned-cart-detail-modal{
-		width: 65%;
-		height: 50%;
-		margin: 0 auto;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		position: relative;
-		-webkit-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.7);
-		box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.7);
-		box-sizing: border-box;
-		overflow: hidden;
-	}
-	.abandoned-cart-details{
-		box-sizing: border-box;
-		width: 100%;
-		padding: 20px;
-		height: calc(100% - 50px);
-		overflow: auto;
-		background: #fff;
-	}
-</style>
 <?php settings_errors(); ?>
 <div id="activecampaign-for-woocommerce-abandoned-cart">
 	<?php
@@ -158,9 +110,19 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 						<?php if ( $activecampaign_for_woocommerce_c === $activecampaign_for_woocommerce_offset + 1 ) : ?>
 							<?php echo esc_html( $activecampaign_for_woocommerce_c ); ?>
 						<?php else : ?>
-							<a href="<?php echo esc_html( add_query_arg( 'offset', $activecampaign_for_woocommerce_c - 1, wc_get_current_admin_url() ) ); ?>">
-								<?php echo esc_html( $activecampaign_for_woocommerce_c ); ?>
-							</a>
+							<a href="
+							<?php
+							echo esc_html(
+								add_query_arg(
+									[
+										'offset' => $activecampaign_for_woocommerce_c - 1,
+										'activecampaign_for_woocommerce_abandoned_cart_nonce_field' => $activecampaign_for_woocommerce_page_nonce,
+									],
+									wc_get_current_admin_url()
+								)
+							);
+							?>
+							"><?php echo esc_html( $activecampaign_for_woocommerce_c ); ?></a>
 						<?php endif; ?>
 					<?php endfor; ?>
 				</div>
@@ -169,7 +131,6 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 				<?php
 				wp_nonce_field( 'activecampaign_for_woocommerce_abandoned_form', 'activecampaign_for_woocommerce_settings_nonce_field' );
 				?>
-
 				<table class="wc_status_table widefat status_activecampaign" cellspacing="0">
 					<thead>
 					<tr>
@@ -262,13 +223,17 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 											</div>
 											<?php
 											$activecampaign_for_woocommerce_array_data = json_decode( $activecampaign_for_woocommerce_ab_cart->customer_ref_json, true );
-											echo nl2br( esc_html( activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocommerce_array_data ) ) );
+											if ( is_array( $activecampaign_for_woocommerce_array_data ) ) {
+												echo nl2br( esc_html( activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocommerce_array_data ) ) );
+											}
 											?>
 											<hr/>
 											<h2>Cart details</h2>
 											<?php
 											$activecampaign_for_woocommerce_array_data = json_decode( $activecampaign_for_woocommerce_ab_cart->cart_ref_json, true );
-											echo nl2br( esc_html( activecampaign_for_woocommerce_parse_array( array_values( $activecampaign_for_woocommerce_array_data )[0] ) ) );
+											if ( is_array( $activecampaign_for_woocommerce_array_data ) ) {
+												echo nl2br( esc_html( activecampaign_for_woocommerce_parse_array( array_values( $activecampaign_for_woocommerce_array_data )[0] ) ) );
+											}
 											?>
 										</div>
 										<button class="activecampaign-sync-abandoned-cart button">

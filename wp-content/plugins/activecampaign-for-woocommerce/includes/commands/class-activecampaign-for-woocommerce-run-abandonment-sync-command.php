@@ -33,7 +33,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	/**
 	 * The logger interface.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
 	private $logger;
 
@@ -102,13 +102,16 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	Customer_Utilities $customer_utilities
 	) {
 		$this->admin               = $admin;
-		$this->logger              = $logger;
 		$this->customer_repository = $customer_repository;
 		$this->order_repository    = $order_repository;
 		$this->abandoned_cart_util = $abandoned_cart_util;
 		$this->order_utilities     = $order_utilities;
 		$this->customer_utilities  = $customer_utilities;
-
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	/**
@@ -116,7 +119,9 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	 * This initializes via Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command
 	 */
 	public function abandoned_cart_hourly_task() {
-		$this->logger = $this->logger ?: new Logger();
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 
 		// Check for abandoned carts
 		$abandoned_carts = $this->get_all_abandoned_carts_from_table();
@@ -131,7 +136,9 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	 * The manual run of the hourly task
 	 */
 	public function abandoned_cart_manual_run() {
-		$this->logger = $this->logger ?: new Logger();
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 
 		// Check for abandoned carts
 		$abandoned_carts = $this->get_all_abandoned_carts_from_table();
@@ -163,7 +170,12 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	 * @param     int $id     The row id.
 	 */
 	public function force_sync_row( $id ) {
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
+
 		$abandoned_cart = $this->abandoned_cart_util->get_abandoned_cart_by_row_id( $id );
+
 		if ( ! empty( $abandoned_cart ) ) {
 			$this->process_abandoned_carts_per_record( $abandoned_cart );
 		} else {
@@ -198,12 +210,13 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 		}
 
 		$expire_datetime = new DateTime( 'now -' . $expire_time . ' minutes', new DateTimeZone( 'UTC' ) );
+		$this->clean_old_abandoned_carts();
 
 		try {
 			// Get the expired carts from our table
 			$abandoned_carts = $wpdb->get_results(
 			// phpcs:disable
-				$wpdb->prepare( 'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid 
+				$wpdb->prepare( 'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid, last_access_time 
 					FROM
 						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
 					WHERE
@@ -253,14 +266,13 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 		global $wpdb;
 
 		foreach ( $abandoned_carts as $ab_order ) {
-			// parse the values
-			$synced_to_ac                          = false;
-			$customer                              = json_decode( $ab_order->customer_ref_json, false );
-			$cart                                  = json_decode( $ab_order->cart_ref_json, false );
-			$cart_totals                           = json_decode( $ab_order->cart_totals_ref_json, false );
-			$removed_cart_contents                 = json_decode( $ab_order->removed_cart_contents_ref_json, false );
+			// parse the values for each cart
+			$synced_to_ac = false;
+			$customer     = json_decode( $ab_order->customer_ref_json, false );
+			$cart         = json_decode( $ab_order->cart_ref_json, false );
+			$cart_totals  = json_decode( $ab_order->cart_totals_ref_json, false );
+			// $removed_cart_contents                 = json_decode( $ab_order->removed_cart_contents_ref_json, false );
 			$activecampaignfwc_order_external_uuid = $ab_order->activecampaignfwc_order_external_uuid;
-			$customer->activecampaignfwc_order_external_uuid = $activecampaignfwc_order_external_uuid;
 
 			$item_count_total = 0;
 			$products         = [];
@@ -282,7 +294,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				break;
 			}
 
-			// get the products set up
+			// Get the products set up for the order/cart
 			foreach ( $cart as $product ) {
 				try {
 					// One of these two methods will get product_id
@@ -300,11 +312,18 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$ecom_product->set_externalid( $wc_product->get_id() );
 					$ecom_product->set_name( $wc_product->get_name() );
 					$ecom_product->set_price( Money::of( wc_format_decimal( $wc_product->get_price(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-					$ecom_product->set_description( $wc_product->get_description() );
 					$ecom_product->set_category( $this->order_utilities->get_product_category( $wc_product ) );
 					$ecom_product->set_image_url( $this->order_utilities->get_product_image_url( $wc_product ) );
 					$ecom_product->set_sku( $wc_product->get_sku() );
 					$ecom_product->set_quantity( $product->quantity );
+
+					if ( ! empty( $wc_product->get_short_description() ) ) {
+						$description = $wc_product->get_short_description();
+					} else {
+						$description = $wc_product->get_description();
+					}
+
+					$ecom_product->set_description( $this->order_utilities->clean_description( $description ) );
 
 					$products[] = $ecom_product;
 				} catch ( Throwable $t ) {
@@ -319,94 +338,57 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				}
 			}
 
-			try {
-				$wc_cart = new WC_Cart();
-				$wc_cart->set_cart_contents( $cart );
-				$wc_cart->set_removed_cart_contents( $removed_cart_contents );
-				$wc_cart->set_totals( $cart_totals );
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Abandonment Sync: Failed to build the cart: ',
-					[
-						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-						'cart'              => $cart,
-					]
-				);
+			$wc_order = $this->abandoned_cart_util->check_for_valid_order( $customer, $activecampaignfwc_order_external_uuid );
+
+			// This is a valid order, do not send as abandoned and try to send as a confirmed order
+			if ( $wc_order instanceof WC_Order ) {
+				$order_ac = $this->send_as_valid_order( $wc_order, $ab_order, $customer_ac );
+				try {
+					if ( empty( $order_ac->get_id() ) && empty( $order_ac->id ) ) {
+						try {
+							$this->logger->error(
+								'There was an issue sending the abandoned cart record as a valid order to ActiveCampaign.',
+								[
+									'order_ac' => $order_ac->serialize_to_array(),
+								]
+							);
+						} catch ( Throwable $t ) {
+							$this->logger->error(
+								'Failed to serialize an abandoned cart record for the log dump.',
+								[
+									'message' => $t,
+								]
+							);
+						}
+					}
+				} catch ( Throwable $t ) {
+					$this->logger->warning(
+						'There was an issue trying to log the abandoned cart information.',
+						[
+							'message' => $t,
+						]
+					);
+				}
+
+				continue;
 			}
 
-			try {
-				// Check if we have a valid order that may have failed to send.
-				$externalcheckout_id = $this->abandoned_cart_util->generate_externalcheckoutid( $customer->id, $customer->email, $activecampaignfwc_order_external_uuid );
-				$wc_post_id          = $this->abandoned_cart_util->find_existing_wc_order( $externalcheckout_id );
-				$wc_order            = wc_get_order( $wc_post_id );
-
-				// We have a valid order, do not send this as abandoned. Create an order instead.
-				if ( $wc_order && isset( $wc_post_id ) && ! empty( $wc_post_id ) && $wc_order->get_id() ) {
-					$ecom_order = $this->order_utilities->setup_woocommerce_order_from_admin( $wc_order );
-					$ecom_order = $this->order_utilities->build_products_for_order( $wc_order, $ecom_order );
-					$ecom_order = $this->customer_utilities->add_customer_to_order( $wc_order, $ecom_order, true );
-
-					if ( ! $ecom_order->get_customerid() ) {
-						$ecom_order->set_customerid( $customer_ac->get_id() );
-					}
-
-					if ( isset( $ecom_order ) && $ecom_order->get_externalid() ) {
-						$this->logger->debug(
-							'Abandonement Sync: Order was found but may not have been sent to ActiveCampaign',
-							[
-								'order_number' => $ecom_order->get_order_number(),
-							]
-						);
-
-						$order_ac = $this->order_repository->find_by_externalid( $ecom_order->get_id() );
-
-						if ( isset( $order_ac ) && $order_ac->get_id() ) {
-							$this->logger->info(
-								'Abandoned cart: Found a valid order in hosted. Ignore this abandoned cart and continue.',
-								[
-									'externalid'   => $ecom_order->get_externalid(),
-									'order_number' => $ecom_order->get_order_number(),
-									'hosted_id'    => $order_ac->get_id(),
-								]
-							);
-						} else {
-							$this->logger->info(
-								'Abandoned cart: This order did not get synced to AC but a valid order was discovered. Invalidate abandoned cart and sync this order to Hosted.',
-								[
-									'externalid'   => $ecom_order->get_externalid(),
-									'order_number' => $ecom_order->get_order_number(),
-								]
-							);
-
-							$order_ac = $this->order_repository->create( $ecom_order );
-						}
-
-						if ( isset( $order_ac ) && $order_ac->get_id() ) {
-							$this->order_utilities->update_last_synced( $wc_order->get_id() );
-						}
-
-						$this->abandoned_cart_util->delete_abandoned_cart_by_filter( 'id', $ab_order->id );
-					}
-
-					// This was a valid order, nothing else to do so skip the rest
-					break;
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Abandonment Sync: There was an error trying to validate if this is an existing order. Do not process.',
+			// If this is a WooCommerce order, no matter what do not send an abandoned cart, continue
+			if ( $wc_order ) {
+				$this->logger->warning(
+					'A valid WooCommerce order was discovered in the abandoned cart data.',
 					[
-						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $this->logger->clean_trace( $t->getTrace() ),
+						'wc_order' => $wc_order,
 					]
 				);
-				break;
+
+				continue;
 			}
 
 			// Step 2: Let's make the abandoned order for AC
 			$ecom_order = new Ecom_Order();
 			try {
-				$externalcheckout_id = $this->abandoned_cart_util->generate_externalcheckoutid( $customer->id, $customer->email, $customer->activecampaignfwc_order_external_uuid );
+				$externalcheckout_id = $this->abandoned_cart_util->generate_externalcheckoutid( $customer->id, $customer->email, $activecampaignfwc_order_external_uuid );
 
 				$ecom_order->set_externalcheckoutid( $externalcheckout_id );
 				$ecom_order->set_source( '1' );
@@ -466,12 +448,10 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				);
 			}
 
-				// Let's make absolutely sure this is the same record
+			// Let's make absolutely sure this is the same record
 			if ( isset( $order_ac ) && ! empty( $order_ac->get_id() ) && $externalcheckout_id === $order_ac->get_externalcheckoutid() ) {
 				try {
-					$synced_to_ac = true;
-
-					$updated_date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+					$updated_date = new DateTime( $ab_order->last_access_time, new DateTimeZone( 'UTC' ) );
 					$ecom_order->set_external_updated_date( $updated_date->format( DATE_ATOM ) );
 					$ecom_order->set_id( $order_ac->get_id() );
 
@@ -500,7 +480,6 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 							'externalcheckout_id' => $externalcheckout_id,
 						]
 					);
-					$synced_to_ac = false;
 				}
 			} else {
 				try {
@@ -513,15 +492,11 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						]
 					);
 
-					$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+					$date = new DateTime( $ab_order->last_access_time, new DateTimeZone( 'UTC' ) );
 					$ecom_order->set_abandoned_date( $date->format( DATE_ATOM ) );
 					$ecom_order->set_external_created_date( $date->format( DATE_ATOM ) );
 
 					$order_ac = $this->order_repository->create( $ecom_order );
-
-					if ( $order_ac ) {
-						$synced_to_ac = true;
-					}
 				} catch ( Throwable $t ) {
 					$this->logger->debug(
 						'Abandonment Sync: Order creation exception: ',
@@ -533,8 +508,26 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 							'externalcheckout_id' => $externalcheckout_id,
 						]
 					);
-					$synced_to_ac = false;
 				}
+			}
+
+			try {
+				if ( isset( $order_ac ) && $order_ac->get_id() ) {
+					$synced_to_ac = true;
+				}
+			} catch ( Throwable $t ) {
+				$this->logger->debug(
+					'Abandonment Sync: Could not read sync ID, record may not have synced to AC: ',
+					[
+						'exception_message'   => $t->getMessage(),
+						'exception_trace'     => $this->logger->clean_trace( $t->getTrace() ),
+						'connection_id'       => $this->admin->get_storage()['connection_id'],
+						'customer_email'      => $customer->email,
+						'externalcheckout_id' => $externalcheckout_id,
+					]
+				);
+
+				$synced_to_ac = false;
 			}
 
 			try {
@@ -574,6 +567,66 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 		}
 	}
 
+	/**
+	 * Sends an assumed abandoned cart as a valid order to ActiveCampaign.
+	 *
+	 * @param     object $wc_order     The WooCommerce order.
+	 * @param     object $ab_order     The abandoned cart order.
+	 * @param     object $customer_ac     The AC customer object.
+	 *
+	 * @return Activecampaign_For_Woocommerce_Ecom_Model_Interface|bool
+	 */
+	private function send_as_valid_order( $wc_order, $ab_order, $customer_ac ) {
+		$ecom_order = $this->order_utilities->setup_woocommerce_order_from_admin( $wc_order );
+		$ecom_order = $this->order_utilities->build_products_for_order( $wc_order, $ecom_order );
+		$ecom_order = $this->customer_utilities->add_customer_to_order( $wc_order, $ecom_order, true );
+
+		if ( ! $ecom_order->get_customerid() ) {
+			$ecom_order->set_customerid( $customer_ac->get_id() );
+		}
+
+		if ( isset( $ecom_order ) && $ecom_order->get_externalid() ) {
+			$this->logger->debug(
+				'Abandonement Sync: Order was found but may not have been sent to ActiveCampaign',
+				[
+					'order_number' => $ecom_order->get_order_number(),
+				]
+			);
+
+			$order_ac = $this->order_repository->find_by_externalid( $ecom_order->get_id() );
+
+			if ( isset( $order_ac ) && $order_ac->get_id() ) {
+				$this->logger->info(
+					'Abandoned cart: Found a valid order in hosted. Ignore this abandoned cart and continue.',
+					[
+						'externalid'   => $ecom_order->get_externalid(),
+						'order_number' => $ecom_order->get_order_number(),
+						'hosted_id'    => $order_ac->get_id(),
+					]
+				);
+			} else {
+				$this->logger->info(
+					'Abandoned cart: This order did not get synced to AC but a valid order was discovered. Invalidate abandoned cart and sync this order to Hosted.',
+					[
+						'externalid'   => $ecom_order->get_externalid(),
+						'order_number' => $ecom_order->get_order_number(),
+					]
+				);
+
+				$order_ac = $this->order_repository->create( $ecom_order );
+			}
+
+			if ( isset( $order_ac ) && $order_ac->get_id() ) {
+				$this->order_utilities->update_last_synced( $wc_order->get_id() );
+			}
+
+			$this->abandoned_cart_util->delete_abandoned_cart_by_filter( 'id', $ab_order->id );
+
+			return $order_ac;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Lookup ecom customer record in AC. If it does not exist, create it. This is altered specifically for abandonment.
@@ -657,5 +710,46 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 		}
 
 		return $customer_ac;
+	}
+
+	/**
+	 * Cleans up any synced records older than 2 weeks.
+	 */
+	private function clean_old_abandoned_carts() {
+		global $wpdb;
+		try {
+			// wipe time is 2 weeks before today
+			$wipe_time = 20160;
+
+			// Get the expired carts from our table
+			$expire_datetime = new DateTime( 'now -' . $wipe_time . ' minutes', new DateTimeZone( 'UTC' ) );
+
+			// phpcs:disable
+			$delete_count = $wpdb->query(
+				'DELETE FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME .
+				' WHERE last_access_time <= "' . $expire_datetime->format( 'Y-m-d H:i:s' ) . '" AND synced_to_ac = 1'
+			);
+			// phpcs:enable
+			if ( ! empty( $delete_count ) ) {
+				$this->logger->debug( $delete_count . ' old abandoned cart records deleted.' );
+
+				if ( $wpdb->last_error ) {
+					$this->logger->error(
+						'Abandonment sync: There was an error deleting old abandoned cart records.',
+						[
+							'wpdb_last_error' => $wpdb->last_error,
+						]
+					);
+				}
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Abandonment Sync: There was an error with preparing or getting abandoned cart results.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
 	}
 }

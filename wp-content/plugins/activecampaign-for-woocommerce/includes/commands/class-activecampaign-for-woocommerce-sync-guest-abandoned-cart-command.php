@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Rep
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command as Abandoned_Cart;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * Handles sending the guest customer and pending order to AC.
@@ -129,17 +130,30 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		$this->wc_session          = $wc_session;
 		$this->admin               = $admin;
 		$this->customer_repository = $customer_repository;
-		$this->logger              = $logger;
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
+
 	}
 
 	/**
 	 * Initialize injections that are still null
 	 */
 	public function init() {
-		$this->cart       = $this->cart ?: wc()->cart;
-		$this->customer   = $this->customer ?: wc()->customer;
-		$this->wc_session = $this->wc_session ?: wc()->session;
-		$this->logger     = $this->logger ?: new Logger();
+		if ( ! $this->cart ) {
+			$this->cart = wc()->cart;
+		}
+		if ( ! $this->customer ) {
+			$this->customer = wc()->customer;
+		}
+		if ( ! $this->wc_session ) {
+			$this->wc_session = wc()->session;
+		}
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		}
 	}
 
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
@@ -192,34 +206,38 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 */
 	private function validate_request() {
 		if ( is_user_logged_in() ) {
-			$this->logger->debug( 'Abandon cart guest sync: User is logged in, cannot perform guest sync' );
+			$this->logger->debug(
+				'Abandon cart guest sync: User is logged in, cannot perform guest sync',
+				[
+					'is_user_logged_in' => is_user_logged_in(),
+					'current_user'      => get_current_user(),
+				]
+			);
 
 			return false;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'sync_guest_abandoned_cart_nonce' ) ) {
-			$this->logger->debug( 'Abandon cart guest sync: sync_guest_abandoned_cart_nonce failed' );
+		if ( ! wp_verify_nonce( AC_Utilities::get_request_data( 'nonce' ), 'sync_guest_abandoned_cart_nonce' ) ) {
+			$this->logger->debug( 'Abandon cart guest sync: Could not verify sync_guest_abandoned_cart_nonce' );
 
 			return false;
 		}
 
-		$this->customer_email = sanitize_email( $_REQUEST['email'] );
+		$this->customer_email = sanitize_email( AC_Utilities::get_request_data( 'email' ) );
 
-		if ( ! $this->customer_email ) {
+		if ( empty( $this->customer_email ) ) {
 			$this->logger->debug( 'Abandon cart guest sync: invalid customer email' );
 
 			return false;
 		}
 
-		if ( isset( $_REQUEST['first_name'] ) ) {
-			$this->customer_first_name = $_REQUEST['first_name'];
-		} else {
+		$this->customer_first_name = AC_Utilities::get_request_data( 'first_name' );
+		if ( empty( $this->customer_first_name ) ) {
 			$this->customer_first_name = '';
 		}
 
-		if ( isset( $_REQUEST['last_name'] ) ) {
-			$this->customer_last_name = $_REQUEST['last_name'];
-		} else {
+		$this->customer_last_name = AC_Utilities::get_request_data( 'last_name' );
+		if ( empty( $this->customer_last_name ) ) {
 			$this->customer_last_name = '';
 		}
 

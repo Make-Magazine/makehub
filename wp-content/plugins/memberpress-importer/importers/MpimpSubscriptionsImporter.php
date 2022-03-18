@@ -5,14 +5,20 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
   public function form() { }
 
   public function import($row,$args) {
-    $required = array(array('any' => array('username','email')), 'product_id', 'payment_method', 'sub_num', 'amount', 'total', 'period', 'period_type');
+    $required = array(
+      array('any' => array('username','email','user_email')),
+      'product_id',
+      array('any' => array('payment_method','gateway')),
+      array('any' => array('sub_num','subscr_id')),
+      array('any' => array('amount','price')),
+      'total',
+      'period',
+      'period_type'
+    );
 
     $cols = array_keys($row);
     $this->check_required('subscriptions', $cols, $required);
     $this->fail_if_empty('product_id', $row['product_id']);
-    $this->fail_if_empty('payment_method', $row['payment_method']);
-    $this->fail_if_empty('sub_num', $row['sub_num']);
-    $this->fail_if_empty('amount', $row['amount']);
     $this->fail_if_empty('total', $row['total']);
     $this->fail_if_empty('period', $row['period']);
     $this->fail_if_empty('period_type', $row['period_type']);
@@ -54,6 +60,7 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
       switch($col) {
         case "email":
         case "username":
+        case "user_email":
           $this->fail_if_empty($col, $cell);
           $usr = new MeprUser();
 
@@ -62,13 +69,14 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
             $usr->load_user_data_by_login($cell);
           }
           else {
-            $this->fail_if_not_valid_user_email($row['email']);
+            $this->fail_if_not_valid_user_email($cell);
             $usr->load_user_data_by_email($cell);
           }
 
           $sub->user_id = $usr->ID;
           break;
         case 'payment_method':
+        case 'gateway':
           $this->fail_if_empty($col, $cell);
           $this->fail_if_not_valid_payment_method($cell);
           $sub->gateway = $cell;
@@ -80,6 +88,7 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
           $sub->subscr_id = $cell;
           break;
         case "amount":
+        case "price":
           $this->fail_if_empty($col, $cell);
           $this->fail_if_not_number($col, $cell);
           $sub->price = $cell;

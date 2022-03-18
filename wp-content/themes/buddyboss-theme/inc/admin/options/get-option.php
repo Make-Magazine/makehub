@@ -1,16 +1,16 @@
 <?php
 
-/**
- * Get BuddyBoss_Theme options
- *
- * @param string $id Option ID.
- * @param string $param Option type.
- * @param bool   $default default value.
- *
- * @return $output False on failure, Option.
- */
 if ( ! function_exists( 'buddyboss_theme_get_option' ) ) {
 
+	/**
+	 * Get BuddyBoss_Theme options
+	 *
+	 * @param string $id Option ID.
+	 * @param string $param Option type.
+	 * @param bool   $default default value.
+	 *
+	 * @return $output False on failure, Option.
+	 */
 	function buddyboss_theme_get_option( $id, $param = null, $default = false ) {
 
 		global $buddyboss_theme_options;
@@ -58,7 +58,19 @@ if ( ! function_exists( 'buddyboss_theme_get_option' ) ) {
 				return $cover_array;
 			}
 
-			return ( $default ) ? true : false;
+			return (bool) $default;
+
+		} elseif ( in_array( $id, array( 'buddyboss_profile_cover_width', 'buddyboss_profile_cover_height', 'buddyboss_group_cover_width', 'buddyboss_group_cover_height' ), true ) ) {
+
+			if ( 'buddyboss_profile_cover_width' === $id ) {
+				return function_exists( 'bb_get_profile_cover_image_width' ) ? bb_get_profile_cover_image_width() : get_option( 'bb-pro-cover-profile-width', $default );
+			} elseif ( 'buddyboss_profile_cover_height' === $id ) {
+				return function_exists( 'bb_get_profile_cover_image_height' ) ? bb_get_profile_cover_image_height() : get_option( 'bb-pro-cover-profile-height', $default );
+			} elseif ( 'buddyboss_group_cover_width' === $id ) {
+				return function_exists( 'bb_get_group_cover_image_width' ) ? bb_get_group_cover_image_width() : get_option( 'bb-pro-cover-group-width', $default );
+			} elseif ( 'buddyboss_group_cover_height' === $id ) {
+				return function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : get_option( 'bb-pro-cover-group-height', $default );
+			}
 		}
 
 		/* Check if options are set */
@@ -72,7 +84,7 @@ if ( ! function_exists( 'buddyboss_theme_get_option' ) ) {
 				return false;
 			} else {
 				// Return true if default passed to true and key not exists into the buddyboss_theme_options array.
-				return ( $default ) ? true : false;
+				return (bool) $default;
 			}
 		}
 

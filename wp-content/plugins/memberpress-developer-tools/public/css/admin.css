@@ -82,3 +82,7 @@ i.mpdt-clipboard:hover {
 i.mpdt-regenerate:hover {
   cursor: pointer;
 }
+
+i.mpdt-regenerate-webhook:hover {
+  cursor: pointer;
+}

@@ -591,7 +591,8 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			'permanent',
 			'headersource',
 			'customizer',
-			'cachetime'
+			'cachetime',
+			'mediavine'
 		);
 
 		if ( ! empty( $sbi_statuses['support_legacy_shortcode'] )
@@ -1422,7 +1423,6 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 				SB_Instagram_API_Connect_Pro::handle_wp_remote_get_error( $connection->get_wp_error() );
 			} else {
 				$response = $connection->get_data();
-
 				if ( (int)$response['error']['code'] === 24 ) {
 					$response['hashtag'] = $hashtag;
 					$sb_instagram_posts_manager->add_error( 'hashtag', $response );

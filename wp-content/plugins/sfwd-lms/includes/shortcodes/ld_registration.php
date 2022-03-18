@@ -22,10 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * }
  *
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_registration'.
  *
  * @return string The `ld_registration` shortcode ouput.
  */
-function learndash_registration( $attr = array(), $content = '' ) {
+function learndash_registration( $attr = array(), $content = '', $shortcode_slug = 'ld_registration' ) {
 
 	global $learndash_shortcode_used;
 
@@ -42,6 +43,9 @@ function learndash_registration( $attr = array(), $content = '' ) {
 		$attr
 	);
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
+
 	$level = ob_get_level();
 	ob_start();
 
@@ -52,4 +56,4 @@ function learndash_registration( $attr = array(), $content = '' ) {
 
 }
 
-add_shortcode( 'ld_registration', 'learndash_registration', 10, 2 );
+add_shortcode( 'ld_registration', 'learndash_registration', 10, 3 );

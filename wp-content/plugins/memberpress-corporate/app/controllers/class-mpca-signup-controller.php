@@ -5,11 +5,29 @@ class MPCA_Signup_Controller {
     // Check for errors after the checkout form has been submitted
     add_filter( 'mepr-validate-signup', array($this, 'validate_ca_signup') );
 
+    // Allow sub-accounts to signup when the permissions for the membership are set to no one(disabled)
+    add_filter( 'mepr-who-can-purchase-custom-check', array($this, 'check_ca_disabled_permission'), 10, 3 );
+
     // Associate sub account if processing corporate account signup
     add_filter( 'mepr-signup-checkout-url', array($this, 'associate_sub_account'), 10, 2 );
 
     // Handle error view if CA is invalid
     add_filter( 'mepr_view_get_string_/checkout/form', array($this, 'display_error'), 1, 2 );
+  }
+
+  public function check_ca_disabled_permission(  $label, $who, $product ) {
+
+    if( 'disabled' === $who->user_type && isset($_GET['ca']) ) {
+
+      $ca = MPCA_Corporate_Account::find_by_uuid(esc_attr($_GET['ca']));
+
+      // Allow signup if ca is valid.
+      if(!empty($ca->id)) {
+        return true;
+      }
+    }
+
+    return $label;
   }
 
   public function validate_ca_signup($errors) {

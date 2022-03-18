@@ -16,7 +16,7 @@
 use AcVendor\GuzzleHttp\Client;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
 use AcVendor\Psr\Http\Message\ResponseInterface;
-use AcVendor\Psr\Log\LoggerInterface;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Request_Id_Service as RequestIdService;
 
 /**
@@ -99,6 +99,22 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	private $configured = false;
 
 	/**
+	 * The count for the number of retries attempted.
+	 *
+	 * @var int
+	 * @since      1.6.10
+	 */
+	private $retry_count = 0;
+
+	/**
+	 * The number of retries allowed.
+	 *
+	 * @var bool
+	 * @since      1.6.10
+	 */
+	private $retries_allowed = 0;
+
+	/**
 	 * A list of methods that can be magic-called.
 	 *
 	 * @since      1.0.0
@@ -119,21 +135,21 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * The WC Logger
 	 *
 	 * @since 1.2.11
-	 * @var   LoggerInterface|null
+	 * @var   Logger|null
 	 */
 	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Api_Client constructor.
 	 *
-	 * @param string|null          $api_uri The API Uri for the client to use.
-	 * @param string|null          $api_key The API Key for the client to use.
-	 * @param LoggerInterface|null $logger  The logger.
-	 * @param null                 $debug   Whether debugging is turned on.
+	 * @param string|null $api_uri The API Uri for the client to use.
+	 * @param string|null $api_key The API Key for the client to use.
+	 * @param Logger|null $logger  The logger.
+	 * @param null        $debug   Whether debugging is turned on.
 	 *
 	 * @since      1.0.0
 	 */
-	public function __construct( $api_uri = null, $api_key = null, LoggerInterface $logger = null, $debug = null ) {
+	public function __construct( $api_uri = null, $api_key = null, Logger $logger = null, $debug = null ) {
 		$this->api_uri = $api_uri;
 		$this->api_key = $api_key;
 
@@ -251,6 +267,16 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 */
 	public function get_client() {
 		return $this->client;
+	}
+
+	/**
+	 * Sets the max number of retries, zero disables
+	 * Disabled by default.
+	 *
+	 * @param int $r The quantity of retries allowed.
+	 */
+	public function set_max_retries( $r ) {
+		$this->retries_allowed = $r;
 	}
 
 	/**
@@ -383,12 +409,14 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * First creates a filtered endpoint, and then passes that endpoint to the Guzzle
 	 * Client. This client then handles making the actual request.
 	 *
-	 * @return ResponseInterface
+	 * @return bool|ResponseInterface
 	 * @throws GuzzleException Thrown when a non-200/300 response is received.
 	 * @since      1.0.0
 	 */
 	public function execute() {
 		$endpoint = $this->construct_endpoint_with_filters();
+		$response = null;
+
 		if ( ! $this->configured ) {
 			$this->refresh_api_values();
 
@@ -413,66 +441,133 @@ class Activecampaign_For_Woocommerce_Api_Client {
 					'Received response',
 					[
 						'endpoint'             => $this->endpoint,
-						'response_status_code' => $response->getStatusCode(),
-						'response_headers'     => $response->getHeaders(),
-						'response_body'        => $response->getBody()->getContents(),
+						'response_status_code' => method_exists( $response, 'getStatusCode' ) ? $response->getStatusCode() : null,
+						'response_headers'     => method_exists( $response, 'getHeaders' ) ? $response->getHeaders() : null,
+						'response_body'        => method_exists( $response, 'getBody' ) ? $response->getBody()->getContents() : null,
 					]
 				);
 			}
 		} catch ( GuzzleException $e ) {
-			$message     = $e->getMessage();
+			$message = $e->getMessage();
+
+			if (
+				404 === $e->getCode()
+				&& strpos( $message, 'No Result found' ) !== false
+			) {
+				$this->logger->debug(
+					'Hosted lookup returned zero results. This is probably not an error.',
+					[
+						'response' => $message,
+					]
+				);
+
+				return 'No results found.';
+			}
+
 			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
 
 			if ( isset( $e ) && 422 === $e->getCode() ) {
 				if ( strpos( $message, 'duplicate' ) !== false ) {
-					$this->logger->debug( $message );
+					$this->logger->debug(
+						'Duplicate record found',
+						[
+							'message'  => $message,
+							'endpoint' => $this->endpoint,
+						]
+					);
 				} else {
-					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+					$this->logger->debug(
+						'The API returned an error [api_e0]',
+						[
+							'message'     => $message,
+							'endpoint'    => $this->endpoint,
+							'code'        => $e->getCode(),
+							'stack trace' => $stack_trace,
+						]
+					);
+
+					return false;
 				}
 			} else {
-				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
-			}
 
-			return null;
-		} catch ( \Exception $e ) {
-			$message     = $e->getMessage();
-			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
-			if ( isset( $e ) && 422 === $e->getCode() ) {
-				if ( strpos( $message, 'duplicate' ) !== false ) {
-					$this->logger->debug( $message );
+				if ( false !== strpos( $message, 'Connection timed out' ) || false !== strpos( $message, 'cURL error 28' ) ) {
+					if ( $this->retries_allowed > $this->retry_count ) {
+						$this->logger->error(
+							'The connection to Hosted timed out. Waiting 10 seconds to try again.',
+							[
+								'message'         => $message,
+								'endpoint'        => $this->endpoint,
+								'retries_allowed' => $this->retries_allowed,
+								'retry_count'     => $this->retry_count,
+								'stack_trace'     => $this->logger->clean_trace( $e->getTrace() ),
+							]
+						);
+
+						$this->retry_count ++;
+						sleep( 10 );
+						return $this->execute();
+					} else {
+						$this->logger->error(
+							'The connection to ActiveCampaign timed out ' . $this->retry_count . ' times. Aborting the call and continuing on.',
+							[
+								'message'         => $message,
+								'endpoint'        => $this->endpoint,
+								'retries_allowed' => $this->retries_allowed,
+								'retry_count'     => $this->retry_count,
+								'stack trace'     => $this->logger->clean_trace( $e->getTrace() ),
+							]
+						);
+					}
 				} else {
-					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+					$this->logger->error(
+						'The API returned an error [api_e1]',
+						[
+							'message'     => $message,
+							'endpoint'    => $this->endpoint,
+							'code'        => $e->getCode(),
+							'stack trace' => $stack_trace,
+						]
+					);
 				}
-			} else {
-				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
-			}
 
-			return null;
+				return false;
+			}
 		} catch ( Throwable $t ) {
 			$message     = $t->getMessage();
 			$stack_trace = $t->getTrace();
+
 			if ( isset( $e ) && 422 === $t->getCode() ) {
 				if ( strpos( $message, 'duplicate' ) !== false ) {
 					// Don't waste log space with stack traces if it's just a duplicate
-					$this->logger->debug( $message );
+					$this->logger->debug(
+						'Duplicate record found [api_e2]',
+						[
+							'message'     => $message,
+							'stack trace' => $stack_trace,
+						]
+					);
 				} else {
-					$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+					$this->logger->debug(
+						'The API returned an error [api_e3]',
+						[
+							'message'     => $message,
+							'stack trace' => $stack_trace,
+						]
+					);
+
+					return false;
 				}
 			} else {
-				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
-			}
+				$this->logger->error(
+					'The API returned an error [api_e4]',
+					[
+						'message'     => $message,
+						'stack trace' => $stack_trace,
+					]
+				);
 
-			return null;
-		} catch ( Throwable $t ) {
-			$message     = $t->getMessage();
-			$stack_trace = $this->logger->clean_trace( $t->getTrace() );
-			if ( isset( $t ) && 422 === $t->getCode() ) {
-				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
-			} else {
-				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+				return false;
 			}
-
-			return null;
 		}
 
 		return $response;
@@ -563,7 +658,9 @@ class Activecampaign_For_Woocommerce_Api_Client {
 
 		$id = count( $args ) > 1 ? (string) $args[1] : null;
 
-		$endpoint = str_replace( '/', '', $endpoint );
+		if ( 'ecomData/bulkSync' !== $endpoint ) {
+			$endpoint = str_replace( '/', '', $endpoint );
+		}
 
 		if ( $id ) {
 			$endpoint .= "/$id";

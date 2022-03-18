@@ -1,6 +1,6 @@
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import React from 'react';
 import { useStateValue } from '../../store/store';
 import ICONS from '../../../../assets/icons';
 

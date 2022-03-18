@@ -15,7 +15,7 @@ use Activecampaign_For_Woocommerce_Connection_Option as Connection_Option;
 use Activecampaign_For_Woocommerce_Connection_Option_Repository as Repository;
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
-use AcVendor\Psr\Log\LoggerInterface;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The Create Or Update Connection Option Command Class.
@@ -68,7 +68,7 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 	/**
 	 * The logger interface.
 	 *
-	 * @var LoggerInterface The logger interface.
+	 * @var Logger The logger interface.
 	 */
 	private $logger;
 
@@ -81,13 +81,18 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 	 * @param Admin             $admin The Admin singleton instance.
 	 * @param Repository        $repository The connection option repository singleton.
 	 * @param Connection_Option $connection_option The connection option model to optionally use.
-	 * @param LoggerInterface   $logger The logger interface.
+	 * @param Logger            $logger The logger interface.
 	 */
-	public function __construct( Admin $admin, Repository $repository, Connection_Option $connection_option = null, LoggerInterface $logger = null ) {
+	public function __construct( Admin $admin, Repository $repository, Connection_Option $connection_option = null, Logger $logger = null ) {
 		$this->admin             = $admin;
 		$this->repository        = $repository;
 		$this->connection_option = $connection_option;
-		$this->logger            = $logger;
+
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
@@ -161,7 +166,11 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 	 * @access private
 	 */
 	private function get_connection_option() {
-		$connection_option = $this->connection_option ?: new Connection_Option();
+		if ( $this->connection_option ) {
+			$connection_option = $this->connection_option;
+		} else {
+			$connection_option = new Connection_Option();
+		}
 
 		$connection_option->set_option( 'abandoned_cart.abandon_after_hours' );
 		$connection_option->set_connectionid( $this->storage['connection_id'] );

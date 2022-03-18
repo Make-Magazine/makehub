@@ -220,6 +220,7 @@ class SBI_Settings_Tab {
 					array(
 						'value' => 'likes',
 						'label' => __( 'Likes', 'instagram-feed' ),
+						'condition'  => array( 'type' => array( 'mixed', 'user', 'tagged' ) ),
 					),
 					array(
 						'value' => 'random',

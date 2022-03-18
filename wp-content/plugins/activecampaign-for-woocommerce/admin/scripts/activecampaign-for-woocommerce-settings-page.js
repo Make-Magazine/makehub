@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const nonceVal = jQuery('#activecampaign_for_woocommerce_settings_nonce_field');
             jQuery.ajax({
                 url: ajaxurl,
+                type: 'POST',
                 data: {
                     action: "activecampaign_for_woocommerce_reset_connection_id",
                     activecampaign_for_woocommerce_settings_nonce_field: nonceVal.attr('value')
@@ -52,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const nonceVal = jQuery('#activecampaign_for_woocommerce_settings_nonce_field');
             jQuery.ajax({
                 url: ajaxurl,
+                type: 'POST',
                 data: {
                     action: "activecampaign_for_woocommerce_clear_all_settings",
                     activecampaign_for_woocommerce_settings_nonce_field: nonceVal.attr('value')

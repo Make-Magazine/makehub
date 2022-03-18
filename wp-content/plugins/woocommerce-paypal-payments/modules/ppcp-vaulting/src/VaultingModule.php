@@ -38,6 +38,11 @@ class VaultingModule implements ModuleInterface {
 	 */
 	public function run( ContainerInterface $container ): void {
 
+		$settings = $container->get( 'wcgateway.settings' );
+		if ( ! $settings->has( 'vault_enabled' ) || ! $settings->get( 'vault_enabled' ) ) {
+			return;
+		}
+
 		add_filter(
 			'woocommerce_account_menu_items',
 			function( $menu_links ) {
@@ -89,6 +94,17 @@ class VaultingModule implements ModuleInterface {
 					echo wp_kses_post( $renderer->render( $tokens ) );
 				} else {
 					echo wp_kses_post( $renderer->render_no_tokens() );
+				}
+			}
+		);
+
+		$subscription_helper = $container->get( 'subscription.helper' );
+		add_action(
+			'woocommerce_created_customer',
+			function( int $customer_id ) use ( $subscription_helper ) {
+				$guest_customer_id = WC()->session->get( 'ppcp_guest_customer_id' );
+				if ( $guest_customer_id && $subscription_helper->cart_contains_subscription() ) {
+					update_user_meta( $customer_id, 'ppcp_guest_customer_id', $guest_customer_id );
 				}
 			}
 		);

@@ -37,6 +37,13 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	private $context;
 
 	/**
+	 * The logger context parameter for errors.
+	 *
+	 * @var array
+	 */
+	private $error_context;
+
+	/**
 	 * The relative path to the log directory.
 	 *
 	 * @var string
@@ -49,8 +56,6 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	 * @var bool
 	 */
 	private $ac_debug;
-
-
 
 	/**
 	 * Logger constructor.
@@ -66,6 +71,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	) {
 		$this->path_to_log_directory = wp_upload_dir()['basedir'] . '/wc-logs';
 		$this->context               = array( 'source' => $plugin_name );
+		$this->error_context         = array( 'source' => ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB );
 		if ( ! $this->logDirectoryExists() ) {
 			$this->createLogDirectory();
 		}
@@ -112,8 +118,9 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	 * {@inheritdoc}
 	 */
 	public function error( $message, array $context = array() ) {
-		$this->add_wc_log_entry($message, $context, 'error');
-		$context = $this->resolveContext( $context );
+		$this->plugin_subname = 'errors';
+		$this->add_wc_error_log_entry($message, $context, 'error');
+		$context = $this->resolveErrorContext( $context );
 		$message = $this->formatMessageWithContext( $message, $context );
 		$this->logger->error( $message, $context );
 	}
@@ -192,9 +199,9 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	}
 
 	/**
-	 * Merge the default error context into the provided context.
+	 * Merge the default log context into the provided context.
 	 *
-	 * @param array $context The error context.
+	 * @param array $context The log context.
 	 *
 	 * @return array
 	 */
@@ -202,6 +209,19 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		$context = array_merge( $context, $this->context );
 
 		return $context;
+	}
+
+	/**
+	 * Merge the default error context into the provided context.
+	 *
+	 * @param array $error_context The error context.
+	 *
+	 * @return array
+	 */
+	private function resolveErrorContext( array $error_context ) {
+		$error_context = array_merge( $error_context, $this->error_context );
+
+		return $error_context;
 	}
 
 	/**
@@ -252,41 +272,23 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	 */
 	public function clean_trace( $trace ) {
 		$result = [];
+		$c      = count( $trace );
+		// Only retrieve class, function, and line for the first 5 trace results
+		for ( $i = 0; $i <= $c; $i++ ) {
+			if ( $i <= 5 ) {
+				if ( isset( $trace[ $i ]['class'] ) ) {
+					$result[ $i ]['class'] = $trace[ $i ]['class'];
+				}
+				if ( isset( $trace[ $i ]['function'] ) ) {
+					$result[ $i ]['function'] = $trace[ $i ]['function'];
+				}
 
-		// Only retrieve class, function, and line for the first 3 trace results
-		if ( isset( $trace[0]['class'] ) ) {
-			$result[0]['class'] = $trace[0]['class'];
-		}
-		if ( isset( $trace[0]['function'] ) ) {
-			$result[0]['function'] = $trace[0]['function'];
-		}
-
-		if ( isset( $trace[0]['line'] ) ) {
-			$result[0]['line'] = $trace[0]['line'];
-		}
-
-		if ( isset( $trace[1]['class'] ) ) {
-			$result[1]['class'] = $trace[1]['class'];
-		}
-
-		if ( isset( $trace[1]['function'] ) ) {
-			$result[1]['function'] = $trace[1]['function'];
-		}
-
-		if ( isset( $trace[1]['line'] ) ) {
-			$result[1]['line'] = $trace[1]['line'];
-		}
-
-		if ( isset( $trace[2]['class'] ) ) {
-			$result[2]['class'] = $trace[2]['class'];
-		}
-
-		if ( isset( $trace[2]['function'] ) ) {
-			$result[2]['function'] = $trace[2]['function'];
-		}
-
-		if ( isset( $trace[2]['line'] ) ) {
-			$result[2]['line'] = $trace[2]['line'];
+				if ( isset( $trace[ $i ]['line'] ) ) {
+					$result[ $i ]['line'] = $trace[ $i ]['line'];
+				}
+			} else {
+				break;
+			}
 		}
 
 		return $result;
@@ -313,6 +315,32 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		try {
 			// Post this error to the woocommerce log
 			WC_Log_Handler_DB::add( $date->getTimestamp(), $level, $message, ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB, $context );
+		} catch ( Throwable $t ) {
+			$this->info(
+				'There was an issue adding an entry to the WooCommerce log',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+
+	}
+
+	/**
+	 * Adds a log entry to the WooCommerce error log.
+	 *
+	 * @param string $message The message to be saved.
+	 * @param array  $context The context from the event.
+	 * @param string $level The log level.
+	 *
+	 * @throws Throwable The error thrown.
+	 */
+	private function add_wc_error_log_entry( $message, $context, $level ) {
+		$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		try {
+			// Post this error to the woocommerce log
+			WC_Log_Handler_DB::add( $date->getTimestamp(), $level, $message, ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB, $context );
 		} catch ( Throwable $t ) {
 			$this->info(
 				'There was an issue adding an entry to the WooCommerce log',

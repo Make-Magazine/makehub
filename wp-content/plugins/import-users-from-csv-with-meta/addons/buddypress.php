@@ -11,8 +11,11 @@ class ACUI_Buddypress{
 	var $profile_groups;
 
 	function __construct(){
-		if( !class_exists( "BP_XProfile_Group" ) ){
-			require_once( WP_PLUGIN_DIR . "/buddypress/bp-xprofile/classes/class-bp-xprofile-group.php" );
+		if( !class_exists( 'BP_XProfile_Group' ) ){
+			if( is_plugin_active( 'buddypress/bp-loader.php' ) )
+				require_once( WP_PLUGIN_DIR . "/buddypress/bp-xprofile/classes/class-bp-xprofile-group.php" );
+			elseif( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) )
+				require_once( WP_PLUGIN_DIR . "/buddyboss-platform/bp-xprofile/classes/class-bp-xprofile-group.php" );
 		}
 		
 		$this->profile_groups = $this->get_profile_groups();

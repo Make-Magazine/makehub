@@ -101,6 +101,9 @@ class Astra_Site_Options_Import {
 			'woocommerce_enable_myaccount_registration',
 			'woocommerce_registration_generate_username',
 
+			// Plugin: Easy Digital Downloads - EDD.
+			'edd_settings',
+
 			// Plugin: WPForms.
 			'wpforms_settings',
 

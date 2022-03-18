@@ -187,7 +187,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						'compare' => 'stripe',
 					);
 					$q_vars['meta_query'][]           = array(
-						'key'     => 'stripe_nonce',
+						'key'     => 'stripe_session_id',
 						'compare' => 'EXISTS',
 					);
 				}
@@ -442,7 +442,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$group_id = get_post_meta( $post_id, 'group_id', true );
 				$group_id = absint( $group_id );
 				if ( ! empty( $group_id ) ) {
-					$filter_label = LearnDash_Custom_Label::get_label( 'course' );
+					$filter_label = LearnDash_Custom_Label::get_label( 'group' );
 					$filter_url   = add_query_arg( 'group_id', $group_id, $this->get_clean_filter_url() );
 
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
@@ -462,7 +462,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					// translators: placeholder: Post type label (Course/Group), Link to Course/Group.
 					esc_html_x( '%1$s : %2$s', 'placeholder: Post type label (Course/Group), Link to Course/Group', 'learndash' ),
 					esc_html( $filter_label ),
-					'<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>'
+					'<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( ( ! empty( $course_id ) ? $course_id : $group_id ) ) ) . '</a>'
 				);
 
 				if ( ! empty( $row_actions ) ) {
@@ -705,8 +705,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						$ld_payment_processor = 'paypal';
 						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
 					}
-					$stripe_nonce = get_post_meta( $post_id, 'stripe_nonce', true );
-					if ( ! empty( $stripe_nonce ) ) {
+					$stripe_session_id = get_post_meta( $post_id, 'stripe_session_id', true );
+					if ( ! empty( $stripe_session_id ) ) {
 						$ld_payment_processor = 'stripe';
 						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
 					}

@@ -54,12 +54,14 @@ trait ProcessPaymentTrait {
 			return $failure_data;
 		}
 
+		$payment_method = filter_input( INPUT_POST, 'payment_method', FILTER_SANITIZE_STRING );
+
 		/**
 		 * If customer has chosen a saved credit card payment.
 		 */
 		$saved_credit_card = filter_input( INPUT_POST, 'saved_credit_card', FILTER_SANITIZE_STRING );
-		$pay_for_order     = filter_input( INPUT_GET, 'pay_for_order', FILTER_SANITIZE_STRING );
-		if ( $saved_credit_card && ! isset( $pay_for_order ) ) {
+		$change_payment    = filter_input( INPUT_POST, 'woocommerce_change_payment', FILTER_SANITIZE_STRING );
+		if ( CreditCardGateway::ID === $payment_method && $saved_credit_card && ! isset( $change_payment ) ) {
 
 			$user_id  = (int) $wc_order->get_customer_id();
 			$customer = new \WC_Customer( $user_id );
@@ -275,7 +277,7 @@ trait ProcessPaymentTrait {
 			if ( $error->has_detail( 'INSTRUMENT_DECLINED' ) ) {
 				$wc_order->update_status(
 					'failed',
-					__( 'Instrument declined.', 'woocommerce-paypal-payments' )
+					__( 'Instrument declined. ', 'woocommerce-paypal-payments' ) . $error->details()[0]->description ?? ''
 				);
 
 				$this->session_handler->increment_insufficient_funding_tries();
@@ -296,6 +298,19 @@ trait ProcessPaymentTrait {
 				);
 			}
 
+			$error_message = $error->getMessage();
+			if ( $error->issues() ) {
+				$error_message = implode(
+					array_map(
+						function( $issue ) {
+							return $issue->issue . ' ' . $issue->description . '<br/>';
+						},
+						$error->issues()
+					)
+				);
+			}
+			wc_add_notice( $error_message, 'error' );
+
 			$this->session_handler->destroy_session_data();
 		} catch ( RuntimeException $error ) {
 			$this->handle_failure( $wc_order, $error );
@@ -306,9 +321,10 @@ trait ProcessPaymentTrait {
 			$this->order_processor->last_error(),
 			'error'
 		);
+
 		$wc_order->update_status(
 			'failed',
-			__( 'Could not process order.', 'woocommerce-paypal-payments' )
+			__( 'Could not process order. ', 'woocommerce-paypal-payments' ) . $this->order_processor->last_error()
 		);
 
 		return $failure_data;
@@ -353,7 +369,7 @@ trait ProcessPaymentTrait {
 
 		$wc_order->update_status(
 			'failed',
-			__( 'Could not process order.', 'woocommerce-paypal-payments' )
+			__( 'Could not process order. ', 'woocommerce-paypal-payments' ) . $error->getMessage()
 		);
 
 		$this->session_handler->destroy_session_data();

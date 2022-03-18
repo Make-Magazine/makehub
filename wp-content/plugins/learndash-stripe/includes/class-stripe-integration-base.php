@@ -30,6 +30,12 @@ abstract class LearnDash_Stripe_Integration_Base {
     protected $endpoint_secret;
 
     /**
+     * Stripe API client
+     * @var object
+     */
+    protected $stripe;
+
+    /**
      * Plugin default payment button
      * @var string
      */
@@ -74,9 +80,15 @@ abstract class LearnDash_Stripe_Integration_Base {
 
         $this->set_stripe_customer_id_meta_key();
     
-        $this->secret_key               =   $this->get_secret_key();
-        $this->publishable_key          =   $this->get_publishable_key();
-        $this->endpoint_secret          =   $this->get_endpoint_secret();
+        $this->secret_key      = $this->get_secret_key();
+        $this->publishable_key = $this->get_publishable_key();
+        $this->endpoint_secret = $this->get_endpoint_secret();
+
+        $this->config();
+
+        if ( ! empty( $this->secret_key ) ) {
+            $this->stripe = new \Stripe\StripeClient( $this->secret_key );
+        }
 
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         add_filter( 'learndash_payment_button', array( $this, 'payment_button' ), 10, 2 );
@@ -89,7 +101,7 @@ abstract class LearnDash_Stripe_Integration_Base {
         if ( $this->is_test_mode() ) {
             $this->stripe_customer_id_meta_key = 'stripe_test_customer_id';
         } else {
-            $this->stripe_customer_id_meta_key = $this->stripe_customer_id_meta_key;
+            $this->stripe_customer_id_meta_key = 'stripe_customer_id';
         }
     }
 
@@ -142,17 +154,27 @@ abstract class LearnDash_Stripe_Integration_Base {
         }
 
         if ( learndash_get_post_type_slug( 'course' ) === $course->post_type ) {
+            $course_type       = __( 'Course', 'learndash-stripe' );
             $course_price      = learndash_get_setting( $course->ID, 'course_price' );
             $course_price_type = learndash_get_setting( $course->ID, 'course_price_type' );
             $course_plan_id = 'learndash-course-' . $course->ID;
             $course_interval_count = get_post_meta( $course->ID, 'course_price_billing_p3', true );
             $course_interval       = get_post_meta( $course->ID, 'course_price_billing_t3', true );
+            $course_recurring_times = learndash_get_setting( $course->ID, 'course_no_of_cycles' );
+            $course_trial_price = learndash_get_setting( $course->ID, 'course_trial_price' );
+            $course_trial_interval = learndash_get_setting( $course->ID, 'course_trial_duration_t1' );
+            $course_trial_interval_count  = learndash_get_setting( $course->ID, 'course_trial_duration_p1' );
         } elseif ( learndash_get_post_type_slug( 'group' ) === $course->post_type ) {
+            $course_type       = __( 'Group', 'learndash-stripe' );
             $course_price      = learndash_get_setting( $course->ID, 'group_price' );
             $course_price_type = learndash_get_setting( $course->ID, 'group_price_type' );
             $course_plan_id = 'learndash-group-' . $course->ID;
             $course_interval_count = get_post_meta( $course->ID, 'group_price_billing_p3', true );
             $course_interval       = get_post_meta( $course->ID, 'group_price_billing_t3', true );
+            $course_recurring_times = learndash_get_setting( $course->ID, 'post_no_of_cycles' );
+            $course_trial_price = learndash_get_setting( $course->ID, 'group_trial_price' );
+            $course_trial_interval = learndash_get_setting( $course->ID, 'group_trial_duration_t1' );
+            $course_trial_interval_count = learndash_get_setting( $course->ID, 'group_trial_duration_p1' );
         }
 
         switch ( $course_interval ) {
@@ -173,18 +195,58 @@ abstract class LearnDash_Stripe_Integration_Base {
                 break;
         }
 
+        switch ( $course_trial_interval ) {
+            case 'D':
+                $course_trial_interval = 'day';
+                break;
+
+            case 'W':
+                $course_trial_interval = 'week';
+                break;
+
+            case 'M':
+                $course_trial_interval = 'month';
+                break;
+
+            case 'Y':
+                $course_trial_interval = 'year';
+                break;
+        }
+
+
         $currency       = strtolower( $this->options['currency'] );
         $course_image   = get_the_post_thumbnail_url( $course->ID, 'medium' );
         $course_name    = $course->post_title;
         $course_id      = $course->ID;
 
-        $course_price = preg_replace( '/.*?(\d+(?:\.?\d+))/', '$1', $course_price );
+        $course_price = preg_replace( '/.*?(\d+(?:\.?\d+)?)/', '$1', $course_price );
 
         if ( ! $this->is_zero_decimal_currency( $this->options['currency'] ) ) {
             $course_price = $course_price * 100;
+            
+            if ( ! empty( $course_trial_price ) ) {
+                $course_trial_price = $course_trial_price * 100;
+            }
         }
 
-        $args = compact( 'user_id', 'user_email', 'course_id', 'currency', 'course_image', 'course_name', 'course_plan_id', 'course_price', 'course_price_type', 'course_interval', 'course_interval_count' );
+        $args = compact( 
+            'user_id', 
+            'user_email', 
+            'course_id', 
+            'currency', 
+            'course_type', 
+            'course_image', 
+            'course_name', 
+            'course_plan_id', 
+            'course_price', 
+            'course_price_type', 
+            'course_interval',
+            'course_interval_count',
+            'course_recurring_times',
+            'course_trial_price',
+            'course_trial_interval',
+            'course_trial_interval_count'
+        );
 
         return $args;
     }
@@ -204,6 +266,10 @@ abstract class LearnDash_Stripe_Integration_Base {
      * @return string                 Modified button
      */
     public function payment_button( $default_button, $params = null ) {
+        if ( ! $this->is_active() ) {
+            return $default_button;
+        }
+        
         if ( $this->key_is_empty() || empty( $this->endpoint_secret ) ) {
             return $default_button;
         }
@@ -279,6 +345,11 @@ abstract class LearnDash_Stripe_Integration_Base {
             if ( 'subscribe' == $course_price_type ) {
                 $stripe_button .= '<input type="hidden" name="stripe_interval_count" value="' . esc_attr( $course_interval_count ) . '" />';
                 $stripe_button .= '<input type="hidden" name="stripe_interval" value="' . esc_attr( $course_interval ) . '" />';
+                // Trial subscription
+                $stripe_button .= '<input type="hidden" name="stripe_recurring_times" value="' . esc_attr( $course_recurring_times ) . '" />';
+                $stripe_button .= '<input type="hidden" name="stripe_trial_price" value="' . esc_attr( $course_trial_price ) . '" />';
+                $stripe_button .= '<input type="hidden" name="stripe_trial_interval" value="' . esc_attr( $course_trial_interval ) . '" />';
+                $stripe_button .= '<input type="hidden" name="stripe_trial_interval_count" value="' . esc_attr( $course_trial_interval_count ) . '" />';
             }
 
             $stripe_button_nonce = wp_create_nonce( 'stripe-nonce-' . $course_id . $course_price . $course_price_type );
@@ -335,6 +406,138 @@ abstract class LearnDash_Stripe_Integration_Base {
     }
 
     /**
+     * Get the Stripe purchase success redirect URL.
+     *
+     * After the Stripe purchase success, the customer can be redirected
+     * to a specific destination URL. Taken from learndash_stripe_get_purchase_success_redirect_url()
+     *
+     * @since 1.9.2
+     * @param int $post_id Course or Group post ID purchased
+     * @return string $return_url
+     */
+    public function get_success_url( $post_id )
+    {
+        $return_url = '';
+
+        $post_id = absint( $post_id );
+        if ( ! empty( $post_id ) ) {
+            $type_slug = '';
+            if ( learndash_get_post_type_slug( 'course' ) === get_post_type( $post_id ) ) {
+                $type_slug = 'course';
+            } elseif ( learndash_get_post_type_slug( 'group' ) === get_post_type( $post_id ) ) {
+                $type_slug = 'group';
+            }
+
+            if ( ! empty( $type_slug ) ) {
+                $price_type = learndash_get_setting( $post_id, $type_slug . '_price_type' );
+                if ( ! empty( $price_type ) ) {
+                    $enrollment_url = learndash_get_setting( $post_id, $type_slug . '_price_type_' . $price_type . '_enrollment_url' );
+                    if ( ! empty( $enrollment_url ) ) {
+                        $return_url = $enrollment_url;
+                    }
+                }
+            }
+        }
+
+        if ( empty( $return_url ) ) {
+            $stripe_settings = $this->options;
+
+            if ( ( isset( $stripe_settings['return_url'] ) ) && ( ! empty( $stripe_settings['return_url'] ) ) ) {
+                $return_url = $stripe_settings['return_url'];
+            }
+        }
+
+        if ( empty( $return_url ) ) {
+            $ld_registration_success_page_id = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration_success' );
+            $ld_registration_success_page_id = absint( $ld_registration_success_page_id );
+            if ( ! empty( $ld_registration_success_page_id ) ) {
+                $return_url = get_permalink( $ld_registration_success_page_id );
+            }
+        }
+
+        if ( ( empty( $return_url ) ) && ( ! empty( $post_id ) ) ) {
+            /**
+             * If the enrollment URL is empty and the global Stripe return URL is empty,
+             * we return the customer to the course/group.
+             */
+            $return_url = get_permalink( $post_id );
+        }
+
+        if ( empty( $return_url ) ) {
+            $return_url = get_home_url();
+        }
+
+        /**
+         * Filters URL for Stripe purchase success.
+         *
+         * @since 1.9.2
+         *
+         * @param string $redirect_url The URL to be redirected on Stripe success.
+         * @param int    $post_id      The Course/Group Post ID.
+         */
+        $return_url = apply_filters( 'learndash_stripe_purchase_success_url', $return_url, $post_id );
+
+        return $return_url;
+    }
+
+    public function get_cancel_url( $post_id )
+    {
+        $return_url = '';
+
+        $post_id = absint( $post_id );
+        if ( ! empty( $post_id ) ) {
+            $type_slug = '';
+            if ( learndash_get_post_type_slug( 'course' ) === get_post_type( $post_id ) ) {
+                $type_slug = 'course';
+            } elseif ( learndash_get_post_type_slug( 'group' ) === get_post_type( $post_id ) ) {
+                $type_slug = 'group';
+            }
+
+            if ( ! empty( $type_slug ) ) {
+                $price_type = learndash_get_setting( $post_id, $type_slug . '_price_type' );
+                if ( ! empty( $price_type ) ) {
+                    $enrollment_url = learndash_get_setting( $post_id, $type_slug . '_price_type_' . $price_type . '_enrollment_url' );
+                    if ( ! empty( $enrollment_url ) ) {
+                        $return_url = $enrollment_url;
+                    }
+                }
+            }
+        }
+
+        if ( empty( $return_url ) ) {
+            $ld_registration_page_id = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration' );
+            $ld_registration_page_id = absint( $ld_registration_page_id );
+            if ( ! empty( $ld_registration_page_id ) ) {
+                $return_url = get_permalink( $ld_registration_page_id );
+            }
+        }
+
+        if ( ( empty( $return_url ) ) && ( ! empty( $post_id ) ) ) {
+            /**
+             * If the enrollment URL is empty and the global Stripe return URL is empty,
+             * we return the customer to the course/group.
+             */
+            $return_url = get_permalink( $post_id );
+        }
+
+        if ( empty( $return_url ) ) {
+            $return_url = get_home_url();
+        }
+
+        /**
+         * Filters URL for Stripe purchase cancel.
+         *
+         * @since 1.9.2
+         *
+         * @param string $redirect_url The URL to be redirected on Stripe cancel.
+         * @param int    $post_id      The Course/Group Post ID.
+         */
+        $return_url = apply_filters( 'learndash_stripe_purchase_cancel_url', $return_url, $post_id );
+
+        return $return_url;
+    }
+
+    /**
      * Specific integration scripts
      * @return void
      */
@@ -376,6 +579,12 @@ abstract class LearnDash_Stripe_Integration_Base {
             return;
         }
 
+        // Prevent webhooks being processed at the same time to prevent webhook error
+        $this->check_webhook_process();
+
+        global $learndash_stripe_webhook_running;
+        $learndash_stripe_webhook_running = true;
+
         try {
             $event = \Stripe\Webhook::constructEvent(
                 $payload, $sig_header, $this->endpoint_secret
@@ -403,30 +612,15 @@ abstract class LearnDash_Stripe_Integration_Base {
             exit();
         }
 
-        $user_id = null;
-
-        $client_reference_id = explode( ';', $session->client_reference_id );
-        foreach ( $client_reference_id as $value ) {
-            if ( strpos( $value, 'user_id' ) !== false ) {
-                preg_match( '/user_id=(\d+)/', $value, $match );
-                $user_id = $match[1];
-            }
-        }
+        $user_id = $session->metadata->user_id ?? null;
 
         $email_address = $customer->email;
         $user_id = $this->get_user( $email_address, $customer->id, $user_id );
 
-        // Handle the checkout.session.completed event
         if ( $event->type == 'checkout.session.completed' ) {
-            $course_id = null;
-            foreach ( $client_reference_id as $value ) {
-                if ( strpos( $value, 'course_id' ) !== false ) {
-                    preg_match( '/course_id=(\d+)/', $value, $match );
-                    $course_id = $match[1];
-                }
-            }
-
             // Associate course with user
+            $course_id = $session->metadata->course_id ?? null;
+
             $this->add_course_access( $course_id, $user_id );
 
             if ( ! $this->is_zero_decimal_currency( $session['stripe_currency'] ) && $session['stripe_price'] > 0 ) { 
@@ -435,31 +629,79 @@ abstract class LearnDash_Stripe_Integration_Base {
 
             // Log transaction
             $this->record_transaction( $session, $course_id, $user_id, $email_address );
-        } elseif ( $event->type == 'invoice.payment_succeeded' || $event->type == 'invoice.paid' ) {
+        } else if ( $event->type == 'invoice.payment_succeeded' ) {
             foreach ( $session->lines->data as $item ) {
-                $plan_id   = $item->plan->id;
-                $course_id = $this->get_course_id_by_plan_id( $plan_id );
-                if ( ! empty( $course_id ) ) {
-                    $this->add_course_access( $course_id, $user_id );
+                $plan_id = $item->plan->id ?? null;
+
+                if ( $plan_id ) {
+                    $course_id = $item->metadata->course_id ?? $this->get_course_id_by_plan_id( $plan_id );
+                    if ( ! empty( $course_id ) ) {
+                        $this->add_course_access( $course_id, $user_id );
+
+                        // Cancel user subscription if recurring limit is set
+                        $course_args = $this->get_course_args( $course_id );
+                        $course_recurring_times = $course_args['course_recurring_times'];
+
+                        if ( ! empty( $session->subscription ) ) {
+                            $invoices = \Stripe\Invoice::all( [
+                                'status' => 'paid',
+                                'customer' => $session->customer,
+                                'subscription' => $session->subscription,
+                            ] );
+
+                            $subscription = \Stripe\Subscription::retrieve( $session->subscription );
+
+                            $payment_number = count( $invoices->data );
+
+                            if ( isset( $subscription->metadata->has_trial ) && $subscription->metadata->has_trial == true ) {
+                                $payments_count = count( $invoices->data ) - 1;
+                            } else {
+                                $payments_count = count( $invoices->data );
+                            }
+                            
+                            if ( ! empty( $course_recurring_times ) && $course_recurring_times == $payments_count ) {
+                                $this->stripe->subscriptions->update(
+                                    $session->subscription,
+                                    [
+                                        'cancel_at_period_end' => true,
+                                    ]
+                                );
+                            }
+
+                            // Record recurring payment transaction
+                            $this->record_transaction( $session, $course_id, $user_id, $email_address, $payment_number );
+                        }
+                    }
                 }
             }
-        } elseif ( $event->type == 'invoice.payment_failed' ) {
+        } else if ( $event->type == 'invoice.payment_failed' ) {
             foreach ( $session->lines->data as $item ) {
                 $plan_id   = $item->plan->id;
-                $course_id = $this->get_course_id_by_plan_id( $plan_id );
+                $course_id = $item->metadata->course_id ?? $this->get_course_id_by_plan_id( $plan_id );
                 if ( ! empty( $course_id ) ) {
                     $this->remove_course_access( $course_id, $user_id );
                 }
             }
-        } elseif ( $event->type == 'customer.subscription.deleted' ) {
+        } else if ( $event->type == 'customer.subscription.deleted' ) {
             foreach ( $session->items->data as $item ) {
                 $plan_id   = $item->plan->id;
-                $course_id = $this->get_course_id_by_plan_id( $plan_id );
+                $course_id = $item->metadata->course_id ?? $this->get_course_id_by_plan_id( $plan_id );
+                
                 if ( ! empty( $course_id ) ) {
-                    $this->remove_course_access( $course_id, $user_id );
+                    $remove_user_course_access_on_recurring_limit = apply_filters( 'learndash_stripe_remove_user_course_access_on_recurring_limit', false, $course_id, $user_id );
+
+                    if ( isset( $session->metadata->has_recurring_limit ) && $session->metadata->has_recurring_limit ) {
+                        if ( $remove_user_course_access_on_recurring_limit ) {
+                            $this->remove_course_access( $course_id, $user_id );
+                        }
+                    } else {
+                        $this->remove_course_access( $course_id, $user_id );
+                    }
                 }
             }
         }
+
+        $learndash_stripe_webhook_running = false;
 
         http_response_code( 200 );
         exit();
@@ -558,6 +800,8 @@ abstract class LearnDash_Stripe_Integration_Base {
             } elseif ( learndash_get_post_type_slug( 'group' ) === get_post_type( $course_id ) ) {
                 ld_update_group_access( $user_id, $course_id );
             }
+
+            learndash_send_purchase_success_email( $user_id, $course_id );
         }
     }
 
@@ -685,6 +929,20 @@ abstract class LearnDash_Stripe_Integration_Base {
             return false;
         }
     }
+
+    /**
+     * Check whether Stripe payment is enabled or not
+     *
+     * @return boolean True if active, false otherwise
+     */
+    public function is_active()
+    {
+        if ( isset( $this->options['enabled'] ) && $this->options['enabled'] == 'yes' ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     /**
      * Check if PayPal is used or not.
@@ -746,5 +1004,17 @@ abstract class LearnDash_Stripe_Integration_Base {
      */
     public function generate_random_string(  $length = 3 ) {
         return substr( md5( microtime() ), 0, $length );
+    }
+
+    public function check_webhook_process()
+    {
+        global $learndash_stripe_webhook_running;
+
+        if ( $learndash_stripe_webhook_running ) {
+            sleep( 1 );
+            $this->check_webhook_process();
+        }
+
+        return false;
     }
 }

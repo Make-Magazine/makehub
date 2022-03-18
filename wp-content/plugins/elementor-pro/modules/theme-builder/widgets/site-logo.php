@@ -19,7 +19,7 @@ class Site_Logo extends Widget_Image {
 	}
 
 	public function get_title() {
-		return __( 'Site Logo', 'elementor-pro' );
+		return esc_html__( 'Site Logo', 'elementor-pro' );
 	}
 
 	public function get_icon() {
@@ -32,6 +32,15 @@ class Site_Logo extends Widget_Image {
 
 	public function get_keywords() {
 		return [ 'site', 'logo', 'branding' ];
+	}
+
+	public function get_inline_css_depends() {
+		return [
+			[
+				'name' => 'image',
+				'is_core_dependency' => true,
+			],
+		];
 	}
 
 	protected function register_controls() {

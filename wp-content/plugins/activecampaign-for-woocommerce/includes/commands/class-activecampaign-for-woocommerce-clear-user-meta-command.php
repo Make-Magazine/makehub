@@ -34,7 +34,11 @@ class Activecampaign_For_Woocommerce_Clear_User_Meta_Command implements Executab
 	 * @return WC_Order
 	 */
 	public function execute( ...$args ) {
-		$additional_information = isset( $args[0] ) ? $args[0] : [];
+		if ( isset( $args[0] ) ) {
+			$additional_information = $args[0];
+		} else {
+			$additional_information = [];
+		}
 
 		if (
 			isset( $additional_information['api_url_changed'] ) &&

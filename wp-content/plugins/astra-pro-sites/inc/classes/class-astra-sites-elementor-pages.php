@@ -71,20 +71,14 @@ class Astra_Sites_Elementor_Pages extends Source_Local {
 				$site_url      = str_replace( '/', '\/', $site_url );
 				$demo_site_url = 'https:' . $demo_data['astra-site-url'];
 				$demo_site_url = str_replace( '/', '\/', $demo_site_url );
-				$data          = str_replace( $demo_site_url, $site_url, $data );
-			}
-
-			// Replace the site urls.
-			$demo_data = get_option( 'astra_sites_import_data', array() );
-			if ( isset( $demo_data['astra-site-url'] ) ) {
-				$data = wp_json_encode( $data, true );
-				if ( ! empty( $data ) ) {
-					$site_url      = get_site_url();
-					$site_url      = str_replace( '/', '\/', $site_url );
-					$demo_site_url = 'https:' . $demo_data['astra-site-url'];
-					$demo_site_url = str_replace( '/', '\/', $demo_site_url );
-					$data          = str_replace( $demo_site_url, $site_url, $data );
-					$data          = json_decode( $data, true );
+				if ( ! is_array( $data ) ) {
+					$data = str_replace( $demo_site_url, $site_url, $data );
+				} else {
+					$data = wp_json_encode( $data, true );
+					if ( ! empty( $data ) ) {
+						$data          = str_replace( $demo_site_url, $site_url, $data );
+						$data          = json_decode( $data, true );
+					}
 				}
 			}
 

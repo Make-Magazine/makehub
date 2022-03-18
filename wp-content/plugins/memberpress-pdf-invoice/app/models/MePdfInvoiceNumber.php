@@ -38,7 +38,7 @@ class MePdfInvoiceNumber extends MeprBaseModel {
     global $wpdb;
     $db = MePdfDB::fetch();
     $last_invoice_no = $wpdb->get_var(
-      "SELECT `invoice_number` FROM {$db->invoice_numbers} ORDER BY `transaction_id` DESC LIMIT 1"
+      "SELECT `invoice_number` FROM {$db->invoice_numbers} ORDER BY `invoice_number` DESC LIMIT 1"
     );
 
     return $last_invoice_no;

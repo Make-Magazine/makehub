@@ -129,7 +129,7 @@ class SB_Instagram_Single {
 	 */
 	public function fetch() {
 		// need a connected business account for this to work
-		$access_token = SB_Instagram_Oembed::last_access_token();
+		$access_token = sbi_maybe_clean( SB_Instagram_Oembed::last_access_token() );
 
 		if ( empty( $access_token ) ) {
 			$this->error = 'No access token';

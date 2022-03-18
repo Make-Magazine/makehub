@@ -39,6 +39,21 @@ class SB_Instagram_Connected_Account {
 	}
 
 	/**
+	 * @return int
+	 *
+	 * @since 6.0.4
+	 */
+	public function recently_searched_hashtags_count() {
+		$connection = new SB_Instagram_API_Connect_Pro( $this->account, 'recently_searched_hashtags', array( 'hashtag' => '' ) );
+		$connection->connect();
+
+		$recently_searched_data     = ! $connection->is_wp_error() ? $connection->get_data() : false;
+		$num_hashatags_searched     = $recently_searched_data && isset( $recently_searched_data ) && ! isset( $recently_searched_data['data'] ) && is_array( $recently_searched_data ) ? count( $recently_searched_data ) : 0;
+
+		return $num_hashatags_searched;
+	}
+
+	/**
 	 * Returns data for a connected account based on a search by term
 	 * or type (business, user)
 	 *

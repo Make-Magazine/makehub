@@ -117,7 +117,7 @@ class BB_Access_Control_Woo_Membership extends BB_Access_Control_Abstract {
 						break;
 					}
 
-					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						$has_access = true;
 						break;
 					}
@@ -128,7 +128,7 @@ class BB_Access_Control_Woo_Membership extends BB_Access_Control_Abstract {
 							break;
 						}
 					}
-					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+					if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						foreach ( wp_list_pluck( self::get_level_lists(), 'id' ) as $level ) {
 							$plan = wc_memberships_is_user_active_or_delayed_member( $user_id, $level );
 							if ( $plan ) {

@@ -76,22 +76,13 @@ class ACUI_Frontend{
 				<tr class="form-field form-required">
 					<th scope="row"><label for="role"><?php _e( 'Default role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select id="role-frontend" name="role-frontend">
-							<?php 
-								if( $role == '' )
-									echo "<option selected='selected' value=''>" . __( 'Disable role assignment in frontend import', 'import-users-from-csv-with-meta' )  . "</option>";
-								else
-									echo "<option value=''>" . __( 'Disable role assignment in frontend import', 'import-users-from-csv-with-meta' )  . "</option>";
-
-								$list_roles = ACUI_Helper::get_editable_roles();		
-								foreach ($list_roles as $key => $value) {
-									if($key == $role)
-										echo "<option selected='selected' value='$key'>$value</option>";
-									else
-										echo "<option value='$key'>$value</option>";
-								}
-							?>
-						</select>
+						<?php ACUIHTML()->select( array(
+                            'options' => ACUI_Helper::get_editable_roles(),
+                            'name' => 'role-frontend',
+                            'selected' => $role,
+                            'show_option_all' => false,
+                            'show_option_none' => __( 'Disable role assignment in frontend import', 'import-users-from-csv-with-meta' ),
+                        )); ?>
 						<p class="description"><?php _e( 'Which role would be used to import users?', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
@@ -106,12 +97,10 @@ class ACUI_Frontend{
 					<th scope="row"><label for="user_login"><?php _e( 'Send mail', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<p id="sends_email_wrapper">
-							<?php _e( 'Do you wish to send a mail with credentials and other data?', 'import-users-from-csv-with-meta' ); ?> 
-							<input type="checkbox" name="send-mail-frontend" value="yes" <?php checked( $send_mail_frontend ); ?>/>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'send-mail-frontend', 'label' => __( 'Do you wish to send a mail with credentials and other data?', 'import-users-from-csv-with-meta' ), 'compare_value' => $send_mail_frontend ) ); ?>
 						</p>
 						<p id="send_email_updated_wrapper">
-							<?php _e( 'Do you wish to send this mail also to users that are being updated? (not only to the one which are being created)', 'import-users-from-csv-with-meta' ); ?>
-							<input type="checkbox" name="send-mail-updated-frontend" value="yes" <?php checked( $send_mail_updated_frontend ); ?>/>
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'send-mail-updated-frontend', 'label' => __( 'Do you wish to send this mail also to users that are being updated? (not only to the one which are being created)', 'import-users-from-csv-with-meta' ), 'compare_value' => $send_mail_updated_frontend ) ); ?>
 						</p>
 					</td>
 				</tr>
@@ -119,7 +108,7 @@ class ACUI_Frontend{
                 <tr class="form-field form-required">
 					<th scope="row"><label for=""><?php _e( 'Force users to reset their passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<input type="checkbox" name="force_user_reset_password" value="yes" <?php checked( get_option( 'acui_frontend_force_user_reset_password' ) ); ?>/>
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'force_user_reset_password', 'compare_value' => get_option( 'acui_frontend_force_user_reset_password' ) ) ); ?>
                         <p class="description"><?php _e( 'If a password is set to an user and you activate this option, the user will be forced to reset their password in their first login', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
@@ -128,10 +117,10 @@ class ACUI_Frontend{
 					<th scope="row"><label for="send_mail_admin_frontend"><?php _e( 'Send notification to admin when the frontend importer is used?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
                         <div style="float:left; margin-top: 10px;">
-                        <input type="checkbox" id="send_mail_admin_frontend" name="send_mail_admin_frontend" value="yes" <?php checked( $send_mail_admin_frontend ); ?>/>
+                        <?php ACUIHTML()->checkbox( array( 'name' => 'send_mail_admin_frontend', 'compare_value' => $send_mail_admin_frontend ) ); ?>
 						</div>
 						<div style="margin-left:25px;">
-							<input type="text" id="send_mail_admin_frontend_address_list" name="send_mail_admin_frontend_address_list" value="<?php echo $send_mail_admin_adress_list_frontend; ?>" placeholder="<?php _e( 'Include a list of emails where notification will be sent, use commas to separate addresses', 'import-users-from-csv-with-meta' ); ?>"/>
+                            <?php ACUIHTML()->text( array( 'name' => 'send_mail_admin_frontend_address_list', 'value' => $send_mail_admin_adress_list_frontend, 'class' => '', 'placeholder' => __( 'Include a list of emails where notification will be sent, use commas to separate addresses', 'import-users-from-csv-with-meta' ) ) ); ?>
 							<p class="description"><?php _e( 'If list is empty, the admin email will be used', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
 					</td>
@@ -146,21 +135,26 @@ class ACUI_Frontend{
 				<tr class="form-field form-required">
 					<th scope="row"><label><?php _e( 'Update existing users?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_existing_users">
-							<option value="yes" <?php selected( $update_existing_users, "yes" ); ?>><?php _e( 'Yes', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="no" <?php selected( $update_existing_users, "no" ); ?>><?php _e( 'No', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'yes' => __( 'Yes', 'import-users-from-csv-with-meta' ), 'no' => __( 'No', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_existing_users',
+                            'selected' => $update_existing_users,
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 
 				<tr class="form-field form-required">
 					<th scope="row"><label><?php _e( 'Update roles for existing users?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<select name="update_roles_existing_users">
-							<option value="no" <?php selected( $update_roles_existing_users, "no" ); ?>><?php _e( 'No', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="yes" <?php selected( $update_roles_existing_users, "yes" ); ?>><?php _e( 'Yes, update and override existing roles', 'import-users-from-csv-with-meta' ); ?></option>
-							<option value="yes_no_override" <?php selected( $update_roles_existing_users, "yes_no_override" ); ?>><?php _e( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ); ?></option>
-						</select>
+                        <?php ACUIHTML()->select( array(
+                            'options' => array( 'yes' => __( 'Yes', 'import-users-from-csv-with-meta' ), 'no' => __( 'No', 'import-users-from-csv-with-meta' ), 'yes_no_override' => __( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ) ),
+                            'name' => 'update_roles_existing_users',
+                            'selected' => $update_roles_existing_users,
+                            'show_option_all' => false,
+                            'show_option_none' => false,
+                        )); ?>
 					</td>
 				</tr>
 				</tbody>
@@ -173,27 +167,17 @@ class ACUI_Frontend{
 				<tr class="form-field form-required">
 					<th scope="row"><label for="delete_users_frontend"><?php _e( 'Delete users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="delete_users_frontend" id="delete_users_frontend" value="yes" <?php if( $delete_users_frontend == true ) echo "checked='checked'"; ?>/>
+                        <div style="float:left; margin-top: 10px;">
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'delete_users_frontend', 'compare_value' => $delete_users_frontend ) ); ?>
 						</div>
 						<div style="margin-left:25px;">
-							<select id="delete-users-assign-posts-frontend" name="delete-users-assign-posts-frontend">
-								<?php
-									if( $delete_users_assign_posts_frontend == '' )
-										echo "<option selected='selected' value=''>" . __( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' ) . "</option>";
-									else
-										echo "<option value=''>" . __( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' ) . "</option>";
-
-									$blogusers = get_users( array( 'fields' => array( 'ID', 'display_name' ) ) );
-									
-									foreach ( $blogusers as $bloguser ) {
-										if( $bloguser->ID == $delete_users_assign_posts_frontend )
-											echo "<option selected='selected' value='{$bloguser->ID}'>{$bloguser->display_name}</option>";
-										else
-											echo "<option value='{$bloguser->ID}'>{$bloguser->display_name}</option>";
-									}
-								?>
-							</select>
+                            <?php ACUIHTML()->select( array(
+                                'options' => ACUI_Helper::get_list_users_with_display_name(),
+                                'name' => 'delete-users-assign-posts-frontend',
+                                'selected' => $delete_users_assign_posts_frontend,
+                                'show_option_all' => false,
+                                'show_option_none' => __( 'Delete posts of deleted users without assigning to any user', 'import-users-from-csv-with-meta' ),
+                            )); ?>
 							<p class="description"><?php _e( 'After delete users, we can choose if we want to assign their posts to another user. Please do not delete them or posts will be deleted.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
 					</td>
@@ -203,17 +187,16 @@ class ACUI_Frontend{
 					<th scope="row"><label for="change_role_not_present_frontend"><?php _e( 'Change role of users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="change_role_not_present_frontend" id="change_role_not_present_frontend" value="yes" <?php checked( $change_role_not_present_frontend ); ?> />
+                            <?php ACUIHTML()->checkbox( array( 'name' => 'change_role_not_present_frontend', 'compare_value' => $change_role_not_present_frontend ) ); ?>
 						</div>
 						<div style="margin-left:25px;">
-							<select name="change_role_not_present_role_frontend" id="change_role_not_present_role_frontend">
-								<?php
-									$list_roles = ACUI_Helper::get_editable_roles();	
-									foreach ($list_roles as $key => $value):
-								?>
-									<option value='<?php echo $key; ?>' <?php selected( $change_role_not_present_role_frontend, $key ); ?>><?php echo $value; ?></option>
-								<?php endforeach; ?>
-							</select>
+                            <?php ACUIHTML()->select( array(
+                                'options' => ACUI_Helper::get_editable_roles(),
+                                'name' => 'change_role_not_present_role_frontend',
+                                'selected' => $change_role_not_present_role_frontend,
+                                'show_option_all' => false,
+                                'show_option_none' => false,
+                            )); ?>
 							<p class="description"><?php _e( 'After import users which is not present in the CSV and can be changed to a different role.', 'import-users-from-csv-with-meta' ); ?></p>
 						</div>
 					</td>

@@ -104,14 +104,16 @@ class MPCA_Account_Controller {
       if( !isset($ALREADY_RUN) && MeprUtils::is_post_request() ) {
         $ALREADY_RUN = true;
 
-        if($_REQUEST['manage_sub_accounts_form'] == 'import') {
+        if(isset($_REQUEST['manage_sub_accounts_form']) && $_REQUEST['manage_sub_accounts_form'] == 'import') {
           $r = $this->import_sub_account_users($ca);
         }
-        else if($_REQUEST['manage_sub_accounts_form'] == 'add') {
+        else if(isset($_REQUEST['manage_sub_accounts_form']) && $_REQUEST['manage_sub_accounts_form'] == 'add') {
           $r = $this->add_sub_account_user($ca);
         }
 
-        extract($r); // $errors and $message
+        if(isset($r)) {
+          extract($r); // $errors and $message
+        }
       }
 
       global $post;
@@ -141,6 +143,8 @@ class MPCA_Account_Controller {
       $next_page = (($currpage < $total_pages) ? ($currpage+1) : false);
 
       $app_helper = new MPCA_App_Helper();
+
+      $product_id = $ca->get_obj()->product_id;
 
       // We now have a valid corporate account
       require(MeprView::file('/mpca-manage-account-template'));
@@ -320,6 +324,13 @@ class MPCA_Account_Controller {
     }
     else {
       // Create the sub account user
+
+      // Make sure the sub account has an email.
+      if(empty(trim($userdata['user_email']))) {
+        array_push($errors, __('Sub Account Must Have an Email', 'memberpress-corporate'));
+        return compact('message', 'errors');
+      }
+
       $userdata['user_pass'] = wp_generate_password( $length=12, $include_standard_special_chars=false );
       $user_id = wp_insert_user( $userdata );
       if( ! is_wp_error($user_id) ) {
@@ -330,6 +341,11 @@ class MPCA_Account_Controller {
         if(!empty($_REQUEST['userdata']['last_name'])) {
           update_user_meta($user_id, 'last_name', sanitize_text_field($_REQUEST['userdata']['last_name']));
         }
+
+        $mepr_user = new MeprUser($user_id);
+
+        // Needed for autoresponders - call before txn is stored
+        MeprHooks::do_action('mepr-signup-user-loaded', $mepr_user);
       }
       else {
         array_push($errors, $user_id->get_error_message());

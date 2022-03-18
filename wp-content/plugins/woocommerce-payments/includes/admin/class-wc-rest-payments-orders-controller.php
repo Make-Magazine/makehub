@@ -7,6 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use WCPay\Constants\Payment_Method;
 use WCPay\Logger;
 
 /**
@@ -36,16 +37,25 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 	private $customer_service;
 
 	/**
+	 * WC_Payments_Order_Service instance for updating order statuses.
+	 *
+	 * @var WC_Payments_Order_Service
+	 */
+	private $order_service;
+
+	/**
 	 * WC_Payments_REST_Controller constructor.
 	 *
 	 * @param WC_Payments_API_Client       $api_client       WooCommerce Payments API client.
 	 * @param WC_Payment_Gateway_WCPay     $gateway          WooCommerce Payments payment gateway.
 	 * @param WC_Payments_Customer_Service $customer_service Customer class instance.
+	 * @param WC_Payments_Order_Service    $order_service    Order Service class instance.
 	 */
-	public function __construct( WC_Payments_API_Client $api_client, WC_Payment_Gateway_WCPay $gateway, WC_Payments_Customer_Service $customer_service ) {
+	public function __construct( WC_Payments_API_Client $api_client, WC_Payment_Gateway_WCPay $gateway, WC_Payments_Customer_Service $customer_service, WC_Payments_Order_Service $order_service ) {
 		parent::__construct( $api_client );
 		$this->gateway          = $gateway;
 		$this->customer_service = $customer_service;
+		$this->order_service    = $order_service;
 	}
 
 	/**
@@ -64,6 +74,15 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 						'required' => true,
 					],
 				],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
+			$this->rest_base . '/(?P<order_id>\w+)/create_terminal_intent',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'create_terminal_intent' ],
+				'permission_callback' => [ $this, 'check_permission' ],
 			]
 		);
 		register_rest_route(
@@ -105,38 +124,59 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 
 			// Do not process intents that can't be captured.
 			$intent = $this->api_client->get_intent( $intent_id );
-			if ( ! in_array( $intent->get_status(), [ 'processing', 'requires_capture' ], true ) ) {
+			if ( ! in_array( $intent->get_status(), [ 'processing', 'requires_capture', 'succeeded' ], true ) ) {
 				return new WP_Error( 'wcpay_payment_uncapturable', __( 'The payment cannot be captured', 'woocommerce-payments' ), [ 'status' => 409 ] );
 			}
 
 			// Update the order: set the payment method and attach intent attributes.
 			$order->set_payment_method( WC_Payment_Gateway_WCPay::GATEWAY_ID );
 			$order->set_payment_method_title( __( 'WooCommerce In-Person Payments', 'woocommerce-payments' ) );
+			$intent_id     = $intent->get_id();
+			$intent_status = $intent->get_status();
+			$charge_id     = $intent->get_charge_id();
 			$this->gateway->attach_intent_info_to_order(
 				$order,
-				$intent->get_id(),
-				$intent->get_status(),
+				$intent_id,
+				$intent_status,
 				$intent->get_payment_method_id(),
 				$intent->get_customer_id(),
-				$intent->get_charge_id(),
+				$charge_id,
 				$intent->get_currency()
 			);
+			$this->gateway->update_order_status_from_intent(
+				$order,
+				$intent_id,
+				$intent_status,
+				$charge_id
+			);
 
-			// Capture the intent and update order status.
-			$result = $this->gateway->capture_charge( $order );
+			// Certain payments (eg. Interac) are captured on the client-side (mobile app).
+			// The client may send us the captured intent to link it to its WC order.
+			// Doing so via this endpoint is more reliable than depending on the payment_intent.succeeded event.
+			$is_intent_captured         = 'succeeded' === $intent->get_status();
+			$result_for_captured_intent = [
+				'status' => 'succeeded',
+				'id'     => $intent->get_id(),
+			];
+
+			$result = $is_intent_captured ? $result_for_captured_intent : $this->gateway->capture_charge( $order );
+
 			if ( 'succeeded' !== $result['status'] ) {
 				$http_code = $result['http_code'] ?? 502;
 				return new WP_Error(
 					'wcpay_capture_error',
 					sprintf(
-						// translators: %s: the error message.
+					// translators: %s: the error message.
 						__( 'Payment capture failed to complete with the following message: %s', 'woocommerce-payments' ),
 						$result['message'] ?? __( 'Unknown error', 'woocommerce-payments' )
 					),
 					[ 'status' => $http_code ]
 				);
 			}
-			$order->update_status( 'completed' );
+			// Store receipt generation URL for mobile applications in order meta-data.
+			$order->add_meta_data( 'receipt_url', get_rest_url( null, sprintf( '%s/payments/readers/receipts/%s', $this->namespace, $intent->get_id() ) ) );
+			// Actualize order status.
+			$this->order_service->mark_terminal_payment_completed( $order, $intent_id, $intent_status, $charge_id );
 
 			return rest_ensure_response(
 				[
@@ -196,6 +236,28 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			);
 		} catch ( \Throwable $e ) {
 			Logger::error( 'Failed to create / update customer from order via REST API: ' . $e );
+			return new WP_Error( 'wcpay_server_error', __( 'Unexpected server error', 'woocommerce-payments' ), [ 'status' => 500 ] );
+		}
+	}
+
+	/**
+	 * Create a new in-person payment intent for the given order ID without confirming it.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function create_terminal_intent( $request ) {
+		// Do not process non-existing orders.
+		$order = wc_get_order( $request['order_id'] );
+		if ( false === $order ) {
+			return new WP_Error( 'wcpay_missing_order', __( 'Order not found', 'woocommerce-payments' ), [ 'status' => 404 ] );
+		}
+
+		try {
+			$result = $this->gateway->create_intent( $order, [ Payment_Method::CARD_PRESENT ], 'manual' );
+			return rest_ensure_response( $result );
+		} catch ( \Throwable $e ) {
+			Logger::error( 'Failed to create an intention via REST API: ' . $e );
 			return new WP_Error( 'wcpay_server_error', __( 'Unexpected server error', 'woocommerce-payments' ), [ 'status' => 500 ] );
 		}
 	}

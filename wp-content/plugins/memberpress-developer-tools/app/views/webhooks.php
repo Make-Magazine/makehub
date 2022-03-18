@@ -2,6 +2,18 @@
 
 <?php $admin = MpdtCtrlFactory::fetch('admin'); ?>
 <div class="mepr-page-title"><?php _e('Webhooks', 'memberpress-developer-tools'); ?></div>
+  <h3><?php _e('Webhook Key:', 'memberpress-developer-tools'); ?></h3>
+  <em>
+    <?php _e('The Webhook Key can be used for authenticating the POST request. If you feel your key has been compromised, you can regenerate a new one. To validate Webhook request, fetch HTTP headers and look for <b>MEMBERPRESS-WEBHOOK-KEY</b>.', 'memberpress-developer-tools'); ?>
+  </em>
+  <p>
+    <input id="mpdt_webhook_key" type="text" name="mpdt_webhook_key" value="<?php echo $webhook_key; ?>" onfocus="this.select();" onclick="this.select();" readonly>
+    <span>
+      <i class="mpdt-clipboard mp-icon mp-icon-clipboard mp-16" data-clipboard-target="#mpdt_webhook_key"></i>
+      <i class="mpdt-regenerate-webhook mp-icon mp-icon-arrows-cw mp-16"></i>
+    </span>
+  </p>
+  <hr/>
 <p><?php _e('Webhooks can send JSON push notices to specific URLs via POST when specific events occur in MemberPress. You can configure your webhooks here:', 'memberpress-developer-tools'); ?></p>
 
 <form action="" method="post" id="mpdt_ops_form">

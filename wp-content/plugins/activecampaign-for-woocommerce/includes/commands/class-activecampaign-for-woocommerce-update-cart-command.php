@@ -19,8 +19,6 @@ use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command as Abandoned_Cart;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
-use AcVendor\Psr\Log\LoggerInterface;
-
 
 /**
  * Send the cart and its products to ActiveCampaign for the given customer.
@@ -73,7 +71,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 	/**
 	 * The logger interface.
 	 *
-	 * @var LoggerInterface
+	 * @var Logger
 	 */
 	private $logger;
 
@@ -100,7 +98,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 	 * @param     Ecom_Order_Factory                        $factory     The Ecom Order Factory.
 	 * @param     Ecom_Order_Repository                     $order_repository     The Ecom Order Repo.
 	 * @param     Ecom_Customer_Repository|null             $customer_repository     The Ecom Customer Repo.
-	 * @param     LoggerInterface                           $logger     The logger interface.
+	 * @param     Logger                                    $logger     The logger interface.
 	 */
 	public function __construct(
 		WC_Cart $cart = null,
@@ -109,7 +107,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		Ecom_Order_Factory $factory,
 		Ecom_Order_Repository $order_repository,
 		Ecom_Customer_Repository $customer_repository,
-		LoggerInterface $logger = null
+		Logger $logger = null
 	) {
 		$this->cart                = $cart;
 		$this->customer            = $customer;
@@ -117,7 +115,12 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		$this->order_repository    = $order_repository;
 		$this->customer_repository = $customer_repository;
 		$this->admin               = $admin;
-		$this->logger              = $logger;
+
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
 	}
 
 	/**
@@ -125,8 +128,13 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 	 */
 	public function init() {
 		// calling wc in the constructor causes an exception, since the object is not ready yet
-		$this->cart     = $this->cart ?: wc()->cart;
-		$this->customer = $this->customer ?: wc()->customer;
+		if ( ! $this->cart ) {
+			$this->cart = wc()->cart;
+		}
+
+		if ( ! $this->customer ) {
+			$this->customer = wc()->customer;
+		}
 	}
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
 
@@ -140,16 +148,29 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 	public function execute( ...$args ) {
 		$this->init();
 
-		// If the customer is not logged in, there is nothing to do
-		if ( ! ( $this->customer instanceof WC_Customer ) || empty( $this->customer->get_email() ) ) {
-			$this->logger->debug(
-				'Update Cart Command: Customer not logged in or unknown. Do nothing.',
+		// If the customer has no available email, there is nothing to do
+		try {
+			if (
+				! ( $this->customer instanceof WC_Customer )
+				&& empty( $this->customer->get_email() )
+				&& empty( $this->customer->get_billing_email() )
+			) {
+				$this->logger->debug(
+					'Update Cart Command: Customer not logged in or email unknown. Do nothing.',
+					[
+						'customer email' => method_exists( $this->customer, 'get_email' ) ? $this->customer->get_email() : null,
+					]
+				);
+
+				return false;
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->warning(
+				'Update Cart Command: There was an issue creating a customer or reading order, continuing.',
 				[
-					'cart' => $this->cart,
+					'message' => $t->getMessage(),
 				]
 			);
-
-			return false;
 		}
 
 		// First, make sure we have the ID for the ActiveCampaign customer record
@@ -158,8 +179,8 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 				$this->logger->debug(
 					'Update Cart Command: Verify AC customer - Cannot verify without a customer ID, continuing.',
 					[
-						'customer_email' => $this->customer->get_email(),
-						'customer_id'    => $this->customer->get_id(),
+						'customer_email' => method_exists( $this->customer, 'get_email' ) ? $this->customer->get_email() : null,
+						'customer_id'    => method_exists( $this->customer, 'get_id' ) ? $this->customer->get_id() : null,
 					]
 				);
 			}
@@ -210,7 +231,12 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		}
 
 		if ( ! $this->customer->get_email() ) {
-			$this->logger->debug( 'Update Cart Command: Customer verification exception - No customer email found or no AC user ID set.', [ 'customer_email' => $this->customer->get_email() ] );
+			$this->logger->debug(
+				'Update Cart Command: Customer verification exception - No customer email found or no AC user ID set.',
+				[
+					'customer_email' => method_exists( $this->customer, 'get_email' ) ? $this->customer->get_email() : null,
+				]
+			);
 
 			return false;
 		}
@@ -261,7 +287,12 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 	 */
 	private function create_customer() {
 		if ( isset( $this->customer ) && $this->customer->get_email() && $this->customer->get_id() && $this->get_connection_id() ) {
-			$this->logger->debug( 'Update Cart: Trying to create a new customer.', [ 'customer' => $this->customer ] );
+			$this->logger->debug(
+				'Update Cart: Trying to create a new customer.',
+				[
+					'customer' => method_exists( $this->customer, 'get_data' ) ? $this->customer->get_data() : null,
+				]
+			);
 			$new_customer = new Ecom_Customer();
 			$new_customer->set_email( $this->customer->get_email() );
 			$new_customer->set_externalid( $this->customer->get_id() );

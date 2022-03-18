@@ -37,7 +37,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Repository implements Repository
 	 * The plural resource name as it maps to the AC API.
 	 */
 	const RESOURCE_NAME_PLURAL = 'ecomOrders';
-
+	const ENDPOINT_NAME        = 'ecomOrder';
+	const ENDPOINT_NAME_PLURAL = 'ecomOrders';
 	/**
 	 * The API client.
 	 *

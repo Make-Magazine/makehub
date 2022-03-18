@@ -12,6 +12,13 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
  */
 class WC_Payments_Blocks_Payment_Method extends AbstractPaymentMethodType {
 	/**
+	 * The gateway instance.
+	 *
+	 * @var WC_Payment_Gateway_WCPay
+	 */
+	private $gateway;
+
+	/**
 	 * Initializes the class.
 	 */
 	public function initialize() {
@@ -34,6 +41,12 @@ class WC_Payments_Blocks_Payment_Method extends AbstractPaymentMethodType {
 	 * @return string[] A list of script handles.
 	 */
 	public function get_payment_method_script_handles() {
+		wp_enqueue_style(
+			'wc-blocks-checkout-style',
+			plugins_url( 'dist/upe-blocks-checkout.css', WCPAY_PLUGIN_FILE ),
+			[],
+			'1.0'
+		);
 		wp_register_script(
 			'stripe',
 			'https://js.stripe.com/v3/',
@@ -60,12 +73,23 @@ class WC_Payments_Blocks_Payment_Method extends AbstractPaymentMethodType {
 	 * @return array An associative array, containing all necessary values.
 	 */
 	public function get_payment_method_data() {
+		$is_platform_checkout_feature_enabled = WC_Payments_Features::is_platform_checkout_enabled(); // Feature flag.
+		$is_platform_checkout_enabled         = 'yes' === $this->gateway->get_option( 'platform_checkout', 'no' );
+		$platform_checkout_config             = [];
+
+		if ( $is_platform_checkout_feature_enabled && $is_platform_checkout_enabled ) {
+			$platform_checkout_config = [
+				'platformCheckoutHost' => defined( 'PLATFORM_CHECKOUT_FRONTEND_HOST' ) ? PLATFORM_CHECKOUT_FRONTEND_HOST : 'http://localhost:8090',
+			];
+		}
+
 		return array_merge(
 			[
 				'title'       => $this->gateway->get_option( 'title', '' ),
 				'description' => $this->gateway->get_option( 'description', '' ),
 				'is_admin'    => is_admin(), // Used to display payment method preview in wp-admin.
 			],
+			$platform_checkout_config,
 			$this->gateway->get_payment_fields_js_config()
 		);
 	}

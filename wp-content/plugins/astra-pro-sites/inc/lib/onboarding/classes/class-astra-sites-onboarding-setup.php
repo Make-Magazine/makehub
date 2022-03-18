@@ -44,6 +44,28 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 		public function __construct() {
 			add_action( 'wp_ajax_astra_sites_set_site_data', array( $this, 'set_site_data' ) );
 			add_action( 'wp_ajax_report_error', array( $this, 'report_error' ) );
+			add_action( 'st_before_sending_error_report', array( $this, 'delete_transient_for_import_process' ) );
+			add_action( 'st_before_sending_error_report', array( $this, 'temporary_cache_errors' ), 10, 1 );
+		}
+
+		/**
+		 * Delete transient for import process.
+		 *
+		 * @since 3.1.4
+		 * @return void
+		 */
+		public function temporary_cache_errors( $posted_data ) {
+			update_option( 'astra_sites_cached_import_error', $posted_data, 'no' );
+		}
+
+		/**
+		 * Delete transient for import process.
+		 *
+		 * @since 3.1.4
+		 * @return void
+		 */
+		public function delete_transient_for_import_process() {
+			delete_transient( 'astra_sites_import_started' );
 		}
 
 		/**
@@ -53,7 +75,6 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 		 * @return void
 		 */
 		public function report_error() {
-			delete_transient( 'astra_sites_import_started' );
 			$api_url = add_query_arg( [], trailingslashit( Astra_Sites::get_instance()->get_api_domain() ) . 'wp-json/starter-templates/v2/import-error/' );
 
 			if ( ! astra_sites_is_valid_url( $api_url ) ) {
@@ -99,7 +120,11 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 				),
 			);
 
+			do_action( 'st_before_sending_error_report', $api_args['body'] );
+
 			$request = wp_remote_post( $api_url, $api_args );
+
+			do_action( 'st_after_sending_error_report', $api_args['body'], $request );
 
 			if ( is_wp_error( $request ) ) {
 				wp_send_json_error( $request );

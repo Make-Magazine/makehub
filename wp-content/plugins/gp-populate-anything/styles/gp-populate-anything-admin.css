@@ -260,6 +260,13 @@
 	width: 45% !important;
 }
 
+/* JetSloth Image Choices styling */
+.gppa-choices-enabled.image-choices-use-images .ginput_container li label,
+.gppa-choices-enabled.image-choices-use-images .ginput_container .gchoice label {
+	width: 75px !important;
+	height: 75px !important;
+}
+
 .gppa-choices-enabled .gfield_label,
 .gppa-values-enabled .gfield_label {
 	display: flex !important;

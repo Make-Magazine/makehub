@@ -826,32 +826,37 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $quiz_post_id ) ) {
-					$filter_url = add_query_arg( 'quiz_id', $quiz_post_id, $this->get_clean_filter_url() );
+					$quiz_post = get_post( $quiz_post_id );
+					if ( ( $quiz_post ) && ( is_a( $quiz_post, 'WP_Post' ) ) ) {
+						$quiz_title = learndash_format_step_post_title_with_status_label( $quiz_post );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $quiz_post_id ) ) . '</a>';
-					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+						$filter_url = add_query_arg( 'quiz_id', $quiz_post_id, $this->get_clean_filter_url() );
 
-					$course_id = get_post_meta( $post_id, 'course_id', true );
-					if ( current_user_can( 'edit_post', $quiz_post_id ) ) {
-						$edit_url = get_edit_post_link( $quiz_post_id );
+						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . wp_kses_post( $quiz_title ) . '</a>';
+						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						if ( ! empty( $course_id ) ) {
-							$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+						$course_id = get_post_meta( $post_id, 'course_id', true );
+						if ( current_user_can( 'edit_post', $quiz_post_id ) ) {
+							$edit_url = get_edit_post_link( $quiz_post_id );
+
+							if ( ! empty( $course_id ) ) {
+								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+							}
+
+							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 						}
 
-						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-					}
+						if ( is_post_type_viewable( get_post_type( $quiz_post_id ) ) ) {
+							if ( ! empty( $course_id ) ) {
+								$view_url = learndash_get_step_permalink( $quiz_post_id, $course_id );
+							} else {
+								$view_url = get_permalink( $quiz_post_id );
+							}
 
-					if ( is_post_type_viewable( get_post_type( $quiz_post_id ) ) ) {
-						if ( ! empty( $course_id ) ) {
-							$view_url = learndash_get_step_permalink( $quiz_post_id, $course_id );
-						} else {
-							$view_url = get_permalink( $quiz_post_id );
+							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 						}
-
-						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+						echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 					}
-					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -881,30 +886,35 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $question_post_id ) ) {
-					$filter_url = add_query_arg( 'question_id', $question_post_id, $this->get_clean_filter_url() );
+					$question_post = get_post( $question_post_id );
+					if ( ( $question_post ) && ( is_a( $question_post, 'WP_Post' ) ) ) {
+						$question_title = learndash_format_step_post_title_with_status_label( $question_post );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $question_post_id ) ) . '</a>';
-					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+						$filter_url = add_query_arg( 'question_id', $question_post_id, $this->get_clean_filter_url() );
 
-					$quiz_id = get_post_meta( $question_post_id, 'quiz_id', true );
-					if ( current_user_can( 'edit_post', $question_post_id ) ) {
-						$edit_url = get_edit_post_link( $question_post_id );
+						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . wp_kses_post( $question_title ) . '</a>';
+						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						if ( ! empty( $quiz_id ) ) {
-							$edit_url = add_query_arg( 'quiz_id', $quiz_id, $edit_url );
+						$quiz_id = get_post_meta( $question_post_id, 'quiz_id', true );
+						if ( current_user_can( 'edit_post', $question_post_id ) ) {
+							$edit_url = get_edit_post_link( $question_post_id );
+
+							if ( ! empty( $quiz_id ) ) {
+								$edit_url = add_query_arg( 'quiz_id', $quiz_id, $edit_url );
+							}
+
+							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 						}
 
-						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-					}
+						if ( is_post_type_viewable( get_post_type( $question_post_id ) ) ) {
+							if ( ! empty( $quiz_id ) ) {
+								$view_url = learndash_get_step_permalink( $question_post_id, $quiz_id );
 
-					if ( is_post_type_viewable( get_post_type( $question_post_id ) ) ) {
-						if ( ! empty( $quiz_id ) ) {
-							$view_url = learndash_get_step_permalink( $question_post_id, $quiz_id );
-
-							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+								$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+							}
 						}
+						echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 					}
-					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}

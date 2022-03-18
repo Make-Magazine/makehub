@@ -6,6 +6,8 @@ import truncateStringMiddle from '../helpers/truncateStringMiddle';
 import Filter from './Filter.vue';
 import ResultsPreview from './ResultsPreview.vue';
 import SelectWithCustom from './SelectWithCustom.vue';
+import Templates from "./Templates.vue";
+import Ordering from "./Ordering.vue";
 
 const $ = window.jQuery;
 
@@ -15,6 +17,8 @@ export default Vue.extend({
 	},
 	components: {
 		'gppa-filter': Filter,
+		'gppa-templates': Templates,
+		'gppa-ordering': Ordering,
 		'gppa-results-preview': ResultsPreview,
 		'gppa-select-with-custom': SelectWithCustom,
 	},
@@ -183,22 +187,6 @@ export default Vue.extend({
 		ungroupedProperties: function () {
 			return this.properties.ungrouped;
 		},
-		orderingPropertiesGrouped: function () {
-			const groupedProperties = {...this.groupedProperties};
-
-			for ( const [groupId, properties] of Object.entries(groupedProperties) ) {
-				groupedProperties[groupId] = properties.filter(property => property?.['orderby']);
-
-				if (groupedProperties[groupId].length === 0) {
-					delete groupedProperties[groupId];
-				}
-			}
-
-			return groupedProperties;
-		},
-		orderingPropertiesUngrouped: function () {
-			return this.ungroupedProperties?.filter(property => property?.['orderby']);
-		},
 		flattenedProperties: function () {
 			var propertiesFlat = {};
 			var vm = this;
@@ -212,6 +200,9 @@ export default Vue.extend({
 			});
 
 			return propertiesFlat;
+		},
+		propertiesLoaded: function () {
+			return this.flattenedProperties && Object.keys(this.flattenedProperties).length;
 		},
 		currentFieldSettings: function () {
 
@@ -251,6 +242,7 @@ export default Vue.extend({
 					if ('basePrice' in this.field || this.field.type === 'option') {
 						templateRows.push({id: 'price', label: this.i18nStrings.price, required: true});
 					}
+
 					break;
 
 				case 'values':
@@ -370,7 +362,9 @@ export default Vue.extend({
 			switch (this.populate) {
 				case 'choices':
 					if ( $.inArray( window.field.type, [ 'post_category' ] ) === -1 ) {
-						window.field.choices && window.field.choices.length && $('.choices_setting').show();
+						if (window.field.choices && window.field.choices.length) {
+							$('.choices_setting, .choices-ui__trigger-section').show();
+						}
 					}
 					break;
 				case 'values':
@@ -388,7 +382,10 @@ export default Vue.extend({
 
 			switch (this.populate) {
 				case 'choices':
-					window.field.choices && $('.choices_setting').hide();
+					if (window.field.choices) {
+						$('.choices_setting, .choices-ui__trigger-section').hide();
+						window?.gform?.instances?.choicesUi?.flyout?.closeFlyout();
+					}
 					break;
 				case 'values':
 					if (window.fieldSettings[window.field.type] && window.fieldSettings[window.field.type].indexOf('calculation_setting') !== -1) {
@@ -548,7 +545,8 @@ export default Vue.extend({
 		},
 		hasChoices: function() {
 			return 'choices' in this.field && this.field.choices !== '' && this.field.choices !== null;
-		}
+		},
+
 	}
 });
 </script>
@@ -647,7 +645,7 @@ export default Vue.extend({
 							</template>
 
 							<button class="gppa-add-filter-group button button-secondary"
-									@click="addFilterGroup">
+									@click="addFilterGroup" :disabled="!propertiesLoaded">
 								<i class="gficon-add"></i> Add Filter Group
 							</button>
 						</div>
@@ -671,91 +669,28 @@ export default Vue.extend({
 						  :populate="populate"
 						  :uniqueResults="uniqueResults"></gppa-results-preview>
 
-						<label class="section_label gppa-ordering-label" style="margin-top: 15px">
-							{{ i18nStrings.ordering }}
-						</label>
-
-						<div class="gppa-ordering">
-							<select class="gppa-ordering-property" v-model="orderingProperty">
-								<option v-if="!Object.keys(properties).length" selected="selected" value=""
-										disabled hidden>{{ i18nStrings.loadingEllipsis }}
-								</option>
-								<option v-else selected="selected" value="" disabled hidden>&ndash; Select a
-									Property &ndash;
-								</option>
-
-								<option v-for="option in orderingPropertiesUngrouped"
-								        v-bind:value="option.value">
-									{{ truncateStringMiddle(option.label) }}
-								</option>
-
-								<optgroup v-for="(options, groupID) in orderingPropertiesGrouped"
-								          v-bind:label="groupID in objectTypeInstance.groups && objectTypeInstance.groups[groupID].label">
-									<option v-for="option in options" v-bind:value="option.value">
-										{{ truncateStringMiddle(option.label) }}
-									</option>
-								</optgroup>
-							</select>
-
-							<select class="gppa-ordering-method" v-model="orderingMethod">
-								<option
-									value="asc">{{ i18nStrings.ascending }}
-								</option>
-								<option
-									value="desc">{{ i18nStrings.descending }}
-								</option>
-								<option
-									value="rand">{{ i18nStrings.random }}
-								</option>
-							</select>
-						</div>
+						<gppa-ordering
+							:grouped-properties="groupedProperties"
+							:ungrouped-properties="ungroupedProperties"
+							:object-type-instance="objectTypeInstance"
+							:ordering-property="orderingProperty"
+							:ordering-method="orderingMethod"
+							:properties-loaded="propertiesLoaded"
+							@input-ordering-property="orderingProperty = $event"
+							@input-ordering-method="orderingMethod = $event"
+						></gppa-ordering>
 					</template>
 
-					<label class="section_label" style="margin-top: 15px" v-if="populate === 'choices'">
-						{{ i18nStrings.choiceTemplate }}
-					</label>
-
-					<label class="section_label" style="margin-top: 15px" v-else>
-						{{ i18nStrings.valueTemplates }}
-					</label>
-
-					<table class="field_custom_inputs_ui gppa-templates">
-						<tr class="field_custom_input_row gppa-template-row" v-for="templateRow of templateRows"
-							:key="templateRow.label">
-							<td>
-								<label class="inline">{{ templateRow.label }}</label>
-							</td>
-
-							<td>
-								<select v-if="!flattenedProperties || !Object.keys(flattenedProperties).length"
-										disabled>
-									<option value="" disabled selected>{{ i18nStrings.loadingEllipsis }}
-									</option>
-								</select>
-								<gppa-select-with-custom v-else v-model="templates[templateRow.id]"
-														 :inject-custom-value-option="true"
-														 :loading="!Object.keys(properties).length"
-														 :object-type-instance="objectTypeInstance"
-														 :flattened-properties="flattenedProperties">
-									<option
-											v-if="!templates[templateRow.label] || !templates[templateRow.label].value"
-											value="">&ndash; Property &ndash;
-									</option>
-
-									<option v-for="option in ungroupedProperties" v-bind:value="option.value">
-										{{ truncateStringMiddle(option.label) }}
-									</option>
-
-									<optgroup v-for="(options, groupID) in groupedProperties"
-											  v-bind:label="groupID in objectTypeInstance.groups && objectTypeInstance.groups[groupID].label">
-										<option v-for="option in options" v-bind:value="option.value">
-											{{ truncateStringMiddle(option.label) }}
-										</option>
-									</optgroup>
-								</gppa-select-with-custom>
-							</td>
-						</tr>
-					</table>
+					<gppa-templates
+						:properties-loaded="propertiesLoaded"
+						:object-type-instance="objectTypeInstance"
+						:grouped-properties="groupedProperties"
+						:ungrouped-properties="ungroupedProperties"
+						:flattened-properties="flattenedProperties"
+						:populate="populate"
+						:template-rows="templateRows"
+						v-model="templates"
+					></gppa-templates>
 				</div>
 			</template>
 		</div>

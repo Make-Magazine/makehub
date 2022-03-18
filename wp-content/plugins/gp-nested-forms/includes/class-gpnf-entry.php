@@ -124,7 +124,17 @@ class GPNF_Entry {
 		return $this->_entry;
 	}
 
-	public function set_parent_form( $parent_form_id, $parent_entry_id = false ) {
+	/**
+	 * @deprecated 1.0.2
+	 *
+	 * @return int
+	 */
+	public function set_parent_form( $parent_form_id, &$parent_entry_id = false ) {
+		_deprecated_function( 'GPNF_Entry::set_parent_form', '1.0.1', 'GPNF_Entry::set_parent_meta' );
+		return $this->set_parent_meta( $parent_form_id, $parent_entry_id );
+	}
+
+	public function set_parent_meta( $parent_form_id, $parent_entry_id = false ) {
 		/**
 		 * Filter parent entry ID
 		 *
@@ -154,6 +164,7 @@ class GPNF_Entry {
 		gform_update_meta( $this->_entry_id, self::ENTRY_PARENT_FORM_KEY, $parent_form_id );
 		$this->_entry[ self::ENTRY_PARENT_FORM_KEY ] = $parent_form_id;
 
+		return $parent_entry_id;
 	}
 
 	public function set_nested_form_field( $nested_form_field_id ) {

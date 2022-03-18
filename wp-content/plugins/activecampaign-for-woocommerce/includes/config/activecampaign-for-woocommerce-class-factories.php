@@ -32,7 +32,7 @@ use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
 use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
 use Activecampaign_For_Woocommerce_I18n as I18n;
 use Activecampaign_For_Woocommerce_Loader as Loader;
-use Activecampaign_For_Woocommerce_Logger as Log;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
@@ -45,6 +45,9 @@ use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Gue
 use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
 use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
 use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
+use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
+use AcVendor\DI;
 use AcVendor\Psr\Container\ContainerInterface;
 use AcVendor\Psr\Log\LoggerInterface;
 
@@ -54,7 +57,7 @@ return array(
 		Admin $admin,
 		AC_Public $public,
 		I18n $i18n,
-		LoggerInterface $logger,
+		Logger $logger,
 		Cart_Updated $cart_updated_event,
 		Cart_Emptied $cart_emptied_event,
 		Set_Connection_Id_Cache_Command $set_connection_id_cache_command,
@@ -73,7 +76,9 @@ return array(
 		Historical_Sync $historical_sync,
 		Order_Utilities $order_utilities,
 		Customer_Utilities $customer_utilities,
-		Abandoned_Cart_Utilities $abandoned_cart_utilities
+		Abandoned_Cart_Utilities $abandoned_cart_utilities,
+		Bulksync_Repository $bulksync_repository,
+		AC_Utilities $ac_utilities
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -109,15 +114,17 @@ return array(
 			$historical_sync,
 			$order_utilities,
 			$customer_utilities,
-			$abandoned_cart_utilities
+			$abandoned_cart_utilities,
+			$bulksync_repository,
+			$ac_utilities
 		);
 	},
 
-	Add_Accepts_Marketing_To_Customer_Meta::class     => function ( LoggerInterface $logger ) {
+	Add_Accepts_Marketing_To_Customer_Meta::class     => static function ( Logger $logger ) {
 		return new Add_Accepts_Marketing_To_Customer_Meta( $logger );
 	},
 
-	Admin::class                                      => function ( ContainerInterface $c ) {
+	Admin::class                                      => static function ( ContainerInterface $c, Connection_Repository $connection_repository ) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
 			'1.0.0';
@@ -130,10 +137,10 @@ return array(
 
 		$event = new Activecampaign_For_Woocommerce_Admin_Settings_Updated_Event();
 
-		return new Admin( $plugin_name, $version, $validator, $event );
+		return new Admin( $plugin_name, $version, $validator, $event, $connection_repository );
 	},
 
-	Api_Client::class                                 => function ( LoggerInterface $logger ) {
+	Api_Client::class                                 => static function ( Logger $logger ) {
 		$settings = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
 
 		$api_uri = isset( $settings['api_url'] ) ? $settings['api_url'] : null;
@@ -142,7 +149,7 @@ return array(
 		return new Api_Client( $api_uri, $api_key, $logger );
 	},
 
-	AC_Public::class                                  => function ( Admin $admin ) {
+	AC_Public::class                                  => static function ( Admin $admin ) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ? ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION : '1.0.0';
 
 		$plugin_name = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB' ) ? ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB : 'activecampaign-for-woocommerce';
@@ -150,24 +157,24 @@ return array(
 		return new AC_Public( $plugin_name, $version, $admin );
 	},
 
-	Create_And_Save_Cart_Id::class                    => function ( LoggerInterface $logger ) {
+	Create_And_Save_Cart_Id::class                    => static function ( Logger $logger ) {
 		return new Create_And_Save_Cart_Id( $logger );
 	},
 
-	Create_Or_Update_Connection_Option_Command::class => function (
+	Create_Or_Update_Connection_Option_Command::class => static function (
 		Admin $admin,
 		Connection_Option_Repository $repository,
-		LoggerInterface $logger
+		Logger $logger
 	) {
 		return new Create_Or_Update_Connection_Option_Command( $admin, $repository, null, $logger );
 	},
 
-	Update_Cart_Command::class                        => function (
+	Update_Cart_Command::class                        => static function (
 		Admin $admin,
 		Ecom_Order_Factory $factory,
 		Ecom_Order_Repository $order_repository,
 		Ecom_Customer_Repository $customer_repository,
-		LoggerInterface $logger
+		Logger $logger
 	) {
 		return new Update_Cart_Command(
 			null,
@@ -180,15 +187,15 @@ return array(
 		);
 	},
 
-	Set_Connection_Id_Cache_Command::class            => function (
+	Set_Connection_Id_Cache_Command::class            => static function (
 		Admin $admin,
 		Connection_Repository $connection_repository,
-		LoggerInterface $logger
+		Logger $logger
 	) {
 		return new Set_Connection_Id_Cache_Command( $admin, $connection_repository, $logger );
 	},
 
-	Sync_Guest_Abandoned_Cart_Command::class          => function (
+	Sync_Guest_Abandoned_Cart_Command::class          => static function (
 		Admin $admin,
 		Ecom_Customer_Repository $customer_repository
 	) {
@@ -201,27 +208,26 @@ return array(
 		);
 	},
 
-	Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command::class => function (
-		LoggerInterface $logger
+	Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command::class => static function (
+		Logger $logger
 	) {
 		return new Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command( $logger );
 	},
 
-	Historical_Sync::class                            => function (
-		LoggerInterface $logger,
+	Historical_Sync::class                            => static function (
+		Logger $logger,
 		Order_Utilities $order_utilities,
 		Customer_Utilities $customer_utilities,
 		Contact_Repository $contact_repository,
 		Ecom_Customer_Repository $customer_repository,
-		Ecom_Order_Repository $order_repository
+		Ecom_Order_Repository $order_repository,
+		Bulksync_Repository $bulksync_repository
 	) {
-		return new Historical_Sync( $logger, $order_utilities, $customer_utilities, $contact_repository, $customer_repository, $order_repository );
+		return new Historical_Sync( $logger, $order_utilities, $customer_utilities, $contact_repository, $customer_repository, $order_repository, $bulksync_repository );
 	},
-
-	LoggerInterface::class                            => AcVendor\DI\factory(
+	Logger::class                                     => DI\factory(
 		function () {
-			return new Log();
+			return new Logger();
 		}
 	),
-
 );

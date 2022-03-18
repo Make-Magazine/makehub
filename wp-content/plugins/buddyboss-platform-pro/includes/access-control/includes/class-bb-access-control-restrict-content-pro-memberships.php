@@ -131,28 +131,31 @@ class BB_Access_Control_Restrict_Content_Pro_Memberships extends BB_Access_Contr
 				if ( ! empty( $current_access_controls ) ) {
 					foreach ( $settings_data['access-control-options'] as $level_id ) {
 						foreach ( $current_access_controls as $current_access_control ) {
+							// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 							if ( $current_access_control->get_object_id() == $level_id && $current_access_control->is_active() ) {
 								$arr_key = 'access-control-' . $level_id . '-options';
 								if ( empty( $settings_data[ $arr_key ] ) ) {
 									$has_access = true;
 									break;
 								}
-								if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+								if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 									$has_access = true;
 									break;
 								}
 								if ( is_object( $customer ) ) {
 									foreach ( $settings_data[ $arr_key ] as $level_id ) {
 										foreach ( $access_controls as $access_control ) {
+											// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 											if ( $access_control->get_object_id() == $level_id && $access_control->is_active() ) {
 												$has_access = true;
 												break;
 											}
 										}
 									}
-									if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+									if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 										foreach ( wp_list_pluck( self::get_level_lists(), 'id' ) as $level_id ) {
 											foreach ( $access_controls as $access_control ) {
+												// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 												if ( $access_control->get_object_id() == $level_id && $access_control->is_active() ) {
 													$has_access = true;
 													break;
@@ -170,6 +173,7 @@ class BB_Access_Control_Restrict_Content_Pro_Memberships extends BB_Access_Contr
 			if ( is_object( $customer ) ) {
 				foreach ( $settings_data['access-control-options'] as $level_id ) {
 					foreach ( $access_controls as $access_control ) {
+						// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 						if ( $access_control->get_object_id() == $level_id && $access_control->is_active() ) {
 							$has_access = true;
 							break;

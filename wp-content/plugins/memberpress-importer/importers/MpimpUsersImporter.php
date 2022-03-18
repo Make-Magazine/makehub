@@ -49,7 +49,26 @@ class MpimpUsersImporter extends MpimpBaseImporter {
     return false;
   }
 
-  protected function import_user($row, $args, $ignore_cols = array()) {
+  protected function import_user($row, $args, $ignore_cols = array(
+    'name',
+    'txn_count',
+    'active_txn_count',
+    'expired_txn_count',
+    'trial_txn_count',
+    'sub_count',
+    'active_sub_count',
+    'pending_sub_count',
+    'suspended_sub_count',
+    'cancelled_sub_count',
+    'latest_txn_date',
+    'first_txn_date',
+    'status',
+    'memberships',
+    'inactive_memberships',
+    'last_login_date',
+    'login_count',
+    'total_spent'
+  )) {
     global $wp_roles;
 
     $required = array('username', 'email');
@@ -99,21 +118,27 @@ class MpimpUsersImporter extends MpimpBaseImporter {
           break;
       /**** Supported Meta ****/
         case "address1":
+        case "mepr-address-one":
           $user_meta['mepr-address-one'] = $cell;
           break;
         case "address2":
+        case "mepr-address-two":
           $user_meta['mepr-address-two'] = $cell;
           break;
         case "city":
+        case "mepr-address-city":
           $user_meta['mepr-address-city'] = $cell;
           break;
         case "state":
+        case "mepr-address-state":
           $user_meta['mepr-address-state'] = $cell;
           break;
         case "zip":
+        case "mepr-address-zip":
           $user_meta['mepr-address-zip'] = $cell;
           break;
         case "country":
+        case "mepr-address-country":
           $user_meta['mepr-address-country'] = $cell;
           break;
         default:

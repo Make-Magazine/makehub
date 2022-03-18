@@ -78,7 +78,8 @@ function bp_zoom_enqueue_scripts_and_styles() {
 			'group_meetings_past_url' => $past_meetings_url,
 			'group_webinars_url'      => $webinars_url,
 			'group_webinar_past_url'  => $past_webinars_url,
-			'bp_staple'               => base64_encode( $api_key ), // Zoom API Key
+            // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			'bp_staple'               => base64_encode( $api_key ), // Zoom API Key.
 			'meeting_delete_nonce'    => wp_create_nonce( 'bp_zoom_meeting_delete' ),
 			'meeting_confirm_msg'     => __( 'Are you sure you want to delete this meeting?', 'buddyboss-pro' ),
 			'webinar_delete_nonce'    => wp_create_nonce( 'bp_zoom_webinar_delete' ),
@@ -1941,7 +1942,6 @@ function bb_zoom_group_api_key( $group_id ) {
  * @since 1.1.4
  * @return string API secret string.
  */
-
 function bb_zoom_group_api_secret( $group_id ) {
 	if ( empty( $group_id ) || ! bp_zoom_is_group_setup( $group_id ) ) {
 		return '';
@@ -1961,17 +1961,18 @@ function bb_zoom_group_api_secret( $group_id ) {
  * @since 1.1.4
  * @return string API signature string.
  */
-
 function bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role ) {
 
-	$time = time() * 1000 - 30000; // time in milliseconds (or close enough)
+	$time = time() * 1000 - 30000; // time in milliseconds (or close enough).
 
-	$data = base64_encode( $api_key . $meeting_number . $time . $role );
+	$data = base64_encode( $api_key . $meeting_number . $time . $role ); // phpcs:ignore
 
 	$hash = hash_hmac( 'sha256', $data, $api_secret, true );
 
+    // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	$_sig = $api_key . '.' . $meeting_number . '.' . $time . '.' . $role . '.' . base64_encode( $hash );
 
+	// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	return rtrim( strtr( base64_encode( $_sig ), '+/', '-_' ), '=' );
 }
 

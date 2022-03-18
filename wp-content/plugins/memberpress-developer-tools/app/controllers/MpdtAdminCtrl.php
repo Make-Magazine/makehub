@@ -64,7 +64,8 @@ class MpdtAdminCtrl extends MpdtBaseCtrl {
         'str' => array(
           'default_value' => __('default value:', 'memberpress-developer-tools'),
         ),
-        'regen_api_key_nonce' => wp_create_nonce('api_key')
+        'regen_api_key_nonce' => wp_create_nonce('api_key'),
+        'regen_webhook_key_nonce' => wp_create_nonce('webhook_key')
       );
 
       wp_register_style('mpdt_highlightjs', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/sunburst.min.css', array(), '8.7');
@@ -92,6 +93,7 @@ class MpdtAdminCtrl extends MpdtBaseCtrl {
 
     $webhooks = get_option(MPDT_WEBHOOKS_KEY, false);
     $api_key  = get_option('mpdt_api_key', '');
+    $webhook_key  = get_option('mpdt_webhook_key', '');
 
     require(MPDT_VIEWS_PATH.'/admin.php');
   }

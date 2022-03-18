@@ -35,6 +35,7 @@ class ACUI_ACF{
 					</ul>
 				<?php endforeach; ?>
 				</ul>
+				<p class="description">In fields of type relationships, you can use post slug or post ID in the list of posts related.</p>
 			</td>
 		</tr>
 		<?php
@@ -64,8 +65,8 @@ class ACUI_ACF{
 			if( $types[ $key ][ 'type' ] == 'relationship' ){
 				$data = explode( ',', $row[ $pos ] );
 
-				foreach ( $data as $it => $slug ) {
-					$data[ $it ] = ACUI_Helper::get_post_id_by_slug( $slug );
+				foreach ( $data as $it => $value ) {
+					$data[ $it ] = is_numeric( $value ) ? $value : ACUI_Helper::get_post_id_by_slug( $value );
 				}
 			}
 			elseif( $types[ $key ][ 'multiple' ] ){

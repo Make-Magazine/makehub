@@ -225,9 +225,9 @@ class Activecampaign_For_Woocommerce_AC_Contact implements Ecom_Model, Has_Id, H
 	 *
 	 * @return bool
 	 */
-	public function create_ecom_contact_from_order( WC_Order $order ) {
+	public function create_ecom_contact_from_order( $order ) {
 		$logger = new Logger();
-		if ( isset( $order ) && $order->get_id() ) {
+		if ( isset( $order ) && method_exists( $order, 'get_id' ) && $order->get_id() ) {
 			$customer = null;
 			if ( $order->get_customer_id() ) {
 				try {
@@ -284,7 +284,7 @@ class Activecampaign_For_Woocommerce_AC_Contact implements Ecom_Model, Has_Id, H
 					$logger->error(
 						'Activecampaign_For_Woocommerce_Historical_Sync: There was a problem preparing data for a record.',
 						[
-							'customer_email' => $order->get_billing_email(),
+							'customer_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 							'message'        => $t->getMessage(),
 						]
 					);

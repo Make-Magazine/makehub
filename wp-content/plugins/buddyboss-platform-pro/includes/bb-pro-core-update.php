@@ -126,6 +126,11 @@ function bbp_pro_version_updater() {
 			 */
 			do_action( 'bbp_pro_update_to_1_0_9' );
 		}
+
+		// Version 1.2.0 .
+		if ( $raw_db_version < 241 ) {
+			do_action( 'bbp_pro_update_to_1_2_0' );
+		}
 	}
 
 	/* All done! *************************************************************/

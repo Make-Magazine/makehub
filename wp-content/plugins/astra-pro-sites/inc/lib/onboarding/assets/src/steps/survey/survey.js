@@ -57,7 +57,7 @@ const SurveyForm = ( { updateFormDetails } ) => {
 						{ __( 'Beginner', 'astra-sites' ) }
 					</option>
 					<option value="2">
-						{ __( 'Intermidiate', 'astra-sites' ) }
+						{ __( 'Intermediate', 'astra-sites' ) }
 					</option>
 					<option value="3">{ __( 'Expert', 'astra-sites' ) }</option>
 				</select>

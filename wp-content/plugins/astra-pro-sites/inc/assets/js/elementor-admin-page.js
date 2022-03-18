@@ -1142,7 +1142,7 @@ var AstraSitesAjaxQueue = (function () {
 					url: astraElementorSites.ajaxurl,
 					type: 'POST',
 					data: {
-						action: 'astra-page-elementor-batch-process',
+						action: 'astra-page-elementor-insert-page',
 						id: elementor.config.document.id,
 						url: api_url,
 						_ajax_nonce: astraElementorSites._ajax_nonce,
@@ -1454,13 +1454,15 @@ var AstraSitesAjaxQueue = (function () {
 
 		_pluginCheck: function (e, data) {
 
+			var args = encodeURI( '?site_url=' + astraElementorSites.siteURL + '&version=' + astraElementorSites.version );
+
 			var api_post = {
-				slug: 'site-pages' + '/' + data['id']
+				slug: 'site-pages' + '/' + data['id'] + args
 			};
 
 			if ('blocks' == AstraElementorSitesAdmin.type) {
 				api_post = {
-					slug: 'astra-blocks' + '/' + data['id']
+					slug: 'astra-blocks' + '/' + data['id'] + args
 				};
 			}
 

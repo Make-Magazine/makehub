@@ -95,6 +95,7 @@ class BB_Access_Control_Memberium extends BB_Access_Control_Abstract {
 			return array();
 		}
 
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( 'm4ac' == MEMBERIUM_SKU ) {
 			$levels = get_option( MEMBERIUM_MEMBERSHIP_SETTINGS, array() );
 		} else {
@@ -151,7 +152,7 @@ class BB_Access_Control_Memberium extends BB_Access_Control_Abstract {
 							$has_access = true;
 							break;
 						}
-						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							$has_access = true;
 							break;
 						}
@@ -161,7 +162,7 @@ class BB_Access_Control_Memberium extends BB_Access_Control_Abstract {
 								break;
 							}
 						}
-						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) {
+						if ( ! $has_access && in_array( 'all', $settings_data[ $arr_key ] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							foreach ( wp_list_pluck( self::get_level_lists(), 'id' ) as $level ) {
 								if ( memb_hasAnyTags( $level, $contact_id ) ) {
 									$has_access = true;
