@@ -45,8 +45,52 @@
 		display: none;
 	}
 }
-.groups-list {
+#groups-list.groups-list {
 	.groups-loop-buttons { display: none; }
+	li.item-entry .list-wrap {
+		display: flex;
+		flex-direction: column;
+		.item {
+			padding-bottom: 25px;
+		}
+		.item-avatar .group-avatar-wrap {
+			aspect-ratio: 1;
+			overflow: hidden;
+		}
+		.group-item-wrap {
+			.item-meta-wrap {
+				.last-activity { display: none !important; }
+			}
+			.group-details { display: flex; }
+		}
+		.group-footer-wrap  {
+			position: relative;
+			left: 0px;
+			display: flex;
+			flex-direction: column;
+			align-items: start;
+			margin: 0px;
+    		margin-top: auto;
+			.footer-button-wrap {
+				width: 100%;
+				.groups-meta {
+					flex-flow: nowrap !important;
+					margin-top: 10px;
+					.generic-button {
+						flex: 1;
+						max-width: fit-content;
+					}
+					.group-subscription-div  {
+						margin-top: -22px;
+						button {
+							min-height: 10px;
+							padding: 5px 20px !important;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 .subnav-search.groups-search {
     margin: -10px 15px 20px;
