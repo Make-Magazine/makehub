@@ -266,8 +266,10 @@ function buddyboss_theme_scripts() {
 	}
 
 	// Add CSS fixes for IE 11 and below.
-	if ( preg_match( '~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'] ) || ( strpos( $_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;' ) !== false ) ) {
-		wp_enqueue_style( 'buddyboss-theme-ie', get_template_directory_uri() . '/assets/css' . $rtl_css . '/ie' . $mincss . '.css', '', buddyboss_theme()->version() );
+	if(isset($_SERVER['HTTP_USER_AGENT'])){
+		if ( preg_match( '~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'] ) || ( strpos( $_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;' ) !== false ) ) {
+			wp_enqueue_style( 'buddyboss-theme-ie', get_template_directory_uri() . '/assets/css' . $rtl_css . '/ie' . $mincss . '.css', '', buddyboss_theme()->version() );
+		}
 	}
 
 	if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
@@ -297,8 +299,10 @@ function buddyboss_theme_scripts() {
 	wp_enqueue_script( 'progressbar-js', get_template_directory_uri() . '/assets/js/vendors/progressbar.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'mousewheel-js', get_template_directory_uri() . '/assets/js/vendors/mousewheel.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	// Add polyfill for Event() constructor in IE 11 and below.
-	if ( preg_match( '~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'] ) || ( strpos( $_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0' ) !== false ) ) {
-		wp_enqueue_script( 'polyfill-event', get_template_directory_uri() . '/assets/js/vendors/polyfill-event.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+	if(isset($_SERVER['HTTP_USER_AGENT'])){
+		if ( preg_match( '~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'] ) || ( strpos( $_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0' ) !== false ) ) {
+			wp_enqueue_script( 'polyfill-event', get_template_directory_uri() . '/assets/js/vendors/polyfill-event.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+		}
 	}
 	// LearnDash.
 	if ( class_exists( 'SFWD_LMS' ) ) {
