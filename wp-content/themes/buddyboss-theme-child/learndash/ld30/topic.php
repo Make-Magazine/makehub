@@ -220,7 +220,7 @@ $topics = learndash_get_topic_list( $lesson_id, $course_id );
 
                                 endif;
 
-                                if( lesson_hasassignments($post) && !empty($user_id) ):
+                                if( learndash_lesson_hasassignments($post) && !empty($user_id) ):
 
                                     learndash_get_template_part(
                                         'assignment/listing.php',

@@ -2,6 +2,7 @@
 /**
  * Template Name: Blog Posts
  */
+if(class_exists('BuddyBlog')) {
 	get_header();
 
     if ( bp_is_my_profile() || is_super_admin() ) {
@@ -9,17 +10,19 @@
 		} else {
 			  $status = 'publish';
 		}
-	
-    $query_args = array(
-		'author'        => bp_displayed_user_id(),
-		'post_type'     => buddyblog_get_posttype(),
-		'post_status'   => $status,
-		'p'             => intval( buddyblog_get_post_id( bp_action_variable( 0 ) ) )
-    );
 
-	query_posts( $query_args );
+
+	    $query_args = array(
+			'author'        => bp_displayed_user_id(),
+			'post_type'     => buddyblog_get_posttype(),
+			'post_status'   => $status,
+			'p'             => intval( buddyblog_get_post_id( bp_action_variable( 0 ) ) )
+	    );
+
+		query_posts( $query_args );
+
 	global $post;
-   
+
    // we're going to display this page like it belongs to the author
 	set_displayed_user(get_the_author_meta('ID'));
 
@@ -28,7 +31,7 @@
 
 ?>
 <div id="buddyblog" class="buddyboss">
-	
+
 
 	<div class="yz-content">
 
@@ -40,7 +43,7 @@
 							<a href="<?php echo bp_core_get_user_domain($bp->displayed_user->id); ?>" class="yz-profile-img">
 								<img src="<?php echo bp_core_fetch_avatar(array('item_id'=>$bp->displayed_user->id, 'html'=>false)); ?>" class="avatar user-2-avatar avatar-150 photo" alt="Profile Photo" width="150" height="150">
 							</a>
-						</div>					
+						</div>
 						<div class="yz-head-content">
 							<div class="yz-name">
 								<h2><?php echo bp_displayed_user_username() ?></h2>
@@ -49,9 +52,9 @@
 								<ul>
 									<li><i class="fas fa-globe"></i><span><?php echo bp_displayed_user_username() ?></span></li>
 								</ul>
-							</div>											
-						</div>						
-					</div>	
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</header>
@@ -63,7 +66,7 @@
 					<a href="<?php echo(bp_core_get_user_domain($bp->displayed_user->id).'blog'); ?>">&laquo; Back to <?php echo(bp_displayed_user_username()); ?>'s Blog</a>
 				</div>
 				<main class="yz-page-main-content">
- 
+
 					<?php do_action( 'bp_before_member_home_content' ); ?>
 					 <div class="user-post">
 						  <div class="post-header">
@@ -78,23 +81,23 @@
 										  <?php  the_post_thumbnail();?>
 									 </div>
 
-							  <?php endif;?>  
+							  <?php endif;?>
 
 								<div class="entry">
 									  <?php the_content(  ); ?>
 								</div>
-							  
+
 							   <div class="clear"></div>
 
-								<?php 
+								<?php
 							      if($bp->displayed_user->id === get_current_user_id()) {
-										echo("<div class='universal-btn edit-btn'>".buddyblog_get_edit_link()."</div>"); 
+										echo("<div class='universal-btn edit-btn'>".buddyblog_get_edit_link()."</div>");
 									}
 							   ?>
-							  
+
 							   <div class="clear"></div>
-							  
-							   <?php 
+
+							   <?php
 							     // need to set this to null to allow the comment form to show up!
 							     $bp->displayed_user->id = null;
 							   ?>
@@ -113,21 +116,21 @@
 
 								</div><!-- #comments -->
 							   <?php
-							     if ( $post->comment_status == 'open' ) comment_form(); 
+							     if ( $post->comment_status == 'open' ) comment_form();
 							     // comments template not working, so have to have the ridiulouseness above
-							     comments_template(); 
+							     comments_template();
 							   ?>
-							  
+
 								<div class="clear"></div>
 
 						  </div>
-   
-						 
+
+
 					</div>
 				</main>
 			</div>
 		</div>
-						
+
         <?php
             //used to hook back BuddyPress Theme compatibility comment closing function
             do_action( 'buddyblog_after_blog_post' );
@@ -136,8 +139,10 @@
 </div>
 
 
-<?php 
+<?php
 wp_reset_postdata();
 wp_reset_query();
 get_footer();
-?>  
+
+} // end if buddyblog post exists
+?>

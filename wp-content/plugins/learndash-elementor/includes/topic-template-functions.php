@@ -139,7 +139,7 @@ function learndash_elementor_show_topic_content_listing( $atts = array() ) {
 
 		endif;
 
-		if ( lesson_hasassignments( $topic_post ) && ! empty( $user_id ) ) :
+		if ( learndash_lesson_hasassignments( $topic_post ) && ! empty( $user_id ) ) :
 
 			learndash_get_template_part(
 				'assignment/listing.php',

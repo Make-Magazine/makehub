@@ -365,10 +365,10 @@ function add_slug_body_class($classes) {
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
-		if ( $post->post_type == "sfwd-courses" && get_post_primary_category($post->ID, 'ld_course_category')['primary_category']) {
+		if ( $post->post_type == "sfwd-courses" && isset( get_post_primary_category( $post->ID, 'ld_course_category')['primary_category'] ) ) {
 			$classes[] = 'cat-' . get_post_primary_category($post->ID, 'ld_course_category')['primary_category']->slug;
 		}
-		if ( $post->post_type == "sfwd-lessons" && get_post_primary_category($post->ID, 'ld_lesson_category')['primary_category'] ) {
+		if ( $post->post_type == "sfwd-lessons" && isset( get_post_primary_category( $post->ID, 'ld_lesson_category')['primary_category'] ) ) {
 			$classes[] = 'cat-' . get_post_primary_category($post->ID, 'ld_lesson_category')['primary_category']->slug;
 		}
         // let's see if your the group owner and what kind of group it is (hidden, private, etc)

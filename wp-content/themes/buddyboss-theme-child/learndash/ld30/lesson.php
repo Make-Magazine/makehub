@@ -162,13 +162,13 @@ if ( empty( $course ) ) {
                                         event.preventDefault();
                                         jQuery("#pleasewait").show(); //show the spinner
                                         jQuery("#topic-section").html(""); //empty out the div
-                                        var url = jQuery(this).attr('href'); //get the href from the clicked button                                       
+                                        var url = jQuery(this).attr('href'); //get the href from the clicked button
                                         jQuery("#topic-section").load(url + " .topic-page"); //load that information starting from the topic-page class
                                         jQuery("#pleasewait").hide(); //hide the spinner
                                         return false;
                                     });
                                 });
-                            </script>    
+                            </script>
 
                         <?php
                             /**
@@ -185,11 +185,11 @@ if ( empty( $course ) ) {
                                 ), true );
                             endif;
                             if ( $show_content ) :
-                         
+
                                 /**
                                  * Content and/or tabs
                                  */
-                                
+
                                 learndash_get_template_part( 'modules/tabs.php', array(
                                     'course_id' => $course_id,
                                     'post_id'   => get_the_ID(),
@@ -198,11 +198,11 @@ if ( empty( $course ) ) {
                                     'materials' => $materials,
                                     'context'   => 'lesson'
                                 ), true );
-                                
+
                                 /**
                                  * Display Lesson Assignments
                                  */
-                                if( lesson_hasassignments($post) && !empty($user_id) ):
+                                if( learndash_lesson_hasassignments($post) && !empty($user_id) ):
                                     /**
                                      * Action to add custom content before the lesson assignment
                                      *
@@ -223,10 +223,10 @@ if ( empty( $course ) ) {
                                      */
                                     do_action( 'learndash-lesson-assignment-after', get_the_ID(), $course_id, $user_id );
                                 endif;
-                                                                 
+
                                 echo '<span style="display:none" id="pleasewait"><i class="fas fa-spinner fa-spin fa-7x"></i></span>';
                                 echo '<div id="topic-section"></div>';
-                                
+
                                 /**
                                  * Lesson Topics or Quizzes
                                  */

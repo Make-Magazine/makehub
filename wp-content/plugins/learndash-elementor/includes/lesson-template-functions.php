@@ -127,7 +127,7 @@ function learndash_elementor_show_lesson_content_listing( $atts = array() ) {
 		 */
 		$bypass_course_limits_admin_users = learndash_elementor_bypass_course_limits( $user_id, $lesson_post->ID, $course_id );
 
-		if ( lesson_hasassignments( $lesson_post ) && ! empty( $user_id ) ) :
+		if ( learndash_lesson_hasassignments( $lesson_post ) && ! empty( $user_id ) ) :
 			if ( ( learndash_lesson_progression_enabled() && learndash_lesson_topics_completed( $lesson_id ) ) || ! learndash_lesson_progression_enabled() || $bypass_course_limits_admin_users ) :
 				/** This filter is documented in themes/ld30/templates/lesson.php */
 				do_action( 'learndash-lesson-assignment-before', $lesson_id, $course_id, $user_id );

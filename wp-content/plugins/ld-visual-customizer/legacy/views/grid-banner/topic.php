@@ -97,7 +97,7 @@ lds_shortcodes_enqueue_scripts(); ?>
             </div>
         <?php endif; ?>
 
-        <?php if ( ( lesson_hasassignments( $post ) ) && ( !empty( $user_id ) ) ) : ?>
+        <?php if ( ( learndash_lesson_hasassignments( $post ) ) && ( !empty( $user_id ) ) ) : ?>
         <?php
             $ret = SFWD_LMS::get_template(
                     'learndash_lesson_assignment_uploads_list.php',
