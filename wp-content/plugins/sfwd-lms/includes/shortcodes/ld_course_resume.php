@@ -28,11 +28,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type boolean $button     Whether to show button. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_course_resume'.
  *
  * @return string The `ld_course_resume` shortcode output.
  */
-function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_resume' ) {
+function ld_course_resume_shortcode( $atts = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 
 	if ( ! is_array( $atts ) ) {
@@ -87,10 +86,10 @@ function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_
 	/**
 	 * Filters shortcode attributes.
 	 *
-	 * @param array  $atts           An array of shortcode attributes.
-	 * @param string $shortcode_slug The current shortcode slug.
+	 * @param array  $atts              An array of shortcode attributes.
+	 * @param string $shortcode_context The shortcode name for which the attributes are filtered.
 	 */
-	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, 'ld_course_resume' );
 
 	if ( ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['course_id'] ) ) ) {
 		if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
@@ -128,4 +127,4 @@ function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_
 
 	return $content;
 }
-add_shortcode( 'ld_course_resume', 'ld_course_resume_shortcode', 10, 3 );
+add_shortcode( 'ld_course_resume', 'ld_course_resume_shortcode', 10, 2 );

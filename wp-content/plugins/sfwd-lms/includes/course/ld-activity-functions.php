@@ -605,7 +605,7 @@ function learndash_activity_start_course( $user_id = 0, $course_id = 0, $startti
 	$activity = learndash_activity_start_step( $user_id, $course_id, $course_id, 'course', $starttime );
 	if ( $activity ) {
 
-		if ( ( ! empty( absint( $starttime ) ) ) && ( empty( absint( $activity->activity_started ) ) ) ) {
+		if ( ( ! empty( $starttime ) ) && ( absint( $activity->activity_started ) !== absint( $starttime ) ) ) {
 			$activity->activity_started = absint( $starttime );
 			learndash_update_user_activity( $activity );
 		}

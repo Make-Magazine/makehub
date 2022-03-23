@@ -926,18 +926,6 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		}
 
 		/**
-		 * Static function to set section setting.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @param string $field_key Section field key.
-		 * @param mixed  $default_return Default value if field not found.
-		 */
-		public static function set_setting( $field_key = '', $field_value = '' ) {
-			return self::set_section_setting( get_called_class(), $field_key, $field_value );
-		}
-
-		/**
 		 * Static function to get all section settings.
 		 *
 		 * @since 2.4.0
@@ -1006,20 +994,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 				if ( isset( self::$_instances[ $section ] ) ) {
 					self::$_instances[ $section ]->init();
 
-					$value_changed = false;
 					if ( isset( self::$_instances[ $section ]->setting_option_fields[ $field_key ] ) ) {
 						self::$_instances[ $section ]->setting_option_fields[ $field_key ]['value'] = $new_value;
-						
-						$value_changed = true;
-					}
-
-					if ( isset( self::$_instances[ $section ]->setting_option_values[ $field_key ] ) ) {
-						self::$_instances[ $section ]->setting_option_values[ $field_key ] = $new_value;
-
-						$value_changed = true;
-					}
-
-					if ( true === $value_changed ) {
 						self::$_instances[ $section ]->save_settings_values();
 					}
 				}

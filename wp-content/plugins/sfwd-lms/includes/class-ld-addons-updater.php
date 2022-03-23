@@ -275,7 +275,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 				return $data;
 			}
 
-			$this->get_addon_plugins();
+			$this->load_repositories_options();
 
 			if ( isset( $this->data['plugins'][ $args->slug ] ) ) {
 				$data = json_decode( wp_json_encode( $this->data['plugins'][ $args->slug ] ), false );

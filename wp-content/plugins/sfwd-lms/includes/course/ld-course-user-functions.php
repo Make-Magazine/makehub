@@ -587,10 +587,6 @@ function ld_update_course_access( $user_id, $course_id, $remove = false ) {
 	 */
 	do_action( 'learndash_update_course_access', $user_id, $course_id, $course_access_list, $remove );
 
-	// Finally clear our cache for other services.
-	$transient_key = 'learndash_user_courses_' . $user_id;
-	LDLMS_Transients::delete( $transient_key );
-
 	return $action_success;
 }
 

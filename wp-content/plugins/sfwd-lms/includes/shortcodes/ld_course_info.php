@@ -24,16 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    {@see 'SFWD_LMS::get_course_info'} for other attributes
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_course_info'.
  *
  * @return string The `ld_course_info` shortcode ouput.
  */
-function learndash_course_info_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_info' ) {
+function learndash_course_info_shortcode( $atts = array(), $content = '' ) {
 
 	global $learndash_shortcode_used;
-
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	if ( ( isset( $atts['user_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
 		$user_id = intval( $atts['user_id'] );
@@ -52,4 +48,4 @@ function learndash_course_info_shortcode( $atts = array(), $content = '', $short
 
 	return SFWD_LMS::get_course_info( $user_id, $atts );
 }
-add_shortcode( 'ld_course_info', 'learndash_course_info_shortcode', 10, 3 );
+add_shortcode( 'ld_course_info', 'learndash_course_info_shortcode', 10, 2 );

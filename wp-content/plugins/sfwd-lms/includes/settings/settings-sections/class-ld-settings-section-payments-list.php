@@ -178,6 +178,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				<tr>
 					<th class="col-name-enabled"></th>
 					<th class="col-name-label"><?php esc_html_e( 'Payment type', 'learndash' ); ?></th>
+					<th class="col-name-label"><?php esc_html_e( 'Description', 'learndash' ); ?></th>
 					<th class="col-name-manage"></th>
 				<tr>
 				</thead>
@@ -212,8 +213,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								if ( ! empty( $listing_label ) ) {
 									echo '<div class="learndash-listing_label"><strong><a href="' . esc_url( add_query_arg( self::$section_url_param, esc_attr( $sub_section->settings_section_key ) ) ) . '">' . esc_html( $listing_label ) . '</a></strong></div>';
 								}
+
+								if ( ( isset( $sub_section->settings_section_listing_description ) ) && ( ! empty( $sub_section->settings_section_listing_description ) ) ) {
+									echo '<div class="learndash-listing_description">' . wp_kses_post( $sub_section->settings_section_listing_description ) . '</div>';
+								}
 								?>
 							</td>
+							<td class="col-name-label"></td>
 							<td class="col-name-manage col-valign-middle">
 								<a class="button alignright" href="<?php echo esc_url( add_query_arg( self::$section_url_param, esc_attr( $sub_section->settings_section_key ) ) ); ?>"><?php esc_html_e( 'Manage', 'learndash' ); ?></a>
 							</td>
@@ -222,7 +228,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					}
 				} else {
 					?>
-					<tr><td colspan="4"><?php esc_html_e( 'No Payment items found.', 'learndash' ); ?></td></tr>
+					<tr><td colspan="4"><?php esc_html_e( 'No Payment itemsfound.', 'learndash' ); ?></td></tr>
 					<?php
 				}
 				?>

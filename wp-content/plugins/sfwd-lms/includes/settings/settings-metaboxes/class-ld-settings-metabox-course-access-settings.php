@@ -257,7 +257,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$select_course_options                      = array();
 			$select_course_prerequisite_query_data_json = '';
 
-			if ( learndash_use_select2_lib() ) {
+			/** This filter is documented in includes/class-ld-lms.php */
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 				$select_course_options_default = sprintf(
 					// translators: placeholder: course.
 					esc_html_x( 'Search or select a %s', 'placeholder: course', 'learndash' ),
@@ -285,7 +286,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 				}
 
-				if ( learndash_use_select2_lib_ajax_fetch() ) {
+				/**
+				 * Filters whether the select2 is used to fetch AJAX data.
+				 *
+				 * @param boolean $learndash_select2_ajax_featch whether the select2 library is used to fetch AJAX data.
+				 */
+				if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
 					$select_course_prerequisite_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(

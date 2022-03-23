@@ -26,14 +26,13 @@ const block_title = sprintf(
 	// translators: placeholder: Course.
 	_x('LearnDash %s In Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')
 );
-const block_key = 'learndash/ld-course-inprogress';
+
 registerBlockType(
-	block_key,
+	'learndash/ld-course-inprogress',
 	{
 		title: block_title,
-		description: sprintf(
-			// translators: placeholder: Course.
-			_x('This block shows the content if the user is enrolled into the %s but not yet completed.', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
+		// translators: placeholder: Course.
+		description: sprintf(_x('This block shows the content if the user is enrolled into the %s but not yet completed.', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
 		icon: 'star-half',
 		category: 'learndash-blocks',
 		supports: {
@@ -62,33 +61,19 @@ registerBlockType(
 						title={__('Settings', 'learndash')}
 					>
 						<TextControl
-							label={sprintf(
-								// translators: placeholder: Course.
-								_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course' ) ) }
-							help={sprintf(
-								// translators: placeholders: Course, Course.
-								_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course') ) }
+							// translators: placeholder: Course.
+							label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course' ) ) }
+							// translators: placeholders: Course, Course.
+							help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course') ) }
 							value={course_id || ''}
-							type={'number'}
-							onChange={ function( new_course_id ) {
-								if ( new_course_id != "" && new_course_id < 0 ) {
-									setAttributes({ course_id: "0" });
-								} else {
-									setAttributes({ course_id: new_course_id });
-								}
-							}}						/>
+							onChange={course_id => setAttributes({ course_id })}
+						/>
 						<TextControl
 							label={__('User ID', 'learndash')}
 							help={__('Enter specific User ID. Leave blank for current User.', 'learndash')}
 							value={user_id || ''}
-							type={'number'}
-							onChange={ function( new_user_id ) {
-								if ( new_user_id != "" && new_user_id < 0 ) {
-									setAttributes({ user_id: "0" });
-								} else {
-									setAttributes({ user_id: new_user_id });
-								}
-							}}						/>
+							onChange={user_id => setAttributes({ user_id })}
+						/>
 						<ToggleControl
 							label={__('Auto Paragraph', 'learndash')}
 							checked={!!autop}
@@ -106,9 +91,8 @@ registerBlockType(
 				preview_course_id = ldlms_get_integer_value(preview_course_id);
 
 				if (preview_course_id == 0) {
-					ld_block_error_message = sprintf(
-						// translators: placeholders: Course, Course.
-						_x('%1$s ID is required when not used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'));
+					// translators: placeholders: Course, Course.
+					ld_block_error_message = sprintf(_x('%1$s ID is required when not used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'));
 				}
 			}
 
@@ -117,7 +101,7 @@ registerBlockType(
 			}
 
 			const outputBlock = (
-				<div className={className} key={block_key}>
+				<div className={className} key="learndash/ld-course-inprogress">
 					<span className="learndash-inner-header">{block_title}</span>
 					<div className="learndash-block-inner">
 						{ld_block_error_message}

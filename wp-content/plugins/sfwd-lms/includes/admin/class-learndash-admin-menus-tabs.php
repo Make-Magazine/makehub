@@ -391,20 +391,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 				}
 			}
 
-			// Exams
-
-			$exam_post_type_slug = learndash_get_post_type_slug( 'exam' );
-			$exam_post_type_url  = 'edit.php?post_type=' . $exam_post_type_slug;
-			if ( isset( $submenu[ $exam_post_type_url ] ) ) {
-				$add_submenu[ $exam_post_type_slug ] = array(
-					'name'  => LearnDash_Custom_Label::get_label( 'exams' ),
-					'cap'   => 'edit_courses',
-					'link'  => $exam_post_type_url,
-					'class' => 'submenu-ldlms-exams',
-				);
-				$this->add_admin_tab_set( $exam_post_type_url, $submenu[ $exam_post_type_url ] );
-			}
-
 			if ( current_user_can( 'edit_assignments' ) ) {
 				if ( isset( $submenu['edit.php?post_type=sfwd-assignment'] ) ) {
 					$add_submenu['sfwd-assignment'] = array(
@@ -855,7 +841,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 			}
 
 			if ( 'admin.php?page=learndash_lms_settings' === $current_screen_parent_file ) {
-
+				
 				$this->add_admin_tab_item(
 					'admin.php?page=learndash_lms_settings',
 					array(
@@ -865,7 +851,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					),
 					50
 				);
-
+				
 				/** This action is documented in includes/admin/class-learndash-admin-menus-tabs.php */
 				do_action( 'learndash_admin_tabs_set', $current_screen_parent_file, $this );
 
@@ -1188,7 +1174,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'settings'                           => esc_html__( 'Settings', 'learndash' ),
 					'edit_question'                      => sprintf(
 						// translators: placeholder: question.
-						esc_html_x( 'Click here to edit the %s', 'placeholder: question.', 'learndash' ),
+						esc_html_x( 'Click here to edit the %s', 'placeholder: question', 'learndash' ),
 						learndash_get_custom_label_lower( 'question' )
 					),
 					'correct_answer_message'             => esc_html__( 'Message for correct answer - optional', 'learndash' ),
@@ -2013,11 +1999,9 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 						learndash_get_post_type_slug( 'topic' ),
 						learndash_get_post_type_slug( 'question' ),
 						learndash_get_post_type_slug( 'group' ),
-						learndash_get_post_type_slug( 'exam' ),
 					),
 					true
 				) ) {
-					/* The above code is adding the metaboxes to the post type. */
 					$post_settings_metaboxes = array();
 
 					switch ( $screen_post_type ) {
@@ -2119,17 +2103,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 									)
 								);
 							}
-
-							break;
-
-						case learndash_get_post_type_slug( 'exam' ):
-							$post_settings_metaboxes = array_merge(
-								$post_settings_metaboxes,
-								[
-									$screen_post_type,
-									'learndash-exam-display-content-settings',
-								]
-							);
 
 							break;
 					}

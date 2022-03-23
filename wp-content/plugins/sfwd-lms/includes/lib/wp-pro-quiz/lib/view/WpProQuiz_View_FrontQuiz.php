@@ -237,18 +237,15 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		$quiz_resume_id                = 0;
 		$quiz_resume_data              = array();
 		$quiz_resume_enabled           = false;
-		$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
+		$quiz_resume_cookie_send_timer = 0;
 		$quiz_resume_cookie_expiration = 604800; // 7 days.
 		$quiz_resume_quiz_started      = 0;
 
 		if ( is_user_logged_in() ) {
-			$quiz_resume_enabled = (bool) learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
 			if ( true === $quiz_resume_enabled ) {
-				$quiz_resume_cookie_send_timer = (int) learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
-				if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $quiz_resume_cookie_send_timer ) {
-					$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
-				}
-				$quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
 				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
 					$quiz_resume_id = $quiz_resume_activity->activity_id;
 					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
@@ -486,18 +483,15 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		$quiz_resume_id                = 0;
 		$quiz_resume_data              = array();
 		$quiz_resume_enabled           = false;
-		$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
+		$quiz_resume_cookie_send_timer = 0;
 		$quiz_resume_cookie_expiration = 604800; // 7 days.
 		$quiz_resume_quiz_started      = 0;
 
 		if ( is_user_logged_in() ) {
-			$quiz_resume_enabled = (bool) learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
 			if ( true === $quiz_resume_enabled ) {
-				$quiz_resume_cookie_send_timer = (int) learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
-				if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $quiz_resume_cookie_send_timer ) {
-					$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
-				}
-				$quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
 				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
 					$quiz_resume_id = $quiz_resume_activity->activity_id;
 					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {

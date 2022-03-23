@@ -143,55 +143,52 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V2' ) ) && ( class_exists( 'L
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 
 			if ( $this->post_type === $post->post_type ) {
-				$base          = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
-				$request_route = $request->get_route();
-			
-				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
-					$links = array();
+				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
 
-					$current_links = $response->get_links();
+				$links = array();
 
-					if ( ! isset( $current_links['price-type'] ) ) {
-						$course_price_type = learndash_get_course_meta_setting( $post->ID, 'course_price_type' );
-						if ( ! empty( $course_price_type ) ) {
-							$links[ $this->get_rest_base( 'price-types' ) ] = array(
-								'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'price-types' ) . '/' . $course_price_type ),
-								'embeddable' => true,
-							);
-						}
-					}
+				$current_links = $response->get_links();
 
-					if ( ! isset( $current_links['prerequisites'] ) ) {
-						$links['prerequisites'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-prerequisites' ),
+				if ( ! isset( $current_links['price-type'] ) ) {
+					$course_price_type = learndash_get_course_meta_setting( $post->ID, 'course_price_type' );
+					if ( ! empty( $course_price_type ) ) {
+						$links[ $this->get_rest_base( 'price-types' ) ] = array(
+							'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'price-types' ) . '/' . $course_price_type ),
 							'embeddable' => true,
 						);
 					}
+				}
 
-					if ( ! isset( $current_links['steps'] ) ) {
-						$links['steps'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-steps' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['prerequisites'] ) ) {
+					$links['prerequisites'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-prerequisites' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! isset( $current_links['users'] ) ) {
-						$links['users'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-users' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['steps'] ) ) {
+					$links['steps'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-steps' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! isset( $current_links['groups'] ) ) {
-						$links['groups'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-groups' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['users'] ) ) {
+					$links['users'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-users' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! empty( $links ) ) {
-						$response->add_links( $links );
-					}
+				if ( ! isset( $current_links['groups'] ) ) {
+					$links['groups'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-groups' ),
+						'embeddable' => true,
+					);
+				}
+
+				if ( ! empty( $links ) ) {
+					$response->add_links( $links );
 				}
 			}
 

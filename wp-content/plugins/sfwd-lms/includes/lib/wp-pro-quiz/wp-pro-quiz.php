@@ -225,15 +225,7 @@ function learndash_question_cloze_fetch_data( $answer_text, $convert_to_lower = 
 		if ( ! isset( $data['replace'] ) ) {
 			$data['replace'] = $answer_text;
 		}
-		$input_size = absint( max( $len ) );
-		if ( $input_size < 1 ) {
-			$input_size = 1;
-		}
-
-		$input_max = $input_size + 5;
-
-		$a  = '<span class="wpProQuiz_cloze"><input autocomplete="off" data-wordlen="' . absint( $input_size ) . '" type="text" value="" size="' . absint( $input_size ) . '" maxlength="' . absint( $input_max ) . '"> ';
-
+		$a  = '<span class="wpProQuiz_cloze"><input autocomplete="off" data-wordlen="' . max( $len ) . '" type="text" value=""> ';
 		$a .= '<span class="wpProQuiz_clozeCorrect" style="display: none;"></span></span>';
 
 		$replace_key = '@@wpProQuizCloze-' . $k . '@@';

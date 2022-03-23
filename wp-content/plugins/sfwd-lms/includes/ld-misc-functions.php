@@ -1447,7 +1447,7 @@ function learndash_is_protected_meta( $protected = false, $meta_key = '', $meta_
 
 		// If post type is not empty and onf othe LD types.
 		if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, learndash_get_post_types(), true ) ) ) {
-			$protected_meta_keys = array( 'course_id', 'lesson_id', 'course_price_billing_p3', 'course_price_billing_t3', 'course_sections', 'ld_course_steps', 'course_access_list', 'quiz_pro_id', 'ld_course_steps_dirty', 'ld_auto_enroll_group_courses', 'group_price_billing_p3', 'group_price_billing_t3', 'ld_auto_enroll_group_course_ids', 'question_pro_id', 'course_points', 'ld_quiz_questions', 'ld_quiz_questions_dirty', 'learndash_certificate_options', 'question_id', 'ld_essay_grading_response', 'question_points', 'question_type', 'question_pro_id', 'question_pro_category', 'course_trial_duration_p1', 'course_trial_duration_t1', 'course_price_type_subscribe_billing_recurring_times', 'group_trial_duration_p1', 'group_trial_duration_t1', 'group_price_type_subscribe_billing_recurring_times', 'exam_challenge_course_show', 'exam_challenge_course_passed' );
+			$protected_meta_keys = array( 'course_id', 'lesson_id', 'course_price_billing_p3', 'course_price_billing_t3', 'course_sections', 'ld_course_steps', 'course_access_list', 'quiz_pro_id', 'ld_course_steps_dirty', 'ld_auto_enroll_group_courses', 'group_price_billing_p3', 'group_price_billing_t3', 'ld_auto_enroll_group_course_ids', 'question_pro_id', 'course_points', 'ld_quiz_questions', 'ld_quiz_questions_dirty', 'learndash_certificate_options', 'question_id', 'ld_essay_grading_response', 'question_points', 'question_type', 'question_pro_id', 'question_pro_category', 'course_trial_duration_p1', 'course_trial_duration_t1', 'course_price_type_subscribe_billing_recurring_times', 'group_trial_duration_p1', 'group_trial_duration_t1', 'group_price_type_subscribe_billing_recurring_times',  );
 
 			if ( ( in_array( $meta_key, $protected_meta_keys, true ) ) ) {
 				$protected = true;
@@ -2001,82 +2001,3 @@ function learndash_the_content( $content = '', $context = '' ) {
 
 	return $content;
 }
-
-/**
- * Gets the user's quiz attempts for the ld_profile shortcode/block
- *
- * @since 4.0
- *
- * @param int $user_id Optional. The ID of the user to get quiz attempts. Default 0.
- *
- * @return array An array of quiz attempts, otherwise false.
- */
-function learndash_get_user_profile_quiz_attempts( $user_id = 0 ) {
-
-	$user_id = absint( $user_id );
-	$user = get_user_by( 'id', $user_id );
-
-	$quiz_attempts = array();
-
-	if ( ! $user ) {
-		return $quiz_attempts;
-	}
-
-	$usermeta           = get_user_meta( $user_id, '_sfwd-quizzes', true );
-	$quiz_attempts_meta = empty( $usermeta ) ? false : $usermeta;
-
-	if ( ! empty( $quiz_attempts_meta ) ) {
-
-		foreach ( $quiz_attempts_meta as $quiz_attempt ) {
-			$c                          = learndash_certificate_details( $quiz_attempt['quiz'], $user_id );
-			$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
-			$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
-
-			if ( get_current_user_id() == $user_id && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
-				$quiz_attempt['certificate'] = $c;
-				if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
-					$quiz_attempt['certificate']['certificateLink'] = add_query_arg( array( 'time' => $quiz_attempt['time'] ), $quiz_attempt['certificate']['certificateLink'] );
-				}
-			}
-
-			if ( ! isset( $quiz_attempt['course'] ) ) {
-				$quiz_attempt['course'] = learndash_get_course_id( $quiz_attempt['quiz'] );
-			}
-			$course_id = intval( $quiz_attempt['course'] );
-
-			$quiz_attempts[ $course_id ][] = $quiz_attempt;
-
-		}
-
-		return $quiz_attempts;
-	}
-}
-
- /* Returns the title for the post
- *
- * @since 4.0
- *
- * @param string $post_title Title of the post.
- * @param int    $post_id         ID of the post.
- *
- * @return string $post_title The title of the post
- */
-function learndash_get_post_title_filter( $post_title = '', $post_id = 0 ) {
-
-	if ( ! empty( $post_title ) ) {
-		return $post_title;
-	}
-
-	if ( empty( $post_id ) ) {
-		return $post_title;
-	}
-
-	if ( ! in_array( get_post_type( $post_id ), learndash_get_post_types(), true ) ) {
-		return $post_title;
-	}
-
-	$post_title = 'Untitled - #' . $post_id;
-
-	return $post_title;
-}
-add_filter( 'the_title', 'learndash_get_post_title_filter', 99, 2 );

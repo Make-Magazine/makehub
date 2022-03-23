@@ -59,11 +59,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string|array    $price_type            An array of price types to show. Default empty.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_course_list'.
  *
  * @return string The `ld_course_list` shortcode output.
  */
-function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_course_list' ) {
+function ld_course_list( $attr = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 
 	/**
@@ -174,9 +173,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	}
 
 	$atts = shortcode_atts( $attr_defaults, $attr );
-
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ), true ) ) {
 		if ( ( 'true' == $atts['mycourses'] ) || ( 'enrolled' == $atts['mycourses'] ) ) {
@@ -1380,7 +1376,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	return apply_filters( 'ld_course_list', $output, $atts, $filter );
 }
 
-add_shortcode( 'ld_course_list', 'ld_course_list', 10, 3 );
+add_shortcode( 'ld_course_list', 'ld_course_list', 10, 2 );
 
 /**
  * Handles the AJAX pagination for the course list shortcode.

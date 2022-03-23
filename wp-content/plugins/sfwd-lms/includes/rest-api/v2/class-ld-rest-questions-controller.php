@@ -719,33 +719,29 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 
 			if ( $this->post_type === $post->post_type ) {
 				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
-				$request_route = $request->get_route();
-				
-				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
-				
-					$links = array();
 
-					$current_links = $response->get_links();
+				$links = array();
 
-					if ( ! isset( $current_links[ $this->get_rest_base( 'question-types' ) ] ) ) {
-						$quiz_pro_id = get_post_meta( $post->ID, 'question_pro_id', true );
-						$quiz_pro_id = absint( $quiz_pro_id );
-						if ( ! empty( $quiz_pro_id ) ) {
-							$question_mapper      = new \WpProQuiz_Model_QuestionMapper();
-							$question_model       = $question_mapper->fetch( $quiz_pro_id );
-							$question_answer_type = $question_model->getAnswerType();
-							if ( ! empty( $question_answer_type ) ) {
-								$links[ $this->get_rest_base( 'question-types' ) ] = array(
-									'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'question-types' ) . '/' . $question_answer_type ),
-									'embeddable' => true,
-								);
-							}
+				$current_links = $response->get_links();
+
+				if ( ! isset( $current_links[ $this->get_rest_base( 'question-types' ) ] ) ) {
+					$quiz_pro_id = get_post_meta( $post->ID, 'question_pro_id', true );
+					$quiz_pro_id = absint( $quiz_pro_id );
+					if ( ! empty( $quiz_pro_id ) ) {
+						$question_mapper      = new \WpProQuiz_Model_QuestionMapper();
+						$question_model       = $question_mapper->fetch( $quiz_pro_id );
+						$question_answer_type = $question_model->getAnswerType();
+						if ( ! empty( $question_answer_type ) ) {
+							$links[ $this->get_rest_base( 'question-types' ) ] = array(
+								'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'question-types' ) . '/' . $question_answer_type ),
+								'embeddable' => true,
+							);
 						}
 					}
+				}
 
-					if ( ! empty( $links ) ) {
-						$response->add_links( $links );
-					}
+				if ( ! empty( $links ) ) {
+					$response->add_links( $links );
 				}
 			}
 

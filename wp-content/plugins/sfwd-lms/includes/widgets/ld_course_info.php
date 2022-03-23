@@ -183,7 +183,6 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 
 			$quiz_orderby = esc_attr( $instance['quiz_orderby'] );
 			$quiz_order   = esc_attr( $instance['quiz_order'] );
-			learndash_replace_widgets_alert();
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html__( 'Title:', 'learndash' ); ?></label>

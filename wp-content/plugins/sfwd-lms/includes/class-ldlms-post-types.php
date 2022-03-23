@@ -15,6 +15,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 	 * Class to create the instance.
 	 */
 	class LDLMS_Post_Types {
+
 		/**
 		 * Collection of all post types.
 		 *
@@ -31,7 +32,6 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 			'assignment'  => 'sfwd-assignment',
 			'essay'       => 'sfwd-essays',
 			'certificate' => 'sfwd-certificates',
-			'exam'        => 'ld-exam',
 		);
 
 		/**
@@ -51,7 +51,6 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 				'assignment',
 				'essay',
 				'certificate',
-				'exam',
 			),
 			'course'         => array(
 				'course',
@@ -230,17 +229,6 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 			}
 
 			return '';
-		}
-
-		/**
-		 * Utility function to return array of all LearnDash post types with key.
-		 *
-		 * @since 4.0.0
-		 *
-		 * @return array array of all post types with key.
-		 */
-		public static function get_all_post_types_set() {
-			return self::$post_types;
 		}
 
 		// End of functions.

@@ -484,60 +484,50 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
-			if ( $this->post_type === $post->post_type ) {
-				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
-				$request_route = $request->get_route();
-				
-				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
+			$current_links = $response->get_links();
 
-					$links = array();
+			list( $course_id, $lesson_id, $topic_id, $parent_id ) = $this->get_essay_post_data( $post->ID );
 
-					$current_links = $response->get_links();
+			$links = array();
+			if ( ( ! isset( $response->links['course'] ) ) && ( ! empty( $course_id ) ) ) {
+				$links['course'] = array(
+					'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'courses' ) . '/' . $course_id ),
+					'embeddable' => true,
+				);
+			}
 
-					list( $course_id, $lesson_id, $topic_id, $parent_id ) = $this->get_essay_post_data( $post->ID );
+			if ( ( ! isset( $response->links['lesson'] ) ) && ( ! empty( $lesson_id ) ) ) {
+				$lesson_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'lessons' ) . '/' . $lesson_id );
 
-					
-					if ( ( ! isset( $response->links['course'] ) ) && ( ! empty( $course_id ) ) ) {
-						$links['course'] = array(
-							'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'courses' ) . '/' . $course_id ),
-							'embeddable' => true,
-						);
-					}
-
-					if ( ( ! isset( $response->links['lesson'] ) ) && ( ! empty( $lesson_id ) ) ) {
-						$lesson_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'lessons' ) . '/' . $lesson_id );
-
-						if ( ! empty( $course_id ) ) {
-							$lesson_url = add_query_arg( 'course', $course_id, $lesson_url );
-						}
-
-						$links['lesson'] = array(
-							'href'       => $lesson_url,
-							'embeddable' => true,
-						);
-					}
-
-					if ( ( ! isset( $response->links['topic'] ) ) && ( ! empty( $topic_id ) ) ) {
-						$topic_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'topics' ) . '/' . $topic_id );
-
-						if ( ! empty( $course_id ) ) {
-							$topic_url = add_query_arg( 'course', $course_id, $topic_url );
-						}
-
-						if ( ! empty( $lesson_id ) ) {
-							$topic_url = add_query_arg( 'lesson', $lesson_id, $topic_url );
-						}
-
-						$links['topic'] = array(
-							'href'       => $topic_url,
-							'embeddable' => true,
-						);
-					}
-
-					if ( ! empty( $links ) ) {
-						$response->add_links( $links );
-					}
+				if ( ! empty( $course_id ) ) {
+					$lesson_url = add_query_arg( 'course', $course_id, $lesson_url );
 				}
+
+				$links['lesson'] = array(
+					'href'       => $lesson_url,
+					'embeddable' => true,
+				);
+			}
+
+			if ( ( ! isset( $response->links['topic'] ) ) && ( ! empty( $topic_id ) ) ) {
+				$topic_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'topics' ) . '/' . $topic_id );
+
+				if ( ! empty( $course_id ) ) {
+					$topic_url = add_query_arg( 'course', $course_id, $topic_url );
+				}
+
+				if ( ! empty( $lesson_id ) ) {
+					$topic_url = add_query_arg( 'lesson', $lesson_id, $topic_url );
+				}
+
+				$links['topic'] = array(
+					'href'       => $topic_url,
+					'embeddable' => true,
+				);
+			}
+
+			if ( ! empty( $links ) ) {
+				$response->add_links( $links );
 			}
 
 			return $response;

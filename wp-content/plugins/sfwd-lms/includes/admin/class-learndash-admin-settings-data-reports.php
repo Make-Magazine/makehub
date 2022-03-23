@@ -293,17 +293,17 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 			 */
 			do_action( 'learndash_settings_page_before_content' );
 			?>
-			<div id="learndash-settings" class="wrap learndash-settings-page-wrap">
-				<h1 class="learndash-empty-page-title"></h1>
+			<div id="learndash-settings" class="wrap">
+				<h1><?php esc_html_e( 'User Reports', 'learndash' ); ?></h1>
 				<form method="post" action="options.php">
-					<div id="poststuff">
+					<div class="sfwd_options_wrapper sfwd_settings_left">
 						<div id="advanced-sortables" class="meta-box-sortables">
-							<div id="sfwd-courses_metabox" class="postbox ld_settings_postbox learndash-settings-postbox">
-								<div class="postbox-header">
-									<h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'User Reports', 'learndash' ); ?></h2>
-								</div>
+							<div id="sfwd-courses_metabox" class="postbox learndash-settings-postbox">
+								<div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'learndash' ); ?>"><br></div>
+								<h3 class="hndle"><span><?php esc_html_e( 'User Reports', 'learndash' ); ?></span></h3>
 								<div class="inside">
 									<div class="sfwd sfwd_options sfwd-courses_settings">
+
 										<table id="learndash-data-reports" class="wc_status_table widefat" cellspacing="0">
 										<?php
 										wp_nonce_field( 'learndash-data-reports-nonce-' . get_current_user_id(), 'learndash-data-reports-nonce' );

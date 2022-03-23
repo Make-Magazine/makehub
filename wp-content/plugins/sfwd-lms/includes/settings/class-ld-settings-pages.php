@@ -145,12 +145,8 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 				$this->settings_tab_title = $this->settings_page_title;
 			}
 
-			if ( ! empty( $this->settings_page_id ) ) {
-				add_filter( 'option_page_capability_' . $this->settings_page_id, array( $this, 'filter_option_page_capability' ), 10, 1 );
-
-				if ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) {
-					$learndash_pages[] = $this->settings_page_id;
-				}
+			if ( ( ! empty( $this->settings_page_id ) ) && ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) ) {
+				$learndash_pages[] = $this->settings_page_id;
 			}
 
 			if ( true === $this->settings_metabox_as_sub ) {
@@ -764,22 +760,6 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			return $show;
 		}
 
-		/**
-		 * Filter function to override default settings save user capability 'manage_options'.
-		 *
-		 * @since 3.6.1
-		 *
-		 * @param string $capability User capability to save options page.
-		 * @return string.
-		 */
-		public function filter_option_page_capability( $capability ) {
-			if ( defined( 'LEARNDASH_ADMIN_CAPABILITY_CHECK' ) && LEARNDASH_ADMIN_CAPABILITY_CHECK ) {
-				$capability = LEARNDASH_ADMIN_CAPABILITY_CHECK;
-			}
-
-			return $capability;
-		}
-
 		// End of functions.
 	}
 }
@@ -793,7 +773,8 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
  */
 function learndash_admin_settings_page_assets() {
 	global $learndash_assets_loaded;
-	if ( learndash_use_select2_lib() ) {
+	/** This filter is documented in includes/class-ld-lms.php */
+	if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 		if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 			wp_enqueue_style(
 				'learndash-select2-jquery-style',
@@ -959,36 +940,14 @@ add_action(
 			$query_args['orderby'] = 'title';
 		}
 
-		$include_selected = 0;
-		if ( ( isset( $query_args['ld_include_selected'] ) ) && ( ! empty( $query_args['ld_include_selected'] ) ) ) {
-			$include_selected = absint( $query_args['ld_include_selected'] ) ;
-		}
-
 		$query_results = new WP_Query( $query_args );
 		if ( ( $query_results ) && ( is_a( $query_results, 'WP_Query' ) ) ) {
 			$result_array['items'] = array();
-
-			if ( ( ! empty( $include_selected ) ) && ( $query_args['paged'] == 1 ) ) {
-				$title = get_the_title( $include_selected );
-				$title = sprintf(
-					// translators: placeholder: post title.
-					esc_html_x( '%s (current selection)', 'placeholder: post title', 'learndash' ), $title);
-				if ( ! empty( $title ) ) {
-					$result_array['items'][] = array(
-						'id'   => $include_selected,
-						'text' => $title,
-					);
-				}
-			}
-
 			if ( ( property_exists( $query_results, 'posts' ) ) && ( is_array( $query_results->posts ) ) && ( ! empty( $query_results->posts ) ) ) {
 				foreach ( $query_results->posts as $item ) {
-				
-					$title = learndash_format_step_post_title_with_status_label( $item );
-					
 					$result_array['items'][] = array(
 						'id'   => $item->ID,
-						'text' => $title,
+						'text' => $item->post_title,
 					);
 				}
 			}

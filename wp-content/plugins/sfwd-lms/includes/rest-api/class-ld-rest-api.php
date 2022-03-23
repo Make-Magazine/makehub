@@ -201,11 +201,6 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-progress-status-controller.php',
 					),
-
-					'LD_REST_Exams_Controller_V2' => array(
-						'register_routes' => true,
-						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-exams-controller.php',
-					),
 				);
 
 				$this->controllers = array_merge( $controllers_v1, $controllers_v2 );

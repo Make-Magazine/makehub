@@ -85,7 +85,6 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 			'Learndash_Binary_Selector_User_Courses',
 			'Learndash_Binary_Selector_User_Groups',
 			'Learndash_Binary_Selector_Leader_Groups',
-			'Learndash_Binary_Selector_Exam_Challenge_Courses',
 		);
 
 		/**

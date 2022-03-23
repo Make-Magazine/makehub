@@ -104,7 +104,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['groups_membership_enabled'] = '';
 			}
 
-			if ( learndash_use_select2_lib() ) {
+			/** This filter is documented in includes/class-ld-lms.php */
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 				$select_groups_options_default = sprintf(
 					// translators: placeholder: Group.
 					esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),

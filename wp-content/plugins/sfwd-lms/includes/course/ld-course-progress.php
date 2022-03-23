@@ -1019,9 +1019,10 @@ function learndash_is_quiz_notcomplete( $user_id = null, $quizzes = null, $retur
 
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
-		if ( empty( $user_id ) ) {
-			return true;
-		}
+	}
+
+	if ( empty( $user_id ) ) {
+		return;
 	}
 
 	if ( ( is_null( $quizzes ) ) || ( ! is_array( $quizzes ) ) || ( empty( $quizzes ) ) ) {
@@ -1845,7 +1846,7 @@ function learndash_next_lesson_quiz( $url = true, $user_id = null, $lesson_id = 
 			return learndash_get_step_permalink( $lesson_id, $course_id );
 		}
 		if ( learndash_user_is_course_children_progress_complete( $user_id, $course_id, $lesson_id ) ) {
-			learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
+			return learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
 		}
 	}
 
@@ -1873,17 +1874,11 @@ function learndash_can_complete_step( $user_id = 0, $step_id = 0, $course_id = 0
 	$step_id   = absint( $step_id );
 	$course_id = absint( $course_id );
 	if ( empty( $course_id ) ) {
-		$course_id = learndash_get_course_id( $step_id );
+		$course_id = learndash_get_course_id();
 	}
 
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $step_id ) ) && ( ! empty( $course_id ) ) ) {
-		// If we have ANY previous incomplete steps then we can't complete this step.
-		$incomplete_step_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $step_id );
-		if ( ! empty( $incomplete_step_id ) && ( $incomplete_step_id !== $step_id ) ) {
-			return false;
-		}
-
-		if ( in_array( get_post_type( $step_id ), learndash_get_post_type_slug( array( 'lesson', 'topic' ) ), true ) ) {
+		if ( in_array( get_post_type( $step_id ), array( learndash_get_post_type_slug( 'lesson' ), learndash_get_post_type_slug( 'topic' ) ), true ) ) {
 
 			// Check the Lesson Timer...
 			$step_timer_time = learndash_forced_lesson_time( $step_id );
@@ -2782,7 +2777,7 @@ function learndash_show_mark_incomplete( $post, $atts = array() ) {
 
 	$button_label = LearnDash_Custom_Label::get_label( 'button_mark_incomplete' );
 	if ( empty( $button_label ) ) {
-		$button_label = esc_html__( 'Mark Incomplete', 'learndash' );
+		$button_label = 'Mark Incomplete';
 	}
 	$form_fields = '<input type="hidden" value="' . $post->ID . '" name="post" />
 				<input type="hidden" value="' . learndash_get_course_id( $post->ID ) . '" name="course_id" />

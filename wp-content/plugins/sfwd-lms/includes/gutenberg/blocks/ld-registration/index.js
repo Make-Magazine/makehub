@@ -6,29 +6,18 @@
  */
 
 /**
- * LearnDash block functions
- */
-import {
-	ldlms_get_post_edit_meta
-} from '../ldlms.js';
-
-/**
  * Internal block libraries
  */
-import { __, _x, sprintf} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
-import { useMemo } from "@wordpress/element";
-
-const block_key   = 'learndash/ld-registration';
-const block_title = __( 'LearnDash Registration', 'learndash' );
 
 registerBlockType(
-	block_key,
+	'learndash/ld-registration',
 	{
-		title: block_title,
+		title: __( 'LearnDash Registration', 'learndash' ),
 		description: __( 'Shows the registration form', 'learndash' ),
 		icon: 'id-alt',
 		category: 'learndash-blocks',
@@ -41,19 +30,16 @@ registerBlockType(
 			customClassName: false,
 		},
 		attributes: {
-			width: {
-				type: 'string',
-			},
-			example_show: {
+			preview_show: {
 				type: 'boolean',
 				default: 1
 			},
-			preview_show: {
+			example_show: {
 				type: 'boolean',
-				default: true
+				default: 0
 			},
-			editing_post_meta: {
-				type: 'object'
+			width: {
+				type: 'string',
 			}
 		},
 		edit: function( props ) {
@@ -87,42 +73,26 @@ registerBlockType(
 				</InspectorControls>
 			);
 
-			function get_default_message() {
-				return sprintf(
-					// translators: placeholder: block_title.
-					_x('%s block output shown here', 'placeholder: block_title', 'learndash'), block_title
-				);
-			}
-
-			function empty_response_placeholder_function(props) {
-				return get_default_message();
-			}
-
 			function do_serverside_render( attributes ) {
 				if ( attributes.preview_show == true ) {
-					// We add the meta so the server knowns what is being edited.
-					attributes.editing_post_meta = ldlms_get_post_edit_meta();
-
 					return <ServerSideRender
-						block={block_key}
-						attributes={ attributes }
-						key={block_key}
-						EmptyResponsePlaceholder={ empty_response_placeholder_function }
+					block="learndash/ld-registration"
+					attributes={ attributes }
+					key="learndash/ld-registration"
 					/>
 				} else {
-					return get_default_message();
+					return __( '[ld_registration] shortcode output shown here', 'learndash' );
 				}
 			}
 
 			return [
 				inspectorControls,
-				useMemo(() => do_serverside_render(props.attributes), [props.attributes]),
+				do_serverside_render( props.attributes )
 			];
 		},
 
 		save: props => {
-			delete (props.attributes.example_show);
-			delete(props.attributes.editing_post_meta);
+
 		}
 	},
 );

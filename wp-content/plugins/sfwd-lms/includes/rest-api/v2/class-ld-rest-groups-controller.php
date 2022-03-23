@@ -177,37 +177,32 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V2' ) ) && ( class_exists( 'LD
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 			if ( $this->post_type === $post->post_type ) {
 				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
-				$request_route = $request->get_route();
-				
-				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
-					$links = array();
 
-					$current_links = $response->get_links();
+				$current_links = $response->get_links();
 
-					if ( ! isset( $current_links['users'] ) ) {
-						$links['users'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-users' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['users'] ) ) {
+					$links['users'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-users' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! isset( $current_links['leaders'] ) ) {
-						$links['leaders'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-leaders' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['leaders'] ) ) {
+					$links['leaders'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-leaders' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! isset( $current_links['courses'] ) ) {
-						$links['courses'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-courses' ),
-							'embeddable' => true,
-						);
-					}
+				if ( ! isset( $current_links['courses'] ) ) {
+					$links['courses'] = array(
+						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'groups-courses' ),
+						'embeddable' => true,
+					);
+				}
 
-					if ( ! empty( $links ) ) {
-						$response->add_links( $links );
-					}
+				if ( ! empty( $links ) ) {
+					$response->add_links( $links );
 				}
 			}
 

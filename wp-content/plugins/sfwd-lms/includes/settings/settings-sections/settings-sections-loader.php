@@ -70,9 +70,8 @@ require_once __DIR__ . '/settings-sections-emails/class-ld-settings-section-emai
 // Payments tab.
 require_once __DIR__ . '/class-ld-settings-section-payments-list.php';
 
-// Payments sub-sections.
+// Payments sub-sections
 require_once __DIR__ . '/settings-sections-payments/class-ld-settings-section-paypal.php';
-require_once __DIR__ . '/settings-sections-payments/class-ld-settings-section-stripe-connect.php';
 
 // Support tab.
 require_once __DIR__ . '/class-ld-settings-section-support-learndash.php';

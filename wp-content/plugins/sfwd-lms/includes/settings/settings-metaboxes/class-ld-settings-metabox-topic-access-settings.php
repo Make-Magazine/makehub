@@ -110,7 +110,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$select_course_options         = array();
 			$select_course_query_data_json = '';
 
-			if ( learndash_use_select2_lib() ) {
+			/** This filter is documented in includes/class-ld-lms.php */
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 				$select_course_options_default = array(
 					'-1' => sprintf(
 						// translators: placeholder: course.
@@ -126,7 +127,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 				}
 
-				if ( learndash_use_select2_lib_ajax_fetch() ) {
+				/** This filter is includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
+				if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
 					$select_course_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
@@ -165,7 +167,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$select_lesson_options = $sfwd_lms->select_a_lesson( absint( $this->setting_option_values['course'] ) );
 			}
 
-			if ( learndash_use_select2_lib() ) {
+			/** This filter is documented in includes/class-ld-lms.php */
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 				$select_lesson_options_default = array(
 					'-1' => sprintf(
 						// translators: placeholder: Lesson.

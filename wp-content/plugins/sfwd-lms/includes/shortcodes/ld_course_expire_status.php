@@ -28,11 +28,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string  $label_after  The content to print after label. Default a translatable string.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_course_expire_status'.
  *
  * @return string The `ld_course_expire_status` shortcode output.
  */
-function learndash_course_expire_status_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_expire_status' ) {
+function learndash_course_expire_status_shortcode( $atts = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -57,9 +56,6 @@ function learndash_course_expire_status_shortcode( $atts = array(), $content = '
 	} else {
 		$atts['autop'] = false;
 	}
-
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	/**
 	 * Filters `ld_course_expire_status` shortcode attributes.
@@ -123,4 +119,4 @@ function learndash_course_expire_status_shortcode( $atts = array(), $content = '
 	return $content;
 }
 
-add_shortcode( 'ld_course_expire_status', 'learndash_course_expire_status_shortcode', 10, 3 );
+add_shortcode( 'ld_course_expire_status', 'learndash_course_expire_status_shortcode', 10, 2 );

@@ -6,22 +6,26 @@
  */
 
 /**
+ * LearnDash block functions
+ */
+//import {
+//	ldlms_get_custom_label,
+//	ldlms_get_per_page,
+//} from '../ldlms.js';
+
+/**
  * Internal block libraries
  */
-import { __, _x, sprintf} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, PanelRow, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
-import { useMemo } from "@wordpress/element";
-
-const block_key   = 'learndash/ld-login';
-const block_title = __('LearnDash Login', 'learndash');
 
 registerBlockType(
-	block_key,
+	'learndash/ld-login',
 	{
-		title: block_title,
+		title: __('LearnDash Login', 'learndash'),
 		description: __('This block adds the login button on any page', 'learndash'),
 		icon: 'admin-network',
 		category: 'learndash-blocks',
@@ -50,6 +54,7 @@ registerBlockType(
 				type: 'string',
 				default: '',
 			},
+
 			logout_url: {
 				type: 'string',
 				default: '',
@@ -198,30 +203,30 @@ registerBlockType(
 			);
 
 			const panel_preview = (
-				<PanelBody title={__("Preview", "learndash")} initialOpen={false}>
+				<PanelBody
+					title={__('Preview', 'learndash')}
+					initialOpen={false}
+				>
 					<ToggleControl
-						label={__("Show Preview", "learndash")}
+						label={__('Show Preview', 'learndash')}
 						checked={!!preview_show}
-						onChange={(preview_show) => setAttributes({ preview_show })}
+						onChange={preview_show => setAttributes({ preview_show })}
 					/>
-					<PanelRow className="learndash-block-error-message">
-						{__("Preview settings are not saved.", "learndash")}
-					</PanelRow>
 					<SelectControl
 						key="preview_action"
-						label={__("Preview Action", "learndash")}
+						label={__('Preview Action', 'learndash')}
 						value={preview_action}
 						options={[
 							{
-								label: __("Login", "learndash"),
-								value: "login",
+								label: __('Login', 'learndash'),
+								value: 'login',
 							},
 							{
-								label: __("Logout", "learndash"),
-								value: "logout",
+								label: __('Logout', 'learndash'),
+								value: 'logout',
 							},
 						]}
-						onChange={(preview_action) => setAttributes({ preview_action })}
+						onChange={preview_action => setAttributes({ preview_action })}
 					/>
 				</PanelBody>
 			);
@@ -235,36 +240,30 @@ registerBlockType(
 				</InspectorControls>
 			);
 
-			function get_default_message() {
-				return sprintf(
-					// translators: placeholder: block_title.
-					_x('%s block output shown here', 'placeholder: block_title', 'learndash'), block_title
-				);
-			}
-
-			function empty_response_placeholder_function(props) {
-				return get_default_message();
-			}
-
 			function do_serverside_render( attributes ) {
 				if ( attributes.preview_show == true ) {
 					return <ServerSideRender
-						block={block_key}
-						attributes={ attributes }
-						key={block_key}
-						EmptyResponsePlaceholder={ empty_response_placeholder_function }
+					block="learndash/ld-login"
+					attributes={ attributes }
+					key="learndash/ld-login"
 					/>
 				} else {
-					return get_default_message();
+					return __( '[learndash_login] shortcode output shown here', 'learndash' );
 				}
 			}
 
 			return [
 				inspectorControls,
-				useMemo(() => do_serverside_render(props.attributes), [props.attributes]),
+				do_serverside_render( props.attributes )
 			];
 		},
+
 		save: props => {
+			// Delete meta from props to prevent it being saved.
+			delete (props.attributes.meta);
+
+			// Delete preview_user_id from props to prevent it being saved.
+			delete (props.attributes.preview_user_id);
 		}
 	},
 );

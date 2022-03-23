@@ -176,9 +176,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 			}
 
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-			if ( ! in_array( $this->post_type, array( learndash_get_post_type_slug( 'exam' ) ), true ) ) {
-				add_shortcode( $this->post_type, array( $this, 'shortcode' ) );
-			}
+			add_shortcode( $this->post_type, array( $this, 'shortcode' ) );
 			add_action( 'init', array( $this, 'add_post_type' ), 5 );
 
 			$this->update_options();
@@ -588,10 +586,10 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 							$started_time = time();
 
-							//$course_earliest_completed_time = learndash_activity_course_get_earliest_started( $current_user->ID, $course_id, $started_time );
+							$course_earliest_completed_time = learndash_activity_course_get_earliest_started( $current_user->ID, $course_id, $started_time );
 
 							// We insert the Course started record before the Lesson.
-							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $started_time );
+							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $course_earliest_completed_time );
 							if ( $course_activity ) {
 								learndash_activity_update_meta_set(
 									$course_activity->activity_id,
@@ -800,8 +798,6 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					include $template_file;
 				}
 				$content = learndash_ob_get_clean( $level );
-			} elseif ( learndash_get_post_type_slug( 'exam' ) === $post->post_type ) {
-				// Nothing here for now.
 			}
 
 			// Added this defined wrap in v2.1.8 as it was effecting <pre></pre>, <code></code> and other formatting of the content.
@@ -883,17 +879,9 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					include ABSPATH . 'wp-trackback.php';
 				} elseif ( ! empty( $wp->query_vars['name'] ) ) {
 					// single.
-					if ( in_array( $post_type, learndash_get_post_types( 'course_steps' ), true ) ) {
+					if ( ( 'sfwd-quiz' === $post_type ) || ( 'sfwd-lessons' === $post_type ) || ( 'sfwd-topic' === $post_type ) ) {
 						global $post;
 						sfwd_lms_access_redirect( $post->ID );
-						$course_id = learndash_get_course_id( $post->ID );
-						if ( ! empty( $course_id ) ) {
-							learndash_course_exam_challenge_redirect( $course_id );
-						}
-					} elseif ( $post_type === learndash_get_post_type_slug( 'course' ) ) {
-						learndash_course_exam_challenge_redirect( $post->ID );
-					} elseif ( $post_type === learndash_get_post_type_slug( 'exam' ) ) {
-						learndash_exam_challenge_view_permission( $post->ID );
 					}
 				}
 			}

@@ -850,21 +850,22 @@ function learndash_get_page_by_path( $slug = '', $post_type = '' ) {
 function learndash_get_course_lessons_per_page( $course_id = 0 ) {
 	$course_lessons_per_page = 0;
 
-	$course_lessons_per_page = (int) get_option( 'posts_per_page' );
-
-	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
-	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
-		if ( isset( $course_settings['course_pagination_lessons'] ) ) {
-			$course_lessons_per_page = absint( $course_settings['course_pagination_lessons'] );
-		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
-			$course_lessons_per_page = absint( $course_settings['posts_per_page'] );
-		}
+	$lessons_options = learndash_get_option( 'sfwd-lessons' );
+	if ( isset( $lessons_options['posts_per_page'] ) ) {
+		$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
 	}
 
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
+
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_lesson_per_page_custom'] ) ) ) {
-			$course_lessons_per_page = absint( $course_settings['course_lesson_per_page_custom'] );
+			$course_lessons_per_page = intval( $course_settings['course_lesson_per_page_custom'] );
+		} else {
+			if ( ( ! isset( $lessons_options['posts_per_page'] ) ) || ( is_null( $lessons_options['posts_per_page'] ) ) ) {
+				$course_lessons_per_page = get_option( 'posts_per_page' );
+			} else {
+				$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+			}
 		}
 	}
 
@@ -957,11 +958,7 @@ function learndash_process_lesson_topics_pager( $topics = array(), $args = array
 	$paged_values = learndash_get_lesson_topic_paged_values();
 
 	if ( ! empty( $topics ) ) {
-		if ( ! isset( $args['per_page'] ) ) {
-			$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
-		} else {
-			$topics_per_page = intval( $args['per_page'] );
-		}
+		$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
 		if ( ( $topics_per_page > 0 ) && ( count( $topics ) > $topics_per_page ) ) {
 			$topics_chunks = array_chunk( $topics, $topics_per_page );
 
@@ -1129,21 +1126,16 @@ function learndash_convert_course_access_list( $course_access_list = '', $return
 function learndash_get_course_topics_per_page( $course_id = 0, $lesson_id = 0 ) {
 	$course_topics_per_page = 0;
 
-	$course_topics_per_page = (int) get_option( 'posts_per_page' );
-
-	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
-	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
-		if ( isset( $course_settings['course_pagination_topics'] ) ) {
-			$course_topics_per_page = absint( $course_settings['course_pagination_topics'] );
-		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
-			$course_topics_per_page = absint( $course_settings['posts_per_page'] );
-		}
+	$lessons_options = learndash_get_option( 'sfwd-lessons' );
+	if ( isset( $lessons_options['posts_per_page'] ) ) {
+		$course_topics_per_page = intval( $lessons_options['posts_per_page'] );
 	}
 
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
+
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_topic_per_page_custom'] ) ) ) {
-			$course_topics_per_page = absint( $course_settings['course_topic_per_page_custom'] );
+			$course_topics_per_page = intval( $course_settings['course_topic_per_page_custom'] );
 		}
 	}
 

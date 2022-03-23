@@ -513,7 +513,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 							if ( ( isset( $field_set['metabox'] ) ) && ( ! empty( $field_set['metabox'] ) ) && ( 'LearnDash_Settings_Metabox' === get_parent_class( $field_set['metabox'] ) ) ) {
 								$metabox_class_name = get_class( $field_set['metabox'] );
 								if ( ( $metabox_class_name ) && ( isset( $this->metaboxes[ $metabox_class_name ] ) ) ) {
-									$this->metaboxes[ $metabox_class_name ]->init( $ld_post, true );
+									$this->metaboxes[ $metabox_class_name ]->init( $ld_post );
 									$field_value = $this->metaboxes[ $metabox_class_name ]->get_metabox_settings_value_by_key( $field_set['settings_field']['name'] );
 								}
 							} else {

@@ -144,7 +144,7 @@ if ( ( ! class_exists( 'Course_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 			} else {
 				$title = $this->post_name;
 			}
-			learndash_replace_widgets_alert();
+
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
