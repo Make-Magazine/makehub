@@ -23,7 +23,6 @@ TABLE OF CONTENTS:
 6.2 - Desktop Small
 6.3 - Desktop Medium
 6.4 - Desktop Large
-7   - Theme 2.0 Modal
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
 * 1.0 - Typography and colour
@@ -395,67 +394,5 @@ TABLE OF CONTENTS:
     height: -webkit-calc(100% - 120px);
     height: calc(100% - 120px);
     padding: 0;
-  }
-}
-/**
-* 7   - Theme 2.0 Modal
-*/
-#theme-hello-container.bb-update-theme-modal {
-  width: 560px;
-  max-width: 100%;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-header {
-  box-shadow: inset 0px -1px 0px #e7e9eb;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-header .theme-hello-title h1 {
-  margin-top: 6px;
-  padding: 9px 0 4px;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-header .theme-hello-close {
-  width: auto;
-  min-width: inherit;
-  top: 5px;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-header .theme-hello-close .button {
-  color: transparent;
-  width: 25px;
-  min-width: auto;
-  background-color: transparent;
-  border: 0;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-header .theme-hello-close .button:before {
-  font: normal 22px/50px dashicons !important;
-  color: #787c82;
-  display: inline-block;
-  content: "\f335";
-  font-weight: 300;
-}
-#theme-hello-container.bb-update-theme-modal .theme-hello-content {
-  padding: 15px 23px;
-}
-#theme-hello-container.bb-update-theme-modal .bp-theme-hello-footer {
-  background: #F0F0F1;
-  box-shadow: inset 0px 1px 0px #E7E9EB;
-  padding: 15px 23px;
-  border-radius: 0 0 3px 3px;
-}
-#theme-hello-container.bb-update-theme-modal .bp-hello-button-links {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-}
-#theme-hello-container.bb-update-theme-modal .bp-hello-button-links .button + .button {
-  margin-right: 15px;
-  color: #fff;
-}
-@media screen and (max-width: 1023px) {
-  #theme-hello-container.bb-update-theme-modal {
-    right: 0;
-    bottom: 110px;
-    left: 0;
-    width: auto;
   }
 }

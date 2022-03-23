@@ -4322,23 +4322,7 @@ body.login.login-split-page .login-split {
     margin-right: 0;
     text-align: right;
   }
-
-  body.login.login-split-page .language-switcher {
-    position: absolute;
-    right: 50%;
-    padding: 15px 35px 0 0;
-  }
 }
-@media screen and (max-width: 991px) {
-  body.login.login-split-page .language-switcher {
-    top: initial !important;
-    margin-top: -25px;
-  }
-}
-body.login:not(.login-split-page) .language-switcher {
-  margin-top: -25px;
-}
-
 .login #backtoblog,
 .login #nav {
   padding: 0;
@@ -4476,13 +4460,11 @@ body.login:not(.login-split-page) .language-switcher {
   font-size: 14px;
 }
 
-.login.bb-login .wp-generate-pw,
 .login.bb-login .button-primary {
   background-color: #007CFF;
   border-color: #007CFF;
   border-radius: 100px;
   box-shadow: none;
-  color: #fff;
   text-shadow: none;
   height: auto;
   padding: 4px 30px;
@@ -4493,13 +4475,10 @@ body.login:not(.login-split-page) .language-switcher {
   margin: 20px 0 0;
   font-size: 14px;
 }
-.login.bb-login .wp-generate-pw:hover, .login.bb-login .wp-generate-pw:focus,
-.login.bb-login .button-primary:hover,
-.login.bb-login .button-primary:focus {
+.login.bb-login .button-primary:hover, .login.bb-login .button-primary:focus {
   background-color: #0070e6;
   border-color: #0070e6;
 }
-.login.bb-login .wp-generate-pw:active,
 .login.bb-login .button-primary:active {
   -webkit-transform: none;
   -ms-transform: none;
@@ -4640,26 +4619,6 @@ body.login:not(.login-split-page) .language-switcher {
   top: 4px;
 }
 .login.bb-login form .forgetmenot input[type=checkbox]:focus + .checkbox {
-  border-color: #007CFF;
-}
-
-.login.bb-login form .pw-weak {
-  font-size: 14px;
-  line-height: 20px;
-  vertical-align: bottom;
-  padding-top: 4px;
-  position: relative;
-}
-.login.bb-login form .pw-weak input[type=checkbox],
-.login.bb-login form .pw-weak input[type=checkbox]:before {
-  margin: 0;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: 0;
-  top: 4px;
-}
-.login.bb-login form .pw-weak input[type=checkbox]:focus + .checkbox {
   border-color: #007CFF;
 }
 

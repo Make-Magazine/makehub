@@ -216,23 +216,6 @@ function buddyboss_login_scripts() {
 			};
 			signinCheckboxes();
 
-			var weakPasswordCheckboxes = function() {
-				// Checkbox Styling
-				jQuery('input[type=checkbox]#pw-weak').each(function() {
-					var $this = jQuery(this);
-					$this.addClass('checkbox');
-					jQuery('<span class="checkbox"></span>').insertAfter($this);
-					if ($this.is(':checked')) {
-						$this.next('span.checkbox').addClass('on');
-					};
-					$this.fadeTo(0,0);
-					$this.change(function(){
-						$this.next('span.checkbox').toggleClass('on');
-					});
-				});
-			};
-			weakPasswordCheckboxes();
-
 			var loginLogoImage = function() {
 				jQuery('.login.bb-login #login > h1 > a').each(function() {
 					var $this = jQuery(this);
@@ -305,20 +288,8 @@ function buddyboss_login_scripts() {
 				});
 			};
 			loginHeight();
-
-			// Re-position WP Language Switcher below Login Form
-			var langSwitchPosition = function() {
-				if( jQuery( 'body' ).hasClass( 'login-split-page' ) && jQuery( '.language-switcher').length  ) {
-					var loginBlockHeight = jQuery( '#login' ).height() + jQuery( '#login' ).offset().top;
-					jQuery( '.language-switcher' ).css( 'top', loginBlockHeight + 'px' );
-				}
-			}
-
-			langSwitchPosition();
-
 			jQuery( window ).on( 'resize', function () {
 				loginHeight();
-				langSwitchPosition();
 			} );
 
 		} )
@@ -570,7 +541,6 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 			form#lostpasswordform a.bs-sign-in {
 			color: <?php echo $rx_admin_screen_links; ?>;
 			}
-			.login.wp-core-ui .wp-generate-pw,
 			.login.wp-core-ui .button-primary {
 			background-color: <?php echo $rx_admin_screen_links; ?>;
 			border-color: <?php echo $rx_admin_screen_links; ?>;

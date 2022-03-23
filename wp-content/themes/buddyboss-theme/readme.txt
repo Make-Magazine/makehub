@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 5.9.2
-Version: 1.8.7
+Tested up to: 5.8.3
+Version: 1.8.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,17 +18,6 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
-
-= 1.8.7 =
-* Profiles - Provided UI support to customize Profile header and directory layouts for settings provided in BuddyBoss Platform Pro
-* Profiles - Moved options to change profile cover image sizes to BuddyBoss Platform Pro
-* Groups - Provided UI support to customize Group header and directory layouts for settings provided in BuddyBoss Platform Pro
-* Groups - Moved options to change group cover image sizes to BuddyBoss Platform Pro
-* Text Editor - Handled emoji popup search issue with uppercase string
-* Login - Handled set password and forgot password screen small UI issue
-* Updater - Added confirm popup before updating to next version
-* LearnDash - Handled quiz question type essay UI issue
-* Compatibility - Fixed language switcher UI issue with WordPress 5.9
 
 = 1.8.6 =
 * Forums - Improved discussion labels logic to show group name when forum associated with the group

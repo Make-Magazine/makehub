@@ -6978,7 +6978,6 @@ ul.bb-lms-user-profile-tabs .more-button.active:after {
 }
 .wpProQuiz_content .wpProQuiz_questionList li.wpProQuiz_questionListItem {
   background-color: #fff;
-  min-width: 100%;
 }
 .wpProQuiz_content .wpProQuiz_questionList[data-type=single] li.wpProQuiz_questionListItem, .wpProQuiz_content .wpProQuiz_questionList[data-type=multiple] li.wpProQuiz_questionListItem, .wpProQuiz_content .wpProQuiz_questionList[data-type=sort_answer] li.wpProQuiz_questionListItem, .wpProQuiz_content .wpProQuiz_questionList.ui-sortable li.wpProQuiz_questionListItem {
   border: 1px solid #E7E9EC;
@@ -7008,7 +7007,6 @@ ul.bb-lms-user-profile-tabs .more-button.active:after {
           align-items: center;
   position: relative;
   background-color: transparent;
-  min-width: 100%;
 }
 .wpProQuiz_content .wpProQuiz_questionList[data-type=essay] form input[type=file] {
   width: 140px;

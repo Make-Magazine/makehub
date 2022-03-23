@@ -128,7 +128,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			 */
 			$admin_bar_class = apply_filters( 'wp_admin_bar_class', 'WP_Admin_Bar' );
 			if ( class_exists( $admin_bar_class ) ) {
-				$wp_admin_bar = new $admin_bar_class();
+				$wp_admin_bar = new $admin_bar_class;
 			} else {
 				return false;
 			}
@@ -216,19 +216,8 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 		}
 
-		/**
-		 * Get group excerpt.
-		 *
-		 * @param string $excerpt Group excerpt.
-		 * @param object $group Group object.
-		 *
-		 * @return string Return group excerpt.
-		 */
-		public function get_group_description_excerpt( $excerpt, $group ) {
-			$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss-theme' ) . '</a>';
-			if ( bp_is_single_item() ) {
-				$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss-theme' ) . '</a>';
-			}
+		function get_group_description_excerpt( $excerpt, $group ) {
+			$group_link = ' <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'more', 'buddyboss-theme' ) . '<i class="bb-icon-chevron-right"></i></a>';
 			return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
 		}
 

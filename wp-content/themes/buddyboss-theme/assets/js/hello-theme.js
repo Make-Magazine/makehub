@@ -10,26 +10,21 @@
     var theme_hello_open_modal = function () {
         var backdrop = document.getElementById('theme-hello-backdrop'),
             modal = document.getElementById('theme-hello-container');
-    
-        if ( modal ) {
-            if ( modal.classList.contains( 'bb-theme-modal-onload' ) ) {
-                document.body.classList.add( 'theme-disable-scroll' );
-            
-                // Show modal and overlay.
-                backdrop.style.display = '';
-                modal.style.display = '';
-            
-                // Focus the "X" so bp_hello_handle_keyboard_events() works.
-                var focus_target = modal.querySelectorAll( 'a[href], button' );
-                focus_target = Array.prototype.slice.call( focus_target );
-                focus_target[0].focus();
-            }
-            // Events.
-            modal.addEventListener('keydown', bp_hello_handle_keyboard_events);
-        }
-        if ( backdrop ) {
-            backdrop.addEventListener( 'click', bp_hello_close_modal );
-        }
+
+        document.body.classList.add('theme-disable-scroll');
+
+        // Show modal and overlay.
+        backdrop.style.display = '';
+        modal.style.display = '';
+
+        // Focus the "X" so bp_hello_handle_keyboard_events() works.
+        var focus_target = modal.querySelectorAll('a[href], button');
+        focus_target = Array.prototype.slice.call(focus_target);
+        focus_target[0].focus();
+
+        // Events.
+        modal.addEventListener('keydown', bp_hello_handle_keyboard_events);
+        backdrop.addEventListener('click', bp_hello_close_modal);
     };
 
     /**
@@ -62,15 +57,9 @@
 
         document.body.classList.remove('theme-disable-scroll');
 
-        if ( ! modal.classList.contains( 'bb-update-theme-modal' ) ) {
-            // Remove modal and overlay.
-            modal.parentNode.removeChild( modal );
-            backdrop.parentNode.removeChild( backdrop );
-        } else {
-            // Hide modal and overlay.
-            backdrop.style.display = 'none';
-            modal.style.display = 'none';
-        }
+        // Remove modal and overlay.
+        modal.parentNode.removeChild(modal);
+        backdrop.parentNode.removeChild(backdrop);
     };
 
     /**
