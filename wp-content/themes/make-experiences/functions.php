@@ -367,15 +367,15 @@ function add_slug_body_class($classes) {
         }
 		// For Course and Lessons, check for the Primary category and add it to the body class if found
 		if ( $post->post_type == "sfwd-courses") {
-		      $ld_course_category = get_post_primary_category($post->ID, 'ld_course_category');
-		      if(isset($ld_course_category['primary_category']->slug)) {
-					     $classes[] = 'cat-' . $ld_course_category['primary_category']->slug;
-		      }
+			$ld_course_category = get_post_primary_category($post->ID, 'ld_course_category');
+			if(isset($ld_course_category['primary_category']->slug)) {
+				$classes[] = 'cat-' . $ld_course_category['primary_category']->slug;
+			}
 		} else if ( $post->post_type == "sfwd-lessons") {
-		      $ld_lesson_category = get_post_primary_category($post->ID, 'ld_lesson_category');
-		      if(isset($ld_lesson_category['primary_category']->slug)) {
-					   $classes[] = 'cat-' . $ld_lesson_category['primary_category']->slug;
-		      }
+			$ld_lesson_category = get_post_primary_category($post->ID, 'ld_lesson_category');
+			if(isset($ld_lesson_category['primary_category']->slug)) {
+				$classes[] = 'cat-' . $ld_lesson_category['primary_category']->slug;
+			}
 		}
 
         // let's see if your the group owner and what kind of group it is (hidden, private, etc)
