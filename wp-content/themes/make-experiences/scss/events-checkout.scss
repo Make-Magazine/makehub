@@ -21,6 +21,19 @@
 }
 
 #cart-results-modal-wrap-dv {
+	h3 {
+		position: relative;
+		margin-left:-15px;
+		text-transform: capitalize;
+		&:before {
+			content: "0";
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    background-color: white;
+		    color: white;
+		}
+	}
 	.close-espresso-notice {
 		position: absolute;
 		top: -10px;
