@@ -236,6 +236,7 @@ get_header();
 						<a name="tickets"></a>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
+							<div class="error_message"></div>
                             <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
                         </div>
                         <div class="event-sidebar-item" id="event-details">

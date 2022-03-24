@@ -210,6 +210,7 @@
                     margin-bottom: 30px;
                     min-width: 100%;
                     padding: 0px 15px;
+					&#tickets .error_message { color: $color-red; }
                     .event-sidebar-field {
                         display: flex;
                         flex-wrap: wrap;
