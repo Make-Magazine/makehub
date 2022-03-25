@@ -283,6 +283,9 @@
 			}
 		}
 	}
+	.gfield_radio input[type="radio"], .gfield_checkbox input[type="checkbox"] {
+		position: relative !important;
+	}
 }
 
 .gform_wrapper .gform_validation_errors {
@@ -457,7 +460,7 @@
 	}
 }
 
-.gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
+.gv-edit-entry-wrapper .gform_wrapper{
 	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
 		top: 4px;
 	}

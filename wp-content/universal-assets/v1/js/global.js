@@ -150,15 +150,6 @@ function get_hostname(url) {
     return m ? m[0] : null;
 }
 
-// remove the hubspot code for anything other than prod sites
-var prodDomains = ["https://make.co", "https://learn.make.co", "https://makerspaces.make.co"];
-jQuery(document).ready(function () {
-    if (jQuery.inArray(get_hostname(window.location.href), prodDomains) < 0) {
-        jQuery("#hs-script-loader").remove();
-    }
-});
-
-
 
 // FANCYBOX POPUPS
 jQuery(document).ready(function (jQuery) {
@@ -226,43 +217,43 @@ jQuery(".login-btn").on('click', function(){
 
 // Smooth scroll all the anchor tags
 jQuery('a[href*="#"]')
-        // Remove links that don't actually link to anything
-        .not('[href="#"]')
-        .not('[href="#0"]')
-        .click(function (event) {
-            // On-page links
-            jQuery('a[href*="#"]').removeClass("clicked");
-            jQuery(this).addClass("clicked");
-            if (
-                    location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
-                    &&
-                    location.hostname == this.hostname
-                    ) {
-                // Figure out element to scroll to
-                var target = jQuery(this.hash);
-                target = target.length ? target : jQuery('[name=' + this.hash.slice(1) + ']');
-                // Does a scroll target exist?
-                if (target.length) {
-                    // Only prevent default if animation is actually gonna happen
-                    event.preventDefault();
-                    jQuery('html, body').animate({
-                        scrollTop: target.offset().top - 50
-                    }, 1000, function () {
-                        // Callback after animation
-                        // Must change focus!
-                        var $target = jQuery(target);
-                        $target.focus();
-                        if ($target.is(":focus")) { // Checking if the target was focused
-                            return false;
-                        } else {
-                            $target.attr('tabindex', '-1'); // Adding tabindex for elements not focusable
-                            $target.focus(); // Set focus again
-                        }
-                        ;
-                    });
+// Remove links that don't actually link to anything
+.not('[href="#"]')
+.not('[href="#0"]')
+.click(function (event) {
+    // On-page links
+    jQuery('a[href*="#"]').removeClass("clicked");
+    jQuery(this).addClass("clicked");
+    if (
+        location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+        &&
+        location.hostname == this.hostname
+        ) {
+        // Figure out element to scroll to
+        var target = jQuery(this.hash);
+        target = target.length ? target : jQuery('[name=' + this.hash.slice(1) + ']');
+        // Does a scroll target exist?
+        if (target.length) {
+            // Only prevent default if animation is actually gonna happen
+            event.preventDefault();
+            jQuery('html, body').animate({
+                scrollTop: target.offset().top - 50
+            }, 1000, function () {
+                // Callback after animation
+                // Must change focus!
+                var $target = jQuery(target);
+                $target.focus();
+                if ($target.is(":focus")) { // Checking if the target was focused
+                    return false;
+                } else {
+                    $target.attr('tabindex', '-1'); // Adding tabindex for elements not focusable
+                    $target.focus(); // Set focus again
                 }
-            }
-        });
+                ;
+            });
+        }
+    }
+});
 
 var matched, browser;
 jQuery.uaMatch = function (ua) {
