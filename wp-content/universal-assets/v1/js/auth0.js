@@ -7,13 +7,13 @@ window.addEventListener('load', function () {
     //do not show the login button on makezine or makercamp
     var url = new URL(location.href).hostname;
     if(url.indexOf('makezine')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
-      wpLoginRequired = false;
-      jQuery(".search-separator").hide();
+		wpLoginRequired = false;
+		jQuery(".search-separator").hide();
     }
 
 	if (wpLoginRequired == true) {
     //check if logged into Wordpress
-    if(document.body.classList.contains( 'logged-in' )){
+    if(document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true"){
 		loggedin = true;
         //let's set up the dropdowns
         displayButtons();
@@ -133,6 +133,7 @@ window.addEventListener('load', function () {
 						document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 					}
 					if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
+						jQuery("body").addClass("logged-in");
 						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 						jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 						WPlogin();

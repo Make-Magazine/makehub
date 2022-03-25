@@ -409,3 +409,9 @@ div[aria-describedby="cookie-dialog"] {
         }
     }
 }
+
+.universal-loading-spinner {
+	position: absolute;
+	top: 200px;
+	left: calc(100% - 50px);
+}
