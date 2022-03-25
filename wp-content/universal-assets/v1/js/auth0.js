@@ -105,7 +105,10 @@ window.addEventListener('load', function () {
 			document.querySelector('#LoginBtn').style.display = "none";
 			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
 			document.querySelector('.profile-info .profile-name').innerHTML = (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename;
-			showBuddypanel();
+			if( jQuery("body").is(".buddyboss-theme") ) {
+				jQuery(".buddypanel").addClass("hide-spinner");
+				showBuddypanel();
+			}
 		}else{
 			//get info from auth0
 			var accessToken = localStorage.getItem('access_token');
@@ -133,9 +136,8 @@ window.addEventListener('load', function () {
 						document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 					}
 					if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
-						jQuery("body").addClass("logged-in");
 						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-						jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 						WPlogin();
 					} else if( jQuery("body").is(".buddyboss-theme") ) {
 						// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
@@ -192,9 +194,12 @@ window.addEventListener('load', function () {
 					}
 					// if the non-logged in buddypanel is showing for a logged in user, refresh it
 					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
-						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *");
+						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
+							jQuery(".buddypanel").addClass("hide-spinner"); // let the spinner show until load is complete
+						});
 						jQuery("body").addClass("buddypanel-closed");
 					}
+					jQuery("body").addClass("logged-in");
 					jQuery('.universal-loading-spinner').remove();
 				}
 				// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
