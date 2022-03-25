@@ -283,6 +283,7 @@
 			}
 		}
 	}
+	// fix scrolling to the top issue for gravity form checkboxes and radio buttons
 	.gfield_radio input[type="radio"], .gfield_checkbox input[type="checkbox"] {
 		position: relative !important;
 	}
