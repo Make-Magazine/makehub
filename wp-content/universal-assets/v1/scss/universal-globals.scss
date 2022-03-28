@@ -64,33 +64,13 @@ a { // don't let genesis molest our links
 		}
 	}
 }
+
 .buddypanel {
 	[data-balloon][data-balloon-pos=right]:after {
 		margin-top: 15px;
 	}
-	&:not(.hide-spinner) {
-		.side-panel-inner::before {
-		    width: 100%;
-		    height: 100vw;
-		    content: "";
-		    background: white;
-		    display: block;
-		    position: absolute;
-		    z-index: 9;
-		}
-		.side-panel-inner::after {
-			position: absolute;
-			top: 80px;
-		    left: 10px;
-		    content: "";
-		    z-index: 9;
-		    height: 50px;
-		    width: 50px;
-		    background-size: cover !important;
-			background: url("https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif");
-		}
-	}
 }
+
 
 
 // These are based off the commonly used btn colors of makerfaire

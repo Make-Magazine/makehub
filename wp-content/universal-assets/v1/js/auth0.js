@@ -12,13 +12,16 @@ window.addEventListener('load', function () {
     }
 
 	if (wpLoginRequired == true) {
-    //check if logged into Wordpress
-    if(document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true"){
-		loggedin = true;
-        //let's set up the dropdowns
-        displayButtons();
-    }else{
-		//ok let's check auth0 instead
+	    //check if logged into Wordpress
+	    if(document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true"){
+			loggedin = true;
+	        //let's set up the dropdowns
+	        displayButtons();
+			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
+	    }else{
+			jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width=50px' />");
+			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
+			//ok let's check auth0 instead
 			var webAuth = new auth0.WebAuth({
 			domain: AUTH0_CUSTOM_DOMAIN,
 			clientID: AUTH0_CLIENT_ID,
@@ -77,6 +80,8 @@ window.addEventListener('load', function () {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			jQuery(".login-section").css("display", "block");
 			showBuddypanel();
+			jQuery(".buddypanel .side-panel-inner img").remove();
+			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
 		}
 	}
 
@@ -106,7 +111,8 @@ window.addEventListener('load', function () {
 			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
 			document.querySelector('.profile-info .profile-name').innerHTML = (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename;
 			if( jQuery("body").is(".buddyboss-theme") ) {
-				jQuery(".buddypanel").addClass("hide-spinner");
+				jQuery(".buddypanel .side-panel-inner img").remove();
+				jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
 				showBuddypanel();
 			}
 		}else{
@@ -195,7 +201,8 @@ window.addEventListener('load', function () {
 					// if the non-logged in buddypanel is showing for a logged in user, refresh it
 					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
 						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
-							jQuery(".buddypanel").addClass("hide-spinner"); // let the spinner show until load is complete
+							jQuery(".buddypanel .side-panel-inner img").remove(); // let the spinner show until load is complete
+							jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
 						});
 						jQuery("body").addClass("buddypanel-closed");
 					}
