@@ -17,9 +17,8 @@ window.addEventListener('load', function () {
 			loggedin = true;
 	        //let's set up the dropdowns
 	        displayButtons();
-			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
 	    }else{
-			jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width=50px' />");
+			jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width=50px' style='margin:auto;' />");
 			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
 			//ok let's check auth0 instead
 			var webAuth = new auth0.WebAuth({

@@ -69,6 +69,11 @@ a { // don't let genesis molest our links
 	[data-balloon][data-balloon-pos=right]:after {
 		margin-top: 15px;
 	}
+	.side-panel-inner {
+		width: 100%;
+	    display: inline-flex;
+	    flex-direction: column;
+	}
 }
 
 
