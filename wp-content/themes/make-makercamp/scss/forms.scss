@@ -51,8 +51,8 @@
 			input:last-of-type {
 				margin-right: 0px;
 			}
-			a.gform_save_link { 
-				order: 0; 
+			a.gform_save_link {
+				order: 0;
 			}
 			@media screen and (max-width: 768px) {
 				flex-wrap: wrap;
@@ -84,7 +84,7 @@
 		.blue_select_btns {
 			text-align: center;
 			padding-right: 0px;
-			.ginput_container_radio ul, .ginput_container_checkbox ul { 
+			.ginput_container_radio ul, .ginput_container_checkbox ul {
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: center;
@@ -139,7 +139,7 @@
 		.big_select_btns {
 			text-align: center;
 			padding-right: 0px;
-			.ginput_container_radio ul, .ginput_container_checkbox ul { 
+			.ginput_container_radio ul, .ginput_container_checkbox ul {
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-evenly;
@@ -283,9 +283,12 @@
 			}
 		}
 	}
+	.gfield_radio input[type="radio"], .gfield_checkbox input[type="checkbox"] {
+		position: relative !important;
+	}
 }
 
-// The event form 
+// The event form
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     margin-top: 0px;
 	margin-bottom: 0px;
@@ -303,8 +306,8 @@
 			float: left;
 			color: #333;
 			opacity: .7;
-			a { 
-				color: #333; 
+			a {
+				color: #333;
 				&:hover { color: #ccc; }
 			}
 			span.gf_step_number {
@@ -355,14 +358,14 @@
 				font-size: 1.2em;
 			}
 			.gfield_description { font-style: italic; }
-			.gfield_html { 
+			.gfield_html {
 				p { margin-top: 10px; }
 				b { font-weight: 700; }
 			}
 			li.gfield select {
 				padding: 7px;
 			}
-		} 
+		}
 		@media screen and (min-width: 768px) {
 			display: flex;
 			.gf_page_steps {
@@ -389,7 +392,7 @@
 			}
 		}
 		.confirmation_box {
-			.gfield_label { 
+			.gfield_label {
 				display: none;
 				font-size: 1em;
 			}
@@ -431,7 +434,7 @@
 		border-radius: 20px;
 		padding: 8px !important;
 	}
-	ul.gfield_radio li, ul.gfield_checkbox li { 
+	ul.gfield_radio li, ul.gfield_checkbox li {
 		input[type="radio"] + label, input[type="checkbox"] + label {
 			font-weight: 300;
 			line-height: inherit;
@@ -465,7 +468,7 @@
 	text-align: center;
 	font-size: 32px;
 	margin: 40px auto 60px;
-	.button { 
+	.button {
 		font-size: 20px;
 		min-height: 50px;
 		min-width: 300px;
@@ -493,9 +496,9 @@
 		margin-right: 0px;
         margin-left: 0px;
 		img { margin: 0 auto; }
-		h1 { 
+		h1 {
 			font-size: 1.2em;
-			margin-bottom: 20px; 
+			margin-bottom: 20px;
 			margin-top: 0px;
 		}
 		.project-card {
@@ -514,7 +517,7 @@
 		}
 		br { display: none; }
 	}
-	p { 
+	p {
 		margin-top: 15px;
 		font-size: .9em;
 		line-height: 1.3em;
@@ -587,7 +590,7 @@
 		.woocommerce-checkout-review-order-table {
 			background: #fff;
 		}
-		.coupon { 
+		.coupon {
 			margin-left: 80px;
 		}
 	}
@@ -607,7 +610,7 @@
 		img { max-width: 40px; }
 	}
 	// order confirmation
-	
+
 }
 
 .woocommerce-order-received {
@@ -622,7 +625,7 @@
 			border: solid 1px #005e9a;
 			justify-content: center;
 			flex-wrap: wrap;
-			li { 
+			li {
 				font-size: 1em;
 				padding-left: 1em;
 				margin: 10px 0;
@@ -642,11 +645,11 @@
 			font-size: 1.7rem;
 		}
 		.woocommerce-customer-details {
-			address { 
+			address {
 				padding: 15px !important;
 				font-size: 18px !important;
 			}
-			.woocommerce-customer-details--maincolumn address { 
+			.woocommerce-customer-details--maincolumn address {
 				border: solid 1px #005e9a !important;
 			}
 		}
@@ -666,8 +669,8 @@
 }
 
 // Register page
-.page-register .entry-content { 
-	text-align: center; 
+.page-register .entry-content {
+	text-align: center;
 	.ihc-register-notice, #ihc_coupon_code_check_div_msg {
 		background: $color-red;
 		font-size: 16px;
