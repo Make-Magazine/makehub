@@ -79,9 +79,7 @@ window.addEventListener('load', function () {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			jQuery(".login-section").css("display", "block");
 			showBuddypanel();
-			jQuery(".buddypanel .side-panel-inner img").remove();
-			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
-		}
+			hideSpinner();
 	}
 
 	// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
@@ -98,6 +96,11 @@ window.addEventListener('load', function () {
 		}
 	}
 
+	function hideSpinner {
+		jQuery(".buddypanel .side-panel-inner img").remove();
+		jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
+	}
+
 	function getProfile() {
 		if(loggedin){
 			//user is logged into wordpress at this point. let's display wordpress data
@@ -110,8 +113,7 @@ window.addEventListener('load', function () {
 			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
 			document.querySelector('.profile-info .profile-name').innerHTML = (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename;
 			if( jQuery("body").is(".buddyboss-theme") ) {
-				jQuery(".buddypanel .side-panel-inner img").remove();
-				jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
+				hideSpinner();
 				showBuddypanel();
 			}
 		}else{
@@ -200,10 +202,11 @@ window.addEventListener('load', function () {
 					// if the non-logged in buddypanel is showing for a logged in user, refresh it
 					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
 						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
-							jQuery(".buddypanel .side-panel-inner img").remove(); // let the spinner show until load is complete
-							jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
+							hideSpinner();
 						});
 						jQuery("body").addClass("buddypanel-closed");
+					} else if(jQuery("#buddypanel-menu .bp-logout-nav").length) {
+						hideSpinner();
 					}
 					jQuery("body").addClass("logged-in");
 					jQuery('.universal-loading-spinner').remove();
