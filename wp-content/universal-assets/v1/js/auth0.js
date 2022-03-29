@@ -74,12 +74,14 @@ window.addEventListener('load', function () {
 		if (localStorage.getItem('expires_at') || loggedin) {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			getProfile();
+			alert("you are here");
 		} else {
 			jQuery("#LoginBtn").css("display", "block");
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			jQuery(".login-section").css("display", "block");
 			showBuddypanel();
 			hideSpinner();
+		}
 	}
 
 	// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
@@ -96,7 +98,7 @@ window.addEventListener('load', function () {
 		}
 	}
 
-	function hideSpinner {
+	function hideSpinner() {
 		jQuery(".buddypanel .side-panel-inner img").remove();
 		jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
 	}
