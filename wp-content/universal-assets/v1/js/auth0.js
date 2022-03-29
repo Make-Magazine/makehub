@@ -74,7 +74,6 @@ window.addEventListener('load', function () {
 		if (localStorage.getItem('expires_at') || loggedin) {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			getProfile();
-			alert("you are here");
 		} else {
 			jQuery("#LoginBtn").css("display", "block");
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
