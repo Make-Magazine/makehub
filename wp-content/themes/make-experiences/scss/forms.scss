@@ -699,3 +699,43 @@
 		max-width: 300px;
 	}
 }
+
+//gravity view datatable layout
+.gv-datatables-container {
+	.proj-images li {
+		display:none;
+		&:first-child {
+			display: block;
+		}
+	}
+
+	table.dataTable thead  {
+		.sorting {
+			background-image: url(/wp-content/themes/buddyboss-theme/assets/images/svg/sort-arrows.svg) !important;
+		}
+		.sorting_desc {
+			background-image: url(/wp-content/themes/buddyboss-theme/assets/images/svg/sort-down.svg) !important;
+		}
+		.sorting_asc {
+		    background-image: url(/wp-content/themes/buddyboss-theme/assets/images/svg/sort-up.svg) !important;
+		}
+		table.dataTable thead .sorting,
+		table.dataTable thead .sorting_asc,
+		table.dataTable thead .sorting_desc{
+		    background-size: 10px;
+		}
+	}
+
+}
+.tippy-popper {
+	top: -33px !important;
+	left: 10px !important;
+	&[x-placement=right]{
+		left: -10px !important;
+	}
+
+	.gv-approval-toggle {
+		display: block;
+		position: relative;
+	}
+}
