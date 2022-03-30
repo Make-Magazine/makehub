@@ -1,0 +1,123 @@
+.single-user-project {
+	#ld-tab-content {
+		h1 {
+			color: #51b2dc;
+			font-size: 59px;
+			text-align: center;
+		}
+		h2 {
+			color: #51b2dc;
+			font-size: 30px;
+			margin-top: 30px;
+			border-top: 1px solid black;
+			padding-top: 30px;
+			font-family: "Roboto Bold";
+		}
+		h4, h5 {
+			color: #d62329;
+			font-size: 18px;
+		}
+		h5 {
+			font-size: 16px;
+		}
+		section {
+			text-align: left;
+			color: #7a7a7a;
+		 }
+		.proj-divider {
+			height: 120px;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			&:first-of-type { height: 200px; }
+			&:before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 0;
+				border-top: 1px solid black;
+				background: black;
+				width: 100%;
+				transform: translateY(-50%);
+		    }
+			svg {
+				height: 150px;
+				background: white;
+				position: relative;
+				padding: 20px;
+			}
+		}
+		.proj-taxonomy-filters {
+			display: flex;
+			justify-content: space-around;
+			a {
+				font-family: "Roboto Light";
+				font-size: 18px;
+				color: #7a7a7a;
+				display: flex;
+				align-items: center;
+				height: 50px;
+				&:before {
+					font-family: "Font Awesome 5 Free";
+					color: #51b2dc;
+					font-size: 26px;
+					margin-right: 15px;
+				}
+				&.tax-time:before {
+					content: "\f017";
+				}
+				&.tax-skill-level:before {
+					content: "\f005";
+				}
+				&.tax-age:before {
+					content: "\f073";
+				}
+			}
+		}
+	}
+	.up-author {
+		margin: 30px 0px;
+	}
+	.up-print {
+		.universal-btn {
+			width: 100%;
+			color: white;
+			border-bottom: solid 1px !important;
+			&:hover, &:focus {
+				color: #005e9a;
+			}
+		}
+	}
+	.up-buttons {
+		display: flex;
+		justify-content: space-around;
+		margin: 30px 0px;
+	}
+	.up-colab-share {
+		text-align: center;
+		border: solid 1px #ccc;
+		border-radius: 15px;
+		background: #f1f1f1;
+		padding-bottom: 15px;
+		margin: 30px 0;
+	}
+}
+
+.mc-blue-arrow-btn {
+	background-color: #3fafed;
+    padding: 10px 25px 10px 47px;
+    border-radius: 25px;
+    color: #fff !important;
+    font-size: 16px;
+    font-weight: 400;
+    transition: background-color .2s;
+    display: inline-block;
+	i {
+	    font-size: 36px;
+	    position: absolute;
+	    margin-left: -40px;
+	    margin-top: -7px;
+	    line-height: 1em;
+	}
+}
