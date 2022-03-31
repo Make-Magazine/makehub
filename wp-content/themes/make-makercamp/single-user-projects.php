@@ -123,6 +123,12 @@ get_header();
 									<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
 									<h1><?php the_title(); ?></h1>
 
+									<?php if($sponsored_by_text) { ?>
+										<div class="proj-sponsor-text">
+											<?php echo $sponsored_by_text; ?>
+										</div>
+									<?php } ?>
+
 									<div class="proj-divider">
 										<?php echo $svg_divider; ?>
 									</div>
@@ -131,6 +137,7 @@ get_header();
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
 									</div>
+
 
 							        <section class="up-intro text-center">
 							            <h2>WHAT WILL YOU LEARN?</h2>
