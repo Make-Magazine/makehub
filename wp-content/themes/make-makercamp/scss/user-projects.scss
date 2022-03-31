@@ -104,6 +104,19 @@
 	}
 }
 
+.learndash-wrapper .project-breadcrumbs {
+	a {
+		color: #999;
+		&:after {
+			content: ">";
+			padding: 0 10px;
+		}
+		&:last-of-type::after {
+			content: "";
+		}
+	}
+}
+
 .mc-blue-arrow-btn {
 	background-color: #3fafed;
     padding: 10px 25px 10px 47px;

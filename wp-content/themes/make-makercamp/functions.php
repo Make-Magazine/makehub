@@ -146,6 +146,18 @@ function parse_yturl($url) {
     return (isset($matches[1])) ? $matches[1] : false;
 }
 
+// get the parent of a given taxonomy term
+function get_term_top_most_parent( $term, $taxonomy ) {
+    // Start from the current term
+    $parent  = get_term( $term, $taxonomy );
+    // Climb up the hierarchy until we reach a term with parent = '0'
+    while ( $parent->parent != '0' ) {
+        $term_id = $parent->parent;
+        $parent  = get_term( $term_id, $taxonomy);
+    }
+    return $parent;
+}
+
 ////////////////////////////////////////////////////////////////////
 // Use Jetpack Photon if it exists, else use original photo
 ////////////////////////////////////////////////////////////////////

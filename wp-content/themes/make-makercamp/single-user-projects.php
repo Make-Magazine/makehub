@@ -5,12 +5,36 @@
  * @package Maker Camp Theme
  */
 
+global $post;
+
 // Get our Taxonomies
-$categories = get_the_terms($post->ID, 'content_categories');
-$materials = get_the_terms($post->ID, 'materials');
-$ages = get_the_terms($post->ID, 'ages');
-$times = get_the_terms($post->ID, 'times');
-$skill_levels = get_the_terms($post->ID, 'skill_levels');
+$terms = get_the_terms($post->ID, 'ld_lesson_category');
+$categories = array();
+$ages = array();
+$times = array();
+$skill_levels = array();
+$materials = array();
+foreach($terms as $term) {
+	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
+	switch ($parent->slug) {
+		case "content-category":
+			array_push($categories, $term);
+			break;
+		case "age":
+			array_push($ages, $term);
+			break;
+		case "time":
+			array_push($times, $term);
+			break;
+		case "skill-level":
+			array_push($skill_levels, $term);
+			break;
+		case "materials":
+			array_push($materials, $term);
+			break;
+	}
+}
+$breadCrumbTerms = array_merge($categories, $ages, $times, $skill_levels);
 
 // Get our ACF Fields
 $hero_image = get_field('hero_image');
@@ -74,6 +98,11 @@ get_header();
         <div id="learndash-page-content" class="lesson-page">
             <div class="learndash-content-body">
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
+					<div class="project-breadcrumbs">
+						<?php foreach($breadCrumbTerms as $breadCrumb) { ?>
+								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>"><?php echo $breadCrumb->name; ?></a>
+						<?php } ?>
+					</div>
 					<div class="learndash_content_wrap">
 						<div class="ld-tabs ld-tab-count-2">
 							<div class="ld-tabs-navigation">
@@ -98,9 +127,9 @@ get_header();
 										<?php echo $svg_divider; ?>
 									</div>
 									<div class="proj-taxonomy-filters">
-										<a href="" class="tax-time"><?php echo $times[0]->name; ?></a>
-										<a href="" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<a href="" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
 									</div>
 
 							        <section class="up-intro text-center">
@@ -181,7 +210,6 @@ get_header();
 							<section class="up-author">
 								<?php
 								// Author section
-								global $post;
 								$author_id=$post->post_author;
 								learndash_get_template_part('template-course-author.php', array(
 									'user_id' => $author_id
