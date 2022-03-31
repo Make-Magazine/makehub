@@ -1,4 +1,8 @@
 .single-user-project {
+	.ld-tabs {
+		display: flex;
+		flex-direction: column;
+	}
 	#ld-tab-content {
 		h1 {
 			color: #51b2dc;
