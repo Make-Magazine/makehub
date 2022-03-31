@@ -164,7 +164,7 @@ get_header();
 							            				<?php } ?>
 
 							                            <?php if (!empty($image_2)) { ?>
-							                                <a class="sp-step-img" href="<?php echo get_fitted_remote_image_url($image_2['url'], 1000, 1000); ?>">
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2['url'], 1000, 1000); ?>">
 							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2['url'], 500, 500); ?>);"></div>
 							                                </a>
 							            				<?php } ?>
