@@ -47,7 +47,7 @@ $svg_divider = get_field('svg_divider');
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 parse_str($referrer_url['query'], $referrer_params);
 $referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
-error_log(print_r($referrer_params, TRUE));
+sort($referrer_params);
 
 get_header();
 
@@ -104,6 +104,7 @@ get_header();
             <div class="learndash-content-body">
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
 					<div class="project-breadcrumbs">
+						<a href="/projects-search/" class="project-tag">Projects</a>
 						<?php foreach($referrer_params as $param) {
 								$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
 								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
