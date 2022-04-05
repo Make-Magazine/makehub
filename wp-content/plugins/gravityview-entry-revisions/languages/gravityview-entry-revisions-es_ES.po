@@ -1,18 +1,19 @@
 # Copyright (C) 2018 GravityView
 # This file is distributed under the GPLv2 or later.
 # Translators:
-# Zachary Katz <zack@katz.co>, 2018
 # Jose Usó <uso@denou.com>, 2018
+# Zachary Katz <zack@katz.co>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: GravityView - Entry Revisions 1.0.1\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-08-02 19:56:17+00:00\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jose Usó <uso@denou.com>, 2018\n"
+"PO-Revision-Date: 2018-09-04 23:34+0000\n"
+"Last-Translator: Zachary Katz <zack@katz.co>, 2020\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/katzwebservices/teams/18775/es_ES/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -65,7 +66,7 @@ msgstr ""
 
 #: class-gv-entry-revisions.php:896
 msgid "Field ID: %s"
-msgstr ""
+msgstr "Campo ID: %s"
 
 #: class-gv-entry-revisions.php:1114 includes/merge-tags.php:95
 #: includes/merge-tags.php:106
@@ -83,42 +84,45 @@ msgstr ""
 
 #: includes/class-gv-entry-revisions-settings.php:215
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: includes/class-gv-entry-revisions-settings.php:216
 msgid "There was an error processing the request."
-msgstr ""
+msgstr "Hubo un error al procesar la solicitud."
 
 #: includes/class-gv-entry-revisions-settings.php:217
 msgid ""
 "Could not deactivate the license. The license key you attempted to "
 "deactivate may not be active or valid."
 msgstr ""
+"No se pudo desactivar la licencia. La clave de licencia que intento "
+"desactivar puede que no esté activa o que no sea válida."
 
 #: includes/class-gv-entry-revisions-settings.php:218
 msgid "The license key is valid, but it has not been activated for this site."
 msgstr ""
+"La clave de licencia es válida, pero no ha sido activada para este sitio."
 
 #: includes/class-gv-entry-revisions-settings.php:219
 msgid "Invalid: this license has reached its activation limit."
-msgstr ""
+msgstr "Inválida: esta licencia ha llegado al límite de activaciones."
 
 #: includes/class-gv-entry-revisions-settings.php:220
 msgid "The license has been deactivated."
-msgstr ""
+msgstr "La licencia ha sido desactivada."
 
 #: includes/class-gv-entry-revisions-settings.php:221
 msgid "The license key is valid and active."
-msgstr ""
+msgstr "La clave de licencia es válida y activa."
 
 #: includes/class-gv-entry-revisions-settings.php:222
 #: includes/class-gv-entry-revisions-settings.php:223
 msgid "The license key entered is invalid."
-msgstr ""
+msgstr "La clave de licencia introducida es inválida."
 
 #: includes/class-gv-entry-revisions-settings.php:224
 msgid "This license key has been revoked."
-msgstr ""
+msgstr "Esta clave de licencia ha sido anulada."
 
 #: includes/class-gv-entry-revisions-settings.php:225
 msgid "This license key does not have access to this plugin."
@@ -132,23 +136,23 @@ msgstr ""
 
 #: includes/class-gv-entry-revisions-settings.php:227
 msgid "Verifying license&hellip;"
-msgstr ""
+msgstr "Verificando licencia&hellip;"
 
 #: includes/class-gv-entry-revisions-settings.php:228
 msgid "Activate License"
-msgstr ""
+msgstr "Activar Licencia"
 
 #: includes/class-gv-entry-revisions-settings.php:229
 msgid "Deactivate License"
-msgstr ""
+msgstr "Desactivar Licencia"
 
 #: includes/class-gv-entry-revisions-settings.php:230
 msgid "Verify License"
-msgstr ""
+msgstr "Verificar Licencia"
 
 #: includes/class-gv-entry-revisions-settings.php:411
 msgid "License Key"
-msgstr ""
+msgstr "Llave de Licencia"
 
 #: includes/class-gv-entry-revisions-settings.php:412
 msgid ""
@@ -193,7 +197,7 @@ msgstr[1] ""
 
 #: includes/diff-table.html.php:51
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: includes/entry_detail.php:38
 msgid "Compare Revisions"

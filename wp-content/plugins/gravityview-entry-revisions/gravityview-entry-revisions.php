@@ -3,7 +3,7 @@
  * Plugin Name:       	GravityView - Entry Revisions
  * Plugin URI:        	https://gravityview.co/extensions/entry-revisions/
  * Description:       	Track changes to Gravity Forms entries and restore values from earlier versions.
- * Version:          	1.0.3
+ * Version:          	1.1
  * Author:            	GravityView
  * Author URI:        	https://gravityview.co
  * Text Domain:       	gravityview-entry-revisions
@@ -17,7 +17,7 @@
  *
  * @since 1.0
  */
-define( 'GV_ENTRY_REVISIONS_VERSION', '1.0.3' );
+define( 'GV_ENTRY_REVISIONS_VERSION', '1.1' );
 
 /** @define "GV_ENTRY_REVISIONS_DIR" "./" The absolute path to the plugin directory */
 define( 'GV_ENTRY_REVISIONS_DIR', plugin_dir_path( __FILE__ ) );
