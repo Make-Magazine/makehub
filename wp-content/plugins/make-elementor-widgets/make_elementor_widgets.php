@@ -157,7 +157,10 @@ function makewidget_rss_output($rss, $settings) {
     $show_summary = $settings['show_summary'];
     $show_author = $settings['show_author'];
     $show_date = $settings['show_date'];
-		$title_position = $settings['title_position'];
+	$feed_link = $settings['link'];
+	$title_position = $settings['title_position'];
+	$horizontal = $settings['horizontal_display'];
+	$carousel = $settings['carousel'];
 
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
@@ -257,7 +260,17 @@ function makewidget_rss_output($rss, $settings) {
         if (++$i == $items) break;
     }
 
-    echo '<ul class="custom-rss-elementor">';
+	$wrapper_classes = "";
+	if ($horizontal == 'yes') {
+		$wrapper_classes .= " horizontal";
+	}
+	if ($carousel == 'yes') {
+		$wrapper_classes .= " carousel";
+	}
+    echo '<ul class="custom-rss-elementor' . $wrapper_classes . '">';
+	if ($carousel == 'yes') {
+		echo "<div class='rss-carousel-clicker rss-carousel-clicker-left'></div>";
+	}
     foreach ($sortedFeed as $item) {
         $link       = $item['link'];
         $title      = $item['title'];
@@ -273,6 +286,9 @@ function makewidget_rss_output($rss, $settings) {
 		if ($title_position == "top") {
             echo "{$title}";
         }
+		if ($horizontal == 'yes') {
+			echo "<div class='rss-content-wrapper'>";
+		}
 		echo 	"<div class='rss-image-wrapper'>{$image}</div>";
 		if ($title_position == "bottom") {
             echo "{$title}";
@@ -280,6 +296,9 @@ function makewidget_rss_output($rss, $settings) {
 		if ($show_summary == "yes") {
             echo "{$summary}";
         }
+		if ($horizontal == 'yes') {
+			echo "</div>";
+		}
 		if ($item['show_date'] == 'yes') {
             echo '<date>' . $item['date'] . '</date>';
         }
@@ -291,6 +310,10 @@ function makewidget_rss_output($rss, $settings) {
 		}
 		echo "</li>";
     }
+	if ($carousel == 'yes') {
+		echo "<li class='rss-carousel-read-more'><a href='". $feed_link ."'>Read More</a></li>";
+		echo "<div class='rss-carousel-clicker rss-carousel-clicker-right'></div>";
+	}
     echo '</ul>';
     $rss->__destruct();
     unset($rss);
