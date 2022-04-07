@@ -125,9 +125,7 @@
 	margin-left: 10px;
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li date {
-	display: block;
-	width: 100%;
-	text-align: right;
+	float: right;
 }
 
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-stage {
