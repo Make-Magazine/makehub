@@ -5,7 +5,7 @@ jQuery(document).ready(function(){
 	});
 	// for rss carousel
 	if(jQuery(".rss-carousel-read-more").length) {
-		jQuery('.custom-rss-elementor').owlCarousel({
+		jQuery('.custom-rss-elementor.carousel').owlCarousel({
 			loop: true,
 			slideBy: 'page',
 			nav:true,
