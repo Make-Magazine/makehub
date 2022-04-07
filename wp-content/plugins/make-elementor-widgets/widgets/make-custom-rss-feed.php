@@ -184,6 +184,19 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 				'default' => 'no',
 			],
 		);
+		$this->add_control(
+			'read_more',
+			[
+				'label' => esc_html__( 'Read More Text', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Read More', 'elementor-make-widget' ),
+				'condition' => [
+					'horizontal_display' => 'yes',
+				    'carousel' => 'yes',
+			  	],
+				'default' => 'Read More',
+			],
+		);
 		$this->end_controls_section();
 
 		$this->start_controls_section(

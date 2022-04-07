@@ -101,42 +101,6 @@
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal {
 	display: flex;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal:not(.carousel) {
-	flex-wrap: wrap;
-	justify-content: space-between;
-	margin: 0 -10px;
-}
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel {
-	overflow-x: hidden;
-	padding-bottom: 12px;
-}
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .rss-carousel-clicker{
-	position: absolute;
-	right: 5px;
-	top: 40%;
-	font-size: 42px;
-	height: 42px;
-	width: 42px;
-	color: #005e9a;
-	cursor: pointer;
-	text-shadow: 2px 2px 5px black;
-	-webkit-text-stroke-width: 2px;
-	-webkit-text-stroke-color: white;
-}
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .rss-carousel-clicker-left {
-	right: auto;
-	z-index: 999;
-}
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .rss-carousel-clicker-right:before {
-	font-family: "FontAwesome";
-	content: "\f0a9";
-	top: -10px;
-}
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .rss-carousel-clicker-left:before {
-	font-family: "FontAwesome";
-	content: "\f0a8";
-	top: -10px;
-}
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li {
 	width: 31.5%;
 	margin-bottom: 0px;
@@ -144,15 +108,6 @@
 	flex-grow: 1;
 	margin: 20px 10px 0px
 }
-
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel li {
-	min-width: 320px;
-	margin-right: 15px;
-	position: relative;
-	left: 0px;
-	transition: left 1s ease-out;
-}
-
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li .rss-image-wrapper {
 	min-width: 100px;
 }
@@ -169,13 +124,64 @@
 	overflow: hidden;
 	margin-left: 10px;
 }
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li date {
+	display: block;
+	width: 100%;
+	text-align: right;
+}
+
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-stage {
+	display: flex;
+	margin: 0 -10px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel li {
+	width: auto;
+	position: relative;
+	left: 0px;
+	transition: left 1s ease-out;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-item {
+	display: flex;
+}
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li.rss-carousel-read-more a {
 	height: 100%;
 	display: flex;
-	justify-content: center;
+	text-align: center;
 	align-items: center;
 	font-size: 42px;
 	font-weight: bold;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal:not(.carousel) {
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 -10px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel {
+	overflow-x: hidden;
+	padding-bottom: 12px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-nav button{
+	position: absolute;
+	top: 40%;
+	right: 5px;
+	background: none;
+	border: none;
+	padding: 0px;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel button.owl-prev {
+	left: 5px;
+	z-index: 999;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-nav button i {
+	font-size: 42px;
+	height: 42px;
+	width: 42px;
+	color: #005e9a;
+	cursor: pointer;
+	text-shadow: 2px 2px 5px black;
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: white;
+	font-family: FontAwesome;
 }
 
 /* Upcoming Maker Faires widget */
