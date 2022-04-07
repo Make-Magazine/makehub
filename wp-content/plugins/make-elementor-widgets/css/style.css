@@ -170,6 +170,7 @@
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel button.owl-prev {
 	left: 5px;
+	right: auto;
 	z-index: 999;
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-nav button i {

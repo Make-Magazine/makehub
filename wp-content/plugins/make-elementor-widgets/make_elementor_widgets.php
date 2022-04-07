@@ -193,12 +193,11 @@ function makewidget_rss_output($rss, $settings) {
                 // if it isn't a youtube feed, exclude feed items with no date
             }
         } else if(strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
-			if(!$item->get_item_tags('', 'pubDate')[0]['data']){
-				continue; //(skip this record);
+			if($item->get_item_tags('', 'pubDate')[0]['data']){
+				$dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
 			}
-			$dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
 		}
-		if ($show_date == 'yes') {
+		if ($show_date == 'yes' && $dateString) {
 			$date = $dateString->format('M j, Y');
 		}
 
@@ -319,7 +318,7 @@ function makewidget_rss_output($rss, $settings) {
 
 add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
 function make_elementor_enqueue_scripts() {
-	$myVersion = '1.9';
+	$myVersion = '2.0';
 	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
 	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }
