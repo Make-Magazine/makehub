@@ -77,6 +77,12 @@
 	display: flex;
 	flex-direction: column;
 }
+@media screen and (max-width: 600px) {
+	.elementor-widget-makecustomrss ul.custom-rss-elementor li {
+		border: none;
+		box-shadow: none;
+	}
+}
 .elementor-widget-makecustomrss ul.custom-rss-elementor li a {
 	color: #333;
 }
