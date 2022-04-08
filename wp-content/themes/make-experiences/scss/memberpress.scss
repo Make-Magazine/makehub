@@ -84,6 +84,6 @@ body.register {
 	}
 	.login-msg { font-size: 22px !important;}
 }
-body.logged-in .login-msg {
+body.register.logged-in .login-msg {
 	display: none;
 }
