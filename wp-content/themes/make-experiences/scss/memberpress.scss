@@ -83,5 +83,7 @@ body.register {
 		}
 	}
 	.login-msg { font-size: 22px !important;}
-	.logged-in .login-msg { display: none; }
+}
+body.logged-in .login-msg {
+	display: none;
 }
