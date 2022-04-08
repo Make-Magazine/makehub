@@ -13,6 +13,14 @@
 	opacity: 0;
 }
 
+// Hide the learndash sidebar
+.sfwd-sidebar {
+   padding-left: 0px !important;
+}
+.sfwd-sidebar .lms-topic-sidebar-wrapper  {
+    display:none;
+}
+
 // margins for learn dash pages
 .single-sfwd-lessons, .sfwd-courses-template, .post-type-archive-sfwd-courses, .learndash-cpt-sfwd-lessons {
 	#page {
