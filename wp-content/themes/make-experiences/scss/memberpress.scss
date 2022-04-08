@@ -58,3 +58,28 @@
 			display: none;
 	}
 }
+
+/*
+	hide the price, address, and gift sign up option for
+	the register page for makercamp and contest
+*/
+body.register.makercamp, body.register.contest {
+	.mepr-signup-form {
+		.mepr_price,
+		.mepr_mepr-address-one, .mepr_mepr-address-two, .mepr_mepr-address-city,
+		.mepr_mepr-address-country, .mepr_mepr-address-state, .mepr_mepr-address-zip,
+		label[for="mpgft-signup-gift-checkbox1"], #mpgft-signup-gift-checkbox1,
+		#mepr-activecampaign-privacy {
+			display: none !important;
+		}
+	}
+}
+
+/* hide the active campain privacy policy for all register pages */
+body.register {
+	.mepr-signup-form {
+		#mepr-activecampaign-privacy {
+			display: none !important;
+		}
+	}
+}
