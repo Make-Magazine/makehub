@@ -43,6 +43,7 @@ $sponsored_by_text = get_field('sponsored_by_text');
 $what_will_you_learn = get_field('what_will_you_learn');
 $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
+$author_id = get_field('user_id');
 
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 parse_str($referrer_url['query'], $referrer_params);
@@ -230,7 +231,6 @@ get_header();
 							<section class="up-author">
 								<?php
 								// Author section
-								$author_id=$post->post_author;
 								learndash_get_template_part('template-course-author.php', array(
 									'user_id' => $author_id
 										), true);

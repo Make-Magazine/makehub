@@ -257,6 +257,27 @@
             },
             "default_value": "",
             "placeholder": ""
+        },
+        {
+            "key": "field_62508b2fc51ed",
+            "label": "User ID",
+            "name": "user_id",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
         }
     ],
     "location": [
@@ -287,5 +308,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1648831513
+    "modified": 1649445704
 }
