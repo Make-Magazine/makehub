@@ -45,6 +45,7 @@ $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
 $author_id = get_field('user_id');
 
+// variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 parse_str($referrer_url['query'], $referrer_params);
 $referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
@@ -228,6 +229,7 @@ get_header();
 								<?php } ?>
 							</section>
 
+
 							<section class="up-author">
 								<?php
 								// Author section
@@ -249,6 +251,16 @@ get_header();
 							<section class="up-disclaimer">
 								<p><strong>Please Note</strong></p>
 								<p>Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Make Community, LLC, disclaims all responsibility for any resulting damage, injury, or expense.</p>
+							</section>
+
+							<section class="standards">
+								<?php if(!empty($ages)) { ?>
+									<h2>Maker Camp Project Standards</h2>
+									<h4>Based on NGSS (Next Generation Science Standards)</h4>
+									<?php foreach($ages as $age) {  ?>
+										<div class="disclaimer-section"><?php echo $age->description; ?></div>
+									<?php }
+									  }?>
 							</section>
 
 							<section class="up-colab-share">

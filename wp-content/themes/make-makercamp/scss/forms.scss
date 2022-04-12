@@ -11,6 +11,10 @@
 	margin-bottom: -20px;
 }
 
+#ui-datepicker-div .ui-datepicker-header .ui-datepicker-title select, .gform-theme-datepicker:not(.gform-legacy-datepicker) .ui-datepicker-header .ui-datepicker-next, .gform-theme-datepicker:not(.gform-legacy-datepicker) .ui-datepicker-header .ui-datepicker-prev {
+	color: #fff !important;
+}
+
 // ALL gravity forms
 .gform_wrapper {
 	.gform_body  {
@@ -286,6 +290,9 @@
 	.gfield_radio input[type="radio"], .gfield_checkbox input[type="checkbox"] {
 		position: relative !important;
 	}
+	.gfield_radio input[type="radio"] label, .gfield_checkbox input[type="checkbox"] + label {
+		height: 2rem;
+	}
 }
 
 // The event form
@@ -398,15 +405,6 @@
 			}
 		}
     }
-	/* is this necessary, because it screws up mobile
-	.gform_page {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		.gform_page_fields {
-			flex-grow: 1;
-		}
-	} */
 
 	.gfgeo-address-locator-wrapper {
 		input.gfgeo-address-field[data-locator_enabled="1"] {
@@ -448,6 +446,13 @@
 .gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
 	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
 		top: 4px;
+	}
+}
+
+//maker camp info tweaks
+.page-makercamp_info {
+	.gform_wrapper.gravity-theme .ginput_container_address .ginput_address_country {
+		padding-left: 0px;
 	}
 }
 
@@ -559,100 +564,6 @@
 	pointer-events: none;
 	.wickedpicker__controls__control {
 		pointer-events: all;
-	}
-}
-
-.woocommerce-cart { background: #f1f1f1; }
-.woocommerce {
-	form {
-		margin-bottom: 30px;
-		.woocommerce-billing-fields {
-			background: #fff;
-			border: solid 1px #005e9a;
-			border-radius: 10px;
-			padding: 10px 20px;
-		}
-		.form-row {
-			input.input-text, textarea, .select2 {
-				padding: 10px;
-				border: solid 1px #ccc;
-				border-radius: 5px;
-				.select2-selection--single,  .select2-selection--single:focus {
-					border: 0px;
-					outline: none;
-				}
-				.select2-selection--single .select2-selection__arrow {
-					top: 8px;
-					right: 10px;
-				}
-			}
-		}
-		.woocommerce-checkout-review-order-table {
-			background: #fff;
-		}
-		.coupon {
-			margin-left: 80px;
-		}
-	}
-	#add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment, .woocommerce-error, .woocommerce-info, .woocommerce-message, .woocommerce-cart-form, .cart_totals table {
-		background: #fff;
-	}
-	a.button.alt, button.button.alt, input.button.alt {
-		border: solid 1px #005e9a;
-		background: #005e9a;
-		&:hover {
-			color: #005e9a;
-			background-color: #fff !important;
-		}
-	}
-	label[for=payment_method_stripe] {
-		width: 100%;
-		img { max-width: 40px; }
-	}
-	// order confirmation
-
-}
-
-.woocommerce-order-received {
-	.woocommerce {
-		margin-top: 30px;
-		ul.order_details {
-			background: #fff;
-			padding: 20px 20px 15px;
-			margin-top: 25px;
-			border-radius: 10px;
-			display: flex;
-			border: solid 1px #005e9a;
-			justify-content: center;
-			flex-wrap: wrap;
-			li {
-				font-size: 1em;
-				padding-left: 1em;
-				margin: 10px 0;
-				border-right: 0px;
-			}
-		}
-		h1 {
-			display: none;
-		}
-		table.shop_table, table.shop_table td, table.shop_table tfoot th {
-			border-color: #005e9a;
-			padding: 10px;
-			font-size: 18px;
-		}
-		.woocommerce-notice--success {
-			text-align: center;
-			font-size: 1.7rem;
-		}
-		.woocommerce-customer-details {
-			address {
-				padding: 15px !important;
-				font-size: 18px !important;
-			}
-			.woocommerce-customer-details--maincolumn address {
-				border: solid 1px #005e9a !important;
-			}
-		}
 	}
 }
 

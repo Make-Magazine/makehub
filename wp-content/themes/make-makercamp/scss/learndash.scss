@@ -241,10 +241,6 @@
 			}
 		}
 	}
-	.print-btn {
-		width: calc(100% - 60px);
-    	margin: 0px 30px 30px;
-	}
 }
 // Use css to rewrite the materials tab to "Resources"
 .ld-tab[data-ld-tab^="ld-tab-materials"] {

@@ -52,9 +52,44 @@ if (empty($course)) {
         $course = get_post($course_id);
     }
 }
+
+// Get our Taxonomies
+$terms = get_the_terms($post->ID, 'ld_lesson_category');
+$categories = array();
+$ages = array();
+$times = array();
+$skill_levels = array();
+$materials = array();
+foreach($terms as $term) {
+	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
+	switch ($parent->slug) {
+		case "content-category":
+			array_push($categories, $term);
+			break;
+		case "age":
+			array_push($ages, $term);
+			break;
+		case "time":
+			array_push($times, $term);
+			break;
+		case "skill-level":
+			array_push($skill_levels, $term);
+			break;
+		case "materials":
+			array_push($materials, $term);
+			break;
+	}
+}
+$tagTerms = array_merge($categories, $ages, $times, $skill_levels);
+
+// variables for building Breadcrumbs
+$referrer_url = parse_url($_SERVER['HTTP_REFERER']);
+parse_str($referrer_url['query'], $referrer_params);
+$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+sort($referrer_params);
 ?>
 
-<div id="learndash-content" class="container-full">
+<div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
         <?php
@@ -92,6 +127,13 @@ if (empty($course)) {
                          */
                         do_action('learndash-lesson-before', get_the_ID(), $course_id, $user_id);
                         ?>
+						<div class="project-breadcrumbs">
+							<a href="/projects-search/" class="project-tag">Projects</a>
+							<?php foreach($referrer_params as $param) {
+									$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
+									<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+							<?php } ?>
+						</div>
                         <div id="learndash-course-header" class="bb-lms-header">
                             <div class="bb-ld-info-bar">
                                 <?php
@@ -155,13 +197,13 @@ if (empty($course)) {
                                         event.preventDefault();
                                         jQuery("#pleasewait").show(); //show the spinner
                                         jQuery("#topic-section").html(""); //empty out the div
-                                        var url = jQuery(this).attr('href'); //get the href from the clicked button                                       
+                                        var url = jQuery(this).attr('href'); //get the href from the clicked button
                                         jQuery("#topic-section").load(url + " .topic-page"); //load that information starting from the topic-page class
                                         jQuery("#pleasewait").hide(); //hide the spinner
                                         return false;
                                     });
                                 });
-                            </script>    
+                            </script>
 
                             <?php
                             /**
@@ -295,21 +337,38 @@ if (empty($course)) {
                             }
                             ?>
 
+							<section class="tags">
+								<?php foreach($tagTerms as $tag) { ?>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $tag->slug; ?>" class="project-tag"><?php echo $tag->name; ?></a>
+								<?php } ?>
+							</section>
+
                             <?php
                             // Author section
                             global $post;
-                            
-                            $author_id=$post->post_author;                         
+
+                            $author_id=$post->post_author;
                             learndash_get_template_part('template-course-author.php', array(
                                 'user_id' => $author_id
                                     ), true);
                             ?>
 
+							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
+
+							<section class="standards">
+								<?php if(!empty($ages)) { ?>
+									<h2>Maker Camp Project Standards</h2>
+									<h4>Based on NGSS (Next Generation Science Standards)</h4>
+									<?php foreach($ages as $age) {  ?>
+										<div class="disclaimer-section"><?php echo $age->description; ?></div>
+									<?php }
+									  }?>
+							</section>
+
                         </div><?php /* .learndash_content_wrap */ ?>
 
                     </div> <!--/.learndash-wrapper-->
-                    <a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
-<?php } ?>
+				<?php } ?>
             </div><?php /* .learndash-content-body */ ?>
         </div><?php /* #learndash-page-content */ ?>
     </div>
