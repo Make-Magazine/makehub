@@ -108,6 +108,11 @@ foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
 
+// Include all custom post type files in the make-makercamp/cpt directory:
+foreach (glob(get_stylesheet_directory() . '/cpt/*.php') as $file) {
+    include_once $file;
+}
+
 // Include all class files in the make-makercamp/classes directory:
 foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
     include_once $file;
@@ -141,6 +146,19 @@ function parse_yturl($url) {
     return (isset($matches[1])) ? $matches[1] : false;
 }
 
+// get the parent of a given taxonomy term
+function get_term_top_most_parent( $term, $taxonomy ) {
+    // Start from the current term
+    $parent  = get_term( $term, $taxonomy );
+    // Climb up the hierarchy until we reach a term with parent = '0'
+    while ( $parent->parent != '0' ) {
+        $term_id = $parent->parent;
+        $parent  = get_term( $term_id, $taxonomy);
+    }
+    return $parent;
+}
+
+
 ////////////////////////////////////////////////////////////////////
 // Use Jetpack Photon if it exists, else use original photo
 ////////////////////////////////////////////////////////////////////
@@ -162,6 +180,30 @@ function get_resized_remote_image_url($url, $width, $height, $escape = true) {
         return $url;
     }
 }
+
+/**
+ * Jetpack Photon fit image
+ */
+function get_fitted_remote_image_url($url, $width, $height, $escape = true) {
+    if (class_exists('Jetpack') && Jetpack::is_module_active('photon')) {
+        $width = (int) $width;
+        $height = (int) $height;
+
+        // Photon doesn't support redirects, so help it out by doing http://foobar.wordpress.com/files/ to http://foobar.files.wordpress.com/
+        if (function_exists('new_file_urls'))
+            $url = new_file_urls($url);
+
+        $thumburl = jetpack_photon_url($url, array(
+            'fit' => array($width, $height),
+            'strip' => 'all'
+        ));
+
+        return ($escape) ? esc_url($thumburl) : $thumburl;
+    } else {
+        return $url;
+    }
+}
+
 
 function get_first_image_url($html) {
     if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {
@@ -306,6 +348,15 @@ function bpdev_fix_avatar_dir_url($url) {
 }
 
 add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
+
+/*-------------------------------------
+ Move Yoast to the Bottom
+---------------------------------------*/
+// Move Yoast to bottom
+function yoasttobottom() {
+	return 'low';
+}
+add_filter( 'wpseo_metabox_prio', 'yoasttobottom');
 
 // add the ability to add tags or categories to pages
 function register_taxonomies() {
