@@ -79,8 +79,10 @@ add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 function load_admin_styles() {
-    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
+	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.3' );
+	wp_enqueue_style( 'admin_css' );
 }
+
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 
@@ -352,7 +354,6 @@ add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
 /*-------------------------------------
  Move Yoast to the Bottom
 ---------------------------------------*/
-// Move Yoast to bottom
 function yoasttobottom() {
 	return 'low';
 }
