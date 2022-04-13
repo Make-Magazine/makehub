@@ -77,7 +77,8 @@ function make_experiences_scripts_styles() {
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
 function load_admin_styles() {
-    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.2');
+    wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.3' );
+	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
