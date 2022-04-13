@@ -310,27 +310,13 @@ function searchfilter($query) {
 
 add_filter('pre_get_posts', 'searchfilter');
 
-/*
- * This action hook executes just before WordPress determines which template page to load.
- * If the user isn't a member of our group, redirect them to the makercamp register page
- */
-
-add_filter('template_redirect', 'check_makercamp_group_membership', 9999, 1);
-
-function check_makercamp_group_membership($template) {
-    $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
-    if ((!is_user_logged_in() || !groups_is_user_member(get_current_user_id(), $group_id)) && $_SERVER['REQUEST_URI'] != "/makercamp-register/" && !current_user_can('administrator')) {
-        wp_redirect('/makercamp-register/');
-    }
-}
-
-add_action('after_setup_theme', 'remove_admin_bar');
 
 function remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);
     }
 }
+add_action('after_setup_theme', 'remove_admin_bar');
 
 define('BP_AVATAR_URL', '/wp-content/uploads/');
 
