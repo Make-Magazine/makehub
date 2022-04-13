@@ -12,14 +12,18 @@ jQuery(document).ready(function(){
 		jQuery('.custom-rss-elementor.carousel').owlCarousel({
 			loop: true,
 			slideBy: slideBy,
+			//autoWidth:true,
 			nav:true,
-			responsiveClass:true,
 			responsive:{
 				0:{
         			items:1,
 					stagePadding: 0,
 				},
-		        600:{
+		        650:{
+					items:2,
+					stagePadding: 0,
+		        },
+				1200:{
 					items:3,
 					stagePadding: 0,
 		        },
