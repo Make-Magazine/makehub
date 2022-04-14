@@ -157,7 +157,11 @@ function makewidget_rss_output($rss, $settings) {
     $show_summary = $settings['show_summary'];
     $show_author = $settings['show_author'];
     $show_date = $settings['show_date'];
-		$title_position = $settings['title_position'];
+	$feed_link = $settings['link'];
+	$title_position = $settings['title_position'];
+	$horizontal = $settings['horizontal_display'];
+	$carousel = $settings['carousel'];
+	$read_more = $settings['read_more'];
 
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
@@ -187,16 +191,15 @@ function makewidget_rss_output($rss, $settings) {
                     continue; //(skip this record);
                 }
                 // if it isn't a youtube feed, exclude feed items with no date
-            } else if(strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
-                if(!$item->get_item_tags('', 'pubDate')[0]['data']){
-                    continue; //(skip this record);
-                }
-                $dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
             }
-            if ($show_date == 'yes') {
-                $date = $dateString->format('M j, Y');
-            }
-        }
+        } else if(strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
+			if($item->get_item_tags('', 'pubDate')[0]['data']){
+				$dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
+			}
+		}
+		if ($show_date == 'yes' && $dateString) {
+			$date = $dateString->format('M j, Y');
+		}
 
         //get the link
         $link = $item->get_link();
@@ -257,7 +260,14 @@ function makewidget_rss_output($rss, $settings) {
         if (++$i == $items) break;
     }
 
-    echo '<ul class="custom-rss-elementor">';
+	$wrapper_classes = "";
+	if ($horizontal == 'yes') {
+		$wrapper_classes .= " horizontal";
+	}
+	if ($carousel == 'yes') {
+		$wrapper_classes .= " carousel";
+	}
+    echo '<ul class="custom-rss-elementor' . $wrapper_classes . '">';
     foreach ($sortedFeed as $item) {
         $link       = $item['link'];
         $title      = $item['title'];
@@ -273,6 +283,9 @@ function makewidget_rss_output($rss, $settings) {
 		if ($title_position == "top") {
             echo "{$title}";
         }
+		if ($horizontal == 'yes') {
+			echo "<div class='rss-content-wrapper'>";
+		}
 		echo 	"<div class='rss-image-wrapper'>{$image}</div>";
 		if ($title_position == "bottom") {
             echo "{$title}";
@@ -280,6 +293,9 @@ function makewidget_rss_output($rss, $settings) {
 		if ($show_summary == "yes") {
             echo "{$summary}";
         }
+		if ($horizontal == 'yes') {
+			echo "</div>";
+		}
 		if ($item['show_date'] == 'yes') {
             echo '<date>' . $item['date'] . '</date>';
         }
@@ -291,6 +307,9 @@ function makewidget_rss_output($rss, $settings) {
 		}
 		echo "</li>";
     }
+	if ($carousel == 'yes') {
+		echo "<li class='rss-carousel-read-more'><a href='". $feed_link ."' target='_blank'>" . $read_more . "</a></li>";
+	}
     echo '</ul>';
     $rss->__destruct();
     unset($rss);
@@ -299,7 +318,7 @@ function makewidget_rss_output($rss, $settings) {
 
 add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
 function make_elementor_enqueue_scripts() {
-	$myVersion = '1.6';
+	$myVersion = '2.3';
 	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
 	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }

@@ -159,6 +159,44 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 				'default' => 'no',
 			]
 		);
+		$this->add_control(
+			'horizontal_display',
+			[
+				'label' => esc_html__( 'Horizontal Display', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Yes', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'No', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			]
+		);
+		$this->add_control(
+			'carousel',
+			[
+				'label' => esc_html__( 'Carousel', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Yes', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'No', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'condition' => [
+				    'horizontal_display' => 'yes',
+			  	],
+				'default' => 'no',
+			],
+		);
+		$this->add_control(
+			'read_more',
+			[
+				'label' => esc_html__( 'Read More Text', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+				'placeholder' => esc_html__( 'Read More', 'elementor-make-widget' ),
+				'condition' => [
+					'horizontal_display' => 'yes',
+				    'carousel' => 'yes',
+			  	],
+				'default' => 'Read More',
+			],
+		);
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -220,7 +258,7 @@ class Elementor_makeCustomRss_Widget extends \Elementor\Widget_Base {
 	 * Written in PHP and used to generate the final HTML.
 	 */
 	protected function render() {
-    $settings = $this->get_settings_for_display();
+    	$settings = $this->get_settings_for_display();
 		$num_display = $settings['num_display'];
 		$disp_order = $settings['disp_order'];
 		$title = $settings['title'];

@@ -33,6 +33,12 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 
 	private $_did_license_refresh = false;
 
+	/** @var string The setting name for default Inline Edit support. */
+	const INLINE_EDIT_GLOBAL_SETTING = 'inline_edit_create_revisions';
+
+	/** @var string The setting name for per-form Inline Edit support. */
+	const INLINE_EDIT_FORM_SETTING = 'inline_edit_create_revisions_per_form';
+
 	public function __construct() {
 
 		if ( self::$_instance ) {
@@ -41,7 +47,65 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 
 		$this->_short_title = esc_html__( 'Entry Revisions', 'gravityview-entry-revisions' );
 
+		add_filter( 'gform_form_settings_fields', array( $this, 'add_form_settings_fields' ), 20 );
+
 		parent::__construct();
+	}
+
+	/**
+	 * Adds a per-form option to enable or disable Entry Revisions for Inline Edit changes.
+	 *
+	 * @since 1.2
+	 *
+	 * @param array $fields Form settings fields.
+	 *
+	 * @return array
+	 */
+	public function add_form_settings_fields( $fields ) {
+
+		$inline_edit_exists = defined( 'GRAVITYVIEW_INLINE_VERSION' );
+
+		$setting = $this->get_plugin_setting(self::INLINE_EDIT_GLOBAL_SETTING );
+
+		// If global settings haven't yet been configured, set to enabled.
+		if ( is_null( $setting ) ) {
+			$setting = '1';
+		}
+
+		// If Inline Edit isn't active, don't remove the form setting if it has been already set.
+		if ( ! $inline_edit_exists && ! is_null( $setting ) ) {
+
+			$fields['form_options']['fields'][] = array(
+				'name'          => self::INLINE_EDIT_FORM_SETTING,
+				'type'          => 'hidden',
+				'value' => $setting,
+			);
+
+			return $fields;
+		}
+
+		$fields['form_options']['fields'][] = array(
+			'name'          => self::INLINE_EDIT_FORM_SETTING,
+			'type'          => 'radio',
+			'label'         => esc_html__( 'Inline Edit Behavior', 'gravityview-entry-revisions' ),
+			'description'   => '<p class="clear">' . esc_html__( 'Should edits made using the Inline Edit plugin create revisions?', 'gravityview-entry-revisions' ) . '</p>',
+			'default_value' => $setting,
+			'dependency'    => array(
+				'live'   => true,
+				'fields' => array(
+					array(
+						'field'  => 'gv_inline_edit_enable',
+						'values' => array( '1', true ),
+					),
+				),
+			),
+			'choices'       => array(
+				array( 'label' => esc_html__( 'Add revisions for edits made using Inline Edit', 'gravityview-entry-revisions' ), 'value' => '1' ),
+				array( 'label' => esc_html__( 'Ignore edits made using Inline Edit', 'gravityview-entry-revisions' ), 'value' => '0' ),
+			),
+		);
+
+		return $fields;
 	}
 
 	/**
@@ -57,7 +121,7 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 			return false;
 		}
 
-		return ! rgempty( 'gform-settings-save' ) && isset( $_POST['_gravityview-entry-revisions_save_settings_nonce'] );
+		return ! rgempty( 'gform-settings-save' ) && ( isset( $_POST['gform_settings_save_nonce'] ) || isset( $_POST['_gravityview-entry-revisions_save_settings_nonce'] ) );
 	}
 
 	/**
@@ -89,7 +153,7 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	 *
 	 * @return string
 	 */
-	protected function settings_edd_license( $field, $echo = true ) {
+	public function settings_edd_license( $field, $echo = true ) {
 
 		// Otherwise, it'd be output as an attribute. Didn't want to use the `gaddon_no_output_field_properties` filter
 		unset( $field['description'] );
@@ -194,9 +258,7 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 			$message = $this->strings( $key, $license_data );
 		}
 
-		$message = sprintf( '<p><strong>%s: %s</strong></p>', $this->strings( 'status' ), $message );
-
-		return $message;
+		return sprintf( '<p><strong>%s: %s</strong></p>', $this->strings( 'status' ), $message );
 	}
 
 	/**
@@ -403,22 +465,41 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	 * @return array Array that contains plugin settings
 	 */
 	public function plugin_settings_fields() {
+
+		$inline_edit_exists = defined( 'GRAVITYVIEW_INLINE_VERSION' );
+
+		$fields = array(
+			array(
+				'name'          => 'license_key',
+				'required'      => true,
+				'label'         => esc_html__( 'License Key', 'gravityview-entry-revisions' ),
+				'description'   => '<p class="clear">' . esc_html__( 'Enter the GravityView license key that was sent to you on purchase. This enables plugin updates &amp; support.', 'gravityview-entry-revisions' ) . '</p>',
+				'type'          => 'edd_license',
+				'feedback_callback' => array( $this, 'setup_field_validation_feedback' ),
+				'placeholder'   => esc_html__('Enter your GravityView license key here', 'gravityview-entry-revisions' ),
+				'default_value' => '',
+				'class'         => 'activate code regular-text edd-license-key',
+			),
+		);
+
+		if ( $inline_edit_exists ) {
+			$fields[] = array(
+				'name'          => self::INLINE_EDIT_GLOBAL_SETTING,
+				'label'         => esc_html__( 'Default Inline Edit Behavior', 'gravityview-entry-revisions' ),
+				'description'   => '<p class="clear">' . esc_html__( 'Should edits made using the Inline Edit plugin create revisions?', 'gravityview-entry-revisions' ) . ' ' . esc_html__( 'Note: This is the global default. You may override this setting in a form&rsquo;s Settings page.', 'gravityview-entry-revisions' ) . '</p>',
+				'type'          => 'radio',
+				'default_value' => '1',
+				'choices'       => array(
+					array( 'label' => esc_html__( 'Add revisions for edits made using Inline Edit', 'gravityview-entry-revisions' ), 'value' => '1' ),
+					array( 'label' => esc_html__( 'Ignore edits made using Inline Edit', 'gravityview-entry-revisions' ), 'value' => '0' ),
+				),
+			);
+		}
+
 		return array(
 			array(
 				'title'  => '',
-				'fields' => array(
-					array(
-						'name'          => 'license_key',
-						'required'      => true,
-						'label'         => esc_html__( 'License Key', 'gravityview-entry-revisions' ),
-						'description'   => '<p class="clear">' . esc_html__( 'Enter the GravityView license key that was sent to you on purchase. This enables plugin updates &amp; support.', 'gravityview-entry-revisions' ) . '</p>',
-						'type'          => 'edd_license',
-						'feedback_callback' => array( $this, 'setup_field_validation_feedback' ),
-						'placeholder'   => esc_html__('Enter your GravityView license key here', 'gravityview-entry-revisions' ),
-						'default_value' => '',
-						'class'         => 'activate code regular-text edd-license-key',
-					),
-				)
+				'fields' => $fields,
 			)
 		);
 	}

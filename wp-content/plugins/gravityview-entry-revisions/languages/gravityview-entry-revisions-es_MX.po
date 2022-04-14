@@ -4,16 +4,17 @@
 # Zachary Katz <zack@katz.co>, 2018
 # Jorge Pelaez <jorgepelaez@gmail.com>, 2018
 # Luis Diaz Venero <luisdiazvenero@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: GravityView - Entry Revisions 1.0.1\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-08-02 19:56:17+00:00\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-09-04 23:34+0000\n"
 "Last-Translator: Luis Diaz Venero <luisdiazvenero@gmail.com>, 2018\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/katzwebservices/teams/18775/es_MX/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"

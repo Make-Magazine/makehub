@@ -1,7 +1,7 @@
 === Entry Revisions by GravityView ===
 Tags: gravityview, gravity forms
 Requires at least: 4.4
-Tested up to: 5.3.2
+Tested up to: 5.9
 Stable tag: trunk
 Contributors: gravityview
 License: GPL 3 or higher
@@ -16,6 +16,15 @@ Track changes to Gravity Forms entries and restore from previous revisions. Requ
 4. You'll see a "Revisions" meta box on the entries page. Click the link next to the revision to compare versions, and restore.
 
 == Changelog ==
+
+= 1.1 on January 26, 2022 =
+
+* Added: Entry Revisions now tracks edits made using our [Inline Edit add-on](https://gravityview.co/extensions/inline-edit/). Tracking revisions is enabled by default. You can change the default setting and override the setting per-form. [Learn how to change these settings.](https://docs.gravityview.co/article/777-inline-edit-revisions). Requires Gravity Forms 2.5 or newer.
+
+= 1.0.4 on July 22, 2021 =
+
+* Fixed: License field missing when running Gravity Forms 2.5
+* Fixed: Column with current revision values was not showing in WP 5.7 and newer
 
 = 1.0.3 on February 19, 2020 =
 

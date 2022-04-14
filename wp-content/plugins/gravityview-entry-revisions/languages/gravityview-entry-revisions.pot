@@ -1,14 +1,14 @@
-# Copyright (C) 2019 GravityView
+# Copyright (C) 2022 GravityView
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GravityView - Entry Revisions 1.0.2\n"
+"Project-Id-Version: GravityView - Entry Revisions 1.1\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-08-02 19:56:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: GravityView <support@gravityview.co>\n"
 "Language-Team: GravityView <support@gravityview.co>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
@@ -28,203 +28,232 @@ msgstr ""
 msgid "The plugin requires Gravity Forms."
 msgstr ""
 
-#: class-gv-entry-revisions.php:207
+#: class-gv-entry-revisions.php:209
 msgid "Revision Parent Entry ID"
 msgstr ""
 
-#: class-gv-entry-revisions.php:212
+#: class-gv-entry-revisions.php:214
 msgid "Revision Parent Date"
 msgstr ""
 
-#: class-gv-entry-revisions.php:217
+#: class-gv-entry-revisions.php:219
 msgid "Revision Date (GMT)"
 msgstr ""
 
-#: class-gv-entry-revisions.php:222
+#: class-gv-entry-revisions.php:224
 msgid "Revision Created By"
 msgstr ""
 
-#: class-gv-entry-revisions.php:227
+#: class-gv-entry-revisions.php:229
 msgid "Revision Changed Content"
 msgstr ""
 
-#: class-gv-entry-revisions.php:346 class-gv-entry-revisions.php:673
-#: class-gv-entry-revisions.php:695 class-gv-entry-revisions.php:833
+#: class-gv-entry-revisions.php:443 class-gv-entry-revisions.php:770
+#: class-gv-entry-revisions.php:792 class-gv-entry-revisions.php:930
 msgid "This revision is identical to the current entry."
 msgstr ""
 
-#: class-gv-entry-revisions.php:420 class-gv-entry-revisions.php:441
-#: class-gv-entry-revisions.php:1126 includes/entry_detail.php:136
+#: class-gv-entry-revisions.php:517 class-gv-entry-revisions.php:538
+#: class-gv-entry-revisions.php:1224 includes/entry_detail.php:140
 msgid "Revision not found"
 msgstr ""
 
-#: class-gv-entry-revisions.php:836
+#: class-gv-entry-revisions.php:933
 msgid "Entry modified by %2$s %3$s ago."
 msgstr ""
 
-#: class-gv-entry-revisions.php:907
+#: class-gv-entry-revisions.php:1004
 msgid "Field ID: %s"
 msgstr ""
 
-#: class-gv-entry-revisions.php:1125 includes/merge-tags.php:99
+#: class-gv-entry-revisions.php:1223 includes/merge-tags.php:99
 #: includes/merge-tags.php:110
 msgid "This entry has no revisions."
 msgstr ""
 
-#: class-gv-entry-revisions.php:1127
+#: class-gv-entry-revisions.php:1225
 msgid "This is an entry revision. %sCompare to the current entry%s."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:42
-#: includes/entry_detail.php:44 includes/entry_list.php:66
+#: includes/class-gv-entry-revisions-settings.php:48
+#: includes/entry_detail.php:48 includes/entry_list.php:66
 msgid "Entry Revisions"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:217
+#: includes/class-gv-entry-revisions-settings.php:90
+msgid "Inline Edit Behavior"
+msgstr ""
+
+#: includes/class-gv-entry-revisions-settings.php:91
+#: includes/class-gv-entry-revisions-settings.php:489
+msgid "Should edits made using the Inline Edit plugin create revisions?"
+msgstr ""
+
+#: includes/class-gv-entry-revisions-settings.php:103
+#: includes/class-gv-entry-revisions-settings.php:493
+msgid "Add revisions for edits made using Inline Edit"
+msgstr ""
+
+#: includes/class-gv-entry-revisions-settings.php:104
+#: includes/class-gv-entry-revisions-settings.php:494
+msgid "Ignore edits made using Inline Edit"
+msgstr ""
+
+#: includes/class-gv-entry-revisions-settings.php:279
 msgid "Status"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:218
+#: includes/class-gv-entry-revisions-settings.php:280
 msgid "There was an error processing the request."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:219
+#: includes/class-gv-entry-revisions-settings.php:281
 msgid ""
 "Could not deactivate the license. The license key you attempted to "
 "deactivate may not be active or valid."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:220
+#: includes/class-gv-entry-revisions-settings.php:282
 msgid "The license key is valid, but it has not been activated for this site."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:221
+#: includes/class-gv-entry-revisions-settings.php:283
 msgid "Invalid: this license has reached its activation limit."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:222
+#: includes/class-gv-entry-revisions-settings.php:284
 msgid "The license has been deactivated."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:223
+#: includes/class-gv-entry-revisions-settings.php:285
 msgid "The license key is valid and active."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:224
-#: includes/class-gv-entry-revisions-settings.php:225
+#: includes/class-gv-entry-revisions-settings.php:286
+#: includes/class-gv-entry-revisions-settings.php:287
 msgid "The license key entered is invalid."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:226
+#: includes/class-gv-entry-revisions-settings.php:288
 msgid "This license key has been revoked."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:227
+#: includes/class-gv-entry-revisions-settings.php:289
 msgid "This license key does not have access to this plugin."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:228
+#: includes/class-gv-entry-revisions-settings.php:290
 msgid ""
 "This license key has expired. %sRenew your license on the GravityView "
 "website%s"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:229
+#: includes/class-gv-entry-revisions-settings.php:291
 msgid "Verifying license&hellip;"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:230
+#: includes/class-gv-entry-revisions-settings.php:292
 msgid "Activate License"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:231
+#: includes/class-gv-entry-revisions-settings.php:293
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:232
+#: includes/class-gv-entry-revisions-settings.php:294
 msgid "Verify License"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:413
+#: includes/class-gv-entry-revisions-settings.php:475
 msgid "License Key"
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:414
+#: includes/class-gv-entry-revisions-settings.php:476
 msgid ""
 "Enter the GravityView license key that was sent to you on purchase. This "
 "enables plugin updates &amp; support."
 msgstr ""
 
-#: includes/class-gv-entry-revisions-settings.php:417
+#: includes/class-gv-entry-revisions-settings.php:479
 msgid "Enter your GravityView license key here"
 msgstr ""
 
-#: includes/diff-table.html.php:17
-msgid "Field"
+#: includes/class-gv-entry-revisions-settings.php:488
+msgid "Default Inline Edit Behavior"
 msgstr ""
 
-#: includes/diff-table.html.php:18
-msgid "Revision Value"
-msgstr ""
-
-#: includes/diff-table.html.php:21 includes/diff-table.html.php:22
-#: includes/diff-table.html.php:46 includes/diff-table.html.php:47
-msgid "Toggle all changes"
+#: includes/class-gv-entry-revisions-settings.php:489
+msgid ""
+"Note: This is the global default. You may override this setting in a "
+"form&rsquo;s Settings page."
 msgstr ""
 
 #: includes/diff-table.html.php:26
+msgid "Field"
+msgstr ""
+
+#: includes/diff-table.html.php:29
+msgid "Revision Value"
+msgstr ""
+
+#: includes/diff-table.html.php:37 includes/diff-table.html.php:39
+#: includes/diff-table.html.php:71 includes/diff-table.html.php:73
+msgid "Toggle all changes"
+msgstr ""
+
+#: includes/diff-table.html.php:44
 msgid "Current Value"
 msgstr ""
 
-#: includes/diff-table.html.php:38 includes/diff-table.html.php:51
+#: includes/diff-table.html.php:57 includes/diff-table.html.php:79
 msgid "Cancel and do not modify the current entry"
 msgstr ""
 
-#: includes/diff-table.html.php:38 includes/entry_detail.php:70
+#: includes/diff-table.html.php:58 includes/entry_detail.php:74
 msgid "Return to Entry"
 msgstr ""
 
-#: includes/diff-table.html.php:44 includes/entry_detail.php:83
+#: includes/diff-table.html.php:67 includes/entry_detail.php:87
 msgid "Restore This Value"
 msgid_plural "Restore These Values"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/diff-table.html.php:51
+#: includes/diff-table.html.php:80
 msgid "Cancel"
 msgstr ""
 
-#: includes/entry_detail.php:38
+#: includes/entry_detail.php:42
 msgid "Compare Revisions"
 msgstr ""
 
-#: includes/entry_detail.php:69
+#: includes/entry_detail.php:73
 msgid "This revision no longer exists."
 msgstr ""
 
-#: includes/entry_detail.php:81
+#: includes/entry_detail.php:85
 msgid ""
 "Are you sure? If you continue, the current entry will be updated with the "
 "selected field values."
 msgstr ""
 
-#: includes/entry_detail.php:84
+#: includes/entry_detail.php:88
 msgid "Restore These Values"
 msgstr ""
 
-#: includes/entry_detail.php:122
+#: includes/entry_detail.php:126
 msgid "Success: the selected revision fields were restored."
 msgstr ""
 
-#: includes/entry_detail.php:140
+#: includes/entry_detail.php:144
 msgid "No changes were made to the current entry."
 msgstr ""
 
-#: includes/entry_detail.php:143
+#: includes/entry_detail.php:147
 msgid "There was a problem restoring the revision."
 msgstr ""
 
-#: includes/entry_detail.php:146
+#: includes/entry_detail.php:150
 msgid "Error: %s"
 msgstr ""
 
@@ -301,23 +330,23 @@ msgctxt "1st replacement is the plugin name; 2nd replacement is the reason why"
 msgid "Could not activate %s: %s"
 msgstr ""
 
-#: class-gv-entry-revisions.php:840
+#: class-gv-entry-revisions.php:937
 msgctxt "%4$s will be replaced by the date"
 msgid "Saved on %4$s"
 msgstr ""
 
-#: class-gv-entry-revisions.php:924
+#: class-gv-entry-revisions.php:1021
 msgctxt "Shown when the field value is empty before or after editing."
 msgid "No Value"
 msgstr ""
 
-#: class-gv-entry-revisions.php:1079
+#: class-gv-entry-revisions.php:1177
 #. translators: revision date format, see http:php.net/date
 msgctxt "revision date format"
 msgid "F j, Y @ H:i:s"
 msgstr ""
 
-#: class-gv-entry-revisions.php:1123
+#: class-gv-entry-revisions.php:1221
 msgctxt ""
 "The default date format. %1 is the avatar, %2 is the name of the person who "
 "modified the entry, %3 is how long ago the entry was modified, and %5 is a "

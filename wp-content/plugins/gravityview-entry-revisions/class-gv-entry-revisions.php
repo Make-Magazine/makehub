@@ -149,6 +149,8 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 */
 	public function add_hooks() {
 
+		add_action( 'gravityview-inline-edit/entry-updated', array( $this, 'inline_edit_update_entry' ), - 100, 5 );
+
 		add_action( 'gform_after_update_entry', array( $this, 'gform_after_update_entry' ), - 100, 3 );
 
 		add_filter( 'gform_entry_meta', array( $this, 'modify_gform_entry_meta' ) );
@@ -270,6 +272,86 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 */
 	public function modify_gform_entry_meta( $meta = array() ) {
 		return $this->get_entry_meta() + $meta;
+	}
+
+	/**
+	 * Handle entries modified using GFAPI
+	 *
+	 * @since 1.1
+	 *
+	 * @param array $entry
+	 * @param array $original_entry
+	 */
+	public function gform_post_update_entry( $entry, $original_entry ) {
+
+		$form = GFAPI::get_form( $entry['form_id'] );
+
+		if ( ! $form ) {
+			gv_revisions_log_error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
+			return;
+		}
+
+		$this->gform_after_update_entry( $form, $entry['id'], $original_entry );
+	}
+
+	/**
+	 * Handle edits made via Inline Edit
+	 *
+	 * @since 1.1
+	 *
+	 * @param bool|WP_Error $update_result  True: the entry has been updated by Gravity Forms or WP_Error if there was a problem
+	 * @param array         $entry          The Entry Object that's been updated
+	 * @param int           $form_id        The Form ID
+	 * @param GF_Field|null $gf_field       The field that's been updated, or null if no field exists (for entry meta)
+	 * @param array         $original_entry Original entry, before being updated
+	 *
+	 * @return bool $update_result, unmodified.
+	 */
+	public function inline_edit_update_entry( $update_result, $entry, $form_id, $gf_field, $original_entry = array() ) {
+
+		if ( is_wp_error( $update_result ) ) {
+			return $update_result;
+		}
+
+		// Requires Inline Edit 1.1 or later.
+		if ( empty( $original_entry ) ) {
+			return $update_result;
+		}
+
+		$form = GFAPI::get_form( $form_id );
+
+		if ( ! $form ) {
+			gv_revisions_log_error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
+			return $update_result;
+		}
+
+		if ( ! $this->should_process_inline_edit( $form ) ) {
+			return $update_result;
+		}
+
+		$this->gform_after_update_entry( $form, $entry['id'], $original_entry );
+
+		return $update_result;
+	}
+
+	/**
+	 * Checks whether to process Inline Edit updates based on the global default and per-form settings.
+	 *
+	 * @since 1.1
+	 *
+	 * @param array $form
+	 *
+	 * @return bool True: process; False: don't!
+	 */
+	private function should_process_inline_edit( $form ) {
+
+		// Global
+		$global_default = GV_Entry_Revisions_Settings::get_instance()->get_plugin_setting(GV_Entry_Revisions_Settings::INLINE_EDIT_GLOBAL_SETTING );
+
+		// Form ID
+		$setting = rgar( $form, GV_Entry_Revisions_Settings::INLINE_EDIT_FORM_SETTING, $global_default );
+
+		return ! empty( $setting );
 	}
 
 	/**
@@ -898,7 +980,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		foreach ( $previous as $key => $previous_value ) {
 
 			// Don't compare `gv_revision` data
-			if ( in_array( $key, $ignored_keys, true ) ) {
+			if ( in_array( $key, $ignored_keys, false ) ) {
 				continue;
 			}
 

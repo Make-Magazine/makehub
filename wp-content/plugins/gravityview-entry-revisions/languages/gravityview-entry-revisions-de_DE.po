@@ -2,21 +2,23 @@
 # This file is distributed under the GPLv2 or later.
 # Translators:
 # David Decker <deckerweb.mobil@gmail.com>, 2018
-# Zachary Katz <zack@katz.co>, 2018
-# Basti <inactive+seschwarz@transifex.com>, 2018
-# Toby Fiverr, 2018
+# 51e9a0e47a09553c8936a69fa7ff4660_e256b99 <761a490eef3a67745ac96b33e59e6f4e_199793>, 2018
+# 3d06e0ffc7f5c27a181838c1f8507783_779e202, 2018
 # Aleksander Kracht-Winter <ma.kracht.winter@gmail.com>, 2018
 # Hubert Test <hubert@trash-mail.com>, 2018
+# Michael Eppers <michael@proper.de>, 2021
+# Zachary Katz <zack@katz.co>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: GravityView - Entry Revisions 1.0.1\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-08-02 19:56:17+00:00\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Hubert Test <hubert@trash-mail.com>, 2018\n"
+"PO-Revision-Date: 2018-09-04 23:34+0000\n"
+"Last-Translator: Zachary Katz <zack@katz.co>, 2021\n"
 "Language-Team: German (Germany) (https://www.transifex.com/katzwebservices/teams/18775/de_DE/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -31,41 +33,41 @@ msgstr ""
 
 #: class-gv-entry-revisions.php:108
 msgid "The plugin requires Gravity Forms."
-msgstr ""
+msgstr "Dieses Plugin benötigt Gravity Forms."
 
 #: class-gv-entry-revisions.php:207
 msgid "Revision Parent Entry ID"
-msgstr ""
+msgstr "Parent ID der Änderung"
 
 #: class-gv-entry-revisions.php:212
 msgid "Revision Parent Date"
-msgstr ""
+msgstr "Datum der Änderung"
 
 #: class-gv-entry-revisions.php:217
 msgid "Revision Date (GMT)"
-msgstr ""
+msgstr "Änderungsdatum (GMT)"
 
 #: class-gv-entry-revisions.php:222
 msgid "Revision Created By"
-msgstr ""
+msgstr "Änderung eingetragen von"
 
 #: class-gv-entry-revisions.php:227
 msgid "Revision Changed Content"
-msgstr ""
+msgstr "Geänderter Versionsinhalt"
 
 #: class-gv-entry-revisions.php:346 class-gv-entry-revisions.php:662
 #: class-gv-entry-revisions.php:684 class-gv-entry-revisions.php:822
 msgid "This revision is identical to the current entry."
-msgstr ""
+msgstr "Diese Änderung ist identisch mit dem aktuellen Eintrag."
 
 #: class-gv-entry-revisions.php:409 class-gv-entry-revisions.php:430
 #: class-gv-entry-revisions.php:1115 includes/entry_detail.php:136
 msgid "Revision not found"
-msgstr ""
+msgstr "Änderung nicht gefunden"
 
 #: class-gv-entry-revisions.php:825
 msgid "Entry modified by %2$s %3$s ago."
-msgstr ""
+msgstr "Eintrag geändert von %2$s  vor %3$s."
 
 #: class-gv-entry-revisions.php:896
 msgid "Field ID: %s"
@@ -74,16 +76,16 @@ msgstr "Feld ID: %s"
 #: class-gv-entry-revisions.php:1114 includes/merge-tags.php:95
 #: includes/merge-tags.php:106
 msgid "This entry has no revisions."
-msgstr ""
+msgstr "Dieser Eintrag wurde nicht verändert"
 
 #: class-gv-entry-revisions.php:1116
 msgid "This is an entry revision. %sCompare to the current entry%s."
-msgstr ""
+msgstr "Dies ist eine Eintragsänderung. %sVergleiche mit aktuellem Eintrag%s."
 
 #: includes/class-gv-entry-revisions-settings.php:40
 #: includes/entry_detail.php:44 includes/entry_list.php:66
 msgid "Entry Revisions"
-msgstr ""
+msgstr "Eintragsänderungen"
 
 #: includes/class-gv-entry-revisions-settings.php:215
 msgid "Status"
@@ -130,7 +132,7 @@ msgstr "Der Lizenz Schlüssel wurde widerrufen."
 
 #: includes/class-gv-entry-revisions-settings.php:225
 msgid "This license key does not have access to this plugin."
-msgstr ""
+msgstr "Dieser Lizenzschlüssel gewährt keinen Zugriff zu dieser Erweiterung."
 
 #: includes/class-gv-entry-revisions-settings.php:226
 msgid ""
@@ -165,41 +167,43 @@ msgid ""
 "Enter the GravityView license key that was sent to you on purchase. This "
 "enables plugin updates &amp; support."
 msgstr ""
+"Geben Sie den Lizenzschlüssel ein, welchen sie beim Kauf erhalten haben. "
+"Dies aktiviert die Plugin-Aktualisierung &amp; support."
 
 #: includes/class-gv-entry-revisions-settings.php:415
 msgid "Enter your GravityView license key here"
-msgstr ""
+msgstr "Geben Sie hier Ihren Lizenzschlüssel ein"
 
 #: includes/diff-table.html.php:17
 msgid "Field"
-msgstr ""
+msgstr "Feld"
 
 #: includes/diff-table.html.php:18
 msgid "Revision Value"
-msgstr ""
+msgstr "Wert der Änderung"
 
 #: includes/diff-table.html.php:21 includes/diff-table.html.php:22
 #: includes/diff-table.html.php:46 includes/diff-table.html.php:47
 msgid "Toggle all changes"
-msgstr ""
+msgstr "zwischen Änderungen umschalten"
 
 #: includes/diff-table.html.php:26
 msgid "Current Value"
-msgstr ""
+msgstr "Aktueller Wert"
 
 #: includes/diff-table.html.php:38 includes/diff-table.html.php:51
 msgid "Cancel and do not modify the current entry"
-msgstr ""
+msgstr "Den aktuellen Eintrag nicht ändern und abbrechen."
 
 #: includes/diff-table.html.php:38 includes/entry_detail.php:70
 msgid "Return to Entry"
-msgstr ""
+msgstr "Zurück zum Eintrag"
 
 #: includes/diff-table.html.php:44 includes/entry_detail.php:83
 msgid "Restore This Value"
 msgid_plural "Restore These Values"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Diese Werte wiederherstellen"
+msgstr[1] "Diese Werte wiederherstellen"
 
 #: includes/diff-table.html.php:51
 msgid "Cancel"
@@ -207,68 +211,75 @@ msgstr "Abbruch"
 
 #: includes/entry_detail.php:38
 msgid "Compare Revisions"
-msgstr ""
+msgstr "Vergleiche die Änderungen"
 
 #: includes/entry_detail.php:69
 msgid "This revision no longer exists."
-msgstr ""
+msgstr "Dieser Änderungseintrag existiert nicht mehr."
 
 #: includes/entry_detail.php:81
 msgid ""
 "Are you sure? If you continue, the current entry will be updated with the "
 "selected field values."
 msgstr ""
+"Sind Sie sicher? Wenn Sie fortfahren, wird der aktuelle Eintrag mit den "
+"ausgewählten Feld-Werten aktualisiert."
 
 #: includes/entry_detail.php:84
 msgid "Restore These Values"
-msgstr ""
+msgstr "Diese Einträge wiederherstellen."
 
 #: includes/entry_detail.php:122
 msgid "Success: the selected revision fields were restored."
 msgstr ""
+"Die ausgewählten Änderungsfelder wurden erfolgreich wieder hergestellt."
 
 #: includes/entry_detail.php:140
 msgid "No changes were made to the current entry."
-msgstr ""
+msgstr "Es wurden keine Änderungen am aktuellen Eintrag vorgenommen."
 
 #: includes/entry_detail.php:143
 msgid "There was a problem restoring the revision."
-msgstr ""
+msgstr "Es gab ein Problem beim Wiederherstellen der Änderungen."
 
 #: includes/entry_detail.php:146
 msgid "Error: %s"
-msgstr ""
+msgstr "Fehler: %s"
 
 #: includes/entry_list.php:80
 msgid "Parent Entry ID"
-msgstr ""
+msgstr "Parent Entry ID"
 
 #: includes/merge-tags.php:21
 msgid "Entry Revisions List"
-msgstr ""
+msgstr "Liste der Eintragsänderungen"
 
 #: includes/merge-tags.php:26
 msgid "Entry Changed Fields"
-msgstr ""
+msgstr "geänderte Eintragsfelder"
 
 #: includes/merge-tags.php:31
 msgid "All Revision Fields"
-msgstr ""
+msgstr "Alle Änderungsfelder"
 
 #: includes/merge-tags.php:36
 msgid "Date Updated"
-msgstr ""
+msgstr "Aktualisierungs-Datum"
 
 #: lib/EDD_SL_Plugin_Updater.php:210
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
+"Es gibt eine neue Version von %1$s. %2$sVersionsinformationen %3$s "
+"ansehen%4$s."
 
 #: lib/EDD_SL_Plugin_Updater.php:218
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
+"Es gibt eine neue Version von %1$s. %2$sVersionsinformationen %3$s "
+"ansehen%4$s oder %5$sjetzt aktualisieren%6$s."
 
 #: lib/EDD_SL_Plugin_Updater.php:408
 msgid "You do not have permission to install plugin updates"
@@ -301,38 +312,42 @@ msgid ""
 "The %s Extension is not compatible with this version of GravityView. Please "
 "update the Extension to the latest version."
 msgstr ""
+"Die %s-Erweiterung ist nicht kompatibel mit dieser Version von GravityView. "
+"Bitte aktualisieren Sie die Erweiterung auf die neueste Version."
 
 #. Plugin Name of the plugin/theme
 msgid "GravityView - Entry Revisions"
-msgstr ""
+msgstr "Gravity View - Entry Revisions"
 
 #. Description of the plugin/theme
 msgid ""
 "Track changes to Gravity Forms entries and restore values from earlier "
 "versions."
 msgstr ""
+"Zeichne Änderungen von Gravity Forms Einträgen auf und stelle Werte früherer"
+" Versionen wieder her."
 
 #: class-gv-entry-revisions.php:109
 msgctxt ""
 "1st replacement is the plugin name; 2nd replacement is the reason why"
 msgid "Could not activate %s: %s"
-msgstr ""
+msgstr "Konnte %s: %s nicht aktivieren"
 
 #: class-gv-entry-revisions.php:829
 msgctxt "%4$s will be replaced by the date"
 msgid "Saved on %4$s"
-msgstr ""
+msgstr "Gespeichert am  %4$s"
 
 #: class-gv-entry-revisions.php:913
 msgctxt "Shown when the field value is empty before or after editing."
 msgid "No Value"
-msgstr ""
+msgstr "Kein Wert"
 
 #. translators: revision date format, see http:php.net/date
 #: class-gv-entry-revisions.php:1068
 msgctxt "revision date format"
 msgid "F j, Y @ H:i:s"
-msgstr ""
+msgstr "F j, Y @ H:i:s"
 
 #: class-gv-entry-revisions.php:1112
 msgctxt ""
@@ -340,9 +355,9 @@ msgctxt ""
 "modified the entry, %3 is how long ago the entry was modified, and %5 is a "
 "timestamp."
 msgid "%1$s %2$s, %3$s ago (%4$s)"
-msgstr ""
+msgstr "%1$s %2$s, %3$s vergangen (%4$s)"
 
 #: includes/notifications.php:37
 msgctxt "The title for an event in a notifications drop down list."
 msgid "Entry is updated, revision is saved"
-msgstr ""
+msgstr "Eintrag wurde aktualisiert, Änderung wurde gespeichert"
