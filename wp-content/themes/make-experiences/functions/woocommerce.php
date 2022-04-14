@@ -121,7 +121,7 @@ function woocommerce_add_membership( $order_id ){
 			}
 
 			if($hasSchoolMembership == false) {
-				addFreeMembership( $user->user_email, $user->user_login, $first_name, $last_name, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ) );
+				addFreeMembership( $user->user_email, $user->user_login, $first_name, $last_name, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ), "99.99" );
 			}
 			groups_join_group( 152, $user_id);
 		}
