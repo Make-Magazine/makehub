@@ -278,6 +278,46 @@
             "min": "",
             "max": "",
             "step": ""
+        },
+        {
+            "key": "field_62589891d0cb6",
+            "label": "Materials",
+            "name": "materials",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_625898a0d0cb7",
+                    "label": "Material",
+                    "name": "material",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
         }
     ],
     "location": [
@@ -308,5 +348,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1649445704
+    "modified": 1649973422
 }

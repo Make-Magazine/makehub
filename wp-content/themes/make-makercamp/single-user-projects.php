@@ -13,7 +13,7 @@ $categories = array();
 $ages = array();
 $times = array();
 $skill_levels = array();
-$materials = array();
+$materials_tax = array();
 foreach($terms as $term) {
 	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
 	switch ($parent->slug) {
@@ -34,7 +34,7 @@ foreach($terms as $term) {
 			break;
 	}
 }
-$tagTerms = array_merge($categories, $ages, $times, $skill_levels);
+$tagTerms = array_merge($categories, $ages, $times, $skill_levels, $materials);
 
 // Get our ACF Fields
 $hero_image = get_field('hero_image');
@@ -43,6 +43,8 @@ $sponsored_by_text = get_field('sponsored_by_text');
 $what_will_you_learn = get_field('what_will_you_learn');
 $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
+$video = get_field('video');
+$video_url = get_field('project_video_url');
 $author_id = get_field('user_id');
 
 // variables for building Breadcrumbs
@@ -202,6 +204,33 @@ get_header();
 							            ?>
 							        </section>
 
+									<section id="video">
+										<?php if (!empty($video_url) || !empty($video) ) { ?>
+											<h3>Project Videos</h3>
+										<?php }
+										if (!empty($video_url) && validate_url($video_url)) {
+										    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);
+										    //youtube has two type of url formats we need to look for and change
+										    $videoID = parse_yturl($dispVideo);
+										    if ($videoID != false) {
+										        $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+										    }
+										    $video_embed = '<div class="project-video">
+										              <div class="embed-youtube">
+										                <iframe class="lazyload" src="' . $dispVideo . '" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+										              </div>
+										            </div>';
+											echo $video_embed;
+										}
+										if (!empty($video)) {
+											$ext = pathinfo($video["url"], PATHINFO_EXTENSION); ?>
+											<video width="100%" controls>
+											  	<source src="<?php echo $video["url"]; ?>" type="video/<?php echo $ext; ?>">
+												Your browser does not support the video tag.
+											</video>
+										<?php }	?>
+									</section>
+
 							        <?php
 							        if ($whats_next) { ?>
 							            <section class="up-whats-next">
@@ -213,11 +242,14 @@ get_header();
 								</div>
 
 								<div class="ld-tab-content" id="ld-tab-materials">
-									<p>Materials:</p>
+									<h4>Materials:</h4>
 									<ul>
-										<?php foreach($materials as $material) { ?>
-											<li><?php echo $material->name; ?>
-										<?php } ?>
+										<?php
+										if( have_rows('materials') ) {
+											while( have_rows('materials') ) : the_row(); ?>
+												<li><?php echo get_sub_field('material'); ?></li>
+											<?php endwhile;
+										} ?>
 									</ul>
 								</div>
 
