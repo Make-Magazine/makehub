@@ -267,6 +267,9 @@ function makewidget_rss_output($rss, $settings) {
 	if ($carousel == 'yes') {
 		$wrapper_classes .= " carousel";
 	}
+	if ($summary != '') {
+		$wrapper_classes .= " summary";
+	}
     echo '<ul class="custom-rss-elementor' . $wrapper_classes . '">';
     foreach ($sortedFeed as $item) {
         $link       = $item['link'];
@@ -290,10 +293,15 @@ function makewidget_rss_output($rss, $settings) {
 		if ($title_position == "bottom") {
             echo "{$title}";
         }
+		if ($horizontal == 'yes') {
+			echo "<div class='rss-text-wrapper'>";
+			echo "{$title}";
+		}
 		if ($show_summary == "yes") {
             echo "{$summary}";
         }
 		if ($horizontal == 'yes') {
+			echo "</div>";
 			echo "</div>";
 		}
 		if ($item['show_date'] == 'yes') {
