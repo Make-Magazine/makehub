@@ -678,3 +678,9 @@
 		max-width: 300px;
 	}
 }
+
+// Make read only fields look read Only
+input[readonly="readonly"] {
+	background: #ccc;
+	pointer-events: none;
+}

@@ -79,8 +79,11 @@ add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
 function load_admin_styles() {
-    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
+	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
+	wp_enqueue_style( 'admin_css' );
 }
+add_action('admin_enqueue_scripts', 'load_admin_styles');
+
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 
@@ -312,5 +315,14 @@ function bpdev_fix_avatar_dir_url($url) {
 }
 
 add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
+
+// add the ability to add tags or categories to pages
+function register_taxonomies() {
+    // Add tag metabox to page
+	register_taxonomy_for_object_type('post_tag', 'page');
+	// Add category metabox to page
+	register_taxonomy_for_object_type('category', 'page');
+}
+add_action( 'init', 'register_taxonomies' );
 
 ?>
