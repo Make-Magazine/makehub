@@ -224,6 +224,12 @@ add_filter('posts_where', 'filter_posts_from_rss', 1, 4);
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
+
+	$classes = array();
+	// not sure why this isn't getting added normally
+	if( is_user_logged_in() ) {
+		$classes[] = "logged-in";
+	}
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
@@ -237,8 +243,8 @@ function add_slug_body_class($classes) {
                 $classes[] = 'my-group';
             }
         }
-        return $classes;
     }
+	return $classes;
 }
 
 add_filter('body_class', 'add_slug_body_class');
