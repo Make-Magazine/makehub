@@ -289,14 +289,6 @@
 	}
 }
 
-.gform_wrapper .gform_validation_errors {
-	background: #c02b0a !important;
-    &> h2, &.gform_validation_errors > ol a {
-        color: #fff !important;
-        font-size: 18px;
-    }
-}
-
 // The event form
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     margin-top: 0px;
@@ -539,14 +531,7 @@
 		line-height: 1.3em;
 	}
 }
-.gform_wrapper .gfield_description.validation_message {
-	top: -2em;
-    padding-bottom: 16px;
-    padding-top: 16px;
-    width: auto;
-    right: -15px;
-    left: auto;
-}
+
 .gform_wrapper li.gfield.gfield_error.gfield_contains_required  {
 	div.ginput_container {
 		padding-right: 15px;
