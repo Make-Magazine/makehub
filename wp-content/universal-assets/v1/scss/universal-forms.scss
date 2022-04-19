@@ -21,13 +21,7 @@ li.gform_validation_container, li.gform_hidden {
 .validation_error {padding-top:1em;}
 
 .gform_wrapper .gfield_description.validation_message {
-    background: black;
-    border-radius: 3px;
-    padding: .25em .5em;
-	color: #fff;
 	font-weight: 900;
-	padding-bottom: 5px;
-	font-size: 1em;
 }
 
 .gfield_description.validation_message:before {content:""; width:0; height:0; position:absolute;
