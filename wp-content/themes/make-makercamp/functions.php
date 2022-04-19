@@ -78,7 +78,7 @@ add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
-function load_admin_styles() {	
+function load_admin_styles() {
 	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
 	wp_enqueue_style( 'admin_css' );
 }
@@ -356,7 +356,6 @@ function bpdev_fix_avatar_dir_url($url) {
 
 add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
 
-<<<<<<< HEAD
 /*-------------------------------------
  Move Yoast to the Bottom
 ---------------------------------------*/
@@ -372,16 +371,7 @@ function register_taxonomies() {
     // Add category metabox to page
     register_taxonomy_for_object_type('category', 'page');
 }
- // Add to the admin_init hook of your theme functions.php file
-=======
-// add the ability to add tags or categories to pages
-function register_taxonomies() {
-    // Add tag metabox to page
-	register_taxonomy_for_object_type('post_tag', 'page');
-	// Add category metabox to page
-	register_taxonomy_for_object_type('category', 'page');
-}
->>>>>>> f5d8fd02bcfafe11c11a1d468ed75439b91e4409
+
 add_action( 'init', 'register_taxonomies' );
 
 ?>
