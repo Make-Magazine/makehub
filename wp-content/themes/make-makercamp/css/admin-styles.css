@@ -9,7 +9,6 @@
 #espresso-default-admin #mtp_extra_actions p::after {
 	content: " Too BAD"
 }
-
 @media screen and (min-width: 787px) {
 	.table-view-list th#title{
 		width: 15%;

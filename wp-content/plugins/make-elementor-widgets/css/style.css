@@ -118,18 +118,43 @@
 	min-width: 100px;
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li img {
-	aspect-ratio: 2 / 1.5;
+	aspect-ratio: 1 / 1.4;
+	max-width: 150px;
+	max-height: 140px;
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper {
 	display: flex;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rss-text-wrapper {
+	margin-left: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 4;
 	overflow: hidden;
-	margin-left: 10px;
 }
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssTitle { display: none; }
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssSummary {
+	display: flex;
+	align-items:  center;
+	margin-bottom: auto;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-text-wrapper .rssTitle {
+	display: block;
+	text-align: left;
+	min-height: auto;
+}
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.summary .rss-text-wrapper .rssTitle {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li date {
 	float: right;
 }

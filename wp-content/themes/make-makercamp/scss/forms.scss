@@ -1,5 +1,4 @@
 // Gravity Form / Gravity View
-
 // buddyboss REALLY wants to hide our gravity form file inputs
 .ginput_container_fileupload > input[type="file"], .ginput_container_post_image input[type="file"] {
 	width: auto;
@@ -588,4 +587,10 @@
 		font-weight: 500;
 		max-width: 300px;
 	}
+}
+
+// Make read only fields look read Only
+input[readonly="readonly"] {
+	background: #ccc;
+	pointer-events: none;
 }

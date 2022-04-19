@@ -78,10 +78,12 @@ add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
-function load_admin_styles() {
-	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.3' );
+function load_admin_styles() {	
+	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
 	wp_enqueue_style( 'admin_css' );
 }
+add_action('admin_enqueue_scripts', 'load_admin_styles');
+
 
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
@@ -279,6 +281,12 @@ add_filter('posts_where', 'filter_posts_from_rss', 1, 4);
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
+
+	$classes = array();
+	// not sure why this isn't getting added normally
+	if( is_user_logged_in() ) {
+		$classes[] = "logged-in";
+	}
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
@@ -292,8 +300,8 @@ function add_slug_body_class($classes) {
                 $classes[] = 'my-group';
             }
         }
-        return $classes;
     }
+	return $classes;
 }
 
 add_filter('body_class', 'add_slug_body_class');
@@ -348,6 +356,7 @@ function bpdev_fix_avatar_dir_url($url) {
 
 add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
 
+<<<<<<< HEAD
 /*-------------------------------------
  Move Yoast to the Bottom
 ---------------------------------------*/
@@ -364,6 +373,15 @@ function register_taxonomies() {
     register_taxonomy_for_object_type('category', 'page');
 }
  // Add to the admin_init hook of your theme functions.php file
+=======
+// add the ability to add tags or categories to pages
+function register_taxonomies() {
+    // Add tag metabox to page
+	register_taxonomy_for_object_type('post_tag', 'page');
+	// Add category metabox to page
+	register_taxonomy_for_object_type('category', 'page');
+}
+>>>>>>> f5d8fd02bcfafe11c11a1d468ed75439b91e4409
 add_action( 'init', 'register_taxonomies' );
 
 ?>
