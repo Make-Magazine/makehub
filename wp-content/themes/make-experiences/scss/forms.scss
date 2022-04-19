@@ -292,7 +292,7 @@
 .gform_wrapper .gform_validation_errors {
 	background: #c02b0a !important;
     &> h2, &.gform_validation_errors > ol a {
-        color: #fff;
+        color: #fff !important;
         font-size: 18px;
     }
 }

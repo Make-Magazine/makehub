@@ -21,9 +21,6 @@ li.gform_validation_container, li.gform_hidden {
 .validation_error {padding-top:1em;}
 
 .gform_wrapper .gfield_description.validation_message {
-    position: absolute;
-    top: -1.25em;
-    left: 1em;
     background: black;
     border-radius: 3px;
     padding: .25em .5em;
