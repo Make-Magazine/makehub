@@ -355,15 +355,17 @@ sort($referrer_params);
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-							<section class="standards">
-								<?php if(!empty($ages)) { ?>
+
+							<?php if(!empty($ages)) { ?>
+								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
 									<?php foreach($ages as $age) {  ?>
 										<div class="disclaimer-section"><?php echo $age->description; ?></div>
-									<?php }
-									  }?>
-							</section>
+									<?php } ?>
+								</section>
+							<?php } ?>
+
 
                         </div><?php /* .learndash_content_wrap */ ?>
 
