@@ -102,28 +102,7 @@ function set_universal_asset_constants() {
 	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
 	$currentMemberships = array();
 
-	if ( class_exists( '\Indeed\Ihc\UserSubscriptions' ) ) {
-		$levels = \Indeed\Ihc\UserSubscriptions::getAllForUser(get_current_user_id(), TRUE);
-		if (!empty($levels)) {
-			$hasmembership = true;
-			foreach($levels as $level) {
-				switch($level['level_slug']){
-					case "school_maker_faire":
-					case "individual_first_year_discount":
-					case "individual":
-					case "family":
-					case "makerspacesmallbusiness":
-					case "patron":
-					case "founder":
-					case "benefactor":
-					case "make_projects_school":
-					case "global_producers":
-						$canUpgrade = false;
-						break;
-				}
-			}
-		}
-	} else if( class_exists('MeprUtils') ) {
+	if( class_exists('MeprUtils') ) {
 	    $mepr_current_user = MeprUtils::get_currentuserinfo();
 		// see if you can get the "slug" in this query and test against that in the $fullMemberships list
 	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
