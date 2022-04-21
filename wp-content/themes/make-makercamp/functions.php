@@ -69,21 +69,20 @@ function maker_camp_scripts_styles() {
                 'home_url' => get_home_url(),
                 'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
                 'wp_user_email' => wp_get_current_user()->user_email,
-                'wp_user_nicename' => wp_get_current_user()->user_nicename
+                'wp_user_nicename' => wp_get_current_user()->user_nicename,
+				'wp_user_avatar' =>get_avatar_url(get_current_user_id())
             )
     );
 }
 
 add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 
-add_action('admin_enqueue_scripts', 'load_admin_styles');
-
+// Build Admin styles for
 function load_admin_styles() {
 	wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
-
 
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
