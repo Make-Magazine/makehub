@@ -50,12 +50,3 @@ function get_lesson_output($lesson_id, $course_id) {
     <?php
     do_action(THEME_HOOK_PREFIX . '_single_template_part_content', 'page');
 }
-
-// Jetpack webp exceptions
-function jetpack_exceptions() {
-  if ( is_page( 11626 ) ) {
-    add_filter( 'jetpack_photon_skip_image', '__return_true' );
-  }
-}
-
-add_action( 'wp', 'jetpack_exceptions' );
