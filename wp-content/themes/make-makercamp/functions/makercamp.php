@@ -21,28 +21,28 @@ function get_lesson_output($lesson_id, $course_id) {
     <div id="primary" class="content-area bb-grid-cell">
         <main id="main" class="site-main">
             <div style="text-align:center"><img src="<?php echo get_stylesheet_directory_uri() . '/images/makercamp-logo.png'; ?> " /></div>
-			
+
 			<div class="print-materials-wrapper">
 				<div class="print-materials">
-					<?php echo $lesson_materials; ?>    
+					<?php echo $lesson_materials; ?>
 				</div>
-            </div>     
+            </div>
 
             <div class="print-body">
                 <?php
-                //print out lesson content                    
-                $post = get_post($lesson_id, OBJECT); //set post info                                       
+                //print out lesson content
+                $post = get_post($lesson_id, OBJECT); //set post info
                 get_template_part('template-parts/content', 'sfwd');
 
                 $topics = learndash_course_get_topics($course_id, $lesson_id);
                 foreach ($topics as $topic) {
-                    //print out topic content                    
-                    $post = get_post($topic->ID, OBJECT); //set post info     
+                    //print out topic content
+                    $post = get_post($topic->ID, OBJECT); //set post info
                     get_template_part('template-parts/content', 'sfwd');
                 }
                 ?>
             </div>
-                               
+
 
 
         </main>
@@ -50,3 +50,12 @@ function get_lesson_output($lesson_id, $course_id) {
     <?php
     do_action(THEME_HOOK_PREFIX . '_single_template_part_content', 'page');
 }
+
+// Jetpack webp exceptions
+function jetpack_exceptions() {
+  if ( is_page( 11626 ) ) {
+    add_filter( 'jetpack_photon_skip_image', '__return_true' );
+  }
+}
+
+add_action( 'wp', 'jetpack_exceptions' );
