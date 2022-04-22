@@ -59,7 +59,7 @@ $categories = array();
 $ages = array();
 $times = array();
 $skill_levels = array();
-$materials = array();
+$materials_array = array();
 foreach($terms as $term) {
 	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
 	switch ($parent->slug) {
@@ -76,7 +76,7 @@ foreach($terms as $term) {
 			array_push($skill_levels, $term);
 			break;
 		case "materials":
-			array_push($materials, $term);
+			array_push($materials_array, $term);
 			break;
 	}
 }
