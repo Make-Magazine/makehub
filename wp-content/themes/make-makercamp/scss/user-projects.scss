@@ -121,6 +121,10 @@
 	}
 	section.tags {
 		margin-bottom: 30px;
+		h4 {
+			color: #333;
+			margin-top: 10px;
+		}
 		a.project-tag {
 			margin: 5px;
 			padding: 5px 10px;
@@ -128,6 +132,8 @@
 			background: #51b2dc;
 			border-radius: 20px;
 			border: solid 1px #51b2dc !important;
+			white-space: nowrap;
+			display: inline-block;
 			&:hover {
 				color: #51b2dc;
 				background: #fff;

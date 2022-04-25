@@ -60,6 +60,7 @@ $ages = array();
 $times = array();
 $skill_levels = array();
 $materials_array = array();
+$themes = array();
 foreach($terms as $term) {
 	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
 	switch ($parent->slug) {
@@ -78,9 +79,11 @@ foreach($terms as $term) {
 		case "materials":
 			array_push($materials_array, $term);
 			break;
+		case "makeyland-theme":
+			array_push($themes, $term);
+			break;
 	}
 }
-$tagTerms = array_merge($categories, $ages, $times, $skill_levels);
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
@@ -338,8 +341,14 @@ sort($referrer_params);
                             ?>
 
 							<section class="tags">
-								<?php foreach($tagTerms as $tag) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $tag->slug; ?>" class="project-tag"><?php echo $tag->name; ?></a>
+								<h4>See More Projects in these topics:</h4>
+								<?php foreach($categories as $category) { ?>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+								<?php } ?>
+								<br />
+								<h4>See More Projects from this theme:</h4>
+								<?php foreach($themes as $theme) { ?>
+										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
 								<?php } ?>
 							</section>
 
