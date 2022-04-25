@@ -292,13 +292,9 @@ function add_slug_body_class($classes) {
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
-        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
-        if (bp_is_groups_component()) {
-            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
-            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
-                $classes[] = 'my-group';
-            }
-        }
+    }
+	if ( is_singular( 'user-projects' ) ) { // Change 'custom_post_type_slug' to your Custom Post Type slug. For example: 'tutorials'.
+        $classes[] = 'single-user-project';
     }
 	return $classes;
 }
