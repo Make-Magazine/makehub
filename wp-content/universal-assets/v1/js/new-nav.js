@@ -28,8 +28,8 @@ jQuery(document).ready(function () {
         case "makercamp.make.co":
         case "makercamp.devmakehub.wpengine.com":
         case "makercamp.stagemakehub.wpengine.com":
-            jQuery("h2.site-title a").attr("href", "https://makercamp.com");
-            document.getElementById("navLogo").src = "https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
+            jQuery("h2.site-title a").attr("href", "https://makercamp.make.co");
+            document.getElementById("navLogo").src = "https://makercamp.make.co/wp-content/universal-assets/v1/images/makercamp-logo.png";
 			sitename = "Maker Camp";
             break;
         case "makezine.test":
