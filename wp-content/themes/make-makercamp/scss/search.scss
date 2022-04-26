@@ -7,14 +7,7 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	.universal-btn {
-		position: absolute;
-		right: 0px;
-		top: 10px;
-		@media screen and (max-width: 800px) {
-			top: -50px;
-		}
-	}
+	.filter-reset { text-align: right; margin-bottom: 5px; }
 	.result-items {
 		display: flex;
 		flex-wrap: wrap;
@@ -55,8 +48,9 @@
 		}
 	}
 	.pagination {
-		display: flex;
+		display: none;
 		justify-content: center;
+		&:last-of-type {display: flex !important;}
 		.nav-previous, .nav-next {
 			a {
 				border: solid 1px $color-blue;
@@ -83,11 +77,16 @@
 		.nav-next a::after {
 			content: "Previous Results";
 		}
+		&:first-of-type { display: none; }
 	}
 }
 
+
 .widget_search_filter_register_widget {
 	h2 { margin-bottom: 5px; }
+	padding: 0px;
+	background: none;
+	border: none;
 	.sf-label-checkbox {
 		position: relative;
 		bottom: -4px !important;
@@ -95,6 +94,37 @@
 	.children {
 		.sf-label-checkbox {
 			font-weight: 300;
+		}
+	}
+	form.searchandfilter > ul {
+		display: flex;
+		flex-flow: row wrap;
+		background: $color-blue;
+		ul li {
+			padding: 0px;
+		}
+		.sf-field-search {
+			width: 100%;
+			background: #FAFBFD;
+			label {
+				width: 100%;
+				input { width: 100%; }
+			 }
+		}
+		[data-sf-field-input-type="multiselect"] {
+			h4 { color: #fff; }
+			padding-top: 0px;
+			margin: 10px 10px 0px;
+			flex: 1 0 auto;
+			&::last-of-type {
+				margin-right: 0px;
+			}
+			.select2-container {
+				width: 100% !important;
+			}
+			.select2-search--inline input::placeholder {
+				color: #000;
+			}
 		}
 	}
 }
