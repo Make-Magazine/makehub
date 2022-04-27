@@ -122,18 +122,6 @@ function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
 }
 
-function basicCurl($url, $headers = null) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    if ($headers != null) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return $data;
-}
-
 function parse_yturl($url) {
     $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
     preg_match($pattern, $url, $matches);

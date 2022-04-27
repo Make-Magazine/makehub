@@ -70,7 +70,7 @@ function make_experiences_scripts_styles() {
                 'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
                 'wp_user_email' => wp_get_current_user()->user_email,
                 'wp_user_nicename' => wp_get_current_user()->user_nicename,
-                'wp_user_avatar' =>get_avatar_url(get_current_user_id())
+                'wp_user_avatar' => get_avatar_url(get_current_user_id())
             )
     );
 }
@@ -171,55 +171,6 @@ function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
 }
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
-
-function basicCurl($url, $headers = null) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    if ($headers != null) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
-	if (strpos(CURRENT_URL, '.local') > -1 || strpos(CURRENT_URL, '.test') > -1 ) { // wpengine local environments
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    }
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return $data;
-}
-
-function postCurl($url, $headers = null, $datastring = null) {
-	$ch = curl_init($url);
-
-	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
-	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-
-	if($datastring != null) {
-		curl_setopt(
-		  $ch,
-		  CURLOPT_POSTFIELDS,
-		  $datastring
-		);
-	}
-
-	if ($headers != null) {
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	}
-
-	$response = curl_exec($ch);
-
-	if(curl_errno($ch)){
-	  throw new Exception(curl_error($ch));
-	}
-
-	echo $response;
-	curl_close($ch);
-}
 
 function parse_yturl($url) {
     $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
