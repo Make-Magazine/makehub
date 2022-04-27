@@ -301,7 +301,7 @@ jQuery(document).ready(function () {
   jQuery.ajax({
     type: 'GET',
     url: "/wp-json/MakeHub/v1/userNav/123",
-    timeout: 10000,
+    
     success: function (data) {
       $( "#make-login" ).html( data.makeLogin );
       $( "#make-coins" ).html( data.makeCoins );
