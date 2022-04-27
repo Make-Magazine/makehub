@@ -13,10 +13,10 @@ window.addEventListener('load', function () {
 	if(url.indexOf('test')!== -1 || url.indexOf('local')!== -1 ) {
 		makecoRoot = "https://www.makehub.local"
     }
-	if(url.indexOf('dev.')!== -1) {
+	if(url.indexOf('dev.')!== -1 || url.indexOf('devmakehub')!== -1) {
 		makecoRoot = "https://devmakehub.make.co"
     }
-	if(url.indexOf('stage.')!== -1) {
+	if(url.indexOf('stage.')!== -1 || url.indexOf('stagemakehub')!== -1 ) {
 		makecoRoot = "https://stagemakehub.wpengine.com"
     }
 
