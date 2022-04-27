@@ -103,7 +103,6 @@ window.addEventListener('load', function () {
 			}
 			//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
 			window.dispatchEvent(new Event('resize'));
-			hideSpinner();
 		}
 	}
 
@@ -145,6 +144,7 @@ window.addEventListener('load', function () {
 				// if you are already logged in, but the site is a buddyboss theme site, we still need to load the buddypanel which we have hidden until it's content has changed
 				} else if( jQuery("body").is(".buddyboss-theme") ) {
 					showBuddypanel();
+					hideSpinner();
 				}
 			}
 		});
