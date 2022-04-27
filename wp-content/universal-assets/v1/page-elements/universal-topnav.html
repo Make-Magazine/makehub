@@ -237,11 +237,36 @@
         <div id="header-aside" class="header-aside">
             <div class="header-aside-inner">
 
+              <span id="make-login" class="login-section">
+
+                  <a id="LoginBtn" href="/wp-login.php" title="Log In">Log In</a>
+                  <div id="profile-view" class="dropdown v-select">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <img class="avatar" style="width:38px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
+                      </a>
+
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          <div class="profile-info">
+                              <img class="avatar" style="width:80px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
+                              <div class="profile-text">
+                                  <div class="profile-name"></div>
+                                  <div class="profile-email"></div>
+                              </div>
+                          </div>
+                          <div class="dropdown-links" id="profileLinks">
+                          </div>
+                          <a id="LogoutBtn" href="/wp-login.php?action=logout" title="Log Out">Log Out</a>
+                      </div>
+                  </div>
+              </span>
+              <span class="search-separator nav-separator"></span>
+              <span style="text-align: center;"><b>Make: Coins</b><br/><div id="make-coins"></div></span>
+              <span id="make-join" class="search-separator nav-separator"></span>
                 <div class="search-button-wrapper">
                     <div class="subscribe-call-out">
                         <div class="subscribe-text">
                             <a target="_none" href="https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-call-out&utm_content=launch" target="_blank">
-                                Subscribe
+                                Join
                             </a>
                         </div>
                         <a target="_none" href="https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-call-out&utm_content=launch" target="_blank">
@@ -258,34 +283,6 @@
 
                 </div>
 
-                <span class="search-separator nav-separator"></span>
-
-                <span class="login-section">
-
-                    <a id="LoginBtn" href="/wp-login.php" title="Log In">Log In</a>
-                    <div id="profile-view" class="dropdown v-select">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="avatar" style="width:38px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                        </a>
-
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <div class="profile-info">
-                                <img class="avatar" style="width:80px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                                <div class="profile-text">
-                                    <div class="profile-name"></div>
-                                    <div class="profile-email"></div>
-                                </div>
-                            </div>
-                            <div class="dropdown-links" id="profileLinks">
-                            </div>
-                            <a id="LogoutBtn" href="/wp-login.php?action=logout" title="Log Out">Log Out</a>
-                        </div>
-                    </div>
-                </span>
-
-                <div class="user-wrap user-wrap-container menu-item-has-children selected">
-
-                </div>
             </div>
             <!-- end header aside -->
         </div>
