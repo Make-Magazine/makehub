@@ -487,7 +487,7 @@
             }
         }
         #profile-view {
-			display: flex;
+			display: none;
 			height: 90px;
 			align-items: center;
             &:hover {
@@ -510,7 +510,7 @@
                 margin-right: 15px;
             }
 			.profile-text {
-				overflow: auto;
+				overflow: hidden;
 				word-wrap: break-word;
 			 }
         }
@@ -541,9 +541,13 @@
             .dropdown-links {
                 padding: 15px;
                 border-top: solid 1px #ccc;
+				ul {
+					margin: 0px;
+				}
                 li.menu-item {
                     height: 25px;
                     font-size: 16px;
+					list-style: none;
                     :-moz-only-whitespace {
                         display: none;
                     }
@@ -610,13 +614,6 @@ body.event-espresso .site-header-custom{
    }
 }
 
-body:not(.buddyboss-theme) {
-    .login-section {
-        .dropdown-links {
-            display: none;
-        }
-    }
-}
 body.buddyboss-theme {
     .site-header-custom {
         width: 100% !important;
@@ -810,7 +807,6 @@ body.mobile-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-width: 160px;
     @media (max-width: 805px) {
         min-width: 65px;
         .subscribe-call-out {
