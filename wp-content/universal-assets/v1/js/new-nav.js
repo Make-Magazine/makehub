@@ -1,8 +1,8 @@
 jQuery(document).ready(function () {
 
-	  // Change logo based on site
+	// Change logo based on site
     var site = window.location.hostname
-	  var sitename = "Make: Community";
+	var sitename = "Make: Community";
     switch (site) {
         case "makerfaire.local":
         case "makerfaire.test":
@@ -14,7 +14,7 @@ jQuery(document).ready(function () {
         case "mfairedev.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
             document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
-			      sitename = "Maker Faire";
+			sitename = "Maker Faire";
             break;
         case "makercamp.local":
         case "makercamp.test":
@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
         case "makercamp.stagemakehub.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makercamp.make.co");
             document.getElementById("navLogo").src = "https://makercamp.make.co/wp-content/universal-assets/v1/images/makercamp-logo.png";
-			      sitename = "Maker Camp";
+			sitename = "Maker Camp";
             break;
         case "makezine.test":
         case "makezine.local":
@@ -38,12 +38,12 @@ jQuery(document).ready(function () {
         case "makezine.com":
         case "stage.makezine.com":
         case "dev.makezine.com":
-		    case "mzinedev.wpengine.com":
+		case "mzinedev.wpengine.com":
         case "mzinestage.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makezine.com");
             jQuery("#site-logo .nav-logo").css("height", "30.4px");
             jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
-			      sitename = "Make: Magazine";
+			sitename = "Make: Magazine";
             break;
         case "makerspaces.makehub.test":
         case "makerspaces.makehub.local":
@@ -61,7 +61,7 @@ jQuery(document).ready(function () {
         case "learn.make.co":
             jQuery("h2.site-title a").attr("href", "https://learn.make.co");
             document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
-			      sitename = "Learning Labs";
+			sitename = "Learning Labs";
             break;
         default:// the default is makehub/make.co
             if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
@@ -96,9 +96,9 @@ jQuery(document).ready(function () {
     }
 
     var primaryWrap = document.getElementById('primary-navbar'),
-            primaryNav = document.getElementById('primary-menu'),
-            extendNav = document.getElementById('navbar-extend'),
-            navCollapse = document.getElementById('navbar-collapse');
+        primaryNav = document.getElementById('primary-menu'),
+        extendNav = document.getElementById('navbar-extend'),
+        navCollapse = document.getElementById('navbar-collapse');
 
     function navListOrder() {
         var eChildren = extendNav.children;
@@ -291,27 +291,5 @@ jQuery(document).ready(function () {
     		jQuery(this).attr('href', href);
     	}
     });
-
-//Attention Rio
-  //place this in getProfile function
-  //move this to auth0.js after log in, replace display of avatar and drop down with this
-  // change auth0.js to login to auth0. if not makercamp or makezine, login to wordpress
-  // add profile links to makehub sites
-  //change user@email.com to be the email
-  jQuery.ajax({
-    type: 'GET',
-    url: "/wp-json/MakeHub/v1/userNav/123",
-    timeout: 10000,
-    success: function (data) {
-      $( "#make-login" ).html( data.makeLogin );
-      $( "#make-coins" ).html( data.makeCoins );
-      $( "#make-join" ).html( data.makeJoin );
-    },
-  }).done(function () {
-
-  }).fail(function (xhr, status, error) {
-
-  });
-
 
 });
