@@ -62,7 +62,7 @@ window.addEventListener('load', function () {
 						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 					}
 					// this is where we have to run the wp logout script
-					if(wpLoginRequired == true) {
+					if(wpLoginRequired == true && jQuery("body").is(".logged-in")) {
 						WPlogout();
 					}
 					clearLocalStorage();
@@ -136,8 +136,10 @@ window.addEventListener('load', function () {
 			timeout: 100000,
 			success: function (data) {
 				jQuery( "#make-login" ).html( data.makeLogin );
-				jQuery( "#make-coins" ).html( data.makeCoins );
-				if(data.makeJoin) {
+				if(data.makeCoins && data.makeCoins != "") {
+					jQuery( "#make-coins" ).html( data.makeCoins );
+				}
+				if(data.makeJoin && data.makeJoin != "") {
 					jQuery( "#make-join" ).html( data.makeJoin );
 				}
 				// overwrite the logout action for sites such as makezine where the Auth0 plugin isn't present
@@ -225,10 +227,13 @@ window.addEventListener('load', function () {
 		}
 		var data = {'action': 'mm_wplogout'};
 		jQuery.post(ajax_object.ajax_url, data, function (response) {
-			window.location.href = 'https://login.make.co/v2/logout?returnTo=' + templateUrl + '&client_id=' + AUTH0_CLIENT_ID;
-		}).done(function () {
-			location.href = location.href;
-			refreshContent();
+			alert(response);
+			if(response == "success") {
+				alert("success!");
+				location.href = 'https://login.make.co/v2/logout?returnTo=/&client_id=' + AUTH0_CLIENT_ID;
+			} else {
+				alert("failure");
+			}
 		});
 		// css will hide buddyboss side panel until page loads
 		showBuddypanel();
