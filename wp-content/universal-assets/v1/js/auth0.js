@@ -4,7 +4,6 @@ window.addEventListener('load', function () {
     var loggedin = false;
     var wpLoginRequired = true;
 	var makecoRoot = "https://make.co";
-	var userEmail = "webmaster@make.co";
 
     //do not show the login button on makezine or makercamp
     var url = new URL(location.href).hostname;
@@ -43,14 +42,14 @@ window.addEventListener('load', function () {
 			leeway: 60
 		});
 
-		// for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
+		// for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than wp-login
 		if(wpLoginRequired == false) {
 			jQuery("#LoginBtn").on("click", function(event){
 				event.preventDefault();
-				webAuth.authorize(
+				webAuth.authorize({
 					clientID: AUTH0_CLIENT_ID,
 					redirect_uri: location.href,
-				);
+				});
 			});
 		}
 
@@ -62,10 +61,14 @@ window.addEventListener('load', function () {
 					if (err.error !== 'login_required') {
 						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 					}
+					// this is where we have to run the wp logout script
+					if(wpLoginRequired == true) {
+						WPlogout();
+					}
 					clearLocalStorage();
 				} else {
 					console.log('SSO set session');
-					userEmail = result.idTokenPayload.email;
+					userProfile = result.idTokenPayload;
 					setSession(result);
 				}
 				displayButtons();
@@ -129,7 +132,7 @@ window.addEventListener('load', function () {
 
 		jQuery.ajax({
 			type: 'GET',
-			url: makecoRoot + "/wp-json/MakeHub/v1/userNav?email=" + userEmail,
+			url: makecoRoot + "/wp-json/MakeHub/v1/userNav?email=" + userProfile.email,
 			timeout: 100000,
 			success: function (data) {
 				jQuery( "#make-login" ).html( data.makeLogin );
@@ -137,6 +140,7 @@ window.addEventListener('load', function () {
 				if(data.makeJoin) {
 					jQuery( "#make-join" ).html( data.makeJoin );
 				}
+				// overwrite the logout action for sites such as makezine where the Auth0 plugin isn't present
 				if(wpLoginRequired == false) {
 					jQuery("#LogoutBtn").on("click", function(){
 						event.preventDefault();
@@ -190,32 +194,7 @@ window.addEventListener('load', function () {
 			}).done(function () {
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
 				if (loggedin == false) {
-					// reload subnavs as necessary
-					jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
-					// reload the digital libary if necessary
-					if (jQuery('.main-content').length && jQuery('.join-box').length) {
-						window.location.replace("/digital-library/");
-					}
-					if (jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.page-template-page-makerspaces-map-php').length && !jQuery('.post-type-archive-tribe_events ').length) {
-						jQuery('.main-content').load(document.URL + " .main-content > *");
-					}
-					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
-					if (jQuery('.page-content').length) {
-						jQuery('.page-content').load(document.URL + " .page-content > *");
-					}
-					// for anything else that has content that will changed if logged in
-					if (jQuery('.logged-in-refresh').length) {
-						jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
-					}
-					// if the non-logged in buddypanel is showing for a logged in user, refresh it
-					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
-						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
-							hideSpinner();
-						});
-						jQuery("body").addClass("buddypanel-closed");
-					} else if(jQuery("#buddypanel-menu .bp-logout-nav").length) {
-						hideSpinner();
-					}
+					refreshContent();
 					jQuery("body").addClass("logged-in");
 					jQuery('.universal-loading-spinner').remove();
 				}
@@ -238,6 +217,52 @@ window.addEventListener('load', function () {
 		}
 	}
 
+	function WPlogout() {
+		if (jQuery('#wpadminbar').length) {
+			jQuery('body').removeClass('adminBar').removeClass('logged-in');
+			jQuery('#wpadminbar').remove();
+			jQuery('#mm-preview-settings-bar').remove();
+		}
+		var data = {'action': 'mm_wplogout'};
+		jQuery.post(ajax_object.ajax_url, data, function (response) {
+			window.location.href = 'https://login.make.co/v2/logout?returnTo=' + templateUrl + '&client_id=' + AUTH0_CLIENT_ID;
+		}).done(function () {
+			location.href = location.href;
+			refreshContent();
+		});
+		// css will hide buddyboss side panel until page loads
+		showBuddypanel();
+	}
+
+	function refreshContent() {
+		// reload subnavs as necessary
+		jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
+		// reload the digital libary if necessary
+		if (jQuery('.main-content').length && jQuery('.join-box').length) {
+			window.location.replace("/digital-library/");
+		}
+		if (jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.page-template-page-makerspaces-map-php').length && !jQuery('.post-type-archive-tribe_events ').length) {
+			jQuery('.main-content').load(document.URL + " .main-content > *");
+		}
+		// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
+		if (jQuery('.page-content').length) {
+			jQuery('.page-content').load(document.URL + " .page-content > *");
+		}
+		// for anything else that has content that will changed if logged in
+		if (jQuery('.logged-in-refresh').length) {
+			jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
+		}
+		// if the non-logged in buddypanel is showing for a logged in user, refresh it
+		if(jQuery("#buddypanel-menu .bp-login-nav").length) {
+			jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
+				hideSpinner();
+			});
+			jQuery("body").addClass("buddypanel-closed");
+		} else if(jQuery("#buddypanel-menu .bp-logout-nav").length) {
+			hideSpinner();
+		}
+	}
+
 	function errorMsg(message) {
 		var data = {
 			'action': 'make_error_log',
@@ -245,7 +270,6 @@ window.addEventListener('load', function () {
 		};
 		jQuery.post(ajax_object.ajax_url, data, function (response) {});
 	}
-
 
   //end functions
 });  // end event listener
