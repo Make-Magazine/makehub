@@ -75,4 +75,4 @@ function landing_hub_add_group_extension() {
 	endif;
 
 }
-add_action('bp_init', 'landing_hub_add_group_extension');
+//add_action('bp_init', 'landing_hub_add_group_extension');
