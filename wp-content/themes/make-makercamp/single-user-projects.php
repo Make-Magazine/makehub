@@ -8,37 +8,12 @@
 global $post;
 
 // Get our Taxonomies
-$terms = get_the_terms($post->ID, 'ld_lesson_category');
-$categories = array();
-$ages = array();
-$times = array();
-$skill_levels = array();
-$materials_tax = array();
-$themes = array();
-foreach($terms as $term) {
-	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
-	switch ($parent->slug) {
-		case "content-category":
-			array_push($categories, $term);
-			break;
-		case "age":
-			array_push($ages, $term);
-			break;
-		case "time":
-			array_push($times, $term);
-			break;
-		case "skill-level":
-			array_push($skill_levels, $term);
-			break;
-		case "materials":
-			array_push($materials_tax, $term);
-			break;
-		case "makeyland-theme":
-			array_push($themes, $term);
-			break;
-	}
-}
-
+$categories = get_the_terms($post->ID, 'content_categories');
+$ages = get_the_terms($post->ID, 'ages');
+$times = get_the_terms($post->ID, 'times');
+$skill_levels = get_the_terms($post->ID, 'skill_levels');
+$materials_tax = get_the_terms($post->ID, 'materials');
+$themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // Get our ACF Fields
 $hero_image = get_field('hero_image');

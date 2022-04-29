@@ -99,7 +99,7 @@
 	form.searchandfilter > ul {
 		display: flex;
 		flex-flow: row wrap;
-		background: $color-blue;
+		background: #f1f1f1;
 		ul li {
 			padding: 0px;
 		}
@@ -112,18 +112,38 @@
 			 }
 		}
 		[data-sf-field-input-type="multiselect"] {
-			h4 { color: #fff; }
+			h4 { color: $color-blue; }
 			padding-top: 0px;
 			margin: 10px 10px 0px;
 			flex: 1 0 auto;
 			&::last-of-type {
 				margin-right: 0px;
 			}
-			.select2-container {
-				width: 100% !important;
+			label {
+				display: flex;
+				.select2-container {
+					flex-grow: 1;
+				}
 			}
-			.select2-search--inline input::placeholder {
-				color: #000;
+			.select2-search--inline{
+				&::after {
+					content: "\f0da";
+					position: absolute;
+					right: 10px;
+					top: 30%;
+					font-family: FontAwesome;
+					color: #666;
+				}
+				input::placeholder {
+					color: #000;
+				}
+			}
+			.select2-selection[aria-expanded="true"] {
+				.select2-search--inline{
+					&::after {
+						content: "\f0d7";
+					}
+				}
 			}
 		}
 	}
