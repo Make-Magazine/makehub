@@ -68,8 +68,8 @@ function make_user_info( $data ) {
     '<span class="login-section" style="display: block;">
         <div id="profile-view" class="dropdown v-select" style="display: flex;">
            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img class="avatar" style="width: 50px; display: block;" alt="avatar" src="'.$avatar.'">
-              <img class="banner" style="width: 75px;" src="'.$banner.'" alt="'.$banner_text.'" />
+              <img class="avatar" alt="avatar" src="'.$avatar.'">
+              <img class="banner" src="'.$banner.'" alt="'.$banner_text.'" />
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <div class="profile-info">

@@ -496,10 +496,21 @@
                  }
             }
         }
-        .avatar {
-            border-radius: 100px;
-			width: 38px;
-        }
+		#dropdownMenuLink {
+			position: relative;
+	        .avatar {
+	            border-radius: 100px;
+				width: 50px;
+	        }
+			.banner {
+				width: 90px;
+				display: block;
+				position: absolute;
+				top: 0px;
+				left: -20px;
+				min-width: 90px;
+			}
+		}
         .profile-info {
             display: flex;
             padding: 10px;
