@@ -497,6 +497,20 @@
                  }
             }
         }
+		.membership-btn {
+			margin: 10px;
+		    padding: 5px 10px;
+		    background: #eb002a;
+			border: solid 1px #eb002a;
+		    color: #fff;
+		    display: flex;
+		    font-size: 20px;
+		    justify-content: center;
+			&:hover {
+				color: #eb002a;
+				background: #fff;
+			}
+		}
 		#dropdownMenuLink {
 			position: relative;
 	        .avatar {
@@ -864,7 +878,7 @@ body.mobile-nav {
             text-align: right;
             a {
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: 300;
                 text-transform: capitalize;
                 color:#333;
             }

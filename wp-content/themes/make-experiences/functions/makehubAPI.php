@@ -17,7 +17,7 @@ add_action( 'rest_api_init', function () {
 function make_user_info( $data ) {
   //retrieve user specific information
   $userEmail = $data['email'];
-  $user   = get_user_by_email($userEmail );
+  $user   = get_user_by_email($userEmail);
 
   $banner_text = "Join Now";
   $banner = "https://make.co/wp-content/universal-assets/v1/images/join-now-banner.png";
@@ -29,6 +29,7 @@ function make_user_info( $data ) {
     $headers = setMemPressHeaders();
     $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
     $memberArray = json_decode($memberInfo);
+	$membershipButton = "<a href='https://make.co/join/' class='btn membership-btn'>Join Now!</a>";
     if(isset($memberArray->active_memberships) &&
            is_array($memberArray->active_memberships)
         && !empty($memberArray->active_memberships)){
@@ -39,10 +40,12 @@ function make_user_info( $data ) {
         //Premium Membership
         $banner_text = "Premium Member";
         $banner = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
+		$membershipButton = "";
       }else{
         //free membership, upgrade now
         $banner_text = "Upgrade Membership";
         $banner = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
+		$membershipButton = "<a href='https://make.co/join/' class='btn membership-btn'>Upgrade Membership</a>";
       }
     }else{
       //not a member on make.co
@@ -79,6 +82,7 @@ function make_user_info( $data ) {
                       <div class="profile-email">'.$userEmail.'</div>
                   </div>
               </div>
+			  '.$membershipButton.'
               <div class="dropdown-links" id="profileLinks">'
                 . $userProfileMenu .
              '</div>
