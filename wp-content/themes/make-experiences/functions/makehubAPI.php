@@ -15,26 +15,67 @@ add_action( 'rest_api_init', function () {
 
 // Returns the User Information for the right hand side of the Universal nav
 function make_user_info( $data ) {
-  $userID = $data['id'];
+  //retrieve user specific information
   $userEmail = $data['email'];
   $user   = get_user_by_email($userEmail );
-  $avatar = get_avatar_url($userEmail);
 
-  //first let's call rimark
-  $coinBalance = get_make_coins($userEmail);
+  $banner_text = "Join Now";
+  $banner = "https://make.co/wp-content/universal-assets/v1/images/join-now-banner.png";
+  //get membership
+  if(isset($user) && isset($user->ID)){
+    $userName = $user->display_name;
+    $avatar = get_avatar_url($userEmail);
+
+    $headers = setMemPressHeaders();
+    $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+    $memberArray = json_decode($memberInfo);
+    if(isset($memberArray->active_memberships) &&
+           is_array($memberArray->active_memberships)
+        && !empty($memberArray->active_memberships)){
+
+      //see if they are an active premium member
+      $key = array_search('Premium Member', array_column($memberArray->active_memberships, 'title'));
+      if($key!== false){
+        //Premium Membership
+        $banner_text = "Premium Member";
+        $banner = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
+      }else{
+        //free membership, upgrade now
+        $banner_text = "Upgrade Membership";
+        $banner = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
+      }
+    }else{
+      //not a member on make.co
+    }
+  }else{
+    //not a user on make.co
+    $userName = '';
+    $avatar = "https://make.co/wp-content/universal-assets/v1/images/default-makey.png";
+  }
+  //if non member - banner with join - grey makey
+
+  //if previously member - banner with join - use their icon
+  //it free membership - banner with upgrade
+  //if Premium - banner with premium
+  //$banner =
+  //$banner_text =
+
+  //build user drop down
   $userProfileMenu = wp_nav_menu( array('menu' => 'Profile Dropdown', 'echo' => false));
+
   $return = array();
   $return['makeLogin'] =
     '<span class="login-section" style="display: block;">
         <div id="profile-view" class="dropdown v-select" style="display: flex;">
            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img class="avatar" style="width: 38px; display: block;" alt="avatar" src="'.$avatar.'">
+              <img class="avatar" style="width: 50px; display: block;" alt="avatar" src="'.$avatar.'">
+              <img class="banner" style="width: 75px;" src="'.$banner.'" alt="'.$banner_text.'" />
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <div class="profile-info">
                   <img class="avatar" style="width:80px" alt="avatar" src="'.$avatar.'">
                   <div class="profile-text">
-                      <div class="profile-name">'.$user->display_name.'</div>
+                      <div class="profile-name">'.$userName.'</div>
                       <div class="profile-email">'.$userEmail.'</div>
                   </div>
               </div>
@@ -45,7 +86,7 @@ function make_user_info( $data ) {
           </div>
       </div>
    </span>';
-  $return['makeCoins'] = $coinBalance; //$coinBalance
+
   $return['makeJoin'] = '';
               /*'<span class="search-separator nav-separator"></span>
                 <div class="search-button-wrapper">
@@ -72,6 +113,10 @@ function make_user_info( $data ) {
                 </div>
             </div>';*/
 
+  //Determine $make coin balance
+  $coinBalance = get_make_coins($userEmail);
+  $return['makeCoins'] = $coinBalance; //$coinBalance
+
   $response = new WP_REST_Response($return);
   $response->set_status(200);
 
@@ -80,7 +125,6 @@ function make_user_info( $data ) {
 
 //Rimark
 function get_make_coins($user_email){
-  $userEmail = "alicia@make.co"; //override as i'm the only one with coins
   //First do the authentication
   $url = "https://devapi.rimark.io/api/auth/local";
 
@@ -96,13 +140,12 @@ function get_make_coins($user_email){
   //now let's see how many coins they have
   $url = 'https://devapi.rimark.io/api/makes?populate=*&filters[user_email][$eq]='.$user_email;
   $headers = array("authorization: Bearer ".$jwt);
-
   $rimarkResp = json_decode(basicCurl($url, $headers));
+
+  $coins = '';
   if(!empty($rimarkResp->data)){
     $coins = $rimarkResp->data[0]->attributes->make_wallet->data->attributes->total_supply_owned;
     $coins = number_format($coins,4); //format with a thousand separators and up to 4 decimal places
-  }else{
-    $coins = 'Learn More';
   }
 
   return $coins;
