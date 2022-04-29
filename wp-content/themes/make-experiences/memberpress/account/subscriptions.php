@@ -237,7 +237,7 @@ if(!empty($subscriptions)) {
   </div>
   <?php
   if(CAN_UPGRADE == true) { ?>
-	  <a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade to Premium Subscriber</a>
+	  <a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="btn universal-btn membership-btn upgrade">Upgrade to Premium Member</a>
   <?php
   }
 }
