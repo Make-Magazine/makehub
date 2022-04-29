@@ -137,6 +137,9 @@
 				input::placeholder {
 					color: #000;
 				}
+				.select2-search__field {
+					width: 100% !important;
+				}
 			}
 			.select2-selection[aria-expanded="true"] {
 				.select2-search--inline{
