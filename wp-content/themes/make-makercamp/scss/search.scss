@@ -116,9 +116,10 @@
 			padding-top: 0px;
 			margin: 10px 10px 0px;
 			flex: 1 0 auto;
-			max-width: 98.1%;
-			&::last-of-type {
-				margin-right: 0px;
+			max-width: 95%;
+			@media screen and (min-width: 400px) {
+				min-width: 300px;
+				max-width: 98.1%;
 			}
 			label {
 				display: flex;
