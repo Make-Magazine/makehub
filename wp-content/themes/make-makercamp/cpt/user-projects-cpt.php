@@ -100,6 +100,7 @@ function register_taxonomy_content_categories() {
 
 	$content_categories = [
 		"electronics" => "Electronics",
+		"robotics" => "Robotics",
 		"engineering" => "Engineering",
 		"fabrication" => "Fabrication",
 		"arts-and-crafts" => "Arts & Crafts",
@@ -165,7 +166,68 @@ function register_taxonomy_materials() {
 		'show_in_rest' => true
 	);
 
+	$materials = array(
+		__( 'Tools' ) => array(
+			__( 'Drill' ),
+			__( 'Jigsaw' ),
+			__( 'Soldering Iron' ),
+			__( 'General Hand Tools' ),
+			__( 'laser cutter' ),
+			__( '3D printer' ),
+			__( 'CNC' ),
+			__( 'Vacuum former' ),
+		),
+		__( 'Electronics' ) => array(
+			__( 'Makey Makey' ),
+			__( 'Micro:bit' ),
+			__( 'Arduino' ),
+			__( 'Breadboard' ),
+			__( 'LEDs' ),
+			__( 'Conductive Tape' ),
+			__( 'Conductive Thread' ),
+		),
+		__( 'Crafting Materials' ) => array(
+			__( 'Cardboard' ),
+			__( 'Paper' ),
+			__( 'Origami Paper' ),
+			__( 'Tape (Duct, masking, etc)' ),
+			__( 'Beads' ),
+			__( 'Pipe cleaners' ),
+			__( 'Yarn/string' ),
+			__( 'Textiles' ),
+		),
+		__( 'Other' ) => array(
+			__( 'Wood' ),
+			__( 'PVC pipe' ),
+			__( 'Acrylic' ),
+			__( 'Vinyl' ),
+			__( 'Upcycled / Recycled materials' ),
+			__( 'Other Plastics (polystyrene & polypropylene)' ),
+			__( 'Stencils' ),
+		),
+	);
+
 	register_taxonomy( 'materials', array('user-projects', 'sfwd-lessons'), $args );
+
+
+	if(empty(get_terms('materials'))) {
+		foreach ($materials as $key => $term) {
+			wp_insert_term($key, 'materials', [
+				'slug' => sanitize_title_with_dashes( $key ),
+			]);
+			$parent_term = term_exists( $key, 'materials' );
+			$term_id = $parent_term['term_id'];
+			foreach ($term as $term_value) {
+				wp_insert_term($term_value, 'materials',
+					array(
+						'slug' => sanitize_title_with_dashes( $term_value ),
+						'parent'=> $term_id
+					)
+				);
+			}
+		}
+	}
+
 
 }
 
@@ -210,11 +272,11 @@ function register_taxonomy_ages() {
 	register_taxonomy( 'ages', array('user-projects', 'sfwd-lessons'), $args );
 
 	$ages = [
-		"5-and-under" => "5 and under",
-		"6-8" => "6-8",
-		"9-10" => "9-10",
-		"11-14" => "11-14",
-		"15-and-up" => "15 and up"
+		"under-5" => "Under 5",
+		"5-7" => "5-7",
+		"8-10" => "8-10",
+		"11-13" => "11-13",
+		"14-and-up" => "14+"
 	];
 	if(empty(get_terms('ages'))) {
 		foreach ($ages as $slug => $name) {
@@ -266,12 +328,11 @@ function register_taxonomy_times() {
 	register_taxonomy( 'times', array('user-projects', 'sfwd-lessons'), $args );
 
 	$times = [
-		"10-30-min" => "10-30 min",
-		"30-45-min" => "30-45 min",
-		"45-60-min" => "45-60 min",
-		"60-90-min" => "60-90 min",
-		"90-120-min" => "90-120 min",
-		"over-120-min" => "over 120 min"
+		"less-than-30-min" => "Less than 30 min.",
+		"30-min-to-an-hour" => "30 min. to an hour",
+		"an-hour-or-two" => "An hour or two",
+		"about-3-hours" => "About 3 hours",
+		"more-than-3-hours" => "More than 3 hours",
 	];
 	if(empty(get_terms('times'))) {
 		foreach ($times as $slug => $name) {
@@ -383,11 +444,12 @@ function register_taxonomy_makeyland_theme() {
 		"carnival-theme-park" => "Carnival/Theme Park",
 		"construction-site" => "Construction Site",
 		"marina-waterfront" => "Marina/Waterfront",
-		"the-canteen" => "The Canteen (Mess Hall and Recycling Station)",
-		"the-depot" => "The Depot (Airport/Space Station/ Racetrack)",
-		"the-shop" => "The Shop (Makerspace)",
+		"farm" => "Farm",
+		"the-canteen" => "Mess Hall and Recycling Station (The Canteen)",
+		"the-depot" => "Airport/Space Station/ Racetrack - \"The Depot\"",
+		"the-shop" => "Makerspace/\"The Shop\"",
 	];
-	if(is_array(get_terms('makeyland_themes')) && empty(get_terms('makeyland_themes'))) {
+	if(empty(get_terms('makeyland_themes'))) {
 		foreach ($makeyland_themes as $slug => $name) {
 			wp_insert_term($name, 'makeyland_themes', [
 				'slug' => $slug,
