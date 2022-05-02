@@ -72,7 +72,7 @@ function make_user_info( $data ) {
         <div id="profile-view" class="dropdown v-select" style="display: flex;">
            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img class="avatar" alt="avatar" src="'.$avatar.'">
-              <img class="nav-banner" src="'.$banner.'" alt="'.$banner_text.'" />
+              <img class="avatar-banner" src="'.$banner.'" alt="'.$banner_text.'" />
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <div class="profile-info">
