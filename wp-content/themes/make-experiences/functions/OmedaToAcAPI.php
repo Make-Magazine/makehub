@@ -26,11 +26,7 @@ function AC_callback( WP_REST_Request $request ) {
 
 //create a log file
 function omeda_log($log_msg) {
-    $log_filename = ABSPATH."/wp-content/ACtoMake_log.log";
-    if (!file_exists($log_filename)){
-        // create directory/folder uploads.
-        mkdir($log_filename, 0777, true);
-    }    
+    $log_filename = ABSPATH."wp-content/ACtoMake_log.log";
 
     // add message to the log file prepended by todays date and time
     file_put_contents($log_filename, date('[m/d/Y H-i-s e] ').$log_msg . "\n", FILE_APPEND);
