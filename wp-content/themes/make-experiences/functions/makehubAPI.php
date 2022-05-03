@@ -1,5 +1,5 @@
 <?php
-function initCors( $value ) {
+function initCors() {
 	$origin_url = '*';
 	// Check if production environment or not
 	if (CURRENT_URL === 'https://make.co' || CURRENT_URL === 'https://make.co/') {
@@ -14,7 +14,7 @@ function initCors( $value ) {
 //new rest API to build the universalNav
 add_action( 'rest_api_init', function () {
 	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
-	add_filter( 'rest_pre_serve_request', initCors);
+	add_filter( 'rest_pre_serve_request', initCors());
 	register_rest_route( 'MakeHub/v1', '/userNav', array(
 		'methods' => 'GET',
 		'callback' => 'make_user_info',
