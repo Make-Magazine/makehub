@@ -56,7 +56,7 @@
       );
     }
     fclose($file);
-
+    echo 'Writing '.count($contacts).' Omeda contacts to Omeda<br/>';
     omeda_log('Writing '.count($contacts).' Omeda contacts to Omeda');
 
     //Omeda API can only handle 250 contacts at a time.
@@ -74,13 +74,16 @@
 
       //send api request here
       $response = json_decode(postCurl($url, $headers, json_encode($body)));
-
+      echo 'AC response<br/>';
+      var_dump($response);
       //results output here
-      omeda_log('File sent to Active Campaign. Status of send: '.$response->Success.
+      omeda_log('File sent to Active Campaign. Status of send: '.$response->success.
       '. # of queued contacts: '.$response->queued_contacts.
       '. batchId: '.$response->batchId.
       '. message: '.$response->message);
+      die('stopping after one');
     }
+    echo 'complete. go check the log';
     ?>
   </body>
 </html>
