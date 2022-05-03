@@ -686,11 +686,12 @@ body.buddyboss-theme {
 	}
 }
 
-body.mobile-nav {
-    @media screen and (max-width: 805px) {
+@media screen and (max-width: 805px) {
+	body.mobile-nav {
         overflow: hidden;
         #navbar-collapse { display: none; }
-    }
+	}
+	#make-coin { display: none; }
 }
 
 .nav-separator {
@@ -835,7 +836,6 @@ body.mobile-nav {
     justify-content: space-between;
     align-items: center;
     @media (max-width: 805px) {
-        min-width: 65px;
         .subscribe-call-out {
             display: none;
         }
