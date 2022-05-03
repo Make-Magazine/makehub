@@ -1,19 +1,33 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+function initCors( $value ) {
+	$origin_url = '*';
+	// Check if production environment or not
+	if (CURRENT_URL === 'https://make.co' || CURRENT_URL === 'https://make.co/') {
+		$origin_url = 'https://make.co/';
+	}
+	header( 'Access-Control-Allow-Origin: ' . $origin_url );
+	header( 'Access-Control-Allow-Methods: GET' );
+	header( 'Access-Control-Allow-Credentials: true' );
+	return $value;
+}
+
 //new rest API to build the universalNav
 add_action( 'rest_api_init', function () {
-  register_rest_route( 'MakeHub/v1', '/userNav', array(
-    'methods' => 'GET',
-    'callback' => 'make_user_info',
-	'permission_callback' => '__return_true',
-    'args' => array (
-        'email' => array (
-            'required' => true,
-            'validate_callback' => 'is_email'
-        )
-    )
-  ) );
+	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+	add_filter( 'rest_pre_serve_request', initCors);
+	register_rest_route( 'MakeHub/v1', '/userNav', array(
+		'methods' => 'GET',
+		'callback' => 'make_user_info',
+		'permission_callback' => '__return_true',
+		'args' => array (
+			'email' => array (
+			    'required' => true,
+			    'validate_callback' => 'is_email'
+			)
+		)
+	) );
 } );
+
 
 // Returns the User Information for the right hand side of the Universal nav
 function make_user_info( $data ) {
