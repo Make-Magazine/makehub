@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 //new rest API to build the universalNav
 add_action( 'rest_api_init', function () {
   register_rest_route( 'MakeHub/v1', '/userNav', array(
