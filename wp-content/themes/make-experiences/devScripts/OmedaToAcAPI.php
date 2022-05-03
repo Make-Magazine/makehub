@@ -23,31 +23,34 @@
         11 - Rollup Expire Date   12 - Promo Code           13 - Order Date
         14 - Requested Version    15 - Class Description    16 - Payment Status Description
     */
-    $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers_20220503.csv", 'r');
+    $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers_20220503-2.csv", 'r');
     fgetcsv($file); //skip the header row
 
     $omedaData = array();
     $count = 1;
     while (($line = fgetcsv($file)) !== FALSE) {
+      if($line[3]=="ivar@miljeteig.no"){
+        echo 'before:'.$line[7].' after'.utf8_encode($line[7]);
+      }
       //build the contacts
       $contacts[] = array(
-        "email" => $line[3],
-        "first_name" => $line[1],
-        "last_name" => $line[2],
+        "email" => utf8_encode($line[3]),
+        "first_name" => utf8_encode($line[1]),
+        "last_name" => utf8_encode($line[2]),
         "tags"    => array("Omeda Subscriber"),
         "fields"  => array(
-          array("id" => 1,    "value" => $line[5]), //address
-          array("id" => 162,  "value" => $line[6]), //address 2
-          array("id" => 2,    "value" => $line[7]), //city
-          array("id" => 3,    "value" => $line[8]), //state
-          array("id" => 4,    "value" => $line[9]), //Zip Code
-          array("id" => 5,    "value" => $line[10]), //Country
-          array("id" => 156,  "value" => $line[11]), //rollup expire date
-          array("id" => 157,  "value" => $line[12]), //promo code
-          array("id" => 158,  "value" => $line[13]), //order date
-          array("id" => 159,  "value"  => $line[14]), //Requested Version
-          array("id" => 160,  "value"  => $line[15]), //Class Description
-          array("id" => 161,  "value"  => $line[16]), //Payment Status Description
+          array("id" => 1,    "value" => utf8_encode($line[5])), //address
+          array("id" => 162,  "value" => utf8_encode($line[6])), //address 2
+          array("id" => 2,    "value" => utf8_encode($line[7])), //city
+          array("id" => 3,    "value" => utf8_encode($line[8])), //state
+          array("id" => 4,    "value" => utf8_encode($line[9])), //Zip Code
+          array("id" => 5,    "value" => utf8_encode($line[10])), //Country
+          array("id" => 156,  "value" => utf8_encode($line[11])), //rollup expire date
+          array("id" => 157,  "value" => utf8_encode($line[12])), //promo code
+          array("id" => 158,  "value" => utf8_encode($line[13])), //order date
+          array("id" => 159,  "value" => utf8_encode($line[14])), //Requested Version
+          array("id" => 160,  "value" => utf8_encode($line[15])), //Class Description
+          array("id" => 161,  "value" => utf8_encode($line[16])), //Payment Status Description
         ),
         //"subscribe"  => array(
         //  "listid" => 8, //make community
@@ -72,24 +75,34 @@
         )
       );
 
+      if(!json_encode($body)){
+        var_dump($body);
+        die();
+      }
+
       //send api request here
-      $response = json_decode(postCurl($url, $headers, json_encode($body)));
-      echo 'AC response<br/>';
-      var_dump($response);
+      $response = postCurl($url, $headers, json_encode($body));
+      $response = json_decode($response);
+
       //results output here
       if($response->success==1){
         omeda_log('File sent to Active Campaign Successfully. BatchID = '.$response->batchId);
       }else{
         omeda_log('Failure on send to Active Campaign. '.$response->message);
+        echo 'Failure on send to Active Campaign. '.$response->message;
+        var_dump($response->failureReasons);
+        echo 'here is the file being sent ';
+        var_dump(json_encode($body));
+
+        die('look into this');
+
         foreach($response->failureReasons as $failureReason){
-          omeda_log((isset($failureReason->message)? $failureReason->message:'').
-                    (isset($failureReason->queuedBatchId)?'BatchID:'.$failureReason->queuedBatchId:'')
-                   );
+          omeda_log(print_r($failureReason,TRUE));
         }
       }
-      die('stopping after one');
+      //die('stopping after one');
     }
-    echo 'complete. go check the log';
+    echo 'complete. go check the <a href="https://make.co/wp-content/ACtoMake_log.log">log</a>';
     ?>
   </body>
 </html>
