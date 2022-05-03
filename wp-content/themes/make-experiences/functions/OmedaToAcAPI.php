@@ -19,14 +19,14 @@ function AC_callback( WP_REST_Request $request ) {
     omeda_log('Error in processing the Omeda to Active Campaign feed. There were '.$success.' successfull requests and '.$failures.' failed requests. Please see errors below:');
     foreach($failure_reasons as $failure_reason){
       omeda_log($failure_reason);
-    }    
+    }
   }
 
 }
 
 //create a log file
 function omeda_log($log_msg) {
-    $log_filename = "ACtoMake_log";
+    $log_filename = ABSPATH."/_wpeprivate/omeda/ACtoMake_log";
     if (!file_exists($log_filename)){
         // create directory/folder uploads.
         mkdir($log_filename, 0777, true);

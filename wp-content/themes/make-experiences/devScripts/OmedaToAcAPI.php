@@ -23,7 +23,7 @@
         11 - Rollup Expire Date   12 - Promo Code           13 - Order Date
         14 - Requested Version    15 - Class Description    16 - Payment Status Description
     */
-    $file = fopen("uploads/make-active-customers.csv", 'r');
+    $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers_20220503.csv", 'r');
     fgetcsv($file); //skip the header row
 
     $omedaData = array();
@@ -36,23 +36,23 @@
         "last_name" => $line[2],
         "tags"    => array("Omeda Subscriber"),
         "fields"  => array(
-          "id" => 1,    "value" => $line[5], //address
-          "id" => 162,  "value" => $line[6], //address 2
-          "id" => 2,    "value" => $line[7], //city
-          "id" => 3,    "value" => $line[8], //state
-          "id" => 4,    "value" => $line[9], //Zip Code
-          "id" => 5,    "value" => $line[10], //Country
-          "id" => 156,  "value" => $line[11], //rollup expire date
-          "id" => 157,  "value" => $line[12], //promo code
-          "id" => 158,  "value" => $line[13], //order date
-          "id" => 159,  "value"  => $line[14], //Requested Version
-          "id" => 160,  "value"  => $line[15], //Class Description
-          "id" => 161,  "value"  => $line[16], //Payment Status Description
+          array("id" => 1,    "value" => $line[5]), //address
+          array("id" => 162,  "value" => $line[6]), //address 2
+          array("id" => 2,    "value" => $line[7]), //city
+          array("id" => 3,    "value" => $line[8]), //state
+          array("id" => 4,    "value" => $line[9]), //Zip Code
+          array("id" => 5,    "value" => $line[10]), //Country
+          array("id" => 156,  "value" => $line[11]), //rollup expire date
+          array("id" => 157,  "value" => $line[12]), //promo code
+          array("id" => 158,  "value" => $line[13]), //order date
+          array("id" => 159,  "value"  => $line[14]), //Requested Version
+          array("id" => 160,  "value"  => $line[15]), //Class Description
+          array("id" => 161,  "value"  => $line[16]), //Payment Status Description
         ),
-        "subscribe"  => array(
-          "listid" => 8, //make community
-          "listid" => 18 //make magazine
-        ),
+        //"subscribe"  => array(
+        //  "listid" => 8, //make community
+        //  "listid" => 18 //make magazine
+        //),
       );
     }
     fclose($file);
@@ -71,7 +71,7 @@
           "detailed_results" => "true"
         )
       );
-      
+
       //send api request here
       $response = json_decode(postCurl($url, $headers, json_encode($body)));
 
