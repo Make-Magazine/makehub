@@ -23,7 +23,14 @@
         11 - Rollup Expire Date   12 - Promo Code           13 - Order Date
         14 - Requested Version    15 - Class Description    16 - Payment Status Description
     */
-    $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers_20220503-2.csv", 'r');
+
+
+    if(!file_exists(ABSPATH."/_wpeprivate/omeda/make-active-customers.csv")){
+      omeda_log('Error!! make-active-customers.csv not found');
+      die('no file for you');
+    }
+
+    $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers.csv", 'r');
     fgetcsv($file); //skip the header row
 
     $omedaData = array();
@@ -79,7 +86,7 @@
         var_dump($body);
         die();
       }
-
+/*
       //send api request here
       $response = postCurl($url, $headers, json_encode($body));
       $response = json_decode($response);
@@ -99,7 +106,7 @@
         foreach($response->failureReasons as $failureReason){
           omeda_log(print_r($failureReason,TRUE));
         }
-      }
+      }*/
       //die('stopping after one');
     }
     echo 'complete. go check the <a href="https://make.co/wp-content/ACtoMake_log.log">log</a>';
