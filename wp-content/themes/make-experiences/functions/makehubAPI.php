@@ -5,6 +5,7 @@ add_action( 'rest_api_init', function () {
   register_rest_route( 'MakeHub/v1', '/userNav', array(
     'methods' => 'GET',
     'callback' => 'make_user_info',
+	'permission_callback' => '__return_true',
     'args' => array (
         'email' => array (
             'required' => true,
@@ -18,7 +19,7 @@ add_action( 'rest_api_init', function () {
 function make_user_info( $data ) {
   //retrieve user specific information
   $userEmail = $data['email'];
-  $user   = get_user_by_email($userEmail);
+  $user   	 = get_user_by('email', $userEmail);
 
   $banner_text = "Join Now";
   $banner = "https://make.co/wp-content/universal-assets/v1/images/join-now-banner.png";
