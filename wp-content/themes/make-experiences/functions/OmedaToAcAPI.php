@@ -26,7 +26,7 @@ function AC_callback( WP_REST_Request $request ) {
 
 //create a log file
 function omeda_log($log_msg) {
-    $log_filename = ABSPATH."/_wpeprivate/omeda/ACtoMake_log";
+    $log_filename = ABSPATH."/wp_content/ACtoMake_log";
     if (!file_exists($log_filename)){
         // create directory/folder uploads.
         mkdir($log_filename, 0777, true);

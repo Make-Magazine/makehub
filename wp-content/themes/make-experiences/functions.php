@@ -217,7 +217,7 @@ function postCurl($url, $headers = null, $datastring = null) {
 	  throw new Exception(curl_error($ch));
 	}
 
-	echo $response;
+	return $response;
 	curl_close($ch);
 }
 
