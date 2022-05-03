@@ -7,7 +7,12 @@ function process_omeda_file() {
   $url = "https://make.api-us1.com/api/3/import/bulk_import";
 
   //pull the Omeda file
-  $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers_20220503-2.csv", 'r');
+  if(!file_exists(ABSPATH."/_wpeprivate/omeda/make-active-customers.csv")){
+    omeda_log('Error!! make-active-customers.csv not found');
+    die();
+  }
+
+  $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers.csv", 'r');
   fgetcsv($file); //skip the header row
 
   $omedaData = array();
@@ -41,9 +46,9 @@ function process_omeda_file() {
   }
   fclose($file);
 
-  omeda_log('Writing '.count($contacts).' Omeda contacts to Omeda');
+  omeda_log('Writing '.count($contacts).' Omeda contacts to Active Campaign');
 
-  //Omeda API can only handle 250 contacts at a time.
+  //Active Campaign API can only handle 250 contacts at a time.
   $contactOut = array_chunk($contacts,250);
 
   foreach($contactOut as $contact_out){
@@ -82,19 +87,17 @@ add_action( 'rest_api_init', function () {
 } );
 
 function AC_callback( WP_REST_Request $request ) {
-  omeda_log('response from Active Campaign');
-  omeda_log(print_r($request,TRUE));
+  omeda_log('Response from Active Campaign');
+
   //access returned data
-  $success = $request['Success'];
-  $failures = $request['Failures'];
-  $failure_reasons = $request['failure_reasons'];
+  $failure_reasons = (isset($request['failure_results'])?$request['failure_results']:array());
 
   //if there were any failures, write them to the log
-  if($failures != 0){
+  if(!empty($failure_reasons)){
     // call to function
-    omeda_log('Error in processing the Omeda to Active Campaign feed. There were '.$success.' successfull requests and '.$failures.' failed requests. Please see errors below:');
+    omeda_log('Error in processing the Omeda to Active Campaign feed. Please see errors below:');
     foreach($failure_reasons as $failure_reason){
-      omeda_log(print_r($failure_reason,TRUE));
+      omeda_log($failure_reason['email'].'('.$failure_reason['code'].') - '.$failure_reason['message']);
     }
   }
 
