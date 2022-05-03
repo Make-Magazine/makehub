@@ -77,10 +77,16 @@
       echo 'AC response<br/>';
       var_dump($response);
       //results output here
-      omeda_log('File sent to Active Campaign. Status of send: '.$response->success.
-      '. # of queued contacts: '.$response->queued_contacts.
-      '. batchId: '.$response->batchId.
-      '. message: '.$response->message);
+      if($response->success==1){
+        omeda_log('File sent to Active Campaign Successfully. BatchID = '.$response->batchId);
+      }else{
+        omeda_log('Failure on send to Active Campaign. '.$response->message);
+        foreach($response->failureReasons as $failureReason){
+          omeda_log((isset($failureReason->message)? $failureReason->message:'').
+                    (isset($failureReason->queuedBatchId)?'BatchID:'.$failureReason->queuedBatchId:'')
+                   );
+        }
+      }
       die('stopping after one');
     }
     echo 'complete. go check the log';
