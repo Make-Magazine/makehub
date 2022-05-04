@@ -157,13 +157,13 @@ function get_make_coins($user_email){
   $jwt = $authRes->jwt;
 
   //now let's see how many coins they have
-  $url = 'https://devapi.rimark.io/api/makes?populate=*&filters[user_email][$eq]='.$user_email;
+  $url = 'https://devapi.rimark.io/api/makes?filters[user_email][$eq]='.$user_email;
   $headers = array("authorization: Bearer ".$jwt);
   $rimarkResp = json_decode(basicCurl($url, $headers));
 
   $coins = '';
   if(!empty($rimarkResp->data)){
-    $coins = $rimarkResp->data[0]->attributes->make_wallet->data->attributes->total_supply_owned;
+    $coins = $rimarkResp->data[0]->attributes->total_supply_owned;
     $coins = number_format($coins24); //format with a thousand separators and up to 2 decimal places
   }
 
