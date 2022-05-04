@@ -172,7 +172,7 @@ function register_taxonomy_materials() {
 			__( 'Jigsaw' ),
 			__( 'Soldering Iron' ),
 			__( 'General Hand Tools' ),
-			__( 'laser cutter' ),
+			__( 'Laser Cutter' ),
 			__( '3D printer' ),
 			__( 'CNC' ),
 			__( 'Vacuum former' ),
@@ -196,13 +196,13 @@ function register_taxonomy_materials() {
 			__( 'Yarn/string' ),
 			__( 'Textiles' ),
 		),
-		__( 'Other' ) => array(
+		__( 'Other Materials' ) => array(
 			__( 'Wood' ),
 			__( 'PVC pipe' ),
 			__( 'Acrylic' ),
 			__( 'Vinyl' ),
 			__( 'Upcycled / Recycled materials' ),
-			__( 'Other Plastics (polystyrene & polypropylene)' ),
+			__( 'General Plastics (polystyrene &amp; polypropylene)' ),
 			__( 'Stencils' ),
 		),
 	);
@@ -445,9 +445,9 @@ function register_taxonomy_makeyland_theme() {
 		"construction-site" => "Construction Site",
 		"marina-waterfront" => "Marina/Waterfront",
 		"farm" => "Farm",
-		"the-canteen" => "Mess Hall and Recycling Station (The Canteen)",
-		"the-depot" => "Airport/Space Station/ Racetrack - \"The Depot\"",
-		"the-shop" => "Makerspace/\"The Shop\"",
+		"the-canteen" => "The Canteen (Mess Hall and Recycling Station)",
+		"the-depot" => "The Depot (Airport/Space Station/ Racetrack)",
+		"the-shop" => "The Shop (Makerspace)",
 	];
 	if(empty(get_terms('makeyland_themes'))) {
 		foreach ($makeyland_themes as $slug => $name) {
