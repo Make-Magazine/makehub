@@ -243,7 +243,7 @@ get_header();
 									<br />
 								<?php }
 									if(!empty($themes)){ ?>
-								<h4>See More Projects from this theme:</h4>
+								<h4>see more projects from these themes:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
 								<?php }
