@@ -210,7 +210,7 @@ function register_taxonomy_materials() {
 	register_taxonomy( 'materials', array('user-projects', 'sfwd-lessons'), $args );
 
 
-	if(empty(get_terms('materials'))) {
+	/*if(empty(get_terms('materials'))) {
 		foreach ($materials as $key => $term) {
 			wp_insert_term($key, 'materials', [
 				'slug' => sanitize_title_with_dashes( $key ),
@@ -226,7 +226,7 @@ function register_taxonomy_materials() {
 				);
 			}
 		}
-	}
+	}*/
 
 
 }
