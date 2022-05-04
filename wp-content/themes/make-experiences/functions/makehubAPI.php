@@ -164,7 +164,7 @@ function get_make_coins($user_email){
   $coins = '';
   if(!empty($rimarkResp->data)){
     $coins = $rimarkResp->data[0]->attributes->total_supply_owned;
-    $coins = number_format($coins24); //format with a thousand separators and up to 2 decimal places
+    $coins = number_format($coins,2); //format with a thousand separators and up to 2 decimal places
   }
 
   return $coins;
