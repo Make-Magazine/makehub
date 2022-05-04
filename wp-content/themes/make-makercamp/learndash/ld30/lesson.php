@@ -317,15 +317,19 @@ sort($referrer_params);
                             ?>
 
 							<section class="tags">
-								<h4>See More Projects in these topics:</h4>
-								<?php foreach($categories as $category) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
-								<?php } ?>
-								<br />
+								<?php if(!empty($categories)) { ?>
+									<h4>See More Projects in these topics:</h4>
+									<?php foreach($categories as $category) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+									<?php } ?>
+									<br />
+								<?php }
+									if(!empty($themes)){ ?>
 								<h4>See More Projects from this theme:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php } ?>
+								<?php }
+								}	?>
 							</section>
 
                             <?php

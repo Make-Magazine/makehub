@@ -463,7 +463,7 @@ if( !function_exists('change_user_projects_slug') ){
     add_filter( 'register_post_type_args', 'change_user_projects_slug', 10, 2 );
     function change_user_projects_slug( $args, $post_type ) {
         if ( 'user-projects' === $post_type ) {
-            $args['rewrite']['slug'] = 'projects';
+            $args['rewrite']['slug'] = 'project';
         }
         return $args;
     }
