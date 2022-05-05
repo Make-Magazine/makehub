@@ -71,8 +71,8 @@ sort($referrer_params);
 <div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
-        <?php
-        if ( !empty($course) && has_term('resource', 'ld_lesson_tag') ) :
+        <?php // only show sidebar if the project is tagged resource
+        if ( has_term('resource', 'ld_lesson_tag') ) :
             include locate_template('/learndash/ld30/learndash-sidebar.php');
         endif;
         ?>
