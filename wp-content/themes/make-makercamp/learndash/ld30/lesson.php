@@ -72,7 +72,7 @@ sort($referrer_params);
 
     <div class="bb-grid grid">
         <?php
-        if (!empty($course)) :
+        if ( !empty($course) && has_term('resource', 'ld_lesson_tag') ) :
             include locate_template('/learndash/ld30/learndash-sidebar.php');
         endif;
         ?>
