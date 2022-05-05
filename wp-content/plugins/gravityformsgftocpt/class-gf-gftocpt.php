@@ -1444,6 +1444,8 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 			return $choices;
 		}
 
+//Alicia - add options here for the user who submitted the GF
+
 		// Get user.
 		$user = get_user_by( 'id', $value );
 
@@ -1724,7 +1726,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 * @return string
 	 */
 	public function get_menu_icon() {
-		return 'gform-icon--gf-to-cpt';
+		return 'gform-icon--advanced-post-creation';
 	}
 
 
