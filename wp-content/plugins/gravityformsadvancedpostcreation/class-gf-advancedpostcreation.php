@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || die();
 
+use Gravity_Forms\Gravity_Forms_APC\Post_Update_Handler;
+
 GFForms::include_feed_addon_framework();
 
 /**
@@ -152,7 +154,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * An array of files attached to the current post, with the file entry URL as the key to the media ID.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @var array
 	 */
@@ -161,7 +163,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * The ID of the feed currently being processed.
 	 *
-	 * @since 1.0-beta-2.1
+	 * @since 1.0
 	 *
 	 * @var bool|int
 	 */
@@ -170,7 +172,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Null or the ID of the user to be assigned as the post author.
 	 *
-	 * @since 1.0-beta-4
+	 * @since 1.0
 	 *
 	 * @var null|int
 	 */
@@ -231,7 +233,6 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 				'option_label' => esc_html__( 'Create post only when payment is received.', 'gravityformsadvancedpostcreation' )
 			)
 		);
-
 	}
 
 	/**
@@ -323,8 +324,23 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 				'version' => $this->_version,
 			),
 			array(
+				'handle'  => 'gform_advancedpostcreation_utils',
+				'src'     => $this->get_base_url() . "/js/utils{$min}.js",
+				'deps'    => array( 'jquery' ),
+				'version' => $this->_version,
+				'enqueue' => array(
+					array(
+						'admin_page' => array( 'form_settings' ),
+						'tab'        => $this->_slug,
+					),
+				),
+				'strings' => array(
+					'GFVersion' => $this->is_gravityforms_supported( '2.5' ) ? '2.5' : '2.4',
+				),
+			),
+			array(
 				'handle'  => 'gform_advancedpostcreation_form_settings',
-				'deps'    => array( 'gform_advancedpostcreation_taxonomy_map' ),
+				'deps'    => array( 'gform_advancedpostcreation_taxonomy_map', 'gform_advancedpostcreation_utils' ),
 				'src'     => $this->get_base_url() . "/js/form_settings{$min}.js",
 				'version' => $this->_version,
 				'enqueue' => array(
@@ -374,7 +390,6 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 						'label'         => esc_html__( 'Feed Name', 'gravityformsadvancedpostcreation' ),
 						'type'          => 'text',
 						'required'      => true,
-						'class'         => 'medium',
 						'default_value' => $this->get_default_feed_name(),
 						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
@@ -595,6 +610,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 						'label'         => esc_html__( 'Content', 'gravityformsadvancedpostcreation' ),
 						'type'          => 'textarea',
 						'required'      => true,
+						'use_editor'    => true,
 						'class'         => 'medium merge-tag-support mt-position-right mt-hide_all_fields',
 						'default_value' => $this->get_default_field_merge_tag( 'post_content' ),
 						'tooltip'       => sprintf(
@@ -602,7 +618,6 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 							esc_html__( 'Post Content', 'gravityformsadvancedpostcreation' ),
 							esc_html__( "Define the post's content. File upload field merge tags used within the post content will automatically have their files uploaded to the media library and associated with the post.", 'gravityformsadvancedpostcreation' )
 						),
-
 					),
 					array(
 						'name'        => 'postMetaFields',
@@ -666,6 +681,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 					'type'          => 'textarea',
 					'class'         => 'medium merge-tag-support mt-position-right mt-hide_all_fields',
 					'default_value' => $this->get_default_field_merge_tag( 'post_excerpt' ),
+					'allow_html'    => true,
 				),
 			);
 
@@ -1563,7 +1579,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 				// If term exists, add it to the preload array.
 				if ( $term ) {
-					$terms[ $term->slug ] = $term->name;
+					$terms[ $term->slug ] = esc_html( $term->name );
 				}
 
 			}
@@ -1619,7 +1635,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 				// Add field to results.
 				$results[] = array(
 					'id'   => esc_html( $term->slug ),
-					'text' => esc_html( $term->name ),
+					'text' => wp_strip_all_tags( $term->name ),
 				);
 
 			}
@@ -1637,8 +1653,16 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 	}
 
-
-
+	/**
+	 * Return the plugin's icon for the plugin/form settings menu.
+	 *
+	 * @since 1.0
+	 *
+	 * @return string
+	 */
+	public function get_menu_icon() {
+		return 'gform-icon--advanced-post-creation';
+	}
 
 
 	// # FEED LIST -----------------------------------------------------------------------------------------------------
@@ -1920,6 +1944,24 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 		return $entry;
 
+	}
+
+	/**
+	 * Updates a post.
+	 *
+	 * @since 1.0
+	 *
+	 * @param integer|string $post_id The ID of the post being updated.
+	 * @param array          $feed    The feed being processed.
+	 * @param array          $entry   The entry associated with the post being updated.
+	 * @param array          $form    The form object.
+	 *
+	 * @return bool
+	 */
+	public function update_post( $post_id, $feed, $entry, $form ) {
+		require_once 'includes/class-post-update-handler.php';
+		$update_handler = new Post_Update_Handler( $this, $post_id, $feed, $entry, $form );
+		return $update_handler->update();
 	}
 
 	/**
@@ -2237,7 +2279,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Sets the _current_media property.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param array $media An array of files attached to the current post, with the file entry URL as the key to the media ID. Defaults to an empty array.
 	 */
@@ -2248,7 +2290,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Returns the value of the _current_media property. An array of files attached to the current post, with the file entry URL as the key to the media ID.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * return array
 	 */
@@ -2259,7 +2301,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Sets the _post_author property.
 	 *
-	 * @since 1.0-beta-4
+	 * @since 1.0
 	 *
 	 * @param null|int $id    Null or the ID of the user to be assigned as the post author.
 	 * @param array    $feed  The feed being processed.
@@ -2278,7 +2320,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Returns the value of the _post_author property. Null or the ID of the user to be assigned as the post author.
 	 *
-	 * @since 1.0-beta-4
+	 * @since 1.0
 	 *
 	 * return null|int
 	 */
@@ -2289,7 +2331,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Returns the post title.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param array $feed  The feed being processed.
 	 * @param array $entry The entry being processed.
@@ -2304,7 +2346,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Sets the post content, password, excerpt, author, and date.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param array $post  The current post data.
 	 * @param array $feed  The feed being processed.
@@ -2314,7 +2356,6 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 * @return array
 	 */
 	public function set_post_data( $post, $feed, $entry, $form ) {
-
 		// Set the post content.
 		$post['post_content'] = $this->prepare_post_content( $feed, $entry, $form, $post['ID'] );
 
@@ -2333,37 +2374,52 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 		// Set the post date.
 		switch ( rgars( $feed, 'meta/postDate' ) ) {
-
 			case 'custom':
-				$date = rgars( $feed, 'meta/postDateCustom' );
-				$date = rgblank( $date ) ? current_time( 'mysql' ) : date( 'Y-m-d H:i:s', strtotime( $date ) );
-
-				$post['post_date']     = $date;
-				$post['post_date_gmt'] = get_gmt_from_date( $date, 'Y-m-d H:i:s' );
+				$post['post_date']     = $this->get_formatted_date( rgars( $feed, 'meta/postDateCustom' ) );
+				$post['post_date_gmt'] = get_gmt_from_date( $post['post_date'] );
 				break;
-
 			case 'entry':
 				$post['post_date_gmt'] = rgar( $entry, 'date_created' );
 				break;
-
 			case 'field':
 				$date = $this->get_field_value( $form, $entry, $feed['meta']['postDateFieldDate'] ) . ' ' . $this->get_field_value( $form, $entry, $feed['meta']['postDateFieldTime'] );
-				$date = rgblank( trim( $date ) ) ? current_time( 'mysql' ) : date( 'Y-m-d H:i:s', strtotime( $date ) );
 
-				$post['post_date']     = $date;
-				$post['post_date_gmt'] = get_gmt_from_date( $date, 'Y-m-d H:i:s' );
+				$post['post_date']     = $this->get_formatted_date( $date );
+				$post['post_date_gmt'] = get_gmt_from_date( $date );
 				break;
-
 		}
 
 		return $post;
+	}
 
+	/**
+	 * Get the formatted date.
+	 *
+	 * @since 1.0
+	 *
+	 * @param string $date Date data.
+	 *
+	 * @return string|false
+	 */
+	private function get_formatted_date( $date ) {
+		require_once __DIR__ . '/includes/helpers/wp-timezone.php';
+
+		try {
+			if ( rgblank( trim( $date ) ) ) {
+				$date = current_time( 'mysql' );
+			}
+
+			return ( new DateTime( $date, wp_timezone() ) )->format( 'Y-m-d H:i:s' );
+		} catch ( Exception $e ) {
+			// If we can't parse the date because it's invalid, set the post date to now.
+			return ( new DateTime( 'now', wp_timezone() ) )->format( 'Y-m-d H:i:s' );
+		}
 	}
 
 	/**
 	 * Sets the post thumbnail.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param int   $post_id The ID of the post the thumbnail is to be set for.
 	 * @param array $feed    The feed being processed.
@@ -2402,7 +2458,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Triggers processing of any additional media for the post.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param int   $post_id The ID of the post the media is to be attached to.
 	 * @param array $feed    The feed being processed.
@@ -2436,6 +2492,10 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			// Loop through uploaded files, upload to Media Library.
 			foreach ( $uploaded_files as $uploaded_file ) {
 
+				if ( ! $uploaded_file ) {
+					continue;
+				}
+
 				// Upload file.
 				$this->log_debug( __METHOD__ . "(): Adding file to media library: {$uploaded_file}" );
 				$this->media_handle_upload( $uploaded_file, $post_id );
@@ -2449,7 +2509,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Sets the post meta.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param int   $post_id The ID of the post the meta is to be set for.
 	 * @param array $feed    The feed being processed.
@@ -2488,7 +2548,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Sets the taxonomies for the post.
 	 *
-	 * @since 1.0-beta-1.3
+	 * @since 1.0
 	 *
 	 * @param int   $post_id The ID of the post the taxonomies are to be set for.
 	 * @param array $feed    The feed being processed.
@@ -2520,7 +2580,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Update post author when user is registered with User Registration Add-On.
 	 *
-	 * @since 1.0-beta-1.4
+	 * @since 1.0
 	 *
 	 * @param int   $user_id The new user ID.
 	 * @param array $ur_feed The User Registration Feed object.
@@ -2729,7 +2789,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Replace {post_id} and {post_edit_url} merge tags.
 	 *
-	 * @since  1.0-beta-1.1
+	 * @since  1.0
 	 * @access public
 	 *
 	 * @param string $text       The current text in which merge tags are being replaced.
@@ -2852,7 +2912,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	 *    Required parameter: field ID.
 	 *    Optional parameter: return type (ids or urls).
 	 *
-	 * @since 1.0-beta-2.1
+	 * @since 1.0
 	 *
 	 * @param string $text       The current text in which merge tags are being replaced.
 	 * @param array  $form       The current Form.

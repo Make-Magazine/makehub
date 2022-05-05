@@ -3,12 +3,12 @@
 	margin: 10px 0;
 }
 
-.gform_advancedpostcreation_date_field select {
-	margin-right: 5px;
+.gform-settings-panel__content input[type="text"].medium {
+	max-width: 50%;
 }
 
-#postSettings .select2-container {
-	width: 50% !important;
+.gform_advancedpostcreation_date_field select {
+	margin-right: 5px;
 }
 
 #postSettings .gform_advancedpostcreation_date_field .select2-container {
@@ -19,10 +19,23 @@
 	margin-right: 2%;
 }
 
+.gform-settings-panel__content #postDateFieldDate ~ .select2-container {
+	margin-right: 1%;
+}
+
 #tab_gravityformsadvancedpostcreation .repeater th,
 #tab_gravityformsadvancedpostcreation .repeater td {
 	font-weight: 400;
 	text-align: left;
+}
+
+.repeater-buttons .gform-settings-generic-map__button--add,
+.repeater-buttons .gform-settings-generic-map__button--add:last-child {
+	margin: 0 1px 0 1px;
+}
+
+table.settings-field-map-table tbody td {
+	padding: 0px;
 }
 
 #tab_gravityformsadvancedpostcreation .gform-settings-field .select2-selection--single,

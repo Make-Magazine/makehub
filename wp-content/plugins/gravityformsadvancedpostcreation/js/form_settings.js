@@ -1,29 +1,18 @@
 ( function( $ ) {
 
 	$( document ).ready( function() {
+		var utils = window.GFAPCUtils;
 
-		// Change post date field.
-		$( 'select[name="_gaddon_setting_postDate"]' ).on( 'change', function() {
+		var $postDateSelector = 'select[name="' + utils.getSettingFieldName( 'postDate' ) + '"]';
 
-			// Hide sibling containers.
-			$( this ).siblings( 'div:not(.chosen-container)' ).hide();
-
-			// Display appropraite container.
-			switch ( $( this ).val() ) {
-
-				case 'custom':
-					$( this ).siblings( '.gform_advancedpostcreation_date_custom' ).show();
-					break;
-
-				case 'field':
-					$( this ).siblings( '.gform_advancedpostcreation_date_field' ).show();
-					break;
-
-				default:
-					break;
-
-			}
-
+		$( $postDateSelector ).on( 'change', function() {
+			// Hide all options.
+			$optionFields = utils.getPostDateOptionFields( $(this) ).each( function ( i, field ){
+				$( field ).hide();
+			});
+			// Show selected option field.
+			var optionFieldName = 'date_' + $( this ).val();
+			utils.getPostDateOptionFieldByName( $( this ), optionFieldName ).show();
 		} );
 
 		// Use Select2.

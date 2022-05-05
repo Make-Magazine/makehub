@@ -10,9 +10,33 @@ var GFTaxonomyMap = function( options ) {
 		self.options.formFields = JSON.parse( self.options.formFields );
 		self.options.preloadedTerms = JSON.parse( self.options.preloadedTerms );
 
+		self.parsePreloadedTerms();
 		self.bindEvents();
 		self.setupData();
 		self.setupRepeater();
+	};
+
+	/**
+	 * Use jQuery to decode HTML entities passed via JSON.
+	 *
+	 * @param html
+	 * @return string
+	 */
+
+	self.decodeHtml = function( html ) {
+		return jQuery('<textarea/>').html( html ).text();
+	}
+
+	/**
+	 * Parse preloaded terms to encode any HTML entities.
+	 *
+	 * @return void
+	 */
+
+	self.parsePreloadedTerms = function() {
+		for ( key in self.options.preloadedTerms ) {
+			self.options.preloadedTerms[ key ] = self.decodeHtml( self.options.preloadedTerms[ key ] );
+		}
 	};
 
 	self.bindEvents = function() {
@@ -181,8 +205,8 @@ var GFTaxonomyMap = function( options ) {
 		self.UI.find( 'tbody.repeater' ).repeater( {
 			limit: limit,
 			items: self.data,
-			addButtonMarkup: '<i class="gficon-add"></i>',
-			removeButtonMarkup: '<i class="gficon-subtract"></i>',
+			addButtonMarkup: '<button class="add_field_choice gform-st-icon gform-st-icon--circle-plus gform-settings-generic-map__button gform-settings-generic-map__button--add"><span class="screen-reader-text">Add</span></button>',
+			removeButtonMarkup: '<button class="delete_field_choice gform-st-icon gform-st-icon--circle-minus gform-settings-generic-map__button gform-settings-generic-map__button--delete"><span class="screen-reader-text">Delete</span></button>',
 			callbacks: {
 				add: function( obj, $elem, item ) {
 					self.setupRow( $elem, item );

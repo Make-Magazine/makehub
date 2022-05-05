@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5
+class ComposerStaticInit7e633131d1ba0fa58c49d089ea4de4db
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -140,17 +140,17 @@ class ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5
         'ParagonIE_Sodium_Crypto' => __DIR__ . '/..' . '/trustedlogin/client/vendor/paragonie/sodium_compat/src/Crypto.php',
         'ParagonIE_Sodium_Crypto32' => __DIR__ . '/..' . '/trustedlogin/client/vendor/paragonie/sodium_compat/src/Crypto32.php',
         'ParagonIE_Sodium_File' => __DIR__ . '/..' . '/trustedlogin/client/vendor/paragonie/sodium_compat/src/File.php',
-        'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/AbstractLogger.php',
-        'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/InvalidArgumentException.php',
-        'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/LogLevel.php',
-        'Psr\\Log\\LoggerAwareInterface' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/LoggerAwareInterface.php',
-        'Psr\\Log\\LoggerAwareTrait' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/LoggerAwareTrait.php',
-        'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/LoggerInterface.php',
-        'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/LoggerTrait.php',
-        'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/NullLogger.php',
-        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/Test/DummyTest.php',
-        'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
-        'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/trustedlogin/client/vendor/psr/log/Psr/Log/Test/TestLogger.php',
+        'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
+        'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
+        'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
+        'Psr\\Log\\LoggerAwareInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerAwareInterface.php',
+        'Psr\\Log\\LoggerAwareTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerAwareTrait.php',
+        'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
+        'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
+        'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
+        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/DummyTest.php',
+        'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'SodiumException' => __DIR__ . '/..' . '/trustedlogin/client/vendor/paragonie/sodium_compat/src/SodiumException.php',
         'SplFixedArray' => __DIR__ . '/..' . '/trustedlogin/client/vendor/paragonie/sodium_compat/src/PHP52/SplFixedArray.php',
         'TrustedLoginAJAXTest' => __DIR__ . '/..' . '/trustedlogin/client/tests/test-ajax.php',
@@ -181,9 +181,9 @@ class ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita497ad1228b58f0f715e6ba3880f70b5::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7e633131d1ba0fa58c49d089ea4de4db::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7e633131d1ba0fa58c49d089ea4de4db::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7e633131d1ba0fa58c49d089ea4de4db::$classMap;
 
         }, null, ClassLoader::class);
     }

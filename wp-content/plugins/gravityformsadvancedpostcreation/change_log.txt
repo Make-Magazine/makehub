@@ -1,3 +1,30 @@
+### 1.2 | 2022-02-02
+- Fixed an issue that causes feeds to break if a taxonomy term has an apostrophe in the label.
+
+### 1.1 | 2021-08-21
+- Fixed a fatal error that occurs when a form is submitted with the date mapped to "Date & Time Fields" or "Custom Date & Time".
+
+### 1.0 | 2021-07-21
+- Official release.
+
+### 1.0-beta-7.5
+- Fixed UI issues in the feed settings page where the post date setting don't show options for the value selected.
+- API: Added `gf_advancedpostcreation()->update_post( $post_id, $feed, $entry, $form )` to enable programmatic updating of posts.
+
+
+### 1.0-beta-7.4
+- Fixed a compatibility issue with Gravity Forms 2.5 by updating the postExcerpt field to explicitly allow HTML.
+- Fixed an issue that causes custom dates and times entered into the feed settings to use UTC instead of the local time.
+
+
+### 1.0-beta-7.3
+- Updated the post content field in the feed settings to use the text editor to enable easier markup entry.
+
+
+### 1.0-beta-7.2
+- Added a custom icon for Gravity Forms 2.5.
+
+
 ### 1.0-beta-7.1
 - Updated the Swedish translations.
 

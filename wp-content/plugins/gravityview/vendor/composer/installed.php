@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '3a47bbc343e02dfa3a25b5b4b8a87103419b868e',
+        'reference' => 'e97d3f0d807125bdc082eadd7362c5aa8465a425',
         'name' => 'gravityview/gravityview',
         'dev' => false,
     ),
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '3a47bbc343e02dfa3a25b5b4b8a87103419b868e',
+            'reference' => 'e97d3f0d807125bdc082eadd7362c5aa8465a425',
             'dev_requirement' => false,
         ),
         'katzgrau/klogger' => array(
