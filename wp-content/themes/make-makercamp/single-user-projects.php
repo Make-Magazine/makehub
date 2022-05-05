@@ -8,36 +8,12 @@
 global $post;
 
 // Get our Taxonomies
-$terms = get_the_terms($post->ID, 'ld_lesson_category');
-$categories = array();
-$ages = array();
-$times = array();
-$skill_levels = array();
-$materials_tax = array();
-$themes = array();
-foreach($terms as $term) {
-	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
-	switch ($parent->slug) {
-		case "content-category":
-			array_push($categories, $term);
-			break;
-		case "age":
-			array_push($ages, $term);
-			break;
-		case "time":
-			array_push($times, $term);
-			break;
-		case "skill-level":
-			array_push($skill_levels, $term);
-			break;
-		case "materials":
-			array_push($materials_tax, $term);
-			break;
-		case "makeyland-theme":
-			array_push($themes, $term);
-			break;
-	}
-}
+$categories = get_the_terms($post->ID, 'content_categories');
+$ages = get_the_terms($post->ID, 'ages');
+$times = get_the_terms($post->ID, 'times');
+$skill_levels = get_the_terms($post->ID, 'skill_levels');
+$materials_tax = get_the_terms($post->ID, 'materials');
+$themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // Get our ACF Fields
 $hero_image = get_field('hero_image');
@@ -259,15 +235,19 @@ get_header();
 							</div> <?php // end tabs content ?>
 
 							<section class="tags">
-								<h4>See More Projects in these topics:</h4>
-								<?php foreach($categories as $category) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
-								<?php } ?>
-								<br />
-								<h4>See More Projects from this theme:</h4>
+								<?php if(!empty($categories)) { ?>
+									<h4>See More Projects in these topics:</h4>
+									<?php foreach($categories as $category) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+									<?php } ?>
+									<br />
+								<?php }
+									if(!empty($themes)){ ?>
+								<h4>see more projects from these themes:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php } ?>
+								<?php }
+								}	?>
 							</section>
 
 							<section class="up-author">
@@ -293,15 +273,15 @@ get_header();
 								<p>Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Make Community, LLC, disclaims all responsibility for any resulting damage, injury, or expense.</p>
 							</section>
 
-							<section class="standards">
-								<h2>Maker Camp Project Standards</h2>
-								<h4>Based on NGSS (Next Generation Science Standards)</h4>
-								<?php foreach($terms as $term) {
-									if($term->description) { ?>
-										<div class="disclaimer-section"><?php echo $term->description; ?></div>
-								<?php }
-								} ?>
-							</section>
+							<?php if(!empty($ages)) { ?>
+								<section class="standards">
+									<h2>Maker Camp Project Standards</h2>
+									<h4>Based on NGSS (Next Generation Science Standards)</h4>
+									<?php foreach($ages as $age) {  ?>
+										<div class="disclaimer-section"><?php echo $age->description; ?></div>
+									<?php } ?>
+								</section>
+							<?php } ?>
 
 							<section class="up-colab-share">
 								<h3>ALL DONE? SHARE IT!</h3>

@@ -104,7 +104,7 @@ function set_universal_asset_constants() {
 
 	if( class_exists('MeprUtils') ) {
 	    $mepr_current_user = MeprUtils::get_currentuserinfo();
-		// see if you can get the "slug" in this query and test against that in the $fullMemberships list
+		  // see if you can get the "slug" in this query and test against that in the $fullMemberships list
 	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
 		if($mepr_current_user) {
 		    $table = MeprSubscription::account_subscr_table(
