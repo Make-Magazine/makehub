@@ -296,6 +296,9 @@ function add_slug_body_class($classes) {
 	if ( is_singular( 'user-projects' ) ) { // Change 'custom_post_type_slug' to your Custom Post Type slug. For example: 'tutorials'.
         $classes[] = 'single-user-project';
     }
+	if ( has_term( 'resource', 'ld_lesson_tag', $post ) ) { // add in a class for resource tagged pages
+        $classes[] = 'resource-project';
+    }
 	return $classes;
 }
 

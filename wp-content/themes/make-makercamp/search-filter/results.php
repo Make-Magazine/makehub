@@ -65,7 +65,11 @@ if ( $query->have_posts() ) {
 						</a></div>
 				<?php } ?>
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-				<?php /* <p><br /><?php the_excerpt(); ?></p> */ ?>
+				<?php
+					if(get_field('what_will_you_learn', $post->ID)) {
+						echo "<p>" . get_field('what_will_you_learn', $post->ID) . "</p>"; 
+					}
+				?>
 				<div class="results-meta">
 					<p><?php the_category(); ?></p>
 					<p><?php the_tags(); ?></p>

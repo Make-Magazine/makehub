@@ -14,7 +14,7 @@
 }
 
 // Hide the learndash sidebar (except for the playbook projects)
-body:not(.learndash-cpt-sfwd-courses-4829-parent) {
+body:not(.resource-project) {
 	&.sfwd-sidebar {
 	   padding-left: 0px !important;
 	}
