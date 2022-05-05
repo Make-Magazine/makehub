@@ -47,10 +47,48 @@
         },
         {
             "key": "field_57686bbc1bd08",
-            "label": "What Will You Make?",
+            "label": "What Will You Learn?",
             "name": "what_will_you_learn",
             "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_627437bb1bf7f",
+            "label": "What Will You Make?",
+            "name": "what_will_you_make",
+            "type": "wysiwyg",
             "instructions": "Add short description for the \"What will you make\".",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_6274390e05035",
+            "label": "What is happening here?",
+            "name": "what_is_happening",
+            "type": "wysiwyg",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -318,6 +356,24 @@
                     "maxlength": ""
                 }
             ]
+        },
+        {
+            "key": "field_62743ab7cbe6e",
+            "label": "User Email",
+            "name": "user_email",
+            "type": "email",
+            "instructions": "Email address of user who submitted project",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -348,5 +404,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1649973422
+    "modified": 1651784409
 }
