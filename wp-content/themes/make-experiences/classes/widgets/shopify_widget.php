@@ -67,11 +67,19 @@ class shopify_widget extends WP_Widget {
 
             // Get the product image and modify the file name to get the large size thumbnail
             $image_src_parts = pathinfo($current_product['images'][0]['src']);
-            $product_image_src = $image_src_parts['dirname'] . '/' . $image_src_parts['filename'] . '_large.' . $image_src_parts['extension'];
+			if(isset($image_src_parts['dirname']) && isset($image_src_parts['extension'])) {
+            	$product_image_src = $image_src_parts['dirname'] . '/' . $image_src_parts['filename'] . '_large.' . $image_src_parts['extension'];
+			} else {
+				continue; // if no image, we skip it
+			}
 
             // Get product variant information, including inventory and pricing
-            $variants = $current_product['variants'];
-            $variant_count = count($variants);
+			if(isset($current_product['variants'])) {
+	            $variants = $current_product['variants'];
+	            $variant_count = count($variants);
+			} else {
+				continue; // if no price, we skip it
+			}
 
             $variant_price = 0;
             $variant_prices = array();
