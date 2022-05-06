@@ -44,17 +44,11 @@ class GP_Media_Library extends GWPerk {
 
 		add_action( 'gform_after_create_post', array( $this, 'acf_integration' ), 10, 3 );
 		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_acf_integration' ), 10, 4 );
-		add_action( 'gform_advancedpostcreation_post_after_creation', array(
-			$this,
-			'apc_custom_field_integration'
-		), 10, 4 );
+		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'apc_custom_field_integration' ), 10, 4 );
 
 		add_action( 'gform_after_create_post', array( $this, 'check_for_featured_image_custom_field' ), 10, 3 );
 
-		add_action( 'gravityview/fields/fileupload/link_content', array(
-			$this,
-			'gravityview_file_upload_content'
-		), 10, 2 );
+		add_action( 'gravityview/fields/fileupload/link_content', array( $this, 'gravityview_file_upload_content' ), 10, 2 );
 
 		add_filter( 'gform_admin_pre_render', array( $this, 'add_image_merge_tags' ) );
 		add_action( 'gform_pre_replace_merge_tags', array( $this, 'replace_image_merge_tags' ), 5, 7 );
@@ -388,8 +382,13 @@ class GP_Media_Library extends GWPerk {
 		$file_index = intval( rgpost( 'file_index' ) );
 
 		$file_ids = $this->get_file_ids( $entry_id, $field_id );
-		$file_id  = array_splice( $file_ids, $file_index, 1 );
-		$file_id  = array_pop( $file_id );
+
+		if ( is_array( $file_ids ) ) {
+			$file_id = array_splice( $file_ids, $file_index, 1 );
+			$file_id = array_pop( $file_id );
+		} else {
+			$file_id = $file_ids;
+		}
 
 		if ( ! empty( $file_id ) ) {
 			wp_delete_attachment( $file_id, true );
@@ -785,10 +784,29 @@ class GP_Media_Library extends GWPerk {
 
 			$custom_field = $mapping['key'] == 'gf_custom' ? $mapping['custom_key'] : $mapping['key'];
 
-			$this->acf_update_field( $post_id, $custom_field, $field, $entry );
+			$this->acf_update_field( $post_id, $custom_field, $field, $entry, $mappings );
 
 		}
 
+	}
+
+	/**
+	 * Check if the featured image has been mapped via an Advanced Post Creation custom field mapping.
+	 *
+	 * Since APC supports mapping to Single File Upload fields by default, a manual mapping would indicate the user is
+	 * mapping a multi-file upload.
+	 *
+	 * @param array $custom_field_map An array of Advanced Post Creation custom field mappings.
+	 *
+	 * @return bool|string
+	 */
+	public function apc_get_featured_image_field( $custom_field_map ) {
+		foreach ( $custom_field_map as $mapping ) {
+			if ( in_array( '_thumbnail_id', array( $mapping['key'], $mapping['custom_key'] ) ) ) {
+				return (int) rgar( $mapping, 'value', $mapping['custom_value'] );
+			}
+		}
+		return false;
 	}
 
 	public function acf_get_field_value( $format, $entry, $gf_field, $is_multi = false ) {
@@ -814,7 +832,7 @@ class GP_Media_Library extends GWPerk {
 		return $value;
 	}
 
-	public function acf_update_field( $post_id, $acf_field_name, $gf_field, $entry ) {
+	public function acf_update_field( $post_id, $acf_field_name, $gf_field, $entry, $custom_field_map = array() ) {
 
 		$acf_field       = acf_get_field( $acf_field_name );
 		$acf_field_types = array_merge( $this->acf_get_supported_fields_types(), array( 'repeater' ) );
@@ -829,6 +847,12 @@ class GP_Media_Library extends GWPerk {
 		$value = $this->acf_get_field_value( 'id', $entry, $gf_field, $acf_field['type'] === 'gallery' );
 		if ( ! $value ) {
 			return false;
+		}
+
+		// If featured image is mapped to same field as this custom field (and this custom field is a gallery) remove the
+		// first file from the gallery since it is already being used as the featured image.
+		if ( $this->apc_get_featured_image_field( $custom_field_map ) === (int) $gf_field->id && $acf_field['type'] === 'gallery' ) {
+			$value = array_slice( $value, 1 );
 		}
 
 		return update_field( $acf_field['key'], $value, $post_id );
@@ -886,25 +910,22 @@ class GP_Media_Library extends GWPerk {
 	public function apc_custom_field_integration( $post_id, $feed, $entry, $form ) {
 
 		$auto_custom_fields = array(
-			'_product_image_gallery' /* WooCommerce product gallery */
+			'_thumbnail_id', /* Get first image for multi-file upload mappings */
+			'_product_image_gallery', /* WooCommerce product gallery */
 		);
 
 		/**
 		 * Filter which custom fields GP Media Library will attempt to convert to use image IDs.
 		 *
 		 * @param array $auto_custom_fields A list of custom field keys that should use image IDs.
-		 * @param int $post_id ID of the post for which custom fields are being processed.
-		 * @param array $entry The current entry ID.
-		 * @param array $form The current form.
-		 * @param array $feed The current APC feed.
+		 * @param int   $post_id            ID of the post for which custom fields are being processed.
+		 * @param array $entry              The current entry ID.
+		 * @param array $form               The current form.
+		 * @param array $feed               The current APC feed.
 		 *
 		 * @since 1.2.8
-		 *
 		 */
-		$auto_custom_fields = gf_apply_filters( array(
-			'gpml_auto_convert_custom_fields',
-			$form['id']
-		), $auto_custom_fields, $post_id, $entry, $form, $feed );
+		$auto_custom_fields = gf_apply_filters( array( 'gpml_auto_convert_custom_fields', $form['id'] ), $auto_custom_fields, $post_id, $entry, $form, $feed );
 
 		$mappings = rgars( $feed, 'meta/postMetaFields', array() );
 
@@ -926,7 +947,11 @@ class GP_Media_Library extends GWPerk {
 			}
 
 			if ( is_array( $value ) ) {
-				$value = implode( ',', $value );
+				if ( $key === '_thumbnail_id' ) {
+					$value = $value[0];
+				} else {
+					$value = implode( ',', $value );
+				}
 			}
 
 			update_post_meta( $post_id, $key, $value );

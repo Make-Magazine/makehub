@@ -66,7 +66,7 @@ elseif ($cff_header_type == "visual" && $cff_show_header) : //Start Visual Heade
 	<div id="cff-visual-header-<?php echo esc_attr( preg_replace( "/[^A-Za-z0-9]/", '', $page_id ) ); ?>" class="cff-visual-header<?php echo $avatar_class . $bio_class . $cover_class . $palette_class ?>">
 		<?php if ( $cff_header_cover ) : ?>
 		<div class="cff-header-hero"<?php echo $header_hero_style; ?>>
-			<img src="<?php echo esc_url( $cover_img_src ); ?>" alt="<?php echo esc_attr( sprintf( __( 'Cover for %s', 'custom-facebook-feed' ), $name ) ); ?>" data-cover-url="<?php echo esc_url( $cover_url ); ?>">
+			<img src="<?php echo esc_url( $cover_img_src ); ?>" class="cff-feed-image" alt="<?php echo esc_attr( sprintf( __( 'Cover for %s', 'custom-facebook-feed' ), $name ) ); ?>" data-cover-url="<?php echo esc_url( $cover_url ); ?>">
 			<?php if ( $cff_header_bio ) : ?>
 			<div class="cff-likes-box">
 				<div class="cff-square-logo"><?php echo $square_logo; ?></div>
@@ -80,7 +80,7 @@ elseif ($cff_header_type == "visual" && $cff_show_header) : //Start Visual Heade
 		<div class="cff-header-inner-wrap">
 			<?php if ( $cff_header_name && $avatar !== '' ) : ?>
 				<div class="cff-header-img">
-	                <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="nofollow noopener" title="<?php echo esc_attr( $name ); ?>"><img src="<?php echo esc_url( $avatar_img_src ); ?>" alt="<?php echo esc_attr( $name ); ?>" data-avatar="<?php echo esc_url( $avatar ); ?>"></a>
+	                <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="nofollow noopener" title="<?php echo esc_attr( $name ); ?>"><img src="<?php echo esc_url( $avatar_img_src ); ?>" class="cff-feed-image" alt="<?php echo esc_attr( $name ); ?>" data-avatar="<?php echo esc_url( $avatar ); ?>"></a>
 				</div>
 			<?php endif; ?>
 			<div class="cff-header-text">

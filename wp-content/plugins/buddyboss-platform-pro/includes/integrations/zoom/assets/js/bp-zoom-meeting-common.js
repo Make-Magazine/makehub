@@ -82,7 +82,7 @@ window.bp = window.bp || {};
 				if (successful) {
 					target.addClass('copied');
 					if ( target.closest('.bp-zoom-group-show-instructions').length ) {
-						target.html('<span class="bb-icon-check"></span> '+target.data('copied'));
+						target.html('<span class="bb-icon-l bb-icon-check"></span> '+target.data('copied'));
 					} else {
 						target.attr('data-balloon', target.data('copied'));
 					}
@@ -93,7 +93,7 @@ window.bp = window.bp || {};
 
 					setTimeout(function () {
 						if ( target.closest('.bp-zoom-group-show-instructions').length ) {
-							target.html('<span class="bb-icon-copy"></span> ' +button_text);
+							target.html('<span class="bb-icon-l bb-icon-duplicate"></span> ' +button_text);
 						} else {
 							target.attr('data-balloon', button_text);
 						}

@@ -58,11 +58,14 @@ class CFF_Customize_Tab{
 				'heading' 			=> __( 'Posts', 'custom-facebook-feed' ),
 				'icon' 				=> 'article',
 				'controls'			=> self::get_customize_posts_controls(),
+				'condition'			=> ['feedtype' => ['timeline','reviews','events','videos','albums']],
+				'separator'			=> 'none',
 				'nested_sections' 	=> [
 					'post_style' => [
 						'heading' 			=> __( 'Post Style', 'custom-facebook-feed' ),
 						'icon' 				=> 'color_scheme',
 						'isNested'			=> 'true',
+						'condition'			=> ['feedtype' => ['timeline','reviews','events','videos','albums']],
 						'controls'			=> self::get_nested_post_style_controls(),
 					],
 					'individual_elements' => [
@@ -877,7 +880,7 @@ class CFF_Customize_Tab{
 				'id' 		=> 'layout',
 				'heading' 	=> __( 'Layout', 'custom-facebook-feed' ),
 				'conditionHide'		=> true,
-				'condition'			=> ['feedtype' => ['timeline','reviews','events']],
+				'condition'			=> ['feedtype' => ['timeline','reviews','events'], 'feedlayout' => ['list','carousel']],
 				'options'	=> [
 					[
 						'value' => 'thumb',
@@ -897,6 +900,13 @@ class CFF_Customize_Tab{
 				]
 			],
 			[
+				'type' 				=> 'separator',
+				'top' 				=> 10,
+				'conditionHide'		=> true,
+				'condition'			=> ['feedtype' => ['timeline','reviews','events'], 'feedlayout' => ['masonry']],
+				'bottom' 			=> 10,
+			],
+			[
 				'type' 				=> 'checkbox',
 				'id' 				=> 'enablenarrow',
 				'label' 			=> __( 'Use Full Width layout when post width is less than 500px', 'custom-facebook-feed' ),
@@ -912,7 +922,7 @@ class CFF_Customize_Tab{
 			[
 				'type' 				=> 'separator',
 				'top' 				=> 10,
-					'conditionHide'		=> true,
+				'conditionHide'		=> true,
 				'condition'			=> ['feedtype' => ['timeline','reviews','events']],
 				'bottom' 			=> -1,
 			],
@@ -1275,6 +1285,8 @@ class CFF_Customize_Tab{
 				'type' 		=> 'toggleset',
 				'id' 		=> 'poststyle',
 				'heading' 	=> __( 'Post Type', 'custom-facebook-feed' ),
+				'condition' => ['feedtype' => ['timeline','reviews','events']],
+				'conditionHide' => true,
 				'options'	=> [
 					[
 						'value' => 'boxed',
@@ -1292,17 +1304,19 @@ class CFF_Customize_Tab{
 				'type' 				=> 'separator',
 				'top' 				=> 10,
 				'bottom' 			=> 10,
+				'condition' => ['feedtype' => ['timeline','reviews','events']],
+				'conditionHide' => true,
 			],
 			[
 				'type' 				=> 'heading',
-				'condition'			=> ['poststyle' => ['boxed']],
+				'condition'			=> ['poststyle' => ['boxed'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'heading' 			=> __( 'Individual Properties', 'custom-facebook-feed' ),
 			],
 			[
 				'type' 				=> 'colorpicker',
 				'id' 				=> 'postbgcolor',
-				'condition'			=> ['poststyle' => ['boxed']],
+				'condition'			=> ['poststyle' => ['boxed'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'layout' 			=> 'half',
 				'icon' 				=> 'background',
@@ -1314,7 +1328,7 @@ class CFF_Customize_Tab{
 			[
 				'type' 				=> 'number',
 				'id' 				=> 'postcorners',
-				'condition'			=> ['poststyle' => ['boxed']],
+				'condition'			=> ['poststyle' => ['boxed'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'fieldSuffix' 		=> 'px',
 				'layout' 			=> 'half',
@@ -1327,14 +1341,14 @@ class CFF_Customize_Tab{
 			[
 				'type' 				=> 'separator',
 				'top' 				=> 10,
-				'condition'			=> ['poststyle' => ['boxed']],
+				'condition'			=> ['poststyle' => ['boxed'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'bottom' 			=> 5,
 			],
 			[
 				'type' 				=> 'checkbox',
 				'id' 				=> 'boxshadow',
-				'condition'			=> ['poststyle' => ['boxed']],
+				'condition'			=> ['poststyle' => ['boxed'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'label' 			=> __( 'Box Shadow', 'custom-facebook-feed' ),
 				'options'			=> [
@@ -1345,14 +1359,15 @@ class CFF_Customize_Tab{
 			],
 			[
 				'type' 				=> 'heading',
-				'condition'			=> ['poststyle' => ['regular']],
+				'condition'			=> ['poststyle' => ['regular'], 'feedtype' => ['timeline','reviews','events']],
+				'conditionHide' => true,
 				'conditionHide'		=> true,
 				'heading' 			=> __( 'Separating Line', 'custom-facebook-feed' ),
 			],
 			[
 				'type' 				=> 'colorpicker',
 				'id' 				=> 'sepcolor',
-				'condition'			=> ['poststyle' => ['regular']],
+				'condition'			=> ['poststyle' => ['regular'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'layout' 			=> 'half',
 				'strongHeading'		=> 'false',
@@ -1363,7 +1378,7 @@ class CFF_Customize_Tab{
 			[
 				'type' 				=> 'number',
 				'id' 				=> 'sepsize',
-				'condition'			=> ['poststyle' => ['regular']],
+				'condition'			=> ['poststyle' => ['regular'], 'feedtype' => ['timeline','reviews','events']],
 				'conditionHide'		=> true,
 				'fieldSuffix' 		=> 'px',
 				'layout' 			=> 'half',
@@ -1371,14 +1386,6 @@ class CFF_Customize_Tab{
 				'heading' 			=> __( 'Thickness', 'custom-facebook-feed' ),
 				'style'				=> ['.cff-post-item-ctn' => 'border-bottom-width:{{value}}px;border-bottom-style:solid;'],
 				'stacked'			=> 'true'
-			],
-
-			[
-				'type' 				=> 'separator',
-				'top' 				=> 10,
-				'condition'			=> ['feedtype' => ['albums']],
-				'conditionHide'		=> true,
-				'bottom' 			=> 5,
 			],
 			[
 				'type' 				=> 'heading',
@@ -1417,13 +1424,7 @@ class CFF_Customize_Tab{
 				]
 			],
 
-			[
-				'type' 				=> 'separator',
-				'top' 				=> 10,
-				'condition'			=> ['feedtype' => ['videos']],
-				'conditionHide'		=> true,
-				'bottom' 			=> 5,
-			],
+
 			[
 				'type' 				=> 'heading',
 				'condition'			=> ['feedtype' => ['videos']],

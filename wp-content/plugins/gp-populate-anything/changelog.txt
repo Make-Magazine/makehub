@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.2.12
+
+	- Fixed issue where live merge tags were not parsed correctly in HTML fields when displayed in GravityView.
+
+## 1.2.11
+
+	- Fixed PHP notice generated when using a custom database due to incorrect database being used when attempting to convert date-like values.
+
+## 1.2.10
+
+	- Removed Page fields from list of available fields when populating from the Entry object type.
+
+## 1.2.9
+
+	- Fixed issue where products used for filter values would not provide consistent results due to the price not being removed from the value while filtering.
+	- Improved AJAX request handling on the frontend to abort previous requests if a new request is made.
+	- Fixed issue where Live Merge Tags would be immediately decoupled and not update when editing a Nested Forms child entry that uses Live Merge Tags.
+
+## 1.2.8
+
+	- Fixed issue where Populate Anything would conflict with certain field maps such as the Metadata field map for the Stripe Add-On and prevent fields from showing in the Value dropdown.
+
+## 1.2.7
+
+	- Improved compatibility with GP Entry Blocks’ Filter block.
+	- Updated `getFormElement()` to play nicer when the `is_submit_FORMID` hidden input isn't present (for GPEB)
+
+## 1.2.6
+
+	- Fixed styling of Gravity Forms merge tag buttons in custom filter/template inputs.
+	- Improved compatibility Gravity Forms 2.6's new AJAX saving.
+
 ## 1.2.5
 
 	- Fixed issue where populated choices with a value and label of both "0" would be excluded from the choice list.

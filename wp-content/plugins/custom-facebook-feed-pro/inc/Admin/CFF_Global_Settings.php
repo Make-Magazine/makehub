@@ -703,6 +703,10 @@ class CFF_Global_Settings {
 		if ( method_exists( 'LiteSpeed_Cache_API', 'purge' ) ) {
 			LiteSpeed_Cache_API::purge( 'esi.custom-facebook-feed' );
 		}
+
+		if( has_action( 'litespeed_purge_all' ) ) {
+			do_action( 'litespeed_purge_all' );
+		}
 	}
 
 	/**
@@ -797,8 +801,8 @@ class CFF_Global_Settings {
 			$license_key = get_option('cff_license_key');
 		}
 
-		$upgrade_url 	= sprintf('https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license', $license_key);
-		$renew_url 		= sprintf('https://smashballoon.com/checkout/?license_key=%s&download_id=%s&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, $cff_download_id);
+		$upgrade_url 	= sprintf('https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license', $license_key);
+		$renew_url 		= sprintf('https://smashballoon.com/checkout/?edd_license_key=%s&download_id=%s&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license&utm_content=renew-license', $license_key, $cff_download_id);
 		$learn_more_url = 'https://smashballoon.com/doc/my-license-key-wont-activate/?utm_campaign=facebook-pro&utm_source=settings&utm_medium=license&utm_content=learn-more';
 
 		// Check if the license key reached max site installations
@@ -951,7 +955,7 @@ class CFF_Global_Settings {
 			$has_license_error = true;
 		}
 
-		$upgrade_url			= sprintf('https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license', $license_key);
+		$upgrade_url			= sprintf('https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-license', $license_key);
 		$usage_tracking_url 	= 'https://smashballoon.com/custom-facebook-feed/docs/usage-tracking/';
 		$feed_issue_email_url 	= 'https://smashballoon.com/email-report-is-not-in-my-inbox/';
 
@@ -1076,7 +1080,7 @@ class CFF_Global_Settings {
 							__( 'The “Load more” button will be disabled', 'custom-facebook-feed'),
 							__( 'The “Like Box” widget will be disabled', 'custom-facebook-feed'),
 							__( 'For album feeds, only the album cover image is available in lightbox', 'custom-facebook-feed'),
-							__( 'The maximum image resoltuion will be 700px wide in the lightbox. If your images are smaller, reset the “resized images” using the button in “Advanced” section.', 'custom-facebook-feed'),
+							__( 'The maximum image resolution will be 700px wide in the lightbox. If your images are smaller, reset the “resized images” using the button in “Advanced” section.', 'custom-facebook-feed'),
 						)
 					)
 				),
@@ -1126,6 +1130,8 @@ class CFF_Global_Settings {
 					'likeShareComment' => __( 'Likes, Shares and Comments', 'custom-facebook-feed' ),
 					'viewMore' => __( 'View more comments', 'custom-facebook-feed' ),
 					'usedIn2' => __( 'Used in the comments section (when applicable)', 'custom-facebook-feed' ),
+					'viewAllReviews' => __( 'View all Reviews', 'custom-facebook-feed' ),
+					'usedIn3' => __( 'Used in View all reviews', 'custom-facebook-feed' ),
 					'commentOnFB' => __( 'Comment on Facebook', 'custom-facebook-feed' ),
 					'usedAt' => __( 'Used at the bottom of the comments section', 'custom-facebook-feed' ),
 					'photos' => __( 'photos', 'custom-facebook-feed' ),
@@ -1316,7 +1322,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Extensions</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 
@@ -1351,7 +1357,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Multifeed</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1375,7 +1381,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Reviews</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1399,7 +1405,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Carousel</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1423,7 +1429,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Date Range</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1447,7 +1453,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Featured Post</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1471,7 +1477,7 @@ class CFF_Global_Settings {
 				$status_text = __('Your <b>Album</b> license is Inactive!', 'custom-facebook-feed');
 			}
 			$upgrade_url = sprintf(
-				'https://smashballoon.com/custom-facebook-feed/pricing/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
+				'https://smashballoon.com/custom-facebook-feed/pricing/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=settings&utm_medium=upgrade-licen',
 				$license_key
 			);
 			$data[] = array(
@@ -1499,7 +1505,7 @@ class CFF_Global_Settings {
 		if ( get_option('cff_license_key') ) {
 			$license_key = get_option('cff_license_key');
 		}
-		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=balloon&utm_medium=all-access', $license_key);
+		$all_access_bundle_popup = sprintf('https://smashballoon.com/all-access/?edd_license_key=%s&upgrade=true&utm_campaign=facebook-pro&utm_source=balloon&utm_medium=all-access', $license_key);
 
 		return array(
 			'manageLicense' => 'https://smashballoon.com/account/downloads/?utm_campaign=facebook-pro&utm_source=settings&utm_medium=manage-license',
@@ -1588,6 +1594,7 @@ class CFF_Global_Settings {
 				'cff_load_more_text' => $cff_style_settings['cff_load_more_text'],
 				'cff_no_more_posts_text' => $cff_style_settings['cff_no_more_posts_text'],
 				'cff_translate_view_previous_comments_text' => $cff_style_settings['cff_translate_view_previous_comments_text'],
+				'cff_reviews_link_text' => $cff_style_settings['cff_reviews_link_text'],
 				'cff_translate_comment_on_facebook_text' => $cff_style_settings['cff_translate_comment_on_facebook_text'],
 				'cff_translate_photos_text' => $cff_style_settings['cff_translate_photos_text'],
 				'cff_translate_like_this_text' => $cff_style_settings['cff_translate_like_this_text'],
@@ -1655,6 +1662,7 @@ class CFF_Global_Settings {
 			'cff_load_more_text'        					=> 'Load more',
 			'cff_no_more_posts_text'    					=> 'No more posts',
 			'cff_translate_view_previous_comments_text'     => 'View more comments',
+			'cff_reviews_link_text' 						=> 'View all Reviews',
 			'cff_translate_comment_on_facebook_text'        => 'Comment on Facebook',
 			'cff_translate_photos_text'                     => 'photos',
 			'cff_translate_likes_this_text'                 => 'likes this',

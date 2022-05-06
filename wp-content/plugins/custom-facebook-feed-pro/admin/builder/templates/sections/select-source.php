@@ -29,12 +29,12 @@
                             <div v-html="source.account_type == 'group' ? svgIcons['users'] : svgIcons['flag']"></div>
                             <span class="sb-small sb-lighter">{{source.account_type}}</span>
                         </div>
-                        <div v-if="source.error !== ''" class="sb-source-error-wrap">
+						<div v-if="source.error !== '' || source.error_encryption" class="sb-source-error-wrap">
                             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.50008 0.666664C3.28008 0.666664 0.666748 3.28 0.666748 6.5C0.666748 9.72 3.28008 12.3333 6.50008 12.3333C9.72008 12.3333 12.3334 9.72 12.3334 6.5C12.3334 3.28 9.72008 0.666664 6.50008 0.666664ZM7.08342 9.41667H5.91675V8.25H7.08342V9.41667ZM7.08342 7.08333H5.91675V3.58333H7.08342V7.08333Z" fill="#D72C2C"/>
                             </svg>
 
-                            <span v-html="genericText.errorSource"></span><a href="#" @click.prevent.default="$parent.activateView('sourcePopupType', 'creation')" v-html="genericText.reconnect"></a>
+                            <span v-html="source.error !== '' ? genericText.errorSource : genericText.errorEncryption"></span><a href="#" @click.prevent.default="activateView('sourcePopup', 'creationRedirect')" v-html="genericText.reconnect"></a>
                         </div>
 						<div v-if="source.error === '' && typeof( source.needs_update ) !== 'undefined' && source.needs_update" class="sb-source-error-wrap">
 							<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">

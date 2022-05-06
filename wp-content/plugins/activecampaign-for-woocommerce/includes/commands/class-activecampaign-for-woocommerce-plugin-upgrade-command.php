@@ -13,6 +13,8 @@
 
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
+use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Order_Repository;
 
 /**
  * The Uninstall_Plugin_Command Class.
@@ -40,6 +42,32 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 	 */
 	private $db_version;
 
+	/**
+	 * The Ecom Order Repo
+	 *
+	 * @var Activecampaign_For_Woocommerce_Ecom_Order_Repository
+	 */
+	private $order_repository;
+
+	/**
+	 * Activecampaign_For_Woocommerce_Plugin_Upgrade_Command constructor.
+	 *
+	 * @param     Activecampaign_For_Woocommerce_Logger|null           $logger The logger.
+	 * @param     Activecampaign_For_Woocommerce_Ecom_Order_Repository $order_repository The ecom order repository.
+	 */
+	public function __construct(
+		Logger $logger = null,
+		Order_Repository $order_repository
+	) {
+		if ( ! $logger ) {
+			$this->logger = new Logger();
+		} else {
+			$this->logger = $logger;
+		}
+
+		$this->order_repository = $order_repository;
+	}
+
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
 	/**
 	 * Executes the command.
@@ -65,11 +93,13 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		if ( ! $installed_version ) {
 			$this->logger->notice( 'Plugin Upgrade Command: We need to add the ActiveCampaign table.' );
 			$this->install_table();
+			$this->upgrade_table();
 		} elseif ( $installed_version !== $this->get_plugin_db_version() ) {
 			$this->logger->notice( 'Plugin Upgrade Command: It looks like your installed version needs a db upgrade.' );
 			$this->upgrade_table();
 		} elseif ( $installed_version === $this->get_plugin_db_version() ) {
-			$this->logger->debug( 'Plugin Upgrade Command: Plugin db is up to date.' );
+			// $this->logger->debug( 'Plugin Upgrade Command: Plugin db is up to date.' );
+			return;
 		} else {
 			$this->logger->notice( 'Plugin Upgrade Command: Plugin is unsure what to do with the upgrade.' );
 		}
@@ -89,7 +119,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
 				$table_exists = true;
 			} else {
-				$this->logger->info( 'Plugin Upgrade Command: Could not find the activecampaign_for_woocommerce_abandoned_cart table so try to create it...' );
+				$this->logger->info( 'Plugin Upgrade Command: Could not find the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table so try to create it...' );
 				$table_exists = false;
 				$this->install_table();
 
@@ -107,7 +137,18 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
+
 			$table_exists = false;
+		}
+
+		if ( $table_exists ) {
+			$installed_version = get_option( 'activecampaign_for_woocommerce_db_version' );
+
+			if ( $installed_version !== $this->get_plugin_db_version() ) {
+				$this->logger->notice( 'Plugin Upgrade Command: It looks like your installed version needs a db upgrade.' );
+				$this->upgrade_table();
+				$table_exists = true;
+			}
 		}
 
 		return $table_exists;
@@ -162,8 +203,56 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 	 * Upgrades the table with new changes.
 	 */
 	private function upgrade_table() {
-		$this->logger->debug( 'Plugin Upgrade Command: There is no upgrade currently...' );
-		// update_option( "activecampaign_for_woocommerce_db_version", $this->get_plugin_db_version() );
+		// v1.1.0 update
+		try {
+			global $wpdb;
+			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+
+			$sql = "CREATE TABLE $table_name (
+				`order_date` DATETIME NULL AFTER `last_access_time` ,
+				`ac_externalcheckoutid` VARCHAR(155) NULL AFTER `activecampaignfwc_order_external_uuid`,
+				`wc_order_id` INT NULL AFTER `ac_externalcheckoutid`,
+				`ac_order_id` VARCHAR(45) NULL AFTER `wc_order_id`,
+				`abandoned_date` DATETIME NULL AFTER `ac_order_id`,
+				`ac_customer_id` VARCHAR(45) NULL AFTER `abandoned_date`,
+				UNIQUE INDEX `ac_externalcheckoutid_UNIQUE` (`ac_externalcheckoutid` ASC)
+				)
+			";
+
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( $sql );
+
+			// phpcs:disable
+			$wpdb->query( 'ALTER TABLE ' . $table_name . ' DROP INDEX `customer_id_UNIQUE`' );
+
+			// If everything went well this shouldn't error
+			$wpdb->get_results( 'SELECT order_date, ac_order_id, ac_externalcheckoutid, wc_order_id, abandoned_date, ac_customer_id FROM ' . $table_name . ' LIMIT 1' );
+			// phpcs:enable
+
+			if ( $wpdb->last_error ) {
+				$this->logger->error(
+					'Update db check failed...',
+					[
+						'wpdb_last_error'   => $wpdb->last_error,
+						'update to version' => $this->get_plugin_db_version(),
+					]
+				);
+			} else {
+				// Add the db version
+				update_option( 'activecampaign_for_woocommerce_db_version', $this->get_plugin_db_version() );
+				$this->logger->info( 'Plugin Upgrade Command: Table upgrade finished!' );
+
+				$this->update_abandoned_carts();
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an error upgrading the table.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
 	}
 
 	/**
@@ -177,5 +266,51 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		}
 
 		return $this->db_version;
+	}
+
+	/**
+	 * The update adds needed fields to each row and requires that an abandoned cart have that filled with the last_access_time
+	 */
+	private function update_abandoned_carts() {
+		global $wpdb;
+		$synced_abandoned_carts = $wpdb->get_results(
+		// phpcs:disable
+			$wpdb->prepare( 'SELECT id, customer_id, customer_email, last_access_time, activecampaignfwc_order_external_uuid 
+					FROM
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+					WHERE
+						synced_to_ac = %s
+						AND order_date IS NULL',
+				1
+			)
+		// phpcs:enable
+		);
+
+		$abandoned_cart_utilities = new Abandoned_Cart_Utilities();
+
+		foreach ( $synced_abandoned_carts as $abc_order ) {
+			$externalcheckout_id = $abandoned_cart_utilities->generate_externalcheckoutid( $abc_order->customer_id, $abc_order->customer_email, $abc_order->activecampaignfwc_order_external_uuid );
+			$order_ac            = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
+
+			if ( method_exists( $order_ac, 'get_id' ) ) {
+				$data = [
+					'ac_order_id'    => method_exists( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
+					'ac_customer_id' => method_exists( $order_ac, 'get_customerid' ) ? $order_ac->get_customerid() : null,
+				];
+			} else {
+				$data = [];
+			}
+
+			$data['abandoned_date']        = $abc_order->last_access_time;
+			$data['ac_externalcheckoutid'] = $externalcheckout_id;
+
+			$wpdb->update(
+				$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+				$data,
+				[
+					'id' => $abc_order->id,
+				]
+			);
+		}
 	}
 }

@@ -7,9 +7,9 @@
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.25.24
+ * Version: 1.25.27
  * WC requires at least: 3.5.5
- * WC tested up to: 6.3
+ * WC tested up to: 6.4
  *
  * Copyright (c) 2017-2022 Automattic
  *
@@ -730,6 +730,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 			$cart_validation = new WC_Connect_Cart_Validation();
 			$cart_validation->register_filters();
+			$cart_validation->register_actions();
 		}
 
 		/**

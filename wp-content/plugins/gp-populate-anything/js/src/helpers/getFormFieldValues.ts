@@ -118,6 +118,16 @@ export default function getFormFieldValues(
 			continue;
 		}
 
+		/* Exclude the price from the value of a selected option/product. */
+		if (
+			$( el ).closest( '.gfield_price' ).length &&
+			value?.indexOf( '|' ) > 0
+		) {
+			const valueSplit = value.split( '|' );
+			inputsObject[ inputName ] = valueSplit[ 0 ];
+			continue;
+		}
+
 		/* Handle array-based inputs such as the Time field */
 		if ( inputName.indexOf( '[]' ) !== -1 ) {
 			inputName = inputName.replace( '[]', '' );

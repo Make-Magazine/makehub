@@ -517,6 +517,9 @@ function cff_delete_cache(){
         do_action( 'litespeed_purge', 'esi.custom-facebook-feed' );
     }
 
+	if( has_action( 'litespeed_purge_all' ) ) {
+		do_action( 'litespeed_purge_all' );
+	}
 }
 
 //Cron job to clear transients

@@ -9,7 +9,7 @@
 ?>
 <div class="bb-title-wrap">
 	<h2 class="bb-title"><?php esc_html_e( 'Create Webinar', 'buddyboss-pro' ); ?></h2>
-	<a href="#" class="bp-close-create-webinar-form"><span class="bb-icon-x"></span></a>
+	<a href="#" class="bp-close-create-webinar-form"><span class="bb-icon-l bb-icon-times"></span></a>
 </div>
 <?php
 $group_id         = filter_input( INPUT_GET, 'group_id', FILTER_VALIDATE_INT );
@@ -79,7 +79,7 @@ if ( 1 === (int) $host_type ) {
 			<div class="bb-field-wrap">
 				<label for="bp-zoom-webinar-password"><?php esc_html_e( 'Passcode (optional)', 'buddyboss-pro' ); ?></label>
 				<div class="bb-webinar-input-wrap bp-toggle-webinar-password-wrap">
-					<a href="#" class="bp-toggle-webinar-password"><i class="bb-icon-eye"></i><i class="bb-icon-eye-off"></i></a>
+					<a href="#" class="bp-toggle-webinar-password"><i class="bb-icon-l bb-icon-eye"></i><i class="bb-icon-l bb-icon-eye-slash"></i></a>
 					<input autocomplete="new-password" type="password" id="bp-zoom-webinar-password" value="" name="bp-zoom-webinar-password" />
 				</div>
 			</div>

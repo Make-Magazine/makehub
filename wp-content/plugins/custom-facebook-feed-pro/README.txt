@@ -2,8 +2,8 @@
 Author: Smash Balloon
 Support Website: https://smashballoon.com/custom-facebook-feed/
 Requires at least: 4.1
-Tested up to: 5.9
-Version: 4.2.2
+Tested up to: 5.9.3
+Version: 4.2.4
 License: Non-distributable, Not for resale
 
 The Custom Facebook Feed allows you to display a completely customizable Facebook feed of any public Facebook page on your website.
@@ -34,6 +34,28 @@ Display a **completely customizable**, **responsive** and **search engine crawla
 5. You can display multiple feeds of different Facebook pages by specifying a Page ID directly in the shortcode: [custom-facebook-feed id=smashballoon num=5].
 
 == Changelog ==
+= 4.2.4 =
+* Fix: Fixed hashtags and account mentions errors with links in the post text.
+* Fix: Events feeds with a masonry layout would not load more posts correctly.
+* Fix: Events feeds would not have the proper styling and settings applied to the load more button.
+* Fix: When there were multiple feeds on a page, some images would not show for the first feed under certain circumstances.
+* Fix: The dark theme template would not apply correctly in feeds.
+* Fix: Fixed missing setting for video post titles.
+* Fix: Added support for oEmbed URL with the structure "https://www.facebook.com/permalink.php?story_fbid=1234567890&id=1123456789"
+
+= 4.2.3 =
+* Tweak: Updated our logo and color scheme throughout the plugin to match our new [website](https://smashballoon.com/).
+* Tweak: Minified the CSS and JavaScript files for better performance.
+* Tweak: Added the CSS class "cff-feed-image" to all img elements in the feed.
+* Fix: Fixed several issues related to event feeds.
+* Fix: The media position post text was being duplicated.
+* Fix: The load more button would be hidden if there were multiple feeds on a page using the masonry layout.
+* Fix: The [Reviews extension](https://smashballoon.com/extensions/reviews/) can now be translated using the "Translations" tab on the settings page.
+* Fix: Added links to the issue in our API error helper doc in error messages for easy debugging on our website.
+* Fix: When using the AJAX theme fix, the JavaScript file name includes the version number to bust browser caches with updates.
+* Fix: Dismissing dashboard notifications would prevent the ability to create new feeds until the page was refreshed.
+* Fix: The event post text setting was not working.
+
 = 4.2.2 =
 * Fix: Fixed an issue which caused the new "Feed Templates" menu item to throw an error if editing a feed created prior to v4.2.
 

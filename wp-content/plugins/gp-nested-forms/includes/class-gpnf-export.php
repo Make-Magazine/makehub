@@ -107,6 +107,17 @@ class GPNF_Export {
 		$nested_form_fields = GFCommon::get_fields_by_type( $form, array( 'form' ) );
 		$lines              = array();
 
+		/**
+		 * Enable the output of parent entry data on child entry rows.
+		 *
+		 * @since x.x.x
+		 *
+		 * @param bool  $export_parent Should parent entry data be exported on child entry rows?
+		 * @param array $form          The parent form.
+		 * @param array $entry         The parent entry.
+		 */
+		$export_parent = gf_apply_filters( array( 'gpnf_export_parent_entry_data_on_child_entry_rows', $form['id'] ), false, $form, $entry );
+
 		foreach ( $nested_form_fields as $nested_form_field ) {
 			foreach ( $parent_entry->get_child_entries( $nested_form_field->id ) as $child_entry ) {
 
@@ -124,10 +135,15 @@ class GPNF_Export {
 						$field   = GFAPI::get_field( $form, $column );
 						$_line[] = self::escape_value( $field->get_value_export( $child_entry, $column, false, true ) );
 					} else {
-						$counter = rgar( $field_rows, $column, 1 );
-						while ( $counter > 0 ) {
-							$_line[] = '""';
-							$counter--;
+						if ( $export_parent ) {
+							$field   = GFAPI::get_field( $form, $column );
+							$_line[] = self::escape_value( $field->get_value_export( $entry, $column, false, true ) );
+						} else {
+							$counter = rgar( $field_rows, $column, 1 );
+							while ( $counter > 0 ) {
+								$_line[] = '""';
+								$counter--;
+							}
 						}
 					}
 				}
@@ -138,7 +154,24 @@ class GPNF_Export {
 			}
 		}
 
-		return empty( $lines ) ? $line : sprintf( "%s\n%s", $line, implode( "\n", $lines ) );
+		if ( empty ( $lines ) ) {
+			return $line;
+		}
+
+		/**
+		 * Disable the output of parent entry rows so that only child entry rows are exported.
+		 *
+		 * @since x.x.x
+		 *
+		 * @param bool  $export_parent Should parent entry rows be exported?
+		 * @param array $form          The parent form.
+		 * @param array $entry         The parent entry.
+		 */
+		if ( gf_apply_filters( array( 'gpnf_export_parent_entry_row', $form['id'] ), true, $form, $entry ) ) {
+			array_unshift( $lines, $line );
+		}
+
+		return implode( "\n", $lines );
 	}
 
 	public function are_export_fields_disabled() {

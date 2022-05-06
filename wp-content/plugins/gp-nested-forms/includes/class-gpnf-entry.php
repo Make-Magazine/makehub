@@ -68,7 +68,12 @@ class GPNF_Entry {
 
 	public function has_children() {
 
-		$entry             = $this->get_entry();
+		$entry = $this->get_entry();
+
+		if ( is_wp_error( $entry ) ) {
+			return false;
+		}
+
 		$form              = GFAPI::get_form( $entry['form_id'] );
 		$has_nested_fields = gp_nested_forms()->has_nested_form_field( $form );
 
@@ -194,10 +199,10 @@ class GPNF_Entry {
 
 		$form = GFAPI::get_form( $this->_entry['form_id'] );
 
-		$entry       = $this->_entry;
-		$entry['id'] = null; // Force GFCommon::get_order_total() to get an un-cached total.
+		// Force GFCommon::get_order_total() to get an un-cached total.
+		gform_delete_meta( $this->_entry['id'], 'gform_product_info__' );
 
-		$total        = GFCommon::get_order_total( $form, $entry );
+		$total        = GFCommon::get_order_total( $form, $this->_entry );
 		$this->_total = $total;
 
 	}

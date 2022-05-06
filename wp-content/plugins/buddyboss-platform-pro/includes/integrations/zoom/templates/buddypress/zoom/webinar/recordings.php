@@ -199,7 +199,7 @@ $recording_groups_dates_print = array_unique( $recording_groups_dates_print );
 
 					<div class="recording-list-row" data-recording-id="<?php echo esc_attr( $recording->id ); ?>">
 						<div class="recording-preview-img">
-							<span class="<?php echo ( 'MP4' === $recording_file->file_type || 'M4A' === $recording_file->file_type ) ? 'bb-icon-play triangle-play-icon' : ''; ?> <?php echo esc_attr( $recording_type ); ?>"></span>
+							<span class="<?php echo ( 'MP4' === $recording_file->file_type || 'M4A' === $recording_file->file_type ) ? 'bb-icon-l bb-icon-play triangle-play-icon' : ''; ?> <?php echo esc_attr( $recording_type ); ?>"></span>
 							<?php if ( in_array( $recording_type, array( 'shared_screen_with_speaker_view', 'shared_screen_with_gallery_view', 'active_speaker', 'shared_screen', 'shared_screen_with_speaker_view(CC)', 'gallery_view' ), true ) ) : ?>
 								<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/recording-video.png' ) ); ?>" alt="<?php echo esc_attr( $recording_type ); ?>"/>
 							<?php elseif ( 'audio_only' === $recording_type ) : ?>
@@ -251,19 +251,19 @@ $recording_groups_dates_print = array_unique( $recording_groups_dates_print );
 								<?php if ( ! empty( $recording->password ) ) : ?>
 									<div class="pass-toggle">
 										<a href="#" class="toggle-password show-pass">
-											<i class="bb-icon-eye"></i><?php esc_html_e( 'Show password', 'buddyboss-pro' ); ?>
+											<i class="bb-icon-l bb-icon-eye"></i><?php esc_html_e( 'Show password', 'buddyboss-pro' ); ?>
 										</a>
-										<span class="show-password bp-hide"><a href="#" class="toggle-password hide-pass"><i class="bb-icon-eye-off"></i></a><span class="recording-password"><?php echo esc_html( $recording->password ); ?></span></span>
+										<span class="show-password bp-hide"><a href="#" class="toggle-password hide-pass"><i class="bb-icon-l bb-icon-eye-slash"></i></a><span class="recording-password"><?php echo esc_html( $recording->password ); ?></span></span>
 									</div>
 								<?php endif; ?>
 							</div>
 							<?php if ( bp_zoom_is_zoom_recordings_links_enabled() ) : ?>
 								<div class="recording-button-wrap">
 									<?php if ( ! in_array( $recording_file->file_type, array( 'TIMELINE', 'TRANSCRIPT', 'CHAT', 'CC' ), true ) && ! empty( $recording_file->play_url ) ) : ?>
-										<a href="#" id="copy-download-link" class="button small outline bb-copy-link" data-download-link="<?php echo esc_url( bp_zoom_get_recording_rewrite_url( $recording_file->play_url, $recording->id ) ); ?>" data-copied="<?php esc_html_e( 'Copied to clipboard', 'buddyboss-pro' ); ?>"><i class="bb-icon-copy"></i><?php esc_html_e( 'Copy Link', 'buddyboss-pro' ); ?></a>
+										<a href="#" id="copy-download-link" class="button small outline bb-copy-link" data-download-link="<?php echo esc_url( bp_zoom_get_recording_rewrite_url( $recording_file->play_url, $recording->id ) ); ?>" data-copied="<?php esc_html_e( 'Copied to clipboard', 'buddyboss-pro' ); ?>"><i class="bb-icon-l bb-icon-duplicate"></i><?php esc_html_e( 'Copy Link', 'buddyboss-pro' ); ?></a>
 									<?php endif; ?>
 									<?php if ( ! empty( $recording_file->download_url ) ) : ?>
-										<a href="<?php echo esc_url( bp_zoom_get_recording_rewrite_url( $recording_file->download_url, $recording->id, true ) ); ?>" class="button small outline downloadwebinar downloadclip"><i class="bb-icon-download"></i><?php esc_html_e( 'Download', 'buddyboss-pro' ); ?></a>
+										<a href="<?php echo esc_url( bp_zoom_get_recording_rewrite_url( $recording_file->download_url, $recording->id, true ) ); ?>" class="button small outline downloadwebinar downloadclip"><i class="bb-icon-l bb-icon-download"></i><?php esc_html_e( 'Download', 'buddyboss-pro' ); ?></a>
 									<?php endif; ?>
 								</div>
 							<?php endif; ?>

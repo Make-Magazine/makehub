@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bbp_pro_core_install', 'bp_zoom_pro_core_install_zoom_integration' );
-add_filter( 'bp_email_get_schema', 'bp_zoom_email_schema', 10 );
-add_filter( 'bp_email_get_type_schema', 'bp_zoom_email_type_schema', 10 );
 add_filter( 'bp_email_set_tokens', 'bp_zoom_set_email_tokens', 99, 3 );
+
+add_filter( 'bp_rest_account_settings_notifications_groups', 'bb_zoom_rest_account_settings_notifications', 99 );
 
 /**
  * Install or upgrade zoom integration.
@@ -150,70 +150,6 @@ function bp_zoom_pro_core_install_zoom_integration() {
 }
 
 /**
- * Add zoom email schema.
- *
- * @since 1.0.9
- *
- * @param array $schema Email schemas.
- *
- * @return mixed
- */
-function bp_zoom_email_schema( $schema ) {
-
-	$schema['zoom-scheduled-meeting-email'] = array(
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} scheduled a Zoom Meeting in the group: "{{group.name}}"', 'buddyboss-pro' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> scheduled a Zoom Meeting in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{zoom_meeting}}}", 'buddyboss-pro' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{poster.name}} scheduled a Zoom Meeting in the group \"{{group.name}}\":\n\n{{{zoom_meeting}}}", 'buddyboss-pro' ),
-	);
-
-	$schema['zoom-scheduled-webinar-email'] = array(
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} scheduled a Zoom Webinar in the group: "{{group.name}}"', 'buddyboss-pro' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> scheduled a Zoom Webinar in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{zoom_webinar}}}", 'buddyboss-pro' ),
-		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{poster.name}} scheduled a Zoom Webinar in the group \"{{group.name}}\":\n\n{{{zoom_webinar}}}", 'buddyboss-pro' ),
-	);
-
-	return $schema;
-}
-
-/**
- * Zoom email type schema.
- *
- * @since 1.0.9
- *
- * @param array $types Types.
- *
- * @return mixed
- */
-function bp_zoom_email_type_schema( $types ) {
-
-	$types['zoom-scheduled-meeting-email'] = array(
-		'description' => __( 'Member scheduled the Zoom Meeting in the group.', 'buddyboss-pro' ),
-		'unsubscribe' => array(
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key' => 'notification_zoom_meeting_scheduled',
-			'message'  => __( 'You will no longer receive emails when someone schedules meeting in the group.', 'buddyboss-pro' ),
-		),
-	);
-
-	$types['zoom-scheduled-webinar-email'] = array(
-		'description' => __( 'Member scheduled the Zoom Webinar in the group.', 'buddyboss-pro' ),
-		'unsubscribe' => array(
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_key' => 'notification_zoom_webinar_scheduled',
-			'message'  => __( 'You will no longer receive emails when someone schedules webinar in the group.', 'buddyboss-pro' ),
-		),
-	);
-
-	return $types;
-}
-
-/**
  * Zoom set email tokens
  *
  * @param array     $formatted_tokens Formatted tokens.
@@ -247,3 +183,39 @@ function bp_zoom_set_email_tokens( $formatted_tokens, $tokens, $bp_email ) {
 	return $formatted_tokens;
 }
 
+/**
+ * Zoom notifications into the api.
+ *
+ * @since 1.2.1
+ *
+ * @param array $fields Array of fields sets.
+ *
+ * @return array
+ */
+function bb_zoom_rest_account_settings_notifications( $fields ) {
+	$fields[] = array(
+		'name'        => 'notification_zoom_meeting_scheduled',
+		'label'       => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss-pro' ),
+		'field'       => 'radio',
+		'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_zoom_meeting_scheduled', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
+		'options'     => array(
+			'yes' => esc_html__( 'Yes', 'buddyboss-pro' ),
+			'no'  => esc_html__( 'No', 'buddyboss-pro' ),
+		),
+		'group_label' => '',
+	);
+
+	$fields[] = array(
+		'name'        => 'notification_zoom_webinar_scheduled',
+		'label'       => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss-pro' ),
+		'field'       => 'radio',
+		'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_zoom_webinar_scheduled', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
+		'options'     => array(
+			'yes' => esc_html__( 'Yes', 'buddyboss-pro' ),
+			'no'  => esc_html__( 'No', 'buddyboss-pro' ),
+		),
+		'group_label' => '',
+	);
+
+	return $fields;
+}

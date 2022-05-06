@@ -304,6 +304,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		parent::init_admin();
 
 		/* Form Editor */
+		add_filter( 'admin_body_class', array( $this, 'add_helper_body_classes' ) );
 		add_action( 'gform_field_standard_settings_75', array( $this, 'field_standard_settings' ) );
 
 		/* We don't change field values in admin since it can cause the value to be saved as the defaultValue setting */
@@ -3030,7 +3031,6 @@ class GP_Populate_Anything extends GP_Plugin {
 		$response     = array(
 			'fields'           => array(),
 			'merge_tag_values' => array(),
-			'event_id'         => rgar( $data, 'event-id' ),
 		);
 
 		/**
@@ -3275,10 +3275,32 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
+	public function add_helper_body_classes( $body_class ) {
+		$gf_version_split    = explode( '.', GFForms::$version );
+		$major_minor_version = $gf_version_split[0] . '.' . $gf_version_split[1];
+
+		if ( is_callable( array( 'GFForms', 'get_page' ) ) && GFForms::get_page() ) {
+			$body_class .= ' gf-version-' . str_replace( '.', '-', $major_minor_version );
+
+			if ( version_compare( $major_minor_version, '2.5' ) <= 0 ) {
+				$body_class .= ' gf-version-lte-2-5';
+			}
+		}
+
+		return $body_class;
+	}
+
+
 	public function field_standard_settings() {
+		/*
+		 * The class of this root element needs to contain whatever field setting classes are used for the Add-On otherwise GF 2.6 will nuke them due to them
+		 * not being present in the initial markup.
+		 *
+		 * Additionally, it needs to be an <li>, have the class to protect as the first class, and also have the field_setting class.
+		 */
 		?>
 		<!-- Populated with Vue -->
-		<div id="gppa"></div>
+		<li id="gppa" class="gppa field_setting" ></li>
 		<?php
 	}
 
@@ -3428,6 +3450,9 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			if ( $choice['label'] === $missing_filter_text ) {
 				unset( $choices['fields']['choices'][ $choice_index ] );
+
+				// Without this, when JSON-encoded, it will be turned into associative.
+				$choices['fields']['choices'] = array_values( $choices['fields']['choices'] );
 			}
 		}
 

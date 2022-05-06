@@ -125,7 +125,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 		<?php endif; ?>
 		<div class="bp-zoom-block-show-details">
 			<a href="#bp-zoom-block-show-details-popup-<?php echo esc_attr( $webinar_id ); ?>" class="show-webinar-details">
-				<span class="bb-icon-calendar-small"></span> <?php esc_html_e( 'Webinar Details', 'buddyboss-pro' ); ?>
+				<span class="bb-icon-l bb-icon-calendar"></span> <?php esc_html_e( 'Webinar Details', 'buddyboss-pro' ); ?>
 			</a>
 		</div>
 		<div id="bp-zoom-block-show-details-popup-<?php echo esc_attr( $webinar_id ); ?>" class="bzm-white-popup bp-zoom-block-show-details mfp-hide">
@@ -189,18 +189,18 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 								</div>
 								<div class="pass-toggle">
 									<a href="javascript:;" class="toggle-password show-pass on">
-										<i class="bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?>
 									</a>
 									<a href="javascript:;" class="toggle-password hide-pass">
-										<i class="bb-icon-eye-off"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-eye-slash"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?>
 									</a>
 								</div>
 							</div>
 						<?php else : ?>
 							<span class="no-pass-required">
-						<i class="bb-icon-close"></i>
-						<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
-					</span>
+								<i class="bb-icon-l bb-icon-times"></i>
+								<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
+							</span>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -211,8 +211,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 						<div class="webinar-item-head"><?php esc_html_e( 'Registration Link', 'buddyboss-pro' ); ?></div>
 						<div class="webinar-item-col">
 							<div class="copy-link-wrap">
-								<a class="bb-registration-url" target="_blank"
-										href="<?php echo esc_url( $registration_url ); ?>"><?php echo esc_url( $registration_url ); ?></a>
+								<a class="bb-registration-url" target="_blank" href="<?php echo esc_url( $registration_url ); ?>"><?php echo esc_url( $registration_url ); ?></a>
 							</div>
 						</div>
 					</div>
@@ -251,15 +250,15 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 						$bp_get_zoom_webinar_auto_recording  = ( in_array( $auto_recording, array( 'cloud', 'local' ), true ) ) ? 'yes' : 'no';
 						?>
 						<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_pratice_session ); ?>">
-							<i class="<?php echo $practice_session ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $practice_session ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Enable practice session', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_authentication ); ?>">
-							<i class="<?php echo $webinar_authentication ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $webinar_authentication ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Only authenticated users can join', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_auto_recording ); ?>">
-							<i class="<?php echo in_array( $auto_recording, array( 'cloud', 'local' ), true ) ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo in_array( $auto_recording, array( 'cloud', 'local' ), true ) ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span>
 								<?php
 								if ( 'cloud' === $auto_recording ) {

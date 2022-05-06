@@ -229,7 +229,15 @@ const ko = window.ko;
 
 			// Setup Knockout to handle our Nested Form field entries.
 			self.viewModel = new EntriesModel(self.prepareEntriesForKnockout(self.entries), self);
+
+			/*
+			 * Preserve jQuery data as KO's cleanNode method will remove it. This is specifically needed for
+			 * Gravity Forms' disable assessment.
+			 */
+			const preservedData = jQuery(self.$fieldContainer).data();
 			ko.cleanNode(self.$fieldContainer[0]);
+			self.$fieldContainer.data(preservedData);
+
 			ko.applyBindings(self.viewModel, self.$fieldContainer[0]);
 		};
 
@@ -1226,7 +1234,7 @@ const ko = window.ko;
 		 * updated if they're listening to the form 'change' events.
 		 */
 		self.entries.subscribe(function () {
-			gpnf.$parentFormContainer.children( 'form' ).trigger( 'change' );
+			gpnf.$parentFormContainer.trigger( 'change' );
 		});
 
 		self.isMaxed = ko.computed( function() {

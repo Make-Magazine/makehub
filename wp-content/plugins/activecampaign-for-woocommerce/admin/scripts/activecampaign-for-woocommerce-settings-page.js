@@ -1,5 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
     const $ = window.jQuery;
+    if($('#ac_emailoption0').attr('checked')){
+        $("#custom-email-option-set").hide();
+    }
+    $("#ac_emailoption0").click(function(e){
+        $("#custom-email-option-set").hide();
+        $("#custom_email_field").val('billing_email');
+    });
+    $("#ac_emailoption1").click(function(e){
+        $("#custom-email-option-set").show();
+    });
 
     $( "#activecampaign-update-api-button" ).click(function(e) {
         e.preventDefault();

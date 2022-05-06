@@ -11,7 +11,6 @@
  */
 
 use Activecampaign_For_Woocommerce_Logger as Logger;
-use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
 
 /**
  * Fired during plugin activation.
@@ -46,8 +45,8 @@ class Activecampaign_For_Woocommerce_Activator {
 	 * @since    1.0.0
 	 */
 	public function activate() {
-		$this->logger = new Logger();
-		$this->logger->info( 'Activation running...' );
+		$logger = new Logger();
+		$logger->info( 'Activation running...' );
 		$current_options = $this->admin->get_options();
 
 		$options_to_be_saved = [];
@@ -71,9 +70,8 @@ class Activecampaign_For_Woocommerce_Activator {
 		$this->admin->update_storage( $options_to_be_saved );
 
 		// Perform the table steps
-		$upgrade = new Plugin_Upgrade_Command();
-		$upgrade->execute();
+		do_action( 'activecampaign_for_woocommerce_verify_tables' );
 
-		$this->logger->info( 'Finished ActiveCampaign for WooCommerce plugin activation.' );
+		$logger->info( 'Finished ActiveCampaign for WooCommerce plugin activation.' );
 	}
 }

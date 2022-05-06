@@ -544,6 +544,9 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		$output = array();
 
 		foreach ( $form['fields'] as $field ) {
+			if ( $field['type'] === 'page' ) {
+				continue;
+			}
 			/**
 			 * Use admin label when listing out fields
 			 */

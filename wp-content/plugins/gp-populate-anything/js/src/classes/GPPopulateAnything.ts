@@ -42,7 +42,6 @@ export default class GPPopulateAnything {
 	public populatedFields: fieldID[] = [];
 	public postedValues: { [ input: string ]: string } = {};
 	public gravityViewMeta?: gravityViewMeta;
-	public eventId = 0;
 	private triggerChangeAfterCalculate: boolean = false;
 	private triggerChangeExecuted: boolean = false;
 	private triggerChangeOnFields: {
@@ -50,6 +49,8 @@ export default class GPPopulateAnything {
 		formula: string;
 		rounding: string;
 	}[] = [];
+
+	private currentBatchedAjaxRequest: JQuery.jqXHR | undefined;
 
 	// eslint-disable-next-line no-shadow
 	constructor( public formId: formId, public fieldMap: fieldMap ) {
@@ -616,7 +617,13 @@ export default class GPPopulateAnything {
 		requestedFields: { field: fieldID; filters?: fieldMapFilter[] }[],
 		triggerInputId: fieldID | fieldID[]
 	): JQueryPromise< any > {
-		this.eventId++;
+		/* Abort previous batched AJAX request if it hasn't resolved yet. */
+		if (
+			this.currentBatchedAjaxRequest &&
+			this.currentBatchedAjaxRequest?.state() !== 'resolved'
+		) {
+			this.currentBatchedAjaxRequest?.abort();
+		}
 
 		const focusBeforeAJAX = $( ':focus' ).attr( 'id' );
 		const fieldIDs: fieldID[] = [];
@@ -756,14 +763,13 @@ export default class GPPopulateAnything {
 					window.gppaLiveMergeTags[ this.formId ]
 						.currentMergeTagValues,
 				security: window.GPPA.NONCE,
-				'event-id': this.eventId,
 			},
 			this.formId
 		);
 
 		disableSubmitButton( this.getFormElement() );
 
-		return $.ajax( {
+		this.currentBatchedAjaxRequest = $.ajax( {
 			url: window.GPPA.AJAXURL + '?action=gppa_get_batch_field_html',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -775,13 +781,7 @@ export default class GPPopulateAnything {
 				fields: any;
 				event_id: any;
 			} ) => {
-				// Skip out of order responses unless payload contains new markup
-				if (
-					this.eventId > response.event_id &&
-					response.fields.length < 1
-				) {
-					return;
-				}
+				this.currentBatchedAjaxRequest = undefined;
 
 				if ( Object.keys( response.fields ).length ) {
 					const updatedFieldIDs = []; // Stores updated field IDs for `gppa_updated_batch_fields`
@@ -949,6 +949,8 @@ export default class GPPopulateAnything {
 				}
 			}
 		);
+
+		return this.currentBatchedAjaxRequest;
 	}
 
 	/**
@@ -1123,9 +1125,12 @@ export default class GPPopulateAnything {
 	}
 
 	getFormElement() {
-		let $form = $( 'input[name="is_submit_' + this.formId + '"]' ).parents(
-			'form'
-		);
+		let $form = $(
+			'input[name="is_submit_' +
+				this.formId +
+				'"], #gform_fields_' +
+				this.formId
+		).parents( 'form' );
 
 		if ( this.gravityViewMeta ) {
 			$form = $( '.gv-widget-search' );

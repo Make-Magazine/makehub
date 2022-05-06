@@ -1,6 +1,14 @@
 
 # Changelog
 
+## 1.2.25
+
+	- Added support for mapping Multi-file Upload fields as a featured image and mapping the same field to an ACF gallery field. The first image will be uploaded as the featured image. All other photos would be added to the gallery field.
+
+## 1.2.24
+
+	- Fixed error that could occur if deleting a file from a single file upload field using GravityView.
+
 ## 1.2.23
 
 	- Added [gpml_image_sizes](https://gravitywiz.com/documentation/gpml_image_sizes) to allow filtering image sizes on upload.

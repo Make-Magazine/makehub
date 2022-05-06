@@ -27,6 +27,8 @@ class GPPA_Compatibility_GravityView {
 
 		add_filter( 'gravityview/fields/custom/form', array( $this, 'hydrate_submitted_entry_choices' ), 10, 2 );
 
+		add_filter( 'gravityview/template/field/context', array( $this, 'replace_live_merge_tags_in_html_field_content' ) );
+
 	}
 
 	/**
@@ -255,6 +257,19 @@ class GPPA_Compatibility_GravityView {
 
 		return $output;
 
+	}
+
+	public function replace_live_merge_tags_in_html_field_content( $context ) {
+		if ( is_a( $context->field->field, 'GF_Field' ) && $context->field->field->get_input_type() === 'html' ) {
+			$lmt   = gp_populate_anything()->live_merge_tags;
+			$field =& $context->field->field;
+			$form  = $context->view->form->form;
+
+			$lmt->populate_lmt_whitelist( $form );
+			$field->content = $lmt->replace_live_merge_tags_static( $field->content, $form, GFAPI::get_entry( $context->entry->ID ) );
+		}
+
+		return $context;
 	}
 
 }

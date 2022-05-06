@@ -157,7 +157,7 @@ class CFF_Post_Record{
 								$message .= ' ' . $key . '- ' . $item[0] . ' |';
 							}
 						}
-						\cff_main_pro()->cff_error_reporter->add_error( 'image_editor', array( $file_name, $message ) );
+						\cff_main_pro()->cff_error_reporter->add_error( 'image_editor', array( $new_file_name, $message ) );
 					}
 				}
 
@@ -199,36 +199,8 @@ class CFF_Post_Record{
 	 *
 	 * @since 2.0/4.0
 	 */
-	public function update_db_data( $update_last_requested = true, $transient_name = false, $image_sizes, $upload_dir, $upload_url, $timestamp_for_update = false ) {
-/*
-		if ( empty( $this->db_id ) ) {
-			return false;
-		}
+	public function update_db_data( $update_last_requested, $transient_name, $image_sizes, $upload_dir, $upload_url, $timestamp_for_update = false ) {
 
-		$to_update = array(
-			'json_data' => sbi_json_encode( $this->instagram_api_data )
-		);
-
-		if ( $update_last_requested ) {
-			$to_update['last_requested'] = date( 'Y-m-d H:i:s' );
-		}
-
-		if ( $timestamp_for_update ) {
-			$to_update['top_time_stamp'] = $timestamp_for_update;
-		}
-
-		if ( $transient_name ) {
-			$this->maybe_add_feed_id( $transient_name );
-		}
-
-		if ( $this->media_id === 'pending' ) {
-			$this->resize_and_save_image( $image_sizes, $upload_dir, $upload_url );
-		} else {
-			$this->update_sbi_instagram_posts( $to_update );
-		}
-
-		return true;
-*/
 	}
 
 	/**
