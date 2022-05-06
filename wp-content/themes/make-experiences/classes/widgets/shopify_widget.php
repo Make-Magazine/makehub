@@ -92,6 +92,7 @@ class shopify_widget extends WP_Widget {
                 $price_max = max($variant_prices);
             } else {
                 $variant_price = $variants[0]['price'];
+				$price_min = $price_max = $variant_price;
                 $variant_inventory = $variants[0]['inventory_quantity'];
             }
 
