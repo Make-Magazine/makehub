@@ -273,15 +273,17 @@ get_header();
 								<p>Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Make Community, LLC, disclaims all responsibility for any resulting damage, injury, or expense.</p>
 							</section>
 
-							<section class="standards">
-								<h2>Maker Camp Project Standards</h2>
-								<h4>Based on NGSS (Next Generation Science Standards)</h4>
-								<?php foreach($terms as $term) {
-									if($term->description) { ?>
-										<div class="disclaimer-section"><?php echo $term->description; ?></div>
-								<?php }
-								} ?>
-							</section>
+							<?php if(!empty($terms)) { ?>
+								<section class="standards">
+									<h2>Maker Camp Project Standards</h2>
+									<h4>Based on NGSS (Next Generation Science Standards)</h4>
+									<?php foreach($terms as $term) {
+										if($term->description) { ?>
+											<div class="disclaimer-section"><?php echo $term->description; ?></div>
+									<?php }
+									} ?>
+								</section>
+							<?php } ?>
 
 							<section class="up-colab-share">
 								<h3>ALL DONE? SHARE IT!</h3>
