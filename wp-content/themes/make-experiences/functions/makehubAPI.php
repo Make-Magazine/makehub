@@ -143,11 +143,7 @@ function make_user_info( $data ) {
 }
 
 //Rimark
-function get_make_coins($user_email){	
-	/*
-	Per Elliot in an email datedd 5/5/22 - they are having problems with the JWT generation
-	and we are to use the hard coded one below that expires in 30 days.
-
+function get_make_coins($user_email){			
   //First do the authentication
   $url = "https://devapi.rimark.io/api/auth/local";
 
@@ -158,8 +154,8 @@ function get_make_coins($user_email){
   $authRes = json_decode($authRes);
 
   //returns jwt key
-  $jwt = $authRes->jwt;*/
-	$jwt = "d235e4ae83b20485e600769f5df678dcfedb0fbcf61a97d96b361c9ba753f84bbba56c54f8d10957acd4b43759d85eabfdcc24b14dbec8fe20a3f42e36de82e13c9604709ce043188ca0ed6919c9691f729ac14a3d2caa7eda6278b36bcca5f7027bc91bc8b10857b997b613bd157cdc26dd1a4920764ed88588767640e472ed";
+  $jwt = $authRes->jwt;
+	//$jwt = "d235e4ae83b20485e600769f5df678dcfedb0fbcf61a97d96b361c9ba753f84bbba56c54f8d10957acd4b43759d85eabfdcc24b14dbec8fe20a3f42e36de82e13c9604709ce043188ca0ed6919c9691f729ac14a3d2caa7eda6278b36bcca5f7027bc91bc8b10857b997b613bd157cdc26dd1a4920764ed88588767640e472ed";
 
 	//now let's see how many coins they have
   $url = 'https://devapi.rimark.io/api/makes?filters[user_email][$eq]='.$user_email;
