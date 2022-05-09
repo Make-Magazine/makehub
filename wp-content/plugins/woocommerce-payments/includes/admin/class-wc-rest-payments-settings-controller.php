@@ -123,9 +123,8 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 						'type'        => 'string',
 					],
 					'account_business_url'              => [
-						'description'       => __( 'The business’s publicly available website.', 'woocommerce-payments' ),
-						'type'              => 'string',
-						'validate_callback' => [ $this, 'validate_business_support_uri' ],
+						'description' => __( 'The business’s publicly available website.', 'woocommerce-payments' ),
+						'type'        => 'string',
 					],
 					'account_business_support_address'  => [
 						'description'       => __( 'A publicly available mailing address for sending support issues to.', 'woocommerce-payments' ),
@@ -201,12 +200,12 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 						'validate_callback' => 'rest_validate_request_arg',
 					],
 					'is_platform_checkout_enabled'      => [
-						'description'       => __( 'If WooCommerce Payments platform checkout should be enabled.', 'woocommerce-payments' ),
+						'description'       => __( 'If WooPay should be enabled.', 'woocommerce-payments' ),
 						'type'              => 'boolean',
 						'validate_callback' => 'rest_validate_request_arg',
 					],
 					'platform_checkout_custom_message'  => [
-						'description'       => __( 'Custom message to display to platform checkout customers.', 'woocommerce-payments' ),
+						'description'       => __( 'Custom message to display to WooPay customers.', 'woocommerce-payments' ),
 						'type'              => 'string',
 						'validate_callback' => 'rest_validate_request_arg',
 					],
@@ -285,30 +284,6 @@ class WC_REST_Payments_Settings_Controller extends WC_Payments_REST_Controller {
 			return new WP_Error(
 				'rest_invalid_pattern',
 				__( 'Error: Invalid phone number: ', 'woocommerce-payments' ) . $value
-			);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Validate the business support URL.
-	 *
-	 * @param string          $value The value being validated.
-	 * @param WP_REST_Request $request The request made.
-	 * @param string          $param The parameter name, used in error messages.
-	 * @return true|WP_Error
-	 */
-	public function validate_business_support_uri( string $value, WP_REST_Request $request, string $param ) {
-		$string_validation_result = rest_validate_request_arg( $value, $request, $param );
-		if ( true !== $string_validation_result ) {
-			return $string_validation_result;
-		}
-
-		if ( '' !== $value && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-			return new WP_Error(
-				'rest_invalid_pattern',
-				__( 'Error: Invalid business URL: ', 'woocommerce-payments' ) . $value
 			);
 		}
 

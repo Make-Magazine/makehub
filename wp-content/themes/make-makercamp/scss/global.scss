@@ -18,13 +18,16 @@ $font-light:		100;
 $font-normal:		300;
 $font-bold:			700;
 
-body { 
+// Import Gamja Flowers
+@import url('https://fonts.googleapis.com/css?family=Gamja+Flower&display=swap');
+
+body {
 	color: $color-grey;
 	font-family: 'Roboto';
 	padding: 0px !important;
 }
 
-.mobile body { 
+.mobile body {
 	position: relative !important;
 	.buddypanel { display: none !important; }
 	.bb-mobile-header-wrapper, .bb-mobile-panel-wrapper { display: inherit !important; }
@@ -32,23 +35,28 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
-a { 
+a {
 	color: $link-color;
 	&:hover {
 		color: $link-color-hover;
 	}
 }
 
+h1, h2, h3, h4, h4, h6 {
+	font-family: "Gamja Flower", "Roboto", Arial, sans-serif !important;
+}
+h2 { font-size: 1.5rem; }
+
 h1.entry-title {
 	font-weight: 400;
-	font-size: 32px;
+	font-size: 34px;
 }
-.sticky-header #content.site-content { 
-	min-height: initial; 
+.sticky-header #content.site-content {
+	min-height: initial;
 	.container { max-width: 100%; }
 }
 @media screen and (max-width: 767px) {
-	h1, .entry-title { font-size: 2.6em; } 
+	h1, .entry-title { font-size: 2.6em; }
 }
 
 b, strong {
@@ -138,7 +146,7 @@ body.admin-bar {
 .truncated {
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
-	-webkit-box-orient: vertical; 
+	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
 
@@ -173,7 +181,7 @@ button, input[type="submit"] {
 				margin-top: -5px;
 			}
 		}
-	}		
+	}
 }
 
 // Youtube responsiveness for Jetpack shortcode

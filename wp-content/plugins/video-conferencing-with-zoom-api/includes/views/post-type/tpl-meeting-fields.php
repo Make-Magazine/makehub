@@ -25,11 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <tr>
             <th scope="row"><label for="meeting-shortcode">Shortcode</label></th>
             <td>
-				<?php if ( $meeting_fields['meeting_type'] == "1" ) { ?>
-                    <input class="text regular-text" id="meeting-shortcode" type="text" readonly value='[zoom_api_link meeting_id="<?php echo $meeting_details->id; ?>" link_only="no"]' onclick="this.select(); document.execCommand('copy'); alert('Copied to clipboard');"/>
-				<?php } else { ?>
-                    <input class="text regular-text" id="meeting-shortcode" type="text" readonly value='[zoom_api_webinar webinar_id="<?php echo $meeting_details->id; ?>" link_only="no"]' onclick="this.select(); document.execCommand('copy'); alert('Copied to clipboard');"/>
-				<?php } ?>
+                <input class="text regular-text" id="meeting-shortcode" type="text" readonly value='[zoom_meeting_post post_id="<?php echo $post->ID; ?>" template="boxed"]' onclick="this.select(); document.execCommand('copy'); alert('Copied to clipboard');"/>
                 <p class="description">
 					<?php _e( 'If you need to show this meeting on another page or post please use this shortcode', 'video-conferencing-with-zoom-api' ); ?>
                 </p>
@@ -170,7 +166,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <tr>
         <th scope="row"><label for="duration"><?php _e( 'Duration', 'video-conferencing-with-zoom-api' ); ?></label></th>
         <td>
-			<?php $duration = ! empty( $meeting_fields['duration'] ) ? vczapi_convertMinutesToHM( $meeting_fields['duration'], false ) : vczapi_convertMinutesToHM( 45, false ); ?>
+			<?php $duration = ! empty( $meeting_fields['duration'] ) ? vczapi_convertMinutesToHM( $meeting_fields['duration'], false ) : vczapi_convertMinutesToHM( 40, false ); ?>
             <label>
                 <select class="option_duration_hour" name="option_duration_hour">
 					<?php for ( $hr = 0; $hr <= 24; $hr ++ ) { ?>
@@ -183,7 +179,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <option value="0" <?php echo $duration['min'] == 0 ? 'selected' : ''; ?>>0</option>
                     <option value="15" <?php echo $duration['min'] == 15 ? 'selected' : ''; ?>>15</option>
                     <option value="30" <?php echo $duration['min'] == 30 ? 'selected' : ''; ?>>30</option>
-                    <option value="45" <?php echo $duration['min'] == 45 ? 'selected' : ''; ?>>45</option>
+                    <option value="45" <?php echo $duration['min'] == 40 ? 'selected' : ''; ?>>40</option>
                 </select> min
             </label>
         </td>

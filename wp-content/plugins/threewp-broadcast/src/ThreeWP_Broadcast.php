@@ -2,6 +2,7 @@
 
 namespace threewp_broadcast;
 
+use Exception;
 use \threewp_broadcast\broadcast_data\blog;
 
 class ThreeWP_Broadcast

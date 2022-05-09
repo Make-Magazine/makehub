@@ -37,11 +37,12 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 			// Get the expired carts from our table
 			$abandoned_cart = $wpdb->get_results(
 			// phpcs:disable
-				$wpdb->prepare( 'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid 
+				$wpdb->prepare( 'SELECT id, last_access_time, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid 
 					FROM
 						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
 					WHERE
-						id = %s;',
+						id = %s
+						AND order_date IS NULL',
 					$id
 				)
 			// phpcs:enable
@@ -270,7 +271,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 		global $wpdb;
 		$logger = new Logger();
 		try {
-			if ( ! is_null( $stored_id ) ) {
+			if ( ! is_null( $stored_id ) && ! empty( $stored_id ) ) {
 				$wpdb->update(
 					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
 					$data,
@@ -284,6 +285,12 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
 					$data
 				);
+
+				$stored_id = null;
+
+				if ( ! empty( $wpdb->insert_id ) ) {
+					$stored_id = $wpdb->insert_id;
+				}
 			}
 
 			if ( $wpdb->last_error ) {
@@ -296,6 +303,8 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 					]
 				);
 			}
+
+			return $stored_id;
 		} catch ( Throwable $t ) {
 			$logger->error(
 				'Abandoned cart: There was an error attempting to save this abandoned cart',
@@ -342,112 +351,31 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 			$uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
 		} else {
 			$uuid = uniqid( '', true );
-			wc()->session->set( 'activecampaignfwc_order_external_uuid', $uuid );
+
+			if ( isset( wc()->session ) ) {
+				wc()->session->set( 'activecampaignfwc_order_external_uuid', $uuid );
+			}
 		}
 
 		return $uuid;
 	}
 
 	/**
-	 * Checks WooCommerce for a valid order.
-	 *
-	 * @param object $customer The customer object.
-	 * @param string $activecampaignfwc_order_external_uuid The order UUID.
-	 *
-	 * @return bool|WC_Order
-	 */
-	public function check_for_valid_order( $customer, $activecampaignfwc_order_external_uuid ) {
-		if ( $customer->id && ! empty( $activecampaignfwc_order_external_uuid ) ) {
-			try {
-				// Check if we have a valid order that may have failed to send.
-				$externalcheckout_id = $this->generate_externalcheckoutid( $customer->id, $customer->email, $activecampaignfwc_order_external_uuid );
-				$wc_post_id          = $this->find_existing_wc_order( $externalcheckout_id );
-				$wc_order            = wc_get_order( $wc_post_id );
-
-				// We have a valid order, do not send this as abandoned. Create an order instead.
-				if ( $wc_order && isset( $wc_post_id ) && ! empty( $wc_post_id ) && $wc_order->get_id() ) {
-
-					// This was a valid order, nothing else to do so skip the rest
-					return $wc_order;
-				}
-			} catch ( Throwable $t ) {
-				$logger = new Logger();
-				$logger->error(
-					'Abandonment Sync: There was an error trying to validate if this is an existing order. Do not process.',
-					[
-						'exception_message' => $t->getMessage(),
-						'exception_trace'   => $logger->clean_trace( $t->getTrace() ),
-					]
-				);
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get the UUID for an abandoned cart by the customer ID.
-	 *
-	 * @param string $customer_id The customer ID from WC.
-	 *
-	 * @return array|bool|object|null
-	 */
-	public function get_uuid_by_customer_id( $customer_id ) {
-		global $wpdb;
-		$logger = new Logger();
-
-		try {
-			// Get the expired carts from our table
-			$abandoned_uuid = $wpdb->get_var(
-			// phpcs:disable
-				$wpdb->prepare( 'SELECT activecampaignfwc_order_external_uuid 
-					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
-					WHERE
-						synced_to_ac = 0 AND
-						customer_id = %s;',
-					$customer_id
-				)
-			// phpcs:enable
-			);
-
-			if ( $wpdb->last_error ) {
-				$logger->error(
-					'Abandonment sync: There was an error getting results for abandoned cart records.',
-					[
-						'wpdb_last_error' => $wpdb->last_error,
-					]
-				);
-			}
-
-			if ( ! empty( $abandoned_uuid ) ) {
-				// abandoned carts found
-				return $abandoned_uuid;
-			} else {
-				// no abandoned carts
-				return false;
-			}
-		} catch ( Throwable $t ) {
-			$logger->error(
-				'Abandonment Sync: There was an error with preparing or getting abandoned cart results.',
-				[
-					'message' => $t->getMessage(),
-					'trace'   => $logger->clean_trace( $t->getTrace() ),
-				]
-			);
-		}
-	}
-
-	/**
-	 * Resets our UUID
+	 * Resets our UUID and cart ID on customer session
 	 */
 	public function cleanup_session_activecampaignfwc_order_external_uuid() {
 		$logger = new Logger();
 		if ( isset( wc()->session ) && $this->get_or_generate_uuid() ) {
-			wc()->session->set( 'activecampaignfwc_order_external_uuid', null );
-			$logger->debug( 'Reset the activecampaignfwc_order_external_uuid on cart' );
+			wc()->session->set( 'activecampaignfwc_order_external_uuid', '' );
+			wc()->session->set( 'activecampaign_abandoned_cart_id', '' );
+
+			$logger->debug(
+				'Reset the activecampaignfwc_order_external_uuid & activecampaign_abandoned_cart_id on cart',
+				[
+					'activecampaignfwc_order_external_uuid' => wc()->session->get( 'activecampaignfwc_order_external_uuid' ),
+					'activecampaign_abandoned_cart_id' => wc()->session->get( 'activecampaign_abandoned_cart_id', '' ),
+				]
+			);
 		}
 	}
 }

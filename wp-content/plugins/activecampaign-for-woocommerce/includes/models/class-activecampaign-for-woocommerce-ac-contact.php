@@ -274,12 +274,14 @@ class Activecampaign_For_Woocommerce_AC_Contact implements Ecom_Model, Has_Id, H
 			if ( ! $customer || ! $order->get_customer_id() || ! $customer->get_email() ) {
 				try {
 					$this->externalid = 0;
-					$this->email      = $order->get_billing_email();
-					$this->first_name = $order->get_billing_first_name();
-					$this->last_name  = $order->get_billing_last_name();
-					$this->phone      = $order->get_billing_phone();
+					if ( method_exists( $order, 'get_billing_email' ) ) {
+						$this->email      = $order->get_billing_email();
+						$this->first_name = $order->get_billing_first_name();
+						$this->last_name  = $order->get_billing_last_name();
+						$this->phone      = $order->get_billing_phone();
 
-					return true;
+						return true;
+					}
 				} catch ( Throwable $t ) {
 					$logger->error(
 						'Activecampaign_For_Woocommerce_Historical_Sync: There was a problem preparing data for a record.',
@@ -289,9 +291,9 @@ class Activecampaign_For_Woocommerce_AC_Contact implements Ecom_Model, Has_Id, H
 						]
 					);
 
-					return false;
 				}
 			}
 		}
+		return false;
 	}
 }

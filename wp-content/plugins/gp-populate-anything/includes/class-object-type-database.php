@@ -238,8 +238,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 		if ( isset( $this->tables_cache[ $table ] ) ) {
 			$is_date = $this->tables_cache[ $table ][ $column ] === 'date';
 		} else {
-			global $wpdb;
-			$structure = $wpdb->get_results( sprintf( 'DESCRIBE `%s`', esc_sql( $table ) ), ARRAY_N );
+			$structure = $this->get_db()->get_results( sprintf( 'DESCRIBE `%s`', esc_sql( $table ) ), ARRAY_N );
 			foreach ( $structure as $index => $row ) {
 				$this->tables_cache[ $table ][ $row[0] ] = $row[1];
 				if ( $row[0] === $column && $row[1] === 'date' ) {

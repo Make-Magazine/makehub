@@ -140,6 +140,9 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 							?>
 						</td>
 						<td>
+							Order Type
+						</td>
+						<td>
 							<?php
 							esc_html_e( 'Synced To ActiveCampaign', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 							?>
@@ -152,7 +155,7 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 						</td>
 						<td>
 							<?php
-							esc_html_e( 'Last Access Time', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+							esc_html_e( 'Last Access Time (UTC)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 							?>
 						</td>
 						<td>
@@ -175,6 +178,20 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 										<div>
 										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_email ); ?>
 										</div>
+									</td>
+									<td>
+										<?php if ( ! empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && ! empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
+											Recovered: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->order_date ); ?>
+										<?php endif; ?>
+										<?php if ( ! empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
+											Ordered: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->order_date ); ?>
+										<?php endif; ?>
+										<?php if ( empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && ! empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
+											Abandoned: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->abandoned_date ); ?>
+										<?php endif; ?>
+										<?php if ( empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
+											Active Cart
+										<?php endif; ?>
 									</td>
 									<td>
 										<?php

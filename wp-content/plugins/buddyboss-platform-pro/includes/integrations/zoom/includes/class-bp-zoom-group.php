@@ -75,10 +75,16 @@ class BP_Zoom_Group {
 		add_action( 'bp_groups_zoom_webinar_created_notification', array( $this, 'groups_format_create_webinar_notification' ), 10, 5 );
 		add_action( 'bp_groups_zoom_webinar_notified_notification', array( $this, 'groups_format_notified_webinar_notification' ), 10, 5 );
 
+		// Modern notification.
+		add_action( 'bp_groups_bb_groups_new_zoom_notification', array( $this, 'bb_groups_format_create_meeting_modern_notification' ), 10, 7 );
+
 		add_action( 'bp_get_request', array( $this, 'zoom_meeting_mark_notifications' ), 1 );
 		add_action( 'bp_get_request', array( $this, 'zoom_webinar_mark_notifications' ), 1 );
 		add_action( 'bp_zoom_meeting_deleted_meetings', array( $this, 'delete_meeting_notifications' ) );
 		add_action( 'bp_zoom_webinar_deleted_webinars', array( $this, 'delete_webinar_notifications' ) );
+
+		add_action( 'bp_zoom_meeting_mark_notifications_handler', array( $this, 'bb_mark_modern_meeting_notifications' ), 10, 5 );
+		add_action( 'bp_zoom_webinar_mark_notifications_handler', array( $this, 'bb_mark_modern_webinar_notifications' ), 10, 5 );
 
 		add_action( 'bp_activity_entry_content', array( $this, 'embed_meeting' ), 10 );
 		add_action( 'bp_activity_entry_content', array( $this, 'embed_webinar' ), 10 );
@@ -668,7 +674,7 @@ class BP_Zoom_Group {
 						<div class="bb-description-info">
 							<span class="bb-url-text"><?php echo esc_url( bp_get_groups_directory_permalink() . '?zoom_webhook=1&group_id=' . $group_id ); ?></span>
 							<a href="#" id="copy-webhook-link" class="copy-webhook-link" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Copy', 'buddyboss-pro' ); ?>" data-copied="<?php esc_html_e( 'Copied', 'buddyboss-pro' ); ?>" data-webhook-link="<?php echo esc_url( bp_get_groups_directory_permalink() . '?zoom_webhook=1&group_id=' . $group_id ); ?>">
-								<span class="bb-icon-copy"></span>
+								<span class="bb-icon-l bb-icon-duplicate"></span>
 							</a>
 						</div>
 					</div>
@@ -679,7 +685,7 @@ class BP_Zoom_Group {
 			<div class="bp-zoom-group-button-wrap">
 				<?php if ( ! empty( $checked ) && ! empty( $api_key ) && ! empty( $api_secret ) && ! empty( $api_email ) ) { ?>
 					<a class="bp-zoom-group-check-connection" href="#" id="bp-zoom-group-check-connection">
-						<i class="bb-icon-radio"></i>
+						<i class="bb-icon-l bb-icon-radio"></i>
 						<span><?php esc_html_e( 'Check Connection', 'buddyboss-pro' ); ?></span>
 					</a>
 				<?php } ?>
@@ -772,12 +778,12 @@ class BP_Zoom_Group {
 										printf(
 											/* translators: %1$s - icon html */
 											esc_html__( 'For "Subscription Name" you can again enter any name you want. Click the %1$s Copy Link button below to copy a special link, and then paste that link back into Zoom in the field titled "Event notification endpoint URL".', 'buddyboss-pro' ),
-											'<span class="bb-icon-copy"></span>'
+											'<span class="bb-icon-l bb-icon-duplicate"></span>'
 										);
 										?>
 											</p>
 										<p><a href="#" class="copy-webhook-link button small outline" data-text="<?php esc_attr_e( 'Copy Link', 'buddyboss-pro' ); ?>" data-copied="<?php esc_attr_e( 'Copied', 'buddyboss-pro' ); ?>" data-webhook-link="<?php echo esc_url( bp_get_groups_directory_permalink() . '?zoom_webhook=1&group_id=' . $group_id ); ?>">
-												<span class="bb-icon-copy"></span>&nbsp;<?php esc_html_e( 'Copy Link', 'buddyboss-pro' ); ?>
+												<span class="bb-icon-l bb-icon-duplicate"></span>&nbsp;<?php esc_html_e( 'Copy Link', 'buddyboss-pro' ); ?>
 											</a></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-event_notification.png' ) ); ?>" />
 										<?php /* translators: %s is options and already having translation another string. */ ?>
@@ -816,8 +822,8 @@ class BP_Zoom_Group {
 							</div> <!-- .bp-step-blocks -->
 
 							<div class="bp-step-actions">
-								<span class="bp-step-prev button small outline" style="display: none;"><i class="bb-icon-arrow-left"></i>&nbsp;<?php esc_html_e( 'Previous', 'buddyboss-pro' ); ?></span>
-								<span class="bp-step-next button small outline"><i class="bb-icon-arrow-right"></i>&nbsp;<?php esc_html_e( 'Next', 'buddyboss-pro' ); ?></span>
+								<span class="bp-step-prev button small outline" style="display: none;"><i class="bb-icon-l bb-icon-angle-left"></i>&nbsp;<?php esc_html_e( 'Previous', 'buddyboss-pro' ); ?></span>
+								<span class="bp-step-next button small outline"><i class="bb-icon-l bb-icon-angle-right"></i>&nbsp;<?php esc_html_e( 'Next', 'buddyboss-pro' ); ?></span>
 
 								<span class="save-settings button small"><?php esc_html_e( 'Save', 'buddyboss-pro' ); ?></span>
 
@@ -1496,6 +1502,268 @@ class BP_Zoom_Group {
 	}
 
 	/**
+	 * Create meeting modern notification for groups.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param string $action            Notification action.
+	 * @param int    $item_id           Item for notification.
+	 * @param int    $secondary_item_id Secondary item for notification.
+	 * @param int    $total_items       Total items.
+	 * @param string $format            Format html or string.
+	 * @param int    $notification_id   Notification ID.
+	 * @param string $screen            Notification Screen type.
+	 *
+	 * @return mixed|void
+	 */
+	public function bb_groups_format_create_meeting_modern_notification( $action, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
+		$group_id          = $item_id;
+		$group             = groups_get_group( $group_id );
+		$group_name        = bp_get_group_name( $group );
+		$group_link        = bp_get_group_permalink( $group );
+		$amount            = 'single';
+		$start_date        = '';
+		$notification_link = '';
+		$text              = '';
+
+		$type       = bp_notifications_get_meta( $notification_id, 'type' );
+		$is_created = bp_notifications_get_meta( $notification_id, 'is_created' );
+
+		// Check the type of zoom like is webinar or meeting.
+		if ( 'meeting' === $type ) {
+			$meeting = new BP_Zoom_Meeting( $secondary_item_id );
+		} else {
+			$meeting = new BP_Zoom_Webinar( $secondary_item_id );
+		}
+
+		if ( (int) $total_items > 1 ) {
+
+			if ( 'meeting' === $type ) {
+				$text = sprintf(
+					/* translators: total number of groups. */
+					esc_html__( 'You have %1$d new Zoom meetings in groups', 'buddyboss-pro' ),
+					(int) $total_items
+				);
+			} else {
+				$text = sprintf(
+					/* translators: total number of groups. */
+					esc_html__( 'You have %1$d new Zoom webinars in groups', 'buddyboss-pro' ),
+					(int) $total_items
+				);
+			}
+			$amount            = 'multiple';
+			$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+
+		} else {
+
+			if ( property_exists( $meeting, 'start_date' ) ) {
+				$start_date = new DateTime( $meeting->start_date );
+				$start_date = $start_date->format( 'd-m-Y' );
+			}
+
+			if ( 'meeting' === $type ) {
+				if ( ! empty( $start_date ) ) {
+					if ( $is_created ) {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: 1. Group name. 2. The meeting start date. */
+								esc_html__( '%1$s: New meeting scheduled for %2$s', 'buddyboss-pro' ),
+								$group_name,
+								$start_date
+							);
+						} else {
+							$text = sprintf(
+							/* translators: %s: The meeting start date */
+								esc_html__( 'New meeting scheduled for %1$s', 'buddyboss-pro' ),
+								$start_date
+							);
+						}
+					} else {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: 1. Group name. 2. The meeting start date. */
+								esc_html__( '%1$s: Update meeting scheduled for %2$s', 'buddyboss-pro' ),
+								$group_name,
+								$start_date
+							);
+						} else {
+							$text = sprintf(
+							/* translators: %s: The meeting start date */
+								esc_html__( 'Update meeting scheduled for %1$s', 'buddyboss-pro' ),
+								$start_date
+							);
+						}
+					}
+				} else {
+					if ( $is_created ) {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: %s: Group name */
+								esc_html__( '%1$s: New meeting scheduled', 'buddyboss-pro' ),
+								$group_name
+							);
+						} else {
+							$text = esc_html__( 'New meeting scheduled', 'buddyboss-pro' );
+						}
+					} else {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: %s: Group name */
+								esc_html__( '%1$s: Update meeting scheduled', 'buddyboss-pro' ),
+								$group_name
+							);
+						} else {
+							$text = esc_html__( 'Update meeting scheduled', 'buddyboss-pro' );
+						}
+					}
+				}
+
+				$notification_link = wp_nonce_url(
+					add_query_arg(
+						array(
+							'action'     => 'bp_mark_read',
+							'group_id'   => $item_id,
+							'meeting_id' => $secondary_item_id,
+						),
+						$group_link . 'zoom/meetings/' . $secondary_item_id
+					),
+					'bp_mark_meeting_' . $item_id
+				);
+			} elseif ( 'webinar' === $type ) {
+				if ( ! empty( $start_date ) ) {
+					if ( $is_created ) {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: 1. Group name. 2. The meeting start date. */
+								esc_html__( '%1$s: New webinar scheduled for %2$s', 'buddyboss-pro' ),
+								$group_name,
+								$start_date
+							);
+						} else {
+							$text = sprintf(
+							/* translators: %s: The meeting start date */
+								esc_html__( 'New webinar scheduled for %1$s', 'buddyboss-pro' ),
+								$start_date
+							);
+						}
+					} else {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: 1. Group name. 2. The meeting start date. */
+								esc_html__( '%1$s: Update webinar scheduled for %2$s', 'buddyboss-pro' ),
+								$group_name,
+								$start_date
+							);
+						} else {
+							$text = sprintf(
+							/* translators: %s: The meeting start date */
+								esc_html__( 'Update webinar scheduled for %1$s', 'buddyboss-pro' ),
+								$start_date
+							);
+						}
+					}
+				} else {
+					if ( $is_created ) {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: %s: Group name */
+								esc_html__( '%1$s: New webinar scheduled', 'buddyboss-pro' ),
+								$group_name
+							);
+						} else {
+							$text = esc_html__( 'New webinar scheduled', 'buddyboss-pro' );
+						}
+					} else {
+						if ( ! empty( $group_name ) ) {
+							$text = sprintf(
+							/* translators: %s: Group name */
+								esc_html__( '%1$s: Update webinar scheduled', 'buddyboss-pro' ),
+								$group_name
+							);
+						} else {
+							$text = esc_html__( 'Update webinar scheduled', 'buddyboss-pro' );
+						}
+					}
+				}
+
+				$notification_link = wp_nonce_url(
+					add_query_arg(
+						array(
+							'action'     => 'bp_mark_read',
+							'group_id'   => $item_id,
+							'webinar_id' => $secondary_item_id,
+						),
+						$group_link . 'zoom/webinars/' . $secondary_item_id
+					),
+					'bp_mark_webinar_' . $item_id
+				);
+			}
+		}
+
+		$content = apply_filters(
+			'bb_groups_' . $amount . '_bb_groups_new_zoom_notification',
+			array(
+				'link' => $notification_link,
+				'text' => $text,
+			),
+			$group_link,
+			$group->name,
+			$text,
+			$notification_link
+		);
+
+		// Validate the return value & return if validated.
+		if (
+			! empty( $content ) &&
+			is_array( $content ) &&
+			isset( $content['text'] ) &&
+			isset( $content['link'] )
+		) {
+			if ( 'string' === $format ) {
+				if ( empty( $content['link'] ) ) {
+					$content = esc_html( $content['text'] );
+				} else {
+					$content = '<a href="' . esc_url( $content['link'] ) . '">' . esc_html( $content['text'] ) . '</a>';
+				}
+			} else {
+				$content = array(
+					'text' => $content['text'],
+					'link' => $content['link'],
+				);
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Mark zoom meeting modern notifications.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param bool   $success    Any sucess ready performed or not.
+	 * @param int    $user_id    Current user ID.
+	 * @param int    $group_id   Group ID.
+	 * @param int    $action     Action for notification.
+	 * @param string $meeting_id Meeting ID.
+	 *
+	 * @return mixed|void
+	 */
+	public function bb_mark_modern_meeting_notifications( $success, $user_id, $group_id, $action, $meeting_id ) {
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
+		if ( ! empty( $meeting_id ) ) {
+			// Attempt to clear notifications for the current user from this meeting.
+			bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_zoom', $meeting_id );
+		} else {
+			// Attempt to clear notifications for the current user from this meeting.
+			bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_zoom' );
+		}
+	}
+
+	/**
 	 * Notified meeting notification for groups.
 	 *
 	 * @param string $action            Notification action.
@@ -2022,6 +2290,33 @@ class BP_Zoom_Group {
 
 		// Do additional subscriptions actions.
 		do_action( 'bp_zoom_webinar_mark_notifications_handler', $success, $user_id, $group_id, $action, $webinar_id );
+	}
+
+	/**
+	 * Mark zoom meeting modern notifications.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param bool   $success    Any sucess ready performed or not.
+	 * @param int    $user_id    Current user ID.
+	 * @param int    $group_id   Group ID.
+	 * @param int    $action     Action for notification.
+	 * @param string $webinar_id Webinar ID.
+	 *
+	 * @return void
+	 */
+	public function bb_mark_modern_webinar_notifications( $success, $user_id, $group_id, $action, $webinar_id ) {
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
+		if ( ! empty( $webinar_id ) ) {
+			// Attempt to clear notifications for the current user from this meeting.
+			bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_zoom', $webinar_id );
+		} else {
+			// Attempt to clear notifications for the current user from this meeting.
+			bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_zoom' );
+		}
 	}
 
 	/**

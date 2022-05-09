@@ -3,8 +3,8 @@ Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
 Tested up to: 5.9
-Stable tag: 1.6.11
-Requires PHP: 7.0
+Stable tag: 1.7.2
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ By removing the silos that typically exist between email marketing, marketing au
 == Installation ==
 
 = WooCommerce Compatibility =
-* Tested up to version: 6.3.0
+* Tested up to version: 6.4.1
 * Minimal version requirement: 3.6.0
 
 = Minimum Requirements =
@@ -57,6 +57,22 @@ By removing the silos that typically exist between email marketing, marketing au
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.7.2 2022-03-20 =
+* Bugfix for payment pending orders getting synced before they are processed
+
+= 1.7.1 2022-03-19 =
+* Hotfix for a fatal error when an order hook runs but there is no WooCommerce session
+
+= 1.7.0 2022-03-18 =
+* All finished orders are now tracked and synced through a background process and bulk synced every minute
+* Finished orders will no longer send as part of the customer order process speeding up order processing
+* Better tracking for abandoned carts passing to recovered orders
+* Orders that cannot send will be retried every minute until they do send to ActiveCampaign
+* Issues with duplicate orders and abandoned carts should now be resolved
+* Issues with false abandoned carts should no longer happen
+* Changing class checks to method checks to reduce errors on products and orders with unexpected classes from WooCommerce
+* Adds a default option for custom email field and fixes the custom email field fallback for JS plugin conflicts
 
 = 1.6.11 2022-03-16 =
 * A message has been added informing admins that soon the official ActiveCampaign plugin will be required to use this plugin

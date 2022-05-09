@@ -41,6 +41,11 @@ if ( isset( $activecampaign_for_woocommerce_settings['ac_debug'] ) ) {
 }
 $activecampaign_for_woocommerce_debug = esc_html( sanitize_text_field( $activecampaign_for_woocommerce_debug ) );
 
+$activecampaign_for_woocommerce_email_option = '0';
+if ( isset( $activecampaign_for_woocommerce_settings['ac_emailoption'] ) ) {
+	$activecampaign_for_woocommerce_email_option = $activecampaign_for_woocommerce_settings['ac_emailoption'];
+}
+
 $activecampaign_for_woocommerce_abcart_wait = '1';
 if ( isset( $activecampaign_for_woocommerce_settings['abcart_wait'] ) ) {
 	$activecampaign_for_woocommerce_abcart_wait = $activecampaign_for_woocommerce_settings['abcart_wait'];
@@ -335,13 +340,43 @@ $activecampaign_for_woocommerce_checkbox_display_options = [
 						</label>
 					</div>
 					<div>
-						<label for="custom_email_field"><?php esc_html_e( 'Custom email field:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></label>
-						<input type="text" name="custom_email_field" id="custom_email_field"
-							   value="<?php echo esc_html( $activecampaign_for_woocommerce_custom_email_field ); ?>"
-							   placeholder="billing_email">
-						<p><?php esc_html_e( 'Default: billing_email (expects ID as input, do not include #)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
-						<p><?php esc_html_e( 'Warning: Advanced users only. Do not set this unless you are having issues with the abandoned cart not triggering on your email field.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
-						<p><?php esc_html_e( 'If you have a forced registration or a custom theme for checkout you can change which field we bind on here.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
+						<label for="custom_email_field">
+							<?php esc_html_e( 'Custom email field:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						</label>
+						<label class="radio">
+							<input type="radio"
+								   id="ac_emailoption0"
+								   name="ac_emailoption"
+								   value="0"
+								<?php
+								if ( '0' === $activecampaign_for_woocommerce_email_option ) {
+									echo 'checked';
+								}
+								?>
+							>
+							<?php esc_html_e( 'Default (billing_email)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						</label>
+						<label class="radio">
+							<input type="radio"
+								   id="ac_emailoption1"
+								   name="ac_emailoption"
+								   value="1"
+								<?php
+								if ( '1' === $activecampaign_for_woocommerce_email_option ) {
+									echo 'checked';
+								}
+								?>
+							>
+							<?php esc_html_e( 'Customize', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+						</label>
+						<div id="custom-email-option-set">
+							<input type="text" name="custom_email_field" id="custom_email_field"
+								   value="<?php echo esc_html( $activecampaign_for_woocommerce_custom_email_field ); ?>"
+								   placeholder="billing_email">
+							<p><?php esc_html_e( 'Default: billing_email (expects ID as input, do not include #)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
+							<p><?php esc_html_e( 'Warning: Advanced users only. Do not set this unless you are having issues with the abandoned cart not triggering on your email field.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
+							<p><?php esc_html_e( 'If you have a forced registration or a custom theme for checkout you can change which field we bind on here.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></p>
+						</div>
 					</div>
 					<div class="col-1">
 						<div class="card">

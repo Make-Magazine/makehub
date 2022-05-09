@@ -40,9 +40,20 @@ class Activecampaign_For_Woocommerce_Deactivator {
 		$this->logger = new Logger();
 		// Should we clean the table out on deactivation?
 		$this->logger->info( 'Deactivation running...' );
+		$this->clear_events();
+		$this->logger->info( 'ActiveCampaign for WooCommerce Deactivated.' );
+	}
+
+	/**
+	 * Clears the events that have been created.
+	 */
+	private function clear_events() {
+		// clear activecampaign_for_woocommerce_cart_updated_recurring_event
+		wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
+		wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_run_order_sync' );
 
 		if ( wp_next_scheduled( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ) ) {
-			$this->logger->info( 'Clearing our scheduled event...' );
+			$this->logger->info( 'Clearing scheduled events...' );
 
 			wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 
@@ -55,10 +66,27 @@ class Activecampaign_For_Woocommerce_Deactivator {
 				);
 			}
 		} else {
-			$this->logger->info( 'No event scheduled. Nothing to deactivate.' );
+			$this->logger->info( 'Abandoned cart event not scheduled. Nothing to deactivate.' );
 		}
 
-		$this->logger->info( 'ActiveCampaign for WooCommerce Deactivated.' );
+		// Clear activecampaign_for_woocommerce_run_order_sync
+		if ( wp_next_scheduled( 'activecampaign_for_woocommerce_run_order_sync' ) ) {
+			$this->logger->info( 'Clearing scheduled events...' );
+
+			wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_run_order_sync' );
+
+			if ( function_exists( 'wp_get_scheduled_event' ) ) {
+				$this->logger->info(
+					'Verify that the scheduled event was removed...',
+					[
+						'activecampaign_for_woocommerce_run_order_sync_event' => wp_get_scheduled_event( 'activecampaign_for_woocommerce_run_order_sync' ),
+					]
+				);
+			}
+		} else {
+			$this->logger->info( 'Order sync event not scheduled. Nothing to deactivate.' );
+		}
+
 	}
 
 }

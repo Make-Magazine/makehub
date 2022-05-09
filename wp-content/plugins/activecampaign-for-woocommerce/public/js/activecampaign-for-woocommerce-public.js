@@ -98,13 +98,18 @@
 		if(document.getElementById('activecampaign-for-woocommerce-js')) {
 			var acUrl = document.getElementById('activecampaign-for-woocommerce-js').getAttribute('src');
 			if(acUrl && typeof acUrl !== 'undefined') {
-				var pat = /(?:custom_email_field=)(.*?)(?=&|$)/;
+				var pat = /(?:custom_email_field=)(.*?)(?=&|$|;|#)/;
 				var e = acUrl.match(pat);
 				if (e && typeof e[1] !== 'undefined' && e[1] && e[1] !== '') {
 					email_field = '#' + e[1];
 				}
 			}
 		}
+
+		if ('undefined' === typeof $( '.woocommerce-checkout ' + email_field ).val() || undefined === typeof $( '.woocommerce-checkout ' + email_field ).val()){
+			email_field = '#billing_email';
+		}
+
 		$( '.woocommerce-checkout ' + email_field ).keyup(function() {
 			var $checkout = $(this).closest('.woocommerce-checkout');
 			var billing_email_value = $( this ).val();

@@ -13,10 +13,14 @@ add_action( 'bbp_pro_update_to_1_0_4', 'bp_zoom_pro_update_to_1_0_4' );
 add_action( 'bbp_pro_update_to_1_0_7', 'bp_zoom_pro_update_to_1_0_7' );
 add_action( 'bbp_pro_update_to_1_0_9', 'bp_zoom_pro_update_to_1_0_9' );
 add_action( 'bp_init', 'bp_zoom_pro_has_access_meeting_web', 10 );
+add_action( 'bp_init', 'bb_zoom_notification_registered' );
 add_action( 'bp_template_redirect', 'bp_zoom_pro_has_access_recording_url', 999999 );
-add_action( 'groups_screen_notification_settings', 'bp_zoom_groups_screen_notification_settings', 10 );
+
 add_action( 'bp_zoom_meeting_after_save', 'bp_zoom_meeting_after_save_update_meeting_data', 1 );
 add_action( 'bp_zoom_webinar_after_save', 'bp_zoom_webinar_after_save_update_webinar_data', 1 );
+
+add_action( 'bp_groups_includes', 'bb_load_pro_groups_notifications', 21 );
+add_action( 'updated_user_meta', 'bb_zoom_migrate_preferences', 10, 4 );
 
 /**
  * BuddyBoss Pro zoom update to 1.0.4
@@ -167,6 +171,23 @@ function bp_zoom_pro_has_access_meeting_web() {
 }
 
 /**
+ * Load look to register zoom notification.
+ *
+ * @since 1.2.1
+ */
+function bb_zoom_notification_registered() {
+	if (
+		! function_exists( 'bb_enabled_legacy_email_preference' ) ||
+		(
+			function_exists( 'bb_enabled_legacy_email_preference' ) &&
+			true === bb_enabled_legacy_email_preference()
+		)
+	) {
+		add_action( 'groups_screen_notification_settings', 'bp_zoom_groups_screen_notification_settings', 10 );
+	}
+}
+
+/**
  * Add zoom meeting scheduled notifications settings to the notifications settings page.
  *
  * @since 1.0.9
@@ -187,7 +208,7 @@ function bp_zoom_groups_screen_notification_settings() {
 	?>
 	<tr id="groups-notification-settings-zoom-meeting-scheduled">
 		<td></td>
-		<td><?php esc_html_e( 'A Zoom meeting has been scheduled in one of your groups', 'buddyboss-pro' ); ?></td>
+		<td><?php esc_html_e( 'A Zoom meeting is scheduled in a group', 'buddyboss-pro' ); ?></td>
 		<td class="yes">
 			<div class="bp-radio-wrap">
 				<input type="radio" name="notifications[notification_zoom_meeting_scheduled]"  id="notification-zoom-meeting-scheduled-yes" class="bs-styled-radio" value="yes" <?php checked( $zoom_meeting_scheduled, 'yes', true ); ?> />
@@ -203,7 +224,7 @@ function bp_zoom_groups_screen_notification_settings() {
 	</tr>
 	<tr id="groups-notification-settings-zoom-webinar-scheduled">
 		<td></td>
-		<td><?php esc_html_e( 'A Zoom webinar has been scheduled in one of your groups', 'buddyboss-pro' ); ?></td>
+		<td><?php esc_html_e( 'A Zoom webinar is scheduled in a group', 'buddyboss-pro' ); ?></td>
 		<td class="yes">
 			<div class="bp-radio-wrap">
 				<input type="radio" name="notifications[notification_zoom_webinar_scheduled]"  id="notification-zoom-webinar-scheduled-yes" class="bs-styled-radio" value="yes" <?php checked( $zoom_webinar_scheduled, 'yes', true ); ?> />
@@ -756,5 +777,65 @@ function bp_zoom_pro_setup_webinar_integration( $key = '', $secret = '', $email 
 				bp_delete_option( 'bp-zoom-enable-webinar' );
 			}
 		}
+	}
+}
+
+/**
+ * Register the zoom group notifications.
+ *
+ * @since BuddyBoss 1.2.1
+ */
+function bb_load_pro_groups_notifications() {
+	if ( class_exists( 'BP_Core_Notification_Abstract' ) && class_exists( 'BP_Zoom_Groups_Notification' ) ) {
+		BP_Zoom_Groups_Notification::instance();
+	}
+}
+
+/**
+ * Migrate Zoom preferences while legacy to modern.
+ *
+ * @since 1.2.1
+ *
+ * @param int    $meta_id    ID of updated metadata entry.
+ * @param int    $object_id  ID of the object metadata is for.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Metadata value.
+ *
+ * @return void
+ */
+function bb_zoom_migrate_preferences( $meta_id, $object_id, $meta_key, $meta_value ) {
+
+	if ( empty( $meta_key ) ) {
+		return;
+	}
+
+	switch ( $meta_key ) {
+		case 'notification_zoom_meeting_scheduled':
+			$webinar_data = get_user_meta( $object_id, 'notification_zoom_webinar_scheduled', true );
+
+			if ( 'no' === $webinar_data && 'no' === $meta_value ) {
+				update_user_meta( $object_id, 'bb_groups_new_zoom', 'no' );
+			} else {
+				update_user_meta( $object_id, 'bb_groups_new_zoom', 'yes' );
+			}
+
+			break;
+
+		case 'notification_zoom_webinar_scheduled':
+			$meeting_data = get_user_meta( $object_id, 'notification_zoom_meeting_scheduled', true );
+
+			if ( 'no' === $meeting_data && 'no' === $meta_value ) {
+				update_user_meta( $object_id, 'bb_groups_new_zoom', 'no' );
+			} else {
+				update_user_meta( $object_id, 'bb_groups_new_zoom', 'yes' );
+			}
+
+			break;
+
+		case 'bb_groups_new_zoom':
+			update_user_meta( $object_id, 'notification_zoom_meeting_scheduled', $meta_value );
+			update_user_meta( $object_id, 'notification_zoom_webinar_scheduled', $meta_value );
+
+			break;
 	}
 }

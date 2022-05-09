@@ -43,6 +43,11 @@ class VaultingModule implements ModuleInterface {
 			return;
 		}
 
+		$listener = $container->get( 'vaulting.customer-approval-listener' );
+		assert( $listener instanceof CustomerApprovalListener );
+
+		$listener->listen();
+
 		add_filter(
 			'woocommerce_account_menu_items',
 			function( $menu_links ) {
@@ -128,6 +133,16 @@ class VaultingModule implements ModuleInterface {
 
 				$endpoint->handle_request();
 			}
+		);
+
+		add_action(
+			'woocommerce_paypal_payments_check_saved_payment',
+			function ( int $order_id, int $customer_id, string $intent ) use ( $container ) {
+				$payment_token_checker = $container->get( 'vaulting.payment-token-checker' );
+				$payment_token_checker->check_and_update( $order_id, $customer_id, $intent );
+			},
+			10,
+			3
 		);
 	}
 

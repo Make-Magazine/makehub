@@ -1,4 +1,5 @@
 import dccInputFactory from "../Helper/DccInputFactory";
+import {show} from "../Helper/Hiding";
 
 class CreditCardRenderer {
 
@@ -31,6 +32,8 @@ class CreditCardRenderer {
             wrapperElement.parentNode.removeChild(wrapperElement);
             return;
         }
+
+        const buttonSelector = wrapper + ' button';
 
         if (this.currentHostedFieldsInstance) {
             this.currentHostedFieldsInstance.teardown()
@@ -121,8 +124,10 @@ class CreditCardRenderer {
 
             });
 
+            show(buttonSelector);
+
             if (document.querySelector(wrapper).getAttribute('data-ppcp-subscribed') !== true) {
-                document.querySelector(wrapper + ' button').addEventListener(
+                document.querySelector(buttonSelector).addEventListener(
                     'click',
                     event => {
                         event.preventDefault();
@@ -181,7 +186,7 @@ class CreditCardRenderer {
         this.errorHandler.clear();
 
         if (this.formValid && this.cardValid) {
-            const save_card = this.defaultConfig.save_card ? true : false;
+            const save_card = this.defaultConfig.can_save_vault_token ? true : false;
             let vault = document.getElementById('ppcp-credit-card-vault') ?
                 document.getElementById('ppcp-credit-card-vault').checked : save_card;
             if (this.defaultConfig.enforce_vault) {
@@ -216,8 +221,12 @@ class CreditCardRenderer {
                 this.spinner.unblock();
                 return contextConfig.onApprove(payload);
             }).catch(err => {
-                console.error(err);
                 this.spinner.unblock();
+                this.errorHandler.clear();
+
+                if (err.details) {
+                    this.errorHandler.message(err.details.map(d => `${d.issue} ${d.description}`).join('<br/>'), true);
+                }
             });
         } else {
             this.spinner.unblock();

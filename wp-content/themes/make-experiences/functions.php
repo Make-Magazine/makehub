@@ -99,7 +99,7 @@ function set_universal_asset_constants() {
 	$canUpgrade = true;
 	$hasMembership = false;
 	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Premium Subscriber", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
+	$fullMemberships = array("Premium Member", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
 	$currentMemberships = array();
 
 	if( class_exists('MeprUtils') ) {
@@ -217,7 +217,7 @@ function postCurl($url, $headers = null, $datastring = null) {
 	  throw new Exception(curl_error($ch));
 	}
 
-	echo $response;
+	return $response;
 	curl_close($ch);
 }
 

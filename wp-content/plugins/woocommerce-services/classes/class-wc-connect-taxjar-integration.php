@@ -46,6 +46,9 @@ class WC_Connect_TaxJar_Integration {
 
 		// Cache rates for 1 hour.
 		$this->cache_time = HOUR_IN_SECONDS;
+
+		// Cache error response for 5 minutes.
+		$this->error_cache_time = MINUTE_IN_SECONDS * 5;
 	}
 
 	/**
@@ -379,7 +382,12 @@ class WC_Connect_TaxJar_Integration {
 			}
 
 			// if on checkout page load (not ajax), don't set an error as it prevents checkout page from displaying
-			if ( ( is_cart() || ( is_checkout() && is_ajax() ) ) && ! wc_has_notice( $message, 'error' ) ) {
+			if ( (
+					( is_cart() || ( is_checkout() && is_ajax() ) ) ||
+					( WC_Connect_Functions::has_cart_or_checkout_block() || WC_Connect_functions::is_store_api_call() )
+				)
+				&& ! wc_has_notice( $message, 'error' )
+			) {
 				wc_add_notice( $message, 'error' );
 			}
 
@@ -701,7 +709,7 @@ class WC_Connect_TaxJar_Integration {
 				$tax_code = end( $tax_class );
 			}
 
-			if ( ! $product->is_taxable() || 'zero-rate' == sanitize_title( $product->get_tax_class() ) ) {
+			if ( 'shipping' !== $product->get_tax_status() && ( ! $product->is_taxable() || 'zero-rate' == sanitize_title( $product->get_tax_class() ) ) ) {
 				$tax_code = '99999';
 			}
 
@@ -718,18 +726,16 @@ class WC_Connect_TaxJar_Integration {
 				}
 			}
 
-			if ( $unit_price && $line_subtotal ) {
-				array_push(
-					$line_items,
-					array(
-						'id'               => $id . '-' . $cart_item_key,
-						'quantity'         => $quantity,
-						'product_tax_code' => $tax_code,
-						'unit_price'       => $unit_price,
-						'discount'         => $discount,
-					)
-				);
-			}
+			array_push(
+				$line_items,
+				array(
+					'id'               => $id . '-' . $cart_item_key,
+					'quantity'         => $quantity,
+					'product_tax_code' => $tax_code,
+					'unit_price'       => $unit_price,
+					'discount'         => $discount,
+				)
+			);
 		}
 
 		return $line_items;
@@ -956,23 +962,50 @@ class WC_Connect_TaxJar_Integration {
 			'plugin'       => 'woo',
 		);
 
-		// Filter the line items to find the taxable items and use empty array if line items is NULL.
-		if ( empty( $line_items ) ) {
-			$taxable_line_items = array();
-		} else {
-			$taxable_line_items = array_filter(
-				$line_items,
-				function( $line_item ) {
-					return ( isset( $line_item['product_tax_code'] ) && '99999' !== $line_item['product_tax_code'] ) ? true : false;
-				}
+		/**
+		 * Change the API request body so that provincial sales tax (PST) is added
+		 * in cases where TaxJar does not combine it with general sales tax (GST)
+		 * based on from/to address alone. This is a limitation of their API.
+		 * They said they would be working on adding specific cases like
+		 * this in the future.
+		 *
+		 * As a temporary workaround, TaxJar suggested we remove the from address
+		 * parameters and use the nexus_addresses[] parameter instead in cases that
+		 * require it. This ensures that the PST is added in cases where it needs to be.
+		 *
+		 * In this case, when shipping from an address Canada to Quebec,
+		 * PST should be charged in addition to GST. The combined tax is
+		 * referred to as Québec sales tax (QST).
+		 */
+		if ( true === apply_filters( 'woocommerce_apply_taxjar_nexus_addresses_workaround', true ) && 'CA' === $body['to_country'] && 'QC' === $body['to_state'] && 'CA' === $body['from_country'] ) {
+			$params_to_unset = array(
+				'from_country',
+				'from_state',
+				'from_zip',
+				'from_city',
+				'from_street',
+			);
+
+			foreach ( $params_to_unset as $param ) {
+				unset( $body[ $param ] );
+			}
+
+			$body['nexus_addresses'] = array(
+				array(
+					'street'  => $body['to_street'],
+					'city'    => $body['to_city'],
+					'state'   => $body['to_state'],
+					'country' => $body['to_country'],
+					'zip'     => $body['to_zip'],
+				),
 			);
 		}
 
 		// Either `amount` or `line_items` parameters are required to perform tax calculations.
-		if ( empty( $taxable_line_items ) ) {
+		if ( empty( $line_items ) ) {
 			$body['amount'] = 0.0;
 		} else {
-			$body['line_items'] = $taxable_line_items;
+			$body['line_items'] = $line_items;
 		}
 
 		$response = $this->smartcalcs_cache_request( wp_json_encode( $body ) );
@@ -1116,6 +1149,53 @@ class WC_Connect_TaxJar_Integration {
 	}
 
 	/**
+	 * Validate TaxJar API request json value and add the error to log.
+	 *
+	 * @param $json
+	 *
+	 * @return bool
+	 */
+	public function validate_taxjar_request( $json ) {
+		$this->_log( ':::: TaxJar API request validation ::::' );
+
+		$json = json_decode( $json, true );
+
+		if ( empty( $json['to_country'] ) ) {
+			$this->_error( 'API request is stopped. Empty country destination.' );
+
+			return false;
+		}
+
+		if ( ( 'US' === $json['to_country'] || 'CA' === $json['to_country'] ) && empty( $json['to_state'] ) ) {
+			$this->_error( 'API request is stopped. Country destination is set to US or CA but the state is empty.' );
+
+			return false;
+		}
+
+		if ( 'US' === $json['to_country'] && empty( $json['to_zip'] ) ) {
+			$this->_error( 'API request is stopped. Country destination is set to US but the zip code is empty.' );
+
+			return false;
+		}
+
+		if ( 'US' === $json['to_country'] && ! WC_Validation::is_postcode( $json['to_zip'], $json['to_country'] ) ) {
+			$this->_error( 'API request is stopped. Country destination is set to US but the zip code has incorrect format.' );
+
+			return false;
+		}
+
+		if ( 'US' === $json['from_country'] && ! WC_Validation::is_postcode( $json['from_zip'], $json['from_country'] ) ) {
+			$this->_error( 'API request is stopped. Country store is set to US but the zip code has incorrect format.' );
+
+			return false;
+		}
+
+		$this->_log( 'API request is in good format.' );
+
+		return true;
+	}
+
+	/**
 	 * Wrap SmartCalcs API requests in a transient-based caching layer.
 	 *
 	 * Unchanged from the TaxJar plugin.
@@ -1126,15 +1206,26 @@ class WC_Connect_TaxJar_Integration {
 	 * @return mixed|WP_Error
 	 */
 	public function smartcalcs_cache_request( $json ) {
-		$cache_key = 'tj_tax_' . hash( 'md5', $json );
-		$response  = get_transient( $cache_key );
+		$cache_key        = 'tj_tax_' . hash( 'md5', $json );
+		$response         = get_transient( $cache_key );
+		$response_code    = wp_remote_retrieve_response_code( $response );
+		$save_error_codes = array( 404, 400 );
 
 		if ( false === $response ) {
-			$response = $this->smartcalcs_request( $json );
+			$response      = $this->smartcalcs_request( $json );
+			$response_code = wp_remote_retrieve_response_code( $response );
 
-			if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
+			if ( 200 == $response_code ) {
 				set_transient( $cache_key, $response, $this->cache_time );
+			} elseif ( in_array( $response_code, $save_error_codes ) ) {
+				set_transient( $cache_key, $response, $this->error_cache_time );
 			}
+		}
+
+		if ( in_array( $response_code, $save_error_codes ) ) {
+			$this->_log( 'Retrieved the error from the cache.' );
+			$this->_error( 'Error retrieving the tax rates. Received (' . $response['response']['code'] . '): ' . $response['body'] );
+			return false;
 		}
 
 		return $response;
@@ -1153,6 +1244,11 @@ class WC_Connect_TaxJar_Integration {
 	public function smartcalcs_request( $json ) {
 		$path = trailingslashit( self::PROXY_PATH ) . 'taxes';
 
+		// Validate the request before sending a request.
+		if ( ! $this->validate_taxjar_request( $json ) ) {
+			return false;
+		}
+
 		$this->_log( 'Requesting: ' . $path . ' - ' . $json );
 
 		$response = $this->api_client->proxy_request(
@@ -1169,6 +1265,10 @@ class WC_Connect_TaxJar_Integration {
 		if ( is_wp_error( $response ) ) {
 			$this->_error( 'Error retrieving the tax rates. Received (' . $response->get_error_code() . '): ' . $response->get_error_message() );
 		} elseif ( 200 == $response['response']['code'] ) {
+			return $response;
+		} elseif ( 404 == $response['response']['code'] || 400 == $response['response']['code'] ) {
+			$this->_error( 'Error retrieving the tax rates. Received (' . $response['response']['code'] . '): ' . $response['body'] );
+
 			return $response;
 		} else {
 			$this->_error( 'Error retrieving the tax rates. Received (' . $response['response']['code'] . '): ' . $response['body'] );

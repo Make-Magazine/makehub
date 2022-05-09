@@ -451,7 +451,7 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 
 			$logger->info(
-				'Schedule single historical sync',
+				'Schedule historical sync',
 				[
 					'current_time'    => time(),
 					'start_on_record' => $start_rec,
@@ -460,7 +460,7 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 		} catch ( Throwable $t ) {
 			$logger->error(
-				'There was an issue scheduling single historical sync',
+				'There was an issue scheduling historical sync',
 				[
 					'message'  => $t->getMessage(),
 					'function' => 'schedule_single_historical_sync',
@@ -494,7 +494,7 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 
 			$logger->info(
-				'Schedule bulk historical sync',
+				'Schedule historical sync',
 				[
 					'current_time'    => time(),
 					'start_on_record' => $start_rec,
@@ -504,7 +504,7 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 		} catch ( Throwable $t ) {
 			$logger->error(
-				'There was an issue scheduling bulk historical sync',
+				'There was an issue scheduling historical sync',
 				[
 					'message'  => $t->getMessage(),
 					'function' => 'schedule_single_historical_sync',
@@ -596,13 +596,20 @@ class Activecampaign_For_Woocommerce_Admin {
 		$logger = new Logger();
 		try {
 			$stop_type = AC_Utilities::get_request_data( 'type' );
+			$user      = wp_get_current_user();
+
 			if ( ! empty( $stop_type ) ) {
-				$logger->debug(
+				$logger->alert(
 					'Historical sync stop requested',
 					[
-						'type' => $stop_type,
+						'type'              => $stop_type,
+						'requested by user' => [
+							'user_id'    => isset( $user->ID ) ? $user->ID : null,
+							'user_email' => isset( $user->data->user_email ) ? $user->data->user_email : null,
+						],
 					]
 				);
+
 				update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_STOP_CHECK_NAME, $stop_type, false );
 				wp_send_json_success( 'Stop requested...' );
 			} else {
@@ -670,21 +677,50 @@ class Activecampaign_For_Woocommerce_Admin {
 	 * @return array|object|null
 	 */
 	public function get_abandoned_carts( $page = 0 ) {
+		$logger = new Logger();
 		try {
 			global $wpdb;
+
+			do_action( 'activecampaign_for_woocommerce_verify_tables' );
+
 			$limit  = 40;
 			$offset = $page * $limit;
-			return $wpdb->get_results(
+
+			$result = $wpdb->get_results(
 			// phpcs:disable
 				$wpdb->prepare(
-					'SELECT id, synced_to_ac, customer_id, customer_email, customer_first_name, customer_last_name, last_access_time, activecampaignfwc_order_external_uuid, cart_ref_json, customer_ref_json
-	                FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` LIMIT %d,%d',
+					'SELECT 
+				       id, 
+				       order_date,
+				       abandoned_date, 
+				       synced_to_ac,
+				       customer_id,
+				       customer_email, 
+				       customer_first_name, 
+				       customer_last_name, 
+				       last_access_time,
+				       activecampaignfwc_order_external_uuid, 
+				       cart_ref_json, 
+				       customer_ref_json
+	                FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` 
+	                WHERE order_date IS NULL OR abandoned_date IS NOT NULL
+	                LIMIT %d,%d',
 					[ $offset, $limit ]
 				), OBJECT
 			// phpcs:enable
 			);
+
+			if ( $wpdb->last_error ) {
+				$logger->error(
+					'Save abandoned cart command: There was an error selecting the id for a customer abandoned cart record.',
+					[
+						'wpdb_last_error' => $wpdb->last_error,
+						'result'          => $result,
+					]
+				);
+			}
+			return $result;
 		} catch ( Throwable $t ) {
-			$logger = new Logger();
 			$logger->warning(
 				'There was an issue getting abandoned carts',
 				[
@@ -703,7 +739,10 @@ class Activecampaign_For_Woocommerce_Admin {
 	public function get_total_abandoned_carts() {
 		global $wpdb;
 		// phpcs:disable
-		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`' );
+
+		do_action('upgrader_post_install');
+
+		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` WHERE order_date IS NULL OR abandoned_date IS NOT NULL' );
 		// phpcs:enable
 	}
 
@@ -714,6 +753,7 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function get_total_abandoned_carts_unsynced() {
 		global $wpdb;
+
 		// phpcs:disable
 		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` WHERE synced_to_ac = 0' );
 		// phpcs:enable
@@ -872,20 +912,26 @@ class Activecampaign_For_Woocommerce_Admin {
 	/**
 	 * Checks the health of the connection and returns issues or empty.
 	 *
-	 * @return array
+	 * @return array|bool
 	 */
 	public function connection_health_check() {
-		$settings = get_option( 'activecampaign_for_woocommerce_storage' );
-		$logger   = new Logger();
-		$issues   = [];
+		$storage  = get_option( 'activecampaign_for_woocommerce_storage' );
+		$settings = get_option( 'activecampaign_for_woocommerce_settings' );
 
-		if ( empty( $settings['connection_id'] ) || empty( $settings['connection_option_id'] ) ) {
+		$logger = new Logger();
+		$issues = [];
+
+		if ( empty( $storage ) || ( empty( $settings['api_url'] ) && empty( $settings['api_key'] ) ) ) {
+			return false;
+		}
+
+		if ( empty( $storage['connection_id'] ) || empty( $storage['connection_option_id'] ) ) {
 			$issues[] = 'Connection id is missing!';
 			$issues[] = 'ActiveCampaign functionality will be disabled until the connection is repaired.';
 			$issues[] = 'Please update your settings and validate your connection.';
 		} else {
 			try {
-				$connection = $this->connection_repository->find_by_id( $settings['connection_id'] );
+				$connection = $this->connection_repository->find_by_id( $storage['connection_id'] );
 
 				if ( ! isset( $connection ) || empty( $connection->get_externalid() ) ) {
 					$services           = $this->connection_repository->find_by_filter( 'service', 'woocommerce' );
@@ -893,7 +939,7 @@ class Activecampaign_For_Woocommerce_Admin {
 					$logger->error(
 						'A valid connection ID for this store could not be found.',
 						[
-							'settings'           => $settings,
+							'settings'           => $storage,
 							'services_found'     => $services->serialize_to_array(),
 							'current_connection' => $current_connection->serialize_to_array(),
 							'this site_url'      => get_site_url(),
@@ -919,7 +965,7 @@ class Activecampaign_For_Woocommerce_Admin {
 					if ( empty( $connection->get_externalid() ) ) {
 						$issues[] = 'Your stored connection ID could not be found in ActiveCampaign. You will need to fix your connection.';
 					} else {
-						$issues[] = 'Your URL is ' . get_site_url() . ' | The stored integration URL in ActiveCampaign matching ID ' . $settings['connection_id'] . ' is ' . $connection->get_externalid();
+						$issues[] = 'Your URL is ' . get_site_url() . ' | The stored integration URL in ActiveCampaign matching ID ' . $storage['connection_id'] . ' is ' . $connection->get_externalid();
 					}
 				}
 			} catch ( Throwable $t ) {

@@ -1,6 +1,27 @@
 
 # Changelog
 
+## 1.0.14
+
+	- Fixed conflict with eComerce Fields that was caused by Nested Forms unsetting child entry ID to null to ensure a fresh total was generated.
+
+## 1.0.13
+
+	- Fixed error that could occur when deleting both parent and child entries in the same request.
+
+## 1.0.12
+
+	- Fixed regression where a change in the form container element caused form change events not to fire.
+
+## 1.0.11
+
+	- Fixed regression where entries wouldn't be saved in certain circumstances if a Nested Form field is conditionally displayed by a calculated field.
+
+## 1.0.10
+
+	- Added [gpnf_export_parent_entry_row](https://gravitywiz.com/documentation/gpnf_export_parent_entry_row/) filter to allow disabling the output of parent entry rows alongside their child entry rows.
+	- Added [gpnf_export_parent_entry_data_on_child_entry_rows](https://gravitywiz.com/documentation/gpnf_export_parent_entry_data_on_child_entry_rows/) to allow exporting parent entry data on child entry rows.
+
 ## 1.0.9
 
 	- Fixed inconsistent behavior of :total, :sum, and :count modifiers between the frontend and the backend if the Nested Form field is hidden. The correct behavior is to return `0` if the Nested Form field is hidden.
@@ -512,7 +533,7 @@
 
 ## 1.0-beta-8.44
 
-	- Added [gppa_child_entry_max](https://gravitywiz.com/documentation/gppa_child_entry_max/) to allow accepting more (or less) entries in a Nested Form field.
+	- Added [gpnf_child_entry_max](https://gravitywiz.com/documentation/gpnf_child_entry_max/) to allow accepting more (or less) entries in a Nested Form field.
 	- Fixed fatal error introduced in 1.0-beta-8.43.
 
 ## 1.0-beta-8.43

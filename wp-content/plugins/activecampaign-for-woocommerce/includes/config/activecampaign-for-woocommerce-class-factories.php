@@ -225,6 +225,12 @@ return array(
 	) {
 		return new Historical_Sync( $logger, $order_utilities, $customer_utilities, $contact_repository, $customer_repository, $order_repository, $bulksync_repository );
 	},
+	Plugin_Upgrade_Command::class                     => static function (
+		Logger $logger,
+		Ecom_Order_Repository $order_repository
+	) {
+		return new Plugin_Upgrade_Command( $logger, $order_repository );
+	},
 	Logger::class                                     => DI\factory(
 		function () {
 			return new Logger();

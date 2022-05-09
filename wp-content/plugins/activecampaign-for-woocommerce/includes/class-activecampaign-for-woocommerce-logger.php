@@ -165,6 +165,16 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		// DO NOT record debug messages if debug is off. It's a waste of log space and makes a mess.
 	}
 
+	public function dev( $message, array $context = array() ) {
+		$context = $this->resolveContext( $context );
+		$message = $this->formatMessageWithContext( $message, $context );
+		if ( $this->ac_debug ) {
+			// If debug logging is turned on in the AC plugin settings, send all debug logs via the INFO level. Bypasses PHP settings.
+			$this->logger->info( "[ActiveCampaign DEV TESTING (DELETE THIS BEFORE PUSHING)] $message", $context );
+		}
+		// DO NOT record debug messages if debug is off. It's a waste of log space and makes a mess.
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

@@ -9,7 +9,7 @@
 ?>
 <div class="meeting-item-container" data-id="<?php bp_zoom_meeting_id(); ?>" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>" data-is-recurring="<?php echo ( 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() || bp_get_zoom_meeting_recurring() ) ? '1' : '0'; ?>" <?php echo 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() ? 'data-occurrence-id="' . esc_attr( bp_get_zoom_meeting_occurrence_id() ) . '"' : ''; ?>>
 	<div class="bb-title-wrap">
-		<a href="#" class="bp-back-to-meeting-list"><span class="bb-icon-chevron-left"></span></a>
+		<a href="#" class="bp-back-to-meeting-list"><span class="bb-icon-l bb-icon-angle-left"></span></a>
 		<div>
 			<h2 class="bb-title">
 				<?php bp_zoom_meeting_title(); ?>
@@ -29,7 +29,7 @@
 		<?php if ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), bp_get_current_group_id() ) && bp_zoom_groups_can_user_manage_meeting( bp_get_zoom_meeting_id() ) ) : ?>
 			<div class="meeting-actions">
 				<a href="#" class="meeting-actions-anchor">
-					<i class="bb-icon-menu-dots-v"></i>
+					<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="meeting-actions-list">
 					<ul>
@@ -37,7 +37,7 @@
 							<li class="bp-zoom-meeting-edit">
 								<?php if ( 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() ) : ?>
 									<a role="button" id="bp-zoom-meeting-occurrence-edit-button" class="edit-meeting" href="#" data-id="bp-meeting-edit">
-										<i class="bb-icon-edit-square"></i><?php esc_html_e( 'Edit this Meeting', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Edit this Meeting', 'buddyboss-pro' ); ?>
 									</a>
 									<div id="bp-zoom-edit-occurrence-popup-<?php echo esc_attr( bp_get_zoom_meeting_occurrence_id() ); ?>" class="bzm-white-popup mfp-hide bp-zoom-edit-occurrence-popup">
 										<header class="bb-zm-model-header"><?php esc_html_e( 'You\'re changing a recurring meeting.', 'buddyboss-pro' ); ?></header>
@@ -56,7 +56,7 @@
 									</div>
 								<?php else : ?>
 									<a role="button" id="bp-zoom-meeting-edit-button" class="edit-meeting" href="#" data-id="<?php bp_zoom_meeting_id(); ?>" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>" data-is-recurring="<?php echo ! empty( bp_get_zoom_meeting_parent() ) ? '1' : '0'; ?>" <?php echo ! empty( bp_get_zoom_meeting_parent() ) ? 'data-occurrence-id="' . esc_attr( bp_get_zoom_meeting_occurrence_id() ) . '"' : ''; ?>>
-										<i class="bb-icon-edit-square"></i><?php esc_html_e( 'Edit this Meeting', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Edit this Meeting', 'buddyboss-pro' ); ?>
 									</a>
 								<?php endif; ?>
 							</li>
@@ -64,7 +64,7 @@
 						<li class="bp-zoom-meeting-delete">
 							<?php if ( 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() ) : ?>
 								<a role="button" id="bp-zoom-meeting-occurrence-delete-button" class="delete" href="#">
-									<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete this Meeting', 'buddyboss-pro' ); ?>
+									<i class="bb-icon-l bb-icon-trash"></i><?php esc_html_e( 'Delete this Meeting', 'buddyboss-pro' ); ?>
 								</a>
 								<div id="bp-zoom-delete-occurrence-popup-<?php echo esc_attr( bp_get_zoom_meeting_occurrence_id() ); ?>" class="bzm-white-popup mfp-hide bp-zoom-delete-occurrence-popup">
 									<header class="bb-zm-model-header"><?php esc_html_e( 'Delete Meeting', 'buddyboss-pro' ); ?></header>
@@ -82,7 +82,7 @@
 									</footer>
 								</div>
 							<?php else : ?>
-								<a role="button" class="delete bp-zoom-delete-meeting" href="javascript:;"><i class="bb-icon-trash"></i><?php esc_html_e( 'Delete this Meeting', 'buddyboss-pro' ); ?></a>
+								<a role="button" class="delete bp-zoom-delete-meeting" href="javascript:;"><i class="bb-icon-l bb-icon-trash"></i><?php esc_html_e( 'Delete this Meeting', 'buddyboss-pro' ); ?></a>
 							<?php endif; ?>
 						</li>
 					</ul>
@@ -172,13 +172,13 @@
 							<span class="show-password"><strong><?php echo esc_html( bp_get_zoom_meeting_password() ); ?></strong></span>
 						</div>
 						<div class="pass-toggle">
-							<a href="javascript:;" class="toggle-password show-pass on"><i class="bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?></a>
-							<a href="javascript:;" class="toggle-password hide-pass"><i class="bb-icon-eye-off"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?></a>
+							<a href="javascript:;" class="toggle-password show-pass on"><i class="bb-icon-l bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?></a>
+							<a href="javascript:;" class="toggle-password hide-pass"><i class="bb-icon-l bb-icon-eye-slash"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?></a>
 						</div>
 					</div>
 				<?php else : ?>
 					<span class="no-pass-required">
-						<i class="bb-icon-close"></i>
+						<i class="bb-icon-l bb-icon-times"></i>
 						<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
 					</span>
 				<?php endif; ?>
@@ -207,7 +207,7 @@
 			<div class="meeting-item-col">
 				<div class="copy-link-wrap">
 					<a class="bb-invitation-url" <?php echo ! bp_zoom_is_zoom_hide_urls_enabled() ? 'target="_blank"' : ''; ?> href="<?php echo esc_url( bp_zoom_get_meeting_rewrite_url( $join_url, bp_get_zoom_meeting_id() ) ); ?>"><?php echo esc_url( bp_zoom_get_meeting_rewrite_url( $join_url, bp_get_zoom_meeting_id() ) ); ?></a>
-					<a id="copy-invitation-link" class="edit copy-invitation-link" href="#copy-invitation-popup" role="button" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>"><span class="bb-icon bb-icon-eye"></span><?php esc_html_e( 'View Invitation', 'buddyboss-pro' ); ?></a>
+					<a id="copy-invitation-link" class="edit copy-invitation-link" href="#copy-invitation-popup" role="button" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>"><span class="bb-icon bb-icon-l bb-icon-eye"></span><?php esc_html_e( 'View Invitation', 'buddyboss-pro' ); ?></a>
 
 					<div id="copy-invitation-popup" class="bzm-white-popup copy-invitation-popup mfp-hide">
 						<header class="bb-zm-model-header"><?php esc_html_e( 'View Invitation', 'buddyboss-pro' ); ?></header>
@@ -248,23 +248,23 @@
 				$bp_get_zoom_meeting_auto_recording    = ( in_array( bp_get_zoom_meeting_auto_recording(), array( 'cloud', 'local' ), true ) ) ? 'yes' : 'no';
 				?>
 				<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_join_before_host ); ?>">
-					<i class="<?php echo bp_get_zoom_meeting_join_before_host() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_meeting_join_before_host() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Enable join before host', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_mute_participants ); ?>">
-					<i class="<?php echo bp_get_zoom_meeting_mute_participants() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_meeting_mute_participants() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Mute participants upon entry', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_waiting_room ); ?>">
-					<i class="<?php echo bp_get_zoom_meeting_waiting_room() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_meeting_waiting_room() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Enable waiting room', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_authentication ); ?>">
-					<i class="<?php echo bp_get_zoom_meeting_authentication() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_meeting_authentication() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Only authenticated users can join', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_auto_recording ); ?>">
-					<i class="<?php echo in_array( bp_get_zoom_meeting_auto_recording(), array( 'cloud', 'local' ), true ) ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo in_array( bp_get_zoom_meeting_auto_recording(), array( 'cloud', 'local' ), true ) ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span>
 						<?php
 						if ( 'cloud' === bp_get_zoom_meeting_auto_recording() ) {

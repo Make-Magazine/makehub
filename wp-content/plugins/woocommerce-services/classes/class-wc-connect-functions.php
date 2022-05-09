@@ -52,10 +52,66 @@ if ( ! class_exists( 'WC_Connect_Functions' ) ) {
 				return false;
 			}
 			$rest_route = $GLOBALS['wp']->query_vars['rest_route'];
-			return (
-				false !== strpos( $rest_route, 'wc/store/cart' ) ||
-				false !== strpos( $rest_route, 'wc/store/checkout' )
-			);
+
+			// Use regex to check any route that has "wc/store" with any of these text : "cart", "checkout", or "batch"
+			// Example : wc/store/v3/batch
+			preg_match( '/wc\/store\/v[0-9]{1,}\/(batch|cart|checkout)/', $rest_route, $route_matches, PREG_OFFSET_CAPTURE );
+
+			return ( ! empty( $route_matches ) );
+		}
+
+		/**
+		 * Check if current page is a cart page or has woocommerce cart block.
+		 *
+		 * @return bool
+		 */
+		public static function is_cart() {
+			if ( is_cart() || self::has_cart_block() ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if current page is a checkout page or has woocommerce checkout block.
+		 *
+		 * @return bool
+		 */
+		public static function is_checkout() {
+			if ( is_checkout() || self::has_checkout_block() ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if current page has woocommerce cart block.
+		 *
+		 * @return bool
+		 */
+		public static function has_cart_block() {
+			// To support WP < 5.0.0, we need to check if `has_block` exists first as has_block only being introduced on WP 5.0.0.
+			if ( function_exists( 'has_block' ) ) {
+				return has_block( 'woocommerce/cart' );
+			}
+
+			return false;
+		}
+
+		/**
+		 * Check if current page has woocommerce checkout block.
+		 *
+		 * @return bool
+		 */
+		public static function has_checkout_block() {
+			// To support WP < 5.0.0, we need to check if `has_block` exists first as has_block only being introduced on WP 5.0.0.
+			if ( function_exists( 'has_block' ) ) {
+				return has_block( 'woocommerce/checkout' );
+			}
+
+			return false;
 		}
 
 		/**
@@ -64,21 +120,8 @@ if ( ! class_exists( 'WC_Connect_Functions' ) ) {
 		 * @return bool
 		 */
 		public static function has_cart_or_checkout_block() {
-			$page = get_post();
-			if ( ! $page ) {
-				return false;
-			}
-
-			$blocks = parse_blocks( $page->post_content );
-			if ( ! $blocks ) {
-				return false;
-			}
-
-			foreach ( $blocks as $block ) {
-				$block_name = $block['blockName'];
-				if ( 'woocommerce/cart' === $block_name || 'woocommerce/checkout' === $block_name ) {
-					return true;
-				}
+			if ( self::has_checkout_block() || self::has_cart_block() ) {
+				return true;
 			}
 
 			return false;

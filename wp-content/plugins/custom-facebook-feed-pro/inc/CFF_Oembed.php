@@ -168,14 +168,10 @@ class CFF_Oembed
 	 */
 	public static function get_provider_from_url_with_query_vars( $provider, $url ) {
 		$exploded = explode( '?', $url );
-		if ( isset( $exploded[1] ) ) {
+		if ( ! empty( $exploded[1] ) ) {
 			if ( strpos( $url, '?v=' ) !== false ) {
 				$exploded = explode( '&', $url );
-				if ( ! empty( $exploded[1] ) ) {
-					$provider = str_replace( urlencode( '&' . $exploded[1] ), '', $provider );
-				}
-			} else {
-				$provider = str_replace( urlencode( '?' . $exploded[1] ), '', $provider );
+				$provider = str_replace( urlencode( '&' . $exploded[1] ), '', $provider );
 			}
 		}
 
