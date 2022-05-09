@@ -63,9 +63,11 @@ $themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
-parse_str($referrer_url['query'], $referrer_params);
-$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
-sort($referrer_params);
+if(isset($referrer_url['query'])) {
+	parse_str($referrer_url['query'], $referrer_params);
+	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	sort($referrer_params);
+}
 ?>
 
 <div id="learndash-content" class="container-fluid">
@@ -108,10 +110,15 @@ sort($referrer_params);
                         ?>
 						<div class="project-breadcrumbs">
 							<a href="/projects-search/" class="project-tag">Projects</a>
-							<?php foreach($referrer_params as $param) {
+							<?php
+							if(isset($referrer_params)) {
+								foreach($referrer_params as $param) {
 									$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
 									<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-							<?php } ?>
+							<?php
+								}
+							}
+							?>
 						</div>
                         <div id="learndash-course-header" class="bb-lms-header">
                             <div class="bb-ld-info-bar">

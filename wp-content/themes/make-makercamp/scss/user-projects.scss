@@ -1,4 +1,5 @@
 .single-user-project {
+	.row { margin: 0px; }
 	.ld-tabs {
 		display: flex;
 		flex-direction: column;
@@ -185,7 +186,6 @@
     padding: 10px 25px 10px 47px;
     border-radius: 25px;
     color: #fff !important;
-    font-size: 16px;
     font-weight: 400;
     transition: background-color .2s;
     display: inline-block;
