@@ -10,7 +10,6 @@
  */
 
 use Activecampaign_For_Woocommerce_Logger as Logger;
-use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 
 /**
@@ -193,26 +192,42 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 		// If we have a customer, do the stuff
 		if ( ! empty( $customer_data['email'] ) ) {
 			// Step 1 verify we added a table
-			$ac_table = new Plugin_upgrade();
-			if ( ! $ac_table->verify_table() ) {
-				$this->logger->error( 'Save abandoned cart command: Could not verify the abandoned cart table...' );
-
-				return;
-			}
+			do_action( 'activecampaign_for_woocommerce_verify_tables' );
 
 			global $wpdb;
 
 			try {
 				$stored_id = null;
 				if ( ! empty( $customer_data['id'] ) ) {
-					$stored_id = $wpdb->get_var(
-					// phpcs:disable
-						$wpdb->prepare(
-							'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' WHERE customer_id = %s',
-							$customer_data['id']
-						)
-					// phpcs:enable
-					);
+
+					$abandoned_row_id                      = wc()->session->get( 'activecampaign_abandoned_cart_id' );
+					$activecampaignfwc_order_external_uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
+
+					if ( ! empty( $abandoned_row_id ) ) {
+						$stored_id = $wpdb->get_var(
+						// phpcs:disable
+							$wpdb->prepare(
+								'
+							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+							WHERE id = %d
+							',
+								$abandoned_row_id
+							)
+						// phpcs:enable
+						);
+					} elseif ( ! empty( $activecampaignfwc_order_external_uuid ) ) {
+						$stored_id = $wpdb->get_var(
+						// phpcs:disable
+							$wpdb->prepare(
+								'
+							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+							WHERE activecampaignfwc_order_external_uuid = %s
+							',
+								$activecampaignfwc_order_external_uuid
+							)
+						// phpcs:enable
+						);
+					}
 
 					if ( $wpdb->last_error ) {
 						$this->logger->error(
@@ -251,7 +266,6 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 
 			try {
 				$store_data = [
-					'synced_to_ac'                   => 0,
 					'customer_id'                    => $customer_data['id'],
 					'customer_email'                 => $customer_data['email'],
 					'customer_first_name'            => $customer_data['first_name'],
@@ -264,12 +278,26 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					'removed_cart_contents_ref_json' => wp_json_encode( $removed_cart_contents, JSON_UNESCAPED_UNICODE ),
 				];
 
-				if ( ! empty( $stored_id ) ) {
-					$this->send_table_data( $store_data, $stored_id );
-				} else {
-					$store_data['activecampaignfwc_order_external_uuid'] = $this->abandoned_cart_util->get_or_generate_uuid();
-					$this->abandoned_cart_util->store_abandoned_cart_data( $store_data );
+				$current_hash = wc()->cart->get_cart_hash();
+				$saved_hash   = wc()->session->get( 'activecampaign_abandoned_cart_hash' );
+
+				if ( empty( $saved_hash ) || $current_hash !== $saved_hash ) {
+					$store_data['synced_to_ac'] = 0;
+					wc()->session->set( 'activecampaign_abandoned_cart_hash', wc()->cart->get_cart_hash() );
 				}
+
+				if ( ! empty( $stored_id ) ) {
+					// Updating existing record
+					$this->abandoned_cart_util->store_abandoned_cart_data( $store_data, $stored_id );
+				} else {
+					// Storing a new record
+					$store_data['activecampaignfwc_order_external_uuid'] = $this->abandoned_cart_util->get_or_generate_uuid();
+					$store_data['ac_externalcheckoutid']                 = $this->abandoned_cart_util->generate_externalcheckoutid( $customer_data['id'], $customer_data['email'], $store_data['activecampaignfwc_order_external_uuid'] );
+
+					$stored_id = $this->abandoned_cart_util->store_abandoned_cart_data( $store_data );
+				}
+
+				wc()->session->set( 'activecampaign_abandoned_cart_id', $stored_id );
 			} catch ( Throwable $t ) {
 				$this->logger->warning(
 					'Save abandoned cart command: There was an error attempting to save this abandoned cart',
@@ -280,54 +308,6 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					]
 				);
 			}
-		}
-	}
-
-	/**
-	 * Send the table data to the database
-	 *
-	 * @param Array       $data The data.
-	 * @param null|string $stored_id The stored id of the customer.
-	 */
-	private function send_table_data( $data, $stored_id = null ) {
-		global $wpdb;
-		try {
-			if ( ! is_null( $stored_id ) ) {
-				$wpdb->update(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
-					$data,
-					[
-						'id' => $stored_id,
-					]
-				);
-
-			} else {
-				$wpdb->insert(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
-					$data
-				);
-			}
-
-			if ( $wpdb->last_error ) {
-				$this->logger->error(
-					'Save abandoned cart command: There was an error creating/updating an abandoned cart record.',
-					[
-						'wpdb_last_error' => $wpdb->last_error,
-						'data'            => $data,
-						'stored_id'       => $stored_id,
-					]
-				);
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Save abandoned cart command: There was an error attempting to save this abandoned cart',
-				[
-					'message'       => $t->getMessage(),
-					'stored_id'     => $stored_id,
-					'customer_data' => $data,
-					'trace'         => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
 		}
 	}
 }

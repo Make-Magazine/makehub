@@ -292,7 +292,7 @@ class Activecampaign_For_Woocommerce {
 	 * @param     Customer_Utilities                                 $customer_utilities     The customer utility functions.
 	 * @param     Abandoned_Cart_Utilities                           $abandoned_cart_utilities     The abandoned cart utility functions.
 	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository $bulksync_repository     The bulksync repository.
-	 * @param     AC_Utilities                                       $ac_utilities The global AC utility class.
+	 * @param     AC_Utilities                                       $ac_utilities     The global AC utility class.
 	 *
 	 * @since    1.0.0
 	 */
@@ -382,6 +382,13 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
+			'activecampaign_for_woocommerce_verify_tables',
+			$this->plugin_upgrade_command,
+			'execute',
+			1
+		);
+
+		$this->loader->add_action(
 			'upgrader_process_complete',
 			$this->plugin_upgrade_command,
 			'execute',
@@ -441,10 +448,10 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
-			'woocommerce_payment_complete',
+			'woocommerce_checkout_update_order_meta',
 			$this->order_finished_event,
 			'checkout_completed',
-			41
+			90
 		);
 
 		$this->loader->add_action(
@@ -522,6 +529,13 @@ class Activecampaign_For_Woocommerce {
 			2
 		);
 
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_order_sync',
+			$this->historical_sync,
+			'sync_new_orders',
+			1,
+			2
+		);
 	}
 
 	/**
@@ -597,13 +611,6 @@ class Activecampaign_For_Woocommerce {
 			'plugin_action_links_' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_BASE_NAME,
 			$this->admin,
 			'add_plugin_settings_link'
-		);
-
-		$this->loader->add_action(
-			'rest_api_init',
-			$this->admin,
-			'active_campaign_register_settings_api',
-			1
 		);
 
 		$disable_notice = 0;

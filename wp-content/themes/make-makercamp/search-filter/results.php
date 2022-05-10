@@ -65,16 +65,16 @@ if ( $query->have_posts() ) {
 						</a></div>
 				<?php } ?>
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-				<?php
+				<?php /*
 					if(get_field('what_will_you_learn', $post->ID)) {
-						echo "<p>" . first_sentence(get_field('what_will_you_learn', $post->ID)) . "</p>"; 
-					}
+						echo "<p>" . first_sentence(get_field('what_will_you_learn', $post->ID)) . "</p>";
+					} */
 				?>
 				<div class="results-meta">
 					<p><?php the_category(); ?></p>
 					<p><?php the_tags(); ?></p>
-					<p><?php echo $postType->labels->singular_name;  ?></p>
-					<p><a href="<?php echo $user_link; ?>"><?php the_author(); ?></a></p>
+					<?php /* <p class="post-type"><?php echo $postType->labels->singular_name;  ?></p> */ ?>
+					<p class="author"><a href="<?php echo $user_link; ?>"><?php the_author(); ?></a></p>
 				</div>
 			</div>
 

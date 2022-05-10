@@ -126,7 +126,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 		<?php endif; ?>
 		<div class="bp-zoom-block-show-details">
 			<a href="#bp-zoom-block-show-details-popup-<?php echo esc_attr( $meeting_id ); ?>" class="show-meeting-details">
-				<span class="bb-icon-calendar-small"></span> <?php esc_html_e( 'Meeting Details', 'buddyboss-pro' ); ?>
+				<span class="bb-icon-l bb-icon-calendar"></span> <?php esc_html_e( 'Meeting Details', 'buddyboss-pro' ); ?>
 			</a>
 		</div>
 		<div id="bp-zoom-block-show-details-popup-<?php echo esc_attr( $meeting_id ); ?>" class="bzm-white-popup bp-zoom-block-show-details mfp-hide">
@@ -190,18 +190,18 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 								</div>
 								<div class="pass-toggle">
 									<a href="javascript:;" class="toggle-password show-pass on">
-										<i class="bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?>
 									</a>
 									<a href="javascript:;" class="toggle-password hide-pass">
-										<i class="bb-icon-eye-off"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-eye-slash"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?>
 									</a>
 								</div>
 							</div>
 						<?php else : ?>
 							<span class="no-pass-required">
-						<i class="bb-icon-close"></i>
-						<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
-					</span>
+								<i class="bb-icon-l bb-icon-times"></i>
+								<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
+							</span>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -212,8 +212,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 						<div class="meeting-item-head"><?php esc_html_e( 'Registration Link', 'buddyboss-pro' ); ?></div>
 						<div class="meeting-item-col">
 							<div class="copy-link-wrap">
-								<a class="bb-registration-url" target="_blank"
-										href="<?php echo esc_url( $registration_url ); ?>"><?php echo esc_url( $registration_url ); ?></a>
+								<a class="bb-registration-url" target="_blank" href="<?php echo esc_url( $registration_url ); ?>"><?php echo esc_url( $registration_url ); ?></a>
 							</div>
 						</div>
 					</div>
@@ -229,7 +228,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 								<a class="edit copy-invitation-link"
 										href="#copy-invitation-popup-<?php echo esc_attr( $meeting_id ); ?>" role="button"
 										data-meeting-id="<?php echo esc_attr( $meeting_id ); ?>">
-									<span class="bb-icon bb-icon-eye"></span><?php esc_html_e( 'View Invitation', 'buddyboss-pro' ); ?>
+									<span class="bb-icon bb-icon-l bb-icon-eye"></span><?php esc_html_e( 'View Invitation', 'buddyboss-pro' ); ?>
 								</a>
 
 								<div id="copy-invitation-popup-<?php echo esc_attr( $meeting_id ); ?>"
@@ -238,8 +237,8 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 										<a href="#bp-zoom-block-show-details-popup-<?php echo esc_attr( $meeting_id ); ?>"
 												class="show-meeting-details"
 												title="<?php esc_html_e( 'Close', 'buddyboss-pro' ); ?>">
-											<i class="bb-icon-close"></i>
-											<a/>
+											<i class="bb-icon-l bb-icon-times"></i>
+										<a/>
 									</header>
 
 									<div id="meeting-invitation-container">
@@ -278,23 +277,23 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 						$bp_get_zoom_meeting_auto_recording    = ( in_array( $auto_recording, array( 'cloud', 'local' ), true ) ) ? 'yes' : 'no';
 						?>
 						<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_join_before_host ); ?>">
-							<i class="<?php echo $join_before_host ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $join_before_host ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Enable join before host', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_mute_participants ); ?>">
-							<i class="<?php echo $mute_participants ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $mute_participants ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Mute participants upon entry', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_waiting_room ); ?>">
-							<i class="<?php echo $waiting_room ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $waiting_room ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Enable waiting room', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_authentication ); ?>">
-							<i class="<?php echo $meeting_authentication ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo $meeting_authentication ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span><?php esc_html_e( 'Only authenticated users can join', 'buddyboss-pro' ); ?></span>
 						</div>
 						<div class="bb-meeting-option <?php echo esc_attr( $bp_get_zoom_meeting_auto_recording ); ?>">
-							<i class="<?php echo in_array( $auto_recording, array( 'cloud', 'local' ), true ) ? 'bb-icon-check-small' : 'bb-icon-close'; ?>"></i>
+							<i class="<?php echo in_array( $auto_recording, array( 'cloud', 'local' ), true ) ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-times'; ?>"></i>
 							<span>
 								<?php
 								if ( 'cloud' === $auto_recording ) {

@@ -151,9 +151,8 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		// If the customer has no available email, there is nothing to do
 		try {
 			if (
-				! ( $this->customer instanceof WC_Customer )
-				&& empty( $this->customer->get_email() )
-				&& empty( $this->customer->get_billing_email() )
+				( ! method_exists( $this->customer, 'get_billing_email' ) || empty( $this->customer->get_billing_email() ) ) &&
+				( ! method_exists( $this->customer, 'get_email' ) || empty( $this->customer->get_email() ) )
 			) {
 				$this->logger->debug(
 					'Update Cart Command: Customer not logged in or email unknown. Do nothing.',

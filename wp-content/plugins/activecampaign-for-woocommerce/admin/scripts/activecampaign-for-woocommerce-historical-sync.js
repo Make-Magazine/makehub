@@ -193,16 +193,16 @@ jQuery(document).ready(function($) {
                         stickCount ++;
                     }
 
-                    if(stickCount < 10) {
+                    if(stickCount < 20) {
                         $('#activecampaign-run-historical-sync-running-status').html('Running...');
                     }
 
-                    if(stickCount >= 10) {
-                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync might be stuck or has exited improperly...');
+                    if(stickCount >= 20 && stickCount < 40) {
+                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync might be stuck or has exited improperly... please check your logs.');
                     }
 
-                    if(stickCount >= 15) {
-                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync process is no longer updating, please reset the sync status.');
+                    if(stickCount >= 40) {
+                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync process is no longer updating. It may be required to reset the sync status.');
                         cancelUpdateCheck();
                     }
                 }

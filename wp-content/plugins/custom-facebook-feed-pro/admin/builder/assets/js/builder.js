@@ -325,16 +325,7 @@ cffBuilder = new Vue({
 	},
 	created: function(){
 		var self = this;
-
-		//console.log(self.feedPagination)
-		//console.log(self.customizerSidebarBuilder)
-		//console.log(self.customizerFeedData)
-		//console.log(self.wordpressPageLists);
-		//console.log(self.feedTypes)
-		//console.log(self.advancedFeedTypes)
-		//console.log(self.activeExtensions)
-		//console.log(self.dummyLightBoxData.post)
-		//console.log(self.sourcesList)
+		console.log(self.customizerFeedData)
 		if( self.customizerFeedData ){
 			setTimeout(function(){
 				self.generateMasonryGridHeight('update');
@@ -664,7 +655,7 @@ cffBuilder = new Vue({
 				self.processFeedTypesSources( typesArray );
 			}
 		},
-		
+
 		/**
 		 * Get Feed Template Element Title
 		 *
@@ -680,7 +671,7 @@ cffBuilder = new Vue({
 				title = self.genericText.largeGrid;
 			} else if ( $el.type == 'latest_post' && (feedType == 'photos' || feedType == 'singlealbum') ) {
 				title = self.genericText.singlePhoto;
-			} else if ( $el.type == 'latest_post' && (feedType == 'albums' || feedType == 'videos') ) {
+			} else if ( $el.type == 'latest_post' && feedType == 'albums') {
 				title = self.genericText.latestAlbum;
 			} else {
 				title = $el.title;
@@ -1494,6 +1485,9 @@ cffBuilder = new Vue({
 				];
 			if( dateRangeElements.includes(settingID) ){
 				self.processDateRange();
+			}
+			if(settingID == 'feedlayout'  && value == 'masonry'){
+				self.customizerFeedData.settings['layout'] = 'fullwidth';
 			}
 
 			if(settingID == 'feedlayout' && value == 'carousel' && !self.checkExtensionActive('carousel')){
@@ -2803,7 +2797,12 @@ cffBuilder = new Vue({
 		 */
 		printPostText : function( post, fullText = false ){
 			var self = this,
-			postText = post.message ? post.message : (post.description ? post.description : ''),
+			postText = post.message ? post.message : (post.description ? post.description : '');
+
+			if( self.getPostTypeTimeline(post) === 'photos'){
+				postText = self.hasOwnNestedProperty(post, 'attachments.data') &&  post.attachments.data[0] != undefined ? post.attachments.data[0].description : postText;
+			}
+
 			postText = ( !self.checkNotEmpty(postText) && self.getPostTypeTimeline(post) == 'links' && self.hasOwnNestedProperty( self.processIframeAndLinkAndVideo( post ), 'args.title' ) ) ?
 					self.processIframeAndLinkAndVideo( post ).args.title : postText,
 
@@ -2825,7 +2824,8 @@ cffBuilder = new Vue({
 			if(postTags !== null){
 				postTags.forEach( function( singleTag ) {
 					var regEx = new RegExp(singleTag.name, "ig");
-					postText = postText.replace(regEx, '<a href="https://facebook.com/' + singleTag.id + '" target="_blank" rel="nofollow">' + singleTag.name + '</a>');
+					//var singleTagName = postText.slice(singleTag.offset, (singleTag.offset + singleTag.length));
+					postText = postText.replace(singleTag.name, '<a href="https://facebook.com/' + singleTag.id + '" target="_blank" rel="nofollow">' + singleTag.name + '</a>');
 				});
 			}
 			return postText;

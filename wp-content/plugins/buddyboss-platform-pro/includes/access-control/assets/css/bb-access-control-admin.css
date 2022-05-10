@@ -1,17 +1,3 @@
-.bp-admin-card.section-bp_messages h2:before {
-	background-image: url(../images/fontawesome/solid/inbox.svg);
-}
-
-.bp-admin-card.section-access-control_block h2:before,
-.bp-admin-card.section-activity_access_control_block h2:before,
-.bp-admin-card.section-connection_access_control_block h2:before,
-.bp-admin-card.section-messages_access_control_block h2:before,
-.bp-admin-card.section-media_access_control_block h2:before,
-.bp-admin-card.section-group_access_control_block h2:before {
-	background-image: url(../images/fontawesome/solid/lock.svg);
-	background-size: 18px 18px;
-}
-
 .subsubsub .bp-messages {
 	border: none;
 }

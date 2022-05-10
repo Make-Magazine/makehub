@@ -216,6 +216,7 @@ return array(
 		$settings                      = $container->get( 'wcgateway.settings' );
 		$environment                   = $container->get( 'onboarding.environment' );
 		$logger                        = $container->get( 'woocommerce.logger.woocommerce' );
+		$subscription_helper = $container->get( 'subscription.helper' );
 		return new OrderProcessor(
 			$session_handler,
 			$order_endpoint,
@@ -224,7 +225,8 @@ return array(
 			$authorized_payments_processor,
 			$settings,
 			$logger,
-			$environment
+			$environment,
+			$subscription_helper
 		);
 	},
 	'wcgateway.processor.refunds'                  => static function ( ContainerInterface $container ): RefundProcessor {
@@ -238,7 +240,16 @@ return array(
 		$payments_endpoint = $container->get( 'api.endpoint.payments' );
 		$logger = $container->get( 'woocommerce.logger.woocommerce' );
 		$notice              = $container->get( 'wcgateway.notice.authorize-order-action' );
-		return new AuthorizedPaymentsProcessor( $order_endpoint, $payments_endpoint, $logger, $notice );
+		$settings            = $container->get( 'wcgateway.settings' );
+		$subscription_helper = $container->get( 'subscription.helper' );
+		return new AuthorizedPaymentsProcessor(
+			$order_endpoint,
+			$payments_endpoint,
+			$logger,
+			$notice,
+			$settings,
+			$subscription_helper
+		);
 	},
 	'wcgateway.admin.render-authorize-action'      => static function ( ContainerInterface $container ): RenderAuthorizeAction {
 		$column = $container->get( 'wcgateway.admin.orders-payment-status-column' );
@@ -760,21 +771,7 @@ return array(
 					>',
 					'</a>'
 				),
-				'options'      => array(
-					'card'        => _x( 'Credit or debit cards', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'credit'      => _x( 'Pay Later', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'sepa'        => _x( 'SEPA-Lastschrift', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'bancontact'  => _x( 'Bancontact', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'blik'        => _x( 'BLIK', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'eps'         => _x( 'eps', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'giropay'     => _x( 'giropay', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'ideal'       => _x( 'iDEAL', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'mercadopago' => _x( 'Mercado Pago', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'mybank'      => _x( 'MyBank', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'p24'         => _x( 'Przelewy24', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'sofort'      => _x( 'Sofort', 'Name of payment method', 'woocommerce-paypal-payments' ),
-					'venmo'       => _x( 'Venmo', 'Name of payment method', 'woocommerce-paypal-payments' ),
-				),
+				'options'      => $container->get( 'wcgateway.all-funding-sources' ),
 				'screens'      => array(
 					State::STATE_START,
 					State::STATE_ONBOARDED,
@@ -1948,13 +1945,15 @@ return array(
 					'woocommerce-paypal-payments'
 				),
 				'options'      => array(
-					'visa'       => _x( 'Visa', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'mastercard' => _x( 'Mastercard', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'amex'       => _x( 'American Express', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'discover'   => _x( 'Discover', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'jcb'        => _x( 'JCB', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'elo'        => _x( 'Elo', 'Name of credit card', 'woocommerce-paypal-payments' ),
-					'hiper'      => _x( 'Hiper', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'visa'            => _x( 'Visa (light)', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'visa-dark'       => _x( 'Visa (dark)', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'mastercard'      => _x( 'Mastercard (light)', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'mastercard-dark' => _x( 'Mastercard (dark)', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'amex'            => _x( 'American Express', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'discover'        => _x( 'Discover', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'jcb'             => _x( 'JCB', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'elo'             => _x( 'Elo', 'Name of credit card', 'woocommerce-paypal-payments' ),
+					'hiper'           => _x( 'Hiper', 'Name of credit card', 'woocommerce-paypal-payments' ),
 				),
 				'screens'      => array(
 					State::STATE_ONBOARDED,
@@ -2030,14 +2029,23 @@ return array(
 		 * Here, we filter them out.
 		 */
 		$card_options = $fields['disable_cards']['options'];
+		$card_icons = $fields['card_icons']['options'];
+		$dark_versions = array();
 		foreach ( $card_options as $card => $label ) {
 			if ( $dcc_applies->can_process_card( $card ) ) {
+				if ( 'visa' === $card || 'mastercard' === $card ) {
+					$dark_versions = array(
+						'visa-dark'       => $card_icons['visa-dark'],
+						'mastercard-dark' => $card_icons['mastercard-dark'],
+					);
+				}
 				continue;
 			}
 			unset( $card_options[ $card ] );
 		}
+
 		$fields['disable_cards']['options'] = $card_options;
-		$fields['card_icons']['options'] = $card_options;
+		$fields['card_icons']['options'] = array_merge( $dark_versions, $card_options );
 
 		/**
 		 * Display vault message on Pay Later label if vault is enabled.
@@ -2051,6 +2059,24 @@ return array(
 		}
 
 		return $fields;
+	},
+
+	'wcgateway.all-funding-sources'                => static function( ContainerInterface $container ): array {
+		return array(
+			'card'        => _x( 'Credit or debit cards', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'credit'      => _x( 'Pay Later', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'sepa'        => _x( 'SEPA-Lastschrift', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'bancontact'  => _x( 'Bancontact', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'blik'        => _x( 'BLIK', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'eps'         => _x( 'eps', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'giropay'     => _x( 'giropay', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'ideal'       => _x( 'iDEAL', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'mercadopago' => _x( 'Mercado Pago', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'mybank'      => _x( 'MyBank', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'p24'         => _x( 'Przelewy24', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'sofort'      => _x( 'Sofort', 'Name of payment method', 'woocommerce-paypal-payments' ),
+			'venmo'       => _x( 'Venmo', 'Name of payment method', 'woocommerce-paypal-payments' ),
+		);
 	},
 
 	'wcgateway.checkout.address-preset'            => static function( ContainerInterface $container ): CheckoutPayPalAddressPreset {
@@ -2116,6 +2142,18 @@ return array(
 	'wcgateway.funding-source.renderer'            => function ( ContainerInterface $container ) : FundingSourceRenderer {
 		return new FundingSourceRenderer(
 			$container->get( 'wcgateway.settings' )
+		);
+	},
+
+	'wcgateway.logging.is-enabled'                 => function ( ContainerInterface $container ) : bool {
+		$settings = $container->get( 'wcgateway.settings' );
+
+		/**
+		 * Whether the logging of the plugin errors/events is enabled.
+		 */
+		return apply_filters(
+			'woocommerce_paypal_payments_is_logging_enabled',
+			$settings->has( 'logging_enabled' ) && $settings->get( 'logging_enabled' )
 		);
 	},
 );

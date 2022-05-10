@@ -671,7 +671,6 @@ class CFF_Utils{
 	 */
 	static function cff_get_set_cache($cff_posts_json_url, $transient_name, $cff_cache_time, $cache_seconds, $data_att_html, $cff_show_access_token, $access_token, $backup=false, $is_multifeed = false ) {
 		$cache_seconds = max(60, $cache_seconds );
-
 		// Trying to use new cache table
 		$shortcode_atts = is_array( $data_att_html ) ? $data_att_html : json_decode( str_replace( '&quot;', '"', $data_att_html ), true );
 

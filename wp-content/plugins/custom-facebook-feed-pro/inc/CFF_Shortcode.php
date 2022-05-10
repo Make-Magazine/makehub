@@ -954,7 +954,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		            $event_fields .= ',owner{picture,id,name,link}';
 	            }
 	            $cff_events_json_url = "https://graph.facebook.com/v3.2/".$page_id."/events/?fields=".$event_fields.$cff_start_time_string.$cff_get_upcoming_events."&limit=" . $events_post_limit . "&access_token=" . $access_token . "&format=json-strings" . $cff_ssl;
-
 	            //Past events
 	            ( $cff_past_events !== 'false' && $cff_past_events != false ) ? $cff_past_events = true : $cff_past_events = false;
 
@@ -1277,6 +1276,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 					$is_multifeed = CFF_Shortcode::is_multifeed( $feed_options );
 
 		            $posts_json = CFF_Utils::cff_get_set_cache($cff_posts_json_url, $transient_name, $cff_cache_time, $cache_seconds, $data_att_html, $cff_show_access_token, $access_token, true, $is_multifeed);
+
 	                if( $cff_is_group ){
 						$groups_post = new CFF_Group_Posts($page_id, $feed_options, $cff_posts_json_url, $data_att_html, false);
 						$groups_post_result = $groups_post->init_group_posts($posts_json, false, $show_posts_number);
@@ -2267,7 +2267,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                        $cff_post_item .= '<div class="cff-media-wrap">';
 	                        $cff_post_item .= '<a class="cff-photo nofancybox';
 	                        if( $crop_event_pic ) $cff_post_item .= ' cff-crop';
-	                        $cff_post_item .= '" href="'.$event_link.'" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $pic_big ) .'" data-orig-source="'. $pic_big .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" ';
+	                        $cff_post_item .= '" href="'.$event_link.'" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $pic_big ) .'" class="cff-feed-image" data-orig-source="'. $pic_big .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" ';
 	                        if( $cff_no_event_img ) $cff_post_item .= 'data-cff-no-event-img-large="'.$pic_big_lightbox.'"';
 	                        $cff_post_item .= ' /></a></div>';
 	                    }
@@ -2314,7 +2314,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                            if (!empty($map_url)) $cff_post_item .= ' <a href="'.$map_url.'" '.$target.$cff_nofollow.' '.$cff_event_link_color_html.' class="cff-event-map-link">'.stripslashes(__( $cff_map_text, 'custom-facebook-feed' ) ).'</a>';
 
 	                            if (!empty($location)) $cff_post_item .= '</p>';
-	                            if (!empty($description)){
+	                            if (!empty($description) && CFF_Utils::stripos($cff_includes, 'text')){
 
 	                                $cff_post_item .= '<p class="cff-desc" ';
 
@@ -2998,9 +2998,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                //Which content should we use?
 	                                //Use the message
 	                                if (!empty($news->message)) {
+	                                    //$cff_message_raw = CFF_Shortcode_Display::get_post_type($news)  === 'photos' ? $post->attachments->data[0]->description : $news->message;
 	                                    $cff_message_raw = $news->message;
 
-	                                    $post_text_message = htmlspecialchars($cff_message_raw);
+	                                    $post_text_message = htmlentities($cff_message_raw);
 	                                    $cff_post_text_type = 'message';
 
 	                                    //MESSAGE TAGS
@@ -3276,7 +3277,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                            if($cff_event_has_cover_photo) $cff_timeline_event_photo .= ' cff-has-cover';
 		                                        $cff_alt_text = apply_filters( 'cff_img_alt', $cff_alt_text );
 
-		                                        $cff_timeline_event_photo .= ' nofancybox" href="'.$link.'" '.$target.$cff_nofollow.' '.$cff_lightbox_sidebar_atts.'><img src="'.$cff_timeline_event_image.'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
+		                                        $cff_timeline_event_photo .= ' nofancybox" href="'.$link.'" '.$target.$cff_nofollow.' '.$cff_lightbox_sidebar_atts.'><img src="'.$cff_timeline_event_image.'" class="cff-feed-image" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
 	                                            $cff_timeline_event_photo .= '</div>';
 	                                        }
 
@@ -3387,7 +3388,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        if($cff_note_media_src) $cff_note_picture_html .= ' cff-has-cover';
 		                                    $cff_alt_text = apply_filters( 'cff_img_alt', $cff_alt_text );
 
-		                                    $cff_note_picture_html .= ' nofancybox" href="'.$link.'" '.$target.$cff_nofollow.$cff_lightbox_sidebar_atts.'><img src="'.$cff_note_media_src.'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
+		                                    $cff_note_picture_html .= ' nofancybox" href="'.$link.'" '.$target.$cff_nofollow.$cff_lightbox_sidebar_atts.'><img src="'.$cff_note_media_src.'" class="cff-feed-image" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
 	                                        $cff_note_picture_html .= '</div>';
 	                                    }
 
@@ -3572,13 +3573,13 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                                    foreach ($news->attachments->data[0]->subattachments->data as $attachment_item ) {
 	                                                        if( isset($attachment_item->media->image->src) ){
 	                                                            $cff_shared_link .= '<div class="cff-link-slider-item">';
-	                                                            $cff_shared_link .= '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $attachment_item->media->image->src ) . '" alt="Link image" data-orig-source="' . esc_attr( $attachment_item->media->image->src ) . '" />';
+	                                                            $cff_shared_link .= '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $attachment_item->media->image->src ) . '" class="cff-feed-image" alt="Link image" data-orig-source="' . esc_attr( $attachment_item->media->image->src ) . '" />';
 	                                                            $cff_shared_link .= '</div>';
 	                                                        }
 	                                                    }
 	                                                    //Put default image at end
 	                                                    $cff_shared_link .= '<div class="cff-link-slider-item cff-final-item">';
-	                                                    $cff_shared_link .= '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $picture ) . '" data-orig-source="'. $full_picture .'" alt="Link image" />';
+	                                                    $cff_shared_link .= '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $picture ) . '" class="cff-feed-image" data-orig-source="'. $full_picture .'" alt="Link image" />';
 	                                                    $cff_shared_link .= '</div>';
 
 	                                                    $cff_shared_link .= '</a>'; //End .cff-link-slider-slides
@@ -3587,7 +3588,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                                } else {
 		                                                $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 		                                                $cff_shared_link .= '<a class="cff-link" href="'.$link.'" '.$target.$cff_nofollow.$media_src_set_att.' data-full="'.$full_picture.'">';
-	                                                    $cff_shared_link .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'" data-orig-source="'. $picture .'" alt="Link thumbnail" />';
+	                                                    $cff_shared_link .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'" class="cff-feed-image" data-orig-source="'. $picture .'" alt="Link thumbnail" />';
 	                                                    $cff_shared_link .= '</a>';
 	                                                }
 
@@ -3745,7 +3746,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                                        if($cff_img_count == 3) $cff_img_attachments .= '<span class="cff-more-attachments"><span>+'.$cff_attachment_total_display.'</span></span>';
 
-	                                                        $cff_img_attachments .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $attachment_src ).'" data-orig-source="'.$attachment_src.'" alt="Image attachment" class="cff-multi-image" /></span>';
+	                                                        $cff_img_attachments .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $attachment_src ).'" data-orig-source="'.$attachment_src.'" alt="Image attachment" class="cff-multi-image cff-feed-image" /></span>';
 	                                                        $cff_img_count++;
 	                                                    }
 	                                                    $a++;
@@ -3799,7 +3800,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    }
 	                                    if( $cff_img_count > 1 ) $cff_media .= '<span class="cff-img-wrap cff-main-image cff-crop">';
 		                                $cff_alt_text = apply_filters( 'cff_img_alt', $cff_alt_text );
-		                                $cff_media .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'"  data-orig-source="'. $picture .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" class="cff-multi-image" />';
+		                                $cff_media .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'"  data-orig-source="'. $picture .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" class="cff-multi-image cff-feed-image" />';
 	                                    if( $cff_img_count > 1 ) $cff_media .= '</span>';
 	                                    $cff_media .= $cff_img_attachments_html;
 	                                    $cff_media .= '</a>';
@@ -3815,7 +3816,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    $cff_swf_url = 'https://www.facebook.com/permalink.php?story_fbid='.$PostID["1"].'&amp;id='.$PostID['0'];
 	                                    $cff_media = '<a href="'.$cff_swf_url.'" class="cff-photo nofancybox';
 	                                    if($cff_media_position == 'above') $cff_media .= ' cff-media-above';
-	                                    $cff_media .= '" ' . $target . $cff_nofollow.$cff_lightbox_sidebar_atts.$media_src_set_att.'><img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $picture ) . '" /></a>';
+	                                    $cff_media .= '" ' . $target . $cff_nofollow.$cff_lightbox_sidebar_atts.$media_src_set_att.'><img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $picture ) . '" class="cff-feed-image" /></a>';
 	                                }
 
 	                                if ($cff_post_type == 'video' && !$cff_soundcloud && !$cff_spotify) {
@@ -3887,7 +3888,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        if($cff_video_action == 'facebook') $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" target="_blank" '.$cff_nofollow.' class="cff-media-overlay"></a>';
 	                                        //Add image as it's needed for lightbox ordering for embedded iframe videos
 		                                    if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-			                                    $cff_media_video .= '<img src="'.$picture.'" alt="Video image" class="cff-iframe-img" />';
+			                                    $cff_media_video .= '<img src="'.$picture.'" alt="Video image" class="cff-iframe-img cff-feed-image" />';
 		                                    }
 
 	                                        $cff_media_video .= $code . '</div>';
@@ -3923,7 +3924,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                            if($cff_video_action == 'facebook') $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" target="_blank" '.$cff_nofollow.' class="cff-media-overlay"></a>';
 
 	                                            //Add image as it's needed for lightbox ordering
-	                                            $cff_media_video .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $picture ).'" alt="Video image" class="cff-iframe-img" />';
+	                                            $cff_media_video .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $picture ).'" alt="Video image" class="cff-iframe-img cff-feed-image" />';
 
 		                                        if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
 			                                        $cff_media_video .= '<iframe src="https://player.vimeo.com/video/'.$clip_id.'" webkitAllowFullScreen mozallowfullscreen allowFullScreen title="Vimeo video"></iframe></div>';
@@ -4033,7 +4034,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                                            if( $cff_disable_lightbox ) $cff_img_attachments .= '</a>';
 
-	                                                            $cff_img_attachments .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $attachment_src ).'" alt="Image attachment" /></span>';
+	                                                            $cff_img_attachments .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $attachment_src ).'" class="cff-feed-image" alt="Image attachment" /></span>';
 	                                                            $cff_img_count++;
 	                                                        }
 	                                                        $a++;
@@ -4076,7 +4077,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                        //Include the VIDEO element
 	                                        //Fallback video link
-	                                        $cff_vid_link = '<a title="' . $vid_title . '" class="cff-vidLink" href="' . $link . '" '.$target.$cff_nofollow.'>' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img class="cff-poster" src="' . $poster_img . '" data-orig-source="' . $poster_img . '" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" /></a>';
+	                                        $cff_vid_link = '<a title="' . $vid_title . '" class="cff-vidLink" href="' . $link . '" '.$target.$cff_nofollow.'>' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img class="cff-poster cff-feed-image" src="' . $poster_img . '" data-orig-source="' . $poster_img . '" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" /></a>';
 
 		                                    $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 	                                        //If lightbox enabled
@@ -4084,7 +4085,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 
 	                                            //Add image and play button
 	                                            $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" class="cff-html5-play">' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '</span><span class="cff-screenreader">Play</span></a>';
-	                                            $cff_media_video .= '<img class="cff-poster" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" data-orig-source="' . $poster_img . '" data-cff-full-img="'.$poster.'" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" data-cff-video="'.$vid_link.'" style="float: left;" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'"' .$media_src_set_att. ' />';
+	                                            $cff_media_video .= '<img class="cff-poster cff-feed-image" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" data-orig-source="' . $poster_img . '" data-cff-full-img="'.$poster.'" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" data-cff-video="'.$vid_link.'" style="float: left;" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'"' .$media_src_set_att. ' />';
 
 	                                        } else { // Lightbox disabled
 
@@ -4098,7 +4099,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                                if( isset( $news->source ) && $cff_mp4_check && $cff_video_player == 'standard' ){
 	                                                    $cff_media_video .= '<a href="https://facebook.com/'.$cff_post_id.'" class="cff-html5-play" '.$cff_nofollow.'>' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '</a>';
 	                                                    //If pagination is enabled then display the poster image over the video element as in Chrome there's a video flicker when loading more posts
-	                                                    if( $this->feed_options['loadmore'] ) $cff_media_video .= '<img class="cff-poster" src="' . $poster_img . '" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" style="position: absolute; top: 0; left: 0; z-index: 7;" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" />';
+	                                                    if( $this->feed_options['loadmore'] ) $cff_media_video .= '<img class="cff-poster cff-feed-image" src="' . $poster_img . '" alt="' . htmlspecialchars($vid_title) . '" data-querystring="'.$cff_picture_querystring.'" style="position: absolute; top: 0; left: 0; z-index: 7;" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" />';
 
 		                                                if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
 			                                                $cff_media_video .= '<video src="'.$vid_link.'" poster="'.$poster_img.'" preload="none" >';
@@ -4119,7 +4120,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 			                                                $cff_media_video .= '<span class="cff-iframe-placeholder" data-src="https://www.facebook.com/v2.3/plugins/video.php?href='.$link.'" data-type="facebook" style="display: none;">placeholder</span></div>';
 		                                                }
 
-	                                                    $cff_media_video .= '<img class="cff-poster" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" alt="' . htmlspecialchars($vid_title) . '"'.$media_src_set_att.' />';
+	                                                    $cff_media_video .= '<img class="cff-poster cff-feed-image" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" alt="' . htmlspecialchars($vid_title) . '"'.$media_src_set_att.' />';
 	                                                    $cff_media_video .= '</div>';
 
 	                                                }
@@ -4558,7 +4559,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    }
 	                                    // here
 										$media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $thumb ) ) ) . '"';
-	                                    if( $cff_cover_photos_available ) $cff_post_item .= '<a href="' . $cff_album_link . '" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $thumb ).'" data-orig-source="'.$thumb.'" alt="' . htmlspecialchars($cff_album_name) . '" data-querystring="'.$cff_picture_querystring.'"data-cff-full-img="'.$album_full_picture.'" /></a>';
+	                                    if( $cff_cover_photos_available ) $cff_post_item .= '<a href="' . $cff_album_link . '" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $thumb ).'" class="cff-feed-image" data-orig-source="'.$thumb.'" alt="' . htmlspecialchars($cff_album_name) . '" data-querystring="'.$cff_picture_querystring.'"data-cff-full-img="'.$album_full_picture.'" /></a>';
 	                                    if($cff_show_album_title || $cff_show_album_number) $cff_post_item .= '<div class="cff-album-info">';
 	                                    if($cff_show_album_title) $cff_post_item .= '<h4><a href="' . $cff_album_link . '" '.$target.$cff_nofollow.'>' . $cff_album_name . '</a></h4>';
 	                                    if( $cff_show_album_number && isset($news->count) ) $cff_post_item .= '<p>' . $cff_album_count . ' '. $cff_translate_photos_text . '</p>';
@@ -4652,7 +4653,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    $cff_post_item .= ' data-cff-full-size="'.$cff_full_size_image.'">';
 		                                $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 
-		                                $cff_post_item .= '<a href="https://facebook.com/'.$news->id.'" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder($news->source) .'" data-orig-source="'. $news->source .'" alt="'.htmlspecialchars($cff_album_desc).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
+		                                $cff_post_item .= '<a href="https://facebook.com/'.$news->id.'" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder($news->source) .'" class="cff-feed-image" data-orig-source="'. $news->source .'" alt="'.htmlspecialchars($cff_album_desc).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
 	                                    $cff_post_item .= '</div>';
 	                                    $post_time = $i;
 	                                }
@@ -4764,10 +4765,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		                                		$cff_post_item .= '<span class="cff-iframe-placeholder" data-src="'.$news->source.'" data-type="facebook" style="display: none;">placeholder</span></div>';
 		                                	}
 
-		                                	$cff_post_item .= '<img class="cff-poster" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" alt="' . htmlspecialchars($vid_title) . '"'.$media_src_set_att.' />';
+		                                	$cff_post_item .= '<img class="cff-poster cff-feed-image" src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster_img ) . '" alt="' . htmlspecialchars($vid_title) . '"'.$media_src_set_att.' />';
 		                                	$cff_post_item .= '</div>';
 		                                }else{
-	                                    	$cff_post_item .= '<a href="https://facebook.com/' . $news->id . '" class="cff-album-cover cff-video" ' . $target . $cff_nofollow .$media_src_set_att. ' id="' . $news->id . '" data-source="' . $cff_vid_source . '">' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster ) . '" data-orig-source="' . $poster . '" alt="' . htmlspecialchars($poster_alt) . '" data-querystring="'.$cff_picture_querystring.'" /></a>';
+	                                    	$cff_post_item .= '<a href="https://facebook.com/' . $news->id . '" class="cff-album-cover cff-video" ' . $target . $cff_nofollow .$media_src_set_att. ' id="' . $news->id . '" data-source="' . $cff_vid_source . '">' . CFF_Display_Elements_Pro::get_icon( 'play', '', 'cff-playbtn' ) . '<img src="' . CFF_Display_Elements_Pro::get_media_placeholder( $poster ) . '" class="cff-feed-image" data-orig-source="' . $poster . '" alt="' . htmlspecialchars($poster_alt) . '" data-querystring="'.$cff_picture_querystring.'" /></a>';
 
 		                                }
 
@@ -4863,7 +4864,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    $cff_post_item .= '">';
 		                                $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 
-	                                    $cff_post_item .= '<a href="'.$news->link.'" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $image_to_use ).'" data-orig-source="'. $image_to_use .'" alt="'.htmlspecialchars($cff_caption).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
+	                                    $cff_post_item .= '<a href="'.$news->link.'" class="cff-album-cover nofancybox" '.$target.$cff_nofollow.$media_src_set_att.'><img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $image_to_use ).'" class="cff-feed-image" data-orig-source="'. $image_to_use .'" alt="'.htmlspecialchars($cff_caption).'" data-querystring="'.$cff_picture_querystring.'" /></a>';
 	                                    $cff_post_item .= '</div>';
 	                                }
 
@@ -5081,7 +5082,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    $shortcode_data = json_decode( str_replace( '\"', '"', $_POST['shortcode_data'] ), true ); // necessary to unescape quotes
 	    isset($_POST['pag_url']) ? $next_urls_arr_safe = json_decode( str_replace( '\"', '"', $_POST['pag_url'] ), true ) : $next_urls_arr_safe = '';
 	    // isset($_POST['last_album_batch']) ? $last_album_batch = $_POST['last_album_batch'] : $last_album_batch = 'false';
-
 	    //Store the previous pag URL so that we can use it on the button for album items
 	    $prev_pag_url = json_encode( $next_urls_arr_safe );
 	    $prev_pag_url = str_replace( '"', '&quot;', $prev_pag_url);

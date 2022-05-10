@@ -28,7 +28,7 @@
 <div class="notice notice-success"><p>Be sure to also install the <a href="/wp-admin/plugin-install.php?s=ActiveCampaign&tab=search&type=term" aria-label="More information about ActiveCampaign" data-title="ActiveCampaign" target="_blank">ActiveCampaign Forms, Site Tracking, & Live Chat plugin</a> to capitalize on all of the awesome capabilities of ActiveCampaign. You can:</p><ul><li>&mdash; Easily embed forms to your website.</li><li>&mdash; Track visitors to your site to target shoppers to boost conversion.</li><li>&mdash; Enable live chat for accounts using Conversations (our site messaging platform)!</li></ul><a href="/wp-admin/plugin-install.php?s=ActiveCampaign&tab=search&type=term" aria-label="More information about ActiveCampaign" data-title="ActiveCampaign" target="_blank">Install now</a></p></div>
 <?php } ?>
 <div class="activecampaign-for-woocommerce-health-check">
-	<?php if ( count( $activecampaign_for_woocommerce_health_check ) > 0 ) : ?>
+	<?php if ( is_array( $activecampaign_for_woocommerce_health_check ) && count( $activecampaign_for_woocommerce_health_check ) > 0 ) : ?>
 		<div class="notice notice-error inline">
 			Connection Status: Issues Found
 				<ul>
@@ -39,7 +39,7 @@
 				<?php endforeach; ?>
 				</ul>
 		</div>
-	<?php else : ?>
+	<?php elseif ( false !== $activecampaign_for_woocommerce_health_check ) : ?>
 		<div class="notice notice-success inline">
 			Connection Status: Connected
 		</div>

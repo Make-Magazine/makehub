@@ -730,7 +730,6 @@ jQuery(document).ready(function($) {
 			avatar: avatar
 		};
 
-		console.log(typeof sbswCASubmit,$('#sbspf_admin').length);
 		if (typeof sbswCASubmit !== 'undefined' && $('#sbspf_admin').length) {
 			sbswCASubmit(cff_connected_accounts);
 		} else {
@@ -1522,7 +1521,6 @@ jQuery(document).ready(function($) {
 				}, 3000 );
 
 			}).fail( function( xhr ) {
-				console.log( xhr.responseText );
 			});
 		},
 

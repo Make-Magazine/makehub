@@ -2,7 +2,7 @@
 	.entry-header {
 		display: none;
 	}
-	.container { min-width: 90%; }
+	.search-results-page .container { min-width: 90%; }
 	.results-info {
 		display: flex;
 		justify-content: space-between;
@@ -44,10 +44,12 @@
 				margin: 0px 0px 15px 0;
 			}
 			h2 {
-				line-height: .6em;
+				text-overflow: ellipsis;
+				overflow-x: hidden;
+				margin: 10px 0px 0px;
 				a {
 					color: #333;
-					font-size: 18px;
+					white-space: nowrap;
 				}
 			}
 			.results-meta {
@@ -120,7 +122,10 @@
 			 }
 		}
 		[data-sf-field-input-type="multiselect"] {
-			h4 { color: $color-blue; }
+			h4 {
+				color: $color-blue;
+				font-size: 24px;
+			 }
 			padding-top: 0px;
 			margin: 10px 10px 0px;
 			flex: 1 0 auto;
@@ -149,6 +154,8 @@
 				}
 				.select2-search__field {
 					width: 100% !important;
+					font-family: "Gamja Flower", "Roboto", Arial, sans-serif;
+					font-size: 1.1em;
 				}
 			}
 			.select2-selection[aria-expanded="true"] {

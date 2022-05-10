@@ -1,6 +1,6 @@
 body{
     background: #red;
-    --cl-orange: #E34F0E;
+    --cl-orange: #FE544F;
     --cl-dark:#2C324C;
     --error-red: #D72C2C;
     --customizer-blue: #0096CC;
@@ -91,15 +91,15 @@ Buttons
 
 /*orange*/
 .cff-btn-orange{
-    background: #E34F0E!important;
+    background: #FE544F!important;
     color: #fff!important;
 }
 .cff-btn-orange:hover{
-    background: #F37036!important;
+    background: #EC352F!important;
     color: #fff!important;
 }
 .cff-btn-orange:focus{
-    background: #B8400B!important;
+    background: #BC120E!important;
     color: #fff!important;
 }
 
@@ -491,6 +491,9 @@ Header
     .sb-customizer-ctn .sb-customizer-sidebar{
         left: 36px;
     }
+  body.jetpack-masterbar .sb-customizer-sidebar {
+    left: 36px;
+  }
 }
 
 .cff-fb-hd-btn{
@@ -761,6 +764,21 @@ Welcome Screen Empty State
 #cff-builder-app .cff-fb-feedtypes-pp-ctn .cff-fb-types {
     margin-top: 20px;
 }
+#cff-builder-app .cff-fb-feedtypes-pp-ctn.sb-fs-boss{
+    position: absolute;
+    min-height: 100%;
+    align-items: unset;
+    padding: 150px 0px;
+}
+#cff-builder-app .cff-fb-feedtypes-pp-ctn.sb-fs-boss .cff-fb-feedtypes-popup.cff-fb-popup-inside{
+    overflow: visible;
+    min-height: 100px;
+    max-height: unset;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 #cff-builder-app .cff-fb-adv-types .cff-adv-types-heading{
     font-style: normal;
     font-weight: bold;
@@ -1550,7 +1568,7 @@ Source Screen
 }
 .cff-stck-wdg-btn svg{
     width: 25px;
-    fill: #E34F0E;
+    fill: #FE544F;
     height: 33px;
     float: left;
 }
@@ -2710,6 +2728,9 @@ Feed Instance Popup
     bottom: 0px;
     padding-bottom: 50px;
 }
+.jetpack-masterbar .sb-customizer-sidebar {
+  left: 272px;
+}
 body.folded .sb-customizer-sidebar{
     left: 36px;
 }
@@ -3720,7 +3741,7 @@ Controls Style
     content: '';
     position: absolute;
     height: 5px;
-    background: #E34F0E;
+    background: #FE544F;
     z-index: 9;
     top: 0;
 }

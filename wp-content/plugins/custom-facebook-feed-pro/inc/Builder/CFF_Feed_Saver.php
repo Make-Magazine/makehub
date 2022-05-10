@@ -454,6 +454,7 @@ class CFF_Feed_Saver {
 		}
 
 		$return['num'] = isset( $return['num'] ) ? (string)$return['num'] : '5';
+		$return['nummobile'] = isset( $return['nummobile'] ) ? (string)$return['nummobile'] : '2';
 
 		return $return;
 	}
@@ -526,6 +527,8 @@ class CFF_Feed_Saver {
 			$final_translations['facebooklinktext'] = isset( $translations['cff_facebook_link_text'] ) ? stripslashes( esc_attr( $translations['cff_facebook_link_text'] ) ) : __( 'View on Facebook', 'custom-facebook-feed' );
 			$final_translations['sharelinktext'] = isset( $translations['cff_facebook_share_text'] ) ? stripslashes( esc_attr( $translations['cff_facebook_share_text'] ) ) : __( 'Share', 'custom-facebook-feed' );
 			$final_translations['buttontext'] = isset( $translations[ 'cff_load_more_text' ] ) ? stripslashes( esc_attr( $translations[ 'cff_load_more_text' ] ) ) : __( 'Load more', 'custom-facebook-feed' );
+			$final_translations['reviewslinktext'] = isset( $translations[ 'cff_reviews_link_text' ] ) ? stripslashes( esc_attr( $translations[ 'cff_reviews_link_text' ] ) ) : __( 'View all Reviews', 'custom-facebook-feed' );
+
 
 			$defaults = array(
 				'sources' => '',
@@ -589,7 +592,7 @@ class CFF_Feed_Saver {
 				'cols' => 3,
 				'colsmobile' => 1,
 				'colsjs' => true,
-				'nummobile' => '',
+				'nummobile' => '2',
 				'poststyle' => 'regular',
 				'postbgcolor' => '#',
 				'postcorners' => '0',
@@ -743,7 +746,7 @@ class CFF_Feed_Saver {
 				'reviewsrated' => '1,2,3,4,5',
 				'starsize' => '12',
 				'hidenegative' => '',
-				'reviewslinktext' => __( 'View all Reviews', 'custom-facebook-feed' ),
+				'reviewslinktext' => '',
 				'reviewshidenotext' => '',
 				'reviewsmethod' => 'all',
 				//TO BE CHECKED

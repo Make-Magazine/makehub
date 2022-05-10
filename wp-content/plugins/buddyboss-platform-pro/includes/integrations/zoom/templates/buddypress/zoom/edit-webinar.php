@@ -89,7 +89,7 @@ if ( 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() ) {
 			<div class="bb-field-wrap">
 				<label for="bp-zoom-webinar-password"><?php esc_html_e( 'Passcode (optional)', 'buddyboss-pro' ); ?></label>
 				<div class="bb-webinar-input-wrap bp-toggle-webinar-password-wrap">
-					<a href="#" class="bp-toggle-webinar-password"><i class="bb-icon-eye"></i><i class="bb-icon-eye-off"></i></a>
+					<a href="#" class="bp-toggle-webinar-password"><i class="bb-icon-l bb-icon-eye"></i><i class="bb-icon-l bb-icon-eye-slash"></i></a>
 					<input <?php echo $occurrence_edit ? 'disabled' : ''; ?> autocomplete="new-password" type="password" id="bp-zoom-webinar-password" value="<?php bp_zoom_webinar_password(); ?>" name="bp-zoom-webinar-password"/>
 				</div>
 			</div>

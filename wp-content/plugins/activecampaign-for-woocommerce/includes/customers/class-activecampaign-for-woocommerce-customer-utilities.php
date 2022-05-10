@@ -10,6 +10,7 @@
  * @subpackage Activecampaign_For_Woocommerce/includes/customers
  */
 
+use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
@@ -55,9 +56,13 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 *
 	 * @return Ecom_Order|null
 	 */
-	public function add_customer_to_order( $order, Ecom_Order $ecom_order, $is_admin = false ) {
+	public function add_customer_to_order( $order, $ecom_order, $is_admin = false ) {
 		try {
-			if ( method_exists( $order, 'get_user_id' ) && $order->get_user_id() ) {
+			if (
+				method_exists( $order, 'get_user_id' ) &&
+				method_exists( $ecom_order, 'set_id' ) &&
+				$order->get_user_id()
+			) {
 				// Set if the AC id is set
 				$ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( $order->get_user_id() ) );
 				if ( get_user_meta( $order->get_user_id(), 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
@@ -67,20 +72,31 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 				}
 			} elseif ( method_exists( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				$ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( $order->get_customer_id() ) );
+
 				if ( get_user_meta( $order->get_customer_id(), 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
 					$ac_customerid = get_user_meta( $order->get_customer_id(), 'activecampaign_for_woocommerce_ac_customer_id' );
 					$ecom_order->set_customerid( $ac_customerid );
 				}
 			}
 
-			if ( ! $is_admin && wc()->customer && method_exists( wc()->customer, 'get_email' ) && wc()->customer->get_email() ) {
+			if (
+				! $is_admin &&
+				wc()->customer && method_exists( wc()->customer, 'get_email' ) &&
+				wc()->customer->get_email()
+			) {
 				// Set the email address from customer
 				$ecom_order->set_email( wc()->customer->get_email() );
-			} elseif ( method_exists( $order, 'get_user_id' ) && get_user_meta( $order->get_user_id(), 'email' ) ) {
+			} elseif (
+				method_exists( $order, 'get_user_id' ) &&
+				get_user_meta( $order->get_user_id(), 'email' )
+			) {
 				$email = get_user_meta( $order->get_user_id(), 'email' );
 				// Set the email address from user
 				$ecom_order->set_email( $email );
-			} elseif ( method_exists( $order, 'get_billing_email' ) && $order->get_billing_email() ) {
+			} elseif (
+				method_exists( $order, 'get_billing_email' ) &&
+				$order->get_billing_email()
+			) {
 				// Set the email address from order
 				$ecom_order->set_email( $order->get_billing_email() );
 			}
@@ -167,5 +183,100 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 */
 	public function store_ac_id( $customer_id, $ac_id ) {
 		add_post_meta( $customer_id, 'activecampaign_for_woocommerce_hosted_id', $ac_id, true );
+	}
+
+	/**
+	 * Get a customer ID from the order.
+	 *
+	 * @param WC_Order $order The order object.
+	 *
+	 * @return mixed
+	 */
+	public function get_ac_customer_id_from_order( $order ) {
+		if ( method_exists( $order, 'get_customer_id' ) ) {
+			$customer_id = $order->get_customer_id();
+		} elseif ( isset( $order['customer_id'] ) ) {
+			$customer_id = $order['customer_id'];
+		}
+
+		if ( isset( $customer_id ) && get_user_meta( $customer_id, 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
+			// if it's an AC customer already stored in hosted
+			$ac_customerid = get_user_meta( $order['customer_id'], 'activecampaign_for_woocommerce_ac_customer_id' );
+			return $ac_customerid;
+		}
+	}
+
+	/**
+	 * Builds a customer from the user_id using stored meta
+	 *
+	 * @param     int $user_id     The user id.
+	 *
+	 * @return bool
+	 */
+	private function build_customer_from_user_meta( $user_id ) {
+		$this->customer = new Ecom_Customer();
+		$this->customer->set_connectionid( $this->connection_id );
+		$this->customer->set_email( $this->customer_email );
+		$this->customer->set_first_name( get_user_meta( $user_id, 'first_name', true ) );
+		$this->customer->set_last_name( get_user_meta( $user_id, 'last_name', true ) );
+		$this->customer->set_accepts_marketing( $this->accepts_marketing );
+
+		return true;
+	}
+
+	/**
+	 * Builds the customer data we need for abandoned cart.
+	 *
+	 * @param     array|null $passed_data The data passed.
+	 *
+	 * @return array|string
+	 */
+	public function build_customer_data( $passed_data = null ) {
+		try {
+			// Get current customer
+			if ( ! empty( wc()->customer->get_id() ) && ! empty( wc()->customer->get_email() ) ) {
+				$customer_data               = wc()->customer->get_data();
+				$customer_data['id']         = wc()->customer->get_id(); // This is a user id if registered or a UUID if guest
+				$customer_data['email']      = wc()->customer->get_email();
+				$customer_data['first_name'] = wc()->customer->get_first_name();
+				$customer_data['last_name']  = wc()->customer->get_last_name();
+			} else {
+				// We don't have a real WC customer, get the session customer
+				$customer_data = wc()->session->get( 'customer' );
+
+				// Make sure we've set the id
+				$customer_data['id'] = wc()->session->get_customer_id();
+
+				// If we have guest data passed in, replace with that
+				if ( ! empty( $this->passed_data ) ) {
+					$customer_data['email']      = $passed_data['customer_email'];
+					$customer_data['first_name'] = $passed_data['customer_first_name'];
+					$customer_data['last_name']  = $passed_data['customer_last_name'];
+				}
+
+				if ( ! empty( $customer_data['email'] ) ) {
+					// Set the customer data for billing
+					$customer_data['billing_email'] = $customer_data['email'];
+				}
+
+				if ( ! empty( $customer_data['first_name'] ) ) {
+					$customer_data['billing_first_name'] = $customer_data['first_name'];
+				}
+
+				if ( ! empty( $customer_data['last_name'] ) ) {
+					$customer_data['billing_last_name'] = $customer_data['last_name'];
+				}
+			}
+
+			return $customer_data;
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Abandoned sync: Encountered an error on gathering customer and/or session data for the abandonment sync',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
 	}
 }

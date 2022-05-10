@@ -555,7 +555,6 @@ class CFF_Settings_Pro {
 
 					//If it's a reviews feed then use the reviews token
 					( $cff_reviews ) ? $feed_token = $feed_options['pagetoken'] : $feed_token = $access_token;
-
 					//Replace the Access Token placeholder with the actual token
 					$cff_api_url = str_replace( "x_cff_hide_token_x", $feed_token, $next_url_safe );
 
