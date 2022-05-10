@@ -458,6 +458,9 @@
 		top: 4px;
 	}
 }
+.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
+	font-weight: 300;
+}
 
 // specific tweaks, remove if we're just going to left align everything
 #gform_fields_7_3{
