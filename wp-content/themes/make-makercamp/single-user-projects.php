@@ -28,9 +28,11 @@ $author_id = get_field('user_id');
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
-parse_str($referrer_url['query'], $referrer_params);
-$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
-sort($referrer_params);
+if(isset($referrer_url['query'])) {
+	parse_str($referrer_url['query'], $referrer_params);
+	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	sort($referrer_params);
+}
 
 get_header();
 
@@ -88,10 +90,14 @@ get_header();
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
 					<div class="project-breadcrumbs">
 						<a href="/projects-search/" class="project-tag">Projects</a>
-						<?php foreach($referrer_params as $param) {
+						<?php
+						if(isset($referrer_params)) {
+							foreach($referrer_params as $param) {
 								$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
 								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-						<?php } ?>
+						<?php
+					 		}
+						}?>
 					</div>
 					<div class="learndash_content_wrap">
 						<div class="ld-tabs ld-tab-count-2">
@@ -110,7 +116,9 @@ get_header();
 								<?php // The First Tab 'Project' ?>
 
 								<div class="ld-tab-content ld-visible" id="ld-tab-content">
-									<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php if(isset($hero_image['url'])) { ?>
+										<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php } ?>
 									<h1><?php the_title(); ?></h1>
 
 									<?php if($sponsored_by_text) { ?>
@@ -123,9 +131,15 @@ get_header();
 										<?php echo $svg_divider; ?>
 									</div>
 									<div class="proj-taxonomy-filters">
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<?php if(isset($times[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+										<?php } ?>
+										<?php if(isset($skill_levels[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
+										<?php } ?>
+										<?php if(isset($ages[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<?php } ?>
 									</div>
 
 
