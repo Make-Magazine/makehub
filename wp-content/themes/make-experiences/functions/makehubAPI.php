@@ -75,8 +75,6 @@ function make_user_info( $data ) {
   //if previously member - banner with join - use their icon
   //it free membership - banner with upgrade
   //if Premium - banner with premium
-  //$banner =
-  //$banner_text =
 
   //build user drop down
   $userProfileMenu = wp_nav_menu( array('menu' => 'Profile Dropdown', 'echo' => false));
@@ -134,6 +132,7 @@ function make_user_info( $data ) {
 
   //Determine $make coin balance
   $coinBalance = get_make_coins($userEmail);
+
   $return['makeCoins'] = $coinBalance; //$coinBalance
 
   $response = new WP_REST_Response($return);
@@ -143,7 +142,7 @@ function make_user_info( $data ) {
 }
 
 //Rimark
-function get_make_coins($user_email){			
+function get_make_coins($user_email){
   //First do the authentication
   $url = "https://devapi.rimark.io/api/auth/local";
 
@@ -166,6 +165,7 @@ function get_make_coins($user_email){
   if(!empty($rimarkResp->data)){
     $coins = $rimarkResp->data[0]->attributes->total_supply_owned;
     $coins = number_format($coins,2); //format with a thousand separators and up to 2 decimal places
+		$coins = '<a href="https://beta.rimark.io/?target=219f76ovo2v0fi2nn9es0x9wf">'.$coins.'</a>';
   }
 
   return $coins;
