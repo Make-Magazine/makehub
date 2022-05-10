@@ -458,7 +458,7 @@
 		top: 4px;
 	}
 }
-.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
+.gfield_checkbox input[type="checkbox"]:checked + label::after {
 	font-weight: 300;
 }
 
