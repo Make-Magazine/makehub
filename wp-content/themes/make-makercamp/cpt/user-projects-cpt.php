@@ -272,11 +272,11 @@ function register_taxonomy_ages() {
 	register_taxonomy( 'ages', array('user-projects', 'sfwd-lessons'), $args );
 
 	$ages = [
-		"under-5" => "Under 5",
-		"5-7" => "5-7",
-		"8-10" => "8-10",
-		"11-13" => "11-13",
-		"14-and-up" => "14+"
+		"age1-under-5" => "Under 5",
+		"age2-5-7" => "5-7",
+		"age3-8-10" => "8-10",
+		"age4-11-13" => "11-13",
+		"age5-14-and-up" => "14+"
 	];
 	if(empty(get_terms('ages'))) {
 		foreach ($ages as $slug => $name) {
@@ -328,11 +328,11 @@ function register_taxonomy_times() {
 	register_taxonomy( 'times', array('user-projects', 'sfwd-lessons'), $args );
 
 	$times = [
-		"less-than-30-min" => "Less than 30 min.",
-		"30-min-to-an-hour" => "30 min. to an hour",
-		"an-hour-or-two" => "An hour or two",
-		"about-3-hours" => "About 3 hours",
-		"more-than-3-hours" => "More than 3 hours",
+		"time1-less-than-30-min" => "Less than 30 min.",
+		"time2-30-min-to-an-hour" => "30 min. to an hour",
+		"time3-an-hour-or-two" => "An hour or two",
+		"time4-about-3-hours" => "About 3 hours",
+		"time5-more-than-3-hours" => "More than 3 hours",
 	];
 	if(empty(get_terms('times'))) {
 		foreach ($times as $slug => $name) {
