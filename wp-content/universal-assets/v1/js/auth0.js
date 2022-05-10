@@ -7,7 +7,7 @@ window.addEventListener('load', function () {
 
     //do not show the login button on makezine or makercamp
     var url = new URL(location.href).hostname;
-    if(url.indexOf('makezine')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
+    if( url.indexOf('makezine')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
 		wpLoginRequired = false;
     }
 	if(url.indexOf('test')!== -1 || url.indexOf('local')!== -1 ) {
