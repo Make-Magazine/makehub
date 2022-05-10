@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"X-Generator: GlotPress/3.0.0\n"
 "Language: pt_BR\n"
 "Project-Id-Version: Plugins - WooCommerce Shipping &amp; Tax - Stable (latest release)\n"
 
@@ -660,7 +660,7 @@ msgstr ""
 msgid "0.0"
 msgstr ""
 
-#: woocommerce-services.php:1457
+#: woocommerce-services.php:1458
 msgid "Shipment Tracking"
 msgstr ""
 
@@ -672,23 +672,23 @@ msgstr ""
 msgid "Customs information incomplete"
 msgstr ""
 
-#: woocommerce-services.php:1500
+#: woocommerce-services.php:1501
 msgid "Packing Log:"
 msgstr ""
 
-#: woocommerce-services.php:1487
+#: woocommerce-services.php:1488
 msgid "Chosen Rate:"
 msgstr ""
 
-#: woocommerce-services.php:1483
+#: woocommerce-services.php:1484
 msgid "Shipping Method ID:"
 msgstr ""
 
-#: woocommerce-services.php:1479
+#: woocommerce-services.php:1480
 msgid "Shipping Method Name:"
 msgstr ""
 
-#: woocommerce-services.php:1463
+#: woocommerce-services.php:1464
 msgid "Shipping Debug"
 msgstr ""
 
@@ -1394,11 +1394,11 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: woocommerce-services.php:1238
+#: woocommerce-services.php:1239
 msgid "Tracking number"
 msgstr ""
 
-#: woocommerce-services.php:1237
+#: woocommerce-services.php:1238
 msgid "Provider"
 msgstr ""
 
@@ -1411,39 +1411,39 @@ msgstr ""
 msgid "Hosted services for WooCommerce: automated tax calculation, shipping label printing, and smoother payment setup."
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:133
+#: classes/class-wc-connect-functions.php:176
 msgid "Tax Class"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:132
+#: classes/class-wc-connect-functions.php:175
 msgid "Shipping"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:131
+#: classes/class-wc-connect-functions.php:174
 msgid "Compound"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:130
+#: classes/class-wc-connect-functions.php:173
 msgid "Priority"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:129
+#: classes/class-wc-connect-functions.php:172
 msgid "Tax Name"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:128
+#: classes/class-wc-connect-functions.php:171
 msgid "Rate %"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:126
+#: classes/class-wc-connect-functions.php:169
 msgid "ZIP/Postcode"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:125
+#: classes/class-wc-connect-functions.php:168
 msgid "State Code"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:124
+#: classes/class-wc-connect-functions.php:167
 msgid "Country Code"
 msgstr ""
 
@@ -1748,7 +1748,7 @@ msgid "#%1$d - %2$s"
 msgstr ""
 
 #. translators: %s Support url
-#: woocommerce-services.php:1573
+#: woocommerce-services.php:1574
 msgid "<a href=\"%s\">Support</a>"
 msgstr ""
 
@@ -1756,8 +1756,8 @@ msgstr ""
 msgid "There was an error installing Jetpack. Please try installing it manually."
 msgstr ""
 
-#: i18n/strings.php:85 woocommerce-services.php:1070
-#: woocommerce-services.php:1073
+#: i18n/strings.php:85 woocommerce-services.php:1071
+#: woocommerce-services.php:1074
 msgid "Shipping Labels"
 msgstr ""
 
@@ -1766,8 +1766,8 @@ msgstr ""
 msgid "https://woocommerce.com/"
 msgstr ""
 
-#: i18n/strings.php:185 i18n/strings.php:212 woocommerce-services.php:1523
-#: woocommerce-services.php:1551
+#: i18n/strings.php:185 i18n/strings.php:212 woocommerce-services.php:1524
+#: woocommerce-services.php:1552
 msgid "Phone"
 msgstr ""
 
@@ -1865,7 +1865,7 @@ msgstr ""
 msgid "Saved Packages"
 msgstr ""
 
-#: woocommerce-services.php:1226 woocommerce-services.php:1233
+#: woocommerce-services.php:1227 woocommerce-services.php:1234
 msgid "Tracking"
 msgstr ""
 
@@ -1888,7 +1888,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: classes/class-wc-connect-functions.php:127 i18n/strings.php:182
+#: classes/class-wc-connect-functions.php:170 i18n/strings.php:182
 #: i18n/strings.php:215
 msgid "City"
 msgstr ""
@@ -2027,7 +2027,7 @@ msgstr ""
 msgid "Packaging"
 msgstr ""
 
-#: woocommerce-services.php:1609
+#: woocommerce-services.php:1610
 msgid "Section not loading? Visit the <a href=\"%s\">status page</a> for troubleshooting steps."
 msgstr ""
 
@@ -2039,7 +2039,7 @@ msgstr ""
 msgid "Note: Jetpack is connected, but development mode is also enabled on this site. Please disable development mode."
 msgstr ""
 
-#: woocommerce-services.php:1459
+#: woocommerce-services.php:1460
 msgid "Shipping Label"
 msgstr ""
 
@@ -2210,7 +2210,7 @@ msgstr ""
 msgid "WooCommerce %1$s or higher is required (You are running %2$s)"
 msgstr ""
 
-#: classes/class-wc-connect-error-notice.php:104 woocommerce-services.php:1645
+#: classes/class-wc-connect-error-notice.php:104 woocommerce-services.php:1646
 msgid "Dismiss this notice"
 msgstr ""
 

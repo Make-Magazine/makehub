@@ -194,7 +194,7 @@
 			</div>
 			<cff-post-media-component :single-post="singlePost" :customizer-feed-data="customizerFeedData"></cff-post-media-component>
 			<cff-iframe-media-component v-if="$parent.processIframeAndLinkAndVideo( singlePost ) !== false" :single-post="singlePost" :postmedia="$parent.processIframeAndLinkAndVideo( singlePost )" :customizer-feed-data="customizerFeedData"></cff-iframe-media-component>
-			<div class="cff-post-item-text cff-fb-fs" v-if="customizerFeedData.settings.mediaposition == 'above' && $parent.getPostTypeTimeline(singlePost) == 'links'">
+			<div class="cff-post-item-text cff-fb-fs" v-if="customizerFeedData.settings.mediaposition == 'above' && $parent.getPostTypeTimeline(singlePost) != 'links'">
 				<cff-post-event-detail-component :single-post="singlePost" :customizer-feed-data="customizerFeedData"></cff-post-event-detail-component>
 				<span v-html="$parent.expandedPostText.includes(singlePost.id) ? $parent.printPostText( singlePost, true ) : $parent.printPostText( singlePost )" v-if="customizerFeedData.settings.include.includes('text')"></span>
 				<span class="cff-post-item-text-expand" v-if="singlePost.message && singlePost.message.length > customizerFeedData.settings.textlength && customizerFeedData.settings.include.includes('text')">

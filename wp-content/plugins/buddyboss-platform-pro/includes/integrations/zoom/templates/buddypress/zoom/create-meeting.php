@@ -9,7 +9,7 @@
 ?>
 <div class="bb-title-wrap">
 	<h2 class="bb-title"><?php esc_html_e( 'Create Meeting', 'buddyboss-pro' ); ?></h2>
-	<a href="#" class="bp-close-create-meeting-form"><span class="bb-icon-x"></span></a>
+	<a href="#" class="bp-close-create-meeting-form"><span class="bb-icon-l bb-icon-times"></span></a>
 </div>
 <?php
 $group_id         = filter_input( INPUT_GET, 'group_id', FILTER_VALIDATE_INT );
@@ -75,7 +75,7 @@ if ( 1 === (int) $host_type ) {
 			<div class="bb-field-wrap">
 				<label for="bp-zoom-meeting-password"><?php esc_html_e( 'Passcode (optional)', 'buddyboss-pro' ); ?></label>
 				<div class="bb-meeting-input-wrap bp-toggle-meeting-password-wrap">
-					<a href="#" class="bp-toggle-meeting-password"><i class="bb-icon-eye"></i><i class="bb-icon-eye-off"></i></a>
+					<a href="#" class="bp-toggle-meeting-password"><i class="bb-icon-l bb-icon-eye"></i><i class="bb-icon-l bb-icon-eye-slash"></i></a>
 					<input autocomplete="new-password" type="password" id="bp-zoom-meeting-password" value="" name="bp-zoom-meeting-password" />
 				</div>
 			</div>

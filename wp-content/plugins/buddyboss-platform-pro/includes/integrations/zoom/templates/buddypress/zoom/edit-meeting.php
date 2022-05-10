@@ -85,7 +85,7 @@ if ( 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() ) {
 			<div class="bb-field-wrap">
 				<label for="bp-zoom-meeting-password"><?php esc_html_e( 'Passcode (optional)', 'buddyboss-pro' ); ?></label>
 				<div class="bb-meeting-input-wrap bp-toggle-meeting-password-wrap">
-					<a href="#" class="bp-toggle-meeting-password"><i class="bb-icon-eye"></i><i class="bb-icon-eye-off"></i></a>
+					<a href="#" class="bp-toggle-meeting-password"><i class="bb-icon-l bb-icon-eye"></i><i class="bb-icon-l bb-icon-eye-slash"></i></a>
 					<input <?php echo $occurrence_edit ? 'disabled' : ''; ?> autocomplete="new-password" type="password" id="bp-zoom-meeting-password" value="<?php bp_zoom_meeting_password(); ?>" name="bp-zoom-meeting-password"/>
 				</div>
 			</div>

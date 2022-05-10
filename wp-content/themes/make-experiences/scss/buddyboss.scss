@@ -10,6 +10,20 @@
     max-width: 100%;
 }
 
+// all navs fix
+.bp-navs {
+	ul > li a {
+		display: flex !important;
+		align-items: center;
+		span {
+			display: flex !important;
+			justify-content: center;
+			align-items: center;
+			max-height: 24px;
+		}
+	}
+}
+
 // no sign up, we have ump for that
 .bb-header-buttons {
     .button.singup {
@@ -258,17 +272,14 @@ button.ges-change, button.ges-change:hover {
 	}
     .dir-list {
         .grid.bp-list > li {
-            flex: 0 0 20%;
-            max-width: 20%;
-            @media screen and (max-width: 1500px) {
-                flex: 0 0 25%;
-                max-width: 25%;
-            }
-            @media screen and (max-width: 1200px) {
+            flex: 0 0 25%;
+            max-width: 25%;
+			min-width: auto !important;
+            @media screen and (max-width: 1460px) {
                 flex: 0 0 33%;
                 max-width: 33%;
             }
-            @media screen and (max-width: 981px) {
+            @media screen and (max-width: 1200px) {
                 flex: 0 0 50%;
                 max-width: 50%;
             }

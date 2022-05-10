@@ -1,4 +1,5 @@
 .single-user-project {
+	.row { margin: 0px; }
 	.ld-tabs {
 		display: flex;
 		flex-direction: column;
@@ -19,10 +20,10 @@
 		}
 		h4, h5 {
 			color: #d62329;
-			font-size: 18px;
+			font-size: 28px;
 		}
 		h5 {
-			font-size: 16px;
+			font-size: 24px;
 		}
 		section {
 			text-align: left;
@@ -146,8 +147,9 @@
 		padding: 10px 30px 30px;
 		border-radius: 4px;
 		background: #f1f1f1;
+		h2 { font-size: 28px; }
 		h4 {
-			font-size: 16px;
+			font-size: 24px;
 			font-weight: 100;
 			font-style: italic;
 		}
@@ -179,12 +181,13 @@
 	}
 }
 
+.lms-header-instructor .bb-about-instructor h5 {  font-size: 30px; }
+
 .mc-blue-arrow-btn {
 	background-color: #3fafed;
     padding: 10px 25px 10px 47px;
     border-radius: 25px;
     color: #fff !important;
-    font-size: 16px;
     font-weight: 400;
     transition: background-color .2s;
     display: inline-block;
@@ -192,7 +195,7 @@
 	    font-size: 36px;
 	    position: absolute;
 	    margin-left: -40px;
-	    margin-top: -7px;
+	    margin-top: -4px;
 	    line-height: 1em;
 	}
 }

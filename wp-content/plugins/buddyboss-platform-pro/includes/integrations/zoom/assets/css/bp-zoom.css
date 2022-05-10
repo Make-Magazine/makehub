@@ -241,8 +241,13 @@
 }
 
 .meeting-actions-list i {
-	font-size: 15px;
+	font-size: 16px;
 	margin-right: 10px;
+	min-width: 22px;
+}
+
+.meeting-actions-list .delete i {
+	font-size: 18px;
 }
 
 #main #bp-zoom-meeting-occurs-on-month label,
@@ -306,7 +311,7 @@
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
@@ -662,20 +667,20 @@ header.bb-zm-model-header {
 }
 
 .bb-meeting-option i {
-	font-size: 17px;
+	font-size: 16px;
 	width: 15px;
 	height: 15px;
 	line-height: 1;
 	margin-right: 6px;
 }
 
-.bb-meeting-option .bb-icon-check-small {
+.bb-meeting-option .bb-icon-check {
 	color: #05d786;
-	transform: scale(1.4);
 }
 
 .toggle-password i {
 	margin-right: 6px;
+	font-size: 16px;
 }
 
 .show-password .recording-password {
@@ -701,7 +706,7 @@ header.bb-zm-model-header {
 }
 
 .meeting-actions-anchor i {
-	font-size: 20px;
+	font-size: 16px;
 }
 
 .bp-zoom-meeting-right-top {
@@ -1051,7 +1056,7 @@ header.bb-zm-model-header {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
@@ -1076,7 +1081,7 @@ header.bb-zm-model-header {
 }
 
 #bp-zoom-create-meeting-button i {
-	font-size: 16px;
+	font-size: 18px;
 	margin-right: 5px;
 }
 
@@ -1312,8 +1317,13 @@ header.bb-zm-model-header {
 	display: none;
 }
 
-.bp-toggle-meeting-password:not(.bb-eye) .bb-icon-eye-off {
+.bp-toggle-meeting-password:not(.bb-eye) .bb-icon-eye-slash {
 	display: none;
+}
+
+.bp-toggle-meeting-password .bb-icon-eye-slash,
+.bp-toggle-meeting-password .bb-icon-eye {
+	font-size: 18px;
 }
 
 .zoom-meeting-block-info {
@@ -1933,13 +1943,13 @@ a.bb-invitation-url {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
 .bb-save-settings.loading:before,
 #bp-zoom-meeting-form-submit.loading:before {
-	font: normal normal 400 14px/1 bb-icons;
+	font: normal normal 400 18px/1 bb-icons;
 	speak: none;
 	display: inline-block;
 	margin: 0 10px 0 0;
@@ -1947,7 +1957,7 @@ a.bb-invitation-url {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
@@ -2035,11 +2045,11 @@ a.bb-invitation-url {
 	color: #007cff;
 }
 
-.buddypress-wrap .bp-subnavs ul #sync-meetings-groups-li #meetings-sync .bb-icon-loader {
+.buddypress-wrap .bp-subnavs ul #sync-meetings-groups-li #meetings-sync .bb-icon-spinner {
 	display: none;
 }
 
-.buddypress-wrap .bp-subnavs ul #sync-meetings-groups-li #meetings-sync.loading .bb-icon-loader {
+.buddypress-wrap .bp-subnavs ul #sync-meetings-groups-li #meetings-sync.loading .bb-icon-spinner {
 	display: inline-block;
 }
 
@@ -3017,13 +3027,13 @@ footer.bb-zm-model-footer {
 	margin-right: 6px;
 }
 
-.bb-webinar-option .bb-icon-check-small {
+.bb-webinar-option .bb-icon-check {
 	color: #05d786;
-	transform: scale(1.4);
 }
 
 .toggle-password i {
 	margin-right: 6px;
+	font-size: 16px;
 }
 
 .show-password .recording-password {
@@ -3389,7 +3399,7 @@ footer.bb-zm-model-footer {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
@@ -3654,7 +3664,7 @@ footer.bb-zm-model-footer {
 	display: none;
 }
 
-.bp-toggle-webinar-password:not(.bb-eye) .bb-icon-eye-off {
+.bp-toggle-webinar-password:not(.bb-eye) .bb-icon-eye-slash {
 	display: none;
 }
 
@@ -3780,6 +3790,10 @@ span.bb-zoom-host {
 	display: none;
 	line-height: 1;
 	margin-left: 10px;
+}
+
+#bp-zoom-dropdown-options-loader i > {
+	font-size: 16px;
 }
 
 .recording-list-row-wrap {
@@ -4226,7 +4240,7 @@ a.bp-close-create-webinar-form span {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 
@@ -4280,11 +4294,11 @@ a.bp-close-create-webinar-form span {
 	color: #007cff;
 }
 
-.buddypress-wrap .bp-subnavs ul #sync-webinars-groups-li #webinars-sync .bb-icon-loader {
+.buddypress-wrap .bp-subnavs ul #sync-webinars-groups-li #webinars-sync .bb-icon-spinner {
 	display: none;
 }
 
-.buddypress-wrap .bp-subnavs ul #sync-webinars-groups-li #webinars-sync.loading .bb-icon-loader {
+.buddypress-wrap .bp-subnavs ul #sync-webinars-groups-li #webinars-sync.loading .bb-icon-spinner {
 	display: inline-block;
 }
 
@@ -4596,7 +4610,7 @@ a.bp-close-create-webinar-form span {
 	text-transform: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	content: "\E838";
+	content: "\ef30";
 	animation: spin 2s infinite linear;
 }
 

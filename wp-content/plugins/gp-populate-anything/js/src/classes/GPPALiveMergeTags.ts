@@ -73,15 +73,14 @@ export default class GPPALiveMergeTags {
 
 	getNestedFormsInstance(): any {
 		for ( const prop in window ) {
-			if (
-				! prop.match(
-					new RegExp( `GPNestedForms_\\d+_${ this.formId }$` )
-				)
-			) {
+			if ( ! prop.match( new RegExp( `GPNestedForms_\\d+_\\d+$` ) ) ) {
 				continue;
 			}
 
-			return window[ prop ];
+			// eslint-disable-next-line eqeqeq
+			if ( window[ prop ].nestedFormId == this.formId ) {
+				return window[ prop ];
+			}
 		}
 
 		return undefined;

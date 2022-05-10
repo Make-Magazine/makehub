@@ -206,6 +206,10 @@ function get_fitted_remote_image_url($url, $width, $height, $escape = true) {
     }
 }
 
+function first_sentence($content) {
+    $pos = strpos($content, '.');
+    return substr($content, 0, $pos+1);
+}
 
 function get_first_image_url($html) {
     if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {

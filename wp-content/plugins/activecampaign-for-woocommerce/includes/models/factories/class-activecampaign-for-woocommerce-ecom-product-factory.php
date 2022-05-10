@@ -53,14 +53,20 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	public function product_from_cart_content( $content ) {
 		try {
-			if ( $content['data'] instanceof WC_Product ) {
+			if (
+				method_exists( $content['data'], 'get_id' ) ||
+				$content['data'] instanceof WC_Product ||
+				$content['data'] instanceof WC_Product_Factory
+			) {
 				$ecom_product = $this->convert_wc_product_to_ecom_product( $content['data'] );
-				$ecom_product->set_quantity( $content['quantity'] );
-
-				return $ecom_product;
+			} else {
+				$ecom_product = $this->convert_item_data_to_generic_product( $content );
 			}
 
-			return null;
+			if ( isset( $ecom_product ) ) {
+				$ecom_product->set_quantity( $content['quantity'] );
+				return $ecom_product;
+			}
 		} catch ( Throwable $t ) {
 			$logger = new Logger();
 			$logger->error(
@@ -71,8 +77,9 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 					'trace'    => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
-			return null;
 		}
+
+		return null;
 	}
 
 	/**
@@ -89,7 +96,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 
 				$ecom_product->set_externalid( $product->get_id() );
 				$ecom_product->set_name( $product->get_name() );
-				$ecom_product->set_price( $product->get_price() * 100 );
+				$ecom_product->set_price( $product->get_price() > 0 ? $product->get_price() * 100 : 0 );
 				$ecom_product->set_category( $this->get_product_all_categories( $product ) );
 				$ecom_product->set_image_url( $this->get_product_image_url( $product ) );
 				$ecom_product->set_product_url( $this->get_product_url( $product ) );
@@ -117,6 +124,40 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Convert a pre_product object to a generic product.
+	 *
+	 * @param array $pre_product The product item.
+	 *
+	 * @return Activecampaign_For_Woocommerce_Ecom_Product
+	 */
+	private function convert_item_data_to_generic_product( $pre_product ) {
+		$logger = new Logger();
+		try {
+			$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
+
+			$ecom_product->set_externalid( $pre_product['product_id'] );
+			$ecom_product->set_name( $pre_product['name'] );
+			$ecom_product->set_price( $pre_product['total'] > 0 ? $pre_product['total'] * 100 : 0 );
+			$ecom_product->set_category( $this->get_product_all_categories( $pre_product['item'] ) );
+			$ecom_product->set_image_url( $this->get_product_image_url( $pre_product['item'] ) );
+			$ecom_product->set_product_url( $this->get_product_url( $pre_product['item'] ) );
+			$ecom_product->set_sku( $this->get_sku( $pre_product['item'] ) );
+			$ecom_product->set_description( '' );
+
+			return $ecom_product;
+		} catch ( Throwable $t ) {
+
+			$logger->error(
+				'Product factory could not convert the product to a generic ecom_product.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
 	}
 
 	/**
@@ -219,20 +260,38 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return string|null
 	 */
 	private function get_product_image_url( $product ) {
+
 		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
-			$post         = get_post( $product->get_id() );
-			$thumbnail_id = get_post_thumbnail_id( $post );
-			$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
+			try {
+				$post         = get_post( $product->get_id() );
+				$thumbnail_id = get_post_thumbnail_id( $post );
+				$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
+			} catch ( Throwable $t ) {
+				$logger = new Logger();
+
+				$logger->warning(
+					'There was an error getting product image url.',
+					[
+						'thrown_message' => $t->getMessage(),
+						'post'           => isset( $post ) ? $post : null,
+						'thumbnail_id'   => isset( $thumbnail_id ) ? $thumbnail_id : null,
+						'image_src'      => isset( $image_src ) ? $image_src : null,
+						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'trace'          => $logger->clean_trace( $t->getTrace() ),
+					]
+				);
+			}
 
 			if ( ! is_array( $image_src ) ) {
 				// Right now this is null by default, we could go looking for a fallback.
-				return null;
+				return '';
 			}
 
 			// The first element is the actual URL
 			return $image_src[0];
 		}
-		return null;
+
+		return '';
 	}
 
 
@@ -244,16 +303,29 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	private function get_product_url( $product ) {
 		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
-			$product_id = get_post( $product->get_id() );
-			$url        = get_permalink( $product_id );
+			try {
+				$product_id = get_post( $product->get_id() );
+				$url        = get_permalink( $product_id );
 
-			if ( is_null( $url ) || empty( $url ) ) {
-				return null;
+				if ( is_null( $url ) || empty( $url ) ) {
+					return '';
+				}
+
+				return $url;
+			} catch ( Throwable $t ) {
+				$logger = new Logger();
+				$logger->warning(
+					'There was an error getting product URL.',
+					[
+						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'thrown_message' => $t->getMessage(),
+						'trace'          => $logger->clean_trace( $t->getTrace() ),
+					]
+				);
 			}
-
-			return $url;
 		}
-		return null;
+
+		return '';
 	}
 
 	/**
@@ -264,14 +336,26 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	private function get_sku( $product ) {
 		if ( method_exists( $product, 'get_sku' ) && ! empty( $product->get_sku() ) ) {
-			$sku = $product->get_sku();
+			try {
+				$sku = $product->get_sku();
 
-			if ( is_null( $sku ) || empty( $sku ) ) {
-				return null;
+				if ( is_null( $sku ) || empty( $sku ) ) {
+					return '';
+				}
+
+				return $sku;
+			} catch ( Throwable $t ) {
+				$logger = new Logger();
+				$logger->warning(
+					'There was an error getting product sku.',
+					[
+						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'thrown_message' => $t->getMessage(),
+						'trace'          => $logger->clean_trace( $t->getTrace() ),
+					]
+				);
 			}
-
-			return $sku;
 		}
-		return null;
+		return '';
 	}
 }

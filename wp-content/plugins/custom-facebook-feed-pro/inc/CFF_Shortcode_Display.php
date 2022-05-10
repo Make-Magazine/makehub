@@ -420,7 +420,7 @@ class CFF_Shortcode_Display {
 
 	    //Timeline pagination method
 	    $cff_timeline_pag = $this->feed_options['timelinepag'];
-	    if( $cff_timeline_pag == 'paging' || ( $this->feed_options['feedtype'] == 'events' && CFF_Utils::check_if_on( $this->feed_options['pastevents'] )) ) {
+	    if( $cff_timeline_pag == 'paging' || $this->feed_options['feedtype'] === 'reviews' || ( $this->feed_options['feedtype'] == 'events' && CFF_Utils::check_if_on( $this->feed_options['pastevents'] )) ) {
 	    	$cff_content .= ' data-timeline-pag="true"';
 	    }
 
@@ -456,9 +456,10 @@ class CFF_Shortcode_Display {
 
 	    $cff_content .= ' data-pag-num="'.$pag_num.'"';
 
-		$mobile_num = !$cff_carousel_active && isset( $this->feed_options['nummobile'] ) && (int)$this->feed_options['nummobile'] !== (int)$pag_num ? (int)$this->feed_options['nummobile'] : false;
+		#$mobile_num = (!$cff_carousel_active && isset( $this->feed_options['nummobile'] ) && (int)$this->feed_options['nummobile'] !== (int)$pag_num) ? (int)$this->feed_options['nummobile'] : false;
+		$mobile_num = ( isset( $this->feed_options['nummobile'] ) && (int)$this->feed_options['nummobile'] !== (int)$pag_num) ? (int)$this->feed_options['nummobile'] : false;
 		if ( $mobile_num ) {
-			$cff_content .= ' data-nummobile="'.$mobile_num.'"';
+			$cff_content .= ' data-nummobile="'.$mobile_num.'" data-mobilenumber="'.$mobile_num.'" ';
 		}
 
 	    //Add the absolute path to the container to be used in the connect.php file for group albums
@@ -555,11 +556,22 @@ class CFF_Shortcode_Display {
 
 	        if ($cff_like_box_position == 'bottom' && $cff_show_like_box && !$cff_like_box_outside) $cff_content .= $like_box;
 
-	        //If the load more is enabled and the number of posts is not set to be zero then show the load more button
-	        if( $cff_load_more && $pag_num > 0 ){
-	            //Load More button
-	    		$cff_content .= CFF_Utils::print_template_part( 'load_more', get_defined_vars(), $this);
-	        }
+			// Work around for upcoming events needing a load more button to reveal posts that exist on the page
+	         if ( $cff_load_more
+	              && ! empty( $atts['type'] )
+				   && $atts['type'] === 'events'
+				   && ! empty( $atts['pastevents'] )
+				   && $atts['pastevents'] === 'false' ) {
+				$next_urls_arr_safe = '';
+				$cff_load_more = true;
+				$cff_content .= '<div class="cff-load-placeholder" style="display:none;" data-loadmoretext="'.esc_attr__('Load more','custom-facebook-feed').'">' . CFF_Utils::print_template_part( 'load_more', get_defined_vars(), $this) . '</div>';
+				$cff_load_more = false;
+				$next_urls_arr_safe = '{}';
+			 //If the load more is enabled and the number of posts is not set to be zero then show the load more button
+			 } elseif( $cff_load_more && $pag_num > 0 ){
+				 //Load More button
+				 $cff_content .= CFF_Utils::print_template_part( 'load_more', get_defined_vars(), $this);
+			 }
 
 	        //Add the Like Box inside
 	        	$cff_posttext_link_style = $this->get_style_attribute ('text_link');
@@ -581,8 +593,7 @@ class CFF_Shortcode_Display {
 	    if ($ajax_theme) {
 	        //Minify files?
 	        $options = get_option('cff_style_settings');
-	        isset($options[ 'cff_minify' ]) ? $cff_minify = $options[ 'cff_minify' ] : $cff_minify = '';
-	        $cff_minify ? $cff_min = '.min' : $cff_min = '';
+			$cff_min = isset( $_GET['sb_debug'] ) ? '' : '.min';
 
 	        $url = plugins_url();
 	        $path = urlencode(ABSPATH);
@@ -598,7 +609,7 @@ class CFF_Shortcode_Display {
 	        $cff_content .= '<script type="text/javascript">var cffsiteurl = "' . $url . '", cfflinkhashtags = "' . $cff_link_hashtags . '";';
 		    $cff_content .= 'var cffOptions = ' . CFF_Utils::cff_json_encode( $cffOptionsObj ) . ';';
 		    $cff_content .= '</script>';
-	        $cff_content .= '<script type="text/javascript" src="' . CFF_PLUGIN_URL . 'assets/js/cff-scripts'.$cff_min.'.js'  . '"></script>';
+	        $cff_content .= '<script type="text/javascript" src="' . CFF_PLUGIN_URL . 'assets/js/cff-scripts'.$cff_min.'.js?ver=' . CFFVER . '"></script>';
 	    }
 	    $cff_content .= '</div>';
 
@@ -1598,6 +1609,37 @@ class CFF_Shortcode_Display {
 			<?php echo $element_name.' '.esc_html__('disabled due to GDPR setting.','custom-facebook-feed') ?> <a href="<?php echo esc_url(admin_url('admin.php?page=cff-style&tab=misc#gdpr')); ?>"><?php echo esc_html__('Click here','custom-facebook-feed') ?></a> <?php echo esc_html__('for more info.','custom-facebook-feed') ?>
 		</div>
 	<?php
+	}
+
+
+	/*
+	* GET POST TYPE
+	*
+	*/
+	static function get_post_type($post){
+			$postType = ($post->message) ? 'statuses' : ($post->description ? 'statuses' : 'empty');
+			if( isset($post->attachments->data) &&  $post->attachments->data[0] ){
+				if( $post->attachments->data[0]->media_type ){
+					switch ($post->attachments->data[0]->media_type) {
+						case 'video':
+							$postType = 'videos';
+							break;
+						case 'link':
+							$postType = 'links';
+							break;
+						case 'photo':
+							$postType = 'photos';
+							break;
+						case 'album':
+							$postType = 'albums';
+							break;
+						case 'event':
+							$postType = 'events';
+							break;
+					}
+				}
+			}
+			return $postType;
 	}
 
 }

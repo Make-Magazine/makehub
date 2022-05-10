@@ -54,49 +54,27 @@ if (empty($course)) {
 }
 
 // Get our Taxonomies
-$terms = get_the_terms($post->ID, 'ld_lesson_category');
-$categories = array();
-$ages = array();
-$times = array();
-$skill_levels = array();
-$materials_array = array();
-$themes = array();
-foreach($terms as $term) {
-	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
-	switch ($parent->slug) {
-		case "content-category":
-			array_push($categories, $term);
-			break;
-		case "age":
-			array_push($ages, $term);
-			break;
-		case "time":
-			array_push($times, $term);
-			break;
-		case "skill-level":
-			array_push($skill_levels, $term);
-			break;
-		case "materials":
-			array_push($materials_array, $term);
-			break;
-		case "makeyland-theme":
-			array_push($themes, $term);
-			break;
-	}
-}
+$categories = get_the_terms($post->ID, 'content_categories');
+$ages = get_the_terms($post->ID, 'ages');
+$times = get_the_terms($post->ID, 'times');
+$skill_levels = get_the_terms($post->ID, 'skill_levels');
+$materials_tax = get_the_terms($post->ID, 'materials');
+$themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
-parse_str($referrer_url['query'], $referrer_params);
-$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
-sort($referrer_params);
+if(isset($referrer_url['query'])) {
+	parse_str($referrer_url['query'], $referrer_params);
+	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	sort($referrer_params);
+}
 ?>
 
 <div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
-        <?php
-        if (!empty($course)) :
+        <?php // only show sidebar if the project is tagged resource
+        if ( has_term('resource', 'ld_lesson_tag') ) :
             include locate_template('/learndash/ld30/learndash-sidebar.php');
         endif;
         ?>
@@ -132,10 +110,15 @@ sort($referrer_params);
                         ?>
 						<div class="project-breadcrumbs">
 							<a href="/projects-search/" class="project-tag">Projects</a>
-							<?php foreach($referrer_params as $param) {
+							<?php
+							if(isset($referrer_params)) {
+								foreach($referrer_params as $param) {
 									$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
 									<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-							<?php } ?>
+							<?php
+								}
+							}
+							?>
 						</div>
                         <div id="learndash-course-header" class="bb-lms-header">
                             <div class="bb-ld-info-bar">
@@ -341,15 +324,19 @@ sort($referrer_params);
                             ?>
 
 							<section class="tags">
-								<h4>See More Projects in these topics:</h4>
-								<?php foreach($categories as $category) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
-								<?php } ?>
-								<br />
-								<h4>See More Projects from this theme:</h4>
+								<?php if(!empty($categories)) { ?>
+									<h4>See More Projects in these topics:</h4>
+									<?php foreach($categories as $category) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+									<?php } ?>
+									<br />
+								<?php }
+									if(!empty($themes)){ ?>
+								<h4>See More Projects from these themes:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php } ?>
+								<?php }
+								}	?>
 							</section>
 
                             <?php
@@ -364,17 +351,17 @@ sort($referrer_params);
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-
-							<?php if(!empty($ages)) { ?>
+							<?php if(!empty($terms)) { ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
-									<?php foreach($ages as $age) {  ?>
-										<div class="disclaimer-section"><?php echo $age->description; ?></div>
-									<?php } ?>
+									<?php foreach($terms as $term) {
+										if($term->description) { ?>
+											<div class="disclaimer-section"><?php echo $term->description; ?></div>
+									<?php }
+									} ?>
 								</section>
 							<?php } ?>
-
 
                         </div><?php /* .learndash_content_wrap */ ?>
 

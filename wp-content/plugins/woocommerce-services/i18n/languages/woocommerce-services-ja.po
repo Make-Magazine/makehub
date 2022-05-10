@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"X-Generator: GlotPress/3.0.0\n"
 "Language: ja_JP\n"
 "Project-Id-Version: Plugins - WooCommerce Shipping &amp; Tax - Stable (latest release)\n"
 
@@ -655,7 +655,7 @@ msgstr ""
 msgid "0.0"
 msgstr ""
 
-#: woocommerce-services.php:1457
+#: woocommerce-services.php:1458
 msgid "Shipment Tracking"
 msgstr "配送状況の追跡"
 
@@ -667,23 +667,23 @@ msgstr "関税情報が有効"
 msgid "Customs information incomplete"
 msgstr "関税情報が不完全"
 
-#: woocommerce-services.php:1500
+#: woocommerce-services.php:1501
 msgid "Packing Log:"
 msgstr "パッキングログ:"
 
-#: woocommerce-services.php:1487
+#: woocommerce-services.php:1488
 msgid "Chosen Rate:"
 msgstr "選択したレート:"
 
-#: woocommerce-services.php:1483
+#: woocommerce-services.php:1484
 msgid "Shipping Method ID:"
 msgstr "配送方法 ID:"
 
-#: woocommerce-services.php:1479
+#: woocommerce-services.php:1480
 msgid "Shipping Method Name:"
 msgstr "配送方法名:"
 
-#: woocommerce-services.php:1463
+#: woocommerce-services.php:1464
 msgid "Shipping Debug"
 msgstr "配送デバッグ"
 
@@ -1387,11 +1387,11 @@ msgstr "PayPal アカウントをリンクする"
 msgid "Refresh"
 msgstr "更新"
 
-#: woocommerce-services.php:1238
+#: woocommerce-services.php:1239
 msgid "Tracking number"
 msgstr "追跡番号"
 
-#: woocommerce-services.php:1237
+#: woocommerce-services.php:1238
 msgid "Provider"
 msgstr "プロバイダー"
 
@@ -1404,39 +1404,39 @@ msgstr ""
 msgid "Hosted services for WooCommerce: automated tax calculation, shipping label printing, and smoother payment setup."
 msgstr "WooCommerce のためのホストされたサービス: 自動税計算、出荷ラベルの印刷、およびよりスムーズな支払い設定。"
 
-#: classes/class-wc-connect-functions.php:133
+#: classes/class-wc-connect-functions.php:176
 msgid "Tax Class"
 msgstr "税区分."
 
-#: classes/class-wc-connect-functions.php:132
+#: classes/class-wc-connect-functions.php:175
 msgid "Shipping"
 msgstr "配送"
 
-#: classes/class-wc-connect-functions.php:131
+#: classes/class-wc-connect-functions.php:174
 msgid "Compound"
 msgstr "複合"
 
-#: classes/class-wc-connect-functions.php:130
+#: classes/class-wc-connect-functions.php:173
 msgid "Priority"
 msgstr "優先順位"
 
-#: classes/class-wc-connect-functions.php:129
+#: classes/class-wc-connect-functions.php:172
 msgid "Tax Name"
 msgstr "税名称"
 
-#: classes/class-wc-connect-functions.php:128
+#: classes/class-wc-connect-functions.php:171
 msgid "Rate %"
 msgstr "率 %"
 
-#: classes/class-wc-connect-functions.php:126
+#: classes/class-wc-connect-functions.php:169
 msgid "ZIP/Postcode"
 msgstr "ZIP/Postcode"
 
-#: classes/class-wc-connect-functions.php:125
+#: classes/class-wc-connect-functions.php:168
 msgid "State Code"
 msgstr "州コード。"
 
-#: classes/class-wc-connect-functions.php:124
+#: classes/class-wc-connect-functions.php:167
 msgid "Country Code"
 msgstr "国別コード"
 
@@ -1739,7 +1739,7 @@ msgid "#%1$d - %2$s"
 msgstr "#%1$d - %2$s"
 
 #. translators: %s Support url
-#: woocommerce-services.php:1573
+#: woocommerce-services.php:1574
 msgid "<a href=\"%s\">Support</a>"
 msgstr "<a href=\"%s\">サポート</a>"
 
@@ -1747,8 +1747,8 @@ msgstr "<a href=\"%s\">サポート</a>"
 msgid "There was an error installing Jetpack. Please try installing it manually."
 msgstr "Jetpack のインストール中にエラーが発生しました。手動でインストールしてください。"
 
-#: i18n/strings.php:85 woocommerce-services.php:1070
-#: woocommerce-services.php:1073
+#: i18n/strings.php:85 woocommerce-services.php:1071
+#: woocommerce-services.php:1074
 msgid "Shipping Labels"
 msgstr "出荷ラベル"
 
@@ -1757,8 +1757,8 @@ msgstr "出荷ラベル"
 msgid "https://woocommerce.com/"
 msgstr "https://woocommerce.com/"
 
-#: i18n/strings.php:185 i18n/strings.php:212 woocommerce-services.php:1523
-#: woocommerce-services.php:1551
+#: i18n/strings.php:185 i18n/strings.php:212 woocommerce-services.php:1524
+#: woocommerce-services.php:1552
 msgid "Phone"
 msgstr "電話"
 
@@ -1855,7 +1855,7 @@ msgstr "価格調整"
 msgid "Saved Packages"
 msgstr "保存済みパッケージ"
 
-#: woocommerce-services.php:1226 woocommerce-services.php:1233
+#: woocommerce-services.php:1227 woocommerce-services.php:1234
 msgid "Tracking"
 msgstr "トラッキング"
 
@@ -1877,7 +1877,7 @@ msgstr "会社"
 msgid "Address"
 msgstr "住所"
 
-#: classes/class-wc-connect-functions.php:127 i18n/strings.php:182
+#: classes/class-wc-connect-functions.php:170 i18n/strings.php:182
 #: i18n/strings.php:215
 msgid "City"
 msgstr "市区町村"
@@ -2016,7 +2016,7 @@ msgstr "設定を更新できません。 %s"
 msgid "Packaging"
 msgstr "パッケージング"
 
-#: woocommerce-services.php:1609
+#: woocommerce-services.php:1610
 msgid "Section not loading? Visit the <a href=\"%s\">status page</a> for troubleshooting steps."
 msgstr "セクションがロードされない?トラブルシューティング手順については、<a href=\"%s\">ステータスページの </a> を参照してください。"
 
@@ -2028,7 +2028,7 @@ msgstr ""
 msgid "Note: Jetpack is connected, but development mode is also enabled on this site. Please disable development mode."
 msgstr "注: Jetpack は接続されていますが、このサイトでは開発モードも有効になっています。開発モードを無効にしてください。"
 
-#: woocommerce-services.php:1459
+#: woocommerce-services.php:1460
 msgid "Shipping Label"
 msgstr "配送ラベル"
 
@@ -2199,7 +2199,7 @@ msgstr "ベースの場所は WooCommerce 設定 > 一般設定 に設定して�
 msgid "WooCommerce %1$s or higher is required (You are running %2$s)"
 msgstr ""
 
-#: classes/class-wc-connect-error-notice.php:104 woocommerce-services.php:1645
+#: classes/class-wc-connect-error-notice.php:104 woocommerce-services.php:1646
 msgid "Dismiss this notice"
 msgstr "この通知を非表示"
 

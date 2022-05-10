@@ -945,7 +945,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__["registerBlockType"])('bp-
         };
         Object(_request__WEBPACK_IMPORTED_MODULE_10__["zoomMeetingFetch"])(meeting_data).then(function (response) {
           target.removeAttribute('disabled');
-          target.innerHTML = '<i class="bb-icon-zap"></i>';
+          target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i>';
           wp.data.dispatch('core/notices').createNotice('success', Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Meeting Synced.', 'buddyboss-pro'), {
             isDismissible: true
           }); // Set meeting object.
@@ -985,7 +985,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__["registerBlockType"])('bp-
       isLink: true,
       onClick: function onClick(e) {
         var target = e.currentTarget;
-        target.innerHTML = '<i class="bb-icon-loader animate-spin"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+        target.innerHTML = '<i class="bb-icon-l bb-icon-spinner animate-spin"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
         target.setAttribute('disabled', true);
         var meeting_data = {
           '_wpnonce': bpZoomMeetingBlock.bp_zoom_meeting_nonce,
@@ -993,7 +993,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__["registerBlockType"])('bp-
         };
         Object(_request__WEBPACK_IMPORTED_MODULE_10__["zoomMeetingFetch"])(meeting_data).then(function (response) {
           target.removeAttribute('disabled');
-          target.innerHTML = '<i class="bb-icon-zap"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+          target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
           wp.data.dispatch('core/notices').createNotice('success', Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Meeting Synced.', 'buddyboss-pro'), {
             isDismissible: true
           }); // Set meeting object.
@@ -1013,14 +1013,14 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__["registerBlockType"])('bp-
           }
         }).catch(function (error) {
           target.removeAttribute('disabled');
-          target.innerHTML = '<i class="bb-icon-zap"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+          target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
           wp.data.dispatch('core/notices').createNotice('error', error.error, {
             isDismissible: true
           });
         });
       }
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("i", {
-      className: "bb-icon-zap"
+      className: "bb-icon-l bb-icon-bolt"
     }), " ", Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro')) : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["TextControl"], {
       label: "",
       type: "hidden",
@@ -2634,7 +2634,7 @@ if (bpZoomMeetingBlock.webinar_enabled) {
           };
           Object(_request__WEBPACK_IMPORTED_MODULE_10__["zoomWebinarFetch"])(webinar_data).then(function (response) {
             target.removeAttribute('disabled');
-            target.innerHTML = '<i class="bb-icon-zap"></i>';
+            target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i>';
             wp.data.dispatch('core/notices').createNotice('success', Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Webinar Synced.', 'buddyboss-pro'), {
               isDismissible: true
             }); // Set webinar object.
@@ -2674,7 +2674,7 @@ if (bpZoomMeetingBlock.webinar_enabled) {
         isLink: true,
         onClick: function onClick(e) {
           var target = e.currentTarget;
-          target.innerHTML = '<i class="bb-icon-loader animate-spin"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+          target.innerHTML = '<i class="bb-icon-l bb-icon-spinner animate-spin"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
           target.setAttribute('disabled', true);
           var webinar_data = {
             '_wpnonce': bpZoomMeetingBlock.bp_zoom_webinar_nonce,
@@ -2682,7 +2682,7 @@ if (bpZoomMeetingBlock.webinar_enabled) {
           };
           Object(_request__WEBPACK_IMPORTED_MODULE_10__["zoomWebinarFetch"])(webinar_data).then(function (response) {
             target.removeAttribute('disabled');
-            target.innerHTML = '<i class="bb-icon-zap"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+            target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
             wp.data.dispatch('core/notices').createNotice('success', Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Webinar Synced.', 'buddyboss-pro'), {
               isDismissible: true
             }); // Set webinar object.
@@ -2702,14 +2702,14 @@ if (bpZoomMeetingBlock.webinar_enabled) {
             }
           }).catch(function (error) {
             target.removeAttribute('disabled');
-            target.innerHTML = '<i class="bb-icon-zap"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
+            target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro');
             wp.data.dispatch('core/notices').createNotice('error', error.error, {
               isDismissible: true
             });
           });
         }
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("i", {
-        className: "bb-icon-zap"
+        className: "bb-icon-l bb-icon-bolt"
       }), " ", Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Sync', 'buddyboss-pro')) : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["TextControl"], {
         label: "",
         type: "hidden",

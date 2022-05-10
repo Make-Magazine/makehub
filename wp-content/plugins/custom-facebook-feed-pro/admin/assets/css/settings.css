@@ -245,7 +245,7 @@
     margin-right: 5px;
 }
 .sb-btn-orange {
-    background: #E34F0E;
+    background: #FE544F;
     color: #fff;
     font-style: normal;
     font-weight: 600;
@@ -509,7 +509,7 @@
     background-color: #0068A0;
     width: 200px;
     height: 2px;
-    transition: all 0.7s cubic-bezier(0.22, 0.51, 0.53, 0.88);
+    transition: all 0.3s cubic-bezier(0.22, 0.51, 0.53, 0.88);
 }
 
 .slide-fade-enter-active {
@@ -1515,7 +1515,7 @@ Sources Instance Popup
 }
 .cff-stck-wdg-btn svg{
     width: 25px;
-    fill: #E34F0E;
+    fill: #FE544F;
     height: 33px;
     float: left;
 }

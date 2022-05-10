@@ -454,8 +454,7 @@ final class Custom_Facebook_Feed_Pro{
 	 */
 	public function enqueue_styles_assets(){
 		$options = get_option('cff_style_settings');
-		isset($options[ 'cff_minify' ]) ? $cff_minify = $options[ 'cff_minify' ] : $cff_minify = '';
-		$cff_minify ? $cff_min = '.min' : $cff_min = '';
+		$cff_min = isset( $_GET['sb_debug'] ) ? '' : '.min';
 
         $cff_ext_options = get_option('cff_extensions_status');
         $cff_extensions_carousel_active = false;
@@ -502,7 +501,7 @@ final class Custom_Facebook_Feed_Pro{
 	 */
 	public function enqueue_scripts_assets(){
 		$options = get_option('cff_style_settings');
-		$cff_min = isset( $options[ 'cff_minify' ] ) && !empty( $options[ 'cff_minify' ] )  ? '.min' : '';
+		$cff_min = isset( $_GET['sb_debug'] ) ? '' : '.min';
 
 		wp_register_script(
 			'cffscripts',

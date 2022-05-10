@@ -8,37 +8,12 @@
 global $post;
 
 // Get our Taxonomies
-$terms = get_the_terms($post->ID, 'ld_lesson_category');
-$categories = array();
-$ages = array();
-$times = array();
-$skill_levels = array();
-$materials_tax = array();
-$themes = array();
-foreach($terms as $term) {
-	$parent = get_term_top_most_parent( $term, 'ld_lesson_category');
-	switch ($parent->slug) {
-		case "content-category":
-			array_push($categories, $term);
-			break;
-		case "age":
-			array_push($ages, $term);
-			break;
-		case "time":
-			array_push($times, $term);
-			break;
-		case "skill-level":
-			array_push($skill_levels, $term);
-			break;
-		case "materials":
-			array_push($materials_tax, $term);
-			break;
-		case "makeyland-theme":
-			array_push($themes, $term);
-			break;
-	}
-}
-
+$categories = get_the_terms($post->ID, 'content_categories');
+$ages = get_the_terms($post->ID, 'ages');
+$times = get_the_terms($post->ID, 'times');
+$skill_levels = get_the_terms($post->ID, 'skill_levels');
+$materials_tax = get_the_terms($post->ID, 'materials');
+$themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // Get our ACF Fields
 $hero_image = get_field('hero_image');
@@ -53,9 +28,11 @@ $author_id = get_field('user_id');
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
-parse_str($referrer_url['query'], $referrer_params);
-$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
-sort($referrer_params);
+if(isset($referrer_url['query'])) {
+	parse_str($referrer_url['query'], $referrer_params);
+	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	sort($referrer_params);
+}
 
 get_header();
 
@@ -113,10 +90,14 @@ get_header();
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
 					<div class="project-breadcrumbs">
 						<a href="/projects-search/" class="project-tag">Projects</a>
-						<?php foreach($referrer_params as $param) {
+						<?php
+						if(isset($referrer_params)) {
+							foreach($referrer_params as $param) {
 								$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
 								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-						<?php } ?>
+						<?php
+					 		}
+						}?>
 					</div>
 					<div class="learndash_content_wrap">
 						<div class="ld-tabs ld-tab-count-2">
@@ -135,7 +116,9 @@ get_header();
 								<?php // The First Tab 'Project' ?>
 
 								<div class="ld-tab-content ld-visible" id="ld-tab-content">
-									<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php if(isset($hero_image['url'])) { ?>
+										<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php } ?>
 									<h1><?php the_title(); ?></h1>
 
 									<?php if($sponsored_by_text) { ?>
@@ -148,9 +131,15 @@ get_header();
 										<?php echo $svg_divider; ?>
 									</div>
 									<div class="proj-taxonomy-filters">
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<?php if(isset($times[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+										<?php } ?>
+										<?php if(isset($skill_levels[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
+										<?php } ?>
+										<?php if(isset($ages[0])) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<?php } ?>
 									</div>
 
 
@@ -260,15 +249,19 @@ get_header();
 							</div> <?php // end tabs content ?>
 
 							<section class="tags">
-								<h4>See More Projects in these topics:</h4>
-								<?php foreach($categories as $category) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
-								<?php } ?>
-								<br />
-								<h4>See More Projects from this theme:</h4>
+								<?php if(!empty($categories)) { ?>
+									<h4>See More Projects in these topics:</h4>
+									<?php foreach($categories as $category) { ?>
+											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+									<?php } ?>
+									<br />
+								<?php }
+									if(!empty($themes)){ ?>
+								<h4>see more projects from these themes:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php } ?>
+								<?php }
+								}	?>
 							</section>
 
 							<section class="up-author">
@@ -294,13 +287,15 @@ get_header();
 								<p>Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Make Community, LLC, disclaims all responsibility for any resulting damage, injury, or expense.</p>
 							</section>
 
-							<?php if(!empty($ages)) { ?>
+							<?php if(!empty($terms)) { ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
-									<?php foreach($ages as $age) {  ?>
-										<div class="disclaimer-section"><?php echo $age->description; ?></div>
-									<?php } ?>
+									<?php foreach($terms as $term) {
+										if($term->description) { ?>
+											<div class="disclaimer-section"><?php echo $term->description; ?></div>
+									<?php }
+									} ?>
 								</section>
 							<?php } ?>
 

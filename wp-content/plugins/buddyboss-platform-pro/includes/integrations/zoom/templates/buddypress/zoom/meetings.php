@@ -27,7 +27,7 @@ $live_meetings = array();
 						<h4 class="total-members-text"><?php esc_html_e( 'Meetings', 'buddyboss-pro' ); ?></h4>
 					<?php } ?>
 					<div id="bp-zoom-dropdown-options-loader" class="bp-zoom-dropdown-options-loader-hide">
-						<i class="bb-icon-loader animate-spin"></i>
+						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</div>
 					<div class="bp-group-message-wrap">
 						<?php if ( ( ! empty( $bp_zoom_current_meeting ) && true === $bp_zoom_current_meeting->is_past && false === $bp_zoom_current_meeting->is_live ) || ( 'past-meetings' === bp_zoom_group_current_meeting_tab() ) ) : ?>
@@ -39,7 +39,7 @@ $live_meetings = array();
 							<?php endif; ?>
 						<?php elseif ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), bp_get_current_group_id() ) ) : ?>
 							<a href="<?php echo esc_url( trailingslashit( bp_get_group_permalink( groups_get_group( bp_get_current_group_id() ) ) . 'zoom/create-meeting/' ) ); ?>" id="bp-zoom-create-meeting-button" data-group-id="<?php echo esc_attr( bp_get_group_id() ); ?>">
-								<i class="bb-icon-edit-square"></i><?php esc_html_e( 'Create New', 'buddyboss-pro' ); ?>
+								<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Create New', 'buddyboss-pro' ); ?>
 							</a>
 						<?php endif; ?>
 					</div>

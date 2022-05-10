@@ -9,7 +9,7 @@
 ?>
 <div class="webinar-item-container" data-id="<?php bp_zoom_webinar_id(); ?>" data-webinar-id="<?php bp_zoom_webinar_zoom_webinar_id(); ?>" data-is-recurring="<?php echo ( 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() || bp_get_zoom_webinar_recurring() ) ? '1' : '0'; ?>" <?php echo 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() ? 'data-occurrence-id="' . esc_attr( bp_get_zoom_webinar_occurrence_id() ) . '"' : ''; ?>>
 	<div class="bb-title-wrap">
-		<a href="#" class="bp-back-to-webinar-list"><span class="bb-icon-chevron-left"></span></a>
+		<a href="#" class="bp-back-to-webinar-list"><span class="bb-icon-l bb-icon-angle-left"></span></a>
 		<div>
 			<h2 class="bb-title">
 				<?php bp_zoom_webinar_title(); ?>
@@ -29,7 +29,7 @@
 		<?php if ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), bp_get_current_group_id() ) && bp_zoom_groups_can_user_manage_webinar( bp_get_zoom_webinar_id() ) ) : ?>
 			<div class="webinar-actions">
 				<a href="#" class="webinar-actions-anchor">
-					<i class="bb-icon-menu-dots-v"></i>
+					<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="webinar-actions-list">
 					<ul>
@@ -37,7 +37,7 @@
 							<li class="bp-zoom-webinar-edit">
 								<?php if ( 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() ) : ?>
 									<a role="button" id="bp-zoom-webinar-occurrence-edit-button" class="edit-webinar" href="#" data-id="bp-webinar-edit">
-										<i class="bb-icon-edit-square"></i><?php esc_html_e( 'Edit this Webinar', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Edit this Webinar', 'buddyboss-pro' ); ?>
 									</a>
 									<div id="bp-zoom-edit-occurrence-popup-<?php echo esc_attr( bp_get_zoom_webinar_occurrence_id() ); ?>" class="bzm-white-popup mfp-hide bp-zoom-edit-occurrence-popup">
 										<header class="bb-zm-model-header"><?php esc_html_e( 'You\'re changing a recurring webinar.', 'buddyboss-pro' ); ?></header>
@@ -56,7 +56,7 @@
 									</div>
 								<?php else : ?>
 									<a role="button" id="bp-zoom-webinar-edit-button" class="edit-webinar" href="#" data-id="<?php bp_zoom_webinar_id(); ?>" data-webinar-id="<?php bp_zoom_webinar_zoom_webinar_id(); ?>" data-is-recurring="<?php echo ! empty( bp_get_zoom_webinar_parent() ) ? '1' : '0'; ?>" <?php echo ! empty( bp_get_zoom_webinar_parent() ) ? 'data-occurrence-id="' . esc_attr( bp_get_zoom_webinar_occurrence_id() ) . '"' : ''; ?>>
-										<i class="bb-icon-edit-square"></i><?php esc_html_e( 'Edit this Webinar', 'buddyboss-pro' ); ?>
+										<i class="bb-icon-l bb-icon-edit"></i><?php esc_html_e( 'Edit this Webinar', 'buddyboss-pro' ); ?>
 									</a>
 								<?php endif; ?>
 							</li>
@@ -64,7 +64,7 @@
 						<li class="bp-zoom-webinar-delete">
 							<?php if ( 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() ) : ?>
 								<a role="button" id="bp-zoom-webinar-occurrence-delete-button" class="delete" href="#">
-									<i class="bb-icon-trash"></i><?php esc_html_e( 'Delete this Webinar', 'buddyboss-pro' ); ?>
+									<i class="bb-icon-l bb-icon-trash"></i><?php esc_html_e( 'Delete this Webinar', 'buddyboss-pro' ); ?>
 								</a>
 								<div id="bp-zoom-delete-occurrence-popup-<?php echo esc_attr( bp_get_zoom_webinar_occurrence_id() ); ?>" class="bzm-white-popup mfp-hide bp-zoom-delete-occurrence-popup">
 									<header class="bb-zm-model-header"><?php esc_html_e( 'Delete Webinar', 'buddyboss-pro' ); ?></header>
@@ -82,7 +82,7 @@
 									</footer>
 								</div>
 							<?php else : ?>
-								<a role="button" class="delete bp-zoom-delete-webinar" href="javascript:;"><i class="bb-icon-trash"></i><?php esc_html_e( 'Delete this Webinar', 'buddyboss-pro' ); ?></a>
+								<a role="button" class="delete bp-zoom-delete-webinar" href="javascript:;"><i class="bb-icon-l bb-icon-trash"></i><?php esc_html_e( 'Delete this Webinar', 'buddyboss-pro' ); ?></a>
 							<?php endif; ?>
 						</li>
 					</ul>
@@ -172,13 +172,13 @@
 							<span class="show-password"><strong><?php echo esc_html( bp_get_zoom_webinar_password() ); ?></strong></span>
 						</div>
 						<div class="pass-toggle">
-							<a href="javascript:;" class="toggle-password show-pass on"><i class="bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?></a>
-							<a href="javascript:;" class="toggle-password hide-pass"><i class="bb-icon-eye-off"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?></a>
+							<a href="javascript:;" class="toggle-password show-pass on"><i class="bb-icon-l bb-icon-eye"></i><?php esc_html_e( 'Show passcode', 'buddyboss-pro' ); ?></a>
+							<a href="javascript:;" class="toggle-password hide-pass"><i class="bb-icon-l bb-icon-eye-slash"></i><?php esc_html_e( 'Hide passcode', 'buddyboss-pro' ); ?></a>
 						</div>
 					</div>
 				<?php else : ?>
 					<span class="no-pass-required">
-						<i class="bb-icon-close"></i>
+						<i class="bb-icon-l bb-icon-times"></i>
 						<span><?php esc_html_e( 'No passcode required', 'buddyboss-pro' ); ?></span>
 					</span>
 				<?php endif; ?>
@@ -233,15 +233,15 @@
 				$bp_get_zoom_webinar_auto_recording   = ( in_array( bp_get_zoom_webinar_auto_recording(), array( 'cloud', 'local' ), true ) ) ? 'yes' : 'no';
 				?>
 				<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_practice_session ); ?>">
-					<i class="<?php echo bp_get_zoom_webinar_practice_session() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_webinar_practice_session() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Enable practice session', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_authentication ); ?>">
-					<i class="<?php echo bp_get_zoom_webinar_authentication() ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo bp_get_zoom_webinar_authentication() ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span><?php esc_html_e( 'Only authenticated users can join', 'buddyboss-pro' ); ?></span>
 				</div>
 				<div class="bb-webinar-option <?php echo esc_attr( $bp_get_zoom_webinar_auto_recording ); ?>">
-					<i class="<?php echo in_array( bp_get_zoom_webinar_auto_recording(), array( 'cloud', 'local' ), true ) ? esc_html( 'bb-icon-check-small' ) : esc_html( 'bb-icon-close' ); ?>"></i>
+					<i class="<?php echo in_array( bp_get_zoom_webinar_auto_recording(), array( 'cloud', 'local' ), true ) ? esc_html( 'bb-icon-l bb-icon-check' ) : esc_html( 'bb-icon-l bb-icon-times' ); ?>"></i>
 					<span>
 						<?php
 						if ( 'cloud' === bp_get_zoom_webinar_auto_recording() ) {

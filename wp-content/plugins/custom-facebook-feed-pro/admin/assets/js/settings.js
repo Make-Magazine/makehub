@@ -224,7 +224,6 @@ var cffSettings = new Vue({
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if ( data.success == false ) {
                     this.licenseStatus = 'inactive';
                     this.hasError = true;
@@ -303,7 +302,6 @@ var cffSettings = new Vue({
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 this.loading = false;
                 if ( data.success == true ) {
                     this.extensionFieldHasError = false;
@@ -358,7 +356,6 @@ var cffSettings = new Vue({
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 this.loading = false;
                 if ( data.success == true ) {
                     this.extensionFieldHasError = false;
@@ -440,7 +437,6 @@ var cffSettings = new Vue({
                         this.pressedBtnName = null;
                         this.recheckLicenseStatus = null;
                     }.bind(this), 3000);
-                    console.log(data);
                 }
                 return;
             });
@@ -602,7 +598,6 @@ var cffSettings = new Vue({
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if ( data.success == false ) {
                     this.optimizeCacheStatus = 'error';
                     return;
@@ -977,8 +972,6 @@ var cffSettings = new Vue({
         viewSourceInstances : function(source){
             var self = this;
             self.viewsActive.instanceSourceActive = source;
-
-            console.log(source);
             //self.movePopUp();
         },
     }

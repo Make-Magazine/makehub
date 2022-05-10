@@ -663,7 +663,7 @@ registerBlockType( 'bp-zoom-meeting/create-meeting', {
 
 									zoomMeetingFetch( meeting_data ).then( ( response ) => {
 										target.removeAttribute( 'disabled' );
-										target.innerHTML = '<i class="bb-icon-zap"></i>';
+										target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i>';
 										wp.data.dispatch( 'core/notices' ).createNotice(
 											'success',
 											__( 'Meeting Synced.', 'buddyboss-pro' ),
@@ -732,7 +732,7 @@ registerBlockType( 'bp-zoom-meeting/create-meeting', {
 							{meetingId > 1 || '' !== meetingId ?
 								<Button isLink onClick={(e) => {
 									var target = e.currentTarget;
-									target.innerHTML = '<i class="bb-icon-loader animate-spin"></i> ' + __( 'Sync', 'buddyboss-pro' );
+									target.innerHTML = '<i class="bb-icon-l bb-icon-spinner animate-spin"></i> ' + __( 'Sync', 'buddyboss-pro' );
 									target.setAttribute( 'disabled', true );
 									const meeting_data = {
 										'_wpnonce': bpZoomMeetingBlock.bp_zoom_meeting_nonce,
@@ -741,7 +741,7 @@ registerBlockType( 'bp-zoom-meeting/create-meeting', {
 
 									zoomMeetingFetch( meeting_data ).then( ( response ) => {
 										target.removeAttribute( 'disabled' );
-										target.innerHTML = '<i class="bb-icon-zap"></i> ' + __( 'Sync', 'buddyboss-pro' );
+										target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + __( 'Sync', 'buddyboss-pro' );
 										wp.data.dispatch( 'core/notices' ).createNotice(
 											'success',
 											__( 'Meeting Synced.', 'buddyboss-pro' ),
@@ -768,7 +768,7 @@ registerBlockType( 'bp-zoom-meeting/create-meeting', {
 									} )
 										.catch( ( error ) => {
 											target.removeAttribute( 'disabled' );
-											target.innerHTML = '<i class="bb-icon-zap"></i> ' + __( 'Sync', 'buddyboss-pro' );
+											target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + __( 'Sync', 'buddyboss-pro' );
 											wp.data.dispatch( 'core/notices' ).createNotice(
 												'error',
 												error.error,
@@ -778,7 +778,7 @@ registerBlockType( 'bp-zoom-meeting/create-meeting', {
 											);
 										} );
 								}}>
-									<i className="bb-icon-zap"></i> { __( 'Sync', 'buddyboss-pro' ) }
+									<i className="bb-icon-l bb-icon-bolt"></i> { __( 'Sync', 'buddyboss-pro' ) }
 								</Button>
 								:
 								''
@@ -2225,7 +2225,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 
 										zoomWebinarFetch( webinar_data ).then( ( response ) => {
 											target.removeAttribute( 'disabled' );
-											target.innerHTML = '<i class="bb-icon-zap"></i>';
+											target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i>';
 											wp.data.dispatch( 'core/notices' ).createNotice(
 												'success',
 												__( 'Webinar Synced.', 'buddyboss-pro' ),
@@ -2294,7 +2294,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 								{webinarId > 1 || '' !== webinarId ?
 									<Button isLink onClick={( e ) => {
 										var target = e.currentTarget;
-										target.innerHTML = '<i class="bb-icon-loader animate-spin"></i> ' + __( 'Sync', 'buddyboss-pro' );
+										target.innerHTML = '<i class="bb-icon-l bb-icon-spinner animate-spin"></i> ' + __( 'Sync', 'buddyboss-pro' );
 										target.setAttribute( 'disabled', true );
 										const webinar_data = {
 											'_wpnonce': bpZoomMeetingBlock.bp_zoom_webinar_nonce,
@@ -2303,7 +2303,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 
 										zoomWebinarFetch( webinar_data ).then( ( response ) => {
 											target.removeAttribute( 'disabled' );
-											target.innerHTML = '<i class="bb-icon-zap"></i> ' + __( 'Sync', 'buddyboss-pro' );
+											target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + __( 'Sync', 'buddyboss-pro' );
 											wp.data.dispatch( 'core/notices' ).createNotice(
 												'success',
 												__( 'Webinar Synced.', 'buddyboss-pro' ),
@@ -2330,7 +2330,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 										} )
 											.catch( ( error ) => {
 												target.removeAttribute( 'disabled' );
-												target.innerHTML = '<i class="bb-icon-zap"></i> ' + __( 'Sync', 'buddyboss-pro' );
+												target.innerHTML = '<i class="bb-icon-l bb-icon-bolt"></i> ' + __( 'Sync', 'buddyboss-pro' );
 												wp.data.dispatch( 'core/notices' ).createNotice(
 													'error',
 													error.error,
@@ -2340,7 +2340,7 @@ if ( bpZoomMeetingBlock.webinar_enabled ) {
 												);
 											} );
 									}}>
-										<i className="bb-icon-zap"></i> {__( 'Sync', 'buddyboss-pro' )}
+										<i className="bb-icon-l bb-icon-bolt"></i> {__( 'Sync', 'buddyboss-pro' )}
 									</Button>
 									:
 									''

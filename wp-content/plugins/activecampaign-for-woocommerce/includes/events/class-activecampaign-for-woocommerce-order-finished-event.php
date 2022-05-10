@@ -11,20 +11,12 @@
  */
 
 use Activecampaign_For_Woocommerce_Admin as Admin;
-use Activecampaign_For_Woocommerce_AC_Contact as AC_Contact;
-use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
-use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
 use Activecampaign_For_Woocommerce_AC_Contact_Repository as AC_Contact_Repository;
-use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
-use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
 use Activecampaign_For_Woocommerce_Logger as Logger;
-use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
-use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
-use AcVendor\GuzzleHttp\Exception\GuzzleException;
-use Brick\Money\Money;
+use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 
 /**
  * The Order_Finished Event Class.
@@ -72,118 +64,11 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	private $admin;
 
 	/**
-	 * The guest customer email address
-	 *
-	 * @var string
-	 */
-	private $customer_email;
-
-	/**
-	 * The guest customer first name
-	 *
-	 * @var string
-	 */
-	private $customer_first_name;
-
-	/**
-	 * The guest customer last name
-	 *
-	 * @var string
-	 */
-	private $customer_last_name;
-
-	/**
-	 * The WooCommerce customer object
-	 *
-	 * @var WC_Customer
-	 */
-	private $customer_woo;
-
-	/**
-	 * The resulting existing or newly created AC ecom customer
-	 *
-	 * @var Ecom_Model
-	 */
-	private $customer_ac;
-
-	/**
-	 * Hash of the WooCommerce session ID plus the guest customer email.
-	 * Used to identify an order as being created in a pending state.
-	 *
-	 * @var string
-	 */
-	private $external_checkout_id;
-
-	/**
-	 * The native ecom order object used to
-	 * create or update an order in AC
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Order
-	 */
-	private $ecom_order;
-
-	/**
-	 * The resulting existing or newly created AC ecom order
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Model_Interface
-	 */
-	private $order_ac;
-
-	/**
 	 * The custom ActiveCampaign logger
 	 *
 	 * @var Activecampaign_For_Woocommerce_Logger
 	 */
 	private $logger;
-
-	/**
-	 * The WooCommerce session
-	 *
-	 * @var WC_Session|null
-	 */
-	private $wc_session;
-
-	/**
-	 * The Ecom Product Factory
-	 *
-	 * @var Ecom_Product_Factory
-	 */
-	private $product_factory;
-
-	/**
-	 * The Ecom Connection ID
-	 *
-	 * @var int
-	 */
-	private $connection_id;
-
-	/**
-	 * The contact repository.
-	 *
-	 * @var AC_Contact_Repository
-	 */
-	private $contact_repository;
-
-	/**
-	 * The customer phone number.
-	 *
-	 * @var string
-	 */
-	private $customer_phone;
-
-	/**
-	 * The AC contact object.
-	 *
-	 * @var object AC_Contact.
-	 */
-	private $contact_ac;
-
-	/**
-	 * The accepts marketing checkbox choice
-	 *
-	 * @var string
-	 */
-	private $accepts_marketing;
 
 	/**
 	 * Abandoned cart utilities class
@@ -202,33 +87,20 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	/**
 	 * Activecampaign_For_Woocommerce_Cart_Emptied_Event constructor.
 	 *
-	 * @param     Activecampaign_For_Woocommerce_Admin|null              $admin     The Admin object.
-	 * @param     Activecampaign_For_Woocommerce_Ecom_Order_Factory|null $factory     The ecom order factory.
-	 * @param     Ecom_Order_Repository|null                             $order_repository     The Ecom Order Repository.
-	 * @param     Ecom_Product_Factory|null                              $product_factory     The Ecom Product Factory.
-	 * @param     Ecom_Customer_Repository|null                          $customer_repository     The Ecom Customer Repository.
-	 * @param     AC_Contact_Repository|null                             $contact_repository     The AC Contact Repository.
-	 * @param     Logger|null                                            $logger     The Logger.
-	 * @param     Activecampaign_For_Woocommerce_Order_Utilities         $order_utilities The order utilities object.
+	 * @param     Activecampaign_For_Woocommerce_Admin|null               $admin     The Admin object.
+	 * @param     Logger|null                                             $logger     The Logger.
+	 * @param     Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities $abandoned_cart_util The abandoned cart utilities object.
+	 * @param     Activecampaign_For_Woocommerce_Order_Utilities          $order_utilities     The order utilities object.
 	 */
 	public function __construct(
 		Admin $admin,
-		Ecom_Order_Factory $factory,
-		Ecom_Order_Repository $order_repository,
-		Ecom_Product_Factory $product_factory,
-		Ecom_Customer_Repository $customer_repository,
-		AC_Contact_Repository $contact_repository,
-		Logger $logger = null,
+		Logger $logger,
+		Abandoned_Cart_Utilities $abandoned_cart_util,
 		Order_Utilities $order_utilities
 	) {
 		$this->admin               = $admin;
-		$this->factory             = $factory;
-		$this->order_repository    = $order_repository;
-		$this->product_factory     = $product_factory;
-		$this->customer_repository = $customer_repository;
-		$this->contact_repository  = $contact_repository;
 		$this->logger              = $logger;
-		$this->abandoned_cart_util = new Abandoned_Cart_Utilities();
+		$this->abandoned_cart_util = $abandoned_cart_util;
 		$this->order_utilities     = $order_utilities;
 	}
 
@@ -239,832 +111,146 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	 * @param     int $order_id     $order_id     The order ID.
 	 */
 	public function checkout_completed( $order_id ) {
-		try {
-			if ( ! $this->logger ) {
-				$this->logger = new Logger();
-			}
-
-			// get order
-			if ( ! empty( $this->admin->get_storage() ) && isset( $this->admin->get_storage()['connection_id'] ) ) {
-				$this->connection_id = $this->admin->get_storage()['connection_id'];
-
-				$order = wc_get_order( $order_id );
-
-				if ( isset( $order ) && $order->get_id() && $order->get_billing_email() && $this->verify_order_status( $order->get_status() ) ) {
-					// init functions
-					if ( is_user_logged_in() ) {
-						if ( ! empty( wc()->customer->get_email() ) ) {
-							$this->customer_email = wc()->customer->get_email();
-						} elseif ( ! empty( wc()->customer->get_billing_email() ) ) {
-							$this->customer_email = wc()->customer->get_billing_email();
-						}
-
-						$this->customer_first_name = wc()->customer->get_first_name();
-						$this->customer_last_name  = wc()->customer->get_last_name();
-					}
-
-					if ( empty( $this->customer_email ) ) {
-						$this->customer_email = $order->get_billing_email();
-					}
-
-					if ( empty( $this->customer_first_name ) ) {
-						$this->customer_first_name = $order->get_billing_first_name();
-					}
-
-					if ( empty( $this->customer_last_name ) ) {
-						$this->customer_last_name = $order->get_billing_last_name();
-					}
-
-					// Check order for accepts marketing meta info
-					if ( is_user_logged_in() ) {
-						$this->accepts_marketing = User_Meta_Service::get_current_user_accepts_marketing();
-					} else {
-						$this->accepts_marketing = $order->get_meta( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME );
-					}
-
-					if ( ! empty( wc()->cart ) ) {
-						// if there is a cart the event origin is triggered by customer
-						$this->customer = wc()->customer;
-
-						if ( empty( $this->customer->get_email() ) ) {
-							$this->customer->set_email( $order->get_billing_email() );
-						}
-
-						if ( empty( $this->customer->get_first_name() ) ) {
-							$this->customer->set_first_name( $order->get_billing_first_name() );
-						}
-
-						if ( empty( $this->customer->get_last_name() ) ) {
-							$this->customer->set_last_name( $order->get_billing_last_name() );
-						}
-
-						if ( ! empty( wc()->customer->get_billing_phone() ) ) {
-							$this->customer_phone = wc()->customer->get_billing_phone();
-						} elseif ( ! empty( $order->get_billing_phone() ) ) {
-							$this->customer_phone = $order->get_billing_phone();
-						}
-					} else {
-						// Customer is empty
-						// This occurs generally as an update by a plugin or admin.
-						// Admin has null values for wc() objects
-						// we need the customer object
-						$user_id = $order->get_user_id();
-						$this->build_customer_from_user_meta( $user_id );
-						// $this->logger->debug( 'Finished event: built a customer from user meta' );
-						if ( User_Meta_Service::get_user_accepts_marketing( $user_id ) !== $this->accepts_marketing ) {
-							User_Meta_Service::set_user_accepts_marketing( $user_id, $this->accepts_marketing );
-						}
-					}
-
-					if ( empty( $this->customer->get_email() ) ) {
-						$user_id = $order->get_user_id();
-						$this->build_customer_from_user_meta( $user_id );
-					}
-
-					$this->customer_woo = $this->customer;
-
-					if ( empty( $this->customer_phone ) && ! empty( $order->get_billing_phone() ) ) {
-						$this->customer_phone = $order->get_billing_phone();
-					}
-
-					$this->setup_woocommerce_contact();
-					$this->setup_woocommerce_customer();
-
-					// we need the order data
-					// see if the order exists in AC already
-					$this->get_ac_order( $order );
-
-					// Update the order with the correct external checkout ID
-					$order->update_meta_data( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME, $this->external_checkout_id );
-
-					// Redundant update the order with the correct external checkout ID in case we find the order ref
-					update_post_meta( $order->get_id(), ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTENT_CART_ID_NAME, $this->external_checkout_id );
-
-					$find_or_create_ac_order = $this->setup_woocommerce_order( $order );
-
-					if ( 1 === $find_or_create_ac_order ) {
-						// Existing order found in AC, try to update it
-						// $this->logger->debug( 'order exists, update it' );
-						$this->update_ac_order();
-					}
-
-					if ( ! $find_or_create_ac_order ) {
-						// 0 was returned, meaning some kind of exception
-						$this->logger->error(
-							'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not create an order in AC, please review log messages.',
-							[
-								'order_id'      => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
-								'email'         => $this->customer_email,
-								'connection_id' => $this->connection_id,
-							]
-						);
-					} else {
-						// Mark the sync time in the order
-						$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-						try {
-							update_post_meta( $order->get_id(), 'activecampaign_for_woocommerce_last_synced', $date->format( 'Y-m-d H:i:s e' ) );
-						} catch ( Throwable $t ) {
-							$this->logger->warning(
-								'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not create datetime or save sync metadata to the order.',
-								[
-									'message'  => $t->getMessage(),
-									'date'     => $date->format( 'Y-m-d H:i:s e' ),
-									'order_id' => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
-									'trace'    => $this->logger->clean_trace( $t->getTrace() ),
-								]
-							);
-						}
-
-						$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
-
-						if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_order( $order ) ) {
-							$this->logger->warning(
-								'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by order.',
-								[
-									'customer_id' => method_exists( $order, 'get_customer_id' ) ? $order->get_customer_id() : null,
-									'user_id'     => method_exists( $order, 'get_user_id' ) ? $order->get_user_id() : null,
-								]
-							);
-
-							if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_customer() ) {
-								$this->logger->warning( 'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by customer.' );
-
-								if ( ! $this->abandoned_cart_util->delete_abandoned_cart_by_filter( 'activecampaignfwc_order_external_uuid', wc()->session->get_session_data()->activecampaignfwc_order_external_uuid ) ) {
-									$this->logger->warning(
-										'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not delete the abandoned cart entry from table by AC UUID.',
-										[
-											'activecampaignfwc_order_external_uuid' => wc()->session->get_session_data()->activecampaignfwc_order_external_uuid,
-										]
-									);
-								}
-							}
-						}
-					}
-				}
-			} else {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not retrieve or find connection id.',
-					[
-						'connection_id' => $this->connection_id,
-					]
-				);
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: There was a fatal error in the checkout AC sync process.',
-				[
-					'connection_id' => $this->connection_id,
-					'message'       => $t->getMessage(),
-					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
+		if ( ! $this->logger ) {
+			$this->logger = new Logger();
 		}
-	}
 
-	/**
-	 * Builds a customer from the user_id using stored meta
-	 *
-	 * @param     int $user_id     The user id.
-	 *
-	 * @return bool
-	 */
-	private function build_customer_from_user_meta( $user_id ) {
-		$this->customer = new Ecom_Customer();
-		$this->customer->set_connectionid( $this->connection_id );
-		$this->customer->set_email( $this->customer_email );
-		$this->customer->set_first_name( get_user_meta( $user_id, 'first_name', true ) );
-		$this->customer->set_last_name( get_user_meta( $user_id, 'last_name', true ) );
-		$this->customer->set_accepts_marketing( $this->accepts_marketing );
+		global $wpdb;
 
-		return true;
-	}
+		$wc_order           = wc_get_order( $order_id );
+		$customer_utilities = new Customer_Utilities();
+		$customer_data      = $customer_utilities->build_customer_data();
+		$cart_uuid          = $this->abandoned_cart_util->get_or_generate_uuid();
+		$externalcheckoutid = $this->abandoned_cart_util->generate_externalcheckoutid( $customer_data['id'], $customer_data['email'], $cart_uuid );
+		$abandoned_cart_id  = wc()->session->get( 'activecampaign_abandoned_cart_id' );
 
-	/**
-	 * Sets up the order and sends to AC
-	 *
-	 * @param     WC_Order $order     The order object.
-	 *
-	 * @return int
-	 * @throws Exception Does not stop.
-	 */
-	private function setup_woocommerce_order( $order ) {
-		// Setup the woocommerce cart
-		try {
-			// setup the ecom order
-			if ( ! empty( wc()->cart ) && method_exists( $this->customer_woo, 'get_email' ) && ! empty( $this->customer_woo->get_email() ) ) {
-				$this->ecom_order = $this->factory->from_woocommerce( wc()->cart, $this->customer_woo );
-			} elseif ( $this->order_ac && method_exists( $this->order_ac, 'get_email' ) && ! empty( $this->order_ac->get_email() ) ) {
-				// Use the order from ActiveCampaign as the base for our order object
-				$this->ecom_order = $this->order_ac;
-			} else {
-				$this->ecom_order = new Ecom_Order();
-			}
-
-			// add the data to the order factory
-			if (
-				$this->ecom_order && (
-					! empty( $this->customer->get_email() ) ||
-					! empty( $order->get_billing_email() )
+		if ( ! empty( $abandoned_cart_id ) ) {
+			$stored_id = $wpdb->get_var(
+			// phpcs:disable
+				$wpdb->prepare(
+					'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+				WHERE id = %d 
+				OR ac_externalcheckoutid = %s 
+				OR activecampaignfwc_order_external_uuid = %s',
+					[ $abandoned_cart_id, $externalcheckoutid, $cart_uuid ]
 				)
-			) {
-				if ( $this->customer && $this->customer->get_email() ) {
-					$this->ecom_order->set_email( $this->customer->get_email() );
-				} elseif ( wc()->customer && wc()->customer->get_email() ) {
-					// Set the email address from customer
-					$this->ecom_order->set_email( wc()->customer->get_email() );
-				} elseif ( get_user_meta( $order->get_user_id(), 'email' ) ) {
-					// Set the email address from user
-					$this->ecom_order->set_email( get_user_meta( $order->get_user_id(), 'email' ) );
-				} elseif ( $order->get_billing_email() ) {
-					// Set the email address from order
-					$this->ecom_order->set_email( $order->get_billing_email() );
-				} else {
-					$this->logger->warning(
-						'Order_Finished_Event: There was an issue setting the email on this order. This order may not be synced to ActiveCampaign.',
-						[
-							'order_number' => $order->get_order_number(),
-							'order'        => $order,
-						]
-					);
-				}
-
-				$created_date = new DateTime( $order->get_date_created(), new DateTimeZone( 'UTC' ) );
-				$this->ecom_order->set_external_created_date( $created_date->format( DATE_ATOM ) );
-				$this->ecom_order->set_customerid( $this->customer_ac->get_id() );
-				$this->ecom_order->set_currency( get_woocommerce_currency() );
-				$this->ecom_order->set_order_number( $order->get_order_number() );
-				$this->ecom_order->set_externalid( $order->get_id() );
-				$this->ecom_order->set_discount_amount( Money::of( wc_format_decimal( $order->get_total_discount(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-				$this->ecom_order->set_shipping_amount( Money::of( wc_format_decimal( $order->get_shipping_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-				$this->ecom_order->set_shipping_method( $order->get_shipping_method() );
-				$this->ecom_order->set_tax_amount( Money::of( wc_format_decimal( $order->get_total_tax(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-
-				if ( ! empty( User_Meta_Service::get_current_cart_ac_id( get_current_user_id() ) ) ) {
-					$this->ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( get_current_user_id() ) );
-				}
-
-				// If the event is triggered by customer add these values, otherwise do not update them
-				if ( ! empty( wc()->cart ) ) {
-					$this->ecom_order->set_total_price( $this->get_cart_total( wc()->cart ) );
-				}
-
-				// If we see the total is empty then set total from order
-				if ( empty( $this->ecom_order->get_total_price() ) ) {
-					$this->ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-				}
-
-				// If we see the total is still empty then re-calculate then set total from order
-				if ( empty( $this->ecom_order->get_total_price() ) ) {
-					$order->calculate_totals();
-					$this->ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
-				}
-
-				// If it's still empty assume the total is zero
-				if ( empty( $this->ecom_order->get_total_price() ) ) {
-					$this->ecom_order->set_total_price( 0 );
-				}
-
-				$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-				$this->ecom_order->set_order_url( wc_get_cart_url() );
-				$this->ecom_order->set_order_date( $date->format( DATE_ATOM ) );
-			}
-
-			$this->ecom_order->set_connectionid( $this->connection_id );
-			$this->ecom_order->set_source( '1' );
-
-			// Catch any missing data and call it out
-			if ( ! $this->ecom_order->validate_model() ) {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Failed to validate a required field in the model. This order will not sync to ActiveCampaign correctly so this order will not be synced.',
-					[
-						'order_number' => method_exists( $order, 'get_order_number' ) ? $order->get_order_number() : null,
-					]
-				);
-
-				return 0;
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: There was an error creating the order object for AC:',
-				[
-					'message'              => $t->getMessage(),
-					'stack_trace'          => $this->logger->clean_trace( $t->getTrace() ),
-					'ecom_order'           => method_exists( $this->ecom_order, 'serialize_to_array' ) ? $this->ecom_order->serialize_to_array() : null,
-					'external_checkout_id' => $this->external_checkout_id,
-					'connection_id'        => $this->connection_id,
-				]
+			// phpcs:enable
 			);
-
-			return 0;
+		} else {
+			$stored_id = $wpdb->get_var(
+			// phpcs:disable
+				$wpdb->prepare(
+					'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+				WHERE ac_externalcheckoutid = %s 
+				OR activecampaignfwc_order_external_uuid = %s',
+					[ $externalcheckoutid, $cart_uuid ]
+				)
+			// phpcs:enable
+			);
 		}
 
 		try {
-			$products = null;
+			$dt = new DateTime( $wc_order->get_date_created(), new DateTimeZone( 'UTC' ) );
+			$dt->format( 'Y-m-d H:i:s' );
 
-			if ( ! empty( wc()->cart ) ) {
-				$products = $this->product_factory->create_products_from_cart_contents( wc()->cart->get_cart_contents() );
-			}
-
-			if ( empty( $products ) ) {
-				// There is no cart object, build the products and add to the order
-				$products = [];
-				if ( ! empty( $order->get_items() ) ) {
-					// Get and Loop Over Order Items to populate products
-					foreach ( $order->get_items() as $item_id => $item ) {
-						$product = $this->build_ecom_product( $item );
-
-						if ( null !== $product ) {
-							$products[ $item_id ] = $product;
-						} else {
-							$this->logger->warning(
-								'Activecampaign_For_Woocommerce_Order_Finished_Event: A product passed back as null.',
-								[
-									'email'                => $this->customer->get_email(),
-									'external_checkout_id' => $this->external_checkout_id,
-									'connection_id'        => $this->connection_id,
-									'item_id'              => $item_id,
-									'item'                 => $item,
-								]
-							);
-						}
-					}
-
-					// Add products to list
-					if ( ! empty( $products ) && count( $products ) > 0 ) {
-						array_walk( $products, [ $this->ecom_order, 'push_order_product' ] );
-					} else {
-						$this->logger->warning(
-							'Activecampaign_For_Woocommerce_Order_Finished_Event: There was an issue creating the product objects for AC',
-							[
-								'email'                => $this->customer->get_email(),
-								'external_checkout_id' => $this->external_checkout_id,
-								'connection_id'        => $this->connection_id,
-							]
-						);
-					}
-				} else {
-					$this->logger->warning(
-						'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not retrieve items from order. Products could not be populated.',
-						[
-							'email'        => $this->customer->get_email(),
-							'order_number' => $order->get_order_number(),
-						]
-					);
-				}
-			}
+			$store_data = [
+				'synced_to_ac'                          => 0,
+				'customer_id'                           => $customer_data['id'],
+				'customer_email'                        => $customer_data['email'],
+				'customer_first_name'                   => $customer_data['first_name'],
+				'customer_last_name'                    => $customer_data['last_name'],
+				'wc_order_id'                           => $order_id,
+				'order_date'                            => $dt->format( 'Y-m-d H:i:s' ),
+				'activecampaignfwc_order_external_uuid' => $cart_uuid,
+				'ac_externalcheckoutid'                 => $externalcheckoutid,
+				'customer_ref_json'                     => null,
+				'user_ref_json'                         => null,
+				'cart_ref_json'                         => null,
+				'cart_totals_ref_json'                  => null,
+				'removed_cart_contents_ref_json'        => null,
+			];
 		} catch ( Throwable $t ) {
 			$this->logger->error(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: There was an error creating the products objects for AC',
+				'There was an issue forming the order data.',
 				[
-					'message'              => $t->getMessage(),
-					'stack_trace'          => $this->logger->clean_trace( $t->getTrace() ),
-					'email'                => $this->customer_email,
-					'external_checkout_id' => $this->external_checkout_id,
-					'connection_id'        => $this->connection_id,
-					'cart'                 => method_exists( wc()->cart, 'get_item_data' ) ? wc()->cart->get_item_data() : null,
+					'message'           => $t->getMessage(),
+					'abandoned_cart_id' => $stored_id,
+					'trace'             => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
 
-		if ( ! $this->order_ac ) {
-			try {
-				$this->logger->debug(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Creating order in ActiveCampaign',
+		try {
+			if ( ! empty( $stored_id ) ) {
+				$wpdb->update(
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$store_data,
 					[
-						'serialized_order' => wp_json_encode( $this->ecom_order->serialize_to_array() ),
+						'id' => $stored_id,
 					]
 				);
-
-				// A new order that was never abandoned should never have an externalcheckoutid, do not send this to hosted
-				$this->ecom_order->set_externalcheckoutid( null );
-
-				// Make sure all meta data was saved
-				$order->save_meta_data();
-
-				// Try to create the new order in AC
-				$this->order_ac = $this->order_repository->create( $this->ecom_order );
-
-				return 2;
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Order finished: Could not send/create order in AC: ',
+				$this->schedule_sync_job( $stored_id );
+			} elseif ( ! empty( $abandoned_cart_id ) ) {
+				$wpdb->update(
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$store_data,
 					[
-						'message'              => $t->getMessage(),
-						'stack_trace'          => $this->logger->clean_trace( $t->getTrace() ),
-						'email'                => $this->customer_email,
-						'external_checkout_id' => $this->external_checkout_id,
-						'connection_id'        => $this->connection_id,
+						'id' => $abandoned_cart_id,
 					]
 				);
-
-				return 0;
-			}
-		} else {
-			return 1;
-		}
-	}
-
-	/**
-	 * Get the AC order.
-	 *
-	 * @param     object $order     The order object.
-	 *
-	 * @return bool
-	 */
-	private function get_ac_order( $order ) {
-		// Let's try to create the order
-		$this->order_ac = null;
-
-		if ( ! empty( wc()->session ) ) {
-			if ( ! $this->wc_session ) {
-				// not available for admin
-				$this->wc_session = wc()->session;
-			}
-
-			if ( wc()->customer->get_id() ) {
-				$customer_id = wc()->customer->get_id();
 			} else {
-				$customer_id = wc()->session->get_customer_id();
-			}
-
-			$this->external_checkout_id = $this->abandoned_cart_util->generate_externalcheckoutid(
-				$customer_id,
-				$this->customer_email
-			);
-		}
-
-		if ( ! empty( $this->external_checkout_id ) ) {
-			try {
-				// Try to find the order by it's externalcheckoutid
-				$this->order_ac = $this->order_repository->find_by_externalcheckoutid( $this->external_checkout_id );
-
-				if ( $this->order_ac->get_externalcheckoutid() === $this->external_checkout_id ) {
-					$this->logger->info(
-						'Activecampaign_For_Woocommerce_Order_Finished_Event: Order found in ActiveCampaign by externalcheckoutid',
-						[
-							'externalcheckoutid' => $this->external_checkout_id,
-							'order_ac'           => $this->order_ac->serialize_to_array(),
-						]
-					);
-
-					return true;
-				} else {
-					$this->order_ac = null;
-					return false;
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->debug(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: No existing order with this external_checkout_id',
-					[
-						'external_checkout_id' => $this->external_checkout_id,
-						'connection_id'        => $this->connection_id,
-						'message'              => $t->getMessage(),
-					]
+				$stored_id = $wpdb->insert(
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$store_data
 				);
 			}
-		}
 
-		if ( ! $this->order_ac && ! empty( $order->get_order_number() ) ) {
-			try {
-				// Try to find the order by it's externalid
-				$this->order_ac = $this->order_repository->find_by_externalid( $order->get_order_number() );
-				$this->logger->info(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Order found in ActiveCampaign by externalid',
-					[
-						'order_number' => $order->get_order_number(),
-						'order_ac'     => $this->order_ac->serialize_to_array(),
-					]
-				);
-
-				// Double check that the order we received matches in case of bad responses
-				if ( $this->order_ac->get_order_number() === $order->get_order_number() ) {
-					return true;
-				} else {
-					$this->order_ac = null;
-					return false;
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->debug(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not find existing order by this externalid',
-					[
-						'connection_id' => $this->connection_id,
-						'order_number'  => method_exists( $order, 'get_order_number' ) ? $order->get_order_number() : null,
-						'message'       => $t->getMessage(),
-					]
-				);
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Builds an ecom product from the item passed in.
-	 *
-	 * @param     object $item     The product object.
-	 *
-	 * @return Activecampaign_For_Woocommerce_Ecom_Product
-	 */
-	private function build_ecom_product( $item ) {
-		$product_data = $this->order_utilities->get_wc_product_from_id( $item->get_product_id() );
-
-		$product = [
-			'data'         => $product_data,
-			'product_id'   => $item->get_product_id(),
-			'variation_id' => $item->get_variation_id(),
-			'product'      => $item->get_product(),
-			'name'         => $item->get_name(),
-			'quantity'     => $item->get_quantity(),
-			'subtotal'     => $item->get_subtotal(),
-			'total'        => $item->get_total(),
-			'tax'          => $item->get_subtotal_tax(),
-			'taxclass'     => $item->get_tax_class(),
-			'taxstat'      => $item->get_tax_status(),
-			'allmeta'      => $item->get_meta_data(),
-			'somemeta'     => $item->get_meta( '_whatever', true ),
-			'type'         => $item->get_type(),
-		];
-
-		return $this->product_factory->product_from_cart_content( $product );
-	}
-
-	/**
-	 * Creates or updates the contact in ActiveCampaign.
-	 *
-	 * @return bool
-	 * @throws Throwable Activecampaign_For_Woocommerce_Resource_Not_Found_Exception.
-	 */
-	private function setup_woocommerce_contact() {
-		try {
-			$this->contact_ac = $this->contact_repository->find_by_email( $this->customer_email );
-		} catch ( Throwable $t ) {
-			$this->logger->warning(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not find contact by email in AC',
-				[
-					'customer_email' => $this->customer_email,
-					'message'        => $t->getMessage(),
-				]
-			);
-		}
-
-		if ( ! empty( $this->contact_ac ) ) {
-			// We have a contact but do we need to update the data?
-			$updated_contact = new AC_Contact();
-
-			try {
-				$updated_contact->set_id( $this->contact_ac->get_id() );
-				$updated_contact->set_email( $this->customer_email );
-				$updated_contact->set_first_name( $this->customer_first_name );
-				$updated_contact->set_last_name( $this->customer_last_name );
-				$updated_contact->set_phone( $this->customer_phone );
-			} catch ( Throwable $t ) {
+			if ( $wpdb->last_error ) {
 				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not set data to an updated contact',
+					'Save finished order command: There was an error creating/updating an abandoned cart record.',
 					[
-						'ac_contact_id'  => method_exists( $this->contact_ac, 'get_id' ) ? $this->contact_ac->get_id() : null,
-						'customer_email' => $this->customer_email,
-						'message'        => $t->getMessage(),
+						'wpdb_last_error' => $wpdb->last_error,
+						'stored_id'       => $stored_id,
 					]
 				);
 			}
-
-			if ( ! empty( array_diff( $this->contact_ac->serialize_to_array(), $updated_contact->serialize_to_array() ) ) ) {
-				try {
-					$this->logger->debug(
-						'Activecampaign_For_Woocommerce_Order_Finished_Event: This contact needs to be updated.',
-						[
-							'original contact' => [
-								'id'         => $this->contact_ac->get_id(),
-								'first_name' => $this->contact_ac->get_first_name(),
-								'last_name'  => $this->contact_ac->get_last_name(),
-								'email'      => $this->contact_ac->get_email(),
-								'phone'      => $this->contact_ac->get_phone(),
-							],
-							'updated contact'  => [
-								'id'         => $updated_contact->get_id(),
-								'first_name' => $updated_contact->get_first_name(),
-								'last_name'  => $updated_contact->get_last_name(),
-								'email'      => $updated_contact->get_email(),
-								'phone'      => $updated_contact->get_phone(),
-							],
-							'array_diff'       => array_diff( $this->contact_ac->serialize_to_array(), $updated_contact->serialize_to_array() ),
-						]
-					);
-					$this->contact_ac = $this->contact_repository->update( $updated_contact );
-
-					return true;
-				} catch ( Throwable $t ) {
-					$this->logger->error(
-						'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not update the contact in AC!',
-						[
-							'array_diff'  => array_diff( $this->contact_ac->serialize_to_array(), $updated_contact->serialize_to_array() ),
-							'message'     => $t->getMessage(),
-							'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
-						]
-					);
-
-					return false;
-				}
-			}
-		} else {
-			// add new contact
-			$new_contact = new AC_Contact();
-
-			try {
-				// Try to create the new contact in AC
-				$new_contact->set_email( $this->customer_email );
-				$new_contact->set_first_name( $this->customer_first_name );
-				$new_contact->set_last_name( $this->customer_last_name );
-				$new_contact->set_phone( $this->customer_phone );
-
-				$this->logger->info(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Creating new contact in ActiveCampaign ',
-					[
-						'serialized' => wp_json_encode( $new_contact->serialize_to_array() ),
-					]
-				);
-
-				$this->contact_ac = $this->contact_repository->create( $new_contact );
-
-				return true;
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not set data to a new contact object or create customer in AC: ',
-					[
-						'connection_id' => $this->connection_id,
-						'email'         => $this->customer_email,
-						'first_name'    => $this->customer_first_name,
-						'last_name'     => $this->customer_last_name,
-						'phone'         => $this->customer_phone,
-						'message'       => $t->getMessage(),
-						'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-					]
-				);
-
-				return false;
-			}
-		}
-	}
-
-	/**
-	 * Sets up and sends the customer for AC
-	 *
-	 * @throws GuzzleException Is not fatal.
-	 */
-	private function setup_woocommerce_customer() {
-		// setup_woocommerce_customer
-		$this->customer_woo->set_email( $this->customer_email );
-
-		// find_or_create_ac_customer
-		$this->customer_ac = null;
-		try {
-			// Try to find the customer in AC
-			$this->customer_ac = $this->customer_repository->find_by_email_and_connection_id( $this->customer_email, $this->connection_id );
-		} catch ( Throwable $t ) {
-			$this->logger->debug(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not find existing customer ',
-				[
-					'customer_email' => $this->customer_email,
-					'connection_id'  => $this->connection_id,
-					'message'        => $t->getMessage(),
-				]
-			);
-		}
-
-		if ( $this->customer_ac ) {
-			try {
-				// Update the customer accepts marketing value
-				if ( $this->accepts_marketing !== $this->customer_ac->get_accepts_marketing() ) {
-					$this->customer_ac->set_accepts_marketing( $this->accepts_marketing );
-					$this->customer_repository->update( $this->customer_ac );
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Something went wrong with setting the customer update fields.',
-					[
-						'message'                       => $t->getMessage(),
-						'customer_ac id'                => method_exists( $this->customer_ac, 'get_id' ) ? $this->customer_ac->get_id() : null,
-						'customer_ac accepts_marketing' => method_exists( $this->customer_ac, 'get_accepts_marketing' ) ? $this->customer_ac->get_accepts_marketing() : null,
-						'trace'                         => $this->logger->clean_trace( $t->getTrace() ),
-					]
-				);
-			}
-
-			return true;
-		} else {
-			try {
-				$this->logger->debug( 'Activecampaign_For_Woocommerce_Order_Finished_Event: No customer found in AC, making a new one.' );
-				// Try to create the new customer in AC
-				$new_customer = new Ecom_Customer();
-				$new_customer->set_email( $this->customer_email );
-				$new_customer->set_connectionid( $this->connection_id );
-				$new_customer->set_first_name( $this->customer_first_name );
-				$new_customer->set_last_name( $this->customer_last_name );
-				$new_customer->set_accepts_marketing( $this->accepts_marketing );
-
-				$this->logger->debug(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Creating customer in ActiveCampaign',
-					[
-						'customer' => wp_json_encode( $new_customer->serialize_to_array() ),
-					]
-				);
-
-				$this->customer_ac = $this->customer_repository->create( $new_customer );
-			} catch ( Throwable $t ) {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not create a customer in AC! ',
-					[
-						'connection_id' => $this->connection_id,
-						'email'         => $this->customer_email,
-						'message'       => $t->getMessage(),
-						'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-					]
-				);
-
-				return false;
-			}
-
-			if ( $this->customer_ac ) {
-				// Customer was created successfully
-				return true;
-			} else {
-				$this->logger->error(
-					'Activecampaign_For_Woocommerce_Order_Finished_Event: It appears we could not find or create a customer in AC. Please check through the logs for further info.',
-					[
-						'connection_id'     => $this->connection_id,
-						'email'             => $this->customer_email,
-						'first_name'        => $this->customer_first_name,
-						'last_name'         => $this->customer_last_name,
-						'accepts_marketing' => $this->accepts_marketing,
-					]
-				);
-
-				return false;
-			}
-		}
-	}
-
-	/**
-	 * Get the cart's total price in cents,
-	 * considering whether the global setting indicates that tax should be included.
-	 *
-	 * @param     WC_Cart $cart     The WC Cart.
-	 *
-	 * @return int
-	 * @throws Throwable Does not stop.
-	 */
-	private function get_cart_total( WC_Cart $cart ) {
-		$totals = new WC_Cart_Totals( $cart );
-
-		return $totals->get_total( 'total', true );
-	}
-
-	/**
-	 * Update the existing ecom order in AC
-	 *
-	 * @return bool Whether or not this job was successful
-	 */
-	private function update_ac_order() {
-		$this->ecom_order->set_id( $this->order_ac->get_id() );
-
-		try {
-			if ( ! $this->order_repository->update( $this->ecom_order ) ) {
-				$this->logger->error(
-					'Could not update the order in AC: ',
-					[
-						'order_array' => $this->ecom_order->serialize_to_array(),
-					]
-				);
-			}
-
-			return true;
 		} catch ( Throwable $t ) {
 			$this->logger->error(
-				'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not update the order in AC',
+				'There was an issue saving the order data.',
 				[
-					'message'     => $t->getMessage(),
-					'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
+					'message'           => $t->getMessage(),
+					'abandoned_cart_id' => $stored_id,
+					'trace'             => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
-
-			return false;
 		}
+
+		$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
 	}
 
 	/**
-	 * Verifies the status of the order for sending to AC
+	 * Schedules the sync job.
 	 *
-	 * @param     string $status     The order status.
-	 *
-	 * @return bool Whether or not the order passes.
+	 * @param int $row_id The row id.
 	 */
-	private function verify_order_status( $status ) {
-		if ( ! empty( $status ) ) {
-			$accepted_statuses = [ 'completed', 'processing' ];
+	private function schedule_sync_job( $row_id ) {
+		wp_schedule_single_event(
+			time() + 5,
+			'activecampaign_for_woocommerce_run_order_sync',
+			[
+				'id' => $row_id,
+			]
+		);
 
-			return in_array( $status, $accepted_statuses, true );
-		}
+		$this->logger->debug(
+			'Schedule finished order for immediate sync.',
+			[
+				'row_id'       => $row_id,
+				'current_time' => time() + 5,
+				'schedule'     => wp_get_scheduled_event( 'activecampaign_for_woocommerce_run_order_sync' ),
+			]
+		);
 
-		return false;
+		$this->order_utilities->schedule_recurring_order_sync_task();
 	}
 }

@@ -1,4 +1,5 @@
 <div v-if="viewsActive.pageScreen == 'selectFeed'" class="cff-fb-fs">
+	<span></span>
 	<div class="cff-fb-create-ctn cff-fb-wrapper">
 		<div class="cff-fb-heading">
 			<h1>{{selectFeedTypeScreen.mainHeading}}</h1>

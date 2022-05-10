@@ -274,15 +274,18 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 				try {
 					// This customer doesn't have a customer or user dataset, set externalid to zero
 					$this->externalid = 0;
-					$this->email      = $order->get_billing_email();
-					$this->first_name = $order->get_billing_first_name();
-					$this->last_name  = $order->get_billing_last_name();
+					if ( method_exists( $order, 'get_billing_email' ) ) {
+						$this->email      = $order->get_billing_email();
+						$this->first_name = $order->get_billing_first_name();
+						$this->last_name  = $order->get_billing_last_name();
+					}
 				} catch ( Throwable $t ) {
 					$logger->error(
 						'Activecampaign_For_Woocommerce_Ecom_Customer: There was a problem preparing data for a record.',
 						[
 							'customer_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 							'message'        => $t->getMessage(),
+							'trace'          => $logger->clean_trace( $t->getTrace() ),
 						]
 					);
 

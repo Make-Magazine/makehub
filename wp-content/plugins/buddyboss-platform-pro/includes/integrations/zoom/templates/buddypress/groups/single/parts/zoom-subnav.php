@@ -47,9 +47,9 @@ add_filter( 'bp_nouveau_get_classes', 'bp_zoom_nouveau_group_secondary_nav_selec
 			<?php if ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
 				<li id="<?php echo bp_zoom_is_webinars() || bp_zoom_is_create_webinar() ? esc_attr( 'sync-webinars-groups-li' ) : esc_attr( 'sync-meetings-groups-li' ); ?>" class="bp-groups-tab <?php echo bp_zoom_is_webinars() || bp_zoom_is_create_webinar() ? esc_attr( 'sync-webinars' ) : esc_attr( 'sync-meetings' ); ?>">
 					<a href="#" id="<?php echo bp_zoom_is_webinars() || bp_zoom_is_create_webinar() ? esc_attr( 'webinars-sync' ) : esc_attr( 'meetings-sync' ); ?>" data-group-id="<?php echo esc_attr( bp_get_current_group_id() ); ?>" data-bp-tooltip="<?php echo bp_zoom_is_webinars() || bp_zoom_is_create_webinar() ? esc_attr__( 'Sync group webinars with Zoom', 'buddyboss-pro' ) : esc_attr__( 'Sync group meetings with Zoom', 'buddyboss-pro' ); ?>" data-bp-tooltip-pos="left">
-						<i class="bb-icon-sync"></i>
+						<i class="bb-icon-bl bb-icon-sync"></i>
 						<?php esc_html_e( 'Sync', 'buddyboss-pro' ); ?>
-						<i class="bb-icon-loader animate-spin"></i>
+						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</a>
 				</li>
 			<?php } ?>

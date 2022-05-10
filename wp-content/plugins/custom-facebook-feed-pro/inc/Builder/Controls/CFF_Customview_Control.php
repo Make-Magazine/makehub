@@ -48,7 +48,7 @@ class CFF_Customview_Control extends CFF_Controls_Base{
 	 * @access public
 	 *
 	 * @return HTML
-	*/ 
+	*/
 	public function get_control_feedtemplate_output($controlEditingTypeModel){
 	?>
 		<div :class="['sb-control-feedtype-ctn sb-control-feedtemplate-ctn', 'cff-feedtemplate-' + customizerScreens.printedTemplate.type]" v-if="control.viewId == 'feedtemplate'">
@@ -82,7 +82,7 @@ class CFF_Customview_Control extends CFF_Controls_Base{
 			</div>
 		</div>
 	<?php
-		}
+	}
 
 	/**
 	 * Feed Type Output Control
