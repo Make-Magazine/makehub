@@ -159,6 +159,9 @@ button, input[type="submit"] {
 	background-color: $color-blue;
 	border-radius: 2px !important;
 	font-family: "Gamja Flower", "Roboto", Arial, sans-serif !important;
+	font-size: 20px !important;
+	align-self: auto !important;
+	height: auto;
 	&:hover, &:active, &:focus {
 		background-color: #fff;
 		color: $color-blue;
