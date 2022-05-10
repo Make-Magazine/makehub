@@ -458,6 +458,9 @@
 		top: 4px;
 	}
 }
+.gfield_checkbox input[type="checkbox"]:checked + label::after {
+	font-weight: 300;
+}
 
 // specific tweaks, remove if we're just going to left align everything
 #gform_fields_7_3{

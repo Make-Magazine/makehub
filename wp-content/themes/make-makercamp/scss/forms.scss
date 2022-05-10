@@ -448,6 +448,11 @@
 	}
 }
 
+.gfield_checkbox input[type="checkbox"]:checked + label::after {
+	font-weight: 300;
+	top: 10px;
+}
+
 //maker camp info tweaks
 .page-makercamp_info {
 	.gform_wrapper.gravity-theme .ginput_container_address .ginput_address_country {
