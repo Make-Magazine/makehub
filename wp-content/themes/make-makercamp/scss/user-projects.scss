@@ -3,6 +3,9 @@
 	.ld-tabs {
 		display: flex;
 		flex-direction: column;
+		.ld-icon.ld-icon-materials::before {
+			content: "\ef46" !important;
+		}
 	}
 	#ld-tab-content {
 		h1 {
