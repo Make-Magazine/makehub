@@ -28,7 +28,8 @@
 		section {
 			text-align: left;
 			color: #7a7a7a;
-		 }
+		}
+		.hero-image { width: 100%; }
 		.proj-sponsor-text {
 			text-align: center;
 			margin-bottom: 30px;
@@ -51,7 +52,7 @@
 				transform: translateY(-50%);
 		    }
 			svg {
-				height: 150px;
+				height: 130px;
 				background: white;
 				position: relative;
 				padding: 20px;
@@ -88,6 +89,7 @@
 	.up-steps {
 		padding: 0px;
 		.col-xs-12 { padding: 0px; }
+		.row { margin-bottom: 15px; }
 		.up-step-img {
 			width: 48%;
 			display: inline-block;

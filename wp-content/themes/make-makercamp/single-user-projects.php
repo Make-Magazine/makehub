@@ -117,7 +117,7 @@ get_header();
 
 								<div class="ld-tab-content ld-visible" id="ld-tab-content">
 									<?php if(isset($hero_image['url'])) { ?>
-										<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+										<img class="hero-image" src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
 									<?php } ?>
 									<h1><?php the_title(); ?></h1>
 
@@ -132,13 +132,13 @@ get_header();
 									</div>
 									<div class="proj-taxonomy-filters">
 										<?php if(isset($times[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+											<a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
 										<?php } ?>
 										<?php if(isset($skill_levels[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
+											<a href="/project-library/?_sft_skill_levels=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
 										<?php } ?>
 										<?php if(isset($ages[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+											<a href="/project-library/?_sft_ages=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
 										<?php } ?>
 									</div>
 
