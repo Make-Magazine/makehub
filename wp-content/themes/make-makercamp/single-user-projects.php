@@ -30,7 +30,7 @@ $author_id = get_field('user_id');
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
-	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
 	sort($referrer_params);
 }
 
@@ -93,8 +93,8 @@ get_header();
 						<?php
 						if(isset($referrer_params)) {
 							foreach($referrer_params as $param) {
-								$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
-								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+								$breadCrumb = get_term_by('slug', $param, 'content_categories'); ?>
+								<a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
 						<?php
 					 		}
 						}?>
@@ -249,18 +249,19 @@ get_header();
 							</div> <?php // end tabs content ?>
 
 							<section class="tags">
-								<?php if(!empty($categories)) { ?>
+								<?php
+								if(!empty($categories)) { ?>
 									<h4>See More Projects in these topics:</h4>
 									<?php foreach($categories as $category) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+										<a href="/project-library/?_sft_content_categories=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
 									<?php } ?>
 									<br />
 								<?php }
-									if(!empty($themes)){ ?>
-								<h4>see more projects from these themes:</h4>
-								<?php foreach($themes as $theme) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php }
+								if(!empty($themes)){ ?>
+									<h4>see more projects from these themes:</h4>
+									<?php foreach($themes as $theme) { ?>
+										<a href="/project-library/?_sft_makeyland_themes=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
+									<?php }
 								}	?>
 							</section>
 
