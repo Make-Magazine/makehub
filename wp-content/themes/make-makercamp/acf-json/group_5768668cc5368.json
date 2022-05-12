@@ -91,6 +91,27 @@
             "button_label": "Add New Step",
             "sub_fields": [
                 {
+                    "key": "field_57686dde1bd0e",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": "",
+                    "readonly": 0,
+                    "disabled": 0
+                },
+                {
                     "key": "field_57686d921bd0c",
                     "label": "Image 1",
                     "name": "image_1",
@@ -127,27 +148,6 @@
                     "prepend": "",
                     "append": "",
                     "maxlength": ""
-                },
-                {
-                    "key": "field_57686dde1bd0e",
-                    "label": "Title",
-                    "name": "title",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": "",
-                    "readonly": 0,
-                    "disabled": 0
                 },
                 {
                     "key": "field_57686dee1bd0f",
@@ -334,5 +334,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1652377992
+    "modified": 1652396869
 }
