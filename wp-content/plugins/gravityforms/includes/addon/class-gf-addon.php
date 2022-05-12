@@ -3013,12 +3013,14 @@ abstract class GFAddOn {
 	 */
 	public function get_generic_map_fields( $feed, $field_name, $form = array(), $entry = array() ) {
 
+		error_log('get_generic_map_fields');
 		// Initialize return fields array.
 		$fields = array();
 
 		// Get generic map field.
 		$generic_fields = rgar( $feed, 'meta' ) ? rgars( $feed, 'meta/' . $field_name ) : rgar( $feed, $field_name );
-
+error_log('generic fields');
+		error_log(print_r($generic_fields,TRUE));
 		// If generic map field is found, loop through mapped fields and add to array.
 		if ( ! empty( $generic_fields ) ) {
 
@@ -3038,6 +3040,36 @@ abstract class GFAddOn {
 
 					// If form isn't set, use value. Otherwise, get field value.
 					$field_value = empty( $form ) ? $generic_field['value'] : $this->get_field_value( $form, $entry, $generic_field['value'] );
+
+					//get the field object by field id
+					$field = GFAPI::get_field($form, $generic_field['value'] );
+					if(!$field){
+						error_log('fieldID='.$generic_field['value'].' ' .print_r($field,true));
+					}
+					//is this a nested form?
+					if($field->type=='form'){
+						$nested_fieldlist = $field->gpnfFields;
+
+						//transform comma separated list of entry ids into array
+						$entry_array = explode(",", $field_value);
+
+						//reset field_value
+						$field_value = array();
+						foreach($entry_array as $entry_id){
+							$entry_id = trim($entry_id);
+
+							//pull the entry from the nested form
+							$nestedentry = GFAPI::get_entry($entry_id);
+							$row_array = array();
+							foreach($nested_fieldlist as $fieldID){
+								//$attachment_id = attachment_url_to_postid( $image_url );
+								$row_array[$fieldID] = $nestedentry[$fieldID];
+							}
+							$field_value[] = $row_array;
+						}
+
+						$field_value = json_encode($field_value);
+					}
 
 				}
 

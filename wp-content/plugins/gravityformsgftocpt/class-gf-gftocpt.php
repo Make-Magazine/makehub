@@ -700,7 +700,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Custom Fields', 'gravityformsgftocpt' ),
-							esc_html__( 'Map form values to post meta using an existing meta key or defining a new one.', 'gravityformsgftocpt' )
+							esc_html__( 'Map form values to post meta using an existing meta key or defining a new one. For ACF fields, use the field ID.', 'gravityformsgftocpt' )
 						),
 					),
 				),
@@ -2421,6 +2421,9 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 * @return array
 	 */
 	public function set_post_data( $post, $feed, $entry, $form ) {
+		//Ailcia are we setting ACF fields here?
+
+
 		// Set the post content.
 		$post['post_content'] = $this->prepare_post_content( $feed, $entry, $form, $post['ID'] );
 
@@ -2582,14 +2585,70 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 * @param array $form    The form being processed.
 	 */
 	public function maybe_set_post_meta( $post_id, $feed, $entry, $form ) {
-
 		// Get mapped meta fields.
 		$meta_fields = $this->get_generic_map_fields( $feed, 'postMetaFields', $form, $entry );
+		error_log('$meta_fields='.print_r($meta_fields,true));
 		if ( empty( $meta_fields ) ) {
 			return;
 		}
 
 		foreach ( $meta_fields as $meta_key => $meta_value ) {
+			if (class_exists('ACF')) {
+				$field = get_field_object($meta_key);
+
+				//check if this is an ACF Field
+				if($field){
+					//update the meta key to the correct field name
+					$meta_key = $field['name'];
+
+					//is this a repeater field?
+					if(isset($field["type"]) && $field["type"]=='repeater'){
+						//note - this is assuming you are setting the input with a list field
+						if(count($field["sub_fields"])==1){
+							/*  when the repeater only has one field we are expecting the
+							    input from GF to be a comma separated string							*/
+
+							//convert comma delimited field to an array
+							$meta_array = explode(", ", $meta_value);
+							$value = array();
+							//loop through the submitted data to format it in an array for ACF
+							foreach($meta_array as $arr_value){
+								$value[] = array($field["sub_fields"][0]['name'] => $arr_value); //value is set with subfield name
+							}
+
+						}else{
+							/*  when the repeater has multiple fields we are expecting the
+							    input from GF to be a json encoded string */
+
+							//convert json encoded field to an array
+							$meta_value = json_decode($meta_value);
+							$value = array();
+							if(is_array($meta_value)){
+								$sub_field_array = array();
+								//build an array with the sub field names
+								foreach($field["sub_fields"] as $sub_field){
+									$sub_field_array[] = $sub_field['name'];
+								}
+
+								//loop through the returned value to populate the ACF array
+								foreach($meta_value as $metaSubRow){ //
+									$count=0;
+									$sub_array = array();
+									foreach($metaSubRow as $metaSubField){
+										$sub_array[$sub_field_array[$count]]=$metaSubField;
+										$count++;
+									}
+									$value[] = $sub_array;
+								}
+							}
+						}
+
+						//update the ACF field and then continue to next meta_field
+						update_field($field['key'], $value, $post_id);
+						continue;
+					}
+				}
+			}
 
 			// If meta value is empty, skip it.
 			if ( rgblank( $meta_value ) ) {
