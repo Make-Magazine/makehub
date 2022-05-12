@@ -137,14 +137,14 @@ get_header();
 										<?php } ?>
 									</div>
 
-									<?php if(isset($what_will_you_make)) { ?>
+									<?php if($what_will_you_make) { ?>
 										<section class="up-intro text-center">
 								            <h2>WHAT WILL YOU MAKE?</h2>
 								            <p><?php echo $what_will_you_make; ?></p>
 								        </section>
 									<?php } ?>
 
-									<?php if(isset($what_will_you_learn)) { ?>
+									<?php if($what_will_you_learn) { ?>
 								        <section class="up-intro text-center">
 								            <h2>WHAT WILL YOU LEARN?</h2>
 								            <p><?php echo $what_will_you_learn; ?></p>
@@ -227,14 +227,14 @@ get_header();
 										<?php }	?>
 									</section>
 
-									<?php if(isset($what_is_happening_here)) { ?>
+									<?php if($what_is_happening_here) { ?>
 										<section class="up-intro text-center">
 								            <h2>WHAT'S HAPPENING HERE?</h2>
 								            <p><?php echo $what_is_happening_here; ?></p>
 								        </section>
 									<?php } ?>
 
-							        <?php if(isset($whats_next)) { ?>
+							        <?php if($whats_next) { ?>
 							            <section class="up-whats-next">
 											<h2>WHAT'S NEXT?</h2>
 							                <p><?php echo $whats_next; ?></p>

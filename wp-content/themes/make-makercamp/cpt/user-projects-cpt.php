@@ -346,64 +346,6 @@ function register_taxonomy_times() {
 	}*/
 }
 
-add_action( 'init', 'register_taxonomy_skill_levels' );
-
-/**
- * Add the Skill Level taxonomy
- *
- */
-function register_taxonomy_skill_levels() {
-
-	$labels = array(
-		'name' => _x( 'Skill Levels', 'skill_levels' ),
-		'singular_name' => _x( 'Skill Level', 'skill_levels' ),
-		'search_items' => _x( 'Search Skill Levels', 'skill_levels' ),
-		'popular_items' => _x( 'Popular Skill Levels', 'skill_levels' ),
-		'all_items' => _x( 'All Skill Levels', 'skill_levels' ),
-		'parent_item' => _x( 'Parent Skill Level', 'skill_levels' ),
-		'parent_item_colon' => _x( 'Parent Skill Level:', 'skill_levels' ),
-		'edit_item' => _x( 'Edit Skill Level', 'skill_levels' ),
-		'update_item' => _x( 'Update Skill Level', 'skill_levels' ),
-		'add_new_item' => _x( 'Add New Skill Level', 'skill_levels' ),
-		'new_item_name' => _x( 'New Skill Level', 'skill_levels' ),
-		'separate_items_with_commas' => _x( 'Separate skill levels with commas', 'skill_levels' ),
-		'add_or_remove_items' => _x( 'Add or remove Skill Levels', 'skill_levels' ),
-		'choose_from_most_used' => _x( 'Choose from most used Skill Levels', 'skill_levels' ),
-		'menu_name' => _x( 'Skill Levels', 'skill_levels' ),
-	);
-
-	$args = array(
-		'labels' => $labels,
-		'public' => true,
-		'show_in_nav_menus' => true,
-		'show_ui' => true,
-		'show_tagcloud' => true,
-		'hierarchical' => true,
-		'rewrite' => true,
-		'query_var' => true,
-		'show_in_rest' => true
-	);
-
-	register_taxonomy( 'skill_levels', array('user-projects', 'sfwd-lessons'), $args );
-
-	/* Original terms, commented out so they can be edited in admin without issue
-	$skill_levels = [
-		"advanced" => "Advanced",
-		"intermediate" => "Intermediate",
-		"novice" => "Novice",
-		"proficient" => "Proficient"
-	];
-	if(empty(get_terms('skill_levels'))) {
-		foreach ($skill_levels as $slug => $name) {
-			wp_insert_term($name, 'skill_levels', [
-				'slug' => $slug,
-			]);
-		}
-	}*/
-
-}
-
-
 add_action( 'init', 'register_taxonomy_makeyland_theme' );
 
 /**
@@ -463,6 +405,65 @@ function register_taxonomy_makeyland_theme() {
 		}
 	}*/
 }
+
+// This was removed as a taxonomy for projects in 2022
+//add_action( 'init', 'register_taxonomy_skill_levels' );
+
+/**
+ * Add the Skill Level taxonomy
+ *
+ */
+function register_taxonomy_skill_levels() {
+
+	$labels = array(
+		'name' => _x( 'Skill Levels', 'skill_levels' ),
+		'singular_name' => _x( 'Skill Level', 'skill_levels' ),
+		'search_items' => _x( 'Search Skill Levels', 'skill_levels' ),
+		'popular_items' => _x( 'Popular Skill Levels', 'skill_levels' ),
+		'all_items' => _x( 'All Skill Levels', 'skill_levels' ),
+		'parent_item' => _x( 'Parent Skill Level', 'skill_levels' ),
+		'parent_item_colon' => _x( 'Parent Skill Level:', 'skill_levels' ),
+		'edit_item' => _x( 'Edit Skill Level', 'skill_levels' ),
+		'update_item' => _x( 'Update Skill Level', 'skill_levels' ),
+		'add_new_item' => _x( 'Add New Skill Level', 'skill_levels' ),
+		'new_item_name' => _x( 'New Skill Level', 'skill_levels' ),
+		'separate_items_with_commas' => _x( 'Separate skill levels with commas', 'skill_levels' ),
+		'add_or_remove_items' => _x( 'Add or remove Skill Levels', 'skill_levels' ),
+		'choose_from_most_used' => _x( 'Choose from most used Skill Levels', 'skill_levels' ),
+		'menu_name' => _x( 'Skill Levels', 'skill_levels' ),
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'public' => true,
+		'show_in_nav_menus' => true,
+		'show_ui' => true,
+		'show_tagcloud' => true,
+		'hierarchical' => true,
+		'rewrite' => true,
+		'query_var' => true,
+		'show_in_rest' => true
+	);
+
+	register_taxonomy( 'skill_levels', array('user-projects', 'sfwd-lessons'), $args );
+
+	/* Original terms, commented out so they can be edited in admin without issue
+	$skill_levels = [
+		"advanced" => "Advanced",
+		"intermediate" => "Intermediate",
+		"novice" => "Novice",
+		"proficient" => "Proficient"
+	];
+	if(empty(get_terms('skill_levels'))) {
+		foreach ($skill_levels as $slug => $name) {
+			wp_insert_term($name, 'skill_levels', [
+				'slug' => $slug,
+			]);
+		}
+	}*/
+
+}
+
 
 // user projects isn't that nice a slug for public consumption, let's rewrite it
 if( !function_exists('change_user_projects_slug') ){
