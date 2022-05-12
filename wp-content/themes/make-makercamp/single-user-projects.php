@@ -16,7 +16,6 @@ $materials_tax = get_the_terms($post->ID, 'materials');
 $themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // Get our ACF Fields
-$hero_image = get_field('hero_image');
 $steps = get_field('steps');
 $sponsored_by_text = get_field('sponsored_by_text');
 $what_will_you_learn = get_field('what_will_you_learn');
@@ -26,7 +25,7 @@ $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
 $video = get_field('video');
 $video_url = get_field('project_video_url');
-$author = get_user_by( 'email', get_field('author_email') );
+$author = get_user_by( 'email', get_field('user_email') );
 $author_id = $author->ID;
 
 // variables for building Breadcrumbs
@@ -118,8 +117,8 @@ get_header();
 								<?php // The First Tab 'Project' ?>
 
 								<div class="ld-tab-content ld-visible" id="ld-tab-content">
-									<?php if(isset($hero_image['url'])) { ?>
-										<img class="hero-image" src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php if(get_the_post_thumbnail()) { ?>
+										<img class="hero-image" src="<?php echo get_resized_remote_image_url(get_the_post_thumbnail_url(), 1900, 814); ?>" />
 									<?php } ?>
 									<h1><?php the_title(); ?></h1>
 
@@ -173,14 +172,14 @@ get_header();
 							                        <div class="col-xs-12 col-sm-6">
 
 							                            <?php if (!empty($image_1)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1['url'], 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1['url'], 500, 500); ?>);"></div>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
 							                                </a>
 							            				<?php } ?>
 
 							                            <?php if (!empty($image_2)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2['url'], 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2['url'], 500, 500); ?>);"></div>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
 							                                </a>
 							            				<?php } ?>
 
@@ -227,9 +226,9 @@ get_header();
 											echo $video_embed;
 										}
 										if (!empty($video)) {
-											$ext = pathinfo($video["url"], PATHINFO_EXTENSION); ?>
+											$ext = pathinfo($video, PATHINFO_EXTENSION); ?>
 											<video width="100%" controls>
-											  	<source src="<?php echo $video["url"]; ?>" type="video/<?php echo $ext; ?>">
+											  	<source src="<?php echo $video; ?>" type="video/<?php echo $ext; ?>">
 												Your browser does not support the video tag.
 											</video>
 										<?php }	?>
