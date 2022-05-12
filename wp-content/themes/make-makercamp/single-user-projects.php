@@ -129,9 +129,9 @@ get_header();
 										<?php if(isset($times[0])) { ?>
 											<a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
 										<?php } ?>
-										<?php if(isset($skill_levels[0])) { ?>
+										<?php /* if(isset($skill_levels[0])) { ?>
 											<a href="/project-library/?_sft_skill_levels=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<?php } ?>
+										<?php } */ ?>
 										<?php if(isset($ages[0])) { ?>
 											<a href="/project-library/?_sft_ages=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
 										<?php } ?>
@@ -148,13 +148,6 @@ get_header();
 								        <section class="up-intro text-center">
 								            <h2>WHAT WILL YOU LEARN?</h2>
 								            <p><?php echo $what_will_you_learn; ?></p>
-								        </section>
-									<?php } ?>
-
-									<?php if(isset($what_is_happening_here)) { ?>
-										<section class="up-intro text-center">
-								            <h2>WHAT IS HAPPENING HERE?</h2>
-								            <p><?php echo $what_is_happening_here; ?></p>
 								        </section>
 									<?php } ?>
 
@@ -209,7 +202,7 @@ get_header();
 
 									<section id="video">
 										<?php if (!empty($video_url) || !empty($video) ) { ?>
-											<h3>Project Videos</h3>
+											<h3>SEE IT IN ACTION</h3>
 										<?php }
 										if (!empty($video_url) && validate_url($video_url)) {
 										    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);
@@ -234,8 +227,14 @@ get_header();
 										<?php }	?>
 									</section>
 
-							        <?php
-							        if ($whats_next) { ?>
+									<?php if(isset($what_is_happening_here)) { ?>
+										<section class="up-intro text-center">
+								            <h2>WHAT'S HAPPENING HERE?</h2>
+								            <p><?php echo $what_is_happening_here; ?></p>
+								        </section>
+									<?php } ?>
+
+							        <?php if(isset($whats_next)) { ?>
 							            <section class="up-whats-next">
 											<h2>WHAT'S NEXT?</h2>
 							                <p><?php echo $whats_next; ?></p>
