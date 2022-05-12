@@ -27,11 +27,11 @@
             "mime_types": ""
         },
         {
-            "key": "field_5981bd066eb74",
-            "label": "Sponsored By: (custom text)",
-            "name": "sponsored_by_text",
-            "type": "text",
-            "instructions": "Custom text if you want to edit \"SPONSORED BY\". Leave blank and \"SPONSORED BY\" will be used.",
+            "key": "field_627c4dd80128e",
+            "label": "What will you make?",
+            "name": "what_will_you_make",
+            "type": "wysiwyg",
+            "instructions": "Add short description for the \"What will you make?\"",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -40,17 +40,36 @@
                 "id": ""
             },
             "default_value": "",
-            "placeholder": "SPONSORED BY",
-            "prepend": "",
-            "append": "",
-            "maxlength": 30
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         },
         {
             "key": "field_57686bbc1bd08",
-            "label": "What Will You Make?",
+            "label": "What Will You Learn?",
             "name": "what_will_you_learn",
             "type": "wysiwyg",
-            "instructions": "Add short description for the \"What will you make\".",
+            "instructions": "Add short description for the \"What will you learn?\"",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_627c4e700128f",
+            "label": "What Is Happening Here?",
+            "name": "what_is_happening_here",
+            "type": "wysiwyg",
+            "instructions": "Add short description for the \"What is happening here?\"",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -260,9 +279,9 @@
         },
         {
             "key": "field_62508b2fc51ed",
-            "label": "User ID",
-            "name": "user_id",
-            "type": "number",
+            "label": "Author Email",
+            "name": "author_email",
+            "type": "email",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -274,10 +293,7 @@
             "default_value": "",
             "placeholder": "",
             "prepend": "",
-            "append": "",
-            "min": "",
-            "max": "",
-            "step": ""
+            "append": ""
         },
         {
             "key": "field_62589891d0cb6",
@@ -348,5 +364,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1649973422
+    "modified": 1652330211
 }

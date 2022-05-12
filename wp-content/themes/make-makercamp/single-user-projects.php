@@ -20,11 +20,14 @@ $hero_image = get_field('hero_image');
 $steps = get_field('steps');
 $sponsored_by_text = get_field('sponsored_by_text');
 $what_will_you_learn = get_field('what_will_you_learn');
+$what_will_you_make = get_field('what_will_you_make');
+$what_is_happening_here = get_field('what_is_happening_here');
 $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
 $video = get_field('video');
 $video_url = get_field('project_video_url');
-$author_id = get_field('user_id');
+$author = get_user_by( 'email', get_field('author_email') );
+$author_id = $author->ID;
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
@@ -35,7 +38,6 @@ if(isset($referrer_url['query'])) {
 }
 
 get_header();
-
 ?>
 <div id="learndash-content">
     <div class="bb-grid grid">
@@ -121,12 +123,6 @@ get_header();
 									<?php } ?>
 									<h1><?php the_title(); ?></h1>
 
-									<?php if($sponsored_by_text) { ?>
-										<div class="proj-sponsor-text">
-											<?php echo $sponsored_by_text; ?>
-										</div>
-									<?php } ?>
-
 									<div class="proj-divider">
 										<?php echo $svg_divider; ?>
 									</div>
@@ -142,11 +138,26 @@ get_header();
 										<?php } ?>
 									</div>
 
+									<?php if(isset($what_will_you_make)) { ?>
+										<section class="up-intro text-center">
+								            <h2>WHAT WILL YOU MAKE?</h2>
+								            <p><?php echo $what_will_you_make; ?></p>
+								        </section>
+									<?php } ?>
 
-							        <section class="up-intro text-center">
-							            <h2>WHAT WILL YOU LEARN?</h2>
-							            <p><?php echo $what_will_you_learn; ?></p>
-							        </section>
+									<?php if(isset($what_will_you_learn)) { ?>
+								        <section class="up-intro text-center">
+								            <h2>WHAT WILL YOU LEARN?</h2>
+								            <p><?php echo $what_will_you_learn; ?></p>
+								        </section>
+									<?php } ?>
+
+									<?php if(isset($what_is_happening_here)) { ?>
+										<section class="up-intro text-center">
+								            <h2>WHAT IS HAPPENING HERE?</h2>
+								            <p><?php echo $what_is_happening_here; ?></p>
+								        </section>
+									<?php } ?>
 
 							        <section class="up-steps container">
 							            <?php
@@ -266,6 +277,7 @@ get_header();
 							</section>
 
 							<section class="up-author">
+
 								<?php
 								// Author section
 								learndash_get_template_part('template-course-author.php', array(
