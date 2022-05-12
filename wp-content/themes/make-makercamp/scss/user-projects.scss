@@ -3,6 +3,9 @@
 	.ld-tabs {
 		display: flex;
 		flex-direction: column;
+		.ld-icon.ld-icon-materials::before {
+			content: "\ef46" !important;
+		}
 	}
 	#ld-tab-content {
 		h1 {
@@ -21,6 +24,7 @@
 		h4, h5 {
 			color: #d62329;
 			font-size: 28px;
+			margin-top: 0px;
 		}
 		h5 {
 			font-size: 24px;
@@ -28,7 +32,8 @@
 		section {
 			text-align: left;
 			color: #7a7a7a;
-		 }
+		}
+		.hero-image { width: 100%; }
 		.proj-sponsor-text {
 			text-align: center;
 			margin-bottom: 30px;
@@ -39,7 +44,6 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			&:first-of-type { height: 200px; }
 			&:before {
 				content: '';
 				position: absolute;
@@ -51,7 +55,7 @@
 				transform: translateY(-50%);
 		    }
 			svg {
-				height: 150px;
+				height: 130px;
 				background: white;
 				position: relative;
 				padding: 20px;
@@ -76,8 +80,11 @@
 				&.tax-time:before {
 					content: "\f017";
 				}
-				&.tax-skill-level:before {
-					content: "\f005";
+				&.tax-skill-level {
+					pointer-events: none;
+					&:before {
+						content: "\f005";
+					}
 				}
 				&.tax-age:before {
 					content: "\f073";
@@ -88,6 +95,7 @@
 	.up-steps {
 		padding: 0px;
 		.col-xs-12 { padding: 0px; }
+		.row { margin-bottom: 15px; }
 		.up-step-img {
 			width: 48%;
 			display: inline-block;
@@ -127,9 +135,11 @@
 			margin-top: 10px;
 		}
 		a.project-tag {
+			font-family: "Gamja Flower", "Roboto", Arial, sans-serif;
 			margin: 5px;
 			padding: 5px 10px;
 			color: #fff;
+			font-size: 20px;
 			background: #51b2dc;
 			border-radius: 20px;
 			border: solid 1px #51b2dc !important;
