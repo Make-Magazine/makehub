@@ -4,6 +4,9 @@ if (!defined('ABSPATH'))
     define('ABSPATH', dirname(__FILE__) . '/');
 require_once(ABSPATH . 'wp-load.php');
 
+define('AUTH0_CLIENTID', "NDw7r6YLomyGceVgG7PIt2wIhIgLNqxG");
+define('AUTH0_SECRET', "4dfAi4LjuknqDkzXILwK13vARSBiZIdB-XTHAErTk7QthdRcjF-5w3-AmYfh6eUT");
+
 // Can we load the universal scripts this way
 function universal_scripts() {
     //auth0
@@ -81,17 +84,63 @@ add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 function auth0_user_update($user_login, $user) {
 	$curl = curl_init();
 
+	curl_setopt_array($curl, array(
+	  CURLOPT_URL => "https://makermedia.auth0.com/oauth/token",
+	  CURLOPT_RETURNTRANSFER => true,
+	  CURLOPT_ENCODING => "",
+	  CURLOPT_MAXREDIRS => 10,
+	  CURLOPT_TIMEOUT => 30,
+	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	  CURLOPT_CUSTOMREQUEST => "POST",
+  	  CURLOPT_POSTFIELDS => "{\"client_id\":\"".AUTH0_CLIENTID."\",\"client_secret\":\"".AUTH0_SECRET."\",\"audience\":\"https://makermedia.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}",
+	  CURLOPT_HTTPHEADER => array(
+	    "content-type: application/json"
+	  ),
+	));
+
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+
+	if ($err) {
+	  error_log("cURL Error #:" . $err);
+	}
+
+	// the response has our token for update metadata
+	$json_response = json_decode($response);
+	$auth0UserID = get_user_meta($user->ID, 'wp_auth0_id');
+	$headers = setMemPressHeaders();
+    $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+    $memberArray = json_decode($memberInfo);
+	$membershipType = "";
+    if(isset($memberArray->active_memberships) &&
+           is_array($memberArray->active_memberships)
+        && !empty($memberArray->active_memberships)){
+		//see if they are an active premium member
+		$key = array_search('Premium Member', array_column($memberArray->active_memberships, 'title'));
+		if($key !== false || $key == 0){
+			//Premium Membership
+			$membershipType = "Premium Member";
+		}else{
+			//free membership, upgrade now
+			$membershipType = "Upgrade Membership";
+		}
+	}
+
+	$curl = curl_init();
+
 	curl_setopt_array($curl, [
-	  CURLOPT_URL => "https://makermedia.auth0.com/api/v2/api/v2/users/" . $user->ID,
+	  CURLOPT_URL => "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0],
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
 	  CURLOPT_TIMEOUT => 30,
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => "PATCH",
-	  CURLOPT_POSTFIELDS => "{\"user_metadata\": {\"addresses\": {\"home\": \"123 Main Street, Anytown, ST 12345\"}}}",
+	  CURLOPT_POSTFIELDS => "{\"user_metadata\": {\"membership_type\": \"".$membershipType."\"}}",
 	  CURLOPT_HTTPHEADER => [
-		"authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9VSTFSamhFTkVZelJqWkZSRFE1T0RaR01EY3lORFUzTkRWRk5FTXhNekF4T0RORE1UWXlPUSJ9.eyJpc3MiOiJodHRwczovL21ha2VybWVkaWEuYXV0aDAuY29tLyIsInN1YiI6IlU5MXZTakUzVnE3ZEdmVUg5OW1JNG5yeFBtbjViaURJQGNsaWVudHMiLCJhdWQiOiJodHRwczovL21ha2VybWVkaWEuYXV0aDAuY29tL2FwaS92Mi8iLCJpYXQiOjE2NTIzOTQ1MjcsImV4cCI6MTY1MjQ4MDkyNywiYXpwIjoiVTkxdlNqRTNWcTdkR2ZVSDk5bUk0bnJ4UG1uNWJpREkiLCJzY29wZSI6InJlYWQ6Y2xpZW50X2dyYW50cyBjcmVhdGU6Y2xpZW50X2dyYW50cyBkZWxldGU6Y2xpZW50X2dyYW50cyB1cGRhdGU6Y2xpZW50X2dyYW50cyByZWFkOnVzZXJzIHVwZGF0ZTp1c2VycyBkZWxldGU6dXNlcnMgY3JlYXRlOnVzZXJzIHJlYWQ6dXNlcnNfYXBwX21ldGFkYXRhIHVwZGF0ZTp1c2Vyc19hcHBfbWV0YWRhdGEgZGVsZXRlOnVzZXJzX2FwcF9tZXRhZGF0YSBjcmVhdGU6dXNlcnNfYXBwX21ldGFkYXRhIGNyZWF0ZTp1c2VyX3RpY2tldHMgcmVhZDpjbGllbnRzIHVwZGF0ZTpjbGllbnRzIGRlbGV0ZTpjbGllbnRzIGNyZWF0ZTpjbGllbnRzIHJlYWQ6Y2xpZW50X2tleXMgdXBkYXRlOmNsaWVudF9rZXlzIGRlbGV0ZTpjbGllbnRfa2V5cyBjcmVhdGU6Y2xpZW50X2tleXMgcmVhZDpjb25uZWN0aW9ucyB1cGRhdGU6Y29ubmVjdGlvbnMgZGVsZXRlOmNvbm5lY3Rpb25zIGNyZWF0ZTpjb25uZWN0aW9ucyByZWFkOnJlc291cmNlX3NlcnZlcnMgdXBkYXRlOnJlc291cmNlX3NlcnZlcnMgZGVsZXRlOnJlc291cmNlX3NlcnZlcnMgY3JlYXRlOnJlc291cmNlX3NlcnZlcnMgcmVhZDpkZXZpY2VfY3JlZGVudGlhbHMgdXBkYXRlOmRldmljZV9jcmVkZW50aWFscyBkZWxldGU6ZGV2aWNlX2NyZWRlbnRpYWxzIGNyZWF0ZTpkZXZpY2VfY3JlZGVudGlhbHMgcmVhZDpydWxlcyB1cGRhdGU6cnVsZXMgZGVsZXRlOnJ1bGVzIGNyZWF0ZTpydWxlcyByZWFkOnJ1bGVzX2NvbmZpZ3MgdXBkYXRlOnJ1bGVzX2NvbmZpZ3MgZGVsZXRlOnJ1bGVzX2NvbmZpZ3MgcmVhZDplbWFpbF9wcm92aWRlciB1cGRhdGU6ZW1haWxfcHJvdmlkZXIgZGVsZXRlOmVtYWlsX3Byb3ZpZGVyIGNyZWF0ZTplbWFpbF9wcm92aWRlciBibGFja2xpc3Q6dG9rZW5zIHJlYWQ6c3RhdHMgcmVhZDp0ZW5hbnRfc2V0dGluZ3MgdXBkYXRlOnRlbmFudF9zZXR0aW5ncyByZWFkOmxvZ3MgcmVhZDpzaGllbGRzIGNyZWF0ZTpzaGllbGRzIGRlbGV0ZTpzaGllbGRzIHVwZGF0ZTp0cmlnZ2VycyByZWFkOnRyaWdnZXJzIHJlYWQ6Z3JhbnRzIGRlbGV0ZTpncmFudHMgcmVhZDpndWFyZGlhbl9mYWN0b3JzIHVwZGF0ZTpndWFyZGlhbl9mYWN0b3JzIHJlYWQ6Z3VhcmRpYW5fZW5yb2xsbWVudHMgZGVsZXRlOmd1YXJkaWFuX2Vucm9sbG1lbnRzIGNyZWF0ZTpndWFyZGlhbl9lbnJvbGxtZW50X3RpY2tldHMgcmVhZDp1c2VyX2lkcF90b2tlbnMgY3JlYXRlOnBhc3N3b3Jkc19jaGVja2luZ19qb2IgZGVsZXRlOnBhc3N3b3Jkc19jaGVja2luZ19qb2IgcmVhZDpjdXN0b21fZG9tYWlucyBkZWxldGU6Y3VzdG9tX2RvbWFpbnMgY3JlYXRlOmN1c3RvbV9kb21haW5zIHJlYWQ6ZW1haWxfdGVtcGxhdGVzIGNyZWF0ZTplbWFpbF90ZW1wbGF0ZXMgdXBkYXRlOmVtYWlsX3RlbXBsYXRlcyIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.T2p2piaiH64FbY80p35b9Fv2g1cTtM10HruBqBbhv9oKmuVmGGdbI3h3bAcPU0kjVHaIKQpoNi6Qv6UdrPw5-R4okObo9bRnbEWBXssnOUeXeMPBpQo1tWrgz6-s0V5AYiRoLbxVHo0eOGgo0HsONiILNn4Q1jMLzz4tHulJd_5tdnR835l3pE7FDXTeyeUf1soufwhClAUGLi15pbPUh_cFHYXYTcgDq3sEe4yE5rdrR4Ftbx3kqp0uOnqgFOg1ZauuMJOM32WxduKEHQZGp_MYFZ_XBe5ragAfGdcok0MKgQDUrE6ckaEB3WnaCPoFVFc8nnqLuvrbfvsBtJRK0w",
+		"authorization: Bearer " . $json_response->access_token,
 		"content-type: application/json"
 	  ],
 	]);
@@ -102,10 +151,10 @@ function auth0_user_update($user_login, $user) {
 	curl_close($curl);
 
 	if ($err) {
-		error_log("cURL Error #:" . $err);
-	} else {
-		error_log($response);
+	  error_log("cURL Error #:" . $err);
 	}
+
+
 }
 add_action('wp_login', 'auth0_user_update', 10, 2);
 

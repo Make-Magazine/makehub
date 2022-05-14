@@ -53,13 +53,14 @@ window.addEventListener('load', function () {
 							WPlogout();
 						}
 						clearLocalStorage();
+						displayButtons();
 					} else {
 						console.log('SSO set session');
 						userProfile = result.idTokenPayload;
 						//console.log(userProfile)
 						setSession(result);
 					}
-					displayButtons();
+
 				}
 			);
 
@@ -85,6 +86,7 @@ window.addEventListener('load', function () {
 		} else {
 			clearLocalStorage();
 		}
+		displayButtons();
 	}
 
 	function displayButtons() {
@@ -120,13 +122,8 @@ window.addEventListener('load', function () {
 	}
 
 	function getProfile() {
-
-		var accessToken = localStorage.getItem('access_token');
-		webAuth.client.userInfo(accessToken, function (err, profile) {
-			console.log(profile);
-		});
 		if(loggedin && window.location.href.indexOf(makecoRoot) > -1){
-			//user is logged into wordpress at this point. let's display wordpress data
+			//user is logged into wordpress at this point and is on a make.co site let's display wordpress data
 			if(ajax_object.wp_user_avatar != undefined) {
 				document.querySelector('.dropdown-toggle img').src =  ajax_object.wp_user_avatar;
 				document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
@@ -139,7 +136,7 @@ window.addEventListener('load', function () {
 				hideSpinner();
 				showBuddypanel();
 			}
-		}else{
+		}else{ // if user is not logged in already or on a non make.co site, we will call data from auth0
 			//we already got the userprofile info from auth0 in the check session step
 			var accessToken = localStorage.getItem('access_token');
 
@@ -155,10 +152,23 @@ window.addEventListener('load', function () {
 			// display the avatar
 			document.querySelector('.dropdown-toggle img').src = userProfile.picture;
 			document.querySelector('.profile-info img').src = userProfile.picture;
-			document.querySelector('.dropdown-toggle img').style.display = "block";
 			document.querySelector('#LoginBtn').style.display = "none";
 			document.querySelector('.profile-email').innerHTML = userProfile.email;
-			//console.log(userProfile);
+
+			if (userProfile['http://makershare.com/membership_level'] != undefined ) {
+				switch(userProfile['http://makershare.com/membership_level']) {
+					case "Premium Member":
+						document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
+						document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
+						break;
+					case "Upgrade Membership":
+						document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
+						document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
+						break;
+					default:
+						break;
+				}
+			}
 			// do we need http://makershare.com/last_name / first_name anymore
 			if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
@@ -171,9 +181,10 @@ window.addEventListener('load', function () {
 				// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
 				showBuddypanel();
 			}
-
+			document.querySelector('.dropdown-toggle img').style.display = "block";
 		}
 		jQuery(".login-section").css("display", "block");
+		// This is where I'm thinking we add the Rimark API Call
 	}
 
 	function WPlogin() {
