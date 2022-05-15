@@ -2586,8 +2586,8 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 */
 	public function maybe_set_post_meta( $post_id, $feed, $entry, $form ) {
 		// Get mapped meta fields.
-		$meta_fields = $this->get_generic_map_fields( $feed, 'postMetaFields', $form, $entry );
-		error_log('$meta_fields='.print_r($meta_fields,true));
+		$meta_fields = $this->get_custom_map_fields( $feed, 'postMetaFields', $form, $entry );
+
 		if ( empty( $meta_fields ) ) {
 			return;
 		}
@@ -2666,6 +2666,80 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 			add_post_meta( $post_id, $meta_key, $meta_value );
 
 		}
+
+	}
+	/**
+	 * Get mapped key/value pairs for generic map.
+	 * This is a customized version of get_generic_map_fields that allows for
+	 * list fields and nested forms
+	 *	 
+	 */
+
+	public function get_custom_map_fields( $feed, $field_name, $form = array(), $entry = array() ) {
+		// Initialize return fields array.
+		$fields = array();
+
+		// Get generic map field.
+		$generic_fields = rgar( $feed, 'meta' ) ? rgars( $feed, 'meta/' . $field_name ) : rgar( $feed, $field_name );
+
+		// If generic map field is found, loop through mapped fields and add to array.
+		if ( ! empty( $generic_fields ) ) {
+
+			// Loop through mapped fields.
+			foreach ( $generic_fields as $generic_field ) {
+
+				// Get mapped key or replace with custom value.
+				$field_key = 'gf_custom' === $generic_field['key'] ? $generic_field['custom_key'] : $generic_field['key'];
+
+				// Get mapped field choice or replace with custom value.
+				if ( 'gf_custom' === $generic_field['value'] ) {
+
+					// If form isn't set, use custom value. Otherwise, replace merge tags.
+					$field_value = empty( $form ) ? $generic_field['custom_value'] : GFCommon::replace_variables( $generic_field['custom_value'], $form, $entry, false, false, false, 'text' );
+
+				} else {
+
+					// If form isn't set, use value. Otherwise, get field value.
+					$field_value = empty( $form ) ? $generic_field['value'] : $this->get_field_value( $form, $entry, $generic_field['value'] );
+
+					//get the field object by field id
+					$field = GFAPI::get_field($form, $generic_field['value'] );
+
+					//is this a nested form?
+					if($field->type=='form'){
+						$nested_fieldlist = $field->gpnfFields;
+
+						//transform comma separated list of entry ids into array
+						$entry_array = explode(",", $field_value);
+
+						//reset field_value
+						$field_value = array();
+						foreach($entry_array as $entry_id){
+							$entry_id = trim($entry_id);
+
+							//pull the entry from the nested form
+							$nestedentry = GFAPI::get_entry($entry_id);
+							$row_array = array();
+							foreach($nested_fieldlist as $fieldID){
+								//$attachment_id = attachment_url_to_postid( $image_url );
+								$row_array[$fieldID] = $nestedentry[$fieldID];
+							}
+							$field_value[] = $row_array;
+						}
+
+						$field_value = json_encode($field_value);
+					}
+
+				}
+
+				// Add mapped field to return array.
+				$fields[ $field_key ] = $field_value;
+
+			}
+
+		}
+
+		return $fields;
 
 	}
 
