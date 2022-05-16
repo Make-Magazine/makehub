@@ -1434,7 +1434,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 		// Initialize choices.
 		$choices = array(
 			array(
-				'label' => esc_html__( 'Logged In User', 'gravityformsgftocpt' ),
+				'label' => esc_html__( 'User who submitted Form', 'gravityformsgftocpt' ),
 				'value' => 'logged-in-user',
 			),
 		);
@@ -1443,8 +1443,6 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 		if ( rgblank( $value ) || ! is_numeric( $value ) ) {
 			return $choices;
 		}
-
-//Alicia - add options here for the user who submitted the GF
 
 		// Get user.
 		$user = get_user_by( 'id', $value );
@@ -2672,7 +2670,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 * Get mapped key/value pairs for generic map.
 	 * This is a customized version of get_generic_map_fields that allows for
 	 * list fields and nested forms
-	 *	 
+	 *
 	 */
 
 	public function get_custom_map_fields( $feed, $field_name, $form = array(), $entry = array() ) {
