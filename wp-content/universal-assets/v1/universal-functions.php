@@ -52,6 +52,7 @@ add_action('wp_ajax_nopriv_mm_wplogout', 'MM_wordpress_logout');
 function MM_WPlogin() {
     //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
     global $wpdb; // access to the database
+
     //use auth0 plugin to log people into wp
     $a0_plugin = new WP_Auth0_InitialSetup(WP_Auth0_Options::Instance());
     $a0_options = WP_Auth0_Options::Instance();
@@ -82,6 +83,13 @@ add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
 add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 
 function auth0_user_update($user_login, $user) {
+  //get membership information for this user
+  $headers = setMemPressHeaders();
+  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberArray = json_decode($memberInfo);
+  $membershipType = checkForUpgrade($memberArray);
+
+  //call Auth0 to get authorization token
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
@@ -109,27 +117,13 @@ function auth0_user_update($user_login, $user) {
 
 	// the response has our token for update metadata
 	$json_response = json_decode($response);
+
+  //get the auth0 id from the wp user meta
 	$auth0UserID = get_user_meta($user->ID, 'wp_auth0_id');
-	$headers = setMemPressHeaders();
-    $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
-    $memberArray = json_decode($memberInfo);
-	$membershipType = "";
-    if(isset($memberArray->active_memberships) &&
-           is_array($memberArray->active_memberships)
-        && !empty($memberArray->active_memberships)){
-		//see if they are an active premium member
-		$key = array_search('Premium Member', array_column($memberArray->active_memberships, 'title'));
-		if($key !== false || $key == 0){
-			//Premium Membership
-			$membershipType = "Premium Member";
-		}else{
-			//free membership, upgrade now
-			$membershipType = "Upgrade Membership";
-		}
-	}
 
+  //call Auth0 to get update user information
+  //TBD: update avatar, name and email here
 	$curl = curl_init();
-
 	curl_setopt_array($curl, [
 	  CURLOPT_URL => "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0],
 	  CURLOPT_RETURNTRANSFER => true,
@@ -154,8 +148,8 @@ function auth0_user_update($user_login, $user) {
 	  error_log("cURL Error #:" . $err);
 	}
 
-
 }
+
 add_action('wp_login', 'auth0_user_update', 10, 2);
 
 // Write to the php error log by request
@@ -170,15 +164,6 @@ function randomString() {
     $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
     return substr(str_shuffle($permitted_chars), 0, 10);
 }
-
-// prevent non admin users from seeing the admin dashboard -- I don't believe this is necessary anymore. - Rio 3/2/22
-/*I function blockusers_init() {
-    if (is_admin() && !current_user_can('administrator') && !( defined('DOING_AJAX') && DOING_AJAX )) {
-        wp_redirect(home_url());
-        exit;
-    }
-}
-add_action('init', 'blockusers_init');*/
 
 function timezone_abbr_from_name($timezone_name) {
     $dateTime = new DateTime();
@@ -217,16 +202,6 @@ add_filter('body_class', 'add_universal_body_classes');
 // don't just use the auth0 email field for the wpuser name
 add_filter( 'auth0_use_management_api_for_userinfo', '__return_false', 101 );
 
-/* disable wordpress emails if that is set in wp-config
-add_filter('wp_mail','disabling_emails', 10,1);
-function disabling_emails( $args ){
-	error_log("variable is: " . ALLOW_WP_EMAILS);
-    if ( ! $_GET['allow_wp_mail'] ) {
-        unset ( $args['to'] );
-    }
-    return $args;
-}
-*/
 
 /**
  * Eliminate some of the default admin list columns that squish the title
@@ -353,3 +328,50 @@ function postCurl($url, $headers = null, $datastring = null) {
 	curl_close($ch);
   return $response;
 }
+
+/* This function will check if user is a premium member, non member or eligible for upgrade */
+function checkForUpgrade($memberArray) {
+  if(isset($memberArray->active_memberships)) {
+    //create an array of memberships using the title field
+    $memArray = array_column($memberArray->active_memberships, 'title');
+
+    if(!empty($memArray)){
+      //look for the needle in any part of the title field in the multi level array
+      if(array_find('premium', $memArray, 'title') !== false ||
+         array_find('multi-seat', $memArray, 'title') !== false ||
+         array_find('school maker faire', $memArray, 'title') !== false){
+        //Premium Membership
+        $membershipType = "premium";
+      }else{
+        //free membership, upgrade now
+        $membershipType = "upgrade";
+      }
+    }
+  }else{
+    $membershipType = "none";
+  }
+  return $membershipType;
+}
+
+/**
+ *  Case in-sensitive array_search() with partial matches
+ */
+ function array_find($needle, array $haystack) {
+   foreach ($haystack as $key => $value) {
+      if (false !== stripos($value, $needle)) {
+           return $key;
+       }
+   }
+   return false;
+ }
+
+ /* Used to set the memberpress headers for the api call */
+ function setMemPressHeaders($datastring = null) {
+ 	$headers = array();
+ 	$headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
+ 	$headers[] = 'Content-Type: application/json';
+ 	if($datastring){
+ 		$headers[] = 'Content-Length: ' . strlen($datastring);
+ 	}
+ 	return $headers;
+ }

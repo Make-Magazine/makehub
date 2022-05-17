@@ -1,34 +1,35 @@
 window.addEventListener('load', function () {
     //set variable defaults
     var userProfile;
-    var loggedin = false;
-    var wpLoginRequired = true;
-	var makecoRoot = "https://make.co";
-
     var url = new URL(location.href).hostname;
-    if( url.indexOf('makezine')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
-		wpLoginRequired = false;
-    }
-	if(url.indexOf('test')!== -1 || url.indexOf('local')!== -1 ) {
-		makecoRoot = "https://www.makehub.local"
-    }
-	if(url.indexOf('dev.')!== -1 || url.indexOf('devmakehub')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('mfairedev')!== -1) {
-		makecoRoot = "https://devmakehub.make.co"
-    }
-	if(url.indexOf('stage.')!== -1 || url.indexOf('stagemakehub')!== -1 || url.indexOf('mzinestage')!== -1 || url.indexOf('mfairestage')!== -1) {
-		makecoRoot = "https://stagemakehub.wpengine.com"
+    var auth0loggedin = false;
+
+    //we only login to wordpress on the makehub and the makerfaire website
+    var wploggedin = false;        //is the user logged into WP?
+    var wpLoginRequired = false;   //is a WP login required?
+    var makehubSite = false;       //is this a makehub site?
+
+    if(url.indexOf('make.co') !== -1 || url.indexOf('makehub')    !== -1) {
+      makehubSite = true;
+      wpLoginRequired = true;
+    } else if(url.indexOf('mfaire') !== -1  || url.indexOf('makerfaire') !== -1 ) {
+      wpLoginRequired = true;
     }
 
-	//if (wpLoginRequired == true) {
-	    //check if logged into Wordpress
-	    if(document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true"){
-			loggedin = true;
-	        //let's set up the dropdowns
-	        displayButtons();
-	    }else{
-			jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width='50px' style='margin:auto;' />");
-			jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
-			//ok let's check auth0 instead
+    //if you are on a makehub site and logged in, you do not need to call auth0
+    if(makehubSite && (document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true")){
+      wploggedin = true;
+      //let's set up the dropdowns
+      displayButtons();
+    }else{
+      //If the buddypanel exists, hide it while we check for logged in
+      //alicia, shouldn't this just be done before the if wpLoginRequired check?
+      if(jQuery(".buddypanel").length){
+        jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width='50px' style='margin:auto;' />");
+			  jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
+      }
+
+      //ok let's check auth0 instead
 			var webAuth = new auth0.WebAuth({
 				domain: AUTH0_CUSTOM_DOMAIN,
 				clientID: AUTH0_CLIENT_ID,
@@ -48,24 +49,31 @@ window.addEventListener('load', function () {
 						if (err.error !== 'login_required') {
 							errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 						}
-						// this is where we have to run the wp logout script
-						if(wpLoginRequired == true && jQuery("body").is(".logged-in")) {
+
+						// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+						if(wpLoginRequired && jQuery("body").is(".logged-in")) {
 							WPlogout();
 						}
+
 						clearLocalStorage();
-						displayButtons();
 					} else {
+            //logged into Auth0
+            auth0loggedin = true;
 						console.log('SSO set session');
 						userProfile = result.idTokenPayload;
-						//console.log(userProfile)
 						setSession(result);
+
+            //if this is a site that requires WP login, but they aren't logged into wp, log them in
+      			if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+      				// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+      				jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+      				WPlogin();
+      			}
 					}
-
+          displayButtons();
 				}
-			);
-
-		}
-	//}
+			); //end webAuth.checkSession
+    }
 
 	//place functions here so they can access the variables inside the event addEventListener
 	function clearLocalStorage() {
@@ -86,14 +94,16 @@ window.addEventListener('load', function () {
 		} else {
 			clearLocalStorage();
 		}
-		displayButtons();
 	}
 
 	function displayButtons() {
-		if (localStorage.getItem('expires_at') || loggedin) {
+    //are we logged into auth0 or wordpress?
+		if (auth0loggedin || wploggedin) {
+      //hide the logout button
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			getProfile();
 		} else {
+      //show the log in button
 			jQuery("#LoginBtn").css("display", "block");
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			jQuery(".login-section").css("display", "block");
@@ -106,12 +116,13 @@ window.addEventListener('load', function () {
 	function showBuddypanel() {
 		//does this site have a bb left hand panel?
 		if(document.body.classList.contains( 'bb-buddypanel' )){
-			if(loggedin == false) {
+      //are they logged into wp or auth0
+			if(wploggedin == false) {
 				jQuery("body").addClass("buddypanel-open");
 			} else {
 				jQuery("body").addClass("buddypanel-closed");
 			}
-			//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get readjusted
+			//simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get re-adjusted
 			window.dispatchEvent(new Event('resize'));
 		}
 	}
@@ -122,21 +133,17 @@ window.addEventListener('load', function () {
 	}
 
 	function getProfile() {
-		if(loggedin && window.location.href.indexOf(makecoRoot) > -1){
+    var user = {};
+    //are they logged into WP or Auth0 and is this a makeco domain?
+		if(wploggedin && makehubSite){
 			//user is logged into wordpress at this point and is on a make.co site let's display wordpress data
-			if(ajax_object.wp_user_avatar != undefined) {
-				document.querySelector('.dropdown-toggle img').src =  ajax_object.wp_user_avatar;
-				document.querySelector('.profile-info img').src = ajax_object.wp_user_avatar;
-			}
-			document.querySelector('.dropdown-toggle img').style.display = "block";
-			document.querySelector('#LoginBtn').style.display = "none";
-			document.querySelector('.profile-email').innerHTML = ajax_object.wp_user_email;
-			document.querySelector('.profile-info .profile-name').innerHTML = (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename;
-			if( jQuery("body").is(".buddyboss-theme") ) {
-				hideSpinner();
-				showBuddypanel();
-			}
-		}else{ // if user is not logged in already or on a non make.co site, we will call data from auth0
+      user = {user_avatar:(ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
+              user_email:(ajax_object.wp_user_email == undefined) ? '' : ajax_object.wp_user_email,
+              user_name:(ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename,
+              user_memlevel:(ajax_object.wp_user_memlevel == undefined) ? '' : ajax_object.wp_user_memlevel,
+             };
+
+		}else if(auth0loggedin){ // if user is logged into auth0, we will call data from auth0
 			//we already got the userprofile info from auth0 in the check session step
 			var accessToken = localStorage.getItem('access_token');
 
@@ -145,45 +152,27 @@ window.addEventListener('load', function () {
 				errorMsg('Login attempted without Access Token');
 			}
 
-			// make sure that there isn't a wordpress acount with a different user logged in
-			/*if (ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
-				WPlogout();
-			}*/
-			// display the avatar
-			document.querySelector('.dropdown-toggle img').src = userProfile.picture;
-			document.querySelector('.profile-info img').src = userProfile.picture;
-			document.querySelector('#LoginBtn').style.display = "none";
-			document.querySelector('.profile-email').innerHTML = userProfile.email;
+      //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
+      user = {user_avatar:(userProfile.picture == undefined) ? '' : userProfile.picture,
+              user_email:(userProfile.email == undefined) ? '' : userProfile.email,
+              user_name:(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
+              user_memlevel:(userProfile['http://makershare.com/membership_level'] != undefined) ? '' : userProfile['http://makershare.com/membership_level'],
+             };
+		}else{
+      //not loged into auth0 or wp, get out of here
+      return;
+    }
 
-			if (userProfile['http://makershare.com/membership_level'] != undefined ) {
-				switch(userProfile['http://makershare.com/membership_level']) {
-					case "Premium Member":
-						document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
-						document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
-						break;
-					case "Upgrade Membership":
-						document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
-						document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
-						break;
-					default:
-						break;
-				}
-			}
-			// do we need http://makershare.com/last_name / first_name anymore
-			if (userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
-				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
-			}
-			if (wpLoginRequired && loggedin == false && !jQuery("body").is(".logged-in")) {
-				// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-				jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-				WPlogin();
-			} else if( jQuery("body").is(".buddyboss-theme") ) {
-				// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-				showBuddypanel();
-			}
-			document.querySelector('.dropdown-toggle img').style.display = "block";
-		}
-		jQuery(".login-section").css("display", "block");
+    //set the user drop down and avatar
+    setUserDrop(user);
+
+    //if this is a buddyboss theme site, show the buddypanel
+    if( jQuery("body").is(".buddyboss-theme") ) {
+      // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
+      hideSpinner();
+      showBuddypanel();
+    }
+
 		// This is where I'm thinking we add the Rimark API Call
 	}
 
@@ -209,7 +198,7 @@ window.addEventListener('load', function () {
 				},
 			}).done(function () {
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
-				if (loggedin == false) {
+				if (wploggedin == false) {
 					// reload subnavs as necessary
 					jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
 					// reload the digital libary if necessary
@@ -227,6 +216,7 @@ window.addEventListener('load', function () {
 					if (jQuery('.logged-in-refresh').length) {
 						jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
 					}
+
 					// if the non-logged in buddypanel is showing for a logged in user, refresh it
 					if(jQuery("#buddypanel-menu .bp-login-nav").length) {
 						jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
@@ -236,6 +226,7 @@ window.addEventListener('load', function () {
 					} else if(jQuery("#buddypanel-menu .bp-logout-nav").length) {
 						hideSpinner();
 					}
+
 					jQuery("body").addClass("logged-in");
 					jQuery('.universal-loading-spinner').remove();
 				}
@@ -253,8 +244,6 @@ window.addEventListener('load', function () {
 				}
 			});
 			// this is if we're just logging in to begin with rather than visiting from another site
-		} else {
-			jQuery('.universal-loading-spinner').remove();
 		}
 	}
 
@@ -281,6 +270,39 @@ window.addEventListener('load', function () {
 		};
 		jQuery.post(ajax_object.ajax_url, data, function (response) {});
 	}
+
+  //this function is used to set the user avatar and drop down sections in the universal header
+  function setUserDrop(user){
+    //set user avatar
+    if(user.user_avatar != '') {
+      document.querySelector('.dropdown-toggle img').src =  user.user_avatar;
+      document.querySelector('.profile-info img').src = user.user_avatar;
+    }
+
+    //set email and profile name
+    document.querySelector('.profile-email').innerHTML = user.user_email;
+    document.querySelector('.profile-info .profile-name').innerHTML = user.user_name;
+
+    //set membership level
+    //TBD - rename the returned profile path to not have makershare.com as part of it
+    if (user.user_memlevel != '' ) {
+      switch(user.user_memlevel) {
+        case "premium":
+          document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
+          document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
+          break;
+        case "upgrade":
+          document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
+          document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
+          break;
+        default:
+          break;
+      }
+    }
+    document.querySelector('#LoginBtn').style.display = "none";
+    document.querySelector('.dropdown-toggle img').style.display = "block";
+		jQuery(".login-section").css("display", "block");
+  }
 
   //end functions
 });  // end event listener

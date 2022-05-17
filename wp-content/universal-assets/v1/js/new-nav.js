@@ -292,86 +292,29 @@ jQuery(document).ready(function () {
 	var profilehtml = '<ul id="header-my-account-menu" class="bb-my-account-menu has-icon">' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/dashboard">' +
-                            '<i class="_mi _before buddyboss bb-icon-board-list" aria-hidden="true"></i><span>My Dashboard</span>' +
+                            '<i class="_icon fa fa-th-list _before" aria-hidden="true"></i><span>My Dashboard</span>' +
                         '</a>' +
                     '</li>' +
-                    '<li class="menu-item menu-item-facilitator-portal">' +
-                        '<a href="https://make.co/edit-submission/">' +
-                            '<i class="_mi _before buddyboss bb-icon-graduation-cap" aria-hidden="true"></i><span>Facilitator Portal</span>' +
+                    '<li class="menu-item icon-added">' +
+                        '<a href="https://make.co/members/me/mp-membership/">' +
+                            '<i class="_icon fa fa-id-card-o _before" aria-hidden="true"></i><span>My Membership</span>' +
                         '</a>' +
                     '</li>' +
-                    '<li class="menu-item menu-item-event-cart">' +
-                        '<a href="https://make.co/registration-checkout/?event_cart=view#checkout">' +
-                            '<i class="_mi _before buddyboss bb-icon-shopping-cart" aria-hidden="true"></i><span>Event Cart</span>' +
+                    '<li class="menu-item icon-added">' +
+                        '<a href="https://make.co/maker-campus/">' +
+                            '<i class="_icon fa fa-calendar _before" aria-hidden="true"></i><span>Campus Events</span>' +
                         '</a>' +
                     '</li>' +
-                    '<li class="bp-menu bp-profile-nav menu-item menu-item-has-children">' +
+                    '<li class="menu-item icon-added">' +
+                        '<a href="https://make.co/members/me/groups/my-groups/">' +
+                            '<i class="_icon fa fa-users _before" aria-hidden="true"></i><span>My Groups</span>' +
+                        '</a>' +
+                    '</li>' +
+                    '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/profile/">' +
-                            '<i class="_mi _before buddyboss bb-icon-user-alt" aria-hidden="true"></i><span>Profile</span>' +
+                            '<i class="_icon fa fa-user _before" aria-hidden="true"></i><span>My Profile</span>' +
                         '</a>' +
-                        '<div class="wrapper ab-submenu">' +
-                            '<ul class="bb-sub-menu">' +
-                                '<li class="bp-menu bp-public-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/profile/">View</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-edit-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/profile/edit/">Edit</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-change-avatar-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/profile/change-avatar/">Profile Photo</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-change-cover-image-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/profile/change-cover-image/">Cover Photo</a>' +
-                                '</li>' +
-                            '</ul>' +
-                        '</div>' +
-                    '</li>' +
-                    '<li class="bp-menu bp-settings-nav menu-item menu-item-has-children">' +
-                        '<a href="https://make.co/members/me/settings/">' +
-                            '<i class="_mi _before buddyboss bb-icon-settings" aria-hidden="true"></i>' +
-                            '<span>Account</span>' +
-                        '</a>' +
-                        '<div class="wrapper ab-submenu"><ul class="bb-sub-menu">' +
-                                '<li class="bp-menu bp-settings-notifications-sub-nav menu-item no-icon"><a href="https://make.co/members/me/settings/notifications/">Email Preferences</a></li>' +
-                                '<li class="bp-menu bp-view-sub-nav menu-item no-icon"><a href="https://make.co/members/me/settings/profile/">Privacy</a></li>' +
-                                '<li class="bp-menu bp-blocked-members-sub-nav menu-item no-icon"><a href="https://make.co/members/me/settings/blocked-members/">Blocked Members</a></li>' +
-                                '<li class="bp-menu bp-group-invites-settings-sub-nav menu-item no-icon"><a href="https://make.co/members/me/settings/invites/">Group Invites</a></li>' +
-                                '<li class="bp-menu bp-export-sub-nav menu-item no-icon"><a href="https://make.co/members/me/settings/export/">Export Data</a></li>' +
-                            '</ul></div>' +
-                    '</li>' +
-                    '<li class="bp-menu bp-friends-nav menu-item menu-item-has-children">' +
-                        '<a href="https://make.co/members/me/friends/">' +
-                            '<i class="_mi _before buddyboss bb-icon-users" aria-hidden="true"></i><span>Connections</span></a>' +
-                        '<div class="wrapper ab-submenu">' +
-                            '<ul class="bb-sub-menu">' +
-                                '<li class="bp-menu bp-my-friends-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/friends/">My Connections</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-requests-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/friends/requests/">Requests</a>' +
-                                '</li>' +
-                            '</ul>' +
-                        '</div>' +
-                    '</li>' +
-                    '<li class="bp-menu bp-groups-nav menu-item menu-item-has-children">' +
-                        '<a href="https://make.co/members/me/groups/">' +
-                            '<i class="_mi _before buddyboss bb-icon-groups" aria-hidden="true"></i>' +
-                            '<span>Groups</span>' +
-                        '</a>' +
-                        '<div class="wrapper ab-submenu">' +
-                            '<ul class="bb-sub-menu">' +
-                                '<li class="bp-menu bp-groups-create-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/groups/create/">Create Group</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-my-groups-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/groups/">My Groups</a>' +
-                                '</li>' +
-                                '<li class="bp-menu bp-group-invites-sub-nav menu-item no-icon">' +
-                                    '<a href="https://make.co/members/me/groups/invites/">Invitations</a>' +
-                                '</li>' +
-                            '</ul>' +
-                        '</div>' +
-                    '</li>' +
+                    '</li>' +                  
                 '</ul>';
 	jQuery("#profileLinks").append(profilehtml);
 

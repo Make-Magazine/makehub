@@ -29,15 +29,6 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 
 	postCurl($url, $headers, $datastring);
 }
-function setMemPressHeaders($datastring = null) {
-	$headers = array();
-	$headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
-	$headers[] = 'Content-Type: application/json';
-	if($datastring){
-		$headers[] = 'Content-Length: ' . strlen($datastring);
-	}
-	return $headers;
-}
 
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
 function add_membership_class_profile($classes) {
