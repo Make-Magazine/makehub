@@ -342,6 +342,8 @@ function set_ajax_params(){
             )
         );
 
+  $last_name = get_user_meta( $user->ID, 'last_name', true );
+  $first_name = get_user_meta( $user->ID, 'first_name', true );      
   //set the ajax parameters
   wp_localize_script('universal', 'ajax_object',
           array(
@@ -349,7 +351,7 @@ function set_ajax_params(){
               'home_url' => get_home_url(),
               'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
               'wp_user_email' => $user->user_email,
-              'wp_user_nicename' => $user->user_nicename,
+              'wp_user_nicename' => $first_name.' '.$last_name,
               'wp_user_avatar' => $user_image,
               'wp_user_memlevel' => $membershipType
           )

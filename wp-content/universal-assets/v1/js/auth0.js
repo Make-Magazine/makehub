@@ -22,6 +22,7 @@ window.addEventListener('load', function () {
       //let's set up the dropdowns
       displayButtons();
     }else{
+      console.log('auth0 login');
       //If the buddypanel exists, hide it while we check for logged in
       //alicia, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
