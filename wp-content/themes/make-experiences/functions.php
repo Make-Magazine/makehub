@@ -395,4 +395,64 @@ function mc_edit_permission_check() {
     }
 }
 add_filter( 'admin_head', 'mc_edit_permission_check', 1, 4 );
+
+/**
+ * Update the Auth0 data after WP loging
+ * NOTE: The example below will break the user login process.
+ *
+ * @see WP_Auth0_LoginManager::do_login()
+ *
+ * @param integer  $user_id       - WordPress user ID for logged-in user
+ * @param stdClass $userinfo      - user information object from Auth0
+ * @param boolean  $is_new        - true if the user was created in WordPress, false if not
+ * @param string   $id_token      - ID token for the user from Auth0
+ * @param string   $access_token  - bearer access token from Auth0 (not used in implicit flow)
+ * @param string   $refresh_token - refresh token from Auth0 (not used in implicit flow)
+ */
+function auth0_user_update( $user_id, $userinfo, $is_new, $id_token, $access_token, $refresh_token ) {
+  //we only want to update auth0 user with community information
+  if(get_current_blog_id()!=1){
+    return;
+  }
+  //get user_meta
+  $last_name = get_user_meta( $user_id, 'last_name', true );
+  $first_name = get_user_meta( $user_id, 'first_name', true );
+
+  //get membership information for this user
+  $headers = setMemPressHeaders();
+  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user_id, $headers);
+  $memberArray = json_decode($memberInfo);
+  $membershipType = checkForUpgrade($memberArray);
+
+  //TBD compare current auth0 data to membership info to see if we need to update anything
+  /*foreach($userinfo as $key=>$value){
+    error_log($key.'='.$value);
+  }*/
+
+  //call Auth0 to get authorization token
+  $post_data = array("client_id" => AUTH0_CLIENTID, "client_secret" => AUTH0_SECRET, "audience" => "https://makermedia.auth0.com/api/v2/", "grant_type" => "client_credentials");
+  $response = postCurl("https://makermedia.auth0.com/oauth/token", array("content-type: application/json"), json_encode($post_data));
+
+  // the response has our token for update metadata
+  $json_response = json_decode($response);
+  $access_token = $json_response->access_token;
+
+  //get the auth0 id from the wp user meta
+	$auth0UserID = get_user_meta($user_id, 'wp_auth0_id');
+  $url = "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0];
+
+  //call Auth0 to get update user information
+  $post_data = array("user_metadata" =>
+                      array("first_name" => $first_name,
+                            "last_name" => $last_name,
+                            "picture" => get_avatar_url($user_id),
+                      )
+                    );
+  $headers = array("authorization: Bearer ".$access_token, "content-type: application/json");
+  $authRes = postCurl($url, $headers, json_encode($post_data),"PATCH");
+
+}
+
+add_action('auth0_user_login', 'auth0_user_update', 10, 6);
+
 ?>

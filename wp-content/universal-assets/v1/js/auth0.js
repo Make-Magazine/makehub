@@ -59,9 +59,8 @@ window.addEventListener('load', function () {
 					} else {
             //logged into Auth0
             auth0loggedin = true;
-						console.log('SSO set session');
-
 						userProfile = result.idTokenPayload;
+
 						setSession(result);
 
             //if this is a site that requires WP login, but they aren't logged into wp, log them in
@@ -154,10 +153,10 @@ window.addEventListener('load', function () {
 			}
 
       //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
-      user = {user_avatar:(userProfile.picture == undefined) ? '' : userProfile.picture,
-              user_email:(userProfile.email == undefined) ? '' : userProfile.email,
-              user_name:(userProfile['http://makershare.com/first_name'] == undefined && userProfile['http://makershare.com/last_name'] == undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
-              user_memlevel:(userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
+      user = {user_avatar: (userProfile['http://makershare.com/picture'] == undefined) ? userProfile.picture : userProfile['http://makershare.com/picture'],
+              user_email: (userProfile.email == undefined) ? '' : userProfile.email,
+              user_name: (userProfile['http://makershare.com/first_name'] == undefined && userProfile['http://makershare.com/last_name'] == undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
+              user_memlevel: (userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
              };
 		}else{
       //not loged into auth0 or wp, get out of here

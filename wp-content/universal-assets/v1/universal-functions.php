@@ -82,76 +82,6 @@ function MM_WPlogin() {
 add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
 add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 
-function auth0_user_update($user_login, $user) {
-  //get membership information for this user
-  $headers = setMemPressHeaders();
-  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
-  $memberArray = json_decode($memberInfo);
-  $membershipType = checkForUpgrade($memberArray);
-
-  //call Auth0 to get authorization token
-	$curl = curl_init();
-
-	curl_setopt_array($curl, array(
-	  CURLOPT_URL => "https://makermedia.auth0.com/oauth/token",
-	  CURLOPT_RETURNTRANSFER => true,
-	  CURLOPT_ENCODING => "",
-	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 30,
-	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	  CURLOPT_CUSTOMREQUEST => "POST",
-  	CURLOPT_POSTFIELDS => "{\"client_id\":\"".AUTH0_CLIENTID."\",\"client_secret\":\"".AUTH0_SECRET."\",\"audience\":\"https://makermedia.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}",
-	  CURLOPT_HTTPHEADER => array(
-	    "content-type: application/json"
-	  ),
-	));
-
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
-
-	curl_close($curl);
-
-	if ($err) {
-	  error_log("cURL Error #:" . $err);
-	}
-
-	// the response has our token for update metadata
-	$json_response = json_decode($response);
-
-  //get the auth0 id from the wp user meta
-	$auth0UserID = get_user_meta($user->ID, 'wp_auth0_id');
-
-  //call Auth0 to get update user information
-  //TBD: update avatar, name and email here
-	$curl = curl_init();
-	curl_setopt_array($curl, [
-	  CURLOPT_URL => "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0],
-	  CURLOPT_RETURNTRANSFER => true,
-	  CURLOPT_ENCODING => "",
-	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 30,
-	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	  CURLOPT_CUSTOMREQUEST => "PATCH",
-	  CURLOPT_POSTFIELDS => "{\"user_metadata\": {\"membership_level\": \"".$membershipType."\"}}",
-	  CURLOPT_HTTPHEADER => [
-		"authorization: Bearer " . $json_response->access_token,
-		"content-type: application/json"
-	  ],
-	]);
-
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
-
-	curl_close($curl);
-
-	if ($err) {
-	  error_log("cURL Error #:" . $err);
-	}
-
-}
-
-add_action('wp_login', 'auth0_user_update', 10, 2);
-
 // Write to the php error log by request
 function make_error_log() {
     $error = filter_input(INPUT_POST, 'make_error', FILTER_SANITIZE_STRING);
@@ -296,7 +226,7 @@ function basicCurl($url, $headers = null) {
     return $data;
 }
 
-function postCurl($url, $headers = null, $datastring = null) {
+function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 	$ch = curl_init($url);
 
 	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
@@ -308,7 +238,7 @@ function postCurl($url, $headers = null, $datastring = null) {
   //curl_setopt($ch, CURLOPT_STDERR, $verbose = fopen('php://temp', 'rw+'));
 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
 
 	if($datastring != null) {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $datastring);
@@ -331,6 +261,7 @@ function postCurl($url, $headers = null, $datastring = null) {
 
 /* This function will check if user is a premium member, non member or eligible for upgrade */
 function checkForUpgrade($memberArray) {
+  $membershipType = '';
   if(isset($memberArray->active_memberships)) {
     //create an array of memberships using the title field
     $memArray = array_column($memberArray->active_memberships, 'title');
@@ -397,6 +328,7 @@ function set_ajax_params(){
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 
   $user = wp_get_current_user();
+
   $headers = setMemPressHeaders();
   $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
   $memberArray = json_decode($memberInfo);
