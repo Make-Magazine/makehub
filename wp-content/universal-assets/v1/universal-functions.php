@@ -334,6 +334,14 @@ function set_ajax_params(){
   $memberArray = json_decode($memberInfo);
   $membershipType = checkForUpgrade($memberArray);
 
+  $user_image =
+        bp_core_fetch_avatar (
+            array(  'item_id' => $user->ID, // id of user for desired avatar
+                    'type'    => 'full',
+                    'html'   => FALSE     // FALSE = return url, TRUE (default) = return img html
+            )
+        );
+
   //set the ajax parameters
   wp_localize_script('universal', 'ajax_object',
           array(
@@ -342,7 +350,7 @@ function set_ajax_params(){
               'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
               'wp_user_email' => $user->user_email,
               'wp_user_nicename' => $user->user_nicename,
-              'wp_user_avatar' => get_avatar_url($user->ID),
+              'wp_user_avatar' => $user_image,
               'wp_user_memlevel' => $membershipType
           )
   );

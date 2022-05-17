@@ -441,11 +441,18 @@ function auth0_user_update( $user_id, $userinfo, $is_new, $id_token, $access_tok
 	$auth0UserID = get_user_meta($user_id, 'wp_auth0_id');
   $url = "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0];
 
+  $user_image =
+        bp_core_fetch_avatar (
+            array(  'item_id' => $user_id, // id of user for desired avatar
+                    'type'    => 'full',
+                    'html'   => FALSE     // FALSE = return url, TRUE (default) = return img html
+            )
+        );
   //call Auth0 to get update user information
   $post_data = array("user_metadata" =>
                       array("first_name" => $first_name,
                             "last_name" => $last_name,
-                            "picture" => get_avatar_url($user_id),
+                            "picture" => $user_image,
                       )
                     );
   $headers = array("authorization: Bearer ".$access_token, "content-type: application/json");
