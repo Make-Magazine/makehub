@@ -4,6 +4,18 @@ window.addEventListener('load', function () {
     var url = new URL(location.href).hostname;
     var auth0loggedin = false;
 
+    //used in makehub API call
+    var makecoRoot = "https://make.co";
+    if( url.indexOf('makezine')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
+		    wpLoginRequired = false;
+    }else if(url.indexOf('test')!== -1 || url.indexOf('local')!== -1 ) {
+		    makecoRoot = "https://www.makehub.local"
+    }else if(url.indexOf('dev.')!== -1 || url.indexOf('devmakehub')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('mfairedev')!== -1) {
+		    makecoRoot = "https://devmakehub.make.co"
+    }else if(url.indexOf('stage.')!== -1 || url.indexOf('stagemakehub')!== -1 || url.indexOf('mzinestage')!== -1 || url.indexOf('mfairestage')!== -1) {
+		    makecoRoot = "https://stagemakehub.wpengine.com"
+    }
+
     //we only login to wordpress on the makehub and the makerfaire website
     var wploggedin = false;        //is the user logged into WP?
     var wpLoginRequired = false;   //is a WP login required?
@@ -100,9 +112,22 @@ window.addEventListener('load', function () {
 	function displayButtons() {
     //are we logged into auth0 or wordpress?
 		if (auth0loggedin || wploggedin) {
+      console.log('before getProfile');
       //hide the logout button
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
-			getProfile();
+			var user = getProfile();
+      console.log('after getProfile');
+      // Now that we have the avatar and the drop down, let's call rimark and see what info they have
+      jQuery.ajax({
+        type: 'GET',
+        url: makecoRoot+"/wp-json/MakeHub/v1/userNav?email=" + user.user_email,
+        timeout: 100000,
+        success: function (data) {
+          if(data.makeCoins && data.makeCoins != "") {
+            jQuery( "#make-coins" ).html( data.makeCoins );
+          }
+        }
+      });
 		} else {
       //show the log in button
 			jQuery("#LoginBtn").css("display", "block");
@@ -111,6 +136,7 @@ window.addEventListener('load', function () {
 			showBuddypanel();
 			hideSpinner();
 		}
+
 	}
 
 	// css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
@@ -173,8 +199,7 @@ window.addEventListener('load', function () {
       hideSpinner();
       showBuddypanel();
     }
-
-		// This is where I'm thinking we add the Rimark API Call
+    return user;
 	}
 
 	function WPlogin() {
