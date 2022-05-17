@@ -9,7 +9,7 @@ window.addEventListener('load', function () {
     var wpLoginRequired = false;   //is a WP login required?
     var makehubSite = false;       //is this a makehub site?
 
-    if(url.indexOf('make.co') !== -1 || url.indexOf('makehub')    !== -1) {
+    if(url.indexOf('make.co') !== -1 || url.indexOf('makehub') !== -1) {
       makehubSite = true;
       wpLoginRequired = true;
     } else if(url.indexOf('mfaire') !== -1  || url.indexOf('makerfaire') !== -1 ) {
@@ -60,6 +60,7 @@ window.addEventListener('load', function () {
             //logged into Auth0
             auth0loggedin = true;
 						console.log('SSO set session');
+
 						userProfile = result.idTokenPayload;
 						setSession(result);
 
@@ -155,8 +156,8 @@ window.addEventListener('load', function () {
       //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
       user = {user_avatar:(userProfile.picture == undefined) ? '' : userProfile.picture,
               user_email:(userProfile.email == undefined) ? '' : userProfile.email,
-              user_name:(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
-              user_memlevel:(userProfile['http://makershare.com/membership_level'] != undefined) ? '' : userProfile['http://makershare.com/membership_level'],
+              user_name:(userProfile['http://makershare.com/first_name'] == undefined && userProfile['http://makershare.com/last_name'] == undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
+              user_memlevel:(userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
              };
 		}else{
       //not loged into auth0 or wp, get out of here
