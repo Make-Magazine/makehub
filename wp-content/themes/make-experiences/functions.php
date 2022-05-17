@@ -57,90 +57,18 @@ function make_experiences_scripts_styles() {
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-	  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 
     // lib src packages up bootstrap js and fancybox
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('make_experiences-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-    $user = wp_get_current_user();    
-    $headers = setMemPressHeaders();
-    $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
-    $memberArray = json_decode($memberInfo);
-    $membershipType = checkForUpgrade($memberArray);
-
-    wp_localize_script('universal', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => $user->user_email,
-                'wp_user_nicename' => $user->user_nicename,
-                'wp_user_avatar' => get_avatar_url($user->ID),
-                'wp_user_memlevel' => $membershipType
-            )
-    );
 }
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
 function load_admin_styles() {
-    wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
+  wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
-
-function set_universal_asset_constants() {
-	if (isset($_SERVER['HTTPS']) &&
-	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-	  		$protocol = 'https://';
-	} else {
-		$protocol = 'http://';
-	}
-    // Set the important bits as CONSTANTS that can easily be used elsewhere
-	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
-	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
-
-	// Decide if user can upgrade
-	$canUpgrade = true;
-	$hasMembership = false;
-	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Premium Member", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
-	$currentMemberships = array();
-
-	if( class_exists('MeprUtils') ) {
-	    $mepr_current_user = MeprUtils::get_currentuserinfo();
-		  // see if you can get the "slug" in this query and test against that in the $fullMemberships list
-	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
-		if($mepr_current_user) {
-		    $table = MeprSubscription::account_subscr_table(
-		      'created_at', 'DESC',
-		      1, '', 'any', 0, false,
-		      array(
-		        'member' => $mepr_current_user->user_login,
-		      ),
-		      $sub_cols
-		    );
-		    $subscriptions = $table['results'];
-			foreach($subscriptions as $subscription) {
-				if($subscription->active == '<span class="mepr-active">Yes</span>') {
-					$hasMembership = true;
-					$currentMemberships[] = $subscription->product_name;
-					if( in_array($subscription->product_name, $fullMemberships) ) {
-						$canUpgrade = false;
-					}
-				}
-			}
-		} else {
-			$canUpgrade = false;
-		}
-	}
-	define('CURRENT_MEMBERSHIPS', $currentMemberships);
-	define('IS_MEMBER', $hasMembership);
-	define('CAN_UPGRADE', $canUpgrade);
-}
-set_universal_asset_constants();
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');

@@ -125,7 +125,7 @@ function make_makerspaces_enqueue_scripts_styles() {
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true );
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
 	// Map page only
@@ -145,22 +145,12 @@ function make_makerspaces_enqueue_scripts_styles() {
 		$my_version,
 		true
 	);
-
-	wp_localize_script('make-makerspaces', 'ajax_object',
-	  array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'home_url' => get_home_url(),
-			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => wp_get_current_user()->user_email,
-	  )
-	);
-
 }
 
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
-	$classes[] = 'makerspaces';
+		$classes[] = 'makerspaces';
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;

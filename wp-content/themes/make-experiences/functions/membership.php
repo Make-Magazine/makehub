@@ -31,7 +31,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 }
 
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
-function add_membership_class_profile($classes) {
+function add_membership_class_profile($classes) {	
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
 	    $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
 	}

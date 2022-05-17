@@ -100,7 +100,7 @@ function auth0_user_update($user_login, $user) {
 	  CURLOPT_TIMEOUT => 30,
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => "POST",
-  	  CURLOPT_POSTFIELDS => "{\"client_id\":\"".AUTH0_CLIENTID."\",\"client_secret\":\"".AUTH0_SECRET."\",\"audience\":\"https://makermedia.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}",
+  	CURLOPT_POSTFIELDS => "{\"client_id\":\"".AUTH0_CLIENTID."\",\"client_secret\":\"".AUTH0_SECRET."\",\"audience\":\"https://makermedia.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}",
 	  CURLOPT_HTTPHEADER => array(
 	    "content-type: application/json"
 	  ),
@@ -132,7 +132,7 @@ function auth0_user_update($user_login, $user) {
 	  CURLOPT_TIMEOUT => 30,
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => "PATCH",
-	  CURLOPT_POSTFIELDS => "{\"user_metadata\": {\"membership_type\": \"".$membershipType."\"}}",
+	  CURLOPT_POSTFIELDS => "{\"user_metadata\": {\"membership_level\": \"".$membershipType."\"}}",
 	  CURLOPT_HTTPHEADER => [
 		"authorization: Bearer " . $json_response->access_token,
 		"content-type: application/json"
@@ -375,3 +375,60 @@ function checkForUpgrade($memberArray) {
  	}
  	return $headers;
  }
+
+function set_ajax_params(){
+  $my_version = '1.1';
+  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+
+  $user = wp_get_current_user();
+  $headers = setMemPressHeaders();
+  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberArray = json_decode($memberInfo);
+  $membershipType = checkForUpgrade($memberArray);
+
+  //set the ajax parameters
+  wp_localize_script('universal', 'ajax_object',
+          array(
+              'ajax_url' => admin_url('admin-ajax.php'),
+              'home_url' => get_home_url(),
+              'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+              'wp_user_email' => $user->user_email,
+              'wp_user_nicename' => $user->user_nicename,
+              'wp_user_avatar' => get_avatar_url($user->ID),
+              'wp_user_memlevel' => $membershipType
+          )
+  );
+}
+
+add_action('wp_enqueue_scripts', 'set_ajax_params', 9999);
+
+function set_universal_asset_constants() {
+	if (isset($_SERVER['HTTPS']) &&
+	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+	  		$protocol = 'https://';
+	} else {
+		$protocol = 'http://';
+	}
+  // Set the important bits as CONSTANTS that can easily be used elsewhere
+  define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
+  define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
+
+	// Decide if user can upgrade
+  $user = wp_get_current_user();
+  $headers = setMemPressHeaders();
+  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberArray = json_decode($memberInfo);
+  $membershipType = checkForUpgrade($memberArray);
+
+  $canUpgrade = ($membershipType=='upgrade' ? TRUE:FALSE);
+  $hasMembership = ($membershipType=='none' ? TRUE:FALSE);
+  $currentMemberships = array_column($memberArray->active_memberships, 'title');
+
+	define('CURRENT_MEMBERSHIPS', $currentMemberships);
+	define('IS_MEMBER', $hasMembership);
+	define('CAN_UPGRADE', $canUpgrade);
+}
+
+set_universal_asset_constants();

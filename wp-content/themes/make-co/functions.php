@@ -92,19 +92,9 @@ function make_co_enqueue_scripts() {
 
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
-	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
-	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true );
 
-    wp_localize_script('theme-js', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => wp_get_current_user()->user_email,
-                'wp_user_nicename' => wp_get_current_user()->user_nicename
-            )
-    );
+	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
     // settings we need localized for buddypress themes
     $store_filter_settings = apply_filters('bp_legacy_store_filter_settings', is_user_logged_in());
@@ -174,7 +164,7 @@ function remove_admin_bar(){
     if (current_user_can('administrator')) {
         return true;
     }
-    
+
     return false;
 }
 
@@ -346,7 +336,7 @@ function wpb_sender_name($original_email_from) {
     return 'Make: Community';
 }
 
-// Hooking up our functions to WordPress filters 
+// Hooking up our functions to WordPress filters
 add_filter('wp_mail_from', 'wpb_sender_email');
 add_filter('wp_mail_from_name', 'wpb_sender_name');
 
@@ -379,7 +369,7 @@ function buddypress_add_last_activity() {
 
   $members =  get_users( 'blog_id=1&fields=ID' );
   // $members =  get_users( 'fields=ID&role=subscriber' );
-  
+
   foreach ( $members as $user_id ) {
      bp_update_user_last_activity( $user_id, bp_core_current_time() );
   }
@@ -394,10 +384,10 @@ add_filter( 'bp_core_signup_send_activation_key', create_function('','return fal
 /** Removes Events from WP Admin Bar  */
 define('TRIBE_DISABLE_TOOLBAR_ITEMS', true);
 function remove_comments(){
-        global $wp_admin_bar;        
+        global $wp_admin_bar;
         $wp_admin_bar->remove_menu('comments');
-        $wp_admin_bar->remove_menu('wpseo-menu');        
-        $wp_admin_bar->remove_menu('uap_dashboard_menu');        
+        $wp_admin_bar->remove_menu('wpseo-menu');
+        $wp_admin_bar->remove_menu('uap_dashboard_menu');
 }
 add_action( 'wp_before_admin_bar_render', 'remove_comments' );
 

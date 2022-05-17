@@ -58,28 +58,10 @@ function maker_camp_scripts_styles() {
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+
     // lib src packages up bootstrap, fancybox, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-    $user = wp_get_current_user();
-    $headers = setMemPressHeaders();
-    $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
-    $memberArray = json_decode($memberInfo);
-    $membershipType = checkForUpgrade($memberArray);
-
-    wp_localize_script('universal', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => $user->user_email,
-                'wp_user_nicename' => $user->user_nicename,
-				        'wp_user_avatar' => get_avatar_url($user->ID),
-                'wp_user_memlevel' => $membershipType
-            )
-    );
 }
 
 add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
