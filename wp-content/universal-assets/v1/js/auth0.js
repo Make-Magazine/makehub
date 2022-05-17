@@ -4,18 +4,6 @@ window.addEventListener('load', function () {
     var url = new URL(location.href).hostname;
     var auth0loggedin = false;
 
-    //used in makehub API call
-    var makecoRoot = "https://make.co";
-    if( url.indexOf('makezine')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('makercamp.com')!== -1 ) {
-		    wpLoginRequired = false;
-    }else if(url.indexOf('test')!== -1 || url.indexOf('local')!== -1 ) {
-		    makecoRoot = "https://www.makehub.local"
-    }else if(url.indexOf('dev.')!== -1 || url.indexOf('devmakehub')!== -1 || url.indexOf('mzinedev')!== -1 || url.indexOf('mfairedev')!== -1) {
-		    makecoRoot = "https://devmakehub.make.co"
-    }else if(url.indexOf('stage.')!== -1 || url.indexOf('stagemakehub')!== -1 || url.indexOf('mzinestage')!== -1 || url.indexOf('mfairestage')!== -1) {
-		    makecoRoot = "https://stagemakehub.wpengine.com"
-    }
-
     //we only login to wordpress on the makehub and the makerfaire website
     var wploggedin = false;        //is the user logged into WP?
     var wpLoginRequired = false;   //is a WP login required?
@@ -112,23 +100,12 @@ window.addEventListener('load', function () {
 	function displayButtons() {
     //are we logged into auth0 or wordpress?
 		if (auth0loggedin || wploggedin) {
-      console.log('before getProfile');
       //hide the logout button
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			var user = getProfile();
-      console.log('after getProfile');
 
       // Now that we have the avatar and the drop down, let's call rimark and see what info they have
-      jQuery.ajax({
-        type: 'GET',
-        url: makecoRoot+"/wp-json/MakeHub/v1/userNav?email=" + user.user_email,
-        timeout: 100000,
-        success: function (data) {
-          if(data.makeCoins && data.makeCoins != "") {
-            jQuery( "#make-coin" ).html( data.makeCoins );
-          }
-        }
-      });
+      callRimark(user);
 		} else {
       //show the log in button
 			jQuery("#LoginBtn").css("display", "block");
@@ -331,5 +308,47 @@ window.addEventListener('load', function () {
 		jQuery(".login-section").css("display", "block");
   }
 
+  //call rimark and build coin section
+  function callRimark(user) {
+    console.time("iterationTime");
+    //POST auth request to get jwt
+    var url = "https://devapi.rimark.io/api/auth/local/";
+    var body = "{\"identifier\": \"webmaster@make.co\",\"password\":\"AHxv2sj3hK*rWpF\"}";
+
+    jQuery.ajax({
+      type: 'POST',
+      url: "https://devapi.rimark.io/api/auth/local/",
+      data: body,
+      contentType: "application/json; charset=utf-8",
+      success: function (data) {
+        var jwt = data.jwt;
+
+        //get specific user info
+        jQuery.ajax({
+          type: 'GET',
+          url: 'https://devapi.rimark.io/api/makes?filters[user_email][$eq]='+user.user_email,
+          headers: {
+            Authorization: 'Bearer ' + jwt
+          },
+          contentType: "application/json; charset=utf-8",
+          success: function (data) {
+            //data[0]->attributes->total_supply_owned
+            if(jQuery.isEmptyObject(data.data)){
+              console.log('no coins for you');
+              coins = '$MAKE:<br/><a target="_blank" href="#">Learn More</a>';
+            }else{
+              coins = '$MAKE:<br/><a target="_blank" href="https://beta.rimark.io/?target=219f76ovo2v0fi2nn9es0x9wf">'+data.data[0].attributes.total_supply_owned+'</a>';
+              //console.log(data.data[0].attributes.total_supply_owned);
+            }
+            jQuery("#make-coin").html(coins);
+
+
+            console.timeEnd("iterationTime");
+          }
+        });
+      }
+    });
+
+  }
   //end functions
 });  // end event listener
