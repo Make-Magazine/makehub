@@ -377,7 +377,23 @@ function checkForUpgrade($memberArray) {
  }
 
 function set_ajax_params(){
-  $my_version = '1.1';
+  $my_version = '1.1'; //default
+  //pull the style.css to retrieve the version
+  $file = ABSPATH . 'wp-content/universal-assets/v1/style.css';
+  $searchfor = 'Version:';
+
+  // get the file contents, assuming the file to be readable (and exist)
+  $contents = file_get_contents($file);
+  // escape special characters in the query
+  $pattern = preg_quote($searchfor, '/');
+  // finalise the regular expression, matching the whole line
+  $pattern = "/^.*$pattern.*\$/m";
+  // search, and store all matching occurences in $matches
+  if(preg_match_all($pattern, $contents, $matches)){
+    $my_version = str_replace($searchfor, '', implode("\n", $matches[0]));
+    $my_version = str_replace(' ', '', $my_version);
+  }
+
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 
   $user = wp_get_current_user();
