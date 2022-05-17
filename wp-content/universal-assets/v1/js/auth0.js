@@ -117,6 +117,7 @@ window.addEventListener('load', function () {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			var user = getProfile();
       console.log('after getProfile');
+
       // Now that we have the avatar and the drop down, let's call rimark and see what info they have
       jQuery.ajax({
         type: 'GET',
@@ -124,7 +125,7 @@ window.addEventListener('load', function () {
         timeout: 100000,
         success: function (data) {
           if(data.makeCoins && data.makeCoins != "") {
-            jQuery( "#make-coins" ).html( data.makeCoins );
+            jQuery( "#make-coin" ).html( data.makeCoins );
           }
         }
       });
