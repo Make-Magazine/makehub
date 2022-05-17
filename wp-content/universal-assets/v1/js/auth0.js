@@ -1,4 +1,4 @@
-window.addEventListener('load', function () {
+jQuery( document ).ready(function() {
     //set variable defaults
     var userProfile;
     var url = new URL(location.href).hostname;

@@ -7,13 +7,6 @@ require_once(ABSPATH . 'wp-load.php');
 define('AUTH0_CLIENTID', "NDw7r6YLomyGceVgG7PIt2wIhIgLNqxG");
 define('AUTH0_SECRET', "4dfAi4LjuknqDkzXILwK13vARSBiZIdB-XTHAErTk7QthdRcjF-5w3-AmYfh6eUT");
 
-// Can we load the universal scripts this way
-function universal_scripts() {
-    //auth0
-    wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
-}
-add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
-
 // check if user is logged in
 function ajax_check_user_logged_in() {
     echo is_user_logged_in() ? 'yes' : 'no';
@@ -325,7 +318,9 @@ function set_ajax_params(){
     $my_version = str_replace(' ', '', $my_version);
   }
 
-  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+  //auth0
+  wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
+  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
   $user = wp_get_current_user();
 
@@ -343,7 +338,7 @@ function set_ajax_params(){
         );
 
   $last_name = get_user_meta( $user->ID, 'last_name', true );
-  $first_name = get_user_meta( $user->ID, 'first_name', true );      
+  $first_name = get_user_meta( $user->ID, 'first_name', true );
   //set the ajax parameters
   wp_localize_script('universal', 'ajax_object',
           array(
