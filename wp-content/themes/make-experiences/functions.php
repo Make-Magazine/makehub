@@ -453,6 +453,7 @@ function auth0_user_update( $user_id, $userinfo, $is_new, $id_token, $access_tok
                       array("first_name" => $first_name,
                             "last_name" => $last_name,
                             "picture" => $user_image,
+                            "user_memlevel" => $membershipType
                       )
                     );
   $headers = array("authorization: Bearer ".$access_token, "content-type: application/json");
