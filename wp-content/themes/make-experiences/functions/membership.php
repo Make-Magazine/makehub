@@ -1,7 +1,7 @@
 <?php
 
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
-	$url = CURRENT_URL . '/wp-json/mp/v1/members';
+	$url = WP_SITEURL . '/wp-json/mp/v1/members';
 
 	$datastring = json_encode(
 	  [
@@ -31,7 +31,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 }
 
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
-function add_membership_class_profile($classes) {	
+function add_membership_class_profile($classes) {
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
 	    $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
 	}

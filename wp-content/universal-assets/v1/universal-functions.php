@@ -206,7 +206,7 @@ function basicCurl($url, $headers = null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
 
-	  if (strpos(CURRENT_URL, '.local') > -1 || strpos(CURRENT_URL, '.test') > -1 ) { // wpengine local environments
+	  if (strpos(WP_SITEURL, '.local') > -1 || strpos(WP_SITEURL, '.test') > -1 ) { // wpengine local environments
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     }
@@ -222,7 +222,7 @@ function basicCurl($url, $headers = null) {
 function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 	$ch = curl_init($url);
 
-	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
+	if (strpos(WP_SITEURL, '.local') > -1  || strpos(WP_SITEURL, '.test') > -1) { // wpengine local environments
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
@@ -250,31 +250,6 @@ function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 
 	curl_close($ch);
   return $response;
-}
-
-/* This function will check if user is a premium member, non member or eligible for upgrade */
-function checkForUpgrade($memberArray) {
-  $membershipType = '';
-  if(isset($memberArray->active_memberships)) {
-    //create an array of memberships using the title field
-    $memArray = array_column($memberArray->active_memberships, 'title');
-
-    if(!empty($memArray)){      
-      //look for the needle in any part of the title field in the multi level array
-      if(array_find('premium', $memArray, 'title') !== false ||
-         array_find('multi-seat', $memArray, 'title') !== false ||
-         array_find('school maker faire', $memArray, 'title') !== false){
-        //Premium Membership
-        $membershipType = "premium";
-      }else{
-        //free membership, upgrade now
-        $membershipType = "upgrade";
-      }
-    }
-  }else{
-    $membershipType = "none";
-  }
-  return $membershipType;
 }
 
 /**
@@ -323,11 +298,7 @@ function set_ajax_params(){
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
   $user = wp_get_current_user();
-
-  $headers = setMemPressHeaders();
-  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
-  $memberArray = json_decode($memberInfo);
-  $membershipType = checkForUpgrade($memberArray);
+  $membershipType = checkMakeCoMems($user);
 
   $user_image =
         bp_core_fetch_avatar (
@@ -339,6 +310,7 @@ function set_ajax_params(){
 
   $last_name = get_user_meta( $user->ID, 'last_name', true );
   $first_name = get_user_meta( $user->ID, 'first_name', true );
+
   //set the ajax parameters
   wp_localize_script('universal', 'ajax_object',
           array(
@@ -355,33 +327,32 @@ function set_ajax_params(){
 
 add_action('wp_enqueue_scripts', 'set_ajax_params', 9999);
 
-function set_universal_asset_constants() {
-	if (isset($_SERVER['HTTPS']) &&
-	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-	  		$protocol = 'https://';
-	} else {
-		$protocol = 'http://';
-	}
-  // Set the important bits as CONSTANTS that can easily be used elsewhere
-  define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
-  define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
+/* This function will check if user is a premium member, non member or eligible for upgrade */
+function checkMakeCoMems($user) {
 
-	// Decide if user can upgrade
-  $user = wp_get_current_user();
   $headers = setMemPressHeaders();
-  $memberInfo = basicCurl("https://make.co/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberInfo = basicCurl(WP_SITEURL."/wp-json/mp/v1/members/".$user->ID, $headers);
   $memberArray = json_decode($memberInfo);
-  $membershipType = checkForUpgrade($memberArray);
 
-  $canUpgrade = ($membershipType=='upgrade' ? TRUE:FALSE);
-  $hasMembership = ($membershipType=='none' ? TRUE:FALSE);
-  $currentMemberships = array_column($memberArray->active_memberships, 'title');
+  $membershipType = 'none';
+  if(isset($memberArray->active_memberships)) {
+    //create an array of memberships using the title field
+    $memArray = array_column($memberArray->active_memberships, 'title');
 
-	define('CURRENT_MEMBERSHIPS', $currentMemberships);
-	define('IS_MEMBER', $hasMembership);
-	define('CAN_UPGRADE', $canUpgrade);
+    if(!empty($memArray)){
+      //look for the needle in any part of the title field in the multi level array
+      if(array_find('premium', $memArray, 'title') !== false ||
+         array_find('multi-seat', $memArray, 'title') !== false ||
+         array_find('school maker faire', $memArray, 'title') !== false){
+        //Premium Membership
+        $membershipType = "premium";
+      }else{
+        //free membership, upgrade now
+        $membershipType = "upgrade";
+      }
+    }
+  }else{
+    $membershipType = "none";
+  }
+  return $membershipType;
 }
-
-add_action( 'init', 'set_universal_asset_constants' );
