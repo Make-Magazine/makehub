@@ -302,6 +302,9 @@ jQuery( document ).ready(function() {
         default:
           break;
       }
+    }else{
+      //no membership level set yet in auth0, remove the banner as we don't know if they have a membership level or not
+      jQuery('.avatar-banner').remove();
     }
     document.querySelector('#LoginBtn').style.display = "none";
     document.querySelector('.dropdown-toggle img').style.display = "block";
