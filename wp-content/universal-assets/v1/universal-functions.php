@@ -259,7 +259,7 @@ function checkForUpgrade($memberArray) {
     //create an array of memberships using the title field
     $memArray = array_column($memberArray->active_memberships, 'title');
 
-    if(!empty($memArray)){
+    if(!empty($memArray)){      
       //look for the needle in any part of the title field in the multi level array
       if(array_find('premium', $memArray, 'title') !== false ||
          array_find('multi-seat', $memArray, 'title') !== false ||
@@ -384,4 +384,4 @@ function set_universal_asset_constants() {
 	define('CAN_UPGRADE', $canUpgrade);
 }
 
-set_universal_asset_constants();
+add_action( 'init', 'set_universal_asset_constants' );
