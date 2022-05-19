@@ -62,7 +62,6 @@ function user_profile_data_updated($user_id, $posted_field_ids, $errors, $old_va
     $dataToUpdate['last_name'] = $new_values[635]['value'];
   }
   if(!empty($dataToUpdate)){
-    error_log('call to auth0_user_update');
     auth0_user_update($user_id, $dataToUpdate);
   }
 }
@@ -79,9 +78,9 @@ add_action( 'xprofile_updated_profile', 'user_profile_data_updated', 1, 5 );
 function user_avatar_updated ($user_id, $type, $avatar_data ){
   if(isset($avatar_data['avatar'])&& $avatar_data['avatar']!=''){
     $dataToUpdate['picture']=$avatar_data['avatar'];
-      auth0_user_update($user_id, $dataToUpdate);
+    auth0_user_update($user_id, $dataToUpdate);
   }
-  error_log('done updating');
+
   return;
 }
 add_action('xprofile_avatar_uploaded','user_avatar_updated',10,3);
@@ -96,25 +95,22 @@ add_action('xprofile_avatar_uploaded','user_avatar_updated',10,3);
 
 //Called after completed payment (free and paid)
 function mepr_pymnt_complete($txn) {
-  error_log('mepr-txn-status-complete');
   $user = $txn->user();
-  $dataToUpdate['user_memlevel'] = checkMakeCoMems($user);
-  auth0_user_update($user_id, $dataToUpdate);
+  $dataToUpdate = array('user_memlevel' => checkMakeCoMems($user));
+  auth0_user_update($user->ID, $dataToUpdate);
 }
 add_action('mepr-txn-status-complete', 'mepr_pymnt_complete');
 
 //deleted transactions
 function mepr_post_delete_transaction_fn($id, $user, $result) {
-  error_log('mepr_post_delete_transaction');
-  $dataToUpdate['user_memlevel'] = checkMakeCoMems($user);
-  auth0_user_update($user_id, $dataToUpdate);
+  $dataToUpdate= array('user_memlevel'=> checkMakeCoMems($user));  
+  auth0_user_update($user->ID, $dataToUpdate);
 }
 add_action('mepr_post_delete_transaction', 'mepr_post_delete_transaction_fn', 3, 10);
 
 //Capture a Transaction expired event
 // if the subscription is no longer valid, update auth0
 function mepr_capture_expired_transaction($event) {
-  error_log('mepr-event-transaction-expired');
   //BE CAREFUL WITH THIS ONE
   //This could be a prior recurring transaction that has expired
   $updateAuth0=true;
@@ -130,8 +126,8 @@ function mepr_capture_expired_transaction($event) {
   }
   if($updateAuth0){
     $user = $transaction->user();
-    $dataToUpdate['user_memlevel'] = checkMakeCoMems($user);
-    auth0_user_update($user_id, $dataToUpdate);
+    $dataToUpdate = array('user_memlevel' => checkMakeCoMems($user));
+    auth0_user_update($user->ID, $dataToUpdate);
   }
 }
 add_action('mepr-event-transaction-expired', 'mepr_capture_expired_transaction');

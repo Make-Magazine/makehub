@@ -329,7 +329,11 @@ add_action('wp_enqueue_scripts', 'set_ajax_params', 9999);
 
 /* This function will check if user is a premium member, non member or eligible for upgrade */
 function checkMakeCoMems($user) {
-
+  if(!isset($user->ID)){
+    error_log('missing user id in checkMakeCoMems!!!');
+    error_log(print_r($user,TRUE));
+    return;
+  }
   $headers = setMemPressHeaders();
   $memberInfo = basicCurl(WP_SITEURL."/wp-json/mp/v1/members/".$user->ID, $headers);
   $memberArray = json_decode($memberInfo);

@@ -22,9 +22,8 @@ jQuery( document ).ready(function() {
       //let's set up the dropdowns
       displayButtons();
     }else{
-      console.log('auth0 login');
       //If the buddypanel exists, hide it while we check for logged in
-      //alicia, shouldn't this just be done before the if wpLoginRequired check?
+      //TBD, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
         jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width='50px' style='margin:auto;' />");
 			  jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
@@ -313,7 +312,6 @@ jQuery( document ).ready(function() {
 
   //call rimark and build coin section
   function callRimark(user) {
-    console.time("iterationTime");
     //POST auth request to get jwt
     var url = "https://devapi.rimark.io/api/auth/local/";
     var body = "{\"identifier\": \"webmaster@make.co\",\"password\":\"AHxv2sj3hK*rWpF\"}";
@@ -337,16 +335,11 @@ jQuery( document ).ready(function() {
           success: function (data) {
             //data[0]->attributes->total_supply_owned
             if(jQuery.isEmptyObject(data.data)){
-              console.log('no coins for you');
               coins = '$MAKE:<br/><a target="_blank" href="#">Learn More</a>';
             }else{
               coins = '$MAKE:<br/><a target="_blank" href="https://beta.rimark.io/?target=219f76ovo2v0fi2nn9es0x9wf">'+data.data[0].attributes.total_supply_owned+'</a>';
-              //console.log(data.data[0].attributes.total_supply_owned);
             }
             jQuery("#make-coin").html(coins);
-
-
-            console.timeEnd("iterationTime");
           }
         });
       }
