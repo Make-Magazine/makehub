@@ -112,7 +112,7 @@ function update_entry_status($entry_id, $status) {
 
 		// give them a free membership if they don't have one already
 		$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
-		$mpInfo = json_decode(basicCurl(WP_SITEURL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+		$mpInfo = json_decode(basicCurl(NETWORK_HOME_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
 
 		if(empty($mpInfo->active_memberships)) {
 			addFreeMembership($user->data->user_email, $user->data->user_login, $first_name, $last_name, $community_membership->ID, true);

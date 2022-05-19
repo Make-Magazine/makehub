@@ -32,7 +32,7 @@ function attendee_approved( $registration) {
 
     // give them a free membership if they don't have one already
 	$community_membership = get_page_by_path('community', OBJECT, 'memberpressproduct');
-	$mpInfo = json_decode(basicCurl(WP_SITEURL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+	$mpInfo = json_decode(basicCurl(NETWORK_HOME_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
 
 	if(empty($mpInfo->active_memberships)) {
 		addFreeMembership($user->data->user_email, $user->data->user_login, $attendee->fname(), $attendee->lname(), $community_membership->ID, true);
@@ -85,7 +85,7 @@ function create_new_user($subject, $first_name, $last_name, $message, $email) {
 	update_user_meta( $user_id, 'last_name', $last_name );
 
 	$subject = $subject;
-	$my_groups = WP_SITEURL . '/wp-login.php?redirect_to=' . WP_SITEURL . '/members/me/groups/';
+	$my_groups = NETWORK_HOME_URL . '/wp-login.php?redirect_to=' . NETWORK_HOME_URL . '/members/me/groups/';
 	$message = 'Hello ' . $first_name .', <br /><br />' . $message .' <a href="'. $my_groups .'">event group</a>. <br /><br />
 	<b>Email:</b> ' . $email . '<br />
 	<b>Temporary Password:</b> ' . $random_password;

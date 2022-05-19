@@ -2,8 +2,8 @@
 function initCors() {
 	$origin_url = '*';
 	// Check if production environment or not
-	if (WP_SITEURL === 'https://make.co' || WP_SITEURL === 'https://make.co/') {
-		$origin_url = 'https://make.co/';
+	if (NETWORK_HOME_URL === 'https://make.co') {
+		$origin_url = NETWORK_HOME_URL;
 	}
 	header( 'Access-Control-Allow-Origin: ' . $origin_url );
 	header( 'Access-Control-Allow-Methods: GET' );

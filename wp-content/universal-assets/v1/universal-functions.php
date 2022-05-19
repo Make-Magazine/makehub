@@ -206,7 +206,7 @@ function basicCurl($url, $headers = null) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     }
 
-	  if (strpos(WP_SITEURL, '.local') > -1 || strpos(WP_SITEURL, '.test') > -1 ) { // wpengine local environments
+	  if (strpos(NETWORK_HOME_URL, '.local') > -1 || strpos(NETWORK_HOME_URL, '.test') > -1 ) { // wpengine local environments
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     }
@@ -222,7 +222,7 @@ function basicCurl($url, $headers = null) {
 function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 	$ch = curl_init($url);
 
-	if (strpos(WP_SITEURL, '.local') > -1  || strpos(WP_SITEURL, '.test') > -1) { // wpengine local environments
+	if (strpos(NETWORK_HOME_URL, '.local') > -1  || strpos(NETWORK_HOME_URL, '.test') > -1) { // wpengine local environments
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
@@ -335,7 +335,7 @@ function checkMakeCoMems($user) {
     return;
   }
   $headers = setMemPressHeaders();
-  $memberInfo = basicCurl(WP_SITEURL."/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberInfo = basicCurl(NETWORK_HOME_URL."/wp-json/mp/v1/members/".$user->ID, $headers);
   $memberArray = json_decode($memberInfo);
 
   $membershipType = 'none';

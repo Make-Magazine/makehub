@@ -1,6 +1,6 @@
 <?php
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
-	$url = WP_SITEURL . '/wp-json/mp/v1/members';
+	$url = NETWORK_HOME_URL . '/wp-json/mp/v1/members';
 
 	$datastring = json_encode(
 	  [
