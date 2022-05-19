@@ -101,10 +101,7 @@ jQuery( document ).ready(function() {
 		if (auth0loggedin || wploggedin) {
       //hide the logout button
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
-			var user = getProfile();
-
-      // Now that we have the avatar and the drop down, let's call rimark and see what info they have
-      callRimark(user);
+			getProfile();
 		} else {
       //show the log in button
 			jQuery("#LoginBtn").css("display", "block");
@@ -169,6 +166,16 @@ jQuery( document ).ready(function() {
 
     //set the user drop down and avatar
     setUserDrop(user);
+
+    //Set upgrade or join now buttons
+    if(user->user_memlevel=="upgrade"){
+        jQuery( ".dropdown-menu .profile-info" ).after( "<a href='https://make.co/join/' class='btn membership-btn'>Upgrade Membership</a>" );
+    }else if(user->user_memlevel=="none"){
+        jQuery( ".dropdown-menu .profile-info" ).after( "<a href='https://make.co/join/' class='btn membership-btn'>Join Now!</a>" );
+    }
+
+    // Now that we have the avatar and the drop down, let's call rimark and see what info they have
+    callRimark(user);
 
     //if this is a buddyboss theme site, show the buddypanel
     if( jQuery("body").is(".buddyboss-theme") ) {
