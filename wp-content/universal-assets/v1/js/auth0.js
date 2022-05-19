@@ -168,9 +168,9 @@ jQuery( document ).ready(function() {
     setUserDrop(user);
 
     //Set upgrade or join now buttons
-    if(user->user_memlevel=="upgrade"){
+    if(user.user_memlevel=="upgrade"){
         jQuery( ".dropdown-menu .profile-info" ).after( "<a href='https://make.co/join/' class='btn membership-btn'>Upgrade Membership</a>" );
-    }else if(user->user_memlevel=="none"){
+    }else if(user.user_memlevel=="none"){
         jQuery( ".dropdown-menu .profile-info" ).after( "<a href='https://make.co/join/' class='btn membership-btn'>Join Now!</a>" );
     }
 
