@@ -18,11 +18,12 @@ jQuery( document ).ready(function() {
 
     //if you are on a makehub site and logged in, you do not need to call auth0
     if(makehubSite && (document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true")){
+      console.log('loggedinto makehub');
       wploggedin = true;
       //let's set up the dropdowns
       displayButtons();
     }else{
-
+      console.log('not logged in');
       //If the buddypanel exists, hide it while we check for logged in
       //TBD, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
@@ -52,7 +53,7 @@ jQuery( document ).ready(function() {
           });
         });
 
-        //set the logout to the default auth0 logout        
+        //set the logout to the default auth0 logout
         jQuery("#LogoutBtn").on("click", function(event){
           event.preventDefault();
           webAuth.logout({
@@ -208,6 +209,8 @@ jQuery( document ).ready(function() {
 	}
 
 	function WPlogin() {
+    console.log('userProfile');
+    console.log(userProfile);
 		if (typeof userProfile !== 'undefined') {
 			var user_id = userProfile.sub;
 			var access_token = localStorage.getItem('access_token');
