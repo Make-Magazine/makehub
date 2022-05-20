@@ -342,7 +342,7 @@ jQuery( document ).ready(function() {
           success: function (data) {
             //data[0]->attributes->total_supply_owned
             if(jQuery.isEmptyObject(data.data)){
-              coins = '$MAKE:<br/><a target="_blank" href="#">Learn More</a>';
+              coins = '$MAKE:<br/><a target="_blank" href="https://make.co/make-faq/">Learn More</a>';
             }else{
               coins = '$MAKE:<br/><a target="_blank" href="https://beta.rimark.io/?target=219f76ovo2v0fi2nn9es0x9wf">'+data.data[0].attributes.total_supply_owned+'</a>';
             }
