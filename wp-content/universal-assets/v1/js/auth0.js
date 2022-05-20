@@ -22,6 +22,7 @@ jQuery( document ).ready(function() {
       //let's set up the dropdowns
       displayButtons();
     }else{
+
       //If the buddypanel exists, hide it while we check for logged in
       //TBD, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
@@ -40,6 +41,17 @@ jQuery( document ).ready(function() {
 				//scope of data pulled by auth0
 				leeway: 60
 			});
+
+      // for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
+      if(wpLoginRequired == false) {
+        jQuery("#LoginBtn").on("click", function(event){
+          event.preventDefault();
+          webAuth.authorize({
+            clientID: AUTH0_CLIENT_ID,
+            redirect_uri: location.href,
+          });
+        });
+      }
 
 			//check if logged in another place
 			webAuth.checkSession({},
