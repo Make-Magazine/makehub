@@ -52,7 +52,7 @@ jQuery( document ).ready(function() {
           });
         });
         //set the logout to the default auth0 logout
-        jQuery("#LogoutBtn").attr("href", "https://makermedia.auth0.com/v2/logout?client_id="+AUTH0_CLIENT_ID+"returnTo="+location.href);
+        jQuery("#LogoutBtn").attr("href", "https://makermedia.auth0.com/v2/logout?client_id="+AUTH0_CLIENT_ID+"&returnTo="+location.href);
       }
 
 			//check if logged in another place
