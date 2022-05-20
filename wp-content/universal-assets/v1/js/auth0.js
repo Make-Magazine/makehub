@@ -223,6 +223,7 @@ jQuery( document ).ready(function() {
 				'auth0_access_token': access_token,
 				'auth0_id_token': id_token
 			};
+      console.log(ajax_object.ajax_url);
 			jQuery.ajax({
 				type: 'POST',
 				url: ajax_object.ajax_url,
@@ -231,6 +232,7 @@ jQuery( document ).ready(function() {
 				success: function (data) {
 				},
 			}).done(function () {
+        console.log('back from wp login');
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
 				if (wploggedin == false) {
 					// reload subnavs as necessary
