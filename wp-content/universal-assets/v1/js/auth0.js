@@ -51,8 +51,15 @@ jQuery( document ).ready(function() {
             redirect_uri: location.href,
           });
         });
-        //set the logout to the default auth0 logout
-        jQuery("#LogoutBtn").attr("href", "https://makermedia.auth0.com/v2/logout?client_id="+AUTH0_CLIENT_ID+"&returnTo="+location.href);
+
+        //set the logout to the default auth0 logout        
+        jQuery("#LogoutBtn").on("click", function(event){
+          event.preventDefault();
+          webAuth.logout({
+            clientID: AUTH0_CLIENT_ID,
+            returnTo: location.href,
+          });
+        });
       }
 
 			//check if logged in another place
