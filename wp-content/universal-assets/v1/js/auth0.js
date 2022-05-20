@@ -18,12 +18,10 @@ jQuery( document ).ready(function() {
 
     //if you are on a makehub site and logged in, you do not need to call auth0
     if(makehubSite && (document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true")){
-      console.log('loggedinto makehub');
       wploggedin = true;
       //let's set up the dropdowns
       displayButtons();
     }else{
-      console.log('not logged in');
       //If the buddypanel exists, hide it while we check for logged in
       //TBD, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
@@ -159,7 +157,6 @@ jQuery( document ).ready(function() {
     var user = {};
     //are they logged into WP or Auth0 and is this a makeco domain?
 		if(wploggedin && makehubSite){
-      console.log('wploggedin get info from ajax');
 			//user is logged into wordpress at this point and is on a make.co site let's display wordpress data
       user = {user_avatar:(ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
               user_email:(ajax_object.wp_user_email == undefined) ? '' : ajax_object.wp_user_email,
@@ -168,7 +165,6 @@ jQuery( document ).ready(function() {
              };
 
 		}else if(auth0loggedin){ // if user is logged into auth0, we will call data from auth0
-      console.log('auth0 logged in get info from auth0');
 			//we already got the userprofile info from auth0 in the check session step
 			var accessToken = localStorage.getItem('access_token');
 
@@ -211,8 +207,6 @@ jQuery( document ).ready(function() {
 	}
 
 	function WPlogin() {
-    console.log('userProfile');
-    console.log(userProfile);
 		if (typeof userProfile !== 'undefined') {
 			var user_id = userProfile.sub;
 			var access_token = localStorage.getItem('access_token');
@@ -225,17 +219,16 @@ jQuery( document ).ready(function() {
 				'auth0_access_token': access_token,
 				'auth0_id_token': id_token
 			};
-      console.log(ajax_object.ajax_url);
+
 			jQuery.ajax({
 				type: 'POST',
 				url: ajax_object.ajax_url,
 				data: data,
 				timeout: 10000,
 				success: function (data) {
-          console.log('data');
 				},
 			}).done(function () {
-        console.log('back from wp login');
+
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
 				if (wploggedin == false) {
 					// reload subnavs as necessary
@@ -314,7 +307,10 @@ jQuery( document ).ready(function() {
   function setUserDrop(user){
     //set user avatar
     if(user.user_avatar != '') {
-      document.querySelector('.dropdown-toggle img').src =  user.user_avatar;
+      console.log('setting avatar to '+user.user_avatar);
+      jQuery('#profile-view #dropdownMenuLink .avatar').attr("src",user.user_avatar);
+      jQuery('.profile-info .avatar').src = user.user_avatar;
+      document.querySelector('#profile-view .avatar').src =  user.user_avatar;
       document.querySelector('.profile-info img').src = user.user_avatar;
     }
 
@@ -327,14 +323,17 @@ jQuery( document ).ready(function() {
     if (user.user_memlevel != '' ) {
       switch(user.user_memlevel) {
         case "premium":
+          console.log('user.user_memlevel =premium');
           document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
           document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
           break;
         case "upgrade":
+          console.log('user.user_memlevel ='+user.user_memlevel);
           document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
           document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
           break;
         default:
+          console.log('user.user_memlevel ='+user.user_memlevel);
           break;
       }
     }else{
