@@ -159,6 +159,7 @@ jQuery( document ).ready(function() {
     var user = {};
     //are they logged into WP or Auth0 and is this a makeco domain?
 		if(wploggedin && makehubSite){
+      console.log('wploggedin get info from ajax');
 			//user is logged into wordpress at this point and is on a make.co site let's display wordpress data
       user = {user_avatar:(ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
               user_email:(ajax_object.wp_user_email == undefined) ? '' : ajax_object.wp_user_email,
@@ -167,6 +168,7 @@ jQuery( document ).ready(function() {
              };
 
 		}else if(auth0loggedin){ // if user is logged into auth0, we will call data from auth0
+      console.log('auth0 logged in get info from auth0');
 			//we already got the userprofile info from auth0 in the check session step
 			var accessToken = localStorage.getItem('access_token');
 
@@ -236,9 +238,6 @@ jQuery( document ).ready(function() {
         console.log('back from wp login');
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
 				if (wploggedin == false) {
-          console.log('reload the page');
-          location.reload();
-
 					// reload subnavs as necessary
 					jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
 					// reload the digital libary if necessary
