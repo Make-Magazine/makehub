@@ -297,8 +297,6 @@ function set_ajax_params(){
   wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
-  //we should pull this information from community
-  switch_to_blog( 1 );
   $user = wp_get_current_user();
   $membershipType = checkMakeCoMems($user);
 
@@ -312,7 +310,7 @@ function set_ajax_params(){
 
   $last_name  = get_user_meta( $user->ID, 'last_name', true );
   $first_name = get_user_meta( $user->ID, 'first_name', true );
-  restore_current_blog();
+
   //set the ajax parameters
   wp_localize_script('universal', 'ajax_object',
           array(
