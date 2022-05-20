@@ -96,14 +96,14 @@ add_action('xprofile_avatar_uploaded','user_avatar_updated',10,3);
 //Called after completed payment (free and paid)
 function mepr_pymnt_complete($txn) {
   $user = $txn->user();
-  $dataToUpdate = array('user_memlevel' => checkMakeCoMems($user));
+  $dataToUpdate = array('membership_level' => checkMakeCoMems($user));
   auth0_user_update($user->ID, $dataToUpdate);
 }
 add_action('mepr-txn-status-complete', 'mepr_pymnt_complete');
 
 //deleted transactions
 function mepr_post_delete_transaction_fn($id, $user, $result) {
-  $dataToUpdate= array('user_memlevel'=> checkMakeCoMems($user));  
+  $dataToUpdate= array('membership_level'=> checkMakeCoMems($user));
   auth0_user_update($user->ID, $dataToUpdate);
 }
 add_action('mepr_post_delete_transaction', 'mepr_post_delete_transaction_fn', 3, 10);
@@ -126,7 +126,7 @@ function mepr_capture_expired_transaction($event) {
   }
   if($updateAuth0){
     $user = $transaction->user();
-    $dataToUpdate = array('user_memlevel' => checkMakeCoMems($user));
+    $dataToUpdate = array('membership_level' => checkMakeCoMems($user));
     auth0_user_update($user->ID, $dataToUpdate);
   }
 }
