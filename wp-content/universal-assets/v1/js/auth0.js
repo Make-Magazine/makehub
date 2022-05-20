@@ -230,11 +230,15 @@ jQuery( document ).ready(function() {
 				data: data,
 				timeout: 10000,
 				success: function (data) {
+          console.log('data');
 				},
 			}).done(function () {
         console.log('back from wp login');
 				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
 				if (wploggedin == false) {
+          console.log('reload the page');
+          location.reload();
+
 					// reload subnavs as necessary
 					jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
 					// reload the digital libary if necessary
