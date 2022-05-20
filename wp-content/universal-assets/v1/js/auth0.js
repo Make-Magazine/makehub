@@ -43,7 +43,8 @@ jQuery( document ).ready(function() {
 			});
 
       // for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
-      if(wpLoginRequired == false) {        
+      if(wpLoginRequired == false) {
+        console.log('redirect_uri='+location.href);     
         jQuery("#LoginBtn").on("click", function(event){
           event.preventDefault();
           webAuth.authorize({
