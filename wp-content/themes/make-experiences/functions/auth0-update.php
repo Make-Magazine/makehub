@@ -111,6 +111,7 @@ add_action('mepr_post_delete_transaction', 'mepr_post_delete_transaction_fn', 3,
 //Capture a Transaction expired event
 // if the subscription is no longer valid, update auth0
 function mepr_capture_expired_transaction($event) {
+  $user = $event->get_data();
   //BE CAREFUL WITH THIS ONE
   //This could be a prior recurring transaction that has expired
   $updateAuth0=true;
@@ -119,7 +120,7 @@ function mepr_capture_expired_transaction($event) {
   // - if the $subscription exists and the $subscription->status is 'active'
   if($subscription && $subscription->status == 'active'){
     //if so, then it's possible the user is not really expired on it
-    if($user->is_already_subscribed_to($transaction->product_id)){
+    if(isset($transaction->product_id) && $user->is_already_subscribed_to($transaction->product_id)){
       //user is still subscribed, no update
         $updateAuth0=false;
     }
