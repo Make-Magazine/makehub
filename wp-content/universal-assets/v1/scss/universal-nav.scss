@@ -320,8 +320,12 @@
                         display: none;
                     }
                     #make-coin {
-                      text-align: center;
-                      padding: 0 20px;
+						text-align: center;
+						padding: 0 20px;
+						a {
+							margin-top: 3px;
+							display: block;
+						}
                     }
                 }
             }
@@ -841,6 +845,7 @@ body.buddyboss-theme {
     display: flex;
     justify-content: space-between;
     align-items: center;
+	height: 100%;
     @media (max-width: 805px) {
         .subscribe-call-out {
             display: none;
@@ -876,6 +881,7 @@ body.buddyboss-theme {
         position: relative;
         display: flex;
 		align-items: center;
+		height: 100%;
 		@media screen and (max-width: 800px) {
 			display: none;
 		}
@@ -899,8 +905,8 @@ body.buddyboss-theme {
             background: #f1f1f1;
             position: absolute;
             z-index: 999999;
-            left: -40px;
-            top: 72px;
+            left: -145px;
+            top: 75px;
             text-align: center;
             border: solid 2px #fff;
             box-shadow: 0 10px 12px rgba(102, 102, 102, 50%);
