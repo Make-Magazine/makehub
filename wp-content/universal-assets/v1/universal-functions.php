@@ -60,11 +60,6 @@ function MM_WPlogin() {
     $id_token = filter_input(INPUT_POST, 'auth0_id_token', FILTER_SANITIZE_STRING);
 
     if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
-        /* $blog_id = get_current_blog_id(); // this only triggered for a user logged into another site to begin with
-          $user_id = username_exists( sanitize_text_field( $userinfo->nickname ) );
-          if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
-          add_user_to_blog( $blog_id, $user_id, "subscriber" );
-          } */
         wp_send_json_success();
     } else {
         error_log('Failed login');
