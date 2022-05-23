@@ -4,7 +4,7 @@
  * parameters -
  *  $user_id (int) WP user ID of user to update
  *  $dataToUpdate (array) array of fields to update on auth0. valid keys are:
-  * first_name, last_name, picture,  user_memlevel
+  * first_name, last_name, picture,  membership_level
  */
 function auth0_user_update( $user_id = '', $dataToUpdate = array() ) {
   //exit function if user id or dataToUpdate are not set
@@ -121,7 +121,7 @@ function mepr_capture_expired_transaction($event) {
     //if so, then it's possible the user is not really expired on it
     if($user->is_already_subscribed_to($transaction->product_id)){
       //user is still subscribed, no update
-      $updateAuth0=true;
+        $updateAuth0=false;
     }
   }
   if($updateAuth0){
