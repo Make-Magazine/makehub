@@ -221,7 +221,14 @@ jQuery(document).ready(function () {
     jQuery(".nav-level-2").css("display", "block");
     if (jQuery(window).width() < 800) {
         jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
-		jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
+		if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
+			jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
+		}
+		jQuery("#primary-navbar").prepend(jQuery(".profile-menu"));
+		if(!jQuery("body").hasClass("logged-in")) {
+			jQuery("#primary-navbar").prepend("<span class='mobile-subscribe-btn'><a class='universal-btn-red' href='https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-mobile&utm_content=launch'>Subscribe</a></span>");
+		}
+		jQuery("#primary-navbar").prepend(jQuery("#make-coin"));
 		jQuery("#primary-navbar").prepend("<h3>" + sitename + "</h3>");
     }
     window.onresize = function() {
@@ -231,10 +238,20 @@ jQuery(document).ready(function () {
 			if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
 				jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
 			}
+			jQuery("#primary-navbar").prepend(jQuery(".profile-menu"));
+			if(!jQuery("body").hasClass("logged-in")) {
+				jQuery("#primary-navbar").prepend("<span class='mobile-subscribe-btn'><a class='universal-btn-red' href='https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-mobile&utm_content=launch'>Subscribe</a></span>");
+			}
+			jQuery("#primary-navbar").prepend(jQuery("#make-coin"));
 			jQuery("#primary-navbar").prepend("<h3>" + sitename + "</h3>");
         } else if (jQuery(window).width() > 800 && (jQuery("#primary-navbar #menu-secondary_universal_menu").length || jQuery("#primary-navbar #buddypanel-menu").length) ) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
             jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
+            jQuery("#profile-view").append(jQuery(".profile-menu"));
+			jQuery("#make-join").before(jQuery("#make-coin"));
+			if(!jQuery("body").hasClass("logged-in")) {
+				jQuery(".mobile-subscribe-btn").remove();
+			}
 			if(jQuery("#primary-navbar #buddypanel-menu").length) {
 				jQuery(".side-panel-menu-container").append(jQuery("#buddypanel-menu"));
 			}
@@ -314,7 +331,7 @@ jQuery(document).ready(function () {
                         '<a href="https://make.co/members/me/profile/">' +
                             '<i class="_icon fa fa-user _before" aria-hidden="true"></i><span>My Profile</span>' +
                         '</a>' +
-                    '</li>' +                  
+                    '</li>' +
                 '</ul>';
 	jQuery("#profileLinks").append(profilehtml);
 
