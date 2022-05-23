@@ -307,11 +307,8 @@ jQuery( document ).ready(function() {
   function setUserDrop(user){
     //set user avatar
     if(user.user_avatar != '') {
-      console.log('setting avatar to '+user.user_avatar);
       jQuery('#profile-view #dropdownMenuLink img.avatar').attr("src",user.user_avatar);
-      jQuery('.profile-info img.avatar').src = user.user_avatar;
-      //document.querySelector('#profile-view img.avatar').src =  user.user_avatar;
-      //document.querySelector('.profile-info img').src = user.user_avatar;
+      jQuery('#profile-view .profile-info img.avatar').attr("src",user.user_avatar);      
     }
 
     //set email and profile name
