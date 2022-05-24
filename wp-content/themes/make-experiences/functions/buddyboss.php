@@ -1,4 +1,7 @@
 <?php
+//set default avatar thumb dimensions
+define ( 'BP_AVATAR_THUMB_WIDTH', 80 );
+define ( 'BP_AVATAR_THUMB_HEIGHT', 80 );
 
 // if we want some random page to behave like a buddy press page (e.g. the blog pages)
 function set_displayed_user($user_id) {
