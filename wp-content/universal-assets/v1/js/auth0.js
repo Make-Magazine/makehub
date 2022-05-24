@@ -196,6 +196,9 @@ jQuery(document).ready(function() {
         //set the user drop down and avatar
         setUserDrop(user);
 
+		jQuery(".profile-menu").addClass("logged-in");
+		jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
+
         //Set upgrade or join now buttons
         if (user.user_memlevel == "upgrade") {
             jQuery(".dropdown-menu .profile-info").after("<a href='https://make.co/join/' class='btn membership-btn'>Upgrade Membership</a>");
@@ -307,11 +310,10 @@ jQuery(document).ready(function() {
 
     //this function is used to set the user avatar and drop down sections in the universal header
     function setUserDrop(user) {
-		console.log(user);
         //set user avatar
         if (user.user_avatar != '') {
-            document.querySelector('#profile-view #dropdownMenuLink img.avatar').src = user.user_avatar;
-            document.querySelector('#profile-view .profile-info img.avatar').src = user.user_avatar;
+            jQuery('#profile-view #dropdownMenuLink img.avatar').attr("src", user.user_avatar);
+            jQuery('#profile-view .profile-info img.avatar').attr("src", user.user_avatar);
         }
 
         //set email and profile name

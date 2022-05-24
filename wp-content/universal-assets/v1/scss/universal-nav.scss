@@ -92,10 +92,12 @@
                     -ms-flex-wrap: nowrap;
                     flex-wrap: nowrap;
                     min-width: 130px;
+					h3, .mobile-subscribe-btn { display: none; }
                     @media screen and (max-width: 800px) {
                         flex-direction: column;
                         min-width: fit-content;
 						h3 {
+							display: block;
 							background: #fff;
                             width: 100%;
 							padding-left: 30px;
@@ -104,12 +106,23 @@
 							font-size: 24px;
 							margin: 0px;
 						}
+						.mobile-subscribe-btn {
+							display: block;
+							padding: 15px;
+							background: #fff;
+							a {
+								margin-bottom: 0px;
+								width: 100%;
+							}
+						}
+						.make-coin { display: flex; }
                         #menu-secondary_universal_menu, #buddypanel-menu, .dropdown-menu {
                             background: #fff;
                             width: 100%;
                             margin: 0px;
                             display: flex;
                             flex-direction: column;
+							&.profile-menu:not(.logged-in) { display: none; }
 							li { min-height: 40px; }
                             a {
                                 color: #333;
@@ -584,7 +597,7 @@
 	}
 }
 
-.dropdown-menu.profile-menu {
+ .dropdown-menu.profile-menu {
 	.dropdown-links {
 		padding: 15px;
 		border-top: solid 1px #ccc;
@@ -656,6 +669,7 @@
 		box-shadow: none;
 		padding-top: 0px;
 		border-radius: 0px;
+		display: none;
 		.dropdown-links {
 			padding-bottom: 0px;
 			border: 0px;
@@ -729,21 +743,13 @@ body.buddyboss-theme {
         #navbar-collapse { display: none; }
 	}
 	#make-coin {
+		display: none;
 		background: #f1f1f1;
 		text-align: left !important;
 		padding: 10px 0px 10px 30px;
-		display: flex;
 		border: solid 1px #ccc;
 		font-weight: 400;
 		a { padding-left: 10px; }
-	}
-	.mobile-subscribe-btn {
-		padding: 15px;
-		background: #fff;
-		a {
-			margin-bottom: 0px;
-			width: 100%;
-		}
 	}
 }
 
