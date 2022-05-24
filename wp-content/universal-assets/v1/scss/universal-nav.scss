@@ -587,9 +587,6 @@
 	.dropdown-links {
 		padding: 15px;
 		border-top: solid 1px #ccc;
-		@media screen and (max-width: 805px) {
-			padding-bottom: 0px;
-		}
 		ul {
 			margin: 0px;
 			padding: 0px;
@@ -656,6 +653,12 @@
 		position: relative;
 		border: 0px;
 		box-shadow: none;
+		padding-top: 0px;
+		border-radius: 0px;
+		.dropdown-links {
+			padding-bottom: 0px;
+			border: 0px;
+		}
 		#LogoutBtn, .profile-info {
 			display: none !important;
 		}
