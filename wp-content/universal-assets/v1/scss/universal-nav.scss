@@ -92,10 +92,12 @@
                     -ms-flex-wrap: nowrap;
                     flex-wrap: nowrap;
                     min-width: 130px;
+					h3, .mobile-subscribe-btn { display: none; }
                     @media screen and (max-width: 800px) {
                         flex-direction: column;
                         min-width: fit-content;
 						h3 {
+							display: block;
 							background: #fff;
                             width: 100%;
 							padding-left: 30px;
@@ -103,6 +105,15 @@
 							padding-bottom: 10px;
 							font-size: 24px;
 							margin: 0px;
+						}
+						.mobile-subscribe-btn {
+							display: block;
+							padding: 15px;
+							background: #fff;
+							a {
+								margin-bottom: 0px;
+								width: 100%;
+							}
 						}
                         #menu-secondary_universal_menu, #buddypanel-menu, .dropdown-menu {
                             background: #fff;
@@ -736,14 +747,6 @@ body.buddyboss-theme {
 		border: solid 1px #ccc;
 		font-weight: 400;
 		a { padding-left: 10px; }
-	}
-	.mobile-subscribe-btn {
-		padding: 15px;
-		background: #fff;
-		a {
-			margin-bottom: 0px;
-			width: 100%;
-		}
 	}
 }
 
