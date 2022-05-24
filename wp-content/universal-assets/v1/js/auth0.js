@@ -17,11 +17,14 @@ jQuery( document ).ready(function() {
     }
 
     //if you are on a makehub site and logged in, you do not need to call auth0
+    // we use ajax fields to set the user drop down in this case
     if(makehubSite && (document.body.classList.contains( 'logged-in' ) || getUrlParam('login') == "true")){
       wploggedin = true;
       //let's set up the dropdowns
       displayButtons();
     }else{
+      //otherwise we need to call auth0 for login and to show the user drop down
+
       //If the buddypanel exists, hide it while we check for logged in
       //TBD, shouldn't this just be done before the if wpLoginRequired check?
       if(jQuery(".buddypanel").length){
@@ -65,12 +68,15 @@ jQuery( document ).ready(function() {
 			webAuth.checkSession({},
 				function (err, result) {
 					if (err) {
+            //not logged into auth0
 						console.log(err);
 						if (err.error !== 'login_required') {
 							errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 						}
 
-						// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+						// This should take care of SSO
+            // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+            //If you are makehub and you are logged in, you will never hit this code
 						if(wpLoginRequired && jQuery("body").is(".logged-in")) {
 							WPlogout();
 						}
@@ -86,6 +92,7 @@ jQuery( document ).ready(function() {
             //if this is a site that requires WP login, but they aren't logged into wp, log them in
       			if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
       				// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+              //TBD - this needs styling as this isn't seen where it's at
       				jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
       				WPlogin();
       			}
@@ -308,7 +315,7 @@ jQuery( document ).ready(function() {
     //set user avatar
     if(user.user_avatar != '') {
       jQuery('#profile-view #dropdownMenuLink img.avatar').attr("src",user.user_avatar);
-      jQuery('#profile-view .profile-info img.avatar').attr("src",user.user_avatar);      
+      jQuery('#profile-view .profile-info img.avatar').attr("src",user.user_avatar);
     }
 
     //set email and profile name
@@ -320,17 +327,14 @@ jQuery( document ).ready(function() {
     if (user.user_memlevel != '' ) {
       switch(user.user_memlevel) {
         case "premium":
-          console.log('user.user_memlevel =premium');
           document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
           document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
           break;
         case "upgrade":
-          console.log('user.user_memlevel ='+user.user_memlevel);
           document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
           document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
           break;
         default:
-          console.log('user.user_memlevel ='+user.user_memlevel);
           break;
       }
     }else{
@@ -346,6 +350,7 @@ jQuery( document ).ready(function() {
   function callRimark(user) {
     //POST auth request to get jwt
     var url = "https://devapi.rimark.io/api/auth/local/";
+    //TBD find a way to encrypt this
     var body = "{\"identifier\": \"webmaster@make.co\",\"password\":\"AHxv2sj3hK*rWpF\"}";
 
     jQuery.ajax({
