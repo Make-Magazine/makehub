@@ -107,27 +107,35 @@ function mepr_post_delete_transaction_fn($id, $user, $result) {
 }
 add_action('mepr_post_delete_transaction', 'mepr_post_delete_transaction_fn', 3, 10);
 
-//Capture a Transaction expired event
-// if the subscription is no longer valid, update auth0
+/*      Capture a Transaction expired event
+    if the subscription is no longer valid, update auth0
+    BE CAREFUL WITH THIS ONE - This could be a prior recurring transaction that has expired */
 function mepr_capture_expired_transaction($event) {
-  $user = $event->get_data();
-  //BE CAREFUL WITH THIS ONE
-  //This could be a prior recurring transaction that has expired
   $updateAuth0=true;
+
+  //get user
   $transaction = $event->get_data();
-  $subscription = $transaction->subscription(); //This may return false if it's a one-time transaction that has expired
-  // - if the $subscription exists and the $subscription->status is 'active'
-  if($subscription && $subscription->status == 'active'){
-    //if so, then it's possible the user is not really expired on it
-    if(isset($transaction->product_id) && $user->is_already_subscribed_to($transaction->product_id)){
-      //user is still subscribed, no update
+  $user = $transaction->user();
+
+  //user found?
+  if($user){
+    $subscription = $transaction->subscription(); //This may return false if it's a one-time transaction that has expired
+    // if the $subscription exists and the $subscription->status is 'active'
+    if($subscription && $subscription->status == 'active'){
+      // if so, then it's possible the user is not really expired on it
+      if(isset($transaction->product_id) && $user->is_already_subscribed_to($transaction->product_id)){
+        //user is still subscribed, no update
         $updateAuth0=false;
+      }
+    }
+
+    if($updateAuth0){
+      $user = $transaction->user();
+      $dataToUpdate = array('membership_level' => checkMakeCoMems($user));
+      auth0_user_update($user->ID, $dataToUpdate);
     }
   }
-  if($updateAuth0){
-    $user = $transaction->user();
-    $dataToUpdate = array('membership_level' => checkMakeCoMems($user));
-    auth0_user_update($user->ID, $dataToUpdate);
-  }
+
+  return;
 }
 add_action('mepr-event-transaction-expired', 'mepr_capture_expired_transaction');
