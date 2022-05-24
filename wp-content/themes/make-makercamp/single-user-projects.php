@@ -16,26 +16,27 @@ $materials_tax = get_the_terms($post->ID, 'materials');
 $themes = get_the_terms($post->ID, 'makeyland_themes');
 
 // Get our ACF Fields
-$hero_image = get_field('hero_image');
 $steps = get_field('steps');
 $sponsored_by_text = get_field('sponsored_by_text');
 $what_will_you_learn = get_field('what_will_you_learn');
+$what_will_you_make = get_field('what_will_you_make');
+$what_is_happening_here = get_field('what_is_happening_here');
 $whats_next = get_field('whats_next');
 $svg_divider = get_field('svg_divider');
 $video = get_field('video');
 $video_url = get_field('project_video_url');
-$author_id = get_field('user_id');
+$author = get_user_by( 'email', get_field('user_email') );
+$author_id = $author->ID;
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
-	$referrer_params = explode(" ", $referrer_params['_sft_ld_lesson_category']);
+	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
 	sort($referrer_params);
 }
 
 get_header();
-
 ?>
 <div id="learndash-content">
     <div class="bb-grid grid">
@@ -93,8 +94,8 @@ get_header();
 						<?php
 						if(isset($referrer_params)) {
 							foreach($referrer_params as $param) {
-								$breadCrumb = get_term_by('slug', $param, 'ld_lesson_category'); ?>
-								<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+								$breadCrumb = get_term_by('slug', $param, 'content_categories'); ?>
+								<a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
 						<?php
 					 		}
 						}?>
@@ -116,37 +117,39 @@ get_header();
 								<?php // The First Tab 'Project' ?>
 
 								<div class="ld-tab-content ld-visible" id="ld-tab-content">
-									<?php if(isset($hero_image['url'])) { ?>
-										<img src="<?php echo get_resized_remote_image_url($hero_image['url'], 1900, 814); ?>" />
+									<?php if(get_the_post_thumbnail()) { ?>
+										<img class="hero-image" src="<?php echo get_resized_remote_image_url(get_the_post_thumbnail_url(), 1900, 814); ?>" />
 									<?php } ?>
 									<h1><?php the_title(); ?></h1>
-
-									<?php if($sponsored_by_text) { ?>
-										<div class="proj-sponsor-text">
-											<?php echo $sponsored_by_text; ?>
-										</div>
-									<?php } ?>
 
 									<div class="proj-divider">
 										<?php echo $svg_divider; ?>
 									</div>
 									<div class="proj-taxonomy-filters">
 										<?php if(isset($times[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+											<a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
 										<?php } ?>
-										<?php if(isset($skill_levels[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<?php } ?>
+										<?php /* if(isset($skill_levels[0])) { ?>
+											<a href="/project-library/?_sft_skill_levels=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
+										<?php } */ ?>
 										<?php if(isset($ages[0])) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+											<a href="/project-library/?_sft_ages=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
 										<?php } ?>
 									</div>
 
+									<?php if($what_will_you_make) { ?>
+										<section class="up-intro text-center">
+								            <h2>WHAT WILL YOU MAKE?</h2>
+								            <p><?php echo $what_will_you_make; ?></p>
+								        </section>
+									<?php } ?>
 
-							        <section class="up-intro text-center">
-							            <h2>WHAT WILL YOU LEARN?</h2>
-							            <p><?php echo $what_will_you_learn; ?></p>
-							        </section>
+									<?php if($what_will_you_learn) { ?>
+								        <section class="up-intro text-center">
+								            <h2>WHAT WILL YOU LEARN?</h2>
+								            <p><?php echo $what_will_you_learn; ?></p>
+								        </section>
+									<?php } ?>
 
 							        <section class="up-steps container">
 							            <?php
@@ -162,14 +165,14 @@ get_header();
 							                        <div class="col-xs-12 col-sm-6">
 
 							                            <?php if (!empty($image_1)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1['url'], 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1['url'], 500, 500); ?>);"></div>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
 							                                </a>
 							            				<?php } ?>
 
 							                            <?php if (!empty($image_2)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2['url'], 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2['url'], 500, 500); ?>);"></div>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
 							                                </a>
 							            				<?php } ?>
 
@@ -199,7 +202,7 @@ get_header();
 
 									<section id="video">
 										<?php if (!empty($video_url) || !empty($video) ) { ?>
-											<h3>Project Videos</h3>
+											<h3>SEE IT IN ACTION</h3>
 										<?php }
 										if (!empty($video_url) && validate_url($video_url)) {
 										    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);
@@ -216,16 +219,22 @@ get_header();
 											echo $video_embed;
 										}
 										if (!empty($video)) {
-											$ext = pathinfo($video["url"], PATHINFO_EXTENSION); ?>
+											$ext = pathinfo($video, PATHINFO_EXTENSION); ?>
 											<video width="100%" controls>
-											  	<source src="<?php echo $video["url"]; ?>" type="video/<?php echo $ext; ?>">
+											  	<source src="<?php echo $video; ?>" type="video/<?php echo $ext; ?>">
 												Your browser does not support the video tag.
 											</video>
 										<?php }	?>
 									</section>
 
-							        <?php
-							        if ($whats_next) { ?>
+									<?php if($what_is_happening_here) { ?>
+										<section class="up-intro text-center">
+								            <h2>WHAT'S HAPPENING HERE?</h2>
+								            <p><?php echo $what_is_happening_here; ?></p>
+								        </section>
+									<?php } ?>
+
+							        <?php if($whats_next) { ?>
 							            <section class="up-whats-next">
 											<h2>WHAT'S NEXT?</h2>
 							                <p><?php echo $whats_next; ?></p>
@@ -249,22 +258,24 @@ get_header();
 							</div> <?php // end tabs content ?>
 
 							<section class="tags">
-								<?php if(!empty($categories)) { ?>
+								<?php
+								if(!empty($categories)) { ?>
 									<h4>See More Projects in these topics:</h4>
 									<?php foreach($categories as $category) { ?>
-											<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+										<a href="/project-library/?_sft_content_categories=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
 									<?php } ?>
 									<br />
 								<?php }
-									if(!empty($themes)){ ?>
-								<h4>see more projects from these themes:</h4>
-								<?php foreach($themes as $theme) { ?>
-										<a href="/projects-search/?_sft_ld_lesson_category=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
-								<?php }
+								if(!empty($themes)){ ?>
+									<h4>see more projects from these themes:</h4>
+									<?php foreach($themes as $theme) { ?>
+										<a href="/project-library/?_sft_makeyland_themes=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
+									<?php }
 								}	?>
 							</section>
 
 							<section class="up-author">
+
 								<?php
 								// Author section
 								learndash_get_template_part('template-course-author.php', array(
