@@ -115,6 +115,7 @@
 								width: 100%;
 							}
 						}
+						.make-coin { display: flex; }
                         #menu-secondary_universal_menu, #buddypanel-menu, .dropdown-menu {
                             background: #fff;
                             width: 100%;
@@ -740,10 +741,10 @@ body.buddyboss-theme {
         #navbar-collapse { display: none; }
 	}
 	#make-coin {
+		display: none;
 		background: #f1f1f1;
 		text-align: left !important;
 		padding: 10px 0px 10px 30px;
-		display: flex;
 		border: solid 1px #ccc;
 		font-weight: 400;
 		a { padding-left: 10px; }
