@@ -290,7 +290,7 @@ function set_ajax_params(){
   $user_image =
         bp_core_fetch_avatar (
             array(  'item_id' => $user->ID, // id of user for desired avatar
-                    'type'    => 'full',
+                    'type'    => 'thumb',
                     'html'   => FALSE     // FALSE = return url, TRUE (default) = return img html
             )
         );
