@@ -596,7 +596,7 @@
 	}
 }
 
-.dropdown-menu.profile-menu {
+.site-header-custom .site-header-container.flex.default-header .main-navigation #primary-navbar .dropdown-menu.profile-menu {
 	.dropdown-links {
 		padding: 15px;
 		border-top: solid 1px #ccc;
@@ -668,6 +668,7 @@
 		box-shadow: none;
 		padding-top: 0px;
 		border-radius: 0px;
+		display: none;
 		.dropdown-links {
 			padding-bottom: 0px;
 			border: 0px;
