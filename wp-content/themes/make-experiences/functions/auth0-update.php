@@ -76,10 +76,9 @@ add_action( 'xprofile_updated_profile', 'user_profile_data_updated', 1, 5 );
  *
 */
 function user_avatar_updated ($user_id, $type, $avatar_data ){
-  if(isset($avatar_data['avatar'])&& $avatar_data['avatar']!=''){
-    $dataToUpdate['picture']=$avatar_data['avatar'];
-    auth0_user_update($user_id, $dataToUpdate);
-  }
+  //this function only returns the full avatar, we want to update auth0 with the thumb avatar
+  $dataToUpdate['picture']=bp_core_fetch_avatar (array(  'item_id' => $user_id, 'object'=>'user','type'    => 'thumb','html'   => FALSE));
+  auth0_user_update($user_id, $dataToUpdate);
 
   return;
 }
