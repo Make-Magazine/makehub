@@ -196,7 +196,7 @@ jQuery(document).ready(function() {
         //set the user drop down and avatar
         setUserDrop(user);
 
-		jQuery(".profile-menu").css("display", "block");
+		jQuery(".profile-menu").addClass("logged-in");
 		jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
 
         //Set upgrade or join now buttons

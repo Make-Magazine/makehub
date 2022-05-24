@@ -122,7 +122,7 @@
                             margin: 0px;
                             display: flex;
                             flex-direction: column;
-							&.profile-menu { display: none; }
+							&.profile-menu:not(.logged-in) { display: none; }
 							li { min-height: 40px; }
                             a {
                                 color: #333;
