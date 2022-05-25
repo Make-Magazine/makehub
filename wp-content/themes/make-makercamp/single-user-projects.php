@@ -9,7 +9,11 @@ global $post;
 
 // Get our Taxonomies
 $categories = get_the_terms($post->ID, 'content_categories');
+function sortBySlug($a, $b) {
+    return $a->slug > $b->slug;
+}
 $ages = get_the_terms($post->ID, 'ages');
+usort($ages, 'sortBySlug');
 $times = get_the_terms($post->ID, 'times');
 $skill_levels = get_the_terms($post->ID, 'skill_levels');
 $materials_tax = get_the_terms($post->ID, 'materials');
@@ -35,6 +39,7 @@ if(isset($referrer_url['query'])) {
 	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
 	sort($referrer_params);
 }
+
 
 get_header();
 ?>
@@ -127,13 +132,14 @@ get_header();
 									</div>
 									<div class="proj-taxonomy-filters">
 										<?php if(isset($times[0])) { ?>
-											<a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>" class="tax-time"><?php echo $times[0]->name; ?></a>
+											<span class="tax-time"><a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>"><?php echo $times[0]->name; ?></a></span>
 										<?php } ?>
-										<?php /* if(isset($skill_levels[0])) { ?>
-											<a href="/project-library/?_sft_skill_levels=<?php echo $skill_levels[0]->slug; ?>" class="tax-skill-level"><?php echo $skill_levels[0]->name; ?></a>
-										<?php } */ ?>
-										<?php if(isset($ages[0])) { ?>
-											<a href="/project-library/?_sft_ages=<?php echo $ages[0]->slug; ?>" class="tax-age"><?php echo $ages[0]->name; ?></a>
+										<?php if(isset($ages)) { ?>
+											<span class="tax-age">
+												<?php foreach($ages as $age) { ?>
+													<a href="/project-library/?_sft_ages=<?php echo $age->slug; ?>"><?php echo $age->name; ?></a>
+												<?php } ?>
+											</span>
 										<?php } ?>
 									</div>
 
@@ -152,6 +158,7 @@ get_header();
 									<?php } ?>
 
 							        <section class="up-steps container">
+										<h2>STEPS</h2>
 							            <?php
 							            if ($steps) {
 							                $step_number = 1;
@@ -162,23 +169,7 @@ get_header();
 							                    $description = $step['description'];
 							                    ?>
 							                    <div class="row">
-							                        <div class="col-xs-12 col-sm-6">
-
-							                            <?php if (!empty($image_1)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
-							                                </a>
-							            				<?php } ?>
-
-							                            <?php if (!empty($image_2)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
-							                                </a>
-							            				<?php } ?>
-
-							                        </div>
-
-							                        <div class="col-xs-12 col-sm-6">
+							                        <div class="col-xs-12">
 							                            <h4>STEP <?php echo $step_number; ?></h4>
 							                            <?php
 							                            if (!empty($title)) {
@@ -191,6 +182,19 @@ get_header();
 							                            }
 							                            ?>
 							                        </div>
+													<div class="col-xs-12">
+							                            <?php if (!empty($image_1)) { ?>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
+							                                </a>
+							            				<?php } ?>
+
+							                            <?php if (!empty($image_2)) { ?>
+							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
+							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
+							                                </a>
+							            				<?php } ?>
+							                        </div>
 							                    </div>
 
 							                    <?php
@@ -202,7 +206,7 @@ get_header();
 
 									<section id="video">
 										<?php if (!empty($video_url) || !empty($video) ) { ?>
-											<h3>SEE IT IN ACTION</h3>
+											<h2>SEE IT IN ACTION</h2>
 										<?php }
 										if (!empty($video_url) && validate_url($video_url)) {
 										    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);

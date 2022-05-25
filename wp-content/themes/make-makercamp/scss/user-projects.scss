@@ -64,10 +64,7 @@
 		.proj-taxonomy-filters {
 			display: flex;
 			justify-content: space-around;
-			a {
-				font-family: "Roboto Light";
-				font-size: 18px;
-				color: #7a7a7a;
+			span {
 				display: flex;
 				align-items: center;
 				height: 50px;
@@ -80,14 +77,20 @@
 				&.tax-time:before {
 					content: "\f017";
 				}
-				&.tax-skill-level {
-					pointer-events: none;
-					&:before {
-						content: "\f005";
-					}
-				}
 				&.tax-age:before {
 					content: "\f073";
+				}
+			}
+			a {
+				font-family: "Roboto Light";
+				font-size: 18px;
+				color: #7a7a7a;
+				&:after {
+					content: ",";
+					margin-right: 8px;
+				}
+				&:last-of-type:after {
+					content: "";
 				}
 			}
 		}
