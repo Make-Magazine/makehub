@@ -1,98 +1,95 @@
-<?php // ?>
-<!DOCTYPE html>
-<html>
-  <head>
-  <meta charset="UTF-8">
-  </head>
-  <body>
-    <?php
-    //place this before any script you want to calculate time
-    $time_start = microtime(true);
-    include '../../../../wp-load.php';
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+<?php //
+include '../../../../wp-load.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    $offset = 0;
-    $args = array('meta_key'=>'wp_auth0_id', 'meta_value'   => '', 'meta_compare' => '!=',
-                  'offset'=>$offset,'number'=>100,'orderby'=>'ID');
+$membersFile = dirname(__FILE__).'/import/auth0Resp/merged-file.json';
+if(!file_exists($membersFile)){
+  die('Members file not found');
+}
+$errors = file_get_contents(dirname(__FILE__).'/import/auth0Resp/merged-file.json');
 
-    $allusers = get_users($args);
-    echo 'number of users found '.count($allusers).'<br/>';
+// Decode the JSON file
+$json_data = json_decode($errors,true);
+$users = array();
+$errors = array();
+foreach($json_data as $json_error){
+  $user = $json_error['user'];
 
-    $userToUpdate = array();
+  $userMetaData = $user['user_metadata'];
 
-    foreach($allusers as $user){
-      //get user first and last name
-      $last_name = get_user_meta( $user->ID, 'last_name', true );
-      $first_name = get_user_meta( $user->ID, 'first_name', true );
+  $users[] = array("email"=>$user['email'],
+  "first_name"=>$userMetaData['first_name'],
+  "last_name"=>$userMetaData['last_name'],
+  "picture"=>$userMetaData['picture'],
+  "membership_level"=>$userMetaData['membership_level']);
 
-      //get user avatar
-      $user_image =
-       bp_core_fetch_avatar (
-           array(  'item_id' => $user->ID, // id of user for desired avatar
-                   'type'    => 'full',
-                   'html'   => FALSE     // FALSE = return url, TRUE (default) = return img html
-           )
-       );
+  $errors[$json_error['errors'][0]['code']] = $json_error['errors'][0]['message'];
+}
+echo count($users).' users in error<br/>';
 
-       //get user membership level
-       $membershipType = checkMakeCoMems($user);
-       if($membershipType!='none'){
-         $userToUpdate[] = array(
-           "email" => $user->user_email,
-           "user_metadata" =>
-                       array("first_name" => $first_name,
-                             "last_name" => $last_name,
-                             "picture" => $user_image,
-                             "membership_level" => $membershipType));
-           echo $user->ID.' '.$user->user_email.' '.$first_name.' '.$last_name.' '.$membershipType.'<br/>';
-       }
-    }
-    echo 'users to update '.count($userToUpdate).'<br/>';
+/*
+//build the json output
+$users = json_encode($users);
 
-    $filename = dirname(__FILE__).'/import/auth0Update'.$offset.'.json';
+//save json output to a file
+$filename = dirname(__FILE__).'/import/auth0Retry.json';
+echo 'writing to file '.$filename.'<br/>';
+file_put_contents($filename, $users,FILE_APPEND);
+*/
 
-    echo 'writing to file '.$filename.'<br/>';
-    file_put_contents($filename, json_encode($userToUpdate),FILE_APPEND);
+//create CSV output
+// Open a file in write mode ('w')
+echo 'writing to file '.dirname(__FILE__).'/import/users.csv'.'<br/>';
+$fp = fopen(dirname(__FILE__).'/import/users.csv', 'w');
 
-    //call Auth0 to get authorization token
-    $post_data = array("client_id" => "Ya3K0wmP182DRTexd1NdoeLolgXOlqO1",
-                       "client_secret" => "eu9e8LC7fvrKb9ou5JglKdIv67QDvhkiMg32vm0q433SMXD5PW3elCV7OuiSFs6n",
-                       "audience" => "https://makermedia.auth0.com/api/v2/",
-                       "grant_type" => "client_credentials");
-    $response = postCurl("https://makermedia.auth0.com/oauth/token",
-                array("content-type: application/json"), json_encode($post_data));
-    $response = json_decode($response);
+// Loop through file pointer and a line
+foreach ($users as $user) {
+    fputcsv($fp, $user);
+}
 
-    if (!isset($response->access_token)) {
-      var_dump($response);
-      die('access token not set');
-    }
+fclose($fp);
 
-    $access_token = $response->access_token;
-    echo '$access_token = '.$access_token.'<br/>';
+die();
+$count=0;
+$user = array();
+//loop through the members file - format email,	first_name,	last_name,	mem level
+while (($line = fgetcsv($file)) !== FALSE) {
+  $count++;
+  $email = $line[0];
+  $first_name = $line[1];
+  $last_name = $line[2];
+  $membership_level = $line[3];
 
-    //call auth0 to get connection
-    $url = "https://makermedia.auth0.com/api/v2/connections";
-    $headers = array("authorization: Bearer " . $access_token, "content-type: application/json");
-    $authRes = basicCurl($url, $headers);
-    $authRes = json_decode($authRes);
+  $user = get_user_by('email',$email);
+  if($user && isset($user->ID)){
+    //retrieve the members photo
+    $picture = bp_core_fetch_avatar (array(  'item_id' => $user->ID, 'object' => 'user', 'type' => 'thumb',
+                        'html'   => FALSE));
 
-    $connection = '';
-    foreach($authRes as $result){
-       if($result->name==="DB-Make-Community"){
-          $connection = $result->id;
-       }
-    }
+    $users[] =  array(
+      "email" => $email,
+      "user_metadata" =>
+                  array("first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "picture" => $picture,
+                        "membership_level" => $membership_level));
 
-    if($connection==''){
-      var_dump($authRes);
-      die('connection not set');
-    }
+  }else{
+    echo 'error getting user information for '.$email.'<br/>';
+    echo 'response is:<br/>';
+    var_dump($user);
+  }
+}
+echo 'members file had '.$count.' users<br/>';
+echo 'found '.count($users).' to update<br/>';
 
-    echo '$connection id = '.$connection .'<br/>';
+//build the json output
+$users = json_encode($users);
 
-?>
-</body>
-</html>
+//save json output to a file
+$filename = dirname(__FILE__).'/import/auth0Update.json';
+
+echo 'writing to file '.$filename.'<br/>';
+file_put_contents($filename, $users,FILE_APPEND);
