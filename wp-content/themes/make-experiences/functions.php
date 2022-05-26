@@ -57,83 +57,18 @@ function make_experiences_scripts_styles() {
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-	  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 
     // lib src packages up bootstrap js and fancybox
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('make_experiences-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-    wp_localize_script('universal', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => wp_get_current_user()->user_email,
-                'wp_user_nicename' => wp_get_current_user()->user_nicename,
-                'wp_user_avatar' =>get_avatar_url(get_current_user_id())
-            )
-    );
 }
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
 function load_admin_styles() {
-    wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
+  wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
-
-function set_universal_asset_constants() {
-	if (isset($_SERVER['HTTPS']) &&
-	    ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-	    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-	    $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-	  		$protocol = 'https://';
-	} else {
-		$protocol = 'http://';
-	}
-    // Set the important bits as CONSTANTS that can easily be used elsewhere
-	define('CURRENT_URL', $protocol . $_SERVER['HTTP_HOST']);
-	define('CURRENT_POSTID', url_to_postid( CURRENT_URL . $_SERVER[ 'REQUEST_URI' ]));
-
-	// Decide if user can upgrade
-	$canUpgrade = true;
-	$hasMembership = false;
-	// this is a list of memberships that can't be upgraded further
-	$fullMemberships = array("Premium Member", "School Maker Faire", "Global Producers", "Multi-Seat Membership");
-	$currentMemberships = array();
-
-	if( class_exists('MeprUtils') ) {
-	    $mepr_current_user = MeprUtils::get_currentuserinfo();
-		  // see if you can get the "slug" in this query and test against that in the $fullMemberships list
-	    $sub_cols = array('id','user_id','product_id','product_name','subscr_id','status','created_at','expires_at','active');
-		if($mepr_current_user) {
-		    $table = MeprSubscription::account_subscr_table(
-		      'created_at', 'DESC',
-		      1, '', 'any', 0, false,
-		      array(
-		        'member' => $mepr_current_user->user_login,
-		      ),
-		      $sub_cols
-		    );
-		    $subscriptions = $table['results'];
-			foreach($subscriptions as $subscription) {
-				if($subscription->active == '<span class="mepr-active">Yes</span>') {
-					$hasMembership = true;
-					$currentMemberships[] = $subscription->product_name;
-					if( in_array($subscription->product_name, $fullMemberships) ) {
-						$canUpgrade = false;
-					}
-				}
-			}
-		} else {
-			$canUpgrade = false;
-		}
-	}
-	define('CURRENT_MEMBERSHIPS', $currentMemberships);
-	define('IS_MEMBER', $hasMembership);
-	define('CAN_UPGRADE', $canUpgrade);
-}
-set_universal_asset_constants();
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
@@ -171,55 +106,6 @@ function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
 }
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
-
-function basicCurl($url, $headers = null) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    if ($headers != null) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
-	if (strpos(CURRENT_URL, '.local') > -1 || strpos(CURRENT_URL, '.test') > -1 ) { // wpengine local environments
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    }
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return $data;
-}
-
-function postCurl($url, $headers = null, $datastring = null) {
-	$ch = curl_init($url);
-
-	if (strpos(CURRENT_URL, '.local') > -1  || strpos(CURRENT_URL, '.test') > -1) { // wpengine local environments
-	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-
-	if($datastring != null) {
-		curl_setopt(
-		  $ch,
-		  CURLOPT_POSTFIELDS,
-		  $datastring
-		);
-	}
-
-	if ($headers != null) {
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	}
-
-	$response = curl_exec($ch);
-
-	if(curl_errno($ch)){
-	  throw new Exception(curl_error($ch));
-	}
-
-	return $response;
-	curl_close($ch);
-}
 
 function parse_yturl($url) {
     $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
@@ -509,4 +395,5 @@ function mc_edit_permission_check() {
     }
 }
 add_filter( 'admin_head', 'mc_edit_permission_check', 1, 4 );
+
 ?>

@@ -4,12 +4,8 @@ if (!defined('ABSPATH'))
     define('ABSPATH', dirname(__FILE__) . '/');
 require_once(ABSPATH . 'wp-load.php');
 
-// Can we load the universal scripts this way
-function universal_scripts() {
-    //auth0
-    wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
-}
-add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
+define('AUTH0_CLIENTID', "NDw7r6YLomyGceVgG7PIt2wIhIgLNqxG");
+define('AUTH0_SECRET', "4dfAi4LjuknqDkzXILwK13vARSBiZIdB-XTHAErTk7QthdRcjF-5w3-AmYfh6eUT");
 
 // check if user is logged in
 function ajax_check_user_logged_in() {
@@ -49,6 +45,7 @@ add_action('wp_ajax_nopriv_mm_wplogout', 'MM_wordpress_logout');
 function MM_WPlogin() {
     //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
     global $wpdb; // access to the database
+
     //use auth0 plugin to log people into wp
     $a0_plugin = new WP_Auth0_InitialSetup(WP_Auth0_Options::Instance());
     $a0_options = WP_Auth0_Options::Instance();
@@ -63,11 +60,6 @@ function MM_WPlogin() {
     $id_token = filter_input(INPUT_POST, 'auth0_id_token', FILTER_SANITIZE_STRING);
 
     if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
-        /* $blog_id = get_current_blog_id(); // this only triggered for a user logged into another site to begin with
-          $user_id = username_exists( sanitize_text_field( $userinfo->nickname ) );
-          if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
-          add_user_to_blog( $blog_id, $user_id, "subscriber" );
-          } */
         wp_send_json_success();
     } else {
         error_log('Failed login');
@@ -90,15 +82,6 @@ function randomString() {
     $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
     return substr(str_shuffle($permitted_chars), 0, 10);
 }
-
-// prevent non admin users from seeing the admin dashboard -- I don't believe this is necessary anymore. - Rio 3/2/22
-/*I function blockusers_init() {
-    if (is_admin() && !current_user_can('administrator') && !( defined('DOING_AJAX') && DOING_AJAX )) {
-        wp_redirect(home_url());
-        exit;
-    }
-}
-add_action('init', 'blockusers_init');*/
 
 function timezone_abbr_from_name($timezone_name) {
     $dateTime = new DateTime();
@@ -137,16 +120,6 @@ add_filter('body_class', 'add_universal_body_classes');
 // don't just use the auth0 email field for the wpuser name
 add_filter( 'auth0_use_management_api_for_userinfo', '__return_false', 101 );
 
-/* disable wordpress emails if that is set in wp-config
-add_filter('wp_mail','disabling_emails', 10,1);
-function disabling_emails( $args ){
-	error_log("variable is: " . ALLOW_WP_EMAILS);
-    if ( ! $_GET['allow_wp_mail'] ) {
-        unset ( $args['to'] );
-    }
-    return $args;
-}
-*/
 
 /**
  * Eliminate some of the default admin list columns that squish the title
@@ -217,3 +190,169 @@ add_action('elementor/widgets/widgets_registered', function( $widget_manager ){
 	$widget_manager->unregister_widget_type('wp-widget-members-widget-login');
 	$widget_manager->unregister_widget_type('uael-gf-styler');
 }, 15);
+
+//curl functionality
+function basicCurl($url, $headers = null) {
+    $ch = curl_init();
+    //curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
+    //curl_setopt($ch, CURLOPT_STDERR, $verbose = fopen('php://temp', 'rw+'));
+    curl_setopt($ch, CURLOPT_URL, $url);
+    if ($headers != null) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+
+	  if (strpos(NETWORK_HOME_URL, '.local') > -1 || strpos(NETWORK_HOME_URL, '.test') > -1 ) { // wpengine local environments
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    }
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    $data = curl_exec($ch);
+
+    //echo "Verbose information:\n", !rewind($verbose), stream_get_contents($verbose), "\n";
+    curl_close($ch);
+    return $data;
+}
+
+function postCurl($url, $headers = null, $datastring = null,$type="POST") {
+	$ch = curl_init($url);
+
+	if (strpos(NETWORK_HOME_URL, '.local') > -1  || strpos(NETWORK_HOME_URL, '.test') > -1) { // wpengine local environments
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}
+
+  //curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
+  //curl_setopt($ch, CURLOPT_STDERR, $verbose = fopen('php://temp', 'rw+'));
+
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+
+	if($datastring != null) {
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $datastring);
+	}
+
+	if ($headers != null) {
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	}
+
+	$response = curl_exec($ch);
+
+  //echo "Verbose information:\n", !rewind($verbose), stream_get_contents($verbose), "\n";
+	if(curl_errno($ch)){
+	  throw new Exception(curl_error($ch));
+	}
+
+	curl_close($ch);
+  return $response;
+}
+
+/**
+ *  Case in-sensitive array_search() with partial matches
+ */
+ function array_find($needle, array $haystack) {
+   foreach ($haystack as $key => $value) {
+      if (false !== stripos($value, $needle)) {
+           return $key;
+       }
+   }
+   return false;
+ }
+
+ /* Used to set the memberpress headers for the api call */
+ function setMemPressHeaders($datastring = null) {
+ 	$headers = array();
+ 	$headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
+ 	$headers[] = 'Content-Type: application/json';
+ 	if($datastring){
+ 		$headers[] = 'Content-Length: ' . strlen($datastring);
+ 	}
+ 	return $headers;
+ }
+
+function set_ajax_params(){
+  //pull the style.css to retrieve the version
+  $file = ABSPATH . 'wp-content/universal-assets/v1/package.json';
+  // get the file contents, assuming the file to be readable (and exist)
+  $contents = file_get_contents($file);
+  if($contents){
+    $pkg_json = json_decode($contents);
+  }
+  $my_version = isset($pkg_json->version)?$pkg_json->version:'1.1';
+
+  //auth0
+  wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
+  wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
+
+  $user = wp_get_current_user();
+  $membershipType = checkMakeCoMems($user);
+
+  $user_image =
+        bp_core_fetch_avatar (
+            array(  'item_id' => $user->ID, // id of user for desired avatar
+                    'object'=>'user',
+                    'type'    => 'thumb',
+                    'html'   => FALSE     // FALSE = return url, TRUE (default) = return img html
+            )
+        );
+
+  $last_name  = get_user_meta( $user->ID, 'last_name', true );
+  $first_name = get_user_meta( $user->ID, 'first_name', true );
+
+  //set the ajax parameters
+  wp_localize_script('universal', 'ajax_object',
+          array(
+              'ajax_url' => admin_url('admin-ajax.php'),
+              'home_url' => get_home_url(),
+              'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+              'wp_user_email' => $user->user_email,
+              'wp_user_nicename' => $first_name.' '.$last_name,
+              'wp_user_avatar' => $user_image,
+              'wp_user_memlevel' => $membershipType
+          )
+  );
+}
+
+add_action('wp_enqueue_scripts', 'set_ajax_params', 9999);
+
+/* This function will check if user is a premium member, non member or eligible for upgrade */
+function checkMakeCoMems($user) {
+  if(!isset($user->ID)){
+    error_log('missing user id in checkMakeCoMems!!!');
+    error_log(print_r($user,TRUE));
+    return;
+  }
+  $headers = setMemPressHeaders();
+  $memberInfo = basicCurl(NETWORK_HOME_URL."/wp-json/mp/v1/members/".$user->ID, $headers);
+  $memberArray = json_decode($memberInfo);
+
+  $membershipType = 'none';
+  if(isset($memberArray->active_memberships)) {
+    //create an array of memberships using the title field
+    $memArray = array_column($memberArray->active_memberships, 'title');
+
+    if(!empty($memArray)){
+      //look for the needle in any part of the title field in the multi level array
+      if(array_find('premium', $memArray, 'title') !== false ||
+         array_find('multi-seat', $memArray, 'title') !== false ||
+         array_find('school maker faire', $memArray, 'title') !== false){
+        //Premium Membership
+        $membershipType = "premium";
+      }else{
+        //free membership, upgrade now
+        $membershipType = "upgrade";
+      }
+    }
+  }else{
+    $membershipType = "none";
+  }
+  return $membershipType;
+}
+
+//set default user avatar to grey makey
+add_filter( 'avatar_defaults', 'wpb_new_gravatar' );
+function wpb_new_gravatar ($avatar_defaults) {
+  $myavatar = 'https://make.co/wp-content/universal-assets/v1/images/default-makey.png';
+  $avatar_defaults[$myavatar] = "Default Makey Avatar";
+  return $avatar_defaults;
+}

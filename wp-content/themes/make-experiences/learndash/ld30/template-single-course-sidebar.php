@@ -136,7 +136,7 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 				// Require users to be logged in to access classes at all
 				if ( apply_filters( 'learndash_login_modal', true, $course_id, $user_id ) && ! is_user_logged_in() ) {
 					echo '<br /><p>Please login or register to complete your purchase.</p>';
-					echo '<a class="learndash-stripe-checkout-button btn-join button" href="/wp-login.php?redirect_to='.CURRENT_URL.$_SERVER['REQUEST_URI'].'">' . __( 'Login', 'buddyboss-theme' ) . '</a>';
+					echo '<a class="learndash-stripe-checkout-button btn-join button" href="/wp-login.php?redirect_to='.NETWORK_HOME_URL.$_SERVER['REQUEST_URI'].'">' . __( 'Login', 'buddyboss-theme' ) . '</a>';
 				} else {
 				?>
 	                <div class="bb-button-wrap">

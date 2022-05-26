@@ -76,18 +76,18 @@ add_action( 'wp_enqueue_scripts', 'make_base_enqueue_scripts_styles' );
 function make_base_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
-	
+
     wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
 	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-	
+
 	### GENESIS STYLES #####
-	$parent_style = 'genesis-style'; 
+	$parent_style = 'genesis-style';
     wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
-	
+
 	### UNIVERSAL STYLES ###
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
-	
+
 	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-base-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
@@ -106,27 +106,17 @@ function make_base_enqueue_scripts_styles() {
 		'genesis_responsive_menu',
 		make_base_responsive_menu_settings()
 	);
-	
+
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
 	// font awesome load script
-	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
-	// universal scripts
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true );
+
 	// our custom scripts
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 	// gutenberg script
 	wp_enqueue_script('make-base', get_stylesheet_directory_uri() . '/js/make-base.js', array( 'jquery' ), $my_version, true);
-	
-	wp_localize_script('make-base', 'ajax_object',
-	  array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'home_url' => get_home_url(),
-			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => wp_get_current_user()->user_email,
-	  )
-	);
 
 }
 

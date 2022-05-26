@@ -9,6 +9,8 @@
         </div>
         <nav id="site-navigation-custom" class="main-navigation" data-menu-space="120">
             <div id="primary-navbar">
+				<h3 class="subnav-title"></h3>
+				<span class='mobile-subscribe-btn'><a class='universal-btn-red' href='https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-mobile&utm_content=launch'>Subscribe</a></span>
                 <ul id="primary-menu" class="primary-menu">
                 </ul>
                 <div id="navbar-collapse" class="hasItems">
@@ -236,7 +238,30 @@
         <!-- start header aside -->
         <div id="header-aside" class="header-aside">
             <div class="header-aside-inner">
+              <span id="make-login" class="login-section">
+                  <a id="LoginBtn" href="/wp-login.php" title="Log In" target="_self">Log In</a>
+                  <div id="profile-view" class="dropdown v-select" style="display: flex;"">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <img class="avatar" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
+						  <img class="avatar-banner" src="https://make.co/wp-content/universal-assets/v1/images/join-now-banner.png" alt="Join Now" />
+                      </a>
 
+                      <div class="dropdown-menu profile-menu" aria-labelledby="dropdownMenuLink">
+                          <div class="profile-info">
+                              <img class="avatar" style="width:80px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
+                              <div class="profile-text">
+                                  <div class="profile-name"></div>
+                                  <div class="profile-email"></div>
+                              </div>
+                          </div>
+                          <div class="dropdown-links" id="profileLinks">
+                          </div>
+                          <a id="LogoutBtn" href="/wp-login.php?action=logout" target="_self" title="Log Out">Log Out</a>
+                      </div>
+                  </div>
+              </span>
+              <span id="make-coin" style="text-align: center;"></span>
+              <span id="make-join" class="search-separator nav-separator"></span>
                 <div class="search-button-wrapper">
                     <div class="subscribe-call-out">
                         <div class="subscribe-text">
@@ -258,34 +283,6 @@
 
                 </div>
 
-                <span class="search-separator nav-separator"></span>
-
-                <span class="login-section">
-
-                    <a id="LoginBtn" href="/wp-login.php" title="Log In">Log In</a>
-                    <div id="profile-view" class="dropdown v-select">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="avatar" style="width:38px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                        </a>
-
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <div class="profile-info">
-                                <img class="avatar" style="width:80px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                                <div class="profile-text">
-                                    <div class="profile-name"></div>
-                                    <div class="profile-email"></div>
-                                </div>
-                            </div>
-                            <div class="dropdown-links" id="profileLinks">
-                            </div>
-                            <a id="LogoutBtn" href="/wp-login.php?action=logout" title="Log Out">Log Out</a>
-                        </div>
-                    </div>
-                </span>
-
-                <div class="user-wrap user-wrap-container menu-item-has-children selected">
-
-                </div>
             </div>
             <!-- end header aside -->
         </div>
