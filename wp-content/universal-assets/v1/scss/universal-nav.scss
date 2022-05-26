@@ -1010,3 +1010,10 @@ body.buddypanel-open {
         align-items: start;
     }
 }
+
+//hide login for makerfaire and makezine on safari-mac
+.safari-mac {
+	body.makezine, body#makerfaire {
+		#LoginBtn { display: none !important; }
+	}
+}
