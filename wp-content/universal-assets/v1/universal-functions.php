@@ -356,3 +356,6 @@ function wpb_new_gravatar ($avatar_defaults) {
   $avatar_defaults[$myavatar] = "Default Makey Avatar";
   return $avatar_defaults;
 }
+
+/* Turn off secure file download. This was conflicting with LargeFS on wpengine */
+add_filter( 'gform_secure_file_download_location', '__return_false' );
