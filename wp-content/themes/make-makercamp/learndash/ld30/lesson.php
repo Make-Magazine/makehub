@@ -57,9 +57,11 @@ if (empty($course)) {
 $categories = get_the_terms($post->ID, 'content_categories');
 $ages = get_the_terms($post->ID, 'ages');
 $times = get_the_terms($post->ID, 'times');
-$skill_levels = get_the_terms($post->ID, 'skill_levels');
 $materials_tax = get_the_terms($post->ID, 'materials');
 $themes = get_the_terms($post->ID, 'makeyland_themes');
+
+$terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
+
 
 // variables for building Breadcrumbs
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
