@@ -81,7 +81,6 @@ class Search_Filter_Helper {
     }
     public static function print_log($name = "", $running = false, $important = false)
     {
-        //echo "<br /><br />********************************<br />
         if($important)
         {
             echo "<strong>";
@@ -324,6 +323,7 @@ class Search_Filter_Helper {
 				'load_js_css' => 1,
 				'combobox_script' => "chosen",
 				'remove_all_data' => 0,
+				'meta_key_text_input' => 0,
 
 			);
 

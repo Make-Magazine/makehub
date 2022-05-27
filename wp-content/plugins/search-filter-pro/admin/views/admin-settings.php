@@ -205,6 +205,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<?php _e('Use text input for meta keys', $this->plugin_slug); ?><br />
+				</th>
+				<td>
+					<label>
+						<input id="search_filter_meta_key_text_input" name="search_filter_meta_key_text_input" type="checkbox" class="" value="1"<?php $this->set_checked($meta_key_text_input); ?> />
+						<?php _e('Enabling this option allows you to directly enter your meta keys and can significantly improve performance in the admin UI when you have a large number of meta keys', $this->plugin_slug); ?>
+					</label>
+
+				</td>
+			</tr>
 		</table>
 		<?php submit_button(); ?>
 	</form>

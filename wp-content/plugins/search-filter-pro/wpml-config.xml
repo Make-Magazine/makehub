@@ -33,8 +33,11 @@
 				<key name="range_value_prefix" />
 				<key name="range_value_postfix" />
 				<key name="all_items_label_number" />
+				<key name="label" />
 				<key name="sort_options">
-					<key name="sort_label" />
+					<key name="*">
+						<key name="sort_label" />
+					</key>
 				</key>
 			</key>
 		</key>

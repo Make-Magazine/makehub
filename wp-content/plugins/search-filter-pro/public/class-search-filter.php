@@ -390,67 +390,14 @@ class Search_Filter {
 
                         $ajax_data = apply_filters("search_filter_ajax_object_$clean_data_type", $ajax_data);
                     }
-
                 }
 
                 do_action("search_filter_api_header");
-                echo Search_Filter_Helper::json_encode($ajax_data);
+				header('Content-Type: application/json; charset=utf-8');
+                echo wp_json_encode($ajax_data);
                 exit;
-
-				/*if($sf_data=="results")
-				{
-					if($sf_inst->settings("display_results_as")=="shortcode")
-					{
-						$results = array();
-						
-						//$results['form'] = $this->display_shortcode->display_shortcode(array("id" => $sfid));
-						$results['results'] = $sf_inst->query()->the_results();
-						
-						echo Search_Filter_Helper::json_encode($results);
-						exit;
-					}
-				}
-				else if($sf_data=="all")
-				{
-					if($sf_inst->settings("display_results_as")=="shortcode")
-					{
-						$results = array();
-
-						$results['form'] = $this->display_shortcode->display_shortcode(array("id" => $sfid));
-						$results['results'] = $sf_inst->query()->the_results();
-
-						echo Search_Filter_Helper::json_encode($results);
-						exit;
-					}
-				}
-				else if($sf_data=="form")
-				{
-					$results = array();
-                    $results['form'] = $this->display_shortcode->display_shortcode(array("id" => $sfid));
-					
-					echo Search_Filter_Helper::json_encode($results);
-					exit;
-				}
-				else if($sf_data=="vc_results")
-				{
-					$results = array();
-
-                    $results_output = "";
-                    if(has_filter("search_filter_ajax_results"))
-                    {
-                        $results['results'] = apply_filters("search_filter_ajax_results", $results_output);
-                    }
-					$results['form'] = $this->display_shortcode->display_shortcode(array("id" => $sfid));
-
-					echo Search_Filter_Helper::json_encode($results);
-					exit;
-				}*/
-
-				//do_action("");
-				
 			}
 		}
-        //exit;
 	}
 
 	public function handle_template($original_template)

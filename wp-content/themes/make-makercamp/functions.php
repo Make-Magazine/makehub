@@ -295,17 +295,6 @@ add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3);
 
-// limit default site search to learndash categories
-function searchfilter($query) {
-    if ($query->is_search && !is_admin()) {
-        $query->set('post_type', array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
-    }
-    return $query;
-}
-
-add_filter('pre_get_posts', 'searchfilter');
-
-
 function remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);

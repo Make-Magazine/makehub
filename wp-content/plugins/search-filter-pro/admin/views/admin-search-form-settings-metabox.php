@@ -734,6 +734,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<td>
 					<fieldset>
 						<?php
+						
+						$meta_key_text_input = Search_Filter_Helper::get_option( 'meta_key_text_input' );
+						if($meta_key_text_input == 1 ) {
+							?>
+							<input type="text" placeholder="<?php echo esc_attr__( 'Enter a meta key', 'search-filter' ); ?> " style="width: 100%" name="default_meta_key" class="meta_key" id="default_meta_key" value="<?php echo esc_attr($values['default_meta_key']); ?>" />
+							<?php
+						} else {
 							$all_meta_keys = $this->get_all_post_meta_keys();
 							echo '<select name="default_meta_key" class="meta_key" id="default_meta_key">';
 							foreach($all_meta_keys as $v)
@@ -741,6 +748,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								echo '<option value="'.$v.'"'.$this->set_selected($values['default_meta_key'], $v, false).'>'.$v."</option>";
 							}
 							echo '</select> ';
+						}
 							
 						?> 
 					
@@ -798,13 +806,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<td>
 					<fieldset>
 						<?php
-							$all_meta_keys = $this->get_all_post_meta_keys();
-							echo '<select name="secondary_meta_key" class="meta_key" id="secondary_meta_key">';
-							foreach($all_meta_keys as $v)
-							{						
-								echo '<option value="'.$v.'"'.$this->set_selected($values['secondary_meta_key'], $v, false).'>'.$v."</option>";
+							if($meta_key_text_input == 1 ) {
+								?>
+								<input type="text" placeholder="<?php echo esc_attr__( 'Enter a meta key', 'search-filter' ); ?> " style="width: 100%" name="secondary_meta_key" class="meta_key" id="secondary_meta_key" value="<?php echo esc_attr($values['secondary_meta_key']); ?>" />
+								<?php
+							} else {
+								$all_meta_keys = $this->get_all_post_meta_keys();
+								echo '<select name="secondary_meta_key" class="meta_key" id="secondary_meta_key">';
+								foreach($all_meta_keys as $v)
+								{						
+									echo '<option value="'.$v.'"'.$this->set_selected($values['secondary_meta_key'], $v, false).'>'.$v."</option>";
+								}
+								echo '</select> ';
 							}
-							echo '</select> ';
 							
 						?> 
 					

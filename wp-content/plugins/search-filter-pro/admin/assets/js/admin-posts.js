@@ -2009,7 +2009,7 @@
 				var val = $self.find('option[value="'+$self.val()+'"]').attr("data-sf-base");
 				var real_display_method = $active_results_display.val();
 
-				if ( ( real_display_method !== 'custom_dce_posts' ) && ( real_display_method !== 'custom_dce_google_maps' ) ) {
+				if ( ( real_display_method !== 'custom_dce_posts' ) && ( real_display_method !== 'custom_dce_google_maps' )  && ( real_display_method !== 'custom_dce_google_maps_posts' ) ) {
 					$template_pagination_table.show();
 					
 				} else {

@@ -2,9 +2,9 @@
 Contributors: DesignsAndCode, CodeAmp
 Donate link:
 Tags: posts, custom posts, products, category, filter, taxonomy, post meta, custom fields, search, wordpress, post type, post date, author
-Requires at least: 3.5
-Tested up to: 5.7
-Stable tag: 2.5.7
+Requires at least: 5.1
+Tested up to: 5.9
+Stable tag: 2.5.12
 
 Search and Filtering for posts, products and custom posts. Allow your users to Search & Filter by taxonomies, custom fields and more.
 
@@ -56,6 +56,34 @@ Great for searching in your online shop, tested with: WooCommerce and WP eCommer
 
 
 == Changelog ==
+
+= 2.5.12 =
+* Fix - Support ajax in multiple results areas when using our third party integrations
+* Fix - an issue with the author field not hiding admin authors (when that option was enabled)
+* Fix - pagination issues with some of our integrations when using multiple search forms + results
+* Fix - an issue where the query was not integrating with the Custom Layouts block
+* Fix - issues in the admin UI since WordPress 5.9
+* Fix - update to using wp_initialize_site for multisite - thanks to Chrissyd
+* Update - minimum required WordPress version to 5.1
+
+= 2.5.11 =
+* Fix - an issue with ajax and the results URL not being correctly detected
+* Fix - updated some of our plugin update procedures
+* New - options to use text input control for selecting post meta keys (to prevent loading of all meta keys in large databases) - available via the settings page
+* New - action - `search_filter_remove_pagination` - use this before your template pagination functions to stop S&F from modifying the pagination
+
+= 2.5.10 =
+* Fix - Fix an ajax issue for Dynamic Content maps - * Note: if you are using the maps + posts display method, you might need to reset this option.
+* Fix - Translate the labels for options in the `sort` field via WPMLs Advanced Translation editor
+
+= 2.5.9 =
+* Fix - Update fix for Dynamic Content maps integration
+* Fix - An issue with with WPML Advanced Translation Editor (the text for our submit and reset buttons was not being detected)
+
+= 2.5.8 =
+* Fix - an issue with Ajax and Dynamic Content's Google maps widget
+* Fix - a PHP notice in our admin notices
+* New - experimental hook for displaying WooCommerce variations individually
 
 = 2.5.7 =
 * Fix - scroll (on pagination only) was not working correctly
@@ -630,8 +658,3 @@ Great for searching in your online shop, tested with: WooCommerce and WP eCommer
 
 = 2.5.7 =
 PHP 8 users - if you are seeing errors on upgrading, please disable Search & Filter before proceeding with the update and it will complete successfully.  This is related to the duplicate Search Form bug (now fixed in this version).
-
-
-
-= 1.0 =
-Initial release

@@ -68,15 +68,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label for="{0}[{1}][number_start_meta_key]">
 						<?php _e("Start Meta Key", $this->plugin_slug); ?><span class="hint--top hint--info" data-hint="<?php _e("choose a meta key for this field", $this->plugin_slug); ?>"><i class="dashicons dashicons-info"></i></span><br />
 						<?php
-							$all_meta_keys = $this->get_all_post_meta_keys();
-							echo '<select data-field-template-name="{0}[{1}][number_start_meta_key]" class="meta_key start_meta_key" data-field-template-id="{0}[{1}][number_start_meta_key]">';
-							
-							foreach($all_meta_keys as $v){
-								//$data[] = $v->meta_key;
+
+							$meta_key_text_input = Search_Filter_Helper::get_option( 'meta_key_text_input' );
+							if($meta_key_text_input == 1 ) {
+								?>
+								<input type="text" placeholder="<?php echo esc_attr__( 'Enter a meta key', 'search-filter' ); ?>" style="width: 100%"  data-field-template-name="{0}[{1}][number_start_meta_key]" class="meta_key start_meta_key" data-field-template-id="{0}[{1}][number_start_meta_key]" value="<?php echo esc_attr($values['number_start_meta_key']); ?>" />
+								<?php
+							} else {
+								$all_meta_keys = $this->get_all_post_meta_keys();
+								echo '<select data-field-template-name="{0}[{1}][number_start_meta_key]" class="meta_key start_meta_key" data-field-template-id="{0}[{1}][number_start_meta_key]">';
 								
-								echo '<option value="'.$v.'"'.$this->set_selected($values['number_start_meta_key'], $v, false).'>'.$v."</option>";
+								foreach($all_meta_keys as $v){
+									//$data[] = $v->meta_key;
+									
+									echo '<option value="'.$v.'"'.$this->set_selected($values['number_start_meta_key'], $v, false).'>'.$v."</option>";
+								}
+								echo '</select>';
 							}
-							echo '</select>';
 							
 						?>
 						<input type="hidden"  data-field-template-name="{0}[{1}][number_start_meta_key_hidden]" data-field-template-id="{0}[{1}][number_start_meta_key_hidden]" class="meta_key_hidden"  value="<?php echo esc_attr($values['number_start_meta_key']); ?>" disabled="disabled" />
@@ -91,16 +99,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label for="{0}[{1}][number_end_meta_key]">	
 						
 						<?php
-							$all_meta_keys = $this->get_all_post_meta_keys();
-							echo '<select data-field-template-name="{0}[{1}][number_end_meta_key]" class="meta_key end_meta_key" data-field-template-id="{0}[{1}][number_end_meta_key]">';
-							
-							foreach($all_meta_keys as $v){
-								//$data[] = $v->meta_key;
+							if($meta_key_text_input == 1 ) {
+								?>
+								<input type="text" placeholder="<?php echo esc_attr__( 'Enter a meta key', 'search-filter' ); ?>" style="width: 100%" data-field-template-name="{0}[{1}][number_end_meta_key]" class="meta_key end_meta_key" data-field-template-id="{0}[{1}][number_end_meta_key]" value="<?php echo esc_attr($values['number_end_meta_key']); ?>" />
+								<?php
+							} else {
+								$all_meta_keys = $this->get_all_post_meta_keys();
+								echo '<select data-field-template-name="{0}[{1}][number_end_meta_key]" class="meta_key end_meta_key" data-field-template-id="{0}[{1}][number_end_meta_key]">';
 								
-								echo '<option value="'.$v.'"'.$this->set_selected($values['number_end_meta_key'], $v, false).'>'.$v."</option>";
+								foreach($all_meta_keys as $v){
+									//$data[] = $v->meta_key;
+									
+									echo '<option value="'.$v.'"'.$this->set_selected($values['number_end_meta_key'], $v, false).'>'.$v."</option>";
+								}
+								echo '</select>';
 							}
-							echo '</select>';
-							
 						?>
 						<input type="hidden"  data-field-template-name="{0}[{1}][number_end_meta_key_hidden]" data-field-template-id="{0}[{1}][number_end_meta_key_hidden]" class="meta_key_hidden"  value="<?php echo esc_attr($values['meta_key']); ?>" disabled="disabled" />
 					</label>
