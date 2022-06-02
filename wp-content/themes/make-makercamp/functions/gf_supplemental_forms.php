@@ -24,20 +24,21 @@ function custom_validation($validation_result) {
         $entry = GFAPI::get_entry($entryid);
 
         if (is_array($entry) && $entry['status'] == 'active') {
-            //finding Field with ID of 1 and marking it as failed validation
-            foreach ($form['fields'] as &$field) {
-                if ($field->id == $contact_email['id']) {     //contact_email
-                    //pull contact email from original entry
-                    $contactEmail = (isset($entry['132']) ? $entry['132'] : '');
-
-                    if (strtolower($sub_email) != strtolower($contactEmail)) {
-                        // set the form validation to false
-                        $validation_result['is_valid'] = false;
-                        $field->failed_validation = true;
-                        $field->validation_message = 'Email does not match email on the event';
-                    }
-                }
-            }
+          $field = get_value_by_label('contact-email', $form, $entry);
+          $contactEmail = $field['value'];
+          //finding Field with ID of 1 and marking it as failed validation
+          foreach ($form['fields'] as &$field) {
+              if ($field->id == $contact_email['id']) {     //contact_email
+                  //pull contact email from original entry
+                  //$contactEmail = (isset($entry['132']) ? $entry['132'] : '');
+                  if (strtolower($sub_email) != strtolower($contactEmail)) {
+                      // set the form validation to false
+                      $validation_result['is_valid'] = false;
+                      $field->failed_validation = true;
+                      $field->validation_message = 'Email does not match email on the event';
+                  }
+              }
+          }
         } else {
             // set the form validation to false
             $validation_result['is_valid'] = false;
@@ -69,14 +70,14 @@ add_filter( 'gform_pre_submission_filter', 'populate_fields' );
  *    to pull in various data from the original form submission
  */
 
-function populate_fields($form) {    
+function populate_fields($form) {
     if (!class_exists('GFFormDisplay')) {
         return $form;
     }
     $jqueryVal = '';
     $form_type = get_value_by_label('supplemental_form', $form, array());
-    
-    if (isset($form_type['id']) && $form_type['id'] != '') {        
+
+    if (isset($form_type['id']) && $form_type['id'] != '') {
         //this is a 2-page form with the data from page one being displayed in an html field on following pages
         $current_page = GFFormDisplay::get_current_page($form['id']);
 
@@ -102,7 +103,7 @@ function populate_fields($form) {
                         case 'address':
                             foreach ($field->inputs as $key => $input) {
                                 if ($input['name'] != '') {
-                                    $parmName = $input['name'];                                    
+                                    $parmName = $input['name'];
                                     $pos = strpos($parmName, 'field-');
                                     if ($pos !== false) { //populate by field ID?
                                         $field_id = str_replace("field-", "", $input['name']);
@@ -116,7 +117,7 @@ function populate_fields($form) {
 
                     if (isset($field->inputName) && $field->inputName != '') {
                         $parmName = $field->inputName;
-                        
+
                         //check for 'field-' to see if the value should be populated by original entry field data
                         $pos = strpos($parmName, 'field-');
 
@@ -125,7 +126,7 @@ function populate_fields($form) {
                             //strip the 'field-' from the parameter name to get the field number
                             $field_id = str_replace("field-", "", $parmName);
                             $fieldType = $field->type;
-                            
+
                             switch ($fieldType) {
                                 case 'name':
                                     foreach ($field->inputs as &$input) {  //loop thru name inputs
@@ -165,7 +166,7 @@ function populate_fields($form) {
                         } else { //populate by specific parameter name
                             //populate fields
                             $fieldIDarr = array(
-                                'project-name' => 116,                                                                
+                                'project-name' => 116,
                                 'entry-id' => $entry_id);
 
                             //find the project name for submitted entry-id
@@ -252,17 +253,17 @@ function updLinked_fields($form, $origEntryID) {
                              *  else, update with blanks
                              */
                             $updValue = (isset($_POST['input_' . $inputID]) ? $_POST['input_' . $inputID] : '');
-                            mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));                            
+                            mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));
                         }
                     } else {
                         //find submitted value
                         $updValue = (isset($_POST['input_' . $field['id']]) ? $_POST['input_' . $field['id']] : '');
                         mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));
-                        
-                        //update the message to attendees in event (need to find a more generic way of doing this 
+
+                        //update the message to attendees in event (need to find a more generic way of doing this
                         if($updField==147){
                             $entry = GFAPI::get_entry($origEntryID);
-                            $event_id = $entry["post_id"];                            
+                            $event_id = $entry["post_id"];
                             update_field('message_to_attendees', $updValue, $event_id);
                         }
                     }
