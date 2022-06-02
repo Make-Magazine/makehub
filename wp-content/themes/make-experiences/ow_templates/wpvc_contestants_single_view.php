@@ -4,6 +4,48 @@
     do_action('single_contestants_head');
     global $wpdb,$post;
     $show_cont_args = Wpvc_Shortcode_Model::wpvc_get_category_options_and_values($show_cont_args,$post->ID);
+	//error_log(print_r($show_cont_args, TRUE));
+
+	// Get all our custom fields, the hard way: by whatever hash the voting plugin decides to name each one
+	$first_name = 		get_post_meta( $post->ID, '6296aa69eeefa', true );
+	$last_name = 		get_post_meta( $post->ID, '6296aa7bb7d7c', true );
+	$age_range = 		get_post_meta( $post->ID, '6296aaa89bf80', true );
+	$address = 			get_post_meta( $post->ID, '6296aaba1fe53', true );
+	$city =				get_post_meta( $post->ID, '6296aac841e1e', true );
+	$state = 			get_post_meta( $post->ID, '6296aad9298ab', true );
+	$country = 			get_post_meta( $post->ID, '6296aae608afb', true );
+	$profile_pic =		get_post_meta( $post->ID, '6296ab09c9118', true );
+	$affiliation = 		get_post_meta( $post->ID, '6296ab5342b12', true );
+	$about_you = 		get_post_meta( $post->ID, '6296abebd1db5', true );
+	$instagram = 		get_post_meta( $post->ID, '6296f3cb4740f', true );
+	$facebook = 		get_post_meta( $post->ID, '6296f3df02364', true );
+	$twitter = 			get_post_meta( $post->ID, '6296f3ecceb51', true );
+	$youtube = 			get_post_meta( $post->ID, '6296f409b9337', true );
+	$tiktok = 			get_post_meta( $post->ID, '6296f4333960e', true );
+	$project_title = 	get_post_meta( $post->ID, '6296f8124ee84', true );
+	$project_type = 	get_post_meta( $post->ID, '6296f8420e061', true );
+	$short_desc = 		get_post_meta( $post->ID, '6296f85ac2e55', true );
+	$project_url = 		get_post_meta( $post->ID, '6296f86d0e92e', true );
+	$proj_photo_1 = 	get_post_meta( $post->ID, '6296f8905a6b1', true );
+	$proj_photo_id_1 = 	!empty($proj_photo_1) ? attachment_url_to_postid($proj_photo_1) . "," : "";
+	$proj_photo_2 = 	get_post_meta( $post->ID, '6297e8aa5b779', true );
+	$proj_photo_id_2 = 	!empty($proj_photo_2) ? attachment_url_to_postid($proj_photo_2) . "," : "";
+	$proj_photo_3 = 	get_post_meta( $post->ID, '6297e8c2debe8', true );
+	$proj_photo_id_3 = 	!empty($proj_photo_3) ? attachment_url_to_postid($proj_photo_3) . "," : "";
+	$proj_photo_4 = 	get_post_meta( $post->ID, '6297e8dec3625', true );
+	$proj_photo_id_4 = 	!empty($proj_photo_4) ? attachment_url_to_postid($proj_photo_4) . "," : "";
+	$proj_photo_5 = 	get_post_meta( $post->ID, '6297e8f0ba77f', true );
+	$proj_photo_id_5 = 	!empty($proj_photo_5) ? attachment_url_to_postid($proj_photo_5) . "," : "";
+	$proj_photo_6 = 	get_post_meta( $post->ID, '6297e926b8bb0', true );
+	$proj_photo_id_6 = 	!empty($proj_photo_6) ? attachment_url_to_postid($proj_photo_6) . "," : "";
+	$post_image_ids_string = $proj_photo_id_1 . $proj_photo_id_2 . $proj_photo_id_3 . $proj_photo_id_4 . $proj_photo_id_5 . $proj_photo_id_6;
+	$project_video = 	get_post_meta( $post->ID, '6296f8b14de31', true );
+	$inspired_you =		get_post_meta( $post->ID, '6296f8c369877', true );
+	$about_project = 	get_post_meta( $post->ID, '6296f8c43c019', true );
+	$what_you_learned = get_post_meta( $post->ID, '6296f8f23e3c6', true );
+	$project_impact = 	get_post_meta( $post->ID, '6296f9147b9fa', true );
+
+	//$title = $show_cont_args
     $options = get_option(WPVC_VOTES_SETTINGS);
     $class_name="wpvc_single_contestant_fullwidth";
     if(is_array($options)){
@@ -23,23 +65,109 @@
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
-                <?php /*<div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
-                */ ?>
+                <div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+
                 <?php
                 /******************* Split voting header and footer show your added content in center
                  * Comment above div id="wpvc-singlecontestant-page" and uncomment below code
                  *
                  */  ?>
-				<div id="wpvc-singlecustom-header" class="<?php echo $class_name; ?>" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 
-                <?php
-				//var_dump($show_cont_args);
-				//var_dump(get_post_meta($post->ID));
-				the_content();
+				<div id="wpvc-singlecustom" class="<?php echo $class_name; ?> container">
+					<div class="wpvc-title">
+						<h1><?php echo $project_title; ?></h1>
+						<h3>By <?php echo $first_name . " " . $last_name; ?></h3>
+					</div>
+					<div class="wpvc-main-wrapper">
+						<div class="wpvc-video flex-main">
+							<?php if( str_contains($project_video, "youtube") || str_contains($project_video, "youtu.be") ) {
+								echo do_shortcode("[embedyt]" . $project_video . "[/embedyt]");
+							} else if(str_contains($project_video, "vimeo")) {
+								echo "<iframe src='".$project_video."'></iframe>";
+							} else {
+								echo $project_video;
+							}?>
+						</div>
+						<div id="wpvc-singlecustom-header" class="flex-main" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+						<div class="wpvc-profile flex-sidebar">
+							<div class="wpvc-profile-image">
+								<img src="<?php echo $profile_pic; ?>" />
+							</div>
+							<div class="wpvc-profile-city"><b>City:</b> <?php echo $city; ?></div>
+							<div class="wpvc-profile-state"><b>State:</b> <?php echo $state; ?></div>
+							<div class="wpvc-profile-country"><b>Country:</b> <?php echo $country; ?></div>
+							<div class="wpvc-profile-affiliation"><b>Affiliation:</b> <?php echo $affiliation; ?></div>
+							<div class="wpvc-profile-about-you"><b>About them:</b> <?php echo $about_you; ?></div>
+							<h4>Social:</h4>
+							<div class="wpvc-profile-social">
+								<?php if(!empty($instagram)) { ?>
+										<a href="<?php echo $instagram; ?>"><i class="fab fa-instagram"></i></a>
+								<?php } ?>
+								<?php if(!empty($facebook)) { ?>
+										<a href="<?php echo $facebook; ?>"><i class="fab fa-facebook"></i></a>
+								<?php } ?>
+								<?php if(!empty($twitter)) { ?>
+										<a href="<?php echo $twitter; ?>"><i class="fab fa-twitter"></i></a>
+								<?php } ?>
+								<?php if(!empty($youtube)) { ?>
+										<a href="<?php echo $youtube; ?>"><i class="fab fa-youtube"></i></a>
+								<?php } ?>
+								<?php if(!empty($tiktok)) { ?>
+										<a href="<?php echo $tiktok; ?>"><i class="fab fa-tiktok"></i></a>
+								<?php } ?>
+							</div>
+						</div>
+						<div class="wpvc-details flex-main">
+							<p><?php echo $short_desc; ?></p>
+							<?php if(!empty($affiliation)) { ?>
+								<p><b>Affiliation:</b><?php echo $affiliation; ?></p>
+							<?php } ?>
+							<?php if(!empty($project_url)) { ?>
+								<p><a href="<?php echo $project_url; ?>"><?php echo $project_url; ?></a></p>
+							<?php } ?>
+						</div>
+					</div>
+					<?php if (!empty($proj_photo_1)) { ?>
+			            <div class="wpvc-gallery">
+			                <?php
+			                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium-large" order="DESC" orderby="ID"]');
+			    			?>
+			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_items:first-of-type a').click())"><i class="fas fa-images"></i></a>
+			            </div>
+			        <?php } ?>
 
-				 ?>
+					<div class="wpvc-essay">
+						<?php if(!empty($inspired_you)) { ?>
+							<div class="wpvc-essay-item wpvc-inspired-you">
+								<h4>What inspired you or what is the idea that got you started</h4>
+								<p><?php echo $inspired_you; ?></p>
+							</div>
+						<?php } ?>
+						<?php if(!empty($about_project)) { ?>
+							<div class="wpvc-essay-item wpvc-about-project">
+								<h4>What your project is about and how does it work?</h4>
+								<p><?php echo $about_project; ?></p>
+							</div>
+						<?php } ?>
+						<?php if(!empty($what_you_learned)) { ?>
+							<div class="wpvc-essay-item wpvc-what-you-learnd">
+								<h4>What did you learn by doing this project?</h4>
+								<p><?php echo $what_you_learned ?></p>
+							</div>
+						<?php } ?>
+						<?php if(!empty($project_impact)) { ?>
+							<div class="wpvc-essay-item wpvc-project-impact">
+								<h4>What inspired you or what is the idea that got you started</h4>
+								<p><?php echo $project_impact; ?></p>
+							</div>
+						<?php } ?>
+					</div>
 
-                <div id="wpvc-singlecustom-footer" class="<?php echo $class_name; ?>" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+				</div>
+
+                <?php /* This entire "footer" area creates all the custom fields as a list in react. we ain't doing that
+				<div id="wpvc-singlecustom-footer" class="<?php echo $class_name; ?>" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+				*/ ?>
 
                 <?php apply_filters('wpvc_single_contestants_html',get_the_ID() ); ?>
             </div>
@@ -61,7 +189,7 @@
             ?>
         </div>
 
-        <div class="ow_vote_content_comment"><?php comments_template( '', true ); ?></div>
+        <?php /* <div class="ow_vote_content_comment"><?php comments_template( '', true ); ?></div> */ ?>
 
     </section>
 <?php get_footer(); ?>
