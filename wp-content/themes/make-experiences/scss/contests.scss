@@ -13,3 +13,120 @@
 	    //transform: translate(0, 10px) scale(1);
 	}
 }
+
+.single-contestants {
+	.wpvc_single_contestant_fullwidth {
+		margin-bottom: 0px !important;
+	}
+	.wpvc_contestantimage, .wpvc_card_conthead_row, .MuiToolbar-gutters {
+		display: none;
+	}
+	.wpvc_single_prev_button, .wpvc_single_next_button {
+		display: flex;
+		align-items: center;
+	}
+	#wpvc-singlecustom {
+		.wpvc-main-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+			.flex-main {
+				width: 68%;
+				background: white;
+				padding: 10px 15px;
+				&:first-of-type {
+					padding: 0px;
+				}
+			}
+			.flex-sidebar {
+				width: 29%;
+				min-height: 100%;
+				position: absolute;
+				right: 20px;
+				background: #f1f1f1;
+				padding: 15px;
+			}
+			@media screen and (max-width: 768px) {
+				flex-direction: column;
+				.flex-main, .flex-sidebar {
+					width: 100%;
+					position: relative;
+					height: auto;
+					right: 0px;
+				}
+			}
+			#wpvc-singlecustom-header {
+				padding-top: 0px;
+				.wpvc_show_style {
+					margin-top: 0px !important;
+				}
+
+			}
+			.wpvc-profile {
+				div {
+					padding-bottom: 10px;
+					&:last-of-type {
+						padding-bottom: 0px;
+					}
+				}
+				.wpvc-profile-social {
+					display: flex;
+					justify-content: space-around;
+					a {
+						font-size: 26px;
+						.fa-instagram { color: #c13584;}
+						.fa-facebook { color: #1877f2;}
+						.fa-twitter { color: #1da1f2;}
+						.fa-youtube { color: #ff0000;}
+						.fa-tiktok { color: #ff0050;}
+					 }
+				}
+			}
+		}
+		.wpvc-gallery {
+			position: relative;
+			padding: 15px 0 0 0;
+			background: #fafbfd;
+			margin-bottom: -30px;
+			.psgal_wrap {
+				.psgal-inline {
+					display: flex;
+					justify-content: space-between;
+					figure.msnry_items {
+						flex: 1;
+						height: 250px;
+						&:first-of-type {
+							padding-left: 0px;
+						}
+						a {
+							height: 100% !important;
+							overflow: hidden;
+							border-radius: 5px;
+							img {
+								min-height: 100%;
+								min-width: 100%;
+								object-fit: cover;
+							}
+						}
+					}
+				}
+			}
+			#showAllGallery {
+				position: absolute;
+				bottom: 50px;
+				right: 10px;
+			}
+		}
+		.wpvc-essay {
+			background: #FAFBFD;
+			position: relative;
+			padding-top: 10px;
+			padding-bottom: 20px;
+			.wpvc-essay-item {
+				background: #fff;
+				margin: 10px 0;
+				padding: 10px 15px;
+				border-radius: 5px;
+			}
+		}
+	}
+}
