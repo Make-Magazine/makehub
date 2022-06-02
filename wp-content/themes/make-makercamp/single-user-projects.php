@@ -15,9 +15,10 @@ function sortBySlug($a, $b) {
 $ages = get_the_terms($post->ID, 'ages');
 usort($ages, 'sortBySlug');
 $times = get_the_terms($post->ID, 'times');
-$skill_levels = get_the_terms($post->ID, 'skill_levels');
 $materials_tax = get_the_terms($post->ID, 'materials');
 $themes = get_the_terms($post->ID, 'makeyland_themes');
+
+$terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
 
 // Get our ACF Fields
 $steps = get_field('steps');

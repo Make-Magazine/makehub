@@ -1,6 +1,6 @@
 {
     "name": "Make-Makerspaces",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "author": "Maker Media",
     "license": "UNLICENSED",
     "private": true,
@@ -19,7 +19,7 @@
         "js:map:uglify": "uglifyjs js/ms-map/ms-map-src-es5/ms-map-src.js -o js/min/ms-map.min.js -c -m --source-map \"root='../../../', url='ms-map.min.js.map'\"",
         "onchange:scss:fe": "onchange 'scss/**/*.scss' -- npm run scss:fe:compile",
         "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
-        "onchange:vue:map": "onchange './includes/js/ms-map/ms-map-src.js' -- npm run js:transpile:map",
+        "onchange:js:map": "onchange 'js/ms-map/ms-map-src.js' -- npm-run-all js:map:uglify js:transpile:map",
         "build": "npm-run-all js:**:uglify js:transpile:map scss:**:compile",
         "build:cachebust": "npm-run-all cachebust:update js:**:uglify js:transpile:map scss:**:compile",
         "dev": "npm-run-all build -p onchange:js:** js:transpile:map onchange:scss:**"

@@ -1,0 +1,52 @@
+:root{--header-color:#0284FE;--header-font-weight:500;--main-bg-color:#fefefe;--main-padding:15px;--textbox-color:#2d3436;--testing-border:1px solid red}
+.post-type-owjudge #wpbody{font-family:'Open Sans',sans-serif}
+.post-type-owjudge h1{color:var(--header-color);font-weight:var(--header-font-weight)}
+.post-type-owjudge #wpbody #titlediv #title{color:var(--textbox-color)}
+.post-type-owjudge #edit-slug-box a{color:var(--textbox-color)}
+.post-type-owjudge #edit-slug-box{display:none}
+#judgingpanel{background:var(--main-bg-color);-webkit-box-shadow:1px 1px 15px 1px rgba(0,0,0,0.05);box-shadow:1px 1px 15px 1px rgba(0,0,0,0.05);border-radius:7px;border:none}
+#judgingpanel h2{color:var(--header-color);font-size:22px;font-weight:var(--header-font-weight);padding:var(--main-padding);border-bottom:none}
+#judgingpanel .inside{background:transparent;padding:0!important;margin:0!important}
+#judgingpanel .toggle-indicator:before{color:var(--header-color)}
+#judgingpanel .tabs{position:relative;overflow:hidden;margin:0 auto;width:100%;font-weight:300;font-size:1.25em}
+#judgingpanel .tabs nav{text-align:center}
+#judgingpanel .tabs nav ul{width:100%;position:relative;display:-ms-flexbox;display:-webkit-flex;display:-moz-flex;display:-ms-flex;display:flex;margin:0 auto;padding:0;list-style:none;-ms-box-orient:horizontal;-ms-box-pack:center;-webkit-flex-flow:row wrap;-moz-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-justify-content:center;-moz-justify-content:center;-ms-justify-content:center;justify-content:center}
+#judgingpanel .tabs nav ul li{position:relative;z-index:1;display:block;margin:0;text-align:center;-webkit-flex:1;-moz-flex:1;-ms-flex:1;flex:1;background:#e8e8e8}
+#judgingpanel .tabs nav a{position:relative;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:2.5;text-decoration:none;font-size:22px;color:var(--textbox-color)}
+#judgingpanel .tabs nav a p{vertical-align:middle;font-size:.75em;margin-top:0}
+#judgingpanel .tabs nav li.tab-current a{color:#FFF;background:#36D1DC;background:-webkit-linear-gradient(to right,#5B86E5,#36D1DC);background:linear-gradient(to right,#5B86E5,#36D1DC);font-weight:700}
+#judgingpanel .tabs nav a:focus{outline:none;box-shadow:none}
+#judgingpanel .content-wrap{position:relative}
+#judgingpanel .content-wrap section{display:none;margin:0 auto;padding:1em;max-width:1200px;text-align:center}
+#judgingpanel .content-wrap section.content-current{display:block}
+#judgingpanel span.dashicons{font-size:26px;margin-top:20px}
+ul#contest_category_ul{float:left;text-align:left;width:400px;display:flex;flex-direction:column;flex-flow:wrap}
+ul#contest_category_ul li,#trash ul.contest_category_ul li{border-radius:4px;text-align:center;background:linear-gradient(to right,#2F80ED,#057ea7);color:#fefefe;padding:1px;width:150px;margin:5px;cursor:grab}
+#trash{float:right;width:400px;min-height:18em;padding:1%}
+#trash ul#contest_category_ul{width:400px;display:flex;flex-direction:column;flex-flow:wrap}
+#trash ul.contest_category_ul li{background:#00b894;color:#000;cursor:move}
+#section-category h4.ui-widget-header{width:78%;text-align:center}
+#section-category a.dashicons.dashicons-trash.ui-icon.ui-icon-refresh{float:right;position:absolute;margin-top:-45px;margin-left:125px}
+.left_panel{width:25%;float:left}
+.right_panel{display:block}
+.Container{width:100%}
+input[type=checkbox]:focus,input[type=color]:focus,input[type=date]:focus,input[type=datetime-local]:focus,input[type=datetime]:focus,input[type=email]:focus,input[type=month]:focus,input[type=number]:focus,input[type=password]:focus,input[type=radio]:focus,input[type=search]:focus,input[type=tel]:focus,input[type=text]:focus,input[type=time]:focus,input[type=url]:focus,input[type=week]:focus,select:focus,textarea:focus{border:none;box-shadow:none;outline:none}
+.judgingcontainer{margin-top:5px}
+#judging-dashoboard{margin-top:25px}
+.wpvc_dash_data,.wpvc_judge_tab .MuiTab-textColorPrimary.Mui-selected{color:#FFF!important;background:#8E2DE2;background:-webkit-linear-gradient(to right,#4A00E0,#8E2DE2);background:linear-gradient(to right,#4A00E0,#8E2DE2);font-weight:700}
+.wpvc_judge_tab .MuiTabs-indicator{background-color:#f50808!important}
+.reactCard{background:#f5f5f5;background:-webkit-linear-gradient(to right,#fbfbfb,#f5f5f5);background:linear-gradient(to right,#fbfbfb,#f5f5f5)}
+.reactCheckbox span{font-size:13px;line-height:13px}
+.reactCheckbox input[type=checkbox]:disabled{opacity:0}
+.inputNumber input{padding:10px 14px!important;border:0}
+.deleteIcon{position:absolute!important;right:15px;margin-top:-5px!important}
+.addQuestion{margin-top:10px!important;background:#36D1DC;background:-webkit-linear-gradient(to right,#5B86E5,#36D1DC);background:linear-gradient(to right,#5B86E5,#36D1DC)}
+.addQuestion:hover{background:#3f51b5}
+.wpvc_judging_questions {margin: 10px 0;}
+.wpvc_judging_index {margin-right: 10px;}
+.wpvc_judge_dash_inputs{min-width: 300px !important;}
+.wpvc_judge_dash_inputs label{top:-8px;}
+.wpvc_judge_dash_inputs input{padding: 5px;}
+.wpvc_judge_dash_inputs input:focus {padding: 10px;}
+.wpvc_judge_dash_select{min-width: 230px !important;}
+.wpvc_judging_filter_btns{margin:10px;}

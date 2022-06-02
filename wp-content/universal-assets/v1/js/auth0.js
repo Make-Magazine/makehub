@@ -248,7 +248,7 @@ jQuery(document).ready(function() {
                     if (jQuery('.main-content').length && jQuery('.join-box').length) {
                         window.location.replace("/digital-library/");
                     }
-                    if (jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.page-template-page-makerspaces-map-php').length && !jQuery('.post-type-archive-tribe_events ').length) {
+                    if (jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.makerspaces').length && !jQuery('.post-type-archive-tribe_events ').length) {
                         jQuery('.main-content').load(document.URL + " .main-content > *");
                     }
                     // this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future

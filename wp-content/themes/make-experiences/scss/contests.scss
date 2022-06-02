@@ -1,0 +1,15 @@
+.wpvc_submit_form{
+	background: #fff !important;
+	.MuiInputBase-input.MuiInput-input {
+    	//padding: 0 20px !important;
+	}
+	.label + .MuiInput-formControl {
+		margin-top: 0px !important;
+	}
+	.MuiButton-containedPrimary {
+		background-color: $color-blue;
+	}
+	.MuiInputLabel-formControl {
+	    //transform: translate(0, 10px) scale(1);
+	}
+}
