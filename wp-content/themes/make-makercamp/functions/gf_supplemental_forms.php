@@ -75,125 +75,121 @@ function populate_fields($form) {
         return $form;
     }
     $jqueryVal = '';
-    $form_type = get_value_by_label('supplemental_form', $form, array());
+    //this is a 2-page form with the data from page one being displayed in an html field on following pages
+    $current_page = GFFormDisplay::get_current_page($form['id']);
 
-    if (isset($form_type['id']) && $form_type['id'] != '') {
-        //this is a 2-page form with the data from page one being displayed in an html field on following pages
-        $current_page = GFFormDisplay::get_current_page($form['id']);
+    if ($current_page > 1) {
+        //find the submitted entry id
+        $return = get_value_by_label('entry-id', $form, array());
+        $entry_id = rgpost('input_' . $return['id']);
 
-        if ($current_page > 1) {
-            //find the submitted entry id
-            $return = get_value_by_label('entry-id', $form, array());
+        //is entry id set?
+        if ($entry_id != '') {
+            //pull the original entry
+            $entry = GFAPI::get_entry($entry_id); //original entry ID
+            $form_id = $form['id'];
 
-            $entry_id = rgpost('input_' . $return['id']);
-
-            //is entry id set?
-            if ($entry_id != '') {
-                //pull the original entry
-                $entry = GFAPI::get_entry($entry_id); //original entry ID
-                $form_id = $form['id'];
-
-                //find the submitted original entry id
-                foreach ($form['fields'] as &$field) {
-                    $parmName = '';
-                    $value = '';
-                    switch ($field->type) {
-                        //parameter name is stored in a different place
-                        case 'name':
-                        case 'address':
-                            foreach ($field->inputs as $key => $input) {
-                                if ($input['name'] != '') {
-                                    $parmName = $input['name'];
-                                    $pos = strpos($parmName, 'field-');
-                                    if ($pos !== false) { //populate by field ID?
-                                        $field_id = str_replace("field-", "", $input['name']);
-                                        $field->inputs[$key]['defaultValue'] = $entry[$field_id];
-                                        $jqueryVal .= "jQuery('#input_" . $form_id . "_" . str_replace('.', '_', $field_id) . "').val('" . $entry[$field_id] . "');";
-                                    }
+            //find the submitted original entry id
+            foreach ($form['fields'] as &$field) {
+                $parmName = '';
+                $value = '';
+                switch ($field->type) {
+                    //parameter name is stored in a different place
+                    case 'name':
+                    case 'address':
+                        foreach ($field->inputs as $key => $input) {
+                            if ($input['name'] != '') {
+                                $parmName = $input['name'];
+                                $pos = strpos($parmName, 'field-');
+                                if ($pos !== false) { //populate by field ID?
+                                    $field_id = str_replace("field-", "", $input['name']);
+                                    $field->inputs[$key]['defaultValue'] = $entry[$field_id];
+                                    $jqueryVal .= "jQuery('#input_" . $form_id . "_" . str_replace('.', '_', $field_id) . "').val('" . $entry[$field_id] . "');";
                                 }
                             }
-                            break;
-                    }
-
-                    if (isset($field->inputName) && $field->inputName != '') {
-                        $parmName = $field->inputName;
-
-                        //check for 'field-' to see if the value should be populated by original entry field data
-                        $pos = strpos($parmName, 'field-');
-
-                        //populate field using field id's from original form
-                        if ($pos !== false) { //populate by field ID?
-                            //strip the 'field-' from the parameter name to get the field number
-                            $field_id = str_replace("field-", "", $parmName);
-                            $fieldType = $field->type;
-
-                            switch ($fieldType) {
-                                case 'name':
-                                    foreach ($field->inputs as &$input) {  //loop thru name inputs
-                                        if (isset($input['name']) && $input['name'] != '') {  //check if parameter name is set
-                                            $pos = strpos($input['name'], 'field-');
-                                            if ($pos !== false) { //is it requesting to be set by field id?
-                                                //strip the 'field-' from the parameter name to get the field number
-                                                $field_id = str_replace("field-", "", $input['name']);
-                                                $input['content'] = (isset($entry[$field_id]) ? $entry[$field_id] : '');
-                                                ;
-                                            }
-                                        }
-                                    }
-                                    break;
-                                case 'checkbox':
-                                    //find which fields are set
-                                    foreach ($field->inputs as $key => $input) {
-                                        //need to get the decimal indicator from the input in order to set the field id
-                                        if (($pos = strpos($input['id'], ".")) !== FALSE) {
-                                            $decPos = substr($input['id'], $pos + 1);
-                                        }
-                                        $fieldNum = $field_id . '.' . $decPos;
-                                        //check if field is set in the entry
-                                        if (!empty($entry[$fieldNum])) {
-                                            if ($field->choices[$key]['value'] == $entry[$fieldNum]) {
-                                                $field->choices[$key]['isSelected'] = true;
-                                                $jqueryVal .= "jQuery( '#choice_" . $form_id . "_" . str_replace('.', '_', $input['id']) . "' ).prop( 'checked', true );";
-                                            }
-                                        }
-                                    }
-
-                                    break;
-                                default:
-                                    $field->defaultValue = (isset($entry[$field_id]) ? $entry[$field_id] : "");
-                                    break;
-                            }
-                        } else { //populate by specific parameter name
-                            //populate fields
-                            $fieldIDarr = array(
-                                'project-name' => 116,
-                                'entry-id' => $entry_id);
-
-                            //find the project name for submitted entry-id
-                            if (isset($fieldIDarr[$parmName])) {
-                                if ($parmName == 'plans-type') {
-                                    $planstypevalues = array();
-                                    for ($i = 1; $i <= 6; $i++) {
-                                        if (isset($entry['55.' . $i]) && !empty($entry['55.' . $i])) {
-                                            $planstypevalues[] = $entry['55.' . $i];
-                                        }
-                                    }
-                                    $value = implode(',', $planstypevalues);
-                                } elseif ($parmName == 'entry-id') {
-                                    $value = $entry_id;
-                                } else {
-                                    if(isset($fieldIDarr[$parmName]))
-                                        $value = $entry[$fieldIDarr[$parmName]];
-                                }
-                            }
-
-                            $field->defaultValue = $value;
                         }
+                        break;
+                }
+
+                if (isset($field->inputName) && $field->inputName != '') {
+                    $parmName = $field->inputName;
+
+                    //check for 'field-' to see if the value should be populated by original entry field data
+                    $pos = strpos($parmName, 'field-');
+
+                    //populate field using field id's from original form
+                    if ($pos !== false) { //populate by field ID?
+                        //strip the 'field-' from the parameter name to get the field number
+                        $field_id = str_replace("field-", "", $parmName);
+                        $fieldType = $field->type;
+
+                        switch ($fieldType) {
+                            case 'name':
+                                foreach ($field->inputs as &$input) {  //loop thru name inputs
+                                    if (isset($input['name']) && $input['name'] != '') {  //check if parameter name is set
+                                        $pos = strpos($input['name'], 'field-');
+                                        if ($pos !== false) { //is it requesting to be set by field id?
+                                            //strip the 'field-' from the parameter name to get the field number
+                                            $field_id = str_replace("field-", "", $input['name']);
+                                            $input['content'] = (isset($entry[$field_id]) ? $entry[$field_id] : '');
+                                            ;
+                                        }
+                                    }
+                                }
+                                break;
+                            case 'checkbox':
+                                //find which fields are set
+                                foreach ($field->inputs as $key => $input) {
+                                    //need to get the decimal indicator from the input in order to set the field id
+                                    if (($pos = strpos($input['id'], ".")) !== FALSE) {
+                                        $decPos = substr($input['id'], $pos + 1);
+                                    }
+                                    $fieldNum = $field_id . '.' . $decPos;
+                                    //check if field is set in the entry
+                                    if (!empty($entry[$fieldNum])) {
+                                        if ($field->choices[$key]['value'] == $entry[$fieldNum]) {
+                                            $field->choices[$key]['isSelected'] = true;
+                                            $jqueryVal .= "jQuery( '#choice_" . $form_id . "_" . str_replace('.', '_', $input['id']) . "' ).prop( 'checked', true );";
+                                        }
+                                    }
+                                }
+
+                                break;
+                            default:
+                                $field->defaultValue = (isset($entry[$field_id]) ? $entry[$field_id] : "");
+                                break;
+                        }
+                    } else { //populate by specific parameter name
+                        //populate fields
+                        $fieldIDarr = array(
+                            'project-name' => 116,
+                            'entry-id' => $entry_id);
+
+                        //find the project name for submitted entry-id
+                        if (isset($fieldIDarr[$parmName])) {
+                            if ($parmName == 'plans-type') {
+                                $planstypevalues = array();
+                                for ($i = 1; $i <= 6; $i++) {
+                                    if (isset($entry['55.' . $i]) && !empty($entry['55.' . $i])) {
+                                        $planstypevalues[] = $entry['55.' . $i];
+                                    }
+                                }
+                                $value = implode(',', $planstypevalues);
+                            } elseif ($parmName == 'entry-id') {
+                                $value = $entry_id;
+                            } else {
+                                if(isset($fieldIDarr[$parmName]))
+                                    $value = $entry[$fieldIDarr[$parmName]];
+                            }
+                        }
+
+                        $field->defaultValue = $value;
                     }
                 }
             }
-        } //end check current page
-    }
+        }
+    } //end check current page
+
     if ($jqueryVal != '') {
         ?>
         <script>
