@@ -24,6 +24,7 @@ function setup_group_nav() {
                 'item_css_id' => 'event-info'
             ));
         }
+        /*
         // custom page
         if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
@@ -38,7 +39,7 @@ function setup_group_nav() {
                     'user_has_access' => $user_access,
                     'item_css_id' => 'group-hub'
                 ));
-        }
+        }*/
     }
 }
 
@@ -51,10 +52,10 @@ function custom_group_default_tabs($default_tab) {
         if (empty($group)) {
             return $default_tab;
         }
-        if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
+        /*if( groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_blog_id', true ) &&
             groups_get_groupmeta( $bp->groups->current_group->id, 'landing_hub_post_id', true )) {
             $default_tab = 'group-hub';
-        }
+        }*/
     endif; // end if ( class_exists( 'BP_Group_Extension' ) )
     return $default_tab;
 }
