@@ -139,7 +139,7 @@
 						<div class="wpvc-details flex-main">
 							<p><?php echo $short_desc; ?></p>
 							<?php if(!empty($project_type)) { ?>
-								<p><b>Project Type:</b><?php echo $project_type; ?></p>
+								<p><b>Project Type: </b><?php echo $project_type; ?></p>
 							<?php } ?>
 							<?php if(!empty($project_url)) { ?>
 								<p><a href="<?php echo $project_url; ?>"><?php echo $project_url; ?></a></p>

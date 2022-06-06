@@ -18,17 +18,19 @@
 	.wpvc_single_contestant_fullwidth {
 		margin-bottom: 0px !important;
 	}
-	.wpvc_contestantimage, .wpvc_card_conthead_row, .MuiToolbar-gutters {
+	.wpvc_contestantimage, .wpvc_card_conthead_row, .MuiToolbar-gutters, .wpvc_video_contest_player {
 		display: none;
 	}
 	.wpvc_single_prev_button, .wpvc_single_next_button {
 		display: flex;
 		align-items: center;
+		width: 8%;
+		justify-content: center;
 	}
 	#wpvc-singlecustom {
 		.wpvc-main-wrapper {
 			display: flex;
-			flex-wrap: wrap;
+			flex-flow: column wrap;
 			.flex-main {
 				width: 68%;
 				background: white;
@@ -36,6 +38,10 @@
 				&:first-of-type {
 					padding: 0px;
 				}
+				&:last-of-type {
+					flex-grow: 1;
+				}
+				p { font-size: 18px; }
 			}
 			.flex-sidebar {
 				width: 29%;
