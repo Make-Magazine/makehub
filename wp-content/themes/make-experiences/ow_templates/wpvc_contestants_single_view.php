@@ -16,7 +16,11 @@
 	$country = 			get_post_meta( $post->ID, '6296aae608afb', true );
 	$profile_pic =		get_post_meta( $post->ID, '6296ab09c9118', true );
 	$affiliation = 		get_post_meta( $post->ID, '6296ab5342b12', true );
+	if( !empty(get_post_meta( $post->ID, '629a4f2c8e5a7', true )) ) {
+		$affiliation .= " - " . get_post_meta( $post->ID, '629a4f2c8e5a7', true );
+	}
 	$about_you = 		get_post_meta( $post->ID, '6296abebd1db5', true );
+	$team_members = 	get_post_meta( $post->ID, '629a44ec6e801', true );
 	$instagram = 		get_post_meta( $post->ID, '6296f3cb4740f', true );
 	$facebook = 		get_post_meta( $post->ID, '6296f3df02364', true );
 	$twitter = 			get_post_meta( $post->ID, '6296f3ecceb51', true );
@@ -93,34 +97,49 @@
 							<div class="wpvc-profile-image">
 								<img src="<?php echo $profile_pic; ?>" />
 							</div>
-							<div class="wpvc-profile-city"><b>City:</b> <?php echo $city; ?></div>
-							<div class="wpvc-profile-state"><b>State:</b> <?php echo $state; ?></div>
-							<div class="wpvc-profile-country"><b>Country:</b> <?php echo $country; ?></div>
-							<div class="wpvc-profile-affiliation"><b>Affiliation:</b> <?php echo $affiliation; ?></div>
-							<div class="wpvc-profile-about-you"><b>About them:</b> <?php echo $about_you; ?></div>
-							<h4>Social:</h4>
-							<div class="wpvc-profile-social">
-								<?php if(!empty($instagram)) { ?>
+							<?php /* if (!empty($city)) { ?>
+								<div class="wpvc-profile-city"><b>City:</b> <?php echo $city; ?></div>
+							<?php } */ ?>
+							<?php if (!empty($state)) { ?>
+								<div class="wpvc-profile-state"><b>State:</b> <?php echo $state; ?></div>
+							<?php } ?>
+							<?php if (!empty($country)) { ?>
+								<div class="wpvc-profile-country"><b>Country:</b> <?php echo $country; ?></div>
+							<?php } ?>
+							<?php if (!empty($affiliation)) { ?>
+								<div class="wpvc-profile-affiliation"><b>Affiliation:</b> <?php echo $affiliation; ?></div>
+							<?php } ?>
+							<?php if (!empty($about_you)) { ?>
+								<div class="wpvc-profile-about-you"><b>About them:</b> <?php echo $about_you; ?></div>
+							<?php } ?>
+							<?php if (!empty($team_members)) { ?>
+								<div class="wpvc-profile-team-members"><b>Team Members:</b><br /> <?php echo $team_members; ?></div>
+							<?php } ?>
+							<?php if(!empty($instagram) || !empty($facebook) || !empty($twitter) || !empty($youtube) || !empty($tiktok)) { ?>
+								<h4>Social:</h4>
+								<div class="wpvc-profile-social">
+									<?php if(!empty($instagram)) { ?>
 										<a href="<?php echo $instagram; ?>"><i class="fab fa-instagram"></i></a>
-								<?php } ?>
-								<?php if(!empty($facebook)) { ?>
+									<?php } ?>
+									<?php if(!empty($facebook)) { ?>
 										<a href="<?php echo $facebook; ?>"><i class="fab fa-facebook"></i></a>
-								<?php } ?>
-								<?php if(!empty($twitter)) { ?>
+									<?php } ?>
+									<?php if(!empty($twitter)) { ?>
 										<a href="<?php echo $twitter; ?>"><i class="fab fa-twitter"></i></a>
-								<?php } ?>
-								<?php if(!empty($youtube)) { ?>
+									<?php } ?>
+									<?php if(!empty($youtube)) { ?>
 										<a href="<?php echo $youtube; ?>"><i class="fab fa-youtube"></i></a>
-								<?php } ?>
-								<?php if(!empty($tiktok)) { ?>
+									<?php } ?>
+									<?php if(!empty($tiktok)) { ?>
 										<a href="<?php echo $tiktok; ?>"><i class="fab fa-tiktok"></i></a>
-								<?php } ?>
-							</div>
+									<?php } ?>
+								</div>
+							<?php } ?>
 						</div>
 						<div class="wpvc-details flex-main">
 							<p><?php echo $short_desc; ?></p>
-							<?php if(!empty($affiliation)) { ?>
-								<p><b>Affiliation:</b><?php echo $affiliation; ?></p>
+							<?php if(!empty($project_type)) { ?>
+								<p><b>Project Type:</b><?php echo $project_type; ?></p>
 							<?php } ?>
 							<?php if(!empty($project_url)) { ?>
 								<p><a href="<?php echo $project_url; ?>"><?php echo $project_url; ?></a></p>
