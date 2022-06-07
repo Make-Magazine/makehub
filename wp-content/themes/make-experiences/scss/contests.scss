@@ -51,6 +51,7 @@
 			}
 			@media screen and (max-width: 768px) {
 				display: block;
+				max-height: auto;
 				.flex-main, .flex-sidebar {
 					width: 100%;
 				}
@@ -60,6 +61,12 @@
 				.wpvc_show_style {
 					margin-top: 0px !important;
 				}
+			}
+			.wpvc-video {
+				.fluid-width-video-wrapper iframe {
+					border: 0px;
+					background: #000;
+			  	}
 			}
 			.wpvc-profile {
 				div {
@@ -89,7 +96,6 @@
 			position: relative;
 			padding: 15px 0 0 0;
 			background: #fafbfd;
-			margin-bottom: -30px;
 			.psgal_wrap {
 				display: flex;
 				justify-content: space-between;
@@ -99,8 +105,14 @@
 					max-height: 250px;
 					min-width: 200px;
 					padding: 0px 5px;
+					margin-bottom: 10px;
+					position: relative;
+					z-index: 99;
 					&:first-of-type {
 						padding-left: 0px;
+					}
+					&:last-of-type {
+						padding-right: 0px;
 					}
 					span {
 						height: 100%;
@@ -117,8 +129,9 @@
 			}
 			#showAllGallery {
 				position: absolute;
-				bottom: 50px;
+				bottom: 5px;
 				right: 10px;
+				z-index: 99;
 			}
 		}
 		.wpvc-essay {
@@ -135,3 +148,15 @@
 		}
 	}
 }
+// Voted dialog
+.MuiDialog-container {
+	.wpvc_sucess_popup_title {
+		background: $color-blue;
+		h6 { color: white; }
+	}
+	.wpvc_sucess_popup_content {
+		background: $color-light-blue !important;
+		color: #333;
+	}
+}
+.wpvc_voting_btns { background: $color-blue !important; }

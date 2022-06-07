@@ -19,7 +19,7 @@
 	if( !empty(get_post_meta( $post->ID, '629a4f2c8e5a7', true )) ) {
 		$affiliation .= " - " . get_post_meta( $post->ID, '629a4f2c8e5a7', true );
 	}
-	$about_you = 		get_post_meta( $post->ID, '6296abebd1db5', true );
+	$about_you = 		nl2br(get_post_meta( $post->ID, '6296abebd1db5', true ));
 	$team_members = 	nl2br(get_post_meta( $post->ID, '629a44ec6e801', true ));
 	$instagram = 		get_post_meta( $post->ID, '6296f3cb4740f', true );
 	$facebook = 		get_post_meta( $post->ID, '6296f3df02364', true );
@@ -42,10 +42,10 @@
 	$proj_photo_10 = 	get_post_meta( $post->ID, '629a31db752d0', true );
 	$project_images =   array($proj_photo_1, $proj_photo_2, $proj_photo_3, $proj_photo_4, $proj_photo_5, $proj_photo_6, $proj_photo_7, $proj_photo_8, $proj_photo_9, $proj_photo_10);
 	$project_video = 	get_post_meta( $post->ID, '6296f8b14de31', true );
-	$inspired_you =		get_post_meta( $post->ID, '6296f8c369877', true );
-	$about_project = 	get_post_meta( $post->ID, '6296f8c43c019', true );
-	$what_you_learned = get_post_meta( $post->ID, '6296f8f23e3c6', true );
-	$project_impact = 	get_post_meta( $post->ID, '6296f9147b9fa', true );
+	$inspired_you =		nl2br(get_post_meta( $post->ID, '6296f8c369877', true ));
+	$about_project = 	nl2br(get_post_meta( $post->ID, '6296f8c43c019', true ));
+	$what_you_learned = nl2br(get_post_meta( $post->ID, '6296f8f23e3c6', true ));
+	$project_impact = 	nl2br(get_post_meta( $post->ID, '6296f9147b9fa', true ));
 
 	//$title = $show_cont_args
     $options = get_option(WPVC_VOTES_SETTINGS);
@@ -85,8 +85,8 @@
 						<div class="wpvc-video flex-main">
 							<?php if( str_contains($project_video, "youtube") || str_contains($project_video, "youtu.be") ) {
 								echo do_shortcode("[embedyt]" . $project_video . "[/embedyt]");
-							} else if(str_contains($project_video, "vimeo")) {
-								echo "<iframe src='".$project_video."'></iframe>";
+							} else if (preg_match('/https:\/\/vimeo.com\/(\\d+)/', $project_video, $regs)) {
+								echo('<iframe src="https://player.vimeo.com/video/' . $regs[1] . '"></iframe>');
 							} else {
 								echo $project_video;
 							}?>
@@ -156,20 +156,20 @@
 								}
 			    			?>
 							</div>
-			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal_wrap figure:first-of-type span img').click())"><i class="fas fa-images"></i></a>
+			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal_wrap figure:first-of-type span img').click())"><i class="fas fa-search"></i></a>
 			            </div>
 			        <?php } ?>
 
 					<div class="wpvc-essay">
 						<?php if(!empty($inspired_you)) { ?>
 							<div class="wpvc-essay-item wpvc-inspired-you">
-								<h4>What inspired you or what is the idea that got you started</h4>
+								<h4>What inspired you or what is the idea that got you started?</h4>
 								<p><?php echo $inspired_you; ?></p>
 							</div>
 						<?php } ?>
 						<?php if(!empty($about_project)) { ?>
 							<div class="wpvc-essay-item wpvc-about-project">
-								<h4>What your project is about and how does it work?</h4>
+								<h4>What is your project about and how does it work?</h4>
 								<p><?php echo $about_project; ?></p>
 							</div>
 						<?php } ?>
@@ -181,7 +181,7 @@
 						<?php } ?>
 						<?php if(!empty($project_impact)) { ?>
 							<div class="wpvc-essay-item wpvc-project-impact">
-								<h4>What inspired you or what is the idea that got you started</h4>
+								<h4>What impact does your project have on others as well as yourself?</h4>
 								<p><?php echo $project_impact; ?></p>
 							</div>
 						<?php } ?>
