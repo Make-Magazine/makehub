@@ -20,7 +20,7 @@
 		$affiliation .= " - " . get_post_meta( $post->ID, '629a4f2c8e5a7', true );
 	}
 	$about_you = 		get_post_meta( $post->ID, '6296abebd1db5', true );
-	$team_members = 	get_post_meta( $post->ID, '629a44ec6e801', true );
+	$team_members = 	nl2br(get_post_meta( $post->ID, '629a44ec6e801', true ));
 	$instagram = 		get_post_meta( $post->ID, '6296f3cb4740f', true );
 	$facebook = 		get_post_meta( $post->ID, '6296f3df02364', true );
 	$twitter = 			get_post_meta( $post->ID, '6296f3ecceb51', true );
@@ -118,19 +118,19 @@
 								<h4>Social:</h4>
 								<div class="wpvc-profile-social">
 									<?php if(!empty($instagram)) { ?>
-										<a href="<?php echo $instagram; ?>"><i class="fab fa-instagram"></i></a>
+										<a href="<?php echo $instagram; ?>" target="_blank"><i class="fab fa-instagram"></i></a>
 									<?php } ?>
 									<?php if(!empty($facebook)) { ?>
-										<a href="<?php echo $facebook; ?>"><i class="fab fa-facebook"></i></a>
+										<a href="<?php echo $facebook; ?>" target="_blank"><i class="fab fa-facebook"></i></a>
 									<?php } ?>
 									<?php if(!empty($twitter)) { ?>
-										<a href="<?php echo $twitter; ?>"><i class="fab fa-twitter"></i></a>
+										<a href="<?php echo $twitter; ?>" target="_blank"><i class="fab fa-twitter"></i></a>
 									<?php } ?>
 									<?php if(!empty($youtube)) { ?>
-										<a href="<?php echo $youtube; ?>"><i class="fab fa-youtube"></i></a>
+										<a href="<?php echo $youtube; ?>" target="_blank"><i class="fab fa-youtube"></i></a>
 									<?php } ?>
 									<?php if(!empty($tiktok)) { ?>
-										<a href="<?php echo $tiktok; ?>"><i class="fab fa-tiktok"></i></a>
+										<a href="<?php echo $tiktok; ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
 									<?php } ?>
 								</div>
 							<?php } ?>
@@ -141,7 +141,7 @@
 								<p><b>Project Type: </b><?php echo $project_type; ?></p>
 							<?php } ?>
 							<?php if(!empty($project_url)) { ?>
-								<p><a href="<?php echo $project_url; ?>"><?php echo $project_url; ?></a></p>
+								<p><a href="<?php echo $project_url; ?>" target="_blank"><?php echo $project_url; ?></a></p>
 							<?php } ?>
 						</div>
 					</div>
@@ -156,7 +156,7 @@
 								}
 			    			?>
 							</div>
-			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_items:first-of-type a').click())"><i class="fas fa-images"></i></a>
+			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal_wrap figure:first-of-type span img').click())"><i class="fas fa-images"></i></a>
 			            </div>
 			        <?php } ?>
 
