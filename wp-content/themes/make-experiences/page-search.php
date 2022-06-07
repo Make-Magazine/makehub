@@ -14,7 +14,7 @@ get_header();
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12">
-					<h1><?php get_the_title(); ?></h1>
+					<h1><?php single_post_title(); ?></h1>
 					<?php dynamic_sidebar('search'); ?>
 				</div>
 			</div>
