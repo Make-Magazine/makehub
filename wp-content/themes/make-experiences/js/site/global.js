@@ -44,6 +44,10 @@ jQuery(document).ready(function () {
 			jQuery(this).attr("href", updateLink);
 		});
 	}
+	// ps galleries are photoswipe
+	if(jQuery("#ps-gallery").length) {
+		jQuery('#ps-gallery').photoSwipe();
+    }
 });
 
 function GetURLParameter(sParam) {

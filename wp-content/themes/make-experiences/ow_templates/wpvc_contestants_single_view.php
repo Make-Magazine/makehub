@@ -31,18 +31,16 @@
 	$short_desc = 		get_post_meta( $post->ID, '6296f85ac2e55', true );
 	$project_url = 		get_post_meta( $post->ID, '6296f86d0e92e', true );
 	$proj_photo_1 = 	get_post_meta( $post->ID, '6296f8905a6b1', true );
-	$proj_photo_id_1 = 	!empty($proj_photo_1) ? attachment_url_to_postid($proj_photo_1) . "," : "";
 	$proj_photo_2 = 	get_post_meta( $post->ID, '6297e8aa5b779', true );
-	$proj_photo_id_2 = 	!empty($proj_photo_2) ? attachment_url_to_postid($proj_photo_2) . "," : "";
 	$proj_photo_3 = 	get_post_meta( $post->ID, '6297e8c2debe8', true );
-	$proj_photo_id_3 = 	!empty($proj_photo_3) ? attachment_url_to_postid($proj_photo_3) . "," : "";
 	$proj_photo_4 = 	get_post_meta( $post->ID, '6297e8dec3625', true );
-	$proj_photo_id_4 = 	!empty($proj_photo_4) ? attachment_url_to_postid($proj_photo_4) . "," : "";
 	$proj_photo_5 = 	get_post_meta( $post->ID, '6297e8f0ba77f', true );
-	$proj_photo_id_5 = 	!empty($proj_photo_5) ? attachment_url_to_postid($proj_photo_5) . "," : "";
 	$proj_photo_6 = 	get_post_meta( $post->ID, '6297e926b8bb0', true );
-	$proj_photo_id_6 = 	!empty($proj_photo_6) ? attachment_url_to_postid($proj_photo_6) . "," : "";
-	$post_image_ids_string = $proj_photo_id_1 . $proj_photo_id_2 . $proj_photo_id_3 . $proj_photo_id_4 . $proj_photo_id_5 . $proj_photo_id_6;
+	$proj_photo_7 = 	get_post_meta( $post->ID, '629a31864f497', true );
+	$proj_photo_8 = 	get_post_meta( $post->ID, '629a31b55f6e9', true );
+	$proj_photo_9 = 	get_post_meta( $post->ID, '629a31c874571', true );
+	$proj_photo_10 = 	get_post_meta( $post->ID, '629a31db752d0', true );
+	$project_images =   array($proj_photo_1, $proj_photo_2, $proj_photo_3, $proj_photo_4, $proj_photo_5, $proj_photo_6, $proj_photo_7, $proj_photo_8, $proj_photo_9, $proj_photo_10);
 	$project_video = 	get_post_meta( $post->ID, '6296f8b14de31', true );
 	$inspired_you =		get_post_meta( $post->ID, '6296f8c369877', true );
 	$about_project = 	get_post_meta( $post->ID, '6296f8c43c019', true );
@@ -64,6 +62,7 @@
     $show_args = htmlspecialchars(json_encode($show_cont_args), ENT_QUOTES, 'UTF-8');
     // Do Not Remove this Section - End
 ?>
+
     <section class="wpvc_vote_single_section">
         <div class="wpvc_vote_single_container">
             <!--React Js div -->
@@ -147,10 +146,16 @@
 						</div>
 					</div>
 					<?php if (!empty($proj_photo_1)) { ?>
-			            <div class="wpvc-gallery">
+			            <div class="wpvc-gallery" id="ps-gallery">
+							<div class="psgal_wrap">
 			                <?php
-			                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium-large" order="DESC" orderby="ID"]');
+			                	foreach($project_images as $val) {
+									if(!empty($val)) {
+										echo("<figure><span><img src='" . $val . "' data-original-src='" . $val . "' /></span></figure>");
+									}
+								}
 			    			?>
+							</div>
 			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_items:first-of-type a').click())"><i class="fas fa-images"></i></a>
 			            </div>
 			        <?php } ?>

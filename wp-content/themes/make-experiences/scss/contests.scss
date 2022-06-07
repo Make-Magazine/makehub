@@ -31,6 +31,7 @@
 		.wpvc-main-wrapper {
 			display: flex;
 			flex-flow: column wrap;
+			max-height: 1200px;
 			.flex-main {
 				width: 68%;
 				background: white;
@@ -38,26 +39,20 @@
 				&:first-of-type {
 					padding: 0px;
 				}
-				&:last-of-type {
-					flex-grow: 1;
-				}
 				p { font-size: 18px; }
 			}
 			.flex-sidebar {
-				width: 29%;
+				width: 30%;
 				min-height: 100%;
-				position: absolute;
-				right: 20px;
+				order: 3;
 				background: #f1f1f1;
 				padding: 15px;
+				margin-left: auto;
 			}
 			@media screen and (max-width: 768px) {
-				flex-direction: column;
+				display: block;
 				.flex-main, .flex-sidebar {
 					width: 100%;
-					position: relative;
-					height: auto;
-					right: 0px;
 				}
 			}
 			#wpvc-singlecustom-header {
@@ -65,7 +60,6 @@
 				.wpvc_show_style {
 					margin-top: 0px !important;
 				}
-
 			}
 			.wpvc-profile {
 				div {
@@ -87,6 +81,9 @@
 					 }
 				}
 			}
+			.wpvc-details {
+				flex-grow: 1;
+			}
 		}
 		.wpvc-gallery {
 			position: relative;
@@ -94,24 +91,23 @@
 			background: #fafbfd;
 			margin-bottom: -30px;
 			.psgal_wrap {
-				.psgal-inline {
-					display: flex;
-					justify-content: space-between;
-					figure.msnry_items {
-						flex: 1;
-						height: 250px;
-						&:first-of-type {
-							padding-left: 0px;
-						}
-						a {
-							height: 100% !important;
-							overflow: hidden;
-							border-radius: 5px;
-							img {
-								min-height: 100%;
-								min-width: 100%;
-								object-fit: cover;
-							}
+				display: flex;
+				justify-content: space-between;
+				figure {
+					flex: 1;
+					max-height: 250px;
+					padding: 0px 5px;
+					&:first-of-type {
+						padding-left: 0px;
+					}
+					span {
+						height: 100% !important;
+						overflow: hidden;
+						border-radius: 5px;
+						img {
+							min-height: 100%;
+							min-width: 100%;
+							object-fit: cover;
 						}
 					}
 				}
