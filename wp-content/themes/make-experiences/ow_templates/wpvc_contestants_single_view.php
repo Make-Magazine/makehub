@@ -96,7 +96,7 @@
 							<div id="wpvc-singlecustom-header" class="flex-main" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 						<?php } else { ?>
 							<div class="flex-main">
-								<a href="/wp-login.php?return_to=<?php echo get_permalink(); ?>" class="btn universal-btn">Please Log In to Vote</a>
+								<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn">Please Log In to Vote</a>
 							</div>
 						<?php } ?>
 
