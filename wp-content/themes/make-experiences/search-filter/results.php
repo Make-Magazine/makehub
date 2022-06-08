@@ -52,11 +52,13 @@ if ( $query->have_posts() ) {
 	<div class="result-items">
 	<?php
 		while ($query->have_posts()) {
-			$post = $query->the_post();
-			$postType = get_post_type_object(get_post_type($post));
+			$query->the_post();
 
-			$author_id = get_the_author_meta( 'ID' );
-			$user_link = str_replace("/author/", "/members/", get_author_posts_url($author_id));
+			$first_name = 		get_post_meta( get_the_ID(), '6296aa69eeefa', true );
+			$last_name = 		get_post_meta( get_the_ID(), '6296aa7bb7d7c', true );
+			$age_range = 		get_post_meta( get_the_ID(), '6296aaa89bf80', true );
+			$project_type = 	get_post_meta( get_the_ID(), '6296f8420e061', true );
+
 			?>
 			<div class="result-item">
 				<?php if ( has_post_thumbnail() ) { ?>
@@ -71,10 +73,9 @@ if ( $query->have_posts() ) {
 					} */
 				?>
 				<div class="results-meta">
-					<p><?php the_category(); ?></p>
-					<p><?php the_tags(); ?></p>
-					<?php /* <p class="post-type"><?php echo $postType->labels->singular_name;  ?></p> */ ?>
-					<p class="author"><a href="<?php echo $user_link; ?>"><?php the_author(); ?></a></p>
+					<p><b>Name:</b> <?php echo $first_name . " " . $last_name; ?></p>
+					<p><b>Age:</b> <?php echo $age_range; ?></p>
+					<p><b>Type:</b> <?php echo $project_type; ?></p>
 				</div>
 			</div>
 

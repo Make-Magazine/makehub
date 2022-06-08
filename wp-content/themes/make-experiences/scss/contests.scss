@@ -159,3 +159,13 @@
 	}
 }
 .wpvc_voting_btns { background: $color-blue !important; }
+
+// Contestant category
+.wpvc_show_contestants {
+	.wpvc_navigation_bar, .wpvc_card_sub_header  { display: none; }
+	.MuiCard-root.wpvc_card_row {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+}
