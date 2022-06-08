@@ -15,14 +15,6 @@
 }
 
 .single-contestants {
-	.contest-back-btn {
-		position: absolute;
-		right: 15px;
-		top: 75px;
-		background: #005e9a;
-		color: #fff;
-		font-size: 18px;
-	}
 	.wpvc_single_contestant_fullwidth {
 		margin-bottom: 0px !important;
 	}
@@ -36,6 +28,20 @@
 		justify-content: center;
 	}
 	#wpvc-singlecustom {
+		.wpvc-title {
+			position: relative;
+			.contest-back-btn {
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+				background: #005e9a;
+				color: #fff;
+				font-size: 18px;
+			}
+			@media screen and (max-width: 768px) {
+				h3 { max-width: 50%; }
+			}
+		}
 		.wpvc-main-wrapper {
 			display: flex;
 			flex-flow: column wrap;

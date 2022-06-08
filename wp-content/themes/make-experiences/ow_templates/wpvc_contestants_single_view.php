@@ -65,7 +65,6 @@
 
     <section class="wpvc_vote_single_section">
         <div class="wpvc_vote_single_container">
-			<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn">Back to Entry Gallery</a>
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
@@ -81,6 +80,7 @@
 					<div class="wpvc-title">
 						<h1><?php echo $project_title; ?></h1>
 						<h3>By <?php echo $first_name . " " . $last_name; ?></h3>
+						<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn">Back to Entry Gallery</a>
 					</div>
 					<div class="wpvc-main-wrapper">
 						<div class="wpvc-video flex-main">
