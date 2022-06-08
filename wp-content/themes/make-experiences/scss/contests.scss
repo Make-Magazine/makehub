@@ -15,6 +15,14 @@
 }
 
 .single-contestants {
+	.contest-back-btn {
+		position: absolute;
+		right: 15px;
+		top: 75px;
+		background: #005e9a;
+		color: #fff;
+		font-size: 18px;
+	}
 	.wpvc_single_contestant_fullwidth {
 		margin-bottom: 0px !important;
 	}
