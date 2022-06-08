@@ -170,7 +170,10 @@
 
 // Contestant category
 .wpvc_show_contestants {
-	.wpvc_navigation_bar, .wpvc_card_sub_header, .wpvc_vote_count  { display: none; }
+	.wpvc_showcontestant_container {
+		margin-top: 0px;
+	}
+	.wpvc_navigation_bar, .wpvc_card_sub_header, .wpvc_contestant_vote_class  { display: none; }
 	.MuiCard-root.wpvc_card_row {
 		height: 100%;
 		display: flex;
@@ -178,7 +181,7 @@
 		.wpvc_card_actions_row:last-of-type {
 			margin-top: auto;
 		}
-		.wpvc_card_conthead_row a, .wpvc_social_icon a svg {
+		.wpvc_card_conthead_row a, .wpvc_contestant_description a, .wpvc_social_icon a svg {
 			color: $color-blue !important;
 		}
 	}
