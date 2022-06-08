@@ -63,10 +63,16 @@ if ( $query->have_posts() ) {
 
 			?>
 			<div class="result-item">
-				<?php if ( has_post_thumbnail() ) { ?>
-						<div class="result-image"><a href="<?php the_permalink(); ?>">
-							<?php the_post_thumbnail("small"); ?>
-						</a></div>
+				<?php if ( !empty($video_url) ) { ?>
+					<div class="video-preview">
+						<?php if( str_contains($video_url, "youtube") || str_contains($video_url, "youtu.be") ) {
+							echo do_shortcode("[embedyt]" . $video_url . "[/embedyt]");
+						} else if (preg_match('/https:\/\/vimeo.com\/(\\d+)/', $video_url, $regs)) {
+							echo('<iframe src="https://player.vimeo.com/video/' . $regs[1] . '"></iframe>');
+						} else {
+							echo $video_url;
+						}?>
+					</div>
 				<?php } ?>
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 				<?php /*

@@ -48,6 +48,10 @@
 					padding: 0px;
 				}
 				p { font-size: 18px; }
+				.universal-btn {
+					width: 100%;
+					font-weight: bold;
+				}
 			}
 			.flex-sidebar {
 				width: 30%;
@@ -180,7 +184,7 @@
 	.wpvc_showcontestant_container {
 		margin-top: 0px;
 	}
-	.wpvc_navigation_bar, .wpvc_card_sub_header, .wpvc_vote_counts  { display: none; }
+	.wpvc_card_sub_header, .wpvc_vote_counts  { display: none; }
 	.wpvc_video_contest_player {
 		height: 200px !important;
 		.fluid-width-video-wrapper {
