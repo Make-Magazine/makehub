@@ -87,6 +87,7 @@
 					display: flex;
 					a {
 						font-size: 26px;
+						margin-right: 15px;
 						.fa-instagram { color: #c13584;}
 						.fa-facebook { color: #1877f2;}
 						.fa-twitter { color: #1da1f2;}
@@ -164,6 +165,12 @@
 	.wpvc_sucess_popup_content {
 		background: $color-light-blue !important;
 		color: #333;
+		.MuiTypography-paragraph {
+			margin-bottom: 0px;
+		}
+	}
+	.wpvc_social_icon svg {
+		color: $color-blue !important;
 	}
 }
 .wpvc_voting_btns { background: $color-blue !important; }
@@ -173,11 +180,25 @@
 	.wpvc_showcontestant_container {
 		margin-top: 0px;
 	}
-	.wpvc_navigation_bar, .wpvc_card_sub_header, .wpvc_contestant_vote_class  { display: none; }
+	.wpvc_navigation_bar, .wpvc_card_sub_header, .wpvc_vote_counts  { display: none; }
+	.wpvc_video_contest_player {
+		height: 200px !important;
+		.fluid-width-video-wrapper {
+			margin: 0px;
+		}
+	}
 	.MuiCard-root.wpvc_card_row {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		.wpvc_card_content_row {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			.wpvc_contestant_description {
+				margin-top: auto;
+			}
+		}
 		.wpvc_card_actions_row:last-of-type {
 			margin-top: auto;
 		}

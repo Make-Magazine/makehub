@@ -58,6 +58,8 @@ if ( $query->have_posts() ) {
 			$last_name = 		get_post_meta( get_the_ID(), '6296aa7bb7d7c', true );
 			$age_range = 		get_post_meta( get_the_ID(), '6296aaa89bf80', true );
 			$project_type = 	get_post_meta( get_the_ID(), '6296f8420e061', true );
+			$vote_count = 		get_post_meta( get_the_ID(), 'votes_count', true );
+			$video_url = 		get_post_meta( get_the_ID(), '6296f8b14de31', true );
 
 			?>
 			<div class="result-item">
