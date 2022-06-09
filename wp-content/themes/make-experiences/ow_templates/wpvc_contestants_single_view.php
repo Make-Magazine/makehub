@@ -92,14 +92,13 @@
 								echo $project_video;
 							}?>
 						</div>
-						<?php if(is_user_logged_in() == true) { ?>
-							<div id="wpvc-singlecustom-header" class="flex-main" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
-						<?php } else { ?>
-							<div class="flex-main">
+						<div class="flex-main logged-in-refresh">
+							<?php if(is_user_logged_in() == true) { ?>
+								<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+							<?php } else { ?>
 								<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn">Please Log In to Vote</a>
-							</div>
-						<?php } ?>
-
+							<?php } ?>
+						</div>
 						<div class="wpvc-profile flex-sidebar">
 							<div class="wpvc-profile-image">
 								<img src="<?php echo $profile_pic; ?>" />
