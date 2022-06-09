@@ -310,6 +310,20 @@ function register_taxonomies() {
     register_taxonomy_for_object_type('post_tag', 'page');
     // Add category metabox to page
     register_taxonomy_for_object_type('category', 'page');
+	// Add type taxonomy to contestants
+	register_taxonomy(
+        'types',
+        'contestants',
+        array(
+            'hierarchical' => true,
+            'label' => 'Contest Types', // display name
+            'query_var' => true,
+            'rewrite' => array(
+                'slug' => 'types',    // This controls the base slug that will display before each term
+                'with_front' => false  // Don't display the category base before
+            )
+        )
+    );
 }
  // Add to the admin_init hook of your theme functions.php file
 add_action( 'init', 'register_taxonomies' );
