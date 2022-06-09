@@ -68,6 +68,7 @@
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
+				<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn"><< Entry Gallery</a>
                 <div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 
                 <?php
@@ -75,12 +76,11 @@
                  * Comment above div id="wpvc-singlecontestant-page" and uncomment below code
                  *
                  */  ?>
-
 				<div id="wpvc-singlecustom" class="<?php echo $class_name; ?> container">
+
 					<div class="wpvc-title">
 						<h1><?php echo $project_title; ?></h1>
 						<h3>By <?php echo $first_name . " " . $last_name; ?></h3>
-						<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn">Back to Entry Gallery</a>
 					</div>
 					<div class="wpvc-main-wrapper">
 						<div class="wpvc-video flex-main">
@@ -146,10 +146,10 @@
 						<div class="wpvc-details flex-main">
 							<p><?php echo $short_desc; ?></p>
 							<?php if(!empty($project_type)) { ?>
-								<p><b>Project Type: </b><?php echo $project_type; ?></p>
+								<p><b>Type: </b><?php echo $project_type; ?></p>
 							<?php } ?>
 							<?php if(!empty($project_url)) { ?>
-								<p><a href="<?php echo $project_url; ?>" target="_blank"><?php echo $project_url; ?></a></p>
+								<p><b>Website: </b><a href="<?php echo $project_url; ?>" target="_blank"><?php echo $project_url; ?></a></p>
 							<?php } ?>
 						</div>
 					</div>

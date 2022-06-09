@@ -15,6 +15,12 @@
 }
 
 .single-contestants {
+	#content > .container {
+		width: 80%;
+		.wpvc_vote_single_section {
+			max-width: 100%;
+		}
+	}
 	.wpvc_single_contestant_fullwidth {
 		margin-bottom: 0px !important;
 	}
@@ -27,21 +33,12 @@
 		width: 8%;
 		justify-content: center;
 	}
+	.contest-back-btn {
+		font-size: 18px;
+		margin-left:-50px;
+		color: #999;
+	}
 	#wpvc-singlecustom {
-		.wpvc-title {
-			position: relative;
-			.contest-back-btn {
-				position: absolute;
-				right: 0px;
-				bottom: 0px;
-				background: #005e9a;
-				color: #fff;
-				font-size: 18px;
-			}
-			@media screen and (max-width: 768px) {
-				h3 { max-width: 50%; }
-			}
-		}
 		.wpvc-main-wrapper {
 			display: flex;
 			flex-flow: column wrap;
@@ -66,6 +63,7 @@
 				background: #f1f1f1;
 				padding: 15px;
 				margin-left: auto;
+				flex: 1;
 			}
 			@media screen and (max-width: 768px) {
 				display: block;
@@ -181,6 +179,9 @@
 	}
 	.wpvc_social_icon svg {
 		color: $color-blue !important;
+	}
+	.MuiIconButton-root:hover {
+  		background-color: #fff;
 	}
 }
 .wpvc_voting_btns { background: $color-blue !important; }
