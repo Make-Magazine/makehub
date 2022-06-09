@@ -16,13 +16,14 @@
 
 .single-contestants {
 	#content > .container {
-		width: 80%;
+		width: 100%;
 		.wpvc_vote_single_section {
 			max-width: 100%;
+			.wpvc_single_contestant_fullwidth {
+				margin-bottom: 0px !important;
+				width: 80%;
+			}
 		}
-	}
-	.wpvc_single_contestant_fullwidth {
-		margin-bottom: 0px !important;
 	}
 	.wpvc_contestantimage, .wpvc_card_conthead_row, .MuiToolbar-gutters, .wpvc_video_contest_player {
 		display: none;
@@ -35,7 +36,6 @@
 	}
 	.contest-back-btn {
 		font-size: 18px;
-		margin-left:-50px;
 		color: #999;
 	}
 	#wpvc-singlecustom {
