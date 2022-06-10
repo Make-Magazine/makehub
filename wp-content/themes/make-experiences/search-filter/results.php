@@ -85,6 +85,7 @@ if ( $query->have_posts() ) {
 					<p><b>Age:</b> <?php echo $age_range; ?></p>
 					<p><b>Type:</b> <?php echo $project_type; ?></p>
 				</div>
+				<a href="<?php the_permalink(); ?>" class="btn universal-btn">Read More</a>
 			</div>
 
 			<hr />

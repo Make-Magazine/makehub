@@ -11,5 +11,18 @@ jQuery(document).ready(function () {
 					return "short";
 				}
 			});
+		});
     }
+	if(jQuery(".page-template-page-search").length) {
+		jQuery(".fluid-width-video-wrapper").css("padding-top", "");
+		jQuery("article").before("<div class='filter-reset'><a href='" + window.location.href + "' class='btn universal-btn' style='display:none;'>Reset Filters</a></div>");
+		if(document.location.search.length) {
+			jQuery(".filter-reset .btn").css("display", "inline-flex");
+		} else {
+			// if the form changes, show the reset button
+			jQuery(".searchandfilter").change(function(){
+				jQuery(".filter-reset .btn").css("display", "inline-flex");
+			});
+		}
+	}
 });
