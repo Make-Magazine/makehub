@@ -56,14 +56,15 @@
 				margin: 0px 0px 10px 0;
 			}
 			h2 {
-				text-overflow: ellipsis;
-				overflow-x: hidden;
 				margin: 10px 0px 15px;
 				font-size: 28px;
 				color: $color-blue;
 				a {
 					color: #333;
-					white-space: nowrap;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
 				}
 			}
 			.results-meta {

@@ -83,18 +83,29 @@
 						<h3>By <?php echo $first_name . " " . $last_name; ?></h3>
 					</div>
 					<div class="wpvc-main-wrapper">
-						<div class="wpvc-video flex-main">
-							<?php if( str_contains($project_video, "youtube") || str_contains($project_video, "youtu.be") ) {
-								echo do_shortcode("[embedyt]" . $project_video . "[/embedyt]");
-							} else if (preg_match('/https:\/\/vimeo.com\/(\\d+)/', $project_video, $regs)) {
-								echo('<iframe src="https://player.vimeo.com/video/' . $regs[1] . '"></iframe>');
-							} else {
-								echo $project_video;
-							}?>
-						</div>
-						<div class="flex-main wpvc-vote">
-							<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
-							<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn lgn-btn">Please Log In to Vote</a>
+						<div class="flex-main">
+							<div class="wpvc-video">
+								<?php if( str_contains($project_video, "youtube") || str_contains($project_video, "youtu.be") ) {
+									echo do_shortcode("[embedyt]" . $project_video . "[/embedyt]");
+								} else if (preg_match('/https:\/\/vimeo.com\/(\\d+)/', $project_video, $regs)) {
+									echo('<iframe src="https://player.vimeo.com/video/' . $regs[1] . '"></iframe>');
+								} else {
+									echo $project_video;
+								}?>
+							</div>
+							<div class="wpvc-vote">
+								<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+								<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn lgn-btn">Please Log In to Vote</a>
+							</div>
+							<div class="wpvc-details">
+								<p><?php echo $short_desc; ?></p>
+								<?php if(!empty($project_type)) { ?>
+									<p><b>Type: </b><?php echo $project_type; ?></p>
+								<?php } ?>
+								<?php if(!empty($project_url)) { ?>
+									<p><b>Website: </b><a href="<?php echo $project_url; ?>" target="_blank"><?php echo $project_url; ?></a></p>
+								<?php } ?>
+							</div>
 						</div>
 						<div class="wpvc-profile flex-sidebar">
 							<div class="wpvc-profile-image">
@@ -140,15 +151,6 @@
 										<a href="<?php echo $tiktok; ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
 									<?php } ?>
 								</div>
-							<?php } ?>
-						</div>
-						<div class="wpvc-details flex-main">
-							<p><?php echo $short_desc; ?></p>
-							<?php if(!empty($project_type)) { ?>
-								<p><b>Type: </b><?php echo $project_type; ?></p>
-							<?php } ?>
-							<?php if(!empty($project_url)) { ?>
-								<p><b>Website: </b><a href="<?php echo $project_url; ?>" target="_blank"><?php echo $project_url; ?></a></p>
 							<?php } ?>
 						</div>
 					</div>
