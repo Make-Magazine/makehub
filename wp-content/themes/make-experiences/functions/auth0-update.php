@@ -31,11 +31,31 @@ function auth0_user_update( $user_id = '', $dataToUpdate = array() ) {
 
     //get the auth0 id from the wp user meta
   	$auth0UserID = get_user_meta($user_id, 'wp_auth0_id');
-    $url = "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0];
+
+    if(isset($auth0UserID[0]) && $auth0UserID[0] != ''){
+        $url = "https://makermedia.auth0.com/api/v2/users/" . $auth0UserID[0]; //update user
+        $curl_type = "PATCH";
+    }else{
+      //if the auth0 id is not set, let's attempt to add them to auth0
+      //get user information
+      $user_info = get_userdata($user_id);
+
+      //add user
+      $update_data["email"] = $user_info->user_email;
+      if($user_info->user_firstname!='')
+        $update_data["given_name"] = $user_info->user_firstname;
+      if($user_info->user_lastname!='')
+        $update_data["family_name"] = $user_info->user_lastname;
+      $update_data["password"] = "ResetMe12!@";
+      $update_data["connection"] = "DB-Make-Community";
+      $url = "https://makermedia.auth0.com/api/v2/users";
+      $curl_type = "POST";
+    }
 
     //update auth0
     $headers = array("authorization: Bearer ".$access_token, "content-type: application/json");
-    $authRes = postCurl($url, $headers, json_encode($update_data),"PATCH");
+    $authRes = postCurl($url, $headers, json_encode($update_data),$curl_type);
+
   }
 }
 
