@@ -92,12 +92,9 @@
 								echo $project_video;
 							}?>
 						</div>
-						<div class="flex-main logged-in-refresh">
-							<?php if(is_user_logged_in() == true) { ?>
-								<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
-							<?php } else { ?>
-								<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn">Please Log In to Vote</a>
-							<?php } ?>
+						<div class="flex-main wpvc-vote">
+							<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
+							<a href="/wp-login.php?redirect_to=<?php echo get_permalink(); ?>" class="btn universal-btn lgn-btn">Please Log In to Vote</a>
 						</div>
 						<div class="wpvc-profile flex-sidebar">
 							<div class="wpvc-profile-image">
@@ -116,7 +113,10 @@
 								<div class="wpvc-profile-affiliation"><b>Affiliation:</b> <?php echo $affiliation; ?></div>
 							<?php } ?>
 							<?php if (!empty($about_you)) { ?>
-								<div class="wpvc-profile-about-you"><b>About them:</b> <?php echo $about_you; ?></div>
+								<div class="wpvc-profile-about-you">
+									<p class="collapse" id="collapseIt" aria-expanded="false"><b>About them:</b> <?php echo $about_you; ?></p>
+									<a role="button" class="collapsed" data-toggle="collapse" href="#collapseIt" aria-controls="collapseIt"></a>
+								</div>
 							<?php } ?>
 							<?php if (!empty($team_members)) { ?>
 								<div class="wpvc-profile-team-members"><b>Team Members:</b><br /> <?php echo $team_members; ?></div>

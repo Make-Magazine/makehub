@@ -220,6 +220,7 @@ jQuery('a[href*="#"]')
 // Remove links that don't actually link to anything
 .not('[href="#"]')
 .not('[href="#0"]')
+.not('.collapsed')
 .click(function (event) {
     // On-page links
     jQuery('a[href*="#"]').removeClass("clicked");

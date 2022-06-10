@@ -14,6 +14,16 @@
 	}
 }
 
+.lgn-btn { display: none; }
+body:not(.logged-in) {
+	.wpvc-vote {
+		#wpvc-singlecustom-header {
+			display: none;
+		}
+		.lgn-btn { display: flex; }
+	}
+}
+
 .single-contestants {
 	#content > .container {
 		width: 100%;
@@ -21,7 +31,7 @@
 			max-width: 100%;
 			.wpvc_single_contestant_fullwidth {
 				margin-bottom: 0px !important;
-				width: 80%;
+				width: 95%;
 			}
 		}
 	}
@@ -89,6 +99,22 @@
 					padding-bottom: 10px;
 					&:last-of-type {
 						padding-bottom: 0px;
+					}
+				}
+				.wpvc-profile-about-you {
+					#collapseIt.collapse:not(.show) {
+						display: block;
+						height: 3rem;
+						overflow: hidden;
+					}
+					#collapseIt.collapsing {
+						height: 3rem;
+					}
+					a.collapsed:after {
+						content: '+ Show More';
+					}
+					a:not(.collapsed):after {
+						content: '- Show Less';
 					}
 				}
 				.wpvc-profile-social {
