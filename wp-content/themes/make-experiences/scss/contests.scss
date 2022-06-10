@@ -24,6 +24,8 @@ body:not(.logged-in) {
 	}
 }
 
+.wpvc_back_loader { display: none; }
+
 .single-contestants {
 	#content > .container {
 		width: 100%;
@@ -53,6 +55,12 @@ body:not(.logged-in) {
 			display: flex;
 			flex-flow: column wrap;
 			max-height: 1600px;
+			&.tallboy {
+				max-height: 1600px !important;
+			}
+			&.short {
+				max-height: 900px !important;
+			}
 			.flex-main {
 				width: 68%;
 				background: white;
