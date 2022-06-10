@@ -4,8 +4,8 @@ if (!defined('ABSPATH'))
     define('ABSPATH', dirname(__FILE__) . '/');
 require_once(ABSPATH . 'wp-load.php');
 
-define('AUTH0_CLIENTID', "NDw7r6YLomyGceVgG7PIt2wIhIgLNqxG");
-define('AUTH0_SECRET', "4dfAi4LjuknqDkzXILwK13vARSBiZIdB-XTHAErTk7QthdRcjF-5w3-AmYfh6eUT");
+define('AUTH0_CLIENTID', "J8vRwQOxIEkUOAlxaThb3YBq0ts6Tj0k");
+define('AUTH0_SECRET', "-B_rlU963aS6LbkcxaulJ-qUG8N3ULQ6idiUea3tMEfbHc5OPZMECkP5akU3oqHk");
 
 // check if user is logged in
 function ajax_check_user_logged_in() {
@@ -335,7 +335,9 @@ function checkMakeCoMems($user) {
       //look for the needle in any part of the title field in the multi level array
       if(array_find('premium', $memArray, 'title') !== false ||
          array_find('multi-seat', $memArray, 'title') !== false ||
-         array_find('school maker faire', $memArray, 'title') !== false){
+         array_find('school maker faire', $memArray, 'title') !== false ||
+         array_find('magazine', $memArray, 'title') !== false
+       ){
         //Premium Membership
         $membershipType = "premium";
       }else{
