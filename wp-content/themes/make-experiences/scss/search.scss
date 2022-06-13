@@ -2,7 +2,9 @@
 	.entry-header {
 		display: none;
 	}
-	.search-results-page .container { min-width: 90%; }
+	.search-results-page .container {
+		min-width: 90%;
+	}
 	.results-info {
 		display: flex;
 		justify-content: space-between;
@@ -54,6 +56,9 @@
 			@media screen and (max-width: 400px) {
 				width: 100%;
 				margin: 0px 0px 10px 0;
+				&:nth-of-type(3n) {
+					margin-right: 0px;
+				}
 			}
 			h2 {
 				margin: 10px 0px 15px;
