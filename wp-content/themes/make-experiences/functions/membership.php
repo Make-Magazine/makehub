@@ -151,7 +151,8 @@ function checkMembershipLevels(){
           if(stripos($membership->post_title, 'premium') !== false ||
              stripos($membership->post_title, 'multi-seat')  !== false ||
              stripos($membership->post_title, 'global') !== false ||
-             stripos($membership->post_title, 'school') !== false) {
+             stripos($membership->post_title, 'school') !== false ||
+					 	 stripos($membership->post_title, 'magazine') !== false)  {
             $type = 'premium';
           }
         }
