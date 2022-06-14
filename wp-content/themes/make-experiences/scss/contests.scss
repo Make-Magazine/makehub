@@ -98,6 +98,7 @@ body:not(.logged-in) {
 				.fluid-width-video-wrapper iframe {
 					border: 0px;
 					background: #000;
+					padding-top: 0px !important;
 			  	}
 			}
 			.wpvc-details {
