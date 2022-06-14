@@ -68,7 +68,7 @@
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
-				<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn"><< Entry Gallery</a>
+				<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn"><< Project Gallery</a>
                 <div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 
                 <?php

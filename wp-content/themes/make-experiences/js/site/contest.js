@@ -10,5 +10,9 @@ jQuery(document).ready(function () {
 				jQuery(".filter-reset .btn").css("display", "inline-flex");
 			});
 		}
+		jQuery(".show-all-search-results").on("click", function(){
+			jQuery(".result-items").addClass("showing-all");
+		});
 	}
+
 });

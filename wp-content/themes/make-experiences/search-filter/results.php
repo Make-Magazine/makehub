@@ -31,8 +31,8 @@ if ( $query->have_posts() ) {
 	?>
 
 	<div class="results-info">
-		<span>Found <?php echo $query->found_posts; ?> Results</span>
-		<span>Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?></span>
+		<span><?php echo $query->found_posts; ?> Projects</span>
+		<?php /* <span>Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?></span> */ ?>
 	</div>
 
 	<div class="pagination">
@@ -85,13 +85,16 @@ if ( $query->have_posts() ) {
 					<p><b>Age:</b> <?php echo $age_range; ?></p>
 					<p><b>Type:</b> <?php echo $project_type; ?></p>
 				</div>
-				<a href="<?php the_permalink(); ?>" class="btn universal-btn">Read More</a>
+				<a href="<?php the_permalink(); ?>" class="btn universal-btn">More</a>
 			</div>
 
 			<hr />
 	<?php } ?>
+	<?php if($query->found_posts > 24) { ?>
+		<div class="text-center" style="margin:0 auto;"><button class="show-all-search-results">Show All</button></div>
+	<?php } ?>
 	</div>
-	Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?><br />
+	<?php /* Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?><br /> */ ?>
 
 	<div class="pagination">
 

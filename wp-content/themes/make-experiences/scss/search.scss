@@ -41,6 +41,7 @@
 					}
 				}
 			}
+			&:nth-child(n+24) { display: none; }
 			&:nth-of-type(3n) {
 				margin-right: 0px;
 			}
@@ -80,6 +81,14 @@
 			.results-meta {
 				margin-top: auto;
 			}
+		}
+		.show-all-search-results {
+			font-weight: bold;
+			min-width: 200px;
+		}
+		&.showing-all {
+			.result-item:nth-child(n+24) { display: flex; }
+			.show-all-search-results { display: none; }
 		}
 	}
 	.pagination {
@@ -135,6 +144,7 @@
 		display: flex;
 		flex-flow: row wrap;
 		background: #f1f1f1;
+		margin-left: 0px;
 		li {
 			padding: 10px;
 			&:first-of-type {

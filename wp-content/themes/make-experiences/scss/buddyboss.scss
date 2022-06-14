@@ -331,6 +331,11 @@ button.ges-change, button.ges-change:hover {
 	}
 }
 
+// messages
+#buddypress .message-action-delete, #buddypress .message_action__anchor {
+	font-size: 16px;
+}
+
 // Member directory
 #members-list {
 	.item-avatar img {
