@@ -10,7 +10,7 @@
 		justify-content: space-between;
 		margin-bottom: 10px;
 	}
-	.filter-reset { text-align: right; margin-bottom: 5px; }
+
 	.result-items {
 		display: flex;
 		flex-wrap: wrap;
@@ -124,7 +124,7 @@
 		&:first-of-type { display: none; }
 	}
 }
-
+.filter-reset { text-align: right; margin-bottom: -20px; }
 
 .widget_search_filter_register_widget {
 	h2 { margin-bottom: 5px; }
