@@ -148,7 +148,7 @@
         {
             "key": "field_62a92be3bfae0",
             "label": "What impact does your project have on others as well as yourself?",
-            "name": "project_import",
+            "name": "project_impact",
             "type": "textarea",
             "instructions": "",
             "required": 0,
@@ -223,9 +223,9 @@
         },
         {
             "key": "field_62a92d08bfaea",
-            "label": "TikTok",
-            "name": "tiktok_url",
-            "type": "text",
+            "label": "Social Media",
+            "name": "social_media",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -234,11 +234,60 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_62aa214e288ef",
+                    "label": "platform",
+                    "name": "platform",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "tiktok": "tiktok",
+                        "youtube": "youtube",
+                        "twitter": "twitter",
+                        "facebook": "facebook",
+                        "instagram": "instagram"
+                    },
+                    "default_value": false,
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "ajax": 0,
+                    "placeholder": ""
+                },
+                {
+                    "key": "field_62aa2193288f1",
+                    "label": "social_url",
+                    "name": "social_url",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
         },
         {
             "key": "field_62a92d12bfaeb",
@@ -366,7 +415,7 @@
         },
         {
             "key": "field_62a92af1bfad5",
-            "label": "Affiliation Text",
+            "label": "Affiliation Name",
             "name": "affiliation_text",
             "type": "text",
             "instructions": "",
@@ -636,5 +685,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1655314060
+    "modified": 1655316917
 }
