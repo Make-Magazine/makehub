@@ -123,21 +123,21 @@
 								<div class="wpvc-profile-social">
 									<?php
 									foreach($social_media as $social) {
-										if($social['platform'] == 'instagram') { ?>
+										if(strtolower($social['platform']) == 'instagram') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-instagram"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] == 'facebook') { ?>
+										<?php if(strtolower($social['platform']) == 'facebook') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-facebook"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] == 'twitter') { ?>
+										<?php if(strtolower($social['platform']) == 'twitter') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-twitter"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] == 'youtube') { ?>
+										<?php if(strtolower($social['platform']) == 'youtube') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-youtube"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] == 'tiktok') { ?>
+										<?php if(strtolower($social['platform']) == 'tiktok') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
-										<?php } 
+										<?php }
 									}
 									?>
 								</div>
