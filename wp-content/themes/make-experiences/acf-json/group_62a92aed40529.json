@@ -435,7 +435,7 @@
         {
             "key": "field_62a92e2dbfaf9",
             "label": "First Name",
-            "name": "first_name",
+            "name": "user_first_name",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -454,7 +454,7 @@
         {
             "key": "field_62a92e1cbfaf8",
             "label": "Last Name",
-            "name": "last_name",
+            "name": "user_last_name",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -685,5 +685,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1655324833
+    "modified": 1655329940
 }
