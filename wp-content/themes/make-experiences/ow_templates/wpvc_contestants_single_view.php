@@ -123,38 +123,23 @@
 								<div class="wpvc-profile-social">
 									<?php
 									foreach($social_media as $social) {
-										if($social['platform'] = 'instagram') { ?>
+										if($social['platform'] == 'instagram') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-instagram"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] = 'facebook') { ?>
+										<?php if($social['platform'] == 'facebook') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-facebook"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] = 'twitter') { ?>
+										<?php if($social['platform'] == 'twitter') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-twitter"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] = 'youtube') { ?>
+										<?php if($social['platform'] == 'youtube') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-youtube"></i></a>
 										<?php } ?>
-										<?php if($social['platform'] = 'tiktok') { ?>
+										<?php if($social['platform'] == 'tiktok') { ?>
 											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
-										<?php } ?>
+										<?php } 
 									}
 									?>
-									<?php if(!empty($facebook)) { ?>
-										<a href="<?php echo $instagram; ?>" target="_blank"><i class="fab fa-instagram"></i></a>
-									<?php } ?>
-									<?php if(!empty($facebook)) { ?>
-										<a href="<?php echo $facebook; ?>" target="_blank"><i class="fab fa-facebook"></i></a>
-									<?php } ?>
-									<?php if(!empty($twitter)) { ?>
-										<a href="<?php echo $twitter; ?>" target="_blank"><i class="fab fa-twitter"></i></a>
-									<?php } ?>
-									<?php if(!empty($youtube)) { ?>
-										<a href="<?php echo $youtube; ?>" target="_blank"><i class="fab fa-youtube"></i></a>
-									<?php } ?>
-									<?php if(!empty($tiktok)) { ?>
-										<a href="<?php echo $tiktok; ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
-									<?php } ?>
 								</div>
 							<?php } ?>
 						</div>
