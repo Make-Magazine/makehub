@@ -54,12 +54,12 @@ if ( $query->have_posts() ) {
 		while ($query->have_posts()) {
 			$query->the_post();
 
-			$first_name = 		get_post_meta( get_the_ID(), '6296aa69eeefa', true );
-			$last_name = 		get_post_meta( get_the_ID(), '6296aa7bb7d7c', true );
-			$age_range = 		get_post_meta( get_the_ID(), '6296aaa89bf80', true );
-			$project_type = 	get_post_meta( get_the_ID(), '6296f8420e061', true );
+			$first_name = 		get_field( 'first_name', $post->ID, true );
+			$last_name = 		get_field( 'last_name', $post->ID, true );
+			$age_range = 		get_field( 'age_group', $post->ID, true );
+			$project_type = 	get_field( 'project_type', $post->ID, true );
 			$vote_count = 		get_post_meta( get_the_ID(), 'votes_count', true );
-			$video_url = 		get_post_meta( get_the_ID(), '6296f8b14de31', true );
+			$video_url = 		get_field( 'project_video_link', $post->ID, true );
 
 			?>
 			<div class="result-item">
