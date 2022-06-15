@@ -7,8 +7,8 @@
 	//error_log(print_r($show_cont_args, TRUE));
 
 	// Get all our custom fields, the hard way: by whatever hash the voting plugin decides to name each one
-	$first_name = 		get_field( 'first_name', $post->ID, true );
-	$last_name = 		get_field( 'last_name', $post->ID, true );
+	$first_name = 		get_field( 'user_first_name', $post->ID, true );
+	$last_name = 		get_field( 'user_last_name', $post->ID, true );
 	$age_range = 		get_field( 'age_group', $post->ID, true );
 	$address = 			get_field( 'user_address', $post->ID, true );
 	$city =				get_field( 'user_city', $post->ID, true );
@@ -23,7 +23,7 @@
 	$team_members = 	nl2br(get_field( 'team_members',  $post->ID, true ));
 	$social_media =		get_field( 'social_media', $post->ID, true );
 	$project_title = 	get_field( 'project_title', $post->ID, true );
-	$project_type = 	get_field( 'project_type', $post->ID, true );
+	$project_type = 	implode(', ', get_field( 'project_type', $post->ID, true ));
 	$short_desc = 		get_field( 'project_short_description', $post->ID, true );
 	$project_url = 		get_field( 'project_url', $post->ID, true );
 	$project_images =   get_field( 'project_photos', $post->ID, true );
@@ -54,7 +54,7 @@
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
-				<a href="/amazing-maker-awards-contestants/" class="btn contest-back-btn"><< Project Gallery</a>
+				<a href="/amazing-maker-awards/" class="btn contest-back-btn"><< Project Gallery</a>
                 <div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 
                 <?php

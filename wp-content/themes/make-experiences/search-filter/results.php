@@ -54,10 +54,10 @@ if ( $query->have_posts() ) {
 		while ($query->have_posts()) {
 			$query->the_post();
 
-			$first_name = 		get_field( 'first_name', $post->ID, true );
-			$last_name = 		get_field( 'last_name', $post->ID, true );
+			$first_name = 		get_field( 'user_first_name', $post->ID, true );
+			$last_name = 		get_field( 'user_last_name', $post->ID, true );
 			$age_range = 		get_field( 'age_group', $post->ID, true );
-			$project_type = 	get_field( 'project_type', $post->ID, true );
+			$project_type = 	implode(', ', get_field( 'project_type', $post->ID, true ));
 			$vote_count = 		get_post_meta( get_the_ID(), 'votes_count', true );
 			$video_url = 		get_field( 'project_video_link', $post->ID, true );
 
