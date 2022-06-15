@@ -7,45 +7,35 @@
 	//error_log(print_r($show_cont_args, TRUE));
 
 	// Get all our custom fields, the hard way: by whatever hash the voting plugin decides to name each one
-	$first_name = 		get_post_meta( $post->ID, '6296aa69eeefa', true );
-	$last_name = 		get_post_meta( $post->ID, '6296aa7bb7d7c', true );
-	$age_range = 		get_post_meta( $post->ID, '6296aaa89bf80', true );
-	$address = 			get_post_meta( $post->ID, '6296aaba1fe53', true );
-	$city =				get_post_meta( $post->ID, '6296aac841e1e', true );
-	$state = 			get_post_meta( $post->ID, '6296aad9298ab', true );
-	$country = 			get_post_meta( $post->ID, '6296aae608afb', true );
-	$profile_pic =		get_post_meta( $post->ID, '6296ab09c9118', true );
-	$affiliation = 		get_post_meta( $post->ID, '6296ab5342b12', true );
-	if( !empty(get_post_meta( $post->ID, '629a4f2c8e5a7', true )) ) {
-		$affiliation .= " - " . get_post_meta( $post->ID, '629a4f2c8e5a7', true );
+	$first_name = 		get_field( 'first_name', $post->ID, true );
+	$last_name = 		get_field( 'last_name', $post->ID, true );
+	$age_range = 		get_field( 'age_group', $post->ID, true );
+	$address = 			get_field( 'user_address', $post->ID, true );
+	$city =				get_field( 'user_city', $post->ID, true );
+	$state = 			get_field( 'user_state', $post->ID, true );
+	$country = 			get_field( 'user_country', $post->ID, true );
+	$profile_pic =		get_field( 'upload_profile_photo', $post->ID, true );
+	$affiliation = 		get_field( 'affiliation', $post->ID, true );
+	if( !empty(get_field( 'affiliation_text', $post->ID, true )) ) {
+		$affiliation .= " - " . get_field( 'affiliation_text', $post->ID, true );
 	}
-	$about_you = 		nl2br(get_post_meta( $post->ID, '6296abebd1db5', true ));
-	$team_members = 	nl2br(get_post_meta( $post->ID, '629a44ec6e801', true ));
-	$instagram = 		get_post_meta( $post->ID, '6296f3cb4740f', true );
-	$facebook = 		get_post_meta( $post->ID, '6296f3df02364', true );
-	$twitter = 			get_post_meta( $post->ID, '6296f3ecceb51', true );
-	$youtube = 			get_post_meta( $post->ID, '6296f409b9337', true );
-	$tiktok = 			get_post_meta( $post->ID, '6296f4333960e', true );
-	$project_title = 	get_post_meta( $post->ID, '6296f8124ee84', true );
-	$project_type = 	get_post_meta( $post->ID, '6296f8420e061', true );
-	$short_desc = 		get_post_meta( $post->ID, '6296f85ac2e55', true );
-	$project_url = 		get_post_meta( $post->ID, '6296f86d0e92e', true );
-	$proj_photo_1 = 	get_post_meta( $post->ID, '6296f8905a6b1', true );
-	$proj_photo_2 = 	get_post_meta( $post->ID, '6297e8aa5b779', true );
-	$proj_photo_3 = 	get_post_meta( $post->ID, '6297e8c2debe8', true );
-	$proj_photo_4 = 	get_post_meta( $post->ID, '6297e8dec3625', true );
-	$proj_photo_5 = 	get_post_meta( $post->ID, '6297e8f0ba77f', true );
-	$proj_photo_6 = 	get_post_meta( $post->ID, '6297e926b8bb0', true );
-	$proj_photo_7 = 	get_post_meta( $post->ID, '629a31864f497', true );
-	$proj_photo_8 = 	get_post_meta( $post->ID, '629a31b55f6e9', true );
-	$proj_photo_9 = 	get_post_meta( $post->ID, '629a31c874571', true );
-	$proj_photo_10 = 	get_post_meta( $post->ID, '629a31db752d0', true );
-	$project_images =   array($proj_photo_1, $proj_photo_2, $proj_photo_3, $proj_photo_4, $proj_photo_5, $proj_photo_6, $proj_photo_7, $proj_photo_8, $proj_photo_9, $proj_photo_10);
-	$project_video = 	get_post_meta( $post->ID, '6296f8b14de31', true );
-	$inspired_you =		nl2br(get_post_meta( $post->ID, '6296f8c369877', true ));
-	$about_project = 	nl2br(get_post_meta( $post->ID, '6296f8c43c019', true ));
-	$what_you_learned = nl2br(get_post_meta( $post->ID, '6296f8f23e3c6', true ));
-	$project_impact = 	nl2br(get_post_meta( $post->ID, '6296f9147b9fa', true ));
+	$about_you = 		nl2br(get_field( 'user_about',  $post->ID, true ));
+	$team_members = 	nl2br(get_field( 'team_members',  $post->ID, true ));
+	$instagram = 		get_field( 'instagram_url', $post->ID, true );
+	$facebook = 		get_field( 'facebook_url', $post->ID, true );
+	$twitter = 			get_field( 'twitter_url', $post->ID, true );
+	$youtube = 			get_field( 'youtube_url', $post->ID, true );
+	$tiktok = 			get_field( 'tiktok_url', $post->ID, true );
+	$project_title = 	get_field( 'project_title', $post->ID, true );
+	$project_type = 	get_field( 'project_type', $post->ID, true );
+	$short_desc = 		get_field( 'project_short_description', $post->ID, true );
+	$project_url = 		get_field( 'project_url', $post->ID, true );
+	$project_images =   get_field( 'project_photos', $post->ID, true );
+	$project_video = 	get_field( 'project_video_link', $post->ID, true );
+	$inspired_you =		nl2br(get_field( 'inspiration', $post->ID, true ));
+	$about_project = 	nl2br(get_field( 'what_is_project_about', $post->ID, true ));
+	$what_you_learned = nl2br(get_field( 'what_did_you_learn', $post->ID, true ));
+	$project_impact = 	nl2br(get_field( 'project_impact', $post->ID, true ));
 
 	//$title = $show_cont_args
     $options = get_option(WPVC_VOTES_SETTINGS);
@@ -154,13 +144,13 @@
 							<?php } ?>
 						</div>
 					</div>
-					<?php if (!empty($proj_photo_1)) { ?>
+					<?php if ($project_images) { ?>
 			            <div class="wpvc-gallery" id="ps-gallery">
 							<div class="psgal_wrap">
 			                <?php
-			                	foreach($project_images as $val) {
-									if(!empty($val)) {
-										echo("<figure><span><img src='" . $val . "' data-original-src='" . $val . "' /></span></figure>");
+			                	foreach($project_images as $project_image) {
+									if(!empty($project_image['photo_url'])) {
+										echo("<figure><span><img src='" . $project_image['photo_url'] . "' data-original-src='" . $project_image['photo_url'] . "' /></span></figure>");
 									}
 								}
 			    			?>
