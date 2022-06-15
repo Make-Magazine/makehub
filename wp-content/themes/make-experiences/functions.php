@@ -279,6 +279,8 @@ add_filter('gettext', 'filter_gettext', 10, 4);
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
 
+// allow gutenberg full width images
+add_theme_support( 'align-wide' );
 
 // Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
