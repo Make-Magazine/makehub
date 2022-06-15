@@ -21,11 +21,7 @@
 	}
 	$about_you = 		nl2br(get_field( 'user_about',  $post->ID, true ));
 	$team_members = 	nl2br(get_field( 'team_members',  $post->ID, true ));
-	$instagram = 		get_field( 'instagram_url', $post->ID, true );
-	$facebook = 		get_field( 'facebook_url', $post->ID, true );
-	$twitter = 			get_field( 'twitter_url', $post->ID, true );
-	$youtube = 			get_field( 'youtube_url', $post->ID, true );
-	$tiktok = 			get_field( 'tiktok_url', $post->ID, true );
+	$social_media =		get_field( 'social_media', $post->ID, true );
 	$project_title = 	get_field( 'project_title', $post->ID, true );
 	$project_type = 	get_field( 'project_type', $post->ID, true );
 	$short_desc = 		get_field( 'project_short_description', $post->ID, true );
@@ -122,10 +118,29 @@
 							<?php if (!empty($team_members)) { ?>
 								<div class="wpvc-profile-team-members"><b>Team Members:</b><br /> <?php echo $team_members; ?></div>
 							<?php } ?>
-							<?php if(!empty($instagram) || !empty($facebook) || !empty($twitter) || !empty($youtube) || !empty($tiktok)) { ?>
+							<?php if(!empty($social_media)) { ?>
 								<h4>Social:</h4>
 								<div class="wpvc-profile-social">
-									<?php if(!empty($instagram)) { ?>
+									<?php
+									foreach($social_media as $social) {
+										if($social['platform'] = 'instagram') { ?>
+											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-instagram"></i></a>
+										<?php } ?>
+										<?php if($social['platform'] = 'facebook') { ?>
+											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-facebook"></i></a>
+										<?php } ?>
+										<?php if($social['platform'] = 'twitter') { ?>
+											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-twitter"></i></a>
+										<?php } ?>
+										<?php if($social['platform'] = 'youtube') { ?>
+											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-youtube"></i></a>
+										<?php } ?>
+										<?php if($social['platform'] = 'tiktok') { ?>
+											<a href="<?php echo $social['social_url'] ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
+										<?php } ?>
+									}
+									?>
+									<?php if(!empty($facebook)) { ?>
 										<a href="<?php echo $instagram; ?>" target="_blank"><i class="fab fa-instagram"></i></a>
 									<?php } ?>
 									<?php if(!empty($facebook)) { ?>
