@@ -90,9 +90,6 @@ if ( $query->have_posts() ) {
 
 			<hr />
 	<?php } ?>
-	<?php if($query->found_posts > 24) { ?>
-		<div class="text-center" style="margin:0 auto;"><button class="show-all-search-results">Show All</button></div>
-	<?php } ?>
 	</div>
 	<?php /* Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?><br /> */ ?>
 

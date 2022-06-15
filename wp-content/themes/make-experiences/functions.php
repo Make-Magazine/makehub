@@ -280,7 +280,10 @@ add_filter('gettext', 'filter_gettext', 10, 4);
 add_filter( 'auto_update_plugin', '__return_false' );
 
 // allow gutenberg full width images
-add_theme_support( 'align-wide' );
+function make_experiences_setup() {
+  add_theme_support( 'align-wide' );
+}
+add_action( 'after_setup_theme', 'make_experiences_setup' );
 
 // Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
