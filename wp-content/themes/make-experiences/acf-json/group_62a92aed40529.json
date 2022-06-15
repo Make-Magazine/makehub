@@ -254,11 +254,11 @@
                         "id": ""
                     },
                     "choices": {
-                        "tiktok": "tiktok",
-                        "youtube": "youtube",
-                        "twitter": "twitter",
-                        "facebook": "facebook",
-                        "instagram": "instagram"
+                        "TikTok": "TikTok",
+                        "YouTube": "YouTube",
+                        "Twitter": "Twitter",
+                        "Facebook": "Facebook",
+                        "Instagram": "Instagram"
                     },
                     "default_value": false,
                     "allow_null": 0,
@@ -685,5 +685,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1655316917
+    "modified": 1655324833
 }
