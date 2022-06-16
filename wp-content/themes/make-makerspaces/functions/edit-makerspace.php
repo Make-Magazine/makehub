@@ -11,7 +11,7 @@ add_filter( 'gravityview/template/text/no_entries', 'modify_gravityview_no_entri
  */
 function modify_gravityview_no_entries_text( $existing_text, $is_search = false, $context = null ) {
 	$return = $existing_text."<br /><a href='/register'>Add a new Makerspace</a>";
-		
+
 	return $return;
 }
 
@@ -21,7 +21,7 @@ add_filter('gform_custom_merge_tags', 'mf_custom_merge_tags', 10, 4);
 
 function mf_custom_merge_tags($merge_tags, $form_id, $fields, $element_id) {
    $merge_tags[] = array('label' => 'Entry Changed Fields', 'tag' => '{entry_changed_fields}');
-    
+
    return $merge_tags;
 }
 
@@ -29,7 +29,7 @@ function mf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $
   $entry_id = (isset($lead['id'])?$lead['id']:'');
 
   //Entry Changed Fields
-  if (strpos($text, '{entry_changed_fields}') !== false) {        
+  if (strpos($text, '{entry_changed_fields}') !== false) {
    $updates = array();
 
    foreach ($form['fields'] as $field) {
@@ -83,7 +83,7 @@ function mf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $
                . '    <td width="40%"><strong>Before</strong></td>'
                . '    <td width="40%"><strong>After</strong></td>'
                . ' </tr></thead>';
-      
+
       $message .= '<tbody>';
       //process updates
       foreach ($updates as $update) {
@@ -94,21 +94,21 @@ function mf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $
       }
       $message .= '</tbody>';
       $message .= '</table>';
-      
+
 
       $text = str_replace('{entry_changed_fields}', $message, $text);
    }
-   
+
      //end update entry changed fields
   }
   return $text;
-}  
+}
 
 //add new Notification event of - send confirmation letter and maker cancelled exhibit
 add_filter( 'gform_notification_events', 'add_event' );
 function add_event( $notification_events ) {
    $notification_events['maker_updated_exhibit'] = __( 'Maker Updated Entry', 'gravityforms' );
-   $notification_events['manual']                = __( 'Send Manually', 'gravityforms' );
+   //$notification_events['manual']                = __( 'Send Manually', 'gravityforms' );
    return $notification_events;
 }
 
@@ -119,20 +119,20 @@ function update_entry($form, $entry_id, $orig_entry=array()) {
    $current_user = wp_get_current_user();
    $message = 'Entry ' . $entry_id . ' updated by '. $current_user->user_email;
    //error_log($message);
-   
+
    //Create a note of the entry change.
 	$results = mf_add_note($entry_id, $message);
-   
+
    //get updated entry
    $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
-   
-   //check for updates     
+
+   //check for updates
    //Handle notifications for acceptance
    $notifications_to_send = GFCommon::get_notifications_to_send( 'maker_updated_exhibit', $form, $updatedEntry );
    foreach ( $notifications_to_send as $notification ) {
       if($notification['isActive']){
          $text = $notification['message'];
-         $notification['message'] = mf_entry_changed_fields($text,$entry_id, $orig_entry, $updatedEntry, $form);        
+         $notification['message'] = mf_entry_changed_fields($text,$entry_id, $orig_entry, $updatedEntry, $form);
          //error_log($notification['message'] );
          GFCommon::send_notification( $notification, $form, $updatedEntry );
       }
@@ -146,7 +146,7 @@ function add_theme_caps() {
 
     // This only works, because it accesses the class instance.
     // would allow the author to edit others' posts for current theme only
-    $role->add_cap( 'gravityforms_edit_entries' ); 
+    $role->add_cap( 'gravityforms_edit_entries' );
 }
 add_action( 'admin_init', 'add_theme_caps');
 
