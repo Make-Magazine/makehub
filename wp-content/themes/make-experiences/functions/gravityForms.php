@@ -1,5 +1,4 @@
 <?php
-
 //This filter declaration targets form 4 - field 9 - the last digit is the column in the list field
 add_filter('gform_column_input_4_9_1', 'set_month_select', 10, 6);
 add_filter('gform_column_input_4_9_2', 'set_day_select', 10, 6);
@@ -255,3 +254,28 @@ function facilitator_preview_post( $posts ) {
     return $posts;
 }
 add_filter( 'posts_results', 'facilitator_preview_post', 10, 2 );
+
+
+//allow us to have a drop down menu for social list fields
+add_filter( 'gform_column_input_8_39_1', 'set_column', 10, 5 );
+function set_column( $input_info, $field, $column, $value, $form_id ) {
+    return array( 'type' => 'select', 'choices' => 'Instagram,Facebook, Twitter, YouTube, TikTok' );
+}
+
+//add link to 'Add event' form entries in gf admin drop down
+function gf_add_entries_link( $wp_admin_bar ) {
+	$wp_admin_bar->add_node(
+			array(
+					'id'     => 'gform-form-entries',
+					'parent' => 'gform-forms',
+					'title'  => esc_html__( "'Add Event' Entries", 'gravityforms' ),
+					'href'   => admin_url('admin.php?page=gf_entries&id=1')
+			));
+	return $wp_admin_bar;
+}
+add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
+
+function spinner_url($image_src, $form) {
+    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+}
+add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
