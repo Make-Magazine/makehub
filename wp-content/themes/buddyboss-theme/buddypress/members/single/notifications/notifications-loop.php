@@ -31,9 +31,10 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 			</li>
 
 			<?php
-				while ( bp_the_notifications() ) : bp_the_notification();
-					$bp      = buddypress();
-					$user_id = $bp->notifications->query_loop->notification->secondary_item_id;
+			while ( bp_the_notifications() ) :
+				bp_the_notification();
+				$bp      = buddypress();
+				$user_id = $bp->notifications->query_loop->notification->secondary_item_id;
 				?>
 					<li class="bs-item-wrap">
 						<div class="bulk-select-check">
@@ -43,7 +44,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 							</span>
 						</div>
 						<div class="notification-avatar">
-							<?php buddyboss_notification_avatar() ?>
+						<?php bb_notification_avatar(); ?>
 						</div>
 
 						<div class="notification-content">
@@ -52,7 +53,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 						</div>
 
 						<div class="actions">
-							<?php bp_the_notification_action_links(); ?>
+						<?php bp_the_notification_action_links(); ?>
 						</div>
 					</li>
 				<?php endwhile; ?>
@@ -65,4 +66,5 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 
 	<?php bp_nouveau_user_feedback( 'member-notifications-none' ); ?>
 
-<?php endif;
+	<?php
+endif;

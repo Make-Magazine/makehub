@@ -712,6 +712,11 @@ body.buddyboss-theme {
         z-index: 9;
 		margin-left:-220px;
 		font-weight: 400;
+		.bb-toggle-panel {
+			.bb-icon-sidebar:before {
+				content: "\e859";
+			}
+		}
     }
 	#page.site {
 		margin-left: 0px;
@@ -746,6 +751,14 @@ body.buddyboss-theme {
 			margin-left: 0px;
 		}
 	}
+}
+// Buddypanel Nav
+body.buddypanel-open {
+    #buddypanel-menu {
+        .bb-menu-item {
+            span { white-space: break-spaces !important; }
+        }
+    }
 }
 
 @media screen and (max-width: 805px) {
@@ -993,21 +1006,6 @@ body.buddyboss-theme {
 body:not(.facilitator-user) {
     .menu-item-facilitator-portal {
         display: none;
-    }
-}
-
-// Buddypanel Nav
-body.buddypanel-open {
-    #buddypanel-menu {
-        .bb-menu-item {
-            span { white-space: break-spaces !important; }
-        }
-    }
-}
-#buddypanel-menu.side-panel-menu {
-    a {
-        display: flex;
-        align-items: start;
     }
 }
 

@@ -26,7 +26,7 @@ do_action( 'woocommerce_before_account_navigation' );
     <div class="wc-MyAccount-navigation-heading">
         <h5>
             <?php _e( 'My account', 'buddyboss-theme' ); ?>
-            <a href="#" class="push-my-account-nav"><i class="bb-icon-menu"></i></a>
+            <a href="#" class="push-my-account-nav"><i class="bb-icon-l bb-icon-bars"></i></a>
         </h5>
     </div>
 	<ul class="woocommerce-MyAccount-menu">

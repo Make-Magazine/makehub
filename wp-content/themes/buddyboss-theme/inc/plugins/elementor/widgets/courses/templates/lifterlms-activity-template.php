@@ -43,7 +43,7 @@ if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
             <?php } else { ?>
                 <a class="bb-la-activity-btn__link" href="<?php echo $base_url; ?>?current_page=1&search=&type=my-courses">
             <?php } ?>
-                <?php echo $settings['my_courses_button_text']; ?><i class="bb-icon-angle-right"></i>
+                <?php echo $settings['my_courses_button_text']; ?><i class="bb-icon-l bb-icon-angle-right"></i>
             </a>
         </div>
     <?php } ?>

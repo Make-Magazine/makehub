@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.9.3
 Requires PHP: 5.6.20
-Stable tag: 2.0.0
+Stable tag: 2.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,14 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 2.0.2 =
+* Zoom - Handled Group zoom tab layout issues
+* Notifications - Added icon support for notification avatar based on the notification type
+* Coding Standards - Code refactoring to update all icon images with new icon pack in the dashboard
+
+= 2.0.1 =
+* Zoom - Handled Recurring meeting deleted occurrence issue on edit
 
 = 2.0.0 =
 * BuddyBoss Theme - Provided Theme 2.0 style new options support

@@ -134,79 +134,82 @@ final class Menu_Icons_Picker {
 				'llms-nav-item-signout'
 			);
 
-			if( count( array_intersect( $llms_stack, $item->classes ) ) == count( $item->classes ) ){
+			if ( count( array_intersect( $llms_stack, $item->classes ) ) == count( $item->classes ) ) {
 				if ( 'llms-nav-item-view-courses' === $item->classes[0] ) {
 					$icon = 'bb-icon-graduation-cap';
 				} elseif ( 'llms-nav-item-dashboard' === $item->classes[0] ) {
-					$icon = 'bb-icon-list-doc';
+					$icon = 'bb-icon-file-checklist';
 				} elseif ( 'llms-nav-item-my-grades' === $item->classes[0] ) {
-					$icon = 'bb-icon-bar-chart';
+					$icon = 'bb-icon-chart-bar';
 				} elseif ( 'llms-nav-item-view-memberships' === $item->classes[0] ) {
-					$icon = 'bb-icon-membership';
+					$icon = 'bb-icon-membership-card';
 				} elseif ( 'llms-nav-item-view-achievements' === $item->classes[0] ) {
-					$icon = 'bb-icon-target';
+					$icon = 'bb-icon-bullseye';
 				} elseif ( 'llms-nav-item-view-certificates' === $item->classes[0] ) {
-					$icon = 'bb-icon-badge';
+					$icon = 'bb-icon-certificate';
 				} elseif ( 'llms-nav-item-notifications' === $item->classes[0] ) {
 					$icon = 'bb-icon-bell-plus';
 				} elseif ( 'llms-nav-item-edit-account' === $item->classes[0] ) {
-					$icon = 'bb-icon-edit-thin';
+					$icon = 'bb-icon-edit';
 				} elseif ( 'llms-nav-item-redeem-voucher' === $item->classes[0] ) {
 					$icon = 'bb-icon-rocket';
 				} elseif ( 'llms-nav-item-orders' === $item->classes[0] ) {
 					$icon = 'bb-icon-layers';
 				} elseif ( 'llms-nav-item-signin' === $item->classes[0] ) {
-					$icon = 'bb-icon-power-small';
+					$icon = 'bb-icon-power-on';
 				} elseif ( 'llms-nav-item-signout' === $item->classes[0] ) {
-					$icon = 'bb-icon-power-small';
+					$icon = 'bb-icon-power-on';
 				}
 			}
 
-		    if ( in_array( 'bp-menu', $item->classes ) ) {
-		        if ( 'bp-profile-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-user-alt';
-                } elseif ( 'bp-settings-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-settings';
-		        } elseif ( 'bp-activity-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-activity';
-                } elseif ( 'bp-notifications-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-bell-small';
-		        } elseif ( 'bp-messages-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-inbox-small';
-		        } elseif ( 'bp-friends-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-users';
-		        } elseif ( 'bp-groups-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-groups';
-		        } elseif ( 'bp-forums-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-discussion';
-		        } elseif ( 'bp-videos-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-video';
-		        } elseif ( 'bp-documents-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-folder-stacked';
-		        } elseif ( 'bp-photos-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-image-square';
-		        } elseif ( 'bp-invites-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-mail';
-		        } elseif ( 'bp-logout-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-log-out';
-		        } elseif ( 'bp-login-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-log-in';
-		        } elseif ( 'bp-register-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-clipboard';
-		        } elseif ( 'bp-courses-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-graduation-cap';
-		        }
+			if ( in_array( 'bp-menu', $item->classes, true ) ) {
+				if ( 'bp-profile-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-user';
+				} elseif ( 'bp-settings-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-cog';
+				} elseif ( 'bp-activity-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-activity';
+				} elseif ( 'bp-notifications-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-bell';
+				} elseif ( 'bp-messages-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-inbox';
+				} elseif ( 'bp-friends-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-user-friends';
+				} elseif ( 'bp-groups-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-users';
+				} elseif ( 'bp-forums-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-comments-square';
+				} elseif ( 'bp-videos-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-video';
+				} elseif ( 'bp-documents-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-folder-alt';
+				} elseif ( 'bp-photos-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-image';
+				} elseif ( 'bp-invites-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-envelope';
+				} elseif ( 'bp-logout-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-sign-out';
+				} elseif ( 'bp-login-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-sign-in';
+				} elseif ( 'bp-register-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-clipboard';
+				} elseif ( 'bp-courses-nav' === $item->classes[1] ) {
+					$icon = 'bb-icon-graduation-cap';
+				}
 			}
-			$new                    = true;
-			$meta['type']           = 'buddyboss';
-			$meta['icon']           = $icon;
-			$meta['url']            = '';
-			$meta['hide_label']     = '';
-			$meta["position"]       = 'before';
-			$meta["vertical_align"] = 'middle';
-			$meta["font_size"]      = '20';
-			$meta["svg_width"]      = '1';
-			$meta["image_size"]     = 'thumbnail';
+			$new                      = ! empty( $icon );
+			$meta['type']             = 'buddyboss';
+			$meta['icon']             = $icon;
+			$meta['url']              = '';
+			$meta['icon_style']       = 'lined';
+			$meta['box_style']        = 'none';
+			$meta['hide_label']       = '';
+			$meta['position']         = 'before';
+			$meta['vertical_align']   = 'middle';
+			$meta['font_size']        = 'default';
+			$meta['font_size_amount'] = '24';
+			$meta['svg_width']        = '1';
+			$meta['image_size']       = 'thumbnail';
 
         }
 		$fields        = self::_get_menu_item_fields( $meta );
@@ -303,6 +306,10 @@ final class Menu_Icons_Picker {
 			return;
 		}
 
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/screen.php';
+		}
+
 		$screen = get_current_screen();
 		if ( ! $screen instanceof WP_Screen || 'nav-menus' !== $screen->id ) {
 			return;
@@ -318,6 +325,11 @@ final class Menu_Icons_Picker {
 			);
 		} else {
 			$value = array();
+		}
+
+		// change "font size amount" to default value 24 if "font size" default selected.
+		if ( isset( $value['font_size'] ) && 'default' === $value['font_size'] ) {
+			unset( $value['font_size_amount'] );
 		}
 
 		Menu_Icons_Meta::update( $menu_item_db_id, $value );
@@ -388,9 +400,13 @@ final class Menu_Icons_Picker {
 			'vertical_align',
 		);
 
+		if ( 'buddyboss' === $id ) {
+			$settings_fields = array_merge( array( 'icon_style', 'box_style' ), $settings_fields );
+		}
 
 		if ( 'Font' === $props['controller'] ) {
 			$settings_fields[] = 'font_size';
+			$settings_fields[] = 'font_size_amount';
 		}
 
 		switch ( $id ) {
@@ -438,4 +454,5 @@ final class Menu_Icons_Picker {
 			return $settings_fields;
 		}
 	}
+
 }

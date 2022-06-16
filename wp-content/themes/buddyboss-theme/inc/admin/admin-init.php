@@ -140,7 +140,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
  * Override customizer value fixed here.
  */
 if ( file_exists( dirname( __FILE__ ) . '/customizer-helper/bb-customizer-helper-init.php' ) ) {
-	require_once( dirname( __FILE__ ) . '/customizer-helper/bb-customizer-helper-init.php' );
+	require_once dirname( __FILE__ ) . '/customizer-helper/bb-customizer-helper-init.php';
 }
 
 /**
@@ -153,8 +153,8 @@ if ( file_exists( dirname( __FILE__ ) . '/buddyboss-extensions/extensions-init.p
 /**
  * Load redux
  */
-if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/framework/redux-core/framework.php' ) ) {
-	require_once( dirname( __FILE__ ) . '/framework/redux-core/framework.php' );
+if ( ! class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/framework/redux-core/framework.php' ) ) {
+	require_once dirname( __FILE__ ) . '/framework/redux-core/framework.php';
 }
 
 /**
@@ -206,7 +206,7 @@ if ( ! function_exists( 'boss_remove_DemoModeLink' ) ) {
 		if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
 			remove_action( 'admin_notices', array( ReduxFrameworkPlugin::get_instance(), 'admin_notices' ) );
 		}
-		
+
 		// Remove redux banner content - Like register, activation content.
 		if ( class_exists( 'Redux_Connection_Banner' ) ) {
 			remove_action( 'current_screen', array( Redux_Connection_Banner::init(), 'maybe_initialize_hooks' ) );
@@ -242,16 +242,20 @@ if ( ! function_exists( 'boss_custom_panel_styles_scripts' ) ) {
 		wp_register_script( 'redux-custom-script', get_template_directory_uri() . '/inc/admin/assets/js/boss-custom-admin.js' );
 		wp_enqueue_script( 'redux-custom-script' );
 
-		wp_localize_script( 'redux-custom-script', 'BOSS_CUSTOM_ADMIN', array(
-		        'elementor_pro_active' => ! empty( buddyboss_theme()->elementor_pro_helper() ) ? '1' : '0'
-        ) );
-		
+		wp_localize_script(
+			'redux-custom-script',
+			'BOSS_CUSTOM_ADMIN',
+			array(
+				'elementor_pro_active' => ! empty( buddyboss_theme()->elementor_pro_helper() ) ? '1' : '0',
+			)
+		);
+
 		// Modified css because its not displaying like same as before update redux framework.
 		wp_deregister_style( 'redux-admin-theme-css' );
 		wp_deregister_style( 'redux-admin-css' );
 		wp_enqueue_style(
 			'redux-admin-css',
-			Redux_Core::$url . "assets/css/redux-admin" . Redux_Functions::is_min() . ".css",
+			Redux_Core::$url . 'assets/css/redux-admin' . Redux_Functions::is_min() . '.css',
 			array(),
 			time()
 		);
@@ -376,174 +380,6 @@ if ( ! function_exists( 'buddyboss_theme_compressed_transient_delete' ) ) {
 		delete_transient( 'buddyboss_theme_compressed_lifterLMS_custom_css' );
 		delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
 	}
-}
-
-if ( ! function_exists( 'buddyboss_theme_reset_profile_cover_position' ) ) {
-
-	/**
-	 * Reset Cover image for Member Profiles when changes backend setting(width and height).
-	 *
-	 * @since 1.5.8
-	 *
-	 * @param array $options        Array of theme options with ols value.
-	 * @param array $changed_values Array of theme options with updated value.
-	 */
-	function buddyboss_theme_reset_profile_cover_position( $options, $changed_values ) {
-		if ( ! empty( $changed_values ) ) {
-			if (
-				(
-					array_key_exists( 'buddyboss_profile_cover_width', $options )
-					&& array_key_exists( 'buddyboss_profile_cover_width', $changed_values )
-					&& $options['buddyboss_profile_cover_width'] !== $changed_values['buddyboss_profile_cover_width']
-				)
-				|| (
-					array_key_exists( 'buddyboss_profile_cover_height', $options )
-					&& array_key_exists( 'buddyboss_profile_cover_height', $changed_values )
-					&& $options['buddyboss_profile_cover_height'] !== $changed_values['buddyboss_profile_cover_height']
-				)
-			) {
-				$all_users = get_users(
-					array(
-						'fields'   => 'ids',
-						'meta_key' => 'bp_cover_position',
-					)
-				);
-
-				if ( ! empty( $all_users ) ) {
-					foreach ( $all_users as $id ) {
-						delete_user_meta( $id, 'bp_cover_position' );
-					}
-				}
-			}
-
-			if (
-				function_exists( 'bp_attachments_get_attachment' )
-				&& array_key_exists( 'buddyboss_profile_cover_default', $options )
-				&& array_key_exists( 'buddyboss_profile_cover_default', $changed_values )
-				&& isset( $options['buddyboss_profile_cover_default']['url'] )
-				&& isset( $changed_values['buddyboss_profile_cover_default']['url'] )
-				&& $options['buddyboss_profile_cover_default'] !== $changed_values['buddyboss_profile_cover_default']
-				&& function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.8.6', '<' )
-			) {
-				$all_users = get_users(
-					array(
-						'fields'   => 'ids',
-						'meta_key' => 'bp_cover_position',
-					)
-				);
-
-				if ( ! empty( $all_users ) ) {
-					foreach ( $all_users as $id ) {
-						if ( empty(
-							bp_attachments_get_attachment(
-								'url',
-								array(
-									'object_dir' => 'members',
-									'item_id'    => $id,
-								)
-							)
-						) ) {
-							delete_user_meta( $id, 'bp_cover_position' );
-						}
-					}
-				}
-			}
-		}
-	}
-
-	add_action( 'redux/options/buddyboss_theme_options/saved', 'buddyboss_theme_reset_profile_cover_position', 10, 2 );
-}
-
-if ( ! function_exists( 'buddyboss_theme_reset_bb_group_cover_position' ) ) {
-
-	/**
-	 * Reset Cover image for Social Groups when changes backend setting(width and height).
-	 *
-	 * @since 1.5.8
-	 *
-	 * @param array $options        Array of theme options with ols value.
-	 * @param array $changed_values Array of theme options with updated value.
-	 */
-	function buddyboss_theme_reset_bb_group_cover_position( $options, $changed_values ) {
-		if ( ! empty( $changed_values ) && function_exists( 'groups_get_groups' ) ) {
-			if (
-				(
-					array_key_exists( 'buddyboss_group_cover_width', $options )
-					&& array_key_exists( 'buddyboss_group_cover_width', $changed_values )
-					&& $options['buddyboss_group_cover_width'] !== $changed_values['buddyboss_group_cover_width']
-				)
-				|| (
-					array_key_exists( 'buddyboss_group_cover_height', $options )
-					&& array_key_exists( 'buddyboss_group_cover_height', $changed_values )
-					&& $options['buddyboss_group_cover_height'] !== $changed_values['buddyboss_group_cover_height']
-				)
-			) {
-				$all_groups = groups_get_groups(
-					array(
-						'fields'      => 'ids',
-						'per_page'    => 999999,
-						'orderby'     => 'last_activity',
-						'meta_query'  => array(
-							array(
-								'key'     => 'bp_cover_position',
-								'compare' => 'EXISTS',
-							),
-						),
-						'show_hidden' => true,
-					)
-				);
-
-				if ( ! empty( $all_groups ) && ! empty( $all_groups['groups'] ) ) {
-					foreach ( $all_groups['groups'] as $group_id ) {
-						groups_delete_groupmeta( $group_id, 'bp_cover_position' );
-					}
-				}
-			}
-
-			if (
-				function_exists( 'bp_attachments_get_attachment' )
-				&& array_key_exists( 'buddyboss_group_cover_default', $options )
-				&& array_key_exists( 'buddyboss_group_cover_default', $changed_values )
-				&& isset( $options['buddyboss_group_cover_default']['url'] )
-				&& isset( $changed_values['buddyboss_group_cover_default']['url'] )
-				&& $options['buddyboss_group_cover_default'] !== $changed_values['buddyboss_group_cover_default']
-				&& function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.8.6', '<' )
-			) {
-				$all_groups = groups_get_groups(
-					array(
-						'fields'      => 'ids',
-						'per_page'    => 999999,
-						'orderby'     => 'last_activity',
-						'meta_query'  => array(
-							array(
-								'key'     => 'bp_cover_position',
-								'compare' => 'EXISTS',
-							),
-						),
-						'show_hidden' => true,
-					)
-				);
-
-				if ( ! empty( $all_groups ) && ! empty( $all_groups['groups'] ) ) {
-					foreach ( $all_groups['groups'] as $group_id ) {
-						if ( empty(
-							bp_attachments_get_attachment(
-								'url',
-								array(
-									'object_dir' => 'groups',
-									'item_id'    => $group_id,
-								)
-							)
-						) ) {
-							groups_delete_groupmeta( $group_id, 'bp_cover_position' );
-						}
-					}
-				}
-			}
-		}
-	}
-
-	add_action( 'redux/options/buddyboss_theme_options/saved', 'buddyboss_theme_reset_bb_group_cover_position', 10, 2 );
 }
 
 /**

@@ -602,7 +602,7 @@ FLBuilder::register_module(
 							'show_reset'  => true,
 							'preview'     => array(
 								'type'      => 'css',
-								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.singup.button',
+								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.signup.button',
 								'property'  => 'color',
 								'important' => true,
 							),
@@ -614,7 +614,7 @@ FLBuilder::register_module(
 							'show_reset'  => true,
 							'preview'     => array(
 								'type'      => 'css',
-								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.singup.button:hover',
+								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.signup.button:hover',
 								'property'  => 'color',
 								'important' => true,
 							),
@@ -626,7 +626,7 @@ FLBuilder::register_module(
 							'show_reset'  => true,
 							'preview'     => array(
 								'type'      => 'css',
-								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.singup.button',
+								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.signup.button',
 								'property'  => 'background-color',
 								'important' => true,
 							),
@@ -638,7 +638,7 @@ FLBuilder::register_module(
 							'show_reset'  => true,
 							'preview'     => array(
 								'type'      => 'css',
-								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.singup.button:hover',
+								'selector'  => '.site-header--beaver-builder .bb-header-buttons a.signup.button:hover',
 								'property'  => 'background-color',
 								'important' => true,
 							),
@@ -656,7 +656,7 @@ FLBuilder::register_module(
 							),
 							'preview'  => array(
 								'type'     => 'css',
-								'selector' => '.site-header--beaver-builder .bb-header-buttons a.singup.button',
+								'selector' => '.site-header--beaver-builder .bb-header-buttons a.signup.button',
 								'property' => 'border-radius',
 							),
 						),

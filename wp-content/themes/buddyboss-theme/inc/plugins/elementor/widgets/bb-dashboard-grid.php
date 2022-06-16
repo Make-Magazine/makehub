@@ -798,7 +798,7 @@ class BBP_Dashboard_Grid extends Widget_Base {
 										</div>
 									<?php endif; ?>
 									<?php if ( $settings['switch_ico'] ) : ?>
-										<span class="bb-dash-grid__ico"><i class="bb-icon-angle-right"></i></span>
+										<span class="bb-dash-grid__ico"><i class="bb-icon-l bb-icon-angle-right"></i></span>
 									<?php endif; ?>
 								</div>
 

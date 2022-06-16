@@ -12,7 +12,7 @@
 									$quiz_lesson_id = $quiz->get( 'lesson_id' );
 									$post_object    = get_post( $quiz_lesson_id );
 									$lesson         = new LLMS_Lesson( $post_object );
-									$course_id      = $lesson->get_parent_course();
+									$course_id      = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 									$lesson_title   = get_the_title();
 									?>
 									<span>
@@ -85,11 +85,11 @@
 								$next_id = $lesson->get_next_lesson();
 
 								if ( ! $prev_id ) {
-									$prev_id = $lesson->get_parent_course();
+									$prev_id = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 								}
 
 								if ( ! $next_id ) {
-									$next_id = $lesson->get_parent_course();
+									$next_id = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 								}
 								?>
 

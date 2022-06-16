@@ -11,7 +11,7 @@
 }
 .bb-tribe-events-views-v2 .tribe-common--breakpoint-medium.tribe-events .tribe-events-c-events-bar--border {
   border-radius: 4px;
-  border: 1px solid #E7E9EC;
+  border: 1px solid var(--bb-content-border-color);
 }
 .bb-tribe-events-views-v2 .tribe-common--breakpoint-medium.tribe-events .tribe-events-calendar-month {
   background: #fff;

@@ -520,7 +520,7 @@ class BBP_Forums extends Widget_Base {
 					<?php if ($settings['switch_more']) : ?>
 						<div class="bb-block-header__extra push-right">
 						<?php if( '' != $settings['forum_link_text'] ) { ?>
-							<a href="<?php echo home_url(bbp_get_root_slug()); ?>" class="count-more"><?php echo esc_html( $settings['forum_link_text'] ); ?><i class="bb-icon-chevron-right"></i></a>
+							<a href="<?php echo home_url(bbp_get_root_slug()); ?>" class="count-more"><?php echo esc_html( $settings['forum_link_text'] ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a>
 						<?php } ?>
 						</div>
 					<?php endif; ?>
@@ -571,16 +571,9 @@ class BBP_Forums extends Widget_Base {
 																<span class="bs-voices"><?php bbp_topic_voice_count(); ?> <?php echo $voice_text; ?></span>
 																<span class="bs-separator">&middot;</span>
 																<span class="bs-replies"><?php 
-																	if( bbp_show_lead_topic() ) {
 																		bbp_topic_reply_count();
-																		$topic_reply_text = $topic_reply_count > 1 ? __(' Replies', 'buddyboss-theme') : __(' Reply', 'buddyboss-theme');
-																	} else {
-																		bbp_topic_post_count();
-																		$topic_reply_text = $topic_post_count > 1 ? __(' Replies', 'buddyboss-theme') : __(' Reply', 'buddyboss-theme');
-																	}
-
-																	echo $topic_reply_text;
-
+																		$topic_reply_text = 1 !== (int) $topic_reply_count ? esc_html__( ' Replies', 'buddyboss-theme' ) : esc_html__( ' Reply', 'buddyboss-theme' );
+																		echo esc_html( $topic_reply_text );
 																	?>
 																</span>
 															<?php endif; ?>

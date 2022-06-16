@@ -196,7 +196,7 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 							if ( false === $is_enrolled ) {
 								echo '<span class="ld-status ld-status-incomplete ld-third-background ld-text">' . __( 'This course is currently closed', 'buddyboss-theme' ) . '</span>';
 								if ( ! empty( $course_price ) ) {
-									echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( $course_pricing['price'] ) . '</span>';
+									echo '<span class="bb-course-type bb-course-type-paynow"><span class="ld-currency">' . wp_kses_post( function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol() ) . '</span> ' . wp_kses_post( $course_pricing['price'] ) . '</span>';
 								}
 							} else { ?>
                                 <div class="learndash_join_button <?php echo $btn_advance_class; ?>">
@@ -212,7 +212,7 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
                             </div>
 							<?php
 							if ( ! empty( $course_price ) ) {
-								echo '<span class="bb-course-type bb-course-type-paynow">' . wp_kses_post( $course_pricing['price'] ) . '</span>';
+								echo '<span class="bb-course-type bb-course-type-paynow"><span class="ld-currency">' . wp_kses_post( function_exists( 'learndash_get_currency_symbol' ) ? learndash_get_currency_symbol() : learndash_30_get_currency_symbol() ) . '</span> ' . wp_kses_post( $course_pricing['price'] ) . '</span>';
 							}
 						endif;
 					} elseif ( $course_price_type == 'paynow' || $course_price_type == 'subscribe' ) {
@@ -255,7 +255,10 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 							if ( $course_price_type == 'paynow' ) {
 								?><span class="bb-course-type bb-course-type-paynow">
 								<?php
-								echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
+								echo wp_kses_post(
+									'<span class="ld-currency">' . function_exists( 'learndash_get_currency_symbol' ) ?
+										learndash_get_currency_symbol() : learndash_30_get_currency_symbol() . '</span> '
+								);
 								echo wp_kses_post( $course_pricing['price'] ); ?></span>
 								<?php
 							} else {
@@ -278,7 +281,8 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
                                     <span class="bb-course-type bb-course-type-subscribe"><?php _e( 'Free', 'buddyboss-theme' ); ?></span>
 									<?php
 								} else {
-									echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
+									echo wp_kses_post( '<span class="ld-currency">' . function_exists( 'learndash_get_currency_symbol' ) ?
+										learndash_get_currency_symbol() : learndash_30_get_currency_symbol() . '</span> ' );
 									echo wp_kses_post( $course_pricing['price'] );
 								}
 
@@ -334,22 +338,22 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
                     <ul class="bb-course-volume-list">
 						<?php if ( sizeof( $lesson_count ) > 0 ) { ?>
                             <li>
-                                <i class="bb-icons bb-icon-book"></i><?php echo sizeof( $lesson_count ); ?> <?php echo sizeof( $lesson_count ) > 1 ? LearnDash_Custom_Label::get_label( 'lessons' ) : LearnDash_Custom_Label::get_label( 'lesson' ); ?>
+                                <i class="bb-icon-l bb-icon-book"></i><?php echo sizeof( $lesson_count ); ?> <?php echo sizeof( $lesson_count ) > 1 ? LearnDash_Custom_Label::get_label( 'lessons' ) : LearnDash_Custom_Label::get_label( 'lesson' ); ?>
                             </li>
 						<?php } ?>
 						<?php if ( $topics_count > 0 ) { ?>
                             <li>
-                                <i class="bb-icons bb-icon-text"></i><?php echo $topics_count; ?> <?php echo $topics_count != 1 ? LearnDash_Custom_Label::get_label( 'topics' ) : LearnDash_Custom_Label::get_label( 'topic' ); ?>
+                                <i class="bb-icon-l bb-icon-text"></i><?php echo $topics_count; ?> <?php echo $topics_count != 1 ? LearnDash_Custom_Label::get_label( 'topics' ) : LearnDash_Custom_Label::get_label( 'topic' ); ?>
                             </li>
 						<?php } ?>
 						<?php if ( $course_quizzes_count > 0 ) { ?>
                             <li>
-                                <i class="bb-icons bb-icon-question-thin"></i><?php echo $course_quizzes_count; ?> <?php echo $course_quizzes_count != 1 ? LearnDash_Custom_Label::get_label( 'quizzes' ) : LearnDash_Custom_Label::get_label( 'quiz' ); ?>
+                                <i class="bb-icon-rl bb-icon-question"></i><?php echo $course_quizzes_count; ?> <?php echo $course_quizzes_count != 1 ? LearnDash_Custom_Label::get_label( 'quizzes' ) : LearnDash_Custom_Label::get_label( 'quiz' ); ?>
                             </li>
 						<?php } ?>
 						<?php if ( $course_certificate ) { ?>
                             <li>
-                                <i class="bb-icons bb-icon-badge"></i><?php echo LearnDash_Custom_Label::get_label( 'course' ); ?> <?php _e( 'Certificate',
+                                <i class="bb-icon-l bb-icon-certificate"></i><?php echo LearnDash_Custom_Label::get_label( 'course' ); ?> <?php _e( 'Certificate',
 									'buddyboss-theme' ); ?></li>
 						<?php } ?>
                     </ul>

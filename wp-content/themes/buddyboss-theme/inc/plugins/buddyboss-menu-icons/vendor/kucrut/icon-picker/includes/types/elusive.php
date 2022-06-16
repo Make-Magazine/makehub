@@ -8,7 +8,7 @@
 class Icon_Picker_Type_Elusive extends Icon_Picker_Type_Font {
 
 	/**
-	 * Icon type ID
+	 * Icon type ID.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -17,16 +17,7 @@ class Icon_Picker_Type_Elusive extends Icon_Picker_Type_Font {
 	protected $id = 'elusive';
 
 	/**
-	 * Icon type name
-	 *
-	 * @since Menu Icons 0.1.0
-	 * @access protected
-	 * @var    string
-	 */
-	protected $name = 'Elusive';
-
-	/**
-	 * Icon type version
+	 * Icon type version.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -34,45 +25,59 @@ class Icon_Picker_Type_Elusive extends Icon_Picker_Type_Font {
 	 */
 	protected $version = '2.0';
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $args Misc. arguments.
+	 */
+	public function __construct( $args = array() ) {
+		$this->name = esc_html__( 'Elusive', 'buddyboss-theme' );
+
+		parent::__construct( $args );
+	}
 
 	/**
-	 * Get icon groups
+	 * Get icon groups.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return array
 	 */
 	public function get_groups() {
 		$groups = array(
 			array(
 				'id'   => 'actions',
-				'name' => __( 'Actions', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Actions', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'currency',
-				'name' => __( 'Currency', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Currency', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'media',
-				'name' => __( 'Media', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Media', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'misc',
-				'name' => __( 'Misc.', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Misc.', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'places',
-				'name' => __( 'Places', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Places', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'social',
-				'name' => __( 'Social', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Social', 'buddyboss-theme' ),
 			),
 		);
 
 		/**
-		 * Filter genericon groups
+		 * Filter genericon groups.
 		 *
 		 * @since 0.1.0
+		 *
 		 * @param array $groups Icon groups.
 		 */
 		$groups = apply_filters( 'icon_picker_genericon_groups', $groups );
@@ -82,1467 +87,1468 @@ class Icon_Picker_Type_Elusive extends Icon_Picker_Type_Font {
 
 
 	/**
-	 * Get icon names
+	 * Get icon names.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return array
 	 */
 	public function get_items() {
 		$items = array(
 			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-adjust',
-				'name'  => __( 'Adjust', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-adjust-alt',
-				'name'  => __( 'Adjust', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-align-left',
-				'name'  => __( 'Align Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-align-center',
-				'name'  => __( 'Align Center', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-align-right',
-				'name'  => __( 'Align Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-align-justify',
-				'name'  => __( 'Justify', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-arrow-up',
-				'name'  => __( 'Arrow Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-arrow-down',
-				'name'  => __( 'Arrow Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-arrow-left',
-				'name'  => __( 'Arrow Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-arrow-right',
-				'name'  => __( 'Arrow Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-fast-backward',
-				'name'  => __( 'Fast Backward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-step-backward',
-				'name'  => __( 'Step Backward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-backward',
-				'name'  => __( 'Backward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-forward',
-				'name'  => __( 'Forward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-forward-alt',
-				'name'  => __( 'Forward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-step-forward',
-				'name'  => __( 'Step Forward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-fast-forward',
-				'name'  => __( 'Fast Forward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-bold',
-				'name'  => __( 'Bold', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-italic',
-				'name'  => __( 'Italic', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'c',
-				'id'    => 'el-icon-link',
-				'name'  => __( 'Link', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-caret-up',
-				'name'  => __( 'Caret Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-caret-down',
-				'name'  => __( 'Caret Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-caret-left',
-				'name'  => __( 'Caret Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-caret-right',
-				'name'  => __( 'Caret Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-check',
-				'name'  => __( 'Check', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-check-empty',
-				'name'  => __( 'Check Empty', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-chevron-up',
-				'name'  => __( 'Chevron Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-chevron-down',
-				'name'  => __( 'Chevron Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-chevron-left',
-				'name'  => __( 'Chevron Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-chevron-right',
-				'name'  => __( 'Chevron Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-circle-arrow-up',
-				'name'  => __( 'Circle Arrow Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-circle-arrow-down',
-				'name'  => __( 'Circle Arrow Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-circle-arrow-left',
-				'name'  => __( 'Circle Arrow Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-circle-arrow-right',
-				'name'  => __( 'Circle Arrow Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-download',
-				'name'  => __( 'Download', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-download-alt',
-				'name'  => __( 'Download', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-edit',
-				'name'  => __( 'Edit', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-eject',
-				'name'  => __( 'Eject', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-file-new',
-				'name'  => __( 'File New', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-file-new-alt',
-				'name'  => __( 'File New', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-file-edit',
-				'name'  => __( 'File Edit', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-file-edit-alt',
-				'name'  => __( 'File Edit', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-fork',
-				'name'  => __( 'Fork', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-fullscreen',
-				'name'  => __( 'Fullscreen', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-indent-left',
-				'name'  => __( 'Indent Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-indent-right',
-				'name'  => __( 'Indent Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-list',
-				'name'  => __( 'List', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-list-alt',
-				'name'  => __( 'List', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-lock',
-				'name'  => __( 'Lock', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-lock-alt',
-				'name'  => __( 'Lock', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-unlock',
-				'name'  => __( 'Unlock', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-unlock-alt',
-				'name'  => __( 'Unlock', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-map-marker',
-				'name'  => __( 'Map Marker', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-map-marker-alt',
-				'name'  => __( 'Map Marker', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-minus',
-				'name'  => __( 'Minus', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-minus-sign',
-				'name'  => __( 'Minus Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-move',
-				'name'  => __( 'Move', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-off',
-				'name'  => __( 'Off', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-ok',
-				'name'  => __( 'OK', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-ok-circle',
-				'name'  => __( 'OK Circle', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-ok-sign',
-				'name'  => __( 'OK Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-play',
-				'name'  => __( 'Play', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-play-alt',
-				'name'  => __( 'Play', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-pause',
-				'name'  => __( 'Pause', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-pause-alt',
-				'name'  => __( 'Pause', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-stop',
-				'name'  => __( 'Stop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-stop-alt',
-				'name'  => __( 'Stop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-plus',
-				'name'  => __( 'Plus', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-plus-sign',
-				'name'  => __( 'Plus Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-print',
-				'name'  => __( 'Print', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-question',
-				'name'  => __( 'Question', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-question-sign',
-				'name'  => __( 'Question Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-record',
-				'name'  => __( 'Record', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-refresh',
-				'name'  => __( 'Refresh', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-remove',
-				'name'  => __( 'Remove', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-repeat',
-				'name'  => __( 'Repeat', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-repeat-alt',
-				'name'  => __( 'Repeat', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-resize-vertical',
-				'name'  => __( 'Resize Vertical', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-resize-horizontal',
-				'name'  => __( 'Resize Horizontal', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-resize-full',
-				'name'  => __( 'Resize Full', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-resize-small',
-				'name'  => __( 'Resize Small', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-return-key',
-				'name'  => __( 'Return', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-retweet',
-				'name'  => __( 'Retweet', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-reverse-alt',
-				'name'  => __( 'Reverse', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-search',
-				'name'  => __( 'Search', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-search-alt',
-				'name'  => __( 'Search', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-share',
-				'name'  => __( 'Share', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-share-alt',
-				'name'  => __( 'Share', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-tag',
-				'name'  => __( 'Tag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-tasks',
-				'name'  => __( 'Tasks', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-text-height',
-				'name'  => __( 'Text Height', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-text-width',
-				'name'  => __( 'Text Width', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-thumbs-up',
-				'name'  => __( 'Thumbs Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-thumbs-down',
-				'name'  => __( 'Thumbs Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-tint',
-				'name'  => __( 'Tint', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-trash',
-				'name'  => __( 'Trash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-trash-alt',
-				'name'  => __( 'Trash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-upload',
-				'name'  => __( 'Upload', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-view-mode',
-				'name'  => __( 'View Mode', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-volume-up',
-				'name'  => __( 'Volume Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-volume-down',
-				'name'  => __( 'Volume Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-volume-off',
-				'name'  => __( 'Mute', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-warning-sign',
-				'name'  => __( 'Warning Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-zoom-in',
-				'name'  => __( 'Zoom In', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'el-icon-zoom-out',
-				'name'  => __( 'Zoom Out', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'currency',
-				'id'    => 'el-icon-eur',
-				'name'  => 'EUR',
-			),
-			array(
-				'group' => 'currency',
-				'id'    => 'el-icon-gbp',
-				'name'  => 'GBP',
-			),
-			array(
-				'group' => 'currency',
-				'id'    => 'el-icon-usd',
-				'name'  => 'USD',
-			),
-			array(
-				'group' => 'media',
-				'id'    => 'el-icon-video',
-				'name'  => __( 'Video', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media',
-				'id'    => 'el-icon-video-alt',
-				'name'  => __( 'Video', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'misc',
-				'id'    => 'el-icon-adult',
-				'name'  => __( 'Adult', 'buddyboss-theme' ),
+				'id'    => 'el-icon-asl',
+				'name'  => esc_html__( 'ASL', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'el-icon-address-book',
-				'name'  => __( 'Address Book', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Address Book', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'el-icon-address-book-alt',
-				'name'  => __( 'Address Book', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Address Book', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-adjust',
+				'name'  => esc_html__( 'Adjust', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-adjust-alt',
+				'name'  => esc_html__( 'Adjust', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
-				'id'    => 'el-icon-asl',
-				'name'  => __( 'ASL', 'buddyboss-theme' ),
+				'id'    => 'el-icon-adult',
+				'name'  => esc_html__( 'Adult', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-align-center',
+				'name'  => esc_html__( 'Align Center', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-align-left',
+				'name'  => esc_html__( 'Align Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-align-right',
+				'name'  => esc_html__( 'Align Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-arrow-down',
+				'name'  => esc_html__( 'Arrow Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-arrow-left',
+				'name'  => esc_html__( 'Arrow Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-arrow-right',
+				'name'  => esc_html__( 'Arrow Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-arrow-up',
+				'name'  => esc_html__( 'Arrow Up', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'el-icon-asterisk',
-				'name'  => __( 'Asterisk', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Asterisk', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-backward',
+				'name'  => esc_html__( 'Backward', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'el-icon-ban-circle',
-				'name'  => __( 'Ban Circle', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Ban Circle', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'el-icon-barcode',
-				'name'  => __( 'Barcode', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-bell',
-				'name'  => __( 'Bell', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-blind',
-				'name'  => __( 'Blind', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-book',
-				'name'  => __( 'Book', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-braille',
-				'name'  => __( 'Braille', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-briefcase',
-				'name'  => __( 'Briefcase', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-broom',
-				'name'  => __( 'Broom', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-brush',
-				'name'  => __( 'Brush', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-bulb',
-				'name'  => __( 'Bulb', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-bullhorn',
-				'name'  => __( 'Bullhorn', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-calendar',
-				'name'  => __( 'Calendar', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-calendar-sign',
-				'name'  => __( 'Calendar Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-camera',
-				'name'  => __( 'Camera', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-car',
-				'name'  => __( 'Car', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-cc',
-				'name'  => __( 'CC', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-certificate',
-				'name'  => __( 'Certificate', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-child',
-				'name'  => __( 'Child', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-cog',
-				'name'  => __( 'Cog', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-cog-alt',
-				'name'  => __( 'Cog', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-cogs',
-				'name'  => __( 'Cogs', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-comment',
-				'name'  => __( 'Comment', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-comment-alt',
-				'name'  => __( 'Comment', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-compass',
-				'name'  => __( 'Compass', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-compass-alt',
-				'name'  => __( 'Compass', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-credit-card',
-				'name'  => __( 'Credit Card', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-css',
-				'name'  => 'CSS',
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-envelope',
-				'name'  => __( 'Envelope', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-envelope-alt',
-				'name'  => __( 'Envelope', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-error',
-				'name'  => __( 'Error', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-error-alt',
-				'name'  => __( 'Error', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-exclamation-sign',
-				'name'  => __( 'Exclamation Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-eye-close',
-				'name'  => __( 'Eye Close', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-eye-open',
-				'name'  => __( 'Eye Open', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-male',
-				'name'  => __( 'Male', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-female',
-				'name'  => __( 'Female', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-file',
-				'name'  => __( 'File', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-file-alt',
-				'name'  => __( 'File', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-film',
-				'name'  => __( 'Film', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-filter',
-				'name'  => __( 'Filter', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-fire',
-				'name'  => __( 'Fire', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-flag',
-				'name'  => __( 'Flag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-flag-alt',
-				'name'  => __( 'Flag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-folder',
-				'name'  => __( 'Folder', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-folder-open',
-				'name'  => __( 'Folder Open', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-folder-close',
-				'name'  => __( 'Folder Close', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-folder-sign',
-				'name'  => __( 'Folder Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-font',
-				'name'  => __( 'Font', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-fontsize',
-				'name'  => __( 'Font Size', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-gift',
-				'name'  => __( 'Gift', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-glass',
-				'name'  => __( 'Glass', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-glasses',
-				'name'  => __( 'Glasses', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-globe',
-				'name'  => __( 'Globe', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-globe-alt',
-				'name'  => __( 'Globe', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-graph',
-				'name'  => __( 'Graph', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-graph-alt',
-				'name'  => __( 'Graph', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-group',
-				'name'  => __( 'Group', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-group-alt',
-				'name'  => __( 'Group', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-guidedog',
-				'name'  => __( 'Guide Dog', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hand-up',
-				'name'  => __( 'Hand Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hand-down',
-				'name'  => __( 'Hand Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hand-left',
-				'name'  => __( 'Hand Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hand-right',
-				'name'  => __( 'Hand Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hdd',
-				'name'  => __( 'HDD', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-headphones',
-				'name'  => __( 'Headphones', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hearing-impaired',
-				'name'  => __( 'Hearing Impaired', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-heart',
-				'name'  => __( 'Heart', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-heart-alt',
-				'name'  => __( 'Heart', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-heart-empty',
-				'name'  => __( 'Heart Empty', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-hourglass',
-				'name'  => __( 'Hourglass', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-idea',
-				'name'  => __( 'Idea', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-idea-alt',
-				'name'  => __( 'Idea', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-inbox',
-				'name'  => __( 'Inbox', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-inbox-alt',
-				'name'  => __( 'Inbox', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-inbox-box',
-				'name'  => __( 'Inbox', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-info-sign',
-				'name'  => __( 'Info', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-key',
-				'name'  => __( 'Key', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-laptop',
-				'name'  => __( 'Laptop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-laptop-alt',
-				'name'  => __( 'Laptop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-leaf',
-				'name'  => __( 'Leaf', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-lines',
-				'name'  => __( 'Lines', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-magic',
-				'name'  => __( 'Magic', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-magnet',
-				'name'  => __( 'Magnet', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-mic',
-				'name'  => __( 'Mic', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-music',
-				'name'  => __( 'Music', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-paper-clip',
-				'name'  => __( 'Paper Clip', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-paper-clip-alt',
-				'name'  => __( 'Paper Clip', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-pencil',
-				'name'  => __( 'Pencil', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-pencil-alt',
-				'name'  => __( 'Pencil', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-person',
-				'name'  => __( 'Person', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-phone',
-				'name'  => __( 'Phone', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-phone-alt',
-				'name'  => __( 'Phone', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-photo',
-				'name'  => __( 'Photo', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-photo-alt',
-				'name'  => __( 'Photo', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-picture',
-				'name'  => __( 'Picture', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-plane',
-				'name'  => __( 'Plane', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-podcast',
-				'name'  => __( 'Podcast', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-puzzle',
-				'name'  => __( 'Puzzle', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-qrcode',
-				'name'  => __( 'QR Code', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-quotes',
-				'name'  => __( 'Quotes', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-quotes-alt',
-				'name'  => __( 'Quotes', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-random',
-				'name'  => __( 'Random', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-scissors',
-				'name'  => __( 'Scissors', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-screen',
-				'name'  => __( 'Screen', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-screen-alt',
-				'name'  => __( 'Screen', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-screenshot',
-				'name'  => __( 'Screenshot', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-shopping-cart',
-				'name'  => __( 'Shopping Cart', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-shopping-cart-sign',
-				'name'  => __( 'Shopping Cart Sign', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-signal',
-				'name'  => __( 'Signal', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-smiley',
-				'name'  => __( 'Smiley', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-smiley-alt',
-				'name'  => __( 'Smiley', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-speaker',
-				'name'  => __( 'Speaker', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-user',
-				'name'  => __( 'User', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-th',
-				'name'  => __( 'Thumbnails', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-th-large',
-				'name'  => __( 'Thumbnails (Large)', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-th-list',
-				'name'  => __( 'Thumbnails (List)', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-time',
-				'name'  => __( 'Time', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-time-alt',
-				'name'  => __( 'Time', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-torso',
-				'name'  => __( 'Torso', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-wheelchair',
-				'name'  => __( 'Wheelchair', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-wrench',
-				'name'  => __( 'Wrench', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-wrench-alt',
-				'name'  => __( 'Wrench', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'el-icon-universal-access',
-				'name'  => __( 'Universal Access', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-bookmark',
-				'name'  => __( 'Bookmark', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-bookmark-empty',
-				'name'  => __( 'Bookmark Empty', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-dashboard',
-				'name'  => __( 'Dashboard', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-home',
-				'name'  => __( 'Home', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-home-alt',
-				'name'  => __( 'Home', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-iphone-home',
-				'name'  => __( 'Home (iPhone)', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-network',
-				'name'  => __( 'Network', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-tags',
-				'name'  => __( 'Tags', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-website',
-				'name'  => __( 'Website', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'el-icon-website-alt',
-				'name'  => __( 'Website', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Barcode', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-behance',
-				'name'  => 'Behance',
+				'name'  => esc_html__( 'Behance', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-bell',
+				'name'  => esc_html__( 'Bell', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-blind',
+				'name'  => esc_html__( 'Blind', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-blogger',
-				'name'  => 'Blogger',
+				'name'  => esc_html__( 'Blogger', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-bold',
+				'name'  => esc_html__( 'Bold', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-book',
+				'name'  => esc_html__( 'Book', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-bookmark',
+				'name'  => esc_html__( 'Bookmark', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-bookmark-empty',
+				'name'  => esc_html__( 'Bookmark Empty', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-braille',
+				'name'  => esc_html__( 'Braille', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-briefcase',
+				'name'  => esc_html__( 'Briefcase', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-broom',
+				'name'  => esc_html__( 'Broom', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-brush',
+				'name'  => esc_html__( 'Brush', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-bulb',
+				'name'  => esc_html__( 'Bulb', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-bullhorn',
+				'name'  => esc_html__( 'Bullhorn', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-cc',
+				'name'  => esc_html__( 'CC', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-css',
+				'name'  => esc_html__( 'CSS', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-calendar',
+				'name'  => esc_html__( 'Calendar', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-calendar-sign',
+				'name'  => esc_html__( 'Calendar Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-camera',
+				'name'  => esc_html__( 'Camera', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-car',
+				'name'  => esc_html__( 'Car', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-caret-down',
+				'name'  => esc_html__( 'Caret Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-caret-left',
+				'name'  => esc_html__( 'Caret Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-caret-right',
+				'name'  => esc_html__( 'Caret Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-caret-up',
+				'name'  => esc_html__( 'Caret Up', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-certificate',
+				'name'  => esc_html__( 'Certificate', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-check',
+				'name'  => esc_html__( 'Check', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-check-empty',
+				'name'  => esc_html__( 'Check Empty', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-chevron-down',
+				'name'  => esc_html__( 'Chevron Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-chevron-left',
+				'name'  => esc_html__( 'Chevron Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-chevron-right',
+				'name'  => esc_html__( 'Chevron Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-chevron-up',
+				'name'  => esc_html__( 'Chevron Up', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-child',
+				'name'  => esc_html__( 'Child', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-circle-arrow-down',
+				'name'  => esc_html__( 'Circle Arrow Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-circle-arrow-left',
+				'name'  => esc_html__( 'Circle Arrow Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-circle-arrow-right',
+				'name'  => esc_html__( 'Circle Arrow Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-circle-arrow-up',
+				'name'  => esc_html__( 'Circle Arrow Up', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-cloud',
-				'name'  => __( 'Cloud', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Cloud', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-cloud-alt',
-				'name'  => __( 'Cloud', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Cloud', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-cog',
+				'name'  => esc_html__( 'Cog', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-cog-alt',
+				'name'  => esc_html__( 'Cog', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-cogs',
+				'name'  => esc_html__( 'Cogs', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-comment',
+				'name'  => esc_html__( 'Comment', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-comment-alt',
+				'name'  => esc_html__( 'Comment', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-compass',
+				'name'  => esc_html__( 'Compass', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-compass-alt',
+				'name'  => esc_html__( 'Compass', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-credit-card',
+				'name'  => esc_html__( 'Credit Card', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-dashboard',
+				'name'  => esc_html__( 'Dashboard', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-delicious',
-				'name'  => 'Delicious',
+				'name'  => esc_html__( 'Delicious', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-deviantart',
-				'name'  => 'DeviantArt',
+				'name'  => esc_html__( 'DeviantArt', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-digg',
-				'name'  => 'Digg',
+				'name'  => esc_html__( 'Digg', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-download',
+				'name'  => esc_html__( 'Download', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-download-alt',
+				'name'  => esc_html__( 'Download', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-dribbble',
-				'name'  => 'Dribbble',
+				'name'  => esc_html__( 'Dribbble', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'currency',
+				'id'    => 'el-icon-eur',
+				'name'  => esc_html__( 'EUR', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-edit',
+				'name'  => esc_html__( 'Edit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-eject',
+				'name'  => esc_html__( 'Eject', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-envelope',
+				'name'  => esc_html__( 'Envelope', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-envelope-alt',
+				'name'  => esc_html__( 'Envelope', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-error',
+				'name'  => esc_html__( 'Error', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-error-alt',
+				'name'  => esc_html__( 'Error', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-exclamation-sign',
+				'name'  => esc_html__( 'Exclamation Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-eye-close',
+				'name'  => esc_html__( 'Eye Close', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-eye-open',
+				'name'  => esc_html__( 'Eye Open', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-facebook',
-				'name'  => 'Facebook',
+				'name'  => esc_html__( 'Facebook', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-facetime-video',
-				'name'  => 'Facetime Video',
+				'name'  => esc_html__( 'Facetime Video', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-fast-backward',
+				'name'  => esc_html__( 'Fast Backward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-fast-forward',
+				'name'  => esc_html__( 'Fast Forward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-female',
+				'name'  => esc_html__( 'Female', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-file',
+				'name'  => esc_html__( 'File', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-file-alt',
+				'name'  => esc_html__( 'File', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-file-edit',
+				'name'  => esc_html__( 'File Edit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-file-edit-alt',
+				'name'  => esc_html__( 'File Edit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-file-new',
+				'name'  => esc_html__( 'File New', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-file-new-alt',
+				'name'  => esc_html__( 'File New', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-film',
+				'name'  => esc_html__( 'Film', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-filter',
+				'name'  => esc_html__( 'Filter', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-fire',
+				'name'  => esc_html__( 'Fire', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-flag',
+				'name'  => esc_html__( 'Flag', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-flag-alt',
+				'name'  => esc_html__( 'Flag', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-flickr',
-				'name'  => 'Flickr',
+				'name'  => esc_html__( 'Flickr', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-folder',
+				'name'  => esc_html__( 'Folder', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-folder-close',
+				'name'  => esc_html__( 'Folder Close', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-folder-open',
+				'name'  => esc_html__( 'Folder Open', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-folder-sign',
+				'name'  => esc_html__( 'Folder Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-font',
+				'name'  => esc_html__( 'Font', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-fontsize',
+				'name'  => esc_html__( 'Font Size', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-fork',
+				'name'  => esc_html__( 'Fork', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-forward',
+				'name'  => esc_html__( 'Forward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-forward-alt',
+				'name'  => esc_html__( 'Forward', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-foursquare',
-				'name'  => 'Foursquare',
+				'name'  => esc_html__( 'Foursquare', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-friendfeed',
-				'name'  => 'FriendFeed',
+				'name'  => esc_html__( 'FriendFeed', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-friendfeed-rect',
-				'name'  => 'FriendFeed',
+				'name'  => esc_html__( 'FriendFeed', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-fullscreen',
+				'name'  => esc_html__( 'Fullscreen', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'currency',
+				'id'    => 'el-icon-gbp',
+				'name'  => esc_html__( 'GBP', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-gift',
+				'name'  => esc_html__( 'Gift', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-github',
-				'name'  => 'GitHub',
+				'name'  => esc_html__( 'GitHub', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-github-text',
-				'name'  => 'GitHub',
+				'name'  => esc_html__( 'GitHub', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-glass',
+				'name'  => esc_html__( 'Glass', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-glasses',
+				'name'  => esc_html__( 'Glasses', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-globe',
+				'name'  => esc_html__( 'Globe', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-globe-alt',
+				'name'  => esc_html__( 'Globe', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-googleplus',
-				'name'  => 'Google+',
+				'name'  => esc_html__( 'Google+', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-graph',
+				'name'  => esc_html__( 'Graph', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-graph-alt',
+				'name'  => esc_html__( 'Graph', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-group',
+				'name'  => esc_html__( 'Group', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-group-alt',
+				'name'  => esc_html__( 'Group', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-guidedog',
+				'name'  => esc_html__( 'Guide Dog', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hdd',
+				'name'  => esc_html__( 'HDD', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hand-down',
+				'name'  => esc_html__( 'Hand Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hand-left',
+				'name'  => esc_html__( 'Hand Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hand-right',
+				'name'  => esc_html__( 'Hand Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hand-up',
+				'name'  => esc_html__( 'Hand Up', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-headphones',
+				'name'  => esc_html__( 'Headphones', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hearing-impaired',
+				'name'  => esc_html__( 'Hearing Impaired', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-heart',
+				'name'  => esc_html__( 'Heart', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-heart-alt',
+				'name'  => esc_html__( 'Heart', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-heart-empty',
+				'name'  => esc_html__( 'Heart Empty', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-home',
+				'name'  => esc_html__( 'Home', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-home-alt',
+				'name'  => esc_html__( 'Home', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-iphone-home',
+				'name'  => esc_html__( 'Home (iPhone)', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-hourglass',
+				'name'  => esc_html__( 'Hourglass', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-idea',
+				'name'  => esc_html__( 'Idea', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-idea-alt',
+				'name'  => esc_html__( 'Idea', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-inbox',
+				'name'  => esc_html__( 'Inbox', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-inbox-alt',
+				'name'  => esc_html__( 'Inbox', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-inbox-box',
+				'name'  => esc_html__( 'Inbox', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-indent-left',
+				'name'  => esc_html__( 'Indent Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-indent-right',
+				'name'  => esc_html__( 'Indent Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-info-sign',
+				'name'  => esc_html__( 'Info', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-instagram',
-				'name'  => 'Instagram',
+				'name'  => esc_html__( 'Instagram', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-italic',
+				'name'  => esc_html__( 'Italic', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-align-justify',
+				'name'  => esc_html__( 'Justify', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-key',
+				'name'  => esc_html__( 'Key', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-laptop',
+				'name'  => esc_html__( 'Laptop', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-laptop-alt',
+				'name'  => esc_html__( 'Laptop', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-lastfm',
-				'name'  => 'Last.fm',
+				'name'  => esc_html__( 'Last.fm', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-leaf',
+				'name'  => esc_html__( 'Leaf', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-lines',
+				'name'  => esc_html__( 'Lines', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'c',
+				'id'    => 'el-icon-link',
+				'name'  => esc_html__( 'Link', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-linkedin',
-				'name'  => 'LinkedIn',
+				'name'  => esc_html__( 'LinkedIn', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-list',
+				'name'  => esc_html__( 'List', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-list-alt',
+				'name'  => esc_html__( 'List', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-livejournal',
-				'name'  => 'LiveJournal',
+				'name'  => esc_html__( 'LiveJournal', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-lock',
+				'name'  => esc_html__( 'Lock', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-lock-alt',
+				'name'  => esc_html__( 'Lock', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-magic',
+				'name'  => esc_html__( 'Magic', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-magnet',
+				'name'  => esc_html__( 'Magnet', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-male',
+				'name'  => esc_html__( 'Male', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-map-marker',
+				'name'  => esc_html__( 'Map Marker', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-map-marker-alt',
+				'name'  => esc_html__( 'Map Marker', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-mic',
+				'name'  => esc_html__( 'Mic', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-minus',
+				'name'  => esc_html__( 'Minus', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-minus-sign',
+				'name'  => esc_html__( 'Minus Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-move',
+				'name'  => esc_html__( 'Move', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-music',
+				'name'  => esc_html__( 'Music', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-volume-off',
+				'name'  => esc_html__( 'Mute', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-myspace',
-				'name'  => 'MySpace',
+				'name'  => esc_html__( 'MySpace', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-network',
+				'name'  => esc_html__( 'Network', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-ok',
+				'name'  => esc_html__( 'OK', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-ok-circle',
+				'name'  => esc_html__( 'OK Circle', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-ok-sign',
+				'name'  => esc_html__( 'OK Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-off',
+				'name'  => esc_html__( 'Off', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-opensource',
-				'name'  => __( 'Open Source', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Open Source', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-paper-clip',
+				'name'  => esc_html__( 'Paper Clip', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-paper-clip-alt',
+				'name'  => esc_html__( 'Paper Clip', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-path',
-				'name'  => 'path',
+				'name'  => esc_html__( 'Path', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-pause',
+				'name'  => esc_html__( 'Pause', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-pause-alt',
+				'name'  => esc_html__( 'Pause', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-pencil',
+				'name'  => esc_html__( 'Pencil', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-pencil-alt',
+				'name'  => esc_html__( 'Pencil', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-person',
+				'name'  => esc_html__( 'Person', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-phone',
+				'name'  => esc_html__( 'Phone', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-phone-alt',
+				'name'  => esc_html__( 'Phone', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-photo',
+				'name'  => esc_html__( 'Photo', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-photo-alt',
+				'name'  => esc_html__( 'Photo', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-picasa',
-				'name'  => 'Picasa',
+				'name'  => esc_html__( 'Picasa', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-picture',
+				'name'  => esc_html__( 'Picture', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-pinterest',
-				'name'  => 'Pinterest',
+				'name'  => esc_html__( 'Pinterest', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-plane',
+				'name'  => esc_html__( 'Plane', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-play',
+				'name'  => esc_html__( 'Play', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-play-alt',
+				'name'  => esc_html__( 'Play', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-plus',
+				'name'  => esc_html__( 'Plus', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-plus-sign',
+				'name'  => esc_html__( 'Plus Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-podcast',
+				'name'  => esc_html__( 'Podcast', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-print',
+				'name'  => esc_html__( 'Print', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-puzzle',
+				'name'  => esc_html__( 'Puzzle', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-qrcode',
+				'name'  => esc_html__( 'QR Code', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-question',
+				'name'  => esc_html__( 'Question', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-question-sign',
+				'name'  => esc_html__( 'Question Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-quotes',
+				'name'  => esc_html__( 'Quotes', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-quotes-alt',
+				'name'  => esc_html__( 'Quotes', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-rss',
-				'name'  => 'RSS',
+				'name'  => esc_html__( 'RSS', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-random',
+				'name'  => esc_html__( 'Random', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-record',
+				'name'  => esc_html__( 'Record', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-reddit',
-				'name'  => 'Reddit',
+				'name'  => esc_html__( 'Reddit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-refresh',
+				'name'  => esc_html__( 'Refresh', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-remove',
+				'name'  => esc_html__( 'Remove', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-repeat',
+				'name'  => esc_html__( 'Repeat', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-repeat-alt',
+				'name'  => esc_html__( 'Repeat', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-resize-full',
+				'name'  => esc_html__( 'Resize Full', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-resize-horizontal',
+				'name'  => esc_html__( 'Resize Horizontal', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-resize-small',
+				'name'  => esc_html__( 'Resize Small', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-resize-vertical',
+				'name'  => esc_html__( 'Resize Vertical', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-return-key',
+				'name'  => esc_html__( 'Return', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-retweet',
+				'name'  => esc_html__( 'Retweet', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-reverse-alt',
+				'name'  => esc_html__( 'Reverse', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-scissors',
+				'name'  => esc_html__( 'Scissors', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-screen',
+				'name'  => esc_html__( 'Screen', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-screen-alt',
+				'name'  => esc_html__( 'Screen', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-screenshot',
+				'name'  => esc_html__( 'Screenshot', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-search',
+				'name'  => esc_html__( 'Search', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-search-alt',
+				'name'  => esc_html__( 'Search', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-share',
+				'name'  => esc_html__( 'Share', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-share-alt',
+				'name'  => esc_html__( 'Share', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-shopping-cart',
+				'name'  => esc_html__( 'Shopping Cart', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-shopping-cart-sign',
+				'name'  => esc_html__( 'Shopping Cart Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-signal',
+				'name'  => esc_html__( 'Signal', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-skype',
-				'name'  => 'Skype',
+				'name'  => esc_html__( 'Skype', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-slideshare',
-				'name'  => 'Slideshare',
+				'name'  => esc_html__( 'Slideshare', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-smiley',
+				'name'  => esc_html__( 'Smiley', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-smiley-alt',
+				'name'  => esc_html__( 'Smiley', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-soundcloud',
-				'name'  => 'SoundCloud',
+				'name'  => esc_html__( 'SoundCloud', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-speaker',
+				'name'  => esc_html__( 'Speaker', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-spotify',
-				'name'  => 'Spotify',
+				'name'  => esc_html__( 'Spotify', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-stackoverflow',
-				'name'  => 'Stack Overflow',
+				'name'  => esc_html__( 'Stack Overflow', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-step-backward',
+				'name'  => esc_html__( 'Step Backward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-step-forward',
+				'name'  => esc_html__( 'Step Forward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-stop',
+				'name'  => esc_html__( 'Stop', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-stop-alt',
+				'name'  => esc_html__( 'Stop', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-stumbleupon',
-				'name'  => 'StumbleUpon',
+				'name'  => esc_html__( 'StumbleUpon', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'social',
-				'id'    => 'el-icon-twitter',
-				'name'  => 'Twitter',
+				'group' => 'actions',
+				'id'    => 'el-icon-tag',
+				'name'  => esc_html__( 'Tag', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-tags',
+				'name'  => esc_html__( 'Tags', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-tasks',
+				'name'  => esc_html__( 'Tasks', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-text-height',
+				'name'  => esc_html__( 'Text Height', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-text-width',
+				'name'  => esc_html__( 'Text Width', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-th',
+				'name'  => esc_html__( 'Thumbnails', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-th-large',
+				'name'  => esc_html__( 'Thumbnails (Large)', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-th-list',
+				'name'  => esc_html__( 'Thumbnails (List)', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-thumbs-down',
+				'name'  => esc_html__( 'Thumbs Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-thumbs-up',
+				'name'  => esc_html__( 'Thumbs Up', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-time',
+				'name'  => esc_html__( 'Time', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-time-alt',
+				'name'  => esc_html__( 'Time', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-tint',
+				'name'  => esc_html__( 'Tint', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-torso',
+				'name'  => esc_html__( 'Torso', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-trash',
+				'name'  => esc_html__( 'Trash', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-trash-alt',
+				'name'  => esc_html__( 'Trash', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-tumblr',
-				'name'  => 'Tumblr',
+				'name'  => esc_html__( 'Tumblr', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
-				'id'    => 'el-icon-viadeo',
-				'name'  => 'Viadeo',
+				'id'    => 'el-icon-twitter',
+				'name'  => esc_html__( 'Twitter', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'social',
-				'id'    => 'el-icon-vimeo',
-				'name'  => 'Vimeo',
+				'group' => 'currency',
+				'id'    => 'el-icon-usd',
+				'name'  => esc_html__( 'USD', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-universal-access',
+				'name'  => esc_html__( 'Universal Access', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-unlock',
+				'name'  => esc_html__( 'Unlock', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-unlock-alt',
+				'name'  => esc_html__( 'Unlock', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-upload',
+				'name'  => esc_html__( 'Upload', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-user',
+				'name'  => esc_html__( 'User', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-vkontakte',
-				'name'  => 'VKontakte',
+				'name'  => esc_html__( 'VKontakte', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'social',
+				'id'    => 'el-icon-viadeo',
+				'name'  => esc_html__( 'Viadeo', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media',
+				'id'    => 'el-icon-video',
+				'name'  => esc_html__( 'Video', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media',
+				'id'    => 'el-icon-video-alt',
+				'name'  => esc_html__( 'Video', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-view-mode',
+				'name'  => esc_html__( 'View Mode', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'social',
+				'id'    => 'el-icon-vimeo',
+				'name'  => esc_html__( 'Vimeo', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-volume-down',
+				'name'  => esc_html__( 'Volume Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-volume-up',
+				'name'  => esc_html__( 'Volume Up', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-w3c',
-				'name'  => 'W3C',
+				'name'  => esc_html__( 'W3C', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-warning-sign',
+				'name'  => esc_html__( 'Warning Sign', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-website',
+				'name'  => esc_html__( 'Website', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'el-icon-website-alt',
+				'name'  => esc_html__( 'Website', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-wheelchair',
+				'name'  => esc_html__( 'Wheelchair', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-wordpress',
-				'name'  => 'WordPress',
+				'name'  => esc_html__( 'WordPress', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-wrench',
+				'name'  => esc_html__( 'Wrench', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'el-icon-wrench-alt',
+				'name'  => esc_html__( 'Wrench', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'el-icon-youtube',
-				'name'  => 'YouTube',
+				'name'  => esc_html__( 'YouTube', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-zoom-in',
+				'name'  => esc_html__( 'Zoom In', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'el-icon-zoom-out',
+				'name'  => esc_html__( 'Zoom Out', 'buddyboss-theme' ),
 			),
 		);
 
 		/**
-		 * Filter genericon items
+		 * Filter genericon items.
 		 *
 		 * @since 0.1.0
 		 * @param array $items Icon names.

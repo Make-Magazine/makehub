@@ -98,8 +98,8 @@
             slidesToScroll: 1,
             adaptiveHeight: true,
             arrows: true,
-            prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-angle-right"></i></a>',
-            nextArrow: '<a class="bb-slide-next"><i class="bb-icon-angle-right"></i></a>',
+            prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-l bb-icon-angle-right"></i></a>',
+            nextArrow: '<a class="bb-slide-next"><i class="bb-icon-l bb-icon-angle-right"></i></a>',
         }
 
         $jm_slick_slider.slick( settings );

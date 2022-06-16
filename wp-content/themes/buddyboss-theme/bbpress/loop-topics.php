@@ -43,6 +43,37 @@
 			}
 			?>
 			</h2>
+			<div class="bbp-forum-buttons-wrap">
+				<?php
+				if ( ( ! is_active_sidebar( 'forums' ) || bp_is_groups_component() ) && bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) {
+					?>
+					<?php bbp_forum_subscription_link(); ?>
+
+					<div class="bbp_before_forum_new_post">
+						<a href="#new-post" data-modal-id="bbp-topic-form" class="button full btn-new-topic">
+							<i class="bb-icon-l bb-icon-edit"></i>
+							<?php esc_html_e( 'New discussion', 'buddyboss-theme' ); ?>
+						</a>
+					</div>
+					<?php
+				}
+
+				if ( function_exists( 'bbp_forum_report_link' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && bbp_get_forum_report_link( array( 'id' => $post->ID ) ) ) {
+					?>
+
+					<div class="bb_more_options action">
+						<a href="#" class="bb_more_options_action">
+							<i class="bb-icon-menu-dots-h"></i>
+						</a>
+						<div class="bb_more_options_list">
+							<?php bbp_forum_report_link( array( 'id' => $post->ID ) ); ?>
+						</div>
+					</div><!-- .bb_more_options -->
+
+					<?php
+				}
+				?>
+			</div>
 		</div>
 	</li>
 

@@ -9,7 +9,7 @@
 								<?php
 								global $post;
 								$lesson       = new LLMS_Lesson( $post );
-								$course_id    = $lesson->get_parent_course();
+								$course_id    = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 								$lesson_id    = get_the_ID();
 								$lesson_title = get_the_title();
 								?>
@@ -85,7 +85,7 @@
 								);
 
 								$attempts = array();
-								$results  = $query->results;
+								$results  = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_quiz_result( $query );
 
 								foreach ( $results as $result ) :
 									$attempts[] = new LLMS_Quiz_Attempt( $result->id );
@@ -130,11 +130,11 @@
 							$next_id = $lesson->get_next_lesson();
 
 							if ( ! $prev_id ) {
-								$prev_id = $lesson->get_parent_course();
+								$prev_id = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 							}
 
 							if ( ! $next_id ) {
-								$next_id = $lesson->get_parent_course();
+								$next_id = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 							}
 							?>
 

@@ -109,13 +109,13 @@ if ( isset( $exists ) && '' !== $exists ) {
 							$revoke_link   = '';
 							$title         = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-theme' ) : __( 'Invited', 'buddyboss-theme' );
 							$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-theme' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss-theme' );
-							$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'bb-icon-check' : 'bb-icon-connection-waiting';
+							$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'bb-icon-l bb-icon-check' : 'bb-icon-l bb-icon-user-clock';
 						} else {
 							$class         = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
 							$revoke_link   = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';
 							$title         = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-theme' ) : __( 'Revoke Invite', 'buddyboss-theme' );
 							$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-theme' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss-theme' );
-							$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'bb-icon-check' : 'bb-icon-close-circle';
+							$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'bb-icon-l bb-icon-check' : 'bb-icon-rl bb-icon-times';
 						}
 
 						if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {

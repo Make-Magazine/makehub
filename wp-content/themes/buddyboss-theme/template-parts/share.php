@@ -9,7 +9,7 @@
 					'action_type'   => 'like',
 
 					'wrapper_class' => 'bb-like-wrap',
-					'icon_class'    => 'bb-icon-like',
+					'icon_class'    => 'bb-icon-l bb-icon-thumbs-up',
 					'text_template' => '{{bookmarks_count}}',
 
 					'title_add'     => __( 'Like this entry', 'buddyboss-theme' ),
@@ -33,7 +33,7 @@
 					'action_type'   => 'bookmark',
 
 					'wrapper_class' => 'bookmark-link-container',
-					'icon_class'    => 'bb-bookmark bb-icon-bookmark-small',
+					'icon_class'    => 'bb-icon-l bb-bookmark bb-icon-bookmark',
 					'text_template' => '',
 
 					'title_add'     => __( 'Bookmark this story to read later', 'buddyboss-theme' ),

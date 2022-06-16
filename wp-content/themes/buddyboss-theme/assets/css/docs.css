@@ -81,16 +81,18 @@ button#mceu_0-open {
 
 .bp-docs .desc a:before,
 .bp-docs .asc a:before {
-  content: "\e861";
+  content: '\e861';
   font: normal normal normal 14px/1 "bb-icons";
   speak: none;
   display: inline-block;
   text-decoration: inherit;
   text-transform: none;
+  font-weight: 300;
 }
 
 .bp-docs .asc a:before {
-  content: "\e864";
+  content: '\e864';
+  font-weight: 500;
 }
 
 .doc-excerpt {

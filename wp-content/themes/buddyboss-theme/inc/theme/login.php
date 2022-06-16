@@ -216,6 +216,23 @@ function buddyboss_login_scripts() {
 			};
 			signinCheckboxes();
 
+			var weakPasswordCheckboxes = function() {
+				// Checkbox Styling
+				jQuery('input[type=checkbox]#pw-weak').each(function() {
+					var $this = jQuery(this);
+					$this.addClass('checkbox');
+					jQuery('<span class="checkbox"></span>').insertAfter($this);
+					if ($this.is(':checked')) {
+						$this.next('span.checkbox').addClass('on');
+					};
+					$this.fadeTo(0,0);
+					$this.change(function(){
+						$this.next('span.checkbox').toggleClass('on');
+					});
+				});
+			};
+			weakPasswordCheckboxes();
+
 			var loginLogoImage = function() {
 				jQuery('.login.bb-login #login > h1 > a').each(function() {
 					var $this = jQuery(this);
@@ -288,8 +305,20 @@ function buddyboss_login_scripts() {
 				});
 			};
 			loginHeight();
+
+			// Re-position WP Language Switcher below Login Form
+			var langSwitchPosition = function() {
+				if( jQuery( 'body' ).hasClass( 'login-split-page' ) && jQuery( '.language-switcher').length  ) {
+					var loginBlockHeight = jQuery( '#login' ).height() + jQuery( '#login' ).offset().top;
+					jQuery( '.language-switcher' ).css( 'top', loginBlockHeight + 'px' );
+				}
+			}
+
+			langSwitchPosition();
+
 			jQuery( window ).on( 'resize', function () {
 				loginHeight();
+				langSwitchPosition();
 			} );
 
 		} )
@@ -374,12 +403,17 @@ if ( ! function_exists( 'custom_login_classes' ) ) {
 
 		$rx_admin_background = buddyboss_theme_get_option( 'admin_login_background_switch' );
 
+		// BuddyBoss theme template class.
+		$template_type  = '1';
+		$template_type  = apply_filters( 'bb_template_type', $template_type );
+		$template_class = 'bb-template-v' . $template_type;
+
 		if ( $rx_custom_login ) {
 			if ( ( $GLOBALS['pagenow'] === 'wp-login.php' ) && $rx_admin_background ) {
-				$classes[] = 'login-split-page bb-login';
+				$classes[] = 'login-split-page bb-login ' . $template_class;
 				return $classes;
 			} else {
-				$classes[] = 'bb-login';
+				$classes[] = 'bb-login ' . $template_class;
 				return $classes;
 			}
 		} else {
@@ -396,56 +430,163 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 
 	function login_custom_head() {
 		$rx_admin_login_background_switch   = buddyboss_theme_get_option( 'admin_login_background_switch' );
-		$rx_admin_login_heading_position    = buddyboss_theme_get_option( 'admin_login_heading_position' );
 		$rx_admin_login_background_text     = buddyboss_theme_get_option( 'admin_login_background_text' );
 		$rx_admin_login_background_textarea = buddyboss_theme_get_option( 'admin_login_background_textarea' );
 		$rx_admin_login_heading_color       = buddyboss_theme_get_option( 'admin_login_heading_color' );
 		$rx_admin_login_overlay_opacity     = buddyboss_theme_get_option( 'admin_login_overlay_opacity' );
 
 		if ( $rx_admin_login_background_switch ) {
-			if ( $rx_admin_login_heading_position ) {
-				$heading_postion_style = 'padding-top: ' . $rx_admin_login_heading_position . '%;';
-			} else {
-				$heading_postion_style = 'padding-top: 8%;';
-			}
-			echo '<div class="login-split"><div style="' . $heading_postion_style . '">';
+			echo '<div class="login-split"><div class="login-split__entry">';
 			if ( $rx_admin_login_background_text ) {
+				echo '<h1>';
 				echo wp_kses_post( sprintf( esc_html__( '%s', 'buddyboss-theme' ), $rx_admin_login_background_text ) );
+				echo '</h1>';
 			}
 			if ( $rx_admin_login_background_textarea ) {
-				echo '<span>';
+				echo '<p>';
 				echo stripslashes( $rx_admin_login_background_textarea );
-				echo '</span>';
+				echo '</p>';
 			}
 			echo '</div><div class="split-overlay"></div></div>';
 		}
 
-		$rx_logoimg                = buddyboss_theme_get_option( 'admin_logo_media' );
-		$rx_logowidth              = buddyboss_theme_get_option( 'admin_logo_width' );
-		$rx_login_background_media = buddyboss_theme_get_option( 'admin_login_background_media' );
+		$rx_logoimg                                     = buddyboss_theme_get_option( 'admin_logo_media' );
+		$rx_logowidth                                   = buddyboss_theme_get_option( 'admin_logo_width' );
+		$rx_login_background_media                      = buddyboss_theme_get_option( 'admin_login_background_media' );
+		$rx_success_color                               = buddyboss_theme_get_option( 'success_notice_bg_color' );
+		$rx_warning_color                               = buddyboss_theme_get_option( 'warning_notice_bg_color' );
+		$buddyboss_custom_font                          = buddyboss_theme_get_option( 'custom_typography' );
+		$buddyboss_body_font                            = buddyboss_theme_get_option( 'boss_body_font_family' );
+		$buddyboss_h1_font                              = buddyboss_theme_get_option( 'boss_h1_font_options' );
+		$buddyboss_h2_font                              = buddyboss_theme_get_option( 'boss_h2_font_options' );
+		$primary_color                                  = buddyboss_theme_get_option( 'accent_color' );
+		$body_background                                = buddyboss_theme_get_option( 'body_background' );
+		$body_blocks                                    = buddyboss_theme_get_option( 'body_blocks' );
+		$light_background_blocks                        = buddyboss_theme_get_option( 'light_background_blocks' );
+		$body_blocks_border                             = buddyboss_theme_get_option( 'body_blocks_border' );
+		$buddyboss_theme_group_cover_bg                 = buddyboss_theme_get_option( 'buddyboss_theme_group_cover_bg' );
+		$heading_text_color                             = buddyboss_theme_get_option( 'heading_text_color' );
+		$body_text_color                                = buddyboss_theme_get_option( 'body_text_color' );
+		$alternate_text_color                           = buddyboss_theme_get_option( 'alternate_text_color' );
+		$admin_screen_bgr_color                         = buddyboss_theme_get_option( 'admin_screen_bgr_color' );
+		$admin_screen_txt_color                         = buddyboss_theme_get_option( 'admin_screen_txt_color' );
 
-		$rx_admin_screen_background  = buddyboss_theme_get_option( 'admin_screen_bgr_color' );
-		$rx_admin_screen_txt         = buddyboss_theme_get_option( 'admin_screen_txt_color' );
-		$rx_admin_screen_links       = buddyboss_theme_get_option( 'admin_screen_links_color' );
-		$rx_admin_screen_links_hover = buddyboss_theme_get_option( 'admin_screen_links_hover_color' );
+		$primary_button_background_regular              = buddyboss_theme_get_option( 'primary_button_background' )['regular'];
+		$primary_button_background_hover                = buddyboss_theme_get_option( 'primary_button_background' )['hover'];
+		$primary_button_border_regular                  = buddyboss_theme_get_option( 'primary_button_border' )['regular'];
+		$primary_button_border_hover                    = buddyboss_theme_get_option( 'primary_button_border' )['hover'];
+		$primary_button_text_color_regular              = buddyboss_theme_get_option( 'primary_button_text_color' )['regular'];
+		$primary_button_text_color_hover                = buddyboss_theme_get_option( 'primary_button_text_color' )['hover'];
+		$secondary_button_background_regular            = buddyboss_theme_get_option( 'secondary_button_background' )['regular'];
+		$secondary_button_background_hover              = buddyboss_theme_get_option( 'secondary_button_background' )['hover'];
+		$secondary_button_border_regular                = buddyboss_theme_get_option( 'secondary_button_border' )['regular'];
+		$secondary_button_border_hover                  = buddyboss_theme_get_option( 'secondary_button_border' )['hover'];
+		$secondary_button_text_color_regular            = buddyboss_theme_get_option( 'secondary_button_text_color' )['regular'];
+		$secondary_button_text_color_hover              = buddyboss_theme_get_option( 'secondary_button_text_color' )['hover'];
 
-		$rx_success_color = buddyboss_theme_get_option( 'success_notice_bg_color' );
-		$rx_warning_color = buddyboss_theme_get_option( 'warning_notice_bg_color' );
+		$login_register_link_color_regular              = buddyboss_theme_get_option( 'login_register_link_color' )['regular'];
+		$login_register_link_color_hover                = buddyboss_theme_get_option( 'login_register_link_color' )['hover'];
+		$login_register_button_background_color_regular = buddyboss_theme_get_option( 'login_register_button_background_color' )['regular'];
+		$login_register_button_background_color_hover   = buddyboss_theme_get_option( 'login_register_button_background_color' )['hover'];
+		$login_register_button_border_color_regular     = buddyboss_theme_get_option( 'login_register_button_border_color' )['regular'];
+		$login_register_button_border_color_hover       = buddyboss_theme_get_option( 'login_register_button_border_color' )['hover'];
+		$login_register_button_text_color_regular       = buddyboss_theme_get_option( 'login_register_button_text_color' )['regular'];
+		$login_register_button_text_color_hover         = buddyboss_theme_get_option( 'login_register_button_text_color' )['hover'];
 
-		$rx_body_txt_color = buddyboss_theme_get_option( 'body_text_color' );
-		$rx_heading_color  = buddyboss_theme_get_option( 'heading_text_color' );
+		$default_notice_color                           = buddyboss_theme_get_option( 'default_notice_bg_color' );
+		$success_color                                  = buddyboss_theme_get_option( 'success_notice_bg_color' );
+		$warning_color                                  = buddyboss_theme_get_option( 'warning_notice_bg_color' );
+		$danger_color                                   = buddyboss_theme_get_option( 'error_notice_bg_color' );
 
-		$rx_error_bg_color   = buddyboss_theme_get_option( 'error_notice_bg_color' );
-		$rx_default_bg_color = buddyboss_theme_get_option( 'default_notice_bg_color' );
-
-		$rx_accent_color = buddyboss_theme_get_option( 'accent_color' );
-
-		$buddyboss_custom_font = buddyboss_theme_get_option( 'custom_typography' );
-		$buddyboss_body_font   = buddyboss_theme_get_option( 'boss_body_font_family' );
-		$buddyboss_h1_font     = buddyboss_theme_get_option( 'boss_h1_font_options' );
-		$buddyboss_h2_font     = buddyboss_theme_get_option( 'boss_h2_font_options' );
+		$button_radius                                  = buddyboss_theme_get_option( 'button_default_radius' );
+		$theme_style                                    = buddyboss_theme_get_option( 'theme_template' );
 
 		echo '<style>';
+		?>
+		:root{
+			--bb-primary-color: <?php echo $primary_color; ?>;
+			--bb-primary-color-rgb: <?php echo join( ', ', hex_2_RGB( $primary_color ) ); ?>;
+			--bb-body-background-color: <?php echo $body_background; ?>;
+			--bb-content-background-color: <?php echo $body_blocks; ?>;
+			--bb-content-alternate-background-color: <?php echo $light_background_blocks; ?>;
+			--bb-content-border-color: <?php echo $body_blocks_border; ?>;
+			--bb-content-border-color-rgb: <?php echo join( ', ', hex_2_RGB( $body_blocks_border ) ); ?>;
+			--bb-cover-image-background-color: <?php echo $buddyboss_theme_group_cover_bg; ?>;
+			--bb-headings-color: <?php echo $heading_text_color; ?>;
+			--bb-body-text-color: <?php echo $body_text_color; ?>;
+			--bb-alternate-text-color: <?php echo $alternate_text_color; ?>;
+			--bb-alternate-text-color-rgb: <?php echo join( ', ', hex_2_RGB( $alternate_text_color ) ); ?>;
+
+			--bb-primary-button-background-regular: <?php echo $primary_button_background_regular; ?>;
+			--bb-primary-button-background-hover: <?php echo $primary_button_background_hover; ?>;
+			--bb-primary-button-border-regular: <?php echo $primary_button_border_regular; ?>;
+			--bb-primary-button-border-hover: <?php echo $primary_button_border_hover; ?>;
+			--bb-primary-button-border-hover-rgb: <?php echo join( ', ', hex_2_RGB( $primary_button_border_hover ) ); ?>;
+			--bb-primary-button-text-regular: <?php echo $primary_button_text_color_regular; ?>;
+			--bb-primary-button-text-regular-rgb: <?php echo join( ', ', hex_2_RGB( $primary_button_text_color_regular ) ); ?>;
+			--bb-primary-button-text-hover: <?php echo $primary_button_text_color_hover; ?>;
+			--bb-primary-button-text-hover-rgb: <?php echo join( ', ', hex_2_RGB( $primary_button_text_color_hover ) ); ?>;
+			--bb-secondary-button-background-regular: <?php echo $secondary_button_background_regular; ?>;
+			--bb-secondary-button-background-hover: <?php echo $secondary_button_background_hover; ?>;
+			--bb-secondary-button-border-regular: <?php echo $secondary_button_border_regular; ?>;
+			--bb-secondary-button-border-hover: <?php echo $secondary_button_border_hover; ?>;
+			--bb-secondary-button-border-hover-rgb:  <?php echo join( ', ', hex_2_RGB( $secondary_button_border_hover ) ); ?>;
+			--bb-secondary-button-text-regular: <?php echo $secondary_button_text_color_regular; ?>;
+			--bb-secondary-button-text-hover: <?php echo $secondary_button_text_color_hover; ?>;
+
+			--bb-admin-screen-bgr-color: <?php echo $admin_screen_bgr_color; ?>;
+			--bb-admin-screen-txt-color: <?php echo $admin_screen_txt_color; ?>;
+			--bb-login-register-link-color-regular: <?php echo $login_register_link_color_regular; ?>;
+			--bb-login-register-link-color-hover: <?php echo $login_register_link_color_hover; ?>;
+			--bb-login-register-button-background-color-regular: <?php echo $login_register_button_background_color_regular; ?>;
+			--bb-login-register-button-background-color-hover: <?php echo $login_register_button_background_color_hover; ?>;
+			--bb-login-register-button-border-color-regular: <?php echo $login_register_button_border_color_regular; ?>;
+			--bb-login-register-button-border-color-hover: <?php echo $login_register_button_border_color_hover; ?>;
+			--bb-login-register-button-text-color-regular: <?php echo $login_register_button_text_color_regular; ?>;
+			--bb-login-register-button-text-color-hover: <?php echo $login_register_button_text_color_hover; ?>;
+
+			--bb-default-notice-color: <?php echo $default_notice_color; ?>;
+			--bb-default-notice-color-rgb: <?php echo join( ', ', hex_2_RGB( $default_notice_color ) ); ?>;
+			--bb-success-color: <?php echo $success_color; ?>;
+			--bb-success-color-rgb: <?php echo join( ', ', hex_2_RGB( $success_color ) ); ?>;
+			--bb-warning-color: <?php echo $warning_color; ?>;
+			--bb-warning-color-rgb: <?php echo join( ', ', hex_2_RGB( $warning_color ) ); ?>;
+			--bb-danger-color: <?php echo $danger_color; ?>;
+			--bb-danger-color-rgb: <?php echo join( ', ', hex_2_RGB( $danger_color ) ); ?>;
+
+			--bb-login-custom-heading-color: <?php echo $rx_admin_login_heading_color; ?>;
+
+			--bb-button-radius: <?php echo $button_radius; ?>px;
+
+			<?php
+			if ( ! isset( $theme_style ) ) {
+				$theme_style = '1';
+			}
+			?>
+
+			<?php if ( '1' === $theme_style ) { ?>
+				--bb-block-radius: 4px;
+				--bb-block-radius-inner: 4px;
+				--bb-input-radius: 4px;
+				--bb-checkbox-radius: 2.7px;
+				--bb-primary-button-focus-shadow: none;
+				--bb-secondary-button-focus-shadow: none;
+				--bb-outline-button-focus-shadow: none;
+				--bb-input-focus-shadow: none;
+				--bb-input-focus-border-color: var(--bb-content-border-color);
+			<?php } else { ?>
+				--bb-block-radius: 10px;
+				--bb-block-radius-inner: 6px;
+				--bb-input-radius: 6px;
+				--bb-checkbox-radius: 5.4px;
+				--bb-primary-button-focus-shadow: 0px 0px 0px 2px rgba(var(--bb-primary-button-border-hover-rgb), 0.1);
+				--bb-secondary-button-focus-shadow: 0px 0px 0px 2px rgba(var(--bb-secondary-button-border-hover-rgb), 0.1);
+				--bb-outline-button-focus-shadow: 0px 0px 0px 2px rgba(var(--bb-content-border-color-rgb), 0.1);
+				--bb-input-focus-shadow: 0px 0px 0px 2px rgba(var(--bb-primary-color-rgb), 0.1);
+				--bb-input-focus-border-color: var(--bb-primary-color);
+			<?php } ?>
+		}
+		<?php
 		if ( '1' == $buddyboss_custom_font ) {
 			if ( ! empty( $buddyboss_body_font['font-family'] ) ) {
 				?>
@@ -502,94 +643,12 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 			}
 			<?php
 		}
-		if ( $rx_admin_screen_background ) {
-			?>
-			body.login {
-			background-color: <?php echo $rx_admin_screen_background; ?>;
-			}
-			<?php
-		}
-		if ( $rx_admin_screen_txt ) {
-			?>
-			body.login #login,
-			body.login p.forgetmenot label {
-			color: <?php echo $rx_admin_screen_txt; ?>;
-			}
-			<?php
-		}
-		if ( $rx_body_txt_color ) {
-			?>
-			body.login .login-popup.bb-modal {
-			color: <?php echo $rx_body_txt_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_heading_color ) {
-			?>
-			body.login .login-popup.bb-modal h1 {
-			color: <?php echo $rx_heading_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_admin_screen_links ) {
-			?>
-			body.login .login-heading a,
-			.login a,
-			.login h1 a.bb-login-title,
-			.login form .lostmenot a,
-			.login a.privacy-policy-link,
-			form#lostpasswordform a.bs-sign-in {
-			color: <?php echo $rx_admin_screen_links; ?>;
-			}
-			.login.wp-core-ui .button-primary {
-			background-color: <?php echo $rx_admin_screen_links; ?>;
-			border-color: <?php echo $rx_admin_screen_links; ?>;
-			}
-			.admin-email__actions .admin-email__actions-primary a.button {
-			color: <?php echo $rx_admin_screen_links; ?>;
-			border-color: <?php echo $rx_admin_screen_links; ?>;
-			}
-
-
-			<?php
-		}
-		if ( $rx_admin_screen_links_hover ) {
-			?>
-			body.login .login-heading a:hover,
-			body.login .login-heading a:focus,
-			.login a:hover,
-			.login a:focus,
-			.login h1 a.bb-login-title:hover,
-			.login h1 a.bb-login-title:focus,
-			.login form .lostmenot a:hover,
-			.login form .lostmenot a:focus,
-			.login a.privacy-policy-link:hover,
-			.login .button.wp-hide-pw:hover .dashicons,
-			.login .button.wp-hide-pw:focus .dashicons,
-			form#lostpasswordform a.bs-sign-in:hover {
-			color: <?php echo $rx_admin_screen_links_hover; ?>;
-			}
-			.login.bb-login .button-primary:hover,
-			.login.bb-login .button-primary:focus,
-			.login.wp-core-ui .button-primary:hover {
-			background-color: <?php echo $rx_admin_screen_links_hover; ?>;
-			border-color: <?php echo $rx_admin_screen_links_hover; ?>;
-			}
-			.login.bb-login form .forgetmenot input[type=checkbox]:focus + .checkbox {
-			border-color: <?php echo $rx_admin_screen_links_hover; ?>;
-			}
-			.admin-email__actions .admin-email__actions-primary a.button:hover {
-			color: <?php echo $rx_admin_screen_links_hover; ?>;
-			border-color: <?php echo $rx_admin_screen_links_hover; ?>;
-			}
-			<?php
-		}
-		if ( $rx_error_bg_color ) {
+		if ( $danger_color ) {
 			?>
 			.login.bb-login #pass-strength-result.short,
 			.login.bb-login #pass-strength-result.bad {
-			background-color: <?php echo $rx_error_bg_color; ?>;
-			border-color: <?php echo $rx_error_bg_color; ?>;
+			background-color: <?php echo $danger_color; ?>;
+			border-color: <?php echo $danger_color; ?>;
 			}
 			<?php
 		}
@@ -611,71 +670,11 @@ if ( ! function_exists( 'login_custom_head' ) ) {
 		}
 		if ( $rx_admin_login_overlay_opacity ) {
 			?>
-			@media( min-width: 992px ) {
 			body.login.login-split-page .login-split .split-overlay {
 			opacity: <?php echo $rx_admin_login_overlay_opacity / 100; ?>;
 			}
-			}
 			<?php
 		}
-		if ( $rx_admin_login_heading_color ) {
-			?>
-			@media( min-width: 992px ) {
-			body.login.login-split-page .login-split div {
-			color: <?php echo $rx_admin_login_heading_color; ?>;
-			}
-			}
-			<?php
-		}
-		if ( $rx_error_bg_color ) {
-			?>
-			.login #login_error {
-			background-color: <?php echo $rx_error_bg_color; ?>;
-			border-left-color: <?php echo $rx_error_bg_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_default_bg_color ) {
-			?>
-			.login:not(.login-action-lostpassword) .message:not(.reset-pass),
-			.login.login-action-lostpassword .message > .message {
-			background-color: <?php echo $rx_default_bg_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_accent_color ) {
-			?>
-			span.checkbox.on {
-			background-color: <?php echo $rx_accent_color; ?>;
-			border-color: <?php echo $rx_accent_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_error_bg_color ) {
-			?>
-			.login #login_error {
-			background-color: <?php echo $rx_error_bg_color; ?>;
-			border-left-color: <?php echo $rx_error_bg_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_default_bg_color ) {
-			?>
-			.login:not(.login-action-lostpassword) .message:not(.reset-pass),
-			.login.login-action-lostpassword .message > .message {
-			background-color: <?php echo $rx_default_bg_color; ?>;
-			}
-			<?php
-		}
-		if ( $rx_accent_color ) {
-			?>
-			span.checkbox.on {
-			background-color: <?php echo $rx_accent_color; ?>;
-			border-color: <?php echo $rx_accent_color; ?>;
-			}
-			<?php
-		}
-
 		echo '</style>';
 	}
 }

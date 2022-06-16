@@ -71,7 +71,7 @@ if ( ! class_exists( 'Redux_Extension_Options_Object', false ) ) {
 				'id'         => 'options-object',
 				'title'      => esc_html__( 'Options Object', 'redux-framework' ),
 				'heading'    => '',
-				'icon'       => 'el el-info-circle',
+				'icon'       => 'bb-icon-l bb-icon-terminal',
 				'customizer' => false,
 				'fields'     => array(
 					array(

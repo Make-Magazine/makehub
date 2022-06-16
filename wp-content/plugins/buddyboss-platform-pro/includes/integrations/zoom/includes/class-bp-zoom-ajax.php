@@ -418,7 +418,12 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 
 			$start_date_time = gmdate( 'Y-m-d\TH:i:s', strtotime( $start_date . ' ' . $start_time . ' ' . $start_meridian ) );
 
-			if ( strtotime( $start_date_time ) < strtotime( wp_date( 'Y-m-d\TH:i:s', strtotime( 'now' ), new DateTimeZone( $timezone ) ) ) ) {
+			$recurring  = filter_input( INPUT_POST, 'bp-zoom-meeting-recurring', FILTER_VALIDATE_BOOLEAN );
+			$meeting_id = filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id', FILTER_SANITIZE_STRING );
+			if (
+				strtotime( $start_date_time ) < strtotime( wp_date( 'Y-m-d\TH:i:s', strtotime( 'now' ), new DateTimeZone( $timezone ) ) ) &&
+				! empty( $meeting_id ) && empty( $recurring )
+			) {
 				wp_send_json_error( array( 'error' => __( 'Please change the meeting date to a future date.', 'buddyboss-pro' ) ) );
 			}
 
@@ -1195,7 +1200,12 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 
 			$start_date_time = gmdate( 'Y-m-d\TH:i:s', strtotime( $start_date . ' ' . $start_time . ' ' . $start_meridian ) );
 
-			if ( strtotime( $start_date_time ) < strtotime( wp_date( 'Y-m-d\TH:i:s', strtotime( 'now' ), new DateTimeZone( $timezone ) ) ) ) {
+			$recurring  = filter_input( INPUT_POST, 'bp-zoom-webinar-recurring', FILTER_VALIDATE_BOOLEAN );
+			$webinar_id = filter_input( INPUT_POST, 'bp-zoom-webinar-zoom-id', FILTER_SANITIZE_STRING );
+			if (
+				strtotime( $start_date_time ) < strtotime( wp_date( 'Y-m-d\TH:i:s', strtotime( 'now' ), new DateTimeZone( $timezone ) ) ) &&
+				! empty( $webinar_id ) && empty( $recurring )
+			) {
 				wp_send_json_error( array( 'error' => __( 'Please change the webinar date to a future date.', 'buddyboss-pro' ) ) );
 			}
 
