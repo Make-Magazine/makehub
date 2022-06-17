@@ -67,11 +67,13 @@
 				margin-bottom: 15px;
 			}
 			.member-button-wrap {
-				.friendship-button {
-					color: #666 !important;
-					width: 100%;
-					display: flex;
-					justify-content: center;
+				.friendship-button.generic-button {
+					.friendship-button {
+						color: #666 !important;
+						width: 100%;
+						display: flex;
+						justify-content: center;
+					}
 				}
 			}
 		}
