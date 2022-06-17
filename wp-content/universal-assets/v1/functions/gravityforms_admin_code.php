@@ -71,3 +71,63 @@ function correct_currententry_formid($form) {
    }
    return $form;
 }
+
+//add new field to advanced setting section of form entry
+add_action( 'gform_field_advanced_settings', 'my_advanced_settings', 10, 2 );
+function my_advanced_settings( $position, $form_id ) {
+  $form     = GFAPI::get_form($form_id);
+
+  // add SNM input field only if form_type is set to SNM
+  if(isset($form['form_type']) && $form['form_type']=='SNM'){
+    //create settings on position 50 (right after Admin Label)
+    if ( $position == 50 ) {
+        ?>
+        <li class="snm_input_setting field_setting">
+            <label for="field_snm_value">
+                <?php _e("SNM field name", "gravityforms"); ?>
+                <?php
+                  gform_tooltip("field_snm_value")
+                ?>
+            </label>
+            <input type="text" id="field_snm_input" onchange="SetFieldProperty('snmInput', this.value);" class="fieldwidth-3" />
+        </li>
+        <?php
+
+      }
+  }
+}
+
+//Filter to add a new tooltip
+add_filter( 'gform_tooltips', 'add_snm_tooltips' );
+function add_snm_tooltips( $tooltips ) {
+    $tooltips['field_snm_value'] = "<strong>Science Near Me field name</strong>Please refer to <a href=\"https://beta.sciencenearme.org/api/docs/v1.html#/default/opportunity_new\">https://beta.sciencenearme.org/api/docs/v1.html#/default/opportunity_new</a> for the SNM field names.";
+    return $tooltips;
+}
+
+//now lets add the new SNM field to all field types and populate it
+add_action( 'gform_editor_js', 'editor_script' );
+function editor_script(){
+	?>
+	<script type="text/javascript">
+		// Add our setting to these field types
+		fieldSettings.text += ', .snm_input_setting';
+		fieldSettings.textarea += ', .snm_input_setting';
+		fieldSettings.email += ', .snm_input_setting';
+		fieldSettings.phone += ', .snm_input_setting';
+		fieldSettings.number += ', .snm_input_setting';
+    fieldSettings.name += ', .snm_input_setting';
+    fieldSettings.website += ', .snm_input_setting';
+    fieldSettings.date += ', .snm_input_setting';
+    fieldSettings.radio += ', .snm_input_setting';
+    fieldSettings.checkbox += ', .snm_input_setting';
+    fieldSettings.select += ', .snm_input_setting';
+    fieldSettings.fileupload += ', .snm_input_setting';
+    fieldSettings.address += ', .snm_input_setting';
+
+		// Make sure our field gets populated with its saved value
+		jQuery(document).on("gform_load_field_settings", function(event, field, form) {
+	        	jQuery("#field_snm_input").val(field["snmInput"]);
+	    	});
+	</script>
+	<?php
+};
