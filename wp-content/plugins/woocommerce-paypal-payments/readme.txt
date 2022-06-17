@@ -2,9 +2,9 @@
 Contributors: woocommerce, automattic
 Tags: woocommerce, paypal, payments, ecommerce, e-commerce, store, sales, sell, shop, shopping, cart, checkout
 Requires at least: 5.3
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 7.1
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,11 +81,27 @@ Follow the steps below to connect the plugin to your PayPal account:
 
 == Changelog ==
 
+= 1.8.1 =
+* Fix - Manual orders return an error for guest users when paying with PayPal Card Processing #530
+* Fix - "No PayPal order found in the current WooCommerce session" error for guests on Pay for Order page #605
+* Fix - Error on order discount by third-party plugins #548
+* Fix - Empty payer data may cause CITY_REQUIRED error for certain checkout countries #632
+* Fix - Mini Cart smart buttons visible after adding subscription product to cart from "shop" page while Vaulting is disabled #624
+* Fix - Smart buttons not loading when free product is in cart but shipping costs are available #606
+* Fix - Smart button & Pay Later messaging disappear on the cart page after changing shipping method #288
+* Fix - Disabling PayPal Checkout on the checkout page also removes the button from the Cart and Product Pages #577
+* Fix - Partial refunds via PayPal are created twice/double in WooCommerce order #522
+* Fix - Emoji in product description causing INVALID_STRING_LENGTH error #491
+* Enhancement - Vaulting & Pay Later UI/UX #174
+* Enhancement - Redirect after updating settings for DCC sends you to PPCP settings screen #392
+* Enhancement - Add Fraud Processor Response as an order note #616
+* Enhancement - Add the Paypal Fee to the Meta Custom Field for export purposes #591
+
 = 1.8.0 =
 * Add - Allow free trial subscriptions #580
 * Fix - The Card Processing does not appear as an available payment method when manually creating an order #562
-* Fix - Express buttons & Pay Later visible on variable Subscription products /w disabled vaulting #281 
-* Fix - Pay for order (guest) failing when no email address available #535 
+* Fix - Express buttons & Pay Later visible on variable Subscription products /w disabled vaulting #281
+* Fix - Pay for order (guest) failing when no email address available #535
 * Fix - Emoji in product description causing INVALID_STRING_LENGTH error #491
 * Enhancement - Change cart total amount that is sent to PayPal gateway #486
 * Enhancement - Include dark Visa and Mastercard gateway icon list for PayPal Card Processing #566
@@ -144,7 +160,7 @@ Follow the steps below to connect the plugin to your PayPal account:
 * Fix - Empty space in invoice prefix causes smart buttons to not load #390
 * Fix - woocommerce_payment_complete action not triggered for payments completed via webhook #399
 * Fix - Paying with Venmo - Change funding source on checkout page and receipt to Venmo  #394
-* Fix - Internal server error on checkout when selected saved card but then switched to paypal #403 
+* Fix - Internal server error on checkout when selected saved card but then switched to paypal #403
 * Enhancement - Allow formatted text for the Description field #407
 * Enhancement - Remove filter to prevent On-Hold emails #411
 

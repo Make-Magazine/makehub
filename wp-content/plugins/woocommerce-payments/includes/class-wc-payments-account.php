@@ -310,6 +310,16 @@ class WC_Payments_Account {
 	}
 
 	/**
+	 * Get has account connected readers flag
+	 *
+	 * @return bool
+	 */
+	public function has_card_readers_available(): bool {
+		$account = $this->get_cached_account_data();
+		return $account['has_card_readers_available'] ?? false;
+	}
+
+	/**
 	 * Gets the current account fees for rendering on the settings page.
 	 *
 	 * @return array Fees.
@@ -529,9 +539,22 @@ class WC_Payments_Account {
 		$redirect_param = sanitize_text_field( wp_unslash( $_GET['wcpay-connect-redirect'] ) );
 
 		// Let's record in Tracks merchants returning via the KYC reminder email.
+		if ( 'initial' === $redirect_param ) {
+			$offset      = 1;
+			$description = 'initial';
+		} elseif ( 'second' === $redirect_param ) {
+			$offset      = 3;
+			$description = 'second';
+		} else {
+			$follow_number = in_array( $redirect_param, [ '1', '2', '3', '4' ], true ) ? $redirect_param : '0';
+			// offset is recorded in days, $follow_number maps to the week number.
+			$offset      = (int) $follow_number * 7;
+			$description = 'weekly-' . $follow_number;
+		}
+
 		$track_props = [
-			'type'          => 'initial' === $redirect_param ? 'initial' : 'follow',
-			'follow_number' => in_array( $redirect_param, [ '1', '2', '3', '4' ], true ) ? $redirect_param : '0',
+			'offset'      => $offset,
+			'description' => $description,
 		];
 		wc_admin_record_tracks_event( 'wcpay_kyc_reminder_merchant_returned', $track_props );
 

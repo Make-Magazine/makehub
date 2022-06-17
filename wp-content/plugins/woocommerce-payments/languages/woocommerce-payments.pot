@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the WooCommerce Payments package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Payments 4.1.0\n"
+"Project-Id-Version: WooCommerce Payments 4.3.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/woocommerce-payments\n"
-"POT-Creation-Date: 2022-05-05 12:17:05+00:00\n"
+"POT-Creation-Date: 2022-06-15 15:18:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: client/index.js:44
 #: client/onboarding/strings.ts:8
 #: client/payment-methods/delete-modal.tsx:32
-#: client/settings/express-checkout-settings/index.js:104
+#: client/settings/express-checkout-settings/index.js:107
 msgid "WooCommerce Payments"
 msgstr ""
 
@@ -33,20 +33,20 @@ msgstr ""
 msgid "All payment methods"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:77
+#: includes/admin/class-wc-payments-admin.php:78
 #: dist/index.js:1
 #: client/index.js:76
 msgid "Overview"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:87
+#: includes/admin/class-wc-payments-admin.php:88
 #: dist/index.js:1
 #: client/deposits/list/index.tsx:194
 #: client/index.js:101
 msgid "Deposits"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:97
+#: includes/admin/class-wc-payments-admin.php:98
 #: dist/index.js:1
 #: client/index.js:128
 #: client/payment-details/readers/index.js:76
@@ -54,77 +54,77 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:107
+#: includes/admin/class-wc-payments-admin.php:108
 #: dist/index.js:1
 #: client/disputes/index.tsx:339
 #: client/index.js:166
 msgid "Disputes"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:126
-#: includes/admin/class-wc-payments-admin.php:190
+#: includes/admin/class-wc-payments-admin.php:127
+#: includes/admin/class-wc-payments-admin.php:191
 #: dist/index.js:1
 #: client/index.js:261
 msgid "Payments"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:144
+#: includes/admin/class-wc-payments-admin.php:145
 #: dist/index.js:1
 #: client/index.js:45
 #: client/onboarding/tasks/setup-complete-task/index.tsx:17
 msgid "Connect"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:214
+#: includes/admin/class-wc-payments-admin.php:215
 #: dist/index.js:1
 #: client/index.js:64
 msgid "Onboarding"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:231
+#: includes/admin/class-wc-payments-admin.php:232
 msgid "Card Readers"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:244
+#: includes/admin/class-wc-payments-admin.php:245
 #: dist/index.js:1
 #: client/index.js:211
 msgid "Capital Loans"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:257
+#: includes/admin/class-wc-payments-admin.php:258
 #: dist/index.js:1
 #: client/documents/list/index.tsx:137
 #: client/index.js:234
 msgid "Documents"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:285
-#: includes/admin/class-wc-payments-admin.php:770
-#: includes/class-wc-payments.php:445
+#: includes/admin/class-wc-payments-admin.php:286
+#: includes/admin/class-wc-payments-admin.php:772
+#: includes/class-wc-payments.php:456
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/index.js:69
+#: client/settings/express-checkout-settings/index.js:72
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:305
+#: includes/admin/class-wc-payments-admin.php:306
 #: dist/index.js:1
 #: client/index.js:103
 msgid "Deposit details"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:313
+#: includes/admin/class-wc-payments-admin.php:314
 #: dist/index.js:1
 #: client/index.js:130
 msgid "Payment details"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:321
+#: includes/admin/class-wc-payments-admin.php:322
 #: dist/index.js:1
 #: client/index.js:154
 msgid "Dispute details"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:329
+#: includes/admin/class-wc-payments-admin.php:330
 #: dist/index.js:1
 #: client/disputes/details/actions.tsx:30
 #: client/disputes/evidence/index.js:289
@@ -132,28 +132,37 @@ msgstr ""
 msgid "Challenge dispute"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:338
+#: includes/admin/class-wc-payments-admin.php:339
 msgid "Add new payment methods"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:346
+#: includes/admin/class-wc-payments-admin.php:347
 #: dist/index.js:1
 #: client/index.js:188
 msgid "Set up multiple currencies"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:355
+#: includes/admin/class-wc-payments-admin.php:356
 #: dist/index.js:1
 #: client/card-readers/settings/index.tsx:29
 #: client/index.js:224
 msgid "Preview a printed receipt"
 msgstr ""
 
-#: includes/admin/class-wc-payments-admin.php:642
+#: includes/admin/class-wc-payments-admin.php:644
 msgid ""
 "Refunding manually requires reimbursing your customer offline via cash, "
 "check, etc. The refund amounts entered here will only be used to balance "
 "your analytics."
+msgstr ""
+
+#: includes/admin/class-wc-payments-admin.php:854
+msgid "Paid with"
+msgstr ""
+
+#: includes/admin/class-wc-payments-admin.php:858
+#: includes/class-wc-payments-order-success-page.php:59
+msgid "Card ending in"
 msgstr ""
 
 #: includes/admin/class-wc-rest-payments-documents-controller.php:96
@@ -194,7 +203,7 @@ msgid "Payment capture failed to complete with the following message: %s"
 msgstr ""
 
 #: includes/admin/class-wc-rest-payments-orders-controller.php:172
-#: includes/class-wc-payment-gateway-wcpay.php:2551
+#: includes/class-wc-payment-gateway-wcpay.php:2588
 msgid "Unknown error"
 msgstr ""
 
@@ -314,15 +323,19 @@ msgstr ""
 msgid "Custom message to display to WooPay customers."
 msgstr ""
 
-#: includes/admin/class-wc-rest-payments-settings-controller.php:262
+#: includes/admin/class-wc-rest-payments-settings-controller.php:213
+msgid "Store logo to display to WooPay customers."
+msgstr ""
+
+#: includes/admin/class-wc-rest-payments-settings-controller.php:267
 msgid "Error: Invalid email address: "
 msgstr ""
 
-#: includes/admin/class-wc-rest-payments-settings-controller.php:286
+#: includes/admin/class-wc-rest-payments-settings-controller.php:291
 msgid "Error: Invalid phone number: "
 msgstr ""
 
-#: includes/admin/class-wc-rest-payments-settings-controller.php:312
+#: includes/admin/class-wc-rest-payments-settings-controller.php:317
 msgid "Error: Invalid address format!"
 msgstr ""
 
@@ -339,7 +352,7 @@ msgid "Invalid payment method. Please input a new card number."
 msgstr ""
 
 #: includes/class-platform-checkout-tracker.php:67
-#: includes/class-wc-payments.php:971
+#: includes/class-wc-payments.php:1001
 msgid "You aren’t authorized to do that."
 msgstr ""
 
@@ -347,11 +360,19 @@ msgstr ""
 msgid "No valid event name or type."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:161
-msgid "Accept payments via credit card."
+#: includes/class-wc-payment-gateway-wcpay.php:163
+#. translators: tosLink: Link to terms of service page, privacyLink: Link to
+#. privacy policy page
+msgid ""
+"Payments made simple, with no monthly fees – designed exclusively for "
+"WooCommerce stores. Accept credit cards, debit cards, and other popular "
+"payment methods.<br/><br/>\n"
+"\t\t\tBy using WooCommerce Payments you agree to be bound by our "
+"<tosLink>Terms of Service</tosLink>  and acknowledge that you have read our "
+"<privacyLink>Privacy Policy</privacyLink>"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:162
+#: includes/class-wc-payment-gateway-wcpay.php:174
 #: includes/payment-methods/class-cc-payment-method.php:27
 #: dist/payment-gateways.js:1
 #: dist/index.js:1
@@ -361,7 +382,7 @@ msgstr ""
 msgid "Credit card / debit card"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:163
+#: includes/class-wc-payment-gateway-wcpay.php:175
 msgid "Enter your card details"
 msgstr ""
 
@@ -370,300 +391,300 @@ msgctxt "an email notification"
 msgid "Enable/disable"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:173
+#: includes/class-wc-payment-gateway-wcpay.php:185
 #: dist/settings.js:1
 #: client/settings/general-settings/index.js:26
 msgid "Enable WooCommerce Payments"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:180
+#: includes/class-wc-payment-gateway-wcpay.php:192
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:107
+#: client/settings/transactions-and-deposits/index.js:77
 msgid "Customer bank statement"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:182
+#: includes/class-wc-payment-gateway-wcpay.php:194
 msgid ""
 "Edit the way your store name appears on your customers’ bank statements "
 "(read more about requirements <a>here</a>)."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:187
+#: includes/class-wc-payment-gateway-wcpay.php:199
 msgid "Manual capture"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:188
+#: includes/class-wc-payment-gateway-wcpay.php:200
 msgid "Issue an authorization on checkout, and capture later."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:190
+#: includes/class-wc-payment-gateway-wcpay.php:202
 msgid ""
 "Charge must be captured within 7 days of authorization, otherwise the "
 "authorization and order will be canceled."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:194
+#: includes/class-wc-payment-gateway-wcpay.php:206
 msgid "Saved cards"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:195
+#: includes/class-wc-payment-gateway-wcpay.php:207
 msgid "Enable payment via saved cards"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:197
+#: includes/class-wc-payment-gateway-wcpay.php:209
 msgid ""
 "If enabled, users will be able to pay with a saved card during checkout. "
 "Card details are saved on our platform, not on your store."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:202
+#: includes/class-wc-payment-gateway-wcpay.php:214
 #: dist/settings.js:1
 #: client/settings/general-settings/index.js:35
 msgid "Test mode"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:203
+#: includes/class-wc-payment-gateway-wcpay.php:215
 #: dist/settings.js:1
 #: client/settings/general-settings/index.js:47
 msgid "Enable test mode"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:205
+#: includes/class-wc-payment-gateway-wcpay.php:217
 msgid "Simulate transactions using test card numbers."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:210
+#: includes/class-wc-payment-gateway-wcpay.php:222
 msgid "Debug log"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:211
+#: includes/class-wc-payment-gateway-wcpay.php:223
 msgid "When enabled debug notes will be added to the log."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:217
+#: includes/class-wc-payment-gateway-wcpay.php:229
 msgid "Payment request buttons"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:225
+#: includes/class-wc-payment-gateway-wcpay.php:237
 #. translators: 1) br tag 2) Stripe anchor tag 3) Apple anchor tag
 msgid ""
 "Enable payment request buttons (Apple Pay, Google Pay, and more). %1$sBy "
 "using Apple Pay, you agree to %2$s and %3$s's Terms of Service."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:231
+#: includes/class-wc-payment-gateway-wcpay.php:243
 msgid ""
 "If enabled, users will be able to pay using Apple Pay, Google Pay or the "
 "Payment Request API if supported by the browser."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:236
+#: includes/class-wc-payment-gateway-wcpay.php:248
 msgid "Button type"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:238
+#: includes/class-wc-payment-gateway-wcpay.php:250
 msgid "Select the button type you would like to show."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:242
+#: includes/class-wc-payment-gateway-wcpay.php:254
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:66
 msgid "Only icon"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:243
+#: includes/class-wc-payment-gateway-wcpay.php:255
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:70
 msgid "Buy"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:244
+#: includes/class-wc-payment-gateway-wcpay.php:256
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:74
 msgid "Donate"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:245
+#: includes/class-wc-payment-gateway-wcpay.php:257
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:78
 msgid "Book"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:249
+#: includes/class-wc-payment-gateway-wcpay.php:261
 msgid "Button theme"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:251
+#: includes/class-wc-payment-gateway-wcpay.php:263
 msgid "Select the button theme you would like to show."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:255
+#: includes/class-wc-payment-gateway-wcpay.php:267
 msgid "Dark"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:256
+#: includes/class-wc-payment-gateway-wcpay.php:268
 msgid "Light"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:257
+#: includes/class-wc-payment-gateway-wcpay.php:269
 msgid "Light-Outline"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:261
+#: includes/class-wc-payment-gateway-wcpay.php:273
 msgid "Button height"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:263
+#: includes/class-wc-payment-gateway-wcpay.php:275
 msgid ""
 "Enter the height you would like the button to be in pixels. Width will "
 "always be 100%."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:268
+#: includes/class-wc-payment-gateway-wcpay.php:280
 msgid "Custom button label"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:270
+#: includes/class-wc-payment-gateway-wcpay.php:282
 msgid "Enter the custom text you would like the button to have."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:271
+#: includes/class-wc-payment-gateway-wcpay.php:283
 msgid "Buy now"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:275
+#: includes/class-wc-payment-gateway-wcpay.php:287
 msgid "Button locations"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:277
+#: includes/class-wc-payment-gateway-wcpay.php:289
 msgid "Select where you would like to display the button."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:286
+#: includes/class-wc-payment-gateway-wcpay.php:298
 msgid "Product"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:287
+#: includes/class-wc-payment-gateway-wcpay.php:299
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:232
 msgid "Cart"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:288
+#: includes/class-wc-payment-gateway-wcpay.php:300
 #: dist/settings.js:1
 #: client/settings/express-checkout-settings/payment-request-settings.js:200
 msgid "Checkout"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:291
+#: includes/class-wc-payment-gateway-wcpay.php:303
 msgid "Select pages"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:295
+#: includes/class-wc-payment-gateway-wcpay.php:307
 #: dist/settings.js:1
 #: client/settings/settings-manager/index.js:28
 msgid "Payments accepted on checkout"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:301
+#: includes/class-wc-payment-gateway-wcpay.php:313
 msgid "Size of the button displayed for Express Checkouts"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:303
+#: includes/class-wc-payment-gateway-wcpay.php:315
 msgid "Select the size of the button."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:307
+#: includes/class-wc-payment-gateway-wcpay.php:319
 msgid "Default"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:308
+#: includes/class-wc-payment-gateway-wcpay.php:320
 msgid "Medium"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:309
+#: includes/class-wc-payment-gateway-wcpay.php:321
 msgid "Large"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:570
+#: includes/class-wc-payment-gateway-wcpay.php:582
 msgid "Test mode active: "
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:571
+#: includes/class-wc-payment-gateway-wcpay.php:583
 msgid ""
 "All transactions are simulated. Customers can't make real purchases through "
 "WooCommerce Payments."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:591
+#: includes/class-wc-payment-gateway-wcpay.php:603
 msgid "Unsupported currency:"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:594
+#: includes/class-wc-payment-gateway-wcpay.php:606
 msgid ""
 "The selected currency is not available for the country set in your "
 "WooCommerce Payments account."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:651
+#: includes/class-wc-payment-gateway-wcpay.php:664
 msgid ""
 "There was a problem processing the payment. Please check your email inbox "
 "and refresh the page to try again."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:713
+#: includes/class-wc-payment-gateway-wcpay.php:726
 msgid "Save payment information to my account for future purchases."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:825
+#: includes/class-wc-payment-gateway-wcpay.php:838
 #. translators: link to Stripe testing page
 msgid ""
 "<strong>Test mode:</strong> use the test VISA card 4242424242424242 with "
 "any expiry date and CVC, or any test card numbers listed <a>here</a>."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:870
-#: includes/payment-methods/class-upe-payment-gateway.php:905
+#: includes/class-wc-payment-gateway-wcpay.php:883
+#: includes/payment-methods/class-upe-payment-gateway.php:907
 msgid ""
 "An error was encountered when preparing the payment form. Please try again "
 "later."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:902
-#: includes/class-wc-payment-gateway-wcpay.php:2281
+#: includes/class-wc-payment-gateway-wcpay.php:915
+#: includes/class-wc-payment-gateway-wcpay.php:2318
 #: includes/payment-methods/class-upe-payment-gateway.php:164
 #: includes/payment-methods/class-upe-payment-gateway.php:239
-#: includes/payment-methods/class-upe-payment-gateway.php:428
+#: includes/payment-methods/class-upe-payment-gateway.php:430
 msgid ""
 "We're not able to process this payment. Please refresh the page and try "
 "again."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:909
-#: includes/payment-methods/class-upe-payment-gateway.php:436
+#: includes/class-wc-payment-gateway-wcpay.php:922
+#: includes/payment-methods/class-upe-payment-gateway.php:438
 msgid "Your payment was not processed."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:934
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:278
+#: includes/class-wc-payment-gateway-wcpay.php:947
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:280
 #. translators: %1: the failed payment amount, %2: error message
 msgid ""
 "A payment of %1$s <strong>failed</strong> to complete with the following "
 "message: <code>%2$s</code>."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:943
+#: includes/class-wc-payment-gateway-wcpay.php:956
 #. translators: %1: the failed payment amount, %2: error message
 msgid "A payment of %1$s <strong>failed</strong>. %2$s"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:948
+#: includes/class-wc-payment-gateway-wcpay.php:961
 msgid ""
 "We couldn’t verify the postal code in the billing address. If the issue "
 "persists, suggest the customer to reach out to the card issuing bank."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:973
+#: includes/class-wc-payment-gateway-wcpay.php:986
 #. translators: %1: the failed payment amount
 msgid ""
 "A payment of %1$s <strong>failed</strong> to complete because of too many "
@@ -671,16 +692,16 @@ msgid ""
 "more attempts temporarily."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1104
+#: includes/class-wc-payment-gateway-wcpay.php:1117
 #. translators: %1: the last 4 digit of the credit card
 msgid "Payment method is changed to: <strong>Credit card ending in %1$s</strong>."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1116
+#: includes/class-wc-payment-gateway-wcpay.php:1129
 msgid "Credit / Debit Card"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1486
+#: includes/class-wc-payment-gateway-wcpay.php:1511
 #. translators: an error message which will appear if a user tries to refund an
 #. order which is has been authorized but not yet charged.
 msgid ""
@@ -690,36 +711,36 @@ msgid ""
 "trigger a refund via the 'Refund' button."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1494
+#: includes/class-wc-payment-gateway-wcpay.php:1519
 msgid "The refund amount is not valid."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1515
+#: includes/class-wc-payment-gateway-wcpay.php:1540
 msgid ""
 "You shall refund this payment in the same application where the payment was "
 "made."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1534
+#: includes/class-wc-payment-gateway-wcpay.php:1559
 #. translators: %1: the successfully charged amount, %2: error message
 msgid "A refund of %1$s failed to complete: %2$s"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1552
+#: includes/class-wc-payment-gateway-wcpay.php:1577
 #. translators: %1: the successfully charged amount, %2: refund id
 msgid ""
 "A refund of %1$s was successfully processed using WooCommerce Payments "
 "(<code>%2$s</code>)."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1564
+#: includes/class-wc-payment-gateway-wcpay.php:1589
 #. translators: %1: the successfully charged amount, %2: refund id, %3: reason
 msgid ""
 "A refund of %1$s was successfully processed using WooCommerce Payments. "
 "Reason: %2$s. (<code>%3$s</code>)"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1629
+#: includes/class-wc-payment-gateway-wcpay.php:1660
 #: dist/settings.js:1
 #: client/settings/general-settings/index.js:42
 msgid ""
@@ -727,50 +748,50 @@ msgid ""
 "is only available to live accounts."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1634
+#: includes/class-wc-payment-gateway-wcpay.php:1665
 #: dist/settings.js:1
 #: client/settings/advanced-settings/debug-mode.js:32
 msgid "Dev mode is active so logging is on by default."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:1977
+#: includes/class-wc-payment-gateway-wcpay.php:2008
 msgid "Failed to update Stripe account. "
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2005
+#: includes/class-wc-payment-gateway-wcpay.php:2036
 msgid ""
 "Customer bank statement is invalid. Statement should be between 5 and 22 "
 "characters long, contain at least single Latin character and does not "
 "contain special characters: ' \" * &lt; &gt;"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2032
+#: includes/class-wc-payment-gateway-wcpay.php:2063
 msgid "Capture charge"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2033
+#: includes/class-wc-payment-gateway-wcpay.php:2064
 msgid "Cancel authorization"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2162
+#: includes/class-wc-payment-gateway-wcpay.php:2193
 #. translators: %1: error message
 msgid ""
 "Canceling authorization <strong>failed</strong> to complete with the "
 "following message: <code>%1$s</code>."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2177
+#: includes/class-wc-payment-gateway-wcpay.php:2208
 msgid "Canceling authorization <strong>failed</strong> to complete."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2290
-#: includes/class-wc-payment-gateway-wcpay.php:2303
-#: includes/class-wc-payment-gateway-wcpay.php:2320
-#: includes/payment-methods/class-upe-payment-gateway.php:623
+#: includes/class-wc-payment-gateway-wcpay.php:2327
+#: includes/class-wc-payment-gateway-wcpay.php:2340
+#: includes/class-wc-payment-gateway-wcpay.php:2357
+#: includes/payment-methods/class-upe-payment-gateway.php:625
 msgid "We're not able to process this payment. Please try again later."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2299
+#: includes/class-wc-payment-gateway-wcpay.php:2336
 #: includes/payment-methods/class-cc-payment-method.php:49
 #. translators: This will be used to indicate an unknown value for an ID.
 #: dist/index.js:1
@@ -779,7 +800,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2386
+#: includes/class-wc-payment-gateway-wcpay.php:2423
 #. translators: %1: transaction ID of the payment or a translated string
 #. indicating an unknown ID.
 msgid ""
@@ -788,31 +809,31 @@ msgid ""
 "so it was ignored and the order was not updated."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2430
+#: includes/class-wc-payment-gateway-wcpay.php:2467
 msgid "A WooCommerce Payments payment method was not provided"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2442
+#: includes/class-wc-payment-gateway-wcpay.php:2479
 msgid "We're not able to add this payment method. Please try again later"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2451
+#: includes/class-wc-payment-gateway-wcpay.php:2488
 msgid "Failed to add the provided payment method. Please try again later"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2550
+#: includes/class-wc-payment-gateway-wcpay.php:2587
 #. translators: %s: the error message.
 msgid "Intent creation failed with the following message: %s"
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2591
-#: includes/payment-methods/class-upe-payment-gateway.php:341
+#: includes/class-wc-payment-gateway-wcpay.php:2628
+#: includes/payment-methods/class-upe-payment-gateway.php:343
 msgid ""
 "We're not able to add this payment method. Please refresh the page and try "
 "again."
 msgstr ""
 
-#: includes/class-wc-payment-gateway-wcpay.php:2784
+#: includes/class-wc-payment-gateway-wcpay.php:2821
 msgid ""
 "Next we’ll ask you to share a few details about your business to create "
 "your account."
@@ -827,34 +848,34 @@ msgstr ""
 msgid "Failed to detect connection status"
 msgstr ""
 
-#: includes/class-wc-payments-account.php:606
+#: includes/class-wc-payments-account.php:629
 msgid ""
 "Connection to WordPress.com failed. Please connect to WordPress.com to "
 "start using WooCommerce Payments."
 msgstr ""
 
-#: includes/class-wc-payments-account.php:616
+#: includes/class-wc-payments-account.php:639
 #. translators: error message.
 msgid "There was a problem connecting this site to WordPress.com: \"%s\""
 msgstr ""
 
-#: includes/class-wc-payments-account.php:626
+#: includes/class-wc-payments-account.php:649
 msgid ""
 "There was a problem redirecting you to the account connection page. Please "
 "try again."
 msgstr ""
 
-#: includes/class-wc-payments-account.php:826
+#: includes/class-wc-payments-account.php:849
 msgid ""
 "There was a duplicate attempt to initiate account setup. Please wait a few "
 "seconds and try again."
 msgstr ""
 
-#: includes/class-wc-payments-account.php:903
+#: includes/class-wc-payments-account.php:926
 msgid "There was a problem processing your account data. Please try again."
 msgstr ""
 
-#: includes/class-wc-payments-account.php:1096
+#: includes/class-wc-payments-account.php:1119
 msgid "Failed to update Account locale. "
 msgstr ""
 
@@ -881,12 +902,12 @@ msgstr ""
 
 #: includes/class-wc-payments-apple-pay-registration.php:359
 msgid ""
-"Payment request buttons are enabled. To use Apple Pay, please use a live "
+"Express checkouts are enabled. To use Apple Pay, please use a live "
 "WooCommerce Payments account."
 msgstr ""
 
 #: includes/class-wc-payments-apple-pay-registration.php:392
-msgid "Payment request button:"
+msgid "Express checkouts:"
 msgstr ""
 
 #: includes/class-wc-payments-apple-pay-registration.php:393
@@ -898,10 +919,126 @@ msgid "Apple Pay domain verification failed with the following error:"
 msgstr ""
 
 #: includes/class-wc-payments-apple-pay-registration.php:397
-#. translators: 1) HTML anchor open tag 2) HTML anchor closing tag
+#. translators: a: Link to the logs page
 msgid ""
-"Please check the %1$slogs%2$s for more details on this issue. Debug log "
-"must be enabled to see recorded logs."
+"Please check the <a>logs</a> for more details on this issue. Debug log must "
+"be enabled under <strong>Advanced settings</strong> to see recorded logs."
+msgstr ""
+
+#: includes/class-wc-payments-apple-pay-registration.php:404
+msgid "<a>Learn more</a>."
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:113
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:280
+msgid "Base fee"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:114
+#: dist/index.js:1
+#: client/payment-details/readers/index.js:82
+#: client/payment-details/summary/index.tsx:87
+#: client/payment-details/timeline/map-events.js:281
+msgid "Fee"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:180
+#. translators: %s is a monetary amount
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:251
+#. %s is a monetary amount
+msgid "Net deposit: %s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:235
+#. translators: %s is a percentage number
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:463
+#. %s is a percentage number
+msgid "Variable fee: %s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:240
+#. translators: %s is a monetary amount
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:468
+#. %s is a monetary amount
+msgid "Fixed fee: %s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:296
+#. translators: %2$s is the capped fee
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:383
+#. %2$s is the capped fee
+msgid "Base fee: capped at %2$s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:300
+#. translators: %1$s% is the fee percentage and %2$s is the fixed rate
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:388
+#. %1$s% is the fee percentage and %2$s is the fixed rate
+msgid "Base fee: %1$s%% + %2$s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:302
+#. translators: %1$s% is the fee percentage
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:392
+#. %1$s% is the fee percentage
+msgid "Base fee: %1$s%%"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:307
+#. translators: %1$s% is the fee percentage and %2$s is the fixed rate
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:397
+msgid "International card fee: %1$s%% + %2$s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:309
+#. translators: %1$s% is the fee percentage
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:402
+msgid "International card fee: %1$s%%"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:313
+#. translators: %1$s% is the fee percentage and %2$s is the fixed rate
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:409
+msgid "Foreign exchange fee: %1$s%% + %2$s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:315
+#. translators: %1$s% is the fee percentage
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:414
+msgid "Foreign exchange fee: %1$s%%"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:319
+#. translators: %1$s% is the fee percentage and %2$s is the fixed rate
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:421
+msgid "Subscription transaction fee: %1$s%% + %2$s"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:321
+#. translators: %1$s% is the fee percentage
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:426
+msgid "Subscription transaction fee: %1$s%%"
+msgstr ""
+
+#: includes/class-wc-payments-captured-event-note.php:323
+#: includes/class-wc-payments-payment-request-button-handler.php:1376
+#: includes/in-person-payments/templates/html-in-person-payment-receipt.php:160
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:431
+msgid "Discount"
 msgstr ""
 
 #: includes/class-wc-payments-customer-service.php:296
@@ -987,11 +1124,11 @@ msgid ""
 "repository</a2>."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:258
+#: includes/class-wc-payments-order-service.php:273
 msgid "Dispute lost."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:324
+#: includes/class-wc-payments-order-service.php:339
 #. translators: %1: the successfully charged amount, %2: transaction ID of the
 #. payment
 msgid ""
@@ -999,28 +1136,28 @@ msgid ""
 "WooCommerce Payments (<a>%2$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:351
+#: includes/class-wc-payments-order-service.php:386
 #. translators: %1: the authorized amount, %2: transaction ID of the payment
 msgid ""
 "A payment of %1$s <strong>failed</strong> using WooCommerce Payments "
 "(<a>%2$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:382
+#: includes/class-wc-payments-order-service.php:417
 #. translators: %1: the authorized amount, %2: transaction ID of the payment
 msgid ""
 "A payment of %1$s was <strong>authorized</strong> using WooCommerce "
 "Payments (<a>%2$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:408
+#: includes/class-wc-payments-order-service.php:443
 #. translators: %1: the authorized amount, %2: transaction ID of the payment
 msgid ""
 "A payment of %1$s was <strong>started</strong> using WooCommerce Payments "
 "(<code>%2$s</code>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:435
+#: includes/class-wc-payments-order-service.php:470
 #. translators: %1: the successfully charged amount, %2: transaction ID of the
 #. payment
 msgid ""
@@ -1028,38 +1165,46 @@ msgid ""
 "WooCommerce Payments (<a>%2$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:463
+#: includes/class-wc-payments-order-service.php:498
 #. translators: %1: the authorized amount, %2: transaction ID of the payment
 msgid ""
 "A capture of %1$s <strong>failed</strong> to complete using WooCommerce "
 "Payments (<a>%2$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:494
+#: includes/class-wc-payments-order-service.php:529
 #. translators: %1: the authorized amount, %2: transaction ID of the payment
 msgid "Payment authorization has <strong>expired</strong> (<a>%1$s</a>)."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:514
+#: includes/class-wc-payments-order-service.php:549
 msgid "Payment authorization was successfully <strong>cancelled</strong>."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:535
+#: includes/class-wc-payments-order-service.php:570
 #. translators: %1: the dispute reason
 msgid ""
 "Payment has been disputed as %1$s. See <a>dispute overview</a> for more "
 "details."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:557
+#: includes/class-wc-payments-order-service.php:592
 #. translators: %1: the dispute status
 msgid ""
 "Payment dispute has been closed with status %1$s. See <a>dispute "
 "overview</a> for more details."
 msgstr ""
 
-#: includes/class-wc-payments-order-service.php:749
+#: includes/class-wc-payments-order-service.php:786
 msgid "Intent id was not included for payment complete status change."
+msgstr ""
+
+#: includes/class-wc-payments-order-success-page.php:36
+msgid "Thank you! We’ve received your order."
+msgstr ""
+
+#: includes/class-wc-payments-order-success-page.php:53
+msgid "Payment method:"
 msgstr ""
 
 #: includes/class-wc-payments-payment-request-button-handler.php:263
@@ -1115,13 +1260,6 @@ msgstr ""
 msgid "Empty cart"
 msgstr ""
 
-#: includes/class-wc-payments-payment-request-button-handler.php:1376
-#: includes/in-person-payments/templates/html-in-person-payment-receipt.php:160
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:422
-msgid "Discount"
-msgstr ""
-
 #: includes/class-wc-payments-payment-request-button-handler.php:1456
 #. translators: The text encapsulated in `**` can be replaced with "Apple Pay"
 #. or "Google Pay". Please translate this text, but don't remove the `**`.
@@ -1166,7 +1304,7 @@ msgstr ""
 msgid "Account ID"
 msgstr ""
 
-#: includes/class-wc-payments-token-service.php:205
+#: includes/class-wc-payments-token-service.php:210
 msgid "SEPA IBAN"
 msgstr ""
 
@@ -1283,9 +1421,9 @@ msgstr ""
 
 #: includes/class-wc-payments-webhook-processing-service.php:214
 #: includes/class-wc-payments-webhook-processing-service.php:290
-#: includes/class-wc-payments-webhook-processing-service.php:406
-#: includes/class-wc-payments-webhook-processing-service.php:435
-#: includes/class-wc-payments-webhook-processing-service.php:463
+#: includes/class-wc-payments-webhook-processing-service.php:409
+#: includes/class-wc-payments-webhook-processing-service.php:438
+#: includes/class-wc-payments-webhook-processing-service.php:466
 #. translators: %1: charge ID
 msgid "Could not find order via charge ID: %1$s"
 msgstr ""
@@ -1297,68 +1435,74 @@ msgid ""
 "Payments (<code>%2$s</code>)."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:471
+#: includes/class-wc-payments-webhook-processing-service.php:474
 msgid "Payment dispute funds have been withdrawn"
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:474
+#: includes/class-wc-payments-webhook-processing-service.php:477
 msgid "Payment dispute funds have been reinstated"
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:477
+#: includes/class-wc-payments-webhook-processing-service.php:480
 msgid "Payment dispute has been updated"
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:482
+#: includes/class-wc-payments-webhook-processing-service.php:485
 #. translators: %1: the dispute message, %2: the dispute details URL
 msgid "%1$s. See <a href=\"%2$s\">dispute overview</a> for more details."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:532
+#: includes/class-wc-payments-webhook-processing-service.php:535
 #. translators: %1: ID being fetched
 msgid "%1$s not found in array"
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:576
+#: includes/class-wc-payments-webhook-processing-service.php:579
 #. translators: %1: intent ID
 msgid "Could not find order via intent ID: %1$s"
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:603
+#: includes/class-wc-payments-webhook-processing-service.php:606
 msgid "The customer's bank account has been closed."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:606
+#: includes/class-wc-payments-webhook-processing-service.php:609
 msgid "The customer has notified their bank that this payment was unauthorized."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:609
+#: includes/class-wc-payments-webhook-processing-service.php:612
 msgid "The customer's account has insufficient funds to cover this payment."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:612
+#: includes/class-wc-payments-webhook-processing-service.php:615
 msgid "The customer's bank account could not be located."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:615
+#: includes/class-wc-payments-webhook-processing-service.php:618
 msgid ""
 "Microdeposit transfers failed. Please check the account, institution and "
 "transit numbers."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:618
+#: includes/class-wc-payments-webhook-processing-service.php:621
 msgid "You have exceeded the number of allowed verification attempts."
 msgstr ""
 
-#: includes/class-wc-payments-webhook-processing-service.php:622
+#: includes/class-wc-payments-webhook-processing-service.php:625
 msgid "The payment was not able to be processed."
 msgstr ""
 
-#: includes/class-wc-payments.php:1085
+#: includes/class-wc-payments.php:1071
+#: includes/wc-payment-api/class-wc-payments-http.php:114
+#. translators: %1: original error message.
+msgid "Http request failed. Reason: %1$s"
+msgstr ""
+
+#: includes/class-wc-payments.php:1141
 msgid "Contact information"
 msgstr ""
 
-#: includes/class-wc-payments.php:1092
+#: includes/class-wc-payments.php:1148
 msgid "Email address"
 msgstr ""
 
@@ -1419,7 +1563,7 @@ msgstr ""
 msgid "Authorize the payment &raquo;"
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:227
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:229
 msgid ""
 "Almost there!\n"
 "\n"
@@ -1431,27 +1575,27 @@ msgstr ""
 msgid "Saved payment method"
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:366
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:398
 msgid "A customer saved payment method was not selected for this order."
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:375
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:407
 msgid "The saved payment method selected is invalid or does not exist."
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:382
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:414
 msgid "The saved payment method selected does not belong to this order's customer."
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:462
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:516
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:494
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:548
 msgid "Please select a payment method"
 msgstr ""
 
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:550
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:569
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:610
-#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:618
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:582
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:601
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:642
+#: includes/compat/subscriptions/trait-wc-payment-gateway-wcpay-subscriptions.php:650
 #. translators: 1: payment method likely credit card, 2: last 4 digit.
 msgid "%1$s ending in %2$s"
 msgstr ""
@@ -1775,16 +1919,16 @@ msgstr ""
 msgid "Popular payment methods"
 msgstr ""
 
-#: includes/payment-methods/class-upe-payment-gateway.php:529
+#: includes/payment-methods/class-upe-payment-gateway.php:531
 msgid "Payment method successfully added."
 msgstr ""
 
-#: includes/payment-methods/class-upe-payment-gateway.php:676
+#: includes/payment-methods/class-upe-payment-gateway.php:678
 #. translators: localized exception message
 msgid "UPE payment failed: %s"
 msgstr ""
 
-#: includes/payment-methods/class-upe-payment-gateway.php:854
+#: includes/payment-methods/class-upe-payment-gateway.php:856
 #. translators: link to Stripe testing page
 msgid ""
 "<strong>Test mode:</strong> use the test VISA card 4242424242424242 with "
@@ -1793,7 +1937,7 @@ msgid ""
 "<a>here</a>."
 msgstr ""
 
-#: includes/payment-methods/class-upe-payment-gateway.php:1008
+#: includes/payment-methods/class-upe-payment-gateway.php:1010
 msgid "Unable to update UPE appearance values at this time."
 msgstr ""
 
@@ -1840,18 +1984,18 @@ msgstr ""
 msgid "Update and retry payment"
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:307
+#: includes/subscriptions/class-wc-payments-subscription-service.php:313
 #. Translators: %s Coupon code.
 msgid "Coupon - %s"
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:357
+#: includes/subscriptions/class-wc-payments-subscription-service.php:363
 msgid ""
 "There was a problem creating your subscription. Please try again or contact "
 "us for assistance."
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:388
+#: includes/subscriptions/class-wc-payments-subscription-service.php:394
 #. Translators: The %1 placeholder is a currency formatted price string
 #. ($0.50). The %2 and %3 placeholders are opening and closing strong HTML
 #. tags.
@@ -1860,21 +2004,21 @@ msgid ""
 "%2$sminimum recurring amount%3$s this payment method can process."
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:589
+#: includes/subscriptions/class-wc-payments-subscription-service.php:595
 msgid ""
 "We've successfully collected payment for your subscription using your new "
 "payment method."
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:646
+#: includes/subscriptions/class-wc-payments-subscription-service.php:652
 msgid "WooCommerce Payments Subscription ID"
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:667
+#: includes/subscriptions/class-wc-payments-subscription-service.php:673
 msgid "The subscription's next payment date has been updated to match WCPay server."
 msgstr ""
 
-#: includes/subscriptions/class-wc-payments-subscription-service.php:891
+#: includes/subscriptions/class-wc-payments-subscription-service.php:897
 #. Translators: %s Stripe subscription item ID.
 msgid "Unable to set subscription item ID meta for WCPay subscription item %s."
 msgstr ""
@@ -1960,7 +2104,8 @@ msgstr ""
 #: client/payment-methods/activation-modal.tsx:28
 #: client/payment-methods/delete-modal.tsx:20
 #: client/settings/disable-upe-modal/index.js:126
-#: client/settings/survey-modal/index.js:151
+#: client/settings/survey-modal/index.js:178
+#: client/settings/transactions-and-deposits/manual-capture-control.js:85
 msgid "Cancel"
 msgstr ""
 
@@ -1998,11 +2143,6 @@ msgstr ""
 
 #: includes/wc-payment-api/class-wc-payments-http.php:55
 msgid "Site is not connected to WordPress.com"
-msgstr ""
-
-#: includes/wc-payment-api/class-wc-payments-http.php:114
-#. translators: %1: original error message.
-msgid "Http request failed. Reason: %1$s"
 msgstr ""
 
 #: templates/emails/customer-ipp-receipt.php:24
@@ -2164,6 +2304,16 @@ msgctxt "Settings tab label"
 msgid "Multi-currency"
 msgstr ""
 
+#: includes/subscriptions/class-wc-payments-subscriptions-onboarding-handler.php:277
+#. translators: %1$s: <h3> tag, %2$s: </h3> tag, %3$s: <p> tag, %4$s: <em> tag,
+#. %5$s: </em> tag, %6$s: <em> tag, %7$s: </em> tag, %8$s: </p> tag.
+msgctxt "used in admin pointer script params in javascript as type pointer content"
+msgid ""
+"%1$sChoose Subscription%2$s%3$sWooCommerce Payments adds two new "
+"subscription product types - %4$sSimple subscription%5$s and %6$sVariable "
+"subscription%7$s.%8$s"
+msgstr ""
+
 #: includes/wc-payment-api/class-wc-payments-api-client.php:2140
 #. translators: This is an error API response.
 msgctxt "API error message to throw as Exception"
@@ -2209,7 +2359,9 @@ msgid "Refined checkout experience designed for desktop and mobile."
 msgstr ""
 
 #: dist/index.js:1
+#: dist/settings.js:1
 #: client/additional-methods-setup/upe-preview-methods-selector/enable-upe-preview-task.js:129
+#: client/settings/transactions-and-deposits/manual-capture-control.js:91
 msgid "Enable"
 msgstr ""
 
@@ -2419,7 +2571,9 @@ msgid "There was a problem generating the receipt preview. Please try again late
 msgstr ""
 
 #: dist/index.js:1
+#: dist/settings.js:1
 #: client/card-readers/settings/file-upload.tsx:59
+#: client/settings/express-checkout-settings/file-upload.tsx:62
 msgid "The file you have attached is exceeding the maximum limit."
 msgstr ""
 
@@ -2521,17 +2675,27 @@ msgid "Business URL"
 msgstr ""
 
 #: dist/index.js:1
-#: client/card-readers/settings/sections/contacts-details.js:38
-msgid "Customer support contacts"
+#: client/card-readers/settings/sections/contacts-details.js:36
+msgid "Support email cannot be empty, please specify."
 msgstr ""
 
 #: dist/index.js:1
-#: client/card-readers/settings/sections/contacts-details.js:47
-msgid "Support email"
+#: client/card-readers/settings/sections/contacts-details.js:43
+msgid "Support phone number cannot be empty, please specify."
 msgstr ""
 
 #: dist/index.js:1
 #: client/card-readers/settings/sections/contacts-details.js:59
+msgid "Customer support contacts"
+msgstr ""
+
+#: dist/index.js:1
+#: client/card-readers/settings/sections/contacts-details.js:68
+msgid "Support email"
+msgstr ""
+
+#: dist/index.js:1
+#: client/card-readers/settings/sections/contacts-details.js:81
 msgid "Support phone number"
 msgstr ""
 
@@ -2613,11 +2777,16 @@ msgstr ""
 
 #: dist/index.js:1
 #: client/components/account-status/status-chip.js:26
-msgid "Restricted"
+msgid "Restricted partially"
 msgstr ""
 
 #: dist/index.js:1
 #: client/components/account-status/status-chip.js:29
+msgid "Restricted"
+msgstr ""
+
+#: dist/index.js:1
+#: client/components/account-status/status-chip.js:32
 msgid "Rejected"
 msgstr ""
 
@@ -2835,12 +3004,15 @@ msgid ""
 msgstr ""
 
 #: dist/index.js:1
-#: client/components/file-upload/index.tsx:38
+#: dist/settings.js:1
+#: client/components/file-upload/index.tsx:39
 msgid "Upload file"
 msgstr ""
 
 #: dist/index.js:1
-#: client/components/file-upload/index.tsx:41
+#: dist/settings.js:1
+#: client/components/file-upload/index.tsx:42
+#: client/settings/express-checkout-settings/file-upload.tsx:147
 msgid "Remove file"
 msgstr ""
 
@@ -2856,8 +3028,24 @@ msgstr ""
 
 #: dist/index.js:1
 #: dist/settings.js:1
+#: client/components/loadable-checkbox/index.js:103
+#. %s: a payment method name.
+msgid "%s cannot be enabled at checkout. Click to expand."
+msgstr ""
+
+#: dist/index.js:1
+#: dist/settings.js:1
+#: client/components/loadable-checkbox/index.js:87
+#. %s: a payment method name.
+msgid ""
+"%s is not available to your customers when the \"manual capture\" setting "
+"is enabled."
+msgstr ""
+
+#: dist/index.js:1
+#: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:102
-#: client/components/payment-methods-list/payment-method.js:93
+#: client/components/payment-methods-list/payment-method.js:100
 msgid ""
 "%s won't be visible to your customers until you provide the required "
 "information. Follow the instructions sent by our partner Stripe to %s."
@@ -2866,28 +3054,28 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:116
-#: client/components/payment-methods-list/payment-method.js:107
+#: client/components/payment-methods-list/payment-method.js:114
 msgid "Pending activation"
 msgstr ""
 
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:126
-#: client/components/payment-methods-list/payment-method.js:117
+#: client/components/payment-methods-list/payment-method.js:124
 msgid "To use %s, please contact WooCommerce support."
 msgstr ""
 
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:134
-#: client/components/payment-methods-list/payment-method.js:125
+#: client/components/payment-methods-list/payment-method.js:132
 msgid "Contact WooCommerce Support"
 msgstr ""
 
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:151
-#: client/components/payment-methods-list/payment-method.js:147
+#: client/components/payment-methods-list/payment-method.js:154
 msgid "Base transaction fees: %s"
 msgstr ""
 
@@ -2899,7 +3087,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:84
-#: client/components/payment-methods-list/payment-method.js:72
+#: client/components/payment-methods-list/payment-method.js:79
 msgid ""
 "This payment method is pending approval. Once approved, you will be able to "
 "use it."
@@ -2908,7 +3096,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: client/components/payment-methods-checkboxes/payment-method-checkbox.js:92
-#: client/components/payment-methods-list/payment-method.js:82
+#: client/components/payment-methods-list/payment-method.js:89
 msgid "Pending approval"
 msgstr ""
 
@@ -2919,21 +3107,21 @@ msgstr ""
 
 #: dist/index.js:1
 #: client/components/payment-status-chip/mappings.js:34
-#: client/payment-details/timeline/map-events.js:612
+#: client/payment-details/timeline/map-events.js:638
 msgid "Partial refund"
 msgstr ""
 
 #: dist/index.js:1
 #: client/components/payment-status-chip/mappings.js:38
 #: client/payment-details/summary/index.tsx:84
-#: client/payment-details/timeline/map-events.js:611
+#: client/payment-details/timeline/map-events.js:637
 msgid "Refunded"
 msgstr ""
 
 #: dist/index.js:1
 #: client/components/payment-status-chip/mappings.js:42
 #: client/deposits/strings.ts:11
-#: client/payment-details/timeline/map-events.js:567
+#: client/payment-details/timeline/map-events.js:597
 msgid "Paid"
 msgstr ""
 
@@ -2997,13 +3185,18 @@ msgid "Privacy Policy"
 msgstr ""
 
 #: dist/platform-checkout.js:1
+#: client/components/platform-checkout/save-user/checkout-page-save-user.js:40
+msgid "Remember your details?"
+msgstr ""
+
+#: dist/platform-checkout.js:1
 #: client/components/platform-checkout/save-user/checkout-page-save-user.js:56
 msgid "Save my information for faster checkouts"
 msgstr ""
 
 #: dist/platform-checkout.js:1
 #: client/components/platform-checkout/save-user/checkout-page-save-user.js:69
-#: client/components/platform-checkout/save-user/phone-number-input.js:124
+#: client/components/platform-checkout/save-user/phone-number-input.js:130
 msgid "Mobile phone number"
 msgstr ""
 
@@ -3252,7 +3445,7 @@ msgstr ""
 #: client/connect-account-page/strings.js:9
 #: client/empty-state-table/list.tsx:47
 #: client/onboarding/strings.ts:7
-#: client/subscription-product-onboarding/modal.js:38
+#: client/subscription-product-onboarding/modal.js:41
 #: client/subscriptions-empty-state/index.js:86
 msgid "Finish setup"
 msgstr ""
@@ -3771,7 +3964,7 @@ msgstr ""
 #: dist/index.js:1
 #: client/deposits/strings.ts:15
 #: client/payment-details/payment-method/card/check.js:16
-#: client/payment-details/timeline/map-events.js:656
+#: client/payment-details/timeline/map-events.js:685
 msgid "Failed"
 msgstr ""
 
@@ -5023,7 +5216,7 @@ msgstr ""
 #: dist/subscription-product-onboarding-modal.js:1
 #: dist/subscriptions-empty-state.js:1
 #: client/empty-state-table/list.tsx:41
-#: client/subscription-product-onboarding/modal.js:79
+#: client/subscription-product-onboarding/modal.js:82
 #: client/subscriptions-empty-state/index.js:48
 msgid "By clicking \"Finish setup\", you agree to the <a>Terms of Service</a>"
 msgstr ""
@@ -6203,13 +6396,6 @@ msgid "Reader id"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/readers/index.js:82
-#: client/payment-details/summary/index.tsx:87
-#: client/payment-details/timeline/map-events.js:273
-msgid "Fee"
-msgstr ""
-
-#: dist/index.js:1
 #: client/payment-details/summary/index.tsx:49
 msgid "Subscription"
 msgstr ""
@@ -6270,93 +6456,19 @@ msgid "%s will be subtracted from a future deposit."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:272
-msgid "Base fee"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:319
+#: client/payment-details/timeline/map-events.js:327
 #. %s is a trcking reference number
 msgid "Acquirer Reference Number (ARN) %s"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:332
+#: client/payment-details/timeline/map-events.js:340
 msgid "the card being expired or canceled."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:342
+#: client/payment-details/timeline/map-events.js:350
 msgid "the card being lost or stolen."
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:374
-#. %2$s is the capped fee
-msgid "Base fee: capped at %2$s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:379
-#. %1$s% is the fee percentage and %2$s is the fixed rate
-msgid "Base fee: %1$s%% + %2$s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:383
-#. %1$s% is the fee percentage
-msgid "Base fee: %1$s%%"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:388
-msgid "International card fee: %1$s%% + %2$s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:393
-msgid "International card fee: %1$s%%"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:400
-msgid "Foreign exchange fee: %1$s%% + %2$s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:405
-msgid "Foreign exchange fee: %1$s%%"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:412
-msgid "Subscription transaction fee: %1$s%% + %2$s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:417
-msgid "Subscription transaction fee: %1$s%%"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:432
-msgid "Variable fee: "
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:436
-msgid "Fixed fee: "
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:502
-msgid "Authorized"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:508
-#. %s is a monetary amount
-msgid "A payment of %s was successfully authorized."
 msgstr ""
 
 #: dist/index.js:1
@@ -6366,127 +6478,110 @@ msgid "Payment status changed to %s."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:523
+#: client/payment-details/timeline/map-events.js:533
+msgid "Authorized"
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:539
+#. %s is a monetary amount
+msgid "A payment of %s was successfully authorized."
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:554
 msgid "Authorization voided"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:528
+#: client/payment-details/timeline/map-events.js:559
 msgid "Authorization for %s was voided."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:544
+#: client/payment-details/timeline/map-events.js:575
 msgid "Authorization expired"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:549
+#: client/payment-details/timeline/map-events.js:580
 msgid "Authorization for %s expired."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:573
+#: client/payment-details/timeline/map-events.js:603
 msgid "A payment of %s was successfully charged."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:589
-#. %s is a monetary amount
-msgid "Net deposit: %s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:618
+#: client/payment-details/timeline/map-events.js:644
 msgid "A payment of %s was successfully refunded."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:639
+#: client/payment-details/timeline/map-events.js:668
 msgid "%s refund was attempted but failed due to %s"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:662
+#: client/payment-details/timeline/map-events.js:691
 #. %s is a monetary amount
 msgid "A payment of %s failed."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:671
+#: client/payment-details/timeline/map-events.js:700
 msgid "Payment disputed"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:678
+#: client/payment-details/timeline/map-events.js:707
 #. %s is a monetary amount
 msgid "Payment disputed as %s."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:694
+#: client/payment-details/timeline/map-events.js:723
 msgid "No funds have been withdrawn yet."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:699
+#: client/payment-details/timeline/map-events.js:728
 msgid ""
 "The cardholder's bank is requesting more information to decide whether to "
 "return these funds to the cardholder."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:724
+#: client/payment-details/timeline/map-events.js:753
 #. %s is a monetary amount
 msgid "Disputed amount: %s"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:730
+#: client/payment-details/timeline/map-events.js:759
 #. %s is a monetary amount
 msgid "Fee: %s"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:740
+#: client/payment-details/timeline/map-events.js:769
 msgid "Disputed: Needs response"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:754
+#: client/payment-details/timeline/map-events.js:783
 msgid "View dispute"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:763
+#: client/payment-details/timeline/map-events.js:792
 msgid "Disputed: In review"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:767
+#: client/payment-details/timeline/map-events.js:796
 msgid "Challenge evidence submitted."
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:783
-msgid "Disputed: Won"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:788
-#. %s is a monetary amount
-msgid "Dispute reversal: %s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:793
-#. %s is a monetary amount
-msgid "Fee refund: %s"
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:799
-msgid "Dispute won! The bank ruled in your favor."
 msgstr ""
 
 #: dist/index.js:1
@@ -6496,23 +6591,35 @@ msgid "%1$s was added to your <a>%2$s deposit</a>."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:811
+#: client/payment-details/timeline/map-events.js:812
+msgid "Disputed: Won"
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:817
+#. %s is a monetary amount
+msgid "Dispute reversal: %s"
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:822
+#. %s is a monetary amount
+msgid "Fee refund: %s"
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:828
+msgid "Dispute won! The bank ruled in your favor."
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:840
 msgid "Disputed: Lost"
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:815
+#: client/payment-details/timeline/map-events.js:844
 msgid "Dispute lost. The bank ruled in favor of your customer."
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:827
-msgid "Dispute inquiry closed. The bank chose not to pursue this dispute."
-msgstr ""
-
-#: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:839
-msgid "The disputed charge has been refunded."
 msgstr ""
 
 #: dist/index.js:1
@@ -6522,7 +6629,17 @@ msgid "%1$s was deducted from your <a>%2$s deposit</a>."
 msgstr ""
 
 #: dist/index.js:1
-#: client/payment-details/timeline/map-events.js:855
+#: client/payment-details/timeline/map-events.js:856
+msgid "Dispute inquiry closed. The bank chose not to pursue this dispute."
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:868
+msgid "The disputed charge has been refunded."
+msgstr ""
+
+#: dist/index.js:1
+#: client/payment-details/timeline/map-events.js:884
 msgid "Loan repayment: <a>Loan %s</a>"
 msgstr ""
 
@@ -6576,7 +6693,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:28
+#: client/payment-methods-map.ts:29
 msgid "BECS Direct Debit"
 msgstr ""
 
@@ -6584,7 +6701,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:29
+#: client/payment-methods-map.ts:30
 msgid ""
 "Bulk Electronic Clearing System — Accept secure bank transfer from "
 "Australia."
@@ -6594,7 +6711,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:36
+#: client/payment-methods-map.ts:38
 msgid "Bancontact"
 msgstr ""
 
@@ -6602,7 +6719,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:37
+#: client/payment-methods-map.ts:39
 msgid ""
 "Bancontact is a bank redirect payment method offered by more than 80% of "
 "online businesses in Belgium."
@@ -6612,7 +6729,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:44
+#: client/payment-methods-map.ts:47
 msgid "EPS"
 msgstr ""
 
@@ -6620,7 +6737,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:45
+#: client/payment-methods-map.ts:48
 msgid "Accept your payment with EPS — a common payment method in Austria."
 msgstr ""
 
@@ -6628,7 +6745,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:52
+#: client/payment-methods-map.ts:56
 msgid "giropay"
 msgstr ""
 
@@ -6636,7 +6753,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:53
+#: client/payment-methods-map.ts:57
 msgid ""
 "Expand your business with giropay — Germany’s second most popular payment "
 "system."
@@ -6646,7 +6763,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:60
+#: client/payment-methods-map.ts:65
 msgid "iDEAL"
 msgstr ""
 
@@ -6654,7 +6771,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:61
+#: client/payment-methods-map.ts:66
 msgid "Expand your business with iDEAL — Netherlands’s most popular payment method."
 msgstr ""
 
@@ -6662,7 +6779,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:68
+#: client/payment-methods-map.ts:74
 msgid "Przelewy24 (P24)"
 msgstr ""
 
@@ -6670,7 +6787,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:69
+#: client/payment-methods-map.ts:75
 msgid ""
 "Accept payments with Przelewy24 (P24), the most popular payment method in "
 "Poland."
@@ -6680,7 +6797,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:76
+#: client/payment-methods-map.ts:83
 msgid "SEPA Direct Debit"
 msgstr ""
 
@@ -6688,7 +6805,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:77
+#: client/payment-methods-map.ts:84
 msgid ""
 "Reach 500 million customers and over 20 million businesses across the "
 "European Union."
@@ -6698,7 +6815,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:84
+#: client/payment-methods-map.ts:92
 msgid "Sofort"
 msgstr ""
 
@@ -6706,7 +6823,7 @@ msgstr ""
 #: dist/index.js:1
 #: dist/settings.js:1
 #: dist/multi-currency.js:1
-#: client/payment-methods-map.ts:85
+#: client/payment-methods-map.ts:93
 msgid ""
 "Accept secure bank transfers from Austria, Belgium, Germany, Italy, "
 "Netherlands, and Spain."
@@ -6902,22 +7019,46 @@ msgid "Payment methods that require the new payments experience:"
 msgstr ""
 
 #: dist/settings.js:1
+#: client/settings/express-checkout-settings/file-upload.tsx:141
+msgid "Upload custom logo"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/express-checkout-settings/file-upload.tsx:146
+msgid "Replace"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/express-checkout-settings/file-upload.tsx:148
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:74
+msgid ""
+"Use a custom logo to WooPay if the one taken from your store doesn’t look "
+"right. For best results, upload a high-resolution horizontal image with "
+"white or transparent background."
+msgstr ""
+
+#: dist/settings.js:1
 #: client/settings/express-checkout-settings/index.js:35
 msgid "Allow your customers to collect payments via WooPay."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/index.js:57
+#: client/settings/express-checkout-settings/index.js:41
+msgid "Checkout appearance"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/express-checkout-settings/index.js:60
 msgid "Allow your customers to collect payments via Apple Pay and Google Pay."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/index.js:71
+#: client/settings/express-checkout-settings/index.js:74
 msgid "Configure the display of Apple Pay and Google Pay buttons on your store."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/index.js:90
+#: client/settings/express-checkout-settings/index.js:93
 msgid "Invalid express checkout method ID specified."
 msgstr ""
 
@@ -7024,22 +7165,27 @@ msgid ""
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/platform-checkout-settings.js:37
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:46
 msgid "Enable WooPay"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/platform-checkout-settings.js:38
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:47
 msgid "When enabled, customers will be able to checkout using WooPay"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/platform-checkout-settings.js:44
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:65
+msgid "Store logo on checkout"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:86
 msgid "Custom message"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/express-checkout-settings/platform-checkout-settings.js:46
+#: client/settings/express-checkout-settings/platform-checkout-settings.js:89
 msgid ""
 "Inform your customers about the return, refund, and exchange policy, or "
 "include any other useful message. Note that you can add plain text and "
@@ -7151,134 +7297,168 @@ msgid "View frequently asked questions"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:139
+#: client/settings/survey-modal/index.js:108
+msgid "There was an error during submission."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/survey-modal/index.js:114
+msgid "Thank you! Your feedback will help improve your experience in the future."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/survey-modal/index.js:123
+msgid "The survey could not be loaded."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/survey-modal/index.js:166
 msgid "Provide feedback about the new payments experience."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:159
+#: client/settings/survey-modal/index.js:186
 msgid "Send feedback"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:29
+#: client/settings/survey-modal/index.js:30
 msgid "You've disabled the new payments experience in your store."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:39
+#: client/settings/survey-modal/index.js:40
 msgid "Do you have any feedback for the new payments experience?"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:43
+#: client/settings/survey-modal/index.js:44
 msgid "What made you disable the new payments experience?"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:62
+#: client/settings/survey-modal/index.js:63
+msgid "Please provide additional details to help us improve the experience"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/survey-modal/index.js:76
+msgid "The following system status information will also be submitted:"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/survey-modal/index.js:97
 msgid ""
 "Feedback will be sent anonymously to the WooCommerce Payments development "
 "team."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/survey-modal/index.js:66
-msgid "Comments (optional)"
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/survey-modal/index.js:81
-msgid "There was an error during submission."
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/survey-modal/index.js:87
-msgid "Thank you! Your feedback will help improve your experience in the future."
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/survey-modal/index.js:96
-msgid "The survey could not be loaded."
+#: client/settings/survey-modal/provider.js:44
+msgid "Can not load System Status Report"
 msgstr ""
 
 #: dist/settings.js:1
 #: client/settings/transactions-and-deposits/index.js:103
-msgid "Edit the way your store name appears on your customers' bank statements."
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:122
-msgid "Bank account information"
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:128
-msgid ""
-"Manage and update your deposit account information to receive payments and "
-"payouts."
-msgstr ""
-
-#: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:133
 msgid "Manage in Stripe"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:51
+#: client/settings/transactions-and-deposits/index.js:45
 msgid "Transaction preferences"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:56
+#: client/settings/transactions-and-deposits/index.js:50
 msgid "Enable payments via saved cards"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:60
+#: client/settings/transactions-and-deposits/index.js:54
 msgid ""
 "When enabled, users will be able to pay with a saved card during checkout. "
 "Card details are stored in our platform, not on your store."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:70
+#: client/settings/transactions-and-deposits/index.js:73
+msgid "Edit the way your store name appears on your customers' bank statements."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/index.js:92
+msgid "Bank account information"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/index.js:98
+msgid ""
+"Manage and update your deposit account information to receive payments and "
+"payouts."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/manual-capture-control.js:104
+msgid ""
+"Only cards support manual capture. When enabled, all other payment methods "
+"will be hidden from checkout."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/manual-capture-control.js:110
+msgid ""
+"You must capture the payment on the order details screen within 7 days of "
+"authorization, otherwise the money will return to the shopper."
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/manual-capture-control.js:55
 msgid "Issue an authorization on checkout, and capture later"
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:76
+#: client/settings/transactions-and-deposits/manual-capture-control.js:61
 msgid ""
 "Charge must be captured on the order details screen within 7 days of "
 "authorization, otherwise the authorization and order will be canceled."
 msgstr ""
 
 #: dist/settings.js:1
-#: client/settings/transactions-and-deposits/index.js:82
+#: client/settings/transactions-and-deposits/manual-capture-control.js:67
 msgid ""
 " The setting is not applied to In-Person Payments (please note that "
 "In-Person Payments should be captured within 2 days of authorization)."
 msgstr ""
 
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/manual-capture-control.js:78
+msgid "Enable manual capture"
+msgstr ""
+
+#: dist/settings.js:1
+#: client/settings/transactions-and-deposits/manual-capture-control.js:98
+msgid "Are you sure you want to enable manual capture of payments?"
+msgstr ""
+
 #: dist/subscription-product-onboarding-modal.js:1
-#: client/subscription-product-onboarding/modal.js:66
+#: client/subscription-product-onboarding/modal.js:102
+msgid "We’ve saved your product as a draft."
+msgstr ""
+
+#: dist/subscription-product-onboarding-modal.js:1
+#: client/subscription-product-onboarding/modal.js:69
 msgid "One more step to accept recurring payments"
 msgstr ""
 
 #: dist/subscription-product-onboarding-modal.js:1
-#: client/subscription-product-onboarding/modal.js:72
+#: client/subscription-product-onboarding/modal.js:75
 msgid ""
 "Verify your business details with WooCommerce Payments to accept recurring "
 "payments for this subscription product."
 msgstr ""
 
-#: dist/subscription-product-onboarding-modal.js:1
-#: client/subscription-product-onboarding/modal.js:99
-msgid "We’ve saved your product as a draft."
-msgstr ""
-
 #: dist/subscription-product-onboarding-toast.js:1
-#: client/subscription-product-onboarding/toast.js:26
+#: client/subscription-product-onboarding/toast.js:28
 msgid ""
 "Thank you for setting up WooCommerce Payments! We’ve published your first "
 "subscription product."
