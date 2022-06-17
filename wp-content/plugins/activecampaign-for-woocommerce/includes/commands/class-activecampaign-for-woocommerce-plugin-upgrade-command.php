@@ -113,13 +113,18 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		$this->logger = new Logger();
 		$table_exists = null;
 		global $wpdb;
+
 		try {
 			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
 
 			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
 				$table_exists = true;
 			} else {
-				$this->logger->info( 'Plugin Upgrade Command: Could not find the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table so try to create it...' );
+				$this->logger->info( 'Plugin Upgrade Command: Could not find the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table.' );
+
+				// Verify if the table just wasn't renamed properly
+				$this->rename_table();
+
 				$table_exists = false;
 				$this->install_table();
 
@@ -172,15 +177,21 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			`customer_first_name` VARCHAR(255),
 			`customer_last_name` VARCHAR(255),
 			`last_access_time` DATETIME,
+			`order_date` DATETIME NULL,
 			`user_ref_json` MEDIUMTEXT,
 			`customer_ref_json` LONGTEXT,
 			`cart_ref_json` LONGTEXT,
 			`cart_totals_ref_json` MEDIUMTEXT,
 			`removed_cart_contents_ref_json` LONGTEXT,
 			`activecampaignfwc_order_external_uuid` VARCHAR(255),
+			`ac_externalcheckoutid` VARCHAR(155) NULL,
+			`wc_order_id` INT NULL,
+			`ac_order_id` VARCHAR(45) NULL,
+			`abandoned_date` DATETIME NULL,
+			`ac_customer_id` VARCHAR(45) NULL,
 			PRIMARY KEY (`id`),
 			INDEX `synced_to_ac_last_access_time` (`last_access_time` ASC, `synced_to_ac` ASC),
-			UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC)) $charset_collate;";
+			UNIQUE INDEX `ac_externalcheckoutid_UNIQUE` (`ac_externalcheckoutid` ASC)) $charset_collate;";
 
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			dbDelta( $sql );
@@ -203,11 +214,15 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 	 * Upgrades the table with new changes.
 	 */
 	private function upgrade_table() {
-		// v1.1.0 update
-		try {
-			global $wpdb;
-			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+		global $wpdb;
 
+		// Rename table before attempting upgrades
+		$this->rename_table();
+
+		$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+
+		// v1.1.0 //
+		try {
 			$sql = "CREATE TABLE $table_name (
 				`order_date` DATETIME NULL AFTER `last_access_time` ,
 				`ac_externalcheckoutid` VARCHAR(155) NULL AFTER `activecampaignfwc_order_external_uuid`,
@@ -223,12 +238,29 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			dbDelta( $sql );
 
 			// phpcs:disable
-			$wpdb->query( 'ALTER TABLE ' . $table_name . ' DROP INDEX `customer_id_UNIQUE`' );
+
+			if (
+				$wpdb->get_var( 'SELECT * FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_NAME = "'.$table_name.'" AND INDEX_NAME = "customer_id_UNIQUE" ' )
+			){
+				$wpdb->query( 'DROP INDEX `customer_id_UNIQUE` ON '.$table_name);
+			}
 
 			// If everything went well this shouldn't error
 			$wpdb->get_results( 'SELECT order_date, ac_order_id, ac_externalcheckoutid, wc_order_id, abandoned_date, ac_customer_id FROM ' . $table_name . ' LIMIT 1' );
 			// phpcs:enable
 
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an error upgrading the table.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+		// v1.1.0 end //
+
+		try {
 			if ( $wpdb->last_error ) {
 				$this->logger->error(
 					'Update db check failed...',
@@ -253,6 +285,45 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 				]
 			);
 		}
+	}
+
+	/**
+	 * Rename table if using the old name
+	 *
+	 * @version 1.1.1
+	 */
+	private function rename_table() {
+		global $wpdb;
+		$old_table_name = $wpdb->prefix . 'activecampaign_for_woocommerce_abandoned_cart';
+		// phpcs:disable
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $old_table_name ) ) === $old_table_name ) {
+			$new_table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$wpdb->query( 'ALTER TABLE ' . $old_table_name . ' RENAME TO `' . $new_table_name . '`' );
+
+			try {
+				if ( $wpdb->last_error ) {
+					$this->logger->error(
+						'Table could not be renamed...',
+						[
+							'wpdb_last_error'   => $wpdb->last_error,
+							'old_table_name' => $old_table_name,
+							'new_table_name'=>$new_table_name,
+						]
+					);
+				} else {
+					$this->logger->info( 'Plugin Upgrade Command: Table rename finished!' );
+				}
+			} catch ( Throwable $t ) {
+				$this->logger->error(
+					'There was an error checking the table update.',
+					[
+						'message' => $t->getMessage(),
+						'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+					]
+				);
+			}
+		}
+		// phpcs:enable
 	}
 
 	/**

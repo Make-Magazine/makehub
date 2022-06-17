@@ -103,7 +103,7 @@ class Astra_Sites_Reporting {
     public function report( $data ) {
         $id = isset( $data['id'] ) ? absint( $data['id'] ) : 0;
         $import_attempts = isset( $data['import_attempts'] ) ? absint( $data['import_attempts'] ) : 0;
-        $import_status = isset( $data['status'] ) ? sanitize_text_field( $data['status'] ) : 'true';
+        $import_status = isset( $data['import_status'] ) ? sanitize_text_field( $data['import_status'] ) : 'true';
         $type = isset( $data['type'] ) ? sanitize_text_field( $data['type'] ) : 'astra-sites';
         $page_builder = isset( $data['page_builder'] ) ? sanitize_text_field( $data['page_builder'] ) : 'gutenberg';
         $exit_intend = isset( $data['exit_intend'] ) ? sanitize_text_field( $data['exit_intend'] ) : 'false';

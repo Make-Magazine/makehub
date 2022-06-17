@@ -25,7 +25,7 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PARENT_MENU_NAME' ) ) {
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.7.2' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.7.7' );
 }
 
 /**
@@ -35,7 +35,7 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
  * @since 1.3.3
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION', '1.1.0' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION', '1.1.1' );
 }
 
 /**
@@ -45,7 +45,7 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION' ) ) {
  * @since 1.3.3
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME', 'activecampaign_for_woocommerce_abandoned_cart' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME', 'wc_activecampaign' );
 }
 
 /**

@@ -1481,7 +1481,7 @@ const ImportSite = () => {
 			} );
 		}
 
-		if ( themeActivateFlag ) {
+		if ( themeActivateFlag && false === themeStatus ) {
 			installAstra( storedState );
 		} else {
 			dispatch( {

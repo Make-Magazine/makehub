@@ -51,7 +51,7 @@ class Jetpack_Lazy_Images {
 	 * @return object The class instance.
 	 */
 	public static function instance() {
-		if ( is_null( self::$instance ) ) {
+		if ( self::$instance === null ) {
 			self::$instance = new Jetpack_Lazy_Images();
 		}
 
@@ -114,7 +114,7 @@ class Jetpack_Lazy_Images {
 			return;
 		}
 
-		add_action( 'wp_head', array( $this, 'setup_filters' ), 9999 ); // We don't really want to modify anything in <head> since it's mostly all metadata.
+		add_action( 'the_post', array( $this, 'setup_filters' ), 9999 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
 		// Do not lazy load avatar in admin bar.
@@ -133,6 +133,11 @@ class Jetpack_Lazy_Images {
 	 * @return void
 	 */
 	public function setup_filters() {
+		// Do not lazy-load images in RSS feeds.
+		if ( is_feed() ) {
+			return;
+		}
+
 		add_filter( 'the_content', array( $this, 'add_image_placeholders' ), PHP_INT_MAX ); // Run this later, so other content filters have run, including image_add_wh on WP.com.
 		add_filter( 'post_thumbnail_html', array( $this, 'add_image_placeholders' ), PHP_INT_MAX );
 		add_filter( 'get_avatar', array( $this, 'add_image_placeholders' ), PHP_INT_MAX );

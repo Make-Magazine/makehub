@@ -18,7 +18,6 @@ use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
-use Brick\Money\Money;
 
 /**
  * Sync the abandoned carts and their products to ActiveCampaign.
@@ -235,19 +234,17 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 
 		try {
 			// Get the expired carts from our table
-			$abandoned_carts = $wpdb->get_results(
 			// phpcs:disable
-				$wpdb->prepare( 'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid, last_access_time 
+			$abandoned_carts = $wpdb->get_results(
+				'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid, last_access_time 
 					FROM
 						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
 					WHERE
-						last_access_time <= %s
+						last_access_time <= "'.$expire_datetime->format( 'Y-m-d H:i:s' ).'"
 						AND order_date IS NULL
-						AND synced_to_ac = 0;',
-					$expire_datetime->format( 'Y-m-d H:i:s' )
-				)
-			// phpcs:enable
+						AND synced_to_ac = 0;'
 			);
+			// phpcs:enable
 
 			if ( $wpdb->last_error ) {
 				$this->logger->error(
@@ -336,7 +333,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
 					$ecom_product->set_externalid( $wc_product->get_id() );
 					$ecom_product->set_name( $wc_product->get_name() );
-					$ecom_product->set_price( Money::of( wc_format_decimal( $wc_product->get_price(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() );
+					$ecom_product->set_price( $this->order_utilities->convert_money_to_cents( $wc_product->get_price() ) );
 					$ecom_product->set_category( $this->order_utilities->get_product_category( $wc_product ) );
 					$ecom_product->set_image_url( $this->order_utilities->get_product_image_url( $wc_product ) );
 					$ecom_product->set_sku( $wc_product->get_sku() );
@@ -377,7 +374,9 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				$ecom_order->set_source( '1' );
 				$ecom_order->set_email( $customer->email );
 				$ecom_order->set_currency( get_woocommerce_currency() );
-				$ecom_order->set_total_price( Money::of( wc_format_decimal( $cart_totals->subtotal, 2, 0 ), get_woocommerce_currency() )->getMinorAmount()->toInt() ); // must be in cents
+				$ecom_order->set_total_price( $this->order_utilities->convert_money_to_cents( $cart_totals->total ) ); // must be in cents
+				$ecom_order->set_tax_amount( $this->order_utilities->convert_money_to_cents( $cart_totals->total_tax ) );
+				$ecom_order->set_shipping_amount( $this->order_utilities->convert_money_to_cents( $cart_totals->shipping_total ) );
 				$ecom_order->set_connectionid( $this->connection_id );
 				$ecom_order->set_customerid( $customer_ac->get_id() );
 				$ecom_order->set_order_url( wc_get_cart_url() );
@@ -441,11 +440,11 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$this->logger->debug(
 						'Abandonment Sync: This abandoned cart has already been synced to ActiveCampaign and will be updated.',
 						[
-							'order'                     => method_exists( $ecom_order, 'serialize_to_array' ) ? $ecom_order->serialize_to_array() : null,
+							'order'                     => $this->order_utilities->validate_object( $ecom_order, 'serialize_to_array' ) ? $ecom_order->serialize_to_array() : null,
 							'connection_id'             => isset( $this->connection_id ) ? $this->connection_id : null,
 							'order externalcheckout_id' => $externalcheckout_id,
-							'ac externalcheckout_id'    => method_exists( $order_ac, 'get_externalcheckoutid' ) ? $order_ac->get_externalcheckoutid() : null,
-							'ac_id'                     => method_exists( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
+							'ac externalcheckout_id'    => $this->order_utilities->validate_object( $order_ac, 'get_externalcheckoutid' ) ? $order_ac->get_externalcheckoutid() : null,
+							'ac_id'                     => $this->order_utilities->validate_object( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
 							'customer_email'            => isset( $customer->email ) ? $customer->email : null,
 							'externalcheckout_id'       => $externalcheckout_id,
 						]
@@ -471,7 +470,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$this->logger->debug(
 						'Abandonment Sync: Creating abandoned cart entry in ActiveCampaign: ',
 						[
-							'order_created' => method_exists( $ecom_order, 'serialize_to_array' ) ? wp_json_encode( $ecom_order->serialize_to_array() ) : null,
+							'order_created' => $this->order_utilities->validate_object( $ecom_order, 'serialize_to_array' ) ? wp_json_encode( $ecom_order->serialize_to_array() ) : null,
 						]
 					);
 
@@ -523,8 +522,8 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						[
 							'synced_to_ac'   => 1,
 							'abandoned_date' => $abc_order->last_access_time,
-							'ac_order_id'    => method_exists( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
-							'ac_customer_id' => method_exists( $order_ac, 'get_customerid' ) ? $order_ac->get_customerid() : null,
+							'ac_order_id'    => $this->order_utilities->validate_object( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
+							'ac_customer_id' => $this->order_utilities->validate_object( $order_ac, 'get_customerid' ) ? $order_ac->get_customerid() : null,
 						],
 						[
 							'id' => $abc_order->id,
@@ -609,7 +608,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 					$this->logger->warning(
 						'Abandonment sync: Email missing, cannot create a customer in AC.',
 						[
-							'email'    => method_exists( $new_customer, 'get_email' ) ? $new_customer->get_email() : null,
+							'email'    => $this->order_utilities->validate_object( $new_customer, 'get_email' ) ? $new_customer->get_email() : null,
 							'customer' => $customer,
 						]
 					);
