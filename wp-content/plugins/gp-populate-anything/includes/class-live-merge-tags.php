@@ -67,12 +67,15 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gppa_hydrate_field_html', array( $this, 'replace_live_merge_tag_textarea_default_value_hydrate_field' ), 99, 4 );
 		add_filter( 'gform_field_choice_markup_pre_render', array( $this, 'replace_live_merge_tags_in_radio_choice_value' ), 10, 4 );
 
+		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 15, 3 ); // Give time for other plugins like GV Entry Revisions to do their replacements.
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 10, 7 );
 		add_filter( 'gform_admin_pre_render', array( $this, 'replace_field_label_live_merge_tags_static' ) );
 
 		add_filter( 'gform_order_summary', array( $this, 'replace_live_merge_tags_static' ), 10, 3 );
 
 		add_filter( 'gform_merge_tag_filter', array( $this, 'prevent_missing_filter_text_from_being_tag_value' ), 10, 5 );
+
+		add_filter( 'gpnf_all_entries_nested_entry_markup', array( $this, 'replace_live_merge_tags_gpnf_all_entries' ), 10, 5 );
 
 		/**
 		 * Prevent replacement of Live Merge Tags in Preview Submission.
@@ -111,7 +114,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			$this->_current_live_merge_tag_values[ $form_id ] = array();
 		}
 
-		$this->_current_live_merge_tag_values[ $form_id ][ $live_merge_tag ] = $live_merge_tag_value;
+		$this->_current_live_merge_tag_values[ $form_id ][ $live_merge_tag ] = $this->prepare_for_lmt_comparison( $live_merge_tag_value );
 	}
 
 	/**
@@ -753,6 +756,21 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	/**
+	 * Prepares a field value for comparison to see if it's a decoupled merge tag or not.
+	 *
+	 * @param $live_merge_tag_value mixed The live merge tag value.
+	 *
+	 * @return mixed
+	 */
+	public function prepare_for_lmt_comparison( $live_merge_tag_value ) {
+		if ( ! is_scalar( $live_merge_tag_value ) ) {
+			return $live_merge_tag_value;
+		}
+
+		return stripslashes( trim( implode( "\n", array_map( 'trim', explode( "\n", $live_merge_tag_value ) ) ) ) );
+	}
+
+	/**
 	 * Check if a field has empty inputs if all are needed. Example: Date field using inputs and not all three inputs
 	 * have been filled out. Without all inputs filled out, Merge Tags typically return odd values.
 	 *
@@ -805,13 +823,22 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		/**
-		 * Use get_value_save_entry() to get a more accurate entry value for field types such as Date and Time.
+		 * Transform entry values for certain inputs depending on their type. This can be necessary to prevent double formatting/cleaning of numbers, etc.
 		 */
 		foreach ( $entry_values as $input_id => $entry_value ) {
 			$field_id = (int) $input_id;
-			$field = GFAPI::get_field( $form, (int) $field_id );
+			$field    = GFAPI::get_field( $form, (int) $field_id );
 
-			if ( ! $field || ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
+			if ( ! $field ) {
+				continue;
+			}
+
+			if ( $field->get_input_type() === 'number' ) {
+				$entry_values[ $input_id ] = $field->clean_number( $entry_value );
+				continue;
+			}
+
+			if ( ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
 				continue;
 			}
 
@@ -1033,6 +1060,22 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return $this->replace_live_merge_tags( $text, $form, $entry );
 
+	}
+
+	/**
+	 * Replaces merge tags in GPNF {all_fields} content.
+	 *
+	 * @param $markup
+	 * @param $nested_form_field
+	 * @param $nested_form
+	 * @param $entry
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	function replace_live_merge_tags_gpnf_all_entries( $markup, $nested_form_field, $nested_form, $entry, $args ) {
+		$this->populate_lmt_whitelist( $nested_form );
+		return $this->replace_live_merge_tags_static( $markup, $nested_form, $entry );
 	}
 
 	/**

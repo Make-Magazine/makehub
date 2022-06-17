@@ -226,10 +226,9 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		/**
 		 * Easy Passthrough
-		 *
-		 * Hydrate checkboxes otherwise not all choices may be copied over.
 		 */
 		add_filter( 'gform_gp-easy-passthrough_field_value', array( $this, 'easy_passthrough_override_field_value' ), 10, 4 );
+		add_filter( 'gppa_prepopulate_field_values', array( $this, 'easy_passthrough_prepopulate_values' ), 10, 2 );
 	}
 
 	/**
@@ -263,6 +262,39 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field          = $hydrated_field['field'];
 
 		return $field->get_value_export( $entry, $field_id );
+	}
+
+	/**
+	 * If Easy Passthrough is in use for the current form, take the passed through values and add them to the prepopulate values which contain values from
+	 * Save & Continue, dynamic population, etc, so Populate Anything can correctly make queries on the initial load.
+	 *
+	 * @param array $prepopulate_values The values to prepopulate into the form and any Populate Anything queries.
+	 * @param array $form The current form.
+	 *
+	 * @return array
+	 */
+	public function easy_passthrough_prepopulate_values( $prepopulate_values, $form ) {
+		if ( ! function_exists( 'gp_easy_passthrough' ) ) {
+			return $prepopulate_values;
+		}
+
+		$gpep_values = gp_easy_passthrough()->get_field_values( $form['id'] );
+
+		if ( ! empty( $gpep_values ) ) {
+			$prepopulate_values = array_replace( $prepopulate_values, $gpep_values );
+
+			/* Unset values for fields that have individual input values in the same array.. */
+			foreach ( $prepopulate_values as $input_id => $input_value ) {
+				$field_id = absint( $input_id );
+
+				/* Check if the input ID is a float (not a field ID) and if so, clear out the field value for that field if it exists since we have the input. */
+				if ( (float) $input_id !== (float) $field_id && isset( $prepopulate_values[ $field_id ] ) ) {
+					unset( $prepopulate_values[ $field_id ] );
+				}
+			}
+		}
+
+		return $prepopulate_values;
 	}
 
 	/**
@@ -764,7 +796,26 @@ class GP_Populate_Anything extends GP_Plugin {
 			return array();
 		}
 
-		$args = array(
+		/**
+		 * Filter the arguments used when querying an Object Type for objects.
+		 *
+		 * @param array             $args        Query arguments array:
+		 *                                       array(
+		 *                                          array  filter_groups          Filters for querying/fetching the objects.
+		 *                                          array  ordering               Ordering settings for querying/fetching (includes 'orderby' and 'order').
+		 *                                          array  templates              Templates to determine how choices/values will utilize the returned objects.
+		 *                                          mixed  primary_property_value Current primary property value used for querying the objects. (Not all object types use primary properties.)
+		 *                                          string field_values           Current field values used in query.
+		 *                                          GF_Field field                Current field.
+		 *                                          bool   unique                 Return only unique results.
+		 *                                       )
+		 * @param \GF_Field         $field       The current field having its value or choices populated.
+		 * @param string            $object_type The current GPPA object type (e.g. 'gf_entry').
+		 * @param \GPPA_Object_Type $object_type The current GPPA object type instance.
+		 *
+		 * @since 1.2.14
+		 */
+		$args = gf_apply_filters( array( 'gppa_field_objects_query_args', $field->formId, $field->id ), array(
 			'filter_groups'          => rgar( $field, $gppa_prefix . 'filter-groups' ),
 			'ordering'               => array(
 				'orderby' => rgar( $field, $gppa_prefix . 'ordering-property' ),
@@ -775,7 +826,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			'field_values'           => $field_values,
 			'field'                  => $field,
 			'unique'                 => $unique,
-		);
+		), $field, $object_type, $object_type_instance );
 
 		/**
 		 * Store results in query cache before making them unique and once after.
@@ -1596,7 +1647,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		if ( ! rgar( $field, 'gppa-values-enabled' ) || ! rgar( $field, 'gppa-values-object-type' ) || ! rgar( $templates, $template ) ) {
 			if ( $lead ) {
-				return RGFormsModel::get_lead_field_value( $lead, $field );
+				$value = RGFormsModel::get_lead_field_value( $lead, $field );
+
+				if ( ! empty( $field->inputs ) && is_array( $value ) ) {
+					$value = rgar( $value, $template );
+				}
+
+				return $value;
 			}
 
 			return null;
@@ -2010,7 +2067,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * line breaks would not equal and cause LMTs to stop populating.
 		 */
 		if ( is_string( $field_value ) ) {
-			if ( stripslashes( trim( $field_value ) ) == stripslashes( trim( $request_val ) ) ) {
+			if ( $this->live_merge_tags->prepare_for_lmt_comparison( $field_value ) == $this->live_merge_tags->prepare_for_lmt_comparison( $request_val ) ) {
 				$field_value = $default_value;
 			}
 		} else {
@@ -2267,7 +2324,20 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		$this->prepopulate_fields_values[ $form['id'] ] = array_replace( $field_values, array_filter( $prepopulate_values ) );
+		/**
+		 * Filter the values that will be used as pre-populated values for Populate Anything. Common use-cases here are pulling in values from
+		 * other perks such as Easy Passthrough, using values from parameters, etc.
+		 *
+		 * @param array $prepopulate_values  The prepopulated values.
+		 * @param array $form                The current form.
+		 *
+		 * @since 1.2.15
+		 */
+		$this->prepopulate_fields_values[ $form['id'] ] = gf_apply_filters(
+			array( 'gppa_prepopulate_field_values', $form['id'] ),
+			array_replace( $field_values, array_filter( $prepopulate_values ) ),
+			$form
+		);
 
 		return $this->prepopulate_fields_values[ $form['id'] ];
 
@@ -2594,7 +2664,10 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$value[ $field->id . '.' . 1 ] = $hour;
 		$value[ $field->id . '.' . 2 ] = $minute;
-		$value[ $field->id . '.' . 3 ] = strpos( $the_rest, 'am' ) > - 1 ? 'am' : 'pm';
+
+		if ( rgar( $field, 'timeFormat', 12 ) == 12 ) {
+			$value[ $field->id . '.' . 3 ] = strpos( $the_rest, 'am' ) > - 1 ? 'am' : 'pm';
+		}
 
 		return $value;
 
@@ -3122,6 +3195,10 @@ class GP_Populate_Anything extends GP_Plugin {
 				foreach ( $form_field_values as $input_id => $input_value ) {
 					if ( (int) $input_id === (int) $field_id ) {
 						unset( $form_field_values[ $input_id ] );
+
+						if ( isset( $fake_lead[ absint( $input_id ) ] ) ) {
+							unset( $fake_lead[ absint( $input_id ) ] );
+						}
 					}
 				}
 

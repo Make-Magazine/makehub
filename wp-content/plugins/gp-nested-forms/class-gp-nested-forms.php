@@ -59,6 +59,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		require_once( 'includes/class-gp-field-nested-form.php' );
 		require_once( 'includes/class-gpnf-feed-processing.php' );
 		require_once( 'includes/class-gpnf-gravityview.php' );
+		require_once( 'includes/class-gpnf-gravityflow.php' );
 		require_once( 'includes/class-gpnf-gfml.php' );
 		require_once( 'includes/class-gpnf-wc-product-addons.php' );
 		require_once( 'includes/class-gpnf-merge-tags.php' );
@@ -86,6 +87,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		// Initialize sub classes.
 		gpnf_gravityview();
+		gpnf_gravityflow();
 		gpnf_gfml();
 		gpnf_feed_processing();
 		gpnf_parent_merge_tag();
@@ -106,6 +108,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		// Handle parent form.
 		add_action( 'gform_register_init_scripts', array( $this, 'register_all_form_init_scripts' ) );
+		add_filter( 'gform_form_tag', array( $this, 'add_session_hash_input' ), 10, 2 );
 		add_action( 'gform_entry_created', array( $this, 'handle_parent_submission' ), 10, 2 );
 		add_action( 'gform_after_update_entry', array( $this, 'handle_parent_update_entry' ), 10, 2 );
 		add_action( 'gform_entry_post_save', array( $this, 'handle_parent_submission_post_save' ), 20 /* should happen well after feeds are processed on 10 */, 2 );
@@ -1518,12 +1521,23 @@ class GP_Nested_Forms extends GP_Plugin {
 			// Pass entry for integration with GP Preview Submission.
 			$args['modifiers'] = $modifiers . ",entry[{$entry_id}]";
 
-			$values[] = $template->parse_template(
+			/**
+			 * Filter an individual entry's markup when displayed using {all_fields}.
+			 *
+			 * @param string                $markup            Entry markup.
+			 * @param \GP_Field_Nested_Form $nested_form_field Current Nested Form field.
+			 * @param array                 $nested_form       Current nested form.
+			 * @param array                 $entry             Child entry.
+			 * @param array                 $args              Template args used to generate the entry markup.
+			 *
+			 * @since 1.0.20
+			 */
+			$values[] = gf_apply_filters( 'gpnf_all_entries_nested_entry_markup', array( $field->formId, $field->id ), $template->parse_template(
 				gp_nested_forms()->get_template_names( $args['template'], $field->formId, $field->id, $this->parse_modifier( 'template', $modifiers ) ),
 				true,
 				false,
 				$args
-			);
+			), $field, $nested_form, $entry, $args );
 
 		}
 
@@ -1593,7 +1607,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		return $this->is_nested_form_submission() ? false : $anchor;
 	}
 
-	public function handle_parent_submission( $parent_entry, $form ) {
+	public function handle_parent_submission( $parent_entry_or_id, $form ) {
 
 		if ( ! $this->has_nested_form_field( $form ) ) {
 			return;
@@ -1603,7 +1617,15 @@ class GP_Nested_Forms extends GP_Plugin {
 		$session = new GPNF_Session( $form['id'] );
 		$session->delete_cookie();
 
-		$parent_entry = new GPNF_Entry( $parent_entry );
+		$parent_entry = new GPNF_Entry( $parent_entry_or_id );
+		$parent_entry->get_entry(); // Ensure that the entry is populated as we'll be using it here shortly.
+
+		/*
+		 * Partial Entries: Delete session hash from parent entry meta – any orphaned child entries from the current
+		 * session will be adopted below.
+		 */
+		gform_delete_meta( $parent_entry->id, GPNF_Session::SESSION_HASH_META_KEY );
+
 		if ( ! $parent_entry->has_children() ) {
 			return;
 		}
@@ -1788,6 +1810,33 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	// # FORM RENDERING
 
+	/**
+	 * Generate and output the session hash as a hidden input within the form markup.
+	 *
+	 * This is used in GP_Nested_Forms::adopt_partial_entry_children() to save the session hash in the parent partial
+	 * entry meta. This allows child entries that are adopted by a partial entry to be verified as part of the current
+	 * session (aka when repopulating child entries or when editing/deleting a child entry via a Nested Form field).
+	 *
+	 * @param $form_tag
+	 * @param $form
+	 *
+	 * @return string
+	 */
+	public function add_session_hash_input( $form_tag, $form ) {
+
+		if ( ! $this->has_child_form( $form ) ) {
+			return $form_tag;
+		}
+
+		$form_id = (int) $form['id'];
+		$session = new GPNF_Session( $form_id );
+		$hash    = $session->get_runtime_hashcode();
+
+		$form_tag .= sprintf( '<input id="gpnf_session_hash_%d" type="hidden" name="gpnf_session_hash" value="%s">', $form_id, esc_attr( $hash ) );
+
+		return $form_tag;
+	}
+
 	public function handle_nested_forms_markup( $form_html, $form ) {
 
 		if ( ! $this->has_nested_form_field( $form, true ) ) {
@@ -1926,8 +1975,13 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	public function replace_post_render_trigger( $form_html, $form ) {
 		$form_html = preg_replace( '/trigger\([ ]*[\'"]gform_post_render[\'"]/', "trigger('gpnf_post_render'", $form_html );
+
 		// Used by event handler functionality to target nested form post render events and prioritize them.
 		$form_html = preg_replace( '/bind\([ ]*[\'"]gform_post_render[\'"]/', "bind('gform_post_render.gpnf'", $form_html );
+
+		// .bind was switch to .on in the following PR: https://github.com/gravityforms/gravityforms/pull/1779
+		$form_html = preg_replace( '/on\([ ]*[\'"]gform_post_render[\'"]/', "on('gform_post_render.gpnf'", $form_html );
+
 		if ( ! $this->use_jquery_ui_dialog() ) {
 			$form_html = preg_replace( '/<script.*gformInitSpinner.*?<\/script>/', '<!-- GPNF removes GF\'s default <iframe> script; replacing it with its own in gp-nested-form.js. -->', $form_html );
 		}
@@ -2341,7 +2395,16 @@ class GP_Nested_Forms extends GP_Plugin {
 	 * @return string|null
 	 */
 	public function get_save_and_continue_token() {
-		return isset( $_POST['gform_resume_token'] ) ? $_POST['gform_resume_token'] : rgget( 'gf_token' );
+		/* gf_token is used as the initial GET parameter and is then changed to gform_resume_token via POST. */
+		if ( ! empty( $this->get_query_arg( 'gform_resume_token' ) ) ) {
+			return $this->get_query_arg( 'gform_resume_token' );
+		}
+
+		if ( ! empty( $this->get_query_arg( 'gf_token' ) ) ) {
+			return $this->get_query_arg( 'gf_token' );
+		}
+
+		return null;
 	}
 
 	public function get_save_and_continue_child_entry_ids( $form, $field_id = false ) {
@@ -2912,6 +2975,9 @@ class GP_Nested_Forms extends GP_Plugin {
 			$child_entry->delete_expiration();
 		}
 
+		// Set the session hash on the partial entry so we know that this parent entry (and its child entries) still belong to the current session.
+		gform_update_meta( $partial_entry['id'], GPNF_Session::SESSION_HASH_META_KEY, rgpost( 'gpnf_session_hash' ) );
+
 		return $partial_entry;
 	}
 
@@ -2946,8 +3012,8 @@ class GP_Nested_Forms extends GP_Plugin {
 	 * @param string $form_id  Form ID to check
 	 * @return bool Form contains a nested form
 	 */
-	public function has_child_form( $form_id ) {
-		$form = GFAPI::get_form( $form_id );
+	public function has_child_form( $form_or_id ) {
+		$form = is_array( $form_or_id ) ? $form_or_id : GFAPI::get_form( $form_or_id );
 		if ( ! $form || empty( $form['fields'] ) ) {
 			return false;
 		}
@@ -3107,12 +3173,18 @@ class GP_Nested_Forms extends GP_Plugin {
 	 * @return string|null Value of query parameter if present
 	 */
 	public function get_query_arg( $param ) {
-		// Use rgget() to attempt to fetch values from $_GET
-		$value = rgget( $param );
+		$value = rgar( $_REQUEST, $param );
 
 		// If we didn't find a value in $_GET, let's check our session cookie
 		if ( rgblank( $value ) ) {
+			$entry_id       = rgar( $_REQUEST, 'gpnf_entry_id' );
 			$parent_form_id = rgar( $_REQUEST, 'gpnf_parent_form_id' );
+
+			/* Some AJAX requests like deleting don't send gpnf_parent_form_id. */
+			if ( ! $parent_form_id && $entry_id ) {
+				$parent_form_id = gform_get_meta( $entry_id, GPNF_Entry::ENTRY_PARENT_FORM_KEY );
+			}
+
 			if ( $parent_form_id ) {
 				$session = new GPNF_Session( $parent_form_id );
 				$cookie  = $session->get_cookie();

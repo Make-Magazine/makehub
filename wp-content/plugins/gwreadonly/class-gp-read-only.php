@@ -154,6 +154,12 @@ class GP_Read_Only extends GWPerk {
 					'<select' => "<select disabled='disabled'",
 				);
 				break;
+			case 'signature':
+				$input_html = preg_replace( '/<a href=[\'"]#[\'"].*?signature_image.*?>.*?<\/a>/', '', $input_html ); // Remove sign again button
+				$input_html = preg_replace( '/<div (style=\'.*\')?><div id=\'input_' . $form_id . '_' . $field->id . '_Container\' .*?>.*?<\/div><\/div>/', '<div style="display: none;"></div><!-- GPRO placeholder -->', $input_html ); // Remove HTML that contains the canvas
+				$search     = '<input';
+				$replace    = $search . " readonly='readonly'";
+				break;
 			default:
 				$search  = '<input';
 				$replace = $search . " readonly='readonly'";
@@ -219,7 +225,7 @@ class GP_Read_Only extends GWPerk {
 
 						break;
 					case 'address':
-						$input_id        = sprintf( '%d.%d', $field->id, $this->get_address_select_input_id( $field ) );
+						$input_id         = sprintf( '%d.%d', $field->id, $this->get_address_select_input_id( $field ) );
 						$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $input_id, rgar( $value, $input_id ) );
 						break;
 					default:

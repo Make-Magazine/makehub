@@ -51,7 +51,7 @@ function serializeAll(
 					return $.map( val, function ( individualVal ) {
 						return {
 							name: el.name,
-							value: individualVal?.replace( rCRLF, '\r\n' ),
+							value: individualVal?.replace( rCRLF, '\n' ),
 							el,
 						};
 					} );
@@ -59,7 +59,7 @@ function serializeAll(
 
 				return {
 					name: el.name,
-					value: ( val as string )?.replace( rCRLF, '\r\n' ),
+					value: ( val as string )?.replace( rCRLF, '\n' ),
 					el,
 				};
 			} )

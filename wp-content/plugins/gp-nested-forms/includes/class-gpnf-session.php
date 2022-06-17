@@ -3,6 +3,7 @@
 class GPNF_Session {
 
 	const COOKIE_NAME = 'gpnf_form_session';
+	const SESSION_HASH_META_KEY = 'gpnf_session_hash';
 
 	private $_form_id;
 	private $_cookie;
@@ -87,6 +88,28 @@ class GPNF_Session {
 		return substr( md5( uniqid( rand(), true ) ), 0, 12 );
 	}
 
+	/**
+	 * Fetch or generate a hash that will be used anytime this function is called for the duration of the current runtime.
+	 *
+	 * Previously, the session hash was generated when the session was initialized. Since this happens *after* the form
+	 * is rendered, it made interacting with the hash prior to rendering the form problematic.
+	 *
+	 * One oddity about this method is that it will generate the same hash for different sessions in the same runtime.
+	 * Since these sessions would always be for the same user, I don't believe this will be an issue but it is strange.
+	 *
+	 * @return array|mixed|string|null
+	 */
+	public function get_runtime_hashcode() {
+		static $hashcode;
+		if ( ! $hashcode ) {
+			$hashcode = $this->get( 'hash' );
+			if ( ! $hashcode ) {
+				$hashcode = $this->make_hashcode();
+			}
+		}
+		return $hashcode;
+	}
+
 	public function set_cookie() {
 		setcookie( $this->get_cookie_name(), json_encode( $this->_cookie ), time() + 60 * 60 * 24 * 7, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 	}
@@ -167,10 +190,14 @@ class GPNF_Session {
 	/**
 	 * Get Save & Continue from URL if it exists.
 	 *
+	 * @deprecated 1.0.20
+	 *
 	 * @return string|null
 	 */
 	public static function get_save_and_continue_token() {
-		return isset( $_POST['gform_resume_token'] ) ? $_POST['gform_resume_token'] : rgget( 'gf_token' );
+		_deprecated_function( 'GPNF_Session::get_save_and_continue_token', '1.0.20', 'gp_nested_forms()->get_save_and_continue_token()' );
+
+		return gp_nested_forms()->get_save_and_continue_token();
 	}
 
 	public static function get_default_session_data( $form_id, $field_values = array() ) {
@@ -181,9 +208,10 @@ class GPNF_Session {
 			'request'      => $_REQUEST ? $_REQUEST : array(),
 			'post_id'      => get_queried_object_id(),
 			'field_values' => $field_values,
+			'hash'         => ( new GPNF_Session( $form_id ) )->get_runtime_hashcode(),
 		);
 
-		if( self::get_save_and_continue_token() ) {
+		if( gp_nested_forms()->get_save_and_continue_token() ) {
 			$parent_hash = gp_nested_forms()->get_save_and_continue_parent_hash( $form_id );
 			if ( $parent_hash ) {
 				$data['hash'] = $parent_hash;

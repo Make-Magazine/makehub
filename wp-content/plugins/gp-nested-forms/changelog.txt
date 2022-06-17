@@ -1,6 +1,47 @@
 
 # Changelog
 
+## 1.0.23
+
+	- Improved compatibility with Gravity Flow User Input steps by bringing back compatibility layer.
+
+## 1.0.22
+
+	- Fixed potential PHP warning if using Gravity Flow by reverting the addition of a new compatibility layer. It will be re-added soon!
+
+## 1.0.21
+
+	- Fixed potential PHP error in Gravity Flow compatibility layer.
+
+## 1.0.20
+
+	- Added new [`gpnf_all_entries_nested_entry_markup`](https://gravitywiz.com/documentation/gpnf_all_entries_nested_entry_markup) filter.
+	- Fixed issue where Save & Continue entries would be un-editable/deletable in some situations.
+	- Fixed compatibility issues with Gravity Flow user input steps where child entries wouldn't show after editing a child entry, leaving the page, and coming back. Additionally, child entry edit permission handling has been improved.
+
+## 1.0.19
+
+	- Fixed potential PHP error that could occur on the Entry Details page if GravityView is activated.
+
+## 1.0.18
+
+	- Fixed issue where the count template would always be used if GravityView is activated.
+
+## 1.0.17
+
+	- Fixed issue where the Count templates were not being used in GravityView if the view is embedded using a shortcode.
+	- Fixed potential PHP error introduced in 1.0.15.
+	- Fixed an issue where the event handler in Nested Forms would not properly handle Chained Selects thus causing the placeholder to be incorrect on subsequent openings of the nested form.
+
+## 1.0.16
+
+	- Fixed issue where child form markup was not refreshed after editing which could result in stagnant form markup.
+
+## 1.0.15
+
+	- Fixed issue where early child entry adoption via Partial Entries would prevent child entries from being loaded, edited, or deleted in the current session.
+	- Improved compatibility with GP Page Transitions Soft Validation functionality.
+
 ## 1.0.14
 
 	- Fixed conflict with eComerce Fields that was caused by Nested Forms unsetting child entry ID to null to ensure a fresh total was generated.

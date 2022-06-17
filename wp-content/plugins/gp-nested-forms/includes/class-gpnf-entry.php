@@ -130,12 +130,11 @@ class GPNF_Entry {
 	}
 
 	/**
-	 * @deprecated 1.0.2
+	 * @deprecated 1.0.23
 	 *
 	 * @return int
 	 */
 	public function set_parent_form( $parent_form_id, &$parent_entry_id = false ) {
-		_deprecated_function( 'GPNF_Entry::set_parent_form', '1.0.1', 'GPNF_Entry::set_parent_meta' );
 		return $this->set_parent_meta( $parent_form_id, $parent_entry_id );
 	}
 
@@ -261,16 +260,25 @@ class GPNF_Entry {
 		$parent_form_field_id = gform_get_meta( $entry['id'], self::ENTRY_NESTED_FORM_FIELD_KEY );
 
 		$session = new GPNF_Session( $parent_form_id );
+		$hash    = $session->get( 'hash' );
 
 		$save_and_continue_entry_ids = gp_nested_forms()->get_save_and_continue_child_entry_ids( $parent_form_id, $parent_form_field_id );
 
-		if ( $session->has_data() && $parent_entry_id == $session->get( 'hash' ) ) {
+		if ( $parent_entry_id == $hash ) {
 			$can_user_edit_entry = true;
 		/**
 		 * In some cases, the session cookie may not be available in which case we need to pull the child entry list
 		 * again and bypass the permissions.
 		 */
 		} else if ( count( $save_and_continue_entry_ids ) && in_array( $entry['id'], $save_and_continue_entry_ids ) ) {
+			$can_user_edit_entry = true;
+
+		}
+		/**
+		 * With Partial Entries, child entries are adopted prior to parent form submission. In this case, we associate the
+		 * child entries with the current session via the session hash saved to the parent entry.
+		 */
+		else if ( gform_get_meta( $parent_entry_id, GPNF_Session::SESSION_HASH_META_KEY ) == $hash ) {
 			$can_user_edit_entry = true;
 		}
 

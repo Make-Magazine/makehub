@@ -20,7 +20,7 @@ const ko = window.ko;
 		}
 
 		self.destroy = function() {
-			self.modal.destroy();
+			self.modal?.destroy();
 			$( document ).off( '.{0}'.format( self.getNamespace() ) );
 			window.gform.removeHook( 'action', 'gform_list_post_item_add', 10, self.getNamespace() );
 			window.gform.removeHook( 'action', 'gform_list_post_item_delete', 10, self.getNamespace() );
@@ -33,12 +33,9 @@ const ko = window.ko;
 			self.id 				  = self.getDebugId();
 			self.$fieldContainer      = $( '#field_{0}_{1}'.format( self.formId, self.fieldId ) );
 			self.$parentFormContainer = self.$fieldContainer.parents('form').first();
-			self.$currentPage 		  = self.$parentFormContainer.find('.gform_page:visible');
 			self.$modalSource         = $( '.gpnf-nested-form-{0}-{1}'.format( self.formId, self.fieldId ) );
 			self.isActive             = false;
-
-			var inHiddenPage = !!(self.$currentPage.length &&
-				!self.$currentPage.find(self.$fieldContainer).length);
+			self.initialized          = false;
 
 			// Handle init when form is reloaded via AJAX.
 			if ( typeof window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.fieldId ) ] !== 'undefined' ) {
@@ -57,7 +54,30 @@ const ko = window.ko;
 			self.initKnockout();
 			self.initCalculations();
 
-			if (inHiddenPage) {
+			window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.fieldId ) ] = self;
+
+			self.finalizeInit();
+		};
+
+		self.inHiddenPage = function() {
+			var $currentPage = self.$parentFormContainer.find('.gform_page:visible');
+
+			return !!($currentPage.length &&
+			          !$currentPage.find(self.$fieldContainer).length);
+		}
+
+		/**
+		 * Handles setting up the session, binding the Add Entry button, the Tingle modal, and more.
+		 *
+		 * Runs only if the field/page is visible as setting up the session triggers an XHR request and can overload the server in rare (but possible) circumstances. Everything else such as
+		 * Knockout will be initialized prior to this method and initialized regardless of field visibility.
+		 *
+		 * This method was originally added for Page Transitions to call it when pages are navigating if using Soft Validation.
+		 *
+		 * @return void
+		 */
+		self.finalizeInit = function() {
+			if (self.inHiddenPage()) {
 				console.debug('Nested form is not visible. Skipping loading.');
 
 				return;
@@ -70,8 +90,6 @@ const ko = window.ko;
 
 			self.initModal();
 			self.addColorStyles();
-
-			window[ 'GPNestedForms_{0}_{1}'.format( self.formId, self.fieldId ) ] = self;
 
 			/**
 			 * Filter whether or not the child form HTML should be immediately fetched when the parent form is loaded.
@@ -86,7 +104,9 @@ const ko = window.ko;
 			if (gform.applyFilters('gpnf_fetch_form_html_on_load', true, self.formId, self.fieldId, self)) {
 				sessionPromise.always(self.getFormHtml);
 			}
-		};
+
+			self.initialized = true;
+		}
 
 		/**
 		 * Initialize cookie for GPNF via AJAX.
@@ -1173,10 +1193,11 @@ const ko = window.ko;
 		GPNestedForms.loadEntry = function( args ) {
 
 			/** @var \GPNestedForms gpnf */
-			var gpnf = window[ 'GPNestedForms_{0}_{1}'.format( args.formId, args.fieldId ) ];
+			var gpnf          = window[ 'GPNestedForms_{0}_{1}'.format( args.formId, args.fieldId ) ];
+			var refreshMarkup = true;
 
-			const entry    = gpnf.prepareEntryForKnockout( args.fieldValues );
-			entry.id = args.entryId;
+			const entry = gpnf.prepareEntryForKnockout( args.fieldValues );
+			entry.id    = args.entryId;
 
 			// edit
 			if ( args.mode == 'edit' ) {
@@ -1207,10 +1228,25 @@ const ko = window.ko;
 				 * @param int             	fieldId   			The field ID of the Nested Form field.
 				 * @param {GPNestedForms} 	gpnf      			Current instance of the GPNestedForms object.
 				 */
-				if ( window.gform.applyFilters( 'gpnf_fetch_form_html_after_add', true, self.formId, self.fieldId, self ) ) {
-					gpnf.refreshMarkup();
-				}
+				refreshMarkup = window.gform.applyFilters( 'gpnf_fetch_form_html_after_add', refreshMarkup, self.formId, self.fieldId, self );
 
+			}
+
+			/**
+			 * Filter to determine if the child form HTML should be refreshed after adding or editing entries.
+			 *
+			 * Return "false" here to disable refreshing child form HTML via AJAX after new entries are added or edited.
+			 *
+			 * @since 1.0.15
+			 *
+			 * @param boolean         refreshMarkup Whether or not to refresh HTML after adding entries.
+			 * @param int             formId        The parent form ID.
+			 * @param int             fieldId       The field ID of the Nested Form field.
+			 * @param {GPNestedForms} gpnf          Current instance of the GPNestedForms object.
+			 * @param object          args          The details of the request to add/edit the current entry.
+			 */
+			if ( window.gform.applyFilters( 'gpnf_fetch_form_html_after_add_or_edit', refreshMarkup, self.formId, self.fieldId, self, args ) ) {
+				gpnf.refreshMarkup();
 			}
 
 			if ( gpnf.isActive ) {
