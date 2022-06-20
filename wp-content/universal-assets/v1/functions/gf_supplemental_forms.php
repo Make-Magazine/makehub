@@ -31,7 +31,7 @@ function custom_validation($validation_result) {
               if ($field->id == $contact_email['id']) {     //contact_email
                   //pull contact email from original entry
                   //$contactEmail = (isset($entry['132']) ? $entry['132'] : '');
-                  if (strtolower($sub_email) != strtolower($contactEmail)) {
+                  if (trim(strtolower($sub_email)) != trim(strtolower($contactEmail))) {
                       // set the form validation to false
                       $validation_result['is_valid'] = false;
                       $field->failed_validation = true;
