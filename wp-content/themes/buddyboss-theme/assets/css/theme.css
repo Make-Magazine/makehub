@@ -1766,62 +1766,88 @@ input[type=submit] i,
   /*top: 1px;*/
   /*margin: 0 2px;*/
 }
-button:hover,
+button:hover, button:focus,
 .button:hover,
+.button:focus,
 input[type=button]:hover,
+input[type=button]:focus,
 input[type=submit]:hover,
+input[type=submit]:focus,
 .buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover {
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
   outline: none;
   text-decoration: none;
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
   border-color: var(--bb-primary-button-border-hover);
 }
-button:focus,
+button:hover, button:focus, button:active,
+.button:hover,
 .button:focus,
-input[type=button]:focus,
-input[type=submit]:focus,
-.buddypress .buddypress-wrap .comment-reply-link:focus,
-.buddypress .buddypress-wrap .generic-button a:focus,
-.buddypress .buddypress-wrap a.bp-title-button:focus,
-.buddypress .buddypress-wrap a.button:focus,
-.buddypress .buddypress-wrap button:focus,
-.buddypress .buddypress-wrap input[type=button]:focus,
-.buddypress .buddypress-wrap input[type=reset]:focus,
-.buddypress .buddypress-wrap input[type=submit]:focus,
-.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
-  outline: none;
-  text-decoration: none;
-}
-button:active,
 .button:active,
+input[type=button]:hover,
+input[type=button]:focus,
 input[type=button]:active,
+input[type=submit]:hover,
+input[type=submit]:focus,
 input[type=submit]:active,
+.buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .comment-reply-link:active,
+.buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap .generic-button a:active,
+.buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.bp-title-button:active,
+.buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap a.button:active,
+.buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap button:active,
+.buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=button]:active,
+.buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=reset]:active,
+.buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap input[type=submit]:active,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:active {
   outline: none;
   text-decoration: none;
@@ -2812,36 +2838,51 @@ input[type=submit].outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus {
   box-shadow: var(--bb-secondary-button-focus-shadow);
 }
-button.outline:hover, button.outline:active,
+button.outline:hover, button.outline:focus, button.outline:active,
 .button.outline:hover,
+.button.outline:focus,
 .button.outline:active,
 input[type=button].outline:hover,
+input[type=button].outline:focus,
 input[type=button].outline:active,
 input[type=submit].outline:hover,
+input[type=submit].outline:focus,
 input[type=submit].outline:active,
 .buddypress .buddypress-wrap .comment-reply-link.outline:hover,
+.buddypress .buddypress-wrap .comment-reply-link.outline:focus,
 .buddypress .buddypress-wrap .comment-reply-link.outline:active,
 .buddypress .buddypress-wrap .generic-button a.outline:hover,
+.buddypress .buddypress-wrap .generic-button a.outline:focus,
 .buddypress .buddypress-wrap .generic-button a.outline:active,
 .buddypress .buddypress-wrap a.bp-title-button.outline:hover,
+.buddypress .buddypress-wrap a.bp-title-button.outline:focus,
 .buddypress .buddypress-wrap a.bp-title-button.outline:active,
 .buddypress .buddypress-wrap a.button.outline:hover,
+.buddypress .buddypress-wrap a.button.outline:focus,
 .buddypress .buddypress-wrap a.button.outline:active,
 .buddypress .buddypress-wrap button.outline:hover,
+.buddypress .buddypress-wrap button.outline:focus,
 .buddypress .buddypress-wrap button.outline:active,
 .buddypress .buddypress-wrap input[type=button].outline:hover,
+.buddypress .buddypress-wrap input[type=button].outline:focus,
 .buddypress .buddypress-wrap input[type=button].outline:active,
 .buddypress .buddypress-wrap input[type=reset].outline:hover,
+.buddypress .buddypress-wrap input[type=reset].outline:focus,
 .buddypress .buddypress-wrap input[type=reset].outline:active,
 .buddypress .buddypress-wrap input[type=submit].outline:hover,
+.buddypress .buddypress-wrap input[type=submit].outline:focus,
 .buddypress .buddypress-wrap input[type=submit].outline:active,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:active {
   background-color: var(--bb-secondary-button-background-hover);
   color: var(--bb-secondary-button-text-hover);
@@ -2965,8 +3006,9 @@ input[type=submit].upper.large,
 .wp-block-file a.wp-block-file__button:focus {
   box-shadow: var(--bb-primary-button-focus-shadow);
 }
-.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:active,
+.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:focus, .wp-block-file .wp-block-file__button:active,
 .wp-block-file a.wp-block-file__button:hover,
+.wp-block-file a.wp-block-file__button:focus,
 .wp-block-file a.wp-block-file__button:active {
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
@@ -4240,7 +4282,7 @@ button[data-balloon] {
   font-weight: 500;
   font-size: 13px;
   letter-spacing: -0.24px;
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
   color: var(--bb-tooltip-color);
@@ -4552,7 +4594,7 @@ button[data-balloon] {
 }
 
 [data-bp-tooltip]:after {
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   color: var(--bb-tooltip-color);
 }
 [data-bp-tooltip]:before {
@@ -4980,6 +5022,43 @@ strong.breadcrumb_last {
   font-weight: 500;
 }
 
+.activity-update-form ~ .mpp-upload-buttons {
+  float: none;
+}
+.activity-update-form ~ .mpp-media-upload-container a.mpp-upload-container-close {
+  color: transparent;
+  text-indent: 0;
+  background: none;
+}
+.activity-update-form ~ .mpp-media-upload-container a.mpp-upload-container-close:before {
+  content: "\e828";
+  font-family: "bb-icons";
+  font-size: 22px;
+  color: #939597;
+}
+.activity-update-form ~ .mpp-media-upload-container a.mpp-upload-container-close:hover {
+  color: transparent;
+}
+.activity-update-form ~ .mpp-media-upload-container .mpp-dropzone {
+  height: auto;
+  background: rgba(240, 243, 247, 0.5);
+  border: 1px dashed #dedfe2;
+  border-radius: 6px;
+  padding: 10px 0;
+}
+.activity-update-form ~ .mpp-media-upload-container .mpp-dropzone .mpp-drag-drop-inside p {
+  color: #122b46;
+}
+.activity-update-form ~ .mpp-media-upload-container .mpp-feedback > ul {
+  margin: 10px 0;
+}
+.activity-update-form ~ .mpp-media-upload-container .mpp-remote-media-container .mpp-remote-add-media-row {
+  padding-right: 90px;
+}
+.activity-update-form ~ .mpp-media-upload-container .mpp-uploading-media-list ul {
+  margin: 10px 0;
+}
+
 /* Radio */
 .bb-radio-style {
   position: relative;
@@ -5023,6 +5102,10 @@ strong.breadcrumb_last {
           transform: translate(-50%, -50%);
   text-align: center;
   border-radius: 100%;
+}
+
+.lms-topic-sidebar-instructor .bb-about-instructor > h4 {
+  color: var(--bb-headings-color);
 }
 
 .bb-checkbox,
@@ -5587,7 +5670,7 @@ body .widget-area:not(.widget-area-secondary) {
   width: 100%;
 }
 .no-results.not-found .search-form .search-submit {
-  border-radius: 0 100px 100px 0;
+  border-radius: 0 var(--bb-button-radius) var(--bb-button-radius) 0;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.24px;
@@ -5769,6 +5852,10 @@ body:not(.logged-in) .bb-mobile-header .flex-1 {
   font-size: 1.375rem;
   font-weight: 500;
   margin: 0;
+  color: var(--bb-headings-color);
+}
+.site-title a {
+  color: var(--bb-headings-color);
 }
 .site-title img {
   max-height: 76px;
@@ -6251,6 +6338,9 @@ a.header-search-link {
 .site-header span.bb-separator.horizontal {
   max-width: 20px;
 }
+.site-header .hideshow .more-button > i {
+  color: var(--bb-header-links);
+}
 
 .header-search-link-wrap,
 .user-wrap-container,
@@ -6315,7 +6405,7 @@ a.header-search-link {
   color: var(--bb-header-links);
 }
 .bb-header-buttons a.button.outline:hover {
-  color: var(--bb-primary-color);
+  color: var(--bb-header-links-hover);
 }
 
 .bb-button-wrap + .bb-button-wrap {
@@ -7099,6 +7189,7 @@ body:not(.bb-page-loaded) .primary-menu {
 .menu-style-tab_bar .site-header .primary-menu > li.menu-item-has-children:not(.hideshow):after {
   color: var(--bb-tooltip-color);
   content: attr(data-balloon);
+  font-family: 'SF UI Text';
   font-size: 13px;
   font-weight: 500;
   left: 50%;
@@ -7125,7 +7216,6 @@ body:not(.bb-page-loaded) .primary-menu {
   font-family: "bb-icons";
   font-size: 24px;
   font-weight: 400;
-  font-style: normal;
   color: var(--bb-header-links);
   left: 50%;
   position: absolute;
@@ -7589,12 +7679,11 @@ body:not(.bb-page-loaded) .primary-menu {
   visibility: visible;
 }
 
-.menu-style-standard .primary-menu .menu-item-has-children:not(.hideshow):after,
+.primary-menu .menu-item-has-children:not(.hideshow):after,
 #navbar-extend .menu-item-has-children:after {
   content: '\e826';
   font-family: 'bb-icons';
   font-weight: normal;
-  font-style: normal;
   speak: none;
   display: inline-block;
   color: var(--bb-header-links);
@@ -7777,44 +7866,27 @@ li.hideshow {
   min-width: 16px;
   text-align: center;
 }
-.user-wrap.menu-item-has-children #header-my-account-menu li.no-icon > a:before {
-  color: var(--bb-alternate-text-color);
-}
 .user-wrap.menu-item-has-children #header-my-account-menu .ab-submenu {
   border-radius: 4px;
 }
 .user-wrap.menu-item-has-children #header-my-account-menu ul {
   padding: 5px 0;
 }
-.user-wrap.menu-item-has-children #header-my-account-menu li li:hover > a {
+.user-wrap.menu-item-has-children #header-my-account-menu li li > a {
   background-color: transparent;
-}
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-ancestor.no-icon > a:before,
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-item.no-icon > a:before {
-  color: var(--bb-primary-color);
-}
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-ancestor > a,
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-item > a {
-  background: var(--bb-content-alternate-background-color);
-  color: var(--bb-primary-color);
-  font-weight: 400;
-}
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-ancestor > a > i,
-.user-wrap.menu-item-has-children #header-my-account-menu > .current-menu-item > a > i {
-  color: var(--bb-primary-color);
-}
-.user-wrap.menu-item-has-children #header-my-account-menu li:hover > a {
-  background: var(--bb-content-alternate-background-color);
-  color: var(--bb-primary-color);
-}
-.user-wrap.menu-item-has-children #header-my-account-menu li:hover > a > i {
-  color: var(--bb-primary-color);
 }
 .user-wrap.menu-item-has-children #header-my-account-menu a {
   padding: 11px 14px 11px 40px;
   position: relative !important;
   color: var(--bb-body-text-color);
   background-color: transparent;
+}
+.user-wrap.menu-item-has-children #header-my-account-menu a:hover {
+  background: var(--bb-content-alternate-background-color);
+  color: var(--bb-primary-color);
+}
+.user-wrap.menu-item-has-children #header-my-account-menu a:hover > i {
+  color: var(--bb-primary-color);
 }
 .user-wrap.menu-item-has-children #header-my-account-menu a i {
   font-size: 18px;
@@ -7833,34 +7905,12 @@ li.hideshow {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-ancestor.no-icon > a:before,
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-item.no-icon > a:before {
-  color: var(--bb-primary-color);
-}
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-ancestor > a,
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-item > a {
-  color: var(--bb-primary-color);
+.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu a:hover {
   background-color: #fff;
-  font-weight: 400;
-}
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-ancestor > a > i,
-.user-wrap.menu-item-has-children #header-my-account-menu .bb-sub-menu .current-menu-item > a > i {
-  color: var(--bb-primary-color);
 }
 .user-wrap.menu-item-has-children #header-my-account-menu [data-balloon]:before,
 .user-wrap.menu-item-has-children #header-my-account-menu [data-balloon]:after {
   display: none;
-}
-
-.user-wrap.menu-item-has-children .sub-menu-inner li.menupop .ab-sub-wrapper {
-  border-radius: 4px;
-}
-.user-wrap.menu-item-has-children .sub-menu-inner li.menupop .ab-sub-wrapper .ab-submenu {
-  border-radius: 4px;
-  padding: 8px 0;
-}
-.user-wrap.menu-item-has-children .sub-menu-inner li.menupop .ab-sub-wrapper .ab-submenu a {
-  padding: 11px 14px;
 }
 
 ul#wp-admin-bar-my-account-default {
@@ -9067,23 +9117,25 @@ body:not(.buddypanel-open).bb-sfwd-aside .buddypanel-site-icon {
 }
 .widget.widget_search input[name="bbp_search"], .widget.widget_search input[type="search"], .widget.widget_search input.search {
   border: 1px solid var(--bb-content-border-color);
-  border-radius: var(--bb-block-radius);
   background-color: var(--bb-content-background-color);
   border-radius: var(--bb-button-radius);
 }
 .widget.widget_search .wp-block-search__button {
-  background: var(--bb-primary-button-background-regular);
+  background-color: var(--bb-primary-button-background-regular);
+  color: var(--bb-primary-button-text-regular);
   border: 1px solid var(--bb-primary-button-border-regular);
   border-radius: 100px;
-  color: var(--bb-primary-button-text-regular);
   margin-left: 10px;
   padding-left: 15px;
   padding-right: 15px;
 }
+.widget.widget_search .wp-block-search__button:focus {
+  box-shadow: var(--bb-primary-button-focus-shadow);
+}
 .widget.widget_search .wp-block-search__button:hover {
-  background: var(--bb-primary-button-background-hover);
-  border: 1px solid var(--bb-primary-button-border-hover);
+  background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
+  border-color: var(--bb-primary-button-border-hover);
 }
 .widget.widget_rss .wp-block-rss li {
   display: -webkit-box;
@@ -10601,6 +10653,7 @@ a.bb-like-wrap:hover .like-count {
   font-weight: 400;
   letter-spacing: -0.24px;
   margin: 0 0 10px;
+  color: var(--bb-headings-color);
 }
 .show-support p {
   font-size: 14px;
@@ -11154,17 +11207,13 @@ span.post-format-icon.white {
 
 .comments-title {
   font-family: inherit;
-  font-size: 24px;
-  line-height: 32px;
-  margin-bottom: 30px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .comment-list {
   list-style: none;
   margin: 0;
-}
-.comment-list ol.children {
-  margin-left: 60px;
 }
 
 .children {
@@ -11174,7 +11223,7 @@ span.post-format-icon.white {
 
 .comment-author .avatar {
   border-radius: 100%;
-  max-width: 38px;
+  max-width: 42px;
 }
 
 .comment-body {
@@ -11185,7 +11234,7 @@ span.post-format-icon.white {
   border: 1px solid var(--bb-content-border-color);
   border-radius: var(--bb-block-radius);
   margin-bottom: 20px;
-  padding: 35px 30px 30px;
+  padding: 30px;
 }
 
 cite.fn {
@@ -11196,7 +11245,7 @@ cite.fn {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  padding-left: 10px;
+  padding-left: 12px;
 }
 
 .comment-author {
@@ -11204,31 +11253,29 @@ cite.fn {
 }
 .comment-author a.url {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   font-style: normal;
   color: var(--bb-headings-color);
   letter-spacing: -0.24px;
-  line-height: 21px;
+  line-height: 18px;
 }
 
 a.comment-date {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
   color: var(--bb-alternate-text-color);
   letter-spacing: -0.24px;
-  line-height: 20px;
 }
 a.comment-date:hover {
   color: var(--bb-headings-color);
 }
 
 .comment-text {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--bb-body-text-color);
   letter-spacing: -0.24px;
-  line-height: 21px;
-  margin-top: 16px;
-  margin-bottom: 20px;
+  line-height: 24px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   word-break: break-word;
 }
 .comment-text p:last-child {
@@ -11250,7 +11297,7 @@ a.comment-date:hover {
       -ms-flex-align: center;
           align-items: center;
   letter-spacing: -0.26px;
-  line-height: 21px;
+  margin-bottom: -8px;
 }
 .comment-footer a {
   color: inherit;
@@ -11275,19 +11322,20 @@ a.comment-date:hover {
   box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.06);
 }
 .comment-respond .comment-author {
-  font-size: 14px;
   font-weight: 500;
   color: var(--bb-headings-color);
-  line-height: 21px;
 }
 .comment-respond .comment-author:hover {
   color: var(--bb-primary-color);
 }
-.comment-respond .logged-in-as {
-  margin-bottom: 20px;
-}
 .comment-respond .vcard {
-  margin-right: 10px;
+  margin-right: 12px;
+}
+.comment-respond .vcard a {
+  color: var(--bb-headings-color);
+}
+.comment-respond .vcard a:hover {
+  color: var(--bb-primary-color);
 }
 .comment-respond form {
   margin: 0;
@@ -11304,35 +11352,8 @@ a.comment-date:hover {
   margin: 0;
   text-align: right;
 }
-.comment-respond .form-submit .submit {
-  color: var(--bb-primary-button-text-regular);
-  background-color: var(--bb-primary-button-background-regular);
-  border: 0;
-}
-.comment-respond .form-submit .submit.waiting {
-  border-width: 1px;
-  border-color: var(--bb-secondary-button-border-regular);
-  color: var(--bb-secondary-button-text-regular);
-  background-color: var(--bb-secondary-button-background-regular);
-}
 .comment-respond .comment-form-comment {
-  margin-bottom: 20px;
-}
-.comment-respond .comment-form {
-  display: table;
-  width: 100%;
-}
-.comment-respond .comment-form .form-submit {
-  float: right;
-}
-.comment-respond .comment-form > small {
-  float: right;
-  margin: 5px 15px 0 0;
-}
-.comment-respond .comment-form > small a {
-  color: var(--bb-alternate-text-color);
-  font-size: 14px;
-  line-height: 1.5;
+  margin-bottom: 15px;
 }
 
 .comment-reply-title {
@@ -11385,11 +11406,6 @@ a#cancel-comment-reply-link {
   float: right;
 }
 
-@media screen and (max-width: 800px) {
-  .comment-list ol.children {
-    margin-left: 1.6875rem;
-  }
-}
 /* Slider */
 .slick-slider {
   position: relative;
@@ -11749,7 +11765,8 @@ ul.wp-block-latest-posts li .wp-block-latest-posts__post-excerpt {
 .elementor-widget-wp-widget-bbp_forums_widget ul,
 .elementor-widget-wp-widget-bbp_topics_widget ul,
 .elementor-widget-wp-widget-bbp_views_widget ul,
-.elementor-widget-wp-widget-recent-posts ul {
+.elementor-widget-wp-widget-recent-posts ul,
+.elementor-element.widget.bp-latest-activities ul {
   list-style: none;
   margin: 0;
 }
@@ -11757,16 +11774,18 @@ ul.wp-block-latest-posts li .wp-block-latest-posts__post-excerpt {
 .elementor-widget-wp-widget-bbp_forums_widget ul li a,
 .elementor-widget-wp-widget-bbp_topics_widget ul li a,
 .elementor-widget-wp-widget-bbp_views_widget ul li a,
-.elementor-widget-wp-widget-recent-posts ul li a {
-  color: #939597;
+.elementor-widget-wp-widget-recent-posts ul li a,
+.elementor-element.widget.bp-latest-activities ul li a {
+  color: var(--bb-alternate-text-color);
   font-size: 14px;
 }
 .elementor-widget-wp-widget-bbp_replies_widget ul li a:hover,
 .elementor-widget-wp-widget-bbp_forums_widget ul li a:hover,
 .elementor-widget-wp-widget-bbp_topics_widget ul li a:hover,
 .elementor-widget-wp-widget-bbp_views_widget ul li a:hover,
-.elementor-widget-wp-widget-recent-posts ul li a:hover {
-  color: var(--bb-headings-color);
+.elementor-widget-wp-widget-recent-posts ul li a:hover,
+.elementor-element.widget.bp-latest-activities ul li a:hover {
+  color: var(--bb-primary-color);
 }
 
 figure.wp-block-embed {
@@ -12802,6 +12821,10 @@ span.footer-tagline {
           justify-content: flex-start;
 }
 
+.zoom-meeting-block {
+  background-color: var(--bb-body-background-color);
+}
+
 @media screen and (max-width: 1024px) {
   #buddypress #bp-new-zoom-meeting-form #boss-media-create-meeting-popup .bb-field-wrapper > .bb-field-wrap {
     width: 100%;
@@ -12998,4 +13021,148 @@ span.footer-tagline {
       opacity: 1;
     }
   }
+}
+
+/*
+* Web Push Notification
+*/
+html body #onesignal-slidedown-container #onesignal-slidedown-dialog {
+  border-radius: 0 0 var(--bb-block-radius) var(--bb-block-radius) !important;
+}
+html body #onesignal-slidedown-container #onesignal-slidedown-dialog .slidedown-body-message {
+  color: var(--bb-body-text-color) !important;
+}
+html body #onesignal-slidedown-container #onesignal-slidedown-dialog .slidedown-footer #onesignal-slidedown-allow-button {
+  font-family: inherit;
+  color: var(--bb-primary-button-text-regular) !important;
+  background-color: var(--bb-primary-button-background-regular) !important;
+  border-color: var(--bb-primary-button-border-regular) !important;
+  border-radius: var(--bb-button-radius) !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  line-height: 1.3 !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  outline: none !important;
+  -webkit-appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transition: all linear 0.2s;
+  transition: all linear 0.2s;
+}
+html body #onesignal-slidedown-container #onesignal-slidedown-dialog .slidedown-footer #onesignal-slidedown-allow-button:hover {
+  color: var(--bb-primary-button-text-hover) !important;
+  background-color: var(--bb-primary-button-background-hover) !important;
+  border-color: var(--bb-primary-button-border-hover) !important;
+}
+html body #onesignal-slidedown-container #onesignal-slidedown-dialog .slidedown-footer #onesignal-slidedown-cancel-button {
+  color: var(--bb-headings-color) !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+html body .onesignal-user-preference {
+  background-color: var(--bb-content-background-color);
+  border-color: var(--bb-content-border-color);
+}
+html body .onesignal-user-preference .web-notification-toggle .web-notification-icon-text .web-browser-text .web-notification-text {
+  color: var(--bb-headings-color);
+}
+html body .onesignal-user-preference .web-notification-toggle .web-notification-icon-text p {
+  color: var(--bb-body-text-color);
+}
+html body .onesignal-user-preference .web-notification-field .slider {
+  border-color: var(--bb-primary-color);
+  background-color: var(--bb-content-background-color);
+}
+html body .onesignal-user-preference .web-notification-field .slider:before {
+  background-color: var(--bb-primary-color);
+}
+html body .onesignal-user-preference .web-notification-field input:checked + .slider {
+  background-color: var(--bb-primary-color);
+}
+html body .onesignal-user-preference .web-notification-field input:checked + .slider:before {
+  background-color: var(--bb-content-background-color);
+}
+html body .onesignal-user-preference .web-notification-field .bb-icon-spinner {
+  content: '';
+  display: inline-block;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--bb-alternate-text-color-rgb), 0.2);
+  border-top-color: var(--bb-alternate-text-color);
+}
+html body .onesignal-user-preference .web-notification-field .bb-icon-spinner:before {
+  display: none;
+}
+html body.bb-template-v2 .onesignal-user-preference {
+  border-radius: var(--bb-block-radius-inner);
+}
+html body .bb-onesignal-popup.notification-popup,
+html body .bb-onesignal-popup-close.notification-popup-close {
+  border-radius: var(--bb-block-radius);
+}
+html body .bb-onesignal-popup.notification-popup > p,
+html body .bb-onesignal-popup-close.notification-popup-close > p {
+  font-size: 13px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-header,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-header {
+  border-color: var(--bb-content-border-color);
+  font-size: 18px;
+  line-height: 1.33;
+}
+html body .bb-onesignal-popup.notification-popup .mfp-close,
+html body .bb-onesignal-popup-close.notification-popup-close .mfp-close {
+  background-color: transparent;
+  color: var(--bb-headings-color) !important;
+  font-size: 24px;
+  opacity: 0.4 !important;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-content ul,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-content ul {
+  padding: 0;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-content ul li,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-content ul li {
+  border: 0;
+  color: var(--bb-body-text-color);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-content ul li img,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-content ul li img {
+  margin: 0 5px;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-content ul li:before,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-content ul li:before {
+  background-color: var(--bb-body-text-color);
+  color: var(--bb-content-background-color);
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  height: 22px;
+  margin-right: 10px;
+  line-height: 22px;
+  position: static;
+  width: 22px;
+}
+html body .bb-onesignal-popup.notification-popup .bb-onesignal-popup-content ul li:last-child,
+html body .bb-onesignal-popup-close.notification-popup-close .bb-onesignal-popup-content ul li:last-child {
+  margin-bottom: 0;
 }

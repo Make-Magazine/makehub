@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 2.0.2\n"
+"Project-Id-Version: BuddyBoss Platform Pro 2.0.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-05-26 15:47:11+00:00\n"
+"POT-Creation-Date: 2022-06-22 13:43:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -80,6 +80,7 @@ msgid "..."
 msgstr ""
 
 #: includes/access-control/bb-access-control-functions.php:574
+#: includes/integrations/onesignal/bb-onesignal-functions.php:69
 #: includes/integrations/zoom/bp-zoom-functions.php:1450
 #: includes/integrations/zoom/bp-zoom-functions.php:1479
 #: includes/integrations/zoom/bp-zoom-functions.php:1506
@@ -223,6 +224,7 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:690
 #: includes/access-control/includes/class-bb-access-control.php:831
 #: includes/access-control/includes/class-bb-access-control.php:1028
+#: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:17
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:17
 #. translators: %1$s - Platform Pro string, %2$s - License URL
 msgid "You need to activate a license key for %1$s to unlock this feature. %2$s"
@@ -235,6 +237,7 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:705
 #: includes/access-control/includes/class-bb-access-control.php:846
 #: includes/access-control/includes/class-bb-access-control.php:1043
+#: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:32
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:32
 msgid "Add License key"
 msgstr ""
@@ -396,6 +399,456 @@ msgstr ""
 #: includes/access-control/templates/plugin-options.php:51
 #: includes/access-control/templates/plugin-options.php:76
 msgid "- Select Membership Type -"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:263
+#: includes/integrations/onesignal/bb-onesignal-actions.php:277
+#. translators: Image src.
+msgid "Choose <img src=\"%s\"> in your browser's address bar"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:268
+#. translators: Image src.
+msgid "Enable <img src=\"%s\"> Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:271
+#: includes/integrations/onesignal/bb-onesignal-actions.php:285
+#: includes/integrations/onesignal/bb-onesignal-actions.php:299
+#: includes/integrations/onesignal/bb-onesignal-actions.php:307
+#: includes/integrations/onesignal/bb-onesignal-actions.php:316
+#: includes/integrations/onesignal/bb-onesignal-actions.php:324
+msgid "Refresh this page"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:282
+#. translators: Image src.
+msgid "Disable <img src=\"%s\"> Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:289
+msgid "Enable Opera Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:291
+msgid "Enable Chrome Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:293
+msgid "Enable Safari Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:295
+#: includes/integrations/onesignal/bb-onesignal-actions.php:303
+msgid "Open the Safari settings"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:296
+#: includes/integrations/onesignal/bb-onesignal-actions.php:304
+msgid "In the Websites tab, open the Notifications section"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:297
+msgid "Change the permission for this site to Allow"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:298
+#: includes/integrations/onesignal/bb-onesignal-actions.php:306
+msgid "Close the settings"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:305
+msgid "Change the permission for this site to Deny"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:310
+msgid "Enable Firefox Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:312
+#: includes/integrations/onesignal/bb-onesignal-actions.php:320
+msgid "Open the Firefox settings"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:313
+#: includes/integrations/onesignal/bb-onesignal-actions.php:321
+msgid ""
+"In the Privacy & Security tab, open the Notifications settings (found under "
+"Permissions)"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:314
+msgid "Change the Status for this site to Allow"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:315
+#: includes/integrations/onesignal/bb-onesignal-actions.php:323
+msgid "Click Save Changes and close the settings"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:322
+msgid "Change the Status for this site to Block"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:327
+msgid "Enable Edge Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:329
+msgid "Enable IE Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:331
+msgid "Enable Browser Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:345
+msgid ""
+"Receive web notifications through this browser, even when you're not on "
+"this site."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:362
+msgid "Enable notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:364
+msgid ""
+"To enable notifications, please allow notifications for this site in your "
+"browser."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:386
+msgid "Disable notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-actions.php:388
+msgid ""
+"To disable notifications, please block notifications for this site in your "
+"browser."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:98
+#. translators: Error Message.
+msgid "There was a problem connecting to your OneSignal account: %s"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:157
+#. translators: Error Message.
+msgid "There was a problem creating a OneSignal app: %s"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:202
+msgid "Are you sure?"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:204
+msgid "No file was uploaded."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:205
+msgid "There was a problem uploading the soft prompt photo."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:207
+msgid "soft prompt photo was uploaded successfully."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:208
+msgid "There was a problem deleting soft prompt photo. Please try again."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:209
+msgid "soft prompt photo was deleted successfully."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:284
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:298
+msgid "Not Connected"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:309
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:322
+msgid "Connected"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:333
+#: includes/integrations/onesignal/bb-onesignal-integration.php:25
+msgid "OneSignal"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:381
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:455
+#: includes/integrations/onesignal/bb-onesignal-functions.php:483
+msgid "OneSignal Auth Key"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:393
+msgid "Select App"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:457
+#. translators: %s is the BuddyBoss marketplace link.
+msgid ""
+"To use OneSignal for web push notifications, enter the %1$s from your %2$s. "
+"After saving, an app will be automatically configured in your OneSignal "
+"account."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:457
+msgid "Auth Key"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:457
+msgid "OneSignal account"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:475
+msgid "-- Select App --"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:480
+msgid "No Apps Found"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:488
+msgid "View App"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:492
+msgid ""
+"Select the app from your OneSignal app to use for sending web push "
+"notifications. To create a new app with the required settings pre-defined, "
+"click %s."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:492
+#: includes/integrations/onesignal/bb-onesignal-admin-tab.php:497
+msgid "Create New App"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:47
+msgid "Enable Web Push Notifications"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:54
+msgid "Default Notification Icon"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:60
+msgid "Automatically Request Permission"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:66
+msgid "Enable Soft Prompt"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:124
+msgid "There was a problem cropping custom profile avatar."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:125
+msgid "The custom profile avatar was uploaded successfully."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:126
+msgid "There was a problem deleting custom profile avatar. Please try again."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-filters.php:127
+msgid "The custom profile avatar was deleted successfully!"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:183
+#. translators: 1. App name 2. App configuration URL
+msgid ""
+"The %1$s app is currently set to only support secure (HTTPS) sites. Please "
+"update this app's %2$s in OneSignal or create a new app for this site."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:185
+#: includes/integrations/onesignal/bb-onesignal-functions.php:201
+msgid "configuration"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:199
+#. translators: 1. App name 2. App configuration URL
+msgid ""
+"The Site URL for the %1$s app does not match this site's url. Please update "
+"this app's %2$s in OneSignal or create a new app for this site."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:375
+msgid "Allow"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:397
+msgid "No Thanks"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:419
+msgid ""
+"Subscribe to push notifications to keep up to date with the latest activity "
+"on this site."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:467
+msgid "Allow members to subscribe to notifications through their browser"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:468
+msgid ""
+"Once enabled, members will be able to opt-in to receive all BuddyBoss "
+"Notifications as push notifications through their web browser."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:481
+#. translators: 1. OneSignal error type. 2. Admin integration url.
+msgid "Please enter a valid %1$s in the %2$s settings."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:496
+#: includes/integrations/onesignal/bb-onesignal-functions.php:528
+msgid "Integration"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:513
+#. translators: 1. OneSignal error type. 2. Admin integration url.
+msgid "Please select a valid %1$s in the %2$s settings."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:515
+msgid "OneSignal App"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:560
+#: includes/integrations/onesignal/bb-onesignal-functions.php:706
+msgid "Uploading..."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:560
+#: includes/integrations/onesignal/bb-onesignal-functions.php:706
+msgid "Upload"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:561
+#: includes/integrations/onesignal/bb-onesignal-functions.php:707
+msgid "Removing..."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:561
+#: includes/integrations/onesignal/bb-onesignal-functions.php:707
+msgid "Remove"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:576
+#. translators: 1: Notification icon width in pixels. 2: Notification icon
+#. height in pixels
+msgid ""
+"Upload an image to be the default icon used for web push notifications. "
+"Certain notification types may use different icons. The recommended size is "
+"%1$spx by %2$spx."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:597
+msgid "visit"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:598
+msgid "login"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:610
+#. translators: Permission validate select box.
+msgid ""
+"Request permission to send notifications when members first %s through a "
+"new browser"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:621
+#. translators: Notification Preferences text.
+msgid ""
+"When enabled, a prompt will be presented by the browser, requesting "
+"permission for the site to send web push notifications. The member must "
+"click \"Allow\" to be subscribed. If disabled, members will need to allow "
+"permission in the %s tab of their Account Settings."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:623
+msgid "Notification Preferences"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:641
+msgid ""
+"Show a \"soft prompt\" before triggering the browser's native permission "
+"prompt"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:648
+#. translators: Learn more link .
+msgid ""
+"A \"soft prompt\" is a customizable prompt that is show to the member "
+"before the \"hard prompt\" of the native permission prompt triggered by the "
+"browser. %s"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:650
+msgid "Learn More"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:657
+msgid ""
+"A \"soft prompt\" is a customizable prompt that is show to the member "
+"before the \"hard prompt\" of the native permission prompt triggered by the "
+"browser."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:658
+msgid ""
+"If a member denies the native permission prompt, they will need to go "
+"through a multi-step process to enable notification permissions in their "
+"browser. As such, a \"soft prompt\" is highly beneficial, as it allows you "
+"opportunity to persuade your members to subscribe to web push notifications "
+"before the native permission prompt is triggered."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:659
+msgid ""
+"However, the \"soft prompt\" does not replace the native permission prompt "
+"and does not subscribe the member's browser to receive web push "
+"notifications."
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:676
+#: includes/integrations/onesignal/bb-onesignal-functions.php:677
+msgid "Message"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:679
+msgid "/90 characters"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:731
+#: includes/integrations/onesignal/bb-onesignal-functions.php:732
+msgid "Allow Button"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:734
+#: includes/integrations/onesignal/bb-onesignal-functions.php:741
+msgid "/15 characters"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:738
+#: includes/integrations/onesignal/bb-onesignal-functions.php:739
+msgid "Cancel Button"
+msgstr ""
+
+#: includes/integrations/onesignal/bb-onesignal-functions.php:779
+msgid "Preview"
+msgstr ""
+
+#: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:12
+msgid "OneSignal <span>&mdash; requires license</span>"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-actions.php:211
@@ -1661,6 +2114,7 @@ msgid "%1$s: New meeting scheduled"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1606
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:213
 msgid "New meeting scheduled"
 msgstr ""
 
@@ -1670,6 +2124,7 @@ msgid "%1$s: Update meeting scheduled"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1616
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:215
 msgid "Update meeting scheduled"
 msgstr ""
 
@@ -1699,6 +2154,7 @@ msgid "%1$s: New webinar scheduled"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1674
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:247
 msgid "New webinar scheduled"
 msgstr ""
 
@@ -1708,6 +2164,7 @@ msgid "%1$s: Update webinar scheduled"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:1684
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:249
 msgid "Update webinar scheduled"
 msgstr ""
 
@@ -1799,6 +2256,26 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:127
 msgid "Group meetings and webinars"
+msgstr ""
+
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:201
+#. translators: %s: The meeting start date.
+msgid "New meeting scheduled for %s"
+msgstr ""
+
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:207
+#. translators: %s: The meeting start date.
+msgid "Update meeting scheduled for %s"
+msgstr ""
+
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:235
+#. translators: %s: The meeting start date
+msgid "New webinar scheduled for %s"
+msgstr ""
+
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:241
+#. translators: %s: The meeting start date.
+msgid "Update webinar scheduled for %s"
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-meeting-template.php:246

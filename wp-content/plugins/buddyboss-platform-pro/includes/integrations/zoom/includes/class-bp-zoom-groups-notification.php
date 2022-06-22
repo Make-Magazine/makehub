@@ -149,4 +149,126 @@ class BP_Zoom_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function format_notification( $content, $item_id, $secondary_item_id, $action_item_count, $component_action_name, $component_name, $notification_id, $screen ) {
 		return $content;
 	}
+
+	/**
+	 * Format zoom Push the notifications.
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param array  $content      Notification content.
+	 * @param object $notification Notification object.
+	 *
+	 * @return array {
+	 *  'title'       => '',
+	 *  'description' => '',
+	 *  'link'        => '',
+	 *  'image'       => '',
+	 * }
+	 */
+	public function format_push_notification( $content, $notification ) {
+
+		if ( 'bb_groups_new_zoom' !== $notification->component_action ) {
+			return $content;
+		}
+
+		$group_id          = $notification->item_id;
+		$group             = groups_get_group( $group_id );
+		$group_name        = bp_get_group_name( $group );
+		$group_link        = bp_get_group_permalink( $group );
+		$start_date        = '';
+		$notification_link = '';
+		$text              = '';
+		$type              = bp_notifications_get_meta( $notification->id, 'type' );
+		$is_created        = bp_notifications_get_meta( $notification->id, 'is_created' );
+
+		// Check the type of zoom like is webinar or meeting.
+		if ( 'meeting' === $type ) {
+			$meeting = new BP_Zoom_Meeting( $notification->secondary_item_id );
+		} else {
+			$meeting = new BP_Zoom_Webinar( $notification->secondary_item_id );
+		}
+
+		if ( property_exists( $meeting, 'start_date' ) ) {
+			$start_date = new DateTime( $meeting->start_date );
+			$start_date = $start_date->format( 'd-m-Y' );
+		}
+
+		if ( 'meeting' === $type ) {
+			if ( ! empty( $start_date ) ) {
+				if ( $is_created ) {
+					$text = sprintf(
+					/* translators: %s: The meeting start date. */
+						__( 'New meeting scheduled for %s', 'buddyboss-pro' ),
+						$start_date
+					);
+				} else {
+					$text = sprintf(
+					/* translators: %s: The meeting start date. */
+						__( 'Update meeting scheduled for %s', 'buddyboss-pro' ),
+						$start_date
+					);
+				}
+			} else {
+				if ( $is_created ) {
+					$text = __( 'New meeting scheduled', 'buddyboss-pro' );
+				} else {
+					$text = __( 'Update meeting scheduled', 'buddyboss-pro' );
+				}
+			}
+
+			$notification_link = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'     => 'bp_mark_read',
+						'group_id'   => $notification->item_id,
+						'meeting_id' => $notification->secondary_item_id,
+					),
+					$group_link . 'zoom/meetings/' . $notification->secondary_item_id
+				),
+				'bp_mark_meeting_' . $notification->item_id
+			);
+		} elseif ( 'webinar' === $type ) {
+			if ( ! empty( $start_date ) ) {
+				if ( $is_created ) {
+					$text = sprintf(
+					/* translators: %s: The meeting start date */
+						__( 'New webinar scheduled for %s', 'buddyboss-pro' ),
+						$start_date
+					);
+				} else {
+					$text = sprintf(
+					/* translators: %s: The meeting start date. */
+						__( 'Update webinar scheduled for %s', 'buddyboss-pro' ),
+						$start_date
+					);
+				}
+			} else {
+				if ( $is_created ) {
+					$text = __( 'New webinar scheduled', 'buddyboss-pro' );
+				} else {
+					$text = __( 'Update webinar scheduled', 'buddyboss-pro' );
+				}
+			}
+
+			$notification_link = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'     => 'bp_mark_read',
+						'group_id'   => $notification->item_id,
+						'webinar_id' => $notification->secondary_item_id,
+					),
+					$group_link . 'zoom/webinars/' . $notification->secondary_item_id
+				),
+				'bp_mark_webinar_' . $notification->item_id
+			);
+		}
+
+		$content = array(
+			'title'       => $group_name,
+			'description' => $text,
+			'link'        => $notification_link,
+			'image'       => bb_notification_avatar_url( $notification ),
+		);
+		return $content;
+	}
 }

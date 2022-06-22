@@ -12,33 +12,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 	while ( bp_message_threads() ) :
 		bp_message_thread();
-		$excerpt = '';
-		foreach ( array_reverse( $messages_template->thread->messages ) as $message ) {
-			if ( '' !== wp_strip_all_tags( $message->message ) ) {
-				$messages_template->thread->last_message_content = $message->message;
-				$excerpt                                   = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
-				$last_message_id                           = (int) $message->id;
-				$messages_template->thread->thread_id      = $message->thread_id;
-				$messages_template->thread->last_sender_id = $message->sender_id;
-			}
-		}
-		if ( '' === $excerpt ) {
-			$thread_messages = BP_Messages_Thread::get_messages( bp_get_message_thread_id(), null, 99999999 );
-			foreach ( $thread_messages as $thread_message ) {
-				$excerpt = wp_strip_all_tags( do_shortcode( $thread_message->message ) );
-				if ( '' !== $excerpt ) {
-					$last_message_id                                 = (int) $thread_message->id;
-					$messages_template->thread->last_message_id      = $thread_message->id;
-					$messages_template->thread->thread_id            = $thread_message->thread_id;
-					$messages_template->thread->last_message_subject = $thread_message->subject;
-					$messages_template->thread->last_message_content = $thread_message->message;
-					$messages_template->thread->last_sender_id       = $thread_message->sender_id;
-					$messages_template->thread->last_message_date    = $thread_message->date_sent;
-					$excerpt = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
-					break;
-				}
-			}
-		}
+
+		$excerpt         = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
+		$last_message_id = (int) $messages_template->thread->last_message_id;
 
 		$group_id = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		if ( 0 === $last_message_id && ! $group_id ) {

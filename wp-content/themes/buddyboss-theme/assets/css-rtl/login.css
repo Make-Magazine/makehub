@@ -1766,62 +1766,88 @@ input[type=submit] i,
   /*top: 1px;*/
   /*margin: 0 2px;*/
 }
-button:hover,
+button:hover, button:focus,
 .button:hover,
+.button:focus,
 input[type=button]:hover,
+input[type=button]:focus,
 input[type=submit]:hover,
+input[type=submit]:focus,
 .buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover {
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
   outline: none;
   text-decoration: none;
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
   border-color: var(--bb-primary-button-border-hover);
 }
-button:focus,
+button:hover, button:focus, button:active,
+.button:hover,
 .button:focus,
-input[type=button]:focus,
-input[type=submit]:focus,
-.buddypress .buddypress-wrap .comment-reply-link:focus,
-.buddypress .buddypress-wrap .generic-button a:focus,
-.buddypress .buddypress-wrap a.bp-title-button:focus,
-.buddypress .buddypress-wrap a.button:focus,
-.buddypress .buddypress-wrap button:focus,
-.buddypress .buddypress-wrap input[type=button]:focus,
-.buddypress .buddypress-wrap input[type=reset]:focus,
-.buddypress .buddypress-wrap input[type=submit]:focus,
-.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
-  outline: none;
-  text-decoration: none;
-}
-button:active,
 .button:active,
+input[type=button]:hover,
+input[type=button]:focus,
 input[type=button]:active,
+input[type=submit]:hover,
+input[type=submit]:focus,
 input[type=submit]:active,
+.buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .comment-reply-link:active,
+.buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap .generic-button a:active,
+.buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.bp-title-button:active,
+.buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap a.button:active,
+.buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap button:active,
+.buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=button]:active,
+.buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=reset]:active,
+.buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap input[type=submit]:active,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:active {
   outline: none;
   text-decoration: none;
@@ -2812,36 +2838,51 @@ input[type=submit].outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus {
   box-shadow: var(--bb-secondary-button-focus-shadow);
 }
-button.outline:hover, button.outline:active,
+button.outline:hover, button.outline:focus, button.outline:active,
 .button.outline:hover,
+.button.outline:focus,
 .button.outline:active,
 input[type=button].outline:hover,
+input[type=button].outline:focus,
 input[type=button].outline:active,
 input[type=submit].outline:hover,
+input[type=submit].outline:focus,
 input[type=submit].outline:active,
 .buddypress .buddypress-wrap .comment-reply-link.outline:hover,
+.buddypress .buddypress-wrap .comment-reply-link.outline:focus,
 .buddypress .buddypress-wrap .comment-reply-link.outline:active,
 .buddypress .buddypress-wrap .generic-button a.outline:hover,
+.buddypress .buddypress-wrap .generic-button a.outline:focus,
 .buddypress .buddypress-wrap .generic-button a.outline:active,
 .buddypress .buddypress-wrap a.bp-title-button.outline:hover,
+.buddypress .buddypress-wrap a.bp-title-button.outline:focus,
 .buddypress .buddypress-wrap a.bp-title-button.outline:active,
 .buddypress .buddypress-wrap a.button.outline:hover,
+.buddypress .buddypress-wrap a.button.outline:focus,
 .buddypress .buddypress-wrap a.button.outline:active,
 .buddypress .buddypress-wrap button.outline:hover,
+.buddypress .buddypress-wrap button.outline:focus,
 .buddypress .buddypress-wrap button.outline:active,
 .buddypress .buddypress-wrap input[type=button].outline:hover,
+.buddypress .buddypress-wrap input[type=button].outline:focus,
 .buddypress .buddypress-wrap input[type=button].outline:active,
 .buddypress .buddypress-wrap input[type=reset].outline:hover,
+.buddypress .buddypress-wrap input[type=reset].outline:focus,
 .buddypress .buddypress-wrap input[type=reset].outline:active,
 .buddypress .buddypress-wrap input[type=submit].outline:hover,
+.buddypress .buddypress-wrap input[type=submit].outline:focus,
 .buddypress .buddypress-wrap input[type=submit].outline:active,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:active {
   background-color: var(--bb-secondary-button-background-hover);
   color: var(--bb-secondary-button-text-hover);
@@ -2965,8 +3006,9 @@ input[type=submit].upper.large,
 .wp-block-file a.wp-block-file__button:focus {
   box-shadow: var(--bb-primary-button-focus-shadow);
 }
-.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:active,
+.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:focus, .wp-block-file .wp-block-file__button:active,
 .wp-block-file a.wp-block-file__button:hover,
+.wp-block-file a.wp-block-file__button:focus,
 .wp-block-file a.wp-block-file__button:active {
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
@@ -4240,7 +4282,7 @@ button[data-balloon] {
   font-weight: 500;
   font-size: 13px;
   letter-spacing: -0.24px;
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
   color: var(--bb-tooltip-color);
@@ -4552,7 +4594,7 @@ button[data-balloon] {
 }
 
 [data-bp-tooltip]:after {
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   color: var(--bb-tooltip-color);
 }
 [data-bp-tooltip]:before {
@@ -4961,9 +5003,9 @@ body.login:not(.login-split-page) .language-switcher {
 .login.bb-login .button-primary,
 .login.wp-core-ui .button-primary,
 .login.bb-login .wp-generate-pw {
-  background-color: var(--bb-primary-button-background-regular);
-  color: var(--bb-primary-button-text-regular);
-  border: 1px solid var(--bb-primary-button-border-regular);
+  background-color: var(--bb-login-register-button-background-color-regular);
+  border-color: var(--bb-login-register-button-border-color-regular);
+  color: var(--bb-login-register-button-text-color-regular);
   border-radius: var(--bb-button-radius);
   box-shadow: none;
   text-shadow: none;
@@ -4976,17 +5018,12 @@ body.login:not(.login-split-page) .language-switcher {
   margin: 20px 0 0;
   font-size: 14px;
 }
-.login.bb-login .button-primary:focus,
-.login.wp-core-ui .button-primary:focus,
-.login.bb-login .wp-generate-pw:focus {
-  box-shadow: var(--bb-primary-button-focus-shadow);
-}
 .login.bb-login .button-primary:hover,
 .login.wp-core-ui .button-primary:hover,
 .login.bb-login .wp-generate-pw:hover {
-  background-color: var(--bb-primary-button-background-hover);
-  color: var(--bb-primary-button-text-hover);
-  border-color: var(--bb-primary-button-border-hover);
+  background-color: var(--bb-login-register-button-background-color-hover);
+  border-color: var(--bb-login-register-button-border-color-hover);
+  color: var(--bb-login-register-button-text-color-hover);
 }
 .login.bb-login .button-primary:active,
 .login.wp-core-ui .button-primary:active,
@@ -4999,19 +5036,15 @@ body.login:not(.login-split-page) .language-switcher {
 .language-switcher .button,
 .bb-login.wp-core-ui .language-switcher .button {
   background-color: var(--bb-secondary-button-background-regular);
+  border-color: var(--bb-secondary-button-border-regular);
   color: var(--bb-secondary-button-text-regular);
-  border: 1px solid var(--bb-secondary-button-border-regular);
   border-radius: var(--bb-button-radius);
-}
-.language-switcher .button:focus,
-.bb-login.wp-core-ui .language-switcher .button:focus {
-  box-shadow: var(--bb-secondary-button-focus-shadow);
 }
 .language-switcher .button:hover,
 .bb-login.wp-core-ui .language-switcher .button:hover {
   background-color: var(--bb-secondary-button-background-hover);
+  border-color: var(--bb-secondary-button-border-hover);
   color: var(--bb-secondary-button-text-hover);
-  border: 1px solid var(--bb-secondary-button-border-hover);
 }
 .language-switcher select,
 .bb-login.wp-core-ui .language-switcher select {

@@ -1550,7 +1550,7 @@ article.job_listing ul.job-listing-meta li.location:before {
   margin-left: 7px;
 }
 article.job_listing ul.job-listing-meta li.location a {
-  color: var(--bb-alternate-text-color);
+  color: var(--bb-headings-color);
 }
 article.job_listing ul.job-listing-meta li.location a:hover {
   color: var(--bb-primary-color);

@@ -1618,21 +1618,38 @@
 					var $bbpress_forums_element = $( e.target ).closest( '.bb-grid' );
 
 					if ( $bbpress_forums_element.find( '.bbp-reply-form' ).length ) {
-
+						var reply_to = $( this ).closest( '.bs-reply-list-item' ).find( '.bbp-author-name' ).text().trim();
 						var reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().substring( 0, 50 );
 						if ( $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-elem' ).length ) {
 							var clickToDownloadText = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-elem .document-helper-text' )[ 0 ];
 							clickToDownloadText = $( clickToDownloadText ).text();
-							reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( clickToDownloadText, '' ).substring( 0, 50 )
+							if ( '' !== clickToDownloadText ) {
+								reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( clickToDownloadText, '' ).substring( 0, 50 );
+							}
+							var mediaFileText = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-elem' ).not('.document-activity');
+							mediaFileText = $( mediaFileText ).text().trim();
+							if ( '' !== mediaFileText ) {
+								reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( mediaFileText, '' );
+							}
+						}
+						if ( $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-wrap .bp-video-thumbnail-uploader' ).length ) {
+							var videoFileText = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-wrap' )[ 0 ];
+							videoFileText = $( videoFileText ).text().trim();
+							if ( '' !== videoFileText ) {
+								reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( videoFileText, '' );
+							}
 						}
 						if( $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bbp-reply-revision-log' ).length ) {
 							var revisionText  = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bbp-reply-revision-log' ).text().trim();
-							reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().replace( revisionText,'').substring( 0, 50 ).trim();
+							reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( revisionText,'').substring( 0, 50 ).trim();
 						}
-						if (reply_exerpt != '') {
+						if( '' !== reply_to ) {
+							$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp-reply-to-user' ).text( reply_to );
+						}
+						if ( '' !== reply_exerpt ) {
 							reply_exerpt = reply_exerpt + '...';
-							$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp-reply-exerpt' ).text( reply_exerpt );
 						}
+						$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp-reply-exerpt' ).text( reply_exerpt );
 						var editor_key = $bbpress_forums_element.find( '.bbp-the-content' ).data( 'key' );
 						if ( typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[ editor_key ] !== 'undefined' ) {
 							window.forums_medium_reply_editor[ editor_key ].subscribe(

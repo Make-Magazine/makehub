@@ -2548,7 +2548,7 @@ div.gform_wrapper ul.gfield_radio li input[type=radio]:checked + label {
   vertical-align: text-top;
   width: 20px;
   height: 20px;
-  background: #fff;
+  background: var(--bb-primary-color);
   border-radius: 3px;
   border: 1px solid #C9CBCA;
 }
@@ -3321,6 +3321,10 @@ div.wpforms-container-full .wpforms-form .wpforms-field-credit-card-expiration s
   background: transparent;
   border: 0;
   font-size: 13px;
+}
+
+.toggle-sap-widgets:hover .cls-1 {
+  fill: var(--bb-primary-color);
 }
 
 @media screen and (max-width: 620px) {

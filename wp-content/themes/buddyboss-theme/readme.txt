@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 6.0
-Version: 2.0.3
+Version: 2.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,21 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 2.0.4 =
+* Notifications - Provided styling support for Web Push Notification from BuddyBoss Platform Pro
+* Forums - Handled discussion reply showing wrong member name issue
+* Messages - Small code refactoring to not save entity code in the DB for empty messages with just media
+* Menus - Handled menu icon picker issues not showing legacy icons
+* Menus - Small improvement to allow add a section for BuddyPanel menu settings only
+* Login - Fixed double quotation mark not working issue on Login Page form placeholder
+* Coding Standards - Menu and sub-navigation CSS Code refactoring
+* Coding Standards - 2.0 specific code cleanup and refactoring
+* Coding Standards - Code cleanup to centralize styling for buttons
+* LearnDash - Handled expand action not working issue for single course page
+* LearnDash - Handled scrolling issue for course page for device screen width between 820px and 768px
+* WooCommerce - Handle single product screen categories UI issue
+* Compatibility - Handled conflicts with a couple of third-party plugins
 
 = 2.0.3 =
 * Theme Options - Handled maintenance mode page description field shortcode support issue

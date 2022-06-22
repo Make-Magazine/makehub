@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-08 10:01:26+00:00\n"
+"POT-Creation-Date: 2022-06-22 13:43:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -436,12 +436,12 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bbpress/loop-blocked-single-reply.php:46
-#: template-parts/unread-messages.php:401
+#: template-parts/unread-messages.php:377
 msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
 #: bbpress/loop-blocked-single-reply.php:48
-#: template-parts/unread-messages.php:403
+#: template-parts/unread-messages.php:379
 msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 
@@ -597,6 +597,35 @@ msgstr ""
 msgid "Close this notice"
 msgstr ""
 
+#: buddypress/groups/single/invite-anyone.php:15
+msgid "Want to invite someone to the group who is not yet a member of the site?"
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:15
+msgid "Send invitations by email."
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:31
+msgid "Search members"
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:38
+msgid "Select members:"
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:51
+msgid "Select people to invite from your friends list."
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:71
+msgid "Remove Invite"
+msgstr ""
+
+#: buddypress/groups/single/invite-anyone.php:86
+#: template-parts/header-profile-menu.php:500
+msgid "Send Invites"
+msgstr ""
+
 #: buddypress/groups/single/members/leaders.php:13
 #: learndash/ld30/template-course-author-details.php:49
 msgid "Message"
@@ -674,7 +703,7 @@ msgstr ""
 #: inc/lib/buddyboss-updater/includes/views/package.php:68
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:689
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:694
-#: inc/theme/login.php:168 learndash/ld30/modules/login-modal.php:389
+#: inc/theme/login.php:171 learndash/ld30/modules/login-modal.php:389
 #: paid-memberships-pro/pages/account.php:107
 msgid "Email"
 msgstr ""
@@ -774,7 +803,7 @@ msgstr ""
 #: buddypress.php:24 inc/lib/buddyboss-updater/includes/views/package.php:37
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:958
 #: inc/plugins/lifterlms-helper.php:1775 inc/plugins/lifterlms-helper.php:1854
-#: inc/theme/login.php:442 inc/theme/template-functions.php:858
+#: inc/theme/login.php:453 inc/theme/template-functions.php:858
 #: learndash/ld30/learndash-sidebar.php:182
 #: learndash/ld30/learndash-sidebar.php:206
 #: learndash/ld30/shortcodes/course_list_template.php:288
@@ -1323,7 +1352,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: inc/admin/options/custom-css.php:2129
+#: inc/admin/options/custom-css.php:841
 msgid "Quiz Progress"
 msgstr ""
 
@@ -5475,8 +5504,8 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1229
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:313
 #: learndash/ld30/lesson/listing.php:159
-#: learndash/ld30/lesson/partials/row.php:299
-#: learndash/ld30/lesson/partials/row.php:301
+#: learndash/ld30/lesson/partials/row.php:304
+#: learndash/ld30/lesson/partials/row.php:306
 #: learndash/ld30/shortcodes/profile/course-row.php:64
 msgid "Expand"
 msgstr ""
@@ -6497,7 +6526,7 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php:1988
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2639
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:1151
-#: inc/theme/login.php:177 lifterlms/certificates/actions.php:33
+#: inc/theme/login.php:188 lifterlms/certificates/actions.php:33
 msgid "Save"
 msgstr ""
 
@@ -8823,7 +8852,7 @@ msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:169
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:243
-#: learndash/ld30/lesson/partials/row.php:299
+#: learndash/ld30/lesson/partials/row.php:304
 msgid "Collapse"
 msgstr ""
 
@@ -11000,7 +11029,7 @@ msgstr ""
 msgid "YouTube Square"
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/font.php:205
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/font.php:204
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/svg.php:110
 msgid "Deselect"
 msgstr ""
@@ -13963,23 +13992,23 @@ msgstr ""
 msgid "BuddyPanel Sections"
 msgstr ""
 
-#: inc/theme/class-buddypanel-section.php:141
+#: inc/theme/class-buddypanel-section.php:145
 msgid ""
 "You can visually group menu items in the BuddyPanel menu by indenting them "
 "within Sections."
 msgstr ""
 
-#: inc/theme/class-buddypanel-section.php:145
+#: inc/theme/class-buddypanel-section.php:149
 msgid "Add Section"
 msgstr ""
 
-#: inc/theme/class-buddypanel-section.php:153
+#: inc/theme/class-buddypanel-section.php:157
 #. translators: BuddyPanel menu location text.
-msgid "Link this menu to a %s to add sections."
+msgid "Link this menu to either %s only to add sections."
 msgstr ""
 
-#: inc/theme/class-buddypanel-section.php:154
-msgid "BuddyPanel menu location"
+#: inc/theme/class-buddypanel-section.php:158
+msgid "BuddyPanel or Mobile menu location"
 msgstr ""
 
 #: inc/theme/functions.php:71
@@ -14050,66 +14079,66 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: inc/theme/login.php:165 inc/theme/login.php:169
+#: inc/theme/login.php:164 inc/theme/login.php:176
 msgid "Email Address"
 msgstr ""
 
-#: inc/theme/login.php:166 woocommerce/myaccount/form-login.php:57
+#: inc/theme/login.php:165 woocommerce/myaccount/form-login.php:57
 #: woocommerce/myaccount/form-login.php:106
 msgid "Password"
 msgstr ""
 
-#: inc/theme/login.php:167 learndash/ld30/modules/login-modal.php:385
+#: inc/theme/login.php:170 learndash/ld30/modules/login-modal.php:385
 #: paid-memberships-pro/pages/account.php:106
 #: woocommerce/myaccount/form-login.php:92
 msgid "Username"
 msgstr ""
 
-#: inc/theme/login.php:170
+#: inc/theme/login.php:177
 msgid "Add new password"
 msgstr ""
 
-#: inc/theme/login.php:171 inc/theme/login.php:714
+#: inc/theme/login.php:178 inc/theme/login.php:725
 msgid "Retype new password"
 msgstr ""
 
-#: inc/theme/login.php:173
+#: inc/theme/login.php:184
 msgid "Reset Password"
 msgstr ""
 
-#: inc/theme/login.php:174
+#: inc/theme/login.php:185
 msgid ""
 "<div>Forgot your password?</div><p class=\"message\">Please enter your "
 "email address. You will receive an email with instructions on how to reset "
 "your password.</p>"
 msgstr ""
 
-#: inc/theme/login.php:176
+#: inc/theme/login.php:187
 msgid "Request reset link"
 msgstr ""
 
-#: inc/theme/login.php:179
+#: inc/theme/login.php:190
 msgid "Password has been updated"
 msgstr ""
 
-#: inc/theme/login.php:182
+#: inc/theme/login.php:193
 msgid "Back to sign in"
 msgstr ""
 
-#: inc/theme/login.php:370
+#: inc/theme/login.php:381
 msgid "Create an Account"
 msgstr ""
 
-#: inc/theme/login.php:373 inc/theme/login.php:379
+#: inc/theme/login.php:384 inc/theme/login.php:390
 #: template-parts/content-buddypress.php:20 template-parts/header-aside.php:142
 msgid "Sign in"
 msgstr ""
 
-#: inc/theme/login.php:695
+#: inc/theme/login.php:706
 msgid "Forgot Password?"
 msgstr ""
 
-#: inc/theme/login.php:723
+#: inc/theme/login.php:734
 msgid "The passwords do not match."
 msgstr ""
 
@@ -14732,7 +14761,7 @@ msgstr ""
 
 #: learndash/ld30/learndash-sidebar.php:140
 #: learndash/ld30/learndash-sidebar.php:398
-#: learndash/ld30/lesson/partials/row.php:40
+#: learndash/ld30/lesson/partials/row.php:45
 #: learndash/ld30/quiz/partials/row.php:32
 msgid "You don't currently have access to this content"
 msgstr ""
@@ -14755,7 +14784,7 @@ msgstr ""
 msgid "Show more"
 msgstr ""
 
-#: learndash/ld30/lesson/partials/row.php:61
+#: learndash/ld30/lesson/partials/row.php:66
 msgid "Please login to view sample content"
 msgstr ""
 
@@ -15631,10 +15660,6 @@ msgstr ""
 msgid "Email Invites"
 msgstr ""
 
-#: template-parts/header-profile-menu.php:500
-msgid "Send Invites"
-msgstr ""
-
 #: template-parts/messages-dropdown.php:28
 msgid "View Inbox"
 msgstr ""
@@ -15655,61 +15680,61 @@ msgstr ""
 msgid "Related Articles"
 msgstr ""
 
-#: template-parts/unread-messages.php:83
+#: template-parts/unread-messages.php:59
 msgid "Group logo of %s"
 msgstr ""
 
-#: template-parts/unread-messages.php:161
+#: template-parts/unread-messages.php:137
 msgid "Deleted Group"
 msgstr ""
 
-#: template-parts/unread-messages.php:316
+#: template-parts/unread-messages.php:292
 msgid "Deleted User"
 msgstr ""
 
-#: template-parts/unread-messages.php:321
-#: template-parts/unread-messages.php:415
+#: template-parts/unread-messages.php:297
+#: template-parts/unread-messages.php:391
 msgid "Suspended Member"
 msgstr ""
 
-#: template-parts/unread-messages.php:323
-#: template-parts/unread-messages.php:417
+#: template-parts/unread-messages.php:299
+#: template-parts/unread-messages.php:393
 msgid "Blocked Member"
 msgstr ""
 
-#: template-parts/unread-messages.php:355
+#: template-parts/unread-messages.php:331
 msgid "sent a photo"
 msgstr ""
 
-#: template-parts/unread-messages.php:357
+#: template-parts/unread-messages.php:333
 msgid "sent some photos"
 msgstr ""
 
-#: template-parts/unread-messages.php:369
+#: template-parts/unread-messages.php:345
 msgid "sent a video"
 msgstr ""
 
-#: template-parts/unread-messages.php:371
+#: template-parts/unread-messages.php:347
 msgid "sent some videos"
 msgstr ""
 
-#: template-parts/unread-messages.php:383
+#: template-parts/unread-messages.php:359
 msgid "sent a document"
 msgstr ""
 
-#: template-parts/unread-messages.php:385
+#: template-parts/unread-messages.php:361
 msgid "sent some documents"
 msgstr ""
 
-#: template-parts/unread-messages.php:394
+#: template-parts/unread-messages.php:370
 msgid "sent a gif"
 msgstr ""
 
-#: template-parts/unread-messages.php:408
+#: template-parts/unread-messages.php:384
 msgid "You"
 msgstr ""
 
-#: template-parts/unread-messages.php:434
+#: template-parts/unread-messages.php:410
 msgid "You have no messages right now."
 msgstr ""
 
@@ -16550,7 +16575,7 @@ msgctxt "%1$s: Lesson Steps Complete %2$s: Total lesson steps"
 msgid "%1$d/%2$d Steps"
 msgstr ""
 
-#: learndash/ld30/lesson/partials/row.php:169
+#: learndash/ld30/lesson/partials/row.php:174
 #. translators: placeholders: Topic Count, Topic/Topics Label.
 msgctxt "placeholders: Topic Count, Topic/Topics Label"
 msgid "%1$d %2$s"
@@ -16558,7 +16583,7 @@ msgid_plural "%1$d %2$s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: learndash/ld30/lesson/partials/row.php:195
+#: learndash/ld30/lesson/partials/row.php:200
 #. translators: placeholders: Quiz Count, Quiz/Quizzes Label.
 msgctxt "placeholders: Quiz Count, Quiz/Quizzes Label"
 msgid "%1$d %2$s"
