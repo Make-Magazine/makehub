@@ -161,25 +161,14 @@ function buddyboss_login_scripts() {
 			var $label_user_lost = jQuery( 'label#user_label_lost' );
 			$label_user_lost.html( $label_user_lost.find( 'input' ) );
 
-			var loginform_user_login = '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>';
-			var loginform_user_pass = '<?php esc_html_e( 'Password', 'buddyboss-theme' ); ?>';
 
-			jQuery( '#loginform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( loginform_user_login ).text() );
-			jQuery( '#loginform #user_pass' ).attr( 'placeholder', jQuery( '<div/>' ).html( loginform_user_pass ).text() );
-
-			var registerform_user_login = '<?php esc_html_e( 'Username', 'buddyboss-theme' ); ?>';
-			var registerform_user_email = '<?php esc_html_e( 'Email', 'buddyboss-theme' ); ?>';
-
-			jQuery( '#registerform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( registerform_user_login ).text() );
-			jQuery( '#registerform #user_email' ).attr( 'placeholder', jQuery( '<div/>' ).html( registerform_user_email ).text() );
-
-			var lostpasswordform_user_login = '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>';
-			var resetpassform_pass1 = '<?php echo apply_filters( THEME_HOOK_PREFIX . 'password_field_text_placeholder', __( 'Add new password', 'buddyboss-theme' ) ); ?>';
-			var resetpassform_pass2 = '<?php echo apply_filters( THEME_HOOK_PREFIX . 're_type_password_field_text_placeholder', __( 'Retype new password', 'buddyboss-theme' ) ); ?>';
-
-			jQuery( '#lostpasswordform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( lostpasswordform_user_login ).text() );
-			jQuery( '#resetpassform #pass1' ).attr( 'placeholder', jQuery( '<div/>' ).html( resetpassform_pass1 ).text() );
-			jQuery( '#resetpassform #bs-pass2' ).attr( 'placeholder', jQuery( '<div/>' ).html( resetpassform_pass2 ).text() );
+			jQuery( '#loginform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>' );
+			jQuery( '#loginform #user_pass' ).attr( 'placeholder', '<?php esc_html_e( 'Password', 'buddyboss-theme' ); ?>' );
+			jQuery( '#registerform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Username', 'buddyboss-theme' ); ?>' );
+			jQuery( '#registerform #user_email' ).attr( 'placeholder', '<?php esc_html_e( 'Email', 'buddyboss-theme' ); ?>' );
+			jQuery( '#lostpasswordform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>' );
+            jQuery( '#resetpassform #pass1' ).attr( 'placeholder', '<?php echo apply_filters( THEME_HOOK_PREFIX . 'password_field_text_placeholder', __( 'Add new password', 'buddyboss-theme' ) ); ?>' );
+            jQuery( '#resetpassform #bs-pass2' ).attr( 'placeholder', '<?php echo apply_filters( THEME_HOOK_PREFIX . 're_type_password_field_text_placeholder', __( 'Retype new password', 'buddyboss-theme' ) ); ?>' );
 
             jQuery( '.login.bb-login p.message.reset-pass' ).text( "<?php esc_html_e( 'Reset Password', 'buddyboss-theme' ); ?>" );
             jQuery( '.login.login-action-lostpassword.bb-login #login > p.message' ).html( '<?php _e( '<div>Forgot your password?</div><p class="message">Please enter your email address. You will receive an email with instructions on how to reset your password.</p>', 'buddyboss-theme' ); ?>' );

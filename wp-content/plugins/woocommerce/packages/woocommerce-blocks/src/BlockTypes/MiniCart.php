@@ -213,7 +213,8 @@ class MiniCart extends AbstractBlock {
 
 		if (
 			current_user_can( 'edit_theme_options' ) &&
-			wc_current_theme_is_fse_theme()
+			function_exists( 'wp_is_block_theme' ) &&
+			wp_is_block_theme()
 		) {
 			$theme_slug      = BlockTemplateUtils::theme_has_template_part( 'mini-cart' ) ? wp_get_theme()->get_stylesheet() : BlockTemplateUtils::PLUGIN_SLUG;
 			$site_editor_uri = admin_url( 'site-editor.php' );
@@ -446,7 +447,7 @@ class MiniCart extends AbstractBlock {
 				);
 			}
 			return array(
-				'tax_label'                         => '',
+				'label_including_tax'               => '',
 				'display_cart_prices_including_tax' => true,
 			);
 		}

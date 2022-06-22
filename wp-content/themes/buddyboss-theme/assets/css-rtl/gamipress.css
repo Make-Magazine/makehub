@@ -650,10 +650,6 @@ body .gamipress-restrict-content-limiter {
   font-size: 13px;
   vertical-align: middle;
 }
-#buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank-title:hover,
-#buddypress .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement-title:hover {
-  color: var(--bb-primary-color);
-}
 #buddypress .users-header .gamipress-buddypress-achievements,
 #buddypress .users-header .gamipress-buddypress-ranks {
   margin-bottom: 0;

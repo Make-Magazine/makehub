@@ -577,14 +577,6 @@
 }
 
 /* Pricing Page Theme : Custom */
-.mepr-price-menu.custom .mepr-price-box-benefits-item:before {
-  color: var(--bb-primary-color);
-}
-
-.mepr-price-menu.custom .mepr-price-box-button a {
-  background-color: var(--bb-primary-color);
-}
-
 #content .mepr-price-menu.custom {
   margin-top: 45px;
 }

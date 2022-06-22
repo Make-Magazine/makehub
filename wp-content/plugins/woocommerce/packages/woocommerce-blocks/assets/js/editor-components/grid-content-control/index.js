@@ -14,15 +14,12 @@ import { ToggleControl } from '@wordpress/components';
  */
 const GridContentControl = ( { onChange, settings } ) => {
 	const { image, button, price, rating, title } = settings;
-	// If `image` is undefined, that might be because it's a block that was
-	// created before the `image` attribute existed, so we default to true.
-	const imageIsVisible = image !== false;
 	return (
 		<>
 			<ToggleControl
 				label={ __( 'Product image', 'woocommerce' ) }
 				help={
-					imageIsVisible
+					image
 						? __(
 								'Product image is visible.',
 								'woocommerce'
@@ -32,10 +29,8 @@ const GridContentControl = ( { onChange, settings } ) => {
 								'woocommerce'
 						  )
 				}
-				checked={ imageIsVisible }
-				onChange={ () =>
-					onChange( { ...settings, image: ! imageIsVisible } )
-				}
+				checked={ image }
+				onChange={ () => onChange( { ...settings, image: ! image } ) }
 			/>
 			<ToggleControl
 				label={ __( 'Product title', 'woocommerce' ) }

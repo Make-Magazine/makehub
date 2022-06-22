@@ -21,14 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var $quizzes [array]
  * @since 3.0
  */
-$topics  = ! empty( $lesson_topics ) && ! empty( $lesson_topics[ $lesson['post']->ID ] ) ? $lesson_topics[ $lesson['post']->ID ] : '';
-$quizzes = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
-
-if ( version_compare( LEARNDASH_VERSION, '4.2.0', '<' ) ) {
-	$attributes = learndash_get_lesson_attributes( $lesson );
-} else {
-	$attributes = learndash_get_course_step_attributes( $lesson['post']->ID, $course_id, $user_id );
-}
+$topics        = ! empty( $lesson_topics ) && ! empty( $lesson_topics[ $lesson['post']->ID ] ) ? $lesson_topics[ $lesson['post']->ID ] : '';
+$quizzes       = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
+$attributes    = learndash_get_lesson_attributes( $lesson );
 $content_count = learndash_get_lesson_content_count( $lesson, $course_id );
 
 // Fallbacks.
@@ -93,7 +88,7 @@ if ( isset( $sections[ $lesson['post']->ID ] ) ) :
 
 endif; ?>
 
-<div class="<?php learndash_lesson_row_class( $lesson, $has_access, $topics, $quizzes ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" data-ld-expand-id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
+<div class="<?php learndash_lesson_row_class( $lesson, $has_access ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
 	<div class="ld-item-list-item-preview">
 		<?php
 		/**
@@ -301,7 +296,7 @@ endif; ?>
 				do_action( 'learndash-lesson-row-expand-before', $lesson['post']->ID, $course_id, $user_id );
 				?>
 
-				<div class="ld-expand-button ld-button-alternate" data-ld-expands="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" data-ld-expand-text="<?php esc_html_e( 'Expand', 'buddyboss-theme' ); ?>" data-ld-collapse-text="<?php esc_html_e( 'Collapse', 'buddyboss-theme' ); ?>">
+				<div class="ld-expand-button ld-button-alternate" data-ld-expands="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php esc_html_e( 'Expand', 'buddyboss-theme' ); ?>" data-ld-collapse-text="<?php esc_html_e( 'Collapse', 'buddyboss-theme' ); ?>">
 					<span class="ld-icon-arrow-down ld-icon ld-primary-background"></span>
 					<span class="ld-text ld-primary-color"><?php esc_html_e( 'Expand', 'buddyboss-theme' ); ?></span>
 				</div> <!--/.ld-expand-button-->

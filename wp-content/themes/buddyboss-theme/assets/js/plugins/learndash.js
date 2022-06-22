@@ -784,7 +784,7 @@
         bbStickyLdSidebar: function () {
             var bbHeaderHeight = $('#masthead').outerHeight();
 
-            if ( $(window).width() > 820 && $('.bb-ld-sticky-sidebar .ld-sidebar-widgets').length == 0 ) {
+            if ( $(window).width() > 768 && $('.bb-ld-sticky-sidebar .ld-sidebar-widgets').length == 0 ) {
                 $('.bb-ld-sticky-sidebar').stick_in_parent({offset_top: bbHeaderHeight + 45});
 
                 var adminBarHeight = 0;
@@ -805,7 +805,7 @@
             }
 
             $(window).on('resize', function () {
-                if ( $(window).width() > 820 && $('.bb-ld-sticky-sidebar .ld-sidebar-widgets').length == 0 ) {
+                if ( $(window).width() > 768 && $('.bb-ld-sticky-sidebar .ld-sidebar-widgets').length == 0 ) {
                     $('.bb-ld-sticky-sidebar').stick_in_parent({offset_top: bbHeaderHeight + 45});
                 } else {
                     $('.bb-ld-sticky-sidebar').trigger("sticky_kit:detach");

@@ -6814,12 +6814,6 @@ div.item-options .bb-members__tab.selected {
 .bb-forums .item-title a {
   font-size: 14px;
 }
-.bb-forums .bb-forums__list .bb-forums__item .item-meta .bs-replied > a:hover {
-  color: var(--bb-primary-color);
-}
-.bb-forums .bb-forums__list .bb-forums__item .item-title > a:hover {
-  color: var(--bb-primary-color);
-}
 .bb-forums .bb-forums__avatar + .item .bs-last-reply {
   padding-right: 0;
 }
