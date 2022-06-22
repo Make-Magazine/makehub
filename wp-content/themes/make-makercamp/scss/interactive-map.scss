@@ -1,0 +1,138 @@
+.page-interactive-map {
+	.buddypanel {
+		display:none;
+	}
+	#page {
+		padding: 0px;
+		margin-left: 0px !important;
+		.site-content {
+			padding: 0px;
+			.container-fluid {
+				padding: 0px;
+				.content-area {
+					padding: 0px;
+					min-width: 100%;
+					svg { margin-bottom: -10px; }
+				}
+			}
+		}
+	}
+	.map-image-btn {
+		transition: transform .5s;
+		position: absolute;
+		&:hover, &:focus {
+			transform: scale(1.1);
+			filter: drop-shadow(0 0 0.75rem rgb(255, 255, 255));
+		}
+	}
+	.popover {
+		opacity: 1;
+		h3 {
+			background: #333;
+		    margin: 0px;
+		    padding: 10px;
+		    color: #fff;
+		    border-top-right-radius: 5px;
+		    border-top-left-radius: 5px;
+		}
+		.popover-body {
+			padding: 10px;
+			font-size: 16px;
+			display: flex;
+			flex-direction: column;
+			.project-count {
+				color: #999;
+				font-style: italic;
+				text-align: right;
+			}
+			.map-btn {
+				width: 100%;
+				margin-top: 10px;
+			}
+		}
+		.arrow::after {
+			display: none;
+		}
+		&.bs-popover-right .arrow {
+			left: -30px;
+		    border-top: 10px solid transparent;
+		    border-right: 20px solid #fff;
+		    border-bottom: 10px solid transparent;
+		}
+		&.bs-popover-left .arrow {
+			right: -30px;
+			border-top: 10px solid transparent;
+			border-left: 20px solid white;
+			border-bottom: 10px solid transparent;
+		}
+	 }
+	a#art-section {
+		top: calc(100vw * .409);
+		left: calc(100vw * .349);
+		width: calc(100vw * .23);
+	}
+	a#food-section {
+		top: calc(100vw * .0195);
+		left: calc(100vw * .2);
+		width: calc(100vw * .4075);
+	}
+	a#farm-section {
+		top: calc(100vw * .165);
+		left: calc(100vw * .363);
+		width: calc(100vw * .39);
+	}
+	a#stage-section {
+		top: calc(100vw * .3065);
+		left: calc(100vw * .625);
+		width: calc(100vw * .22135);
+		z-index: 99;
+		z-index: 99;
+	}
+	a#fabrication-section {
+		top: calc(100vw * .178);
+		left: calc(100vw * .000001);
+		width: calc(100vw * .3825);
+	}
+	a#dock-section {
+		bottom: calc(100vw * .000001);
+		right: calc(100vw * .00001);
+		width: calc(100vw * .6215);
+	}
+	a#camp-section {
+		bottom: calc(100vw * .000001);
+		left: calc(100vw * .00001);
+		width: calc(100vw * .315);
+	}
+	a#construction-section {
+		top: calc(100vw * .0053);
+		right: calc(100vw * .000001);
+		width: calc(100vw * .3125);
+	}
+	a#sky-section {
+		top: calc(100vw * .0003);
+		left: calc(100vw * .011);
+		width: calc(100vw * .9);
+	}
+	.popover#fabrication-section {
+		left: calc(100vw * -.16) !important;
+    	top: calc(100vw *-.05) !important;
+	}
+	.popover#food-section {
+		left: calc(100vw * -.12) !important;
+    	top: calc(100vw *.06) !important;
+	}
+	.popover#construction-section {
+		left: calc(100vw * .05) !important;
+    	top: calc(100vw *.05) !important;
+	}
+	.popover#stage-section {
+		left: calc(100vw * .05) !important;
+	}
+	.popover#farm-section {
+		left: calc(100vw * -.08) !important
+	}
+	.popover#dock-section {
+		left: calc(100vw *.25) !important;
+		top: calc(100vw *.05) !important;
+	}
+}

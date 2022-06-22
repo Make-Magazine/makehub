@@ -30,7 +30,7 @@ class upcoming_mfaires_widget extends WP_Widget {
         $number = (isset($instance['number'])?$instance['number']:5);
         $api_url = 'https://makerfaire.com/query/?type=map&upcoming=true&number=' . $number . '&categories=mini,featured,flagship';
 
-        $faire_content = @file_get_contents($api_url);
+        $faire_content = basicCurl($api_url);
 
         // Decode the JSON in the file
         $faires = json_decode($faire_content, true);
