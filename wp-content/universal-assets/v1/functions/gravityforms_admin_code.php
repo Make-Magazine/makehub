@@ -123,6 +123,7 @@ function editor_script(){
     fieldSettings.select += ', .snm_input_setting';
     fieldSettings.fileupload += ', .snm_input_setting';
     fieldSettings.address += ', .snm_input_setting';
+    fieldSettings.list += ', .snm_input_setting';
 
 		// Make sure our field gets populated with its saved value
 		jQuery(document).on("gform_load_field_settings", function(event, field, form) {
@@ -136,6 +137,7 @@ function editor_script(){
 add_filter('gform_replace_merge_tags', 'make_replace_merge_tags', 10, 7);
 
 function make_replace_merge_tags($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
+
   // the formatted_date merge tags needs 3 fields to work - date, time, timezone
   if (strpos($text, '{formatted_date') !== false) {
     $formatted_date = '';
@@ -166,7 +168,7 @@ function make_replace_merge_tags($text, $form, $entry, $url_encode, $esc_html, $
     $timeZoneVal = pullMergeParam($merge_text, 'timezone');
     $timeZone = ($timeZoneVal==''?wp_timezone_string():$timeZoneVal);
 
-    $now = new DateTime($date.' '.$time,new DateTimeZone($timeZone));
+    $now = new DateTime($date.' '.$time, new DateTimeZone($timeZone));
     $formatted_date = $now->format('c');
 
     //replace the merge tag with the formatted date
@@ -192,4 +194,13 @@ function pullMergeParam($merge_text, $param){
       }
   }
   return ''; //parameter not found, return blank
+}
+
+add_filter( 'gform_column_input', 'set_column_input', 10, 5 );
+function set_column_input( $input_info, $field, $column, $value, $form_id ) {
+  if($field->inputName=='social-list' && $column=='Platform'){
+    return array( 'type' => 'select', 'choices' => 'Facebook, Twitter, Instagram, YouTube' );
+  }else{
+    return $input_info;
+  }
 }
