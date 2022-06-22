@@ -33,7 +33,7 @@ jQuery(document).ready(function(){
 					id="<?php echo($section['section_type']); ?>"
 					class="map-image-btn"
 					data-html="true"
-					data-content="<?php echo($section['section_short_description']); ?><a href='<?php echo($section['section_link']); ?>' class='btn universal-btn map-btn'>See Projects</a>"
+					data-content="<?php echo($section['section_short_description']); ?><div class='project-count'><?php echo($section['section_projects']); ?> Projects</div><a href='<?php echo($section['section_link']); ?>' class='btn universal-btn map-btn'>See Projects</a>"
 					rel="popover"
 					data-container="body"
 					data-original-title="<?php echo($section['section_title']); ?>"

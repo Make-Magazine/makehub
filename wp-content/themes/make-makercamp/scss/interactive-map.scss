@@ -20,9 +20,9 @@
 	.map-image-btn {
 		transition: transform .5s;
 		position: absolute;
-		&:hover {
+		&:hover, &:focus {
 			transform: scale(1.1);
-			filter: drop-shadow(0 0 0.75rem rgb(255, 217, 0));
+			filter: drop-shadow(0 0 0.75rem rgb(255, 255, 255));
 		}
 	}
 	.popover {
@@ -40,6 +40,11 @@
 			font-size: 16px;
 			display: flex;
 			flex-direction: column;
+			.project-count {
+				color: #999;
+				font-style: italic;
+				text-align: right;
+			}
 			.map-btn {
 				width: 100%;
 				margin-top: 10px;
@@ -67,7 +72,7 @@
 		width: calc(100vw * .23);
 	}
 	#food-section {
-		top: calc(100vw * .0179);
+		top: calc(100vw * .0195);
 		left: calc(100vw * .2);
 		width: calc(100vw * .4075);
 	}
@@ -78,8 +83,9 @@
 	}
 	#stage-section {
 		top: calc(100vw * .3065);
-		left: calc(100vw * .619);
-		width: calc(100vw * .2835);
+		left: calc(100vw * .625);
+		width: calc(100vw * .22135);
+		z-index: 99;
 		z-index: 99;
 	}
 	#fabrication-section {

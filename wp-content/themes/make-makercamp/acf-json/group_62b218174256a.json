@@ -157,7 +157,7 @@
                     "key": "field_62b21ef09d12b",
                     "label": "Section Projects",
                     "name": "section_projects",
-                    "type": "number",
+                    "type": "text",
                     "instructions": "Manually enter in how many projects are in each section",
                     "required": 0,
                     "conditional_logic": 0,
@@ -170,9 +170,7 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "min": "",
-                    "max": "",
-                    "step": ""
+                    "maxlength": ""
                 }
             ]
         }
@@ -195,5 +193,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1655843746
+    "modified": 1655920735
 }
