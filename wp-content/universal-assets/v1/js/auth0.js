@@ -68,10 +68,10 @@ jQuery(document).ready(function() {
         webAuth.checkSession({},
             function(err, result) {
                 if (err) {
-                    //not logged into auth0
-                    console.log(err);
+                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
+                    //console.log(err);
                     if (err.error !== 'login_required') {
-                        errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
                     }
 
                     // This should take care of SSO

@@ -1,0 +1,110 @@
+.page-interactive-map {
+	.buddypanel {
+		display:none;
+	}
+	#page {
+		padding: 0px;
+		margin-left: 0px !important;
+		.site-content {
+			padding: 0px;
+			.container-fluid {
+				padding: 0px;
+				.content-area {
+					padding: 0px;
+					min-width: 100%;
+					svg { margin-bottom: -10px; }
+				}
+			}
+		}
+	}
+	.map-image-btn {
+		transition: transform .5s;
+		position: absolute;
+		&:hover {
+			transform: scale(1.1);
+			filter: drop-shadow(0 0 0.75rem rgb(255, 217, 0));
+		}
+	}
+	.popover {
+		opacity: 1;
+		h3 {
+			background: #333;
+		    margin: 0px;
+		    padding: 10px;
+		    color: #fff;
+		    border-top-right-radius: 5px;
+		    border-top-left-radius: 5px;
+		}
+		.popover-body {
+			padding: 10px;
+			font-size: 16px;
+			display: flex;
+			flex-direction: column;
+			.map-btn {
+				width: 100%;
+				margin-top: 10px;
+			}
+		}
+		.arrow::after {
+			display: none;
+		}
+		&.bs-popover-right .arrow {
+			left: -30px;
+		    border-top: 10px solid transparent;
+		    border-right: 20px solid #fff;
+		    border-bottom: 10px solid transparent;
+		}
+		&.bs-popover-left .arrow {
+			right: -30px;
+			border-top: 10px solid transparent;
+			border-left: 20px solid white;
+			border-bottom: 10px solid transparent;
+		}
+	 }
+	#art-section {
+		top: calc(100vw * .409);
+		left: calc(100vw * .349);
+		width: calc(100vw * .23);
+	}
+	#food-section {
+		top: calc(100vw * .0179);
+		left: calc(100vw * .2);
+		width: calc(100vw * .4075);
+	}
+	#farm-section {
+		top: calc(100vw * .165);
+		left: calc(100vw * .363);
+		width: calc(100vw * .39);
+	}
+	#stage-section {
+		top: calc(100vw * .3065);
+		left: calc(100vw * .619);
+		width: calc(100vw * .2835);
+		z-index: 99;
+	}
+	#fabrication-section {
+		top: calc(100vw * .178);
+		left: calc(100vw * .000001);
+		width: calc(100vw * .3825);
+	}
+	#dock-section {
+		bottom: calc(100vw * .000001);
+		right: calc(100vw * .00001);
+		width: calc(100vw * .6215);
+	}
+	#camp-section {
+		bottom: calc(100vw * .000001);
+		left: calc(100vw * .00001);
+		width: calc(100vw * .315);
+	}
+	#construction-section {
+		top: calc(100vw * .0053);
+		right: calc(100vw * .000001);
+		width: calc(100vw * .3125);
+	}
+	#sky-section {
+		top: calc(100vw * .0003);
+		left: calc(100vw * .011);
+		width: calc(100vw * .9);
+	}
+}
