@@ -66,51 +66,73 @@
 			border-bottom: 10px solid transparent;
 		}
 	 }
-	#art-section {
+	a#art-section {
 		top: calc(100vw * .409);
 		left: calc(100vw * .349);
 		width: calc(100vw * .23);
 	}
-	#food-section {
+	a#food-section {
 		top: calc(100vw * .0195);
 		left: calc(100vw * .2);
 		width: calc(100vw * .4075);
 	}
-	#farm-section {
+	a#farm-section {
 		top: calc(100vw * .165);
 		left: calc(100vw * .363);
 		width: calc(100vw * .39);
 	}
-	#stage-section {
+	a#stage-section {
 		top: calc(100vw * .3065);
 		left: calc(100vw * .625);
 		width: calc(100vw * .22135);
 		z-index: 99;
 		z-index: 99;
 	}
-	#fabrication-section {
+	a#fabrication-section {
 		top: calc(100vw * .178);
 		left: calc(100vw * .000001);
 		width: calc(100vw * .3825);
 	}
-	#dock-section {
+	a#dock-section {
 		bottom: calc(100vw * .000001);
 		right: calc(100vw * .00001);
 		width: calc(100vw * .6215);
 	}
-	#camp-section {
+	a#camp-section {
 		bottom: calc(100vw * .000001);
 		left: calc(100vw * .00001);
 		width: calc(100vw * .315);
 	}
-	#construction-section {
+	a#construction-section {
 		top: calc(100vw * .0053);
 		right: calc(100vw * .000001);
 		width: calc(100vw * .3125);
 	}
-	#sky-section {
+	a#sky-section {
 		top: calc(100vw * .0003);
 		left: calc(100vw * .011);
 		width: calc(100vw * .9);
+	}
+	.popover#fabrication-section {
+		left: calc(100vw * -.16) !important;
+    	top: calc(100vw *-.05) !important;
+	}
+	.popover#food-section {
+		left: calc(100vw * -.12) !important;
+    	top: calc(100vw *.06) !important;
+	}
+	.popover#construction-section {
+		left: calc(100vw * .05) !important;
+    	top: calc(100vw *.05) !important;
+	}
+	.popover#stage-section {
+		left: calc(100vw * .05) !important;
+	}
+	.popover#farm-section {
+		left: calc(100vw * -.08) !important
+	}
+	.popover#dock-section {
+		left: calc(100vw *.25) !important;
+		top: calc(100vw *.05) !important;
 	}
 }
