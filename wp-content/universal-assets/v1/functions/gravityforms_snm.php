@@ -11,7 +11,7 @@ function snm_automation($entry, $form) {
   //the following fields must be in an array format:
   $arr_fields = array('start_datetimes', 'end_datetimes', 'opp_venue', 'opp_topics',
                       'opp_descriptor', 'tags', 'languages', 'opp_hashtags','opp_social_handles');
-  $obj_fields = array('opp_social_handles'); //{"twitter": "@SciStarter"}
+
 // true/false - is_online, ticket_required, has_end
 
   if(isset($form_type) && $form_type == 'SNM'){
@@ -31,14 +31,17 @@ function snm_automation($entry, $form) {
 
     //now loop through the set snm fields to prepare the SNM API feed
     if(!empty($snmFieldArr)){
-      $postFields = array();
+      //default data
+      $postFields = array("partner_name"      =>  "Maker Camp",
+                          "partner_website"   =>  "https://makercamp.make.co",
+                          "opp_descriptor"    =>  array("camp"),
+                          "pes_domain"        => "maker");
       foreach($snmFieldArr as $fieldID=>$snmField){
         switch ($snmField['type']) {
           case 'text':
           case 'textarea':
           case 'website':
           case 'email':
-          case 'number':
           case 'phone':
           case 'select':
           case 'radio':
@@ -47,12 +50,19 @@ function snm_automation($entry, $form) {
             if($entry[$fieldID]!=''){
               //check if the SNM field needs to be an array or text
               if(in_array($snmField['snm_field'],$arr_fields)){
-                $postFields[$snmField['snm_field']][] = $entry[$fieldID];
+                $postFields[$snmField['snm_field']] = explode(",", $entry[$fieldID]);
               }else{
                 $postFields[$snmField['snm_field']] = $entry[$fieldID];
               }
             }
             break;
+          case 'number':
+            //if the field is not blank, lets pass it to snm
+            if($entry[$fieldID]!=''){
+              //cast the field as an integer
+              $postFields[$snmField['snm_field']] = (int) $entry[$fieldID];
+            }
+              break;
           //name fields are formatted as first name = fieldID.3 and last name = fieldID.6
           case 'name':
             //check if the SNM field needs to be an array or text
@@ -72,9 +82,10 @@ function snm_automation($entry, $form) {
                   $checkbox_values[]=$entry[$input_id];
                 }
               }
+
               //check if the SNM field needs to be an array or text
               if(in_array($snmField['snm_field'],$arr_fields)){
-                $postFields[$snmField['snm_field']][] = implode(", ", $checkbox_values);
+                $postFields[$snmField['snm_field']] = $checkbox_values;
               }else{
                 $postFields[$snmField['snm_field']] = implode(", ", $checkbox_values);
               }
@@ -82,36 +93,66 @@ function snm_automation($entry, $form) {
             break;
           case 'list':
             $listArr = unserialize($entry[$fieldID]);
+
+            //this is a comma delimited object
+            //example: "opp_social_handles":{"facebook":"kaleidoscopesci", "twitter":"KaleidoscopeSci", "instagram":"kaleidoscopesci", "youtube":"UCNEA2TdAFYzrghjKC_N03xQ"},
             if($snmField['snm_field']=='opp_social_handles'){
+              $social_array = array();
               foreach($listArr as $listRow){
-                $postFields[$snmField['snm_field']][] = array(strtolower($listRow['Platform'])=>$listRow['Handle']);
+
+                $social_array[strtolower($listRow['Platform'])] = $listRow['Handle'];
               }
+
+              $postFields[$snmField['snm_field']] = $social_array;
             }
             break;
         }
       }
-      //opp_social_handles needs to be type casted to an object
-      if(isset($postFields['opp_social_handles'])){
-        $postFields['opp_social_handles'] = (object) $postFields['opp_social_handles'];
-      }
-      $post_data = array($postFields);
+
     }
   }else{
     return;
   }
-
+  if(isset($postFields['is_online']) && $postFields['is_online']=='true') {
+    $postFields['is_online'] = true;
+  }else{
+    $postFields['is_online'] = false;
+  }
   //format the data to prepare to send to SNM
-  $dataToSend = json_encode($post_data);
+  $dataToSend = json_encode($postFields);
   echo 'SNM output<br/>';
   var_dump($dataToSend);
-  die('you die now');
-  $url = "https://beta.sciencenearme.org/api/v1/opportunity/";
-  $authRes  = curlCall($url, $dataToSend, $token);
-  if(isset($authRes->accepted) && $authRes->accepted){
-    echo 'The UID for this is '.$authRes->uid.'<br/>';
-    echo 'The slug for this is '.$authRes->slug;
+  echo '<br/><br/>';
+  //die('stop here');
+  //First do the authentication
+  $url = "https://beta.sciencenearme.org/api/v1/partner/authorize";
+
+  $post_data = '{
+    "uid": "b75f265a-4107-5e6b-bd5d-1b03d51c51fa",
+    "secret": "KDiwBOFaZlLkduvsmVFdAdNjOY4dFRcz"
+  }';
+  $headers = array("content-type: application/json");
+  $authRes = json_decode(postCurl($url, $headers, $post_data));
+
+  //did we get a token?
+  if(isset($authRes->token)){
+    $token = $authRes->token;
+    echo 'token is '.$token.'<br/>';
+    $url = "https://beta.sciencenearme.org/api/v1/opportunity/";
+    $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
+
+    $authRes  = json_decode(postCurl($url, $headers, $dataToSend));
+    if(isset($authRes->accepted) && $authRes->accepted){
+      echo 'The UID for this is '.$authRes->uid.'<br/>';
+      echo 'The slug for this is '.$authRes->slug;
+      //TBD write UID and slug to the entry so users can access and update
+    }else{
+      var_dump($authRes);
+    }
   }else{
+    echo 'no token returned<br/>';
     var_dump($authRes);
   }
+  die('you die now');
 }
  ?>
