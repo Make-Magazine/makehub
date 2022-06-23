@@ -710,7 +710,7 @@ body.buddyboss-theme {
     .buddypanel {
         margin-top: 121px;
         z-index: 9;
-		margin-left:-220px;
+		margin-left:-230px;
 		font-weight: 400;
 		.bb-toggle-panel {
 			.bb-icon-sidebar:before {
@@ -724,7 +724,8 @@ body.buddyboss-theme {
 	&.buddypanel-open.bb-page-loaded, &.buddypanel-open.buddypanel-closed.bb-page-loaded {
 		.buddypanel { margin-left: 0px }
 		#page.site {
-			margin-left: 220px;
+			margin-left: 230px;
+			padding: 0px 10px;
 		}
 		@media screen and (max-width: 805px) {
 			#page.site { margin-left: 0px; }
