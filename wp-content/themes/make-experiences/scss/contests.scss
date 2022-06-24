@@ -18,7 +18,7 @@
 body:not(.logged-in) {
 	.wpvc-vote {
 		#wpvc-singlecustom-header, .back-btn {
-			display: none;
+			display: none !important;
 		}
 		.lgn-btn { display: flex; }
 	}
