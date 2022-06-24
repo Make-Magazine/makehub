@@ -116,7 +116,7 @@
 		left: calc(100vw * .011);
 		width: calc(100vw * .9);
 	}
-	@media screen and (max-width: 600px) {
+	@media screen and (min-width: 600px) {
 		.popover#fabrication-section {
 			left: calc(100vw * -.16) !important;
 	    	top: calc(100vw *-.05) !important;
