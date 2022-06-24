@@ -119,7 +119,7 @@
                     "key": "field_62b21ecc9d129",
                     "label": "Section Short Description",
                     "name": "section_short_description",
-                    "type": "text",
+                    "type": "textarea",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -129,10 +129,10 @@
                         "id": ""
                     },
                     "default_value": "",
+                    "new_lines": "",
+                    "maxlength": "",
                     "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "rows": ""
                 },
                 {
                     "key": "field_62b21ee69d12a",
@@ -193,5 +193,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1655920735
+    "modified": 1656094182
 }

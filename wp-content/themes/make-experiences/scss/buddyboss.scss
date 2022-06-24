@@ -56,7 +56,7 @@
 }
 .groups-header {
 	.group-subscription-div, .group-item-actions#item-actions {
-		display: none;
+		display: none !important;
 	}
 }
 #groups-list.groups-list {
