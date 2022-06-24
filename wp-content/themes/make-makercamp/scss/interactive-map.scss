@@ -70,11 +70,13 @@
 		top: calc(100vw * .409);
 		left: calc(100vw * .349);
 		width: calc(100vw * .23);
+		z-index: 11;
 	}
 	a#food-section {
 		top: calc(100vw * .0195);
 		left: calc(100vw * .2);
 		width: calc(100vw * .4075);
+		z-index: 10;
 	}
 	a#farm-section {
 		top: calc(100vw * .165);
