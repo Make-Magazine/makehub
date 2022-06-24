@@ -3,25 +3,6 @@
     "title": "Interactive Map",
     "fields": [
         {
-            "key": "field_62b218319d124",
-            "label": "Background SVG",
-            "name": "background_svg",
-            "type": "textarea",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "maxlength": "",
-            "rows": "",
-            "new_lines": ""
-        },
-        {
             "key": "field_62b218449d125",
             "label": "Map Sections",
             "name": "map_sections",
@@ -193,5 +174,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1656094182
+    "modified": 1656102546
 }
