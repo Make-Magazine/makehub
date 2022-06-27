@@ -75,23 +75,23 @@
 	a#food-section {
 		top: calc(100vw * .0195);
 		left: calc(100vw * .2);
-		width: calc(100vw * .4075);
+		width: calc(100vw * .355);
 		z-index: 10;
 	}
 	a#farm-section {
 		top: calc(100vw * .165);
 		left: calc(100vw * .363);
 		width: calc(100vw * .39);
+		z-index: 9;
 	}
 	a#stage-section {
 		top: calc(100vw * .3065);
-		left: calc(100vw * .625);
-		width: calc(100vw * .22135);
-		z-index: 99;
+		left: calc(100vw * .659);
+		width: calc(100vw * .18);
 		z-index: 99;
 	}
 	a#fabrication-section {
-		top: calc(100vw * .178);
+		top: calc(100vw * .174);
 		left: calc(100vw * .000001);
 		width: calc(100vw * .3825);
 		z-index: 9;
