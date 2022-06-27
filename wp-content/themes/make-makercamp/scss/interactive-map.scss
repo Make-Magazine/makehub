@@ -13,6 +13,7 @@
 					padding: 0px;
 					min-width: 100%;
 					svg { margin-bottom: -10px; }
+					.body_content { padding: 10px 15px 0px; }
 				}
 			}
 		}
@@ -65,56 +66,59 @@
 			border-left: 20px solid white;
 			border-bottom: 10px solid transparent;
 		}
-	 }
-	a#art-section {
-		top: calc(100vw * .409);
-		left: calc(100vw * .349);
-		width: calc(100vw * .23);
-		z-index: 11;
 	}
-	a#food-section {
-		top: calc(100vw * .0195);
-		left: calc(100vw * .2);
-		width: calc(100vw * .355);
-		z-index: 10;
-	}
-	a#farm-section {
-		top: calc(100vw * .165);
-		left: calc(100vw * .363);
-		width: calc(100vw * .39);
-		z-index: 9;
-	}
-	a#stage-section {
-		top: calc(100vw * .3065);
-		left: calc(100vw * .659);
-		width: calc(100vw * .18);
-		z-index: 99;
-	}
-	a#fabrication-section {
-		top: calc(100vw * .174);
-		left: calc(100vw * .000001);
-		width: calc(100vw * .3825);
-		z-index: 9;
-	}
-	a#dock-section {
-		bottom: calc(100vw * .000001);
-		right: calc(100vw * .00001);
-		width: calc(100vw * .6215);
-	}
-	a#camp-section {
-		bottom: calc(100vw * .000001);
-		left: calc(100vw * .00001);
-		width: calc(100vw * .315);
-	}
-	a#construction-section {
-		top: calc(100vw * .0053);
-		right: calc(100vw * .000001);
-		width: calc(100vw * .3125);
-	}
-	a#sky-section {
-		top: calc(100vw * .0003);
-		left: calc(100vw * .011);
-		width: calc(100vw * .9);
+	.svg-wrapper {
+		display: relative;
+		a#art-section {
+			top: calc(100vw * .409);
+			left: calc(100vw * .349);
+			width: calc(100vw * .23);
+			z-index: 11;
+		}
+		a#food-section {
+			top: calc(100vw * .0195);
+			left: calc(100vw * .2);
+			width: calc(100vw * .355);
+			z-index: 10;
+		}
+		a#farm-section {
+			top: calc(100vw * .165);
+			left: calc(100vw * .363);
+			width: calc(100vw * .39);
+			z-index: 9;
+		}
+		a#stage-section {
+			top: calc(100vw * .3065);
+			left: calc(100vw * .659);
+			width: calc(100vw * .18);
+			z-index: 99;
+		}
+		a#fabrication-section {
+			top: calc(100vw * .174);
+			left: calc(100vw * .000001);
+			width: calc(100vw * .3825);
+			z-index: 9;
+		}
+		a#dock-section {
+			bottom: calc(100vw * .000001);
+			right: calc(100vw * .00001);
+			width: calc(100vw * .6215);
+		}
+		a#camp-section {
+			bottom: calc(100vw * .000001);
+			left: calc(100vw * .00001);
+			width: calc(100vw * .315);
+		}
+		a#construction-section {
+			top: calc(100vw * .0053);
+			right: calc(100vw * .000001);
+			width: calc(100vw * .3125);
+		}
+		a#sky-section {
+			top: calc(100vw * .0003);
+			left: calc(100vw * .011);
+			width: calc(100vw * .9);
+		}
 	}
 	@media screen and (min-width: 600px) {
 		.popover#fabrication-section {
