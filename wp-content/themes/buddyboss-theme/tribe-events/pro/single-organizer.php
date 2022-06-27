@@ -34,7 +34,7 @@ $organizer_id = get_the_ID();
     		
     		<div class="tribe-events-organizer-meta bs-organizer-meta tribe-clearfix">
                 <p class="tribe-events-back">
-    				<a href="<?php echo esc_url( tribe_get_events_link() ); ?>" rel="bookmark"><?php printf( __( '<i class="bb-icon-angle-left"></i> Back to %s', 'buddyboss-theme' ), tribe_get_event_label_plural() ); ?></a>
+    				<a href="<?php echo esc_url( tribe_get_events_link() ); ?>" rel="bookmark"><?php printf( __( '<i class="bb-icon-l bb-icon-angle-left"></i> Back to %s', 'buddyboss-theme' ), tribe_get_event_label_plural() ); ?></a>
     			</p>
                 <?php do_action( 'tribe_events_single_organizer_before_organizer' ) ?>
                 <div class="bs-organizer-cols">

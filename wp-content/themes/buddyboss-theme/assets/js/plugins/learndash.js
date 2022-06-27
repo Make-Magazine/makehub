@@ -114,7 +114,7 @@
 
                 $( this ).addClass( 'loading-members' );
 
-                spinnerSelector.removeClass( 'bb-icon-chevron-down' );
+                spinnerSelector.removeClass( 'bb-icon-angle-down' );
                 spinnerSelector.addClass( 'bb-icon-spin' );
                 spinnerSelector.addClass( 'animate-spin' );
                 $( '.lms-course-members-list .bb-course-member-wrap .lme-less' ).hide();
@@ -134,7 +134,7 @@
                         if ( $( '.ld-sidebar-widgets' ).length === 0 ) {
                             $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: $(document).height() }, 1000);
                         }
-                        spinnerSelector.addClass( 'bb-icon-chevron-down' );
+                        spinnerSelector.addClass( 'bb-icon-angle-down' );
                         spinnerSelector.removeClass( 'bb-icon-spin' );
                         spinnerSelector.removeClass( 'animate-spin' );
                         viewMoreSelector.removeClass( 'loading-members' );
@@ -792,14 +792,15 @@
                     adminBarHeight = 32;
                 }
                 $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
-                if( !$('body').hasClass( 'sticky-header' ) ) {
+                /* Learndash single lesson/topic/quiz pages - header always sticky */
+                /*if( !$('body').hasClass( 'sticky-header' ) ) {
                     if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
                         bbHeaderHeight = 0;
                     } else {
                         bbHeaderHeight = $('#masthead').outerHeight();
                     }
-                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });    
-                }
+                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
+                }*/
 
             }
 
@@ -812,17 +813,18 @@
                 }
             });
 
-            $(window).on('scroll', function () {
+            /* Learndash single lesson/topic/quiz pages - header always sticky */
+            /*$(window).on('scroll', function () {
                 if( !$('body').hasClass( 'sticky-header' ) ) {
                     if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
                         bbHeaderHeight = 0;
                     } else {
                         bbHeaderHeight = $('#masthead').outerHeight();
                     }
-                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });    
+                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
                 }
                 
-            });
+            });*/
 
             if ($('.wpProQuiz_matrixSortString').length > 0) {
                 $('html').addClass('quiz-sort');

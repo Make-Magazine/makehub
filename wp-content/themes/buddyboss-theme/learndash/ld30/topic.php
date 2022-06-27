@@ -143,7 +143,7 @@ $topics    = learndash_get_topic_list( $lesson_id, $course_id );
 									if ( $expire_date_calc > 0 && abs( intval( $expire_access_days ) ) > 0 && ( ! empty( $user_id ) ) ) {
 										?>
 									<div class="sfwd-course-expire">
-										<span data-balloon-pos="up" data-balloon="<?php echo $expire_string; ?>"><i class="bb-icons bb-icon-watch-alarm"></i><?php echo $expire_date; ?></span>
+										<span data-balloon-pos="up" data-balloon="<?php echo esc_attr( $expire_string ); ?>"><i class="bb-icon-l bb-icon-alarm"></i><?php echo wp_kses_post( $expire_date ); ?></span>
 									</div>
 									<?php } ?>
 									<div class="learndash_next_prev_link">

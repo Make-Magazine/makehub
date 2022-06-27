@@ -6,29 +6,16 @@
         padding: 0;
     }
 }
+.bp-nouveau {
+	background-color: #FAFBFD;
+	.bb-grid {
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	span.count { background: #fff !important; }
+}
 .has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #primary, body.buddypress.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #page #primary {
     max-width: 100%;
-}
-
-// all navs fix
-.bp-navs {
-	ul > li a {
-		display: flex !important;
-		align-items: center;
-		span {
-			display: flex !important;
-			justify-content: center;
-			align-items: center;
-			max-height: 24px;
-		}
-	}
-}
-
-// no sign up, we have ump for that
-.bb-header-buttons {
-    .button.singup {
-        display: none;
-    }
 }
 
 // Everything from buddyboss that we have to override with Roboto Font
@@ -37,6 +24,12 @@
     color: #333;
     font-weight: 600;
 }
+
+.buddypress-wrap .bp-pagination .bp-pagination-links a, .buddypress-wrap .bp-pagination .bp-pagination-links span {
+  width: auto;
+  min-width: 28px;
+}
+
 
 ///////////// GROUPS //////////////////
 
@@ -55,21 +48,73 @@
 	}
 }
 .groups-header {
+
+	.bp-group-meta {
+		.group-type {
+			background: $color-red;
+			color: #fff;
+			font-size: 14px;
+			margin-bottom: 10px;
+		}
+	}
 	.group-subscription-div, .group-item-actions#item-actions {
 		display: none !important;
+	}
+	.item-meta [id^=ges-panel], .last-activity {
+		display: none;
+	}
+}
+.groups {
+	ul#members-list {
+		li {
+			.list-wrap-inner {
+				margin-bottom: 15px;
+			}
+			.member-button-wrap {
+				.friendship-button.generic-button {
+					.friendship-button {
+						color: #666 !important;
+						width: 100%;
+						display: flex;
+						justify-content: center;
+					}
+				}
+			}
+		}
 	}
 }
 #groups-list.groups-list {
 	.groups-loop-buttons { display: none; }
 	li.item-entry .list-wrap {
-		display: flex;
-		flex-direction: column;
+		padding: 15px;
+		.bs-group-cover {
+			margin: -15px -15px 5px;
+			position: relative;
+			a {
+				border-radius: 3px 3px 0 0;
+				position: relative;
+				overflow: hidden;
+				padding-top: 52.56%;
+				display: block;
+				background: #607487;
+				img {
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					z-index: 0;
+					min-height: 100%;
+					width: auto;
+					min-width: 100%;
+					object-fit: cover;
+					image-rendering: -webkit-optimize-contrast;
+				}
+			}
+		}
 		.item {
 			padding-bottom: 25px;
-		}
-		.item-avatar .group-avatar-wrap {
-			aspect-ratio: 1;
-			overflow: hidden;
 		}
 		.group-item-wrap {
 			.item-meta-wrap {
@@ -88,17 +133,21 @@
 			.footer-button-wrap {
 				width: 100%;
 				.groups-meta {
-					flex-flow: nowrap !important;
+					display: flex;
 					margin-top: 10px;
+					align-items: end;
+					.group-subscription-status {
+						font-size: 14px;
+					}
 					.generic-button {
 						flex: 1;
 						max-width: fit-content;
 					}
 					.group-subscription-div  {
-						margin-top: -22px;
 						button {
 							min-height: 10px;
-							padding: 5px 20px !important;
+							padding: 4px 20px !important;
+							border: solid 1px $color-blue;
 						}
 					}
 				}
@@ -136,6 +185,9 @@
 	}
 	@media screen and (max-width:800px) {
 		.bb-grid { margin: 0px; }
+	}
+	.groups-manage-members-list .members-manage-buttons .button {
+		font-size: 16px !important;
 	}
 }
 .groups.bp-user {
@@ -208,6 +260,8 @@ button.ges-change, button.ges-change:hover {
 		width: 100vw;
 	}
 }
+
+// buddypanel
 .buddypanel-open {
 	#page-content.bluetoad iframe{
 		width: calc(100vw - 220px);
@@ -291,6 +345,20 @@ button.ges-change, button.ges-change:hover {
                 flex: 0 0 100%;
                 max-width: 100%;
             }
+			button.friendship-button, a.friendship-button {
+				color: #fff !important;
+				padding: 5px 10px !important;
+				border: solid 1px $color-blue !important;
+				&:hover {
+					color: $color-blue !important;
+				}
+			}
+			#send-private-message a {
+				background: none;
+			}
+			.members-meta.action > .generic-button:last-child a, .members-meta.action > .generic-button:last-child button {
+				margin-left: 0px;
+			}
         }
     }
     #secondary {

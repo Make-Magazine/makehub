@@ -278,7 +278,7 @@ class BBP_Dashboard_Intro extends Widget_Base {
 			[
 				'label'     => __( 'Greeting Color', 'buddyboss-theme' ),
 				'type'      => Controls_Manager::COLOR,
-				'default'   => '#122B46',
+				'default'   => '#1E2132',
 				'selectors' => [
 					'{{WRAPPER}} .bb-dash__prior' => 'color: {{VALUE}};',
 				],
@@ -290,7 +290,7 @@ class BBP_Dashboard_Intro extends Widget_Base {
 			[
 				'label'     => __( 'Description Color', 'buddyboss-theme' ),
 				'type'      => Controls_Manager::COLOR,
-				'default'   => '#4D5C6D',
+				'default'   => '#5A5A5A',
 				'selectors' => [
 					'{{WRAPPER}} .bb-dash__brief' => 'color: {{VALUE}};',
 				],

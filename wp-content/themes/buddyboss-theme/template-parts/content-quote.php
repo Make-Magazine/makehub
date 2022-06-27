@@ -22,7 +22,7 @@ global $post;
 
 			<?php
 			if ( !is_singular() ) {
-				echo '<span class="post-format-icon white"><i class="bb-icon-quote"></i></span>';
+				echo '<span class="post-format-icon white"><i class="bb-icon-l bb-icon-quote-left"></i></span>';
 			}
 			?>
 

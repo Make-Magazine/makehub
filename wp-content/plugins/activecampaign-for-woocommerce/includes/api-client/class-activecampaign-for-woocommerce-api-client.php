@@ -409,7 +409,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * First creates a filtered endpoint, and then passes that endpoint to the Guzzle
 	 * Client. This client then handles making the actual request.
 	 *
-	 * @return bool|ResponseInterface
+	 * @return array|bool|ResponseInterface
 	 * @throws GuzzleException Thrown when a non-200/300 response is received.
 	 * @since      1.0.0
 	 */
@@ -517,17 +517,40 @@ class Activecampaign_For_Woocommerce_Api_Client {
 								'stack trace'     => $this->logger->clean_trace( $e->getTrace() ),
 							]
 						);
+
+						return [
+							'type'    => 'timeout',
+							'message' => 'The connection to ActiveCampaign timed out ' . $this->retry_count . ' times. Aborting the call and continuing on.',
+						];
 					}
 				} else {
-					$this->logger->error(
-						'The API returned an error [api_e1]',
-						[
-							'message'     => $message,
-							'endpoint'    => $this->endpoint,
-							'code'        => $e->getCode(),
-							'stack trace' => $stack_trace,
-						]
-					);
+					if ( 'ecomData\/bulkSync' === $this->endpoint && 400 === $e->getCode() ) {
+						$this->logger->warning(
+							'The API returned an error but it may be false [api_eb]',
+							[
+								'message'     => $message,
+								'endpoint'    => $this->endpoint,
+								'code'        => $e->getCode(),
+								'stack trace' => $stack_trace,
+							]
+						);
+					} elseif ( in_array( $e->getCode(), [ 500, 503, 520, 521, 525, 526, 590 ], true ) ) {
+						return [
+							'type'    => 'error',
+							'message' => $e->getMessage(),
+							'code'    => $e->getCode(),
+						];
+					} else {
+						$this->logger->error(
+							'The API returned an error [api_e1]',
+							[
+								'message'     => $message,
+								'endpoint'    => $this->endpoint,
+								'code'        => $e->getCode(),
+								'stack trace' => $stack_trace,
+							]
+						);
+					}
 				}
 
 				return false;

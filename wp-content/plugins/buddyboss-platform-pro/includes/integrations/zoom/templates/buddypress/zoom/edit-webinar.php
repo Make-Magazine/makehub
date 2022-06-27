@@ -109,7 +109,7 @@ if ( 'webinar_occurrence' === bp_get_zoom_webinar_zoom_type() ) {
 						if ( ! empty( $webinar_details ) && ! empty( $webinar_details['occurrences'] ) ) {
 							$occurrences = $webinar_details['occurrences'];
 							foreach ( $occurrences as $occurrence ) {
-								if ( 'deleted' !== $occurrence['status'] && wp_date( 'U', strtotime( 'now' ), new DateTimeZone( 'UTC' ) ) < strtotime( $occurrence['start_time'] ) ) {
+								if ( 'deleted' !== $occurrence['status'] ) {
 									$start_date_time = wp_date( 'Y-m-d g:i a', strtotime( $occurrence['start_time'] ), new DateTimeZone( bp_get_zoom_webinar_timezone() ) );
 									break;
 								}

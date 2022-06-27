@@ -113,7 +113,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 * @return Ecom_Order $ecom_order
 	 */
 	public function setup_woocommerce_order_from_admin( $order, $is_historical = false ) {
-		if ( ! method_exists( $order, 'get_order' ) || ! method_exists( $order, 'get_order_number' ) ) {
+		if ( ! $this->validate_object( $order, 'get_order' ) || ! $this->validate_object( $order, 'get_order_number' ) ) {
 			return null;
 		}
 
@@ -142,11 +142,11 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			$ecom_order->set_order_number( $order->get_order_number() );
 			$ecom_order->set_externalid( $order->get_id() );
 			$ecom_order->set_order_url( $order->get_edit_order_url() );
-			$ecom_order->set_discount_amount( Money::of( wc_format_decimal( $order->get_total_discount(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
-			$ecom_order->set_shipping_amount( Money::of( wc_format_decimal( $order->get_shipping_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_discount_amount( $this->convert_money_to_cents( $order->get_total_discount() ) );
+			$ecom_order->set_shipping_amount( $this->convert_money_to_cents( $order->get_shipping_total() ) );
 			$ecom_order->set_shipping_method( $order->get_shipping_method() );
-			$ecom_order->set_tax_amount( Money::of( wc_format_decimal( $order->get_total_tax(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
-			$ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
+			$ecom_order->set_tax_amount( $this->convert_money_to_cents( $order->get_total_tax() ) );
+			$ecom_order->set_total_price( $this->convert_money_to_cents( $order->get_total() ) );
 
 			// Set the order dates by the time set from WC
 			$created_date = new DateTime( $order->get_date_created(), new DateTimeZone( 'UTC' ) );
@@ -164,7 +164,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			if ( empty( $ecom_order->get_total_price() ) ) {
 				$order->calculate_totals();
-				$ecom_order->set_total_price( Money::of( wc_format_decimal( $order->get_total(), 2, 0 ), get_woocommerce_currency() )->getMinorAmount() );
+				$ecom_order->set_total_price( $this->convert_money_to_cents( $order->get_total() ) );
 			}
 
 			return $ecom_order;
@@ -194,20 +194,21 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			// There is no cart object, build the products and add to the order
 			$products = [];
 
-			if ( method_exists( $order, 'get_items' ) ) {
+			if ( $this->validate_object( $order, 'get_items' ) ) {
 				// Get and Loop Over Order Items to populate products
 				foreach ( $order->get_items() as $item_id => $item ) {
 					$product = $this->build_ecom_product( $item, $item_id );
 
-					if ( null !== $product ) {
+					if ( $this->validate_object( $product, 'get_id' ) ) {
 						$products[ $item_id ] = $product;
 					} else {
 						$this->logger->warning(
-							'Order Utilities: A product passed back as null.',
+							'Order Utilities: The ecom product could not be set.',
 							[
-								'product' => $product,
-								'item_id' => $item_id,
-								'item'    => $item,
+								'item_id'      => $item_id,
+								'item'         => $item,
+								'product'      => $product,
+								'product_type' => typeOf( $product ),
 							]
 						);
 					}
@@ -285,8 +286,8 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 
 			if (
-				method_exists( $item, 'get_product_id' ) &&
-				! method_exists( $product_data, 'get_id' )
+				$this->validate_object( $item, 'get_product_id' ) &&
+				! $this->validate_object( $product_data, 'get_id' )
 			) {
 				$product_data = $this->get_wc_product_from_id( $item->get_product_id() );
 			}
@@ -311,7 +312,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			$product = $this->product_factory->product_from_cart_content( $pre_product );
 
-			if ( $product ) {
+			if ( isset( $product ) ) {
 				return $product;
 			}
 		} catch ( Throwable $t ) {
@@ -346,16 +347,16 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			$product = wc_get_product( $id );
 
-			if ( ! method_exists( $product, 'get_id' ) || empty( $product->get_id() ) ) {
+			if ( ! $this->validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
 				$product = WC()->product_factory->get_product( $id );
 			}
 
-			if ( ! method_exists( $product, 'get_id' ) || empty( $product->get_id() ) ) {
+			if ( ! $this->validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
 				$_pf     = new WC_Product_Factory();
 				$product = $_pf->get_product( $id );
 			}
 
-			if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			if ( $this->validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 				return $product;
 			}
 		} catch ( Throwable $t ) {
@@ -407,7 +408,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 */
 	public function get_product_image_url( $product ) {
 		try {
-			if ( method_exists( $product, 'get_id' ) ) {
+			if ( $this->validate_object( $product, 'get_id' ) ) {
 				$post         = get_post( $product->get_id() );
 				$thumbnail_id = get_post_thumbnail_id( $post );
 				$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
@@ -425,7 +426,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Could not retrieve product image URL',
 				[
 					'message' => $t->getMessage(),
-					'product' => method_exists( $product, 'get_data' ) ? $product->get_data() : null,
+					'product' => $this->validate_object( $product, 'get_data' ) ? $product->get_data() : null,
 				]
 			);
 		}
@@ -443,7 +444,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	public function get_product_category( $product ) {
 		$logger = new Logger();
 		try {
-			if ( method_exists( $product, 'get_id' ) ) {
+			if ( $this->validate_object( $product, 'get_id' ) ) {
 				$terms = get_the_terms( $product->get_id(), 'product_cat' );
 			}
 		} catch ( Throwable $t ) {
@@ -469,7 +470,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 						$logger->warning(
 							'A product category attached to this product does not have a valid category and/or name.',
 							[
-								'product_id' => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+								'product_id' => $this->validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 								'term_id'    => $term->term_id,
 								'term_name'  => $term->name,
 							]
@@ -482,7 +483,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'There was an error getting all product categories.',
 				[
 					'terms'          => $terms,
-					'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+					'product_id'     => $this->validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 					'trace'          => $logger->clean_trace( $t->getTrace() ),
 					'thrown_message' => $t->getMessage(),
 				]
@@ -506,13 +507,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 */
 	public function is_refund_order( $order ) {
 		try {
-			if ( method_exists( $order, 'get_item_count_refunded' ) && $order->get_item_count_refunded() > 0 ) {
+			if ( $this->validate_object( $order, 'get_item_count_refunded' ) && $order->get_item_count_refunded() > 0 ) {
 				// refunds don't work yet
 				$this->logger->debug(
 					'Historical sync cannot currently sync refund data. This order will be ignored.',
 					[
-						'order_id'            => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
-						'item_count_refunded' => method_exists( $order, 'get_item_count_refunded' ) ? $order->get_item_count_refunded() : null,
+						'order_id'            => $this->validate_object( $order, 'get_id' ) ? $order->get_id() : null,
+						'item_count_refunded' => $this->validate_object( $order, 'get_item_count_refunded' ) ? $order->get_item_count_refunded() : null,
 					]
 				);
 
@@ -543,7 +544,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	public function get_order_by_id( $order_id ) {
 		$wc_order = wc_get_order( $order_id );
 
-		if ( method_exists( $wc_order, 'get_id' ) && $wc_order->get_id() ) {
+		if ( $this->validate_object( $wc_order, 'get_id' ) && $wc_order->get_id() ) {
 			return $wc_order;
 		}
 	}
@@ -637,17 +638,37 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 *
 	 * @param string|int $amount The currency amount.
 	 *
-	 * @return \Brick\Math\BigDecimal|null
+	 * @return \Brick\Math\BigDecimal|int
 	 */
 	public function convert_money_to_cents( $amount ) {
-		$cents = null;
+		$cents    = 0;
+		$currency = get_woocommerce_currency();
 
-		if ( ! empty( $amount ) ) {
-			// round to 2 decimals and convert to minor "cents" using WC currency
-			return Money::of( wc_format_decimal( $amount, 2, 0 ), get_woocommerce_currency() )->getMinorAmount();
+		try {
+			if ( ! empty( $currency ) && ! empty( $amount ) ) {
+				// round to 2 decimals and convert to minor "cents"
+				$amount = number_format( $amount, 2, '.', '' );
+				$cents  = Money::of( $amount, $currency )->getMinorAmount()->toInt();
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an issue converting money to cents.',
+				[
+					'message'       => $t->getMessage(),
+					'amount_passed' => $amount,
+					'amount_cents'  => $cents,
+					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+
+			if ( is_numeric( $cents ) ) {
+				$cents = $amount;
+			} else {
+				return 0;
+			}
 		}
 
-		return null;
+		return $cents;
 	}
 
 	/**
@@ -683,7 +704,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			if ( is_array( $order ) && isset( $order['id'] ) ) {
 				$meta_value = get_post_meta( $order['id'], 'activecampaign_for_woocommerce_accepts_marketing' );
-			} elseif ( method_exists( $order, 'get_id' ) ) {
+			} elseif ( $this->validate_object( $order, 'get_id' ) ) {
 				$meta_value = get_post_meta( $order->get_id(), 'activecampaign_for_woocommerce_accepts_marketing' );
 			}
 
@@ -875,7 +896,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 * @return bool|WC_Order
 	 */
 	public function get_wc_order( $order ) {
-		if ( method_exists( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
+		if ( $this->validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
 
 			return $order;
 		}
@@ -885,13 +906,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			try {
 				$wc_order = wc_get_order( $order );
 
-				if ( method_exists( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 
 				$wc_order = wc_get_order( $order->get_id() );
 
-				if ( method_exists( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 			} catch ( Throwable $t ) {
@@ -910,7 +931,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			if ( is_array( $order ) ) {
 				$wc_order = wc_get_order( $order['id'] );
 
-				if ( method_exists( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 			}
@@ -926,7 +947,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			$wc_order = wc_get_order( $order );
 
-			if ( method_exists( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+			if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 				return $wc_order;
 			}
 		} catch ( Throwable $t ) {
@@ -934,13 +955,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Historical Sync: A final WC_Order object failed to retrieve.',
 				[
 					'message' => $t->getMessage(),
-					'order'   => method_exists( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
+					'order'   => $this->validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
 				]
 			);
 		}
 
 		try {
-			if ( method_exists( $order, 'get_id' ) ) {
+			if ( $this->validate_object( $order, 'get_id' ) ) {
 				$wc_order = new WC_Order( $order->get_id() );
 			} elseif ( isset( $order['id'] ) ) {
 				$wc_order = new WC_Order( $order['id'] );
@@ -948,7 +969,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				$wc_order = new WC_Order( $order );
 			}
 
-			if ( method_exists( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+			if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 				return $wc_order;
 			}
 		} catch ( Throwable $t ) {
@@ -1002,7 +1023,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		}
 
 		try {
-			if ( method_exists( $ecom_order, 'get_order_number' ) && ! empty( $ecom_order->get_order_number() ) && $ecom_order->get_externalid() ) {
+			if ( $this->validate_object( $ecom_order, 'get_order_number' ) && ! empty( $ecom_order->get_order_number() ) && $ecom_order->get_externalid() ) {
 				$ecom_order->set_connectionid( $this->connection_id );
 				$ecom_order->set_email( $ecom_customer->get_email() );
 
@@ -1014,8 +1035,8 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Historical sync failed to format an ecommerce order object.',
 				[
 					'message'      => $t->getMessage(),
-					'order_number' => method_exists( $ecom_order, 'get_order_number' ) ? $ecom_order->get_order_number() : null,
-					'order_id'     => method_exists( $ecom_order, 'get_externalid' ) ? $ecom_order->get_externalid() : null,
+					'order_number' => $this->validate_object( $ecom_order, 'get_order_number' ) ? $ecom_order->get_order_number() : null,
+					'order_id'     => $this->validate_object( $ecom_order, 'get_externalid' ) ? $ecom_order->get_externalid() : null,
 				]
 			);
 			return null;
@@ -1155,4 +1176,22 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		return null;
 	}
 
+	/**
+	 * Validates an object with isset check and method_exists check in one call.
+	 *
+	 * @param object $o The string|object.
+	 * @param string $s The string for the call.
+	 *
+	 * @return bool
+	 */
+	public function validate_object( $o, $s ) {
+		if (
+			isset( $o ) &&
+			( is_object( $o ) || is_string( $o ) ) &&
+			method_exists( $o, $s )
+		) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -272,11 +272,6 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'title'    => __( '&#160;', 'buddyboss-pro' ),
 					'callback' => 'bp_zoom_api_check_connection_button',
 				);
-			} else {
-				$fields['bp_zoom_gutenberg_section']['bp_zoom_api_zoom_settings_tutorial'] = array(
-					'title'    => __( '&#160;', 'buddyboss-pro' ),
-					'callback' => 'bp_zoom_api_zoom_settings_tutorial',
-				);
 			}
 
 			if ( bp_is_active( 'groups' ) ) {

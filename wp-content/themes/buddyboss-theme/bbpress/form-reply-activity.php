@@ -38,7 +38,7 @@
 			<fieldset class="bbp-form">
 				<legend>
 					<?php esc_html_e( 'Reply to', 'buddyboss-theme' ); ?>  <span id="bbp-reply-exerpt"></span>
-					<a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-close"></i></a>
+					<a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-l bb-icon-times"></i></a>
 				</legend>
 
 				<div id="bbp-template-notices">
@@ -142,7 +142,7 @@
 
 							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit small">
 								<?php esc_html_e( 'Post Reply', 'buddyboss-theme' ); ?>
-								<i class="bb-icon-loader animate-spin"></i>
+								<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 							</button>
 
 							<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>

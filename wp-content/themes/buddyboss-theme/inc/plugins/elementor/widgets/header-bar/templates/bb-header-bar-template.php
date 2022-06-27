@@ -71,7 +71,7 @@ $container = '<div ' . $this->get_render_attribute_string( 'site-header-containe
 			get_search_form();
 			remove_filter( 'search_placeholder', 'buddyboss_search_input_placeholder_text' );
 			?>
-			<a href="#" class="close-search"><i class="bb-icon-close-circle"></i></a>
+			<a href="#" class="close-search"><i class="bb-icon-rl bb-icon-times"></i></a>
 		</div>
 	</div>
 </div>

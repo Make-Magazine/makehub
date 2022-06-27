@@ -51,7 +51,7 @@
 			 *
 			 * @return      void
 			 */
-			public function __construct( $field = array(), $value = '', $parent ) {
+			public function __construct( $field = array(), $value = '', $parent = null ) {
 
 				// Set required variables
 				$this->parent          = $parent;

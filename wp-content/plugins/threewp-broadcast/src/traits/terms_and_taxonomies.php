@@ -231,7 +231,10 @@ trait terms_and_taxonomies
 		// These sources were not found. Add them.
 		if ( isset( $bcd->add_new_taxonomies ) && $bcd->add_new_taxonomies )
 		{
-			$this->debug( '%s terms are missing on this blog: %s', count( $unfound_sources ), array_keys( $unfound_sources ) );
+			if ( count( $unfound_sources ) > 0 )
+				$this->debug( '%s terms are missing on this blog: %s', count( $unfound_sources ), array_keys( $unfound_sources ) );
+			else
+				$this->debug( 'All terms found on this blog.' );
 			foreach( $unfound_sources as $unfound_source_id => $unfound_source )
 			{
 				// We need to clone because we will be modifying the source.

@@ -11,6 +11,7 @@ use WP_Query;
 use LLMS_Student;
 use LLMS_Lesson;
 use LLMS_Course;
+use LLMS_Student_Dashboard;
 
 if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 
@@ -129,6 +130,64 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				$this,
 				'buddyboss_llms_add_space_before_schedule_details',
 			], 9999, 2 );
+
+			add_action( 'bb_llms_display_certificate', [ $this, 'bb_llms_certificate_content' ], 50 );
+			add_action( 'bb_llms_display_certificate', [ $this, 'bb_llms_certificate_actions' ], 60 );
+
+		}
+
+		/**
+		 * Get parent course based on lesson object as compatible with lifterlms version.
+		 *
+		 * @since 2.0.1
+		 *
+		 * @param object $lesson Object of the lesson.
+		 *
+		 * @return integer $course_id
+		 */
+		public function bb_lifterlms_get_parent_course( $lesson ) {
+			if ( defined( 'LLMS_VERSION' ) && version_compare( LLMS_VERSION, '5.7.0', '<' ) ) {
+				$course_id = $lesson->get_parent_course(); // Its deprecated since version 5.7.0.
+			} else {
+				$course_id = $lesson->get( 'parent_course' );
+			}
+			return $course_id;
+		}
+
+		/**
+		 * Get lesson order based on lesson object as compatible with lifterlms version.
+		 *
+		 * @since 2.0.1
+		 *
+		 * @param object $lesson Object of the lesson.
+		 *
+		 * @return integer $lesson_order
+		 */
+		public function bb_lifterlms_get_lesson_order( $lesson ) {
+			if ( defined( 'LLMS_VERSION' ) && version_compare( LLMS_VERSION, '5.7.0', '<' ) ) {
+				$lesson_order = $lesson->get_order(); // Its deprecated since version 5.7.0.
+			} else {
+				$lesson_order = $lesson->get( 'order' );
+			}
+			return $lesson_order;
+		}
+
+		/**
+		 * Get results of attempt quiz as compatible with lifterlms version.
+		 *
+		 * @since 2.0.1
+		 *
+		 * @param object $query Object of the quiz attempt.
+		 *
+		 * @return array $results
+		 */
+		public function bb_lifterlms_get_quiz_result( $query ) {
+			if ( defined( 'LLMS_VERSION' ) && version_compare( LLMS_VERSION, '6.0.0', '<' ) ) {
+				$results = $query->results; // Its deprecated since version 6.0.0.
+			} else {
+				$results = $query->get_results();
+			}
+			return $results;
 		}
 
 		public function buddyboss_llms_add_space_before_schedule_details( $period, $data ) {
@@ -1314,6 +1373,8 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				'my-courses' => 0,
 			];
 
+			add_action( 'pre_get_posts', [ $this, 'filter_query_ajax_get_courses' ], 999 );
+
 			$terms = wp_list_pluck(
 				get_terms(
 					[
@@ -1450,6 +1511,8 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				$return['my-courses'] = $count;
 			}
 
+			remove_action( 'pre_get_posts', [ $this, 'filter_query_ajax_get_courses' ], 999 );
+
 			return $return;
 		}
 
@@ -1515,7 +1578,6 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 
 			if ( 'lesson' === $post_type ) {
 				$lesson    = new LLMS_Lesson( $post );
-				$course_id = $lesson->get_parent_course();
 			}
 
 			if ( 'quiz' === $post_type ) {
@@ -1523,7 +1585,10 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				$quiz_lesson_id = $quiz->get( 'lesson_id' );
 				$post_object    = get_post( $quiz_lesson_id );
 				$lesson         = new LLMS_Lesson( $post_object );
-				$course_id      = $lesson->get_parent_course();
+			}
+
+			if ( ! empty( $lesson ) ) {
+				$course_id = $this->bb_lifterlms_get_parent_course( $lesson );
 			}
 
 			if ( is_user_logged_in() ) {
@@ -1549,7 +1614,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				if ( ! empty( $lessons ) ) {
 					$all_lesson_count = count( $lessons );
 					foreach ( $lessons as $lesson ) {
-						$is_lesson_complete = $student->is_complete( $lesson, 'lesson' );
+						$is_lesson_complete = ! empty( $student ) ? $student->is_complete( $lesson, 'lesson' ) : false;
 						if ( $is_lesson_complete ) {
 							$completed_lesson_count ++;
 						}
@@ -2004,6 +2069,51 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 
 			return $lessons_ids;
 
+
+		}
+
+		/**
+		 * Loads the certificate content template.
+		 *
+		 * @since 2.0.3
+		 *
+		 * @param LLMS_User_Certificate $certificate Certificate object.
+		 * @return void
+		 */
+		public function bb_llms_certificate_content( $certificate ) {
+			$template = 1 === $certificate->get_template_version() ? 'content-legacy' : 'content';
+			llms_get_template(
+				"certificates/{$template}.php",
+				compact( 'certificate' )
+			);
+		}
+
+		/**
+		 * Loads the certificate actions template.
+		 *
+		 * @since 2.0.3
+		 *
+		 * @param LLMS_User_Certificate $certificate Certificate object.
+		 * @return void
+		 */
+		public function bb_llms_certificate_actions( $certificate ) {
+
+			if ( ! $certificate->can_user_manage() ) {
+				return;
+			}
+
+			$dashboard_url   = get_permalink( llms_get_page_id( 'myaccount' ) );
+			$cert_ep_enabled = LLMS_Student_Dashboard::is_endpoint_enabled( 'view-certificates' );
+
+			$back_link = $cert_ep_enabled ? llms_get_endpoint_url( 'view-certificates', '', $dashboard_url ) : $dashboard_url;
+			$back_text = $cert_ep_enabled ? __( 'All certificates', 'buddyboss-theme' ) : __( 'Dashboard', 'buddyboss-theme' );
+
+			$is_template        = 'llms_certificate' === $certificate->get( 'type' );
+			$is_sharing_enabled = $certificate->is_sharing_enabled();
+			llms_get_template(
+				'certificates/actions.php',
+				compact( 'certificate', 'back_link', 'back_text', 'is_sharing_enabled', 'is_template' )
+			);
 
 		}
 	}

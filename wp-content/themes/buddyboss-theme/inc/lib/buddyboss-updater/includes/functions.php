@@ -68,6 +68,71 @@ if ( ! function_exists( 'bblicenses_switch__updates_without_license' ) ) {
 
 
 function bbupdater_discover_licensed_packages( $packages = array() ) {
+
+	$all_themes = wp_get_themes();
+	if ( empty( $all_themes ) ) {
+		return $packages;
+	}
+
+	//themes - boss, onesocial, buddyboss theme, buddyboss mobile only, social portfolio,
+	foreach ( $all_themes as $theme_directory => $theme_details ) {
+		if ( 'boss' == $theme_directory ) {
+			$packages['boss'] = array(
+				'id'       => 'boss',
+				'path'     => $theme_directory,
+				'package'  => 'theme',
+				'name'     => __( 'Boss Theme', 'buddyboss-theme' ),
+				'products' => array(
+					'BOSS' => array(
+						'software_ids' => array( 'BOSS_1S', 'BOSS_5S', 'BOSS_20S' ),
+						'name'         => __( 'Boss Theme', 'buddyboss-theme' ),
+					),
+				),
+			);
+
+			continue;
+		}
+
+		if ( 'onesocial' == $theme_directory ) {
+			$packages['onesocial'] = array(
+				'id'       => 'onesocial',
+				'path'     => $theme_directory,
+				'package'  => 'theme',
+				'name'     => __( 'OneSocial Theme', 'buddyboss-theme' ),
+				'products' => array(
+					'ONESOCIAL' => array(
+						'software_ids' => array( 'ONESOCIAL_1S', 'ONESOCIAL_5S', 'ONESOCIAL_20S' ),
+						'name'         => __( 'OneSocial Theme', 'buddyboss-theme' ),
+					),
+				),
+			);
+
+			continue;
+		}
+
+		if ( 'buddyboss-theme' == $theme_directory ) {
+			$packages['buddyboss_theme'] = array(
+				'id'       => 'buddyboss_theme',
+				'path'     => $theme_directory,
+				'package'  => 'theme',
+				'name'     => __( 'BB Theme & Platform Pro', 'buddyboss-theme' ),
+				'products' => array(
+					// key should be unique for every individual buddyboss product
+					// and if product X is included in 2 different packages, key for product X must be same in both packages.
+					'BB_THEME' => array(
+						'software_ids' => array( 'BB_THEME_1S', 'BB_THEME_2S' ,'BB_THEME_5S', 'BB_THEME_10S' ),
+						'name'         => __( 'BuddyBoss Theme', 'buddyboss-theme' ),
+					),
+					'BB_PLATFORM_PRO' => array(
+						'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_2S' ,'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
+						'name'         => __( 'BuddyBoss Platform Pro', 'buddyboss-theme' ),
+					),
+				),
+			);
+			continue;
+		}
+	}
+
 	/**
 	 * look for all installed buddyboss plugins( active or inactive ) & themes and register those
 	 */
@@ -81,6 +146,34 @@ function bbupdater_discover_licensed_packages( $packages = array() ) {
 	//Boss for Sensei, Boss for Learndash, marketplace,
 	//bp user blog, BP Reorder Tabs, BP Portfolio Pro, bp member types
 	foreach ( $all_plugins as $plugin_file => $plugin_details ) {
+
+		if ( 'buddyboss-platform-pro/buddyboss-platform-pro.php' == $plugin_file ) {
+			
+			/**
+			 * Get the BB theme licenses status
+			 */
+			$bb_theme_active_status = BuddyBoss_Updater_Admin::instance()->get_package_status_from_licenses( 'buddyboss_theme' );
+
+			/**
+			 * Check if the BB theme licenses is active
+			 */
+			if( 'active' !== $bb_theme_active_status ) {
+				$packages['bb_platform_pro'] = array(
+					'id'       => 'bb_platform_pro',
+					'path'     => $plugin_file,
+					'package'  => 'plugin',
+					'name'     => __( 'BB Platform Pro', 'buddyboss-theme' ),
+					'products' => array(
+						'BB_PLATFORM_PRO' => array(
+							'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_2S', 'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
+							'name'         => __( 'BuddyBoss Platform Pro', 'buddyboss-theme' ),
+						),
+					),
+				);
+			}
+			continue;
+		}
+
 		if ( 'buddyboss-media/buddyboss-media.php' == $plugin_file ) {
 			$packages['bbmedia'] = array(
 				'id'       => 'bbmedia',
@@ -187,92 +280,6 @@ function bbupdater_discover_licensed_packages( $packages = array() ) {
 					'BPMEMTYPES' => array(
 						'software_ids' => array( 'BPMEMTYPES_1S', 'BPMEMTYPES_5S', 'BPMEMTYPES_20S' ),
 						'name'         => __( 'BuddyPress Member Types', 'buddyboss-theme' ),
-					),
-				),
-			);
-			continue;
-		}
-
-		if ( 'buddyboss-platform-pro/buddyboss-platform-pro.php' == $plugin_file ) {
-			$packages['buddyboss_theme'] = array(
-				'id'       => 'buddyboss_theme',
-				'path'     => 'buddyboss-theme',
-				'package'  => 'theme',
-				'name'     => __( 'BB Theme & Platform Pro', 'buddyboss-theme' ),
-				'products' => array(
-					// key should be unique for every individual buddyboss product
-					// and if product X is included in 2 different packages, key for product X must be same in both packages.
-					'BB_THEME' => array(
-						'software_ids' => array( 'BB_THEME_1S', 'BB_THEME_5S', 'BB_THEME_10S' ),
-						'name'         => __( 'BuddyBoss Theme', 'buddyboss-theme' ),
-					),
-					'BB_PLATFORM_PRO' => array(
-						'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
-						'name'         => __( 'BuddyBoss Platform Pro', 'buddyboss-theme' ),
-					),
-				),
-			);
-			continue;
-		}
-	}
-
-	$all_themes = wp_get_themes();
-	if ( empty( $all_themes ) ) {
-		return $packages;
-	}
-
-	//themes - boss, onesocial, buddyboss theme, buddyboss mobile only, social portfolio,
-	foreach ( $all_themes as $theme_directory => $theme_details ) {
-		if ( 'boss' == $theme_directory ) {
-			$packages['boss'] = array(
-				'id'       => 'boss',
-				'path'     => $theme_directory,
-				'package'  => 'theme',
-				'name'     => __( 'Boss Theme', 'buddyboss-theme' ),
-				'products' => array(
-					'BOSS' => array(
-						'software_ids' => array( 'BOSS_1S', 'BOSS_5S', 'BOSS_20S' ),
-						'name'         => __( 'Boss Theme', 'buddyboss-theme' ),
-					),
-				),
-			);
-
-			continue;
-		}
-
-		if ( 'onesocial' == $theme_directory ) {
-			$packages['onesocial'] = array(
-				'id'       => 'onesocial',
-				'path'     => $theme_directory,
-				'package'  => 'theme',
-				'name'     => __( 'OneSocial Theme', 'buddyboss-theme' ),
-				'products' => array(
-					'ONESOCIAL' => array(
-						'software_ids' => array( 'ONESOCIAL_1S', 'ONESOCIAL_5S', 'ONESOCIAL_20S' ),
-						'name'         => __( 'OneSocial Theme', 'buddyboss-theme' ),
-					),
-				),
-			);
-
-			continue;
-		}
-
-		if ( 'buddyboss-theme' == $theme_directory ) {
-			$packages['buddyboss_theme'] = array(
-				'id'       => 'buddyboss_theme',
-				'path'     => $theme_directory,
-				'package'  => 'theme',
-				'name'     => __( 'BB Theme & Platform Pro', 'buddyboss-theme' ),
-				'products' => array(
-					// key should be unique for every individual buddyboss product
-					// and if product X is included in 2 different packages, key for product X must be same in both packages.
-					'BB_THEME' => array(
-						'software_ids' => array( 'BB_THEME_1S', 'BB_THEME_5S', 'BB_THEME_10S' ),
-						'name'         => __( 'BuddyBoss Theme', 'buddyboss-theme' ),
-					),
-					'BB_PLATFORM_PRO' => array(
-						'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
-						'name'         => __( 'BuddyBoss Platform Pro', 'buddyboss-theme' ),
 					),
 				),
 			);
@@ -429,7 +436,7 @@ function bbupdater_register_updatable_products( $products = array() ) {
 			$products['BB_PLATFORM_PRO'] = array(
 				'path'          => $plugin_file,
 				'id'            => 1341,
-				'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
+				'software_ids' => array( 'BB_PLATFORM_PRO_1S', 'BB_PLATFORM_PRO_2S', 'BB_PLATFORM_PRO_5S', 'BB_PLATFORM_PRO_10S' ),
 				'type'          => 'plugin',
 				'releases_link' => 'https://www.buddyboss.com/resources/buddyboss-platform-pro-releases/',
 			);
@@ -476,7 +483,7 @@ function bbupdater_register_updatable_products( $products = array() ) {
 			$products['BB_THEME'] = array(
 				'path'          => $theme_directory,
 				'id'            => 867,
-				'software_ids'  => array( 'BB_THEME_1S', 'BB_THEME_5S', 'BB_THEME_10S' ),
+				'software_ids'  => array( 'BB_THEME_1S', 'BB_THEME_2S', 'BB_THEME_5S', 'BB_THEME_10S' ),
 				'type'          => 'theme',
 				'releases_link' => 'https://www.buddyboss.com/resources/buddyboss-theme-releases/',
 			);

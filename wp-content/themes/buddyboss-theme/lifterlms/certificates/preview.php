@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="llms-certificate__download push-right">
 				<form action="" method="POST">
 					<button class="llms-certificate__downloadBtn button" type="submit" name="llms_generate_cert">
-						<i class="bb-icon-arrow-down"></i>
+						<i class="bb-icon-rl bb-icon-arrow-down"></i>
 					</button>
 
 					<input type="hidden" name="certificate_id" value="<?php echo $certificate->get( 'id' ); ?>">

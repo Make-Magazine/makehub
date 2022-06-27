@@ -22,14 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 	return;
 }
+$product_exists = is_object( $product );
 ?>
 <tr class="<?php echo esc_attr( apply_filters( 'woocommerce_order_item_class', 'woocommerce-table__line-item order_item', $item, $order ) ); ?>">
 
-    <td class="woocommerce-table__product-thumb product-thumb">
-        <?php
-            echo $product->get_image();
-        ?>
-    </td>
+	<td class="woocommerce-table__product-thumb product-thumb">
+		<?php
+			echo $product_exists ? $product->get_image() : wc_placeholder_img();
+		?>
+	</td>
 
 	<td class="woocommerce-table__product-name product-name" data-title="<?php esc_html_e( 'Product', 'buddyboss-theme' ); ?>">
 		<?php
@@ -53,10 +54,10 @@ if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 
 		do_action( 'woocommerce_order_item_meta_end', $item_id, $item, $order, false );
 		?>
-        <span class="bb_sku_wrapper"><?php esc_html_e( 'SKU:', 'buddyboss-theme' ); ?> <span class="sku"><?php echo ( $sku = $product->get_sku() ) ? $sku : esc_html__( 'N/A', 'buddyboss-theme' ); ?></span></span>
+		<span class="bb_sku_wrapper"><?php esc_html_e( 'SKU:', 'buddyboss-theme' ); ?> <span class="sku"><?php echo ( $product_exists && $sku = $product->get_sku() ) ? $sku : esc_html__( 'N/A', 'buddyboss-theme' ); ?></span></span>
 	</td>
 
-    <td class="woocommerce-table__product-total product-qty" data-title="<?php esc_html_e( 'Qty', 'buddyboss-theme' ); ?>">
+	<td class="woocommerce-table__product-total product-qty" data-title="<?php esc_html_e( 'Qty', 'buddyboss-theme' ); ?>">
 		<?php echo apply_filters( 'woocommerce_order_item_quantity_html', ' <span class="product-quantity">' . sprintf( '%s', $item->get_quantity() ) . '</span>', $item ); ?>
 	</td>
 

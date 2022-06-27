@@ -66,7 +66,7 @@ global $post;
                                 <div class="bb-course-points">
                                     <a class="anchor-course-points" href="#lifter-course-content">
                                         <?php echo __( 'View course details', 'buddyboss-theme' ); ?>
-                                        <i class="bb-icons bb-icon-chevron-down"></i>
+                                        <i class="bb-icon-l bb-icon-angle-down"></i>
                                     </a>
                                 </div>
 

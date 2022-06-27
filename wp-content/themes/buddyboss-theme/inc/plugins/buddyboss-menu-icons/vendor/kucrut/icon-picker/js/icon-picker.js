@@ -82,6 +82,7 @@ wp.media.view.IconPickerSidebar = __webpack_require__(13);
 wp.media.view.IconPickerFontItem = __webpack_require__(9);
 wp.media.view.IconPickerFontLibrary = __webpack_require__(10);
 wp.media.view.IconPickerFontFilter = __webpack_require__(8);
+wp.media.view.IconPickerTypeFilter = __webpack_require__(16);
 wp.media.view.IconPickerFontBrowser = __webpack_require__(7);
 wp.media.view.IconPickerImgBrowser = __webpack_require__(12);
 wp.media.view.IconPickerSvgItem = __webpack_require__(14);
@@ -102,7 +103,7 @@ wp.media.view.MediaFrame.IconPicker = __webpack_require__(11);
 var IconPickerFont = wp.media.controller.State.extend(_.extend({}, wp.media.controller.iconPickerMixin, {
 	defaults: {
 		multiple: false,
-		menu: 'default',
+		menu: false,
 		toolbar: 'select',
 		baseType: 'font'
 	},
@@ -121,6 +122,17 @@ var IconPickerFont = wp.media.controller.State.extend(_.extend({}, wp.media.cont
 		this.frame.on('open', this.updateSelection, this);
 		this.resetFilter();
 		this.updateSelection();
+
+		// set tab active and hide router for other tabs.
+		jQuery( '.menu-icon-tabs button' ).siblings().removeClass( 'active' );
+		jQuery( '.menu-icon-tabs button[data-id="menu-item-buddyboss"]' ).addClass( 'active' );
+		jQuery( '.media-frame-router' ).hide();
+
+		jQuery( document ).on( 'click', '.media-frame-title .menu-icon-tabs button', function () {
+			var tab_name = jQuery( this ).data( 'id' );
+			jQuery( '.menu-icon-tabs button' ).siblings().removeClass( 'active' );
+			jQuery( '.menu-icon-tabs button[data-id="' + tab_name + '"]' ).addClass( 'active' );
+		} );
 	},
 
 	deactivate: function deactivate() {
@@ -184,6 +196,7 @@ IconPickerImg = Library.extend(_.extend({}, wp.media.controller.iconPickerMixin,
 	defaults: _.defaults({
 		id: 'image',
 		baseType: 'image',
+		menu: false,
 		syncSelection: false
 	}, Library.prototype.defaults),
 
@@ -219,6 +232,16 @@ IconPickerImg = Library.extend(_.extend({}, wp.media.controller.iconPickerMixin,
 		this.get('library').observe(wp.Uploader.queue);
 		this.frame.on('open', this.updateSelection, this);
 		this.updateSelection();
+
+		// set tab active and hide router for other tabs.
+		jQuery( '.menu-icon-tabs button' ).siblings().removeClass( 'active' );
+		jQuery( '.menu-icon-tabs button[data-id="menu-item-image"]' ).addClass( 'active' );
+
+		jQuery( document ).on( 'click', '.media-frame-title .menu-icon-tabs button', function () {
+			var tab_name = jQuery( this ).data( 'id' );
+			jQuery( '.menu-icon-tabs button' ).siblings().removeClass( 'active' );
+			jQuery( '.menu-icon-tabs button[data-id="' + tab_name + '"]' ).addClass( 'active' );
+		} );
 	},
 
 	deactivate: function deactivate() {
@@ -231,7 +254,6 @@ IconPickerImg = Library.extend(_.extend({}, wp.media.controller.iconPickerMixin,
 		var content = mode === 'upload' ? this.uploadContent() : this.browseContent();
 
 		this.frame.$el.removeClass('hide-toolbar');
-
 		return content;
 	},
 
@@ -427,7 +449,8 @@ var IconPickerFonts = Backbone.Collection.extend({
 				result = _.any(['id', 'name'], function (attribute) {
 					var value = item.get(attribute);
 
-					return value && value.search(term) >= 0;
+					var term_var = new RegExp( term, 'i' );
+					return value && ( value.search( term ) >= 0 || value.match( term_var ) );
 				}, term);
 			}
 
@@ -534,18 +557,32 @@ var IconPickerFontBrowser = wp.media.View.extend(_.extend({
 
 		this.views.add(this.toolbar);
 
-		// Dropdown filter
+		// Dropdown filter.
 		this.toolbar.set('filters', new wp.media.view.IconPickerFontFilter({
 			controller: this.controller,
 			model: this.collection.props,
 			priority: -80
 		}).render());
 
+		// Dropdown filter.
+		if( Object.keys(iconPicker.enabledTypes).length > 1 ){
+			this.toolbar.set('typefilters', new wp.media.view.IconPickerTypeFilter({
+				controller: this.controller,
+				model: this.collection.props,
+				className: 'media-attachment-type-filters',
+				id: 'media-attachment-type-filters',
+				priority: -100
+			}).render());
+		}
+
 		// Search field
 		this.toolbar.set('search', new wp.media.view.Search({
 			controller: this.controller,
 			model: this.collection.props,
-			priority: 60
+			priority: 60,
+			attributes: {
+				'placeholder': iconPicker.text.search
+			},
 		}).render());
 	},
 
@@ -805,16 +842,92 @@ IconPicker = Select.extend({
 	},
 
 	/**
-  * Set state based on the target's icon type
-  */
+	 * Set state based on the target's icon type
+	 */
 	_ipSetState: function _ipSetState() {
-		var stateId = this.target.get('type');
+		var stateId = this.target.get( 'type' );
+		var current_object = this;
 
-		if (!stateId || !this.states.findWhere({ id: stateId })) {
-			stateId = this.states.at(0).id;
+		if ( !stateId || !this.states.findWhere( { id: stateId } ) ) {
+			stateId = this.states.at( 0 ).id;
 		}
 
-		this.setState(stateId);
+		this.setState( stateId );
+		var tab_target;
+
+		// open target tab.
+		jQuery( document ).on( 'click', '.media-frame-title .menu-icon-tabs button', function () {
+			var selected_dropdown = jQuery( 'select#media-attachment-type-filters' ).val();
+			if ( 'undefined' !== typeof selected_dropdown && '' !== selected_dropdown ) {
+				tab_target = selected_dropdown;
+			} else if ( menuIcons.activeTypes.length <= 3 ) {
+				tab_target = stateId;
+			}
+			var tab_name = jQuery( this ).data( 'id' );
+			var state_name = tab_name.replace( 'menu-item-', '' );
+
+			if ( 'buddyboss' === state_name ) {
+				if ( 'undefined' === typeof tab_target || '' === tab_target ) {
+					tab_target = 'buddyboss';
+				}
+				current_object.setState( tab_target );
+			} else {
+				current_object.setState( state_name );
+			}
+
+			if ( 'menu-item-manage' === tab_name ) {
+				// set to another state to fix tabbing issue.
+				jQuery( '.media-frame-content' ).html( jQuery( 'div.buddyboss-menu-icon-settings' ).html() );
+				jQuery( '.media-toolbar-primary.search-form' ).hide();
+				jQuery( 'div.media-frame-router' ).hide();
+				if( ! jQuery( '.media-frame-toolbar .media-toolbar .submitbox.button-controls' ).length ) {
+					jQuery( '.media-frame-toolbar .media-toolbar' ).append( jQuery( 'div.buddyboss-menu-icon-buttons' ).html() );
+				}
+				jQuery( '.submitbox.button-controls' ).show();
+				jQuery( 'div.media-frame.mode-select' ).addClass( 'hide-router' );
+			} else {
+				if ( 'menu-item-image' === tab_name ) {
+					jQuery( 'div.media-frame-router' ).show();
+					jQuery( 'div.media-frame.mode-select' ).removeClass( 'hide-router' );
+					jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'placeholder', iconPicker.text.search_library );
+				} else {
+					jQuery( 'div.media-frame-router' ).hide();
+					jQuery( 'div.media-frame.mode-select' ).addClass( 'hide-router' );
+					jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'placeholder', iconPicker.text.search );
+				}
+				jQuery( '.media-toolbar-primary.search-form' ).show();
+				jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'type', 'search' );
+				jQuery( '.submitbox.button-controls' ).hide();
+				jQuery( 'select#media-attachment-type-filters' ).val( tab_target );
+			}
+
+			setTimeout(
+				function () {
+					jQuery( 'div.media-frame-title' ).html( jQuery( 'div.buddyboss-menu-icon-tabs' ).html() );
+				},
+				0
+			);
+		} );
+
+		var targetTab = function () {
+			jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'type', 'search' );
+			if ( jQuery( 'button[data-id="menu-item-image"]' ).hasClass( 'active' ) ) {
+				jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'placeholder', iconPicker.text.search_library );
+			} else {
+				jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'placeholder', iconPicker.text.search );
+			}
+		};
+
+		jQuery( '.media-modal-content' ).each( targetTab );
+		jQuery( document ).on( 'click', '.media-router button#menu-item-browse', targetTab );
+
+		// keep the current state option selected when popup open.
+		jQuery( 'select#media-attachment-type-filters' ).val( stateId );
+
+		// add a class to identify.
+		if ( jQuery( '.media-frame.mode-select' ).length ) {
+			jQuery( '.media-frame.mode-select' ).addClass( 'bb-media-frame' );
+		}
 	},
 
 	/**
@@ -1013,5 +1126,49 @@ __webpack_require__(0);
 	$('div.ipf').trigger('ipf:update');
 })(jQuery);
 
-/***/ })
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+/**
+ * wp.media.view.IconPickerTypeFilter
+ */
+var IconPickerTypeFilter = wp.media.view.AttachmentFilters.extend( {
+	createFilters: function createFilters() {
+		var groups = iconPicker.types,
+			filters = {};
+
+		var enabledTypes = iconPicker.enabledTypes;
+
+		jQuery.each( groups, function ( i ) {
+			if ( enabledTypes.includes( groups[ i ].id ) ) {
+				filters[ groups[ i ].id ] = {
+					text: groups[ i ].name,
+					props: { group: groups[ i ].id }
+				};
+			}
+		} );
+
+		this.filters = filters;
+	},
+
+	select: function () {
+		this.model.set( { selected: true } );
+	},
+
+	change: function change() {
+		var filter = this.filters[ this.el.value ];
+
+		if ( filter ) {
+			var filter_name = filter.props.group;
+			this.controller.setState( filter_name );
+			jQuery( 'select#media-attachment-type-filters' ).val( filter_name );
+			jQuery( '.media-toolbar-primary.search-form input.search' ).attr( 'type', 'search' );
+		}
+	}
+} );
+
+module.exports = IconPickerTypeFilter;
+
+/***/ }),
 /******/ ]);

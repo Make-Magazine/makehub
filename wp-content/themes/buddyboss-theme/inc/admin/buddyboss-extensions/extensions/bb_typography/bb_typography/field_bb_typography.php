@@ -69,7 +69,7 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 			$this->set_defaults();
 			if ( empty( $this->extension_dir ) ) {
 				$this->extension_dir = trailingslashit( str_replace( '\\', '/', dirname( __FILE__ ) ) );
-				$this->extension_url = site_url( str_replace( trailingslashit( str_replace( '\\', '/', ABSPATH ) ), '', $this->extension_dir ) );
+				$this->extension_url = site_url( str_replace( trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) ), 'wp-content/', $this->extension_dir ) );
 			}
 			$this->timestamp = Redux_Core::$version;
 			if ( $parent->args['dev_mode'] ) {

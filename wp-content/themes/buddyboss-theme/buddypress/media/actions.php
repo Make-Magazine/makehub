@@ -33,8 +33,8 @@ if (
 
 	<header class="bb-member-media-header bb-photos-actions">
 		<div class="bb-media-meta bb-photos-meta">
-			<a data-balloon="<?php esc_attr_e( 'Delete', 'buddyboss-theme' ); ?>" data-balloon-pos="up" class="bb-delete" id="bb-delete-media" href="#"><i class="bb-icon-trash-small"></i></a>
-			<a data-balloon="<?php esc_attr_e( 'Select All', 'buddyboss-theme' ); ?>" data-balloon-pos="up" class="bb-select" id="bb-select-deselect-all-media" href="#"><i class="bb-icon-check"></i></a>
+			<a data-balloon="<?php esc_attr_e( 'Delete', 'buddyboss-theme' ); ?>" data-balloon-pos="up" class="bb-delete" id="bb-delete-media" href="#"><i class="bb-icon-l bb-icon-trash"></i></a>
+			<a data-balloon="<?php esc_attr_e( 'Select All', 'buddyboss-theme' ); ?>" data-balloon-pos="up" class="bb-select" id="bb-select-deselect-all-media" href="#"><i class="bb-icon-l bb-icon-check"></i></a>
 		</div>
 	</header>
 

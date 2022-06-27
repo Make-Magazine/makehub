@@ -145,7 +145,7 @@ jQuery(
 
 						var editor_element_key = $bbpress_forums_element.find( '.bbp-reply-form form' ).find( '.bbp-the-content' ).data( 'key' );
 						if ( typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[editor_element_key] !== 'undefined' ) {
-							// Reset formatting of editor
+							// Reset formatting of editor.
 							window.forums_medium_reply_editor[editor_element_key].execAction( 'selectAll' );
 							window.forums_medium_reply_editor[editor_element_key].execAction( 'removeFormate' );
 							window.forums_medium_reply_editor[editor_element_key].resetContent();
@@ -156,6 +156,17 @@ jQuery(
 						} else {
 							$bbpress_forums_element.find( '#bbp-close-btn' ).trigger( 'click' );
 						}
+
+						$bbpress_forums_element.find( '.header-total-reply-count.bp-hide' ).removeClass( 'bp-hide' );
+						if ( response.total_reply_count ) {
+							$bbpress_forums_element.find( '.header-total-reply-count .topic-reply-count' ).html( response.total_reply_count );
+							$bbpress_forums_element.find( '.topic-lead .bs-replies' ).html( response.total_reply_count );
+						}
+
+						if ( $bbpress_forums_element.find( '.replies-content .bp-feedback.info' ).length > 0 ) {
+							$bbpress_forums_element.find( '.replies-content .bp-feedback.info' ).remove();
+						}
+
 						$bbpress_forums_element.find( '#bbp_reply_content' ).val( '' );
 						reset_reply_form( $bbpress_forums_element, media_element_key, media );
 						reset_reply_form( $bbpress_forums_element, document_element_key, document );
@@ -338,13 +349,13 @@ jQuery(
 							$('.bb-quick-reply-form-wrap').remove();
 						}
 
-						$( 'body' ).append( appendthis );
-						$( '.bb-modal-overlay' ).fadeTo( 500, 0.7 );
+						$( 'body' ).addClass( 'bb-modal-overlay-open' ).append( appendthis );
+						$( '.bb-modal-overlay' ).fadeTo( 0, 1 );
 						var $bbpress_forums_element = curObj.closest( '.bb-grid .content-area' );
 						var loading_modal = '<div id="bbpress-forums" class="bbpress-forums-activity bb-quick-reply-form-wrap"><div class="bbp-reply-form bb-modal bb-modal-box"><form id="new-post" name="new-post" method="post" action=""><fieldset class="bbp-form"><legend>'+window.bbpReplyAjaxJS.reply_to_text+' <span id="bbp-reply-exerpt"> '+reply_exerpt+'...</span><a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-close"></i></a></legend><div><div class="bbp-the-content-wrapper"><div class="bbp-the-content bbp_editor_reply_content medium-editor-element" contenteditable="true" data-placeholder="'+window.bbpReplyAjaxJS.type_reply_here_text+'"></div></div></fieldset></form></div></div>';
 						$bbpress_forums_element.append(loading_modal);
-						$bbpress_forums_element.find('.bb-quick-reply-form-wrap').show().find('.bbp-reply-form').addClass('bb-modal bb-modal-box').show();
-						$bbpress_forums_element.find('.bb-quick-reply-form-wrap .bbp-the-content-wrapper').addClass('loading').show();
+						$bbpress_forums_element.find( '.bb-quick-reply-form-wrap' ).show( 0 ).find( '.bbp-reply-form' ).addClass( 'bb-modal bb-modal-box' ).show( 0 );
+						$bbpress_forums_element.find( '.bb-quick-reply-form-wrap .bbp-the-content-wrapper' ).addClass( 'loading' ).show( 0 );
 
 						var data = {
 							action: 'quick_reply_ajax',
@@ -611,6 +622,11 @@ jQuery(
 													window.forums_medium_forum_editor[key].checkContentChanged();
 												}
 												$('#'+elem_id)[0].emojioneArea.hidePicker();
+											},
+											search_keypress: function() {
+												var _this = this;
+												var small = _this.search.val().toLowerCase();
+												_this.search.val(small);
 											},
 										}
 									}

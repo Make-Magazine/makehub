@@ -384,7 +384,7 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'activecampaign_for_woocommerce_verify_tables',
 			$this->plugin_upgrade_command,
-			'execute',
+			'verify_table',
 			1
 		);
 
@@ -525,6 +525,22 @@ class Activecampaign_For_Woocommerce {
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME,
 			$this->historical_sync,
 			'execute',
+			1,
+			2
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_historical_sync_active',
+			$this->historical_sync,
+			'run_active',
+			1,
+			2
+		);
+
+		$this->loader->add_action(
+			'admin_post_activecampaign_for_woocommerce_run_historical_sync_active',
+			$this->admin,
+			'run_historical_sync_active',
 			1,
 			2
 		);

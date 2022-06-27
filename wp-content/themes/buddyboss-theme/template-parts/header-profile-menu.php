@@ -17,6 +17,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-xprofile" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $profile_link ); ?>">
+				<i class="bb-icon-l bb-icon-user-avatar"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Profile', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -53,7 +54,9 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-settings" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $settings_link ); ?>">
-				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Account', 'buddyboss-theme' ); ?></a>
+				<i class="bb-icon-l bb-icon-user"></i>
+				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Account', 'buddyboss-theme' ); ?>
+			</a>
 			<div class="ab-sub-wrapper wrapper">
 				<ul id="wp-admin-bar-my-account-settings-default" class="ab-submenu">
 					<li id="wp-admin-bar-my-account-settings-general">
@@ -64,7 +67,14 @@ if ( is_user_logged_in() ) {
 					<?php if ( has_action( 'bp_notification_settings' ) ) { ?>
 					<li id="wp-admin-bar-my-account-settings-notifications">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $settings_link . 'notifications' ) ); ?>">
-							<?php esc_html_e( 'Email Preferences', 'buddyboss-theme' ); ?>
+							<?php
+							if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
+								$data = bb_core_notification_preferences_data();
+								echo esc_html( $data['menu_title'] );
+							} else {
+								esc_html_e( 'Email Preferences', 'buddyboss-theme' );
+							}
+							?>
 						</a>
 					</li>
 					<?php } ?>
@@ -116,6 +126,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-activity" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $activity_link ); ?>">
+				<i class="bb-icon-l bb-icon-activity"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Timeline', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -184,6 +195,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-notifications" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $notifications_link ); ?>">
+				<i class="bb-icon-l bb-icon-bell"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -228,6 +240,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-messages" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $messages_link ); ?>">
+				<i class="bb-icon-l bb-icon-inbox"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -277,6 +290,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-friends" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $friends_link ); ?>">
+				<i class="bb-icon-l bb-icon-user-friends"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -322,6 +336,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-groups" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $groups_link ); ?>">
+				<i class="bb-icon-l bb-icon-users"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -354,6 +369,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-forums" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $forums_link ); ?>">
+				<i class="bb-icon-l bb-icon-comments-square"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Forums', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -390,6 +406,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-media" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $media_link ); ?>">
+				<i class="bb-icon-l bb-icon-images"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Photos', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -418,6 +435,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-document" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $document_link ); ?>">
+				<i class="bb-icon-l bb-icon-folder-alt"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Documents', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -445,6 +463,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-video" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $video_link ); ?>">
+				<i class="bb-icon-l bb-icon-film"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Videos', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -472,6 +491,7 @@ if ( is_user_logged_in() ) {
 		?>
 		<li id="wp-admin-bar-my-account-invites" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $invites_link ); ?>">
+				<i class="bb-icon-l bb-icon-envelope"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php esc_html_e( 'Email Invites', 'buddyboss-theme' ); ?>
 			</a>
 			<div class="ab-sub-wrapper wrapper">
@@ -493,7 +513,10 @@ if ( is_user_logged_in() ) {
 
 	?>
 	<li class="logout-link">
-		<a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php echo esc_html_e( 'Log Out', 'buddyboss-theme' ); ?></a>
+		<a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>">
+			<i class="bb-icon-l bb-icon-sign-out"></i>
+			<?php esc_html_e( 'Log Out', 'buddyboss-theme' ); ?>
+		</a>
 	</li>
 	<?php
 }

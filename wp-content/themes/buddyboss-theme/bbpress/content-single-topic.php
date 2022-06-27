@@ -7,6 +7,17 @@
  * @subpackage Theme
  */
 
+$topic_id   = bbp_get_topic_id();
+$query_page = get_query_var( 'paged' );
+
+$topic_reply_count = 0;
+if ( bbp_show_lead_topic() ) {
+	$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
+} else {
+	$topic_reply_count = (int) bbp_get_topic_post_count( $topic_id );
+}
+
+
 ?>
 
 <div id="bbpress-forums" class="bb-content-area bs-replies-wrapper">
@@ -31,15 +42,18 @@
 
 				<?php endif; ?>
 
-				<?php if ( bbp_has_replies() ) : ?>
+				<?php
+				if ( bbp_has_replies() ) :
+					// bbp_get_template_part( 'pagination', 'replies' );
 
-					<?php // bbp_get_template_part( 'pagination', 'replies' ); ?>
+					bbp_get_template_part( 'loop', 'replies' );
 
-					<?php bbp_get_template_part( 'loop', 'replies' ); ?>
-
-					<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
-
-				<?php endif; ?>
+					bbp_get_template_part( 'pagination', 'replies' );
+				else :
+					bbp_get_template_part( 'loop', 'replies' );
+					bbp_get_template_part( 'feedback', 'no-replies' );
+				endif;
+				?>
 
 				<p class="bb-topic-reply-link-wrap mobile-only">
 					<?php
@@ -55,8 +69,20 @@
 					echo bbp_get_topic_subscription_link( $args );
 					?>
 				</p>
+				<?php
+				if ( bbp_is_favorites_active() ) {
+					?>
+					<p class="bb-topic-favorite-link-wrap mobile-only">
+						<?php
+						$args = array( 'before' => '' );
+						echo bbp_get_topic_favorite_link( $args );
+						?>
+					</p>
+					<?php
+				}
 
-				<?php bbp_get_template_part( 'form', 'reply' ); ?>
+				bbp_get_template_part( 'form', 'reply' );
+				?>
 
 			<?php endif; ?>
 
@@ -81,33 +107,56 @@
 					echo bbp_get_topic_subscription_link( $args );
 					?>
 					</p>
+					<?php
+					if ( bbp_is_favorites_active() ) {
+						?>
+						<p class="bb-topic-favorite-link-wrap">
+							<?php
+							$args = array( 'before' => '' );
+							echo bbp_get_topic_favorite_link( $args );
+							?>
+						</p>
+						<?php
+					}
+					?>
 				</div>
 
 				<?php
-				$bbp       = bbpress();
-				$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
-				$from_num  = bbp_number_format( $start_num );
-				$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
-				?>
+				$bbp = bbpress();
+				if ( property_exists( $bbp->reply_query, 'total_items_per_page' ) ) {
 
-				<div class="scrubber" id="scrubber" data-key="<?php echo esc_attr( buddyboss_unique_id( 'forums_scrubber_' ) ); ?>" data-total-item="<?php echo esc_attr( $bbp->reply_query->total_count ); ?>" data-total-page="<?php echo esc_attr( $bbp->reply_query->total_pages ); ?>" data-current-page="<?php echo esc_attr( $bbp->reply_query->paged ); ?>" data-from="<?php echo esc_attr( $from_num ); ?>" data-to="<?php echo esc_attr( $to_num ); ?>">
+					if ( $bbp->reply_query->offset > 0 ) {
+						$start_num = $bbp->reply_query->offset + 1;
+					} else {
+						$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->total_items_per_page ) + 1;
+					}
+
+					$from_num = bbp_number_format( $start_num );
+					$to_num   = bbp_number_format( ( $start_num + ( $bbp->reply_query->total_items_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->total_items_per_page - 1 ) );
+				} else {
+					$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
+					$from_num  = bbp_number_format( $start_num );
+					$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
+				}
+				?>
+				<div class="scrubber light" id="scrubber" data-key="<?php echo esc_attr( buddyboss_unique_id( 'forums_scrubber_' ) ); ?>" data-total-item="<?php echo esc_attr( $topic_reply_count ); ?>" data-total-page="<?php echo esc_attr( $bbp->reply_query->total_pages ); ?>" data-current-page="<?php echo esc_attr( $bbp->reply_query->paged ); ?>" data-from="<?php echo esc_attr( $from_num ); ?>" data-to="<?php echo esc_attr( $to_num ); ?>">
 					<a href="#" class="firstpostbtn">
 						<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11">
 							<path fill="none" stroke="#C8CBCF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.44" d="M1 10l4.5-4 4.5 4M1 5l4.5-4L10 5"/>
 						</svg>
-						<span><?php _e( 'Start of Discussion', 'buddyboss-theme' ); ?></span>
+						<span><?php esc_html_e( 'Start of Discussion', 'buddyboss-theme' ); ?></span>
 					</a>
 					<div class="reply-timeline-container" id="reply-timeline-container">
 						<div class="handle" id="handle">
-							<span id="currentpost">0</span> <?php _e( 'of', 'buddyboss-theme' ); ?> <span id="totalposts">0</span> <?php _e( 'posts', 'buddyboss-theme' ); ?>
-							<span class="desc" id="date"><?php _e( 'June 2018', 'buddyboss-theme' ); ?></span>
+							<span id="currentpost">0</span> <?php esc_html_e( 'of', 'buddyboss-theme' ); ?> <span id="totalposts">0</span> <?php esc_html_e( 'replies', 'buddyboss-theme' ); ?>
+							<span class="desc" id="date"><?php esc_html_e( 'June 2018', 'buddyboss-theme' ); ?></span>
 						</div>
 					</div>
 					<a href="#" class="lastpostbtn">
 						<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11">
 							<path fill="none" stroke="#C8CBCF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.44" d="M1 1l4.5 4L10 1M1 6l4.5 4L10 6"/>
 						</svg>
-						<span><?php _e( 'Now', 'buddyboss-theme' ); ?></span>
+						<span><?php esc_html_e( 'Now', 'buddyboss-theme' ); ?></span>
 					</a>
 				</div>
 			</div>

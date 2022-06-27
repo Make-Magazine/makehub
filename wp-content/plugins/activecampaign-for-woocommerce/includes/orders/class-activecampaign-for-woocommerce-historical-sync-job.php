@@ -21,6 +21,7 @@ use Activecampaign_For_Woocommerce_AC_Contact_Repository as Contact_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Customer_Repository;
 use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Bulksync as Ecom_Bulksync;
+
 /**
  * The Historical_Sync Event Class.
  *
@@ -92,11 +93,29 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	/**
 	 * The historical source designation.
 	 *
-	 * @since 2.0.0
+	 * @since 1.7.0
 	 *
-	 * @var Activecampaign_For_Woocommerce_Bulksync_Repository
+	 * @var bool
 	 */
 	private $is_historical;
+
+	/**
+	 * If we run the background job or not.
+	 *
+	 * @since 1.7.3
+	 *
+	 * @var bool
+	 */
+	private $run_background;
+
+	/**
+	 * Sets the max retries in the case of a failure to connect to hosted.
+	 *
+	 * @since 1.7.5
+	 *
+	 * @var bool
+	 */
+	private $max_retries;
 
 	/**
 	 * The initializing status array.
@@ -146,12 +165,14 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		}
 
 		$this->is_historical       = 1;
+		$this->max_retries         = 2;
 		$this->order_utilities     = $order_utilities;
 		$this->contact_repository  = $contact_repository;
 		$this->customer_repository = $customer_repository;
 		$this->order_repository    = $order_repository;
 		$this->customer_utilities  = $customer_utilities;
 		$this->bulksync_repository = $bulksync_repository;
+		$this->run_background      = true;
 
 		$admin_storage = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
 		if ( ! empty( $admin_storage ) && isset( $admin_storage['connection_id'] ) ) {
@@ -175,21 +196,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		if ( get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME ) ) {
 			$this->status = json_decode( get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME ), 'array' );
 
-			if ( true === $this->status['is_running'] || 'true' === $this->status['is_running'] ) {
-				$this->logger->info(
-					'Historical sync is already running or in a hung state.',
-					[
-						'sync_status' => $this->status,
-					]
-				);
-
-				delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME );
-
-				return;
-			}
-
 			$this->logger->info(
-				'Historical sync process discovered a previous run that may have errored or been paused. Continuing from this data.',
+				'Historical sync process is continuing from this data.',
 				[
 					'status' => $this->status,
 				]
@@ -206,7 +214,9 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		}
 
 		// set the start time
-		$this->status['start_time'] = wp_date( 'F d, Y - G:i:s e' );
+		if ( ! isset( $this->status['start_time'] ) ) {
+			$this->status['start_time'] = wp_date( 'F d, Y - G:i:s e' );
+		}
 
 		// Remove the scheduled status because our process is no longer scheduled & now running
 		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME );
@@ -232,6 +242,18 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 			}
 		}
 
+		if (
+			isset( $_REQUEST['activecampaign_for_woocommerce_nonce_field'] )
+			&& wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_nonce_field'], 'activecampaign_for_woocommerce_historical_sync_form' )
+		) {
+			if ( isset( $_POST['activecampaign-historical-sync-limit'] ) && ! empty( $_POST['activecampaign-historical-sync-limit'] ) ) {
+				$this->status['batch_limit'] = $_POST['activecampaign-historical-sync-limit'];
+			}
+			if ( isset( $_POST['activecampaign-historical-sync-starting-record'] ) && ! empty( $_POST['activecampaign-historical-sync-starting-record'] ) ) {
+				$this->status['record_offset'] = $_POST['activecampaign-historical-sync-starting-record'];
+			}
+		}
+
 		$this->logger->debug(
 			'Historical sync is starting with the following settings',
 			[
@@ -239,8 +261,25 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 			]
 		);
 
-		$this->run_historical_sync_process();
+		if ( $this->run_background ) {
+			$this->logger->debug( 'Run stepped historical sync' );
+			$this->run_historical_sync_one_time();
+		} else {
+			$this->logger->debug( 'Run active historical sync' );
+			 $this->run_full_historical_sync_process();
+		}
+	}
 
+
+	/**
+	 * Runs the job as an active process.
+	 *
+	 * @since 1.7.3
+	 */
+	public function run_active() {
+		$this->run_background = false;
+		$this->max_retries    = 1;
+		$this->execute();
 	}
 
 	/**
@@ -248,19 +287,90 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 *
 	 * @since 1.6.0
 	 */
-	private function run_historical_sync_process() {
+	private function run_full_historical_sync_process() {
 		$exclude = [];
-		if ( $this->status['record_offset'] > 1 ) {
-			for ( $i = 0; $i < $this->status['record_offset']; $i ++ ) {
-				$exclude[] = $i;
-			}
+
+		if ( ! isset( $this->status['record_offset'] ) && isset( $this->status['current_record'] ) ) {
+			$this->status['record_offset'] = $this->status['current_record'];
 		}
+
+		if ( $this->status['record_offset'] > 1 ) {
+			$this->status['current_record'] = $this->status['record_offset'];
+		}
+
+		if ( ! isset( $this->status['batch_limit'] ) ) {
+			$this->status['batch_limit'] = 50;
+		}
+
+		echo esc_html( 'Last record processed (batches of ' . $this->status['batch_limit'] . '):' );
 
 		// phpcs:disable
 		while ( $orders = $this->get_orders_by_page( $this->status['current_record'], $this->status['batch_limit'], $exclude ) ) {
 			// phpcs:enable
+			if ( isset( $orders ) && ! empty( $orders ) ) {
+				$this->bulk_sync_data( $orders );
 
+				$sync_stop_type = $this->check_for_stop();
+
+				if ( $sync_stop_type ) {
+					switch ( $sync_stop_type ) {
+						case '1':
+							$this->status['stop_type_name'] = 'cancelled';
+							$this->update_sync_status( 'cancel' );
+							return;
+						case '2':
+							$this->status['stop_type_name'] = 'paused';
+							$this->update_sync_status( 'pause' );
+							return;
+						default:
+							$this->logger->error(
+								'Historical sync stop status found but did not match a type. There may be a bug. Sync will continue.',
+								[
+									'status'    => $this->status,
+									'stop_type' => $sync_stop_type,
+								]
+							);
+							break;
+					}
+
+					break;
+				}
+
+				$this->status['current_record'] += count( $orders );
+				$this->update_sync_status();
+				echo '<p>';
+				echo esc_html( 'Record ' . $this->status['last_processed_id'] );
+				echo '</p>';
+				ob_flush();
+				flush();
+			}
+		}
+
+		if ( ! isset( $this->status['stop_type_name'] ) ) {
+			$this->update_sync_status( 'finished' );
+		}
+	}
+
+	/**
+	 * This runs our sync process after being initialized by the execute command.
+	 *
+	 * @since 1.6.0
+	 */
+	private function run_historical_sync_one_time() {
+		$exclude = [];
+
+		if ( $this->status['record_offset'] > 1 ) {
+			$this->status['current_record'] = $this->status['record_offset'];
+		}
+
+		$orders = $this->get_orders_by_page( $this->status['current_record'], $this->status['batch_limit'], $exclude );
+
+		if ( isset( $orders ) && ! empty( $orders ) ) {
 			$this->bulk_sync_data( $orders );
+
+			$this->status['current_record'] += count( $orders );
+			// $this->status['is_running'] = false;
+			$next_starting_id = $this->status['current_record'];
 
 			$sync_stop_type = $this->check_for_stop();
 
@@ -269,11 +379,11 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					case '1':
 						$this->status['stop_type_name'] = 'cancelled';
 						$this->update_sync_status( 'cancel' );
-						break;
+						return;
 					case '2':
 						$this->status['stop_type_name'] = 'paused';
 						$this->update_sync_status( 'pause' );
-						break;
+						return;
 					default:
 						$this->logger->error(
 							'Historical sync stop status found but did not match a type. There may be a bug. Sync will continue.',
@@ -284,15 +394,12 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 						);
 						break;
 				}
-
-				break;
 			}
 
-			$this->status['current_record'] += count( $orders );
 			$this->update_sync_status();
-		}
 
-		if ( ! isset( $this->status['stop_type_name'] ) ) {
+			$this->schedule_bulk_historical_sync( $next_starting_id, $this->status['batch_limit'] );
+		} elseif ( ! isset( $this->status['stop_type_name'] ) ) {
 			$this->update_sync_status( 'finished' );
 		}
 	}
@@ -317,7 +424,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 			$wc_order = $this->order_utilities->get_wc_order( $order );
 
-			if ( method_exists( $wc_order, 'get_data' ) ) {
+			if ( $this->order_utilities->validate_object( $wc_order, 'get_data' ) ) {
 				$this->status['last_processed_id'] = $wc_order->get_id();
 
 				if ( $this->order_utilities->is_refund_order( $wc_order ) ) {
@@ -353,12 +460,14 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 				try {
 					// Get the order
-						$ecom_order_with_products = $this->order_utilities->build_ecom_order( $ecom_customer, $wc_order, $this->is_historical );
-					if ( ! empty( $ecom_order_with_products ) ) {
+					$ecom_order_with_products = $this->order_utilities->build_ecom_order( $ecom_customer, $wc_order, $this->is_historical );
 
-						if ( ! $this->is_historical ) {
+					if ( isset( $ecom_order_with_products ) && ! empty( $ecom_order_with_products ) ) {
+
+						if ( ! $this->is_historical && $this->order_utilities->validate_object( $wc_order, 'get_id' ) ) {
 							$ecom_order_with_products->set_id( $this->get_ac_order_id( $wc_order->get_id() ) );
 						}
+
 						$customer_orders[ $ecom_customer->get_email() ][] = $this->order_utilities->serialize_ecom_order_for_bulksync( $ecom_order_with_products );
 						$success_count ++;
 					} else {
@@ -370,8 +479,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 						'Historical sync failed to create an order',
 						[
 							'message'      => $t->getMessage(),
-							'order_number' => method_exists( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
-							'order_id'     => method_exists( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
+							'order_number' => $this->order_utilities->validate_object( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
+							'order_id'     => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
 							'stack_trace'  => $this->logger->clean_trace( $t->getTrace() ),
 						]
 					);
@@ -389,8 +498,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					$this->logger->warning(
 						'Historical Sync: Could not retrieve a valid WC_Order from WooCommerce. This order cannot be synced at this time.',
 						[
-							'order data' => method_exists( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
-							'order_id'   => method_exists( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
+							'order data' => $this->order_utilities->validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
+							'order_id'   => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
 						]
 					);
 					$this->status['failed_order_id_array'][] = $wc_order->get_id();
@@ -410,14 +519,14 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 			}
 		}
 
-		unset( $orders ); // save memory
+		$orders = null; // save memory
 
 		$serialized_customers = [];
 		// Now that we have all of the serialized customers and orders we can put them in the right object
 		if ( count( $customers ) > 0 ) {
 			foreach ( $customers as $customer_email => $customer ) {
 				try {
-					if ( count( $customer_orders[ $customer_email ] ) > 0 ) {
+					if ( isset( $customer_orders[ $customer_email ] ) && count( $customer_orders[ $customer_email ] ) > 0 ) {
 						$customer['orders']     = $customer_orders[ $customer_email ];
 						$serialized_customers[] = $customer;
 					}
@@ -442,16 +551,48 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					$ecom_bulksync->set_externalid( get_site_url() );
 
 					$serialized_customers = null; // save memory
+					$this->bulksync_repository->set_max_retries( $this->max_retries );
 
+					// Until corrected on deepdata bulksync will always return empty but errors will return in our code.
+					// Be aware that unless there is a major error this process will not tell you if it succeeded or not.
 					$response = $this->bulksync_repository->create( $ecom_bulksync );
+
+					if ( is_array( $response ) && isset( $response['type'] ) ) {
+						if ( 'error' === $response['type'] ) {
+							$this->status['stop_type_name'] = 'halted';
+							$this->status['stop_type_code'] = $response['code'];
+							$this->logger->error(
+								'Hosted returned a bad response and cannot be reached or cannot process the request at this time. Historical sync will be stopped. Please try again later.',
+								[
+									'response' => $response,
+								]
+							);
+							$this->update_sync_status( 'halted' );
+						}
+
+						if ( 'timeout' === $response['type'] ) {
+							$this->status['stop_type_name'] = 'halted';
+							$this->status['stop_type_code'] = 'connection timeout';
+							$this->logger->error(
+								'Hosted could not be reached.',
+								[
+									'response' => $response,
+								]
+							);
+							$this->update_sync_status( 'halted' );
+						}
+					}
 				} catch ( Throwable $t ) {
 					$this->logger->warning(
 						'There was an issue with the bulksync API send.',
 						[
-							'message' => $t->getMessage(),
+							'message'     => $t->getMessage(),
+							'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
+							'response'    => $response,
 						]
 					);
 				}
+
 				if ( ! isset( $response ) || false === $response ) {
 					return false;
 				}
@@ -480,7 +621,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 				$order_ac = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
 			}
 
-			if ( ! method_exists( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
+			if ( ! $this->order_utilities->validate_object( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
 				// check ac by external order id
 				$order_ac = $this->order_repository->find_by_externalid( $order_id );
 			}
@@ -498,11 +639,9 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 * @param     WC_Order $wc_order The WooCommerce order.
 	 */
 	private function add_failed_order_to_status( $order = null, $wc_order = null ) {
-		if ( method_exists( $wc_order, 'get_order_number' ) && ! empty( $wc_order->get_order_number() ) ) {
-			$this->status['failed_order_id_array'][] = $wc_order->get_order_number();
-		} elseif ( method_exists( $order, 'get_order_number' ) && ! empty( $order->get_order_number() ) ) {
-			$this->status['failed_order_id_array'][] = $order->get_order_number();
-		} elseif ( method_exists( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
+		if ( $this->order_utilities->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+			$this->status['failed_order_id_array'][] = $wc_order->get_id();
+		} elseif ( $this->order_utilities->validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
 			$this->status['failed_order_id_array'][] = $order->get_id();
 		} else {
 			$this->status['failed_order_id_array'][] = $order;
@@ -607,6 +746,30 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 						]
 					);
 					break;
+				case 'halted':
+					update_option(
+						ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME,
+						wp_json_encode(
+							[
+								'is_paused'   => false,
+								'is_running'  => false,
+								'is_halted'   => true,
+								'is_finished' => true,
+							]
+						)
+					);
+					// delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME );
+					$this->status['end_time']   = wp_date( 'F d, Y - G:i:s e' );
+					$this->status['is_running'] = false;
+					delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME );
+					update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_LAST_STATUS_NAME, wp_json_encode( $this->status ) );
+					$this->logger->info(
+						'Historical Sync was halted due to an error',
+						[
+							'status' => $this->status,
+						]
+					);
+					die( 'There was a fatal error encountered and Historical Sync was halted. Please go back to the historical sync page and check your ActiveCampaign logs.' );
 				default:
 					update_option(
 						ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME,
@@ -724,8 +887,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 				'Historical sync failed to create an order',
 				[
 					'message'      => $t->getMessage(),
-					'order_number' => method_exists( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
-					'order_id'     => method_exists( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
+					'order_number' => $this->order_utilities->validate_object( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
+					'order_id'     => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
 					'stack_trace'  => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -742,23 +905,23 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	private function check_synced_order( $unsynced_order, $ac_order = null ) {
 		global $wpdb;
 
-		if ( isset( $ac_order ) && method_exists( $ac_order, 'get_id' ) ) {
+		if ( $this->order_utilities->validate_object( $ac_order, 'get_id' ) ) {
 			$ac_order_id = $ac_order->get_id();
 		} else {
 			$ac_order = $this->order_repository->find_by_externalid( $unsynced_order->wc_order_id );
 
-			if ( method_exists( $ac_order, 'get_id' ) ) {
+			if ( $this->order_utilities->validate_object( $ac_order, 'get_id' ) ) {
 				$ac_order_id = $ac_order->get_id();
 			}
 		}
 
-		if ( method_exists( $ac_order, 'get_customer_id' ) ) {
+		if ( $this->order_utilities->validate_object( $ac_order, 'get_customer_id' ) ) {
 			$ac_customer_id = $ac_order->get_customer_id();
 		}
 
 		if ( ! isset( $ac_customer_id ) ) {
 			$ac_customer = $this->customer_repository->find_by_email_and_connection_id( $unsynced_order->customer_email, $this->connection_id );
-			if ( isset( $ac_customer ) && method_exists( $ac_customer, 'get_id' ) ) {
+			if ( $this->order_utilities->validate_object( $ac_customer, 'get_id' ) ) {
 				$ac_customer_id = $ac_customer->get_id();
 			}
 		}
@@ -768,9 +931,12 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		if ( ! empty( $ac_customer_id ) ) {
 			$data['ac_customer_id'] = $ac_customer_id;
 		}
+
 		if ( ! empty( $ac_order_id ) ) {
 			$data['ac_order_id']  = $ac_order_id;
 			$data['synced_to_ac'] = 1;
+			$note                 = 'Order record synced to ActiveCampaign (ID: ' . $ac_order_id . ')';
+			wc_create_order_note( $unsynced_order->wc_order_id, $note );
 		}
 
 		// if order do this
@@ -878,4 +1044,46 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		}
 	}
 
+	/**
+	 * Schedules another followup bulk historical sync to run as a background job.
+	 *
+	 * @param int $start_rec The start record.
+	 * @param int $batch_limit The limit for the batch.
+	 *
+	 * @since 1.7.3
+	 */
+	public function schedule_bulk_historical_sync( $start_rec, $batch_limit ) {
+		$logger = new Logger();
+		try {
+			wp_schedule_single_event(
+				time() + 10,
+				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME,
+				[
+					'args' => [
+						'sync_type'   => 'bulk',
+						'start_rec'   => $start_rec,
+						'batch_limit' => $batch_limit,
+					],
+				]
+			);
+
+			$logger->info(
+				'Schedule historical sync',
+				[
+					'current_time'    => time(),
+					'start_on_record' => $start_rec,
+					'batch_limit'     => $batch_limit,
+					'schedule'        => wp_get_scheduled_event( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME ),
+				]
+			);
+		} catch ( Throwable $t ) {
+			$logger->error(
+				'There was an issue scheduling historical sync',
+				[
+					'message'  => $t->getMessage(),
+					'function' => 'schedule_single_historical_sync',
+				]
+			);
+		}
+	}
 }

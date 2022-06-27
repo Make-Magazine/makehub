@@ -60,7 +60,6 @@ class Activecampaign_For_Woocommerce_Bulksync_Repository implements Repository {
 	 * @return Ecom_Model|bool
 	 */
 	public function create( Ecom_Model $model ) {
-		$this->client->set_max_retries( 3 );
 		$response = $this->create_and_set_model_properties_from_api(
 			$this->client,
 			$model
@@ -75,6 +74,15 @@ class Activecampaign_For_Woocommerce_Bulksync_Repository implements Repository {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Sets the max retries on the client connection.
+	 *
+	 * @param int $tries The number of retries.
+	 */
+	public function set_max_retries( $tries ) {
+		$this->client->set_max_retries( $tries );
 	}
 
 	/**

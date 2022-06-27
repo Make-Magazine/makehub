@@ -8,7 +8,7 @@
 class Icon_Picker_Type_Genericons extends Icon_Picker_Type_Font {
 
 	/**
-	 * Icon type ID
+	 * Icon type ID.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -17,16 +17,7 @@ class Icon_Picker_Type_Genericons extends Icon_Picker_Type_Font {
 	protected $id = 'genericon';
 
 	/**
-	 * Icon type name
-	 *
-	 * @since Menu Icons 0.1.0
-	 * @access protected
-	 * @var    string
-	 */
-	protected $name = 'Genericons';
-
-	/**
-	 * Icon type version
+	 * Icon type version.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -35,7 +26,7 @@ class Icon_Picker_Type_Genericons extends Icon_Picker_Type_Font {
 	protected $version = '3.4';
 
 	/**
-	 * Stylesheet ID
+	 * Stylesheet ID.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -43,53 +34,67 @@ class Icon_Picker_Type_Genericons extends Icon_Picker_Type_Font {
 	 */
 	protected $stylesheet_id = 'genericons';
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $args Misc. arguments.
+	 */
+	public function __construct( $args = array() ) {
+		$this->name = esc_html__( 'Genericons', 'buddyboss-theme' );
+
+		parent::__construct( $args );
+	}
 
 	/**
-	 * Get icon groups
+	 * Get icon groups.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return array
 	 */
 	public function get_groups() {
 		$groups = array(
 			array(
 				'id'   => 'actions',
-				'name' => __( 'Actions', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Actions', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'media-player',
-				'name' => __( 'Media Player', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Media Player', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'meta',
-				'name' => __( 'Meta', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Meta', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'misc',
-				'name' => __( 'Misc.', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Misc.', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'places',
-				'name' => __( 'Places', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Places', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'post-formats',
-				'name' => __( 'Post Formats', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Post Formats', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'text-editor',
-				'name' => __( 'Text Editor', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Text Editor', 'buddyboss-theme' ),
 			),
 			array(
 				'id'   => 'social',
-				'name' => __( 'Social', 'buddyboss-theme' ),
+				'name' => esc_html__( 'Social', 'buddyboss-theme' ),
 			),
 		);
 
 		/**
-		 * Filter genericon groups
+		 * Filter genericon groups.
 		 *
 		 * @since 0.1.0
+		 *
 		 * @param array $groups Icon groups.
 		 */
 		$groups = apply_filters( 'icon_picker_genericon_groups', $groups );
@@ -99,752 +104,753 @@ class Icon_Picker_Type_Genericons extends Icon_Picker_Type_Font {
 
 
 	/**
-	 * Get icon names
+	 * Get icon names.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return array
 	 */
 	public function get_items() {
 		$items = array(
 			array(
-				'group' => 'actions',
-				'id'    => 'genericon-checkmark',
-				'name'  => __( 'Checkmark', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-close',
-				'name'  => __( 'Close', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-close-alt',
-				'name'  => __( 'Close', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-dropdown',
-				'name'  => __( 'Dropdown', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-dropdown-left',
-				'name'  => __( 'Dropdown left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-collapse',
-				'name'  => __( 'Collapse', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-expand',
-				'name'  => __( 'Expand', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-help',
-				'name'  => __( 'Help', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-info',
-				'name'  => __( 'Info', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-lock',
-				'name'  => __( 'Lock', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-maximize',
-				'name'  => __( 'Maximize', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-minimize',
-				'name'  => __( 'Minimize', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-plus',
-				'name'  => __( 'Plus', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-minus',
-				'name'  => __( 'Minus', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-previous',
-				'name'  => __( 'Previous', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-next',
-				'name'  => __( 'Next', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-move',
-				'name'  => __( 'Move', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-hide',
-				'name'  => __( 'Hide', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-show',
-				'name'  => __( 'Show', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-print',
-				'name'  => __( 'Print', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-rating-empty',
-				'name'  => __( 'Rating: Empty', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-rating-half',
-				'name'  => __( 'Rating: Half', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-rating-full',
-				'name'  => __( 'Rating: Full', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-refresh',
-				'name'  => __( 'Refresh', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-reply',
-				'name'  => __( 'Reply', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-reply-alt',
-				'name'  => __( 'Reply alt', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-reply-single',
-				'name'  => __( 'Reply single', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-search',
-				'name'  => __( 'Search', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-send-to-phone',
-				'name'  => __( 'Send to', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-send-to-tablet',
-				'name'  => __( 'Send to', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-share',
-				'name'  => __( 'Share', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-shuffle',
-				'name'  => __( 'Shuffle', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-spam',
-				'name'  => __( 'Spam', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-subscribe',
-				'name'  => __( 'Subscribe', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-subscribed',
-				'name'  => __( 'Subscribed', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-unsubscribe',
-				'name'  => __( 'Unsubscribe', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-top',
-				'name'  => __( 'Top', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-unapprove',
-				'name'  => __( 'Unapprove', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-zoom',
-				'name'  => __( 'Zoom', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-unzoom',
-				'name'  => __( 'Unzoom', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'actions',
-				'id'    => 'genericon-xpost',
-				'name'  => __( 'X-Post', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-skip-back',
-				'name'  => __( 'Skip back', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-rewind',
-				'name'  => __( 'Rewind', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-play',
-				'name'  => __( 'Play', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-pause',
-				'name'  => __( 'Pause', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-stop',
-				'name'  => __( 'Stop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-fastforward',
-				'name'  => __( 'Fast Forward', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-player',
-				'id'    => 'genericon-skip-ahead',
-				'name'  => __( 'Skip ahead', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-comment',
-				'name'  => __( 'Comment', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-category',
-				'name'  => __( 'Category', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-hierarchy',
-				'name'  => __( 'Hierarchy', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-tag',
-				'name'  => __( 'Tag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-time',
-				'name'  => __( 'Time', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-user',
-				'name'  => __( 'User', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-day',
-				'name'  => __( 'Day', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-week',
-				'name'  => __( 'Week', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-month',
-				'name'  => __( 'Month', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'meta',
-				'id'    => 'genericon-pinned',
-				'name'  => __( 'Pinned', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-uparrow',
-				'name'  => __( 'Arrow Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-downarrow',
-				'name'  => __( 'Arrow Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-leftarrow',
-				'name'  => __( 'Arrow Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-rightarrow',
-				'name'  => __( 'Arrow Right', 'buddyboss-theme' ),
+				'group' => 'places',
+				'id'    => 'genericon-404',
+				'name'  => esc_html__( '404', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'misc',
 				'id'    => 'genericon-activity',
-				'name'  => __( 'Activity', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-bug',
-				'name'  => __( 'Bug', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-book',
-				'name'  => __( 'Book', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-cart',
-				'name'  => __( 'Cart', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-cloud-download',
-				'name'  => __( 'Cloud Download', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-cloud-upload',
-				'name'  => __( 'Cloud Upload', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-cog',
-				'name'  => __( 'Cog', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-document',
-				'name'  => __( 'Document', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-dot',
-				'name'  => __( 'Dot', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-download',
-				'name'  => __( 'Download', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-draggable',
-				'name'  => __( 'Draggable', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-ellipsis',
-				'name'  => __( 'Ellipsis', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-external',
-				'name'  => __( 'External', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-feed',
-				'name'  => __( 'Feed', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-flag',
-				'name'  => __( 'Flag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-fullscreen',
-				'name'  => __( 'Fullscreen', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-handset',
-				'name'  => __( 'Handset', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-heart',
-				'name'  => __( 'Heart', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-key',
-				'name'  => __( 'Key', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-mail',
-				'name'  => __( 'Mail', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-menu',
-				'name'  => __( 'Menu', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-microphone',
-				'name'  => __( 'Microphone', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-notice',
-				'name'  => __( 'Notice', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-paintbrush',
-				'name'  => __( 'Paint Brush', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-phone',
-				'name'  => __( 'Phone', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-picture',
-				'name'  => __( 'Picture', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-plugin',
-				'name'  => __( 'Plugin', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-portfolio',
-				'name'  => __( 'Portfolio', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-star',
-				'name'  => __( 'Star', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-summary',
-				'name'  => __( 'Summary', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-tablet',
-				'name'  => __( 'Tablet', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-videocamera',
-				'name'  => __( 'Video Camera', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'misc',
-				'id'    => 'genericon-warning',
-				'name'  => __( 'Warning', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-404',
-				'name'  => __( '404', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-trash',
-				'name'  => __( 'Trash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-cloud',
-				'name'  => __( 'Cloud', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-home',
-				'name'  => __( 'Home', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-location',
-				'name'  => __( 'Location', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-sitemap',
-				'name'  => __( 'Sitemap', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'places',
-				'id'    => 'genericon-website',
-				'name'  => __( 'Website', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-standard',
-				'name'  => __( 'Standard', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-aside',
-				'name'  => __( 'Aside', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-image',
-				'name'  => __( 'Image', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-gallery',
-				'name'  => __( 'Gallery', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-video',
-				'name'  => __( 'Video', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-status',
-				'name'  => __( 'Status', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-quote',
-				'name'  => __( 'Quote', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-link',
-				'name'  => __( 'Link', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-chat',
-				'name'  => __( 'Chat', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'post-formats',
-				'id'    => 'genericon-audio',
-				'name'  => __( 'Audio', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Activity', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-editor',
 				'id'    => 'genericon-anchor',
-				'name'  => __( 'Anchor', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Anchor', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-downarrow',
+				'name'  => esc_html__( 'Arrow Down', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-leftarrow',
+				'name'  => esc_html__( 'Arrow Left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-rightarrow',
+				'name'  => esc_html__( 'Arrow Right', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-uparrow',
+				'name'  => esc_html__( 'Arrow Up', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-aside',
+				'name'  => esc_html__( 'Aside', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-editor',
 				'id'    => 'genericon-attachment',
-				'name'  => __( 'Attachment', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Attachment', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'text-editor',
-				'id'    => 'genericon-edit',
-				'name'  => __( 'Edit', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'text-editor',
-				'id'    => 'genericon-code',
-				'name'  => __( 'Code', 'buddyboss-theme' ),
+				'group' => 'post-formats',
+				'id'    => 'genericon-audio',
+				'name'  => esc_html__( 'Audio', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-editor',
 				'id'    => 'genericon-bold',
-				'name'  => __( 'Bold', 'buddyboss-theme' ),
+				'name'  => esc_html__( 'Bold', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-book',
+				'name'  => esc_html__( 'Book', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-bug',
+				'name'  => esc_html__( 'Bug', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-cart',
+				'name'  => esc_html__( 'Cart', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-category',
+				'name'  => esc_html__( 'Category', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-chat',
+				'name'  => esc_html__( 'Chat', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-checkmark',
+				'name'  => esc_html__( 'Checkmark', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-close',
+				'name'  => esc_html__( 'Close', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-close-alt',
+				'name'  => esc_html__( 'Close', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-cloud',
+				'name'  => esc_html__( 'Cloud', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-cloud-download',
+				'name'  => esc_html__( 'Cloud Download', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-cloud-upload',
+				'name'  => esc_html__( 'Cloud Upload', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-editor',
-				'id'    => 'genericon-italic',
-				'name'  => __( 'Italic', 'buddyboss-theme' ),
+				'id'    => 'genericon-code',
+				'name'  => esc_html__( 'Code', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-codepen',
-				'name'  => 'CodePen',
+				'name'  => esc_html__( 'CodePen', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-cog',
+				'name'  => esc_html__( 'Cog', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-collapse',
+				'name'  => esc_html__( 'Collapse', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-comment',
+				'name'  => esc_html__( 'Comment', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-day',
+				'name'  => esc_html__( 'Day', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-digg',
-				'name'  => 'Digg',
+				'name'  => esc_html__( 'Digg', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-document',
+				'name'  => esc_html__( 'Document', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-dot',
+				'name'  => esc_html__( 'Dot', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-download',
+				'name'  => esc_html__( 'Download', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-draggable',
+				'name'  => esc_html__( 'Draggable', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-dribbble',
-				'name'  => 'Dribbble',
+				'name'  => esc_html__( 'Dribbble', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-dropbox',
-				'name'  => 'DropBox',
+				'name'  => esc_html__( 'DropBox', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-dropdown',
+				'name'  => esc_html__( 'Dropdown', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-dropdown-left',
+				'name'  => esc_html__( 'Dropdown left', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'text-editor',
+				'id'    => 'genericon-edit',
+				'name'  => esc_html__( 'Edit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-ellipsis',
+				'name'  => esc_html__( 'Ellipsis', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-expand',
+				'name'  => esc_html__( 'Expand', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-external',
+				'name'  => esc_html__( 'External', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-facebook',
-				'name'  => 'Facebook',
+				'name'  => esc_html__( 'Facebook', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-facebook-alt',
-				'name'  => 'Facebook',
+				'name'  => esc_html__( 'Facebook', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-fastforward',
+				'name'  => esc_html__( 'Fast Forward', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-feed',
+				'name'  => esc_html__( 'Feed', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-flag',
+				'name'  => esc_html__( 'Flag', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-flickr',
-				'name'  => 'Flickr',
+				'name'  => esc_html__( 'Flickr', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-foursquare',
-				'name'  => 'Foursquare',
+				'name'  => esc_html__( 'Foursquare', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-fullscreen',
+				'name'  => esc_html__( 'Fullscreen', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-gallery',
+				'name'  => esc_html__( 'Gallery', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-github',
-				'name'  => 'GitHub',
+				'name'  => esc_html__( 'GitHub', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-googleplus',
-				'name'  => 'Google+',
+				'name'  => esc_html__( 'Google+', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-googleplus-alt',
-				'name'  => 'Google+',
+				'name'  => esc_html__( 'Google+', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-handset',
+				'name'  => esc_html__( 'Handset', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-heart',
+				'name'  => esc_html__( 'Heart', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-help',
+				'name'  => esc_html__( 'Help', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-hide',
+				'name'  => esc_html__( 'Hide', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-hierarchy',
+				'name'  => esc_html__( 'Hierarchy', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-home',
+				'name'  => esc_html__( 'Home', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-image',
+				'name'  => esc_html__( 'Image', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-info',
+				'name'  => esc_html__( 'Info', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-instagram',
-				'name'  => 'Instagram',
+				'name'  => esc_html__( 'Instagram', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'text-editor',
+				'id'    => 'genericon-italic',
+				'name'  => esc_html__( 'Italic', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-key',
+				'name'  => esc_html__( 'Key', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-link',
+				'name'  => esc_html__( 'Link', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-linkedin',
-				'name'  => 'LinkedIn',
+				'name'  => esc_html__( 'LinkedIn', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-linkedin-alt',
-				'name'  => 'LinkedIn',
+				'name'  => esc_html__( 'LinkedIn', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-location',
+				'name'  => esc_html__( 'Location', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-lock',
+				'name'  => esc_html__( 'Lock', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-mail',
+				'name'  => esc_html__( 'Mail', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-maximize',
+				'name'  => esc_html__( 'Maximize', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-menu',
+				'name'  => esc_html__( 'Menu', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-microphone',
+				'name'  => esc_html__( 'Microphone', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-minimize',
+				'name'  => esc_html__( 'Minimize', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-minus',
+				'name'  => esc_html__( 'Minus', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-month',
+				'name'  => esc_html__( 'Month', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-move',
+				'name'  => esc_html__( 'Move', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-next',
+				'name'  => esc_html__( 'Next', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-notice',
+				'name'  => esc_html__( 'Notice', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-paintbrush',
+				'name'  => esc_html__( 'Paint Brush', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-path',
-				'name'  => 'Path',
+				'name'  => esc_html__( 'Path', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-pause',
+				'name'  => esc_html__( 'Pause', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-phone',
+				'name'  => esc_html__( 'Phone', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-picture',
+				'name'  => esc_html__( 'Picture', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-pinned',
+				'name'  => esc_html__( 'Pinned', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-pinterest',
-				'name'  => 'Pinterest',
+				'name'  => esc_html__( 'Pinterest', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-pinterest-alt',
-				'name'  => 'Pinterest',
+				'name'  => esc_html__( 'Pinterest', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-play',
+				'name'  => esc_html__( 'Play', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-plugin',
+				'name'  => esc_html__( 'Plugin', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-plus',
+				'name'  => esc_html__( 'Plus', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-pocket',
-				'name'  => 'Pocket',
+				'name'  => esc_html__( 'Pocket', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-polldaddy',
-				'name'  => 'PollDaddy',
+				'name'  => esc_html__( 'PollDaddy', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-portfolio',
+				'name'  => esc_html__( 'Portfolio', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-previous',
+				'name'  => esc_html__( 'Previous', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-print',
+				'name'  => esc_html__( 'Print', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-quote',
+				'name'  => esc_html__( 'Quote', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-rating-empty',
+				'name'  => esc_html__( 'Rating: Empty', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-rating-full',
+				'name'  => esc_html__( 'Rating: Full', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-rating-half',
+				'name'  => esc_html__( 'Rating: Half', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-reddit',
-				'name'  => 'Reddit',
+				'name'  => esc_html__( 'Reddit', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-refresh',
+				'name'  => esc_html__( 'Refresh', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-reply',
+				'name'  => esc_html__( 'Reply', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-reply-alt',
+				'name'  => esc_html__( 'Reply alt', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-reply-single',
+				'name'  => esc_html__( 'Reply single', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-rewind',
+				'name'  => esc_html__( 'Rewind', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-search',
+				'name'  => esc_html__( 'Search', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-send-to-phone',
+				'name'  => esc_html__( 'Send to', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-send-to-tablet',
+				'name'  => esc_html__( 'Send to', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-share',
+				'name'  => esc_html__( 'Share', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-show',
+				'name'  => esc_html__( 'Show', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-shuffle',
+				'name'  => esc_html__( 'Shuffle', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-sitemap',
+				'name'  => esc_html__( 'Sitemap', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-skip-ahead',
+				'name'  => esc_html__( 'Skip ahead', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-skip-back',
+				'name'  => esc_html__( 'Skip back', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-skype',
-				'name'  => 'Skype',
+				'name'  => esc_html__( 'Skype', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-spam',
+				'name'  => esc_html__( 'Spam', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-spotify',
-				'name'  => 'Spotify',
+				'name'  => esc_html__( 'Spotify', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-standard',
+				'name'  => esc_html__( 'Standard', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-star',
+				'name'  => esc_html__( 'Star', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-status',
+				'name'  => esc_html__( 'Status', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'media-player',
+				'id'    => 'genericon-stop',
+				'name'  => esc_html__( 'Stop', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-stumbleupon',
-				'name'  => 'StumbleUpon',
+				'name'  => esc_html__( 'StumbleUpon', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-subscribe',
+				'name'  => esc_html__( 'Subscribe', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-subscribed',
+				'name'  => esc_html__( 'Subscribed', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-summary',
+				'name'  => esc_html__( 'Summary', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-tablet',
+				'name'  => esc_html__( 'Tablet', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-tag',
+				'name'  => esc_html__( 'Tag', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-time',
+				'name'  => esc_html__( 'Time', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-top',
+				'name'  => esc_html__( 'Top', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-trash',
+				'name'  => esc_html__( 'Trash', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-tumblr',
-				'name'  => 'Tumblr',
+				'name'  => esc_html__( 'Tumblr', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-twitch',
-				'name'  => 'Twitch',
+				'name'  => esc_html__( 'Twitch', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-twitter',
-				'name'  => 'Twitter',
+				'name'  => esc_html__( 'Twitter', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-unapprove',
+				'name'  => esc_html__( 'Unapprove', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-unsubscribe',
+				'name'  => esc_html__( 'Unsubscribe', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-unzoom',
+				'name'  => esc_html__( 'Unzoom', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-user',
+				'name'  => esc_html__( 'User', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'post-formats',
+				'id'    => 'genericon-video',
+				'name'  => esc_html__( 'Video', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-videocamera',
+				'name'  => esc_html__( 'Video Camera', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-vimeo',
-				'name'  => 'Vimeo',
+				'name'  => esc_html__( 'Vimeo', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'misc',
+				'id'    => 'genericon-warning',
+				'name'  => esc_html__( 'Warning', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'places',
+				'id'    => 'genericon-website',
+				'name'  => esc_html__( 'Website', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'meta',
+				'id'    => 'genericon-week',
+				'name'  => esc_html__( 'Week', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-wordpress',
-				'name'  => 'WordPress',
+				'name'  => esc_html__( 'WordPress', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-xpost',
+				'name'  => esc_html__( 'X-Post', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'social',
 				'id'    => 'genericon-youtube',
-				'name'  => 'Youtube',
+				'name'  => esc_html__( 'Youtube', 'buddyboss-theme' ),
+			),
+			array(
+				'group' => 'actions',
+				'id'    => 'genericon-zoom',
+				'name'  => esc_html__( 'Zoom', 'buddyboss-theme' ),
 			),
 		);
 
 		/**
-		 * Filter genericon items
+		 * Filter genericon items.
 		 *
 		 * @since 0.1.0
 		 * @param array $items Icon names.

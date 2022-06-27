@@ -262,6 +262,11 @@
 								type = $el.find( 'input._mi-type' ).val(),
 								icon = $el.find( 'input._mi-icon' ).val(),
 								url = $el.find( 'input._mi-url' ).val(),
+								box_style = $el.find( 'input._mi-box_style' ).val(),
+								icon_style = $el.find( 'input._mi-icon_style' ).val(),
+								font_size = $el.find( 'input._mi-font_size' ).val(),
+								font_size_amount = $el.find( 'input._mi-font_size_amount' ).val(),
+								box_icon_merge = '',
 								template;
 
 							if ( type === '' || icon === '' || _.indexOf( menuIcons.activeTypes, type ) < 0 ) {
@@ -277,12 +282,39 @@
 								template = miPicker.templates[type] = wp.template( 'menu-icons-item-field-preview-' + iconPicker.types[type].templateId );
 							}
 
+							if ( 'buddyboss' === type ) {
+								if ( 'lined' === icon_style && 'none' === box_style ) {
+									box_icon_merge = 'bb-icon-l';
+								}
+								else if ( 'filled' === icon_style && 'none' === box_style ) {
+									box_icon_merge = 'bb-icon-f';
+								}
+								else if ( 'lined' === icon_style && 'rounded' === box_style ) {
+									box_icon_merge = 'bb-icon-bl';
+								}
+								else if ( 'filled' === icon_style && 'rounded' === box_style ) {
+									box_icon_merge = 'bb-icon-bf';
+								}
+								else if ( 'lined' === icon_style && 'circle' === box_style ) {
+									box_icon_merge = 'bb-icon-rl';
+								}
+								else if ( 'filled' === icon_style && 'circle' === box_style ) {
+									box_icon_merge = 'bb-icon-rf';
+								}
+							}
+
+							if ( 'default' === font_size ) {
+								font_size_amount = '24';
+							}
+
 							$unset.removeClass( 'hidden' );
 							$set.attr( 'title', menuIcons.text.change );
 							$set.html( template( {
 								type: type,
 								icon: icon,
-								url: url
+								url: url,
+								box_icon_merge: box_icon_merge,
+								font_size_amount: font_size_amount
 							} ) );
 						},
 
@@ -347,7 +379,7 @@
 						$.ajax( {
 							type: 'POST',
 							url: window.menuIcons.ajaxUrls.update,
-							data: $( '.media-sidebar :input' ).serialize(),
+							data: $( '.media-frame :input' ).serialize(),
 
 							success: function success( response ) {
 								if ( response.success && '' !== response.data.redirectUrl ) {
@@ -380,6 +412,7 @@
 
 			wp.media.view.MenuIconsItemSettingField = __webpack_require__( 8 );
 			wp.media.view.MenuIconsItemSettings = __webpack_require__( 9 );
+			wp.media.view.HeaderMenuIconsItemSettings = __webpack_require__( 12 );
 			wp.media.view.MenuIconsItemPreview = __webpack_require__( 7 );
 			wp.media.view.MenuIconsSidebar = __webpack_require__( 10 );
 			wp.media.view.MediaFrame.MenuIcons = __webpack_require__( 6 );
@@ -566,10 +599,43 @@
 						} ),
 						template = 'menu-icons-item-sidebar-preview-' + iconPicker.types[state.id].templateId + '-';
 
-					if ( data.hide_label ) {
-						template += 'hide_label';
+					if ( 'tab_bar' === window.menuIcons.menu_style ) {
+						template += 'tab';
 					} else {
-						template += data.position;
+						if ( data.hide_label ) {
+							template += 'hide_label';
+						} else {
+							template += data.position;
+						}
+					}
+
+					if ( data.font_size && 'custom' === data.font_size && 'image' !== data.type ) {
+						template += '-custom';
+					}
+
+					if ( data.type && 'buddyboss' === data.type ) {
+						template += '-buddyboss';
+					}
+
+					if ( 'lined' === data.icon_style && 'none' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-l';
+					}
+					else if ( 'filled' === data.icon_style && 'none' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-f';
+					}
+					else if ( 'lined' === data.icon_style && 'rounded' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-bl';
+					}
+					else if ( 'filled' === data.icon_style && 'rounded' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-bf';
+					}
+					else if ( 'lined' === data.icon_style && 'circle' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-rl';
+					}
+					else if ( 'filled' === data.icon_style && 'circle' === data.box_style ) {
+						data.box_icon_merge = 'bb-icon-rf';
+					} else {
+						data.box_icon_merge = '';
 					}
 
 					this.template = wp.media.template( template );
@@ -618,6 +684,43 @@
 					this.model.on( 'change', this.render, this );
 				},
 
+				ready: function ready() {
+					this.conditionalDisplay();
+				},
+
+				conditionalDisplay: function conditionalDisplay() {
+					// If the selection hasn't been rendered, bail.
+					if ( ! this.$el.children().length ) {
+						return;
+					}
+
+					// "font size amount" field displays if "font size" custom selected
+					this.hideFontSizeAmountField();
+
+					// Hide "Position" field when "Hide Label" is true.
+					if ( 'hide_label' === this.model.id ) {
+						this.hidePositionField( this.model.attributes.value );
+					}
+				},
+
+				hideFontSizeAmountField: function hideFontSizeAmountField() {
+					if ( 'font_size' === this.model.id ) {
+						if ( 'custom' === this.model.attributes.value ) {
+							$( 'input[data-setting="font_size_amount"]' ).parent().show();
+						} else {
+							$( 'input[data-setting="font_size_amount"]' ).parent().hide();
+						}
+					}
+				},
+
+				hidePositionField: function hidePositionField(fieldValue) {
+					if ( fieldValue == 1 ) {
+						$( 'select[data-setting="position"]' ).parent().hide();
+					} else {
+						$( 'select[data-setting="position"]' ).parent().show();
+					}
+				},
+
 				prepare: function prepare() {
 					return this.model.toJSON();
 				},
@@ -625,8 +728,22 @@
 				_update: function _update( e ) {
 					var value = $( e.currentTarget ).val();
 
-					this.model.set( 'value', value );
+					//this.model.set( 'value', value ); //Creates weird issue with chrome number's input spin box.
 					this.options.item.set( this.model.id, value );
+
+					// "font size amount" field displays if "font size" custom selected.
+					if ( 'font_size' === this.model.id ) {
+						if ( 'custom' === value ) {
+							$( 'input[data-setting="font_size_amount"]' ).parent().show();
+						} else {
+							$( 'input[data-setting="font_size_amount"]' ).parent().hide();
+						}
+					}
+
+					// Hide "Position" field when "Hide Label" is yes.
+					if ( 'hide_label' === this.model.id ) {
+						this.hidePositionField( value );
+					}
 				}
 			} );
 
@@ -650,11 +767,13 @@
 			 * @augments Backbone.View
 			 */
 			var MenuIconsItemSettings = wp.media.view.PriorityList.extend( {
-				className: 'mi-settings attachment-info',
+				className: 'mi-settings attachment-info attachment-info--icon-setup',
 
 				prepare: function prepare() {
 					_.each( this.collection.map( this.createField, this ), function ( view ) {
-						this.set( view.model.id, view );
+						if ( 'hide_label' !== view.model.id && 'position' !== view.model.id ) {
+							this.set( view.model.id, view );
+						}
 					}, this );
 				},
 
@@ -692,33 +811,55 @@
 			 */
 			var MenuIconsSidebar = wp.media.view.IconPickerSidebar.extend( {
 				initialize: function initialize() {
-					var title = new wp.media.View( {
-						tagName: 'h3',
-						priority: - 10
-					} );
-
-					var info = new wp.media.View( {
-						tagName: 'div',
-						className: '_info',
-						priority: 1000
-					} );
 
 					wp.media.view.IconPickerSidebar.prototype.initialize.apply( this, arguments );
 
-					title.$el.text( window.menuIcons.text.preview );
-					this.set( 'title', title );
+					// replace title with tabs.
+					jQuery( 'div.media-frame-title' ).html( jQuery( 'div.buddyboss-menu-icon-tabs' ).html() );
+					if( ! jQuery( '.media-frame-toolbar .media-toolbar .submitbox.button-controls' ).length ) {
+						jQuery( '.media-frame-toolbar .media-toolbar' ).append( jQuery( 'div.buddyboss-menu-icon-buttons' ).html() );
+					}
+					jQuery( '.submitbox.button-controls' ).hide();
 
-					this.$el.append( jQuery( 'div.buddyboss-menu-icon-settings' ).html() );
+					if ( typeof this.options.selection._byId === 'undefined' || Object.keys( this.options.selection._byId ).length == 0 ) {
+						this.instructionDisplay();
+					}
+				},
+
+				instructionDisplay: function instructionDisplay () {
+					var info = new wp.media.View( {
+						tagName: 'div',
+						className: '_info',
+						priority: -15
+					} );
+
+					info.$el.text( window.menuIcons.text.instruction );
+					this.set( 'info', info );
 				},
 
 				createSingle: function createSingle() {
+					this.unset( 'info' );
 					this.createPreview();
 					this.createSettings();
+					if(window.menuIcons.is_header_menu){
+						this.headerMenuSettings();
+					}
 				},
 
 				disposeSingle: function disposeSingle() {
+					this.unset( 'title' );
 					this.unset( 'preview' );
 					this.unset( 'settings' );
+					this.unset( 'settings_title' );
+					if ( window.menuIcons.is_header_menu ) {
+						this.unset( 'header_menu_title' );
+						this.unset( 'header_menu_settings' );
+					}
+					if ( 'standard' !== window.menuIcons.menu_style ) {
+						this.unset( 'tab_style_info' );
+					}
+					this.unset( 'settings_tip' );
+					this.instructionDisplay();
 				},
 
 				createPreview: function createPreview() {
@@ -741,6 +882,72 @@
 						model: frame.target,
 						priority: 80
 					} ) );
+
+					var title = new wp.media.View( {
+						tagName: 'h3',
+						className: 'mi-preview-heading',
+						priority: - 10
+					} );
+
+					title.$el.text( window.menuIcons.text.preview );
+					//title.$el.wrapAll( '<span class="alabala" />' );
+					self.set( 'title', title );
+				},
+
+				headerMenuSettings: function headerMenuSettings() {
+					// show header menu settings title.
+					var header_menu_title = new wp.media.View( {
+						tagName: 'h3',
+						priority: 140
+					} );
+
+					header_menu_title.$el.text( window.menuIcons.text.header_menu );
+					this.set( 'header_menu_title', header_menu_title );
+
+					if ( 'standard' === window.menuIcons.menu_style ) {
+						var frame = this.controller,
+							state = frame.state(),
+							fieldIds = state.get( 'data' ).settingsFields,
+							fields = [];
+
+						_.each( fieldIds, function ( fieldId ) {
+							if( 'hide_label' === fieldId || 'position' === fieldId ) {
+								var field = window.menuIcons.settingsFields[fieldId],
+									model;
+
+								if ( ! field ) {
+									return;
+								}
+
+								model = _.defaults( {
+									value: frame.target.get( fieldId ) || field['default']
+								}, field );
+
+								fields.push( model );
+							}
+						} );
+
+						if ( ! fields.length ) {
+							return;
+						}
+
+						this.set( 'header_menu_settings', new wp.media.view.HeaderMenuIconsItemSettings( {
+							controller: this.controller,
+							collection: new wp.media.model.MenuIconsItemSettings( fields ),
+							model: frame.target,
+							type: this.options.type,
+							priority: 160
+						} ) );
+					} else {
+						var tab_style_info = new wp.media.View( {
+							tagName: 'div',
+							className: '_tab_style_info',
+							priority: 160
+						} );
+
+						tab_style_info.$el.html( window.menuIcons.text.tab_style_info );
+						this.set( 'tab_style_info', tab_style_info );
+					}
 				},
 
 				createSettings: function createSettings() {
@@ -775,6 +982,28 @@
 						type: this.options.type,
 						priority: 120
 					} ) );
+
+					// show icon settings title.
+					var settings_title = new wp.media.View( {
+						tagName: 'h3',
+						priority: 100
+					} );
+
+					settings_title.$el.text( window.menuIcons.text.settings );
+					this.set( 'settings_title', settings_title );
+
+					// Show tip if selected icon is from buddyboss icon pack.
+					if ( 'buddyboss' === state.id ) {
+						var settings_tip = new wp.media.View( {
+							tagName: 'div',
+							className: '_tip',
+							priority: 200
+						} );
+
+						settings_tip.$el.html( window.menuIcons.text.settings_tip );
+						this.set( 'settings_tip', settings_tip );
+					}
+
 				}
 			} );
 
@@ -793,6 +1022,47 @@
 
 			/***/
 		}
-	)
+	),
+	/* 12 */
+	/***/
+	(
+		function ( module, exports ) {
+
+			/**
+			 * wp.media.view.HeaderMenuIconsItemSettings
+			 *
+			 * @class
+			 * @augments wp.media.view.PriorityList
+			 * @augments wp.media.View
+			 * @augments wp.Backbone.View
+			 * @augments Backbone.View
+			 */
+			var HeaderMenuIconsItemSettings = wp.media.view.PriorityList.extend( {
+				className: 'mi-settings attachment-info attachment-info--header-menu',
+
+				prepare: function prepare() {
+					_.each( this.collection.map( this.createField, this ), function ( view ) {
+						if ( 'hide_label' === view.model.id || 'position' === view.model.id ) {
+							this.set( view.model.id, view );
+						}
+					}, this );
+				},
+
+				createField: function createField( model ) {
+					var field = new wp.media.view.MenuIconsItemSettingField( {
+						item: this.model,
+						model: model,
+						collection: this.collection
+					} );
+
+					return field;
+				}
+			} );
+
+			module.exports = HeaderMenuIconsItemSettings;
+
+			/***/
+		}
+	),
 	/******/
 ] );

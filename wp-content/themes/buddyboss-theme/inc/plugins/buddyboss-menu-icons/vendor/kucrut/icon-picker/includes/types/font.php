@@ -9,13 +9,12 @@
 require_once dirname( __FILE__ ) . '/base.php';
 
 /**
- * Generic handler for icon fonts
- *
+ * Generic handler for icon fonts.
  */
 abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 	/**
-	 * Stylesheet ID
+	 * Stylesheet ID.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -24,7 +23,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 	protected $stylesheet_id = '';
 
 	/**
-	 * JS Controller
+	 * JS Controller.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -33,7 +32,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 	protected $controller = 'Font';
 
 	/**
-	 * Template ID
+	 * Template ID.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -43,27 +42,26 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 
 	/**
-	 * Get icon groups
+	 * Get icon groups.
 	 *
 	 * @since Menu Icons 0.1.0
-	 * @return array
 	 */
 	public function get_groups() {}
 
 
 	/**
-	 * Get icon names
+	 * Get icon names.
 	 *
 	 * @since Menu Icons 0.1.0
-	 * @return array
 	 */
 	public function get_items() {}
 
 
 	/**
-	 * Get stylesheet URI
+	 * Get stylesheet URI.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return string
 	 */
 	public function get_stylesheet_uri() {
@@ -75,7 +73,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 		);
 
 		/**
-		 * Filters icon type's stylesheet URI
+		 * Filters icon type's stylesheet URI.
 		 *
 		 * @since Menu Icons 0.4.0
 		 *
@@ -97,7 +95,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 
 	/**
-	 * Register assets
+	 * Register assets.
 	 *
 	 * @since Menu Icons  0.1.0
 	 * @wp_hook action icon_picker_loader_init
@@ -140,9 +138,10 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @since 0.1.0
+	 *
 	 * @param array $args Optional arguments passed to parent class.
 	 */
 	public function __construct( array $args = array() ) {
@@ -158,17 +157,12 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 	}
 
 	/**
-	 * Alter the CSS path for BuddyBoss Icon
+	 * Alter the CSS path for BuddyBoss Icon.
 	 */
 	public function icon_type_stylesheet_uri( $stylesheet_uri, $id ) {
 
-
-		if ( 'buddyboss' === $id ) {
-			if ( is_admin() ) {
-				$stylesheet_uri = get_template_directory_uri() . '/assets/icons/bb-icons.css';
-			} else {
-				return;
-			}
+		if ( 'buddyboss' === $id || 'buddyboss_legacy' === $id ) {
+			return;
 		}
 
 		return $stylesheet_uri;
@@ -176,7 +170,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 
 	/**
-	 * Get extra properties data
+	 * Get extra properties data.
 	 *
 	 * @since Menu Icons 0.1.0
 	 * @access protected
@@ -191,9 +185,10 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 
 
 	/**
-	 * Get media templates
+	 * Get media templates.
 	 *
 	 * @since Menu Icons 0.1.0
+	 *
 	 * @return array
 	 */
 	public function get_templates() {
@@ -212,9 +207,10 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 		);
 
 		/**
-		 * Filter media templates
+		 * Filter media templates.
 		 *
 		 * @since 0.1.0
+		 *
 		 * @param array $templates Media templates.
 		 */
 		$templates = apply_filters( 'icon_picker_font_media_templates', $templates );

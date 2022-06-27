@@ -164,7 +164,7 @@
 	align-items: center;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup,
+.site-header--beaver-builder .bb-header-buttons a.signup,
 .site-header--beaver-builder .bb-header-buttons a.signin-button {
 	<?php if ( $settings->signout_font['family'] != 'Default' ) : ?>
 		font-family: "<?php echo esc_attr( $settings->signout_font['family'] ); ?>";
@@ -180,22 +180,22 @@
 	color: #<?php echo esc_attr( $settings->sign_in_color_hover ); ?>;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup.button {
+.site-header--beaver-builder .bb-header-buttons a.signup.button {
 	color: #<?php echo esc_attr( $settings->sign_up_color ); ?>;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup.button:hover {
+.site-header--beaver-builder .bb-header-buttons a.signup.button:hover {
 	color: #<?php echo esc_attr( $settings->sign_up_color_hover ); ?>;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup.button {
+.site-header--beaver-builder .bb-header-buttons a.signup.button {
 	background-color: #<?php echo esc_attr( $settings->sign_up_bgr_color ); ?>;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup.button:hover {
+.site-header--beaver-builder .bb-header-buttons a.signup.button:hover {
 	background-color: #<?php echo esc_attr( $settings->sign_up_bgr_color_hover ); ?>;
 }
 
-.site-header--beaver-builder .bb-header-buttons a.singup.button {
+.site-header--beaver-builder .bb-header-buttons a.signup.button {
 	border-radius: <?php echo esc_attr( $settings->sign_up_border_radius ); ?>px;
 }

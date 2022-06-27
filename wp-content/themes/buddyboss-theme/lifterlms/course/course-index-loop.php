@@ -206,7 +206,7 @@ if ( ! empty( $post->post_type ) && 'course' === $post->post_type ) {
 								</div>
 							</div>
 							<div class="llms-meta-aplans__btn push-right">
-								<a class="btn-meta-join" href="<?php echo esc_url( $plan->get_checkout_url() ); ?>"><i class="bb-icon-plus"></i><?php echo $plan->get_enroll_text(); ?></a>
+								<a class="btn-meta-join" href="<?php echo esc_url( $plan->get_checkout_url() ); ?>"><i class="bb-icon-l bb-icon-plus"></i><?php echo wp_kses_post( $plan->get_enroll_text() ); ?></a>
 							</div>
 						</div>
 						<?php

@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.9
-Stable tag: 1.7.2
+Tested up to: 6.0
+Stable tag: 1.7.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -32,7 +32,7 @@ By removing the silos that typically exist between email marketing, marketing au
 == Installation ==
 
 = WooCommerce Compatibility =
-* Tested up to version: 6.4.1
+* Tested up to version: 6.5.1
 * Minimal version requirement: 3.6.0
 
 = Minimum Requirements =
@@ -57,6 +57,29 @@ By removing the silos that typically exist between email marketing, marketing au
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.7.7 2022-06-09 =
+* Bugfix for order totals syncing with the incorrect value
+* Bugfix for abandoned cart date check issues
+
+= 1.7.6 2022-05-25 =
+* Bugfix for serialization error and guzzle handling
+
+= 1.7.5 2022-05-24 =
+* Abandoned cart pricing fix
+* Bugfix for handling Hosted returned errors, better timeout handling
+* Various minor bug fixes
+
+= 1.7.4 2022-05-16 =
+* Bugfix for AC table missing
+* Bugfix for upgrade action called wrongly
+
+= 1.7.3 2022-05-09 =
+* A note will now be added to orders when they are synced to AC
+* Bugfix for historical sync using too many resources
+* Debugging output added to historical sync
+* Corrected table name length issues
+* Bugfix for checking order statuses
 
 = 1.7.2 2022-03-20 =
 * Bugfix for payment pending orders getting synced before they are processed

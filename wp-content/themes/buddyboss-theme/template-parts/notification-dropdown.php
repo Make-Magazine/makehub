@@ -8,7 +8,7 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
        ref="notification_bell"
        class="notification-link">
        <span data-balloon-pos="down" data-balloon="<?php _e( 'Notifications', 'buddyboss-theme' ); ?>">
-            <i class="bb-icon-bell-small"></i>
+            <i class="bb-icon-l bb-icon-bell"></i>
     		<?php if ( $unread_notification_count > 0 ): ?>
                 <span class="count"><?php echo $unread_notification_count; ?></span>
     		<?php endif; ?>
@@ -23,13 +23,13 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
         </header>
 
         <ul class="notification-list bb-nouveau-list">
-            <p class="bb-header-loader"><i class="bb-icon-loader animate-spin"></i></p>
+            <p class="bb-header-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>
         </ul>
 
 		<footer class="notification-footer">
 			<a href="<?php echo $menu_link ?>" class="delete-all">
 				<?php _e( 'View Notifications', 'buddyboss-theme' ); ?>
-				<i class="bb-icon-angle-right"></i>
+				<i class="bb-icon-l bb-icon-angle-right"></i>
 			</a>
 		</footer>
     </section>

@@ -231,10 +231,14 @@ final class Icon_Picker_Loader {
 	 * @return  array
 	 */
 	public function _media_view_strings( $strings ) {
+		global $pagenow;
+		if ( 'nav-menus.php' === $pagenow ) {
+			$strings['select'] = esc_html__( 'Select Icon', 'buddyboss-theme' );
+		}
 		$strings['iconPicker'] = array(
-			'frameTitle' => __( 'Icon Picker', 'buddyboss-theme' ),
-			'allFilter'  => __( 'All', 'buddyboss-theme' ),
-			'selectIcon' => __( 'Select Icon', 'buddyboss-theme' ),
+			'frameTitle' => esc_html__( 'Icon Picker', 'buddyboss-theme' ),
+			'allFilter'  => esc_html__( 'All Categories', 'buddyboss-theme' ),
+			'selectIcon' => esc_html__( 'Select Icon', 'buddyboss-theme' ),
 		);
 
 		return $strings;
@@ -249,13 +253,23 @@ final class Icon_Picker_Loader {
 	 * @return  void
 	 */
 	public function _enqueue_assets() {
-		$icon_picker = Icon_Picker::instance();
+		$icon_picker   = Icon_Picker::instance();
+		$enabled_types = Menu_Icons_Settings::get( 'global', 'icon_types' );
+
+		if ( ! empty( $enabled_types && is_array( $enabled_types ) ) ) {
+			$enabled_types = array_diff( $enabled_types, array( 'image', 'manage' ) );
+		}
 
 		wp_localize_script(
 			'icon-picker',
 			'iconPicker',
 			array(
-				'types' => $icon_picker->registry->get_types_for_js(),
+				'types'        => $icon_picker->registry->get_types_for_js(),
+				'enabledTypes' => $enabled_types,
+				'text'         => array(
+					'search' => esc_html__( 'Search Icons...', 'buddyboss-theme' ),
+					'search_library' => esc_html__( 'Search Library...', 'buddyboss-theme' ),
+				),
 			)
 		);
 
