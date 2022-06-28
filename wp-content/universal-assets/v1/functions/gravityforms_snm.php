@@ -6,13 +6,10 @@ add_action('gform_entry_created', 'snm_automation', 10, 2);
 //new SNM (Science Near Me) form submitted
 function snm_automation($entry, $form) {
   $form_type = rgar($form, 'form_type');
-  echo 'form type is '.$form_type.'<br/>';
 
   //the following fields must be in an array format:
   $arr_fields = array('start_datetimes', 'end_datetimes', 'opp_venue', 'opp_topics',
                       'opp_descriptor', 'tags', 'languages', 'opp_hashtags','opp_social_handles');
-
-// true/false - is_online, ticket_required, has_end
 
   if(isset($form_type) && $form_type == 'SNM'){
     $snmFieldArr = array();
@@ -113,18 +110,25 @@ function snm_automation($entry, $form) {
   }else{
     return;
   }
-  if(isset($postFields['is_online']) && $postFields['is_online']=='true') {
-    $postFields['is_online'] = true;
-  }else{
-    $postFields['is_online'] = false;
+
+  //set boolean fields to true or false
+  $boolFields = array('is_online', 'ticket_required', 'has_end');
+  foreach($boolFields as $bfield){
+    if(isset($postFields[$bfield])){
+      if($postFields[$bfield]=='true'){
+          $postFields[$bfield] = true;
+      }else{
+          $postFields[$bfield] = false;
+      }
+    }
   }
+
   //format the data to prepare to send to SNM
   $dataToSend = json_encode($postFields);
-  echo 'SNM output<br/>';
-  var_dump($dataToSend);
-  echo '<br/><br/>';
-  //die('stop here');
-  //First do the authentication
+
+  //Send to Science Near Me
+
+  //First do the authentication to get a token
   $url = "https://beta.sciencenearme.org/api/v1/partner/authorize";
 
   $post_data = '{
@@ -137,15 +141,18 @@ function snm_automation($entry, $form) {
   //did we get a token?
   if(isset($authRes->token)){
     $token = $authRes->token;
-    echo 'token is '.$token.'<br/>';
+
     $url = "https://beta.sciencenearme.org/api/v1/opportunity/";
     $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
 
     $authRes  = json_decode(postCurl($url, $headers, $dataToSend));
     if(isset($authRes->accepted) && $authRes->accepted){
+      // Write UID and slug to the entry so users can access and update
+      gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
+      gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
       echo 'The UID for this is '.$authRes->uid.'<br/>';
       echo 'The slug for this is '.$authRes->slug;
-      //TBD write UID and slug to the entry so users can access and update
+
     }else{
       var_dump($authRes);
     }
