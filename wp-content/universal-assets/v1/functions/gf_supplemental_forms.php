@@ -59,10 +59,10 @@ function gf_custom_validation($validation_result) {
     return $validation_result;
 }
 
-add_filter( 'gform_pre_render', 'populate_fields' ); //all forms
-add_filter( 'gform_pre_validation', 'populate_fields' );
-add_filter( 'gform_admin_pre_render', 'populate_fields' );
-add_filter( 'gform_pre_submission_filter', 'populate_fields' );
+add_filter( 'gform_pre_render', 'make_populate_fields' ); //all forms
+add_filter( 'gform_pre_validation', 'make_populate_fields' );
+add_filter( 'gform_admin_pre_render', 'make_populate_fields' );
+add_filter( 'gform_pre_submission_filter', 'make_populate_fields' );
 
 /*
  * this logic is for page 2 of 'linked forms'
@@ -70,7 +70,7 @@ add_filter( 'gform_pre_submission_filter', 'populate_fields' );
  *    to pull in various data from the original form submission
  */
 
-function populate_fields($form) {
+function make_populate_fields($form) {
     if (!class_exists('GFFormDisplay')) {
         return $form;
     }
