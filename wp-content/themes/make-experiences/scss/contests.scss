@@ -246,14 +246,35 @@ body:not(.logged-in) {
 .wpvc_show_contestants {
 	.wpvc_showcontestant_container {
 		margin-top: 0px;
+		.MuiGrid-container {
+			counter-reset: item;
+			.wpvc_show_style_column {
+				position: relative;
+				&::before {
+					content: counter(item) " ";
+					counter-increment: item;
+					position: absolute;
+					right: 0px;
+					top: 5px;
+					background: #ea002a;
+					color: #fff;
+					border-radius: 50px;
+					height: 40px;
+					width: 40px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+			}
+		}
 	}
-	.wpvc_card_sub_header  { display: none; }
+	.wpvc_card_sub_header, .wpvc_custom_fields_view  { display: none; }
 	.wpvc_video_contest_player {
 		height: 200px !important;
 		.fluid-width-video-wrapper {
 			margin: 0px;
 		}
 	}
+	.MuiSvgIcon-root { color: $color-red !important; }
 	.MuiCard-root.wpvc_card_row {
 		height: 100%;
 		display: flex;
