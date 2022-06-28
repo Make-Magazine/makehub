@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { __ } from '@wordpress/i18n';
 import DefaultStep from '../../components/default-step';
 import SitePreview from '../../components/site-preview';
 import { useStateValue } from '../../store/store';
@@ -63,6 +64,20 @@ const CustomizeSite = () => {
 			currentCustomizeIndex: currentCustomizeIndex - 1,
 		} );
 	};
+
+	const preventRefresh = ( event ) => {
+		event.returnValue = __(
+			'Are you sure you want to cancel the site import process?',
+			'astra-sites'
+		);
+		return event;
+	};
+
+	useEffect( () => {
+		window.addEventListener( 'beforeunload', preventRefresh ); // eslint-disable-line
+		return () =>
+			window.removeEventListener( 'beforeunload', preventRefresh ); // eslint-disable-line
+	} );
 
 	return (
 		<DefaultStep

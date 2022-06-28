@@ -132,8 +132,8 @@ ul#bp-message-thread-list .bp-message-content-wrap ul, ul#bp-message-thread-list
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
-  width: -webkit-calc(100% - 125px);
-  width: calc(100% - 125px);
+  width: -webkit-calc(100% - 125px );
+  width: calc(100% - 125px );
   float: left;
 }
 
@@ -169,12 +169,12 @@ ul#bp-message-thread-list .bp-message-content-wrap ul, ul#bp-message-thread-list
   display: inline-block;
 }
 
-.buddypanel [data-balloon][data-balloon-pos=right]::after {
+.buddypanel [data-balloon][data-balloon-pos='right']::after {
   margin-left: 8px;
   margin-top: 2px;
 }
 
-.buddypanel [data-balloon][data-balloon-pos=right]::before {
+.buddypanel [data-balloon][data-balloon-pos='right']::before {
   margin-top: 1px;
 }
 
@@ -209,40 +209,41 @@ ul#bp-message-thread-list .bp-message-content-wrap ul, ul#bp-message-thread-list
 }
 @media screen and (max-width: 1200px) {
   #content .elementor-widget-container li.product,
-#content .wp-block-woocommerce-handpicked-products li.product,
-#content .wp-block-woocommerce-product-category li.product,
-#content .wp-block-woocommerce-product-new li.product,
-#content .wp-block-woocommerce-product-on-sale li.product,
-#content .wp-block-woocommerce-product-top-rated li.product,
-#content .wp-block-woocommerce-products-by-attribute li.product,
-#content .wp-block-woocommerce-product-best-sellers li.product {
+  #content .wp-block-woocommerce-handpicked-products li.product,
+  #content .wp-block-woocommerce-product-category li.product,
+  #content .wp-block-woocommerce-product-new li.product,
+  #content .wp-block-woocommerce-product-on-sale li.product,
+  #content .wp-block-woocommerce-product-top-rated li.product,
+  #content .wp-block-woocommerce-products-by-attribute li.product,
+  #content .wp-block-woocommerce-product-best-sellers li.product {
     width: -webkit-calc(33% - 20px);
     width: calc(33% - 20px);
   }
 }
 @media screen and (max-width: 992px) {
   #content .elementor-widget-container li.product,
-#content .wp-block-woocommerce-handpicked-products li.product,
-#content .wp-block-woocommerce-product-category li.product,
-#content .wp-block-woocommerce-product-new li.product,
-#content .wp-block-woocommerce-product-on-sale li.product,
-#content .wp-block-woocommerce-product-top-rated li.product,
-#content .wp-block-woocommerce-products-by-attribute li.product,
-#content .wp-block-woocommerce-product-best-sellers li.product {
+  #content .wp-block-woocommerce-handpicked-products li.product,
+  #content .wp-block-woocommerce-product-category li.product,
+  #content .wp-block-woocommerce-product-new li.product,
+  #content .wp-block-woocommerce-product-on-sale li.product,
+  #content .wp-block-woocommerce-product-top-rated li.product,
+  #content .wp-block-woocommerce-products-by-attribute li.product,
+  #content .wp-block-woocommerce-product-best-sellers li.product {
     width: -webkit-calc(50% - 20px);
     width: calc(50% - 20px);
   }
 }
 @media screen and (max-width: 544px) {
   #content .elementor-widget-container li.product,
-#content .wp-block-woocommerce-handpicked-products li.product,
-#content .wp-block-woocommerce-product-category li.product,
-#content .wp-block-woocommerce-product-new li.product,
-#content .wp-block-woocommerce-product-on-sale li.product,
-#content .wp-block-woocommerce-product-top-rated li.product,
-#content .wp-block-woocommerce-products-by-attribute li.product,
-#content .wp-block-woocommerce-product-best-sellers li.product {
-    width: 100%;
+  #content .wp-block-woocommerce-handpicked-products li.product,
+  #content .wp-block-woocommerce-product-category li.product,
+  #content .wp-block-woocommerce-product-new li.product,
+  #content .wp-block-woocommerce-product-on-sale li.product,
+  #content .wp-block-woocommerce-product-top-rated li.product,
+  #content .wp-block-woocommerce-products-by-attribute li.product,
+  #content .wp-block-woocommerce-product-best-sellers li.product {
+    width: -webkit-calc(100%);
+    width: calc(100%);
   }
 }
 #content .elementor-search-form__container input {

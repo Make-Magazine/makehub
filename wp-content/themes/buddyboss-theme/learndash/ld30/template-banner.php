@@ -55,7 +55,7 @@ $course_slug   = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] 
 				<div class="bb-course-points">
 					<a class="anchor-course-points" href="#learndash-course-content">
 						<?php echo sprintf( esc_html_x( 'View %s details', 'link: View Course details', 'buddyboss-theme' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?>
-						<i class="bb-icons bb-icon-chevron-down"></i>
+						<i class="bb-icon-l bb-icon-angle-down"></i>
 					</a>
 				</div>
 

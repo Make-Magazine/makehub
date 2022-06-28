@@ -18,7 +18,7 @@ if ( ( isset( $_COOKIE['lessonpanel'] ) && 'closed' === $_COOKIE['lessonpanel'] 
 }
 
 $users_per_page             = apply_filters( 'buddyboss_llms_get_course_participants', 5 );
-$course_id                  = $lesson->get_parent_course();
+$course_id                  = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 $enrolled_users             = buddyboss_theme()->lifterlms_helper()->bb_theme_llms_get_users_for_course( $course_id, 1, $users_per_page );
 $total_enrolled_users_count = $enrolled_users['total'];
 $total_enrolled_users_data  = $enrolled_users['data'];
@@ -32,22 +32,25 @@ $total_enrolled_users_data  = $enrolled_users['data'];
         <div class="lifter-topic-sidebar-course-navigation">
             <div class="ld-course-navigation">
 
-				<?php if ( is_singular( 'llms_quiz' ) || is_singular( 'llms_assignment' ) ): ?>
+	            <?php if ( is_singular( 'llms_quiz' ) || is_singular( 'llms_assignment' ) ): ?>
 
-                    <a title="<?php echo get_the_title( $lessonID ); ?>" href="<?php echo get_permalink( $lessonID ); ?>" class="course-entry-link">
-                      <span>
-                           <i class="bb-icons bb-icon-chevron-left"></i>
-                           <?php _e( 'Back to Lesson', 'buddyboss-theme' ); ?>
-                      </span> </a><h2 class="course-entry-title"><?php echo get_the_title( $lessonID ); ?></h2>
-				<?php else: ?>
+		            <a title="<?php echo esc_html( get_the_title( $lessonID ) ); ?>" href="<?php echo esc_url( get_permalink( $lessonID ) ); ?>" class="course-entry-link">
+	                      <span>
+	                           <i class="bb-icons bb-icon-chevron-left"></i>
+	                           <?php esc_html_e( 'Back to Lesson', 'buddyboss-theme' ); ?>
+	                      </span>
+		            </a>
+		            <h2 class="course-entry-title"><?php echo esc_html( get_the_title( $lessonID ) ); ?></h2>
+	            <?php else: ?>
 
-                    <a title="<?php echo get_the_title( $lesson->get_parent_course() ); ?>" href="<?php echo get_permalink( $lesson->get_parent_course() ); ?>" class="course-entry-link">
-                      <span>
-                           <i class="bb-icons bb-icon-chevron-left"></i>
-                           <?php _e( 'Back to Course', 'buddyboss-theme' ); ?>
-                      </span> </a>
-                    <h2 class="course-entry-title"><?php echo get_the_title( $lesson->get_parent_course() ); ?></h2>
-				<?php endif; ?>
+		            <a title="<?php echo esc_html( get_the_title( $course_id ) ); ?>" href="<?php echo esc_url( get_permalink( $course_id ) ); ?>" class="course-entry-link">
+	                      <span>
+	                           <i class="bb-icons bb-icon-chevron-left"></i>
+	                           <?php esc_html_e( 'Back to Course', 'buddyboss-theme' ); ?>
+	                      </span>
+		            </a>
+		            <h2 class="course-entry-title"><?php echo esc_html( get_the_title( $course_id ) ); ?></h2>
+	            <?php endif; ?>
             </div>
         </div>
 
@@ -143,7 +146,7 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 			        if( $total_enrolled_users_count > 5 ) {
 				        ?>
                         <a href="javascript:void(0);" class="list-members-extra list-members-extra--llms lme-more--llms">
-                            <span class="members-count-g"></span> <?php _e( 'Show more', 'buddyboss-theme' ); ?><i class="bb-icons bb-icon-chevron-down"></i>
+                            <span class="members-count-g"></span> <?php _e( 'Show more', 'buddyboss-theme' ); ?><i class="bb-icon-l bb-icon-angle-down"></i>
                         </a>
 				        <?php
 			        }

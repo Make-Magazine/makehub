@@ -14,7 +14,7 @@
 .gamipress-achievement-attached,
 .gamipress-rank-requirements {
   margin-bottom: 20px;
-  border-bottom: 1px dotted #E7E9EC;
+  border-bottom: 1px dotted var(--bb-content-border-color);
 }
 .gamipress-achievement-attached .gamipress-open-close-switch > a,
 .gamipress-rank-requirements .gamipress-open-close-switch > a {
@@ -28,7 +28,7 @@
   padding: 5px 0;
   font-size: 12px;
   text-transform: uppercase;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievement-attached .gamipress-open-close-switch > a:after,
 .gamipress-rank-requirements .gamipress-open-close-switch > a:after {
@@ -36,7 +36,7 @@
   margin-right: auto;
   background: transparent;
   background-image: none;
-  background-color: #EEF0F3;
+  background-color: var(--bb-content-alternate-background-color);
   border-radius: 100%;
   font-family: "bb-icons";
   display: inline-block;
@@ -55,18 +55,18 @@
   line-height: 20px;
   vertical-align: top;
   text-align: center;
-  -webkit-transition: color 0.1s ease-in 0;
-          transition: color 0.1s ease-in 0;
-  color: #A3A5A9;
+  -webkit-transition: color .1s ease-in 0;
+          transition: color .1s ease-in 0;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievement-attached .gamipress-open-close-switch > a.show-hide-open:after,
 .gamipress-rank-requirements .gamipress-open-close-switch > a.show-hide-open:after {
-  content: "\e879";
+  content: '\e826';
   line-height: 21px;
 }
 .gamipress-achievement-attached .gamipress-open-close-switch > a.show-hide-close:after,
 .gamipress-rank-requirements .gamipress-open-close-switch > a.show-hide-close:after {
-  content: "\e87c";
+  content: '\e87c';
   -webkit-transform: none;
       -ms-transform: none;
           transform: none;
@@ -75,8 +75,7 @@
 .gamipress-rank-requirements .gamipress-extras-window {
   margin-top: 10px;
 }
-.gamipress-achievement-attached .gamipress-extras-window h4,
-.gamipress-rank-requirements .gamipress-extras-window h4 {
+.gamipress-achievement-attached .gamipress-extras-window h4, .gamipress-rank-requirements .gamipress-extras-window h4 {
   font-size: 14px;
   margin-bottom: 5px;
 }
@@ -95,14 +94,13 @@ body.buddypress .gamipress-rank-requirements .gamipress-extras-window h4 {
   padding-top: 5px;
 }
 
-ul.gamipress-achievement-earners-list li,
-ul.gamipress-rank-earners-list li {
+ul.gamipress-achievement-earners-list li, ul.gamipress-rank-earners-list li {
   margin: 0 0 10px 10px;
   text-align: center;
   width: 105px;
-  border-radius: 4px;
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
+  border-radius: var(--bb-block-radius-inner);
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
   padding: 15px;
 }
 ul.gamipress-achievement-earners-list li:hover,
@@ -182,12 +180,13 @@ p.gamipress-coupons-redeem-coupon-form-submit,
 
 .gamipress-referrals-referral-url-generator {
   font-family: inherit;
+  background-color: var(--bb-content-background-color);
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 2rem;
   margin-bottom: 2rem;
   margin-top: 2rem;
 }
-.gamipress-referrals-referral-url-generator input[type=text] {
+.gamipress-referrals-referral-url-generator input[type="text"] {
   width: 400px;
   max-width: 100%;
 }
@@ -217,23 +216,23 @@ p.gamipress-coupons-redeem-coupon-form-submit,
 .gamipress-achievement,
 .gamipress-rank {
   padding: 20px;
-  background-color: #fff;
-  border: 1px solid #e7e9ec;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
   font-size: 14px;
   line-height: 24px;
-  border-radius: 4px;
+  border-radius: var(--bb-block-radius);
 }
 
 .gamipress-transfers-achievement-transfer-form-achievement-input + .ui-autocomplete,
 .gamipress-transfers-rank-transfer-form-rank-input + .ui-autocomplete {
-  background-color: #fff;
+  background-color: var(--bb-content-background-color);
 }
 
 body .gamipress-restrict-content-limiter {
   background: transparent;
-  background: -webkit-linear-gradient(transparent, #fafbfd);
-  background: -webkit-gradient(linear, right top, right bottom, from(transparent), to(#fafbfd));
-  background: linear-gradient(transparent, #fafbfd);
+  background: -webkit-linear-gradient(transparent, var(--bb-body-background-color));
+  background: -webkit-gradient(linear, right top, right bottom, from(transparent), to(var(--bb-body-background-color)));
+  background: linear-gradient(transparent, var(--bb-body-background-color));
 }
 
 .gamipress-rewards-calendar-rewards {
@@ -296,11 +295,11 @@ body .gamipress-restrict-content-limiter {
   padding: 3px 4px 3px 9px;
   box-shadow: 0 1px 2px rgba(18, 43, 70, 0.12);
   font-size: 13px;
-  color: #4D5C6D;
+  color: var(--bb-body-text-color);
   background-color: #fff;
   line-height: 1.5;
-  -webkit-transition: all ease 0.3s;
-          transition: all ease 0.3s;
+  -webkit-transition: all ease .3s;
+          transition: all ease .3s;
 }
 #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-points > div:hover,
 #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievement:hover,
@@ -344,19 +343,19 @@ body .gamipress-restrict-content-limiter {
     margin: 5px 0 15px;
   }
   #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-points,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievements,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-ranks {
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievements,
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-ranks {
     display: inline;
   }
   #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-points > div,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievement,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-ranks .gamipress-bbpress-rank {
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievement,
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-ranks .gamipress-bbpress-rank {
     padding: 2px 3px 2px 7px;
     font-size: 11px;
   }
   #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-points-type,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievement,
-#bbpress-forums .bbp-after-author-hook .gamipress-bbpress-rank {
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-achievement,
+  #bbpress-forums .bbp-after-author-hook .gamipress-bbpress-rank {
     margin-bottom: 5px;
   }
 }
@@ -429,16 +428,15 @@ body .gamipress-restrict-content-limiter {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border: 1px solid #e7e9ec;
-  border-radius: 20px;
+  border: 1px solid var(--bb-content-border-color);
   padding: 3px 4px 3px 9px;
   box-shadow: 0 1px 2px rgba(18, 43, 70, 0.12);
   font-size: 13px;
-  color: #4D5C6D;
-  background-color: #fff;
+  color: var(--bb-body-text-color);
+  background-color: var(--bb-content-background-color);
   line-height: 1.5;
-  -webkit-transition: all ease 0.3s;
-          transition: all ease 0.3s;
+  -webkit-transition: all ease .3s;
+          transition: all ease .3s;
 }
 .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points > div:hover,
 .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement:hover,
@@ -540,46 +538,50 @@ body .gamipress-restrict-content-limiter {
 }
 @media screen and (max-width: 1180px) {
   .acomment-content .gamipress-buddypress-user-details-activity,
-.activity-content .gamipress-buddypress-user-details-activity,
-.item-avatar .gamipress-buddypress-user-details-listing {
+  .activity-content .gamipress-buddypress-user-details-activity,
+  .item-avatar .gamipress-buddypress-user-details-listing {
     display: inline-block;
     width: 100%;
     margin: 5px 0 15px;
   }
   .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievements,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievements,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievements,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-ranks {
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievements,
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievements,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievements,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-ranks {
     display: inline;
   }
   .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points > div,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks .gamipress-buddypress-rank,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points > div,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks .gamipress-buddypress-rank,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points > div,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievement,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-ranks .gamipress-buddypress-rank {
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks .gamipress-buddypress-rank,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points > div,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-ranks .gamipress-buddypress-rank,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points > div,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievement,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-ranks .gamipress-buddypress-rank {
     padding: 2px 3px 2px 7px;
     font-size: 11px;
   }
   .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points-type,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
-.acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-rank,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points-type,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
-.activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-rank,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points-type,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievement,
-.item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-rank {
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
+  .acomment-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-rank,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-points-type,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-achievement,
+  .activity-content .gamipress-buddypress-user-details-activity .gamipress-buddypress-rank,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-points-type,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-achievement,
+  .item-avatar .gamipress-buddypress-user-details-listing .gamipress-buddypress-rank {
     margin-bottom: 5px;
   }
+}
+
+.gamipress-buddypress-points .gamipress-buddypress-points-type {
+  border-radius: 20px;
 }
 
 .activity-content .gamipress-achievement.user-has-earned {
@@ -622,16 +624,15 @@ body .gamipress-restrict-content-limiter {
 #buddypress .users-header .gamipress-buddypress-points .gamipress-buddypress-points-type,
 #buddypress .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement {
   vertical-align: middle;
-  border: 1px solid #e7e9ec;
-  border-radius: 20px;
+  border: 1px solid var(--bb-content-border-color);
   padding: 3px 4px 3px 9px;
   box-shadow: 0 1px 2px rgba(18, 43, 70, 0.12);
   font-size: 13px;
-  color: #4D5C6D;
+  color: var(--bb-body-text-color);
   margin-left: 5px;
-  background-color: #fff;
-  -webkit-transition: all ease 0.3s;
-          transition: all ease 0.3s;
+  background-color: var(--bb-content-background-color);
+  -webkit-transition: all ease .3s;
+          transition: all ease .3s;
 }
 #buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank:hover,
 #buddypress .users-header .gamipress-buddypress-points .gamipress-buddypress-points-type:hover,
@@ -645,7 +646,7 @@ body .gamipress-restrict-content-limiter {
 #buddypress .users-header .gamipress-buddypress-points span.activity,
 #buddypress .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement-title,
 #buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank-title {
-  color: #4D5C6D;
+  color: var(--bb-body-text-color);
   font-size: 13px;
   vertical-align: middle;
 }
@@ -683,8 +684,8 @@ body .gamipress-restrict-content-limiter {
 }
 @media screen and (max-width: 540px) {
   #buddypress .users-header .gamipress-buddypress-points span.activity,
-#buddypress .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement-title,
-#buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank-title {
+  #buddypress .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement-title,
+  #buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank-title {
     font-size: 11px;
   }
 }
@@ -716,7 +717,7 @@ body.hide-overflow {
   z-index: 999901;
 }
 .buddypress.widget .GamiPress-data-popup.is_active .gamipress-buddypress-user-details-listing {
-  display: block;
+  display: block !important;
   background-color: #fff;
   padding: 20px 20px 10px 20px;
   border: 1px solid #d2d4d6;
@@ -742,8 +743,8 @@ body.hide-overflow {
 }
 .buddypress.widget .showGamipressData {
   position: absolute;
-  left: 0;
   bottom: 0;
+  left: 0;
   background-color: #fff;
   border-radius: 100%;
   display: -webkit-box;
@@ -763,7 +764,7 @@ body.hide-overflow {
   height: 14px !important;
   width: 14px !important;
 }
-.buddypress.widget .showGamipressData .bb-icon {
+.buddypress.widget .showGamipressData [class*=" bb-icon-"] {
   font-size: 12px;
   color: #000;
 }
@@ -775,8 +776,8 @@ body.hide-overflow {
 
 .gamipress-achievement-congratulations {
   padding: 20px;
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
   font-size: 14px;
   line-height: 24px;
 }
@@ -792,10 +793,10 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
   margin-bottom: 15px;
 }
 .gamipress-achievement-description .gamipress-achievement-title a {
-  color: #122B46;
+  color: var(--bb-headings-color);
 }
 .gamipress-achievement-description .gamipress-achievement-title a:hover {
-  color: #007CFF;
+  color: var(--bb-primary-color);
 }
 .gamipress-achievement-description .gamipress-achievement-title + .gamipress-achievement-excerpt {
   margin-top: 15px;
@@ -805,11 +806,11 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
   font-size: 14px;
   line-height: 24px;
   margin-bottom: 15px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievement-description ol.gamipress-required-achievements li {
   font-size: 14px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievements-list .gamipress-achievement-description ol.gamipress-required-achievements li.user-has-not-earned {
   text-decoration: none;
@@ -820,13 +821,13 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
 }
 .gamipress-achievement-description ul.gamipress-required-achievements li {
   font-size: 14px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievements-list .gamipress-achievement-description ul.gamipress-required-achievements li.user-has-not-earned {
   text-decoration: none;
 }
 .gamipress-achievement-description ul.gamipress-required-achievements li:before {
-  content: "\e841";
+  content: '\ef32';
   font-family: "bb-icons";
   display: inline-block;
   line-height: 1;
@@ -848,11 +849,13 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
   margin-left: 10px;
   position: relative;
   top: 3px;
-  background-color: #EEF0F3;
+  background-color: var(--bb-content-alternate-background-color);
   border-radius: 100%;
 }
 .gamipress-achievement-description ul.gamipress-required-achievements li.user-has-earned:before {
-  content: "\e842";
+  content: '\ef32';
+  font-family: 'bb-icons';
+  font-weight: 300;
 }
 
 .single-achievement.gamipress-layout-none .gamipress-achievement-image {
@@ -957,7 +960,7 @@ body.buddypress .gamipress-achievement-description .gamipress-achievement-title 
   font-size: 14px;
   line-height: 24px;
   margin-bottom: 15px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 
 button.gamipress-achievement-unlock-with-points-button {
@@ -974,27 +977,27 @@ button.gamipress-achievement-unlock-with-points-button {
     margin-left: auto;
   }
 }
-.gamipress-achievements-list #gamipress-achievements-container[class*=gamipress-columns] {
+.gamipress-achievements-list #gamipress-achievements-container[class*="gamipress-columns"] {
   margin-right: auto;
   margin-left: auto;
 }
-.gamipress-achievements-list #gamipress-achievements-container[class*=gamipress-columns] > .gamipress-achievement {
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
-  border-radius: 4px;
+.gamipress-achievements-list #gamipress-achievements-container[class*="gamipress-columns"] > .gamipress-achievement {
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: var(--bb-block-radius);
   margin-right: 10px;
   margin-left: 10px;
   -ms-flex-item-align: normal;
       align-self: normal;
 }
 @media screen and (max-width: 800px) {
-  .gamipress-achievements-list #gamipress-achievements-container[class*=gamipress-columns] > .gamipress-achievement {
+  .gamipress-achievements-list #gamipress-achievements-container[class*="gamipress-columns"] > .gamipress-achievement {
     margin-right: 0;
     margin-left: 0;
     padding: 20px;
   }
 }
-.gamipress-achievements-list #gamipress-achievements-container[class*=gamipress-columns] > .gamipress-achievement.gamipress-layout-top {
+.gamipress-achievements-list #gamipress-achievements-container[class*="gamipress-columns"] > .gamipress-achievement.gamipress-layout-top {
   -ms-flex-flow: nowrap;
       flex-flow: nowrap;
   -webkit-box-orient: vertical;
@@ -1002,14 +1005,14 @@ button.gamipress-achievement-unlock-with-points-button {
       -ms-flex-direction: column;
           flex-direction: column;
 }
-.gamipress-achievements-list #gamipress-achievements-container[class*=gamipress-columns] > .gamipress-achievement.gamipress-layout-none {
+.gamipress-achievements-list #gamipress-achievements-container[class*="gamipress-columns"] > .gamipress-achievement.gamipress-layout-none {
   margin-bottom: 20px;
 }
 
 .entry-content > .gamipress-achievement {
   padding: 20px;
   background-color: #fff;
-  border: 1px solid #E7E9EC;
+  border: 1px solid var(--bb-content-border-color);
   font-size: 14px;
   line-height: 24px;
   border-radius: 4px;
@@ -1026,7 +1029,7 @@ button.gamipress-achievement-unlock-with-points-button {
 .gamipress-rank-congratulations {
   padding: 20px;
   background-color: #fff;
-  border: 1px solid #E7E9EC;
+  border: 1px solid var(--bb-content-border-color);
   font-size: 14px;
   line-height: 24px;
 }
@@ -1038,10 +1041,10 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   margin-bottom: 15px;
 }
 .gamipress-rank-description .gamipress-rank-title a {
-  color: #122B46;
+  color: var(--bb-headings-color);
 }
 .gamipress-rank-description .gamipress-rank-title a:hover {
-  color: #007CFF;
+  color: var(--bb-primary-color);
 }
 .gamipress-rank-description ul.gamipress-required-requirements {
   list-style: none;
@@ -1049,13 +1052,13 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
 }
 .gamipress-rank-description ul.gamipress-required-requirements li {
   font-size: 14px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-achievements-list .gamipress-rank-description ul.gamipress-required-requirements li.user-has-not-earned {
   text-decoration: none;
 }
 .gamipress-rank-description ul.gamipress-required-requirements li:before {
-  content: "\e841";
+  content: '\ef32';
   font-family: "bb-icons";
   display: inline-block;
   line-height: 1;
@@ -1081,7 +1084,9 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   border-radius: 100%;
 }
 .gamipress-rank-description ul.gamipress-required-requirements li.user-has-earned:before {
-  content: "\e842";
+  content: '\ef32';
+  font-family: 'bb-icons';
+  font-weight: 300;
 }
 
 .gamipress-ranks-list .gamipress-ranks-container.gamipress-columns-1 > .gamipress-rank {
@@ -1143,14 +1148,14 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   margin-bottom: 0;
 }
 
-.gamipress-ranks-list .gamipress-ranks-container[class*=gamipress-columns] {
+.gamipress-ranks-list .gamipress-ranks-container[class*="gamipress-columns"] {
   margin-right: -10px;
   margin-left: -10px;
 }
-.gamipress-ranks-list .gamipress-ranks-container[class*=gamipress-columns] .gamipress-rank {
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
-  border-radius: 4px;
+.gamipress-ranks-list .gamipress-ranks-container[class*="gamipress-columns"] .gamipress-rank {
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: var(--bb-block-radius);
   margin-right: 10px;
   margin-left: 10px;
   -ms-flex-item-align: normal;
@@ -1158,13 +1163,13 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   padding: 30px 20px;
 }
 @media screen and (max-width: 800px) {
-  .gamipress-ranks-list .gamipress-ranks-container[class*=gamipress-columns] .gamipress-rank {
+  .gamipress-ranks-list .gamipress-ranks-container[class*="gamipress-columns"] .gamipress-rank {
     margin-right: 0;
     margin-left: 0;
     padding: 20px;
   }
 }
-.gamipress-ranks-list .gamipress-ranks-container[class*=gamipress-columns] .gamipress-rank.gamipress-layout-top {
+.gamipress-ranks-list .gamipress-ranks-container[class*="gamipress-columns"] .gamipress-rank.gamipress-layout-top {
   -ms-flex-flow: nowrap;
       flex-flow: nowrap;
   -webkit-box-orient: vertical;
@@ -1172,7 +1177,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
       -ms-flex-direction: column;
           flex-direction: column;
 }
-.gamipress-ranks-list .gamipress-ranks-container[class*=gamipress-columns] .gamipress-rank.gamipress-layout-none {
+.gamipress-ranks-list .gamipress-ranks-container[class*="gamipress-columns"] .gamipress-rank.gamipress-layout-none {
   margin-bottom: 20px;
 }
 
@@ -1182,11 +1187,11 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
 }
 .gamipress-user-ranks .gamipress-rank {
   padding: 20px;
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
   font-size: 14px;
   line-height: 24px;
-  border-radius: 4px;
+  border-radius: var(--bb-block-radius);
   margin-right: 10px;
   margin-left: 10px;
   -ms-flex-item-align: normal;
@@ -1227,7 +1232,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
 
 .gamipress-user-points .gamipress-user-points-amount {
   font-weight: 500;
-  color: #122B46;
+  color: var(--bb-headings-color);
 }
 
 .gamipress-user-points:not(.gamipress-layout-none) {
@@ -1242,9 +1247,9 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
       -ms-flex: 0 0 25%;
           flex: 0 0 25%;
   max-width: 25%;
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
-  border-radius: 4px;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: var(--bb-block-radius);
   margin-right: 10px;
   margin-left: 10px;
   margin-top: 20px;
@@ -1267,7 +1272,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   margin: 12px 0;
 }
 .gamipress-user-points:not(.gamipress-layout-none) .gamipress-points .gamipress-user-points-label {
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 @media screen and (max-width: 992px) {
   .gamipress-user-points:not(.gamipress-layout-none) .gamipress-points {
@@ -1275,6 +1280,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
         -ms-flex: 0 0 33.33%;
             flex: 0 0 33.33%;
     max-width: 33.33%;
+    padding: 1em;
   }
 }
 @media screen and (max-width: 800px) {
@@ -1327,17 +1333,17 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   margin-right: -10px;
   margin-left: -10px;
 }
-.gamipress-points-types[class*=gamipress-columns] > .gamipress-points-type {
-  border-bottom: 1px solid #E7E9EC;
+.gamipress-points-types[class*="gamipress-columns"] > .gamipress-points-type {
+  border-bottom: 1px solid var(--bb-content-border-color);
 }
 .gamipress-points-types:not(.gamipress-layout-none) .gamipress-points-type {
   -ms-flex-item-align: normal;
       align-self: normal;
 }
 .gamipress-points-types .gamipress-points-type {
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
-  border-radius: 4px;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: var(--bb-block-radius);
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 20px;
@@ -1379,7 +1385,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   padding: 5px 0;
   font-size: 12px;
   text-transform: uppercase;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-points-types .gamipress-open-close-switch a.show-hide-open:after,
 .gamipress-points-types .gamipress-open-close-switch a.show-hide-close:after {
@@ -1406,16 +1412,16 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
   line-height: 20px;
   vertical-align: top;
   text-align: center;
-  -webkit-transition: color 0.1s ease-in 0;
-          transition: color 0.1s ease-in 0;
-  color: #A3A5A9;
+  -webkit-transition: color .1s ease-in 0;
+          transition: color .1s ease-in 0;
+  color: var(--bb-alternate-text-color);
 }
 .gamipress-points-types .gamipress-open-close-switch a.show-hide-open:after {
-  content: "\e879";
+  content: '\e826';
   line-height: 21px;
 }
 .gamipress-points-types .gamipress-open-close-switch a.show-hide-close:after {
-  content: "\e87c";
+  content: '\e87c';
   -webkit-transform: none;
       -ms-transform: none;
           transform: none;
@@ -1437,7 +1443,7 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
 }
 .gamipress-points-types .gamipress-extras-window .gamipress-points-awards li:before,
 .gamipress-points-types .gamipress-extras-window .gamipress-points-deducts li:before {
-  content: "\e841";
+  content: '\ef32';
   font-family: "bb-icons";
   display: inline-block;
   line-height: 1;
@@ -1464,7 +1470,9 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
 }
 .gamipress-points-types .gamipress-extras-window .gamipress-points-awards li.user-has-earned:before,
 .gamipress-points-types .gamipress-extras-window .gamipress-points-deducts li.user-has-earned:before {
-  content: "\e842";
+  content: '\ef32';
+  font-family: 'bb-icons';
+  font-weight: 300;
 }
 
 table.gamipress-earnings-table {
@@ -1482,7 +1490,7 @@ table.gamipress-earnings-table thead th {
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 500;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
   white-space: nowrap;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -1547,11 +1555,11 @@ table.gamipress-earnings-table tbody td.gamipress-earnings-col-thumbnail img.gam
 }
 table.gamipress-earnings-table tbody td.gamipress-earnings-col-date {
   font-size: 13px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 table.gamipress-earnings-table tbody td.gamipress-earnings-col-points {
   font-size: 13px;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 
 .gamipress-earnings-pagination {
@@ -1607,6 +1615,7 @@ table.gamipress-earnings-table tbody td.gamipress-earnings-col-points {
 .users-header .gamipress-buddypress-achievements .gamipress-buddypress-achievement-type-label {
   margin-left: 10px;
   font-weight: 500;
+  color: var(--bb-headings-color);
 }
 .users-header .gamipress-buddypress-achievements img.gamipress-achievement-thumbnail {
   border-radius: 100%;
@@ -1638,7 +1647,7 @@ table.gamipress-earnings-table tbody td.gamipress-earnings-col-points {
   font-weight: 500;
 }
 #buddypress .users-header .gamipress-buddypress-ranks .gamipress-buddypress-rank-label {
-  color: #122B46;
+  color: var(--bb-headings-color);
 }
 .users-header .gamipress-buddypress-ranks img.gamipress-rank-thumbnail {
   border-radius: 100%;
@@ -1647,6 +1656,7 @@ table.gamipress-earnings-table tbody td.gamipress-earnings-col-points {
 .users-header .gamipress-buddypress-rank-title {
   margin-left: 10px;
 }
+.users-header .item-meta .gamipress-buddypress-user-details-top,
 .users-header .item-meta .gamipress-buddypress-points,
 .users-header .item-meta .gamipress-buddypress-achievements,
 .users-header .item-meta .gamipress-buddypress-ranks {

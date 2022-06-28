@@ -153,9 +153,9 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 								for ( $i = 1; $i <= $totalPages; $i ++ ) {
 									if ( $i <> $page ) {
-										echo "<span><a id='page_a_link' href='?ld-profile-page=$i'>$i</a></span>";
+										echo "<span><a id='page_a_link' class='page-numbers' href='?ld-profile-page=$i'>$i</a></span>";
 									} else {
-										echo "<span id='page_links' style='font-weight: bold;'>$i</span>";
+										echo "<span id='page_links' class='page-numbers current' style='font-weight: bold;'>$i</span>";
 									}
 								}
 

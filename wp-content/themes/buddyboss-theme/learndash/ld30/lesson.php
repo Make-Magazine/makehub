@@ -45,7 +45,7 @@ if ( empty( $course_id ) ) {
 		$course_id = (int) buddyboss_theme()->learndash_helper()->ld_30_get_course_id( $lesson_data->ID );
 	}
 }
-$lession_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1, 'orderby' => 'menu_order' ) );
+$lession_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
 $content_urls            = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination( $course_id, $lession_list );
 $pagination_urls         = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url( $content_urls );
@@ -115,7 +115,7 @@ if ( empty( $course ) ) {
 							<div class="flex bb-position">
 								<div class="sfwd-course-position">
 									<span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'lesson' ); ?> <?php echo $lesson_no; ?> <span
-												class="bb-total"><?php esc_html_e( 'of', 'buddyboss-theme' ); ?><?php echo count( $lession_list ); ?></span></span>
+												class="bb-total"><?php esc_html_e( 'of', 'buddyboss-theme' ); ?> <?php echo count( $lession_list ); ?></span></span>
 								</div>
 								<div class="sfwd-course-nav">
 									<div class="bb-ld-status">
@@ -136,7 +136,7 @@ if ( empty( $course ) ) {
 										?>
 										<div class="sfwd-course-expire">
 											<span data-balloon-pos="up" data-balloon="<?php echo $expire_string; ?>"><i
-														class="bb-icons bb-icon-watch-alarm"></i><?php echo $expire_date; ?></span>
+														class="bb-icon-l bb-icon-alarm"></i><?php echo $expire_date; ?></span>
 										</div>
 									<?php } ?>
 									<div class="learndash_next_prev_link">

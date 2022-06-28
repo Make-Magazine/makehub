@@ -81,7 +81,7 @@ class BBP_Forums_Activity extends Widget_Base {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-		
+
 		$this->start_controls_section(
 			'section_content_layout',
 			[
@@ -115,7 +115,7 @@ class BBP_Forums_Activity extends Widget_Base {
 				'default' => 'yes',
 			]
 		);
-		
+
 		$this->add_control(
 			'switch_excerpt_icon',
 			[
@@ -859,16 +859,16 @@ class BBP_Forums_Activity extends Widget_Base {
 	 */
 	protected function render() {
 
-		$settings = $this->get_settings_for_display(); 
+		$settings = $this->get_settings_for_display();
 		$my_discussions_link = trailingslashit( bp_loggedin_user_domain() . bbp_maybe_get_root_slug() );
 		?>
 
-		
+
 		<div class="bb-forums-activity-wrapper <?php echo ( $settings['switch_my_discussions'] ) ? 'bb-forums-activity-wrapper--ismy' : ''; ?>">
 
 			<?php if ( $settings['switch_my_discussions'] && is_user_logged_in() ) { ?>
 				<div class="bb-forums-activity-btn">
-					<a class="bb-forums-activity-btn__link" href="<?php echo $my_discussions_link; ?>"><?php echo $settings['my_discussions_button_text']; ?><i class="bb-icon-angle-right"></i></a>
+					<a class="bb-forums-activity-btn__link" href="<?php echo esc_url( $my_discussions_link ); ?>"><?php echo wp_kses_post( $settings['my_discussions_button_text'] ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a>
 				</div>
 			<?php } ?>
 
@@ -965,7 +965,7 @@ class BBP_Forums_Activity extends Widget_Base {
 					endwhile;
 
 				} else { ?>
-				
+
 					<div class="bb-no-data bb-no-data--fa-activity">
 						<img class="bb-no-data__image" src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/dfy-no-data-icon03.svg" alt="Forums Activity" />
 						<div class="bb-no-data__msg"><?php echo esc_html( $settings['no_forums_paragraph_text'] ); ?></div>
@@ -977,7 +977,7 @@ class BBP_Forums_Activity extends Widget_Base {
 				<?php }
 
 			} else { ?>
-				
+
 				<div class="bb-no-data bb-no-data--fa-activity">
 					<img class="bb-no-data__image" src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/dfy-no-data-icon03.svg" alt="Forums Activity" />
 					<div class="bb-no-data__msg"><?php _e( 'You are not logged in.', 'buddyboss-theme' ); ?></div>
@@ -1005,6 +1005,6 @@ class BBP_Forums_Activity extends Widget_Base {
 	 * @access protected
 	 */
 	/*protected function _content_template() {
-		
+
 	}*/
 }

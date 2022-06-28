@@ -3,13 +3,15 @@ Contributors: embedplus
 Plugin Name: Embed Plus Plugin for YouTube, with YouTube Gallery, Channel, Playlist, Live Stream, Facade
 Tags: youtube gallery, youtube wordpress plugin, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, lazy load, facade
 Requires at least: 4.5
-Tested up to: 5.9
-Stable tag: 14.1
+Tested up to: 6.0
+Stable tag: 14.1.1
 License: GPLv3 or later
 
 YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube livestream. Defer JavaScript
 
 == Description ==
+
+https://www.youtube.com/watch?v=QDdvXBqfrzM
 
 **YouTube WordPress Plugin** to embed and customize a YouTube gallery (channel or playlist),  YouTube livestream (and premiere), YouTube short, or standard YouTube video. This YouTube WordPress plugin can be customized in a wide variety of ways. The plugin also focuses on performance with the ability to lazy load with a facade and defer JavaScript while serving minified CSS and JavaScript. Here are a few recently added features to all versions (free and Pro) of this WordPress plugin:
 
@@ -186,6 +188,12 @@ Assuming you already have the EmbedPlus plugin active, you can embed a YouTube s
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 14.1.1 =
+* Better compatability with WordPress 6.0
+* Easier channel live stream wizard
+* Cleaner uninstalls
+* Add intro helper video
 
 = Embed Plus for YouTube WordPress Plugin 14.1 =
 * Adds the live stream fallback feature to channel-based live stream embeds

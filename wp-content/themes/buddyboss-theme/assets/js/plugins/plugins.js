@@ -20,8 +20,8 @@
                     adaptiveHeight: true,
                     arrows: true,
                     //appendArrows: $( '.bp-search-results-wrapper .search_filters' ),
-                    prevArrow: '<span class="bb-slide-prev"><i class="bb-icon-angle-left"></i></span>',
-                    nextArrow: '<span class="bb-slide-next"><i class="bb-icon-angle-right"></i></span>',
+                    prevArrow: '<span class="bb-slide-prev"><i class="bb-icon-l bb-icon-angle-left"></i></span>',
+                    nextArrow: '<span class="bb-slide-next"><i class="bb-icon-l bb-icon-angle-right"></i></span>',
                     responsive: [
                         {
                             breakpoint: 1280,

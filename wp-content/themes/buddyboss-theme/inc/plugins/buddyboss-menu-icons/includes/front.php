@@ -25,17 +25,17 @@ final class Menu_Icons_Front_End {
 	 * @var    array
 	 */
 	protected static $default_style = array(
-		'font_size'      => array(
+		'font_size_amount' => array(
 			'property' => 'font-size',
-			'value'    => '20',
+			'value'    => '24',
 			'unit'     => 'px',
 		),
-		'vertical_align' => array(
+		'vertical_align'   => array(
 			'property' => 'vertical-align',
 			'value'    => 'middle',
 			'unit'     => null,
 		),
-		'svg_width'      => array(
+		'svg_width'        => array(
 			'property' => 'width',
 			'value'    => '1',
 			'unit'     => 'em',
@@ -50,7 +50,6 @@ final class Menu_Icons_Front_End {
 	 * @var    string
 	 */
 	protected static $hidden_label_class = 'visuallyhidden';
-
 
 	/**
 	 * Add hooks for front-end functionalities
@@ -93,32 +92,34 @@ final class Menu_Icons_Front_End {
 		add_filter( 'wp_nav_menu', array( __CLASS__, '_remove_menu_item_title_filter' ) );
 	}
 
-
 	/**
 	 * Get nav menu ID based on arguments passed to wp_nav_menu()
 	 *
 	 * @since Menu Icons 0.3.0
-	 * @param  array $args wp_nav_menu() Arguments
+	 * @param  array $args wp_nav_menu() Arguments.
 	 * @return mixed Nav menu ID or FALSE on failure
 	 */
 	public static function get_nav_menu_id( $args ) {
-		$args = (object) $args;
-		$menu = wp_get_nav_menu_object( $args->menu );
+		$args      = (object) $args;
+		$menu      = wp_get_nav_menu_object( $args->menu );
+		$locations = get_nav_menu_locations();
 
-		// Get the nav menu based on the theme_location
-		if ( ! $menu
+		// Get the nav menu based on the theme_location.
+		if (
+			! $menu
 			&& $args->theme_location
-			&& ( $locations = get_nav_menu_locations() )
+			&& ! empty( $locations )
 			&& isset( $locations[ $args->theme_location ] )
 		) {
 			$menu = wp_get_nav_menu_object( $locations[ $args->theme_location ] );
 		}
 
-		// get the first menu that has items if we still can't find a menu
+		// get the first menu that has items if we still can't find a menu.
 		if ( ! $menu && ! $args->theme_location ) {
 			$menus = wp_get_nav_menus();
 			foreach ( $menus as $menu_maybe ) {
-				if ( $menu_items = wp_get_nav_menu_items( $menu_maybe->term_id, array( 'update_post_term_cache' => false ) ) ) {
+				$menu_items = wp_get_nav_menu_items( $menu_maybe->term_id, array( 'update_post_term_cache' => false ) );
+				if ( $menu_items ) {
 					$menu = $menu_maybe;
 					break;
 				}
@@ -131,7 +132,6 @@ final class Menu_Icons_Front_End {
 			return false;
 		}
 	}
-
 
 	/**
 	 * Enqueue stylesheets
@@ -148,16 +148,16 @@ final class Menu_Icons_Front_End {
 		}
 	}
 
-
 	/**
 	 * Add filter to 'the_title' hook
 	 *
 	 * We need to filter the menu item title but **not** regular post titles.
 	 * Thus, we're adding the filter when `wp_nav_menu()` is called.
 	 *
-	 * @since Menu Icons  0.1.0
+	 * @since   Menu Icons  0.1.0
 	 * @wp_hook filter wp_nav_menu_args
-	 * @param   array  $args Not used.
+	 *
+	 * @param array $args Not used.
 	 *
 	 * @return array
 	 */
@@ -167,16 +167,17 @@ final class Menu_Icons_Front_End {
 		return $args;
 	}
 
-
 	/**
 	 * Remove filter from 'the_title' hook
 	 *
 	 * Because we don't want to filter post titles, we need to remove our
 	 * filter when `wp_nav_menu()` exits.
 	 *
-	 * @since Menu Icons  0.1.0
+	 * @since   Menu Icons  0.1.0
 	 * @wp_hook filter wp_nav_menu
-	 * @param   array  $nav_menu Not used.
+	 *
+	 * @param array $nav_menu Not used.
+	 *
 	 * @return  array
 	 */
 	public static function _remove_menu_item_title_filter( $nav_menu ) {
@@ -185,19 +186,19 @@ final class Menu_Icons_Front_End {
 		return $nav_menu;
 	}
 
-
 	/**
 	 * Add icon to menu item title
 	 *
-	 * @since Menu Icons  0.1.0
-	 * @since Menu Icons  0.9.0   Renamed the method to `add_icon()`.
+	 * @since   Menu Icons  0.1.0
+	 * @since   Menu Icons  0.9.0   Renamed the method to `add_icon()`.
 	 * @wp_hook filter  the_title
-	 * @param   string  $title     Menu item title.
-	 * @param   int     $id        Menu item ID.
+	 *
+	 * @param string $title Menu item title.
+	 * @param int    $id    Menu item ID.
 	 *
 	 * @return string
 	 */
-	public static function _add_icon( $title, $id=0 ) {
+	public static function _add_icon( $title, $id = 0 ) {
 		$meta = Menu_Icons_Meta::get( $id );
 		$icon = self::get_icon( $meta );
 
@@ -205,7 +206,10 @@ final class Menu_Icons_Front_End {
 			return $title;
 		}
 
+		$menu_style    = buddyboss_menu_icons()->get_menu_style();
 		$title_class   = ! empty( $meta['hide_label'] ) ? self::$hidden_label_class : '';
+		$title_wrapped = '';
+
 		$title_wrapped = sprintf(
 			'<span%s>%s</span>',
 			( ! empty( $title_class ) ) ? sprintf( ' class="%s"', esc_attr( $title_class ) ) : '',
@@ -235,12 +239,13 @@ final class Menu_Icons_Front_End {
 		return $title_with_icon;
 	}
 
-
 	/**
 	 * Get icon
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array  $meta Menu item meta value.
+	 *
+	 * @param array $meta Menu item meta value.
+	 *
 	 * @return string
 	 */
 	public static function get_icon( $meta ) {
@@ -279,15 +284,16 @@ final class Menu_Icons_Front_End {
 		return $icon;
 	}
 
-
 	/**
 	 * Get icon style
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array   $meta         Menu item meta value.
-	 * @param  array   $keys         Style properties.
-	 * @param  bool    $as_attribute Optional. Whether to output the style as HTML attribute or value only.
+	 *
+	 * @param array $meta            Menu item meta value.
+	 * @param array $keys            Style properties.
+	 * @param bool  $as_attribute    Optional. Whether to output the style as HTML attribute or value only.
 	 *                               Defaults to TRUE.
+	 *
 	 * @return string
 	 */
 	public static function get_icon_style( $meta, $keys, $as_attribute = true ) {
@@ -323,20 +329,21 @@ final class Menu_Icons_Front_End {
 
 		$style_s = esc_attr( $style_s );
 
-		if ( $as_attribute  ) {
+		if ( $as_attribute ) {
 			$style_s = sprintf( ' style="%s"', $style_s );
 		}
 
 		return $style_s;
 	}
 
-
 	/**
 	 * Get icon classes
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array         $meta    Menu item meta value.
-	 * @param  string        $output  Whether to output the classes as string or array. Defaults to string.
+	 *
+	 * @param array  $meta   Menu item meta value.
+	 * @param string $output Whether to output the classes as string or array. Defaults to string.
+	 *
 	 * @return string|array
 	 */
 	public static function get_icon_classes( $meta, $output = 'string' ) {
@@ -346,6 +353,27 @@ final class Menu_Icons_Front_End {
 			$classes[] = "_{$meta['position']}";
 		}
 
+		if (
+			isset( $meta['type'] ) &&
+			'buddyboss' === $meta['type'] &&
+			isset( $meta['icon_style'] ) &&
+			isset( $meta['box_style'] )
+		) {
+			if ( 'lined' === $meta['icon_style'] && 'none' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-l';
+			} else if ( 'filled' === $meta['icon_style'] && 'none' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-f';
+			} else if ( 'lined' === $meta['icon_style'] && 'rounded' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-bl';
+			} else if ( 'filled' === $meta['icon_style'] && 'rounded' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-bf';
+			} else if ( 'lined' === $meta['icon_style'] && 'circle' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-rl';
+			} else if ( 'filled' === $meta['icon_style'] && 'circle' === $meta['box_style'] ) {
+				$classes[] = 'bb-icon-rf';
+			}
+		}
+
 		if ( 'string' === $output ) {
 			$classes = implode( ' ', $classes );
 		}
@@ -353,27 +381,29 @@ final class Menu_Icons_Front_End {
 		return $classes;
 	}
 
-
-	/**f.menu-item i._mi
+	/**
 	 * Get font icon
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array  $meta Menu item meta value.
+	 *
+	 * @param array $meta Menu item meta value.
+	 *
 	 * @return string
 	 */
 	public static function get_font_icon( $meta ) {
 		$classes = sprintf( '%s %s %s', self::get_icon_classes( $meta ), $meta['type'], $meta['icon'] );
-		$style   = self::get_icon_style( $meta, array( 'font_size', 'vertical_align' ) );
+		$style   = self::get_icon_style( $meta, array( 'font_size_amount', 'vertical_align' ) );
 
 		return sprintf( '<i class="%s" aria-hidden="true"%s></i>', esc_attr( $classes ), $style );
 	}
-
 
 	/**
 	 * Get image icon
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array  $meta Menu item meta value.
+	 *
+	 * @param array $meta Menu item meta value.
+	 *
 	 * @return string
 	 */
 	public static function get_image_icon( $meta ) {
@@ -390,12 +420,13 @@ final class Menu_Icons_Front_End {
 		return wp_get_attachment_image( $meta['icon'], $meta['image_size'], false, $args );
 	}
 
-
 	/**
 	 * Get SVG icon
 	 *
 	 * @since Menu Icons 0.9.0
-	 * @param  array  $meta Menu item meta value.
+	 *
+	 * @param array $meta Menu item meta value.
+	 *
 	 * @return string
 	 */
 	public static function get_svg_icon( $meta ) {

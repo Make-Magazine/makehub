@@ -6,15 +6,15 @@
 				<?php bbp_topic_author_link( array( 'size' => '180' ) ); ?>
 
 				<?php if ( ! bbp_is_topic_open() ) { ?>
-					<i data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss-theme' ); ?>" class="bb-topic-status closed"></i>
+					<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss-theme' ); ?>"><i class="bb-icon-rl bb-icon-lock-alt-open bb-topic-status closed"></i></span>
 					<?php
 				}
 
 				if ( bbp_is_topic_super_sticky() ) {
 					?>
-					<i data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss-theme' ); ?>" class="bb-topic-status super-sticky"></i>
+					<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss-theme' ); ?>"><i class="bb-icon-rl bb-icon-thumbtack-star bb-topic-status super-sticky"></i></span>
 				<?php } elseif ( bbp_is_topic_sticky() ) { ?>
-					<i data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss-theme' ); ?>" class="bb-topic-status sticky"></i>
+					<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss-theme' ); ?>"><i class="bb-icon-rl bb-icon-thumbtack bb-topic-status sticky"></i></span>
 					<?php
 				}
 
@@ -22,7 +22,7 @@
 					$is_subscribed = bbp_is_user_subscribed_to_topic( get_current_user_id(), bbp_get_topic_id() );
 					if ( $is_subscribed ) {
 						?>
-						<i data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss-theme' ); ?>" class="bb-topic-status subscribed"></i>
+						<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss-theme' ); ?>"><i class="bb-icon-rl bb-icon-rss bb-topic-status subscribed"></i></span>
 						<?php
 					}
 				}
@@ -35,7 +35,7 @@
 				</div>
 
 				<div class="item-meta bb-reply-meta">
-					<i class="bb-icon-reply"></i>
+					<i class="bb-icon-f bb-icon-reply"></i>
 					<div>
 						<span class="bs-replied">
 							<span class="bbp-topic-freshness-author">
@@ -62,14 +62,9 @@
 							<span class="bs-separator">&middot;</span>
 							<span class="bs-replies">
 							<?php
-							if ( bbp_show_lead_topic() ) {
-								bbp_topic_reply_count();
-								$topic_reply_text = $topic_reply_count > 1 ? __( 'Replies', 'buddyboss-theme' ) : __( 'Reply', 'buddyboss-theme' );
-							} else {
-								bbp_topic_post_count();
-								$topic_reply_text = $topic_post_count > 1 ? __( 'Replies', 'buddyboss-theme' ) : __( 'Reply', 'buddyboss-theme' );
-							}
-							echo ' ' . wp_kses_post( $topic_reply_text );
+							bbp_topic_reply_count();
+							$topic_reply_text = 1 !== (int) $topic_reply_count ? esc_html__( ' Replies', 'buddyboss-theme' ) : esc_html__( ' Reply', 'buddyboss-theme' );
+							echo esc_html( $topic_reply_text );
 							?>
 							</span>
 						</span>

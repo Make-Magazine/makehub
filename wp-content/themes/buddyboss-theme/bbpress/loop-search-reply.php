@@ -11,7 +11,7 @@
 			</div>
 
 			<div class="item-meta bb-reply-meta">
-				<i class="bb-icon-reply"></i>
+				<i class="bb-icon-l bb-icon-reply"></i>
 				<div>
 					<span class="bs-replied">
 						<span class="bbp-topic-freshness-author"><?php bbp_author_link( array( 'post_id' => bbp_get_reply_id(), 'size' => 1 ) ); ?></span> <?php _e('replied', 'buddyboss-theme'); ?> <?php bbp_reply_post_date(); ?>

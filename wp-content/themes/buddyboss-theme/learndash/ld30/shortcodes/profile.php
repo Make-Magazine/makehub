@@ -129,7 +129,7 @@ endif; ?>
 						 * @param array $learndash_profile_stats An array of profile stats data.
 						 * @param int   $user_id                 User ID.
 						 */
-						$learndash_profile_stats = apply_filters( 'learndash_profile_stats', $learndash_profile_stats, $user_id );
+						$learndash_profile_stats = apply_filters( 'learndash_profile_stats', $ld_profile_stats, $user_id );
 
 						if ( ( ! empty( $learndash_profile_stats ) ) && ( is_array( $learndash_profile_stats ) ) ) {
 							foreach ( $learndash_profile_stats as $learndash_profile_stat ) :

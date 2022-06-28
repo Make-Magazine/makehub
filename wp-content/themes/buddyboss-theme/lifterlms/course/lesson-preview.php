@@ -29,7 +29,7 @@ endif;
 
 if ( is_singular( 'lesson' ) ):
 
-	$post_id = $lesson->get_parent_course();
+	$post_id = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_parent_course( $lesson );
 
 	$product = new LLMS_Product( $post_id );
 
@@ -43,7 +43,7 @@ $data_msg = $restrictions['is_restricted'] ? ' data-tooltip-msg="' . esc_html( s
 
 $quiz_id       = $lesson->quiz;
 $assignment_id = $lesson->assignment;
-
+$lesson_status = '';
 
 if ( empty( $restrictions['is_restricted'] ) && is_user_logged_in() ):
 
@@ -59,7 +59,7 @@ if ( empty( $restrictions['is_restricted'] ) && is_user_logged_in() ):
 
 		$attempts = array();
 
-		$results = $query->results;
+		$results = buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_quiz_result( $query );
 
 		foreach ( $results as $result ) {
 
@@ -141,11 +141,20 @@ endif;
 
                 <aside class="llms-extra <?php echo ( $restrictions['is_restricted'] ) || ( empty( $is_enrolled ) && $lesson->is_free() ) ? ' llms-extra-locked' : ( ! is_user_logged_in() ? ' llms-extra-logged-out' : '' ); ?>">
                     
-					<span class="llms-lesson-counter"><?php printf( _x( '%1$d of %2$d',
-		                    'lesson order within section',
-		                    'buddyboss-theme' ),
-		                    $lesson->get_order(),
-		                    $total_lessons ); ?></span>
+					<span class="llms-lesson-counter">
+						<?php
+						printf(
+							/* translators: 1: Lesson Order, 2: Total Lesson. */
+							_x(
+								'%1$d of %2$d',
+								'lesson order within section',
+								'buddyboss-theme'
+							),
+							buddyboss_theme()->lifterlms_helper()->bb_lifterlms_get_lesson_order( $lesson ),
+							$total_lessons
+						);
+						?>
+					</span>
 
 					<?php if ( !empty( $lesson->get_preview_icon_html() ) ) {
 						echo $lesson->get_preview_icon_html();	

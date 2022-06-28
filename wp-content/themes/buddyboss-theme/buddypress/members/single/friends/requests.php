@@ -23,7 +23,7 @@
 				<div class="list-wrap member-request-list-wrap">
 					<div class="item-avatar">
 						<a href="<?php bp_member_permalink(); ?>">
-							<?php bb_user_status( bp_get_member_user_id() ); ?>
+							<?php function_exists( 'bb_current_user_status' ) ? bb_current_user_status( bp_get_member_user_id() ) : bb_user_status( bp_get_member_user_id() ); ?>
 							<?php bp_member_avatar( bp_nouveau_avatar_args() ); ?>
 						</a>
 					</div>

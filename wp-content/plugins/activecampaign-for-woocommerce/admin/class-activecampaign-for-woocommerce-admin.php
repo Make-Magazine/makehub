@@ -740,7 +740,7 @@ class Activecampaign_For_Woocommerce_Admin {
 		global $wpdb;
 		// phpcs:disable
 
-		do_action('upgrader_post_install');
+		do_action('activecampaign_for_woocommerce_verify_tables');
 
 		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` WHERE order_date IS NULL OR abandoned_date IS NOT NULL' );
 		// phpcs:enable
@@ -755,7 +755,7 @@ class Activecampaign_For_Woocommerce_Admin {
 		global $wpdb;
 
 		// phpcs:disable
-		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` WHERE synced_to_ac = 0' );
+		return $wpdb->get_var( 'SELECT COUNT(id) FROM `' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '` WHERE synced_to_ac = 0 AND order_date IS NULL' );
 		// phpcs:enable
 	}
 
@@ -1001,6 +1001,9 @@ class Activecampaign_For_Woocommerce_Admin {
 			if ( $this->response_has_errors() ) {
 				wp_send_json_error( $this->get_response(), 422 );
 			}
+
+			// Settings saved, make sure our table is populated.
+			do_action( 'activecampaign_for_woocommerce_verify_tables' );
 
 			$this->push_response_notice(
 				$this->format_response_message( 'Settings successfully updated!', 'success' )
@@ -1391,6 +1394,9 @@ class Activecampaign_For_Woocommerce_Admin {
 
 			$response = $this->update_options( $params );
 
+			// If settings were saved we should populate our table to enable functionality
+			do_action( 'activecampaign_for_woocommerce_verify_tables' );
+
 			return new WP_REST_Response( 'ActiveCampaign connection settings successfully saved to WordPress.', 201 );
 		} else {
 			$logger->error( 'Required parameters were missing from the API setup call. Setup may need to be finished manually. Please contact support about this issue.' );
@@ -1511,5 +1517,37 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 			return false;
 		}
+	}
+
+	/**
+	 * Runs historical sync in active mode.
+	 */
+	public function run_historical_sync_active() {
+		$url = esc_url( admin_url( 'admin.php?page=' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_historical_sync' ) );
+		require_once plugin_dir_path( __FILE__ ) . 'partials/activecampaign-for-woocommerce-historical-sync-active.php';
+
+		do_action( 'activecampaign_for_woocommerce_run_historical_sync_active' );
+
+		$this->historical_active_load_finished( $url );
+		echo '</div></section>';
+		exit;
+	}
+
+	/**
+	 * Loads the finished process for historical sync
+	 * .
+	 *
+	 * @param string $url The URL for the page.
+	 */
+	public function historical_active_load_finished( $url ) {
+		?>
+		<p>
+			<?php esc_html_e( 'Historical sync ended.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+		</p>
+
+		<script>
+			location.href = "<?php echo esc_url( $url ); ?>"
+		</script>
+		<?php
 	}
 }

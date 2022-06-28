@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 2.0.0\n"
+"Project-Id-Version: BuddyBoss Platform Pro 2.0.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-04-28 13:30:57+00:00\n"
+"POT-Creation-Date: 2022-05-26 15:47:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -453,30 +453,29 @@ msgid "Zoom Account Email"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-admin-tab.php:272
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:277
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:325
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:320
 msgid "&#160;"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:284
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:279
 #: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:67
 #: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:68
 msgid "Social Groups"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:292
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:287
 msgid "Private Meeting URLs"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:300
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:295
 msgid "Private Webinar URLs"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:308
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:303
 msgid "Recordings"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-admin-tab.php:315
+#: includes/integrations/zoom/bp-zoom-admin-tab.php:310
 msgid "Recording Links"
 msgstr ""
 
@@ -1026,15 +1025,15 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:143
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:150
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1712
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1719
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1722
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1729
 msgid "There was a problem when updating. Please try again."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:154
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:345
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1117
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1723
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1122
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1733
 msgid "Groups is not active."
 msgstr ""
 
@@ -1045,15 +1044,15 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:164
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:358
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1130
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1733
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1135
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1743
 msgid "This group does not have Zoom enabled. Please check the settings."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:177
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:372
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1149
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1746
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1154
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1756
 msgid "Please choose API Host in the settings and try again."
 msgstr ""
 
@@ -1064,13 +1063,13 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:189
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:390
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1167
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1758
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1172
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1768
 msgid "Please enter valid date as format <strong>yyyy-mm-dd</strong>."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:193
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:422
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:427
 msgid "Please change the meeting date to a future date."
 msgstr ""
 
@@ -1082,19 +1081,19 @@ msgid "Please select the meeting duration to a minimum of 15 minutes."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:294
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1854
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1864
 msgid "There was an error saving the occurrence."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:322
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1877
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1887
 msgid "There was a problem when updating an occurrence. Please try again."
 msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:331
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:560
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1104
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1330
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:565
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1109
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1340
 #: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:316
 #: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:321
 #: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:369
@@ -1128,96 +1127,96 @@ msgstr ""
 msgid "Please enter the meeting title."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:608
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:613
 msgid "There was an error saving the meeting."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:700
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:704
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:705
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:709
 msgid "You do not have permission to delete a meeting in this group."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:777
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:782
 msgid "Please provide ID of the meeting."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:802
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:807
 msgid "There was a issue in fetching invitation."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:843
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:888
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1444
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1693
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:848
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:893
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1454
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1703
 #: includes/integrations/zoom/templates/buddypress/zoom/meetings.php:107
 #: includes/integrations/zoom/templates/buddypress/zoom/webinars.php:98
 msgid "Load More"
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:909
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:949
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:914
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:954
 msgid "Please provide meeting ID."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1031
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1036
 #. translators: %s total meetings
 msgid "%s meetings updated successfully."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1047
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1052
 msgid "Meetings update complete!"
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1123
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1729
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1128
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1739
 msgid "You do not have permission to create webinar in this group."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1140
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1145
 msgid "Webinars not allowed in this group."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1155
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1160
 msgid "Please enter the webinar title."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1163
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1754
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1168
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1764
 msgid "Please select the webinar date."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1187
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1782
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1192
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1792
 #: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1014
 #: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1101
 msgid "Please select the webinar duration to a minimum of 15 minutes."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1199
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1762
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1209
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1772
 msgid "Please change the webinar date to a future date."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1377
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1387
 msgid "There was an error saving the webinar."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1463
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1503
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1473
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1513
 msgid "Please provide webinar ID."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1595
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1599
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1605
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1609
 msgid "You do not have permission to delete a webinar in this group."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1970
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1980
 #. translators: %s total meetings
 msgid "%s webinars updated successfully."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1986
+#: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1996
 msgid "Webinars update complete!"
 msgstr ""
 
@@ -1798,7 +1797,7 @@ msgid ""
 "group."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:126
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:127
 msgid "Group meetings and webinars"
 msgstr ""
 

@@ -384,7 +384,8 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'learndash-cours
 						<span class="course-fee">
 						<?php
 						if ( 'closed' !== $course_pricing['type'] ) :
-							echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span> ' );
+							echo wp_kses_post( '<span class="ld-currency">' . function_exists( 'learndash_get_currency_symbol' ) ?
+								learndash_get_currency_symbol() : learndash_30_get_currency_symbol() . '</span> ' );
 						endif;
 						?>
 						<?php echo wp_kses_post( $course_pricing['price'] ); ?>

@@ -23,7 +23,7 @@
 			</div>
 
 			<div class="item-meta bb-reply-meta">
-				<i class="bb-icon-reply"></i>
+				<i class="bb-icon-l bb-icon-reply"></i>
 				<div>
 					<span class="bs-replied">
 						<?php $forum = bbp_get_forum( bbp_get_forum_id());  ?>

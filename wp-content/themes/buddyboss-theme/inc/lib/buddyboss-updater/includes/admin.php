@@ -418,7 +418,11 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 		 */
 		public function show_partial_activations( $package ) {
 			$status = $this->get_package_status( $package['id'] );
-			if ( 'active' == $status ) {
+
+			/**
+			 * Check if the status is Active Or Product is BB theme
+			 */
+			if ( 'active' == $status || 'buddyboss_theme' == $package['id'] ) {
 				return;
 			}
 
@@ -445,7 +449,10 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 			}
 		}
 
-		public function get_package_status( $package_id ) {
+		/**
+		 * Get the status if the Product is that is active or inactive
+		 */
+		public function get_package_status_from_licenses( $package_id ) {
 			$status         = 'inactive';
 			$saved_licenses = $this->_get_saved_licenses();
 			if ( ! empty( $saved_licenses ) ) {
@@ -457,6 +464,16 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 					}
 				}
 			}
+
+			return $status;
+		}
+
+		public function get_package_status( $package_id ) {
+
+			/**
+			 * Get the status of the product from the licenses save in the DB
+			 */
+			$status = $this->get_package_status_from_licenses( $package_id );
 
 			if ( $status == 'inactive' ) {
 				//package is inactive but all the products of this package might be active as part of other packages
@@ -645,7 +662,7 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 			if ( ! empty( $saved_licenses ) ) {
 				foreach ( $saved_licenses as $package_id => $license_details ) {
 					//parent plugin should be active as well
-					if ( isset( $license_details['is_active'] ) && $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
+					if ( $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
 						if ( ! empty( $license_details['product_keys'] ) && is_array( $license_details['product_keys'] ) && in_array( $product_key, $license_details['product_keys'] ) ) {
 							if ( $get_extra_info ) {
 								$valid_license_key = array(

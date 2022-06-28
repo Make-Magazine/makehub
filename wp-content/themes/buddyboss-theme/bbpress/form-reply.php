@@ -40,6 +40,10 @@
 				<legend>
 					<?php esc_html_e( 'Reply to:', 'buddyboss-theme' ); ?> <span id="bbp-reply-to-user"><?php printf( '%s', bbp_get_topic_author_display_name() ); ?></span>
 					<div id="bbp-reply-exerpt"></div>
+					<a href="#" id="bbp-close-btn" class="js-modal-close bb-model-close-button">
+						<span class="bb-icon bb-icon-close"></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Cancel', 'buddyboss-theme' ); ?></span>
+					</a>
 				</legend>
 
 				<div id="bbp-template-notices">
@@ -127,28 +131,42 @@
 
 						<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
-							<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
+							<?php
+							if (
+								! function_exists( 'bb_enabled_legacy_email_preference' ) ||
+								(
+									function_exists( 'bb_enabled_legacy_email_preference' ) &&
+									(
+										bb_enabled_legacy_email_preference() ||
+										( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) )
+									)
+								)
+							) {
+								?>
 
-							<div class="bb_subscriptions_active">
+								<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 
-								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+								<div class="bb_subscriptions_active">
 
-								<?php if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) : ?>
+									<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of replies via email', 'buddyboss-theme' ); ?></label>
+									<?php if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-								<?php else : ?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of replies via email', 'buddyboss-theme' ); ?></label>
 
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of replies via email', 'buddyboss-theme' ); ?></label>
+									<?php else : ?>
 
-								<?php endif; ?>
+										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of replies via email', 'buddyboss-theme' ); ?></label>
 
-							</div>
+									<?php endif; ?>
 
-							<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
+								</div>
+
+								<?php do_action( 'bbp_theme_after_reply_form_subscription' ); ?>
+
+						<?php } ?>
 
 						<?php endif; ?>
-
 
 						<?php do_action( 'bbp_theme_before_reply_form_submit_wrapper' ); ?>
 
@@ -158,11 +176,9 @@
 
 							<?php bbp_cancel_reply_to_link(); ?>
 
-							<a href="#" id="bbp-close-btn" class="js-modal-close"><?php esc_html_e( 'Cancel', 'buddyboss-theme' ); ?></a>
-
 							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit small">
 								<?php esc_html_e( 'Post', 'buddyboss-theme' ); ?>
-								<i class="bb-icon-loader animate-spin"></i>
+								<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 							</button>
 
 							<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>

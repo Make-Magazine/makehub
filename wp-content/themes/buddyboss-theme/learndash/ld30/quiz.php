@@ -96,7 +96,7 @@ if ( empty( $course ) ) {
 							<div class="flex bb-position">
 								<div class="sfwd-course-position">
 									<span class="bb-pages"><?php echo LearnDash_Custom_Label::get_label( 'quiz' ); ?> <?php echo $current_quiz_ke; ?> <span
-												class="bb-total"><?php esc_html_e( 'of', 'buddyboss-theme' ); ?><?php echo count( $quiz_urls ); ?></span></span>
+												class="bb-total"><?php esc_html_e( 'of', 'buddyboss-theme' ); ?> <?php echo count( $quiz_urls ); ?></span></span>
 								</div>
 								<div class="sfwd-course-nav">
 									<?php
@@ -111,7 +111,7 @@ if ( empty( $course ) ) {
 										?>
 										<div class="sfwd-course-expire">
 											<span data-balloon-pos="up" data-balloon="<?php echo $expire_string; ?>"><i
-														class="bb-icons bb-icon-watch-alarm"></i><?php echo $expire_date; ?></span>
+														class="bb-icon-l bb-icon-alarm"></i><?php echo $expire_date; ?></span>
 										</div>
 									<?php } ?>
 									<div class="learndash_next_prev_link">

@@ -106,7 +106,6 @@ if ( ! class_exists( 'Ast_Block_Templates_Sync_Library' ) ) :
 		 * @return void
 		 */
 		public function setup_templates() {
-
 			$is_fresh_site = get_site_option( 'ast_block_templates_fresh_site', 'yes' );
 
 			$this->process_sync();

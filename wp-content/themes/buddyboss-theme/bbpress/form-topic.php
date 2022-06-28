@@ -53,9 +53,10 @@
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<div class="bbp_topic_title_wrapper flex">
+
 						<div class="new_topic_title_avatar">
 							<?php
-                            global $current_user;
+							global $current_user;
 
 							if ( is_user_logged_in() ) {
 								wp_get_current_user();
@@ -67,6 +68,11 @@
 						  <label for="bbp_topic_title"><?php esc_html_e( 'Discussion Title', 'buddyboss-theme' ); ?></label>
 						  <input required type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" placeholder="<?php esc_html_e( 'Discussion Title', 'buddyboss-theme' ); ?>" />
 						</div>
+
+						<a href="#" id="bbp-close-btn" class="js-modal-close bb-model-close-button">
+							<span class="bb-icon bb-icon-close"></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Cancel', 'buddyboss-theme' ); ?></span>
+						</a>
 					</div>
 
 					<?php do_action( 'bbp_theme_after_topic_form_title' ); ?>
@@ -181,23 +187,37 @@
 
 
 						<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
-							<div class="bbp_topic_subscription_wrapper">
-							<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
 
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<?php
+							if (
+								! function_exists( 'bb_enabled_legacy_email_preference' ) ||
+								(
+									function_exists( 'bb_enabled_legacy_email_preference' ) &&
+									(
+										bb_enabled_legacy_email_preference() ||
+										( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_discussion' ) )
+									)
+							   )
+							) {
+								?>
+								<div class="bbp_topic_subscription_wrapper">
+								<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
 
-							<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
-								<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of replies via email', 'buddyboss-theme' ); ?></label>
+								<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-							<?php else : ?>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of replies via email', 'buddyboss-theme' ); ?></label>
 
-								<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of replies via email', 'buddyboss-theme' ); ?></label>
+								<?php else : ?>
 
-							<?php endif; ?>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of replies via email', 'buddyboss-theme' ); ?></label>
 
-							<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
-							</div>
+								<?php endif; ?>
+
+								<?php do_action( 'bbp_theme_after_topic_form_subscriptions' ); ?>
+								</div>
+							<?php } ?>
 						<?php endif; ?>
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_wrapper' ); ?>
@@ -205,8 +225,6 @@
 						<div class="bbp-submit-wrapper">
 
 							<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
-
-							<a href="#" id="bbp-close-btn" class="js-modal-close"><?php esc_html_e( 'Cancel', 'buddyboss-theme' ); ?></a>
 
 							<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit small"><?php esc_html_e( 'Post', 'buddyboss-theme' ); ?></button>
 

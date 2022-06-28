@@ -53,8 +53,8 @@
 
 	$(document).ready(function() {
 		iconReplace( '.site-header--beaver-builder .header-search-link i', 'bb-icon-search', 'search-icon' );
-		iconReplace( '.site-header--beaver-builder #header-messages-dropdown-elem .notification-link i', 'bb-icon-inbox-small', 'messages-icon' );
-		iconReplace( '.site-header--beaver-builder #header-notifications-dropdown-elem .notification-link i', 'bb-icon-bell-small', 'notifications-icon' );
+		iconReplace( '.site-header--beaver-builder #header-messages-dropdown-elem .notification-link i', 'bb-icon-inbox', 'messages-icon' );
+		iconReplace( '.site-header--beaver-builder #header-notifications-dropdown-elem .notification-link i', 'bb-icon-bell', 'notifications-icon' );
 		iconReplace( '.site-header--beaver-builder a.header-cart-link i', 'bb-icon-shopping-cart', 'cart-icon' );
 		setTimeout(function () {
 			iconReplace( '.site-header--beaver-builder a.header-cart-link i', 'bb-icon-shopping-cart', 'cart-icon' );

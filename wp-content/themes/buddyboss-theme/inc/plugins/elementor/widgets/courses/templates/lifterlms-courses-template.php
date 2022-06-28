@@ -53,11 +53,11 @@ $search            = isset( $_GET['search'] ) ? $_GET['search'] : '';
                 <ul class="component-navigation courses-nav">
                     <?php
                     $navs = array(
-                        'all' => __( 'All Courses', 'buddyboss-theme' ) . ' ' . '<span class="count">' . $query->found_posts . '</span>',
+                        'all' => '<div class="bb-component-nav-item-point">' . esc_html__( 'All Courses', 'buddyboss-theme' ) . '</div>' . ' ' . '<span class="count">' . $query->found_posts . '</span>',
                     );
 
                     if ( is_user_logged_in() ) {
-	                    $navs['my-courses'] = __( 'My Courses', 'buddyboss-theme' ) . '<span class="count">' . buddyboss_theme()->lifterlms_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
+	                    $navs['my-courses'] = '<div class="bb-component-nav-item-point">' . esc_html__( 'My Courses', 'buddyboss-theme' ) . '</div>' . '<span class="count">' . buddyboss_theme()->lifterlms_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
                     }
 
                     $navs = apply_filters( 'BuddyBossTheme/lifterlms/Archive/Navs', $navs );

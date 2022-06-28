@@ -618,8 +618,11 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 					}
 
 					$order_product = new Activecampaign_For_Woocommerce_Ecom_Product();
-					$order_product->set_properties_from_serialized_array( $product );
-					$this->push_order_product( $order_product );
+
+					if ( isset( $product ) ) {
+						$order_product->set_properties_from_serialized_array( $product );
+						$this->push_order_product( $order_product );
+					}
 				}
 			}
 		} catch ( Throwable $t ) {

@@ -73,7 +73,7 @@ table#pmpro_invoices_table thead th,
 #pmpro_cancel table thead th {
   text-transform: uppercase;
   font-weight: 400;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
   white-space: nowrap;
 }
 table.pmpro_checkout tbody td:first-child,
@@ -121,7 +121,7 @@ a.pmpro_btn,
   font-style: normal;
   font-weight: normal;
   color: #fff;
-  background-color: #007CFF;
+  background-color: var(--bb-primary-color);
   border-radius: 100px;
   display: inline-block;
   border: 0;
@@ -139,14 +139,14 @@ a.pmpro_btn:hover,
 a.pmpro_btn.pmpro_btn-cancel,
 .entry-content a.pmpro_btn.pmpro_btn-cancel,
 .pmpro_btn:link.pmpro_btn-cancel {
-  color: #939597;
+  color: var(--bb-headings-color);
   text-decoration: none;
 }
 .pmpro_btn.pmpro_btn-cancel:hover,
 a.pmpro_btn.pmpro_btn-cancel:hover,
 .entry-content a.pmpro_btn.pmpro_btn-cancel:hover,
 .pmpro_btn:link.pmpro_btn-cancel:hover {
-  color: #007CFF;
+  color: var(--bb-primary-color);
   text-decoration: none;
 }
 
@@ -180,13 +180,13 @@ form.pmpro_form .pmpro_checkout-field-bcity_state_zip input[type=text] {
 form.pmpro_form hr {
   height: 1px;
   background-color: transparent;
-  border-top: 1px solid #E7E9EC;
+  border-top: 1px solid var(--bb-content-border-color);
   margin: 1.5em 0;
 }
 form.pmpro_form > div[align=center] {
   text-align: left;
 }
-form.pmpro_form input[type=button]#other_discount_code_button {
+form.pmpro_form input[type="button"]#other_discount_code_button {
   text-decoration: none;
 }
 
@@ -196,7 +196,7 @@ input[type=submit].pmpro_btn {
 
 .pmpro_checkout h3 span.pmpro_checkout-h3-msg {
   font-style: normal;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 
 #pmpro_account .pmpro_box {
@@ -213,19 +213,19 @@ input[type=submit].pmpro_btn {
   font-size: 14px;
 }
 
-body[class^=pmpro] hr {
+body[class^="pmpro"] hr {
   height: 1px;
   background-color: transparent;
-  border-top: 1px solid #E7E9EC;
+  border-top: 1px solid var(--bb-content-border-color);
   margin: 1.5em 0;
 }
 
 .pmpro_a-print {
   background: transparent;
-  color: #939597;
+  color: var(--bb-headings-color);
 }
 .pmpro_a-print:before {
-  content: "\e924";
+  content: '\eefe';
   font-family: "bb-icons";
   font-size: 16px;
   text-rendering: auto;
@@ -235,18 +235,18 @@ body[class^=pmpro] hr {
   margin-right: 4px;
 }
 .pmpro_a-print:hover {
-  color: #007CFF;
+  color: var(--bb-primary-color);
 }
 
 .bb-pmpro_account-profile {
   background-color: #fff;
-  border: 1px solid #E7E9EC;
+  border: 1px solid var(--bb-content-border-color);
   border-radius: 4px;
   padding: 1rem;
   font-size: 14px;
 }
 .bb-pmpro_account-profile > p {
-  color: #122B46;
+  color: var(--bb-headings-color);
   text-transform: uppercase;
 }
 .bb-pmpro_account-profile > ul {

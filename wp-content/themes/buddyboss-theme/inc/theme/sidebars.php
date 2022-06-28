@@ -197,13 +197,13 @@ if ( !function_exists( 'buddyboss_widgets_init' ) ) {
 		if( $footer_widgets ) {
 			for( $count = 1; $count <= $footer_widgets_columns; $count++ ) {
 				register_sidebar( array(
-					'name'           => sprintf( __( 'Footer #%s', 'buddyboss-theme' ), $count ),
-					'id'			 => 'footer-'.$count,
-					'description'	 => sprintf( __( 'The footer widget area %s. Only appears if widgets are added.', 'buddyboss-theme' ), $count ),
-					'before_widget'	 => '<aside id="%1$s" class="widget %2$s">',
-					'after_widget'	 => '</aside>',
-					'before_title'	 => '<h2 class="widget-title">',
-					'after_title'	 => '</h2>'
+					'name'          => sprintf( __( 'Footer Column #%s', 'buddyboss-theme' ), $count ),
+					'id'            => 'footer-' . $count,
+					'description'   => sprintf( __( 'The footer widget area %s. Only appears if widgets are added.', 'buddyboss-theme' ), $count ),
+					'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+					'after_widget'  => '</aside>',
+					'before_title'  => '<h2 class="widget-title">',
+					'after_title'   => '</h2>',
 				) );
 			}
 		}

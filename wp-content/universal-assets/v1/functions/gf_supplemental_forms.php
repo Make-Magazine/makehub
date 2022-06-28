@@ -5,9 +5,9 @@
  * otherwise it returns errors
  */
 
-add_filter('gform_validation', 'custom_validation');
+add_filter('gform_validation', 'gf_custom_validation');
 
-function custom_validation($validation_result) {
+function gf_custom_validation($validation_result) {
     $form = $validation_result['form'];
 
     // determine if entry-id and contact-email id's are in the submitted form

@@ -38,7 +38,7 @@ $author_link = esc_url( $author_link );
 								'object_type'	 => 'post_' . get_post_type( get_the_ID() ),
 								'action_type'	 => 'like',
 								'wrapper_class'	 => 'bb-like-wrap',
-								'icon_class'	 => 'bb-icon-like',
+								'icon_class'	 => 'bb-icon-l bb-icon-thumbs-up',
 								'text_template'	 => '{{bookmarks_count}} ' . __( 'Likes', 'buddyboss-theme' ),
 								'title_add'		 => __( 'Like this entry', 'buddyboss-theme' ),
 								'title_remove'	 => __( 'Remove like', 'buddyboss-theme' ),
@@ -48,7 +48,7 @@ $author_link = esc_url( $author_link );
 				<?php } ?>
                     <?php 
                     if ( comments_open() || get_comments_number() ) { ?>
-                        <a href="<?php echo get_comments_link( get_the_ID() ); ?>" class="flex align-items-center bb-comments-wrap"><i class="bb-icon-comment"></i><span class="comments-count"><?php printf( _nx( '1 <span class="bb-comment-text">Comment</span>', '%1$s <span class="bb-comment-text">Comments</span>', get_comments_number(), 'comments title', 'buddyboss-theme' ), number_format_i18n( get_comments_number() ) ); ?></span></a>
+                        <a href="<?php echo get_comments_link( get_the_ID() ); ?>" class="flex align-items-center bb-comments-wrap"><i class="bb-icon-l bb-icon-comment-square"></i><span class="comments-count"><?php printf( _nx( '1 <span class="bb-comment-text">Comment</span>', '%1$s <span class="bb-comment-text">Comments</span>', get_comments_number(), 'comments title', 'buddyboss-theme' ), number_format_i18n( get_comments_number() ) ); ?></span></a>
 				<?php } ?>
 			<?php } ?>
              
@@ -67,7 +67,7 @@ $author_link = esc_url( $author_link );
 					'object_type'	 => 'post_' . get_post_type( get_the_ID() ),
 					'action_type'	 => 'like',
 					'wrapper_class'	 => 'bb-like-wrap',
-					'icon_class'	 => 'bb-icon-like',
+					'icon_class'	 => 'bb-icon-l bb-icon-thumbs-up',
 					'text_template'	 => '{{bookmarks_count}} ' . __( 'Likes', 'buddyboss-theme' ),
 					'title_add'		 => __( 'Like this entry', 'buddyboss-theme' ),
 					'title_remove'	 => __( 'Remove like', 'buddyboss-theme' ),
@@ -77,7 +77,7 @@ $author_link = esc_url( $author_link );
 
 			<?php if ( comments_open() || get_comments_number() ) { ?>
 				<a href="<?php echo get_comments_link( get_the_ID() ); ?>" class="flex align-items-center bb-comments-wrap">
-					<i class="bb-icon-comment"></i>
+					<i class="bb-icon-l bb-icon-comment-square"></i>
 					<span class="comments-count"><?php printf( _nx( '1 <span class="bb-comment-text">Comment</span>', '%1$s <span class="bb-comment-text">Comments</span>', get_comments_number(), 'comments title', 'buddyboss-theme' ), number_format_i18n( get_comments_number() ) ); ?></span>
 				</a>
 			<?php } ?>
@@ -94,7 +94,7 @@ $author_link = esc_url( $author_link );
         				'object_type'	 => 'post_' . get_post_type( get_the_ID() ),
         				'action_type'	 => 'bookmark',
         				'wrapper_class'	 => 'bookmark-link-container',
-        				'icon_class'	 => 'bb-bookmark bb-icon-bookmark-small',
+        				'icon_class'	 => 'bb-bookmark bb-icon-l bb-icon-bookmark',
         				'text_template'	 => '',
         				'title_add'		 => __( 'Bookmark this story to read later', 'buddyboss-theme' ),
         				'title_remove'	 => __( 'Remove bookmark', 'buddyboss-theme' ),

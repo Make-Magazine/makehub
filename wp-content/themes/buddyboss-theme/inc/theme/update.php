@@ -29,9 +29,17 @@ if ( ! function_exists( 'buddyboss_theme_update' ) ) {
 				bb_theme_update_1_8_3();
 			}
 
+			// Call to backup default cover images.
+			if ( version_compare( $current_version, '1.8.6', '>' ) && function_exists( 'bb_theme_update_1_8_7' ) ) {
+				bb_theme_update_1_8_7();
+			}
+
 			// update not to run twice.
 			update_option( 'buddyboss_theme_version', $current_version );
 		}
+
+		bb_theme_setup_updater();
+
 	}
 
 	add_action( 'after_setup_theme', 'buddyboss_theme_update' );
@@ -86,4 +94,345 @@ function bb_theme_update_1_8_3() {
 
 	// Delete custom css transient.
 	delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
+}
+
+/**
+ * Backup cover width and height for profile and group.
+ *
+ * @since 1.8.7
+ */
+function bb_theme_update_1_8_7() {
+	global $buddyboss_theme_options;
+
+	$is_platform_upto_date = function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.9.1', '>=' );
+
+	/* Check if options are empty */
+	if ( ! isset( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_width'] ) ) {
+		$profile_cover_width = buddyboss_theme_get_option( 'buddyboss_profile_cover_width' );
+
+		// If platform is not updated then option will migrate.
+		if ( ! $is_platform_upto_date ) {
+			delete_option( 'bb-pro-cover-profile-width' );
+			add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
+		}
+		unset( $buddyboss_theme_options['buddyboss_profile_cover_width'] );
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_height'] ) ) {
+		$profile_cover_height = buddyboss_theme_get_option( 'buddyboss_profile_cover_height' );
+
+		// If platform is not updated then option will migrate.
+		if ( ! $is_platform_upto_date ) {
+			delete_option( 'bb-pro-cover-profile-height' );
+			add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
+		}
+		unset( $buddyboss_theme_options['buddyboss_profile_cover_height'] );
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_group_cover_width'] ) ) {
+		$group_cover_width = buddyboss_theme_get_option( 'buddyboss_group_cover_width' );
+
+		// If platform is not updated then option will migrate.
+		if ( ! $is_platform_upto_date ) {
+			delete_option( 'bb-pro-cover-group-width' );
+			add_option( 'bb-pro-cover-group-width', $group_cover_width );
+		}
+		unset( $buddyboss_theme_options['buddyboss_group_cover_width'] );
+	}
+
+	if ( isset( $buddyboss_theme_options['buddyboss_group_cover_height'] ) ) {
+		$group_cover_height = buddyboss_theme_get_option( 'buddyboss_group_cover_height' );
+
+		// If platform is not updated then option will migrate.
+		if ( ! $is_platform_upto_date ) {
+			delete_option( 'bb-pro-cover-group-height' );
+			add_option( 'bb-pro-cover-group-height', $group_cover_height );
+		}
+		unset( $buddyboss_theme_options['buddyboss_group_cover_height'] );
+	}
+
+	if ( ! empty( $buddyboss_theme_options ) ) {
+		update_option( 'buddyboss_theme_options', $buddyboss_theme_options );
+	}
+}
+
+/**
+ * Set up the BuddyBoss theme updater.
+ *
+ * @return void
+ *
+ * @since 1.8.7
+ */
+function bb_theme_setup_updater() {
+	// Are we running an outdated version of BuddyBoss Theme?
+	if ( wp_doing_ajax() || ! bb_theme_is_update() ) {
+		return;
+	}
+
+	bb_theme_version_updater();
+}
+
+/**
+ * Is this a BuddyBoss theme update?
+ *
+ * @return bool True if update, otherwise false.
+ * @since 1.8.7
+ */
+function bb_theme_is_update() {
+
+	// Current DB version of this site (per site in a multisite network).
+	$current_db   = bb_theme_get_db_version();
+	$current_live = bb_theme_get_db_version_raw();
+
+	// Compare versions (cast as int and bool to be safe).
+	$is_update = (bool) ( (int) $current_db < (int) $current_live );
+
+	// Return the product of version comparison.
+	return $is_update;
+}
+
+/**
+ * Initialize an update or installation of BuddyBoss Theme.
+ *
+ * BuddyBoss Theme's version updater looks at what the current database version is,
+ * and runs whatever other code is needed - either the "update" or "install"
+ * code.
+ *
+ * @since 1.8.7
+ */
+function bb_theme_version_updater() {
+	// Get the raw database version.
+	$raw_db_version = (int) bb_theme_get_db_version();
+
+	/* All done! *************************************************************/
+
+	// Add the conditional logic for each version migration code.
+	if ( $raw_db_version < 400 ) {
+		bb_theme_update_2_0_0();
+	}
+
+	// Bump the version.
+	bb_theme_version_bump();
+}
+
+/**
+ * Update the BuddyBoss Theme version stored in the database to the current version.
+ *
+ * @since 1.8.7
+ */
+function bb_theme_version_bump() {
+	update_option( '_bb_theme_db_version', bb_theme_get_db_version_raw() );
+}
+
+/**
+ * Output the BuddyBoss Theme database version.
+ *
+ * @since 1.8.7
+ */
+function bb_theme_db_version() {
+	echo bb_theme_get_db_version();
+}
+/**
+ * Return the BuddyBoss Theme database version.
+ *
+ * @since 1.8.7
+ *
+ * @return string The BuddyBoss Theme database version.
+ */
+function bb_theme_get_db_version() {
+	return get_option( '_bb_theme_db_version', 0 );
+}
+
+/**
+ * Output the BuddyBoss Theme database version.
+ *
+ * @since 1.8.7
+ */
+function bb_theme_db_version_raw() {
+	echo bb_theme_get_db_version_raw();
+}
+
+/**
+ * Return the BuddyBoss Theme database version.
+ *
+ * @since 1.8.7
+ *
+ * @return string The BuddyBoss Theme version direct from the database.
+ */
+function bb_theme_get_db_version_raw() {
+	return ! empty( buddyboss_theme()->bb_theme_db_version ) ? buddyboss_theme()->bb_theme_db_version : 0;
+}
+
+/**
+ * Migrate options for 2.0.0
+ *
+ * @since 2.0.0
+ */
+function bb_theme_migrate_components_options() {
+	global $buddyboss_theme_options;
+
+	/* Check if options are set */
+	if ( ! isset( $buddyboss_theme_options ) ) {
+		$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['mobile_header_search'] ) ) {
+		$buddyboss_theme_options['mobile_component_opt_multi_checkbox']['mobile_header_search'] = buddyboss_theme_get_option( 'mobile_header_search' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['mobile_messages'] ) ) {
+		$buddyboss_theme_options['mobile_component_opt_multi_checkbox']['mobile_messages'] = buddyboss_theme_get_option( 'mobile_messages' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['mobile_shopping_cart'] ) ) {
+		$buddyboss_theme_options['mobile_component_opt_multi_checkbox']['mobile_shopping_cart'] = buddyboss_theme_get_option( 'mobile_shopping_cart' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['mobile_notifications'] ) ) {
+		$buddyboss_theme_options['mobile_component_opt_multi_checkbox']['mobile_notifications'] = buddyboss_theme_get_option( 'mobile_notifications' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['header_search'] ) ) {
+		$buddyboss_theme_options['desktop_component_opt_multi_checkbox']['desktop_header_search'] = buddyboss_theme_get_option( 'header_search' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['messages'] ) ) {
+		$buddyboss_theme_options['desktop_component_opt_multi_checkbox']['desktop_messages'] = buddyboss_theme_get_option( 'messages' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['shopping_cart'] ) ) {
+		$buddyboss_theme_options['desktop_component_opt_multi_checkbox']['desktop_shopping_cart'] = buddyboss_theme_get_option( 'shopping_cart' );
+	}
+
+	if ( isset( $buddyboss_theme_options ) && isset( $buddyboss_theme_options['notifications'] ) ) {
+		$buddyboss_theme_options['desktop_component_opt_multi_checkbox']['desktop_notifications'] = buddyboss_theme_get_option( 'notifications' );
+	}
+
+	// Set default styling option to theme 1.0 when updating the theme.
+	// Set default logo on for header 3 style.
+	if ( ! isset( $buddyboss_theme_options['theme_template'] ) ) {
+		$buddyboss_theme_options['theme_template'] = '1';
+	}
+
+	if (
+		isset( $buddyboss_theme_options['buddyboss_header'] ) &&
+		'3' === $buddyboss_theme_options['buddyboss_header']
+	) {
+		$buddyboss_theme_options['buddypanel_show_logo'] = '1';
+	}
+
+	// Set default 404 featured image to custom when updating the theme and image uploaded.
+	$img_404 = buddyboss_theme_get_option( '404_image' );
+	if ( is_array( $img_404 ) && $img_404['url'] ) {
+		$buddyboss_theme_options['404_featured_image'] = 'custom';
+	}
+
+	// Migrate all the older maintenance social network to latest version.
+	$social_network_twitter   = buddyboss_theme_get_option( 'social_network_twitter' );
+	$social_network_facebook  = buddyboss_theme_get_option( 'social_network_facebook' );
+	$social_network_google    = buddyboss_theme_get_option( 'social_network_google' );
+	$social_network_instagram = buddyboss_theme_get_option( 'social_network_instagram' );
+	$social_network_youtube   = buddyboss_theme_get_option( 'social_network_youtube' );
+	$buddyboss_theme_options['maintenance_social_links']['twitter']   = ! empty( $social_network_twitter ) ? $social_network_twitter : '';
+	$buddyboss_theme_options['maintenance_social_links']['facebook']  = ! empty( $social_network_facebook ) ? $social_network_facebook : '';
+	$buddyboss_theme_options['maintenance_social_links']['google']    = ! empty( $social_network_google ) ? $social_network_google : '';
+	$buddyboss_theme_options['maintenance_social_links']['instagram'] = ! empty( $social_network_instagram ) ? $social_network_instagram : '';
+	$buddyboss_theme_options['maintenance_social_links']['youtube']   = ! empty( $social_network_youtube ) ? $social_network_youtube : '';
+
+	update_option( 'buddyboss_theme_options', $buddyboss_theme_options );
+
+	// Backward compatibility of icon picker.
+	icon_picker_backward_compatibility();
+}
+
+/**
+ * Backward compatibility of icon picker.
+ *
+ * @since 2.0.0
+ */
+function icon_picker_backward_compatibility() {
+	// fix option table data.
+	$menu_icons = get_option( 'menu-icons' );
+	if ( isset( $menu_icons['global']['icon_types'] ) && ! empty( $menu_icons['global']['icon_types'] ) ) {
+		if ( ! in_array( 'buddyboss', $menu_icons['global']['icon_types'], true ) ) {
+			$menu_icons['global']['icon_types'][] = 'buddyboss';
+		}
+		if ( ! in_array( 'buddyboss_legacy', $menu_icons['global']['icon_types'], true ) ) {
+			$menu_icons['global']['icon_types'][] = 'buddyboss_legacy';
+		}
+	} else {
+		$menu_icons = array(
+			'global' => array(
+				'icon_types' => array(
+					'buddyboss',
+					'buddyboss_legacy',
+				),
+			),
+		);
+	}
+	// update option.
+	update_option( 'menu-icons', $menu_icons );
+
+	// fix postmeta table data.
+	$args = array(
+		'post_type'   => 'nav_menu_item',
+		'post_status' => 'publish',
+	);
+
+	$r              = wp_parse_args( null, $args );
+	$get_posts      = new \WP_Query();
+	$nav_menu_items = $get_posts->query( $r );
+
+	if ( isset( $nav_menu_items ) && ! empty( $nav_menu_items ) ) {
+		$nav_menu_items = wp_list_pluck( $nav_menu_items, 'ID' );
+		foreach ( $nav_menu_items as $single ) {
+			$menu_icons = get_post_meta( $single, 'menu-icons', true );
+			if ( isset( $menu_icons['type'] ) && 'buddyboss' === $menu_icons['type'] ) {
+				$menu_icons['type'] = 'buddyboss_legacy';
+				update_post_meta( $single, 'menu-icons', $menu_icons );
+			}
+		}
+	}
+}
+
+/**
+ * Backward compatibility of header menu.
+ *
+ * @since 2.0.0
+ */
+function bb_theme_migrate_header_menu() {
+	// Set the Header Menu - Logged in users to Header Menu - Logged out.
+	$locations = get_theme_mod( 'nav_menu_locations' );
+	if ( isset( $locations ) && isset( $locations['header-menu'] ) ) {
+		$locations['header-menu-logout'] = $locations['header-menu'];
+		set_theme_mod( 'nav_menu_locations', $locations );
+	}
+}
+
+/**
+ * Function to migrate all the theme data from old theme to new theme.
+ *
+ * @since 2.0.0
+ */
+function bb_theme_update_2_0_0() {
+
+	// Migrate the header menu data.
+	bb_theme_migrate_header_menu();
+
+	// Migrate the component options and theme option.
+	bb_theme_migrate_components_options();
+
+	// Clear all the cache.
+	if ( function_exists( 'buddyboss_theme_compressed_transient_delete' ) ) {
+		buddyboss_theme_compressed_transient_delete();
+	}
+
 }

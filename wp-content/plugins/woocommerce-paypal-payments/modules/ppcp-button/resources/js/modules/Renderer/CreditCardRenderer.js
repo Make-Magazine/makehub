@@ -13,7 +13,6 @@ class CreditCardRenderer {
     }
 
     render(wrapper, contextConfig) {
-
         if (
             (
                 this.defaultConfig.context !== 'checkout'
@@ -42,6 +41,9 @@ class CreditCardRenderer {
         }
 
         const gateWayBox = document.querySelector('.payment_box.payment_method_ppcp-credit-card-gateway');
+        if(! gateWayBox) {
+            return
+        }
         const oldDisplayStyle = gateWayBox.style.display;
         gateWayBox.style.display = 'block';
 
@@ -206,12 +208,6 @@ class CreditCardRenderer {
             if (!hostedFieldsData.cardholderName) {
                 const firstName = document.getElementById('billing_first_name') ? document.getElementById('billing_first_name').value : '';
                 const lastName = document.getElementById('billing_last_name') ? document.getElementById('billing_last_name').value : '';
-
-                if (!firstName || !lastName) {
-                    this.spinner.unblock();
-                    this.errorHandler.message(this.defaultConfig.hosted_fields.labels.cardholder_name_required);
-                    return;
-                }
 
                 hostedFieldsData.cardholderName = firstName + ' ' + lastName;
             }

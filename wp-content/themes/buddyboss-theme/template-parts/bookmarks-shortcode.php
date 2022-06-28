@@ -56,7 +56,7 @@ if ( !empty( $bookmarks ) ) {
                                         'action_type' => 'bookmark',
 
                                         'wrapper_class' => 'bookmark-link-container',
-                                        'icon_class'    => 'bb-bookmark bb-icon-bookmark-small',
+                                        'icon_class'    => 'bb-bookmark bb-icon-l bb-icon-bookmark',
                                         'text_template' => '',
 
                                         'title_add' => __( 'Bookmark this story to read later', 'buddyboss-theme' ),

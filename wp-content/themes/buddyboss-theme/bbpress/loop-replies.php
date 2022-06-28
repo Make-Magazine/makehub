@@ -7,15 +7,16 @@
  * @subpackage Theme
  */
 
+$topic_id = bbp_get_topic_id();
 ?>
 
 <?php do_action( 'bbp_template_before_replies_loop' ); ?>
 
-<ul id="topic-<?php bbp_topic_id(); ?>-replies"
+<ul id="topic-<?php echo esc_attr( $topic_id ); ?>-replies"
 	class="bs-item-list bs-forums-items bs-single-forum-list bb-single-reply-list list-view">
 
 	<?php
-	if ( ! empty( bbp_get_topic_id() ) ) {
+	if ( ! empty( $topic_id ) && ! bbp_show_lead_topic() ) {
 		?>
 		<li class="bs-item-wrap bs-header-item align-items-center no-hover-effect">
 
@@ -33,11 +34,11 @@
 								if ( bbp_is_topic_open() ) {
 									?>
 									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status open"><?php bbp_topic_close_link(); ?></i>
+										<i class="bb-icon-rl bb-icon-lock-alt bb-topic-status open"><?php bbp_topic_close_link(); ?></i>
 									</span>
 								<?php } else { ?>
 									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Open', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status closed"><?php bbp_topic_close_link(); ?></i>
+										<i class="bb-icon-rl bb-icon-lock-alt-open bb-topic-status closed"><?php bbp_topic_close_link(); ?></i>
 									</span>
 									<?php
 								}
@@ -46,17 +47,17 @@
 							/**
 							 * Checked bbp_get_topic_stick_link() is empty or not
 							 */
-							if ( ! bbp_is_topic_super_sticky( bbp_get_topic_id() ) && ! empty( bbp_get_topic_stick_link() ) ) {
+							if ( ! bbp_is_topic_super_sticky( $topic_id ) && ! empty( bbp_get_topic_stick_link() ) ) {
 								if ( bbp_is_topic_sticky() ) {
 									?>
 									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unstick', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-sticky sticky"><?php bbp_topic_stick_link(); ?></i>
+										<i class="bb-icon-rl bb-icon-thumbtack bb-topic-status bb-sticky sticky"><?php bbp_topic_stick_link(); ?></i>
 									</span>
 									<?php
 								} else {
 									?>
 									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
+										<i class="bb-icon-rl bb-icon-thumbtack bb-topic-status bb-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
 									</span>
 									<?php
 								}
@@ -66,33 +67,16 @@
 							 * Checked bbp_get_topic_stick_link() is empty or not
 							 */
 							if ( ! empty( bbp_get_topic_stick_link() ) ) {
-								if ( bbp_is_topic_super_sticky( bbp_get_topic_id() ) ) {
+								if ( bbp_is_topic_super_sticky( $topic_id ) ) {
 									?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unstick', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-super-sticky super-sticky"><?php bbp_topic_stick_link(); ?></i>
+									<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unstick', 'buddyboss-theme' ); ?>">
+										<i class="bb-icon-rl bb-icon-thumbtack-star bb-topic-status bb-super-sticky super-sticky"><?php bbp_topic_stick_link(); ?></i>
 									</span>
 									<?php
 								} elseif ( ( ! bp_is_group() && ! bp_is_group_forum_topic() ) && ! bbp_is_topic_sticky() ) {
 									?>
-									<span data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-super-sticky super-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
-									</span>
-									<?php
-								}
-							}
-
-							if ( bbp_is_favorites_active() ) {
-								$is_fav = bbp_is_user_favorite( get_current_user_id(), bbp_get_topic_id() );
-								if ( $is_fav ) {
-									?>
-									<span class="bb-favorite-wrap" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Unfavorite', 'buddyboss-theme' ); ?>" data-unfav="<?php esc_attr_e( 'Unfavorite', 'buddyboss-theme' ); ?>" data-fav="<?php esc_attr_e( 'Favorite', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-favorite-status favorited"><?php bbp_user_favorites_link(); ?></i>
-									</span>
-									<?php
-								} else {
-									?>
-									<span class="bb-favorite-wrap" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Favorite', 'buddyboss-theme' ); ?>" data-unfav="<?php esc_attr_e( 'Unfavorite', 'buddyboss-theme' ); ?>" data-fav="<?php esc_attr_e( 'Favorite', 'buddyboss-theme' ); ?>">
-										<i class="bb-topic-status bb-favorite-status unfavorited"><?php bbp_user_favorites_link(); ?></i>
+									<span class="bb-topic-status-wrapper" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss-theme' ); ?>">
+										<i class="bb-icon-rl bb-icon-thumbtack-star bb-topic-status bb-super-sticky super-sticky unsticky"><?php bbp_topic_stick_link(); ?></i>
 									</span>
 									<?php
 								}
@@ -102,7 +86,7 @@
 							<?php if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) { ?>
 								<div class="forum_single_action_wrap">
 									<span class="forum_single_action_more-wrap" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More Options', 'buddyboss-theme' ); ?>">
-										<i class="bb-icon bb-icon-menu-dots-v"></i>
+										<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 									</span>
 									<div class="forum_single_action_options">
 										<?php
@@ -136,7 +120,6 @@
 					</span>
 					<span class="bs-voices-wrap">
 						<?php
-						$topic_id    = bbp_get_topic_id();
 						$voice_count = bbp_get_topic_voice_count( $topic_id );
 						$voice_text  = $voice_count > 1 ? __( 'Members', 'buddyboss-theme' ) : __( 'Member', 'buddyboss-theme' );
 
@@ -149,14 +132,10 @@
 						<span class="bs-separator">&middot;</span>
 						<span class="bs-replies">
 							<?php
-							if ( bbp_show_lead_topic() ) {
-								bbp_topic_reply_count( $topic_id );
-								$topic_reply_text = $topic_reply_count > 1 ? esc_html__( 'Replies', 'buddyboss-theme' ) : esc_html__( 'Reply', 'buddyboss-theme' );
-							} else {
-								bbp_topic_post_count( $topic_id );
-								$topic_reply_text = $topic_post_count > 1 ? esc_html__( 'Posts', 'buddyboss-theme' ) : esc_html__( 'Post', 'buddyboss-theme' );
-							}
-							echo ' ' . wp_kses_post( $topic_reply_text );
+							bbp_topic_reply_count( $topic_id );
+							$topic_reply_text = (int) $topic_reply_count > 1 ? esc_html__( 'Replies', 'buddyboss-theme' ) : esc_html__( 'Reply', 'buddyboss-theme' );
+
+							echo wp_kses_post( $topic_reply_text );
 							?>
 						</span>
 					</span>
@@ -186,7 +165,7 @@
 					}
 					?>
 					<div class="item-tags">
-						<i class="bb-icon-tag"></i>
+						<i class="bb-icon-l bb-icon-tag"></i>
 						<ul>
 							<?php echo wp_kses_post( rtrim( $html, ',' ) ); ?>
 						</ul>
@@ -195,13 +174,13 @@
 				} else {
 					?>
 					<div class="item-tags" style="display: none;">
-						<i class="bb-icon-tag"></i>
+						<i class="bb-icon-l bb-icon-tag"></i>
 					</div>
 					<?php
 				}
 				remove_filter( 'bbp_get_reply_content', 'bbp_reply_content_append_revisions', 99, 2 );
 				?>
-				<input type="hidden" name="bbp_topic_excerpt" id="bbp_topic_excerpt" value="<?php bbp_reply_excerpt( bbp_get_topic_id(), 50 ); ?>"/>
+				<input type="hidden" name="bbp_topic_excerpt" id="bbp_topic_excerpt" value="<?php bbp_reply_excerpt( $topic_id, 50 ); ?>"/>
 				<?php
 				add_filter( 'bbp_get_reply_content', 'bbp_reply_content_append_revisions', 99, 2 );
 				?>
@@ -211,16 +190,17 @@
 	}
 
 	if ( bbp_thread_replies() ) :
-		?>
-		<?php bbp_list_replies(); ?>
-	<?php else : ?>
-		<?php
+		bbp_list_replies();
+	elseif ( bbp_replies() ) :
 		while ( bbp_replies() ) :
 			bbp_the_reply();
 			?>
 			<li><?php bbp_get_template_part( 'loop', 'single-reply' ); ?></li>
-		<?php endwhile; ?>
-	<?php endif; ?>
+
+			<?php
+		endwhile;
+	endif;
+	?>
 
 </ul><!-- #topic-<?php bbp_topic_id(); ?>-replies -->
 

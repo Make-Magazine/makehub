@@ -30,7 +30,7 @@
                     }
                 } );
 
-                self.append( '<li class="hideshow menu-item-has-children1"><a class="more-button" href="#"><i class="bb-icon-menu-dots-h"></i></a><ul class="sub-menu">' + menuhtml + '</ul></li>' );
+                self.append( '<li class="hideshow menu-item-has-children1"><a class="more-button" href="#"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><ul class="sub-menu">' + menuhtml + '</ul></li>' );
 
                 if ( self.find( 'li.hideshow' ).find( 'li' ).length > 0 ) {
                     self.find( 'li.hideshow' ).show();
