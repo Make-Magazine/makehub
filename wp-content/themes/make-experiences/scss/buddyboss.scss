@@ -240,31 +240,39 @@ button.ges-change, button.ges-change:hover {
 
 /* blue toad digital library page */
 .page-template-page-digital-library {
-	#page #content {
-		padding-left: 0px;
-		.container {
-			padding: 0px;
-			width: 100%;
-		 }
+	#page {
+		padding: 0px !important;
+		#content {
+			padding-left: 0px;
+			.container {
+				padding: 0px;
+				width: 100%;
+				#page-content.bluetoad {
+					padding: 0px;
+				}
+			 }
+		}
 	}
 	.bb-onscreen-notification-enable {
 		display: none;
 	}
 }
-#page-content.bluetoad iframe{
-    width: calc(100vw - 68px);
-    height: calc(100vh - 120px);
-    border: none;
-    margin-bottom: -10px;
-	@media screen and (max-width: 800px) {
-		width: 100vw;
+#page-content.bluetoad  {
+	iframe{
+	    width: calc(100vw - 68px);
+	    height: calc(100vh - 120px);
+	    border: none;
+	    margin-bottom: -10px;
+		@media screen and (max-width: 800px) {
+			width: 100vw;
+		}
 	}
 }
 
 // buddypanel
 .buddypanel-open {
 	#page-content.bluetoad iframe{
-		width: calc(100vw - 220px);
+		width: calc(100vw - 230px);
 	}
 }
 
