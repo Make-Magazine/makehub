@@ -19,8 +19,13 @@
 	.gform_body  {
 		.gfield { width: 100%; } // as the baseline
 
-		.gfield_list_icons button { color: transparent; } // prevent add from showing with plus button
-
+		.gfield_list_icons button {  // prevent add from showing with plus button
+			color: transparent;
+			&.delete_list_item {
+				position: relative
+			}
+		}
+		
 		.gform_page_footer {
 			display: flex;
 			input[type="button"] {
