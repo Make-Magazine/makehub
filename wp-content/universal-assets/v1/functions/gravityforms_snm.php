@@ -16,24 +16,27 @@ function snm_automation($entry_id) {
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
     if($snm_uid!=''){
       //update the SNM to show
-      update_snm_data($snm_uid,array('withdrawn'=>FALSE));
+      $snmReturn = update_snm_data($snm_uid,array('withdrawn'=>FALSE));
+      if(!isset($snmReturn['error'])){
+        GFAPI::add_note( $entry_id, 2, 'makey','Entry updated to display on SNM.');
+      }
       return;
     }else{
       //add info to SNM
       $postFields = pullSNMinfo($entry, $form);
 
       $authRes = add_snm_data($postFields, $entry_id);
-      if(isset($authRes->accepted) && $authRes->accepted){
+      if(isset($authRes['accepted']) && $authRes['accepted']){
         // Write UID and slug to the entry so users can access and update
-        gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
-        gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
+        gform_update_meta( $entry_id, 'snm_uid', $authRes['uid'] );
+        gform_update_meta( $entry_id, 'snm_slug', $authRes['slug'] );
         GFAPI::add_note( $entry_id, 2, 'makey',
-        'Submitted to Science Near Me. SNM_UID='.$authRes->uid.
-        '. SNM Link = <a href="https://sciencenearme.org/'.$authRes->slug.'" target="_none">https://sciencenearme.org/'.$authRes->slug.'</a>' );
+        'Submitted to Science Near Me. SNM_UID='.$authRes['uid'].
+        '. SNM Link = <a href="https://sciencenearme.org/'.$authRes['slug'].'" target="_none">https://sciencenearme.org/'.$authRes['slug'].'</a>' );
       }else{
         //if there was an error in adding this to SNM add a note to the entry
-        if(isset($authRes->error)){
-          GFAPI::add_note( $entry_id, 2, 'makey','Error in adding to SNM. Error - '.$authRes->error);
+        if(isset($authRes['error'])){
+          GFAPI::add_note( $entry_id, 2, 'makey','Error in adding to SNM. Error - '.$authRes['error']);
         }else{
           error_log('Error in posting new entry '.$entry_id.' to SNM');
           error_log(print_r($authRes,TRUE));
@@ -60,6 +63,9 @@ function make_update_snm($entry_id) {
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
     if($snm_uid!=''){
       update_snm_data($snm_uid,array('withdrawn'=>TRUE));
+      if(!isset($snmReturn['error'])){
+        GFAPI::add_note( $entry_id, 2, 'makey','Entry withdrawn from SNM.');
+      }
     }
   }
 }
@@ -68,6 +74,7 @@ function make_update_snm($entry_id) {
 add_action('gform_after_update_entry', 'make_update_SNM_entry', 10, 2); //via the entry detail page.
 add_action( 'gravityview/edit_entry/after_update', 'make_update_SNM_entry', 10, 3 );
 function make_update_SNM_entry( $form, $entry_id ) {
+  $entry = GFAPI::get_entry($entry_id);
   $form_type = rgar($form, 'form_type');
 
   //only continue if this is a SNM (Science Near Me) form
@@ -133,9 +140,9 @@ function update_snm_data($snm_uid,$dataToUpdate){
 
       //if there was an error updating this to SNM add a note to the entry
       if(isset($authRes['error'])){
-        GFAPI::add_note( $entry_id, 2, 'makey','Error in adding to SNM. Error - '.$authRes['error']);
-        return;
+        GFAPI::add_note( $entry_id, 2, 'makey','Error in updating SNM. Error - '.$authRes['error']);
       }
+      return $authRes;
     }
 
   }else{
@@ -154,7 +161,7 @@ function add_snm_data($dataToAdd, $entry_id){
     $url = "https://beta.sciencenearme.org/api/v1/opportunity/";
     $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
     $snm_data = json_encode($dataToAdd); //encode data to send
-    $authRes  = json_decode(postCurl($url, $headers, $snm_data));
+    $authRes  = json_decode(postCurl($url, $headers, $snm_data),true);
     return $authRes;
   }else{
     error_log('no auth token returned from SNM');
