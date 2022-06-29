@@ -57,9 +57,9 @@ function make_update_snm($entry_id) {
 }
 
 //update entry in gravity view or in gravity forms admin entry
-add_action('gform_after_update_entry', 'pre_makerspace_to_community', 10, 2); //via the entry detail page.
-add_action( 'gravityview/edit_entry/after_update', 'gravityview_trigger_feeds', 10, 3 );
-function update_entry( $form, $entry_id ) {
+add_action('gform_after_update_entry', 'make_update_SNM_entry', 10, 2); //via the entry detail page.
+add_action( 'gravityview/edit_entry/after_update', 'make_update_SNM_entry', 10, 3 );
+function make_update_SNM_entry( $form, $entry_id ) {
   $form_type = rgar($form, 'form_type');
 
   //only continue if this is a SNM (Science Near Me) form
