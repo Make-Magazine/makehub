@@ -137,43 +137,46 @@ function editor_script(){
 add_filter('gform_replace_merge_tags', 'make_replace_merge_tags', 10, 7);
 
 function make_replace_merge_tags($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
+  $merge_tag = '{formatted_date';
+  //if the merge tag isn't found AND if the entry hasn't been submitted yet, exit
+  if ( strpos( $text, $merge_tag ) === false || empty( $entry ) || empty( $form ) || is_null($entry["id"]) ) {
+    return $text;
+  }
 
   // the formatted_date merge tags needs 3 fields to work - date, time, timezone
-  if (strpos($text, '{formatted_date') !== false) {
-    $formatted_date = '';
-    $startPos         = strpos($text, '{formatted_date'); //pos of start of merge tag
-    $closeBracketPos  = strpos($text, '}', $startPos); //find the closing bracket of the merge tag
+  $formatted_date = '';
+  $startPos         = strpos($text, '{formatted_date'); //pos of start of merge tag
+  $closeBracketPos  = strpos($text, '}', $startPos); //find the closing bracket of the merge tag
 
-    //pull full merge tag text
-    $merge_text    = substr ( $text , $startPos, $closeBracketPos - $startPos + 1);
+  //pull full merge tag text
+  $merge_text    = substr ( $text , $startPos, $closeBracketPos - $startPos + 1);
 
-    //pull date field, if one isn't passed use current date
-    $dateVal = pullMergeParam($merge_text, 'date');
-    $date = ($dateVal!='' ? date("Y-m-d", strtotime($dateVal)):date("Y-m-d"));
+  //pull date field, if one isn't passed use current date
+  $dateVal = pullMergeParam($merge_text, 'date');
+  $date = ($dateVal!='' ? date("Y-m-d", strtotime($dateVal)):date("Y-m-d"));
 
-    //pull time field
-    $timeVal = pullMergeParam($merge_text, 'time');
-    //if a time field is used, the value is returned as an array
-    if(is_array($timeVal)){
-      $timeValue = $timeVal[0].':'.$timeVal[1].' '.$timeVal[2];
-      $time = date("h:i a",strtotime($timeValue));
-    }elseif($timeVal != ''){ //if the field was a text field
-      $time = date("h:i a",strtotime($timeVal));
-    }else{
-      //if no field is set for time, set to current time
-      $time = date("h:i a");
-    }
-
-    //pull timezone field, if not set use the wordpress timezone
-    $timeZoneVal = pullMergeParam($merge_text, 'timezone');
-    $timeZone = ($timeZoneVal==''?wp_timezone_string():$timeZoneVal);
-
-    $now = new DateTime($date.' '.$time, new DateTimeZone($timeZone));
-    $formatted_date = $now->format('c');
-
-    //replace the merge tag with the formatted date
-    $text = str_replace($merge_text, $formatted_date, $text);
+  //pull time field
+  $timeVal = pullMergeParam($merge_text, 'time');
+  //if a time field is used, the value is returned as an array
+  if(is_array($timeVal)){
+    $timeValue = $timeVal[0].':'.$timeVal[1].' '.$timeVal[2];
+    $time = date("h:i a",strtotime($timeValue));
+  }elseif($timeVal != ''){ //if the field was a text field
+    $time = date("h:i a",strtotime($timeVal));
+  }else{
+    //if no field is set for time, set to current time
+    $time = date("h:i a");
   }
+
+  //pull timezone field, if not set use the wordpress timezone
+  $timeZoneVal = pullMergeParam($merge_text, 'timezone');
+  $timeZone = ($timeZoneVal==''?wp_timezone_string():$timeZoneVal);
+
+  $now = new DateTime($date.' '.$time, new DateTimeZone($timeZone));
+  $formatted_date = $now->format('c');
+
+  //replace the merge tag with the formatted date
+  $text = str_replace($merge_text, $formatted_date, $text);
 
   return $text;
 }

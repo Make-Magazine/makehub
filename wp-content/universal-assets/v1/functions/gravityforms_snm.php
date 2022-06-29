@@ -27,9 +27,17 @@ function snm_automation($entry_id) {
         // Write UID and slug to the entry so users can access and update
         gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
         gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
+        GFAPI::add_note( $entry_id, 2, 'makey',
+        'Submitted to Science Near Me. SNM_UID='.$authRes->uid.
+        '. SNM Link = <a href="https://sciencenearme.org/'.$authRes->slug.'" target="_none">https://sciencenearme.org/'.$authRes->slug.'</a>' );
       }else{
-        error_log('Error in posting new entry '.$entry_id.' to SNM');
-        error_log(print_r($authRes,TRUE));
+        //if there was an error in adding this to SNM add a note to the entry
+        if(isset($authRes->error)){
+          GFAPI::add_note( $entry_id, 2, 'makey','Error in adding to SNM. Error - '.$authRes->error);
+        }else{
+          error_log('Error in posting new entry '.$entry_id.' to SNM');
+          error_log(print_r($authRes,TRUE));
+        }
       }
     }
   }
@@ -121,10 +129,11 @@ function update_snm_data($snm_uid,$dataToUpdate){
       $dataToSend = json_encode($snm_data);
 
       $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
-      $authRes  = json_decode(postCurl($url, $headers, $dataToSend,'PUT'),true);
+      $authRes = json_decode(postCurl($url, $headers, $dataToSend,'PUT'),true);
+
+      //if there was an error updating this to SNM add a note to the entry
       if(isset($authRes['error'])){
-        error_log('error updating SNM record "'.$url.'"');
-        error_log(print_r($snm_data,true));
+        GFAPI::add_note( $entry_id, 2, 'makey','Error in adding to SNM. Error - '.$authRes['error']);
         return;
       }
     }
@@ -285,5 +294,12 @@ function replace_download_link( $text, $form, $entry, $url_encode, $esc_html, $n
     }
 
     return $text;
+}
+
+//include the SNM link merge tag wherever merge tag drop downs are generated
+add_filter('gform_custom_merge_tags', 'make_custom_merge_tags', 10, 4);
+function make_custom_merge_tags( $merge_tags, $form_id, $fields, $element_id ) {
+    $merge_tags[] = array('label' => 'Science Near Me Link', 'tag' => '{snm_link}');
+    return $merge_tags;
 }
  ?>
