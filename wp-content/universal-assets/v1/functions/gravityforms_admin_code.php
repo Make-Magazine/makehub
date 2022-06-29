@@ -134,51 +134,48 @@ function editor_script(){
 };
 
 //add custom merge tag to calculate a formatted date
-add_filter('gform_replace_merge_tags', 'make_replace_merge_tags', 10, 7);
-
-function make_replace_merge_tags($text, $form, $entry, $url_encode, $esc_html, $nl2br, $format) {
+add_action( 'gform_after_submission', 'make_set_merge_tag', 10, 2 );
+function make_set_merge_tag( $entry, $form ) {
   $merge_tag = '{formatted_date';
-  //if the merge tag isn't found AND if the entry hasn't been submitted yet, exit
-  if ( strpos( $text, $merge_tag ) === false || empty( $entry ) || empty( $form ) || is_null($entry["id"]) ) {
-    return $text;
+  foreach($entry as $key=>$text){
+    if(strpos( $text, $merge_tag ) !== false){
+      // the formatted_date merge tags needs 3 fields to work - date, time, timezone
+      $formatted_date = '';
+      $startPos         = strpos($text, '{formatted_date'); //pos of start of merge tag
+      $closeBracketPos  = strpos($text, '}', $startPos); //find the closing bracket of the merge tag
+
+      //pull full merge tag text
+      $merge_text    = substr ( $text , $startPos, $closeBracketPos - $startPos + 1);
+
+      //pull date field, if one isn't passed use current date
+      $fieldID = pullMergeParam($merge_text, 'date');
+      $date = ($fieldID !='' && isset($entry[$fieldID]) ? date("Y-m-d", strtotime($entry[$fieldID])) : date("Y-m-d"));
+
+      //pull time field, if one isn't passed use current time
+      $fieldID = pullMergeParam($merge_text, 'time');
+
+      //if a time field is used, the value is returned as an array
+      if($fieldID !='' && isset($entry[$fieldID]) && !empty($entry[$fieldID])){
+        if(is_array($entry[$fieldID])){
+          $time = $entry[$fieldID][0].':'.$entry[$fieldID][1].' '. $entry[$fieldID][2];
+        }else{
+          $time = $entry[$fieldID];
+        }
+      }else{
+        $time = date("h:i a"); //current time
+      }
+
+      //pull timezone field, if not set use the wordpress timezone
+      $fieldID = pullMergeParam($merge_text, 'timezone');
+      $timeZone = ($fieldID != '' && isset($entry[$fieldID]) ? $entry[$fieldID] : wp_timezone_string());
+
+      $now = new DateTime($date.' '.$time, new DateTimeZone($timeZone));
+      $formatted_date = $now->format('c');
+
+      //replace the merge tag with the formatted date
+      $result  = GFAPI::update_entry_field( $entry['id'], $key, $formatted_date);
+    }
   }
-
-  // the formatted_date merge tags needs 3 fields to work - date, time, timezone
-  $formatted_date = '';
-  $startPos         = strpos($text, '{formatted_date'); //pos of start of merge tag
-  $closeBracketPos  = strpos($text, '}', $startPos); //find the closing bracket of the merge tag
-
-  //pull full merge tag text
-  $merge_text    = substr ( $text , $startPos, $closeBracketPos - $startPos + 1);
-
-  //pull date field, if one isn't passed use current date
-  $dateVal = pullMergeParam($merge_text, 'date');
-  $date = ($dateVal!='' ? date("Y-m-d", strtotime($dateVal)):date("Y-m-d"));
-
-  //pull time field
-  $timeVal = pullMergeParam($merge_text, 'time');
-  //if a time field is used, the value is returned as an array
-  if(is_array($timeVal)){
-    $timeValue = $timeVal[0].':'.$timeVal[1].' '.$timeVal[2];
-    $time = date("h:i a",strtotime($timeValue));
-  }elseif($timeVal != ''){ //if the field was a text field
-    $time = date("h:i a",strtotime($timeVal));
-  }else{
-    //if no field is set for time, set to current time
-    $time = date("h:i a");
-  }
-
-  //pull timezone field, if not set use the wordpress timezone
-  $timeZoneVal = pullMergeParam($merge_text, 'timezone');
-  $timeZone = ($timeZoneVal==''?wp_timezone_string():$timeZoneVal);
-
-  $now = new DateTime($date.' '.$time, new DateTimeZone($timeZone));
-  $formatted_date = $now->format('c');
-
-  //replace the merge tag with the formatted date
-  $text = str_replace($merge_text, $formatted_date, $text);
-
-  return $text;
 }
 
 function pullMergeParam($merge_text, $param){
@@ -190,11 +187,7 @@ function pullMergeParam($merge_text, $param){
       $fieldEndPos = strpos($merge_text, '"', $fieldStartPos);
       $fieldID     = substr($merge_text , $fieldStartPos, $fieldEndPos - $fieldStartPos);
 
-      if(rgpost('input_' . $fieldID)!=''){
-        return rgpost('input_' . $fieldID);
-      }else{
-        return ''; //field not set, return blank
-      }
+      return $fieldID;
   }
   return ''; //parameter not found, return blank
 }

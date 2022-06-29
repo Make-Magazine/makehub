@@ -234,6 +234,19 @@ function pullSNMinfo($entry, $form){
             $postFields[$snmField['snm_field']] = $entry[$fieldID.'.3'].' '.$entry[$fieldID.'.6'];
           }
           break;
+        // GF address fields are formatted as:
+        // street = fieldID.1, city = fieldID.3, state = fieldID.4, zipcode = fieldID=5, country = fieldID.6
+        case 'address':
+          //address field is weird on SNM, so I just hard coded it
+          if($snmField['snm_field']=='address'){
+            $postFields['address_street'] = $entry[$fieldID.'.1'];
+            $postFields['address_city'] =  $entry[$fieldID.'.3'];
+            $postFields['address_state'] =  $entry[$fieldID.'.4'];
+            $postFields['address_zip'] =  $entry[$fieldID.'.5'];
+            $postFields['address_country'] =  $entry[$fieldID.'.6'];
+          }
+
+          break;
         case 'checkbox':
           if(isset($snmField['inputs'])){
             $checkbox_values = array();
