@@ -28,7 +28,7 @@ function snm_automation($entry_id) {
         gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
         gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
       }else{
-        error_log('Error in posting new entry to SNM');
+        error_log('Error in posting new entry '.$entry_id.' to SNM');
         error_log(print_r($authRes,TRUE));
       }
     }
@@ -148,7 +148,7 @@ function add_snm_data($dataToAdd, $entry_id){
     $authRes  = json_decode(postCurl($url, $headers, $snm_data));
     return $authRes;
   }else{
-    error_log('no token returned from SNM');
+    error_log('no auth token returned from SNM');
     error_log(print_r($authRes,TRUE));
   }
   return;
