@@ -239,6 +239,7 @@ function pullSNMinfo($entry, $form){
         case 'address':
           //address field is weird on SNM, so I just hard coded it
           if($snmField['snm_field']=='address'){
+            $postFields['location_type'] = "at";
             $postFields['address_street'] = $entry[$fieldID.'.1'];
             $postFields['address_city'] =  $entry[$fieldID.'.3'];
             $postFields['address_state'] =  $entry[$fieldID.'.4'];
