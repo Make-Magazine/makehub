@@ -22,10 +22,15 @@ function snm_automation($entry_id) {
       //add info to SNM
       $postFields = pullSNMinfo($entry, $form);
 
-      //format the data to prepare to send to SNM
-      $dataToSend = json_encode($postFields);
-
-      add_snm_data($dataToSend, $entry_id);
+      $authRes = add_snm_data($postFields, $entry_id);
+      if(isset($authRes->accepted) && $authRes->accepted){
+        // Write UID and slug to the entry so users can access and update
+        gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
+        gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
+      }else{
+        error_log('Error in posting new entry to SNM');
+        error_log(print_r($authRes,TRUE));
+      }
     }
   }
   return;
@@ -61,13 +66,13 @@ function update_entry( $form, $entry_id ) {
   if(isset($form_type) && $form_type == 'SNM'){
     //format the data to prepare to send to SNM
     $postFields = pullSNMinfo($entry, $form);
-    $dataToSend = json_encode($postFields);
+    $postFields['withdrawn'] = TRUE;
 
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
 
     // If the entry is approved we will have a UID to update
     if($snm_uid!=''){
-      update_snm_data($snm_uid,array('withdrawn'=>TRUE));
+      update_snm_data($snm_uid, $postFields);
     }
   }
   return;
@@ -139,16 +144,9 @@ function add_snm_data($dataToAdd, $entry_id){
   if($token!=''){
     $url = "https://beta.sciencenearme.org/api/v1/opportunity/";
     $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
-
-    $authRes  = json_decode(postCurl($url, $headers, $dataToSend));
-    if(isset($authRes->accepted) && $authRes->accepted){
-      // Write UID and slug to the entry so users can access and update
-      gform_update_meta( $entry_id, 'snm_uid', $authRes->uid );
-      gform_update_meta( $entry_id, 'snm_slug', $authRes->slug );
-    }else{
-      error_log('Error in posting new entry to SNM');
-      error_log(print_r($authRes,TRUE));
-    }
+    $snm_data = json_encode($dataToAdd); //encode data to send
+    $authRes  = json_decode(postCurl($url, $headers, $snm_data));
+    return $authRes;
   }else{
     error_log('no token returned from SNM');
     error_log(print_r($authRes,TRUE));
@@ -210,7 +208,7 @@ function pullSNMinfo($entry, $form){
             //cast the field as an integer
             $postFields[$snmField['snm_field']] = (int) $entry[$fieldID];
           }
-            break;
+          break;
         //name fields are formatted as first name = fieldID.3 and last name = fieldID.6
         case 'name':
           //check if the SNM field needs to be an array or text

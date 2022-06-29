@@ -199,7 +199,7 @@ function pullMergeParam($merge_text, $param){
 add_filter( 'gform_column_input', 'set_column_input', 10, 5 );
 function set_column_input( $input_info, $field, $column, $value, $form_id ) {
   if($field->inputName=='social-list' && $column=='Platform'){
-    return array( 'type' => 'select', 'choices' => 'Facebook, Twitter, Instagram, YouTube' );
+    return array( 'type' => 'select', 'choices' => 'Facebook, Twitter, Instagram, YouTube, TikTok' );
   }else{
     return $input_info;
   }
