@@ -80,9 +80,7 @@ function make_update_SNM_entry( $form, $entry_id ) {
   //only continue if this is a SNM (Science Near Me) form
   if(isset($form_type) && $form_type == 'SNM'){
     //format the data to prepare to send to SNM
-    $postFields = pullSNMinfo($entry, $form);
-    $postFields['withdrawn'] = TRUE;
-
+    $postFields = pullSNMinfo($entry, $form);  
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
 
     // If the entry is approved we will have a UID to update
