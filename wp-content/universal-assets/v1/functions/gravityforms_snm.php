@@ -70,7 +70,7 @@ function update_entry( $form, $entry_id ) {
       update_snm_data($snm_uid,array('withdrawn'=>TRUE));
     }
   }
-  return;  
+  return;
 }
 
 /* This function is used to retrieve an authorization token from Science Near Me */
@@ -270,5 +270,22 @@ function pullSNMinfo($entry, $form){
     }
   }
   return $postFields;
+}
+
+//Return the SNM URL
+add_filter( 'gform_replace_merge_tags', 'replace_download_link', 10, 7 );
+function replace_download_link( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
+    $custom_merge_tag = '{snm_link}';
+    if ( strpos( $text, $custom_merge_tag ) === false ) {
+        return $text;
+    }
+error_log('i am here');
+    if($form['form_type']=='SNM'){
+      $snm_slug = gform_get_meta( $entry['id'], 'snm_slug' );
+      $snm_link = '<a href="https://sciencenearme.org/'.$snm_slug.'" target="_none">https://sciencenearme.org/'.$snm_slug.'</a>';
+      $text = str_replace( $custom_merge_tag, $snm_link, $text );
+    }
+
+    return $text;
 }
  ?>
