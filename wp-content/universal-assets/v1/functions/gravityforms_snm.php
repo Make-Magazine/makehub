@@ -279,7 +279,7 @@ function replace_download_link( $text, $form, $entry, $url_encode, $esc_html, $n
     if ( strpos( $text, $custom_merge_tag ) === false ) {
         return $text;
     }
-error_log('i am here');
+
     if($form['form_type']=='SNM'){
       $snm_slug = gform_get_meta( $entry['id'], 'snm_slug' );
       $snm_link = '<a href="https://sciencenearme.org/'.$snm_slug.'" target="_none">https://sciencenearme.org/'.$snm_slug.'</a>';
