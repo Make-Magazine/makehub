@@ -16,6 +16,7 @@ get_header();
 				<div class="col-xs-12 col-sm-12">
 					<h1><?php single_post_title(); ?></h1>
 					<?php dynamic_sidebar('search'); ?>
+					<a href="/amazing-maker-awards/top-10" class="top-10">Top 10</a>
 				</div>
 			</div>
 			<div class="row">

@@ -242,7 +242,7 @@ body:not(.logged-in) {
 }
 .wpvc_voting_btns { background: $color-blue !important; }
 
-// Contestant category
+// Contestant category / Top 10
 .wpvc_show_contestants {
 	.wpvc_showcontestant_container {
 		margin-top: 0px;
@@ -266,9 +266,32 @@ body:not(.logged-in) {
 					align-items: center;
 					z-index: 99;
 				}
+				.wpvc_contestant_social, .wpvc_voting_btns, #player {
+					display: none;
+				}
+			}
+		}
+		.wpvc_card_conthead_column {
+			.wpvc_grid_header {
+				a.MuiLink-underlineHover {
+					&:after {
+						content: "See More";
+						Position: absolute;
+						bottom: 15px;
+						right: 10px;
+						background: $color-blue;
+						border: solid 1px $color-blue;
+						padding: 15px;
+						&:hover {
+							color: $color-blue !important;
+							background-color: #fff !important;
+						}
+					}
+				}
 			}
 		}
 	}
+
 	.wpvc_card_sub_header, .wpvc_custom_fields_view  { display: none; }
 	.wpvc_video_contest_player {
 		height: 200px !important;

@@ -84,6 +84,7 @@ if ( $query->have_posts() ) {
 					<p><b>Name:</b> <?php echo $first_name . " " . $last_name; ?></p>
 					<p><b>Age:</b> <?php echo $age_range; ?></p>
 					<p><b>Type:</b> <?php echo $project_type; ?></p>
+					<!--<p><b>Community Votes:</b> <?php echo $vote_count  ?></p> -->
 				</div>
 				<a href="<?php the_permalink(); ?>" class="btn universal-btn">More</a>
 			</div>

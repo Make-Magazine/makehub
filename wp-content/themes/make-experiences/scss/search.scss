@@ -117,6 +117,21 @@
 }
 .filter-reset { text-align: right; margin-bottom: -20px; }
 
+.top-10 {
+	position: absolute;
+	bottom: 52px;
+	right: 50px;
+	color: #fff;
+	background: $color-blue;
+	border: solid 1px $color-blue;
+	padding: 7px 10px;
+	border-radius: 5px;
+	&:hover {
+		color: $color-blue;
+		background: #fff;
+	}
+}
+
 .widget_search_filter_register_widget {
 	h2 { margin-bottom: 5px; }
 	padding: 15px;
