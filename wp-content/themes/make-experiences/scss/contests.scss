@@ -266,7 +266,7 @@ body:not(.logged-in) {
 					align-items: center;
 					z-index: 99;
 				}
-				.wpvc_contestant_social, .wpvc_voting_btns, #player {
+				.wpvc_contestant_social, .wpvc_voting_btns, .wpvc_video_audio_div, #player {
 					display: none;
 				}
 			}
