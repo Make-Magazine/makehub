@@ -288,6 +288,9 @@ body:not(.logged-in) {
 						}
 						.wpvc_contestant_vote_class {
 							margin-right: 100px;
+							@media screen and (max-width: 600px) {
+								margin-right: 0px;
+							}
 							.MuiGrid-item {
 								flex: auto !important;
 							}
@@ -310,9 +313,8 @@ body:not(.logged-in) {
 						    border: solid 1px #005e9a;
 						    padding: 10px;
 							color: $color-blue;
-							&:hover {
-								color: $color-blue !important;
-								background-color: #fff !important;
+							@media screen and (max-width: 600px) {
+								display: none;
 							}
 						}
 					}
