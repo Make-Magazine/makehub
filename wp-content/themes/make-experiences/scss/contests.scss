@@ -242,6 +242,11 @@ body:not(.logged-in) {
 }
 .wpvc_voting_btns { background: $color-blue !important; }
 
+.MuiLink-underlineHover:hover {
+	color: #fff !important;
+	text-decoration: underline;
+}
+
 // Contestant category / Top 10
 .wpvc_show_contestants {
 	.wpvc_showcontestant_container {
