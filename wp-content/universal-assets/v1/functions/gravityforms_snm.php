@@ -310,8 +310,10 @@ function replace_download_link( $text, $form, $entry, $url_encode, $esc_html, $n
       $snm_slug = gform_get_meta( $entry['id'], 'snm_slug' );
       if($snm_slug!=''){
         $snm_link = '<a href="https://sciencenearme.org/'.$snm_slug.'" target="_none">https://sciencenearme.org/'.$snm_slug.'</a>';
-        $text = str_replace( $custom_merge_tag, $snm_link, $text );
+      }else{
+        $snm_link = '';
       }
+      $text = str_replace( $custom_merge_tag, $snm_link, $text );
     }
 
     return $text;
