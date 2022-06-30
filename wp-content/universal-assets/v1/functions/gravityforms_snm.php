@@ -80,7 +80,7 @@ function make_update_SNM_entry( $form, $entry_id ) {
   //only continue if this is a SNM (Science Near Me) form
   if(isset($form_type) && $form_type == 'SNM'){
     //format the data to prepare to send to SNM
-    $postFields = pullSNMinfo($entry, $form);  
+    $postFields = pullSNMinfo($entry, $form);
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
 
     // If the entry is approved we will have a UID to update
@@ -308,8 +308,10 @@ function replace_download_link( $text, $form, $entry, $url_encode, $esc_html, $n
 
     if($form['form_type']=='SNM'){
       $snm_slug = gform_get_meta( $entry['id'], 'snm_slug' );
-      $snm_link = '<a href="https://sciencenearme.org/'.$snm_slug.'" target="_none">https://sciencenearme.org/'.$snm_slug.'</a>';
-      $text = str_replace( $custom_merge_tag, $snm_link, $text );
+      if($snm_slug!=''){
+        $snm_link = '<a href="https://sciencenearme.org/'.$snm_slug.'" target="_none">https://sciencenearme.org/'.$snm_slug.'</a>';
+        $text = str_replace( $custom_merge_tag, $snm_link, $text );
+      }
     }
 
     return $text;
