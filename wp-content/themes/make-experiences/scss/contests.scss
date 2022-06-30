@@ -243,85 +243,109 @@ body:not(.logged-in) {
 .wpvc_voting_btns { background: $color-blue !important; }
 
 .MuiLink-underlineHover:hover {
-	color: #fff !important;
-	text-decoration: underline;
+	text-decoration: underline !important;
 }
 
 // Contestant category / Top 10
-.wpvc_show_contestants {
-	.wpvc_showcontestant_container {
-		margin-top: 0px;
-		.MuiGrid-container {
-			counter-reset: item;
-			.wpvc_show_style_column {
-				position: relative;
-				&::before {
-					content: counter(item) " ";
-					counter-increment: item;
-					position: absolute;
-					right: 0px;
-					top: 5px;
-					background: #ea002a;
-					color: #fff;
-					border-radius: 50px;
-					height: 40px;
-					width: 40px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					z-index: 99;
-				}
-				.wpvc_contestant_social, .wpvc_voting_btns, .wpvc_video_audio_div, #player {
-					display: none;
+.page-top-10 {
+	.wpvc_show_contestants {
+		.wpvc_showcontestant_container {
+			margin-top: 0px;
+			.MuiGrid-container {
+				counter-reset: item;
+				.wpvc_show_style_column {
+					position: relative;
+					min-width: 100%;
+					&::before {
+						content: counter(item) " ";
+						counter-increment: item;
+						position: absolute;
+						left: 15px;
+						top: calc(50% - 20px);
+						background: #ea002a;
+						color: #fff;
+						border-radius: 50px;
+						height: 40px;
+						width: 40px;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						z-index: 99;
+					}
+					.wpvc_card_column {
+						display: flex;
+						align-items: center;
+						background: #fff;
+    					border: 1px #005e9a solid;
+						.wpvc_card_conthead_column {
+							background: transparent !important;
+							margin-bottom: 0px;
+							.MuiTypography-h5 {
+								font-size: 20px !important;
+								margin-left: 50px;
+								color: $color-blue !important;
+							}
+						}
+						.wpvc_contestant_vote_class {
+							margin-right: 100px;
+							.MuiGrid-item {
+								flex: auto !important;
+							}
+						}
+					}
+					.wpvc_contestant_social, .wpvc_voting_btns, .wpvc_video_audio_div, #player {
+						display: none;
+					}
 				}
 			}
-		}
-		.wpvc_card_conthead_column {
-			.wpvc_grid_header {
-				a.MuiLink-underlineHover {
-					&:after {
-						content: "See More";
-						Position: absolute;
-						bottom: 15px;
-						right: 10px;
-						background: $color-blue;
-						border: solid 1px $color-blue;
-						padding: 15px;
-						&:hover {
-							color: $color-blue !important;
-							background-color: #fff !important;
+			.wpvc_card_conthead_column {
+				.wpvc_grid_header {
+					a.MuiLink-underlineHover {
+						&:after {
+							content: "See More";
+						    position: absolute;
+						    bottom: calc(50% - 25px);
+						    right: 15px;
+						    background: #fff;
+						    border: solid 1px #005e9a;
+						    padding: 10px;
+							color: $color-blue;
+							&:hover {
+								color: $color-blue !important;
+								background-color: #fff !important;
+							}
 						}
 					}
 				}
 			}
 		}
-	}
 
-	.wpvc_card_sub_header, .wpvc_custom_fields_view  { display: none; }
-	.wpvc_video_contest_player {
-		height: 200px !important;
-		.fluid-width-video-wrapper {
-			margin: 0px;
+		.wpvc_card_sub_header, .wpvc_custom_fields_view  { display: none; }
+		.wpvc_video_contest_player {
+			height: 200px !important;
+			.fluid-width-video-wrapper {
+				margin: 0px;
+			}
 		}
-	}
-	.MuiSvgIcon-root { color: $color-red !important; }
-	.MuiCard-root.wpvc_card_row {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		.wpvc_card_content_row {
+		.MuiSvgIcon-root { color: $color-red !important; }
+		.MuiCard-root.wpvc_card_row {
 			height: 100%;
 			display: flex;
 			flex-direction: column;
-			.wpvc_contestant_description {
+			.wpvc_card_content_row {
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				.wpvc_contestant_description {
+					margin-top: auto;
+				}
+			}
+			.wpvc_card_actions_row:last-of-type {
 				margin-top: auto;
 			}
-		}
-		.wpvc_card_actions_row:last-of-type {
-			margin-top: auto;
-		}
-		.wpvc_card_conthead_row a, .wpvc_contestant_description a, .wpvc_social_icon a svg {
-			color: $color-blue !important;
+			.wpvc_card_conthead_row a, .wpvc_contestant_description a, .wpvc_social_icon a svg {
+				color: $color-blue !important;
+			}
 		}
 	}
 }
