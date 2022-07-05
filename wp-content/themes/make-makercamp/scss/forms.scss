@@ -567,7 +567,7 @@
 				border-color: $color-red;
 				color: $color-red;
 				background: #fff;
-				&::hover {
+				&:hover {
 					color: #fff;
 					background: $color-red;
 				}
@@ -576,7 +576,7 @@
 				border-color: $color-red;
 				color: #fff;
 				background: $color-red;
-				&::hover {
+				&:hover {
 					color: $color-red;
 					background: #fff;
 				}
