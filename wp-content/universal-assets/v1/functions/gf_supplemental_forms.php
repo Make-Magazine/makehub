@@ -154,12 +154,6 @@ function make_populate_fields($form) {
                                 break;
                             default:
                                 $field->defaultValue = (isset($entry[$field_id]) ? $entry[$field_id] : "");
-                                if($field->id==97){
-                                  echo 'info for field '.$field->id.'<br/>';
-                                  var_dump($field);
-
-                                  echo '<br/><br/>';
-                                }
                                 break;
                         }
                     } else { //populate by specific parameter name
