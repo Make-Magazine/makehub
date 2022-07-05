@@ -79,6 +79,15 @@
 			}
 			.results-meta {
 				margin-top: auto;
+				.author {
+					font-weight: bold;
+				}
+				.short_desc {
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					overflow: hidden;
+				}
 			}
 		}
 	}

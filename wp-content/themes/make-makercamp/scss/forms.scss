@@ -25,7 +25,7 @@
 				position: relative
 			}
 		}
-		
+
 		.gform_page_footer {
 			display: flex;
 			input[type="button"] {
@@ -454,11 +454,6 @@
 	}
 }
 
-.gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
-	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
-		top: 4px;
-	}
-}
 
 .gfield_checkbox input[type="checkbox"]:checked + label::after {
 	font-weight: 300;
@@ -558,6 +553,36 @@
 .gv-edit-entry-wrapper {
 	.gform_wrapper li.gfield.gfield_error.gfield_contains_required .gfield_label { color: #333 !important; }
 	.info-btn { display: none; }
+	.gform_footer #publishing-action {
+		display: flex;
+		input, a {
+			margin-right: 15px;
+			margin-bottom: 0px;
+			text-transform: uppercase;
+		}
+		a {
+			display: flex;
+			align-items: center;
+			&.gv-button-cancel {
+				border-color: $color-red;
+				color: $color-red;
+				background: #fff;
+				&:hover {
+					color: #fff;
+					background: $color-red;
+				}
+			}
+			&.btn-danger {
+				border-color: $color-red;
+				color: #fff;
+				background: $color-red;
+				&:hover {
+					color: $color-red;
+					background: #fff;
+				}
+			}
+		}
+	}
 }
 
 // This is necessary for the wickedpicker to appear on the edit submission page because fml
