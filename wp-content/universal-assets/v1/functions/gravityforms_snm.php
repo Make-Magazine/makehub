@@ -16,7 +16,7 @@ function snm_automation($entry_id) {
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
     if($snm_uid!=''){
       //update the SNM to show
-      $snmReturn = update_snm_data($snm_uid,array('withdrawn'=>FALSE));
+      $snmReturn = update_snm_data($snm_uid,array('withdrawn'=>FALSE),$entry_id);
       if(!isset($snmReturn['error'])){
         GFAPI::add_note( $entry_id, 2, 'makey','Entry updated to display on SNM.');
       }
@@ -48,8 +48,8 @@ function snm_automation($entry_id) {
 }
 
 //gravity view - set entry to unapproved or declined
-add_action('gravityview/approve_entries/disapproved', 'make_update_snm', 1, 10);
-add_action('gravityview/approve_entries/unapproved', 'make_update_snm', 1, 10);
+add_action('gravityview/approve_entries/disapproved', 'make_update_snm', 10, 1);
+add_action('gravityview/approve_entries/unapproved', 'make_update_snm', 10, 1);
 
 /* This function will withdrawl a record from science near me */
 function make_update_snm($entry_id) {
@@ -62,7 +62,7 @@ function make_update_snm($entry_id) {
   if(isset($form_type) && $form_type == 'SNM'){
     $snm_uid = gform_get_meta( $entry_id, 'snm_uid' );
     if($snm_uid!=''){
-      update_snm_data($snm_uid,array('withdrawn'=>TRUE));
+      update_snm_data($snm_uid,array('withdrawn'=>TRUE),$entry_id);
       if(!isset($snmReturn['error'])){
         GFAPI::add_note( $entry_id, 2, 'makey','Entry withdrawn from SNM.');
       }
@@ -85,7 +85,7 @@ function make_update_SNM_entry( $form, $entry_id ) {
 
     // If the entry is approved we will have a UID to update
     if($snm_uid!=''){
-      update_snm_data($snm_uid, $postFields);
+      update_snm_data($snm_uid, $postFields,$entry_id);
     }
   }
   return;
@@ -112,7 +112,7 @@ function ret_SNM_token(){
 }
 
 /* This function is used to update information on Science Near Me */
-function update_snm_data($snm_uid,$dataToUpdate){
+function update_snm_data($snm_uid,$dataToUpdate,$entry_id){
   //get an authorization token
   $token = ret_SNM_token();
 
@@ -121,9 +121,8 @@ function update_snm_data($snm_uid,$dataToUpdate){
     $url = "https://beta.sciencenearme.org/api/v1/opportunity/".$snm_uid;
     $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
     $snm_data = json_decode(basicCurl($url,$headers),true);
+
     if(isset($snm_data['error'])){
-      error_log('error returned attempting to retrieve data from "'.$url.'"');
-      error_log(print_r($snm_data,true));
       return;
     }
 
@@ -131,9 +130,10 @@ function update_snm_data($snm_uid,$dataToUpdate){
       foreach($dataToUpdate as $key=>$data){
         $snm_data[$key]=$data;
       }
+      $snm_data["opp_social_handles"] = (object) $snm_data["opp_social_handles"];
+
       $dataToSend = json_encode($snm_data);
 
-      $headers = array("authorization: Bearer ".$token ,"content-type: application/json");
       $authRes = json_decode(postCurl($url, $headers, $dataToSend,'PUT'),true);
 
       //if there was an error updating this to SNM add a note to the entry
@@ -324,5 +324,15 @@ add_filter('gform_custom_merge_tags', 'make_custom_merge_tags', 10, 4);
 function make_custom_merge_tags( $merge_tags, $form_id, $fields, $element_id ) {
     $merge_tags[] = array('label' => 'Science Near Me Link', 'tag' => '{snm_link}');
     return $merge_tags;
+}
+
+//when an SNM entry is deleted, we need to ensure it's withdrawn from SNM
+add_action('gravityview/delete-entry/deleted','make_delete_snm', 10, 1 );
+add_action('gravityview/delete-entry/trashed','make_delete_snm', 10, 1 );
+add_action( 'gform_delete_entry', 'make_delete_snm', 10, 1 );
+function make_delete_snm($entry_id){
+  gform_update_meta( $entry_id, GravityView_Entry_Approval::meta_key,
+          GravityView_Entry_Approval_Status::UNAPPROVED);
+  make_update_snm($entry_id);//run this to withdraw the entry from SNM
 }
  ?>
