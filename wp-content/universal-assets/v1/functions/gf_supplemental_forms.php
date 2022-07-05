@@ -59,14 +59,11 @@ function gf_custom_validation($validation_result) {
     return $validation_result;
 }
 
-add_filter( 'gform_pre_render', 'make_populate_fields' ); //all forms
-add_filter( 'gform_pre_validation', 'make_populate_fields' );
-add_filter( 'gform_admin_pre_render', 'make_populate_fields' );
-add_filter( 'gform_pre_submission_filter', 'make_populate_fields' );
+add_filter( 'gform_pre_render', 'make_populate_fields',99 ); //all forms
 
 /*
- * this logic is for page 2 of 'linked forms'
- * It will take the entry id submitted on page one and use that
+ * this logic is for all subsequent pages of 'linked forms'
+ * It will take the entry id that was submitted on page one and use that
  *    to pull in various data from the original form submission
  */
 
@@ -74,6 +71,7 @@ function make_populate_fields($form) {
     if (!class_exists('GFFormDisplay')) {
         return $form;
     }
+
     $jqueryVal = '';
     //this is a 2-page form with the data from page one being displayed in an html field on following pages
     $current_page = GFFormDisplay::get_current_page($form['id']);
@@ -87,7 +85,7 @@ function make_populate_fields($form) {
         if ($entry_id != '') {
             //pull the original entry
             $entry = GFAPI::get_entry($entry_id); //original entry ID
-            $form_id = $form['id'];
+            $form_id = $form['id']; //current form
 
             //find the submitted original entry id
             foreach ($form['fields'] as &$field) {
@@ -122,7 +120,6 @@ function make_populate_fields($form) {
                         //strip the 'field-' from the parameter name to get the field number
                         $field_id = str_replace("field-", "", $parmName);
                         $fieldType = $field->type;
-
                         switch ($fieldType) {
                             case 'name':
                                 foreach ($field->inputs as &$input) {  //loop thru name inputs
@@ -157,6 +154,12 @@ function make_populate_fields($form) {
                                 break;
                             default:
                                 $field->defaultValue = (isset($entry[$field_id]) ? $entry[$field_id] : "");
+                                if($field->id==97){
+                                  echo 'info for field '.$field->id.'<br/>';
+                                  var_dump($field);
+
+                                  echo '<br/><br/>';
+                                }
                                 break;
                         }
                     } else { //populate by specific parameter name
@@ -235,6 +238,9 @@ function updLinked_fields($form, $origEntryID) {
             $pos = strpos($parmName, 'field-');
 
             if ($pos !== false) {
+              if($field->id==97){
+                echo 'you made it!!';
+              }
                 //find the field ID passed to update the linked entry
                 $updField = str_replace("field-", "", $parmName);  //strip the 'field-' from the parameter name to get the field number
                 //  Do not update values from read only fields
