@@ -558,12 +558,28 @@
 		input, a {
 			margin-right: 15px;
 			margin-bottom: 0px;
+			text-transform: uppercase;
 		}
 		a {
 			display: flex;
 			align-items: center;
-			&::hover {
+			&.gv-button-cancel {
+				border-color: $color-red;
+				color: $color-red;
+				background: #fff;
+				&::hover {
+					color: #fff;
+					background: $color-red;
+				}
+			}
+			&.btn-danger {
+				border-color: $color-red;
 				color: #fff;
+				background: $color-red;
+				&::hover {
+					color: $color-red;
+					background: #fff;
+				}
 			}
 		}
 	}
