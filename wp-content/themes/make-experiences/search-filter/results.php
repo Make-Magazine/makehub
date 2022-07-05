@@ -56,8 +56,9 @@ if ( $query->have_posts() ) {
 
 			$first_name = 		get_field( 'user_first_name', $post->ID, true );
 			$last_name = 		get_field( 'user_last_name', $post->ID, true );
-			$age_range = 		get_field( 'age_group', $post->ID, true );
-			$project_type = 	implode(', ', get_field( 'project_type', $post->ID, true ));
+			$short_desc = 		get_field( 'project_short_description', $post->ID, true );
+			//$age_range = 		get_field( 'age_group', $post->ID, true );
+			//$project_type = 	implode(', ', get_field( 'project_type', $post->ID, true ));
 			$vote_count = 		get_post_meta( get_the_ID(), 'votes_count', true );
 			$video_url = 		get_field( 'project_video_link', $post->ID, true );
 
@@ -81,9 +82,8 @@ if ( $query->have_posts() ) {
 					} */
 				?>
 				<div class="results-meta">
-					<p><b>Name:</b> <?php echo $first_name . " " . $last_name; ?></p>
-					<p><b>Age:</b> <?php echo $age_range; ?></p>
-					<p><b>Type:</b> <?php echo $project_type; ?></p>
+					<p class="author"><?php echo $first_name . " " . $last_name; ?></p>
+					<p class="short_desc"><?php echo $short_desc; ?></p>
 					<p><b>Community Votes:</b> <?php echo $vote_count  ?></p>
 				</div>
 				<a href="<?php the_permalink(); ?>" class="btn universal-btn">More</a>
