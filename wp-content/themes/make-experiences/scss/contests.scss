@@ -376,7 +376,7 @@ body[class*="page-judge-group"] {
 			flex-direction: column;
 			.wpvc_custom_fields_view {
 				height: 100%;
-				.MuiGrid-item { display: none; }
+				&> .MuiGrid-item { display: none; }
 				.wpvc_custom_fields_contain:last-of-type {
 					margin-top: auto;
 				}
