@@ -375,9 +375,9 @@ body[class*="page-judge-group"] {
 			display: flex;
 			flex-direction: column;
 			.wpvc_custom_fields_view {
-				flex: 1;
+				height: 100%;
 				.wpvc_custom_fields_contain:last-of-type {
-					margin-top: 100%;
+					margin-top: auto;
 				}
 			}
 		}
