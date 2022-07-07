@@ -351,3 +351,28 @@ body:not(.logged-in) {
 		}
 	}
 }
+
+// Judge pages
+body[class^="page-judge-group-1"] {
+	font-size: 16px;
+	.wpvc_card_conthead_row h5 a {
+		text-decoration: none;
+		color: #333;
+		pointer-events: none;
+		cursor: pointer;
+	}
+	.wpvc_social_icon { display: none; }
+	.MuiTypography-paragraph .universal-btn {
+		width: 50%;
+	}
+	.wpvc_card_row {
+		position: relative;
+		.wpvc_card_actions_row {
+			width: 50%;
+			position: absolute;
+			bottom: 13px;
+			right: 0px;
+		}
+	}
+
+}
