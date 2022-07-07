@@ -367,11 +367,31 @@ body[class*="page-judge-group"] {
 	}
 	.wpvc_card_row {
 		position: relative;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		.wpvc_card_content_row {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			.wpvc_custom_fields_view {
+				flex: 1;
+				.wpvc_custom_fields_contain:last-of-type {
+					margin-top: 100%;
+				}
+			}
+		}
 		.wpvc_card_actions_row {
 			width: 50%;
 			position: absolute;
 			bottom: 13px;
 			right: 0px;
+			.wpvc_judgebtn:hover {
+				span {
+					color: #fff;
+					text-decoration: underline;
+				 }
+			}
 		}
 	}
 
