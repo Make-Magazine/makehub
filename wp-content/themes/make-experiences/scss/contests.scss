@@ -361,7 +361,7 @@ body[class*="page-judge-group"] {
 		pointer-events: none;
 		cursor: pointer;
 	}
-	.wpvc_social_icon { display: none; }
+	.wpvc_social_icon, .wpvc_vote_cast_btn { display: none; }
 	.MuiTypography-paragraph .universal-btn {
 		width: 50%;
 	}
