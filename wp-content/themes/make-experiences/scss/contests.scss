@@ -353,8 +353,8 @@ body:not(.logged-in) {
 }
 
 // Judge pages
-body[class^="page-judge-group"], .wpvc_show_contestants {
-	font-size: 16px;
+body[class*="page-judge-group"] {
+	.MuiTypography-paragraph { font-size: 16px !important; }
 	.wpvc_card_conthead_row h5 a {
 		text-decoration: none;
 		color: #333;
