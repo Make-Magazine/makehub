@@ -353,7 +353,7 @@ body:not(.logged-in) {
 }
 
 // Judge pages
-body[class^="page-judge-group-1"] {
+body[class^="page-judge-group"], .wpvc_show_contestants {
 	font-size: 16px;
 	.wpvc_card_conthead_row h5 a {
 		text-decoration: none;
