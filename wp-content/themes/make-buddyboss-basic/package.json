@@ -1,0 +1,43 @@
+{
+   "name": "Make-Experiences",
+   "version": "1.0.859",
+   "author": "Make: Community",
+   "license": "UNLICENSED",
+   "private": true,
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/Make-Magazine/makehub.git"
+   },
+   "scripts": {
+      "cachebust:update": "npm version patch",
+      "postcachebust:update": "npm run replace:version",
+      "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
+      "scss:fe:compile": "sass scss/style.scss css/style.min.css --style compressed",
+      "js:fe:uglify": "uglifyjs js/site/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
+      "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/jquery.photoswipe/dist/jquery.photoswipe-global.js node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
+      "onchange:scss:fe": "onchange 'scss/*.scss' -- npm run scss:fe:compile",
+      "onchange:js:fe": "onchange 'js/site/*.js' -- npm run js:fe:uglify",
+      "onchange:js:libs": "onchange 'js/libs-src/*.js' -- npm run js:libs:uglify",
+      "build": "npm-run-all js:**:uglify scss:**:compile",
+      "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
+      "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
+   },
+   "devDependencies": {
+      "npm-run-all": "^4.1.5",
+      "onchange": "^7.1.0",
+      "replace-in-file": "^6.3.2",
+      "uglify-js": "^3.15.1"
+   },
+   "dependencies": {
+      "@fancyapps/fancybox": "^3.5.7",
+      "ansi-regex": "^6.0.1",
+      "anymatch": "^3.1.2",
+      "bootstrap": "^4.6.1",
+      "cliui": "^7.0.4",
+      "is-fullwidth-code-point": "^4.0.0",
+      "jquery": "^3.6.0",
+      "jquery.photoswipe": "^1.1.1",
+      "sass": "^1.49.7",
+      "strip-ansi": "^6.0.1"
+   }
+}
