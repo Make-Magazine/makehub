@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Make Experiences
+ * @package Make Buddyboss Basic
  * The parent theme functions are located at /buddyboss-theme/inc/theme/functions.php
  * Add your own functions at the bottom of this file.
  */
@@ -9,15 +9,15 @@
 require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
 
 // Defines the child theme (do not remove).
-define('CHILD_THEME_NAME', 'Make - Experiences');
-define('CHILD_THEME_URL', 'https://experiences.make.co');
+define('CHILD_THEME_NAME', 'Make - Buddyboss Basic');
+define('CHILD_THEME_URL', 'https://makershed.make.co');
 
 /**
  * Sets up theme for translation
  *
  * @since Make Experiences 1.0.0
  */
-function make_experiences_languages() {
+function make_buddyboss_basic_languages() {
     /**
      * Makes child theme available for translation.
      * Translations can be added into the /languages/ directory.
@@ -26,17 +26,17 @@ function make_experiences_languages() {
     load_theme_textdomain('buddyboss-theme', get_stylesheet_directory() . '/languages');
 
     // Translate text from the CHILD theme only.
-    // Change 'buddyboss-theme' instances in all child theme files to 'make_experiences'.
-    // load_theme_textdomain( 'make_experiences', get_stylesheet_directory() . '/languages' );
+    // Change 'buddyboss-theme' instances in all child theme files to 'make_buddyboss_basic'.
+    // load_theme_textdomain( 'make_buddyboss_basic', get_stylesheet_directory() . '/languages' );
 }
-add_action('after_setup_theme', 'make_experiences_languages');
+add_action('after_setup_theme', 'make_buddyboss_basic_languages');
 
 /**
  * Enqueues scripts and styles for child theme front-end.
  *
- * @since Make Experiences  1.0.0
+ * @since Make Buddyboss Basic  1.0.0
  */
-function make_experiences_scripts_styles() {
+function make_buddyboss_basic_scripts_styles() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     /**
@@ -60,9 +60,9 @@ function make_experiences_scripts_styles() {
 
     // lib src packages up bootstrap js and fancybox
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
-    wp_enqueue_script('make_experiences-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+    wp_enqueue_script('make_buddyboss_basic-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 }
-add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
+add_action('wp_enqueue_scripts', 'make_buddyboss_basic_scripts_styles', 9999);
 
 function load_admin_styles() {
   wp_register_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.4' );
@@ -86,20 +86,6 @@ foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
 foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
     include_once $file;
 }
-
-//* Disable email match check for all users - this error would keep users from registering users already in our system
-add_filter('EED_WP_Users_SPCO__verify_user_access__perform_email_user_match_check', '__return_false');
-
-function parse_yturl($url) {
-    $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
-    preg_match($pattern, $url, $matches);
-    return (isset($matches[1])) ? $matches[1] : false;
-}
-
-//do not display doing it wrong errors
-add_filter('doing_it_wrong_trigger_error', function () {
-    return false;
-}, 10, 0);
 
 function add_slug_body_class($classes) {
     global $post;
@@ -128,36 +114,10 @@ function add_slug_body_class($classes) {
 			}
 		}
 
-        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
-        if (bp_is_groups_component()) {
-            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
-            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
-                $classes[] = 'my-group';
-            }
-        }
         return $classes;
     }
 }
 add_filter('body_class', 'add_slug_body_class');
-
-/*
- * Override any of the translation files if we need to change language
- *
- * @param $translation The current translation
- * @param $text The text being translated
- * @param $domain The domain for the translation
- * @return string The translated / filtered text.
- */
-function filter_gettext($translation, $text, $domain) {
-    $translations = get_translations_for_domain($_SERVER['HTTP_HOST']);
-    switch ($text) {
-        case 'Nickname':
-            return $translations->translate('Display Name');
-            break;
-    }
-    return $translation;
-}
-add_filter('gettext', 'filter_gettext', 10, 4);
 
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
