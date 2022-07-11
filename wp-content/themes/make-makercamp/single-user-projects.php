@@ -272,7 +272,7 @@ get_header();
 									<br />
 								<?php }
 								if(!empty($themes)){ ?>
-									<h4>see more projects from these themes:</h4>
+									<h4>See More Projects from these themes:</h4>
 									<?php foreach($themes as $theme) { ?>
 										<a href="/project-library/?_sft_makeyland_themes=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
 									<?php }
