@@ -307,3 +307,31 @@
 		display: none;
 	}
 }
+
+
+.shopify-buy-frame {
+	margin: 0 auto;
+	@media screen and (max-width: 1200px) {
+		position: fixed;
+		top: 149px;
+		right: 0px;
+		z-index: 99;
+		max-width: 20vw !important;
+		border: solid 1px #ccc;
+		border-right: 0px;
+		padding-bottom: 15px;
+		border-bottom-left-radius: 10px;
+		border-top-left-radius: 10px;
+		overflow: hidden;
+		background: #fff;
+	}
+	.shopify-buy__btn {
+		background-color: $color-blue;
+		border: 1px solid $color-blue;
+		border-radius: 3px;
+		&:hover {
+			background-color: #fff;
+			color: $color-blue;
+		}
+	}
+}
