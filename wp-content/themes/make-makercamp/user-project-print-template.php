@@ -28,7 +28,7 @@
 <body <?php body_class(); ?>>
 
   <?php
-  $hero_image = get_field('hero_image', $parent_id);
+  $hero_image = get_the_post_thumbnail_url($parent_id);
   $materials = get_the_terms($parent_id, 'materials');
   $times = get_the_terms($parent_id, 'times');
   $time = $times[0]->name;
@@ -42,9 +42,9 @@
 
 	  <img src="<?php echo get_stylesheet_directory_uri() . '/images/makercamp-logo.png' ?>" class="header-logo img-responsive" alt="Maker Camp projects, making, building, tickering for kids" />
 	  <hr />
-	  <h1><?php echo empty( $post->post_parent ) ? get_the_title( $post->ID ) : get_the_title( $post->post_parent ); ?></h1>
+	  <h1><?php echo empty( $parent_id ) ? get_the_title( $post->ID ) : get_the_title( $parent_id ); ?></h1>
 
-	  <img src="<?php echo $hero_image['url']; ?>" class="img-responsive" alt="Project hero image" />
+	  <img src="<?php echo $hero_image; ?>" class="img-responsive" alt="Project hero image" />
 
 	  <div class="pp-time">
 		<h4>TIME TO COMPLETE</h4>
@@ -88,12 +88,12 @@
                 <div class="row">
                   <div class="col-xs-6">
                     <?php if (!empty($image_1)) { ?>
-                      <img class="img-responsive" src="<?php echo $image_1['url']; ?>" alt="Project step photo 2" />
+                      <img class="img-responsive" src="<?php echo $image_1; ?>" alt="Project step photo 2" />
                     <?php } ?>
                   </div>
                   <div class="col-xs-6">
                     <?php if (!empty($image_2)) { ?>
-                      <img class="img-responsive" src="<?php echo $image_2['url']; ?>" alt="Project step photo 2" />
+                      <img class="img-responsive" src="<?php echo $image_2; ?>" alt="Project step photo 2" />
                     <?php } ?>
                   </div>
                 </div>
