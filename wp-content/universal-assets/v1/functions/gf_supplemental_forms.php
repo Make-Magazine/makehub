@@ -232,9 +232,6 @@ function updLinked_fields($form, $origEntryID) {
             $pos = strpos($parmName, 'field-');
 
             if ($pos !== false) {
-              if($field->id==97){
-                echo 'you made it!!';
-              }
                 //find the field ID passed to update the linked entry
                 $updField = str_replace("field-", "", $parmName);  //strip the 'field-' from the parameter name to get the field number
                 //  Do not update values from read only fields
@@ -278,7 +275,7 @@ function update_linked_data_pre($form, $entry_id, $orig_entry = array()) {
     update_linked_data($entry, $form);
 }
 
-add_action('gform_after_submission', 'update_linked_data', 10, 2); //$entry, $form
+//add_action('gform_after_submission', 'update_linked_data', 10, 2); //$entry, $form
 function update_linked_data($entry, $form) {
     // update meta
     $updateEntryID = get_value_by_label('entry-id', $form, $entry);
