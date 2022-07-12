@@ -1,17 +1,17 @@
 === GravityView ===
 Tags: gravity forms, directory, gravity forms directory
 Requires at least: 4.7
-Tested up to: 5.9.2
+Tested up to: 6.0
 Requires PHP: 5.6.30
 Stable tag: trunk
-Contributors: The GravityView Team
+Contributors: The GravityKit Team
 License: GPL 3 or higher
 
 Beautifully display and edit your Gravity Forms entries.
 
 == Description ==
 
-Beautifully display your Gravity Forms entries. Learn more on [gravityview.co](https://gravityview.co).
+Beautifully display your Gravity Forms entries. Learn more on [gravitykit.com](https://www.gravitykit.com).
 
 == Installation ==
 
@@ -20,6 +20,49 @@ Beautifully display your Gravity Forms entries. Learn more on [gravityview.co](h
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.14.6 on May 27, 2022 =
+
+* [GravityView (the company) is now GravityKit!](https://www.gravitykit.com/rebrand/)
+* Fixed: Embedding Edit Entry context directly in a page/post using the `[gventry edit="1"]` shortcode ([learn more](https://docs.gravitykit.com/article/463-gventry-shortcode))
+* Fixed: Edit Entry link wasn't working in the Single Entry context of an embedded View
+* Fixed: Search Bar GravityView widget was not saving the chosen fields
+* Fixed: Gravity PDF shortcodes would not be processed when bulk-approving entries using GravityView. Thanks, Jake!
+* Fixed: Sometimes embedding a GravityView shortcode in the block editor could cause a fatal error
+* Fixed: Multiple PHP 8 warnings
+
+__Developer Updates:__
+
+* Added: `redirect_url` parameter to the `gravityview/edit_entry/success` filter
+* Added `redirect_url` and `back_link` parameters to the `gravityview/shortcodes/gventry/edit/success` filter
+
+
+= 2.14.5 on May 4, 2022 =
+
+* Added: A link that allows administrators to disable the "Show only approved entries" View setting from the front-end
+* Fixed: Configuring new Search Bar WordPress widgets wasn't working in WordPress 5.8+
+* Fixed: Styling of form settings dropdowns on the Gravity Forms "Forms" page
+
+= 2.14.4 on April 27, 2022 =
+
+* Added: Search Bar support for the [Chained Selects](https://www.gravityforms.com/add-ons/chained-selects/) field type
+* Improved: Plugin updater script now supports auto-updates and better supports multisite installations
+* Improved: If a View does not support joined forms, log as a notice, not an error
+* Fixed: Merge Tag picker behavior when using Gravity Forms 2.6
+* Fixed: Deleting a file when editing an entry as a non-administrator user on Gravity Forms 2.6.1 results in a server error
+* Fixed: When The Events Calendar Pro plugin is active, Views became un-editable
+* Tweak: Additional translation strings related to View editing
+
+Note: We will be requiring Gravity Forms 2.5 and WordPress 5.3 in the near future; please upgrade!
+
+__Developer Updates:__
+
+* Added: Search URLs now support `input_{field ID}` formats as well as `filter_{field ID}`; the following will both be treated the same:
+	- `/view/example/?filter_3=SEARCH`
+	- `/view/example/?input_3=SEARCH`
+* Added: In the admin, CSS classes are now added to the `body` tag based on Gravity Forms version. See `GravityView_Admin_Views::add_gf_version_css_class()`
+* Modified: Allow non-admin users with "edit entry" permissions to delete uploaded files
+* Updated: EDD_SL_Plugin_Updater script to version 1.9.1
 
 = 2.14.3 on March 24, 2022 =
 
@@ -2577,4 +2620,4 @@ We're just getting started with what can be done with DataTables. We'll have muc
 * Liftoff!
 
 
-= 1648571765-4249 =
+= 1657652452-4249 =
