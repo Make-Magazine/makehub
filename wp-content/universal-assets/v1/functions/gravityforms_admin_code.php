@@ -192,8 +192,36 @@ function pullMergeParam($merge_text, $param){
   return ''; //parameter not found, return blank
 }
 
+add_filter('gform_column_input_content', 'add_list_field_classes',10,6);
+function add_list_field_classes( $input, $input_info, $field, $text, $value, $form_id ) {
+  if($field["type"]=='list' && $field["inputName"]=="date-time-list"){
+    if(stripos($text, 'time')!== false){
+      $tabindex = GFCommon::get_tabindex();
+      $input_field_name = 'input_' . $field->id . '[]';
+      $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
+
+  	  if(!$value) { $value = "12 : 00 PM"; } // if we aren't seeing a set value, set it noon as default
+
+      $input = '<input type="text" name="' . $input_field_name . '" value="'.$value.'" ' . $tabindex . ' class="time timepicker">';
+
+    }elseif(stripos($text, 'date')!== false){
+      //build field name, must match List field syntax to be processed correctly
+      $input_field_name = 'input_' . $field->id . '[]';
+      $input_field_id = 'input_' . $form_id . '_' . $field->id;
+      $tabindex = GFCommon::get_tabindex();
+
+      $input = '<input name="' . $input_field_name . '" id="' . $input_field_name . '" ' . $tabindex . ' type="date" placeholder="mm-dd-yyyy" onKeyDown="numbersAndDashes()" value="' . $value . '" class="datepicker medium mdy datepicker_no_icon hasDatepicker" aria-describedby="input_10_12_date_format">' .
+              ' <span id="' . $input_field_id . '_date_format" class="screen-reader-text">Date Format: MM slash DD slash YYYY</span>';
+    }
+  }
+  return $input;
+}
 add_filter( 'gform_column_input', 'set_column_input', 10, 5 );
 function set_column_input( $input_info, $field, $column, $value, $form_id ) {
+  if($field->inputName=='') {
+    return $input_info;
+  }
+
   if($field->inputName=='social-list' && $column=='Platform'){
     return array( 'type' => 'select', 'choices' => 'Facebook, Twitter, Instagram, YouTube, TikTok' );
   }else{
