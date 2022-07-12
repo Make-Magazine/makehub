@@ -101,6 +101,14 @@ function add_slug_body_class($classes) {
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
+		// add page template class to page
+		if (!empty(get_post_meta(get_the_ID(), '_wp_page_template', true))) {
+			// Remove the `template-` prefix and get the name of the template without the file extension.
+			$templateName = basename(get_page_template_slug(get_the_ID()));
+			$templateName = "page-template-" . str_replace(".php", "", $templateName);
+
+			$classes[] = $templateName;
+		}
 		// For Course and Lessons, check for the Primary category and add it to the body class if found
 		if ( $post->post_type == "sfwd-courses") {
 			$ld_course_category = get_post_primary_category($post->ID, 'ld_course_category');
