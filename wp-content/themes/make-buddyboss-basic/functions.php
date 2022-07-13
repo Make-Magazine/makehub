@@ -135,7 +135,7 @@ function remove_admin_bar() {
         show_admin_bar(false);
     }
 }
-add_action('after_setup_theme', 'remove_admin_bar');
+add_action('show_admin_bar', 'remove_admin_bar', 999);
 
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
