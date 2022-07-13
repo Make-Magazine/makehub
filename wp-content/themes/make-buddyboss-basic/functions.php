@@ -109,6 +109,9 @@ function add_slug_body_class($classes) {
 
 			$classes[] = $templateName;
 		}
+		if(current_user_can('administrator')) {
+			$classes[] = "admin-bar";
+		}
 		// For Course and Lessons, check for the Primary category and add it to the body class if found
 		if ( $post->post_type == "sfwd-courses") {
 			$ld_course_category = get_post_primary_category($post->ID, 'ld_course_category');
@@ -126,6 +129,13 @@ function add_slug_body_class($classes) {
     }
 }
 add_filter('body_class', 'add_slug_body_class');
+
+function remove_admin_bar() {
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
+}
+add_action('after_setup_theme', 'remove_admin_bar');
 
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
