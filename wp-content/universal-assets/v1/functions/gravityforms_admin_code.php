@@ -216,6 +216,7 @@ function add_list_field_classes( $input, $input_info, $field, $text, $value, $fo
   }
   return $input;
 }
+
 add_filter( 'gform_column_input', 'set_column_input', 10, 5 );
 function set_column_input( $input_info, $field, $column, $value, $form_id ) {
   if($field->inputName=='') {
@@ -227,4 +228,52 @@ function set_column_input( $input_info, $field, $column, $value, $form_id ) {
   }else{
     return $input_info;
   }
+}
+
+function retFieldByParam($paramName = '', $form = array(), $entry = array()) {
+  if (isset($form['fields'])) {
+    $paramFound = false;
+    foreach ($form['fields'] as $field) {
+      //paramater names are stored in a different place
+      if ($field['type'] == 'name' || $field['type'] == 'address') {
+          foreach ($field['inputs'] as $choice) {
+              if ($choice['name'] != '' && $choice['name']==$paramName){
+                  $parameter_array[$choice['name']] = $field;
+                  $paramFound = true;
+              }
+          }
+      }
+      if ($field['allowsPrepopulate'] && $field['inputName'] != '' && $field['inputName']==$paramName) {
+          $parameter_array[$field['inputName']] = $field;
+          $paramFound = true;
+      }
+      if($paramFound) break;
+    }
+  }
+
+  if($paramFound){
+    $field = $parameter_array[$paramName];
+    if (isset($field)) {
+      $fieldID = $field->id;
+      if ($field->type == 'name' || $field->type == 'address') {
+          foreach ($field->inputs as $choice) {
+              if ($choice['name'] == $paramName) {
+                  $fieldID = $choice['id'];
+              }
+          }
+      } elseif ($field->type == 'checkbox') {
+          $fieldID = $field->id;
+          $cbArray = array();
+          foreach ($entry as $key => $value) {
+              if (strpos($key, $fieldID . ".") === 0) {
+                  $cbArray[] = $value;
+              }
+          }
+          return $cbArray;
+      }
+      return (isset($entry[$fieldID]) ? $entry[$fieldID] : '');
+    }
+  }
+
+  return '';
 }
