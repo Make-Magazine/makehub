@@ -19,6 +19,17 @@ function wps_remove_filter_phone( $address_fields ) {
   return $address_fields;
 }
 
+// Auto Complete all WooCommerce orders.
+add_action( 'woocommerce_thankyou', 'custom_woocommerce_auto_complete_order' );
+function custom_woocommerce_auto_complete_order( $order_id ) {
+    if ( ! $order_id ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    $order->update_status( 'completed' );
+}
+
 /*
 // Add some extra checkout fields
 add_filter( 'woocommerce_checkout_fields' , 'add_custom_checkout_fields' );

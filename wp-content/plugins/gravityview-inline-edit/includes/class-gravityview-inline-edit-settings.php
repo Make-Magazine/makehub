@@ -1,7 +1,7 @@
 <?php
 
 if ( ! class_exists( 'GFForms' ) ) {
-    return;
+	return;
 }
 
 GFForms::include_addon_framework();
@@ -45,17 +45,76 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 		$this->_short_title = esc_html__( 'Inline Edit', 'gravityview-inline-edit' );
 
 		parent::__construct();
+
+		add_filter( 'gravityview_template_field_options', array( $this, 'add_inline_edit_option' ), 10, 6 );
+
+		add_filter( 'gravityview/admin/indicator_icons', array( $this, 'add_inline_edit_icon' ), 10, 2 );
 	}
 
 	/**
+	 * Add inline edit icon in the field setting.
+	 *
+	 * @param array $icons
+	 * @param array $settings
+	 *
+	 * @return array
+	 */
+	public function add_inline_edit_icon( $icons, $settings ) {
+
+		$icons['enable_inline_edit'] = array(
+			'visible'   => isset( $settings['enable_inline_edit'] ) && 'enabled' === rgar( $settings, 'enable_inline_edit', 'enabled' ),
+			'title'     => __( 'This field is allowed to be inline edited', 'gravityview-inline-edit' ),
+			'css_class' => 'dashicons dashicons-edit icon-allow-inline-edit',
+		);
+
+		return $icons;
+	}
+
+	/**
+	 * Add inline edit checkbox in the field setting
+	 *
+	 * @param array $field_options
+	 * @param integer $template_id
+	 * @param integer $field_id
+	 * @param string $context
+	 * @param string $input_type
+	 * @param integer $form_id
+	 *
+	 * @return array
+	 */
+	public function add_inline_edit_option( $field_options, $template_id, $field_id, $context, $input_type, $form_id ) {
+		// Show option only to supported fields.
+		$supported_fields = GravityView_Inline_Edit::get_instance()->get_supported_fields();
+		if ( ! in_array( $input_type, $supported_fields ) ) {
+			return $field_options;
+		}
+
+		$field_options['enable_inline_edit'] = array(
+			'type'     => 'radio',
+			'label'    => __( 'Enable editing this field with Inline Edit', 'gravityview-inline-edit' ),
+			'value'    => 'enabled',
+			'choices'  => array(
+				'enabled'  => __( 'Enabled', 'gravityview-inline-edit' ),
+				'disabled' => __( 'Disabled', 'gravityview-inline-edit' ),
+			),
+			'class'    => 'checkbox',
+			'priority' => 5100,
+			'group'    => 'advanced',
+		);
+
+		return $field_options;
+	}
+
+
+	/**
 	 * Returns TRUE if the settings "Save" button was pressed
-     *
-     * @since 1.0.3 Fixes conflict with Import Entries plugin
-     *
-     * @return bool True: Settings form is being saved and the Inline Edit setting is in the posted values (form settings)
+	 *
+	 * @since 1.0.3 Fixes conflict with Import Entries plugin
+	 *
+	 * @return bool True: Settings form is being saved and the Inline Edit setting is in the posted values (form settings)
 	 */
 	public function is_save_postback() {
-		return ! rgempty( 'gform-settings-save' ) && ( isset( $_POST['gv_inline_edit_enable'] ) || isset( $_POST['_gravityview-inline-edit_save_settings_nonce'] ) || isset( $_POST['_gaddon_setting_inline-edit-mode'] ) );
+		return ! rgempty( 'gform-settings-save' ) && ( isset( $_POST['gv_inline_edit_enable'] ) || isset( $_POST['_gravityview-inline-edit_save_settings_nonce'] ) || isset( $_POST['_gaddon_setting_inline-edit-mode'] ) || isset( $_POST['_gform_setting_inline-edit-mode'] ) );
 	}
 
 	/**
@@ -87,13 +146,13 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	private function _get_edit_mode_tooltip_html() {
 
 		$tooltips = array(
-			'popup' => array(
-				'image' => 'gf-popup',
-				'description' => esc_html__('Popup: The edit form will appear above the content.', 'gravityview-inline-edit'),
+			'popup'  => array(
+				'image'       => 'gf-popup',
+				'description' => esc_html__( 'Popup: The edit form will appear above the content.', 'gravityview-inline-edit' ),
 			),
 			'inline' => array(
-				'image' => 'gf-in-place',
-				'description' => esc_html__('In-Place: The edit form for the field will show in the same place as the content.', 'gravityview-inline-edit'),
+				'image'       => 'gf-in-place',
+				'description' => esc_html__( 'In-Place: The edit form for the field will show in the same place as the content.', 'gravityview-inline-edit' ),
 			),
 		);
 
@@ -121,7 +180,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	 *
 	 * @return string
 	 */
-	protected function settings_edd_license( $field, $echo = true ) {
+	public function settings_edd_license( $field, $echo = true ) {
 
 		// Otherwise, it'd be output as an attribute. Didn't want to use the `gaddon_no_output_field_properties` filter
 		unset( $field['description'] );
@@ -160,20 +219,71 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	public function print_select_scripts() {
 		?>
         <script>
-            jQuery( document ).ready( function( $ ) {
-               $('select[name*="edit-mode"]').on('change', function() {
-                   $( '.gv-inline-edit-mode-image' ).hide().filter('[data-edit-mode="' + $( this ).val() + '"]').show();
-               }).trigger('change');
-            });
+			jQuery( document ).ready( function ( $ ) {
+				$( 'select[name*="edit-mode"]' ).on( 'change', function () {
+					$( '.gv-inline-edit-mode-image' ).hide().filter( '[data-edit-mode="' + $( this ).val() + '"]' ).show();
+				} ).trigger( 'change' );
+
+				function toggle_inline_edit_icon_visibility() {
+
+					var is_view_inline_edit_enabled = $( '#gravityview_se_inline_edit' ).is( ':checked' );
+
+					$( '#gv-view-configuration-tabs' )
+						.find( '.gv-field-controls .icon-allow-inline-edit' )
+						.not( '.hide-if-js' )
+						.toggle( is_view_inline_edit_enabled );
+				}
+
+				$( 'body' )
+					.on( 'change', ".gv-dialog-options input[name*=enable_inline_edit]", function ( e ) {
+						var parent = $( e.target ).parents( '.gv-fields' );
+						var inline_edit = ( 'enabled' === $( e.target ).filter( ':checked' ).val() );
+						parent.toggleClass( 'icon-allow-inline-edit', inline_edit );
+						parent.find( '.gv-field-controls .icon-allow-inline-edit' ).toggleClass( 'hide-if-js', !inline_edit );
+						toggle_inline_edit_icon_visibility();
+					} )
+					.on( 'change', '#gravityview_se_inline_edit', function () {
+						toggle_inline_edit_icon_visibility();
+					} )
+					.on( 'gravityview/field-added', function ( e, field ) {
+						if ( $( field ).find( '.gv-dialog-options .gv-setting-container-enable_inline_edit' ).length > 0 ) {
+							$( field ).find( '.gv-field-controls .icon-allow-inline-edit' ).removeClass( 'hide-if-js' );
+						}
+					} );
+
+				// gravityview/loaded has already run; let's initialize whether to show or hide the icons
+				toggle_inline_edit_icon_visibility();
+
+			} );
         </script>
 
         <style>
-            #gaddon-setting-row-inline-edit-mode .gv-inline-edit-mode-image {
-                display: none;
-                margin-top: 15px;
-            }
+			#gaddon-setting-row-inline-edit-mode .gv-inline-edit-mode-image {
+				display: none;
+				margin-top: 15px;
+			}
+
+			.gv-dialog-options .gv-setting-container label[for$=enable_inline_edit]::after {
+				content: "\f464";
+				font-family: Dashicons, sans-serif;
+				font-size: 20px;
+				height: 20px;
+				width: 20px;
+				line-height: 20px;
+				speak: none;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				margin-left: 0.25em;
+				position: absolute;
+				color: #555D66;
+			}
+
+			.gv-fields .gv-field-controls .dashicons-edit {
+				line-height: 44px;
+				margin: -2px 6px 0 0;
+			}
         </style>
-        <?php
+		<?php
 	}
 
 	/**
@@ -182,6 +292,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	 * @since 1.0
 	 *
 	 * @param array $settings {
+	 *
 	 * @type string $edd_action The EDD action to perform, like `check_license`
 	 * @type string $license The license key
 	 * @type string $format If `object`, return the object of the license data. `array` for array, `json` to return the JSON-encoded object. [Default: "array"]
@@ -193,28 +304,34 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 
 		$current_settings = $this->get_current_settings();
 
-		$data = wp_parse_args( $settings, array(
-			'edd_action' => 'activate_license',
-		    'license_key'    => rgar( $current_settings, 'license_key' ),
-		    'format'     => 'array',
-		) );
+		$data = wp_parse_args(
+			$settings,
+			array(
+				'edd_action'  => 'activate_license',
+				'license_key' => rgar( $current_settings, 'license_key' ),
+				'format'      => 'array',
+			)
+		);
 
 		$api_params = array(
 			'edd_action' => rgar( $data, 'edd_action' ),
-			'version'   => GravityView_Inline_Edit::get_version(),
-			'license'   => rgar( $data, 'license_key' ),
-			'item_name' => GravityView_Inline_Edit::get_title(),
-			'item_id'   => GravityView_Inline_Edit::get_item_id(),
-			'author'    => GravityView_Inline_Edit::get_author(),
-			'url'       => home_url(),
+			'version'    => GravityView_Inline_Edit::get_version(),
+			'license'    => rgar( $data, 'license_key' ),
+			'item_name'  => GravityView_Inline_Edit::get_title(),
+			'item_id'    => GravityView_Inline_Edit::get_item_id(),
+			'author'     => GravityView_Inline_Edit::get_author(),
+			'url'        => home_url(),
 		);
 
 		$url = add_query_arg( $api_params, GravityView_Inline_Edit::get_remote_update_url() );
 
-		$response = wp_remote_get( $url, array(
-			'timeout'   => 15,
-			'sslverify' => false,
-		) );
+		$response = wp_remote_get(
+			$url,
+			array(
+				'timeout'   => 15,
+				'sslverify' => false,
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -232,7 +349,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 		// Store the license key inside the data array
 		$license_data->license_key = rgar( $data, 'license_key' );
 
-		switch( rgar( $data, 'format' ) ) {
+		switch ( rgar( $data, 'format' ) ) {
 			case 'object':
 				$return = $license_data;
 				break;
@@ -277,12 +394,12 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	 *
 	 * @since 1.0
 	 *
-	 * @param  array|null $status Status to get. If empty, get all strings.
-	 * @param  object|null $license_data Response from GravityView license server
+	 * @param array|null $status Status to get. If empty, get all strings.
+	 * @param object|null $license_data Response from GravityView license server
 	 *
 	 * @return array          Modified array of content
 	 */
-	public function strings( $status = NULL, $license_data = null ) {
+	public function strings( $status = null, $license_data = null ) {
 
 		$renewal_url = ! empty( $license_data->renewal_url ) ? $license_data->renewal_url : 'https://gravityview.co/account/';
 
@@ -295,7 +412,8 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 			'deactivated'         => esc_html__( 'The license has been deactivated.', 'gravityview-inline-edit' ),
 			'valid'               => esc_html__( 'The license key is valid and active.', 'gravityview-inline-edit' ),
 			'invalid'             => esc_html__( 'The license key entered is invalid.', 'gravityview-inline-edit' ),
-			'missing'             => esc_html__( 'The license key entered is invalid.', 'gravityview-inline-edit' ), // Missing is "the license couldn't be found", not "you submitted an empty license"
+			'missing'             => esc_html__( 'The license key entered is invalid.', 'gravityview-inline-edit' ),
+			// Missing is "the license couldn't be found", not "you submitted an empty license"
 			'revoked'             => esc_html__( 'This license key has been revoked.', 'gravityview-inline-edit' ),
 			'expired'             => sprintf( esc_html__( 'This license key has expired. %sRenew your license on the GravityView website%s', 'gravityview-inline-edit' ), '<a href="' . esc_url( $renewal_url ) . '" rel="external">', '</a>' ),
 			'verifying_license'   => esc_html__( 'Verifying license&hellip;', 'gravityview-inline-edit' ),
@@ -312,7 +430,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 			return $strings[ $status ];
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -327,15 +445,18 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	 */
 	public function validate_edd_license_settings( $field = array(), $settings = array() ) {
 
-		if( '' === rgar( $settings, 'license_key' ) ) {
+		if ( '' === rgar( $settings, 'license_key' ) ) {
 			return true;
 		}
 
-		$license = GravityView_Inline_Edit::get_instance()->get_license( false, array(
-			'license'    => rgar( $settings, 'license_key' ),
-			'format'     => 'array',
-		    'edd_action' => 'activate_license',
-		) );
+		$license = GravityView_Inline_Edit::get_instance()->get_license(
+			false,
+			array(
+				'license'    => rgar( $settings, 'license_key' ),
+				'format'     => 'array',
+				'edd_action' => 'activate_license',
+			)
+		);
 
 		$status = rgar( $license, 'license' );
 
@@ -379,7 +500,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 		$license = GravityView_Inline_Edit::get_instance()->get_license();
 
 		// Show the stored error message
-		if( ! $success = rgar( $license, 'success' ) ) {
+		if ( ! $success = rgar( $license, 'success' ) ) {
 			$this->set_field_error( $field, rgar( $license, 'message' ) );
 		}
 
@@ -417,47 +538,45 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 				'title'  => '',
 				'fields' => array(
 					array(
-						'name'          => 'license_key',
-						'required'      => true,
-						'label'         => __( 'Support License Key', 'gravityview-inline-edit' ),
-						'description'   => '<p class="clear">'.__( 'Enter the license key that was sent to you on purchase. This enables plugin updates &amp; support.', 'gravityview-inline-edit' ).'</p>',
-						'type'          => 'edd_license',
+						'name'              => 'license_key',
+						'required'          => true,
+						'label'             => __( 'Support License Key', 'gravityview-inline-edit' ),
+						'description'       => '<p class="clear">' . __( 'Enter the license key that was sent to you on purchase. This enables plugin updates &amp; support.', 'gravityview-inline-edit' ) . '</p>',
+						'type'              => 'edd_license',
 						'feedback_callback' => array( $this, 'setup_field_validation_feedback' ),
-						'placeholder'   => esc_html__('Enter your license key here', 'gravityview-inline-edit' ),
-						'default_value' => '',
-						'class'         => 'activate code regular-text edd-license-key',
+						'placeholder'       => esc_html__( 'Enter your license key here', 'gravityview-inline-edit' ),
+						'default_value'     => '',
+						'class'             => 'activate code regular-text edd-license-key',
 					),
 					array(
 						'name'          => 'inline-edit-mode',
 						'type'          => 'select',
 						'label'         => __( 'Inline Edit Mode', 'gravityview-inline-edit' ),
 						'tooltip'       => $this->_get_edit_mode_tooltip_html(),
-                        'after_select'  => $this->_get_edit_mode_tooltip_html(),
+						'after_select'  => $this->_get_edit_mode_tooltip_html(),
 						'description'   => esc_html__( 'Change where the Inline Edit form appears &ndash; above the content or in its place.', 'gravityview-inline-edit' ),
 						'default_value' => 'popup',
 						'horizontal'    => 1,
 						'choices'       => array(
-							array
-							(
-								'label' => esc_html__( 'Popup', 'gravityview-inline-edit' ),
-								'tooltip' => esc_html__('Popup: The edit form will appear above the content.', 'gravityview-inline-edit'),
-								'value' => 'popup',
-								'name'  => 'inline-edit-mode-popup',
-							    'icon'  => plugins_url( "assets/images/popup.png", GRAVITYVIEW_INLINE_FILE ),
+							array(
+								'label'   => esc_html__( 'Popup', 'gravityview-inline-edit' ),
+								'tooltip' => esc_html__( 'Popup: The edit form will appear above the content.', 'gravityview-inline-edit' ),
+								'value'   => 'popup',
+								'name'    => 'inline-edit-mode-popup',
+								'icon'    => plugins_url( 'assets/images/popup.png', GRAVITYVIEW_INLINE_FILE ),
 							),
-							array
-							(
-								'label' => esc_html__('In-Place', 'gravityview-inline-edit'),
-								'tooltip' => esc_html__( 'In-Place: The edit form for the field will show in the same place as the content.', 'gravityview-inline-edit'),
-								'value' => 'inline',
-								'name'  => 'inline-edit-mode-inline',
-								'icon'  => plugins_url( "assets/images/in-place.png", GRAVITYVIEW_INLINE_FILE ),
+							array(
+								'label'   => esc_html__( 'In-Place', 'gravityview-inline-edit' ),
+								'tooltip' => esc_html__( 'In-Place: The edit form for the field will show in the same place as the content.', 'gravityview-inline-edit' ),
+								'value'   => 'inline',
+								'name'    => 'inline-edit-mode-inline',
+								'icon'    => plugins_url( 'assets/images/in-place.png', GRAVITYVIEW_INLINE_FILE ),
 							),
 
 						),
-					)
-				)
-			)
+					),
+				),
+			),
 		);
 	}
 
@@ -468,6 +587,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
 	 *
 	 * @return void
 	 */
-	public function render_uninstall() {}
+	public function render_uninstall() {
+	}
 
 }

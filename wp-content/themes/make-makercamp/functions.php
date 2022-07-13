@@ -227,6 +227,9 @@ function add_slug_body_class($classes) {
 	if( is_user_logged_in() ) {
 		$classes[] = "logged-in";
 	}
+	if(current_user_can('administrator')) {
+		$classes[] = "admin-bar";
+	}
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;

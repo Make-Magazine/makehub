@@ -605,10 +605,10 @@ input[type="checkbox"], input[type="radio"] {
 		}
 	}
 	a.button.alt, button.button.alt, input.button.alt {
-		border: solid 1px #005e9a;
-		background: #005e9a;
+		border: solid 1px #005e9a !important;
+		background: #005e9a !important;
 		&:hover {
-			color: #005e9a;
+			color: #005e9a !important;
 			background-color: #fff !important;
 		}
 	}
