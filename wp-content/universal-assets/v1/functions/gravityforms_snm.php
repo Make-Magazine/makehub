@@ -26,6 +26,7 @@ function snm_automation($entry_id) {
       $postFields = pullSNMinfo($entry, $form);
 
       $authRes = add_snm_data($postFields, $entry_id);
+
       if(isset($authRes['accepted']) && $authRes['accepted']){
         // Write UID and slug to the entry so users can access and update
         gform_update_meta( $entry_id, 'snm_uid', $authRes['uid'] );
@@ -268,16 +269,47 @@ function pullSNMinfo($entry, $form){
         case 'list':
           $listArr = unserialize($entry[$fieldID]);
 
-          //this is a comma delimited object
-          //example: "opp_social_handles":{"facebook":"kaleidoscopesci", "twitter":"KaleidoscopeSci", "instagram":"kaleidoscopesci", "youtube":"UCNEA2TdAFYzrghjKC_N03xQ"},
           if($snmField['snm_field']=='opp_social_handles'){
+            //this is a comma delimited object
+            //example: "opp_social_handles":{"facebook":"kaleidoscopesci", "twitter":"KaleidoscopeSci", "instagram":"kaleidoscopesci", "youtube":"UCNEA2TdAFYzrghjKC_N03xQ"},
             $social_array = array();
             foreach($listArr as $listRow){
-
               $social_array[strtolower($listRow['Platform'])] = $listRow['Handle'];
             }
 
             $postFields[$snmField['snm_field']] = $social_array;
+          }elseif($snmField['snm_field']=='snm_datetimes'){
+            //pull the timezone field
+            $timezone = retFieldByParam('timezone', $form, $entry);
+            $timeZone = ($timezone != '' ? $timezone : wp_timezone_string()); //use the wordpress timezone if one isn't set in the entry
+
+            //calculate start and end times - each start time must have an associated end time
+            $date = date("Y-m-d"); //default to current date
+            $startTime = date("h:i a"); //default to current time
+            $endTime = "0:00 PM"; //default to midnight
+            foreach($listArr as $column) {
+              foreach($column as $label => $value) {
+                //find a date, start time and end time
+                if(stripos($label, 'time')!== false){
+                  if(stripos($label, 'start')!== false){
+                    $startTime = str_replace(' : ',":",$value);
+                  }elseif(stripos($label, 'end')!== false){
+                    $endTime = str_replace(' : ',":",$value);
+                  }
+                }elseif(stripos($label, 'date')!== false){
+                  $date = $value;
+                }
+              }
+              //build the date for SNM
+              $now = new DateTime($date.' '.$startTime, new DateTimeZone($timeZone));
+              $startDtTm = $now->format('c');
+
+              $now = new DateTime($date.' '.$endTime, new DateTimeZone($timeZone));
+              $endDtTm = $now->format('c');
+              $postFields['start_datetimes'][] = $startDtTm;
+              $postFields['end_datetimes'][] = $endDtTm;
+            }
+            $postFields['has_end'] = TRUE;
           }
           break;
       }
