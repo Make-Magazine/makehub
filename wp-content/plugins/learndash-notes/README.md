@@ -1,2 +1,0 @@
-# learndash-notes
-Learndash Notes
