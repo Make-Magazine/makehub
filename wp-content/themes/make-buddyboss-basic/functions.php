@@ -130,12 +130,29 @@ function add_slug_body_class($classes) {
 }
 add_filter('body_class', 'add_slug_body_class');
 
-function remove_admin_bar() {
-    if (!current_user_can('administrator') && !is_admin()) {
-        show_admin_bar(false);
-    }
+function tf_check_user_role( $roles ) {
+    /*@ Check user logged-in */
+    if ( is_user_logged_in() ) {
+        /*@ Get current logged-in user data */
+        $user = wp_get_current_user();
+        /*@ Fetch only roles */
+        $currentUserRoles = $user->roles;
+        /*@ Intersect both array to check any matching value */
+        $isMatching = array_intersect( $currentUserRoles, $roles);
+        $response = false;
+        /*@ If any role matched then return true */
+        if ( !empty($isMatching) ) :
+            $response = true;
+        endif;
+        return $response;
+    } else {
+		return true;
+	}
 }
-add_action('show_admin_bar', 'remove_admin_bar', 999);
+$roles = [ 'customer', 'subscriber' ];
+if ( tf_check_user_role($roles) ) {
+    add_filter('show_admin_bar', '__return_false', 999);
+}
 
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
