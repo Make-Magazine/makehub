@@ -582,6 +582,14 @@
     }
 }
 
+// default padding underneath universal nav
+#page .site-content {
+	padding-top: 121px;
+	@media screen and (max-width: 768px) {
+		padding-top: 76ppx;
+	}
+}
+
 .membership-btn {
 	margin: 10px;
 	padding: 5px 10px;
@@ -597,6 +605,7 @@
 	}
 }
 
+// Profile dropdown
  .dropdown-menu.profile-menu {
 	.dropdown-links {
 		padding: 15px;
@@ -692,14 +701,6 @@
 			padding-left: 15px !important;
 		}
 	}
-}
-
-body.event-espresso .site-header-custom{
-   .login-section .dropdown-menu .dropdown-links {
-       .menu-item-event-cart {
-           display: block;
-       }
-   }
 }
 
 body.buddyboss-theme {
