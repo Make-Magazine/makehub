@@ -19,28 +19,34 @@ define( 'SEARCH_FILTER_STORE_URL', 'https://searchandfilter.com' ); // you shoul
 // the name of your product. This should match the download name in EDD exactly
 define( 'SEARCH_FILTER_ITEM_NAME', 'Search & Filter Pro' ); // you should use your own CONSTANT name, and be sure to replace it throughout this file
 
-if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+if( !class_exists( 'SF_EDD_SL_Plugin_Updater' ) ) {
 	// load our custom updater
 	require_once( plugin_dir_path( __FILE__ ) . 'includes/EDD_SL_Plugin_Updater.php' );
 }
 
 function search_filter_plugin_updater() {
 
+	// To support auto-updates, this needs to run during the wp_version_check cron job for privileged users.
+	$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+	if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
+		return;
+	}
+	
 	// retrieve our license key from the DB
 	$license_key = trim( get_option( 'search_filter_license_key' ) );
 
 	// setup the updater
-	$edd_updater = new EDD_SL_Plugin_Updater( SEARCH_FILTER_STORE_URL, SEARCH_FILTER_PRO_BASE_PATH, array(
+	$edd_updater = new SF_EDD_SL_Plugin_Updater( SEARCH_FILTER_STORE_URL, SEARCH_FILTER_PRO_BASE_PATH, array(
 			'version' 	=> SEARCH_FILTER_VERSION,				// current version number
 			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
 			'item_name' => SEARCH_FILTER_ITEM_NAME, 	// name of this plugin
 			'author' 	=> 'Ross Morsali',  // author of this plugin
-			'url'       => home_url()
+			'url'       => home_url(),
+			'beta'      => false,
 		)
 	);
 }
-add_action( 'admin_init', 'search_filter_plugin_updater', 0 );
-
+add_action( 'init', 'search_filter_plugin_updater' );
 
 class Search_Filter_Admin {
 
@@ -99,7 +105,7 @@ class Search_Filter_Admin {
 		add_action('admin_init', array($this,'search_filter_deactivate_license'));
 
 		//new blog created
-		add_action( 'wpmu_new_blog', array($this, 'on_create_blog'), 10, 6 );
+        add_action( 'wp_initialize_site', array( $this, 'init_new_site_dbs' ) );
 
 		//adds all the filters for the post cache and admin hooks, probably should be singleton
 		global $search_filter_post_cache;
@@ -490,10 +496,6 @@ class Search_Filter_Admin {
 
 	public function display_plugin_settings_admin_page()
 	{
-        // *******************
-        //**********************
-        //need to do a custom "get option" function which initialised the defaults, then use that everywhere
-
 		$cache_speed 								= Search_Filter_Helper::get_option( 'cache_speed' );
 		$cache_use_manual 							= Search_Filter_Helper::get_option( 'cache_use_manual' );
 		$cache_use_background_processes 			= Search_Filter_Helper::get_option( 'cache_use_background_processes' );
@@ -505,6 +507,7 @@ class Search_Filter_Admin {
 		
 		$combobox_script 							= Search_Filter_Helper::get_option( 'combobox_script' );
 		$remove_all_data 							= Search_Filter_Helper::get_option( 'remove_all_data' );
+		$meta_key_text_input                        = Search_Filter_Helper::get_option( 'meta_key_text_input' );
 
 		include_once( 'views/admin-settings.php' );
 	}
@@ -516,7 +519,6 @@ class Search_Filter_Admin {
 		$status 	= get_option( 'search_filter_license_status' );
 		$expires 	= get_option( 'search_filter_license_expires' );
 		$error 	    = get_option( 'search_filter_license_error' );
-
 
 
 		include_once( 'views/admin-license-settings.php' );
@@ -538,6 +540,7 @@ class Search_Filter_Admin {
 		register_setting('search_filter_settings', 'search_filter_load_jquery_i18n', array($this, 'sf_sanitize_options') );
 		register_setting('search_filter_settings', 'search_filter_combobox_script', array($this, 'sf_sanitize_options') );
 		register_setting('search_filter_settings', 'search_filter_remove_all_data', array($this, 'sf_sanitize_options') );
+		register_setting('search_filter_settings', 'search_filter_meta_key_text_input', array($this, 'sf_sanitize_options') );
 	}
 
 	function sf_sanitize_options( $new )
@@ -993,7 +996,7 @@ class Search_Filter_Admin {
 								<h4><?php _e( 'Help', $this->plugin_slug ); ?></h4>
 								<ul>
 									<li><div class="welcome-icon welcome-widgets-menus"><a href="https://searchandfilter.com/documentation/faq/" target="_blank"><?php _e( 'Frequently Asked Questions', $this->plugin_slug ); ?></a></div></li>
-									<li><div class="welcome-icon welcome-widgets-menus"><a href="https://support.searchandfilter.com/forums/forum/search-filter-pro/support/" target="_blank"><?php _e( 'Support Forums', $this->plugin_slug ); ?></a></div></li>
+									<li><div class="welcome-icon welcome-widgets-menus"><a href="https://searchandfilter.com/account/support/" target="_blank"><?php _e( 'Get Support', $this->plugin_slug ); ?></a></div></li>
 								</ul>
 							</div>
 
@@ -1077,14 +1080,14 @@ class Search_Filter_Admin {
 
 		exit;
 	}
-
-	public function on_create_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta )
-	{
-		if ( is_plugin_active_for_network( 'search-filter-pro/search-filter-pro.php' ) )
-		{
-			switch_to_blog( $blog_id );
-			$this->db_install();
-			restore_current_blog();
+	public function init_new_site_dbs( $new_site ) {
+		if ( is_a( $new_site, 'WP_Site' ) ) {
+			if ( is_plugin_active_for_network( 'search-filter-pro/search-filter-pro.php' ) )
+			{
+				switch_to_blog( $new_site->blog_id );
+				$this->db_install();
+				restore_current_blog();
+			}
 		}
 	}
 

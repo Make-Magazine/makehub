@@ -159,7 +159,7 @@
 
                 $( this ).addClass( 'loading-members' );
 
-                spinnerSelector.removeClass( 'bb-icon-chevron-down' );
+                spinnerSelector.removeClass( 'bb-icon-angle-down' );
                 spinnerSelector.addClass( 'bb-icon-spin' );
                 spinnerSelector.addClass( 'animate-spin' );
 
@@ -176,7 +176,7 @@
                         }
                         paged = response.data.page;
                         $( 'html, body' ).animate({ scrollTop: $(window).scrollTop() + 150 }, 300);
-                        spinnerSelector.addClass( 'bb-icon-chevron-down' );
+                        spinnerSelector.addClass( 'bb-icon-angle-down' );
                         spinnerSelector.removeClass( 'bb-icon-spin' );
                         spinnerSelector.removeClass( 'animate-spin' );
                         viewMoreSelector.removeClass( 'loading-members' );

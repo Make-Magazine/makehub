@@ -4,8 +4,8 @@
 
 #badgeos-achievements-container .badgeos-achievements-list-item {
   padding: 20px;
-  background-color: #fff;
-  border: 1px solid #E7E9EC;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
   border-radius: 4px;
   margin-bottom: 20px;
 }
@@ -13,10 +13,10 @@
   margin-bottom: 10px;
 }
 #badgeos-achievements-container .badgeos-achievements-list-item .badgeos-item-title a {
-  color: #122B46;
+  color: var(--bb-headings-color);
 }
 #badgeos-achievements-container .badgeos-achievements-list-item .badgeos-item-title a:hover {
-  color: #007CFF;
+  color: var(--bb-primary-color);
 }
 #badgeos-achievements-container .badgeos-open-close-switch a {
   display: -webkit-box;
@@ -29,7 +29,7 @@
   padding: 5px 0;
   font-size: 12px;
   text-transform: uppercase;
-  color: #A3A5A9;
+  color: var(--bb-alternate-text-color);
 }
 #badgeos-achievements-container .badgeos-open-close-switch a:after {
   padding: 0;
@@ -55,16 +55,16 @@
   line-height: 20px;
   vertical-align: top;
   text-align: center;
-  -webkit-transition: color 0.1s ease-in 0;
-          transition: color 0.1s ease-in 0;
-  color: #A3A5A9;
+  -webkit-transition: color .1s ease-in 0;
+          transition: color .1s ease-in 0;
+  color: var(--bb-alternate-text-color);
 }
 #badgeos-achievements-container .badgeos-open-close-switch a.show-hide-open:after {
-  content: "\e879";
+  content: '\e826';
   line-height: 21px;
 }
 #badgeos-achievements-container .badgeos-open-close-switch a.show-hide-close:after {
-  content: "\e87c";
+  content: '\e87c';
   -webkit-transform: none;
       -ms-transform: none;
           transform: none;

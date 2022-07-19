@@ -48,7 +48,7 @@ if ( ! class_exists( 'ReduxFramework_custom_image_select' ) ) {
 
 			if ( empty( $this->extension_dir ) ) {
 				$this->extension_dir = trailingslashit( str_replace( '\\', '/', dirname( __FILE__ ) ) );
-				$this->extension_url = site_url( str_replace( trailingslashit( str_replace( '\\', '/', ABSPATH ) ), '', $this->extension_dir ) );
+				$this->extension_url = site_url( str_replace( trailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR ) ), 'wp-content/', $this->extension_dir ) );
 			}
 
 			// Set default args for this field to avoid bad indexes. Change this to anything you use.
@@ -225,8 +225,9 @@ if ( ! class_exists( 'ReduxFramework_custom_image_select' ) ) {
 				'redux-field-custom-image-select-js',
 				'REDUX_CUSTOM_IMAGE_ADMIN',
 				array(
-					'cover_notice'     => esc_html__( 'Changing cover image settings will reset the positioning of all existing cover photos.', 'buddyboss-theme' ),
-					'cover_btn_notice' => esc_html__( 'Okay', 'buddyboss-theme' ),
+					'confirm_dialog_notice'     => esc_html__( 'Your current options will be replaced with the values of this preset. Would you like to proceed?', 'buddyboss-theme' ),
+					'confirm_dialog_accept_btn' => esc_html__( 'Yes', 'buddyboss-theme' ),
+					'confirm_dialog_reject_btn' => esc_html__( 'Cancel', 'buddyboss-theme' ),
 				)
 			);
 

@@ -119,7 +119,8 @@ class BP_Zoom_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification(
 			'groups',
 			'bb_groups_new_zoom',
-			'bb_groups_new_zoom'
+			'bb_groups_new_zoom',
+			'bb-icon-f bb-icon-calendar'
 		);
 
 		$this->register_notification_filter(

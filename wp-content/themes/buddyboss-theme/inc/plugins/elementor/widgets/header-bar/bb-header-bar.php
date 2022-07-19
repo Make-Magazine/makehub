@@ -274,7 +274,7 @@ class Header_Bar extends Widget_Base {
 			)
 		);
 
-		if ( buddyboss_theme_get_option( 'header_search' ) ) {
+		if ( buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_header_search' ) ) :
 			$this->add_control(
 				'search_icon_switch',
 				array(
@@ -289,9 +289,13 @@ class Header_Bar extends Widget_Base {
 					),
 				)
 			);
-		}
+		endif;
 
-		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'messages' ) && buddyboss_theme_get_option( 'messages' ) ) :
+		if (
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'messages' ) &&
+			buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_messages' )
+		) :
 			$this->add_control(
 				'messages_icon_switch',
 				array(
@@ -308,7 +312,11 @@ class Header_Bar extends Widget_Base {
 			);
 		endif;
 
-		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) && buddyboss_theme_get_option( 'notifications' ) ) :
+		if (
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'notifications' ) &&
+			buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_notifications' )
+		) :
 			$this->add_control(
 				'notifications_icon_switch',
 				array(
@@ -325,7 +333,10 @@ class Header_Bar extends Widget_Base {
 			);
 		endif;
 
-		if ( class_exists( 'WooCommerce' ) && buddyboss_theme_get_option( 'shopping_cart' ) ) :
+		if (
+			class_exists( 'WooCommerce' ) &&
+			buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_shopping_cart' )
+		) :
 			$this->add_control(
 				'cart_icon_switch',
 				array(
@@ -1400,7 +1411,7 @@ class Header_Bar extends Widget_Base {
 			array(
 				'name'     => 'typography_sign_up',
 				'label'    => esc_html__( 'Typography Sign Up', 'buddyboss-theme' ),
-				'selector' => '{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup',
+				'selector' => '{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup',
 			)
 		);
 
@@ -1421,7 +1432,7 @@ class Header_Bar extends Widget_Base {
 				'label'     => esc_html__( 'Sign Up Color', 'buddyboss-theme' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup' => 'color: {{VALUE}}',
 				),
 			)
 		);
@@ -1432,7 +1443,7 @@ class Header_Bar extends Widget_Base {
 				'label'     => esc_html__( 'Sign Up Background Color', 'buddyboss-theme' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup' => 'background-color: {{VALUE}}',
 				),
 			)
 		);
@@ -1452,7 +1463,7 @@ class Header_Bar extends Widget_Base {
 				'label'     => esc_html__( 'Sign Up Color', 'buddyboss-theme' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup:hover' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup:hover' => 'color: {{VALUE}}',
 				),
 			)
 		);
@@ -1463,7 +1474,7 @@ class Header_Bar extends Widget_Base {
 				'label'     => esc_html__( 'Sign Up Background Color', 'buddyboss-theme' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup:hover' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup:hover' => 'background-color: {{VALUE}}',
 				),
 			)
 		);
@@ -1479,7 +1490,7 @@ class Header_Bar extends Widget_Base {
 				'label'       => esc_html__( 'Border', 'buddyboss-theme' ),
 				'placeholder' => '1px',
 				'default'     => '1px',
-				'selector'    => '{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup',
+				'selector'    => '{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup',
 				'separator'   => 'before',
 			)
 		);
@@ -1491,7 +1502,7 @@ class Header_Bar extends Widget_Base {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => array( 'px', '%' ),
 				'selectors'  => array(
-					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.singup' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .site-header--elementor .bb-header-buttons a.signup' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				),
 			)
 		);

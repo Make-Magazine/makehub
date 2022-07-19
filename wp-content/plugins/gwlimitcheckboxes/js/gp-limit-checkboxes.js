@@ -84,10 +84,6 @@
 			// loops through ALL groups to make sure that overlapping groups are covered
 			for ( var i = 0; i < self.groups.length; i++ ) {
 
-				if ( self.groups[ i ].fields.indexOf( fieldId ) === -1 ) {
-					continue;
-				}
-
 				/**
 				 * Filter the group of checkboxes that are about to be processed.
 				 *

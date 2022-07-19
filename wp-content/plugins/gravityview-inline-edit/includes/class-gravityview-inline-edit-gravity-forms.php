@@ -40,6 +40,9 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 		add_filter( 'gform_pre_form_settings_save', array( $this, 'pre_form_settings_save' ) );
 		add_filter( 'gform_tooltips', array( $this, 'tooltips' ) );
 		add_filter( 'gform_form_settings', array( $this, 'form_settings' ), 10, 2 );
+
+		// Set priority to 19 so it runs before the "Inline Edit Behavior" settings added by Entry Revisions 1.1
+		add_filter( 'gform_form_settings_fields', array( $this, 'add_settings_field' ), 19, 2 );
 	}
 
 	/**
@@ -54,9 +57,9 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 	public function tooltips( $tooltips ) {
 
 		$image   = GRAVITYVIEW_INLINE_URL . 'assets/images/gf-inline-edit-toggle.png';
-		$content = sprintf( '<h3>%s</h3><p>%s</p><p>%s</p>',
+		$content = sprintf( '<h4>%s</h4><p>%s</p><p>%s</p>',
 			esc_html__( 'An Inline Edit button will be added', 'gravityview-inline-edit' ),
-			'<img src="' . $image . '" class="alignright" width="300" />',
+			'<img src="' . esc_url( $image ) . '" class="alignright" width="300" style="max-width: 100%;" />',
 			esc_html__( 'If enabled, a button to toggle on and off inline editing will be added to the Gravity Forms Entries screen. If disabled, the button will not be added.', 'gravityview-inline-edit' )
 		);
 
@@ -82,6 +85,41 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 	}
 
 	/**
+	 * Check whether Gravity Forms is v2.5-beta or newer
+	 *
+	 * @since 1.5
+	 *
+	 * @return bool
+	 */
+	public static function is_GF_25() {
+		return version_compare( '2.5-beta', \GFForms::$version, '<=' );
+	}
+
+	/**
+	 * Adds the Enable Inline Edit field to the "Form Options" settings group in GF 2.5+
+	 *
+	 * @see https://docs.gravityforms.com/gform_form_settings_fields/
+	 *
+	 * @param array $fields Form Settings fields.
+	 * @param array $form The current form
+	 *
+	 * @return array
+	 */
+	function add_settings_field( $fields, $form = array() ) {
+
+		$fields['form_options']['fields'][] = array(
+			'name' => 'gv_inline_edit_enable',
+			'type' => 'toggle',
+			'label' => esc_html__( 'Enable Inline Edit', 'gravityview-inline-edit' ),
+			'description' => esc_html__( 'Allow Inline Edit when viewing this form\'s entries in Gravity Forms', 'gravityview-inline-edit' ),
+			'tooltip' => gform_tooltip( 'gv_inline_edit_enable', '', true ),
+			'default_value' => false,
+		);
+
+		return $fields;
+	}
+
+	/**
 	 * Save the Inline Edit setting when the form is updated
 	 *
 	 * @since 1.0
@@ -91,6 +129,11 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 	 * @return array Form object, with our `gv_inline_edit_enable` setting added
 	 */
 	public function pre_form_settings_save( $updated_form = array() ) {
+
+		// If running GF 2.5, no need to modify the form settings
+		if ( self::is_GF_25() ) {
+			return $updated_form;
+		}
 
 		$updated_form['gv_inline_edit_enable'] = rgempty( 'gv_inline_edit_enable' ) ? 0 : 1;
 
@@ -108,6 +151,11 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 	 * @return array $form_settings with the Enable Inline Edit setting added
 	 */
 	public function form_settings( $form_settings, $form = array() ) {
+
+		/** If running GF 2.5, no need to modify the form settings. Instead, we use {@see add_settings_field()}. */
+		if ( self::is_GF_25() ) {
+			return $form_settings;
+		}
 
 		$tr_enable_inline_edit = '
         <tr>
@@ -241,6 +289,10 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 	public function maybe_add_inline_edit_toggle_button( $form_id = 0 ) {
 
 		if ( ! $this->is_inline_edit_enabled( $form_id ) ) {
+			return;
+		}
+
+		if ( 0 === GFAPI::count_entries( $form_id ) ) {
 			return;
 		}
 

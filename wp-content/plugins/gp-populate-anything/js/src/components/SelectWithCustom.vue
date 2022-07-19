@@ -1,8 +1,8 @@
 <template>
 	<div
 		:class="[additionalClass, 'gppa-select-with-custom', { 'gppa-show-custom-input': showCustomInput, 'gppa-no-reset': forceCustomInput, 'gppa-has-merge-tag-selector': hasMergeTagSelector }]">
-		<select v-if="loading">
-			<option value="" disabled hidden>{{ i18nStrings.loadingEllipsis }}</option>
+		<select v-if="loading && !showCustomInput" disabled>
+			<option value="" selected disabled hidden>{{ i18nStrings.loadingEllipsis }}</option>
 		</select>
 		<select v-else-if="!showCustomInput" v-model="selectValueProxy">
 			<slot></slot>
@@ -12,6 +12,7 @@
 
 		<div class="gppa-select-with-custom-input-container">
 			<input type="text" v-model="inputValueProxy" :id="'gppa-select-with-custom-input_' + _uid"
+				   :disabled="loading"
 				   ref="customInput"
 				   class="mt-position-right"/>
 			<a href="#"

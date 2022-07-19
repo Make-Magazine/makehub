@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function() {
-   
+
    Vue.use(VueTables.ClientTable);
    Vue.use(VueTables.Event);
 
@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
          options: {
             headings: {
                mmap_eventname: 'Name',
-               physLoc: 'Location', 
+               physLoc: 'Location',
                mmap_country: 'Country'
             },
             templates: {
@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
             },
             columnsClasses: {
                mmap_eventname: 'col-name',
-               physLoc: 'col-location', 
+               physLoc: 'col-location',
                mmap_country: 'col-country'
             },
             pagination: { chunk: 5 } // undocumented :(
@@ -64,7 +64,7 @@ jQuery(document).ready(function() {
          detectBrowser: function() {
             var useragent = navigator.userAgent,
                mapdiv = this.$refs.map;
-          
+
             if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
               mapdiv.style.width = '100%';
               mapdiv.style.height = '300px';

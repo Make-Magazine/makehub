@@ -1,6 +1,12 @@
 
 # Changelog
 
+## 1.3.5
+
+	- Fixed issue with lower limits not being respected with spanned limits.
+	- Improved compatibility with Gravity Forms 2.6 AJAX form saving.
+	- Added "Update URI" to plugin header to improve security.
+
 ## 1.3.4
 
 	- Improved compatibility with GP Populate Anything.

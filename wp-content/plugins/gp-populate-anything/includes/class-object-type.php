@@ -519,9 +519,22 @@ abstract class GPPA_Object_Type {
 
 		global $wpdb;
 
-		$sql_operator  = $this->get_sql_operator( $operator );
-		$value         = $this->get_sql_value( $operator, $value );
-		$specification = $this->get_value_specification( $value, $operator, $sql_operator );
+		$sql_operator = $this->get_sql_operator( $operator );
+		$value        = $this->get_sql_value( $operator, $value );
+
+		/**
+		 * Filter the specification used by `$wpdb->prepare()` when inserting a value into a query.
+		 *
+		 * @param string           $value_specification The value specification to be used. Typically one of `%s`, `%d`, `%f`.
+		 * @param string           $table               Table being queried.
+		 * @param string           $column              Column being queried.
+		 * @param string           $operator            Operator that was selected. Examples: `is`, `isnot`, `starts_with`, `contains`, etc.
+		 * @param string           $value               Value being searched for.
+		 * @param GPPA_Object_Type $object_type         Current object type.
+		 *
+		 * @since 1.2.14
+		 */
+		$specification = apply_filters( 'gppa_value_specification', $this->get_value_specification( $value, $operator, $sql_operator ), $table, $column, $operator, $value, $this );
 
 		$ident = self::esc_property_to_ident( "{$table}.{$column}" );
 

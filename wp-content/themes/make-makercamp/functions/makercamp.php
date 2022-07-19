@@ -1,5 +1,30 @@
 <?php
 
+// add the learndash lessons and cpt user projects to wordpress search
+function add_post_type_to_search( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+	if ( $query->is_search() ) {
+		$query->set(
+			'post_type',
+			array( 'post', 'user-projects', 'sfwd-lessons' ),
+		);
+	}
+	return $query;
+
+}
+add_filter( 'pre_get_posts', 'add_post_type_to_search', 999, 2 );
+
+/*function add_post_type_to_search_and_filter( $query_args, $sfid ) {
+	var_dump($query_args);
+	//modify $query_args here before returning it
+	$query_args['post_type'] = array( 'user-projects', 'sfwd-lessons' );
+
+	return $query_args;
+}
+add_filter( 'sf_edit_query_args', 'add_post_type_to_search_and_filter', 20, 2 );*/
+
 // make order of projects library random
 add_filter( 'posts_orderby', 'randomise_with_pagination' );
 function randomise_with_pagination( $orderby ) {

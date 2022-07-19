@@ -26,7 +26,7 @@
 					</div>
 				</div>
 				<div class="close">
-					<a href="#" class="js-modal-close"><i class="bb-icon-close"></i></a>
+					<a href="#" class="js-modal-close"><i class="bb-icon-l bb-icon-times"></i></a>
 				</div>
 			</div>
 			<div class="activity-inner">

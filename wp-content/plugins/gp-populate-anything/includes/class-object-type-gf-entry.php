@@ -351,6 +351,9 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				}
 			}
 
+			/* Replace \r\n with just \n to provide consistent querying. */
+			$filter_value = str_replace( "\r\n", "\n", $filter_value );
+
 			$filter_value = new GF_Query_Literal( $filter_value );
 		}
 

@@ -1214,12 +1214,6 @@ class Search_Filter_Post_Cache
 	    $this->schedule_post_updated($post->ID);
     }
 
-    /*public function attachment_updated($form_fields, $post)
-    {
-        $this->post_updated($post->ID, $post, false);
-        return $form_fields;
-    }*/
-
     public function attachment_updated($form_fields, $post_before, $post_after) {
 
         $this->post_updated($post_after->ID, $post_after, false);
@@ -1244,7 +1238,7 @@ class Search_Filter_Post_Cache
 		    //so pop the ID off hte array on the action `search_filter_update_post` (unless we use the action somewhere)
 		    $this->setup_cached_search_forms();
 
-		    $this->posts_updated = array_unique($this->posts_updated);
+		    $this->posts_updated = array_unique( $this->posts_updated );
 	    	foreach($this->posts_updated as $post_id){
 	    		//$this->update_post_cache($post_id);
 			    $post = get_post($post_id);

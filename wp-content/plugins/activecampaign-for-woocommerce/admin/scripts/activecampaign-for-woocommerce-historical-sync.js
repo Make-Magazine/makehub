@@ -179,6 +179,7 @@ jQuery(document).ready(function($) {
                     $('#activecampaign-run-historical-sync-running-status').html('Paused on latest record:' + run_status.last_processed_id ).show();
                     $('#activecampaign-historical-sync-starting-record').val(run_status.last_processed_id - 1);
                     $('#activecampaign-run-historical-sync-current-record-num').html(run_status.last_processed_id);
+                    $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
                 }else if (run_status){
                     startUpdateCheck();
                     showRunSection();
@@ -186,6 +187,7 @@ jQuery(document).ready(function($) {
                     enableStopButtons();
                     $('#activecampaign-last-sync-status').html('');
                     $('#activecampaign-run-historical-sync-current-record-num').html(run_status.last_processed_id);
+                    $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
                     if(run_status.last_processed_id !== lastRec){
                         lastRec = run_status.last_processed_id;
                         stickCount = 0;
@@ -193,15 +195,15 @@ jQuery(document).ready(function($) {
                         stickCount ++;
                     }
 
-                    if(stickCount < 20) {
+                    if(stickCount < 40) {
                         $('#activecampaign-run-historical-sync-running-status').html('Running...');
                     }
 
-                    if(stickCount >= 20 && stickCount < 40) {
+                    if(stickCount >= 40 && stickCount < 60) {
                         $('#activecampaign-run-historical-sync-running-status').html('The historical sync might be stuck or has exited improperly... please check your logs.');
                     }
 
-                    if(stickCount >= 40) {
+                    if(stickCount >= 60) {
                         $('#activecampaign-run-historical-sync-running-status').html('The historical sync process is no longer updating. It may be required to reset the sync status.');
                         cancelUpdateCheck();
                     }

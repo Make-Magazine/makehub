@@ -87,13 +87,15 @@ final class Icon_Picker {
 	 */
 	protected $default_types = array(
 		'buddyboss'        => 'BuddyBoss',
-		'dashicons'        => 'Dashicons',
+		'buddyboss_legacy' => 'BuddyBoss_Legacy',
+		//'dashicons'        => 'Dashicons',
 		'elusive'          => 'Elusive',
 		'fa'               => 'Font_Awesome',
 		'foundation-icons' => 'Foundation',
 		'genericon'        => 'Genericons',
 		'image'            => 'Image',
-		'svg'              => 'Svg',
+		//'svg'              => 'Svg',
+		'manage'           => 'Manage',
 	);
 
 

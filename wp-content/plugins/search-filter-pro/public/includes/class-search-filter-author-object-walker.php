@@ -93,8 +93,11 @@ class Search_Filter_Author_Object_Walker {
 		foreach ( $authors as $author_id ) {
 			
 			$author = get_userdata( $author_id );
+			
+			//check if user role is administrator or not
+			$is_user_role_admin = in_array( 'administrator', $author->roles );
 
-			if ( $exclude_admin && 'admin' == $author->display_name )
+			if ( $exclude_admin && $is_user_role_admin)
 				continue;
 
 			$option_count = isset( $author_count[$author->ID] ) ? $author_count[$author->ID] : 0;

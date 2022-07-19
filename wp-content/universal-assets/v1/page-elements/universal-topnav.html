@@ -4,11 +4,13 @@
         <div id="site-logo" class="site-branding">
             <h2 class="site-title">
                 <a href="https://make.co" rel="home">
-                    <img src="https://make.co/wp-content/universal-assets/v1/images/make_logo.svg" id="navLogo" class="nav-logo" alt="Make: Logo">		</a>
+                    <img src="https://make.co/wp-content/universal-assets/v1/images/make_logo.svg" id="navLogo" class="nav-logo" alt="Make: Logo" width="100" height="30">		</a>
             </h2>
         </div>
         <nav id="site-navigation-custom" class="main-navigation" data-menu-space="120">
             <div id="primary-navbar">
+				<h3 class="subnav-title"></h3>
+				<span class='mobile-subscribe-btn'><a class='universal-btn-red' href='https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-mobile&utm_content=launch'>Subscribe</a></span>
                 <ul id="primary-menu" class="primary-menu">
                 </ul>
                 <div id="navbar-collapse" class="hasItems">
@@ -50,14 +52,6 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item bottom-menu menu-item-has-children">
-                                    <a href="https://make.co/maker-campus/?utm_source=make&utm_medium=universalnav&utm_campaign=makercampus&utm_content=launch">Maker Campus</a>
-                                    <ul class="sub-menu sub-menu-full-height">
-                                        <li class="menu-item">
-                                            <a href="https://make.co/maker-campus/?utm_source=make&utm_medium=universalnav&utm_campaign=makercampus&utm_content=launch">Maker Campus is a place to connect, learn, and make together. Find enriching and interactive events, classes, workshops, and more. Let’s grow together!</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item bottom-menu menu-item-has-children">
                                     <a href="https://makercamp.com/?utm_source=make&utm_medium=universalnav&utm_campaign=makercamp&utm_content=launch">Maker Camp</a>
                                     <ul class="sub-menu sub-menu-full-height">
                                         <li class="menu-item">
@@ -90,12 +84,6 @@
                                     <a href="https://www.makershed.com/collections/make-kit/?utm_source=make&utm_medium=universalnav&utm_campaign=books-kits&utm_content=launch">
                                         <b>Books &amp; Kits</b>
                                         <p>Get hands-on with kits, books, and more from the Maker Shed</p>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="https://make.co/maker-campus/?utm_source=make&utm_medium=universalnav&utm_campaign=classes-workshops&utm_content=launch">
-                                        <b>Classes and Workshops</b>
-                                        <p>On Maker Campus facilitated by makers but for everyone</p>
                                     </a>
                                 </li>
                                 <li class="menu-item">
@@ -137,12 +125,6 @@
                                     <a href="https://makerfaire.com/map/?utm_source=make&utm_medium=universalnav&utm_campaign=faires-map&utm_content=launch">
                                         <b>Faires</b>
                                         <p>Find a Maker Faire near you</p>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="https://make.co/maker-campus/?utm_source=make&utm_medium=universalnav&utm_campaign=classes-workshops-2&utm_content=launch">
-                                        <b>Classes and Workshops</b>
-                                        <p>Register on Maker Campus</p>
                                     </a>
                                 </li>
 								<!--
@@ -206,12 +188,6 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="https://make.co/maker-campus/?utm_source=make&utm_medium=universalnav&utm_campaign=classes-workshops-3&utm_content=launch">
-                                        <b>Classes and Workshops</b>
-                                        <p>From top makers on Maker Campus</p>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
                                     <a target="_none" href="https://subscribe.makezine.com/Make_subscribe?utm_source=make&utm_medium=universalnav&utm_campaign=magazine-subscribe&utm_content=launch">
                                         <b>Make: Magazine</b>
                                         <p>Subscribe to the premier DIY magazine today</p>
@@ -227,6 +203,26 @@
                         </li>
                         <li class="menu-item top-menu menu-item-has-children">
                             <a href="https://make.co/amazing-maker-awards/?utm_source=make&utm_medium=universalnav&utm_campaign=awards&utm_content=launch">Awards</a>
+							<ul class="sub-menu">
+                                <li class="menu-item">
+                                    <a href="https://make.co/amazing-maker-awards/?utm_source=make&utm_medium=universalnav&utm_campaign=awards-2&utm_content=launch">
+                                        <b>2022 Project Collection</b>
+                                        <p>Browse and Vote on Your Favorite Projects</p>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="https://make.co/amazing-maker-awards/about/?utm_source=make&utm_medium=universalnav&utm_campaign=about-amas&utm_content=launch">
+                                        <b>About</b>
+                                        <p>Learn More About the Amazing Maker Awards</p>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a target="_none" href="https://make.co/amazing-maker-awards/promote/?utm_source=make&utm_medium=universalnav&utm_campaign=promote-ama&utm_content=launch">
+                                        <b>Promote</b>
+                                        <p>Graphics and More to Help Spread the Word</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -236,7 +232,30 @@
         <!-- start header aside -->
         <div id="header-aside" class="header-aside">
             <div class="header-aside-inner">
+              <span id="make-login" class="login-section">
+                  <a id="LoginBtn" href="/wp-login.php" title="Log In" target="_self">Log In</a>
+                  <div id="profile-view" class="dropdown v-select" style="display: flex;"">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <img class="avatar" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" width="50" height="50" />
+						  <img class="avatar-banner" src="https://make.co/wp-content/universal-assets/v1/images/join-now-banner.png" alt="Join Now" width="90" height="90" />
+                      </a>
 
+                      <div class="dropdown-menu profile-menu" aria-labelledby="dropdownMenuLink">
+                          <div class="profile-info">
+                              <img class="avatar" width="60" height="60" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
+                              <div class="profile-text">
+                                  <div class="profile-name"></div>
+                                  <div class="profile-email"></div>
+                              </div>
+                          </div>
+                          <div class="dropdown-links" id="profileLinks">
+                          </div>
+                          <a id="LogoutBtn" href="/wp-login.php?action=logout" target="_self" title="Log Out">Log Out</a>
+                      </div>
+                  </div>
+              </span>
+              <span id="make-coin" style="text-align: center;"></span>
+              <span id="make-join" class="search-separator nav-separator"></span>
                 <div class="search-button-wrapper">
                     <div class="subscribe-call-out">
                         <div class="subscribe-text">
@@ -245,11 +264,12 @@
                             </a>
                         </div>
                         <a target="_none" href="https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-call-out&utm_content=launch" target="_blank">
-                            <img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=81" id="nav-subscribe-img" alt="Get Make: Magazine Issue 79">
+                            <img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=81" id="nav-subscribe-img" alt="Get Make: Magazine Issue 79" width="50" height="70.5">
                         </a>
                         <div class="subscribe-pop-out">
                             <a target="_none" href="https://make.co/join/?utm_source=make&utm_medium=universalnav&utm_campaign=subscribe-popout&utm_content=launch" target="_blank">
-                                <img src="https://make.co/wp-content/universal-assets/v1/images/subscribe-today.jpg?v=81" alt="Subscribe Today to Make: Magazine">
+                                <img src="https://make.co/wp-content/universal-assets/v1/images/subscribe-today.jpg?v=81" alt="Subscribe Today to Make: Magazine" width="296" height=
+								"380.5">
                             </a>
                         </div>
                     </div>
@@ -258,34 +278,6 @@
 
                 </div>
 
-                <span class="search-separator nav-separator"></span>
-
-                <span class="login-section">
-
-                    <a id="LoginBtn" href="/wp-login.php" title="Log In">Log In</a>
-                    <div id="profile-view" class="dropdown v-select">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="avatar" style="width:38px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                        </a>
-
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <div class="profile-info">
-                                <img class="avatar" style="width:80px" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" />
-                                <div class="profile-text">
-                                    <div class="profile-name"></div>
-                                    <div class="profile-email"></div>
-                                </div>
-                            </div>
-                            <div class="dropdown-links" id="profileLinks">
-                            </div>
-                            <a id="LogoutBtn" href="/wp-login.php?action=logout" title="Log Out">Log Out</a>
-                        </div>
-                    </div>
-                </span>
-
-                <div class="user-wrap user-wrap-container menu-item-has-children selected">
-
-                </div>
             </div>
             <!-- end header aside -->
         </div>

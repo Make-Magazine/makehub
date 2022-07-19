@@ -30,8 +30,8 @@
 					to: parseInt( $( scrubber ).data( 'to' ), 10 ),
 				};
 
-				if ( self.scrubbers[ scrubber_key ].total < 10 ) {
-					$( scrubber ).addClass( 'light' );
+				if ( self.scrubbers[ scrubber_key ].total >= 10 || self.scrubbers[ scrubber_key ].current_page > 1 ) {
+					$( scrubber ).removeClass( 'light' );
 				}
 
 				self.init_draggabilly(scrubber_key);

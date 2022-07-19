@@ -1,7 +1,6 @@
 <?php
-
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
-	$url = CURRENT_URL . '/wp-json/mp/v1/members';
+	$url = NETWORK_HOME_URL . '/wp-json/mp/v1/members';
 
 	$datastring = json_encode(
 	  [
@@ -29,20 +28,11 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 
 	postCurl($url, $headers, $datastring);
 }
-function setMemPressHeaders($datastring = null) {
-	$headers = array();
-	$headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
-	$headers[] = 'Content-Type: application/json';
-	if($datastring){
-		$headers[] = 'Content-Length: ' . strlen($datastring);
-	}
-	return $headers;
-}
 
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
 function add_membership_class_profile($classes) {
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
-	    $classes[] = "member-level-" . strtolower($membership);
+	    $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
 	}
     return $classes;
 }
@@ -117,3 +107,63 @@ function bp_exclude_users( $qs = '', $object = '' ) {
 }
 
 add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
+
+/* TBD: The init action is triggering this function multiple times, even when there is no interaction on a page
+ * We need to find a better way to trigger this
+ * setting of CURRENT_URL and CURRENT_POSTID should be moved to wp-config
+ */
+ function set_membership_constants() {
+ 	// Decide if user can upgrade
+  $memLevels = checkMembershipLevels();
+  $hasMembership = !empty($memLevels['levels'])? TRUE:'';
+  $currentMemberships = $memLevels['levels'];
+ 	$canUpgrade = $memLevels['type']=='upgrade'?TRUE:FALSE;
+
+ 	define('CURRENT_MEMBERSHIPS', $currentMemberships);
+ 	define('IS_MEMBER', $hasMembership);
+ 	define('CAN_UPGRADE', $canUpgrade);
+ }
+
+add_action( 'init', 'set_membership_constants' );
+
+/* Check Membership Levels for current blog
+*  for current user return list of membership levels (levels) and membership type(type)
+*  Note: This CANNOT call the memberpress API as it will get stuck in an init loop
+*/
+function checkMembershipLevels(){
+  $currentMemberships=array();
+  $type = 'upgrade';
+
+  if( class_exists('MeprUtils') ) {
+    $mepr_current_user = MeprUtils::get_currentuserinfo();
+
+    if($mepr_current_user) {
+      //Returns an array of Membership ID's that the current user is active on
+      $active_products = $mepr_current_user->active_product_subscriptions('ids');
+
+      if(!empty($active_products)) {
+        foreach($active_products as $id) {
+          $membership = new MeprProduct($id);
+
+          $currentMemberships[] = $membership->post_title;
+
+          //look for part of the membership title, case-insensitive. This saves us if membership titles change in the future
+          if(stripos($membership->post_title, 'premium') !== false ||
+             stripos($membership->post_title, 'multi-seat')  !== false ||
+             stripos($membership->post_title, 'global') !== false ||
+             stripos($membership->post_title, 'school') !== false ||
+					 	 stripos($membership->post_title, 'magazine') !== false)  {
+            $type = 'premium';
+          }
+        }
+      }else{
+        //no active membership
+        $type = 'none';
+      }
+    } else {
+      //no memberships
+      $type = 'none';
+    }
+  }
+  return array('levels'=>$currentMemberships,'type'=>$type);
+}

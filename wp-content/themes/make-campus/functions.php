@@ -110,22 +110,13 @@ function make_campus_enqueue_scripts() {
     wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
 
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+
     wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
 
     wp_localize_script('theme-js', 'ajax_object',
             array(
                 'ajax_url' => admin_url('admin-ajax.php'),
-            )
-    );
-	wp_localize_script('universal', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => wp_get_current_user()->user_email,
-                'wp_user_nicename' => wp_get_current_user()->user_nicename
             )
     );
 }
@@ -330,7 +321,7 @@ function wpb_sender_name($original_email_from) {
     return 'Make: Community';
 }
 
-// Hooking up our functions to WordPress filters 
+// Hooking up our functions to WordPress filters
 add_filter('wp_mail_from', 'wpb_sender_email');
 add_filter('wp_mail_from_name', 'wpb_sender_name');
 
@@ -389,7 +380,7 @@ function smartTruncate($string, $limit, $break = ".", $pad = "...") {
 
 //check if gravity view plugin is active
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-if ( is_plugin_active('gravityview/gravityview.php') ) {    
+if ( is_plugin_active('gravityview/gravityview.php') ) {
     $gv_fe = GravityView_frontend::getInstance();
     remove_filter('parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
 }
@@ -407,7 +398,7 @@ function featuredtoRSS($content) {
 	}
 	return $content;
 }
- 
+
 add_filter('the_excerpt_rss', 'featuredtoRSS');
 add_filter('the_content_feed', 'featuredtoRSS');
 
@@ -420,7 +411,7 @@ function add_event_date_to_rss() {
 }
 add_action('rss2_item', 'add_event_date_to_rss');
 
-// block wp-admin access for 
+// block wp-admin access for
 function wpabsolute_block_users_backend() {
     $user = wp_get_current_user();
     if (is_admin() && !wp_doing_ajax() & in_array('event_facilitator', (array) $user->roles)) {

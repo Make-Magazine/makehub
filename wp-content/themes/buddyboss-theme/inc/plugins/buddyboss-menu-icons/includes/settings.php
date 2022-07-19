@@ -112,28 +112,29 @@ final class Menu_Icons_Settings {
 	public static function in_admin_footer() {
 		global $pagenow;
 		if ( 'nav-menus.php' === $pagenow ) {
-
 			foreach ( self::_get_fields() as $section_index => $section ) {
-
 				if ( 'global' === $section_index ) {
 					?>
-                    <div class="hidden hide buddyboss-menu-icon-settings">
-
-                        <h3><?php _e( 'Icon Types Available', 'buddyboss-theme' ) ?></h3>
-
-                        <div class="buddyboss-menu-icon-settings-options">
-							<?php
-							foreach ( $section['fields'] as $field ) {
-								$field->render();
-							}
-							?>
-                        </div>
-
-						<?php
-						self::submit_button();
-						?>
-
-                    </div>
+						<div class="hidden hide buddyboss-menu-icon-tabs">
+							<div class="menu-icon-tabs">
+								<button type="button" data-id="menu-item-buddyboss" class="active"><?php esc_html_e( 'Icons', 'buddyboss-theme' ); ?></button>
+								<button type="button" data-id="menu-item-image"><?php esc_html_e( 'Custom', 'buddyboss-theme' ); ?></button>
+								<button type="button" data-id="menu-item-manage"><?php esc_html_e( 'Manage', 'buddyboss-theme' ); ?></button>
+							</div>
+						</div>
+						<div class="hidden hide buddyboss-menu-icon-settings">
+							<div class="buddyboss-menu-icon-panel">
+								<h3><?php esc_html_e( 'Select Icon Packs', 'buddyboss-theme' ); ?></h3>
+								<div class="buddyboss-menu-icon-settings-options">
+									<?php
+									foreach ( $section['fields'] as $field ) {
+										$field->render();
+									}
+									?>
+								</div>
+							</div>
+						</div>
+						<div class="hidden hide buddyboss-menu-icon-buttons"> <?php self::submit_button(); ?> </div>
 					<?php
 				}
 			}
@@ -265,6 +266,62 @@ final class Menu_Icons_Settings {
 			check_admin_referer( self::RESET_KEY, self::RESET_KEY );
 			wp_redirect( self::_reset_settings() );
 		}
+
+		// update menu icon settings based on header menu selection.
+		if ( isset( $_POST['nav-menu-locations'] ) && ! empty( $_POST['nav-menu-locations'] ) ) {
+			$current_menu = ! empty( $_POST['menu'] ) ? sanitize_text_field( wp_unslash( $_POST['menu'] ) ) : '';
+			$header_menus = array();
+			if ( isset( $_POST['menu-locations']['header-menu'] ) ) {
+				$header_menus[] = sanitize_text_field( wp_unslash( $_POST['menu-locations']['header-menu'] ) );
+			}
+			if ( isset( $_POST['menu-locations']['header-menu-logout'] ) ) {
+				$header_menus[] = sanitize_text_field( wp_unslash( $_POST['menu-locations']['header-menu-logout'] ) );
+			}
+			if ( ! in_array( $current_menu, $header_menus ) ) {
+				self::update_menu_icon_settings( $current_menu );
+			}
+		}
+	}
+
+	/**
+	 * Update menu icon settings based on header menu selection.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $current_menu term id.
+	 *
+	 * @return void
+	 */
+	public static function update_menu_icon_settings( $current_menu ) {
+		$args = array(
+			'post_type'   => 'nav_menu_item',
+			'post_status' => 'publish',
+			'tax_query'   => array(
+				array(
+					'taxonomy' => 'nav_menu',
+					'field'    => 'id',
+					'terms'    => $current_menu,
+				),
+			),
+		);
+
+		$r              = wp_parse_args( null, $args );
+		$get_posts      = new \WP_Query();
+		$nav_menu_items = $get_posts->query( $r );
+
+		if ( isset( $nav_menu_items ) && ! empty( $nav_menu_items ) ) {
+			$nav_menu_items = wp_list_pluck( $nav_menu_items, 'ID' );
+			foreach ( $nav_menu_items as $single ) {
+				$menu_icons = get_post_meta( $single, 'menu-icons', true );
+				if ( ! empty( $menu_icons['hide_label'] ) ) {
+					$menu_icons['hide_label'] = '';
+				}
+				if ( isset( $menu_icons['position'] ) && 'before' !== $menu_icons['position'] ) {
+					$menu_icons['position'] = 'before';
+				}
+				update_post_meta( $single, 'menu-icons', $menu_icons );
+			}
+		}
 	}
 
 	/**
@@ -278,6 +335,11 @@ final class Menu_Icons_Settings {
 	 * @return string    Redirect URL.
 	 */
 	protected static function _update_settings( $values ) {
+		// include image and svg so that tabs working.
+		if ( isset( $values['global'] ) && isset( $values['global']['icon_types'] ) ) {
+			array_push( $values['global']['icon_types'], 'image', 'manage' );
+		}
+
 		update_option(
 			'menu-icons',
 			wp_parse_args(
@@ -304,6 +366,15 @@ final class Menu_Icons_Settings {
 	 */
 	protected static function _reset_settings() {
 		delete_option( 'menu-icons' );
+		// update with default data.
+		$reset_data['global']['icon_types'] = array( 'buddyboss', 'image', 'manage' );
+		update_option(
+			'menu-icons',
+			wp_parse_args(
+				kucrut_validate( $reset_data ),
+				self::$settings
+			)
+		);
 		set_transient( self::TRANSIENT_KEY, 'reset', 30 );
 
 		$redirect_url = remove_query_arg(
@@ -344,6 +415,7 @@ final class Menu_Icons_Settings {
 		if ( empty( $_POST['menu-icons']['settings'] ) ) {
 			wp_send_json_error();
 		}
+
 
 		$redirect_url = self::_update_settings( $_POST['menu-icons']['settings'] ); // Input var okay.
 		wp_send_json_success( array( 'redirectUrl' => $redirect_url ) );
@@ -445,7 +517,7 @@ final class Menu_Icons_Settings {
 						)
 					),
 					esc_attr__( 'Discard all changes and reset to default state', 'buddyboss-theme' ),
-					esc_html__( 'Reset', 'buddyboss-theme' )
+					esc_html__( 'Reset Icon Packs', 'buddyboss-theme' )
 				);
 				?>
 			</span>
@@ -454,8 +526,8 @@ final class Menu_Icons_Settings {
 			<span class="spinner"></span>
 				<?php
 				submit_button(
-					__( 'Load Icon Types', 'buddyboss-theme' ),
-					'secondary menu-icons-settings-save',
+					esc_html__( 'Load Icon Packs', 'buddyboss-theme' ),
+					'primary menu-icons-settings-save',
 					'menu-icons-settings-save',
 					false
 				);
@@ -475,6 +547,13 @@ final class Menu_Icons_Settings {
 	public static function get_fields() {
 		$menu_id    = self::get_current_menu_id();
 		$icon_types = wp_list_pluck( Buddyboss_Menu_Icons::get( 'types' ), 'name' );
+
+		if ( isset( $icon_types['image'] ) ) {
+			unset( $icon_types['image'] );
+		}
+		if ( isset( $icon_types['manage'] ) ) {
+			unset( $icon_types['manage'] );
+		}
 
 		asort( $icon_types );
 
@@ -528,83 +607,135 @@ final class Menu_Icons_Settings {
 	 */
 	public static function get_settings_fields( array $values = array() ) {
 		$fields = array(
+			'icon_style'      => array(
+				'id'      => 'icon_style',
+				'type'    => 'select',
+				'label'   => esc_html__( 'Icon Style', 'buddyboss-theme' ),
+				'default' => 'lined',
+				'choices' => array(
+					array(
+						'value' => 'lined',
+						'label' => esc_html__( 'Lined', 'buddyboss-theme' ),
+					),
+					array(
+						'value' => 'filled',
+						'label' => esc_html__( 'Filled', 'buddyboss-theme' ),
+					),
+				),
+			),
+			'box_style'      => array(
+				'id'      => 'box_style',
+				'type'    => 'select',
+				'label'   => esc_html__( 'Box Style', 'buddyboss-theme' ),
+				'default' => 'none',
+				'choices' => array(
+					array(
+						'value' => 'none',
+						'label' => esc_html__( 'None', 'buddyboss-theme' ),
+					),
+					array(
+						'value' => 'rounded',
+						'label' => esc_html__( 'Boxed', 'buddyboss-theme' ),
+					),
+					array(
+						'value' => 'circle',
+						'label' => esc_html__( 'Rounded', 'buddyboss-theme' ),
+					),
+				),
+			),
 			'hide_label'     => array(
 				'id'      => 'hide_label',
 				'type'    => 'select',
-				'label'   => __( 'Hide Label', 'buddyboss-theme' ),
+				'label'   => esc_html__( 'Hide Label', 'buddyboss-theme' ),
 				'default' => '',
 				'choices' => array(
 					array(
 						'value' => '',
-						'label' => __( 'No', 'buddyboss-theme' ),
+						'label' => esc_html__( 'No', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => '1',
-						'label' => __( 'Yes', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Yes', 'buddyboss-theme' ),
 					),
 				),
 			),
 			'position'       => array(
 				'id'      => 'position',
 				'type'    => 'select',
-				'label'   => __( 'Position', 'buddyboss-theme' ),
+				'label'   => esc_html__( 'Icon Position', 'buddyboss-theme' ),
 				'default' => 'before',
 				'choices' => array(
 					array(
 						'value' => 'before',
-						'label' => __( 'Before', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Before', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'after',
-						'label' => __( 'After', 'buddyboss-theme' ),
+						'label' => esc_html__( 'After', 'buddyboss-theme' ),
 					),
 				),
 			),
 			'vertical_align' => array(
 				'id'      => 'vertical_align',
 				'type'    => 'select',
-				'label'   => __( 'Vertical Align', 'buddyboss-theme' ),
+				'label'   => esc_html__( 'Vertical Align', 'buddyboss-theme' ),
 				'default' => 'middle',
 				'choices' => array(
 					array(
 						'value' => 'super',
-						'label' => __( 'Super', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Super', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'top',
-						'label' => __( 'Top', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Top', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'text-top',
-						'label' => __( 'Text Top', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Text Top', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'middle',
-						'label' => __( 'Middle', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Middle', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'baseline',
-						'label' => __( 'Baseline', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Baseline', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'text-bottom',
-						'label' => __( 'Text Bottom', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Text Bottom', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'bottom',
-						'label' => __( 'Bottom', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Bottom', 'buddyboss-theme' ),
 					),
 					array(
 						'value' => 'sub',
-						'label' => __( 'Sub', 'buddyboss-theme' ),
+						'label' => esc_html__( 'Sub', 'buddyboss-theme' ),
 					),
 				),
 			),
 			'font_size'      => array(
 				'id'          => 'font_size',
+				'type'        => 'select',
+				'label'       => esc_html__( 'Icon Size', 'buddyboss-theme' ),
+				'default'     => 'default',
+				'choices' => array(
+					array(
+						'value' => 'default',
+						'label' => esc_html__( 'Default', 'buddyboss-theme' ),
+					),
+					array(
+						'value' => 'custom',
+						'label' => esc_html__( 'Custom', 'buddyboss-theme' ),
+					),
+				),
+			),
+			'font_size_amount'      => array(
+				'id'          => 'font_size_amount',
 				'type'        => 'number',
-				'label'       => __( 'Font Size', 'buddyboss-theme' ),
-				'default'     => '20',
+				'label'       => '',
+				'default'     => '24',
 				'description' => 'px',
 				'attributes'  => array(
 					'min'  => '1',
@@ -614,7 +745,7 @@ final class Menu_Icons_Settings {
 			'svg_width'      => array(
 				'id'          => 'svg_width',
 				'type'        => 'number',
-				'label'       => __( 'SVG Width', 'buddyboss-theme' ),
+				'label'       => esc_html__( 'SVG Width', 'buddyboss-theme' ),
 				'default'     => '1',
 				'description' => 'em',
 				'attributes'  => array(
@@ -625,7 +756,7 @@ final class Menu_Icons_Settings {
 			'image_size'     => array(
 				'id'      => 'image_size',
 				'type'    => 'select',
-				'label'   => __( 'Image Size', 'buddyboss-theme' ),
+				'label'   => esc_html__( 'Image Size', 'buddyboss-theme' ),
 				'default' => 'thumbnail',
 				'choices' => kucrut_get_image_sizes(),
 			),
@@ -734,19 +865,63 @@ final class Menu_Icons_Settings {
 				$menu_current_theme = $theme->get( 'Name' );
 			}
 		}
+
+		$active_types = self::get( 'global', 'icon_types' );
+		if ( is_array( $active_types ) && ! in_array( 'image', $active_types, true ) ) {
+			$active_types[] = 'image';
+		}
+		if ( is_array( $active_types ) && ! in_array( 'manage', $active_types, true ) ) {
+			$active_types[] = 'manage';
+		}
+
+		$menu_id        = self::get_current_menu_id();
+		$locations      = get_nav_menu_locations();
+		$is_header_menu = false;
+		$header_menus   = array();
+
+		$menu_style      = buddyboss_menu_icons()->get_menu_style();
+		$menu_style_link = esc_url( admin_url( 'admin.php?page=buddyboss_theme_options&tab=23' ) );
+
+		if ( isset( $locations['header-menu'] ) ) {
+			$header_menus[] = $locations['header-menu'];
+		}
+		if ( isset( $locations['header-menu-logout'] ) ) {
+			$header_menus[] = $locations['header-menu-logout'];
+		}
+
+		if ( in_array( $menu_id, $header_menus, true ) ) {
+			$is_header_menu = true;
+		}
+
 		$js_data = apply_filters(
 			'menu_icons_settings_js_data',
 			array(
 				'text'           => array(
-					'title'   => __( 'Select Icon', 'buddyboss-theme' ),
-					'select'  => __( 'Select', 'buddyboss-theme' ),
-					'remove'  => __( 'Remove', 'buddyboss-theme' ),
-					'change'  => __( 'Change', 'buddyboss-theme' ),
-					'all'     => __( 'All', 'buddyboss-theme' ),
-					'preview' => __( 'Preview', 'buddyboss-theme' ),
+					'title'          => esc_html__( 'Select Icon', 'buddyboss-theme' ),
+					'select'         => esc_html__( 'Select', 'buddyboss-theme' ),
+					'remove'         => esc_html__( 'Remove', 'buddyboss-theme' ),
+					'change'         => esc_html__( 'Change', 'buddyboss-theme' ),
+					'all'            => esc_html__( 'All', 'buddyboss-theme' ),
+					'preview'        => esc_html__( 'Preview', 'buddyboss-theme' ),
+					'settings'       => esc_html__( 'Icon Settings', 'buddyboss-theme' ),
+					'header_menu'    => esc_html__( 'Header Menu', 'buddyboss-theme' ),
+					'instruction'    => esc_html__( 'Select an icon to configure its appearance.', 'buddyboss-theme' ),
+					'settings_tip'   => sprintf( '<span>%s</span> %s', esc_html__( 'Tip:', 'buddyboss-theme' ), esc_html__( 'If you select lined, the icon will be dynamically changed to filled when the menu item is active.', 'buddyboss-theme' ) ),
+					'tab_style_info' => sprintf(
+					/* translators: Description with link. */
+						__( 'Menu labels are hidden in your header menu as you\'ve set your %s to Tab Bar Menu.', 'buddyboss-theme' ),
+						sprintf(
+						/* translators: 1. Link, 2. Text */
+							'<a href="%1$s" target="_blank">%2$s</a>',
+							esc_url( $menu_style_link ),
+							esc_html__( 'Menu Style', 'buddyboss-theme' )
+						)
+					),
 				),
+				'is_header_menu' => $is_header_menu,
+				'menu_style'     => $menu_style,
 				'settingsFields' => self::get_settings_fields(),
-				'activeTypes'    => self::get( 'global', 'icon_types' ),
+				'activeTypes'    => $active_types,
 				'ajaxUrls'       => array(
 					'update' => add_query_arg( 'action', 'menu_icons_update_settings', admin_url( '/admin-ajax.php' ) ),
 				),

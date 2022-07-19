@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.15
+
+	- Fixed an issue where carriage returns (`\r`) would be inserted into field values when filtering by them which could cause data to not be matched for certain object types such as Gravity Forms entries.
+	- Improved compatibility with Easy Passthrough and populating chained choices/values.
+	- Added new [`gppa_prepopulate_field_values`](https://gravitywiz.com/documentation/gppa_prepopulate_field_values) PHP filter.
+	- Fixed a PHP warning that could occur in some cases with multiple input fields if there are some inputs without value templates specified.
+	- Improved compatibility with replacing Live Merge Tags inside merge tags parsed by GravityRevisions.
+
+## 1.2.14
+
+	- Fixed Live Merge Tags not being parsed in {all_fields} for nested entries.
+	- Added new [`gppa_field_objects_query_args`](https://gravitywiz.com/documentation/gppa_field_objects_query_args) filter.
+	- Added new [`gppa_value_specification`](https://gravitywiz.com/documentation/gppa_value_specification) filter.
+	- Improved behavior of filter selects/inputs when reloading field settings.
+
+## 1.2.13
+
+	- Fixed an issue where Live Merge Tags displaying time field values that are loaded in through Field Value Objects could result in the wrong time format being used.
+	- Fixed an issue where Live Merge Tags could show a number in the wrong format if the Number field is set to use a format outside of decimal dot.
+	- Fixed an issue where Live Merge Tags would not work as expected with textareas on multi-page forms where some lines have trailing whitespace.
+	- Improved performance if using Populate Anything with JetSloth Images Add-on.
+
 ## 1.2.12
 
 	- Fixed issue where live merge tags were not parsed correctly in HTML fields when displayed in GravityView.

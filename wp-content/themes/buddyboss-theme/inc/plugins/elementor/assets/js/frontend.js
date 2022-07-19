@@ -45,13 +45,13 @@
 		}
 
 		iconReplace( '.site-header--elementor .header-search-link i', 'bb-icon-search', 'search-icon' );
-		iconReplace( '.site-header--elementor #header-messages-dropdown-elem .notification-link i', 'bb-icon-inbox-small', 'messages-icon' );
-		iconReplace( '.site-header--elementor #header-notifications-dropdown-elem .notification-link i', 'bb-icon-bell-small', 'notifications-icon' );
+		iconReplace( '.site-header--elementor #header-messages-dropdown-elem .notification-link i', 'bb-icon-inbox', 'messages-icon' );
+		iconReplace( '.site-header--elementor #header-notifications-dropdown-elem .notification-link i', 'bb-icon-bell', 'notifications-icon' );
 		iconReplace( '.site-header--elementor a.header-cart-link i', 'bb-icon-shopping-cart', 'cart-icon' );
-		iconReplace( 'body:not(.bb-dark-theme) .site-header--elementor a#bb-toggle-theme i', 'bb-icon-moon-circle', 'dark-icon' );
+		iconReplace( 'body:not(.bb-dark-theme) .site-header--elementor a#bb-toggle-theme i', 'bb-icon-moon', 'dark-icon' );
 		iconReplace( '.bb-dark-theme .site-header--elementor a#bb-toggle-theme i', 'bb-icon-sun', 'dark-icon' );
-		iconReplace( '.site-header--elementor a.header-maximize-link i', 'bb-icon-maximize', 'sidebartoggle-icon' );
-		iconReplace( '.site-header--elementor a.header-minimize-link i', 'bb-icon-minimize', 'sidebartoggle-icon' );
+		iconReplace( '.site-header--elementor a.header-maximize-link i', 'bb-icon-expand', 'sidebartoggle-icon' );
+		iconReplace( '.site-header--elementor a.header-minimize-link i', 'bb-icon-merge', 'sidebartoggle-icon' );
 
 
 		// NB - Duplicated as per theme main.js sidePanel()
@@ -163,8 +163,8 @@
 				dots: $switchDots,
 				fade: !0,
 				cssEase: 'linear',
-				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-angle-left"></i></a>',
-				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-angle-right"></i></a>',
+				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-l bb-icon-angle-left"></i></a>',
+				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-l bb-icon-angle-right"></i></a>',
 			});
 
 		});
@@ -189,8 +189,8 @@
 				dots: $switchDots,
 				fade: true,
 				asNavFor: $slickNav,
-				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-arrow-left"></i></a>',
-				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-arrow-right"></i></a>',
+				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-l bb-icon-arrow-left"></i></a>',
+				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-l bb-icon-arrow-right"></i></a>',
 				rtl: false,
 			});
 
@@ -223,8 +223,8 @@
 				centerMode: true,
 				centerPadding: $slMargin,
 				slidesToShow: 1,
-				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-angle-left"></i></a>',
-				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-angle-right"></i></a>',
+				prevArrow: '<a class="bb-slide-prev"><i class="bb-icon-l bb-icon-angle-left"></i></a>',
+				nextArrow: '<a class="bb-slide-next"><i class="bb-icon-l bb-icon-angle-right"></i></a>',
 				arrows: $switchNav,
 				dots: $switchDots,
 				infinite: $switchLoop,

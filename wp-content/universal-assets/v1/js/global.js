@@ -150,7 +150,6 @@ function get_hostname(url) {
     return m ? m[0] : null;
 }
 
-
 // FANCYBOX POPUPS
 jQuery(document).ready(function (jQuery) {
     // Thank you modal with more newsletter options
@@ -210,6 +209,7 @@ jQuery(document).ready(function (jQuery) {
     }
 });
 
+// make all buttons with the class .login-btn function like the main one
 jQuery(".login-btn").on('click', function(){
 	var _href = "//" + window.location.hostname + jQuery("#LoginBtn").attr("href");
 	window.location.href = _href;
@@ -220,6 +220,7 @@ jQuery('a[href*="#"]')
 // Remove links that don't actually link to anything
 .not('[href="#"]')
 .not('[href="#0"]')
+.not('.collapsed')
 .click(function (event) {
     // On-page links
     jQuery('a[href*="#"]').removeClass("clicked");
@@ -255,6 +256,7 @@ jQuery('a[href*="#"]')
     }
 });
 
+// Browser detection
 var matched, browser;
 jQuery.uaMatch = function (ua) {
     ua = ua.toLowerCase();

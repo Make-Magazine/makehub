@@ -89,7 +89,7 @@ class Search_Filter_Third_Party
 			}
 
 			// -- custom layouts
-			add_filter('shortcode_atts_custom-layouts', array($this, 'custom_layouts_shortcode_attributes'), 1000, 3);
+			add_filter('shortcode_atts_custom-layout', array($this, 'custom_layouts_shortcode_attributes'), 1000, 3);
 			add_filter( 'search_filter_form_attributes', array($this, 'custom_layouts_search_filter_form_attributes'), 10, 2 );
 		}
 
@@ -257,7 +257,9 @@ class Search_Filter_Third_Party
 			if($attributes['data-display-result-method']=="custom_edd_store")
 			{
 				$attributes['data-ajax-target'] = '.search-filter-results-'.$sfid;
-				$attributes['data-ajax-links-selector'] = '.edd_pagination a';
+
+				//for fixing pagination issue when there are multiple instance of the S&F.
+				$attributes['data-ajax-links-selector'] = '.search-filter-results-'.$sfid.' .edd_pagination a';
 			}
 
 		}
@@ -276,8 +278,8 @@ class Search_Filter_Third_Party
 				}
 
 				
-
-				$attributes['data-ajax-links-selector'] = '.cl-pagination a';
+				//for fixing pagination issue when there are multiple instance of the S&F.
+				$attributes['data-ajax-links-selector'] = '.search-filter-results-'.$sfid.' .cl-pagination a';
 			}
 
 		}
@@ -296,9 +298,9 @@ class Search_Filter_Third_Party
 					$attributes['data-ajax-target'] = '.dce-posts-container';
 				}
 
-				$attributes['data-ajax-links-selector'] = '.dce-pagination a';
+				//for fixing pagination issue when there are multiple instance of the S&F.
+				$attributes['data-ajax-links-selector'] = '.elementor-widget-dce-dynamicposts-v2'.$search_filter_results_class.' .dce-pagination a';
 				
-				//$attributes['data-infinite-scroll-result-class'] = 'article.dce-post';
 				if ( isset( $attributes['data-infinite-scroll-result-class'] ) ) {
 					unset( $attributes['data-infinite-scroll-result-class'] );
 				}
@@ -313,11 +315,11 @@ class Search_Filter_Third_Party
 			}
 			else if($attributes['data-display-result-method']=="custom_dce_google_maps")
 			{
-				//$attributes['data-ajax-target'] = '.elementor-widget-dce-dynamic-google-maps';
-				$attributes['data-ajax-target'] = '.elementor-widget-dce-dynamic-google-maps'.$search_filter_results_class;
-				$attributes['data-ajax-links-selector'] = '.dce-pagination a';
+				$attributes['data-ajax-target'] = '.elementor-widget-dyncontel-acf-google-maps'.$search_filter_results_class;
 
-				//$attributes['data-infinite-scroll-result-class'] = 'article.dce-post';
+				//for fixing pagination issue when there are multiple instance of the S&F.
+				$attributes['data-ajax-links-selector'] = '.elementor-widget-dyncontel-acf-google-maps'.$search_filter_results_class.' .dce-pagination a';
+
 				if ( isset( $attributes['data-infinite-scroll-result-class'] ) ) {
 					unset( $attributes['data-infinite-scroll-result-class'] );
 				}
@@ -330,18 +332,18 @@ class Search_Filter_Third_Party
 					unset( $attributes['data-infinite-scroll-container'] );
 				}
 			}
-			else if($attributes['data-display-result-method']=="custom_dce_google_maps_posts_v2")
+			else if($attributes['data-display-result-method']=="custom_dce_google_maps_posts")
 			{
-				//$attributes['data-ajax-target'] = '.elementor-widget-dce-dynamic-google-maps';
-				$attributes['data-ajax-target'] = '.elementor-widget-dce-dynamic-google-maps'.$search_filter_results_class;
-				$attributes['data-ajax-links-selector'] = '.dce-pagination a';
+				$attributes['data-ajax-target'] = '.elementor-widget-dyncontel-acf-google-maps'. $search_filter_results_class;
+
+				//for fixing pagination issue when there are multiple instance of the S&F.
+				$attributes['data-ajax-links-selector'] = '.elementor-widget-dyncontel-acf-google-maps'. $search_filter_results_class. ' .dce-pagination a';
 
 				// we want additional areas to be udpated with ajax:
 				$attributes['data-ajax-update-sections'] = wp_json_encode( [
 					'.elementor-widget-dce-dynamicposts-v2'.$search_filter_results_class,
 				] );
 				
-				//$attributes['data-infinite-scroll-result-class'] = 'article.dce-post';
 				if ( isset( $attributes['data-infinite-scroll-result-class'] ) ) {
 					unset( $attributes['data-infinite-scroll-result-class'] );
 				}
@@ -361,7 +363,7 @@ class Search_Filter_Third_Party
 
 	public function dce_filter_display_results_options( $display_results_methods ) {
 		$display_results_methods['custom_dce_posts'] = array(
-			'label'         => __('Dynamic.ooo: Posts v2'),
+			'label'         => __('Dynamic.ooo: Posts'),
 			'description'   =>
 				'<p>'.__("Use the powerful Dynamic Posts v2 widget for Elementor to create any kind of layout you can imagine.", $this->plugin_slug ).'</p>' .
 				'<p><a href="https://searchandfilter.com/documentation/3rd-party/dynamic-content-elementor/" target="_blank">'.__("View the setup instructions", $this->plugin_slug ).'</a></p>',
@@ -381,8 +383,8 @@ class Search_Filter_Third_Party
 		}
 	
 		if ( version_compare( DCE_VERSION, '1.13.0', '>=' ) ) {
-			$display_results_methods['custom_dce_google_maps_posts_v2'] = array(
-				'label'         => __('Dynamic.ooo: Posts v2 + Google Maps'),
+			$display_results_methods['custom_dce_google_maps_posts'] = array(
+				'label'         => __('Dynamic.ooo: Posts + Google Maps'),
 				'description'   =>
 					'<p>'.__("Use the powerful Dynamic Google Maps widget combined with a Dynamic Posts widget to create advanced searches that work with your maps + posts at the same time!", $this->plugin_slug ).'</p>' .
 					'<p><a href="https://searchandfilter.com/documentation/3rd-party/dynamic-content-elementor/" target="_blank">'.__("View the setup instructions", $this->plugin_slug ).'</a></p>',
@@ -514,7 +516,6 @@ class Search_Filter_Third_Party
 	}
 
 	public function sf_woo_post_cache_insert_data( $insert_data, $post_id, $type ) {
-
 		if (!$this->is_woo_enabled()) {
 			return $insert_data;
 		}
@@ -572,18 +573,18 @@ class Search_Filter_Third_Party
 
 				$this->wc_variable_meta_keys = array_keys($insert_data);
 
-				if(isset($insert_data['_sfm__price'])) {
+				//if(isset($insert_data['_sfm__price'])) {
 					//unset($insert_data['_sfm__price']);
 					// no we need to leave in parent price, so it can be matched
 					// with other fields, such as attributes, that are not variations (so they are on the parent)
-				}
+				//}
 
 				//if managing stock is false, then we are managing stock at the variation level, so unset it from the parent
-				if(($product->managing_stock()==false)&&(isset($insert_data['_sfm__stock_status']))) {
+				//if(($product->managing_stock()==false)&&(isset($insert_data['_sfm__stock_status']))) {
 					// disable, keep on the parent, in case the user doesn't include variations, and so we can mathc stock status
 					// if such a filter has been created v2.4.7
 					//unset($insert_data['_sfm__stock_status']);
-				}
+				//}
 			}
 
 		} else if( $product->is_type('simple')) {
@@ -842,7 +843,7 @@ class Search_Filter_Third_Party
 		return $index_data;
 
 	}
-
+	
 	public function sf_woo_post_cache_get_delete_variation_data( $post_id ) {
 
 
@@ -900,9 +901,6 @@ class Search_Filter_Third_Party
 		$product_variable = new WC_Product_Variable( $post->ID );
 		$product_variation_ids = $product_variable->get_children();
 
-		//$product_variations = $product_variable->get_available_variations();
-		//foreach($product_variations as $product_variation) {
-
 		$post_status = get_post_status($post->ID); //don't index variations if the parent is private, and if its not in any search forms
 		$index_variation = true;
 
@@ -919,7 +917,7 @@ class Search_Filter_Third_Party
 				$index_variation = false;
 			}
 		//}
-
+		
 		//we first need to delete all variation data assoc with this post
 		$this->sf_woo_post_cache_get_delete_variation_data($post->ID);
 
@@ -940,7 +938,6 @@ class Search_Filter_Third_Party
 		$variations_data = array();
 
 		foreach($product_variation_ids as $variation_id) {
-
 			//need to remove existing records for this variation (already done in `sf_woo_post_cache_get_delete_variation_data`)
 
 			//loop through the variations
@@ -1391,8 +1388,15 @@ class Search_Filter_Third_Party
 		}
 
 		return false;
-
 	}
+	public function sf_woocommerce_should_reduce_variations( $sfid ) {
+		if (!$this->is_woo_enabled()) {
+			return false;
+		}
+		$should_reduce = apply_filters( 'search_filter_woo_should_reduce_variation', true );
+		return $should_reduce;
+	}
+	
 	public function sf_woocommerce_is_woo_query($sfid)
 	{
 		if (!$this->is_woo_enabled()) {
@@ -1417,47 +1421,7 @@ class Search_Filter_Third_Party
 		return false;
 
 	}
-	/*public function sf_woocommerce_cache_filter_names($field_names, $sfid)
-	{
-		if (!$this->is_woo_enabled()) {
-			return $field_names;
-		}
-
-		if($this->sf_woocommerce_is_woo_variations_query($sfid))
-		{
-			$taxonomy_names = $this->sf_woocommerce_get_tax_meta_variations_keys(false);
-
-			//now try to see which of the post variations post meta keys are in the current fields list (as taxonomies, and only then add them)
-			$active_taxonomy_names = array();
-			foreach ($field_names as $field_name)
-			{
-				//remove
-				if(strpos($field_name, "_sft_")!== false)
-				{
-					$tax_name = ltrim($field_name, '_sft_');
-					//$tax_name = str_replace("_sft_", "", $field_name);
-					array_push($active_taxonomy_names, $tax_name);
-				}
-			}
-
-			//no we find which need to have meta fields also added to lookup tax values within variations
-			$tax_meta_keys_needed = array_intersect($active_taxonomy_names, $taxonomy_names);
-
-			//now convert them to field names:
-			$this->woo_meta_keys_added = array();
-			foreach($tax_meta_keys_needed as $tax_key)
-			{
-				$meta_key = "_sfm_attribute_".$tax_key;
-
-				array_push($field_names, $meta_key);
-				array_push($this->woo_meta_keys_added, $tax_key);
-
-			}
-		}
-
-		return $field_names;
-	}*/
-
+	
 	public function sf_woocommerce_convert_term_results($filters, $cache_term_results, $sfid) {
 
 		//check to see if we are using woocommerce post types
@@ -1501,11 +1465,6 @@ class Search_Filter_Third_Party
 			return $register;
 		}
 
-		//make sure this search form is tyring to use woocommerce
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)){
-			return true;
-		}
-
 		return $register;
 
 	}
@@ -1515,12 +1474,11 @@ class Search_Filter_Third_Party
 	}
 
 	public function sf_woocommerce_convert_variable_product_ids($post_ids, $sfid) {
-
 		global $searchandfilter;
 		$sf_inst = $searchandfilter->get($sfid);
 
 		//make sure this search form is tyring to use woocommerce
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)) {
+		if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid) ) {
 			$post_ids = $this->sf_woocommerce_conv_variable_ids( $post_ids, $sfid );
 		}
 
@@ -1536,7 +1494,7 @@ class Search_Filter_Third_Party
 		$sf_inst = $searchandfilter->get($sfid);
 
 		//make sure this search form is tyring to use woocommerce
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)){
+		if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid) ){
 
 			$this->woo_all_results_ids_keys = $sf_inst->query->cache->get_registered_result_ids();
 			$all_result_ids = array_keys($this->woo_all_results_ids_keys);
@@ -1607,7 +1565,7 @@ class Search_Filter_Third_Party
 	public function sf_woocommerce_conv_variable_ids($post_ids, $sfid)
 	{
 		//make sure this search form is tyring to use woocommerce
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)){
+		if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid) ){
 
 			//$post_ids = array_unique($post_ids); //so no duplicates
 			$replacements = $this->woo_result_ids_map;
@@ -1625,7 +1583,7 @@ class Search_Filter_Third_Party
 	/* not in use */
 	public function sf_query_cache_count_id_numbers($post_ids, $sfid)
 	{
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)){
+		if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid)){
 
 			$replacements = $this->woo_result_ids_map;
 			foreach ($post_ids as $key => $value) {
@@ -1698,8 +1656,10 @@ class Search_Filter_Third_Party
 
 		//make sure post type is "product" only, not with variations, otherwise,
 		//they will show in the results (if the variation ID has not been converted to its parent ID yet)
-		if($this->sf_woocommerce_is_woo_variations_query($sfid)){
+		if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid) ){
 			$query->set("post_type", "product");
+		} else if($this->sf_woocommerce_is_woo_variations_query($sfid) && ! $this->sf_woocommerce_should_reduce_variations($sfid) ){
+			$query->set("post_type", [ "product", "product_variation" ] );
 		}
 
 		return $query;
@@ -1775,7 +1735,7 @@ class Search_Filter_Third_Party
 		if(isset($settings['display_results_as']))
 		{
 			//if($settings["display_results_as"]=="custom_woocommerce_store"){
-			if($this->sf_woocommerce_is_woo_variations_query($sfid)){
+			if($this->sf_woocommerce_is_woo_variations_query($sfid) && $this->sf_woocommerce_should_reduce_variations($sfid) ){
 
 				$settings['treat_child_posts_as_parent'] = 1;
 			}

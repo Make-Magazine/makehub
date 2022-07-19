@@ -449,6 +449,20 @@ export default class GPPALiveMergeTags {
 				canBeDecoupled = false;
 			}
 
+			let attrValComparison = attrVal;
+
+			/**
+			 * There are situations in which trailing whitespace can be stripped on individual lines in a textarea. This helps account for it.
+			 *
+			 * @see GP_Populate_Anything_Live_Merge_Tags::prepare_for_lmt_comparison() for the PHP counterpart that is used on this.currentMergeTagValues on initial load.
+			 */
+			if ( typeof attrVal === 'string' ) {
+				attrValComparison = attrVal
+					.split( '\n' )
+					.map( ( line ) => line.trim() )
+					.join( '\n' );
+			}
+
 			/**
 			 * Handle decoupling
 			 *
@@ -458,7 +472,8 @@ export default class GPPALiveMergeTags {
 			if (
 				elementMergeTag in this.currentMergeTagValues &&
 				// eslint-disable-next-line eqeqeq
-				attrVal != this.currentMergeTagValues[ elementMergeTag ] &&
+				attrValComparison !=
+					this.currentMergeTagValues[ elementMergeTag ] &&
 				// eslint-disable-next-line eqeqeq
 				attrVal != elementMergeTag &&
 				canBeDecoupled

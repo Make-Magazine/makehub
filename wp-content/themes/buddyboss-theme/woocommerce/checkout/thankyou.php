@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php else : ?>
         
-                <h2 class="woocommerce-heading--success woocommerce-thankyou-order-received-heading"><i class="bb-icon-check"></i><?php _e( 'Your Order Confirmed', 'buddyboss-theme' ); ?></h2>
+                <h2 class="woocommerce-heading--success woocommerce-thankyou-order-received-heading"><i class="bb-icon-rl bb-icon-check"></i><?php esc_html_e( 'Your Order Confirmed', 'buddyboss-theme' ); ?></h2>
 
     			<p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'buddyboss-theme' ), $order ); ?></p>
     

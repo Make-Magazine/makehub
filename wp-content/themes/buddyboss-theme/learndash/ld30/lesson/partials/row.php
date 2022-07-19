@@ -39,7 +39,7 @@ $sections = ( isset( $sections ) ? $sections : array() );
  */
 $atts = apply_filters( 'learndash_lesson_row_atts', ( isset( $has_access ) && ! $has_access && 'is_not_sample' === $lesson['sample'] ? 'data-balloon-pos="up" data-balloon="' . esc_html__( "You don't currently have access to this content", 'buddyboss-theme' ) . '"' : '' ), $lesson['post']->ID, $course_id, $user_id );
 
-$atts_access_marker = apply_filters( 'learndash_lesson_row_atts', ( isset( $has_access ) && ! $has_access && $lesson['sample'] === 'is_not_sample' ? '<span class="lms-is-locked-ico"><i class="bb-icons bb-icon-lock-fill"></i></span>' : '' ) );
+$atts_access_marker = apply_filters( 'learndash_lesson_row_atts', ( isset( $has_access ) && ! $has_access && $lesson['sample'] === 'is_not_sample' ? '<span class="lms-is-locked-ico"><i class="bb-icon-f bb-icon-lock"></i></span>' : '' ) );
 
 /**
  * New logic to override sample lessons access LEARNDASH-3854

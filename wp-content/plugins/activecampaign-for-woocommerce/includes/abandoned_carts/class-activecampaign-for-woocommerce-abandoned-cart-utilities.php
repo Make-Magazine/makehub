@@ -220,8 +220,8 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 				'Abandoned cart: could not delete the abandoned cart entry.',
 				[
 					'message'  => $t->getMessage(),
-					'session'  => method_exists( wc()->session, 'get_session_data' ) ? wc()->session->get_session_data() : null,
-					'customer' => method_exists( wc()->customer, 'get_data' ) ? wc()->customer->get_data() : null,
+					'session'  => isset( wc()->session ) && method_exists( wc()->session, 'get_session_data' ) ? wc()->session->get_session_data() : null,
+					'customer' => isset( wc()->customer ) && method_exists( wc()->customer, 'get_data' ) ? wc()->customer->get_data() : null,
 					'trace'    => $logger->clean_trace( $t->getTrace() ),
 				]
 			);

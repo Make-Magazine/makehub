@@ -239,7 +239,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
                 }
 
                 .learndash-wrapper .ld-alert-success {
-                    border-color: #E7E9EC !important;
+                    border-color: #DCDFE3 !important;
                 }
 
                 .learndash-wrapper .ld-secondary-in-progress-icon {
@@ -376,12 +376,12 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 								<div class="grid-filters push-right" data-object="">
 								    <a href="#" class="layout-view layout-grid-view active bp-tooltip"  data-view="grid" data-bp-tooltip-pos="up"
 								       data-bp-tooltip="' . esc_html__( 'Grid View', 'buddyboss-theme' ) . '">
-								        <i class="bb-icon-grid-view-small" aria-hidden="true"></i>
+								        <i class="bb-icon-l bb-icon-grid-large" aria-hidden="true"></i>
 								    </a>
 
 								    <a href="#" class="layout-view layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="up"
 								       data-bp-tooltip=" ' . esc_html__( 'List View', 'buddyboss-theme' ) . '">
-								        <i class="bb-icon-list-view-small" aria-hidden="true"></i>
+								        <i class="bb-icon-l bb-icon-bars" aria-hidden="true"></i>
 								    </a>
 								</div>
 							</div>

@@ -44,21 +44,21 @@ $memberships = $student->get_membership_levels();
 			<footer class="llms-sd-section-footer push-right">
 				<a class="llms-button-secondary" href="<?php echo esc_url( $more['url'] ); ?>">
 					<?php esc_html_e( 'View All', 'buddyboss-theme' ); ?>
-					<i class="bb-icon-angle-right"></i>
+					<i class="bb-icon-l bb-icon-angle-right"></i>
 				</a>
 			</footer>
 		<?php } elseif ( $more && 'my_achievements' === $action && $achievements ) { ?>
 			<footer class="llms-sd-section-footer push-right">
 				<a class="llms-button-secondary" href="<?php echo esc_url( $more['url'] ); ?>">
 					<?php esc_html_e( 'View All', 'buddyboss-theme' ); ?>
-					<i class="bb-icon-angle-right"></i>
+					<i class="bb-icon-l bb-icon-angle-right"></i>
 				</a>
 			</footer>
 		<?php } elseif ( $more && 'my_certificates' === $action && $certificates ) { ?>
 			<footer class="llms-sd-section-footer push-right">
 				<a class="llms-button-secondary" href="<?php echo esc_url( $more['url'] ); ?>">
 					<?php esc_html_e( 'View All', 'buddyboss-theme' ); ?>
-					<i class="bb-icon-angle-right"></i>
+					<i class="bb-icon-l bb-icon-angle-right"></i>
 				</a>
 			</footer>
 		<?php } ?>

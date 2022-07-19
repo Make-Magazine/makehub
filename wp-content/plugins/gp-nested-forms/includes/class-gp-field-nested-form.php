@@ -378,11 +378,14 @@ class GP_Field_Nested_Form extends GF_Field {
 	}
 
 	public function should_use_count_template() {
+		global $post;
 
-		$is_gravityview = function_exists( 'gravityview' ) && gravityview()->request->is_view();
+		if ( ! $post || ! ( $post instanceof WP_Post ) || ! method_exists( '\GV\View_Collection', 'from_post' ) ) {
+			return false;
+		}
 
-		return $is_gravityview;
-
+		/* This check will work with both shortcodes and if accessing a View via direct permalink. No need for gravityview()->request->is_view(). */
+		return ! empty( \GV\View_Collection::from_post( $post )->all() );
 	}
 
 	public function get_item_labels() {

@@ -27,7 +27,7 @@ if ( ! defined( 'BB_HEADER_BAR_WIDGET' ) ) {
 		);
 		?>
         <div id="navbar-collapse">
-            <a class="more-button" href="#"><i class="bb-icon-menu-dots-h"></i></a>
+            <a class="more-button" href="#"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a>
             <ul id="navbar-extend" class="sub-menu"></ul>
         </div>
     </div>

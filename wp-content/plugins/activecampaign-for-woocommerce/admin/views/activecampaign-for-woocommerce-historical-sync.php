@@ -14,6 +14,18 @@
 	$activecampaign_for_woocommerce_running_sync_status     = json_decode( get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME ), 'array' );
 	$activecampaign_for_woocommerce_schedule_status         = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME );
 	$activecampaign_for_woocommerce_event_status            = wp_get_scheduled_event( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_SYNC_NAME );
+	$activecampaign_for_woocommerce_options                 = $this->get_options();
+	$activecampaign_for_woocommerce_page_url                = esc_url( admin_url( 'admin.php?page=' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_historical_sync&activesync=1' ) );
+	$activecampaign_for_woocommerce_page_nonce              = wp_create_nonce( 'activecampaign_for_woocommerce_historical_sync_form' );
+
+if (
+isset( $_REQUEST['activecampaign_for_woocommerce_nonce_field'] )
+&& wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_nonce_field'], 'activecampaign_for_woocommerce_historical_sync_form' )
+) {
+	if ( isset( $_GET['activesync'] ) && ! empty( $_GET['activesync'] ) ) {
+		$this->run_historical_sync_active();
+	}
+}
 ?>
 <div id="activecampaign-for-woocommerce-historical-sync" class="wrap">
 <h1>
@@ -26,10 +38,20 @@
 		<div>
 			<div id="sync-start-section">
 				<div>
-					<button id="activecampaign-run-historical-sync" class="button disabled">
-						<?php esc_html_e( 'Start Historical Sync', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<form method="post" action="<?php echo esc_html( $activecampaign_for_woocommerce_page_url ); ?>">
+					<?php
+					wp_nonce_field( 'activecampaign_for_woocommerce_historical_sync_form', 'activecampaign_for_woocommerce_nonce_field' );
+					?>
+					<input type="hidden" name="action" value="activecampaign_for_woocommerce_run_historical_sync_active" />
+
+					<button type="button" id="activecampaign-run-historical-sync" class="button disabled">
+						<?php esc_html_e( 'Start Background Historical Sync', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 					</button>
-					<button id="activecampaign-reset-historical-sync" class="button">
+
+					<button type="submit" class="submit button">
+						<?php esc_html_e( 'Start Active Historical Sync', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					</button>
+					<button id="activecampaign-reset-historical-sync" class="button" type="button" >
 						<?php esc_html_e( 'Reset Sync Status', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 					</button>
 					<div>
@@ -50,6 +72,7 @@
 						</select>
 						</div>
 					</div>
+					</form>
 				</div>
 				<div id="activecampaign-historical-sync-run-shortly" style="display:none;">
 					<?php esc_html_e( 'Historical sync will start shortly...', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
@@ -76,7 +99,16 @@
 					<?php endif; ?>
 				</div>
 				<div id="activecampaign-run-historical-sync-current-record">
-					<?php esc_html_e( 'Last Record ID Processed: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?> <span id="activecampaign-run-historical-sync-current-record-num"></span>
+					<?php esc_html_e( 'Last Record ID Processed: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<span id="activecampaign-run-historical-sync-current-record-num"></span>
+					<?php
+					if ( $activecampaign_for_woocommerce_options['ac_debug'] ) :
+						?>
+ </php>
+					<div>
+						<p>Debug info: <span id="activecampaign-run-historical-sync-current-record-status"></span></p>
+					</div>
+					<?php endif; ?>
 				</div>
 				<div>
 					<button id="activecampaign-cancel-historical-sync" class="button">

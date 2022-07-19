@@ -1,3 +1,24 @@
+v3.1.11 - 03-June-2022
+- Improvement: Activate plugins using WP-CLI when importing demo using cli command.
+
+v3.1.10 - 19-May-2022
+- Improvement: Renamed button text from Starter Templates to Template Kits.
+
+v3.1.9 - 16-May-2022
+- Improvement: Enhanced test environments.
+- Fix: Fixed redirection of few required plugins during import.
+- Fix: Missing support for wp_block post type in Gutenberg templates.
+
+
+v3.1.8 - 13-April-2022
+- Fix: Fixed an issue with the click action for category mega menu titles.
+- Fix: Fixed an issue with the Popular and Latest filters.
+- Fix: Improved import error messages.
+- Fix: UI improvement on the last screen for Starter Template import.
+
+v3.1.7 - 17-March-2022
+- Fix: Fixed an issue with multiple import processes being invoked when the theme is not activated.
+
 v3.1.6 - 8-March-2022
 - Improvement: Better error reporting for the import process.
 - Fix: Fixed an issue where the Starter Templates library won't refresh after the sync process.

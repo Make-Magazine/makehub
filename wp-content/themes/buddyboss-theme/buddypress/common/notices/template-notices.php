@@ -20,7 +20,7 @@ $bp = buddypress();
 	<?php bp_nouveau_template_message(); ?>
 
 	<?php if ( bp_nouveau_has_dismiss_button() ) : ?>
-		<button type="button" data-balloon-pos="down" class="" data-balloon="<?php echo esc_attr_x( 'Close', 'button', 'buddyboss-theme' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss-theme' ); ?>" data-bp-close="<?php bp_nouveau_dismiss_button_type(); ?>"><span class="bb-icon-close-circle" aria-hidden="true"></span></button>
+		<button type="button" data-balloon-pos="down" class="" data-balloon="<?php echo esc_attr_x( 'Close', 'button', 'buddyboss-theme' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss-theme' ); ?>" data-bp-close="<?php bp_nouveau_dismiss_button_type(); ?>"><span class="bb-icon-rl bb-icon-times" aria-hidden="true"></span></button>
 	<?php endif; ?>
 
 	<?php

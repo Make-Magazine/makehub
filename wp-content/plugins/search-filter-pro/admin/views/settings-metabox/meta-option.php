@@ -12,15 +12,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<td>
 				<label for="settings_post_meta[{0}][meta_key]">
 					<?php
-						$all_meta_keys = $this->get_all_post_meta_keys();
-						echo '<select class="meta_key" data-field-template-id="settings_post_meta[{0}][meta_key]" data-field-template-name="settings_post_meta[{0}][meta_key]">';
-						
-						foreach($all_meta_keys as $v){
-							//$data[] = $v->meta_key;
+					
+						$meta_key_text_input = Search_Filter_Helper::get_option( 'meta_key_text_input' );
+						if($meta_key_text_input == 1 ) {
+							?>
+							<input type="text" placeholder="<?php echo esc_attr__( 'Enter a meta key', 'search-filter' ); ?>" style="width: 100%"  class="meta_key" data-field-template-id="settings_post_meta[{0}][meta_key]" data-field-template-name="settings_post_meta[{0}][meta_key]" value="<?php echo esc_attr($values['meta_key']); ?>" />
+							<?php
+						} else {
+							$all_meta_keys = $this->get_all_post_meta_keys();
+							echo '<select class="meta_key" data-field-template-id="settings_post_meta[{0}][meta_key]" data-field-template-name="settings_post_meta[{0}][meta_key]">';
 							
-							echo '<option value="'.$v.'"'.$this->set_selected($values['meta_key'], $v, false).'>'.$v."</option>";
+							foreach($all_meta_keys as $v){
+								//$data[] = $v->meta_key;
+								
+								echo '<option value="'.$v.'"'.$this->set_selected($values['meta_key'], $v, false).'>'.$v."</option>";
+							}
+							echo '</select>';
 						}
-						echo '</select>';
 						
 					?>
 					<input type="hidden" class="meta_key_hidden"  value="<?php echo $values['meta_key']; ?>" disabled="disabled" data-field-template-id="settings_post_meta[{0}][meta_key]" data-field-template-name="settings_post_meta[{0}][meta_key]" />
@@ -29,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<td>
 				<label for="settings_post_meta[{0}][meta_type]">
 					<?php
-						$all_meta_keys = $this->get_all_post_meta_keys();
+					
 						echo '<select class="meta_type" data-field-template-id="settings_post_meta[{0}][meta_type]" data-field-template-name="settings_post_meta[{0}][meta_type]">';
 						
 							echo '<option value="CHAR"'.$this->set_selected($values['meta_type'], "CHAR", false).'>char</option>';
@@ -51,8 +59,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<td>
 				<label for="{0}[{1}][meta_compare]">
 					<?php
-						$all_meta_keys = $this->get_all_post_meta_keys();
-						
 						echo '<select class="meta_compare" data-field-template-id="settings_post_meta[{0}][meta_compare]" data-field-template-name="settings_post_meta[{0}][meta_compare]">';
 						
 							echo '<option value="e"'.$this->set_selected($values['meta_compare'], "e", false).' class="date-format-supported">= &nbsp;&nbsp;(equals)</option>';

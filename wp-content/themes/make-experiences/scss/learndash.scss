@@ -18,7 +18,6 @@
 	#page {
 		.site-content > .container{
 			width: 100%;
-			padding: 0 30px;
 			@media screen and (max-width: 960px) {
 				padding: 0px;
 			}
@@ -116,7 +115,8 @@
 		.lms-course-members-list { display: none;}
 
 	}
-
+	.buddypanel { display: none; }
+	.lms-topic-sidebar-data { left: 0px !important; }
 	@media screen and (max-width: 767px) {
 		#learndash-content .lms-topic-sidebar-wrapper {
 			display: none;

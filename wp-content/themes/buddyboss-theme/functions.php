@@ -123,3 +123,11 @@ if ( ! function_exists( 'wp_body_open' ) ) {
 require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-filters.php';
 require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-hooks.php';
 require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-functions.php';
+
+/**
+ * Load BuddyBoss theme blocks.
+ *
+ * @since 2.0.0
+ */
+require_once trailingslashit( get_template_directory() ) . 'blocks/blocks.php';
+

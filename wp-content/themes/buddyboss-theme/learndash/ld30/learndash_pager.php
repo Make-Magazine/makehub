@@ -91,31 +91,32 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 		if ( 1 != $pages ) {
 			?>
 
-		<div class='bp-pagination bottom'>
-			<div class='bp-pagination-links bottom'>
-				<p class='pag-data'>
+            <div class='bp-pagination bottom'>
+                <div class='bp-pagination-links bottom'>
+                    <p class='pag-data'>
 
-				<?php
-				if ( $paged > 1 && $showitems < $pages ) {
-					echo "<a data-paged='" . ( $paged - 1 ) . "'>←</a>";
-				}
+                        <?php
+                        if ( $paged > 1 && $showitems < $pages ) {
+                            echo '<a class="page-numbers" data-paged="' . esc_attr( $paged - 1 ) . '">←</a>';
+                        }
 
-				for ( $i = 1; $i <= $pages; $i++ ) {
-					if ( 1 != $pages && ( ! ( $i >= $paged + $range + 1 || $i <= $paged - $range - 1 ) || $pages <= $showitems ) ) {
-						echo ( $paged == $i ) ? "<span class='page-numbers current'>" . $i . '</span>' : "<a data-paged='" . $i . "' class='inactive' >" . $i . '</a>';
-					}
-				}
+                        for ( $i = 1; $i <= $pages; $i ++ ) {
+                            if ( 1 != $pages && ( ! ( $i >= $paged + $range + 1 || $i <= $paged - $range - 1 ) || $pages <= $showitems ) ) {
+                                echo ( $paged == $i ) ? '<span class="page-numbers current">' . $i . '</span>' : '<a class="page-numbers" data-paged="' . esc_attr( $i ) . '" class="inactive" >' . esc_html( $i ) . '</a>';
+                            }
+                        }
 
-				if ( $paged < $pages && $showitems < $pages ) {
-					echo "<a data-paged='" . ( $paged + 1 ) . "'>&rarr;</a>";
-				}
+                        if ( $paged < $pages && $showitems < $pages ) {
+                            echo '<a class="page-numbers" data-paged="' . esc_attr( $paged + 1 ) . '">&rarr;</a>';
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+
+		    <?php
 		}
-		?>
-				</p>
-			</div>
-		</div>
 
-		<?php
 		echo $wrapper_after;
 	}
 }

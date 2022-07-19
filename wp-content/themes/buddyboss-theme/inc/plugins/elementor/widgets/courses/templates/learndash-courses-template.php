@@ -43,11 +43,11 @@ if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
                 <ul class="component-navigation courses-nav">
                     <?php
                     $navs = array(
-                        'all' => __( 'All', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '<span class="count">' . $query->found_posts . '</span>',
+                        'all' => '<div class="bb-component-nav-item-point">' . esc_html__( 'All', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . $query->found_posts . '</span>',
                     );
 
                     if ( is_user_logged_in() ) {
-                        $navs['my-courses'] = __( 'My', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
+                        $navs['my-courses'] = '<div class="bb-component-nav-item-point">' . esc_html__( 'My', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
                     }
 
                     $navs = apply_filters( 'BuddyBossTheme/Learndash/Archive/Navs', $navs );

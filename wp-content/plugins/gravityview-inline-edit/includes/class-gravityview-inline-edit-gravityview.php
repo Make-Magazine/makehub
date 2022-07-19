@@ -19,7 +19,7 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 	 */
 	protected function should_add_hooks() {
 
-		$is_gv_admin = class_exists( 'GravityView_Admin' ) && GravityView_Admin::is_admin_page() || ( function_exists( 'gravityview' ) && gravityview()->request->is_admin() );
+		$is_gv_admin = ( class_exists( 'GravityView_Admin' ) && GravityView_Admin::is_admin_page() ) || ( function_exists( 'gravityview' ) && gravityview()->request->is_admin() );
 
 		$is_valid_nonce = isset( $_POST['nonce'] ) && ( wp_verify_nonce( $_POST['nonce'], 'gravityview_inline_edit' ) || wp_verify_nonce( $_POST['nonce'], 'gravityview_datatables_data' ) );
 
@@ -59,24 +59,32 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 
 		add_filter( 'gravityview-inline-edit/user-can-edit-entry', array( $this, 'filter_can_edit_entry' ), 1, 4 );
 
-		add_filter( 'gravityview-inline-edit/entry-updated', array( $this, 'add_to_blacklist' ), 10, 2 );
+		add_filter( 'gravityview-inline-edit/entry-updated', array( $this, 'add_to_blocklist' ), 10, 2 );
 
 		add_filter( 'gravityview/datatables/output', array( $this, 'modify_datatables_output' ), 10, 2 );
+
+	}
+
+	/**
+	 * @since 1.0.2
+	 * @depecated 1.5
+	 */
+	public function add_to_blacklist( $update_result, $entry ) {
+		_deprecated_function( __METHOD__, '1.5', 'GravityView_Inline_Edit_GravityView::add_to_blocklist' );
+		return $this->add_to_blocklist( $update_result, $entry );
 	}
 
 	/**
 	 * Clear the GravityView cache when an entry is updated via Inline Edit (if the update is valid)
 	 *
-	 * @since 1.0.2
+	 * @since 1.5
 	 *
 	 * @param bool|WP_Error $update_result True: the entry has been updated by Gravity Forms or WP_Error if there was a problem
 	 * @param array $entry The Entry Object that's been updated
-	 * @param int $form_id The Form ID
-	 * @param GF_Field|null $gf_field The field that's been updated, or null if no field exists (for entry meta)
 	 *
 	 * @return bool|WP_Error Original $update_result
 	 */
-	function add_to_blacklist( $update_result, $entry ) {
+	function add_to_blocklist( $update_result, $entry ) {
 
 		if ( $update_result && ! is_wp_error( $update_result ) ) {
 			do_action( 'gravityview_clear_entry_cache', $entry['id'] );
@@ -262,7 +270,6 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 	public function wrap_gravityview_field_value( $output, $entry, $field_settings, $field ) {
 
 		$view_id = GravityView_View::getInstance()->getViewId();
-
 		if ( ! $this->is_inline_edit_enabled( $view_id ) ) {
 			return $output;
 		}
@@ -272,12 +279,57 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 			return $output;
 		}
 
+		// Check if field inline edit is disabled
+		if ( 'disabled' === rgar( $field_settings, 'enable_inline_edit', 'enabled' ) ) {
+			return $output;
+		}
+
 		$current_field = rgar( $field, 'field' );
 		$form          = rgar( $field, 'form' );
 
 		$gf_field = is_a( $current_field, 'GF_Field' ) ? GVCommon::get_field( $form, $current_field->id ) : null;
 
-		return parent::wrap_field_value( $output, $entry, $field_settings['id'], $gf_field, $form );
+		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'filter_wrapper_attribute_add_entry_link' ), 10, 7 );
+
+		$return = parent::wrap_field_value( $output, $entry, $field_settings['id'], $gf_field, $form, $field_settings );
+
+		remove_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'filter_wrapper_attribute_add_entry_link' ), 10 );
+
+		return $return;
+	}
+
+	/**
+	 * If the View field is linking to the single entry, set the data attribute for use in the UI to fix the link being stripped by Editable when changing the field value
+	 *
+	 * @since 1.4
+	 *
+	 * @param $wrapper_attributes
+	 * @param $input_type
+	 * @param $gf_field_id
+	 * @param $entry
+	 * @param $form
+	 * @param $gf_field
+	 * @param $output
+	 *
+	 * @return array Modified attributes, with 'data-viewid' and 'data-entry-link' (optional) keys
+	 */
+	public function filter_wrapper_attribute_add_entry_link( $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output ) {
+
+		if ( ! class_exists( 'GravityView_frontend' ) ) {
+			return $wrapper_attributes;
+		}
+
+		$view_id = GravityView_frontend::getInstance()->get_context_view_id();
+
+		$wrapper_attributes['data-viewid'] = $view_id;
+
+		$entry_link = gv_entry_link( $entry, $view_id );
+
+		if ( strpos( $output, $entry_link ) !== false) {
+			$wrapper_attributes['data-entry-link'] = $entry_link;
+		}
+
+		return $wrapper_attributes;
 	}
 
 	/**

@@ -27,11 +27,16 @@ class GPPA_Compatibility_JetSloth_Image_Choices {
 		if ( rgar( $templates, 'imageChoices_image' ) ) {
 			$choice['imageChoices_image'] = gp_populate_anything()->process_template( $field, 'imageChoices_image', $object, 'choices', $objects );
 
-			/* In lieu of another template row for choices, just try to get the attachment ID from the URL. */
-			$attachment_id = attachment_url_to_postid( $choice['imageChoices_image'] );
+			/* Only use attachment_url_to_postid() if the Lightbox is used otherwise it's a performance waste. */
+			if ( rgar( $field, 'imageChoices_useLightbox' ) ) {
+				/* In lieu of another template row for choices, just try to get the attachment ID from the URL. */
+				$attachment_id = attachment_url_to_postid( $choice['imageChoices_image'] );
 
-			if ( $attachment_id ) {
-				$choice['imageChoices_imageID'] = $attachment_id;
+				if ( $attachment_id ) {
+					$choice['imageChoices_imageID'] = $attachment_id;
+				}
+			} else {
+				$choice['imageChoices_imageID'] = '';
 			}
 		}
 

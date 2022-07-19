@@ -1,235 +1,266 @@
 @font-face {
-    font-family: 'SF UI Text';
-    src: url('../fonts/SFUIText-Light.woff') format('woff'),
-        url('../fonts/SFUIText-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-Light.woff") format("woff"), url("../fonts/SFUIText-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
 }
-
 @font-face {
-    font-family: 'SF UI Text';
-    src: url('../fonts/SFUIText-LightItalic.woff') format('woff'),
-        url('../fonts/SFUIText-LightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-LightItalic.woff") format("woff"), url("../fonts/SFUIText-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
 }
-
 @font-face {
-    font-family: 'SF UI Text';
-    src: url('../fonts/SFUIText-Regular.woff') format('woff'),
-        url('../fonts/SFUIText-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-Regular.woff") format("woff"), url("../fonts/SFUIText-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
-
 @font-face {
-    font-family: 'SF UI Text';
-    src: url('../fonts/SFUIText-RegularItalic.woff') format('woff'),
-        url('../fonts/SFUIText-RegularItalic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-RegularItalic.woff") format("woff"), url("../fonts/SFUIText-RegularItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
 }
-
 @font-face {
-    font-family: 'SF UI Text';
-    src:url('../fonts/SFUIText-Medium.woff') format('woff'),
-        url('../fonts/SFUIText-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-Medium.woff") format("woff"), url("../fonts/SFUIText-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
 }
-
 @font-face {
-    font-family: 'SF UI Text';
-    src: url('../fonts/SFUIText-Semibold.woff') format('woff'),
-        url('../fonts/SFUIText-Semibold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
+  font-family: "SF UI Text";
+  src: url("../fonts/SFUIText-Semibold.woff") format("woff"), url("../fonts/SFUIText-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
 }
-
 @font-face {
-    font-family: 'SF UI Display';
-    src: url('../fonts/SFUIDisplay-Regular.woff') format('woff'),
-        url('../fonts/SFUIDisplay-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "SF UI Display";
+  src: url("../fonts/SFUIDisplay-Regular.woff") format("woff"), url("../fonts/SFUIDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
-
 @font-face {
-    font-family: 'SF UI Display';
-    src: url('../fonts/SFUIDisplay-Medium.woff') format('woff'),
-        url('../fonts/SFUIDisplay-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
+  font-family: "SF UI Display";
+  src: url("../fonts/SFUIDisplay-Medium.woff") format("woff"), url("../fonts/SFUIDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
 }
-
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html, body {
-    min-height: 100%;
-    font-family: 'SF UI Text', sans-serif;
+  min-height: 100%;
+  font-family: "SF UI Text", sans-serif;
 }
 
 img {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .maintenance-content {
-    text-align: center;
-    padding: 40px 15px;
+  background-color: var(--bb-content-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: 4px;
+  margin: 50px auto;
+  max-width: 800px;
+  padding: 40px 15px;
+  text-align: center;
+  width: 100%;
 }
 
 .page-header {
-    margin-bottom: 60px;
+  margin: 0 auto 35px;
+  max-width: 500px;
 }
 
 .page-title {
-    font-family: 'SF UI Display', sans-serif;
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 1.1;
-    margin: 0 0 10px;
+  font-family: "SF UI Display", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.22;
+  margin: 0 0 15px;
 }
 
-.desc {
-    font-size: 18px;
-    font-weight: 300;
-    color: #939597;
-    letter-spacing: -0.24px;
-    line-height: 1.5;
+.description {
+  color: var(--bb-body-text-color);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.24px;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 500px;
+}
+.description p {
+  margin-bottom: 0;
+}
+.description.bottom {
+  margin-bottom: 10px;
 }
 
 .bb-maintenance-img {
-    margin: 0 0 30px;
+  margin: 0 0 35px;
+}
+.bb-maintenance-img img {
+  width: 425px;
+  max-width: 100%;
 }
 
 #clockdiv {
-    font-size: 30px;
-    margin-bottom: 40px;
+  margin-bottom: 25px;
 }
-
 #clockdiv > div {
-    padding: 10px 15px;
-    border-radius: 3px;
-    display: inline-block;
+  padding: 10px 15px;
+  border-radius: 3px;
+  display: inline-block;
 }
-
-#clockdiv div > span {
-    display: inline-block;
-    font-family: 'SF UI Display', sans-serif;
-    font-size: 42px;
-    color: #122B46;
-    letter-spacing: -0.68px;
-    text-align: center;
-    line-height: 1;
-    margin-bottom: 10px;
+#clockdiv > div > span {
+  display: inline-block;
+  font-family: "SF UI Display", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--bb-headings-color);
+  letter-spacing: -0.24px;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .smalltext {
-    font-size: 12px;
-    color: #939597;
-    text-align: center;
-    text-transform: uppercase;
+  color: var(--bb-alternate-text-color);
+  font-size: 13px;
+  font-weight: 600;
+  list-style: 1.4;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .mc4wp-form-fields > p,
 .bb-subscribe-form {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    margin: 0 auto 55px;
-    max-width: 325px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0 auto 55px;
+  max-width: 325px;
 }
 
+.bb-subscribe-form-wrap {
+  background: var(--bb-content-alternate-background-color);
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: 4px;
+  color: var(--bb-body-text-color);
+  margin: 0 auto 35px auto;
+  max-width: 500px;
+  padding: 30px;
+  text-align: left;
+}
 .bb-subscribe-form-wrap h3 {
-    font-size: 18px;
-    color: #4D5C6D;
-    letter-spacing: -0.24px;
-    text-align: center;
-    line-height: 27px;
-    font-weight: 400;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--bb-headings-color);
+  margin: 0;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+  text-align: center;
 }
-
-.bb-subscribe-form-wrap input:not([type=submit]) {
-    border: 1px solid #DEDFE2;
-    border-radius: 3px 0 0 3px;
-    color: #A3A5A9;
-    font-size: 14px;
-    letter-spacing: -0.24px;
-    border-right: 0;
-    padding-left: 15px;
-    width: 232px;
-    height: 42px;
-    outline: none;
-    box-shadow: none;
+.bb-subscribe-form-wrap.has-content h3 {
+  margin: 0 0 15px;
 }
-
-.bb-subscribe-form-wrap input[type=submit] {
-    background: #007CFF;
-    border-radius: 0 3px 3px 0;
-    font-size: 14px;
-    color: #FFFFFF;
-    text-align: center;
-    border: 0;
-    min-width: 100px;
-    padding: 10px 15px;
-    min-height: 42px;
-    cursor: pointer;
+.bb-subscribe-form-wrap form {
+  margin-bottom: 0;
 }
-
-.bb-subscribe-form-wrap input[type=submit]:hover {
-    background-color: #0070e6;
+.bb-subscribe-form-wrap form p {
+  margin-bottom: 0;
+}
+.bb-subscribe-form-wrap form textarea,
+.bb-subscribe-form-wrap form input:not([type="submit"]) {
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 .bb-social-icons {
-    margin-bottom: 30px;
+  margin: 0 auto 30px;
+  max-width: 500px;
 }
-
 .bb-social-icons a {
-    color: #122B46;
-    display: inline-block;
-    padding: 8px;
-    margin: 0 6px;
-    font-size: 18px;
-    opacity: 0.35;
-    -webkit-transition: 0.2s linear all;
-    transition: 0.2s linear all;
-    text-decoration: none;
+  color: var(--bb-body-text-color);
+  display: inline-block;
+  padding: 0;
+  margin: 4px;
+  opacity: 0.30;
+  -webkit-transition: 0.2s linear all;
+          transition: 0.2s linear all;
 }
-
-.bb-social-icons a i {
-    font-size: 21px;
-}
-
 .bb-social-icons a:hover {
-    opacity: 0.8;
+  opacity: 1;
+}
+.bb-social-icons a i {
+  font-size: 32px;
+}
+.bb-social-icons a i:before {
+  margin: 0;
 }
 
 .bb-contact-wrap {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-.button.outline {
-    border: 1px solid #007CFF;
-    border-radius: 100px;
-    outline: none;
-    text-decoration: none;
-    display: inline-block;
-    padding: 10px 20px;
-    min-width: 146px;
-    font-size: 14px;
-    color: #007CFF;
-    letter-spacing: -0.24px;
-    text-align: center;
+/* Theme 2.0 */
+.bb-template-v2 .bb-subscribe-form-wrap,
+.bb-template-v2 .maintenance-content {
+  border-radius: 10px;
+}
+.bb-template-v2 .bb-subscribe-form-wrap {
+  border: 0;
+}
+.bb-template-v2 .bb-social-icons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.bb-template-v2 .bb-social-icons a {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 1px solid var(--bb-content-border-color);
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  opacity: 1;
+  height: 36px;
+  width: 36px;
+}
+.bb-template-v2 .bb-social-icons a i {
+  color: var(--bb-headings-color);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+.bb-template-v2 .bb-social-icons a:hover {
+  background-color: var(--bb-headings-color);
+}
+.bb-template-v2 .bb-social-icons a:hover i {
+  color: var(--bb-content-background-color);
+  font-weight: 300;
 }
 
-.button.outline:hover {
-    background: none;
-    color: #0070e6;
-    border-color: #0070e6;
+@media screen and (max-width: 800px) {
+  .maintenance-content {
+    background-color: transparent;
+    border: 0;
+    padding: 0 20px;
+  }
 }

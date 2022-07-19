@@ -1,6 +1,6 @@
 <div id="theme-hello-backdrop" style="display: none;"></div>
 
-<div id="theme-hello-container" class="theme-hello-buddyboss-app" role="dialog" aria-labelledby="theme-hello-title" style="display: none;">
+<div id="theme-hello-container" class="theme-hello-buddyboss-app bb-theme-modal-onload" role="dialog" aria-labelledby="theme-hello-title" style="display: none;">
 	<div class="theme-hello-header" role="document">
 		<div class="theme-hello-close">
 			<button type="button" class="close-modal button theme-tooltip" data-theme-tooltip-pos="down" data-theme-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-theme' ); ?>">

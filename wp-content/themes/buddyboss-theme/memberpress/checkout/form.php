@@ -156,8 +156,8 @@ do_action( 'mepr-above-checkout-form', $product->ID ); ?>
 			if ( $mepr_options->require_tos ) :
 				?>
 				<div class="mp-form-row mepr_tos">
-					<input type="checkbox" name="mepr_agree_to_tos" id="mepr_agree_to_tos" class="bs-styled-checkbox" <?php checked( isset( $mepr_agree_to_tos ) ); ?> />
 					<label for="mepr_agree_to_tos" class="mepr-checkbox-field mepr-form-input" required>
+						<input type="checkbox" name="mepr_agree_to_tos" id="mepr_agree_to_tos" <?php checked( isset( $mepr_agree_to_tos ) ); ?> />
 						<a href="<?php echo stripslashes( $mepr_options->tos_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo stripslashes( $mepr_options->tos_title ); ?></a>*
 					</label>
 				</div>
@@ -168,8 +168,8 @@ do_action( 'mepr-above-checkout-form', $product->ID ); ?>
 			if ( $mepr_options->require_privacy_policy && $privacy_page_link ) :
 				?>
 				<div class="mp-form-row">
-					<input type="checkbox" name="mepr_agree_to_privacy_policy" id="mepr_agree_to_privacy_policy" class="bs-styled-checkbox"/>
-					<label for="mepr_agree_to_privacy_policy" class="mepr-checkbox-field mepr-form-input">
+					<label for="mepr_agree_to_privacy_policy" class="mepr-checkbox-field mepr-form-input" required>
+						<input type="checkbox" name="mepr_agree_to_privacy_policy" id="mepr_agree_to_privacy_policy"/>
 						<?php echo preg_replace( '/%(.*)%/', '<a href="' . esc_url( $privacy_page_link ) . '" target="_blank">$1</a>', __( $mepr_options->privacy_policy_title, 'buddyboss-theme' ) ); ?>
 					</label>
 				</div>

@@ -46,7 +46,7 @@ if ( !class_exists( '\BuddyBossTheme\RelatedPostsHelper' ) ) {
 				AND table_name = '{$wpdb->posts}'
 			" );
 
-	        if ( $current_engine->engine !== $table_engine ) {
+	        if ( isset( $current_engine->engine ) && $current_engine->engine !== $table_engine ) {
 		        $wpdb->query( "ALTER TABLE {$wpdb->posts} ENGINE = {$table_engine};" ); // WPCS: unprepared SQL OK.
 	        }
 

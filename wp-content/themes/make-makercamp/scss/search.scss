@@ -47,6 +47,7 @@
 				text-overflow: ellipsis;
 				overflow-x: hidden;
 				margin: 10px 0px 0px;
+				font-size: 34px;
 				a {
 					color: #333;
 					white-space: nowrap;
@@ -124,7 +125,7 @@
 		[data-sf-field-input-type="multiselect"] {
 			h4 {
 				color: $color-blue;
-				font-size: 24px;
+				font-size: 28px;
 			 }
 			padding-top: 0px;
 			margin: 10px 10px 0px;
@@ -154,7 +155,6 @@
 				}
 				.select2-search__field {
 					width: 100% !important;
-					font-family: "Gamja Flower", "Roboto", Arial, sans-serif;
 					font-size: 1.1em;
 				}
 			}

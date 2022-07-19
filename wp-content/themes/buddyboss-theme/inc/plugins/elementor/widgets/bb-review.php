@@ -1039,7 +1039,7 @@ class BB_Review extends Widget_Base {
 
 		for ( $stars = 1.0; $stars <= $rating_data[1]; $stars++ ) {
 			if ( $stars <= $floored_rating ) {
-				$stars_html .= '<span><i class="bb-icon-star-fill">' . $icon . '</i></span>';
+				$stars_html .= '<span><i class="bb-icon-f bb-icon-star">' . $icon . '</i></span>';
 			} elseif ( $floored_rating + 1 === $stars && $rating !== $floored_rating ) {
 				$stars_html .= '<span><i class="bb-star-' . ( $rating - $floored_rating ) * 10 . '">' . $icon . '</i></span>';
 			} else {
@@ -1112,7 +1112,7 @@ class BB_Review extends Widget_Base {
 					<?php if ( ! empty( $settings_image_url ) ) : ?>
 						<div class="bb-review__image-overlay" style="background-image: url(<?php echo $settings_image_url; ?>);">
 							<div class="media-ctrl">
-								<i class="bb-icon-play-circle"></i>
+								<i class="bb-icon-rf bb-icon-play"></i>
 								<?php if ( ! empty( $settings_play_text ) ) { echo $settings_play_text; } ?>
 							</div>
 						</div>

@@ -755,7 +755,7 @@ class BB_Lms_Courses extends Widget_Base {
 						'size' => 25,
 					),
 					'selectors'  => array(
-						'{{WRAPPER}} .bb-lms-pagination .page-numbers:not(.prev):not(.next)' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; line-height: {{SIZE}}{{UNIT}};',
+						'{{WRAPPER}} .bb-lms-pagination .page-numbers' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; line-height: {{SIZE}}{{UNIT}};',
 					),
 				)
 			);
@@ -779,6 +779,7 @@ class BB_Lms_Courses extends Widget_Base {
 					),
 					'selectors'  => array(
 						'{{WRAPPER}} .bb-lms-pagination > *' => 'margin-right: {{SIZE}}{{UNIT}};',
+						'.bb-template-v2 {{WRAPPER}} .bb-lms-pagination a.page-numbers:not(.prev):not(.next)' => 'margin-right: {{SIZE}}{{UNIT}};',
 					),
 				)
 			);
@@ -810,6 +811,8 @@ class BB_Lms_Courses extends Widget_Base {
 					'type'      => \Elementor\Controls_Manager::COLOR,
 					'selectors' => array(
 						'{{WRAPPER}} .bb-lms-pagination > a:not(.next):not(.prev)' => 'color: {{VALUE}}',
+						'.bb-template-v2 {{WRAPPER}} .bb-lms-pagination > a.next' => 'color: {{VALUE}}',
+						'.bb-template-v2 {{WRAPPER}} .bb-lms-pagination > a.prev' => 'color: {{VALUE}}',
 					),
 				)
 			);
@@ -821,6 +824,8 @@ class BB_Lms_Courses extends Widget_Base {
 					'type'      => \Elementor\Controls_Manager::COLOR,
 					'selectors' => array(
 						'{{WRAPPER}} .bb-lms-pagination > a:not(.next):not(.prev)' => 'background-color: {{VALUE}}',
+						'.bb-template-v2 {{WRAPPER}} .bb-lms-pagination > a.next' => 'background-color: {{VALUE}}',
+						'.bb-template-v2 {{WRAPPER}} .bb-lms-pagination > a.prev' => 'background-color: {{VALUE}}',
 					),
 				)
 			);
@@ -866,7 +871,7 @@ class BB_Lms_Courses extends Widget_Base {
 					'label'     => __( 'Current Page Color', 'buddyboss-theme' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => array(
-						'{{WRAPPER}} .bb-lms-pagination > span.page-numbers' => 'color: {{VALUE}};',
+						'{{WRAPPER}} .bb-lms-pagination > span.page-numbers:not(.dots)' => 'color: {{VALUE}};',
 					),
 					'separator' => 'before',
 				)
@@ -878,7 +883,7 @@ class BB_Lms_Courses extends Widget_Base {
 					'label'     => __( 'Current Page Background Color', 'buddyboss-theme' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => array(
-						'{{WRAPPER}} .bb-lms-pagination > span.page-numbers' => 'background-color: {{VALUE}};',
+						'{{WRAPPER}} .bb-lms-pagination > span.page-numbers:not(.dots)' => 'background-color: {{VALUE}};',
 					),
 				)
 			);
@@ -898,10 +903,10 @@ class BB_Lms_Courses extends Widget_Base {
 					),
 					'default'    => array(
 						'unit' => 'px',
-						'size' => 0,
+						'size' => 6,
 					),
 					'selectors'  => array(
-						'{{WRAPPER}} .bb-lms-pagination > .page-numbers:not(.prev):not(.next)' => 'border-radius: {{SIZE}}{{UNIT}};',
+						'{{WRAPPER}} .bb-lms-pagination > .page-numbers' => 'border-radius: {{SIZE}}{{UNIT}};',
 					),
 				)
 			);

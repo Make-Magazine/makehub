@@ -1,3 +1,8 @@
+// general
+input[type="checkbox"], input[type="radio"] {
+	margin-top: -2px;
+}
+
 // Gravity Form / Gravity View
 
 // buddyboss REALLY wants to hide our gravity form file inputs
@@ -599,14 +604,11 @@
 			margin-left: 80px;
 		}
 	}
-	#add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment, .woocommerce-error, .woocommerce-info, .woocommerce-message, .woocommerce-cart-form, .cart_totals table {
-		background: #fff;
-	}
 	a.button.alt, button.button.alt, input.button.alt {
-		border: solid 1px #005e9a;
-		background: #005e9a;
+		border: solid 1px #005e9a !important;
+		background: #005e9a !important;
 		&:hover {
-			color: #005e9a;
+			color: #005e9a !important;
 			background-color: #fff !important;
 		}
 	}

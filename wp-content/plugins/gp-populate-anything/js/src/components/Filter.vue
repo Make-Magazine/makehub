@@ -1,10 +1,11 @@
 <template>
 	<div class="gppa-filter">
-		<select disabled
-				v-if="!Object.keys(properties).length || (Object.keys(properties).length === 1 && 'primary-property' in properties)">
-			<option value="" disabled selected="selected">{{ i18nStrings.loadingEllipsis }}</option>
-		</select>
-		<select v-else class="gppa-filter-property" v-model="filter.property" @change="resetFilter">
+		<select :disabled="loadingProperties"
+				class="gppa-filter-property"
+				v-model="filterPropertyModel"
+				@change="resetFilter">
+			<option v-if="loadingProperties" value="" selected disabled hidden>{{ i18nStrings.loadingEllipsis }}</option>
+
 			<option v-for="option in filterPropertiesUngrouped" v-bind:value="option.value">
 				{{ truncateStringMiddle(option.label) }}
 			</option>
@@ -24,13 +25,13 @@
 			</option>
 		</select>
 
-		<select disabled v-if="!(filter.property in propertyValues)">
-			<option value="" disabled selected="selected">{{ i18nStrings.loadingEllipsis }}</option>
-		</select>
-		<gppa-select-with-custom v-else additional-class="gppa-filter-value" v-model="filter.value"
-								 :operator="filter.operator"
-								 :object-type-instance="objectTypeInstance"
-								 :flattened-properties="flattenedProperties">
+		<gppa-select-with-custom
+			 :loading="loadingPropertyValues"
+			 additional-class="gppa-filter-value"
+			 v-model="filter.value"
+			 :operator="filter.operator"
+			 :object-type-instance="objectTypeInstance"
+			 :flattened-properties="flattenedProperties">
 			<option v-if="!filter.value" value="" disabled selected="selected" hidden>&ndash; Value &ndash;</option>
 
 			<optgroup :label="i18nStrings.specialValues">
@@ -129,6 +130,25 @@
 			}
 		},
 		computed: {
+			/* Used so we can set it to an empty value while loading. */
+			filterPropertyModel: {
+				get() {
+					if (this.loadingProperties) {
+						return '';
+					}
+
+					return this.filter.property;
+				},
+				set(val) {
+					this.filter.property = val;
+				}
+			},
+			loadingProperties: function() {
+				return !Object.keys(this.properties).length || (Object.keys(this.properties).length === 1 && 'primary-property' in this.properties);
+			},
+			loadingPropertyValues: function() {
+				return !(this.filter.property in this.propertyValues);
+			},
 			specialValues: function () {
 				const specialValues = [
 					{

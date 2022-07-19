@@ -30,7 +30,7 @@ $is_sample    = ( isset( $lesson['sample'] ) ? $lesson['sample'] : false );
  * @param string $attribute Quiz row attribute. The value is data-ld-tooltip if a user does not have access to quiz otherwise empty string.
  */
 $atts               = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-balloon-pos="up" data-balloon="' . esc_html__( "You don't currently have access to this content", 'buddyboss-theme' ) . '"' : '' ) );
-$atts_access_marker = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? '<span class="lms-is-locked-ico"><i class="bb-icons bb-icon-lock-fill"></i></span>' : '' ) );
+$atts_access_marker = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? '<span class="lms-is-locked-ico"><i class="bb-icon-f bb-icon-lock"></i></span>' : '' ) );
 
 /**
  * Fires before the quiz row listing.

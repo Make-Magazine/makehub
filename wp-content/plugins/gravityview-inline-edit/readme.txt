@@ -1,7 +1,7 @@
 === Inline Edit by GravityView ===
 Tags: gravity forms
 Requires at least: 3.3
-Tested up to: 4.9.8
+Tested up to: 5.9
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 2
@@ -19,6 +19,86 @@ Inline Editing is a powerful way to quickly make changes to a form entry without
 3. Set your license key
 
 == Changelog ==
+
+= 1.5 on January 26, 2022 =
+
+* Added: GravityView field setting to disable Inline Edit for a field ([read how set this up](https://docs.gravityview.co/article/826-how-to-enable-or-disable-inline-edit-per-field))
+* Added: Support for creating entry revisions after each edit (requires the [Gravity Forms Entry Revisions](https://gravityview.co/extensions/entry-revisions/) add-on Version 1.1 or newer)
+* Improved: Made the input sizes larger when using "Popup" Inline Edit Mode
+* Improved: Display of Inline Edit settings in Gravity Forms 2.5+
+* Updated: Polish translation (thanks, Dariusz!) and German translation (thanks, Michael!)
+
+__Developer Updates:__
+
+* Renamed `GravityView_Inline_Edit_GravityView::add_to_blacklist()` to `GravityView_Inline_Edit_GravityView::add_to_blocklist()`
+
+= 1.4.4 on November 9, 2021 =
+
+* Fixed: Inline Edit would not work in DataTables View when using a responsive mode. Requires DataTables 2.5 or newer.
+
+= 1.4.3 on August 26, 2021 =
+
+* Improved: The Inline Edit button no longer makes the page adjust on load on the Gravity Forms "Entries" screen
+* Improved: The appearance when editing checkboxes in Gravity Forms 2.5
+* Fixed: Single checkbox items would not be editable on the "Entries" screen in Gravity Forms 2.5
+* Fixed: `de` German translations were unreachable; strings were merged with `de_DE`. Thanks again for the translations, Michael!
+
+__Developer Updates:__
+
+* Modified: Escaped the `style` attribute output in `templates/toggle.php`
+
+= 1.4.2 on June 1, 2021 =
+
+* Fixed: License field missing when running Gravity Forms 2.5
+
+= 1.4.1 on April 12, 2021 =
+
+* Fixed: Editing the Country/State/Province input of an Address field did not work
+* Fixed: Fields that weren't editable were removed from the View rather than being disabled
+* Fixed: Editing a Paragraph Text field did not respect the "allow HTML" View setting
+
+= 1.4 on April 1, 2021 =
+
+* Added: Support for Product field (User-Defined Price only)
+* Fixed: Multi-input fields (e.g., Name) marked as required would fail validation when attempting to update them
+* Fixed: Updating a single checkbox choice would reset other choices
+* Fixed: Updating fields linking to a single entry would remove the hyperlink and reset the field value
+* Fixed: It was possible to clear all checkbox choices for fields marked as required
+* Fixed: Inline Edit would initialize with incorrect data when including multiple list fields in the View
+* Fixed: Output formatting for certain field types would change after an update
+* Fixed: Currency symbol would disappear when updating a number field
+* Improved: Links to single entry are not disabled when Inline Edit is activated
+* Improved: Inline Edit no longer prevents configuring visible columns on the Gravity Forms Entries screen
+* Improved: Shows a message when a form or View does not have any editable fields visible
+* Updated: German translation (thanks, Michael!), Russian translation (thanks, Irina!), and Chinese translation (thanks, Edi!)
+
+= 1.3.3 on January 11, 2021 =
+
+* Improved: If there are no entries, hide the Inline Edit button
+* Improved: Don't register a bundled jQuery Cookie script if others are in use
+* Fixed: Unable to override the default "Empty" string translation
+* Fixed: "Enable Inline Edit" toggle would not work with the DataTables layout
+* Fixed: Clicking the Inline Edit button would enable, then immediately disable, inline editing
+
+= 1.3.2 on December 5, 2019 =
+
+Lots of bug fixes!
+
+* Fixed: Editing multi-column List fields
+* Fixed: Duplicate "Other" radio button inputs
+* Fixed: "Other" input field can't be updated if it's already selected
+* Fixed: Update and Cancel buttons not appearing
+* Fixed: Inline edit mode could get "stuck" on or off
+* Fixed: Set `date_updated` entry property when updating entry
+* Fixed: When activating column editing by clicking a field's column header in Gravity Forms, the page no longer scrolls to the last row
+* Fixed: In GravityView, when Inline Editing is activated for a View using a DataTables layout, the Approval field popup does not render
+* Fixed: In GravityView, after editing a field that links to a single entry, the link would be removed
+* Fixed: Performance issue
+* Updated: French translation, Russian translation (thanks, Viktor S!), and Turkish translation (thanks, Süha Karalar)
+
+__Developer Updates:__
+
+* Added: `$output` attribute to `gravityview-inline-edit/wrapper-attributes` filter
 
 = 1.3.1 on October 3, 2018 =
 

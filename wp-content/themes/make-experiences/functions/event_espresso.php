@@ -1,5 +1,4 @@
 <?php
-
 // Overwrite the event dates display
 function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_format = '', $echo = TRUE, $show_expired = NULL, $format = TRUE,  $limit = NULL ) {
 	$date_format = ! empty( $date_format ) ? $date_format : get_option( 'date_format' );
@@ -108,3 +107,18 @@ function ee_filter_pre_get_posts( $query ) {
 	}
 }
 add_action( 'pre_get_posts', 'ee_filter_pre_get_posts' );
+
+function register_ee_attendee_id_meta() {
+    global $wpdb;
+    $args = array(
+        'type' => 'integer',
+        'single' => true,
+        'show_in_rest' => true
+    );
+    register_meta(
+            'user',
+            $wpdb->prefix . 'EE_Attendee_ID',
+            $args
+    );
+}
+add_action('rest_api_init', 'register_ee_attendee_id_meta');

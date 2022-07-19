@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.9.8
+
+	- Added support for making Signature fields read-only.
+
 ## 1.9.7
 
 	- Fixed regression with Date fields that are marked as read only not having their date picker disabled.

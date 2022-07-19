@@ -176,11 +176,27 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 		callable $response_massager = null
 	) {
 		$resource = $this->get_result_set_from_api_by_filter( $client, $filter_name, $filter_value, $response_massager );
+		$logger   = new Logger();
 
-		if ( ! isset( $resource[0] ) ) {
-			$logger = new Logger();
+		if ( is_array( $resource ) && isset( $resource[0] ) ) {
+			try {
+				$model->set_properties_from_serialized_array( $resource[0] );
+			} catch ( Throwable $t ) {
+				$logger->warning(
+					'Activecampaign_For_Woocommerce_Interacts_With_Api: There was an issue parsing the resource from serialized array.',
+					[
+						'message'  => $t->getMessage(),
+						'endpoint' => $client->get_endpoint(),
+						'resource' => $resource,
+					]
+				);
+			}
+			return;
+		}
+
+		try {
 			$logger->debug(
-				'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource not found.',
+				'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource not found in result.',
 				[
 					'endpoint'     => $client->get_endpoint(),
 					'resource'     => $resource,
@@ -188,9 +204,19 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 					'filter_value' => $filter_value,
 				]
 			);
-			$model->set_properties_from_serialized_array( $resource );
-		} else {
-			$model->set_properties_from_serialized_array( $resource[0] );
+
+			if ( isset( $resource ) ) {
+				$model->set_properties_from_serialized_array( $resource );
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource threw an error.',
+				[
+					'message'  => $t->getMessage(),
+					'endpoint' => $client->get_endpoint(),
+					'resource' => $resource,
+				]
+			);
 		}
 	}
 
@@ -337,6 +363,20 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			return $result;
 		}
 
+		if ( isset( $result['type'] ) && ( 'error' === $result['type'] || 'timeout' === $result['type'] ) ) {
+			$logger = new Logger();
+			$logger->error(
+				'Activecampaign_For_Woocommerce_Interacts_With_Api: Hosted returned an error response.',
+				[
+					'resource_name' => self::RESOURCE_NAME,
+					'endpoint_name' => self::ENDPOINT_NAME,
+					'result'        => $result,
+				]
+			);
+
+			return $result;
+		}
+
 		return false;
 	}
 
@@ -360,7 +400,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			self::RESOURCE_NAME => $resource,
 		];
 
-		$body_as_string = AcVendor\GuzzleHttp\json_encode( $body );
+		$body_as_string = wp_json_encode( $body );
 		$logger         = new Logger();
 		try {
 			$result = $client

@@ -1,0 +1,182 @@
+.page-map {
+	.buddypanel {
+		display:none;
+	}
+	#page {
+		padding: 0px;
+		margin-left: 0px !important;
+		.site-content {
+			padding: 0px;
+			.container-fluid {
+				padding: 0px;
+				.content-area {
+					padding: 0px;
+					min-width: 100%;
+					svg { margin-bottom: -10px; }
+					.body_content { padding: 10px 15px 0px; }
+				}
+			}
+		}
+	}
+	.map-image-btn {
+		transition: transform .5s;
+		position: absolute;
+		&:hover, &:focus {
+			transform: scale(1.1);
+			filter: drop-shadow(0 0 0.75rem rgb(255, 255, 255));
+		}
+	}
+	.popover {
+		opacity: 1;
+		h3 {
+		    margin: 0px;
+		    padding: 10px 10px 0px;
+			font-family: "Gamja Flower";
+			font-size: 30px;
+			color: #005E9A;
+			text-align: center;
+		}
+		.popover-body {
+			padding: 10px;
+			font-size: 16px;
+			display: flex;
+			flex-direction: column;
+			.project-count {
+				padding-top: 10px;
+				font-style: italic;
+				text-align: right;
+			}
+			.map-btn {
+				width: 100%;
+				margin-top: 10px;
+			}
+		}
+		.arrow::after {
+			display: none;
+		}
+		&.bs-popover-right .arrow {
+			left: -30px;
+		    border-top: 10px solid transparent;
+		    border-right: 20px solid #fff;
+		    border-bottom: 10px solid transparent;
+		}
+		&.bs-popover-left .arrow {
+			right: -30px;
+			border-top: 10px solid transparent;
+			border-left: 20px solid white;
+			border-bottom: 10px solid transparent;
+		}
+	}
+	.svg-wrapper {
+		display: relative;
+		a#art-section {
+			top: calc(100vw * .409);
+			left: calc(100vw * .349);
+			width: calc(100vw * .23);
+			z-index: 11;
+		}
+		a#food-section {
+			top: calc(100vw * .0195);
+			left: calc(100vw * .2);
+			width: calc(100vw * .355);
+			z-index: 10;
+		}
+		a#farm-section {
+			top: calc(100vw * .165);
+			left: calc(100vw * .363);
+			width: calc(100vw * .39);
+			z-index: 9;
+		}
+		a#stage-section {
+			top: calc(100vw * .3065);
+			left: calc(100vw * .659);
+			width: calc(100vw * .18);
+			z-index: 99;
+		}
+		a#fabrication-section {
+			top: calc(100vw * .174);
+			left: calc(100vw * .000001);
+			width: calc(100vw * .3825);
+			z-index: 9;
+		}
+		a#dock-section {
+			bottom: calc(100vw * .000001);
+			right: calc(100vw * .00001);
+			width: calc(100vw * .6215);
+		}
+		a#camp-section {
+			bottom: calc(100vw * .000001);
+			left: calc(100vw * .00001);
+			width: calc(100vw * .315);
+		}
+		a#construction-section {
+			top: calc(100vw * .0053);
+			right: calc(100vw * .000001);
+			width: calc(100vw * .3125);
+		}
+		a#sky-section {
+			top: calc(100vw * .0003);
+			left: calc(100vw * .011);
+			width: calc(100vw * .9);
+		}
+	}
+	@media screen and (min-width: 600px) {
+		.popover#fabrication-section {
+			left: calc(100vw * -.16) !important;
+	    	top: calc(100vw *-.05) !important;
+		}
+		.popover#food-section {
+			left: calc(100vw * -.12) !important;
+	    	top: calc(100vw *.06) !important;
+		}
+		.popover#farm-section {
+			left: calc(100vw * -.12) !important;
+	    	top: calc(100vw *.06) !important;
+		}
+		.popover#construction-section {
+			left: calc(100vw * .05) !important;
+	    	top: calc(100vw *.05) !important;
+		}
+		.popover#stage-section {
+			left: calc(100vw * -.05) !important;
+		}
+		.popover#farm-section {
+			left: calc(100vw * -.1) !important;
+			top: calc(100vw * -.02) !important;
+		}
+		.popover#dock-section {
+			left: calc(100vw *.25) !important;
+			top: calc(100vw *.05) !important;
+		}
+	}
+	#close {
+		display: none;
+		position: absolute;
+		top: 50px;
+		right: 50px;
+		background: white;
+		opacity: 1;
+		border-radius: 100px;
+		height: 25px;
+		width: 25px;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		z-index: 99999;
+	 }
+
+	@media screen and (max-width: 600px) {
+		.popover {
+			top: 16.5% !important;
+			transform: inherit !important;
+			left: 0 !important;
+			right: 0 !important;
+			margin-left: auto;
+			margin-right: auto;
+			min-width: 200px;
+			.arrow {
+				display: none !important;
+			}
+		}
+	}
+}

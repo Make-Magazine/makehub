@@ -78,16 +78,20 @@ abstract class GravityView_Inline_Edit_Render {
 	}
 
 	/**
-	 * Wrap each field value with
+	 * Wrap each field value with HTML markup/data attributes
+	 *
+	 * @since 1.4 Added $field_settings_parameter
+	 *
 	 * @param $output
 	 * @param $entry
 	 * @param string $field_id
 	 * @param GF_Field $gf_field
 	 * @param array $form
+	 * @param array $field_settings
 	 *
 	 * @return string
 	 */
-	public function wrap_field_value( $output, $entry, $field_id, $gf_field, $form = array() ) {
+	public function wrap_field_value( $output, $entry, $field_id, $gf_field, $form = array(), $field_settings = array() ) {
 		$source = null;
 
 		if ( $gf_field ) {
@@ -115,24 +119,33 @@ abstract class GravityView_Inline_Edit_Render {
 		if ( ! in_array( $input_type, $supported_fields ) ||
 		     ( 'list' === $input_type && $gf_field->enableColumns && ! empty( $input_id ) )
 		) {
+			if ( 'entry_link' == $input_type ) {
+				return $output;
+			}
+
 			return '<div class="gv-inline-editable-disabled editable-disabled">' . $output . '</div>';
 		}
 
-		$view_id = class_exists( 'GravityView_frontend' ) ? GravityView_frontend::getInstance()->get_context_view_id() : null;
-
 		// TODO: Add dynamic `title` to show the label of the field being edited
 		$wrapper_attributes = array(
-			'id'           => str_replace( '.', '-', "gv-inline-editable-{$entry['id']}-{$form['id']}-{$field_id}" ),
-			'class'        => 'gv-inline-editable-value',
+			'id'           => str_replace( '.', '-', "gv-inline-editable-field-{$entry['id']}-{$form['id']}-{$field_id}" ),
+			'class'        => "gv-inline-editable-field-{$entry['id']}-{$form['id']}-" . str_replace( '.', '-', $field_id ),
 			'data-formid'  => $form['id'],
 			'data-entryid' => $entry['id'],
 			'data-fieldid' => $gf_field_id,
 			'data-inputid' => $input_id,
-			'data-viewid'  => $view_id,
 		);
 
 		if ( ! empty( $source ) ) {
 			$wrapper_attributes['data-source'] = json_encode( $source );
+		}
+
+		if ( '1' === rgar( $field_settings, 'show_map_link' ) ) {
+			$wrapper_attributes['data-show-map-link'] = 'true';
+		}
+
+		if ( '1' === rgar( $field_settings, 'allow_html' ) ) {
+			$wrapper_attributes['data-allow-html'] = 'true';
 		}
 
 		//Disable inline edit for number fields with calculation
@@ -144,6 +157,7 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @filter `gravityview-inline-edit/wrapper-attributes` Modify the attributes being added to an inline editable wrapper HTML tag
 		 *
 		 * @since 1.0
+		 * @since 1.4 added $output parameter
 		 *
 		 * @param array $wrapper_attributes The attributes of the container <div> or <span>
 		 * @param string $field_input_type The field input type
@@ -151,8 +165,9 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @param array $entry The entry
 		 * @param array $form The current Form
 		 * @param GF_Field $gf_field Gravity Forms field object.
+		 * @param string $output The original field value HTML
 		 */
-		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field );
+		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output );
 
 		/**
 		 * @filter `gravityview-inline-edit/{$input_type}-wrapper-attributes` Modify the attributes being added to an inline editable link for a specific input type
@@ -219,8 +234,8 @@ abstract class GravityView_Inline_Edit_Render {
 		 */
 		$labels = apply_filters( 'gravityview-inline-edit/toggle-labels', $labels );
 
-		// When on admin, show as button. Otherwise, don't
-		$link_class = is_admin() ? 'button button-primary' : '';
+		// When on admin, show as button and hide (will be unhidden by JS). Otherwise, don't.
+		$link_class = is_admin() ? 'button button-primary hidden' : '';
 
 		ob_start();
 		/** @define "GRAVITYVIEW_INLINE_DIR" "../" */

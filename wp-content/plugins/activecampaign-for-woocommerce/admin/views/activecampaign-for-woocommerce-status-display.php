@@ -6,7 +6,6 @@
 	 * @package    Activecampaign_For_Woocommerce
 	 */
 
-	use Activecampaign_For_Woocommerce_Logger;
 	use Automattic\WooCommerce\Blocks\Package as Block_Package;
 
 	global $wpdb;

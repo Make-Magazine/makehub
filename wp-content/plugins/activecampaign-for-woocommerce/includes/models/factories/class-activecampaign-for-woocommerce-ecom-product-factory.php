@@ -103,7 +103,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 				$ecom_product->set_sku( $this->get_sku( $product ) );
 
 				if ( ! empty( $product->get_short_description() ) ) {
-								$description = $product->get_short_description();
+					$description = $product->get_short_description();
 				} else {
 					$description = $product->get_description();
 				}

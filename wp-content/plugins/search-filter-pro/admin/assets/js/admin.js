@@ -34,7 +34,7 @@
 		var meta_prefs_action_name = "meta_prefs_set";
 
 		// Place your administration-specific JavaScript here
-		var $metabox_prefs = $('#screen-meta #screen-options-wrap .metabox-prefs');
+		var $metabox_prefs = $('#screen-meta #screen-options-wrap .metabox-prefs.view-mode');
 		var $screen_options_link = $('#screen-options-link-wrap');
 		var $screen_options_wrap = $('#screen-options-wrap');
 		

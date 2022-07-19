@@ -105,7 +105,7 @@ if ( 'meeting_occurrence' === bp_get_zoom_meeting_zoom_type() ) {
 						if ( ! empty( $meeting_details ) && ! empty( $meeting_details['occurrences'] ) ) {
 							$occurrences = $meeting_details['occurrences'];
 							foreach ( $occurrences as $occurrence ) {
-								if ( 'deleted' !== $occurrence['status'] && wp_date( 'U', strtotime( 'now' ), new DateTimeZone( 'UTC' ) ) < strtotime( $occurrence['start_time'] ) ) {
+								if ( 'deleted' !== $occurrence['status'] ) {
 									$start_date_time = wp_date( 'Y-m-d g:i a', strtotime( $occurrence['start_time'] ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) );
 									break;
 								}

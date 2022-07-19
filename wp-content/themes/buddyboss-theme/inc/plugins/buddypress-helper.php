@@ -53,7 +53,6 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 				add_action( THEME_HOOK_PREFIX . 'before_members_widgets', 'bp_profile_search_show_form' );
 			}
 
-			add_filter( 'bp_get_group_description_excerpt', array( $this, 'get_group_description_excerpt' ), 10, 2 );
 			add_filter( 'bp_get_message_thread_excerpt', array( $this, 'get_message_thread_excerpt' ), 10, 2 );
 			add_filter( 'bp_before_has_message_threads_parse_args', array( $this, 'has_message_threads_parse_args' ), 10 );
 
@@ -88,10 +87,10 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 		protected function _get_icon_for_menu_item( $slug = '' ) {
 			$icons = array(
-				'activity'      => 'bb-icon-home-small',
-				'profile'       => 'bb-icon-user',
-				'messages'      => 'bb-icon-inbox-small',
-				'notifications' => 'bb-icon-bell-small',
+				'activity'      => 'bb-icon-l bb-icon-home',
+				'profile'       => 'bb-icon-l bb-icon-user',
+				'messages'      => 'bb-icon-l bb-icon-inbox',
+				'notifications' => 'bb-icon-l bb-icon-bell',
 			);
 
 			return isset( $icons[ $slug ] ) ? $icons[ $slug ] : '';
@@ -128,7 +127,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			 */
 			$admin_bar_class = apply_filters( 'wp_admin_bar_class', 'WP_Admin_Bar' );
 			if ( class_exists( $admin_bar_class ) ) {
-				$wp_admin_bar = new $admin_bar_class;
+				$wp_admin_bar = new $admin_bar_class();
 			} else {
 				return false;
 			}
@@ -216,11 +215,6 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 		}
 
-		function get_group_description_excerpt( $excerpt, $group ) {
-			$group_link = ' <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . __( 'more', 'buddyboss-theme' ) . '<i class="bb-icon-chevron-right"></i></a>';
-			return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
-		}
-
 		function get_message_thread_excerpt( $excerpt ) {
 			return strip_tags( bp_create_excerpt( $excerpt, 140, array( 'ending' => '&hellip;' ) ) );
 		}
@@ -278,7 +272,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 
 				// Total count.
 				$instance      = BP_Search::instance();
-				$total_results = $instance->search_helpers[ $search_subset ]->get_total_match_count( $_REQUEST['s'] );
+				$total_results = $instance->search_helpers[ $search_subset ]->get_total_match_count( $_REQUEST['s'], $search_subset );
 
 				// Label.
 				$search_items = bp_search_items();
@@ -390,8 +384,8 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		 * @return array $response
 		 */
 		function heartbeat_unread_notifications( $response = array() ) {
-			$show_notifications = buddyboss_theme_get_option( 'notifications' );
-			$show_messages      = buddyboss_theme_get_option( 'messages' );
+			$show_notifications = buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_notifications' );
+			$show_messages      = buddyboss_theme_get_option( 'desktop_component_opt_multi_checkbox', 'desktop_messages' );
 
 			if ( $show_notifications && bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
 				ob_start();

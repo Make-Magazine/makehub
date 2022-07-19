@@ -520,12 +520,12 @@ class GP_Limit_Checkboxes extends GWPerk {
 						
 						setSelectOptions(checkboxFields, field);
 
-						if ($("#field_"+field.id+" .asmContainer").length > 0)
-							return;
-
 						// All setTimeouts are set as I was hitting an issue where the fieldSettings dom object
 						// was not added before the select fields were being dynamically set.
 						setTimeout(function() {
+							if ($("#gwlimitcheckboxes_settings .asmContainer").length > 0)
+								return;
+
 							jQuery(".<?php echo $this->slug; ?>_"+field.id).asmSelect({
 								addItemTarget: 'bottom',
 								animate: true,

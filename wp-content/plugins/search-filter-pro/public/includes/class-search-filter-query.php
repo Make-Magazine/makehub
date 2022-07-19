@@ -300,6 +300,7 @@ class Search_Filter_Query {
 
         global $searchandfilter;
         if(!$searchandfilter->has_pagination_init()) {
+
             add_filter('get_pagenum_link', array($this, 'pagination_fix_pagenum'), 100);
             add_filter('paginate_links', array($this, 'pagination_fix_paginate'), 100);
 
@@ -366,6 +367,18 @@ class Search_Filter_Query {
 
                 do_action("search_filter_pagination_init");
             }
+
+		}
+		
+	}
+	
+	public function remove_pagination()
+	{
+		global $searchandfilter;
+		if ( $searchandfilter->has_pagination_init() ) {
+			remove_filter('get_pagenum_link', array($this, 'pagination_fix_pagenum'), 100);
+			remove_filter('paginate_links', array($this, 'pagination_fix_paginate'), 100);
+			do_action("search_filter_pagination_unset");
 
 		}
 		
@@ -1145,8 +1158,6 @@ class Search_Filter_Query {
 
 	public function pagination_fix_pagenum($url)
 	{
-		//$new_url = $this->pagination_fix(remove_query_arg("sf_paged", $url));
-
 		$new_url = $this->pagination_fix($url);
 		return $new_url;
 	}

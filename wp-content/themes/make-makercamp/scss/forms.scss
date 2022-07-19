@@ -18,6 +18,14 @@
 .gform_wrapper {
 	.gform_body  {
 		.gfield { width: 100%; } // as the baseline
+
+		.gfield_list_icons button {  // prevent add from showing with plus button
+			color: transparent;
+			&.delete_list_item {
+				position: relative
+			}
+		}
+
 		.gform_page_footer {
 			display: flex;
 			input[type="button"] {
@@ -54,8 +62,11 @@
 			input:last-of-type {
 				margin-right: 0px;
 			}
-			a.gform_save_link {
+			a.gform_save_link, button.gform_save_link {
 				order: 0;
+				margin-right: 15px;
+				margin-left: 0px !important;
+				margin-bottom: 10px !important;
 			}
 			@media screen and (max-width: 768px) {
 				flex-wrap: wrap;
@@ -83,6 +94,7 @@
 		}
 		.ginput_container_time {
 			display: flex;
+			min-width: 85px;
 		}
 		.blue_select_btns {
 			text-align: center;
@@ -442,11 +454,6 @@
 	}
 }
 
-.gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
-	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
-		top: 4px;
-	}
-}
 
 .gfield_checkbox input[type="checkbox"]:checked + label::after {
 	font-weight: 300;
@@ -546,6 +553,36 @@
 .gv-edit-entry-wrapper {
 	.gform_wrapper li.gfield.gfield_error.gfield_contains_required .gfield_label { color: #333 !important; }
 	.info-btn { display: none; }
+	.gform_footer #publishing-action {
+		display: flex;
+		input, a {
+			margin-right: 15px;
+			margin-bottom: 0px;
+			text-transform: uppercase;
+		}
+		a {
+			display: flex;
+			align-items: center;
+			&.gv-button-cancel {
+				border-color: $color-red;
+				color: $color-red;
+				background: #fff;
+				&:hover {
+					color: #fff;
+					background: $color-red;
+				}
+			}
+			&.btn-danger {
+				border-color: $color-red;
+				color: #fff;
+				background: $color-red;
+				&:hover {
+					color: $color-red;
+					background: #fff;
+				}
+			}
+		}
+	}
 }
 
 // This is necessary for the wickedpicker to appear on the edit submission page because fml

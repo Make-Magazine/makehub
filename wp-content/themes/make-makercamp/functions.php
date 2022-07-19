@@ -58,21 +58,10 @@ function maker_camp_scripts_styles() {
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+
     // lib src packages up bootstrap, fancybox, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-    wp_localize_script('universal', 'ajax_object',
-            array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'home_url' => get_home_url(),
-                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-                'wp_user_email' => wp_get_current_user()->user_email,
-                'wp_user_nicename' => wp_get_current_user()->user_nicename,
-				'wp_user_avatar' =>get_avatar_url(get_current_user_id())
-            )
-    );
 }
 
 add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
@@ -129,18 +118,6 @@ add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
-}
-
-function basicCurl($url, $headers = null) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    if ($headers != null) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    }
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return $data;
 }
 
 function parse_yturl($url) {
@@ -241,46 +218,6 @@ function featuredtoRSS($content) {
 add_filter('the_excerpt_rss', 'featuredtoRSS', 20, 1);
 add_filter('the_content_feed', 'featuredtoRSS', 20, 1);
 
-function add_event_date_to_rss() {
-    global $post;
-
-    if (get_post_type() == 'espresso_events') {
-        //determine start date
-        $event = EEM_Event::instance()->get_one_by_ID($post->ID);
-        $date = $event->first_datetime();
-        $start_date = date('m/d/Y', strtotime($date->start_date()));
-        ?>
-        <event_date><?php echo $start_date ?></event_date>
-        <?php
-    }
-}
-
-add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
-
-// Exclude espresso_events from rss feed if marked for supression
-function filter_posts_from_rss($where, $query = NULL) {
-    global $wpdb;
-
-    if (!$query->is_admin && $query->is_feed && $query->query['post_type'] == 'espresso_events') {
-        $dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
-        $results = $wpdb->get_results($dbSQL);
-        $suppression_IDs = array();
-
-        foreach ($results as $result) {
-            $suppression_IDs[] = $result->post_id;
-        }
-
-        $exclude = implode(",", $suppression_IDs);
-
-        if (!empty($exclude)) {
-            $where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
-        }
-    }
-    return $where;
-}
-
-add_filter('posts_where', 'filter_posts_from_rss', 1, 4);
-
 function add_slug_body_class($classes) {
     global $post;
     global $bp;
@@ -289,6 +226,9 @@ function add_slug_body_class($classes) {
 	// not sure why this isn't getting added normally
 	if( is_user_logged_in() ) {
 		$classes[] = "logged-in";
+	}
+	if(current_user_can('administrator')) {
+		$classes[] = "admin-bar";
 	}
     if (isset($post)) {
         if ($post->post_name) {
@@ -317,17 +257,6 @@ function lazyload_exclude() {
 add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3);
-
-// limit default site search to learndash categories
-function searchfilter($query) {
-    if ($query->is_search && !is_admin()) {
-        $query->set('post_type', array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
-    }
-    return $query;
-}
-
-add_filter('pre_get_posts', 'searchfilter');
-
 
 function remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {

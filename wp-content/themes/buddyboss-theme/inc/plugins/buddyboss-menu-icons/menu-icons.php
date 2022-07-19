@@ -315,6 +315,22 @@ if ( ! class_exists( 'Buddyboss_Menu_Icons' ) ) {
 			}
 		}
 
+		/**
+		 * Get menu style.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @return mixed|string
+		 */
+		public function get_menu_style() {
+			global $buddyboss_theme_options;
+			if ( ! isset( $buddyboss_theme_options ) ) {
+				$buddyboss_theme_options = get_option( 'buddyboss_theme_options', array() );
+			}
+
+			return ! empty( $buddyboss_theme_options['menu_style'] ) ? $buddyboss_theme_options['menu_style'] : 'standard';
+		}
+
 	}
 
 

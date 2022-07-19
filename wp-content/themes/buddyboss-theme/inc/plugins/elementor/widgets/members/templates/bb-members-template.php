@@ -25,7 +25,7 @@ if( ! defined( 'BB_MEMBERS_WIDGET' ) ) {
 					<?php if( '' != $settings['member_link_text'] ) { ?>
                         <a href="<?php bp_members_directory_permalink(); ?>"
                            class="count-more"><?php echo esc_html( $settings['member_link_text'] ); ?><i
-                                    class="bb-icon-chevron-right"></i></a>
+                                    class="bb-icon-l bb-icon-angle-right"></i></a>
 					<?php } ?>
                 </div>
 			<?php endif; ?>

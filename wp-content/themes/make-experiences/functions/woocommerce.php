@@ -19,6 +19,17 @@ function wps_remove_filter_phone( $address_fields ) {
   return $address_fields;
 }
 
+// Auto Complete all WooCommerce orders.
+add_action( 'woocommerce_thankyou', 'custom_woocommerce_auto_complete_order' );
+function custom_woocommerce_auto_complete_order( $order_id ) {
+    if ( ! $order_id ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    $order->update_status( 'completed' );
+}
+
 /*
 // Add some extra checkout fields
 add_filter( 'woocommerce_checkout_fields' , 'add_custom_checkout_fields' );
@@ -109,7 +120,7 @@ function woocommerce_add_membership( $order_id ){
 			}
 			// add school mf membership if user doesn't have it already
 			$school_membership = get_page_by_path('school-maker-faire', OBJECT, 'memberpressproduct');
-			$mpInfo = json_decode(basicCurl(CURRENT_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+			$mpInfo = json_decode(basicCurl(NETWORK_HOME_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
 			$first_name = get_user_meta( $user->ID, 'first_name', true );
 			$last_name = get_user_meta( $user->ID, 'last_name', true );
 

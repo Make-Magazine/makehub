@@ -92,18 +92,6 @@ class Buttons extends Common_Widget {
 		return Widget_Button::get_button_sizes();
 	}
 
-
-	/**
-	 * Register Buttons controls.
-	 *
-	 * @since 0.0.1
-	 * @access protected
-	 */
-	protected function _register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-
-		$this->register_controls();
-	}
-
 	/**
 	 * Register Buttons controls.
 	 *
@@ -253,6 +241,48 @@ class Buttons extends Common_Widget {
 					);
 
 					$repeater->add_control(
+						'icon_size',
+						array(
+							'label'      => __( 'Icon size', 'uael' ),
+							'type'       => Controls_Manager::SLIDER,
+							'size_units' => array( 'px', '%', 'em' ),
+							'range'      => array(
+								'px' => array(
+									'min'  => 0,
+									'max'  => 100,
+									'step' => 1,
+								),
+								'%'  => array(
+									'min' => 0,
+									'max' => 100,
+								),
+								'em' => array(
+									'min' => 0,
+									'max' => 100,
+								),
+							),
+							'default'    => array(
+								'unit' => 'em',
+								'size' => 1,
+							),
+							'conditions' => array(
+								'relation' => 'or',
+								'terms'    => array(
+									array(
+										'name'     => UAEL_Helper::get_new_icon_name( 'icon' ),
+										'operator' => '!=',
+										'value'    => '',
+									),
+								),
+							),
+							'selectors'  => array(
+								'{{WRAPPER}} {{CURRENT_ITEM}} .elementor-button .elementor-button-icon i' => 'font-size: {{SIZE}}{{UNIT}};',
+								'{{WRAPPER}} {{CURRENT_ITEM}} .elementor-button .elementor-button-icon svg' => 'height: {{SIZE}}{{UNIT}}; width: {{SIZE}}{{UNIT}};',
+							),
+						)
+					);
+
+					$repeater->add_control(
 						'css_id',
 						array(
 							'label'       => __( 'CSS ID', 'uael' ),
@@ -393,7 +423,7 @@ class Buttons extends Common_Widget {
 							'global'   => array(
 								'default' => Global_Typography::TYPOGRAPHY_ACCENT,
 							),
-							'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} a.elementor-button, {{WRAPPER}} {{CURRENT_ITEM}} a.elementor-button .elementor-button-icon i,{{WRAPPER}} {{CURRENT_ITEM}} a.elementor-button .elementor-button-icon svg',
+							'selector' => '{{WRAPPER}} {{CURRENT_ITEM}} a.elementor-button .elementor-button-text',
 						)
 					);
 
@@ -907,7 +937,7 @@ class Buttons extends Common_Widget {
 
 							button_wrap += ' elementor-animation-' + settings.hover_animation;
 							var new_icon_align = '';
-							var icon_align = '';	
+							var icon_align = '';
 				#>
 				<div class="uael-button-wrapper elementor-button-wrapper uael-dual-button {{ button_wrap }}">
 					<a id="{{ item.css_id }}" href="{{ item.link.url }}" class="elementor-button-link elementor-button {{ button_class }}">
@@ -919,11 +949,11 @@ class Buttons extends Common_Widget {
 									icon_align = 'elementor-align-icon-' + item.icon_align;
 								#>
 									<span class="elementor-button-icon {{ icon_align }}">
-										<# 	
+										<#
 											iconsHTML[ index ] = elementor.helpers.renderIcon( view, item.new_icon, { 'aria-hidden': true }, 'i' , 'object' );
 											migrated = elementor.helpers.isIconMigrated( item, 'new_icon' );
 										#>
-										<# 
+										<#
 											if ( ( ! item.icon || migrated ) && iconsHTML[ index ] && iconsHTML[ index ].rendered ) {
 										#>
 												{{{ iconsHTML[ index ].value }}}
@@ -941,7 +971,7 @@ class Buttons extends Common_Widget {
 										<i class="{{ item.icon }}" aria-hidden="true"></i>
 									</span>
 								<# } #>
-							<?php } ?>	
+							<?php } ?>
 							<span {{{ view.getRenderAttributeString( buttonContentKey ) }}} >{{ item.text }}</span>
 						</span>
 					</a>

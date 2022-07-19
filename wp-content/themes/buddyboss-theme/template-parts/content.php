@@ -24,7 +24,7 @@ global $post;
 	} 
 	?>
 
-	<div class="entry-content-wrap">
+	<div class="entry-content-wrap primary-entry-content">
 		<?php 
 		$featured_img_style = buddyboss_theme_get_option( 'blog_featured_img' );
 
@@ -40,11 +40,11 @@ global $post;
 
 			<?php
 			if ( has_post_format( 'link' ) && ( !is_singular() || is_related_posts() ) ) {
-				echo '<span class="post-format-icon"><i class="bb-icon-link-1"></i></span>';
+				echo '<span class="post-format-icon"><i class="bb-icon-l bb-icon-link"></i></span>';
 			}
 
 			if ( has_post_format( 'quote' ) && ( !is_singular() || is_related_posts() ) ) {
-				echo '<span class="post-format-icon white"><i class="bb-icon-quote"></i></span>';
+				echo '<span class="post-format-icon white"><i class="bb-icon-l bb-icon-quote-left"></i></span>';
 			}
 			?>
 
@@ -88,11 +88,11 @@ global $post;
 
 			<?php
 			if ( has_post_format( 'link' ) && ( !is_singular() || is_related_posts() ) ) {
-				echo '<span class="post-format-icon"><i class="bb-icon-link-1"></i></span>';
+				echo '<span class="post-format-icon"><i class="bb-icon-l bb-icon-link"></i></span>';
 			}
 
 			if ( has_post_format( 'quote' ) && ( !is_singular() || is_related_posts() ) ) {
-				echo '<span class="post-format-icon white"><i class="bb-icon-quote"></i></span>';
+				echo '<span class="post-format-icon white"><i class="bb-icon-l bb-icon-quote-left"></i></span>';
 			}
 			?>
 
@@ -101,7 +101,7 @@ global $post;
 					the_title( '<h1 class="entry-title">', '</h1>' );
 				else :
 					$prefix = "";
-					if( has_post_format( 'link' ) ){
+					if ( has_post_format( 'link' ) ) {
 						$prefix = __( '[Link]', 'buddyboss-theme' );
 						$prefix .= " ";//whitespace
 					}
@@ -168,27 +168,94 @@ global $post;
 
 </article><!-- #post-<?php the_ID(); ?> -->
 
-<?php if( is_single() && ( has_category() || has_tag() ) ) { ?>
-	<div class="post-meta-wrapper">
-		<?php if  ( has_category() ) : ?>
-			<div class="cat-links">
-				<i class="bb-icon-folder"></i>
-				<?php _e( 'Categories: ', 'buddyboss-theme' ); ?>
-				<span><?php the_category( __( ', ', 'buddyboss-theme' ) ); ?></span>
-			</div>
-		<?php endif; ?>
+<?php if ( is_single() ) { ?>
+	<div class="post-meta-wrapper-main">
 
-		<?php if  ( has_tag() ) : ?>
-			<div class="tag-links">
-				<i class="bb-icon-tag"></i>
-				<?php _e( 'Tagged: ', 'buddyboss-theme' ); ?>
-				<?php the_tags( '<span>', __( ', ', 'buddyboss-theme' ),'</span>' ); ?>
+		<?php if ( has_category() || has_tag() ) { ?>
+			<div class="post-meta-wrapper">
+				<?php if ( has_category() ) : ?>
+					<div class="cat-links">
+						<i class="bb-icon-l bb-icon-folder"></i>
+						<?php _e( 'Categories: ', 'buddyboss-theme' ); ?>
+						<span><?php the_category( __( ', ', 'buddyboss-theme' ) ); ?></span>
+					</div>
+				<?php endif;
+
+				if ( has_tag() ) : ?>
+					<div class="tag-links">
+						<i class="bb-icon-l bb-icon-tags"></i>
+						<?php _e( 'Tags: ', 'buddyboss-theme' ); ?>
+						<?php the_tags( '<span>', __( ', ', 'buddyboss-theme' ), '</span>' ); ?>
+					</div>
+				<?php endif; ?>
 			</div>
-		<?php endif; ?>
+		<?php } ?>
+
+		<div class="show-support">
+			<?php if ( function_exists( 'bb_bookmarks' ) ) { ?>
+				<h6><?php _e( 'Show your support', 'buddyboss-theme' ); ?></h6>
+				<p>
+					<?php
+					printf(
+						'<span class="authors-avatar vcard table-cell">%1$s</span>',
+						sprintf( __( 'Liking shows how much you appreciated %1$s’s story.', 'buddyboss-theme' ), get_the_author() )
+					);
+					?>
+				</p>
+			<?php } ?>
+
+			<div class="flex author-post-meta">
+				<?php
+				if ( is_user_logged_in() ) {
+
+					if ( function_exists( 'bb_bookmarks' ) ) {
+						echo bb_bookmarks()->action_button( array(
+							'object_id'     => get_the_ID(),
+							'object_type'   => 'post_' . get_post_type( get_the_ID() ),
+							'action_type'   => 'like',
+							'wrapper_class' => 'bb-like-wrap',
+							'icon_class'    => 'bb-icon-l bb-icon-thumbs-up',
+							'title_add'     => esc_html__( 'Like this entry', 'buddyboss-theme' ),
+							'title_remove'  => esc_html__( 'Remove like', 'buddyboss-theme' ),
+						) );
+					}
+				} ?>
+				<span class="pa-share-fix push-left"></span>
+
+				<?php
+				if ( comments_open() || get_comments_number() ) { ?>
+					<a data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'View Comments', 'buddyboss-theme' ); ?>" href="#comments" class="push-right"><i class="bb-icon-l bb-icon-comment-square"></i></a>
+				<?php }
+
+				if ( is_singular( 'post' ) ) : ?>
+					<div class="author-box-share-wrap">
+						<a href="#" class="bb-share"><i class="bb-icon-l bb-icon-share-dots"></i></a>
+						<div class="bb-share-container bb-share-author-box">
+							<div class="bb-shareIcons"></div>
+						</div>
+					</div>
+				<?php endif;
+
+				if ( function_exists( 'bb_bookmarks' ) && is_user_logged_in() ) {
+					echo bb_bookmarks()->action_button(
+						array(
+							'object_id'     => get_the_ID(),
+							'object_type'   => 'post_' . get_post_type( get_the_ID() ),
+							'action_type'   => 'bookmark',
+							'wrapper_class' => 'bookmark-link-container',
+							'icon_class'    => 'bb-bookmark bb-icon-l bb-icon-bookmark',
+							'text_template' => '',
+							'title_add'     => esc_html__( 'Bookmark this story to read later', 'buddyboss-theme' ),
+							'title_remove'  => esc_html__( 'Remove bookmark', 'buddyboss-theme' ),
+						)
+					);
+				}
+				?>
+			</div>
+		</div>
+
 	</div>
-<?php } ?>
-
-<?php
+<?php }
 get_template_part( 'template-parts/content-subscribe' );
 get_template_part( 'template-parts/author-box' );
 get_template_part( 'template-parts/related-posts' );
