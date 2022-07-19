@@ -94,7 +94,7 @@ function redirect_nongroup_member() {
 		}
 	}
 }
-add_action( 'wp', 'redirect_nongroup_member' );
+//add_action( 'wp', 'redirect_nongroup_member' );
 
 
 if( ! function_exists( 'wp_new_user_notification' ) ) {
