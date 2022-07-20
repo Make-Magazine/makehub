@@ -13,6 +13,7 @@ function sortBySlug($a, $b) {
     return $a->slug > $b->slug;
 }
 $ages = get_the_terms($post->ID, 'ages');
+
 usort($ages, 'sortBySlug');
 $times = get_the_terms($post->ID, 'times');
 $materials_tax = get_the_terms($post->ID, 'materials');
@@ -53,8 +54,10 @@ $author_id = $author->ID;
 $referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
-	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
-	sort($referrer_params);
+  if(isset($referrer_params['_sft_content_categories'])){
+    $referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
+  	sort($referrer_params);
+  }
 }
 
 
@@ -116,9 +119,12 @@ get_header();
 						<?php
 						if(isset($referrer_params)) {
 							foreach($referrer_params as $param) {
-								$breadCrumb = get_term_by('slug', $param, 'content_categories'); ?>
-								<a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-						<?php
+								$breadCrumb = get_term_by('slug', $param, 'content_categories');
+                if($breadCrumb) {
+                ?>
+                <a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+                <?php
+                }
 					 		}
 						}?>
 					</div>
@@ -331,7 +337,7 @@ get_header();
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
 									<?php foreach($terms as $term) {
-										if($term->description) { ?>
+										if(isset($term->description)) { ?>
 											<div class="disclaimer-section"><?php echo $term->description; ?></div>
 									<?php }
 									} ?>
