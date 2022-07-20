@@ -30,7 +30,7 @@ function gv_status_change($entry_id, $statusToUpdate) {
   // Get post IDs associated with this entry id
 	$created_posts = gform_get_meta( $entry_id, 'gravityformsgftocpt_post_id' );
   //if no posts are found, exit this function
-  if(is_empty($created_posts)){
+  if(empty($created_posts)){
     return;
   }
 
