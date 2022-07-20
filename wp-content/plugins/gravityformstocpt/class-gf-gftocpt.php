@@ -697,12 +697,14 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 
 		//add gravityview specific fields only if the plugin is active
 		if(class_exists('GravityView_Plugin')){
+			$choices_array = $this->get_post_statuses_as_choices();
+			$choices_array[] = array('label'=>'No Change','value'=>'no-change');
 			$fields['settings']['fields'][]= array(
 				'name'          => 'statAfterApp',
 				'label'         => esc_html__( 'Post Status after Approval', 'gravityformsgftocpt' ),
 				'type'          => 'select',
 				'required'      => true,
-				'choices'       => $this->get_post_statuses_as_choices(),
+				'choices'       => $choices_array,
 				'default_value' => 'publish',
 				'tooltip'       => sprintf(
 					'<h6>%s</h6>%s',
@@ -716,7 +718,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 				'label'         => esc_html__( 'Post Status after Entry Rejected', 'gravityformsgftocpt' ),
 				'type'          => 'select',
 				'required'      => true,
-				'choices'       => $this->get_post_statuses_as_choices(),
+				'choices'       => $choices_array,
 				'default_value' => 'trash',
 				'tooltip'       => sprintf(
 					'<h6>%s</h6>%s',
@@ -730,7 +732,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 				'label'         => esc_html__( 'Post Status after Unapprove Entry', 'gravityformsgftocpt' ),
 				'type'          => 'select',
 				'required'      => true,
-				'choices'       => $this->get_post_statuses_as_choices(),
+				'choices'       => $choices_array,
 				'default_value' => 'draft',
 				'tooltip'       => sprintf(
 					'<h6>%s</h6>%s',
@@ -744,8 +746,8 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 				'label'         => esc_html__( 'Post Status after User Edit', 'gravityformsgftocpt' ),
 				'type'          => 'select',
 				'required'      => true,
-				'choices'       => $this->get_post_statuses_as_choices(),
-				'default_value' => 'private',
+				'choices'       => $choices_array,
+				'default_value' => 'no-change',
 				'tooltip'       => sprintf(
 					'<h6>%s</h6>%s',
 					esc_html__( 'Post Status', 'gravityformsgftocpt' ),
@@ -753,6 +755,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 				),
 			);
 		}
+
 		// Get available post formats.
 		$post_formats = $this->get_post_formats_as_choices();
 

@@ -46,7 +46,7 @@ function gv_status_change($entry_id, $statusToUpdate) {
 	$gv_array = array();
 	foreach($result as $feed){
 		if($feed["is_active"]){
-			if(isset($feed['meta'][$statusToUpdate])){
+			if(isset($feed['meta'][$statusToUpdate]) && $feed['meta'][$statusToUpdate] != 'no-change'){
 				$gv_array[$feed['feed_order']] = $feed['meta'][$statusToUpdate];
 			}
 		}
