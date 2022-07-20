@@ -380,6 +380,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 */
 	public function feed_settings_fields() {
 		$form = $this->get_current_form();
+
 		// Build base fields array.
 		$base_fields = array(
 			array(
@@ -402,19 +403,6 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 						'label' => esc_html__( 'Action', 'gravityformsgftocpt' ),
 						'type'  => 'hidden',
 						'value' => 'post-create',
-					),
-					array(
-						'name'  => 'event',
-						'label'    => esc_html__( 'Event', 'gravityformsformstocpt' ),
-						'type'     => 'select',
-						'required' => true,
-						'choices'  => $this->get_gravityform_events($form),
-						//'hidden'  => count( $events_choices ) === 1,
-						'tooltip'  => sprintf(
-							'<h6>%s</h6>%s',
-							esc_html__( 'Event', 'gravityformsformstocpt' ),
-							esc_html__( 'Select one of the defined GravityForm Events.', 'gravityformsformstocpt' )
-						),
 					),
 				),
 			),
@@ -602,11 +590,11 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 					),
 					array(
 						'name'          => 'postStatus',
-						'label'         => esc_html__( 'Status', 'gravityformsgftocpt' ),
+						'label'         => esc_html__( 'Post Status after submission', 'gravityformsgftocpt' ),
 						'type'          => 'select',
 						'required'      => true,
 						'choices'       => $this->get_post_statuses_as_choices(),
-						'default_value' => 'publish',
+						'default_value' => 'draft',
 						'tooltip'       => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Post Status', 'gravityformsgftocpt' ),
@@ -707,6 +695,64 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 			),
 		);
 
+		//add gravityview specific fields only if the plugin is active
+		if(class_exists('GravityView_Plugin')){
+			$fields['settings']['fields'][]= array(
+				'name'          => 'statAfterApp',
+				'label'         => esc_html__( 'Post Status after Approval', 'gravityformsgftocpt' ),
+				'type'          => 'select',
+				'required'      => true,
+				'choices'       => $this->get_post_statuses_as_choices(),
+				'default_value' => 'publish',
+				'tooltip'       => sprintf(
+					'<h6>%s</h6>%s',
+					esc_html__( 'Post Status after Entry Approval', 'gravityformsgftocpt' ),
+					esc_html__( 'Select the status for the post after the entry is approved. If published status is selected and the post date is in the future, it will automatically be changed to scheduled.', 'gravityformsgftocpt' )
+				),
+			);
+			$fields['settings']['fields'][]=
+			array(
+				'name'          => 'statAfterRej',
+				'label'         => esc_html__( 'Post Status after Entry Rejected', 'gravityformsgftocpt' ),
+				'type'          => 'select',
+				'required'      => true,
+				'choices'       => $this->get_post_statuses_as_choices(),
+				'default_value' => 'trash',
+				'tooltip'       => sprintf(
+					'<h6>%s</h6>%s',
+					esc_html__( 'Post Status after Entry Rejected', 'gravityformsgftocpt' ),
+					esc_html__( 'Select the status for the post after the entry is approved. If published status is selected and the post date is in the future, it will automatically be changed to scheduled.', 'gravityformsgftocpt' )
+				),
+			);
+			$fields['settings']['fields'][]=
+			array(
+				'name'          => 'statAfterRes',
+				'label'         => esc_html__( 'Post Status after Unapprove Entry', 'gravityformsgftocpt' ),
+				'type'          => 'select',
+				'required'      => true,
+				'choices'       => $this->get_post_statuses_as_choices(),
+				'default_value' => 'draft',
+				'tooltip'       => sprintf(
+					'<h6>%s</h6>%s',
+					esc_html__( 'Post Status after unapproving an entry', 'gravityformsgftocpt' ),
+					esc_html__( 'Select the status for the post after the entry is approved. If published status is selected and the post date is in the future, it will automatically be changed to scheduled.', 'gravityformsgftocpt' )
+				),
+			);
+			$fields['settings']['fields'][]=
+			array(
+				'name'          => 'statAfterEdit',
+				'label'         => esc_html__( 'Post Status after User Edit', 'gravityformsgftocpt' ),
+				'type'          => 'select',
+				'required'      => true,
+				'choices'       => $this->get_post_statuses_as_choices(),
+				'default_value' => 'private',
+				'tooltip'       => sprintf(
+					'<h6>%s</h6>%s',
+					esc_html__( 'Post Status', 'gravityformsgftocpt' ),
+					esc_html__( 'Select the status after the user has made an edit to their entry. If published status is selected and the post date is in the future, it will automatically be changed to scheduled.', 'gravityformsgftocpt' )
+				),
+			);
+		}
 		// Get available post formats.
 		$post_formats = $this->get_post_formats_as_choices();
 
@@ -2704,7 +2750,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 					$field = GFAPI::get_field($form, $generic_field['value'] );
 
 					//is this a nested form?
-					if($field->type=='form'){
+					if(isset($field->type)&&$field->type=='form'){
 						$nested_fieldlist = $field->gpnfFields;
 
 						//transform comma separated list of entry ids into array
@@ -2849,7 +2895,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 
 		if ( $created_posts ) {
 			$meta_boxes[ $this->_slug ] = array(
-				'title'    => esc_html__( 'Created Posts', 'gravityformsgftocpt' ),
+				'title'    => esc_html__( 'GF->CPT Created Posts', 'gravityformsgftocpt' ),
 				'callback' => array( $this, 'add_posts_meta_box' ),
 				'context'  => 'side',
 			);

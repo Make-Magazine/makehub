@@ -1,7 +1,7 @@
 <?php
 /**
-Plugin Name: Gravity Forms - GF to CPT Add-On
-Plugin URI: https://gravityforms.com
+Plugin Name: Gravity Forms to CPT Add-On
+Plugin URI: https://make.co
 Description: Make: custom GF plugin. Allows you to create new CPT posts from GravityForm submission.
 Version: 1.0
 Author: Make Community, LLC
@@ -32,6 +32,10 @@ define( 'GF_GFTOCPT_VERSION', '1.2' );
 
 // If Gravity Forms is loaded, bootstrap the GF to CPT Add-On.
 add_action( 'gform_loaded', array( 'GF_GfToCPT_Bootstrap', 'load' ), 5 );
+
+//include gravity view functions
+require_once __DIR__ . '/includes/gv_funcs.php';
+
 
 /**
  * Class GF_GfToCPT_Bootstrap
