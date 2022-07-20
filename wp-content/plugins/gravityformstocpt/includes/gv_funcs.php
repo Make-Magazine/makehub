@@ -38,7 +38,7 @@ function gv_status_change($entry_id, $statusToUpdate) {
 	$result = GFAPI::get_feeds( null, $entry['form_id'], 'gravityformsgftocpt' );
 
   //if no GF to CPT feeds are found for this form, exit this function
-  if(is_empty($result)){
+  if(empty($result)){
     return;
   }
 
