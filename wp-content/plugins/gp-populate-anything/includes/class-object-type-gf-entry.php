@@ -63,46 +63,72 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		}
 
 		$properties = array(
-			'id'           => array(
-				'label'     => 'Entry ID',
+			'id'             => array(
+				'label'     => esc_html__( 'Entry ID', 'gp-populate-anything' ),
 				'value'     => 'id',
 				'callable'  => array( $this, 'get_col_rows' ),
 				'args'      => array( GFFormsModel::get_entry_table_name(), 'id' ),
 				'orderby'   => true,
 				'operators' => $this->supported_operators(),
 			),
-			'created_by'   => array(
-				'label'     => 'Created by (User ID)',
+			'created_by'     => array(
+				'label'     => esc_html__( 'Created by (User ID)', 'gp-populate-anything' ),
 				'value'     => 'created_by',
 				'callable'  => '__return_empty_array',
 				'orderby'   => true,
 				'operators' => $this->supported_operators(),
-
 			),
-			'date_created' => array(
-				'label'     => 'Date Created',
+			'date_created'   => array(
+				'label'     => esc_html__( 'Date Created', 'gp-populate-anything' ),
 				'value'     => 'date_created',
 				'callable'  => '__return_empty_array',
 				'orderby'   => true,
 				'operators' => $this->supported_operators(),
-
 			),
-			'date_updated' => array(
-				'label'     => 'Date Updated',
+			'date_updated'   => array(
+				'label'     => esc_html__( 'Date Updated', 'gp-populate-anything' ),
 				'value'     => 'date_updated',
 				'callable'  => '__return_empty_array',
 				'orderby'   => true,
 				'operators' => $this->supported_operators(),
-
 			),
-			'status'       => array(
-				'label'     => 'Status',
+			'ip'             => array(
+				'label'     => esc_html__( 'IP', 'gp-populate-anything' ),
+				'value'     => 'ip',
+				'callable'  => '__return_empty_array',
+				'orderby'   => true,
+				'operators' => $this->supported_operators(),
+			),
+			'payment_method' => array(
+				'label'     => esc_html__( 'Payment Method', 'gp-populate-anything' ),
+				'value'     => 'payment_method',
+				'callable'  => array( $this, 'get_col_rows' ),
+				'args'      => array( GFFormsModel::get_entry_table_name(), 'payment_method' ),
+				'orderby'   => true,
+				'operators' => $this->supported_operators(),
+			),
+			'payment_status' => array(
+				'label'     => esc_html__( 'Payment Status', 'gp-populate-anything' ),
+				'value'     => 'payment_status',
+				'callable'  => array( $this, 'get_col_rows' ),
+				'args'      => array( GFFormsModel::get_entry_table_name(), 'payment_status' ),
+				'orderby'   => true,
+				'operators' => $this->supported_operators(),
+			),
+			'status'         => array(
+				'label'     => esc_html__( 'Status', 'gp-populate-anything' ),
 				'value'     => 'status',
 				'callable'  => array( $this, 'get_col_rows' ),
 				'args'      => array( GFFormsModel::get_entry_table_name(), 'status' ),
 				'orderby'   => true,
 				'operators' => $this->supported_operators(),
-
+			),
+			'transaction_id' => array(
+				'label'     => esc_html__( 'Transaction ID', 'gp-populate-anything' ),
+				'value'     => 'transaction_id',
+				'callable'  => '__return_empty_array',
+				'orderby'   => true,
+				'operators' => $this->supported_operators(),
 			),
 		);
 
@@ -282,7 +308,14 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				return $gf_query_where;
 		}
 
-		if ( is_array( $filter_value ) || in_array( $operator, array( GF_Query_Condition::IN, GF_Query_Condition::NIN ), true ) ) {
+		if (
+			( is_array( $filter_value ) || GP_Populate_Anything::is_json( $filter_value ) )
+			|| in_array( $operator, array( GF_Query_Condition::IN, GF_Query_Condition::NIN ), true )
+		) {
+			if ( GP_Populate_Anything::is_json( $filter_value ) ) {
+				$filter_value = GP_Populate_Anything::maybe_decode_json( $filter_value );
+			}
+
 			if ( ! is_array( $filter_value ) ) {
 				$filter_value = array_map( 'trim', explode( ',', $filter_value ) );
 			}
@@ -352,7 +385,9 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			}
 
 			/* Replace \r\n with just \n to provide consistent querying. */
-			$filter_value = str_replace( "\r\n", "\n", $filter_value );
+			if ( is_string( $filter_value ) ) {
+				$filter_value = str_replace( "\r\n", "\n", $filter_value );
+			}
 
 			$filter_value = new GF_Query_Literal( $filter_value );
 		}

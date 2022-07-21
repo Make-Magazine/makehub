@@ -73,6 +73,19 @@
 
 				self.bindTriggerEvents();
 			});
+
+			gform.addAction( 'gpi_field_refreshed', function( $targetField, $triggerField, initialLoad ) {
+				var formId = $targetField
+					.closest('form')
+					.prop('id')
+					.replace('gform_', '');
+
+				if (formId != self.formId) {
+					return;
+				}
+
+				self.bindTriggerEvents();
+			} );
 		}
 
 		self.handleCheckboxClick = function( $elem ) {

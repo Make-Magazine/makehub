@@ -1,6 +1,18 @@
 
 # Changelog
 
+## 1.0.26
+
+	- Added `:set` merge tag modifier for calculations which allows you to reutrn a list of values for use Advanced Calculation functions like `min()` and `max()`.
+
+## 1.0.25
+
+	- Added support for filtering the Save & Continue token that will be used to populate child entries into a Nested Form field.
+
+## 1.0.24
+
+	- Fixed `@media` query for Nested Form table layouts to resolve an inconsistency between `760px` and `768px`.
+
 ## 1.0.23
 
 	- Improved compatibility with Gravity Flow User Input steps by bringing back compatibility layer.

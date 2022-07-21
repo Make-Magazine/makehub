@@ -893,7 +893,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	public function process_merge_tags( $formula, $field, $form, $entry ) {
 
-		preg_match_all( '/{[^{]*?:([0-9]+):(sum|total|count)=?([0-9]*)}/', $formula, $matches, PREG_SET_ORDER );
+		preg_match_all( '/{[^{]*?:([0-9]+):(sum|total|count|set)=?([0-9]*)}/', $formula, $matches, PREG_SET_ORDER );
 		foreach ( $matches as $match ) {
 
 			list( $search, $nested_form_field_id, $func, $target_field_id ) = $match;
@@ -926,6 +926,13 @@ class GP_Nested_Forms extends GP_Plugin {
 					break;
 				case 'count':
 					$replace = count( $child_entries );
+					break;
+				case 'set':
+					$items = array();
+					foreach ( $child_entries as $child_entry ) {
+						$items[] = (float) GFCommon::to_number( rgar( $child_entry, $target_field_id ), $entry['currency'] );
+					}
+					$replace = implode( ', ', $items );
 					break;
 			}
 
@@ -2250,7 +2257,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			}
 
 			// if no posted $entry_ids check if we are resuming a saved entry
-			if ( $this->get_save_and_continue_token() && empty( $entry_ids ) ) {
+			if ( $this->get_save_and_continue_token( $form['id'] ) && empty( $entry_ids ) ) {
 				$entry_ids = $this->get_save_and_continue_child_entry_ids( $form['id'], $field->id );
 			}
 
@@ -2392,24 +2399,37 @@ class GP_Nested_Forms extends GP_Plugin {
 	/**
 	 * Get Save & Continue from URL if it exists.
 	 *
+	 * @var int|bool $form_id The parent form ID for which the Save & Continue token is being fetched.
+	 *
 	 * @return string|null
 	 */
-	public function get_save_and_continue_token() {
+	public function get_save_and_continue_token( $form_id = false ) {
+
+		$gf_token = null;
+
 		/* gf_token is used as the initial GET parameter and is then changed to gform_resume_token via POST. */
 		if ( ! empty( $this->get_query_arg( 'gform_resume_token' ) ) ) {
-			return $this->get_query_arg( 'gform_resume_token' );
+			$gf_token = $this->get_query_arg( 'gform_resume_token' );
+		} else if ( ! empty( $this->get_query_arg( 'gf_token' ) ) ) {
+			$gf_token = $this->get_query_arg( 'gf_token' );
 		}
 
-		if ( ! empty( $this->get_query_arg( 'gf_token' ) ) ) {
-			return $this->get_query_arg( 'gf_token' );
-		}
+		/**
+		 * Filter the Save & Continue token that will be used to retrieve child entries for population in a Nested Form field.
+		 *
+		 * @param null|string $gf_token The Save & Continue token.
+		 * @param int|bool    $form_id  The parent form ID for which the Save & Continue token is being fetched.
+		 *
+		 * @since 1.0.25
+		 */
+		$gf_token = apply_filters( 'gpnf_save_and_continue_token', $gf_token, $form_id );
 
-		return null;
+		return $gf_token;
 	}
 
 	public function get_save_and_continue_child_entry_ids( $form, $field_id = false ) {
 
-		if ( ! $this->get_save_and_continue_token() ) {
+		if ( ! $this->get_save_and_continue_token( is_numeric( $form ) ? $form : $form['id'] ) ) {
 			return array();
 		}
 
@@ -2418,7 +2438,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			$form = GFAPI::get_form( $form );
 		}
 
-		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $this->get_save_and_continue_token() );
+		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $this->get_save_and_continue_token( $form['id'] ) );
 		if ( $incomplete_submission_info['form_id'] != $form['id'] ) {
 			return array();
 		}

@@ -41,6 +41,12 @@ class GPNF_Merge_Tags {
 					'label' => sprintf( esc_html__( '%s: Total', 'gp-nested-forms' ), $field->label ),
 				);
 			}
+
+			$merge_tags[] = array(
+				'tag'   => "{{$field->label}:{$field->id}:set=CHILD_FIELD_ID}",
+				'label' => sprintf( esc_html__( '%s: Set', 'gp-nested-forms' ), $field->label ),
+			);
+
 		}
 
 		return $merge_tags;

@@ -346,6 +346,42 @@ abstract class GPPA_Object_Type {
 						'property_id'            => $filter['property'],
 					)
 				);
+
+				/**
+				 * Filter a field's filter groups immediately after a filter has been processed.
+				 *
+				 * This is advantageous over `gppa_object_type_query` as this filter is ran while in the loop which gives
+				 * you the ability to easily modify the last change to the processed filter groups depending on a
+				 * specific filter or property.
+				 *
+				 * @param array $processed_filter_groups The processed filter groups for the current query.
+				 * @param array $args {
+				 *     @var mixed     $filter_value             Filter's value.
+				 *     @var array     $filter                   Filter being processed.
+				 *     @var \GF_Field $field                    Field being dynamically populated.
+				 *     @var array     $filter_group             Filter group being processed.
+				 *     @var int       $filter_group_index       Filter group's index.
+				 *     @var mixed     $primary_property_value   Value of the primary property for the object type if needed. (e.g. form ID if GF Entries Object Type)
+				 *     @var array     $property                 Property being filtered by.
+				 *     @var string    $property_id              ID of property that is being filtered by.
+				 * }
+				 *
+				 * @since 1.2.20
+				 */
+				$processed_filter_groups = gf_apply_filters(
+					array( 'gppa_object_type_filter_after_processing', $this->id ),
+					$processed_filter_groups,
+					array(
+						'filter_value'           => $filter_value,
+						'filter'                 => $filter,
+						'field'                  => $field,
+						'filter_group'           => $filter_group,
+						'filter_group_index'     => $filter_group_index,
+						'primary_property_value' => $primary_property_value,
+						'property'               => $property,
+						'property_id'            => $filter['property'],
+					)
+				);
 			}
 		}
 

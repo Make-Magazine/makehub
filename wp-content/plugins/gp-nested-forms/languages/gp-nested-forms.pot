@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: GP Nested Forms 1.0.23\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-ycYn3x3sN\n"
+"Project-Id-Version: GP Nested Forms 1.0.26\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-hegoyeamb\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-06-14T20:00:35+00:00\n"
+"POT-Creation-Date: 2022-07-12T23:31:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: gp-nested-forms\n"
@@ -162,74 +162,74 @@ msgstr ""
 msgid "Child Form Field ID"
 msgstr ""
 
-#: class-gp-nested-forms.php:957
+#: class-gp-nested-forms.php:964
 msgid "Oops! You don't have permission to get fields for this form."
 msgstr ""
 
-#: class-gp-nested-forms.php:972
 #: class-gp-nested-forms.php:979
+#: class-gp-nested-forms.php:986
 msgid "Oops! You don't have permission to delete this entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:1008
-#: class-gp-nested-forms.php:1020
+#: class-gp-nested-forms.php:1015
+#: class-gp-nested-forms.php:1027
 msgid "Oops! You don't have permission to edit this entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:1016
+#: class-gp-nested-forms.php:1023
 msgid "Oops! We can't locate that entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:1059
+#: class-gp-nested-forms.php:1066
 msgid "Oops! You don't have permission to do this."
 msgstr ""
 
-#: class-gp-nested-forms.php:1076
+#: class-gp-nested-forms.php:1083
 msgid "Configuration Error"
 msgstr ""
 
-#: class-gp-nested-forms.php:1077
+#: class-gp-nested-forms.php:1084
 msgid "Child forms cannot contain nested forms. Please edit the child form and remove any nested form fields in it."
 msgstr ""
 
-#: class-gp-nested-forms.php:1090
+#: class-gp-nested-forms.php:1097
 msgid "Sorry. You must be logged in to view this form."
 msgstr ""
 
-#: class-gp-nested-forms.php:1128
-#: class-gp-nested-forms.php:1148
+#: class-gp-nested-forms.php:1135
+#: class-gp-nested-forms.php:1155
 msgid "Oops! You don't have permission to duplicate this entry."
 msgstr ""
 
 #. Translators: %s is replaced by singular item label.
-#: class-gp-nested-forms.php:2116
-#: class-gp-nested-forms.php:2139
-#: class-gp-nested-forms.php:2149
+#: class-gp-nested-forms.php:2123
+#: class-gp-nested-forms.php:2146
+#: class-gp-nested-forms.php:2156
 #: includes/class-gp-field-nested-form.php:85
 msgid "Add %s"
 msgstr ""
 
 #. Translators: %s is replaced by singular item label.
-#: class-gp-nested-forms.php:2118
-#: class-gp-nested-forms.php:2140
-#: class-gp-nested-forms.php:2154
+#: class-gp-nested-forms.php:2125
+#: class-gp-nested-forms.php:2147
+#: class-gp-nested-forms.php:2161
 msgid "Edit %s"
 msgstr ""
 
-#: class-gp-nested-forms.php:2121
+#: class-gp-nested-forms.php:2128
 msgid "Cancel"
 msgstr ""
 
-#: class-gp-nested-forms.php:2122
+#: class-gp-nested-forms.php:2129
 #: includes/class-gp-field-nested-form.php:117
 msgid "Delete"
 msgstr ""
 
-#: class-gp-nested-forms.php:2123
+#: class-gp-nested-forms.php:2130
 msgid "Are you sure?"
 msgstr ""
 
-#: class-gp-nested-forms.php:2124
+#: class-gp-nested-forms.php:2131
 msgid "Close"
 msgstr ""
 
@@ -313,6 +313,10 @@ msgstr ""
 
 #: includes/class-gpnf-merge-tags.php:41
 msgid "%s: Total"
+msgstr ""
+
+#: includes/class-gpnf-merge-tags.php:47
+msgid "%s: Set"
 msgstr ""
 
 #: templates/nested-entries.php:27

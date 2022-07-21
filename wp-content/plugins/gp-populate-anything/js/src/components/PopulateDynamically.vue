@@ -250,6 +250,7 @@ export default Vue.extend({
 						this.field.inputs
 						&& !window.GPPA_ADMIN.interpretedMultiInputFieldTypes.includes(this.field.type)
 						&& !window.GPPA_ADMIN.multiSelectableChoiceFieldTypes.includes(this.field.type)
+						&& !window.GPPA_ADMIN.multiSelectableChoiceFieldTypes.includes(this.field.inputType)
 					) {
 						for ( const input of this.field.inputs ) {
 							if (input.isHidden) {

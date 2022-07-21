@@ -72,6 +72,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gform_admin_pre_render', array( $this, 'replace_field_label_live_merge_tags_static' ) );
 
 		add_filter( 'gform_order_summary', array( $this, 'replace_live_merge_tags_static' ), 10, 3 );
+		add_filter( 'gform_entry_field_value', array( $this, 'replace_entry_field_value_live_merge_tags' ), 10, 4 );
 
 		add_filter( 'gform_merge_tag_filter', array( $this, 'prevent_missing_filter_text_from_being_tag_value' ), 10, 5 );
 
@@ -1023,6 +1024,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	public function replace_live_merge_tags( $text, $form, $entry = null ) {
+		if ( ! is_string( $text ) ) {
+			return $text;
+		}
+
 		preg_match_all( $this->live_merge_tag_regex, $text, $matches, PREG_SET_ORDER );
 
 		if ( ! $matches ) {
@@ -1060,6 +1065,20 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return $this->replace_live_merge_tags( $text, $form, $entry );
 
+	}
+
+	/**
+	 * Same story, different signature for replacing merge tags in Entry Details for fields such as the List field.
+	 *
+	 * @param string   $display_value The value to be displayed.
+	 * @param GF_Field $field         The Field Object.
+	 * @param array    $entry         The Entry Object.
+	 * @param array    $form          The Form Object.
+	 *
+	 * @return string $text
+	 */
+	public function replace_entry_field_value_live_merge_tags( $display_value, $field, $entry, $form ) {
+		return $this->replace_live_merge_tags( $display_value, $form, $entry );
 	}
 
 	/**

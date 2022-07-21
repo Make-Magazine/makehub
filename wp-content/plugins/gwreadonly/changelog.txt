@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.9.9
+
+	- Improved compatibility with the Edit Form block in GP Entry Blocks.
+
 ## 1.9.8
 
 	- Added support for making Signature fields read-only.

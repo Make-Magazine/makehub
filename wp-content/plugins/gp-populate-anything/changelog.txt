@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.2.20
+
+	- Added new `gppa_object_type_filter_after_processing` and `gppa_has_empty_field_filter_value` PHP filters.
+	- Fixed issue where numeric filters such as greater than were not working correctly with the Gravity Forms Entry Object Type.
+	- Fixed regression where property values would not show for the Database Object Type in the Form Editor.
+	- Fixed issue where Value population did not work correctly for Option fields using the Checkbox Field Type.
+	- Fixed a potential PHP warning on the Entry Details screen.
+	- Improved error handling during queries in the event that a `WP_Error` object gets returned for various reasons (missing taxonomy, etc).
+
+## 1.2.19
+
+	- Fixed issue where Live Merge Tags in List field column labels would not be replaced in the Entry Details screen.
+	- Fixed issue where a query limit was not being used when fetching values for a property in the Form Editor which could cause out-of-memory errors.
+	- Added IP, Payment Method, Payment Status, and Transaction ID as available properties under the Gravity Forms Entry Object Type.
+
+## 1.2.18
+
+	- Added support for viewing dynamically populated choices in add-on results pages such as the Survey Results.
+
+## 1.2.17
+
+	- Fixed an issue where field choices would be cached prior to hydration which could cause Live Merge Tags to use the value rather than the label.
+
+## 1.2.16
+
+	- Fixed an issue where the GF Entry object type wasn't always JSON decoding when filtering using a JSON value such as one from a multi select field.
+	- Fixed a scenario where a product/option's price would not be stripped from the submitted value during failed validation which would cause dependent fields to not be properly populated.
+
 ## 1.2.15
 
 	- Fixed an issue where carriage returns (`\r`) would be inserted into field values when filtering by them which could cause data to not be matched for certain object types such as Gravity Forms entries.

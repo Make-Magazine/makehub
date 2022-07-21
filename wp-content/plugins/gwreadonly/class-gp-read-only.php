@@ -369,6 +369,12 @@ class GP_Read_Only extends GWPerk {
 		if ( function_exists( 'gravityview' ) && gravityview()->request->is_edit_entry() ) {
 			$gv_entry = gravityview()->request->is_edit_entry();
 			$value    = rgar( $gv_entry->as_entry(), $field->id );
+		} elseif (
+			method_exists( 'GP_Entry_Blocks\GF_Queryer', 'attach_to_current_block' )
+			&& GP_Entry_Blocks\GF_Queryer::attach_to_current_block()
+			&& GP_Entry_Blocks\GF_Queryer::attach_to_current_block()->is_edit_entry()
+		) {
+			$value = rgar( GP_Entry_Blocks\GF_Queryer::attach_to_current_block()->entry, $field->id );
 		} elseif ( is_array( $submitted_values ) ) {
 			$value = $submitted_values[ $field->id ];
 		} else {

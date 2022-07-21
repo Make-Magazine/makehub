@@ -889,7 +889,7 @@ const ko = window.ko;
 				return formula;
 			}
 
-			var matches = getMatchGroups( formula, /{[^{]*?:([0-9]+):(sum|total|count)=?([0-9]*)}/i );
+			var matches = getMatchGroups( formula, /{[^{]*?:([0-9]+):(sum|total|count|set)=?([0-9]*)}/i );
 			$.each( matches, function( i, group ) {
 
 				var search            = group[0],
@@ -931,6 +931,17 @@ const ko = window.ko;
 						break;
 					case 'count':
 						replace = self.viewModel.entries().length;
+						break;
+					case 'set':
+						var items = [];
+						self.viewModel.entries().forEach( function( entry ) {
+							var value = 0;
+							if ( typeof entry[ targetFieldId ] !== 'undefined' && entry[ targetFieldId ].value ) {
+								value = gformToNumber( entry[ targetFieldId ].value );
+							}
+							items.push( value );
+						} );
+						replace = items.join( ', ' );
 						break;
 				}
 

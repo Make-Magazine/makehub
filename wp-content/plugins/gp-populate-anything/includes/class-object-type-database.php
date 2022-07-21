@@ -131,10 +131,14 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	}
 
 	public function get_column_values( $table, $col ) {
+		global $wpdb;
+
 		$table = self::esc_sql_ident( $table );
 		$col   = self::esc_sql_ident( $col );
 
-		$query  = apply_filters( 'gppa_object_type_database_column_value_query', "SELECT DISTINCT $col FROM $table", $table, $col, $this );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query  = $wpdb->prepare( "SELECT DISTINCT $col FROM $table LIMIT %d", gp_populate_anything()->get_query_limit( $this ) );
+		$query  = apply_filters( 'gppa_object_type_database_column_value_query', $query, $table, $col, $this );
 		$result = $this->get_db()->get_results( $query, ARRAY_N );
 
 		return $this->filter_values( wp_list_pluck( $result, 0 ) );

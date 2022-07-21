@@ -108,17 +108,22 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * An example of a caching issue here was with GPLCD and confirmation URL query strings
 		 * returning IDs instead of hydrated labels. See HS#25419.
 		 */
-		add_action( 'gform_pre_process', array( $this, 'hydrate_fields' ), 5 );
+		add_filter( 'gform_pre_process', array( $this, 'hydrate_fields' ), 5 );
+		add_filter( 'gform_pre_process', array( $this, 'flush_dynamically_populated_fields_cache' ), 6 );
 		add_action( 'gform_pre_validation', array( $this, 'hydrate_fields' ) ); // Required for Gravity View's Edit Entry view.
 		add_action( 'gform_pre_submission_filter', array( $this, 'hydrate_fields' ) );
 
 		add_filter( 'gform_admin_pre_render', array( $this, 'modify_admin_field_choices' ) );
 		add_filter( 'gform_admin_pre_render', array( $this, 'modify_admin_field_values' ) );
 
+		// Hydrate choices for Survey add-on, etc
+		add_filter( 'gform_form_pre_results', array( $this, 'modify_admin_field_choices' ) );
+
 		/* Permissions */
 		add_filter( 'gform_form_update_meta', array( $this, 'check_gppa_settings_for_user' ), 10, 3 );
 
 		/* Template Replacement */
+		add_filter( 'gppa_process_template', array( $this, 'convert_wp_error_in_template_to_null' ), 8, 1 );
 		add_filter( 'gppa_process_template', array( $this, 'maybe_convert_array_value_to_text' ), 9, 8 );
 		add_filter( 'gppa_process_template', array( $this, 'replace_template_generic_gf_merge_tags' ), 15, 1 );
 		add_filter( 'gppa_process_template', array( $this, 'replace_template_object_merge_tags' ), 10, 6 );
@@ -631,7 +636,16 @@ class GP_Populate_Anything extends GP_Plugin {
 	 *
 	 * @return mixed
 	 */
-	public function get_query_limit( $object_type_instance, $field ) {
+	public function get_query_limit( $object_type_instance, $field = null ) {
+		if ( ! $field ) {
+			return apply_filters(
+				'gppa_query_limit',
+				501,
+				$object_type_instance,
+				$field
+			);
+		}
+
 		return gf_apply_filters(
 			array( 'gppa_query_limit', rgar( $field, 'formId' ), rgar( $field, 'id' ) ),
 			501,
@@ -1030,6 +1044,21 @@ class GP_Populate_Anything extends GP_Plugin {
 		return $value;
 	}
 
+	/**
+	 * Convert WP_Error in templates to null to prevent downstream errors with methods such as str_replace() without
+	 * needing to put an is_wp_error() check in every filter that's added to gppa_process_template
+	 *
+	 * WP_Error's can be returned by WordPress if trying to fetch from a taxonomy that does not
+	 * exist (among other situations) which can cause the whole form to break rather than just the field.
+	 */
+	public function convert_wp_error_in_template_to_null( $template_value ) {
+		if ( is_wp_error( $template_value ) ) {
+			return null;
+		}
+
+		return $template_value;
+	}
+
 	public function maybe_convert_array_value_to_text( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
 
 		/**
@@ -1208,6 +1237,14 @@ class GP_Populate_Anything extends GP_Plugin {
 		return $template_value;
 	}
 
+	/**
+	 * @todo change wording from "dependent" to "dependency" for accuracy.
+	 *
+	 * @param $field
+	 * @param $populate
+	 *
+	 * @return array
+	 */
 	public function get_dependent_fields_by_filter_group( $field, $populate ) {
 
 		$gppa_prefix = 'gppa-' . $populate . '-';
@@ -1250,30 +1287,56 @@ class GP_Populate_Anything extends GP_Plugin {
 			return false;
 		}
 
-		$field_values              = $entry ? $entry : $this->get_posted_field_values( $form );
-		$dependent_fields_by_group = $this->get_dependent_fields_by_filter_group( $field, $populate );
+		$field_values               = $entry ? $entry : $this->get_posted_field_values( $form );
+		$dependency_fields_by_group = $this->get_dependent_fields_by_filter_group( $field, $populate );
+		$result                     = null;
 
-		if ( count( $dependent_fields_by_group ) === 0 ) {
-			return false;
+		if ( count( $dependency_fields_by_group ) === 0 ) {
+			$result = false;
 		}
 
-		foreach ( $dependent_fields_by_group as $dependent_field_group_index => $dependent_field_ids ) {
-			$group_requirements_met = true;
+		if ( $result === null ) {
+			foreach ( $dependency_fields_by_group as $dependency_field_group_index => $dependency_field_ids ) {
+				$group_requirements_met = true;
 
-			foreach ( $dependent_field_ids as $dependent_field_id ) {
-				if ( ! $this->has_field_value( $dependent_field_id, $field_values ) ) {
-					$group_requirements_met = false;
+				foreach ( $dependency_field_ids as $dependency_field_id ) {
+					if ( ! $this->has_field_value( $dependency_field_id, $field_values ) ) {
+						$group_requirements_met = false;
 
+						break;
+					}
+				}
+
+				if ( $group_requirements_met ) {
+					$result = false;
 					break;
 				}
 			}
-
-			if ( $group_requirements_met ) {
-				return false;
-			}
 		}
 
-		return true;
+		/**
+		 * If the checks above didn't see that there are no filters or find a filter group that has all of its values,
+		 * then there is a missing field filter value.
+		 */
+		if ( $result === null ) {
+			$result = true;
+		}
+
+		/**
+		 * Filter whether a field has missing field filter values.
+		 *
+		 * Note, this filter's name is close to `gppa_has_empty_field_value` which is for filtering the value of a field
+		 * with a dynamically populated value if this method returns `true`.
+		 *
+		 * @param boolean $has_empty_field_filter_value Whether the current fields has missing field filter values.
+		 * @param \GF_Field $field Current field.
+		 * @param array $form Current form.
+		 * @param array $field_values Current field values.
+		 * @param array $dependency_fields_by_group Fields that are depended upon in the current field's filters.
+		 *
+		 * @since 1.2.20
+		 */
+		return gf_apply_filters( array( 'gppa_has_empty_field_filter_value', $form['id'], $field->id ), $result, $field, $form, $field_values, $dependency_fields_by_group );
 
 	}
 
@@ -1494,7 +1557,10 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$templates = rgar( $field, 'gppa-values-templates', array() );
 
-		if ( ! in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) ) {
+		if (
+			! in_array( $field->type, self::get_multi_selectable_choice_field_types(), true )
+			&& ! in_array( $field->inputType, self::get_multi_selectable_choice_field_types(), true )
+		) {
 			return null;
 		}
 
@@ -1810,15 +1876,12 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * we need to extract out only the value for dynamic population.
 	 *
 	 * @param $value mixed
-	 * @param $field_value_object_type GF_Field
+	 * @param $field GF_Field
 	 *
 	 * @return mixed
 	 */
-	public function maybe_extract_value_from_product( $value, $field_value_object_field ) {
-		if (
-			in_array( $field_value_object_field->type, array( 'product', 'option' ), true )
-			&& strpos( $value, '|' ) !== false
-		) {
+	public function maybe_extract_value_from_product( $value, $field ) {
+		if ( GFCommon::is_product_field( $field->type ) && strpos( $value, '|' ) !== false ) {
 			$value_bits = explode( '|', $value );
 
 			return $value_bits[0];
@@ -2267,6 +2330,11 @@ class GP_Populate_Anything extends GP_Plugin {
 						continue;
 					}
 				}
+
+				/**
+				 * Strip price from pricing fields as it cannot be used when filtering.
+				 */
+				$field_value = $this->maybe_extract_value_from_product( $field_value, $field );
 
 				/**
 				 * Ideally we'd like to use $field->get_value_submission() but it requires the submit $_POST value to be
@@ -3096,7 +3164,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$form         = GFAPI::get_form( rgar( $data, 'form-id' ) );
 		$fields       = rgar( $data, 'field-ids', array() );
-		$field_values = $this->get_field_values_from_request();
+		$field_values = $this->get_posted_field_values( $form );
 		$entry_id     = rgar( $data, 'lead-id', 0 );
 		$using_entry  = ! ! $entry_id;
 		$entry        = $using_entry ? GFAPI::get_entry( $entry_id ) : null;
@@ -3223,18 +3291,12 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$live_merge_tags = rgar( $data, 'merge-tags', array() );
 
+		if ( ! empty( $live_merge_tags ) ) {
+			$this->flush_dynamically_populated_fields_cache( $form );
+		}
+
 		foreach ( $live_merge_tags as $live_merge_tag ) {
 			$live_merge_tag = stripslashes( $live_merge_tag );
-
-			/*
-			 * Clear field from $GLOBALS['_fields'] cache to ensure that we have all of the hydrated choices so
-			 * Gravity Forms can use choice labels if it desires.
-			 */
-			foreach ( $form['fields'] as $field ) {
-				if ( $this->is_field_dynamically_populated( $field ) && isset( $GLOBALS['_fields'][ $field->formId . '_' . $field->id ] ) ) {
-					unset( $GLOBALS['_fields'][ $field->formId . '_' . $field->id ] );
-				}
-			}
 
 			$live_merge_tag_value                            = $this->live_merge_tags->get_live_merge_tag_value( $live_merge_tag, $form, $fake_lead );
 			$response['merge_tag_values'][ $live_merge_tag ] = gf_apply_filters(
@@ -3267,6 +3329,29 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		return array();
 
+	}
+
+	/*
+	 * Clear field from $GLOBALS['_fields'] cache to ensure that we have all of the hydrated choices so
+	 * Gravity Forms can use choice labels if it desires.
+	 *
+	 * @param array $form The current form.
+	 *
+	 * @return array $form
+	 */
+	public function flush_dynamically_populated_fields_cache( $form ) {
+		if ( empty( $form['fields'] ) ) {
+			return $form;
+		}
+
+		foreach ( $form['fields'] as $field ) {
+			if ( $this->is_field_dynamically_populated( $field ) && isset( $GLOBALS['_fields'][ $field->formId . '_' . $field->id ] ) ) {
+				unset( $GLOBALS['_fields'][ $field->formId . '_' . $field->id ] );
+				GFAPI::get_field( $form, $field->id ); // Re-fetch field using current form meta to re-prime cache.
+			}
+		}
+
+		return $form;
 	}
 
 	public function check_gppa_settings_for_user( $form_meta, $form_id, $meta_name ) {
