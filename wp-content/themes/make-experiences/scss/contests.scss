@@ -353,7 +353,7 @@ body:not(.logged-in) {
 }
 
 // Judge pages
-body[class*="page-judge-group"] {
+body[class*="page-judge-set"] {
 	.MuiTypography-paragraph { font-size: 16px !important; }
 	.wpvc_card_conthead_row h5 a {
 		text-decoration: none;

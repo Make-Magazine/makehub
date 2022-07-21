@@ -290,3 +290,20 @@ function add_featured_ms_class_directory($classes) {
 }
 
 add_filter('bp_get_member_class', 'add_featured_ms_class_directory');
+
+/**
+ * To be more inclusive to Europe, we will Name and Surname rather than First Name Last Name
+ */
+function translate_text( $translated_text, $text, $domain ) {
+    switch ( $translated_text ) {
+        case 'First Name:*' :
+            $translated_text = __( 'Name', 'memberpress' );
+            break;
+		case 'Last Name:*' :
+			$translated_text = __( 'Surname', 'memberpress' );
+			break;
+    }
+
+    return $translated_text;
+}
+add_filter( 'gettext', 'translate_text', 999, 3 );
