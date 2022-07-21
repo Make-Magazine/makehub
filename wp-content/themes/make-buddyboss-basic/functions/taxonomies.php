@@ -77,6 +77,7 @@ function register_taxonomy_content_categories() {
 
 	register_taxonomy( 'content_categories', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	$content_categories = [
 		"electronics" => "Electronics",
 		"robotics" => "Robotics",
@@ -104,7 +105,7 @@ function register_taxonomy_content_categories() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 
 }
 
@@ -189,6 +190,7 @@ function register_taxonomy_materials() {
 
 	register_taxonomy( 'materials', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	if(empty(get_terms('materials'))) {
 		foreach ($materials as $key => $term) {
 			wp_insert_term($key, 'materials', [
@@ -205,7 +207,7 @@ function register_taxonomy_materials() {
 				);
 			}
 		}
-	}
+	}*/
 
 }
 
@@ -249,6 +251,7 @@ function register_taxonomy_ages() {
 
 	register_taxonomy( 'ages', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	$ages = [
 		"age1-under-5" => "Under 5",
 		"age2-5-7" => "5-7",
@@ -262,7 +265,7 @@ function register_taxonomy_ages() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 }
 
 add_action( 'init', 'register_taxonomy_times' );
@@ -305,6 +308,7 @@ function register_taxonomy_times() {
 
 	register_taxonomy( 'times', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	$times = [
 		"time1-less-than-30-min" => "Less than 30 min.",
 		"time2-30-min-to-an-hour" => "30 min. to an hour",
@@ -318,7 +322,7 @@ function register_taxonomy_times() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 }
 
 add_action( 'init', 'register_taxonomy_makeyland_theme' );
@@ -361,6 +365,7 @@ function register_taxonomy_makeyland_theme() {
 
 	register_taxonomy( 'makeyland_themes', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	$makeyland_themes = [
 		"art-craft-studio" => "Art/Craft Studio",
 		"carnival-theme-park" => "Carnival/Theme Park",
@@ -377,7 +382,7 @@ function register_taxonomy_makeyland_theme() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 }
 
 // This was removed as a taxonomy for projects in 2022
@@ -421,6 +426,7 @@ function register_taxonomy_skill_levels() {
 
 	register_taxonomy( 'skill_levels', array('sfwd-lessons'), $args );
 
+	/* Original terms, commented out so they can be edited in admin without issue
 	$skill_levels = [
 		"advanced" => "Advanced",
 		"intermediate" => "Intermediate",
@@ -433,7 +439,7 @@ function register_taxonomy_skill_levels() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 
 }
  ?>
