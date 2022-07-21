@@ -387,7 +387,7 @@ body[class*="page-judge-set"] {
 			position: absolute;
 			bottom: 13px;
 			right: 0px;
-			.wpvc_judgebtn:hover {
+			.wpvc_judgebtn:hover, .wpvc_judgebtn:active, .wpvc_judgebtn:focus {
 				span {
 					color: #fff;
 					text-decoration: underline;
