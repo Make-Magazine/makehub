@@ -11,8 +11,5 @@ jQuery(document).ready(function () {
 			});
 		}
 	}
-	if(jQuery("body[class*='page-judge-set']").length) {
-		jQuery(".MuiTypography-body1 .universal-btn").attr("target", "_blank");
-	}
 	jQuery(".wpvc-vote").prepend('<a class="back-btn" data-toggle="tooltip" data-placement="right" href="/amazing-maker-awards/" title="Take me back to the project gallery or click the right arrow to see another project entry."><svg class="wpvc_gallery_btn" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></a>');
 });
