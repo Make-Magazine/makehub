@@ -111,7 +111,7 @@ if(isset($referrer_url['query'])) {
                         do_action('learndash-lesson-before', get_the_ID(), $course_id, $user_id);
                         ?>
 						<div class="project-breadcrumbs">
-							<a href="/projects-search/" class="project-tag">Projects</a>
+							<a href="/project-library/" class="project-tag">Projects</a>
 							<?php
 							if(isset($referrer_params)) {
 								foreach($referrer_params as $param) {

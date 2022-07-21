@@ -75,10 +75,8 @@ if(isset($referrer_url['query'])) {
 <div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
-        <?php // only show sidebar if the project is tagged resource
-        if ( has_term('resource', 'ld_lesson_tag') ) :
+        <?php
             include locate_template('/learndash/ld30/learndash-sidebar.php');
-        endif;
         ?>
 
         <div id="learndash-page-content" class="lesson-page">
@@ -111,7 +109,7 @@ if(isset($referrer_url['query'])) {
                         do_action('learndash-lesson-before', get_the_ID(), $course_id, $user_id);
                         ?>
 						<div class="project-breadcrumbs">
-							<a href="/projects-search/" class="project-tag">Projects</a>
+							<a href="/project-library/" class="project-tag">Projects</a>
 							<?php
 							if(isset($referrer_params)) {
 								foreach($referrer_params as $param) {
@@ -353,7 +351,7 @@ if(isset($referrer_url['query'])) {
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-							<?php if( !empty($terms) && empty($terms["errors"]) ) {  ?>
+							<?php if( !empty($terms) && !empty($terms["errors"]) ) {  ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
