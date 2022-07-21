@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.9.3
 Requires PHP: 5.6.20
-Stable tag: 2.0.2
+Stable tag: 2.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,17 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 2.0.4 =
+* Zoom - Updated Zoom Client WebSDK to 2.4.0
+* Coding Standards - Code refactoring to support different notification types for custom development
+
+= 2.0.3 =
+* Notifications - Added OneSignal integration option to enable Web Push Notifications
+* Notifications - Provided options to configure Web Push Notifications using OneSignal
+* Notifications - Provided option in Notifications screen and provided a soft prompt to subscribe browser to Push Notifications
+* Notifications - Added support to trigger real-time Push notifications for logged-in users for all notification types
+* Coding Standards - Sub-navigation CSS Code refactoring
 
 = 2.0.2 =
 * Zoom - Handled Group zoom tab layout issues

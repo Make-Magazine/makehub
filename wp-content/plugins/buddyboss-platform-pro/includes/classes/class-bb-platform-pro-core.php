@@ -91,6 +91,11 @@ class BB_Platform_Pro_Core {
 			if ( file_exists( $file ) ) {
 				require $file;
 			}
+
+			$file = "{$bb_platform_pro->integration_dir}/{$integration}/bb-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				require $file;
+			}
 		}
 
 		/**

@@ -243,3 +243,41 @@ if ( ! function_exists( 'wp_timezone_string' ) ) {
 	}
 }
 
+/**
+ * It's a alias for wp_safe_remote_post but allows filters.
+ *
+ * @since 2.0.3
+ *
+ * @param string $url  URL for the remote post.
+ * @param array  $args array of arguments.
+ *
+ * @return array|WP_Error
+ */
+function bbpro_remote_post( $url, $args = array() ) {
+
+	$url      = apply_filters( 'bbpro_remote_post_url', $url, $args );
+	$args     = apply_filters( 'bbpro_remote_post_args', $args, $url );
+	$response = wp_safe_remote_post( $url, $args );
+	$response = apply_filters( 'bbpro_remote_post_response', $response, $url, $args );
+
+	return $response;
+}
+
+/**
+ * It's a alias for wp_remote_get but allows filters.
+ *
+ * @since 2.0.3
+ *
+ * @param string $url  URL for the remote post.
+ * @param array  $args array of arguments.
+ *
+ * @return array|WP_Error
+ */
+function bbpro_remote_get( $url, $args = array() ) {
+	$url      = apply_filters( 'bbpro_remote_get_url', $url, $args );
+	$args     = apply_filters( 'bbpro_remote_get_args', $args, $url );
+	$response = wp_safe_remote_get( $url, $args );
+	$response = apply_filters( 'bbpro_remote_get_response', $response, $url, $args );
+
+	return $response;
+}

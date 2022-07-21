@@ -2165,10 +2165,6 @@ a.bb-invitation-url {
 	border: 0 !important;
 }
 
-.groups.zoom .bp-single-vert-nav #item-body #subnav .subnav a {
-	padding: 16px 0;
-}
-
 @media (min-width: 749px) {
 	.groups.zoom .bp-single-vert-nav .bp-zoom-meeting-container {
 		border: 0;
