@@ -311,6 +311,7 @@
 
 .shopify-buy-frame {
 	margin: 0 auto;
+	.shopify-close-btn { display: none; }
 	@media screen and (min-width: 1200px) {
 		position: fixed;
 		top: 179px;
@@ -336,7 +337,7 @@
 			cursor: pointer;
 			height: 40px;
 			width: 40px;
-			display: flex;
+			display: flex ;
 			justify-content: center;
 			align-items: center;
 		}
@@ -351,5 +352,4 @@
 			}
 		}
 	}
-	.shopify-close-btn { display: none; }
 }
