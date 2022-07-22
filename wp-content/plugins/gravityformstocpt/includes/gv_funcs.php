@@ -50,16 +50,17 @@ function gv_status_change($entry_id, $statusToUpdate) {
 	//create an array of the status to update, keyed on feed order
 	foreach($result as $feed){
 		if($feed["is_active"]){
-      //if this is an update, we need to update the associated post
-      if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){
-        gf_gftocpt()->update_post( $post_id, $feed, $entry, $form );        
-        if($statusToUpdate = 'adminEditNoChange'){
-          $statusToUpdate = 'no-change'; //if this is an admin edit, do not change the status
-        }
-      }
       // Loop through created posts.
       foreach ( $created_posts as $post_info ) {
         $post_id = absint( rgar( $post_info, 'post_id' ) ); // Get post ID.
+
+        //if this is an update, we need to update the associated post
+        if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){
+          gf_gftocpt()->update_post( $post_id, $feed, $entry, $form );
+          if($statusToUpdate = 'adminEditNoChange'){
+            $statusToUpdate = 'no-change'; //if this is an admin edit, do not change the status
+          }
+        }
 
         //loop through the feeds and update status of the post
         if(isset($feed['meta'][$statusToUpdate]) && $feed['meta'][$statusToUpdate] != 'no-change'){
