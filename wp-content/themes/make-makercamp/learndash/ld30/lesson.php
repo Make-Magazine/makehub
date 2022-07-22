@@ -111,7 +111,7 @@ if(isset($referrer_url['query'])) {
                         do_action('learndash-lesson-before', get_the_ID(), $course_id, $user_id);
                         ?>
 						<div class="project-breadcrumbs">
-							<a href="/projects-search/" class="project-tag">Projects</a>
+							<a href="/project-library/" class="project-tag">Projects</a>
 							<?php
 							if(isset($referrer_params)) {
 								foreach($referrer_params as $param) {
@@ -333,7 +333,7 @@ if(isset($referrer_url['query'])) {
 									<?php } ?>
 									<br />
 								<?php }
-									if(!empty($themes)){ ?>
+								if(!empty($themes)){ ?>
 								<h4>See More Projects from these themes:</h4>
 								<?php foreach($themes as $theme) { ?>
 										<a href="/project-library/?_sft_makeyland_themes=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
@@ -353,7 +353,7 @@ if(isset($referrer_url['query'])) {
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-							<?php if(!empty($terms)) { ?>
+							<?php if( !empty($terms) && empty($terms["errors"]) ) {  ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>

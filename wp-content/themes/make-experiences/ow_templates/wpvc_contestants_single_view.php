@@ -81,7 +81,7 @@
 							</div>
 							<div class="wpvc-vote">
 								<div id="wpvc-singlecustom-header" data-shortcode="singlecontestantcustom" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
-								<a href="/register/contest/" class="btn universal-btn lgn-btn">Vote</a>
+								<a href="/register/contest/" class="btn universal-btn lgn-btn">Voting is over</a>
 							</div>
 							<div class="wpvc-details">
 								<p><?php echo $short_desc; ?></p>

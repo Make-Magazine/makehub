@@ -14,10 +14,11 @@
 }
 
 // margins for learn dash pages
-.single-sfwd-lessons, .sfwd-courses-template, .learndash-cpt-sfwd-lessons {
+.single-sfwd-lessons, .sfwd-courses-template, .post-type-archive-sfwd-courses, .learndash-cpt-sfwd-lessons {
 	#page {
 		.site-content > .container{
 			width: 100%;
+			padding: 0 30px;
 			@media screen and (max-width: 960px) {
 				padding: 0px;
 			}
@@ -30,6 +31,7 @@
 			}
 		}
 	}
+	.universal-footer { z-index: 999; }
 }
 
 /* Learn Dash */
@@ -78,8 +80,8 @@
 }
 
 // Adventures page
-.sfwd-courses-template, .learndash-cpt-sfwd-courses, .groups {
-	.ld-course-status, .bb-course-member-wrap { display: none !important; }
+.sfwd-courses-template, .learndash-cpt-sfwd-courses {
+	.ld-course-status { display: none !important; }
 	.ld-lesson-list {
 		.bb-course-meta {
 			width: 100%;
@@ -103,20 +105,19 @@
 }
 
 // Lessons / Projects
-.learndash-cpt-sfwd-lessons {
+.learndash-cpt-sfwd-lessons, .single-user-project {
 	.site-content {
 		padding: 0px;
 	}
 	.lms-topic-sidebar-wrapper {
-		z-index: 0;
-		.lms-topic-sidebar-data {
-			top: 138px !important;
-		}
-		.lms-course-members-list { display: none;}
-
+		background-color: transparent;
+		box-shadow: none;
 	}
-	.buddypanel { display: none; }
-	.lms-topic-sidebar-data { left: 0px !important; }
+	.lms-topic-sidebar-data {
+		top: 138px !important;
+		background: #F5F6F7;
+		box-shadow: inset -36px 0 40px -32px rgba(0,0,0,.05);
+	}
 	@media screen and (max-width: 767px) {
 		#learndash-content .lms-topic-sidebar-wrapper {
 			display: none;
@@ -222,10 +223,10 @@
 		padding: 20px;
 		border-radius: 3px;
 		.bb-avatar-wrap {
-			min-width: 120px;
+			min-width: 80px;
 			margin-right: 25px;
 			img.avatar {
-				min-width: 120px;
+				min-width: 70px;
 			}
 		}
 		h5 { margin-bottom: 15px; }
@@ -238,10 +239,6 @@
 				}
 			}
 		}
-	}
-	.print-btn {
-		width: calc(100% - 60px);
-    	margin: 0px 30px 30px;
 	}
 }
 // Use css to rewrite the materials tab to "Resources"
@@ -310,36 +307,75 @@
 	}
 }
 
-.single-sfwd-courses .learndash-wrapper .bb-single-course-sidebar {
-	.bb-course-preview-content {
-		padding-top: 5px;
-	}
-	.ld-status {
-		font-size: 16px;
-		margin-top: 5px;
-	}
-	.learndash-stripe-checkout-button {
-		font-size: 20px;
-		margin-bottom: 15px;
-		border-radius: 2px;
-		&:hover { color: #fff; }
-	 }
-	 .bb-course-type-paynow {
-		 font-size: 18px;
-		 color: #333;
-	 }
+ .learndash-wrapper {
+ 	padding-bottom: 30px;
+ 	a.universal-btn {
+ 		border-bottom: solid 1px #005e9a !important;
+ 		color: #fff;
+ 		width: 100%;
+ 		&:hover, &:focus {
+ 			color: #005e9a;
+ 		}
+ 	}
+ 	section.tags {
+ 		margin-bottom: 30px;
+ 		h4 {
+ 			color: #333;
+ 			margin-top: 10px;
+ 		}
+ 		a.project-tag {
+ 			font-family: "Gamja Flower", "Roboto", Arial, sans-serif;
+ 			margin: 5px;
+ 			padding: 5px 10px;
+ 			color: #fff;
+ 			font-size: 20px;
+ 			background: #51b2dc;
+ 			border-radius: 20px;
+ 			border: solid 1px #51b2dc !important;
+ 			white-space: nowrap;
+ 			display: inline-block;
+ 			&:hover {
+ 				color: #51b2dc;
+ 				background: #fff;
+ 			}
+ 		}
+ 	}
+ 	section.standards {
+ 		border: solid 1px #ccc;
+ 		margin-top: 15px;
+ 		padding: 10px 30px 30px;
+ 		border-radius: 4px;
+ 		background: #f1f1f1;
+ 		h2 { font-size: 28px; }
+ 		h4 {
+ 			font-size: 24px;
+ 			font-weight: 100;
+ 			font-style: italic;
+ 		}
+ 	}
+ 	section.up-buttons {
+ 		display: flex;
+ 		justify-content: space-around;
+ 		margin: 30px 0px;
+ 	}
+ 	section.up-colab-share {
+ 		text-align: center;
+ 		border: solid 1px #ccc;
+ 		border-radius: 4px;
+ 		background: #f1f1f1;
+ 		padding-bottom: 15px;
+ 		margin: 30px 0;
+ 	}
+ 	.project-breadcrumbs {
+ 		a {
+ 			color: #999;
+ 			&:after {
+ 				content: ">";
+ 				padding: 0 10px;
+ 			}
+ 			&:last-of-type::after {
+ 				content: "";
+ 			}
+ 		}
+ 	}
  }
-
-// EXCEPTIONS
-.sfwd-courses-school-maker-faire-playbook, .group-school-maker-faire-organizers {
-	.widget_follow_us { display: none; }
-}
-
-body.cat-education {
-	.widget_follow_us { display: none; }
-	.learndash-wrapper {
-		.btn-advance.ld-primary-background, .ld-section-heading, .lds-btn-primary, .lds-grid-banners-thumbnail, .btn-join {
-			background-color: #07757A !important;
-		}
-	}
-}

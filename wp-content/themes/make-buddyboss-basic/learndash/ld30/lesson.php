@@ -52,15 +52,31 @@ if (empty($course)) {
         $course = get_post($course_id);
     }
 }
+
+// Get our Taxonomies
+$categories = get_the_terms($post->ID, 'content_categories');
+$ages = get_the_terms($post->ID, 'ages');
+$times = get_the_terms($post->ID, 'times');
+$materials_tax = get_the_terms($post->ID, 'materials');
+$themes = get_the_terms($post->ID, 'makeyland_themes');
+
+$terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
+
+
+// variables for building Breadcrumbs
+$referrer_url = parse_url($_SERVER['HTTP_REFERER']);
+if(isset($referrer_url['query'])) {
+	parse_str($referrer_url['query'], $referrer_params);
+	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
+	sort($referrer_params);
+}
 ?>
 
-<div id="learndash-content" class="container-full">
+<div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
         <?php
-        if (!empty($course)) :
             include locate_template('/learndash/ld30/learndash-sidebar.php');
-        endif;
         ?>
 
         <div id="learndash-page-content" class="lesson-page">
@@ -92,6 +108,18 @@ if (empty($course)) {
                          */
                         do_action('learndash-lesson-before', get_the_ID(), $course_id, $user_id);
                         ?>
+						<div class="project-breadcrumbs">
+							<a href="/project-library/" class="project-tag">Projects</a>
+							<?php
+							if(isset($referrer_params)) {
+								foreach($referrer_params as $param) {
+									$breadCrumb = get_term_by('slug', $param, 'content_categories'); ?>
+									<a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+							<?php
+								}
+							}
+							?>
+						</div>
                         <div id="learndash-course-header" class="bb-lms-header">
                             <div class="bb-ld-info-bar">
                                 <?php
@@ -295,6 +323,22 @@ if (empty($course)) {
                             }
                             ?>
 
+							<section class="tags">
+								<?php if(!empty($categories)) { ?>
+									<h4>See More Projects in these topics:</h4>
+									<?php foreach($categories as $category) { ?>
+											<a href="/project-library/?_sft_content_categories=<?php echo $category->slug; ?>" class="project-tag"><?php echo $category->name; ?></a>
+									<?php } ?>
+									<br />
+								<?php }
+								if(!empty($themes)){ ?>
+								<h4>See More Projects from these themes:</h4>
+								<?php foreach($themes as $theme) { ?>
+										<a href="/project-library/?_sft_makeyland_themes=<?php echo $theme->slug; ?>" class="project-tag"><?php echo $theme->name; ?></a>
+								<?php }
+								}	?>
+							</section>
+
                             <?php
                             // Author section
                             global $post;
@@ -305,10 +349,24 @@ if (empty($course)) {
                                     ), true);
                             ?>
 
+							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
+
+							<?php if( !empty($terms) && !empty($terms["errors"]) ) {  ?>
+								<section class="standards">
+									<h2>Maker Camp Project Standards</h2>
+									<h4>Based on NGSS (Next Generation Science Standards)</h4>
+									<?php foreach($terms as $term) {
+										if($term->description) { ?>
+											<div class="disclaimer-section"><?php echo $term->description; ?></div>
+									<?php }
+									} ?>
+								</section>
+							<?php } ?>
+
                         </div><?php /* .learndash_content_wrap */ ?>
 
-                    </div> <!--/.learndash-wrapper-->                    
-<?php } ?>
+                    </div> <!--/.learndash-wrapper-->
+				<?php } ?>
             </div><?php /* .learndash-content-body */ ?>
         </div><?php /* #learndash-page-content */ ?>
     </div>
