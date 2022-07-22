@@ -55,7 +55,8 @@ function gv_status_change($entry_id, $statusToUpdate) {
         $post_id = absint( rgar( $post_info, 'post_id' ) ); // Get post ID.
 
         //if this is an update, we need to update the associated post
-        if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){
+        if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){                    
+          $form = GFAPI::get_form($entry['form_id']);
           gf_gftocpt()->update_post( $post_id, $feed, $entry, $form );
           if($statusToUpdate = 'adminEditNoChange'){
             $statusToUpdate = 'no-change'; //if this is an admin edit, do not change the status
