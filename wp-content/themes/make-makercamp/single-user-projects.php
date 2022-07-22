@@ -199,7 +199,7 @@ get_header();
 })();
 /*]]>*/
 </script>
-<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-times-circle"></i></div>
+<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-angle-double-right"></i></div>
 
 <div id="learndash-content">
     <div class="bb-grid grid">

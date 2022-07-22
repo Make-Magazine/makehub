@@ -211,7 +211,7 @@ if(isset($referrer_url['query'])) {
 })();
 /*]]>*/
 </script>
-<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-times-circle"></i></div>
+<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-angle-double-right"></i><</div>
 
 <div id="learndash-content" class="container-fluid">
 
