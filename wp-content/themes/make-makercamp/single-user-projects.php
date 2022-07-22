@@ -59,7 +59,148 @@ if(isset($referrer_url['query'])) {
 
 
 get_header();
+// Below is the shopify Javascript code
 ?>
+<script type="text/javascript">
+/*<![CDATA[*/
+(function () {
+  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+  if (window.ShopifyBuy) {
+    if (window.ShopifyBuy.UI) {
+      ShopifyBuyInit();
+    } else {
+      loadScript();
+    }
+  } else {
+    loadScript();
+  }
+  function loadScript() {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = scriptURL;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+    script.onload = ShopifyBuyInit;
+  }
+  function ShopifyBuyInit() {
+    var client = ShopifyBuy.buildClient({
+      domain: 'makershed.myshopify.com',
+      storefrontAccessToken: 'd5afa3c85254acd69409972a027226b1',
+    });
+    ShopifyBuy.UI.onReady(client).then(function (ui) {
+      ui.createComponent('product', {
+        id: '7252580171969',
+        node: document.getElementById('product-component-1656018448357'),
+        moneyFormat: '%24%7B%7Bamount%7D%7D',
+        options: {
+  "product": {
+    "styles": {
+      "product": {
+        "@media (min-width: 601px)": {
+          "max-width": "calc(25% - 20px)",
+          "margin-left": "20px",
+          "margin-bottom": "50px"
+        }
+      },
+      "button": {
+        ":hover": {
+          "background-color": "#1932d5"
+        },
+        "background-color": "#1c37ed",
+        ":focus": {
+          "background-color": "#1932d5"
+        },
+        "border-radius": "13px",
+        "padding-left": "9px",
+        "padding-right": "9px"
+      }
+    },
+    "text": {
+      "button": "Add to cart"
+    }
+  },
+  "productSet": {
+    "styles": {
+      "products": {
+        "@media (min-width: 601px)": {
+          "margin-left": "-20px"
+        }
+      }
+    }
+  },
+  "modalProduct": {
+    "contents": {
+      "img": false,
+      "imgWithCarousel": true,
+      "button": false,
+      "buttonWithQuantity": true
+    },
+    "styles": {
+      "product": {
+        "@media (min-width: 601px)": {
+          "max-width": "100%",
+          "margin-left": "0px",
+          "margin-bottom": "0px"
+        }
+      },
+      "button": {
+        ":hover": {
+          "background-color": "#1932d5"
+        },
+        "background-color": "#1c37ed",
+        ":focus": {
+          "background-color": "#1932d5"
+        },
+        "border-radius": "13px",
+        "padding-left": "9px",
+        "padding-right": "9px"
+      }
+    },
+    "text": {
+      "button": "Add to cart"
+    }
+  },
+  "option": {},
+  "cart": {
+    "styles": {
+      "button": {
+        ":hover": {
+          "background-color": "#1932d5"
+        },
+        "background-color": "#1c37ed",
+        ":focus": {
+          "background-color": "#1932d5"
+        },
+        "border-radius": "13px"
+      }
+    },
+    "text": {
+      "total": "Subtotal",
+      "notice": "Use code JIMMYD and SAVE 5%",
+      "button": "Checkout"
+    }
+  },
+  "toggle": {
+    "styles": {
+      "toggle": {
+        "background-color": "#1c37ed",
+        ":hover": {
+          "background-color": "#1932d5"
+        },
+        ":focus": {
+          "background-color": "#1932d5"
+        }
+      }
+    }
+  }
+},
+      });
+    });
+  }
+})();
+/*]]>*/
+</script>
+<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-times-circle"></i></div>
+
 <div id="learndash-content">
     <div class="bb-grid grid">
 		<?php /* Sidebar emulating the LearnDash sidebar
