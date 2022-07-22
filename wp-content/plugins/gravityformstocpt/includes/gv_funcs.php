@@ -23,6 +23,11 @@ function gftocpt_gv_update_entry( $form, $entry_id ) {
   gv_status_change($entry_id, 'statAfterEdit');
 }
 
+add_action('gform_after_update_entry', 'gftocpt_update_post', 10, 2); //via the entry detail page.
+function gftocpt_update_post( $form, $entry_id ) {
+  gv_status_change($entry_id, 'adminEditNoChange');
+}
+
 function gv_status_change($entry_id, $statusToUpdate) {
 	//pull the associated entry for this entry id
 	$entry = GFAPI::get_entry($entry_id);
@@ -43,27 +48,25 @@ function gv_status_change($entry_id, $statusToUpdate) {
   }
 
 	//create an array of the status to update, keyed on feed order
-	$gv_array = array();
 	foreach($result as $feed){
 		if($feed["is_active"]){
-			if(isset($feed['meta'][$statusToUpdate]) && $feed['meta'][$statusToUpdate] != 'no-change'){
-				$gv_array[$feed['feed_order']] = $feed['meta'][$statusToUpdate];
-			}
-		}
-	}
+      //if this is an update, we need to update the associated post
+      if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){
+        gf_gftocpt()->update_post( $post_id, $feed, $entry, $form );        
+        if($statusToUpdate = 'adminEditNoChange'){
+          $statusToUpdate = 'no-change'; //if this is an admin edit, do not change the status
+        }
+      }
+      // Loop through created posts.
+      foreach ( $created_posts as $post_info ) {
+        $post_id = absint( rgar( $post_info, 'post_id' ) ); // Get post ID.
 
-  //sort feed by feed order
-  ksort($gv_array);
-
-	// Loop through created posts.
-	foreach ( $created_posts as $post_info ) {
-		// Get post ID.
-		$post_id = absint( rgar( $post_info, 'post_id' ) );
-
-		//loop through the feeds and update status of the post
-		foreach($gv_array as $status){
-			$data = array('ID' => $post_id,'post_status'=>$status);
-			wp_update_post( $data );
+        //loop through the feeds and update status of the post
+        if(isset($feed['meta'][$statusToUpdate]) && $feed['meta'][$statusToUpdate] != 'no-change'){
+          $data = array('ID' => $post_id,'post_status' => $feed['meta'][$statusToUpdate]);
+          wp_update_post( $data );
+        }
+      }
 		}
 	}
 }

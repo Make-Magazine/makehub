@@ -86,7 +86,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	 * @access protected
 	 * @var    string $_title The title of the Add-On.
 	 */
-	protected $_title = 'Gravity Forms - GF to CPT Add-On';
+	protected $_title = 'Gravity Forms to CPT Add-On';
 
 	/**
 	 * Defines the short title of the Add-On.
