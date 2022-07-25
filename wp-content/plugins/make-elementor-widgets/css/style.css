@@ -137,6 +137,10 @@
 	-webkit-line-clamp: 4;
 	overflow: hidden;
 }
+.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary p {
+	margin: 0px;
+	padding-bottom: 5px;
+}
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssTitle { display: none; }
 .elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssSummary {
 	display: flex;
