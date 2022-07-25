@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var EE_Attendee $att_check
  * @var string      $att_edit_label
@@ -10,6 +11,9 @@
  * @var string      $lname
  * @var string      $phone
  */
+
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 $email = sanitize_email($email);
 ?>
 
@@ -24,7 +28,7 @@ $email = sanitize_email($email);
         <span class="admin-side-mbox-label-spn lt-grey-txt float-left">
             <?php esc_html_e('Email', 'event_espresso'); ?>
         </span>
-        <a href="mailto:<?php echo $email; // sanitized ?>">
+        <a href="mailto:<?php echo esc_attr($email); ?>">
             <?php echo esc_html($email); ?>
         </a>
     </div>
@@ -43,7 +47,7 @@ $email = sanitize_email($email);
             <?php esc_html_e('Address', 'event_espresso'); ?>
         </span>
         <div class="admin-side-mbox-text-dv">
-            <?php echo $formatted_address; // already escaped ?>
+            <?php echo wp_kses($formatted_address, AllowedTags::getAllowedTags()); ?>
         </div>
     </div>
 </div>

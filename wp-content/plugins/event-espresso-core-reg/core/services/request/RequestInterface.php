@@ -15,7 +15,6 @@ use EventEspresso\core\domain\services\contexts\RequestTypeContextCheckerInterfa
  */
 interface RequestInterface extends RequestTypeContextCheckerInterface
 {
-
     /**
      * @param RequestTypeContextCheckerInterface $type
      */
@@ -60,6 +59,15 @@ interface RequestInterface extends RequestTypeContextCheckerInterface
      * @return void
      */
     public function setServerParam($key, $value);
+
+
+    /**
+     * remove param
+     *
+     * @param string $key
+     * @param bool   $unset_from_global_too
+     */
+    public function unSetServerParam($key, $unset_from_global_too = false);
 
 
     /**

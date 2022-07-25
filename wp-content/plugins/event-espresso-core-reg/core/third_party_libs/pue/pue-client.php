@@ -37,6 +37,7 @@
 
 use EventEspresso\core\services\loaders\LoaderFactory;
 use EventEspresso\core\services\request\RequestInterface;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 if (! class_exists('PluginUpdateEngineChecker')):
     /**
@@ -304,22 +305,31 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 : false;
 
             //set hooks
-            $this->_check_for_forced_upgrade();
             $this->installHooks();
         }
 
 
         /**
          * This checks to see if there is a forced upgrade option saved from a previous saved options page trigger.
-         *  If there is then we change the slug accordingly and setup for premium update.
+         * If there is then we change the slug accordingly and setup for premium update.
          * This function will also take care of deleting any previous force_update options IF our current installed
          * plugin IS premium.
          *
+         * @deprecated 4.10.37.p
          * @access private
          * @return void
+         * @throws EE_Error
          */
         private function _check_for_forced_upgrade()
         {
+            EE_Error::doing_it_wrong(
+                __METHOD__,
+                esc_html__(
+                    'This method is no longer in use. There is no replacement for it. The method was used to check and setup for a premium upgrade via 1-click which is no longer available from within WP admin.',
+                    'event_espresso'
+                ),
+                '4.10.37.p'
+            );
 
             /**
              * We ONLY execute this check if the incoming plugin being checked has a free option.
@@ -513,7 +523,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
         {
             ?>
             <div class="error" style="padding:15px; position:relative;" id="pue_option_error">
-                <?php echo $this->_error_msg; ?>
+                <?php echo wp_kses($this->_error_msg, AllowedTags::getAllowedTags()); ?>
             </div>
             <?php
         }
@@ -794,12 +804,6 @@ if (! class_exists('PluginUpdateEngineChecker')):
             //date.
             $this->trigger_update_check();
 
-            //if we've got a forced premium upgrade then let's add an admin notice for this with a nice button to do
-            //the upgrade right away.  We'll also handle the display of any json errors in this admin_notice.
-            if ($this->_force_premium_upgrade) {
-                add_action('admin_notices', array($this, 'show_premium_upgrade'));
-            }
-
 
             //this injects info into the returned Plugin info popup but we ONLY inject if we're not doing wp_updates
             $this->json_error = $this->get_json_error_string();
@@ -932,40 +936,12 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 $this->api_secret_key = $value;
                 $this->set_api($this->api_secret_key);
 
-                //reset force_upgrade flag (but only if there's a free slug key)
+                // Reset force_upgrade flag (but only if there's a free slug key).
+                // There are no force upgrades anymore.
                 if (! empty($this->_incoming_slug['free'])) {
                     delete_site_option(
                         'pue_force_upgrade_' . $this->_incoming_slug['free'][key($this->_incoming_slug['free'])]
                     );
-                }
-
-                //now let's reset some flags if necessary?  in other words IF the user has entered a premium key and
-                //the CURRENT version is a free version (NOT a prerelease version) then we need to make sure that we
-                // ping for the right version
-                //if this condition matches then that means we've got a free active key in place (or a free version
-                // from wp WITHOUT an active key) and the user has entered a NON free API key which means they intend
-                // to check for premium access.
-                if (! empty($this->api_secret_key)
-                    && ! $this->_is_premium
-                    && ! $this->_is_prerelease
-                    && $this->_is_freerelease
-                    && false === stripos(
-                        $this->api_secret_key,
-                        'FREE'
-                    )
-                ) {
-                    $this->_use_wp_update = false;
-                    $this->slug = $this->_incoming_slug['premium'][key($this->_incoming_slug['premium'])];
-                    $this->_is_premium = true;
-                    $this->_force_premium_upgrade = true;
-                    $this->pue_install_key = 'pue_install_key_' . $this->slug;
-                    $this->optionName = 'external_updates-' . $this->slug;
-                    if (isset($this->_incoming_slug['free'])) {
-                        update_site_option(
-                            'pue_force_upgrade_' . $this->_incoming_slug['free'][key($this->_incoming_slug['free'])],
-                            $this->slug
-                        );
-                    }
                 }
 
                 $this->checkForUpdates();
@@ -1039,19 +1015,19 @@ if (! class_exists('PluginUpdateEngineChecker')):
                     $this->add_persistent_notice($response->extra_notices);
                 }
                 // This instance is for EE Core, we have a response from PUE so lets check if it contains PUE Plugin data.
-                if ( stripos($this->slug, 'event-espresso-core') !== false
+                if (stripos($this->slug, 'event-espresso-core') !== false
                     && isset($response->extra_data)
                     && !empty($response->extra_data->plugins)
-                ) {                    // Pull PUE pugin data from 'extra_data'.
+                ) {                    // Pull PUE plugin data from 'extra_data'.
                     $plugins_array = json_decode($result['body'], true);
                     $plugins = $plugins_array['extra_data']['plugins'];
                     // Pull all of the add-ons EE has active and update the local latestVersion value of each of them.
                     foreach (EE_Registry::instance()->addons as $addon) {
                         $addon_slug = $addon->getPueSlug();
-                        if( isset($response->extra_data->plugins->{ $addon_slug }) ) {
+                        if(isset($response->extra_data->plugins->{ $addon_slug })) {
                             $addon_state = get_option('external_updates-' . $addon_slug);
                             // If we don't have an addon state, get out we'll update it next time.
-                            if( empty($addon_state)) {
+                            if(empty($addon_state)) {
                                 continue;
                             }
                             // Have an addon state? Set the latestVersion value!
@@ -1232,7 +1208,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 ob_start();
                 ?>
                 <div class="error" id="pue_error_notices">
-                    <?php echo $this->_sanitize_notices($errors); ?>
+                    <?php echo wp_kses($errors, AllowedTags::getAllowedTags()); ?>
                     <a class="button-secondary" href="javascript:void(0);" onclick="PUEDismissNotice( 'error' );"
                        style="float:right; margin-bottom: 10px;">
                         <?php esc_html_e('Dismiss'); ?>
@@ -1248,7 +1224,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 ob_start();
                 ?>
                 <div class="notice notice-info" id="pue_attention_notices">
-                    <?php echo $this->_sanitize_notices($attentions); ?>
+                    <?php echo wp_kses($attentions, AllowedTags::getAllowedTags()); ?>
                     <a class="button-secondary" href="javascript:void(0);" onclick="PUEDismissNotice( 'attention' );"
                        style="float:right; margin-bottom: 10px;">
                         <?php esc_html_e('Dismiss'); ?>
@@ -1264,7 +1240,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 ob_start();
                 ?>
                 <div class="success" id="pue_success_notices">
-                    <?php echo $this->_sanitize_notices($successes); ?>
+                    <?php echo wp_kses($successes, AllowedTags::getAllowedTags()); ?>
                     <a class="button-secondary" href="javascript:void(0);" onclick="PUEDismissNotice( 'success' );"
                        style="float:right; margin-bottom: 10px;">
                         <?php esc_html_e('Dismiss'); ?>
@@ -1292,7 +1268,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
             <?php
             $content .= ob_get_contents();
             ob_end_clean();
-            echo $content;
+            echo ($content);
         }
 
 
@@ -1475,7 +1451,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 ob_start();
                 ?>
                 <div class="updated" style="padding:15px; position:relative;"
-                     id="pu_dashboard_message"><?php echo $this->_sanitize_notices($msg); ?>
+                     id="pu_dashboard_message"><?php echo wp_kses($msg, AllowedTags::getAllowedTags()); ?>
                     <a class="button-secondary" href="javascript:void(0);" onclick="PUDismissUpgrade();"
                        style='float:right;'><?php esc_html_e("Dismiss") ?></a>
                     <div style="clear:both;"></div>
@@ -1484,8 +1460,8 @@ if (! class_exists('PluginUpdateEngineChecker')):
                     function PUDismissUpgrade() {
                         jQuery("#pu_dashboard_message").slideUp();
                         jQuery.post(ajaxurl, {
-                            action: "<?php echo $this->dismiss_upgrade; ?>",
-                            version: "<?php echo $pluginInfo->version; ?>",
+                            action: "<?php echo esc_js($this->dismiss_upgrade); ?>",
+                            version: "<?php echo esc_js($pluginInfo->version); ?>",
                             cookie: encodeURIComponent(document.cookie)
                         });
                     }
@@ -1494,7 +1470,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 $content = ob_get_contents();
                 ob_end_clean();
                 if ($echo !== false) {
-                    echo $content;
+                    echo ($content);
                 } else {
                     return $content;
                 }
@@ -1541,11 +1517,22 @@ if (! class_exists('PluginUpdateEngineChecker')):
          * allows them to click a button to get the premium version.
          * Note: we'll alternatively display any json errors that may be present from the returned package.
          *
+         * @deprecated 4.10.37.p
          * @access  public
          * @return string html
+         * @throws EE_Error
          */
         public function show_premium_upgrade()
         {
+            EE_Error::doing_it_wrong(
+                __METHOD__,
+                esc_html__(
+                    'This method is no longer in use. There is no replacement for it. The method was used to show an admin notice for a 1-click premium upgrade which is no longer available from within WP admin.',
+                    'event_espresso'
+                ),
+                '4.10.37.p'
+            );
+
             global $current_screen;
             $ver_option_key = 'puvererr_' . basename($this->pluginFile);
             if (empty($current_screen)) {
@@ -1620,7 +1607,7 @@ if (! class_exists('PluginUpdateEngineChecker')):
                 </script>'
                 : '';
 
-            echo $content;
+            echo ($content);
         }
 
 
@@ -1767,6 +1754,11 @@ if (! class_exists('PluginUpdateEngineChecker')):
          */
         public function injectUpdate($updates)
         {
+            // Fix for update_plugins returning false
+            if (! is_object($updates)) {
+                $updates = new stdClass();
+            }
+
             $state = get_site_option($this->optionName);
 
             //first remove any existing WP update message that might have snuck in before we have any return from our

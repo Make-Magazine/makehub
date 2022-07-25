@@ -8,14 +8,13 @@ use EventEspresso\core\services\commands\Command;
  * Class SingleRegistrationCommand
  * DTO for passing data a single EE_Registration object to a CommandHandler
  *
+ * @deprecated 4.9.54
  * @package       Event Espresso
  * @author        Brent Christensen
  * @since         4.9.0
  */
 abstract class SingleRegistrationCommand extends Command
 {
-
-
     /**
      * @var \EE_Registration $registration
      */

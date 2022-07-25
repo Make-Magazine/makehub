@@ -14,12 +14,12 @@ use EventEspresso\core\services\commands\CommandRequiresCapCheckInterface;
  * Class CreateAttendeeCommand
  * DTO for passing data to a CreateAttendeeCommandHandler
  *
+ * @deprecated 4.9.54
  * @package       Event Espresso
  * @author        Brent Christensen
  */
 class CreateAttendeeCommand extends Command implements CommandRequiresCapCheckInterface
 {
-
     /**
      * array of details where keys are names of EEM_Attendee model fields
      *

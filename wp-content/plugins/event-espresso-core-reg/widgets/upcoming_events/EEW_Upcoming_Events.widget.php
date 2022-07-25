@@ -1,5 +1,6 @@
 <?php
 
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 use EventEspresso\widgets\EspressoWidget;
 
 /**
@@ -11,7 +12,6 @@ use EventEspresso\widgets\EspressoWidget;
  */
 class EEW_Upcoming_Events extends EspressoWidget
 {
-
     /**
      * @var string
      */
@@ -277,7 +277,7 @@ class EEW_Upcoming_Events extends EspressoWidget
     public function update($new_instance, $old_instance)
     {
         $instance                    = $old_instance;
-        $instance['title']           = ! empty($new_instance['title']) ? strip_tags($new_instance['title']) : '';
+        $instance['title']           = ! empty($new_instance['title']) ? strip_tags((string) $new_instance['title']) : '';
         $instance['category_name']   = $new_instance['category_name'];
         $instance['show_expired']    = $new_instance['show_expired'];
         $instance['limit']           = $new_instance['limit'];
@@ -324,14 +324,14 @@ class EEW_Upcoming_Events extends EspressoWidget
                 $title = $this->widgetTitle();
 
                 // Before widget (defined by themes).
-                echo $before_widget;
+                echo wp_kses($before_widget, AllowedTags::getAllowedTags());
                 // Display the widget title if one was input (before and after defined by themes).
                 if (! empty($title)) {
-                    echo $before_title . $title . $after_title;
+                    echo wp_kses($before_title . $title . $after_title, AllowedTags::getAllowedTags());
                 }
-                echo $this->widgetContent($post);
+                echo wp_kses($this->widgetContent($post), AllowedTags::getWithFormTags());
                 // After widget (defined by themes).
-                echo $after_widget;
+                echo wp_kses($after_widget, AllowedTags::getAllowedTags());
             }
         }
     }
@@ -515,7 +515,7 @@ class EEW_Upcoming_Events extends EspressoWidget
             if ($event instanceof EE_Event && (! is_single() || $post->ID != $event->ID())) {
                 $event_url = $this->eventUrl($event);
                 $list_items .= '
-                <li id="ee-upcoming-events-widget-li-' . esc_attr($event->ID()) . '" 
+                <li id="ee-upcoming-events-widget-li-' . absint($event->ID()) . '" 
                     class="ee-upcoming-events-widget-li"
                 >
                     <h5 class="ee-upcoming-events-widget-title-h5">
@@ -660,7 +660,7 @@ class EEW_Upcoming_Events extends EspressoWidget
         }
 
         if ($this->show_desc) {
-            global $allowedtags;
+            $allowedtags = AllowedTags::getAllowedTags();
             $desc    = $event->short_description(25);
             $content .= $desc ? '<p style="margin-top: .5em">' . wp_kses($desc, $allowedtags) . '</p>' : '';
         }

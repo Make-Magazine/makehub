@@ -14,7 +14,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  */
 class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
 {
-
     /**
      * This property is just used to hold the status of whether an event is currently being
      * created (true) or edited (false)
@@ -443,11 +442,10 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
     protected function _update_tickets($event, $saved_datetimes, $data)
     {
         $new_tkt = null;
-        $new_default = null;
         // stripslashes because WP filtered the $_POST ($data) array to add slashes
         $data = stripslashes_deep($data);
-        $timezone = isset($data['timezone_string']) ? $data['timezone_string'] : null;
-        $saved_tickets = $datetimes_on_existing = array();
+        $timezone = $data['timezone_string'] ?? null;
+        $saved_tickets = array();
         $old_tickets = isset($data['ticket_IDs']) ? explode(',', $data['ticket_IDs']) : array();
         if (empty($data['edit_tickets']) || ! is_array($data['edit_tickets'])) {
             throw new InvalidArgumentException(
@@ -486,9 +484,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             $ticket_price = $ticket_price === 0 && $base_price !== 0
                 ? $base_price
                 : $ticket_price;
-            $base_price_id = isset($tkt['TKT_base_price_ID'])
-                ? $tkt['TKT_base_price_ID']
-                : 0;
+            $base_price_id = $tkt['TKT_base_price_ID'] ?? 0;
             $price_rows = is_array($data['edit_prices']) && isset($data['edit_prices'][ $row ])
                 ? $data['edit_prices'][ $row ]
                 : array();
@@ -527,7 +523,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
                 'TKT_min'         => empty($tkt['TKT_min']) ? 0 : $tkt['TKT_min'],
                 'TKT_max'         => empty($tkt['TKT_max']) ? EE_INF : $tkt['TKT_max'],
                 'TKT_row'         => $row,
-                'TKT_order'       => isset($tkt['TKT_order']) ? $tkt['TKT_order'] : 0,
+                'TKT_order'       => $tkt['TKT_order'] ?? 0,
                 'TKT_taxable'     => ! empty($tkt['TKT_taxable']) ? 1 : 0,
                 'TKT_required'    => ! empty($tkt['TKT_required']) ? 1 : 0,
                 'TKT_price'       => $ticket_price,
@@ -873,7 +869,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
      * @throws EE_Error
      */
     protected function _add_prices_to_ticket(
-        $prices = array(),
+        array $prices,
         EE_Ticket $ticket,
         $new_prices = false,
         $base_price = false,
@@ -1244,12 +1240,16 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             'reg_list_url'         => $default || ! $datetime->event() instanceof \EE_Event
                 ? ''
                 : EE_Admin_Page::add_query_args_and_nonce(
-                    array('event_id' => $datetime->event()->ID(), 'datetime_id' => $datetime->ID()),
+                    array(
+                        'event_id' => $datetime->event()->ID(),
+                        'datetime_id' => $datetime->ID(),
+                        'use_filters' => true
+                    ),
                     REG_ADMIN_URL
                 ),
         );
         $template_args['show_trash'] = count($all_datetimes) === 1 && $template_args['trash_icon'] !== 'ee-lock-icon'
-            ? ' style="display:none"'
+            ? 'display:none'
             : '';
         // allow filtering of template args at this point.
         $template_args = apply_filters(
@@ -1274,7 +1274,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
      * @param EE_Datetime $datetime
      * @param array       $datetime_tickets
      * @param array       $all_tickets
-     * @param bool        $default
+     * @param bool       $default
      * @return mixed
      * @throws DomainException
      * @throws EE_Error
@@ -1284,14 +1284,14 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
         $datetime,
         $datetime_tickets = array(),
         $all_tickets = array(),
-        $default
+        $default = false
     ) {
         $template_args = array(
             'dtt_row'                           => $default ? 'DTTNUM' : $datetime_row,
             'event_datetimes_name'              => $default ? 'DTTNAMEATTR' : 'edit_event_datetimes',
             'DTT_description'                   => $default ? '' : $datetime->get_f('DTT_description'),
             'datetime_tickets_list'             => $default ? '<li class="hidden"></li>' : '',
-            'show_tickets_row'                  => ' style="display:none;"',
+            'show_tickets_row'                  => 'display:none;',
             'add_new_datetime_ticket_help_link' => EEH_Template::get_help_tab_link(
                 'add_new_ticket_via_datetime',
                 $this->_adminpage_obj->page_slug,
@@ -1353,7 +1353,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
         $datetime,
         $ticket,
         $datetime_tickets = array(),
-        $default
+        $default = false
     ) {
         $dtt_tkts = $datetime instanceof EE_Datetime && isset($datetime_tickets[ $datetime->ID() ])
             ? $datetime_tickets[ $datetime->ID() ]
@@ -1368,7 +1368,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
                 ? 'TICKETNUM'
                 : $ticket_row,
             'datetime_ticket_checked' => in_array($display_row, $dtt_tkts, true)
-                ? ' checked="checked"'
+                ? ' checked'
                 : '',
             'ticket_selected'         => in_array($display_row, $dtt_tkts, true)
                 ? ' ticket-selected'
@@ -1468,7 +1468,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             $TKT_taxable = '';
         } else {
             $TKT_taxable = $ticket->taxable()
-                ? ' checked="checked"'
+                ? 'checked'
                 : '';
         }
         if ($default) {
@@ -1491,7 +1491,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             'TKT_order'                     => $default ? 'TICKETNUM' : $ticket_row,
             // on initial page load this will always be the correct order.
             'tkt_status_class'              => $ticket_status_class,
-            'display_edit_tkt_row'          => ' style="display:none;"',
+            'display_edit_tkt_row'          => 'display:none;',
             'edit_tkt_expanded'             => '',
             'edit_tickets_name'             => $default ? 'TICKETNAMEATTR' : 'edit_tickets',
             'TKT_name'                      => $default ? '' : $ticket->get_f('TKT_name'),
@@ -1550,11 +1550,11 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             'TKT_base_price_ID'             => $default || ! $base_price instanceof EE_Price ? 0 : $base_price->ID(),
             'show_price_modifier'           => count($prices) > 1 || ($default && $count_price_mods > 0)
                 ? ''
-                : ' style="display:none;"',
+                : 'display:none;',
             'show_price_mod_button'         => count($prices) > 1
                                                || ($default && $count_price_mods > 0)
                                                || (! $default && $ticket->deleted())
-                ? ' style="display:none;"'
+                ? 'display:none;'
                 : '',
             'total_price_rows'              => count($prices) > 1 ? count($prices) : 1,
             'ticket_datetimes_list'         => $default ? '<li class="hidden"></li>' : '',
@@ -1565,7 +1565,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             'TKT_taxable'                   => $TKT_taxable,
             'display_subtotal'              => $ticket instanceof EE_Ticket && $ticket->taxable()
                 ? ''
-                : ' style="display:none"',
+                : 'display:none;',
             'price_currency_symbol'         => EE_Registry::instance()->CFG->currency->sign,
             'TKT_subtotal_amount_display'   => EEH_Template::format_currency(
                 $ticket_subtotal,
@@ -1588,7 +1588,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
                 : 'clone-icon ee-icon ee-icon-clone clickable',
         );
         $template_args['trash_hidden'] = count($all_tickets) === 1 && $template_args['trash_icon'] !== 'ee-lock-icon'
-            ? ' style="display:none"'
+            ? 'display:none'
             : '';
         // handle rows that should NOT be empty
         if (empty($template_args['TKT_start_date'])) {
@@ -1702,7 +1702,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             $template_args = array(
                 'display_tax'       => ! empty($ticket) && $ticket->get('TKT_taxable')
                     ? ''
-                    : ' style="display:none;"',
+                    : 'display:none;',
                 'tax_id'            => $tax->ID(),
                 'tkt_row'           => $ticket_row,
                 'tax_label'         => $tax->get('PRC_name'),
@@ -1797,21 +1797,21 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
             'price_currency_symbol' => EE_Registry::instance()->CFG->currency->sign,
             'show_plus_or_minus'    => $default && empty($price)
                 ? ''
-                : ' style="display:none;"',
+                : 'display:none;',
             'show_plus'             => ($default && empty($price)) || ($price->is_discount() || $price->is_base_price())
-                ? ' style="display:none;"'
+                ? 'display:none;'
                 : '',
             'show_minus'            => ($default && empty($price)) || ! $price->is_discount()
-                ? ' style="display:none;"'
+                ? 'display:none;'
                 : '',
             'show_currency_symbol'  => ($default && empty($price)) || $price->is_percent()
-                ? ' style="display:none"'
+                ? 'display:none'
                 : '',
             'PRC_amount'            => $default && empty($price)
                 ? 0
                 : $price->get_pretty('PRC_amount', 'localized_float'),
             'show_percentage'       => ($default && empty($price)) || ! $price->is_percent()
-                ? ' style="display:none;"'
+                ? 'display:none;'
                 : '',
             'show_trash_icon'       => $show_trash
                 ? ''
@@ -1937,7 +1937,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
     ) {
         $select_name = $default && ! $price instanceof EE_Price
             ? 'edit_prices[TICKETNUM][PRICENUM][PRT_ID]'
-            : 'edit_prices[' . $ticket_row . '][' . $price_row . '][PRT_ID]';
+            : 'edit_prices[' . esc_attr($ticket_row) . '][' . esc_attr($price_row) . '][PRT_ID]';
         /** @var EEM_Price_Type $price_type_model */
         $price_type_model = EE_Registry::instance()->load_model('Price_Type');
         $price_types = $price_type_model->get_all(array(
@@ -2032,7 +2032,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
         $datetime,
         $ticket,
         $ticket_datetimes = array(),
-        $default
+        $default = false
     ) {
         $tkt_datetimes = $ticket instanceof EE_Ticket && isset($ticket_datetimes[ $ticket->ID() ])
             ? $ticket_datetimes[ $ticket->ID() ]
@@ -2048,7 +2048,7 @@ class espresso_events_Pricing_Hooks extends EE_Admin_Hooks
                 ? ' ticket-selected'
                 : '',
             'ticket_datetime_checked'  => in_array($datetime_row, $tkt_datetimes, true)
-                ? ' checked="checked"'
+                ? ' checked'
                 : '',
             'DTT_name'                 => $default && empty($datetime)
                 ? 'DTTNAME'

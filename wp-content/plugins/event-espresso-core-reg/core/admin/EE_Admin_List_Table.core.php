@@ -1,5 +1,7 @@
 <?php
 
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 if (! class_exists('WP_List_Table')) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
@@ -19,6 +21,23 @@ if (! class_exists('WP_List_Table')) {
  */
 abstract class EE_Admin_List_Table extends WP_List_Table
 {
+    const ACTION_COPY    = 'duplicate';
+
+    const ACTION_DELETE  = 'delete';
+
+    const ACTION_EDIT    = 'edit';
+
+    const ACTION_RESTORE = 'restore';
+
+    const ACTION_TRASH   = 'trash';
+
+    protected static $actions = [
+        self::ACTION_COPY,
+        self::ACTION_DELETE,
+        self::ACTION_EDIT,
+        self::ACTION_RESTORE,
+        self::ACTION_TRASH,
+    ];
 
     /**
      * holds the data that will be processed for the table
@@ -467,19 +486,28 @@ abstract class EE_Admin_List_Table extends WP_List_Table
         if (empty($filters)) {
             return;
         }
+        $use_filters = isset($this->_req_data['use_filters'])
+                       && filter_var($this->_req_data['use_filters'], FILTER_VALIDATE_BOOLEAN)
+            ? 'yes'
+            : 'no';
+
+        echo '<div class="ee-list-table-filters actions alignleft">';
         foreach ($filters as $filter) {
-            echo $filter; // already escaped
+            echo wp_kses($filter, AllowedTags::getWithFormTags());
         }
         // add filter button at end
-        echo '<input type="submit" class="button-secondary" value="'
+        echo '<input type="submit" class="ee-list-table-filter-submit button button--secondary" value="'
              . esc_html__('Filter', 'event_espresso')
              . '" id="post-query-submit" />';
+        echo '<input type="hidden" id="ee-list-table-use-filters" name="use_filters" value="' . $use_filters . '"/>';
+
         // add reset filters button at end
-        echo '<a class="button button-secondary"  href="'
+        echo '<a class="button button--secondary"  href="'
              . esc_url_raw($this->_admin_page->get_current_page_view_url())
              . '" style="display:inline-block">'
              . esc_html__('Reset Filters', 'event_espresso')
              . '</a>';
+        echo '</div>';
     }
 
 
@@ -749,7 +777,7 @@ abstract class EE_Admin_List_Table extends WP_List_Table
                     $item,
                     $this
                 );
-                echo $this->handle_row_actions($item, $column_name, $primary);
+                echo wp_kses($this->handle_row_actions($item, $column_name, $primary), AllowedTags::getWithFormTags());
                 echo "</td>";
             } else {
                 echo "<td $attributes>"; // already escaped
@@ -760,7 +788,7 @@ abstract class EE_Admin_List_Table extends WP_List_Table
                     $column_name,
                     $this
                 );
-                echo $this->handle_row_actions($item, $column_name, $primary);
+                echo wp_kses($this->handle_row_actions($item, $column_name, $primary), AllowedTags::getWithFormTags());
                 echo "</td>";
             }
         }
@@ -778,19 +806,19 @@ abstract class EE_Admin_List_Table extends WP_List_Table
     {
         if ($which === 'top') {
             $this->_filters();
-            echo $this->_get_hidden_fields(); // already escaped
+            echo wp_kses($this->_get_hidden_fields(), AllowedTags::getWithFormTags());
         } else {
             echo '<div class="list-table-bottom-buttons alignleft actions">';
             foreach ($this->_bottom_buttons as $type => $action) {
                 $route         = isset($action['route']) ? $action['route'] : '';
                 $extra_request = isset($action['extra_request']) ? $action['extra_request'] : '';
                 // already escaped
-                echo $this->_admin_page->get_action_link_or_button(
+                echo wp_kses($this->_admin_page->get_action_link_or_button(
                     $route,
                     $type,
                     $extra_request,
-                    'button button-secondary'
-                );
+                    'button button--secondary'
+                ), AllowedTags::getWithFormTags());
             }
             do_action('AHEE__EE_Admin_List_Table__extra_tablenav__after_bottom_buttons', $this, $this->_screen);
             echo '</div>';

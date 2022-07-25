@@ -1,10 +1,14 @@
 <?php
+
 /**
  * @var EE_Message_Template_Group $MTP
  * @var string                    $context
  * @var string                    $event_name
  * @var string[]                  $template_fields
  */
+
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 ?>
 
 <div id="admin-primary-mbox-dv" class="admin-primary-mbox-dv">
@@ -47,7 +51,7 @@
                           id="ee-msg-non-global-fields-MTP_description"
                           name="ee_msg_non_global_fields[MTP_description]"
                 >
-                    <?php echo esc_html($MTP->description()); ?>
+                    <?php echo esc_textarea($MTP->description()); ?>
                 </textarea>
             </p>
         </div>
@@ -63,7 +67,7 @@
     <!-- we need to loop through the template_fields so we know our structure -->
     <?php
     if (isset($template_fields) && ! empty($template_fields) && ! is_wp_error($template_fields)) {
-        echo $template_fields; // already escaped
+        echo wp_kses($template_fields, AllowedTags::getWithFullTags());
     } else {
         ?>
         <p>

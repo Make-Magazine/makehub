@@ -8,6 +8,8 @@ use EventEspresso\core\exceptions\InvalidFormSubmissionException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\domain\services\attendee\forms\AttendeeContactDetailsMetaboxFormHandler;
 use EventEspresso\core\services\request\CurrentPage;
+use EventEspresso\core\services\request\DataType;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * Registrations_Admin_Page class
@@ -18,7 +20,6 @@ use EventEspresso\core\services\request\CurrentPage;
  */
 class Registrations_Admin_Page extends EE_Admin_Page_CPT
 {
-
     /**
      * @var EE_Registration
      */
@@ -225,9 +226,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                 'add-registrant'      => esc_html__('Add New Registration', 'event_espresso'),
                 'add-attendee'        => esc_html__('Add Contact', 'event_espresso'),
                 'edit'                => esc_html__('Edit Contact', 'event_espresso'),
-                'report'              => esc_html__('Event Registrations CSV Report', 'event_espresso'),
-                'report_all'          => esc_html__('All Registrations CSV Report', 'event_espresso'),
-                'report_filtered'     => esc_html__('Filtered CSV Report', 'event_espresso'),
+                'csv_reg_report'      => esc_html__('Registrations CSV Report', 'event_espresso'),
                 'contact_list_report' => esc_html__('Contact List Report', 'event_espresso'),
                 'contact_list_export' => esc_html__('Export Data', 'event_espresso'),
             ],
@@ -257,7 +256,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
         $ATT_ID             = $this->request->getRequestParam('post', $ATT_ID, 'int');
         $this->_page_routes = [
             'default'                             => [
-                'func'       => '_registrations_overview_list_table',
+                'func'       => [$this, '_registrations_overview_list_table'],
                 'capability' => 'ee_read_registrations',
             ],
             'view_registration'                   => [
@@ -519,7 +518,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
                 'capability' => 'ee_send_message',
             ],
             'registrations_report'                => [
-                'func'       => '_registrations_report',
+                'func'       => [$this, '_registrations_report'],
                 'noheader'   => true,
                 'capability' => 'ee_read_registrations',
             ],
@@ -1255,7 +1254,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
         if ($today) {
             $this->request->setRequestParam('status', 'today');
         }
-        $query_params = $this->_get_registration_query_parameters($this->request->requestParams(), $per_page, $count);
+        $query_params = $this->_get_registration_query_parameters([], $per_page, $count);
         /**
          * Override the default groupby added by EEM_Base so that sorts with multiple order bys work as expected
          *
@@ -1507,7 +1506,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
         );
         $output                 .= $change_reg_status_form->get_html();
         $output                 .= $change_reg_status_form->form_close();
-        echo $output; // already escaped
+        echo wp_kses($output, AllowedTags::getWithFormTags());
     }
 
 
@@ -3251,23 +3250,18 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
             ? $this->request->getRequestParam('EVT_ID', 0, 'int')
             : null;
         if (! defined('EE_USE_OLD_CSV_REPORT_CLASS')) {
-            $request_params = $this->request->requestParams();
+            $filters = $this->request->getRequestParam('filters', [], DataType::STRING, true);
+            $report_params  = $this->$method_name_for_getting_query_params($filters);
             wp_redirect(
                 EE_Admin_Page::add_query_args_and_nonce(
                     [
                         'page'        => 'espresso_batch',
                         'batch'       => 'file',
                         'EVT_ID'      => $EVT_ID,
-                        'filters'     => urlencode(
-                            serialize(
-                                $this->$method_name_for_getting_query_params(
-                                    EEH_Array::is_set($request_params, 'filters', [])
-                                )
-                            )
-                        ),
-                        'use_filters' => EEH_Array::is_set($request_params, 'use_filters', false),
                         'job_handler' => urlencode('EventEspressoBatchRequest\JobHandlers\RegistrationsReport'),
-                        'return_url'  => urlencode($this->request->getRequestParam('return_url', '', 'url')),
+                        'return_url'  => urlencode($this->request->getRequestParam('return_url', '', DataType::URL)),
+                        'filters'     => urlencode(serialize($report_params)),
+                        'use_filters' => $this->request->getRequestParam('use_filters', false, DataType::BOOL)
                     ]
                 )
             );
@@ -3405,7 +3399,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
      * Callback invoked by parent EE_Admin_CPT class hooked in on `save_post` wp hook.
      *
      * @param int     $post_id
-     * @param WP_POST $post
+     * @param WP_Post $post
      * @throws DomainException
      * @throws EE_Error
      * @throws InvalidArgumentException
@@ -3575,7 +3569,7 @@ class Registrations_Admin_Page extends EE_Admin_Page_CPT
         // get attendee object ( should already have it )
         $form = $this->getAttendeeContactDetailsMetaboxFormHandler($this->_cpt_model_obj);
         $form->enqueueStylesAndScripts();
-        echo $form->display(); // already escaped
+        echo wp_kses($form->display(), AllowedTags::getWithFormTags());
     }
 
 

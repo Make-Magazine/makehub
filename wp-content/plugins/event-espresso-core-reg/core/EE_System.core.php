@@ -26,7 +26,6 @@ use EventEspresso\core\services\request\RequestInterface;
  */
 final class EE_System implements ResettableInterface
 {
-
     /**
      * indicates this is a 'normal' request. Ie, not activation, nor upgrade, nor activation.
      * So examples of this would be a normal GET request on the frontend or backend, or a POST, etc
@@ -293,6 +292,8 @@ final class EE_System implements ResettableInterface
      * create and cache the CommandBus, and also add middleware
      * The CapChecker middleware requires the use of EE_Capabilities
      * which is why we need to load the CommandBus after Caps are set up
+     * CommandBus middleware operate FIFO - First In First Out
+     * so LocateMovedCommands will run first in order to return any new commands
      *
      * @return void
      * @throws EE_Error
@@ -306,6 +307,7 @@ final class EE_System implements ResettableInterface
                 apply_filters(
                     'FHEE__EE_Load_Espresso_Core__handle_request__CommandBus_middleware',
                     array(
+                        $this->loader->getShared('EventEspresso\core\services\commands\middleware\LocateMovedCommands'),
                         $this->loader->getShared('EventEspresso\core\services\commands\middleware\CapChecker'),
                         $this->loader->getShared('EventEspresso\core\services\commands\middleware\AddActionHook'),
                     )
@@ -1203,6 +1205,7 @@ final class EE_System implements ResettableInterface
             || $this->request->isWordPressApi()
         ) {
             try {
+                $this->loader->getShared('EventEspresso\core\services\assets\I18nRegistry', [[]]);
                 $this->loader->getShared('EventEspresso\core\services\assets\Registry');
                 $this->loader->getShared('EventEspresso\core\domain\services\assets\CoreAssetManager');
                 if ($this->canLoadBlocks()) {
@@ -1239,6 +1242,22 @@ final class EE_System implements ResettableInterface
     public function initialize()
     {
         do_action('AHEE__EE_System__initialize');
+        add_filter(
+            'safe_style_css',
+            function ($styles) {
+                $styles[] = 'display';
+                $styles[] = 'visibility';
+                $styles[] = 'position';
+                $styles[] = 'top';
+                $styles[] = 'right';
+                $styles[] = 'bottom';
+                $styles[] = 'left';
+                $styles[] = 'resize';
+                $styles[] = 'max-width';
+                $styles[] = 'max-height';
+                return $styles;
+            }
+        );
     }
 
 

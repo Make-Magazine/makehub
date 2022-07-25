@@ -30,7 +30,6 @@ use InvalidArgumentException;
  */
 class PersistentAdminNoticeManager
 {
-
     const WP_OPTION_KEY = 'ee_pers_admin_notices';
 
     /**
@@ -60,13 +59,16 @@ class PersistentAdminNoticeManager
     /**
      * PersistentAdminNoticeManager constructor
      *
-     * @param string              $return_url where to  redirect to after dismissing notices
      * @param CapabilitiesChecker $capabilities_checker
-     * @param RequestInterface          $request
+     * @param RequestInterface    $request
+     * @param string              $return_url where to  redirect to after dismissing notices
      * @throws InvalidDataTypeException
      */
-    public function __construct($return_url = '', CapabilitiesChecker $capabilities_checker, RequestInterface $request)
-    {
+    public function __construct(
+        CapabilitiesChecker $capabilities_checker,
+        RequestInterface $request,
+        string $return_url = ''
+    ) {
         $this->setReturnUrl($return_url);
         $this->capabilities_checker = $capabilities_checker;
         $this->request = $request;

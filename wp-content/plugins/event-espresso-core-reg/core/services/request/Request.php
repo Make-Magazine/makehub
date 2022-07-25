@@ -16,7 +16,6 @@ use EventEspresso\core\interfaces\ReservedInstanceInterface;
  */
 class Request implements InterminableInterface, RequestInterface, ReservedInstanceInterface
 {
-
     /**
      * $_COOKIE parameters
      *
@@ -62,7 +61,7 @@ class Request implements InterminableInterface, RequestInterface, ReservedInstan
     ) {
         $this->cookies = ! empty($cookies)
             ? $cookies
-            : filter_input_array(INPUT_COOKIE, FILTER_SANITIZE_STRING);
+            : filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW);
         $this->files          = ! empty($files) ? $files : $_FILES;
         $this->request_params = $request_params;
         $this->server_params  = $server_params;
@@ -268,6 +267,18 @@ class Request implements InterminableInterface, RequestInterface, ReservedInstan
 
 
     /**
+     * remove param
+     *
+     * @param      $key
+     * @param bool $unset_from_global_too
+     */
+    public function unSetServerParam($key, $unset_from_global_too = false)
+    {
+        $this->server_params->unSetServerParam($key, $unset_from_global_too);
+    }
+
+
+    /**
      * remove params
      *
      * @param array $keys
@@ -298,7 +309,7 @@ class Request implements InterminableInterface, RequestInterface, ReservedInstan
      */
     public function requestUri($relativeToWpRoot = false)
     {
-        return $this->server_params->requestUri();
+        return $this->server_params->requestUri($relativeToWpRoot);
     }
 
 

@@ -9,30 +9,32 @@
  * @subpackage Admin, Messages
  */
 
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 /**
  * Template args found in this template.
  *
- * $form_action
- * $form_route
- * $form_nonce_name
- * $form_nonce
- * $redirect_back_to
- * $ajax_nonce
- * $template_selector
- * $shortcodes
- * $id_type
+ * @var string $form_action
+ * @var string $form_route
+ * @var string $form_nonce_name
+ * @var string $form_nonce
+ * @var string $redirect_back_to
+ * @var string $ajax_nonce
+ * @var string $template_selector
+ * @var array $shortcodes
+ * @var string $id_type
  */
 ?>
 <div id="ee-batch-message-send-form" style="display:none;">
     <div class="ee-batch-message-send-form">
-        <form id="newsletter-send-form" method="POST" action="<?php echo $form_action; ?>">
+        <form id="newsletter-send-form" method="POST" action="<?php echo esc_url_raw($form_action); ?>">
             <input type="hidden" name="page" value="espresso_registrations">
-            <input id="newsletter_action" type="hidden" name="action" value="<?php echo $form_route; ?>">
-            <input type="hidden" name="<?php echo $form_nonce_name; ?>" value="<?php echo $form_nonce; ?>">
-            <input type="hidden" name="redirect_back_to" value="<?php echo $redirect_back_to; ?>">
+            <input id="newsletter_action" type="hidden" name="action" value="<?php echo esc_attr($form_route); ?>">
+            <input type="hidden" name="<?php echo esc_attr($form_nonce_name); ?>" value="<?php echo esc_attr($form_nonce); ?>">
+            <input type="hidden" name="redirect_back_to" value="<?php echo esc_attr($redirect_back_to); ?>">
             <input type="hidden" id="get_newsletter_form_content_nonce" name="get_newsletter_form_content_nonce"
-                   value="<?php echo $ajax_nonce; ?>">
-            <input type="hidden" name="batch_message[id_type]" value="<?php echo $id_type; ?>">
+                   value="<?php echo esc_attr($ajax_nonce); ?>">
+            <input type="hidden" name="batch_message[id_type]" value="<?php echo esc_attr($id_type); ?>">
             <input id="newsletter-batch-ids" type="hidden" name="batch_message[ids]" value="">
             <h3 class="newsletter-send-form-title"><?php
                 printf(
@@ -40,7 +42,7 @@
                     '[NUMPEOPLE]'
                 ); ?></h3>
             <label for="batch-message-template-selector"><?php esc_html_e('Select Template:', 'event_espresso'); ?></label>
-            <?php echo $template_selector; ?>
+            <?php echo wp_kses($template_selector, AllowedTags::getWithFormTags()); ?>
             <div class="batch-message-edit-fields" style="display:none;">
                 <section>
                     <label for="batch-message-from"><?php esc_html_e('From:', 'event_espresso'); ?></label>
@@ -49,7 +51,7 @@
                     <div id="shortcode-container-from" class="shortcodes-info-container ee_shortcode_chooser_container"
                          style="display:none">
                         <p><?php esc_html_e('The following shortcodes can be used in the from field:', 'event_espresso'); ?></p>
-                        <p><?php echo $shortcodes['From']; ?></p>
+                        <p><?php echo wp_kses($shortcodes['From'], AllowedTags::getAllowedTags()); ?></p>
                     </div>
                     <input type="text" name="batch_message[from]" id="batch-message-from" class="batch-message-input">
                 </section>
@@ -64,7 +66,7 @@
                                 'The following shortcodes can be used in the subject field:',
                                 'event_espresso'
                             ); ?></p>
-                        <p><?php echo $shortcodes['Subject']; ?></p>
+                        <p><?php echo wp_kses($shortcodes['Subject'], AllowedTags::getAllowedTags()); ?></p>
                     </div>
                     <input type="text" name="batch_message[subject]" id="batch-message-subject"
                            class="batch-message-input">
@@ -80,7 +82,7 @@
                                 'The following shortcodes can be used in the content area:',
                                 'event_espresso'
                             ); ?></p>
-                        <p><?php echo $shortcodes['[NEWSLETTER_CONTENT]']; ?></p>
+                        <p><?php echo wp_kses($shortcodes['[NEWSLETTER_CONTENT]'], AllowedTags::getAllowedTags()); ?></p>
                     </div>
                     <textarea name="batch_message[content]" id="batch-message-content"
                               class="batch-message-textarea"></textarea>

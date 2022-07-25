@@ -15,7 +15,6 @@ use EventEspresso\core\services\orm\tree_traversal\NodeGroupDao;
  */
 class Events_Admin_Page extends EE_Admin_Page_CPT
 {
-
     /**
      * This will hold the event object for event_details screen.
      *
@@ -988,7 +987,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
      * @access protected
      * @abstract
      * @param string $post_id The ID of the cpt that was saved (so you can link relationally)
-     * @param object $post    The post object of the cpt that was saved.
+     * @param WP_Post $post    The post object of the cpt that was saved.
      * @return void
      * @throws EE_Error
      * @throws ReflectionException
@@ -1380,11 +1379,14 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
             $datetime->_add_relation_to($ticket, 'Ticket');
             $saved_tickets[ $ticket->ID() ] = $ticket;
             // add prices to ticket
-            $this->_add_prices_to_ticket($data['edit_prices'][ $row ], $ticket, $update_prices);
+            $prices_data = isset($data['edit_prices'][ $row ]) && is_array($data['edit_prices'][ $row ])
+                ? $data['edit_prices'][ $row ]
+                : [];
+            $this->_add_prices_to_ticket($prices_data, $ticket, $update_prices);
         }
         // however now we need to handle permanently deleting tickets via the ui.
-        //  Keep in mind that the ui does not allow deleting/archiving tickets that have ticket sold.
-        //  However, it does allow for deleting tickets that have no tickets sold,
+        // Keep in mind that the ui does not allow deleting/archiving tickets that have ticket sold.
+        // However, it does allow for deleting tickets that have no tickets sold,
         // in which case we want to get rid of permanently because there is no need to save in db.
         $old_tickets     = isset($old_tickets[0]) && $old_tickets[0] == '' ? [] : $old_tickets;
         $tickets_removed = array_diff($old_tickets, array_keys($saved_tickets));
@@ -1517,6 +1519,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                     'action'      => 'default',
                     'event_id'    => $this->_cpt_model_obj->ID(),
                     '_reg_status' => EEM_Registration::status_id_approved,
+                    'use_filters' => true,
                 ],
                 REG_ADMIN_URL
             ),
@@ -1525,6 +1528,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                     'action'      => 'default',
                     'event_id'    => $this->_cpt_model_obj->ID(),
                     '_reg_status' => EEM_Registration::status_id_not_approved,
+                    'use_filters' => true,
                 ],
                 REG_ADMIN_URL
             ),
@@ -1533,6 +1537,7 @@ class Events_Admin_Page extends EE_Admin_Page_CPT
                     'action'      => 'default',
                     'event_id'    => $this->_cpt_model_obj->ID(),
                     '_reg_status' => EEM_Registration::status_id_pending_payment,
+                    'use_filters' => true,
                 ],
                 REG_ADMIN_URL
             ),

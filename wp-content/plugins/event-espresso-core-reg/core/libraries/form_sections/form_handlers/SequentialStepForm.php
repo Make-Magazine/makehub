@@ -18,7 +18,6 @@ use InvalidArgumentException;
  */
 abstract class SequentialStepForm extends FormHandler implements SequentialStepFormInterface
 {
-
     const REDIRECT_TO_NEXT_STEP    = 'redirect_to_next_step';
 
     const REDIRECT_TO_CURRENT_STEP = 'redirect_to_current_step';
@@ -66,20 +65,16 @@ abstract class SequentialStepForm extends FormHandler implements SequentialStepF
     private $redirect_to = SequentialStepForm::REDIRECT_TO_CURRENT_STEP;
 
 
-
     /**
      * SequentialStepForm constructor
      *
-     * @param int         $order
-     * @param string      $form_name
-     * @param string      $admin_name
-     * @param string      $slug
-     * @param string      $form_action
-     * @param string      $form_config
-     * @param EE_Registry $registry
-     * @throws InvalidArgumentException
-     * @throws InvalidDataTypeException
-     * @throws DomainException
+     * @param int              $order
+     * @param string           $form_name
+     * @param string           $admin_name
+     * @param string           $slug
+     * @param string           $form_action
+     * @param string           $form_config
+     * @param EE_Registry|null $registry
      */
     public function __construct(
         $order,
@@ -88,7 +83,7 @@ abstract class SequentialStepForm extends FormHandler implements SequentialStepF
         $slug,
         $form_action = '',
         $form_config = 'add_form_tags_and_submit',
-        EE_Registry $registry
+        EE_Registry $registry = null
     ) {
         $this->setOrder($order);
         parent::__construct($form_name, $admin_name, $slug, $form_action, $form_config, $registry);

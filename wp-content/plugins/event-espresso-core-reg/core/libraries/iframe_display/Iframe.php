@@ -6,6 +6,7 @@ use DomainException;
 use EE_Registry;
 use EE_System;
 use EEH_Template;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * Class Iframe
@@ -17,7 +18,6 @@ use EEH_Template;
  */
 class Iframe
 {
-
     /*
     * HTML for notices and ajax gif
     * @var string $title
@@ -280,7 +280,7 @@ class Iframe
             ! empty($utm_content) ? array('utm_content' => $utm_content) : array()
         );
         EE_System::do_not_cache();
-        echo $this->getTemplate(); // already escaped
+        echo ($this->getTemplate());
         exit;
     }
 

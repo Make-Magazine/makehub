@@ -17,13 +17,13 @@ use EventEspresso\core\services\commands\CommandRequiresCapCheckInterface;
  * Class CreateRegistrationCommand
  * DTO for passing data to a CreateRegistrationCommandHandler
  *
+ * @deprecated 4.9.54
  * @package       Event Espresso
  * @author        Brent Christensen
  * @since         4.9.0
  */
 class CreateRegistrationCommand extends Command implements CommandRequiresCapCheckInterface
 {
-
     /**
      * @var EE_Transaction $transaction
      */

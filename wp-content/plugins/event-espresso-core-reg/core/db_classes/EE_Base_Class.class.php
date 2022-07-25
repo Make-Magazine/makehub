@@ -2,6 +2,7 @@
 
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * EE_Base_Class class
@@ -12,7 +13,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  */
 abstract class EE_Base_Class
 {
-
     /**
      * This is an array of the original properties and values provided during construction
      * of this model object. (keys are model field names, values are their values).
@@ -1254,7 +1254,7 @@ abstract class EE_Base_Class
      */
     public function e($field_name, $extra_cache_ref = null)
     {
-        echo $this->get_pretty($field_name, $extra_cache_ref); // sanitized
+        echo wp_kses($this->get_pretty($field_name, $extra_cache_ref), AllowedTags::getWithFormTags());
     }
 
 
@@ -1578,8 +1578,9 @@ abstract class EE_Base_Class
      * @throws InvalidDataTypeException
      * @throws EE_Error
      */
-    protected function _set_date_time($what = 'T', $datetime_value, $fieldname)
+    protected function _set_date_time($what, $datetime_value, $fieldname)
     {
+        $what  = $what ?: 'T';
         $field = $this->_get_dtt_field_settings($fieldname);
         $field->set_timezone($this->_timezone);
         $field->set_date_format($this->_dt_frmt);
@@ -2751,9 +2752,9 @@ abstract class EE_Base_Class
      *          return $previousReturnValue.$returnString;
      *      }
      * require('EE_Answer.class.php');
-     * $answer= EE_Answer::new_instance(array('REG_ID' => 2,'QST_ID' => 3,'ANS_value' => The answer is 42'));
-     * echo $answer->my_callback('monkeys',100);
-     * //will output "you called my_callback! and passed args:monkeys,100"
+     * echo EE_Answer::new_instance(['REG_ID' => 2,'QST_ID' => 3,'ANS_value' => The answer is 42'])
+     *      ->my_callback('monkeys',100);
+     * // will output "you called my_callback! and passed args:monkeys,100"
      *
      * @param string $methodName name of method which was called on a child of EE_Base_Class, but which
      * @param array  $args       array of original arguments passed to the function

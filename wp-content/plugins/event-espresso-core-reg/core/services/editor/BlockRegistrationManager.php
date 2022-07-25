@@ -31,7 +31,6 @@ use WP_Block_Type;
  */
 class BlockRegistrationManager extends BlockManager
 {
-
     /**
      * @var BlockAssetManagerCollection $block_asset_manager_collection
      */
@@ -92,7 +91,7 @@ class BlockRegistrationManager extends BlockManager
         $this->initializeBlocks();
         add_action('AHEE__EE_System__initialize_last', array($this, 'registerBlocks'));
         add_action('wp_loaded', array($this, 'unloadAssets'));
-        add_filter('block_categories', array($this, 'addEspressoBlockCategories'));
+        add_filter('block_categories_all', array($this, 'addEspressoBlockCategories'));
     }
 
 

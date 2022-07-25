@@ -16,7 +16,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  */
 class EE_Transaction_Shortcodes extends EE_Shortcodes
 {
-
     /**
      * @var EE_Payment_Method $_invoice_pm the invoice payment method for use in invoices etc
      */
@@ -503,7 +502,7 @@ class EE_Transaction_Shortcodes extends EE_Shortcodes
         } else {
             $image_width = $image_size[0];
         }
-        return '<img class="logo screen" src="' . $invoice_logo_url . '" width="' . $image_width . '" alt="logo" />';
+        return '<img class="logo screen" src="' . esc_url_raw($invoice_logo_url) . '" width="' . esc_attr($image_width) . '" alt="logo" />';
     }
 
 
