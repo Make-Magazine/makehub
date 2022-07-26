@@ -116,7 +116,7 @@ get_header();
             <div class="learndash-content-body">
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
 					<div class="project-breadcrumbs">
-						<a href="/projects-search/" class="project-tag">Projects</a>
+						<a href="/project-library/" class="project-tag">Projects</a>
 						<?php
 						if(isset($referrer_params)) {
 							foreach($referrer_params as $param) {
