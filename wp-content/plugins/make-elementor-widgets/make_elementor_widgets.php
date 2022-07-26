@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Make: Elementor Widgets
  * Description: This plugin adds some common Make: dashboard widgets including: Makershed purchases, My Makerspace listings, Facilitator Event listings, Maker Campus tickets, Maker camp projects
- * Version:     1.0.0
+ * Version:     1.2.0
  * Author:      Alicia Williams
  * Text Domain: elementor-make-widget
  *
@@ -151,9 +151,7 @@ function makewidget_rss_output($rss, $settings) {
     );
     $args = $default_args;
     $items = (int) $settings['num_display']; // this is the number of items we show
-    if ($items < 1 || 20 < $items) {
-        $items = 10;
-    }
+
     $show_summary = $settings['show_summary'];
     $show_author = $settings['show_author'];
     $show_date = $settings['show_date'];
@@ -334,7 +332,7 @@ function makewidget_rss_output($rss, $settings) {
 
 add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
 function make_elementor_enqueue_scripts() {
-	$myVersion = '2.3';
+	$myVersion = '2.4';
 	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
 	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }
