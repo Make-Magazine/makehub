@@ -224,9 +224,8 @@ function makewidget_rss_output($rss, $settings) {
 
         //set description
 		if (strpos($settings['rss_url'], 'www.makershed.com')) {
-			$desc = "<p><b>Vendor:</b> " . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'vendor')[0]['data'] . "</p>";
-			$desc .= "<p><b>Type:</b> " . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'type')[0]['data'] . "</p>";
-			$desc .= "<p><b>Price:</b> " . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'variant')[0]['child']["http://jadedpixel.com/-/spec/shopify"]['price'][0]['data'] . "</p>";
+			//$desc = "<p><b>" . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'variant')[0]['child']["http://jadedpixel.com/-/spec/shopify"]['price'][0]['data'] . "</b></p>";
+			$desc = "<a href='" . $link . "' class='universal-btn btn'>Buy Now</a>";
 		} else {
 	        $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
 	        $desc = esc_html(esc_attr(wp_trim_words($desc, 55, ' [&hellip;]')));
@@ -275,6 +274,9 @@ function makewidget_rss_output($rss, $settings) {
 	}
 	if ($summary != '') {
 		$wrapper_classes .= " summary";
+	}
+	if (strpos($settings['rss_url'], 'www.makershed.com')) {
+		$wrapper_classes .= " makershed";
 	}
     echo '<ul class="custom-rss-elementor' . $wrapper_classes . '">';
     foreach ($sortedFeed as $item) {
