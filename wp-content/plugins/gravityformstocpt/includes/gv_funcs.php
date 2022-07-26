@@ -55,7 +55,7 @@ function gv_status_change($entry_id, $statusToUpdate) {
         $post_id = absint( rgar( $post_info, 'post_id' ) ); // Get post ID.
 
         //if this is an update, we need to update the associated post
-        if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){                    
+        if($statusToUpdate == 'statAfterEdit' || $statusToUpdate == 'adminEditNoChange'){
           $form = GFAPI::get_form($entry['form_id']);
           gf_gftocpt()->update_post( $post_id, $feed, $entry, $form );
           if($statusToUpdate = 'adminEditNoChange'){
@@ -71,4 +71,31 @@ function gv_status_change($entry_id, $statusToUpdate) {
       }
 		}
 	}
+}
+
+add_action('gravityview/delete-entry/deleted','gftocpt_delete_entry', 10, 1 );
+add_action('gravityview/delete-entry/trashed','gftocpt_delete_entry', 10, 1 );
+add_action('gform_delete_entry', 'gftocpt_delete_entry', 10, 1 );
+
+//when the entry is deleted, we need to ensure the associated
+function gftocpt_delete_entry($entry_id){
+  //mark entry as unapproved
+  gform_update_meta( $entry_id, GravityView_Entry_Approval::meta_key,
+          GravityView_Entry_Approval_Status::UNAPPROVED);
+
+  // Get post IDs associated with this entry id
+	$created_posts = gform_get_meta( $entry_id, 'gravityformsgftocpt_post_id' );
+
+  //if no posts are found, exit this function
+  if(empty($created_posts)){
+    return;
+  }
+
+  //trash entry
+  // Loop through created posts.
+  foreach ( $created_posts as $post_info ) {
+    $post_id = absint( rgar( $post_info, 'post_id' ) ); // Get post ID.
+    $data = array('ID' => $post_id,'post_status' => 'trash');
+    wp_update_post( $data );
+  }
 }
