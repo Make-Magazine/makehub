@@ -2427,6 +2427,10 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 		} else {
 			$this->_post_author = rgars( $feed, 'meta/postAuthor' );
 		}
+
+		//set user to a contributor so they can see their created post
+		$user = get_user_by( 'ID', $this->_post_author );		
+		$user->add_role( 'contributor' );
 	}
 
 	/**
