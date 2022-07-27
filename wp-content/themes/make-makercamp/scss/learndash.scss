@@ -8,6 +8,11 @@
     }
 }
 
+//hide pagination and participants
+#learndash-course-header, .lms-course-members-list {
+	display: none;
+}
+
 .bb-learndash-banner::before {
 	background: transparent;
 	opacity: 0;
