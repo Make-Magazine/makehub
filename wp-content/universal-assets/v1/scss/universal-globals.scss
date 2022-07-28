@@ -468,16 +468,23 @@ input.cmn-toggle-round:checked + label:after {
     }
 }
 
-.btns-404 {
-	font-size: 24px;
-	font-weight: bold;
+.container-404 {
 	text-align: center;
-	margin-top: 15px;
-	margin-bottom: 25px;
-	a {
-		color: #ea002a;
+	img.makey-404 {
+		max-width: 1000px;
+	}
+	.btns-404 {
+		font-size: 24px;
+		font-weight: bold;
+		text-align: center;
+		margin-top: 15px;
+		margin-bottom: 25px;
+		a {
+			color: #ea002a;
+		}
 	}
 }
+
 
 // don't print urls
 @media print {
