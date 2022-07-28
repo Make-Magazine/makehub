@@ -8,8 +8,8 @@
     }
 }
 
-//hide pagination and participants
-#learndash-course-header, .lms-course-members-list {
+//hide pagination and participants, as well as tag section
+#learndash-course-header, .lms-course-members-list, section.tags {
 	display: none;
 }
 
@@ -122,6 +122,7 @@
 		top: 138px !important;
 		background: #F5F6F7;
 		box-shadow: inset -36px 0 40px -32px rgba(0,0,0,.05);
+		height: 100%;
 	}
 	@media screen and (max-width: 767px) {
 		#learndash-content .lms-topic-sidebar-wrapper {
