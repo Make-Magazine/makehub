@@ -1,5 +1,8 @@
 <?php
+
 // required variables for template:
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 assert($question_group instanceof EE_Question_Group);
 assert(isset($all_questions) && (empty($all_questions) || is_array($all_questions)));// list of unused questions
 foreach ($all_questions as $question_option) {
@@ -12,14 +15,14 @@ foreach ($all_questions as $question_option) {
     <?php
     foreach ($all_questions as $question_ID => $question) {
         /*@var $question EE_Question*/
-        $checked = array_key_exists($question_ID, $question_group->questions()) ? ' checked="checked"' : '';
+        $checked = array_key_exists($question_ID, $question_group->questions()) ? 'checked' : '';
         ?>
         <li>
-            <label for="question-<?php echo $question_ID ?>">
-                <input type="checkbox" name="questions[<?php echo $question_ID; ?>]"
-                       id="question-<?php echo $question_ID; ?>"
-                       value="<?php echo $question_ID; ?>"<?php echo $checked; ?>/>
-                <?php echo $question->display_text() ?>
+            <label for="question-<?php echo absint($question_ID); ?>">
+                <input type="checkbox" name="questions[<?php echo absint($question_ID); ?>]"
+                       id="question-<?php echo absint($question_ID); ?>"
+                       value="<?php echo absint($question_ID); ?>" <?php echo esc_attr($checked); ?>>
+                <?php echo wp_kses($question->display_text(), AllowedTags::getAllowedTags()); ?>
             </label>
         </li>
     <?php } ?>

@@ -33,6 +33,12 @@
 
 ///////////// GROUPS //////////////////
 
+body.groups:not(.admin-bar) {
+	fieldset.group-create-types, fieldset.group-parent {
+		display: none;
+	}
+}
+
 //show hidden groups if you're a member
 #groups-dir-list, .mygroups {
     .hidden {

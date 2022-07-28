@@ -15,8 +15,6 @@ use EventEspresso\core\services\notifications\PersistentAdminNoticeManager;
  */
 class EED_Add_New_State extends EED_Module
 {
-
-
     /**
      * @return EED_Add_New_State|EED_Module
      * @throws EE_Error
@@ -378,7 +376,6 @@ class EED_Add_New_State extends EED_Module
                                 'required'        => false,
                             ]
                         ),
-                        'spacer'                      => new EE_Form_Section_HTML(EEH_HTML::br()),
                         // NEW STATE NAME
                         'new_state_abbrv'             => new EE_Text_Input(
                             [
@@ -402,19 +399,18 @@ class EED_Add_New_State extends EED_Module
                         'add_new_state_submit_button' => new EE_Form_Section_HTML(
                             apply_filters(
                                 'FHEE__EED_Add_New_State__display_add_new_state_micro_form__add_new_state_submit_button',
-                                EEH_HTML::nbsp(3) .
-                                EEH_HTML::link(
+                                EEH_HTML::div(
+                                    EEH_HTML::button(
+                                        esc_html__('ADD', 'event_espresso'),
+                                        'ee-form-add-new-state-submit button button-secondary',
+                                        '',
+                                        'submit-' . $new_state_submit_id,
+                                        '',
+                                        'data-target="' . $new_state_submit_id . '"'
+                                        . ' data-value-field-name="' . $input->valueFieldName() . '"'
+                                    ),
                                     '',
-                                    esc_html__('ADD', 'event_espresso'),
-                                    '',
-                                    'submit-' . $new_state_submit_id,
-                                    'ee-form-add-new-state-submit button button-secondary',
-                                    '',
-                                    'data-target="'
-                                    . $new_state_submit_id
-                                    . '" data-value-field-name="'
-                                    . $input->valueFieldName()
-                                    . '"'
+                                    'ee-form-add-new-state-submit-dv'
                                 )
                             )
                         ),
@@ -422,7 +418,7 @@ class EED_Add_New_State extends EED_Module
                         'add_new_state_extra'         => new EE_Form_Section_HTML(
                             apply_filters(
                                 'FHEE__EED_Add_New_State__display_add_new_state_micro_form__add_new_state_extra',
-                                EEH_HTML::br(2)
+                                EEH_HTML::br()
                                 .
                                 EEH_HTML::div('', '', 'small-text')
                                 .
@@ -567,7 +563,7 @@ class EED_Add_New_State extends EED_Module
      */
     public static function filter_checkout_request_params($request_params)
     {
-        foreach ($request_params as $form_section) {
+        foreach ((array) $request_params as $form_section) {
             if (is_array($form_section)) {
                 EED_Add_New_State::unset_new_state_request_params($form_section);
                 EED_Add_New_State::filter_checkout_request_params($form_section);
@@ -693,21 +689,21 @@ class EED_Add_New_State extends EED_Module
 
 
     /**
-     * @param EE_State[]                            $state_options
-     * @param EE_SPCO_Reg_Step_Attendee_Information $reg_step
-     * @param EE_Registration                       $registration
-     * @param EE_Question                           $question
-     * @param                                       $answer
+     * @param EE_State[]                                 $state_options
+     * @param EE_SPCO_Reg_Step_Attendee_Information|null $reg_step
+     * @param EE_Registration|null                       $registration
+     * @param EE_Question|null                           $question
+     * @param null                                       $answer
      * @return array
      * @throws EE_Error
      * @throws ReflectionException
      */
     public static function inject_new_reg_state_into_options(
         array $state_options,
-        EE_SPCO_Reg_Step_Attendee_Information $reg_step,
-        EE_Registration $registration,
-        EE_Question $question,
-        $answer
+        EE_SPCO_Reg_Step_Attendee_Information $reg_step = null,
+        EE_Registration $registration = null,
+        EE_Question $question = null,
+        $answer = null
     ) {
         if (
             $answer instanceof EE_Answer && $question instanceof EE_Question
@@ -734,26 +730,26 @@ class EED_Add_New_State extends EED_Module
 
 
     /**
-     * @param EE_Country[]                          $country_options
-     * @param EE_SPCO_Reg_Step_Attendee_Information $reg_step
-     * @param EE_Registration                       $registration
-     * @param EE_Question                           $question
-     * @param                                       $answer
+     * @param EE_Country[]                               $country_options
+     * @param EE_SPCO_Reg_Step_Attendee_Information|null $reg_step
+     * @param EE_Registration|null                       $registration
+     * @param EE_Question|null                           $question
+     * @param null                                       $answer
      * @return array
      * @throws EE_Error
      * @throws ReflectionException
      */
     public static function inject_new_reg_country_into_options(
         array $country_options,
-        EE_SPCO_Reg_Step_Attendee_Information $reg_step,
-        EE_Registration $registration,
-        EE_Question $question,
-        $answer
+        EE_SPCO_Reg_Step_Attendee_Information $reg_step = null,
+        EE_Registration $registration = null,
+        EE_Question $question = null,
+        $answer = null
     ) {
         if (
-            $answer instanceof EE_Answer && $question instanceof EE_Question
-            && $question->type()
-               === EEM_Question::QST_type_country
+            $answer instanceof EE_Answer
+            && $question instanceof EE_Question
+            && $question->type() === EEM_Question::QST_type_country
         ) {
             $CNT_ISO = $answer->value();
             if (! empty($CNT_ISO)) {

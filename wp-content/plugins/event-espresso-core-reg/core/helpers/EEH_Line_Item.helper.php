@@ -2,6 +2,7 @@
 
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * EEH_Line_Item
@@ -20,7 +21,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  */
 class EEH_Line_Item
 {
-
     /**
      * Adds a simple item (unrelated to any other model object) to the provided PARENT line item.
      * Does NOT automatically re-calculate the line item totals or update the related transaction.
@@ -1576,7 +1576,7 @@ class EEH_Line_Item
                 $breakdown = '$' . "{$line_item->unit_price()} x {$line_item->quantity()}";
             }
         }
-        echo $line_item->name();
+        echo wp_kses($line_item->name(), AllowedTags::getAllowedTags());
         echo " [ ID:{$line_item->ID()} | qty:{$line_item->quantity()} ] {$line_item->type()} : ";
         echo '$' . (string) $line_item->total();
         if ($breakdown) {

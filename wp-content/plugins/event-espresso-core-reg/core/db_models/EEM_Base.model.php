@@ -35,7 +35,6 @@ use EventEspresso\core\services\loaders\LoaderInterface;
  */
 abstract class EEM_Base extends EE_Base implements ResettableInterface
 {
-
     /**
      * Flag to indicate whether the values provided to EEM_Base have already been prepared
      * by the model object or not (ie, the model object has used the field's _prepare_for_set function on the values).
@@ -5592,9 +5591,8 @@ abstract class EEM_Base extends EE_Base implements ResettableInterface
      *        return $previousReturnValue.$returnString;
      * }
      * require('EEM_Answer.model.php');
-     * $answer=EEM_Answer::instance();
-     * echo $answer->my_callback('monkeys',100);
-     * //will output "you called my_callback! and passed args:monkeys,100"
+     * echo EEM_Answer::instance()->my_callback('monkeys',100);
+     * // will output "you called my_callback! and passed args:monkeys,100"
      *
      * @param string $methodName name of method which was called on a child of EE_TempBase, but which
      * @param array  $args       array of original arguments passed to the function

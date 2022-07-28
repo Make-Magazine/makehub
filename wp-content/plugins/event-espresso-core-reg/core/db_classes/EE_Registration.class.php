@@ -5,6 +5,7 @@ use EventEspresso\core\exceptions\EntityNotFoundException;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\exceptions\UnexpectedEntityException;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * EE_Registration class
@@ -15,8 +16,6 @@ use EventEspresso\core\exceptions\UnexpectedEntityException;
  */
 class EE_Registration extends EE_Soft_Delete_Base_Class implements EEI_Registration, EEI_Admin_Links
 {
-
-
     /**
      * Used to reference when a registration has never been checked in.
      *
@@ -1177,7 +1176,7 @@ class EE_Registration extends EE_Soft_Delete_Base_Class implements EEI_Registrat
      */
     public function e_pretty_status($show_icons = false)
     {
-        echo $this->pretty_status($show_icons); // already escaped
+        echo wp_kses($this->pretty_status($show_icons), AllowedTags::getAllowedTags());
     }
 
 

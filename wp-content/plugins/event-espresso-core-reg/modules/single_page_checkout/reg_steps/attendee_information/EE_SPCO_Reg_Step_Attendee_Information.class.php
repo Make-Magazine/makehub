@@ -4,7 +4,7 @@ use EventEspresso\core\domain\entities\contexts\Context;
 use EventEspresso\core\exceptions\EntityNotFoundException;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
-use EventEspresso\core\services\commands\attendee\CreateAttendeeCommand;
+use EventEspresso\core\domain\services\commands\attendee\CreateAttendeeCommand;
 use EventEspresso\core\services\loaders\LoaderFactory;
 
 /**
@@ -17,7 +17,6 @@ use EventEspresso\core\services\loaders\LoaderFactory;
  */
 class EE_SPCO_Reg_Step_Attendee_Information extends EE_SPCO_Reg_Step
 {
-
     /**
      * @type bool $_print_copy_info
      */
@@ -295,6 +294,7 @@ class EE_SPCO_Reg_Step_Attendee_Information extends EE_SPCO_Reg_Step
                         [
                             'Event.EVT_ID' => $registration->event()->ID(),
                             $field_name    => true,
+                            'QSG_deleted'  => false
                         ],
                         'order_by' => ['QSG_order' => 'ASC'],
                     ],

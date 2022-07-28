@@ -6,6 +6,7 @@ use EventEspresso\core\services\request\RequestInterface;
 use EventEspresso\core\services\request\ResponseInterface;
 use EventEspresso\core\domain\entities\notifications\PersistentAdminNotice;
 use EventEspresso\core\exceptions\InvalidDataTypeException;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * Class NonProductionReadyVersionWarning
@@ -17,7 +18,6 @@ use EventEspresso\core\exceptions\InvalidDataTypeException;
  */
 class PreProductionVersionWarning extends Middleware
 {
-
     /**
      * converts a Request to a Response
      *
@@ -86,7 +86,7 @@ class PreProductionVersionWarning extends Middleware
     public function preProductionVersionWarningNotice()
     {
         echo '<div id="ee-release-candidate-notice-dv" class="ee-really-important-notice-dv"><p>';
-        echo $this->warningNotice(); // already escaped
+        echo wp_kses($this->warningNotice(), AllowedTags::getAllowedTags());
         echo '</p></div>';
     }
 

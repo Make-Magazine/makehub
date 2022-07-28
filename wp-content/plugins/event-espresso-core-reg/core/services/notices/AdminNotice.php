@@ -2,6 +2,8 @@
 
 namespace EventEspresso\core\services\notices;
 
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 /**
  * Class AdminNotice
  * generates WordPress admin notices from EventEspresso\core\services\notices\Notice objects
@@ -12,7 +14,6 @@ namespace EventEspresso\core\services\notices;
  */
 class AdminNotice
 {
-
     const ERROR = 'notice-error';
 
     const WARNING = 'notice-warning';
@@ -53,7 +54,7 @@ class AdminNotice
      */
     public function displayNotice()
     {
-        echo $this->getNotice(); // sanitized
+        echo wp_kses($this->getNotice(), AllowedTags::getAllowedTags());
     }
 
 

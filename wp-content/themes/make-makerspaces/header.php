@@ -127,7 +127,7 @@ do_action('genesis_before_header');
 <?php } // end cookie law if ?>
 
 	<?php
-		// Nav Level 1 and Hamburger      
+		// Nav Level 1 and Hamburger
 		require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
 	?>
 	<div id="universal-subnav" class="nav-level-2">
@@ -157,7 +157,7 @@ do_action('genesis_after_header');
 
 genesis_markup(
         array(
-            'open' => '<div class="main-content container-fluid">',
+            'open' => '<div class="main-content site-content container-fluid">',
             'context' => 'site-inner',
         )
 );

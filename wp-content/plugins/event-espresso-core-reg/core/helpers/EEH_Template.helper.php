@@ -4,6 +4,7 @@ use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\services\loaders\LoaderFactory;
 use EventEspresso\core\services\request\RequestInterface;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 if (! function_exists('espresso_get_template_part')) {
     /**
@@ -49,7 +50,6 @@ if (! function_exists('espresso_get_object_css_class')) {
  */
 class EEH_Template
 {
-
     private static $_espresso_themes = [];
 
 
@@ -552,7 +552,7 @@ class EEH_Template
      * @param string $title
      * @return string the html output for the button
      */
-    public static function get_button_or_link($url, $label, $class = 'button-primary', $icon = '', $title = '')
+    public static function get_button_or_link($url, $label, $class = 'button button--primary', $icon = '', $title = '')
     {
         $icon_html = '';
         if (! empty($icon)) {
@@ -593,7 +593,7 @@ class EEH_Template
         $icon_style = false,
         $help_text = false
     ) {
-        global $allowedtags;
+        $allowedtags = AllowedTags::getAllowedTags();
         /** @var RequestInterface $request */
         $request = LoaderFactory::getLoader()->getShared(RequestInterface::class);
         $page    = $page ?: $request->getRequestParam('page', '', 'key');

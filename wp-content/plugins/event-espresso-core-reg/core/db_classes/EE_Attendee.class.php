@@ -9,8 +9,8 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  * @ package            Event Espresso
  * @ author                Seth Shoultes
  * @ copyright        (c) 2008-2011 Event Espresso  All Rights Reserved.
- * @ license            {@link https://eventespresso.com/support/terms-conditions/}   * see Plugin Licensing *
- * @ link                    {@link http://www.eventespresso.com}
+ * @linkense            {@link https://eventespresso.com/support/terms-conditions/}   * see Plugin Licensing *
+ * @link                    {@link http://www.eventespresso.com}
  * @ since                4.0
  */
 
@@ -24,7 +24,6 @@ use EventEspresso\core\exceptions\InvalidInterfaceException;
  */
 class EE_Attendee extends EE_CPT_Base implements EEI_Contact, EEI_Address, EEI_Admin_Links, EEI_Attendee
 {
-
     /**
      * Sets some dynamic defaults
      *
@@ -257,7 +256,7 @@ class EE_Attendee extends EE_CPT_Base implements EEI_Contact, EEI_Address, EEI_A
      */
     public function e_full_name()
     {
-        echo $this->full_name(); // sanitized
+        echo esc_html($this->full_name());
     }
 
 

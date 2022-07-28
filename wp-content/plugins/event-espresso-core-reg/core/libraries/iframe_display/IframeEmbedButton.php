@@ -2,6 +2,8 @@
 
 namespace EventEspresso\core\libraries\iframe_display;
 
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 /**
  * Class IframeEmbedButton
  *
@@ -11,8 +13,6 @@ namespace EventEspresso\core\libraries\iframe_display;
  */
 abstract class IframeEmbedButton
 {
-
-
     /**
      * @var string $iframe_name
      */
@@ -133,7 +133,7 @@ abstract class IframeEmbedButton
      */
     public function addActionIframeEmbedButtonCallback()
     {
-        echo $this->embedButtonHtml(); // already escaped
+        echo wp_kses($this->embedButtonHtml(), AllowedTags::getWithFormTags());
     }
 
 

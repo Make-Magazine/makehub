@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var string $current_screen_widget_class
  * @var string $admin_page_header
@@ -6,16 +7,19 @@
  * @var string $current_page
  * @var int $num_columns
  */
+
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 ?>
 
 <div id="poststuff">
     <div id="dashboard-widgets" class="metabox-holder <?php echo esc_attr($current_screen_widget_class); ?>">
         <div id="admin-page-header">
-            <?php echo esc_html($admin_page_header); ?>
+            <?php echo wp_kses($admin_page_header, AllowedTags::getAllowedTags()); ?>
         </div> <!-- admin-page-header -->
 
         <div id="post-body-content">
-            <?php echo $post_body_content; // already escaped ?>
+            <?php echo wp_kses($post_body_content, AllowedTags::getWithFullTags()); ?>
         </div> <!-- post-body-content -->
 
         <?php
@@ -24,7 +28,7 @@
             $context = ($i === 1) ? 'normal' : 'side';
             $context = ($i > 2) ? 'column' . $i : $context;
             ?>
-        <div id='postbox-container-<?php echo $i; ?>' class='postbox-container'>
+        <div id='postbox-container-<?php echo absint($i); ?>' class='postbox-container'>
             <?php do_meta_boxes($current_page, $context, null); ?>
         </div>
         <?php } // end column loop ?>

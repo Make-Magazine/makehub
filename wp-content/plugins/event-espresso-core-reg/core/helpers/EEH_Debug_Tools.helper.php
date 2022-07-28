@@ -3,6 +3,7 @@
 use EventEspresso\core\services\Benchmark;
 use EventEspresso\core\services\loaders\LoaderFactory;
 use EventEspresso\core\services\request\RequestInterface;
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
 
 /**
  * Class EEH_Debug_Tools
@@ -14,7 +15,6 @@ use EventEspresso\core\services\request\RequestInterface;
  */
 class EEH_Debug_Tools
 {
-
     /**
      *    instance of the EEH_Autoloader object
      *
@@ -407,7 +407,7 @@ class EEH_Debug_Tools
         if ($die) {
             die($result);
         }
-        echo $result;
+        echo wp_kses($result, AllowedTags::getWithFormTags());
     }
 
 
@@ -594,7 +594,7 @@ class EEH_Debug_Tools
         if ($die) {
             die($result);
         }
-        echo $result;
+        echo wp_kses($result, AllowedTags::getWithFormTags());
     }
 
 

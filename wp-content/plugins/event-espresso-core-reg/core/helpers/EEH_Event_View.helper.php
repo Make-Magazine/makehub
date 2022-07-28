@@ -9,7 +9,6 @@
  */
 class EEH_Event_View extends EEH_Base
 {
-
     /**
      * @var EE_Event $_event
      */
@@ -370,10 +369,10 @@ class EEH_Event_View extends EEH_Base
             ?>
             <div class="event-date-calendar-page-dv">
                 <div class="event-date-calendar-page-month-dv">
-                    <?php echo $datetime->get_i18n_datetime('DTT_EVT_start', 'M'); // already escaped ?>
+                    <?php echo esc_html($datetime->get_i18n_datetime('DTT_EVT_start', 'M')); ?>
                 </div>
                 <div class="event-date-calendar-page-day-dv">
-                    <?php echo $datetime->start_date('d'); // already escaped ?>
+                    <?php echo esc_html($datetime->start_date('d')); ?>
                 </div>
             </div>
             <?php

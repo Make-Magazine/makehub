@@ -468,6 +468,17 @@ input.cmn-toggle-round:checked + label:after {
     }
 }
 
+.btns-404 {
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 15px;
+	margin-bottom: 25px;
+	a {
+		color: #ea002a;
+	}
+}
+
 // don't print urls
 @media print {
 	header.site-header-custom, footer.universal-footer { display: none; }

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Make: Elementor Widgets
  * Description: This plugin adds some common Make: dashboard widgets including: Makershed purchases, My Makerspace listings, Facilitator Event listings, Maker Campus tickets, Maker camp projects
- * Version:     1.0.0
+ * Version:     1.2.0
  * Author:      Alicia Williams
  * Text Domain: elementor-make-widget
  *
@@ -151,9 +151,7 @@ function makewidget_rss_output($rss, $settings) {
     );
     $args = $default_args;
     $items = (int) $settings['num_display']; // this is the number of items we show
-    if ($items < 1 || 20 < $items) {
-        $items = 10;
-    }
+
     $show_summary = $settings['show_summary'];
     $show_author = $settings['show_author'];
     $show_date = $settings['show_date'];
@@ -223,8 +221,13 @@ function makewidget_rss_output($rss, $settings) {
         }
 
         //set description
-        $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
-        $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));
+		if (strpos($settings['rss_url'], 'www.makershed.com')) {
+			//$desc = "<p><b>" . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'variant')[0]['child']["http://jadedpixel.com/-/spec/shopify"]['price'][0]['data'] . "</b></p>";
+			$desc = "<a href='" . $link . "' class='universal-btn btn'>Buy Now</a>";
+		} else {
+	        $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
+	        $desc = esc_html(esc_attr(wp_trim_words($desc, 55, ' [&hellip;]')));
+		}
 
         //summary
         $summary = '';
@@ -234,7 +237,7 @@ function makewidget_rss_output($rss, $settings) {
             if ('[...]' == substr($summary, -5)) {
                 $summary = substr($summary, 0, -5) . '[&hellip;]';
             }
-            $summary = '<div class="rssSummary">' . esc_html($summary) . '</div>';
+            $summary = '<div class="rssSummary">' . $summary . '</div>';
         }
 
         //author
@@ -269,6 +272,9 @@ function makewidget_rss_output($rss, $settings) {
 	}
 	if ($summary != '') {
 		$wrapper_classes .= " summary";
+	}
+	if (strpos($settings['rss_url'], 'www.makershed.com')) {
+		$wrapper_classes .= " makershed";
 	}
     echo '<ul class="custom-rss-elementor' . $wrapper_classes . '">';
     foreach ($sortedFeed as $item) {
@@ -326,7 +332,7 @@ function makewidget_rss_output($rss, $settings) {
 
 add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
 function make_elementor_enqueue_scripts() {
-	$myVersion = '2.3';
+	$myVersion = '2.4';
 	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
 	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }

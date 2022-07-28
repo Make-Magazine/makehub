@@ -27,8 +27,6 @@ use EventEspresso\core\services\request\RequestInterface;
  */
 class EEH_Form_Fields
 {
-
-
     /**
      *  Generates HTML for the forms used on admin pages
      *
@@ -388,7 +386,7 @@ class EEH_Form_Fields
         $name      = esc_attr($name);
         $class     = esc_attr($class);
         $tab_index = absint($tab_index);
-        $checked   = ! empty($default) && $default == $value ? 'checked="checked" ' : '';
+        $checked   = ! empty($default) && $default == $value ? 'checked ' : '';
         $required  = filter_var($required, FILTER_VALIDATE_BOOLEAN) ? 'required' : '';
         $input     = "
         <input name='{$name}[]' type='{$type}' id='{$id}' class='{$class}' value='{$value}' {$checked} {$required} tabindex='{$tab_index}'/>";
@@ -419,7 +417,7 @@ class EEH_Form_Fields
     {
         $options_array = [];
         foreach ($options as $value => $label) {
-            $selected        = ! empty($default) && $default == $value ? 'selected="selected"' : '';
+            $selected        = ! empty($default) && $default == $value ? 'selected' : '';
             $value           = esc_attr($value);
             $label           = wp_strip_all_tags($label);
             $options_array[] = "<option value='{$value}' {$selected}>{$label}</option>";
@@ -1049,7 +1047,7 @@ class EEH_Form_Fields
             . '<textarea name="' . $name . '" id="' . $id . '" class="' . $class . ' ' . $required['class'] . '" '
             . 'rows="' . $dimensions['rows'] . '" cols="' . $dimensions['cols'] . '"  '
             . 'title="' . $required['msg'] . '" ' . $disabled . ' ' . $extra . '>'
-            . $answer
+            . esc_textarea($answer)
             . '</textarea>';
 
         $input_html = apply_filters('FHEE__EEH_Form_Fields__input_html', $input_html, $label_html, $id);
@@ -1129,7 +1127,7 @@ class EEH_Form_Fields
         $only_option = count($options, 1) == 1;
         if (! $only_option) {
             // if there is NO answer set and there are multiple options to choose from, then set the "please select" message as selected
-            $selected   = $answer === null ? ' selected="selected"' : '';
+            $selected   = $answer === null ? ' selected' : '';
             $input_html .= $add_please_select_option
                 ? "\n\t\t\t\t"
                   . '<option value=""' . $selected . '>'
@@ -1217,7 +1215,7 @@ class EEH_Form_Fields
         $key      = self::prep_answer($key, $use_html_entities);
         $value    = self::prep_answer($value, $use_html_entities);
         $value    = ! empty($value) ? $value : $key;
-        $selected = ($answer == $key || $only_option) ? 'selected="selected"' : '';
+        $selected = ($answer == $key || $only_option) ? 'selected' : '';
         return "\n\t\t\t\t"
                . '<option value="' . self::prep_option_value($key) . '" ' . $selected . '> '
                . $value
@@ -1303,7 +1301,7 @@ class EEH_Form_Fields
                     : self::get_label_size_class($OPT->value());
                 $desc    = $OPT->desc();// no self::prep_answer
                 $answer  = is_numeric($value) && empty($answer) ? 0 : $answer;
-                $checked = (string) $value == (string) $answer ? ' checked="checked"' : '';
+                $checked = (string) $value == (string) $answer ? ' checked' : '';
                 $opt     = '-' . sanitize_key($value);
 
                 $input_html .= "\n\t\t\t\t" . '<li' . $size . '>';
@@ -1412,7 +1410,7 @@ class EEH_Form_Fields
             $desc  = $OPT->desc();
             $opt   = '-' . sanitize_key($value);
 
-            $checked = is_array($answer) && in_array($text, $answer) ? ' checked="checked"' : '';
+            $checked = is_array($answer) && in_array($text, $answer) ? ' checked' : '';
 
             $input_html .= "\n\t\t\t\t" . '<li' . $size . '>';
             $input_html .= "\n\t\t\t\t\t" . '<label class="' . $radio_class . ' espresso-checkbox-lbl">';

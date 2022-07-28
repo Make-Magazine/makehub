@@ -3,6 +3,7 @@
 use EventEspresso\core\exceptions\InvalidDataTypeException;
 use EventEspresso\core\exceptions\InvalidInterfaceException;
 use EventEspresso\core\services\loaders\LoaderFactory;
+use EventEspresso\core\services\request\DataType;
 use EventEspresso\core\services\request\RequestInterface;
 
 /**
@@ -16,7 +17,6 @@ use EventEspresso\core\services\request\RequestInterface;
  */
 class EEH_Event_Query
 {
-
     /**
      * Start Date
      *
@@ -107,7 +107,7 @@ class EEH_Event_Query
      * @param string $month
      * @param string $category
      * @param bool   $show_expired
-     * @param string $orderby
+     * @param array|string $orderby
      * @param string $sort
      * @throws InvalidArgumentException
      * @throws InvalidDataTypeException
@@ -172,7 +172,7 @@ class EEH_Event_Query
 
 
     /**
-     * @param string $orderby
+     * @param array|string $orderby
      * @return array
      * @throws InvalidArgumentException
      * @throws InvalidDataTypeException
@@ -180,7 +180,12 @@ class EEH_Event_Query
      */
     private static function _orderby($orderby = 'start_date')
     {
-        $event_query_orderby = self::getRequest()->getRequestParam('event_query_orderby', $orderby);
+        $event_query_orderby = self::getRequest()->getRequestParam(
+            'event_query_orderby',
+            (array) $orderby,
+            DataType::STRING,
+            true
+        );
         $event_query_orderby = is_array($event_query_orderby)
             ? $event_query_orderby
             : explode(',', $event_query_orderby);

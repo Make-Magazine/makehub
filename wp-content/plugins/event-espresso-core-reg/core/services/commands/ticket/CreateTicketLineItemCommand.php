@@ -8,14 +8,13 @@ use EventEspresso\core\services\commands\Command;
  * Class CreateTicketLineItemCommand
  * DTO for passing data to CreateTicketLineItemCommandHandler
  *
+ * @deprecated 4.9.54
  * @package       Event Espresso
  * @author        Brent Christensen
  * @since         4.9.0
  */
 class CreateTicketLineItemCommand extends Command
 {
-
-
     /**
      * @var \EE_Transaction $transaction
      */

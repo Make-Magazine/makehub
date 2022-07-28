@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var int         $QST_ID
  * @var EE_Question $question
@@ -7,6 +8,8 @@
  * @var int|float   $max_max
  */
 // PARAMS THAT MUST BE PASSED ARE:
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 assert(isset($QST_ID));
 assert($question);
 assert($question instanceof EE_Question);
@@ -53,16 +56,16 @@ if ($QST_system === 'country') {
                 <tr>
                     <th>
                         <label for="QST_display_text">
-                            <?php echo $fields['QST_display_text']->get_nicename(); // already escaped ?>
+                            <?php echo wp_kses($fields['QST_display_text']->get_nicename(), AllowedTags::getAllowedTags()); ?>
                         </label>
-                        <?php echo EEH_Template::get_help_tab_link('question_text_info'); // already escaped ?>
+                        <?php echo wp_kses(EEH_Template::get_help_tab_link('question_text_info'), AllowedTags::getAllowedTags()); ?>
                     </th>
                     <td>
                         <input class='regular-text'
                                id="QST_display_text"
                                name="QST_display_text"
                                type="text"
-                               value="<?php $question->f('QST_display_text') ?>"
+                               value="<?php echo esc_attr($question->get_f('QST_display_text')); ?>"
                         />
                     </td>
                 </tr>
@@ -70,33 +73,33 @@ if ($QST_system === 'country') {
                 <tr>
                     <th>
                         <label for="QST_admin_label">
-                            <?php echo $fields['QST_admin_label']->get_nicename(); ?>
+                            <?php echo wp_kses($fields['QST_admin_label']->get_nicename(), AllowedTags::getAllowedTags()); ?>
                         </label>
-                        <?php echo EEH_Template::get_help_tab_link('question_label_info'); // already escaped ?>
+                        <?php echo wp_kses(EEH_Template::get_help_tab_link('question_label_info'), AllowedTags::getAllowedTags()); ?>
                     </th>
                     <td>
                         <?php
                         $id            = ! empty($QST_system) ? '_disabled' : '';
-                        $disabled_attr = ! empty($QST_system) ? ' disabled="disabled"' : '';
+                        $disabled_attr = ! empty($QST_system) ? 'disabled' : '';
                         ?>
                         <input class='regular-text'
-                               id="QST_admin_label<?php echo $id; // escape not needed ?>"
-                               name="QST_admin_label<?php echo $id; // escape not needed ?>"
+                               id="QST_admin_label<?php echo esc_attr($id); ?>"
+                               name="QST_admin_label<?php echo esc_attr($id); ?>"
                                type="text"
-                               value="<?php $question->f('QST_admin_label') ?>"
-                               <?php echo $disabled_attr ?>
+                               value="<?php echo esc_attr($question->get_f('QST_admin_label')); ?>"
+                               <?php echo esc_attr($disabled_attr); ?>
                         />
                         <input class="QST_order"
-                               id="QST_order<?php echo $id; // escape not needed ?>"
-                               name="QST_order<?php echo $id; // escape not needed ?>"
+                               id="QST_order<?php echo esc_attr($id); ?>"
+                               name="QST_order<?php echo esc_attr($id); ?>"
                                type="hidden"
-                               value="<?php echo $question->get('QST_order'); ?>"
+                               value="<?php echo esc_attr($question->get('QST_order')); ?>"
                         />
                         <?php if (! empty($QST_system)) { ?>
                             <input id='QST_admin_label'
                                    name="QST_admin_label"
                                    type="hidden"
-                                   value="<?php echo $question->admin_label(); ?>"
+                                   value="<?php echo esc_attr($question->admin_label()); ?>"
                             />
                         <?php } ?>
                         <br />
@@ -121,18 +124,18 @@ if ($QST_system === 'country') {
                     <td>
                         <?php
                         $id            = ! empty($QST_system) ? '_disabled' : '';
-                        $disabled_attr = ! empty($QST_system) ? ' disabled="disabled"' : '';
+                        $disabled_attr = ! empty($QST_system) ? 'disabled' : '';
                         $admin_only    = $question->get('QST_admin_only');
-                        $checked       = ! empty($admin_only) ? ' checked="checked"' : '';
+                        $checked       = ! empty($admin_only) ? ' checked' : '';
                         ?>
                         <input class="QST_admin_only"
-                               id="QST_admin_only<?php echo $id; // escape not needed ?>"
-                               name="QST_admin_only<?php echo $id; // escape not needed ?>"
+                               id="QST_admin_only<?php echo esc_attr($id); ?>"
+                               name="QST_admin_only<?php echo esc_attr($id); ?>"
                                type="checkbox"
                                value="1"
                             <?php
-                            echo $disabled_attr; // escape not needed
-                            echo $checked; // escape not needed
+                            echo esc_attr($disabled_attr);
+                            echo esc_attr($checked);
                             ?>
                         />
                         <br />
@@ -183,7 +186,7 @@ if ($QST_system === 'country') {
                             <input id='QST_type'
                                    name="QST_type"
                                    type="hidden"
-                                   value="<?php echo $question->type(); ?>"
+                                   value="<?php echo esc_attr($question->type()); ?>"
                             />
                             <?php
                             $explanatory_text = esc_html__(
@@ -204,7 +207,7 @@ if ($QST_system === 'country') {
                             </p>
                         <?php } ?>
 
-                        <?php echo $question_type_descriptions; ?>
+                        <?php echo wp_kses($question_type_descriptions, AllowedTags::getAllowedTags()); ?>
 
                     </td>
                 </tr>
@@ -216,7 +219,7 @@ if ($QST_system === 'country') {
                     </th>
                     <td>
                         <input id="QST_max"
-                            <?php echo $max_max === EE_INF ? '' : 'max="' . esc_attr($max_max) . '"'; ?>
+                            <?php echo ($max_max === EE_INF ? '' : 'max="' . esc_attr($max_max) . '"'); ?>
                                min="1"
                                name="QST_max"
                                type="number"
@@ -303,34 +306,34 @@ if ($QST_system === 'country') {
                                 if (! empty($question_options)) {
                                     foreach ($question_options as $option_id => $option) {
                                         $disabled_attr = $has_answers || $option->get('QSO_system')
-                                            ? ' disabled="disabled"'
+                                            ? 'disabled'
                                             : '';
                                         ?>
                                         <tr class="question-option ee-options-sortable">
                                             <td class="option-value-cell">
                                                 <input type="hidden"
                                                        class="QSO_order"
-                                                       name="question_options[<?php echo $count; ?>][QSO_order]"
-                                                       value="<?php echo $count; // escape not needed ?>"
+                                                       name="question_options[<?php echo absint($count); ?>][QSO_order]"
+                                                       value="<?php echo absint($count); ?>"
                                                 />
                                                 <input type="text"
                                                        class="option-value regular-text"
-                                                       name="question_options[<?php echo $count ?>][QSO_value]"
-                                                       value="<?php $option->f('QSO_value') ?>"
-                                                    <?php echo $disabled_attr; // escape not needed ?>
+                                                       name="question_options[<?php echo absint($count) ?>][QSO_value]"
+                                                       value="<?php echo esc_attr($option->get_f('QSO_value')); ?>"
+                                                    <?php echo esc_attr($disabled_attr); ?>
                                                 />
                                                 <?php if ($has_answers) : ?>
                                                     <input type="hidden"
-                                                           name="question_options[<?php echo $count; ?>][QSO_value]"
-                                                           value="<?php $option->f('QSO_value'); ?>"
+                                                           name="question_options[<?php echo absint($count); ?>][QSO_value]"
+                                                           value="<?php echo esc_attr($option->get_f('QSO_value')); ?>"
                                                     />
                                                 <?php endif; ?>
                                             </td>
                                             <td class="option-desc-cell">
                                                 <input type="text"
                                                        class="option-desc regular-text"
-                                                       name="question_options[<?php echo $count ?>][QSO_desc]"
-                                                       value="<?php $option->f('QSO_desc') ?>"
+                                                       name="question_options[<?php echo absint($count); ?>][QSO_desc]"
+                                                       value="<?php echo esc_attr($option->get_f('QSO_desc')); ?>"
                                                 />
                                             </td>
                                             <td>
@@ -445,7 +448,7 @@ if ($QST_system === 'country') {
                         ?>
                         <p>
                             <span id="required_toggled_on" class="description"
-                                  style="color:#D54E21;<?php echo $show_required_msg; ?>"
+                                  style="color:#D54E21;<?php echo esc_attr($show_required_msg); ?>"
                             >
                                 <?php esc_html_e(
                                     'Required is set to optional, and this field is disabled, because the question is Admin-Only.',
@@ -485,7 +488,7 @@ if ($QST_system === 'country') {
                                class="regular-text"
                                id="QST_required_text"
                                name="QST_required_text"
-                               value="<?php $question->f('QST_required_text'); ?>"
+                               value="<?php echo esc_attr($question->get_f('QST_required_text')); ?>"
                         />
 
                     </td>

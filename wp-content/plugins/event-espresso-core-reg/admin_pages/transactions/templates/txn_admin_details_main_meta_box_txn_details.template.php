@@ -5,7 +5,7 @@
  * @var EE_Payment[] $payments
  * @var array        $payment_methods
  * @var array        $payment_status
- * @var array        $registrations_to_apply_payment_to
+ * @var string       $registrations_to_apply_payment_to
  * @var array        $txn_details
  * @var array        $txn_nmbr
  * @var int          $TXN_ID
@@ -22,6 +22,9 @@
  * @var string       $line_item_table
  * @var string       $status_change_select
  */
+
+use EventEspresso\core\services\request\sanitizers\AllowedTags;
+
 ?>
 
 <div id="admin-primary-mbox-dv" class="admin-primary-mbox-dv">
@@ -31,11 +34,11 @@
     </h3>
 
     <div class="admin-primary-mbox-tbl-wrap">
-        <?php echo $line_item_table; // already escaped ?>
+        <?php echo wp_kses($line_item_table, AllowedTags::getWithFormTags()); ?>
         <span id="txn-admin-grand-total" class="hidden"><?php echo esc_html($grand_raw_total); ?></span>
     </div>
     <div id="additional-transaction-actions-dv">
-        <?php echo $action_buttons; // already escaped ?>
+        <?php echo wp_kses($action_buttons, AllowedTags::getWithFormTags()); ?>
     </div>
 
     <a id="display-additional-transaction-session-info"
@@ -71,7 +74,7 @@
                             </label>
                         </th>
                         <td>
-                            <?php echo $txn_detail['value']; // already escaped ?>
+                            <?php echo wp_kses($txn_detail['value'], AllowedTags::getAllowedTags()); ?>
                         </td>
                     </tr>
                 <?php endforeach; // $txn_details?>
@@ -117,7 +120,6 @@
                             'Notes / Extra&nbsp;Accounting',
                             'event_espresso'
                         ); ?></th>
-                        <!--<th class="jst-left"><?php esc_html_e('Details', 'event_espresso'); ?></th>-->
                         <th class="jst-cntr"><?php esc_html_e('Amount', 'event_espresso'); ?></th>
                     </tr>
                 </thead>
@@ -132,18 +134,17 @@
                             $existing_reg_payment_json = isset($existing_reg_payments[ $PAY_ID ])
                                 ? wp_json_encode($existing_reg_payments[ $PAY_ID ])
                                 : '{}';
-                            $escaped_pay_id = esc_attr($PAY_ID);
                             ?>
-                            <tr id="txn-admin-payment-tr-<?php echo $escaped_pay_id; ?>">
+                            <tr id="txn-admin-payment-tr-<?php echo absint($PAY_ID); ?>">
                                 <td>
-                <span id="payment-status-<?php echo $escaped_pay_id; ?>"
+                <span id="payment-status-<?php echo absint($PAY_ID); ?>"
                       class="ee-status-strip-td ee-status-strip pymt-status-<?php echo esc_attr($payment->STS_ID()); ?>"
                 >
                 </span>
-                                    <div id="payment-STS_ID-<?php echo $escaped_pay_id; ?>" class="hidden">
+                                    <div id="payment-STS_ID-<?php echo absint($PAY_ID); ?>" class="hidden">
                                         <?php echo esc_html($payment->STS_ID()); ?>
                                     </div>
-                                    <div id="reg-payments-<?php echo $escaped_pay_id; ?>" class="hidden">
+                                    <div id="reg-payments-<?php echo absint($PAY_ID); ?>" class="hidden">
                                         <?php echo esc_html($existing_reg_payment_json); ?>
                                     </div>
                                 </td>
@@ -153,7 +154,7 @@
                                             <?php if ($can_edit_payments) : ?>
                                                 <a class="txn-admin-payment-action-edit-lnk"
                                                    title="<?php esc_attr_e('Edit Payment', 'event_espresso'); ?>"
-                                                   data-payment-id="<?php echo $escaped_pay_id; ?>"
+                                                   data-payment-id="<?php echo absint($PAY_ID); ?>"
                                                 >
                                                     <div class="dashicons dashicons-edit" style="margin: 0;"></div>
                                                 </a>
@@ -163,7 +164,7 @@
                                             <?php if ($can_delete_payments) : ?>
                                                 <a class="txn-admin-payment-action-delete-lnk"
                                                    title="<?php esc_attr_e('Delete Payment', 'event_espresso'); ?>"
-                                                   data-payment-id="<?php echo $escaped_pay_id; ?>"
+                                                   data-payment-id="<?php echo absint($PAY_ID); ?>"
                                                 >
                                                     <div class="dashicons dashicons-trash" style="margin: 0;"></div>
                                                 </a>
@@ -172,50 +173,49 @@
                                     </ul>
                                 </td>
                                 <td class=" jst-rght">
-                                    <div id="payment-id-<?php echo $escaped_pay_id; ?>">
-                                        <?php echo $PAY_ID; // sanitized
-                                        ?>
+                                    <div id="payment-id-<?php echo absint($PAY_ID); ?>">
+                                        <?php echo esc_html($PAY_ID); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left">
-                                    <div id="payment-date-<?php echo $escaped_pay_id; ?>" class="payment-date-dv">
+                                    <div id="payment-date-<?php echo absint($PAY_ID); ?>" class="payment-date-dv">
                                         <?php echo esc_html($payment->timestamp('Y-m-d', 'g:i a')); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left">
-                                    <div id="payment-method-<?php echo $escaped_pay_id; ?>">
+                                    <div id="payment-method-<?php echo absint($PAY_ID); ?>">
                                         <?php echo esc_html($payment->source()); ?>
                                     </div>
-                                    <div id="payment-gateway-<?php echo $escaped_pay_id; ?>">
-                                        <?php echo $payment->payment_method() instanceof EE_Payment_Method
+                                    <div id="payment-gateway-<?php echo absint($PAY_ID); ?>">
+                                        <?php echo ($payment->payment_method() instanceof EE_Payment_Method
                                             ? esc_html($payment->payment_method()->admin_name())
-                                            : esc_html__("Unknown", 'event_espresso'); ?>
+                                            : esc_html__("Unknown", 'event_espresso')); ?>
                                     </div>
-                                    <div id="payment-gateway-id-<?php echo $escaped_pay_id; ?>"
+                                    <div id="payment-gateway-id-<?php echo absint($PAY_ID); ?>"
                                          class="hidden"
                                     >
-                                        <?php echo $payment->payment_method() instanceof EE_Payment_Method
+                                        <?php echo ($payment->payment_method() instanceof EE_Payment_Method
                                             ? esc_html($payment->payment_method()->ID())
-                                            : 0; ?>
+                                            : 0); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left">
-                                    <div id="payment-response-<?php echo $escaped_pay_id; ?>">
+                                    <div id="payment-response-<?php echo absint($PAY_ID); ?>">
                                         <?php echo esc_html($payment->gateway_response()); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left payment-txn-id-chq-nmbr">
-                                    <div id="payment-txn-id-chq-nmbr-<?php echo $escaped_pay_id; ?>">
+                                    <div id="payment-txn-id-chq-nmbr-<?php echo absint($PAY_ID); ?>">
                                         <?php echo esc_html($payment->txn_id_chq_nmbr()); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left">
-                                    <div id="payment-po-nmbr-<?php echo $escaped_pay_id; ?>">
+                                    <div id="payment-po-nmbr-<?php echo absint($PAY_ID); ?>">
                                         <?php echo esc_html($payment->po_number()); ?>
                                     </div>
                                 </td>
                                 <td class=" jst-left">
-                                    <div id="payment-accntng-<?php echo $escaped_pay_id; ?>">
+                                    <div id="payment-accntng-<?php echo absint($PAY_ID); ?>">
                                         <?php echo esc_html($payment->extra_accntng()); ?>
                                     </div>
                                 </td>
@@ -226,7 +226,7 @@
                                         : 'txn-admin-payment-status-PDC';
                                     ?>
                                     <span class="<?php echo esc_attr($payment_class); ?>">
-                                        <span id="payment-amount-<?php echo $escaped_pay_id; ?>" style="display:inline;">
+                                        <span id="payment-amount-<?php echo absint($PAY_ID); ?>" style="display:inline;">
                                         <?php echo EEH_Template::format_currency(
                                             $payment->amount(),
                                             false,
@@ -245,7 +245,7 @@
                         ?>
                         <tr id="txn-admin-no-payments-tr" class="admin-primary-mbox-total-tr hidden">
                             <td class=" jst-rght" colspan="10">
-                                <span class="important-notice"><?php echo $no_payment_text; // already escaped ?></span>
+                                <span class="important-notice"><?php echo wp_kses($no_payment_text, AllowedTags::getAllowedTags()); ?></span>
                             </td>
                         </tr>
                         <tr id="txn-admin-payments-total-tr"
@@ -259,12 +259,13 @@
                               . __('This transaction has been overpaid ! ', 'event_espresso')
                               . '</span>'
                             : '';
-                        echo esc_html(
+                        echo wp_kses(
                             $overpaid
                             . sprintf(
                                 __('Payments Total %s', 'event_espresso'),
                                 '(' . EE_Registry::instance()->CFG->currency->code . ')'
-                            )
+                            ),
+                            AllowedTags::getAllowedTags()
                         ); ?>
                         </span>
                             </th>
@@ -282,7 +283,7 @@
                     <?php else : ?>
                         <tr id="txn-admin-no-payments-tr" class="admin-primary-mbox-total-tr">
                             <td class=" jst-rght" colspan="10">
-                                <span class="important-notice"><?php echo $no_payment_text; // already escaped ?></span>
+                                <span class="important-notice"><?php echo wp_kses($no_payment_text, AllowedTags::getAllowedTags()); ?></span>
                             </td>
                         </tr>
                         <tr id="txn-admin-payments-total-tr" class="admin-primary-mbox-total-tr hidden">
@@ -533,12 +534,12 @@
                                 <?php foreach ($payment_methods as $method) : ?>
                                     <?php
                                     $selected = $method->slug() == 'cash'
-                                        ? ' selected="selected"'
+                                        ? ' selected'
                                         : '';
                                     ?>
                                     <option id="payment-method-opt-<?php echo esc_attr($method->slug()); ?>"
                                             value="<?php echo esc_attr($method->ID()); ?>"
-                                        <?php echo $selected; ?>
+                                        <?php echo esc_attr($selected); ?>
                                     >
                                         <?php
                                         echo esc_html(
@@ -615,12 +616,12 @@
                                     <?php foreach ($payment_status as $STS_ID => $STS_code) : ?>
                                         <?php
                                         $selected = $STS_ID == 'PAP'
-                                            ? ' selected="selected"'
+                                            ? 'selected'
                                             : '';
                                         ?>
                                         <option id="payment-status-opt-<?php echo esc_attr($STS_ID); ?>"
                                                 value="<?php echo esc_attr($STS_ID); ?>"
-                                            <?php echo $selected; ?>
+                                            <?php echo esc_attr($selected); ?>
                                         >
                                             <?php echo esc_html($STS_code); ?>
                                         </option>
@@ -686,7 +687,7 @@
                                        value="1"
                                        id="txn-admin-apply-payment-to-all-registrations-inp"
                                        name="txn_admin_payment[apply_to_all_registrations]"
-                                       checked="checked"
+                                       checked
                                 />
                                 <?php esc_html_e('ALL Registrations', 'event_espresso'); ?>
                             </label>
@@ -698,15 +699,14 @@
                                 />
                                 <?php esc_html_e('Just the following Registrations', 'event_espresso'); ?>
                             </label>
-                            <?php echo $registrations_to_apply_payment_to; // already escaped ?>
+                            <?php echo wp_kses($registrations_to_apply_payment_to, AllowedTags::getWithFormTags()); ?>
                         </div>
 
                         <div class="txn-admin-payment-reg-status-dv admin-modal-dialog-row">
                             <label for="txn-admin-payment-reg-status-inp" class="last">
                                 <?php esc_html_e('Change Registration Status?', 'event_espresso'); ?>
                             </label>
-                            <?php
-                            echo $status_change_select; // already escaped ?>
+                            <?php echo wp_kses($status_change_select, AllowedTags::getWithFormTags()); ?>
                             <p class="description">
                                 <?php esc_html_e(
                                     'If you wish to change the status for the registrations selected above, then select which status from this dropdown.',
@@ -725,7 +725,7 @@
                                 <input type="checkbox"
                                        value="1"
                                        name="txn_payments[send_notifications]"
-                                       checked="checked"
+                                       checked
                                        aria-checked="true"
                                        style="vertical-align: middle;"
                                 />
@@ -850,7 +850,7 @@
                             <label for="delete-txn-admin-payment-reg-status-inp" class="last">
                                 <?php esc_html_e('Change Registration Status?', 'event_espresso'); ?>
                             </label>
-                            <?php echo $delete_status_change_select; // already escaped ?>
+                            <?php echo wp_kses($delete_status_change_select, AllowedTags::getWithFormTags()); ?>
                             <p class="description">
                                 <?php printf(
                                     esc_html__(
