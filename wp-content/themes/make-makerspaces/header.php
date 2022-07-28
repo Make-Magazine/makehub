@@ -97,7 +97,7 @@ do_action('genesis_before');
 
 genesis_markup(
         array(
-            'open' => '<div %s>',
+            'open' => '<div id="page" %s>',
             'context' => 'site-container',
         )
 );
