@@ -52,3 +52,34 @@ add_action('admin_init','sort_admin_menu');
    $avatar_defaults[$myavatar] = "Default Makey Avatar";
    return $avatar_defaults;
  }
+
+// Allw admin users to edit elementor and wysiwyg without stripping styles and scripts
+function allow_unfiltered_html_multisite( $caps, $cap, $user_id, $args ) {
+	if ( $user_id !== 0 && $cap === 'unfiltered_html' ) {
+		$user_meta = get_userdata($user_id);
+		if ( in_array( 'administrator', $user_meta->roles, true ) ) {
+			// Re-add the cap
+			unset( $caps );
+			$caps[] = $cap;
+		}
+	}
+	return $caps;
+}
+add_filter('map_meta_cap', 'allow_unfiltered_html_multisite', 10, 4 );
+
+// for non-super admins, hides some items they don't need to trouble with
+function hide_unnecessary_menu_items(){
+	if( !is_super_admin(wp_get_current_user()) ) {
+        remove_menu_page( 'jetpack' ); //Jetpack
+        remove_menu_page( 'themes.php' ); //Appearance
+        remove_menu_page( 'plugins.php' ); //Plugins
+        remove_menu_page( 'edit.php?post_type=acf-field-group' ); //Custom Fields
+        remove_menu_page( 'edit.php?post_type=search-filter-widget' ); //Search and Filter
+        remove_menu_page( 'activecampaign_for_woocommerce' ); //ActiveCampaign
+        remove_menu_page( 'wpa0' ); //Auth0
+        remove_menu_page( 'wpseo_dashboard' ); //Yoast
+        remove_menu_page( 'members' ); //Members
+        remove_menu_page( 'elementor' ); //Elementor Settings
+	}
+}
+add_action( 'admin_init', 'hide_unnecessary_menu_items' );
