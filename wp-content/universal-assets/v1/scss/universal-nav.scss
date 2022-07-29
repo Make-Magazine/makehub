@@ -5,6 +5,8 @@
     z-index: 610;
     box-shadow: 0 1px 5px rgba(0,0,0, .3);
     width: 100%;
+	height: 121px; // hardcoded to prevent CLS
+	background: #333;
     i {
         color: #939597;
         font-size: 21px;
@@ -48,6 +50,7 @@
         align-items: center;
         display: flex !important;
         max-width: 100%;
+		background: #fff;
         .site-branding {
             display: -webkit-box;
             display: -ms-flexbox;
