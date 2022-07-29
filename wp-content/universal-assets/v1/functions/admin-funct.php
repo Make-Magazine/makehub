@@ -48,7 +48,7 @@ add_action('admin_init','sort_admin_menu');
  //set default user avatar to grey makey
  add_filter( 'avatar_defaults', 'wpb_new_gravatar' );
  function wpb_new_gravatar ($avatar_defaults) {
-   $myavatar = 'https://make.co/wp-content/universal-assets/v1/images/default-makey.png';
+   $myavatar = 'https://make.co/wp-content/universal-assets/v1/images/default-makey-big.png';
    $avatar_defaults[$myavatar] = "Default Makey Avatar";
    return $avatar_defaults;
  }
