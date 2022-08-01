@@ -78,6 +78,11 @@ foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
 
+// Include all custom post type files in the make-makercamp/cpt directory:
+foreach (glob(get_stylesheet_directory() . '/cpt/*.php') as $file) {
+    include_once $file;
+}
+
 // Include all class files in the make-experiences/classes directory:
 foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
     include_once $file;

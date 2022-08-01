@@ -75,7 +75,7 @@ function register_taxonomy_content_categories() {
 		'show_in_rest' => true
 	);
 
-	register_taxonomy( 'content_categories', array('sfwd-lessons'), $args );
+	register_taxonomy( 'content_categories', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	$content_categories = [
@@ -188,7 +188,7 @@ function register_taxonomy_materials() {
 		),
 	);
 
-	register_taxonomy( 'materials', array('sfwd-lessons'), $args );
+	register_taxonomy( 'materials', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	if(empty(get_terms('materials'))) {
@@ -249,7 +249,7 @@ function register_taxonomy_ages() {
 		'show_in_rest' => true
 	);
 
-	register_taxonomy( 'ages', array('sfwd-lessons'), $args );
+	register_taxonomy( 'ages', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	$ages = [
@@ -306,7 +306,7 @@ function register_taxonomy_times() {
 		'show_in_rest' => true
 	);
 
-	register_taxonomy( 'times', array('sfwd-lessons'), $args );
+	register_taxonomy( 'times', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	$times = [
@@ -363,7 +363,7 @@ function register_taxonomy_makeyland_theme() {
 		'show_in_rest' => true
 	);
 
-	register_taxonomy( 'makeyland_themes', array('sfwd-lessons'), $args );
+	register_taxonomy( 'makeyland_themes', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	$makeyland_themes = [
@@ -424,7 +424,7 @@ function register_taxonomy_skill_levels() {
 		'show_in_rest' => true
 	);
 
-	register_taxonomy( 'skill_levels', array('sfwd-lessons'), $args );
+	register_taxonomy( 'skill_levels', array('user-projects', 'sfwd-lessons'), $args );
 
 	/* Original terms, commented out so they can be edited in admin without issue
 	$skill_levels = [
