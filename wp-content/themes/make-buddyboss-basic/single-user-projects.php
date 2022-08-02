@@ -115,20 +115,20 @@ get_header();
         <div id="learndash-page-content" class="lesson-page">
             <div class="learndash-content-body">
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
-					<div class="project-breadcrumbs">
+					<?php /*<div class="project-breadcrumbs">
 						<a href="/project-library/" class="project-tag">Projects</a>
 						<?php
 						if(isset($referrer_params)) {
 							foreach($referrer_params as $param) {
 								$breadCrumb = get_term_by('slug', $param, 'content_categories');
-                if($breadCrumb) {
-                ?>
-                <a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
-                <?php
-                }
+				                if($breadCrumb) {
+				                ?>
+				                <a href="/project-library/?_sft_content_categories=<?php echo $breadCrumb->slug; ?>" class="project-tag"><?php echo $breadCrumb->name; ?></a>
+				                <?php
+				                }
 					 		}
 						}?>
-					</div>
+					</div> */ ?>
 					<div class="learndash_content_wrap">
 						<div class="ld-tabs ld-tab-count-2">
 							<div class="ld-tabs-navigation">
@@ -292,6 +292,7 @@ get_header();
 
 							</div> <?php // end tabs content ?>
 
+							<?php /*
 							<section class="tags">
 								<?php
 								if(!empty($categories)) { ?>
@@ -308,6 +309,7 @@ get_header();
 									<?php }
 								}	?>
 							</section>
+							*/ ?>
 
 							<section class="up-author">
 
@@ -324,7 +326,7 @@ get_header();
 							</section>
 
 							<section class="up-buttons text-center">
-								<a class="mc-blue-arrow-btn" href="/projects"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>BROWSE MORE MAKER CAMP PROJECTS</a>
+								<a class="mc-blue-arrow-btn" href="https://makercamp.make.co/projects"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>BROWSE MAKER CAMP PROJECTS</a>
 								<a class="mc-blue-arrow-btn" href="http://makezine.com/projects/" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>FIND EVEN MORE PROJECTS AT Make:</a>
 							</section>
 
