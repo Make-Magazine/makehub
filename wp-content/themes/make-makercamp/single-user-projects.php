@@ -51,7 +51,7 @@ $author = get_user_by( 'email', get_field('user_email') );
 $author_id = $author->ID;
 
 // variables for building Breadcrumbs
-$referrer_url = parse_url($_SERVER['HTTP_REFERER']);
+$referrer_url = (isset($_SERVER['HTTP_REFERER'])? parse_url($_SERVER['HTTP_REFERER']):array());
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
   if(isset($referrer_params['_sft_content_categories'])){
@@ -65,7 +65,7 @@ get_header();
 ?>
 
 <div id="learndash-content">
-    <div class="bb-grid grid">
+  <div class="bb-grid grid">
 		<?php /* Sidebar emulating the LearnDash sidebar
 		 <div class="lms-topic-sidebar-wrapper ">
 			<div class="lms-topic-sidebar-data" style="max-height: calc(-76px + 100vh); top: 76px;">
@@ -112,8 +112,8 @@ get_header();
 			</div>
 		</div> */ ?>
 		<?php // Page Content emulating the LearnDash body ?>
-        <div id="learndash-page-content" class="lesson-page">
-            <div class="learndash-content-body">
+    <div id="learndash-page-content" class="lesson-page">
+      <div class="learndash-content-body">
 				<div class="learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner">
 					<div class="project-breadcrumbs">
 						<a href="/project-library/" class="project-tag">Projects</a>
@@ -128,7 +128,7 @@ get_header();
                 }
 					 		}
 						}?>
-					</div>
+					</div> <!-- close .project-breadcrumbs -->
 					<div class="learndash_content_wrap">
 						<div class="ld-tabs ld-tab-count-2">
 							<div class="ld-tabs-navigation">
@@ -140,7 +140,7 @@ get_header();
 									<span class="ld-icon ld-icon-materials"></span>
 									<span class="ld-text">Materials</span>
 								</div>
-							</div>
+							</div> <!-- close .ld-tabs-navigation -->
 							<div class="ld-tabs-content">
 
 								<?php // The First Tab 'Project' ?>
@@ -150,133 +150,144 @@ get_header();
 										<img class="hero-image" src="<?php echo get_resized_remote_image_url(get_the_post_thumbnail_url(), 1900, 814); ?>" />
 									<?php } ?>
 									<h1><?php the_title(); ?></h1>
+                  <?php
+                    if ( !empty( get_the_content() ) ){
+                      echo the_content();
+                    }
+                  ?>
+                  <div class="proj-divider">
+                    <?php echo $svg_array[array_rand($svg_array)]; ?>
+                  </div>
+                  <div class="proj-taxonomy-filters">
+                    <?php if(isset($times[0])) { ?>
+                      <span class="tax-time"><a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>"><?php echo $times[0]->name; ?></a></span>
+                    <?php } ?>
 
-									<?php
-										if ( !empty( get_the_content() ) ){
-											echo the_content();
-										}
-									?>
+                    <?php if(isset($ages)) { ?>
+                      <span class="tax-age">
+                        <?php foreach($ages as $age) { ?>
+                          <a href="/project-library/?_sft_ages=<?php echo $age->slug; ?>"><?php echo $age->name; ?></a>
+                        <?php } ?>
+                      </span>
+                    <?php } ?>
+                  </div> <!-- end .proj-taxonomy-filters -->
 
-									<div class="proj-divider">
-										<?php echo $svg_array[array_rand($svg_array)]; ?>
-									</div>
-									<div class="proj-taxonomy-filters">
-										<?php if(isset($times[0])) { ?>
-											<span class="tax-time"><a href="/project-library/?_sft_times=<?php echo $times[0]->slug; ?>"><?php echo $times[0]->name; ?></a></span>
-										<?php } ?>
-										<?php if(isset($ages)) { ?>
-											<span class="tax-age">
-												<?php foreach($ages as $age) { ?>
-													<a href="/project-library/?_sft_ages=<?php echo $age->slug; ?>"><?php echo $age->name; ?></a>
-												<?php } ?>
-											</span>
-										<?php } ?>
-									</div>
+                  <?php if($what_will_you_make) { ?>
+                    <section class="up-intro text-center">
+                      <h2>WHAT WILL YOU MAKE?</h2>
+                      <p><?php echo $what_will_you_make; ?></p>
+                    </section>
+                  <?php } ?>
 
+                  <?php //authorized only content
+                  if(current_user_can('mepr-active','rules:8640')){ ?>
 
-									<?php if($what_will_you_make) { ?>
-										<section class="up-intro text-center">
-								            <h2>WHAT WILL YOU MAKE?</h2>
-								            <p><?php echo $what_will_you_make; ?></p>
-								        </section>
-									<?php } ?>
+                    <?php if($what_will_you_learn) { ?>
+                      <section class="up-intro text-center">
+                        <h2>WHAT WILL YOU LEARN?</h2>
+                        <p><?php echo $what_will_you_learn; ?></p>
+                      </section>
+                    <?php } ?>
 
-									<?php if($what_will_you_learn) { ?>
-								        <section class="up-intro text-center">
-								            <h2>WHAT WILL YOU LEARN?</h2>
-								            <p><?php echo $what_will_you_learn; ?></p>
-								        </section>
-									<?php } ?>
+                    <section class="up-steps container">
+                      <h2>STEPS</h2>
+                      <?php
+                      if ($steps) {
+                        $step_number = 1;
+                        foreach ($steps as $step) {
+                          $image_1 = $step['image_1'];
+                          $image_2 = $step['image_2'];
+                          $title = $step['title'];
+                          $description = $step['description'];
+                          ?>
+                          <div class="row">
+                            <div class="col-xs-12">
+                                <h4>STEP <?php echo $step_number; ?></h4>
+                                <?php
+                                if (!empty($title)) {
+                                   echo '<h5>' . $title . '</h5>';
+                                }
+                                ?>
+                                <?php
+                                if (!empty($description)) {
+                                   echo '<div class="sp-step-desc">' . $description . '</div>';
+                                }
+                                ?>
+                            </div> <!-- end .col-xs-12 -->
+                            <div class="col-xs-12">
+                              <?php if (!empty($image_1)) { ?>
+                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
+                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
+                                </a>
+                              <?php } ?>
 
-							        <section class="up-steps container">
-										<h2>STEPS</h2>
-							            <?php
-							            if ($steps) {
-							                $step_number = 1;
-							                foreach ($steps as $step) {
-							                    $image_1 = $step['image_1'];
-							                    $image_2 = $step['image_2'];
-							                    $title = $step['title'];
-							                    $description = $step['description'];
-							                    ?>
-							                    <div class="row">
-							                        <div class="col-xs-12">
-							                            <h4>STEP <?php echo $step_number; ?></h4>
-							                            <?php
-							                            if (!empty($title)) {
-							                                echo '<h5>' . $title . '</h5>';
-							                            }
-							                            ?>
-							                            <?php
-							                            if (!empty($description)) {
-							                                echo '<div class="sp-step-desc">' . $description . '</div>';
-							                            }
-							                            ?>
-							                        </div>
-													<div class="col-xs-12">
-							                            <?php if (!empty($image_1)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
-							                                </a>
-							            				<?php } ?>
+                              <?php if (!empty($image_2)) { ?>
+                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
+                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
+                                </a>
+                              <?php } ?>
+                            </div> <!-- end col-xs-12 -->
+                          </div> <!-- end .row -->
 
-							                            <?php if (!empty($image_2)) { ?>
-							                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
-							                                    <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
-							                                </a>
-							            				<?php } ?>
-							                        </div>
-							                    </div>
+                          <?php
+                          $step_number++;
+                        } //end foreach $steps
+                      } // end if $steps ?>
+                    </section> <!-- end section .up-steps container -->
 
-							                    <?php
-							                    $step_number++;
-							                }
-							            }
-							            ?>
-							        </section>
+                    <section id="video">
+                      <?php if (!empty($video_url) || !empty($video) ) { ?>
+                        <h2>SEE IT IN ACTION</h2>
+                      <?php }
+                      if (!empty($video_url) && validate_url($video_url)) {
+                          $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);
+                          //youtube has two type of url formats we need to look for and change
+                          $videoID = parse_yturl($dispVideo);
+                          if ($videoID != false) {
+                              $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+                          }
+                          $video_embed = '<div class="project-video">
+                                            <div class="embed-youtube">
+                                              <iframe class="lazyload" src="' . $dispVideo . '" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                            </div>
+                                          </div>';
+                        echo $video_embed;
+                      }
+                      if (!empty($video)) {
+                        $ext = pathinfo($video, PATHINFO_EXTENSION); ?>
+                        <video width="100%" controls>
+                          <source src="<?php echo $video; ?>" type="video/<?php echo $ext; ?>">
+                          Your browser does not support the video tag.
+                        </video>
+                      <?php }	?>
+                    </section> <!-- end section #video-->
 
-									<section id="video">
-										<?php if (!empty($video_url) || !empty($video) ) { ?>
-											<h2>SEE IT IN ACTION</h2>
-										<?php }
-										if (!empty($video_url) && validate_url($video_url)) {
-										    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $video_url);
-										    //youtube has two type of url formats we need to look for and change
-										    $videoID = parse_yturl($dispVideo);
-										    if ($videoID != false) {
-										        $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
-										    }
-										    $video_embed = '<div class="project-video">
-										              <div class="embed-youtube">
-										                <iframe class="lazyload" src="' . $dispVideo . '" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-										              </div>
-										            </div>';
-											echo $video_embed;
-										}
-										if (!empty($video)) {
-											$ext = pathinfo($video, PATHINFO_EXTENSION); ?>
-											<video width="100%" controls>
-											  	<source src="<?php echo $video; ?>" type="video/<?php echo $ext; ?>">
-												Your browser does not support the video tag.
-											</video>
-										<?php }	?>
-									</section>
+                    <?php if($what_is_happening_here) { ?>
+                      <section class="up-intro text-center">
+                        <h2>WHAT'S HAPPENING HERE?</h2>
+                        <p><?php echo $what_is_happening_here; ?></p>
+                      </section>
+                    <?php } ?>
 
-									<?php if($what_is_happening_here) { ?>
-										<section class="up-intro text-center">
-								            <h2>WHAT'S HAPPENING HERE?</h2>
-								            <p><?php echo $what_is_happening_here; ?></p>
-								        </section>
-									<?php } ?>
+                    <?php if($whats_next) { ?>
+                      <section class="up-whats-next">
+                        <h2>WHAT'S NEXT?</h2>
+                        <p><?php echo $whats_next; ?></p>
+                      </section>
+                    <?php } ?>
+                  <?php
+                }else{
+                  $headers = array();
+                  $headers[] = 'MEMBERPRESS-API-KEY: a7nvYqloDO'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
+                  $headers[] = 'Content-Type: application/json';
+                  $ruleInfo = json_decode(
+                              basicCurl(get_site_url() . '/wp-json/mp/v1/rules/8640',$headers));
 
-							        <?php if($whats_next) { ?>
-							            <section class="up-whats-next">
-											<h2>WHAT'S NEXT?</h2>
-							                <p><?php echo $whats_next; ?></p>
-							            </section>
-							        <?php } ?>
+                  echo $ruleInfo->unauth_message;
+                  }
+                  ?>
 
-								</div>
+								</div> <!-- end #ld-tab-content -->
 
 								<div class="ld-tab-content" id="ld-tab-materials">
 									<h4>Materials:</h4>
@@ -288,10 +299,11 @@ get_header();
 											<?php endwhile;
 										} ?>
 									</ul>
-								</div>
+								</div> <!-- end #ld-tab-materials -->
 
-							</div> <?php // end tabs content ?>
-
+							</div> <!-- end tabs content .ld-tabs-content -->
+              <?php  //authorized user only content
+              if(current_user_can('mepr-active','rules:8640')){ ?>
 							<section class="tags">
 								<?php
 								if(!empty($categories)) { ?>
@@ -350,7 +362,7 @@ get_header();
 								<p>Share pictures and videos of your cool build! Be sure to use #maketogether or #makercamp</p>
 								<a class="mc-blue-arrow-btn" href="/"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>POST YOUR PROJECTS</a>
 							</section>
-
+            <?php } //end authorized content bottom section ?>
 							<?php //Below is the shopify javascript embed ?>
 							<script type="text/javascript">
 							/*<![CDATA[*/
@@ -498,13 +510,13 @@ get_header();
 								});
 							</script>
 
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+						</div> <!-- close .ld-tabs ld-tab-count-2 -->
+					</div> <!-- close .learndash_content_wrap -->
+				</div> <!-- close .learndash-wrapper lds-focus-mode-content-widgets lds-columns-3 lds-template-grid-banner-->
+			</div> <!-- close div.learndash-content-body -->
+		</div> <!-- close #learndash-page-content -->
+	</div> <!-- close .bb-grid grid -->
+</div> <!-- close #learndash-content-->
 
 <?php
 get_footer();

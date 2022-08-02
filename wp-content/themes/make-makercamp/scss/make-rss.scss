@@ -40,7 +40,7 @@
                 margin-right: 0px;
             }
         }
-        a { 
+        a {
             color: #333;
             &:hover, &:focus, &:active, &:visited {
                 text-decoration: none;
@@ -57,7 +57,7 @@
                 height: 35px;
                 overflow: visible;
             }
-            p {                
+            p {
                 line-height: 1.3em;
                 font-size: 18px;
             }
@@ -82,3 +82,20 @@
 
 }
 
+section.unauthorized {
+  border: 3px solid #d62329;
+  padding: 30px;
+  text-align: center;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 50px;
+  h2 {
+    color: #333;
+    border-top: none;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+  a {
+    color:#005e9a;
+  }
+}
