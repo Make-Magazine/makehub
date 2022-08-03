@@ -1,0 +1,141 @@
+.single-user-project {
+	.row { margin: 0px; }
+	.ld-tabs {
+		display: flex;
+		flex-direction: column;
+		.ld-icon.ld-icon-materials::before {
+			content: "\ef46" !important;
+		}
+	}
+	#ld-tab-content {
+		h1 {
+			color: #51b2dc;
+			font-size: 59px;
+			text-align: center;
+		}
+		h2 {
+			color: #51b2dc;
+			font-size: 30px;
+			margin-top: 30px;
+			border-top: 1px solid black;
+			padding-top: 30px;
+			font-family: "Roboto Bold";
+		}
+		h4, h5 {
+			color: #d62329;
+			font-size: 28px;
+			margin-top: 0px;
+		}
+		h5 {
+			font-size: 24px;
+		}
+		section {
+			text-align: left;
+			color: #7a7a7a;
+		}
+		.hero-image { width: 100%; }
+		.proj-sponsor-text {
+			text-align: center;
+			margin-bottom: 30px;
+		 }
+		.proj-divider {
+			height: 120px;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			&:before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 0;
+				border-top: 1px solid black;
+				background: black;
+				width: 100%;
+				transform: translateY(-50%);
+		    }
+			svg {
+				height: 130px;
+				background: white;
+				position: relative;
+				padding: 20px;
+			}
+		}
+		.proj-taxonomy-filters {
+			display: flex;
+			justify-content: space-around;
+			span {
+				display: flex;
+				align-items: center;
+				height: 50px;
+				&:before {
+					font-family: "Font Awesome 5 Free";
+					color: #51b2dc;
+					font-size: 26px;
+					margin-right: 15px;
+				}
+				&.tax-time:before {
+					content: "\f017";
+				}
+				&.tax-age:before {
+					content: "\f073";
+				}
+			}
+			a {
+				font-family: "Roboto Light";
+				font-size: 18px;
+				color: #7a7a7a;
+				&:after {
+					content: ",";
+					margin-right: 8px;
+				}
+				&:last-of-type:after {
+					content: "";
+				}
+			}
+		}
+	}
+	.up-steps {
+		padding: 0px;
+		.col-xs-12 { padding: 0px; padding-top: 10px; }
+		.row { margin-bottom: 15px; }
+		.up-step-img {
+			width: 48%;
+			display: inline-block;
+			float: left;
+			&:first-of-type {
+				margin-right: 2%;
+			}
+			div {
+				width: 100%;
+				height: 260px;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+		}
+	}
+
+	.up-author {
+		margin: 30px 0px;
+	}
+}
+
+.lms-header-instructor .bb-about-instructor h5 { font-size: 30px; }
+
+.mc-blue-arrow-btn {
+	background-color: #3fafed;
+    padding: 10px 25px 10px 47px;
+    border-radius: 25px;
+    color: #fff !important;
+    font-weight: 400;
+    transition: background-color .2s;
+    display: inline-block;
+	i {
+	    font-size: 36px;
+	    position: absolute;
+	    margin-left: -40px;
+	    margin-top: -4px;
+	    line-height: 1em;
+	}
+}

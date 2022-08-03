@@ -67,10 +67,10 @@ function allow_unfiltered_html_multisite( $caps, $cap, $user_id, $args ) {
 }
 add_filter('map_meta_cap', 'allow_unfiltered_html_multisite', 10, 4 );
 
-/*
+
 // for non-super admins, hides some items they don't need to trouble with
 function hide_unnecessary_menu_items(){
-	if( !is_super_admin(wp_get_current_user()) ) {
+	if( !is_super_admin(wp_get_current_user()->ID) ) {
         remove_menu_page( 'jetpack' ); //Jetpack
         remove_menu_page( 'themes.php' ); //Appearance
         remove_menu_page( 'plugins.php' ); //Plugins
@@ -84,4 +84,3 @@ function hide_unnecessary_menu_items(){
 	}
 }
 add_action( 'admin_init', 'hide_unnecessary_menu_items' );
-*/
