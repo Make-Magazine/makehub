@@ -14,29 +14,6 @@ require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer
 <div id="nav-overlay"></div>
 <?php wp_footer(); ?>
 
-<div class="fancybox-thx" style="display:none;">
-    <div class="nl-modal-cont nl-thx-p2">
-        <div class="col-sm-4 hidden-xs nl-modal">
-            <span class="fa-stack fa-4x">
-                <i class="fa fa-circle-thin fa-stack-2x"></i>
-                <i class="fa fa-thumbs-o-up fa-stack-1x"></i>
-            </span>
-        </div>
-        <div class="col-sm-8 col-xs-12 nl-modal">
-            <h3 style="text-align:center;">Awesome!</h3>
-            <p style="color:#333;text-align:center;margin-top:20px;">Thanks for signing up.</p>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</div>
-
-<div class="nl-modal-error" style="display:none;">
-    <div class="col-xs-12 nl-modal padtop">
-        <p class="lead">The reCAPTCHA box was not checked. Please try again.</p>
-    </div>
-    <div class="clearfix"></div>
-</div>
-
 <?php
     // Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
 	if(!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes" ) {

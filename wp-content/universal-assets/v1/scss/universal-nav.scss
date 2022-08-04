@@ -17,6 +17,7 @@
 	.campus-subnav-item { display: none; }
     .menu-item-has-children > a {
         position: relative;
+		padding: 0px !important;
     }
     #site-logo.site-branding {
         margin: 0px;
@@ -339,6 +340,7 @@
                     #make-coin {
 						text-align: center;
 						padding: 0 20px;
+						display: none;
 						a {
 							margin-top: 3px;
 							display: block;
@@ -496,10 +498,8 @@
         }
     }
     .login-section {
-        display: none;
         #LoginBtn, #LogoutBtn {
             color: #333;
-            display: none;
 			font-size: 16px;
         }
         #LogoutBtn {
@@ -534,7 +534,7 @@
 	        }
 			.avatar-banner {
 				width: 90px;
-				display: block;
+				display: none;
 				position: absolute;
 				top: 0px;
 				left: -20px;
@@ -583,6 +583,15 @@
 			}
 		}
     }
+}
+.logged-in {
+	.login-section {
+		#LoginBtn { display: none; }
+	}
+	#make-coin {
+		min-width: 57px;
+		display: flex;
+	}
 }
 
 // default padding underneath universal nav

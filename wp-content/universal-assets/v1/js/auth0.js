@@ -321,7 +321,6 @@ jQuery(document).ready(function() {
         document.querySelector('.profile-info .profile-name').innerHTML = user.user_name;
 
         //set membership level
-        //TBD - rename the returned profile path to not have makershare.com as part of it
         if (user.user_memlevel != '') {
             switch (user.user_memlevel) {
                 case "premium":
@@ -339,6 +338,9 @@ jQuery(document).ready(function() {
             //no membership level set yet in auth0, remove the banner as we don't know if they have a membership level or not
             jQuery('.avatar-banner').remove();
         }
+		setTimeout(function() {
+			document.querySelector(".avatar-banner").style.display = "block";
+		}, 100);
         document.querySelector('#LoginBtn').style.display = "none";
         document.querySelector('.dropdown-toggle img').style.display = "block";
         jQuery(".login-section").css("display", "block");
