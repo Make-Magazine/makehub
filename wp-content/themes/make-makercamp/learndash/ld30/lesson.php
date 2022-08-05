@@ -31,20 +31,6 @@
  *
  * @package LearnDash\Lesson
  */
- if(current_user_can('mepr-active','rules:8488')) {
-
- }else{
-   echo '<div class="single-user-project">';
-   echo '<div class="ld-tab-content ld-visible" id="ld-tab-content">';
-   if(get_the_post_thumbnail()) {
-    echo '<img class="hero-image" src="' . get_resized_remote_image_url(get_the_post_thumbnail_url(), 1900, 814) . '" />';
-  }
-  echo '<h1>' . get_the_title() . '</h1>';
-   echo '<div>' . get_the_post_thumbnail($post->ID, 'large', array('style' => 'margin-bottom: 15px;')) . '</div>' . $content;
-   echo '</div>';
-   echo '</div>';
- }
- $show_content = false;
 $in_focus_mode = LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Theme_LD30', 'focus_mode_enabled');
 add_filter('comments_array', 'learndash_remove_comments', 1, 2);
 $lesson_data = $post;
@@ -78,14 +64,13 @@ $terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
 
 
 // variables for building Breadcrumbs
-$referrer_url = (isset($_SERVER['HTTP_REFERER'])?parse_url($_SERVER['HTTP_REFERER']):array());
+$referrer_url = parse_url($_SERVER['HTTP_REFERER']);
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
 	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
 	sort($referrer_params);
 }
 
-$show_content=false;
 ?>
 
 <div id="learndash-content" class="container-fluid">
@@ -223,7 +208,6 @@ $show_content=false;
                                     'user_id' => $user_id
                                         ), true);
                             endif;
-
                             if ($show_content) :
 
                                 /**
