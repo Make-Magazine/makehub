@@ -17,9 +17,11 @@
     }
 	// hide campus menu items unless you are on campus
 	.campus-subnav-item { display: none; }
+	.top-menu.menu-item-has-children > a {
+		padding: 0px !important;
+	}
     .menu-item-has-children > a {
         position: relative;
-		padding: 0px !important;
     }
     #site-logo.site-branding {
         margin: 0px;
