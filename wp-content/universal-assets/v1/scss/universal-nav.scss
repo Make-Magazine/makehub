@@ -5,8 +5,10 @@
     z-index: 610;
     box-shadow: 0 1px 5px rgba(0,0,0, .3);
     width: 100%;
-	height: 121px; // hardcoded to prevent CLS
-	background: #333;
+	@media screen and (min-width: 768px) {
+		height: 121px; // hardcoded to prevent CLS
+		background: #333;
+	}
     i {
         color: #939597;
         font-size: 21px;
@@ -15,6 +17,9 @@
     }
 	// hide campus menu items unless you are on campus
 	.campus-subnav-item { display: none; }
+	.top-menu.menu-item-has-children > a {
+		padding: 0px !important;
+	}
     .menu-item-has-children > a {
         position: relative;
     }
@@ -339,6 +344,7 @@
                     #make-coin {
 						text-align: center;
 						padding: 0 20px;
+						display: none;
 						a {
 							margin-top: 3px;
 							display: block;
@@ -496,10 +502,8 @@
         }
     }
     .login-section {
-        display: none;
         #LoginBtn, #LogoutBtn {
             color: #333;
-            display: none;
 			font-size: 16px;
         }
         #LogoutBtn {
@@ -534,7 +538,7 @@
 	        }
 			.avatar-banner {
 				width: 90px;
-				display: block;
+				display: none;
 				position: absolute;
 				top: 0px;
 				left: -20px;
@@ -583,6 +587,15 @@
 			}
 		}
     }
+}
+.logged-in {
+	.login-section {
+		#LoginBtn { display: none; }
+	}
+	#make-coin {
+		min-width: 57px;
+		display: flex;
+	}
 }
 
 // default padding underneath universal nav
