@@ -594,7 +594,8 @@
 	}
 	#make-coin {
 		min-width: 57px;
-		display: flex;
+		display: flex !important;
+		flex-direction: column;
 	}
 }
 
