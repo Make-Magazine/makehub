@@ -36,15 +36,12 @@
                     'domains': [
                         'make.co',
                         'makermedia.auth0.com',
-                        'makeco.staging.wpengine.com',
                         'stagemakehub.wpengine.com',
                         'devmakehub.wpengine.com'
                     ]
                 });
                 gtag('js', new Date());
-                gtag('config', 'UA-51157-36', {
-                    'cookie_domain': 'make.co'
-                });
+                gtag('config', 'UA-51157-36');
             </script>
 
             <!-- Google Tag Manager -->

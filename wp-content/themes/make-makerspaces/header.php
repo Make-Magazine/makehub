@@ -54,7 +54,7 @@ do_action('genesis_meta');
 	if(!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes" ) {
 ?>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-39"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-36"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() {
@@ -65,14 +65,12 @@ do_action('genesis_meta');
 			'domains': [
 				'make.co',
 				'makermedia.auth0.com',
-				'makeco.staging.wpengine.com'
+				'stagemakehub.wpengine.com',
+				'devmakehub.wpengine.com'
 			]
 		});
 		gtag('js', new Date());
-
-		gtag('config', 'UA-51157-39', {
-			'cookie_domain': 'make.co'
-		});
+		gtag('config', 'UA-51157-36');
 	</script>
 <?php } // end cookie law if ?>
 
