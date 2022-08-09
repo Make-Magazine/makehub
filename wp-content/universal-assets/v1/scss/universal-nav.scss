@@ -345,6 +345,7 @@
 						text-align: center;
 						padding: 0 20px;
 						display: none;
+						min-width: 57px;
 						a {
 							margin-top: 3px;
 							display: block;
@@ -593,7 +594,6 @@
 		#LoginBtn { display: none; }
 	}
 	#make-coin {
-		min-width: 57px;
 		display: flex !important;
 		flex-direction: column;
 	}
@@ -603,7 +603,7 @@
 #page .site-content {
 	padding-top: 121px;
 	@media screen and (max-width: 768px) {
-		padding-top: 76ppx;
+		padding-top: 76px;
 	}
 }
 
