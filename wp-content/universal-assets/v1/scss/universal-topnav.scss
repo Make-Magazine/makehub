@@ -1,7 +1,4 @@
 // site nav logos
-body h2.site-title {
-	a { display: none !important; }
-}
 body.makeco h2.site-title a.makeco-logo { display: block !important; }
 body.makershed h2.site-title a.makershed-logo { display: block !important; }
 body.makezine h2.site-title a.makezine-logo { display: block !important; }
@@ -91,6 +88,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                 margin: 0;
                 a {
                     color: #005e9a;
+					display: none;
                 }
                 img.nav-logo {
                     position: relative;
