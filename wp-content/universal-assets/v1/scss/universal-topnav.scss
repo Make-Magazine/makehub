@@ -1,12 +1,34 @@
 // site nav logos
-body.makeco h2.site-title a.makeco-logo { display: block !important; }
-body.makershed h2.site-title a.makershed-logo { display: block !important; }
-body.makezine h2.site-title a.makezine-logo { display: block !important; }
-body#makerfaire h2.site-title a.makerfaire-logo { display: block !important; }
-body.makercamp h2.site-title a.makercamp-logo { display: block !important; }
-body.makerspaces h2.site-title a.makerspaces-logo { display: block !important; }
-body.learn h2.site-title a.makelearn-logo { display: block !important; }
-body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp):not(.makerspaces):not(.learn) {
+body.makeco #site-logo {
+	min-width: 100px;
+	h2.site-title a.makeco-logo { display: block !important; }
+}
+body.makershed #site-logo {
+	min-width: 100px;
+	h2.site-title a.makershed-logo { display: block !important; }
+}
+body.makezine #site-logo {
+	min-width: 100px;
+	h2.site-title a.makezine-logo { display: block !important; }
+}
+body#makerfaire #site-logo {
+	min-width: 165px;
+	h2.site-title a.makerfaire-logo { display: block !important; }
+}
+body.makercamp #site-logo {
+	min-width: 100px;
+	h2.site-title a.makercamp-logo { display: block !important; }
+}
+body.makerspaces #site-logo {
+	min-width: 100px;
+	h2.site-title a.makerspaces-logo { display: block !important; }
+}
+body.learn #site-logo {
+	min-width: 100px;
+	h2.site-title a.makelearn-logo { display: block !important; }
+}
+body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp):not(.makerspaces):not(.learn) #site-logo {
+	min-width: 100px;
 	h2.site-title a.makezine-logo { display: block !important; }
 }
 
@@ -95,6 +117,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                     z-index: 1;
                     max-height: 76px;
                     height: 40px;
+					min-width: 100px;
                 }
             }
             @media screen and (max-width: 800px) {
@@ -164,6 +187,8 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                         height: 76px;
                         white-space: nowrap;
                         padding-left: 0px;
+						display: flex;
+						flex-wrap: wrap;
                         a {
                             font-size: 16px;
                             font-weight: 500;
@@ -172,8 +197,6 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             p { margin: 0px; }
                         }
                         &> li.menu-item {
-                            float: left;
-                            display: inline-block;
                             height: 76px;
                             line-height: 76px;
                             padding: 0 16px;
