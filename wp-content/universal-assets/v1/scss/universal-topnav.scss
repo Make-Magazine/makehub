@@ -1,16 +1,16 @@
 // site nav logos
-h2.site-title {
-	a { display: none; }
+body h2.site-title {
+	a { display: none !important; }
 }
-body.makeco h2.site-title a.makeco-logo { display: block; }
-body.makershed h2.site-title a.makershed-logo { display: block; }
-body.makezine h2.site-title a.makezine-logo { display: block; }
-body#makerfaire h2.site-title a.makerfaire-logo { display: block; }
-body.makercamp h2.site-title a.makercamp-logo { display: block; }
-body.makerspaces h2.site-title a.makerspaces-logo { display: block; }
-body.learn h2.site-title a.makelearn-logo { display: block; }
+body.makeco h2.site-title a.makeco-logo { display: block !important; }
+body.makershed h2.site-title a.makershed-logo { display: block !important; }
+body.makezine h2.site-title a.makezine-logo { display: block !important; }
+body#makerfaire h2.site-title a.makerfaire-logo { display: block !important; }
+body.makercamp h2.site-title a.makercamp-logo { display: block !important; }
+body.makerspaces h2.site-title a.makerspaces-logo { display: block !important; }
+body.learn h2.site-title a.makelearn-logo { display: block !important; }
 body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp):not(.makerspaces):not(.learn) {
-	h2.site-title a.makezine-logo { display: block; }
+	h2.site-title a.makezine-logo { display: block !important; }
 }
 
 .site-header-custom {
