@@ -17,6 +17,10 @@ function set_ajax_params(){
   }
   $my_version = isset($pkg_json->version)?$pkg_json->version:'1.1';
 
+  ### UNIVERSAL STYLES ###
+  wp_enqueue_style('universal-firstload.css', content_url() . '/universal-assets/v1/css/universal-firstload.min.css', array(), $my_version);
+  wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
+
   //auth0
   wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);

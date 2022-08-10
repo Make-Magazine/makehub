@@ -1,3 +1,18 @@
+// site nav logos
+h2.site-title {
+	a { display: none; }
+}
+body.makeco h2.site-title a.makeco-logo { display: block; }
+body.makershed h2.site-title a.makershed-logo { display: block; }
+body.makezine h2.site-title a.makezine-logo { display: block; }
+body#makerfaire h2.site-title a.makerfaire-logo { display: block; }
+body.makercamp h2.site-title a.makercamp-logo { display: block; }
+body.makerspaces h2.site-title a.makerspaces-logo { display: block; }
+body.learn h2.site-title a.makelearn-logo { display: block; }
+body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp):not(.makerspaces):not(.learn) {
+	h2.site-title a.makezine-logo { display: block; }
+}
+
 .site-header-custom {
     font-family: 'Roboto', 'SF UI Text', sans-serif;
     background: #fff;
@@ -812,7 +827,7 @@ body.buddypanel-open {
     display: none;
 }
 
-.makezine, .makercamp {
+.makezine, .makercamp:not(.buddyboss-theme) {
     #sb-search {
         display: block;
     }
