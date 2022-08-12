@@ -395,5 +395,8 @@ body[class*="page-judge-set"] {
 			}
 		}
 	}
+	.fluid-width-video-wrapper iframe, .fluid-width-video-wrapper object, .fluid-width-video-wrapper embed {
+		height: 50%;
+	}
 
 }
