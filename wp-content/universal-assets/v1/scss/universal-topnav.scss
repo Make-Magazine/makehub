@@ -692,10 +692,14 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 			a {
 				color: #333;
 				display: flex;
+				align-items: center;
+				min-height: 30px;
+				align-content: center;
 				i {
 					width: 40px;
 					margin-right: 0px;
 					display: block !important;
+					top: 0px !important;
 				}
 			}
 			&.menu-item-has-children {
