@@ -1,3 +1,43 @@
+// site nav logos
+body.makeco #site-logo {
+	min-width: 100px;
+	h2.site-title a.makeco-logo { display: block !important; }
+}
+body.makershed #site-logo {
+	min-width: 100px;
+	h2.site-title a.makershed-logo { display: block !important; }
+}
+body.makezine #site-logo {
+	min-width: 100px;
+	h2.site-title a.makezine-logo { display: block !important; }
+	@media screen and (max-width: 800px) {
+		h2.site-title { position: relative; }
+	}
+}
+body#makerfaire #site-logo {
+	min-width: 165px;
+	h2.site-title a.makerfaire-logo { display: block !important; }
+}
+body.makercamp #site-logo {
+	min-width: 100px;
+	h2.site-title a.makercamp-logo { display: block !important; }
+}
+body.makerspaces #site-logo {
+	min-width: 100px;
+	h2.site-title a.makerspaces-logo { display: block !important; }
+	@media screen and (max-width: 800px) {
+		h2.site-title { margin-right: 10px; }
+	}
+}
+body.learn #site-logo {
+	min-width: 100px;
+	h2.site-title a.makelearn-logo { display: block !important; }
+}
+body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp):not(.makerspaces):not(.learn) #site-logo {
+	min-width: 100px;
+	h2.site-title a.makezine-logo { display: block !important; }
+}
+
 .site-header-custom {
     font-family: 'Roboto', 'SF UI Text', sans-serif;
     background: #fff;
@@ -5,6 +45,7 @@
     z-index: 610;
     box-shadow: 0 1px 5px rgba(0,0,0, .3);
     width: 100%;
+	max-width: 100vw;
 	@media screen and (min-width: 768px) {
 		height: 121px; // hardcoded to prevent CLS
 		background: #333;
@@ -76,16 +117,26 @@
                 margin: 0;
                 a {
                     color: #005e9a;
+					display: none;
                 }
                 img.nav-logo {
                     position: relative;
                     z-index: 1;
                     max-height: 76px;
                     height: 40px;
+					min-width: 100px;
                 }
             }
             @media screen and (max-width: 800px) {
                 padding-right: 0px;
+				h2.site-title {
+					position: absolute;
+				    margin-right: auto;
+				    margin-left: auto;
+				    left: 0;
+				    right: 0;
+				    text-align: center;
+				}
             }
         }
         &.default-header {
@@ -151,6 +202,8 @@
                         height: 76px;
                         white-space: nowrap;
                         padding-left: 0px;
+						display: flex;
+						flex-wrap: wrap;
                         a {
                             font-size: 16px;
                             font-weight: 500;
@@ -159,8 +212,6 @@
                             p { margin: 0px; }
                         }
                         &> li.menu-item {
-                            float: left;
-                            display: inline-block;
                             height: 76px;
                             line-height: 76px;
                             padding: 0 16px;
@@ -300,10 +351,7 @@
                 -webkit-box-flex: 0;
                 -ms-flex: 0 0 auto;
                 flex: 0 0 auto;
-                &> :last-child { padding-right: 0; }
-                &> :first-child { padding-left: 0; }
                 &> * {
-                    padding: 0 10px;
                     height: 76px;
                     display: -webkit-box;
                     display: -ms-flexbox;
@@ -321,6 +369,7 @@
                     align-items: center;
                     &> * {
                         line-height: 1;
+						padding: 0px;
                     }
                     .nav-header-buttons {
                         padding: 0px;
@@ -362,7 +411,6 @@
             }
             .mobile-toggle-panel {
                 display: block;
-                margin-right: 70px;
                 color: #333;
             }
             .search-separator { display: none; }
@@ -644,10 +692,14 @@
 			a {
 				color: #333;
 				display: flex;
+				align-items: center;
+				min-height: 30px;
+				align-content: center;
 				i {
 					width: 40px;
 					margin-right: 0px;
 					display: block !important;
+					top: 0px !important;
 				}
 			}
 			&.menu-item-has-children {
@@ -812,7 +864,7 @@ body.buddypanel-open {
     display: none;
 }
 
-.makezine, .makercamp {
+.makezine, .makercamp:not(.buddyboss-theme) {
     #sb-search {
         display: block;
     }

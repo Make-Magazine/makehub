@@ -92,9 +92,6 @@ function make_makerspaces_enqueue_scripts_styles() {
 	$parent_style = 'genesis-style';
    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
 
-	### UNIVERSAL STYLES ###
-	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
-
 	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-makerspaces-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 

@@ -50,8 +50,6 @@ function make_learn_scripts_styles() {
     // Styles
     wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
     wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-    ### UNIVERSAL STYLES ###
-    wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
 
@@ -204,15 +202,30 @@ function searchfilter($query) {
 
 add_filter('pre_get_posts', 'searchfilter');
 
-
-
-add_action('after_setup_theme', 'remove_admin_bar');
-
-function remove_admin_bar() {
-    if (!current_user_can('administrator') && !is_admin()) {
-        show_admin_bar(false);
-    }
+function tf_check_user_role( $roles ) {
+    /*@ Check user logged-in */
+    if ( is_user_logged_in() ) {
+        /*@ Get current logged-in user data */
+        $user = wp_get_current_user();
+        /*@ Fetch only roles */
+        $currentUserRoles = $user->roles;
+        /*@ Intersect both array to check any matching value */
+        $isMatching = array_intersect( $currentUserRoles, $roles);
+        $response = false;
+        /*@ If any role matched then return true */
+        if ( !empty($isMatching) ) :
+            $response = true;
+        endif;
+        return $response;
+    } else {
+		return true;
+	}
 }
+$roles = [ 'customer', 'subscriber' ];
+if ( tf_check_user_role($roles) ) {
+    add_filter('show_admin_bar', '__return_false', 999);
+}
+
 
 define('BP_AVATAR_URL', '/wp-content/uploads/');
 

@@ -12,8 +12,6 @@ jQuery(document).ready(function () {
         case "stage.makerfaire.com":
         case "mfairestage.wpengine.com":
         case "mfairedev.wpengine.com":
-            jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
-            document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
 			sitename = "Maker Faire";
             break;
         case "makercamp.local":
@@ -26,10 +24,8 @@ jQuery(document).ready(function () {
         case "mcampdev.wpengine.com":
         case "makercamp.makehub.local":
         case "makercamp.make.co":
-        case "makercamp.devmakehub.wpengine.com":
+        case "makercamp.devmakehub.make.co":
         case "makercamp.stagemakehub.wpengine.com":
-            jQuery("h2.site-title a").attr("href", "https://makercamp.make.co");
-            document.getElementById("navLogo").src = "https://makercamp.make.co/wp-content/universal-assets/v1/images/makercamp-logo.png";
 			sitename = "Maker Camp";
             break;
         case "makezine.test":
@@ -40,27 +36,20 @@ jQuery(document).ready(function () {
         case "dev.makezine.com":
 		case "mzinedev.wpengine.com":
 		case "mzinestage.wpengine.com":
-            jQuery("h2.site-title a").attr("href", "https://makezine.com");
-            jQuery("#site-logo .nav-logo").css("height", "30.4px");
-            jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
 			sitename = "Make: Magazine";
             break;
         case "makerspaces.makehub.test":
         case "makerspaces.makehub.local":
-        case "makerspaces.devmakehub.wpengine.com":
+        case "makerspaces.devmakehub.make.co":
         case "makerspaces.stagemakehub.wpengine.com":
         case "makerspaces.make.co":
 			sitename = "Maker Spaces";
-            jQuery("h2.site-title a").attr("href", "https://makerspaces.make.co");
-            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
             break;
         case "learn.makehub.test":
         case "learn.makehub.local":
         case "learn.devmakehub.wpengine.com":
         case "learn.stagemakehub.wpengine.com":
         case "learn.make.co":
-            jQuery("h2.site-title a").attr("href", "https://learn.make.co");
-            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
 			sitename = "Learning Labs";
             break;
         default:// the default is makehub/make.co
@@ -72,8 +61,6 @@ jQuery(document).ready(function () {
                 document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
                 jQuery("#universal-subnav .community-subnav-item, #primary-navbar .community-subnav-item").css("display", "none");
                 jQuery("#universal-subnav .campus-subnav-item, #primary-navbar .campus-subnav-item").css("display", "block");
-            } else {
-                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make_co_logo.png";
             }
             break;
     }
