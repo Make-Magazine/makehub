@@ -319,9 +319,11 @@
  .learndash-wrapper {
  	padding-bottom: 30px;
  	a.universal-btn {
- 		border-bottom: solid 1px #005e9a !important;
+ 		border: solid 1px #005e9a !important;
  		color: #fff;
  		width: 100%;
+		align-items: center;
+		display: flex;
  		&:hover, &:focus {
  			color: #005e9a;
  		}
