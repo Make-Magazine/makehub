@@ -326,7 +326,7 @@ get_header();
 							</section>
 
 							<section class="up-buttons text-center">
-								<a class="mc-blue-arrow-btn" href="https://makercamp.make.co/projects"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>BROWSE MAKER CAMP PROJECTS</a>
+								<a class="mc-blue-arrow-btn" href="https://makercamp.make.co/project-library/"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>BROWSE MAKER CAMP PROJECTS</a>
 								<a class="mc-blue-arrow-btn" href="http://makezine.com/projects/" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>FIND EVEN MORE PROJECTS AT Make:</a>
 							</section>
 
@@ -350,7 +350,7 @@ get_header();
 							<section class="up-colab-share">
 								<h3>ALL DONE? SHARE IT!</h3>
 								<p>Share pictures and videos of your cool build! Be sure to use #maketogether or #makercamp</p>
-								<a class="mc-blue-arrow-btn" href="/"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>POST YOUR PROJECTS</a>
+								<a class="mc-blue-arrow-btn" href="https://makercamp.make.co/share/"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i>POST YOUR PROJECTS</a>
 							</section>
 
 							<?php //Below is the shopify javascript embed ?>
