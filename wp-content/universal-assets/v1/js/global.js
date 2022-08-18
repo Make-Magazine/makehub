@@ -173,20 +173,6 @@ jQuery(document).ready(function (jQuery) {
         autoHeight: true,
         padding: 0
     });
-    // Pinterest Offer
-    if (document.referrer) {
-        refDomain = (new URL(document.referrer)).hostname;
-        if (refDomain == "pinterest.com" || refDomain == "www.pinterest.com") {
-            jQuery(".pinterest-fancybox").fancybox({
-                fitToView: false,
-                autoSize: false,
-                maxWidth: 400,
-                autoWidth: true,
-                autoHeight: true,
-                padding: 15,
-            }).click();
-        }
-    }
 });
 
 // make all buttons with the class .login-btn function like the main one

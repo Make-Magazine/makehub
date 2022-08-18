@@ -267,19 +267,6 @@ input.cmn-toggle-round:checked + label:after {
         }
     }
 }
-#pinterest-offer a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
-    b {
-        font-size: 20px;
-        color: #333;
-    }
-}
-
 
 .universal-warning {
     color: #4A4A4A;
@@ -317,6 +304,19 @@ input.cmn-toggle-round:checked + label:after {
     position: relative;
     min-width: 40%;
     overflow: visible;
+	z-index: 999;
+	background: #fff;
+	padding: 10px 5px 15px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+	&.hide-heading {
+		.ui-dialog-titlebar { visibility: hidden; height: 0px; padding: 0px; }
+		.ui-dialog-titlebar-close {
+			visibility: visible;
+			margin-top: -25px;
+			margin-left: -15px;
+		}
+	}
     p { color: #000; }
     .ui-button-icon-only {
         visibility: hidden;
@@ -362,6 +362,7 @@ input.cmn-toggle-round:checked + label:after {
         left: 0px;
     }
 }
+
 .ui-widget-overlay {
     z-index: 998;
     position: fixed;
