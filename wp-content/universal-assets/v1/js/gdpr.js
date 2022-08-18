@@ -1,13 +1,13 @@
 // GDPR compliance never looked so good
-window.addEventListener('load', function() {
+jQuery(document).ready( function() {
 
 	var storage = new CrossStorageClient('https://make.co/wp-content/universal-assets/v1/page-elements/universal-gdpr-helper.html', {
-	  timeout: 90000000,
+	  timeout: 5000,
 	  frameId: 'storageFrame'
 	});
-	
+
 	var gdpr_state = null;
-	
+
 	jQuery("#cookie-dialog").dialog({
 		modal: true,
 		title: null,
@@ -15,7 +15,7 @@ window.addEventListener('load', function() {
 		draggable: false,
 		autoOpen: false
 	});
-	
+
 	storage.onConnect().then(function(result) {
 		return storage.get('cookies-allowed');
 	}).then(function(res){
@@ -30,17 +30,17 @@ window.addEventListener('load', function() {
 			jQuery("#nonNeccessaryCookies").removeAttr('checked');
 		}
 	});
-	
+
 	jQuery("#cookie-settings-btn").click(function(){
 		jQuery("#cookie-settings-btn").hide();
 		jQuery("#cookie-dialog").dialog("open");
 	});
-							 
+
 	jQuery("#cookie-configure").click(function(){
 		jQuery("#cookie-footer").hide();
 		jQuery("#cookie-dialog").dialog("open");
 	});
-	
+
 	jQuery("#cookie-accept").click(function(){
 		jQuery("#cookie-footer").hide();
 		if( !localStorage.getItem('cookie-law') ) {
@@ -48,7 +48,7 @@ window.addEventListener('load', function() {
 			return storage.set('cookies-allowed', 'yes');
 		}
 	});
-	
+
 	jQuery('div#cookie-dialog').on('dialogclose', function(event) {
 		jQuery("#cookie-settings-btn").show();
 		if(jQuery("#nonNeccessaryCookies").is(':checked') ) {
@@ -61,5 +61,5 @@ window.addEventListener('load', function() {
 		}
 	});
 
-	
+
 });
