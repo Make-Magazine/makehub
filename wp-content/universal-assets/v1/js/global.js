@@ -153,26 +153,28 @@ function get_hostname(url) {
 // FANCYBOX POPUPS
 jQuery(document).ready(function (jQuery) {
     // YOUTUBE PLAYER FOR FANCYBOX MODALS
-    jQuery(".fancytube").fancybox({
-        maxWidth: 800,
-        maxHeight: 600,
-        fitToView: false,
-        width: '70%',
-        height: '70%',
-        autoSize: false,
-        closeClick: false,
-        openEffect: 'none',
-        closeEffect: 'none',
-        padding: 0
-    });
-    // just a standard info box
-    jQuery(".info-modal").fancybox({
-        fitToView: false,
-        autoSize: false,
-        maxWidth: '70%',
-        autoHeight: true,
-        padding: 0
-    });
+	if(typeof fancybox === "function"){
+	    jQuery(".fancytube").fancybox({
+	        maxWidth: 800,
+	        maxHeight: 600,
+	        fitToView: false,
+	        width: '70%',
+	        height: '70%',
+	        autoSize: false,
+	        closeClick: false,
+	        openEffect: 'none',
+	        closeEffect: 'none',
+	        padding: 0
+	    });
+	    // just a standard info box
+	    jQuery(".info-modal").fancybox({
+	        fitToView: false,
+	        autoSize: false,
+	        maxWidth: '70%',
+	        autoHeight: true,
+	        padding: 0
+	    });
+	}
 });
 
 // make all buttons with the class .login-btn function like the main one

@@ -865,7 +865,7 @@ body.buddypanel-open {
     display: none;
 }
 
-.makezine, .makercamp:not(.buddyboss-theme) {
+.makezine {
     #sb-search {
         display: block;
     }
@@ -879,7 +879,7 @@ body.buddypanel-open {
     position: fixed;
     top: 0px;
 }
-.fancybox-wrap.search-modal-wrapper .fancybox-skin{
+.ui-dialog[aria-describedby=search-modal]{
     background: transparent;
     box-shadow: none;
     -webkit-box-shadow: none;
@@ -888,7 +888,7 @@ body.buddypanel-open {
         color: #fff;
         display: block;
         font-size: 62px;
-        font-family: "Roboto-Light";
+        font-family: "Roboto-Light", "Roboto Light";
         text-align:center;
         margin-bottom: 30px;
     }
@@ -947,7 +947,7 @@ body.buddypanel-open {
         text-align: center;
         h5 {
             color: #fff;
-            font-family: "Roboto-Light";
+            font-family: "Roboto-Light", "Roboto Light";
             font-size: 18px;
             font-weight: normal;
         }
@@ -967,8 +967,9 @@ body.buddypanel-open {
             }
         }
     }
-    .fancybox-close {
-        background: none;
+    .ui-dialog-titlebar-close {
+        background: none !important;
+		width: 10px !important;
         color: #fff;
         font-size: 30px;
         margin-top: -30px;
@@ -979,11 +980,18 @@ body.buddypanel-open {
         right: 0px;
         &:before {
             content: "x";
+			visibility: visible;
         }
+		&:after {
+			content: "" !important;
+		}
         @media (max-width: 767px) {
             margin-top: -50px;
         }
     }
+}
+.ui-widget-overlay {
+	background: rgba(0,0,0,.8) !important;
 }
 
 .search-button-wrapper {
