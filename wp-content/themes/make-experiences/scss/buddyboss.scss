@@ -6,6 +6,7 @@
         padding: 0;
     }
 }
+
 .bp-nouveau {
 	background-color: #FAFBFD;
 	.bb-grid {
@@ -68,6 +69,20 @@ body.groups:not(.admin-bar) {
 	}
 	.item-meta [id^=ges-panel], .last-activity {
 		display: none;
+	}
+}
+body #buddypress .bp-list.members-list .action {
+	.generic-button button, a.send-message {
+		color: #fff !important;
+		background: $color-blue;
+		border: solid $color-blue 1px;
+		border-radius: 5px !important;
+		padding: 10px 5px;
+		font-size: 18px;
+		&:hover {
+			color: $color-blue !important;
+			background: #fff;
+		}
 	}
 }
 .groups {
