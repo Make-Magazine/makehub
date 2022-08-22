@@ -341,6 +341,20 @@ button.ges-change, button.ges-change:hover {
 	#learndash_profile {
 		.learndash-course-status, .learndash-course-certificate { display: none; }
 	}
+	// rename I wish to rename anonymous checkbox
+	.field_i-wish-to-remain-anonymous-and-opt-out-of-the-member-directory {
+		.option-label {
+			visibility: hidden;
+			&:before {
+				visibility: visible;
+				margin-right: 0px;
+			}
+			&:after {
+				visibility: visible;
+				content: "yes";
+			}
+		}
+	}
 }
 
 // Makerspace dir Page
