@@ -21,7 +21,7 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
     return ($keys_only ? array_keys($events) : $events);
   }
 
-  public function prepare_data($event, $data) {
+  public function prepare_data($event, $data, $raw_data = null) {
     $info = $this->events[$event];
 
     switch($info->type) {
@@ -35,6 +35,12 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
         return $data;
     }
 
+    if( is_object($raw_data) && $raw_data instanceof \MeprBaseModel && 'member' === $info->type ){
+      if( isset($raw_data->event_args) && !empty($raw_data->event_args) ){
+        $data->event_args = $raw_data->event_args;
+      }
+    }
+
     return $utils->prepare_obj((array)$data);
   }
 
@@ -46,11 +52,20 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
 
     if(is_wp_error($data)) { return $data; }
 
+    // make sure to pass event args
+    $event_args = (array) $evt->get_args();
+    if( !empty($event_args) ){
+      $event_args['event_id'] = $evt->id;
+      $event_args['event'] = $event;
+      $data->event_args = $event_args;
+    }
+
     $send_now = get_option('mpdt_send_webhook_immediately');
     return $this->send_to_all_webhooks($event, $data, $send_now);
   }
 
   public function send_to_all_webhooks($event, MeprBaseModel $data, $send_now=false) {
+
     if(!in_array($event, $this->real_events(true))) { return false; }
 
     $webhooks = get_option(MPDT_WEBHOOKS_KEY, false);
@@ -70,6 +85,7 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
   }
 
   public function send($webhook, $event, MeprBaseModel $data, $send_now=false) {
+
     if(!in_array($event, $this->real_events(true))) { return false; }
 
     $send_now_events = apply_filters('mpdt-send-now-events', array('member-deleted'), $webhook, $event, $data, $send_now);
@@ -79,7 +95,12 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
     }
 
     if($send_now || (defined('DOING_CRON') && DOING_CRON)) {
-      $data = $this->prepare_data($event,$data->rec);
+      $data = $this->prepare_data($event,$data->rec,$data);
+
+      if( isset($data['event_args']) ){
+        unset($data['event_args']);
+      }
+
       $evt_obj = $this->events[$event];
       $type = $evt_obj->type;
       $body = compact('event', 'type', 'data');
@@ -127,6 +148,13 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
         $job->data_id = $data->id;
       }
 
+      // We need event id to fetch args.
+      if( isset($data->event_args) ){
+        if( isset($data->event_args['event_id']) ){
+          $job->event_id = $data->event_args['event_id'];
+        }
+      }
+
       $job->enqueue();
     }
 
@@ -168,6 +196,11 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
           )
         )
       );
+    }
+
+     // make sure to pass event args
+    if( isset($evt_data['data']['event_args']) ){
+      $data->event_args = $evt_data['data']['event_args'];
     }
 
     $this->send_to_all_webhooks($event, $data, true);
@@ -212,9 +245,17 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
     }
 
     $evt_obj = $this->events[$event];
+
     $utils = MpdtUtilsFactory::fetch($evt_obj->type);
 
-    exit($utils->get_event_json($event));
+    // let us get the event data.
+    $event_data = apply_filters('mdpt-ajax-event-data', $utils->get_event_data($event));
+    if( isset($event_data['data']['event_args']) ){
+      unset($event_data['data']['event_args']);
+    }
+
+    // prepare json.
+    exit(wp_json_encode($event_data));
   }
 
 }

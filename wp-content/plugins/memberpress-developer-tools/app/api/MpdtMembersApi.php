@@ -9,9 +9,16 @@ class MpdtMembersApi extends MpdtBaseApi {
 
     $accepted_fields = array_merge($accepted_fields, $allowed_meta);
 
+
     foreach($_post as $k => $field) {
       if(!isset($accepted_fields[$k])) {
         unset($_post[$k]);
+      }else{
+        if('text' === (string) $accepted_fields[$k]['type']){
+          $_post[$k] = wp_kses_post($_post[$k]);
+        }else if('array' !== (string) $accepted_fields[$k]['type']){
+          $_post[$k] = sanitize_text_field($_post[$k]);
+        }
       }
     }
 

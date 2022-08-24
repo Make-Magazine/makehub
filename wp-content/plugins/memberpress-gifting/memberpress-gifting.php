@@ -7,7 +7,7 @@ Author: MemberPress
 Author URI: https://memberpress.com/
 Text Domain: memberpress-gifting
 Domain Path: /i18n
-Version: 1.1.15
+Version: 1.1.16
 Copyright: 2004-2022, Caseproof, LLC
 */
 

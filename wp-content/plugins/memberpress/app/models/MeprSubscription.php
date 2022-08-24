@@ -868,6 +868,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
   //Cancels a subscription is the limit_cycles_num >= txn_count
   //$trial_offset is used if a paid trial payment exists
   public function limit_payment_cycles() {
+
     //Check if limiting is even enabled
     if(!$this->limit_cycles) { return; }
 
@@ -879,9 +880,11 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
 
     //Cancel this subscription if the payment cycles are limited and have been reached
     if($this->status == MeprSubscription::$active_str && ($this->txn_count - $trial_offset) >= $this->limit_cycles_num) {
+
       $_REQUEST['expire'] = true; // pass the expire
       $_REQUEST['silent'] = true; // Don't want to send cancellation notices
       try {
+        file_put_contents( WP_CONTENT_DIR . '/paypal-connect.log', 'Canceling sub', FILE_APPEND );
         $pm->process_cancel_subscription($this->id);
       }
       catch(Exception $e) {
@@ -1092,7 +1095,6 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
   }
 
   //Is the most recent transaction a failure?
-  //used mostly for catchup feature in authorize.net
   public function latest_txn_failed() {
     global $wpdb;
     $mepr_db = new MeprDb();
@@ -1106,6 +1108,22 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
     ");
 
     return ($status == MeprTransaction::$failed_str);
+  }
+
+  //Is the most recent transaction a refund?
+  public function latest_txn_refunded() {
+    global $wpdb;
+    $mepr_db = new MeprDb();
+
+    $status = $wpdb->get_var("
+      SELECT status
+        FROM {$mepr_db->transactions}
+       WHERE subscription_id = {$this->id}
+       ORDER BY id DESC
+       LIMIT 1
+    ");
+
+    return ($status == MeprTransaction::$refunded_str);
   }
 
   public function is_lifetime() {
@@ -1195,7 +1213,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
     }
   }
 
-  public function maybe_cancel_old_sub() {
+  public function maybe_cancel_old_sub($force_cancel_artificial = false) {
     $mepr_options = MeprOptions::fetch();
     $usr = $this->user();
     $grp = $this->group();
@@ -1207,19 +1225,40 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
     // no upgrade path here ... not an upgrade
     if(!$grp->is_upgrade_path) { return false; }
 
+    $pm = $this->payment_method();
+    if(!$force_cancel_artificial && $pm instanceof MeprArtificialGateway && $pm->settings->manually_complete && $pm->settings->no_cancel_up_down_grade) {
+      //If this is an artifical gateway and admin must manually approve and do not cancel when admin must manually approve
+      //then don't cancel
+      return false;
+    }
+
     try {
       if(($old_sub = $usr->subscription_in_group($grp->ID, true, $this->id))) {
-        $evt_txn = $old_sub->latest_txn();
-        $old_sub->expire_txns(); //Expire associated transactions for the old subscription
-        $_REQUEST['silent'] = true; // Don't want to send cancellation notices
-        if($old_sub->status !== MeprSubscription::$cancelled_str) {
-          $old_sub->cancel();
+        //NOTE: This was added for one specific customer, it should only be used at customers own risk,
+        //we don not support any custom development or issues that arrise from using this hook
+        //to override the default group behavior.
+        $override_default_behavior = apply_filters('mepr-override-group-default-behavior-sub', false, $old_sub);
+
+        if (!$override_default_behavior) {
+          $evt_txn = $old_sub->latest_txn();
+          $old_sub->expire_txns(); //Expire associated transactions for the old subscription
+          $_REQUEST['silent'] = true; // Don't want to send cancellation notices
+          if($old_sub->status !== MeprSubscription::$cancelled_str) {
+            $old_sub->cancel();
+          }
         }
       }
       elseif($old_lifetime_txn = $usr->lifetime_subscription_in_group($grp->ID)) {
-        $old_lifetime_txn->expires_at = MeprUtils::ts_to_mysql_date(time() - MeprUtils::days(1));
-        $old_lifetime_txn->store();
-        $evt_txn = $old_lifetime_txn;
+        //NOTE: This was added for one specific customer, it should only be used at customers own risk,
+        //we don not support any custom development or issues that arrise from using this hook
+        //to override the default group behavior.
+        $override_default_behavior = apply_filters('mepr-override-group-default-behavior-lt', false, $old_lifetime_txn);
+
+        if (!$override_default_behavior) {
+          $old_lifetime_txn->expires_at = MeprUtils::ts_to_mysql_date(time() - MeprUtils::days(1));
+          $old_lifetime_txn->store();
+          $evt_txn = $old_lifetime_txn;
+        }
       }
     }
     catch(Exception $e) {
@@ -1264,7 +1303,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
 
           // Fixes bug 1136 early/late monthly renewals
           if( $period == 1 ) {
-            if( $days_till_expire < 27 && ! $this->latest_txn_failed() ) {
+            if( $days_till_expire < 27 ) {
               // Early renewal - we need to add a month in this case
               $expires_ts += MeprUtils::months( $period, $expires_ts, false, $renewal_dom );
             }
@@ -1276,7 +1315,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
             $new_days_till_expire = floor( ( $expires_ts - $created_ts ) / MeprUtils::days(1) );
 
             // One final check, if we're still outside of tolerance just add 1 month from the created_ts like we used to
-            if( ( $new_days_till_expire < 27 && ! $this->latest_txn_failed() ) || $new_days_till_expire > 32) {
+            if( ( $new_days_till_expire < 27 ) || $new_days_till_expire > 32) {
               $expires_ts = ( $created_ts + MeprUtils::months( $period, $created_ts ) );
             }
           }
@@ -1299,7 +1338,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
           $days_till_expire = floor( ( $expires_ts - $created_ts ) / MeprUtils::days(1) );
 
           // Make sure we haven't under cut the expiration time
-          if( $days_till_expire < ( $period_days - $tolerance ) && ! $this->latest_txn_failed() ) {
+          if( $days_till_expire < ( $period_days - $tolerance ) ) {
             // Early renewal - we need to add a year in this case
             $expires_ts += MeprUtils::years( $period, $expires_ts, false, $day_num, $month_num );
           }
@@ -1311,7 +1350,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
           $new_days_till_expire = floor( ( $expires_ts - $created_ts ) / MeprUtils::days(1) );
 
           // One final check, if we're still outside of tolerance just add 1 year from the created_ts like we used to
-          if( ( $new_days_till_expire < ( $period_days - $tolerance ) && ! $this->latest_txn_failed() ) || ( $new_days_till_expire > ( $period_days + $tolerance ) ) ) {
+          if( ( $new_days_till_expire < ( $period_days - $tolerance ) ) || ( $new_days_till_expire > ( $period_days + $tolerance ) ) ) {
             $expires_ts = ( $created_ts + MeprUtils::years( $period, $created_ts ) );
           }
 
@@ -1774,7 +1813,6 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
 
   protected function mgm_txn_count($mgm, $val = '') {
     global $wpdb;
-
     $mepr_db = new MeprDb();
 
     switch($mgm) {
@@ -1838,6 +1876,11 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
         $expires_at = $wpdb->get_var($q);
 
         if(!$this->id || is_null($expires_at) || false === $expires_at) {
+          // First check if latest txn was a refund, if so we're not active
+          if($this->latest_txn_refunded()) {
+            return false;
+          }
+
           $expires_at = $this->get_expires_at();
           // Convert to mysql date
           $expires_at = MeprUtils::ts_to_mysql_date($expires_at);

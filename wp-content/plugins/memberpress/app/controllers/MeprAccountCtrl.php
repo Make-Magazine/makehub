@@ -34,6 +34,10 @@ class MeprAccountCtrl extends MeprBaseCtrl {
   //They accidentally go to purchase a new subscription instead? This could lead to a double billing
   //So let's warn them here
   public function maybe_show_broken_sub_message($prd_id) {
+    global $pagenow;
+
+    if($pagenow == 'post.php') { return; }
+
     $mepr_options   = MeprOptions::fetch();
     $user           = MeprUtils::get_currentuserinfo();
     $errors         = array();
@@ -48,11 +52,11 @@ class MeprAccountCtrl extends MeprBaseCtrl {
           MeprView::render('/shared/errors', get_defined_vars());
           ?>
           <!-- Hidden signup form -->
-          <style>
-            form.mepr-signup-form {
-              display:none;
-            }
-          </style>
+          <script>
+            jQuery(document).ready(function($) {
+              $('input[value="' + <?php echo (int) $prd_id; ?> +'"]').closest('form').hide();
+            });
+          </script>
           <?php
         }
       }
@@ -305,7 +309,7 @@ class MeprAccountCtrl extends MeprBaseCtrl {
     $mepr_options = MeprOptions::fetch();
     $account_url = $_SERVER['REQUEST_URI']; //Use URI for BuddyPress compatibility
     $delim = MeprAppCtrl::get_param_delimiter_char($account_url);
-    $perpage = 10;
+    $perpage = MeprHooks::apply_filters('mepr_subscriptions_per_page', 10);
     $curr_page = (isset($_GET['currpage']) && is_numeric($_GET['currpage']))?$_GET['currpage']:1;
     $start = ($curr_page - 1) * $perpage;
     $end = $start + $perpage;

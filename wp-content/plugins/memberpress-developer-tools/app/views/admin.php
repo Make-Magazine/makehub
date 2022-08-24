@@ -19,6 +19,7 @@
           <li><a data-id="mepr-webhooks"><?php _e('Webhooks', 'memberpress-developer-tools'); ?></a></li>
           <li><a data-id="mepr-events"><?php _e('Events', 'memberpress-developer-tools'); ?></a></li>
           <li><a data-id="mepr-api"><?php _e('REST API', 'memberpress-developer-tools'); ?></a></li>
+          <li><a data-id="mepr-zapier"><?php _e('Zapier', 'memberpress-developer-tools'); ?></a></li>
           <li><a data-id="mepr-resources"><?php _e('Other Resources', 'memberpress-developer-tools'); ?></a></li>
         </ul>
       </td>
@@ -33,6 +34,10 @@
         </div>
         <div class="mepr-page" id="mepr-api">
           <?php require(MPDT_VIEWS_PATH.'/api.php'); ?>
+          <div class="mpdt_spacer"></div>
+        </div>
+        <div class="mepr-page" id="mepr-zapier">
+          <?php require(MPDT_VIEWS_PATH.'/zapier.php'); ?>
           <div class="mpdt_spacer"></div>
         </div>
         <div class="mepr-page" id="mepr-resources">

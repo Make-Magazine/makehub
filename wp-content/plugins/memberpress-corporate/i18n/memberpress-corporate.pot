@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MemberPress Corporate Accounts plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Corporate Accounts 1.5.20\n"
+"Project-Id-Version: MemberPress Corporate Accounts 1.5.24\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-corporate\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-18T16:55:30+00:00\n"
+"POT-Creation-Date: 2022-06-30T16:30:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: memberpress-corporate\n"
@@ -108,7 +108,11 @@ msgstr ""
 msgid "Sub Account Must Have an Email"
 msgstr ""
 
-#: app/controllers/class-mpca-account-controller.php:371
+#: app/controllers/class-mpca-account-controller.php:333
+msgid "Sub Account Must Have a valid Email"
+msgstr ""
+
+#: app/controllers/class-mpca-account-controller.php:374
 msgid "You successfully added a sub account"
 msgstr ""
 
@@ -127,7 +131,7 @@ msgid "Inactive"
 msgstr ""
 
 #: app/controllers/class-mpca-member-controller.php:9
-msgid "Role"
+msgid "Corp Type"
 msgstr ""
 
 #: app/controllers/class-mpca-member-controller.php:18
@@ -187,12 +191,12 @@ msgid "Corporate Account"
 msgstr ""
 
 #: app/importers/MpimpCorporateSubAccountsImporter.php:35
-#: app/views/mpca-manage-account-template.php:156
+#: app/views/mpca-manage-account-template.php:182
 msgid "Send NEW members a password reset link (does not email existing members)"
 msgstr ""
 
 #: app/importers/MpimpCorporateSubAccountsImporter.php:39
-#: app/views/mpca-manage-account-template.php:159
+#: app/views/mpca-manage-account-template.php:185
 msgid "Send NEW members the welcome email if they haven't received it already for the membership."
 msgstr ""
 
@@ -352,7 +356,7 @@ msgid "Import Sub Accounts"
 msgstr ""
 
 #: app/views/mpca-edit-user-template.php:69
-#: app/views/mpca-manage-account-template.php:128
+#: app/views/mpca-manage-account-template.php:154
 msgid "Export Sub Accounts"
 msgstr ""
 
@@ -360,110 +364,124 @@ msgstr ""
 msgid "Corporate account for %s"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:17
+#: app/views/mpca-manage-account-template.php:37
 msgid "Add Sub Account"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:25
+#: app/views/mpca-manage-account-template.php:45
 msgid "Existing Username"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:33
+#: app/views/mpca-manage-account-template.php:53
 msgid "OR"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:37
+#: app/views/mpca-manage-account-template.php:57
 msgid "Username"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:43
+#: app/views/mpca-manage-account-template.php:63
 msgid "Email"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:49
+#: app/views/mpca-manage-account-template.php:69
 msgid "First Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:53
+#: app/views/mpca-manage-account-template.php:73
 msgid "Last Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:60
+#: app/views/mpca-manage-account-template.php:80
 msgid "Send NEW members the welcome email"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:65
+#: app/views/mpca-manage-account-template.php:85
 msgid "Submit"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:72
+#: app/views/mpca-manage-account-template.php:92
 msgid "Search Sub Accounts..."
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:79
+#: app/views/mpca-manage-account-template.php:99
 msgid "Page %1$s of %2$s (%3$s Sub Accounts)"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:85
+#: app/views/mpca-manage-account-template.php:105
 msgctxt "ui"
 msgid "Username"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:86
+#: app/views/mpca-manage-account-template.php:106
 msgctxt "ui"
 msgid "Email"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:87
+#: app/views/mpca-manage-account-template.php:107
 msgctxt "ui"
 msgid "First Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:88
+#: app/views/mpca-manage-account-template.php:108
 msgctxt "ui"
 msgid "Last Name"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:102
+#: app/views/mpca-manage-account-template.php:109
+msgctxt "ui"
+msgid "Last Login"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:110
+msgctxt "ui"
+msgid "Logins"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:126
+msgid "Never"
+msgstr ""
+
+#: app/views/mpca-manage-account-template.php:128
 msgid "Remove"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:115
+#: app/views/mpca-manage-account-template.php:141
 msgctxt "ui"
 msgid "Previous Page"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:118
+#: app/views/mpca-manage-account-template.php:144
 msgctxt "ui"
 msgid "Next Page"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:124
+#: app/views/mpca-manage-account-template.php:150
 msgctxt "ui"
 msgid "You have no sub accounts to display."
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:132
+#: app/views/mpca-manage-account-template.php:158
 msgid "Signup URL"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:133
+#: app/views/mpca-manage-account-template.php:159
 msgid "People signing up with this link will be automatically added to your account"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:140
+#: app/views/mpca-manage-account-template.php:166
 msgid "Import Sub Accounts via CSV"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:141
+#: app/views/mpca-manage-account-template.php:167
 msgid "(Maximum 200 Sub Accounts per CSV file)"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:164
+#: app/views/mpca-manage-account-template.php:190
 msgid "Upload CSV"
 msgstr ""
 
-#: app/views/mpca-manage-account-template.php:167
+#: app/views/mpca-manage-account-template.php:193
 msgid "Importing sub accounts..."
 msgstr ""
 

@@ -82,7 +82,7 @@ class MPCA_App_Controller {
 
       if($ca !== false && isset($ca->id) && $ca->id) {
         $transaction->corporate_account_id = $ca->id;
-        $transaction->store();
+        $transaction->store(true);
         $already_here[$transaction->id] = true;
       }
     }

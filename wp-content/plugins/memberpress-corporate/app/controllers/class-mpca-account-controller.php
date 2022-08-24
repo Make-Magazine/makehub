@@ -124,7 +124,7 @@ class MPCA_Account_Controller {
       $full_name = $ca_owner->full_name();
       $owner_name = empty($full_name) ? $ca_owner->user_login : $full_name;
 
-      $account_url = MeprUtils::get_permalink($post->ID);
+      $account_url = (is_plugin_active('buddypress/bp-loader.php') && class_exists('MpBuddyPress')) ? bp_core_get_user_domain(get_current_user_id()) . 'mp-membership/' : MeprUtils::get_permalink($post->ID);
       $delim = MeprAppCtrl::get_param_delimiter_char($account_url);
 
       $perpage = intval(isset($_REQUEST['perpage']) ? $_REQUEST['perpage'] : 10);
@@ -328,6 +328,9 @@ class MPCA_Account_Controller {
       // Make sure the sub account has an email.
       if(empty(trim($userdata['user_email']))) {
         array_push($errors, __('Sub Account Must Have an Email', 'memberpress-corporate'));
+        return compact('message', 'errors');
+      }else if(!is_email($userdata['user_email'])){
+        array_push($errors, __('Sub Account Must Have a valid Email', 'memberpress-corporate'));
         return compact('message', 'errors');
       }
 

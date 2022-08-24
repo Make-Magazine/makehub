@@ -24,6 +24,20 @@ class MpdtWebhookJob extends MeprBaseJob {
       throw new Exception($data->get_error_message());
     }
 
+    if( isset($this->event_id) ){
+      $evt = new \MeprEvent( $this->event_id );
+
+      // make sure to pass event args
+      if( $evt->id ){
+        $event_args = (array) $evt->get_args();
+        if( !empty($event_args) ){
+          $event_args['event_id'] = $evt->id;
+          $event_args['event'] = $this->event;
+          $data->event_args = $event_args;
+        }
+      }
+    }
+
     $whk->send($this->webhook, $this->event, $data);
   }
 }

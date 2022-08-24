@@ -14,7 +14,7 @@ function return_membership_widget($user){
 		$return .= '  <h4 class="open"><img style="max-width:100px;" src="'. get_stylesheet_directory_uri().'/images/make-community-logo.png" /> Membership Details</h4>';
 		$return .= '  <ul class="open">';
 		$return .= '    <li>'. do_shortcode('[ihc-membership-card]').'</li>';
-		$return .= '    <li><a href="/members/'. $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
+		$return .= '    <li><a href="/members/'. $user_slug . '/membership/" class="universal-btn">See More Details</a></li>';
 		$return .= '  </ul>';
 		$return .= '</div>';
 	} else if( class_exists('MeprUtils') ) {

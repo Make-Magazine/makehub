@@ -310,7 +310,7 @@ class Checkout extends lib\BaseCtrl {
    */
   public function gifter_cannot_buy_their_gift($override, $product){
     $user  = lib\Utils::get_currentuserinfo();
-    if(lib\Utils::is_user_logged_in() && isset($_GET['coupon']) && !empty($_GET['coupon'])){
+    if(!lib\Utils::is_logged_in_and_an_admin() && lib\Utils::is_user_logged_in() && isset($_GET['coupon']) && !empty($_GET['coupon'])){
       $coupon = \MeprCoupon::get_one_from_code($_GET['coupon']);
       if($coupon){
         $coupon_author_id = get_post_field( 'post_author', $coupon->ID );

@@ -11,13 +11,33 @@
 
     <?php
       $sub_welcome_checked = isset($_POST['action']) ? isset($_POST['userdata[welcome]']) : false;
+      $manage_sub_accounts_form = isset($_POST['manage_sub_accounts_form']) ? isset($_POST['manage_sub_accounts_form']) : false;
+      $mpca_class = 'mpca-hidden';
+      $form_data = array(
+        'user_login'  =>  '',
+        'user_email'  =>  '',
+        'first_name'  =>  '',
+        'last_name'  =>  '',
+      );
+      if($manage_sub_accounts_form == 'add' && !empty($errors)){
+        $mpca_class = '';
+        if(isset($_POST['userdata'])){
+          if(is_array($_POST['userdata'])){
+            $form_data['user_login'] = isset($_POST['userdata']['user_login']) ? $_POST['userdata']['user_login'] : '';
+            $form_data['user_email'] = isset($_POST['userdata']['user_email']) ? $_POST['userdata']['user_email'] : '';
+            $form_data['first_name'] = isset($_POST['userdata']['first_name']) ? $_POST['userdata']['first_name'] : '';
+            $form_data['last_name'] = isset($_POST['userdata']['last_name']) ? $_POST['userdata']['last_name'] : '';
+            $form_data = wp_unslash($form_data);
+          }
+        }
+      }
     ?>
 
     <?php if($ca->num_sub_accounts > $ca->num_sub_accounts_used()): ?>
     <button id="mpca-add-sub-user-btn" class="mpca-fat-bottom" type="button" value=""><?php _e('Add Sub Account', 'memberpress-corporate') ?></button>
     <?php endif ?>
 
-    <form action="" method="post" id="mpca-add-sub-user-form" class="mpca-hidden">
+    <form action="" method="post" id="mpca-add-sub-user-form" class="<?php echo $mpca_class; ?>">
       <input type="hidden" name="action" value="manage_sub_accounts" />
       <input type="hidden" name="manage_sub_accounts_form" value="add" />
       <input type="hidden" name="mepr_product_id" value="<?php echo esc_attr($product_id); ?>" />
@@ -35,23 +55,23 @@
     <?php if(!$mepr_options->username_is_email): ?>
       <label>
         <span><?php _e('Username', 'memberpress-corporate'); ?> </span>
-        <input id="" type="text" name="userdata[user_login]" />
+        <input id="" type="text" name="userdata[user_login]" value="<?php echo esc_attr($form_data['user_login']); ?>" />
       </label>
       <?php endif ?>
 
       <label>
         <span><?php _e('Email', 'memberpress-corporate'); ?> </span>
-        <input id="" type="text" name="userdata[user_email]" />
+        <input id="" type="text" name="userdata[user_email]" value="<?php echo esc_attr($form_data['user_email']); ?>" />
       </label>
 
       <?php if($mepr_options->show_fname_lname): ?>
         <label>
           <span><?php _e('First Name', 'memberpress-corporate'); ?></span>
-          <input id="" type="text" name="userdata[first_name]" />
+          <input id="" type="text" name="userdata[first_name]" value="<?php echo esc_attr($form_data['first_name']); ?>" />
         </label>
         <label>
           <span><?php _e('Last Name', 'memberpress-corporate'); ?></span>
-          <input id="" type="text" name="userdata[last_name]" />
+          <input id="" type="text" name="userdata[last_name]" value="<?php echo esc_attr($form_data['last_name']); ?>"  />
         </label>
       <?php endif ?>
 
@@ -86,6 +106,8 @@
             <th><?php _ex('Email', 'ui', 'memberpress-corporate'); ?></th>
             <th><?php _ex('First Name', 'ui', 'memberpress-corporate'); ?></th>
             <th><?php _ex('Last Name', 'ui', 'memberpress-corporate'); ?></th>
+            <th><?php _ex('Last Login', 'ui', 'memberpress-corporate'); ?></th>
+            <th><?php _ex('Logins', 'ui', 'memberpress-corporate'); ?></th>
             <th> </th>
             <?php do_action('mpca-sub-accounts-th', $mepr_current_user, $sub_accounts); ?>
           </tr>
@@ -93,13 +115,17 @@
         <tbody>
           <?php
           foreach($sub_accounts as $sa):
+            $user = new MeprUser($sa->ID);
+            $last_login = $user->get_last_login_data();
             ?>
             <tr id="mpca-sub-accounts-row-<?php echo $sa->ID; ?>" class="mpca-sub-accounts-row <?php echo (isset($alt) && !$alt)?'mepr-alt-row':''; ?>">
               <td><?php echo $sa->user_login; ?></td>
               <td><?php echo $sa->user_email; ?></td>
               <td><?php echo $sa->first_name; ?></td>
               <td><?php echo $sa->last_name; ?></td>
-              <td><a href="" data-ca="<?php echo $ca->id; ?>" data-sa="<?php echo $sa->ID; ?>" class="mpca-remove-sub-account"><?php _e('Remove', 'memberpress-corporate'); ?></a></td>
+              <td><?php echo $last_login ? MeprAppHelper::format_date($last_login->created_at, 'Never') : __('Never', 'memberpress-corporate'); ?></td>
+              <td><?php echo $user->login_count; ?></td>
+              <td><a href="" data-ca="<?php echo $ca->id; ?>" data-sa="<?php echo $sa->ID; ?>" class="mpca-remove-sub-account"><?php _e('Remove', 'memberpress-corporate'); ?></a> <?php do_action('mpca-sub-accounts-links', $mepr_current_user, $ca, $sa); ?></td>
               <?php do_action('mpca-sub-accounts-td', $mepr_current_user, $sa); ?>
             </tr>
             <?php $alt = !$alt; ?>

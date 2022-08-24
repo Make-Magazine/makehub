@@ -3,7 +3,7 @@
 Plugin Name: MemberPress PDF Invoice
 Plugin URI: http://memberpress.com
 Description: Allows your customers to download PDF Invoice of their Payments
-Version: 1.1.12
+Version: 1.1.17
 Author: Caseproof, LLC
 Author URI: http://caseproof.com
 Text Domain: memberpress-pdf-invoice
@@ -87,7 +87,8 @@ function mpdfinvoice_autoloader( $class_name ) {
   } else {
     // Load MPDF Library if it isn't already loaded
     if(!class_exists('Mpdf\Mpdf')) {
-      require_once __DIR__ . '/vendor/autoload.php';
+      $mpdf_autoload_path = apply_filters('mepr-mpdf-autoload-path', __DIR__ . '/vendor/autoload.php');
+      require_once $mpdf_autoload_path;
     }
   }
 }

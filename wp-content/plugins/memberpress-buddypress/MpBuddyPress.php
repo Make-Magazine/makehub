@@ -6,6 +6,8 @@ class MpBuddyPress {
   public $default_groups_str            = 'mepr_buddypress_default_groups';
   public $membership_groups_enabled_str = '_mepr_buddypress_groups_enabled';
   public $membership_groups_str         = '_mepr_buddypress_groups';
+  public $protect_bp_section            = 'mepr_bp_protect_bp_section';
+  public $protect_members_area          = 'mepr_bp_protect_members_area';
 
   public function __construct() {
     include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -27,6 +29,9 @@ class MpBuddyPress {
       add_filter('mepr-account-page-permalink',       array($this, 'change_account_page_url'));
       add_action('template_redirect',                 array($this, 'catch_account_page_and_redirect'));
       add_filter('mepr_is_account_page',              array($this, 'set_is_account_page_true'), 11, 2);
+
+      //Members protection
+      add_filter('template_redirect',                 array($this, 'member_profile_protection'));
 
       //BP's signup form hook
       add_action('bp_core_signup_user',               array($this, 'capture_bp_signups'), 11, 5);
@@ -88,11 +93,13 @@ class MpBuddyPress {
   }
 
   public function display_option_fields() {
-    $enabled            = get_option($this->enabled_str, 0);
-    $default_membership = get_option($this->default_membership_str, 0);
-    $default_groups     = maybe_unserialize(get_option($this->default_groups_str, array()));
-    $memberships        = get_posts(array('numberposts' => -1, 'post_type' => MeprProduct::$cpt, 'post_status' => 'publish'));
-    $groups             = (bp_is_active('groups'))?BP_Groups_Group::get(array('show_hidden' => true, 'type'=>'alphabetical', 'per_page' => 9999)):false;
+    $enabled              = get_option($this->enabled_str, 0);
+    $default_membership   = get_option($this->default_membership_str, 0);
+    $default_groups       = maybe_unserialize(get_option($this->default_groups_str, array()));
+    $memberships          = get_posts(array('numberposts' => -1, 'post_type' => MeprProduct::$cpt, 'post_status' => 'publish'));
+    $groups               = (bp_is_active('groups'))?BP_Groups_Group::get(array('show_hidden' => true, 'type'=>'alphabetical', 'per_page' => 9999)):false;
+    $protect_bp_section   = get_option($this->protect_bp_section, 0);
+    $protect_members_area = get_option($this->protect_members_area, 0);
 
     //Make sure it's an array
     if(empty($default_groups)) { $default_groups = array(); }
@@ -120,8 +127,9 @@ class MpBuddyPress {
                 <option value="<?php echo $m->ID; ?>" <?php selected($default_membership, $m->ID); ?>><?php echo $m->post_title; ?></option>
               <?php endforeach; ?>
             </select>
-            <br/>
-            <small><?php _e("If the user signs up via BuddyPress's signup page, then no payment can be collected. Therefore the member will get lifetime free access to the default Membership you choose here. If you need to charge your users, then we recommend that you disable signups via BuddyPress and instead force the users to signup via MemberPress instead.", 'memberpress-buddypress'); ?></small>
+        <?php MeprAppHelper::info_tooltip( 'mepr-protect-bp-section',
+          __('BuddyPress Protection', 'memberpress-buddypress'),
+          __("If the user signs up via BuddyPress's signup page, then no payment can be collected. Therefore the member will get lifetime free access to the default Membership you choose here. If you need to charge your users, then we recommend that you disable signups via BuddyPress and instead force the users to signup via MemberPress instead.", 'memberpress-buddypress')); ?>
           <?php //endif; //Users can register ?>
           <?php if(bp_is_active('groups') && $groups['total']): ?>
             <?php //if(get_option('users_can_register')): //Show a spacer ?>
@@ -136,8 +144,28 @@ class MpBuddyPress {
               <?php endforeach; ?>
             </select>
             <br/>
-            <small><?php _e("Hold the Control Key (Command Key on the Mac) in order to select or deselect multiple groups.", 'memberpress-buddypress'); ?><br/><?php _e("Select a default BuddyPress Group(s) that every member should be added to when signing up. Please note, ALL members are added to this group whether they're active and paid or not. Please see the per-Membership Groups if you want to add/remove members to/from Groups automatically based on their status.", 'memberpress-buddypress'); ?></small>
+          <small><?php _e("Hold the Control Key (Command Key on the Mac) in order to select or deselect multiple groups.", 'memberpress-buddypress'); ?></small>
+          <?php MeprAppHelper::info_tooltip( 'mepr-default-group-members',
+            __('Default Groups for All Members', 'memberpress-buddypress'),
+            __("Select a default BuddyPress Group(s) that every member should be added to when signing up. Please note, ALL members are added to this group whether they're active and paid or not. Please see the per-Membership Groups if you want to add/remove members to/from Groups automatically based on their status.", 'memberpress-buddypress')); ?>
           <?php endif; //!empty groups ?>
+          <br/>
+          <br/>
+          <input type="checkbox" id="mepr_bp_protect_bp_section" name="mepr_bp_protect_bp_section" <?php checked($protect_bp_section); ?> />
+          <label for="mepr_bp_protect_bp_section" style="vertical-align:top;"><?php _e('Protect BuddyPress Profile Pages', 'memberpress-buddypress'); ?></label>
+          <?php MeprAppHelper::info_tooltip( 'mepr-protect-bp-section',
+          __('BuddyPress Profile Pages Protection', 'memberpress-buddypress'),
+          __('This is a replacement for Custom URI rule that protects /members/ sections. For logged out users it will protect /members/ page and all subpages. For logged in users who does not have any active subscription, it will protect members subpages except Membership sections where users can see their MemberPress details. For logged in users who have at least one active subscription, it will give access to each members subpage.', 'memberpress-buddypress') . '<br/><br/><strong>' .
+          __('Before you enable this option, remember to delete any Custom URI rules that protect /members/ sections.', 'memberpress-buddypress') . '</strong>'); ?>
+          <br/>
+          <br/>
+          <div id="mepr_bp_protect_members_section" class="mepr-hidden" style="margin-left:20px;">
+            <input type="checkbox" id="mepr_bp_protect_members_area" name="mepr_bp_protect_members_area" <?php checked($protect_members_area); ?> />
+            <label for="mepr_bp_protect_members_area" style="vertical-align:top;"><?php _e('Protect Main Members Listing Page', 'memberpress-buddypress'); ?></label>
+          <?php MeprAppHelper::info_tooltip( 'mepr-protect-members-section',
+            __('BuddyPress Members Page Protection', 'memberpress-buddypress'),
+            __('Protect the main BuddyPress members page where the list of all members is displayed.', 'memberpress-buddypress')); ?></small>
+          </div>
         </div>
       </div>
     <?php
@@ -147,6 +175,8 @@ class MpBuddyPress {
     update_option($this->enabled_str, (isset($_POST['mepr_bp_enabled'])));
     update_option($this->default_membership_str, (isset($_POST['mepr_bp_default_free_membership']))?(int)$_POST['mepr_bp_default_free_membership']:0);
     update_option($this->default_groups_str, (!empty($_POST['mepr_bp_default_groups']))?(array)$_POST['mepr_bp_default_groups']:array());
+    update_option($this->protect_bp_section, (isset($_POST['mepr_bp_protect_bp_section'])));
+    update_option($this->protect_members_area, (isset($_POST['mepr_bp_protect_members_area'])));
   }
 
   public function enqueue_options_page_scripts($hook) {
@@ -467,6 +497,35 @@ class MpBuddyPress {
     return $is_account_page;
   }
 
+  public function member_profile_protection() {
+    if (!get_option($this->enabled_str, 0) || ! get_option($this->protect_bp_section, 0)) {
+      return;
+    }
+
+    if ( ! is_user_logged_in() && (bp_is_user() || bp_is_members_directory()) ) {
+      $mepr_options = MeprOptions::fetch();
+      $redirect_url = $mepr_options->login_page_url();
+    }
+
+    $protect_members_area = get_option($this->protect_members_area, 0);
+
+    if ( is_user_logged_in() && !current_user_can('administrator') && (bp_is_user() || ($protect_members_area && bp_is_members_directory())) ) {
+      $user = MeprUtils::get_currentuserinfo();
+      $active_products = $user->active_product_subscriptions( 'ids' );
+      if (
+        (empty( $active_products ) && (($protect_members_area && bp_is_members_directory()) || strpos( $_SERVER['REQUEST_URI'], MeprHooks::apply_filters('mepr-bp-info-main-nav-slug', 'mp-membership') ) === false)) ||
+        (!empty( $active_products ) && (($protect_members_area && bp_is_members_directory()) || (bp_displayed_user_id() && bp_loggedin_user_id() != bp_displayed_user_id())))
+      ) {
+        $redirect_url = bp_core_get_user_domain( get_current_user_id() ) . MeprHooks::apply_filters('mepr-bp-info-main-nav-slug', 'mp-membership');
+      }
+    }
+
+    if ( isset( $redirect_url ) ) {
+      wp_redirect( $redirect_url );
+      exit();
+    }
+  }
+
   public function setup_bp_nav() {
     global $bp;
 
@@ -504,7 +563,7 @@ class MpBuddyPress {
     bp_core_new_subnav_item(
       array(
         'name' => _x('Subscriptions', 'ui', 'memberpress-buddypress'),
-        'slug' => 'mp-subscriptions',
+        'slug' => MeprHooks::apply_filters('mepr-bp-subscriptions-slug', 'mp-subscriptions'),
         'parent_url' => $bp->loggedin_user->domain . $main_slug . '/',
         'parent_slug' => $main_slug,
         'screen_function' => array($this, 'membership_subscriptions'),
@@ -519,7 +578,7 @@ class MpBuddyPress {
     bp_core_new_subnav_item(
       array(
         'name' => _x('Payments', 'ui', 'memberpress-buddypress'),
-        'slug' => 'mp-payments',
+        'slug' => MeprHooks::apply_filters('mepr-bp-payments-slug', 'mp-payments'),
         'parent_url' => $bp->loggedin_user->domain . $main_slug . '/',
         'parent_slug' => $main_slug,
         'screen_function' => array($this, 'membership_payments'),
@@ -529,6 +588,44 @@ class MpBuddyPress {
         'item_css_id' => 'mepr-bp-payments'
       )
     );
+
+    //Gifts Sub Menu
+    $current_user = \MeprUtils::get_currentuserinfo();
+    if(is_plugin_active('memberpress-gifting/memberpress-gifting.php') && $current_user) {
+      $gift_txn_ids = (array) memberpress\gifting\models\Gift::find_gifts_by_user_id($current_user->ID);
+      if(!empty($gift_txn_ids)) {
+        bp_core_new_subnav_item(
+          array(
+            'name'            => _x( 'Gifts', 'ui', 'memberpress-buddypress' ),
+            'slug'            => MeprHooks::apply_filters('mepr-bp-gifts-slug', 'mp-gifts'),
+            'parent_url'      => $bp->loggedin_user->domain . $main_slug . '/',
+            'parent_slug'     => $main_slug,
+            'screen_function' => array( $this, 'membership_gifts' ),
+            'position'        => 20,
+            'user_has_access' => bp_is_my_profile(),
+            'site_admin_only' => false,
+            'item_css_id'     => 'mepr-bp-gifts'
+          )
+        );
+      }
+    }
+
+    //Courses Sub Menu
+    if(is_plugin_active('memberpress-courses/main.php')) {
+      bp_core_new_subnav_item(
+        array(
+          'name'            => _x( 'Courses', 'ui', 'memberpress-buddypress' ),
+          'slug'            => MeprHooks::apply_filters('mepr-bp-courses-slug', 'mp-courses'),
+          'parent_url'      => $bp->loggedin_user->domain . $main_slug . '/',
+          'parent_slug'     => $main_slug,
+          'screen_function' => array( $this, 'membership_courses' ),
+          'position'        => 20,
+          'user_has_access' => bp_is_my_profile(),
+          'site_admin_only' => false,
+          'item_css_id'     => 'mepr-bp-courses'
+        )
+      );
+    }
 
     do_action('mepr_buddypress_integration_setup_menus', $main_slug);
   }
@@ -635,6 +732,36 @@ class MpBuddyPress {
   public function membership_payments_content() {
     $acct_ctrl = new MeprAccountCtrl();
     $acct_ctrl->payments();
+  }
+
+  /* GIFTS TAB */
+  public function membership_gifts() {
+    add_action('bp_template_content', array($this, 'membership_gifts_content'));
+
+    //Enqueue the account page scripts here yo
+    $acct_ctrl = new MeprAccountCtrl();
+    $acct_ctrl->enqueue_scripts(true);
+
+    bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
+  }
+
+  public function membership_gifts_content() {
+    memberpress\gifting\controllers\Account::gifts_list('gifts');
+  }
+
+  /* COURSES TAB */
+  public function membership_courses() {
+    add_action('bp_template_content', array($this, 'membership_courses_content'));
+
+    //Enqueue the account page scripts here yo
+    $acct_ctrl = new MeprAccountCtrl();
+    $acct_ctrl->enqueue_scripts(true);
+
+    bp_core_load_template(apply_filters('bp_core_template_plugin', 'members/single/plugins'));
+  }
+
+  public function membership_courses_content() {
+    memberpress\courses\controllers\Account::my_courses_list('courses');
   }
 
   public function activate_bp_profile($txn) {

@@ -23,6 +23,14 @@ class MpdtMemberUtils extends MpdtBaseUtils {
   }
 
   protected function extend_obj(Array $mbr) {
+
+    if( isset($mbr['event_args']) ){
+      $data = apply_filters( 'mpdt-member-extend-obj-data', $mbr, $mbr );
+      if( false !== $data ){
+        return $data;
+      }
+    }
+
     $u = new MeprUser($mbr['id']);
     $mbr['active_memberships'] = array();
 

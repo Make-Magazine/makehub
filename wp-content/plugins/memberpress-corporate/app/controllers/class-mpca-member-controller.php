@@ -6,7 +6,7 @@ class MPCA_Member_Controller {
   }
 
   public function customize_admin_members_cols($cols) {
-    $cols['col_role'] = __('Role', 'memberpress-corporate');
+    $cols['col_role'] = __('Corp Type', 'memberpress-corporate');
 
     return $cols;
   }

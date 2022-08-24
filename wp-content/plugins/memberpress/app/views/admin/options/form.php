@@ -144,7 +144,7 @@
         <div>&nbsp;</div>
         <div id="mepr-unauthorized-show-login">
           <input type="checkbox" name="<?php echo $mepr_options->unauth_show_login_str; ?>" id="<?php echo $mepr_options->unauth_show_login_str; ?>" <?php checked($mepr_options->unauth_show_login); ?> />
-          <label for="<?php echo $mepr_options->unauth_show_login_str; ?>"><?php _e('Show a login form on pages containing unauthorized content', 'memberpress'); ?></label>
+          <label for="<?php echo $mepr_options->unauth_show_login_str; ?>"><?php _e('Show a login form on pages containing unauthorized message', 'memberpress'); ?></label>
         </div>
 
         <br/>
@@ -432,7 +432,7 @@
                                            __('Custom User Information Fields', 'memberpress'),
                                            __('You can specify custom fields to be used with your users\' account. Just click the \'plus\' button below to add your first field.', 'memberpress') ); ?>
       </h3>
-      <ol id="custom_profile_fields" class="mepr-sortable">
+      <ol id="custom_profile_fields">
         <?php MeprOptionsHelper::show_existing_custom_fields(); ?>
         <a href="" id="mepr-add-new-custom-field" title="<?php _e('Add new Custom Field', 'memberpress'); ?>"><i class="mp-icon mp-icon-plus-circled mp-24"></i></a>
       </ol>

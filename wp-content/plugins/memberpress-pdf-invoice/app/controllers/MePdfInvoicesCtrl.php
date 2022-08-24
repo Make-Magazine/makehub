@@ -291,7 +291,7 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     $this->invoice['color']           = $mepr_options->attr( 'biz_invoice_color' );
     $this->invoice['paid_logo_url']   = $txn->status == MeprTransaction::$refunded_str ? MPDFINVOICE_PATH . 'app/views/account/invoice/refund.jpg' : MPDFINVOICE_PATH . 'app/views/account/invoice/paid.jpg';
 
-    if ( $sub = $txn->subscription() ) {
+    if ( ( $sub = $txn->subscription() ) ) {
       if ( $sub->trial && $sub->txn_count < 1 ) {
         $desc = esc_html__( 'Initial Payment', 'memberpress-pdf-invoice' );
         // Must do this *after* apply tax so we don't screw up the invoice
@@ -309,10 +309,14 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       $desc .= ' ' . esc_html__( 'Refund', 'memberpress-pdf-invoice' );
     }
 
-    if ( $coupon = $txn->coupon() ) {
-      $amount     = $txn->total;
-      $prd = new MeprProduct($txn->product_id);
-      if ($prd) {
+    if ( ( $coupon = $txn->coupon() ) ) {
+      $amount     = $txn->amount;
+      $prd        = new MeprProduct($txn->product_id);
+
+      if($sub) {
+        $amount = $sub->price; // Attempt to get price from Subscription
+      }
+      elseif ($prd) {
         $amount = $prd->price; //Note, this is not 100% acurrate, but its the best we can do right now.
       }
 
@@ -327,6 +331,7 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     }
 
     if ($sub && $coupon) {
+      $_REQUEST['mepr_get_real_payment'] = true; // ensure we don't get subscription confirmation txn back
       $first_txn = $sub->first_txn();
 
       if ( $coupon->discount_mode == 'first-payment' &&
@@ -678,7 +683,7 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
   public function create_receipt_pdf($txn){
     $mepr_options = MeprOptions::fetch();
     $prd = $txn->product();
-    $current_user = get_current_user();
+    $current_user = MeprUtils::get_currentuserinfo();
     $invoice = (object) $this->collect_invoice_data( $txn, $mepr_options, $prd, $current_user );
 
     // Create and Save PDF in the Uploads directory
@@ -694,7 +699,9 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
 
     if($attachments){
       foreach ($attachments as $attachment) {
-        unlink($attachment);
+        if(file_exists($attachment)) {
+          unlink($attachment);
+        }
       }
     }
   }

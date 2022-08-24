@@ -102,7 +102,7 @@ class MpdtWebhooksApi {
       'validated' => $user && wp_check_password( $password, $user->data->user_pass, $user->ID )
     );
 
-    wp_send_json_success( apply_filters( 'mpdt_validate_login_response_data', $data, $user ), 200 );
+    wp_send_json_success( apply_filters( 'mpdt_validate_login_response_data', $data, $user, $request ), 200 );
   }
 
   /**
@@ -139,7 +139,12 @@ class MpdtWebhooksApi {
     $request_data = $request->get_params();
     if($this->validate_request($request_data, array('event', 'event_type'))) {
       $utils = MpdtUtilsFactory::fetch($request_data['event_type']);
-      $event_data = $utils->get_event_data($request_data['event']);
+      $event_data = apply_filters('mpdt-sample-event-data', $utils->get_event_data($request_data['event']));
+
+      if(isset($event_data['data']['event_args'])) {
+        unset($event_data['data']['event_args']);
+      }
+
       wp_send_json(array($event_data), 200);
     }
     else {

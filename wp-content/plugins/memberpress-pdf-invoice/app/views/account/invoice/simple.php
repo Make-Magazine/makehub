@@ -52,12 +52,9 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
       <thead>
         <tr>
           <th><?php esc_html_e( 'DESCRIPTION', 'memberpress-pdf-invoice' ); ?></th>
-          <?php
-          if ( $invoice->show_quantity ) :
-            '<th class="quantity">QUANTITY</th>';
-          endif;
-          ?>
-
+          <?php if ( $invoice->show_quantity ) : ?>
+            <th class="quantity"><?php esc_html_e( 'QUANTITY', 'memberpress-pdf-invoice' ); ?></th>
+          <?php endif; ?>
           <th><?php esc_html_e( 'AMOUNT', 'memberpress-pdf-invoice' ); ?></th>
         </tr>
       </thead>
@@ -68,13 +65,11 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
         ?>
         <tr>
           <td><?php echo $item['description']; ?></td>
-          <?php
-          if ( $invoice->show_quantity ) :
-            '<td>' . $item['quantity'] . '</td>';
-          endif;
-          ?>
+          <?php if ( $invoice->show_quantity ) : ?>
+            <td class="unit"><?php echo MePdfInvoicesCtrl::format_real_number($item['quantity']); ?></td>;
+          <?php endif; ?>
 
-          <td class="unit"><?php echo MePdfInvoicesCtrl::format_real_number($item['amount']); ?></td>
+          <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency( $item['amount'], true, false ); ?></td>
         </tr>
         <?php
       }
@@ -90,7 +85,7 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
     </tr>
     <?php endif; ?>
 
-    <?php if ( $invoice->tax['amount'] > 0.00 ) : ?>
+    <?php if ( $invoice->tax['amount'] > 0.00 || $invoice->tax['percent'] > 0.00 ) : ?>
         <tr>
           <td><?php esc_html_e( 'SUBTOTAL', 'memberpress-pdf-invoice' ); ?></td>
       <?php if ( $invoice->show_quantity ) : ?>
@@ -108,7 +103,11 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
       <?php endif; ?>
         <tr>
           <td class="grand total"><?php esc_html_e( 'GRAND TOTAL', 'memberpress-pdf-invoice' ); ?></td>
-          <td class="grand total"><?php echo MeprAppHelper::format_currency( $invoice->total, true, false ); ?></td>
+          <?php if ( $invoice->show_quantity ) : ?>
+          <td class="grand total">&nbsp;</td>
+          <?php endif; ?>
+          <td class="grand total">
+            <?php echo MeprAppHelper::format_currency( $invoice->total, true, false ); ?></td>
         </tr>
       </tbody>
     </table>

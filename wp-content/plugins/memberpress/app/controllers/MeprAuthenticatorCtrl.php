@@ -84,7 +84,20 @@ class MeprAuthenticatorCtrl extends MeprBaseCtrl
       exit;
     }
 
-    wp_redirect( remove_query_arg( array( 'mepr-connect', 'nonce', 'site_uuid', 'auth_code' ) ) );
+    $redirect_url = remove_query_arg( array( 'mepr-connect', 'nonce', 'site_uuid', 'user_uuid', 'auth_code', 'license_key' ) );
+
+    $license_key = isset( $_GET['license_key'] ) ? sanitize_text_field( wp_unslash( $_GET['license_key'] ) ) : '';
+
+    if( ! empty( $license_key ) ) {
+      try {
+        MeprUpdateCtrl::activate_license( $license_key );
+      }
+      catch( Exception $e ) {
+        $redirect_url = add_query_arg( 'license_error', urlencode( $e->getMessage() ), $redirect_url );
+      }
+    }
+
+    wp_redirect( $redirect_url );
     exit;
   }
 
@@ -193,12 +206,14 @@ class MeprAuthenticatorCtrl extends MeprBaseCtrl
   /**
    * Assembles a URL for connecting to our Authentication service
    *
-   * @param boolean   $stripe_connect   Will add a query string that is used to redirect to Stripe Connect after returning from Auth service
+   * @param boolean     $stripe_connect    Will add a query string that is used to redirect to Stripe Connect after returning from Auth service
+   * @param array       $additional_params
+   * @param string|null $return_url
    *
    * @return string
    */
-  public static function get_auth_connect_url( $stripe_connect = false, $payment_method_id = false ) {
-    $return_url = admin_url( 'admin.php?page=memberpress-account-login', false );
+  public static function get_auth_connect_url( $stripe_connect = false, $payment_method_id = false, $additional_params = [], $return_url = null ) {
+    $return_url = is_null( $return_url ) ? admin_url( 'admin.php?page=memberpress-account-login', false ) : $return_url;
 
     $connect_params = array(
       'return_url' => urlencode( add_query_arg( 'mepr-connect', 'true', $return_url ) ),
@@ -214,6 +229,10 @@ class MeprAuthenticatorCtrl extends MeprBaseCtrl
     if ( true === $stripe_connect && ! empty( $payment_method_id ) ) {
       $connect_params['stripe_connect'] = 'true';
       $connect_params['method_id'] = $payment_method_id;
+    }
+
+    if ( ! empty( $additional_params ) ) {
+      $connect_params = array_merge($connect_params, $additional_params);
     }
 
     return add_query_arg( $connect_params, MEPR_AUTH_SERVICE_URL . '/connect/memberpress' );

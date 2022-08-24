@@ -569,6 +569,14 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
       return true; //No rules exist so everyone can purchase
     }
 
+    // Do not allow upgrades/downgrades during a pro-rated trial period from a previous upgrade/downgrade
+    if(MeprUtils::is_user_logged_in() && $user && ($group = $this->group()) !== false) {
+      $sub_in_group = $user->subscription_in_group($group->ID);
+      if($sub_in_group !== false && $sub_in_group->prorated_trial && $sub_in_group->in_trial()) {
+        return MeprHooks::apply_filters('mepr-allow-multiple-upgrades-downgrades', false, $user, $sub_in_group, $this);
+      }
+    }
+
     foreach($this->who_can_purchase as $who) {
       //Give Developers a chance to hook in here
       //Return true or false if you run your own custom handling here
@@ -910,6 +918,16 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
   }
 
   /**
+   * Get the Stripe Initial payment product ID
+   *
+   * @param  string       $gateway_id The gateway ID
+   * @return string|false
+   */
+  public function get_stripe_initial_payment_product_id($gateway_id) {
+    return get_post_meta($this->ID, '_mepr_stripe_initial_payment_product_id_' . $gateway_id, true);
+  }
+
+  /**
    * Set the Stripe Product ID
    *
    * @param string $gateway_id The gateway ID
@@ -917,6 +935,16 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
    */
   public function set_stripe_product_id($gateway_id, $product_id) {
     update_post_meta($this->ID, '_mepr_stripe_product_id_' . $gateway_id, $product_id);
+  }
+
+  /**
+   * Set the Stripe Initial Payment Product ID
+   *
+   * @param string $gateway_id The gateway ID
+   * @param string $product_id The Stripe Product ID
+   */
+  public function set_stripe_initial_payment_product_id($gateway_id, $product_id) {
+    update_post_meta($this->ID, '_mepr_stripe_initial_payment_product_id_' . $gateway_id, $product_id);
   }
 
   /**

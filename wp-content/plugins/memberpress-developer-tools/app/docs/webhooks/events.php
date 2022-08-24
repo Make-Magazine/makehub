@@ -212,4 +212,31 @@ return array(
     'desc'  => __('Sent when a sub account is removed by the corporate account.', 'memberpress-developer-tools'),
     'type'  => 'transaction'
   ),
+
+  /***** Events for Courses *****/
+  'mpca-course-started' => (object)array(
+    'label' => __('Course Started', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when a user views the course for the first time.', 'memberpress-developer-tools'),
+    'type'  => 'member'
+  ),
+  'mpca-course-completed' => (object)array(
+    'label' => __('Course Completed', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when a user completes the course.', 'memberpress-developer-tools'),
+    'type'  => 'member'
+  ),
+  'mpca-lesson-started' => (object)array(
+    'label' => __('Lesson Started', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when a user views the lesson for the first time.', 'memberpress-developer-tools'),
+    'type'  => 'member'
+  ),
+  'mpca-lesson-completed' => (object)array(
+    'label' => __('Lesson Completed', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when a user completed the lesson.', 'memberpress-developer-tools'),
+    'type'  => 'member'
+  ),
+  'mpca-quiz-attempt-completed' => (object)array(
+    'label' => __('Quiz Attempted', 'memberpress-developer-tools'),
+    'desc'  => __('Sent when a user attempts the quiz.', 'memberpress-developer-tools'),
+    'type'  => 'member'
+  )
 );

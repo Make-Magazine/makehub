@@ -11,6 +11,7 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
     add_action( 'wp_ajax_nopriv_mepr_update_spc_invoice_table', array( $this, 'update_spc_invoice_table' ) );
     add_action( 'wp_ajax_nopriv_mepr_update_price_string', array( $this, 'update_price_string' ) );
     add_action( 'wp_ajax_mepr_update_price_string', array( $this, 'update_price_string' ) );
+    add_filter('mepr_options_helper_payment_methods', array($this, 'exclude_disconnected_gateways'), 10, 2);
   }
 
   public function replace_tracking_codes($atts, $content='') {
@@ -176,8 +177,12 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
     $mepr_coupon_code = '';
 
     extract($_REQUEST, EXTR_SKIP);
-    if(isset($_REQUEST['errors'])) {
-      $errors = array_map( 'wp_kses_post', $_REQUEST['errors'] ); // Use kses here so our error HTML isn't stripped
+    if ( isset( $_REQUEST['errors'] ) ) {
+      if ( is_array( $_REQUEST['errors'] ) ) {
+        $errors = array_map( 'wp_kses_post', $_REQUEST['errors'] ); // Use kses here so our error HTML isn't stripped
+      } else {
+        $errors = [ wp_kses_post( $_REQUEST['errors'] ) ];
+      }
     }
     //See if Coupon was passed via GET
     if(isset($_GET['coupon']) && !empty($_GET['coupon'])) {
@@ -272,6 +277,7 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
       if(!empty($errors)) {
         $_POST['errors'] = $errors; //Deprecated?
         $_REQUEST['errors'] = $errors;
+
         return;
       }
 
@@ -561,8 +567,8 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
     if(isset($_REQUEST['payment_method_params'])) {
       extract($_REQUEST['payment_method_params'], EXTR_SKIP);
 
-      if(isset($_POST['errors']) && !empty($_POST['errors'])) {
-        $errors = $_POST['errors'];
+      if(isset($_REQUEST['errors']) && !empty($_REQUEST['errors'])) {
+        $errors = $_REQUEST['errors'];
         MeprView::render('/shared/errors', get_defined_vars());
       }
 
@@ -690,6 +696,21 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
     }
 
     $_POST['errors'] = array(__('Sorry, an unknown error occurred.', 'memberpress'));
+  }
+
+  public function exclude_disconnected_gateways($pm_ids, $field_name) {
+    $mepr_options = MeprOptions::fetch();
+    $connected_pm_ids = array();
+
+    foreach($pm_ids as $pm_id) {
+      $obj = $mepr_options->payment_method($pm_id);
+
+      if(MeprUtils::is_gateway_connected($obj)) {
+        $connected_pm_ids[] = $pm_id;
+      }
+    }
+
+    return $connected_pm_ids;
   }
 
 

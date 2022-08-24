@@ -300,6 +300,12 @@ abstract class MpdtBaseApi extends WP_REST_Controller {
         // that's right, what do you think would happen here?
         // We're killing the accept from the input ... booyah
         unset($_post[$k]);
+      }else{
+        if('text' === (string) $this->utils->accept_fields[$k]['type']){
+          $_post[$k] = wp_kses_post($_post[$k]);
+        }else if('array' !== (string) $this->utils->accept_fields[$k]['type']){
+          $_post[$k] = sanitize_text_field($_post[$k]);
+        }
       }
     }
 

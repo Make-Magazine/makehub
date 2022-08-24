@@ -13,6 +13,16 @@
       <?php wp_referer_field(); ?>
     <?php endif; ?>
 
+    <?php MeprHooks::do_action('mepr-checkout-before-price', $product->ID); ?>
+
+    <?php if(sizeof($payment_methods) <= 0 && $payment_required): ?>
+      <div class="mepr_wrapper">
+        <div class="mepr_error">
+          <?php esc_html_e('There are no active payment methods. Please contact the site administrator.', 'memberpress'); ?>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <?php if( ($product->register_price_action != 'hidden') && MeprHooks::apply_filters('mepr_checkout_show_terms', true, $product) ): ?>
       <div class="mp-form-row mepr_bold mepr_price">
         <?php $price_label = ($product->is_one_time_payment() ? _x('Price:', 'ui', 'memberpress') : _x('Terms:', 'ui', 'memberpress')); ?>
@@ -28,14 +38,14 @@
     <?php if((!MeprUtils::is_user_logged_in() ||
               (MeprUtils::is_user_logged_in() && $mepr_options->show_fields_logged_in_purchases)) &&
              $mepr_options->show_fname_lname): ?>
-      <div class="mp-form-row mepr_first_name">
+      <div class="mp-form-row mepr_first_name<?php echo ($mepr_options->require_fname_lname) ? ' mepr-field-required' : ''; ?>">
         <div class="mp-form-label">
           <label for="user_first_name<?php echo $unique_suffix; ?>"><?php _ex('First Name:', 'ui', 'memberpress'); echo ($mepr_options->require_fname_lname)?'*':''; ?></label>
           <span class="cc-error"><?php _ex('First Name Required', 'ui', 'memberpress'); ?></span>
         </div>
         <input type="text" name="user_first_name" id="user_first_name<?php echo $unique_suffix; ?>" class="mepr-form-input" value="<?php echo esc_attr($first_name_value); ?>" <?php echo ($mepr_options->require_fname_lname)?'required':''; ?> />
       </div>
-      <div class="mp-form-row mepr_last_name">
+      <div class="mp-form-row mepr_last_name<?php echo ($mepr_options->require_fname_lname) ? ' mepr-field-required' : ''; ?>">
         <div class="mp-form-label">
           <label for="user_last_name<?php echo $unique_suffix; ?>"><?php _ex('Last Name:', 'ui', 'memberpress'); echo ($mepr_options->require_fname_lname)?'*':''; ?></label>
           <span class="cc-error"><?php _ex('Last Name Required', 'ui', 'memberpress'); ?></span>
@@ -63,7 +73,7 @@
       <input type="hidden" class="mepr-geo-country" name="mepr-geo-country" value="" />
 
       <?php if(!$mepr_options->username_is_email): ?>
-        <div class="mp-form-row mepr_username">
+        <div class="mp-form-row mepr_username mepr-field-required">
           <div class="mp-form-label">
             <label for="user_login<?php echo $unique_suffix; ?>"><?php _ex('Username:*', 'ui', 'memberpress'); ?></label>
             <span class="cc-error"><?php _ex('Invalid Username', 'ui', 'memberpress'); ?></span>
@@ -71,17 +81,19 @@
           <input type="text" name="user_login" id="user_login<?php echo $unique_suffix; ?>" class="mepr-form-input" value="<?php echo (isset($user_login))?esc_attr(stripslashes($user_login)):''; ?>" required />
         </div>
       <?php endif; ?>
-      <div class="mp-form-row mepr_email">
+      <div class="mp-form-row mepr_email mepr-field-required">
         <div class="mp-form-label">
           <label for="user_email<?php echo $unique_suffix; ?>"><?php _ex('Email:*', 'ui', 'memberpress'); ?></label>
           <span class="cc-error"><?php _ex('Invalid Email', 'ui', 'memberpress'); ?></span>
         </div>
         <input type="email" name="user_email" id="user_email<?php echo $unique_suffix; ?>" class="mepr-form-input" value="<?php echo (isset($user_email))?esc_attr(stripslashes($user_email)):''; ?>" required />
       </div>
+      <div class="mp-form-row mepr_email_stripe mepr-field-required mepr-hidden">
+      </div>
       <?php MeprHooks::do_action('mepr-after-email-field'); //Deprecated ?>
       <?php MeprHooks::do_action('mepr-checkout-after-email-field', $product->ID); ?>
       <?php if($mepr_options->disable_checkout_password_fields === false): ?>
-        <div class="mp-form-row mepr_password">
+        <div class="mp-form-row mepr_password mepr-field-required">
           <div class="mp-form-label">
             <label for="mepr_user_password<?php echo $unique_suffix; ?>"><?php _ex('Password:*', 'ui', 'memberpress'); ?></label>
             <span class="cc-error"><?php _ex('Invalid Password', 'ui', 'memberpress'); ?></span>
@@ -93,7 +105,7 @@
             </button>
           </div>
           </div>
-        <div class="mp-form-row mepr_password_confirm">
+        <div class="mp-form-row mepr_password_confirm mepr-field-required">
           <div class="mp-form-label">
             <label for="mepr_user_password_confirm<?php echo $unique_suffix; ?>"><?php _ex('Password Confirmation:*', 'ui', 'memberpress'); ?></label>
             <span class="cc-error"><?php _ex('Password Confirmation Doesn\'t Match', 'ui', 'memberpress'); ?></span>
@@ -168,7 +180,9 @@
       <label for="mepr_no_val" class="mepr-visuallyhidden"><?php _ex('No val', 'ui', 'memberpress'); ?></label>
       <input type="text" id="mepr_no_val" name="mepr_no_val" class="mepr-form-input mepr-visuallyhidden mepr_no_val mepr-hidden" autocomplete="off" />
 
-      <input type="submit" class="mepr-submit" value="<?php echo stripslashes($product->signup_button_text); ?>" />
+      <?php if(sizeof($payment_methods) > 0 || !$payment_required): ?>
+        <input type="submit" class="mepr-submit" value="<?php echo stripslashes($product->signup_button_text); ?>" />
+      <?php endif; ?>
       <img src="<?php echo admin_url('images/loading.gif'); ?>" alt="<?php _e('Loading...', 'memberpress'); ?>" style="display: none;" class="mepr-loading-gif" title="<?php _ex('Loading icon', 'ui', 'memberpress'); ?>" />
       <?php MeprView::render('/shared/has_errors', get_defined_vars()); ?>
     </div>

@@ -27,11 +27,11 @@ abstract class BaseCtrl {
     static $obj;
 
     $class = get_called_class();
-    if(!isset($obj) || $force) {
-      $obj = new $class;
+    if(!isset($obj[$class]) || $force) {
+      $obj[$class] = new $class;
     }
 
-    return apply_filters(base\SLUG_KEY.'_fetch_ctrl_'.$class, $obj);
+    return apply_filters(base\SLUG_KEY.'_fetch_ctrl_'.$class, $obj[$class]);
   }
 }
 

@@ -5,7 +5,7 @@ abstract class MePdfBaseGenerator {
   protected $paper_orientation;
 
   public function get_filename( $txn ) {
-    return $txn->trans_num . '_invoice.pdf';
+    return MeprHooks::apply_filters( 'mepr_pdf_invoice_filename', $txn->trans_num . '_invoice.pdf', $txn );
   }
 
   public function fetch_content( $invoice, $txn ) {

@@ -289,17 +289,34 @@ abstract class MpdtBaseUtils {
     // If this event has been recently sent then let's use it
     if(($evt = MeprEvent::latest($event))) {
       $events = require(MPDT_DOCS_PATH . '/webhooks/events.php');
+
       $obj = $evt->get_data();
+
       $info = $events[$event];
 
       $utils = MpdtUtilsFactory::fetch($info->type);
 
       $data = (array)$obj->rec;
+
       $data = $utils->prepare_obj($data);
+
+      // make sure to pass event args
+      $event_args = (array) $evt->get_args();
+      if(!empty($event_args)){
+        $event_args['event_id'] = $evt->id;
+        $event_args['event'] = $event;
+        $data['event_args'] = $event_args;
+      }
+
     }
     else {
       $data = $this->get_data();
       $data = $data[0];
+
+      $event_args = array();
+      $event_args['event_id'] = 0;
+      $event_args['event'] = $event;
+      $data['event_args'] = $event_args;
     }
 
     return compact('event', 'type', 'data');

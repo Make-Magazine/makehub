@@ -34,6 +34,11 @@ class MpdtTransactionUtils extends MpdtBaseUtils {
         $mbr_data = $mbr_utils->map_vars((array)$mbr->rec);
         $mbr_data['address'] = (object)$mbr->full_address(false);
         $mbr_data['profile'] = (object)$mbr->custom_profile_values();
+        $vat_enabled = get_option('mepr_vat_enabled');
+        if($vat_enabled) {
+          $mbr_data['vat_number'] = get_user_meta($mbr->ID, 'mepr_vat_number', true);
+          $mbr_data['vat_customer_type'] = get_user_meta($mbr->ID, 'mepr_vat_customer_type', true);
+        }
         $txn['member'] = (array)$mbr_utils->trim_obj((array)$mbr_data);
       }
     }
@@ -73,6 +78,10 @@ class MpdtTransactionUtils extends MpdtBaseUtils {
 
     if(method_exists($txn_obj,'subscription_payment_index')) {
       $txn['subscription_payment_index'] = $txn_obj->subscription_payment_index();
+    }
+
+    if(class_exists('MePdfInvoicesCtrl')) {
+      $txn['invoice_number'] = MePdfInvoiceNumber::find_invoice_num_by_txn_id($txn['id']);
     }
 
     return $txn;

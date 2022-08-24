@@ -14,7 +14,7 @@ jQuery(document).ready(function(){
 	jQuery("a").each(function() {
 		if (jQuery(this).attr('href') && jQuery(this).attr('href').indexOf("event_cart=view") > -1) {
 			var removeHash = jQuery(this).attr('href').substring(0, jQuery(this).attr('href').indexOf("#"));
-			jQuery(this).attr('href', removeHash); 
+			jQuery(this).attr('href', removeHash);
 		}
 	});
 	if (window.location.href.indexOf("event_cart=view") > -1) {
@@ -22,9 +22,14 @@ jQuery(document).ready(function(){
 			jQuery("#event-cart-whats-next-buttons").append("<a href='/maker-campus' class='btn universal-btn' style='width:100%;'>Your Cart is Empty. Browse Events?</a>");
 		}
 	}
+	if (window.location.href.indexOf("mp-subscriptions") > -1) {
+		if(jQuery("#mepr-stripe-payment-form input[name='card-address-country']").val() == "United States") {
+			jQuery("#mepr-stripe-payment-form input[name='card-address-country']").attr('value', 'US');
+		}
+	}
 });
 
-// 
+//
 jQuery("select#member-type-order-by").on('change', function(){
 	if(jQuery('option:selected', this).text().replace(/\s+/g, '') == "Makerspace") {
 		jQuery("h1.entry-title").append("<span>: Makerspaces</span>");

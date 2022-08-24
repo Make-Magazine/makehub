@@ -10,7 +10,7 @@
         <directory>i18n</directory>
       </target>
       <template locked="true">
-        <file>i18n/memberpress-pdf-invoices.pot</file>
+        <file>i18n/memberpress-pdf-invoice.pot</file>
       </template>
     </project>
   </domain>
