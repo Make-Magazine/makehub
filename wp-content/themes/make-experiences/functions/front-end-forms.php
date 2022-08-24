@@ -36,15 +36,15 @@ add_action( 'init', 'create_posttypes' );
 
 
 /**
- *   Add the title and featured image of a blog post to the activity feed. 
- */ 
+ *   Add the title and featured image of a blog post to the activity feed.
+ */
 function record_cpt_activity_content( $cpt ) {
 	if ( 'new_blog_posts' === $cpt['type'] ) {
 		global $wpdb, $post, $bp;
 		$cpt['content'] = '<a href="'.$cpt['primary_link'].'">'
 			. get_the_post_thumbnail($cpt['secondary_item_id']) . '</a>';
 		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">' . get_the_title($cpt['secondary_item_id']) . '</a>';
-		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'" class="btn universal-btn">Read More!</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'" class="universal-btn">Read More!</a>';
 	}
 
 	return $cpt;
@@ -54,7 +54,7 @@ add_filter('bp_after_activity_add_parse_args', 'record_cpt_activity_content');
 
 /**
  *   Delete activity if it's secondary item id matches the postid of the deleted post
- */ 
+ */
 add_action( 'before_delete_post', 'delete_post_activity' );
 function delete_post_activity( $postid ){;
 	bp_activity_delete( array( 'secondary_item_id' => $postid ) );
@@ -68,7 +68,7 @@ function use_profile_as_comment_author_url( $url, $id, $comment ) {
 }
 add_filter( 'get_comment_author_url', 'use_profile_as_comment_author_url', 10, 3 );
 
-	
+
 /**
  * Filter the except length to 20 words.
  */

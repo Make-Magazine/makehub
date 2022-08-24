@@ -91,7 +91,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 						echo sanitize_text_field( $content );
 					?>
 				</div>
-				<a href="<?php echo get_permalink();?>" class="btn universal-btn">Read More</a>
+				<a href="<?php echo get_permalink();?>" class="universal-btn">Read More</a>
 			<?php } ?>
 
 			<?php if ( ( isset($post->post_type) && $post->post_type === 'post' ) || ( ! has_post_format( 'quote' ) && is_singular( 'post' ) ) ) : ?>
@@ -136,7 +136,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 						echo sanitize_text_field( $content );
 					?>
 				</div>
-				<a href="<?php echo get_permalink();?>" class="btn universal-btn">Read More</a>
+				<a href="<?php echo get_permalink();?>" class="universal-btn">Read More</a>
 			<?php } ?>
 
 			<?php if ( ( isset($post->post_type) && $post->post_type === 'post' ) || ( ! has_post_format( 'quote' ) && is_singular( 'post' ) ) ) : ?>

@@ -8,15 +8,15 @@ function profile_tab_makerfaire_infoname() {
     global $current_user;
     $current_user = wp_get_current_user();
 
-    $email = $current_user->user_email; 
-    
+    $email = $current_user->user_email;
+
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
-    
+
     //do not display this section on a local install as it can't connect to the wpengine db's
-    $homeurl = get_home_url();    
-    if(strpos($homeurl, 'makehub.local') !== false || strpos($homeurl, 'makehub.test')!==false) {    
+    $homeurl = get_home_url();
+    if(strpos($homeurl, 'makehub.local') !== false || strpos($homeurl, 'makehub.test')!==false) {
         return;
     }
     if($user_id != 0 && has_mf_entries()){
@@ -55,14 +55,14 @@ function makerfaire_info_content() {
     $user_info = get_userdata($user_id);
     $user_email = $user_info->user_email;
 
-    //access the makerfaire database.    
+    //access the makerfaire database.
     include(get_stylesheet_directory() . '/db-connect/mf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
     if ($mysqli->connect_errno) {
         error_log("Makerfaire profile section - Failed to connect to makerfaire database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
 
-    //pull maker information from database.    
+    //pull maker information from database.
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
             . '     wp_mf_entity.status, wp_mf_entity.faire, wp_mf_entity.project_photo, wp_mf_entity.desc_short, '
@@ -70,25 +70,25 @@ function makerfaire_info_content() {
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
-            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '            
+            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '
             . 'left outer join wp_mf_faire on wp_mf_entity.faire=wp_mf_faire.faire '
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" '
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
 
-    foreach ($entries as $entry) {        
+    foreach ($entries as $entry) {
         $faire_name  = ($entry['faire']=='NMF16' ? 'National Maker Faire 2016': $entry['faire_name']);
         $faire_badge = ($entry['faire']=='NMF16' ? 'https://makerfaire.com/wp-content/uploads/2016/03/national-maker-faire-badge.png': $entry['faire_badge']);
-        $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
-                            'title'         =>  $entry['presentation_title'], 
+        $entryData[] = array( 'entry_id'      =>  $entry['entity_id'],
+                            'title'         =>  $entry['presentation_title'],
                             'faire_url'     =>  'makerfaire.com',
-                            'faire_name'    =>  $faire_name, 
+                            'faire_name'    =>  $faire_name,
                             'year'          =>  $entry['faire_year'],
                             'photo'         =>  $entry['project_photo'],
                             'faire_logo'     => $faire_badge,
-                            'desc_short'    =>  $entry['desc_short']);        
-    }   
+                            'desc_short'    =>  $entry['desc_short']);
+    }
 
     //pull in global faires now
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
@@ -96,8 +96,8 @@ function makerfaire_info_content() {
     if ($mysqli->connect_errno) {
         error_log("Makerfaire profile section - Failed to connect to makerfaire global database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
-    
-    //pull maker information from database.    
+
+    //pull maker information from database.
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
             . '     wp_mf_entity.status, wp_mf_entity.faire as faire_name, wp_mf_entity.project_photo, wp_mf_entity.desc_short,'
@@ -107,12 +107,12 @@ function makerfaire_info_content() {
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type="contact" '
             . 'order by entity_id desc';
-    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");    
-    
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
+
     foreach ($entries as $entry) {
         //get faire name
         $faire_sql = "SELECT option_name, option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname' OR option_name = 'theme_mods_MiniMakerFaire'";
-        $faire_data = $mysqli->query($faire_sql) or trigger_error($mysqli->error . "[$faire_sql]");    
+        $faire_data = $mysqli->query($faire_sql) or trigger_error($mysqli->error . "[$faire_sql]");
         $faire_name = '';
         $faire_logo = '';
         foreach($faire_data as $fdata){
@@ -125,33 +125,33 @@ function makerfaire_info_content() {
                 //if it does, set it as the alternate image, else use the makey pedastal
                 $faire_logo = ($imgSize==FALSE?"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg":$theme_mods_MiniMakerFaire['header_logo']);
             }
-        }       
-        
-        $entryData[] = array( 'entry_id'    =>  $entry['entity_id'], 
-                            'title'         =>  $entry['presentation_title'], 
+        }
+
+        $entryData[] = array( 'entry_id'    =>  $entry['entity_id'],
+                            'title'         =>  $entry['presentation_title'],
                             'faire_url'     =>  $entry['faire_name'],
-                            'faire_name'    =>  $faire_name . ' ' .$entry['faire_year'], 
+                            'faire_name'    =>  $faire_name . ' ' .$entry['faire_year'],
                             'year'          =>  $entry['faire_year'],
-                            'photo'         =>  $entry['project_photo'], 
+                            'photo'         =>  $entry['project_photo'],
                             'faire_logo'    =>  $faire_logo,
-                            'desc_short'    =>  $entry['desc_short']);        
-    }   
-    
-    $entryDataUnique = array_unique($entryData, SORT_REGULAR);    
+                            'desc_short'    =>  $entry['desc_short']);
+    }
+
+    $entryDataUnique = array_unique($entryData, SORT_REGULAR);
     //sort entry data by year, newest first
     usort($entryDataUnique, function($a, $b) {
         return -($a['year'] <=> $b['year']);
     });
-    
+
     //build outpupt
-    //echo '<h2><a class="btn universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
-    echo '<h3>Maker Faire Entries from '.bp_get_displayed_user_fullname(). '</h3>';    
+    //echo '<h2><a class="universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
+    echo '<h3>Maker Faire Entries from '.bp_get_displayed_user_fullname(). '</h3>';
     echo '<div class="item-grid">';
-        
+
     foreach($entryDataUnique as $entry){
         $imgSize = getimagesize($entry['photo']);
         $photo = ($imgSize==FALSE?$entry['faire_logo']:$entry['photo']);
-        
+
         echo '<div class="item-wrapper">
 		<a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">
                     <article class="item-article">
@@ -161,10 +161,10 @@ function makerfaire_info_content() {
                                  html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') .
                             '</div>' .
                         '</div>
-                         
+
                         <div class="item-image" style="background-image:url(' . $photo . ')";>
                             <div class="item-description">' . html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</div>
-                        </div>                       
+                        </div>
                     </article>
 		</a>
             </div>';
@@ -179,47 +179,47 @@ function has_mf_entries(){
     //get the users email
     $user_info = get_userdata($user_id);
     $user_email = $user_info->user_email;
-    
+
     //check flagship
     include(get_stylesheet_directory() . '/db-connect/mf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
-    if ($mysqli->connect_errno) {        
+    if ($mysqli->connect_errno) {
         error_log("Makerfaire profile section - Failed to connect to makerfaire database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
-    }   
-    
+    }
+
     $sql = 'SELECT  count(*) as count '
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
-            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '                        
+            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" ';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
-    
+
     foreach ($entries as $entry) {
         if($entry['count']>0) {
-            return true;        
+            return true;
         }
     }
-    
+
     //check global
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
     if ($mysqli->connect_errno) {
-        error_log("Makerfaire profile section - Failed to connect to makerfaire global database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);        
+        error_log("Makerfaire profile section - Failed to connect to makerfaire global database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
-    
-    //pull maker information from database.    
+
+    //pull maker information from database.
     $sql = 'SELECT  count(*) as count '
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type="contact" '
             . 'order by entity_id desc';
-    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");        
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     foreach ($entries as $entry) {
         if($entry['count']>0) {
-            return true;        
+            return true;
         }
-    }    
+    }
     return false;
 }

@@ -571,7 +571,7 @@ function rolloverItems($row_layout) {
         }
         $return .= '<div class="row">
             <div class="col-xs-12 text-center">
-              <a class="btn universal-btn-navy more-makers-link" href="' . $cta_url . '">' . $cta_text . '</a>
+              <a class="universal-btn-navy more-makers-link" href="' . $cta_url . '">' . $cta_text . '</a>
             </div>
           </div>';
     }

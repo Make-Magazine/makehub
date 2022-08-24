@@ -53,7 +53,7 @@ get_header();
 			</div>
 
 			<script src="https://make.activehosted.com/f/embed.php?id=29" type="text/javascript" charset="utf-8"></script>
-			<a href="" onclick="jQuery('._form-wrapper').show();jQuery('#formBtn').hide(); return false;" id="formBtn" class="btn universal-btn-reversed">Keep me informed of upcoming sessions</a>
+			<a href="" onclick="jQuery('._form-wrapper').show();jQuery('#formBtn').hide(); return false;" id="formBtn" class="universal-btn-reversed">Keep me informed of upcoming sessions</a>
 
 			<div class='host-events'>
 				<?php
@@ -94,7 +94,7 @@ get_header();
 												   			<div class="event-description">' . get_field('short_description', $evt->ID()) . '</div>';
 															if($isPast == true) {
 																$return .= '<div class="event-prices">
-																				<a href="' . get_permalink($evt->ID()) . '/#tickets" class="btn universal-btn" target="_blank">Get Tickets</a>'
+																				<a href="' . get_permalink($evt->ID()) . '/#tickets" class="universal-btn" target="_blank">Get Tickets</a>'
 																				. event_ticket_prices($evt) .
 																			'</div>';
 															}

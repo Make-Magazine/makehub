@@ -126,7 +126,7 @@ $wp_query = new EE_Grid_Template_Query($attributes);
                             }
                             ?>
                             <div class="event-prices">
-                                <a href="<?php echo $registration_url; ?>#tickets" class="btn universal-btn">Get Tickets</a>
+                                <a href="<?php echo $registration_url; ?>#tickets" class="universal-btn">Get Tickets</a>
                                 <?php echo event_ticket_prices($event); ?>
                             </div> <!-- end .event-prices -->
                         </div> <!-- end .event-info -->

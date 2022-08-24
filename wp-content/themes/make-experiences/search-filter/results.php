@@ -86,7 +86,7 @@ if ( $query->have_posts() ) {
 					<p class="short_desc"><?php echo $short_desc; ?></p>
 					<p><b>Community Votes:</b> <?php echo $vote_count  ?></p>
 				</div>
-				<a href="<?php the_permalink(); ?>" class="btn universal-btn">More</a>
+				<a href="<?php the_permalink(); ?>" class="universal-btn">More</a>
 			</div>
 
 			<hr />

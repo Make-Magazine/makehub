@@ -120,12 +120,12 @@ get_header();
                             <h4 style="margin-top:0px;">Attendee Resources:</h4>
                             <div class="single-conference-link tribe-events-content" style="border-bottom: 0px;">
                                 <?php if (get_field('webinar_link')) { ?>
-                                    <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
+                                    <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="universal-btn">Online Event Link</a>
                                 <?php } else { ?>
                                     COMING SOON
                                 <?php } ?>
                             </div>
-                            <a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
+                            <a href="/members/<?php echo $user_slug; ?>/dashboard" class="universal-btn">Access Your Tickets</a>
                         <?php } ?>
                         <div class="event-description event-content-item">
                             <h4>What You'll Do:</h4>
@@ -157,7 +157,7 @@ get_header();
                                     }
                                 }
                                 if (get_field('kit_price_included') == "no") {
-                                    echo "<p><a class='btn universal-btn' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
+                                    echo "<p><a class='universal-btn' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
                                 }
                                 ?>
                             </div>
@@ -331,7 +331,7 @@ get_header();
                 </div>
 				<div class="row">
                     <div class="col-sm-12">
-						<a href="#tickets" class="btn universal-btn hidden-lg hidden-md" style="width:100%;margin-bottom:25px;">Select your Tickets Now!</a>
+						<a href="#tickets" class="universal-btn hidden-lg hidden-md" style="width:100%;margin-bottom:25px;">Select your Tickets Now!</a>
                         <?php
                         if (class_exists('ESSB_Plugin_Options')) {
                             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
