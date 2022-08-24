@@ -74,14 +74,14 @@ body.groups:not(.admin-bar) {
 body #buddypress .bp-list.members-list .action {
 	.generic-button button, a.send-message {
 		color: #fff !important;
-		background: $color-blue;
+		background: $color-blue !important;
 		border: solid $color-blue 1px;
 		border-radius: 5px !important;
 		padding: 10px 5px;
 		font-size: 18px;
 		&:hover {
 			color: $color-blue !important;
-			background: #fff;
+			background: #fff !important;
 		}
 	}
 }
