@@ -1,7 +1,7 @@
 html {
     overflow-x: hidden;
     height: 100vh;
-    body { 
+    body {
         min-height: 100%;
         #page-content, #error-page {
             min-height: calc(100vh - 418px);
@@ -14,24 +14,12 @@ html {
 main.content {
 	margin-top: 0px !important; // has to override, sumome. sorry not sorry
 }
-.universal-footer {
-	.link-footer {
-		padding: 30px 0px 20px;
-	}
-	a {
-		color: #fff !important;
-	}
-}
-
 
 body {
   font-size: 16px;
   font-weight: 300;
 }
 
-.main-content {
-	padding-top: 25px;
-}
 
 p {
   font-size: 16px;
@@ -402,11 +390,11 @@ input[type=checkbox].fa-checkbox {
     a.icoYoutube:hover {
       background-color: #bb0000;
     }
-    a.icoInstagram:hover i, 
-    a.icoFacebook:hover i, 
+    a.icoInstagram:hover i,
+    a.icoFacebook:hover i,
     a.icoTwitter:hover i,
-    a.icoPinterest:hover i, 
-    a.icoVimeo:hover i, 
+    a.icoPinterest:hover i,
+    a.icoVimeo:hover i,
     a.icoLinkedin:hover i {
       color:#fff;
     }
@@ -458,28 +446,28 @@ input[type=checkbox].fa-checkbox {
 
 .nav-level-2 #menu-secondary_universal_menu li span { width: 160px; }
 
-.top15 { 
+.top15 {
   margin-top:15px!important;
 }
-.bottom15 { 
+.bottom15 {
   margin-bottom:15px!important;
 }
-.left15 { 
+.left15 {
   margin-left:15px!important;
 }
-.right15 { 
+.right15 {
   margin-right:15px!important;
 }
-.padtop { 
+.padtop {
   padding-top:15px!important;
 }
-.padbottom { 
+.padbottom {
   padding-bottom:15px!important;
 }
-.padleft { 
+.padleft {
   padding-left:15px!important;
 }
-.padright { 
+.padright {
   padding-right:15px!important;
 }
 .no-margins {
@@ -678,37 +666,6 @@ a.red-borders {
 		background: #fff;
 		border: solid 1px #9B9B9B;
 	}
-}
-
-
-.dwnld-btn {
-  border: solid 1px #1989C7;
-  border-radius: 3px;
-  color: #1989C7;
-  margin: 3px;
-  text-transform: uppercase;
-  background: #fff;
-  font-size: 20px;
-  line-height: 20px;
-  padding: 3px 40px;
-  position: relative;
-  text-align: center;
-  transition: all 0.15s ease;
-  &:visited, &:hover, &:active, &:focus {
-    color: #4EBEFC;
-    border-color: #4EBEFC;
-    transition: all 0.15s ease;
-  }
-  &:after {
-    font-family: FontAwesome;
-    content: "\f019";
-    position: absolute;
-    right: 8px;
-  }
-}
-
-.btn.btn-square {
-  border-radius: 1px;
 }
 
 hr.double-line-hr {

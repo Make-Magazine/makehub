@@ -76,8 +76,6 @@ a { // don't let genesis molest our links
 	}
 }
 
-
-
 // These are based off the commonly used btn colors of makerfaire
 .btn-red, .btn-reversed {
     font-weight: 300;
@@ -108,24 +106,6 @@ a { // don't let genesis molest our links
     &:hover, &:active, &:focus { color: #fff; }
 }
 
-.btn-blue-universal {
-	color: #1987C7;
-	border: thin solid #1987C7;
-	padding: 10px 30px;
-	&:hover, &:active, &:focus {
-	  background-color: #1987C7;
-	  color: #fff;
-	}
-}
-.btn-blue-reversed {
-    color: #fff;
-    border: thin solid white;
-    padding: 10px 30px;
-    &:hover, &:active, &:focus {
-        color: #00597E;
-        background-color: #fff;
-    }
-}
 
 .wp-block-button__link {
     border-radius: 15px;
@@ -134,7 +114,7 @@ a { // don't let genesis molest our links
     }
 }
 
-.universal-btn {
+.universal-btn, .btn.universal-btn {
     background-color: #005e9a;
     color: #fff;
     display: inline-flex;
@@ -157,7 +137,7 @@ a { // don't let genesis molest our links
         color: #005e9a;
     }
 }
-.universal-btn-red {
+.universal-btn-red, .btn.universal-btn-red {
     @extend .universal-btn;
     background-color: #EA002A;
     border-color: #EA002A;
@@ -165,7 +145,7 @@ a { // don't let genesis molest our links
         color: #EA002A;
     }
 }
-.universal-btn-navy {
+.universal-btn-navy, .btn.universal-btn-navy {
     @extend .universal-btn;
     background-color: #151733;
 	border-color: #151733;
@@ -174,7 +154,7 @@ a { // don't let genesis molest our links
         border-color: #151733;
     }
 }
-.universal-btn-light-blue {
+.universal-btn-light-blue, .btn.universal-btn-blue {
     @extend .universal-btn;
     background-color: #3fafed;
     border-color: #3fafed;
@@ -183,7 +163,7 @@ a { // don't let genesis molest our links
         border-color: #3fafed;
     }
 }
-.universal-btn-reversed {
+.universal-btn-reversed, .btn.universal-btn-reversed {
     @extend .universal-btn;
     background-color: #fff;
     border-color: #005e9a;
@@ -254,18 +234,6 @@ input.cmn-toggle-round:checked + label:before {
 }
 input.cmn-toggle-round:checked + label:after {
     margin-left: 30px;
-}
-
-.fancybox-overlay { z-index: 999999; }
-.fancybox-opened {
-    z-index: 9999999;
-    @media screen and (max-width: 768px) {
-        left: 0px !important;
-        width: 100vw !important;
-        .fancybox-inner {
-            width: auto !important;
-        }
-    }
 }
 
 .universal-warning {
@@ -482,7 +450,18 @@ input.cmn-toggle-round:checked + label:after {
     background: rgba(0,0,0, .8);
     top: 0px;
 }
+.fancybox-opened {
+    z-index: 9999999;
+    @media screen and (max-width: 768px) {
+        left: 0px !important;
+        width: 100vw !important;
+        .fancybox-inner {
+            width: auto !important;
+        }
+    }
+}
 .fancybox-overlay {
+	z-index: 999999;
     background: #333;
     opacity: .95;
     width: 100vw !important;
