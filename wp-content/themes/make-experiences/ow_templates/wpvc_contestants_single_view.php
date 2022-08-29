@@ -46,6 +46,7 @@
         }
     }
     $show_args = htmlspecialchars(json_encode($show_cont_args), ENT_QUOTES, 'UTF-8');
+	$back_btn = (strtolower(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) == strtolower($_SERVER['HTTP_HOST']) && strpos(_SERVER['HTTP_REFERER'], "/contestants/") !== false) ? $_SERVER['HTTP_REFERER'] : "/amazing-maker-awards/";
     // Do Not Remove this Section - End
 ?>
 
@@ -54,7 +55,7 @@
             <!--React Js div -->
             <div class="wpvc_single_contestants_page">
                 <?php // Do Not Remove this DIV ?>
-				<a href="/amazing-maker-awards/" class="btn contest-back-btn"><< Project Gallery</a>
+				<a href="<?php echo $back_btn; ?>" class="btn contest-back-btn"><< Project Gallery</a>
                 <div id="wpvc-singlecontestant-page" class="<?php echo $class_name; ?>" data-shortcode="singlecontestants" data-url="<?php echo site_url();?>" data-args='<?php echo $show_args; ?>' data-postid="<?php echo $post->ID; ?>" ></div>
 
                 <?php
