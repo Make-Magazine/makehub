@@ -46,7 +46,10 @@
         }
     }
     $show_args = htmlspecialchars(json_encode($show_cont_args), ENT_QUOTES, 'UTF-8');
-	$back_btn = (strtolower(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) == strtolower($_SERVER['HTTP_HOST']) || strpos(_SERVER['HTTP_REFERER'], "/contestants/") !== false) ? $_SERVER['HTTP_REFERER'] : "/amazing-maker-awards/";
+	$back_btn = "/amazing-maker-awards/";
+	if( strtolower(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) === strtolower($_SERVER['HTTP_HOST']) && str_contains($_SERVER['HTTP_REFERER'], "/contestants/") === false ) {
+		$back_btn = $_SERVER['HTTP_REFERER'];
+	}
     // Do Not Remove this Section - End
 ?>
 
