@@ -466,10 +466,13 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             &> a {
                                 width: 100%;
                                 pointer-events: none;
+								display: flex;
+								justify-content: space-between;
                                 &::after {
                                     font-family: FontAwesome;
                                     content: '\f054';
-                                    float: right;
+									margin: 0px;
+									margin-right: 20px;
                                 }
                             }
                             &:hover > .sub-menu {
@@ -479,7 +482,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             &.show-submenu > .sub-menu {
                                 opacity: 1;
                                 visibility: visible;
-                                left: 10%;
+                                left: 5%;
                             }
 
                             .sub-menu {
