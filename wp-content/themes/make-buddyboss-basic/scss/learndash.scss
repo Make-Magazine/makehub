@@ -91,11 +91,11 @@
 .sfwd-courses-template, .learndash-cpt-sfwd-courses {
 	.bb-single-course-sidebar {
 		.bb-course-preview-content {
-			.button, .bb-course-volume-list {
+			.button, .bb-course-volume-list, .bb-course-type {
 				font-size: 16px;
 			}
 			.button {
-				color: $color-blue;
+				background: $color-blue;
 				margin-bottom: 15px;
 			}
 		}
