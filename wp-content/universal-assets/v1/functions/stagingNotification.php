@@ -38,6 +38,7 @@ function wpse_check_visibility() {
     if (strpos($homeurl, 'devmakehub')   !== false ||
         strpos($homeurl, 'wpengine.com') !== false) {
       error_log('we are on a dev/stage site');
+      error_log('blog id is '.get_current_blog_id());
       error_log('blog public is '.get_option( 'blog_public'));
       // Public blogs have a setting of 1, private blogs are 0.
       if ( get_option( 'blog_public') != '0' ) {
