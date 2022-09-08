@@ -1,7 +1,7 @@
 <?php
 
 // override for the wp email function on stage/dev sites
-add_filter('wp_mail', 'change_email_for_wp', 10, 2);
+add_filter('wp_mail', 'change_email_for_wp', 99, 2);
 
 function change_email_for_wp($email) {
     $homeurl = get_home_url();
@@ -22,3 +22,25 @@ function change_email_for_wp($email) {
 
     return ($email);
 }
+
+
+/**
+ * Check if Website is visible to Search Engines
+ */
+function wpse_check_visibility() {
+    // if the worpress site is set public AND we are on a staging or dev environment,
+    //        set it to not public
+    // this is to discourage search engines from crawling our dev and stage sites
+    $homeurl = get_home_url();
+
+    //check for our stage, dev or local sites
+    if (strpos($homeurl, 'devmakehub')   !== false ||
+        strpos($homeurl, 'wpengine.com') !== false) {
+      // Public blogs have a setting of 1, private blogs are 0.
+      if ( get_option( 'blog_public' != '0') ) {
+          update_blog_public(1,0);
+      }
+    }
+
+}
+add_action( 'admin_init', 'wpse_check_visibility' );
