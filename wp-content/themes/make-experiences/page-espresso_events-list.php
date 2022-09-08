@@ -36,13 +36,11 @@ $wp_query = new EE_Grid_Template_Query($attributes);
 ?>
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
+		<header class="page-header">
+			<h1 class="page-title">Upcoming Maker Campus Events</h1>
+		</header><!-- .page-header -->
         <?php
         if (have_posts()) :
-            ?>
-            <header class="page-header">
-                <h1 class="page-title">Upcoming Maker Campus Events</h1>
-            </header><!-- .page-header -->
-            <?php
             // allow other stuff
             do_action('AHEE__espresso_grid_template_template__before_loop');
             ?>
@@ -141,7 +139,7 @@ $wp_query = new EE_Grid_Template_Query($attributes);
             do_action('AHEE__archive_espresso_events_template__after_loop');
         else :
             // If no content, include the "No posts found" template.
-            espresso_get_template_part('content', 'none');
+            echo "No Events Found";
         endif;
         ?>
         <hr />

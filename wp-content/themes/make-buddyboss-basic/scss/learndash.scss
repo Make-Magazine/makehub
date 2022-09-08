@@ -89,6 +89,17 @@
 
 // Adventures page
 .sfwd-courses-template, .learndash-cpt-sfwd-courses {
+	.bb-single-course-sidebar {
+		.bb-course-preview-content {
+			.button, .bb-course-volume-list, .bb-course-type {
+				font-size: 16px;
+			}
+			.button {
+				background: $color-blue;
+				margin-bottom: 15px;
+			}
+		}
+	}
 	.ld-course-status { display: none !important; }
 	.ld-lesson-list {
 		.bb-course-meta {
@@ -317,7 +328,6 @@
 }
 
  .learndash-wrapper {
- 	padding-bottom: 30px;
  	a.universal-btn {
  		border: solid 1px #005e9a !important;
  		color: #fff;
