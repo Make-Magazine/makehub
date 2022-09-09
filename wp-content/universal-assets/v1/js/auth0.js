@@ -150,6 +150,9 @@ jQuery(document).ready(function() {
             } else {
                 jQuery("body").addClass("buddypanel-closed");
             }
+			if (!jQuery("body").hasClass("bb-page-loaded")) {
+				jQuery("body").addClass("bb-page-loaded");
+			}
             //simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get re-adjusted
             window.dispatchEvent(new Event('resize'));
         }
