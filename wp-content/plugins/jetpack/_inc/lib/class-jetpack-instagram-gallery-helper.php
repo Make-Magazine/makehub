@@ -17,10 +17,10 @@ class Jetpack_Instagram_Gallery_Helper {
 	 * Check whether an Instagram access token is valid,
 	 * or has been permanently deleted elsewhere.
 	 *
-	 * @param  int $access_token_id The ID of the external access token for Instagram.
+	 * @param  string $access_token The Instagram access token.
 	 * @return bool
 	 */
-	public static function is_instagram_access_token_valid( $access_token_id ) {
+	public static function is_instagram_access_token_valid( $access_token ) {
 		$site_id = self::get_site_id();
 		if ( is_wp_error( $site_id ) ) {
 			return false;
@@ -30,12 +30,12 @@ class Jetpack_Instagram_Gallery_Helper {
 			if ( ! class_exists( 'WPCOM_Instagram_Gallery_Helper' ) ) {
 				\jetpack_require_lib( 'instagram-gallery-helper' );
 			}
-			$token = WPCOM_Instagram_Gallery_Helper::get_token( $access_token_id );
+			$token = WPCOM_Instagram_Gallery_Helper::get_token( $access_token );
 			return ! is_wp_error( $token );
 		}
 
 		$response = Client::wpcom_json_api_request_as_blog(
-			sprintf( '/sites/%d/instagram/%d/check-token', $site_id, $access_token_id ),
+			sprintf( '/sites/%d/instagram/%s/check-token', $site_id, $access_token ),
 			2,
 			array( 'headers' => array( 'content-type' => 'application/json' ) ),
 			null,
@@ -47,20 +47,20 @@ class Jetpack_Instagram_Gallery_Helper {
 	/**
 	 * Get the Instagram Gallery.
 	 *
-	 * @param  int $access_token_id The ID of the external access token for Instagram.
-	 * @param  int $count           The number of Instagram posts to fetch.
+	 * @param  string $access_token The Instagram access token.
+	 * @param  int    $count        The number of Instagram posts to fetch.
 	 * @return mixed
 	 */
-	public static function get_instagram_gallery( $access_token_id, $count ) {
+	public static function get_instagram_gallery( $access_token, $count ) {
 		$site_id = self::get_site_id();
 		if ( is_wp_error( $site_id ) ) {
 			return $site_id;
 		}
 
-		$transient_key = self::TRANSIENT_KEY_PREFIX . $access_token_id;
+		$transient_key = self::TRANSIENT_KEY_PREFIX . $access_token;
 
 		// Check if the connection exists before trying to retrieve the cached gallery.
-		if ( ! self::is_instagram_access_token_valid( $access_token_id ) ) {
+		if ( ! self::is_instagram_access_token_valid( $access_token ) ) {
 			delete_transient( $transient_key );
 			return new WP_Error(
 				'instagram_connection_unavailable',
@@ -80,7 +80,7 @@ class Jetpack_Instagram_Gallery_Helper {
 		}
 
 		$response = Client::wpcom_json_api_request_as_blog(
-			sprintf( '/sites/%d/instagram/%d?count=%d', $site_id, $access_token_id, $count ),
+			sprintf( '/sites/%d/instagram/%s?count=%d', $site_id, $access_token, (int) $count ),
 			2,
 			array( 'headers' => array( 'content-type' => 'application/json' ) ),
 			null,

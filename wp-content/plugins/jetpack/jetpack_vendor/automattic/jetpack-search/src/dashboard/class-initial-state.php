@@ -15,7 +15,6 @@ use Jetpack_Options;
  * The React initial state.
  */
 class Initial_State {
-
 	/**
 	 * Connection Manager
 	 *
@@ -37,7 +36,8 @@ class Initial_State {
 	 * @param Module_Control     $module_control - Module control instance.
 	 */
 	public function __construct( $connection_manager = null, $module_control = null ) {
-		$this->connection_manager = $connection_manager ? $connection_manager : new Connection_Manager( Package::SLUG );
+		// TODO: 'jetpack-search' better to be the current plugin where the package is running.
+		$this->connection_manager = $connection_manager ? $connection_manager : new Connection_Manager( 'jetpack-search' );
 		$this->module_control     = $module_control ? $module_control : new Module_Control();
 	}
 
@@ -58,7 +58,7 @@ class Initial_State {
 	public function get_initial_state() {
 		return array(
 			'siteData'        => array(
-				'WP_API_root'       => $this->get_wp_api_root(),
+				'WP_API_root'       => esc_url_raw( rest_url() ),
 				'WP_API_nonce'      => wp_create_nonce( 'wp_rest' ),
 				'registrationNonce' => wp_create_nonce( 'jetpack-registration-nonce' ),
 				'purchaseToken'     => $this->get_purchase_token(),
@@ -70,10 +70,9 @@ class Initial_State {
 				'showPromotions'    => apply_filters( 'jetpack_show_promotions', true ),
 				'adminUrl'          => esc_url( admin_url() ),
 				'blogId'            => Jetpack_Options::get_option( 'id', 0 ),
-				'version'           => Package::VERSION,
+				// TODO: add JETPACK_SEARCH_PACKAGE_VERSION to a proper place after major PRs merged.
+				'version'           => defined( 'JETPACK_SEARCH_PACKAGE_VERSION' ) ? JETPACK_SEARCH_PACKAGE_VERSION : 'dev',
 				'calypsoSlug'       => ( new Status() )->get_site_suffix(),
-				'postTypes'         => $this->get_post_types_with_labels(),
-				'isWpcom'           => Helper::is_wpcom(),
 			),
 			'userData'        => array(
 				'currentUser' => $this->current_user_data(),
@@ -84,23 +83,10 @@ class Initial_State {
 			),
 			'features'        => array_map(
 				'sanitize_text_field',
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				isset( $_GET['features'] ) ? explode( ',', wp_unslash( $_GET['features'] ) ) : array()
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				isset( $_GET['features'] ) ? explode( ',', $_GET['features'] ) : array()
 			),
 		);
-	}
-
-	/**
-	 * Get API root.
-	 *
-	 * It return first party API root for WPCOM simple sites.
-	 */
-	protected function get_wp_api_root() {
-		if ( ! Helper::is_wpcom() ) {
-			return esc_url_raw( rest_url() );
-		}
-		// First party API prefix for WPCOM.
-		return esc_url_raw( site_url( '/wp-json/wpcom-origin/' ) );
 	}
 
 	/**
@@ -126,33 +112,6 @@ class Initial_State {
 		);
 
 		return $current_user_data;
-	}
-
-	/**
-	 * Gets the post type labels for all of the site's post types (including custom post types)
-	 *
-	 * @return array
-	 */
-	protected function get_post_types_with_labels() {
-
-		$args = array(
-			'public' => true,
-		);
-
-		$post_types_with_labels = array();
-
-		$post_types = get_post_types( $args, 'objects' );
-
-		// We don't need all the additional post_type data, just the slug & label
-		foreach ( $post_types as $post_type ) {
-			$post_type_with_label = array(
-				'slug'  => $post_type->name,
-				'label' => $post_type->label,
-			);
-
-			$post_types_with_labels[ $post_type->name ] = $post_type_with_label;
-		}
-		return $post_types_with_labels;
 	}
 
 	/**

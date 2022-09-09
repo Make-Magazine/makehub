@@ -1,5 +1,5 @@
-const i18n = require( '@wordpress/i18n' );
 const { default: md5 } = require( 'md5-es' );
+const i18n = require( '@wordpress/i18n' );
 
 const locationMap = {
 	plugin: 'plugins/',

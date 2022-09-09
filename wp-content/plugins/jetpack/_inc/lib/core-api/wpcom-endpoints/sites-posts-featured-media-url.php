@@ -1,29 +1,18 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * WPCOM Add Featured Media URL
- * Adds `jetpack_featured_media_url` to post responses
+<?php
+
+/*
+ * Plugin Name: WPCOM Add Featured Media URL
  *
- * @package automattic/jetpack
+ * Adds `jetpack_featured_media_url` to post responses
  */
 
-/**
- * Add featured media url to API post responses.
- */
 class WPCOM_REST_API_V2_Sites_Posts_Add_Featured_Media_URL {
-	/**
-	 * Constructor.
-	 */
-	public function __construct() {
+	function __construct() {
 		add_action( 'rest_api_init', array( $this, 'add_featured_media_url' ) );
 	}
 
-	/**
-	 * Add featured media url to post responses.
-	 */
-	public function add_featured_media_url() {
-		register_rest_field(
-			'post',
-			'jetpack_featured_media_url',
+	function add_featured_media_url() {
+		register_rest_field( 'post', 'jetpack_featured_media_url',
 			array(
 				'get_callback'    => array( $this, 'get_featured_media_url' ),
 				'update_callback' => null,
@@ -32,16 +21,9 @@ class WPCOM_REST_API_V2_Sites_Posts_Add_Featured_Media_URL {
 		);
 	}
 
-	/**
-	 * Get featured media url.
-	 *
-	 * @param mixed           $object      What the endpoint returns.
-	 * @param string          $field_name  Should always match `->field_name`.
-	 * @param WP_REST_Request $request     WP API request.
-	 */
-	public function get_featured_media_url( $object, $field_name, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	function get_featured_media_url( $object, $field_name, $request ) {
 		$featured_media_url = '';
-		$image_attributes   = wp_get_attachment_image_src(
+		$image_attributes = wp_get_attachment_image_src(
 			get_post_thumbnail_id( $object['id'] ),
 			'full'
 		);
@@ -51,4 +33,5 @@ class WPCOM_REST_API_V2_Sites_Posts_Add_Featured_Media_URL {
 		return $featured_media_url;
 	}
 }
+
 wpcom_rest_api_v2_load_plugin( 'WPCOM_REST_API_V2_Sites_Posts_Add_Featured_Media_URL' );

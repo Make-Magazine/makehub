@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * The functions in this class provide an API for handling
  * sitemap related URIs.
@@ -32,7 +32,7 @@ class Jetpack_Sitemap_Finder {
 		$url = jetpack_sitemap_uri( $filename );
 
 		if ( pathinfo( $filename, PATHINFO_EXTENSION ) === 'xsl' ) {
-			// Strip scheme for sites where sitemap could be access via http or https.
+			// strip scheme for sites where sitemap could be access via http or https
 			$url = preg_replace( '/^https?:/', '', $url );
 		}
 

@@ -5,7 +5,6 @@
 		var adminbar = document.querySelector( '#wpadminbar' );
 		var wpwrap = document.querySelector( '#wpwrap' );
 		var adminMenu = document.querySelector( '#adminmenu' );
-		var dismissClass = 'dismissible-card__close-icon';
 
 		if ( ! adminbar ) {
 			return;
@@ -60,19 +59,15 @@
 				} );
 			}
 
-			adminMenu.addEventListener( 'click', function ( event ) {
-				if (
-					event.target.classList.contains( dismissClass ) ||
-					event.target.closest( '.' + dismissClass )
-				) {
+			const jitmDismissButton = adminMenu.querySelector( '.dismissible-card__close-icon' );
+			if ( jitmDismissButton ) {
+				jitmDismissButton.addEventListener( 'click', function ( event ) {
 					event.preventDefault();
 
 					const siteNotice = document.getElementById( 'toplevel_page_site-notices' );
 					if ( siteNotice ) {
 						siteNotice.style.display = 'none';
 					}
-
-					const jitmDismissButton = event.target;
 
 					makeAjaxRequest(
 						'POST',
@@ -86,32 +81,12 @@
 							'&_ajax_nonce=' +
 							jetpackAdminMenu.jitmDismissNonce
 					);
-				}
-			} );
-
-			makeAjaxRequest(
-				'GET',
-				ajaxurl + '?action=upsell_nudge_jitm&_ajax_nonce=' + jetpackAdminMenu.upsellNudgeJitm,
-				undefined,
-				null,
-				function ( xhr ) {
-					try {
-						if ( xhr.readyState === XMLHttpRequest.DONE ) {
-							if ( xhr.status === 200 && xhr.responseText ) {
-								adminMenu
-									.querySelector( '#toplevel_page_site_card' )
-									.insertAdjacentHTML( 'afterend', xhr.responseText );
-							}
-						}
-					} catch ( error ) {
-						// On failure, we just won't display an upsell nudge
-					}
-				}
-			);
+				} );
+			}
 		}
 	}
 
-	function makeAjaxRequest( method, url, contentType, body = null, callback = null ) {
+	function makeAjaxRequest( method, url, contentType, body ) {
 		var xhr = new XMLHttpRequest();
 		xhr.open( method, url, true );
 		xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
@@ -119,11 +94,6 @@
 			xhr.setRequestHeader( 'Content-Type', contentType );
 		}
 		xhr.withCredentials = true;
-		if ( callback ) {
-			xhr.onreadystatechange = function () {
-				callback( xhr );
-			};
-		}
 		xhr.send( body );
 	}
 

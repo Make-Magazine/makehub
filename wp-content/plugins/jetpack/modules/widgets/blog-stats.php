@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileNam
+<?php
 /**
  * Blog Stats Widget.
  *
@@ -26,7 +26,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	function __construct() {
 		$widget_ops = array(
 			'classname'                   => 'blog-stats',
 			'description'                 => esc_html__( 'Show a hit counter for your blog.', 'jetpack' ),
@@ -85,7 +85,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 	 *
 	 * @return void
 	 */
-	public function form( $instance ) {
+	function form( $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults() );
 		?>
 
@@ -112,7 +112,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 	 *
 	 * @return array Updated safe values to be saved.
 	 */
-	public function update( $new_instance, $old_instance ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	function update( $new_instance, $old_instance ) {
 		$instance          = array();
 		$instance['title'] = wp_kses( $new_instance['title'], array() );
 		$instance['hits']  = wp_kses( $new_instance['hits'], array() );
@@ -128,13 +128,13 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Saved values from database.
 	 */
-	public function widget( $args, $instance ) {
+	function widget( $args, $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults() );
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
-		echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $args['before_widget'];
 
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -155,7 +155,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 			esc_html_e( 'There was an issue retrieving stats. Please try again later.', 'jetpack' );
 		}
 
-		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $args['after_widget'];
 
 		/** This action is already documented in modules/widgets/gravatar-profile.php */
 		do_action( 'jetpack_stats_extra', 'widget_view', 'blog_stats' );

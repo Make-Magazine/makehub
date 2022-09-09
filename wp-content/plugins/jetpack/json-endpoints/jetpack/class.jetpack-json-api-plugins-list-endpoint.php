@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
 new Jetpack_JSON_API_Plugins_List_Endpoint(
 	array(
@@ -23,30 +23,11 @@ new Jetpack_JSON_API_Plugins_List_Endpoint(
 		'example_request'         => 'https://public-api.wordpress.com/rest/v1/sites/example.wordpress.org/plugins',
 	)
 );
-
-/**
- * Plugins list endpoint class.
- *
- * GET /sites/%s/plugins
- *
- * No v1.2 versions since they are .com only
- */
+// No v1.2 versions since they are .com only
 class Jetpack_JSON_API_Plugins_List_Endpoint extends Jetpack_JSON_API_Plugins_Endpoint {
-	/**
-	 * Needed capabilities.
-	 *
-	 * @var string
-	 */
+	// GET /sites/%s/plugins
 	protected $needed_capabilities = 'activate_plugins';
-
-	/**
-	 * Validate the input.
-	 *
-	 * @param string $plugin - the plugin.
-	 *
-	 * @return bool
-	 */
-	public function validate_input( $plugin ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function validate_input( $plugin ) {
 		wp_update_plugins();
 		$this->plugins = array_keys( get_plugins() );
 		return true;

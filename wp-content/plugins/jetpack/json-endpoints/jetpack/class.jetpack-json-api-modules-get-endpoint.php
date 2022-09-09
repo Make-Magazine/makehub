@@ -1,15 +1,6 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
-/**
- * The Modules get endpoint.
- *
- * /sites/%s/jetpack/modules/%s
- */
 class Jetpack_JSON_API_Modules_Get_Endpoint extends Jetpack_JSON_API_Modules_Endpoint {
-	/**
-	 * Needed capabilities.
-	 *
-	 * @var string
-	 */
+	// GET  /sites/%s/jetpack/modules/%s
 	protected $needed_capabilities = 'jetpack_manage_modules';
 }

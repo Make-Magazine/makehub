@@ -11,10 +11,6 @@ use \WP_CLI;
 use \WP_CLI_Command;
 use \WP_Error;
 
-if ( ! class_exists( 'WP_CLI_Command' ) ) {
-	return;
-}
-
 /**
  * Provide functionality by WPCLI.
  */

@@ -183,7 +183,7 @@ class Jetpack_Network_Sites_List_Table extends WP_List_Table {
 	 */
 	public function process_bulk_action() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Check if we have anything to do before checking the nonce.
-		if ( empty( $_POST['bulk'] ) ) {
+		if ( ! isset( $_POST['bulk'] ) || empty( $_POST['bulk'] ) ) {
 			return; // Thou shall not pass! There is nothing to do.
 		}
 
@@ -195,14 +195,12 @@ class Jetpack_Network_Sites_List_Table extends WP_List_Table {
 		switch ( $action ) {
 
 			case 'connect':
-				$bulk = wp_unslash( $_POST['bulk'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				foreach ( $bulk as $site ) {
+				foreach ( $_POST['bulk'] as $site ) {
 					$jpms->do_subsiteregister( $site );
 				}
 				break;
 			case 'disconnect':
-				$bulk = wp_unslash( $_POST['bulk'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				foreach ( $bulk as $site ) {
+				foreach ( $_POST['bulk'] as $site ) {
 					$jpms->do_subsitedisconnect( $site );
 				}
 				break;

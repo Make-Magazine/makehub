@@ -1,6 +1,6 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
- * Theme Tools: Social Links.
+ * Social Links.
  *
  * This feature will only be activated for themes that declare their support.
  * This can be done by adding code similar to the following during the
@@ -9,13 +9,8 @@
  * add_theme_support( 'social-links', array(
  *     'facebook', 'twitter', 'linkedin', 'tumblr',
  * ) );
- *
- * @package automattic/jetpack
  */
 
-/**
- * Init Social_Links if the theme declares support.
- */
 function jetpack_theme_supports_social_links() {
 	if ( current_theme_supports( 'social-links' ) && function_exists( 'publicize_init' ) ) {
 		new Social_Links();
@@ -25,9 +20,6 @@ add_action( 'init', 'jetpack_theme_supports_social_links', 30 );
 
 if ( ! class_exists( 'Social_Links' ) ) {
 
-	/**
-	 * Social_Links main class.
-	 */
 	class Social_Links {
 
 		/**
@@ -82,14 +74,11 @@ if ( ! class_exists( 'Social_Links' ) ) {
 			add_filter( 'jetpack_get_social_links', array( $this, 'get_social_links' ) );
 
 			foreach ( $theme_support[0] as $service ) {
-				add_filter( "pre_option_jetpack-$service", array( $this, 'get_social_link_filter' ) ); // - `get_option( 'jetpack-service' );`
-				add_filter( "theme_mod_jetpack-$service", array( $this, 'get_social_link_filter' ) ); // - `get_theme_mod( 'jetpack-service' );`
+				add_filter( "pre_option_jetpack-$service", array( $this, 'get_social_link_filter' ) ); // get_option( 'jetpack-service' );
+				add_filter( "theme_mod_jetpack-$service", array( $this, 'get_social_link_filter' ) ); // get_theme_mod( 'jetpack-service' );
 			}
 		}
 
-		/**
-		 * Init the admin setup.
-		 */
 		public function admin_setup() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
@@ -260,4 +249,4 @@ if ( ! class_exists( 'Social_Links' ) ) {
 		}
 	}
 
-} // - end if ( ! class_exists( 'Social_Links' )
+} // end if ( ! class_exists( 'Social_Links' )

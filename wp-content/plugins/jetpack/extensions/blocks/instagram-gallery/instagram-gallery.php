@@ -116,7 +116,6 @@ function render_block( $attributes, $content ) { // phpcs:ignore VariableAnalysi
 				<img
 					alt="<?php echo esc_attr( $image->title ? $image->title : $image->link ); ?>"
 					src="<?php echo esc_url( $image->url ); ?>"
-					loading="lazy"
 				/>
 			</a>
 		<?php endforeach; ?>

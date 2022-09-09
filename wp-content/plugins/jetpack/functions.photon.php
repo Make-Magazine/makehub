@@ -1,4 +1,7 @@
 <?php
+
+use Automattic\Jetpack\Status;
+
 /**
  * Generic functions using the Photon service.
  *
@@ -6,8 +9,6 @@
  *
  * @package automattic/jetpack
  */
-
-use Automattic\Jetpack\Status;
 
 /**
  * Generates a Photon URL.
@@ -325,6 +326,7 @@ function jetpack_photon_banned_domains( $skip, $image_url ) {
 
 	return $skip;
 }
+
 
 /**
  * Jetpack Photon - Support Text Widgets.

@@ -9,7 +9,6 @@
 namespace Automattic\Jetpack\Search;
 
 use Automattic\Jetpack\Connection\Client;
-use Automattic\Jetpack\My_Jetpack\Products\Search as Search_Product;
 use Jetpack_Options;
 use WP_Error;
 use WP_REST_Request;
@@ -19,14 +18,6 @@ use WP_REST_Server;
  * Registers the REST routes for Search.
  */
 class REST_Controller {
-	/**
-	 * Namespace for the REST API.
-	 *
-	 * This is overriden with value `wpcom-orgin/jetpack/v4` for WPCOM.
-	 *
-	 * @var string
-	 */
-	public static $namespace = 'jetpack/v4';
 	/**
 	 * Whether it's run on WPCOM.
 	 *
@@ -50,8 +41,8 @@ class REST_Controller {
 	 */
 	public function __construct( $is_wpcom = false, $module_control = null, $plan = null ) {
 		$this->is_wpcom      = $is_wpcom;
-		$this->search_module = $module_control === null ? new Module_Control() : $module_control;
-		$this->plan          = $plan === null ? new Plan() : $plan;
+		$this->search_module = is_null( $module_control ) ? new Module_Control() : $module_control;
+		$this->plan          = is_null( $plan ) ? new Plan() : $plan;
 	}
 
 	/**
@@ -61,20 +52,8 @@ class REST_Controller {
 	 * @static
 	 */
 	public function register_rest_routes() {
-		$this->register_common_rest_routes();
-		if ( ! Helper::is_wpcom() ) {
-			$this->register_jetpack_only_rest_routes();
-		} else {
-			$this->register_wpcom_only_rest_routes();
-		}
-	}
-
-	/**
-	 * Routes both existing in Jetpack and WPCOM simple sites.
-	 */
-	protected function register_common_rest_routes() {
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/plan',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -83,7 +62,7 @@ class REST_Controller {
 			)
 		);
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/settings',
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
@@ -92,7 +71,7 @@ class REST_Controller {
 			)
 		);
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/settings',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -101,7 +80,7 @@ class REST_Controller {
 			)
 		);
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/stats',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -110,22 +89,16 @@ class REST_Controller {
 			)
 		);
 		register_rest_route(
-			static::$namespace,
-			'/search/pricing',
+			'jetpack/v4',
+			'/search',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'product_pricing' ),
+				'callback'            => array( $this, 'get_search_results' ),
 				'permission_callback' => 'is_user_logged_in',
 			)
 		);
-	}
-
-	/**
-	 * Routes only existing in Jetpack.
-	 */
-	protected function register_jetpack_only_rest_routes() {
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/plan/activate',
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
@@ -134,7 +107,7 @@ class REST_Controller {
 			)
 		);
 		register_rest_route(
-			static::$namespace,
+			'jetpack/v4',
 			'/search/plan/deactivate',
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
@@ -142,24 +115,6 @@ class REST_Controller {
 				'permission_callback' => array( $this, 'require_admin_privilege_callback' ),
 			)
 		);
-		register_rest_route(
-			static::$namespace,
-			'/search',
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_search_results' ),
-				'permission_callback' => 'is_user_logged_in',
-			)
-		);
-	}
-
-	/**
-	 * Routes only existing in WPCOM.
-	 *
-	 * We currently don't have any.
-	 */
-	protected function register_wpcom_only_rest_routes() {
-		return true;
 	}
 
 	/**
@@ -213,14 +168,14 @@ class REST_Controller {
 		}
 
 		$errors = array();
-		if ( $module_active !== null ) {
+		if ( ! is_null( $module_active ) ) {
 			$module_active_updated = $this->search_module->update_status( $module_active );
 			if ( is_wp_error( $module_active_updated ) ) {
 				$errors['module_active'] = $module_active_updated;
 			}
 		}
 
-		if ( $instant_search_enabled !== null ) {
+		if ( ! is_null( $instant_search_enabled ) ) {
 			$instant_search_enabled_updated = $this->search_module->update_instant_search_status( $instant_search_enabled );
 			if ( is_wp_error( $instant_search_enabled_updated ) ) {
 				$errors['instant_search_enabled'] = $instant_search_enabled_updated;
@@ -252,7 +207,7 @@ class REST_Controller {
 	 * @param boolean $instant_search_enabled - Instant Search status.
 	 */
 	protected function validate_search_settings( $module_active, $instant_search_enabled ) {
-		if ( ( true === $instant_search_enabled && false === $module_active ) || ( $module_active === null && $instant_search_enabled === null ) ) {
+		if ( ( true === $instant_search_enabled && false === $module_active ) || ( is_null( $module_active ) && is_null( $instant_search_enabled ) ) ) {
 			return new WP_Error(
 				'rest_invalid_arguments',
 				esc_html__( 'The arguments passed in are invalid.', 'jetpack-search-pkg' ),
@@ -298,7 +253,7 @@ class REST_Controller {
 			$request->get_query_params(),
 			sprintf( '/sites/%d/search', absint( $blog_id ) )
 		);
-		$response = Client::wpcom_json_api_request_as_blog( $path, '1.3', array(), null, 'rest' );
+		$response = Client::wpcom_json_api_request_as_user( $path, '1.3', array(), null, 'rest' );
 		return rest_ensure_response( $this->make_proper_response( $response ) );
 	}
 
@@ -322,7 +277,7 @@ class REST_Controller {
 
 		// Update plan data, plan info is in the request body.
 		// We do this to avoid another call to WPCOM and reduce latency.
-		if ( $payload['search_plan_info'] === null || ! $this->plan->set_plan_options( $payload['search_plan_info'] ) ) {
+		if ( is_null( $payload['search_plan_info'] ) || ! $this->plan->set_plan_options( $payload['search_plan_info'] ) ) {
 			$this->plan->get_plan_info_from_wpcom();
 		}
 
@@ -371,14 +326,6 @@ class REST_Controller {
 				'code' => 'success',
 			)
 		);
-	}
-
-	/**
-	 * Pricing for record count of the site
-	 */
-	public function product_pricing() {
-		$tier_pricing = Search_Product::get_pricing_for_ui();
-		return rest_ensure_response( $tier_pricing );
 	}
 
 	/**

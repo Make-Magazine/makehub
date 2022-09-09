@@ -1,4 +1,7 @@
 /*!
+* Do not modify this file directly.  It is compiled SASS code.
+*/
+/*!
 * CleanSlate
 *   github.com/premasagar/cleanslate
 *
@@ -89,6 +92,7 @@
   -webkit-background-clip: border-box !important;
   background-clip: border-box !important;
   background-size: auto !important;
+  -o-border-image: none !important;
   border-image: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
@@ -475,3 +479,4 @@
 .cleanslate pre {
   white-space: pre !important;
 }
+/*# sourceMappingURL=cleanslate-rtl.css.map */

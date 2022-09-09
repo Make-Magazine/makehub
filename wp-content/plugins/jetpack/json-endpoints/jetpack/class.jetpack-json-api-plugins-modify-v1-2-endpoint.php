@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 new Jetpack_JSON_API_Plugins_Modify_v1_2_Endpoint(
 	array(
 		'description'             => 'Activate/Deactivate a Plugin on your Jetpack Site, or set automatic updates',
@@ -101,10 +101,7 @@ new Jetpack_JSON_API_Plugins_Modify_v1_2_Endpoint(
 	)
 );
 
-/**
- * Plugins modify 1_2 Endpoint.
- */
-class Jetpack_JSON_API_Plugins_Modify_v1_2_Endpoint extends Jetpack_JSON_API_Plugins_Modify_Endpoint { // phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid, Generic.Classes.OpeningBraceSameLine.ContentAfterBrace
+class Jetpack_JSON_API_Plugins_Modify_v1_2_Endpoint extends Jetpack_JSON_API_Plugins_Modify_Endpoint {
 
 	/**
 	 * Activate plugins.

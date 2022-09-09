@@ -10,7 +10,6 @@ use Automattic\Jetpack\Connection\Manager as Connection_Manager;
 use Automattic\Jetpack\Connection\Secrets;
 use Automattic\Jetpack\Connection\Tokens;
 use Automattic\Jetpack\Connection\Urls;
-use Automattic\Jetpack\Constants;
 use Automattic\Jetpack\Roles;
 
 /**
@@ -408,7 +407,7 @@ class Jetpack_XMLRPC_Server {
 		$secrets = ( new Secrets() )->generate( 'authorize', $user->ID );
 
 		$response = array(
-			'jp_version'   => Constants::get_constant( 'JETPACK__VERSION' ),
+			'jp_version'   => JETPACK__VERSION,
 			'redirect_uri' => $redirect_uri,
 			'user_id'      => $user->ID,
 			'user_email'   => $user->user_email,
@@ -637,7 +636,7 @@ class Jetpack_XMLRPC_Server {
 			do_action( 'jetpack_xmlrpc_server_event', $event_name, 'fail', $error, $user );
 		}
 
-		if ( $error !== null ) {
+		if ( ! is_null( $error ) ) {
 			$this->error = $error;
 		}
 

@@ -3,7 +3,6 @@
  * Display the Pay with PayPal Form.
  *
  * @package automattic/jetpack
- * @phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
  */
 
 ?>
@@ -18,13 +17,7 @@
 		name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
 		value="<?php echo esc_attr( $instance['title'] ); ?>" />
 </p>
-<p class="jetpack-simple-payments-products-fieldset" 
-<?php
-if ( empty( $product_posts ) ) {
-	echo 'style="display:none;"';
-}
-?>
->
+<p class="jetpack-simple-payments-products-fieldset" <?php if ( empty( $product_posts ) ) { echo 'style="display:none;"'; } ?>>
 	<label for="<?php echo esc_attr( $this->get_field_id( 'product_post_id' ) ); ?>">
 		<?php esc_html_e( 'Select a Pay with PayPal button:', 'jetpack' ); ?>
 	</label>
@@ -40,13 +33,7 @@ if ( empty( $product_posts ) ) {
 	</select>
 </p>
 <?php if ( is_customize_preview() ) { ?>
-<p class="jetpack-simple-payments-products-warning" 
-	<?php
-	if ( ! empty( $product_posts ) ) {
-		echo 'style="display:none;"';
-	}
-	?>
->
+<p class="jetpack-simple-payments-products-warning" <?php if ( ! empty( $product_posts ) ) { echo 'style="display:none;"'; } ?>>
 	<?php esc_html_e( "Looks like you don't have any products. You can create one using the Add New button below.", 'jetpack' ); ?>
 </p>
 <p>
@@ -103,22 +90,10 @@ if ( empty( $product_posts ) ) {
 	</p>
 	<div class="jetpack-simple-payments-image-fieldset">
 		<label><?php esc_html_e( 'Product image', 'jetpack' ); ?></label>
-		<div class="placeholder" 
-		<?php
-		if ( ! empty( $instance['form_product_image_id'] ) ) {
-			echo 'style="display:none;"';
-		}
-		?>
-		>
+		<div class="placeholder" <?php if ( ! empty( $instance['form_product_image_id'] ) ) echo 'style="display:none;"'; ?>>
 			<?php esc_html_e( 'Select an image', 'jetpack' ); ?>
 		</div>
-		<div class="jetpack-simple-payments-image" 
-		<?php
-		if ( empty( $instance['form_product_image_id'] ) ) {
-			echo 'style="display:none;"';
-		}
-		?>
-		>
+		<div class="jetpack-simple-payments-image" <?php if ( empty( $instance['form_product_image_id'] ) ) echo 'style="display:none;"'; ?>>
 			<img src="<?php echo esc_url( $instance['form_product_image_src'] ); ?>" />
 			<button class="button jetpack-simple-payments-remove-image"><?php esc_html_e( 'Remove image', 'jetpack' ); ?></button>
 		</div>

@@ -1,64 +1,48 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * Update site users API endpoint.
- *
- * Endpoint: /sites/%s/users/%d/delete
- */
+<?php
 
-new WPCOM_JSON_API_Update_User_Endpoint(
-	array(
-		'description'          => 'Deletes or removes a user of a site.',
-		'group'                => 'users',
-		'stat'                 => 'users:delete',
+new WPCOM_JSON_API_Update_User_Endpoint( array(
+	'description' => 'Deletes or removes a user of a site.',
+	'group'       => 'users',
+	'stat'        => 'users:delete',
 
-		'method'               => 'POST',
-		'path'                 => '/sites/%s/users/%d/delete',
-		'path_labels'          => array(
-			'$site'    => '(int|string) The site ID or domain.',
-			'$user_ID' => '(int) The user\'s ID',
+	'method'      => 'POST',
+	'path'        => '/sites/%s/users/%d/delete',
+	'path_labels' => array(
+		'$site'       => '(int|string) The site ID or domain.',
+		'$user_ID'    => '(int) The user\'s ID'
+	),
+
+	'request_format' => array(
+		'reassign' => '(int) An optional id of a user to reassign posts to.',
+	),
+
+	'response_format' => array(
+		'success' => '(bool) Was the deletion of user successful?',
+	),
+
+	'example_request'      => 'https://public-api.wordpress.com/rest/v1/sites/82974409/users/1/delete',
+	'example_request_data' => array(
+		'headers' => array(
+			'authorization' => 'Bearer YOUR_API_TOKEN'
 		),
+	),
 
-		'request_format'       => array(
-			'reassign' => '(int) An optional id of a user to reassign posts to.',
-		),
-
-		'response_format'      => array(
-			'success' => '(bool) Was the deletion of user successful?',
-		),
-
-		'example_request'      => 'https://public-api.wordpress.com/rest/v1/sites/82974409/users/1/delete',
-		'example_request_data' => array(
-			'headers' => array(
-				'authorization' => 'Bearer YOUR_API_TOKEN',
-			),
-		),
-
-		'example_response'     => '
+	'example_response' => '
 	{
 		"success": true
-	}',
-	)
-);
+	}'
+) );
 
-/**
- * Update site users API class.
- */
 class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
-	/**
-	 * Update site users API callback.
-	 *
-	 * @param string $path API path.
-	 * @param int    $blog_id Blog ID.
-	 * @param int    $user_id User ID.
-	 */
-	public function callback( $path = '', $blog_id = 0, $user_id = 0 ) {
+
+	function callback( $path = '', $blog_id = 0, $user_id = 0 ) {
 		$blog_id = $this->api->switch_to_blog_and_validate_user( $this->api->get_blog_id( $blog_id ) );
 		if ( is_wp_error( $blog_id ) ) {
 			return $blog_id;
 		}
 
 		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			if ( (int) wpcom_get_blog_owner( $blog_id ) === (int) $user_id ) {
+			if ( wpcom_get_blog_owner( $blog_id ) == $user_id ) {
 				return new WP_Error( 'forbidden', 'A site owner can not be removed through this endpoint.', 403 );
 			}
 		}
@@ -72,20 +56,19 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 	/**
 	 * Checks if a user exists by checking to see if a WP_User object exists for a user ID.
-	 *
-	 * @param  int $user_id User ID.
+	 * @param  int $user_id
 	 * @return bool
 	 */
-	public function user_exists( $user_id ) {
+	function user_exists( $user_id ) {
 		$user = get_user_by( 'id', $user_id );
 
-		return false !== $user && is_a( $user, 'WP_User' );
+		return false != $user && is_a( $user, 'WP_User' );
 	}
 
 	/**
-	 * Return the domain name of a subscription.
+	 * Return the domain name of a subscription
 	 *
-	 * @param  Store_Subscription $subscription Subscription object.
+	 * @param  Store_Subscription $subscription
 	 * @return string
 	 */
 	protected function get_subscription_domain_name( $subscription ) {
@@ -95,7 +78,7 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 	/**
 	 * Get a list of the domains owned by the given user.
 	 *
-	 * @param  int $user_id User ID.
+	 * @param  int $user_id
 	 * @return array
 	 */
 	protected function domain_subscriptions_for_site_owned_by_user( $user_id ) {
@@ -108,12 +91,11 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 	/**
 	 * Validates user input and then decides whether to remove or delete a user.
-	 *
-	 * @param  int $user_id User ID.
+	 * @param  int $user_id
 	 * @return array|WP_Error
 	 */
-	public function delete_or_remove_user( $user_id ) {
-		if ( 0 === (int) $user_id ) {
+	function delete_or_remove_user( $user_id ) {
+		if ( 0 == $user_id ) {
 			return new WP_Error( 'invalid_input', 'A valid user ID must be specified.', 400 );
 		}
 
@@ -134,7 +116,7 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 			}
 		}
 
-		if ( get_current_user_id() === (int) $user_id ) {
+    	if ( get_current_user_id() == $user_id ) {
 			return new WP_Error( 'invalid_input', 'User can not remove or delete self through this endpoint.', 400 );
 		}
 
@@ -147,11 +129,10 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 	/**
 	 * Removes a user from the current site.
-	 *
-	 * @param  int $user_id User ID.
+	 * @param  int $user_id
 	 * @return array|WP_Error
 	 */
-	public function remove_user( $user_id ) {
+	function remove_user( $user_id ) {
 		if ( ! current_user_can( 'remove_users' ) ) {
 			return new WP_Error( 'unauthorized', 'User cannot remove users for specified site.', 403 );
 		}
@@ -161,17 +142,16 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 		}
 
 		return array(
-			'success' => remove_user_from_blog( $user_id, get_current_blog_id() ),
+			'success' => remove_user_from_blog( $user_id, get_current_blog_id() )
 		);
 	}
 
 	/**
 	 * Deletes a user and optionally reassigns posts to another user.
-	 *
-	 * @param  int $user_id User ID.
+	 * @param  int $user_id
 	 * @return array|WP_Error
 	 */
-	public function delete_user( $user_id ) {
+	function delete_user( $user_id ) {
 		if ( ! current_user_can( 'delete_users' ) ) {
 			return new WP_Error( 'unauthorized', 'User cannot delete users for specified site.', 403 );
 		}
@@ -179,7 +159,7 @@ class WPCOM_JSON_API_Update_User_Endpoint extends WPCOM_JSON_API_Endpoint {
 		$input = (array) $this->input();
 
 		if ( isset( $input['reassign'] ) ) {
-			if ( (int) $user_id === (int) $input['reassign'] ) {
+			if ( $user_id == $input['reassign'] ) {
 				return new WP_Error( 'invalid_input', 'Can not reassign posts to user being deleted.', 400 );
 			}
 

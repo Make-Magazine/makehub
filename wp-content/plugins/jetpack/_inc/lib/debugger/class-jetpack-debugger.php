@@ -20,11 +20,11 @@ class Jetpack_Debugger {
 	 * Used in class.jetpack-admin.php.
 	 */
 	public static function disconnect_and_redirect() {
-		if ( ! ( isset( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'jp_disconnect' ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		if ( ! ( isset( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'jp_disconnect' ) ) ) {
 			return;
 		}
 
-		if ( ! empty( $_GET['disconnect'] ) ) {
+		if ( isset( $_GET['disconnect'] ) && $_GET['disconnect'] ) {
 			if ( Jetpack::is_connection_ready() ) {
 				Jetpack::disconnect();
 				wp_safe_redirect( Jetpack::admin_url() );

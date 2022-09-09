@@ -1,7 +1,13 @@
-import { IDCScreen } from '@automattic/jetpack-idc';
-import React from 'react';
+/**
+ * External dependencies
+ */
 import ReactDOM from 'react-dom';
+import React from 'react';
+import { IDCScreen } from '@automattic/jetpack-idc';
 
+/**
+ * Internal dependencies
+ */
 import './admin-bar.scss';
 import './style.scss';
 
@@ -26,7 +32,6 @@ function render() {
 		isSafeModeConfirmed,
 		consumerData,
 		isAdmin,
-		possibleDynamicSiteUrlDetected,
 	} = window.JP_IDENTITY_CRISIS__INITIAL_STATE;
 
 	if ( ! isSafeModeConfirmed ) {
@@ -44,7 +49,6 @@ function render() {
 				}
 				isAdmin={ isAdmin }
 				logo={ consumerData.hasOwnProperty( 'logo' ) ? consumerData.logo : undefined }
-				possibleDynamicSiteUrlDetected={ possibleDynamicSiteUrlDetected }
 			/>,
 			container
 		);

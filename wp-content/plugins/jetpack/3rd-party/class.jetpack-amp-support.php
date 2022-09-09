@@ -139,6 +139,7 @@ class Jetpack_AMP_Support {
 	 */
 	public static function amp_disable_the_content_filters() {
 		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			add_filter( 'videopress_show_2015_player', '__return_true' );
 			add_filter( 'protected_embeds_use_form_post', '__return_false' );
 			remove_filter( 'the_title', 'widont' );
 		}
@@ -437,8 +438,7 @@ class Jetpack_AMP_Support {
 	 */
 	public static function amp_enqueue_sharing_css() {
 		if (
-			Jetpack::is_module_active( 'sharedaddy' )
-			&& self::is_amp_request()
+			self::is_amp_request()
 			&& ! self::is_amp_legacy()
 		) {
 			wp_enqueue_style( 'sharedaddy-amp', plugin_dir_url( __DIR__ ) . 'modules/sharedaddy/amp-sharing.css', array( 'social-logos' ), JETPACK__VERSION );

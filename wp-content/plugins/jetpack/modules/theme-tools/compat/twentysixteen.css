@@ -65,7 +65,7 @@
 }
 
 /* Gallery Widget */
-.widget-gallery .jetpack-slideshow-window {
+.widget-gallery .slideshow-window {
 	border-radius: 0;
 }
 
@@ -446,7 +446,7 @@ iframe[src^="http://api.mixcloud.com/"] {
 }
 
 /* Slideshow */
-.entry-content .jetpack-slideshow-window {
+.entry-content .slideshow-window {
 	border-radius: 0;
 	margin-bottom: 1.75em;
 }
