@@ -43,8 +43,11 @@ function wpse_check_visibility() {
       error_log('blog id is '.get_current_blog_id());
       error_log('blog public is '.get_option( 'blog_public'));
       // Public blogs have a setting of 1, private blogs are 0.
-      if ( get_option( 'blog_public') != '0' ) {          
-          update_blog_status( get_current_blog_id(), 'public', (int) 0 );
+      if ( get_option( 'blog_public') != '0' ) {
+        $blog_id = get_current_blog_id();
+        switch_to_blog( $blog_id );
+        update_blog_status( $blog_id, 'public', (int) 0 );
+        restore_current_blog();          
           error_log('after update, blog public is '.get_option( 'blog_public'));
       }
     }
