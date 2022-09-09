@@ -2,7 +2,7 @@
 /**
  * Learndash Reports functions
  *
- * @since 2.3
+ * @since 2.3.0
  *
  * @package LearnDash\Reports
  */
@@ -950,19 +950,18 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		$sql_str_where .= ' AND ld_user_activity.course_id ' . $query_args['course_ids_action'] . ' (' . implode( ',', $query_args['course_ids'] ) . ') ';
 	}
 
-	if ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) ) {
-		if ( true === $activity_status_has_null ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_started >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_updated >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
-		}
-	}
-	if ( ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
-		if ( true === $activity_status_has_null ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_started <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_updated <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
-		}
+	if ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) && ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND ( ';
+		$sql_str_where .= '(ld_user_activity.activity_started BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
+		$sql_str_where .= ' OR ';
+		$sql_str_where .= '(ld_user_activity.activity_updated BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
+		$sql_str_where .= ' OR ';
+		$sql_str_where .= '(ld_user_activity.activity_completed BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
+		$sql_str_where .= ' ) ';
+	} elseif ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND (ld_user_activity.activity_started >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_updated >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
+	} elseif ( ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND ((ld_user_activity.activity_started > 0 AND ld_user_activity.activity_started <= ' . $query_args['time_end_gmt_timestamp'] . ') OR ( ld_user_activity.activity_completed > 0 AND ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ' ) OR ( ld_user_activity.activity_updated > 0 AND ld_user_activity.activity_updated <= ' . $query_args['time_end_gmt_timestamp'] . ')) ';
 	}
 
 	if ( ! empty( $query_args['s'] ) ) {

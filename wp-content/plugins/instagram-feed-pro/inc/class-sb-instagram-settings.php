@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
+use InstagramFeed\Helpers\Util;
+
 class SB_Instagram_Settings {
 	/**
 	 * @var array
@@ -113,12 +115,18 @@ class SB_Instagram_Settings {
 				'resizeprocess'    => isset( $db['sb_instagram_resizeprocess'] ) ? $db['sb_instagram_resizeprocess'] : 'background',
 				'customtemplates'  => isset( $db['custom_template'] ) ? $db['custom_template'] : '',
 				'gdpr'             => isset( $db['gdpr'] ) ? $db['gdpr'] : 'auto',
+
+				//Post Style
+				'poststyle'        => isset( $db['sb_post_style'] ) ? $db['sb_post_style'] : '',
+				'postbgcolor'      => isset( $db['sb_post_bg_color'] ) ? $db['sb_post_bg_color'] : '',
+				'postcorners'      => isset( $db['sb_post_rounded'] ) ? $db['sb_post_rounded'] : '',
+				'boxshadow'        => isset( $db['sb_box_shadow'] ) ? $db['sb_box_shadow'] : '',
 			),
 			$atts
 		);
 
 		$this->settings['customtemplates'] = $this->settings['customtemplates'] === 'true' || $this->settings['customtemplates'] === 'on';
-		if ( isset( $_GET['sbi_debug'] ) || isset( $_GET['sb_debug'] ) ) {
+		if ( Util::isDebugging() ) {
 			$this->settings['customtemplates'] = false;
 		}
 		$this->settings['minnum']  = max( (int) $this->settings['num'], (int) $this->settings['nummobile'] );

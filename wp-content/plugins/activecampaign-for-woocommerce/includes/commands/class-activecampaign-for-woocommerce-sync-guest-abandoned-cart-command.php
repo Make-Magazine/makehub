@@ -254,7 +254,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		// Obtain WooCommerce customer model
 		$this->customer_woo = $this->customer;
 
-		if ( ! method_exists( $this->customer_woo, 'get_email' ) ) {
+		if ( ! AC_Utilities::validate_object( $this->customer_woo, 'get_email' ) ) {
 			$this->logger->debug( 'Abandon cart guest sync: customer_woo not an instance of WC_Customer' );
 
 			return false;
@@ -271,7 +271,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * @return bool Whether or not this job was successful
 	 */
 	private function setup_woocommerce_cart() {
-		if ( ! method_exists( $this->cart, 'get_cart' ) || $this->cart->is_empty() ) {
+		if ( ! AC_Utilities::validate_object( $this->cart, 'get_cart' ) || $this->cart->is_empty() ) {
 			$this->logger->debug( 'Abandon cart guest sync: cart not an instance of WC_Cart' );
 
 			return false;

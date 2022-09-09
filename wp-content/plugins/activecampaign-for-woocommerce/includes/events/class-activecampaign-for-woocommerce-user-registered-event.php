@@ -143,11 +143,17 @@ class Activecampaign_For_Woocommerce_User_Registered_Event implements Triggerabl
 				return true;
 			} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
 				// Set up AC customer model for a new customer
-				$new_customer = new Ecom_Customer();
-				$new_customer->set_email( $this->customer_email );
-				$new_customer->set_connectionid( $connection_id );
-				$new_customer->set_first_name( $this->customer_first_name );
-				$new_customer->set_last_name( $this->customer_last_name );
+				try {
+					$new_customer = new Ecom_Customer();
+					$new_customer->set_email( $this->customer_email );
+					$new_customer->set_connectionid( $connection_id );
+					$new_customer->set_first_name( $this->customer_first_name );
+					$new_customer->set_last_name( $this->customer_last_name );
+				} catch ( Throwable $t ) {
+					$this->logger->debug( 'Registered event: New customer creation exception ', [ 'message' => $t->getMessage() ] );
+
+					return false;
+				}
 
 				try {
 					// Try to create the new customer in AC

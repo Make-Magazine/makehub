@@ -153,6 +153,7 @@ jQuery( function( $ ) {
 
 	function closeFocusSidebarPageLoad() {
 		$( '.ld-focus' ).addClass( 'ld-focus-sidebar-collapsed' );
+		$( '.ld-focus' ).removeClass( 'ld-focus-initial-transition' );
 		$( '.ld-mobile-nav' ).removeClass( 'expanded' );
 		positionTooltips();
 	}
@@ -263,14 +264,30 @@ jQuery( function( $ ) {
 			collapse = false;
 		}
 
+		var elmParentWrapper = elm.parents( '.ld-focus-sidebar' );
+		if ( ( 'undefined' === typeof elmParentWrapper ) || ( ! elmParentWrapper.length ) ) {
+			var elmParentWrapper = elm.parents( '.learndash-wrapper' );
+		}
+		if ( ( 'undefined' === typeof elmParentWrapper ) || ( ! elmParentWrapper.length ) ) {
+			return;
+		}
+
 		// Get the button's state
 		var $expanded = $( elm ).hasClass( 'ld-expanded' );
 
 		// Get the element to expand
 		if ( $( elm )[0] && $( elm )[0].hasAttribute( 'data-ld-expands' ) ) {
-			var $expands 		= $( elm ).attr( 'data-ld-expands' );
-			var $expandElm 		= $( '#' + $expands );
-			var $expandsChild 	= $( '#' + $expands ).find( '.ld-item-list-item-expanded' );
+			var $expands      = $( elm ).attr( 'data-ld-expands' );
+			if ( ( 'undefined' === typeof $expands ) || ( ! $expands.length ) ) {
+				return;
+			}
+
+			var $expandElm    = $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' );
+			if ( ( 'undefined' === typeof $expandElm ) || ( ! $expandElm.length ) ) {
+				return;
+			}
+
+			var $expandsChild = $( $expandElm ).find( '.ld-item-list-item-expanded' );
 
 			if ( $expandsChild.length ) {
 				$expandElm = $expandsChild;
@@ -286,8 +303,9 @@ jQuery( function( $ ) {
 
 			// If the element expands a list
 
-			if ( $( '#' + $expands )[0].hasAttribute( 'data-ld-expand-list' ) ) {
-				var $container = $( '#' + $expands );
+			if ( $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' )[0].hasAttribute( 'data-ld-expand-list' ) ) {
+
+				var $container = $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' );
 				var innerButtons = $container.find( '.ld-expand-button' );
 				if ( $expanded ) {
 					ld_expand_button_state( 'collapse', elm );
@@ -302,11 +320,11 @@ jQuery( function( $ ) {
 				}
 
 				// If the element expands an item
-			} else if ( $( '#' + $expands ).length ) {
+			} else if ( $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' ).length ) {
 				if ( $expanded || true == collapse ) {
-					ld_expand_singular_item( elm, $( '#' + $expands ), $expandElm );
+					ld_expand_singular_item( elm, $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' ), $expandElm );
 				} else {
-					ld_collapse_singular_item( elm, $( '#' + $expands ), $expandElm );
+					ld_collapse_singular_item( elm, $(elmParentWrapper).find( '[data-ld-expand-id="'+ $expands+'"]' ), $expandElm );
 				}
 			} else {
 				console.log( 'LearnDash: No expandable content was found' );
@@ -342,7 +360,9 @@ jQuery( function( $ ) {
 		var $tab = $( '#' + $( this ).attr( 'data-ld-tab' ) );
 		if ( $tab.length ) {
 			$( '.ld-tabs-navigation .ld-tab.ld-active' ).removeClass( 'ld-active' );
+			$( '.ld-tabs-navigation .ld-tab' ).removeAttr( 'aria-selected' );
 			$( this ).addClass( 'ld-active' );
+			$( this ).attr( 'aria-selected', 'true' );
 			$( '.ld-tabs-content .ld-tab-content.ld-visible' ).removeClass( 'ld-visible' );
 			$tab.addClass( 'ld-visible' );
 		}
@@ -369,6 +389,27 @@ jQuery( function( $ ) {
 				if ( anchor.hasClass( 'ld-item-list-item' ) ) {
 					anchor = anchor.find( '.ld-item-title' );
 				}
+
+				/**
+				 * Prevent calendar icon from being clickable.
+				 */
+				if ( ( "undefined" !== typeof anchor ) && ( $( anchor ).hasClass( 'ld-status-waiting' ) ) ) {
+					$( anchor ).on( 'click', function( e ) {
+						e.preventDefault();
+						return false;
+					} );
+
+					// Also prevent parent <a> from being clickable.
+					var parent_anchor = $( anchor ).parents( 'a' );
+					if ( "undefined" !== typeof parent_anchor ) {
+						$( parent_anchor ).on( 'click', function( e ) {
+							e.preventDefault();
+							return false;
+						} );
+					}
+				}
+
+
 				var elementOffsets = {
 					top: anchor.offset().top,
 					left: anchor.offset().left + ( anchor.outerWidth() / 2 ),
@@ -482,7 +523,7 @@ jQuery( function( $ ) {
 						$tooltip.css( { 'margin-left': Math.abs( $tooltip.offset().left ) } ).addClass( 'ld-shifted-left' );
 					}
 					var $tooltipRight = $( window ).width() - ( $tooltip.offset().left + $tooltip.outerWidth() );
-					if ( 0 >= $tooltipRight ) {
+					if ( 0 >= $tooltipRight && 360 < $( window ).width() ) {
 						$tooltip.css( { 'margin-right': Math.abs( $tooltipRight ) } ).addClass( 'ld-shifted-right' );
 					}
 				} );
@@ -622,6 +663,10 @@ jQuery( function( $ ) {
 			linkVars.shortcode_instance = $( '#ld-profile' ).data( 'shortcode_instance' );
 		}
 
+		if ( 'profile_quizzes' == linkVars.context ) {
+			$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id + ' .ld-item-contents' ).addClass( 'ld-loading' );
+		}
+
 		if ( 'course_info_courses' == linkVars.context ) {
 			$( '.ld-user-status' ).addClass( 'ld-loading' );
 			linkVars.shortcode_instance = $( '.ld-user-status' ).data( 'shortcode-atts' );
@@ -720,6 +765,13 @@ jQuery( function( $ ) {
 				if ( 'profile' == linkVars.context ) {
 					if ( 'undefined' !== typeof response.data.markup ) {
 						$( '#ld-profile' ).html( response.data.markup );
+					}
+				}
+
+				if ( 'profile_quizzes' == linkVars.context ) {
+					if ( 'undefined' !== typeof response.data.markup ) {
+						$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id + ' .ld-item-list-item-expanded .ld-item-contents' ).replaceWith( response.data.markup );
+						$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id ).get( 0 ).scrollIntoView( { behavior: 'smooth' } );
 					}
 				}
 
@@ -907,6 +959,135 @@ jQuery( function( $ ) {
 			}
 		}
 	}
+
+	// Coupon processing.
+
+	function update_payment_forms( data ) {
+		$( '#total-row' ).attr( 'data-total', data.total.value )
+
+		// Update PayPal form amount.
+		$( 'form[name="buynow"] input[name="amount"]' ).val( data.total.value );
+
+		// Update Stripe form amount.
+		$( 'form.learndash-stripe-checkout input[name="stripe_price"]' ).val( data.total.stripe_value );
+
+		// Remove Stripe Connect session to respect the new amount.
+		const stripe_course_id = $( '.learndash-stripe-checkout input[name="stripe_course_id"]' ).val();
+
+		if ( stripe_course_id ) {
+			LD_Cookies.remove( 'ld_stripe_session_id_' + stripe_course_id ); // Stripe Plugin (Checkout).
+			LD_Cookies.remove( 'ld_stripe_connect_session_id_' + stripe_course_id ); // Stripe Connect in core.
+		}
+
+		// Re-init Stripe Plugin (Legacy) to respect the new amount.
+		if ( typeof ld_init_stripe_legacy === "function" ) {
+			ld_init_stripe_legacy();
+		}
+	}
+
+	$( '.btn-join' ).on( 'click', function( e ) {
+		const total = parseFloat( $( '#total-row' ).attr( 'data-total' ) );
+
+		if ( 0 === total ) {
+			$.ajax( {
+				type: 'POST',
+				url: ldVars.ajaxurl,
+				dataType: 'json',
+				cache: false,
+				data: {
+					action: 'learndash_enroll_with_zero_price',
+					nonce: $( '#apply-coupon-form' ).data( 'nonce' ),
+					post_id: $( '#apply-coupon-form' ).data( 'post-id' ),
+				},
+				success: function( response ) {
+					if ( response.success ) {
+						window.location.replace( response.data.redirect_url );
+					} else {
+						alert( response.data.message );
+					}
+				},
+			} );
+
+			e.preventDefault();
+			return false;
+		}
+	});
+
+	$( '#apply-coupon-form' ).on( 'submit', function( e ) {
+		e.preventDefault();
+
+		$.ajax( {
+			type: 'POST',
+			url: ldVars.ajaxurl,
+			dataType: 'json',
+			cache: false,
+			data: {
+				action: 'learndash_apply_coupon',
+				nonce: $( this ).data( 'nonce' ),
+				coupon_code: $( this ).find( '#coupon-field' ).val(),
+				post_id: $( this ).data( 'post-id' ),
+			},
+			success: function( response ) {
+				$( '#coupon-alerts .coupon-alert' ).hide();
+
+				let $alert = $( '#coupon-alerts' ).find(
+					response.success ? '.coupon-alert-success' : '.coupon-alert-warning'
+				);
+
+				let $coupon_row = $( '#coupon-row' );
+
+				if ( response.success ) {
+					$coupon_row.find( '.purchase-label > span' ).html( response.data.coupon_code ); // Set coupon code in totals.
+					$coupon_row.find( '.purchase-value span' ).html( response.data.discount ); // Set discount value in totals.
+					$coupon_row.css( 'display', 'flex' ).hide().fadeIn(); // Show a coupon row in totals.
+					$( '#total-row .purchase-value' ).html( response.data.total.formatted ); // Update Total.
+					$( '#totals' ).show();
+
+					update_payment_forms( response.data );
+				}
+
+				$alert.find( '.ld-alert-messages' ).html( response.data.message );
+				$alert.fadeIn();
+			},
+		} );
+	} );
+
+	$( '#remove-coupon-form' ).on( 'submit', function( e ) {
+		e.preventDefault();
+
+		$.ajax( {
+			type: 'POST',
+			url: ldVars.ajaxurl,
+			dataType: 'json',
+			cache: false,
+			data: {
+				action: 'learndash_remove_coupon',
+				nonce: $( this ).data( 'nonce' ),
+				post_id: $( this ).data( 'post-id' ),
+			},
+			success: function( response ) {
+				$( '#coupon-alerts .coupon-alert' ).hide();
+
+				let $alert = $( '#coupon-alerts' ).find(
+					response.success ? '.coupon-alert-success' : '.coupon-alert-warning'
+				);
+
+				if ( response.success ) {
+					$( '#coupon-row' ).hide(); // Hide a coupon row in totals.
+					$( '#coupon-field' ).val( '' ); // Set coupon field empty.
+					$( '#price-row .purchase-value' ).html( response.data.total.formatted ); // Update Price.
+					$( '#subtotal-row .purchase-value' ).html( response.data.total.formatted ); // Update Subtotal.
+					$( '#total-row .purchase-value' ).html( response.data.total.formatted ); // Update Total.
+					$( '#totals' ).hide();
+
+					update_payment_forms( response.data );
+				}
+
+				$alert.find( '.ld-alert-messages' ).html( response.data.message );
+				$alert.fadeIn();
+			},
+		} );
+	} );
 } );
 
 function ldGetUrlVars() {

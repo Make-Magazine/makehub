@@ -14,6 +14,7 @@ use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Customer Utilities Class.
@@ -59,8 +60,8 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	public function add_customer_to_order( $order, $ecom_order, $is_admin = false ) {
 		try {
 			if (
-				method_exists( $order, 'get_user_id' ) &&
-				method_exists( $ecom_order, 'set_id' ) &&
+				AC_Utilities::validate_object( $order, 'get_user_id' ) &&
+				AC_Utilities::validate_object( $ecom_order, 'set_id' ) &&
 				$order->get_user_id()
 			) {
 				// Set if the AC id is set
@@ -70,7 +71,7 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 					$ac_customerid = get_user_meta( $order->get_user_id(), 'activecampaign_for_woocommerce_ac_customer_id' );
 					$ecom_order->set_customerid( $ac_customerid );
 				}
-			} elseif ( method_exists( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
+			} elseif ( AC_Utilities::validate_object( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				$ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( $order->get_customer_id() ) );
 
 				if ( get_user_meta( $order->get_customer_id(), 'activecampaign_for_woocommerce_ac_customer_id' ) ) {
@@ -81,20 +82,20 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 
 			if (
 				! $is_admin &&
-				wc()->customer && method_exists( wc()->customer, 'get_email' ) &&
+				wc()->customer && AC_Utilities::validate_object( wc()->customer, 'get_email' ) &&
 				wc()->customer->get_email()
 			) {
 				// Set the email address from customer
 				$ecom_order->set_email( wc()->customer->get_email() );
 			} elseif (
-				method_exists( $order, 'get_user_id' ) &&
+				AC_Utilities::validate_object( $order, 'get_user_id' ) &&
 				get_user_meta( $order->get_user_id(), 'email' )
 			) {
 				$email = get_user_meta( $order->get_user_id(), 'email' );
 				// Set the email address from user
 				$ecom_order->set_email( $email );
 			} elseif (
-				method_exists( $order, 'get_billing_email' ) &&
+				AC_Utilities::validate_object( $order, 'get_billing_email' ) &&
 				$order->get_billing_email()
 			) {
 				// Set the email address from order
@@ -123,28 +124,28 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 * @return bool|string
 	 */
 	public function get_customer_id( $order = null ) {
-		if ( is_null( $order ) && method_exists( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
+		if ( is_null( $order ) && AC_Utilities::validate_object( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
 			return wc()->session->get_customer_id();
 		}
 
-		if ( ! is_null( $order ) && method_exists( $order, 'get_customer_id' ) && ! empty( $order->get_customer_id() ) ) {
+		if ( ! is_null( $order ) && AC_Utilities::validate_object( $order, 'get_customer_id' ) && ! empty( $order->get_customer_id() ) ) {
 			return $order->get_customer_id();
 		}
 
-		if ( isset( wc()->customer ) && method_exists( wc()->customer, 'get_id' ) && ! empty( wc()->customer->get_id() ) ) {
+		if ( isset( wc()->customer ) && AC_Utilities::validate_object( wc()->customer, 'get_id' ) && ! empty( wc()->customer->get_id() ) ) {
 			return wc()->customer->get_id();
 		}
 
-		if ( isset( wc()->session ) && method_exists( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
+		if ( isset( wc()->session ) && AC_Utilities::validate_object( wc()->session, 'get_customer_id' ) && ! empty( wc()->session->get_customer_id() ) ) {
 			return wc()->session->get_customer_id();
 		}
 
 		$this->logger->error(
 			'Customer Utilities: Could not find a customer ID.',
 			[
-				'id'            => method_exists( $order, 'get_id' ) ? $order->get_id() : null,
-				'order_number'  => method_exists( $order, 'get_order_number' ) ? $order->get_order_number() : null,
-				'billing_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
+				'id'            => AC_Utilities::validate_object( $order, 'get_id' ) ? $order->get_id() : null,
+				'order_number'  => AC_Utilities::validate_object( $order, 'get_order_number' ) ? $order->get_order_number() : null,
+				'billing_email' => AC_Utilities::validate_object( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 			]
 		);
 
@@ -193,7 +194,7 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 * @return mixed
 	 */
 	public function get_ac_customer_id_from_order( $order ) {
-		if ( method_exists( $order, 'get_customer_id' ) ) {
+		if ( AC_Utilities::validate_object( $order, 'get_customer_id' ) ) {
 			$customer_id = $order->get_customer_id();
 		} elseif ( isset( $order['customer_id'] ) ) {
 			$customer_id = $order['customer_id'];
@@ -214,12 +215,24 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	 * @return bool
 	 */
 	private function build_customer_from_user_meta( $user_id ) {
-		$this->customer = new Ecom_Customer();
-		$this->customer->set_connectionid( $this->connection_id );
-		$this->customer->set_email( $this->customer_email );
-		$this->customer->set_first_name( get_user_meta( $user_id, 'first_name', true ) );
-		$this->customer->set_last_name( get_user_meta( $user_id, 'last_name', true ) );
-		$this->customer->set_accepts_marketing( $this->accepts_marketing );
+		try {
+			$this->customer = new Ecom_Customer();
+			$this->customer->set_connectionid( $this->connection_id );
+			$this->customer->set_email( $this->customer_email );
+			$this->customer->set_first_name( get_user_meta( $user_id, 'first_name', true ) );
+			$this->customer->set_last_name( get_user_meta( $user_id, 'last_name', true ) );
+			$this->customer->set_accepts_marketing( $this->accepts_marketing );
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an exception building a customer from user data.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+
+			return false;
+		}
 
 		return true;
 	}

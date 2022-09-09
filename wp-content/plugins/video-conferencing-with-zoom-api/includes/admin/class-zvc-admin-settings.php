@@ -11,10 +11,154 @@ use Codemanas\VczApi\Data\Logger;
 class Zoom_Video_Conferencing_Admin_Views {
 
 	public static $message = '';
+	//either error warning or success
+	public static $messageType = 'error';
+	public static $isDismissible = true;
 	public $settings;
 
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'zoom_video_conference_menus' ) );
+		add_action( 'admin_menu', [ $this, 'zoom_video_conference_menus' ] );
+		add_action( 'admin_init', [ $this, 'zoomConnectHandler' ] );
+		add_action( 'admin_notices', [ $this, 'maybeShowMessage' ] );
+		$this->migration_notice();
+	}
+
+	/**
+	 * @return void
+	 * @since 4.0.0
+	 *        Show migration notice if JWT keys are still being shown
+	 */
+	public function migration_notice() {
+
+
+		$is_jwt_active   = vczapi_is_jwt_active();
+		$is_oauth_active = vczapi_is_oauth_active();
+		$is_sdk_active   = vczapi_is_sdk_enabled();
+
+		$sdk_not_active_notice_dismissed = get_option( 'vczapi_dismiss_sdk_not_active_notice' );
+
+		self::$isDismissible = true;
+		self::$messageType   = 'error';
+
+		if ( ( $is_oauth_active && ! $is_sdk_active ) && ! $sdk_not_active_notice_dismissed ) {
+			$admin_page_url  = esc_url( add_query_arg( [
+				'post_type' => 'zoom-meetings',
+				'page'      => 'zoom-video-conferencing-settings',
+			],
+				admin_url( 'edit.php' ),
+			) );
+			$admin_page_link = '<a href="' . $admin_page_url . '">here</a>';
+
+			$dismiss_button = '<a href="#" class="vczapi-dismiss-admin-notice" data-id="vczapi_dismiss_sdk_not_active_notice" data-security="' . wp_create_nonce( 'vczapi-dismiss-nonce' ) . '" >don\'t show this message again</a>.';
+			self::$message  = '<strong>Video Conferencing Zoom: </strong>' . sprintf( __( 'The SDK App credentials have not been added, without SDK app credentials - Join via Browser functionality will not work, to add SDK app credentials click %s. If you understand and don\'t want the to see this message click %s' ), $admin_page_link, $dismiss_button );
+			wp_enqueue_script( 'video-conferencing-with-zoom-api-js' );
+
+			return;
+		} elseif ( ! apply_filters( 'vczapi_show_jwt_keys', ( $is_jwt_active ) ) || $sdk_not_active_notice_dismissed ) {
+			return;
+		}
+
+		$depreciationLink = '<a href="' . esc_url( 'https://marketplace.zoom.us/docs/guides/build/jwt-app/jwt-faq/#jwt-app-type-deprecation-faq--omit-in-toc-' ) . '"
+target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ', 'video-conferencing-with-zoom-api' ) . '</a>';
+
+		$migration_wizard_url  = esc_url( add_query_arg(
+			[
+				'post_type' => 'zoom-meetings',
+				'page'      => 'zoom-video-conferencing-settings',
+				'migrate'   => 'now',
+			],
+			admin_url( 'edit.php' )
+		) );
+		$migration_wizard_link = '<a href="' . $migration_wizard_url . '">migration wizard</a>';
+		$message               = sprintf( __( 'Zoom is deprecating their JWT app from June of 2023, please see %s for more details, Until the deadline all your current settings will work, however to ensure a smooth transition to the new Server to Server OAuth system + New App SDK (required for Join Via Browser) - we recommend that you migrate as soon as possible. Run the %s now to complete the migration process in 2 easy steps ', 'video-conferencing-with-zoom-api' ), $depreciationLink, $migration_wizard_link );
+
+
+		self::$message = $message;
+	}
+
+	/**
+	 * @return void
+	 * @since 4.0.0
+	 *        Show message if any messages are active
+	 *        hooked admin_notices
+	 */
+	public function maybeShowMessage() {
+		if ( empty( self::$message ) ) {
+			return;
+		}
+		$message_classes   = [
+			'success' => 'notice-success',
+			'error'   => 'notice-error',
+			'warning' => 'notice-warning',
+		];
+		$additionalClasses = $message_classes[ self::$messageType ] . ' ' . ( self::$isDismissible ? 'is-dismissible' : '' );
+		?>
+        <div class="vczapi-notice notice <?php _e( $additionalClasses ) ?>">
+            <p><?php _e( self::$message ); ?></p>
+        </div>
+		<?php
+	}
+
+	/**
+	 * @return void
+	 * @since 4.0.0
+	 *        Handles saving of Connection tab Zoom credentials
+	 */
+	public function zoomConnectHandler() {
+		$nonce = filter_input( INPUT_POST, 'vczapi_zoom_connect_nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		} elseif ( ! wp_verify_nonce( $nonce, 'verify_vczapi_zoom_connect' ) ) {
+			return;
+		}
+
+		$vczapi_oauth_account_id    = sanitize_text_field( filter_input( INPUT_POST, 'vczapi_oauth_account_id' ) );
+		$vczapi_oauth_client_id     = sanitize_text_field( filter_input( INPUT_POST, 'vczapi_oauth_client_id' ) );
+		$vczapi_oauth_client_secret = sanitize_text_field( filter_input( INPUT_POST, 'vczapi_oauth_client_secret' ) );
+		$vczapi_sdk_key             = sanitize_text_field( filter_input( INPUT_POST, 'vczapi_sdk_key' ) );
+		$vczapi_sdk_secret_key      = sanitize_text_field( filter_input( INPUT_POST, 'vczapi_sdk_secret_key' ) );
+		$zoom_api_key               = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_key' ) );
+		$zoom_api_secret            = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_secret' ) );
+		$delete_jwt_keys            = sanitize_text_field( filter_input( INPUT_POST, 'vczapi-delete-jwt-keys' ) );
+
+
+		//added for Oauth S2S
+		update_option( 'vczapi_oauth_account_id', $vczapi_oauth_account_id );
+		update_option( 'vczapi_oauth_client_id', $vczapi_oauth_client_id );
+		update_option( 'vczapi_oauth_client_secret', $vczapi_oauth_client_secret );
+		//sdk app credentials
+		update_option( 'vczapi_sdk_key', $vczapi_sdk_key );
+		update_option( 'vczapi_sdk_secret_key', $vczapi_sdk_secret_key );
+
+		//jwt keys update
+		update_option( 'zoom_api_key', $zoom_api_key );
+		update_option( 'zoom_api_secret', $zoom_api_secret );
+
+		$OAuth_access_token = \vczapi\S2SOAuth::get_instance()->generateAndSaveAccessToken( $vczapi_oauth_account_id, $vczapi_oauth_client_id, $vczapi_oauth_client_secret, );
+
+		if ( is_wp_error( $OAuth_access_token ) ) {
+			self::$message     = sprintf( __( 'Zoom Oauth Error Code: "%s"  -  %s ', 'video-conferencing-with-zoom-api' ), $OAuth_access_token->get_error_code(), $OAuth_access_token->get_error_message() );
+			self::$messageType = 'error';
+			//error has not been displayed yet.
+		} elseif ( $delete_jwt_keys == 'on' ) {
+			delete_option( 'zoom_api_key' );
+			delete_option( 'zoom_api_secret' );
+		} else {
+			//probably need a helper function or code to save keys on save differently
+			$decoded_users = json_decode( zoom_conference()->listUsers() );
+			if ( ! empty( $decoded_users->code ) ) {
+				if ( is_admin() ) {
+					add_action( 'admin_notices', 'vczapi_check_connection_error' );
+				}
+			} else {
+				$users = ! empty( $decoded_users->users ) ? $decoded_users->users : false;
+				vczapi_set_cache( '_zvc_user_lists', $users, 108000 );
+			}
+			//vczapi_set_cache( '_zvc_user_lists', $users, 108000 );
+			self::$message     = __( 'Zoom: Credentials successfully verified and saved ', 'video-conferencing-with-zoom-api' );
+			self::$messageType = 'success';
+			video_conferencing_zoom_api_get_user_transients();
+		}
 	}
 
 	/**
@@ -26,66 +170,66 @@ class Zoom_Video_Conferencing_Admin_Views {
 	 * @author  Deepen Bajracharya <dpen.connectify@gmail.com>
 	 */
 	public function zoom_video_conference_menus() {
-		if ( get_option( 'zoom_api_key' ) && get_option( 'zoom_api_secret' ) && video_conferencing_zoom_api_get_user_transients() ) {
-			if ( apply_filters( 'vczapi_show_live_meetings', false ) ) {
+		if ( vczapi_is_zoom_activated() ) {
+			if ( apply_filters( 'vczapi_show_live_meetings', true ) ) {
 				add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Live Webinars', 'video-conferencing-with-zoom-api' ), __( 'Live Webinars', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-webinars', array(
 					'Zoom_Video_Conferencing_Admin_Webinars',
-					'list_webinars'
+					'list_webinars',
 				) );
 
 				add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Live Meetings', 'video-conferencing-with-zoom-api' ), __( 'Live Meetings', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing', array(
 					'Zoom_Video_Conferencing_Admin_Meetings',
-					'list_meetings'
+					'list_meetings',
 				) );
 
 				add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Add Live Meeting', 'video-conferencing-with-zoom-api' ), __( 'Add Live Meeting', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-add-meeting', array(
 					'Zoom_Video_Conferencing_Admin_Meetings',
-					'add_meeting'
+					'add_meeting',
 				) );
 			}
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Zoom Users', 'video-conferencing-with-zoom-api' ), __( 'Zoom Users', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-list-users', array(
 				'Zoom_Video_Conferencing_Admin_Users',
-				'list_users'
+				'list_users',
 			) );
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', 'Add Users', __( 'Add Users', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-add-users', array(
 				'Zoom_Video_Conferencing_Admin_Users',
-				'add_zoom_users'
+				'add_zoom_users',
 			) );
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Reports', 'video-conferencing-with-zoom-api' ), __( 'Reports', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-reports', array(
 				'Zoom_Video_Conferencing_Reports',
-				'zoom_reports'
+				'zoom_reports',
 			) );
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Recordings', 'video-conferencing-with-zoom-api' ), __( 'Recordings', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-recordings', array(
 				'Zoom_Video_Conferencing_Recordings',
-				'zoom_recordings'
+				'zoom_recordings',
 			) );
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Extensions', 'video-conferencing-with-zoom-api' ), __( 'Extensions', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-addons', array(
 				'Zoom_Video_Conferencing_Admin_Addons',
-				'render'
+				'render',
 			) );
 
 			//Only for developers or PRO version. So this is hidden !
 			if ( defined( 'VIDEO_CONFERENCING_HOST_ASSIGN_PAGE' ) ) {
 				add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Host to WP Users', 'video-conferencing-with-zoom-api' ), __( 'Host to WP Users', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-host-id-assign', array(
 					'Zoom_Video_Conferencing_Admin_Users',
-					'assign_host_id'
+					'assign_host_id',
 				) );
 			}
 
 			add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Import', 'video-conferencing-with-zoom-api' ), __( 'Import', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-sync', array(
 				'Zoom_Video_Conferencing_Admin_Sync',
-				'render'
+				'render',
 			) );
 		}
 
 		add_submenu_page( 'edit.php?post_type=zoom-meetings', __( 'Settings', 'video-conferencing-with-zoom-api' ), __( 'Settings', 'video-conferencing-with-zoom-api' ), 'manage_options', 'zoom-video-conferencing-settings', array(
 			$this,
-			'zoom_video_conference_api_zoom_settings'
+			'zoom_video_conference_api_zoom_settings',
 		) );
 	}
 
@@ -104,16 +248,22 @@ class Zoom_Video_Conferencing_Admin_Views {
 		video_conferencing_zoom_api_show_like_popup();
 
 		$tab        = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-		$active_tab = isset( $tab ) ? $tab : 'api-settings';
+		$active_tab = $tab ?? 'connect';
 		?>
         <div class="wrap">
             <h1><?php _e( 'Zoom Integration Settings', 'video-conferencing-with-zoom-api' ); ?></h1>
             <h2 class="nav-tab-wrapper">
+                <a href="<?php echo esc_url( add_query_arg(
+					[
+						'post_type' => 'zoom-meetings',
+						'page'      => 'zoom-video-conferencing-settings',
+					],
+					admin_url( 'edit.php' )
+				) ); ?>" class="nav-tab <?php echo ( 'connect' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
+					<?php esc_html_e( 'Connect', 'video-conferencing-with-zoom-api' ); ?>
+                </a>
                 <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'api-settings' ) ) ); ?>" class="nav-tab <?php echo ( 'api-settings' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
 					<?php esc_html_e( 'API Settings', 'video-conferencing-with-zoom-api' ); ?>
-                </a>
-                <a style="background: #bf5252;color: #fff;" href="<?php echo esc_url( add_query_arg( array( 'tab' => 'shortcode' ) ) ); ?>" class="nav-tab <?php echo ( 'shortcode' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
-					<?php esc_html_e( 'Shortcode', 'video-conferencing-with-zoom-api' ); ?>
                 </a>
                 <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'support' ) ) ); ?>" class="nav-tab <?php echo ( 'support' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
 					<?php esc_html_e( 'Support', 'video-conferencing-with-zoom-api' ); ?>
@@ -126,12 +276,22 @@ class Zoom_Video_Conferencing_Admin_Views {
 			<?php
 			do_action( 'vczapi_admin_tabs_content', $active_tab );
 
-			if ( 'api-settings' === $active_tab ) {
+			if ( 'connect' === $active_tab ) {
+				//Defining Varaibles
+				$vczapi_oauth_account_id    = get_option( 'vczapi_oauth_account_id' );
+				$vczapi_oauth_client_id     = get_option( 'vczapi_oauth_client_id' );
+				$vczapi_oauth_client_secret = get_option( 'vczapi_oauth_client_secret' );
+				//app sdk
+				$vczapi_sdk_key        = get_option( 'vczapi_sdk_key' );
+				$vczapi_sdk_secret_key = get_option( 'vczapi_sdk_secret_key' );
+
+				$zoom_api_key    = get_option( 'zoom_api_key' );
+				$zoom_api_secret = get_option( 'zoom_api_secret' );
+				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/connect.php';
+			} elseif ( 'api-settings' === $active_tab ) {
 				if ( isset( $_POST['save_zoom_settings'] ) ) {
 					//Nonce
 					check_admin_referer( '_zoom_settings_update_nonce_action', '_zoom_settings_nonce' );
-					$zoom_api_key                       = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_key' ) );
-					$zoom_api_secret                    = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_secret' ) );
 					$vanity_url                         = esc_url_raw( filter_input( INPUT_POST, 'vanity_url' ) );
 					$delete_zoom_meeting                = filter_input( INPUT_POST, 'donot_delete_zom_meeting_also' );
 					$join_links                         = filter_input( INPUT_POST, 'meeting_end_join_link' );
@@ -152,8 +312,6 @@ class Zoom_Video_Conferencing_Admin_Views {
 					$disable_auto_pwd_generation        = sanitize_text_field( filter_input( INPUT_POST, 'disable_auto_pwd_generation' ) );
 					$debugger_logs                      = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_debugger_logs' ) );
 
-					update_option( 'zoom_api_key', $zoom_api_key );
-					update_option( 'zoom_api_secret', $zoom_api_secret );
 					update_option( 'zoom_vanity_url', $vanity_url );
 					update_option( 'zoom_api_donot_delete_on_zoom', $delete_zoom_meeting );
 					update_option( 'zoom_past_join_links', $join_links );
@@ -186,9 +344,6 @@ class Zoom_Video_Conferencing_Admin_Views {
 					<?php
 				}
 
-				//Defining Varaibles
-				$zoom_api_key                = get_option( 'zoom_api_key' );
-				$zoom_api_secret             = get_option( 'zoom_api_secret' );
 				$zoom_vanity_url             = get_option( 'zoom_vanity_url' );
 				$past_join_links             = get_option( 'zoom_past_join_links' );
 				$zoom_author_show            = get_option( 'zoom_show_author' );
@@ -212,11 +367,9 @@ class Zoom_Video_Conferencing_Admin_Views {
 
 				//Get Template
 				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/api-settings.php';
-			} else if ( 'shortcode' === $active_tab ) {
-				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/shortcode.php';
-			} else if ( 'support' == $active_tab ) {
+			} elseif ( 'support' == $active_tab ) {
 				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/support.php';
-			} else if ( 'debug' == $active_tab ) {
+			} elseif ( 'debug' == $active_tab ) {
 				$debug_log = get_option( 'zoom_api_enable_debug_log' );
 				$logs      = Logger::get_log_files();
 

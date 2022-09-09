@@ -12,6 +12,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	private $_current_live_merge_tag_values = array();
 	private $_lmt_whitelist                 = array();
 
+	public $checkable_input_types = array( 'checkbox', 'radio' );
+
 	public $live_merge_tag_regex_option_placeholder = '/(<option.*?class=\'gf_placeholder\'>)(.*?)<\/option>/';
 	public $live_merge_tag_regex_option_choice      = '/(<option.*>)(.*?@({.*?:?.+?}).*?)<\/option>/';
 	public $live_merge_tag_regex_textarea           = '/(<textarea.*>)([\S\s]*?@({.*?:?.+?})[\S\s]*?)<\/textarea>/';
@@ -32,6 +34,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	public function __construct() {
 		add_filter( 'gform_admin_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
+		add_filter( 'gform_pre_render', array( $this, 'replace_lmts_in_checkable_choices' ), 7 );
 		add_filter( 'gform_pre_render', array( $this, 'reset_gf_cache' ), 15 );
 		add_filter( 'gform_before_resend_notifications', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_submission_filter', array( $this, 'populate_lmt_whitelist' ), 5 );
@@ -47,7 +50,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			add_filter( $field_filter, array( $this, 'replace_live_merge_tag_textarea_default_value' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_live_value_attr' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_live_value_attr_textarea' ), 99, 2 );
-			add_filter( $field_filter, array( $this, 'add_live_value_attr_radio_choice' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_live_value_attr_checkable_choice' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_select_default_value_attr' ), 99, 2 );
 		}
 
@@ -65,7 +68,6 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		add_filter( 'gppa_hydrate_field_html', array( $this, 'replace_live_merge_tag_textarea_default_value_hydrate_field' ), 99, 4 );
-		add_filter( 'gform_field_choice_markup_pre_render', array( $this, 'replace_live_merge_tags_in_radio_choice_value' ), 10, 4 );
 
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 15, 3 ); // Give time for other plugins like GV Entry Revisions to do their replacements.
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 10, 7 );
@@ -419,7 +421,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @param $field
 	 *
 	 * @return mixed
-	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() for choices
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_checkable_choice() for choices
 	 *
 	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_textarea() for textareas
 	 */
@@ -471,7 +473,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @param $field
 	 *
 	 * @return mixed
-	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() for choices
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_checkable_choice() for choices
 	 *
 	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr() for other inputs
 	 */
@@ -525,18 +527,24 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 *
 	 * @return mixed
 	 */
-	public function add_live_value_attr_radio_choice( $content, $field ) {
-		if ( ! $field->choices || $field->get_input_type() !== 'radio' ) {
+	public function add_live_value_attr_checkable_choice( $content, $field ) {
+		if ( ! $field->choices || ! in_array( $field->get_input_type(), $this->checkable_input_types, true ) ) {
 			return $content;
 		}
 
 		foreach ( $field->choices as $choice_index => $choice ) {
 			if (
-				$this->has_live_merge_tag( $choice['value'] )
-				&& strpos( $content, "value='{$choice['value']}'" ) === false
+				isset( $choice['gppaOriginalValue'] )
+				&& $this->has_live_merge_tag( $choice['gppaOriginalValue'] )
+				&& strpos( $content, "value='{$choice['gppaOriginalValue']}'" ) === false
 			) {
+				// The index of checkboxes decided to start at 1 instead of 0 somewhere along the line.
+				if ( $field->get_input_type() === 'checkbox' && version_compare( GFForms::$version, '2.5-beta-1', '>=' ) ) {
+					$choice_index++;
+				}
+
 				$id_attr   = "id='choice_{$field->formId}_{$field->id}_{$choice_index}'";
-				$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $choice['value'] ) ) . '"';
+				$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $choice['gppaOriginalValue'] ) ) . '"';
 				$content   = str_replace( $id_attr, $id_attr . ' ' . $data_attr, $content );
 
 				$this->register_lmt_on_page( $field->formId, 'data-gppa-live-merge-tag-value' );
@@ -1143,57 +1151,35 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	/**
-	 * When using Live Merge Tags in radio-based choice values, the selected radio will be lost when navigating
-	 * multi-page forms.
+	 * When using Live Merge Tags in choice values, the selected choice will be lost when navigating multi-page forms
+	 * and when encountering a validation error.
 	 *
-	 * @param $choice_markup string
-	 * @param $choice array
-	 * @param $field GF_Field_Radio
-	 * @param $value string
-	 *
-	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() which re-adds the data attribute to make
-	 *   the LMT reactive on the frontend.
-	 *
-	 * For additional context, see ticket #20452.
-	 *
+	 * @param $form array Current form object.
 	 */
-	public function replace_live_merge_tags_in_radio_choice_value( $choice_markup, $choice, $field, $value ) {
-		if ( $field->get_input_type() !== 'radio' ) {
-			return $choice_markup;
+	public function replace_lmts_in_checkable_choices( $form ) {
+		foreach ( $form['fields'] as &$field ) {
+			if ( ! in_array( $field->get_input_type(), $this->checkable_input_types, true ) ) {
+				continue;
+			}
+
+			if ( empty( $field->choices ) || ! is_array( $field->choices ) ) {
+				continue;
+			}
+
+			foreach ( $field->choices as $choice_index => &$choice ) {
+				$choice['gppaOriginalValue'] = trim( $choice['value'] );
+				$choice['value']             = trim( $this->replace_live_merge_tags( $choice['value'], $form ) );
+
+				// If the value is empty, change POST params to prevent it from becoming checked on multi-page forms.
+				$input_id = sprintf( 'input_%d_%d', $field->id, $choice_index + 1 );
+
+				if ( $choice['value'] === '' && $_POST[ $input_id ] === '' ) {
+					// An empty string will not suffice here as GFFormsModel::choice_value_match() will still check it.
+					$_POST[ $input_id ] = 'gppa-unchecked';
+				}
+			}
 		}
 
-		if ( ! $this->has_live_merge_tag( $choice['value'] ) ) {
-			return $choice_markup;
-		}
-
-		$form            = GFAPI::get_Form( $field->formId );
-		$choice['value'] = $this->replace_live_merge_tags( $choice['value'], $form );
-
-		/**
-		 * If there are still merge tags after performing a replacement, bail here to prevent infinite loop as
-		 * this recursively calls $field->get_choice_html().
-		 */
-		if ( $this->has_live_merge_tag( $choice['value'] ) ) {
-			return $choice_markup;
-		}
-
-		$is_entry_detail = $field->is_entry_detail();
-		$is_form_editor  = $field->is_form_editor();
-		$is_admin        = $is_entry_detail || $is_form_editor;
-
-		$disabled_text = $is_form_editor ? 'disabled="disabled"' : '';
-
-		$choice_id_pattern = '/\'(?:gchoice )?gchoice_[0-9_]*?_(\d+)\'/';
-
-		preg_match( $choice_id_pattern, $choice_markup, $choice_id_match );
-
-		if ( ! $choice_id_match || ! is_numeric( $choice_id_match[1] ) ) {
-			return $choice_markup;
-		}
-
-		$choice_id = (int) $choice_id_match[1];
-
-		return $field->get_choice_html( $choice, $choice_id, $value, $disabled_text, $is_admin );
+		return $form;
 	}
-
 }

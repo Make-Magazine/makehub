@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * Ecom Order Factory
@@ -64,7 +65,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 		$logger = new Logger();
 
 		try {
-			if ( method_exists( $cart, 'get_cart_contents' ) && ! $cart->is_empty() && method_exists( $customer, 'get_email' ) ) {
+			if ( AC_Utilities::validate_object( $cart, 'get_cart_contents' ) && ! $cart->is_empty() && AC_Utilities::validate_object( $customer, 'get_email' ) ) {
 				$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
 				$order->set_id( $this->get_ac_id() );
@@ -88,8 +89,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 				'Order Factory from_woocommerce: There was an error creating the order.',
 				[
 					'message'       => $t->getMessage(),
-					'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
-					'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
+					'email'         => AC_Utilities::validate_object( $customer, 'get_email' ) ? $customer->get_email() : null,
+					'cart_contents' => AC_Utilities::validate_object( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -106,8 +107,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 				$logger->warning(
 					'Order Factory: Could not create product from cart contents.',
 					[
-						'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
-						'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
+						'email'         => AC_Utilities::validate_object( $customer, 'get_email' ) ? $customer->get_email() : null,
+						'cart_contents' => AC_Utilities::validate_object( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					]
 				);
 			}
@@ -116,8 +117,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 				'Order Factory: Could not create product from cart contents.',
 				[
 					'message'       => $t->getMessage(),
-					'email'         => method_exists( $customer, 'get_email' ) ? $customer->get_email() : null,
-					'cart_contents' => method_exists( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
+					'email'         => AC_Utilities::validate_object( $customer, 'get_email' ) ? $customer->get_email() : null,
+					'cart_contents' => AC_Utilities::validate_object( $cart, 'get_cart_contents' ) ? $cart->get_cart_contents() : null,
 					'trace'         => $logger->clean_trace( $t->getTrace() ),
 				]
 			);

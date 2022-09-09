@@ -7,7 +7,7 @@ class GP_Read_Only extends GWPerk {
 	protected $min_gravity_forms_version = '2.4';
 	protected $min_wp_version            = '3.0';
 
-	private $unsupported_field_types  = array( 'hidden', 'html', 'captcha', 'page', 'section' );
+	private $unsupported_field_types  = array( 'hidden', 'html', 'captcha', 'page', 'section', 'form' );
 	private $disable_attr_field_types = array( 'radio', 'select', 'checkbox', 'multiselect', 'time', 'date', 'name', 'address', 'workflow_user', 'workflow_role', 'workflow_assignee_select' );
 
 	public function init() {
@@ -385,7 +385,7 @@ class GP_Read_Only extends GWPerk {
 		$choices = array_filter( $choices );
 
 		// Use GPPA hydrated value if current value is empty and gppa-values is enabled
-		if ( rgar( $field, 'gppa-values-enabled', false ) && ! $value ) {
+		if ( rgar( $field, 'gppa-values-enabled', false ) && GFCommon::is_empty_array( $value ) ) {
 			$value = $field->gppa_hydrated_value;
 		}
 		if ( ! $value && $field->get_input_type() == 'time' ) {
@@ -449,8 +449,8 @@ class GP_Read_Only extends GWPerk {
 	public function get_address_select_input_id( $field ) {
 		$input_id = false;
 		switch ( $field->addressType ) {
-			case 'us':
-			case 'canadian':
+			// US, Canadian, and any added using https://docs.gravityforms.com/gform_address_types/
+			default:
 				$input_id = 4;
 				break;
 			case 'international':

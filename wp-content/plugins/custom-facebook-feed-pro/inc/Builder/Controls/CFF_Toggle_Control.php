@@ -36,7 +36,7 @@ class CFF_Toggle_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-toggle-ctn cff-fb-fs">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-toggle-ctn cff-fb-fs">
 			<div class="sb-control-toggle-elm cff-fb-fs sb-tr-2" data-active="true">
 				<div class="sb-control-toggle-deco sb-tr-1"></div>
 				<div class="sb-control-toggle-icon" v-if="control.toggle.icon" v-html="svgIcons[control.toggle.icon]"></div>

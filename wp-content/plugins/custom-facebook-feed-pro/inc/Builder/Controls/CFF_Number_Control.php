@@ -36,7 +36,7 @@ class CFF_Number_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-input-ctn cff-fb-fs" :data-contains-suffix="control.fieldSuffix !== undefined ? 'true' : 'false'">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-input-ctn cff-fb-fs" :data-contains-suffix="control.fieldSuffix !== undefined ? 'true' : 'false'">
 			<div class="sb-control-input-info" v-if="control.fieldPrefix">{{control.fieldPrefix.replace(/ /g,"&nbsp;")}}</div>
 			<input type="number" class="sb-control-input cff-fb-fs" :placeholder="control.placeholder ? control.placeholder : ''" :step="control.step ? control.step : 1" :max="control.max ? control.max : 1000" :min="control.min ? control.min : 0" v-model="<?php echo $controlEditingTypeModel ?>[control.id]"  @change.prevent.default="changeSettingValue(control.id,false,false, control.ajaxAction ? control.ajaxAction : false)">
 			<div class="sb-control-input-info" v-if="control.fieldSuffix">{{control.fieldSuffix.replace(/ /g,"&nbsp;")}}</div>

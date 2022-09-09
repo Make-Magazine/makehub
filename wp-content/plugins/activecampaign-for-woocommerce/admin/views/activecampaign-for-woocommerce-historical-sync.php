@@ -56,26 +56,34 @@ isset( $_REQUEST['activecampaign_for_woocommerce_nonce_field'] )
 					</button>
 					<div>
 						<div>
-						<label>Starting Record: </label>
-						<input type="text" name="activecampaign-historical-sync-starting-record" id="activecampaign-historical-sync-starting-record" size="9" placeholder="0" />
+							<label>Sync All Contacts: </label>
+							<input type="checkbox" value="1" class="checkbox" name="activecampaign-historical-sync-contacts" id="activecampaign-historical-sync-contacts" />
 						</div>
 						<div>
-						<label>Batch Limit: </label>
-						<select name="activecampaign-historical-sync-limit" id="activecampaign-historical-sync-limit">
-							<option value="5">5</option>
-							<option value="10">10</option>
-							<option value="20">20</option>
-							<option value="50">50</option>
-							<option selected="selected" value="100">100</option>
-							<option value="150">150</option>
-							<option value="200">200</option>
-						</select>
+							<label>Starting Record: </label>
+							<input type="text" name="activecampaign-historical-sync-starting-record" id="activecampaign-historical-sync-starting-record" size="9" placeholder="0" />
+						</div>
+						<div>
+							<label>Batch Limit: </label>
+							<select name="activecampaign-historical-sync-limit" id="activecampaign-historical-sync-limit">
+								<option value="5">5</option>
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="50">50</option>
+								<option selected="selected" value="100">100</option>
+								<option value="150">150</option>
+								<option value="200">200</option>
+							</select>
 						</div>
 					</div>
 					</form>
 				</div>
 				<div id="activecampaign-historical-sync-run-shortly" style="display:none;">
 					<?php esc_html_e( 'Historical sync will start shortly...', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+				</div>
+				<div id="activecampaign-historical-sync-run-contacts" style="display:none;">
+					<?php esc_html_e( 'Syncing all contacts...', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<span id="activecampaign-historical-sync-contacts-count"></span>
 				</div>
 				<div id="activecampaign-historical-sync-stop-requested" style="display:none;">
 					<?php esc_html_e( 'Attempting to stop the process...', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
@@ -101,10 +109,11 @@ isset( $_REQUEST['activecampaign_for_woocommerce_nonce_field'] )
 				<div id="activecampaign-run-historical-sync-current-record">
 					<?php esc_html_e( 'Last Record ID Processed: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 					<span id="activecampaign-run-historical-sync-current-record-num"></span>
-					<?php
-					if ( $activecampaign_for_woocommerce_options['ac_debug'] ) :
-						?>
- </php>
+					<br/>
+					<?php esc_html_e( 'Last Status Update: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<span id="activecampaign-run-historical-sync-last-update"></span>
+					<?php if ( $activecampaign_for_woocommerce_options['ac_debug'] ) : ?>
+
 					<div>
 						<p>Debug info: <span id="activecampaign-run-historical-sync-current-record-status"></span></p>
 					</div>

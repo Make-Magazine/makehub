@@ -24,6 +24,13 @@ if (
 	$activecampaign_for_woocommerce_offset = 0;
 }
 
+$activecampaign_for_woocommerce_expire_time = 1;
+if ( isset( $activecampaign_for_woocommerce_settings['abcart_wait'] ) && ! empty( $activecampaign_for_woocommerce_settings['abcart_wait'] ) ) {
+	$activecampaign_for_woocommerce_expire_time = $activecampaign_for_woocommerce_settings['abcart_wait'];
+}
+
+$activecampaign_for_woocommerce_expire_datetime = new DateTime( 'now -' . $activecampaign_for_woocommerce_expire_time . ' hours', new DateTimeZone( 'UTC' ) );
+
 $activecampaign_for_woocommerce_abandoned_carts = $this->get_abandoned_carts( $activecampaign_for_woocommerce_offset );
 $activecampaign_for_woocommerce_total           = 0;
 
@@ -31,7 +38,14 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 	$activecampaign_for_woocommerce_total = $this->get_total_abandoned_carts();
 	$activecampaign_for_woocommerce_pages = ceil( $activecampaign_for_woocommerce_total / $activecampaign_for_woocommerce_limit );
 }
-
+$activecampaign_for_woocommerce_now      = date_create( 'NOW' );
+$activecampaign_for_woocommerce_last_run = get_option( 'activecampaign_for_woocommerce_abandoned_cart_last_run' );
+if ( $activecampaign_for_woocommerce_last_run ) {
+	$activecampaign_for_woocommerce_interval         = date_diff( $activecampaign_for_woocommerce_now, $activecampaign_for_woocommerce_last_run );
+	$activecampaign_for_woocommerce_interval_minutes = $activecampaign_for_woocommerce_interval->format( '%i' );
+} else {
+	$activecampaign_for_woocommerce_interval_minutes = null;
+}
 $activecampaign_for_woocommerce_page_nonce = wp_create_nonce( 'activecampaign_for_woocommerce_abandoned_form' );
 
 /**
@@ -90,6 +104,14 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 			</div>
 			<div class="clear">
 				<h3>
+					Last sync time:
+					<?php if ( isset( $activecampaign_for_woocommerce_interval_minutes ) ) : ?>
+						<?php echo esc_html( $activecampaign_for_woocommerce_interval_minutes ); ?> minutes ago
+					<?php else : ?>
+						unknown
+					<?php endif; ?>
+				</h3>
+				<h3>
 					Total Abandoned Carts
 				</h3>
 				<p>
@@ -144,7 +166,7 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 						</td>
 						<td>
 							<?php
-							esc_html_e( 'Synced To ActiveCampaign', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+							esc_html_e( 'Synced Latest Data To ActiveCampaign', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 							?>
 						</td>
 
@@ -181,16 +203,20 @@ function activecampaign_for_woocommerce_parse_array( $activecampaign_for_woocomm
 									</td>
 									<td>
 										<?php if ( ! empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && ! empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
-											Recovered: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->order_date ); ?>
+											<?php esc_html_e( 'Recovered:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?> <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->order_date ); ?>
 										<?php endif; ?>
 										<?php if ( ! empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
 											Ordered: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->order_date ); ?>
 										<?php endif; ?>
 										<?php if ( empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && ! empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
-											Abandoned: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->abandoned_date ); ?>
+											Synced<br/>Abandoned On: <?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->abandoned_date ); ?>
 										<?php endif; ?>
 										<?php if ( empty( $activecampaign_for_woocommerce_ab_cart->order_date ) && empty( $activecampaign_for_woocommerce_ab_cart->abandoned_date ) ) : ?>
-											Active Cart
+											<?php if ( $activecampaign_for_woocommerce_ab_cart->last_access_time < $activecampaign_for_woocommerce_expire_datetime->format( 'Y-m-d H:i:s' ) ) : ?>
+												Abandoned Cart Ready to Sync
+											<?php else : ?>
+												Active Cart
+											<?php endif; ?>
 										<?php endif; ?>
 									</td>
 									<td>

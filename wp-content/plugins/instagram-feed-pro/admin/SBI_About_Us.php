@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+use InstagramFeed\Helpers\Util;
 use InstagramFeed\SBI_View;
 use InstagramFeed\SBI_Response;
 
@@ -76,11 +77,7 @@ class SBI_About_Us {
 	 * @since 6.0
 	 */
 	public function about_us_enqueue_assets() {
-		if ( ! get_current_screen() ) {
-			return;
-		}
-		$screen = get_current_screen();
-		if ( 'instagram-feed_page_sbi-about-us' !== $screen->id ) {
+		if(!Util::isIFPage()) {
 			return;
 		}
 
@@ -238,7 +235,7 @@ class SBI_About_Us {
 				'title'       => __( 'Social Wall', 'instagram-feed' ),
 				'description' => __( 'Combine feeds from all of our plugins into a single wall', 'instagram-feed' ),
 				'graphic'     => SBI_PLUGIN_URL . 'admin/assets/img/social-wall-graphic.png',
-				'permalink'   => sprintf( 'https://smashballoon.com/social-wall/demo?license_key=%s&upgrade=true&utm_campaign=instagram-pro&utm_source=about&utm_medium=social-wall', $license_key ),
+				'permalink'   => sprintf( 'https://smashballoon.com/social-wall/demo?edd_license_key=%s&upgrade=true&utm_campaign=instagram-pro&utm_source=about&utm_medium=social-wall', $license_key ),
 				'installed'   => isset( $installed_plugins['social-wall/social-wall.php'] ) ? true : false,
 				'activated'   => is_plugin_active( 'social-wall/social-wall.php' ),
 			),

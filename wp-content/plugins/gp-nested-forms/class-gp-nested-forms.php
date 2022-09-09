@@ -119,6 +119,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		add_filter( 'gform_confirmation_anchor', array( $this, 'handle_nested_confirmation_anchor' ) );
 		add_action( 'gform_entry_id_pre_save_lead', array( $this, 'maybe_edit_entry' ), 10, 2 );
 		add_action( 'gform_entry_post_save', array( $this, 'add_child_entry_meta' ), 10, 2 );
+		add_filter( 'gform_get_field_value', array( $this, 'row_id_field_value' ), 11, 3 );
 
 		// Administrative hooks.
 		// Trash child entries when a parent entry is trashed or deleted.
@@ -965,7 +966,8 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$form_id = rgpost( 'form_id' );
-		$form    = GFAPI::get_form( $form_id );
+		$form    = $this->get_nested_form( $form_id );
+		$form    = $this->add_row_id_field( $form );
 
 		wp_send_json( $form['fields'] );
 
@@ -981,6 +983,10 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		$entry_id = $this->get_posted_entry_id();
 		$entry    = GFAPI::get_entry( $entry_id );
+
+		if ( is_wp_error($entry) ) {
+			wp_send_json_error( __( 'Oops! There was an error finding an entry. Did you pass a valid entry_id?', 'gp-nested-forms' ) );
+		}
 
 		if ( ! GPNF_Entry::can_current_user_edit_entry( $entry ) ) {
 			wp_send_json_error( __( 'Oops! You don\'t have permission to delete this entry.', 'gp-nested-forms' ) );
@@ -1588,7 +1594,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		$parent_form       = GFAPI::get_form( $this->get_parent_form_id() );
 		$nested_form_field = $this->get_posted_nested_form_field( $parent_form );
 		//$display_fields    = $nested_form_field->gpnfFields;
-		$field_values = $this->get_entry_display_values( $entry, $submitted_form );
+		$field_values = $this->get_entry_display_values( $entry, $this->get_nested_form( $submitted_form ) );
 		$mode         = rgpost( 'gpnf_mode' ) ? rgpost( 'gpnf_mode' ) : 'add';
 
 		// Attach session meta to child entry.
@@ -1712,7 +1718,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		foreach ( $display_fields as $display_field_id ) {
 
-			$field = GFFormsModel::get_field( $form, $display_field_id );
+			$field = $display_field_id !== 'row_id' ? GFFormsModel::get_field( $form, $display_field_id ) : $this->get_row_id_field( $form );
 
 			// This can happen if the field is deleted from the child form but is still set as a Display Field on the Nested Form field.
 			if ( ! $field ) {
@@ -3045,11 +3051,13 @@ class GP_Nested_Forms extends GP_Plugin {
 		return false;
 	}
 
-	public function get_nested_form( $nested_form_id ) {
+	public function get_nested_form( $nested_form_or_id ) {
 		// Do not return a form object if it contains a child form
 		// This prevents recursion/infinite loop.
-		if ( ! $this->has_child_form( $nested_form_id ) ) {
-			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form_id ), GFAPI::get_form( $nested_form_id ) );
+		if ( ! $this->has_child_form( $nested_form_or_id ) ) {
+			$nested_form = is_array( $nested_form_or_id ) ? $nested_form_or_id : GFAPI::get_form( $nested_form_or_id );
+
+			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form['id'] ), $nested_form );
 		}
 		return false;
 	}
@@ -3213,6 +3221,81 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param $nested_form array The nested form having the Row ID field prepended to it. Used for filtering.
+	 *
+	 * @return GF_Field Row ID field.
+	 */
+	public function get_row_id_field( $nested_form ) {
+		return new GF_Field( array(
+			'id'    => 'row_id',
+			/**
+			 * Filter the Row ID Summary Field label.
+			 *
+			 * @since 1.1.3
+			 *
+			 * @param string $row_id_label Row ID label.
+			 * @param array $nested_form The current nested form.
+			 */
+			'label' => gf_apply_filters( array( 'gpnf_row_id_label', $nested_form['id'] ), __( 'Row ID', 'gp-nested-forms' ), $nested_form ),
+			'type'  => 'gpnf_row_id',
+		) );
+	}
+
+	public function add_row_id_field( $nested_form ) {
+		if ( isset( $nested_form['fields'] ) && is_array( $nested_form['fields'] ) && rgars( $nested_form, 'fields/0/type' ) !== 'gpnf_row_id' ) {
+			array_unshift( $nested_form['fields'], $this->get_row_id_field( $nested_form ) );
+		}
+
+		return $nested_form;
+	}
+
+	public function get_index_of_child_entry( $child_entry ) {
+		$parent_entry_form_id = rgar( $child_entry, GPNF_Entry::ENTRY_PARENT_FORM_KEY, false );
+		$parent_entry_id      = rgar( $child_entry, GPNF_Entry::ENTRY_PARENT_KEY, false );
+		$nested_form_field_id = rgar( $child_entry, GPNF_Entry::ENTRY_NESTED_FORM_FIELD_KEY, false );
+
+		// If the parent is numeric, it has been created and the child entries are not orphaned.
+		if ( is_numeric( $parent_entry_id ) ) {
+			$parent_entry = new GPNF_Entry( $parent_entry_id );
+
+			if ( ! is_wp_error( $parent_entry->get_entry() ) ) {
+				$child_entry_ids = wp_list_pluck( $parent_entry->get_child_entries( $nested_form_field_id ), 'id' );
+
+				return array_search( $child_entry['id'], $child_entry_ids );
+			}
+		}
+
+		/*
+		 * Pull off of session.
+		 *
+		 * Note, this logic won't be used in many scenarios as the frontend row ID is handled by Knockout computed.
+		 */
+		$session                = new GPNF_Session( $parent_entry_form_id );
+		$session_nested_entries = $session->get( 'nested_entries' );
+
+		if ( ! empty( $session_nested_entries[ $nested_form_field_id ] ) ) {
+			$index = array_search( $child_entry['id'], $session_nested_entries[ $nested_form_field_id ] );
+
+			if ( $index !== false ) {
+				return $index;
+			}
+
+			// We're returning the new index so no need to increment by one.
+			return count( $session_nested_entries[ $nested_form_field_id ] );
+		}
+
+		return 0;
+	}
+
+	public function row_id_field_value( $value, $entry, $field ) {
+		if ( empty( $field ) || $field->type !== 'gpnf_row_id' ) {
+			return $value;
+		}
+
+		return $this->get_index_of_child_entry( $entry ) + 1;
 	}
 
 }

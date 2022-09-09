@@ -97,3 +97,4 @@ function cff_delete_all_platform_data(){
 	\cff_main_pro()->cff_error_reporter->add_action_log( 'Deleted all platform data.' );
 	\cff_main_pro()->cff_error_reporter->reset_api_errors();
 }
+

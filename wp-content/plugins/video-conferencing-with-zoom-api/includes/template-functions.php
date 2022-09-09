@@ -125,14 +125,17 @@ function video_conference_zoom_meeting_join() {
 		$post_id            = get_the_id();
 		$meeting_start_date = get_post_meta( $post_id, '_meeting_field_start_date_utc', true );
 		$data               = array(
-			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-			'start_date' => $meeting_start_date,
-			'timezone'   => $zoom['timezone'],
-			'post_id'    => $post_id,
-			'page'       => 'single-meeting'
+			'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+			'start_date'   => $meeting_start_date,
+			'timezone'     => $zoom['timezone'],
+			'post_id'      => $post_id,
+			'meeting_type' => $zoom['api']->type,
+			'page'         => 'single-meeting'
 		);
 		$data               = apply_filters( 'vczapi_single_meeting_localized_data', $data );
 		wp_localize_script( 'video-conferencing-with-zoom-api', 'mtg_data', $data );
+	} else if ( ! empty( $zoom['api']->state ) && $zoom['api']->state == "ended" ) {
+		echo "<p>" . __( 'This meeting has ended.', 'video-conferencing-with-zoom-api' ) . "</p>";
 	} else {
 		echo "<p>" . __( 'Please login to join this meeting.', 'video-conferencing-with-zoom-api' ) . "</p>";
 	}
@@ -497,13 +500,19 @@ function video_conference_zoom_before_jbh_html( $zoom ) {
 
 /**
  * AFter join before host
-*/
+ */
 function video_conference_zoom_after_jbh_html() {
 	do_action( 'vczapi_join_via_browser_footer' );
 
 	ob_start( 'vczapi_removeWhitespace' );
 	global $post;
-	$post_link = ! empty( $post ) && ! empty( $post->ID ) ? get_permalink( $post->ID ) : home_url( '/' );
+	if ( isset( $_GET['redirect'] ) && ! empty( $_GET['redirect'] ) ) {
+		$post_link = esc_url( $_GET['redirect'] );
+	} else if ( ! empty( $post ) && ! empty( $post->ID ) ) {
+		$post_link = get_permalink( $post->ID );
+	} else {
+		$post_link = home_url( '/' );
+	}
 
 	$localize = array(
 		'ajaxurl'       => admin_url( 'admin-ajax.php' ),

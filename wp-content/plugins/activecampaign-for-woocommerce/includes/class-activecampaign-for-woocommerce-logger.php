@@ -308,7 +308,19 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	 * Clears the WooCommerce error log of our errors.
 	 */
 	public function clear_wc_error_log() {
-		return WC_Log_Handler_DB::clear( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB );
+		$c = 0;
+		try {
+			$c += $this->clear( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB );
+			$c += $this->clear( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB );
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an error clearing the AC entries from the WC error log.',
+				[
+					'message' => $t->getMessage(),
+				]
+			);
+		}
+		return $c;
 	}
 
 	/**

@@ -34,11 +34,13 @@ use Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command as Run_Abandonme
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
 use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
+use Activecampaign_For_Woocommerce_New_Order_Sync_Job as New_Order_Sync;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
 use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
+use Activecampaign_For_Woocommerce_AC_Contact_Repository as Contact_Repository;
 
 /**
  * The core plugin class.
@@ -222,6 +224,15 @@ class Activecampaign_For_Woocommerce {
 	private $historical_sync;
 
 	/**
+	 * Handles new order sync.
+	 *
+	 * @since 1.8.0
+	 * @var New_Order_Sync The historical sync class.
+	 */
+	private $new_order_sync;
+
+
+	/**
 	 * Order utility class.
 	 *
 	 * @since 1.5.0
@@ -265,34 +276,36 @@ class Activecampaign_For_Woocommerce {
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 *
-	 * @param     string                                             $version     The current version of the plugin.
-	 * @param     string                                             $plugin_name     The kebab-case name of the plugin.
-	 * @param     Loader                                             $loader     The loader class.
-	 * @param     Admin                                              $admin     The admin class.
-	 * @param     AC_Public                                          $public     The public class.
-	 * @param     I18n                                               $i18n     The internationalization class.
-	 * @param     Logger                                             $logger     The logger.
-	 * @param     Cart_Updated                                       $cart_updated_event     The cart update event class.
-	 * @param     Cart_Emptied                                       $cart_emptied_event     The cart emptied event class.
-	 * @param     Set_Connection_Id_Cache_Command                    $set_connection_id_cache_command     The connection id cache command class.
-	 * @param     Create_Or_Update_Connection_Option_Command         $c_or_u_co_command     The connection option command class.
-	 * @param     Create_And_Save_Cart_Id                            $create_and_save_cart_id_command     The cart id command class.
-	 * @param     Update_Cart_Command                                $update_cart_command     The update cart command class.
-	 * @param     Delete_Cart_Id                                     $delete_cart_id_command     The delete cart id command class.
-	 * @param     Add_Cart_Id_To_Order                               $add_cart_id_to_order_command     The add cart id to order command class.
-	 * @param     Add_Accepts_Marketing_To_Customer_Meta             $add_am_to_meta_command     The accepts marketing command class.
-	 * @param     Clear_User_Meta_Command                            $clear_user_meta_command     The clear user meta command class.
-	 * @param     Sync_Guest_Abandoned_Cart_Command                  $sync_guest_abandoned_cart_command     The sync guest abandoned cart command class.
-	 * @param     Order_Finished                                     $order_finished_event     The order finished event class.
-	 * @param     User_Registered                                    $user_registered_event     The user registered event class.
-	 * @param     Run_Abandonment_Sync_Command                       $run_abandonment_sync_command     The scheduled runner to sync abandonments.
-	 * @param     Plugin_Upgrade_Command                             $plugin_upgrade_command     The plugin installation and upgrade commands.
-	 * @param     Historical_Sync                                    $historical_sync     The historical sync commands.
-	 * @param     Order_Utilities                                    $order_utilities     The order utility functions.
-	 * @param     Customer_Utilities                                 $customer_utilities     The customer utility functions.
-	 * @param     Abandoned_Cart_Utilities                           $abandoned_cart_utilities     The abandoned cart utility functions.
-	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository $bulksync_repository     The bulksync repository.
-	 * @param     AC_Utilities                                       $ac_utilities     The global AC utility class.
+	 * @param     string                                               $version     The current version of the plugin.
+	 * @param     string                                               $plugin_name     The kebab-case name of the plugin.
+	 * @param     Loader                                               $loader     The loader class.
+	 * @param     Admin                                                $admin     The admin class.
+	 * @param     AC_Public                                            $public     The public class.
+	 * @param     I18n                                                 $i18n     The internationalization class.
+	 * @param     Logger                                               $logger     The logger.
+	 * @param     Cart_Updated                                         $cart_updated_event     The cart update event class.
+	 * @param     Cart_Emptied                                         $cart_emptied_event     The cart emptied event class.
+	 * @param     Set_Connection_Id_Cache_Command                      $set_connection_id_cache_command     The connection id cache command class.
+	 * @param     Create_Or_Update_Connection_Option_Command           $c_or_u_co_command     The connection option command class.
+	 * @param     Create_And_Save_Cart_Id                              $create_and_save_cart_id_command     The cart id command class.
+	 * @param     Update_Cart_Command                                  $update_cart_command     The update cart command class.
+	 * @param     Delete_Cart_Id                                       $delete_cart_id_command     The delete cart id command class.
+	 * @param     Add_Cart_Id_To_Order                                 $add_cart_id_to_order_command     The add cart id to order command class.
+	 * @param     Add_Accepts_Marketing_To_Customer_Meta               $add_am_to_meta_command     The accepts marketing command class.
+	 * @param     Clear_User_Meta_Command                              $clear_user_meta_command     The clear user meta command class.
+	 * @param     Sync_Guest_Abandoned_Cart_Command                    $sync_guest_abandoned_cart_command     The sync guest abandoned cart command class.
+	 * @param     Order_Finished                                       $order_finished_event     The order finished event class.
+	 * @param     User_Registered                                      $user_registered_event     The user registered event class.
+	 * @param     Run_Abandonment_Sync_Command                         $run_abandonment_sync_command     The scheduled runner to sync abandonments.
+	 * @param     Plugin_Upgrade_Command                               $plugin_upgrade_command     The plugin installation and upgrade commands.
+	 * @param     Historical_Sync                                      $historical_sync     The historical sync commands.
+	 * @param     New_Order_Sync                                       $new_order_sync The new order sync job.
+	 * @param     Order_Utilities                                      $order_utilities     The order utility functions.
+	 * @param     Customer_Utilities                                   $customer_utilities     The customer utility functions.
+	 * @param     Abandoned_Cart_Utilities                             $abandoned_cart_utilities     The abandoned cart utility functions.
+	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository   $bulksync_repository     The bulksync repository.
+	 * @param     AC_Utilities                                         $ac_utilities     The global AC utility class.
+	 * @param     Activecampaign_For_Woocommerce_AC_Contact_Repository $contact_repository     The AC contact repository.
 	 *
 	 * @since    1.0.0
 	 */
@@ -320,11 +333,13 @@ class Activecampaign_For_Woocommerce {
 		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
 		Plugin_Upgrade_Command $plugin_upgrade_command,
 		Historical_Sync $historical_sync,
+		New_Order_Sync $new_order_sync,
 		Order_Utilities $order_utilities,
 		Customer_Utilities $customer_utilities,
 		Abandoned_Cart_Utilities $abandoned_cart_utilities,
 		Bulksync_Repository $bulksync_repository,
-		AC_Utilities $ac_utilities
+		AC_Utilities $ac_utilities,
+		Contact_Repository $contact_repository
 	) {
 		$this->version                                    = $version;
 		$this->plugin_name                                = $plugin_name;
@@ -349,11 +364,13 @@ class Activecampaign_For_Woocommerce {
 		$this->run_abandonment_sync_command                   = $run_abandonment_sync_command;
 		$this->plugin_upgrade_command                         = $plugin_upgrade_command;
 		$this->historical_sync                                = $historical_sync;
+		$this->new_order_sync                                 = $new_order_sync;
 		$this->order_utilities                                = $order_utilities;
 		$this->customer_utilities                             = $customer_utilities;
 		$this->abandoned_cart_utilities                       = $abandoned_cart_utilities;
 		$this->bulksync_repository                            = $bulksync_repository;
 		$this->ac_utilities                                   = $ac_utilities;
+		$this->contact_repository                             = $contact_repository;
 	}
 
 	/**
@@ -441,6 +458,7 @@ class Activecampaign_For_Woocommerce {
 			'trigger'
 		);
 
+		// Order complete hooks
 		$this->loader->add_action(
 			'woocommerce_checkout_update_order_meta',
 			$this->cart_emptied_event,
@@ -450,9 +468,38 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'woocommerce_checkout_update_order_meta',
 			$this->order_finished_event,
-			'checkout_completed',
-			90
+			'execute_with_order_id',
+			9
 		);
+
+		$this->loader->add_action(
+			'woocommerce_new_order',
+			$this->order_finished_event,
+			'execute',
+			9
+		);
+
+		$this->loader->add_action(
+			'woocommerce_payment_complete_order_status_completed',
+			$this->order_finished_event,
+			'execute',
+			9
+		);
+
+		$this->loader->add_action(
+			'woocommerce_payment_complete_order_status_processing',
+			$this->order_finished_event,
+			'execute',
+			9
+		);
+
+		$this->loader->add_action(
+			'woocommerce_checkout_order_created',
+			$this->order_finished_event,
+			'execute_with_order_obj',
+			9
+		);
+		// End order complete hooks
 
 		$this->loader->add_action(
 			'user_register',
@@ -546,9 +593,17 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
-			'activecampaign_for_woocommerce_run_order_sync',
+			'activecampaign_for_woocommerce_run_historical_sync_contacts',
 			$this->historical_sync,
-			'sync_new_orders',
+			'run_historical_sync_contacts',
+			1,
+			2
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_order_sync',
+			$this->new_order_sync,
+			'execute',
 			1,
 			2
 		);
@@ -591,6 +646,20 @@ class Activecampaign_For_Woocommerce {
 			'activecampaign_for_woocommerce_cart_updated_recurring_event',
 			$this->run_abandonment_sync_command,
 			'abandoned_cart_hourly_task'
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_cart_updated',
+			$this->run_abandonment_sync_command,
+			'abandoned_cart_hourly_task'
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_cart_updated',
+			$this->new_order_sync,
+			'execute',
+			1,
+			2
 		);
 	}
 

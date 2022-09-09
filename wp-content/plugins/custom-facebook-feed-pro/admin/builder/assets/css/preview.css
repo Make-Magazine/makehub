@@ -41,6 +41,11 @@ body{
     line-height: 1.4;
     word-wrap: break-word;
 }
+[data-poststyle="regular"][data-feed-type="timeline"] .cff-post-item-ctn,
+[data-poststyle="regular"][data-feed-type="events"] .cff-post-item-ctn,
+[data-poststyle="regular"][data-feed-type="reviews"] .cff-post-item-ctn{
+	border-bottom-color: #ddd;
+}
 
 /*Preview Sections Highlights*/
 .cff-preview-section{

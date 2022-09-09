@@ -1353,6 +1353,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 			$steps = array();
 
+			$this->objects_loaded = false;
+			$this->objects        = array();
+
 			if ( ! empty( $this->course_id ) ) {
 				// Set that we loaded the objects to prevent double logic.
 				$this->objects_loaded = true;
@@ -1634,7 +1637,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 				if ( ! empty( $steps_h ) ) {
 					foreach ( $steps_h as $steps_post_type => $steps_post_set ) {
-						if ( ( empty( $return_post_type ) ) || ( $return_post_type == $steps_post_type ) ) {
+						if ( ( empty( $return_post_type ) ) || ( $return_post_type == $steps_post_type ) && ( is_array( $steps_post_set ) ) ) {
 							$item_children_steps = array_merge( $item_children_steps, array_keys( $steps_post_set ) );
 						}
 

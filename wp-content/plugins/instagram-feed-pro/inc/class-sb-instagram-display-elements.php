@@ -47,6 +47,41 @@ class SB_Instagram_Display_Elements {
 	}
 
 	/**
+	 * Gets inner wrapper styles for the post item.
+	 *
+	 * @since INSTA_FEED_PRO_SINCE
+	 *
+	 * @param $settings
+	 *
+	 * @return string
+	 */
+	public static function get_item_styles_for_post_style( $settings ) {
+		$styles = '';
+
+		if ( sbi_doing_customizer( $settings ) ) {
+			return $styles;
+		}
+
+		if ( empty( $settings['poststyle'] ) || 'boxed' !== $settings['poststyle'] ) {
+			return $styles;
+		}
+
+		if ( ! empty( $settings['postbgcolor'] ) ) {
+			$styles .= 'background-color: ' . $settings['postbgcolor'] . '; ';
+		}
+
+		if ( ! empty( $settings['postcorners'] ) ) {
+			$styles .= ' border-radius: ' . $settings['postcorners'] . 'px; ';
+		}
+
+		if ( ! empty( $settings['boxshadow'] ) && InstagramFeed\Builder\SBI_Feed_Saver_Manager::cast_boolean( $settings['boxshadow'] ) ) {
+			$styles .= ' box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.05);';
+		}
+
+		return sprintf( 'style="%s"', $styles );
+	}
+
+	/**
 	 * Overwritten in the Pro version.
 	 *
 	 * @param string $type key of the kind of icon needed
@@ -585,7 +620,7 @@ class SB_Instagram_Display_Elements {
 			$customizer,
 			array(
 				'attr'        => 'data-num',
-				'vue_content' => '$parent.getModerationShoppableMode ? 12 : $parent.customizerFeedData.settings.num',
+				'vue_content' => '$parent.getModerationShoppableMode ? 20 : $parent.customizerFeedData.settings.num',
 				'php_content' => $settings['num'],
 			)
 		);
@@ -598,6 +633,17 @@ class SB_Instagram_Display_Elements {
 				'php_content' => $settings['nummobile'],
 			)
 		);
+
+		$atts .= SB_Instagram_Display_Elements_Pro::print_element_attribute(
+			$customizer,
+			array(
+				'attr'        => 'data-header-size',
+				'vue_content' => '$parent.customizerFeedData.settings.headerstyle == \'text\' ? $parent.customizerFeedData.settings.headertextsize : $parent.customizerFeedData.settings.headersize',
+				'php_content' => $settings['headerstyle'] == 'text' ? $settings['headertextsize'] : $settings['headersize'],
+			)
+		);
+
+
 
 		return $atts;
 	}
@@ -713,7 +759,7 @@ class SB_Instagram_Display_Elements {
 	 *
 	 * @since 6.0
 	 */
-	public static function get_header_data_attributes( $settings, $header_data ) {
+	public static function get_header_data_attributesss( $settings, $header_data ) {
 		$atts = '';
 
 		if ( sbi_doing_customizer( $settings ) ) {
@@ -726,8 +772,51 @@ class SB_Instagram_Display_Elements {
 			} else {
 				$header_vue['condition'] = $settings['vue_args']['condition'] . ' && $parent.customizerFeedData.settings.headerstyle === \'boxed\'';
 			}
+
+			if ( $settings['headerstyle'] !== 'text' ) {
+				$header_vue['condition'] = $settings['vue_args']['condition'] . ' && $parent.customizerFeedData.settings.headerstyle !== \'text\'';
+			}
+
 			$header_enabeld_vue = self::vue_check_header_enabled( $settings, 'header', $header_vue );
 			$atts              .= ' ' . $header_enabeld_vue;
+		}
+		$avatar = SB_Instagram_Parse_Pro::get_avatar( $header_data, $settings );
+
+		$story_data_att = SB_Instagram_Display_Elements_Pro::get_story_attributes( sbi_doing_customizer( $settings ), $settings, $header_data, $avatar );
+
+		$atts .= ' ' . $story_data_att;
+		return $atts;
+	}
+
+
+	/**
+	 * Header data attributes
+	 *
+	 * @param array $settings
+	 * @param array $header_data
+	 *
+	 * @return string
+	 *
+	 * @since 6.1
+	 */
+	public static function get_header_data_attributes( $header_style, $settings, $header_data ) {
+		$atts = '';
+		$customizer = sbi_doing_customizer( $settings );
+		if ( $customizer ) {
+			switch ( $header_style ) {
+				case 'standard-centered':
+					$atts .= SB_Instagram_Display_Elements_Pro::create_condition_show_vue( $customizer,  '$parent.valueIsEnabled($parent.customizerFeedData.settings.showheader) && ($parent.customizerFeedData.settings.headerstyle === \'standard\' || $parent.customizerFeedData.settings.headerstyle === \'centered\') && $parent.customizerFeedData.settings.type !== \'hashtag\' ' . $settings['vue_args']['condition'] );
+					break;
+				case 'boxed':
+					$atts .= SB_Instagram_Display_Elements_Pro::create_condition_show_vue( $customizer,  '$parent.valueIsEnabled($parent.customizerFeedData.settings.showheader) && $parent.customizerFeedData.settings.headerstyle === \'boxed\'  && $parent.customizerFeedData.settings.type !== \'hashtag\' ' . $settings['vue_args']['condition'] );
+					break;
+				case 'text':
+					$atts .= SB_Instagram_Display_Elements_Pro::create_condition_show_vue( $customizer,  '$parent.valueIsEnabled($parent.customizerFeedData.settings.showheader) && $parent.customizerFeedData.settings.headerstyle === \'text\' ' . $settings['vue_args']['condition'] ) . ' ' . SB_Instagram_Display_Elements_Pro::should_print_element_vue( sbi_doing_customizer( $settings ), '$parent.customizerFeedData.settings.headertext' );
+					break;
+				case 'generic':
+					$atts .= SB_Instagram_Display_Elements_Pro::create_condition_show_vue( $customizer,  '$parent.valueIsEnabled($parent.customizerFeedData.settings.showheader) && $parent.customizerFeedData.settings.type === \'hashtag\'&& $parent.customizerFeedData.settings.headerstyle !== \'text\' ' . $settings['vue_args']['condition'] );
+					break;
+			}
 		}
 		$avatar = SB_Instagram_Parse_Pro::get_avatar( $header_data, $settings );
 
@@ -749,12 +838,13 @@ class SB_Instagram_Display_Elements {
 	 * @since 6.0
 	 */
 	public static function get_header_img_data_attributes( $settings, $header_data = array(), $location = 'default' ) {
-		$instagram_cdn_avatar = SB_Instagram_Parse_Pro::get_avatar( $header_data, $settings, true );
-
+		$instagram_cdn_avatar = SB_Instagram_Parse_Pro::get_avatar( $header_data, $settings, false );
+		$doing_customizer     = sbi_doing_customizer( $settings );
+		$return               = '';
 		if ( $settings['headerstyle'] === 'boxed' ) {
 			if ( ! empty( $instagram_cdn_avatar ) ) {
-				$return = SB_Instagram_Display_Elements_Pro::print_element_attribute(
-					sbi_doing_customizer( $settings ),
+				$return = self::print_element_attribute(
+					$doing_customizer,
 					array(
 						'attr'        => 'data-avatar-url',
 						'vue_content' => '$parent.getHeaderAvatar()',
@@ -762,34 +852,32 @@ class SB_Instagram_Display_Elements {
 					)
 				);
 			} else {
-				$return = SB_Instagram_Display_Elements_Pro::create_condition_vue( sbi_doing_customizer( $settings ), '$parent.getHeaderAvatar() === false' );
+				$return = self::create_condition_vue( $doing_customizer, '$parent.getHeaderAvatar() === false' );
 			}
 		} else {
 			if ( $location !== 'centered' ) {
-				if ( ! empty( $instagram_cdn_avatar ) ) {
-					$return = SB_Instagram_Display_Elements_Pro::print_element_attribute(
-						sbi_doing_customizer( $settings ),
+				if ( ! empty( $instagram_cdn_avatar ) || $doing_customizer ) {
+					$return = self::print_element_attribute(
+						$doing_customizer,
 						array(
 							'attr'        => 'data-avatar-url',
 							'vue_content' => '$parent.getHeaderAvatar()',
 							'php_content' => $instagram_cdn_avatar,
 						)
-					) . SB_Instagram_Display_Elements_Pro::create_condition_vue( sbi_doing_customizer( $settings ), '$parent.getHeaderAvatar() !== false && $parent.customizerFeedData.settings.headerstyle !== \'centered\'' );
-				} else {
-					$return = SB_Instagram_Display_Elements_Pro::create_condition_vue( sbi_doing_customizer( $settings ), '$parent.getHeaderAvatar() === false && $parent.customizerFeedData.settings.headerstyle !== \'centered\'' );
+					) .
+					self::create_condition_vue( $doing_customizer, ' $parent.customizerFeedData.settings.headerstyle !== \'centered\'' );
 				}
 			} else {
-				if ( ! empty( $instagram_cdn_avatar ) ) {
-					$return = SB_Instagram_Display_Elements_Pro::print_element_attribute(
-						sbi_doing_customizer( $settings ),
+				if ( ! empty( $instagram_cdn_avatar ) || $doing_customizer ) {
+					$return = self::print_element_attribute(
+						$doing_customizer,
 						array(
 							'attr'        => 'data-avatar-url',
 							'vue_content' => '$parent.getHeaderAvatar()',
 							'php_content' => $instagram_cdn_avatar,
 						)
-					) . SB_Instagram_Display_Elements_Pro::create_condition_vue( sbi_doing_customizer( $settings ), '$parent.getHeaderAvatar() !== false && $parent.customizerFeedData.settings.headerstyle === \'centered\'' );
-				} else {
-					$return = SB_Instagram_Display_Elements_Pro::create_condition_vue( sbi_doing_customizer( $settings ), '$parent.getHeaderAvatar() === false && $parent.customizerFeedData.settings.headerstyle === \'centered\'' );
+					) .
+					self::create_condition_vue( $doing_customizer, ' $parent.customizerFeedData.settings.headerstyle === \'centered\'' );
 				}
 			}
 		}
@@ -888,7 +976,7 @@ class SB_Instagram_Display_Elements {
 		if ( ! sbi_doing_customizer( $settings ) ) {
 			return '';
 		}
-		return ' ' . SB_Instagram_Display_Elements_Pro::should_show_element_vue( $settings, 'showfollowers' ) . SB_Instagram_Display_Elements_Pro::should_print_element_vue( sbi_doing_customizer( $settings ), ' $parent.svgIcons[\'headerUser\'] + \' \' + $parent.getHeaderFollowersCount()' );
+		return ' ' . SB_Instagram_Display_Elements_Pro::should_show_header_followers( $settings, 'showfollowers' ) . SB_Instagram_Display_Elements_Pro::should_print_element_vue( sbi_doing_customizer( $settings ), ' $parent.svgIcons[\'headerUser\'] + \' \' + $parent.getHeaderFollowersCount()' );
 	}
 
 	/**
@@ -1161,6 +1249,22 @@ class SB_Instagram_Display_Elements {
 	}
 
 	/**
+	 * Post image data attributes
+	 *
+	 * @param array $settings
+	 *
+	 * @return string
+	 *
+	 * @since INSTA_FEED_PRO_SINCE
+	 */
+	public static function get_post_image_style_attributes( $settings ) {
+		if ( ! sbi_doing_customizer( $settings ) ) {
+			return ! $settings['showcaption'] && ! $settings['showlikes'] ? ' style="border-radius: inherit;"' : '';
+		}
+		return ' :style="[( ! $parent.customizerFeedData.settings.showcaption && ! $parent.customizerFeedData.settings.showlikes  ) && {\'border-radius\': \'inherit\'}]"';
+	}
+
+	/**
 	 * Show header section
 	 *
 	 * @param string $section
@@ -1206,6 +1310,31 @@ class SB_Instagram_Display_Elements {
 		}
 
 		return $result_vue;
+	}
+
+	/**
+	 * Should Show Element
+	 *
+	 * @param array $settings
+	 * @param string $setting_name
+	 * @param bool $custom_condition
+	 *
+	 * @return string
+	 */
+	public static function should_show_header_followers( $settings, $setting_name, $custom_condition = false ) {
+		$customizer = sbi_doing_customizer( $settings );
+		if ( $customizer ) {
+			return ' v-if="$parent.checkBusinessAccount() && $parent.valueIsEnabled($parent.customizerFeedData.settings.' . $setting_name . ')' . ( $custom_condition != false ? $custom_condition : '' ) . '" ';
+		}
+		return '';
+	}
+
+	public static function get_header_text( $settings ) {
+		if ( ! empty( $settings['customheadertext'] ) ) {
+			return $settings['customheadertext'];
+		}
+
+		return __( "We're On Instagram", 'instagram-feed' );
 	}
 
 	/**

@@ -11,11 +11,11 @@
  */
 
 use Activecampaign_For_Woocommerce_Api_Serializable as Api_Serializable;
-use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Has_Id as Has_Id;
 use Activecampaign_For_Woocommerce_Has_Email as Has_Email;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The model class for the Ecom Customer
@@ -228,7 +228,7 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	public function create_ecom_customer_from_order( $order ) {
 		$logger = new Logger();
 		if ( isset( $order ) && $order->get_id() ) {
-			if ( method_exists( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
+			if ( AC_Utilities::validate_object( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				try {
 					// Use the customer information
 					$customer = new WC_Customer( $order->get_customer_id(), false );
@@ -266,15 +266,15 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 
 			if (
 				! isset( $customer ) ||
-				! method_exists( $order, 'get_customer_id' ) ||
-				! method_exists( $customer, 'get_email' ) ||
+				! AC_Utilities::validate_object( $order, 'get_customer_id' ) ||
+				! AC_Utilities::validate_object( $customer, 'get_email' ) ||
 				! $order->get_customer_id() ||
 				! $customer->get_email()
 			) {
 				try {
 					// This customer doesn't have a customer or user dataset, set externalid to zero
 					$this->externalid = 0;
-					if ( method_exists( $order, 'get_billing_email' ) ) {
+					if ( AC_Utilities::validate_object( $order, 'get_billing_email' ) ) {
 						$this->email      = $order->get_billing_email();
 						$this->first_name = $order->get_billing_first_name();
 						$this->last_name  = $order->get_billing_last_name();
@@ -283,7 +283,7 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 					$logger->error(
 						'Activecampaign_For_Woocommerce_Ecom_Customer: There was a problem preparing data for a record.',
 						[
-							'customer_email' => method_exists( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
+							'customer_email' => AC_Utilities::validate_object( $order, 'get_billing_email' ) ? $order->get_billing_email() : null,
 							'message'        => $t->getMessage(),
 							'trace'          => $logger->clean_trace( $t->getTrace() ),
 						]

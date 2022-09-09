@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb7a8c6bc56115720741fda3dffad4163
+class ComposerStaticInit94550cb0a9d0967b4ad754902c3386e8
 {
     public static $files = array (
         'c98aede596c7fdc52cbf3d0f03e475c5' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/functions.php',
@@ -230,6 +230,7 @@ class ComposerStaticInitb7a8c6bc56115720741fda3dffad4163
         'AcVendor\\GuzzleHttp\\Psr7\\StreamWrapper' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/StreamWrapper.php',
         'AcVendor\\GuzzleHttp\\Psr7\\UploadedFile' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/UploadedFile.php',
         'AcVendor\\GuzzleHttp\\Psr7\\Uri' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/Uri.php',
+        'AcVendor\\GuzzleHttp\\Psr7\\UriComparator' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/UriComparator.php',
         'AcVendor\\GuzzleHttp\\Psr7\\UriNormalizer' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/UriNormalizer.php',
         'AcVendor\\GuzzleHttp\\Psr7\\UriResolver' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/UriResolver.php',
         'AcVendor\\GuzzleHttp\\Psr7\\Utils' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/psr7/src/Utils.php',
@@ -281,6 +282,8 @@ class ComposerStaticInitb7a8c6bc56115720741fda3dffad4163
         'ActiveCampaign_For_WooCommerce_Runtime_Exception' => __DIR__ . '/../..' . '/includes/exceptions/class-activecampaign-for-woocommerce-runtime-exception.php',
         'Activecampaign_For_Woocommerce' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce.php',
         'Activecampaign_For_Woocommerce_AC_Contact' => __DIR__ . '/../..' . '/includes/models/class-activecampaign-for-woocommerce-ac-contact.php',
+        'Activecampaign_For_Woocommerce_AC_Contact_Batch' => __DIR__ . '/../..' . '/includes/models/class-activecampaign-for-woocommerce-ac-contact-batch.php',
+        'Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository' => __DIR__ . '/../..' . '/includes/repositories/class-activecampaign-for-woocommerce-ac-contact-batch-repository.php',
         'Activecampaign_For_Woocommerce_AC_Contact_Repository' => __DIR__ . '/../..' . '/includes/repositories/class-activecampaign-for-woocommerce-ac-contact-repository.php',
         'Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities' => __DIR__ . '/../..' . '/includes/abandoned_carts/class-activecampaign-for-woocommerce-abandoned-cart-utilities.php',
         'Activecampaign_For_Woocommerce_Activator' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-activator.php',
@@ -321,6 +324,7 @@ class ComposerStaticInitb7a8c6bc56115720741fda3dffad4163
         'Activecampaign_For_Woocommerce_Interacts_With_Api' => __DIR__ . '/../..' . '/includes/traits/class-activecampaign-for-woocommerce-interacts-with-api-trait.php',
         'Activecampaign_For_Woocommerce_Loader' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-loader.php',
         'Activecampaign_For_Woocommerce_Logger' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-logger.php',
+        'Activecampaign_For_Woocommerce_New_Order_Sync_Job' => __DIR__ . '/../..' . '/includes/orders/class-activecampaign-for-woocommerce-new-order-sync-job.php',
         'Activecampaign_For_Woocommerce_Order_Finished_Event' => __DIR__ . '/../..' . '/includes/events/class-activecampaign-for-woocommerce-order-finished-event.php',
         'Activecampaign_For_Woocommerce_Order_Utilities' => __DIR__ . '/../..' . '/includes/orders/class-activecampaign-for-woocommerce-order-utilities.php',
         'Activecampaign_For_Woocommerce_Plugin_Upgrade_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-plugin-upgrade-command.php',
@@ -385,9 +389,9 @@ class ComposerStaticInitb7a8c6bc56115720741fda3dffad4163
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb7a8c6bc56115720741fda3dffad4163::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb7a8c6bc56115720741fda3dffad4163::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitb7a8c6bc56115720741fda3dffad4163::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit94550cb0a9d0967b4ad754902c3386e8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit94550cb0a9d0967b4ad754902c3386e8::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit94550cb0a9d0967b4ad754902c3386e8::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -7,6 +7,8 @@
 
 namespace InstagramFeed\Builder;
 
+use InstagramFeed\SB_Instagram_Data_Encryption;
+
 class SBI_Db {
 
 	const RESULTS_PER_PAGE = 20;
@@ -33,11 +35,11 @@ class SBI_Db {
 			unset( $args['page'] );
 		}
 
-		$offset = max( 0, $page * self::RESULTS_PER_PAGE );
+		$offset = max( 0, $page * 400 );
 
 		if ( empty( $args ) ) {
 
-			$limit = (int) self::RESULTS_PER_PAGE;
+			$limit = 400;
 			$sql   = "SELECT s.id, s.account_id, s.account_type, s.privilege, s.access_token, s.username, s.info, s.error, s.expires, count(f.id) as used_in
 				FROM $sources_table_name s
 				LEFT JOIN $feeds_table_name f ON f.settings LIKE CONCAT('%', s.account_id, '%')
@@ -199,7 +201,7 @@ class SBI_Db {
 	public static function source_update( $to_update, $where_data ) {
 		global $wpdb;
 		$sources_table_name = $wpdb->prefix . 'sbi_sources';
-		$encryption         = new \SB_Instagram_Data_Encryption();
+		$encryption         = new SB_Instagram_Data_Encryption();
 
 		$data         = array();
 		$where        = array();
@@ -212,6 +214,14 @@ class SBI_Db {
 		if ( isset( $to_update['privilege'] ) ) {
 			$data['privilege'] = $to_update['privilege'];
 			$format[]          = '%s';
+		}
+		if ( isset( $to_update['id'] ) ) {
+			$data['account_id'] = $to_update['id'];
+			$format[]      = '%s';
+		}
+		if ( isset( $where_data['id'] ) ) {
+			$data['account_id'] = $where_data['id'];
+			$format[]      = '%s';
 		}
 		if ( isset( $to_update['id'] ) ) {
 			$where['account_id'] = $to_update['id'];
@@ -284,10 +294,12 @@ class SBI_Db {
 	public static function source_insert( $to_insert ) {
 		global $wpdb;
 		$sources_table_name = $wpdb->prefix . 'sbi_sources';
-		$encryption         = new \SB_Instagram_Data_Encryption();
+		$encryption         = new SB_Instagram_Data_Encryption();
 
 		$data   = array();
 		$format = array();
+		$where  = array();
+		$where_format = array();
 		if ( isset( $to_insert['id'] ) ) {
 			$data['account_id'] = $to_insert['id'];
 			$format[]           = '%s';
@@ -335,8 +347,9 @@ class SBI_Db {
 			$data['author'] = get_current_user_id();
 			$format[]       = '%d';
 		}
+		$affected = $wpdb->insert( $sources_table_name, $data, $format );
 
-		return $wpdb->insert( $sources_table_name, $data, $format );
+		return $affected;
 	}
 
 	/**
@@ -360,7 +373,7 @@ class SBI_Db {
 				$feeds_elementor[ $feed->id ] = $feed->feed_name;
 			}
 		}
-		return $feeds_elementor;
+		return [ 0 => __('Choose a Feed', 'instagram-feed')] + $feeds_elementor;
 	}
 
 
@@ -556,6 +569,25 @@ class SBI_Db {
 
 		echo sbi_json_encode( SBI_Feed_Builder::get_feed_list() );
 		wp_die();
+	}
+
+	/**
+	 * Query to Remove Source from Database
+	 *
+	 * @param array $source_id
+	 *
+	 * @since 6.0
+	 */
+	public static function delete_source( $source_id ) {
+		global $wpdb;
+		$sources_table_name = $wpdb->prefix . 'sbi_sources';
+		return $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $sources_table_name WHERE id = %d; ",
+				$source_id
+			)
+		);
+
 	}
 
 	/**
@@ -940,4 +972,24 @@ class SBI_Db {
 		wp_clear_scheduled_hook( 'sbi_feed_update' );
 		wp_clear_scheduled_hook( 'sbi_usage_tracking_cron' );
 	}
+
+
+	/**
+	 * Query to Get Single source
+	 *
+	 * @param array $source_id
+	 *
+	 * @since 6.1
+	 */
+	public static function get_source_by_account_id( $source_id ) {
+		global $wpdb;
+		$sources_table_name = $wpdb->prefix . 'sbi_sources';
+		$sql = $wpdb->prepare(
+				"SELECT * FROM $sources_table_name WHERE account_id = %s; ",
+				$source_id
+			);
+		return $wpdb->get_row( $sql, ARRAY_A );
+	}
+
+
 }

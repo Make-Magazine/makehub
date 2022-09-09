@@ -539,7 +539,7 @@ function rocket_thank_you_license() {
 			/* translators: %1$s = plugin name, %2$s + %3$s = opening links, %4$s = closing link */
 			__( '%1$s is good to go! %2$sTest your load time%4$s, or visit your %3$ssettings%4$s.', 'rocket' ),
 			'<strong>' . WP_ROCKET_PLUGIN_NAME . '</strong>',
-			'<a href="https://wp-rocket.me/blog/correctly-measure-websites-page-load-time/?utm_source=wp_plugin&utm_medium=wp_rocket" target="_blank">',
+			'<a href="https://wp-rocket.me/blog/how-to-test-wordpress-site-performance-measure-speed-results/?utm_source=wp_plugin&utm_medium=wp_rocket" target="_blank">',
 			'<a href="' . admin_url( 'options-general.php?page=' . WP_ROCKET_PLUGIN_SLUG ) . '">',
 			'</a>'
 		);
@@ -742,6 +742,7 @@ function rocket_notice_html( $args ) {
 		'action'           => '',
 		'dismiss_button'   => false,
 		'readonly_content' => '',
+		'id'               => '',
 	];
 
 	$args = wp_parse_args( $args, $defaults );
@@ -774,8 +775,14 @@ function rocket_notice_html( $args ) {
 			break;
 	}
 
+	$notice_id = '';
+
+	if ( ! empty( $args['id'] ) ) {
+		$notice_id = ' id="' . esc_attr( $args['id'] ) . '"';
+	}
+
 	?>
-	<div class="notice notice-<?php echo esc_attr( $args['status'] ); ?> <?php echo esc_attr( $args['dismissible'] ); ?>">
+	<div class="notice notice-<?php echo esc_attr( $args['status'] ); ?> <?php echo esc_attr( $args['dismissible'] ); ?>"<?php echo $notice_id; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<?php
 			$tag = 0 !== strpos( $args['message'], '<p' ) && 0 !== strpos( $args['message'], '<ul' );
 
@@ -792,7 +799,7 @@ function rocket_notice_html( $args ) {
 		<p>
 			<?php echo $args['action']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<?php if ( $args['dismiss_button'] ) : ?>
-			<a class="rocket-dismiss" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=rocket_ignore&box=' . $args['dismiss_button'] ), 'rocket_ignore_' . $args['dismiss_button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"><?php esc_html_e( 'Dismiss this notice.', 'rocket' ); ?></a>
+			<a class="rocket-dismiss <?php echo $args['dismiss_button_class'] ?? ''; ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=rocket_ignore&box=' . $args['dismiss_button'] ), 'rocket_ignore_' . $args['dismiss_button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"><?php esc_html_e( 'Dismiss this notice', 'rocket' ); ?></a>
 			<?php endif; ?>
 		</p>
 		<?php endif; ?>

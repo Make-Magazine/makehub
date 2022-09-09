@@ -3,9 +3,9 @@ Author: Smash Balloon
 Contributors: smashballoon
 Support Website: http://smashballoon/social-wall/
 Tags: Social Media, Instagram, Twitter, Facebook, YouTube
-Requires at least: 3.4
-Tested up to: 5.9
-Stable tag: 1.0.6
+Requires at least: 4.1
+Tested up to: 6.0
+Stable tag: 1.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,11 +78,25 @@ You can embed your social wall feed directly into a template file by using the W
 
 = Will Social Wall work with W3 Total Cache or other caching plugins? =
 
-The Social Wall plugin should work in compatibility with most, if not all, caching plugins, but you may need to tweak the settings in order to allow the social media feeds to update successfully and display your latest posts.  If you are experiencing problems with your social media feeds not updating then try disabling either 'Page Caching' or 'Object Caching' in W3 Total Cache (or any other similar caching plugin) to see whether that fixes the problem.
+The Social WAll plugin should work in compatibility with most, if not all, caching plugins, but you may need to tweak the settings in order to allow the social media feeds to update successfully and display your latest posts.  If you are experiencing problems with your social media feeds not updating then try disabling either 'Page Caching' or 'Object Caching' in W3 Total Cache (or any other similar caching plugin) to see whether that fixes the problem.
 
 == Screenshots ==
 
 == Changelog ==
+= 1.0.10 =
+* Tweak: Made it more clear what is happening when creating a feed to use in the social wall. Feeds are created in individual plugins and then the settings from those feeds can be used in the Social Wall.
+* Tweak: Made using pre-created feeds the default method of generating shortcodes while on the "configure" tab.
+
+= 1.0.9 =
+* Fix: Added compatibility with version 2.0 of the YouTube Feed plugin.
+
+= 1.0.8 =
+* Fix: Updated the shortcode generator on the "Configure" tab to work with feeds created in version 2.0 of Custom Twitter Feeds.
+* Fix: New Twitter cards were not being created after updating Custom Twitter Feeds Pro.
+
+= 1.0.7 =
+* Fix: Added compatibility with version 2.0 of the Custom Twitter Feeds plugin.
+
 = 1.0.6 =
 * Fix: Updated the shortcode generator on the "Configure" tab to work with feeds created in version 6.0 of Instagram Feed.
 

@@ -14,6 +14,7 @@
         usingdefault: true,
         ytapi_load: 'light',
         pause_others: false,
+        facade_mode: false,
         not_live_on_channel: false
     };
 
@@ -628,8 +629,7 @@
                             $.get('https://youtube.com/oembed', {url: facadeOembedUrl, format: 'json'},
                                     function (response)
                                     {
-                                        $facadePoster.attr('src', response.thumbnail_url);
-
+                                        $facadePoster.attr('src', response.thumbnail_url.replace('hqdefault', 'maxresdefault'));
                                     }, 'json')
                                     .fail(function ()
                                     {
@@ -686,7 +686,10 @@
         }
     };
 
-    window._EPADashboard_.loadYTAPI();
+    if (!window._EPYT_.facade_mode)
+    {
+        window._EPADashboard_.loadYTAPI();
+    }
 
     if (window._EPYT_.pageLoaded)
     {
@@ -705,7 +708,10 @@
     {
         window._EPADashboard_.pageReady();
 
-        window._EPADashboard_.loadYTAPI();
+        if (!window._EPYT_.facade_mode)
+        {
+            window._EPADashboard_.loadYTAPI();
+        }
 
         if (window._EPYT_.ajax_compat)
         {

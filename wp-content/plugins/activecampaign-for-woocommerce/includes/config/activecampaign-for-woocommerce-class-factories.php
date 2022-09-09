@@ -45,8 +45,10 @@ use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Gue
 use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
 use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
 use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
+use Activecampaign_For_Woocommerce_New_Order_Sync_Job as New_Order_Sync;
 use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
 use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
+use Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository as AC_Contact_Batch_Repository;
 use AcVendor\DI;
 use AcVendor\Psr\Container\ContainerInterface;
 use AcVendor\Psr\Log\LoggerInterface;
@@ -74,11 +76,13 @@ return array(
 		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
 		Plugin_Upgrade_Command $plugin_upgrade_command,
 		Historical_Sync $historical_sync,
+		New_Order_Sync $new_order_sync,
 		Order_Utilities $order_utilities,
 		Customer_Utilities $customer_utilities,
 		Abandoned_Cart_Utilities $abandoned_cart_utilities,
 		Bulksync_Repository $bulksync_repository,
-		AC_Utilities $ac_utilities
+		AC_Utilities $ac_utilities,
+		Contact_Repository $contact_repository
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -112,11 +116,13 @@ return array(
 			$run_abandonment_sync_command,
 			$plugin_upgrade_command,
 			$historical_sync,
+			$new_order_sync,
 			$order_utilities,
 			$customer_utilities,
 			$abandoned_cart_utilities,
 			$bulksync_repository,
-			$ac_utilities
+			$ac_utilities,
+			$contact_repository
 		);
 	},
 
@@ -217,13 +223,19 @@ return array(
 	Historical_Sync::class                            => static function (
 		Logger $logger,
 		Order_Utilities $order_utilities,
-		Customer_Utilities $customer_utilities,
-		Contact_Repository $contact_repository,
-		Ecom_Customer_Repository $customer_repository,
-		Ecom_Order_Repository $order_repository,
+		AC_Contact_Batch_Repository $contact_batch_repository,
 		Bulksync_Repository $bulksync_repository
 	) {
-		return new Historical_Sync( $logger, $order_utilities, $customer_utilities, $contact_repository, $customer_repository, $order_repository, $bulksync_repository );
+		return new Historical_Sync( $logger, $order_utilities, $contact_batch_repository, $bulksync_repository );
+	},
+	New_Order_Sync::class                             => static function (
+		Logger $logger,
+		Order_Utilities $order_utilities,
+		Customer_Utilities $customer_utilities,
+		Ecom_Customer_Repository $customer_repository,
+		Ecom_Order_Repository $order_repository
+	) {
+		return new New_Order_Sync( $logger, $order_utilities, $customer_utilities, $customer_repository, $order_repository );
 	},
 	Plugin_Upgrade_Command::class                     => static function (
 		Logger $logger,

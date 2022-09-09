@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\Onboarding\Render;
 
+use WooCommerce\PayPalCommerce\WcGateway\Settings\Settings;
+use WooCommerce\PayPalCommerce\WcGateway\Exception\NotFoundException;
+
 /**
  * Class OnboardingRenderer
  */
@@ -28,14 +31,23 @@ class OnboardingOptionsRenderer {
 	private $country;
 
 	/**
+	 * The settings.
+	 *
+	 * @var Settings
+	 */
+	protected $settings;
+
+	/**
 	 * OnboardingOptionsRenderer constructor.
 	 *
-	 * @param string $module_url The module url (for assets).
-	 * @param string $country 2-letter country code of the shop.
+	 * @param string   $module_url The module url (for assets).
+	 * @param string   $country 2-letter country code of the shop.
+	 * @param Settings $settings The settings.
 	 */
-	public function __construct( string $module_url, string $country ) {
+	public function __construct( string $module_url, string $country, Settings $settings ) {
 		$this->module_url = $module_url;
 		$this->country    = $country;
+		$this->settings   = $settings;
 	}
 
 	/**
@@ -44,6 +56,7 @@ class OnboardingOptionsRenderer {
 	 * @param bool $is_shop_supports_dcc Whether the shop can use DCC (country, currency).
 	 */
 	public function render( bool $is_shop_supports_dcc ): string {
+		$checked = $is_shop_supports_dcc ? '' : 'checked';
 		return '
 <ul class="ppcp-onboarding-options">
 	<li>
@@ -52,12 +65,31 @@ class OnboardingOptionsRenderer {
 		</label>
 	</li>
 	<li>
-		<label><input type="checkbox" id="ppcp-onboarding-accept-cards" checked> ' .
-			__( 'Securely accept all major credit & debit cards on the strength of the PayPal network', 'woocommerce-paypal-payments' ) . '
-		</label>
+		<label><input type="checkbox" id="ppcp-onboarding-accept-cards" ' . $checked . '> ' . __( 'Securely accept all major credit & debit cards on the strength of the PayPal network', 'woocommerce-paypal-payments' ) . '</label>
 	</li>
-	<li>' . $this->render_dcc( $is_shop_supports_dcc ) . '</li>
-</ul>';
+	<li>' . $this->render_dcc( $is_shop_supports_dcc ) . '</li>' .
+			$this->render_pui_option()
+		. '</ul>';
+	}
+
+	/**
+	 * Renders pui option.
+	 *
+	 * @return string
+	 * @throws NotFoundException When setting is not found.
+	 */
+	private function render_pui_option(): string {
+		if ( 'DE' === $this->country ) {
+			$checked = 'checked';
+			if ( $this->settings->has( 'ppcp-onboarding-pui' ) && $this->settings->get( 'ppcp-onboarding-pui' ) !== '1' ) {
+				$checked = '';
+			}
+			return '<li><label><input type="checkbox" id="ppcp-onboarding-pui" ' . $checked . '> ' .
+				__( 'Onboard with Pay upon Invoice', 'woocommerce-paypal-payments' ) . '
+		</label></li>';
+		}
+
+		return '';
 	}
 
 	/**
@@ -69,6 +101,44 @@ class OnboardingOptionsRenderer {
 		$items = array();
 
 		$is_us_shop = 'US' === $this->country;
+
+		$basic_table_rows = array(
+			$this->render_table_row(
+				__( 'Credit & Debit Card form fields', 'woocommerce-paypal-payments' ),
+				__( 'Prebuilt user experience', 'woocommerce-paypal-payments' )
+			),
+			! $is_us_shop ? '' : $this->render_table_row(
+				__( 'Credit & Debit Card pricing', 'woocommerce-paypal-payments' ),
+				__( '3.49% + $0.49', 'woocommerce-paypal-payments' ),
+				'',
+				__( 'for US domestic transactions', 'woocommerce-paypal-payments' )
+			),
+			$this->render_table_row(
+				__( 'Seller Protection', 'woocommerce-paypal-payments' ),
+				__( 'Yes', 'woocommerce-paypal-payments' ),
+				__( 'No matter what you sell, Seller Protection can help you avoid chargebacks, reversals, and fees on eligible PayPal payment transactions — even when a customer has filed a dispute.', 'woocommerce-paypal-payments' ),
+				__( 'for eligible PayPal transactions', 'woocommerce-paypal-payments' )
+			),
+			$this->render_table_row(
+				__( 'Seller Account Type', 'woocommerce-paypal-payments' ),
+				__( 'Business or Casual', 'woocommerce-paypal-payments' ),
+				__( 'For Standard payments, Casual sellers may connect their Personal PayPal account in eligible countries to sell on WooCommerce. For Advanced payments, a Business PayPal account is required.', 'woocommerce-paypal-payments' )
+			),
+		);
+		$items[]          = '
+<li>
+	<label>
+		<input type="radio" id="ppcp-onboarding-dcc-basic" name="ppcp_onboarding_dcc" value="basic" checked ' .
+			( ! $is_shop_supports_dcc ? 'checked' : '' ) .
+			' data-screen-url="' . $this->get_screen_url( 'basic' ) . '"' .
+			'> ' .
+		__( 'Standard Card Processing', 'woocommerce-paypal-payments' ) . '
+	</label>
+	' . $this->render_tooltip( __( 'Card transactions are managed by PayPal, which simplifies compliance requirements for you.', 'woocommerce-paypal-payments' ) ) . '
+	<table>
+		' . implode( $basic_table_rows ) . '
+	</table>
+</li>';
 
 		if ( $is_shop_supports_dcc ) {
 			$dcc_table_rows = array(
@@ -113,9 +183,9 @@ class OnboardingOptionsRenderer {
 			$items[]        = '
 <li>
 	<label>
-		<input type="radio" id="ppcp-onboarding-dcc-acdc" name="ppcp_onboarding_dcc" value="acdc" checked ' .
+		<input type="radio" id="ppcp-onboarding-dcc-acdc" name="ppcp_onboarding_dcc" value="acdc" ' .
 				'data-screen-url="' . $this->get_screen_url( 'acdc' ) . '"> ' .
-			__( 'Advanced Card Processing', 'woocommerce-paypal-payments' ) . '
+				__( 'Advanced Card Processing', 'woocommerce-paypal-payments' ) . '
 	</label>
 	' . $this->render_tooltip( __( 'PayPal acts as the payment processor for card transactions. You can add optional features like Chargeback Protection for more security.', 'woocommerce-paypal-payments' ) ) . '
 	<table>
@@ -124,53 +194,13 @@ class OnboardingOptionsRenderer {
 </li>';
 		}
 
-		$basic_table_rows = array(
-			$this->render_table_row(
-				__( 'Credit & Debit Card form fields', 'woocommerce-paypal-payments' ),
-				__( 'Prebuilt user experience', 'woocommerce-paypal-payments' )
-			),
-			! $is_us_shop ? '' : $this->render_table_row(
-				__( 'Credit & Debit Card pricing', 'woocommerce-paypal-payments' ),
-				__( '3.49% + $0.49', 'woocommerce-paypal-payments' ),
-				'',
-				__( 'for US domestic transactions', 'woocommerce-paypal-payments' )
-			),
-			$this->render_table_row(
-				__( 'Seller Protection', 'woocommerce-paypal-payments' ),
-				__( 'Yes', 'woocommerce-paypal-payments' ),
-				__( 'No matter what you sell, Seller Protection can help you avoid chargebacks, reversals, and fees on eligible PayPal payment transactions — even when a customer has filed a dispute.', 'woocommerce-paypal-payments' ),
-				__( 'for eligible PayPal transactions', 'woocommerce-paypal-payments' )
-			),
-			$this->render_table_row(
-				__( 'Seller Account Type', 'woocommerce-paypal-payments' ),
-				__( 'Business or Casual', 'woocommerce-paypal-payments' ),
-				__( 'For Standard payments, Casual sellers may connect their Personal PayPal account in eligible countries to sell on WooCommerce. For Advanced payments, a Business PayPal account is required.', 'woocommerce-paypal-payments' )
-			),
-		);
-		$items[]          = '
-<li ' . ( ! $is_shop_supports_dcc ? 'style="display: none;"' : '' ) . '>
-	<label>
-		<input type="radio" id="ppcp-onboarding-dcc-basic" name="ppcp_onboarding_dcc" value="basic" ' .
-			( ! $is_shop_supports_dcc ? 'checked' : '' ) .
-			' data-screen-url="' . $this->get_screen_url( 'basic' ) . '"' .
-			'> ' .
-		__( 'Standard Card Processing', 'woocommerce-paypal-payments' ) . '
-	</label>
-	' . $this->render_tooltip( __( 'Card transactions are managed by PayPal, which simplifies compliance requirements for you.', 'woocommerce-paypal-payments' ) ) . '
-	<table>
-		' . implode( $basic_table_rows ) . '
-	</table>
-</li>';
-
 		return '
 <div class="ppcp-onboarding-cards-options">
 	<ul id="ppcp-onboarding-dcc-options" class="ppcp-onboarding-options-sublist">' .
 			implode( '', $items ) .
 			'
 	</ul>
-	<div class="ppcp-onboarding-cards-screen">' .
-			( $is_shop_supports_dcc ? '<img id="ppcp-onboarding-cards-screen-img" />' : '' ) . '
-	</div>
+	<div class="ppcp-onboarding-cards-screen"><img id="ppcp-onboarding-cards-screen-img" /></div>
 </div>';
 	}
 

@@ -468,14 +468,14 @@ class CFF_Feed_Locator{
 		$had_error = false;
 		if ( $wpdb->get_var( "show tables like '$feed_locator_table_name'" ) != $feed_locator_table_name ) {
 			$had_error = true;
-			#\cff_main_pro()->cff_error_reporter->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'custom-facebook-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
+			cff_main_pro()->cff_error_reporter->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'custom-facebook-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
 		}
 
 		if ( ! $had_error ) {
 			$wpdb->query( "ALTER TABLE $feed_locator_table_name ADD INDEX feed_id (feed_id)" );
 			$wpdb->query( "ALTER TABLE $feed_locator_table_name ADD INDEX post_id (post_id)" );
 
-			#\cff_main_pro()->cff_error_reporter->remove_error( 'database_create' );
+			cff_main_pro()->cff_error_reporter->remove_error( 'database_create' );
 		}
 	}
 

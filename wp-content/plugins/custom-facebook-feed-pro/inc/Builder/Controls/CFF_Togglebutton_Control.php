@@ -36,7 +36,7 @@ class CFF_Togglebutton_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-togglebutton-ctn cff-fb-fs">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-togglebutton-ctn cff-fb-fs">
 			<div class="sb-control-togglebutton-elm cff-fb-fs sb-tr-1" v-for="toggle in control.options" :data-active="<?php echo $controlEditingTypeModel ?>[control.id] == toggle.value" v-show="toggle.condition != undefined ? checkControlCondition(toggle.condition) : true"  @click.prevent.default="changeSettingValue(control.id,toggle.value, true)" >
 				{{toggle.label}}
 			</div>

@@ -82,6 +82,20 @@ class SettingsListener {
 	protected $page_id;
 
 	/**
+	 * The signup link cache.
+	 *
+	 * @var Cache
+	 */
+	protected $signup_link_cache;
+
+	/**
+	 * Signup link ids
+	 *
+	 * @var array
+	 */
+	protected $signup_link_ids;
+
+	/**
 	 * SettingsListener constructor.
 	 *
 	 * @param Settings         $settings The settings.
@@ -91,6 +105,8 @@ class SettingsListener {
 	 * @param State            $state The state.
 	 * @param Bearer           $bearer The bearer.
 	 * @param string           $page_id ID of the current PPCP gateway settings page, or empty if it is not such page.
+	 * @param Cache            $signup_link_cache The signup link cache.
+	 * @param array            $signup_link_ids Signup link ids.
 	 */
 	public function __construct(
 		Settings $settings,
@@ -99,7 +115,9 @@ class SettingsListener {
 		Cache $cache,
 		State $state,
 		Bearer $bearer,
-		string $page_id
+		string $page_id,
+		Cache $signup_link_cache,
+		array $signup_link_ids
 	) {
 
 		$this->settings          = $settings;
@@ -109,6 +127,8 @@ class SettingsListener {
 		$this->state             = $state;
 		$this->bearer            = $bearer;
 		$this->page_id           = $page_id;
+		$this->signup_link_cache = $signup_link_cache;
+		$this->signup_link_ids   = $signup_link_ids;
 	}
 
 	/**
@@ -215,7 +235,7 @@ class SettingsListener {
 	 *
 	 * @throws \WooCommerce\PayPalCommerce\WcGateway\Exception\NotFoundException When a setting was not found.
 	 */
-	public function listen() {
+	public function listen(): void {
 
 		if ( ! $this->is_valid_update_request() ) {
 			return;
@@ -251,6 +271,7 @@ class SettingsListener {
 		if ( $credentials_change_status ) {
 			if ( self::CREDENTIALS_UNCHANGED !== $credentials_change_status ) {
 				$this->settings->set( 'products_dcc_enabled', null );
+				$this->settings->set( 'products_pui_enabled', null );
 			}
 
 			if ( in_array(
@@ -259,6 +280,12 @@ class SettingsListener {
 				true
 			) ) {
 				$this->webhook_registrar->unregister();
+
+				foreach ( $this->signup_link_ids as $key ) {
+					if ( $this->signup_link_cache->has( $key ) ) {
+						$this->signup_link_cache->delete( $key );
+					}
+				}
 			}
 		}
 
@@ -445,5 +472,37 @@ class SettingsListener {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Prevent enabling tracking if it is not enabled for merchant account.
+	 */
+	public function listen_for_tracking_enabled(): void {
+		if ( State::STATE_ONBOARDED !== $this->state->current_state() ) {
+			return;
+		}
+
+		try {
+			$token = $this->bearer->bearer();
+			if ( ! $token->is_tracking_available() ) {
+				$this->settings->set( 'tracking_enabled', false );
+				$this->settings->persist();
+				return;
+			}
+		} catch ( RuntimeException $exception ) {
+			$this->settings->set( 'tracking_enabled', false );
+			$this->settings->persist();
+
+			add_action(
+				'admin_notices',
+				function () use ( $exception ) {
+					printf(
+						'<div class="notice notice-error"><p>%1$s</p><p>%2$s</p></div>',
+						esc_html__( 'Authentication with PayPal failed: ', 'woocommerce-paypal-payments' ) . esc_attr( $exception->getMessage() ),
+						wp_kses_post( __( 'Please verify your API Credentials and try again to connect your PayPal business account. Visit the <a href="https://docs.woocommerce.com/document/woocommerce-paypal-payments/" target="_blank">plugin documentation</a> for more information about the setup.', 'woocommerce-paypal-payments' ) )
+					);
+				}
+			);
+		}
 	}
 }

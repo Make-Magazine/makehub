@@ -128,7 +128,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 						'default'         => 'DESC',
 						'help_text'       => esc_html__( 'Choose the sort order.', 'learndash' ),
 					),
-					'posts_per_page' => array(
+					'posts_per_page' => array( // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 						'name'      => esc_html__( 'Posts Per Page', 'learndash' ),
 						'type'      => 'text',
 						'help_text' => esc_html__( 'Enter the number of posts to display per page.', 'learndash' ),
@@ -176,14 +176,16 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 			}
 
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-			add_shortcode( $this->post_type, array( $this, 'shortcode' ) );
+			if ( ! in_array( $this->post_type, array( learndash_get_post_type_slug( 'exam' ) ), true ) ) {
+				add_shortcode( $this->post_type, array( $this, 'shortcode' ) );
+			}
 			add_action( 'init', array( $this, 'add_post_type' ), 5 );
 
 			$this->update_options();
 
 			if ( ! is_admin() ) {
 				add_action( 'pre_get_posts', array( $this, 'pre_posts' ) );
-				if ( isset( $this->template_redirect ) && ( true === $this->template_redirect ) ) {
+				if ( true === $this->template_redirect ) {
 					add_action( 'template_redirect', array( $this, 'template_redirect_access' ) );
 					add_filter( 'the_content', array( $this, 'template_content' ), LEARNDASH_FILTER_PRIORITY_THE_CONTENT );
 				}
@@ -283,11 +285,11 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 			/**
 			 * Remove the hook into the WP 'the_content' filter once we are in our handler. This
-			 * will allow other templates to call the 'the_content' filter without causing recusion.
+			 * will allow other templates to call the 'the_content' filter without causing recursion.
 			 *
-			 * @since 3.1
+			 * @since 3.1.0
 			 *
-			 * @param boolean true Default true to remove the filter. Return false to not remove.
+			 * @param boolean Default true to remove the filter. Return false to not remove.
 			 */
 			if ( apply_filters( 'learndash_remove_template_content_filter', false ) ) {
 				remove_filter( 'the_content', array( $this, 'template_content' ), LEARNDASH_FILTER_PRIORITY_THE_CONTENT );
@@ -354,7 +356,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							'learndash_course_prerequisites_message',
 							array(
 								'current_post'           => $post,
-								// We need to support the 'prerequisite_post' element since modifued templates may suse it.
+								// We need to support the 'prerequisite_post' element since modified templates may suse it.
 								'prerequisite_post'      => get_post( $c_id ),
 								'prerequisite_posts_all' => $course_pre,
 								'content_type'           => $content_type,
@@ -418,7 +420,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 						$lessons = learndash_get_course_lessons_list( $course_id );
 
-						// For now no paginiation on the course quizzes. Can't think of a scenario where there will be more
+						// For now no pagination on the course quizzes. Can't think of a scenario where there will be more
 						// than the pager count.
 						$quizzes = learndash_get_course_quiz_list( $course );
 
@@ -466,8 +468,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							}
 						}
 
-						$content = wptexturize(
-							// do_shortcode( '[ld_quiz quiz_id="' . $post->ID . '" course_id="' . absint( $course_id ) . '" quiz_pro_id="' . absint( $quiz_pro_id ) . '"]' )
+						$content      = wptexturize(
 							learndash_quiz_shortcode(
 								array(
 									'quiz_id'     => $post->ID,
@@ -586,11 +587,9 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 							$started_time = time();
 
-							$course_earliest_completed_time = learndash_activity_course_get_earliest_started( $current_user->ID, $course_id, $started_time );
-
 							// We insert the Course started record before the Lesson.
-							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $course_earliest_completed_time );
-							if ( $course_activity ) {
+							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $started_time );
+							if ( ( is_a( $course_activity, 'LDLMS_Model_Activity' ) && ( $course_activity->activity_id ) ) ) {
 								learndash_activity_update_meta_set(
 									$course_activity->activity_id,
 									array(
@@ -626,6 +625,9 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 						} else {
 							$lesson_post = null;
 						}
+
+						$previous_lesson_completed = false;
+						$previous_topic_completed  = false;
 
 						if ( ! empty( $user_id ) ) {
 							if ( learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) {
@@ -715,7 +717,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 							// We insert the Course started record before the Topic.
 							$course_activity = learndash_activity_start_course( $current_user->ID, $course_id, $started_time );
-							if ( $course_activity ) {
+							if ( ( is_a( $course_activity, 'LDLMS_Model_Activity' ) && ( $course_activity->activity_id ) ) ) {
 								learndash_activity_update_meta_set(
 									$course_activity->activity_id,
 									array(
@@ -768,7 +770,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					$group_certficate_link = learndash_get_group_certificate_link( $group_id, $user_id );
 				}
 
-				$group_settings = learndash_get_setting( $post );
+				$group_settings = (array) learndash_get_setting( $post );
 				if ( ! is_array( $group_settings ) ) {
 					$group_settings = array();
 				}
@@ -798,6 +800,8 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					include $template_file;
 				}
 				$content = learndash_ob_get_clean( $level );
+			} elseif ( learndash_get_post_type_slug( 'exam' ) === $post->post_type ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
+				// Nothing here for now.
 			}
 
 			// Added this defined wrap in v2.1.8 as it was effecting <pre></pre>, <code></code> and other formatting of the content.
@@ -855,10 +859,8 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 
 			if ( get_query_var( 'post_type' ) ) {
 				$post_type = get_query_var( 'post_type' );
-			} else {
-				if ( ! empty( $post ) ) {
-					$post_type = $post->post_type;
-				}
+			} elseif ( is_a( $post, 'WP_Post' ) ) {
+				$post_type = $post->post_type;
 			}
 
 			if ( empty( $post_type ) ) {
@@ -879,9 +881,17 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					include ABSPATH . 'wp-trackback.php';
 				} elseif ( ! empty( $wp->query_vars['name'] ) ) {
 					// single.
-					if ( ( 'sfwd-quiz' === $post_type ) || ( 'sfwd-lessons' === $post_type ) || ( 'sfwd-topic' === $post_type ) ) {
+					if ( in_array( $post_type, learndash_get_post_types( 'course_steps' ), true ) ) {
 						global $post;
 						sfwd_lms_access_redirect( $post->ID );
+						$course_id = learndash_get_course_id( $post->ID );
+						if ( ! empty( $course_id ) ) {
+							learndash_course_exam_challenge_redirect( $course_id );
+						}
+					} elseif ( learndash_get_post_type_slug( 'course' ) === $post_type ) {
+						learndash_course_exam_challenge_redirect( $post->ID );
+					} elseif ( learndash_get_post_type_slug( 'exam' ) === $post_type ) {
+						learndash_exam_challenge_view_permission( $post->ID );
 					}
 				}
 			}

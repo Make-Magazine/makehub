@@ -14,7 +14,9 @@ class MpdtMembersApi extends MpdtBaseApi {
       if(!isset($accepted_fields[$k])) {
         unset($_post[$k]);
       }else{
-        if('text' === (string) $accepted_fields[$k]['type']){
+        if(!is_array($accepted_fields[$k])) {
+          $_post[$k] = wp_kses_post($_post[$k]);
+        }else if('text' === (string) $accepted_fields[$k]['type']){
           $_post[$k] = wp_kses_post($_post[$k]);
         }else if('array' !== (string) $accepted_fields[$k]['type']){
           $_post[$k] = sanitize_text_field($_post[$k]);
@@ -23,6 +25,22 @@ class MpdtMembersApi extends MpdtBaseApi {
     }
 
     return $_post;
+  }
+
+  /**
+   * Runs right before mapping vars when creating and updating the object
+   *
+   * @param Array $data args data.
+   * @param WP_REST_Request $request WordPress REST Object.
+   * @return array
+   */
+  public function prepare_vars(Array $data, $request) {
+
+    if( $this->is_updating($request) && isset($data['password']) ){
+      unset($data['password']);
+    }
+
+    return $data;
   }
 
   protected function after_store($request, $response) {
@@ -37,6 +55,11 @@ class MpdtMembersApi extends MpdtBaseApi {
     $get_req->set_url_params(array('id'=>$member_data->id));
     $data = $this->get_item($get_req);
     $response = rest_ensure_response($data);
+
+    // Send password reset email if password arg is set and we are updating member
+    if( $this->is_updating($request) && isset($args['password']) ){
+      $mepr_user->send_password_notification('new');
+    }
 
     return $response;
   }
@@ -92,6 +115,12 @@ class MpdtMembersApi extends MpdtBaseApi {
       $request->set_param('password', wp_generate_password(24));
     }
 
+    // If user exists, stop!
+    if( isset( $args['email'] ) && email_exists( $args['email'] ) ){
+      error_log( esc_html__( "MemberPress API Error: User already exists", "memberpress-developer-tools" ) );
+      return new WP_Error( 'mp_db_create_error', esc_html__('The user was unable to be saved: Sorry, that email address is already used!', 'memberpress-developer-tools') );
+    }
+
     return $request;
   }
 
@@ -132,5 +161,20 @@ class MpdtMembersApi extends MpdtBaseApi {
         update_user_meta($mepr_user->ID, $key, $val);
       }
     }
+  }
+
+  /**
+   * Checks whether this is an update request
+   *
+   * @param WP_REST_Request $request WordPress Rest Object.
+   * @return boolean
+   */
+  private function is_updating($request){
+    $url = $request->get_route();
+    $method = strtolower( $request->get_method() );
+
+    return
+    in_array($method, ['post', 'put'], true) &&
+    preg_match('/members\/[0-9]+$/', $url);
   }
 }

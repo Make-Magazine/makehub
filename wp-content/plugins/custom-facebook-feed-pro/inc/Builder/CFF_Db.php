@@ -434,6 +434,14 @@ class CFF_Db {
 		$format[] = '%d';
 
 		$wpdb->insert( $feeds_table_name, $data, $format );
+
+		// Check if first feed has been created.
+		$first_feed_created = get_option( 'cff_pro_first_feed_created', false );
+
+		if ( ! $first_feed_created ) {
+			update_option( 'cff_pro_first_feed_created', true );
+		}
+
 		return $wpdb->insert_id;
 	}
 
@@ -626,11 +634,11 @@ class CFF_Db {
 		$had_error = false;
 		if ( $wpdb->get_var( "show tables like '$feeds_table_name'" ) != $feeds_table_name ) {
 			$had_error = true;
-			//$sb_instagram_posts_manager->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
+			\cff_main_pro()->cff_error_reporter->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
 		}
 
 		if ( ! $had_error ) {
-			//$sb_instagram_posts_manager->remove_error( 'database_create' );
+			\cff_main_pro()->cff_error_reporter->remove_error( 'database_create' );
 		}
 
 		$feed_caches_table_name = $wpdb->prefix . 'cff_feed_caches';
@@ -654,11 +662,11 @@ class CFF_Db {
 		$had_error = false;
 		if ( $wpdb->get_var( "show tables like '$feed_caches_table_name'" ) != $feed_caches_table_name ) {
 			$had_error = true;
-			//$sb_instagram_posts_manager->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
+			\cff_main_pro()->cff_error_reporter->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
 		}
 
 		if ( ! $had_error ) {
-			//$sb_instagram_posts_manager->remove_error( 'database_create' );
+			\cff_main_pro()->cff_error_reporter->remove_error( 'database_create' );
 		}
 
 		$sources_table_name = $wpdb->prefix . 'cff_sources';
@@ -688,11 +696,11 @@ class CFF_Db {
 		$had_error = false;
 		if ( $wpdb->get_var( "show tables like '$sources_table_name'" ) != $sources_table_name ) {
 			$had_error = true;
-			//$sb_instagram_posts_manager->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
+			\cff_main_pro()->cff_error_reporter->add_error( 'database_create', '<strong>' . __( 'There was an error when trying to create the database tables used to locate feeds.', 'instagram-feed' ) .'</strong><br>' . $error . '<br><code>' . $query . '</code>' );
 		}
 
 		if ( ! $had_error ) {
-			//$sb_instagram_posts_manager->remove_error( 'database_create' );
+			\cff_main_pro()->cff_error_reporter->remove_error( 'database_create' );
 		}
 
 		return $had_error;

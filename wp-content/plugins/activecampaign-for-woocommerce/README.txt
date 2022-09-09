@@ -2,37 +2,50 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 6.0
-Stable tag: 1.7.7
+Tested up to: 6.1
+Stable tag: 1.7.14
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-ActiveCampaign for WooCommerce enables you to create abandoned cart automations and send emails to your contacts who abandon carts.
-
 == Description ==
 
-ActiveCampaign for WooCommerce automatically syncs your customers and their purchase data into ActiveCampaign, including abandoned carts and whether or not the customer opted-in to marketing.
+= Customer Experience Automation for WooCommerce =
+Power your online sales thanks to ActiveCampaign and WooCommerce. Help your customers throughout their buying journey to turn them from new customers to regulars.
 
-ActiveCampaign for WooCommerce gives you the power to:
-- Sync all customers and their purchase data into ActiveCampaign in real time
-- Sync existing data from WooCommerce into ActiveCampaign
--- Take control of your historical data sync with visibility to each order that is synced
--- Start, pause, and cancel your historical data sync at your convenience; no need to worry about syncs running during high traffic periods
--- Confirmation of orders being synced once complete, with transparency around any order that fails to sync
-- Configure how long until a cart should be considered abandoned
-- Provide an opt-in checkbox on your checkout form for customers to opt-in to marketing
-- Configure what the opt-in checkbox says and if it's checked by default
-- Trigger automations when a customer abandons a cart
+= Enhance customer loyalty =
+When connected to ActiveCampaign, WooCommerce users can use purchase behavior to turn first-time buyers into repeat customers.
 
-ActiveCampaign's category-defining customer experience automation (CXA) platform helps over 130,000 businesses in 170 countries meaningfully engage with their customers. The platform gives businesses of all sizes access to hundreds of pre-built automations that combine email marketing, marketing automation, CRM, and machine learning for powerful segmentation and personalization across social, email, messaging, chat, and text.
+= Acquire more customers =
+Enhance your relationship with existing customers, and gain new customers as well. Set up welcome emails and automation workflows to reach more potential customers with high-quality marketing automation and messaging.
 
-By removing the silos that typically exist between email marketing, marketing automation, CRM, and account management solutions, businesses can automate truly personalized experiences that feel authentic. Over 70% of ActiveCampaign's customers use its 300+ integrations including WooCommerce, Square, Facebook, Eventbrite, Wordpress and Salesforce.
+= Follow your customers' journeys =
+Automatically sync customer purchase information into ActiveCampaign and track purchases through your pipelines. Effectively engage and follow up with customers right after they purchase.
+
+= What you can do with WooCommerce and ActiveCampaign =
+- Segment email campaigns and automations by purchase behavior and shopper demographics
+- Text customers with promos and special offers using SMS
+- Use abandoned cart email automations to increase purchase-completion rate
+- Understand the right time to reach out to customers on the right subjects.
+- Use conditional content to send shoppers product recommendations based on their past purchases
+- Build relationships and brand loyalty through personalized messaging.
+
+= Free Automation Recipes for WooCommerce users =
+- [Accessory Upsell After Purchase Recipe](https://www.activecampaign.com/marketplace/recipe/accessory-upsell-after-purchase?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022)
+- [Ecommerce Subscription and Welcome Recipe](https://www.activecampaign.com/marketplace/recipe/ecommerce-subscription-and-welcome?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022)
+- [Birthday and Anniversary Coupon Email Recipe](https://www.activecampaign.com/marketplace/recipe/birthday-anniversary-email?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022)
+
+= Free Tools WooCommerce users =
+- [Lead nurturing email templates](https://www.activecampaign.com/free-marketing-tools/lead-nurturing-email-templates?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022)
+- [Ecommerce integration and automation starter pack](https://www.activecampaign.com/free-marketing-tools/sample-ecommerce-integration-and-automation-starter-stack?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022)
+
+= About ActiveCampaign =
+ActiveCampaign's category-defining Customer Experience Automation Platform (CXA) helps over [180,000 businesses](https://www.activecampaign.com/tomorrows-business?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022) in 170 countries meaningfully engage with their customers. The platform gives businesses of all sizes access to hundreds of pre-built automations that combine transactional email and email marketing, marketing automation and CRM for powerful segmentation and personalization across social, email, messaging, chat and text. Over 70% of ActiveCampaign's customers use its 880+ integrations including Microsoft, Shopify, Square, Facebook and Salesforce. ActiveCampaign scores higher in customer satisfaction than any other solution in Marketing Automation, CRM and E-Commerce Personalization on [G2.com](https://www.g2.com/products/activecampaign/reviews) and is the Top Rated Email Marketing Software on TrustRadius. Start a free trial at [ActiveCampaign.com](https://www.activecampaign.com/?utm_source=unpaid_syndication_website&utm_medium=referral&utm_campaign=woocommerce_listing_june_2022).
 
 == Installation ==
 
 = WooCommerce Compatibility =
-* Tested up to version: 6.5.1
+* Tested up to version: 6.8.2
 * Minimal version requirement: 3.6.0
 
 = Minimum Requirements =
@@ -58,6 +71,39 @@ By removing the silos that typically exist between email marketing, marketing au
 
 == Changelog ==
 
+= 1.7.14 2022-09-07 =
+* Bugfix for some accounts not syncing live orders
+
+= 1.7.13 2022-08-31 =
+* Limits how often background services are run
+* Adds a foreground job to trigger functions that are not happening in cron
+* Adding more clarity to abandoned cart status
+* Fixes the source status for sync
+* Cleanup and bug fixes for syncing new orders
+* Bugfixes for abandoned carts not syncing
+* Bugfix for coupon codes
+* Adds simple report info to the status page
+* Add transparency to order sync and health check
+
+= 1.7.12 2022-08-09 =
+* Hotfix for new orders wrongly syncing as historical sync
+* Fixes inconsistent automation triggers
+
+= 1.7.11 2022-08-04 =
+* Bugfix for when historical sync is run background without contacts box checked
+
+= 1.7.10 2022-08-03 =
+* Added a cache flush and time extension to historical sync to keep the process from crashing
+* Resolved a bug with the contact sync and phone number lookup
+* Added more detail to the historical sync page
+
+= 1.7.9 2022-07-18 =
+* Added contact syncing to historical sync for all contacts regardless of order status
+* Reverted live order syncing to single record create/update to resolve various bugs
+
+= 1.7.8 2022-06-22 =
+* Bugfix for abandoned carts not syncing
+
 = 1.7.7 2022-06-09 =
 * Bugfix for order totals syncing with the incorrect value
 * Bugfix for abandoned cart date check issues
@@ -65,274 +111,11 @@ By removing the silos that typically exist between email marketing, marketing au
 = 1.7.6 2022-05-25 =
 * Bugfix for serialization error and guzzle handling
 
-= 1.7.5 2022-05-24 =
-* Abandoned cart pricing fix
-* Bugfix for handling Hosted returned errors, better timeout handling
-* Various minor bug fixes
+== Screenshots ==
 
-= 1.7.4 2022-05-16 =
-* Bugfix for AC table missing
-* Bugfix for upgrade action called wrongly
-
-= 1.7.3 2022-05-09 =
-* A note will now be added to orders when they are synced to AC
-* Bugfix for historical sync using too many resources
-* Debugging output added to historical sync
-* Corrected table name length issues
-* Bugfix for checking order statuses
-
-= 1.7.2 2022-03-20 =
-* Bugfix for payment pending orders getting synced before they are processed
-
-= 1.7.1 2022-03-19 =
-* Hotfix for a fatal error when an order hook runs but there is no WooCommerce session
-
-= 1.7.0 2022-03-18 =
-* All finished orders are now tracked and synced through a background process and bulk synced every minute
-* Finished orders will no longer send as part of the customer order process speeding up order processing
-* Better tracking for abandoned carts passing to recovered orders
-* Orders that cannot send will be retried every minute until they do send to ActiveCampaign
-* Issues with duplicate orders and abandoned carts should now be resolved
-* Issues with false abandoned carts should no longer happen
-* Changing class checks to method checks to reduce errors on products and orders with unexpected classes from WooCommerce
-* Adds a default option for custom email field and fixes the custom email field fallback for JS plugin conflicts
-
-= 1.6.11 2022-03-16 =
-* A message has been added informing admins that soon the official ActiveCampaign plugin will be required to use this plugin
-
-= 1.6.10 2022-03-14 =
-* Fixing an error when API calls time out and adding retries to historical sync on connection timeout
-* Adding a manual offset for historical sync and limit select box
-* Fixing pagination on abandoned carts
-
-= 1.6.9 - 2022-03-07 =
-* Changing sync to use product short description if filled out and removing html from description field
-* Fix for incorrect abandoned cart dates
-* Fix for historical sync hanging
-* Fixing the accepts marketing nonce error from stopping accepts marketing function
-
-= 1.6.8 - 2022-02-21 =
-* New connection health check will notify admin if there are connection issues and check to make sure ActiveCampaign APIs can be reached
-* Adds various checks for connection issues and better handling for ActiveCampaign APIs
-* Resolves memory overflow issues with object storage in historical sync
-* Bugfix for handling WooCommerce returning null products and orders
-* Bugfix for various errors in historical sync, order sync, and abandoned carts
-
-= 1.6.7 - 2022-02-07 =
-* Hotfix for rounding errors reported in the order syncing process
-
-= 1.6.6 - 2022-01-31 =
-* Bugfix for historical sync hanging
-* Historical sync error fixes for products not being retrieved properly
-
-= 1.6.5 - 2022-01-21 =
-* PHP 7.4 & 8 compatibility fixes
-* Bugfixes for abandoned cart & historical sync
-
-= 1.6.4 - 2022-01-13 =
-* Various compatibility bugfixes
-
-= 1.6.3 - 2022-01-11 =
-* Bugfix for historical sync running but syncing zero records
-
-= 1.6.2 - 2022-01-06 =
-* Bugfixes for abandoned cart syncing duplicates of orders
-* Various bugfixes for historical sync
-
-= 1.6.1 - 2021-12-14 =
-* Bugfix for historical sync date
-* Bugfix for orders with multiple categories
-* Various fixes for abandoned carts
-
-= 1.6.0 - 2021-12-07 =
-* Bulk sync is now available for the historical sync process in the plugin
-* Speeds up the sync process dramatically
-* Resolved a few minor bugs and logging cleanup
-
-= 1.5.4 - 2021-12-02 =
-* Hotfix for finished order process
-
-= 1.5.3 - 2021-11-15 =
-* Hotfix for urgent abandoned cart bug
-
-= 1.5.2 - 2021-11-15 =
-* Hotfix for bad build that caused composer to miss a class that autoload of abandoned cart to be missing
-
-= 1.5.1 - 2021-11-11 =
-* Bugfix for completed orders being marked as abandoned cart orders in ActiveCampaign
-* Adds a backup method to make sure an order that failed to send to ActiveCampaign will resend during the abandoned cart sync
-
-= 1.5.0 - 2021-11-02 =
-* Adds a first version historical sync page where a historical sync can be run as a background process within Wordpress instead of ActiveCampaign.
-* Allows direct sync from WooCommerce to the Hosted API.
-* Allows the admin to view progress of historical sync & cancel/pause the sync process within the ActiveCampaign plugin historical sync page.
-
-= 1.4.10 - 2021-11-01 =
-* Bugfix for checkbox and JS not loading on the checkout page in some cases
-* Bugfix for an abandoned cart that has already been synced becoming a new abandoned cart
-
-= 1.4.9 - 2021-09-22 =
-* Updated activation and setup to make configuration easier
-* Bugfix for numbers with more than 2 decimals & concat error in the stack trace
-
-= 1.4.8 - 2021-09-13 =
-* Bugfix for WooCommerce orders showing as duplicates in ActiveCampaign
-
-= 1.4.7 - 2021-08-20 =
-* Various bug fixes and logging improvements
-
-= 1.4.6 - 2021-08-17 =
-* Adds advanced helper buttons to debug connection issues and clear settings without uninstalling the plugin
-* Bugfix for zero total orders that fail validation but are supposed to be zero
-
-= 1.4.5 - 2021-08-02 =
-* Adds a total value check fallback to double check we have the order total.
-* Adds validation of order before sending to ActiveCampaign.
-* Feature change for debug mode: debug messages will no longer post to the logs if debug mode in the plugin settings is off. Reduces log waste.
-* Bugfix to stop record mismatches when looking up an existing order in ActiveCampaign.
-* Bugfix for UUID reset happening at the wrong time causing some finished orders to record as abandoned carts.
-
-= 1.4.4 - 2021-07-22 =
-* Bugfix to check if undefined functions wc_admin_url() & wp_get_scheduled_event() are available.
-* Bugfix for array_walk issue to make sure the WC_Order is not set to null during checkout.
-* Bugfix for get() on null error on order processing.
-* Bugfix for zero dollar totals
-* Bugfix for error on dropping the table on deletion of the plugin
-* Adds catches for more error conditions
-
-= 1.4.3 - 2021-07-15 =
-* Bugfix for array_walk error.
-* Adding more error handling.
-* Extending the connection timeout so customers with slower connection to ActiveCampaign can send data.
-
-= 1.4.2 - 2021-06-29 =
-* Bugfix for abandoned cart report page errors
-* Allowing admin to force sync an abandoned cart row
-
-= 1.4.1 - 2021-06-23 =
-* Plugin now surfaces errors to admin with a dismissible notice.
-* You can find a list of the last 10 errors related to this plugin in this plugin's status tab to help quickly identify problems.
-* Added an abandon cart manual sync button to allow manual re-running of the abandoned cart sync process.
-* Added the ability to delete individual rows from the abandoned cart page.
-
-= 1.4.0 - 2021-06-14 =
-* New menu item for ActiveCampaign features.
-* Guest abandoned carts now sync as a background process creating more reliable data in ActiveCampaign.
-* All abandoned carts are now synced on an hourly basis.
-* New abandoned carts status page shows abandoned carts in WooCommerce and their current status.
-* Contacts and phone numbers now properly sync to ActiveCampaign when orders are placed.
-* Bugfix for various cases where "place order" hangs or errors and causes orders to not be placed.
-* Bugfix for accepts marketing selection not always being set in ActiveCampaign.
-* Bugfix for duplicate orders appearing in ActiveCampaign.
-* Bugfix for orders marked as abandoned no longer create bad records as both abandoned and completed in ActiveCampaign.
-
-= 1.3.6 - 2021-05-10 =
-* Bugfix for Normalizer fatal error issues, removing Normalizer dependency
-
-= 1.3.5 - 2021-04-22 =
-* Fixes a bug surfaced by the 1.3.4 fix which caused an error when admin updates an order
-
-= 1.3.4 - 2021-04-22 =
-* Fixing a bug that sent orders using external payment methods to ActiveCampaign (Paypal, Stripe) before the order was complete.
-
-= 1.3.3 - 2021-04-20 =
-* Resolving a javascript error with the copy to clipboard function
-* Adds the connection id output to the status tab
-* Bugfix for adding all categories to the abandoned cart product send
-* Adding a new process to manage sync of abandoned carts for registered users
-* Adding more checks and safety points to keep orders from failing to process
-* Resolving a bug that stops orders from finishing
-
-= 1.3.2 - 2021-03-30 =
-* Bugfix for logger error when the plugin isn't configured properly
-* Bugfix for checkbox configuration issues
-* Adding a vendor library to always format money properly when sending to AC
-* Adding a missing package that was causing fatal errors on some installs
-* Add a new customer to ActiveCampaign on registration, also adds a synced to AC time to metadata for users/contacts
-
-= 1.3.1 - 2021-03-18 =
-* Adding an API test button to verify that the connection to the customer's ActiveCampaign account is valid without needing to save
-* Bugfix adding a check to verify the orderProducts exists and is an array.
-* Bugfix for request errors when the plugin is not configured or there are settings issues
-* Bugfix for orders not completing and 500 errors when users try to place an order
-* Bugfix for Javascript syntax errors on iPhone/Safari devices
-
-= 1.3.0 - 2021-03-01 =
-* The admin settings link on the left menu has moved from Settings to WooCommerce
-* New feature - Adding functionality to send orders to AC on order completed instead of waiting for webhooks (webhooks will still run in case this process fails)
-* Upon sending to AC a metadata field will be added to orders to track last sync time for that order to ActiveCampaign
-* New feature - Adding an advanced admin field to customize the email ID we bind on for abandoned cart
-* New feature - Adding an admin status page
-
-= 1.2.16 - 2021-02-17 =
-* Bugfix for abandoned carts not sending product image, sku, or url
-
-= 1.2.15 - 2021-02-03 =
-* Updated description copy
-* Updated WooCommerce compatibility version tested
-
-= 1.2.14 - 2020-12-16 =
-* Bugfix for repeat guest orders not syncing to ActiveCampaign
-* Fix for abandoned carts not being sent to ActiveCampaign due to checkout ID conflicts
-* Adds error logging for marketing checkbox issues
-* Updating compatibility reference for Wordpress 5.6 and WooCommerce 4.8
-
-= 1.2.13 - 2020-11-05 =
-* Resolving errors resulting from files missing in the package
-
-= 1.2.12 - 2020-11-04 =
-* Updating compatibility documentation
-
-= 1.2.11 - 2020-06-02 =
-* Fix bug with abandoned cart when there is no logged in customer
-* Improve logging
-
-= 1.2.10 - 2020-02-17 =
-* Upgrade Guzzle for bug fixes
-* Fix email validation
-* Send first and last name to guest abandoned carts
-
-= 1.2.9 - 2019-12-17 =
-* Improve nonce validation
-
-= 1.2.8 - 2019-07-31 =
-* Register plugin with version number for cache busting purposes
-
-= 1.2.7 =
-* Fixed incompatibility with Aero Checkout plugin
-
-= 1.2.6 =
-* Update Guzzle
-
-= 1.2.5 =
-* Added more info to logs. Fixed imports and doc blocks.
-
-= 1.2.4 =
-* Added WooCommerce version check
-
-= 1.2.3 =
-* Prevent erroneous abandoned carts
-
-= 1.2.2 =
-* Prevent vendor package collisions with other plugins
-* Increased error logging for easier debugging
-
-= 1.2.0 =
-* Accepts Marketing for Guests
-* Local setup and readme updates
-
-= 1.1.0 =
-* Added support for guest abandoned carts
-
-= 1.0.3 =
-* Prevent edgecase where updating the Abandoned Cart time causes an exception
-
-= 1.0.2 =
-* Allow Woocommerce API calls to work when Wordpress is behind a load balancer
-* Fixed a bug where abandoned cart functionality would not work if an item had no categories
-
-= 1.0.1 =
-* Prevent exceptions from breaking WooCommerce cart functionality
-
-= 1.0.0 =
-* Initial Release
+1. ActiveCampaign for WooCommerce
+2. Post-purchase thank you and product suggestion ActiveCampaign for WooCommerce automation workflow
+3. WooCommerce store purchase history on an ActiveCampaign contact
+4. Accessory upsell after purchase ActiveCampaign automation recipe for WooCommerce stores
+5. Ecommerce subscription and welcome ActiveCampaign automation recipe for WooCommerce stores
+6. Birthday and anniversary coupon email ActiveCampaign automation recipe for WooCommerce store

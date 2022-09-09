@@ -48,6 +48,15 @@ function serializeAll(
 				const val = $( el ).val();
 
 				if ( Array.isArray( val ) ) {
+					// Handle empty multi-selects otherwise no value will be sent, and it could get re-populated.
+					if ( val.length === 0 ) {
+						return {
+							name: el.name,
+							value: '',
+							el,
+						};
+					}
+
 					return $.map( val, function ( individualVal ) {
 						return {
 							name: el.name,

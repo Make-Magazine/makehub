@@ -19,6 +19,7 @@ use AcVendor\Psr\Http\Message\RequestInterface;
  *
  * @final
  */
+#[\AllowDynamicProperties]
 class CurlMultiHandler
 {
     /**

@@ -10,6 +10,7 @@
  */
 
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Ecom Product Factory class.
@@ -54,7 +55,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	public function product_from_cart_content( $content ) {
 		try {
 			if (
-				method_exists( $content['data'], 'get_id' ) ||
+				AC_Utilities::validate_object( $content['data'], 'get_id' ) ||
 				$content['data'] instanceof WC_Product ||
 				$content['data'] instanceof WC_Product_Factory
 			) {
@@ -91,7 +92,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	private function convert_wc_product_to_ecom_product( $product ) {
 		try {
-			if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			if ( AC_Utilities::validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 				$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
 
 				$ecom_product->set_externalid( $product->get_id() );
@@ -209,7 +210,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	private function get_product_all_categories( $product ) {
 		$logger = new Logger();
-		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+		if ( AC_Utilities::validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 			$terms    = get_the_terms( $product->get_id(), 'product_cat' );
 			$cat_list = [];
 			try {
@@ -261,7 +262,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 */
 	private function get_product_image_url( $product ) {
 
-		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+		if ( AC_Utilities::validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 			try {
 				$post         = get_post( $product->get_id() );
 				$thumbnail_id = get_post_thumbnail_id( $post );
@@ -276,7 +277,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 						'post'           => isset( $post ) ? $post : null,
 						'thumbnail_id'   => isset( $thumbnail_id ) ? $thumbnail_id : null,
 						'image_src'      => isset( $image_src ) ? $image_src : null,
-						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'product_id'     => AC_Utilities::validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 						'trace'          => $logger->clean_trace( $t->getTrace() ),
 					]
 				);
@@ -302,7 +303,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return false|string|null
 	 */
 	private function get_product_url( $product ) {
-		if ( method_exists( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+		if ( AC_Utilities::validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 			try {
 				$product_id = get_post( $product->get_id() );
 				$url        = get_permalink( $product_id );
@@ -317,7 +318,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 				$logger->warning(
 					'There was an error getting product URL.',
 					[
-						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'product_id'     => AC_Utilities::validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 						'thrown_message' => $t->getMessage(),
 						'trace'          => $logger->clean_trace( $t->getTrace() ),
 					]
@@ -335,7 +336,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return string|null
 	 */
 	private function get_sku( $product ) {
-		if ( method_exists( $product, 'get_sku' ) && ! empty( $product->get_sku() ) ) {
+		if ( AC_Utilities::validate_object( $product, 'get_sku' ) && ! empty( $product->get_sku() ) ) {
 			try {
 				$sku = $product->get_sku();
 
@@ -349,7 +350,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 				$logger->warning(
 					'There was an error getting product sku.',
 					[
-						'product_id'     => method_exists( $product, 'get_id' ) ? $product->get_id() : null,
+						'product_id'     => AC_Utilities::validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 						'thrown_message' => $t->getMessage(),
 						'trace'          => $logger->clean_trace( $t->getTrace() ),
 					]

@@ -105,47 +105,125 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	}
 
 	/**
+	 * Execute process for finished order. If we don't know what will be passed this should be used.
+	 *
+	 * @param int|obj $args The passed arg.
+	 */
+	public function execute( $args ) {
+		if ( is_object( $args ) ) {
+			$this->execute_with_order_obj( $args );
+		} else {
+			$this->execute_with_order_id( $args );
+		}
+	}
+
+	/**
+	 * Execute using the order ID.
+	 *
+	 * @param int $order_id The order ID.
+	 */
+	public function execute_with_order_id( $order_id ) {
+		$wc_order = wc_get_order( $order_id );
+		$this->checkout_completed( $order_id, $wc_order );
+	}
+
+	/**
+	 * Execute using an order object.
+	 *
+	 * @param WC_Order $order The WC Order object.
+	 */
+	public function execute_with_order_obj( $order ) {
+		if ( is_object( $order ) && method_exists( $order, 'get_id' ) ) {
+			$order_id = $order->get_id();
+			$this->checkout_completed( $order_id, $order );
+		} else {
+			$this->logger->error(
+				'This order could not be processed for AC based on the items passed by WooCommerce',
+				[
+					$order,
+				]
+			);
+
+			return;
+		}
+	}
+
+	/**
 	 * Called when an order checkout is completed so that we can process and send data to Hosted.
 	 * Directly called via hook action.
 	 *
-	 * @param     int $order_id     $order_id     The order ID.
+	 * @param     int      $order_id       The order ID.
+	 * @param      WC_Order $wc_order The WC order object.
 	 */
-	public function checkout_completed( $order_id ) {
+	private function checkout_completed( $order_id, $wc_order ) {
 		if ( ! $this->logger ) {
 			$this->logger = new Logger();
 		}
 
 		global $wpdb;
+		try {
+			$customer_utilities = new Customer_Utilities();
+			$customer_data      = $customer_utilities->build_customer_data();
+			$cart_uuid          = $this->abandoned_cart_util->get_or_generate_uuid();
+			$externalcheckoutid = $this->abandoned_cart_util->generate_externalcheckoutid( $customer_data['id'], $customer_data['email'], $cart_uuid );
 
-		$wc_order           = wc_get_order( $order_id );
-		$customer_utilities = new Customer_Utilities();
-		$customer_data      = $customer_utilities->build_customer_data();
-		$cart_uuid          = $this->abandoned_cart_util->get_or_generate_uuid();
-		$externalcheckoutid = $this->abandoned_cart_util->generate_externalcheckoutid( $customer_data['id'], $customer_data['email'], $cart_uuid );
-		$abandoned_cart_id  = wc()->session->get( 'activecampaign_abandoned_cart_id' );
+			$stored_row = $wpdb->get_row(
+		// phpcs:disable
+			$wpdb->prepare(
+				'SELECT id, wc_order_id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' 
+				WHERE wc_order_id = %d OR ac_externalcheckoutid = %s OR activecampaignfwc_order_external_uuid = %s LIMIT 1',
+				[ $order_id,$externalcheckoutid, $cart_uuid ]
+			)
+		// phpcs:enable
+			);
 
-		if ( ! empty( $abandoned_cart_id ) ) {
-			$stored_id = $wpdb->get_var(
-			// phpcs:disable
-				$wpdb->prepare(
-					'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+			if ( isset( $stored_row->wc_order_id ) && ! empty( $stored_row->wc_order_id ) ) {
+				// If we've saved the order we do not need to save again to stop redundant events
+				return;
+			}
+
+			if ( isset( $stored_row->id ) && ! empty( $stored_row->id ) ) {
+				$stored_id = $stored_row->id;
+			}
+
+			$abandoned_cart_id = wc()->session->get( 'activecampaign_abandoned_cart_id' );
+
+			if ( empty( $stored_id ) ) {
+				if ( ! empty( $abandoned_cart_id ) ) {
+					$stored_id = $wpdb->get_var(
+					// phpcs:disable
+						$wpdb->prepare(
+							'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' 
 				WHERE id = %d 
 				OR ac_externalcheckoutid = %s 
 				OR activecampaignfwc_order_external_uuid = %s',
-					[ $abandoned_cart_id, $externalcheckoutid, $cart_uuid ]
-				)
-			// phpcs:enable
-			);
-		} else {
-			$stored_id = $wpdb->get_var(
-			// phpcs:disable
-				$wpdb->prepare(
-					'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+							[ $abandoned_cart_id, $externalcheckoutid, $cart_uuid ]
+						)
+					// phpcs:enable
+					);
+				} else {
+					$stored_id = $wpdb->get_var(
+					// phpcs:disable
+						$wpdb->prepare(
+							'SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' 
 				WHERE ac_externalcheckoutid = %s 
 				OR activecampaignfwc_order_external_uuid = %s',
-					[ $externalcheckoutid, $cart_uuid ]
-				)
-			// phpcs:enable
+							[ $externalcheckoutid, $cart_uuid ]
+						)
+					// phpcs:enable
+					);
+				}
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an issue collecting order data from our table.',
+				[
+					'message'            => $t->getMessage(),
+					'stored_id'          => isset( $stored_id ) ? $stored_id : null,
+					'abandoned_cart_id'  => $abandoned_cart_id,
+					'externalcheckoutid' => $externalcheckoutid,
+					'trace'              => $this->logger->clean_trace( $t->getTrace() ),
+				]
 			);
 		}
 
@@ -171,7 +249,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 			];
 		} catch ( Throwable $t ) {
 			$this->logger->error(
-				'There was an issue forming the order data.',
+				'There was an issue forming the order data for the finished order.',
 				[
 					'message'           => $t->getMessage(),
 					'abandoned_cart_id' => $stored_id,
@@ -183,7 +261,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 		try {
 			if ( ! empty( $stored_id ) ) {
 				$wpdb->update(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$store_data,
 					[
 						'id' => $stored_id,
@@ -192,7 +270,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$this->schedule_sync_job( $stored_id );
 			} elseif ( ! empty( $abandoned_cart_id ) ) {
 				$wpdb->update(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$store_data,
 					[
 						'id' => $abandoned_cart_id,
@@ -200,9 +278,10 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				);
 			} else {
 				$stored_id = $wpdb->insert(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$store_data
 				);
+				$this->schedule_sync_job( $stored_id );
 			}
 
 			if ( $wpdb->last_error ) {
@@ -226,6 +305,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 		}
 
 		$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
+		$this->order_utilities->schedule_recurring_order_sync_task();
 	}
 
 	/**
@@ -234,20 +314,22 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	 * @param int $row_id The row id.
 	 */
 	private function schedule_sync_job( $row_id ) {
-		wp_schedule_single_event(
-			time() + 5,
-			'activecampaign_for_woocommerce_run_order_sync',
-			[
-				'id' => $row_id,
-			]
-		);
+		if ( ! wp_get_scheduled_event( 'activecampaign_for_woocommerce_run_order_sync', [ 'id' => $row_id ] ) ) {
+			wp_schedule_single_event(
+				time() + 5,
+				'activecampaign_for_woocommerce_run_order_sync',
+				[
+					'id' => $row_id,
+				]
+			);
+		}
 
 		$this->logger->debug(
 			'Schedule finished order for immediate sync.',
 			[
 				'row_id'       => $row_id,
 				'current_time' => time() + 5,
-				'schedule'     => wp_get_scheduled_event( 'activecampaign_for_woocommerce_run_order_sync' ),
+				'schedule'     => wp_get_scheduled_event( 'activecampaign_for_woocommerce_run_order_sync', [ 'id' => $row_id ] ),
 			]
 		);
 

@@ -18,6 +18,7 @@ use AcVendor\GuzzleHttp\Exception\GuzzleException;
 use AcVendor\Psr\Http\Message\ResponseInterface;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Request_Id_Service as RequestIdService;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The main API Client class.
@@ -441,9 +442,9 @@ class Activecampaign_For_Woocommerce_Api_Client {
 					'Received response',
 					[
 						'endpoint'             => $this->endpoint,
-						'response_status_code' => method_exists( $response, 'getStatusCode' ) ? $response->getStatusCode() : null,
-						'response_headers'     => method_exists( $response, 'getHeaders' ) ? $response->getHeaders() : null,
-						'response_body'        => method_exists( $response, 'getBody' ) ? $response->getBody()->getContents() : null,
+						'response_status_code' => AC_Utilities::validate_object( $response, 'getStatusCode' ) ? $response->getStatusCode() : null,
+						'response_headers'     => AC_Utilities::validate_object( $response, 'getHeaders' ) ? $response->getHeaders() : null,
+						'response_body'        => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody()->getContents() : null,
 					]
 				);
 			}
@@ -546,6 +547,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 							[
 								'message'     => $message,
 								'endpoint'    => $this->endpoint,
+								'body'        => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody() : null,
 								'code'        => $e->getCode(),
 								'stack trace' => $stack_trace,
 							]
@@ -681,7 +683,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 
 		$id = count( $args ) > 1 ? (string) $args[1] : null;
 
-		if ( 'ecomData/bulkSync' !== $endpoint ) {
+		if ( 'ecomData/bulkSync' !== $endpoint && 'import/bulk_import' !== $endpoint ) {
 			$endpoint = str_replace( '/', '', $endpoint );
 		}
 

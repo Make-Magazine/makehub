@@ -3,8 +3,7 @@
  * LearnDash Admin Translations handler.
  * This class connects to a remote GlotPress server to retreive needed translations for LearnDash core and related add-ons.
  *
- * @package LearnDash
- * @subpackage Admin
+ * @package LearnDash\Admin
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

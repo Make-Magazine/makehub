@@ -587,6 +587,10 @@ function ld_update_course_access( $user_id, $course_id, $remove = false ) {
 	 */
 	do_action( 'learndash_update_course_access', $user_id, $course_id, $course_access_list, $remove );
 
+	// Finally clear our cache for other services.
+	$transient_key = 'learndash_user_courses_' . $user_id;
+	LDLMS_Transients::delete( $transient_key );
+
 	return $action_success;
 }
 
@@ -669,6 +673,9 @@ function ld_lesson_access_from( $lesson_id, $user_id, $course_id = null, $bypass
  * Gets when the lesson will be available.
  *
  * Fires on `learndash_content` hook.
+ * 
+ * This function is not reentrant. If called using a Topic post it will recursively
+ * call itself for the parent Lesson post.
  *
  * @since 2.1.0
  *
@@ -677,27 +684,30 @@ function ld_lesson_access_from( $lesson_id, $user_id, $course_id = null, $bypass
  *
  * @return string The output of when the lesson will be available.
  */
-function lesson_visible_after( $content, $post ) {
-	if ( empty( $post->post_type ) ) {
-		return $content;
-	}
-
-	if ( $post->post_type == 'sfwd-lessons' ) {
-		$lesson_id = $post->ID;
-	} else {
-		if ( $post->post_type == 'sfwd-topic' || $post->post_type == 'sfwd-quiz' ) {
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
-				$course_id = learndash_get_course_id( $post );
-				$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
-			} else {
-				$lesson_id = learndash_get_setting( $post, 'lesson' );
+/**
+ * Gets when the lesson will be available.
+ *
+ * Fires on `learndash_content` hook.
+ *
+ * @since 2.1.0
+ *
+ * @param string  $content The content of lesson.
+ * @param WP_Post $post    The `WP_Post` object.
+ *
+ * @return string The output of when the lesson will be available.
+ */
+function lesson_visible_after( string $content = '', $post = null ) {
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		$post_id = get_the_ID();
+		if ( ! empty( $post_id ) ) {
+			$post = get_post( $post_id );
+			if ( ! is_a( $post, 'WP_Post' ) ) {
+				return $content;
 			}
-		} else {
-			return $content;
 		}
 	}
-
-	if ( empty( $lesson_id ) ) {
+	
+	if ( ! in_array( $post->post_type, learndash_get_post_types(), true ) ) {
 		return $content;
 	}
 
@@ -711,29 +721,43 @@ function lesson_visible_after( $content, $post ) {
 
 	// For logged in users to allow an override filter.
 	/** This filter is documented in includes/course/ld-course-progress.php */
-	$bypass_course_limits_admin_users = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $user_id, $post->ID, $post );
-
-	$lesson_access_from = ld_lesson_access_from( $lesson_id, get_current_user_id() );
-	if ( ( empty( $lesson_access_from ) ) || ( $bypass_course_limits_admin_users ) ) {
+	if ( apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $user_id, $post->ID, $post ) ) {
 		return $content;
-	} else {
+	}
+
+	$course_id = learndash_get_course_id( $post );
+	if ( empty( $course_id ) ) {
+		return $content;
+	}
+
+	$lesson_access_from = learndash_course_step_available_date( $post->ID, $course_id, $user_id, true );
+	if ( ! empty( $lesson_access_from ) ) {
+		$context = learndash_get_post_type_key( $post->post_type );
+
+		if ( learndash_get_post_type_slug( 'lesson' ) === $post->post_type ) {
+			$lesson_id = $post->ID;
+		} else {
+			$lesson_id = 0;
+		}
+
 		$content = SFWD_LMS::get_template(
 			'learndash_course_lesson_not_available',
 			array(
-				'user_id'                 => get_current_user_id(),
-				'course_id'               => learndash_get_course_id( $lesson_id ),
+				'user_id'                 => $user_id,
+				'course_id'               => $course_id,
+				'step_id'                 => $post->ID,
 				'lesson_id'               => $lesson_id,
 				'lesson_access_from_int'  => $lesson_access_from,
 				'lesson_access_from_date' => learndash_adjust_date_time_display( $lesson_access_from ),
-				'context'                 => 'lesson',
+				'context'                 => $context,
 			),
 			false
 		);
-		return $content;
 	}
 
 	return $content;
 }
+
 add_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
 
 /**
@@ -943,4 +967,72 @@ function learndash_user_is_course_children_progress_complete( $user_id = 0, $cou
 	}
 
 	return false;
+}
+
+
+/**
+ * Gets the course step available date.
+ *
+ * @since 4.2.0
+ *
+ * @param int  $step_id      The Course step post ID Lesson, Topic, or Quiz.
+ * @param int  $course_id    Optional. The Course ID.
+ * @param int  $user_id      Optional. The user ID.
+ * @param bool $parent_steps Optional. Whether to include the parent steps. Default false.
+ *
+ * @return int.
+ */
+function learndash_course_step_available_date( int $step_id = 0, int $course_id = 0, int $user_id = 0, bool $parent_steps = false ) {
+	$available_timestamp = 0;
+
+	$step_id   = absint( $step_id );
+	$course_id = absint( $course_id );
+	$user_id   = absint( $user_id );
+
+	if ( empty( $step_id ) ) {
+		return $available_timestamp;
+	}
+
+	$step_post = get_post();
+	if ( ( ! is_a( $step_post, 'WP_Post' ) ) || ( ! in_array( $step_post->post_type, learndash_get_post_types(), true ) ) ) {
+		return $available_timestamp;
+	}
+
+	if ( empty( $course_id ) ) {
+		$course_id = learndash_get_course_id( $step_id );
+		if ( empty( $course_id ) ) {
+			return $available_timestamp;
+		}
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+		if ( empty( $course_id ) ) {
+			return $available_timestamp;
+		}
+	}
+
+	if ( learndash_can_user_bypass( $user_id, 'learndash_course_lesson_not_available', $step_post->ID, $step_post ) ) {
+		return $available_timestamp;
+	}
+
+	$step_ids = array();
+	if ( true === $parent_steps ) {
+		$step_ids = learndash_course_get_all_parent_step_ids( $course_id, $step_id, true, true );
+		if ( count( $step_ids ) > 1 ) {
+			$step_ids = array_reverse( $step_ids );
+		}
+	} 
+	$step_ids = array_merge( array( $step_id ), $step_ids );
+
+	if ( ! empty( $step_ids ) ) {
+		foreach ( $step_ids as $_step_id ) {
+			$available_timestamp = (int) ld_lesson_access_from( $_step_id, $user_id, $course_id );
+			if ( ! empty( $available_timestamp ) ) {
+				break;
+			}
+		}
+	}
+
+	return $available_timestamp;
 }

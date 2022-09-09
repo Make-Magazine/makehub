@@ -31,11 +31,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -92,7 +92,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_id( $field_args );
 			$html .= $this->get_field_attribute_class( $field_args );
 
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
+			if ( learndash_use_select2_lib() ) {
 				if ( ! isset( $field_args['attrs']['data-ld-select2'] ) ) {
 					$html .= ' data-ld-select2="1" ';
 				}
@@ -116,8 +116,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					get_the_title( intval( $_GET['post'] ) )
 				) . '</option>';
 			} else {
-				/** This filter is documented in includes/class-ld-lms.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+				if ( learndash_use_select2_lib() ) {
 					$html .= '<option value="-1">' . esc_html__( 'Search or select a template…', 'learndash' ) . '</option>';
 				} else {
 					$html .= '<option value="">' . esc_html__( 'Select a Template to load', 'learndash' ) . '</option>';

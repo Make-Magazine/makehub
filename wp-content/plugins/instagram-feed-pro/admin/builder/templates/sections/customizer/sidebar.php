@@ -7,7 +7,7 @@
 
 		<div class="sb-customizer-sidebar-sec-ctn sbi-fb-fs" v-if="customizerScreens.activeSection == null">
 			<div v-for="(section, sectionId) in customizerSidebarBuilder[customizerScreens.activeTab].sections">
-				<div class="sb-customizer-sidebar-sec-el sbi-fb-fs" v-if="!section.isHeader" @click.prevent.default="switchCustomizerSection(sectionId, section)">
+                <div :class="'sb-customizer-sidebar-sec-el cff-fb-fs sb-customizer-sidebar-section-' + sectionId" v-if="!section.isHeader" @click.prevent.default="switchCustomizerSection(sectionId, section)">
 					<div class="sb-customizer-sidebar-sec-el-icon" v-html="svgIcons[section.icon]"></div>
 					<span class="sb-small-p sb-bold sb-dark-text">{{section.heading}}</span>
                     <div class="sb-customizer-chevron">
@@ -46,7 +46,7 @@
                             <path d="M5.27203 0.94L4.33203 0L0.332031 4L4.33203 8L5.27203 7.06L2.2187 4L5.27203 0.94Z" fill="#434960"/>
                         </svg>Elements
                     </a>
-                    <a v-if="viewsActive.moderationMode" @click.prevent.default="activateView('moderationMode')" class="sbi-child-breadcrumb">
+                    <a v-if="viewsActive.moderationMode" @click.prevent.default="saveModerationSettings()" class="sbi-child-breadcrumb">
                         <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5.27203 0.94L4.33203 0L0.332031 4L4.33203 8L5.27203 7.06L2.2187 4L5.27203 0.94Z" fill="#434960"/>
                         </svg>{{genericText.filtersAndModeration}}

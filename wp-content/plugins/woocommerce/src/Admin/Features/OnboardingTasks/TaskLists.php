@@ -8,8 +8,7 @@ namespace Automattic\WooCommerce\Admin\Features\OnboardingTasks;
 use Automattic\WooCommerce\Admin\Features\Features;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\DeprecatedExtendedTask;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
-use Automattic\WooCommerce\Internal\Admin\Loader;
-
+use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Tasks\ReviewShippingOptions;
 /**
  * Task Lists class.
  */
@@ -51,6 +50,7 @@ class TaskLists {
 		'Marketing',
 		'Appearance',
 		'AdditionalPayments',
+		'ReviewShippingOptions',
 	);
 
 	/**
@@ -121,8 +121,7 @@ class TaskLists {
 					'Appearance',
 				),
 				'event_prefix' => 'tasklist_',
-				'visible'      => ! self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_1' )
-					&& ! self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_2' ),
+				'visible'      => false,
 			)
 		);
 
@@ -133,6 +132,7 @@ class TaskLists {
 				'title'                   => __( 'Get ready to start selling', 'woocommerce' ),
 				'tasks'                   => array(
 					'StoreDetails',
+					'Purchase',
 					'Products',
 					'WooCommercePayments',
 					'Payments',
@@ -146,18 +146,19 @@ class TaskLists {
 				'options'                 => array(
 					'use_completed_title' => true,
 				),
-				'visible'                 => self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_1' ),
+				'visible'                 => true,
 			)
 		);
 
 		self::add_list(
 			array(
-				'id'           => 'setup_experiment_2',
-				'hidden_id'    => 'setup',
-				'title'        => __( 'Get ready to start selling', 'woocommerce' ),
-				'tasks'        => array(
+				'id'                      => 'setup_experiment_2',
+				'hidden_id'               => 'setup',
+				'title'                   => __( 'Get ready to start selling', 'woocommerce' ),
+				'tasks'                   => array(
 					'StoreCreation',
 					'StoreDetails',
+					'Purchase',
 					'Products',
 					'WooCommercePayments',
 					'Payments',
@@ -166,14 +167,13 @@ class TaskLists {
 					'Marketing',
 					'Appearance',
 				),
-				'event_prefix' => 'tasklist_',
-				'visible'      => self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_2' )
-					&& ! self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_1' ),
-				'options'      => array(
+				'event_prefix'            => 'tasklist_',
+				'visible'                 => false,
+				'options'                 => array(
 					'use_completed_title' => true,
 				),
 				'display_progress_header' => true,
-				'sections'     => array(
+				'sections'                => array(
 					array(
 						'id'          => 'basics',
 						'title'       => __( 'Cover the basics', 'woocommerce' ),
@@ -182,7 +182,7 @@ class TaskLists {
 							'/assets/images/task_list/basics-section-illustration.png',
 							WC_ADMIN_PLUGIN_FILE
 						),
-						'task_names'  => array( 'StoreCreation', 'StoreDetails', 'Products', 'Payments', 'WooCommercePayments' ),
+						'task_names'  => array( 'StoreCreation', 'StoreDetails', 'Purchase', 'Products', 'Payments', 'WooCommercePayments' ),
 					),
 					array(
 						'id'          => 'sales',
@@ -266,6 +266,35 @@ class TaskLists {
 			)
 		);
 
+		if ( Features::is_enabled( 'shipping-smart-defaults' ) ) {
+			self::add_task(
+				'extended',
+				new ReviewShippingOptions(
+					self::get_list( 'extended' )
+				)
+			);
+
+			self::add_task(
+				'extended_two_column',
+				new ReviewShippingOptions(
+					self::get_list( 'extended_two_column' )
+				)
+			);
+
+			// Tasklist that will never be shown in homescreen,
+			// used for having tasks that are accessed by other means.
+			self::add_list(
+				array(
+					'id'           => 'secret_tasklist',
+					'hidden_id'    => 'setup',
+					'tasks'        => array(
+						'ExperimentalShippingRecommendation',
+					),
+					'event_prefix' => 'secret_tasklist_',
+					'visible'      => false,
+				)
+			);
+		}
 	}
 
 	/**
@@ -467,13 +496,13 @@ class TaskLists {
 	 *
 	 * @return number
 	 */
-	public static function setup_tasks_remaining () {
+	public static function setup_tasks_remaining() {
 
 		$active_list = self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_1' ) ? 'setup_experiment_1' : ( self::is_experiment_treatment( 'woocommerce_tasklist_setup_experiment_2' ) ? 'setup_experiment_2' : 'setup' );
 
 		$setup_list = self::get_list( $active_list );
 
-		if( ! $setup_list || $setup_list->is_hidden() || $setup_list->is_complete() ) {
+		if ( ! $setup_list || $setup_list->is_hidden() || $setup_list->is_complete() ) {
 			return;
 		}
 

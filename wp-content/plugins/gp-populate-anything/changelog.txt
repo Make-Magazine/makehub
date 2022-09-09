@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.2.26
+
+	- Fixed issue where dynamically populated choices were not populated in selects when using Inline Edit with GravityView after a recent update of GravityView.
+	- Added support for dynamically populating the choices of Post Category fields.
+	- Added new `gppa_require_value_to_be_in_dynamic_choices` PHP filter hook.
+	- Fixed regression with multi selects not having their value populated in some setups that include Gravity Flow.
+
+## 1.2.25
+
+	- Fixed issue where values from multi selects with dynamically populated choices would not have their values JSON-decoded. This could cause issues with querying on subsequent pages with fields that are dependent on the multi select's value.
+	- Fixed issue where choice-based fields with dynamically populated choices and values could have a hydrated value that does not exist in the choices. This could then cause other fields or Live Merge Tags to not have the correct value.
+	- Fixed issue where empty array-based values (such as Multi Selects) were not used which could cause Live Merge Tag values to be incorrect in some cases.
+
+## 1.2.24
+
+	- Fixed an issue with dynamically populated values not being populated in Live Merge Tag values in certain fields such as Paragraph fields.
+	- Fixed integration with JetSloth Image Choices where Product Option fields would have their option labels reset after selecting/deselecting options.
+	- Fixed a PHP warning that could occur in certain scenarios with Product fields.
+	- Fixed issue where checkboxes using Live Merge Tags as values could become checked on multi-page forms if the depended-upon LMT has an empty value.
+	- Fixed a fatal PHP error that could occur for fields pointing to an Object Type that is no longer available.
+
+## 1.2.23
+
+	- Fixed issue where Live Merge Tags wouldn't update in some cases with multi select fields.
+	- Fixed issue where Live Merge Tags referencing fields that are dynamically populated would not work in some situations.
+
+## 1.2.22
+
+	- Fixed PHP notice.
+
+## 1.2.21
+
+	- Fixed issue with checkbox fields using Live Merge Tags causing them to become unchecked after failed validation or when navigating multi-page forms.
+
 ## 1.2.20
 
 	- Added new `gppa_object_type_filter_after_processing` and `gppa_has_empty_field_filter_value` PHP filters.

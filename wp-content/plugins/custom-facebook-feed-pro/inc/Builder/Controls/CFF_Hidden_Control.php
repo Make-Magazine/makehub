@@ -36,7 +36,7 @@ class CFF_Hidden_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-input-ctn cff-fb-fs">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-input-ctn cff-fb-fs">
 			<input type="hidden" v-model="<?php echo $controlEditingTypeModel ?>[control.id]">
 		</div>
 		<?php

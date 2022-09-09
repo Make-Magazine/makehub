@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Order_Repository;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Uninstall_Plugin_Command Class.
@@ -115,12 +116,12 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		global $wpdb;
 
 		try {
-			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME;
 
 			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
 				$table_exists = true;
 			} else {
-				$this->logger->info( 'Plugin Upgrade Command: Could not find the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table.' );
+				$this->logger->info( 'Plugin Upgrade Command: Could not find the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' table.' );
 
 				// Verify if the table just wasn't renamed properly
 				$this->rename_table();
@@ -166,7 +167,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		$this->logger->info( 'Plugin Upgrade Command: Install the activecampaign_for_woocommerce_abandoned_cart table...' );
 		global $wpdb;
 		try {
-			$table_name      = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$table_name      = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME;
 			$charset_collate = $wpdb->get_charset_collate();
 
 			$sql = "CREATE TABLE $table_name (
@@ -219,7 +220,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		// Rename table before attempting upgrades
 		$this->rename_table();
 
-		$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+		$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME;
 
 		// v1.1.0 //
 		try {
@@ -297,7 +298,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		$old_table_name = $wpdb->prefix . 'activecampaign_for_woocommerce_abandoned_cart';
 		// phpcs:disable
 		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $old_table_name ) ) === $old_table_name ) {
-			$new_table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$new_table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME;
 			$wpdb->query( 'ALTER TABLE ' . $old_table_name . ' RENAME TO `' . $new_table_name . '`' );
 
 			try {
@@ -348,7 +349,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		// phpcs:disable
 			$wpdb->prepare( 'SELECT id, customer_id, customer_email, last_access_time, activecampaignfwc_order_external_uuid 
 					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . '`
 					WHERE
 						synced_to_ac = %s
 						AND order_date IS NULL',
@@ -363,10 +364,10 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			$externalcheckout_id = $abandoned_cart_utilities->generate_externalcheckoutid( $abc_order->customer_id, $abc_order->customer_email, $abc_order->activecampaignfwc_order_external_uuid );
 			$order_ac            = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
 
-			if ( method_exists( $order_ac, 'get_id' ) ) {
+			if ( AC_Utilities::validate_object( $order_ac, 'get_id' ) ) {
 				$data = [
-					'ac_order_id'    => method_exists( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
-					'ac_customer_id' => method_exists( $order_ac, 'get_customerid' ) ? $order_ac->get_customerid() : null,
+					'ac_order_id'    => AC_Utilities::validate_object( $order_ac, 'get_id' ) ? $order_ac->get_id() : null,
+					'ac_customer_id' => AC_Utilities::validate_object( $order_ac, 'get_customerid' ) ? $order_ac->get_customerid() : null,
 				];
 			} else {
 				$data = [];
@@ -376,7 +377,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			$data['ac_externalcheckoutid'] = $externalcheckout_id;
 
 			$wpdb->update(
-				$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+				$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 				$data,
 				[
 					'id' => $abc_order->id,

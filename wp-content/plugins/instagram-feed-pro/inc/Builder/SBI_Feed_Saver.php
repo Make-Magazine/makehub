@@ -6,6 +6,7 @@
  */
 
 namespace InstagramFeed\Builder;
+use InstagramFeed\SB_Instagram_Data_Encryption;
 
 class SBI_Feed_Saver {
 
@@ -395,7 +396,7 @@ class SBI_Feed_Saver {
 	}
 
 	public static function get_processed_source_data( $source ) {
-		$encryption = new \SB_Instagram_Data_Encryption();
+		$encryption = new SB_Instagram_Data_Encryption();
 		$user_id    = $source['account_id'];
 		$info       = ! empty( $source['info'] ) ? json_decode( $encryption->decrypt( $source['info'] ), true ) : array();
 
@@ -525,6 +526,10 @@ class SBI_Feed_Saver {
 				'likescolor'                => '',
 				'likessize'                 => '13',
 				'hidephotos'                => '',
+				'poststyle'                 => 'regular',
+				'postbgcolor'               => '#FFFFFF',
+				'postcorners'               => '4',
+				'boxshadow'                 => '',
 
 				//Footer
 				'showbutton'                => true,
@@ -540,7 +545,6 @@ class SBI_Feed_Saver {
 
 				//Header
 				'showheader'                => true,
-				'headertextsize'            => '', //to be tested
 				'headercolor'               => '',
 				'headerstyle'               => 'standard',
 				'showfollowers'             => true,
@@ -553,6 +557,9 @@ class SBI_Feed_Saver {
 				'stories'                   => true,
 				'storiestime'               => '',
 				'headeroutside'             => false,
+				'headertext'                => __( 'We are on Instagram', 'instagram-feed' ),
+				'headertextsize'            => 'medium',
+				'headertextcolor'           => '#',
 
 				'class'                     => '',
 				'ajaxtheme'                 => '',
@@ -591,7 +598,7 @@ class SBI_Feed_Saver {
 				'feedid'                    => false,
 
 				'resizeprocess'             => 'background',
-				'mediavine'                 => '',
+				'mediavine'                 => false,
 				'customtemplates'           => false,
 				'gdpr'                      => 'auto',
 				'moderationmode'            => false,
@@ -609,7 +616,6 @@ class SBI_Feed_Saver {
 
 				'photosposts'               => true,
 				'videosposts'               => true,
-				'igtvposts'                 => true,
 
 				'shoppablefeed'             => false,
 				'shoppablelist'             => '{}',

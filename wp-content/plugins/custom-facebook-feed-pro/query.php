@@ -10,6 +10,7 @@ include trailingslashit( CFF_PLUGIN_DIR ) . 'connect.php';
 ( $_REQUEST['use_id'] == 'object' ) ? $use_object_id = true : $use_object_id = false;
 ( isset($_REQUEST['o_id']) ) ? $object_id = $_REQUEST['o_id'] : $object_id = '';
 ( isset($_REQUEST['post_id']) ) ? $post_id = $_REQUEST['post_id'] : $post_id = '';
+$page_id = ( isset($_REQUEST['pageid']) ) ? $_REQUEST['pageid'] : '';
 
 //Check whether it's a timeline album/video as they require different rules
 ( isset($_REQUEST['timelinealbum']) ) ? $timelinealbum = $_REQUEST['timelinealbum'] : $timelinealbum = false;
@@ -23,6 +24,9 @@ if( $usegrouptoken || $isvideo ) $use_object_id = false;
 //Check IDs to make sure they're numeric as they could be printed in an error message
 check_id($object_id);
 check_id($post_id);
+
+
+
 
 function check_id($check_id){
 	if (preg_match("#^[0-9_]+$#", $check_id) || empty($check_id) || $check_id == 'undefined' ) {
@@ -39,6 +43,8 @@ function check_id($check_id){
 //Which meta type should we query?
 ( isset($_REQUEST['type']) ) ? $metaType = $_REQUEST['type'] : $metaType = '';
 
+
+
 //Make the API request to get the data from Facebook
 function api_call($id, $likes, $reactions, $images, $access_token, $attachments){
 	$encryption = new \CustomFacebookFeed\SB_Facebook_Data_Encryption();
@@ -46,14 +52,15 @@ function api_call($id, $likes, $reactions, $images, $access_token, $attachments)
 	if ( ! empty( $access_token ) && $encryption->decrypt( $access_token ) ) {
 		$access_token = $encryption->decrypt( $access_token );
 	}
-	$json_object = \CustomFacebookFeed\CFF_Utils::cff_fetchUrl("https://graph.facebook.com/v3.2/" . $id . "/?fields=".$likes."comments.summary(true){id,from{id,name,picture{url},link},message,message_tags,created_time,like_count,comment_count,attachment{media}}".$reactions.$images.$attachments."&access_token=" . $access_token);
-
+	$json_object = \CustomFacebookFeed\CFF_Utils::cff_fetchUrl("https://graph.facebook.com/" . $id . "/?fields=".$likes."comments.summary(true){id,from{id,name,picture{url},link},message,message_tags,created_time,like_count,comment_count,attachment{media}}".$reactions.$images.$attachments."&access_token=" . $access_token);
 	return $json_object;
 }
 
 
 if( $metaType == 'meta' ){
-
+	$id = $page_id . '_' . $object_id;
+	$use_object_id = false;
+	$isvideo = false;
 	//If there's an object ID then request the full size images
 	( $use_object_id ) ? $images = ",images" : $images = '';
 	( $isvideo ) ? $attachments = ",attachments" : $attachments = '';
@@ -84,7 +91,6 @@ if( $metaType == 'meta' ){
 	}
 
 	$json_object = api_call($id, $likes, $reactions, $images, $access_token, $attachments);
-
 	//Encode comment text
 	if( isset($json_object->comments->data) ){
 		$c_1 = 0;

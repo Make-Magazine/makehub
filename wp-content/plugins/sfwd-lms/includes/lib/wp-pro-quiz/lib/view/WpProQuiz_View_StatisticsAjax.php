@@ -205,7 +205,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 						if ( ! $this->avg && null !== $q['statistcAnswerData'] ) {
 							/**
 							 * Changed above logic which removes all shortcodes and HTML tags. This is better served as a filter.
-							 * @since 2.4
+							 * @since 2.4.0
 							*/
 
 							/**

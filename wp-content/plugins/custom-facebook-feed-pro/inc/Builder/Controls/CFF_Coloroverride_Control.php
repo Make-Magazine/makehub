@@ -36,7 +36,7 @@ class CFF_Coloroverride_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-input-ctn cff-fb-fs sb-control-coloroverride-ctn">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-input-ctn cff-fb-fs sb-control-coloroverride-ctn">
 			<div class="sb-control-coloroverride-content">
 				<div class="sb-control-coloroverride-txt" v-html="<?php echo $controlEditingTypeModel ?>[control.id]"></div>
 				<div class="sb-control-coloroverride-swatch" :style="'background:'+<?php echo $controlEditingTypeModel ?>[control.id]"></div>

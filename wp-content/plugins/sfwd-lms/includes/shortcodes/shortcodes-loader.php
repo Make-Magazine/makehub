@@ -2,8 +2,7 @@
 /**
  * LearnDash Shortcodes Loader.
  *
- * @package LearnDash
- * @subpackage Shortcodes
+ * @package LearnDash\Shortcodes
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,3 +45,7 @@ require_once __DIR__ . '/ld_course_resume.php';
 require_once __DIR__ . '/ld_group_list.php';
 require_once __DIR__ . '/ld_groupinfo.php';
 require_once __DIR__ . '/ld_registration.php';
+require_once __DIR__ . '/ld_infobar.php';
+require_once __DIR__ . '/ld_materials.php';
+require_once __DIR__ . '/learndash_user_status.php';
+require_once __DIR__ . '/ld_navigation.php';

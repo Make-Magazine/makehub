@@ -149,6 +149,10 @@ abstract class MpdtBaseApi extends WP_REST_Controller {
 
     $request = $this->before_create($args, $request);
 
+    if(is_wp_error($request)){
+      return $request;
+    }
+
     // Should handle the same way if id isn't set
     $response = $this->update_item( $request );
 
@@ -264,7 +268,7 @@ abstract class MpdtBaseApi extends WP_REST_Controller {
 
     $data = $this->apply_accept_fields((array)$args);
     $item = $this->get_obj($id);
-    $data = $this->prepare_vars((array)$data);
+    $data = $this->prepare_vars((array)$data, $request);
 
     // Do a reverse mapping before we load the object
     $rdata = $this->utils->map_vars((array)$data, true);
@@ -320,7 +324,7 @@ abstract class MpdtBaseApi extends WP_REST_Controller {
   }
 
   // Runs right before mapping vars when creating and updating the object
-  public function prepare_vars(Array $data) {
+  public function prepare_vars(Array $data, $request) {
     return $data;
   }
 

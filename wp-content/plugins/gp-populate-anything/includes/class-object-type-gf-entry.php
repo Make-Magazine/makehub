@@ -717,8 +717,4 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 	}
 
-	public function does_field_accept_json( $field ) {
-		return ! empty( $field->inputs ) || $field->storageType === 'json';
-	}
-
 }

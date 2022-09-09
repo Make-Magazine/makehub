@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus Plugin for YouTube
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.1.1
+  Version: 14.1.2
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
   Requires at least: 4.5
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.1.1';
+    public static $version = '14.1.2';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -1854,6 +1854,7 @@ class YouTubePrefs
                     ajax_compat: <?php echo self::$alloptions[self::$opt_ajax_compat] == '1' ? 'true' : 'false' ?>,
                     ytapi_load: '<?php echo esc_attr(self::$alloptions[self::$opt_ytapi_load]) ?>',
                     pause_others: <?php echo self::$alloptions[self::$opt_pause_others] == '1' ? 'true' : 'false' ?>,
+                    facade_mode: <?php echo self::$alloptions[self::$opt_facade_mode] == '1' ? 'true' : 'false' ?>,
                     not_live_on_channel: <?php echo self::$alloptions[self::$opt_not_live_on_channel] == '1' ? 'true' : 'false' ?>,
                     stopMobileBuffer: <?php echo self::$alloptions[self::$opt_stop_mobile_buffer] == '1' ? 'true' : 'false' ?>
                 };</script>
@@ -3262,7 +3263,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update has more compatibility for WordPress 6.0, adds easier live stream embedding, and allows for cleaner uninstalls for both free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update provides higher quality images for facades, and avoids unused javascript for facade mode in free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -5986,6 +5987,7 @@ class YouTubePrefs
                     'ytapi_load' => self::$alloptions[self::$opt_ytapi_load],
                     'pause_others' => self::$alloptions[self::$opt_pause_others] == '1' ? true : false,
                     'stopMobileBuffer' => self::$alloptions[self::$opt_stop_mobile_buffer] == '1' ? true : false,
+                    'facade_mode' => self::$alloptions[self::$opt_facade_mode] == '1' ? true : false,
                     'not_live_on_channel' => self::$alloptions[self::$opt_not_live_on_channel] == '1' ? true : false,
                     'vi_active' => false, // self::$alloptions[self::$opt_vi_active] == '1' ? true : false,
                     'vi_js_posttypes' => array() // self::$alloptions[self::$opt_vi_js_posttypes]

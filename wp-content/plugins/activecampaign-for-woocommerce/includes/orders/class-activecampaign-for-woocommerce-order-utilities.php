@@ -10,6 +10,7 @@
  * @subpackage Activecampaign_For_Woocommerce/includes
  */
 
+use Activecampaign_For_Woocommerce_AC_Contact as AC_Contact;
 use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
@@ -18,6 +19,9 @@ use Activecampaign_For_Woocommerce_Ecom_Product as Ecom_Product;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Customer_Repository;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
+use Activecampaign_For_Woocommerce_AC_Contact_Repository as Contact_Repository;
+use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Order_Repository;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 use Brick\Money\Money;
 
 /**
@@ -59,16 +63,34 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	private $customer_repository;
 
 	/**
+	 * The contact repository.
+	 *
+	 * @var contact_repository
+	 */
+	private $contact_repository;
+
+	/**
+	 * The order repository.
+	 *
+	 * @var order_repository
+	 */
+	private $order_repository;
+
+	/**
 	 * Activecampaign_For_Woocommerce_Order_Utilities constructor.
 	 *
 	 * @param     Ecom_Product_Factory|null                               $product_factory     The Ecom Product Factory.
 	 * @param     Logger|null                                             $logger     The Logger.
-	 * @param     Activecampaign_For_Woocommerce_Ecom_Customer_Repository $customer_repository The customer repository.
+	 * @param     Activecampaign_For_Woocommerce_Ecom_Customer_Repository $customer_repository     The customer repository.
+	 * @param     Activecampaign_For_Woocommerce_AC_Contact_Repository    $contact_repository     The contact repository.
+	 * @param     Activecampaign_For_Woocommerce_Ecom_Order_Repository    $order_repository The order repository.
 	 */
 	public function __construct(
 		Ecom_Product_Factory $product_factory,
 		Logger $logger = null,
-		Customer_Repository $customer_repository
+		Customer_Repository $customer_repository,
+		Contact_Repository $contact_repository,
+		Order_Repository $order_repository
 	) {
 		if ( ! $product_factory ) {
 			$this->product_factory = new Ecom_Product_Factory();
@@ -82,10 +104,22 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			$this->logger = $logger;
 		}
 
-		if ( ! $logger ) {
+		if ( ! $customer_repository ) {
 			$this->customer_repository = new Customer_Repository();
 		} else {
 			$this->customer_repository = $customer_repository;
+		}
+
+		if ( ! $contact_repository ) {
+			$this->contact_repository = new Contact_Repository();
+		} else {
+			$this->contact_repository = $contact_repository;
+		}
+
+		if ( ! $order_repository ) {
+			$this->order_repository = new Order_Repository();
+		} else {
+			$this->order_repository = $order_repository;
 		}
 	}
 
@@ -106,14 +140,19 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	/**
 	 * Sets up the order and sends to AC.
 	 *
+	 * Source is a method of sync marker indicating it's historical
+	 * or that it's an up to date send of data.
+	 * 0 = historical
+	 * 1 = webhook/live order - triggers automations/records/revenue
+	 *
 	 * @param     WC_Order $order     The order object.
-	 * @param bool     $is_historical Sets whether or not this is a historical sync.
+	 * @param bool     $source Sets whether or not this is a trigger sync.
 	 *
 	 * @throws Exception Does not stop.
 	 * @return Ecom_Order $ecom_order
 	 */
-	public function setup_woocommerce_order_from_admin( $order, $is_historical = false ) {
-		if ( ! $this->validate_object( $order, 'get_order' ) || ! $this->validate_object( $order, 'get_order_number' ) ) {
+	public function setup_woocommerce_order_from_admin( $order, $source = 0 ) {
+		if ( ! AC_Utilities::validate_object( $order, 'get_order' ) || ! AC_Utilities::validate_object( $order, 'get_order_number' ) ) {
 			return null;
 		}
 
@@ -124,20 +163,9 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			// setup the ecom order
 			$ecom_order = new Ecom_Order();
 
-			/**
-			 * Source is a method of sync marker indicating it's historical
-			 * or that it's an up to date send of data.
-			 * 0 = historical
-			 * 1 = webhook/live order
-			 */
-			if ( $is_historical ) {
-				$ecom_order->set_source( '0' );
-			} else {
-				$ecom_order->set_source( '1' );
-			}
-
 			// add the data to the order factory
 			$ecom_order->set_connectionid( $this->connection_id );
+			$ecom_order->set_source( $source );
 			$ecom_order->set_currency( get_woocommerce_currency() );
 			$ecom_order->set_order_number( $order->get_order_number() );
 			$ecom_order->set_externalid( $order->get_id() );
@@ -147,6 +175,18 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			$ecom_order->set_shipping_method( $order->get_shipping_method() );
 			$ecom_order->set_tax_amount( $this->convert_money_to_cents( $order->get_total_tax() ) );
 			$ecom_order->set_total_price( $this->convert_money_to_cents( $order->get_total() ) );
+
+			$wc_coupons = $order->get_coupons();
+
+			if ( isset( $wc_coupons ) && count( $wc_coupons ) > 0 ) {
+				$ecom_coupons = [];
+
+				foreach ( $wc_coupons as $coupon ) {
+					$ecom_coupons[] = $this->get_coupon_data( $coupon );
+				}
+
+				$ecom_order->set_order_discounts( $ecom_coupons );
+			}
 
 			// Set the order dates by the time set from WC
 			$created_date = new DateTime( $order->get_date_created(), new DateTimeZone( 'UTC' ) );
@@ -182,6 +222,43 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	}
 
 	/**
+	 * Gets the coupon data and creates an object to pass back.
+	 *
+	 * @param WC_Order_Item_Coupon $coupon The WC coupon object.
+	 *
+	 * @return stdClass The coupon class.
+	 */
+	private function get_coupon_data( $coupon ) {
+		try {
+			$object       = new stdClass();
+			$object->type = 'order'; // string | order or shipping
+
+			if ( AC_Utilities::validate_object( $coupon, 'get_code' ) ) {
+				$object->name = $coupon->get_code(); // string
+			} else {
+				$object->name = 'Unavailable';
+			}
+
+			if ( AC_Utilities::validate_object( $coupon, 'get_discount' ) ) {
+				$object->discount_amount = $this->convert_money_to_cents( $coupon->get_discount() );// int32
+			} else {
+				$object->discount_amount = 0;
+			}
+
+			return $object;
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an issue retrieving coupon data',
+				[
+					'message' => $t->getMessage(),
+					'coupon'  => $coupon,
+					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+	}
+
+	/**
 	 * Build products from the order object.
 	 *
 	 * @param     WC_Order                                  $order The WC order.
@@ -194,12 +271,12 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			// There is no cart object, build the products and add to the order
 			$products = [];
 
-			if ( $this->validate_object( $order, 'get_items' ) ) {
+			if ( AC_Utilities::validate_object( $order, 'get_items' ) ) {
 				// Get and Loop Over Order Items to populate products
 				foreach ( $order->get_items() as $item_id => $item ) {
 					$product = $this->build_ecom_product( $item, $item_id );
 
-					if ( $this->validate_object( $product, 'get_id' ) ) {
+					if ( AC_Utilities::validate_object( $product, 'get_id' ) ) {
 						$products[ $item_id ] = $product;
 					} else {
 						$this->logger->warning(
@@ -286,8 +363,8 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 
 			if (
-				$this->validate_object( $item, 'get_product_id' ) &&
-				! $this->validate_object( $product_data, 'get_id' )
+				AC_Utilities::validate_object( $item, 'get_product_id' ) &&
+				! AC_Utilities::validate_object( $product_data, 'get_id' )
 			) {
 				$product_data = $this->get_wc_product_from_id( $item->get_product_id() );
 			}
@@ -347,16 +424,16 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			$product = wc_get_product( $id );
 
-			if ( ! $this->validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
+			if ( ! AC_Utilities::validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
 				$product = WC()->product_factory->get_product( $id );
 			}
 
-			if ( ! $this->validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
+			if ( ! AC_Utilities::validate_object( $product, 'get_id' ) || empty( $product->get_id() ) ) {
 				$_pf     = new WC_Product_Factory();
 				$product = $_pf->get_product( $id );
 			}
 
-			if ( $this->validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
+			if ( AC_Utilities::validate_object( $product, 'get_id' ) && ! empty( $product->get_id() ) ) {
 				return $product;
 			}
 		} catch ( Throwable $t ) {
@@ -408,7 +485,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 */
 	public function get_product_image_url( $product ) {
 		try {
-			if ( $this->validate_object( $product, 'get_id' ) ) {
+			if ( AC_Utilities::validate_object( $product, 'get_id' ) ) {
 				$post         = get_post( $product->get_id() );
 				$thumbnail_id = get_post_thumbnail_id( $post );
 				$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
@@ -426,7 +503,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Could not retrieve product image URL',
 				[
 					'message' => $t->getMessage(),
-					'product' => $this->validate_object( $product, 'get_data' ) ? $product->get_data() : null,
+					'product' => AC_Utilities::validate_object( $product, 'get_data' ) ? $product->get_data() : null,
 				]
 			);
 		}
@@ -444,7 +521,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	public function get_product_category( $product ) {
 		$logger = new Logger();
 		try {
-			if ( $this->validate_object( $product, 'get_id' ) ) {
+			if ( AC_Utilities::validate_object( $product, 'get_id' ) ) {
 				$terms = get_the_terms( $product->get_id(), 'product_cat' );
 			}
 		} catch ( Throwable $t ) {
@@ -470,7 +547,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 						$logger->warning(
 							'A product category attached to this product does not have a valid category and/or name.',
 							[
-								'product_id' => $this->validate_object( $product, 'get_id' ) ? $product->get_id() : null,
+								'product_id' => AC_Utilities::validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 								'term_id'    => $term->term_id,
 								'term_name'  => $term->name,
 							]
@@ -483,7 +560,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'There was an error getting all product categories.',
 				[
 					'terms'          => $terms,
-					'product_id'     => $this->validate_object( $product, 'get_id' ) ? $product->get_id() : null,
+					'product_id'     => AC_Utilities::validate_object( $product, 'get_id' ) ? $product->get_id() : null,
 					'trace'          => $logger->clean_trace( $t->getTrace() ),
 					'thrown_message' => $t->getMessage(),
 				]
@@ -507,13 +584,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 */
 	public function is_refund_order( $order ) {
 		try {
-			if ( $this->validate_object( $order, 'get_item_count_refunded' ) && $order->get_item_count_refunded() > 0 ) {
+			if ( AC_Utilities::validate_object( $order, 'get_item_count_refunded' ) && $order->get_item_count_refunded() > 0 ) {
 				// refunds don't work yet
 				$this->logger->debug(
 					'Historical sync cannot currently sync refund data. This order will be ignored.',
 					[
-						'order_id'            => $this->validate_object( $order, 'get_id' ) ? $order->get_id() : null,
-						'item_count_refunded' => $this->validate_object( $order, 'get_item_count_refunded' ) ? $order->get_item_count_refunded() : null,
+						'order_id'            => AC_Utilities::validate_object( $order, 'get_id' ) ? $order->get_id() : null,
+						'item_count_refunded' => AC_Utilities::validate_object( $order, 'get_item_count_refunded' ) ? $order->get_item_count_refunded() : null,
 					]
 				);
 
@@ -544,7 +621,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	public function get_order_by_id( $order_id ) {
 		$wc_order = wc_get_order( $order_id );
 
-		if ( $this->validate_object( $wc_order, 'get_id' ) && $wc_order->get_id() ) {
+		if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && $wc_order->get_id() ) {
 			return $wc_order;
 		}
 	}
@@ -641,14 +718,32 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 * @return \Brick\Math\BigDecimal|int
 	 */
 	public function convert_money_to_cents( $amount ) {
-		$cents    = 0;
-		$currency = get_woocommerce_currency();
+		if ( empty( $amount ) ) {
+			return 0;
+		}
 
 		try {
-			if ( ! empty( $currency ) && ! empty( $amount ) ) {
-				// round to 2 decimals and convert to minor "cents"
-				$amount = number_format( $amount, 2, '.', '' );
-				$cents  = Money::of( $amount, $currency )->getMinorAmount()->toInt();
+			$dec      = number_format( $amount, 2 );
+			$currency = get_woocommerce_currency();
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'There was an issue converting money to cents.',
+				[
+					'message'       => $t->getMessage(),
+					'amount_passed' => $amount,
+					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
+				]
+			);
+		}
+
+		try {
+			if ( ! empty( $dec ) && ! empty( $currency ) ) {
+				// round to 2 decimals and convert to minor "cents" using WC currency
+				$cents = Money::of( $dec, $currency )->getMinorAmount()->toInt();
+
+				if ( null !== $cents ) {
+					return $cents;
+				}
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->error(
@@ -656,19 +751,12 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				[
 					'message'       => $t->getMessage(),
 					'amount_passed' => $amount,
-					'amount_cents'  => $cents,
 					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
-
-			if ( is_numeric( $cents ) ) {
-				$cents = $amount;
-			} else {
-				return 0;
-			}
 		}
 
-		return $cents;
+		return 0;
 	}
 
 	/**
@@ -704,7 +792,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			if ( is_array( $order ) && isset( $order['id'] ) ) {
 				$meta_value = get_post_meta( $order['id'], 'activecampaign_for_woocommerce_accepts_marketing' );
-			} elseif ( $this->validate_object( $order, 'get_id' ) ) {
+			} elseif ( AC_Utilities::validate_object( $order, 'get_id' ) ) {
 				$meta_value = get_post_meta( $order->get_id(), 'activecampaign_for_woocommerce_accepts_marketing' );
 			}
 
@@ -824,7 +912,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			if ( ! is_null( $stored_id ) ) {
 				$wpdb->update(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$data,
 					[
 						'id' => $stored_id,
@@ -833,7 +921,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 			} else {
 				$wpdb->insert(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$data
 				);
 			}
@@ -896,7 +984,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 * @return bool|WC_Order
 	 */
 	public function get_wc_order( $order ) {
-		if ( $this->validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
+		if ( AC_Utilities::validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
 
 			return $order;
 		}
@@ -906,13 +994,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			try {
 				$wc_order = wc_get_order( $order );
 
-				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 
 				$wc_order = wc_get_order( $order->get_id() );
 
-				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 			} catch ( Throwable $t ) {
@@ -931,7 +1019,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			if ( is_array( $order ) ) {
 				$wc_order = wc_get_order( $order['id'] );
 
-				if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+				if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 					return $wc_order;
 				}
 			}
@@ -947,7 +1035,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			$wc_order = wc_get_order( $order );
 
-			if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+			if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 				return $wc_order;
 			}
 		} catch ( Throwable $t ) {
@@ -955,13 +1043,13 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Historical Sync: A final WC_Order object failed to retrieve.',
 				[
 					'message' => $t->getMessage(),
-					'order'   => $this->validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
+					'order'   => AC_Utilities::validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
 				]
 			);
 		}
 
 		try {
-			if ( $this->validate_object( $order, 'get_id' ) ) {
+			if ( AC_Utilities::validate_object( $order, 'get_id' ) ) {
 				$wc_order = new WC_Order( $order->get_id() );
 			} elseif ( isset( $order['id'] ) ) {
 				$wc_order = new WC_Order( $order['id'] );
@@ -969,7 +1057,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				$wc_order = new WC_Order( $order );
 			}
 
-			if ( $this->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+			if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 				return $wc_order;
 			}
 		} catch ( Throwable $t ) {
@@ -996,7 +1084,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 *
 	 * @param     Activecampaign_For_Woocommerce_Ecom_Customer $ecom_customer     The ecom customer object.
 	 * @param     WC_Order                                     $order     The WC order object.
-	 * @param     int|string                                   $source The source designation.
+	 * @param     bool                                         $source The source setting for if this transaction triggers services in Hosted.
 	 *
 	 * @return Activecampaign_For_Woocommerce_Ecom_Order|bool|null
 	 */
@@ -1023,7 +1111,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		}
 
 		try {
-			if ( $this->validate_object( $ecom_order, 'get_order_number' ) && ! empty( $ecom_order->get_order_number() ) && $ecom_order->get_externalid() ) {
+			if ( AC_Utilities::validate_object( $ecom_order, 'get_order_number' ) && ! empty( $ecom_order->get_order_number() ) && $ecom_order->get_externalid() ) {
 				$ecom_order->set_connectionid( $this->connection_id );
 				$ecom_order->set_email( $ecom_customer->get_email() );
 
@@ -1035,8 +1123,8 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				'Historical sync failed to format an ecommerce order object.',
 				[
 					'message'      => $t->getMessage(),
-					'order_number' => $this->validate_object( $ecom_order, 'get_order_number' ) ? $ecom_order->get_order_number() : null,
-					'order_id'     => $this->validate_object( $ecom_order, 'get_externalid' ) ? $ecom_order->get_externalid() : null,
+					'order_number' => AC_Utilities::validate_object( $ecom_order, 'get_order_number' ) ? $ecom_order->get_order_number() : null,
+					'order_id'     => AC_Utilities::validate_object( $ecom_order, 'get_externalid' ) ? $ecom_order->get_externalid() : null,
 				]
 			);
 			return null;
@@ -1092,7 +1180,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			// phpcs:disable
 				$wpdb->prepare( 'SELECT ac_externalcheckoutid 
 					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . '`
 					WHERE
 						abandoned_date IS NOT NULL
 						AND wc_order_id = %s LIMIT 1',
@@ -1143,7 +1231,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			// phpcs:disable
 				$wpdb->prepare( 'SELECT ac_order_id 
 					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . '`
 					WHERE wc_order_id = %s LIMIT 1',
 					$order_id
 				)
@@ -1177,21 +1265,145 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	}
 
 	/**
-	 * Validates an object with isset check and method_exists check in one call.
+	 * Creates or updates the contact, customer, and order objects to Hosted.
 	 *
-	 * @param object $o The string|object.
-	 * @param string $s The string for the call.
+	 * @param     Activecampaign_For_Woocommerce_AC_Contact    $ecom_contact The object to send to AC ecom contact.
+	 * @param     Activecampaign_For_Woocommerce_Ecom_Customer $ecom_customer The object to send to AC ecom customer.
+	 * @param     Activecampaign_For_Woocommerce_Ecom_Order    $ecom_order The object to send to AC ecom order.
 	 *
 	 * @return bool
 	 */
-	public function validate_object( $o, $s ) {
-		if (
-			isset( $o ) &&
-			( is_object( $o ) || is_string( $o ) ) &&
-			method_exists( $o, $s )
-		) {
-			return true;
+	public function sync_to_hosted( AC_Contact $ecom_contact, Ecom_Customer $ecom_customer, Ecom_Order $ecom_order ) {
+		// Sync the contact
+		try {
+			// Contact is allowed to fail
+			$ac_contact = $this->contact_repository->find_by_email( $ecom_contact->get_email() );
+			if (
+				AC_Utilities::validate_object( $ac_contact, 'get_id' ) &&
+				! empty( $ac_contact->get_id() )
+			) {
+				$ecom_contact->set_id( $ac_contact->get_id() );
+				$this->contact_repository->update( $ecom_contact );
+			} else {
+				$this->contact_repository->create( $ecom_contact );
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->warning(
+				'Order Utilities: Could not create contact.',
+				[
+					'email'   => $ecom_contact->get_email(),
+					'message' => $t->getMessage(),
+				]
+			);
 		}
-		return false;
+
+		// Sync the customer
+		try {
+			$ac_customer = $this->customer_repository->find_by_email_and_connection_id( $ecom_customer->get_email(), $this->connection_id );
+
+			if (
+				AC_Utilities::validate_object( $ac_customer, 'get_id' ) &&
+				! empty( $ac_customer->get_id() )
+			) {
+				$ecom_customer->set_id( $ac_customer->get_id() );
+				$customer_response = $this->customer_repository->update( $ecom_customer );
+			} else {
+				$customer_response = $this->customer_repository->create( $ecom_customer );
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Order Utilities: Customer create process received a thrown error.',
+				[
+					'email'   => $ecom_customer->get_email(),
+					'message' => $t->getMessage(),
+				]
+			);
+
+			return false;
+		}
+
+		// Sync the order
+		try {
+			$ac_order = $this->order_repository->find_by_externalid( $ecom_order->get_externalid() );
+
+			if ( isset( $ac_customer ) && ! empty( $ac_customer->get_id() ) ) {
+				$ecom_order->set_customerid( $ac_customer->get_id() );
+			} else {
+				$ecom_order->set_customerid( $customer_response->get_id() );
+			}
+
+			if (
+				AC_Utilities::validate_object( $ecom_order, 'get_customerid' ) &&
+				AC_Utilities::validate_object( $ac_order, 'get_id' ) &&
+				! empty( $ecom_order->get_customerid() ) &&
+				! empty( $ac_order->get_id() )
+			) {
+				$ecom_order->set_id( $ac_order->get_id() );
+				$order_response = $this->order_repository->update( $ecom_order );
+			} else {
+				$order_response = $this->order_repository->create( $ecom_order );
+			}
+
+			$this->store_ac_id( $ecom_order->get_externalid(), $order_response->get_id() );
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Order Utilities: Could not create order.',
+				[
+					'order_json' => $ecom_order->order_to_json(),
+					'message'    => $t->getMessage(),
+					'trace'      => $t->getTrace(),
+				]
+			);
+
+			return false;
+		}
+
+		try {
+			if ( $customer_response->get_id() && $order_response->get_id() ) {
+				return $order_response;
+			} else {
+				return false;
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Order Utilities: Issue with syncing order',
+				[
+					'customer' => $ecom_customer->get_id(),
+					'contact'  => $ecom_contact->get_id(),
+					'order'    => $ecom_order->get_id(),
+				]
+			);
+			return false;
+		}
+	}
+
+	/**
+	 * Get the ActiveCampaign ID.
+	 *
+	 * @param string|int $order_id The order ID.
+	 *
+	 * @return mixed|string|null
+	 */
+	public function get_ac_order_id( $order_id ) {
+		// check if we have it in storage ac_order_id
+		$ac_order_id = $this->get_ac_orderid_from_wc_order( $order_id );
+
+		if ( ! isset( $ac_order_id ) ) {
+			// check ac by externalcheckoutid
+			$externalcheckout_id = $this->get_externalcheckoutid_from_table_by_orderid( $order_id );
+
+			if ( ! empty( $externalcheckout_id ) ) {
+				$order_ac = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
+			}
+
+			if ( ! AC_Utilities::validate_object( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
+				// check ac by external order id
+				$order_ac = $this->order_repository->find_by_externalid( $order_id );
+			}
+
+			$ac_order_id = $order_ac->get_id();
+		}
+
+		return $ac_order_id;
 	}
 }

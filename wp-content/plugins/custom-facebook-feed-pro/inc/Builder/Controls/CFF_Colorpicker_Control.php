@@ -36,7 +36,7 @@ class CFF_Colorpicker_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-input-ctn cff-fb-fs sb-control-colorpicker-ctn" :data-picker-style="control.pickerType ? control.pickerType : 'default'" @click.stop="showColorPickerPospup(control.id)" v-on-clickaway="hideColorPickerPospup">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-input-ctn cff-fb-fs sb-control-colorpicker-ctn" :data-picker-style="control.pickerType ? control.pickerType : 'default'" @click.stop="showColorPickerPospup(control.id)" v-on-clickaway="hideColorPickerPospup">
 			<!--<cff-colorpicker :color="<?php echo $controlEditingTypeModel ?>[control.id]" v-on:change="changeSettingValue(control.id,...arguments)" :control-id="control.id"></cff-colorpicker>-->
 			<input class="sb-control-input" placeholder="Select" type="text"  v-model="<?php echo $controlEditingTypeModel ?>[control.id]">
 			<div class="sb-control-colorpicker-swatch" :style="'background:'+<?php echo $controlEditingTypeModel ?>[control.id]+';'"></div>

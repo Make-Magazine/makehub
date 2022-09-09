@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
+use InstagramFeed\Helpers\Util;
+use InstagramFeed\SB_Instagram_Data_Encryption;
+
 class SB_Instagram_Feed
 {
 	/**
@@ -102,7 +105,7 @@ class SB_Instagram_Feed
 	/**
 	 * @var object|SB_Instagram_Cache
 	 */
-	private $cache;
+	protected $cache;
 
 	/**
 	 * @var int
@@ -166,7 +169,7 @@ class SB_Instagram_Feed
 		return str_replace( '*', '', $this->regular_feed_transient_name );
 	}
 
-	public function set_cache( $cache_seconds, $settings ) {
+	public function set_cache( $cache_seconds, $settings, $feed_id = false ) {
 		$feed_id = $this->regular_feed_transient_name;
 
 		$feed_page = 1;
@@ -553,7 +556,7 @@ class SB_Instagram_Feed
 
 		global $wpdb;
 		$table_name = $wpdb->prefix . SBI_INSTAGRAM_POSTS_TYPE;
-		$id_string =  "'" . implode( "','", $array_of_ids ) . "'";
+		$id_string =  "'" . implode( "','", array_map( 'sbi_sanitize_instagram_ids', $array_of_ids ) ) . "'";
 
 		$query = $wpdb->query( $wpdb->prepare( "UPDATE $table_name
 		SET last_requested = %s
@@ -785,7 +788,7 @@ class SB_Instagram_Feed
 						}
 					} else {
 
-						if ( $this->can_try_another_request( $type, $connected_accounts_for_feed[ $term ] ) ) {
+						if ( ! $connection->is_wp_error() && $this->can_try_another_request( $type, $connected_accounts_for_feed[ $term ] ) ) {
 							$this->add_report( 'trying other accounts' );
 							$i = 0;
 							$attempted = array( $connected_accounts_for_feed[ $term ]['access_token'] );
@@ -797,7 +800,9 @@ class SB_Instagram_Feed
 									&& ! $success
 									&& $this->can_try_another_request( $type, $connected_accounts_for_feed[ $term ], $i ) ) {
 								$different = $this->get_different_connected_account( $type, $attempted );
-								$this->add_report( 'trying the account ' . $different['user_id'] );
+								if ( ! empty( $different['user_id'] ) ) {
+									$this->add_report( 'trying the account ' . $different['user_id'] );
+								}
 
 								if ( $different ) {
 									$connected_accounts_for_feed[ $term ] = $this->get_different_connected_account( $type, $attempted );
@@ -1157,13 +1162,13 @@ class SB_Instagram_Feed
 	 *
 	 * @since 2.0/5.0
 	 */
-	public function get_the_feed_html( $settings, $atts, $feed_types_and_terms, $connected_accounts_for_feed ) {
+	public function get_the_feed_html( $settings, $atts, $feed_types_and_terms, $connected_accounts_for_feed, $moderation_posts = false ) {
 		global $sb_instagram_posts_manager;
 
 		if ( empty( $this->post_data ) && ! empty( $connected_accounts_for_feed ) && $settings['minnum'] > 0 ) {
 			$this->handle_no_posts_found( $settings, $feed_types_and_terms );
 		}
-		$posts = array_slice( $this->post_data, 0, $settings['minnum'] );
+		$posts = $moderation_posts !== false ? $moderation_posts : array_slice( $this->post_data, 0, $settings['minnum'] );
 		$header_data = ! empty( $this->header_data ) ? $this->header_data : false;
 
 		$first_user = ! empty( $feed_types_and_terms['users'][0] ) ? $feed_types_and_terms['users'][0]['term'] : false;
@@ -1221,7 +1226,7 @@ class SB_Instagram_Feed
 			$this->add_report( 'doing feed locating' );
 			$flags[] = 'locator';
 		}
-		if ( isset( $_GET['sbi_debug'] ) || isset( $_GET['sb_debug'] ) ) {
+		if ( Util::isDebugging() ) {
 			$flags[] = 'debug';
 		}
 

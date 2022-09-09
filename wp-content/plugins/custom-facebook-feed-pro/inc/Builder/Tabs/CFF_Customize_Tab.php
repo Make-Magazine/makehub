@@ -1372,7 +1372,7 @@ class CFF_Customize_Tab{
 				'layout' 			=> 'half',
 				'strongHeading'		=> 'false',
 				'heading' 			=> __( 'Color', 'custom-facebook-feed' ),
-				'style'				=> ['.cff-post-item-ctn' => 'border-bottom-color:{{value}};'],
+				'style'				=> ['.cff-post-item-ctn' => 'border-bottom-color:{{value}}!important;'],
 				'stacked'			=> 'true'
 			],
 			[

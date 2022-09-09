@@ -1,10 +1,10 @@
 === Video Conferencing with Zoom ===
-Contributors: j__3rk, codemanas, digamberpradhan
+Contributors: j__3rk, digamberpradhan
 Tags: zoom video conference, video conference, zoom, zoom video conferencing, web conferencing, online meetings
 Donate link: https://www.paypal.com/donate?hosted_button_id=2UCQKR868M9WE
-Requires at least: 4.9
+Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 3.9.3
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ Video conferencing with Zoom plugin gives you the extensive functionality to man
 * Gutenberg Blocks Support
 * Elementor Support
 
-**PRO FEATURES**
+**ADDON FEATURES**
 
 * Recurring meetings and Webinars (PRO)
 * Enable registrations (PRO)
@@ -43,9 +43,9 @@ Video conferencing with Zoom plugin gives you the extensive functionality to man
 
 **DOCUMENTATION LINKS:**
 
-* [Installation](https://zoom.codemanas.com/integration/ "Installation")
-* [Full Shortcode Documentation](https://zoom.codemanas.com/shortcode/ "Shortcodes")
-* [Full Documentation](https://zoom.codemanas.com/ "Usage Documentation")
+* [Installation](https://zoom.codemanas.com/setup/ "Installation")
+* [Shortcodes](https://zoom.codemanas.com/shortcode/ "Shortcodes")
+* [Documentation](https://zoom.codemanas.com/ "Documentation")
 * [Usage Documentation /w WP](https://deepenbajracharya.com.np/zoom-api-integration-with-wordpress/ "Usage Documentation")
 * [Webhooks](https://zoom.codemanas.com/webhooks/ "Webhooks")
 
@@ -77,10 +77,6 @@ REFER FAQ to override page templates!
 * Elementor
 * Beaver Builder
 
-**SHORTCODE:**
-
-[Full Shortcode Documentation](https://zoom.codemanas.com/shortcode/ "Shortcodes")
-
 **CONTRIBUTING**
 
 There’s a [GIT repository](https://github.com/techies23/video-conference-zoom "GIT repository") if you want to contribute a patch. Please check issues. Pull requests are welcomed and your contributions will be appreciated.
@@ -97,6 +93,10 @@ Lastly, Thank you all to those contributors who have contributed for this plugin
 Search for the plugin -> add new dialog and click install, or download and extract the plugin, and copy the the Zoom plugin folder into your wp-content/plugins directory and activate.
 
 == Frequently Asked Questions ==
+
+= Updating to version 4.0.0 =
+
+Please check how you can do the [Migration from JWT](https://zoom.codemanas.com/migration/ "Migration from JWT")
 
 = Add users not working for me =
 
@@ -149,6 +149,38 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 9. Shortcode Output
 
 == Changelog ==
+
+= 4.0.5 August 17th, 2022 =
+* Fix - Minor - Meeting Host should not be editable even if post visibility is set to Private
+
+= 4.0.4 August 11th, 2022 =
+* Fixed: Import meetings not working for version 4.0 or greater.
+
+= 4.0.3 August 10th, 2022 =
+* Added: Redirection parameter for join via browser.
+
+= 4.0.2 August 5th, 2022 =
+* Fixed: wp_reset_postdata() was not called after looping in shortcode show_meeting_by_postTypeID
+* Fixed: Join via web browser theme router template not being called correctly for pages that uses builders or editor.
+* Updated: WebSDK to version 2.6.0
+
+= 4.0.1 July 21st, 2022 =
+* Fixed: PHP 7.4 below - class strict type declaration removed for backwards compatiblity.
+
+= 4.0.0 July 21st, 2022 =
+* Major Update: Server-to-Server OAuth App and SDK App to replace JWT App as JWT is being deprecated see [JWT App Type Deprecation FAQ](https://marketplace.zoom.us/docs/guides/build/jwt-app/jwt-faq/), users can see new configuration steps in the [documentation](https://zoom.codemanas.com/setup/)
+* Updated: WebSDK to version 2.5.0
+
+= 3.9.7 July 13th, 2022 =
+* Fixed: Issue showing "meeting no longer valid" when using no fixed time for meetings and webinars.
+
+= 3.9.6 July 11th, 2022 =
+* Fixed: Issue with recordings for multiple same meetings showing only latest recording
+
+= 3.9.4 - 3.9.5 June 28th, 2022 =
+* Fixed: More robust information for error logs.
+* Updated: Live webinars and Meeting on by default.
+* Updated: WebSDK to version 2.4.5
 
 = 3.9.3 May 31st, 2022 =
 * Updated: Compatible with WordPress version 6.0

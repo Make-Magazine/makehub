@@ -36,7 +36,7 @@ class CFF_Datepicker_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div class="sb-control-input-ctn cff-fb-fs">
+		<div v-bind:id="'sb-control-'+control.id" class="sb-control-input-ctn cff-fb-fs">
 			<input type="date" class="sb-control-input cff-fb-fs" v-model="<?php echo $controlEditingTypeModel ?>[control.id]" @change.prevent.default="changeSettingValue(control.id, false,false, control.ajaxAction ? control.ajaxAction : false)"  :placeholder="control.placeholder ? control.placeholder : ''">
 		</div>
 		<?php

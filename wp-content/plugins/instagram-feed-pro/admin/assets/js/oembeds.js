@@ -17,6 +17,7 @@ var sbioembeds_data = {
     instaoEmbedLoader: false,
     openFacebookInstaller: false,
     loaderSVG: sbi_oembeds.loaderSVG,
+    timesSVG: sbi_oembeds.timesSVG,
     checkmarkSVG: sbi_oembeds.checkmarkSVG,
     installerStatus: null
 }
@@ -74,7 +75,11 @@ var sbioEmbeds = new Vue({
                         this.isFacebookActivated = true;
                         this.installerStatus = 'success'
                     }
+                  if ( typeof data.data === 'object') {
                     this.facebookInstallBtnText = data.data.msg;
+                  } else {
+                    this.facebookInstallBtnText = data.data;
+                  }
                     setTimeout(function() {
                         this.installerStatus = null;
                     }.bind(this), 3000);
@@ -153,7 +158,7 @@ var sbioEmbeds = new Vue({
             } else if( this.installerStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if( this.installerStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesSVG;
             }
         },
 

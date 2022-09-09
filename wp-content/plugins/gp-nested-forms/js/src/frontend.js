@@ -249,6 +249,7 @@ const ko = window.ko;
 
 			// Setup Knockout to handle our Nested Form field entries.
 			self.viewModel = new EntriesModel(self.prepareEntriesForKnockout(self.entries), self);
+			self.addRowIdComputedToEntries( self.viewModel.entries );
 
 			/*
 			 * Preserve jQuery data as KO's cleanNode method will remove it. This is specifically needed for
@@ -657,8 +658,15 @@ const ko = window.ko;
 			return entries;
 		};
 
-		self.prepareEntryForKnockout = function( entry ) {
+		self.addRowIdComputedToEntries = function( entries ) {
+			for ( var i = 0; i < entries().length; i++ ) {
+				entries.splice( i, 1, self.addRowIdComputedToEntry( entries()[i] ) );
+			}
 
+			return entries;
+		};
+
+		self.prepareEntryForKnockout = function( entry ) {
 			// IE8 hack to fix recursive loop issue; props to Josh Casey
 			var entryTemplate = $.extend( {}, entry );
 
@@ -672,8 +680,35 @@ const ko = window.ko;
 				}
 			}
 
+			entry = self.addRowIdComputedToEntry( entry );
+
 			return entry;
 		};
+
+		/*
+		 * Row ID should be computed otherwise we'd need to update all entries using AJAX on delete, etc.
+		 *
+		 * We also need to do it after Knockout is actually initialized so the computed works correctly upon reload.
+		 */
+		self.addRowIdComputedToEntry = function( entry ) {
+			var rowIdComputed = ko.computed( function () {
+				var entryIds = $.map( self.viewModel ? self.viewModel.entries() : self.entries, function ( entry ) {
+					return parseInt( entry.id );
+				} );
+
+				return entryIds.indexOf( parseInt( entry.id ) ) + 1;
+			}, self.viewModel );
+
+			var rowId = {
+				label: rowIdComputed,
+				value: rowIdComputed,
+			};
+
+			entry['row_id'] = rowId;
+			entry['frow_id'] = rowId;
+
+			return entry;
+		}
 
 		self.refreshMarkup = function() {
 
@@ -714,7 +749,7 @@ const ko = window.ko;
 
 		};
 
-		self.deleteEntry = function( item, $trigger ) {
+		self.deleteEntry = function( item, $trigger, opts ) {
 
 			/**
 			 * Filter whether the child entry should be deleted. Useful for
@@ -731,7 +766,17 @@ const ko = window.ko;
 				return;
 			}
 
-			var $spinner = new AjaxSpinner( $trigger, self.spinnerUrl, '' );
+			var defaultOpts = {
+				showSpinner: true
+			};
+
+			opts = $.extend({}, defaultOpts, opts)
+
+			var $spinner = null;
+			if (opts.showSpinner) {
+				$spinner = new AjaxSpinner( $trigger, self.spinnerUrl, '' );
+			}
+
 			$trigger.css( { visibility: 'hidden' } );
 
 			$.post( self.ajaxUrl, {
@@ -740,7 +785,10 @@ const ko = window.ko;
 				gpnf_entry_id: item.id
 				}, function( response ) {
 
-					$spinner.destroy();
+					if ($spinner) {
+						$spinner.destroy();
+					}
+
 					$trigger.css( { visibility: 'visible' } );
 
 					if ( ! response ) {
@@ -752,7 +800,9 @@ const ko = window.ko;
 					}
 
 					// Success!
-					self.viewModel.entries.remove( item );
+					self.viewModel.entries.remove(function (currItem) {
+						return currItem.id === item.id || currItem === item;
+					} );
 
 					/**
 					 * Filter to determine if the child form HTML should be refreshed after deleting child entries.
@@ -1090,7 +1140,7 @@ const ko = window.ko;
 				}
 
 				if ( currentValue != value ) {
-					$( this ).val( value ).change().trigger( "chosen:updated" );
+					$( this ).val( value ).change().trigger( "chosen:updated" ).trigger('gpnfUpdatedFromParentMergeTag');
 
 					// TinyMCE appears to initialize _before_ the parent merge tags are handled. Instead of changing priority, reset the TinyMCE editor content accordingly.
 					const inputIdBits = $( this ).prop( 'id' )?.split( '_' );
@@ -1194,6 +1244,10 @@ const ko = window.ko;
 					$( document ).trigger( 'gpnf_post_render', [ formId, current_page] );
 				} );
 		}
+
+		GPNestedForms.deleteEntry = function( item, $trigger, opts ) {
+			self.deleteEntry( item, $trigger, opts );
+		};
 
 		/**
 		 * Static function called via the confirmation of the nested form. Loads the newly created entry into the

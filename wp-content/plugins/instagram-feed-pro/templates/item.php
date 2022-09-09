@@ -65,6 +65,10 @@ $hover_styles               = SB_Instagram_Display_Elements_Pro::get_hover_style
 $sbi_info_styles            = SB_Instagram_Display_Elements_Pro::get_sbi_info_styles( $settings ); // style="font-size: 13px;" already escaped
 $sbi_meta_color_styles      = SB_Instagram_Display_Elements_Pro::get_sbi_meta_color_styles( $settings ); // style="font-size: 13px;" already escaped
 $sbi_meta_size_color_styles = SB_Instagram_Display_Elements_Pro::get_sbi_meta_size_color_styles( $settings ); // style="font-size: 13px;color: rgba(153,231,255,1)" already escaped
+$sbi_inner_wrapper_style    = SB_Instagram_Display_Elements_Pro::get_item_styles_for_post_style( $settings );
+
+// Pro Attributes
+$sbi_post_image_style_attribute = SB_Instagram_Display_Elements_Pro::get_post_image_style_attributes( $settings );
 
 /**
  * Date string for date posted
@@ -78,84 +82,88 @@ $posted_on_date_str = ucfirst( date_i18n( 'M j', $timestamp ) ); // ex. Feb 2
 $posted_on_date_str = apply_filters( 'sbi_posted_on_date', $posted_on_date_str, $timestamp );
 ?>
 <div class="sbi_item sbi_type_<?php echo esc_attr( $media_type ); ?><?php echo esc_attr( $classes ); ?>" id="sbi_<?php echo esc_attr( $post_id ); ?>" data-date="<?php echo esc_attr( $timestamp ); ?>" data-numcomments="<?php echo esc_attr( $comments_count ); ?>" <?php echo $sbi_item_attributes ?> >
-    <div class="sbi_photo_wrap">
-	    <?php echo $maybe_content; ?>
-	    <?php echo $maybe_carousel_icon; ?>
-	    <?php echo $maybe_video_icon; ?>
+    <div class="sbi_inner_wrap" <?php echo $sbi_inner_wrapper_style; ?>>
+        <div class="sbi_photo_wrap" <?php echo $sbi_post_image_style_attribute; ?>>
+		    <?php echo $maybe_content; ?>
+		    <?php echo $maybe_carousel_icon; ?>
+		    <?php echo $maybe_video_icon; ?>
 
-        <div class="sbi_link<?php echo esc_attr( $sbi_link_classes ); ?>" <?php echo $link_styles; ?>>
-            <div class="sbi_hover_top">
-	            <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverusername', $settings ) ) : ?>
-                <p class="sbi_username"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverusername_data_attributes( $settings ); ?>>
-                    <a href="<?php echo esc_url( 'https://www.instagram.com/' . $username . '/' ); ?>" target="_blank" rel="nofollow noopener" <?php echo $hover_styles; ?>><?php echo esc_html( $username ); ?></a>
-                </p>
-	            <?php endif; ?>
-	            <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hovercaption', $settings ) ) : ?>
-                <p class="sbi_caption"<?php echo SB_Instagram_Display_Elements_Pro::get_hovercaption_data_attributes( $settings ); ?><?php echo $hover_styles; ?>><?php echo shorten_paragraph( str_replace( '&lt;br /&gt;', '<br>', esc_html( nl2br( $caption ) ) ), $settings['captionlength'] ); ?></p>
-	            <?php endif; ?>
-            </div>
-	        <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverinstagram', $settings ) ) : ?>
-            <a class="sbi_instagram_link" href="<?php echo esc_url( $permalink ); ?>"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverinstagram_data_attributes( $settings ); ?> target="_blank" rel="nofollow noopener" title="Instagram" <?php echo $hover_styles; ?>>
-                <span class="sbi-screenreader"><?php _e( 'View', 'instagram-feed' ); ?></span>
-				<?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'instagram', 'svg' ); ?>
-            </a>
-	        <?php endif; ?>
-            <div class="sbi_hover_bottom" <?php echo $hover_styles; ?>>
-	            <?php if ( sbi_doing_customizer( $settings ) || ( ($timestamp > 0 && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverdate', $settings ))
-                                        || (! empty( $location_info ) && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlocation', $settings ) )) ) : ?>
-                <p>
-	                <?php if ( sbi_doing_customizer( $settings ) || ($timestamp > 0 && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverdate', $settings )) ) : ?>
-                    <span class="sbi_date"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverdate_data_attributes( $settings ); ?>>
+            <div <?php echo $link_styles; ?> <?php echo $sbi_link_classes; ?>>
+                <div class="sbi_hover_top">
+				    <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverusername', $settings ) ) : ?>
+                        <p class="sbi_username"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverusername_data_attributes( $settings ); ?>>
+                            <a href="<?php echo esc_url( 'https://www.instagram.com/' . $username . '/' ); ?>" target="_blank" rel="nofollow noopener" <?php echo $hover_styles; ?>><?php echo esc_html( $username ); ?></a>
+                        </p>
+				    <?php endif; ?>
+				    <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hovercaption', $settings ) ) : ?>
+                        <p class="sbi_caption"<?php echo SB_Instagram_Display_Elements_Pro::get_hovercaption_data_attributes( $settings ); ?><?php echo $hover_styles; ?>><?php echo shorten_paragraph( str_replace( '&lt;br /&gt;', '<br>', esc_html( nl2br( $caption ) ) ), $settings['captionlength'] ); ?></p>
+				    <?php endif; ?>
+                </div>
+			    <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverinstagram', $settings ) ) : ?>
+                    <a class="sbi_instagram_link" href="<?php echo esc_url( $permalink ); ?>"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverinstagram_data_attributes( $settings ); ?> target="_blank" rel="nofollow noopener" title="Instagram" <?php echo $hover_styles; ?>>
+                        <span class="sbi-screenreader"><?php _e( 'View', 'instagram-feed' ); ?></span>
+					    <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'instagram', 'svg' ); ?>
+                    </a>
+			    <?php endif; ?>
+                <div class="sbi_hover_bottom" <?php echo $hover_styles; ?>>
+				    <?php if ( sbi_doing_customizer( $settings ) || ( ($timestamp > 0 && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverdate', $settings ))
+				                                                      || (! empty( $location_info ) && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlocation', $settings ) )) ) : ?>
+                        <p>
+						    <?php if ( sbi_doing_customizer( $settings ) || ($timestamp > 0 && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverdate', $settings )) ) : ?>
+                                <span class="sbi_date"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverdate_data_attributes( $settings ); ?>>
                         <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'date', 'svg' ); ?>
                         <?php echo esc_html( $posted_on_date_str ); ?></span>
-	                <?php endif; ?>
+						    <?php endif; ?>
 
-	                <?php if ( ! empty( $location_info ) && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlocation', $settings ) ) : ?>
-                        <a href="<?php echo esc_url( 'https://www.instagram.com/explore/locations/' . $location_info['id'] . '/' ); ?>" class="sbi_location" target="_blank" rel="nofollow noopener" <?php echo $hover_styles; ?>data-lat="<?php echo esc_attr( $location_info['longitude'] ); ?>" data-long="<?php echo esc_attr( $location_info['lattitude'] ); ?>"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'map_marker', 'svg' ); ?><?php echo esc_html( $location_info['name'] ); ?></a>
-	                <?php endif; ?>
-                </p>
-	            <?php endif; ?>
-                <?php if ( sbi_doing_customizer( $settings ) || ($comment_or_like_counts_data_exists && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlikes', $settings )) ) : ?>
-                <div class="sbi_meta"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverlikes_data_attributes( $settings ); ?>>
+						    <?php if ( ! empty( $location_info ) && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlocation', $settings ) ) : ?>
+                                <a href="<?php echo esc_url( 'https://www.instagram.com/explore/locations/' . $location_info['id'] . '/' ); ?>" class="sbi_location" target="_blank" rel="nofollow noopener" <?php echo $hover_styles; ?>data-lat="<?php echo esc_attr( $location_info['longitude'] ); ?>" data-long="<?php echo esc_attr( $location_info['lattitude'] ); ?>"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'map_marker', 'svg' ); ?><?php echo esc_html( $location_info['name'] ); ?></a>
+						    <?php endif; ?>
+                        </p>
+				    <?php endif; ?>
+				    <?php if ( sbi_doing_customizer( $settings ) || ($comment_or_like_counts_data_exists && SB_Instagram_Display_Elements_Pro::should_show_element( 'hoverlikes', $settings )) ) : ?>
+                        <div class="sbi_meta"<?php echo SB_Instagram_Display_Elements_Pro::get_hoverlikes_data_attributes( $settings ); ?>>
                     <span class="sbi_likes" <?php echo $hover_styles; ?>>
                         <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'likes', 'svg' ); ?>
                         <?php echo esc_html( $likes_count ); ?></span>
-                    <span class="sbi_comments" <?php echo $hover_styles; ?>>
+                            <span class="sbi_comments" <?php echo $hover_styles; ?>>
                         <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'comments', 'svg' ); ?>
                         <?php echo esc_html( $comments_count ); ?></span>
+                        </div>
+				    <?php endif; ?>
                 </div>
-	            <?php endif; ?>
+                <a class="sbi_link_area nofancybox" href="<?php echo $media_full_res; ?>" rel="nofollow noopener" data-lightbox-sbi="" data-title="<?php echo str_replace( '&lt;br /&gt;', '&lt;br&gt;', esc_attr( nl2br( $caption ) ) ); ?>" data-video="<?php echo esc_attr( $lightbox_media_atts['video'] ); ?>" data-carousel="<?php echo esc_attr( $lightbox_media_atts['carousel'] ); ?>" data-id="sbi_<?php echo esc_attr( $post_id ); ?>" data-user="<?php echo esc_attr( $username ); ?>" data-url="<?php echo esc_attr( $permalink ); ?>" data-avatar="<?php echo esc_attr( $avatar ); ?>" data-account-type="<?php echo esc_attr( $account_type ); ?>">
+                    <span class="sbi-screenreader"><?php _e( 'Open', 'instagram-feed' ); ?></span>
+				    <?php echo $maybe_video_icon; ?>
+                </a>
             </div>
-            <a class="sbi_link_area nofancybox" href="<?php echo $media_full_res; ?>" rel="nofollow noopener" data-lightbox-sbi="" data-title="<?php echo str_replace( '&lt;br /&gt;', '&lt;br&gt;', esc_attr( nl2br( $caption ) ) ); ?>" data-video="<?php echo esc_attr( $lightbox_media_atts['video'] ); ?>" data-carousel="<?php echo esc_attr( $lightbox_media_atts['carousel'] ); ?>" data-id="sbi_<?php echo esc_attr( $post_id ); ?>" data-user="<?php echo esc_attr( $username ); ?>" data-url="<?php echo esc_attr( $permalink ); ?>" data-avatar="<?php echo esc_attr( $avatar ); ?>" data-account-type="<?php echo esc_attr( $account_type ); ?>">
-                <span class="sbi-screenreader"><?php _e( 'Open', 'instagram-feed' ); ?></span>
-				<?php echo $maybe_video_icon; ?>
+
+            <a class="sbi_photo" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="nofollow noopener" data-full-res="<?php echo esc_url( $media_full_res ); ?>" data-img-src-set="<?php echo esc_attr( sbi_json_encode( $media_all_sizes_json ) ); ?>"<?php echo $sbi_photo_style_element; ?>>
+                <img src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( $img_alt ); ?>">
             </a>
         </div>
 
-        <a class="sbi_photo" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="nofollow noopener" data-full-res="<?php echo esc_url( $media_full_res ); ?>" data-img-src-set="<?php echo esc_attr( sbi_json_encode( $media_all_sizes_json ) ); ?>"<?php echo $sbi_photo_style_element; ?>>
-            <img src="<?php echo esc_url( $media_url ); ?>" alt="<?php echo esc_attr( $img_alt ); ?>">
-        </a>
-    </div>
+        <div class="sbi_info_wrapper">
+            <div class="sbi_info">
 
-    <div class="sbi_info">
+		        <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'caption', $settings ) ) : ?>
+                    <p class="sbi_caption_wrap" <?php echo SB_Instagram_Display_Elements_Pro::get_caption_data_attributes( $settings, $caption, $post_id ); ?>>
+                        <span class="sbi_caption" <?php echo $sbi_info_styles; ?>><?php echo str_replace( '&lt;br /&gt;', '<br>', esc_html( nl2br( $caption ) ) ); ?></span><span class="sbi_expand"> <a href="#"><span class="sbi_more">...</span></a></span>
+                    </p>
+		        <?php endif; ?>
 
-        <?php if ( sbi_doing_customizer( $settings ) || SB_Instagram_Display_Elements_Pro::should_show_element( 'caption', $settings ) ) : ?>
-        <p class="sbi_caption_wrap" <?php echo SB_Instagram_Display_Elements_Pro::get_caption_data_attributes( $settings, $caption, $post_id ); ?>>
-            <span class="sbi_caption" <?php echo $sbi_info_styles; ?>><?php echo str_replace( '&lt;br /&gt;', '<br>', esc_html( nl2br( $caption ) ) ); ?></span><span class="sbi_expand"> <a href="#"><span class="sbi_more">...</span></a></span>
-        </p>
-        <?php endif; ?>
-
-	    <?php if ( sbi_doing_customizer( $settings ) || ($comment_or_like_counts_data_exists && SB_Instagram_Display_Elements_Pro::should_show_element( 'likes', $settings ) )) : ?>
-        <div class="sbi_meta" <?php echo $sbi_meta_color_styles; ?><?php echo SB_Instagram_Display_Elements_Pro::get_meta_data_attributes( $settings ); ?>>
+		        <?php if ( sbi_doing_customizer( $settings ) || ($comment_or_like_counts_data_exists && SB_Instagram_Display_Elements_Pro::should_show_element( 'likes', $settings ) )) : ?>
+                    <div class="sbi_meta" <?php echo $sbi_meta_color_styles; ?><?php echo SB_Instagram_Display_Elements_Pro::get_meta_data_attributes( $settings ); ?>>
             <span class="sbi_likes" <?php echo $sbi_meta_size_color_styles; ?>>
                 <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'likes', 'svg', $sbi_meta_size_color_styles ); ?>
                 <?php echo esc_html( $likes_count ); ?></span>
-            <span class="sbi_comments" <?php echo $sbi_meta_size_color_styles; ?>>
+                        <span class="sbi_comments" <?php echo $sbi_meta_size_color_styles; ?>>
                 <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'comments', 'svg', $sbi_meta_size_color_styles ); ?>
                 <?php echo esc_html( $comments_count ); ?></span>
-        </div>
-	    <?php endif; ?>
+                    </div>
+		        <?php endif; ?>
 
+            </div>
+        </div>
     </div>
 
 </div>

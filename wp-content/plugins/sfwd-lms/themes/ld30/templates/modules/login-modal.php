@@ -26,12 +26,8 @@ if ( is_multisite() ) {
 	$can_register = get_option( 'users_can_register' );
 }
 ?>
-<div class="ld-modal ld-login-modal
-<?php
-if ( $can_register ) {
-	echo esc_attr( 'ld-can-register' ); }
-?>
-">
+
+<div class="ld-modal ld-login-modal<?php echo ( $can_register ? ' ld-can-register' : '' ); ?>">
 
 	<span class="ld-modal-closer ld-icon ld-icon-delete"></span>
 
@@ -197,7 +193,7 @@ if ( $can_register ) {
 					// If we are showing on a Course or Group we inlcude the 'ld_register_id' query string param.
 					$register_url = add_query_arg( 'ld_register_id', get_the_ID(), $register_url );
 				} elseif ( get_the_ID() === $ld_registration_page_id ) {
-					// If we are showing on the new Registration page we make sure to include the 
+					// If we are showing on the new Registration page we make sure to include the
 					if ( isset( $_GET['ld_register_id'] ) ) {
 						$register_url = add_query_arg( 'ld_register_id', absint( $_GET['ld_register_id'] ), $register_url );
 					}

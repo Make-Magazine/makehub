@@ -1,10 +1,10 @@
 === WooCommerce PayPal Payments ===
-Contributors: woocommerce, automattic
+Contributors: woocommerce, automattic, inpsyde
 Tags: woocommerce, paypal, payments, ecommerce, e-commerce, store, sales, sell, shop, shopping, cart, checkout
 Requires at least: 5.3
 Tested up to: 6.0
 Requires PHP: 7.1
-Stable tag: 1.8.1
+Stable tag: 1.9.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,63 @@ Follow the steps below to connect the plugin to your PayPal account:
 6. Main settings screen.
 
 == Changelog ==
+
+= 1.9.3 =
+* Add - Tracking API #792
+* Fix - Improve compatibility with Siteground Optimizer plugin #797
+* Fix - Transaction ID in order not updated when manually capturing authorized payment from WC #766
+* Fix - Failed form validation on Checkout page causing page to be sticky #781
+* Fix - Do not include full path in exception #779
+* Fix - PUI conflict with Germanized plugin and taxes #808
+* Enhancement - Enable ACDC by default only in locations where WooCommerce Payments is not available #799
+* Enhancement - Add links to docs & support in plugin #782
+* Enhancement - Put gateway sub-options into tabs #772
+* Enhancement - Show tabs only after onboarding #789
+* Enhancement - Add header on settings page #790
+* Enhancement - PUI add option for a phone number field next to the Birth Date field #742
+* Enhancement - PUI gateway availability on pay for order page with unsupported currency #744
+
+= 1.9.2 =
+* Fix - Do not allow birth date older than 100 years for PUI. #743
+* Fix - Store the customer id for vaulted payment method in usermeta to not lose vaulted methods after the invoice prefix change. #698
+* Fix - Capture Virtual-Only Orders setting did not auto-capture subscription renewal payments. #626
+* Fix - Voiding authorization at PayPal did not update the status/order notes. #712
+* Fix - PayPal scripts were loading on pages without smart buttons or Pay Later messaging. #750
+* Fix - Do not show links for unavailable gateways settings pages. #753
+* Fix - The smart buttons were not loaded on single product page if a subscription product exists in the cart. #703
+* Fix - DCC was causing other gateways to disappear after checkout validation error. #757
+* Fix - Buttons not loading on single product page with default settings when product is in cart. #777
+* Enhancement - Improve Checkout Field Validation Message. #739
+* Enhancement - Handle PAYER_ACTION_REQUIRED error. #759
+
+= 1.9.1 =
+* Fix - ITEM_TOTAL_MISMATCH error when checking out with multiple products #721
+* Fix - Unable to purchase a product with Credit card button in pay for order page #718
+* Fix - Pay Later messaging only displayed when smart button is active on the same page #283
+* Fix - Pay Later messaging displayed for out of stock variable products or with no variation selected #667
+* Fix - Placeholders and card type detection not working for PayPal Card Processing (260) #685
+* Fix - PUI gateway is displayed with unsupported store currency #711
+* Fix - Wrong PUI locale sent causing error PAYMENT_SOURCE_CANNOT_BE_USED #741 
+* Enhancement - Missing PayPal fee in WC order details for PUI purchase #714
+* Enhancement - Skip loading of PUI js file on all pages where PUI gateway is not displayed #723
+* Enhancement - PUI feature capitalization not consistent #724 
+
+= 1.9.0 =
+* Add - New Feature - Pay Upon Invoice (Germany only) #608
+* Fix - Order not approved: payment via vaulted PayPal account fails #677
+* Fix - Cant' refund : "ERROR Refund failed: No country given for address." #639
+* Fix - Something went wrong error in Virtual products when using vaulted payment #673 
+* Fix - PayPal smart buttons are not displayed for product variations when parent product is set to out of stock #669
+* Fix - Pay Later messaging displayed for out of stock variable products or with no variation selected #667 
+* Fix - "Capture Virtual-Only Orders" intent sets virtual+downloadable product orders to "Processing" instead of "Completed" #665 
+* Fix - Free trial period causing incorrerct disable-funding parameters with DCC disabled #661 
+* Fix - Smart button not visible on single product page when product price is below 1 and decimal is "," #654 
+* Fix - Checkout using an email address containing a + symbol results in a "[INVALID_REQUEST]" error #523
+* Fix - Order details are sometimes empty in PayPal dashboard #689
+* Fix - Incorrect TAX details on PayPal order overview #541
+* Fix - Fatal error: Uncaught Error: Call to a member function get_name() on bool #622
+* Fix - DCC causes checkout continuation state after checkout validation error #695
+* Enhancement - Improve checkout validation & order creation #513
 
 = 1.8.1 =
 * Fix - Manual orders return an error for guest users when paying with PayPal Card Processing #530

@@ -39,6 +39,7 @@ bool(false)
 
 namespace InstagramFeed\Builder;
 
+use InstagramFeed\SB_Instagram_Data_Encryption;
 use function DI\value;
 
 class SBI_Source {
@@ -224,8 +225,6 @@ class SBI_Source {
 			|| $admin_url_state === '/wp-admin/admin.php?page=sbi-feed-builder&tab=configuration' ) {
 			$admin_url_state = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 		}
-		#$urls['personal']  ='https://connect.smashballoon.com/auth/ig/?wordpress_user=&v=pro&vn=' . SBIVER . '&state=';
-		#$urls['business'] = 'https://connect.smashballoon.com/auth/ig/?wordpress_user=&v=pro&vn=' . SBIVER . '&state=';
 
 		$urls['personal']  ='https://connect.smashballoon.com/auth/ig/?wordpress_user=&v=pro&vn=' . SBIVER;
 		$urls['business'] = 'https://connect.smashballoon.com/auth/ig/?wordpress_user=&v=pro&vn=' . SBIVER;
@@ -267,7 +266,7 @@ class SBI_Source {
 	 * @since 6.0
 	 */
 	public static function retrieve_available_personal_accounts() {
-		$encryption = new \SB_Instagram_Data_Encryption();
+		$encryption = new SB_Instagram_Data_Encryption();
 		$return     = array(
 			'type'                     => 'personal',
 			'unconnectedAccounts'      => array(),
@@ -342,7 +341,7 @@ class SBI_Source {
 		);
 		$results                               = SBI_Db::source_query( $args );
 		$already_connected_as_business_account = ( isset( $results[0] ) && $results[0]['account_type'] === 'business' );
-		$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] === 'personal' );
+		$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] !== 'business' );
 
 		if ( $already_connected_as_business_account ) {
 			$return['matchingExistingAccounts']           = $results[0];
@@ -352,9 +351,11 @@ class SBI_Source {
 			$return['notice'] = __( 'The Instagram account you are logged into is already connected as a "business" account. Remove the business account if you\'d like to connect as a basic account instead (not recommended).', 'instagram-feed' );
 		} elseif ( $matches_existing_personal ) {
 			$return['matchingExistingAccounts'] = $results[0];
+			SBI_Db::delete_source( $results[0]['id'] );
 			self::update_or_insert( $source_data );
 			$return['notice']         = '';
 			$return['didQuickUpdate'] = true;
+			sbi_clear_caches(); // clear caches to allow api errors to reset
 		} else {
 			self::update_or_insert( $source_data );
 			$return['didQuickUpdate'] = true;
@@ -471,10 +472,14 @@ class SBI_Source {
 					$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] === 'personal' );
 
 					if ( $already_connected_as_business_account ) {
+						SBI_Db::delete_source( $results[0]['id'] );
 						self::update_or_insert( $source_data );
+						sbi_clear_caches(); // clear caches to allow api errors to reset
 					} elseif ( $matches_existing_personal && $return['numFound'] === 1 ) {
 						$return['didQuickUpdate'] = true;
+						SBI_Db::delete_source( $results[0]['id'] );
 						self::update_or_insert( $source_data );
+						sbi_clear_caches(); // clear caches to allow api errors to reset
 					}
 				} else {
 					$page_error = $result;
@@ -674,7 +679,7 @@ class SBI_Source {
 
 		$connection = new \SB_Instagram_API_Connect( $connected_account, 'header', array() );
 
-		$connection->connect();
+		$connection->update_source_connect();
 		if ( isset( $connected_account['privilege'] ) && $connected_account['privilege'] === 'tagged' ) {
 			$connected_account['use_tagged'] = true;
 		}
@@ -825,7 +830,7 @@ class SBI_Source {
 	 *  @since 6.0
 	 */
 	public static function convert_sources_to_connected_accounts( $source_data ) {
-		$encryption = new \SB_Instagram_Data_Encryption();
+		$encryption = new SB_Instagram_Data_Encryption();
 
 		$connected_accounts = array();
 
@@ -850,6 +855,10 @@ class SBI_Source {
 				$connected_account['private'] = $info['private'];
 			}
 
+			if ( ! empty( $info['biography'] ) ) {
+				$connected_account['bio'] = $info['biography'];
+			}
+
 			$connected_account['local_avatar_url'] = \SB_Instagram_Connected_Account::maybe_local_avatar( $source_datum['username'], $avatar );
 
 			$connected_accounts[ $source_datum['account_id'] ] = $connected_account;
@@ -871,5 +880,25 @@ class SBI_Source {
 
 		return $results;
 
+	}
+
+
+	/**
+	 * Updates Personal Account Bio
+	 *
+	 * @return array|bool
+	 *
+	 * @since 6.1
+	 */
+	public static function update_personal_account_bio( $account_id, $bio ) {
+		$source = SBI_Db::get_source_by_account_id( $account_id );
+		if( isset( $source['info'] ) ){
+			$encryption = new SB_Instagram_Data_Encryption();
+			$info 			= json_decode( $encryption->maybe_decrypt( $source['info'] ), true );
+			$info 			= array('biography' => $bio) + $info;
+			$to_update = [];
+			$to_update['info'] = json_encode($info);
+			SBI_Db::source_update( $to_update, array( 'id' => $account_id) );
+		}
 	}
 }

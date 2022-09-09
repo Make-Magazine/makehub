@@ -51,12 +51,12 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 		try {
 			global $wpdb;
 			// phpcs:disable
-			$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME );
+			$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME );
 			// phpcs:enable
 		} catch ( Throwable $t ) {
 			$logger = new Logger();
 			$logger->error(
-				'There was an issue removing the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' table from your database.',
+				'There was an issue removing the ' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' table from your database.',
 				[
 					'message' => $t->getMessage(),
 				]

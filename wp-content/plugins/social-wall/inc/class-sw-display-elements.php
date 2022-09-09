@@ -2,6 +2,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
+use TwitterFeed\Pro\CTF_Parse_Pro;
+use TwitterFeed\Pro\CTF_Display_Elements_Pro;
+use SmashBalloon\YouTubeFeed\Pro\SBY_Parse_Pro;
+use SmashBalloon\YouTubeFeed\SBY_Parse;
 
 class SW_Display_Elements
 {
@@ -289,14 +293,16 @@ class SW_Display_Elements
 		$style_options = get_option( 'cff_style_settings', array() );
 		$cff_event_date_formatting = isset( $style_options[ 'cff_event_date_formatting' ] ) ? $style_options[ 'cff_event_date_formatting' ] : '';
 		$cff_event_date_custom = isset( $style_options[ 'cff_event_date_custom' ] ) ? $style_options[ 'cff_event_date_custom' ] : '';
+		$cff_timezone = isset($style_options[ 'cff_timezone' ]) ?  $style_options[ 'cff_timezone' ] :  'America/Chicago';
+
 		$cff_event_timezone_offset = '';
 
 		if ( ! empty( $start_time ) || ! empty ( $end_time ) ) {
-			$formatted_start_time = str_replace( array( '<k>','</k>' ), '', CustomFacebookFeed\CFF_Utils::cff_eventdate($start_time, $cff_event_date_formatting, $cff_event_date_custom, $cff_event_timezone_offset) );
+			$formatted_start_time = str_replace( array( '<k>','</k>' ), '', CustomFacebookFeed\CFF_Utils::cff_eventdate($start_time, $cff_event_date_formatting, $cff_event_date_custom, $cff_event_timezone_offset, $cff_timezone) );
 			$content .= sbsw_esc_html_with_br( $formatted_start_time );
 
 			if ( ! empty ( $end_time ) ) {
-				$formatted_end_time = str_replace( array( '<k>','</k>' ), '', CustomFacebookFeed\CFF_Utils::cff_eventdate($end_time, $cff_event_date_formatting, $cff_event_date_custom, $cff_event_timezone_offset) );
+				$formatted_end_time = str_replace( array( '<k>','</k>' ), '', CustomFacebookFeed\CFF_Utils::cff_eventdate($end_time, $cff_event_date_formatting, $cff_event_date_custom, $cff_event_timezone_offset, $cff_timezone) );
 				$content .= ' - ' . sbsw_esc_html_with_br( $formatted_end_time );
 			}
 		}

@@ -16,6 +16,12 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+use InstagramFeed\Helpers\Util;
+use InstagramFeed\Builder\SBI_Feed_Builder;
+use InstagramFeed\SB_Instagram_Data_Encryption;
+use InstagramFeed\SBI_Feed_Cache_Manager;
+
+
 /**
  * The main function the creates the feed from a shortcode.
  * Can be safely added directly to templates using
@@ -78,6 +84,10 @@ function display_instagram( $atts = array(), $preview_settings = false ) {
 	$instagram_feed_settings->set_transient_name();
 	$transient_name = $instagram_feed_settings->get_transient_name();
 	$settings = $instagram_feed_settings->get_settings();
+
+	$feed_cache_manager = new SBI_Feed_Cache_Manager( 'sbi_feed_update', $settings['caching_type'] );
+
+	$settings['caching_type'] = $feed_cache_manager->get_caching_type();
 
 	$customizer = $settings['customizer'];
 
@@ -369,7 +379,7 @@ function sbi_maybe_palette_styles( $posts, $settings ) {
     #sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer,
     #sbi_lightbox .sbi_lightbox_tooltip,
     #sbi_lightbox .sbi_share_close{
-        background: <?php echo esc_html( $custom_colors['bg1'] ); ?>;
+        background: <?php echo esc_html( $custom_colors['bg1'] ); ?>!important;
     }
     <?php endif; ?>
     <?php if ( ! empty( $custom_colors['text1'] ) ) : ?>
@@ -377,31 +387,32 @@ function sbi_maybe_palette_styles( $posts, $settings ) {
     #sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-details .sbi_lb-caption,
     #sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-number,
     #sbi_lightbox.sbi_lb-comments-enabled .sbi_lb-commentBox p{
-        color: <?php echo esc_html( $custom_colors['text1'] ); ?>;
+        color: <?php echo esc_html( $custom_colors['text1'] ); ?>!important;
     }
     <?php endif; ?>
     <?php if ( ! empty( $custom_colors['text2'] ) ) : ?>
     <?php echo $header_selector ?> .sbi_bio,
     #sb_instagram<?php echo $feed_selector ?> .sbi_meta {
-        color: <?php echo esc_html( $custom_colors['text2'] ); ?>;
+        color: <?php echo esc_html( $custom_colors['text2'] ); ?>!important;
     }
     <?php endif; ?>
     <?php if ( ! empty( $custom_colors['link1'] ) ) : ?>
     <?php echo $header_selector ?> a,
+    <?php echo $header_selector ?> a h3,
     #sb_instagram<?php echo $feed_selector ?> .sbi_expand a,
     #sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-details a,
     #sbi_lightbox.sbi_lb-comments-enabled .sbi_lb-commentBox .sbi_lb-commenter {
-        color: <?php echo esc_html( $custom_colors['link1'] ); ?>;
+        color: <?php echo esc_html( $custom_colors['link1'] ); ?>!important;
     }
     <?php endif; ?>
     <?php if ( ! empty( $custom_colors['button1'] ) ) : ?>
     #sb_instagram<?php echo $feed_selector ?> #sbi_load .sbi_load_btn {
-        background: <?php echo esc_html( $custom_colors['button1'] ); ?>;
+        background: <?php echo esc_html( $custom_colors['button1'] ); ?>!important;
     }
     <?php endif; ?>
     <?php if ( ! empty( $custom_colors['button2'] ) ) : ?>
     #sb_instagram<?php echo $feed_selector ?> #sbi_load .sbi_follow_btn a {
-        background: <?php echo esc_html( $custom_colors['button2'] ); ?>;
+        background: <?php echo esc_html( $custom_colors['button2'] ); ?>!important;
     }
     <?php endif; ?>
     </style>
@@ -549,6 +560,11 @@ function sbi_get_next_post_set() {
 
 			$instagram_feed->add_report( 'adding to cache' );
 			$instagram_feed->cache_feed_data( $instagram_feed_settings->get_cache_time_in_seconds(), $settings['backup_cache_enabled'] );
+		}
+
+		if ( $instagram_feed->using_an_allow_list( $settings ) ) {
+			$instagram_feed->add_report( 'Adding allow list only posts' );
+			$instagram_feed->add_db_only_allow_list_posts( $settings );
 		}
 
 
@@ -799,7 +815,7 @@ function sbi_doing_openssl() {
  */
 function sbi_debug_report( $instagram_feed, $feed_id ) {
 
-    if ( ! isset( $_GET['sbi_debug'] ) && ! isset( $_GET['sb_debug'] ) ) {
+    if ( !Util::isDebugging() ) {
         return;
     }
 	global $sb_instagram_posts_manager;
@@ -1032,12 +1048,21 @@ function sbi_header_html( $settings, $header_data, $location = 'inside' ) {
 		    'condition' => ' && $parent.valueIsEnabled($parent.customizerFeedData.settings.headeroutside)'
 	    ];
     }
-	include sbi_get_feed_template_part( 'header', $settings );
+    if( $customizer  ){
+        include sbi_get_feed_template_part( 'header', $settings );
+        include sbi_get_feed_template_part( 'header-boxed', $settings );
+        include sbi_get_feed_template_part( 'header-generic', $settings );
+		include sbi_get_feed_template_part( 'header-text', $settings );
+    }else{
+		include sbi_get_feed_template_part( SB_Instagram_Display_Elements_Pro::header_type( $settings ) , $settings );
+    }
 
+	/*
 	if ( $customizer && $settings['type'] != 'hashtag' ) {
         $settings['headerstyle'] = $settings['headerstyle'] !== 'boxed' ? 'boxed' : 'default';
         include sbi_get_feed_template_part( 'header', $settings );
 	}
+	*/
 }
 
 /**
@@ -1064,6 +1089,7 @@ function sbi_get_feed_template_part( $part, $settings = array() ) {
 		$custom_header_template = locate_template( 'sbi/header.php', false, false );
 		$custom_header_boxed_template = locate_template( 'sbi/header-boxed.php', false, false );
 		$custom_header_generic_template = locate_template( 'sbi/header-generic.php', false, false );
+		$custom_header_text_template = locate_template( 'sbi/header-text.php', false, false );
 		$custom_item_template = locate_template( 'sbi/item.php', false, false );
 		$custom_footer_template = locate_template( 'sbi/footer.php', false, false );
 		$custom_feed_template = locate_template( 'sbi/feed.php', false, false );
@@ -1071,35 +1097,38 @@ function sbi_get_feed_template_part( $part, $settings = array() ) {
 		$custom_header_template = false;
 		$custom_header_boxed_template = false;
 		$custom_header_generic_template = false;
+		$custom_header_text_template = false;
 		$custom_item_template = false;
 		$custom_footer_template = false;
 		$custom_feed_template = false;
     }
 
 	if ( $part === 'header' ) {
-	    if ( isset( $settings['generic_header'] ) ) {
-	        if ( $custom_header_generic_template ) {
-	            $file = $custom_header_generic_template;
-            } else {
-		        $file = $generic_path . 'header-generic.php';
-	        }
-	    } else {
-		    if ( $settings['headerstyle'] !== 'boxed' ) {
-			    if ( $custom_header_template ) {
-				    $file = $custom_header_template;
-			    } else {
-				    $file = $generic_path . 'header.php';
-			    }
-		    } else {
-			    if ( $custom_header_boxed_template ) {
-				    $file = $custom_header_boxed_template;
-			    } else {
-				    $file = $generic_path . 'header-boxed.php';
-			    }
-		    }
-	    }
-
-	} elseif ( $part === 'item' ) {
+		if ( $custom_header_template ) {
+			$file = $custom_header_template;
+		} else {
+			$file = $generic_path . 'header.php';
+		}
+	}if ( $part === 'header-boxed' ) {
+		if ( $custom_header_boxed_template ) {
+			$file = $custom_header_boxed_template;
+		} else {
+			$file = $generic_path . 'header-boxed.php';
+		}
+	}
+	if ( $part === 'header-generic' ) {
+		if ( $custom_header_generic_template ) {
+			$file = $custom_header_generic_template;
+		} else {
+			$file = $generic_path . 'header-generic.php';
+		}
+	}  if ( $part === 'header-text' ) {
+		if ( $custom_header_generic_template ) {
+			$file = $custom_header_text_template;
+		} else {
+			$file = $generic_path . 'header-text.php';
+		}
+	}elseif ( $part === 'item' ) {
 		if ( $custom_item_template ) {
 			$file = $custom_item_template;
 		} else {
@@ -1787,7 +1816,7 @@ function sb_instagram_scripts_enqueue( $enqueue = false ) {
 	$sb_instagram_settings = sbi_get_database_settings();
 
 	$js_file = 'js/sbi-scripts.min.js';
-	if ( isset( $_GET['sbi_debug'] ) || isset( $_GET['sb_debug'] ) ) {
+	if ( Util::isDebugging() ) {
 		$js_file = 'js/sbi-scripts.js';
 	}
 
@@ -2136,7 +2165,7 @@ function sbi_send_report_email() {
 
 	$header_image = SBI_PLUGIN_URL . 'img/balloon-120.png';
 
-	$link = admin_url( '?page=sb-instagram-feed');
+	$link = admin_url( 'admin.php?page=sbi-settings');
 	//&tab=customize-advanced
 	$footer_link = admin_url('admin.php?page=sbi-settings&view=advanced&flag=emails');
 

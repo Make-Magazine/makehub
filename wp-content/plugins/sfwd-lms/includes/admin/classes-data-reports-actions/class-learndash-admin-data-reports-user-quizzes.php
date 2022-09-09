@@ -38,7 +38,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 		/**
 		 * Data headers
 		 *
-		 * @var string $data_headers
+		 * @var array $data_headers
 		 */
 		private $data_headers = array();
 
@@ -87,7 +87,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 		 * @since 2.3.0
 		 */
 		public static function getInstance() {
-			if ( ! isset( self::$instance ) ) {
+			if ( ! is_object( self::$instance ) ) {
 				self::$instance = new self();
 			}
 			return self::$instance;
@@ -103,7 +103,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 		 * @return array
 		 */
 		public function register_report_action( $report_actions = array() ) {
-			// Add ourselved to the upgrade actions.
+			// Add ourselves to the upgrade actions.
 			$report_actions[ $this->data_slug ] = array(
 				'class'    => get_class( $this ),
 				'instance' => $this,
@@ -123,7 +123,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 		public function show_report_action() {
 			?>
 			<tr id="learndash-data-reports-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-reports-container">
-				<td class="learndash-data-reports-button-container" style="width:20%">
+				<td class="learndash-data-reports-button-container" style="width: 20%">
 					<button class="learndash-data-reports-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-reports-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 						printf(
@@ -290,7 +290,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 											 * Missing Activity meta data. As a secondary pull from the user quiz meta.
 											 */
 											if ( ( ! property_exists( $result, 'activity_meta' ) ) || ( empty( $result->activity_meta ) ) ) {
-												if ( ! empty( $user_quiz_meta ) ) {
+												if ( ! empty( $user_quiz_meta ) ) { // @phpstan-ignore-line -- Not sure where this came from but don't want to remove just yet.
 													foreach ( $user_quiz_meta as $user_meta_item ) {
 														if ( ( absint( $result->post_id ) === absint( $user_meta_item['quiz'] ) ) && ( absint( $result->activity_updated ) === absint( $user_meta_item['time'] ) ) && ( absint( $result->activity_started ) === absint( $user_meta_item['started'] ) ) ) {
 															$result->activity_meta = $user_meta_item;
@@ -304,7 +304,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 
 											foreach ( $this->data_headers as $header_key => $header_data ) {
 
-												if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) && ( is_callable( $header_data['display']  ) ) ) {
+												if ( ( isset( $header_data['display'] ) ) && ( ! empty( $header_data['display'] ) ) && ( is_callable( $header_data['display'] ) ) ) {
 													$row[ $header_key ] = call_user_func_array(
 														$header_data['display'],
 														array(
@@ -627,7 +627,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) && ( class_exi
 							$column_value = '';
 
 							if ( $timespent > 86400 ) {
-								if ( ! empty( $column_value ) ) {
+								if ( ! empty( $column_value ) ) { // @phpstan-ignore-line
 									$column_value .= ' ';
 								}
 								$column_value .= floor( $timespent / 86400 ) . 'd';

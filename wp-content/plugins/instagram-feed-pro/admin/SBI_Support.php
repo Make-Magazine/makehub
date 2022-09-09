@@ -284,6 +284,8 @@ class SBI_Support {
 	 * @return string
 	 */
 	public static function get_site_n_server_info() {
+		$sbi_statuses = get_option('sbi_statuses', []);
+
 		$allow_url_fopen = ini_get( 'allow_url_fopen' ) ? 'Yes' : 'No';
 		$php_curl        = is_callable( 'curl_init' ) ? 'Yes' : 'No';
 		$php_json_decode = function_exists( 'json_decode' ) ? 'Yes' : 'No';
@@ -300,6 +302,7 @@ class SBI_Support {
 		$output .= 'PHP cURL:' . self::get_whitespace( 17 ) . esc_html( $php_curl ) . '</br>';
 		$output .= 'JSON:' . self::get_whitespace( 21 ) . esc_html( $php_json_decode ) . '</br>';
 		$output .= 'SSL Stream:' . self::get_whitespace( 15 ) . esc_html( $php_ssl ) . '</br>';
+		$output .= 'Auto-Encryption Keys:' . self::get_whitespace( 5 ) . (isset($sbi_statuses['added_encryption_keys']) && true === $sbi_statuses['added_encryption_keys'] ? 'Yes' : 'No')  . '</br>';
 		$output .= '</br>';
 
 		return $output;

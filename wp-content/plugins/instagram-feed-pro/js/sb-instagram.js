@@ -4588,8 +4588,6 @@ if(!sbi_js_exists) {
         $(this.el).find('.sbi_item').each(function() {
           feed.lazyLoadCheck($(this));
         });
-
-
       },
       initLayout: function() {
 
@@ -4998,7 +4996,7 @@ if(!sbi_js_exists) {
               } else {
                 if (feed.settings.debugEnabled) {
                   var reason = checked ? 'already checked' : 'no aspect ratio change';
-                  console.log('not raising res for replacement  ' + currentUrl, reason);
+//                  console.log('not raising res for replacement  ' + currentUrl, reason);
                 }
               }
             });
@@ -5076,6 +5074,9 @@ if(!sbi_js_exists) {
         }
 
         return bestWidthRounded;
+      },
+      removeExtraCarouselPages: function(num) {
+
       },
       hideExtraImagesForWidth: function() {
         if (this.layout === 'carousel') {
@@ -5582,6 +5583,21 @@ if(!sbi_js_exists) {
         if (this.layout === 'highlight' || this.layout === 'masonry' ) {
           this.smashotopeInit();
         } else if ( this.layout === 'carousel' ) {
+          var $self = $(this.el),
+            num = typeof $self.attr('data-num') !== 'undefined' && $self.attr('data-num') !== '' ? parseInt($self.attr('data-num')) : 1,
+            nummobile = typeof $self.attr('data-nummobile') !== 'undefined' && $self.attr('data-nummobile') !== '' ? parseInt($self.attr('data-nummobile')) : num;
+
+          if ( num !== nummobile ) {
+            var targetNum = num;
+            if ($(window).width() < 480) {
+              targetNum = nummobile;
+            }
+            if ( targetNum < $self.find('.sbi_item').length ) {
+              $self.find('.sbi_item').slice(targetNum - $self.find('.sbi_item').length).remove();
+            }
+          }
+
+          //come here
           $sbi.find('.sbi_carousel').sbiOwlCarousel(this.carouselArgs);
           if (parseInt(settings.general.carousel[5]) === 2) {
             $sbi.addClass('sbi_carousel_2_row');

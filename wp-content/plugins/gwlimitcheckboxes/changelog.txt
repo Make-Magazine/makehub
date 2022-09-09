@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.3.7
+
+	- Added `gplc-disabled` CSS class to checkboxes disabled by GP Limit Checkboxes to allow external scripts to safely identify (or ignore) checkboxes disabled by GP Limit Checkboxes.
+
 ## 1.3.6
 
 	- Improved compatibility with GP Inventory when using Scoped Inventory.

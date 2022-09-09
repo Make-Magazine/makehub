@@ -11,16 +11,16 @@
  * @subpackage Activecampaign_For_Woocommerce/includes
  */
 
+use Activecampaign_For_Woocommerce_AC_Contact as AC_Contact;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
-use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 use Activecampaign_For_Woocommerce_Executable_Interface as Executable;
-use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Order_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
-use Activecampaign_For_Woocommerce_AC_Contact_Repository as Contact_Repository;
-use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Customer_Repository;
 use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Bulksync as Ecom_Bulksync;
+use Activecampaign_For_Woocommerce_AC_Contact_Batch as AC_Contact_Batch;
+use Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository as AC_Contact_Batch_Repository;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Historical_Sync Event Class.
@@ -40,13 +40,6 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	private $logger;
 
 	/**
-	 * The Ecom Order Repo
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Order_Repository
-	 */
-	private $order_repository;
-
-	/**
 	 * The order utilities functions.
 	 *
 	 * @var Activecampaign_For_Woocommerce_Order_Utilities
@@ -54,25 +47,11 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	private $order_utilities;
 
 	/**
-	 * The order utilities functions.
+	 * The AC contact batch repository.
 	 *
-	 * @var Activecampaign_For_Woocommerce_Customer_Utilities
+	 * @var object AC_Batch_Repository.
 	 */
-	private $customer_utilities;
-
-	/**
-	 * The AC contact repository.
-	 *
-	 * @var object AC_Contact.
-	 */
-	private $contact_repository;
-
-	/**
-	 * The Ecom Customer Repo
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Customer_Repository
-	 */
-	private $customer_repository;
+	private $contact_batch_repository;
 
 	/**
 	 * The Ecom Connection ID
@@ -89,15 +68,6 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 * @var Activecampaign_For_Woocommerce_Bulksync_Repository
 	 */
 	private $bulksync_repository;
-
-	/**
-	 * The historical source designation.
-	 *
-	 * @since 1.7.0
-	 *
-	 * @var bool
-	 */
-	private $is_historical;
 
 	/**
 	 * If we run the background job or not.
@@ -131,31 +101,27 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		'success_count'         => 0,
 		'batch_limit'           => 100, // How many records per batch (200 is the API limit)
 		'start_time'            => null, // WP date time
+		'last_update'           => null, // WP date time
 		'end_time'              => null, // WP date time
 		'failed_order_id_array' => [], // Array of failed IDs
 		'is_paused'             => false, // if the sync is paused
 		'is_running'            => true, // running status
 		'sync_type'             => 'bulk',
+		'status_name'           => 'none',
 	];
 
 	/**
 	 * Activecampaign_For_Woocommerce_Historical_Sync_Job constructor.
 	 *
-	 * @param     Activecampaign_For_Woocommerce_Logger|null              $logger     The logger object.
-	 * @param     Activecampaign_For_Woocommerce_Order_Utilities          $order_utilities     The order utilities class.
-	 * @param     Activecampaign_For_Woocommerce_Customer_Utilities       $customer_utilities     The customer utility class.
-	 * @param     Activecampaign_For_Woocommerce_AC_Contact_Repository    $contact_repository     The contact repository object.
-	 * @param     Activecampaign_For_Woocommerce_Ecom_Customer_Repository $customer_repository     The customer repository object.
-	 * @param     Activecampaign_For_Woocommerce_Ecom_Order_Repository    $order_repository     The order repository object.
-	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository      $bulksync_repository The bulksync repository object.
+	 * @param     Activecampaign_For_Woocommerce_Logger|null                 $logger     The logger object.
+	 * @param     Activecampaign_For_Woocommerce_Order_Utilities             $order_utilities     The order utilities class.
+	 * @param     Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository $contact_batch_repository The repository for contact batching.
+	 * @param     Activecampaign_For_Woocommerce_Bulksync_Repository         $bulksync_repository     The bulksync repository object.
 	 */
 	public function __construct(
 		Logger $logger = null,
 		Order_Utilities $order_utilities,
-		Customer_Utilities $customer_utilities,
-		Contact_Repository $contact_repository,
-		Customer_Repository $customer_repository,
-		Order_Repository $order_repository,
+		AC_Contact_Batch_Repository $contact_batch_repository,
 		Bulksync_Repository $bulksync_repository
 	) {
 		if ( ! $logger ) {
@@ -164,15 +130,11 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 			$this->logger = $logger;
 		}
 
-		$this->is_historical       = 1;
-		$this->max_retries         = 2;
-		$this->order_utilities     = $order_utilities;
-		$this->contact_repository  = $contact_repository;
-		$this->customer_repository = $customer_repository;
-		$this->order_repository    = $order_repository;
-		$this->customer_utilities  = $customer_utilities;
-		$this->bulksync_repository = $bulksync_repository;
-		$this->run_background      = true;
+		$this->max_retries              = 2;
+		$this->order_utilities          = $order_utilities;
+		$this->contact_batch_repository = $contact_batch_repository;
+		$this->bulksync_repository      = $bulksync_repository;
+		$this->run_background           = true;
 
 		$admin_storage = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
 		if ( ! empty( $admin_storage ) && isset( $admin_storage['connection_id'] ) ) {
@@ -205,11 +167,6 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 			$this->status['is_paused']  = false;
 			$this->status['is_running'] = true;
-			$this->update_sync_status();
-		} else {
-			delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_LAST_STATUS_NAME );
-
-			// Set the init sync status
 			$this->update_sync_status();
 		}
 
@@ -254,6 +211,12 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 			}
 		}
 
+		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_LAST_STATUS_NAME );
+		$this->status['status_name'] = 'orders';
+
+		// Set the init sync status
+		$this->update_sync_status();
+
 		$this->logger->debug(
 			'Historical sync is starting with the following settings',
 			[
@@ -263,7 +226,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 		if ( $this->run_background ) {
 			$this->logger->debug( 'Run stepped historical sync' );
-			$this->run_historical_sync_one_time();
+			// $this->run_historical_sync_one_time();
+			$this->run_full_historical_sync_process();
 		} else {
 			$this->logger->debug( 'Run active historical sync' );
 			 $this->run_full_historical_sync_process();
@@ -288,7 +252,9 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 * @since 1.6.0
 	 */
 	private function run_full_historical_sync_process() {
-		$exclude = [];
+		$exclude                     = [];
+		$this->status['status_name'] = 'orders';
+		$this->is_historical         = 1;
 
 		if ( ! isset( $this->status['record_offset'] ) && isset( $this->status['current_record'] ) ) {
 			$this->status['record_offset'] = $this->status['current_record'];
@@ -301,6 +267,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 		if ( ! isset( $this->status['batch_limit'] ) ) {
 			$this->status['batch_limit'] = 50;
 		}
+
+		$this->update_sync_status();
 
 		echo esc_html( 'Last record processed (batches of ' . $this->status['batch_limit'] . '):' );
 
@@ -344,6 +312,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 				ob_flush();
 				flush();
 			}
+			$this->cache_flush_extend_time();
 		}
 
 		if ( ! isset( $this->status['stop_type_name'] ) ) {
@@ -357,7 +326,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 * @since 1.6.0
 	 */
 	private function run_historical_sync_one_time() {
-		$exclude = [];
+		$exclude             = [];
+		$this->is_historical = 1;
 
 		if ( $this->status['record_offset'] > 1 ) {
 			$this->status['current_record'] = $this->status['record_offset'];
@@ -411,7 +381,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 *
 	 * @param array $orders An array of orders.
 	 */
-	public function bulk_sync_data( $orders ) {
+	private function bulk_sync_data( $orders ) {
 		$customers       = [];
 		$customer_orders = [];
 		$success_count   = 0;
@@ -424,7 +394,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 			$wc_order = $this->order_utilities->get_wc_order( $order );
 
-			if ( $this->order_utilities->validate_object( $wc_order, 'get_data' ) ) {
+			if ( AC_Utilities::validate_object( $wc_order, 'get_data' ) ) {
 				$this->status['last_processed_id'] = $wc_order->get_id();
 
 				if ( $this->order_utilities->is_refund_order( $wc_order ) ) {
@@ -460,12 +430,12 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 
 				try {
 					// Get the order
-					$ecom_order_with_products = $this->order_utilities->build_ecom_order( $ecom_customer, $wc_order, $this->is_historical );
+					$ecom_order_with_products = $this->order_utilities->build_ecom_order( $ecom_customer, $wc_order, 0 );
 
 					if ( isset( $ecom_order_with_products ) && ! empty( $ecom_order_with_products ) ) {
 
-						if ( ! $this->is_historical && $this->order_utilities->validate_object( $wc_order, 'get_id' ) ) {
-							$ecom_order_with_products->set_id( $this->get_ac_order_id( $wc_order->get_id() ) );
+						if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) ) {
+							$ecom_order_with_products->set_id( $this->order_utilities->get_ac_order_id( $wc_order->get_id() ) );
 						}
 
 						$customer_orders[ $ecom_customer->get_email() ][] = $this->order_utilities->serialize_ecom_order_for_bulksync( $ecom_order_with_products );
@@ -479,8 +449,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 						'Historical sync failed to create an order',
 						[
 							'message'      => $t->getMessage(),
-							'order_number' => $this->order_utilities->validate_object( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
-							'order_id'     => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
+							'order_number' => AC_Utilities::validate_object( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
+							'order_id'     => AC_Utilities::validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
 							'stack_trace'  => $this->logger->clean_trace( $t->getTrace() ),
 						]
 					);
@@ -498,8 +468,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					$this->logger->warning(
 						'Historical Sync: Could not retrieve a valid WC_Order from WooCommerce. This order cannot be synced at this time.',
 						[
-							'order data' => $this->order_utilities->validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
-							'order_id'   => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
+							'order data' => AC_Utilities::validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
+							'order_id'   => AC_Utilities::validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
 						]
 					);
 					$this->status['failed_order_id_array'][] = $wc_order->get_id();
@@ -603,45 +573,15 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	}
 
 	/**
-	 * Get the ActiveCampaign ID.
-	 *
-	 * @param string|int $order_id The order ID.
-	 *
-	 * @return mixed|string|null
-	 */
-	public function get_ac_order_id( $order_id ) {
-		// check if we have it in storage ac_order_id
-		$ac_order_id = $this->order_utilities->get_ac_orderid_from_wc_order( $order_id );
-
-		if ( ! isset( $ac_order_id ) ) {
-			// check ac by externalcheckoutid
-			$externalcheckout_id = $this->order_utilities->get_externalcheckoutid_from_table_by_orderid( $order_id );
-
-			if ( ! empty( $externalcheckout_id ) ) {
-				$order_ac = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
-			}
-
-			if ( ! $this->order_utilities->validate_object( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
-				// check ac by external order id
-				$order_ac = $this->order_repository->find_by_externalid( $order_id );
-			}
-
-			$ac_order_id = $order_ac->get_id();
-		}
-
-		return $ac_order_id;
-	}
-
-	/**
 	 * Add a failed order to the status.
 	 *
 	 * @param     object   $order The order.
 	 * @param     WC_Order $wc_order The WooCommerce order.
 	 */
 	private function add_failed_order_to_status( $order = null, $wc_order = null ) {
-		if ( $this->order_utilities->validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
+		if ( AC_Utilities::validate_object( $wc_order, 'get_id' ) && ! empty( $wc_order->get_id() ) ) {
 			$this->status['failed_order_id_array'][] = $wc_order->get_id();
-		} elseif ( $this->order_utilities->validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
+		} elseif ( AC_Utilities::validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
 			$this->status['failed_order_id_array'][] = $order->get_id();
 		} else {
 			$this->status['failed_order_id_array'][] = $order;
@@ -657,7 +597,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 *
 	 * @return stdClass|WC_Order[]
 	 */
-	public function get_orders_by_page( $offset, $batch_limit, $exclude ) {
+	private function get_orders_by_page( $offset, $batch_limit, $exclude ) {
 		// limits and paged can be added
 		$orders = wc_get_orders(
 			array(
@@ -704,6 +644,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 */
 	private function update_sync_status( $type = '' ) {
 		try {
+			$this->status['last_update'] = wp_date( 'F d, Y - G:i:s e' );
 			switch ( $type ) {
 				case 'pause':
 					update_option(
@@ -717,6 +658,8 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 								'is_paused'             => true,
 								'is_running'            => false,
 								'is_finished'           => true,
+								'status_name'           => 'paused',
+								'status'                => $this->status,
 							]
 						)
 					);
@@ -724,20 +667,11 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					break;
 				case 'cancel':
 				case 'finished':
-					update_option(
-						ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME,
-						wp_json_encode(
-							[
-								'is_paused'   => false,
-								'is_running'  => false,
-								'is_finished' => true,
-							]
-						)
-					);
-					// delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME );
-					$this->status['end_time']   = wp_date( 'F d, Y - G:i:s e' );
-					$this->status['is_running'] = false;
-					delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME );
+					$this->status['is_running']  = false;
+					$this->status['is_finished'] = true;
+					$this->status['end_time']    = wp_date( 'F d, Y - G:i:s e' );
+					$this->status['is_running']  = false;
+					delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME, $this->status );
 					update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_LAST_STATUS_NAME, wp_json_encode( $this->status ) );
 					$this->logger->info(
 						'Historical Sync Ended',
@@ -755,6 +689,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 								'is_running'  => false,
 								'is_halted'   => true,
 								'is_finished' => true,
+								'status_name' => 'halt',
 							]
 						)
 					);
@@ -771,18 +706,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					);
 					die( 'There was a fatal error encountered and Historical Sync was halted. Please go back to the historical sync page and check your ActiveCampaign logs.' );
 				default:
-					update_option(
-						ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME,
-						wp_json_encode(
-							[
-								'current_record'        => $this->status['current_record'],
-								'success_count'         => $this->status['success_count'],
-								'failed_order_id_array' => $this->status['failed_order_id_array'],
-								'last_processed_id'     => $this->status['last_processed_id'],
-								'is_running'            => true,
-							]
-						)
-					);
+					update_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME, wp_json_encode( $this->status ) );
 					break;
 			}
 		} catch ( Throwable $t ) {
@@ -797,254 +721,6 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	}
 
 	/**
-	 * Sync any new orders.
-	 * Triggered from a hook call.
-	 *
-	 * @param     mixed ...$args The passed args.
-	 */
-	public function sync_new_orders( ...$args ) {
-		$order_id = null;
-
-		if ( isset( $args[0] ) ) {
-			// We're just syncing one row
-			$order_id = $args[0];
-		}
-
-		$unsynced_order_data = $this->get_unsynced_orders_from_table( $order_id, false );
-		$recovered_orders    = $this->get_unsynced_orders_from_table( $order_id, true );
-
-		if ( ! empty( $unsynced_order_data ) && count( $unsynced_order_data ) > 0 ) {
-			$unsynced_wc_orders = $this->order_utilities->get_orders_from_unsynced_data( $unsynced_order_data );
-
-			if ( ! empty( $unsynced_wc_orders ) && count( $unsynced_wc_orders ) > 0 ) {
-				$this->bulk_sync_data( $unsynced_wc_orders );
-
-				foreach ( $unsynced_order_data as $order ) {
-					$this->check_synced_order( $order );
-				}
-			}
-		}
-
-		if ( ! empty( $recovered_orders ) && count( $recovered_orders ) > 0 ) {
-			foreach ( $recovered_orders as $unsynced_recovered_order ) {
-				$wc_order = $this->order_utilities->get_wc_order( wc_get_order( $unsynced_recovered_order->wc_order_id ) );
-				$ac_order = $this->sync_recovered_order( $wc_order );
-
-				$this->check_synced_order( $unsynced_recovered_order, $ac_order );
-			}
-		}
-	}
-
-	/**
-	 * Sync a recovered order.
-	 *
-	 * @param WC_Order $wc_order The WooCommerce order.
-	 *
-	 * @return Activecampaign_For_Woocommerce_Ecom_Model_Interface|null
-	 */
-	private function sync_recovered_order( $wc_order ) {
-		// Get the customer
-		try {
-			$ecom_customer = new Ecom_Customer();
-			$ecom_customer->create_ecom_customer_from_order( $wc_order );
-
-			// Make sure our customer is added to the customers array
-			if ( ! isset( $customers[ $ecom_customer->get_email() ] ) ) {
-				if ( $ecom_customer->get_accepts_marketing() === null ) {
-					$ecom_customer->set_accepts_marketing( $wc_order->get_meta( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME ) );
-				}
-
-				$customers[ $ecom_customer->get_email() ] = $ecom_customer->serialize_to_array();
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Sync failed to create a customer',
-				[
-					'message'     => $t->getMessage(),
-					'stack_trace' => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
-
-			return null;
-		}
-
-		try {
-			// Get the order
-			$ecom_order_with_products = $this->order_utilities->build_ecom_order( $ecom_customer, $wc_order, 0 );
-
-			if ( ! empty( $ecom_order_with_products ) ) {
-				$ecom_order_with_products->set_id( $this->get_ac_order_id( $wc_order->get_id() ) );
-				$result = $this->order_repository->update( $ecom_order_with_products );
-
-				if ( isset( $result ) ) {
-					return $result;
-				}
-			} else {
-				return null;
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Historical sync failed to create an order',
-				[
-					'message'      => $t->getMessage(),
-					'order_number' => $this->order_utilities->validate_object( $wc_order, 'get_order_number' ) ? $wc_order->get_order_number() : null,
-					'order_id'     => $this->order_utilities->validate_object( $wc_order, 'get_id' ) ? $wc_order->get_id() : null,
-					'stack_trace'  => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
-			return null;
-		}
-	}
-
-	/**
-	 * Check if our order was properly synced to AC then mark result in the table.
-	 *
-	 * @param     object     $unsynced_order     The stored cart or order object.
-	 * @param     Ecom_Order $ac_order The AC order object.
-	 */
-	private function check_synced_order( $unsynced_order, $ac_order = null ) {
-		global $wpdb;
-
-		if ( $this->order_utilities->validate_object( $ac_order, 'get_id' ) ) {
-			$ac_order_id = $ac_order->get_id();
-		} else {
-			$ac_order = $this->order_repository->find_by_externalid( $unsynced_order->wc_order_id );
-
-			if ( $this->order_utilities->validate_object( $ac_order, 'get_id' ) ) {
-				$ac_order_id = $ac_order->get_id();
-			}
-		}
-
-		if ( $this->order_utilities->validate_object( $ac_order, 'get_customer_id' ) ) {
-			$ac_customer_id = $ac_order->get_customer_id();
-		}
-
-		if ( ! isset( $ac_customer_id ) ) {
-			$ac_customer = $this->customer_repository->find_by_email_and_connection_id( $unsynced_order->customer_email, $this->connection_id );
-			if ( $this->order_utilities->validate_object( $ac_customer, 'get_id' ) ) {
-				$ac_customer_id = $ac_customer->get_id();
-			}
-		}
-
-		$data = [ 'synced_to_ac' => 0 ];
-
-		if ( ! empty( $ac_customer_id ) ) {
-			$data['ac_customer_id'] = $ac_customer_id;
-		}
-
-		if ( ! empty( $ac_order_id ) ) {
-			$data['ac_order_id']  = $ac_order_id;
-			$data['synced_to_ac'] = 1;
-			$note                 = 'Order record synced to ActiveCampaign (ID: ' . $ac_order_id . ')';
-			wc_create_order_note( $unsynced_order->wc_order_id, $note );
-		}
-
-		// if order do this
-		$wpdb->update(
-			$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
-			$data,
-			[
-				'id' => $unsynced_order->id,
-			]
-		);
-
-		if ( $wpdb->last_error ) {
-			$this->logger->error(
-				'Abandonement sync: There was an error updating an abandoned cart record as synced.',
-				[
-					'wpdb_last_error' => $wpdb->last_error,
-				]
-			);
-		}
-	}
-
-	/**
-	 * Get all of the unsynced orders from the table.
-	 *
-	 * @param     int|null $id     The row id.
-	 * @param     bool     $recovered If this is a recovered call.
-	 *
-	 * @return array|bool|object|null
-	 */
-	private function get_unsynced_orders_from_table( $id = null, $recovered = false ) {
-		global $wpdb;
-
-		try {
-			// Get the expired carts from our table
-			if ( ! empty( $id ) ) {
-				if ( true === $recovered ) {
-					$where = 'abandoned_date IS NOT NULL';
-				} else {
-					$where = 'abandoned_date IS NULL';
-				}
-
-				$orders = $wpdb->get_results(
-				// phpcs:disable
-					$wpdb->prepare( 'SELECT id, wc_order_id, ac_externalcheckoutid, customer_email, abandoned_date
-						FROM
-							`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
-						WHERE '.$where.'
-							AND id = %d
-							LIMIT 1',
-						$id
-
-					)
-				// phpcs:enable
-				);
-
-			} else {
-				if ( true === $recovered ) {
-					$where = 'AND abandoned_date IS NOT NULL';
-				} else {
-					$where = 'AND abandoned_date IS NULL';
-				}
-
-				$orders = $wpdb->get_results(
-				// phpcs:disable
-					$wpdb->prepare( 'SELECT id, wc_order_id, ac_externalcheckoutid, customer_email
-					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
-					WHERE
-						wc_order_id IS NOT NULL 
-						'.$where.'
-						AND synced_to_ac = %d
-						ORDER BY id ASC
-						LIMIT 100',
-						0
-
-					)
-				// phpcs:enable
-				);
-			}
-
-			if ( $wpdb->last_error ) {
-				$this->logger->error(
-					'Abandonment sync: There was an error getting results for abandoned cart records.',
-					[
-						'wpdb_last_error' => $wpdb->last_error,
-					]
-				);
-			}
-
-			if ( ! empty( $orders ) ) {
-				$this->is_historical = 0;
-
-				return $orders;
-			} else {
-				return false;
-			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'Order Sync: There was an error with preparing or getting order results.',
-				[
-					'message' => $t->getMessage(),
-					'trace'   => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
-		}
-	}
-
-	/**
 	 * Schedules another followup bulk historical sync to run as a background job.
 	 *
 	 * @param int $start_rec The start record.
@@ -1052,7 +728,7 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 	 *
 	 * @since 1.7.3
 	 */
-	public function schedule_bulk_historical_sync( $start_rec, $batch_limit ) {
+	private function schedule_bulk_historical_sync( $start_rec, $batch_limit ) {
 		$logger = new Logger();
 		try {
 			wp_schedule_single_event(
@@ -1084,6 +760,183 @@ class Activecampaign_For_Woocommerce_Historical_Sync_Job implements Executable {
 					'function' => 'schedule_single_historical_sync',
 				]
 			);
+		}
+	}
+
+	/**
+	 * Step 1 run historical sync on contacts
+	 */
+	public function run_historical_sync_contacts() {
+		global $wpdb;
+
+		// set the start time
+		if ( ! isset( $this->status['start_time'] ) ) {
+			$this->status['start_time'] = wp_date( 'F d, Y - G:i:s e' );
+		}
+
+		$this->update_sync_status();
+		$this->output_echo( 'Syncing contacts...' );
+		$this->status['status_name']   = 'contacts';
+		$this->status['contact_count'] = 0;
+		$this->status['contact_total'] = $wpdb->get_var( 'SELECT count(email) FROM ' . $wpdb->prefix . 'wc_customer_lookup WHERE email != "";' );
+
+		$this->update_sync_status();
+
+		$c               = 0;
+		$limit           = 200;
+		$synced_contacts = 0;
+		// phpcs:disable
+		while ( $wc_customers = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT first_name, last_name, email, user_id, customer_id FROM ' . $wpdb->prefix . 'wc_customer_lookup WHERE email != "" ORDER BY customer_id LIMIT %d, %d;',
+				[ $c, $limit ]
+			)
+		// phpcs:enable
+		) ) {
+			$bulk_contacts = [];
+			foreach ( $wc_customers as $wc_customer ) {
+				try {
+					if ( isset( $wc_customer->email ) ) {
+						$ac_contact = new AC_Contact();
+						$ac_contact->set_first_name( $wc_customer->first_name );
+						$ac_contact->set_last_name( $wc_customer->last_name );
+						$ac_contact->set_email( $wc_customer->email );
+						$ac_contact->set_phone( $this->find_wc_phone_number( $wc_customer ) );
+
+						$bulk_contacts[] = $ac_contact->serialize_to_array();
+						$synced_contacts ++;
+					}
+				} catch ( Throwable $t ) {
+					$this->logger->warning(
+						'A contact failed validation. This record will be skipped.',
+						[
+							'message' => $t->getMessage(),
+						]
+					);
+				}
+			}
+
+			$ac_contact_batch = new AC_Contact_Batch();
+			$ac_contact_batch->set_contacts( $bulk_contacts );
+			$batch    = $ac_contact_batch->to_json();
+			$response = $this->contact_batch_repository->create( $ac_contact_batch );
+			$this->logger->debug(
+				'Processing the batch customer object...',
+				[
+					'batch'    => $batch,
+					'response' => $response,
+				]
+			);
+
+			$c += $limit;
+			$this->output_echo( $c . ' Contacts Synced' );
+			$this->status['contact_count'] = $synced_contacts;
+			$this->update_sync_status();
+			// Don't let cache overflow
+			$this->cache_flush_extend_time();
+		}
+		$this->output_echo( 'Contacts Finished Syncing' );
+		$this->logger->info(
+			'Contacts synced',
+			[
+				'count' => $c,
+			]
+		);
+	}
+
+	/**
+	 * Finds the phone number through few methods.
+	 *
+	 * @param object $wc_customer The WooCommerce customer.
+	 *
+	 * @return string|null The phone number returned.
+	 */
+	private function find_wc_phone_number( $wc_customer ) {
+		global $wpdb;
+		try {
+			if ( AC_Utilities::validate_object( $wc_customer, 'user_id' ) && ! empty( $wc_customer->user_id ) ) {
+				$phone = $wpdb->get_var(
+					$wpdb->prepare(
+						'SELECT meta_value FROM ' . $wpdb->prefix . 'usermeta where meta_key = %s AND user_id = %d;',
+						[ 'billing_phone', $wc_customer->user_id ]
+					)
+				);
+
+				if ( isset( $phone ) && ! empty( $phone ) ) {
+					return $phone;
+				}
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Historical Sync: There was an error trying to find phone number from usermeta.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( ( $t->getTrace() ) ),
+				]
+			);
+		}
+
+		try {
+			if ( ! empty( $wc_customer->customer_id ) ) {
+				$order_id = $wpdb->get_var(
+					$wpdb->prepare(
+						'SELECT order_id FROM ' . $wpdb->prefix . 'wc_order_stats where customer_id = %d ORDER BY order_id ASC LIMIT 1;',
+						[ $wc_customer->customer_id ]
+					)
+				);
+
+				if ( isset( $order_id ) ) {
+					$wc_order = wc_get_order( $order_id );
+
+					if ( AC_Utilities::validate_object( $wc_order, 'get_billing_phone' ) ) {
+						$phone = $wc_order->get_billing_phone();
+					}
+
+					if ( isset( $phone ) && ! empty( $phone ) ) {
+						return $phone;
+					}
+				}
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Historical Sync: There was an error trying to find phone number from order stats.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $this->logger->clean_trace( ( $t->getTrace() ) ),
+				]
+			);
+		}
+
+		return '';
+	}
+
+
+	/**
+	 * Outputs an echo and flushes the string.
+	 *
+	 * @param string $output The output string.
+	 */
+	private function output_echo( $output ) {
+		echo '<p>' . esc_html( $output ) . '</p>';
+		ob_flush();
+		flush();
+	}
+
+	/**
+	 * Flush the cache and extend the time limit
+	 */
+	private function cache_flush_extend_time() {
+		if ( function_exists( 'wp_cache_flush_runtime' ) ) {
+			// Memory will overflow if we don't clear the cache during read. This will flush just this cycle.
+			wp_cache_flush_runtime();
+		} elseif ( function_exists( 'wp_cache_flush' ) ) {
+			// This will flush all the cache but we have to for this to not crash
+			wp_cache_flush();
+		}
+
+		if ( function_exists( 'set_time_limit' ) ) {
+			// This extends our time limit another 30 seconds to make sure we don't get a process end early.
+			set_time_limit( 30 );
 		}
 	}
 }

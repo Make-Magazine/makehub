@@ -63,6 +63,10 @@ class CFF_Error_Reporter
 		add_action( 'wp_ajax_cff_dismiss_critical_notice', [ $this, 'dismiss_critical_notice']  );
 		add_action( 'wp_footer', [ $this, 'critical_error_notice'] , 300 );
 		add_action( 'cff_admin_notices', [ $this, 'admin_error_notices']  );
+
+        // Handles DB Error Reporting
+        $db_handler = new DB_Error_Handler();
+        $db_handler->register_hooks();
 	}
 
 	/**
@@ -95,7 +99,7 @@ class CFF_Error_Reporter
 					}
 				}
 			}
-			if ( !$accesstoken_error_exists ) {
+			if ( ! $accesstoken_error_exists && isset( $this->errors['accounts'] ) ) {
 				$this->errors['accounts'][ $connected_account['id'] ][] = array(
 					'accesstoken' 	=> $args['accesstoken'],
 					'post_id' 		=> $args['post_id'],
@@ -664,9 +668,20 @@ class CFF_Error_Reporter
 	public function admin_error_notices() {
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'cff-settings' )) ) {
 			$errors = $this->get_errors();
-			if ( ! empty( $errors ) && (! empty( $errors['database_create'] ) || ! empty( $errors['upload_dir'] )) ) : ?>
+
+            if ( ! empty( $errors ) ) {
+	            /**
+                 * Error notice for the Custom Facebook Feed plugin.
+                 *
+                 * @since 4.2.6
+                 *
+	             * @var array $error
+	             */
+	            do_action( 'cff_error_admin_notice', $errors );
+            }
+
+			if ( ! empty( $errors ) && ! empty( $errors['upload_dir'] ) ) : ?>
             <div class="cff-admin-notices cff-critical-error-notice">
-	            <?php if ( ! empty( $errors['database_create'] ) ) echo '<p>' . $errors['database_create'] . '</p>'; ?>
 				<?php if ( ! empty( $errors['upload_dir'] ) ) echo '<p>' . $errors['upload_dir'] . '</p>'; ?>
                 <p><?php _e( sprintf( 'Visit our %s page for help', '<a href="https://smashballoon.com/custom-facebook-feed/faq/" class="cff-notice-btn cff-btn-grey" target="_blank">FAQ</a>' ), 'custom-facebook-feed' ); ?></p>
             </div>

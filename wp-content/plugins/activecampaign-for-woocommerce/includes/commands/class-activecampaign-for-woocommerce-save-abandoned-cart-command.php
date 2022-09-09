@@ -208,7 +208,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 						// phpcs:disable
 							$wpdb->prepare(
 								'
-							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' 
 							WHERE id = %d
 							',
 								$abandoned_row_id
@@ -220,7 +220,7 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 						// phpcs:disable
 							$wpdb->prepare(
 								'
-							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . ' 
+							SELECT id FROM ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . ' 
 							WHERE activecampaignfwc_order_external_uuid = %s
 							',
 								$activecampaignfwc_order_external_uuid

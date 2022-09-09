@@ -217,6 +217,8 @@ function rocket_get_ignored_parameters() {
 		'dm_i'                  => 1,
 		'epik'                  => 1,
 		'pp'                    => 1,
+		'gbraid'                => 1,
+		'wbraid'                => 1,
 	];
 
 	/**
@@ -239,10 +241,10 @@ function rocket_get_ignored_parameters() {
  * @since 2.0
  *
  * @param bool $force Force the static uris to be reverted to null.
- *
+ * @param bool $show_safe_content show sensitive uris.
  * @return string A pipe separated list of rejected uri.
  */
-function get_rocket_cache_reject_uri( $force = false ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+function get_rocket_cache_reject_uri( $force = false, $show_safe_content = true ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 	static $uris;
 	global $wp_rewrite;
 
@@ -253,7 +255,8 @@ function get_rocket_cache_reject_uri( $force = false ) { // phpcs:ignore WordPre
 		return $uris;
 	}
 
-	$uris              = (array) get_rocket_option( 'cache_reject_uri', [] );
+	$uris = (array) get_rocket_option( 'cache_reject_uri', [] );
+
 	$home_root         = rocket_get_home_dirname();
 	$home_root_escaped = preg_quote( $home_root, '/' ); // The site is not at the domain root, it's in a folder.
 	$home_root_len     = strlen( $home_root );
@@ -287,8 +290,9 @@ function get_rocket_cache_reject_uri( $force = false ) { // phpcs:ignore WordPre
 	 * @since 2.1
 	 *
 	 * @param array $uris List of rejected uri
+	 * @param bool $show_safe_content show sensitive uris.
 	*/
-	$uris = apply_filters( 'rocket_cache_reject_uri', $uris );
+	$uris = apply_filters( 'rocket_cache_reject_uri', $uris, $show_safe_content );
 	$uris = array_filter( $uris );
 
 	if ( ! $uris ) {
@@ -455,12 +459,12 @@ function get_rocket_cache_query_string() { // phpcs:ignore WordPress.NamingConve
  * @return bool true if everything is ok, false otherwise
  */
 function rocket_valid_key() {
-	$rocket_secret_key = get_rocket_option( 'secret_key' );
+	$rocket_secret_key = (string) get_rocket_option( 'secret_key', '' );
 	if ( ! $rocket_secret_key ) {
 		return false;
 	}
 
-	$valid_details = 8 === strlen( get_rocket_option( 'consumer_key' ) ) && hash_equals( $rocket_secret_key, hash( 'crc32', get_rocket_option( 'consumer_email' ) ) );
+	$valid_details = 8 === strlen( (string) get_rocket_option( 'consumer_key', '' ) ) && hash_equals( $rocket_secret_key, hash( 'crc32', get_rocket_option( 'consumer_email', '' ) ) );
 
 	if ( ! $valid_details ) {
 		set_transient(
@@ -528,7 +532,7 @@ function rocket_check_key() {
 		if ( '' === $body ) {
 			Logger::error( 'License validation failed. No body available in response.', [ 'license validation process' ] );
 			// Translators: %1$s = opening em tag, %2$s = closing em tag, %3$s = opening link tag, %4$s closing link tag.
-			$message = __( 'License validation failed. Our server could not resolve the request from your website.', 'rocket' ) . '<br>' . sprintf( __( 'Try clicking %1$sSave Changes%2$s below. If the error persists, follow %3$sthis guide%4$s.', 'rocket' ), '<em>', '</em>', '<a href="https://docs.wp-rocket.me/article/100-resolving-problems-with-license-validation#general">', '</a>' );
+			$message = __( 'License validation failed. Our server could not resolve the request from your website.', 'rocket' ) . '<br>' . sprintf( __( 'Try clicking %1$sValidate License%2$s below. If the error persists, follow %3$sthis guide%4$s.', 'rocket' ), '<em>', '</em>', '<a href="https://docs.wp-rocket.me/article/100-resolving-problems-with-license-validation#general">', '</a>' );
 			set_transient( 'rocket_check_key_errors', [ $message ] );
 
 			return $return;

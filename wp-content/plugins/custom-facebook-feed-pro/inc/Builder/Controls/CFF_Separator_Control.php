@@ -36,7 +36,7 @@ class CFF_Separator_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-			<div class="sb-control-elem-separator cff-fb-fs" :style="'margin-top:'+ (control.top ? control.top : 0) +'px;margin-bottom:'+ (control.bottom ? control.bottom : 0) +'px;'"></div>
+			<div v-bind:id="'sb-control-'+control.id" class="sb-control-elem-separator cff-fb-fs" :style="'margin-top:'+ (control.top ? control.top : 0) +'px;margin-bottom:'+ (control.bottom ? control.bottom : 0) +'px;'"></div>
 		<?php
 	}
 

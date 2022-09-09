@@ -40,10 +40,6 @@ if ( ( defined( 'LEARNDASH_TRANSLATIONS' ) ) && ( LEARNDASH_TRANSLATIONS === tru
 require_once __DIR__ . '/class-ld-settings-page-support.php';
 require_once __DIR__ . '/class-ld-settings-page-advanced.php';
 
-//require_once __DIR__ . '/class-ld-settings-page-paypal.php';
-//require_once __DIR__ . '/class-ld-settings-page-custom-labels.php';
-//require_once __DIR__ . '/class-ld-settings-page-data-upgrades.php';
-
 // Add-ons Page.
 if ( ( defined( 'LEARNDASH_ADDONS_UPDATER' ) ) && ( LEARNDASH_ADDONS_UPDATER === true ) ) {
 	require_once __DIR__ . '/class-ld-settings-page-addons.php';

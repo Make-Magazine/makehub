@@ -124,7 +124,14 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			}
 
 			// Do not process intents that can't be captured.
-			$intent = $this->api_client->get_intent( $intent_id );
+			$intent                   = $this->api_client->get_intent( $intent_id );
+			$intent_metadata          = is_array( $intent->get_metadata() ) ? $intent->get_metadata() : [];
+			$intent_meta_order_id_raw = $intent_metadata['order_id'] ?? '';
+			$intent_meta_order_id     = is_numeric( $intent_meta_order_id_raw ) ? intval( $intent_meta_order_id_raw ) : 0;
+			if ( $intent_meta_order_id !== $order->get_id() ) {
+				Logger::error( 'Payment capture rejected due to failed validation: order id on intent is incorrect or missing.' );
+				return new WP_Error( 'wcpay_intent_order_mismatch', __( 'The payment cannot be captured', 'woocommerce-payments' ), [ 'status' => 409 ] );
+			}
 			if ( ! in_array( $intent->get_status(), [ 'processing', 'requires_capture', 'succeeded' ], true ) ) {
 				return new WP_Error( 'wcpay_payment_uncapturable', __( 'The payment cannot be captured', 'woocommerce-payments' ), [ 'status' => 409 ] );
 			}
@@ -134,7 +141,8 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			$order->set_payment_method_title( __( 'WooCommerce In-Person Payments', 'woocommerce-payments' ) );
 			$intent_id     = $intent->get_id();
 			$intent_status = $intent->get_status();
-			$charge_id     = $intent->get_charge_id();
+			$charge        = $intent->get_charge();
+			$charge_id     = $charge ? $charge->get_id() : null;
 			$this->gateway->attach_intent_info_to_order(
 				$order,
 				$intent_id,
@@ -177,7 +185,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			// Store receipt generation URL for mobile applications in order meta-data.
 			$order->add_meta_data( 'receipt_url', get_rest_url( null, sprintf( '%s/payments/readers/receipts/%s', $this->namespace, $intent->get_id() ) ) );
 			// Actualize order status.
-			$this->order_service->mark_terminal_payment_completed( $order, $intent_id, $result['status'], $charge_id );
+			$this->order_service->mark_terminal_payment_completed( $order, $intent_id, $result['status'] );
 
 			return rest_ensure_response(
 				[
@@ -260,11 +268,67 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 		}
 
 		try {
-			$result = $this->gateway->create_intent( $order, [ Payment_Method::CARD_PRESENT ], 'manual' );
+			$result = $this->gateway->create_intent(
+				$order,
+				$this->get_terminal_intent_payment_method( $request ),
+				$this->get_terminal_intent_capture_method( $request ),
+				$request->get_param( 'metadata' ) ?? [],
+				$request->get_param( 'customer_id' )
+			);
 			return rest_ensure_response( $result );
 		} catch ( \Throwable $e ) {
 			Logger::error( 'Failed to create an intention via REST API: ' . $e );
 			return new WP_Error( 'wcpay_server_error', __( 'Unexpected server error', 'woocommerce-payments' ), [ 'status' => 500 ] );
 		}
+	}
+
+	/**
+	 * Return terminal intent payment method array based on payment methods request.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @param array           $default_value - default value.
+	 *
+	 * @return array|null
+	 * @throws \Exception
+	 */
+	public function get_terminal_intent_payment_method( $request, array $default_value = [ Payment_Method::CARD_PRESENT ] ) :array {
+		$payment_methods = $request->get_param( 'payment_methods' );
+		if ( null === $payment_methods ) {
+			return $default_value;
+		}
+
+		if ( ! is_array( $payment_methods ) ) {
+			throw new \Exception( 'Invalid param \'payment_methods\'!' );
+		}
+
+		foreach ( $payment_methods as $value ) {
+			if ( ! in_array( $value, Payment_Method::IPP_ALLOWED_PAYMENT_METHODS, true ) ) {
+				throw new \Exception( 'One or more payment methods are not supported!' );
+			}
+		}
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Return terminal intent capture method based on capture method request.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @param string          $default_value default value.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 */
+	public function get_terminal_intent_capture_method( $request, string $default_value = 'manual' ) : string {
+		$capture_method = $request->get_param( 'capture_method' );
+		if ( null === $capture_method ) {
+			return $default_value;
+		}
+
+		if ( ! in_array( $capture_method, [ 'manual', 'automatic' ], true ) ) {
+			throw new \Exception( 'Invalid param \'capture_method\'!' );
+		}
+
+		return $capture_method;
 	}
 }

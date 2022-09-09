@@ -6,14 +6,14 @@ Domain Path: /lang
 Plugin URI: http://wordpress.org/plugins/timed-content/
 Description: Plugin to show or hide portions of a Page or Post based on specific date/time characteristics.  These actions can either be processed either server-side or client-side, depending on the desired effect.
 Author: K. Tough, Arno Welzel, Enrico Bacis
-Version: 2.68
+Version: 2.72
 Author URI: http://wordpress.org/plugins/timed-content/
 */
 defined('ABSPATH') or die();
 
 include 'lib/customFieldsInterface.php';
 
-define('TIMED_CONTENT_VERSION', '2.68');
+define('TIMED_CONTENT_VERSION', '2.72');
 define('TIMED_CONTENT_SLUG', 'timed-content');
 define('TIMED_CONTENT_PLUGIN_URL', plugins_url() . '/' . TIMED_CONTENT_SLUG);
 define('TIMED_CONTENT_SHORTCODE_CLIENT', 'timed-content-client');
@@ -29,6 +29,12 @@ define('TIMED_CONTENT_JQUERY_UI_CSS', TIMED_CONTENT_PLUGIN_URL . '/css/jqueryui/
 define('TIMED_CONTENT_JQUERY_UI_TIMEPICKER_JS', TIMED_CONTENT_PLUGIN_URL . '/js/jquery-ui-timepicker-0.3.3/jquery.ui.timepicker.js');
 define('TIMED_CONTENT_JQUERY_UI_TIMEPICKER_CSS', TIMED_CONTENT_PLUGIN_URL . '/js/jquery-ui-timepicker-0.3.3/jquery.ui.timepicker.css');
 define('TIMED_CONTENT_DATE_FORMAT_OUTPUT', 'Y-m-d H:i O');
+define('TIMED_CONTENT_FREQ_HOURLY', 0);
+define('TIMED_CONTENT_FREQ_DAILY', 1);
+define('TIMED_CONTENT_FREQ_WEEKLY', 2);
+define('TIMED_CONTENT_FREQ_MONTHLY', 3);
+define('TIMED_CONTENT_FREQ_YEARLY', 4);
+
 
 /**
  * Class timedContentPlugin
@@ -67,7 +73,6 @@ class timedContentPlugin
         add_filter('pre_get_posts', array($this, 'timedContentPreGetPosts'));
         add_filter('post_updated_messages', array($this, 'timedContentRuleUpdatedMessages'), 1);
 
-        add_action('plugins_loaded', array($this, 'i18nInit'), 1);
         add_action('init', array($this, 'init'), 2);
         add_action('wp_head', array($this, 'addHeaderCode'), 1);
         add_action('manage_' . TIMED_CONTENT_RULE_TYPE . '_posts_custom_column', array($this, 'addDescColumnContent'), 10, 2);
@@ -91,6 +96,8 @@ class timedContentPlugin
     function init()
     {
         global $wp_locale;
+
+        load_plugin_textdomain('timed-content', false, basename(dirname(__FILE__)) . '/lang/');
 
         $this->rule_freq_array = array(
             0 => __('hourly', 'timed-content'),
@@ -860,7 +867,26 @@ class timedContentPlugin
             $loop_test = "return (\$period_count < \$num_repeat);";
         }
 
-        while (eval ($loop_test)) {
+        $day_limit = 0;
+        switch($freq) {
+            case TIMED_CONTENT_FREQ_HOURLY:
+                $day_limit = 1;
+                break;
+            case TIMED_CONTENT_FREQ_DAILY:
+                $day_limit = 7;
+                break;
+            case TIMED_CONTENT_FREQ_WEEKLY:
+                $day_limit = 21;
+                break;
+            case TIMED_CONTENT_FREQ_MONTHLY:
+                $day_limit = 80;
+                break;
+            default: // TIMED_CONTENT_FREQ_YEARLY:
+                $day_limit = 380;
+                break;
+        }
+        $future_repeats = 0;
+        while (eval ($loop_test) && ($current < $right_now_t || $future_repeats<20)) {
             $exception_period = false;
             $current_date = date('Y-m-d', $current);
             if (is_array($exceptions_dates)) {
@@ -875,7 +901,10 @@ class timedContentPlugin
                 }
             }
 
-            if ((eval ($loop_test)) && (!($exception_period))) {
+            if ((eval ($loop_test)) && (!($exception_period)) && $current > $right_now_t-$day_limit*86400) {
+                if ($current > $right_now_t) {
+                    $future_repeats++;
+                }
                 $end_current = $current + ($instance_end - $instance_start);
                 if ($human_readable == true) {
                     $active_periods[ $period_count ]["start"] = date_i18n(TIMED_CONTENT_DATE_FORMAT_OUTPUT, $current);
@@ -889,37 +918,48 @@ class timedContentPlugin
                         $active_periods[ $period_count ]["status"] = "active";
                         $active_periods[ $period_count ]["time"]   = __("Right now!", 'timed-content');
                     } else {
-                        $active_periods[ $period_count ]["status"] = "expired";
-                        $active_periods[ $period_count ]["time"]   = sprintf(_x('%s ago.',
-                            'Human readable time difference', 'timed-content'),
-                            human_time_diff($end_current, $right_now_t));
+                        $active_periods[$period_count]["status"] = "expired";
+                        $active_periods[$period_count]["time"] = sprintf(
+                            _x(
+                                '%s ago.',
+                                'Human readable time difference',
+                                'timed-content'
+                            ),
+                            human_time_diff($end_current, $right_now_t)
+                        );
                     }
                 } else {
-                    $active_periods[ $period_count ]["start"] = $current;
-                    $active_periods[ $period_count ]["end"]   = $end_current;
+                    $active_periods[$period_count]["start"] = $current;
+                    $active_periods[$period_count]["end"] = $end_current;
                 }
                 if (!($exception_period)) {
                     $period_count ++;
                 }
             }
 
-            if ($freq == 0) {
-                $current = $this->getNextHour($current, $interval_multiplier);
-            } elseif ($freq == 1) {
-                $current = $this->getNextDay($current, $interval_multiplier);
-            } elseif ($freq == 2) {
-                $current = $this->getNextWeek($current, $interval_multiplier, $days_of_week);
-            } elseif ($freq == 3) {
-                $current      = $this->getNextMonth($current, $instance_start, $interval_multiplier);
-                $temp_current = $current;
-                if ($monthly_pattern == "yes") {
-                    $current = $this->getNthWeekdayOfMonth($current, $monthly_pattern_ord,
-                        $monthly_pattern_day);
-                } else {
-                    $current = $temp_current;
-                }
-            } elseif ($freq == 4) {
-                $current = $this->getNextYear($current, $interval_multiplier);
+            switch ($freq) {
+                case TIMED_CONTENT_FREQ_HOURLY:
+                    $current = $this->getNextHour($current, $interval_multiplier);
+                    break;
+                case TIMED_CONTENT_FREQ_DAILY:
+                    $current = $this->getNextDay($current, $interval_multiplier);
+                    break;
+                case TIMED_CONTENT_FREQ_WEEKLY:
+                    $current = $this->getNextWeek($current, $interval_multiplier, $days_of_week);
+                    break;
+                case TIMED_CONTENT_FREQ_MONTHLY:
+                    $current      = $this->getNextMonth($current, $instance_start, $interval_multiplier);
+                    $temp_current = $current;
+                    if ($monthly_pattern == "yes") {
+                        $current = $this->getNthWeekdayOfMonth($current, $monthly_pattern_ord,
+                            $monthly_pattern_day);
+                    } else {
+                        $current = $temp_current;
+                    }
+                    break;
+                default: // TIMED_CONTENT_FREQ_YEARLY:
+                    $current = $this->getNextYear($current, $interval_multiplier);
+                    break;
             }
         }
         date_default_timezone_set($temp_tz);
@@ -1849,17 +1889,6 @@ class timedContentPlugin
     }
 
     /**
-     * Adds support for i18n (internationalization)
-     *
-     * @return void
-     */
-    function i18nInit()
-    {
-        $plugin_dir = basename(dirname(__FILE__)) . "/lang/";
-        load_plugin_textdomain('timed-content', false, $plugin_dir);
-    }
-
-    /**
      * Add custom columns to the Timed Content Rules overview page
      *
      * @return void
@@ -1990,8 +2019,8 @@ class timedContentPlugin
                 "title"       => __("Starting date/time", 'timed-content'),
                 "description" => __("Sets the date and time for the beginning of the first active period for this rule.", 'timed-content'),
                 "type"        => "datetime",
-                "default"     => array("date" => strftime('%Y-%m-%d', $now_plus1h_dt->getTimeStamp()),
-                                       "time" => strftime('%H:%M', $now_plus1h_dt->getTimeStamp())),
+                "default"     => array("date" => date('Y-m-d', $now_plus1h_dt->getTimeStamp()),
+                                       "time" => date('H:i', $now_plus1h_dt->getTimeStamp())),
                 "scope"       => array(TIMED_CONTENT_RULE_TYPE),
                 "capability"  => "edit_posts"
            ),
@@ -2001,8 +2030,8 @@ class timedContentPlugin
                 "title"       => __("Ending date/time", 'timed-content'),
                 "description" => __("Sets the date and time for the end of the first active period for this rule.", 'timed-content'),
                 "type"        => "datetime",
-                "default"     => array("date" => strftime('%Y-%m-%d', $now_plus2h_dt->getTimeStamp()),
-                                       "time" => strftime('%H:%M', $now_plus2h_dt->getTimeStamp())),
+                "default"     => array("date" => date('Y-m-d', $now_plus2h_dt->getTimeStamp()),
+                                       "time" => date('H:i', $now_plus2h_dt->getTimeStamp())),
                 "scope"       => array(TIMED_CONTENT_RULE_TYPE),
                 "capability"  => "edit_posts"
            ),
@@ -2149,7 +2178,7 @@ class timedContentPlugin
                 "title"       => __("End Date", 'timed-content'),
                 "description" => __("Using the settings above, repeat this action until this date.", 'timed-content'),
                 "type"        => "date",
-                "default"     => strftime('%Y-%m-%d', $now_plus1y_dt->getTimeStamp()),
+                "default"     => date('Y-m-d', $now_plus1y_dt->getTimeStamp()),
                 "scope"       => array(TIMED_CONTENT_RULE_TYPE),
                 "capability"  => "edit_posts"
            ),
@@ -2276,13 +2305,13 @@ FUNC;
         $date_parsed = date_create_from_format('Y-m-d', $args['instance_start']['date']);
         if ($date_parsed === false) {
             $date_source = strtotime($this->datetimeToEnglish($args['instance_start']['date']));
-            $args['instance_start']['date'] = strftime('%Y-%m-%d', $date_source);
+            $args['instance_start']['date'] = date('Y-m-d', $date_source);
         }
 
         $date_parsed = date_create_from_format('Y-m-d', $args['instance_end']['date']);
         if ($date_parsed === false) {
             $date_source = strtotime($this->datetimeToEnglish($args['instance_end']['date']));
-            $args['instance_end']['date'] = strftime('%Y-%m-%d', $date_source);
+            $args['instance_end']['date'] = date('Y-m-d', $date_source);
         }
 
         $args['instance_start']['time'] = $this->convertTimeToISO($args['instance_start']['time']);
@@ -2292,7 +2321,7 @@ FUNC;
         $date_parsed = date_create_from_format('Y-m-d', $args['end_date']);
         if ($date_parsed === false) {
             $date_source = strtotime($this->datetimeToEnglish($args['end_date']));
-            $args['end_date'] = strftime('%Y-%m-%d', $date_source);
+            $args['end_date'] = date('Y-m-d', $date_source);
         }
 
         if(is_array($args['exceptions_dates'])) {
@@ -2300,7 +2329,7 @@ FUNC;
                 $date_parsed = date_create_from_format('Y-m-d', $value);
                 if ($date_parsed === false) {
                     $date_source = strtotime($this->datetimeToEnglish($args['end_date']));
-                    $args['exceptions_dates'][$key] = strftime('%Y-%m-%d', $date_source);
+                    $args['exceptions_dates'][$key] = date('Y-m-d', $date_source);
                 }
             }
         }
@@ -2320,13 +2349,13 @@ FUNC;
             $time_base = trim(substr($time, 0, strlen($time)-2));
             $time_dt = date_create_from_format('G:i', $time_base);
             if($time_dt !== false) {
-                $time = strftime('%H:%M', $time_dt->getTimestamp());
+                $time = date('H:i', $time_dt->getTimestamp());
             }
         } else if (strpos($time, 'PM') !== false) {
             $time_base = trim(substr($time, 0, strlen($time)-2));
             $time_dt = date_create_from_format('G:i', $time_base);
             if($time_dt !== false) {
-                $time = strftime('%H:%M', $time_dt->getTimestamp() + 43200);
+                $time = date('H:i', $time_dt->getTimestamp() + 43200);
             }
         }
 

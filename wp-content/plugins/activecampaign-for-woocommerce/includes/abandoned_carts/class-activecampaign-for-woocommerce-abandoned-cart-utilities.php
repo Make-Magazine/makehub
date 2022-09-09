@@ -12,6 +12,7 @@
 
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Order_Finished Event Class.
@@ -39,7 +40,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 			// phpcs:disable
 				$wpdb->prepare( 'SELECT id, last_access_time, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid 
 					FROM
-						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME . '`
 					WHERE
 						id = %s
 						AND order_date IS NULL',
@@ -192,7 +193,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 		}
 
 		try {
-			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$table_name = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME;
 
 			$wpdb->delete(
 				$table_name,
@@ -220,8 +221,8 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 				'Abandoned cart: could not delete the abandoned cart entry.',
 				[
 					'message'  => $t->getMessage(),
-					'session'  => isset( wc()->session ) && method_exists( wc()->session, 'get_session_data' ) ? wc()->session->get_session_data() : null,
-					'customer' => isset( wc()->customer ) && method_exists( wc()->customer, 'get_data' ) ? wc()->customer->get_data() : null,
+					'session'  => isset( wc()->session ) && AC_Utilities::validate_object( wc()->session, 'get_session_data' ) ? wc()->session->get_session_data() : null,
+					'customer' => isset( wc()->customer ) && AC_Utilities::validate_object( wc()->customer, 'get_data' ) ? wc()->customer->get_data() : null,
 					'trace'    => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -273,7 +274,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 		try {
 			if ( ! is_null( $stored_id ) && ! empty( $stored_id ) ) {
 				$wpdb->update(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$data,
 					[
 						'id' => $stored_id,
@@ -282,7 +283,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 
 			} else {
 				$wpdb->insert(
-					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME,
+					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$data
 				);
 

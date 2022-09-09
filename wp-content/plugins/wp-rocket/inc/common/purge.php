@@ -126,7 +126,8 @@ function rocket_get_purge_urls( $post_id, $post ) {
 				}
 				continue;
 			}
-			$purge_urls[] = trailingslashit( $home_url ) . $page;
+
+			$purge_urls[] = trailingslashit( $home_url ) . ltrim( $page, '/' );
 		}
 	}
 
@@ -242,7 +243,9 @@ function rocket_clean_post( $post_id, $post = null ) {
 	rocket_clean_home( $lang );
 
 	// Purge home feeds (blog & comments).
-	rocket_clean_home_feeds();
+	if ( has_filter( 'rocket_cache_reject_uri', 'wp_rocket_cache_feed' ) !== false ) {
+		rocket_clean_home_feeds();
+	}
 
 	/**
 	 * Fires after cache files related with the post are deleted

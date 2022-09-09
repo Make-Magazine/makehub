@@ -18,7 +18,7 @@ $avatar   = SB_Instagram_Parse_Pro::get_avatar( $header_data, $settings );
 $name     = SB_Instagram_Parse_Pro::get_name( $header_data );
 
 // Attributes
-$header_atts             = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( $settings, $header_data );
+$header_atts             = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( 'boxed', $settings, $header_data );
 $header_image_atts       = SB_Instagram_Display_Elements_Pro::get_header_img_data_attributes( $settings, $header_data );
 $header_classes          = SB_Instagram_Display_Elements_Pro::get_header_class( $settings, $avatar, 'boxed' );
 $avatar_el_atts          = SB_Instagram_Display_Elements_Pro::get_avatar_element_data_attributes( $settings, $header_data );
@@ -58,8 +58,8 @@ $follow_attribute   = SB_Instagram_Display_Elements_Pro::get_follow_attribute( $
                 <p class="sbi_bio"<?php echo $header_text_color_style; ?><?php echo $bio_attribute; ?>><?php echo str_replace( '&lt;br /&gt;', '<br>', esc_html( nl2br( $bio ) ) ); ?></p>
             <?php endif; ?>
         </div>
-        <div class="sbi_header_img"<?php echo $header_image_atts; ?>>
-            <?php if ( $avatar !== '' ):  ?>
+        <div class="sbi_header_img" <?php echo $header_image_atts; ?>>
+            <?php if ( $avatar !== '' || sbi_doing_customizer($settings) ):  ?>
                 <div class="sbi_header_img_hover"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'newlogo', 'svg' ); ?></div>
                 <img<?php echo $avatar_el_atts; ?> width="50" height="50">
             <?php else: ?>
@@ -72,8 +72,8 @@ $follow_attribute   = SB_Instagram_Display_Elements_Pro::get_follow_attribute( $
 
     <div class="sbi_header_bar" <?php echo $header_bar_style; ?>>
         <p class="sbi_bio_info" <?php echo $header_info_style; ?>>
+        <span class="sbi_posts_count"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'photo', 'svg' ) . number_format_i18n( (int)$post_count, 0 ); ?></span>
         <?php if ( SB_Instagram_Display_Elements_Pro::should_show_element( 'headerfollowers', $settings ) ) : ?>
-            <span class="sbi_posts_count"<?php echo $post_count_attribute; ?>><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'photo', 'svg' ) . number_format_i18n( (int)$post_count, 0 ); ?></span>
             <?php if ( $follower_count !== '' || ! empty( $follower_count_attribute ) ) : // basic display API does not include follower counts as of January 2020 ?>
             <span class="sbi_followers"<?php echo $follower_count_attribute; ?>><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'user', 'svg' ) . number_format_i18n( (int)$follower_count, 0 ); ?></span>
             <?php endif; ?>
@@ -81,7 +81,7 @@ $follow_attribute   = SB_Instagram_Display_Elements_Pro::get_follow_attribute( $
         </p>
         <a class="sbi_header_follow_btn<?php echo esc_attr( $follow_btn_classes ); ?>"<?php echo $header_link; ?> target="_blank" rel="nofollow noopener" <?php echo $follow_btn_style; ?>>
             <?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'instagram', 'svg' ); ?>
-            <span<?php echo $follow_attribute; ?>><?php echo esc_html( $follow_button_text ); ?></span>
+            <span <?php echo $follow_attribute; ?>><?php echo esc_html( $follow_button_text ); ?></span>
         </a>
     </div>
 </div>

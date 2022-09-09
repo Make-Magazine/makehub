@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4
+class ComposerStaticInit5637480de1586c7881aef6eadf7719ec
 {
     public static $files = array (
         '3773ef3f09c37da5478d578e32b03a4b' => __DIR__ . '/..' . '/automattic/jetpack-assets/actions.php',
@@ -148,6 +148,7 @@ class ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4
         'Automattic\\Jetpack\\Sync\\Utils' => __DIR__ . '/..' . '/automattic/jetpack-sync/src/class-utils.php',
         'Automattic\\Jetpack\\Terms_Of_Service' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-terms-of-service.php',
         'Automattic\\Jetpack\\Tracking' => __DIR__ . '/..' . '/automattic/jetpack-tracking/src/class-tracking.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
         'Composer\\Installers\\AimeosInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AimeosInstaller.php',
         'Composer\\Installers\\AnnotateCmsInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AnnotateCmsInstaller.php',
@@ -264,6 +265,7 @@ class ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4
         'WCPay\\MultiCurrency\\Compatibility\\WooCommerceDeposits' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommerceDeposits.php',
         'WCPay\\MultiCurrency\\Compatibility\\WooCommerceFedEx' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommerceFedEx.php',
         'WCPay\\MultiCurrency\\Compatibility\\WooCommerceNameYourPrice' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommerceNameYourPrice.php',
+        'WCPay\\MultiCurrency\\Compatibility\\WooCommercePointsAndRewards' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommercePointsAndRewards.php',
         'WCPay\\MultiCurrency\\Compatibility\\WooCommercePreOrders' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommercePreOrders.php',
         'WCPay\\MultiCurrency\\Compatibility\\WooCommerceProductAddOns' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommerceProductAddOns.php',
         'WCPay\\MultiCurrency\\Compatibility\\WooCommerceSubscriptions' => __DIR__ . '/../..' . '/includes/multi-currency/Compatibility/WooCommerceSubscriptions.php',
@@ -290,9 +292,9 @@ class ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitfba13a170c74c50b26f35cc74c81c7d4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5637480de1586c7881aef6eadf7719ec::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5637480de1586c7881aef6eadf7719ec::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5637480de1586c7881aef6eadf7719ec::$classMap;
 
         }, null, ClassLoader::class);
     }

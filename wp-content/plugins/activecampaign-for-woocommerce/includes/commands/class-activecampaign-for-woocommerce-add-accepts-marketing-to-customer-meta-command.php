@@ -125,8 +125,8 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 		$valid          = (bool) wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' );
 
 		if ( ! $valid ) {
-			$this->logger->error(
-				'Accepts Marketing: Invalid nonce',
+			$this->logger->warning(
+				'Accepts Marketing: Invalid nonce. There may be an issue storing order values or orders may have been created through the API.',
 				[
 					'checkout_nonce' => $checkout_nonce,
 					'nonce_value'    => $nonce_value,

@@ -336,7 +336,7 @@ if ( ! class_exists( 'Ast_Block_Templates' ) ) :
 				)
 			);
 
-			$demo_api_uri = add_query_arg( $request_params, $api_uri );
+			$demo_api_uri = esc_url_raw( add_query_arg( $request_params, $api_uri ) );
 
 			// API Call.
 			$response = wp_remote_get( $demo_api_uri, $api_args );
@@ -399,6 +399,7 @@ if ( ! class_exists( 'Ast_Block_Templates' ) ) :
 						'allCategories'           => get_site_option( 'ast-block-templates-categories', array() ),
 						'wpforms_status'          => $this->get_plugin_status( 'wpforms-lite/wpforms.php' ),
 						'gutenberg_status'        => $this->get_plugin_status( 'gutenberg/gutenberg.php' ),
+						'spectra_status'          => $this->get_plugin_status( 'ultimate-addons-for-gutenberg/ultimate-addons-for-gutenberg.php' ),
 						'_ajax_nonce'             => wp_create_nonce( 'ast-block-templates-ajax-nonce' ),
 						'button_text'             => esc_html__( 'Template Kits', 'ast-block-templates' ),
 						'display_button_logo'     => true,

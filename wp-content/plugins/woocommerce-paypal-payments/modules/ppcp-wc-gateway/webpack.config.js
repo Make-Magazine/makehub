@@ -7,6 +7,8 @@ module.exports = {
     target: 'web',
     entry: {
         'gateway-settings': path.resolve('./resources/js/gateway-settings.js'),
+        'pay-upon-invoice': path.resolve('./resources/js/pay-upon-invoice.js'),
+        'oxxo': path.resolve('./resources/js/oxxo.js'),
     },
     output: {
         path: path.resolve(__dirname, 'assets/'),

@@ -57,9 +57,9 @@ class SBI_Admin_Notices {
 			'instagram-feed_page_sbi-support',
 		);
 
-		if ( in_array( $current_screen->base, $not_allowed_screens, true ) ) {
-			remove_all_actions( 'admin_notices' );
-			remove_all_actions( 'all_admin_notices' );
+		if ( in_array( $current_screen->base, $not_allowed_screens, true ) || strpos( $current_screen->base, 'sbi-' ) !== false ) {
+			remove_all_actions('admin_notices');
+			remove_all_actions('all_admin_notices');
 		}
 	}
 

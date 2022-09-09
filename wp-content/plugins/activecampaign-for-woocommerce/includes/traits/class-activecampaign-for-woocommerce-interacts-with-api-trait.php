@@ -13,6 +13,7 @@ use AcVendor\GuzzleHttp\Exception\GuzzleException;
 use AcVendor\GuzzleHttp\Exception\BadResponseException;
 use AcVendor\Psr\Http\Message\StreamInterface;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * Trait Activecampaign_For_Woocommerce_Interacts_With_Api
@@ -61,10 +62,11 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 		if ( isset( $result ) ) {
 			try {
 
-				if ( ! is_object( $result ) || ! method_exists( $result, 'getBody' ) ) {
+				if ( ! is_object( $result ) || ! AC_Utilities::validate_object( $result, 'getBody' ) ) {
 					$logger->debug(
-						$result,
+						'Result of get and set model from get_and_set_model_properties_from_api_by_id',
 						[
+							'result'        => $result,
 							'resource_name' => self::RESOURCE_NAME,
 							'endpoint_name' => self::ENDPOINT_NAME,
 						]
@@ -85,7 +87,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 							[
 								'result'        => $result,
 								'resource_name' => self::RESOURCE_NAME,
-								'result_body'   => method_exists( $result, 'getBody' ) ? $result->getBody() : null,
+								'result_body'   => AC_Utilities::validate_object( $result, 'getBody' ) ? $result->getBody() : null,
 							]
 						);
 					}
@@ -246,7 +248,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 
 		if ( $result ) {
 			try {
-				if ( ! is_object( $result ) || ! method_exists( $result, 'getBody' ) ) {
+				if ( ! is_object( $result ) || ! AC_Utilities::validate_object( $result, 'getBody' ) ) {
 					$logger->debug(
 						$result,
 						[
@@ -307,9 +309,13 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 
 		$resource = $model->serialize_to_array();
 
-		$body = [
-			self::RESOURCE_NAME => $resource,
-		];
+		if ( 'import' === self::RESOURCE_NAME ) {
+			$body = $resource;
+		} else {
+			$body = [
+				self::RESOURCE_NAME => $resource,
+			];
+		}
 
 		$body_as_string = wp_json_encode( $body );
 
@@ -326,17 +332,17 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 					'resource_name' => self::RESOURCE_NAME,
 					'endpoint_name' => self::ENDPOINT_NAME,
 					'context'       => $body_as_string,
-					'response'      => method_exists( $e->getResponse(), 'getBody' )
+					'response'      => AC_Utilities::validate_object( $e->getResponse(), 'getBody' )
 						? $e->getResponse()->getBody()->getContents()
 						: '',
 					// Make sure the clean trace ends up in the logs
 					'trace'         => $logger->clean_trace( $e->getTrace() ),
-					'status_code'   => method_exists( $e->getResponse(), 'getStatusCode' ) ? $e->getResponse()->getStatusCode() : '',
+					'status_code'   => AC_Utilities::validate_object( $e->getResponse(), 'getStatusCode' ) ? $e->getResponse()->getStatusCode() : '',
 				]
 			);
 		}
 
-		if ( isset( $result ) && method_exists( $result, 'getBody' ) ) {
+		if ( isset( $result ) && AC_Utilities::validate_object( $result, 'getBody' ) ) {
 			try {
 				$resource_array = json_decode( $result->getBody(), true );
 
@@ -442,7 +448,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			);
 		}
 
-		if ( isset( $result ) && null !== $result && method_exists( $result, 'getBody' ) ) {
+		if ( isset( $result ) && null !== $result && AC_Utilities::validate_object( $result, 'getBody' ) ) {
 			try {
 				$resource_array = json_decode( $result->getBody(), true );
 

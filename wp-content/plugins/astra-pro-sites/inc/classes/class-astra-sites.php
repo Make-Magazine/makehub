@@ -1693,7 +1693,7 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 					'isPro'                              => defined( 'ASTRA_PRO_SITES_NAME' ) ? true : false,
 					'isWhiteLabeled'                     => Astra_Sites_White_Label::get_instance()->is_white_labeled(),
 					'whiteLabelName'                     => Astra_Sites_White_Label::get_instance()->get_white_label_name(),
-					'whiteLabelUrl'                      => Astra_Sites_White_Label::get_instance()->get_white_label_link( 'https://wpastra.com/docs/not-valid-license/' ),
+					'whiteLabelUrl'                      => Astra_Sites_White_Label::get_instance()->get_white_label_link( '#' ),
 					'ajaxurl'                            => esc_url( admin_url( 'admin-ajax.php' ) ),
 					'siteURL'                            => site_url(),
 					'getProText'                         => __( 'Get Access!', 'astra-sites' ),

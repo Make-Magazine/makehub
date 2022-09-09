@@ -10,13 +10,18 @@ jQuery(document).ready(function($) {
 
             var startRec = 0;
             var batchLimit = 100;
+            var syncContacts = 0;
 
             if($('#activecampaign-historical-sync-starting-record').val() > 0) {
                 startRec = $('#activecampaign-historical-sync-starting-record').val();
             }
 
-            if($('#activecampaign-historical-sync-limit').find(":selected").text() > 0) {
-                batchLimit = $('#activecampaign-historical-sync-limit').find(":selected").text()
+            if($('#activecampaign-historical-sync-limit').find(":selected").text()) {
+                batchLimit = $('#activecampaign-historical-sync-limit').find(":selected").text();
+            }
+
+            if($('#activecampaign-historical-sync-contacts:checked').val() == 1) {
+                syncContacts = 1;
             }
 
             var action = 'activecampaign_for_woocommerce_schedule_bulk_historical_sync';
@@ -25,6 +30,7 @@ jQuery(document).ready(function($) {
                 'action': action,
                 'startRec': startRec,
                 'batchLimit': batchLimit,
+                'syncContacts': syncContacts,
                 'activecampaign_for_woocommerce_settings_nonce_field': $('#activecampaign_for_woocommerce_settings_nonce_field').val()
             });
             scheduled = true;
@@ -68,8 +74,18 @@ jQuery(document).ready(function($) {
     // Check sync status
     var statInt = setInterval(updateStatus, 2000);
 
-    function startUpdateCheck() {
-        statInt = setInterval(updateStatus, 2000);
+    function startUpdateCheck( degrade = 0 ) {
+        var intv = 2000;
+
+        if(degrade > 0){
+            intv = degrade + intv;
+        }
+
+        if(statInt) {
+            cancelUpdateCheck();
+        }
+
+        statInt = setInterval(updateStatus, intv);
     }
 
     function cancelUpdateCheck() {
@@ -85,7 +101,7 @@ jQuery(document).ready(function($) {
             }).done(response => {
                 resolve(response.data);
             }).fail(response => {
-                reject(response.responseJSON.data)
+                startUpdateCheck(4000);
             });
         });
     }
@@ -138,8 +154,8 @@ jQuery(document).ready(function($) {
                 $('#activecampaign-historical-sync-stop-requested').hide();
             }
         }).fail(response => {
-            $('#activecampaign-run-historical-sync-status').html(response.responseJSON.data);
-            cancelUpdateCheck();
+            $('#activecampaign-run-historical-sync-status').html('There was an error retrieving data from ' + ajaxurl);
+            startUpdateCheck(4000);
         });
     }
 
@@ -153,65 +169,86 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: data
         }).done(response => {
-            if(response.data === 1) {
-                $('#activecampaign-historical-sync-run-shortly').show();
-                // scheduled = true;
-            } else {
-                $('#activecampaign-historical-sync-run-shortly').hide();
-                cancelUpdateCheck();
-                var last_sync = response.data.last_sync;
-                var run_status = response.data.status;
+            var run_status = false;
+            var status_name = false;
 
-                if (!run_status && !last_sync){
-                    enableStartSection();
-                    getLastSyncData();
-                    hideRunSection();
-                }else if (!run_status && last_sync) {
-                    getLastSyncData();
-                    enableStartSection();
-                    hideRunSection();
-                } else if(run_status.is_paused && !scheduled){
-                    scheduled = false;
-                    cancelUpdateCheck();
-                    enableStartSection();
-                    showRunSection();
-                    disableStopButtons();
-                    $('#activecampaign-run-historical-sync-running-status').html('Paused on latest record:' + run_status.last_processed_id ).show();
-                    $('#activecampaign-historical-sync-starting-record').val(run_status.last_processed_id - 1);
-                    $('#activecampaign-run-historical-sync-current-record-num').html(run_status.last_processed_id);
-                    $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
-                }else if (run_status){
-                    startUpdateCheck();
-                    showRunSection();
-                    disableStartSection();
-                    enableStopButtons();
-                    $('#activecampaign-last-sync-status').html('');
-                    $('#activecampaign-run-historical-sync-current-record-num').html(run_status.last_processed_id);
-                    $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
-                    if(run_status.last_processed_id !== lastRec){
-                        lastRec = run_status.last_processed_id;
-                        stickCount = 0;
-                    }else{
-                        stickCount ++;
-                    }
-
-                    if(stickCount < 40) {
-                        $('#activecampaign-run-historical-sync-running-status').html('Running...');
-                    }
-
-                    if(stickCount >= 40 && stickCount < 60) {
-                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync might be stuck or has exited improperly... please check your logs.');
-                    }
-
-                    if(stickCount >= 60) {
-                        $('#activecampaign-run-historical-sync-running-status').html('The historical sync process is no longer updating. It may be required to reset the sync status.');
-                        cancelUpdateCheck();
-                    }
+            if(response.data.status){
+                run_status = response.data.status;
+                if (response.data.status.status_name) {
+                    status_name = response.data.status.status_name;
                 }
             }
+
+            if( status_name === 'waiting') {
+                $('#activecampaign-historical-sync-run-shortly').show();
+                $('#activecampaign-historical-sync-run-contacts').hide();
+            }else if( 'contacts' === status_name){
+                $('#activecampaign-historical-sync-run-shortly').hide();
+                $('#activecampaign-historical-sync-run-contacts').show();
+                if(run_status.contact_count >= 0) {
+                    $('#activecampaign-historical-sync-contacts-count').html(run_status.contact_count + '/' + run_status.contact_total);
+                }
+            } else if ( status_name === 'orders') {
+                $('#activecampaign-historical-sync-run-shortly').hide();
+                $('#activecampaign-historical-sync-run-contacts').hide();
+                var last_sync = response.data.last_sync;
+                run_status = response.data.status;
+
+                startUpdateCheck();
+                showRunSection();
+                disableStartSection();
+                enableStopButtons();
+                if (typeof run_status.contact_count !== 'undefined' && run_status.contact_count > 0) {
+                    $('#activecampaign-run-historical-sync-contact-block').show();
+                    $('#activecampaign-run-historical-sync-contact-record-num').html(run_status.contact_count);
+                } else {
+                    $('#activecampaign-run-historical-sync-contact-block').hide();
+                }
+
+                $('#activecampaign-last-sync-status').html('');
+                $('#activecampaign-run-historical-sync-current-record').show();
+                $('#activecampaign-run-historical-sync-prep-record').hide();
+                $('#activecampaign-run-historical-sync-current-record-num').html(run_status.last_processed_id);
+                $('#activecampaign-run-historical-sync-current-sync-count').html(run_status.sync_count);
+                $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
+                $('#activecampaign-run-historical-sync-total-record-num').html(run_status.total_orders);
+                $('#activecampaign-run-historical-sync-last-update').html(run_status.last_update);
+
+                if (run_status.last_processed_id !== lastRec) {
+                    lastRec = run_status.last_processed_id;
+                    stickCount = 0;
+                } else {
+                    stickCount++;
+                }
+
+                if (stickCount < 40) {
+                    $('#activecampaign-run-historical-sync-running-status').html('Running...');
+                }
+
+                if (stickCount >= 40 && stickCount < 60) {
+                    $('#activecampaign-run-historical-sync-running-status').html('The historical sync might be stuck or has exited improperly... please check your logs.');
+                }
+
+                if (stickCount >= 60) {
+                    var timeStuck = Math.round((stickCount * 2) / 60);
+                    $('#activecampaign-run-historical-sync-running-status').html('The historical sync process has not updated in ' + timeStuck + ' minutes. It may be required to reset the sync status.');
+                }
+
+            } else if ( status_name === 'finished') {
+                getLastSyncData();
+                enableStartSection();
+                hideRunSection();
+                startUpdateCheck(8000);
+            }else{
+                getLastSyncData();
+                enableStartSection();
+                hideRunSection();
+                startUpdateCheck(8000);
+            }
         }).fail(response => {
-            $('#activecampaign-run-historical-sync-status').html(response.responseJSON.data);
-            cancelUpdateCheck();
+            startUpdateCheck(4000);
+            $('#activecampaign-run-historical-sync-status').html('Response failed from ' + ajaxurl);
+
         });
     }
 });

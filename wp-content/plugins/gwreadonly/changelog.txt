@@ -1,6 +1,18 @@
 
 # Changelog
 
+## 1.9.12
+
+	- Improved compatibility with Populate Anything when dynamically populating the value of a multi-input fields and also marking it as read-only.
+
+## 1.9.11
+
+	- Added support for Address fields using custom address types registered using the `gform_address_types` hook.
+
+## 1.9.10
+
+	- Fixed issue where Nested Form fields were showing as a supported field type for Read Only.
+
 ## 1.9.9
 
 	- Improved compatibility with the Edit Form block in GP Entry Blocks.

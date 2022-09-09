@@ -21,6 +21,7 @@ class GPPA_Compatibility_GravityView {
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'add_gravityview_id_filter' ), 10, 4 );
 
 		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'gravityview_inline_edit_choices' ), 15, 6 );
+		add_filter( 'gravityview-inline-edit/select-wrapper-attributes', array( $this, 'gravityview_inline_edit_choices' ), 15, 6 );
 
 		add_filter( 'gppa_field_filter_values', array( $this, 'field_filter_values_replace_filter_prefix' ), 10, 6 );
 		add_filter( 'gppa_get_batch_field_html', array( $this, 'render_search_field' ), 10, 6 );

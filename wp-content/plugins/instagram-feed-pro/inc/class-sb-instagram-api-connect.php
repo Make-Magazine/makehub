@@ -180,9 +180,10 @@ class SB_Instagram_API_Connect
 	/**
 	 * Connect to the Instagram API and record the response
 	 *
+	 * @param bool $bypass_connect_response
 	 * @since 2.0/5.0
 	 */
-	public function connect() {
+	public function connect( $bypass_connect_response = false ) {
 		if ( empty( $this->url ) ) {
 			$this->response = array();
 			return;
@@ -191,6 +192,16 @@ class SB_Instagram_API_Connect
 			'timeout' => 20
 		);
 		$response = wp_remote_get( $this->url, $args );
+
+		if ( ! $bypass_connect_response ) {
+			/**
+			 * Api response for instagram connection
+			 *
+			 * @since INSTA_FEED_PRO_SINCE
+			 */
+			do_action( 'sbi_api_connect_response', $response, $this->url );
+		}
+
 
 		if ( ! is_wp_error( $response ) ) {
 			// certain ways of representing the html for double quotes causes errors so replaced here.
@@ -207,6 +218,13 @@ class SB_Instagram_API_Connect
 		}
 
 		$this->response = $response;
+	}
+
+	/**
+	 * @since 6.1
+	 */
+	public function update_source_connect() {
+		$this->connect( true );
 	}
 
 	/**

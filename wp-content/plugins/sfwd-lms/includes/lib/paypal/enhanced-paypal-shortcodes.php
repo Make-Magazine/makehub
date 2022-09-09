@@ -309,30 +309,6 @@ if ( ! function_exists( 'enhanced_paypal_shortcode' ) ) {
 		);
 
 		$user_id = get_current_user_id();
-		/*  $learndash_plus_paypal_settings = get_option( 'learndash_plus_paypal_settings' );
-		$paypal_email =  isset($learndash_plus_paypal_settings['paypal_email'])? $learndash_plus_paypal_settings['paypal_email']:"";
-		$paypal_currency =  isset($learndash_plus_paypal_settings['paypal_currency'])? $learndash_plus_paypal_settings['paypal_currency']:"USD";
-		$paypal_country =  isset($learndash_plus_paypal_settings['paypal_country'])? $learndash_plus_paypal_settings['paypal_country']:"US";
-		$paypal_cancel_url =  isset($learndash_plus_paypal_settings['paypal_cancel_url'])? $learndash_plus_paypal_settings['paypal_cancel_url']:get_bloginfo('wpurl');
-		$paypal_return_url =  isset($learndash_plus_paypal_settings['paypal_return_url'])? $learndash_plus_paypal_settings['paypal_return_url']:get_bloginfo('wpurl');
-		$paypal_notify_url =  isset($learndash_plus_paypal_settings['paypal_notify_url'])? $learndash_plus_paypal_settings['paypal_notify_url']:get_bloginfo('wpurl')."/?ldp-paypal-ipn=1";
-		$paypal_sandbox =  isset($learndash_plus_paypal_settings['paypal_sandbox'])? $learndash_plus_paypal_settings['paypal_sandbox']:"";
-
-		if(empty($atts['email']))
-			$atts['email'] = $paypal_email;
-		if(empty($atts['notifyurl']))
-			$atts['notifyurl'] = $paypal_notify_url;
-		if(empty($atts['returnurl']))
-			$atts['returnurl'] = $paypal_return_url;
-		if(empty($atts['cancelurl']))
-			$atts['cancelurl'] = $paypal_cancel_url;
-		if($atts['sandbox'] == '')
-			$atts['sandbox'] = $paypal_sandbox;
-		if($atts['currencycode'] == '')
-			$atts['currencycode'] = $paypal_currency;
-		if($atts['lc'] == '')
-			$atts['lc'] = $paypal_country;
-		*/
 		if ( ( isset( $atts['itemno'] ) ) && ( get_post_type( absint( $atts['itemno'] ) ) === learndash_get_post_type_slug( 'course' ) ) ) {
 			$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_course' );
 		} elseif ( ( isset( $atts['itemno'] ) ) && ( get_post_type( absint( $atts['itemno'] ) ) === learndash_get_post_type_slug( 'group' ) ) ) {
@@ -811,7 +787,7 @@ if ( ! function_exists( 'enhanced_paypal_shortcode' ) ) {
 				}
 				$code .= '"><form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		<input type="hidden" name="cmd" value="_cart">
-		<input type="hidden" name="bn" value="PP-ShopCartBF:btn_cart_LG.gif:NonHosted">		
+		<input type="hidden" name="bn" value="PP-ShopCartBF:btn_cart_LG.gif:NonHosted">
 		<input type="hidden" name="add" value="1">';
 				if ( $atts['display'] == 1 ) {
 					$code .= '<input type="hidden" name="display" value="1">';

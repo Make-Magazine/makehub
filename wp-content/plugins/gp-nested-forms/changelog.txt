@@ -1,6 +1,27 @@
 
 # Changelog
 
+## 1.1.3
+
+	- Added new [`gpnf_row_id_label`](https://gravitywiz.com/documentation/gpnf_row_id_label) filter hook.
+
+## 1.1.2
+
+	- Fixed issue where the "Row ID" field would show in `{all_fields}` and the merge tag output for Nested Forms.
+
+## 1.1.1
+
+	- Fixed PHP error that could occur for some forms.
+
+## 1.0.28
+
+	- Added the ability to optionally show an AjaxSpinner when deleting nested form entry rows.
+	- Added new public `GPNestedForms.deleteEntry()` method for calling on the frontend and in snippets.
+
+## 1.0.27
+
+	- Improved support for `{Parent}` merge tags referencing the parent entry details such as `{Parent:entry_id}` when set to a field's default value and sent in notifications.
+
 ## 1.0.26
 
 	- Added `:set` merge tag modifier for calculations which allows you to reutrn a list of values for use Advanced Calculation functions like `min()` and `max()`.

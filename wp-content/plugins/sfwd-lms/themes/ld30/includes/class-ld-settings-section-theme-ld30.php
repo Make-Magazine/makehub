@@ -103,6 +103,10 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 			if ( ( ! isset( $this->setting_option_values['focus_mode_content_width'] ) ) || ( empty( $this->setting_option_values['focus_mode_content_width'] ) ) ) {
 				$this->setting_option_values['focus_mode_content_width'] = 'default';
 			}
+
+			if ( ( ! isset( $this->setting_option_values['focus_mode_sidebar_position'] ) ) || ( empty( $this->setting_option_values['focus_mode_sidebar_position'] ) ) ) {
+				$this->setting_option_values['focus_mode_sidebar_position'] = 'default';
+			}
 		}
 
 		/**
@@ -194,6 +198,15 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 					),
 					'parent_setting' => 'focus_mode_enabled',
 				),
+				'focus_mode_sidebar_position' => array(
+					'name'           => 'focus_mode_sidebar_position',
+					'type'           => 'select',
+					'label'          => esc_html__( 'Focus Mode Sidebar Position', 'learndash' ),
+					'help_text'      => esc_html__( 'Set the Position of the Sidebar while on Focus Mode', 'learndash' ),
+					'value'          => $this->setting_option_values['focus_mode_sidebar_position'],
+					'options'        => $this->focus_mode_sidebar_position_options(),
+					'parent_setting' => 'focus_mode_enabled',
+				),
 				'login_mode_enabled'       => array(
 					'name'      => 'login_mode_enabled',
 					'type'      => 'checkbox-switch',
@@ -241,6 +254,27 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_section_key );
 
 			parent::load_settings_fields();
+		}
+
+		/**
+		 * Options for focus_mode_sidebar_position.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @return array Options.
+		 */
+		private function focus_mode_sidebar_position_options() {
+			if ( is_rtl() ) {
+				return array(
+					'default' => __( 'Right (default)', 'learndash' ),
+					'left'    => __( 'Left', 'learndash' ),
+				);
+			}
+
+			return array(
+				'default' => __( 'Left (default)', 'learndash' ),
+				'right'   => __( 'Right', 'learndash' ),
+			);
 		}
 
 		/**

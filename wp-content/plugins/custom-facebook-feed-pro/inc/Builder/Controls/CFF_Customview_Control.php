@@ -51,7 +51,7 @@ class CFF_Customview_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_feedtemplate_output($controlEditingTypeModel){
 	?>
-		<div :class="['sb-control-feedtype-ctn sb-control-feedtemplate-ctn', 'cff-feedtemplate-' + customizerScreens.printedTemplate.type]" v-if="control.viewId == 'feedtemplate'">
+		<div id="'sb-control-feedtemplate" :class="['sb-control-feedtype-ctn sb-control-feedtemplate-ctn', 'cff-feedtemplate-' + customizerScreens.printedTemplate.type]" v-if="control.viewId == 'feedtemplate'">
 			<div class="cff-fb-type-el" v-if="customizerFeedTemplatePrint()"  @click.prevent.default="activateView('feedtemplatesPopup')">
 				<div class="cff-fb-type-el-img cff-fb-fs" v-html="svgIcons[customizerFeedData.settings.feedtype][customizerScreens.printedTemplate.icon]"></div>
 				<div class="cff-fb-type-el-info cff-fb-fs">

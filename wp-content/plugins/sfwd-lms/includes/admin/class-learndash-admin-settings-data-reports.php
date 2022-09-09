@@ -113,16 +113,14 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 				if ( ( isset( $_GET['data-nonce'] ) ) && ( ! empty( $_GET['data-nonce'] ) ) && ( isset( $_GET['data-slug'] ) ) && ( ! empty( $_GET['data-slug'] ) ) ) {
 
-					if ( wp_verify_nonce( esc_attr( $_GET['data-nonce'] ), 'learndash-data-reports-' . esc_attr( $_GET['data-slug'] ) . '-' . get_current_user_id() ) ) {
-						$transient_key = esc_attr( $_GET['data-slug'] ) . '_' . esc_attr( $_GET['data-nonce'] );
+					if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['data-nonce'] ) ), 'learndash-data-reports-' . sanitize_text_field( wp_unslash( $_GET['data-slug'] ) ) . '-' . get_current_user_id() ) ) {
+						$transient_key = sanitize_text_field( wp_unslash( $_GET['data-slug'] ) ) . '_' . sanitize_text_field( wp_unslash( $_GET['data-nonce'] ) );
 
 						$transient_data = $this->get_transient( $transient_key );
 						if ( ( isset( $transient_data['report_filename'] ) ) && ( ! empty( $transient_data['report_filename'] ) ) ) {
-							// $report_filename = ABSPATH . $transient_data['report_filename'];
 							$report_filename = $transient_data['report_filename'];
 							if ( ( file_exists( $report_filename ) ) && ( is_readable( $report_filename ) ) ) {
 								$http_headers = array(
-									'Content-Encoding: ' . DB_CHARSET,
 									'Content-type: text/csv; charset=' . DB_CHARSET,
 									'Content-Disposition: attachment; filename=' . basename( $report_filename ),
 									'Pragma: no-cache',
@@ -137,7 +135,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 								 * @param array  $transient_data An array of transient data for csv download.
 								 * @param string $data_slug     The slug of the data to be downloaded.
 								 */
-								$http_headers = apply_filters( 'learndash_csv_download_headers', $http_headers, $transient_data, esc_attr( $_GET['data-slug'] ) );
+								$http_headers = apply_filters( 'learndash_csv_download_headers', $http_headers, $transient_data, sanitize_text_field( wp_unslash( $_GET['data-slug'] ) ) );
 								if ( ! empty( $http_headers ) ) {
 									foreach ( $http_headers as $http_header ) {
 										header( $http_header );
@@ -151,9 +149,9 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 								do_action( 'learndash_csv_download_after_headers' );
 
 								set_time_limit( 0 );
-								$report_fp = @fopen( $report_filename, 'rb' );
+								$report_fp = @fopen( $report_filename, 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
 								while ( ! feof( $report_fp ) ) {
-									print( @fread( $report_fp, 1024 * 8 ) );
+									print( @fread( $report_fp, 1024 * 8 ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.WP.AlternativeFunctions.file_system_read_fread
 									if ( ob_get_level() > 0 ) {
 										ob_flush();
 									}
@@ -293,17 +291,17 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 			 */
 			do_action( 'learndash_settings_page_before_content' );
 			?>
-			<div id="learndash-settings" class="wrap">
-				<h1><?php esc_html_e( 'User Reports', 'learndash' ); ?></h1>
+			<div id="learndash-settings" class="wrap learndash-settings-page-wrap">
+				<h1 class="learndash-empty-page-title"></h1>
 				<form method="post" action="options.php">
-					<div class="sfwd_options_wrapper sfwd_settings_left">
+					<div id="poststuff">
 						<div id="advanced-sortables" class="meta-box-sortables">
-							<div id="sfwd-courses_metabox" class="postbox learndash-settings-postbox">
-								<div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'learndash' ); ?>"><br></div>
-								<h3 class="hndle"><span><?php esc_html_e( 'User Reports', 'learndash' ); ?></span></h3>
+							<div id="sfwd-courses_metabox" class="postbox ld_settings_postbox learndash-settings-postbox">
+								<div class="postbox-header">
+									<h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'User Reports', 'learndash' ); ?></h2>
+								</div>
 								<div class="inside">
 									<div class="sfwd sfwd_options sfwd-courses_settings">
-
 										<table id="learndash-data-reports" class="wc_status_table widefat" cellspacing="0">
 										<?php
 										wp_nonce_field( 'learndash-data-reports-nonce-' . get_current_user_id(), 'learndash-data-reports-nonce' );
@@ -393,7 +391,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 				$transient_key = str_replace( '-', '_', $transient_key );
 				$options_key   = 'learndash_reports_' . $transient_key;
 
-				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) { // @phpstan-ignore-line
 					$wp_upload_dir = wp_upload_dir();
 
 					$ld_file_part = '/learndash/cache/learndash_reports_data_' . $transient_key . '.txt';
@@ -405,13 +403,13 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 					}
 
 					if ( file_exists( $ld_transient_filename ) ) {
-						$transient_fp = fopen( $ld_transient_filename, 'r' );
+						$transient_fp = fopen( $ld_transient_filename, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 						if ( $transient_fp ) {
 							$transient_data = '';
 							while ( ! feof( $transient_fp ) ) {
-								$transient_data .= fread( $transient_fp, 4096 );
+								$transient_data .= fread( $transient_fp, 4096 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.WP.AlternativeFunctions.file_system_read_fread
 							}
-							fclose( $transient_fp );
+							fclose( $transient_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 
 							$transient_data = maybe_unserialize( $transient_data );
 						}
@@ -430,16 +428,16 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 		 * @since 3.1.0
 		 *
 		 * @param string $transient_key  Unique transient key.
-		 * @param string $transient_data Array od data to store.
+		 * @param array  $transient_data Array of data to store.
 		 */
-		public function set_option_cache( $transient_key = '', $transient_data = '' ) {
+		public function set_option_cache( $transient_key = '', $transient_data = array() ) {
 
 			if ( ! empty( $transient_key ) ) {
 				$transient_key = str_replace( '-', '_', $transient_key );
 				$options_key   = 'learndash_reports_' . $transient_key;
 
 				if ( ! empty( $transient_data ) ) {
-					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) { // @phpstan-ignore-line
 						$wp_upload_dir = wp_upload_dir();
 
 						$ld_file_part = '/learndash/cache/learndash_reports_data_' . $transient_key . '.txt';
@@ -450,10 +448,10 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 							return;
 						}
 
-						$transient_fp = fopen( $ld_transient_filename, 'w' );
+						$transient_fp = fopen( $ld_transient_filename, 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 						if ( $transient_fp ) {
-							fwrite( $transient_fp, serialize( $transient_data ) );
-							fclose( $transient_fp );
+							fwrite( $transient_fp, serialize( $transient_data ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize, WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+							fclose( $transient_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 						}
 					} else {
 						update_option( $options_key, $transient_data );
@@ -468,7 +466,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 	}
 }
 
-// Go ahead and inlcude out User Meta Courses upgrade class.
+// Go ahead and include out User Meta Courses upgrade class.
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-reports-actions/class-learndash-admin-data-reports-user-courses.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-reports-actions/class-learndash-admin-data-reports-user-quizzes.php';
 
@@ -490,15 +488,13 @@ function learndash_data_reports_ajax() {
 	$reply_data = array( 'status' => false );
 
 	if ( current_user_can( 'read' ) ) {
-		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-data-reports-nonce-' . get_current_user_id() ) ) ) {
+		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'learndash-data-reports-nonce-' . get_current_user_id() ) ) ) {
 			if ( ( isset( $_POST['data'] ) ) && ( ! empty( $_POST['data'] ) ) ) {
 
 				$ld_admin_settings_data_reports = new Learndash_Admin_Settings_Data_Reports();
-				$reply_data['data']             = $ld_admin_settings_data_reports->do_data_reports( $_POST['data'], $reply_data );
+				$reply_data['data']             = $ld_admin_settings_data_reports->do_data_reports( $_POST['data'], $reply_data ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-				if ( ! empty( $reply_data ) ) {
-					echo wp_json_encode( $reply_data );
-				}
+				echo wp_json_encode( $reply_data );
 			}
 		}
 	}

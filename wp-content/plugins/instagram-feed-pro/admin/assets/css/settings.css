@@ -858,7 +858,7 @@
 }
 .rrecheck-license-status.success svg,
 .test-connection.success svg {
-    transform: translate(3px, 6px)
+    margin-right: 5px;
 }
 .test-connection i,
 .recheck-license-status i {
@@ -873,18 +873,18 @@
 .test-connection.success i {
     color: #59AB46;
 }
-.recheck-license-status.error i,
-.test-connection.error i {
-    color: #D72C2C;
+.recheck-license-status.error svg path,
+.test-connection.error svg path {
+    fill: #D72C2C;
 }
 .recheck-license-status {
     margin-left: 8px;
     cursor: pointer;
 }
-.recheck-license-status i {
-    margin-left: 8px;
+.recheck-license-status svg {
+    margin-right: 6px;
 }
-.test-connection.error i {
+.test-connection.error svg {
     color: #D72C2C;
 }
 .test-connection a {
@@ -948,6 +948,12 @@
 .sb-tab-box.sb-reset-box-style .success svg,
 .sb-tab-box.sb-dpa-clear-box-style .success svg{
     stroke: rgba(23, 22, 22, .95)
+}
+.sb-tab-box.sb-caching-box .sbi-caching-btn .error svg path,
+.sb-tab-box.sb-optimize-box .optimize-image-btn .error svg path,
+.sb-tab-box.sb-reset-box-style .error svg path,
+.sb-tab-box.sb-dpa-clear-box-style .error svg path{
+    fill: #D72C2C;
 }
 
 /* Translation Tab */
@@ -1315,7 +1321,22 @@
 #sbi-settings .sbi-fb-source-step1 .sbi-fb-source-top h3 {
     margin-bottom: 40px;
 }
-
+.sbi-fb-srcs-personal-btn{
+    height: 40px;
+    width: 100%;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #E2F5FF;
+    cursor: pointer;
+    color: #0068A0;
+    font-weight: 600;
+}
+.sbi-fb-srcs-personal-btn svg{
+    float: left;
+    margin-right: 10px;
+}
 /*
 Sources Instance Popup
 */

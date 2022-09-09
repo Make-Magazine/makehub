@@ -1543,6 +1543,10 @@ cffBuilder = new Vue({
 		changeCheckboxSectionValue : function(settingID, value, ajaxAction = false){
 			var self = this;
 			var settingValue = self.customizerFeedData.settings[settingID];
+			if( !Array.isArray(settingValue) && settingID == 'include'){
+				settingValue = settingValue.split(',');
+			}
+
 			if(!Array.isArray(settingValue) && settingID == 'type'){
 				settingValue = [settingValue];
 			}
@@ -1956,6 +1960,7 @@ cffBuilder = new Vue({
 				carouselElement = jQuery('.cff-preview-posts-list-ctn'),
 				customizerSettings = self.customizerFeedData.settings,
 				currentDevice = self.customizerScreens.previewScreen;
+				self.disableJQueryNodes();
 			if(customizerSettings.feedlayout === 'carousel' && self.activeExtensions['carousel'] == true){
 				carouselElement.addClass('cff-carousel');
 				var carouselHeightInput = customizerSettings.carouselheight,
@@ -1984,9 +1989,8 @@ cffBuilder = new Vue({
 			            afterInit = function(){
 			                self.cffUpdateSize(carouselElement);
 			            };
-	            	}else{
+	            	}
 						carouselElement.find('.cff-carousel-expand').remove();
-					}
 
 
 	            var carouselSettings = {

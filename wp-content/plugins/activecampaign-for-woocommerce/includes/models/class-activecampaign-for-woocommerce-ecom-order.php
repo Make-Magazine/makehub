@@ -53,9 +53,21 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 		'order_date'            => 'orderDate',
 		'order_url'             => 'orderUrl',
 		'discount_amount'       => 'discountAmount',
+		'order_discounts'       => 'orderDiscounts',
 		'shipping_amount'       => 'shippingAmount',
 		'shipping_method'       => 'shippingMethod',
 		'tax_amount'            => 'taxAmount',
+	];
+
+	/**
+	 * The mapping for the discount array.
+	 *
+	 * @var array The discount mapping array.
+	 */
+	private $discount_mappings = [
+		'name'            => 'name',
+		'type'            => 'type',
+		'discount_amount' => 'discountAmount',
 	];
 
 	/**
@@ -199,6 +211,13 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * @var string
 	 */
 	private $discount_amount;
+
+	/**
+	 * The order discounts applied.
+	 *
+	 * @var array
+	 */
+	private $order_discounts;
 
 	/**
 	 * The order shipping amount.
@@ -510,6 +529,24 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	}
 
 	/**
+	 * Set the order discount array.
+	 *
+	 * @param array $discounts The order discount array.
+	 */
+	public function set_order_discounts( $discounts ) {
+		$this->order_discounts = $discounts;
+	}
+
+	/**
+	 * Get the order discounts.
+	 *
+	 * @return array The order discount array.
+	 */
+	public function get_order_discounts() {
+		return $this->order_discounts;
+	}
+
+	/**
 	 * Set the order shipping total.
 	 *
 	 * @param string $shipping The order total shipping.
@@ -622,6 +659,22 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 					if ( isset( $product ) ) {
 						$order_product->set_properties_from_serialized_array( $product );
 						$this->push_order_product( $order_product );
+					}
+				}
+			}
+
+			if ( isset( $array['orderDiscounts'] ) ) {
+				foreach ( $array['orderDiscounts'] as $order_discounts ) {
+					$mappings = $this->discount_mappings;
+
+					// e.g., "order_number" => "orderNumber"
+					foreach ( $mappings as $local_name => $remote_name ) {
+						if ( isset( $array[ $remote_name ] ) ) {
+							// e.g., set_order_number()
+							$set_method = "set_$local_name";
+							// e.g. $this->set_order_number($array['orderNumber']);
+							$this->$set_method( $array[ $remote_name ] );
+						}
 					}
 				}
 			}
