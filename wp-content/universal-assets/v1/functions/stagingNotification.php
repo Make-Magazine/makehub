@@ -26,7 +26,8 @@ function change_email_for_wp($email) {
 
 /**
  * Check if Website is visible to Search Engines
- */
+*/
+
 function wpse_check_visibility() {
   error_log('in function');
     // if the worpress site is set public AND we are on a staging or dev environment,
@@ -36,13 +37,14 @@ function wpse_check_visibility() {
     error_log('homeurl='.$homeurl);
     //check for our stage, dev or local sites
     if (strpos($homeurl, 'devmakehub')   !== false ||
-        strpos($homeurl, 'wpengine.com') !== false) {
+        strpos($homeurl, 'wpengine.com') !== false ||
+        strpos($homeurl, 'makehub.local')) {
       error_log('we are on a dev/stage site');
       error_log('blog id is '.get_current_blog_id());
       error_log('blog public is '.get_option( 'blog_public'));
       // Public blogs have a setting of 1, private blogs are 0.
-      if ( get_option( 'blog_public') != '0' ) {
-          update_blog_public(1,0);
+      if ( get_option( 'blog_public') != '0' ) {          
+          update_blog_status( get_current_blog_id(), 'public', (int) 0 );
           error_log('after update, blog public is '.get_option( 'blog_public'));
       }
     }
