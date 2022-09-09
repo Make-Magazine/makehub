@@ -5,15 +5,15 @@
 	.content-panel {
 		margin-bottom: 45px;
 	}
-	h1, h2, h3, h4 { 
+	h1, h2, h3, h4 {
 		font-family: "Roboto Light";
 	}
 	h1{ font-size: 60px; }
-	h2 { 
+	h2 {
 		font-size: 26px;
 		img { max-height: 40px; margin-left: 15px;}
 	}
-	.btn { 
+	.btn {
 		font-family: "Roboto Light";
 		min-width: 320px;
 		margin-top: 25px;
@@ -52,7 +52,7 @@
 			margin-bottom: 15px;
 		}
 	}
-	
+
 	&:hover, &:active, &:visited {
 		color: #fff;
 	}
@@ -85,7 +85,7 @@
 }
 
 .three-column-cards {
-	h2 { 
+	h2 {
 		text-align: left;
 		margin-bottom: -15px;
 	}
@@ -107,7 +107,7 @@
 		border: solid 2px #00AEEF;
 		color: #fff;
 	}
-	.column-header { 
+	.column-header {
 		margin-bottom: 15px;
 	}
 	.column-header, .column-title {
@@ -121,12 +121,12 @@
 		margin-right: 30px;
 		margin-bottom: 30px;
 	}
-	
+
 	@media screen and (max-width: 480px) {
 		min-height: 250px;
 		font-size: 15px;
 		padding-bottom: 15px;
-		.column-header { 
+		.column-header {
 			font-size: 16px;
 			margin-bottom: 10px;
 		}
@@ -167,8 +167,8 @@
 	}
 	.make-panel {
 		margin: 25px 20px;
-		.column-info { 
-			min-height: 100px; 
+		.column-info {
+			min-height: 100px;
 			padding: 0px 10px;
 		}
 		@media screen and (max-width: 996px) {
@@ -187,7 +187,7 @@
 				width: 60%;
 				padding: 0px 25px;
 			}
-			img { 
+			img {
 				float: right;
 				width: 35%;
 				margin-bottom: 20px;
@@ -210,7 +210,7 @@
 		}
 	}
 	.column-contents {
-		.column-title { 
+		.column-title {
 			font-family: "Roboto";
 			font-size: 36px;
 		}
@@ -278,7 +278,7 @@
 			text-align: left;
 			font-size: 18px;
 			font-family: "Roboto Light";
-			.btn { 
+			.btn {
 				min-width: 0px;
 				width: 100%;
 			}
@@ -294,13 +294,13 @@
 }
 
 .two-column {
-	.container-fluid{ 
+	.container-fluid{
 		margin-bottom: -45px; // probably remove this as more panels come online
 	}
 	.column {
 		background-size: cover;
-		.column-info { 
-			padding: 45px 0px 25px; 
+		.column-info {
+			padding: 45px 0px 25px;
 			.column-title {
 				font-size: 48px;
 				line-height: 46px;
@@ -326,7 +326,7 @@
 			margin: 0 auto;
 			padding: 25px 30px;
 			background: #cbcbcb;
-			img { 
+			img {
 				height: 80px;
 				@media screen and (max-width: 767px) {
 					height: 60px;
@@ -340,8 +340,8 @@
 			}
 			.btn {
 				&::after {
-					font-family: "LinearIcons-Free";
-					content: "\e87a";
+					font-family: "FontAwesome";
+					content: "\f061";
 					position: absolute;
 					right: 28%;
 				}

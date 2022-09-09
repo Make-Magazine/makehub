@@ -132,7 +132,6 @@ function make_campus_enqueue_styles() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
 
-    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
     wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
 
     ### GENESIS STYLES #####

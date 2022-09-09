@@ -83,14 +83,11 @@ function make_makerspaces_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
   $my_version = $my_theme->get('Version');
 
-  wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
-	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-	wp_enqueue_style( 'makerspaces-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
 
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style';
-   wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
 
 	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-makerspaces-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );

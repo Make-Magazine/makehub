@@ -31,6 +31,22 @@ function make_experiences_languages() {
 }
 add_action('after_setup_theme', 'make_experiences_languages');
 
+function remove_unnecessary_scripts() {
+	//wp_dequeue_style( 'font-awesome' );
+	//wp_dequeue_style( 'essb-fontawsome' );
+}
+add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
+
+function remove_jquery_migrate( $scripts ) {
+	if ( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
+		$script = $scripts->registered['jquery'];
+		if ( $script->deps ) {
+			$script->deps = array_diff( $script->deps, array( 'jquery-migrate' ) );
+		}
+	}
+}
+add_action( 'wp_default_scripts', 'remove_jquery_migrate' );
+
 /**
  * Enqueues scripts and styles for child theme front-end.
  *
@@ -48,7 +64,6 @@ function make_experiences_scripts_styles() {
      * http://codex.wordpress.org/Function_Reference/wp_deregister_style
      * */
     // Styles
-    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
     wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css', '', 'all');
 
     ### SUBTHEME STYLES ###

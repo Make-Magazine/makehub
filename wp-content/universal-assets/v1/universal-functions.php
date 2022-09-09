@@ -18,6 +18,7 @@ function set_ajax_params(){
 	$my_version = isset($pkg_json->version)?$pkg_json->version:'1.1';
 
 	### UNIVERSAL STYLES ###
+	wp_enqueue_style( 'bootstrap', content_url() . '/universal-assets/v1/css/bootstrap-noglyphicons.min.css' );
 	wp_enqueue_style('universal-firstload.css', content_url() . '/universal-assets/v1/css/universal-firstload.min.css', array(), $my_version);
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
 

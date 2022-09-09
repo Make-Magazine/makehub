@@ -48,7 +48,6 @@ function make_learn_scripts_styles() {
      * http://codex.wordpress.org/Function_Reference/wp_deregister_style
      * */
     // Styles
-    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
     wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
