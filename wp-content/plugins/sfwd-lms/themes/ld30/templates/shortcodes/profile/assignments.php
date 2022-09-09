@@ -20,16 +20,6 @@ $assignment_post_type_object = get_post_type_object( 'sfwd-assignment' ); ?>
 		</div> <!--/.ld-table-list-tittle-->
 		<div class="ld-table-list-columns">
 			<?php
-			$cols =	array(
-				'comments' => esc_html__( 'Comments', 'learndash' ),
-				'status'   => esc_html__( 'Status', 'learndash' ),
-				'date'     => esc_html__( 'Date', 'learndash' ),
-			);
-
-			if ( ! post_type_supports( 'sfwd-assignment', 'comments' ) ) {
-				unset( $cols['comments'] );
-			}
-
 			/**
 			 * Filters assignment columns in user's profile.
 			 *
@@ -39,7 +29,11 @@ $assignment_post_type_object = get_post_type_object( 'sfwd-assignment' ); ?>
 			 */
 			$cols = apply_filters(
 				'learndash-profile-assignment-cols',
-				$cols
+				array(
+					'comments' => esc_html__( 'Comments', 'learndash' ),
+					'status'   => esc_html__( 'Status', 'learndash' ),
+					'date'     => esc_html__( 'Date', 'learndash' ),
+				)
 			);
 			foreach ( $cols as $slug => $label ) :
 				?>

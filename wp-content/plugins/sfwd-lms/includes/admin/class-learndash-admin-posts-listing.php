@@ -35,7 +35,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		/**
 		 * Variable to hold the listing post type. This will be set in the sub-classes instances.
 		 *
-		 * @var string $post_type
+		 * @var array $post_type
 		 */
 		protected $post_type;
 
@@ -64,7 +64,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		protected $posts_to_delete = array();
 
 		/**
-		 * Flag set when AJAX Fetch process is running.
+		 * Flag set when AJAX Fetsh process is running.
 		 *
 		 * @var bool $doing_ajax_fetch.
 		 */
@@ -97,20 +97,13 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param string $post_type Optional. Post type slug.
-		 *
 		 * @return boolean true is correct, else false.
 		 */
-		protected function post_type_check( $post_type = '' ) {
+		protected function post_type_check() {
 			global $pagenow, $typenow;
 
 			if ( 'edit.php' === $pagenow ) {
-				if ( empty( $post_type ) ) {
-					if ( ! empty( $typenow ) ) {
-						$post_type = $typenow;
-					}
-				}
-				if ( ( ! empty( $post_type ) ) && ( $post_type === $this->post_type ) ) {
+				if ( ( ! empty( $typenow ) ) && ( $typenow === $this->post_type ) ) {
 					return true;
 				}
 			} elseif ( 'users.php' === $pagenow ) {
@@ -170,13 +163,13 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 
 			$this->listing_init();
 
-			if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['listing_nonce'] ) ), get_called_class() ) ) {
+			if ( wp_verify_nonce( $_POST['listing_nonce'], get_called_class() ) ) {
 				if ( ( ! isset( $_POST['query_data']['selector_key'] ) ) || ( empty( $_POST['query_data']['selector_key'] ) ) ) {
 					echo wp_json_encode( $result_array );
 					wp_die();
 				}
 
-				$selector_nonce = sanitize_text_field( wp_unslash( $_POST['query_data']['selector_key'] ) );
+				$selector_nonce = esc_attr( $_POST['query_data']['selector_key'] );
 				$selector       = $this->get_selector_by_nonce( $selector_nonce );
 				if ( ! $selector ) {
 					echo wp_json_encode( $result_array );
@@ -186,7 +179,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				$this->doing_ajax_fetch = true;
 
 				if ( ( isset( $_POST['query_data']['selector_filters'] ) ) && ( ! empty( $_POST['query_data']['selector_filters'] ) ) ) {
-					$this->fill_selectors_values_ajax( $_POST['query_data']['selector_filters'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$this->fill_selectors_values_ajax( $_POST['query_data']['selector_filters'] );
 				}
 
 				if ( ( ! isset( $selector['query_args']['post_type'] ) ) || ( empty( $selector['query_args']['post_type'] ) ) ) {
@@ -201,7 +194,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				}
 
 				if ( ( isset( $_POST['search'] ) ) && ( ! empty( $_POST['search'] ) ) ) {
-					$selector['query_args']['s'] = sanitize_text_field( wp_unslash( $_POST['search'] ) );
+					$selector['query_args']['s'] = esc_attr( $_POST['search'] );
 				} else {
 					// We only provide the 'empty' option when not a search.
 					$empty_set = $this->get_selector_empty_set( $selector );
@@ -282,8 +275,8 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $selectors Array of selectors.
-			 * @param string $post_type Post Type for listing table.
+			 * @param array  $this->selectors Array of selectors.
+			 * @param string $post_type       Post Type for listing table.
 			 */
 			$this->selectors = apply_filters( 'learndash_listing_selectors', $this->selectors, $this->post_type );
 
@@ -292,8 +285,8 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $columns   Array of columns.
-			 * @param string $post_type Post Type for listing table.
+			 * @param array  $this->columns Array of columns.
+			 * @param string $post_type     Post Type for listing table.
 			 */
 			$this->columns = apply_filters( 'learndash_listing_columns', $this->columns, $this->post_type );
 
@@ -331,8 +324,8 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $object_taxonomies An array of the names or objects of all taxonomies of all the listing post types.
-			 * @param string $post_type         Listing table post type.
+			 * @param array $object_taxonomies An array of the names or objects of all taxonomies of all the listing post types.
+			 * @param array $post_type         Listing table post type.
 			 */
 			$object_taxonomies = apply_filters( 'learndash_listing_taxonomies', $object_taxonomies, $this->post_type );
 
@@ -542,7 +535,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 						if ( ( isset( $_GET[ $selector['field_name'] ] ) ) && ( ! empty( $_GET[ $selector['field_name'] ] ) ) ) {
 
 							// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-							$selector['selected'] = sanitize_text_field( wp_unslash( $_GET[ $selector['field_name'] ] ) );
+							$selector['selected'] = esc_attr( $_GET[ $selector['field_name'] ] );
 							if ( ( isset( $selector['selector_value_function'] ) ) && ( ! empty( $selector['selector_value_function'] ) ) && ( is_callable( $selector['selector_value_function'] ) ) ) {
 								$selector['selected'] = call_user_func( $selector['selector_value_function'], $selector['selected'], $selector );
 							}
@@ -609,7 +602,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				$gl_user_ids = learndash_get_groups_administrators_users( get_current_user_id() );
 				$gl_user_ids = array_map( 'absint', $gl_user_ids );
 				if ( ( empty( $gl_user_ids ) ) || ( ! in_array( $user_id, $gl_user_ids, true ) ) ) {
-					$user_id = 0;
+					$value = 0;
 				}
 			}
 
@@ -715,7 +708,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 *
 				 * @param array  $q_vars    Array of query vars.
 				 * @param string $post_type Post Type being displayed.
-				 * @param object $query     WP_Query instance.
+				 * @param array  $query     Main Query.
 				 */
 				$q_vars = apply_filters( 'learndash_listing_table_query_vars_filter', $q_vars, $this->post_type, $query );
 			}
@@ -767,7 +760,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 * @since 2.3.1
 				 * @deprecated 3.2.3 Use {@see 'learndash_listing_selectors'} instead.
 				 *
-				 * @param array $cpt_filters_shown An array of custom post types shown filter.
+				 * @param array $cpt_filters_shown An array of cpts shown filter.
 				 */
 				apply_filters_deprecated(
 					'learndash-admin-cpt-filters-display',
@@ -790,7 +783,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * Utility function to get a Selector by key.
 		 *
 		 * @since 3.2.3
-		 * @since 3.4.1 Added `$selector_field` parameter.
+		 * @since 3.4.1 Added `$selector_field` paramter.
 		 *
 		 * @param string $selector_key Key for Selector.
 		 * @param string $selector_field Optional selector field to
@@ -893,8 +886,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @since 2.6.0
 		 *
 		 * @param array $columns Columns array passed from WordPress.
-		 *
-		 * @return array $columns Modified array with new columns.
+		 * @return array $colums  Modified array with new columns.
 		 */
 		public function manage_column_headers( $columns = array() ) {
 			$this->listing_init();
@@ -936,26 +928,21 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 */
 				$course_id = get_post_meta( $post_id, 'course_id', true );
 				if ( ! empty( $course_id ) ) {
-					$course_post = get_post( $course_id );
-					if ( ( $course_post ) && ( is_a( $course_post, 'WP_Post' ) ) ) {
-						$course_title = learndash_format_step_post_title_with_status_label( $course_post );
+					$row_actions = array();
 
-						$row_actions = array();
+					$filter_url = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
 
-						$filter_url = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
+					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>';
+					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'filter' ) ) . '">' . wp_kses_post( $course_title ) . '</a>';
-						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-
-						if ( current_user_can( 'edit_post', $course_id ) ) {
-							$row_actions['ld-post-edit'] = '<a href="' . esc_url( get_edit_post_link( $course_id ) ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-						}
-
-						if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
-							$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-						}
-						echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+					if ( current_user_can( 'edit_post', $course_id ) ) {
+						$row_actions['ld-post-edit'] = '<a href="' . esc_url( get_edit_post_link( $course_id ) ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 					}
+
+					if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
+						$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $course_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+					}
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 				} elseif ( ( isset( $column_meta['required'] ) ) && ( true === $column_meta['required'] ) ) {
 					echo '<span class="ld-error dashicons dashicons-warning" title="' . sprintf(
 						// translators: placeholder: Course.
@@ -982,37 +969,32 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 */
 				$lesson_id = get_post_meta( $post_id, 'lesson_id', true );
 				if ( ! empty( $lesson_id ) ) {
-					$lesson_post = get_post( $lesson_id );
-					if ( ( $lesson_post ) && ( is_a( $lesson_post, 'WP_Post' ) ) ) {
-						$lesson_title = learndash_format_step_post_title_with_status_label( $lesson_post );
+					$row_actions = array();
+					$filter_url  = add_query_arg( 'lesson_id', $lesson_id, $this->get_clean_filter_url() );
 
-						$row_actions = array();
-						$filter_url  = add_query_arg( 'lesson_id', $lesson_id, $this->get_clean_filter_url() );
+					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $lesson_id ) ) . '</a>';
+					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . wp_kses_post( $lesson_title ) . '</a>';
-						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+					$course_id = learndash_get_course_id( $lesson_id );
+					if ( current_user_can( 'edit_post', $lesson_id ) ) {
+						$edit_url = get_edit_post_link( $lesson_id );
 
-						$course_id = learndash_get_course_id( $lesson_id );
-						if ( current_user_can( 'edit_post', $lesson_id ) ) {
-							$edit_url = get_edit_post_link( $lesson_id );
-
-							if ( ! empty( $course_id ) ) {
-								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
-							}
-							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
+						if ( ! empty( $course_id ) ) {
+							$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
 						}
-
-						if ( is_post_type_viewable( get_post_type( $lesson_id ) ) ) {
-							if ( ! empty( $course_id ) ) {
-								$view_url = learndash_get_step_permalink( $lesson_id, $course_id );
-							} else {
-								$view_url = get_permalink( $lesson_id );
-							}
-
-							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-						}
-						echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 					}
+
+					if ( is_post_type_viewable( get_post_type( $lesson_id ) ) ) {
+						if ( ! empty( $course_id ) ) {
+							$view_url = learndash_get_step_permalink( $lesson_id, $course_id );
+						} else {
+							$view_url = get_permalink( $lesson_id );
+						}
+
+						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+					}
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 				} elseif ( ( isset( $column_meta['required'] ) ) && ( true === $column_meta['required'] ) ) {
 					echo '<span class="ld-error dashicons dashicons-warning" title="' . sprintf(
 						// translators: placeholder: Lesson.
@@ -1103,96 +1085,86 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					}
 
 					if ( ! empty( $lesson_id ) ) {
-						$lesson_post = get_post( $lesson_id );
-						if ( ( $lesson_post ) && ( is_a( $lesson_post, 'WP_Post' ) ) ) {
-							$lesson_title = learndash_format_step_post_title_with_status_label( $lesson_post );
+						$lesson_row_actions = array();
 
-							$lesson_row_actions = array();
-
-							$filter_url = add_query_arg( 'lesson_id', $lesson_id, $this->get_clean_filter_url() );
-							$course_id  = learndash_get_course_id( $lesson_id );
-							if ( ! empty( $course_id ) ) {
-								$filter_url = add_query_arg( 'course_id', $course_id, $filter_url );
-							}
-
-							echo sprintf(
-								// translators: Placeholders: Lesson label, Lesson Filter Anchor.
-								esc_html_x( '%1$s: %2$s', 'Placeholders: Lesson label, Lesson Filter Anchor', 'learndash' ),
-								LearnDash_Custom_Label::get_label( 'lesson' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
-								'<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . wp_kses_post( $lesson_title ) . '</a>'
-							);
-
-							$lesson_row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-
-							if ( current_user_can( 'edit_post', $lesson_id ) ) {
-								$edit_url = get_edit_post_link( $lesson_id );
-
-								if ( ! empty( $course_id ) ) {
-									$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
-								}
-
-								$lesson_row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-							}
-
-							if ( is_post_type_viewable( get_post_type( $lesson_id ) ) ) {
-								if ( ! empty( $course_id ) ) {
-									$view_url = learndash_get_step_permalink( $lesson_id, $course_id );
-								} else {
-									$view_url = get_permalink( $lesson_id );
-								}
-
-								$lesson_row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-							}
-							echo $this->list_table_row_actions( $lesson_row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+						$filter_url = add_query_arg( 'lesson_id', $lesson_id, $this->get_clean_filter_url() );
+						$course_id  = learndash_get_course_id( $lesson_id );
+						if ( ! empty( $course_id ) ) {
+							$filter_url = add_query_arg( 'course_id', $course_id, $filter_url );
 						}
+
+						echo sprintf(
+							// translators: Placeholders: Lesson label, Lesson Filter Anchor.
+							esc_html_x( '%1$s: %2$s', 'Placeholders: Lesson label, Lesson Filter Anchor', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'lesson' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+							'<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $lesson_id ) ) . '</a>'
+						);
+
+						$lesson_row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+
+						if ( current_user_can( 'edit_post', $lesson_id ) ) {
+							$edit_url = get_edit_post_link( $lesson_id );
+
+							if ( ! empty( $course_id ) ) {
+								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+							}
+
+							$lesson_row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
+						}
+
+						if ( is_post_type_viewable( get_post_type( $lesson_id ) ) ) {
+							if ( ! empty( $course_id ) ) {
+								$view_url = learndash_get_step_permalink( $lesson_id, $course_id );
+							} else {
+								$view_url = get_permalink( $lesson_id );
+							}
+
+							$lesson_row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $lesson_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+						}
+						echo $this->list_table_row_actions( $lesson_row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 					}
 
 					if ( ! empty( $topic_id ) ) {
-						$topic_post = get_post( $topic_id );
-						if ( ( $topic_post ) && ( is_a( $topic_post, 'WP_Post' ) ) ) {
-							$topic_title = learndash_format_step_post_title_with_status_label( $topic_post );
+						$topic_row_actions = array();
 
-							$topic_row_actions = array();
-
-							$filter_url = add_query_arg( 'topic_id', $topic_id, $this->get_clean_filter_url() );
-							$course_id  = learndash_get_course_id( $topic_id );
-							if ( ! empty( $course_id ) ) {
-								$filter_url = add_query_arg( 'course_id', $course_id, $filter_url );
-							}
-							if ( ! empty( $lesson_id ) ) {
-								$filter_url = add_query_arg( 'lesson_id', $lesson_id, $filter_url );
-							}
-
-							echo sprintf(
-								// translators: Placeholders: Topic label, Topic Filter Anchor.
-								esc_html_x( '%1$s: %2$s', 'Placeholders: Topic label, Topic Filter Anchor', 'learndash' ),
-								LearnDash_Custom_Label::get_label( 'topic' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
-								'<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'filter' ) ) . '">' . wp_kses_post( $topic_title ) . '</a>'
-							);
-
-							$topic_row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-
-							if ( current_user_can( 'edit_post', $topic_id ) ) {
-								$edit_url = get_edit_post_link( $topic_id );
-
-								if ( ! empty( $course_id ) ) {
-									$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
-								}
-
-								$topic_row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-							}
-
-							if ( is_post_type_viewable( get_post_type( $topic_id ) ) ) {
-								if ( ! empty( $course_id ) ) {
-									$view_url = learndash_get_step_permalink( $topic_id, $course_id );
-								} else {
-									$view_url = get_permalink( $topic_id );
-								}
-
-								$topic_row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-							}
-							echo $this->list_table_row_actions( $topic_row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+						$filter_url = add_query_arg( 'topic_id', $topic_id, $this->get_clean_filter_url() );
+						$course_id  = learndash_get_course_id( $topic_id );
+						if ( ! empty( $course_id ) ) {
+							$filter_url = add_query_arg( 'course_id', $course_id, $filter_url );
 						}
+						if ( ! empty( $lesson_id ) ) {
+							$filter_url = add_query_arg( 'lesson_id', $lesson_id, $filter_url );
+						}
+
+						echo sprintf(
+							// translators: Placeholders: Topic label, Topic Filter Anchor.
+							esc_html_x( '%1$s: %2$s', 'Placeholders: Topic label, Topic Filter Anchor', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'topic' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+							'<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $topic_id ) ) . '</a>'
+						);
+
+						$topic_row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+
+						if ( current_user_can( 'edit_post', $topic_id ) ) {
+							$edit_url = get_edit_post_link( $topic_id );
+
+							if ( ! empty( $course_id ) ) {
+								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+							}
+
+							$topic_row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
+						}
+
+						if ( is_post_type_viewable( get_post_type( $topic_id ) ) ) {
+							if ( ! empty( $course_id ) ) {
+								$view_url = learndash_get_step_permalink( $topic_id, $course_id );
+							} else {
+								$view_url = get_permalink( $topic_id );
+							}
+
+							$topic_row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $topic_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+						}
+						echo $this->list_table_row_actions( $topic_row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 					}
 				}
 			}
@@ -1210,36 +1182,31 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( ! empty( $post_id ) ) {
 				$quiz_id = get_post_meta( $post_id, 'quiz_id', true );
 				if ( ! empty( $quiz_id ) ) {
-					$quiz_post = get_post( $quiz_id );
-					if ( ( $quiz_post ) && ( is_a( $quiz_post, 'WP_Post' ) ) ) {
-						$quiz_title = learndash_format_step_post_title_with_status_label( $quiz_post );
+					$row_actions = array();
+					$filter_url  = add_query_arg( 'quiz_id', $quiz_id, $this->get_clean_filter_url() );
 
-						$row_actions = array();
-						$filter_url  = add_query_arg( 'quiz_id', $quiz_id, $this->get_clean_filter_url() );
+					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $quiz_id ) ) . '</a>';
+					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'filter' ) ) . '">' . wp_kses_post( $quiz_title ) . '</a>';
-						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+					$course_id = learndash_get_course_id( $quiz_id );
+					if ( current_user_can( 'edit_post', $quiz_id ) ) {
+						$edit_url = get_edit_post_link( $quiz_id );
 
-						$course_id = learndash_get_course_id( $quiz_id );
-						if ( current_user_can( 'edit_post', $quiz_id ) ) {
-							$edit_url = get_edit_post_link( $quiz_id );
-
-							if ( ! empty( $course_id ) ) {
-								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
-							}
-							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
+						if ( ! empty( $course_id ) ) {
+							$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
 						}
-
-						if ( is_post_type_viewable( get_post_type( $quiz_id ) ) ) {
-							if ( ! empty( $course_id ) ) {
-								$view_url = learndash_get_step_permalink( $quiz_id, $course_id );
-							} else {
-								$view_url = get_permalink( $quiz_id );
-							}
-							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-						}
-						echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 					}
+
+					if ( is_post_type_viewable( get_post_type( $quiz_id ) ) ) {
+						if ( ! empty( $course_id ) ) {
+							$view_url = learndash_get_step_permalink( $quiz_id, $course_id );
+						} else {
+							$view_url = get_permalink( $quiz_id );
+						}
+						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+					}
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 				} elseif ( ( isset( $column_meta['required'] ) ) && ( true === $column_meta['required'] ) ) {
 					echo '<span class="ld-error dashicons dashicons-warning" title="' . sprintf(
 						// translators: placeholder: Quiz.
@@ -1655,21 +1622,21 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			}
 
 			$selector['query_results'] = $this->get_user_selector_query_results( $selector );
-			if ( is_a( $selector['query_results'], 'WP_User_Query' ) ) {
-				if ( ! empty( $selector['query_results']->get_results() ) ) {
-					foreach ( $selector['query_results']->get_results() as $u ) {
+			if ( ( $selector['query_results'] ) && ( is_a( $selector['query_results'], 'WP_User_Query' ) ) ) {
+				if ( ! empty( $selector['query_results']->results ) ) {
+					foreach ( $selector['query_results']->results as $u ) {
 						/**
-						 * Filters the post listing items before displaying it to user.
+						 * Filters the post listing itemsbefore displaying it to user.
 						 *
 						 * @since 3.2.3
 						 *
 						 * @param WP_User $u               WP_User object to be displayed.
 						 * @param array   $query_arguments An array of selector query arguments.
 						 * @param object  $query_results   WP_Query instance.
-						 * @param string  $post_type       The post type of the screen shown.
+						 * @param array   $post_type       The post type of the screen shown.
 						 */
 						$u = apply_filters( 'learndash_listing_selector_user_option_before', $u, $selector['query_args'], $selector['query_results'], $this->post_type );
-						if ( is_a( $u, 'WP_User' ) ) {
+						if ( ( $u ) && ( is_a( $u, 'WP_User' ) ) ) {
 							$selector['options'][ absint( $u->ID ) ] = $u->display_name;
 
 							/**
@@ -1681,7 +1648,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 							 * @param WP_User $u               WP_User object to be displayed.
 							 * @param array   $query_arguments An array of selector query arguments.
 							 * @param object  $query_results   WP_Query instance.
-							 * @param string  $post_type       The post type of the screen shown.
+							 * @param array   $post_type       The post type of the screen shown.
 							 */
 							$options_after = apply_filters( 'learndash_listing_selector_user_option_after', array(), $u, $selector['query_args'], $selector['query_results'], $this->post_type );
 							if ( ! empty( $options_after ) ) {
@@ -1693,11 +1660,13 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					}
 				}
 
-				$selector['pager_results']['total_items'] = absint( $selector['query_results']->get_total() );
+				if ( property_exists( $selector['query_results'], 'total_users' ) ) {
+					$selector['pager_results']['total_items'] = absint( $selector['query_results']->total_users );
 
-				if ( ( property_exists( $selector['query_results'], 'query_vars' ) ) && ( isset( $selector['query_results']->query_vars['number'] ) ) ) {
-					if ( $selector['query_results']->query_vars['number'] > 0 ) {
-						$selector['pager_results']['total_pages'] = ceil( $selector['pager_results']['total_items'] / absint( $selector['query_results']->query_vars['number'] ) );
+					if ( ( property_exists( $selector['query_results'], 'query_vars' ) ) && ( isset( $selector['query_results']->query_vars['number'] ) ) ) {
+						if ( $selector['query_results']->query_vars['number'] > 0 ) {
+							$selector['pager_results']['total_pages'] = ceil( $selector['query_results']->total_users / absint( $selector['query_results']->query_vars['number'] ) );
+						}
 					}
 				}
 			}
@@ -1742,7 +1711,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			}
 
 			$selector['query_results'] = $this->get_selector_post_type_query_results( $selector );
-			if ( is_a( $selector['query_results'], 'WP_Query' ) ) {
+			if ( ( $selector['query_results'] ) && ( is_a( $selector['query_results'], 'WP_Query' ) ) ) {
 				if ( ! empty( $selector['query_results']->posts ) ) {
 					foreach ( $selector['query_results']->posts as $p ) {
 						if ( has_filter( 'learndash_post_listing_before_option' ) ) {
@@ -1772,12 +1741,12 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 						 * @param WP_Post $post            WP_Post object to be displayed.
 						 * @param array   $query_arguments An array of selector query arguments.
 						 * @param object  $query_results   WP_Query instance.
-						 * @param string  $post_type       The post type of the screen shown.
+						 * @param array   $post_type       The post type of the screen shown.
 						 */
 						$p = apply_filters( 'learndash_listing_selector_post_type_option_before', $p, $selector['query_args'], $selector['query_results'], $this->post_type );
 
-						if ( is_a( $p, 'WP_Post' ) ) {
-							$selector['options'][ absint( $p->ID ) ] = learndash_format_step_post_title_with_status_label( $p );
+						if ( ( $p ) && ( is_a( $p, 'WP_Post' ) ) ) {
+							$selector['options'][ absint( $p->ID ) ] = $p->post_title;
 
 							if ( has_action( 'learndash_post_listing_after_option' ) ) {
 								/**
@@ -1802,11 +1771,11 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 							 *
 							 * @since 3.2.3
 							 *
-							 * @param array  $options_after   Array of options to show after current option.
-							 * @param object $post            WP_Post object to be displayed.
-							 * @param array  $query_arguments An array of selector query arguments.
-							 * @param object $query_results   WP_Query instance.
-							 * @param string $post_type       The post type of the screen shown.
+							 * @param array $options_after     Array of options to show after current option.
+							 * @param WP_User $post            WP_Post object to be displayed.
+							 * @param array   $query_arguments An array of selector query arguments.
+							 * @param object  $query_results   WP_Query instance.
+							 * @param array   $post_type       The post type of the screen shown.
 							 */
 							$options_after = apply_filters( 'learndash_listing_selector_post_type_option_after', array(), $p, $selector['query_args'], $selector['query_results'], $this->post_type );
 							if ( ! empty( $options_after ) ) {
@@ -1837,7 +1806,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @param array $selector Selector array.
 		 *
-		 * @return object|bool WP_Query instance.
+		 * @return object WP_Query instance.
 		 */
 		protected function get_selector_post_type_query_results( $selector = array() ) {
 			$query_args_default = array(
@@ -1929,9 +1898,9 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $query_arguments An array of selector query arguments.
-			 * @param array  $selector        Selector array.
-			 * @param string $post_type       The post type of the screen shown.
+			 * @param array $query_arguments An array of selector query arguments.
+			 * @param array $selector        Selector array.
+			 * @param array $post_type       The post type of the screen shown.
 			 */
 			$selector['query_args'] = apply_filters( 'learndash_listing_selector_post_type_query_args', $selector['query_args'], $selector, $this->post_type );
 
@@ -1944,9 +1913,9 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				 * @since 3.0.0
 				 * @deprecated 3.2.3 Use {@see 'learndash_listing_selector_post_type_query_results'} instead.
 				 *
-				 * @param array  $posts           An array of post listing result posts.
-				 * @param array  $query_arguments An array of selector query arguments.
-				 * @param string $post_type       The post type of the screen shown.
+				 * @param array $posts           An array of post listing result posts.
+				 * @param array $query_arguments An array of selector query arguments.
+				 * @param array $post_type       The post type of the screen shown.
 				 */
 				$query_results->posts = apply_filters_deprecated(
 					'learndash_post_listing_results_posts',
@@ -1961,9 +1930,9 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $posts           An array of post listing result posts.
-			 * @param array  $query_arguments An array of selector query arguments.
-			 * @param string $post_type       The post type of the screen shown.
+			 * @param array $posts           An array of post listing result posts.
+			 * @param array $query_arguments An array of selector query arguments.
+			 * @param array $post_type       The post type of the screen shown.
 			 */
 			$query_results->posts = apply_filters( 'learndash_listing_selector_post_type_query_results', $query_results->posts, $selector['query_args'], $this->post_type );
 
@@ -2011,9 +1980,9 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $query_arguments An array of selector query arguments.
-			 * @param array  $selector        Selector array.
-			 * @param string $post_type       The post type of the screen shown.
+			 * @param array $query_arguments An array of selector query arguments.
+			 * @param array $selector        Selector array.
+			 * @param array $post_type       The post type of the screen shown.
 			 */
 			$selector['query_args'] = apply_filters( 'learndash_listing_selector_user_selector_query_args', $selector['query_args'], $selector, $this->post_type );
 			$query_results          = new WP_User_Query( $selector['query_args'] );
@@ -2023,11 +1992,11 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @since 3.2.3
 			 *
-			 * @param array  $posts           An array of post listing result posts.
-			 * @param array  $query_arguments An array of selector query arguments.
-			 * @param string $post_type       The post type of the screen shown.
+			 * @param array $posts           An array of post listing result posts.
+			 * @param array $query_arguments An array of selector query arguments.
+			 * @param array $post_type       The post type of the screen shown.
 			 */
-			$query_results->results = apply_filters( 'learndash_listing_selector_user_query_results', $query_results->results, $selector['query_args'], $this->post_type ); // @phpstan-ignore-line
+			$query_results->results = apply_filters( 'learndash_listing_selector_user_query_results', $query_results->results, $selector['query_args'], $this->post_type );
 
 			return $query_results;
 		}
@@ -2191,10 +2160,10 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param array $q_vars   Query vars used for the table .
-		 * @param array $selector Array of attributes used to display the filter selector.
+		 * @param  object $q_vars   Query vars used for the table .
+		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return array $q_vars.
+		 * @return object $q_vars.
 		 */
 		protected function listing_filter_by_taxonomy( $q_vars = array(), $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
@@ -2232,7 +2201,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					}
 				} else {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 
 					$course_ids = learndash_group_enrolled_courses( absint( $selector['selected'] ) );
@@ -2267,7 +2236,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -2298,7 +2267,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					}
 
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 					$q_vars['meta_query'][] = $course_query_args;
 				}
@@ -2321,7 +2290,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -2374,7 +2343,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 
 								if ( ( ! empty( $course_lessons_ids ) ) && ( in_array( $selector['selected'], $course_lessons_ids, true ) ) ) {
 									if ( ! isset( $q_vars['meta_query'] ) ) {
-										$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+										$q_vars['meta_query'] = array();
 									}
 
 									$q_vars['meta_query'][] = array(
@@ -2389,7 +2358,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 								 */
 							} else {
 								if ( ! isset( $q_vars['meta_query'] ) ) {
-									$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+									$q_vars['meta_query'] = array();
 								}
 
 								$q_vars['meta_query'][] = array(
@@ -2449,7 +2418,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					} else {
 
 						if ( ! isset( $q_vars['meta_query'] ) ) {
-							$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+							$q_vars['meta_query'] = array();
 						} else {
 							$lesson_item_found = false;
 							foreach ( $q_vars['meta_query'] as $meta_idx => &$meta_item ) {
@@ -2531,7 +2500,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -2547,7 +2516,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					);
 				} else {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -2574,7 +2543,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -2590,7 +2559,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 					);
 				} else {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$q_vars['meta_query'] = array();
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -2660,11 +2629,11 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param string|array $post_type Post type to check.
+		 * @param string $post_type Post type to check.
 		 *
 		 * @return int Number of posts for a post type.
 		 */
-		protected function check_query_post_type_count( $post_type = '' ) {
+		protected function check_query_post_type_count( $post_type ) {
 			$total_post_count = 0;
 			if ( ! empty( $post_type ) ) {
 				if ( is_string( $post_type ) ) {
@@ -2698,7 +2667,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			 *
 			 * @param bool   $hide_empty    True if the taxonomy selector/column should be shown if empty.
 			 * @param string $taxonomy_slug The taxonomy slug.
-			 * @param string $post_type     The list table post type.
+			 * @param string $post_type     The list tabl post type.
 			 */
 			if ( apply_filters( 'learndash_listing_taxonomies_hide_empty', true, $taxonomy_slug, $this->post_type ) ) {
 				if ( ! wp_count_terms( $taxonomy_slug, array( 'hide_empty' => true ) ) ) {
@@ -2784,7 +2753,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 	}
 }
 
-// Include the LearnDash table listing files here.
+// Incldue the LearnDash table listing files here.
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-courses-listing.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-lessons-listing.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-topics-listing.php';
@@ -2796,5 +2765,3 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/c
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-assignments-listing.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-essays-listing.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-users-listing.php';
-require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-exams-listing.php';
-require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-listings/class-learndash-admin-coupons-listing.php';

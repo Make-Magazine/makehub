@@ -21,8 +21,6 @@ use CustomFacebookFeed\Admin\CFF_Support;
 use CustomFacebookFeed\Admin\CFF_About_Us;
 use CustomFacebookFeed\Builder\CFF_oEmbed_Manager;
 use CustomFacebookFeed\Builder\CFF_Tooltip_Wizard;
-use CustomFacebookFeed\Integrations\Elementor\CFF_Elementor_Base;
-use CustomFacebookFeed\Integrations\Divi\CFF_Divi_Handler;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -253,18 +251,6 @@ final class Custom_Facebook_Feed_Pro{
 	 */
 	public $cff_admin_notices;
 
-	/**
-	 * CFF_Divi_Handler
-	 *
-	 * Divi Module Handler.
-	 *
-	 * @since 4.3
-	 * @access public
-	 *
-	 * @var CFF_Admin_Notices
-	 */
-	public $cff_divi_handler;
-
 
 	/**
 	 * Custom_Facebook_Feed_Pro Instance.
@@ -303,10 +289,6 @@ final class Custom_Facebook_Feed_Pro{
 			self::$instance->cff_admin_notices		= new CFF_Admin_Notices();
 
 			self::$instance->cff_elementor_base		= CFF_Elementor_Base::instance();
-
-			self::$instance->cff_divi_handler		= new CFF_Divi_Handler();
-
-
 
 			add_action( 'init', [ self::$instance, 'sw_version_check' ], 0 );
 
@@ -612,12 +594,6 @@ final class Custom_Facebook_Feed_Pro{
 	 * @access public
 	 */
 	function cff_pro_activate( $network_wide ) {
-        $installed_timestamp = get_option( 'cff_pro_installed_timestamp' );
-
-        if ( ! $installed_timestamp ) {
-            update_option( 'cff_pro_installed_timestamp', current_time( 'timestamp' ) );
-        }
-
 		$options = get_option('cff_style_settings');
 		//Run cron twice daily when plugin is first activated for new users
 		if ( ! wp_next_scheduled( 'cff_cron_job' ) ) {
@@ -880,11 +856,7 @@ final class Custom_Facebook_Feed_Pro{
 	 * @since 3.18
 	 * @access public
 	 */
-	function cff_create_database_table( $include_charset_collate = true ) {
-		if ( ! function_exists( 'dbDelta' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/upgrade.php';
-		}
-
+	function cff_create_database_table() {
 		global $wpdb;
 		global $wp_version;
 
@@ -892,9 +864,7 @@ final class Custom_Facebook_Feed_Pro{
 		$feeds_posts_table_name = esc_sql( $wpdb->prefix . CFF_FEEDS_POSTS_TABLE );
 		$charset_collate = '';
 
-		if ( $include_charset_collate
-             && method_exists( $wpdb, 'get_charset_collate' )
-             && version_compare( $wp_version, '3.5', '>' ) ) {
+		if ( version_compare( $wp_version, '3.5', '>' ) ) {
 			$charset_collate = $wpdb->get_charset_collate();
 		}
 

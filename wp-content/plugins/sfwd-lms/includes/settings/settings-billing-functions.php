@@ -33,7 +33,7 @@ function learndash_billing_cycle_setting_field_html( $post_id = 0, $post_type = 
 			$post_type = get_post_type( $post_id );
 		}
 		if ( ( empty( $post_type ) ) && ( isset( $_GET['post_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$post_type = esc_attr( $_GET['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$post_type = esc_attr( $_GET['post_type'] );
 		}
 	}
 
@@ -45,7 +45,7 @@ function learndash_billing_cycle_setting_field_html( $post_id = 0, $post_type = 
 	} elseif ( learndash_get_post_type_slug( 'group' ) === $post_type ) {
 		$settings_prefix = 'group';
 	} else {
-		$settings_prefix = '';
+		return '';
 	}
 
 	if ( ! empty( $post_id ) ) {
@@ -98,7 +98,7 @@ function learndash_trial_duration_setting_field_html( $post_id = 0, $post_type =
 			$post_type = get_post_type( $post_id );
 		}
 		if ( ( empty( $post_type ) ) && ( isset( $_GET['post_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$post_type = esc_attr( $_GET['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$post_type = esc_attr( $_GET['post_type'] );
 		}
 	}
 
@@ -110,7 +110,7 @@ function learndash_trial_duration_setting_field_html( $post_id = 0, $post_type =
 	} elseif ( learndash_get_post_type_slug( 'group' ) === $post_type ) {
 		$settings_prefix = 'group';
 	} else {
-		$settings_prefix = '';
+		return '';
 	}
 
 	if ( ! empty( $post_id ) ) {
@@ -291,11 +291,10 @@ function learndash_payment_buttons( $post ) {
 		}
 
 		$post_label_prefix = 'course';
-		$course_price      = learndash_get_course_price( $post_id );
 
 		$meta              = learndash_get_setting( $post_id );
 		$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
-		$post_price        = $course_price['price'];
+		$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
 		$post_no_of_cycles = ( isset( $meta['course_no_of_cycles'] ) ) ? $meta['course_no_of_cycles'] : '';
 		$post_button_url   = ( isset( $meta['custom_button_url'] ) ) ? $meta['custom_button_url'] : '';
 		$post_button_label = ( isset( $meta['custom_button_label'] ) ) ? $meta['custom_button_label'] : '';
@@ -321,19 +320,18 @@ function learndash_payment_buttons( $post ) {
 		}
 
 		$post_label_prefix = 'group';
-		$group_price       = learndash_get_group_price( $post_id );
 
 		$meta              = learndash_get_setting( $post_id );
 		$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
-		$post_price        = $group_price['price'];
+		$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
 		$post_no_of_cycles = ( isset( $meta['post_no_of_cycles'] ) ) ? $meta['post_no_of_cycles'] : '';
 		$post_button_url   = ( isset( $meta['custom_button_url'] ) ) ? $meta['custom_button_url'] : '';
 		$post_button_label = ( isset( $meta['custom_button_label'] ) ) ? $meta['custom_button_label'] : '';
 
 		$post_srt = '';
 		if ( 'subscribe' === $post_price_type ) {
-			$post_price_billing_p3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_p3', true );
-			$post_price_billing_t3 = get_post_meta( $post_id, $post_label_prefix . '_price_billing_t3', true );
+			$post_price_billing_p3 = learndash_get_setting( $post_id, 'course_price_billing_p3' );
+			$post_price_billing_t3 = learndash_get_setting( $post_id, 'course_price_billing_t3' );
 			$post_price_trial_a1   = learndash_get_setting( $post_id, 'group_trial_price' );
 			$post_price_trial_p1   = learndash_get_setting( $post_id, 'group_trial_duration_p1' );
 			$post_price_trial_t1   = learndash_get_setting( $post_id, 'group_trial_duration_t1' );
@@ -352,10 +350,12 @@ function learndash_payment_buttons( $post ) {
 	// format the Course price to be proper XXX.YY no leading dollar signs or other values.
 	if ( ( 'paynow' === $post_price_type ) || ( 'subscribe' === $post_price_type ) ) {
 		if ( '' !== $post_price ) {
-			$post_price = number_format( learndash_get_price_as_float( $post_price ), 2, '.', '' );
+			$post_price = preg_replace( '/[^0-9.]/', '', $post_price );
+			$post_price = number_format( floatval( $post_price ), 2, '.', '' );
 		}
 		if ( '' !== $post_price_trial_a1 ) {
-			$post_price_trial_a1 = number_format( learndash_get_price_as_float( $post_price_trial_a1 ), 2, '.', '' );
+			$post_price_trial_a1 = preg_replace( '/[^0-9.]/', '', $post_price_trial_a1 );
+			$post_price_trial_a1 = number_format( floatval( $post_price_trial_a1 ), 2, '.', '' );
 		}
 	}
 
@@ -364,8 +364,12 @@ function learndash_payment_buttons( $post ) {
 		$paypal_settings['paypal_sandbox'] = ( 'yes' === $paypal_settings['paypal_sandbox'] ) ? 1 : 0;
 	}
 
-	if ( ! isset( $paypal_settings['enabled'] ) || ! isset( $paypal_settings['paypal_email'] ) || empty( $paypal_settings['paypal_email'] ) ) {
-		$paypal_settings['enabled'] = '';
+	if ( ! isset( $paypal_settings['enabled'] ) ) {
+		if ( ( isset( $paypal_settings['paypal_email'] ) ) && ( ! empty( $paypal_settings['paypal_email'] ) ) ) {
+			$paypal_settings['enabled'] = 'on';
+		} else {
+			$paypal_settings['enabled'] = '';
+		}
 	}
 
 	if ( ( ! empty( $post_price_type ) ) && ( 'closed' === $post_price_type ) ) {
@@ -394,7 +398,7 @@ function learndash_payment_buttons( $post ) {
 		 * @since 2.1.0
 		 *
 		 * @param string $custom_button  Payment button markup for closed course.
-		 * @param array  $payment_params An array of payment parameter details.
+		 * @param array  $payment_params An array of payment paramter details.
 		 */
 		return apply_filters( 'learndash_payment_closed_button', $post_button, $payment_params );
 
@@ -406,13 +410,14 @@ function learndash_payment_buttons( $post ) {
 			$ld_registration_page_id = (int) LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration' );
 		}
 
+		if ( is_user_logged_in() ) {
+			$ld_registration_page_id = 0;
+		}
+
 		$paypal_button = '';
 
 		if ( ( ! empty( $ld_registration_page_id ) ) && ( $current_page_id !== $ld_registration_page_id ) ) {
-			$payment_buttons = '<form action="' . esc_url( get_permalink( $ld_registration_page_id ) ) . '" method="get">';
-			if ( empty( get_option( 'permalink_structure' ) ) ) {
-				$payment_buttons .= '<input type="hidden" value="' . $ld_registration_page_id . '" name="page_id" />';
-			}
+			$payment_buttons  = '<form action="' . esc_url( get_permalink( $ld_registration_page_id ) ) . '" method="get">';
 			$payment_buttons .= '<input type="hidden" value="' . absint( $post->ID ) . '" name="ld_register_id" />';
 			$payment_buttons .= '<input type="submit" class="btn-join" id="btn-join" value="' . $button_text . '" />';
 			$payment_buttons .= '</form>';
@@ -451,25 +456,14 @@ function learndash_payment_buttons( $post ) {
 
 				$post_title = str_replace( array( '[', ']' ), array( '', '' ), $post->post_title );
 
-				/** This filter is documented in includes/payments/class-learndash-stripe-connect-checkout-integration.php */
-				$post_price = apply_filters(
-					'learndash_get_price_by_coupon',
-					learndash_get_price_as_float( $post_price ),
-					$post->ID,
-					get_current_user_id()
-				);
-
-				$post_price = number_format( $post_price, 2, '.', '' );
-
-				$currency_code = learndash_get_currency_code();
 				if ( empty( $post_price_type ) || 'paynow' === $post_price_type ) {
-					$shortcode_content = do_shortcode( '[paypal type="paynow" amount="' . $post_price . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $currency_code . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '"]' );
+					$shortcode_content = do_shortcode( '[paypal type="paynow" amount="' . $post_price . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $paypal_settings['paypal_currency'] . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '"]' );
 					if ( ! empty( $shortcode_content ) ) {
 						$paypal_button = wptexturize( '<div class="learndash_checkout_button learndash_paypal_button">' . $shortcode_content . '</div>' );
 					}
 				} elseif ( 'subscribe' === $post_price_type ) {
 
-					$shortcode_content = do_shortcode( '[paypal type="subscribe" a1="' . $post_price_trial_a1 . '" p1="' . $post_price_trial_p1 . '" t1="' . $post_price_trial_t1 . '" a3="' . $post_price . '" p3="' . $post_price_billing_p3 . '" t3="' . $post_price_billing_t3 . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $currency_code . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '" srt="' . $post_srt . '"]' );
+					$shortcode_content = do_shortcode( '[paypal type="subscribe" a1="' . $post_price_trial_a1 . '" p1="' . $post_price_trial_p1 . '" t1="' . $post_price_trial_t1 . '" a3="' . $post_price . '" p3="' . $post_price_billing_p3 . '" t3="' . $post_price_billing_t3 . '" sandbox="' . $paypal_settings['paypal_sandbox'] . '" email="' . $paypal_settings['paypal_email'] . '" itemno="' . $post->ID . '" name="' . $post_title . '" noshipping="1" nonote="1" qty="1" currencycode="' . $paypal_settings['paypal_currency'] . '" rm="2" notifyurl="' . $paypal_settings['paypal_notifyurl'] . '" cancelurl="' . $paypal_settings['paypal_cancelurl'] . '" returnurl="' . $paypal_settings['paypal_returnurl'] . '" imagewidth="100px" pagestyle="paypal" lc="' . $paypal_settings['paypal_country'] . '" cbt="' . esc_html__( 'Complete Your Purchase', 'learndash' ) . '" custom="' . $user_id . '" srt="' . $post_srt . '"]' );
 
 					if ( ! empty( $shortcode_content ) ) {
 						$paypal_button = wptexturize( '<div class="learndash_checkout_button learndash_paypal_button">' . $shortcode_content . '</div>' );
@@ -488,44 +482,23 @@ function learndash_payment_buttons( $post ) {
 			 * @since 2.1.0
 			 *
 			 * @param string $payment_button Payment button markup.
-			 * @param array  $payment_params Payment parameters.
+			 * @param array  $payment_params An array of payment paramter details.
 			 */
 			$payment_buttons = apply_filters( 'learndash_payment_button', $paypal_button, $payment_params );
 
-			global $learndash_stripe_script_loaded;
-			global $learndash_stripe_connect_loaded;
-			global $learndash_razorpay_loaded;
-
-			$loaded_payment_buttons_number = count(
-				array_filter(
-					array(
-						! empty( $paypal_button ),
-						(bool) $learndash_stripe_script_loaded,
-						(bool) $learndash_stripe_connect_loaded,
-						(bool) $learndash_razorpay_loaded,
-					)
-				)
-			);
-
 			if ( ! empty( $payment_buttons ) ) {
-				if ( $payment_buttons === $paypal_button || 1 === $loaded_payment_buttons_number ) {
-					return '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">' . $payment_buttons . '</div>';
-				} else {
-					$button  = '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">';
+				if ( ( ! empty( $paypal_button ) ) && ( $payment_buttons != $paypal_button ) ) {
+					$button  = '';
+					$button .= '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">';
 					$button .= '<input id="btn-join-' . $post->ID . '" class="btn-join btn-join-' . $post->ID . ' button learndash_checkout_button" data-jq-dropdown="#jq-dropdown-' . $post->ID . '" type="button" value="' . $button_text . '" />';
 					$button .= '</div>';
 
 					global $dropdown_button;
-					// phpcs
-					//:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+					// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 					$dropdown_button .= '<div id="jq-dropdown-' . esc_attr( $post->ID ) . '" class="jq-dropdown jq-dropdown-tip checkout-dropdown-button">';
 					$dropdown_button .= '<ul class="jq-dropdown-menu">';
 					$dropdown_button .= '<li>';
-					$dropdown_button .= str_replace(
-						$button_text,
-						empty( $paypal_button ) ? esc_html__( 'Use Credit Card', 'learndash' ) : esc_html__( 'Use Paypal', 'learndash' ),
-						$payment_buttons
-					);
+					$dropdown_button .= str_replace( $button_text, esc_html__( 'Use Paypal', 'learndash' ), $payment_buttons );
 					$dropdown_button .= '</li>';
 					$dropdown_button .= '</ul>';
 					$dropdown_button .= '</div>';
@@ -537,11 +510,14 @@ function learndash_payment_buttons( $post ) {
 					 * @param string $button Dropdown payment button markup.
 					 */
 					return apply_filters( 'learndash_dropdown_payment_button', $button );
+
+				} else {
+					return '<div id="learndash_checkout_buttons_course_' . $post->ID . '" class="learndash_checkout_buttons">' . $payment_buttons . '</div>';
 				}
 			}
 		}
 	} else {
-		$join_button = '<div class="learndash_join_button"><form action="' . get_permalink( $post->ID ) . '" method="post">
+		$join_button = '<div class="learndash_join_button"><form method="post">
 							<input type="hidden" value="' . $post->ID . '" name="' . $post_label_prefix . '_id" />
 							<input type="hidden" name="' . $post_label_prefix . '_join" value="' . wp_create_nonce( $post_label_prefix . '_join_' . get_current_user_id() . '_' . $post->ID ) . '" />
 							<input type="submit" value="' . $button_text . '" class="btn-join" id="btn-join" />
@@ -560,4 +536,3 @@ function learndash_payment_buttons( $post ) {
 
 	return '';
 }
-

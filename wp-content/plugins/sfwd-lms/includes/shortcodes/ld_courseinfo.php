@@ -30,11 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int        $decimals       The number of decimal points. Default 2.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'courseinfo'.
  *
  * @return string The `courseinfo` shortcode output.
  */
-function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug = 'courseinfo' ) {
+function learndash_courseinfo( $attr = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -52,8 +51,8 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 
 	$shortcode_atts['course_id'] = ! empty( $shortcode_atts['course_id'] ) ? $shortcode_atts['course_id'] : '';
 	if ( '' === $shortcode_atts['course_id'] ) {
-		if ( ( isset( $_GET['course_id'] ) ) && ( ! empty( $_GET['course_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$shortcode_atts['course_id'] = intval( $_GET['course_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ( isset( $_GET['course_id'] ) ) && ( ! empty( $_GET['course_id'] ) ) ) {
+			$shortcode_atts['course_id'] = intval( $_GET['course_id'] );
 		} else {
 			$shortcode_atts['course_id'] = learndash_get_course_id();
 		}
@@ -61,13 +60,10 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 
 	$shortcode_atts['user_id'] = ! empty( $shortcode_atts['user_id'] ) ? $shortcode_atts['user_id'] : '';
 	if ( '' === $shortcode_atts['user_id'] ) {
-		if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$shortcode_atts['user_id'] = intval( $_GET['user_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) {
+			$shortcode_atts['user_id'] = intval( $_GET['user_id'] );
 		}
 	}
-
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$shortcode_atts = apply_filters( 'learndash_shortcode_atts', $shortcode_atts, $shortcode_slug );
 
 	if ( empty( $shortcode_atts['user_id'] ) ) {
 		$shortcode_atts['user_id'] = get_current_user_id();
@@ -75,7 +71,7 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 		/**
 		 * Added logic to allow admin and group_leader to view certificate from other users.
 		 *
-		 * @since 2.3.0
+		 * @since 2.3
 		 */
 		$post_type = '';
 		if ( get_query_var( 'post_type' ) ) {
@@ -83,8 +79,8 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 		}
 
 		if ( 'sfwd-certificates' == $post_type ) {
-			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$shortcode_atts['user_id'] = intval( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) {
+				$shortcode_atts['user_id'] = intval( $_GET['user'] );
 			}
 		}
 	}
@@ -238,7 +234,7 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 
 			if ( ( ! empty( $quizdata ) ) && ( is_array( $quizdata ) ) ) {
 				foreach ( $quizdata as $data ) {
-					if ( ( is_array( $quizzes ) ) && ( ( in_array( $data['quiz'], $quizzes ) ) ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					if ( ( is_array( $quizzes ) ) && ( ( in_array( $data['quiz'], $quizzes ) ) ) ) {
 						if ( ( ! isset( $data['course'] ) ) || ( intval( $data['course'] ) == intval( $shortcode_atts['course_id'] ) ) ) {
 							if ( empty( $scores[ $data['quiz'] ] ) || $scores[ $data['quiz'] ] < $data[ $field ] ) {
 								$scores[ $data['quiz'] ] = $data[ $field ];
@@ -307,7 +303,7 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 
 			if ( ( ! empty( $quizdata ) ) && ( is_array( $quizdata ) ) ) {
 				foreach ( $quizdata as $data ) {
-					if ( ( is_array( $quizzes ) ) && ( ( in_array( $data['quiz'], $quizzes ) ) ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					if ( ( is_array( $quizzes ) ) && ( ( in_array( $data['quiz'], $quizzes ) ) ) ) {
 						if ( ( empty( $scores[ $data['quiz'] ] ) || $scores[ $data['quiz'] ] < $data[ $field ] ) ) {
 							if ( ( ! isset( $data['course'] ) ) || ( intval( $data['course'] ) == intval( $shortcode_atts['course_id'] ) ) ) {
 								$scores[ $data['quiz'] ] = $data[ $field ];
@@ -406,4 +402,4 @@ function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug =
 			return apply_filters( 'learndash_courseinfo', '', $shortcode_atts );
 	}
 }
-add_shortcode( 'courseinfo', 'learndash_courseinfo', 10, 3 );
+add_shortcode( 'courseinfo', 'learndash_courseinfo', 10, 2 );

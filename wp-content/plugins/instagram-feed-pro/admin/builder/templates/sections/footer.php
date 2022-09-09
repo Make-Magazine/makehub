@@ -69,10 +69,8 @@
 </div>
 <?php
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/add-source-popup.php';
-	include_once SBI_BUILDER_DIR . 'templates/sections/popup/personal-account-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/sources-list-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/extensions-popup.php';
-    include_once SBI_BUILDER_DIR . 'templates/sections/popup/feedtemplates-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/feedtypes-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/feedtypes-customizer-popup.php';
 	include_once SBI_BUILDER_DIR . 'templates/sections/popup/confirm-dialog-popup.php';
@@ -96,12 +94,6 @@
 	</div>
 </div>
 
-<sb-personal-account-component
-:generic-text="genericText"
-:svg-icons="svgIcons"
-ref="personalAccountRef"
->
-</sb-personal-account-component>
 
 
 <sb-confirm-dialog-component

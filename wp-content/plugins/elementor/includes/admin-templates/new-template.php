@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $document_types = Plugin::$instance->documents->get_document_types();
 
 $types = [];
-$lock_configs = [];
 
 $selected = get_query_var( 'elementor_library_type' );
 
@@ -20,12 +19,8 @@ foreach ( $document_types as $document_type ) {
 		 * @var Document $instance
 		 */
 		$instance = new $document_type();
-		$lock_behavior = $document_type::get_lock_behavior_v2();
 
 		$types[ $instance->get_name() ] = $document_type::get_title();
-		$lock_configs[ $instance->get_name() ] = empty( $lock_behavior )
-			? (object) []
-			: $lock_behavior->get_config();
 	}
 }
 
@@ -70,23 +65,11 @@ $types = apply_filters( 'elementor/template-library/create_new_dialog_types', $t
 		<div id="elementor-new-template__form__template-type__wrapper" class="elementor-form-field">
 			<label for="elementor-new-template__form__template-type" class="elementor-form-field__label"><?php echo esc_html__( 'Select the type of template you want to work on', 'elementor' ); ?></label>
 			<div class="elementor-form-field__select__wrapper">
-				<?php // Badge will be filled from js. ?>
-				<span id="elementor-new-template__form__template-type-badge" class="e-hidden">
-					<i id="elementor-new-template__form__template-type-badge__icon"></i>
-					<span id="elementor-new-template__form__template-type-badge__text"></span>
-				</span>
-
 				<select id="elementor-new-template__form__template-type" class="elementor-form-field__select" name="template_type" required>
 					<option value=""><?php echo esc_html__( 'Select', 'elementor' ); ?>...</option>
 					<?php
 					foreach ( $types as $value => $type_title ) {
-						printf(
-							'<option value="%1$s" data-lock=\'%2$s\' %3$s>%4$s</option>',
-							esc_attr( $value ),
-							wp_json_encode( $lock_configs[ $value ] ?? (object) [] ),
-							selected( $selected, $value, false ),
-							esc_html( $type_title )
-						);
+						printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $value ), selected( $selected, $value, false ), esc_html( $type_title ) );
 					}
 					?>
 				</select>
@@ -112,6 +95,5 @@ $types = apply_filters( 'elementor/template-library/create_new_dialog_types', $t
 			</div>
 		</div>
 		<button id="elementor-new-template__form__submit" class="elementor-button elementor-button-success"><?php echo esc_html__( 'Create Template', 'elementor' ); ?></button>
-		<a id="elementor-new-template__form__lock_button" class="elementor-button elementor-button-brand e-hidden" target="_blank"><?php // Will be filled from js. ?></a>
 	</form>
 </script>

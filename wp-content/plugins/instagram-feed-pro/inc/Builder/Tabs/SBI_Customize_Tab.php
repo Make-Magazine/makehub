@@ -24,14 +24,10 @@ class SBI_Customize_Tab {
 	 * @access public
 	 *
 	 * @return array
-	 */
+	*/
 	public static function get_sections() {
 		return array(
-			'settings_feedtemplate' => [
-				'heading' 	=> __( 'Template', 'custom-facebook-feed' ),
-				'icon' 		=> 'layout',
-				'controls'	=> self::get_settings_feed_templates_controls()
-			],
+
 			'customize_feedlayout'     => array(
 				'heading'  => __( 'Feed Layout', 'instagram-feed' ),
 				'icon'     => 'feed_layout',
@@ -57,13 +53,6 @@ class SBI_Customize_Tab {
 				'icon'            => 'article',
 				'controls'        => self::get_customize_posts_controls(),
 				'nested_sections' => array(
-					'post_style'        => array(
-						'heading'   => __( 'Post Style', 'instagram-feed' ),
-						'icon'      => 'color_scheme',
-						'isNested'  => 'true',
-						'separator' => 'none',
-						'controls'  => self::get_nested_post_style_controls(),
-					),
 					'images_videos'        => array(
 						'heading'   => __( 'Images and Videos', 'instagram-feed' ),
 						'icon'      => 'picture',
@@ -122,27 +111,13 @@ class SBI_Customize_Tab {
 		);
 	}
 
-	/**
-	 * Get Settings Tab Feed Type Section.
-	 *
-	 * @since INSTA_FEED_PRO_SINCE
-	 *
-	 * @return array
-	 */
-	public static function get_settings_feed_templates_controls() {
-		return [
-			[
-				'type'   => 'customview',
-				'viewId' => 'feedtemplate'
-			]
-		];
-	}
+
 
 	/**
 	 * Get Customize Tab Feed Layout Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_feedlayout_controls() {
 		$columns_options = array(
 			'1' => '1',
@@ -452,7 +427,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Color Scheme Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_colorscheme_controls() {
 		$feed_id            = isset( $_GET['feed_id'] ) ? sanitize_key( $_GET['feed_id'] ) : '';
 		$color_scheme_array = array(
@@ -568,11 +543,9 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Header Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_header_controls() {
-		$is_business_source = SBI_Feed_Builder::is_business_source();
-
-		$header_controls = array(
+		return array(
 			array(
 				'type'    => 'switcher',
 				'id'      => 'showheader',
@@ -608,20 +581,12 @@ class SBI_Customize_Tab {
 						'value' => 'centered',
 						'label' => __( 'Centered', 'instagram-feed' ),
 					),
-					array(
-						'value' => 'text',
-						'label' => __( 'Text', 'instagram-feed' ),
-					),
 				),
 			),
 			array(
 				'type'          => 'select',
 				'id'            => 'headersize',
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
+				'condition'     => array( 'showheader' => array( true ) ),
 
 				'strongHeading' => 'true',
 				'separator'     => 'both',
@@ -636,11 +601,7 @@ class SBI_Customize_Tab {
 			array(
 				'type'          => 'imagechooser',
 				'id'            => 'customavatar',
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
+				'condition'     => array( 'showheader' => array( true ) ),
 
 				'strongHeading' => 'true',
 				'separator'     => 'bottom',
@@ -652,22 +613,13 @@ class SBI_Customize_Tab {
 			array(
 				'type'      => 'heading',
 				'heading'   => __( 'Text', 'instagram-feed' ),
-				'type'          => 'heading',
-				'heading'       => __( 'Text', 'instagram-feed' ),
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
+				'condition' => array( 'showheader' => array( true ) ),
 			),
 			array(
 				'type'          => 'colorpicker',
 				'id'            => 'headercolor',
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
+				'condition'     => array( 'showheader' => array( true ) ),
+
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Color', 'instagram-feed' ),
@@ -711,207 +663,128 @@ class SBI_Customize_Tab {
 				'top'       => 10,
 				'bottom'    => 10,
 			),
-		);
-
-		// is business source
-		if ( true ) {
-			$header_controls[] = array(
+			array(
 				'type'        => 'switcher',
 				'id'          => 'showfollowers',
-				'type'          => 'switcher',
-				'id'            => 'showfollowers',
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
-				'label'         => __( 'Show number of followers', 'instagram-feed' ),
-				'stacked'       => 'true',
-				'labelStrong'   => 'true',
-				'options'       => array(
+				'condition'   => array( 'showheader' => array( true ) ),
+
+				'label'       => __( 'Show number of followers', 'instagram-feed' ),
+				'stacked'     => 'true',
+				'labelStrong' => 'true',
+				'options'     => array(
 					'enabled'  => true,
 					'disabled' => false,
 				),
-			);
-			$header_controls[] = array(
-				'type'          => 'separator',
-				'condition'     => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'standard', 'boxed', 'centered' )
-				),
-				'conditionHide' => true,
-				'top'           => 10,
-				'bottom'        => 10,
-			);
-		}
-		$header_controls[] = array(
-			'type'          => 'switcher',
-			'id'            => 'showbio',
-			'condition'     => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' )
 			),
-			'conditionHide' => true,
-			'label'         => __( 'Show Bio Text', 'instagram-feed' ),
-			'tooltip'       => __( 'Use your own custom bio text in the feed header. This is automatically retrieved from Instagram for Business accounts, but it not available for Personal accounts.
+			array(
+				'type'      => 'separator',
+				'condition' => array( 'showheader' => array( true ) ),
+				'top'       => 10,
+				'bottom'    => 10,
+			),
+			array(
+				'type'        => 'switcher',
+				'id'          => 'showbio',
+				'condition'   => array( 'showheader' => array( true ) ),
+
+				'label'       => __( 'Show Bio Text', 'instagram-feed' ),
+				'tooltip'     => __( 'Use your own custom bio text in the feed header. This is automatically retrieved from Instagram for Business accounts, but it not available for Personal accounts.
 ', 'instagram-feed' ),
-			'stacked'     => 'true',
-			'labelStrong' => 'true',
-			'options'     => array(
-				'enabled'  => true,
-				'disabled' => false,
-			),
-		);
-		$header_controls[] = array(
-			'type'        => 'textarea',
-			'id'          => 'custombio',
-			'placeholder' => __( 'Add Custom bio', 'instagram-feed' ),
-			'condition'   => array(
-				'showheader' => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' ),
-				'showbio'    => array( true ),
-			),
-			'conditionHide' => true,
-			'child'       => 'true',
-			'stacked'     => 'true',
-		);
-		$header_controls[] = array(
-			'type'      => 'separator',
-			'condition'     => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' )
-			),
-			'conditionHide' => true,
-			'top'       => 10,
-			'bottom'    => 10,
-		);
-		$header_controls[] = array(
-			'type'        => 'switcher',
-			'id'          => 'headeroutside',
-			'condition'     => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' )
-			),
-			'conditionHide' => true,
-
-			'label'       => __( 'Show outside scrollable area', 'instagram-feed' ),
-			'stacked'     => 'true',
-			'labelStrong' => 'true',
-			'options'     => array(
-				'enabled'  => true,
-				'disabled' => false,
-			),
-		);
-		$header_controls[] = array(
-			'type'      => 'separator',
-			'condition' => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' )
-			),
-			'top'       => 10,
-			'bottom'    => 10,
-		);
-		$header_controls[] = array(
-			'type'        => 'switcher',
-			'id'          => 'stories',
-			'condition'     => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' )
-			),
-			'conditionHide' => true,
-			'switcherTop' => true,
-
-			'heading'     => __( 'Include Stories', 'instagram-feed' ),
-			'description' => __( 'You can view active stories by clicking the profile picture in the header. Instagram Business accounts only.<br/><br/>', 'instagram-feed' ),
-			'tooltip'     =>
-				'<div class="sbi-story-tltp-ctn"><strong>' . __( 'Add Instagram Stories', 'instagram-feed' ) . '</strong>' .
-				'<p>' . __( 'Show your active stories from Instagram on your website.', 'instagram-feed' ) . '</p>' .
-				'<p class="sbi-story-note"><strong>' . __( 'Note: ', 'instagram-feed' ) . '</strong>' .
-				'<span>' . __( 'You need to have a business account with an active story.', 'instagram-feed' ) . '</span></p>' .
-				'<div class="sbi-story-tooltip-img"><img src="'.esc_url(SBI_BUILDER_URL . 'assets/img/stories-tooltip.png' ).'" alt="stories tooltip"></div></div>' ,
-
-			'stacked'     => 'true',
-			'labelStrong' => 'true',
-			'layout'      => 'half',
-			'reverse'     => 'true',
-			'options'     => array(
-				'enabled'  => true,
-				'disabled' => false,
-			),
-		);
-		$header_controls[] = array(
-			'type'                => 'number',
-			'id'                  => 'storiestime',
-			'condition'           => array(
-				'showheader' => array( true ),
-				'headerstyle' => array( 'standard', 'boxed', 'centered' ),
-				'stories'    => array( true ),
-			),
-			'conditionHide'       => true,
-			'strongHeading'       => false,
-			'stacked'             => 'true',
-			'placeholder'         => '500',
-			'child'               => true,
-
-			'fieldSuffix'         => 'milliseconds',
-			'heading'             => __( 'Change Interval', 'instagram-feed' ),
-			'description'         => __( 'This is the time a story displays for, before displaying the next one. Videos always change when the video is finished.', 'instagram-feed' ),
-			'descriptionPosition' => 'bottom',
-		);
-
-		$header_controls[] = array(
-			'type' 				=> 'textarea',
-			'id' 				=> 'headertext',
-			'heading' 			=> __( 'Text', 'instagram-feed' ),
-			'condition'           => array(
-				'showheader'  => array( true ),
-				'headerstyle' => array( 'text' ),
-			),
-			'conditionHide'       => true,
-			'stacked'			=> 'true'
-		);
-
-		$header_controls[] = array(
-				'type' 				=> 'select',
-				'id' 				=> 'headertextsize',
-				'condition'           => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'text' ),
+				'stacked'     => 'true',
+				'labelStrong' => 'true',
+				'options'     => array(
+					'enabled'  => true,
+					'disabled' => false,
 				),
-				'conditionHide'		=> true,
-				'layout' 			=> 'full',
-				'strongHeading'		=> 'false',
-				'heading' 			=> __( 'Size', 'instagram-feed' ),
-				'stacked'			=> 'true',
-				'options'			=> array(
-					'small' => __( 'Small', 'custom-twitter-feeds' ),
-					'medium' => __( 'Medium', 'custom-twitter-feeds' ),
-					'large' => __( 'Large', 'custom-twitter-feeds' ),
-				)
-			);
-		$header_controls[] = array(
-				'type' 				=> 'colorpicker',
-				'id' 				=> 'headertextcolor',
-				'condition'           => array(
-					'showheader'  => array( true ),
-					'headerstyle' => array( 'text' ),
+			),
+			array(
+				'type'        => 'textarea',
+				'id'          => 'custombio',
+				'placeholder' => __( 'Add Custom bio', 'instagram-feed' ),
+				'condition'   => array(
+					'showheader' => array( true ),
+					'showbio'    => array( true ),
 				),
-				'conditionHide'		=> true,
-				'layout' 			=> 'half',
-				'strongHeading'		=> 'false',
-				'heading' 			=> __( 'Color', 'custom-facebook-feed' ),
-				'style'				=> ['.sbi-header-type-text' => 'color:{{value}};'],
-				'stacked'			=> 'true'
-			);
 
-		return $header_controls;
+				'child'       => 'true',
+				'stacked'     => 'true',
+			),
+			array(
+				'type'      => 'separator',
+				'condition' => array( 'showheader' => array( true ) ),
+				'top'       => 10,
+				'bottom'    => 10,
+			),
+			array(
+				'type'        => 'switcher',
+				'id'          => 'headeroutside',
+				'condition'   => array( 'showheader' => array( true ) ),
+
+				'label'       => __( 'Show outside scrollable area', 'instagram-feed' ),
+				'stacked'     => 'true',
+				'labelStrong' => 'true',
+				'options'     => array(
+					'enabled'  => true,
+					'disabled' => false,
+				),
+			),
+			array(
+				'type'      => 'separator',
+				'condition' => array( 'showheader' => array( true ) ),
+				'top'       => 10,
+				'bottom'    => 10,
+			),
+			array(
+				'type'        => 'switcher',
+				'id'          => 'stories',
+				'condition'   => array( 'showheader' => array( true ) ),
+				'switcherTop' => true,
+
+				'heading'     => __( 'Include Stories', 'instagram-feed' ),
+				'description' => __( 'You can view active stories by clicking the profile picture in the header. Instagram Business accounts only.<br/><br/>', 'instagram-feed' ),
+				'tooltip'     =>
+					'<div class="sbi-story-tltp-ctn"><strong>' . __( 'Add Instagram Stories', 'instagram-feed' ) . '</strong>' .
+					'<p>' . __( 'Show your active stories from Instagram on your website.', 'instagram-feed' ) . '</p>' .
+					'<p class="sbi-story-note"><strong>' . __( 'Note: ', 'instagram-feed' ) . '</strong>' .
+					'<span>' . __( 'You need to have a business account with an active story.', 'instagram-feed' ) . '</span></p>' .
+					'<div class="sbi-story-tooltip-img"><img src="'.esc_url(SBI_BUILDER_URL . 'assets/img/stories-tooltip.png' ).'" alt="stories tooltip"></div></div>' ,
+
+				'stacked'     => 'true',
+				'labelStrong' => 'true',
+				'layout'      => 'half',
+				'reverse'     => 'true',
+				'options'     => array(
+					'enabled'  => true,
+					'disabled' => false,
+				),
+			),
+			array(
+				'type'                => 'number',
+				'id'                  => 'storiestime',
+				'condition'           => array(
+					'showheader' => array( true ),
+					'stories'    => array( true ),
+				),
+				'conditionHide'       => true,
+				'strongHeading'       => false,
+				'stacked'             => 'true',
+				'placeholder'         => '500',
+				'child'               => true,
+
+				'fieldSuffix'         => 'milliseconds',
+				'heading'             => __( 'Change Interval', 'instagram-feed' ),
+				'description'         => __( 'This is the time a story displays for, before displaying the next one. Videos always change when the video is finished.', 'instagram-feed' ),
+				'descriptionPosition' => 'bottom',
+			),
+
+		);
 	}
 
 	/**
 	 * Get Customize Tab Posts Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_posts_controls() {
 		return array();
 	}
@@ -920,7 +793,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Posts Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_nested_images_videos_controls() {
 		return array(
 			array(
@@ -950,7 +823,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Posts Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_nested_caption_controls() {
 		return array(
 			array(
@@ -970,8 +843,8 @@ class SBI_Customize_Tab {
 				'top'       => 15,
 				'bottom'    => 15,
 				'condition' => array(
-					'showcaption' => array( true ),
-					'layout' => array( 'grid', 'carousel', 'masonry' )
+							'showcaption' => array( true ),
+							'layout' => array( 'grid', 'carousel', 'masonry' )
 				),
 
 			),
@@ -979,8 +852,8 @@ class SBI_Customize_Tab {
 				'type'        => 'number',
 				'id'          => 'captionlength',
 				'condition'   => array(
-					'showcaption' => array( true ),
-					'layout' => array( 'grid', 'carousel', 'masonry' )
+							'showcaption' => array( true ),
+							'layout' => array( 'grid', 'carousel', 'masonry' )
 				),
 
 				'stacked'     => 'true',
@@ -993,15 +866,15 @@ class SBI_Customize_Tab {
 				'top'       => 25,
 				'bottom'    => 15,
 				'condition' => array(
-					'showcaption' => array( true ),
-					'layout' => array( 'grid', 'carousel', 'masonry' )
+							'showcaption' => array( true ),
+							'layout' => array( 'grid', 'carousel', 'masonry' )
 				),
 			),
 			array(
 				'type'      => 'heading',
 				'condition' => array(
-					'showcaption' => array( true ),
-					'layout' => array( 'grid', 'carousel', 'masonry' )
+							'showcaption' => array( true ),
+							'layout' => array( 'grid', 'carousel', 'masonry' )
 				),
 
 				'heading'   => __( 'Text', 'instagram-feed' ),
@@ -1010,8 +883,8 @@ class SBI_Customize_Tab {
 				'type'          => 'select',
 				'id'            => 'captionsize',
 				'condition'     => array(
-					'showcaption' => array( true ),
-					'layout' => array( 'grid', 'carousel', 'masonry' )
+							'showcaption' => array( true ),
+							'layout' => array( 'grid', 'carousel', 'masonry' )
 				),
 				'layout'        => 'half',
 				'strongHeading' => 'false',
@@ -1042,7 +915,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Posts Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_nested_like_comment_summary_controls() {
 		return array(
 			array(
@@ -1100,7 +973,7 @@ class SBI_Customize_Tab {
 				'layout'        => 'half',
 				'strongHeading' => 'false',
 				'heading'       => __( 'Color', 'instagram-feed' ),
-				'style'         => array( '.sbi_info_wrapper .sbi_likes svg, .sbi_info_wrapper .sbi_comments svg' => 'color:{{value}};' ),
+				'style'         => array( '.sbi_likes, .sbi_comments' => 'color:{{value}};' ),
 				'stacked'       => 'true',
 			),
 		);
@@ -1110,7 +983,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Posts Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_nested_hover_state_controls() {
 		return array(
 			array(
@@ -1173,7 +1046,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Load More Button Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_loadmorebutton_controls() {
 		return array(
 			array(
@@ -1292,7 +1165,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab Follow Button Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_followbutton_controls() {
 		return array(
 			array(
@@ -1372,7 +1245,7 @@ class SBI_Customize_Tab {
 	 * Get Customize Tab LightBox Section
 	 * @since 6.0
 	 * @return array
-	 */
+	*/
 	public static function get_customize_lightbox_controls() {
 		return array(
 			array(
@@ -1430,88 +1303,5 @@ class SBI_Customize_Tab {
 		);
 	}
 
-	/**
-	 * Get Customize Tab `Post Style` Nested Section
-	 *
-	 * @since INSTA_FEED_PRO_SINCE
-	 *
-	 * @return array
-	 */
-	static function get_nested_post_style_controls() {
-		return array(
-			array(
-				'type'    => 'toggleset',
-				'id'      => 'poststyle',
-				'heading' => __( 'Post Type', 'instagram-feed' ),
-				'options' => array(
-					array(
-						'value' => 'boxed',
-						'icon'  => 'boxed',
-						'label' => __( 'Boxed', 'instagram-feed' )
-					),
-					array(
-						'value' => 'regular',
-						'icon'  => 'thumbnail',
-						'label' => __( 'Regular', 'instagram-feed' )
-					)
-				)
-			),
-			array(
-				'type'   => 'separator',
-				'top'    => 10,
-				'bottom' => 10,
-			),
-			array(
-				'type'          => 'heading',
-				'condition'     => array( 'poststyle' => array( 'boxed' ) ),
-				'conditionHide' => true,
-				'heading'       => __( 'Individual Properties', 'instagram-feed' ),
-			),
-			array(
-				'type'          => 'colorpicker',
-				'id'            => 'postbgcolor',
-				'condition'     => array( 'poststyle' => array( 'boxed' ) ),
-				'conditionHide' => true,
-				'layout'        => 'half',
-				'icon'          => 'background',
-				'strongHeading' => 'false',
-				'heading'       => __( 'Background', 'instagram-feed' ),
-				'style'         => array( '.sbi_inner_wrap' => 'background:{{value}};' ),
-				'stacked'       => 'true'
-			),
-			array(
-				'type'          => 'number',
-				'id'            => 'postcorners',
-				'condition'     => array( 'poststyle' => array( 'boxed' ) ),
-				'conditionHide' => true,
-				'fieldSuffix'   => 'px',
-				'layout'        => 'half',
-				'icon'          => 'corner',
-				'strongHeading' => 'false',
-				'heading'       => __( 'Border Radius', 'instagram-feed' ),
-				'style'         => array( '.sbi_inner_wrap' => 'border-radius: {{value}}px;' ),
-				'stacked'       => 'true'
-			),
-			array(
-				'type'          => 'separator',
-				'top'           => 10,
-				'condition'     => array( 'poststyle' => array( 'boxed' ) ),
-				'conditionHide' => true,
-				'bottom'        => 5,
-			),
-			array(
-				'type'          => 'checkbox',
-				'id'            => 'boxshadow',
-				'condition'     => array( 'poststyle' => array( 'boxed' ) ),
-				'conditionHide' => true,
-				'label'         => __( 'Box Shadow', 'instagram-feed' ),
-				'options'       => array(
-					'enabled'  => 'on',
-					'disabled' => 'off'
-				),
-				'stacked'       => 'true'
-			),
-		);
-	}
 
 }

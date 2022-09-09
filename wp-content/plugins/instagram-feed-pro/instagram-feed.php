@@ -3,7 +3,7 @@
 Plugin Name: Instagram Feed Pro Developer
 Plugin URI: https://smashballoon.com/instagram-feed
 Description: Display beautifully clean, customizable, and responsive Instagram feeds
-Version: 6.1
+Version: 6.0.4
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -17,9 +17,6 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
-
-use InstagramFeed\Helpers\SB_Instagram_Tracking;
-
 if ( ! defined( 'SBI_STORE_URL' ) ) {
 	define( 'SBI_STORE_URL', 'https://smashballoon.com/' );
 }
@@ -35,7 +32,7 @@ if( !class_exists( '\InstagramFeed\EDD_SL_Plugin_Updater' ) ) {
 }
 
 if ( ! defined( 'SBIVER' ) ) {
-	define( 'SBIVER', '6.1' );
+	define( 'SBIVER', '6.0.4' );
 }
 // Db version.
 if ( ! defined( 'SBI_DBVERSION' ) ) {
@@ -129,9 +126,7 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 		    define( 'SBI_BUILDER_URL', SBI_PLUGIN_URL . 'admin/builder/' );
 		}
 
-		require SBI_PLUGIN_DIR . 'vendor/autoload.php';
 
-		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-feed-cache-manager.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/if-functions.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-api-connect.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-cache.php';
@@ -139,8 +134,6 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-cron-updater.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-data-encryption.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-data-manager.php';
-		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-encryption-keys-manager.php';
-
 		$manager = new SB_Instagram_Data_Manager();
 		$manager->init();
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-display-elements.php';
@@ -156,9 +149,10 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-single.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-token-refresher.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/admin/blocks/class-sbi-blocks.php';
+		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/admin/class-sbi-tracking.php';
 
 		$sbi_blocks = new SB_Instagram_Blocks();
-		new SB_Instagram_Tracking();
+
 		if ( $sbi_blocks->allow_load() ) {
 			$sbi_blocks->load();
 		}
@@ -201,6 +195,13 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 
 		include SBI_PLUGIN_DIR . '/inc/Builder/SBI_Feed_Builder.php';
 		include SBI_PLUGIN_DIR . '/inc/Builder/SBI_Tooltip_Wizard.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Db.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Feed_Builder.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Feed_Saver.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Feed_Saver_Manager.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Post_Set.php';
+		//require_once SBI_PLUGIN_DIR . '/inc/Builder/SBI_Source.php';
+
 		sbi_builder_pro();
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'admin/SBI_View.php';
 
@@ -221,11 +222,6 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 		//$sbi_widget				= new SBI_Widget();
 		$sbi_admin_notices		= new InstagramFeed\Admin\SBI_Admin_Notices();
 		$sbi_tooltip_wizard		= new InstagramFeed\Builder\SBI_Tooltip_Wizard();
-		InstagramFeed\Integrations\Elementor\SBI_Elementor_Base::instance();
-
-
-		$sbi_divi_handler		= new InstagramFeed\Integrations\Divi\SBI_Divi_Handler();
-
 
 		$db_ver = get_option( 'sbi_db_version', 0 );
 		if ( version_compare( $db_ver, '2.0', '>=' ) ) {
@@ -479,15 +475,6 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 	function sbi_check_for_db_updates() {
 
 		$db_ver = get_option( 'sbi_db_version', 0 );
-
-		if ( $db_ver === 0 ) {
-			$keys_manager = new SBI_Ecnryption_Keys_Manager( 'SBI_ENCRYPTION_KEY', 'SBI_ENCRYPTION_SALT' );
-
-			$sbi_statuses_option = get_option( 'sbi_statuses', array() );
-			$sbi_statuses_option['added_encryption_keys'] = false !== $keys_manager->set_constants();
-
-			update_option('sbi_statuses', $sbi_statuses_option);
-		}
 
 		if ( (float) $db_ver < 1.2 ) {
 
@@ -959,10 +946,6 @@ if ( function_exists( 'sb_instagram_feed_init' ) || function_exists( 'display_in
 		if ( $sb_instagram_preserve_settings ) {
 			return;
 		}
-
-		require_once trailingslashit( plugin_dir_path( __FILE__ ) ) . 'inc/class-sb-instagram-encryption-keys-manager.php';
-		$keys_manager = new SBI_Ecnryption_Keys_Manager( 'SBI_ENCRYPTION_KEY', 'SBI_ENCRYPTION_SALT' );
-		$keys_manager->remove_keys();
 
 		//Delete tables
 		$wpdb->query( "DROP TABLE IF EXISTS $posts_table_name" );

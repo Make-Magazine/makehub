@@ -133,7 +133,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'order'   => LearnDash_Settings_Section::get_section_setting_select_option_label( 'LearnDash_Settings_Section_Lessons_Display_Order', 'group_courses_order' ),
 			);
 
-			if ( learndash_use_select2_lib() ) {
+			/** This filter is documented in includes/class-ld-lms.php */
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 				$select_cert_options_default = array(
 					'-1' => esc_html__( 'Search or select a certificate…', 'learndash' ),
 				);
@@ -180,7 +181,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -217,10 +218,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'context'     => array( 'view', 'edit' ),
 										'readonly'    => true,
 									),
-								),
-								'arg_options' => array(
-									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
-									'validate_callback' => null,
 								),
 							),
 						),
@@ -319,7 +316,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								// translators: placeholder: Courses per page.
 								'description' => sprintf( esc_html_x( '%s per page', 'placeholder: Courses per page', 'learndash' ), learndash_get_custom_label( 'courses' ) ),
 								'type'        => 'integer',
-								'default'     => (int) $this->setting_option_values['group_courses_per_page_custom'],
+								'default'     => '',
 							),
 						),
 					),

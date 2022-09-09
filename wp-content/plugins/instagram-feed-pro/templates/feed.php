@@ -37,7 +37,7 @@ sbi_header_html( $settings, $header_data, 'outside' );
     <div id="sbi_images"<?php echo $sb_images_style; ?>>
 		<?php
         if ( ! in_array( 'ajaxPostLoad', $flags, true ) ) {
-		    $this->posts_loop( $posts, $settings );
+	        $this->posts_loop( $posts, $settings );
         }
 		?>
     </div>

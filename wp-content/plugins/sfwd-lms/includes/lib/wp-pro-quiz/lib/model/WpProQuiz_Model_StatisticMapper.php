@@ -45,11 +45,12 @@ class WpProQuiz_Model_StatisticMapper extends WpProQuiz_Model_Mapper {
 	/**
 	 * Fetch statistics data by passing ref ids.
 	 *
-	 * @param array $ref_ids Array of ref ids.
+	 * @param array $refIDs Array of ref ids.
 	 *
-	 * @return WpProQuiz_Model_Statistic[]
+	 * @return array
 	 */
-	public function fetchByRefs( array $ref_ids ): array {
+	public function fetchByRefs( array $ref_ids ) {
+
 		$a       = array();
 		$ref_ids = array_map( 'intval', $ref_ids );
 

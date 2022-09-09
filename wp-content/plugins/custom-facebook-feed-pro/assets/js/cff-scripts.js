@@ -890,10 +890,7 @@ if(!cff_js_exists){
       var d=this.columnWidth+=this.gutter,e=this.containerWidth+this.gutter,f=e/d,g=d-e%d,h=g&&1>g?"round":"floor";f=Math[h](f),this.cols=Math.max(f,1)},d.prototype.getContainerWidth=function(){var a=this.options.isFitWidth?this.element.parentNode:this.element,c=b(a);this.containerWidth=c&&c.innerWidth},d.prototype._getItemLayoutPosition=function(a){a.getSize();var b=a.size.outerWidth%this.columnWidth,d=b&&1>b?"round":"ceil",e=Math[d](a.size.outerWidth/this.columnWidth);e=Math.min(e,this.cols);for(var f=this._getColGroup(e),g=Math.min.apply(Math,f),h=c.indexOf(f,g),i={x:this.columnWidth*h,y:g},j=g+a.size.outerHeight,k=this.cols+1-f.length,l=0;k>l;l++)this.colYs[h+l]=j;return i},d.prototype._getColGroup=function(a){if(2>a)return this.colYs;for(var b=[],c=this.cols+1-a,d=0;c>d;d++){var e=this.colYs.slice(d,d+a);b[d]=Math.max.apply(Math,e)}
       return b},d.prototype._manageStamp=function(a){var c=b(a),d=this._getElementOffset(a),e=this.options.isOriginLeft?d.left:d.right,f=e+c.outerWidth,g=Math.floor(e/this.columnWidth);g=Math.max(0,g);var h=Math.floor(f/this.columnWidth);h-=f%this.columnWidth?0:1,h=Math.min(this.cols-1,h);for(var i=(this.options.isOriginTop?d.top:d.bottom)+c.outerHeight,j=g;h>=j;j++)this.colYs[j]=Math.max(i,this.colYs[j])},d.prototype._getContainerSize=function(){this.maxY=Math.max.apply(Math,this.colYs);var a={height:this.maxY};return this.options.isFitWidth&&(a.width=this._getContainerFitWidth()),a},d.prototype._getContainerFitWidth=function(){for(var a=0,b=this.cols;--b&&0===this.colYs[b];)a++;return(this.cols-a)*this.columnWidth-this.gutter},d.prototype.needsResizeLayout=function(){var a=this.containerWidth;return this.getContainerWidth(),a!==this.containerWidth},d})
 
-
-
-  } //End Masonry code
-  function cffAddMasonry($self) {
+    function cffAddMasonry($self) {
 
       var evt = jQuery.Event('cffbeforemasonry');
       evt.$self = $self;
@@ -945,6 +942,9 @@ if(!cff_js_exists){
         }
       }
     }
+
+  } //End Masonry code
+
   window.cffMasonrySettings = {itemSelector: '.cff-album-item' };
 
   function Cff() {
@@ -1066,17 +1066,6 @@ if(!cff_js_exists){
       var $ = jQuery,
         $self = jQuery(this.el);
       jQuery('.cff-gdpr-notice').remove();
-
-      $(window).on('resize scroll load', function() {
-        $('iframe.cff-lazy-load[data-loaded="false"]').each(function() {
-            if ($(this).isInViewport()) {
-                $(this).attr('src', $(this).attr('data-src'));
-                $(this).attr('data-loaded', "true");
-            }
-        })
-    });
-
-
 
       jQuery(this.el).find('.cff-author-img').each(function() {
         $(this).find('img').attr('src',$(this).attr('data-avatar'));
@@ -1393,7 +1382,6 @@ if(!cff_js_exists){
           var newUrl = imgSrcSet[i][changeToRes];
           if (newUrl !== currentUrl) {
             $targetImageElement.attr('src', newUrl);
-            $targetImageElement.attr('data-lightbox-source', newUrl);
             if ($imgWrapItem.hasClass('imgLiquid_ready')) {
               $imgWrapItem.css('background-image', 'url("' + newUrl + '")');
               $imgWrapItem.imgLiquid({fill:true});
@@ -1767,9 +1755,10 @@ if(!cff_js_exists){
     return "";
   }
 
-  var cff_init = window.cff_init = function( $cff ){
+  function cff_init( $cff ){
     //JS is running
     jQuery('.cff-nojs').removeClass('cff-nojs');
+
     //Check whether it's a touch device
     var cffTouchDevice = false;
     if (cffIsTouchDevice() === true) cffTouchDevice = true;
@@ -1964,23 +1953,8 @@ if(!cff_js_exists){
           }
         }
 
-        let short_text = full_text.substring(0, text_limit);
-
-        // Cut the text based on limits set
-        $post_text.html( short_text );
-
-        // Show the 'See More' link if needed
-        if ( full_text.length > text_limit ) {
-          $self.find( '.cff-expand' ).show();
-
-          let short_text_plus_one = full_text.substring( 0, text_limit + 1 );
-          let short_text_plus_one_last_char = short_text_plus_one.charAt( short_text_plus_one.length - 1 );
-          let last_white_space = short_text.lastIndexOf(' ');
-
-          if ( last_white_space > 0 && short_text_plus_one_last_char !== ' ' ) {
-            short_text = short_text.substring( 0, last_white_space );
-          }
-        }
+        //new string from the array
+        var short_text = full_text_arr.join('');
 
         //remove empty html tags from the array
         short_text = short_text.replace(/(<(?!\/)[^>]+>)+(<\/[^>]+>)/g, "");
@@ -2147,8 +2121,7 @@ if(!cff_js_exists){
 
 
         //Add lightbox tile link to photos
-        setTimeout(function(){
-          if( $self.closest('#cff').hasClass('cff-lb') ){
+        if( $self.closest('#cff').hasClass('cff-lb') ){
           $self.find('.cff-photo, .cff-album-cover, .cff-event-thumb, .cff-html5-video, .cff-iframe-wrap').each(function(){
             var $photo = $(this),
               postId = post_id,
@@ -2234,9 +2207,8 @@ if(!cff_js_exists){
             } else {
               var lb_href = $photo.find('img').attr('src').indexOf('placeholder') === -1 ? $photo.find('img').attr('src') : $photo.find('img').attr('data-orig-source');
               if( $photo.find('img').attr('data-cff-no-event-img-large') ) lb_href = $photo.find('img').attr('data-cff-no-event-img-large');
-              if( $photo.find('img').attr('data-cff-full-img') && !$cff.hasClass('cff-doing-gdpr') ) lb_href = $photo.find('img').attr('data-cff-full-img');
+              if( $photo.find('img').attr('data-cff-full-img') ) lb_href = $photo.find('img').attr('data-cff-full-img');
               cffLightboxTile += 'href="'+lb_href+'" data-iframe="" ';
-              console.log($cff)
             }
             //No nav
             // cffLightboxTile += 'data-cff-lightbox="'+postId+'" data-title="'+cffLightboxTitle+'" data-id="'+postId+'" data-thumbs="'+cffShowThumbs+'" ';
@@ -2276,7 +2248,6 @@ if(!cff_js_exists){
 
           });
         }
-        }, 2000)
 
         //Share tooltip function
         $self.find('.cff-share-link').off('click').on('click', function(e){
@@ -2638,7 +2609,7 @@ if(!cff_js_exists){
           if( events_count > 0 ){
             show_events = show_events + num_events;
             //Show the next set of events
-            $cff.find('.cff-upcoming-event').slice(0, show_events).css('display', 'inline-block').removeClass('cff-num-diff-hide');
+            $cff.find('.cff-upcoming-event').slice(0, show_events).css('display', 'inline-block');
             if( show_events > events_count ){
               $cff.find('#cff-load-more').hide();
               cff_no_more_posts($cff, $cffLoadMore);
@@ -3248,6 +3219,7 @@ if(!cff_js_exists){
       //Replace the lightbox image with the full size image which is retrieved in the meta API request
       function cffAddFullsizeImageURLs($self, data){
         var data = JSON.parse( data );
+
         if( typeof data.images !== 'undefined' && data.images !== null ) $self.find('.cff-lightbox-link').attr('href', data.images[0].source);
 
         //Removed in v3.7 as shouldn't be needed any longer. Commenting out in case needs to be re-added.
@@ -3655,6 +3627,7 @@ if(!cff_js_exists){
           var $self = $(this),
             currentSrc = $self.attr('src'),
             originalSrc = $self.attr('data-orig-source');
+
           // Check if the img source has been changed by lazy loading
           if(originalSrc != currentSrc){
             $self.attr('src', originalSrc);
@@ -5204,11 +5177,6 @@ if(!cff_js_exists){
               }
 
               var onSuccess = function(data) {
-                // Early return if the data is empty
-                if ( ! data ) {
-                  return;
-                }
-
                 //Convert string of data received from thumbs.php to a JSON object
                 data = JSON.parse( data );
 
@@ -5545,13 +5513,5 @@ if(!cff_js_exists){
   if( jQuery('#cff.cff-lb').length ) cffLightbox();
 
 
-jQuery.fn.isInViewport = function() {
-    var elementTop = jQuery(this).offset().top;
-    var elementBottom = elementTop + jQuery(this).outerHeight();
 
-    var viewportTop = jQuery(window).scrollTop();
-    var viewportBottom = viewportTop + jQuery(window).height();
-
-    return elementBottom > viewportTop && elementTop < viewportBottom;
-};
 } //End cff_js_exists check

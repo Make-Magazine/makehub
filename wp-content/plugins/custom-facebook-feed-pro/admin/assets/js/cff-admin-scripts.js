@@ -1284,31 +1284,6 @@ jQuery(document).ready(function($) {
 
 	});
 
-	jQuery( '.cff-retry-db' ).on( 'click', function( event ) {
-		event.preventDefault();
-
-		const $btn = $( this );
-
-		$btn.prop( 'disabled', true ).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
-
-		$.ajax({
-			url : cffA.ajax_url,
-			type : 'post',
-			data : {
-				action : 'sbi_cff_retry_db_creation',
-				cff_nonce: cffA.cff_nonce
-			},
-			success : function( data ) {
-				if ( typeof data.data.message !== 'undefined' ) {
-					$btn.closest( 'p' ).after( data.data.message );
-					$btn.remove();
-				}
-			},
-			error : function( data )  {
-			}
-		}); // ajax call
-	});
-
 });
 
 

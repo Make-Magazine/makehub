@@ -2,8 +2,8 @@
 Author: Smash Balloon
 Support Website: https://smashballoon.com/custom-facebook-feed/
 Requires at least: 4.1
-Tested up to: 6.0
-Version: 4.3
+Tested up to: 5.9.3
+Version: 4.2.4
 License: Non-distributable, Not for resale
 
 The Custom Facebook Feed allows you to display a completely customizable Facebook feed of any public Facebook page on your website.
@@ -34,27 +34,6 @@ Display a **completely customizable**, **responsive** and **search engine crawla
 5. You can display multiple feeds of different Facebook pages by specifying a Page ID directly in the shortcode: [custom-facebook-feed id=smashballoon num=5].
 
 == Changelog ==
-= 4.3 =
-* New: Elementor and Divi Builder widgets. We've added new Elementor and Divi Builder widgets to make it easier to embed your feeds.
-* New: Iframes from YouTube and Vimeo will not load until the rest of the page content has loaded to improve page performance.
-* Fix: Some post content that included special characters would display incorrectly.
-* Fix: Comments for posts would appear correctly in the feed preview but not on the front-end for some feeds.
-* Fix: When the text shortening setting was enabled, unexpected text would appear in some circumstances.
-* Fix: For the carousel layout available with the carousel extension, the setting to automatically adjust the height of the feed would not work correctly when expanding post content on mobile devices.
-
-= 4.2.6 =
-* Tweak: Added a new setting to allow disabling of the JavaScript image loading. Deactivate "JavaScript Image Loading" on the advanced tab if you are using a lazy loading plugin and blank images are displaying in your feed.
-* Fix: Group posts with special formatting (markdown) will now display like they do in Facebook.
-* Fix: Fixed several issues related to accessibility and screen readers.
-* Fix: Fixed an issue where shortening the text content might result in emoji being cut off and displaying as plain text.
-* Fix: Fixed an error with group posts and the Social Wall plugin.
-* Fix: Fixed an error with the carousel layout in the feed preview when customizing a feed.
-* Fix: Fixed an issue with translations not showing the default value to be customized in the customizer.
-
-= 4.2.5 =
-* Fix: Fixed issues with hashtags and account mention links in the post text in some specific situations.
-* Fix: Fixed PHP warnings when visiting the support page before creating a feed.
-
 = 4.2.4 =
 * Fix: Fixed hashtags and account mentions errors with links in the post text.
 * Fix: Events feeds with a masonry layout would not load more posts correctly.

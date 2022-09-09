@@ -7,74 +7,72 @@
  * @since 6.0
  */
 
-use InstagramFeed\SB_Instagram_Data_Encryption;
-
 class SB_Instagram_Cache {
 
 	/**
 	 * @var int
 	 */
-	protected $feed_id;
+	private $feed_id;
 
 	/**
 	 * @var int
 	 */
-	protected $page;
+	private $page;
 
 	/**
 	 * @var string
 	 */
-	protected $suffix;
+	private $suffix;
 
 	/**
 	 * @var bool
 	 */
-	protected $is_legacy;
+	private $is_legacy;
 
 	/**
 	 * @var int
 	 */
-	protected $cache_time;
+	private $cache_time;
 
 	/**
 	 * @var array
 	 */
-	protected $posts;
+	private $posts;
 
 	/**
 	 * @var array
 	 */
-	protected $posts_page;
+	private $posts_page;
 
 	/**
 	 * @var bool
 	 */
-	protected $is_expired;
+	private $is_expired;
 
 	/**
 	 * @var array
 	 */
-	protected $header;
+	private $header;
 
 	/**
 	 * @var array
 	 */
-	protected $resized_images;
+	private $resized_images;
 
 	/**
 	 * @var array
 	 */
-	protected $meta;
+	private $meta;
 
 	/**
 	 * @var array
 	 */
-	protected $posts_backup;
+	private $posts_backup;
 
 	/**
 	 * @var array
 	 */
-	protected $header_backup;
+	private $header_backup;
 
 	/**
 	 * @var object|SB_Instagram_Data_Encryption
@@ -365,20 +363,9 @@ class SB_Instagram_Cache {
 		global $wpdb;
 		$cache_table_name = $wpdb->prefix . 'sbi_feed_caches';
 
-		$feed_id = str_replace( array( '_MODMODE', '_CUSTOMIZER', '_CUSTOMIZER_MODMODE', '_CUSTOMIZER_MODMODE_SELECTED' ), '', $this->feed_id );
-		if ( $type === 'show_selected' ) {
-			$feed_id = str_replace( array( '_SELECTED' ), '', $feed_id );
+		$feed_id = str_replace( array( '_CUSTOMIZER', '_CUSTOMIZER_MODMODE' ), '', $this->feed_id );
 
-			$mod_mode_where = esc_sql( $feed_id ) . '_CUSTOMIZER_MODMODE_SELECTED%';
-			$affected       = $wpdb->query(
-				$wpdb->prepare(
-					"UPDATE $cache_table_name
-				SET cache_value = ''
-				WHERE feed_id like %s",
-					$mod_mode_where
-				)
-			);
-		} elseif ( $type === 'all' ) {
+		if ( $type === 'all' ) {
 			$affected = $wpdb->query(
 				$wpdb->prepare(
 					"UPDATE $cache_table_name
@@ -398,18 +385,15 @@ class SB_Instagram_Cache {
 				)
 			);
 
-			if ( isset( $_POST['moderationShoppableMode'] ) && isset( $_POST['moderationShoppableModeOffset'] ) && empty( $_POST['moderationShoppableModeOffset'] ) ) {
-				$mod_mode_where = esc_sql( $feed_id ) . '_CUSTOMIZER_MODMODE%';
-				$affected       = $wpdb->query(
-					$wpdb->prepare(
-						"UPDATE $cache_table_name
+			$mod_mode_where = esc_sql( $feed_id ) . '_CUSTOMIZER_MODMODE%';
+			$affected       = $wpdb->query(
+				$wpdb->prepare(
+					"UPDATE $cache_table_name
 				SET cache_value = ''
 				WHERE feed_id like %s",
-						$mod_mode_where
-					)
-				);
-			}
-
+					$mod_mode_where
+				)
+			);
 		} else {
 
 			$data   = array( 'cache_value' => '' );
@@ -427,12 +411,9 @@ class SB_Instagram_Cache {
 
 			$affected = $wpdb->update( $cache_table_name, $data, $where, $format, $where_format );
 
-			if ( isset( $_POST['moderationShoppableMode'] ) ) {
-				$where['feed_id'] = $feed_id . '_CUSTOMIZER_MODMODE';
+			$where['feed_id'] = $feed_id . '_CUSTOMIZER_MODMODE';
 
-				$affected = $wpdb->update( $cache_table_name, $data, $where, $format, $where_format );
-			}
-
+			$affected = $wpdb->update( $cache_table_name, $data, $where, $format, $where_format );
 		}
 
 		return $affected;
@@ -505,7 +486,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function query_sbi_feed_caches() {
+	private function query_sbi_feed_caches() {
 		$feed_cache = wp_cache_get( $this->get_wp_cache_key() );
 		if ( false === $feed_cache ) {
 			global $wpdb;
@@ -544,7 +525,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function clear_wp_cache() {
+	private function clear_wp_cache() {
 		wp_cache_delete( $this->get_wp_cache_key() );
 	}
 
@@ -555,7 +536,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function get_wp_cache_key() {
+	private function get_wp_cache_key() {
 		return 'sbi_feed_' . $this->feed_id . '_' . $this->page;
 	}
 
@@ -568,7 +549,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function maybe_encrypt( $value ) {
+	private function maybe_encrypt( $value ) {
 		if ( ! empty( $value ) && ! is_string( $value ) ) {
 			$value = sbi_json_encode( $value );
 		}
@@ -588,7 +569,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function maybe_decrypt( $value ) {
+	private function maybe_decrypt( $value ) {
 		if ( ! is_string( $value ) ) {
 			return $value;
 		}
@@ -612,7 +593,7 @@ class SB_Instagram_Cache {
 	 *
 	 * @since 6.0
 	 */
-	protected function maybe_customizer_suffix() {
+	private function maybe_customizer_suffix() {
 		$additional_suffix = '';
 		$in_customizer     = ! empty( $_POST['previewSettings'] ) || ( isset( $_GET['page'] ) && $_GET['page'] === 'sbi-feed-builder' );
 		if ( $in_customizer ) {
@@ -620,11 +601,8 @@ class SB_Instagram_Cache {
 
 			if ( ! empty( $_POST['moderationShoppableMode'] ) ) {
 				$additional_suffix .= '_MODMODE';
-				$offset             = $this->page > 1 ? $this->page : '';
+				$offset             = ! empty( $_POST['moderationShoppableModeOffset'] ) ? intval( $_POST['moderationShoppableModeOffset'] ) : '';
 				$additional_suffix .= $offset;
-				if ( ! empty( $_POST['moderationShoppableShowSelected'] ) ) {
-					$additional_suffix .= '_SELECTED';
-				}
 			}
 		}
 
@@ -666,32 +644,6 @@ class SB_Instagram_Cache {
 		$affected = $wpdb->update( $cache_table_name, $data, $where, $format, $where_format );
 
 		return $affected;
-	}
-
-	/**
-	 * Get active/all cache count.
-	 *
-	 * @param bool $active when set to true only items updated in the last months are returned.
-	 *
-	 * @return int
-	 */
-	public function get_cache_count($active = false) {
-		global $wpdb;
-		$cache_table_name = $wpdb->prefix . 'sbi_feed_caches';
-		$query = "SELECT COUNT(DISTINCT feed_id, cache_key) as cache_count FROM $cache_table_name WHERE feed_id Not Like '%_CUSTOMIZER%'";
-
-		if($active === true) {
-			$query .= " AND feed_id Not Like '%_MODMODE%' AND last_updated >= DATE_SUB(NOW(), INTERVAL 1 MONTH)";
-		}
-
-		$sql = $wpdb->prepare($query);
-		$caches = $wpdb->get_results( $sql );
-
-		if(!empty($caches)) {
-			return $caches[0]->cache_count;
-		}
-
-		return 0;
 	}
 
 }

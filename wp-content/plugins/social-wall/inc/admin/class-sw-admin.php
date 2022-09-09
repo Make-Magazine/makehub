@@ -1154,20 +1154,12 @@ class SW_Admin {
 		if ( ! defined( 'CTF_VERSION' ) ) {
 			$sbsw_ctf_menu_text = '<span class="sbsw_plugin_missing">Twitter Feed</span>';
 			$sbsw_ctf_menu_link = 'https://smashballoon.com/custom-twitter-feeds/';
-		}else{
-			if ( version_compare( CTF_VERSION, '2.0', '>=' ) ) {
-			    $sbsw_ctf_menu_link = admin_url( 'admin.php?page=ctf-feed-builder' );
-            }
 		}
 		$sbsw_yt_menu_text = '<span class="sbsw_yt_menu">YouTube Feed</span>';
 		$sbsw_yt_menu_link = 'youtube-feed';
 		if ( ! defined( 'SBYVER' ) ) {
 			$sbsw_yt_menu_text = '<span class="sbsw_plugin_missing">YouTube Feed</span>';
 			$sbsw_yt_menu_link = 'https://smashballoon.com/youtube-feed/';
-		} else {
-			if ( version_compare( SBYVER, '2.0', '>=' ) ) {
-				$sbsw_yt_menu_link = admin_url( 'admin.php?page=sby-feed-builder' );
-			}
 		}
 
 		add_submenu_page(
@@ -1219,7 +1211,6 @@ class SW_Admin {
 	public function sbsw_hide_yt_menu(){
 		echo '<style>';
 		echo '#adminmenu li.menu-top.toplevel_page_youtube-feed{ display: none !important; }';
-		echo '#adminmenu li.menu-top.toplevel_page_sby-feed-builder{ display: none !important; }';
 		echo 'ul#adminmenu .toplevel_page_sbsw a.wp-has-current-submenu:after, .toplevel_page_sbsw ul#adminmenu>li.current>a.current:after{ z-index: 10001; }';
 		echo '</style>';
 	}

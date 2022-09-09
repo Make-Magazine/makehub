@@ -5,7 +5,6 @@
  * @since 2.18/3.17
  */
 namespace CustomFacebookFeed\Admin;
-use CustomFacebookFeed\Builder\CFF_Db;
 use CustomFacebookFeed\CFF_Utils;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -261,26 +260,10 @@ class CFF_Notifications {
 			return array();
 		}
 
-        $installed_timestamp = get_option( 'cff_pro_installed_timestamp', false );
-
-        // Check if current timestamp is 7 days later than installed timestamp.
-        if ( $installed_timestamp && ( current_time( 'timestamp' ) - $installed_timestamp ) > 7 * DAY_IN_SECONDS ) {
-	        $is_first_feed_created = get_option( 'cff_pro_first_feed_created', false );
-
-	        // We are keeping the consideration for new users that the first feed is created after the first installation of the plugin.
-	        if (  ! $is_first_feed_created ) {
-		        return [];
-	        }
-        }
-
-		// Remove notifications that are not active.
+		// Remove notfications that are not active.
 		foreach ( $notifications as $key => $notification ) {
 			if ( ( ! empty( $notification['start'] ) && cff_get_current_time() < strtotime( $notification['start'] ) )
 			     || ( ! empty( $notification['end'] ) && cff_get_current_time() > strtotime( $notification['end'] ) ) ) {
-				unset( $notifications[ $key ] );
-			}
-
-			if ( empty( $notification['recent_install_override'] ) && $this->recently_installed() ) {
 				unset( $notifications[ $key ] );
 			}
 
@@ -311,26 +294,6 @@ class CFF_Notifications {
 		}
 
 		return $notifications;
-	}
-
-	/**
-	 * @return bool
-	 *
-	 * @since 1.4.5/1.4.2
-	 */
-	public function recently_installed() {
-		$cff_statuses_option = get_option( 'cff_statuses', array() );
-
-		if ( ! isset( $cff_statuses_option['first_install'] ) ) {
-			return false;
-		}
-
-		// Plugin was installed less than a week ago
-		if ( (int) $cff_statuses_option['first_install'] > time() - WEEK_IN_SECONDS ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -508,8 +471,9 @@ class CFF_Notifications {
 	 * @since 2.18/3.17
 	 */
 	public function output() {
+		$current_screen = get_current_screen();
 		// if we are one single feed page then return
-		if ( isset( $_GET['feed_id'] ) ) {
+		if ( $current_screen->base == "facebook-feed_page_cff-feed-builder" && isset( $_GET['feed_id'] ) ) {
 			return;
 		}
 		$notifications = $this->get();

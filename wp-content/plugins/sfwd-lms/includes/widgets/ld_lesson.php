@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'Lesson_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 	 * @since 2.1.0
 	 * @uses WP_Widget
 	 */
-	class Lesson_Widget extends WP_Widget /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
+	class Lesson_Widget extends WP_Widget { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Post type
@@ -77,7 +77,7 @@ if ( ( ! class_exists( 'Lesson_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+			extract( $args, EXTR_SKIP );
 
 			/* Before Widget content */
 			$buf = $before_widget;
@@ -192,7 +192,7 @@ if ( ( ! class_exists( 'Lesson_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 			} else {
 				$title = $this->post_name;
 			}
-			learndash_replace_widgets_alert();
+
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>

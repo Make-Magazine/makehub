@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-use InstagramFeed\SB_Instagram_Data_Encryption;
 class SB_Instagram_Data_Manager {
 
 	/**
@@ -58,6 +57,7 @@ class SB_Instagram_Data_Manager {
 
 			$this->update_statuses( $statuses );
 		}
+
 	}
 
 	/**
@@ -86,15 +86,13 @@ class SB_Instagram_Data_Manager {
 	 * @since 2.9.4/5.12.4
 	 */
 	public function maybe_delete_old_data() {
-		global $sb_instagram_posts_manager;
-
 		$statuses = $this->get_statuses();
 
 		$data_was_deleted = false;
 
-		do_action( 'sbi_before_delete_old_data', $statuses );
-
 		if ( $statuses['last_used'] < sbi_get_current_time() - ( 21 * DAY_IN_SECONDS ) ) {
+			global $sb_instagram_posts_manager;
+
 			$this->delete_caches();
 			$this->delete_comments_data();
 			$this->delete_hashtag_data();
@@ -339,6 +337,7 @@ class SB_Instagram_Data_Manager {
 		delete_option( 'sbi_single_cache' );
 
 		\InstagramFeed\Builder\SBI_Db::clear_sbi_feed_caches();
+		\InstagramFeed\Builder\SBI_Db::clear_sbi_sources();
 
 	}
 

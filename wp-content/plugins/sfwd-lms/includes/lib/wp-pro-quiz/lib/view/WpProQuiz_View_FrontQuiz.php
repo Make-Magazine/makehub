@@ -56,60 +56,6 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 
 		$question_count = count( $this->question );
 
-		// Keep the saved order if needed.
-
-		if ( is_user_logged_in() ) {
-			$quiz_resume_enabled = (bool) learndash_get_setting(
-				$this->quiz->getPostId(),
-				'quiz_resume'
-			);
-
-			if ( true === $quiz_resume_enabled ) {
-				$course_id = 0;
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) !== 'yes' ) {
-					$course_id = learndash_get_setting( $this->quiz->getPostId(), 'course' );
-					$course_id = absint( $course_id );
-				}
-
-				$quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity(
-					get_current_user_id(),
-					$this->quiz->getPostId(),
-					$course_id
-				);
-
-				if (
-					is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) &&
-					property_exists( $quiz_resume_activity, 'activity_id' ) &&
-					! empty( $quiz_resume_activity->activity_id )
-				) {
-					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
-						$quiz_resume_data = $quiz_resume_activity->activity_meta;
-
-						if (
-							isset( $quiz_resume_data['randomQuestions'] ) &&
-							$quiz_resume_data['randomQuestions'] &&
-							! empty( $quiz_resume_data['randomOrder'] ) &&
-							count( $this->question ) > 0
-						) {
-							$questionPostIdProIdHash = array();
-							foreach ( $this->question as $question ) {
-								/** @var WpProQuiz_Model_Question $question Question. */
-								$questionPostIdProIdHash[ $question->getId() ] = $question->getQuestionPostId();
-							}
-
-							$questions = array();
-							foreach ( $quiz_resume_data['randomOrder'] as $question_id ) {
-								$question = $this->question[ $questionPostIdProIdHash[ $question_id ] ];
-
-								$questions[ $question->getQuestionPostId() ] = $question;
-							}
-							$this->question = $questions;
-						}
-					}
-				}
-			}
-		}
-
 		$result = $this->quiz->getResultText();
 
 		if ( ! $this->quiz->isResultGradeEnabled() ) {
@@ -251,7 +197,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				$course_id = absint( $course_id );
 			}
 		}
-		if ( empty( $course_id ) || is_null( $course_id ) ) {
+		if ( ( empty( $course_id ) ) || ( is_null( $course_id ) ) ) {
 			$course_id = 0;
 		}
 
@@ -291,18 +237,15 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		$quiz_resume_id                = 0;
 		$quiz_resume_data              = array();
 		$quiz_resume_enabled           = false;
-		$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
+		$quiz_resume_cookie_send_timer = 0;
 		$quiz_resume_cookie_expiration = 604800; // 7 days.
 		$quiz_resume_quiz_started      = 0;
 
 		if ( is_user_logged_in() ) {
-			$quiz_resume_enabled = (bool) learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
 			if ( true === $quiz_resume_enabled ) {
-				$quiz_resume_cookie_send_timer = (int) learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
-				if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $quiz_resume_cookie_send_timer ) {
-					$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
-				}
-				$quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
 				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
 					$quiz_resume_id = $quiz_resume_activity->activity_id;
 					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
@@ -319,7 +262,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		}
 
 		$quiz_resume_data = learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data );
-
+		
 		echo " <script type='text/javascript'>
 		function load_wpProQuizFront" . esc_attr( $this->quiz->getId() ) . "() {
 			jQuery('#wpProQuiz_" . esc_attr( $this->quiz->getId() ) . "').wpProQuizFront({
@@ -540,18 +483,15 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		$quiz_resume_id                = 0;
 		$quiz_resume_data              = array();
 		$quiz_resume_enabled           = false;
-		$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
+		$quiz_resume_cookie_send_timer = 0;
 		$quiz_resume_cookie_expiration = 604800; // 7 days.
 		$quiz_resume_quiz_started      = 0;
 
 		if ( is_user_logged_in() ) {
-			$quiz_resume_enabled = (bool) learndash_get_setting( $quiz_post_id, 'quiz_resume' );
+			$quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
 			if ( true === $quiz_resume_enabled ) {
-				$quiz_resume_cookie_send_timer = (int) learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
-				if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $quiz_resume_cookie_send_timer ) {
-					$quiz_resume_cookie_send_timer = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
-				}
-				$quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
+				$quiz_resume_cookie_send_timer = learndash_get_setting( $quiz_post_id, 'quiz_resume_cookie_send_timer' );
+				$quiz_resume_activity          = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $course_id );
 				if ( ( is_a( $quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $quiz_resume_activity->activity_id ) ) ) {
 					$quiz_resume_id = $quiz_resume_activity->activity_id;
 					if ( ( property_exists( $quiz_resume_activity, 'activity_meta' ) ) && ( ! empty( $quiz_resume_activity->activity_meta ) ) ) {
@@ -1014,6 +954,7 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 				'shortcode_atts' => $this->_shortcode_atts,
 				'question_count' => $questionCount,
 				'result'         => $result,
+
 			)
 		);
 	}
@@ -1055,7 +996,6 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 			$contents = learndash_ob_get_clean( $level );
 			echo $contents; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
-
 		return $quizData;
 	}
 

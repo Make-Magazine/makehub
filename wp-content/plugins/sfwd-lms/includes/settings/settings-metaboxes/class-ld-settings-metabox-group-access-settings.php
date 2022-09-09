@@ -163,9 +163,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_price_type_closed_price']                      = '';
 					$this->setting_option_values['group_price_type_closed_custom_button_label']        = '';
 					$this->setting_option_values['group_price_type_closed_custom_button_url']          = '';
-					$this->setting_option_values['group_trial_price']                                  = '';
-					$this->setting_option_values['group_trial_duration_t1']                            = '';
-					$this->setting_option_values['group_trial_duration_p1']                            = '';
+					$this->setting_option_values['group_trial_price']                                   = '';
+					$this->setting_option_values['group_trial_duration_t1']                             = '';
+					$this->setting_option_values['group_trial_duration_p1']                             = '';
 					$this->setting_option_values['group_price_type_subscribe_enrollment_url']          = '';
 					break;
 
@@ -182,9 +182,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_price_type_subscribe_billing_cycle']           = '';
 					$this->setting_option_values['group_price_type_subscribe_billing_recurring_times'] = '';
 					$this->setting_option_values['group_price_type_paynow_price']                      = '';
-					$this->setting_option_values['group_trial_price']                                  = '';
-					$this->setting_option_values['group_trial_duration_t1']                            = '';
-					$this->setting_option_values['group_trial_duration_p1']                            = '';
+					$this->setting_option_values['group_trial_price']                                   = '';
+					$this->setting_option_values['group_trial_duration_t1']                             = '';
+					$this->setting_option_values['group_trial_duration_p1']                             = '';
 					$this->setting_option_values['group_price_type_paynow_enrollment_url']             = '';
 					$this->setting_option_values['group_price_type_subscribe_enrollment_url']          = '';
 					break;
@@ -199,9 +199,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_price_type_closed_price']                      = '';
 					$this->setting_option_values['group_price_type_closed_custom_button_label']        = '';
 					$this->setting_option_values['group_price_type_closed_custom_button_url']          = '';
-					$this->setting_option_values['group_trial_price']                                  = '';
-					$this->setting_option_values['group_trial_duration_t1']                            = '';
-					$this->setting_option_values['group_trial_duration_p1']                            = '';
+					$this->setting_option_values['group_trial_price']                                   = '';
+					$this->setting_option_values['group_trial_duration_t1']                             = '';
+					$this->setting_option_values['group_trial_duration_p1']                             = '';
 					$this->setting_option_values['group_price_type_paynow_enrollment_url']             = '';
 					$this->setting_option_values['group_price_type_subscribe_enrollment_url']          = '';
 					break;
@@ -246,7 +246,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'group_price_type_paynow_enrollment_url' => array(
 					'name'      => 'group_price_type_paynow_enrollment_url',
 					'label'     => sprintf(
-						// translators: placeholder: Group.
+						// translators: placeholder: Group
 						esc_html_x( '%s Enrollment URL', 'placeholder: Group', 'learndash' ),
 						learndash_get_custom_label( 'group' )
 					),
@@ -254,7 +254,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['group_price_type_paynow_enrollment_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: group.
+						// translators: placeholder: group
 						esc_html_x( 'Enter the URL of the page you want to redirect your enrollees after signing up for this specific %s', 'placeholder: group', 'learndash' ),
 						learndash_get_custom_label_lower( 'group' )
 					),
@@ -305,10 +305,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'  => 'group_price_type_subscribe_billing_cycle',
 					'label' => esc_html__( 'Billing Cycle', 'learndash' ),
 					'type'  => 'custom',
-					'html'  => learndash_billing_cycle_setting_field_html(
-						0,
-						learndash_get_post_type_slug( 'group' )
-					),
+					'html'  => learndash_billing_cycle_setting_field_html(),
 				),
 				'group_price_type_subscribe_billing_recurring_times' => array(
 					'name'      => 'group_price_type_subscribe_billing_recurring_times',
@@ -322,7 +319,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'group_trial_price'                        => array(
 					'name'      => 'group_trial_price',
 					'label'     => sprintf(
-						// translators: placeholder: Group.
+						// translators: placeholder: Group
 						esc_html_x( '%s Trial Price', 'placeholder: Group', 'learndash' ),
 						learndash_get_custom_label( 'group' )
 					),
@@ -330,7 +327,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => '-medium',
 					'value'     => $this->setting_option_values['group_trial_price'],
 					'help_text' => sprintf(
-						// translators: placeholder: group.
+						// translators: placeholder: group
 						esc_html_x( 'Enter the price for the trial period for this %s', 'placeholder: group', 'learndash' ),
 						learndash_get_custom_label( 'group' )
 					),
@@ -352,17 +349,14 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'      => 'group_trial_duration',
 					'label'     => esc_html__( 'Trial Duration', 'learndash' ),
 					'type'      => 'custom',
-					'html'      => learndash_trial_duration_setting_field_html(
-						0,
-						learndash_get_post_type_slug( 'group' )
-					),
-					// translators: group.
+					'html'      => learndash_trial_duration_setting_field_html(),
+					// translators: group
 					'help_text' => sprintf( esc_html_x( 'The length of the trial period, after the trial is over, the normal %s price billing goes into effect.', 'placeholder: group', 'learndash' ), learndash_get_custom_label_lower( 'group' ) ),
 				),
 				'group_price_type_subscribe_enrollment_url' => array(
 					'name'      => 'group_price_type_subscribe_enrollment_url',
 					'label'     => sprintf(
-						// translators: placeholder: Group.
+						// translators: placeholder: Group
 						esc_html_x( '%s Enrollment URL', 'placeholder: Group', 'learndash' ),
 						learndash_get_custom_label( 'group' )
 					),
@@ -370,7 +364,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['group_price_type_subscribe_enrollment_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: group.
+						// translators: placeholder: group
 						esc_html_x( 'Enter the URL of the page you want to redirect your enrollees after signing up for this specific %s', 'placeholder: group', 'learndash' ),
 						learndash_get_custom_label_lower( 'group' )
 					),
@@ -424,7 +418,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['group_price_type_closed_custom_button_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: "Take this Group" button label.
+						// translators: placeholder: "Take this Group" button label
 						esc_html_x( 'Redirect the "%s" button to a specific URL.', 'placeholder: "Join Group" button label', 'learndash' ),
 						learndash_get_custom_label( 'button_take_this_group' )
 					),
@@ -511,7 +505,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								// translators: placeholder: Group.
 								'description' => sprintf( esc_html_x( '%s Price Type', 'placeholder: Group', 'learndash' ), LearnDash_Custom_Label::get_label( 'group' ) ),
 								'type'        => 'string',
-								'default'     => LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
+								'default'     => 'open',
 								'enum'        => array(
 									'closed',
 									'free',
@@ -616,26 +610,26 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['group_price_type_subscribe_billing_recurring_times'] = '';
 				}
 
-				if ( isset( $_POST['group_price_billing_t3'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-					$settings_values['group_price_billing_t3'] = strtoupper( esc_attr( $_POST['group_price_billing_t3'] ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				if ( isset( $_POST['group_price_billing_t3'] ) ) {
+					$settings_values['group_price_billing_t3'] = strtoupper( esc_attr( $_POST['group_price_billing_t3'] ) );
 					$settings_values['group_price_billing_t3'] = learndash_billing_cycle_field_frequency_validate( $settings_values['group_price_billing_t3'] );
 				}
 
-				if ( isset( $_POST['group_price_billing_p3'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-					$settings_values['group_price_billing_p3'] = absint( $_POST['group_price_billing_p3'] ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				if ( isset( $_POST['group_price_billing_p3'] ) ) {
+					$settings_values['group_price_billing_p3'] = absint( $_POST['group_price_billing_p3'] );
 					$settings_values['group_price_billing_p3'] = learndash_billing_cycle_field_interval_validate( $settings_values['group_price_billing_p3'], $settings_values['group_price_billing_t3'] );
 				}
 
 				if ( ! isset( $settings_values['group_trial_price'] ) ) {
 					$settings_values['group_trial_price'] = '';
 				}
-				if ( isset( $_POST['group_trial_duration_t1'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-					$settings_values['group_trial_duration_t1'] = strtoupper( esc_attr( $_POST['group_trial_duration_t1'] ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				if ( isset( $_POST['group_trial_duration_t1'] ) ) {
+					$settings_values['group_trial_duration_t1'] = strtoupper( esc_attr( $_POST['group_trial_duration_t1'] ) );
 					$settings_values['group_trial_duration_t1'] = learndash_billing_cycle_field_frequency_validate( $settings_values['group_trial_duration_t1'] );
 				}
 
-				if ( isset( $_POST['group_trial_duration_p1'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-					$settings_values['group_trial_duration_p1'] = absint( $_POST['group_trial_duration_p1'] ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				if ( isset( $_POST['group_trial_duration_p1'] ) ) {
+					$settings_values['group_trial_duration_p1'] = absint( $_POST['group_trial_duration_p1'] );
 					$settings_values['group_trial_duration_p1'] = learndash_billing_cycle_field_interval_validate( $settings_values['group_trial_duration_p1'], $settings_values['group_trial_duration_t1'] );
 				}
 

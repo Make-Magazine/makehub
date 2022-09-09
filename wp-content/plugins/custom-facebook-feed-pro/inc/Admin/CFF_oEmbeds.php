@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 use CustomFacebookFeed\CFF_View;
 use CustomFacebookFeed\CFF_Response;
-use CustomFacebookFeed\Helpers\Util;
 
 class CFF_oEmbeds {
     /**
@@ -131,9 +130,13 @@ class CFF_oEmbeds {
 	 * @since 4.0
 	 */
     public function oembeds_enqueue_admin_scripts(){
-	    if ( ! Util::currentPageIs( 'cff-oembeds' ) ) {
-		    return;
-	    }
+        if( ! get_current_screen() ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! 'facebook-feed_page_cff-oembeds-manager' === $screen->id ) {
+            return;
+		}
 
 		wp_enqueue_style(
 			'oembeds-style',

@@ -2,9 +2,9 @@
 Contributors: smashballoon
 Support Website: https://smashballoon/instagram-feed/
 Requires at least: 4.1
-Tested up to: 6.0
-Stable tag: 6.1
-Version: 6.1
+Tested up to: 5.9
+Stable tag: 6.0.4
+Version: 6.0.4
 License: Non-distributable, Not for resale
 
 Display beautifully clean, customizable, and responsive feeds from multiple Instagram accounts
@@ -40,45 +40,6 @@ Display Instagram photos from any non-private Instagram accounts, either in the 
 5. You can display multiple Instagram feeds by using shortcode options, for example: `[instagram-feed id=YOUR_USER_ID_HERE cols=3 width=50 widthunit=%]`
 
 == Changelog ==
-= 6.1 =
-* New: Introducing our new Feed Templates feature! You can now select a feed template when creating a feed to make it much quicker and easier to get started with the type of feed you want to display. Selecting a template preconfigures the feed customization settings to match that template, saving you time and effort.
-* New: Added a Post Style setting which allows you to add a boxed style to your posts, with a background color, border radius, and box shadow.
-* New: Added a new custom text header option, so you can now add custom text to the header for your feed.
-* New: Add a header image and bio text for personal sources. Go to the settings page and click on the gear icon to add this to an existing source.
-* New: Elementor and Divi Builder widgets. We've added new Elementor and Divi Builder widgets to make it easier to embed your feeds.
-* Tweak: If WordPress cron is not working, the plugin will automatically fall back to updating caches when the feed loads.
-* Tweak: When installing Instagram Feed Pro for the first time, encryption keys and salts will automatically be added to your wp-config.php file.
-* Fix: For captions with emoji, the maximum text length setting would be inaccurate.
-* Fix: Auto load more on scroll setting was not working for new feeds.
-* Fix: The number of posts would be inaccurate in the feed preview when using the customizer for mobile devices.
-* Fix: All sources would be removed when the grace period to address app permission issues ended. Now only the single source will be removed.
-* Fix: Several improvements to moderation mode and pagination were made.
-
-= 6.0.8 =
-* Fix: If the number of posts for mobile was higher than the number of posts for desktop, the number of posts for desktop would be incorrect.
-* Fix: When using a recent hashtag feed, if a post had been made within the last 24 hours, the plugin would not include top posts in the feed.
-
-= 6.0.7 =
-* Tweak: Added a warning notice to allow a grace period before Instagram data is permanently deleted from your site after deauthorizing the Smash Balloon Instagram app. Due to Instagram requirements, any Instagram data on your site must be deleted within a reasonable time after the app has been deauthorized. The new warning notice provides a 7 day grace period to allow you time to reauthorize the app if you don't want the data to be deleted.
-* Tweak: Reconnecting an account now results in deleting the original connection in the database and adding a new one. This will prevent issues with some caching systems like Redis.
-* Fix: The Infinity loop type for carousel feeds was not working for certain feed configurations.
-* Fix: Removed the ".animated" CSS rule to prevent conflicts.
-* Fix: Screen reader text was visible in the feed with some themes.
-* Fix: Removed all Font Awesome icons and no longer include the CSS file from the Font Awesome CDN.
-
-= 6.0.6 =
-* Fix: When using the shoppable feeds feature, trying to view the second page of posts in the customizer would not work.
-* Fix: Only the first 20 sources were available when creating feeds and changing sources for a feed.
-* Fix: Admin notices from other plugins would display on the Instagram Feeds pages when a notification for Instagram Feed was available.
-
-= 6.0.5 =
-* Tweak: Several improvements to moderation mode. Show moderated posts only, improved pagination, and improved how far back in the feed's history posts can be moderated.
-* Tweak: Removed the setting to filter for Instagram Live as this is no longer supported by Instagram.
-* Fix: Posts on the "allow list" would stop displaying if there were a lot of newer posts from the source that were not in the allow list.
-* Fix: Fixed the customizer sidebar being hidden when JetPack's Master Bar feature was enabled.
-* Fix: Added back support for the "class" shortcode setting for all feeds.
-* Fix: The carousel layout was not showing the proper number of posts when there was a different number of posts for mobile and desktop.
-
 = 6.0.4 =
 * Tweak: After clearing the cache for a hashtag feed, the plugin will now also try to get older posts for that feed using a different API method.
 * Tweak: Removed sorting by "likes" for hashtag feeds as sorting by likes is unreliable for this feed type due to limitations of the Instagram API.

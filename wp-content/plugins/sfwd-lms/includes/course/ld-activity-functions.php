@@ -242,7 +242,7 @@ function learndash_update_user_activity( $args = array() ) {
  * }
  * @param bool  $activity_create It true will create to activity record.
  *
- * @return object|array|null Activity object (LDLMS_Activity) or null if not found.
+ * @return object Activity object.
  */
 function learndash_get_user_activity( $args = array(), $activity_create = false ) {
 	global $wpdb;
@@ -279,12 +279,12 @@ function learndash_get_user_activity( $args = array(), $activity_create = false 
 		}
 	}
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql_str prepared in previous lines
-	$activity = $wpdb->get_row( $sql_str ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+	$activity = $wpdb->get_row( $sql_str );
 	if ( ! $activity ) {
 		if ( true === $activity_create ) {
 			$activity_id = learndash_update_user_activity( $args );
 			if ( ! empty( $activity_id ) ) {
-				$activity = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$activity = $wpdb->get_row(
 					$wpdb->prepare(
 						'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_id=%d',
 						$activity_id
@@ -508,8 +508,6 @@ function learndash_activity_course_get_earliest_started( $user_id = 0, $course_i
 				unset( $user_activity[ learndash_get_post_type_slug( 'course' ) . ':' . $course_id ] );
 			}
 			$activity_started = wp_list_pluck( $user_activity, 'activity_started' );
-			$activity_started = array_map( 'absint', $activity_started ); // Give me only integers.
-			$activity_started = array_diff( $activity_started, array( 0 ) ); // Remove empty values.
 			if ( ! empty( $activity_started ) ) {
 				sort( $activity_started );
 				$default_started = (int) $activity_started[0];
@@ -607,7 +605,7 @@ function learndash_activity_start_course( $user_id = 0, $course_id = 0, $startti
 	$activity = learndash_activity_start_step( $user_id, $course_id, $course_id, 'course', $starttime );
 	if ( $activity ) {
 
-		if ( ( ! empty( absint( $starttime ) ) ) && ( empty( absint( $activity->activity_started ) ) ) ) {
+		if ( ( ! empty( $starttime ) ) && ( absint( $activity->activity_started ) !== absint( $starttime ) ) ) {
 			$activity->activity_started = absint( $starttime );
 			learndash_update_user_activity( $activity );
 		}

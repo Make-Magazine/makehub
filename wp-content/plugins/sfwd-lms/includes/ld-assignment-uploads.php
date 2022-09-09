@@ -609,6 +609,29 @@ function learndash_is_assignment_approved_by_meta( $assignment_id ) {
 }
 
 /**
+ * Adds inline actions to assignments on post listing hover in the admin.
+ *
+ * Fires on `post_row_actions` hook.
+ *
+ * @since 2.1.0
+ *
+ * @param array   $actions An array post row action.
+ * @param WP_Post $post    The assignment WP_Post object.
+ *
+ * @return array $actions Returns post row actions after adding inline assignment actions.
+ */
+function learndash_assignment_inline_actions( $actions, $post ) {
+	if ( learndash_get_post_type_slug( 'assignment' ) === $post->post_type ) {
+		$download_link                  = get_post_meta( $post->ID, 'file_link', true );
+		$actions['download_assignment'] = "<a href='" . $download_link . "' target='_blank'>" . esc_html__( 'Download', 'learndash' ) . '</a>';
+	}
+
+	return $actions;
+}
+
+add_filter( 'post_row_actions', 'learndash_assignment_inline_actions', 10, 2 );
+
+/**
  * Checks if the assignment is approved or not.
  *
  * @since 2.1.0
@@ -650,10 +673,10 @@ function learndash_is_assignment_approved( $assignment_id ) {
  * @since 2.1.0
  */
 function learndash_assignment_permissions() {
-	if ( is_singular( learndash_get_post_type_slug( 'assignment' ) ) ) {
+	global $post;
 
+	if ( ! empty( $post->post_type ) && learndash_get_post_type_slug( 'assignment' ) === $post->post_type && is_singular() ) {
 		$user_id = get_current_user_id();
-		$post    = get_post();
 
 		if ( learndash_is_admin_user( $user_id ) ) {
 			return;
@@ -678,22 +701,6 @@ function learndash_assignment_permissions() {
 		 * @param string $redirect_url Redirect URL.
 		 */
 		learndash_safe_redirect( apply_filters( 'learndash_assignment_permissions_redirect_url', get_bloginfo( 'url' ) ) );
-	} elseif ( ( is_home() ) || ( is_front_page() ) ) {
-		/**
-		 * Prevents the user from forcing the query on the home page
-		 * with http://www.site.com?post_type=sfwd-assignment to access an archive.
-		 *
-		 * It would be nice if this is controllable via WP register_post_type() settings.
-		 *
-		 * See LEARNDASH-6390 for more details.
-		 */
-		if ( get_query_var( 'post_type', '' ) === learndash_get_post_type_slug( 'assignment' ) ) {
-			// If this is an attempt we redirect them to the hme URL without the post_type query arg.
-			$redirect_to_url = get_bloginfo( 'url' );
-			if ( ! empty( $redirect_to_url ) ) {
-				learndash_safe_redirect( $redirect_to_url );
-			}
-		}
 	}
 }
 
@@ -810,54 +817,38 @@ add_action( 'init', 'learndash_register_assignment_upload_type' );
  * Fires on `admin_init` hook.
  *
  * @since 2.1.0
- *
- * @return void
  */
-function learndash_init_assignments_capabilities(): void {
+function learndash_add_assignment_caps() {
 	$admin_role = get_role( 'administrator' );
+	if ( ( $admin_role ) && ( $admin_role instanceof WP_Role ) ) {
+		$cap = $admin_role->has_cap( 'delete_others_assignments' );
 
-	if ( $admin_role instanceof WP_Role ) {
-		$admin_role_capabilities = array(
-			'edit_assignment',
-			'edit_assignments',
-			'edit_others_assignments',
-			'publish_assignments',
-			'read_assignment',
-			'read_private_assignments',
-			'delete_assignment',
-			'edit_published_assignments',
-			'delete_others_assignments',
-			'delete_published_assignments',
-		);
-
-		foreach ( $admin_role_capabilities as $capability ) {
-			if ( ! $admin_role->has_cap( $capability ) ) {
-				$admin_role->add_cap( $capability );
-			}
+		if ( empty( $cap ) ) {
+			$admin_role->add_cap( 'edit_assignment' );
+			$admin_role->add_cap( 'edit_assignments' );
+			$admin_role->add_cap( 'edit_others_assignments' );
+			$admin_role->add_cap( 'publish_assignments' );
+			$admin_role->add_cap( 'read_assignment' );
+			$admin_role->add_cap( 'read_private_assignments' );
+			$admin_role->add_cap( 'delete_assignment' );
+			$admin_role->add_cap( 'edit_published_assignments' );
+			$admin_role->add_cap( 'delete_others_assignments' );
+			$admin_role->add_cap( 'delete_published_assignments' );
 		}
 	}
 
 	$group_leader_role = get_role( 'group_leader' );
-
-	if ( $group_leader_role instanceof WP_Role ) {
-		$group_leader_role_capabilities = array(
-			'read_assignment',
-			'edit_assignments',
-			'edit_others_assignments',
-			'edit_published_assignments',
-			'delete_others_assignments',
-			'delete_published_assignments',
-		);
-
-		foreach ( $group_leader_role_capabilities as $capability ) {
-			if ( ! $group_leader_role->has_cap( $capability ) ) {
-				$group_leader_role->add_cap( $capability );
-			}
-		}
+	if ( ( $group_leader_role ) && ( $group_leader_role instanceof WP_Role ) ) {
+		$group_leader_role->add_cap( 'read_assignment' );
+		$group_leader_role->add_cap( 'edit_assignments' );
+		$group_leader_role->add_cap( 'edit_others_assignments' );
+		$group_leader_role->add_cap( 'edit_published_assignments' );
+		$group_leader_role->add_cap( 'delete_others_assignments' );
+		$group_leader_role->add_cap( 'delete_published_assignments' );
 	}
 }
 
-add_action( 'admin_init', 'learndash_init_assignments_capabilities' );
+add_action( 'admin_init', 'learndash_add_assignment_caps' );
 
 /**
  * Deletes assignment file when assignment post is deleted.

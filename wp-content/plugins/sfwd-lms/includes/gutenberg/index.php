@@ -47,9 +47,3 @@ require plugin_dir_path( __FILE__ ) . 'blocks/ld-quizinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-groupinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-usermeta/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-registration/index.php';
-require plugin_dir_path( __FILE__ ) . 'blocks/ld-infobar/index.php';
-require plugin_dir_path( __FILE__ ) . 'blocks/ld-materials/index.php';
-require plugin_dir_path( __FILE__ ) . 'blocks/ld-user-status/index.php';
-require plugin_dir_path( __FILE__ ) . 'blocks/ld-navigation/index.php';
-
-require plugin_dir_path( __FILE__ ) . 'blocks/ld-exam/index.php';

@@ -9,8 +9,6 @@
  *
  * @since 2.0/5.0
  */
-use TwitterFeed\Pro\CTF_Parse_Pro;
-use SmashBalloon\YouTubeFeed\Pro\SBY_Parse_Pro;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );

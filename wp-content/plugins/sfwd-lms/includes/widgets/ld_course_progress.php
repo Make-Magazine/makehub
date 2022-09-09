@@ -50,8 +50,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Progress_Widget' ) ) && ( class_exists(
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-
+			extract( $args );
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
 
@@ -105,7 +104,6 @@ if ( ( ! class_exists( 'LearnDash_Course_Progress_Widget' ) ) && ( class_exists(
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
 			$title    = wp_strip_all_tags( $instance['title'] );
-			learndash_replace_widgets_alert();
 			?>
 			<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></p>

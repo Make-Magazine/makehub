@@ -1,12 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-use TwitterFeed\Pro\CTF_Settings_Pro;
-use TwitterFeed\Pro\CTF_Parse_Pro;
-use TwitterFeed\Pro\CTF_Feed_Pro;
-use SmashBalloon\YouTubeFeed\Pro\SBY_Settings_Pro;
-use SmashBalloon\YouTubeFeed\Pro\SBY_Parse_Pro;
-use SmashBalloon\YouTubeFeed\Pro\SBY_Feed_Pro;
-use SmashBalloon\YouTubeFeed\SBY_Parse;
+
 
 add_shortcode( 'social-wall', 'sbsw_feed_init' );
 function sbsw_feed_init( $atts, $content = null ) {
@@ -616,11 +610,7 @@ function sbsw_get_next_post_set() {
 				foreach ( $post_data as $post ) {
 					$vid_ids[] = SBY_Parse::get_video_id( $post );
 				}
-                if ( class_exists( 'SmashBalloon\YouTubeFeed\Services\AdminAjaxService' ) ) {
-                    SmashBalloon\YouTubeFeed\Services\AdminAjaxService::sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
-                } else {
-                    sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
-                }
+				sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
 			}
 			$wall_next_pages[] = $youtube_feed->get_next_pages();
 			$wall_misc_data['youtube'] = $youtube_feed->get_misc_data( '', $post_data );
@@ -806,16 +796,13 @@ function sbsw_background_processing() {
 	$atts = $sanitized_atts; // now sanitized
 
 	$return = array();
-	if ( isset( $_POST['posts']['youtube'] ) && (function_exists( 'sby_process_post_set_caching' ) || class_exists( 'SmashBalloon\YouTubeFeed\Services\AdminAjaxService' ) ) ) {
+	if ( isset( $_POST['posts']['youtube'] ) && function_exists( 'sby_process_post_set_caching' ) ) {
 	    $social_wall_feed = new SW_Feed( $feed_id );
         $social_wall_feed->set_post_data_from_cache();
 	    $posts = $social_wall_feed->get_post_data();
 	    $youtube_posts = SW_Feed::filter_for_plugin( $posts, 'youtube' );
-        if ( class_exists( 'SmashBalloon\YouTubeFeed\Services\AdminAjaxService' ) ) {
-            $info = SmashBalloon\YouTubeFeed\Services\AdminAjaxService::sby_process_post_set_caching( $youtube_posts, $feed_id );
-        } else {
-		    $info = sby_process_post_set_caching( $youtube_posts, $feed_id );
-        }
+
+		$info = sby_process_post_set_caching( $youtube_posts, $feed_id );
 		$return['youtube'] = $info;
 		$wall_misc_data = array();
 
@@ -838,7 +825,7 @@ function sbsw_background_processing() {
         $social_wall_feed->cache_feed_data( SBSW_CRON_UPDATE_CACHE_TIME, $wall_next_pages );
 	}
 
-	if ( isset( $_POST['posts']['twitter'] ) && class_exists( 'TwitterFeed\Pro\CTF_Twitter_Card_Manager' ) ) {
+	if ( isset( $_POST['posts']['twitter'] ) && class_exists( 'CTF_Twitter_Card_Manager' ) ) {
 		$url_item_batch = array();
 		if ( isset( $_POST['posts']['twitter']['cards'] ) ) {
             foreach ( $_POST['posts']['twitter']['cards'] as $tc_item ) {
@@ -849,7 +836,7 @@ function sbsw_background_processing() {
             }
 		}
 
-		$twitter_card_batch = TwitterFeed\Pro\CTF_Twitter_Card_Manager::process_url_batch( $url_item_batch );
+		$twitter_card_batch = CTF_Twitter_Card_Manager::process_url_batch( $url_item_batch );
 
 		$twitter_return = array();
 		foreach ( $twitter_card_batch as $twitter_card_array ) {
@@ -857,10 +844,10 @@ function sbsw_background_processing() {
 
 			$twitter_card = $twitter_card_array['twitter_card'];
 
-			$image = TwitterFeed\Pro\CTF_Display_Elements_Pro::get_twitter_card_media_html( $twitter_card );
-			$title = TwitterFeed\Pro\CTF_Parse_Pro::get_twitter_card_title( $twitter_card );
-			$description = TwitterFeed\Pro\CTF_Parse_Pro::get_twitter_card_description( $twitter_card );
-			$link_html = TwitterFeed\Pro\CTF_Display_Elements_Pro::get_icon( 'link' ) . TwitterFeed\Pro\CTF_Display_Elements_Pro::get_twitter_card_link_text( $url );
+			$image = CTF_Display_Elements_Pro::get_twitter_card_media_html( $twitter_card );
+			$title = CTF_Parse_Pro::get_twitter_card_title( $twitter_card );
+			$description = CTF_Parse_Pro::get_twitter_card_description( $twitter_card );
+			$link_html = CTF_Display_Elements_Pro::get_icon( 'link' ) . CTF_Display_Elements_Pro::get_twitter_card_link_text( $url );
 
 			$content = '';
 			if ( ! empty( $title )
@@ -1344,7 +1331,7 @@ function sbsw_get_active_plugins() {
 		$active[] = 'instagram';
 	}
 
-	if ( class_exists( 'SmashBalloon\YouTubeFeed\Pro\SBY_Parse_Pro' ) ) {
+	if ( class_exists( 'SBY_Parse_Pro' ) ) {
 		$active[] = 'youtube';
 	}
 

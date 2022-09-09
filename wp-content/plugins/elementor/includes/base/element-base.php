@@ -396,7 +396,7 @@ abstract class Element_Base extends Controls_Stack {
 		}
 
 		if ( $attributes ) {
-			$this->add_render_attribute( $element, $attributes, null, $overwrite );
+			$this->add_render_attribute( $element, $attributes, $overwrite );
 		}
 
 		return $this;
@@ -541,26 +541,6 @@ abstract class Element_Base extends Controls_Stack {
 			'elements' => $elements,
 			'isInner' => $data['isInner'],
 		];
-	}
-
-	public function get_data_for_save() {
-		$data = $this->get_raw_data();
-
-		$elements = [];
-
-		foreach ( $this->get_children() as $child ) {
-			$elements[] = $child->get_data_for_save();
-		}
-
-		if ( ! empty( $elements ) ) {
-			$data['elements'] = $elements;
-		}
-
-		if ( ! empty( $data['settings'] ) ) {
-			$data['settings'] = $this->on_save( $data['settings'] );
-		}
-
-		return $data;
 	}
 
 	/**
@@ -731,8 +711,8 @@ abstract class Element_Base extends Controls_Stack {
 					'type' => Controls_Manager::SWITCHER,
 					'default' => '',
 					'prefix_class' => 'elementor-',
-					'label_on' => __( 'Hide', 'elementor' ),
-					'label_off' => __( 'Show', 'elementor' ),
+					'label_on' => 'Hide',
+					'label_off' => 'Show',
 					'return_value' => 'hidden-' . $breakpoint_key,
 				]
 			);
@@ -821,14 +801,6 @@ abstract class Element_Base extends Controls_Stack {
 		}
 
 		return $config;
-	}
-
-	/**
-	 * A Base method for sanitizing the settings before save.
-	 * This method is meant to be overridden by the element.
-	 */
-	protected function on_save( array $settings ) {
-		return $settings;
 	}
 
 	/**

@@ -114,7 +114,7 @@ function learndash_get_lesson_list( $id = null, $atts = array() ) {
  * @param int|null         $user_id      Optional. User ID. Default null.
  * @param array            $lessons_args Optional. An array of query arguments to get lesson list. Default empty array.
  *
- * @return array The lesson list array.
+ * @return string The lesson list HTML output.
  */
 function learndash_get_course_lessons_list_legacy( $course = null, $user_id = null, $lessons_args = array() ) {
 	if ( empty( $course ) ) {
@@ -811,7 +811,7 @@ function learndash_course_status_legacy( $id, $user_id = null, $return_slug = fa
 					/**
 					 * Filters whether to autocomplete courses with final quizzes after the first final quiz is completed.
 					 *
-					 * @since 3.2.0
+					 * @since 3.2
 					 *
 					 * @param bool false   Action to auto complete course step.
 					 * @param int $id      Course ID

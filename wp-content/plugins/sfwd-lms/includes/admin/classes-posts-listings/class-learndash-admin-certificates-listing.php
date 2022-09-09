@@ -2,7 +2,8 @@
 /**
  * LearnDash certificates (certificate) Posts Listing Class.
  *
- * @package LearnDash\Admin
+ * @package LearnDash
+ * @subpackage admin
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

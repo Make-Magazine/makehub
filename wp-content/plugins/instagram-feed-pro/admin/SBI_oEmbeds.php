@@ -9,7 +9,6 @@
 namespace InstagramFeed\Admin;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-use InstagramFeed\Helpers\Util;
 use InstagramFeed\SBI_View;
 use InstagramFeed\SBI_Response;
 
@@ -127,9 +126,13 @@ class SBI_oEmbeds {
 	 * @since 6.0
 	 */
     public function oembeds_enqueue_admin_scripts(){
-	    if(!Util::isIFPage()) {
+        if( ! get_current_screen() ) {
 			return;
-	    }
+		}
+		$screen = get_current_screen();
+		if ( ! 'instagram-feed_page_sbi-oembeds-manager' === $screen->id ) {
+            return;
+		}
 
 		wp_enqueue_style(
 			'oembeds-style',
@@ -207,18 +210,17 @@ class SBI_oEmbeds {
                 'image4_2x' => SBI_PLUGIN_URL . 'admin/assets/img/oembeds-image-4@2x.png',
 			),
 			'modal' => array(
-				'title' => __( 'Enable Facebook oEmbeds', 'instagram-feed' ),
-				'description' => __( 'To enable Facebook oEmbeds our Custom Facebook Feed plugin is required. Click the button below to Install it and enable Facebook oEmbeds.', 'instagram-feed' ),
+				'title' => __( 'Enable Instagram oEmbeds', 'instagram-feed' ),
+				'description' => __( 'To enable Instagram oEmbeds our Instagram Feed plugin is required. Click the button below to Install it and enable Instagram oEmbeds.', 'instagram-feed' ),
 				'install' => __( 'Install Plugin', 'instagram-feed' ),
 				'activate' => __( 'Activate Plugin', 'instagram-feed' ),
 				'cancel' => __( 'Cancel', 'instagram-feed' ),
-				'instaIcon' => SBI_PLUGIN_URL . 'admin/assets/img/facebook-color-icon.svg',
+				'instaIcon' => SBI_PLUGIN_URL . 'admin/assets/img/instagram-color-icon.svg',
 				'timesIcon' => '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.2084 2.14275L12.8572 0.791504L7.50008 6.14859L2.143 0.791504L0.791748 2.14275L6.14883 7.49984L0.791748 12.8569L2.143 14.2082L7.50008 8.85109L12.8572 14.2082L14.2084 12.8569L8.85133 7.49984L14.2084 2.14275Z" fill="#141B38"/></svg>',
 				'plusIcon' => '<svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.0832 6.83317H7.08317V11.8332H5.4165V6.83317H0.416504V5.1665H5.4165V0.166504H7.08317V5.1665H12.0832V6.83317Z" fill="white"/></svg>'
 			),
 			'loaderSVG' => '<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#fff" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>',
 			'checkmarkSVG' => '<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>',
-			'timesSVG' => '<svg  width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path fill="#fff" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"/></svg>',
 		);
 
 		$oembed_token_settings = get_option( 'sbi_oembed_token', array() );

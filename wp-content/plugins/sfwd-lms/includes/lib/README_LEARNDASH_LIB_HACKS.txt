@@ -88,17 +88,3 @@ Description of changes: LEARNDASH-4582 #3 issue. For security reasons disabled s
 
 File: includes/lib/tcpdf/config/tcpdf_config.php
 Description of changes: LEARNDASH-4582 #3 issue. For security reasons disabled support for K_TCPDF_CALLS_IN_HTML. Line 330 changed define value to false.
-
----
-
-File: includes/lib/tcpdf/include/tcpdf_static.php
-Description of changes: added phpcs ignore for lines 143,159,453,454,475,476,493,1835 and 1946
-
-File: includes/lib/tcpdf/tcpdf.php
-Description of changes: added phpcs ignore for lines 10929,16361
-
----
-stripe-php - 7.107.0
-
-File: includes/lib/stripe-php/lib/HttpClient/CurlClient.php
-Description of changes: added phpcs ignore for line 202

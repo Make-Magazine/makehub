@@ -36,7 +36,7 @@ class CFF_Switcher_Control extends CFF_Controls_Base{
 	*/
 	public function get_control_output($controlEditingTypeModel){
 		?>
-		<div v-bind:id="'sb-control-'+control.id" class="sb-control-switcher-ctn" :data-active="<?php echo $controlEditingTypeModel ?>[control.id] == control.options.enabled" @click.prevent.default="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)">
+		<div class="sb-control-switcher-ctn" :data-active="<?php echo $controlEditingTypeModel ?>[control.id] == control.options.enabled" @click.prevent.default="changeSwitcherSettingValue(control.id, control.options.enabled, control.options.disabled, control.ajaxAction ? control.ajaxAction : false)">
 			<div class="sb-control-switcher sb-tr-2"></div>
 			<div class="sb-control-label" v-if="control.label" :data-title="control.labelStrong ? 'true' : false">{{control.label}}</div>
 		</div>

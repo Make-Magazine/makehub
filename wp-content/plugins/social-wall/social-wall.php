@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon Social Wall
 Plugin URI: https://smashballoon.com/social-wall
 Description: Combine social media feeds from all Smash Balloon plugins.
-Version: 1.0.10
+Version: 1.0.6
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -21,7 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 define( 'SBSW_PLUGIN_EDD_NAME', 'Social Wall' );
 
 if ( ! defined( 'SWVER' ) ) {
-	define( 'SWVER', '1.0.10' );
+	define( 'SWVER', '1.0.6' );
 }
 // Db version.
 if ( ! defined( 'SW_DBVERSION' ) ) {

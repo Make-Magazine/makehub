@@ -40,7 +40,6 @@ class SB_Customview_Control extends SB_Controls_Base {
 		$this->get_control_shoppable_enabled_output( $controlEditingTypeModel );
 		$this->get_control_shoppable_selected_post_output( $controlEditingTypeModel );
 		$this->get_control_moderation_mode_output( $controlEditingTypeModel );
-		$this->get_control_feed_template_output( $controlEditingTypeModel );
 
 	}
 
@@ -63,32 +62,6 @@ class SB_Customview_Control extends SB_Controls_Base {
 			</div>
 		</div>
 	</div>
-		<?php
-	}
-
-	/**
-	 * Feed Templates Output Control
-	 *
-	 *
-	 * @since 4.0
-	 * @access public
-	 *
-	 * @return HTML
-	 */
-	public function get_control_feed_template_output($controlEditingTypeModel){
-		?>
-		<div :class="['sb-control-feedtype-ctn sb-control-feedtemplate-ctn', 'sbi-feedtemplate-' + customizerScreens.printedTemplate.type]" v-if="control.viewId == 'feedtemplate'">
-			<div class="sbi-fb-type-el" v-if="customizerFeedTemplatePrint()"  @click.prevent.default="activateView('feedtemplatesPopup')">
-				<div class="sbi-fb-type-el-img sbi-fb-fs" v-html="svgIcons[customizerScreens.printedTemplate.icon]"></div>
-				<div class="sbi-fb-type-el-info sbi-fb-fs">
-					<strong class="sbi-fb-fs" v-html="getFeedTemplateElTitle(customizerScreens.printedTemplate, true)"></strong>
-				</div>
-			</div>
-			<button class="sb-control-action-button sb-btn sbi-fb-fs sb-btn-grey" @click.prevent.default="activateView('feedtemplatesPopup')">
-				<div v-html="svgIcons['edit']"></div>
-				<span>{{genericText.change}}</span>
-			</button>
-		</div>
 		<?php
 	}
 
@@ -239,7 +212,7 @@ class SB_Customview_Control extends SB_Controls_Base {
 						<textarea class="sb-control-input-textrea sbi-fb-fs" v-model="customBlockModerationlistTemp" :placeholder="genericText.moderationModePostIdPlaceholder"></textarea>
 					</div>
 				</div>
-				<!--
+
 				<div class="sb-control-moderationmode-action-btns sb-control-before-brd sbi-fb-fs">
 					<button class="sb-btn sb-btn-blue sbi-fb-fs" @click.prevent.default="saveModerationSettings()">
 						<div class="sbi-fb-icon-success"></div>
@@ -250,7 +223,6 @@ class SB_Customview_Control extends SB_Controls_Base {
 						{{genericText.cancel}}
 					</button>
 				</div>
-				-->
 			</div>
 
 

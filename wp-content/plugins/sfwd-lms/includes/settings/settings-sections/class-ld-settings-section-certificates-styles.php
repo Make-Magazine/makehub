@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_label = esc_html__( 'Certificate Custom Styles', 'learndash' );
 
 			// Used to show the section description above the fields. Can be empty.
-			$this->settings_section_description = esc_html__( 'Add Custom Styles (CSS) to be used on all legacy certificates, does not work on certificates created with the Certificate Builder addon.', 'learndash' );
+			$this->settings_section_description = esc_html__( 'Add Custom Styles (CSS) to be used on all Certificates', 'learndash' );
 
 			parent::__construct();
 		}
@@ -84,7 +84,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'name'      => 'styles',
 					'type'      => 'textarea',
 					'label'     => esc_html__( 'Custom Styles (CSS)', 'learndash' ),
-					'help_text' => esc_html__( 'Add custom styles (CSS) to be used on legacy certificates.', 'learndash' ),
+					'help_text' => esc_html__( 'Add custom styles (CSS) to be used.', 'learndash' ),
 					'value'     => $this->setting_option_values['styles'],
 					'attrs'     => array(
 						'rows' => '8',

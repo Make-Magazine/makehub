@@ -163,6 +163,20 @@ class SBI_Settings_Tab {
 				),
 			),
 			array(
+				'type'              => 'checkbox',
+				'id'                => 'igtvposts',
+				'label'             => __( 'IGTV Videos', 'instagram-feed' ),
+				'reverse'           => 'true',
+				'stacked'           => 'true',
+				'checkViewDisabled' => 'moderationMode',
+				'ajaxAction'        => 'feedFlyPreview',
+				'options'           => array(
+					'enabled'  => true,
+					'disabled' => false,
+				),
+			),
+
+			array(
 				'type'              => 'separator',
 				'top'               => 26,
 				'bottom'            => 15,
@@ -287,22 +301,6 @@ class SBI_Settings_Tab {
 					'disabled' => false,
 				),
 			),
-			array(
-				'type'                => 'switcher',
-				'id'                  => 'mediavine',
-				'label'               => __( 'Enable MediaVine Integration', 'instagram-feed' ),
-				'description'         => sprintf( __( 'This will enable our feature to automatically add "hints" to your feeds HTML that allows MediaVine to insert ads. This feature is meant only for MediaVine ad network users. %1$sLearn More%2$s', 'instagram-feed' ), '<a href="https://smashballoon.com/doc/how-do-i-integrate-mediavine-ads/" target="_blank">', '</a>' ),
-				'descriptionPosition' => 'bottom',
-				'reverse'             => 'true',
-				'strongHeading'       => 'true',
-				'labelStrong'         => 'true',
-				'options'             => array(
-					'enabled'  => true,
-					'disabled' => false,
-				),
-			),
-
-
 		);
 	}
 

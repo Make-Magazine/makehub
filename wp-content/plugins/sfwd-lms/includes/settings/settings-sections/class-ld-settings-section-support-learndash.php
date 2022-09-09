@@ -954,7 +954,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Determine count of post_type posts by post_status.
 		 *
-		 * @since 3.3.0
+		 * @since 3.3
 		 *
 		 * @param string $post_type Post Type to get counts for.
 		 *

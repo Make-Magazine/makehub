@@ -20,17 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 			<a class="cff-post-text-link" <?php echo $cff_title_styles ?> href="<?php echo esc_url($text_link) ?>" <?php echo $target.$cff_nofollow ?>>
 				<?php
 					endif;
-                    if ( $cff_is_group ) {
-	                    $post_text = \CustomFacebookFeed\CFF_Markdown_Parser::render( $post_text );
-                    } else {
-	                    $post_text = preg_replace("/\r\n|\r|\n/", $cff_linebreak_el, $post_text);
-                    }
-
-				    $post_text = apply_filters( 'cff_post_text', $post_text );
-
+					$post_text = preg_replace("/\r\n|\r|\n/",$cff_linebreak_el, $post_text);
+					$post_text = apply_filters( 'cff_post_text', $post_text );
 					if ($cff_title_link):
 						$result = preg_replace('/<a href=\"(.*?)\">(.*?)<\/a>/', "\\2", $post_text);
-						echo CFF_Utils::cff_wrap_span( $result ) . ' ';
+						echo CFF_Utils::cff_wrap_span( $post_text ) . ' ';
 					else:
 						echo CFF_Autolink::cff_autolink( $post_text ) . ' ';
 					endif;

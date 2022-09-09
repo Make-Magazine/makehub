@@ -33,10 +33,6 @@ class Post_Type extends Base {
 			'posts_per_page' => -1,
 			'meta_query' => [
 				[
-					'key' => '_elementor_edit_mode',
-					'compare' => 'EXISTS',
-				],
-				[
 					'key' => '_elementor_data',
 					'compare' => 'EXISTS',
 				],

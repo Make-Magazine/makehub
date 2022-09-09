@@ -363,7 +363,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 			'gdpr' => 'auto',
 			'cff_show_credit' => false,
 			'cff_format_issue' => '',
-			'enable_js_image_loading' => true,
 			'cff_disable_resize' => false,
 			'disable_admin_notice' => false
 		);
@@ -759,7 +758,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    //Past events
 	    $cff_past_events = $feed_options['pastevents'];
 	    //Active extensions
-
 	    $cff_ext_multifeed_active = $feed_options[ 'multifeedactive' ];
 	    #$cff_ext_date_active = $feed_options[ 'daterangeactive' ];
 	    $cff_ext_date_active = CFF_FB_Settings::check_active_extension( 'date_range' ) && CFF_Utils::check_if_on($feed_options['daterange']);
@@ -857,7 +855,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    //********************************************//
 	    $FBdata_arr = array(); //Use an array to store the data for each page ID (for multifeed)
 	    //Multifeed extension
-		$page_ids = ( $cff_ext_multifeed_active === true ) ? cff_multifeed_ids($page_id) :  array($page_id);
+	    ( $cff_ext_multifeed_active ) ? $page_ids = cff_multifeed_ids($page_id) : $page_ids = array($page_id);
 
 	    //If it's an album embed then only use one ID otherwise it loops through and embeds the same album items multiple times
 	    if( !empty($cff_album_id) ) $page_ids = array($page_ids[0]);
@@ -1170,6 +1168,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	            }
 
 	        } //END ALL POSTS
+
 
 
 	        //Are there more posts to get for this ID?
@@ -1559,7 +1558,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    $cff_show_author = $this->feed_options[ 'showauthornew' ];
 	    $cff_cache_time = $this->feed_options[ 'cachetime' ];
 	    $cff_locale = $this->feed_options[ 'locale' ];
-        $lazy_iframes = isset($original_atts['lazyiframes']) ? CFF_Utils::check_if_on( $original_atts['lazyiframes'] ) : true;
 	    if ( empty($cff_locale) || !isset($cff_locale) || $cff_locale == '' ) $cff_locale = 'en_US';
 
 	    $cff_cache_time_unit = $this->feed_options[ 'cacheunit' ];
@@ -1975,7 +1973,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	    $i = 0;
 
 	    //Multifeed extension
-		$page_ids = ( $cff_ext_multifeed_active === true ) ? cff_multifeed_ids($page_id) :  array($page_id);
+	    ( $cff_ext_multifeed_active ) ? $page_ids = cff_multifeed_ids($page_id) : $page_ids = array($page_id);
 
 	    //If multiple Access Tokens are being used then split them up into an associative array
 	    $cff_multiple_tokens = false;
@@ -2329,7 +2327,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                $cff_format_issue = $this->feed_options['textissue'];
 	                                ($cff_format_issue == 'true' || $cff_format_issue == 'on') ? $cff_format_issue = true : $cff_format_issue = false;
 	                                $cff_linebreak_el = '<br />';
-	                                if( $cff_format_issue ) $cff_linebreak_el = '<div alt="cff-linebreak-placeholder" aria-hidden="true" class="cff-linebreak" ></div>';
+	                                if( $cff_format_issue ) $cff_linebreak_el = '<img class="cff-linebreak" />';
 
 	                                //Replace line breaks in text (needed for IE8 and to prevent lost line breaks in HTML minification)
 	                                $description = preg_replace("/\r\n|\r|\n/",$cff_linebreak_el, $description);
@@ -2503,11 +2501,8 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                    }
 
 	                    //Object ID
-	                    if( !empty($news->object_id) ){
-	                     	$object_id = $news->object_id;
-	                    }else{
-	                     	$object_id = str_replace($page_id . '_', '', $news->id );
-	                    }
+	                    ( !empty($news->object_id) ) ? $object_id = $news->object_id : $object_id = '';
+
 	                    //Check the post type
 	                    $cff_post_type = 'status';
 	                    if( isset($news->type) ) $cff_post_type = $news->type;
@@ -2892,9 +2887,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                $post_text_message = '';
 
 	                                //STORY TAGS
-	                                //$cff_post_tags = CFF_Utils::check_if_on($this->feed_options[ 'posttags' ]);
-	                                $cff_post_tags = $this->feed_options[ 'posttags' ];
-
+	                                $cff_post_tags = CFF_Utils::check_if_on($this->feed_options[ 'posttags' ]);
 	                                //Use the story
 	                                if (!empty($news->story)) {
 	                                    $cff_story_raw = $news->story;
@@ -3005,9 +2998,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                //Which content should we use?
 	                                //Use the message
 	                                if (!empty($news->message)) {
+	                                    //$cff_message_raw = CFF_Shortcode_Display::get_post_type($news)  === 'photos' ? $post->attachments->data[0]->description : $news->message;
 	                                    $cff_message_raw = $news->message;
 
-	                                    $post_text_message = htmlspecialchars($cff_message_raw);
+	                                    $post_text_message = htmlentities($cff_message_raw);
 	                                    $cff_post_text_type = 'message';
 
 	                                    //MESSAGE TAGS
@@ -3015,7 +3009,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    if( $cff_post_tags && isset($news->message_tags) && !$cff_title_link){
 
 	                                        $text_tags = $news->message_tags;
-
 	                                        //Does the Post Text contain any html tags? - the & symbol is the best indicator of this
 	                                        $cff_html_check_array = array('&lt;', '’', '“', '&quot;', '&amp;', '&gt;&gt;', '&gt;');
 
@@ -3061,7 +3054,6 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                            usort($message_tags_arr, "CustomFacebookFeed\CFF_Utils::cffSortTags");
 
 	                                            for($tag = count($message_tags_arr)-1; $tag >= 0; $tag--) {
-
 	                                                //If the name is blank (aka the story tag doesn't work properly) then don't use it
 	                                                if( $message_tags_arr[$tag]['name'] !== '' ) {
 
@@ -3071,7 +3063,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
                                                             $post_tag_position = strpos( strtolower( $post_text_message ), strtolower( $message_tags_arr[$tag]['name'] ) );
                                                             $original_text_offset = substr($post_text_message, $post_tag_position, $message_tags_arr[$tag]['length']);
 
-	                                                        $b = '<a href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" '.$cff_nofollow.'>' . $message_tags_arr[$tag]['name']. '</a>';
+	                                                        $b = '<a href="https://facebook.com/' . $message_tags_arr[$tag]['id'] . '" '.$cff_nofollow.'>' . substr($message_tags_arr[$tag]['name'], 0 , $message_tags_arr[$tag]['length']). '</a>';
 	                                                        $c = $message_tags_arr[$tag]['offset'];
 	                                                        $d = $message_tags_arr[$tag]['length'];
 	                                                        $post_text_message = CFF_Utils::cff_mb_substr_replace( $post_text_message, $b, $c, $d);
@@ -3210,7 +3202,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                ($cff_format_issue == 'true' || $cff_format_issue == 'on') ? $cff_format_issue = true : $cff_format_issue = false;
 
 	                                $cff_linebreak_el = '<br />';
-	                                if( $cff_format_issue ) $cff_linebreak_el = '<div alt="cff-linebreak-placeholder" aria-hidden="true" class="cff-linebreak" ></div>';
+	                                if( $cff_format_issue ) $cff_linebreak_el = '<img class="cff-linebreak" />';
 
 
 	                                //EVENT
@@ -3479,7 +3471,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        //Put this here so that is also hidden when hiding shared links in the Post Layout settings
 	                                        if($cff_soundcloud) {
 		                                        if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-			                                        $cff_shared_link .= '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, "https://w.soundcloud.com/player/?url=" . $news->link . "&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;visual=false" ,'cff-soundcloud').' width="100%" height="100" scrolling="no" title="Music player" frameborder="no"></iframe>';
+			                                        $cff_shared_link .= '<iframe class="cff-soundcloud" width="100%" height="100" scrolling="no" title="Music player" frameborder="no" src="https://w.soundcloud.com/player/?url=' . $news->link . '&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;visual=false"></iframe>';
 		                                        } else {
 			                                        $cff_shared_link .= '<span class="cff-iframe-placeholder" data-src="https://w.soundcloud.com/player/?url=' . $news->link . '&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;visual=false" data-type="soundcloud" style="display: none;">placeholder</span>';
 		                                        }
@@ -3500,7 +3492,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        //Put this here so that is also hidden when hiding shared links in the Post Layout settings
 	                                        if($cff_spotify) {
 		                                        if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-			                                        $cff_shared_link .= '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, "https://open.spotify.com/embed/".$spotify_type."/".$spotify_id  ,'cff-spotify').' width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>';
+			                                        $cff_shared_link .= '<iframe class="cff-spotify" src="https://open.spotify.com/embed/'.$spotify_type.'/'.$spotify_id.'" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>';
 		                                        } else {
 			                                        $cff_shared_link .= '<span class="cff-iframe-placeholder" data-src="https://open.spotify.com/embed/'.$spotify_type.'/'.$spotify_id.'" data-type="spotify" style="display: none;">placeholder</span>';
 		                                        }
@@ -3771,7 +3763,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		                                $media_src_set_att = ' data-img-src-set="' . esc_attr( CFF_Utils::cff_json_encode( CFF_Parse_Pro::get_media_src_set( $news ) ) ) . '"';
 
 	                                    $cff_media = '<div class="cff-media-wrap">';
-	                                    $cff_media .= '<div class="cff-photo';
+	                                    $cff_media .= '<a class="cff-photo';
 	                                    if($cff_media_position == 'above') $cff_media .= ' cff-media-above';
 	                                    if( $cff_img_count > 1 ) $cff_media .= ' cff-multiple cff-img-layout-'.$cff_img_count;
 	                                    if( $cff_portrait ) $cff_media .= ' cff-portrait';
@@ -3808,11 +3800,10 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                    }
 	                                    if( $cff_img_count > 1 ) $cff_media .= '<span class="cff-img-wrap cff-main-image cff-crop">';
 		                                $cff_alt_text = apply_filters( 'cff_img_alt', $cff_alt_text );
-
-		                                $cff_media .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'" data-orig-source="'. $picture .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" class="cff-multi-image cff-feed-image" />';
+		                                $cff_media .= '<img src="'. CFF_Display_Elements_Pro::get_media_placeholder( $picture ) .'"  data-orig-source="'. $picture .'" alt="'.htmlspecialchars($cff_alt_text).'" data-querystring="'.$cff_picture_querystring.'" data-ratio="'.round($cff_main_img_width/$cff_main_img_height,3).'" class="cff-multi-image cff-feed-image" />';
 	                                    if( $cff_img_count > 1 ) $cff_media .= '</span>';
 	                                    $cff_media .= $cff_img_attachments_html;
-	                                    $cff_media .= '</div>';
+	                                    $cff_media .= '</a>';
 	                                    $cff_media .= '</div>';
 	                                }
 	                                if ($news->type == 'swf') {
@@ -3876,8 +3867,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                        if( strrpos($id, '?') ) $id = substr($id, 0, strrpos($id, '?'));
 	                                        // this is your template for generating embed codes
 		                                    if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-
-			                                    $code = '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, "https://www.youtube.com/embed/{id}"  ,'youtube-player') .' type="text/html" allowfullscreen title="YouTube video"></iframe>';
+			                                    $code = '<iframe class="youtube-player" type="text/html" src="https://www.youtube.com/embed/{id}" allowfullscreen title="YouTube video"></iframe>';
 		                                    } else {
 			                                    $code = '<span class="cff-iframe-placeholder" data-src="https://www.youtube.com/embed/{id}" data-type="youtube" style="display: none;">placeholder</span>';
 		                                    }
@@ -3937,7 +3927,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                            $cff_media_video .= '<img src="'.CFF_Display_Elements_Pro::get_media_placeholder( $picture ).'" alt="Video image" class="cff-iframe-img cff-feed-image" />';
 
 		                                        if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-			                                        $cff_media_video .= '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, "https://player.vimeo.com/video/".$clip_id ) .' webkitAllowFullScreen mozallowfullscreen allowFullScreen title="Vimeo video"></iframe></div>';
+			                                        $cff_media_video .= '<iframe src="https://player.vimeo.com/video/'.$clip_id.'" webkitAllowFullScreen mozallowfullscreen allowFullScreen title="Vimeo video"></iframe></div>';
 		                                        } else {
 			                                        $cff_media_video .= '<span class="cff-iframe-placeholder" data-src="https://player.vimeo.com/video/'.$clip_id.'" data-type="vimeo" style="display: none;">placeholder</span></div>';
 		                                        }
@@ -4125,7 +4115,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                                    $cff_media_video .= '<div class="cff-vidLink cff-video-player">';
 	                                                    $cff_media_video .= '<div class="fb-video" data-href="'.$link.'" data-show-text="false" fb-xfbml-state="rendered">';
 		                                                if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-			                                                $cff_media_video .= '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, "https://www.facebook.com/v2.3/plugins/video.php?href=".$link ) .' title="Facebook video player" allowfullscreen frameborder="0" webkitallowfullscreen mozallowfullscreen></iframe></div>';
+			                                                $cff_media_video .= '<iframe src="https://www.facebook.com/v2.3/plugins/video.php?href='.$link.'" title="Facebook video player" allowfullscreen frameborder="0" webkitallowfullscreen mozallowfullscreen></iframe></div>';
 		                                                } else {
 			                                                $cff_media_video .= '<span class="cff-iframe-placeholder" data-src="https://www.facebook.com/v2.3/plugins/video.php?href='.$link.'" data-type="facebook" style="display: none;">placeholder</span></div>';
 		                                                }
@@ -4382,6 +4372,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 	                                //**************************//
 	                                //***CREATE THE POST HTML***//
 	                                //**************************//
+
 	                                //Start the container
 	                                $cff_post_item .= '<div class="cff-item ';
 	                                $cff_post_type_class = ' cff-status-post';
@@ -4769,8 +4760,7 @@ class CFF_Shortcode extends CFF_Shortcode_Display{
 		                                	$cff_post_item .= '<div class="cff-vidLink cff-video-player cff-only-vids">';
 		                                	$cff_post_item .= '<div class="fb-video" data-href="'.$news->source.'" data-show-text="false" fb-xfbml-state="rendered">';
 		                                	if ( ! CFF_GDPR_Integrations::doing_gdpr( $this->feed_options ) ) {
-
-		                                		$cff_post_item .= '<iframe '.CFF_Utils::iframe_data_attributes($lazy_iframes, $news->source).' title="Facebook video player" allowfullscreen frameborder="0" webkitallowfullscreen mozallowfullscreen></iframe></div>';
+		                                		$cff_post_item .= '<iframe src="'.$news->source.'" title="Facebook video player" allowfullscreen frameborder="0" webkitallowfullscreen mozallowfullscreen></iframe></div>';
 		                                	} else {
 		                                		$cff_post_item .= '<span class="cff-iframe-placeholder" data-src="'.$news->source.'" data-type="facebook" style="display: none;">placeholder</span></div>';
 		                                	}

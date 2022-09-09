@@ -27,8 +27,7 @@ function cff_deactivate_addon() {
 
 		// check if intended to disable extension from extensions bundle
 		if ( isset( $_POST['extensions_bundle'] ) && true == $_POST['extensions_bundle'] ) {
-			$cff_ext_options = get_option('cff_extensions_status', array());
-			$cff_ext_options = is_array($cff_ext_options) ? $cff_ext_options : [];
+			$cff_ext_options = get_option('cff_extensions_status');
 			$cff_ext_options[ $plugin ] = '';
 			$activate = update_option('cff_extensions_status', $cff_ext_options);
 		} else {
@@ -52,6 +51,7 @@ add_action( 'wp_ajax_cff_deactivate_addon', 'cff_deactivate_addon' );
  * @since 1.0.0
  */
 function cff_activate_addon() {
+
 	// Run a security check.
 	check_ajax_referer( 'cff-admin', 'nonce' );
 
@@ -70,8 +70,7 @@ function cff_activate_addon() {
 
 		// check if intended to enable extension from extensions bundle
 		if ( isset( $_POST['extensions_bundle'] ) && true == $_POST['extensions_bundle'] ) {
-			$cff_ext_options = get_option('cff_extensions_status', array());
-			$cff_ext_options = is_array($cff_ext_options) ? $cff_ext_options : [];
+			$cff_ext_options = get_option('cff_extensions_status');
 			$cff_ext_options[ $plugin ] = 'on';
 			$activate = update_option('cff_extensions_status', $cff_ext_options);
 		} else {

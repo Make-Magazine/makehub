@@ -47,11 +47,9 @@ var settings_data = {
     gdprInfoTooltip: null,
     loaderSVG: sbi_settings.loaderSVG,
     checkmarkSVG: sbi_settings.checkmarkSVG,
-    checkmarCircleSVG: sbi_settings.checkmarCircleSVG,
     uploadSVG: sbi_settings.uploadSVG,
     exportSVG: sbi_settings.exportSVG,
     reloadSVG: sbi_settings.reloadSVG,
-    timesSVG: sbi_settings.timesSVG,
     tooltipHelpSvg: sbi_settings.tooltipHelpSvg,
     tooltip : {
         text : '',
@@ -442,9 +440,9 @@ var sbiSettings = new Vue({
             } else if ( this.recheckLicenseStatus == 'loading' ) {
                 return this.loaderSVG;
             } else if ( this.recheckLicenseStatus == 'success' ) {
-                return this.checkmarCircleSVG + ' ' + this.generalTab.licenseBox.licenseValid;
+                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.licenseValid;
             } else if ( this.recheckLicenseStatus == 'error' ) {
-                return this.timesSVG + this.generalTab.licenseBox.licenseExpired;
+                return '<i class="fa fa-times-circle"></i> ' + this.generalTab.licenseBox.licenseExpired;
             }
         },
         recheckBtnText: function( btnName ) {
@@ -453,18 +451,18 @@ var sbiSettings = new Vue({
             } else if ( this.recheckLicenseStatus == 'loading' && this.pressedBtnName == btnName  ) {
                 return this.loaderSVG;
             } else if ( this.recheckLicenseStatus == 'success' ) {
-                return this.checkmarCircleSVG + ' ' + this.generalTab.licenseBox.licenseValid;
+                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.licenseValid;
             } else if ( this.recheckLicenseStatus == 'error' ) {
-                return this.timesSVG + ' ' + this.generalTab.licenseBox.licenseExpired;
+                return '<i class="fa fa-times-circle"></i> ' + this.generalTab.licenseBox.licenseExpired;
             }
         },
         testConnectionIcon: function() {
             if ( this.testConnectionStatus == 'loading' ) {
                 return this.loaderSVG;
             } else if ( this.testConnectionStatus == 'success' ) {
-                return this.checkmarCircleSVG + this.generalTab.licenseBox.connectionSuccessful;
+                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.connectionSuccessful;
             } else if ( this.testConnectionStatus == 'error' ) {
-                return `${this.timesSVG} ${this.generalTab.licenseBox.connectionFailed} <a href="#">${this.generalTab.licenseBox.viewError}</a>`;
+                return `<i class="fa fa-times-circle"></i> ${this.generalTab.licenseBox.connectionFailed} <a href="#">${this.generalTab.licenseBox.viewError}</a>`;
             }
         },
         importFile: function() {
@@ -656,7 +654,7 @@ var sbiSettings = new Vue({
         } else if ( this.clearErrorLogStatus == 'success' ) {
           return this.checkmarkSVG;
         } else if ( this.clearErrorLogStatus == 'error' ) {
-          return this.timesSVG;
+          return `<i class="fa fa-times-circle"></i>`;
         }
       },
         saveChangesIcon: function() {
@@ -665,7 +663,7 @@ var sbiSettings = new Vue({
             } else if ( this.btnStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.btnStatus == 'error' ) {
-                return this.timesSVG;
+                return `<i class="fa fa-times-circle"></i>`;
             }
         },
         importBtnIcon: function() {
@@ -677,7 +675,7 @@ var sbiSettings = new Vue({
             } else if ( this.uploadStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.uploadStatus == 'error' ) {
-                return this.timesSVG;
+                return `<i class="fa fa-times-circle"></i>`;
             }
         },
         clearCacheIcon: function() {
@@ -689,7 +687,7 @@ var sbiSettings = new Vue({
             } else if ( this.clearCacheStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.clearCacheStatus == 'error' ) {
-                return this.timesSVG;
+                return `<i class="fa fa-times-circle"></i>`;
             }
         },
         clearImageResizeCacheIcon: function() {
@@ -701,7 +699,7 @@ var sbiSettings = new Vue({
             } else if ( this.optimizeCacheStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.optimizeCacheStatus == 'error' ) {
-                return this.timesSVG;
+                return `<i class="fa fa-times-circle"></i>`;
             }
         },
         dpaResetStatusIcon: function() {
@@ -713,7 +711,7 @@ var sbiSettings = new Vue({
             } else if ( this.dpaResetStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.dpaResetStatus == 'error' ) {
-                return this.timesSVG;
+                return `<i class="fa fa-times-circle"></i>`;
             }
         },
 
@@ -743,7 +741,6 @@ var sbiSettings = new Vue({
              let data = new FormData();
             data.append( 'action', 'sbi_feed_saver_manager_delete_source' );
             data.append( 'source_id', sourceToDelete.id);
-            data.append( 'username', sourceToDelete.username);
             data.append( 'nonce', this.nonce );
             fetch(self.ajaxHandler, {
                 method: "POST",
@@ -997,45 +994,6 @@ var sbiSettings = new Vue({
 
             return false;
         },
-
-        /**
-         * Trigger & Open Personal Account Info Dialog
-         *
-         * @since 6.1
-         *
-         * @return string
-         */
-        openPersonalAccount : function( source ){
-            var self = this;
-            self.$refs.personalAccountRef.personalAccountInfo.id = source.account_id;
-            self.$refs.personalAccountRef.personalAccountInfo.username = source.username;
-            self.$refs.personalAccountRef.personalAccountInfo.bio = source?.header_data?.biography;
-            self.$refs.personalAccountRef.personalAccountPopup = true;
-            self.$refs.personalAccountRef.step = 2;
-        },
-
-        /**
-         * Cancel Personal Account
-         *
-         * @since 6.1
-        */
-        cancelPersonalAccountUpdate : function(){
-            let self        = this;
-        },
-
-        successPersonalAccountUpdate : function(){
-            let self        = this;
-            self.notificationElement =  {
-                type : 'success',
-                text : self.genericText.personalAccountUpdated,
-                shown : "shown"
-            };
-            setTimeout(function(){
-                self.notificationElement.shown =  "hidden";
-            }, 3000);
-
-            sbiSettings.$forceUpdate();
-        }
 
     }
 });

@@ -55,7 +55,6 @@ sbiBuilder = new Vue({
 		customizeScreensText 	: sbi_builder.customizeScreens,
 		dialogBoxPopupScreen   	: sbi_builder.dialogBoxPopupScreen,
 		selectFeedTypeScreen 	: sbi_builder.selectFeedTypeScreen,
-		selectFeedTemplateScreen : sbi_builder.selectFeedTemplateScreen,
 		addFeaturedPostScreen 	: sbi_builder.addFeaturedPostScreen,
 		addFeaturedAlbumScreen 	: sbi_builder.addFeaturedAlbumScreen,
 		addVideosPostScreen 	: sbi_builder.addVideosPostScreen,
@@ -64,7 +63,6 @@ sbiBuilder = new Vue({
 		svgIcons 	: sbi_builder.svgIcons,
 		feedsList 	: sbi_builder.feeds,
 		feedTypes 	: sbi_builder.feedTypes,
-		feedTemplates : sbi_builder.feedTemplates,
 		socialInfo 	: sbi_builder.socialInfo,
 		sourcesList : sbi_builder.sources,
 		links : sbi_builder.links,
@@ -74,8 +72,6 @@ sbiBuilder = new Vue({
 
 		//Selected Feed type => User Hashtag Tagged
 		selectedFeed : ['user'],
-		// Selected Feed Template
-		selectedFeedTemplate : 'ft_default',
 		selectedFeedPopup : [],
 
 		selectedSources : [],
@@ -100,12 +96,11 @@ sbiBuilder = new Vue({
 			// welcome, selectFeed
 			pageScreen : 'welcome',
 
-			// feedsType, selectSource, selectTemplate, feedsTypeGetProcess
+			// feedsType, selectSource, feedsTypeGetProcess
 			selectedFeedSection : 'feedsType',
 		    manualSourcePopupInit : sbi_builder.manualSourcePopupInit,
 			sourcePopup : false,
 			feedtypesPopup : false,
-			feedtemplatesPopup : false,
 			feedtypesCustomizerPopup : false,
 			sourcesListPopup : false,
 			// step_1 [Add New Source] , step_2 [Connect to a user pages/groups], step_3 [Add Manually]
@@ -198,7 +193,6 @@ sbiBuilder = new Vue({
 		customizerScreens : {
 			activeTab 		: 'customize',
 			printedType 	: {},
-			printedTemplate : {},
 			activeSection 	: null,
 			previewScreen 	: 'desktop',
 			sourceExpanded 	: null,
@@ -276,13 +270,9 @@ sbiBuilder = new Vue({
 		},
 
 		//Moderation & Shoppable Mode
-		shouldPaginateNext: true,
 		moderationShoppableMode : false,
 		moderationShoppableModeAjaxDone : false,
-		moderationShoppableModeOffset : 0,
-		moderationShoppableModeOffsetLast : 0,
-    	moderationShoppableShowSelected : 0,
-    moderationShoppableisLoading : false
+		moderationShoppableModeOffset : 0
 	},
 	watch : {
 		feedPreviewOutput : function(){
@@ -307,10 +297,7 @@ sbiBuilder = new Vue({
 		},
 	    getModerationShoppableModeOffset : function(){
 	      return this.moderationShoppableModeOffset > 0;
-	    },
-    getModerationShoppableisLoading : function(){
-      return this.moderationShoppableisLoading;
-    }
+	    }
 
 	},
 	updated : function(){
@@ -415,9 +402,6 @@ sbiBuilder = new Vue({
 			if(viewName === 'feedtypesPopup'){
 				self.viewsActive.feedTypeElement = null;
 			}
-			if(viewName === 'feedtemplatesPopup'){
-				self.viewsActive.feedTemplatesElement = null;
-			}
 			if(viewName === 'extensionsPopupElement' && self.customizerFeedData !== undefined){
 				//self.activateView('feedtypesPopup');
 			}
@@ -437,6 +421,7 @@ sbiBuilder = new Vue({
 			if(viewName == 'moderationMode'){
 				self.customizerControlAjaxAction('feedFlyPreview');
 			}
+
 
 			sbiBuilder.$forceUpdate();
 			self.movePopUp();
@@ -500,7 +485,7 @@ sbiBuilder = new Vue({
 		 * @return boolean
 		 */
 		checkNotEmpty : function(value){
-			return value != null && value != undefined && value.replace(/ /gi,'') != '';
+			return value != null && value.replace(/ /gi,'') != '';
 		},
 
 		/**
@@ -552,8 +537,8 @@ sbiBuilder = new Vue({
 		 */
 		ajaxPost : function(data, callback){
 			var self = this;
-		    data['nonce'] = this.nonce;
-		    self.$http.post(self.ajaxHandler,data).then(callback);
+      data['nonce'] = this.nonce;
+      self.$http.post(self.ajaxHandler,data).then(callback);
 		},
 
 		/**
@@ -626,24 +611,6 @@ sbiBuilder = new Vue({
 				self.viewsActive.extensionsPopupElement = 'socialwall';
 			}
 			sbiBuilder.$forceUpdate();
-		},
-
-		chooseFeedTemplate: function( feedTemplate, iscustomizerPopup = false ) {
-			var self = this;
-			self.selectedFeedTemplate = feedTemplate.type;
-			if( iscustomizerPopup ){
-				self.viewsActive.feedTemplateElement = feedTemplate.type;
-			}
-			sbiBuilder.$forceUpdate();
-		},
-
-		/**
-		 * Get Feed Template Element Title
-		 *
-		 * @since 4.2.0
-		 */
-		getFeedTemplateElTitle : function( $el, isCustomizer = false ) {
-			return $el.title;
 		},
 
 		/**
@@ -947,9 +914,6 @@ sbiBuilder = new Vue({
 				case 'selectSource':
 					checkBtnNext = self.creationProcessCheckSourcesHashtags();
 				break;
-				case 'selectTemplate':
-					checkBtnNext = self.selectedSources.length > 0 || self.creationProcessCheckSourcesHashtags() ? true : false;
-				break;
 				case 'feedsTypeGetProcess':
 
 				break;
@@ -959,7 +923,6 @@ sbiBuilder = new Vue({
 		//Next Click in the Creation Process
 		creationProcessNext : function(){
 			var self = this;
-
 			switch (self.viewsActive.selectedFeedSection) {
 				case 'feedsType':
 					if(self.selectedFeed !== null){
@@ -971,29 +934,15 @@ sbiBuilder = new Vue({
 					}
 				break;
 				case 'selectSource':
-					if(self.selectedSources.length > 0 || self.creationProcessCheckSourcesHashtags() ){
-						if( self.checkPeronalAccount() ){
-							self.switchScreen('selectedFeedSection', 'selectTemplate');
-						}else{
-							self.$refs.personalAccountRef.personalAccountPopup = true;
-						}
-					}
-				break;
-				case 'selectTemplate':
-					self.isCreateProcessGood = self.creationProcessCheckSourcesHashtags();
-					if(self.selectedSources.length > 0){
-						self.switchScreen('selectedFeedSection', 'feedsTypeGetProcess');
-						if(!self.extraProcessFeedsTypes.includes(self.selectedFeed))
-							self.isCreateProcessGood = true;
-					}
 					self.hashtagWriteDetect(true);
+					self.isCreateProcessGood = self.creationProcessCheckSourcesHashtags();
 				break;
 				case 'feedsTypeGetProcess':
 				break;
 			}
-			if(self.isCreateProcessGood){
+			if(self.isCreateProcessGood)
 				self.submitNewFeed();
-			}
+
 		},
 		changeVideoSource : function( videoSource ){
 			this.videosTypeInfo.type = videoSource;
@@ -1114,9 +1063,6 @@ sbiBuilder = new Vue({
 				case 'selectSource':
 					self.switchScreen('selectedFeedSection', 'feedsType');
 					break;
-				case 'selectTemplate':
-					self.switchScreen('selectedFeedSection', 'selectSource');
-					break;
 				case 'feedsTypeGetProcess':
 					self.switchScreen('selectedFeedSection', 'selectSource');
 					break;
@@ -1205,7 +1151,6 @@ sbiBuilder = new Vue({
 				new_insert : 'true',
 				sourcename : self.getSelectedSourceName(self.getSourceIdSelected()),
 				//feedtype : self.selectedFeed,
-				feedtemplate : self.selectedFeedTemplate,
 				type : self.getFeedTypeSaver()
 			};
 
@@ -1685,7 +1630,6 @@ sbiBuilder = new Vue({
 			var self = this;
 			self.customizerScreens.previewScreen = previewScreen;
 			self.loadingBar = true;
-			window.sbi_preview_device = previewScreen;
 			setTimeout(function(){
 				self.setShortcodeGlobalSettings(false);
 				self.loadingBar = false;
@@ -1695,10 +1639,6 @@ sbiBuilder = new Vue({
 		switchCustomizerTab : function(tabId){
 			var self = this,
 				domBody = document.getElementsByTagName("body")[0];
-
-			if( self.customizerScreens.activeSection == 'settings_filters_moderation' && self.viewsActive['moderationMode'] == true ){
-				self.saveModerationSettings();
-			}
 			self.customizerScreens.activeTab = tabId;
 			self.customizerScreens.activeSection = null;
 			self.customizerScreens.activeSectionData = null;
@@ -1807,7 +1747,6 @@ sbiBuilder = new Vue({
 				}, 200)
 			}
 
-
 		},
 
 
@@ -1836,13 +1775,13 @@ sbiBuilder = new Vue({
 			}
 			return additionalCssClasses;
 		},
+
 		//Shortcode Global Layout Settings
 		setShortcodeGlobalSettings : function(flyPreview = false){
 			var self = this,
 				instagramFeed = jQuery("html").find("#sb_instagram"),
 				feedSettings = self.jsonParse(instagramFeed.attr('data-options')),
 				customizerSettings = self.customizerFeedData.settings;
-			self.alterLightboxBehavior();
 
 			if(JSON.stringify(self.feedSettingsDomOptions) !== JSON.stringify(feedSettings) || flyPreview == true){
 
@@ -2128,9 +2067,8 @@ sbiBuilder = new Vue({
 					return headerData['data']['profile_picture'];
 				}
 			}
-			return self.pluginURL +'img/thumb-placeholder.png';
+			return false;
 		},
-
 
 		//Header Bio
 		getHeaderBio : function(){
@@ -2210,7 +2148,13 @@ sbiBuilder = new Vue({
 				self.customizerControlAjaxAction(ajaxAction);
 			}
 
-
+			if(settingID == 'disablelightbox' || settingID == 'shoppablefeed'){
+				if( self.valueIsEnabled( self.customizerFeedData.settings['disablelightbox'] ) || self.valueIsEnabled( self.customizerFeedData.settings['shoppablefeed'] ) ){
+					jQuery('body').find('.sbi_link').addClass('sbi_disable_lightbox');
+				}else{
+					jQuery('body').find('.sbi_link').removeClass('sbi_disable_lightbox');
+				}
+			}
 
 			self.regenerateLayout(settingID);
 		},
@@ -2383,32 +2327,11 @@ sbiBuilder = new Vue({
 			self.customizerScreens.printedType = result.length > 0 ? result[0] : [];
 			return result.length > 0 ? true : false;
 		},
-		customizerFeedTemplatePrint : function(){
-			var self = this;
-			if ( self.customizerFeedData.settings.feedtemplate == undefined ) {
-				self.customizerFeedData.settings.feedtemplate = 'ft_default';
-			}
-			result = self.feedTemplates.filter(function(tp){
-				return tp.type === self.customizerFeedData.settings.feedtemplate
-			});
-			self.customizerScreens.printedTemplate = result.length > 0 ? result[0] : [];
-			return result.length > 0 ? true : false;
-		},
 		choosedFeedTypeCustomizer : function(feedType){
 			var self = this, result = false;
 			if(
 				(self.viewsActive.feedTypeElement === null && self.customizerFeedData.settings.feedtype === feedType) ||
 				(self.viewsActive.feedTypeElement !== null && self.viewsActive.feedTypeElement == feedType)
-			){
-				result = true;
-			}
-			return result;
-		},
-		choosedFeedTemplateCustomizer : function(feedtemplate){
-			var self = this, result = false;
-			if(
-				(self.viewsActive.feedTemplateElement === null && self.customizerFeedData.settings.feedtemplate === feedtemplate) ||
-				(self.viewsActive.feedTemplateElement !== null && self.viewsActive.feedTemplateElement == feedtemplate)
 			){
 				result = true;
 			}
@@ -2426,14 +2349,6 @@ sbiBuilder = new Vue({
 			self.viewsActive.feedTypeElement = null;
 			self.viewsActive.feedtypesPopup = false;
 			self.customizerControlAjaxAction('feedFlyPreview');
-			sbiBuilder.$forceUpdate();
-		},
-		updateFeedTemplateCustomizer : function(){
-			var self = this;
-			self.customizerFeedData.settings.feedtemplate = self.viewsActive.feedTemplateElement;
-			self.viewsActive.feedTemplateElement = null;
-			self.viewsActive.feedtemplatesPopup = false;
-			self.customizerControlAjaxAction('feedTemplateFlyPreview');
 			sbiBuilder.$forceUpdate();
 		},
 		updateInputWidth : function(){
@@ -2534,7 +2449,7 @@ sbiBuilder = new Vue({
 				case 'feedFlyPreview':
 					self.loadingBar = true;
 					self.templateRender = false;
-          			var previewFeedData = {
+					var previewFeedData = {
 						action : 'sbi_feed_saver_manager_fly_preview',
 						feedID : self.customizerFeedData.feed_info.id,
 						previewSettings : self.customizerFeedData.settings,
@@ -2542,25 +2457,14 @@ sbiBuilder = new Vue({
 					};
 					if(self.getModerationShoppableMode){
 						previewFeedData['moderationShoppableMode'] = true;
-			           	previewFeedData['moderationShoppableModeOffset'] = self.moderationShoppableModeOffset;
-			            previewFeedData['moderationShoppableShowSelected'] = self.moderationShoppableShowSelected;
-			        }
+           				previewFeedData['moderationShoppableModeOffset'] = self.moderationShoppableModeOffset;
+					}
 
 					self.ajaxPost(previewFeedData, function(_ref){
-                    self.moderationShoppableisLoading = false;
-                    var data = _ref.data;
+						var data = _ref.data;
 						if( data !== false ){
 							self.updatedTimeStamp = new Date().getTime();
-							self.shouldPaginateNext = true;
-							if(self.getModerationShoppableMode && self.moderationShoppableModeOffset >= 1){
-			                  self.template = String("<div>"+data.feed_html+"</div>");
-			                  if( data?.feedStatus?.shouldPaginate != undefined &&  data.feedStatus.shouldPaginate == false){
-			                    self.shouldPaginateNext = false;
-			                  }
-							} else{
-	              				self.template = String("<div>"+data+"</div>");
-							}
-
+              				self.template = String("<div>"+data+"</div>");
 							self.moderationShoppableModeAjaxDone = self.getModerationShoppableMode ? true : false;
 							self.processNotification("previewUpdated");
 						}else{
@@ -2569,26 +2473,6 @@ sbiBuilder = new Vue({
 						jQuery('body').find('#sbi_load .sbi_load_btn').unbind('click')
 					});
 				break;
-				case 'feedTemplateFlyPreview':
-					self.loadingBar = true;
-					var previewFeedData = {
-						action : 'sbi_feed_saver_manager_fly_preview',
-						feedID : self.customizerFeedData.feed_info.id,
-						previewSettings : self.customizerFeedData.settings,
-						isFeedTemplatesPopup : true,
-						feedName : self.customizerFeedData.feed_info.feed_name
-					};
-					self.ajaxPost(previewFeedData, function(_ref){
-						var data = _ref.data;
-						if( data !== false ) {
-							self.customizerFeedData.settings = data.customizerData;
-							self.template = String("<div>" + data.feed_html + "</div>");
-							self.processNotification("previewUpdated");
-						} else {
-							self.processNotification("unkownError");
-						}
-					});
-					break;
 				case 'feedPreviewRender':
 					setTimeout(function(){
 					}, 150);
@@ -2596,11 +2480,6 @@ sbiBuilder = new Vue({
 			}
 		},
 
-		checkModerationList  : function(){
-			if(this.customizerFeedData?.settings?.moderationlist?.list_type_selected === undefined){
-				this.customizerFeedData.settings.moderationlist = {"list_type_selected" : "allow", "allow_list" : [], "block_list" : [] };
-			}
-		},
 
 		/**
 		 * Ajax Action : Save Feed Settings
@@ -2608,11 +2487,7 @@ sbiBuilder = new Vue({
 		 * @since 4.0
 		 */
 		saveFeedSettings : function( leavePage = false ){
-			var self = this;
-    		self.checkModerationList();
-		    Object.assign(this.customizerFeedData.settings.moderationlist, this.moderationSettings);
-		    this.customizerFeedData.settings.customBlockModerationlist = `${this.customBlockModerationlistTemp}`;
-    		  var self = this,
+			var self = this,
 				sources = [],
 				updateFeedData = {
 					action : 'sbi_feed_saver_manager_builder_update',
@@ -2643,7 +2518,6 @@ sbiBuilder = new Vue({
 				}
 			});
 			sbiBuilder.$forceUpdate();
-
 		},
 
 		/**
@@ -2688,9 +2562,6 @@ sbiBuilder = new Vue({
 		*/
 		moderationModePagination : function( type ){
 			var self = this;
-		    if ( self.moderationShoppableisLoading ) {
-		       	return;
-		    }
 			if( type == 'next'){
 				self.moderationShoppableModeOffset = self.moderationShoppableModeOffset + 1;
 			}
@@ -2698,32 +2569,8 @@ sbiBuilder = new Vue({
 				self.moderationShoppableModeOffset = self.moderationShoppableModeOffset > 0 ? ( self.moderationShoppableModeOffset - 1 ) : 0;
 			}
 
-			if( type == 'first'){
-				self.moderationShoppableModeOffset =  0;
-			}
-
-			if( type == 'last'){
-				self.moderationShoppableModeOffset =  self.moderationShoppableModeOffsetLast;
-			}
-
-			self.moderationShoppableModeOffsetLast = self.moderationShoppableModeOffset > self.moderationShoppableModeOffsetLast ? self.moderationShoppableModeOffset : self.moderationShoppableModeOffsetLast;
-      		self.moderationShoppableisLoading = true;
 			self.customizerControlAjaxAction('feedFlyPreview');
 		},
-
-    /**
-     * Moderation & Shoppable Mode Show Selected
-     *
-     * @since 4.0
-     */
-    moderationModeShowSelected : function(showSelected){
-      if (showSelected !== this.moderationShoppableShowSelected) {
-        this.moderationShoppableShowSelected = showSelected;
-        this.moderationShoppableModeOffset = 0;
-        this.customizerControlAjaxAction('feedFlyPreview');
-      }
-
-    },
 
 
 		/**
@@ -3148,67 +2995,6 @@ sbiBuilder = new Vue({
 			sbiBuilder.$forceUpdate();
 		},
 
-		alterLightboxBehavior : function(){
-			var self = this;
-			jQuery('body').find('.sbi_link:not(.sbi_disable_lightbox) .sbi_link_area').on('click', function(event){
-				event.preventDefault();
-				event.stopPropagation();
-				var customize_lightbox = self.customizerSidebarBuilder['customize'].sections.customize_lightbox;
-				self.customizerScreens.activeSection = 'customize_lightbox';
-				self.customizerScreens.activeSectionData= self.customizerSidebarBuilder['customize'].sections.customize_lightbox;
-				self.switchCustomizerSection('customize_lightbox', customize_lightbox, false, false);
-				sbiBuilder.$forceUpdate();
-			})
-		},
-
-		/**
-		 * Check Personal Account Info
-		 *
-		 * @since 6.1
-		*/
-		checkPeronalAccount : function(){
-			let self 		= this;
-			if( self.selectedSources.length > 0){
-				let sourceInfo = self.sourcesList.filter(function(source){
-					return source.account_id == self.selectedSources[0];
-				});
-				sourceInfo = sourceInfo[0] ? sourceInfo[0] : [];
-				if(sourceInfo?.header_data?.account_type &&
-					sourceInfo?.header_data?.account_type.toLowerCase() === 'personal' &&
-					self.checkSinglePersonalData(sourceInfo?.header_data?.biography)  &&
-					self.checkSinglePersonalData(sourceInfo?.local_avatar)
-					){
-						self.$refs.personalAccountRef.personalAccountInfo.id = sourceInfo.account_id;
-						self.$refs.personalAccountRef.personalAccountInfo.username = sourceInfo.username;
-						return false
-				}
-			}
-			return true;
-		},
-
-		checkSinglePersonalData : function( data ){
-			return data === false || data === undefined || (data !== undefined && data !== false && !this.checkNotEmpty( data ));
-		},
-
-		/**
-		 * Cancel Personal Account
-		 *
-		 * @since 6.1
-		*/
-		cancelPersonalAccountUpdate : function(){
-			let self 		= this;
-			self.switchScreen('selectedFeedSection', 'selectTemplate');
-		},
-
-		/**
-		 * Triggered When updating Personal Account info
-		 *
-		 * @since 6.1
-		*/
-		successPersonalAccountUpdate : function(){
-			self.processNotification('personalAccountUpdated');
-			this.creationProcessNext();
-		}
 
 	}
 

@@ -79,10 +79,6 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 		return false;
 	}
 
-	public function using_an_allow_list( $settings ) {
-		return ! empty( $settings['allow_list'] ) || ! empty( $settings['show_selected_list'] );
-	}
-
 	/**
 	 * Recent hashtag feeds need older posts added from the database
 	 * as they aren't available from the API after 24 hours
@@ -158,68 +154,6 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 			}
 
 			$this->set_post_data( $post_data );
-		} else {
-			$this->add_report( 'Db returned no posts' );
-		}
-
-	}
-
-	/**
-	 * Adds posts from the database from the allow list in settings
-	 *
-	 * @param array $settings
-	 *
-	 * @since 6.0.5
-	 */
-	public function add_db_only_allow_list_posts( $settings ) {
-
-		if ( empty( $settings['allow_list'] ) && empty( $settings['show_selected_list'] ) ) {
-			return;
-		}
-
-		if ( ! empty( $settings['show_selected_list'] ) ) {
-			$settings['allow_list'] = $settings['show_selected_list'];
-		}
-
-		$sanitized_list = array_map( 'sbi_sanitize_instagram_ids', $settings['allow_list'] );
-		$allow_list = implode( "','", $sanitized_list );
-
-		global $wpdb;
-		$posts_table_name       = $wpdb->prefix . SBI_INSTAGRAM_POSTS_TYPE;
-		$feeds_posts_table_name = $wpdb->prefix . SBI_INSTAGRAM_FEEDS_POSTS;
-		$results = $wpdb->get_col(
-		"SELECT p.json_data FROM $posts_table_name AS p INNER JOIN $feeds_posts_table_name AS f ON p.id = f.id
-				WHERE p.instagram_id IN ('$allow_list')
-				GROUP BY p.instagram_id
-				ORDER BY p.time_stamp"
-		);
-
-		$post_set = $results;
-
-		if ( isset( $post_set[0] ) ) {
-			$post_data          = $this->get_post_data();
-
-			$this->add_report( 'Db returned posts: ' . count( $post_set ) );
-
-			foreach ( $post_set as $post ) {
-				$decrypted = $this->encryption->decrypt( $post );
-				$decoded   = ! empty( $decrypted ) ? json_decode( $decrypted, true ) : json_decode( $post, true );
-				if ( isset( $decoded['id'] ) ) {
-					$decoded = $this->filter_posts( array( $decoded ), $settings );
-
-					if ( ! empty( $decoded[0] ) ) {
-						array_push( $post_data, $decoded[0] );
-					}
-				}
-			}
-
-			self::update_last_requested( $sanitized_list );
-
-			usort($post_data, 'sbi_date_sort' );
-
-			$this->set_post_data( $post_data );
-			$this->remove_duplicate_posts();
-
 		} else {
 			$this->add_report( 'Db returned no posts' );
 		}
@@ -640,20 +574,17 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 	 *  and also does not include any excludeword"
 	 */
 	protected function filter_posts( $post_set, $settings = array() ) {
-		$entering_moderation_mode = ( sbi_doing_customizer( $settings ) && ! empty( $_POST['moderationShoppableShowSelected'] ) );
+		$entering_moderation_mode = ( sbi_doing_customizer( $settings ) && ! empty( $_POST['moderationShoppableMode'] ) );
+
 		if ( $entering_moderation_mode ) {
-			if ( ! empty( $settings['show_selected_list'] ) ) {
-				$settings['allow_list'] = $settings['show_selected_list'];
-			} else {
-				// no hide
-				$settings['whitelist']  = '';
-				$settings['hidephotos'] = '';
-				if ( isset( $settings['allow_list'] ) ) {
-					unset( $settings['allow_list'] );
-				}
-				if ( isset( $settings['block_list'] ) ) {
-					unset( $settings['block_list'] );
-				}
+			// no hide
+			$settings['whitelist']  = '';
+			$settings['hidephotos'] = '';
+			if ( isset( $settings['allow_list'] ) ) {
+				unset( $settings['allow_list'] );
+			}
+			if ( isset( $settings['block_list'] ) ) {
+				unset( $settings['block_list'] );
 			}
 		}
 
@@ -875,19 +806,6 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 			}
 		}
 
-		if ( ! empty( $settings['allow_list'] ) ) {
-			if ( ! empty( $settings['moderation_shoppable'] ) ) {
-				return false;
-			}
-			$total_posts_loaded = $settings['num'] + $offset;
-
-			$num_allow_list = is_array( $settings['allow_list'] ) ? count( $settings['allow_list'] ) : 0;
-
-			if ( $num_allow_list <= $total_posts_loaded ) {
-				return true;
-			}
-		}
-
 		return false;
 	}
 
@@ -931,7 +849,7 @@ class SB_Instagram_Feed_Pro extends SB_Instagram_Feed {
 		} else {
 			$options_att_arr['grid'] = true;
 		}
-		$autoscroll = $settings['autoscroll'] === 'true' || $settings['autoscroll'] === 'on' || $settings['autoscroll'] === true || $settings['autoscroll'] === 1 || $settings['autoscroll'] === '1';
+		$autoscroll = $settings['autoscroll'] === 'true' || $settings['autoscroll'] === 'on' || $settings['autoscroll'] === 1 || $settings['autoscroll'] === '1';
 
 		if ( $autoscroll ) {
 			$options_att_arr['autoscroll'] = max( 20, (int) $settings['autoscrolldistance'] );

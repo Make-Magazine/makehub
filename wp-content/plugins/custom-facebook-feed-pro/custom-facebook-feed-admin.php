@@ -11,26 +11,18 @@ use CustomFacebookFeed\SB_Facebook_Data_Encryption;
 function cff_menu() {
     $notice = '';
     if ( \cff_main_pro()->cff_error_reporter->are_critical_errors() ) {
-        $notice = ' <span class="cff-notice-alert"><span>!</span></span>';
+        $notice = ' <span class="update-plugins cff-error-alert"><span>!</span></span>';
     }
-	$cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
-	$cap = apply_filters( 'cff_settings_pages_capability', $cap );
+    $cap = current_user_can( 'manage_custom_facebook_feed_options' ) ? 'manage_custom_facebook_feed_options' : 'manage_options';
+    $cap = apply_filters( 'cff_settings_pages_capability', $cap );
 
-	$sbi_notifications = new CustomFacebookFeed\Admin\CFF_Notifications();
-	$notifications = $sbi_notifications->get();
-
-	$notice_bubble = '';
-	if ( empty( $notice ) && ! empty( $notifications ) && is_array( $notifications ) ) {
-		$notice_bubble = ' <span class="cff-notice-alert"><span>'.count( $notifications ).'</span></span>';
-	}
-
-	add_menu_page(
-		'Facebook Feed',
-		'Facebook Feed'. $notice . $notice_bubble,
-		$cap,
-		'cff-top',
-		'cff_settings_page'
-	);
+    add_menu_page(
+        '',
+        'Facebook Feed'. $notice,
+        $cap,
+        'cff-top',
+        'cff_settings_page'
+    );
 }
 add_action('admin_menu', 'cff_menu');
 

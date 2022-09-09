@@ -234,7 +234,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				'post_type'      => 'sfwd-courses',
 				'post_status'    => 'any',
 				'fields'         => 'ids',
-				'posts_per_page' => LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+				'posts_per_page' => LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
 				'paged'          => $this->transient_data['paged'],
 			);
 			/** This filter is documented in includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list-convert.php */

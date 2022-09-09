@@ -1149,22 +1149,4 @@ class CFF_Utils{
 	public static function sanitize_post_ids( $raw_id ) {
 		return preg_replace( '/[^0-9_]/', '', $raw_id );
 	}
-
-
-    /**
-	 * Checks if lazy loading is disabled
-	 * Applies Data Attributes for iframe
-	 *
-	 * @access public
-  	 * @static
-	 * @since 4.3
-	 * @return string
-	 */
-    public static function iframe_data_attributes( $lazy_loading, $src, $css_classes = '' ) {
-        $attributes = '';
-        $attributes .= 'class="' . $css_classes . ($lazy_loading ? ' cff-lazy-load' : '') . '" ';
-        $attributes .= ($lazy_loading ? 'data-' : '') . 'src="' . $src . '" ';
-        $attributes .= $lazy_loading ? 'data-loaded="false"' : '';
-        return $attributes;
-	}
 }

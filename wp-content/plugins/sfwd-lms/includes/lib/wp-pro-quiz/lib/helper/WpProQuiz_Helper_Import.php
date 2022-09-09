@@ -7,10 +7,8 @@ class WpProQuiz_Helper_Import {
 
 	private $_content = null;
 	private $_error   = false;
-	private $_user_id = 0;
 
-	public $import_post_id                  = 0;
-	public $import_questions_old_to_new_ids = array();
+	public $import_post_id = 0;
 
 	public function setImportFileUpload( $file ) {
 		if ( ! is_uploaded_file( $file['tmp_name'] ) ) {
@@ -21,21 +19,6 @@ class WpProQuiz_Helper_Import {
 		$this->_content = file_get_contents( $file['tmp_name'] );
 
 		return $this->checkCode();
-	}
-
-	/**
-	 * Resets default values.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @return void
-	 */
-	public function reset(): void {
-		$this->_user_id                        = 0;
-		$this->_content                        = null;
-		$this->_error                          = false;
-		$this->import_post_id                  = 0;
-		$this->import_questions_old_to_new_ids = array();
 	}
 
 	public function setImportString( $str ) {
@@ -50,19 +33,6 @@ class WpProQuiz_Helper_Import {
 
 	public function getError() {
 		return $this->_error;
-	}
-
-	/**
-	 * Set the user that runs an import.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param int $user_id User ID.
-	 *
-	 * @return void
-	 */
-	public function setUserID( int $user_id ): void {
-		$this->_user_id = $user_id;
 	}
 
 	private function checkCode() {
@@ -133,21 +103,8 @@ class WpProQuiz_Helper_Import {
 		return false;
 	}
 
-	public function unique_post_slug( $override, $slug, $post_ID, $post_status, $post_type ) {
-		if (
-			learndash_get_post_type_slug( 'question' ) === $post_type ||
-			learndash_get_post_type_slug( 'quiz' ) === $post_type
-		) {
-			return $post_ID ? $post_ID : uniqid( $post_type . '-', true );
-		}
-
-		return $override;
-	}
-
 	private function importData( $o, $ids = false, $version = '1' ) {
-		add_filter( 'pre_wp_unique_post_slug', array( $this, 'unique_post_slug' ), 10, 5 );
-
-		$user_id = $this->_user_id > 0 ? $this->_user_id : get_current_user_id();
+		global $wpdb;
 
 		$quizMapper     = new WpProQuiz_Model_QuizMapper();
 		$questionMapper = new WpProQuiz_Model_QuestionMapper();
@@ -183,6 +140,7 @@ class WpProQuiz_Helper_Import {
 
 			$quizMapper->save( $master );
 
+			$user_id          = get_current_user_id();
 			$quiz_insert_data = array(
 				'post_type'   => learndash_get_post_type_slug( 'quiz' ),
 				'post_title'  => $master->getName(),
@@ -270,8 +228,6 @@ class WpProQuiz_Helper_Import {
 					continue;
 				}
 
-				$old_question_post_id = $question->getQuestionPostId();
-
 				$question->setQuizId( $master->getId() );
 				$question->setId( 0 );
 
@@ -306,10 +262,7 @@ class WpProQuiz_Helper_Import {
 				);
 				$question_post_array = wp_slash( $question_post_array );
 				$question_post_id    = wp_insert_post( $question_post_array );
-
 				if ( ! empty( $question_post_id ) ) {
-					$this->import_questions_old_to_new_ids[ $old_question_post_id ] = $question_post_id;
-
 					update_post_meta( $question_post_id, 'points', absint( $question->getPoints() ) );
 					update_post_meta( $question_post_id, 'question_type', $question->getAnswerType() );
 					update_post_meta( $question_post_id, 'question_pro_id', absint( $question->getId() ) );
@@ -319,16 +272,12 @@ class WpProQuiz_Helper_Import {
 
 					$quiz_questions[ $question_post_id ] = absint( $question->getId() );
 				}
-
-				Learndash_Admin_Import::clear_wpdb_query_cache();
 			}
 
 			if ( ! empty( $quiz_questions ) ) {
 				update_post_meta( $quiz_post_id, 'ld_quiz_questions', $quiz_questions );
 			}
 		}
-
-		remove_filter( 'pre_wp_unique_post_slug', array( $this, 'unique_post_slug' ) );
 
 		return true;
 	}

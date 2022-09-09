@@ -2,9 +2,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
-use TwitterFeed\Pro\CTF_Settings_Pro;
-use TwitterFeed\Pro\CTF_Parse_Pro;
-use TwitterFeed\Pro\CTF_Feed_Pro;
 
 class SW_Cron_Updater
 {
@@ -109,7 +106,7 @@ class SW_Cron_Updater
 			$yt_atts              = $plugins_with_atts['youtube-feed'];
 			$yt_database_settings = sby_get_database_settings();
 
-			$youtube_feed_settings = new \SmashBalloon\YouTubeFeed\SBY_Settings_Pro( $yt_atts, $yt_database_settings );
+			$youtube_feed_settings = new SBY_Settings_Pro( $yt_atts, $yt_database_settings );
 			$youtube_feed_settings->set_feed_type_and_terms();
 			$yt_settings                           = $youtube_feed_settings->get_settings();
 			$yt_feed_type_and_terms                = $youtube_feed_settings->get_feed_type_and_terms();
@@ -264,11 +261,7 @@ class SW_Cron_Updater
 				foreach ( $post_data as $post ) {
 					$vid_ids[] = SBY_Parse::get_video_id( $post );
 				}
-				if ( class_exists( 'SmashBalloon\YouTubeFeed\Services\AdminAjaxService' ) ) {
-					SmashBalloon\YouTubeFeed\Services\AdminAjaxService::sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
-				} else {
-					sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
-				}
+				sby_process_post_set_caching( $vid_ids, $youtube_feed_settings->get_transient_name() );
 			}
 			$wall_posts[] = $post_data;
 			$wall_next_pages[] = $youtube_feed->get_next_pages();

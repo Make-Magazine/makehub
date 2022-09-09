@@ -182,9 +182,9 @@ class CFF_Settings_Pro {
 		//********************************************//
 
 		$FBdata_arr = array(); //Use an array to store the data for each page ID (for multifeed)
-		//Multifeed extension
-		$page_ids = ( $cff_ext_multifeed_active === true ) ? cff_multifeed_ids($page_id) :  array($page_id);
 
+		//Multifeed extension
+		( $cff_ext_multifeed_active ) ? $page_ids = cff_multifeed_ids($page_id) : $page_ids = array($page_id);
 
 		//If it's an album embed then only use one ID otherwise it loops through and embeds the same album items multiple times
 		if( !empty($cff_album_id) ) $page_ids = array($page_ids[0]);

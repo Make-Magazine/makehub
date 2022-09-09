@@ -11,7 +11,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
-$header_atts    = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( 'generic', $settings, $header_data );
+$header_atts    = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( $settings, $header_data );
 $header_padding = (int) $settings['imagepadding'] > 0 ? 'padding: ' . (int) $settings['imagepadding'] . esc_attr( $settings['imagepaddingunit'] ) . ';' : '';
 $header_margin  = (int) $settings['imagepadding'] < 10 ? ' margin-bottom: 10px;' : '';
 

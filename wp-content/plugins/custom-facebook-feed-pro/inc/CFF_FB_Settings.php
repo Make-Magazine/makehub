@@ -290,7 +290,6 @@ class CFF_FB_Settings{
 
 		        'credit' 					=> isset($options[ 'cff_show_credit' ]) ? $options[ 'cff_show_credit' ] : '',
 		        'textissue' 				=> isset($options[ 'cff_format_issue' ]) ? $options[ 'cff_format_issue' ] : '',
-		        'enable_js_image_loading' 	=> isset($options[ 'enable_js_image_loading' ]) ? $options[ 'enable_js_image_loading' ] : '',
 		        'disablesvgs' 				=> isset($options[ 'cff_disable_svgs' ]) ? $options[ 'cff_disable_svgs' ] : '',
 		        'restrictedpage' 			=> isset($options[ 'cff_restricted_page' ]) ? $options[ 'cff_restricted_page' ] : '',
 		        'hidesupporterposts' 		=> isset($options[ 'cff_hide_supporter_posts' ]) ? $options[ 'cff_hide_supporter_posts' ] : '',

@@ -19,7 +19,7 @@ $name     = SB_Instagram_Parse_Pro::get_name( $header_data );
 $bio      = SB_Instagram_Parse_Pro::get_bio( $header_data, $settings );
 
 // Attributes
-$header_atts                = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( 'standard-centered', $settings, $header_data );
+$header_atts                = SB_Instagram_Display_Elements_Pro::get_header_data_attributes( $settings, $header_data );
 $header_image_atts          = SB_Instagram_Display_Elements_Pro::get_header_img_data_attributes( $settings, $header_data );
 $header_image_atts_centered = SB_Instagram_Display_Elements_Pro::get_header_img_data_attributes( $settings, $header_data, 'centered' );
 $avatar_el_atts             = SB_Instagram_Display_Elements_Pro::get_avatar_element_data_attributes( $settings, $header_data );
@@ -47,7 +47,7 @@ $post_count_attribute     = SB_Instagram_Display_Elements_Pro::get_post_count_da
         <div<?php echo $header_text_class; ?>>
         <?php if ( SB_Instagram_Display_Elements_Pro::should_show_header_section( 'image-top', $settings ) ) : ?>
             <div class="sbi_header_img"<?php echo $header_image_atts_centered; ?>>
-            <?php if ( $avatar !== '' || sbi_doing_customizer($settings) ):  ?>
+            <?php if ( $avatar !== '' ):  ?>
                 <div class="sbi_header_img_hover"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'newlogo', 'svg' ); ?></div>
                 <img<?php echo $avatar_el_atts; ?> width="50" height="50">
             <?php else: ?>
@@ -58,8 +58,8 @@ $post_count_attribute     = SB_Instagram_Display_Elements_Pro::get_post_count_da
 
             <h3<?php echo $header_text_color_style . $header_heading_attribute; ?>><?php echo esc_html( $username ); ?></h3>
             <p class="sbi_bio_info"<?php echo $header_text_color_style; ?>>
-            <span class="sbi_posts_count"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'photo', 'svg' ) . number_format_i18n( (int)$post_count, 0 ); ?></span>
             <?php if ( SB_Instagram_Display_Elements_Pro::should_show_element( 'headerfollowers', $settings ) ) : ?>
+                <span class="sbi_posts_count"<?php echo $post_count_attribute; ?>><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'photo', 'svg' ) . number_format_i18n( (int)$post_count, 0 ); ?></span>
                 <?php if ( $follower_count !== '' || ! empty( $follower_count_attribute ) ) : // basic display API does not include follower counts as of January 2020 ?>
                 <span class="sbi_followers"<?php echo $follower_count_attribute; ?>><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'user', 'svg' ) . number_format_i18n( (int)$follower_count, 0 ); ?></span>
                 <?php endif; ?>
@@ -72,7 +72,7 @@ $post_count_attribute     = SB_Instagram_Display_Elements_Pro::get_post_count_da
 
     <?php if ( SB_Instagram_Display_Elements_Pro::should_show_header_section( 'image-bottom', $settings ) ) : ?>
         <div class="sbi_header_img"<?php echo $header_image_atts; ?>>
-	        <?php if ( $avatar !== '' || sbi_doing_customizer($settings) ):  ?>
+	        <?php if ( $avatar !== '' ):  ?>
                 <div class="sbi_header_img_hover"><?php echo SB_Instagram_Display_Elements_Pro::get_icon( 'newlogo', 'svg' ); ?></div>
                 <img<?php echo $avatar_el_atts; ?> width="50" height="50">
 	        <?php else: ?>

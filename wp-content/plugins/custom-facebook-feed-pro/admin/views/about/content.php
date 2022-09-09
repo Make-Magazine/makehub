@@ -5,7 +5,7 @@
          * 
          * @since 4.0
          */
-        do_action('cff_admin_notices');
+        do_action('cff_admin_notices'); 
     ?>
     <div class="cff-sb-container">
         <div class="cff-section-header">
@@ -36,24 +36,25 @@
             <div class="sb-plugins-box" v-for="(plugin, name, index) in plugins">
                 <div class="icon"><img :src="plugin.icon" :alt="plugin.title"></div>
                 <div class="plugin-box-content">
-                    <h4 class="sb-box-title">{{plugin.title + (plugin.type !== 'none' ? ' Pro' : '')}}</h4>
+                    <h4 class="sb-box-title">{{plugin.title}}</h4>
                     <p class="sb-box-description">{{plugin.description}}</p>
                     <div class="sb-action-buttons">
-                        <button class="cff-btn sb-btn-add" v-if="plugin.type === 'none' && plugin.activated === 'none'" @click="installPlugin(plugin.download_plugin, name, index, 'plugin')">
+                        <button class="cff-btn sb-btn-add" v-if="!plugin.installed" @click="installPlugin(plugin.download_plugin, name, index, 'plugin')">
                             <span v-html="buttonIcon()" v-if="btnClicked == index + 1 && btnName == name"></span>
                             {{buttons.install}}
                         </button>
-                        <button class="cff-btn sb-btn-installed" v-if="plugin.type === 'pro'">
+                        <button class="cff-btn sb-btn-installed" v-if="plugin.installed">
                             <span v-html="icons.checkmarkSVG"></span>
                             {{buttons.installed}}
                         </button>
-                        <button class="cff-btn sb-btn-activate" v-if="plugin.type === 'pro' && !plugin.activated" @click="activatePlugin(plugin.plugin, name, index, 'plugin')" :class="btnStatus">
+                        <button class="cff-btn sb-btn-activate" v-if="plugin.installed && ! plugin.activated" @click="activatePlugin(plugin.plugin, name, index, 'plugin')" :class="btnStatus">
                             <span v-html="buttonIcon()" v-if="btnClicked == index + 1 && btnName == name"></span>
                             {{buttons.activate}}
                         </button>
-                        <a class="cff-btn sb-btn-activate" :href="plugin.link" target="_blank" v-if="plugin.type === 'free'">
-                            {{buttons.upgradeToPro}}
-                        </a>
+                        <button class="cff-btn sb-btn-deactivate" v-if="plugin.installed && plugin.activated && name != 'facebook'" @click="deactivatePlugin(plugin.plugin, name, index, 'plugin')" :class="btnStatus">
+                            <span v-html="buttonIcon()" v-if="btnClicked == index + 1 && btnName == name"></span>
+                            {{buttons.deactivate}}
+                        </button>
                     </div>
                 </div>
             </div>

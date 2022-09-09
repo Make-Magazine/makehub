@@ -43,10 +43,6 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 				return;
 			}
 
-			if ( ! empty( $pointers ) ) {
-				$this->pointers = $pointers;
-			}
-
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1000 );
 		}
 
@@ -57,7 +53,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 		 */
 		public function admin_enqueue_scripts() {
 			$this->register_pointers();
-			$this->check_user_dismissed();
+			$this->check_user_dissmissed();
 
 			if ( empty( $this->pointers ) ) {
 				return;
@@ -154,12 +150,12 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 		 *
 		 * @since 3.0.0
 		 */
-		protected function check_user_dismissed() {
+		protected function check_user_dissmissed() {
 			if ( ! $this->pointers || ! is_array( $this->pointers ) ) {
 				return;
 			}
 
-			if ( isset( $_GET['ld_reset_pointers'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['ld_reset_pointers'] ) ) {
 				delete_user_meta( get_current_user_id(), 'dismissed_wp_pointers' );
 			}
 
@@ -169,7 +165,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 
 			// Check pointers and remove dismissed ones.
 			foreach ( $this->pointers as $pointer_id => $pointer ) {
-				if ( ( in_array( $pointer_id, $dismissed, true ) ) || ( empty( $pointer ) ) || ( empty( $pointer_id ) ) || ( empty( $pointer['target'] ) ) || ( empty( $pointer['options'] ) ) ) {
+				if ( ( in_array( $pointer_id, $dismissed ) ) || ( empty( $pointer ) ) || ( empty( $pointer_id ) ) || ( empty( $pointer['target'] ) ) || ( empty( $pointer['options'] ) ) ) {
 					unset( $this->pointers[ $pointer_id ] );
 				}
 			}

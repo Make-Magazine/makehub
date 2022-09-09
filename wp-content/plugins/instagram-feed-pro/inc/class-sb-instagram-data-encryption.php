@@ -14,9 +14,6 @@
  * @access private
  * @ignore
  */
-
-namespace InstagramFeed;
-
 class SB_Instagram_Data_Encryption {
 
 	/**
@@ -126,31 +123,6 @@ class SB_Instagram_Data_Encryption {
 		}
 
 		return $this->encrypt( $raw_value );
-	}
-
-	/**
-	 * Uses a raw value and attempts to decrypt it
-	 *
-	 * @since 6.0
-	 *
-	 * @param $value
-	 * @return bool|string
-	 */
-	public function maybe_decrypt( $value ) {
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-		if ( strpos( $value, '{' ) === 0 ) {
-			return $value;
-		}
-
-		$decrypted = $this->decrypt( $value );
-
-		if ( ! $decrypted ) {
-			return $value;
-		}
-
-		return $decrypted;
 	}
 
 	/**

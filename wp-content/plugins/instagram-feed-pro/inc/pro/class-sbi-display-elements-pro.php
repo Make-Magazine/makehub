@@ -102,12 +102,10 @@ class SB_Instagram_Display_Elements_Pro extends SB_Instagram_Display_Elements
 	 * @since 5.0
 	 */
 	public static function get_sbi_link_classes( $settings ) {
-		$customizer = sbi_doing_customizer( $settings );
-		if ( $customizer ) {
-			return ' :class="\'sbi_link_customizer sbi_link\' + ($parent.valueIsEnabled( $parent.customizerFeedData.settings.disablelightbox ) || $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) ? \' sbi_disable_lightbox\' : \'\')" ';
+		if ( ! empty( $settings['disablelightbox'] ) && ($settings['disablelightbox'] === 'on' || $settings['disablelightbox'] === 'true' || $settings['disablelightbox'] === true) ) {
+			return ' sbi_disable_lightbox';
 		}
-		$lightbox_class = ( ! empty( $settings['disablelightbox'] ) && ($settings['disablelightbox'] === 'on' || $settings['disablelightbox'] === 'true' || $settings['disablelightbox'] === true) ) ? ' sbi_disable_lightbox' : '';
-		return ' class="sbi_link ' . $lightbox_class . '" ';
+		return '';
 	}
 
 	/**
@@ -452,16 +450,16 @@ class SB_Instagram_Display_Elements_Pro extends SB_Instagram_Display_Elements
 		$caption = SB_Instagram_Display_Elements::sanitize_caption( $caption );
 	?>
 		<button class="sb-shoppable-edit-btn sbi-btn-grey sb-button-standard"
-			v-if="!$parent.checkPostShoppableFeed('<?php echo $post_id ?>') && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
-			:data-active="($parent.shoppableFeed.postId == '<?php echo $post_id ?>' || Object.keys($parent.customizerFeedData.settings.shoppablelist).length == 0 )  && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
-			@click.prevent.default="$parent.openPostShoppableFeed('<?php echo $post_id ?>', '<?php echo $media ?>', '<?php echo htmlspecialchars($caption) ?>')">
+			v-if="!$parent.checkPostShoppableFeed(<?php echo $post_id ?>) && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
+			:data-active="($parent.shoppableFeed.postId == <?php echo $post_id ?> || Object.keys($parent.customizerFeedData.settings.shoppablelist).length == 0 )  && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
+			@click.prevent.default="$parent.openPostShoppableFeed(<?php echo $post_id ?>, '<?php echo $media ?>', '<?php echo htmlspecialchars($caption) ?>')">
 			<div class="sb-shoppable-edit-btn-link" v-html="$parent.svgIcons['link']"></div>
 			<span v-html="$parent.genericText.add"></span>
 		</button>
 		<button class="sb-shoppable-edit-btn sbi-btn-blue sb-button-standard"
-			v-if="$parent.checkPostShoppableFeed('<?php echo $post_id ?>') && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
-			:data-active="($parent.shoppableFeed.postId == '<?php echo $post_id ?>' || Object.keys($parent.customizerFeedData.settings.shoppablelist).length == 0 )  && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
-			@click.prevent.default="$parent.openPostShoppableFeed('<?php echo $post_id ?>', '<?php echo $media ?>', '<?php echo htmlspecialchars($caption) ?>')">
+			v-if="$parent.checkPostShoppableFeed(<?php echo $post_id ?>) && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
+			:data-active="($parent.shoppableFeed.postId == <?php echo $post_id ?> || Object.keys($parent.customizerFeedData.settings.shoppablelist).length == 0 )  && $parent.valueIsEnabled( $parent.customizerFeedData.settings.shoppablefeed ) && $parent.customizerScreens.activeSection === 'settings_shoppable_feed'"
+			@click.prevent.default="$parent.openPostShoppableFeed(<?php echo $post_id ?>, '<?php echo $media ?>', '<?php echo htmlspecialchars($caption) ?>')" >
 			<div class="sb-shoppable-edit-btn-link" v-html="$parent.svgIcons['link']"></div>
 			<span v-html="$parent.genericText.update"></span>
 		</button>
@@ -495,56 +493,5 @@ class SB_Instagram_Display_Elements_Pro extends SB_Instagram_Display_Elements
 	}
 
 
-	/**
-     * Print Moderation Toggle Button
-     *
-	 * @param int $post_id
-	 *
-	 * @return string
-	 */
-	public static function header_type( $settings ) {
-		$header_template = 'header-generic';
-    	if ( $settings['type'] != 'hashtag' && $settings['headerstyle'] != 'text') {
-			$header_template = $settings['headerstyle'] !== 'boxed' ?  'header' : 'header-boxed';
-		}
-	    if( isset( $settings['headerstyle'] ) && $settings['headerstyle'] == 'text'){
-		    $header_template = 'header-text';
-	    }
-	    return $header_template;
-    }
-
-    /**
-	 * Should Show Print HTML
-	 *
-	 * @param bool $customizer
-	 * @param string $condition
-	 *
-	 * @return string
-	 *
-	 * @since 6.1
-	 */
-	public static function create_condition_show_vue( $customizer, $condition ) {
-		if ( $customizer ) {
-			return ' v-show="' . $condition . '" ';
-		}
-		return '';
-	}
-
-
-	/**
-	 * Text Header Style
-	 *
-	 * @param $settings
-	 *
-	 * @return string
-	 *
-	 * @since 6.1
-	 */
-	public static function get_header_text_style( $settings ) {
-		if ( ! empty( $settings['headertextcolor'] ) && $settings['headertextcolor'] !== '#' && !sbi_doing_customizer( $settings )) {
-			return ' style="color: ' . $settings['headertextcolor'] . ' "';
-		}
-		return '';
-	}
 
 }

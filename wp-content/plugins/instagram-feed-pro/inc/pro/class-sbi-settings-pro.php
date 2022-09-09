@@ -9,10 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-use InstagramFeed\Helpers\Util;
-use InstagramFeed\SB_Instagram_Data_Encryption;
-
-
 class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 
 	private $business_accounts;
@@ -123,7 +119,7 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 		$this->connected_accounts = apply_filters( 'sbi_connected_accounts', $this->connected_accounts, $this->atts );
 
 		$this->settings['customtemplates'] = $this->settings['customtemplates'] === true || $this->settings['customtemplates'] === 'true' || $this->settings['customtemplates'] === 'on';
-		if ( Util::isDebugging() ) {
+		if ( isset( $_GET['sbi_debug'] ) || isset( $_GET['sb_debug'] ) ) {
 			$this->settings['customtemplates'] = false;
 		}
 		$this->settings['showbio'] = $this->settings['showbio'] === 'true' || $this->settings['showbio'] === 'on' || $this->settings['showbio'] === true;
@@ -261,8 +257,6 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			$this->settings['feedid'] = false;
 		}
 
-		// flag moderation mode and shoppable mode
-		$this->settings['moderation_shoppable'] = ! empty( $_POST['moderationShoppableMode'] );
 	}
 
 	/**
@@ -468,10 +462,8 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			&& $settings['shoppablefeed'] !== 'false'
 			&& ! empty( $settings['shoppablefeed'] ) ) {
 			$settings['captionlinks'] = true;
+			$settings['shoppablelist'] = json_decode( $settings['shoppablelist'], true ) ? json_decode( $settings['shoppablelist'], true ) : array();
 
-			if ( ! is_array( $settings['shoppablelist'] ) ) {
-				$settings['shoppablelist'] = json_decode( $settings['shoppablelist'], true ) ? json_decode( $settings['shoppablelist'], true ) : array();
-			}
 		}
 
 		if ( ! isset( $atts['media'] ) ) {
@@ -489,19 +481,33 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 				$include_videos = $settings['videosposts'] !== 'false' && ! empty( $settings['videosposts'] );
 			}
 
-			if ( $include_photos && $include_videos ) {
+			if ( isset( $settings['igtvposts'] ) && $settings['igtvposts'] ) {
+				$include_igtv = true;
+			} else {
+				$include_igtv = ($settings['media'] === 'all' || $include_videos) && strpos( $settings['videotypes'], 'igtv' ) !== false ? true : false;
+			}
+			if ( isset( $settings['igtvposts'] ) ) {
+				$include_igtv = $settings['igtvposts'] !== 'false' && ! empty( $settings['igtvposts'] );
+			}
+
+			if ( $include_photos && ( $include_videos || $include_igtv ) ) {
 				$settings['media'] = 'all';
-			} elseif ( $include_videos ) {
+			} elseif ( $include_videos || $include_igtv ) {
 				$settings['media'] = 'videos';
 			} else {
 				$settings['media'] = 'photos';
 			}
 		} else {
+			$include_igtv = $settings['media'] === 'all' || $settings['media'] === 'videos' && strpos( $settings['videotypes'], 'igtv' );
 			$include_videos = $settings['media'] === 'all' || $settings['media'] === 'videos' && strpos( $settings['videotypes'], 'regular' );
 		}
 
 		if ( ! isset( $atts['videotypes'] ) ) {
 			$video_types = array();
+			if ( $include_igtv ) {
+				$video_types[] = 'igtv';
+				$video_types[] = 'regular';
+			}
 			if ( $include_videos ) {
 				$video_types[] = 'igtv';
 				$video_types[] = 'regular';
@@ -526,7 +532,6 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 				$settings['hidephotos'] = 'builder';
 				if ( $moderation_list['list_type_selected'] === 'allow' ) {
 					$settings['allow_list'] = ! empty( $moderation_list['allow_list'] ) ? $moderation_list['allow_list'] : array();
-					$settings['apinum'] = ! empty( $settings['apinum'] ) ? max( intval( $settings['apinum'] ), 20 ) : 20;
 				} else {
 					$settings['block_list'] = ! empty( $moderation_list['block_list'] ) ? array_merge( $settings['block_list'], $moderation_list['block_list'] ) : $settings['block_list'];
 				}
@@ -587,7 +592,6 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			'headersource',
 			'customizer',
 			'cachetime',
-			'class',
 			'mediavine'
 		);
 
@@ -916,7 +920,7 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 					$user = implode( ', ', $usernames_not_connected );
 				}
 
-				$settings_link = '<a href="'.get_admin_url().'admin.php?page=sbi-settings" target="_blank">' . __( 'plugin Settings page', 'instagram-feed' ) . '</a>';
+				$settings_link = '<a href="'.get_admin_url().'?page=sb-instagram-feed" target="_blank">' . __( 'plugin Settings page', 'instagram-feed' ) . '</a>';
 
 				$error_message_return = array(
 					'error_message' => sprintf( __( 'Error: There is no connected account for the user %s.', 'instagram-feed' ), $user ),
@@ -944,7 +948,7 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 		$hashtag_order_suffix = $this->settings['order'] === 'recent' ? 'recent' : 'top';
 		if ( $this->settings['order'] === 'top' ) {
 			$this->settings['sortby'] = 'api';
-			$this->settings['apinum'] = empty( $this->settings['moderation_shoppable'] ) ? 50 : 20;
+			$this->settings['apinum'] = 50;
 		}
 		$connected_accounts_in_feed = array();
 
@@ -1186,7 +1190,7 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 		global $sb_instagram_posts_manager;
 
 		$is_using_access_token_in_shortcode = ! empty( $this->atts['accesstoken'] );
-		$settings_link = '<a href="'.get_admin_url().'admin.php?page=sbi-settings" target="_blank">' . __( 'plugin Settings page', 'instagram-feed' ) . '</a>';
+		$settings_link = '<a href="'.get_admin_url().'?page=sb-instagram-feed" target="_blank">' . __( 'plugin Settings page', 'instagram-feed' ) . '</a>';
 		if ( $is_using_access_token_in_shortcode ) {
 			$error_message_return = array(
 				'error_message' => __( 'Error: Cannot add access token directly to the shortcode.', 'instagram-feed' ),
@@ -1539,6 +1543,7 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			'customtemplates',
 			'gdpr',
 			'colorpalette',
+			'igtvposts',
 			'feed',
 			'minnum',
 			'disable_resize',
@@ -1585,8 +1590,9 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 		if ( ! is_array( $existing ) ) {
 			$existing = json_decode( $encryption->decrypt( $existing ), true );
 		}
-		$existing = is_array( $existing ) ? $existing : [];
+
 		$new = array_merge( $existing, $hashtag_name_id_pairs );
+
 		update_option( 'sbi_hashtag_ids', $encryption->encrypt( sbi_json_encode( $new ) ), false );
 	}
 
@@ -1782,14 +1788,8 @@ class SB_Instagram_Settings_Pro extends SB_Instagram_Settings{
 			$include_all_businesses = ! empty( $this->settings['hashtag'] );
 		}
 
-		$ids = array();
-		if ( ! empty( $this->settings['id'] ) ) {
-			$ids = is_array( $this->settings['id'] ) ? $this->settings['id'] : explode( ',', str_replace(' ', '', $this->settings['id'] ) );
-		}
-		$tagged = array();
-		if ( ! empty( $this->settings['tagged'] ) ) {
-			$tagged = is_array( $this->settings['tagged'] ) ? $this->settings['tagged'] : explode( ',', str_replace(' ', '', $this->settings['tagged'] ) );
-		}
+		$ids = is_array( $this->settings['id'] ) ? $this->settings['id'] : explode( ',', str_replace(' ', '', $this->settings['id'] ) );
+		$tagged = is_array( $this->settings['tagged'] ) ? $this->settings['tagged'] : explode( ',', str_replace(' ', '', $this->settings['tagged'] ) );
 
 		$account_ids = array_merge( $ids, $tagged );
 

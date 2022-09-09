@@ -3662,20 +3662,3 @@ body .cff_review_step1_notice .cff-btn-link:not(:last-child) {
 	}
 }
 
-.cff-notice-alert {
-  display: inline-block;
-  position: absolute;
-  vertical-align: top;
-  box-sizing: border-box;
-  margin: 1px 0 0 4px;
-  padding: 0 5px;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 9px;
-  background-color: #d63638;
-  color: #fff;
-  font-size: 11px;
-  line-height: 1.6;
-  text-align: center;
-  z-index: 26;
-}

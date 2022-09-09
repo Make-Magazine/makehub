@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Quizzes_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
+	class LD_REST_Quizzes_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * LearnDash course steps object
@@ -37,14 +37,14 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @var array
 		 */
-		protected $_post = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+		protected $_post = array();
 
 		/**
 		 * WP ProQuiz get arguments
 		 *
 		 * @var array
 		 */
-		protected $_get = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+		protected $_get = array();
 
 		/**
 		 * WPProQuiz Quiz instance.
@@ -217,7 +217,7 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 				}
 
 				// If we don't have a course parameter we need to get all the courses the user has access to and all
-				// the courses the lesson is available in and compare.
+				// the courses the lesson is avaiable in and compare.
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
@@ -421,39 +421,34 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
-			if ( $this->post_type === $post->post_type ) {
-				$base          = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
-				$request_route = $request->get_route();
 
-				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
+			$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
 
-					$links = array();
+			$links = array();
 
-					if ( ! isset( $response->links['statistics'] ) ) {
-						$quiz_pro_id = get_post_meta( $post->ID, 'quiz_pro_id', true );
-						$quiz_pro_id = absint( $quiz_pro_id );
-						if ( ! empty( $quiz_pro_id ) ) {
-							$quiz_pro_statistics_on = learndash_get_setting( $post, 'statisticsOn', true );
-							if ( $quiz_pro_statistics_on ) {
-								$links['statistics'] = array(
-									'href'       => rest_url( trailingslashit( $base ) . $post->ID . '/' . $this->get_rest_base( 'quizzes-statistics' ) ),
-									'embeddable' => true,
-								);
-							}
-						}
-					}
-
-					if ( ! isset( $response->links['users'] ) ) {
-						$links['users'] = array(
-							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
+			if ( ! isset( $response->links['statistics'] ) ) {
+				$quiz_pro_id = get_post_meta( $post->ID, 'quiz_pro_id', true );
+				$quiz_pro_id = absint( $quiz_pro_id );
+				if ( ! empty( $quiz_pro_id ) ) {
+					$quiz_pro_statistics_on = learndash_get_setting( $post, 'statisticsOn', true );
+					if ( $quiz_pro_statistics_on ) {
+						$links['statistics'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID . '/' . $this->get_rest_base( 'quizzes-statistics' ) ),
 							'embeddable' => true,
 						);
 					}
-
-					if ( ! empty( $links ) ) {
-						$response->add_links( $links );
-					}
 				}
+			}
+
+			if ( ! isset( $response->links['users'] ) ) {
+				$links['users'] = array(
+					'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/users',
+					'embeddable' => true,
+				);
+			}
+
+			if ( ! empty( $links ) ) {
+				$response->add_links( $links );
 			}
 
 			return $response;
@@ -530,9 +525,9 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V2' ) ) && ( class_exists( 'L
 					'post_id' => $post->ID,
 				);
 
-				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
 					$this->_get['templateLoad']   = 'yes';
-					$this->_get['templateLoadId'] = absint( $_GET['templateLoadId'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$this->_get['templateLoadId'] = $_GET['templateLoadId'];
 				}
 
 				$pro_quiz            = new WpProQuiz_Controller_Quiz();

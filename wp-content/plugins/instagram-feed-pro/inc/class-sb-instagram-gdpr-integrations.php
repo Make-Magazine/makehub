@@ -74,9 +74,6 @@ class SB_Instagram_GDPR_Integrations {
 	 * @return bool
 	 */
 	public static function doing_gdpr( $settings ) {
-		if( isset( $settings['customizer'] ) &&  sbi_doing_customizer( $settings ) ){
-			return false;
-		}
 		$gdpr = isset( $settings['gdpr'] ) ? $settings['gdpr'] : 'auto';
 		if ( $gdpr === 'no' ) {
 			return false;

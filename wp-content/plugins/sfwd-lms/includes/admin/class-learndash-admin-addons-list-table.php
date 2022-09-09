@@ -77,7 +77,7 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		public $orderby = 'last_updated';
 
 		/**
-		 * Array of tabs.
+		 * Arrya of tabs.
 		 *
 		 * @var array $tabs
 		 */
@@ -118,8 +118,8 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 				),
 			);
 
-			if ( ( isset( $_GET['tab'] ) ) && ( ! empty( $_GET['tab'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$current_tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( isset( $_GET['tab'] ) ) && ( ! empty( $_GET['tab'] ) ) ) {
+				$current_tab = esc_attr( $_GET['tab'] );
 				if ( isset( $this->tabs[ $current_tab ] ) ) {
 					$this->current_tab = $current_tab;
 				}
@@ -198,13 +198,13 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 
 			$args['tag'] = sanitize_title_with_dashes( 'LearnDash' );
 
-			$api = plugins_api( 'query_plugins', $args ); // @phpstan-ignore-line
+			$api = plugins_api( 'query_plugins', $args );
 
 			if ( is_wp_error( $api ) ) {
 				return;
 			}
 
-			$this->items = $api->plugins; // @phpstan-ignore-line
+			$this->items = $api->plugins;
 			if ( ! empty( $this->items ) ) {
 				foreach ( $this->items as $idx => $item ) {
 					if ( 'wplms-learndash-migration' === $item['slug'] ) {
@@ -219,7 +219,7 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 
 			$this->set_pagination_args(
 				array(
-					'total_items' => $api->info['results'], // @phpstan-ignore-line
+					'total_items' => $api->info['results'],
 					'per_page'    => $args['per_page'],
 				)
 			);
@@ -254,7 +254,7 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 
 		/**
 		 * Order items callback
-		 * The function compare two items based on $orderby
+		 * The function compars two items based on $orderby
 		 *
 		 * @since 3.2.0
 		 *
@@ -310,7 +310,7 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		 * @since 2.5.5
 		 */
 		public function display_rows_learndash() {
-			$plugins_allowed_tags = array(
+			$plugins_allowedtags = array(
 				'a'       => array(
 					'href'   => array(),
 					'title'  => array(),
@@ -329,20 +329,22 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 				'br'      => array(),
 			);
 
+			$group = null;
+
 			foreach ( (array) $this->items as $plugin ) {
 				if ( is_object( $plugin ) ) {
 					$plugin = (array) $plugin;
 				}
 
-				$title = wp_kses( $plugin['name'], $plugins_allowed_tags );
+				$title = wp_kses( $plugin['name'], $plugins_allowedtags );
 
 				// Remove any HTML from the description.
 				$description = wp_strip_all_tags( $plugin['short_description'] );
-				$version     = wp_kses( $plugin['version'], $plugins_allowed_tags );
+				$version     = wp_kses( $plugin['version'], $plugins_allowedtags );
 
 				$name = wp_strip_all_tags( $title . ' ' . $version );
 
-				$author = wp_kses( $plugin['author'], $plugins_allowed_tags );
+				$author = wp_kses( $plugin['author'], $plugins_allowedtags );
 				if ( ! empty( $author ) ) {
 					$author = ' <cite>' . sprintf(
 						// translators: placeholder Author.
@@ -445,7 +447,9 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 					</div>
 					<div class="action-links">
 						<?php
+						if ( $action_links ) {
 							echo '<ul class="plugin-action-buttons"><li>' . implode( '</li><li>', $action_links ) . '</li></ul>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. Elements escaped when defined.
+						}
 						?>
 					</div>
 					<div class="desc column-description">
@@ -489,6 +493,11 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 			</div>
 				<?php
 			}
+
+			// Close off the group divs of the last one.
+			if ( ! empty( $group ) ) {
+				echo '</div></div>';
+			}
 		}
 
 		/**
@@ -499,7 +508,6 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		 * @param string $which Filter.
 		 */
 		protected function display_tablenav( $which ) {
-			// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
 			// Empty function.
 		}
 
@@ -575,8 +583,8 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		public function show_update_button() {
 			$page_url = add_query_arg(
 				array(
-					'page'       => isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					'repo_reset' => 1,
+					'page'       => esc_attr( $_GET['page'] ),
+					'repo_reset' => '1',
 				),
 				'admin.php'
 			);

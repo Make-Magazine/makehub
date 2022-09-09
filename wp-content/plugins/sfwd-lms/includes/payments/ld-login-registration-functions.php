@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function learndash_registration_output( $attr = array() ) {
 
 	$attr_defaults = array(
-		'width' => 0,
+		'width' => 0
 	);
 	$attr          = shortcode_atts( $attr_defaults, $attr );
 
@@ -64,205 +64,41 @@ function learndash_registration_output( $attr = array() ) {
 		 */
 		do_action( 'learndash_registration_successful_after' );
 	}
+	if ( isset( $_GET['ld_register_id'] ) && '0' < $_GET['ld_register_id'] ) {
+			$register_id = absint( $_GET['ld_register_id'] );
+			echo '<div class="order-overview"><p class="order-overview-title">' . esc_html__( 'Order Overview', 'learndash' ) . '</p>';
+			echo '<p class="purchase-title">' . esc_html( get_the_title( $register_id ) ) . '</p>';
 
-	if ( isset( $_GET['ld_register_id'] ) && '0' < $_GET['ld_register_id'] ) :
-		$register_id = absint( $_GET['ld_register_id'] );
+			$post_type = get_post_type( $register_id );
 
-		$post_type = get_post_type( $register_id );
-
-		if ( LDLMS_Post_Types::get_post_type_slug( 'course' ) === $post_type ) {
+		if ( learndash_get_post_type_slug( 'course' ) === $post_type ) {
 			$course_pricing = learndash_get_course_price( $register_id );
 		} elseif ( learndash_get_post_type_slug( 'group' ) === $post_type ) {
 			$course_pricing = learndash_get_group_price( $register_id );
-		} else {
-			esc_html_e( 'Invalid Course or Group', 'learndash' );
-			return;
 		}
 
-		$course_pricing['price'] = learndash_get_price_as_float( $course_pricing['price'] );
-
-		if ( ! empty( $course_pricing['trial_price'] ) ) {
-			$course_pricing['trial_price'] = learndash_get_price_as_float( $course_pricing['trial_price'] );
-		}
-
-		$attached_coupon_data = array();
-		if ( is_user_logged_in() && learndash_post_has_attached_coupon( $register_id, get_current_user_id() ) ) {
-			$attached_coupon_data = learndash_get_attached_coupon_data( $register_id, get_current_user_id() );
-		}
-		?>
-
-		<div class="order-overview">
-			<p class="order-heading">
-				<?php esc_html_e( 'Order Overview', 'learndash' ); ?>
-			</p>
-
-			<p class="purchase-title">
-				<?php echo esc_html( get_the_title( $register_id ) ); ?>
-			</p>
-
-			<?php if ( 'paynow' === $course_pricing['type'] && is_user_logged_in() ) : ?>
-				<div id="coupon-alerts">
-					<div class="coupon-alert coupon-alert-success" style="display: none">
-						<?php
-						learndash_get_template_part(
-							'modules/alert.php',
-							array(
-								'type'    => 'success',
-								'icon'    => 'alert',
-								'message' => ' ',
-							),
-							true
-						);
-						?>
-					</div>
-					<div class="coupon-alert coupon-alert-warning" style="display: none">
-						<?php
-						learndash_get_template_part(
-							'modules/alert.php',
-							array(
-								'type'    => 'warning',
-								'icon'    => 'alert',
-								'message' => ' ',
-							),
-							true
-						);
-						?>
-					</div>
-				</div>
-			<?php endif; ?>
-
-			<div class="purchase-rows">
-				<?php if ( 'subscribe' === $course_pricing['type'] && ! empty( $course_pricing['trial_interval'] ) && ! empty( $course_pricing['trial_frequency'] ) ) : ?>
-					<div class="purchase-row">
-						<span class="purchase-label">
-							<?php esc_html_e( 'Trial', 'learndash' ); ?>
-						</span>
-
-						<span class="purchase-field-price">
-							<?php echo esc_html( learndash_get_price_formatted( $course_pricing['trial_price'] ? $course_pricing['trial_price'] : 0 ) ); ?>
-
-							<?php echo esc_html__( ' for ', 'learndash' ) . absint( $course_pricing['trial_interval'] ) . ' ' . esc_html( $course_pricing['trial_frequency'] ); ?>
-						</span>
-					</div>
-				<?php endif; ?>
-
-				<div class="purchase-row" id="price-row">
-					<span class="purchase-label">
-						<?php esc_html_e( 'Price', 'learndash' ); ?>
-					</span>
-
-					<span class="purchase-value">
-						<?php
-						echo esc_html(
-							( 'free' === $course_pricing['type'] || 'open' === $course_pricing['type'] )
-								? __( 'Free', 'learndash' )
-								: learndash_get_price_formatted( $course_pricing['price'] )
-						);
-
-						if ( ! empty( $course_pricing['interval'] ) ) {
-							echo esc_html__( ' every ', 'learndash' ) . absint( $course_pricing['interval'] ) . ' ' . esc_html( $course_pricing['frequency'] );
-
-							if ( ! empty( $course_pricing['repeats'] ) ) {
-								echo esc_html__( ' for ', 'learndash' ) . absint( $course_pricing['interval'] ) * absint( $course_pricing['repeats'] ) . ' ' . esc_html( $course_pricing['repeat_frequency'] );
-							}
-						}
-						?>
-					</span>
-				</div>
-			</div>
-
-			<?php if ( 'paynow' === $course_pricing['type'] && is_user_logged_in() ) : ?>
-				<?php if ( learndash_active_coupons_exist() ) : ?>
-					<form
-						class="coupon-form"
-						id="apply-coupon-form"
-						data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-coupon-nonce' ) ); ?>"
-						data-post-id="<?php echo esc_attr( $register_id ); ?>"
-					>
-						<input type="text" id="coupon-field" placeholder="<?php esc_html_e( 'Coupon', 'learndash' ); ?>" />
-						<input type="submit" value="<?php esc_html_e( 'Apply Coupon', 'learndash' ); ?>" />
-					</form>
-				<?php endif; ?>
-
-				<div class="totals" id="totals" style="display: <?php echo ! empty( $attached_coupon_data ) ? 'block' : 'none'; ?>">
-					<span class="order-heading">
-						<?php esc_html_e( 'Totals', 'learndash' ); ?>
-					</span>
-
-					<div class="purchase-rows">
-						<div class="purchase-row" id="subtotal-row">
-							<span class="purchase-label">
-								<?php esc_html_e( 'Subtotal', 'learndash' ); ?>
-							</span>
-							<span class="purchase-value">
-								<?php echo esc_html( learndash_get_price_formatted( $course_pricing['price'] ) ); ?>
-							</span>
-						</div>
-
-						<div
-							class="purchase-row"
-							id="coupon-row"
-							style="<?php echo esc_attr( empty( $attached_coupon_data ) ? 'display: none' : '' ); ?>"
-						>
-							<span class="purchase-label">
-								<?php esc_html_e( 'Coupon: ', 'learndash' ); ?>
-								<span>
-									<?php
-									if ( ! empty( $attached_coupon_data ) ) {
-										echo esc_html( $attached_coupon_data[ LEARNDASH_COUPON_META_KEY_CODE ] );
-									}
-									?>
-								</span>
-							</span>
-							<span class="purchase-value">
-								<form
-									id="remove-coupon-form"
-									data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-coupon-nonce' ) ); ?>"
-									data-post-id="<?php echo esc_attr( $register_id ); ?>"
-								>
-									<span>
-										<?php
-										if ( ! empty( $attached_coupon_data ) ) {
-											echo esc_html( learndash_get_price_formatted( floatval( $attached_coupon_data['discount'] ) ) );
-										}
-										?>
-									</span>
-									<input type="submit" class="button-small" value="<?php esc_html_e( 'Remove', 'learndash' ); ?>" />
-								</form>
-							</span>
-						</div>
-
-						<?php
-						/** This filter is documented in includes/payments/class-learndash-stripe-connect-checkout-integration.php */
-						$total = apply_filters( 'learndash_get_price_by_coupon', floatval( $course_pricing['price'] ), $register_id, get_current_user_id() );
-						?>
-
-						<div class="purchase-row" id="total-row" data-total="<?php echo esc_attr( $total ); ?>">
-							<span class="purchase-label">
-								<?php esc_html_e( 'Total', 'learndash' ); ?>
-							</span>
-							<span class="purchase-value">
-								<?php
-								echo esc_html( learndash_get_price_formatted( $total ) );
-								?>
-							</span>
-						</div>
-					</div>
-				</div>
-			<?php endif; ?>
-
-			<?php
-			if ( isset( $_GET['ld-registered'] ) || is_user_logged_in() ) {
-				echo learndash_payment_buttons( $register_id );
+		if ( 'subscribe' === $course_pricing['type'] && ! empty( $course_pricing['trial_price'] ) ) {
+			echo '<p class="purchase-trial"><span class="purchase-trial-text purchase-field-text">' . esc_html__( 'Trial', 'learndash' ) . '</span><span class="purchase-trial-price purchase-field-price"> ' . wp_kses_post( learndash_30_get_currency_symbol() ) . wp_kses_post( $course_pricing['trial_price'] );
+			if ( ! empty( $course_pricing['trial_interval'] ) ) {
+				echo esc_html__( ' for ', 'learndash' ) . absint( $course_pricing['trial_interval'] ) . ' ' . esc_html( $course_pricing['trial_frequency'] ) . '</span></p>';
 			}
+		}
 
+		echo '<p class="purchase-price"><span class="purchase-price-text purchase-field-text">' . esc_html__( 'Price', 'learndash' ) . '</span><span class="purchase-price-price purchase-field-price">' . wp_kses_post( learndash_30_get_currency_symbol() ) . wp_kses_post( $course_pricing['price'] );
+
+		if ( ! empty( $course_pricing['interval'] ) ) {
+			echo esc_html__( ' every ', 'learndash' ) . absint( $course_pricing['interval'] ) . ' ' . esc_html( $course_pricing['frequency'] );
+			if ( ! empty( $course_pricing['repeats'] ) ) {
+				echo esc_html__( ' for ', 'learndash' ) . absint( $course_pricing['repeats'] ) . ' ' . esc_html( $course_pricing['repeat_frequency'] ) . '</p>';
+			}
+		}
+		if ( isset( $_GET['ld-registered'] ) || is_user_logged_in() ) {
+			echo learndash_payment_buttons( $register_id );
+		}
 			// translators: placeholder: Return to Course/Group.
-			echo '<span class="order-overview-return">' . sprintf( esc_html_x( 'Return to %s', 'placeholder: Return to Course/Group.', 'learndash' ), '<a href="' . esc_html( get_permalink( absint( $_GET['ld_register_id'] ) ) ) . '">' . esc_html( get_the_title( absint( $_GET['ld_register_id'] ) ) ) . '</a></p>' );
-			?>
-		</div>
-	<?php endif; ?>
-
-	<?php
+			echo '<p class="order-overview-return">' . sprintf( esc_html_x( 'Return to %s', 'placeholder: Return to Course/Group.', 'learndash' ), '<a href="' . esc_html( get_permalink( absint( $_GET['ld_register_id'] ) ) ) . '">' . esc_html( get_the_title( absint( $_GET['ld_register_id'] ) ) ) . '</a></p>' );
+			echo '</div>';
+	}
 	if ( ( isset( $_REQUEST['attributes']['preview_show'] ) && 'true' === sanitize_text_field( $_REQUEST['attributes']['preview_show'] ) ) || ! is_user_logged_in() ) {
 		// translators: placeholder: Message above registration form if user logged out.
 		echo '<p class="registration-login-link">' . sprintf( esc_html_x( 'Already have an account? %s', 'placeholder: Message above registration form if user logged out.', 'learndash' ), '<a href="' . esc_url( learndash_get_login_url() ) . '">' . esc_html__( 'Log In', 'learndash' ) . '</a>' ) . '</p>';
@@ -378,10 +214,10 @@ function learndash_registration_output( $attr = array() ) {
 
 				$learndash_redirect_to_url = remove_query_arg( array_keys( $learndash_errors_conditions ), get_permalink() );
 				if ( ! is_multisite() ) {
-					// $ld_registration_success = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration_success' );
-					// if ( ! empty( $ld_registration_success ) && ( ! isset( $_GET['ld_register_id'] ) || '0' === $_GET['ld_register_id'] ) ) {
-					// $learndash_redirect_to_url = get_permalink( $ld_registration_success );
-					// }
+					//$ld_registration_success = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration_success' );
+					//if ( ! empty( $ld_registration_success ) && ( ! isset( $_GET['ld_register_id'] ) || '0' === $_GET['ld_register_id'] ) ) {
+					//	$learndash_redirect_to_url = get_permalink( $ld_registration_success );
+					//}
 					$learndash_redirect_to_url = add_query_arg(
 						array(
 							'ld-registered'  => 'true',
@@ -549,13 +385,6 @@ function learndash_emails_content_new_user( $wp_new_user_notification_email = ''
 
 		if ( 'text/html' === $email_setting['content_type'] ) {
 			$wp_new_user_notification_email['headers'] = 'Content-Type: ' . $email_setting['content_type'] . ' charset=' . get_option( 'blog_charset' );
-
-			add_filter(
-				'wp_mail_content_type',
-				function() {
-					return 'text/html';
-				}
-			);
 		}
 	}
 	return $wp_new_user_notification_email;
@@ -572,12 +401,11 @@ function learndash_registration_form_validate( $errors, $sanitized_user_login, $
 	if ( isset( $_POST['ld_register_id'] ) ) {
 		if ( ( isset( $_POST['learndash-registration-form'] ) ) && ( wp_verify_nonce( $_POST['learndash-registration-form'], 'learndash-registration-form' ) ) ) {
 			$learndash_registration_fields = LearnDash_Settings_Section_Registration_Fields::get_section_settings_all();
-
-			$first_name                    = '';
+			$first_name = '';
 			if ( isset( $_POST['first_name'] ) ) {
 				$first_name = sanitize_text_field( $_POST['first_name'] );
 			}
-			if ( 'yes' === $learndash_registration_fields['first_name_enabled'] && 'yes' === $learndash_registration_fields['first_name_required'] && empty( $first_name ) ) {
+			if ( 'yes' === $learndash_registration_fields['first_name_required'] && empty( $first_name ) ) {
 				$errors->add( 'required_first_name', __( 'Registration requires a first name.', 'learndash' ) );
 			}
 
@@ -585,14 +413,14 @@ function learndash_registration_form_validate( $errors, $sanitized_user_login, $
 			if ( isset( $_POST['last_name'] ) ) {
 				$last_name = sanitize_text_field( $_POST['last_name'] );
 			}
-			if ( 'yes' === $learndash_registration_fields['last_name_enabled'] && 'yes' === $learndash_registration_fields['last_name_required'] && empty( $last_name ) ) {
+			if ( 'yes' === $learndash_registration_fields['last_name_required'] && empty( $last_name ) ) {
 				$errors->add( 'required_last_name', __( 'Registration requires a last name.', 'learndash' ) );
 			}
 
 			$password  = '';
 			$cpassword = '';
 			if ( isset( $_POST['password'] ) ) {
-				$password = sanitize_text_field( $_POST['password'] );
+				$password  = sanitize_text_field( $_POST['password'] );
 			}
 			if ( 'yes' === $learndash_registration_fields['password_required'] && empty( $password ) ) {
 				$errors->add( 'empty_password', __( 'Registration requires a password.', 'learndash' ) );
@@ -601,6 +429,9 @@ function learndash_registration_form_validate( $errors, $sanitized_user_login, $
 				$cpassword = sanitize_text_field( $_POST['confirm_password'] );
 			}
 
+			if ( 'yes' === $learndash_registration_fields['confirm_password_required'] && empty( $cpassword ) ) {
+				$errors->add( 'empty_password', __( 'Registration requires a password.', 'learndash' ) );
+			}
 			if ( $password !== $cpassword ) {
 				$errors->add( 'confirm_password', __( 'Passwords do not match.', 'learndash' ) );
 			}
@@ -619,7 +450,7 @@ add_filter( 'registration_errors', 'learndash_registration_form_validate', 10, 3
  * @return int|false $course_id Valid course_id if valid otherwise false.
  */
 function learndash_validation_registration_form_redirect_to() {
-	if ( ( isset( $_POST['learndash-registration-form'] ) ) && ( wp_verify_nonce( $_POST['learndash-registration-form'], 'learndash-registration-form' ) ) || ( isset( $_POST['learndash-login-form'] ) ) && ( wp_verify_nonce( $_POST['learndash-login-form'], 'learndash-login-form' ) ) ) {
+	if ( ( isset( $_POST['learndash-registration-form'] ) ) && ( wp_verify_nonce( $_POST['learndash-registration-form'], 'learndash-registration-form' ) ) ) {
 		if ( ( isset( $_POST['redirect_to'] ) ) && ( ! empty( $_POST['redirect_to'] ) ) ) {
 			return esc_url_raw( $_POST['redirect_to'] );
 		}

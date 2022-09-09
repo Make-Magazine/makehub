@@ -10,7 +10,7 @@
  * @var int    $question_count Number of Question to display.
  * @var array  $result         Array of Quiz Result Messages.
  *
- * @since 3.2.0
+ * @since 3.2
  *
  * @package LearnDash\Templates\Legacy\Quiz
  */

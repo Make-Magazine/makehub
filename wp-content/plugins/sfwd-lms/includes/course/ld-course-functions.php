@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param  WP_Post|int|null $id        Optional. ID of the resource. Default null.
  * @param  boolean          $bypass_cb Optional. If true will bypass course_builder logic. Default false.
  *
- * @return int|bool ID of the course.
+ * @return string ID of the course.
  */
 function learndash_get_course_id( $id = null, $bypass_cb = false ) {
 	if ( is_object( $id ) && $id->ID ) {
@@ -260,39 +260,9 @@ function learndash_get_course_prerequisites( $post_id = 0, $user_id = 0 ) {
  * @return array An array of course prerequisite.
  */
 function learndash_get_course_prerequisite( $course_id = 0 ) {
-	$course_pre = array();
-
-	if ( ! empty( $course_id ) ) {
-		$transient_key        = 'learndash_course_pre_' . $course_id;
-		$course_pre_transient = LDLMS_Transients::get( $transient_key );
-
-		if ( false !== $course_pre_transient ) {
-			$course_pre = (array) $course_pre_transient;
-		} else {
-			$course_pre = learndash_get_setting( $course_id, 'course_prerequisite' );
-			if ( empty( $course_pre ) ) {
-				$course_pre = array();
-			}
-			$course_pre = array_map( 'absint', $course_pre );
-			$course_pre = array_diff( $course_pre, array( 0 ) ); // Removes zeros.
-			if ( ! empty( $course_pre ) ) {
-				$post_status = learndash_get_step_post_statuses();
-
-				$course_pre_query_args = array(
-					'post_type'   => learndash_get_post_type_slug( 'course' ),
-					'nopaging'    => true,
-					'post_status' => array_keys( $post_status ),
-					'fields'      => 'ids',
-					'post__in'    => $course_pre,
-				);
-
-				$course_pre_query = new WP_Query( $course_pre_query_args );
-				if ( ( is_a( $course_pre_query, 'WP_Query' ) ) && ( property_exists( $course_pre_query, 'posts' ) ) && ( ! empty( $course_pre_query->posts ) ) ) {
-					$course_pre = $course_pre_query->posts;
-					LDLMS_Transients::set( $transient_key, $course_pre, HOUR_IN_SECONDS );
-				}
-			}
-		}
+	$course_pre = learndash_get_setting( $course_id, 'course_prerequisite' );
+	if ( empty( $course_pre ) ) {
+		$course_pre = array();
 	}
 
 	return $course_pre;
@@ -303,23 +273,19 @@ function learndash_get_course_prerequisite( $course_id = 0 ) {
  *
  * @since 2.4.4
  *
- * @param int   $course_id  Optional. ID of the course. Default 0.
- * @param array $course_pre Optional. An array of course prerequisites. Default empty array.
+ * @param int   $course_id            Optional. ID of the course. Default 0.
+ * @param array $course_prerequisites Optional. An array of course prerequisites. Default empty array.
  *
  * @return boolean Returns true if update was successful otherwise false.
  */
-function learndash_set_course_prerequisite( $course_id = 0, $course_pre = array() ) {
+function learndash_set_course_prerequisite( $course_id = 0, $course_prerequisites = array() ) {
 	if ( ! empty( $course_id ) ) {
-		if ( ( ! empty( $course_pre ) ) && ( is_array( $course_pre ) ) ) {
-			$course_pre = array_unique( $course_pre );
+		if ( ( ! empty( $course_prerequisites ) ) && ( is_array( $course_prerequisites ) ) ) {
+			$course_prerequisites = array_unique( $course_prerequisites );
 		}
 
-		$transient_key        = 'learndash_course_pre_' . $course_id;
-		$course_pre_transient = LDLMS_Transients::delete( $transient_key );
-
-		return learndash_update_setting( $course_id, 'course_prerequisite', $course_pre );
+		return learndash_update_setting( $course_id, 'course_prerequisite', (array) $course_prerequisites );
 	}
-
 	return false;
 }
 
@@ -587,7 +553,7 @@ function learndash_process_course_join() {
 			}
 		}
 
-		if ( 'free' === $settings['group_price_type'] || 'paynow' === $settings['group_price_type'] && empty( $settings['group_price'] ) && ! empty( $_POST['group_join'] ) || learndash_is_user_in_group( $user_id, $post_id ) ) {
+		if ( 'free' === $settings['group_price_type'] || 'paynow' === $settings['group_price_type'] && empty( $settings['group_price'] ) && ! empty( $settings['group_join'] ) || learndash_is_user_in_group( $user_id, $post_id ) ) {
 			ld_update_group_access( $user_id, $post_id );
 		}
 	} elseif ( learndash_get_post_type_slug( 'course' ) === get_post_type( $post_id ) ) {
@@ -884,31 +850,26 @@ function learndash_get_page_by_path( $slug = '', $post_type = '' ) {
 function learndash_get_course_lessons_per_page( $course_id = 0 ) {
 	$course_lessons_per_page = 0;
 
-	// From the WP > Settings > Reading > Posts per page.
-	$course_lessons_per_page = (int) get_option( 'posts_per_page' );
-
-	// From the LearnDash > Settings > General > Global Pagination Settings > Shortcodes & Widgets per page.
-	$course_lessons_per_page = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page', $course_lessons_per_page );
-
-	// From the LearnDash > Courses > Settings > Global Course Management > Course Table Pagination > Lessons per page.
-	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
-	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
-		if ( isset( $course_settings['course_pagination_lessons'] ) ) {
-			$course_lessons_per_page = $course_settings['course_pagination_lessons'];
-		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
-			$course_lessons_per_page = $course_settings['posts_per_page'];
-		}
+	$lessons_options = learndash_get_option( 'sfwd-lessons' );
+	if ( isset( $lessons_options['posts_per_page'] ) ) {
+		$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
 	}
 
-	// From the specific Course Settings > Custom Pagination.
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
+
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_lesson_per_page_custom'] ) ) ) {
-			$course_lessons_per_page = $course_settings['course_lesson_per_page_custom'];
+			$course_lessons_per_page = intval( $course_settings['course_lesson_per_page_custom'] );
+		} else {
+			if ( ( ! isset( $lessons_options['posts_per_page'] ) ) || ( is_null( $lessons_options['posts_per_page'] ) ) ) {
+				$course_lessons_per_page = get_option( 'posts_per_page' );
+			} else {
+				$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+			}
 		}
 	}
 
-	return absint( $course_lessons_per_page );
+	return $course_lessons_per_page;
 }
 
 /**
@@ -997,11 +958,7 @@ function learndash_process_lesson_topics_pager( $topics = array(), $args = array
 	$paged_values = learndash_get_lesson_topic_paged_values();
 
 	if ( ! empty( $topics ) ) {
-		if ( ! isset( $args['per_page'] ) ) {
-			$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
-		} else {
-			$topics_per_page = intval( $args['per_page'] );
-		}
+		$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
 		if ( ( $topics_per_page > 0 ) && ( count( $topics ) > $topics_per_page ) ) {
 			$topics_chunks = array_chunk( $topics, $topics_per_page );
 
@@ -1125,8 +1082,8 @@ function learndash_get_course_lessons_order( $course_id = 0 ) {
  *
  * @since 2.5.9
  *
- * @param string|array $course_access_list Optional. String of comma separated user IDs or array. Default empty.
- * @param boolean      $return_array       Optional. Whether to return array. True to return array and false to return string. Default false.
+ * @param string  $course_access_list Optional. String of comma separated user IDs. Default empty.
+ * @param boolean $return_array       Optional. Whether to return array. True to return array and false to return string. Default false.
  *
  * @return string|array The list of user IDs.
  */
@@ -1169,27 +1126,16 @@ function learndash_convert_course_access_list( $course_access_list = '', $return
 function learndash_get_course_topics_per_page( $course_id = 0, $lesson_id = 0 ) {
 	$course_topics_per_page = 0;
 
-	// From the WP > Settings > Reading > Posts per page.
-	$course_topics_per_page = (int) get_option( 'posts_per_page' );
-
-	// From the LearnDash > Settings > General > Global Pagination Settings > Shortcodes & Widgets per page.
-	$course_topics_per_page = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page', $course_topics_per_page );
-
-	// From the LearnDash > Courses > Settings > Global Course Management > Course Table Pagination > Lessons per page.
-	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
-	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
-		if ( isset( $course_settings['course_pagination_topics'] ) ) {
-			$course_topics_per_page = absint( $course_settings['course_pagination_topics'] );
-		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
-			$course_topics_per_page = absint( $course_settings['posts_per_page'] );
-		}
+	$lessons_options = learndash_get_option( 'sfwd-lessons' );
+	if ( isset( $lessons_options['posts_per_page'] ) ) {
+		$course_topics_per_page = intval( $lessons_options['posts_per_page'] );
 	}
 
-	// From the specific Course Settings > Custom Pagination.
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
+
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_topic_per_page_custom'] ) ) ) {
-			$course_topics_per_page = absint( $course_settings['course_topic_per_page_custom'] );
+			$course_topics_per_page = intval( $course_settings['course_topic_per_page_custom'] );
 		}
 	}
 
@@ -1516,59 +1462,4 @@ function learndash_post_meta_processed( $post_type = '' ) {
 		return apply_filters( 'learndash_post_meta_processed', $post_meta_processed, $post_type );
 	}
 	return false;
-}
-
-/**
- * Returns true if it's a course post.
- *
- * @param WP_Post|int|null $post Post or Post ID.
- *
- * @since 4.1.0
- *
- * @return bool
- */
-function learndash_is_course_post( $post ): bool {
-	if ( empty( $post ) ) {
-		return false;
-	}
-
-	$post_type = is_a( $post, WP_Post::class ) ? $post->post_type : get_post_type( $post );
-
-	return LDLMS_Post_Types::get_post_type_slug( 'course' ) === $post_type;
-}
-
-/**
- * Returns course enrollment url.
- *
- * @param WP_Post|int|null $post Post or Post ID.
- *
- * @since 4.1.0
- *
- * @return string
- */
-function learndash_get_course_enrollment_url( $post ): string {
-	if ( empty( $post ) ) {
-		return '';
-	}
-
-	if ( is_int( $post ) ) {
-		$post = get_post( $post );
-
-		if ( is_null( $post ) ) {
-			return '';
-		}
-	}
-
-	$url = get_permalink( $post );
-
-	$settings = learndash_get_setting( $post );
-
-	if ( 'paynow' === $settings['course_price_type'] && ! empty( $settings['course_price_type_paynow_enrollment_url'] ) ) {
-		$url = $settings['course_price_type_paynow_enrollment_url'];
-	} elseif ( 'subscribe' === $settings['course_price_type'] && ! empty( $settings['course_price_type_subscribe_enrollment_url'] ) ) {
-		$url = $settings['course_price_type_subscribe_enrollment_url'];
-	}
-
-	/** This filter is documented in includes/course/ld-course-functions.php */
-	return apply_filters( 'learndash_course_join_redirect', $url, $post->ID );
 }

@@ -3,7 +3,7 @@
 	<div class="cff-preview-header-visual cff-fb-fs" v-if="customizerFeedData.settings.headertype == 'visual'">
 		<div class="cff-preview-header-cover cff-fb-fs" v-if="valueIsEnabled(customizerFeedData.settings.headercover)">
 			<img v-if="hasOwnNestedProperty(customizerFeedData,  'header.cover.source')" :src="customizerFeedData.header.cover.source">
-			<div class="cff-preview-header-likebox" v-if="valueIsEnabled(customizerFeedData.settings.headerbio) && customizerFeedData.header.fan_count > 0">
+			<div class="cff-preview-header-likebox" v-if="valueIsEnabled(customizerFeedData.settings.headerbio)">
 				<div v-html="svgIcons['facebook']"></div>
 				<span>{{customizerFeedData.header.fan_count}}</span>
 			</div>

@@ -11,7 +11,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
-use InstagramFeed\SB_Instagram_Data_Encryption;
 
 class SB_Instagram_Connected_Account {
 

@@ -285,6 +285,7 @@ class CFF_Cache {
 	 */
 	public function update_or_insert( $cache_type, $cache_value, $include_backup = true, $cron_update = true ) {
 		$this->clear_wp_cache();
+
 		if ( $this->page > 1 || ($cache_type !== 'posts' && $cache_type !== 'header') ) {
 			$cron_update = false;
 		}
@@ -574,22 +575,5 @@ class CFF_Cache {
 		}
 
 		return $decrypted;
-	}
-
-	/**
-	 * Delete Backup caches
-	 *
-	 * @param $value
-	 *
-	 * @return bool|string
-	 */
-	public function delete_backup( ) {
-		global $wpdb;
-		$table_name = $wpdb->prefix . "options";
-		$wpdb->query( "
-	        DELETE
-	        FROM $table_name
-	        WHERE `option_name` LIKE ('%cff_backup%')
-        " );
 	}
 }

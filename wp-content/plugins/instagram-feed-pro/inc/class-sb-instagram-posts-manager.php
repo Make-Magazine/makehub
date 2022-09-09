@@ -63,10 +63,6 @@ class SB_Instagram_Posts_Manager {
 		if ( $this->does_resizing_tables_exist() ) {
 			$this->resizing_tables_exist = true;
 		}
-
-		require_once( trailingslashit( dirname( __FILE__ ) ) . '/Platform_Data.php' );
-		$platform_data_manager = new \InstagramFeed\Platform_Data();
-		$platform_data_manager->register_hooks();
 	}
 
 	/**
@@ -140,14 +136,7 @@ class SB_Instagram_Posts_Manager {
 						$this->errors['revoked'][] = $connected_account['user_id'];
 					}
 
-					/**
-					 * Fires when an app permission related error is encountered
-					 *
-					 * @param array $connected_account The connected account that encountered the error
-					 *
-					 * @since INSTA_FEED_PRO_SINCE
-					 */
-					do_action( 'sbi_app_permission_revoked', $connected_account );
+					$this->delete_platform_data( $connected_account );
 				}
 			} elseif ( isset( $details['response'] ) && is_wp_error( $details['response'] ) ) {
 				foreach ( $details['response']->errors as $key => $item ) {
@@ -220,16 +209,6 @@ class SB_Instagram_Posts_Manager {
 		if ( $type === 'upload_dir' ) {
 			$this->errors['upload_dir'] = $details;
 			$log_item                  .= $details;
-		}
-
-		if ( $type === 'unused_feed' ) {
-			$this->errors['unused_feed'] = $details;
-			$log_item                    .= $details;
-		}
-
-		if ( $type === 'platform_data_deleted' ) {
-			$this->errors['platform_data_deleted'] = $details;
-			$log_item                              .= $details;
 		}
 
 		$current_log = $this->errors['error_log'];
@@ -377,7 +356,7 @@ class SB_Instagram_Posts_Manager {
 			return $error_message_return;
 		}
 		$hash = '#' . (int) $response['error']['code'];
-		$link = admin_url( 'admin.php?page=sbi-settings' );
+		$link = admin_url( '?page=sbi-settings' );
 
 		if ( isset( $response['error']['message'] ) ) {
 			if ( (int) $response['error']['code'] === 100 ) {
@@ -679,12 +658,6 @@ class SB_Instagram_Posts_Manager {
 	 * @param $hashtag
 	 */
 	public static function maybe_update_list_of_top_hashtags( $hashtag ) {
-		// The customizer has some quirks which prevent the top hashtag post request from being
-		// properly stored. So we force the plugin to make a top request outside of the customizer with
-		// this conditional
-		if ( is_admin() && isset( $_GET['feed_id'] ) ) {
-			return;
-		}
 		$list_of_top_hashtags = get_option( 'sbi_top_api_calls', array() );
 
 		if ( ! in_array( $hashtag, $list_of_top_hashtags, true ) ) {
@@ -1020,8 +993,6 @@ class SB_Instagram_Posts_Manager {
 			return '';
 		}
 		$accounts_revoked_string = '';
-		$accounts_revoked = '';
-
 		if ( $this->was_app_permission_related_error() ) {
 			$accounts_revoked = $this->get_app_permission_related_error_ids();
 			if ( count( $accounts_revoked ) > 1 ) {
@@ -1029,35 +1000,28 @@ class SB_Instagram_Posts_Manager {
 			} else {
 				$accounts_revoked = $accounts_revoked[0];
 			}
-			$accounts_revoked_string = sprintf( __( 'Instagram Feed related data for the account(s) %s was removed due to permission for the Smash Balloon App on Facebook or Instagram being revoked. <br><br> To prevent the automated data deletion for the account, please reconnect your account within 7 days.', 'instagram-feed' ), $accounts_revoked );
+			$accounts_revoked_string = sprintf( __( 'Instagram Feed related data for the account(s) %s was removed due to permission for the Smash Balloon App on Facebook or Instagram being revoked.', 'instagram-feed' ), $accounts_revoked );
 		}
 
 		if ( isset( $this->errors['connection']['critical'] ) ) {
 			$errors        = $this->get_errors();
 			$error_message = '';
 
-			if ( $errors['connection']['error_id'] === 190 ) {
-				$error_message .=  '<strong>' .  __( 'Action Required Within 7 Days', 'instagram-feed' ) . '</strong><br>';
-				$error_message .= __( 'An account admin has deauthorized the Smash Balloon app used to power the Instagram Feed plugin.', 'instagram-feed' );
-				$error_message .= ' ' . sprintf( __( 'If the Instagram account is not reconnected within 7 days then all Instagram data will be automatically deleted on your website for this account (ID: %s) due to Facebook data privacy rules.', 'instagram-feed' ), $accounts_revoked );
-				$error_message .= __( '<br><br>To prevent the automated data deletion for the account, please reconnect your account within 7 days.', 'instagram-feed' );
+			$error_message_array = $errors['connection']['error_message'];
+			$error_message      .= '<strong>' . $error_message_array['error_message'] . '</strong><br>';
+			$error_message      .= $error_message_array['admin_only'] . '<br><br>';
+			if ( ! empty( $accounts_revoked_string ) ) {
+				$error_message .= $accounts_revoked_string . '<br><br>';
+			}
+			if ( ! empty( $error_message_array['backend_directions'] ) ) {
+				$error_message .= $error_message_array['backend_directions'];
 			} else {
-				$error_message_array = $errors['connection']['error_message'];
-				$error_message      .= '<strong>' . $error_message_array['error_message'] . '</strong><br>';
-				$error_message      .= $error_message_array['admin_only'] . '<br><br>';
-				if ( ! empty( $accounts_revoked_string ) ) {
-					$error_message .= $accounts_revoked_string . '<br><br>';
+				$retry = '';
+				if ( is_admin() ) {
+					$retry = '<button data-url="'.get_the_permalink( $this->errors['connection']['post_id'] ).'" class="sbi-clear-errors-visit-page sbi-space-left sbi-btn sbi-notice-btn sbi-btn-grey">' . __( 'View Feed and Retry', 'instagram-feed' )  . '</button>';
 				}
-				if ( ! empty( $error_message_array['backend_directions'] ) ) {
-					$error_message .= $error_message_array['backend_directions'];
-				} else {
-					$retry = '';
-					if ( is_admin() ) {
-						$retry = '<button data-url="'.get_the_permalink( $this->errors['connection']['post_id'] ).'" class="sbi-clear-errors-visit-page sbi-space-left sbi-btn sbi-notice-btn sbi-btn-grey">' . __( 'View Feed and Retry', 'instagram-feed' )  . '</button>';
-					}
-					$hash           = isset( $errors['connection']['error_id'] ) ? '#' . (int) $errors['connection']['error_id'] : '';
-					$error_message .= '<div class="license-action-btns"><p class="sbi-error-directions"><a class="sbi-license-btn sbi-btn-blue sbi-notice-btn" href="https://smashballoon.com/instagram-feed/docs/errors/' . $hash . '" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>' . $retry. '</p></div>';
-				}
+				$hash           = isset( $errors['connection']['error_id'] ) ? '#' . (int) $errors['connection']['error_id'] : '';
+				$error_message .= '<div class="license-action-btns"><p class="sbi-error-directions"><a class="sbi-license-btn sbi-btn-blue sbi-notice-btn" href="https://smashballoon.com/instagram-feed/docs/errors/' . $hash . '" target="_blank" rel="noopener">' . __( 'Directions on how to resolve this issue', 'instagram-feed' ) . '</a>' . $retry. '</p></div>';
 			}
 		} else {
 			$connected_accounts = SB_Instagram_Connected_Account::get_all_connected_accounts();
@@ -1220,6 +1184,46 @@ class SB_Instagram_Posts_Manager {
 
 	public function get_app_permission_related_error_ids() {
 		return $this->errors['revoked'];
+	}
+
+
+	/**
+	 * Delete any data associated with the Instagram API and the
+	 * connected account being deleted.
+	 *
+	 * @param $to_delete_connected_account
+	 */
+	public function delete_platform_data( $to_delete_connected_account ) {
+
+		$are_other_business_accounts = false;
+		$all_connected_accounts      = SB_Instagram_Connected_Account::get_all_connected_accounts();
+
+		$to_update = array();
+		foreach ( $all_connected_accounts as $connected_account ) {
+			if ( (int) $connected_account['user_id'] !== (int) $to_delete_connected_account['user_id'] ) {
+				$to_update[ $connected_account['user_id'] ] = $connected_account;
+
+				if ( isset( $connected_account['type'] )
+				     && $connected_account['type'] === 'business' ) {
+					$are_other_business_accounts = true;
+				}
+			}
+		}
+
+		SB_Instagram_Connected_Account::update_connected_accounts( $to_update );
+
+		\InstagramFeed\Builder\SBI_Db::delete_source_by_account_id( $to_delete_connected_account['user_id'] );
+
+		$manager = new SB_Instagram_Data_Manager();
+
+		$manager->delete_caches();
+		$manager->delete_comments_data();
+
+		if ( empty( $to_update ) || ! $are_other_business_accounts ) {
+			$manager->delete_hashtag_data();
+		} else {
+			$manager->delete_non_hashtag_sbi_instagram_posts( $to_delete_connected_account['username'] );
+		}
 	}
 
 

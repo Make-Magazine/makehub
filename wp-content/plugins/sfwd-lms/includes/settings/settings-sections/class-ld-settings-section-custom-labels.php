@@ -57,7 +57,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			if ( ( isset( $_GET['action'] ) ) && ( 'ld_reset_settings' === $_GET['action'] ) && ( isset( $_GET['page'] ) ) && ( $_GET['page'] === $this->settings_page_id ) ) {
 				if ( ( isset( $_GET['ld_wpnonce'] ) ) && ( ! empty( $_GET['ld_wpnonce'] ) ) ) {
-					if ( wp_verify_nonce( $_GET['ld_wpnonce'], get_current_user_id() . '-' . $this->setting_option_key ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					if ( wp_verify_nonce( $_GET['ld_wpnonce'], get_current_user_id() . '-' . $this->setting_option_key ) ) {
 						if ( ! empty( $this->setting_option_values ) ) {
 							foreach ( $this->setting_option_values as $key => $val ) {
 								$this->setting_option_values[ $key ] = '';
@@ -184,22 +184,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['group_leader'] ) ? $this->setting_option_values['group_leader'] : '',
 					'class'     => 'regular-text',
 				),
-				'exam'                          => array(
-					'name'      => 'exam',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Challenge Exam', 'learndash' ),
-					'help_text' => esc_html__( 'Label to replace "challenge exam" (singular).', 'learndash' ),
-					'value'     => $this->setting_option_values['exam'] ?? '',
-					'class'     => 'regular-text',
-				),
-				'exams'                         => array(
-					'name'      => 'exams',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Challenge Exams', 'learndash' ),
-					'help_text' => esc_html__( 'Label to replace "challenge exams" (plural).', 'learndash' ),
-					'value'     => $this->setting_option_values['exams'] ?? '',
-					'class'     => 'regular-text',
-				),
 				'button_take_this_course'       => array(
 					'name'      => 'button_take_this_course',
 					'type'      => 'text',
@@ -222,14 +206,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'label'     => esc_html__( 'Mark Complete (Button)', 'learndash' ),
 					'help_text' => esc_html__( 'Label to replace "Mark Complete" button.', 'learndash' ),
 					'value'     => isset( $this->setting_option_values['button_mark_complete'] ) ? $this->setting_option_values['button_mark_complete'] : '',
-					'class'     => 'regular-text',
-				),
-				'button_mark_incomplete'        => array(
-					'name'      => 'button_mark_incomplete',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Mark Incomplete (Button)', 'learndash' ),
-					'help_text' => esc_html__( 'Label to replace "Mark Incomplete" button.', 'learndash' ),
-					'value'     => isset( $this->setting_option_values['button_mark_incomplete'] ) ? $this->setting_option_values['button_mark_incomplete'] : '',
 					'class'     => 'regular-text',
 				),
 				'button_click_here_to_continue' => array(
@@ -276,9 +252,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$old_values['group_leader'] = '';
 				}
 
-				if ( empty( $new_values['group_leader'] ) ) {
-					$new_values['group_leader'] = esc_html__( 'Group Leader', 'learndash' );
-				}
 				if ( $old_values['group_leader'] !== $new_values['group_leader'] ) {
 					$group_leader = get_role( 'group_leader' );
 					if ( ! is_null( $group_leader ) ) {

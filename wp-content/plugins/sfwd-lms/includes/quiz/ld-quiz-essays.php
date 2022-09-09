@@ -263,7 +263,6 @@ add_action( 'init', 'learndash_register_essay_post_status' );
  * @since 2.2.1
  */
 function learndash_essay_permissions() {
-
 	if ( is_singular( learndash_get_post_type_slug( 'essay' ) ) ) {
 		$can_view_file = false;
 
@@ -313,22 +312,6 @@ function learndash_essay_permissions() {
 			 * @param string $redirect_url Redirect URL.
 			 */
 			$redirect_to_url = apply_filters( 'learndash_essay_permissions_redirect_url', $redirect_to_url );
-			if ( ! empty( $redirect_to_url ) ) {
-				learndash_safe_redirect( $redirect_to_url );
-			}
-		}
-	} elseif ( ( is_home() ) || ( is_front_page() ) ) {
-		/**
-		 * Prevents the user from forcing the query on the home page
-		 * with http://www.site.com?post_type=sfwd-essays to access an archive.
-		 *
-		 * It would be nice if this is controllable via WP register_post_type() settings.
-		 *
-		 *  See LEARNDASH-6389 for more details.
-		 */
-		if ( get_query_var( 'post_type', '' ) === learndash_get_post_type_slug( 'essay' ) ) {
-			// If this is an attempt we redirect them to the hme URL without the post_type query arg.
-			$redirect_to_url = get_bloginfo( 'url' );
 			if ( ! empty( $redirect_to_url ) ) {
 				learndash_safe_redirect( $redirect_to_url );
 			}

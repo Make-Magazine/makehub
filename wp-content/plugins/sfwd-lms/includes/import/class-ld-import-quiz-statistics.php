@@ -4,7 +4,8 @@
  *
  * This file contains functions to handle import of the LearnDash Quiz Statistics
  *
- * @package LearnDash\Import
+ * @package LearnDash
+ * @subpackage LearnDash
  * @since 1.0.0
  */
 

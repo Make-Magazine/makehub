@@ -21,7 +21,7 @@ use CustomFacebookFeed\Builder\CFF_Db;
 use CustomFacebookFeed\Builder\CFF_Feed_Builder;
 use CustomFacebookFeed\Builder\CFF_Source;
 use CustomFacebookFeed\Admin\Traits\CFF_Settings;
-use CustomFacebookFeed\Helpers\Util;
+
 
 class CFF_Global_Settings {
 	use CFF_Settings;
@@ -888,8 +888,11 @@ class CFF_Global_Settings {
 	 * @since 4.0
 	 */
     public function builder_enqueue_admin_scripts(){
-
-	    if ( ! Util::currentPageIs( 'cff-settings' ) ) {
+        if( ! get_current_screen() ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! 'facebook-feed_page_cff-settings' === $screen->id ) {
 			return;
 		}
 		$cff_status  = 'inactive';
@@ -1219,10 +1222,6 @@ class CFF_Global_Settings {
 				'adminErrorBox' => array(
 					'title' => __( 'Admin Error Notice', 'custom-facebook-feed' ),
 					'helpText' => __( 'This will disable or enable the feed error notice that displays in the bottom right corner of your site for logged-in admins.', 'custom-facebook-feed' ),
-				),
-				'jsImages'         => array(
-					'title'    => __( 'JavaScript Image Loading', 'instagram-feed' ),
-					'helpText' => __( 'Load images on the client side with JS, instead of server side.', 'instagram-feed' ),
 				),
 				'feedIssueBox' => array(
 					'title' => __( 'Feed Issue Email Reports', 'custom-facebook-feed' ),
@@ -1632,7 +1631,6 @@ class CFF_Global_Settings {
 				'cff_ajax' => $cff_ajax,
 				'cff_show_credit' => $cff_style_settings['cff_show_credit'],
 				'cff_format_issue' => $cff_style_settings['cff_format_issue'],
-				'enable_js_image_loading' => $cff_style_settings['enable_js_image_loading'],
 				'disable_admin_notice' => !$cff_style_settings['disable_admin_notice'],
 				'enable_email_report' => $cff_style_settings['enable_email_report'],
 				'email_notification' => $cff_style_settings['email_notification'],
@@ -1696,7 +1694,6 @@ class CFF_Global_Settings {
 			'cff_translate_ago'         					=> 'ago',
 			'cff_show_credit'		    					=> false,
 			'cff_format_issue'		    					=> false,
-			'enable_js_image_loading'		    		    => true,
 			'cff_disable_resize'		    				=> false,
 			'disable_admin_notice'		    				=> false,
 			'enable_email_report'		    				=> 'on',

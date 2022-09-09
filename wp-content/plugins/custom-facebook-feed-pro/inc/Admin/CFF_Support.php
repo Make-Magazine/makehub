@@ -437,7 +437,7 @@ class CFF_Support {
         $output .= isset( $cff_options['cff_format_issue'] ) && $cff_options['cff_format_issue'] == true ? 'Enabled' : 'Disabled';
         $output .= "</br>";
         $output .= 'Fix Text Shortening Issue: ';
-        $output .= isset( $cff_options['cff_format_issue'] ) && $cff_options['cff_format_issue'] == true ? 'Enabled' : 'Disabled';
+        $output .= isset( $cff_options['cff_show_credit'] ) && $cff_options['cff_show_credit'] == true ? 'Enabled' : 'Disabled';
         $output .= "</br>";
         $output .= 'Admin Error Notice: ';
         $output .= isset( $cff_options['disable_admin_notice'] ) && $cff_options['disable_admin_notice'] == true ? 'Enabled' : 'Disabled';

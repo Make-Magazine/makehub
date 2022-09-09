@@ -95,6 +95,7 @@ class CFF_Post_Set {
 	public function init( $customizerBuilder = false, $previewSettings = false ) {
 		$saver = new CFF_Feed_Saver( $this->feed_id );
 		if( $customizerBuilder && $previewSettings != false){
+
 			if ( isset( $previewSettings['album'] ) ) {
 				$previewSettings['album'] = CFF_Source::extract_id( $previewSettings['album'], 'album' );
 			}
@@ -102,7 +103,6 @@ class CFF_Post_Set {
 				$previewSettings['playlist'] = CFF_Source::extract_id( $previewSettings['playlist'], 'playlist' );
 			}
 			$this->feed_settings = $saver->get_feed_settings_preview( $previewSettings );
-
 		} else{
 			$this->feed_settings = $saver->get_feed_settings();
 		}

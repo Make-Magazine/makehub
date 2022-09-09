@@ -19,6 +19,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 	 * @uses Learndash_Admin_Post_Edit
 	 */
 	class Learndash_Admin_Group_Edit extends Learndash_Admin_Post_Edit {
+
+		/**
+		 * Object level variable for current Group ID being edited.
+		 *
+		 * @var integer $group_id
+		 */
+		private $group_id = 0;
+
 		/**
 		 * Public constructor for class.
 		 *
@@ -160,7 +168,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				'menu_order'  => $post->menu_order,
 			);
 
-			if ( ( isset( $_POST['ld-group-attributes-metabox-nonce'] ) ) && ( ! empty( $_POST['ld-group-attributes-metabox-nonce'] ) ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-group-attributes-metabox-nonce'] ) ), 'ld-group-attributes-metabox-nonce' ) ) {
+			if ( ( isset( $_POST['ld-group-attributes-metabox-nonce'] ) ) && ( ! empty( $_POST['ld-group-attributes-metabox-nonce'] ) ) && wp_verify_nonce( $_POST['ld-group-attributes-metabox-nonce'], 'ld-group-attributes-metabox-nonce' ) ) {
 
 				$updated_post = false;
 

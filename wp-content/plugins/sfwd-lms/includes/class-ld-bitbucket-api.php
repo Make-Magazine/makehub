@@ -5,7 +5,7 @@
  * @since 2.5.4
  *
  * @package LearnDash
- *
+ * phpcs:disable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -35,6 +35,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// This is the HTML form field prefix used.
 			$this->setting_field_prefix = 'learndash_settings_emails_placeholders';
 
+			// Used within the Settings API to uniquely identify this section.
+			//$this->settings_section_key = 'settings_emails_placeholders';
+
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Email Placeholders', 'learndash' );
 
@@ -69,7 +72,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				<p><strong>
 				<?php
 				// translators: placeholder: Course/Group Purchase Success.
-				echo sprintf( esc_html_x( ' %1$s/%2$s Purchase Success', 'placeholder: Course/Group Purchase Success.', 'learndash' ), esc_html( learndash_get_custom_label( 'course' ) ), esc_html( learndash_get_custom_label( 'group' ) ) );
+				echo sprintf( _x( ' %1$s/%2$s Purchase Success', 'placeholder: Course/Group Purchase Success.', 'learndash' ), esc_html( learndash_get_custom_label( 'course' ) ), esc_html( learndash_get_custom_label( 'group' ) ) );
 				?>
 				</strong></p>
 				<ul>
@@ -81,7 +84,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				<p><strong>
 				<?php
 				// translators: placeholder: Course/Group Purchase Failed.
-				echo sprintf( esc_html_x( ' %1$s/%2$s Purchase Failed', 'placeholder: Course/Group Purchase Failed.', 'learndash' ), esc_html( learndash_get_custom_label( 'course' ) ), esc_html( learndash_get_custom_label( 'group' ) ) );
+				echo sprintf( _x( ' %1$s/%2$s Purchase Failed', 'placeholder: Course/Group Purchase Failed.', 'learndash' ), esc_html( learndash_get_custom_label( 'course' ) ), esc_html( learndash_get_custom_label( 'group' ) ) );
 				?>
 				</strong></p>
 				<ul>
@@ -94,11 +97,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			<?php
 		}
 
-		/**
-		 * This is a requires function.
-		 */
+		// This is a requires function.
 		public function load_settings_fields() {
-			// Nothing to do here.
 		}
 	}
 }

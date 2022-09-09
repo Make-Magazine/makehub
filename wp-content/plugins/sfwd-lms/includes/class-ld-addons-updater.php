@@ -4,7 +4,8 @@
  *
  * @since 2.5.4
  *
- * @package LearnDash\Add-on
+ * @package LearnDash
+ * @subpackage Add-on Updates
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -274,17 +275,10 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 				return $data;
 			}
 
-			$this->get_addon_plugins();
+			$this->load_repositories_options();
 
 			if ( isset( $this->data['plugins'][ $args->slug ] ) ) {
 				$data = json_decode( wp_json_encode( $this->data['plugins'][ $args->slug ] ), false );
-
-				if ( ( property_exists( $data, 'sections' ) ) && ( is_object( $data->sections ) ) ) {
-					$data->sections = (array) $data->sections;
-				}
-				if ( ( property_exists( $data, 'banners' ) ) && ( is_object( $data->banners ) ) ) {
-					$data->banners = (array) $data->banners;
-				}
 
 				// We already have the obj but we update the BB download URL just in case.
 				$data->download_link = $this->bb_api->get_bitbucket_repository_download_url( $data->slug );

@@ -162,8 +162,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['groups-users_v2'] = 'users';
 			}
 
-			$this->setting_option_values['exams_v2'] = $this->setting_option_values['exams_v2'] ?? 'exams';
-
 			if ( ( ! isset( $this->setting_option_values['assignments_v2'] ) ) || ( empty( $this->setting_option_values['assignments_v2'] ) ) ) {
 				$this->setting_option_values['assignments_v2'] = learndash_get_post_type_slug( 'assignment' );
 			}
@@ -520,15 +518,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'class'          => '-medium',
 					'parent_setting' => 'groups_v2',
 				),
-				'exams_v2'                        => array(
-					'name'         => 'exams_v2',
-					'type'         => 'text',
-					'label'        => LearnDash_Custom_Label::get_label( 'exam' ),
-					'value'        => $this->setting_option_values['exams_v2'],
-					'value_prefix' => $value_prefix_top,
-					'class'        => '-medium',
-					'placeholder'  => 'exams',
-				),
 				'users_v2'                        => array(
 					'name'                => 'users_v2',
 					'type'                => 'text',
@@ -599,7 +588,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'progress-status_v2'              => array(
 					'name'         => 'progress-status_v2',
 					'type'         => 'text',
-					'label'        => esc_html__( 'Progress Status', 'learndash' ),
+					'label'        => esc_html__( 'Progess Status', 'learndash' ),
 					'value'        => $this->setting_option_values['progress-status_v2'],
 					'value_prefix' => $value_prefix_top,
 					'class'        => '-medium',

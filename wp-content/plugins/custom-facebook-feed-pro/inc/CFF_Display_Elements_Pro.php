@@ -84,20 +84,13 @@ class CFF_Display_Elements_Pro {
 		return '';
 	}
 
-	public static function get_media_placeholder( $media_url, $settings = [] ) {
+	public static function get_media_placeholder( $media_url, $settings = array( 'disable_js_image_loading' => false ) ) {
 		if ( empty( $media_url ) ) {
 			return '';
 		}
-
-		if ( empty( $settings ) ) {
-			// Getting settings for image loading.
-			$settings = get_option( 'cff_style_settings', [] );
-		}
-
-		if ( isset( $settings['enable_js_image_loading'] ) && $settings['enable_js_image_loading'] ) {
+		if ( ! $settings['disable_js_image_loading'] ) {
 			return trailingslashit( CFF_PLUGIN_URL ) . 'assets/img/placeholder.png';
 		}
-
 		return $media_url;
 	}
 

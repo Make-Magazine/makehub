@@ -33,7 +33,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			$this->settings_tab_priority = 0;
 
 			// Override action with custom plugins function for add-ons.
-			add_action( 'install_plugins_pre_plugin-information', array( $this, 'shows_addon_plugin_information' ), 5 );
+			add_action( 'install_plugins_pre_plugin-information', array( $this, 'shows_addon_plugin_information' ) );
 			add_filter( 'learndash_submenu_last', array( $this, 'submenu_item' ), 200 );
 
 			add_filter( 'learndash_admin_tab_sets', array( $this, 'learndash_admin_tab_sets' ), 10, 3 );
@@ -43,7 +43,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		}
 
 		/**
-		 * Control visibility of submenu items based on license status
+		 * Control visibility of submenu items based on lisence status
 		 *
 		 * @since 2.5.5
 		 *
@@ -220,7 +220,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			}
 
 			$addon_updater             = LearnDash_Addon_Updater::get_instance();
-			$plugin_readme_information = $addon_updater->get_plugin_information( esc_attr( $_REQUEST['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$plugin_readme_information = $addon_updater->get_plugin_information( esc_attr( $_REQUEST['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( empty( $plugin_readme_information ) ) {
 				return;
@@ -231,7 +231,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				$api->$_k = $_s;
 			}
 
-			$plugins_allowed_tags = array(
+			$plugins_allowedtags = array(
 				'a'          => array(
 					'href'   => array(),
 					'title'  => array(),
@@ -286,16 +286,16 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 			// Sanitize HTML.
 			foreach ( (array) $api->sections as $section_name => $content ) {
-				$api->sections[ $section_name ] = wp_kses( $content, $plugins_allowed_tags );
+				$api->sections[ $section_name ] = wp_kses( $content, $plugins_allowedtags );
 			}
 
 			foreach ( array( 'version', 'author', 'requires', 'tested', 'homepage', 'downloaded', 'slug' ) as $key ) {
 				if ( isset( $api->$key ) ) {
-					$api->$key = wp_kses( $api->$key, $plugins_allowed_tags );
+					$api->$key = wp_kses( $api->$key, $plugins_allowedtags );
 				}
 			}
 
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$section = isset( $_REQUEST['section'] ) ? wp_unslash( $_REQUEST['section'] ) : 'description'; // Default to the Description tab, Do not translate, API returns English.
 			if ( empty( $section ) || ! isset( $api->sections[ $section ] ) ) {
 				$section_titles = array_keys( (array) $api->sections );
@@ -304,14 +304,14 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET['tab'] ) ) && ( ! empty( $_GET['tab'] ) ) ) {
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$tab = esc_attr( $_GET['tab'] );
 			} else {
 				$tab = 'plugin-information';
 			}
 			$_tab = $tab;
 
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$section = isset( $_REQUEST['section'] ) ? wp_unslash( $_REQUEST['section'] ) : 'description'; // Default to the Description tab, Do not translate, API returns English.
 			if ( empty( $section ) || ! isset( $api->sections[ $section ] ) ) {
 				$section_titles = array_keys( (array) $api->sections );
@@ -440,15 +440,15 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					<h3><?php esc_html_e( 'Reviews', 'learndash' ); ?></h3>
 					<p class="fyi-description"><?php esc_html_e( 'Read all reviews on WordPress.org or write your own!', 'learndash' ); ?></p>
 					<?php
-					foreach ( $api->ratings as $key => $rate_count ) {
+					foreach ( $api->ratings as $key => $ratecount ) {
 						// Avoid div-by-zero.
-						$_rating    = $api->num_ratings ? ( $rate_count / $api->num_ratings ) : 0;
+						$_rating    = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
 						$aria_label = esc_attr(
 							sprintf(
 								// translators: 1: number of stars (used to determine singular/plural), 2: number of reviews.
 								_n( 'Reviews with %1$d star: %2$s. Opens in a new window.', 'Reviews with %1$d stars: %2$s. Opens in a new window.', $key, 'learndash' ),
 								$key,
-								number_format_i18n( $rate_count ),
+								number_format_i18n( $ratecount ),
 								'learndash'
 							)
 						);
@@ -470,7 +470,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 								<span class="counter-back">
 									<span class="counter-bar" style="width: <?php echo 92 * esc_attr( $_rating ); ?>px;"></span>
 								</span>
-							<span class="counter-count" aria-hidden="true"><?php echo esc_html( number_format_i18n( $rate_count ) ); ?></span>
+							<span class="counter-count" aria-hidden="true"><?php echo esc_html( number_format_i18n( $ratecount ) ); ?></span>
 						</div>
 						<?php
 					}
