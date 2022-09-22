@@ -281,8 +281,9 @@ input.cmn-toggle-round:checked + label:after {
 		.ui-dialog-titlebar { visibility: hidden; height: 0px; padding: 0px; }
 		.ui-dialog-titlebar-close {
 			visibility: visible;
-			margin-top: -25px;
-			margin-left: -15px;
+			position: absolute;
+			top: 0;
+			right: 10px;
 		}
 	}
     p { color: #000; }

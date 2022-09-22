@@ -216,13 +216,13 @@ get_header();
                             </div> <!-- end .col-xs-12 -->
                             <div class="col-xs-12">
                               <?php if (!empty($image_1)) { ?>
-                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
+                                <a class="up-step-img" src="<?php echo get_fitted_remote_image_url($image_1, 1000, 1000); ?>">
                                     <div style="background-image: url(<?php echo get_resized_remote_image_url($image_1, 500, 500); ?>);"></div>
                                 </a>
                               <?php } ?>
 
                               <?php if (!empty($image_2)) { ?>
-                                <a class="up-step-img" href="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
+                                <a class="up-step-img" src="<?php echo get_fitted_remote_image_url($image_2, 1000, 1000); ?>">
                                     <div style="background-image: url(<?php echo get_resized_remote_image_url($image_2, 500, 500); ?>);"></div>
                                 </a>
                               <?php } ?>
@@ -505,9 +505,19 @@ get_header();
 							<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-angle-double-right"></i></div>
 
 							<script type="text/javascript">
-								jQuery(document).ready(function () {
-									jQuery(".up-step-img").fancybox();
-								});
+								jQuery('.up-step-img').on('click', function () {
+									jQuery("#dialog").remove();
+							        jQuery('.up-step-img').append('<div id="dialog" style="display:none;"><img src="' + jQuery(this).attr('src') + '" /></div>');
+							        jQuery('#dialog').dialog({
+										dialogClass: 'hide-heading',
+										modal: true,
+										open: function(){
+								            jQuery('.ui-widget-overlay').bind('click',function(){
+								                jQuery(".ui-dialog-content").dialog("close");
+								            })
+								        }
+									});
+							    });
 							</script>
 
 						</div> <!-- close .ld-tabs ld-tab-count-2 -->

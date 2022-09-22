@@ -81,9 +81,7 @@ add_action( 'wp_enqueue_scripts', 'make_makerspaces_enqueue_scripts_styles' );
  */
 function make_makerspaces_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
-  $my_version = $my_theme->get('Version');
-
-	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
+  	$my_version = $my_theme->get('Version');
 
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style';
@@ -92,12 +90,6 @@ function make_makerspaces_enqueue_scripts_styles() {
 	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-makerspaces-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
-	wp_enqueue_style(
-		'make-makerspaces-fonts',
-		'//fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
-		array(),
-		$my_version
-	);
 
 	wp_enqueue_style( 'dashicons' );
 
@@ -116,8 +108,6 @@ function make_makerspaces_enqueue_scripts_styles() {
 		make_makerspaces_responsive_menu_settings()
 	);
 
-	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
-	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true );
 	wp_enqueue_script('markerclusterer', 'https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js', '', 'all');
 

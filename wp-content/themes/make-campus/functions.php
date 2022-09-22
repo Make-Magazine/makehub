@@ -107,7 +107,6 @@ function make_campus_enqueue_scripts() {
     );
 
     wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
-    wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
 
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
 
@@ -131,8 +130,6 @@ add_action('wp_enqueue_scripts', 'make_campus_enqueue_styles');
 function make_campus_enqueue_styles() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
-
-    wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
 
     ### GENESIS STYLES #####
     $parent_style = 'genesis-style';

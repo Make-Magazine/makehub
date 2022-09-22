@@ -1,6 +1,6 @@
 {
    "name": "Make-Buddyboss-Basic",
-   "version": "1.0.873",
+   "version": "1.0.874",
    "author": "Make: Community",
    "license": "UNLICENSED",
    "private": true,
@@ -14,7 +14,7 @@
       "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
       "scss:fe:compile": "sass scss/style.scss css/style.min.css --style compressed",
       "js:fe:uglify": "uglifyjs js/site/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
-      "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
+      "js:libs:uglify": "uglifyjs js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
       "onchange:scss:fe": "onchange 'scss/*.scss' -- npm run scss:fe:compile",
       "onchange:js:fe": "onchange 'js/site/*.js' -- npm run js:fe:uglify",
       "onchange:js:libs": "onchange 'js/libs-src/*.js' -- npm run js:libs:uglify",

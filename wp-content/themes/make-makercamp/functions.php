@@ -48,15 +48,14 @@ function maker_camp_scripts_styles() {
      * http://codex.wordpress.org/Function_Reference/wp_deregister_script
      * http://codex.wordpress.org/Function_Reference/wp_deregister_style
      * */
-    // Styles
-    wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
+
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
 
-    // lib src packages up bootstrap, fancybox, jquerycookie etc
+    // lib src packages up bootstrap, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 }

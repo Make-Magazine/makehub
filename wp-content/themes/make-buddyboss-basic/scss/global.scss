@@ -225,55 +225,8 @@ input[type="submit"].disabled { color: #fff !important; }
 	}
 }
 
-#flip-card {
-	display: flex;
-	width: 100%;
-	margin-bottom: 30px;
-	min-height: 200px;
-	.front, .back {
-		min-height: 200px;
-		min-width:100%;
-	}
-}
-
 .tooltip-inner {
 	font-size: 15px;
-}
-
-//Youtube Fancybox modal shortcode [youtube-modal]
-.fancytube {
-  position: relative;
-  display: block;
-  i {
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-
-//Fancybox modal overrides
-.fancybox-close {
-  background-image: none !important;
-  text-align: center;
-  top: 0 !important;
-  right: 0 !important;
-  &:hover {
-    text-decoration: none;
-  }
-  &:before {
-    font-family: FontAwesome;
-    content: '\f00d';
-    color: #4a4a4a;
-    display: inline-block;
-    font-size: 18px;
-    padding-top: 6px;
-  }
-}
-
-.fancybox-overlay {
-  background: rgba(255, 255, 255, 0.5) !important;
 }
 
 #makey-sign {
@@ -332,25 +285,5 @@ input[type="submit"].disabled { color: #fff !important; }
 .safari-mac {
 	.row:before, .row:after {
 		display: none;
-	}
-}
-
-// taxonomy styling
-body.tax-espresso_event_categories {
-	article .post-inner-wrap {
-		display: flex;
-		align-items: center;
-		.image-wrapper {
-			min-width: 150px;
-		}
-		.entry-header { margin-bottom: 0px; }
-		.entry-content { display: none; }
-		@media screen and (max-width: 800px) {
-			flex-direction: column;
-			.image-wrapper {
-				min-width: 100%;
-				img { width: 100%; }
-			}
-		}
 	}
 }

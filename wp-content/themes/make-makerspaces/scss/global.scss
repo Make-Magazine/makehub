@@ -497,18 +497,6 @@ input[type=checkbox].fa-checkbox {
   flex-direction: column;
 }
 
-//Youtube Fancybox modal shortcode [youtube-modal]
-.fancytube {
-  position: relative;
-  display: block;
-  i {
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
 
 body.admin-bar {
   .navbar.navbar-fixed-top {
@@ -697,26 +685,4 @@ hr.double-line-hr {
   height: 100%;
   width: 100%;
   position: absolute;
-}
-
-//Fancybox modal overrides
-.fancybox-close {
-  background-image: none !important;
-  text-align: center;
-  top: 0 !important;
-  right: 0 !important;
-  &:hover {
-    text-decoration: none;
-  }
-  &:before {
-    font-family: FontAwesome;
-    content: '\f00d';
-    color: #4a4a4a;
-    display: inline-block;
-    font-size: 18px;
-    padding-top: 6px;
-  }
-}
-.fancybox-overlay {
-  background: rgba(255, 255, 255, 0.5) !important;
 }

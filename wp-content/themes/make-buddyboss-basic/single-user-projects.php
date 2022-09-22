@@ -495,9 +495,19 @@ get_header();
 							<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-angle-double-right"></i></div>
 
 							<script type="text/javascript">
-								jQuery(document).ready(function () {
-									jQuery(".up-step-img").fancybox();
-								});
+								jQuery('.up-step-img').on('click', function () {
+									jQuery("#dialog").remove();
+							        jQuery('.up-step-img').append('<div id="dialog" style="display:none;"><img src="' + jQuery(this).attr('src') + '" /></div>');
+							        jQuery('#dialog').dialog({
+										dialogClass: 'hide-heading',
+										modal: true,
+										open: function(){
+								            jQuery('.ui-widget-overlay').bind('click',function(){
+								                jQuery(".ui-dialog-content").dialog("close");
+								            })
+								        }
+									});
+							    });
 							</script>
 
 						</div>

@@ -5,7 +5,7 @@
 .entry-content { padding: 15px 0; }
 
 @media screen and (max-width: 767px) {
-	h1, .entry-title { font-size: 2.6em; margin-top: 45px; } 
+	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
 }
 
 // overwrite the jquery styling
@@ -94,7 +94,7 @@ figure {
 	border-radius: 15px;
 	text-align: center;
 	background: #005e9a;
-	color: #fff; 
+	color: #fff;
 	padding: 10px;
 	margin: 10px 0px;
 }
@@ -135,7 +135,7 @@ button, input[type="submit"] {
 		border-radius: 2px;
 		text-transform: uppercase;
 		font-size: 16px;
-		font-weight: 500;      
+		font-weight: 500;
 		height: 50px;
 		padding: 0px 15px;
 		border: solid 1px #005e9a;
@@ -251,42 +251,6 @@ hr.double-line-hr {
   height: 100%;
   width: 100%;
   position: absolute;
-}
-
-//Youtube Fancybox modal shortcode [youtube-modal]
-.fancytube {
-  position: relative;
-  display: block;
-  i {
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-
-//Fancybox modal overrides
-.fancybox-close {
-  background-image: none !important;
-  text-align: center;
-  top: 0 !important;
-  right: 0 !important;
-  &:hover {
-    text-decoration: none;
-  }
-  &:before {
-    font-family: FontAwesome;
-    content: '\f00d';
-    color: #4a4a4a;
-    display: inline-block;
-    font-size: 18px;
-    padding-top: 6px;
-  }
-}
-
-.fancybox-overlay {
-  background: rgba(255, 255, 255, 0.5) !important;
 }
 
 // modal gallery

@@ -63,8 +63,6 @@ function make_experiences_scripts_styles() {
      * http://codex.wordpress.org/Function_Reference/wp_deregister_script
      * http://codex.wordpress.org/Function_Reference/wp_deregister_style
      * */
-    // Styles
-    wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css', '', 'all');
 
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
@@ -72,9 +70,13 @@ function make_experiences_scripts_styles() {
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
 
-    // lib src packages up bootstrap js and fancybox
+    // lib src packages
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('make_experiences-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+
+	if ( is_page_template('page-media-center.php') ) {
+        wp_enqueue_script( 'jquery-ui-tabs' );
+    }
 }
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
@@ -83,6 +85,7 @@ function load_admin_styles() {
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
+
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
