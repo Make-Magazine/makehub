@@ -3,7 +3,7 @@
 		display: flex;
 		gap: 20px;
 		@media screen and (max-width: 600px) {
-			flex-wrap: column;
+			flex-direction: column;
 		}
 		ul.nav {
 			min-width: 250px;
