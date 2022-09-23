@@ -106,12 +106,7 @@ function make_campus_enqueue_scripts() {
             make_campus_responsive_menu_settings()
     );
 
-    wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
-
-    wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-
     wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
 
     wp_localize_script('theme-js', 'ajax_object',
             array(

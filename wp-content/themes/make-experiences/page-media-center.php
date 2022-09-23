@@ -27,9 +27,7 @@ get_header(); ?>
             <ul class="nav col-xs-12 col-sm-3">
 
               <?php if( have_rows('tabs') ):
-
                 while( have_rows('tabs') ): the_row();
-
                   $tab_title = get_sub_field('tab_title');
                   $replace_these = array("/", "&");
                   $tab_title2 = (str_replace($replace_these, '', $tab_title));
@@ -41,25 +39,18 @@ get_header(); ?>
                     </li>
 
                   <?php
-
                 endwhile;
-
               endif; ?>
 
             </ul>
 
               <?php if( have_rows('tabs') ):
-
-                $counter = 1;
-
-                while( have_rows('tabs') ): the_row();
-
+                while( have_rows('tabs') ): the_row();She
                   $tab_content = get_sub_field('tab_content');
                   $tab_title = get_sub_field('tab_title');
                   $replace_these = array("/", "&");
                   $tab_title2 = (str_replace($replace_these, '', $tab_title));
                   $tab_url = (str_replace(' ', '-', strtolower($tab_title2)));
-
 				  ?>
 
                     <div id="<?php echo $tab_url ?>">
@@ -68,7 +59,6 @@ get_header(); ?>
 
                   <?php
                 endwhile;
-
               endif; ?>
 
           </div>

@@ -52,9 +52,6 @@ function maker_camp_scripts_styles() {
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
 
-    // Javascript
-    wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-
     // lib src packages up bootstrap, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);

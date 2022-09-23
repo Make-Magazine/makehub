@@ -238,18 +238,6 @@ button, input[type="submit"] {
 	}
 }
 
-#flip-card {
-	display: flex;
-	width: 100%;
-	margin-bottom: 30px;
-	min-height: 200px;
-	.front, .back {
-		min-height: 200px;
-		min-width:100%;
-	}
-}
-
-
 #makey-sign {
 	position: fixed;
     bottom: 0;

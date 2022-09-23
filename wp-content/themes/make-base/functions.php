@@ -77,8 +77,6 @@ function make_base_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
 
-	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style';
     wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );

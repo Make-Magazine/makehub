@@ -56,7 +56,7 @@ get_header(); ?>
 					<?php }
 					if ($linkedin) { ?>
 						<a href="<?php echo $linkedin; ?>" target="_blank">
-							<i class="far fa-linkedin"></i>
+							<i class="fab fa-linkedin"></i>
 						</a>
 					<?php } ?>
 				</div>
