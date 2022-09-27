@@ -1,5 +1,5 @@
 <?php
-// Overwrite the event dates display
+/* Overwrite the event dates display
 function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_format = '', $echo = TRUE, $show_expired = NULL, $format = TRUE,  $limit = NULL ) {
 	$date_format = ! empty( $date_format ) ? $date_format : get_option( 'date_format' );
 	$time_format = ! empty( $time_format ) ? $time_format : get_option( 'time_format' );
@@ -121,4 +121,4 @@ function register_ee_attendee_id_meta() {
             $args
     );
 }
-add_action('rest_api_init', 'register_ee_attendee_id_meta');
+add_action('rest_api_init', 'register_ee_attendee_id_meta'); */

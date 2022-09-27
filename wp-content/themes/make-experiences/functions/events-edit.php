@@ -1,6 +1,8 @@
 <?php
 
-// After the gravity view is updated, we want to update the created post associated with it. 
+// After the gravity view is updated, we want to update the created post associated with it.
+
+/*
 add_action('gform_after_update_entry_1', 'gravityview_event_update', 998, 3);
 
 //function gravityview_event_update($form, $entry_id, $entry_object = '') {
@@ -10,11 +12,11 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
 
     $event_id = $entry["post_id"];
     $event_status = get_post_status($event_id);
-    
-    //find all fields set with a parameter name 
+
+    //find all fields set with a parameter name
     $parameter_array = find_field_by_parameter($form);
 
-        
+
     //if the event is not published,  update event name, description, short description, ticket/schedule information
     if ($event_status != 'publish') {
         //update the event
@@ -50,8 +52,8 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
         setSchedTicket($parameter_array, $entry, $event_id);
     }
 
-    event_post_meta($entry, $form, $event_id, $parameter_array); // update taxonomies, featured image, etc    
-    update_event_acf($entry, $form, $event_id, $parameter_array); // Set the ACF data        
+    event_post_meta($entry, $form, $event_id, $parameter_array); // update taxonomies, featured image, etc
+    update_event_acf($entry, $form, $event_id, $parameter_array); // Set the ACF data
 }
 
 // trigger an email to when an entry is updated via gravity view
@@ -62,7 +64,7 @@ function send_update_entry_notification($form, $entry_id, $orig_entry = array())
         //get updated entry
         $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
 
-        //check for updates and trigger maker update notification    
+        //check for updates and trigger maker update notification
         $notifications_to_send = GFCommon::get_notifications_to_send('maker_updated_exhibit', $form, $updatedEntry);
         foreach ($notifications_to_send as $notification) {
             if ($notification['isActive']) {
@@ -179,14 +181,14 @@ function nested_form_event_upd($nstForm, $entry_id, $orig_entry = array()) {
     $parent_entry       = GFAPI::get_entry($child_entry['gpnf_entry_parent']);
     $parent_form        = GFAPI::get_form($child_entry['gpnf_entry_parent_form']);
 
-    $nest_parameter_arr = find_field_by_parameter($nstForm); 
-    $parent_parameter_arr = find_field_by_parameter($parent_form); 
+    $nest_parameter_arr = find_field_by_parameter($nstForm);
+    $parent_parameter_arr = find_field_by_parameter($parent_form);
 
     $event_id = $parent_entry["post_id"];
     $event_status = get_post_status($event_id);
 
     $timeZone = getFieldByParam('timezone', $parent_parameter_arr, $parent_entry);
-        
+
     //if the event is not published,  update ticket/schedule information
     if ($event_status != 'publish') {
         //delete all schedule/tickets and then re-add to get all changes
@@ -204,7 +206,8 @@ function nested_form_event_upd($nstForm, $entry_id, $orig_entry = array()) {
                 $datetime->delete();
             }
         }
-        //now let's re-add the schedule        
+        //now let's re-add the schedule
         setScheduleInfo($nest_parameter_arr, $child_entry, $parent_entry, $timeZone);
     }
 }
+*/

@@ -1,5 +1,5 @@
 <?php
-
+/*
 add_action('gravityview/approve_entries/updated', 'update_entry_status', 1, 3);
 
 function update_entry_status($entry_id, $status) {
@@ -46,10 +46,9 @@ function update_entry_status($entry_id, $status) {
 	        //add Month and year to end of group name ie. How to Make Your Dragon - May 2021
 	        $groupName = $eventName . ' - ' . $startDt;
 
-	        /*
-	         * link to event listing at least (so registrants can help promote)
-	         * Basic event information - dates, times
-	         */
+	        // link to event listing at least (so registrants can help promote)
+	        // Basic event information - dates, times
+
 	        $webinar_link = getFieldByParam('webinar_link', $parameter_array, $entry);
 	        if ($webinar_link == '')
 	            $webinar_link = 'Coming Soon';
@@ -121,3 +120,4 @@ function update_entry_status($entry_id, $status) {
 		}
     }
 }
+*/

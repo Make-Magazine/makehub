@@ -1,5 +1,5 @@
 <?php
-
+/*
 //We do not want gravity forms creating the post, we will be doing that ourselves
 add_filter('gform_disable_post_creation_1', 'disable_post_creation', 10, 3);
 
@@ -98,10 +98,9 @@ function create_event($entry, $form) {
     // this will update the organizer social, website, and facilitator info
     update_organizer_data($entry, $form, $personID, $parameter_array);
 
-    /*
-     * Now that the event is created, let's transfer data from the entry to the event
-     */
+    // Now that the event is created, let's transfer data from the entry to the event
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc
     update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data
 
 }
+*/

@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+/*
 add_filter( 'AHEE__EE_Registration__set_status__to_approved', 'attendee_approved', 4 );
 //attendee registration approved
 function attendee_approved( $registration) {
@@ -95,3 +96,4 @@ function create_new_user($subject, $first_name, $last_name, $message, $email) {
 
 	return $user_id;
 }
+*/

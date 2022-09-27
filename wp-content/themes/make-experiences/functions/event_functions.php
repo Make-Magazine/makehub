@@ -1,6 +1,6 @@
 <?php
 
-//duplicate entry
+/*duplicate entry
 add_action('gravityview/duplicate-entry/duplicated', 'duplicate_entry', 10, 2);
 
 function duplicate_entry($duplicated_entry, $entry) {
@@ -132,15 +132,14 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
 
 function update_sched_ticket_acf($schedArray, $eventID) {
     //acf field - tickets_scheduling (repeater)
-    /* ticket_name, ticket_price, ticket_description, minimum_num_tickets, maximum_num_of_tickets, preferred_schedule, alternate_schedule*/
+    // ticket_name, ticket_price, ticket_description, minimum_num_tickets, maximum_num_of_tickets, preferred_schedule, alternate_schedule
     update_field('field_606e135e03fa2', $schedArray, $eventID);
 }
 
 function setSchedTicket($parameter_array, $entry, $eventID) {
-    /* Event Date/Time and Tickets
-     *      Ticket and schedule information is set in a nested form
-     *      Need to get nested form ID and then loop through the nested form information
-     */
+    //  Event Date/Time and Tickets
+    //      Ticket and schedule information is set in a nested form
+    //      Need to get nested form ID and then loop through the nested form information
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
 
     //pull nested form to get submitted schedule/ticket
@@ -293,3 +292,4 @@ function slugify($text) {
 
   return $text;
 }
+*/

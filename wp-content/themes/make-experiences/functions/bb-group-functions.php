@@ -1,6 +1,6 @@
 <?php
 
-add_action('bp_init', 'setup_group_nav');
+//add_action('bp_init', 'setup_group_nav');
 
 //add tabs to the group nav for schedule and materials
 function setup_group_nav() {

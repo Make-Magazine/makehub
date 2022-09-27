@@ -296,11 +296,6 @@ jQuery(document).ready(function () {
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
-                        '<a href="https://make.co/maker-campus/">' +
-                            '<i class="_icon fa fa-calendar _before" aria-hidden="true"></i><span>Campus Events</span>' +
-                        '</a>' +
-                    '</li>' +
-                    '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/groups/my-groups/">' +
                             '<i class="_icon fa fa-users _before" aria-hidden="true"></i><span>My Groups</span>' +
                         '</a>' +

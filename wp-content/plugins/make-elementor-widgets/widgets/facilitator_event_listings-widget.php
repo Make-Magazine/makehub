@@ -1,90 +1,39 @@
-<?php
+<?php /*
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-/**
- * Elementor Make: Facilitator event listings Widget
- *
- * Elementor widget that lists the makerspaces that you have submitted and links back to edit them
- *
- * @since 1.0.0
- */
+//Elementor Make: Facilitator event listings Widget
+ //Elementor widget that lists the makerspaces that you have submitted and links back to edit them
+ //@since 1.0.0
 class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 
-	/**
-	 * Get widget name.
-	 *
-	 * Retrieve MakeFacilitEvents_Widget widget name.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget name.
-	 */
+	// Get widget name
 	public function get_name() {
 		return 'makefacilEvents';
 	}
 
-	/**
-	 * Get widget title.
-	 *
-	 * Retrieve MakeFacilitEvents_Widget widget title.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget title.
-	 */
+	//Get widget title.
 	public function get_title() {
 		return esc_html__( 'Facilitator Events', 'elementor-make-widget' );
 	}
 
-	/**
-	 * Get widget icon.
-	 *
-	 * Retrieve MakeFacilitEvents_Widget widget icon.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return string Widget icon.
-	 */
+	// Get widget icon.
 	public function get_icon() {
 		return 'eicon-custom';
 	}
 
-	/**
-	 * Get widget categories.
-	 *
-	 * Retrieve the list of categories the MakeFacilitEvents_Widget widget belongs to.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array Widget categories.
-	 */
+	// Get widget categories.
 	public function get_categories() {
 		return [ 'make-category' ];
 	}
 
-	/**
-	 * Get widget keywords.
-	 *
-	 * Retrieve the list of keywords the myMspaces_Widget widget belongs to.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array Widget keywords.
-	 */
+	// Get widget keywords.
 	public function get_keywords() {
 		return [ 'make', 'facilitator', 'event'];
 	}
 
-	/**
-	 * Register MakeFacilitEvents_Widget widget controls.
-	 *
-	 * Add input fields to allow the user to customize the widget settings.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
+	// Register MakeFacilitEvents_Widget widget controls.
 	protected function register_controls() {
 
 		$this->start_controls_section(
@@ -132,14 +81,7 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 
 	}
 
-	/**
-	 * Render MakeFacilitEvents_Widget widget output on the frontend.
-	 *
-	 * Written in PHP and used to generate the final HTML.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
+	// Render MakeFacilitEvents_Widget widget output on the frontend.
 	protected function render() {
 	    $settings = $this->get_settings_for_display();
 
@@ -172,3 +114,4 @@ class Elementor_MakeFacilitatorEvents_Widget extends \Elementor\Widget_Base {
 	    }
 	}
 }
+*/

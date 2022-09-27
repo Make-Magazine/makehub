@@ -1,57 +1,45 @@
 <?php
+/*
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-/**
- * Elementor Make: Campus Tickets listings Widget
- *
- * Elementor widget that lists the Maker Campus tickets the user has purchased
- *
- * @since 1.0.0
- */
+ //Elementor Make: Campus Tickets listings Widget
+ //
+ //Elementor widget that lists the Maker Campus tickets the user has purchased
+ //
+ // @since 1.0.0
+
+
 class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
 
-	/**
-	 * Get widget name.
-	 */
+	//Get widget name.
 	public function get_name() {
 		return 'makecampustickets';
 	}
 
-	/**
-	 * Get widget title.
-	 */
+	// Get widget title.
 	public function get_title() {
 		return esc_html__( 'Make: Campus Tickets', 'elementor-make-widget' );
 	}
 
-	/**
-	 * Get widget icon.
-	 */
+	// Get widget icon.
 	public function get_icon() {
 		return 'eicon-custom';
 	}
 
-	/**
-	 * Get widget categories.
-	 */
+	// Get widget categories.
 	public function get_categories() {
 		return [ 'make-category' ];
 	}
 
-	/**
-	 * Get widget keywords.
-	 */
+	// Get widget keywords.
 	public function get_keywords() {
 		return [ 'make', 'makercampus', 'ticket'];
 	}
 
-  /**
-	 * Register widget controls.
-	 *
-	 * Add input fields to allow the user to customize the widget settings.
-	 */
+  // Register widget controls.
+  // Add input fields to allow the user to customize the widget settings.
 	protected function register_controls() {
 
 		$this->start_controls_section(
@@ -99,9 +87,7 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
 
 	}
 
-	/**
-	 * Render widget output on the frontend.
-	 */
+	// Render widget output on the frontend.
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		echo '<h4>'.$settings['title'].'</h4>';
@@ -147,3 +133,4 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
     }
 	}
 }
+*/
