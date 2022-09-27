@@ -45,7 +45,7 @@ get_header(); ?>
             </ul>
 
               <?php if( have_rows('tabs') ):
-                while( have_rows('tabs') ): the_row();She
+                while( have_rows('tabs') ): the_row();
                   $tab_content = get_sub_field('tab_content');
                   $tab_title = get_sub_field('tab_title');
                   $replace_these = array("/", "&");
