@@ -1,15 +1,11 @@
 <?php
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
-	$url = NETWORK_HOME_URL . '/wp-json/mp/v1/members';
+	$user = get_user_by('email', $email);
+	$url = NETWORK_HOME_URL . '/wp-json/mp/v1/transactions';
 
 	$datastring = json_encode(
 	  [
-		'first_name'          => $firstName,
-  	    'last_name'           => $lastName,
-	    'email'               => $email,
-	    'username'            => $userName,
-	    'send_welcome_email'  => $sendWelcomeEmail,
-	    'transaction'         => [
+		  'member'		=> $user->ID,
 	      'membership'  => $membership, // ID of the Membership
 	      'amount'      => $price,
 	      'total'       => $price,
@@ -20,7 +16,6 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	      'gateway'     => 'free',
 	      'created_at'  => date("Y-m-d H:i:s"),
 	      'expires_at'  => $expiresAt
-	    ]
 	  ]
 	);
 
