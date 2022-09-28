@@ -1,7 +1,7 @@
 <?php
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
 	$user = get_user_by('email', $email);
-	$url = NETWORK_HOME_URL . '/wp-json/mp/v1/transactions';
+	$url = network_home_url() . '/wp-json/mp/v1/transactions';
 
 	$datastring = json_encode(
 	  [

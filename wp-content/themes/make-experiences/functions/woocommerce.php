@@ -120,7 +120,7 @@ function woocommerce_add_membership( $order_id ){
 			}
 			// add school mf membership if user doesn't have it already
 			$school_membership = get_page_by_path('school-maker-faire', OBJECT, 'memberpressproduct');
-			$mpInfo = json_decode(basicCurl(NETWORK_HOME_URL . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
+			$mpInfo = json_decode(basicCurl(network_home_url() . '/wp-json/mp/v1/members/' . $user->ID, setMemPressHeaders()));
 			$first_name = get_user_meta( $user->ID, 'first_name', true );
 			$last_name = get_user_meta( $user->ID, 'last_name', true );
 
