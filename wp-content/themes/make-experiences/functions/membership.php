@@ -109,9 +109,9 @@ add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
  */
  function set_membership_constants() {
  	// Decide if user can upgrade
-  $memLevels = checkMembershipLevels();
-  $hasMembership = !empty($memLevels['levels'])? TRUE:'';
-  $currentMemberships = $memLevels['levels'];
+	$memLevels = checkMembershipLevels();
+	$hasMembership = !empty($memLevels['levels'])? TRUE:'';
+	$currentMemberships = $memLevels['levels'];
  	$canUpgrade = $memLevels['type']=='upgrade'?TRUE:FALSE;
 
  	define('CURRENT_MEMBERSHIPS', $currentMemberships);
