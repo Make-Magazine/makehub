@@ -19,13 +19,6 @@ function remove_profile_nav() {
 }
 add_action('bp_init', 'remove_profile_nav');
 
-/*add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
-function ad_filter_menu($sorted_menu_objects, $args) {
-    //check if current user is a facilitator
-    global $current_user;
-    $current_user = wp_get_current_user();
-    $userEmail = (string) $current_user->user_email;
-}*/
 
 // overwrite the recommended dimensions for the cover image
 function bp_custom_get_cover_image_dimensions( $wh, $settings, $component ) {
