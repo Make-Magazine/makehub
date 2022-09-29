@@ -28,11 +28,11 @@
 
 <?php do_action( THEME_HOOK_PREFIX . 'after_page' ); ?>
 
-<?php if(strpos($_SERVER['REQUEST_URI'], "maker-campus")) { ?>
+<?php  /* if(strpos($_SERVER['REQUEST_URI'], "maker-campus")) { ?>
 	<a href="/submit-event" id="makey-sign" target="blank">
 		<img src="/wp-content/themes/make-experiences/images/submit-program-makey.png" alt />
 	</a>
-<?php } ?>
+<?php }  */ ?>
 
 <?php wp_footer(); ?>
 
