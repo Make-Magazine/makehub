@@ -18,7 +18,7 @@ body#makerfaire #site-logo {
 	min-width: 165px;
 	h2.site-title a.makerfaire-logo { display: block !important; }
 }
-body.makercamp #site-logo {
+body.makercamp:not(.makeco) #site-logo {
 	min-width: 100px;
 	h2.site-title a.makercamp-logo { display: block !important; }
 }
