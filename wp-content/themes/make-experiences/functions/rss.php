@@ -21,7 +21,7 @@ function add_event_date_to_rss() {
         <?php
     }
 }
-add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
+//add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 
 // Exclude espresso_events from rss feed if marked for supression
 function filter_posts_from_rss($where, $query = NULL) {

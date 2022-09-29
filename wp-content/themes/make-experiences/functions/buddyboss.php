@@ -19,7 +19,7 @@ function remove_profile_nav() {
 }
 add_action('bp_init', 'remove_profile_nav');
 
-add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
+//add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
 function ad_filter_menu($sorted_menu_objects, $args) {
     //check if current user is a facilitator
     global $current_user;

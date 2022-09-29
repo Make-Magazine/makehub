@@ -87,7 +87,7 @@ function group_event_info_screen_content() {
     $event_id = $wpdb->get_var($sql);
 
     $return = '';
-    if ($event_id) {
+    if ($event_id && class_exists(EEM_Person::class)) {
         $event = EEM_Event::instance()->get_one_by_ID($event_id);
         $tickets = $event->tickets();
 

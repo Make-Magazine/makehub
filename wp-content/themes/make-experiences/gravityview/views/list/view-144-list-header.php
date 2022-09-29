@@ -48,14 +48,16 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 		}
 	  });
 	}
-</script>    
+</script>
 <a class="universal-btn" style="float:right" href="/submit-event/" target="_blank">Submit a New Event</a>
 
 <?php
 global $current_user;
 $current_user = wp_get_current_user();
 $userEmail = (string) $current_user->user_email;
-$person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+if (class_exists(EEM_Person::class)) {
+	$person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+}
 
 if ($person) {
     $personID = $person->ID();
@@ -78,7 +80,7 @@ if ($person) {
         <h2><a href="<?php echo get_permalink($post_id); ?>" target="_blank">Public Facilitator Information</a></h2>
 
         <div id="flip-card" class="host">
-            <div class="host-wrapper front">        
+            <div class="host-wrapper front">
                 <div class="host-photo">
                     <?php echo get_the_post_thumbnail($post_id); ?>
                 </div>
@@ -88,7 +90,7 @@ if ($person) {
                         <div class="host-email">
                             <i class="fas fa-link" aria-hidden="true"></i>
                             <a href="<?php $user_website; ?>" target="_blank"><?php echo $user_website; ?>/</a>
-                        </div>            
+                        </div>
                         <?php
                     }
                     if ($user_social) {
@@ -107,7 +109,7 @@ if ($person) {
                         <?php
                     }
                     ?>
-                    <div class="host-bio">                
+                    <div class="host-bio">
                         <?php
                         $postwithbreaks = wpautop($userBio, true);
                         echo $postwithbreaks;
@@ -115,7 +117,7 @@ if ($person) {
                     </div>
                 </div>
                 <i class="fas fa-user-edit fa-2x flip-toggle" aria-hidden="true"></i>
-            </div> 
+            </div>
             <div class="host-wrapper back smaller">
                 <div class="host-form-wrapper">
                     <h4>Edit Facilitator Profile</h4>
@@ -138,5 +140,5 @@ if ($person) {
 <?php } ?>
 
 <?php gravityview_before($gravityview); ?>
-<div class="<?php gv_container_class('gv-list-container gv-list-view gv-list-multiple-container', true, $gravityview); ?>">    
+<div class="<?php gv_container_class('gv-list-container gv-list-view gv-list-multiple-container', true, $gravityview); ?>">
     <?php gravityview_header($gravityview); ?>

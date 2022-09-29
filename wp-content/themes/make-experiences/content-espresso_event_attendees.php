@@ -19,7 +19,7 @@ if ( $show_gravatar ) {
 	$gravatar = '';
 }
 ?>
-<?php 
+<?php
 do_action( 'AHEE__content-espresso_event_attendees__before', $contact, $show_gravatar );
 $attendee_ID = $contact->get('ATT_ID');
 $registration = EEM_Registration::instance()->get_one([['ATT_ID' => $attendee_ID]]);
@@ -37,14 +37,14 @@ foreach($answer as $ans){
         $attendee_age = $ans->get('ANS_value');
     }elseif($ans->get('QST_ID')=='12'){
         $anything_else = $ans->get('ANS_value');
-    }       
+    }
 }
 
 ?>
 <tr>
-    <td><?php echo '<span class="hidden-xs">' . $gravatar . '&nbsp;</span>' . $contact->full_name(); ?></td>    
+    <td><?php echo '<span class="hidden-xs">' . $gravatar . '&nbsp;</span>' . $contact->full_name(); ?></td>
     <td><?php echo '<a href = "mailto:'. $contact->email().'">'.$contact->email().'</a>';?></td>
-    <td><?php echo $registration->get('REG_date');?></td>            
+    <td><?php echo $registration->get('REG_date');?></td>
     <td><?php echo $attendee_age;?></td>
     <td><?php echo $anything_else;?></td>
 </tr>
