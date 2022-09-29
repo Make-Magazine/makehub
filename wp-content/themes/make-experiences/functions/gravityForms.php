@@ -133,7 +133,7 @@ function getFieldByParam($paramName = '', $parameterArray = array(), $entry = ar
     return '';
 }
 
-/* this field will prepoulate gravity form fields based on the set parameter name */
+/* this field will prepoulate gravity form fields based on the set parameter name FOR EVENT ESPRESSO PEOPLE ADDON
 add_filter('gform_field_value', 'set_field_values', 10, 3);
 
 function set_field_values($value, $field, $name) {
@@ -164,7 +164,7 @@ function set_field_values($value, $field, $name) {
     }
 
     return isset($values[$name]) ? $values[$name] : $value;
-}
+}*/
 
 //update the person record
 function updatePerson($parameter_array, $entry, $person) {

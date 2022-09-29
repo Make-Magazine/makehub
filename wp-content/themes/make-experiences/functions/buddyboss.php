@@ -19,6 +19,33 @@ function remove_profile_nav() {
 }
 add_action('bp_init', 'remove_profile_nav');
 
+add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
+function ad_filter_menu($sorted_menu_objects, $args) {
+    //check if current user is a facilitator
+    global $current_user;
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;
+	if (class_exists(EEM_Person::class)) {
+	    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+
+	    //if they are not a facilitator, remove the facilitator portal from the drop down
+	    if (isset($args->menu->slug)
+	        && ($args->menu->slug == 'profile-dropdown' || $args->menu->slug == 'buddy-panel')
+	        && !$person) {
+	        foreach ($sorted_menu_objects as $key => $menu_object) {
+	            //look for "edit-submission" in the url
+	            $pos = strpos($menu_object->url, "edit-submission");
+	            if ($pos !== false) {
+	                unset($sorted_menu_objects[$key]);
+	                break;
+	            }
+	        }
+	        global $bp;
+	        bp_core_remove_nav_item('facilitator-portal');
+	    }
+	    return $sorted_menu_objects;
+	}
+}
 
 // overwrite the recommended dimensions for the cover image
 function bp_custom_get_cover_image_dimensions( $wh, $settings, $component ) {
