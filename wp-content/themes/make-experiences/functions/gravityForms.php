@@ -188,7 +188,7 @@ function updatePerson($parameter_array, $entry, $person) {
     $person->save();
 }
 
-/* If the person filling out this form is an existing facilitator, populate the preview image */
+/* If the person filling out this form is an existing facilitator, populate the preview image
 add_filter( 'gform_field_content_1_118', 'set_facilitator_img', 10, 5 );
 function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
     if(is_admin()){
@@ -218,7 +218,7 @@ function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
             .   '<div class="preview_img-wrapper" style="background-image: url('.$facilitator_img.');"></div>'
            . '</div>';
     return $input;
-}
+} */
 
 add_filter( 'gform_pre_render', 'gw_conditional_requirement' );
 add_filter( 'gform_pre_validation', 'gw_conditional_requirement' );
