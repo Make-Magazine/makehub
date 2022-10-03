@@ -198,9 +198,9 @@ jQuery(document).ready(function () {
     });
 
     // make some room for our fixed header
-    jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
+    jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "121px");
     if (jQuery(window).width() < 800) {
-        jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
+        jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "76px");
     }
 
     // Subnav
