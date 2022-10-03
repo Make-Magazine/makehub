@@ -72,13 +72,23 @@ body.groups:not(.admin-bar) {
 	}
 }
 body #buddypress .bp-list.members-list .action {
+	display: flex;
+	gap: 10px;
+	margin-top: 10px;
+	&> div { flex: 45%; }
 	.generic-button button, a.send-message {
 		color: #fff !important;
 		background: $color-blue !important;
 		border: solid $color-blue 1px;
 		border-radius: 5px !important;
-		padding: 10px 5px;
-		font-size: 18px;
+		padding: 8px 3px;
+		font-size: 16px;
+		line-height: 16px;
+		height: 40px;
+		width: 100%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		&:hover {
 			color: $color-blue !important;
 			background: #fff !important;
