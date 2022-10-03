@@ -7,7 +7,7 @@ get_header(); ?>
 <?php
 $querystr = "
     SELECT $wpdb->vimeography_gallery.*
-    FROM $wpdb->vimeography_gallery ORDER BY id DESC
+    FROM $wpdb->vimeography_gallery WHERE title NOT LIKE '%Exclude:%' ORDER BY id DESC
 ";
 $galleryInfo = $wpdb->get_results($querystr, OBJECT);
 // get the first value, since the first gallery won't always have id = 1
