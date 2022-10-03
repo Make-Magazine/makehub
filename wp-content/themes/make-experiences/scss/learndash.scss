@@ -78,7 +78,7 @@
 }
 
 // Adventures page
-.sfwd-courses-template, .learndash-cpt-sfwd-courses, .groups {
+.sfwd-courses-template, .learndash-cpt-sfwd-courses, .groups, .single-sfwd-courses  {
 	.ld-course-status, .bb-course-member-wrap { display: none !important; }
 	.ld-lesson-list {
 		.bb-course-meta {
@@ -335,12 +335,7 @@
  }
 
 // EXCEPTIONS
-.sfwd-courses-school-maker-faire-playbook, .group-school-maker-faire-organizers {
-	.widget_follow_us { display: none; }
-}
-
 body.cat-education {
-	.widget_follow_us { display: none; }
 	.learndash-wrapper {
 		.btn-advance.ld-primary-background, .ld-section-heading, .lds-btn-primary, .lds-grid-banners-thumbnail, .btn-join {
 			background-color: #07757A !important;
