@@ -78,7 +78,7 @@
 }
 
 // Adventures page
-.sfwd-courses-template, .learndash-cpt-sfwd-courses, .groups, .single-sfwd-courses  {
+.sfwd-courses-template, .learndash-cpt-sfwd-courses, .groups  {
 	.ld-course-status, .bb-course-member-wrap { display: none !important; }
 	.ld-lesson-list {
 		.bb-course-meta {
@@ -100,7 +100,7 @@
 			cursor: pointer;
 		}
 	}
-	.btn-advance {
+	.btn-advance-start, .btn-advance {
 		border-radius: 3px !important;
 		border: 0px !important;
 	}
