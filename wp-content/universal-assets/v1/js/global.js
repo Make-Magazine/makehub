@@ -1,15 +1,16 @@
 // All the functions and scripts that are just so good they need to be everywhere
 jQuery(window).bind("load", function () {
 
-    // init Bootstrap Tooltips by data attr
-    jQuery(function () {
-        jQuery('[data-toggle="tooltip"]').tooltip({
-			position: {
-			    collision: 'none'
-			},
-			hide: false
-		});
-    });
+    // buddyboss Buddypanel
+	jQuery("a.bb-toggle-panel").on("click", function(){
+		if(jQuery("body").hasClass("buddypanel-closed")) {
+			jQuery("body").removeClass("buddypanel-closed");
+			jQuery("body").addClass("buddypanel-open");
+		} else {
+			jQuery("body").addClass("buddypanel-closed");
+			jQuery("body").removeClass("buddypanel-open");
+		}
+	});
 
     /* Provide a class for Safari, the new IE */
     if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
@@ -149,33 +150,6 @@ function get_hostname(url) {
     var m = url.match(/^http:\/\/[^/]+/);
     return m ? m[0] : null;
 }
-
-// FANCYBOX POPUPS
-jQuery(document).ready(function (jQuery) {
-    // YOUTUBE PLAYER FOR FANCYBOX MODALS
-	if(typeof fancybox === "function"){
-	    jQuery(".fancytube").fancybox({
-	        maxWidth: 800,
-	        maxHeight: 600,
-	        fitToView: false,
-	        width: '70%',
-	        height: '70%',
-	        autoSize: false,
-	        closeClick: false,
-	        openEffect: 'none',
-	        closeEffect: 'none',
-	        padding: 0
-	    });
-	    // just a standard info box
-	    jQuery(".info-modal").fancybox({
-	        fitToView: false,
-	        autoSize: false,
-	        maxWidth: '70%',
-	        autoHeight: true,
-	        padding: 0
-	    });
-	}
-});
 
 // make all buttons with the class .login-btn function like the main one
 jQuery(".login-btn").on('click', function(){

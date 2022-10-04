@@ -43,6 +43,17 @@ function setup_group_nav() {
     }
 }
 
+/**
+ * Remove courses and cours settings from group creation.
+ */
+add_filter( 'admin_bar_menu', function ( ) {
+	$bp = buddypress();
+	unset( $bp->groups->group_creation_steps['courses'] );
+	unset( $bp->groups->group_creation_steps['group-course-settings'] );
+	return $steps;
+}, 9999 );
+
+
 // use this to set specific default tabs for specific groups
 function custom_group_default_tabs($default_tab) {
     if (class_exists('BP_Group_Extension')) :
