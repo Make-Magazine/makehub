@@ -198,6 +198,9 @@ body #buddypress .bp-list.members-list .action {
         #group-settings-form {
             .bp-controls-wrap { display: none; }
         }
+		#group-course-settings-groups-li, #courses-groups-li {
+			display: none;
+		}
     }
     &.group-hidden, &.group-private {
         &:not(.my-group) {
