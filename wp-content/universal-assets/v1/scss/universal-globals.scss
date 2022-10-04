@@ -490,8 +490,8 @@ input.cmn-toggle-round:checked + label:after {
 }
 
 // Data data-balloon-pos
-[data-balloon]:after {
-	content: attr(data-balloon);
+[data-balloon]::after {
+	content: attr(data-balloon) !important;
 }
 
 // This checkbox code is so good, we got to make it universal
