@@ -37,9 +37,6 @@
             }
         }
     }
-	.vimeography-description {
-		max-width: 90% !important;
-	}
     .select-selected {
         border: 1px solid #fff;
         color: #fff;
@@ -97,4 +94,7 @@
     .select-items div:hover, .same-as-selected {
         background-color: rgba(0, 0, 0, 0.1);
     }
+}
+.vimeography-description {
+	max-width: 90% !important;
 }
