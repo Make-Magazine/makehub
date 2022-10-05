@@ -28,12 +28,15 @@ foreach ($results as $blogrow) {
         $table = 'wp_' . $blogID . '_posts';
     }
 
-    $postResults = $wpdb->get_results('select ID, post_title from ' . $table.' where post_content like "%'.$findme.'%"', ARRAY_A);
+    $postResults = $wpdb->get_results('select ID, post_title,post_date, post_status, post_type from ' . $table.' where post_content like "%'.$findme.'%"', ARRAY_A);
     foreach ($postResults as $postRow) {
       $blogArray[] = array(
           'blog_id' => $blogID,
           'blog_name' => $blogrow['domain'],
           'post_id' => $postRow['ID'],
+          'post_date'  => $postRow['post_date'],
+          'post_status'  => $postRow['post_status'],
+          'post_type'  => $postRow['post_type'],
           'post_title' => $postRow['post_title']
       );
     }
@@ -110,17 +113,21 @@ if ((isset($_GET['debug']) && trim($_GET['debug']) != '')) {
               <div style="clear:both">
                 <table width="100%">
                     <tr>
-                        <td width="10%">Blog ID</td>
-                        <td width="20%">Blog Name</td>
-                        <td width="10%">Post ID</td>
-                        <td width="60%">Post Name</td>
+                        <td width="15%">Blog Name</td>
+                        <td width="5%">Post ID</td>
+                        <td width="15%">Post Date</td>
+                        <td width="5%">Post Status</td>
+                        <td width="10%">Post Type</td>
+                        <td width="50%">Post Name</td>
                     </tr>
                     <?php
                     foreach ($blogArray as $blogData) {
                       echo '<tr>';
-                        echo '<td>' . $blogData['blog_id']    . '</td>';
                         echo '<td>' . $blogData['blog_name']  . '</td>';
                         echo '<td>' . $blogData['post_id']    . '</td>';
+                        echo '<td>' . $blogData['post_date']    . '</td>';
+                        echo '<td>' . $blogData['post_status']    . '</td>';
+                        echo '<td>' . $blogData['post_type']    . '</td>';
                         echo '<td><a target="_blank" href="https://' . $blogData['blog_name'] . '/?p='.$blogData['post_id'].'">' . $blogData['post_title'] . '</a></td>';
                       echo '</tr>';
                     }
