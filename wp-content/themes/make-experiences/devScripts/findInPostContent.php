@@ -21,7 +21,7 @@ $blogArray = array();
 $count = 0;
 foreach ($results as $blogrow) {
     $blogID = $blogrow['blog_id'];
-    
+
     if ($blogID == 1) {
         $table = 'wp_posts';
     } else {
@@ -118,10 +118,10 @@ if ((isset($_GET['debug']) && trim($_GET['debug']) != '')) {
                     <?php
                     foreach ($blogArray as $blogData) {
                       echo '<tr>';
-                        echo '<td>' . $blogData['blog_id'] . '</td>';
-                        echo '<td>' . $blogData['blog_name'] . '</td>';
-                        echo '<td>' . $blogData['post_id'] . '</td>';
-                        echo '<td>' . $blogData['post_title'] . '</td>';
+                        echo '<td>' . $blogData['blog_id']    . '</td>';
+                        echo '<td>' . $blogData['blog_name']  . '</td>';
+                        echo '<td>' . $blogData['post_id']    . '</td>';
+                        echo '<td><a target="_blank" href="https://"' . $blogData['blog_name'] . '/?p='.$blogData['post_id'].'>' . $blogData['post_title'] . '</a></td>';
                       echo '</tr>';
                     }
                     ?>
