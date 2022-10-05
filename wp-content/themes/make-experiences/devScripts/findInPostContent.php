@@ -121,7 +121,7 @@ if ((isset($_GET['debug']) && trim($_GET['debug']) != '')) {
                         echo '<td>' . $blogData['blog_id']    . '</td>';
                         echo '<td>' . $blogData['blog_name']  . '</td>';
                         echo '<td>' . $blogData['post_id']    . '</td>';
-                        echo '<td><a target="_blank" href="https://"' . $blogData['blog_name'] . '/?p='.$blogData['post_id'].'>' . $blogData['post_title'] . '</a></td>';
+                        echo '<td><a target="_blank" href="https://' . $blogData['blog_name'] . '/?p='.$blogData['post_id'].'">' . $blogData['post_title'] . '</a></td>';
                       echo '</tr>';
                     }
                     ?>
