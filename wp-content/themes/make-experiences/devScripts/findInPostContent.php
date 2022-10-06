@@ -4,10 +4,15 @@ include '../../../../wp-load.php';
 global $wpdb;
 
 $findme  = (isset($_GET['findme']) ? $_GET['findme'] : '');
+$status  = (isset($_GET['status']) ? $_GET['status'] : '');
+
 if ($findme != '') {
-    echo 'looking for ' . $findme . '<br/>';
+    echo 'looking for ' . $findme . ' '.($status!=''?' with a post_status of '.$status:'').'<br/><br/>';
 }else{
-  echo 'Please enter your search term in the URL using the findme variable';
+  $file_path = __DIR__;
+  $url_path = get_site_url().str_replace($_SERVER['DOCUMENT_ROOT'], '', $file_path);
+  echo 'Please enter your search term in the URL using the findme variable. IE: '.$url_path.'/findInPostContent.php?findme=sometext<br/>';
+  echo 'To limit post type, use the status variable. IE: '.$url_path.'/findInPostContent.php?findme=sometext&status=publish<br/>';
   die();
 }
 global $wpdb;
@@ -28,7 +33,11 @@ foreach ($results as $blogrow) {
         $table = 'wp_' . $blogID . '_posts';
     }
 
-    $postResults = $wpdb->get_results('select ID, post_title,post_date, post_status, post_type from ' . $table.' where post_content like "%'.$findme.'%"', ARRAY_A);
+    $postResults = $wpdb->get_results('select ID, post_title, post_date, post_status, post_type from ' . $table.
+    ' where post_content like "%'.$findme.'%" '.
+    ($status !=''? ' and post_status = "'.$status.'"':'') .
+    'order by post_date', ARRAY_A);
+
     foreach ($postResults as $postRow) {
       $blogArray[] = array(
           'blog_id' => $blogID,
