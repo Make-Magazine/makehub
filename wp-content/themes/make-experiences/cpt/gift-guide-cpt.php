@@ -96,6 +96,9 @@ function register_taxonomy_gift_guide_categories() {
 		'show_in_rest' => true
 	);
 
+	register_taxonomy( 'gift_guide_categories', array('gift_guides'), $args );
+
+
 	// Original terms, commented out so they can be edited in admin without issue
 	$gift_guide_categories = [
 		"arts-crafts" => "Arts/Crafts",
@@ -116,9 +119,6 @@ function register_taxonomy_gift_guide_categories() {
 			]);
 		}
 	}
-
-	register_taxonomy( 'gift_guide_categories', array('gift_guides'), $args );
-
 }
 
 add_action( 'init', 'register_taxonomy_audiences' );
