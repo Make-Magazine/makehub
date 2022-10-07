@@ -38,7 +38,7 @@ function register_cpt_gift_guide() {
 		'hierarchical' => false,
 		'description' => 'Gift Guides are submitted by a Gravity form for Gift Guides',
 		'supports' => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes' ),
-		'taxonomies' => array( 'gift_guide_categories', 'audiences' ),
+		'taxonomies' => array( 'gift_guide_categories', 'audiences', 'gift_guide_years' ),
 		'public' => true,
 		'menu_icon' => 'dashicons-products',
 		'show_ui' => true,
@@ -175,6 +175,48 @@ function register_taxonomy_audiences() {
 			]);
 		}
 	}
+
+}
+
+
+add_action( 'init', 'register_taxonomy_gift_guide_years' );
+/**
+ * Add the Gift Guide Year taxonomy
+ *
+ */
+function register_taxonomy_gift_guide_years() {
+
+	$labels = array(
+		'name' => _x( 'Gift Guide Years', 'gift_guide_years' ),
+		'singular_name' => _x( 'Gift Guide Year', 'gift_guide_years' ),
+		'search_items' => _x( 'Search Gift Guide Year', 'gift_guide_years' ),
+		'popular_items' => _x( 'Popular Gift Guide Years', 'gift_guide_years' ),
+		'all_items' => _x( 'All Gift Guide Years', 'gift_guide_years' ),
+		'parent_item' => _x( 'Parent Gift Guide Year', 'gift_guide_years' ),
+		'parent_item_colon' => _x( 'Parent Gift Guide Year:', 'gift_guide_years' ),
+		'edit_item' => _x( 'Edit Gift Guide Year', 'gift_guide_years' ),
+		'update_item' => _x( 'Update Gift Guide Year', 'gift_guide_years' ),
+		'add_new_item' => _x( 'Add New Gift Guide Year', 'gift_guide_years' ),
+		'new_item_name' => _x( 'New Gift Guide Year', 'gift_guide_years' ),
+		'separate_items_with_commas' => _x( 'Separate Gift Guide Years with commas', 'gift_guide_years' ),
+		'add_or_remove_items' => _x( 'Add or remove Gift Guide Years', 'gift_guide_years' ),
+		'choose_from_most_used' => _x( 'Choose from most used Gift Guide Years', 'gift_guide_years' ),
+		'menu_name' => _x( 'Gift Guide Years', 'gift_guide_years' ),
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'public' => true,
+		'show_in_nav_menus' => true,
+		'show_ui' => true,
+		'show_tagcloud' => true,
+		'hierarchical' => true,
+		'rewrite' => true,
+		'query_var' => true,
+		'show_in_rest' => true
+	);
+
+	register_taxonomy( 'gift_guide_years', array('gift_guides'), $args );
 
 }
 
