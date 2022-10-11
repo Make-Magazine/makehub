@@ -34,7 +34,7 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "Read More",
+            "default_value": "More",
             "placeholder": "",
             "prepend": "",
             "append": "",
@@ -54,7 +54,7 @@
                 "id": ""
             },
             "message": "",
-            "default_value": 0,
+            "default_value": 1,
             "ui": 0,
             "ui_on_text": "",
             "ui_off_text": ""
@@ -78,5 +78,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1665438484
+    "modified": 1665516546
 }

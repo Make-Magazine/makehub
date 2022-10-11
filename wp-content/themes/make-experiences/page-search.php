@@ -14,12 +14,6 @@ get_header();
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12">
-					<h1><?php single_post_title(); ?></h1>
-					<?php dynamic_sidebar('search'); ?>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12 col-sm-12">
 					<?php if ( have_posts() ) :
 
 						do_action( THEME_HOOK_PREFIX . '_template_parts_content_top' );
