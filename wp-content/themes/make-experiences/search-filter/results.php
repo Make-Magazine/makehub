@@ -22,6 +22,10 @@
  *
  */
 
+$show_desc = get_field('show_short_description');
+$show_button = get_field('show_button');
+$button_text = get_field('button_text');
+
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,6 +59,7 @@ if ( $query->have_posts() ) {
 			$query->the_post();
 
 			$secondary_image = get_the_post_thumbnail_url();
+			$link = get_permalink();
 			if(get_post_type() == "contestants") {
 				$first_name = 		get_field( 'user_first_name', $post->ID, true );
 				$last_name = 		get_field( 'user_last_name', $post->ID, true );
@@ -66,6 +71,7 @@ if ( $query->have_posts() ) {
 				$cost = 			get_field( 'cost', $post->ID, true );
 				$images =			get_field( 'product_image_links', $post->ID, true );
 				$secondary_image = 	$images[0]['product_image'];
+				$link = 			get_field( 'purchase_url', $post->ID, true );
 			}
 
 			?>
@@ -96,9 +102,14 @@ if ( $query->have_posts() ) {
 					<?php if( isset($cost) ) { ?>
 						<p class="cost">$<?php echo $cost; ?></p>
 					<?php } ?>
-					<p class="short_desc"><?php echo $short_desc; ?></p>
+					<?php if( $show_desc == true ) { ?>
+						<p class="short_desc"><?php echo $short_desc; ?></p>
+					<?php } ?>
 					<?php if( isset($vote_count) ) { ?>
 						<p><b>Community Votes:</b> <?php echo $vote_count  ?></p>
+					<?php } ?>
+					<?php if( $show_button == true ) { ?>
+						<a class="universal-btn" href="<?php echo $link; ?>"><?php echo $button_text; ?></a>
 					<?php } ?>
 				</div>
 			</div>
