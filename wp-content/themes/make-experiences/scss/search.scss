@@ -1,9 +1,13 @@
 .page-template-page-search {
+	.site-content {
+		padding: 0px;
+		&> .container {
+			width: 100%;
+			padding: 0px;
+		}
+	}
 	.entry-header {
 		display: none;
-	}
-	.search-results-page .container {
-		min-width: 90%;
 	}
 	.results-info {
 		display: flex;
@@ -14,22 +18,19 @@
 	.result-items {
 		display: flex;
 		flex-wrap: wrap;
+		gap: 10px;
 		.result-item {
-			border: solid 1px $color-light-grey;
-			-webkit-box-shadow: 0 2px 5px 0 hsl(0deg 0% 66% / 50%);
-			box-shadow: 0 2px 5px 0 hsl(0deg 0% 66% / 50%);
-			background: #fff;
-			border-radius: 3px;
-			padding: 10px;
-			align-self: stretch;
 			display: flex;
 			flex-direction: column;
-			margin: 0px 15px 15px 0;
-			width: calc(1/3*100% - (1 - 1/3)*15px);
-			.result-image a {
-				display: flex;
-				aspect-ratio: 1.35 / 1;
-				img { object-fit: cover; }
+			width: calc(1/4*100% - (1 - 1/4)*20px);
+			.featured-image {
+				aspect-ratio: 1;
+				overflow: hidden;
+				border: solid 2px #e6e6e6;
+				img {
+					height: 100%;
+					object-fit: cover;
+				}
 			}
 			.video-preview {
 				.fluid-width-video-wrapper {
@@ -41,29 +42,22 @@
 					}
 				}
 			}
-			&:nth-of-type(3n) {
+			&:nth-of-type(4n) {
 				margin-right: 0px;
 			}
+			@media screen and (max-width: 1024px) {
+				width: calc(1/3*100% - (1 - 1/3)*20px);
+			}
 			@media screen and (max-width: 767px) {
-				width: calc(1/2*100% - (1 - 1/2)*15px);
-				&:nth-of-type(3n) {
-					margin-right: 15px;
-				}
-				&:nth-of-type(2n) {
-					margin-right: 0px;
-				}
+				width: calc(1/2*100% - (1 - 1/2)*20px);
 			}
 			@media screen and (max-width: 500px) {
 				width: 100%;
-				margin: 0px 0px 10px 0;
-				&:nth-of-type(3n) {
-					margin-right: 0px;
-				}
 			}
 			h2 {
-				margin: 10px 0px 15px;
-				font-size: 28px;
-				color: $color-blue;
+				margin: 10px 0px 5px;
+				font-size: 16px;
+				font-weight: 500;
 				a {
 					color: #333;
 					display: -webkit-box;
@@ -78,7 +72,7 @@
 				height: 40px;
 			}
 			.results-meta {
-				margin-top: auto;
+				//margin-top: auto;
 				.author {
 					font-weight: bold;
 				}
@@ -123,7 +117,95 @@
 		}
 		&:first-of-type { display: none; }
 	}
+
+	form.searchandfilter ul {
+		margin: 0px;
+	}
+
+	// specific types of filters
+	.sf-field-search label, .sf-field-search input {
+		width: 100%;
+	}
+	.sf-field-taxonomy-audiences ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+		@media screen and (min-width: 781px) {
+			max-width: calc(100% - 150px);
+		}
+		input[type="checkbox"] { display: none; }
+		label {
+			padding: 10px 15px;
+			background: #fff;
+			border: solid 1px $color-blue;
+			color: $color-blue;
+			&:hover {
+				background: $color-blue;
+				color: #fff;
+			}
+		}
+		input:checked + label {
+			background: $color-blue;
+			color: #fff;
+		}
+	}
+	.sf-field-taxonomy-gift_guide_categories ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+		input[type="checkbox"] { display: none; }
+		label {
+			font-weight: bold;
+			display: flex;
+			flex-direction: column;
+			text-align: center;
+			&:before {
+				border: 3px solid transparent;
+				border-radius: 1000px;
+				padding: 0px;
+				height: 130px;
+			}
+			&:hover:before {
+				opacity: .8;
+				background: $color-blue;
+			}
+		}
+		input:checked + label:before {
+			border: 3px solid $color-light-blue;
+		}
+		input[value="arts-crafts"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/arts-crafts.png");
+		}
+		input[value="books"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/books.png");
+		}
+		input[value="gadgets"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/gadgets.png");
+		}
+		input[value="games-toys"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/games-toys.png");
+		}
+		input[value="home"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/home.png");
+		}
+		input[value="lifestyle"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/lifestyle.png");
+		}
+		input[value="maker-wear"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/maker-wear.png");
+		}
+		input[value="other"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/other.png");
+		}
+		input[value="tech"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/tech.png");
+		}
+		input[value="tools"] + label:before {
+			content: url("/wp-content/themes/make-experiences/images/gift-guides/tools.png");
+		}
+	}
 }
+
 .filter-reset { text-align: right; margin-bottom: -20px; }
 
 .top-10-btn {
@@ -224,5 +306,12 @@
 				}
 			}
 		}
+	}
+}
+
+.page-gift-guide {
+	.search-filter-results { margin-top: 30px; }
+	@media screen and (min-width: 781px) {
+		.filter-reset { margin-top: -95px; }
 	}
 }
