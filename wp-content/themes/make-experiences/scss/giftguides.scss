@@ -2,12 +2,81 @@
 	.breadcrumbs {
 		a {
 			padding: 0px;
+			color: #333;
 			&::after {
 				content: ">";
 				padding: 0 10px;
 			}
 			&:last-of-type::after {
 				display: none;
+			}
+		}
+	}
+	#main {
+		display: flex;
+		gap: 30px;
+		flex-direction: column;
+		@media screen and (min-width: 781px) {
+			flex-direction: row;
+			&> div {
+				flex: 50%;
+				max-width: 50%;
+			}
+		}
+		.gg-gallery {
+			position: relative;
+			@media screen and (max-width: 781px) {
+				order: 2;
+			}
+			.gg-gallery-off { display: none; }
+			.gg-gallery-viewer {
+				aspect-ratio: 1;
+				overflow: hidden;
+				img { width: 100%; }
+			}
+			.video-preview iframe {
+				max-width: 100%;
+			}
+			.gg-gallery-buttons {
+				margin-top: 15px;
+				border-top: solid 1px #ccc;
+				padding-top: 15px;
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				.gg-gallery-thumbnail {
+					max-width: 100px;
+				}
+			}
+			#gg-gallery-overlay {
+				border: 1px dotted #666;
+				width: 250px;
+				height: 250px;
+				display: inline-block;
+				background-repeat: no-repeat;
+				background-size: 250%;
+				background-color: #f1f1f1;
+				position: absolute;
+				z-index: 99;
+				left: 100%;
+				top: 0px;
+				display: none;
+			}
+		}
+		.gg-info {
+			position: sticky;
+			top: 150px;
+			height: fit-content;
+			h1 { margin-top: 0px; }
+			.gg-description {
+				padding-bottom: 15px;
+				border-bottom: solid 1px #ccc;
+				margin-bottom: 15px;
+			}
+			.gg-cost { font-size: 20px; }
+			.universal-btn {
+				width: 100%;
+				margin-top: 15px;
 			}
 		}
 	}
