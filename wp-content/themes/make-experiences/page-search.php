@@ -11,13 +11,7 @@ get_header();
 
 <div id="primary" class="content-area bb-grid-cell">
 	<main id="main" class="site-main search-results-page">
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12">
-					<h1><?php single_post_title(); ?></h1>
-					<?php dynamic_sidebar('search'); ?>
-				</div>
-			</div>
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12">
 					<?php if ( have_posts() ) :

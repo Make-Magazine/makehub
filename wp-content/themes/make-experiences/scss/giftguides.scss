@@ -1,0 +1,14 @@
+.single-gift-guides {
+	.breadcrumbs {
+		a {
+			padding: 0px;
+			&::after {
+				content: ">";
+				padding: 0 10px;
+			}
+			&:last-of-type::after {
+				display: none;
+			}
+		}
+	}
+}
