@@ -126,6 +126,11 @@ figure {
 	max-width: 100% !important;
 	width: 100%;
 }
+@media screen and (min-width: 781px) {
+	body:not(.page-template-page-fullscreen) .site {
+	  overflow-x: initial;
+	}
+}
 // for the cases where the buddypanel was overlapping content at some breakpoints
 .page-template .wp-block-columns {
 	margin-left: 10px;
