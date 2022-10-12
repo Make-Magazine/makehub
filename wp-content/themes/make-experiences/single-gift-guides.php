@@ -32,9 +32,11 @@ get_header();
 		<a href="<?php echo $referrer_parts['domain'] . $referrer_parts['path']; ?>">Gift Guide</a>
 		<?php
 		foreach($parameters as $key => $value) {
-			$parameter_arr = explode(",", $value);
-			foreach($parameter_arr as $parameter) {
-				echo("<a href='" . $referrer_parts['domain'] . $referrer_parts['path'] . "?" . $key . "=" . $parameter . "'>" . ucwords(str_replace("-", " / ", $parameter)) . "</a>");
+			if($key == "_sft_gift_guide_categories" || $key == "_sft_audiences") {
+				$parameter_arr = explode(",", $value);
+				foreach($parameter_arr as $parameter) {
+					echo("<a href='" . $referrer_parts['domain'] . $referrer_parts['path'] . "?" . $key . "=" . $parameter . "'>" . ucwords(str_replace("-", " / ", $parameter)) . "</a>");
+				}
 			}
 		}
 		?>

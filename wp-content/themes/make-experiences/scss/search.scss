@@ -328,8 +328,8 @@
 }
 
 .page-gift-guide {
-	.search-filter-results { margin-top: 30px; }
+	.search-filter-results { margin-top: 100px; }
 	@media screen and (min-width: 781px) {
-		.filter-reset { margin-top: -95px; }
+		.filter-reset { margin-top: -95px;margin-bottom: -80px; }
 	}
 }
