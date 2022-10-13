@@ -78,6 +78,32 @@
 				width: 100%;
 				margin-top: 15px;
 			}
+			.essb_links {
+				margin-bottom: 0px;
+				margin-top: 30px;
+				ul {
+					display: flex;
+					justify-content: space-between;
+					li {
+						max-width: 75px;
+						border-radius: 100px;
+						overflow: hidden;
+						a {
+							text-align: center;
+							margin: 0px;
+						 }
+					}
+				}
+			}
+			h3 {
+				font-size: 18px;
+				color: $color-blue;
+			}
+			.gg-taxonomy-list {
+				margin: 0px;
+				list-style: none;
+				a { color: #333; }
+			}
 		}
 	}
 }

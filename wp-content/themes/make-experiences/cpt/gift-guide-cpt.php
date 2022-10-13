@@ -20,7 +20,7 @@ function register_cpt_gift_guide() {
 
 	$labels = array(
 		'name' => _x( 'Gift Guides', 'Gift Guide' ),
-		'singular_name' => _x( 'Gift Guide', 'Gift Guide' ),
+		'singular_name' => _x( 'Gift Guide Product', 'Gift Guide' ),
 		'add_new' => _x( 'Add New', 'Gift Guide' ),
 		'add_new_item' => _x( 'Add New Gift Guide', 'Gift Guide' ),
 		'edit_item' => _x( 'Edit Gift Guide', 'Gift Guide' ),
@@ -31,6 +31,7 @@ function register_cpt_gift_guide() {
 		'not_found_in_trash' => _x( 'No Gift Guides found in Trash', 'Gift Guide' ),
 		'parent_item_colon' => _x( 'Parent Gift Guide:', 'Gift Guide' ),
 		'menu_name' => _x( 'Gift Guides', 'Gift Guide' ),
+		'all_items' => _x( 'Gift Guide Products', 'Gift Guide' )
 	);
 
 	$args = array(

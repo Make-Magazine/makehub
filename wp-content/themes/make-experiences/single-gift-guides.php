@@ -22,14 +22,15 @@ foreach($images as $image) {
 	$gallery[] = $image['product_image'];
 }
 $extra_videos =		array();
-
+$categories = get_the_terms( get_the_ID(), 'gift_guide_categories' );
+$audiences = get_the_terms( get_the_ID(), 'audiences' );
 
 get_header();
 ?>
 
 <div id="primary" class="content-area">
 	<nav class="breadcrumbs">
-		<a href="<?php echo $referrer_parts['domain'] . $referrer_parts['path']; ?>">Gift Guide</a>
+		<a href="/gift-guide">Gift Guide</a>
 		<?php
 		foreach($parameters as $key => $value) {
 			if($key == "_sft_gift_guide_categories" || $key == "_sft_audiences") {
@@ -72,6 +73,22 @@ get_header();
 			<div class="gg-description"><?php echo $short_desc; ?></div>
 			<div class="gg-cost">$<?php echo $cost; ?></div>
 			<a class="universal-btn" href="<?php echo $purchase_url; ?>">Get it now</a>
+			<?php
+			if (class_exists('ESSB_Plugin_Options')) {
+				$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+				echo do_shortcode('[easy-social-share buttons="facebook,pinterest,twitter,love" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="4" postid="' . get_the_ID() . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
+			}
+			echo("<h3>Categories</h3><ul class='gg-taxonomy-list'>");
+			foreach($categories as $category) {
+				echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $category->slug . "'>" . $category->name . "</a></li>");
+			}
+			echo("</ul>");
+			echo("<h3>Audiences</h3><ul class='gg-taxonomy-list'>");
+			foreach($audiences as $audience) {
+				echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $audience->slug . "'>" . $audience->name . "</a></li>");
+			}
+			echo("</ul>");
+			?>
 		</div>
     </main><!-- #main -->
 </div><!-- #primary -->
