@@ -1124,11 +1124,6 @@
                 "reference": "c4debb6c3150b0732eb29b2b897bcbaef8cc6f97",
                 "shasum": ""
             },
-            "archive": {
-                "exclude": [
-                    "!/build"
-                ]
-            },
             "require": {
                 "composer/installers": "~1.2",
                 "php": "^7.1"
@@ -1145,6 +1140,11 @@
                 "phpcodesniffer-search-depth": 2
             },
             "installation-source": "dist",
+            "archive": {
+                "exclude": [
+                    "!/build"
+                ]
+            },
             "scripts": {
                 "phpcs": [
                     "bin/phpcs.sh"
