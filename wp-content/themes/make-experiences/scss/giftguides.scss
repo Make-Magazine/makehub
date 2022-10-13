@@ -44,8 +44,11 @@
 				display: flex;
 				gap: 10px;
 				flex-wrap: wrap;
-				.gg-gallery-thumbnail {
+				.gg-gallery-btn {
 					max-width: 100px;
+					max-height: 100px;
+					aspect-ratio: 1;
+					overflow: hidden;
 				}
 			}
 			#gg-gallery-overlay {
@@ -61,6 +64,22 @@
 				left: 100%;
 				top: 0px;
 				display: none;
+			}
+		}
+		.gg-taxonomy-section {
+			margin-top: 15px;
+			border-top: solid 1px #ccc;
+			padding-top: 5px;
+			h3 {
+				font-size: 18px;
+				color: $color-blue;
+			}
+			.gg-taxonomy-list {
+				margin: 0px;
+				list-style: none;
+				display: flex;
+				gap: 15px;
+				a { color: #333; }
 			}
 		}
 		.gg-info {
@@ -85,7 +104,7 @@
 					display: flex;
 					justify-content: space-between;
 					li {
-						max-width: 75px;
+						max-width: 35px;
 						border-radius: 100px;
 						overflow: hidden;
 						a {
@@ -94,15 +113,6 @@
 						 }
 					}
 				}
-			}
-			h3 {
-				font-size: 18px;
-				color: $color-blue;
-			}
-			.gg-taxonomy-list {
-				margin: 0px;
-				list-style: none;
-				a { color: #333; }
 			}
 		}
 	}
