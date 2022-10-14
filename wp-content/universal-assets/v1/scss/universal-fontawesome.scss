@@ -33,8 +33,7 @@
 	&.fa-caret-down:before { content: "\f0d7"; }
 	&.fa-caret-up:before { content: "\f0d8"; }
 	&.fa-circle:before { content: "\f111"; }
-	&.fa-minus-circle:before, &.fa-circle-minus:before { content: "\f056"; }
-	&.fa-times-circle:before, &.fa-circle-times:before { content: "\f057"; }
+	&.fa-minus-circle:before, &.fa-circle-minue:before { content: "\f056"; }
 	&.fa-plus:before { content: "\2b"; }
 	&.fa-star:before { content: "\f005"; }
 	&.fa-edit:before { content: "\f044"; }
@@ -57,10 +56,6 @@
 	&.fa-tiktok:before { content: "\e07b"; }
 	&.fa-linkedin:before { content: "\f08c"; }
 	&.fa-snapchat:before { content: "\f2ab"; }
-}
-
-i.fab, i.far, i.fas, i.fa {
-	font-style: normal;
 }
 
 @keyframes spin {
