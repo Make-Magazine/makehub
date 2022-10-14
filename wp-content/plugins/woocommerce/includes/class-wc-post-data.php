@@ -11,7 +11,6 @@
 use Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer;
 use Automattic\WooCommerce\Internal\ProductAttributesLookup\LookupDataStore as ProductAttributesLookupDataStore;
 use Automattic\WooCommerce\Proxies\LegacyProxy;
-use Automattic\WooCommerce\Utilities\OrderUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -428,7 +427,7 @@ class WC_Post_Data {
 	 * @param int $order_id Order ID.
 	 */
 	public static function before_delete_order( $order_id ) {
-		if ( OrderUtil::is_order( $order_id, wc_get_order_types() ) ) {
+		if ( in_array( get_post_type( $order_id ), wc_get_order_types(), true ) ) {
 			// Clean up user.
 			$order = wc_get_order( $order_id );
 
@@ -464,7 +463,7 @@ class WC_Post_Data {
 	public static function delete_order_items( $postid ) {
 		global $wpdb;
 
-		if ( OrderUtil::is_order( $postid, wc_get_order_types() ) ) {
+		if ( in_array( get_post_type( $postid ), wc_get_order_types(), true ) ) {
 			do_action( 'woocommerce_delete_order_items', $postid );
 
 			$wpdb->query(
@@ -486,7 +485,7 @@ class WC_Post_Data {
 	 * @param int $postid Post ID.
 	 */
 	public static function delete_order_downloadable_permissions( $postid ) {
-		if ( OrderUtil::is_order( $postid, wc_get_order_types() ) ) {
+		if ( in_array( get_post_type( $postid ), wc_get_order_types(), true ) ) {
 			do_action( 'woocommerce_delete_order_downloadable_permissions', $postid );
 
 			$data_store = WC_Data_Store::load( 'customer-download' );

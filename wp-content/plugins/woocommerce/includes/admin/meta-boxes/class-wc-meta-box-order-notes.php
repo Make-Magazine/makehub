@@ -17,22 +17,16 @@ class WC_Meta_Box_Order_Notes {
 	/**
 	 * Output the metabox.
 	 *
-	 * @param WP_Post|WC_Order $post Post or order object.
+	 * @param WP_Post $post Post object.
 	 */
 	public static function output( $post ) {
-		if ( $post instanceof WC_Order ) {
-			$order_id = $post->get_id();
-		} else {
-			$order_id = $post->ID;
-		}
+		global $post;
 
-		$args = array( 'order_id' => $order_id );
+		$args = array(
+			'order_id' => $post->ID,
+		);
 
-		if ( 0 !== $order_id ) {
-			$notes = wc_get_order_notes( $args );
-		} else {
-			$notes = array();
-		}
+		$notes = wc_get_order_notes( $args );
 
 		include __DIR__ . '/views/html-order-notes.php';
 		?>

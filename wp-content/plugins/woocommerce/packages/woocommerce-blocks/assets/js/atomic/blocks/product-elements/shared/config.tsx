@@ -3,6 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Icon, grid } from '@wordpress/icons';
+import { isExperimentalBuild } from '@woocommerce/block-settings';
 import type { BlockConfiguration } from '@wordpress/blocks';
 
 /**
@@ -28,7 +29,9 @@ const sharedConfig: Omit< BlockConfiguration, 'attributes' | 'title' > = {
 	supports: {
 		html: false,
 	},
-	parent: [ '@woocommerce/all-products', '@woocommerce/single-product' ],
+	parent: isExperimentalBuild()
+		? undefined
+		: [ '@woocommerce/all-products', '@woocommerce/single-product' ],
 	save,
 	deprecated: [
 		{

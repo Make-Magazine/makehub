@@ -21,7 +21,7 @@ class Version_Selector {
 	public function is_version_update_required( $selected_version, $compare_version ) {
 		$use_dev_versions = defined( 'JETPACK_AUTOLOAD_DEV' ) && JETPACK_AUTOLOAD_DEV;
 
-		if ( $selected_version === null ) {
+		if ( is_null( $selected_version ) ) {
 			return true;
 		}
 

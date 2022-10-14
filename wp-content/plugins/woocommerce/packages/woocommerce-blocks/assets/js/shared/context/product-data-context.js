@@ -63,7 +63,6 @@ const defaultProductData = {
 const ProductDataContext = createContext( {
 	product: defaultProductData,
 	hasContext: false,
-	isLoading: false,
 } );
 
 export const useProductDataContext = () => useContext( ProductDataContext );
@@ -71,11 +70,10 @@ export const useProductDataContext = () => useContext( ProductDataContext );
 export const ProductDataContextProvider = ( {
 	product = null,
 	children,
-	isLoading,
+	isLoading = false,
 } ) => {
 	const contextValue = {
 		product: product || defaultProductData,
-		isLoading,
 		hasContext: true,
 	};
 

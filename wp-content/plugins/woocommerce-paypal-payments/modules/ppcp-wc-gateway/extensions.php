@@ -98,6 +98,4 @@ return array(
 			$source
 		);
 	},
-
-	'wcgateway.settings.fields'      => require __DIR__ . '/connection-tab-settings.php',
 );

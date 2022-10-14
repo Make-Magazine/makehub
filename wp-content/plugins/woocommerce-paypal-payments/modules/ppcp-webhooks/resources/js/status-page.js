@@ -10,7 +10,6 @@ document.addEventListener(
                 PayPalCommerceGatewayWebhooksStatus.resubscribe.endpoint,
                 {
                     method: 'POST',
-                    credentials: 'same-origin',
                     headers: {
                         'content-type': 'application/json'
                     },
@@ -53,7 +52,6 @@ document.addEventListener(
                     PayPalCommerceGatewayWebhooksStatus.simulation.start.endpoint,
                     {
                         method: 'POST',
-                        credentials: 'same-origin',
                         headers: {
                             'content-type': 'application/json'
                         },
@@ -108,7 +106,6 @@ document.addEventListener(
                         PayPalCommerceGatewayWebhooksStatus.simulation.state.endpoint,
                         {
                             method: 'GET',
-                            credentials: 'same-origin',
                         }
                     );
 

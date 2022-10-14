@@ -190,4 +190,5 @@ abstract class CustomMetaDataStore {
 
 		return $meta;
 	}
+
 }

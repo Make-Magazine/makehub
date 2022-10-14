@@ -6,8 +6,6 @@ use Automattic\WooCommerce\Blocks\Package;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
-use Automattic\WooCommerce\Blocks\BlockTypes\Cart;
-use Automattic\WooCommerce\Blocks\BlockTypes\Checkout;
 
 /**
  * BlockTypesController class.
@@ -198,10 +196,12 @@ final class BlockTypesController {
 			'ProductTitle',
 			'MiniCart',
 			'MiniCartContents',
-			'ProductQuery',
 		];
 
-		$block_types = array_merge( $block_types, Cart::get_cart_block_types(), Checkout::get_checkout_block_types() );
+		if ( Package::feature()->is_feature_plugin_build() ) {
+			$block_types[] = 'Checkout';
+			$block_types[] = 'Cart';
+		}
 
 		if ( Package::feature()->is_experimental_build() ) {
 			$block_types[] = 'SingleProduct';

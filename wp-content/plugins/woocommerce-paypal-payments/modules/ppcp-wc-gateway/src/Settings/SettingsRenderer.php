@@ -34,13 +34,6 @@ class SettingsRenderer {
 	protected $settings_status;
 
 	/**
-	 * The api shop country.
-	 *
-	 * @var string
-	 */
-	protected $api_shop_country;
-
-	/**
 	 * The settings.
 	 *
 	 * @var ContainerInterface
@@ -100,7 +93,6 @@ class SettingsRenderer {
 	 * @param DCCProductStatus   $dcc_product_status The product status.
 	 * @param SettingsStatus     $settings_status The Settings status helper.
 	 * @param string             $page_id ID of the current PPCP gateway settings page, or empty if it is not such page.
-	 * @param string             $api_shop_country The api shop country.
 	 */
 	public function __construct(
 		ContainerInterface $settings,
@@ -110,8 +102,7 @@ class SettingsRenderer {
 		MessagesApply $messages_apply,
 		DCCProductStatus $dcc_product_status,
 		SettingsStatus $settings_status,
-		string $page_id,
-		string $api_shop_country
+		string $page_id
 	) {
 
 		$this->settings           = $settings;
@@ -122,7 +113,6 @@ class SettingsRenderer {
 		$this->dcc_product_status = $dcc_product_status;
 		$this->settings_status    = $settings_status;
 		$this->page_id            = $page_id;
-		$this->api_shop_country   = $api_shop_country;
 	}
 
 	/**
@@ -358,7 +348,7 @@ $data_rows_html
 	/**
 	 * Renders the settings.
 	 */
-	public function render(): void {
+	public function render() {
 
 		$is_dcc = CreditCardGateway::ID === $this->page_id;
 		//phpcs:enable WordPress.Security.NonceVerification.Recommended
@@ -391,14 +381,14 @@ $data_rows_html
 				continue;
 			}
 			if (
-				in_array( 'messages', $config['requirements'], true )
-				&& ! $this->messages_apply->for_country()
+				in_array( 'dcc', $config['requirements'], true )
+				&& ! $this->dcc_product_status->dcc_is_active()
 			) {
 				continue;
 			}
 			if (
-				in_array( 'pui_ready', $config['requirements'], true )
-				&& $this->api_shop_country !== 'DE'
+				in_array( 'messages', $config['requirements'], true )
+				&& ! $this->messages_apply->for_country()
 			) {
 				continue;
 			}
@@ -442,10 +432,6 @@ $data_rows_html
 
 				<?php if ( $description ) : ?>
 				<p class="<?php echo 'ppcp-heading' === $config['type'] ? '' : 'description'; ?>"><?php echo wp_kses_post( $description ); ?></p>
-				<?php endif; ?>
-
-				<?php if ( isset( $config['description_with_tip'] ) && $config['description_with_tip'] ) : ?>
-					<p class="<?php echo 'description'; ?>"><?php echo wp_kses_post( $config['description_with_tip'] ); ?></p>
 				<?php endif; ?>
 			</td>
 		</tr>

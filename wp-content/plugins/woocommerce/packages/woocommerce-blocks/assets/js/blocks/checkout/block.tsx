@@ -145,7 +145,7 @@ const Block = ( {
 	return (
 		<BlockErrorBoundary
 			header={ __(
-				'Something went wrong. Please contact us for assistance.',
+				'Something went wrong…',
 				'woo-gutenberg-products-block'
 			) }
 			text={ createInterpolateElement(

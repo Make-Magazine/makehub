@@ -1,8 +1,6 @@
 <?php
 namespace Automattic\WooCommerce\Blocks\BlockTypes;
 
-use Automattic\WooCommerce\Blocks\Package;
-
 /**
  * Checkout class.
  *
@@ -74,12 +72,11 @@ class Checkout extends AbstractBlock {
 	/**
 	 * Append frontend scripts when rendering the block.
 	 *
-	 * @param array    $attributes Block attributes.
-	 * @param string   $content    Block content.
-	 * @param WP_Block $block Block instance.
+	 * @param array  $attributes Block attributes.
+	 * @param string $content    Block content.
 	 * @return string Rendered block type output.
 	 */
-	protected function render( $attributes, $content, $block ) {
+	protected function render( $attributes, $content ) {
 		if ( $this->is_checkout_endpoint() ) {
 			// Note: Currently the block only takes care of the main checkout form -- if an endpoint is set, refer to the
 			// legacy shortcode instead and do not render block.
@@ -182,23 +179,20 @@ class Checkout extends AbstractBlock {
 			},
 			true
 		);
-		if ( wc_shipping_enabled() ) {
-			$this->asset_data_registry->add(
-				'shippingCountries',
-				function() {
-					return $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() );
-				},
-				true
-			);
-			$this->asset_data_registry->add(
-				'shippingStates',
-				function() {
-					return $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() );
-				},
-				true
-			);
-		}
-
+		$this->asset_data_registry->add(
+			'shippingCountries',
+			function() {
+				return $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() );
+			},
+			true
+		);
+		$this->asset_data_registry->add(
+			'shippingStates',
+			function() {
+				return $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() );
+			},
+			true
+		);
 		$this->asset_data_registry->add(
 			'countryLocale',
 			function() {
@@ -416,35 +410,5 @@ class Checkout extends AbstractBlock {
 		$vendor_chunks = $this->get_chunks_paths( 'vendors--cart-blocks' );
 		$shared_chunks = [ 'cart-blocks/order-summary-shipping--checkout-blocks/order-summary-shipping-frontend' ];
 		$this->register_chunk_translations( array_merge( $chunks, $vendor_chunks, $shared_chunks ) );
-	}
-
-	/**
-	 * Get list of Checkout block & its inner-block types.
-	 *
-	 * @return array;
-	 */
-	public static function get_checkout_block_types() {
-		return [
-			'Checkout',
-			'CheckoutActionsBlock',
-			'CheckoutBillingAddressBlock',
-			'CheckoutContactInformationBlock',
-			'CheckoutExpressPaymentBlock',
-			'CheckoutFieldsBlock',
-			'CheckoutOrderNoteBlock',
-			'CheckoutOrderSummaryBlock',
-			'CheckoutOrderSummaryCartItemsBlock',
-			'CheckoutOrderSummaryCouponFormBlock',
-			'CheckoutOrderSummaryDiscountBlock',
-			'CheckoutOrderSummaryFeeBlock',
-			'CheckoutOrderSummaryShippingBlock',
-			'CheckoutOrderSummarySubtotalBlock',
-			'CheckoutOrderSummaryTaxesBlock',
-			'CheckoutPaymentBlock',
-			'CheckoutShippingAddressBlock',
-			'CheckoutShippingMethodsBlock',
-			'CheckoutTermsBlock',
-			'CheckoutTotalsBlock',
-		];
 	}
 }

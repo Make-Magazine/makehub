@@ -24,7 +24,9 @@ class Init {
 	public function __construct() {
 		include_once __DIR__ . '/WCPaymentGatewayPreInstallWCPayPromotion.php';
 
-		$is_payments_page = isset( $_GET['page'] ) && $_GET['page'] === 'wc-settings' && isset( $_GET['tab'] ) && $_GET['tab'] === 'checkout'; // phpcs:ignore WordPress.Security.NonceVerification
+		add_action( 'change_locale', array( __CLASS__, 'delete_specs_transient' ) );
+
+		$is_payments_page = isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] && isset( $_GET['tab'] ) && 'checkout' === $_GET['tab']; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( ! wp_is_json_request() && ! $is_payments_page ) {
 			return;
 		}
@@ -42,7 +44,16 @@ class Init {
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
-		WCAdminAssets::register_script( 'wp-admin-scripts', 'payment-method-promotions', true );
+		$script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'payment-method-promotions' );
+		$script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $script_assets_filename;
+
+		wp_enqueue_script(
+			'wc-admin-payment-method-promotions',
+			WCAdminAssets::get_url( 'wp-admin-scripts/payment-method-promotions', 'js' ),
+			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			WCAdminAssets::get_file_version( 'js' ),
+			true
+		);
 	}
 
 	/**
@@ -68,7 +79,7 @@ class Init {
 		if ( class_exists( '\WC_Payments' ) ) {
 			return false;
 		}
-		if ( get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) === 'no' ) {
+		if ( 'no' === get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) ) {
 			return false;
 		}
 		if ( ! apply_filters( 'woocommerce_allow_marketplace_suggestions', true ) ) {
@@ -95,7 +106,7 @@ class Init {
 		$id       = WCPaymentGatewayPreInstallWCPayPromotion::GATEWAY_ID;
 		// Only tweak the ordering if the list hasn't been reordered with WooCommerce Payments in it already.
 		if ( ! isset( $ordering[ $id ] ) || ! is_numeric( $ordering[ $id ] ) ) {
-			$is_empty        = empty( $ordering ) || ( count( $ordering ) === 1 && $ordering[0] === false );
+			$is_empty        = empty( $ordering ) || ( 1 === count( $ordering ) && false === $ordering[0] );
 			$ordering[ $id ] = $is_empty ? 0 : ( min( $ordering ) - 1 );
 		}
 		return $ordering;
@@ -152,7 +163,7 @@ class Init {
 	 * Get specs or fetch remotely if they don't exist.
 	 */
 	public static function get_specs() {
-		if ( get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) === 'no' ) {
+		if ( 'no' === get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) ) {
 			return array();
 		}
 		return WCPayPromotionDataSourcePoller::get_instance()->get_specs_from_data_sources();

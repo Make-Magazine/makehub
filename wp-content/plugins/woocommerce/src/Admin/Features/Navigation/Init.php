@@ -119,7 +119,7 @@ class Init {
 			return;
 		}
 
-		if ( $value !== 'yes' ) {
+		if ( 'yes' !== $value ) {
 			update_option( 'woocommerce_navigation_show_opt_out', 'yes' );
 		}
 
@@ -142,7 +142,7 @@ class Init {
 	 * Enqueue the opt out scripts.
 	 */
 	public function maybe_enqueue_opt_out_scripts() {
-		if ( get_option( 'woocommerce_navigation_show_opt_out', 'no' ) !== 'yes' ) {
+		if ( 'yes' !== get_option( 'woocommerce_navigation_show_opt_out', 'no' ) ) {
 			return;
 		}
 
@@ -154,7 +154,17 @@ class Init {
 			WCAdminAssets::get_file_version( 'css' )
 		);
 
-		WCAdminAssets::register_script( 'wp-admin-scripts', 'navigation-opt-out', true );
+		$script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'navigation-opt-out' );
+		$script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $script_assets_filename;
+
+		wp_enqueue_script(
+			'wc-admin-navigation-opt-out',
+			WCAdminAssets::get_url( 'wp-admin-scripts/navigation-opt-out', 'js' ),
+			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			WCAdminAssets::get_file_version( 'js' ),
+			true
+		);
+
 		wp_localize_script(
 			'wc-admin-navigation-opt-out',
 			'surveyData',
@@ -162,6 +172,7 @@ class Init {
 				'url' => Survey::get_url( '/new-navigation-opt-out' ),
 			)
 		);
+
 		delete_option( 'woocommerce_navigation_show_opt_out' );
 	}
 }

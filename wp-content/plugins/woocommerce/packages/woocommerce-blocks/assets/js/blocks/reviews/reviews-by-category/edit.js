@@ -94,7 +94,7 @@ const ReviewsByCategoryEditor = ( {
 			setAttributes( { editMode: false } );
 			debouncedSpeak(
 				__(
-					'Now displaying a preview of the reviews for the products in the selected categories.',
+					'Showing Reviews by Category block preview.',
 					'woocommerce'
 				)
 			);

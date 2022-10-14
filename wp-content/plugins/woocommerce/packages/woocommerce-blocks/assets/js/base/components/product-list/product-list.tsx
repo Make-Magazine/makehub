@@ -238,11 +238,7 @@ const ProductList = ( {
 			) }
 			{ ! hasProducts && ! hasFilters && <NoProducts /> }
 			{ hasProducts && (
-				<ul
-					className={ classnames( `${ parentClassName }__products`, {
-						'is-loading-products': productsLoading,
-					} ) }
-				>
+				<ul className={ `${ parentClassName }__products` }>
 					{ listProducts.map( ( product = {}, i: number ) => (
 						<ProductListItem
 							key={ product.id || i }

@@ -19,15 +19,12 @@ import {
 } from '@wordpress/element';
 import CheckboxList from '@woocommerce/base-components/checkbox-list';
 import FilterSubmitButton from '@woocommerce/base-components/filter-submit-button';
-import FilterResetButton from '@woocommerce/base-components/filter-reset-button';
-import FilterTitlePlaceholder from '@woocommerce/base-components/filter-placeholder';
 import Label from '@woocommerce/base-components/filter-element-label';
 import isShallowEqual from '@wordpress/is-shallow-equal';
 import { decodeEntities } from '@wordpress/html-entities';
 import { isBoolean, objectHasProp } from '@woocommerce/types';
 import { addQueryArgs, removeQueryArgs } from '@wordpress/url';
-import { changeUrl, PREFIX_QUERY_ARG_FILTER_TYPE } from '@woocommerce/utils';
-import classnames from 'classnames';
+import { PREFIX_QUERY_ARG_FILTER_TYPE } from '@woocommerce/utils';
 
 /**
  * Internal dependencies
@@ -59,7 +56,7 @@ const StockStatusFilterBlock = ( {
 		isBoolean
 	);
 
-	const [ hasSetFilterDefaultsFromUrl, setHasSetFilterDefaultsFromUrl ] =
+	const [ hasSetPhpFilterDefaults, setHasSetPhpFilterDefaults ] =
 		useState( false );
 
 	const { outofstock, ...otherStockStatusOptions } = getSetting(
@@ -73,12 +70,9 @@ const StockStatusFilterBlock = ( {
 			: { outofstock, ...otherStockStatusOptions }
 	);
 
-	const initialFilters = useMemo(
-		() => getActiveFilters( STOCK_STATUS_OPTIONS.current, QUERY_PARAM_KEY ),
-		[]
+	const [ checked, setChecked ] = useState(
+		getActiveFilters( STOCK_STATUS_OPTIONS.current, QUERY_PARAM_KEY )
 	);
-
-	const [ checked, setChecked ] = useState( initialFilters );
 	const [ displayedOptions, setDisplayedOptions ] = useState(
 		blockAttributes.isPreview ? previewOptions : []
 	);
@@ -92,7 +86,7 @@ const StockStatusFilterBlock = ( {
 
 	const [ queryState ] = useQueryStateByContext();
 	const [ productStockStatusQuery, setProductStockStatusQuery ] =
-		useQueryStateByKey( 'stock_status', initialFilters );
+		useQueryStateByKey( 'stock_status', [] );
 
 	const { results: filteredCounts, isLoading: filteredCountsLoading } =
 		useCollectionData( {
@@ -185,10 +179,7 @@ const StockStatusFilterBlock = ( {
 	 *
 	 * @param {Array} checkedOptions Array of checked stock options.
 	 */
-	const updateFilterUrl = ( checkedOptions: string[] ) => {
-		if ( ! window ) {
-			return;
-		}
+	const redirectPageForPhpTemplate = ( checkedOptions: string[] ) => {
 		if ( checkedOptions.length === 0 ) {
 			const url = removeQueryArgs(
 				window.location.href,
@@ -196,9 +187,8 @@ const StockStatusFilterBlock = ( {
 			);
 
 			if ( url !== window.location.href ) {
-				changeUrl( url );
+				window.location.href = url;
 			}
-
 			return;
 		}
 
@@ -206,23 +196,23 @@ const StockStatusFilterBlock = ( {
 			[ QUERY_PARAM_KEY ]: checkedOptions.join( ',' ),
 		} );
 
-		if ( newUrl === window.location.href ) {
-			return;
+		if ( newUrl !== window.location.href ) {
+			window.location.href = newUrl;
 		}
-
-		changeUrl( newUrl );
 	};
 
 	const onSubmit = useCallback(
-		( checkedOptions ) => {
+		( isChecked ) => {
 			if ( isEditor ) {
 				return;
 			}
-			if ( checkedOptions && ! filteringForPhpTemplate ) {
-				setProductStockStatusQuery( checkedOptions );
+			if ( isChecked ) {
+				setProductStockStatusQuery( checked );
 			}
-
-			updateFilterUrl( checkedOptions );
+			// For PHP templates when the filter button is enabled.
+			if ( filteringForPhpTemplate ) {
+				redirectPageForPhpTemplate( checked );
+			}
 		},
 		[
 			isEditor,
@@ -256,18 +246,32 @@ const StockStatusFilterBlock = ( {
 	}, [ checked, currentCheckedQuery, previousCheckedQuery ] );
 
 	/**
-	 * Try get the stock filter from the URL.
+	 * Important: For PHP rendered block templates only.
 	 */
 	useEffect( () => {
-		if ( ! hasSetFilterDefaultsFromUrl ) {
-			setProductStockStatusQuery( initialFilters );
-			setHasSetFilterDefaultsFromUrl( true );
+		if ( filteringForPhpTemplate ) {
+			setChecked( checked );
+		}
+	}, [ filteringForPhpTemplate, checked ] );
+
+	/**
+	 * Important: For PHP rendered block templates only.
+	 */
+	useEffect( () => {
+		if ( ! hasSetPhpFilterDefaults && filteringForPhpTemplate ) {
+			setProductStockStatusQuery(
+				getActiveFilters(
+					STOCK_STATUS_OPTIONS.current,
+					QUERY_PARAM_KEY
+				)
+			);
+			setHasSetPhpFilterDefaults( true );
 		}
 	}, [
+		filteringForPhpTemplate,
 		setProductStockStatusQuery,
-		hasSetFilterDefaultsFromUrl,
-		setHasSetFilterDefaultsFromUrl,
-		initialFilters,
+		hasSetPhpFilterDefaults,
+		setHasSetPhpFilterDefaults,
 	] );
 
 	/**
@@ -341,15 +345,14 @@ const StockStatusFilterBlock = ( {
 		[ checked, displayedOptions ]
 	);
 
-	if ( ! filteredCountsLoading && displayedOptions.length === 0 ) {
+	if ( displayedOptions.length === 0 ) {
 		return null;
 	}
 
 	const TagName =
 		`h${ blockAttributes.headingLevel }` as keyof JSX.IntrinsicElements;
 	const isLoading =
-		( ! blockAttributes.isPreview && ! STOCK_STATUS_OPTIONS.current ) ||
-		displayedOptions.length === 0;
+		! blockAttributes.isPreview && ! STOCK_STATUS_OPTIONS.current;
 	const isDisabled = ! blockAttributes.isPreview && filteredCountsLoading;
 
 	const hasFilterableProducts = getSettingWithCoercion(
@@ -362,26 +365,14 @@ const StockStatusFilterBlock = ( {
 		return null;
 	}
 
-	const heading = (
-		<TagName className="wc-block-stock-filter__title">
-			{ blockAttributes.heading }
-		</TagName>
-	);
-
-	const filterHeading = isLoading ? (
-		<FilterTitlePlaceholder>{ heading }</FilterTitlePlaceholder>
-	) : (
-		heading
-	);
-
 	return (
 		<>
-			{ ! isEditor && blockAttributes.heading && filterHeading }
-			<div
-				className={ classnames( 'wc-block-stock-filter', {
-					'is-loading': isLoading,
-				} ) }
-			>
+			{ ! isEditor && blockAttributes.heading && (
+				<TagName className="wc-block-stock-filter__title">
+					{ blockAttributes.heading }
+				</TagName>
+			) }
+			<div className="wc-block-stock-filter">
 				<CheckboxList
 					className={ 'wc-block-stock-filter-list' }
 					options={ displayedOptions }
@@ -390,31 +381,14 @@ const StockStatusFilterBlock = ( {
 					isLoading={ isLoading }
 					isDisabled={ isDisabled }
 				/>
+				{ blockAttributes.showFilterButton && (
+					<FilterSubmitButton
+						className="wc-block-stock-filter__button"
+						disabled={ isLoading || isDisabled }
+						onClick={ () => onSubmit( checked ) }
+					/>
+				) }
 			</div>
-			{
-				<div className="wc-block-stock-filter__actions">
-					{ checked.length > 0 && ! isLoading && (
-						<FilterResetButton
-							onClick={ () => {
-								setChecked( [] );
-								onSubmit( [] );
-							} }
-							screenReaderLabel={ __(
-								'Reset stock filter',
-								'woo-gutenberg-products-block'
-							) }
-						/>
-					) }
-					{ blockAttributes.showFilterButton && (
-						<FilterSubmitButton
-							className="wc-block-stock-filter__button"
-							isLoading={ isLoading }
-							disabled={ isLoading || isDisabled }
-							onClick={ () => onSubmit( checked ) }
-						/>
-					) }
-				</div>
-			}
 		</>
 	);
 };

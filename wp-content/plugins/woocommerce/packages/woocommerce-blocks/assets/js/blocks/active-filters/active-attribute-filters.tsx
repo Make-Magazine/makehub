@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import { useEffect } from '@wordpress/element';
 import {
 	useCollection,
 	useQueryStateByKey,
@@ -27,25 +26,22 @@ interface ActiveAttributeFiltersProps {
 	operator: 'and' | 'in';
 	slugs: string[];
 	attributeObject: AttributeObject;
-	isLoadingCallback: ( val: boolean ) => void;
 }
 
 /**
  * Component that renders active attribute (terms) filters.
  *
- * @param {Object} props                   Incoming props for the component.
- * @param {Object} props.attributeObject   The attribute object.
- * @param {Array}  props.slugs             The slugs for attributes.
- * @param {string} props.operator          The operator for the filter.
- * @param {string} props.displayStyle      The style used for displaying the filters.
- * @param {string} props.isLoadingCallback The callback to trigger the loading complete state.
+ * @param {Object} props                 Incoming props for the component.
+ * @param {Object} props.attributeObject The attribute object.
+ * @param {Array}  props.slugs           The slugs for attributes.
+ * @param {string} props.operator        The operator for the filter.
+ * @param {string} props.displayStyle    The style used for displaying the filters.
  */
 const ActiveAttributeFilters = ( {
 	attributeObject,
 	slugs = [],
 	operator = 'in',
 	displayStyle,
-	isLoadingCallback,
 }: ActiveAttributeFiltersProps ) => {
 	const { results, isLoading } = useCollection( {
 		namespace: '/wc/store/v1',
@@ -58,11 +54,8 @@ const ActiveAttributeFilters = ( {
 		[]
 	);
 
-	useEffect( () => {
-		isLoadingCallback( isLoading );
-	}, [ isLoading, isLoadingCallback ] );
-
 	if (
+		isLoading ||
 		! Array.isArray( results ) ||
 		! isAttributeTermCollection( results ) ||
 		! isAttributeQueryCollection( productAttributes )
@@ -98,7 +91,7 @@ const ActiveAttributeFilters = ( {
 					if ( index > 0 && operator === 'and' ) {
 						prefix = (
 							<span className="wc-block-active-filters__list-item-operator">
-								{ __( 'All', 'woo-gutenberg-products-block' ) }
+								{ __( 'and', 'woo-gutenberg-products-block' ) }
 							</span>
 						);
 					}
@@ -107,35 +100,34 @@ const ActiveAttributeFilters = ( {
 						type: attributeLabel,
 						name: decodeEntities( termObject.name || slug ),
 						prefix,
-						isLoading,
 						removeCallback: () => {
-							const currentAttribute = productAttributes.find(
-								( { attribute } ) =>
-									attribute === `pa_${ attributeObject.name }`
-							);
-
-							// If only one attribute was selected, we remove both filter and query type from the URL.
-							if ( currentAttribute?.slug.length === 1 ) {
-								removeArgsFromFilterUrl(
-									`query_type_${ attributeObject.name }`,
-									`filter_${ attributeObject.name }`
+							if ( filteringForPhpTemplate ) {
+								const currentAttribute = productAttributes.find(
+									( { attribute } ) =>
+										attribute ===
+										`pa_${ attributeObject.name }`
 								);
-							} else {
+
+								// If only one attribute was selected, we remove both filter and query type from the URL.
+								if ( currentAttribute?.slug.length === 1 ) {
+									return removeArgsFromFilterUrl(
+										`query_type_${ attributeObject.name }`,
+										`filter_${ attributeObject.name }`
+									);
+								}
+
 								// Remove only the slug from the URL.
-								removeArgsFromFilterUrl( {
+								return removeArgsFromFilterUrl( {
 									[ `filter_${ attributeObject.name }` ]:
 										slug,
 								} );
 							}
-
-							if ( ! filteringForPhpTemplate ) {
-								removeAttributeFilterBySlug(
-									productAttributes,
-									setProductAttributes,
-									attributeObject,
-									slug
-								);
-							}
+							removeAttributeFilterBySlug(
+								productAttributes,
+								setProductAttributes,
+								attributeObject,
+								slug
+							);
 						},
 						showLabel: false,
 						displayStyle,

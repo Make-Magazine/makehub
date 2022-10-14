@@ -16,14 +16,10 @@ interface ReturnToCartButtonProps {
 
 const ReturnToCartButton = ( {
 	link,
-}: ReturnToCartButtonProps ): JSX.Element | null => {
-	const cartLink = link || CART_URL;
-	if ( ! cartLink ) {
-		return null;
-	}
+}: ReturnToCartButtonProps ): JSX.Element => {
 	return (
 		<a
-			href={ cartLink }
+			href={ link || CART_URL }
 			className="wc-block-components-checkout-return-to-cart-button"
 		>
 			<Icon icon={ arrowLeft } />

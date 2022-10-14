@@ -5,7 +5,6 @@
 
 namespace Automattic\WooCommerce\Internal\Admin\ProductReviews;
 
-use Automattic\WooCommerce\Internal\Traits\AccessiblePrivateMethods;
 use WP_Ajax_Response;
 use WP_Comment;
 use WP_Screen;
@@ -14,8 +13,6 @@ use WP_Screen;
  * Handles backend logic for the Reviews component.
  */
 class Reviews {
-
-	use AccessiblePrivateMethods;
 
 	/**
 	 * Admin page identifier.
@@ -41,16 +38,59 @@ class Reviews {
 	 */
 	public function __construct() {
 
-		self::add_action( 'admin_menu', [ $this, 'add_reviews_page' ] );
-		self::add_action( 'admin_enqueue_scripts', [ $this, 'load_javascript' ] );
+		add_action(
+			'admin_menu',
+			function() {
+				$this->add_reviews_page();
+			}
+		);
+
+		add_action(
+			'admin_enqueue_scripts',
+			function() {
+				$this->load_javascript();
+			}
+		);
 
 		// These ajax callbacks need a low priority to ensure they run before their WordPress core counterparts.
-		self::add_action( 'wp_ajax_edit-comment', [ $this, 'handle_edit_review' ], -1 );
-		self::add_action( 'wp_ajax_replyto-comment', [ $this, 'handle_reply_to_review' ], -1 );
+		add_action(
+			'wp_ajax_edit-comment',
+			function() {
+				$this->handle_edit_review();
+			},
+			-1
+		);
 
-		self::add_filter( 'parent_file', [ $this, 'edit_review_parent_file' ] );
-		self::add_filter( 'gettext', [ $this, 'edit_comments_screen_text' ], 10, 2 );
-		self::add_action( 'admin_notices', [ $this, 'display_notices' ] );
+		add_action(
+			'wp_ajax_replyto-comment',
+			function() {
+				$this->handle_reply_to_review();
+			},
+			-1
+		);
+
+		add_filter(
+			'parent_file',
+			function( $parent_file ) {
+				return $this->edit_review_parent_file( $parent_file );
+			}
+		);
+
+		add_filter(
+			'gettext',
+			function( $translation, $text ) {
+				return $this->edit_comments_screen_text( $translation, $text );
+			},
+			10,
+			2
+		);
+
+		add_action(
+			'admin_notices',
+			function() {
+				$this->display_notices();
+			}
+		);
 	}
 
 	/**
@@ -71,7 +111,7 @@ class Reviews {
 		 * @param string $capability The capability (defaults to `moderate_comments` for viewing and `edit_products` for editing).
 		 * @param string $context    The context for which the capability is needed.
 		 */
-		return (string) apply_filters( 'woocommerce_product_reviews_page_capability', $context === 'view' ? 'moderate_comments' : 'edit_products', $context );
+		return (string) apply_filters( 'woocommerce_product_reviews_page_capability', 'view' === $context ? 'moderate_comments' : 'edit_products', $context );
 	}
 
 	/**
@@ -90,7 +130,12 @@ class Reviews {
 			[ $this, 'render_reviews_list_table' ]
 		);
 
-		self::add_action( "load-{$this->reviews_page_hook}", array( $this, 'load_reviews_screen' ) );
+		add_action(
+			"load-{$this->reviews_page_hook}",
+			function() {
+				$this->load_reviews_screen();
+			}
+		);
 	}
 
 	/**
@@ -118,7 +163,7 @@ class Reviews {
 	public function is_reviews_page() : bool {
 		global $current_screen;
 
-		return isset( $current_screen->base ) && $current_screen->base === 'product_page_' . static::MENU_SLUG;
+		return isset( $current_screen->base ) && 'product_page_' . static::MENU_SLUG === $current_screen->base;
 	}
 
 	/**
@@ -141,7 +186,7 @@ class Reviews {
 	 */
 	protected function is_review_or_reply( $object ) : bool {
 
-		$is_review_or_reply = $object instanceof WP_Comment && in_array( $object->comment_type, [ 'review', 'comment' ], true ) && get_post_type( $object->comment_post_ID ) === 'product';
+		$is_review_or_reply = $object instanceof WP_Comment && in_array( $object->comment_type, [ 'review', 'comment' ], true ) && 'product' === get_post_type( $object->comment_post_ID );
 
 		/**
 		 * Filters whether the object is a review or a reply to a review.
@@ -200,7 +245,7 @@ class Reviews {
 			wp_die( esc_html( $updated->get_error_message() ) );
 		}
 
-		$position      = isset( $_POST['position'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['position'] ) ) : -1;
+		$position = isset( $_POST['position'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['position'] ) ) : -1;
 		$wp_list_table = $this->make_reviews_list_table();
 
 		ob_start();
@@ -245,12 +290,12 @@ class Reviews {
 		}
 
 		// Inline Review replies will use the `detail` mode. If that's not what we have, then let WordPress core take over.
-		if ( isset( $_REQUEST['mode'] ) && $_REQUEST['mode'] === 'dashboard' ) {
+		if ( isset( $_REQUEST['mode'] ) && 'dashboard' === $_REQUEST['mode'] ) {
 			return;
 		}
 
 		// If this is not a a reply to a review, bail silently to let WordPress core take over.
-		if ( get_post_type( $post ) !== 'product' ) {
+		if ( 'product' !== get_post_type( $post ) ) {
 			return;
 		}
 
@@ -272,8 +317,8 @@ class Reviews {
 			$comment_author_email = wp_slash( $user->user_email );
 			$comment_author_url   = wp_slash( $user->user_url );
 			// WordPress core already sanitizes `content` during the `pre_comment_content` hook, which is why it's not needed here, {@see wp_filter_comment()} and {@see kses_init_filters()}.
-			$comment_content = isset( $_POST['content'] ) ? wp_unslash( $_POST['content'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$comment_type    = isset( $_POST['comment_type'] ) ? sanitize_text_field( wp_unslash( $_POST['comment_type'] ) ) : 'comment';
+			$comment_content      = isset( $_POST['content'] ) ? wp_unslash( $_POST['content'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$comment_type         = isset( $_POST['comment_type'] ) ? sanitize_text_field( wp_unslash( $_POST['comment_type'] ) ) : 'comment';
 
 			if ( current_user_can( 'unfiltered_html' ) ) {
 				if ( ! isset( $_POST['_wp_unfiltered_html_comment'] ) ) {
@@ -291,7 +336,7 @@ class Reviews {
 			wp_die( esc_html__( 'Sorry, you must be logged in to reply to a review.', 'woocommerce' ) );
 		}
 
-		if ( $comment_content === '' ) {
+		if ( '' === $comment_content ) {
 			wp_die( esc_html__( 'Error: Please type your reply text.', 'woocommerce' ) );
 		}
 
@@ -308,7 +353,7 @@ class Reviews {
 		if ( ! empty( $_POST['approve_parent'] ) ) {
 			$parent = get_comment( $comment_parent );
 
-			if ( $parent && $parent->comment_approved === '0' && $parent->comment_post_ID === $comment_post_ID ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			if ( $parent && '0' === $parent->comment_approved && $parent->comment_post_ID == $comment_post_ID ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 				if ( ! current_user_can( 'edit_comment', $parent->comment_ID ) ) {
 					wp_die( -1 );
 				}
@@ -466,16 +511,6 @@ class Reviews {
 			]
 		);
 
-		/**
-		 * Provides an opportunity to alter the pending comment count used within
-		 * the product reviews admin list table.
-		 *
-		 * @since 7.0.0
-		 *
-		 * @param array $count Current count of comments pending review.
-		 */
-		$count = apply_filters( 'woocommerce_product_reviews_pending_count', $count );
-
 		if ( empty( $count ) ) {
 			return '';
 		}
@@ -494,16 +529,16 @@ class Reviews {
 	protected function edit_review_parent_file( $parent_file ) {
 		global $submenu_file, $current_screen;
 
-		if ( isset( $current_screen->id, $_GET['c'] ) && $current_screen->id === 'comment' ) {
+		if ( isset( $current_screen->id, $_GET['c'] ) && 'comment' === $current_screen->id ) {
 
 			$comment_id = absint( $_GET['c'] );
-			$comment    = get_comment( $comment_id );
+			$comment = get_comment( $comment_id );
 
 			if ( isset( $comment->comment_parent ) && $comment->comment_parent > 0 ) {
 				$comment = get_comment( $comment->comment_parent );
 			}
 
-			if ( isset( $comment->comment_post_ID ) && get_post_type( $comment->comment_post_ID ) === 'product' ) {
+			if ( isset( $comment->comment_post_ID ) && 'product' === get_post_type( $comment->comment_post_ID ) ) {
 				$parent_file  = 'edit.php?post_type=product';
 				$submenu_file = 'product-reviews'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			}
@@ -528,7 +563,7 @@ class Reviews {
 		}
 
 		// Try to get comment from query params when not in context already.
-		if ( ! $comment && isset( $_GET['action'], $_GET['c'] ) && $_GET['action'] === 'editcomment' ) {
+		if ( ! $comment && isset( $_GET['action'], $_GET['c'] ) && 'editcomment' === $_GET['action'] ) {
 			$comment_id = absint( $_GET['c'] );
 			$comment    = get_comment( $comment_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
@@ -537,16 +572,16 @@ class Reviews {
 
 		if ( isset( $comment->comment_parent ) && $comment->comment_parent > 0 ) {
 			$is_reply = true;
-			$comment  = get_comment( $comment->comment_parent ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$comment = get_comment( $comment->comment_parent ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
 		// Only replace the translated text if we are editing a comment left on a product (ie. a review).
-		if ( isset( $comment->comment_post_ID ) && get_post_type( $comment->comment_post_ID ) === 'product' ) {
-			if ( $text === 'Edit Comment' ) {
+		if ( isset( $comment->comment_post_ID ) && 'product' === get_post_type( $comment->comment_post_ID ) ) {
+			if ( 'Edit Comment' === $text ) {
 				$translation = $is_reply
 					? __( 'Edit Review Reply', 'woocommerce' )
 					: __( 'Edit Review', 'woocommerce' );
-			} elseif ( $text === 'Moderate Comment' ) {
+			} elseif ( 'Moderate Comment' === $text ) {
 				$translation = $is_reply
 					? __( 'Moderate Review Reply', 'woocommerce' )
 					: __( 'Moderate Review', 'woocommerce' );
@@ -618,4 +653,5 @@ class Reviews {
 		 */
 		echo apply_filters( 'woocommerce_product_reviews_list_table', ob_get_clean(), $this->reviews_list_table ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
+
 }

@@ -26,7 +26,6 @@ class Features {
 	 * @var array
 	 */
 	protected static $optional_features = array(
-		'multichannel-marketing'     => array( 'default' => 'no' ),
 		'navigation'                 => array( 'default' => 'no' ),
 		'settings'                   => array( 'default' => 'no' ),
 		'analytics'                  => array( 'default' => 'yes' ),
@@ -39,7 +38,6 @@ class Features {
 	 * @var array
 	 */
 	protected static $beta_features = array(
-		'multichannel-marketing',
 		'navigation',
 		'settings',
 	);
@@ -419,6 +417,7 @@ class Features {
 			'Automattic\WooCommerce\Internal\Admin\ShippingLabelBanner' => 'Automattic\WooCommerce\Admin\Features\ShippingLabelBanner',
 			'Automattic\WooCommerce\Internal\Admin\ShippingLabelBannerDisplayRules' => 'Automattic\WooCommerce\Admin\Features\ShippingLabelBannerDisplayRules',
 			'Automattic\WooCommerce\Internal\Admin\WcPayWelcomePage' => 'Automattic\WooCommerce\Admin\Features\WcPayWelcomePage',
+			'Automattic\WooCommerce\Internal\Admin\WcPaySubscriptionsPage' => 'Automattic\WooCommerce\Admin\Features\WcPaySubscriptionsPage',
 		);
 		foreach ( $aliases as $new_class => $orig_class ) {
 			class_alias( $new_class, $orig_class );

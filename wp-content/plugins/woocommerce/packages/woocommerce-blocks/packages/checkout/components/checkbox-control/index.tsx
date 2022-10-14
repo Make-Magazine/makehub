@@ -11,13 +11,12 @@ import './style.scss';
 
 export type CheckboxControlProps = {
 	className?: string;
-	label?: string | React.ReactNode;
+	label?: string;
 	id?: string;
 	onChange: ( value: boolean ) => void;
 	children?: React.ReactChildren;
 	hasError?: boolean;
 	checked?: boolean;
-	disabled?: boolean;
 };
 
 /**
@@ -31,7 +30,6 @@ export const CheckboxControl = ( {
 	children,
 	hasError = false,
 	checked = false,
-	disabled = false,
 	...rest
 }: CheckboxControlProps ): JSX.Element => {
 	const instanceId = useInstanceId( CheckboxControl );
@@ -55,7 +53,6 @@ export const CheckboxControl = ( {
 					onChange={ ( event ) => onChange( event.target.checked ) }
 					aria-invalid={ hasError === true }
 					checked={ checked }
-					disabled={ disabled }
 					{ ...rest }
 				/>
 				<svg

@@ -14,7 +14,7 @@ interface FilterElementLabelProps {
 	count: number | null;
 }
 /**
- * The label for a filter element.
+ * The label for an filter elements.
  *
  * @param {Object} props       Incoming props for the component.
  * @param {string} props.name  The name for the label.
@@ -27,7 +27,7 @@ const FilterElementLabel = ( {
 	return (
 		<>
 			{ name }
-			{ count !== null && Number.isFinite( count ) && (
+			{ count && Number.isFinite( count ) && (
 				<Label
 					label={ count.toString() }
 					screenReaderLabel={ sprintf(

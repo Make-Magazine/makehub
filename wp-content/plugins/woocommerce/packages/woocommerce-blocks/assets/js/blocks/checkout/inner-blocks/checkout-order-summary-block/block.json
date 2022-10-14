@@ -21,6 +21,5 @@
 	},
 	"parent": [ "woocommerce/checkout-totals-block" ],
 	"textdomain": "woo-gutenberg-products-block",
-	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2
 }

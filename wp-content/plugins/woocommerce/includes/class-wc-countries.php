@@ -1037,12 +1037,6 @@ class WC_Countries {
 							'hidden'   => true,
 						),
 					),
-					'GG' => array(
- 						'state' => array(
- 							'required' => false,
- 							'label' => __( 'Parish', 'woocommerce' ),
- 						),
- 					),
 					'GH' => array(
 						'postcode' => array(
 							'required' => false,
@@ -1233,12 +1227,6 @@ class WC_Countries {
 						),
 					),
 					'LB' => array(
-						'state' => array(
-							'required' => false,
-							'hidden'   => true,
-						),
-					),
-					'MF' => array(
 						'state' => array(
 							'required' => false,
 							'hidden'   => true,

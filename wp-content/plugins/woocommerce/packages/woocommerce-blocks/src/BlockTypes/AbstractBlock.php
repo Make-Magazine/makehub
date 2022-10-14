@@ -76,16 +76,14 @@ abstract class AbstractBlock {
 	 *
 	 * @param array|WP_Block $attributes Block attributes, or an instance of a WP_Block. Defaults to an empty array.
 	 * @param string         $content    Block content. Default empty string.
-	 * @param WP_Block|null  $block      Block instance.
 	 * @return string Rendered block type output.
 	 */
-	public function render_callback( $attributes = [], $content = '', $block = null ) {
-
+	public function render_callback( $attributes = [], $content = '' ) {
 		$render_callback_attributes = $this->parse_render_callback_attributes( $attributes );
 		if ( ! is_admin() && ! WC()->is_rest_api_request() ) {
 			$this->enqueue_assets( $render_callback_attributes );
 		}
-		return $this->render( $render_callback_attributes, $content, $block );
+		return $this->render( $render_callback_attributes, $content );
 	}
 
 	/**
@@ -224,9 +222,8 @@ abstract class AbstractBlock {
 		 * These are left unset until now and only added here because if they were set when registering with metadata,
 		 * the attributes and supports from $block_settings would override the values from metadata.
 		 */
-		$block_settings['attributes']   = $this->get_block_type_attributes();
-		$block_settings['supports']     = $this->get_block_type_supports();
-		$block_settings['uses_context'] = $this->get_block_type_uses_context();
+		$block_settings['attributes'] = $this->get_block_type_attributes();
+		$block_settings['supports']   = $this->get_block_type_supports();
 
 		register_block_type(
 			$this->get_block_type(),
@@ -327,15 +324,6 @@ abstract class AbstractBlock {
 	}
 
 	/**
-	 * Get block usesContext.
-	 *
-	 * @return array;
-	 */
-	protected function get_block_type_uses_context() {
-		return [];
-	}
-
-	/**
 	 * Parses block attributes from the render_callback.
 	 *
 	 * @param array|WP_Block $attributes Block attributes, or an instance of a WP_Block. Defaults to an empty array.
@@ -348,12 +336,11 @@ abstract class AbstractBlock {
 	/**
 	 * Render the block. Extended by children.
 	 *
-	 * @param array    $attributes Block attributes.
-	 * @param string   $content    Block content.
-	 * @param WP_Block $block      Block instance.
+	 * @param array  $attributes Block attributes.
+	 * @param string $content    Block content.
 	 * @return string Rendered block type output.
 	 */
-	protected function render( $attributes, $content, $block ) {
+	protected function render( $attributes, $content ) {
 		return $content;
 	}
 

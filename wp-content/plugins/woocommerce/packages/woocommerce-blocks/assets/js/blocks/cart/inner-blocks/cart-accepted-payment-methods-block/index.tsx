@@ -1,15 +1,16 @@
 /**
  * External dependencies
  */
-import { registerBlockType } from '@wordpress/blocks';
+import { registerFeaturePluginBlockType } from '@woocommerce/block-settings';
 import { Icon, payment } from '@wordpress/icons';
 
 /**
  * Internal dependencies
  */
 import { Edit, Save } from './edit';
+import metadata from './block.json';
 
-registerBlockType( 'woocommerce/cart-accepted-payment-methods-block', {
+registerFeaturePluginBlockType( metadata, {
 	icon: {
 		src: (
 			<Icon

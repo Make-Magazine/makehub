@@ -19,7 +19,7 @@ export interface ErrorMessageProps {
 const getErrorMessage = ( { message, type }: ErrorObject ) => {
 	if ( ! message ) {
 		return __(
-			'An error has prevented the block from being updated.',
+			'An unknown error occurred which prevented the block from being updated.',
 			'woo-gutenberg-products-block'
 		);
 	}

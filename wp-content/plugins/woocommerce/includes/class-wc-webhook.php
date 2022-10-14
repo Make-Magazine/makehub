@@ -13,7 +13,6 @@
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Utilities\NumberUtil;
-use Automattic\WooCommerce\Utilities\OrderUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -288,7 +287,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 			}
 
 			// Check registered order types for order types args.
-			if ( 'order' === $resource && ! OrderUtil::is_order( absint( $arg ), wc_get_order_types( 'order-webhooks' ) ) ) {
+			if ( 'order' === $resource && ! in_array( get_post_type( absint( $arg ) ), wc_get_order_types( 'order-webhooks' ), true ) ) {
 				return false;
 			}
 		}

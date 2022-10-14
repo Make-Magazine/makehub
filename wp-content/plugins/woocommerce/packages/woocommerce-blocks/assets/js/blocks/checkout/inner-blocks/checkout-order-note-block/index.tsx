@@ -2,14 +2,15 @@
  * External dependencies
  */
 import { Icon, page } from '@wordpress/icons';
-import { registerBlockType } from '@wordpress/blocks';
+import { registerFeaturePluginBlockType } from '@woocommerce/block-settings';
 
 /**
  * Internal dependencies
  */
 import { Edit, Save } from './edit';
+import metadata from './block.json';
 
-registerBlockType( 'woocommerce/checkout-order-note-block', {
+registerFeaturePluginBlockType( metadata, {
 	icon: {
 		src: (
 			<Icon

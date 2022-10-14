@@ -19,7 +19,7 @@ import { Attributes } from './types';
 registerBlockType( metadata, {
 	title: __( 'Active Product Filters', 'woo-gutenberg-products-block' ),
 	description: __(
-		'Display the currently active product filters.',
+		'Show the currently active product filters. Works in combination with the All Products and filters blocks.',
 		'woo-gutenberg-products-block'
 	),
 	icon: {

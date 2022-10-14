@@ -8,7 +8,6 @@ namespace Automattic\WooCommerce\Blocks;
  * @internal
  */
 class Installer {
-
 	/**
 	 * Constructor
 	 */

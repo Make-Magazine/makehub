@@ -65,7 +65,7 @@ export const Edit = ( {
 					>
 						<p className="wc-block-checkout__controls-text">
 							{ __(
-								'The following shipping integrations are active on your store.',
+								'You currently have the following shipping integrations active.',
 								'woo-gutenberg-products-block'
 							) }
 						</p>

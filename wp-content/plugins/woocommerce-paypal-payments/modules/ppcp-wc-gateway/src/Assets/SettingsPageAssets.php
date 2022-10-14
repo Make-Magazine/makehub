@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\WcGateway\Assets;
 
-use WooCommerce\PayPalCommerce\Subscription\Helper\SubscriptionHelper;
+use WooCommerce\PayPalCommerce\ApiClient\Exception\RuntimeException;
 
 /**
  * Class SettingsPageAssets
@@ -31,23 +31,14 @@ class SettingsPageAssets {
 	private $version;
 
 	/**
-	 * The subscription helper.
-	 *
-	 * @var SubscriptionHelper
-	 */
-	protected $subscription_helper;
-
-	/**
 	 * Assets constructor.
 	 *
-	 * @param string             $module_url The url of this module.
-	 * @param string             $version                            The assets version.
-	 * @param SubscriptionHelper $subscription_helper The subscription helper.
+	 * @param string $module_url The url of this module.
+	 * @param string $version                            The assets version.
 	 */
-	public function __construct( string $module_url, string $version, SubscriptionHelper $subscription_helper ) {
-		$this->module_url          = $module_url;
-		$this->version             = $version;
-		$this->subscription_helper = $subscription_helper;
+	public function __construct( string $module_url, string $version ) {
+		$this->module_url = $module_url;
+		$this->version    = $version;
 	}
 
 	/**
@@ -104,15 +95,6 @@ class SettingsPageAssets {
 			array(),
 			$this->version,
 			true
-		);
-
-		// Intent is configured with Authorize and Capture Virtual-Only Orders is not set.
-		wp_localize_script(
-			'ppcp-gateway-settings',
-			'PayPalCommerceGatewaySettings',
-			array(
-				'is_subscriptions_plugin_active' => $this->subscription_helper->plugin_is_active(),
-			)
 		);
 	}
 }

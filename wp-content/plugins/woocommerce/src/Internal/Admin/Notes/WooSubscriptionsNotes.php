@@ -17,7 +17,6 @@ use \Automattic\WooCommerce\Admin\Notes\Notes;
  */
 class WooSubscriptionsNotes {
 	const LAST_REFRESH_OPTION_KEY = 'woocommerce_admin-wc-helper-last-refresh';
-	const NOTE_NAME               = 'wc-admin-wc-helper-connection';
 	const CONNECTION_NOTE_NAME    = 'wc-admin-wc-helper-connection';
 	const SUBSCRIPTION_NOTE_NAME  = 'wc-admin-wc-helper-subscription';
 	const NOTIFY_WHEN_DAYS_LEFT   = 60;
@@ -182,14 +181,6 @@ class WooSubscriptionsNotes {
 	 * Adds a note prompting to connect to WooCommerce.com.
 	 */
 	public function add_no_connection_note() {
-		$note = self::get_note();
-		$note->save();
-	}
-
-	/**
-	 * Get the WooCommerce.com connection note
-	 */
-	public static function get_note() {
 		$note = new Note();
 		$note->set_title( __( 'Connect to WooCommerce.com', 'woocommerce' ) );
 		$note->set_content( __( 'Connect to get important product notifications and updates.', 'woocommerce' ) );
@@ -203,7 +194,7 @@ class WooSubscriptionsNotes {
 			'?page=wc-addons&section=helper',
 			Note::E_WC_ADMIN_NOTE_UNACTIONED
 		);
-		return $note;
+		$note->save();
 	}
 
 	/**

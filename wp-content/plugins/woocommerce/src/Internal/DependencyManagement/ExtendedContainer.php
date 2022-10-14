@@ -5,7 +5,6 @@
 
 namespace Automattic\WooCommerce\Internal\DependencyManagement;
 
-use Automattic\WooCommerce\Container;
 use Automattic\WooCommerce\Utilities\StringUtil;
 use Automattic\WooCommerce\Vendor\League\Container\Container as BaseContainer;
 use Automattic\WooCommerce\Vendor\League\Container\Definition\DefinitionInterface;
@@ -36,7 +35,7 @@ class ExtendedContainer extends BaseContainer {
 	 * @var string[]
 	 */
 	private $registration_whitelist = array(
-		Container::class,
+		\Psr\Container\ContainerInterface::class,
 	);
 
 	/**

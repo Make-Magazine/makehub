@@ -240,6 +240,6 @@ document.addEventListener(
             return;
         }
 
-        document.body.appendChild(script);
+        document.body.append(script);
     },
 );

@@ -2,7 +2,6 @@ const onApprove = (context, errorHandler) => {
     return (data, actions) => {
         return fetch(context.config.ajax.approve_order.endpoint, {
             method: 'POST',
-            credentials: 'same-origin',
             body: JSON.stringify({
                 nonce: context.config.ajax.approve_order.nonce,
                 order_id:data.orderID,
