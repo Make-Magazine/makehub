@@ -104,7 +104,6 @@ function custom_checkout_field_update_order_meta( $order_id ) {
 
 // add membership when order is completed
 add_action( 'woocommerce_payment_complete', 'woocommerce_add_membership', 10, 2 );
-
 function woocommerce_add_membership( $order_id ){
     $order = wc_get_order( $order_id );
 	$items = $order->get_items();

@@ -78,7 +78,6 @@ function tmp_only_show_members_in_directory( $args ) {
 add_filter( 'bp_after_has_members_parse_args', 'tmp_only_show_members_in_directory' );
 */
 
-
 /* Exclude opted out Members from BuddyPress Members List. */
 function bp_exclude_users( $qs = '', $object = '' ) {
 	global $wpdb;
