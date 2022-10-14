@@ -44,9 +44,9 @@ function setup_group_nav() {
 }
 
 /**
- * Remove courses and course settings from group creation.
+ * Remove courses and cours settings from group creation.
  */
-add_filter( 'get_header', function ( ) {
+add_filter( 'admin_bar_menu', function ( ) {
 	$bp = buddypress();
 	unset( $bp->groups->group_creation_steps['courses'] );
 	unset( $bp->groups->group_creation_steps['group-course-settings'] );
