@@ -60,34 +60,38 @@ get_header();
 			<div class="gg-gallery-buttons">
 				<?php
 					foreach($gallery as $gallery_image) {
-						echo "<img class='gg-gallery-thumbnail' src='" . get_resized_remote_image_url($gallery_image, 100, 100) . "' data-src='" . $gallery_image . "' />";
+						echo "<div class='gg-gallery-btn'><img class='gg-gallery-thumbnail' src='" . get_resized_remote_image_url($gallery_image, 100, 100) . "' data-src='" . $gallery_image . "' /></div>";
 					}
 					if(!empty($video_url)) {
-						echo "<img class='gg-video-thumbnail' src='/wp-content/universal-assets/v1/images/play-btn.png' />";
+						echo "<div class='gg-gallery-btn'><img class='gg-video-thumbnail' src='/wp-content/universal-assets/v1/images/play-btn.png' /></div>";
 					}
 				?>
+			</div>
+			<div class="gg-taxonomy-section">
+			<?php
+				echo("<h3>Categories</h3><ul class='gg-taxonomy-list'>");
+				foreach($categories as $category) {
+					echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $category->slug . "'>" . $category->name . "</a></li>");
+				}
+				echo("</ul>");
+				echo("<h3>Audiences</h3><ul class='gg-taxonomy-list'>");
+				foreach($audiences as $audience) {
+					echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $audience->slug . "'>" . $audience->name . "</a></li>");
+				}
+				echo("</ul>");
+			?>
 			</div>
 		</div>
 		<div class="gg-info">
 			<h1><?php echo get_the_title(); ?></h1>
 			<div class="gg-description"><?php echo $short_desc; ?></div>
 			<div class="gg-cost">$<?php echo $cost; ?></div>
-			<a class="universal-btn" href="<?php echo $purchase_url; ?>">Get it now</a>
+			<a class="universal-btn" href="<?php echo $link; ?>">Get it now</a>
 			<?php
 			if (class_exists('ESSB_Plugin_Options')) {
 				$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 				echo do_shortcode('[easy-social-share buttons="facebook,pinterest,twitter,love" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="4" postid="' . get_the_ID() . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
 			}
-			echo("<h3>Categories</h3><ul class='gg-taxonomy-list'>");
-			foreach($categories as $category) {
-				echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $category->slug . "'>" . $category->name . "</a></li>");
-			}
-			echo("</ul>");
-			echo("<h3>Audiences</h3><ul class='gg-taxonomy-list'>");
-			foreach($audiences as $audience) {
-				echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $audience->slug . "'>" . $audience->name . "</a></li>");
-			}
-			echo("</ul>");
 			?>
 		</div>
     </main><!-- #main -->

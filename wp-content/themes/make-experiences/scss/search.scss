@@ -143,6 +143,7 @@
 	// specific types of filters
 	.sf-field-search label, .sf-field-search input {
 		width: 100%;
+		border-color: $color-blue;
 	}
 	.sf-field-taxonomy-audiences ul {
 		display: flex;
@@ -328,8 +329,8 @@
 }
 
 .page-gift-guide {
-	.search-filter-results { margin-top: 100px; }
+	//.search-filter-results { margin-top: 100px; }
 	@media screen and (min-width: 781px) {
-		.filter-reset { margin-top: -95px;margin-bottom: -80px; }
+		//.filter-reset { margin-top: -95px;margin-bottom: -80px; }
 	}
 }
