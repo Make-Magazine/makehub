@@ -86,7 +86,7 @@ get_header();
 			<h1><?php echo get_the_title(); ?></h1>
 			<div class="gg-description"><?php echo $short_desc; ?></div>
 			<div class="gg-cost">$<?php echo $cost; ?></div>
-			<a class="universal-btn" href="<?php echo $link; ?>">Get it now</a>
+			<a class="universal-btn" href="<?php echo $link; ?>" target="_blank">Get it now</a>
 			<?php
 			if (class_exists('ESSB_Plugin_Options')) {
 				$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

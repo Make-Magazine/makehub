@@ -177,6 +177,12 @@ a { // don't let genesis molest our links
         color: #005e9a !important;
     }
 }
+.no-click {
+	@extend .universal-btn;
+	pointer-events: none;
+	background: #ccc !important;
+	color: #666 !important;
+}
 .btn.full-width, .btn.full-width a {
     width: 100%;
 }
