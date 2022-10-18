@@ -1,4 +1,4 @@
-CPT<?php
+<?php
 
 namespace Gravity_Forms\Gravity_Forms_CPT;
 
