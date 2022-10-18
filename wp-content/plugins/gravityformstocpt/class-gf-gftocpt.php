@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || die();
 
-use Gravity_Forms\Gravity_Forms_APC\Post_Update_Handler;
+use Gravity_Forms\Gravity_Forms_TCPT\Post_Update_Handler;
 
 GFForms::include_feed_addon_framework();
 
@@ -2429,7 +2429,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 		}
 
 		//set user to a contributor so they can see their created post
-		$user = get_user_by( 'ID', $this->_post_author );		
+		$user = get_user_by( 'ID', $this->_post_author );
 		$user->add_role( 'contributor' );
 	}
 

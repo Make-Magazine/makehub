@@ -1,6 +1,6 @@
 <?php
 
-namespace Gravity_Forms\Gravity_Forms_APC;
+namespace Gravity_Forms\Gravity_Forms_TCPT;
 
 defined( 'ABSPATH' ) || die();
 
