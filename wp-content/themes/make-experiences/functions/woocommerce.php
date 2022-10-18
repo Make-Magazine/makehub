@@ -124,16 +124,8 @@ function woocommerce_add_membership( $order_id ){
 			$first_name = get_user_meta( $user->ID, 'first_name', true );
 			$last_name = get_user_meta( $user->ID, 'last_name', true );
 
-			$hasSchoolMembership = false;
-			foreach($mpInfo->active_memberships as $membership) {
-				if($membership->title == 'School Maker Faire') {
-					$hasSchoolMembership = true;
-				}
-			}
+			addFreeMembership( $user->user_email, $user->user_login, $first_name, $last_name, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ), "99.99" );
 
-			if($hasSchoolMembership == false) {
-				addFreeMembership( $user->user_email, $user->user_login, $first_name, $last_name, $school_membership->ID, false, date( 'Y-m-d H:i:s', strtotime('+1 years') ), "99.99" );
-			}
 			groups_join_group( 152, $user_id);
 		}
 	}
