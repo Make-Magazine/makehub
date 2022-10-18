@@ -12,6 +12,22 @@ window.onload = (event) => {
 			jQuery("#gg-video-viewer").removeClass("gg-gallery-off");
 		});
 	}
+	if(document.body.classList.contains("page-gift-guide")) {
+		var moreFilters = false;
+		jQuery(".search-filter-reset").on("click", function(){
+			if(moreFilters == false) {
+				document.getElementsByClassName("sf-field-taxonomy-gift_guide_categories")[0].style.maxHeight = "100%";
+				document.getElementsByClassName("sf-field-taxonomy-audiences")[0].style.display = "block";
+				document.getElementsByClassName("search-filter-reset")[0].value = "Less Filters";
+				moreFilters = true;
+			} else {
+				document.getElementsByClassName("sf-field-taxonomy-gift_guide_categories")[0].style.maxHeight = "210px";
+				document.getElementsByClassName("sf-field-taxonomy-audiences")[0].style.display = "none";
+				document.getElementsByClassName("search-filter-reset")[0].value = "More Filters";
+				moreFilters = false;
+			}
+		});
+	}
 }
 
 

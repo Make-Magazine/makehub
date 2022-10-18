@@ -1,13 +1,13 @@
 jQuery(document).ready(function () {
 	if(jQuery(".page-template-page-search").length) {
 		var url = window.location.href.split('?')[0];
-		jQuery("form.searchandfilter").after("<div class='filter-reset'><a href='" + url + "' class='btn universal-btn' style='display:none;'>Reset Filters</a></div>");
+		jQuery("form.searchandfilter").after("<div class='filter-reset'><a href='" + url + "' class='btn universal-btn no-click'>Reset Filters</a></div>");
 		if(document.location.search.length) {
-			jQuery(".filter-reset .btn").css("display", "inline-flex");
+			jQuery(".filter-reset .btn").removeClass('no-click');
 		} else {
 			// if the form changes, show the reset button
 			jQuery(".searchandfilter").change(function(){
-				jQuery(".filter-reset .btn").css("display", "inline-flex");
+				jQuery(".filter-reset .btn").removeClass('no-click');
 			});
 		}
 	}
