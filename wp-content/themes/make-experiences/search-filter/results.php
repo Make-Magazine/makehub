@@ -70,7 +70,7 @@ if ( $query->have_posts() ) {
 				$short_desc = 		get_field( 'product_description', $post->ID, true );
 				$cost = 			get_field( 'cost', $post->ID, true );
 				$images =			get_field( 'product_image_links', $post->ID, true );
-				if($images[0]) {
+				if(!empty($images[0]['product_image'])) {
 					$secondary_image = 	$images[0]['product_image'];
 				}
 				$link = 			get_field( 'purchase_url', $post->ID, true );
