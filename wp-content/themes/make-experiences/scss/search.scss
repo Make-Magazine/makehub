@@ -202,35 +202,47 @@
 			input:checked + label:before {
 				border: 3px solid $color-light-blue;
 			}
-			input[value="arts-crafts"] + label:before {
+			input[value*="arts-crafts"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/arts-crafts.png");
 			}
-			input[value="books"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/books.png");
+			input[value*="books-magazines"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/books-magazines.png");
 			}
-			input[value="gadgets"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/gadgets.png");
+			input[value*="community-picks"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/community-picks.png");
 			}
-			input[value="games-toys"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/games-toys.png");
+			input[value*="digital-fabrication"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/digital-fabrication.png");
 			}
-			input[value="home"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/home.png");
+			input[value*="gadgets-gizmos"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/gadgets-gizmos.png");
 			}
-			input[value="lifestyle"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/lifestyle.png");
+			input[value*="garden-travel"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/garden-travel.png");
 			}
-			input[value="maker-wear"] + label:before {
+			input[value*="home-hearth"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/home-hearth.png");
+			}
+			input[value*="maker-shed"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/maker-shed.png");
+			}
+			input[value*="maker-wear"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/maker-wear.png");
 			}
-			input[value="other"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/other.png");
+			input[value*="marvelous-miscellaneous"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/marvelous-miscellaneous.png");
 			}
-			input[value="tech"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/tech.png");
+			input[value*="staff-picks"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/staff-picks.png");
 			}
-			input[value="tools"] + label:before {
-				content: url("/wp-content/themes/make-experiences/images/gift-guides/tools.png");
+			input[value*="technology-electronics"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/technology-electronics.png");
+			}
+			input[value*="tools-shop"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/tools-shop.png");
+			}
+			input[value*="toys-games"] + label:before {
+				content: url("/wp-content/themes/make-experiences/images/gift-guides/toys-games.png");
 			}
 		}
 	}
