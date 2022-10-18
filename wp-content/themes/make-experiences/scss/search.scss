@@ -202,6 +202,7 @@
 			input:checked + label:before {
 				border: 3px solid $color-light-blue;
 			}
+			// these have to be hardcoded as there isn't any other way to attach them to search and filter checkboxes
 			input[value*="arts-crafts"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/arts-crafts.png");
 			}

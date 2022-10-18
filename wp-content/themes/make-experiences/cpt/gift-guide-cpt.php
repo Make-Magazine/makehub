@@ -101,7 +101,7 @@ function register_taxonomy_gift_guide_categories() {
 
 
 	// Original terms, commented out so they can be edited in admin without issue
-	$gift_guide_categories = [
+	/*$gift_guide_categories = [
 		"arts-crafts" => "Arts/Crafts",
 		"books" => "Books",
 		"gadgets" => "Gadgets",
@@ -119,7 +119,7 @@ function register_taxonomy_gift_guide_categories() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 }
 
 add_action( 'init', 'register_taxonomy_audiences' );
@@ -163,7 +163,7 @@ function register_taxonomy_audiences() {
 	register_taxonomy( 'audiences', array('gift_guides'), $args );
 
 	// Original terms, commented out so they can be edited in admin without issue
-	$audiences = [
+	/*$audiences = [
 		"educators" => "Educators",
 		"family-friends" => "Family/Friends",
 		"kids" => "Kids",
@@ -175,7 +175,7 @@ function register_taxonomy_audiences() {
 				'slug' => $slug,
 			]);
 		}
-	}
+	}*/
 
 }
 
