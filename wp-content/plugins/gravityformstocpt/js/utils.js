@@ -1,12 +1,12 @@
 /* global jQuery, GFVersion, gform_formsgftocpt_utils_strings */
 
 /**
- * This file contains a collection of utility methods intended to be usable across the APC add-on.
+ * This file contains a collection of utility methods intended to be usable across the CPT add-on.
  */
 
 	GFVersion = gform_formsgftocpt_utils_strings.GFVersion;
 
-	window.GFAPCUtils = {
+	window.GFCPTUtils = {
 		/**
 		 * Returns an option field by its name.
 		 *

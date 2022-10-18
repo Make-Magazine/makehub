@@ -47,7 +47,7 @@
 
 ### 1.0-beta-4 | 2020-05-07
 - Added translations for Hebrew, Hindi, Japanese, and Turkish.
-- Added the {apc_media} merge tag to insert IDs or URLs of files uploaded to media library.
+- Added the {cpt_media} merge tag to insert IDs or URLs of files uploaded to media library.
 - Updated Javascript files, stylesheets to use minified versions.
 - Fixed an issue where a taxonomy mapping which is removed on the feed configuration page can still be processed.
 - Fixed an issue where the wrong user could be assigned as the media author.

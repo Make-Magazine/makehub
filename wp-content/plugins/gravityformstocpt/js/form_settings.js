@@ -1,7 +1,7 @@
 ( function( $ ) {
 
 	$( document ).ready( function() {
-		var utils = window.GFAPCUtils;
+		var utils = window.GFCPTUtils;
 
 		var $postDateSelector = 'select[name="' + utils.getSettingFieldName( 'postDate' ) + '"]';
 

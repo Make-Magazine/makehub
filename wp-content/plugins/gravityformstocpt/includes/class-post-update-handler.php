@@ -1,6 +1,6 @@
-<?php
+CPT<?php
 
-namespace Gravity_Forms\Gravity_Forms_TCPT;
+namespace Gravity_Forms\Gravity_Forms_CPT;
 
 defined( 'ABSPATH' ) || die();
 
@@ -19,7 +19,7 @@ use GF_GF_To_CPT;
 class Post_Update_Handler {
 
 	/**
-	 * Instance of the APC addon object.
+	 * Instance of the CPT addon object.
 	 *
 	 * @since 1.0
 	 *
@@ -77,7 +77,7 @@ class Post_Update_Handler {
 	 *
 	 * @since 1.0
 	 *
-	 * @param GF_GF_To_CPT $addon   Instance of the APC addon object.
+	 * @param GF_GF_To_CPT $addon   Instance of the CPT addon object.
 	 * @param integer|string            $post_id The ID of the post being updated.
 	 * @param array                     $feed    The feed being processed.
 	 * @param array                     $entry   The entry associated with the post being updated.

@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || die();
 
-use Gravity_Forms\Gravity_Forms_TCPT\Post_Update_Handler;
+use Gravity_Forms\Gravity_Forms_CPT\Post_Update_Handler;
 
 GFForms::include_feed_addon_framework();
 
@@ -2104,8 +2104,8 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 
 			foreach ( $matches as $match ) {
 
-				// Determine if this is an {apc_media} merge tag.
-				$is_apc_media_tag = strpos( $match[0], '{apc_media' ) === 0;
+				// Determine if this is an {cpt_media} merge tag.
+				$is_cpt_media_tag = strpos( $match[0], '{cpt_media' ) === 0;
 
 				// Get input ID from merge tag.
 				$input_id = $match[1];
@@ -2155,7 +2155,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 					}
 
 					// Add media URLs to content.
-					if ( ! $is_apc_media_tag ) {
+					if ( ! $is_cpt_media_tag ) {
 						$content = str_replace( $match[0], GFCommon::implode_non_blank( ', ', $media_urls ), $content );
 					}
 
@@ -2176,7 +2176,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 					$media_url = wp_get_attachment_url( $media_id );
 
 					// Replace URL in post content.
-					if ( ! $is_apc_media_tag ) {
+					if ( ! $is_cpt_media_tag ) {
 						$content = str_replace( $match[0], $media_url, $content );
 					}
 
@@ -3054,7 +3054,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	public function filter_gform_pre_replace_merge_tags( $text, $form, $entry, $url_encode = false, $esc_html = true, $nl2br = true, $format = 'html' ) {
 
 		// If GF Tp CPT Media merge tag was found, replace merge tag.
-		if ( preg_match_all( '/\{apc_media:?(\d*):?(ids|urls)?\}/m', $text ) ) {
+		if ( preg_match_all( '/\{cpt_media:?(\d*):?(ids|urls)?\}/m', $text ) ) {
 			$text = $this->replace_media_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
 		}
 
@@ -3157,7 +3157,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	}
 
 	/**
-	 * Replace {apc_media} merge tag.
+	 * Replace {cpt_media} merge tag.
 	 *    Required parameter: field ID.
 	 *    Optional parameter: return type (ids or urls).
 	 *
@@ -3176,7 +3176,7 @@ class GF_GF_To_CPT extends GFFeedAddOn {
 	public function replace_media_merge_tag( $text, $form, $entry, $url_encode = false, $esc_html = true, $nl2br = true, $format = 'html' ) {
 
 		// Find merge tag matches.
-		preg_match_all( '/\{apc_media:?(\d*):?(ids|urls)?\}/m', $text, $matches, PREG_SET_ORDER, 0 );
+		preg_match_all( '/\{cpt_media:?(\d*):?(ids|urls)?\}/m', $text, $matches, PREG_SET_ORDER, 0 );
 
 		// Loop through merge tags, replace.
 		foreach ( $matches as $match ) {
