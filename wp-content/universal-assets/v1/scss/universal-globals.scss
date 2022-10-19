@@ -142,7 +142,8 @@ a { // don't let genesis molest our links
     background-color: #EA002A;
     border-color: #EA002A;
     &:hover, &:focus {
-        color: #FFF;
+        background-color: #FFF;
+		color: #EA002A;
     }
 }
 .universal-btn-navy, .btn.universal-btn-navy {
