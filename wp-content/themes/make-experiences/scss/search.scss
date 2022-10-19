@@ -197,7 +197,7 @@
 					padding: 0px;
 					height: 130px;
 					width: 130px;
-					margin-left: -25px;
+					margin-left: -26px;
 				}
 				&:hover:before {
 					opacity: .8;
@@ -235,8 +235,12 @@
 			input[value*="maker-wear"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/maker-wear.png");
 			}
+			input[value*="marvelous-miscellaneous"] + label {
+				width: 130px;
+			}
 			input[value*="marvelous-miscellaneous"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/marvelous-miscellaneous.png");
+				margin-left: -10px;
 			}
 			input[value*="staff-picks"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/staff-picks.png");
