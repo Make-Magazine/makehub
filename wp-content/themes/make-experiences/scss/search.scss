@@ -241,7 +241,7 @@
 			input[value*="staff-picks"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/staff-picks.png");
 			}
-			input[value*="technology-electronics"] {
+			input[value*="technology-electronics"] + label {
 				width: 115px;
 			}
 			input[value*="technology-electronics"] + label:before {
