@@ -181,18 +181,23 @@
 			gap: 15px;
 			input[type="checkbox"] { display: none; }
 			li {
-				max-width: 145px;
+				width: 145px;
+				text-align: center;
+				display: flex;
+				justify-content: center
 			}
 			label {
 				font-weight: bold;
 				display: flex;
 				flex-direction: column;
-				text-align: center;
+				width: 90px;
 				&:before {
 					border: 3px solid transparent;
 					border-radius: 1000px;
 					padding: 0px;
 					height: 130px;
+					width: 130px;
+					margin-left: -25px;
 				}
 				&:hover:before {
 					opacity: .8;
@@ -236,8 +241,12 @@
 			input[value*="staff-picks"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/staff-picks.png");
 			}
+			input[value*="technology-electronics"] {
+				width: 115px;
+			}
 			input[value*="technology-electronics"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/technology-electronics.png");
+				margin-left: -15px;
 			}
 			input[value*="tools-shop"] + label:before {
 				content: url("/wp-content/themes/make-experiences/images/gift-guides/tools-shop.png");
@@ -249,7 +258,7 @@
 	}
 }
 
-.filter-reset { text-align: right; margin-bottom: -20px; }
+.filter-reset { text-align: right; margin-bottom: -20px; .universal-btn{ border-radius: 5px !important; }}
 
 .top-10-btn {
 	position: relative;
@@ -362,6 +371,7 @@
 			bottom: -60px;
 			input[type="submit"] {
 				text-transform: uppercase;
+				border-radius: 5px !important
 			}
 		}
 	}

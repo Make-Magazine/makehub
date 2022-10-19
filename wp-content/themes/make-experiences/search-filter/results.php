@@ -25,6 +25,7 @@
 $show_desc = get_field('show_short_description');
 $show_button = get_field('show_button');
 $button_text = get_field('button_text');
+$type = (str_contains(strtolower(get_the_title()), "gift")) ? "Products" : "Projects";
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +36,7 @@ if ( $query->have_posts() ) {
 	?>
 
 	<div class="results-info">
-		<span><?php echo $query->found_posts; ?> Projects</span>
+		<span><?php echo $query->found_posts . " " . $type; ?> </span>
 		<?php /* <span>Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?></span> */ ?>
 	</div>
 
@@ -111,7 +112,7 @@ if ( $query->have_posts() ) {
 						<p><b>Community Votes:</b> <?php echo $vote_count  ?></p>
 					<?php } ?>
 					<?php if( $show_button == true ) { ?>
-						<a class="universal-btn" href="<?php echo $link; ?>"><?php echo $button_text; ?></a>
+						<a class="universal-btn" target="_blank" href="<?php echo $link; ?>"><?php echo $button_text; ?></a>
 					<?php } ?>
 				</div>
 			</div>
