@@ -142,7 +142,7 @@ a { // don't let genesis molest our links
     background-color: #EA002A;
     border-color: #EA002A;
     &:hover, &:focus {
-        color: #EA002A;
+        color: #FFF;
     }
 }
 .universal-btn-navy, .btn.universal-btn-navy {
@@ -322,6 +322,7 @@ input.cmn-toggle-round:checked + label:after {
                 border-radius: 25px;
                 font-size: 24px;
                 position: absolute;
+				z-index: 999;
                 right: -25px;
                 top: -10px;
                 visibility: visible;
