@@ -25,7 +25,7 @@
 $show_desc = get_field('show_short_description');
 $show_button = get_field('show_button');
 $button_text = get_field('button_text');
-$type = (str_contains(strtolower(get_the_title()), "gift")) ? "Products" : "Projects";
+$type = (str_contains(strtolower($_SERVER['REQUEST_URI']), "gift-guide")) ? "Products" : "Projects";
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
