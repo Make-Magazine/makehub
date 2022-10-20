@@ -13,6 +13,7 @@
 	font-family: "FontAwesome";
 	font-style: normal;
 	&.fa-ellipsis-h:before { content: "\f141"; }
+	&.fa-check:before { content: "\f00c"; }
 	&.fa-bars:before { content: "\f0c9"; }
 	&.fa-times:before { content: "\f00d"; }
 	&.fa-th-list:before { content: "\f03a"; }
