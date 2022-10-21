@@ -48,9 +48,9 @@
 	&.sign-out-alt:before { content: "\f2f5"; }
 	&.fa-table-cells-large:before, &.fa-th-large:before { content: "\f009"; }
 }
-.glyphicon.glyphicon-chevron-up:before { content: "\f077"; }
-.glyphicon.glyphicon-chevron-down:before { content: "\f078"; }
-.glyphicon.glyphicon-sort:before { content: "\f0dc"; }
+.glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
+.glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
+.glyphicon.glyphicon-sort:before { font-family: "FontAwesome"; content: "\f0dc"; }
 .fab, .nv-social-icons-wrapper .fa {
 	font-family: "FontAwesomeBrands";
 	&.fa-facebook-f:before, &.fa-facebook:before { content: "\f09a"; }
