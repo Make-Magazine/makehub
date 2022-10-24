@@ -369,15 +369,31 @@
 	.searchandfilter {
 		position: relative;
 		margin-bottom : 0px;
-		.sf-field-reset {
-			position: absolute;
-			right: 155px;
-			bottom: -60px;
-			input[type="submit"] {
-				text-transform: uppercase;
-				border-radius: 5px !important
-			}
+	}
+	.sf-field-posts_per_page {
+		position: absolute;
+		right: 155px;
+		bottom: -50px;
+		height: 50px;
+		width: 160px;
+		display: flex;
+		background: #005e9a;
+		margin: 0px;
+		justify-content: center;
+		align-items: center;
+		border-radius: 5px;
+		background: $color-blue;
+		border: solid 1px $color-blue;
+		h4 {
+			color: #fff;
+			padding: 0px;
+			text-transform: uppercase;;
 		}
+		&:hover{
+			background: #fff;
+			h4 { color: $color-blue; }
+		}
+		input, label { display: none; }
 	}
 	.filter-reset {
 		height: 60px;

@@ -44,9 +44,7 @@ get_header();
 			</header>
 
 			<?php
-			if ( !empty(get_the_content()) ) {
-			  echo get_the_content();
-			}
+			the_content();
 
         } else {
             get_template_part('template-parts/content', 'none');

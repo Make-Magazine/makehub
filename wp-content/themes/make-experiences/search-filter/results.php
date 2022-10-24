@@ -21,7 +21,6 @@
  * http://codex.wordpress.org/Template_Tags
  *
  */
-
 $show_desc = get_field('show_short_description');
 $show_button = get_field('show_button');
 $button_text = get_field('button_text');

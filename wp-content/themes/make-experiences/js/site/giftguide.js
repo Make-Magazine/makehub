@@ -14,16 +14,16 @@ window.onload = (event) => {
 	}
 	if(document.body.classList.contains("page-gift-guide")) {
 		var moreFilters = false;
-		jQuery(".search-filter-reset").on("click", function(){
+		jQuery(".sf-field-posts_per_page").on("click", function(event){
 			if(moreFilters == false) {
 				document.getElementsByClassName("sf-field-taxonomy-gift_guide_categories")[0].style.maxHeight = "100%";
 				document.getElementsByClassName("sf-field-taxonomy-audiences")[0].style.display = "block";
-				document.getElementsByClassName("search-filter-reset")[0].value = "Less Filters";
+				jQuery(".sf-field-posts_per_page h4").text("Less Filters");
 				moreFilters = true;
 			} else {
 				document.getElementsByClassName("sf-field-taxonomy-gift_guide_categories")[0].style.maxHeight = "210px";
 				document.getElementsByClassName("sf-field-taxonomy-audiences")[0].style.display = "none";
-				document.getElementsByClassName("search-filter-reset")[0].value = "More Filters";
+				jQuery(".sf-field-posts_per_page h4").text("More Filters");
 				moreFilters = false;
 			}
 		});

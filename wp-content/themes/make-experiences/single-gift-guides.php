@@ -76,7 +76,7 @@ get_header();
 				echo("</ul>");
 				echo("<h3>Audiences</h3><ul class='gg-taxonomy-list'>");
 				foreach($audiences as $audience) {
-					echo("<li><a href='/gift-guide?_sft_gift_guide_categories=" . $audience->slug . "'>" . $audience->name . "</a></li>");
+					echo("<li><a href='/gift-guide?_sft_audiences=" . $audience->slug . "'>" . $audience->name . "</a></li>");
 				}
 				echo("</ul>");
 			?>
