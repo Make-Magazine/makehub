@@ -24,7 +24,6 @@
 $show_desc = get_field('show_short_description');
 $show_button = get_field('show_button');
 $button_text = get_field('button_text');
-$type = (str_contains(strtolower($_SERVER['REQUEST_URI']), "gift-guide")) ? "Products" : "Projects";
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +34,7 @@ if ( $query->have_posts() ) {
 	?>
 
 	<div class="results-info">
-		<span><?php echo $query->found_posts . " " . $type; ?> </span>
+		<span><?php echo $query->found_posts; ?> Results</span>
 		<?php /* <span>Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?></span> */ ?>
 	</div>
 
