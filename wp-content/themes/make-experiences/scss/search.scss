@@ -374,10 +374,18 @@
 		position: absolute;
 		padding: 0px;
 		right: 325px;
+
 		input {
 			border-radius: 5px !important;
 			text-transform: uppercase;
 			font-weight: 600;
+			background: $color-red;
+			border: solid 1px $color-red;
+			color: #fff;
+			&:hover{
+				background: #fff;
+				color: $color-red;
+			}
 		}
 	}
 	.filter-reset {
@@ -395,8 +403,8 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 5px;
-		background: $color-red;
-		border: solid 1px $color-red;
+		background: $color-blue;
+		border: solid 1px $color-blue;
 		h4 {
 			color: #fff;
 			padding: 0px;
@@ -404,7 +412,7 @@
 		}
 		&:hover{
 			background: #fff;
-			h4 { color: $color-red; }
+			h4 { color: $color-blue; }
 		}
 		input, label { display: none; }
 	}
