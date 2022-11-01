@@ -373,7 +373,7 @@
 	.sf-field-submit {
 		position: absolute;
 		padding: 0px;
-		right: 0px;
+		right: 325px;
 		input {
 			border-radius: 5px !important;
 			text-transform: uppercase;
@@ -383,21 +383,20 @@
 	.filter-reset {
 		height: 60px;
 		position: absolute;
-		right: 185px;
+		right: 172px;
 	}
 	.sf-field-sort_order{
 		position: absolute;
-		right: 338px;
+		right: 0px;
 		height: 50px;
 		width: 160px;
 		display: flex;
-		background: #005e9a;
 		margin: 0px;
 		justify-content: center;
 		align-items: center;
 		border-radius: 5px;
-		background: $color-blue;
-		border: solid 1px $color-blue;
+		background: $color-red;
+		border: solid 1px $color-red;
 		h4 {
 			color: #fff;
 			padding: 0px;
@@ -405,7 +404,7 @@
 		}
 		&:hover{
 			background: #fff;
-			h4 { color: $color-blue; }
+			h4 { color: $color-red; }
 		}
 		input, label { display: none; }
 	}
