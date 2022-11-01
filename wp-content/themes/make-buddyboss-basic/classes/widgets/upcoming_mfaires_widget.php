@@ -22,7 +22,7 @@ class upcoming_mfaires_widget extends WP_Widget {
         $title = (isset($instance['title'])?apply_filters('widget_title', $instance['title']):'');
         // before and after widget arguments are defined by themes
         echo $args['before_widget'];
-        echo("<a href='https://makerfaire.com/map' target='_blank'><img class='mf-logo' src='/wp-content/themes/make-experiences/images/makerfaire-logo.png' /></a>");
+        echo("<a href='https://makerfaire.com/map' target='_blank'><img class='mf-logo' src='/wp-content/themes/make-experiences/images/makerfaire-logo.png' alt='Maker Faire' /></a>");
         if (!empty($title)) {
             echo $args['before_title'] . "<a href='https://makerfaire.com/map' target='_blank'>" . $title . "</a>" . $args['after_title'];
         }
