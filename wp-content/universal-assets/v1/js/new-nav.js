@@ -168,10 +168,8 @@ jQuery(document).ready(function () {
     }
 
     jQuery(document).on('click', '.more-button', function (e) {
-        if(!document.getElementById('buddyboss-theme-main-js-js')) {
-            e.preventDefault();
-            jQuery(this).toggleClass('active').next().toggleClass('active');
-        }
+        e.preventDefault();
+        jQuery(this).toggleClass('active').next().toggleClass('active');
     });
 
     jQuery(document).on('click', '.hideshow .sub-menu a', function (e) {
