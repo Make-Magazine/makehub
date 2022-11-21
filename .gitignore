@@ -1,28 +1,46 @@
-# ignore everything in the root except the "wp-content" directory.
-/wp-admin
-/wp-includes
+*~
+.DS_Store
+*.bak
+*.swp
+Thumbs.db
+
+# ignore log files
+*.log
+
+# ignore node/grunt dependency directories
+node_modules/
+
+# ignore cache files
+*.cache
+wp-content/wp-rocket-config/*
+
+# wordpress specific
 wp-config.php
-# ignore all files starting with .
-.*
-!.gitignore
-# track .editorconfig file (i.e. do NOT ignore it)
-!.editorconfig
-# track readme.md in the root (i.e. do NOT ignore it)
-!readme.md
+wp-content/uploads/
+wp-content/blogs.dir/
+wp-content/upgrade/*
+wp-content/backup-db/*
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+wp-content/cache/*
+wp-content/cache/supercache/*
+
 # wpengine specific
 .smushit-status
 .gitattributes
 .htaccess
-last-mod
-_wpeprivate
-wp-content/advanced-cache.php
+_wpeprivate*
 wp-content/object-cache.php
-wp-content/mu-plugins/*
+wp-content/mu-plugins/mu-plugin.php
+wp-content/mu-plugins/slt-force-strong-passwords.php
+wp-content/mu-plugins/stop-long-comments.php
+wp-content/mu-plugins/force-strong-passwords*
+wp-content/mu-plugins/wpengine-common*
 wp-content/mysql.sql
-wp-content/themes/make-experiences/nbproject/*
-wp-content/universal-assets/v1/nbproject/*
+wp-content/mu-plugins/wpengine-security-auditor.php
+wp-content/mu-plugins/wpe-wp-sign-on-plugin*
 
-# wp core (as of 3.4.1)
+# wp core (as of 4.9.5)
 /db-config.php
 /index.php
 /license.txt
@@ -52,67 +70,54 @@ wp-content/universal-assets/v1/nbproject/*
 /wp-admin
 /wp-includes
 /wp-content/index.php
-/wp-content/themes/twentieth
+/wp-content/themes/twentyten
+/wp-content/themes/twentyeleven
+/wp-content/themes/twentytwelve
+/wp-content/themes/twentythirteen
+/wp-content/themes/twentyfourteen
+/wp-content/themes/twentyfifteen
+/wp-content/themes/twentysixteen
+/wp-content/themes/twentyseventeen
+/wp-content/themes/twentyeighteen
+/wp-content/themes/twentynineteen
+/wp-content/themes/twentytwenty
+/wp-content/themes/twentytwentyone
 /wp-content/themes/index.php
 /wp-content/plugins/index.php
-/wp-content/debug.log
-# ignore all files that start with ~
-~*
-# ignore OS generated files
-ehthumbs.db
-Thumbs.db
-# ignore Editor files
-*.sublime-project
-*.sublime-workspace
-*.komodoproject
-# ignore log files and databases
-*.log
-*.sql
-*.sqlite
-# ignore compiled files
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-# ignore packaged files
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-*.ogg
-*.mp3
+/wp-content/plugins/akismet*
+
+# large/disallowed file types
+# a CDN should be used for these
+*.hqx
 *.bin
-*.cache
+*.exe
+*.dll
+*.deb
+*.dmg
+*.iso
+*.img
+*.msi
+*.msp
+*.msm
+*.mid
+*.midi
+*.kar
+*.mp3
+*.ogg
+*.m4a
+*.ra
+*.3gpp
+*.3gp
+*.mp4
+*.mpeg
+*.mpg
+*.mov
+*.webm
+*.flv
+*.m4v
+*.mng
+*.asx
+*.asf
+*.wmv
+*.avi
 
-# ignore wp-content/uploads
-wp-content/uploads
-
-# ignore everything in the "wp-content" directory, except:
-# "plugins" directory
-# "themes" directory
-# wp-content/*
-# !wp-content/plugins/
-# !wp-content/themes/
-# !wp-content/universal-assets/
-
-# ignore these plugins
-wp-content/plugins/hello.php
-
-# ignore specific themes
-wp-content/themes/twenty*/
-
-# ignore node/grunt dependency directories
-node_modules/
-
-wp-content/themes/make-experiences/devScripts/uploads
-wp-content/plugins/indeed-membership-pro/temporary_files
-/wp-content/universal-assets/v1/nbproject/private/
-wp-content/cache
-wp-content/wp-rocket-config
-wp-content/themes/make-experiences/devScripts/import
