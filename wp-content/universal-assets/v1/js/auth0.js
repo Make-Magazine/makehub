@@ -128,6 +128,8 @@ jQuery(document).ready(function() {
         if (auth0loggedin || wploggedin) {
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
+			jQuery("#mzLoginBtn").css("display", "none");
+			jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
             //show the log in button
