@@ -315,9 +315,17 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 			}
 
 			//timeout for localhost
-			$retval['timeout'] = 50;
+			$retval['timeout'] = 15;
 
-			return $retval;
+			/**
+			 * Filters the API request parameter for check plugin updates.
+			 *
+			 * @param array  $retval Array of API data.
+			 * @param string $action The type of information being requested from the Plugin Installation API.
+			 *
+			 * @since 2.1.1
+			 */
+			return apply_filters( 'bb_prepare_request', $retval, $action );
 		}
 
 		function debug_result( $res, $action, $args ) {

@@ -191,7 +191,7 @@ jQuery(
 									);
 									scrubbers_obj.total_item = parseInt( scrubbers_obj.total_item, 10 ) + 1;
 									scrubbers_obj.to = parseInt( scrubbers_obj.to, 10 ) + 1;
-									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, 'last', scrubber_key );
+									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, '', scrubber_key );
 									break;
 								}
 							}
@@ -328,6 +328,7 @@ jQuery(
 		var bbp_quick_reply = {
 			init: function () {
 				this.ajax_call();
+				this.moveToReply();
 			},
 
 			// Quick Reply AJAX call
@@ -636,6 +637,26 @@ jQuery(
 					}
 				}
 			},
+			
+			// When click on notification then move to particular reply.
+			moveToReply: function () {
+				if ( window.location.href.indexOf( '#post-' ) > 0 ) {
+					var varUrl = window.location.href.split( '#post-' );
+					var postID = varUrl && undefined !== varUrl[1] ? varUrl[1] : '';
+					if ( !postID ) {
+						return;
+					}
+					var scrollTop;
+					if ( $( 'body' ).hasClass( 'sticky-header' ) ) {
+						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#masthead' ).innerHeight() - $( '#wpadminbar' ).innerHeight() );
+					} else {
+						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#wpadminbar' ).innerHeight() );
+					}
+					$( 'html, body' ).animate( {
+						scrollTop: scrollTop
+					}, 200 );
+				}
+			}
 
 		};
 

@@ -26,7 +26,7 @@ if ( bp_is_active( 'moderation' ) ) {
 		<div class="flex align-items-center bs-reply-header bs-reply-suspended-header">
 
 			<div class="bbp-reply-author item-avatar bp-suspended-avatar">
-				<img class="avatar avatar-96 photo avatar-default" src="<?php echo get_avatar_url( $reply_author_id, 300 ); ?>" />"
+				<img class="avatar avatar-96 photo avatar-default" src="<?php echo get_avatar_url( $reply_author_id, 300 ); ?>" />
 			</div><!-- .bbp-reply-author -->
 
 			<div class="item-meta flex-1">

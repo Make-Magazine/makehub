@@ -3,6 +3,8 @@
  * @package WordPress
  * @subpackage BuddyPress for LearnDash
  */
+global $wp;
+$current_url = home_url( add_query_arg( $_GET, $wp->request ) );
 
 $filepath = locate_template(
 	array(
@@ -31,7 +33,6 @@ if ( ! empty( $filepath ) ) {
 	wp_localize_script( 'learndash_template_script_js', 'sfwd_data', $data );
 }
 
-// LD_QuizPro::showModalWindow();
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
 ?>
 
@@ -47,8 +48,9 @@ $defaults = array(
 );
 $atts     = apply_filters( 'bp_learndash_user_courses_atts', $defaults );
 $atts     = wp_parse_args( $atts, $defaults );
-if ( $atts['per_page'] === false ) {
-	$atts['per_page'] = $atts['quiz_num'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+if ( false === $atts['per_page'] ) {
+	$atts['per_page'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+	$atts['quiz_num'] = $atts['per_page'];
 } else {
 	$atts['per_page'] = intval( $atts['per_page'] );
 }
@@ -94,33 +96,33 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 ?>
 
 <div id="bb-learndash_profile" class="<?php echo empty( $user_courses ) ? 'user-has-no-lessons' : ''; ?>">
-    <div id="learndash-content" class="learndash-course-list">
+	<div id="learndash-content" class="learndash-course-list">
 		<?php
 		if ( ! empty( $user_courses ) ) {
 			?>
-            <form id="bb-courses-directory-form" class="bb-courses-directory" method="get" action="">
-                <div class="flex align-items-center bb-courses-header">
-                    <div id="courses-dir-search" class="bs-dir-search" role="search"></div>
-                    <div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
-                        <div class="grid-filters" data-view="ld-course">
-                            <a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss-theme' ); ?>">
-                                <i class="dashicons dashicons-screenoptions" aria-hidden="true"></i>
-                            </a>
+			<form id="bb-courses-directory-form" class="bb-courses-directory" method="get" action="<?php echo esc_url( $current_url ); ?>">
+				<div class="flex align-items-center bb-courses-header">
+					<div id="courses-dir-search" class="bs-dir-search" role="search"></div>
+					<div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
+						<div class="grid-filters" data-view="ld-course">
+							<a href="#" class="layout-view layout-view-course layout-grid-view bp-tooltip <?php echo esc_attr( $class_grid_active ); ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Grid View', 'buddyboss-theme' ); ?>">
+								<i class="dashicons dashicons-screenoptions" aria-hidden="true"></i>
+							</a>
 
-                            <a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'List View', 'buddyboss-theme' ); ?>">
-                                <i class="dashicons dashicons-menu" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-view bb-grid">
-                    <div id="course-dir-list" class="course-dir-list bs-dir-list">
+							<a href="#" class="layout-view layout-view-course layout-list-view bp-tooltip <?php echo esc_attr( $class_list_active ); ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'List View', 'buddyboss-theme' ); ?>">
+								<i class="dashicons dashicons-menu" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="grid-view bb-grid">
+					<div id="course-dir-list" class="course-dir-list bs-dir-list">
 						<?php
 						if ( ! empty( $user_courses ) ) :
 							global $post;
 							$_post = $post;
 							?>
-                            <ul class="bb-course-list bb-course-items <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>" aria-live="assertive" aria-relevant="all">
+							<ul class="bb-course-list bb-course-items <?php echo esc_attr( $class_grid_show . $class_list_show ); ?>" aria-live="assertive" aria-relevant="all">
 								<?php
 								foreach ( $user_courses as $course_id ) :
 									$course = get_post( $course_id );
@@ -128,68 +130,79 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 									get_template_part( 'learndash/ld30/template-course-item' );
 								endforeach;
 								?>
-                            </ul>
+							</ul>
 							<?php
 							$post = $_post;
 						endif;
-						?>
 
-						<?php
-						if ( $profile_pager['total_items'] >= 21 ) {
-							// @todo We need a cleaner solution than this
+
+						$page                = (int) $profile_pager['paged'];
+						$num_results_on_page = (int) $atts['per_page'];
+						$total_pages         = (int) $profile_pager['total_pages'];
+						$pagination_url      = trailingslashit( $current_url ) . 'page/';
+
+						if ( 1 < $total_pages ) {
 							?>
-
-                            <div class="bb-lms-pagination">
+							<div class="bb-lms-pagination">
 								<?php
-								$page                = (int) $profile_pager['paged'];
-								$num_results_on_page = (int) $atts['per_page'];
-								$totalPages          = (int) $profile_pager['total_pages'];
-
-								if ( $page <= 1 ) {
-								} else {
+								if ( 1 < $page ) {
 									$j = $page - 1;
-									echo "<a class='prev page-numbers' id='page_a_link' href='?ld-profile-page=$j'>" . __( '« Previous', 'buddyboss-theme' ) . '</a>';
+
+									echo sprintf(
+										'<a class="prev page-numbers" id="page_a_link" href="%1$s">%2$s</a>',
+										esc_url( $pagination_url . $j ),
+										esc_html__( '« Previous', 'buddyboss-theme' )
+									);
 								}
 
-								for ( $i = 1; $i <= $totalPages; $i ++ ) {
-									if ( $i <> $page ) {
-										echo "<span><a id='page_a_link' class='page-numbers' href='?ld-profile-page=$i'>$i</a></span>";
+								for ( $i = 1; $i <= $total_pages; $i ++ ) {
+									if ( $i !== $page ) {
+										echo sprintf(
+											'<span><a class="page-numbers" id="page_a_link" href="%1$s">%2$s</a></span>',
+											esc_url( $pagination_url . $i ),
+											esc_attr( $i )
+										);
 									} else {
-										echo "<span id='page_links' class='page-numbers current' style='font-weight: bold;'>$i</span>";
+										echo sprintf(
+											'<span class="current page-numbers" id="page_a_link" style="font-weight: bold;">%1$s</a></span>',
+											esc_attr( $i )
+										);
 									}
 								}
 
-								if ( $page == $totalPages ) {
-								} else {
+								if ( $page !== $total_pages ) {
 									$j = $page + 1;
-									echo "<a class='next page-numbers'  id='page_a_link' href='?ld-profile-page=$j'>" . __( 'Next »', 'buddyboss-theme' ) . '</a>';
+									echo sprintf(
+										'<a class="next page-numbers" id="page_a_link" href="%1$s">%2$s</a>',
+										esc_url( $pagination_url . $j ),
+										esc_html__( 'Next »', 'buddyboss-theme' )
+									);
 								}
-
 								?>
-                            </div>
-
+							</div>
 							<?php
 						}
 						?>
-                    </div>
-                </div>
-            </form>
+					</div>
+				</div>
+			</form>
 			<?php
 		} else {
 			?>
-            <aside class="bp-feedback bp-messages info">
-                <span class="bp-icon" aria-hidden="true"></span>
-                <p>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p>
 					<?php
 					printf(
-						__( 'Sorry, no %s were found.', 'buddyboss-theme' ),
-						LearnDash_Custom_Label::label_to_lower( 'courses' )
+					/* translators: The course label. */
+						esc_html__( 'Sorry, no %s were found.', 'buddyboss-theme' ),
+						esc_html( LearnDash_Custom_Label::label_to_lower( 'courses' ) )
 					);
 					?>
-                </p>
-            </aside>
+				</p>
+			</aside>
 			<?php
 		}
 		?>
-    </div>
+	</div>
 </div>

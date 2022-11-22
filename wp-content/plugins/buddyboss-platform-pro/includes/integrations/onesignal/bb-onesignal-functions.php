@@ -870,7 +870,7 @@ function bb_onesingnal_send_notification( $data ) {
 			$lang => html_entity_decode( wp_encode_emoji( $data['title'] ) ),
 		),
 		'contents'                  => array(
-			$lang => html_entity_decode( wp_encode_emoji( $data['content'] ) ),
+			$lang => html_entity_decode( wp_encode_emoji( stripcslashes( $data['content'] ) ) ),
 		),
 		'include_external_user_ids' => wp_parse_list( $data['user_id'] ),
 
@@ -917,4 +917,48 @@ function bb_onesignal_get_current_browser() {
 	}
 
 	return '';
+}
+
+/**
+ * Function will return excluded web push notification lists.
+ *
+ * @since 2.1.6
+ *
+ * @return array
+ */
+function bb_onesignal_excluded_web_notification_message_actions() {
+	return apply_filters(
+		'bb_onesignal_excluded_web_notification_message_actions',
+		array()
+	);
+}
+
+/**
+ * When a member is currently present in a web or app push notifications should not be sent.
+ *
+ * @since 2.1.6
+ *
+ * @param bool   $retval       True or False.
+ * @param object $notification Notification object.
+ *
+ * @return bool
+ */
+function bb_pro_onesignal_user_presence_check( $retval, $notification ) {
+	$excluded_actions = bb_onesignal_excluded_web_notification_message_actions();
+
+	if (
+		! empty( $notification->component_action ) &&
+		in_array( $notification->component_action, $excluded_actions, true )
+	) {
+		return $retval;
+	}
+
+//	$user_id       = $notification->user_id; // Notification receiver user id.
+//	$presence_time = (int) apply_filters( 'bb_pro_push_notification_presence_time', 300 ); // 5 minutes =
+//	$user_presence = bb_is_online_user( $user_id, $presence_time );
+//	if ( true === $user_presence ) {
+//		return false;
+//	}
+
+	return $retval;
 }

@@ -239,7 +239,7 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		 */
 		private function _setup_globals() {
 
-			$this->bb_theme_db_version = 400;
+			$this->bb_theme_db_version = 430;
 
 			// Get theme path.
 			$this->_tpl_dir = get_template_directory();
@@ -269,11 +269,10 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		protected function _do_includes() {
 
 			require_once $this->_inc_dir . '/common-functions.php';
+			require_once $this->_inc_dir . '/admin/options/setting-options.php';
 			require_once $this->_inc_dir . '/admin/admin-init.php';
 
 			require_once $this->_inc_dir . '/compatibility/incompatible-themes-helper.php';
-
-			require_once $this->_inc_dir . '/admin/options/setting-options.php';
 
 			// Theme stuff
 			// Wherever possible, we'll put related functions in a separate file, instead of dumping them all in functions.php

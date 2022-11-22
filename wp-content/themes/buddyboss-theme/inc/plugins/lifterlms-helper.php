@@ -719,6 +719,21 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				];
 			}
 
+			$pagination_url = '';
+			if ( isset( $_GET['request_url'] ) && ! empty( $_GET['request_url'] ) ) {
+				// Decode the requested URL.
+				$pagination_url = urldecode_deep( $_GET['request_url'] );
+
+				// Validate the requested URL.
+				if ( false === strpos( $pagination_url, get_site_url() ) ) {
+					$pagination_url = '';
+				}
+			}
+
+			if ( empty( $pagination_url ) ) {
+				$pagination_url = $category ? get_category_link( $category ) : get_post_type_archive_link( 'course' );
+			}
+
 			$c_q = new WP_Query( $args );
 
 			if ( $c_q->have_posts() ) {
@@ -760,7 +775,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				if ( $category ) {
 					$html .= paginate_links(
 						[
-							'base'               => trailingslashit( get_category_link( $category ) ) . 'page/%#%/',
+							'base'               => trailingslashit( $pagination_url ) . 'page/%#%/',
 							'format'             => '?paged=%#%',
 							'current'            => ( isset( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 ),
 							'total'              => $c_q->max_num_pages,
@@ -770,7 +785,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				} else {
 					$html .= paginate_links(
 						[
-							'base'               => trailingslashit( get_post_type_archive_link( 'course' ) ) . 'page/%#%/',
+							'base'               => trailingslashit( $pagination_url ) . 'page/%#%/',
 							'format'             => '?paged=%#%',
 							'current'            => ( isset( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 ),
 							'total'              => $c_q->max_num_pages,

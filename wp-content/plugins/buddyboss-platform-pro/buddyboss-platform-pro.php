@@ -9,7 +9,7 @@
  * Description: Adds premium features to BuddyBoss Platform.
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     2.0.4
+ * Version:     2.1.7.1
  * Text Domain: buddyboss-pro
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -22,6 +22,10 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+	require dirname( __FILE__ ) . '/vendor/autoload.php';
+}
 
 // load main class file.
 require_once 'class-bb-platform-pro.php';

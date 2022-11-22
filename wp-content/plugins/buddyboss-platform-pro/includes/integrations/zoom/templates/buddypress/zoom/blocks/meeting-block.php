@@ -36,6 +36,7 @@ $occurrences            = ! empty( $bp_zoom_meeting_block->occurrences ) ? $bp_z
 $recurring              = isset( $bp_zoom_meeting_block->type ) && 8 === $bp_zoom_meeting_block->type;
 $recurrence             = ! empty( $bp_zoom_meeting_block->recurrence ) ? $bp_zoom_meeting_block->recurrence : false;
 $meeting_status         = ! empty( $bp_zoom_meeting_block->status ) ? $bp_zoom_meeting_block->status : '';
+$block_class_name       = isset( $bp_zoom_meeting_block->block_class_name ) ? $bp_zoom_meeting_block->block_class_name : '';
 
 
 if ( is_user_logged_in() ) {
@@ -109,7 +110,7 @@ $meeting_date_unix = $occurrence_date->format( 'U' );
 $date              = wp_date( bp_core_date_format( false, true ), strtotime( $start_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $start_time ), new DateTimeZone( $timezone ) );
 ?>
 
-<div class="zoom-meeting-block">
+<div class="zoom-meeting-block <?php echo esc_attr( $block_class_name ); ?>">
 	<div class="zoom-meeting-block-info">
 		<h2 id="bp-zoom-meeting-block-title-<?php echo esc_attr( $meeting_id ); ?>">
 			<?php echo esc_html( $topic ); ?>

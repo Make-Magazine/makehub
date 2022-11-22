@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 2.0.4\n"
+"Project-Id-Version: BuddyBoss Platform Pro 2.1.7.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-07-08 06:12:56+00:00\n"
+"POT-Creation-Date: 2022-11-16 06:41:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,19 +28,19 @@ msgstr ""
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
-#: buddyboss-platform-pro.php:47
+#: buddyboss-platform-pro.php:51
 msgid "requires the BuddyBoss Platform plugin to work. Please"
 msgstr ""
 
-#: buddyboss-platform-pro.php:48
+#: buddyboss-platform-pro.php:52
 msgid "install BuddyBoss Platform"
 msgstr ""
 
-#: buddyboss-platform-pro.php:49
+#: buddyboss-platform-pro.php:53
 msgid "first."
 msgstr ""
 
-#: buddyboss-platform-pro.php:62
+#: buddyboss-platform-pro.php:66
 msgid ""
 "requires BuddyBoss Platform plugin version 1.3.5 or higher to work. Please "
 "update BuddyBoss Platform."
@@ -50,27 +50,21 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
+#: class-bb-platform-pro.php:275 includes/bb-pro-update-buddyboss.php:81
+msgid "Release Notes"
+msgstr ""
+
 #: includes/access-control/bb-access-control-filters.php:483
 msgid "You don't have access to send request membership."
 msgstr ""
 
 #: includes/access-control/bb-access-control-filters.php:706
-#: includes/access-control/bb-access-control-rest-filters.php:447
-#: includes/access-control/bb-access-control-rest-filters.php:523
-msgid ""
-"You can no longer send replies to this thread as you are restricted from "
-"sending messages to this member."
+msgid "You are restricted from sending new messages to this member."
 msgstr ""
 
 #: includes/access-control/bb-access-control-filters.php:708
 #: includes/access-control/bb-access-control-filters.php:710
-#: includes/access-control/bb-access-control-rest-filters.php:449
-#: includes/access-control/bb-access-control-rest-filters.php:451
-#: includes/access-control/bb-access-control-rest-filters.php:525
-#: includes/access-control/bb-access-control-rest-filters.php:527
-msgid ""
-"You can no longer send replies to this thread as you are restricted from "
-"sending messages to these members: "
+msgid "You are restricted from sending new messages to these members: "
 msgstr ""
 
 #: includes/access-control/bb-access-control-filters.php:710
@@ -81,6 +75,7 @@ msgstr ""
 
 #: includes/access-control/bb-access-control-functions.php:574
 #: includes/integrations/onesignal/bb-onesignal-functions.php:69
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:238
 #: includes/integrations/zoom/bp-zoom-functions.php:1450
 #: includes/integrations/zoom/bp-zoom-functions.php:1479
 #: includes/integrations/zoom/bp-zoom-functions.php:1506
@@ -121,6 +116,22 @@ msgstr ""
 msgid ""
 "Requested User don't have enough membership to approve membership requests "
 "to this group."
+msgstr ""
+
+#: includes/access-control/bb-access-control-rest-filters.php:447
+#: includes/access-control/bb-access-control-rest-filters.php:523
+msgid ""
+"You can no longer send replies to this thread as you are restricted from "
+"sending messages to this member."
+msgstr ""
+
+#: includes/access-control/bb-access-control-rest-filters.php:449
+#: includes/access-control/bb-access-control-rest-filters.php:451
+#: includes/access-control/bb-access-control-rest-filters.php:525
+#: includes/access-control/bb-access-control-rest-filters.php:527
+msgid ""
+"You can no longer send replies to this thread as you are restricted from "
+"sending messages to these members: "
 msgstr ""
 
 #: includes/access-control/bb-access-control-rest-filters.php:615
@@ -225,6 +236,7 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:831
 #: includes/access-control/includes/class-bb-access-control.php:1028
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:17
+#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:17
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:17
 #. translators: %1$s - Platform Pro string, %2$s - License URL
 msgid "You need to activate a license key for %1$s to unlock this feature. %2$s"
@@ -238,6 +250,7 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:846
 #: includes/access-control/includes/class-bb-access-control.php:1043
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:32
+#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:32
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:32
 msgid "Add License key"
 msgstr ""
@@ -399,6 +412,62 @@ msgstr ""
 #: includes/access-control/templates/plugin-options.php:51
 #: includes/access-control/templates/plugin-options.php:76
 msgid "- Select Membership Type -"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:75
+msgid "Close pop-up"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:76
+#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:240
+#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
+#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
+msgid "Close"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:82
+msgid "BuddyBoss Platform Pro v"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:86
+msgid "Overview"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:88
+msgid "Changelog"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:102
+msgid "Welcome to BuddyBoss Theme 2.0 🥳"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:103
+msgid ""
+"Check out the video below for a full walkthrough of all the new features "
+"and updates available to you in this release."
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:108
+#. translators: %1$s - Overview tab link for details.
+msgid ""
+"As this update contains a number of improvements to the theme’s colors, "
+"layouts and styling, we recommend you reconfigure your Theme Options and "
+"review any custom CSS you may have.  For more information on how to update, "
+"%1$s."
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:113
+#. translators: %1$s - Overview tab link for details. %2$s - tutorial text
+msgid "check out this tutorial"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:121
+msgid "For more information, please watch the video below:"
+msgstr ""
+
+#: includes/bb-pro-update-buddyboss.php:136
+msgid "Changes:"
 msgstr ""
 
 #: includes/integrations/onesignal/bb-onesignal-actions.php:263
@@ -564,11 +633,15 @@ msgstr ""
 
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:284
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:298
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:174
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:196
 msgid "Not Connected"
 msgstr ""
 
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:309
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:322
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:188
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:193
 msgid "Connected"
 msgstr ""
 
@@ -853,6 +926,346 @@ msgstr ""
 
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:12
 msgid "OneSignal <span>&mdash; requires license</span>"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:188
+msgid "a second ago"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:195
+#: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:520
+#: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:516
+#: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:54
+#: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:54
+msgid "Cancel"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:196
+msgid "Not delivered"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:197
+msgid "Try again"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:198
+msgid "Sending..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:201
+msgid "The conversation with %s has been deleted."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:202
+msgid "You have left "
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:203
+msgid "You are banned in "
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:204
+msgid " are typing..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:205
+msgid " is typing..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:206
+msgid " members are typing..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:207
+msgid " others are typing..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:208
+msgid " and "
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:209
+msgid "Group messages have been disabled by a site administrator."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:210
+msgid " was deleted."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:211
+msgid "Private messages have been disabled by a site administrator."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:212
+msgid "You have removed from group "
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:306
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:206
+msgid "This content has been hidden as you have blocked this member."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:331
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:231
+msgid "This content has been hidden from site admin."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:378
+msgid "Typing..."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1502
+#: includes/integrations/pusher/bb-pusher-actions.php:1926
+msgid "sent a photo"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1504
+#: includes/integrations/pusher/bb-pusher-actions.php:1928
+msgid "sent some photos"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1515
+#: includes/integrations/pusher/bb-pusher-actions.php:1939
+msgid "sent a video"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1517
+#: includes/integrations/pusher/bb-pusher-actions.php:1941
+msgid "sent some videos"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1528
+#: includes/integrations/pusher/bb-pusher-actions.php:1952
+msgid "sent a document"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1530
+#: includes/integrations/pusher/bb-pusher-actions.php:1954
+msgid "sent some documents"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1539
+#: includes/integrations/pusher/bb-pusher-actions.php:1963
+msgid "sent a GIF"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1734
+#: includes/integrations/pusher/bb-pusher-actions.php:2157
+msgid "Your browser does not support the audio element."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1763
+#: includes/integrations/pusher/bb-pusher-actions.php:2186
+msgid "Click to expand"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1796
+#: includes/integrations/pusher/bb-pusher-actions.php:2219
+#. translators: %s: download url
+msgid "Click to view"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1798
+#: includes/integrations/pusher/bb-pusher-actions.php:2221
+#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:266
+#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:266
+msgid "Download"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1799
+#: includes/integrations/pusher/bb-pusher-actions.php:2222
+msgid "Collapse"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1800
+#: includes/integrations/pusher/bb-pusher-actions.php:2223
+msgid "Copy Download Link"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-actions.php:1801
+#: includes/integrations/pusher/bb-pusher-actions.php:2224
+msgid "More actions"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:46
+msgid "mt1 (N. Virginia)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:47
+msgid "us2 (Ohio)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:48
+msgid "us3 (Oregon)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:49
+msgid "eu (Ireland)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:50
+msgid "ap1 (Singapore)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:51
+msgid "ap2 (Mumbai)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:52
+msgid "ap3 (Tokyo)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:53
+msgid "ap4 (Sydney)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:54
+msgid "sa1 (São Paulo)"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:55
+msgid "Custom"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:207
+#: includes/integrations/pusher/bb-pusher-integration.php:25
+msgid "Pusher"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:209
+msgid ""
+"In your app's settings, please enable \"Client events\", \"Subscription "
+"counting\" and \"Authorized connections\" for this integration to work "
+"correctly."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:283
+msgid "Information"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:289
+msgid "Dashboard"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:295
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:400
+msgid "Pusher App ID"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:301
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:412
+msgid "Pusher App Key"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:307
+msgid "Pusher Secret Key"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:313
+msgid "Pusher Cluster"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:322
+msgid "Enable Features"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:369
+#. translators: pusher channels link
+msgid ""
+"The BuddyBoss Platform has an integration with %s, a WebSocket service "
+"which can power realtime features on your BuddyBoss community such as live "
+"messaging."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:370
+msgid "Pusher Channels"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:386
+#. translators: 1. pusher channels dashboard link 2. App Keys text
+msgid ""
+"After creating your app in your Pusher Channels %1$s, enter the %2$s below "
+"to connect it to this site."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:387
+msgid "account"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:388
+msgid "App Keys"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:428
+msgid "Pusher App Secret"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:457
+#: includes/integrations/pusher/bb-pusher-admin-tab.php:458
+msgid "Cluster Name"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-functions.php:137
+msgid "Live Messaging"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-functions.php:138
+msgid ""
+"When enabled, members will send and receive private messages in realtime "
+"across their devices."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-functions.php:146
+#. translators: BuddyBoss components link
+msgid "To use Live Messaging, please enable the %s component."
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-functions.php:155
+msgid "Private Messaging"
+msgstr ""
+
+#: includes/integrations/pusher/bb-pusher-functions.php:234
+#. translators: Error Message.
+msgid "There was a problem connecting to your Pusher Channels app: %s"
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:54
+msgid "Channel Name"
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:59
+msgid "Socket ID"
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:285
+msgid "Sorry, Restrict access to only logged-in members."
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:297
+msgid "Pusher does not setup properly."
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:331
+msgid "a valid channel_name param is required."
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:334
+msgid "a valid socket_id param is required."
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:373
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:434
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:439
+msgid "You are not authorized to subscribe this channel."
+msgstr ""
+
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:381
+#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:455
+msgid "Sorry, you are not allowed to access this endpoint"
+msgstr ""
+
+#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:12
+msgid "Pusher <span>&mdash; requires license</span>"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-actions.php:211
@@ -1320,8 +1733,8 @@ msgstr ""
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:28
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:27
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:28
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:109
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:108
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:110
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:109
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:37
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:34
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:175
@@ -1333,7 +1746,7 @@ msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3776
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:62
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:152
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:153
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:96
 msgid "Meeting ID"
 msgstr ""
@@ -1342,8 +1755,8 @@ msgstr ""
 #: includes/integrations/zoom/bp-zoom-functions.php:3936
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:56
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:54
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:138
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:137
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:139
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:138
 msgid "Date and Time"
 msgstr ""
 
@@ -1351,8 +1764,8 @@ msgstr ""
 #: includes/integrations/zoom/bp-zoom-functions.php:3944
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:79
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:77
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:168
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:167
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:169
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:168
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:114
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:118
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:165
@@ -1366,8 +1779,8 @@ msgstr ""
 #: includes/integrations/zoom/bp-zoom-functions.php:3954
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:84
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:82
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:173
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:172
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:174
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:173
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:124
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:124
 #. translators: %d number of hours
@@ -1384,8 +1797,8 @@ msgstr[1] ""
 #: includes/integrations/zoom/bp-zoom-functions.php:3958
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:88
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:86
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:177
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:176
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:178
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:177
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:128
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:128
 #. translators: %d number of minutes
@@ -1402,8 +1815,8 @@ msgstr[1] ""
 #: includes/integrations/zoom/bp-zoom-functions.php:3971
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:157
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:153
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:212
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:211
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:213
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:212
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:192
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:192
 msgid "Registration Link"
@@ -1411,43 +1824,43 @@ msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3841
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:170
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:224
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:225
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:206
 msgid "Meeting Link"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3853
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:45
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:129
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:130
 msgid "Meeting Details"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3922
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:60
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:151
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:152
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:96
 msgid "Webinar ID"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3987
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:166
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:223
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:224
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:206
 msgid "Webinar Link"
 msgstr ""
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3999
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:44
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:128
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:129
 msgid "Webinar Details"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-group-functions.php:312
+#: includes/integrations/zoom/bp-zoom-group-functions.php:190
 #. translators: %1$s - user link, %2$s - group link.
 msgid "%1$s scheduled a Zoom meeting in the group %2$s"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-group-functions.php:397
+#: includes/integrations/zoom/bp-zoom-group-functions.php:275
 #. translators: %1$s - user link, %2$s - group link.
 msgid "%1$s scheduled a Zoom webinar in the group %2$s"
 msgstr ""
@@ -1532,8 +1945,8 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:213
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:410
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:454
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:544
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:456
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:546
 msgid "Please select the meeting duration to a minimum of 15 minutes."
 msgstr ""
 
@@ -1551,30 +1964,30 @@ msgstr ""
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:565
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1109
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1340
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:316
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:321
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:369
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:374
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:421
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:426
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:492
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:501
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:683
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:705
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:712
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:788
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:879
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:884
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:931
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:936
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:982
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:987
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1050
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1059
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1232
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1254
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1261
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1336
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:318
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:323
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:371
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:376
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:423
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:428
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:494
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:503
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:685
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:707
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:714
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:790
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:883
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:888
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:935
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:940
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:986
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:991
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1054
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1063
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1236
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1258
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1265
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1340
 msgid ""
 "Something went wrong. If passcode is entered then please make sure it "
 "matches Zoom Passcode requirements and try again."
@@ -1644,8 +2057,8 @@ msgstr ""
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1192
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1792
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1014
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1101
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1018
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1105
 msgid "Please select the webinar duration to a minimum of 15 minutes."
 msgstr ""
 
@@ -1681,22 +2094,22 @@ msgstr ""
 msgid "Are you sure you want to delete this occurrence?"
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:328
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:381
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:433
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:516
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:891
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:943
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:994
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1074
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:330
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:383
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:435
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:518
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:895
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:947
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:998
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1078
 msgid "Please choose API Host Email in the settings and try again."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:718
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:720
 msgid "Please provide Meeting ID."
 msgstr ""
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1267
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1271
 msgid "Please provide Webinar ID."
 msgstr ""
 
@@ -2320,8 +2733,8 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:69
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:67
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:159
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:158
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:160
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:159
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:107
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:107
 msgid "Description"
@@ -2382,22 +2795,15 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:174
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:178
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:231
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:236
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:232
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:237
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:210
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:213
 msgid "View Invitation"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:239
-#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
-#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
-msgid "Close"
-msgstr ""
-
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:187
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:249
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:250
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:263
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:220
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:263
@@ -2405,15 +2811,15 @@ msgid "Copied to clipboard"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:187
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:249
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:250
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:220
 msgid "Copy Meeting Invitation"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:195
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:175
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:257
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:232
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:258
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:233
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:335
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:339
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:365
@@ -2425,8 +2831,8 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:198
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:178
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:260
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:235
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:339
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:429
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:343
@@ -2442,8 +2848,8 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:199
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:179
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:262
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:237
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:232
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:219
 msgid " On"
@@ -2453,10 +2859,10 @@ msgstr ""
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:203
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:179
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:183
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:262
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:266
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:237
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:241
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:232
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:219
@@ -2466,22 +2872,22 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:202
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:182
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:264
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:235
 msgid "Participant"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:203
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:183
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:266
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:241
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:223
 msgid "On"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:208
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:270
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:271
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:365
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:395
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:241
@@ -2489,7 +2895,7 @@ msgid "Meeting Options"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:219
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:281
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:282
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:385
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:415
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:252
@@ -2498,7 +2904,7 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:223
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:197
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:285
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:286
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:390
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:420
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:256
@@ -2506,7 +2912,7 @@ msgid "Mute participants upon entry"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:227
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:289
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:290
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:395
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:425
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:260
@@ -2515,8 +2921,8 @@ msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:231
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:201
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:293
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:258
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:294
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:259
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:400
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:431
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:426
@@ -2526,43 +2932,43 @@ msgid "Only authenticated users can join"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:238
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:300
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:301
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:271
 msgid "Record the meeting automatically in the cloud"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:240
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:302
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:303
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:273
 msgid "Record the meeting automatically in the local computer"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:242
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:304
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:305
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:275
 msgid "Do not record the meeting."
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:282
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:333
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:334
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:319
 msgid "Host Meeting in Browser"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:284
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:335
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:336
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:321
 msgid "Join Meeting in Browser"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:290
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:341
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:342
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:329
 msgid "Host Meeting in Zoom"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:292
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:343
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:344
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:331
 msgid "Join Meeting in Zoom"
 msgstr ""
@@ -2584,7 +2990,7 @@ msgid "Webinar Password"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:188
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:245
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:246
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:369
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:399
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:228
@@ -2592,43 +2998,43 @@ msgid "Webinar Options"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:208
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:265
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:266
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:248
 msgid "Record the webinar automatically in the cloud"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:210
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:267
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:268
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:250
 msgid "Record the webinar automatically in the local computer"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:212
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:269
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:270
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:252
 msgid "Do not record the webinar."
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:253
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:298
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:299
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:312
 msgid "Join Webinar in Browser"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:259
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:304
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:305
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:322
 msgid "Host Webinar in Zoom"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:261
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:306
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:307
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:324
 msgid "Join Webinar in Zoom"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:117
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:116
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:118
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:117
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:34
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:31
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:17
@@ -2636,57 +3042,57 @@ msgstr ""
 msgid "Recurring"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:120
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:119
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:121
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:120
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:17
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:16
 msgid "Live"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:145
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:144
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:146
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:145
 msgid "Occurrences"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:183
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:184
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:166
 msgid "Meeting Passcode"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:193
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:192
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:194
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:193
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:175
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:175
 msgid "Show passcode"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:196
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:195
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:197
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:196
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:176
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:176
 msgid "Hide passcode"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:203
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:202
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:204
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:203
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:182
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:182
 msgid "No passcode required"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:182
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:183
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:166
 msgid "Webinar Passcode"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:239
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:353
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:383
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:222
 msgid "Panelists"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:254
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:255
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:389
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:420
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:237
@@ -3077,13 +3483,6 @@ msgstr ""
 msgid "Edit Meeting"
 msgstr ""
 
-#: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:520
-#: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:516
-#: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:54
-#: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:54
-msgid "Cancel"
-msgstr ""
-
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:521
 msgid "Update Meeting"
 msgstr ""
@@ -3145,11 +3544,6 @@ msgstr ""
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:242
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:242
 msgid "Timeline"
-msgstr ""
-
-#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:266
-#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:266
-msgid "Download"
 msgstr ""
 
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:288

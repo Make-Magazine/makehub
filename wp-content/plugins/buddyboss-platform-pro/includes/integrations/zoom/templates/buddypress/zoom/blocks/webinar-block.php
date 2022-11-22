@@ -35,6 +35,7 @@ $occurrences            = ! empty( $bp_zoom_webinar_block->occurrences ) ? $bp_z
 $recurring              = isset( $bp_zoom_webinar_block->type ) && 9 === $bp_zoom_webinar_block->type;
 $recurrence             = ! empty( $bp_zoom_webinar_block->recurrence ) ? $bp_zoom_webinar_block->recurrence : false;
 $webinar_status         = ! empty( $bp_zoom_webinar_block->status ) ? $bp_zoom_webinar_block->status : '';
+$block_class_name       = isset( $bp_zoom_webinar_block->block_class_name ) ? $bp_zoom_webinar_block->block_class_name : '';
 
 
 if ( is_user_logged_in() ) {
@@ -108,7 +109,7 @@ $webinar_date_unix = $occurrence_date->format( 'U' );
 $date              = wp_date( bp_core_date_format( false, true ), strtotime( $start_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $start_time ), new DateTimeZone( $timezone ) );
 ?>
 
-<div class="zoom-webinar-block">
+<div class="zoom-webinar-block <?php echo esc_attr( $block_class_name ); ?>">
 	<div class="zoom-webinar-block-info">
 		<h2 id="bp-zoom-webinar-block-title-<?php echo esc_attr( $webinar_id ); ?>">
 			<?php echo esc_html( $topic ); ?>

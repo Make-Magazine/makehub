@@ -896,13 +896,13 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 						}
 					}
 					if ( empty( $value ) && in_array(
-							$key,
-							array(
-								'font-weight',
-								'font-style',
-							),
-							true
-						) && true === $font_value_set ) {
+						$key,
+						array(
+							'font-weight',
+							'font-style',
+						),
+						true
+					) && true === $font_value_set ) {
 						$value = 'normal';
 					}
 					if ( 'font-weight' === $key && false === $this->field['font-weight'] ) {
@@ -910,6 +910,9 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 					}
 					if ( 'font-style' === $key && false === $this->field['font-style'] ) {
 						continue;
+					}
+					if ( 'font-weight' === $key && in_array( substr( $value, 0, 3 ), array( '100', '200', '300', '400', '500', '600', '700', '800', '900' ), true ) ) {
+						$value = substr( $value, 0, 3 );
 					}
 					if ( 'google' === $key || 'subsets' === $key || 'font-backup' === $key || empty( $value ) ) {
 						continue;

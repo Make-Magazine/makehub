@@ -70,7 +70,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 						<span class="sfwd-light-mode" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Light Mode', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-sun"></i></span>
 					</a>
 					<a href="#" class="header-maximize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Hide Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-expand"></i></a>
-					<a href="#" class="header-minimize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Show Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-expand"></i></a>
+					<a href="#" class="header-minimize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Show Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-merge"></i></a>
 				<?php } else {
 					if ( $show_search ) : ?>
 						<a data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Search', 'buddyboss-theme' ); ?>" href="#" class="push-right header-search-link"><i class="bb-icon-l bb-icon-search"></i></a>
@@ -81,7 +81,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 					<?php endif; ?>
 
 					<a href="#" class="header-maximize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Hide Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-expand"></i></a>
-					<a href="#" class="header-minimize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Show Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-expand"></i></a>
+					<a href="#" class="header-minimize-link course-toggle-view" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Show Sidepanel', 'buddyboss-theme' ); ?>"><i class="bb-icon-l bb-icon-merge"></i></a>
 					<?php
 				}
 			} else {

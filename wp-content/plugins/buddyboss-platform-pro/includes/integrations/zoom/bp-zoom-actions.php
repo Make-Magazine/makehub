@@ -783,7 +783,7 @@ function bp_zoom_pro_setup_webinar_integration( $key = '', $secret = '', $email 
 /**
  * Register the zoom group notifications.
  *
- * @since BuddyBoss 1.2.1
+ * @since 1.2.1
  */
 function bb_load_pro_groups_notifications() {
 	if ( class_exists( 'BP_Core_Notification_Abstract' ) && class_exists( 'BP_Zoom_Groups_Notification' ) ) {

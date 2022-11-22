@@ -187,10 +187,10 @@ if ( ! function_exists( 'buddyboss_theme_body_classes' ) ) {
 			// LearnDash sidebar.
 			$sidebar   = ' sidebar-' . buddyboss_theme_get_option( 'learndash' );
 			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
-		} elseif ( is_active_sidebar( 'learndash_sidebar' ) && buddyboss_is_learndash() ) {
-			// LearnDash sidebar.
-			$sidebar   = 'sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
-			$classes[] = $sidebar;
+		} elseif ( is_active_sidebar( 'learndash_lesson_sidebar' ) && buddyboss_is_learndash() ) {
+			// LearnDash lesson sidebar
+			$sidebar   = ' sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
+			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
 		} elseif ( buddyboss_is_lifterlms() ) {
 			// LifterLMS class.
 			$classes[] = 'llms-pointer';
@@ -483,7 +483,7 @@ if ( ! function_exists( 'buddyboss_theme_entry_header_image' ) ) {
 			ob_start();
 			?>
 			<div class="ratio-wrap">
-				<a href="<?php the_permalink(); ?> title="
+				<a href="<?php the_permalink(); ?>" title="
 					<?php
 					echo esc_attr(
 						sprintf(
@@ -902,6 +902,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					array_merge(
 						$args,
 						array(
+							'reply_text' => esc_html__( 'Reply', 'buddyboss-theme' ),
 							'add_below' => $add_below,
 							'depth'     => $depth,
 							'max_depth' => $args['max_depth'],
@@ -912,7 +913,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 				);
 				?>
 
-				<?php edit_comment_link( __( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
+				<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
 			</footer>
 		</div>		</article>
 		<?php

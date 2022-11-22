@@ -12,7 +12,8 @@ $courses_progress    = buddyboss_theme()->learndash_helper()->get_courses_progre
 $course_progress     = isset( $courses_progress[ $course_id ] ) ? $courses_progress[ $course_id ] : null;
 $course_progress_new = buddyboss_theme()->learndash_helper()->ld_get_progress_course_percentage( get_current_user_id(), $course_id );
 $admin_enrolled      = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
-$lesson_count        = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
+$lesson_count        = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
+$lesson_count        = array_column( $lesson_count, 'post' );
 $course_pricing      = learndash_get_course_price( $course_id );
 $has_access          = sfwd_lms_has_access( $course_id, $current_user_id );
 $file_info           = pathinfo( $course_video_embed );
