@@ -970,9 +970,20 @@ body:not(.facilitator-user) {
     }
 }
 
+#no3rdPartyCookiesDialog {
+	padding: 0px 15px;
+	h4 {
+		color: #ea002a
+	}
+	ol {
+		list-style: decimal;
+	}
+}
+#SafariLoginBtn{ display: none;color:#333; }
 //hide login for makerfaire and makezine on safari-mac
-.safari-mac {
-	body.makezine, body#makerfaire {
+body.no3rdPartyCookies {
+	&.makezine, &#makerfaire {
 		#LoginBtn { display: none !important; }
+		#SafariLoginBtn { display: block; }
 	}
 }
