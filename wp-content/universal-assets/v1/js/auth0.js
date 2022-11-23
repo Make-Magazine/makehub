@@ -50,7 +50,7 @@ jQuery(document).ready(function() {
                 event.preventDefault();
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
-                    redirect_uri: "/",
+                    redirect_uri: location.protocol + "//" + location.hostname,
                 });
             });
 
@@ -59,7 +59,7 @@ jQuery(document).ready(function() {
                 event.preventDefault();
                 webAuth.logout({
                     clientID: AUTH0_CLIENT_ID,
-                    returnTo: "/",
+                    returnTo: location.protocol + "//" + location.hostname,
                 });
             });
         }

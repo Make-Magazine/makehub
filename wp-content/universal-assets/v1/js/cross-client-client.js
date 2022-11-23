@@ -307,7 +307,7 @@
         return;
       }
 	  // if the response is null and the root domain is not make.co, we got a no3rdPartyCookies situation
-	  if(!response.result) {
+	  if(response.result != 'yes') {
 		  document.body.classList.add('no3rdPartyCookies');
 	  }
       if (!response.id) return;
