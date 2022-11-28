@@ -32,6 +32,7 @@ jQuery(document).ready(function() {
             jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
         }
 
+
         //ok let's check auth0 instead
         var webAuth = new auth0.WebAuth({
             domain: AUTH0_CUSTOM_DOMAIN,
@@ -48,6 +49,7 @@ jQuery(document).ready(function() {
         if (wpLoginRequired == false) {
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
+				setCookie("mz_redirect_url", window.location.href, 1);
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
                     redirect_uri: location.protocol + "//" + location.hostname,
