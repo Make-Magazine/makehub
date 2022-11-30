@@ -47,8 +47,8 @@
 	&.fa-table-list:before { content: "\f00b"; }
 	&.sign-out-alt:before { content: "\f2f5"; }
 	&.fa-table-cells-large:before, &.fa-th-large:before { content: "\f009"; }
-	&.fa-angle-double-right { content: "\f101"; }
-	&.fa-book-open { content: "\f518"; }
+	&.fa-angle-double-right:before { content: "\f101"; }
+	&.fa-book-open:before { content: "\f518"; }
 }
 .glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
 .glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
