@@ -48,7 +48,10 @@
 	&.sign-out-alt:before { content: "\f2f5"; }
 	&.fa-table-cells-large:before, &.fa-th-large:before { content: "\f009"; }
 	&.fa-angle-double-right:before { content: "\f101"; }
-	&.fa-book-open:before { content: "\f518"; }
+	&.fa-angle-double-left:before { content: "\f100"; }
+	&.fa-book-open:before { content: "\F518"; }
+	&.fa-book:before { content: "\f02d"; }
+	&.fa-book-reader:before { content: "\f5da"; }
 }
 .glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
 .glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
