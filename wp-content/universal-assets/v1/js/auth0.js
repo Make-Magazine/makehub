@@ -1,7 +1,6 @@
 // Before we get started, let's check if there is an auth0Hash either in the url or in localstorage
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
 if(window.location.hash) {
-	alert("We are setting the hash");
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
@@ -67,6 +66,7 @@ jQuery(document).ready(function() {
 
             //set the logout to the default auth0 logout
             jQuery("#LogoutBtn").on("click", function(event) {
+				clearLocalStorage();
                 event.preventDefault();
                 webAuth.logout({
                     clientID: AUTH0_CLIENT_ID,
@@ -76,6 +76,7 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
+			console.log(auth0Hash);
 			if(auth0Hash.includes("access_token")){
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
@@ -171,8 +172,6 @@ jQuery(document).ready(function() {
     }
 
     function setSession(authResult) {  // delete the hash localStorage and set the new one
-		console.log("here we are at set session");
-		console.log(authResult);
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
