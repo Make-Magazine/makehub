@@ -1,6 +1,7 @@
 // Before we get started, let's check if there is an auth0Hash either in the url or in localstorage
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
 if(window.location.hash) {
+	alert("We are setting the hash");
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
@@ -83,6 +84,7 @@ jQuery(document).ready(function() {
 					console.log('err', err);
 				  }
 				  if (data) {
+					console.log("data");
 					//logged into Auth0
 					auth0loggedin = true;
 					userProfile = data.idTokenPayload;
@@ -111,6 +113,8 @@ jQuery(document).ready(function() {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
+			console.log(currentDate.getTime());
+			console.log(localStorage.getItem('expires_at'));
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					console.log(err);
@@ -167,6 +171,8 @@ jQuery(document).ready(function() {
     }
 
     function setSession(authResult) {  // delete the hash localStorage and set the new one
+		console.log("here we are at set session");
+		console.log(authResult);
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
