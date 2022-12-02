@@ -76,7 +76,6 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
-			console.log(auth0Hash);
 			if(auth0Hash.includes("access_token")){
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
@@ -85,7 +84,6 @@ jQuery(document).ready(function() {
 					console.log('err', err);
 				  }
 				  if (data) {
-					console.log("data");
 					//logged into Auth0
 					auth0loggedin = true;
 					userProfile = data.idTokenPayload;
@@ -114,8 +112,6 @@ jQuery(document).ready(function() {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
-			console.log(currentDate.getTime());
-			console.log(localStorage.getItem('expires_at'));
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					console.log(err);
