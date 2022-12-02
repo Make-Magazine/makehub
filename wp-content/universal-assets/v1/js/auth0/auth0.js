@@ -6,7 +6,7 @@ if(window.location.hash) {
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
-
+console.log('lets do some auth0!');
 
 jQuery(document).ready(function() {
     //set variable defaults
@@ -106,7 +106,7 @@ jQuery(document).ready(function() {
 				  window.location.hash = '';
 				});
 			}else if(auth0Hash.includes("login_required")){
-				console.log('back from a wp logout');
+				console.log('login is required fools');
 				// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 				//If you are makehub and you are logged in, you will never hit this code
 				if (wpLoginRequired && jQuery("body").is(".logged-in")) {
@@ -116,10 +116,13 @@ jQuery(document).ready(function() {
 			}
 			localStorage.removeItem('first_login');
 		} else {
+			console.log('time to check expiration');
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
+				console.log('expires_at:');
+				console.log(localStorage.getItem('expires_at'));
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					console.log(err);
 					userProfile = user;
@@ -127,6 +130,7 @@ jQuery(document).ready(function() {
 					displayButtons();
 				});
 			} else {
+				console.log('no expiration, time for check session');
 		        //check if logged in another place
 		        webAuth.checkSession({},
 		            function(err, result) {
@@ -162,8 +166,8 @@ jQuery(document).ready(function() {
 		            }
 		        ); //end webAuth.checkSession
 
+					}
 			}
-		}
     }
 
     //place functions here so they can access the variables inside the event addEventListener
