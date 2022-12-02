@@ -57,7 +57,7 @@ jQuery(document).ready(function() {
         if (wpLoginRequired == false) {
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
-				setCookie("mz_redirect_url", window.location.href, 1);
+								setCookie("mz_redirect_url", window.location.href, 1);
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
                     redirect_uri: location.protocol + "//" + location.hostname,
@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
 
             //set the logout to the default auth0 logout
             jQuery("#LogoutBtn").on("click", function(event) {
-				clearLocalStorage();
+								clearLocalStorage();
                 event.preventDefault();
                 webAuth.logout({
                     clientID: AUTH0_CLIENT_ID,
@@ -76,30 +76,35 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
+			console.log ('first_login is true');
 			if(auth0Hash.includes("access_token")){
+				console.log ('auth0 hash includes access token');
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
 				  if (err) {
-				   //user does not have a session you'll see something like 'login required'
-					console.log('err', err);
+				   	//user does not have a session you'll see something like 'login required'
+						console.log('err', err);
 				  }
 				  if (data) {
-					//logged into Auth0
-					auth0loggedin = true;
-					userProfile = data.idTokenPayload;
-					setSession(data);
-					displayButtons();
-					//if this is a site that requires WP login, but they aren't logged into wp, log them in
-					if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
-						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-						//TBD - this needs styling as this isn't seen where it's at
-						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-						WPlogin();
-					}
+						console.log ('data found');
+						console.log (data);
+						//logged into Auth0
+						auth0loggedin = true;
+						userProfile = data.idTokenPayload;
+						setSession(data);
+						displayButtons();
+						//if this is a site that requires WP login, but they aren't logged into wp, log them in
+						if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+							// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+							//TBD - this needs styling as this isn't seen where it's at
+							jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+							WPlogin();
+						}
 				  }
 				  window.location.hash = '';
 				});
 			}else if(auth0Hash.includes("login_required")){
+				console.log('back from a wp logout');
 				// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 				//If you are makehub and you are logged in, you will never hit this code
 				if (wpLoginRequired && jQuery("body").is(".logged-in")) {
@@ -108,7 +113,7 @@ jQuery(document).ready(function() {
 				clearLocalStorage();
 			}
 			localStorage.removeItem('first_login');
-		}else {
+		} else {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
@@ -168,6 +173,8 @@ jQuery(document).ready(function() {
     }
 
     function setSession(authResult) {  // delete the hash localStorage and set the new one
+			console.log('in setSession. authresult: ');
+			console.log(authResult);
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
@@ -186,8 +193,8 @@ jQuery(document).ready(function() {
         if (auth0loggedin || wploggedin) {
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
-			jQuery("#mzLoginBtn").css("display", "none");
-			jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
+						jQuery("#mzLoginBtn").css("display", "none");
+						jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
             //show the log in button
@@ -210,9 +217,9 @@ jQuery(document).ready(function() {
             } else {
                 jQuery("body").addClass("buddypanel-closed");
             }
-			if (!jQuery("body").hasClass("bb-page-loaded")) {
-				jQuery("body").addClass("bb-page-loaded");
-			}
+						if (!jQuery("body").hasClass("bb-page-loaded")) {
+							jQuery("body").addClass("bb-page-loaded");
+						}
             //simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get re-adjusted
             window.dispatchEvent(new Event('resize'));
         }
@@ -238,7 +245,7 @@ jQuery(document).ready(function() {
         } else if (auth0loggedin) { // if user is logged into auth0, we will call data from auth0
             //we already got the userprofile info from auth0 in the check session step
 
-			var accessToken = localStorage.getItem('access_token');
+						var accessToken = localStorage.getItem('access_token');
 
             if (!accessToken) {
                 console.log('Access token must exist to fetch profile');
@@ -260,8 +267,8 @@ jQuery(document).ready(function() {
         //set the user drop down and avatar
         setUserDrop(user);
 
-		jQuery(".profile-menu").addClass("logged-in");
-		jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
+				jQuery(".profile-menu").addClass("logged-in");
+				jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
 
         //Set upgrade or join now buttons
         if (user.user_memlevel == "upgrade") {

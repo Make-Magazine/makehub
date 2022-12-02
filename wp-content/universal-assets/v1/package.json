@@ -1,6 +1,6 @@
 {
    "name": "StyleGuide",
-   "version": "1.0.255",
+   "version": "1.0.256",
    "author": "Maker Media",
    "license": "UNLICENSED",
    "private": true,
@@ -15,7 +15,7 @@
       "scss:universal:compile": "sass scss/universal.scss css/universal.min.css --style compressed",
       "scss:universal-firstload:compile": "sass scss/universal-firstload.scss css/universal-firstload.min.css --style compressed",
       "js:universal:uglify": "uglifyjs js/*.js -o js/min/universal.min.js -c -m --source-map \"root='../../../', url='universal.min.js.map'\"",
-	  "js:auth0:uglify": "uglifyjs js/auth0/*.js -o js/min/universal-auth0.min.js -c -m --source-map \"root='../../../', url='universal-auth0.min.js.map'\"",
+      "js:auth0:uglify": "uglifyjs js/auth0/*.js -o js/min/universal-auth0.min.js -c -m --source-map \"root='../../../', url='universal-auth0.min.js.map'\"",
       "onchange:scss:universal": "onchange 'scss/**/*.scss' -- npm run scss:universal:compile",
       "onchange:scss:universal-firstload": "onchange 'scss/**/*.scss' -- npm run scss:universal-firstload:compile",
       "onchange:js:universal": "onchange 'js/*.js' -- npm run js:universal:uglify",
