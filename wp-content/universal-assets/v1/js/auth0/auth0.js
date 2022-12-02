@@ -1,6 +1,8 @@
 // Before we get started, let's check if there is an auth0Hash either in the url or in localstorage
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
+
 if(window.location.hash) {
+	console.log ('window location hash set');
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
