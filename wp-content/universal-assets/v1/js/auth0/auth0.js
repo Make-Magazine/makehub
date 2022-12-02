@@ -121,9 +121,12 @@ jQuery(document).ready(function() {
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
-				console.log('expires_at:');
-				console.log(localStorage.getItem('expires_at'));
+				console.log('not expired');
+
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
+					console.log('returned user info:');
+					console.log('user');
+
 					console.log(err);
 					userProfile = user;
 					auth0loggedin = true;
@@ -197,12 +200,14 @@ jQuery(document).ready(function() {
     function displayButtons() {
         //are we logged into auth0 or wordpress?
         if (auth0loggedin || wploggedin) {
+					console.log('user is logged in now. time to display buttons');
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 						jQuery("#mzLoginBtn").css("display", "none");
 						jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
+					console.log('user is not logged in. do not display buttons');
             //show the log in button
             jQuery("#LoginBtn").css("display", "block");
             jQuery("#profile-view, #LogoutBtn").css('display', 'none');
