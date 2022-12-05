@@ -582,6 +582,9 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 			&.show {
 				display: flex !important;
 			}
+			@media screen and (max-width: 768px) {
+				pointer-events: none;
+			}
         }
 		#dropdownMenuLink {
 			position: relative;
@@ -968,22 +971,4 @@ body:not(.facilitator-user) {
     .menu-item-facilitator-portal {
         display: none;
     }
-}
-
-#no3rdPartyCookiesDialog {
-	padding: 0px 15px;
-	h4 {
-		color: #ea002a
-	}
-	ol {
-		list-style: decimal;
-	}
-}
-#SafariLoginBtn{ display: none;color:#333; }
-//hide login for makerfaire and makezine on safari-mac
-body.no3rdPartyCookies {
-	&.makezine, &#makerfaire {
-		#LoginBtn { display: none !important; }
-		#SafariLoginBtn { display: block; }
-	}
 }

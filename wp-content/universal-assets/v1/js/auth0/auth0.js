@@ -2,11 +2,9 @@
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
 
 if(window.location.hash) {
-	console.log ('window location hash set');
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
-console.log('lets do some auth0!');
 
 jQuery(document).ready(function() {
     //set variable defaults
@@ -78,18 +76,14 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
-			console.log ('first_login is true');
 			if(auth0Hash.includes("access_token")){
-				console.log ('auth0 hash includes access token');
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
 				  if (err) {
 				   	//user does not have a session you'll see something like 'login required'
-						console.log('err', err);
+					console.log('err', err);
 				  }
 				  if (data) {
-						console.log ('data found');
-						console.log (data);
 						//logged into Auth0
 						auth0loggedin = true;
 						userProfile = data.idTokenPayload;
@@ -106,7 +100,6 @@ jQuery(document).ready(function() {
 				  window.location.hash = '';
 				});
 			}else if(auth0Hash.includes("login_required")){
-				console.log('login is required fools');
 				// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 				//If you are makehub and you are logged in, you will never hit this code
 				if (wpLoginRequired && jQuery("body").is(".logged-in")) {
@@ -116,24 +109,18 @@ jQuery(document).ready(function() {
 			}
 			localStorage.removeItem('first_login');
 		} else {
-			console.log('time to check expiration');
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
-				console.log('not expired');
 
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
-					console.log('returned user info:');
-					console.log('user');
-
 					console.log(err);
 					userProfile = user;
 					auth0loggedin = true;
 					displayButtons();
 				});
 			} else {
-				console.log('no expiration, time for check session');
 		        //check if logged in another place
 		        webAuth.checkSession({},
 		            function(err, result) {
@@ -182,8 +169,6 @@ jQuery(document).ready(function() {
     }
 
     function setSession(authResult) {  // delete the hash localStorage and set the new one
-			console.log('in setSession. authresult: ');
-			console.log(authResult);
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
@@ -200,14 +185,12 @@ jQuery(document).ready(function() {
     function displayButtons() {
         //are we logged into auth0 or wordpress?
         if (auth0loggedin || wploggedin) {
-					console.log('user is logged in now. time to display buttons');
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 						jQuery("#mzLoginBtn").css("display", "none");
 						jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
-					console.log('user is not logged in. do not display buttons');
             //show the log in button
             jQuery("#LoginBtn").css("display", "block");
             jQuery("#profile-view, #LogoutBtn").css('display', 'none');
@@ -255,14 +238,12 @@ jQuery(document).ready(function() {
 
         } else if (auth0loggedin) { // if user is logged into auth0, we will call data from auth0
             //we already got the userprofile info from auth0 in the check session step
-
-						var accessToken = localStorage.getItem('access_token');
+			var accessToken = localStorage.getItem('access_token');
 
             if (!accessToken) {
                 console.log('Access token must exist to fetch profile');
                 errorMsg('Login attempted without Access Token');
             }
-
 
             user = {
                 user_avatar: (userProfile['http://makershare.com/picture'] == undefined) ? userProfile.picture : userProfile['http://makershare.com/picture'],

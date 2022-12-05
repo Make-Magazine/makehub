@@ -283,38 +283,6 @@
       <div class="header-aside-inner">
         <span id="make-login" class="login-section">
           <a id="LoginBtn" href="/wp-login.php" title="Log In" target="_self">Log In</a>
-		  <a id="SafariLoginBtn" onclick="jQuery('#no3rdPartyCookiesDialog').dialog({
-  			dialogClass: 'hide-heading',
-  			modal: true,
-  			show: {
-  				effect: 'blind',
-  				duration: 1000
-  			},
-  			hide: {
-  				effect: 'explode',
-  				duration: 1200
-  			},
-  			open: function(){
-  	            jQuery('.ui-widget-overlay').bind('click',function(){
-  	                jQuery('.ui-dialog-content').dialog('close');
-  	            })
-  	        }
-  		});" href="#" title="Log In" target="_self">Log In</a>
-		  <div id="no3rdPartyCookiesDialog" style="display: none;">
-		    <h4><b>Unfortunately, Safari blocks the cookies we use for login functionality.</b></h4>
-			<p><b>Enabling Login functionality on Desktop Safari</b></p>
-			<ol>
-				<li>Go to Safari Preferences, and then click Privacy.</li>
-				<li>In the "Privacy:" section, uncheck the box to prevent cross-site tracking.</li>
-				<li>Close and reload the browser.</li>
-			</ol>
-			<p><b>Enabling Login functionality on Mobile Safari</b></p>
-			<ol>
-				<li>Go to the Settings app on your iPhones or iPads.</li>
-				<li>Scroll down and select Safari from the left navigation menu.</li>
-				<li>Under Security & Privacy, disable both “Block All Cookies” and “Prevent Cross-Site Tracking.</li>
-			</ol>
-		  </div>
           <div id="profile-view" class="dropdown v-select">
             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img class="avatar" alt="avatar" src="https://make.co/wp-content/universal-assets/v1/images/default-makey.png" width="50" height="50" />
