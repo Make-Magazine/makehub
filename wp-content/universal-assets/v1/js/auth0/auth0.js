@@ -53,11 +53,16 @@ jQuery(document).ready(function() {
             leeway: 60
         });
 
+		// always need to make sure we clear the localStorage when the login button is clicked, regardless of case
+		jQuery("#LogoutBtn").on("click", function(event) {
+			clearLocalStorage();
+		});
+
         // for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
         if (wpLoginRequired == false) {
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
-								setCookie("mz_redirect_url", window.location.href, 1);
+				setCookie("mz_redirect_url", window.location.href, 1);
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
                     redirect_uri: location.protocol + "//" + location.hostname,
@@ -66,7 +71,6 @@ jQuery(document).ready(function() {
 
             //set the logout to the default auth0 logout
             jQuery("#LogoutBtn").on("click", function(event) {
-								clearLocalStorage();
                 event.preventDefault();
                 webAuth.logout({
                     clientID: AUTH0_CLIENT_ID,
@@ -113,9 +117,7 @@ jQuery(document).ready(function() {
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
-
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
-					console.log(err);
 					userProfile = user;
 					auth0loggedin = true;
 					displayButtons();
@@ -155,9 +157,8 @@ jQuery(document).ready(function() {
 		                displayButtons();
 		            }
 		        ); //end webAuth.checkSession
-
-					}
 			}
+		}
     }
 
     //place functions here so they can access the variables inside the event addEventListener
@@ -187,8 +188,8 @@ jQuery(document).ready(function() {
         if (auth0loggedin || wploggedin) {
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
-						jQuery("#mzLoginBtn").css("display", "none");
-						jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
+			jQuery("#mzLoginBtn").css("display", "none");
+			jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
             //show the log in button
@@ -211,9 +212,9 @@ jQuery(document).ready(function() {
             } else {
                 jQuery("body").addClass("buddypanel-closed");
             }
-						if (!jQuery("body").hasClass("bb-page-loaded")) {
-							jQuery("body").addClass("bb-page-loaded");
-						}
+			if (!jQuery("body").hasClass("bb-page-loaded")) {
+				jQuery("body").addClass("bb-page-loaded");
+			}
             //simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get re-adjusted
             window.dispatchEvent(new Event('resize'));
         }
@@ -259,8 +260,8 @@ jQuery(document).ready(function() {
         //set the user drop down and avatar
         setUserDrop(user);
 
-				jQuery(".profile-menu").addClass("logged-in");
-				jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
+		jQuery(".profile-menu").addClass("logged-in");
+		jQuery(".mobile-subscribe-btn").css("display", "none"); // logged in, we no longer show the mobile subscribe button, as it will be replaced with the upgrade or join buttons below
 
         //Set upgrade or join now buttons
         if (user.user_memlevel == "upgrade") {
@@ -355,7 +356,7 @@ jQuery(document).ready(function() {
     }
 
     // on logout delete the hash localStorage
-    function WPlogout(wp_only) {
+    function WPlogout() {
         if (jQuery('#wpadminbar').length) {
             jQuery('body').removeClass('adminBar').removeClass('logged-in');
             jQuery('#wpadminbar').remove();
@@ -371,6 +372,7 @@ jQuery(document).ready(function() {
         });
         // css will hide buddyboss side panel until page loads
         showBuddypanel();
+
     }
 
     //this function is used to set the user avatar and drop down sections in the universal header
