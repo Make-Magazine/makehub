@@ -304,7 +304,7 @@ jQuery(document).ready(function () {
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
-                        '<a href="https://https://subscribe.makezine.com/loading.do?omedasite=Make_account_status&r=">' +
+                        '<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_account_status&r=">' +
                             '<i class="_icon fa fa-book-open _before" aria-hidden="true"></i><span>My Magazine Subscription</span>' +
                         '</a>' +
                     '</li>' +
