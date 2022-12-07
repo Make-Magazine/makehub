@@ -55,10 +55,21 @@ function getCookie(name) {
     }
     return null;
 }
-
 function delete_cookie(name) {
     document.cookie = name + '=; expires=Tue, 16 Oct 1979 00:00:01 GMT;path=/';
 }
+function checkCookie() {
+    // Quick test if browser has cookieEnabled host property
+    if (navigator.cookieEnabled)
+        return true;
+    // Create cookie
+    document.cookie = "cookietest=1";
+    var ret = document.cookie.indexOf("cookietest=") != -1;
+    // Delete cookie
+    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+    return ret;
+}
+
 
 function getY(element) {
     var yPosition = 0;
@@ -100,18 +111,6 @@ function lsTest() {
     } catch (e) {
         return false;
     }
-}
-
-function checkCookie() {
-    // Quick test if browser has cookieEnabled host property
-    if (navigator.cookieEnabled)
-        return true;
-    // Create cookie
-    document.cookie = "cookietest=1";
-    var ret = document.cookie.indexOf("cookietest=") != -1;
-    // Delete cookie
-    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-    return ret;
 }
 
 function mobileCheck() {

@@ -24,6 +24,7 @@ function set_ajax_params(){
 
 	//auth0
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
+	wp_enqueue_script('universal-auth0', content_url() . '/universal-assets/v1/js/min/universal-auth0.min.js', array('auth0'), $my_version, true);
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
 	$user = wp_get_current_user();

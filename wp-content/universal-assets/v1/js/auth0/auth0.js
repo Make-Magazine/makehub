@@ -1,3 +1,11 @@
+// Before we get started, let's check if there is an auth0Hash either in the url or in localstorage
+var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
+
+if(window.location.hash) {
+	localStorage.setItem('auth0_hash', auth0Hash);
+	localStorage.setItem('first_login', 'true');
+}
+
 jQuery(document).ready(function() {
     //set variable defaults
     var userProfile;
@@ -32,6 +40,7 @@ jQuery(document).ready(function() {
             jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
         }
 
+
         //ok let's check auth0 instead
         var webAuth = new auth0.WebAuth({
             domain: AUTH0_CUSTOM_DOMAIN,
@@ -44,13 +53,19 @@ jQuery(document).ready(function() {
             leeway: 60
         });
 
+		// always need to make sure we clear the localStorage when the login button is clicked, regardless of case
+		jQuery("#LogoutBtn").on("click", function(event) {
+			clearLocalStorage();
+		});
+
         // for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
         if (wpLoginRequired == false) {
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
+				setCookie("mz_redirect_url", window.location.href, 1);
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
-                    redirect_uri: location.href,
+                    redirect_uri: location.protocol + "//" + location.hostname,
                 });
             });
 
@@ -59,57 +74,102 @@ jQuery(document).ready(function() {
                 event.preventDefault();
                 webAuth.logout({
                     clientID: AUTH0_CLIENT_ID,
-                    returnTo: location.href,
+                    returnTo: location.protocol + "//" + location.hostname,
                 });
             });
         }
+		//check for if this is the first login
+		if(localStorage.getItem('first_login')) {
+			if(auth0Hash.includes("access_token")){
+				// this is the first time logging in
+				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
+				  if (err) {
+				   	//user does not have a session you'll see something like 'login required'
+					console.log('err', err);
+				  }
+				  if (data) {
+						//logged into Auth0
+						auth0loggedin = true;
+						userProfile = data.idTokenPayload;
+						setSession(data);
+						displayButtons();
+						//if this is a site that requires WP login, but they aren't logged into wp, log them in
+						if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+							// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+							//TBD - this needs styling as this isn't seen where it's at
+							jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+							WPlogin();
+						}
+				  }
+				  window.location.hash = '';
+				});
+			}else if(auth0Hash.includes("login_required")){
+				// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+				//If you are makehub and you are logged in, you will never hit this code
+				if (wpLoginRequired && jQuery("body").is(".logged-in")) {
+					WPlogout();
+				}
+				clearLocalStorage();
+			}
+			localStorage.removeItem('first_login');
+		} else {
+			//check if expires at is set and not expired and accesstoken is set in local storage
+			//if yes then run the webAuth.client.userInfo() call
+			var currentDate = new Date();
+			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
+				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
+					userProfile = user;
+					auth0loggedin = true;
+					displayButtons();
+				});
+			} else {
+		        //check if logged in another place
+		        webAuth.checkSession({},
+		            function(err, result) {
+		                if (err) {
+		                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
+		                    if (err.error !== 'login_required') {
+		                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+		                    }
 
-        //check if logged in another place
-        webAuth.checkSession({},
-            function(err, result) {
-                if (err) {
-                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
-                    //console.log(err);
-                    if (err.error !== 'login_required') {
-                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-                    }
+		                    // This should take care of SSO
+		                    // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+		                    //If you are makehub and you are logged in, you will never hit this code
+		                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
+		                        WPlogout();
+		                    }
+		                    clearLocalStorage();
+		                } else {
+		                    //logged into Auth0
+		                    auth0loggedin = true;
+		                    userProfile = result.idTokenPayload;
 
-                    // This should take care of SSO
-                    // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
-                    //If you are makehub and you are logged in, you will never hit this code
-                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
-                        WPlogout();
-                    }
+		                    setSession(result);
 
-                    clearLocalStorage();
-                } else {
-                    //logged into Auth0
-                    auth0loggedin = true;
-                    userProfile = result.idTokenPayload;
-
-                    setSession(result);
-
-                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
-                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
-                        // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-                        //TBD - this needs styling as this isn't seen where it's at
-                        jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-                        WPlogin();
-                    }
-                }
-                displayButtons();
-            }
-        ); //end webAuth.checkSession
+		                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
+		                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+		                        // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+		                        //TBD - this needs styling as this isn't seen where it's at
+		                        jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+		                        WPlogin();
+		                    }
+		                }
+		                displayButtons();
+		            }
+		        ); //end webAuth.checkSession
+			}
+		}
     }
 
     //place functions here so they can access the variables inside the event addEventListener
     function clearLocalStorage() {
+		localStorage.removeItem('auth0_hash');
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
     }
 
-    function setSession(authResult) {
+    function setSession(authResult) {  // delete the hash localStorage and set the new one
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
@@ -128,6 +188,8 @@ jQuery(document).ready(function() {
         if (auth0loggedin || wploggedin) {
             //hide the logout button
             jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
+			jQuery("#mzLoginBtn").css("display", "none");
+			jQuery(".login-section #dropdownMenuLink .avatar").css("display", "block");
             getProfile();
         } else {
             //show the log in button
@@ -177,14 +239,13 @@ jQuery(document).ready(function() {
 
         } else if (auth0loggedin) { // if user is logged into auth0, we will call data from auth0
             //we already got the userprofile info from auth0 in the check session step
-            var accessToken = localStorage.getItem('access_token');
+			var accessToken = localStorage.getItem('access_token');
 
             if (!accessToken) {
                 console.log('Access token must exist to fetch profile');
                 errorMsg('Login attempted without Access Token');
             }
 
-            //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
             user = {
                 user_avatar: (userProfile['http://makershare.com/picture'] == undefined) ? userProfile.picture : userProfile['http://makershare.com/picture'],
                 user_email: (userProfile.email == undefined) ? '' : userProfile.email,
@@ -192,7 +253,7 @@ jQuery(document).ready(function() {
                 user_memlevel: (userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
             };
         } else {
-            //not loged into auth0 or wp, get out of here
+            //not logged into auth0 or wp, get out of here
             return;
         }
 
@@ -220,6 +281,7 @@ jQuery(document).ready(function() {
         }
         return user;
     }
+
 
     function WPlogin() {
         if (typeof userProfile !== 'undefined') {
@@ -293,7 +355,8 @@ jQuery(document).ready(function() {
         }
     }
 
-    function WPlogout(wp_only) {
+    // on logout delete the hash localStorage
+    function WPlogout() {
         if (jQuery('#wpadminbar').length) {
             jQuery('body').removeClass('adminBar').removeClass('logged-in');
             jQuery('#wpadminbar').remove();
@@ -309,6 +372,7 @@ jQuery(document).ready(function() {
         });
         // css will hide buddyboss side panel until page loads
         showBuddypanel();
+
     }
 
     //this function is used to set the user avatar and drop down sections in the universal header
