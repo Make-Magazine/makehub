@@ -272,6 +272,9 @@ class Gallery extends Base_Widget {
 					'link_to' => 'custom',
 				],
 				'frontend_available' => true,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -335,6 +338,9 @@ class Gallery extends Base_Widget {
 				'default' => esc_html__( 'All', 'elementor-pro' ),
 				'condition' => [
 					'show_all_galleries' => 'yes',
+				],
+				'dynamic' => [
+					'active' => true,
 				],
 			]
 		);
@@ -528,7 +534,15 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
+				'size_units' => [ 'px', '%', 'em' ],
+				'range' => [
+					'px' => [
+						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
+					],
+				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-border-width: {{SIZE}}{{UNIT}};',
 				],
@@ -540,7 +554,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-border-radius: {{SIZE}}{{UNIT}};',
 				],
@@ -580,7 +594,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-gallery-item:hover' => 'border-radius: {{SIZE}}{{UNIT}};',
 				],
