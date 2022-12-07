@@ -90,8 +90,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 			if ( in_array( $typenow, $this->get_global_included_post_types(), true ) ) {
 
-				/** This filter is documented in includes/class-ld-lms.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+				if ( learndash_use_select2_lib() ) {
 					if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 						wp_enqueue_style(
 							'learndash-select2-jquery-style',
@@ -229,8 +228,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 				$select_groups_options = $sfwd_lms->select_a_group();
 				if ( ! empty( $select_groups_options ) ) {
-					/** This filter is documented in includes/class-ld-lms.php */
-					if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+					if ( learndash_use_select2_lib() ) {
 						$select_groups_options_default = sprintf(
 							// translators: placeholder: Group.
 							esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),

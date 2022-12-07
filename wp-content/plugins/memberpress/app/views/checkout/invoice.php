@@ -32,7 +32,7 @@
           <?php if( $show_quantity ): ?>
             <td>&nbsp;</td>
           <?php endif; ?>
-          <td class="mp-currency-cell">-<?php echo MeprAppHelper::format_currency($invoice['coupon']['amount'], true, false); ?></td>
+          <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency(MeprCouponsHelper::format_coupon_amount($invoice['coupon']['amount']), true, false); ?></td>
         </tr>
       <?php endif; ?>
     </tbody>
@@ -59,7 +59,6 @@
         <?php endif; ?>
         <th><?php _ex('Total', 'ui', 'memberpress'); ?></th>
         <th class="mp-currency-cell"><?php echo MeprAppHelper::format_currency($total, true, false); ?></th>
-        <input type="hidden" name="mepr_stripe_txn_amount" value="<?php echo MeprUtils::format_stripe_currency($total); ?>"/>
       </tr>
     </tfoot>
   </table>

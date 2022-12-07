@@ -1,8 +1,8 @@
 === Vimeography Ballistic ===
 Tags: vimeo
 Requires at least: 3.8
-Tested up to: 4.9.4
-Stable tag: 2.0.5
+Tested up to: 5.5
+Stable tag: 2.1.1
 License: GPL-2.0
 
 The easiest way to create beautiful Vimeo galleries on your WordPress site.
@@ -32,6 +32,20 @@ Okay, deep breath. More than likely, it is another plugin causing this issue. Se
 Heck yeah! Use the appearance editor to change your theme's style so that it matches your site perfectly.
 
 == Changelog ==
+= 2.1.1 =
+* Bump compatibility to WordPress 5.5
+
+= 2.1 =
+* [New] Show number of search results in message after query is performed.
+* Update theme dependencies to latest versions
+* Add `fitvidsignore` attribute to player to prevent fitvids intervention
+* Add support for loading "unlisted" videos in Pro
+* Improve error message with link to docs on video load error
+* Bump compatibility to WordPress 5.4
+
+= 2.0.6 =
+* [Tweak] Hide the spinner if a search returns no results
+
 = 2.0.5 =
 * [Fix] Introduce fallback for when source video downloads are unavailable
 * [Tweak] Allow player settings to be configured via Vimeography Pro

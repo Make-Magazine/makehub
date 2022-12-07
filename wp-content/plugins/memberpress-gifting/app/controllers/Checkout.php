@@ -25,6 +25,7 @@ class Checkout extends lib\BaseCtrl {
     add_filter('mepr-can-you-buy-me-override', array($this, 'gifter_cannot_buy_their_gift'), 20, 2 );
     add_action('mepr-above-checkout-form',  array($this,  'show_gift_only_message'));
     add_filter('mepr_send_email_disable', array($this, 'maybe_disable_admin_recurring_email'), 10, 4 );
+    add_filter('mepr-active-inactive-hooks-skip', array($this, 'handle_active_inactive_hooks'), 10, 2);
   }
 
 
@@ -225,7 +226,12 @@ class Checkout extends lib\BaseCtrl {
     $user   = \MeprUtils::get_currentuserinfo();
     // If user is purchasing a gift, cancel trial
     if(isset($_POST['mpgft_gift_checkbox']) && "true" == $_POST['mpgft_gift_checkbox']){
-      $sub->trial = 0;
+      $coupon = $sub->coupon();
+      $discount_mode = $coupon ? $coupon->discount_mode : null;
+
+      if('first-payment' !== $discount_mode){
+        $sub->trial = 0;
+      }
     }
 
     return $sub;
@@ -399,6 +405,21 @@ class Checkout extends lib\BaseCtrl {
     }
 
     return $disable_email;
+  }
+
+  /**
+   * Don't allow active/inactive hooks to run if the product is a gift
+   *
+   * @param boolean $skip The return value.
+   * @param \MeprTransaction $txn The Transaction object.
+   *
+   * @return boolean
+   */
+  public function handle_active_inactive_hooks($skip, $txn){
+    if( $txn->get_meta(models\Gift::$is_gift_complete_str, true) ){
+      return true;
+    }
+    return $skip;
   }
 
 

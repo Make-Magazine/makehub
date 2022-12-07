@@ -1,8 +1,8 @@
 === Vimeography Sixup ===
 Tags: vimeo
 Requires at least: 3.8
-Tested up to: 4.9
-Stable tag: 2.0.6
+Tested up to: 5.5
+Stable tag: 2.1.1
 License: GPL-2.0
 
 The easiest way to create beautiful Vimeo galleries on your WordPress site.
@@ -32,6 +32,26 @@ Okay, deep breath. More than likely, it is another plugin causing this issue. Se
 Heck yeah! Use the appearance editor to change your theme's style so that it matches your site perfectly.
 
 == Changelog ==
+
+= 2.1.1 =
+* Bump compatibility to WordPress 5.5
+
+= 2.1 =
+* [New] Search bar now shows number of results
+* [Tweak] Video will autoplay on thumbnail click if playlisting is enabled
+* [Fix] Improved styling on smaller screens
+* [Fix] Remove call to scrollToTop which does not exist
+* Update theme dependencies to latest versions
+* Add `fitvidsignore` attribute to player to prevent fitvids intervention
+* Add support for loading "unlisted" videos in Pro
+* Improve error message with link to docs on video load error
+* Bump compatibility to WordPress 5.4
+* Update markup to latest rc-slider compatibility
+
+= 2.0.7 =
+* [Tweak] Thumbnails are now lazy loaded by default
+* [Tweak] Unload the video player before loading a new video in it
+
 = 2.0.6 =
 * [Fix] Introduce fallback for when source video downloads are unavailable
 * [Fix] Navigate to the current window pathname instead of root

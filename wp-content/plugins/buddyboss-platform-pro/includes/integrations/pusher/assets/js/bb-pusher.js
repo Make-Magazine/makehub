@@ -19,7 +19,7 @@ window.Backbone = window.Backbone || [];
 		can_type: true,
 		throttleTime: 6000,
 		clearInterval: 6000, // 6 seconds.
-		clearTimerId: null,
+		clearTimerId: [],
 		pendingRemoves: [],
 		leaveWaitingTime: 5000, // 5 seconds.
 		pusherPresenceThread: [],
@@ -245,7 +245,6 @@ window.Backbone = window.Backbone || [];
 			bb_pusher_vars.global_channel.bind(
 				'pusher:subscription_succeeded',
 				function () {
-					console.log( 'GLOBAL CHANNEL SUBSCRIBED' );
 				}
 			);
 
@@ -253,7 +252,6 @@ window.Backbone = window.Backbone || [];
 			bb_pusher_vars.global_channel.bind(
 				'pusher:subscription_error',
 				function () {
-					console.log( 'You are not subscribed with Global Channel, try again. Refresh' );
 				}
 			);
 
@@ -298,6 +296,51 @@ window.Backbone = window.Backbone || [];
 					}
 				}
 			);
+
+			// When group messages has been disabled by admin.
+			bb_pusher_vars.global_channel.bind(
+				'client-bb-pro-update-group-messages',
+				function ( data ) {
+					if ( parseInt( data.previous ) !== parseInt( data.updated ) ) {
+						if (
+							bb_pusher_vars.current_thread.is_group_thread &&
+							true === bb_pusher_vars.current_thread.is_group_thread
+						) {
+							var hash        = new Date().getTime();
+							var next_thread = $( '.message-lists .thread-item:first-child' );
+							var thread_id   = next_thread.find( '.bp-message-link' ).attr( 'data-thread-id' );
+							if ( parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
+								thread_id = next_thread.next( '.thread-item' ).find( '.bp-message-link' ).attr( 'data-thread-id' );
+							}
+
+							window.location.href.replace( window.location.search, '' );
+							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+
+						}
+
+						if ( 0 === parseInt( data.updated ) ) {
+							jQuery( document ).trigger(
+								'bb_trigger_toast_message',
+								[
+									'',
+									bb_pusher_vars.i18n.group_message_disabled,
+									'warning',
+									null,
+									true
+								]
+							);
+						}
+
+						if ( 'undefined' !== typeof window.Backbone.trigger ) {
+							window.Backbone.trigger( 'relistelements' );
+						}
+
+						if ( 'undefined' !== typeof window.wp.heartbeat ) {
+							window.wp.heartbeat.connectNow();
+						}
+					}
+				}
+			);
 		},
 
 		pusherSubscribeUserChannel: function( $name ) {
@@ -307,7 +350,6 @@ window.Backbone = window.Backbone || [];
 			bb_pusher_vars.user_channel.bind(
 				'pusher:subscription_succeeded',
 				function () {
-					console.log( 'User CHANNEL SUBSCRIBED' );
 				}
 			);
 
@@ -315,7 +357,6 @@ window.Backbone = window.Backbone || [];
 			bb_pusher_vars.user_channel.bind(
 				'pusher:subscription_error',
 				function () {
-					console.log( 'You are not subscribed with Global Channel, try again. Refresh' );
 				}
 			);
 
@@ -324,7 +365,8 @@ window.Backbone = window.Backbone || [];
 				'client-bb-pro-member-connection-requested',
 				function ( data ) {
 
-					bp.Nouveau.updateUserPresence( parseInt( data.initiator_user_id ), 'online' );
+					// friend_user_id = request sender.
+					bp.Nouveau.updateUserPresence( parseInt( data.friend_user_id ), 'online' );
 
 					if ( parseInt( bb_pusher_vars.loggedin_user_id ) === parseInt( data.friend_user_id ) ) {
 						var friend_user_threads_hash = data.thread_ids;
@@ -363,7 +405,8 @@ window.Backbone = window.Backbone || [];
 				'client-bb-pro-member-withdrawn-connection-request',
 				function ( data ) {
 
-					bp.Nouveau.updateUserPresence( parseInt( data.initiator_user_id ), 'online' );
+					// friend_user_id = request withdrawer.
+					bp.Nouveau.updateUserPresence( parseInt( data.friend_user_id ), 'online' );
 
 					if ( parseInt( bb_pusher_vars.loggedin_user_id ) === parseInt( data.friend_user_id ) ) {
 						var friend_user_threads_hash = data.thread_ids;
@@ -687,7 +730,7 @@ window.Backbone = window.Backbone || [];
 				}
 			);
 
-			// Group message member joined/left/ban/unban.
+			// Group message member joined/left/ban/unban/promote/demote.
 			bb_pusher_vars.user_channel.bind(
 				'client-bb-pro-group-message-group-update-notify',
 				function ( data ) {
@@ -721,6 +764,16 @@ window.Backbone = window.Backbone || [];
 						if ( 'undefined' !== typeof window.Backbone.trigger ) {
 							window.Backbone.trigger( 'relistelements' );
 						}
+
+						if ( thread_id > 0 && parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
+							hash = new Date().getTime();
+							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+						}
+
+					} else if (
+						action === 'group_message_group_promoted' ||
+						action === 'group_message_group_demoted'
+					) {
 
 						if ( thread_id > 0 && parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
 							hash = new Date().getTime();
@@ -776,10 +829,6 @@ window.Backbone = window.Backbone || [];
 								if ( 'undefined' !== typeof next_thread_id ) {
 									bb_pusher_vars.current_thread_id = parseInt( next_thread_id );
 									bp.Nouveau.Messages.router.navigate( 'view/' + next_thread_id + '/?hash=' + hash, { trigger: true } );
-
-									if ( 'undefined' !== typeof window.Backbone.trigger ) {
-										window.Backbone.trigger( 'relistelements' );
-									}
 								} else {
 									bb_pusher_vars.current_thread_id = 0;
 									bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
@@ -787,6 +836,16 @@ window.Backbone = window.Backbone || [];
 
 							} else {
 								bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+							}
+						}
+
+						if ( parseInt( user_id ) === parseInt( bb_pusher_vars.loggedin_user_id ) ) {
+							if ( 'undefined' !== typeof window.Backbone.trigger ) {
+								window.Backbone.trigger( 'relistelements' );
+							}
+
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
 							}
 						}
 					}
@@ -822,6 +881,12 @@ window.Backbone = window.Backbone || [];
 
 									if ( 'undefined' !== typeof window.wp.heartbeat ) {
 										window.wp.heartbeat.connectNow();
+									}
+								} else if ( 'undefined' !== typeof data.thread ) {
+									bb_pusher_vars.group_threads[data.thread_id] = parseInt( data.thread );
+									bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( data.thread ) );
+									if ( 'undefined' !== typeof window.Backbone.trigger ) {
+										window.Backbone.trigger( 'relistelements' );
 									}
 								}
 							}
@@ -895,6 +960,19 @@ window.Backbone = window.Backbone || [];
 					if ( 'undefined' !== typeof data.is_blocked_by_users ) {
 						bb_pusher_vars.is_blocked_by_users = data.is_blocked_by_users;
 					}
+
+					if ( 'undefined' !== typeof data.group_threads ) {
+						bb_pusher_vars.group_threads = data.group_threads;
+					}
+
+					if ( 'undefined' !== typeof bb_pusher_vars.group_threads && Object.keys( bb_pusher_vars.group_threads ).length > 0 ) {
+						$.each(
+							bb_pusher_vars.group_threads,
+							function ( i, item ) {
+								bp.Pusher_FrontCommon.pusherSubscribeThreadsChannels( parseInt( item ) );
+							}
+						);
+					}
 				}
 			);
 
@@ -918,6 +996,7 @@ window.Backbone = window.Backbone || [];
 							var data    = {
 								hash: dataArr.hash,
 								thread_id: dataArr.thread_id,
+								sender_id: parseInt( bb_pusher_vars.loggedin_user_id ),
 							};
 
 							var key = 'live_message_' + bb_pusher_vars.current_thread_id;
@@ -969,12 +1048,16 @@ window.Backbone = window.Backbone || [];
 
 								bp.Pusher_FrontCommon.singleThreadTypingIndicator( filtered );
 
-								clearTimeout( bp.Pusher_FrontCommon.clearTimerId );
-								bp.Pusher_FrontCommon.clearTimerId = setTimeout(
+								bp.Pusher_FrontCommon.threadListTypingIndicator( thread_id, filtered );
+
+								clearTimeout( bp.Pusher_FrontCommon.clearTimerId[thread_id] );
+								bp.Pusher_FrontCommon.clearTimerId[thread_id] = setTimeout(
 									function () {
 										if ( parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
 											bp.Pusher_FrontCommon.singleThreadTypingIndicator( [] );
 										}
+
+										bp.Pusher_FrontCommon.threadListTypingIndicator( thread_id, [] );
 									},
 									bp.Pusher_FrontCommon.clearInterval
 								);
@@ -1019,8 +1102,8 @@ window.Backbone = window.Backbone || [];
 
 										bp.Pusher_FrontCommon.threadListTypingIndicator( thread_id, filtered );
 
-										clearTimeout( bp.Pusher_FrontCommon.clearTimerId );
-										bp.Pusher_FrontCommon.clearTimerId = setTimeout(
+										clearTimeout( bp.Pusher_FrontCommon.clearTimerId[thread_id] );
+										bp.Pusher_FrontCommon.clearTimerId[thread_id] = setTimeout(
 											function () {
 												if ( parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
 													bp.Pusher_FrontCommon.singleThreadTypingIndicator( [] );
@@ -1049,6 +1132,7 @@ window.Backbone = window.Backbone || [];
 							var data    = {
 								hash: dataArr.hash,
 								thread_id: dataArr.thread_id,
+								sender_id: parseInt( bb_pusher_vars.loggedin_user_id ),
 							};
 
 							key = 'live_message_' + bb_pusher_vars.current_thread_id;
@@ -1088,7 +1172,9 @@ window.Backbone = window.Backbone || [];
 						'undefined' !== typeof jqxhr.responseText
 					) {
 						var messagesDelete = $.parseJSON( jqxhr.responseText );
-						bp.Pusher_FrontCommon.updateInboxMessageUnreadCount( bp.Pusher_FrontCommon.json2array( messagesDelete.data.recipient_inbox_unread_counts ) );
+						if ( 'undefined' !== typeof messagesDelete.data.recipient_inbox_unread_counts ) {
+							bp.Pusher_FrontCommon.updateInboxMessageUnreadCount( bp.Pusher_FrontCommon.json2array( messagesDelete.data.recipient_inbox_unread_counts ) );
+						}
 						bp.Pusher_FrontCommon.bb_update_header_messages();
 					}
 
@@ -1119,8 +1205,8 @@ window.Backbone = window.Backbone || [];
 
 										bp.Pusher_FrontCommon.threadListTypingIndicator( thread_id, filtered );
 
-										clearTimeout( bp.Pusher_FrontCommon.clearTimerId );
-										bp.Pusher_FrontCommon.clearTimerId = setTimeout(
+										clearTimeout( bp.Pusher_FrontCommon.clearTimerId[thread_id] );
+										bp.Pusher_FrontCommon.clearTimerId[thread_id] = setTimeout(
 											function () {
 												if ( parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
 													bp.Pusher_FrontCommon.singleThreadTypingIndicator( [] );
@@ -1190,7 +1276,8 @@ window.Backbone = window.Backbone || [];
 						var dataArr = bp.Pusher_FrontCommon.bbParseParams( bb_pusher_vars.ajax_url + '?' + settings.data );
 						var data    = {
 							hash: dataArr.hash,
-							thread_id: dataArr.thread_id
+							thread_id: dataArr.thread_id,
+							sender_id: parseInt( bb_pusher_vars.loggedin_user_id ),
 						};
 
 						var key = 'live_message_' + bb_pusher_vars.current_thread_id;
@@ -1275,7 +1362,8 @@ window.Backbone = window.Backbone || [];
 												thumbnail       : item.msg_url || item.medium || item.thumb,
 												title           : item.name,
 												height			: media_height,
-												width			: media_width
+												width			: media_width,
+												menu_order      : parseInt( item.menu_order )
 											}
 										);
 
@@ -1288,12 +1376,29 @@ window.Backbone = window.Backbone || [];
 												thumbnail       : previewURL,
 												title           : item.name,
 												height          : media_height,
-												width           : media_width
+												width           : media_width,
+												menu_order      : parseInt( item.menu_order )
 											}
 										);
 
 									}
 								);
+
+								if ( mediasPusher.length > 1 ) {
+									mediasPusher.sort(
+										function ( a, b ) {
+											return a.menu_order - b.menu_order;
+										}
+									);
+								}
+
+								if ( mediasPusherTemp.length > 1 ) {
+									mediasPusherTemp.sort(
+										function ( a, b ) {
+											return a.menu_order - b.menu_order;
+										}
+									);
+								}
 							}
 						}
 
@@ -1314,7 +1419,8 @@ window.Backbone = window.Backbone || [];
 												thumbnail       : bb_pusher_vars.video_default_url,
 												title           : item.name,
 												vid_ids_fake    : item.vid_msg_url,
-												ext             : item.ext
+												ext             : item.ext,
+												menu_order      : parseInt( item.menu_order )
 											}
 										);
 
@@ -1327,12 +1433,29 @@ window.Backbone = window.Backbone || [];
 												thumbnail       : item.js_preview,
 												title           : item.name,
 												vid_ids_fake    : item.vid_msg_url,
-												ext             : item.ext
+												ext             : item.ext,
+												menu_order      : parseInt( item.menu_order )
 											}
 										);
 
 									}
 								);
+
+								if ( videosPusher.length > 1 ) {
+									videosPusher.sort(
+										function ( a, b ) {
+											return a.menu_order - b.menu_order;
+										}
+									);
+								}
+
+								if ( videosPusherTemp.length > 1 ) {
+									videosPusherTemp.sort(
+										function ( a, b ) {
+											return a.menu_order - b.menu_order;
+										}
+									);
+								}
 							}
 						}
 
@@ -1365,10 +1488,19 @@ window.Backbone = window.Backbone || [];
 												download              : '',
 												copy_download_link    : '',
 												msg_preview           : '',
+												menu_order            : parseInt( item.menu_order )
 											}
 										);
 									}
 								);
+
+								if ( documentsPusher.length > 1 ) {
+									documentsPusher.sort(
+										function ( a, b ) {
+											return a.menu_order - b.menu_order;
+										}
+									);
+								}
 							}
 						}
 
@@ -1421,10 +1553,10 @@ window.Backbone = window.Backbone || [];
 						param_data.content           = contentModified;
 						param_data.excerpt           = '';
 						if ( contentModified ) {
-							if ( contentModified.length > 75 ) {
-								contentModified = contentModified.substring( 0, 75 ) + '...';
-							}
 							param_data.excerpt = contentModified.replace( excerptRegularExpression, ' ' ).replace( /(<([^>]+)>)/ig, '' ).replace( /\s+/g, ' ' );
+							if ( param_data.excerpt.length > 75 ) {
+								param_data.excerpt = param_data.excerpt.substring( 0, 75 ) + '...';
+							}
 						}
 						param_data.media    = mediasPusher;
 						param_data.video    = videosPusher;
@@ -1522,7 +1654,6 @@ window.Backbone = window.Backbone || [];
 			channel.bind(
 				'pusher:subscription_succeeded',
 				function () {
-					console.log( 'CHANNEL ' + channel.name + ' SUBSCRIBED' );
 				}
 			);
 
@@ -1530,7 +1661,6 @@ window.Backbone = window.Backbone || [];
 			channel.bind(
 				'pusher:subscription_error',
 				function () {
-					console.log( 'You are not subscribed with ' + channel.name + ', try again. Refresh' );
 				}
 			);
 
@@ -1541,8 +1671,12 @@ window.Backbone = window.Backbone || [];
 				'client-bb-pro-before-message-ajax-send',
 				function ( data ) {
 
-					if ( 'undefined' === typeof data.sender_id ) {
+					if ( 'undefined' !== typeof data.sender_id ) {
 						bp.Nouveau.updateUserPresence( parseInt( data.sender_id ), 'online' );
+
+						if ( 'undefined' !== typeof data.thread_id ) {
+							bp.Pusher_FrontCommon.threadTypingEnd( parseInt( data.thread_id ), parseInt( data.sender_id ) );
+						}
 					}
 
 					if ( 'undefined' !== typeof data.message_chunk_id ) {
@@ -1567,6 +1701,10 @@ window.Backbone = window.Backbone || [];
 					} else {
 						// If chunks is not available then it will call directly.
 						bp.Pusher_FrontCommon.renderMessage( data );
+					}
+
+					if ( 'undefined' !== typeof window.Backbone.trigger && 'undefined' !== typeof data.refresh_element && true === data.refresh_element ) {
+						window.Backbone.trigger( 'relistelements' );
 					}
 
 				}
@@ -1607,8 +1745,9 @@ window.Backbone = window.Backbone || [];
 			channel.bind(
 				'client-bb-pro-thread-delete-message',
 				function ( data ) {
-					if ( 'undefined' !== typeof window.Backbone.trigger && 'undefined' !== typeof data.thread_id && parseInt( data.thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
+					if ( 'undefined' !== typeof window.Backbone.trigger && 'undefined' !== typeof data.thread_id ) {
 						window.Backbone.trigger( 'onMessageDeleteSuccess', data );
+						bp.Pusher_FrontCommon.bb_update_header_messages();
 					}
 				}
 			);
@@ -1656,8 +1795,8 @@ window.Backbone = window.Backbone || [];
 
 					bp.Pusher_FrontCommon.threadListTypingIndicator( t_id, filtered );
 
-					clearTimeout( bp.Pusher_FrontCommon.clearTimerId );
-					bp.Pusher_FrontCommon.clearTimerId = setTimeout(
+					clearTimeout( bp.Pusher_FrontCommon.clearTimerId[t_id] );
+					bp.Pusher_FrontCommon.clearTimerId[t_id] = setTimeout(
 						function () {
 							bp.Pusher_FrontCommon.threadTypingEnd( t_id, u_id );
 						},
@@ -1715,6 +1854,16 @@ window.Backbone = window.Backbone || [];
 						}
 
 					} else if (
+						action === 'group_message_group_promoted' ||
+						action === 'group_message_group_demoted'
+					) {
+
+						if ( thread_id > 0 && parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
+							hash = new Date().getTime();
+							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+						}
+
+					} else if (
 						action === 'group_message_group_left' ||
 						action === 'group_message_group_ban' ||
 						action === 'groups_remove_member'
@@ -1763,10 +1912,6 @@ window.Backbone = window.Backbone || [];
 								if ( 'undefined' !== typeof next_thread_id ) {
 									bb_pusher_vars.current_thread_id = parseInt( next_thread_id );
 									bp.Nouveau.Messages.router.navigate( 'view/' + next_thread_id + '/?hash=' + hash, { trigger: true } );
-
-									if ( 'undefined' !== typeof window.Backbone.trigger ) {
-										window.Backbone.trigger( 'relistelements' );
-									}
 								} else {
 									bb_pusher_vars.current_thread_id = 0;
 									bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
@@ -1774,6 +1919,16 @@ window.Backbone = window.Backbone || [];
 
 							} else {
 								bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
+							}
+						}
+
+						if ( parseInt( user_id ) === parseInt( bb_pusher_vars.loggedin_user_id ) ) {
+							if ( 'undefined' !== typeof window.Backbone.trigger ) {
+								window.Backbone.trigger( 'relistelements' );
+							}
+
+							if ( 'undefined' !== typeof window.wp.heartbeat ) {
+								window.wp.heartbeat.connectNow();
 							}
 						}
 					}
@@ -1795,18 +1950,32 @@ window.Backbone = window.Backbone || [];
 
 					if ( thread_id > 0 && thread_id === parseInt( bb_pusher_vars.current_thread_id ) ) {
 						var content = data.group_name + bb_pusher_vars.i18n.deleted;
-						bp.Pusher_FrontCommon.createCookie( 'bb-message-group-thread-deleted', content, 5 );
 
 						if ( bp.Nouveau.Messages.threads.length > 1 ) {
-							bp.Nouveau.Messages.threads.remove( parseInt( data.thread_id ) );
+							bp.Nouveau.Messages.threads.remove( parseInt( thread_id ) );
 							bb_pusher_vars.current_thread_id = parseInt( bp.Nouveau.Messages.threads.at( 0 ).id );
-							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + bb_pusher_vars.current_thread_id + '/', { trigger: true } );
 						} else {
 							BP_Nouveau.messages.hasThreads   = false;
 							bb_pusher_vars.current_thread_id = 0;
 							bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
 						}
-						window.location.reload();
+
+						if ( 'undefined' !== typeof window.wp.heartbeat ) {
+							window.wp.heartbeat.connectNow();
+						}
+
+						jQuery( document ).trigger(
+							'bb_trigger_toast_message',
+							[
+								'',
+								content,
+								'info',
+								null,
+								true
+							]
+						);
+
 					} else {
 						bp.Nouveau.Messages.threads.remove( parseInt( thread_id ) );
 
@@ -1846,48 +2015,6 @@ window.Backbone = window.Backbone || [];
 						var hash = new Date().getTime();
 						window.location.href.replace( window.location.search, '' );
 						bp.Nouveau.Messages.router.navigate( 'view/' + bb_pusher_vars.current_thread_id + '/?hash=' + hash, { trigger: true } );
-					}
-				}
-			);
-
-			// When group messages has been disabled by admin.
-			channel.bind(
-				'client-bb-pro-update-group-messages',
-				function ( data ) {
-					if ( parseInt( data.previous ) !== parseInt( data.updated ) ) {
-						if (
-							bb_pusher_vars.current_thread.is_group_thread &&
-							true === bb_pusher_vars.current_thread.is_group_thread
-						) {
-							var hash        = new Date().getTime();
-							var next_thread = $( '.message-lists .thread-item:first-child' );
-							var thread_id   = next_thread.find( '.bp-message-link' ).attr( 'data-thread-id' );
-							if ( parseInt( thread_id ) === parseInt( bb_pusher_vars.current_thread_id ) ) {
-								thread_id = next_thread.next( '.thread-item' ).find( '.bp-message-link' ).attr( 'data-thread-id' );
-							}
-
-							window.location.href.replace( window.location.search, '' );
-							bp.Nouveau.Messages.router.navigate( 'view/' + thread_id + '/?hash=' + hash, { trigger: true } );
-
-							jQuery( document ).trigger(
-								'bb_trigger_toast_message',
-								[
-									'',
-									bb_pusher_vars.i18n.group_message_disabled,
-									'warning',
-									null,
-									true
-								]
-							);
-						}
-
-						if ( 'undefined' !== typeof window.Backbone.trigger ) {
-							window.Backbone.trigger( 'relistelements' );
-						}
-
-						if ( 'undefined' !== typeof window.wp.heartbeat ) {
-							window.wp.heartbeat.connectNow();
-						}
 					}
 				}
 			);
@@ -1936,7 +2063,12 @@ window.Backbone = window.Backbone || [];
 							bp.Pusher_FrontCommon.createCookie( 'bb-thread-delete', content, 5 );
 						}
 
-						window.location.reload();
+						if ( 'undefined' !== typeof BP_Nouveau && 'undefined' !== typeof BP_Nouveau.messages && 'undefined' !== typeof BP_Nouveau.messages.message_url ) {
+							window.location.href = BP_Nouveau.messages.message_url;
+						} else {
+							window.location.reload();
+						}
+
 					} else {
 						var thread_list_element = $( '#message-threads li .bp-message-link[data-thread-id="' + thread_id + '"]' );
 						if ( thread_list_element.length > 0 ) {
@@ -2389,7 +2521,7 @@ window.Backbone = window.Backbone || [];
 			}
 
 			// remove typing event on sent.
-			bp.Pusher_FrontCommon.threadTypingEnd( data.thread_id, data.sender_id );
+			bp.Pusher_FrontCommon.threadTypingEnd( parseInt( data.thread_id ), parseInt( data.sender_id ) );
 
 			var blocked_user_ids = [];
 			Object.values( bb_pusher_vars.blocked_users_ids ).forEach(
@@ -2597,26 +2729,52 @@ window.Backbone = window.Backbone || [];
 							item.user_id = parseInt( bb_pusher_vars.loggedin_user_id );
 						}
 
-						if ( $( document.body ).find( '.bb-message-dropdown-notification' ).length && $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id ).length ) {
-							if ( $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && item.inbox_unread_count > 0 ) {
-								$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).text( item.inbox_unread_count );
-							} else if ( $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && 0 === item.inbox_unread_count ) {
-								$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).remove();
-							} else if ( 0 === $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && item.inbox_unread_count > 0 ) {
-								$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id ).append( '<span class="count">' + item.inbox_unread_count + '</span>' );
-							}
-						}
-						if ( $( document.body ).find( '.bp-buddypanel-menu-item-messages-count-' + item.user_id ).length && item.inbox_unread_count > 0 ) {
-							$( document.body ).find( '.bp-buddypanel-menu-item-messages-count-' + item.user_id ).each(
-								function() {
-									if ( $( this ).find( '.bb-messages-inbox-unread-count' ).length ) {
-										$( this ).find( '.bb-messages-inbox-unread-count' ).text( item.inbox_unread_count ).removeClass( 'bp-hide' );
-									} else {
-										$( this ).find( '> a' ).append( '<span class="count bb-messages-inbox-unread-count">' + item.inbox_unread_count + '</span>' );
-									}
+						var totalCount = parseInt( item.inbox_unread_count );
+
+						if ( parseInt( bb_pusher_vars.current_thread_id ) === parseInt( item.thread_id ) && parseInt( bb_pusher_vars.loggedin_user_id ) === parseInt( item.user_id ) ) {
+							totalCount = totalCount - parseInt( item.current_thread_unread_count );
+							$.ajax(
+								{
+									type: 'POST',
+									url: bb_pusher_vars.ajax_url,
+									data: {
+										'action': 'bb_pusher_update_current_thread_unread_count',
+										'thread_id': item.thread_id,
+										'current_user_id': bb_pusher_vars.loggedin_user_id,
+
+									},
+									success: function () {
+
+									},
+									error: function () {
+										return false;
+									},
 								}
 							);
+						}
 
+						if ( parseInt( bb_pusher_vars.current_thread_id ) !== parseInt( item.thread_id ) ) {
+							if ( $( document.body ).find( '.bb-message-dropdown-notification' ).length && $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id ).length ) {
+								if ( $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && totalCount > 0 ) {
+									$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).text( totalCount );
+								} else if ( $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && 0 === totalCount ) {
+									$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).remove();
+								} else if ( 0 === $( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id + ' span.count' ).length && totalCount > 0 ) {
+									$( document.body ).find( '.bb-message-dropdown-notification .bb-member-unread-count-span-' + item.user_id ).append( '<span class="count">' + totalCount + '</span>' );
+								}
+							}
+							if ( $( document.body ).find( '.bp-buddypanel-menu-item-messages-count-' + item.user_id ).length && totalCount > 0 ) {
+								$( document.body ).find( '.bp-buddypanel-menu-item-messages-count-' + item.user_id ).each(
+									function () {
+										if ( $( this ).find( '.bb-messages-inbox-unread-count' ).length ) {
+											$( this ).find( '.bb-messages-inbox-unread-count' ).text( totalCount ).removeClass( 'bp-hide' );
+										} else {
+											$( this ).find( '> a' ).append( '<span class="count bb-messages-inbox-unread-count">' + totalCount + '</span>' );
+										}
+									}
+								);
+
+							}
 						}
 					}
 				);
@@ -2730,8 +2888,6 @@ window.Backbone = window.Backbone || [];
 					// if the key is not empty, create it in the object.
 					if ( new_key !== '' ) {
 						createElement( params[ list[ 0 ] ], new_key, value );
-					} else {
-						console.warn( 'parseParams :: empty property in key "' + key + '"' );
 					}
 				} else {
 					// if the key is an array.

@@ -80,7 +80,16 @@ class OXXO {
 
 		add_filter(
 			'woocommerce_thankyou_order_received_text',
-			function( string $message, WC_Order $order ) {
+			/**
+			 * Order can be null.
+			 *
+			 * @psalm-suppress MissingClosureParamType
+			 */
+			function( string $message, $order ) {
+				if ( ! $order instanceof WC_Order ) {
+					return $message;
+				}
+
 				$payer_action = $order->get_meta( 'ppcp_oxxo_payer_action' ) ?? '';
 
 				$button = '';
@@ -129,7 +138,8 @@ class OXXO {
 			'add_meta_boxes',
 			function( string $post_type ) {
 				if ( $post_type === 'shop_order' ) {
-					$post_id = filter_input( INPUT_GET, 'post', FILTER_SANITIZE_STRING );
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$post_id = wc_clean( wp_unslash( $_GET['post'] ?? '' ) );
 					$order   = wc_get_order( $post_id );
 					if ( is_a( $order, WC_Order::class ) && $order->get_payment_method() === OXXOGateway::ID ) {
 						$payer_action = $order->get_meta( 'ppcp_oxxo_payer_action' );
@@ -173,7 +183,8 @@ class OXXO {
 			return false;
 		}
 
-		$billing_country = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_STRING ) ?? null;
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$billing_country = wc_clean( wp_unslash( $_POST['country'] ?? '' ) );
 		if ( $billing_country && 'MX' !== $billing_country ) {
 			return false;
 		}

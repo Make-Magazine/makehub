@@ -9078,9 +9078,6 @@ body:not(.buddypanel-open).bb-sfwd-aside .buddypanel-site-icon {
 .widget .wp-block-archives-dropdown select:focus {
   box-shadow: none;
 }
-.widget.widget_categories label.screen-reader-text:hover {
-  background: transparent;
-}
 .widget.widget_categories .wp-block-categories-list li {
   color: var(--bb-headings-color);
   padding: 8px 0;
@@ -9143,19 +9140,6 @@ body:not(.buddypanel-open).bb-sfwd-aside .buddypanel-site-icon {
   -webkit-transition: all linear 0.2s;
           transition: all linear 0.2s;
   color: var(--bb-primary-color);
-}
-.widget.widget_categories label.screen-reader-text {
-  overflow: visible;
-  -webkit-clip-path: inherit;
-          clip-path: inherit;
-  width: 100%;
-  clip: unset;
-  position: inherit !important;
-  height: auto;
-}
-.widget.widget_categories label.screen-reader-text:hover {
-  box-shadow: none;
-  padding: 0;
 }
 .widget.widget_search input[name="bbp_search"], .widget.widget_search input[type="search"], .widget.widget_search input.search {
   border: 1px solid var(--bb-content-border-color);

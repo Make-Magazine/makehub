@@ -171,7 +171,8 @@ class MpimpTransactionsImporter extends MpimpBaseImporter {
       }
 
       if($send_welcome) {
-        MeprUtils::send_signup_notices($txn, true, true);
+        $admin_signup = true === $mepr_options->emails['MeprAdminSignupEmail']['enabled'];
+        MeprUtils::send_signup_notices($txn, true, $admin_signup);
       }
 
       if($send_receipt) {

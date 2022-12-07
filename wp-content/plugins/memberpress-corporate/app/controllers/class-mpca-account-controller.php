@@ -344,6 +344,11 @@ class MPCA_Account_Controller {
         if(!empty($_REQUEST['userdata']['last_name'])) {
           update_user_meta($user_id, 'last_name', sanitize_text_field($_REQUEST['userdata']['last_name']));
         }
+        foreach($_REQUEST['userdata'] as $key => $val) {
+          if(strpos($key, 'mepr_') !== false) {
+            update_user_meta($user_id, $key, sanitize_text_field($val));
+          }
+        }
 
         $mepr_user = new MeprUser($user_id);
 

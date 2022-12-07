@@ -5,7 +5,7 @@
  * @since 1.0
  * @return bool true on success or false on failure.
  */
-function _gv_ob_start() {
+function _gk_gravityrevisions_ob_start() {
 	return ob_start();
 }
 
@@ -14,6 +14,6 @@ function _gv_ob_start() {
  * @since 1.0
  * @return @return string the contents of the output buffer and end output buffering. If output buffering isn't active then false is returned.
  */
-function _gv_ob_get_clean() {
+function _gk_gravityrevisions_ob_get_clean() {
 	return ob_get_clean();
 }

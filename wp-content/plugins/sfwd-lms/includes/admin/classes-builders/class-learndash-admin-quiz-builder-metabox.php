@@ -43,7 +43,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 		}
 
 		/**
-		 * Iniitialize builder for specific Quiz Item.
+		 * Initialize builder for specific Quiz Item.
 		 *
 		 * @since 2.6.0
 		 *
@@ -189,18 +189,14 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 				case 'sfwd-quiz':
 					if ( true === $singular ) {
 						return 'quiz';
-					} else {
-						return 'quizzes';
 					}
-					break;
+					return 'quizzes';
 
 				case 'sfwd-question':
 					if ( true === $singular ) {
 						return 'question';
-					} else {
-						return 'questions';
 					}
-					break;
+					return 'questions';
 
 				default:
 					return '';
@@ -262,10 +258,10 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 					unset( $args['post__not_in'] );
 				}
 
-				$m_args['meta_query'] = array();
+				$m_args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 
 				// First get all the items related to the quiz ID.
-				$m_args['meta_query'] = array(
+				$m_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
 						'key'     => 'quiz_id',
 						'value'   => $this->builder_post_id,
@@ -294,7 +290,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 				if ( true === $include_orphaned_questions ) {
 
 					// Next get any quiz where the 'quiz_id' is zero.
-					$m_args['meta_query'] = array(
+					$m_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						array(
 							'key'     => 'quiz_id',
 							'value'   => 0,
@@ -311,7 +307,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 					}
 
 					// Finally get any quiz where the 'quiz_id' does not exist.
-					$m_args['meta_query'] = array(
+					$m_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						array(
 							'key'     => 'quiz_id',
 							'compare' => 'NOT EXISTS',
@@ -397,7 +393,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 		 *
 		 * @param object $post_type_query WP_Query instance.
 		 *
-		 * @return string Button(s) HTML.
+		 * @return array Page Button(s) array.
 		 */
 		public function build_selector_pages_buttons_json( $post_type_query ) {
 			$pager_buttons = [
@@ -804,14 +800,14 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 			$cb_nonce_key   = $this->builder_prefix . '_nonce';
 			$cb_nonce_value = $this->builder_prefix . '_' . $post->post_type . '_' . $post_id . '_nonce';
 
-			if ( ( isset( $_POST[ $cb_nonce_key ] ) ) && ( wp_verify_nonce( $_POST[ $cb_nonce_key ], $cb_nonce_value ) ) ) {
+			if ( ( isset( $_POST[ $cb_nonce_key ] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $cb_nonce_key ] ) ), $cb_nonce_value ) ) ) {
 				if ( isset( $_POST[ $this->builder_prefix ][ $this->builder_post_type ][ $post_id ] ) ) {
-					$quiz_questions_data = $_POST[ $this->builder_prefix ][ $this->builder_post_type ][ $post_id ];
+					$quiz_questions_data = wp_unslash( $_POST[ $this->builder_prefix ][ $this->builder_post_type ][ $post_id ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( '' !== $quiz_questions_data ) {
 						$this->ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( $post_id );
 
-						$quiz_questions = (array) json_decode( stripslashes( $quiz_questions_data ), true );
+						$quiz_questions = (array) json_decode( $quiz_questions_data, true );
 
 						if ( ( is_array( $quiz_questions ) ) && ( ! empty( $quiz_questions ) ) ) {
 							$quiz_questions_split = LDLMS_Quiz_Questions::questions_split_keys( $quiz_questions );
@@ -946,7 +942,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 							 * We have to set the guid manually because the one assigned within wp_insert_post is non-unique.
 							 * See LEARNDASH-3853
 							 */
-							$wpdb->update(
+							$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 								$wpdb->posts,
 								array(
 									'guid' => add_query_arg(

@@ -953,12 +953,5 @@ function bb_pro_onesignal_user_presence_check( $retval, $notification ) {
 		return $retval;
 	}
 
-//	$user_id       = $notification->user_id; // Notification receiver user id.
-//	$presence_time = (int) apply_filters( 'bb_pro_push_notification_presence_time', 300 ); // 5 minutes =
-//	$user_presence = bb_is_online_user( $user_id, $presence_time );
-//	if ( true === $user_presence ) {
-//		return false;
-//	}
-
-	return $retval;
+	return bb_can_send_push_notification( $notification->user_id );
 }

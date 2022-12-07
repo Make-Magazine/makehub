@@ -3,7 +3,7 @@
 Plugin Name: MemberPress Importer
 Plugin URI: http://memberpress.com
 Description: Allows you to import Users, Products, Subscriptions, Transactions, Coupons and Rules from a csv file
-Version: 1.6.8
+Version: 1.6.14
 Author: Caseproof, LLC
 Author URI: http://caseproof.com
 Text Domain: memberpress-importer
@@ -121,6 +121,7 @@ if( is_plugin_active('memberpress/memberpress.php') ) {
                   data-row="<?php echo $results['row']; ?>">
           */
           $results['_wpnonce'] = $_REQUEST['_wpnonce'];
+
           $this->display_results($results);
         }
         else
@@ -168,7 +169,7 @@ if( is_plugin_active('memberpress/memberpress.php') ) {
           <div class="mepr-import">
             <?php require MEPR_VIEWS_PATH . '/shared/errors.php'; ?>
 
-            <p><?php printf( __('Before importing for the first time go to the %1$s to get instructions.', 'memberpress-importer'), '<a href="http://www.memberpress.com/user-manual/importing">'.__('User Manual Page on Importing', 'memberpress-importer').'</a>' ); ?></p>
+            <p><?php printf( __('Before importing for the first time go to the %1$s to get instructions.', 'memberpress-importer'), '<a href="https://docs.memberpress.com/article/48-migrating-overview">'.__('User Manual Page on Importing', 'memberpress-importer').'</a>' ); ?></p>
             <p><strong><?php printf( __('Note: Make sure your database is backed up before running any MemberPress import.', 'memberpress-importer') ); ?></p>
 
             <div>
@@ -234,7 +235,7 @@ if( is_plugin_active('memberpress/memberpress.php') ) {
           <textarea class="mpimp-errors"><?php echo implode("\n",$errors); ?></textarea>
           </p>
           <p><?php _e('CSV for failed rows ... copy these, fix and reimport:', 'memberpress-importer'); ?><br/>
-          <textarea class="mpimp-error-rows"><?php echo implode(',',$results['headers']); ?></textarea>
+          <textarea class="mpimp-error-rows"><?php echo ! empty($errors) ? implode(',',$results['headers']) : ''; ?></textarea>
           </p>
         </div>
       </div>
@@ -301,6 +302,14 @@ if( is_plugin_active('memberpress/memberpress.php') ) {
       $failed_rows = array();
       $messages = array();
       $errors = array();
+
+      // Check for BOM - Byte Order Mark
+      $bom = "\xef\xbb\xbf";
+      // Move pointer to the 4th byte to check if we have a BOM
+      if (fgets($fh, 4) !== $bom) {
+        // BOM not found - rewind pointer to start of file.
+        rewind($fh);
+      }
 
       // grab the headers on the first pass
       if( $row==0 ) {

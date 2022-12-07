@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\OrderTracking;
 
-use Dhii\Container\ServiceProvider;
-use Dhii\Modular\Module\ModuleInterface;
+use WooCommerce\PayPalCommerce\Vendor\Dhii\Container\ServiceProvider;
+use WooCommerce\PayPalCommerce\Vendor\Dhii\Modular\Module\ModuleInterface;
 use Exception;
-use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use WooCommerce\PayPalCommerce\Vendor\Interop\Container\ServiceProviderInterface;
+use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use WC_Order;
 use WooCommerce\PayPalCommerce\OrderTracking\Assets\OrderEditPageAssets;
@@ -51,7 +51,7 @@ class OrderTrackingModule implements ModuleInterface {
 		$pui_helper = $c->get( 'wcgateway.pay-upon-invoice-helper' );
 		assert( $pui_helper instanceof PayUponInvoiceHelper );
 
-		if ( $pui_helper->is_pui_enabled() ) {
+		if ( $pui_helper->is_pui_gateway_enabled() ) {
 			$settings->set( 'tracking_enabled', true );
 			$settings->persist();
 		}

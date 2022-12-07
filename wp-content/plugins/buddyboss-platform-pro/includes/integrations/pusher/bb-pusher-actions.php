@@ -79,8 +79,6 @@ add_action( 'groups_leave_group', 'bb_pro_pusher_group_messages_member_left', 10
 add_action( 'groups_remove_member', 'bb_pro_pusher_group_messages_member_left', 10, 2 );
 
 add_action( 'wp_ajax_bb_pusher_update_message_content', 'bb_pusher_update_message_content' );
-add_action( 'wp_ajax_bb_pusher_update_message_content', 'bb_pusher_update_message_content' );
-
 
 add_action( 'bp_rest_messages_create_item', 'bb_pusher_rest_create_message', 10, 4 );
 
@@ -90,17 +88,23 @@ add_action( 'update_option_bb-pusher-enabled-features', 'bb_pro_pusher_disabled_
 // For and event when group messages has been deleted.
 add_action( 'bp_messages_thread_messages_after_update', 'bb_pro_pusher_deleted_thread_messages', 999, 1 );
 
+// Fire an events for the group member promoted/demoted.
+add_action( 'groups_promote_member', 'bb_pro_pusher_group_messages_member_promoted', 10, 2 );
+add_action( 'groups_demote_member', 'bb_pro_pusher_group_messages_member_demoted', 10, 2 );
+
+add_action( 'wp_ajax_bb_pusher_update_current_thread_unread_count', 'bb_pusher_update_current_thread_unread_count' );
+
 /**
  * Enqueue scripts and styles.
  *
  * @since 2.1.6
  */
 function bb_pro_pusher_enqueue_scripts_and_styles() {
-	if ( ! bbp_pro_is_license_valid() || ! bb_pusher_is_enabled() ) {
-		return;
-	}
-
-	if ( false === bb_pusher_is_feature_enabled( 'live-messaging' ) || ! is_user_logged_in() ) {
+	if (
+		! bbp_pro_is_license_valid() ||
+		! bb_pusher_is_enabled() ||
+		! is_user_logged_in()
+	) {
 		return;
 	}
 
@@ -113,7 +117,12 @@ function bb_pro_pusher_enqueue_scripts_and_styles() {
 		}
 	}
 
-	if ( ! $is_msg_dropdown && ! bp_is_user_messages() ) {
+	if (
+		! $is_msg_dropdown &&
+		! bp_is_user_messages() &&
+		! isset( $_COOKIE['bb-message-component-disabled'] ) &&
+		true !== bb_pusher_is_feature_enabled( 'live-messaging' )
+	) {
 		return;
 	}
 
@@ -185,7 +194,7 @@ function bb_pro_pusher_enqueue_scripts_and_styles() {
 			)
 		),
 		'sender_link'                  => bp_core_get_userlink( bp_loggedin_user_id(), false, true ),
-		'display_date'                 => __( 'a second ago', 'buddyboss-pro' ),
+		'display_date'                 => __( 'Now', 'buddyboss-pro' ),
 		'app_key'                      => bb_pusher_app_key(),
 		'app_cluster'                  => bb_pusher_cluster(),
 		'global_private'               => 'private-bb-pro-global',
@@ -209,7 +218,7 @@ function bb_pro_pusher_enqueue_scripts_and_styles() {
 			'group_message_disabled'   => __( 'Group messages have been disabled by a site administrator.', 'buddyboss-pro' ),
 			'deleted'                  => __( ' was deleted.', 'buddyboss-pro' ),
 			'disabled_private_message' => __( 'Private messages have been disabled by a site administrator.', 'buddyboss-pro' ),
-			'remove_from_group'        => __( 'You have removed from group ', 'buddyboss-pro' ),
+			'remove_from_group'        => __( 'You have left ', 'buddyboss-pro' ),
 		),
 		'blocked_users_ids'            => array(),
 		'suspended_users_ids'          => array(),
@@ -569,7 +578,8 @@ function bb_pro_pusher_moderation_after_save( $moderation ) {
 	if (
 		! bbp_pro_is_license_valid() ||
 		! bb_pusher_is_enabled() ||
-		! bb_pusher_is_feature_enabled( 'live-messaging' )
+		! bb_pusher_is_feature_enabled( 'live-messaging' ) ||
+		( isset( $moderation->user_report ) && ! empty( $moderation->user_report ) )
 	) {
 		return;
 	}
@@ -602,8 +612,8 @@ function bb_pro_pusher_moderation_after_save( $moderation ) {
 		);
 
 		$event_data = array(
-			'creator_id' => $creator_id,
-			'blocked_id' => $blocked_id,
+			'creator_id' => (int) $creator_id,
+			'blocked_id' => (int) $blocked_id,
 			'thread_ids' => $thread_ids,
 		);
 
@@ -660,8 +670,8 @@ function bb_pro_pusher_moderation_after_delete( $moderation ) {
 		);
 
 		$event_data = array(
-			'creator_id'   => $creator_id,
-			'unblocked_id' => $unblocked_id,
+			'creator_id'   => (int) $creator_id,
+			'unblocked_id' => (int) $unblocked_id,
 			'thread_ids'   => $thread_ids,
 		);
 
@@ -898,15 +908,24 @@ function bb_pro_pusher_message_access_control_after_update( $old_value, $new_val
  * @param string $option    Option key Name.
  */
 function bb_pro_pusher_active_components( $old_value, $value, $option ) {
+	// phpcs:ignore
+	$action = ( isset( $_POST['action'] ) && '' !== $_POST['action'] ) ? $_POST['action'] : ( isset( $_POST['action2'] ) ? $_POST['action2'] : '' );
+
+	// phpcs:ignore
+	$current_action = ( isset( $_GET['do_action'] ) ? $_GET['do_action'] : '' );
+
 	if (
 		! bbp_pro_is_license_valid() ||
-		! bb_pusher_is_enabled()
+		! bb_pusher_is_enabled() ||
+		$old_value === $value ||
+		(
+			! in_array( $action, array( 'inactive', 'active', 'all' ), true ) &&
+			! in_array( $current_action, array( 'deactivate', 'activate' ), true )
+		)
 	) {
 		return;
 	}
 
-	$channel    = 'private-bb-pro-global';
-	$event_name = 'client-bb-pro-active-components';
 	$event_data = array(
 		'previous' => $old_value,
 		'updated'  => $value,
@@ -914,7 +933,7 @@ function bb_pro_pusher_active_components( $old_value, $value, $option ) {
 
 	$bb_pusher = bb_pusher();
 	if ( null !== $bb_pusher ) {
-		bb_pusher_trigger_event( $bb_pusher, $channel, $event_name, $event_data );
+		bb_pusher_trigger_event( $bb_pusher, 'private-bb-pro-global', 'client-bb-pro-active-components', $event_data );
 	}
 }
 
@@ -942,37 +961,9 @@ function bb_pro_pusher_disabled_group_messages( $old_value, $value, $option ) {
 		'updated'  => $value,
 	);
 
-	// Determine groups of user.
-	$groups = groups_get_groups(
-		array(
-			'fields'      => 'ids',
-			'per_page'    => - 1,
-			'show_hidden' => true,
-			'meta_query'  => array( // phpcs:ignore
-				'relation' => 'AND',
-				array(
-					'key'     => 'group_message_thread',
-					'compare' => 'EXISTS',
-				),
-			),
-		),
-	);
-
-	$group_ids        = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
-	$threads_channels = array();
-	if ( ! empty( $group_ids ) ) {
-
-		foreach ( $group_ids as $group_id ) {
-			$thread_id = groups_get_groupmeta( $group_id, 'group_message_thread' );
-			if ( ! empty( $thread_id ) ) {
-				$threads_channels[] = 'private-bb-message-thread-' . $thread_id;
-			}
-		}
-	}
-
 	$bb_pusher = bb_pusher();
 	if ( null !== $bb_pusher ) {
-		bb_pusher_trigger_event( $bb_pusher, $threads_channels, $event_name, $event_data );
+		bb_pusher_trigger_event( $bb_pusher, 'private-bb-pro-global', $event_name, $event_data );
 	}
 }
 
@@ -1005,7 +996,8 @@ function bb_pro_pusher_group_settings_update( $meta_id, $object_id, $meta_key, $
 
 	$members = groups_get_group_members(
 		array(
-			'group_id' => $object_id,
+			'group_id'            => $object_id,
+			'exclude_admins_mods' => false,
 		)
 	);
 
@@ -1146,7 +1138,6 @@ function bb_pro_pusher_messages_message_new_message_save( $message ) {
 	if (
 		'group' !== $message_from ||
 		'messages_send_reply' === $message_action ||
-		( bb_is_rest() && strpos( $GLOBALS['wp']->query_vars['rest_route'], 'buddyboss/v1/messages' ) !== false ) ||
 		did_action( 'groups_join_group' ) ||
 		did_action( 'groups_accept_invite' ) ||
 		did_action( 'groups_banned_member' ) ||
@@ -1154,31 +1145,50 @@ function bb_pro_pusher_messages_message_new_message_save( $message ) {
 		did_action( 'groups_unban_member' ) ||
 		did_action( 'groups_membership_accepted' ) ||
 		did_action( 'groups_leave_group' ) ||
-		did_action( 'groups_remove_member' )
+		did_action( 'groups_remove_member' ) ||
+		(
+			bb_is_rest() &&
+			strpos( $GLOBALS['wp']->query_vars['rest_route'], 'buddyboss/v1/messages' ) !== false &&
+			strpos( $GLOBALS['wp']->query_vars['rest_route'], 'buddyboss/v1/messages/group' ) === false
+		)
 	) {
 		return;
 	}
 
-	$recipients     = array();
-	$channels       = array();
-	$thread         = new BP_Messages_Thread( $message->thread_id );
-	$all_recipients = $thread->get_recipients();
+	$bb_pusher     = bb_pusher();
+	$first_message = BP_Messages_Thread::get_first_message( $message->thread_id );
 
-	if ( ! empty( $all_recipients ) ) {
-		foreach ( (array) $all_recipients as $recipient ) {
-			$recipients[ bb_pusher_get_user_hash( $recipient->user_id ) ] = bb_pusher_get_user_hash( $recipient->user_id );
-			$channels[] = 'private-user-' . $recipient->user_id;
+	if ( (int) $first_message->id === $message->id ) {
+		$recipients     = array();
+		$channels       = array();
+		$thread         = new BP_Messages_Thread( $message->thread_id );
+		$all_recipients = $thread->get_recipients();
+
+		if ( ! empty( $all_recipients ) ) {
+			foreach ( (array) $all_recipients as $recipient ) {
+				$recipients[ bb_pusher_get_user_hash( $recipient->user_id ) ] = bb_pusher_get_user_hash( $recipient->user_id );
+				$channels[] = 'private-bb-user-' . $recipient->user_id;
+			}
 		}
-	}
 
-	$event_data = array(
-		'thread_id'  => bb_pusher_string_hash( $message->thread_id ),
-		'recipients' => $recipients,
-	);
+		$event_data = array(
+			'thread_id'  => bb_pusher_string_hash( $message->thread_id ),
+			'thread'     => (int) $message->thread_id,
+			'recipients' => $recipients,
+		);
 
-	$bb_pusher = bb_pusher();
-	if ( null !== $bb_pusher ) {
-		bb_pusher_trigger_event( $bb_pusher, $channels, 'client-bb-pro-new-group-message', $event_data );
+		if ( null !== $bb_pusher ) {
+			bb_pusher_trigger_event( $bb_pusher, $channels, 'client-bb-pro-new-group-message', $event_data );
+		}
+	} else {
+		$response = bb_get_message_response_object( $message );
+
+		if ( ! empty( $response['thread_id'] ) && (int) $response['thread_id'] > 0 && null !== $bb_pusher && bp_is_active( 'messages' ) ) {
+
+			$notify_data = $response['messages'][0];
+			bb_pro_pusher_trigger_chunked_event( $bb_pusher, 'private-bb-message-thread-' . $response['thread_id'], 'client-bb-pro-before-message-ajax-send', $notify_data );
+
+		}
 	}
 
 }
@@ -1268,7 +1278,7 @@ function bb_pro_pusher_group_messages_banned_member( $thread_id, $user_id, $grou
 	$event_data = array(
 		'action'    => 'group_message_group_ban',
 		'thread_id' => bb_pusher_string_hash( $thread_id ),
-		'sender_id' => $user_id,
+		'sender_id' => (int) $user_id,
 	);
 
 	if ( null !== $bb_pusher ) {
@@ -1296,13 +1306,13 @@ function bb_pro_pusher_group_messages_unbanned_member( $thread_id, $user_id, $gr
 		return;
 	}
 
-	$channels  = array( 'private-bb-message-thread-' . $thread_id, 'private-user-' . $user_id );
+	$channels  = array( 'private-bb-message-thread-' . $thread_id, 'private-bb-user-' . $user_id );
 	$bb_pusher = bb_pusher();
 
 	$event_data = array(
 		'action'    => 'group_message_group_un_ban',
 		'thread_id' => bb_pusher_string_hash( $thread_id ),
-		'sender_id' => $user_id,
+		'sender_id' => (int) $user_id,
 	);
 
 	if ( null !== $bb_pusher ) {
@@ -1339,7 +1349,7 @@ function bb_pro_pusher_group_messages_member_joined( $group_id, $user_id ) {
 		$event_data = array(
 			'action'    => 'group_message_group_joined',
 			'thread_id' => bb_pusher_string_hash( $group_thread ),
-			'sender_id' => $user_id,
+			'sender_id' => (int) $user_id,
 		);
 
 		if ( null !== $bb_pusher ) {
@@ -1383,7 +1393,7 @@ function bb_pro_pusher_group_messages_member_left( $group_id, $user_id ) {
 		$event_data = array(
 			'action'    => $action,
 			'thread_id' => bb_pusher_string_hash( $group_thread ),
-			'sender_id' => $user_id,
+			'sender_id' => (int) $user_id,
 		);
 
 		if ( null !== $bb_pusher ) {
@@ -1426,8 +1436,8 @@ function bb_pro_comman_connection_triggers( $user_id, $friend_user_id, $initiato
 	}
 
 	$event_data = array(
-		'initiator_user_id' => $initiator_user_id,
-		'friend_user_id'    => $friend_user_id,
+		'initiator_user_id' => (int) $initiator_user_id,
+		'friend_user_id'    => (int) $friend_user_id,
 		'thread_ids'        => $thread_ids,
 	);
 
@@ -1915,353 +1925,7 @@ function bb_pusher_rest_create_message( $thread, $response, $request, $message )
 			$thread_template->message = current( $messages['messages'] );
 		}
 
-		$excerpt = wp_trim_words( wp_strip_all_tags( bb_get_the_thread_message_excerpt() ) );
-		if ( empty( $excerpt ) ) {
-			if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-				$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
-
-				if ( ! empty( $media_ids ) ) {
-					$media_ids = explode( ',', $media_ids );
-					if ( count( $media_ids ) < 2 ) {
-						$excerpt = __( 'sent a photo', 'buddyboss-pro' );
-					} else {
-						$excerpt = __( 'sent some photos', 'buddyboss-pro' );
-					}
-				}
-			}
-
-			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
-				$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
-
-				if ( ! empty( $video_ids ) ) {
-					$video_ids = explode( ',', $video_ids );
-					if ( count( $video_ids ) < 2 ) {
-						$excerpt = __( 'sent a video', 'buddyboss-pro' );
-					} else {
-						$excerpt = __( 'sent some videos', 'buddyboss-pro' );
-					}
-				}
-			}
-
-			if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-				$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
-
-				if ( ! empty( $document_ids ) ) {
-					$document_ids = explode( ',', $document_ids );
-					if ( count( $document_ids ) < 2 ) {
-						$excerpt = __( 'sent a document', 'buddyboss-pro' );
-					} else {
-						$excerpt = __( 'sent some documents', 'buddyboss-pro' );
-					}
-				}
-			}
-
-			if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-				$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
-
-				if ( ! empty( $gif_data ) ) {
-					$excerpt = __( 'sent a GIF', 'buddyboss-pro' );
-				}
-			}
-		}
-
-		// Output single message template part.
-		$reply = array(
-			'id'                => bp_get_the_thread_message_id(),
-			'content'           => do_shortcode( bp_get_the_thread_message_content() ),
-			'sender_id'         => bp_get_the_thread_message_sender_id(),
-			'sender_name'       => esc_html( bp_get_the_thread_message_sender_name() ),
-			'is_deleted'        => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
-			'sender_link'       => bp_get_the_thread_message_sender_link(),
-			'sender_is_you'     => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-			'sender_avatar'     => esc_url(
-				bp_core_fetch_avatar(
-					array(
-						'item_id' => bp_get_the_thread_message_sender_id(),
-						'object'  => 'user',
-						'type'    => 'thumb',
-						'width'   => 32,
-						'height'  => 32,
-						'html'    => false,
-					)
-				)
-			),
-			'date'              => bp_get_the_thread_message_date_sent() * 1000,
-			'display_date'      => bb_get_the_thread_message_sent_time(),
-			'display_date_list' => bb_get_thread_sent_date( $thread_template->message->date_sent ),
-			'excerpt'           => $excerpt,
-			'sent_date'         => ucfirst( bb_get_thread_start_date( $thread_template->message->date_sent ) ),
-			'sent_split_date'   => date_i18n( 'Y-m-d', strtotime( $thread_template->message->date_sent ) ),
-			'is_new'            => true,
-		);
-
-		if ( bp_is_active( 'moderation' ) ) {
-			$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
-			$reply['is_user_blocked']   = bp_moderation_is_user_blocked( bp_get_the_thread_message_sender_id() );
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
-
-			if (
-				! empty( $media_ids ) &&
-				bp_has_media(
-					array(
-						'include'  => $media_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-					)
-				)
-			) {
-				$reply['media'] = array();
-				while ( bp_media() ) {
-					bp_the_media();
-
-					$reply['media'][] = array(
-						'id'            => bp_get_media_id(),
-						'title'         => bp_get_media_title(),
-						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
-						'attachment_id' => bp_get_media_attachment_id(),
-						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
-						'full'          => bb_get_media_photos_theatre_popup_image(),
-						'meta'          => $media_template->media->attachment_data->meta,
-						'privacy'       => bp_get_media_privacy(),
-						'height'        => ( isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : '' ),
-						'width'         => ( isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : '' ),
-					);
-				}
-			}
-		}
-
-		if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-			$video_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_video_ids', true );
-
-			if (
-				! empty( $video_ids ) &&
-				bp_has_video(
-					array(
-						'include'  => $video_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-					)
-				)
-			) {
-				$reply['video'] = array();
-				while ( bp_video() ) {
-					bp_the_video();
-
-					$video_html = '';
-					if ( 1 === $video_template->video_count ) {
-						ob_start();
-						bp_get_template_part( 'video/single-video' );
-						?>
-						<p class="bb-video-loader"></p>
-						<?php
-						if ( ! empty( bp_get_video_length() ) ) {
-							?>
-							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
-							<?php
-						}
-						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
-
-						if ( empty( $thumbnail_url ) ) {
-							$thumbnail_url = bb_get_video_default_placeholder_image();
-						}
-						?>
-						<a class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide" data-id="<?php bp_video_id(); ?>" data-attachment-full="<?php bp_video_popup_thumb(); ?>" data-privacy="<?php bp_video_privacy(); ?>"  data-attachment-id="<?php bp_video_attachment_id(); ?>" href="#">
-							<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php bp_video_title(); ?>" />
-						</a>
-						<?php
-						$video_html = ob_get_clean();
-						$video_html = str_replace( 'video-js', 'video-js single-activity-video', $video_html );
-						$video_html = str_replace( 'id="theatre-video', 'id="video', $video_html );
-
-					}
-
-					$reply['video'][] = array(
-						'id'            => bp_get_video_id(),
-						'title'         => bp_get_video_title(),
-						'message_id'    => bp_get_the_thread_message_id(),
-						'thread_id'     => bp_get_the_thread_id(),
-						'attachment_id' => bp_get_video_attachment_id(),
-						'thumbnail'     => bp_get_video_attachment_image_thumbnail(),
-						'full'          => bp_get_video_attachment_image(),
-						'meta'          => $video_template->video->attachment_data->meta,
-						'privacy'       => bp_get_video_privacy(),
-						'video_html'    => $video_html,
-					);
-				}
-			}
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
-
-			if (
-				! empty( $document_ids ) &&
-				bp_has_document(
-					array(
-						'include'  => $document_ids,
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-					)
-				)
-			) {
-				$reply['document'] = array();
-				while ( bp_document() ) {
-					bp_the_document();
-
-					$document_id           = bp_get_document_id();
-					$attachment_id         = bp_get_document_attachment_id();
-					$extension             = bp_document_extension( $attachment_id );
-					$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
-					$svg_icon_download     = bp_document_svg_icon( 'download' );
-					$download_url          = bp_document_download_link( $attachment_id, $document_id );
-					$filename              = basename( get_attached_file( $attachment_id ) );
-					$size                  = bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) );
-					$extension_description = '';
-					$extension_lists       = bp_document_extensions_list();
-					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
-					$mirror_text           = bp_document_mirror_text( $attachment_id );
-					$audio_url             = '';
-					$video_url             = '';
-
-					if ( ! empty( $extension_lists ) ) {
-						$extension_lists = array_column( $extension_lists, 'description', 'extension' );
-						$extension_name  = '.' . $extension;
-						if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
-							$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
-						}
-					}
-
-					if ( in_array( $extension, bp_get_document_preview_video_extensions(), true ) ) {
-						$video_url = bb_document_video_get_symlink( $document_id, true );
-					}
-
-					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_url( $document_id, $attachment_id );
-					}
-
-					$output = '';
-					ob_start();
-
-					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_url( bp_get_document_id(), $attachment_id );
-						?>
-						<div class="document-audio-wrap">
-							<audio controls controlsList="nodownload">
-								<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
-								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss-pro' ); ?>
-							</audio>
-						</div>
-						<?php
-					}
-
-					$attachment_url      = bp_document_get_preview_url( $document_id, bp_get_document_attachment_id(), 'bb-document-pdf-preview-activity-image' );
-					$full_attachment_url = bp_document_get_preview_url( $document_id, bp_get_document_attachment_id(), 'bb-document-pdf-image-popup-image' );
-
-					if ( $attachment_url ) {
-						?>
-						<div class="document-preview-wrap">
-							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
-						</div><!-- .document-preview-wrap -->
-						<?php
-					}
-					$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
-					if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
-						if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
-							$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
-							$file_data = $data['text'];
-							$more_text = $data['more_text']
-							?>
-							<div class="document-text-wrap">
-								<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-									<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
-								</div>
-								<div class="document-expand">
-									<a href="#" class="document-expand-anchor">
-										<i class="bb-icon-l bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss-pro' ); ?>
-									</a>
-								</div>
-							</div> <!-- .document-text-wrap -->
-							<?php
-							if ( true === $more_text ) {
-
-								printf(
-								/* translators: %s: download string */
-									'<div class="more_text_view">%s</div>',
-									sprintf(
-									/* translators: %s: download url */
-										wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-pro' ),
-										esc_url( $download_url )
-									)
-								);
-							}
-						}
-					}
-
-					$output .= ob_get_clean();
-
-					$reply['document'][] = array(
-						'id'                    => bp_get_document_id(),
-						'title'                 => bp_get_document_title(),
-						'attachment_id'         => bp_get_document_attachment_id(),
-						'url'                   => $download_url,
-						'extension'             => $extension,
-						'svg_icon'              => $svg_icon,
-						'svg_icon_download'     => $svg_icon_download,
-						'filename'              => $filename,
-						'size'                  => $size,
-						'meta'                  => $document_template->document->attachment_data->meta,
-						'download_text'         => __( 'Click to view', 'buddyboss-pro' ),
-						'extension_description' => $extension_description,
-						'download'              => __( 'Download', 'buddyboss-pro' ),
-						'collapse'              => __( 'Collapse', 'buddyboss-pro' ),
-						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss-pro' ),
-						'more_action'           => __( 'More actions', 'buddyboss-pro' ),
-						'privacy'               => bp_get_db_document_privacy(),
-						'author'                => bp_get_document_user_id(),
-						'preview'               => $attachment_url,
-						'full_preview'          => ( '' !== $full_attachment_url ) ? $full_attachment_url : $attachment_url,
-						'msg_preview'           => $output,
-						'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
-						'mp3_preview'           => $audio_url ? $audio_url : '',
-						'document_title'        => $filename ? $filename : '',
-						'mirror_text'           => $mirror_text ? $mirror_text : '',
-						'video'                 => $video_url ? $video_url : '',
-					);
-				}
-			}
-		}
-
-		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
-			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
-
-			if ( ! empty( $gif_data ) ) {
-				$preview_url  = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-				$video_url    = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-				$reply['gif'] = array(
-					'preview_url' => $preview_url,
-					'video_url'   => $video_url,
-				);
-			}
-		}
-
-		$extra_content = bp_nouveau_messages_catch_hook_content(
-			array(
-				'beforeMeta'    => 'bp_before_message_meta',
-				'afterMeta'     => 'bp_after_message_meta',
-				'beforeContent' => 'bp_before_message_content',
-				'afterContent'  => 'bp_after_message_content',
-			)
-		);
-
-		if ( array_filter( $extra_content ) ) {
-			$reply = array_merge( $reply, $extra_content );
-		}
+		$message_response = bb_get_message_response_object( $thread_template->message );
 
 		$get_thread_recipients = $thread_template->thread->recipients;
 		$inbox_unread_count    = apply_filters( 'thread_recipient_inbox_unread_counts', array(), $get_thread_recipients );
@@ -2272,7 +1936,7 @@ function bb_pusher_rest_create_message( $thread, $response, $request, $message )
 		$notify_data = array(
 			'hash'                          => $hash,
 			'thread_id'                     => $thread->thread_id,
-			'message'                       => $reply,
+			'message'                       => ! empty( $message_response['messages'] ) ? current( $message_response['messages'] ) : array(),
 			'recipient_inbox_unread_counts' => $inbox_unread_count,
 			'last_message_id'               => $last_message_id,
 		);
@@ -2381,11 +2045,134 @@ function bb_pro_pusher_deleted_thread_messages( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
 
 	$event_data = array(
-		'thread_id'     => $thread_id,
+		'thread_id'     => (int) $thread_id,
 		'thread_exists' => messages_is_valid_thread( $thread_id ),
 	);
 	$bb_pusher  = bb_pusher();
 	if ( null !== $bb_pusher ) {
 		bb_pusher_trigger_event( $bb_pusher, 'private-bb-message-thread-' . $thread_id, 'client-bb-pro-thread-delete-message', $event_data );
 	}
+}
+
+/**
+ * Events fired when user promoted for the group.
+ *
+ * @since 2.2
+ *
+ * @param int $group_id  Group id.
+ * @param int $user_id   User id.
+ *
+ * @return void
+ */
+function bb_pro_pusher_group_messages_member_promoted( $group_id, $user_id ) {
+	if (
+		! bbp_pro_is_license_valid() ||
+		! bb_pusher_is_enabled() ||
+		! bb_pusher_is_feature_enabled( 'live-messaging' )
+	) {
+		return;
+	}
+
+	if ( empty( $group_id ) ) {
+		return;
+	}
+
+	$thread_id = (int) groups_get_groupmeta( $group_id, 'group_message_thread' );
+
+	if ( empty( $thread_id ) ) {
+		return;
+	}
+
+	$channels  = array( 'private-bb-message-thread-' . $thread_id, 'private-bb-user-' . $user_id );
+	$bb_pusher = bb_pusher();
+
+	$event_data = array(
+		'action'    => 'group_message_group_promoted',
+		'thread_id' => bb_pusher_string_hash( $thread_id ),
+		'sender_id' => (int) $user_id,
+	);
+
+	if ( null !== $bb_pusher ) {
+		bb_pusher_trigger_event( $bb_pusher, $channels, 'client-bb-pro-group-message-group-update-notify', $event_data );
+	}
+}
+
+/**
+ * Events fired when user demoted for the group.
+ *
+ * @since 2.2
+ *
+ * @param int $group_id  Group id.
+ * @param int $user_id   User id.
+ *
+ * @return void
+ */
+function bb_pro_pusher_group_messages_member_demoted( $group_id, $user_id ) {
+	if (
+		! bbp_pro_is_license_valid() ||
+		! bb_pusher_is_enabled() ||
+		! bb_pusher_is_feature_enabled( 'live-messaging' )
+	) {
+		return;
+	}
+
+	if ( empty( $group_id ) ) {
+		return;
+	}
+
+	$thread_id = (int) groups_get_groupmeta( $group_id, 'group_message_thread' );
+
+	if ( empty( $thread_id ) ) {
+		return;
+	}
+
+	$channels  = array( 'private-bb-message-thread-' . $thread_id, 'private-bb-user-' . $user_id );
+	$bb_pusher = bb_pusher();
+
+	$event_data = array(
+		'action'    => 'group_message_group_demoted',
+		'thread_id' => bb_pusher_string_hash( $thread_id ),
+		'sender_id' => (int) $user_id,
+	);
+
+	if ( null !== $bb_pusher ) {
+		bb_pusher_trigger_event( $bb_pusher, $channels, 'client-bb-pro-group-message-group-update-notify', $event_data );
+	}
+}
+
+/**
+ * Ajax to mark the message as read.
+ *
+ * @since 2.2
+ *
+ * @return void
+ */
+function bb_pusher_update_current_thread_unread_count() {
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_success( array(
+			'feedback' => __( 'It\'s not a post request.', 'buddyboss-pro' ),
+			'type'     => 'error',
+		) );
+	}
+
+	$thread_id         = filter_input( INPUT_POST, 'thread_id', FILTER_SANITIZE_NUMBER_INT );
+	$current_user_id   = filter_input( INPUT_POST, 'current_user_id', FILTER_SANITIZE_NUMBER_INT );
+
+	$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $current_user_id );
+	if ( ! $is_active_recipient ) {
+		wp_send_json_success( array(
+			'feedback' => __( 'Not a valid thread access', 'buddyboss-pro' ),
+			'type'     => 'error',
+		) );
+	}
+
+	// Mark thread as read.
+	messages_mark_thread_read( $thread_id, $current_user_id );
+
+	wp_send_json_success( array(
+		'feedback' => __( 'Message marked as read.', 'buddyboss-pro' ),
+		'type'     => 'success',
+	) );
+
 }

@@ -808,6 +808,7 @@
 .bb-template-v2 .modal-container#boss-video-create-album-popup #bp-media-create-album-submit.saving:after,
 .bb-template-v2 .modal-container#boss-video-create-album-popup #bp-video-create-album-submit.saving:after,
 .bb-template-v2 #buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after,
+.bb-template-v2 #bbpress-forums .bb-modal.bb-modal-box .bbp-the-content-wrapper.loading:after,
 .bb-template-v2 #media-folder-document-data-table .pager a.button.loading:after,
 .bb-template-v2 .activity-url-scrapper-loading .bb-icon-spinner:before,
 .bb-template-v2 .button-load-more-posts.loading:after {
@@ -1711,10 +1712,6 @@ body.bb-template-v2 #buddypress:not(.round-avatars) .groups-header #item-header-
   font-weight: 300;
   -webkit-transition: all linear 0.2s;
           transition: all linear 0.2s;
-}
-.bb-template-v2 .widget.widget_categories label.screen-reader-text:hover {
-  background: transparent;
-  padding-right: 5px;
 }
 .bb-template-v2 .widget.widget_categories .wp-block-categories-list li a {
   font-weight: 500;

@@ -47,8 +47,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'show_all_value'         => '',
 					'show_all_label'         => esc_html__( 'Show All Payment Processors', 'learndash' ),
 					'options'                => array(
-						'paypal' => esc_html__( 'PayPal', 'learndash' ),
-						'stripe' => esc_html__( 'Stripe', 'learndash' ),
+						'paypal'   => esc_html__( 'PayPal', 'learndash' ),
+						'stripe'   => esc_html__( 'Stripe', 'learndash' ),
+						'razorpay' => esc_html__( 'Razorpay', 'learndash' ),
 					),
 					'listing_query_function' => array( $this, 'listing_filter_by_payment_processor' ),
 					'select2'                => true,
@@ -59,15 +60,19 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'show_all_value'         => '',
 					'show_all_label'         => esc_html__( 'Show All Transactions Types', 'learndash' ),
 					'options'                => array(
-						'return-success'   => esc_html__( 'PayPal Purchase Pending', 'learndash' ),
-						'web_accept'       => esc_html__( 'PayPal Purchase Complete', 'learndash' ),
-						'subscr_cancel'    => esc_html__( 'PayPal Subscription Canceled', 'learndash' ),
-						'subscr_eot'       => esc_html__( 'PayPal Subscription Expired', 'learndash' ),
-						'subscr_failed'    => esc_html__( 'PayPal Subscription Payment Failed', 'learndash' ),
-						'subscr_payment'   => esc_html__( 'PayPal Subscription Payment Success', 'learndash' ),
-						'subscr_signup'    => esc_html__( 'PayPal Subscription Signup', 'learndash' ),
-						'stripe_paynow'    => esc_html__( 'Stripe Purchase', 'learndash' ),
-						'stripe_subscribe' => esc_html__( 'Stripe Subscribe', 'learndash' ),
+						'return-success'                => esc_html__( 'PayPal Purchase Pending', 'learndash' ),
+						'web_accept'                    => esc_html__( 'PayPal Purchase Complete', 'learndash' ),
+						'subscr_cancel'                 => esc_html__( 'PayPal Subscription Canceled', 'learndash' ),
+						'subscr_eot'                    => esc_html__( 'PayPal Subscription Expired', 'learndash' ),
+						'subscr_failed'                 => esc_html__( 'PayPal Subscription Payment Failed', 'learndash' ),
+						'subscr_payment'                => esc_html__( 'PayPal Subscription Payment Success', 'learndash' ),
+						'subscr_signup'                 => esc_html__( 'PayPal Subscription Signup', 'learndash' ),
+						'stripe_paynow'                 => esc_html__( 'Stripe Purchase', 'learndash' ),
+						'stripe_subscribe'              => esc_html__( 'Stripe Subscription', 'learndash' ),
+						'razorpay_paynow'               => esc_html__( 'Razorpay Purchase', 'learndash' ),
+						'razorpay_subscribe'            => esc_html__( 'Razorpay Subscription (no trial)', 'learndash' ),
+						'razorpay_subscribe_paid_trial' => esc_html__( 'Razorpay Subscription (paid trial)', 'learndash' ),
+						'razorpay_subscribe_free_trial' => esc_html__( 'Razorpay Subscription (free trial)', 'learndash' ),
 					),
 					'listing_query_function' => array( $this, 'listing_filter_by_transaction_type' ),
 					'select2'                => true,
@@ -110,9 +115,14 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'after'   => 'payment_processor',
 					'display' => array( $this, 'show_column_transaction_type' ),
 				),
+				'coupon'            => array(
+					'label'   => esc_html__( 'Coupon', 'learndash' ),
+					'after'   => 'transaction_type',
+					'display' => array( $this, 'show_column_coupon' ),
+				),
 				'access_status'     => array(
 					'label'   => esc_html__( 'Access Status', 'learndash' ),
-					'after'   => 'transaction_type',
+					'after'   => 'coupon',
 					'display' => array( $this, 'show_column_access_status' ),
 				),
 				'course_group_id'   => array(
@@ -164,33 +174,43 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @return object $q_vars.
 		 */
 		protected function listing_filter_by_payment_processor( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
+			}
 
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
+			if ( ! isset( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			}
 
-				if ( 'paypal' === $selector['selected'] ) {
-					$q_vars['meta_query']['relation'] = 'OR';
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ld_payment_processor',
-						'compare' => 'paypal',
-					);
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ipn_track_id',
-						'compare' => 'EXISTS',
-					);
-				} elseif ( 'stripe' === $selector['selected'] ) {
-					$q_vars['meta_query']['relation'] = 'OR';
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ld_payment_processor',
-						'compare' => 'stripe',
-					);
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'stripe_nonce',
-						'compare' => 'EXISTS',
-					);
-				}
+			if ( 'paypal' === $selector['selected'] ) {
+				$q_vars['meta_query']['relation'] = 'OR';
+				$q_vars['meta_query'][]           = array(
+					'key'     => 'ld_payment_processor',
+					'compare' => '=',
+					'value'   => $selector['selected'],
+				);
+				$q_vars['meta_query'][]           = array(
+					'key'     => 'ipn_track_id',
+					'compare' => 'EXISTS',
+				);
+			} elseif ( 'stripe' === $selector['selected'] ) {
+				$q_vars['meta_query']['relation'] = 'OR';
+				$q_vars['meta_query'][]           = array(
+					'key'     => 'ld_payment_processor',
+					'compare' => '=',
+					'value'   => $selector['selected'],
+				);
+				$q_vars['meta_query'][]           = array(
+					'key'     => 'stripe_session_id',
+					'compare' => 'EXISTS',
+				);
+			} elseif ( 'razorpay' === $selector['selected'] ) {
+				// phpcs:ignore
+				$q_vars['meta_query'][] = array(
+					'key'     => 'ld_payment_processor',
+					'compare' => '=',
+					'value'   => $selector['selected'],
+				);
 			}
 
 			return $q_vars;
@@ -246,12 +266,65 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				} elseif ( 'stripe_paynow' === $selector['selected'] ) {
 					$q_vars['meta_query'][] = array(
 						'key'   => 'stripe_price_type',
-						'value' => 'paynow',
+						'value' => LEARNDASH_PRICE_TYPE_PAYNOW,
 					);
 				} elseif ( 'stripe_subscribe' === $selector['selected'] ) {
 					$q_vars['meta_query'][] = array(
 						'key'   => 'stripe_price_type',
-						'value' => 'subscribe',
+						'value' => LEARNDASH_PRICE_TYPE_SUBSCRIBE,
+					);
+				} elseif ( 'razorpay_paynow' === $selector['selected'] ) {
+					$q_vars['meta_query'][] = array(
+						array(
+							'key'   => 'ld_payment_processor',
+							'value' => 'razorpay',
+						),
+						array(
+							'key'   => 'price_type',
+							'value' => LEARNDASH_PRICE_TYPE_PAYNOW,
+						),
+					);
+				} elseif ( 'razorpay_subscribe' === $selector['selected'] ) {
+					$q_vars['meta_query'][] = array(
+						array(
+							'key'   => 'ld_payment_processor',
+							'value' => 'razorpay',
+						),
+						array(
+							'key'   => 'price_type',
+							'value' => LEARNDASH_PRICE_TYPE_SUBSCRIBE,
+						),
+						array(
+							'key'     => 'has_trial',
+							'compare' => '!=',
+							'value'   => 1,
+						),
+					);
+				} elseif ( 'razorpay_subscribe_paid_trial' === $selector['selected'] ) {
+					$q_vars['meta_query'][] = array(
+						array(
+							'key'   => 'ld_payment_processor',
+							'value' => 'razorpay',
+						),
+						array(
+							'key'   => 'has_trial',
+							'value' => 1,
+						),
+						array(
+							'key'   => 'has_free_trial',
+							'value' => 0,
+						),
+					);
+				} elseif ( 'razorpay_subscribe_free_trial' === $selector['selected'] ) {
+					$q_vars['meta_query'][] = array(
+						array(
+							'key'   => 'ld_payment_processor',
+							'value' => 'razorpay',
+						),
+						array(
+							'key'   => 'has_free_trial',
+							'value' => 1,
+						),
 					);
 				}
 			}
@@ -270,16 +343,23 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @return object $q_vars.
 		 */
 		protected function listing_filter_by_transaction_course_id( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
-
-				$q_vars['meta_query'][] = array(
-					'key'   => 'course_id',
-					'value' => absint( $selector['selected'] ),
-				);
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
 			}
+
+			if ( ! isset( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			}
+
+			$q_vars['meta_query']['relation'] = 'OR';
+			$q_vars['meta_query'][]           = array(
+				'key'   => 'course_id',
+				'value' => absint( $selector['selected'] ),
+			);
+			$q_vars['meta_query'][]           = array(
+				'key'   => 'post_id',
+				'value' => absint( $selector['selected'] ),
+			);
 
 			return $q_vars;
 		}
@@ -295,16 +375,23 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @return object $q_vars
 		 */
 		protected function listing_filter_by_transaction_group_id( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
-
-				$q_vars['meta_query'][] = array(
-					'key'   => 'group_id',
-					'value' => absint( $selector['selected'] ),
-				);
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
 			}
+
+			if ( ! isset( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			}
+
+			$q_vars['meta_query']['relation'] = 'OR';
+			$q_vars['meta_query'][]           = array(
+				'key'   => 'group_id',
+				'value' => absint( $selector['selected'] ),
+			);
+			$q_vars['meta_query'][]           = array(
+				'key'   => 'post_id',
+				'value' => absint( $selector['selected'] ),
+			);
 
 			return $q_vars;
 		}
@@ -319,13 +406,27 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		protected function show_column_payment_processor( $post_id = 0 ) {
 			$post_id = absint( $post_id );
 
-			$ld_payment_processor = $this->get_transaction_processor_type( $post_id );
-			if ( 'paypal' === $ld_payment_processor ) {
-				esc_html_e( 'PayPal', 'learndash' );
-			} elseif ( 'stripe' === $ld_payment_processor ) {
-				esc_html_e( 'Stripe', 'learndash' );
-			} else {
-				esc_html_e( 'Unknown', 'learndash' );
+			$is_zero_price = (bool) get_post_meta( $post_id, 'is_zero_price', true );
+
+			if ( $is_zero_price ) {
+				esc_html_e( 'No', 'learndash' );
+				return;
+			}
+
+			$payment_processor = $this->get_transaction_processor_type( $post_id );
+
+			switch ( $payment_processor ) {
+				case 'paypal':
+					esc_html_e( 'PayPal', 'learndash' );
+					break;
+				case 'stripe':
+					esc_html_e( 'Stripe', 'learndash' );
+					break;
+				case 'razorpay':
+					esc_html_e( 'Razorpay', 'learndash' );
+					break;
+				default:
+					esc_html_e( 'Unknown', 'learndash' );
 			}
 		}
 
@@ -337,15 +438,21 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @param int $post_id Transaction Post ID.
 		 */
 		protected function show_column_transaction_type( $post_id = 0 ) {
-			$post_id = absint( $post_id );
+			$post_id       = absint( $post_id );
+			$is_zero_price = (bool) get_post_meta( $post_id, 'is_zero_price', true );
 
-			$ld_payment_processor = $this->get_transaction_processor_type( $post_id );
+			if ( $is_zero_price ) {
+				esc_html_e( 'Zero price', 'learndash' );
+				return;
+			}
+
+			$payment_processor = $this->get_transaction_processor_type( $post_id );
 
 			$payment_label    = '';
 			$payment_amount   = '';
 			$payment_currency = '';
 
-			if ( 'paypal' === $ld_payment_processor ) {
+			if ( 'paypal' === $payment_processor ) {
 				$ipn_transaction_type = get_post_meta( $post_id, 'txn_type', true );
 				if ( 'return-success' === $ipn_transaction_type ) {
 					$ipn_track_id = get_post_meta( $post_id, 'txn_type', true );
@@ -375,22 +482,45 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						);
 					}
 				}
-			} elseif ( 'stripe' === $ld_payment_processor ) {
+			} elseif ( 'stripe' === $payment_processor ) {
 				$stripe_price_type = 'stripe_' . get_post_meta( $post_id, 'stripe_price_type', true );
+
 				if ( in_array( $stripe_price_type, array( 'stripe_paynow', 'stripe_subscribe' ), true ) ) {
 					$payment_label  = $this->selectors['transaction_type']['options'][ $stripe_price_type ];
 					$payment_amount = get_post_meta( $post_id, 'stripe_price', true );
-					if ( '' === $payment_amount ) {
-						$payment_amount = '0.00';
+
+					if ( 'stripe_subscribe' === $stripe_price_type && ( 0 == $payment_amount || '' === $payment_amount ) ) {
+						$payment_label .= ' ' . __( 'Signup', 'learndash' );
+						$payment_amount = null;
+					} else {
+						if ( '' === $payment_amount ) {
+							$payment_amount = '0.00';
+						}
+						$payment_amount   = number_format_i18n( $payment_amount, 2 );
+						$payment_currency = get_post_meta( $post_id, 'stripe_currency', true );
 					}
-					$payment_amount   = number_format_i18n( $payment_amount, 2 );
-					$payment_currency = get_post_meta( $post_id, 'stripe_currency', true );
 				} else {
 					$payment_label = sprintf(
 						// translators: placeholder: Stripe stripe_price_type value.
 						esc_html_x( 'stripe %s', 'Stripe stripe_price_type value', 'learndash' ),
 						$stripe_price_type
 					);
+				}
+			} elseif ( 'razorpay' === $payment_processor ) {
+				$price_type     = get_post_meta( $post_id, 'price_type', true );
+				$pricing        = get_post_meta( $post_id, 'pricing', true );
+				$has_trial      = get_post_meta( $post_id, 'has_trial', true );
+				$has_free_trial = get_post_meta( $post_id, 'has_free_trial', true );
+
+				$payment_label = $has_trial
+					? $this->selectors['transaction_type']['options'][ 'razorpay_' . $price_type . '_' . ( $has_free_trial ? 'free' : 'paid' ) . '_trial' ]
+					: $this->selectors['transaction_type']['options'][ 'razorpay_' . $price_type ];
+
+				if ( ! $has_free_trial ) {
+					$payment_amount = ! empty( $pricing['trial_price'] ) ? $pricing['trial_price'] : $pricing['price'];
+					$payment_amount = number_format_i18n( $payment_amount, 2 );
+
+					$payment_currency = $pricing['currency'];
 				}
 			}
 
@@ -410,6 +540,26 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		}
 
 		/**
+		 * Output the Coupon column.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param int $post_id Transaction Post ID.
+		 */
+		protected function show_column_coupon( int $post_id ) {
+			$coupon_data = get_post_meta( $post_id, LEARNDASH_TRANSACTION_COUPON_META_KEY, true );
+
+			if ( empty( $coupon_data ) ) {
+				echo esc_html__( 'No coupon', 'learndash' );
+				return;
+			}
+
+			$code = $coupon_data[ LEARNDASH_COUPON_META_KEY_CODE ];
+
+			echo esc_html( $code );
+		}
+
+		/**
 		 * Output the Transaction Course or Group.
 		 *
 		 * @since 3.2.3
@@ -420,12 +570,17 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$post_id = absint( $post_id );
 
 			$filter_label = '';
+			$filter_url   = '';
+			$filter_link  = '';
 			$row_actions  = array();
 
 			$course_id = get_post_meta( $post_id, 'course_id', true );
+			if ( empty( $course_id ) ) {
+				$course_id = get_post_meta( $post_id, 'post_id', true );
+			}
 			$course_id = absint( $course_id );
-			if ( ! empty( $course_id ) ) {
 
+			if ( ! empty( $course_id ) ) {
 				$filter_label = LearnDash_Custom_Label::get_label( 'course' );
 				$filter_url   = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
 
@@ -438,11 +593,13 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
 					$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 				}
+
+				$filter_link = '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>';
 			} else {
 				$group_id = get_post_meta( $post_id, 'group_id', true );
 				$group_id = absint( $group_id );
 				if ( ! empty( $group_id ) ) {
-					$filter_label = LearnDash_Custom_Label::get_label( 'course' );
+					$filter_label = LearnDash_Custom_Label::get_label( 'group' );
 					$filter_url   = add_query_arg( 'group_id', $group_id, $this->get_clean_filter_url() );
 
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
@@ -454,15 +611,17 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( is_post_type_viewable( get_post_type( $group_id ) ) ) {
 						$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $group_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 					}
+
+					$filter_link = '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $group_id ) ) . '</a>';
 				}
 			}
 
-			if ( ( ! empty( $filter_label ) ) && ( ! empty( $filter_url ) ) ) {
+			if ( ( ! empty( $filter_label ) ) && ( ! empty( $filter_link ) ) ) {
 				echo sprintf(
 					// translators: placeholder: Post type label (Course/Group), Link to Course/Group.
-					esc_html_x( '%1$s : %2$s', 'placeholder: Post type label (Course/Group), Link to Course/Group', 'learndash' ),
+					esc_html_x( '%1$s: %2$s', 'placeholder: Post type label (Course/Group), Link to Course/Group', 'learndash' ),
 					esc_html( $filter_label ),
-					'<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>'
+					wp_kses_post( $filter_link )
 				);
 
 				if ( ! empty( $row_actions ) ) {
@@ -504,7 +663,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			if ( ( ! empty( $user ) ) && ( is_a( $user, 'WP_User' ) ) ) {
+				$row_actions  = array();
 				$display_name = $user->display_name . ' (' . $user->user_email . ')';
+
 				if ( current_user_can( 'edit_users' ) ) {
 					$edit_url = get_edit_user_link( $user->ID );
 					echo '<a href="' . esc_url( $edit_url ) . '">' . esc_html( $display_name ) . '</a>';
@@ -512,7 +673,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				} else {
 					echo esc_html( $display_name );
 				}
-				echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+				if ( ! empty( $row_actions ) ) {
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+				}
 			}
 		}
 
@@ -549,7 +712,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.6.0
 		 */
 		protected function transactions_bulk_actions_remove_access() {
-			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( wp_unslash( $_REQUEST['ld-listing-nonce'], get_called_class() ) ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ld-listing-nonce'] ) ), get_called_class() ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				return;
 			}
 
@@ -697,16 +860,22 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$ld_payment_processor = '';
 
 			$post_id = absint( $post_id );
+
 			if ( ! empty( $post_id ) ) {
 				$ld_payment_processor = get_post_meta( $post_id, 'ld_payment_processor', true );
+
 				if ( empty( $ld_payment_processor ) ) {
 					$ipn_track_id = get_post_meta( $post_id, 'ipn_track_id', true );
+
 					if ( ! empty( $ipn_track_id ) ) {
 						$ld_payment_processor = 'paypal';
 						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
 					}
-					$stripe_nonce = get_post_meta( $post_id, 'stripe_nonce', true );
-					if ( ! empty( $stripe_nonce ) ) {
+
+					$stripe_session_id = get_post_meta( $post_id, 'stripe_session_id', true );
+					$stripe_price      = get_post_meta( $post_id, 'stripe_price', true );
+
+					if ( ! empty( $stripe_session_id ) || ! empty( $stripe_price ) ) {
 						$ld_payment_processor = 'stripe';
 						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
 					}

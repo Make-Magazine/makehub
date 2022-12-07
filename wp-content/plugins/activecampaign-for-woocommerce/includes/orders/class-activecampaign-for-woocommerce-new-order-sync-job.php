@@ -320,7 +320,6 @@ class Activecampaign_For_Woocommerce_New_Order_Sync_Job implements Executable {
 		if ( AC_Utilities::validate_object( $ac_order, 'get_id' ) ) {
 			$ac_order_id = $ac_order->get_id();
 		} elseif ( isset( $ac_order->id ) ) {
-			$this->logger->dev( 'check_synced_order: we have an order id 2' );
 			$ac_order_id = $ac_order->id;
 		}
 
@@ -333,7 +332,6 @@ class Activecampaign_For_Woocommerce_New_Order_Sync_Job implements Executable {
 		}
 
 		if ( empty( $ac_customer_id ) && isset( $ac_order->customerid ) ) {
-			$this->logger->dev( 'check_synced_order: we have a customer id 3' );
 			$ac_customer_id = $ac_order->customerid;
 		}
 

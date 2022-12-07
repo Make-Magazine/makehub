@@ -11,12 +11,12 @@
  */
 
 use Activecampaign_For_Woocommerce_Admin as Admin;
-use Activecampaign_For_Woocommerce_AC_Contact_Repository as AC_Contact_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
 use Activecampaign_For_Woocommerce_Order_Utilities as Order_Utilities;
 use Activecampaign_For_Woocommerce_Customer_Utilities as Customer_Utilities;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The Order_Finished Event Class.
@@ -133,7 +133,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	 * @param WC_Order $order The WC Order object.
 	 */
 	public function execute_with_order_obj( $order ) {
-		if ( is_object( $order ) && method_exists( $order, 'get_id' ) ) {
+		if ( is_object( $order ) && AC_Utilities::validate_object( $order, 'get_id' ) ) {
 			$order_id = $order->get_id();
 			$this->checkout_completed( $order_id, $order );
 		} else {
@@ -186,10 +186,18 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$stored_id = $stored_row->id;
 			}
 
-			$abandoned_cart_id = wc()->session->get( 'activecampaign_abandoned_cart_id' );
+			if (
+				isset( wc()->session ) &&
+				! is_null( wc()->session ) &&
+				AC_Utilities::validate_object( WC()->session, 'has_session' ) &&
+				WC()->session->has_session() &&
+				AC_Utilities::validate_object( wc()->session, 'get' )
+			) {
+				$abandoned_cart_id = wc()->session->get( 'activecampaign_abandoned_cart_id' );
+			}
 
-			if ( empty( $stored_id ) ) {
-				if ( ! empty( $abandoned_cart_id ) ) {
+			if ( isset( $stored_id ) && empty( $stored_id ) ) {
+				if ( isset( $abandoned_cart_id ) && ! empty( $abandoned_cart_id ) ) {
 					$stored_id = $wpdb->get_var(
 					// phpcs:disable
 						$wpdb->prepare(
@@ -220,8 +228,8 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				[
 					'message'            => $t->getMessage(),
 					'stored_id'          => isset( $stored_id ) ? $stored_id : null,
-					'abandoned_cart_id'  => $abandoned_cart_id,
-					'externalcheckoutid' => $externalcheckoutid,
+					'abandoned_cart_id'  => isset( $abandoned_cart_id ) ? $abandoned_cart_id : null,
+					'externalcheckoutid' => isset( $externalcheckoutid ) ? $externalcheckoutid : null,
 					'trace'              => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
@@ -252,14 +260,15 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				'There was an issue forming the order data for the finished order.',
 				[
 					'message'           => $t->getMessage(),
-					'abandoned_cart_id' => $stored_id,
+					'abandoned_cart_id' => isset( $abandoned_cart_id ) ? $abandoned_cart_id : null,
+					'stored_id'         => isset( $stored_id ) ? $stored_id : null,
 					'trace'             => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
 
 		try {
-			if ( ! empty( $stored_id ) ) {
+			if ( isset( $stored_id ) && ! empty( $stored_id ) ) {
 				$wpdb->update(
 					$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
 					$store_data,
@@ -288,8 +297,8 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$this->logger->error(
 					'Save finished order command: There was an error creating/updating an abandoned cart record.',
 					[
-						'wpdb_last_error' => $wpdb->last_error,
-						'stored_id'       => $stored_id,
+						'wpdb_last_error' => isset( $wpdb->last_error ) ? $wpdb->last_error : null,
+						'stored_id'       => isset( $stored_id ) ? $stored_id : null,
 					]
 				);
 			}
@@ -298,7 +307,7 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				'There was an issue saving the order data.',
 				[
 					'message'           => $t->getMessage(),
-					'abandoned_cart_id' => $stored_id,
+					'abandoned_cart_id' => isset( $stored_id ) ? $stored_id : null,
 					'trace'             => $this->logger->clean_trace( $t->getTrace() ),
 				]
 			);

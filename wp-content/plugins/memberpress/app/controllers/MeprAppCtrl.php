@@ -681,15 +681,15 @@ class MeprAppCtrl extends MeprBaseCtrl {
       $prereqs = MeprHooks::apply_filters('mepr-signup-styles', array());
       wp_enqueue_style('mp-signup',  MEPR_CSS_URL.'/signup.css', $prereqs, MEPR_VERSION);
 
-      wp_register_script('mepr-timepicker-js', MEPR_JS_URL.'/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker'));
+      wp_register_script('mepr-timepicker-js', MEPR_JS_URL.'/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker'), MEPR_VERSION);
       wp_register_script('mp-datepicker', MEPR_JS_URL.'/date_picker.js', array('mepr-timepicker-js'), MEPR_VERSION);
 
       $date_picker_frontend = array('translations' => self::get_datepicker_strings(), 'timeFormat' => (is_admin())?'HH:mm:ss':'', 'dateFormat' => MeprUtils::datepicker_format(get_option('date_format')), 'showTime' => (is_admin())?true:false);
       wp_localize_script('mp-datepicker', 'MeprDatePicker', $date_picker_frontend);
 
-      wp_register_script('jquery.payment', MEPR_JS_URL.'/jquery.payment.js');
-      wp_register_script('mp-validate', MEPR_JS_URL.'/validate.js');
-      wp_register_script('mp-i18n', MEPR_JS_URL.'/i18n.js');
+      wp_register_script('jquery.payment', MEPR_JS_URL.'/jquery.payment.js', array(), MEPR_VERSION);
+      wp_register_script('mp-validate', MEPR_JS_URL.'/validate.js', array(), MEPR_VERSION);
+      wp_register_script('mp-i18n', MEPR_JS_URL.'/i18n.js', array(), MEPR_VERSION);
 
       $i18n = array('states' => MeprUtils::states(), 'ajaxurl' => admin_url('admin-ajax.php'));
       $i18n['please_select_state'] = __('-- Select State --', 'memberpress');
@@ -884,7 +884,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
     * so we should be good to do it this way
     */
     $paths = array();
-    $paths[] = str_replace(WP_PLUGIN_DIR, '', MEPR_I18N_PATH);
 
     //Have to use WP_PLUGIN_DIR because load_plugin_textdomain doesn't accept abs paths
     if(!file_exists(WP_PLUGIN_DIR . '/' . 'mepr-i18n')) {
@@ -896,6 +895,9 @@ class MeprAppCtrl extends MeprBaseCtrl {
     else {
       $paths[] = '/mepr-i18n';
     }
+
+    // /wp-content/mepr-i18n should have priority over wp-content/memberpress/i18n/
+    $paths[] = str_replace(WP_PLUGIN_DIR, '', MEPR_I18N_PATH);
 
     $paths = MeprHooks::apply_filters('mepr-textdomain-paths', $paths);
 

@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Sixup
 Plugin URI: https://vimeography.com/themes
 Theme Name: Sixup
 Theme URI:  https://vimeography.com/themes/sixup
-Version: 2.0.6
+Version: 2.1.1
 Description: Sixup displays the 6 latest video thumbnails from your Vimeo collection, which can be clicked for navigating the slider.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Sixup') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Sixup') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

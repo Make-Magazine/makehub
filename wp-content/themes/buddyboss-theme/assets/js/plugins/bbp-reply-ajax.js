@@ -161,6 +161,7 @@ jQuery(
 						if ( response.total_reply_count ) {
 							$bbpress_forums_element.find( '.header-total-reply-count .topic-reply-count' ).html( response.total_reply_count );
 							$bbpress_forums_element.find( '.topic-lead .bs-replies' ).html( response.total_reply_count );
+							$( '.bs-forums-items' ).removeClass( 'topic-list-no-replies' )
 						}
 
 						if ( $bbpress_forums_element.find( '.replies-content .bp-feedback.info' ).length > 0 ) {
@@ -373,6 +374,7 @@ jQuery(
 								if ( $bbpress_forums_element.find('div.bb-quick-reply-form-wrap').length ) {
 									var $quick_reply_wrap = $bbpress_forums_element.find('div.bb-quick-reply-form-wrap');
 									$quick_reply_wrap.show();
+									$quick_reply_wrap.not('[data-component="activity"]').hide();
 
 									if ( $quick_reply_wrap.find('.bbp-reply-form').length ) {
 										$quick_reply_wrap.find('.bbp-reply-form').addClass('bb-modal bb-modal-box');

@@ -26,9 +26,9 @@ use WooCommerce\PayPalCommerce\WcGateway\FundingSource\FundingSourceRenderer;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayUponInvoice\PayUponInvoiceGateway;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\OrderProcessor;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\RefundProcessor;
+use WooCommerce\PayPalCommerce\WcGateway\Settings\Settings;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\SettingsRenderer;
-use Psr\Container\ContainerInterface;
-use WooCommerce\PayPalCommerce\Webhooks\Status\WebhooksStatusPage;
+use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
 
 /**
  * Class PayPalGateway
@@ -269,7 +269,7 @@ class PayPalGateway extends \WC_Payment_Gateway {
 				'title'       => __( 'Enable/Disable', 'woocommerce-paypal-payments' ),
 				'type'        => 'checkbox',
 				'desc_tip'    => true,
-				'description' => __( 'In order to use PayPal or PayPal Card Processing, you need to enable the Gateway.', 'woocommerce-paypal-payments' ),
+				'description' => __( 'In order to use PayPal or Advanced Card Processing, you need to enable the Gateway.', 'woocommerce-paypal-payments' ),
 				'label'       => __( 'Enable the PayPal Gateway', 'woocommerce-paypal-payments' ),
 				'default'     => 'no',
 			),
@@ -290,14 +290,17 @@ class PayPalGateway extends \WC_Payment_Gateway {
 	 * @return string
 	 */
 	private function define_method_title(): string {
-		if ( $this->is_credit_card_tab() ) {
-			return __( 'PayPal Card Processing', 'woocommerce-paypal-payments' );
+		if ( $this->is_connection_tab() ) {
+			return __( 'Account Setup', 'woocommerce-paypal-payments' );
 		}
-		if ( $this->is_webhooks_tab() ) {
-			return __( 'Webhooks Status', 'woocommerce-paypal-payments' );
+		if ( $this->is_credit_card_tab() ) {
+			return __( 'Advanced Card Processing', 'woocommerce-paypal-payments' );
+		}
+		if ( $this->is_pay_later_tab() ) {
+			return __( 'PayPal Pay Later', 'woocommerce-paypal-payments' );
 		}
 		if ( $this->is_paypal_tab() ) {
-			return __( 'PayPal Checkout', 'woocommerce-paypal-payments' );
+			return __( 'Standard Payments', 'woocommerce-paypal-payments' );
 		}
 		if ( $this->is_pui_tab() ) {
 			return __( 'Pay upon Invoice', 'woocommerce-paypal-payments' );
@@ -312,16 +315,24 @@ class PayPalGateway extends \WC_Payment_Gateway {
 	 * @return string
 	 */
 	private function define_method_description(): string {
+		if ( $this->is_connection_tab() ) {
+			return '';
+		}
+
 		if ( $this->is_credit_card_tab() ) {
 			return __(
 				'Accept debit and credit cards, and local payment methods.',
 				'woocommerce-paypal-payments'
 			);
 		}
-		if ( $this->is_webhooks_tab() ) {
-			return __(
-				'Status of the webhooks subscription.',
-				'woocommerce-paypal-payments'
+
+		if ( $this->is_pay_later_tab() ) {
+			return sprintf(
+			// translators: %1$s is </ br> HTML tag and %2$s, %3$s are the opening and closing of HTML <i> tag.
+				__( 'Let customers pay over time while you get paid up front — at no additional cost.%1$sPayPal’s pay later options are boosting merchant conversion rates and increasing cart sizes by 39%%. %2$s(PayPal Q2 Earnings-2021.)%3$s', 'woocommerce-paypal-payments' ),
+				'</ br>',
+				'<i>',
+				'</ i>'
 			);
 		}
 
@@ -365,13 +376,23 @@ class PayPalGateway extends \WC_Payment_Gateway {
 	}
 
 	/**
-	 * Whether we are on the Webhooks Status tab.
+	 * Whether we are on the connection tab.
 	 *
-	 * @return bool
+	 * @return bool true if is connection tab, otherwise false
 	 */
-	private function is_webhooks_tab() : bool {
+	protected function is_connection_tab() : bool {
 		return is_admin()
-			&& WebhooksStatusPage::ID === $this->page_id;
+			&& Settings::CONNECTION_TAB_ID === $this->page_id;
+	}
+
+	/**
+	 * Whether we are on the pay-later tab.
+	 *
+	 * @return bool true if is pay-later tab, otherwise false
+	 */
+	protected function is_pay_later_tab() : bool {
+		return is_admin()
+			&& Settings::PAY_LATER_TAB_ID === $this->page_id;
 	}
 
 	/**
@@ -402,8 +423,8 @@ class PayPalGateway extends \WC_Payment_Gateway {
 			);
 		}
 
-		$funding_source = filter_input( INPUT_POST, 'ppcp-funding-source', FILTER_SANITIZE_STRING );
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$funding_source = wc_clean( wp_unslash( $_POST['ppcp-funding-source'] ?? '' ) );
 		if ( 'card' !== $funding_source && $this->is_free_trial_order( $wc_order ) ) {
 			$user_id = (int) $wc_order->get_customer_id();
 			$tokens  = $this->payment_token_repository->all_for_user_id( $user_id );
@@ -425,9 +446,11 @@ class PayPalGateway extends \WC_Payment_Gateway {
 		 * If customer has chosen change Subscription payment.
 		 */
 		if ( $this->subscription_helper->has_subscription( $order_id ) && $this->subscription_helper->is_subscription_change_payment() ) {
-			$saved_paypal_payment = filter_input( INPUT_POST, 'saved_paypal_payment', FILTER_SANITIZE_STRING );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$saved_paypal_payment = wc_clean( wp_unslash( $_POST['saved_paypal_payment'] ?? '' ) );
 			if ( $saved_paypal_payment ) {
-				update_post_meta( $order_id, 'payment_token_id', $saved_paypal_payment );
+				$wc_order->update_meta_data( 'payment_token_id', $saved_paypal_payment );
+				$wc_order->save();
 
 				return $this->handle_payment_success( $wc_order );
 			}

@@ -5,7 +5,7 @@ class GPNF_Feed_Processing {
 	private static $instance = null;
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( self::$instance == null ) {
 			self::$instance = new self;
 		}
 		return self::$instance;
@@ -55,7 +55,6 @@ class GPNF_Feed_Processing {
 		}
 		// Check if we are pre-processing feeds from a parent form submission for a nested entry.
 		elseif ( ! empty( $this->_parent_form_data ) ) {
-
 			$is_filtered       = true;
 			$parent_form       = $this->_parent_form_data['form'];
 			$nested_form_field = $this->_parent_form_data['field'];

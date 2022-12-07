@@ -756,6 +756,56 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 				 * flag and abort. This will cause the process to restart.
 				 */
 				if ( true !== $this->meta['course_shared_steps_enabled'] ) {
+					/**
+					 * If here we have a mismatch of the number of steps in the structure
+					 * vs. the number of objects queried. So we try and reconcile. Otherwise
+					 * this causes the 'dirty' logic to be triggered over and over.
+					 * See LEARNDASH-6721 for example.
+					 */
+					$all_intersect_ids = array_intersect( $all_steps_ids, $all_objects_ids );
+					if ( count( $all_intersect_ids ) ) {
+						$all_diff_ids = array_diff( $all_objects_ids, $all_intersect_ids );
+						if ( ! empty( $all_diff_ids ) ) {
+							foreach ( $all_diff_ids as $all_diff_id ) {
+								if ( ( isset( $this->objects[ $all_diff_id ] ) ) && ( is_a( $this->objects[ $all_diff_id ], 'WP_Post' ) ) ) {
+									$diff_post = $this->objects[ $all_diff_id ];
+
+									/**
+									 * We only handle 'topic' items here because a topic needs both the
+									 * 'course' and 'lesson' post meta. If a lesson or quiz is missing
+									 * the 'course' it will auto-reconcile via the 'dirty' processing.
+									 */
+									if ( learndash_get_post_type_slug( 'topic' ) === $diff_post->post_type ) {
+										$valid_post = true;
+
+										/**
+										 * We need to check the post_meta as well as the settings since they are
+										 * stored separately. The post_meta can be changed outside of LD logic.
+										 */
+										$course_id_post_meta = (int) get_post_meta( $diff_post->ID, 'course_id', true );
+										$course_id_setting   = (int) learndash_get_setting( $diff_post->ID, 'course' );
+
+										if ( ( empty( $course_id_post_meta ) ) || ( empty( $course_id_setting ) ) || ( $course_id_setting !== $course_id_post_meta ) ) {
+											$valid_post = false;
+										} else {
+											$lesson_id_post_meta = (int) get_post_meta( $diff_post->ID, 'lesson_id', true );
+											$lesson_id_setting   = (int) learndash_get_setting( $diff_post->ID, 'lesson' );
+
+											if ( ( empty( $lesson_id_post_meta ) ) || ( empty( $lesson_id_setting ) ) || ( $lesson_id_setting !== $lesson_id_post_meta ) ) {
+												$valid_post = false;
+											}
+										}
+
+										// If we have an invalid post we clear the course and lesson references
+										if ( true !== $valid_post ) {
+											learndash_update_setting( $diff_post->ID, 'course', 0 );
+											learndash_update_setting( $diff_post->ID, 'lesson', 0 );
+										}
+									}
+								}
+							}
+						}
+					}
 					$this->set_steps_dirty();
 					$this->objects        = array();
 					$this->objects_loaded = false;
@@ -1353,6 +1403,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 			$steps = array();
 
+			$this->objects_loaded = false;
+			$this->objects        = array();
+
 			if ( ! empty( $this->course_id ) ) {
 				// Set that we loaded the objects to prevent double logic.
 				$this->objects_loaded = true;
@@ -1634,7 +1687,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 				if ( ! empty( $steps_h ) ) {
 					foreach ( $steps_h as $steps_post_type => $steps_post_set ) {
-						if ( ( empty( $return_post_type ) ) || ( $return_post_type == $steps_post_type ) ) {
+						if ( ( empty( $return_post_type ) ) || ( $return_post_type == $steps_post_type ) && ( is_array( $steps_post_set ) ) ) {
 							$item_children_steps = array_merge( $item_children_steps, array_keys( $steps_post_set ) );
 						}
 

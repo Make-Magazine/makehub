@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Memberpress Gifting plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Memberpress Gifting 1.1.16\n"
+"Project-Id-Version: Memberpress Gifting 1.1.18\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-gifting\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-17T21:23:05+00:00\n"
+"POT-Creation-Date: 2022-11-14T14:34:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: memberpress-gifting\n"
@@ -31,15 +31,15 @@ msgstr ""
 msgid "MemberPress"
 msgstr ""
 
-#: app/controllers/Account.php:135
+#: app/controllers/Account.php:100
 msgid "Gifts"
 msgstr ""
 
-#: app/controllers/Account.php:180
+#: app/controllers/Account.php:145
 msgid "Could not send email. Please try again later."
 msgstr ""
 
-#: app/controllers/Account.php:191
+#: app/controllers/Account.php:156
 msgid "Email sent"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/Checkout.php:374
+#: app/controllers/Checkout.php:380
 msgctxt "ui"
 msgid "Since you already have an active membership, we are assuming that this is a gift purchase."
 msgstr ""

@@ -1,6 +1,6 @@
 import React from 'react';
-import { __ } from '@wordpress/i18n';
 import { Tooltip } from '@brainstormforce/starter-templates-components';
+import { __ } from '@wordpress/i18n';
 import Button from '../../components/button/button';
 import { useStateValue } from '../../store/store';
 import './style.scss';

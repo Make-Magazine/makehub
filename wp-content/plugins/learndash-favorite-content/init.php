@@ -3,7 +3,7 @@
 Plugin Name: Favorite Content for LearnDash
 Plugin URI:  http://www.snaporbital.com/favorite-content/
 Description: Allow your students to mark content as favorites to quickly revisit later!
-Version:     1.0.2
+Version:     1.0.3
 Author:      SnapOrbital
 Author URI:  http://www.snaporbital.com
 License:     GPL2
@@ -17,7 +17,7 @@ $ld_constants = array(
 	'LDFC_PATH'		=>	plugin_dir_path( __FILE__ ),
 	'LDFC_STORE_URL'	=>	'https://www.snaporbital.com',
 	'LDFC_ITEM_NAME'	=>	'Favorite Content',
-	'LDFC_VER'		=>	'1.0.2',
+	'LDFC_VER'		=>	'1.0.3',
 );
 
 foreach( $ld_constants as $constant => $value ) {

@@ -552,7 +552,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date'             => $start_date,
+				'start_date_utc'         => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -1111,7 +1111,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date'             => $start_date,
+				'start_date_utc'         => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,

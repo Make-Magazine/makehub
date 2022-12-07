@@ -23,6 +23,12 @@ if (!function_exists('essb5_generate_share_button')) {
 		$button_total = essb_option_bool_value('sharebutton_total');
 		$button_icon = essb_option_value('sharebutton_icon');
 		
+		$button_bg_hover = essb_option_value('sharebutton_bg_hover');
+		$button_color_hover = essb_option_value('sharebutton_color_hover');
+		
+		$total_bg = essb_option_value('sharebutton_bg_total');
+		$total_color = essb_option_value('sharebutton_color_total');
+				
 		if ($button_icon == '') {
 			$button_icon = 'share';
 		}
@@ -102,12 +108,20 @@ if (!function_exists('essb5_generate_share_button')) {
 		
 		$button_window_title = essb_option_value('sharebutton_window_title');
 		$button_user_message = essb_option_value('sharebutton_user_message');
+		
+		/**
+		 * @since 8.2.3
+		 * New fields in the settings to customize the window width and height
+		 */
+		$sharebutton_win_width = essb_option_value('sharebutton_win_width');
+		$sharebutton_win_height = essb_option_value('sharebutton_win_height');
 
 		$salt = mt_rand();
 		// Generating the share button that will appear on screen
 		if ($button_position != 'manual') {
 			
-			if ($button_bg != '' || $button_color != '') {
+			if ($button_bg != '' || $button_color != '' || $button_bg_hover != '' || 
+			    $button_color_hover != '' || $total_bg != '' || $total_color != '') {
 				$output .= '<style type="text/css">';
 				
 				if ($button_style == 'button' || $button_style == 'modern') {
@@ -117,13 +131,31 @@ if (!function_exists('essb5_generate_share_button')) {
 					if ($button_color != '') {
 						$output .= ' .essb-share-button.essb-bs-'.esc_attr($button_style).' { color: '.esc_attr($button_color).'; }';
 					}
+					
+					if ($button_bg_hover != '') {
+					    $output .= ' .essb-share-button.essb-bs-'.esc_attr($button_style).':hover { background-color: '.esc_attr($button_bg_hover).'; }';
+					}
+					if ($button_color_hover != '') {
+					    $output .= ' .essb-share-button.essb-bs-'.esc_attr($button_style).':hover { color: '.esc_attr($button_color_hover).'; }';
+					}
 				}
 				
 				if ($button_style == 'outline') {
 					if ($button_color != '') {
 						$output .= ' .essb-share-button.essb-bs-'.esc_attr($button_style).' { color: '.esc_attr($button_color).'; }';
 					}
+					if ($button_color_hover != '') {
+					    $output .= ' .essb-share-button.essb-bs-'.esc_attr($button_style).':hover { color: '.esc_attr($button_color_hover).'; }';
+					}
 				}
+				
+				if ($total_bg != '') {
+				    $output .= '.essb-share-button .essb-total { background-color: ' . esc_attr($total_bg) . '; }';
+				}
+				if ($total_color != '') {
+				    $output .= '.essb-share-button .essb-total { color: ' . esc_attr($total_color) . '; }';
+				}
+				
 				
 				$output .= '</style>';
 			}
@@ -132,7 +164,7 @@ if (!function_exists('essb5_generate_share_button')) {
 				$output .= '<div class="essb-share-button-inline">';
 			}
 			
-			$output .= '<div class="essb-share-button essb-bl-'.esc_attr($button_position).' essb-bs-'.esc_attr($button_style).' essb-cs-'.esc_attr($salt).'" onclick="essb.sharebutton(\''.$salt.'\');"><i class="essb_icon_'.$button_icon.'"></i><span>'.$button_text.'</span>'.$total_counter_code.'</div>';
+			$output .= '<div class="essb-share-button essb-bl-'.esc_attr($button_position).' essb-bs-'.esc_attr($button_style).' essb-cs-'.esc_attr($salt).'" onclick="essb.sharebutton(\''.$salt.'\');"><div class="essb-share-button-inner">'.essb_svg_replace_font_icon($button_icon).'<span>'.$button_text.'</span>'.$total_counter_code.'</div></div>';
 
 			if ($button_position == 'inline' || $button_position == 'inline-full') {
 				$output .= '</div>';
@@ -140,8 +172,8 @@ if (!function_exists('essb5_generate_share_button')) {
 		}
 		
 				
-		$output .= '<div class="essb-share-button-window essb-windowcs-'.$salt.' essb-bl-'.esc_attr($button_position).'">';
-		$output .= '<a href="#" class="essb-share-button-close" onclick="essb.sharebutton_close(\''.$salt.'\'); return false;"></a>';
+		$output .= '<div class="essb-share-button-window essb-windowcs-'.$salt.' essb-bl-'.esc_attr($button_position).'"'.(!empty($sharebutton_win_width) ? ' data-width="'.$sharebutton_win_width.'"' : '').(!empty($sharebutton_win_height) ? ' data-height="'.$sharebutton_win_height.'"' : '').'>';
+		$output .= '<a href="#" class="essb-share-button-close" onclick="essb.sharebutton_close(\''.$salt.'\'); return false;">'.essb_svg_icon('close').'</a>';
 		$output .= '<div class="inner-content">';
 		
 		$button_window_title = stripslashes($button_window_title);

@@ -34,10 +34,10 @@ class MeprAppHelper {
 
         if( $rstr < 0 ){
           if(!$mepr_options->currency_symbol_after) {
-            $rstr = '(' . $mepr_options->currency_symbol . abs($rstr) . ')';
+            $rstr = '(' . $mepr_options->currency_symbol . str_replace('-', '', $rstr) . ')';
           }
           else {
-            $rstr = '(' . abs($rstr) . $mepr_options->currency_symbol . ')';
+            $rstr = '(' . str_replace('-', '', $rstr) . $mepr_options->currency_symbol . ')';
           }
         }else{
           if(!$mepr_options->currency_symbol_after) {
@@ -54,7 +54,7 @@ class MeprAppHelper {
       $rstr = __('Free','memberpress');
     }
 
-    return $rstr;
+    return MeprHooks::apply_filters('mepr_format_currency', $rstr, $number, $show_symbol);
   }
 
   public static function auto_add_page($page_name, $content = '') {

@@ -1,3 +1,15 @@
+v3.1.18 - 04-November-2022
+Fix: Compatibility to WordPress 6.1.
+Improvement: Responsive welcome banner notice on WP dashboard for fresh installation.
+
+v3.1.17 - 10-October-2022
+New: Added welcome banner notice on WP dashboard for fresh installation.
+
+v3.1.16 - 12-September-2022
+- Improvement: Added compatibility for Spectra.
+- Fix: White screen is appearing on latest safari 15+ browser when select any template.
+- Fix: Install Spectra only when light category Patterns importing.
+
 v3.1.15 - 23-Aug-2022
 - Improvement: Install Spectra while importing Block Patterns and Wireframe Patterns.
 

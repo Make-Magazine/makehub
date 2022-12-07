@@ -56,16 +56,26 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 	 */
 	do_action( 'learndash-quiz-before', $quiz_post->ID, $course_id, $user_id );
 
-	learndash_get_template_part(
-		'modules/infobar.php',
-		array(
-			'context'   => 'quiz',
-			'course_id' => $course_id,
-			'user_id'   => $user_id,
-			'post'      => $quiz_post,
-		),
-		true
-	);
+	if ( ( defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) && ( 'shortcode' === LEARNDASH_TEMPLATE_CONTENT_METHOD ) ) {
+		$shown_content_key = 'learndash-shortcode-wrap-ld_infobar-' . absint( $course_id ) . '_' . (int) get_the_ID() . '_' . absint( $user_id );
+		if ( false === strstr( $content, $shown_content_key ) ) {
+			$shortcode_out = do_shortcode( '[ld_infobar course_id="' . $course_id . '" user_id="' . $user_id . '" post_id="' . get_the_ID() . '"]' );
+			if ( ! empty( $shortcode_out ) ) {
+				echo $shortcode_out;
+			}
+		}
+	} else {
+		learndash_get_template_part(
+			'modules/infobar.php',
+			array(
+				'context'   => 'quiz',
+				'course_id' => $course_id,
+				'user_id'   => $user_id,
+				'post'      => $quiz_post,
+			),
+			true
+		);
+	}
 
 	if ( ! empty( $lesson_progression_enabled ) ) :
 		$last_incomplete_step = learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id );
@@ -77,12 +87,19 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 					remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
 					$previous_lesson_completed = true;
 				} else {
-					$previous_step_post_id     = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $quiz_post->ID );
-					$previous_lesson_completed = true;
+					$previous_step_post_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $quiz_post->ID );
 					if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
 						$previous_lesson_completed = false;
 
 						$last_incomplete_step = get_post( $previous_step_post_id );
+					} else {
+						$previous_step_post_id     = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $quiz_post->ID );
+						$previous_lesson_completed = true;
+						if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
+							$previous_lesson_completed = false;
+
+							$last_incomplete_step = get_post( $previous_step_post_id );
+						}						
 					}
 
 					/**
@@ -98,7 +115,7 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 				$show_content = $previous_lesson_completed;
 			}
 
-			if ( learndash_is_sample( $quiz_post ) ) {
+			if ( ( learndash_is_sample( $quiz_post ) ) /* && ( true !== (bool) $has_access ) */ ) {
 				$show_content = true;
 			} elseif ( ( $last_incomplete_step ) && ( is_a( $last_incomplete_step, 'WP_Post' ) ) ) {
 				$show_content = false;

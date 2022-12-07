@@ -1,17 +1,17 @@
 === Vimeography Pro ===
 Contributors: iamdavekiss
 Tags: vimeo, video, videos, gallery, vimeography, media, player, playlist, showcase, skins, themes, video gallery
-Requires at least: 3.8
-Tested up to: 5.0
-Stable tag: 2.0.2
+Requires at least: 4.7
+Tested up to: 5.7
+Stable tag: 2.1.1
 Author: Dave Kiss
 Author URL: http://davekiss.com
-Version: 2.0.2
+Version: 2.1.1
 
 The easiest way to create beautiful Vimeo galleries on your WordPress site.
 
 == Copyright ==
-Copyright 2018 Dave Kiss
+Copyright 2020 Dave Kiss
 
 == Description ==
 
@@ -82,6 +82,22 @@ Heck yeah! Use the appearance editor to change your theme's style so that it mat
 4. Get new styles by installing gallery themes.
 
 == Changelog ==
+= 2.1.1 =
+* [Update] Mark compatibility with WordPress 5.7
+* [Fix] Fix admin JS dependency loading order
+* [Fix] Correct deprecation error related to wp_localize_script function by refactoring to use wp_add_inline_script
+* [Fix] Fix meta url value output
+
+= 2.1 =
+* [Update] Mark compatibility with WordPress 5.6
+* [New] Vimeography Pro now works with Vimeography 2.2 React admin
+
+= 2.0.3 =
+* [Update] Mark compatibility with WordPress 5.4
+* [Update] Rewrote labels in Vimeography Pro gallery editor settings
+* [Fix] Add check to ensure settings keys exist before accessing
+* [Fix] Multiple galleries on a page were all affected by any preceding gallery video limits when Pro is installed.
+
 = 2.0.2 =
 * Allow player transparency, responsiveness, speed, and playsinline settings to be filtered.
 

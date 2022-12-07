@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_pro_register_pusher_integration() {
 	if (
 		! defined( 'BP_PLATFORM_VERSION' ) ||
-		version_compare( BP_PLATFORM_VERSION, '2.1.4', '<' ) ||
+		version_compare( BP_PLATFORM_VERSION, '2.2', '<' ) ||
 		! function_exists( 'bb_platform_pro' ) ||
 		version_compare( bb_platform_pro()->version, '2.1.6', '<' )
 	) {

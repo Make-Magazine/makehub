@@ -3,7 +3,7 @@
 cd vimeography-themes/
 
 for themeDir in */ ; do
-  cd "$themeDir" && yarn build && rm yarn-error.log
+  cd "$themeDir" && npm run build
   git add dist
   cd ../
 done

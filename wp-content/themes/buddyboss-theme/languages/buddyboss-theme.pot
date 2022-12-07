@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-10 08:05:56+00:00\n"
+"POT-Creation-Date: 2022-12-02 07:45:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -219,9 +219,9 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php:1958
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2594
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:623
-#: inc/plugins/learndash-compat.php:63 inc/theme/template-functions.php:905
-#: inc/theme/template-functions.php:1862 inc/theme/template-functions.php:1875
-#: inc/theme/template-functions.php:1984 inc/theme/template-functions.php:1999
+#: inc/plugins/learndash-compat.php:63 inc/theme/template-functions.php:911
+#: inc/theme/template-functions.php:1868 inc/theme/template-functions.php:1881
+#: inc/theme/template-functions.php:1990 inc/theme/template-functions.php:2005
 #: learndash/ld30/focus/comments_list.php:120
 msgid "Reply"
 msgstr ""
@@ -441,12 +441,12 @@ msgid "You must be logged in to create new discussions."
 msgstr ""
 
 #: bbpress/loop-blocked-single-reply.php:46
-#: template-parts/unread-messages.php:418
+#: template-parts/unread-messages.php:422
 msgid "This content has been hidden as the member is suspended."
 msgstr ""
 
 #: bbpress/loop-blocked-single-reply.php:48
-#: template-parts/unread-messages.php:420
+#: template-parts/unread-messages.php:424
 msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 
@@ -570,7 +570,7 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:456
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1129
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:303
-#: inc/theme/template-functions.php:916
+#: inc/theme/template-functions.php:922
 #: template-parts/header-profile-menu.php:29
 #: woocommerce/myaccount/dashboard.php:194
 #: woocommerce/myaccount/my-address.php:73
@@ -809,7 +809,7 @@ msgstr ""
 #: buddypress.php:24 inc/lib/buddyboss-updater/includes/views/package.php:37
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:958
 #: inc/plugins/lifterlms-helper.php:1790 inc/plugins/lifterlms-helper.php:1869
-#: inc/theme/login.php:453 inc/theme/template-functions.php:858
+#: inc/theme/login.php:453 inc/theme/template-functions.php:863
 #: learndash/ld30/learndash-sidebar.php:182
 #: learndash/ld30/learndash-sidebar.php:206
 #: learndash/ld30/shortcodes/course_list_template.php:368
@@ -825,22 +825,22 @@ msgstr ""
 msgid "Responses"
 msgstr ""
 
-#: comments.php:34
+#: comments.php:39
 msgid "Write a response..."
 msgstr ""
 
-#: comments.php:42
+#: comments.php:47
 #. translators: %1$s - user avatar html %3$s - User Name
 msgid ""
 "<a class=\"comment-author\" href=\"%1$s\"><span "
 "class=\"vcard\">%2$s</span><span class=\"name\">%3$s</span></a>"
 msgstr ""
 
-#: comments.php:46
+#: comments.php:51
 msgid "Publish"
 msgstr ""
 
-#: comments.php:72
+#: comments.php:77
 msgid "Comments are closed."
 msgstr ""
 
@@ -3660,14 +3660,14 @@ msgstr ""
 msgid "We are unable to validate the license key. Service unavailable."
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/vendor/updater.php:287
+#: inc/lib/buddyboss-updater/includes/vendor/updater.php:387
 msgid ""
 "An Unexpected HTTP Error occurred during the API request.</p> <p><a "
 "href=\"?\" onclick=\"document.location.reload(); return false;\">Try "
 "again</a>"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/vendor/updater.php:291
+#: inc/lib/buddyboss-updater/includes/vendor/updater.php:391
 msgid "An unknown error occurred"
 msgstr ""
 
@@ -8342,7 +8342,7 @@ msgid "Log In"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php:1518
-#: inc/theme/functions.php:1526 inc/theme/template-functions.php:1463
+#: inc/theme/functions.php:1526 inc/theme/template-functions.php:1469
 #: paid-memberships-pro/pages/account.php:233
 #: template-parts/header-profile-menu.php:518
 msgid "Log Out"
@@ -11866,13 +11866,13 @@ msgstr ""
 msgid "Custom Field #2"
 msgstr ""
 
-#: inc/plugins/buddypress-helper.php:210
+#: inc/plugins/buddypress-helper.php:213
 msgid "member"
 msgid_plural "members"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/plugins/buddypress-helper.php:286
+#: inc/plugins/buddypress-helper.php:289
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
@@ -14007,8 +14007,8 @@ msgstr ""
 #: learndash/ld30/learndash-sidebar.php:219
 #: learndash/ld30/learndash-sidebar.php:279
 #: learndash/ld30/learndash-sidebar.php:310
-#: learndash/ld30/learndash-sidebar.php:363
-#: learndash/ld30/learndash-sidebar.php:420
+#: learndash/ld30/learndash-sidebar.php:359
+#: learndash/ld30/learndash-sidebar.php:416
 #: learndash/ld30/shortcodes/course_list_template.php:166
 #: learndash/ld30/shortcodes/course_list_template.php:182
 #: learndash/ld30/shortcodes/course_list_template.php:214
@@ -14463,24 +14463,24 @@ msgstr ""
 msgid "Permalink to %s"
 msgstr ""
 
-#: inc/theme/template-functions.php:869
+#: inc/theme/template-functions.php:875
 #. translators: %s: Author comment date.
 msgid "%1$s"
 msgstr ""
 
-#: inc/theme/template-functions.php:879
+#: inc/theme/template-functions.php:885
 msgid "Your comment is awaiting moderation."
 msgstr ""
 
-#: inc/theme/template-functions.php:954
+#: inc/theme/template-functions.php:960
 msgid "Load More"
 msgstr ""
 
-#: inc/theme/template-functions.php:1620 inc/theme/template-functions.php:1647
+#: inc/theme/template-functions.php:1626 inc/theme/template-functions.php:1653
 msgid "You need to be loggedin."
 msgstr ""
 
-#: inc/theme/template-functions.php:2185
+#: inc/theme/template-functions.php:2191
 msgid "Edit Post Privacy"
 msgstr ""
 
@@ -14924,7 +14924,7 @@ msgid "Light Mode"
 msgstr ""
 
 #: learndash/ld30/learndash-sidebar.php:140
-#: learndash/ld30/learndash-sidebar.php:405
+#: learndash/ld30/learndash-sidebar.php:401
 #: learndash/ld30/lesson/partials/row.php:45
 #: learndash/ld30/quiz/partials/row.php:32
 msgid "You don't currently have access to this content"
@@ -14933,17 +14933,17 @@ msgstr ""
 #: learndash/ld30/learndash-sidebar.php:221
 #: learndash/ld30/learndash-sidebar.php:285
 #: learndash/ld30/learndash-sidebar.php:318
-#: learndash/ld30/learndash-sidebar.php:369
-#: learndash/ld30/learndash-sidebar.php:426
+#: learndash/ld30/learndash-sidebar.php:365
+#: learndash/ld30/learndash-sidebar.php:422
 msgid "Not Completed"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:445
+#: learndash/ld30/learndash-sidebar.php:441
 #: lifterlms/lesson/template-single-lesson-sidebar.php:110
 msgid "Participants"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:494
+#: learndash/ld30/learndash-sidebar.php:490
 #: lifterlms/lesson/template-single-lesson-sidebar.php:149
 msgid "Show more"
 msgstr ""
@@ -15878,58 +15878,58 @@ msgstr ""
 msgid "Deleted Group"
 msgstr ""
 
-#: template-parts/unread-messages.php:316
+#: template-parts/unread-messages.php:320
 msgid "Deleted User"
 msgstr ""
 
-#: template-parts/unread-messages.php:321
-#: template-parts/unread-messages.php:434
+#: template-parts/unread-messages.php:325
+#: template-parts/unread-messages.php:438
 msgid "Suspended Member"
 msgstr ""
 
-#: template-parts/unread-messages.php:323
-#: template-parts/unread-messages.php:436
+#: template-parts/unread-messages.php:327
+#: template-parts/unread-messages.php:440
 msgid "Blocked Member"
 msgstr ""
 
-#: template-parts/unread-messages.php:336
+#: template-parts/unread-messages.php:340
 msgid "others"
 msgstr ""
 
-#: template-parts/unread-messages.php:366
+#: template-parts/unread-messages.php:370
 msgid "sent a photo"
 msgstr ""
 
-#: template-parts/unread-messages.php:369
+#: template-parts/unread-messages.php:373
 msgid "sent some photos"
 msgstr ""
 
-#: template-parts/unread-messages.php:382
+#: template-parts/unread-messages.php:386
 msgid "sent a video"
 msgstr ""
 
-#: template-parts/unread-messages.php:385
+#: template-parts/unread-messages.php:389
 msgid "sent some videos"
 msgstr ""
 
-#: template-parts/unread-messages.php:398
+#: template-parts/unread-messages.php:402
 msgid "sent a document"
 msgstr ""
 
-#: template-parts/unread-messages.php:401
+#: template-parts/unread-messages.php:405
 msgid "sent some documents"
 msgstr ""
 
-#: template-parts/unread-messages.php:411
+#: template-parts/unread-messages.php:415
 msgid "sent a GIF"
 msgstr ""
 
-#: template-parts/unread-messages.php:426
-#: template-parts/unread-messages.php:428
+#: template-parts/unread-messages.php:430
+#: template-parts/unread-messages.php:432
 msgid "You"
 msgstr ""
 
-#: template-parts/unread-messages.php:463
+#: template-parts/unread-messages.php:467
 msgid "You have no messages right now."
 msgstr ""
 

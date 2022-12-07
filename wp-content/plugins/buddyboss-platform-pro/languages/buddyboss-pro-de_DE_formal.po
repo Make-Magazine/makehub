@@ -2,10 +2,10 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro v2.1.6\n"
+"Project-Id-Version: BuddyBoss Platform Pro v2.1.7.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-11-04 09:39+0100\n"
-"PO-Revision-Date: 2022-11-10 11:33+0400\n"
+"POT-Creation-Date: 2022-11-16 13:32+0100\n"
+"PO-Revision-Date: 2022-11-24 16:28+0400\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -62,6 +62,10 @@ msgstr ""
 #: class-bb-platform-pro.php:64 class-bb-platform-pro.php:72
 msgid "Cheatin&#8217; huh?"
 msgstr "Sie schummeln&#8217; oder?"
+
+#: class-bb-platform-pro.php:275 includes/bb-pro-update-buddyboss.php:81
+msgid "Release Notes"
+msgstr "Entwicklungsstand"
 
 #: includes/access-control/bb-access-control-filters.php:483
 msgid "You don't have access to send request membership."
@@ -485,6 +489,70 @@ msgstr "GamiPress-Typ auswählen"
 #: includes/access-control/templates/plugin-options.php:76
 msgid "- Select Membership Type -"
 msgstr "- Mitgliedschaftsart wählen -"
+
+#: includes/bb-pro-update-buddyboss.php:75
+msgid "Close pop-up"
+msgstr "Popup schließen"
+
+#: includes/bb-pro-update-buddyboss.php:76
+#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:240
+#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
+#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
+msgid "Close"
+msgstr "Schließen"
+
+#: includes/bb-pro-update-buddyboss.php:82
+msgid "BuddyBoss Platform Pro v"
+msgstr "BuddyBoss Platform Pro v"
+
+#: includes/bb-pro-update-buddyboss.php:86
+msgid "Overview"
+msgstr "Überblick"
+
+#: includes/bb-pro-update-buddyboss.php:88
+msgid "Changelog"
+msgstr "Änderungsverlauf"
+
+#: includes/bb-pro-update-buddyboss.php:102
+msgid "Welcome to BuddyBoss Theme 2.0 🥳"
+msgstr "Willkommen bei BuddyBoss Theme 2.0 🥳"
+
+#: includes/bb-pro-update-buddyboss.php:103
+msgid ""
+"Check out the video below for a full walkthrough of all the new features and "
+"updates available to you in this release."
+msgstr ""
+"Schauen Sie sich das Video unten an, um einen vollständigen Überblick über "
+"alle neuen Funktionen und Aktualisierungen zu erhalten, die Ihnen in dieser "
+"Version zur Verfügung stehen."
+
+#. translators: %1$s - Overview tab link for details.
+#: includes/bb-pro-update-buddyboss.php:108
+#, php-format
+msgid ""
+"As this update contains a number of improvements to the theme’s colors, "
+"layouts and styling, we recommend you reconfigure your Theme Options and "
+"review any custom CSS you may have.  For more information on how to update, "
+"%1$s."
+msgstr ""
+"Da dieses Update eine Reihe von Verbesserungen an den Farben, dem Layout und "
+"dem Styling des Themes enthält, empfehlen wir Ihnen, Ihre Theme-Optionen neu "
+"zu konfigurieren und alle benutzerdefinierten CSS, die Sie möglicherweise "
+"haben, zu überprüfen.  Weitere Informationen über das Update finden Sie "
+"unter %1$s."
+
+#: includes/bb-pro-update-buddyboss.php:113
+msgid "check out this tutorial"
+msgstr "Sehen Sie sich dieses Tutorial an"
+
+#: includes/bb-pro-update-buddyboss.php:121
+msgid "For more information, please watch the video below:"
+msgstr "Für weitere Informationen sehen Sie sich bitte das Video unten an:"
+
+#: includes/bb-pro-update-buddyboss.php:136
+msgid "Changes:"
+msgstr "Änderungen:"
 
 #. translators: Image src.
 #: includes/integrations/onesignal/bb-onesignal-actions.php:263
@@ -3828,13 +3896,6 @@ msgstr "Kein Passwort erforderlich"
 msgid "View Invitation"
 msgstr "Einladung ansehen"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:240
-#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
-#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
-msgid "Close"
-msgstr "Schließen"
-
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:187
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:250
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:263
@@ -5078,9 +5139,6 @@ msgstr "BuddyBoss"
 #~ msgstr ""
 #~ "FEHLER: Der Eintrag, den Sie zu beantworten versuchen, konnte nicht "
 #~ "gefunden werden oder wurde gelöscht."
-
-#~ msgid "Overview"
-#~ msgstr "Überblick"
 
 #~ msgid ""
 #~ "You edit activities made on your site similar to the way you edit a "
@@ -7535,9 +7593,6 @@ msgstr "BuddyBoss"
 #~ "Listenansicht an oder erlauben Sie das Umschalten zwischen beiden "
 #~ "Ansichten."
 
-#~ msgid "Close pop-up"
-#~ msgstr "Popup schließen"
-
 #~ msgid "Video Demo of BuddyBoss App"
 #~ msgstr "Video-Demo der BuddyBoss-App"
 
@@ -7584,9 +7639,6 @@ msgstr "BuddyBoss"
 #~ "mit der E-Mail und dem Passwort an, die Sie während Ihres Kaufs erstellt "
 #~ "haben, und von dort aus können Sie auf Support-Tickets, Downloads und "
 #~ "Lizenzschlüssel zugreifen."
-
-#~ msgid "Consider the BuddyBoss Theme"
-#~ msgstr "Beachten Sie das BuddyBoss-Theme"
 
 #~ msgid ""
 #~ "BuddyBoss Platform is theme independent, meaning any generic WordPress "
@@ -7775,10 +7827,6 @@ msgstr "BuddyBoss"
 #~ msgstr[1] ""
 #~ "<strong>Version %1$s</strong> adressiert mehrere Sicherheitsprobleme und "
 #~ "behoben %2$s Bugs."
-
-#~ msgid "For more information, see <a href=\"%s\">the release notes</a>."
-#~ msgstr ""
-#~ "Weitere Informationen finden Sie in den <a href=\"%s\">Release Notes</a>."
 
 #~ msgid "My Account"
 #~ msgstr "Mein Konto"
@@ -17090,9 +17138,6 @@ msgstr "BuddyBoss"
 #~ msgid "No Group Type"
 #~ msgstr "Kein Gruppentyp"
 
-#~ msgid "Change"
-#~ msgstr "Ändern"
-
 #~ msgid "Group Moderator"
 #~ msgstr "Gruppenmoderator"
 
@@ -20542,9 +20587,6 @@ msgstr "BuddyBoss"
 
 #~ msgid "Activate Notice"
 #~ msgstr "Nachricht aktivieren"
-
-#~ msgid "Delete Notice"
-#~ msgstr "Nachricht löschen"
 
 #~ msgid "Deactivate Notice"
 #~ msgstr "Nachricht deaktivieren"

@@ -33,13 +33,14 @@ function bb_pro_pusher_thread_recipient_inbox_unread_counts( $data, $recipients_
 			if ( $recipients_lists ) {
 				foreach ( $recipients_lists as $key => $val ) {
 					$inbox_unread_cnt[ $key ] = array(
-						'message_id'          => $val->id,
-						'user_id'             => $val->user_id,
-						'thread_id'           => $val->thread_id,
-						'thread_unread_count' => $val->unread_count,
-						'is_deleted'          => $val->is_deleted,
-						'is_hidden'           => $val->is_hidden,
-						'inbox_unread_count'  => messages_get_unread_count( $key ),
+						'message_id'                  => $val->id,
+						'user_id'                     => $val->user_id,
+						'thread_id'                   => $val->thread_id,
+						'thread_unread_count'         => $val->unread_count,
+						'is_deleted'                  => $val->is_deleted,
+						'is_hidden'                   => $val->is_hidden,
+						'inbox_unread_count'          => messages_get_unread_count( $key ),
+						'current_thread_unread_count' => bb_get_thread_messages_unread_count( $val->thread_id, $key ),
 					);
 				}
 			}
@@ -93,7 +94,7 @@ function bb_pro_pusher_group_events( $check, $object_id, $meta_key, $meta_value,
 				$event_data = array(
 					'action'    => $meta_key,
 					'thread_id' => bb_pusher_string_hash( $message->thread_id ),
-					'sender_id' => $message->sender_id,
+					'sender_id' => (int) $message->sender_id,
 				);
 
 				if ( null !== $bb_pusher ) {
@@ -248,6 +249,42 @@ function bb_pro_pusher_receive_heartbeat( array $response, array $data ) {
 					);
 				}
 			}
+		}
+
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+			// Determine groups of user.
+			$groups = groups_get_groups(
+				array(
+					'fields'      => 'ids',
+					'per_page'    => - 1,
+					'user_id'     => bp_loggedin_user_id(),
+					'show_hidden' => true,
+					'meta_query'  => array( // phpcs:ignore
+						'relation' => 'AND',
+						array(
+							'key'     => 'group_message_thread',
+							'compare' => 'EXISTS',
+						),
+					),
+				),
+			);
+
+			$group_ids = ( isset( $groups['groups'] ) ? $groups['groups'] : array() );
+
+			$group_threads = array();
+			if ( ! empty( $group_ids ) ) {
+				array_walk(
+					$group_ids,
+					function ( &$group_id, $key ) use ( &$group_threads ) {
+						$thread_id = (int) groups_get_groupmeta( (int) $group_id, 'group_message_thread' );
+						if ( ! empty( $thread_id ) ) {
+							$group_threads[ bb_pusher_string_hash( $thread_id ) ] = $thread_id;
+						}
+					}
+				);
+			}
+			$response['group_threads'] = $group_threads;
+
 		}
 	}
 

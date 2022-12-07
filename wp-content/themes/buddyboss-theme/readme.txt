@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 6.1
-Version: 2.1.5
+Tested up to: 6.1.1
+Version: 2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,21 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 2.2 =
+* Messages - Provided Pusher Integration UI support from BuddyBoss Platform Pro
+
+= 2.1.6 =
+* Theme Options - Handled broken UI issue when Admin color scheme updated to anything other than the default
+* Theme Options - Handled 'BuddyBoss Profile link' option not working issue for a certain setup
+* Profiles - Small style improvement of repeater fieldset in the profile edit screen
+* Forums - Handled small border radius styling issue when the first reply gets added for a discussion
+* Forums - Handled styling issue for forum shortcodes
+* Activity - Handled auto-generated forum discussion, quick reply giphy option small styling issue
+* Widgets - Handled categories widget UI issue when classic widget mode enabled
+* Updater - Improvements to updater logic and performance
+* LearnDash - Provided new option 'Mark Incomplete' support for lessons and topics
+* Compatibility - Handled duplicate WooCommerce mini cart issue in the header when the header is set to sticky using Elementor
 
 = 2.1.5 =
 * Header - Improved 'Show logo in buddypanel' enabled option to show logo in the header even when the buddypanel menu doesn't exist

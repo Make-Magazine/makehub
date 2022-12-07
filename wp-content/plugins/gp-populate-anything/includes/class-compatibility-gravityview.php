@@ -96,7 +96,7 @@ class GPPA_Compatibility_GravityView {
 			$hydrated_field   = gp_populate_anything()->hydrate_field( $field, $form, $this->get_gravityview_filter_values() );
 			$hydrated_choices = rgars( $hydrated_field, 'field/choices' );
 
-			if ( $hydrated_choices === rgar( $field, 'choices' ) ) {
+			if ( $hydrated_choices === rgar( $search_field, 'choices' ) ) {
 				continue;
 			}
 
@@ -267,7 +267,17 @@ class GPPA_Compatibility_GravityView {
 			$form  = $context->view->form->form;
 
 			$lmt->populate_lmt_whitelist( $form );
-			$field->content = $lmt->replace_live_merge_tags_static( $field->content, $form, GFAPI::get_entry( $context->entry->ID ) );
+
+			/*
+			 * Preserve the original content of the HTML field prior to merge tag replacement as the field is a reference
+			 * and if we update it for one entry, we'll lose the merge tags for subsequent entries thus causing the
+			 * same HTML content to be used for each HTML field.
+			 */
+			if ( ! isset( $field->originalContent ) ) {
+				$field->originalContent = $field->content;
+			}
+
+			$field->content = $lmt->replace_live_merge_tags_static( $field->originalContent, $form, $context->entry->as_entry() );
 		}
 
 		return $context;

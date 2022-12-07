@@ -841,7 +841,12 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 
 			<?php
 			if ( 0 != $args['avatar_size'] ) {
-				$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $comment->user_id ) : get_comment_author_url( $comment );
+				$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
+				if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
+					$user_link = bp_core_get_user_domain( $comment->user_id );
+				} else {
+					$user_link = get_comment_author_url( $comment );
+				}
 				?>
 				<div class="comment-author vcard">
 					<a href="<?php echo esc_url( $user_link ); ?>">
@@ -857,7 +862,8 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					/* translators: %s: Author related metas. */
 					__( '%s', 'buddyboss-theme' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
 					sprintf(
-						'<cite class="fn comment-author">%s</cite>',
+						'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
+						esc_url( $user_link ),
 						get_comment_author_link( $comment )
 					)
 				);
@@ -2260,3 +2266,4 @@ function buddyboss_theme_add_blog_comment_reply_link( $submit_field, $args ) {
 	return $submit_field . $cancel_reply_link;
 }
 add_action( 'comment_form_submit_field', 'buddyboss_theme_add_blog_comment_reply_link', 99, 2 );
+

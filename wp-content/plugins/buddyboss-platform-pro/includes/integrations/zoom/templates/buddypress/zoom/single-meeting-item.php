@@ -21,7 +21,7 @@
 				<?php
 				$utc_date_time = bp_get_zoom_meeting_start_date_utc();
 				$time_zone     = bp_get_zoom_meeting_timezone();
-				$date          = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				$date          = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				echo esc_html( $date ) . ( ! empty( $time_zone ) ? ' (' . esc_html( bp_zoom_get_timezone_label( $time_zone ) ) . ')' : '' );
 				?>
 			</div>
@@ -91,7 +91,7 @@
 		<?php endif; ?>
 	</div>
 
-	<div id="bp-zoom-single-meeting" class="meeting-item meeting-item-table single-meeting-item-table" data-meeting-start-date="<?php echo esc_attr( wp_date( 'Y-m-d', strtotime( bp_get_zoom_meeting_start_date_utc() ) ) ); ?>">
+	<div id="bp-zoom-single-meeting" class="meeting-item meeting-item-table single-meeting-item-table" data-meeting-start-date="<?php echo esc_attr( wp_date( 'Y-m-d', strtotime( bp_get_zoom_meeting_start_date_utc() ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) ) ); ?>">
 		<div class="single-meeting-item">
 			<div class="meeting-item-head"><?php esc_html_e( 'Meeting ID', 'buddyboss-pro' ); ?></div>
 			<div class="meeting-item-col">

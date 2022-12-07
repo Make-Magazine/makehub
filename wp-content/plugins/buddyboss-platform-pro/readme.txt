@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.1.7.1
+Stable tag: 2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,14 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 2.2 =
+* Messages - Added Pusher integration option to enable LIVE messaging
+* Messages - Provided real-time support for typing indicator, Sending/Receiving messages, and all relevant messages actions
+
+= 2.1.8 =
+* Zoom - Handled zoom meeting and webinar date and time issues with the timezone by refactoring the DB table
+* Updater - Improvements to updater logic and performance
 
 = 2.1.7.1 =
 * Compatibility - Handled critical conflict with third party plugins using guzzle composer library

@@ -69,9 +69,10 @@ class Vimeography_Pro_Database {
         'direction'  => 'desc',
         'playlist'   => 0,
         'allow_downloads' => 0,
-        'enable_search' => 0
+        'enable_search' => 0,
+        'enable_tags' => 0
       ),
-      array('%d', '%d', '%s', '%s', '%d', '%d', '%d')
+      array('%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d')
     );
 
     return $row;
@@ -86,6 +87,8 @@ class Vimeography_Pro_Database {
     self::vimeography_pro_update_db_to_0_9();
     self::vimeography_pro_update_db_to_1_0();
     self::vimeography_pro_update_db_to_2_0();
+    self::vimeography_pro_update_db_to_2_0_3();
+    self::vimeography_pro_update_db_to_2_1();
     self::_vimeography_pro_update_db_version();
   }
 
@@ -127,6 +130,22 @@ class Vimeography_Pro_Database {
     playlist tinyint(1) NOT NULL DEFAULT 0,
     allow_downloads tinyint(1) NOT NULL DEFAULT 0,
     enable_search tinyint(1) NOT NULL DEFAULT 0,
+    enable_tags tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY  (id)
+    );
+    CREATE TABLE '.$wpdb->prefix.'vimeography_pro_filters (
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    title varchar(100) NOT NULL,
+    slug varchar(100) NOT NULL,
+    type varchar(100) NOT NULL,
+    sort_by varchar(100) NOT NULL,
+    options longtext DEFAULT NULL,
+    PRIMARY KEY  (id)
+    );
+    CREATE TABLE '.$wpdb->prefix.'vimeography_pro_gallery_filters (
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    gallery_id mediumint(8) unsigned NOT NULL,
+    filter_id mediumint(8) unsigned NOT NULL,
     PRIMARY KEY  (id)
     );
     ';
@@ -218,6 +237,50 @@ class Vimeography_Pro_Database {
       $wpdb->hide_errors();
 
       return $wpdb->query('ALTER TABLE '.$wpdb->vimeography_pro_meta.' ADD enable_search TINYINT(1) NOT NULL DEFAULT 0 AFTER allow_downloads;');
+    }
+  }
+
+  /**
+   * Adds a `enable_tags` column to each gallery, which specifies
+   * if the gallery should allow filtering by tags or not.
+   *
+   * @return bool
+   * @since 2.0.3
+   */
+  public static function vimeography_pro_update_db_to_2_0_3() {
+    if ( version_compare(self::$_vimeography_pro_db_version, '2.0.3', '<') ) {
+      global $wpdb;
+      $wpdb->hide_errors();
+
+      return $wpdb->query('ALTER TABLE '.$wpdb->vimeography_pro_meta.' ADD enable_tags TINYINT(1) NOT NULL DEFAULT 0 AFTER enable_search;');
+    }
+  }
+
+  /**
+   * 2.1 Adds two new tables, one for filter data and another which acts as a join table between galleries and filters.
+   *
+   * @access public
+   * @return void
+   */
+  public static function vimeography_pro_update_db_to_2_1() {
+    if ( version_compare(self::$_vimeography_pro_db_version, '2.1', '<') ) {
+      global $wpdb;
+      $wpdb->hide_errors();
+
+      self::vimeography_pro_update_tables();
+
+      $row = $wpdb->insert(
+        $wpdb->vimeography_pro_filters,
+        array(
+          'id'      => 1,
+          'title'   => 'Category',
+          'slug'    => 'category',
+          'type'    => 'RADIO',
+          'sort_by' => 'OPTION_POSITION',
+          'options' => json_encode( array() )
+        ),
+        array('%d', '%s', '%s', '%s', '%s', '%s')
+      );
     }
   }
 

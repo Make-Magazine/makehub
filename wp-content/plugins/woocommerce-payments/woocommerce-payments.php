@@ -8,11 +8,11 @@
  * Woo: 5278104:bf3cf30871604e15eec560c962593c1f
  * Text Domain: woocommerce-payments
  * Domain Path: /languages
- * WC requires at least: 6.4
- * WC tested up to: 6.9.0
- * Requires at least: 5.8
+ * WC requires at least: 6.9
+ * WC tested up to: 7.1.0
+ * Requires at least: 5.9
  * Requires PHP: 7.0
- * Version: 4.7.0
+ * Version: 5.1.2
  *
  * @package WooCommerce\Payments
  */
@@ -26,6 +26,16 @@ define( 'WCPAY_SUBSCRIPTIONS_ABSPATH', __DIR__ . '/vendor/woocommerce/subscripti
 
 require_once __DIR__ . '/vendor/autoload_packages.php';
 require_once __DIR__ . '/includes/class-wc-payments-features.php';
+require_once __DIR__ . '/includes/platform-checkout-user/class-platform-checkout-extension.php';
+require_once __DIR__ . '/includes/platform-checkout/class-platform-checkout-session.php';
+
+use \WCPay\Platform_Checkout\Platform_Checkout_Session;
+
+/**
+ * Needs to be loaded as soon as possible
+ * Check https://github.com/Automattic/woocommerce-payments/issues/4759
+ */
+Platform_Checkout_Session::init();
 
 /**
  * Plugin activation hook.
@@ -314,3 +324,26 @@ function wcpay_tasks_init() {
 }
 
 add_action( 'plugins_loaded', 'wcpay_tasks_init' );
+
+/**
+ * Register blocks extension for platform checkout.
+ */
+function register_platform_checkout_extension() {
+	( new Platform_Checkout_Extension() )->register_extend_rest_api_update_callback();
+}
+
+add_action( 'woocommerce_blocks_loaded', 'register_platform_checkout_extension' );
+
+/**
+ * As the class is defined in later versions of WC, Psalm infers error.
+ *
+ * @psalm-suppress UndefinedClass
+ */
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'woocommerce-payments/woocommerce-payments.php', false );
+		}
+	}
+);

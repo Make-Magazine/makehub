@@ -174,7 +174,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				if ( ( ! $post_type_object ) || ( ! is_a( $post_type_object, 'WP_Post_Type' ) ) ) {
 					return new WP_Error(
 						'rest_type_invalid',
-						__( 'Invalid post type.' ),
+						__( 'Invalid post type.', 'learndash' ),
 						array( 'status' => 404 )
 					);
 				}
@@ -182,7 +182,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				if ( ( ! property_exists( $post_type_object, 'show_in_rest' ) ) || ( true !== $post_type_object->show_in_rest ) ) {
 					return new WP_Error(
 						'rest_cannot_read_type',
-						__( 'Cannot view post type.' ),
+						__( 'Cannot view post type.', 'learndash' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}
@@ -208,7 +208,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				if ( ! $can_view_archive ) {
 					return new WP_Error(
 						'rest_cannot_view',
-						__( 'Sorry, you are not allowed to edit posts in this post type.' ),
+						__( 'Sorry, you are not allowed to edit posts in this post type.', 'learndash' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}
@@ -244,6 +244,6 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 			return rest_ensure_response( $data );
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

@@ -3,63 +3,7 @@
 /**
  * Class GV_Entry_Revisions
  */
-class GV_Entry_Revisions extends GravityView_Extension {
-
-	/**
-	 * @var string Name of the plugin in gravityview.co
-	 *
-	 * @since 1.0
-	 */
-	protected $_title = 'Gravity Forms Entry Revisions';
-
-	/**
-	 * @var string Version number of the plugin, set during initialization
-	 *
-	 * @since 1.0
-	 */
-	protected $_version = GV_ENTRY_REVISIONS_VERSION;
-
-	/**
-	 * @var int The ID of the download on gravityview.co
-	 *
-	 * @since 1.0
-	 */
-	protected $_item_id = 526639;
-
-	/**
-	 * @var string Minimum version of GravityView the Extension requires
-	 *
-	 * @since 1.0
-	 */
-	protected $_min_gravityview_version = false;
-
-	/**
-	 * @var string Minimum version of GravityView the Extension requires
-	 *
-	 * @since 1.0
-	 */
-	protected $_min_gravityforms_version = '2.0';
-
-	/**
-	 * @var string Translation textdomain
-	 *
-	 * @since 1.0
-	 */
-	protected $_text_domain = 'gravityview-entry-revisions';
-
-	/**
-	 * @var string Path to main plugin file
-	 *
-	 * @since 1.0
-	 */
-	protected $_path = GV_ENTRY_REVISIONS_FILE;
-
-	/**
-	 * @var string Author name
-	 *
-	 * @since 1.0
-	 */
-	protected $_author = 'GravityView';
+class GV_Entry_Revisions {
 
 	/**
 	 * The value for the 'status' column of the revision entry in GF
@@ -78,43 +22,11 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 */
 	public function __construct() {
 
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/class-gv-entry-revisions-settings.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/functions.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/notifications.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/logging.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/merge-tags.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/entry_list.php';
-		include_once GV_ENTRY_REVISIONS_DIR . 'includes/entry_detail.php';
-
-		parent::__construct();
-	}
-
-	/**
-	 * Check whether the extension is supported:
-	 *
-	 * - Checks if Gravity Forms is active
-	 * - Sets self::$is_compatible to boolean value
-	 *
-	 * @since 1.0
-	 *
-	 * @return boolean Is the extension able to continue running?
-	 */
-	protected function is_extension_supported() {
-
-		self::$is_compatible = true;
-
-		if ( ! class_exists( 'GFCommon' ) ) {
-
-			$reason = esc_html__('The plugin requires Gravity Forms.', 'gravityview-entry-revisions' );
-			$message = esc_html_x('Could not activate %s: %s', '1st replacement is the plugin name; 2nd replacement is the reason why', 'gravityview-entry-revisions' );
-			$message = sprintf( $message, $this->_title, $reason );
-
-			self::add_notice( $message );
-
-			self::$is_compatible = false;
+		if ( self::$instance ) {
+			return;
 		}
 
-		return self::$is_compatible;
+		$this->init();
 	}
 
 	/**
@@ -123,23 +35,12 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 * @since 1.0
 	 */
 	public static function get_instance() {
-
 		if ( ! self::$instance ) {
 			self::$instance = new self;
 		}
 
-		return self::$instance;
-	}
 
-	/**
-	 * Returns the plugin's Download ID from the GravityView website
-	 *
-	 * @since 1.0
-	 *
-	 * @return int
-	 */
-	public function get_item_id() {
-		return $this->_item_id;
+		return self::$instance;
 	}
 
 	/**
@@ -147,7 +48,14 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 *
 	 * @since 1.0
 	 */
-	public function add_hooks() {
+	public function init() {
+
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/class-gv-entry-revisions-settings.php';
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/functions.php';
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/notifications.php';
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/merge-tags.php';
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/entry_list.php';
+		include_once GV_ENTRY_REVISIONS_DIR . 'includes/entry_detail.php';
 
 		add_action( 'gravityview-inline-edit/entry-updated', array( $this, 'inline_edit_update_entry' ), - 100, 5 );
 
@@ -163,7 +71,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		add_filter( 'gform_noconflict_styles', array( $this, 'register_noconflict' ) );
 
-		add_action( 'init', array( $this, 'register_style' ) );
+		add_action( 'wp_print_scripts', array( $this, 'register_style' ), 1 );
 
 		add_action( 'admin_init', array( $this, 'admin_init_restore_listener' ) );
 
@@ -206,27 +114,27 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		$meta = array(
 			'gv_revision_parent_id' => array(
-				'label'             => __( 'Revision Parent Entry ID', 'gravityview-entry-revisions' ),
+				'label'             => __( 'Revision Parent Entry ID', 'gk-gravityrevisions' ),
 				'is_numeric'        => true,
 				'is_default_column' => false,
 			),
 			'gv_revision_date'      => array(
-				'label'             => __( 'Revision Parent Date', 'gravityview-entry-revisions' ),
+				'label'             => __( 'Revision Parent Date', 'gk-gravityrevisions' ),
 				'is_numeric'        => true,
 				'is_default_column' => false,
 			),
 			'gv_revision_date_gmt'  => array(
-				'label'             => __( 'Revision Date (GMT)', 'gravityview-entry-revisions' ),
+				'label'             => __( 'Revision Date (GMT)', 'gk-gravityrevisions' ),
 				'is_numeric'        => true,
 				'is_default_column' => false,
 			),
 			'gv_revision_user_id'   => array(
-				'label'             => __( 'Revision Created By', 'gravityview-entry-revisions' ),
+				'label'             => __( 'Revision Created By', 'gk-gravityrevisions' ),
 				'is_numeric'        => true,
 				'is_default_column' => false,
 			),
 			'gv_revision_changed'   => array(
-				'label'             => __( 'Revision Changed Content', 'gravityview-entry-revisions' ),
+				'label'             => __( 'Revision Changed Content', 'gk-gravityrevisions' ),
 				'is_numeric'        => false,
 				'is_default_column' => false,
 			)
@@ -287,7 +195,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$form = GFAPI::get_form( $entry['form_id'] );
 
 		if ( ! $form ) {
-			gv_revisions_log_error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
 			return;
 		}
 
@@ -321,7 +229,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$form = GFAPI::get_form( $form_id );
 
 		if ( ! $form ) {
-			gv_revisions_log_error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Not able to update entry #%d because form #%d is missing.', __METHOD__, $entry['id'], $form_id ) );
 			return $update_result;
 		}
 
@@ -380,15 +288,22 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$add_revision = apply_filters( 'gravityview/entry-revisions/add-revision', true, $entry_id, $form, $original_entry );
 
 		if ( ! $add_revision ) {
-			gv_revisions_log_info( sprintf( '[%s] `gravityview/entry-revisions/add-revision` filter used to prevent adding revisions for entry #%d', __METHOD__, $entry_id ) );
+			GravityKitFoundation::logger()->info( sprintf( '[%s] `gravityview/entry-revisions/add-revision` filter used to prevent adding revisions for entry #%d', __METHOD__, $entry_id ) );
 			return;
 		}
 
 		$added = $this->add_revision( $entry_id, $original_entry );
 
-		if ( ! $added || is_wp_error( $added ) ) {
+		if ( ! $added ) {
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Not able to update entry #%d `date_updated` property', __METHOD__, $entry_id ) );
 			return;
 		}
+
+		if( is_wp_error( $added ) ) {
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Not able to add revision for entry #%d: %s', __METHOD__, $entry_id, $added->get_error_message() ) );
+			return;
+		}
+
 
 		// 2.4 will update date_updated already
 		if ( version_compare( GFFormsModel::get_database_version(), '2.4', '>=' ) ) {
@@ -398,11 +313,11 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$updated = GFAPI::update_entry_property( $entry_id, 'date_updated', gmdate( 'Y-m-d H:i:s' ) );
 
 		if ( ! $updated ) {
-			gv_revisions_log_error( sprintf( '[%s] Not able to update entry #%d `date_updated` property', __METHOD__, $entry_id ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Not able to update entry #%d `date_updated` property', __METHOD__, $entry_id ) );
 			return;
 		}
 
-		gv_revisions_log_info( sprintf( '[%s] Updated entry #%d `date_updated` property', __METHOD__, $entry_id ) );
+		GravityKitFoundation::logger()->info( sprintf( '[%s] Updated entry #%d `date_updated` property', __METHOD__, $entry_id ) );
 	}
 
 	/**
@@ -413,18 +328,18 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 * @param int|array $entry_or_entry_id Current entry ID or current entry array
 	 * @param array $revision_to_add Previous entry data to add as a revision
 	 *
-	 * @return bool false: Nothing changed; true: updated
+	 * @return WP_Error|true True: updated; WP_Error: Nothing changed, the entry was not found, or the entry isn't formatted correctly.
 	 */
 	public function add_revision( $entry_or_entry_id = 0, $revision_to_add = array() ) {
 
 		$current_entry = $entry_or_entry_id;
 
-		if ( ! is_array( $entry_or_entry_id ) && is_numeric( $entry_or_entry_id ) ) {
+		if ( is_numeric( $entry_or_entry_id ) ) {
 			$current_entry = GFAPI::get_entry( $entry_or_entry_id );
 		}
 
 		if ( is_wp_error( $current_entry ) ) {
-			gv_revisions_log_error( __METHOD__ . ': Entry not found at ID #' . $entry_or_entry_id );
+			GravityKitFoundation::logger()->error( __METHOD__ . ': Entry not found at ID #' . $entry_or_entry_id );
 
 			return $current_entry;
 		}
@@ -438,9 +353,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		// Nothing changed
 		if ( empty( $changed_fields ) ) {
-			gv_revisions_log_warning( sprintf( '[%s] Not adding revision for entry #%d (no fields changed)', __METHOD__, $entry_or_entry_id ), 'warning' );
+			GravityKitFoundation::logger()->warning( sprintf( '[%s] Not adding revision for entry #%d (no fields changed)', __METHOD__, $entry_or_entry_id ) );
 
-			return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gravityview-entry-revisions' ) );
+			return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gk-gravityrevisions' ) );
 		}
 
 		$revision_to_add['status'] = self::revision_status_key;
@@ -459,7 +374,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 			gform_update_meta( $revision_id, $key, $value );
 		}
 
-		gv_revisions_log_info( sprintf( '[%s] Added revision #%d for entry #%d', __METHOD__, $revision_id, $entry_or_entry_id ), 'warning' );
+		GravityKitFoundation::logger()->info( sprintf( '[%s] Added revision #%d for entry #%d', __METHOD__, $revision_id, $entry_or_entry_id ) );
 
 		/**
 		 * @filter `gravityview/entry-revisions/send-notifications` Whether to trigger or suppress send notifications.
@@ -469,7 +384,15 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		 * @param array $changed_fields The new entry, with only the changed fields
 		 */
 		if ( apply_filters( 'gravityview/entry-revisions/send-notifications', true, $revision_to_add, $current_entry, $changed_fields ) ) {
-			add_action( 'gform_after_update_entry', 'gv_revisions_send_notifications', 10, 3 );
+
+			if( doing_action( 'gravityview-inline-edit/entry-updated' ) ) {
+				$form = GFAPI::get_form( $current_entry['form_id'] );
+				gv_revisions_send_notifications( $form, $current_entry['id'], $revision_to_add );
+			} else {
+				// Triggered in Gravity Forms and GravityView.
+				add_action( 'gform_after_update_entry', 'gv_revisions_send_notifications', 10, 3 );
+			}
+
 		}
 
 		return $revision_id;
@@ -512,9 +435,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		if ( is_wp_error( $revision ) ) {
 
-			gv_revisions_log_error( sprintf( '%s: Revision #%s not found', __METHOD__, $revision_id ) );
+			GravityKitFoundation::logger()->error( sprintf( '%s: Revision #%s not found', __METHOD__, $revision_id ) );
 
-			return new WP_Error( 'not_found', __( 'Revision not found', 'gravityview-entry-revisions' ), array(
+			return new WP_Error( 'not_found', __( 'Revision not found', 'gk-gravityrevisions' ), array(
 				'entry_id'    => $entry_id,
 				'revision_id' => $revision_id
 			) );
@@ -522,7 +445,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		if ( self::revision_status_key !== $revision['status'] ) {
 
-			gv_revisions_log_error( sprintf( '%s: Entry #%s is not a revision', __METHOD__, $revision_id ) );
+			GravityKitFoundation::logger()->error( sprintf( '%s: Entry #%s is not a revision', __METHOD__, $revision_id ) );
 
 			return new WP_Error( 'not_revision', sprintf( 'Entry #%s is not a revision', $revision_id ), array( 'revision_id' => $revision_id ) );
 		}
@@ -533,9 +456,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 			if ( (int) $entry_id !== (int) $entry_id_from_revision ) {
 
-				gv_revisions_log_error( sprintf( '%s: Revision #%s not found', __METHOD__, $revision_id ) );
+				GravityKitFoundation::logger()->error( sprintf( '%s: Revision #%s not found', __METHOD__, $revision_id ) );
 
-				return new WP_Error( 'mismatch', __( 'Revision not found', 'gravityview-entry-revisions' ), array(
+				return new WP_Error( 'mismatch', __( 'Revision not found', 'gk-gravityrevisions' ), array(
 					'entry_id'    => $entry_id,
 					'revision_id' => $revision_id
 				) );
@@ -602,26 +525,6 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	}
 
 	/**
-	 * Returns the license information for this plugin
-	 *
-	 * @since 1.0
-	 *
-	 * @uses GV_Entry_Revisions_Settings::get_license()
-	 *
-	 * @return array|bool False if license isn't set and GravityView GravityView_Settings class does not exist.
-	 */
-	protected function get_license() {
-
-		$license = GV_Entry_Revisions_Settings::get_instance()->get_license();
-
-		if( ! $license ) {
-			return parent::get_license();
-		}
-
-		return $license;
-	}
-
-	/**
 	 * Get the latest revision
 	 *
 	 * @param $entry_id
@@ -633,9 +536,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$revisions = $this->get_revisions( $entry_id, 'entries', array( 'direction' => 'DESC' ), array( 'page_size' => 1 ) );
 
 		if ( is_wp_error( $revisions ) ) {
-			gv_revisions_log_error( sprintf( 'Could not get latest revision: %s', $revisions->get_error_message() ) );
+			GravityKitFoundation::logger()->error( sprintf( 'Could not get latest revision: %s', $revisions->get_error_message() ) );
 
-			return false;
+			return [];
 		}
 
 		if ( empty( $revisions ) ) {
@@ -715,7 +618,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		if ( is_wp_error( $revision ) ) {
 
-			gv_revisions_log_error( sprintf( '[%s] There was an error deleting revision #%d: %s', __METHOD__, $revision_id, $revision->get_error_message() ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] There was an error deleting revision #%d: %s', __METHOD__, $revision_id, $revision->get_error_message() ) );
 
 			return $revision;
 		}
@@ -723,9 +626,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$deleted = GFAPI::delete_entry( $revision_id );
 
 		if ( is_wp_error( $deleted ) ) {
-			gv_revisions_log_error( sprintf( '[%s] There was an error deleting the revision: %s', __METHOD__, $revision->get_error_message() ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] There was an error deleting the revision: %s', __METHOD__, $revision->get_error_message() ) );
 		} else {
-			gv_revisions_log_info( sprintf( '[%s] Revision #%d successfully deleted', __METHOD__, $revision_id ) );
+			GravityKitFoundation::logger()->info( sprintf( '[%s] Revision #%d successfully deleted', __METHOD__, $revision_id ) );
 		}
 
 		return $deleted;
@@ -747,7 +650,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		// Revision has already been deleted or does not exist
 		if ( is_wp_error( $revision ) ) {
 
-			gv_revisions_log_error( sprintf( '[%s] There was an error restoring revision #%d: %s', __METHOD__, $revision_id, $revision->get_error_message() ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] There was an error restoring revision #%d: %s', __METHOD__, $revision_id, $revision->get_error_message() ) );
 
 			return $revision;
 		}
@@ -765,9 +668,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		if ( $new_entry === $revision ) {
 
-			gv_revisions_log_debug( sprintf( '[%s] Not restoring: Revision (#%s) is identical to the current entry (#%s).', __METHOD__, $revision_id, $entry_id ) );
+			GravityKit\GravityRevisions\Foundation\Core::logger()->debug( sprintf( '[%s] Not restoring: Revision (#%s) is identical to the current entry (#%s).', __METHOD__, $revision_id, $entry_id ) );
 
-			return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gravityview-entry-revisions' ) );
+			return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gk-gravityrevisions' ) );
 		}
 
 		if ( empty( $rows ) ) {
@@ -778,7 +681,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 			foreach ( $rows as $field_id ) {
 
 				if ( ! isset( $revision[ $field_id ] ) ) {
-					gv_revisions_log_warning( sprintf( '[%s] Could not update field id "%s": not set for revision #%d', __METHOD__, $field_id, $revision_id ) );
+					GravityKitFoundation::logger()->warning( sprintf( '[%s] Could not update field id "%s": not set for revision #%d', __METHOD__, $field_id, $revision_id ) );
 					continue;
 				}
 
@@ -787,9 +690,9 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 			if ( $revision === $new_entry ) {
 
-				gv_revisions_log_warning( sprintf( '[%s] Not restoring: Revision (#%s) is identical to the current entry (#%s).', __METHOD__, $revision_id, $entry_id ) );
+				GravityKitFoundation::logger()->warning( sprintf( '[%s] Not restoring: Revision (#%s) is identical to the current entry (#%s).', __METHOD__, $revision_id, $entry_id ) );
 
-				return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gravityview-entry-revisions' ) );
+				return new WP_Error( 'identical', esc_html__( 'This revision is identical to the current entry.', 'gk-gravityrevisions' ) );
 			}
 		}
 
@@ -801,7 +704,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		 */
 		if ( apply_filters( 'gravityview/entry-revisions/restore/remove-gf-hooks', true, $entry_id ) ) {
 
-			gv_revisions_log_info( sprintf( '[%s] Removing Gravity Forms update hooks', __METHOD__ ) );
+			GravityKitFoundation::logger()->info( sprintf( '[%s] Removing Gravity Forms update hooks', __METHOD__ ) );
 
 			remove_all_filters( 'gform_entry_pre_update' );
 			remove_all_filters( 'gform_form_pre_update_entry' );
@@ -814,7 +717,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		if ( is_wp_error( $updated_result ) ) {
 
-			gv_revisions_log_error( $updated_result->get_error_message() );
+			GravityKitFoundation::logger()->error( $updated_result->get_error_message() );
 
 			return $updated_result;
 		}
@@ -841,7 +744,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 			$this->delete_revision( $revision_id, $entry_id );
 		}
 
-		gv_revisions_log_info( sprintf( '[%s] Restored %s from revision #%s to entry #%s.', __METHOD__, sprintf( '%d %s', count( $rows ), ( count( $rows ) === 1 ? 'row' : 'rows' ) ), $revision_id, $entry_id ) );
+		GravityKitFoundation::logger()->info( sprintf( '[%s] Restored %s from revision #%s to entry #%s.', __METHOD__, sprintf( '%d %s', count( $rows ), ( count( $rows ) === 1 ? 'row' : 'rows' ) ), $revision_id, $entry_id ) );
 
 		return true;
 	}
@@ -855,13 +758,17 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	 */
 	public function admin_init_restore_listener() {
 
+		if ( ! function_exists( 'rgpost' ) ) {
+			return;
+		}
+
 		if ( ! rgpost( '_wpnonce' ) || ! rgpost( 'revision' ) || ! rgpost( 'rows' ) || ! rgpost( 'entry_id' ) ) {
 			return;
 		}
 
 		// No access!
 		if ( ! GFCommon::current_user_can_any( 'gravityforms_edit_entries' ) ) {
-			gv_revisions_log_error( 'Restoring the entry revision failed: user does not have the "gravityforms_edit_entries" capability.' );
+			GravityKitFoundation::logger()->error( 'Restoring the entry revision failed: user does not have the "gravityforms_edit_entries" capability.' );
 			return;
 		}
 
@@ -873,7 +780,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		// Nonce didn't validate
 		if ( ! $valid ) {
-			gv_revisions_log_error( 'Restoring the entry revision failed: nonce validation failed.' );
+			GravityKitFoundation::logger()->error( 'Restoring the entry revision failed: nonce validation failed.' );
 			return;
 		}
 
@@ -927,14 +834,14 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$diffs = $this->get_diffs( $revision, $entry, $form, $restore_links );
 
 		if ( empty( $diffs ) ) {
-			return esc_html__( 'This revision is identical to the current entry.', 'gravityview-entry-revisions' );
+			return esc_html__( 'This revision is identical to the current entry.', 'gk-gravityrevisions' );
 		}
 
-		$revision_title      = $this->revision_title( $revision, false, esc_html__( 'Entry modified by %2$s %3$s ago.', 'gravityview-entry-revisions' ), $entry );
+		$revision_title      = $this->revision_title( $revision, false, esc_html__( 'Entry modified by %2$s %3$s ago.', 'gk-gravityrevisions' ), $entry );
 		$user_can_edit_entry = GFCommon::current_user_can_any( 'gravityforms_edit_entries' );
 		$nonce_field         = wp_nonce_field( $this->generate_restore_nonce_action( $revision['gv_revision_parent_id'], $revision['id'] ) );
 		$url_cancel          = esc_url( remove_query_arg( array( 'revision', 'screen_mode' ) ) );
-		$date = $this->revision_title( $revision, false, esc_html_x( 'Saved on %4$s', '%4$s will be replaced by the date', 'gravityview-entry-revisions' ), $entry );;
+		$date = $this->revision_title( $revision, false, esc_html_x( 'Saved on %4$s', '%4$s will be replaced by the date', 'gk-gravityrevisions' ), $entry );;
 
 		ob_start();
 
@@ -1001,7 +908,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 				$subtitle    = '';
 			}
 
-			$details[] = sprintf( esc_html__( 'Field ID: %s', 'gravityview-entry-revisions' ), $key );
+			$details[] = sprintf( esc_html__( 'Field ID: %s', 'gk-gravityrevisions' ), $key );
 
 			/**
 			 * @filter `gravityview/entry-revisions/diff-row-args` Modify how the diff rows are rendered
@@ -1018,7 +925,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 			 * }
 			 */
 			$diff_row_args = apply_filters( 'gravityview/entry-revisions/diff-row-args', array(
-				'empty_value' => '<em>' . esc_html_x( 'No Value', 'Shown when the field value is empty before or after editing.', 'gravityview-entry-revisions' ) . '</em>',
+				'empty_value' => '<em>' . esc_html_x( 'No Value', 'Shown when the field value is empty before or after editing.', 'gk-gravityrevisions' ) . '</em>',
 				'row_label'   => sprintf( '%s <div class="diff-row-details">%s</div>', $field_label, '<div>' . implode( '</div><div>', $details ) . '</div>' ),
 				'show_inputs' => $show_inputs,
 			), compact( "field", "field_label", "key" ) );
@@ -1101,7 +1008,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 	private function get_restore_url( $revision = array() ) {
 
 		if ( empty( $revision ) ) {
-			gv_revisions_log_error( sprintf( '[%s] Revision #%d was not found; could not create restore URL', __METHOD__, $revision['id'] ) );
+			GravityKitFoundation::logger()->error( sprintf( '[%s] Revision #%d was not found; could not create restore URL', __METHOD__, $revision['id'] ) );
 
 			return new WP_Error( 'not_found', 'The revision was not found; could not create restore URL' );
 		}
@@ -1174,7 +1081,7 @@ class GV_Entry_Revisions extends GravityView_Extension {
 
 		$author = get_the_author_meta( 'display_name', $revision_user_id );
 		/* translators: revision date format, see http://php.net/date */
-		$datef = _x( 'F j, Y @ H:i:s', 'revision date format', 'gravityview-entry-revisions' );
+		$datef = _x( 'F j, Y @ H:i:s', 'revision date format', 'gk-gravityrevisions' );
 		$date     = esc_html( date_i18n( $datef, $revision['gv_revision_date'] ) );
 
 		$gravatar = get_avatar( $revision_user_id, 32 );
@@ -1218,11 +1125,11 @@ class GV_Entry_Revisions extends GravityView_Extension {
 		$atts = wp_parse_args( $atts, array(
 			'container_css' => 'gv-entry-revisions',
 			'wpautop'       => 1,
-			'format'        => _x( '%1$s %2$s, %3$s ago (%4$s)', 'The default date format. %1 is the avatar, %2 is the name of the person who modified the entry, %3 is how long ago the entry was modified, and %5 is a timestamp.', 'gravityview-entry-revisions' ),
+			'format'        => _x( '%1$s %2$s, %3$s ago (%4$s)', 'The default date format. %1 is the avatar, %2 is the name of the person who modified the entry, %3 is how long ago the entry was modified, and %5 is a timestamp.', 'gk-gravityrevisions' ),
 			'strings'       => array(
-				'no_revisions' => __( 'This entry has no revisions.', 'gravityview-entry-revisions' ),
-				'not_found'    => __( 'Revision not found', 'gravityview-entry-revisions' ),
-				'compare'      => __( 'This is an entry revision. %sCompare to the current entry%s.', 'gravityview-entry-revisions' ),
+				'no_revisions' => __( 'This entry has no revisions.', 'gk-gravityrevisions' ),
+				'not_found'    => __( 'Revision not found', 'gk-gravityrevisions' ),
+				'compare'      => __( 'This is an entry revision. %sCompare to the current entry%s.', 'gk-gravityrevisions' ),
 			)
 		) );
 

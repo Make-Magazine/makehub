@@ -2,13 +2,23 @@
 /**
  * LearnDash LD30 Displays the breadcrumbs
  *
+ * Available Variables:
+ *
+ * $post                  : (WP_Post) The post object.
+ *
  * @since 3.0.0
  *
  * @package LearnDash\Templates\LD30
+ *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+// The $post var should be passed if from the calling template as of LD 4.0.0.
+if ( ! isset( $post ) ) {
+	$post = get_post();
 }
 
 /**
@@ -20,7 +30,7 @@ do_action( 'learndash-breadcrumbs-before' ); ?>
 
 <div class="ld-breadcrumbs-segments">
 	<?php
-	$breadcrumbs = learndash_get_breadcrumbs();
+	$breadcrumbs = learndash_get_breadcrumbs( $post );
 
 	/**
 	 * Filter Breadcrumb keys

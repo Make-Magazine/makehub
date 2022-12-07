@@ -22,6 +22,8 @@ add_action( 'bp_zoom_webinar_after_save', 'bp_zoom_webinar_after_save_update_web
 add_action( 'bp_groups_includes', 'bb_load_pro_groups_notifications', 21 );
 add_action( 'updated_user_meta', 'bb_zoom_migrate_preferences', 10, 4 );
 
+add_action( 'bbp_pro_update_to_2_1_5', 'bb_zoom_pro_update_to_2_1_5' );
+
 /**
  * BuddyBoss Pro zoom update to 1.0.4
  *
@@ -445,7 +447,6 @@ function bp_zoom_meeting_after_save_update_meeting_data( $meeting ) {
 				$data['duration']       = $meeting_occurrence->duration;
 				$data['parent']         = $zoom_meeting['response']->id;
 				$data['zoom_type']      = 'meeting_occurrence';
-				$data['start_date']     = $meeting_occurrence->start_time;
 				$data['start_date_utc'] = $meeting_occurrence->start_time;
 				$data['recurring']      = false;
 				$occurrence_added_id    = bp_zoom_meeting_add( $data );
@@ -689,7 +690,6 @@ function bp_zoom_webinar_after_save_update_webinar_data( $webinar ) {
 				$data['duration']       = $webinar_occurrence->duration;
 				$data['parent']         = $zoom_webinar['response']->id;
 				$data['zoom_type']      = 'webinar_occurrence';
-				$data['start_date']     = $webinar_occurrence->start_time;
 				$data['start_date_utc'] = $webinar_occurrence->start_time;
 				$data['recurring']      = false;
 				$occurrence_added_id    = bp_zoom_webinar_add( $data );
@@ -837,5 +837,26 @@ function bb_zoom_migrate_preferences( $meta_id, $object_id, $meta_key, $meta_val
 			update_user_meta( $object_id, 'notification_zoom_webinar_scheduled', $meta_value );
 
 			break;
+	}
+}
+
+/**
+ * BuddyBoss Pro zoom update to 2.1.8
+ *
+ * @since 2.1.8
+ */
+function bb_zoom_pro_update_to_2_1_5() {
+	global $wpdb;
+
+    // phpcs:ignore
+    $meeting_start_date_exists = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}bp_zoom_meetings LIKE 'start_date'" );
+	if ( ! is_null( $meeting_start_date_exists ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_zoom_meetings DROP COLUMN `start_date`" ); // phpcs:ignore
+	}
+
+    // phpcs:ignore
+	$webinar_start_date_exists = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}bp_zoom_webinars LIKE 'start_date'" );
+	if ( ! is_null( $webinar_start_date_exists ) ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}bp_zoom_webinars DROP COLUMN `start_date`" ); // phpcs:ignore
 	}
 }

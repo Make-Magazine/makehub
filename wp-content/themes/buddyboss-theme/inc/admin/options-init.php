@@ -2814,7 +2814,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 						'mode'     => 'javascript',
 						'validate' => 'plain_text',
 						'theme'    => 'chrome',
-						'default'  => "jQuery( document ).ready( function(){\n    //Your codes strat from here\n});",
+						'default'  => "jQuery( document ).ready( function(){\n    //Your codes start from here\n});",
 						'required' => array( 'custom_js', 'equals', '1' ),
 					),
 				),

@@ -187,9 +187,12 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 				$logger->warning(
 					'Activecampaign_For_Woocommerce_Interacts_With_Api: There was an issue parsing the resource from serialized array.',
 					[
-						'message'  => $t->getMessage(),
-						'endpoint' => $client->get_endpoint(),
-						'resource' => $resource,
+						'message'      => $t->getMessage(),
+						'endpoint'     => $client->get_endpoint(),
+						'client_body'  => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
+						'filter_name'  => $filter_name,
+						'filter_value' => $filter_value,
+						'resource'     => $resource,
 					]
 				);
 			}
@@ -214,9 +217,12 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			$logger->warning(
 				'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource threw an error.',
 				[
-					'message'  => $t->getMessage(),
-					'endpoint' => $client->get_endpoint(),
-					'resource' => $resource,
+					'message'      => $t->getMessage(),
+					'endpoint'     => $client->get_endpoint(),
+					'client_body'  => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
+					'filter_name'  => $filter_name,
+					'filter_value' => $filter_value,
+					'resource'     => $resource,
 				]
 			);
 		}
@@ -250,8 +256,12 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			try {
 				if ( ! is_object( $result ) || ! AC_Utilities::validate_object( $result, 'getBody' ) ) {
 					$logger->debug(
-						$result,
+						'Result from API may not have a body. Could be an error.',
 						[
+							'result'        => $result,
+							'filter_name'   => $filter_name,
+							'filter_value'  => $filter_value,
+							'client_body'   => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
 							'resource_name' => self::RESOURCE_NAME,
 							'endpoint_name' => self::ENDPOINT_NAME,
 						]
@@ -265,8 +275,9 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 							[
 								'resource_name' => self::RESOURCE_NAME,
 								'endpoint_name' => self::ENDPOINT_NAME,
-								'found_by'      => $filter_name,
-								'value'         => $filter_value,
+								'filter_name'   => $filter_name,
+								'filter_value'  => $filter_value,
+								'client_body'   => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
 								'response'      => $result->getBody() instanceof StreamInterface
 									? $result->getBody()->getContents()
 									: null,
@@ -285,7 +296,11 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 				$logger->debug(
 					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource thrown error.',
 					[
-						'result' => $result,
+						'result'       => $result,
+						'filter_name'  => $filter_name,
+						'filter_value' => $filter_value,
+						'client_body'  => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
+						'code'         => $t->getCode(),
 					]
 				);
 			}
@@ -331,6 +346,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 					'message'       => $e->getMessage(),
 					'resource_name' => self::RESOURCE_NAME,
 					'endpoint_name' => self::ENDPOINT_NAME,
+					'client_body'   => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
 					'context'       => $body_as_string,
 					'response'      => AC_Utilities::validate_object( $e->getResponse(), 'getBody' )
 						? $e->getResponse()->getBody()->getContents()
@@ -359,9 +375,10 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 				$logger->error(
 					'Activecampaign_For_Woocommerce_Interacts_With_Api: Resource error thrown.',
 					[
-						'message' => $t->getMessage(),
-						'result'  => $result,
-						'trace'   => $logger->clean_trace( $t->getTrace() ),
+						'message'     => $t->getMessage(),
+						'client_body' => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
+						'result'      => $result,
+						'trace'       => $logger->clean_trace( $t->getTrace() ),
 					]
 				);
 			}
@@ -376,6 +393,7 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 				[
 					'resource_name' => self::RESOURCE_NAME,
 					'endpoint_name' => self::ENDPOINT_NAME,
+					'client_body'   => AC_Utilities::validate_object( $client, 'getBody' ) ? $client->get_body() : null,
 					'result'        => $result,
 				]
 			);

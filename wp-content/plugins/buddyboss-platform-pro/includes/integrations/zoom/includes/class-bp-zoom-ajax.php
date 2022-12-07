@@ -280,7 +280,6 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 			if ( ! empty( $zoom_meeting['code'] ) && 204 === $zoom_meeting['code'] ) {
 				$meeting                     = new BP_Zoom_Meeting( $id );
 				$meeting->description        = $data['description'];
-				$meeting->start_date         = $start_date_time_save;
 				$meeting->duration           = $data['duration'];
 				$meeting->join_before_host   = $data['join_before_host'];
 				$meeting->host_video         = $data['host_video'];
@@ -476,7 +475,7 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 				'type'                   => $type,
 				'host_id'                => $host_email,
 				'user_id'                => bp_loggedin_user_id(),
-				'start_date'             => $start_date_time,
+				'start_date_utc'         => $start_date_time,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -1257,7 +1256,7 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 				'type'                   => $type,
 				'host_id'                => $host_email,
 				'user_id'                => bp_loggedin_user_id(),
-				'start_date'             => $start_date_time,
+				'start_date_utc'         => $start_date_time,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -1853,7 +1852,6 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 			if ( ! empty( $zoom_webinar['code'] ) && 204 === $zoom_webinar['code'] ) {
 				$webinar                  = new BP_Zoom_Webinar( $id );
 				$webinar->description     = $data['description'];
-				$webinar->start_date      = $start_date_time_save;
 				$webinar->duration        = $data['duration'];
 				$webinar->host_video      = $data['host_video'];
 				$webinar->panelists_video = $data['panelists_video'];

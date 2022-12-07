@@ -530,8 +530,9 @@ class MeprRule extends MeprCptModel {
   }
 
   // We just assume this will only be called on posts that are the correct type
-  public static function is_exception_to_rule( $post, $rule ) {
-    $exceptions = explode( ',', preg_replace( '#\s#', '', $rule->mepr_content ) );
+  public static function is_exception_to_rule( $post, $rule, $exceptions = array() ) {
+    $rule_exceptions = explode( ',', preg_replace( '#\s#', '', $rule->mepr_content ) );
+    $exceptions = array_unique ( array_merge($rule_exceptions, $exceptions) );
     return in_array( $post->ID, $exceptions );
   }
 
@@ -664,7 +665,7 @@ class MeprRule extends MeprCptModel {
       if($user->has_access_from_rule($rule->ID)) {
         if($rule->has_dripped($user->ID)) {
           if(!$rule->has_expired($user->ID)) {
-            return false;
+            return MeprHooks::apply_filters('mepr-content-locked-for-user', false, $rule, $context, $rules);
           }
         }
       }

@@ -70,6 +70,9 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			add_filter( 'heartbeat_nopriv_received', array( $this, 'heartbeat_unread_notifications' ), 11 );
 
 			add_action( 'admin_footer', array( $this, 'buddyboss_theme_header_menu_admin_js' ), 999 ); // For back-end.
+
+			add_filter( 'comments_template_query_args', array( $this, 'buddyboss_theme_template_query_arguments' ), 999, 1 );
+			add_filter( 'comments_template', array( $this, 'buddyboss_theme_comments_template' ), 999, 1 );
 		}
 
 		public function is_active() {
@@ -455,6 +458,42 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		public function has_message_threads_parse_args( $args ) {
 			$args['per_page'] = 20;
 			return $args;
+		}
+
+		/**
+		 * Remove the user profile link when theme settings has been disabled.
+		 *
+		 * @since 2.1.6
+		 *
+		 * @param array $comment_args Comments query arguments.
+		 *
+		 * @return mixed
+		 */
+		public function buddyboss_theme_template_query_arguments( $comment_args ) {
+			$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
+			if ( function_exists( 'bp_core_filter_comments' ) && ! $platform_author_link ) {
+				remove_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
+			}
+
+			return $comment_args;
+		}
+
+		/**
+		 * Remove the user profile link when theme settings has been disabled.
+		 *
+		 * @since 2.1.6
+		 *
+		 * @param string $theme_template The path to the theme template file.
+		 *
+		 * @return mixed
+		 */
+		public function buddyboss_theme_comments_template( $theme_template ) {
+			$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
+			if ( function_exists( 'bp_core_filter_comments' ) && ! $platform_author_link ) {
+				add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
+			}
+
+			return $theme_template;
 		}
 	}
 }

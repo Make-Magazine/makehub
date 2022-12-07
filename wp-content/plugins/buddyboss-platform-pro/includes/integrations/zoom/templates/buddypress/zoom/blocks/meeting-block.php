@@ -107,7 +107,7 @@ $current_date             = wp_date( 'U' );
 $occurrence_date->setTimezone( wp_timezone() );
 $occurrence_date->modify( '+' . $duration . ' minutes' );
 $meeting_date_unix = $occurrence_date->format( 'U' );
-$date              = wp_date( bp_core_date_format( false, true ), strtotime( $start_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $start_time ), new DateTimeZone( $timezone ) );
+$date              = wp_date( bp_core_date_format( false, true ), strtotime( $start_time ), new DateTimeZone( $timezone ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $start_time ), new DateTimeZone( $timezone ) );
 ?>
 
 <div class="zoom-meeting-block <?php echo esc_attr( $block_class_name ); ?>">

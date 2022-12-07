@@ -25,7 +25,14 @@ const ko = window.ko;
 			window.gform.removeHook( 'action', 'gform_list_post_item_add', 10, self.getNamespace() );
 			window.gform.removeHook( 'action', 'gform_list_post_item_delete', 10, self.getNamespace() );
 			gform.removeFilter( 'gform_calculation_formula', 10, 'gpnf_{0}_{1}'.format( self.formId, self.fieldId ) );
-			ko.cleanNode(self.$fieldContainer[0]);
+
+			/*
+			 * Important placeholder! Knockout is not destroyed in this function as rebinding to an already-bound
+			 * container will cause major issues due to templates not being present after the initial binding.
+			 *
+			 * Specifically, items in a foreach will be removed after binding and are not available for subsequent
+			 * bindings. This will result in errors saying no template contents found.
+			 */
 		}
 
 		self.init = function() {
@@ -242,22 +249,14 @@ const ko = window.ko;
 			/**
 			 * If VM already exists, reset the observable array as rebinding can cause issues.
 			 */
-			if (self.viewModel && ko.dataFor(self.$fieldContainer[0])) {
-				self.viewModel.entries(self.prepareEntriesForKnockout(self.entries));
+			if (ko.dataFor(self.$fieldContainer[0])) {
+				ko.dataFor(self.$fieldContainer[0]).entries(self.prepareEntriesForKnockout(self.entries));
 				return;
 			}
 
 			// Setup Knockout to handle our Nested Form field entries.
 			self.viewModel = new EntriesModel(self.prepareEntriesForKnockout(self.entries), self);
 			self.addRowIdComputedToEntries( self.viewModel.entries );
-
-			/*
-			 * Preserve jQuery data as KO's cleanNode method will remove it. This is specifically needed for
-			 * Gravity Forms' disable assessment.
-			 */
-			const preservedData = jQuery(self.$fieldContainer).data();
-			ko.cleanNode(self.$fieldContainer[0]);
-			self.$fieldContainer.data(preservedData);
 
 			ko.applyBindings(self.viewModel, self.$fieldContainer[0]);
 		};
@@ -642,8 +641,9 @@ const ko = window.ko;
 				}
 			} );
 
-			gform.addAction( 'gform_list_post_item_add', self.modal.checkOverflow, 10, self.getNamespace() );
-			gform.addAction( 'gform_list_post_item_delete', self.modal.checkOverflow, 10, self.getNamespace() );
+			// Use .bind() to ensure that the "this" context is set correctly.
+			gform.addAction( 'gform_list_post_item_add', self.modal.checkOverflow.bind(self.modal), 10, self.getNamespace() );
+			gform.addAction( 'gform_list_post_item_delete', self.modal.checkOverflow.bind(self.modal), 10, self.getNamespace() );
 
 		};
 
@@ -960,10 +960,30 @@ const ko = window.ko;
 					return 0;
 				}
 
+				/**
+				 * Filter the child entries used for Nested Forms' calculation merge tag modifiers such as :count, :sum,
+				 * and more. This is useful for conditionally including/excluding entries while calculating the results.
+				 *
+				 * @since 1.1.5
+				 *
+				 * @param {array}           entries         Child entries to be used for calculations
+				 * @param {object}          match           Information about the matched merge tag.
+				 * @param {int}             fieldId         ID of the Nested Form field.
+				 * @param {int}             formId          ID of the child form.
+				 * @param {GPNestedForms}   gpnf            Current instance of the GPNestedForms object.
+				 * @param {object}          formulaField    The formula field with the merge tag in it.
+				 */
+				var entries = window.gform.applyFilters( 'gpnf_calc_entries', self.viewModel.entries(), {
+					search,
+					nestedFormFieldId,
+					func,
+					targetFieldId,
+				}, self.fieldId, self.formId, self, formulaField );
+
 				switch ( func ) {
 					case 'sum':
 						var total = 0;
-						self.viewModel.entries().forEach( function( entry ) {
+						entries.forEach( function( entry ) {
 							var value = 0;
 							if ( typeof entry[ targetFieldId ] !== 'undefined' ) {
 								value = entry[ targetFieldId ].value ? gformToNumber( entry[ targetFieldId ].value ) : 0;
@@ -974,17 +994,17 @@ const ko = window.ko;
 						break;
 					case 'total':
 						var total = 0;
-						self.viewModel.entries().forEach( function( entry ) {
+						entries.forEach( function( entry ) {
 							total += parseFloat( entry.total );
 						} );
 						replace = total;
 						break;
 					case 'count':
-						replace = self.viewModel.entries().length;
+						replace = entries.length;
 						break;
 					case 'set':
 						var items = [];
-						self.viewModel.entries().forEach( function( entry ) {
+						entries.forEach( function( entry ) {
 							var value = 0;
 							if ( typeof entry[ targetFieldId ] !== 'undefined' && entry[ targetFieldId ].value ) {
 								value = gformToNumber( entry[ targetFieldId ].value );
@@ -994,6 +1014,26 @@ const ko = window.ko;
 						replace = items.join( ', ' );
 						break;
 				}
+
+				/**
+				 * Filter the replacement values for Nested Forms calculation merge tag modifiers such as :sum.
+				 *
+				 * @since 1.1.5
+				 *
+				 * @param {float}             replace         Replacement value to use for the merge tag in the calculation.
+				 * @param {object}            match           Information about the matched merge tag.
+				 * @param {array}             entries         Child entries to be used for calculations
+				 * @param {int}               fieldId         ID of the Nested Form field.
+				 * @param {int}               formId          ID of the child form.
+				 * @param {GPNestedForms}     gpnf            Current instance of the GPNestedForms object.
+				 * @param {object}            formulaField    The formula field with the merge tag in it.
+				 */
+				replace = window.gform.applyFilters( 'gpnf_calc_replacement_value', replace, {
+					search,
+					nestedFormFieldId,
+					func,
+					targetFieldId,
+				}, entries, self.fieldId, self.formId, self, formulaField );
 
 				formula = formula.replace( search, replace );
 

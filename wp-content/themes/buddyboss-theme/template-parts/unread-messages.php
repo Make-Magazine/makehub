@@ -221,6 +221,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				<div class="notification-avatar <?php echo ( 1 === count( $avatars ) && 'user' === $avatars[0]['type'] ? esc_attr( $moderation_class ) : '' ); ?>">
 					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 						<?php
+						if ( 1 === count( $avatars ) && 'user' === $avatars[0]['type'] && function_exists( 'bb_user_presence_html' ) ) {
+							bb_user_presence_html( $avatars[0]['id'] );
+						}
 						if ( count( $avatars ) > 1 ) {
 							echo '<div class="thread-multiple-avatar">';
 						}
@@ -237,6 +240,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						if ( count( $avatars ) > 1 ) {
 							echo '</div>';
 						}
+
 						?>
 					</a>
 				</div>

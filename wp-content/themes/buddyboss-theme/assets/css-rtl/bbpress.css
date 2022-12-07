@@ -2765,8 +2765,8 @@ div.bbp-submit-wrapper .button.submit {
 
 .bs-item-list.list-view li.bs-item-wrap.bs-topic-form-wrap:hover {
   box-shadow: none;
-  border-right-color: #E7EAEC;
-  border-left-color: #E7EAEC;
+  border-right-color: var(--bb-content-border-color);
+  border-left-color: var(--bb-content-border-color);
 }
 
 .bs-header-item .action.bs-forums-meta {
@@ -3342,7 +3342,7 @@ div#bbpress-forums:after {
 
 #bbp-your-profile {
   background-color: #fff;
-  border: 1px solid #E7EAEC;
+  border: 1px solid var(--bb-content-border-color);
   padding: 15px 20px;
   position: relative;
   border-radius: 4px;
@@ -3438,13 +3438,13 @@ div#bbpress-forums:after {
 
 .bbp-user-profile {
   background-color: #fff;
-  border: 1px solid #E7EAEC;
+  border: 1px solid var(--bb-content-border-color);
   border-radius: 4px;
   padding: 30px;
 }
 
 #bbpress-forums .bs-single-forum-list.bb-single > li.bs-header-item {
-  border-bottom: 1px solid #E7EAEC;
+  border-bottom: 1px solid var(--bb-content-border-color);
 }
 
 #bbpress-forums#bbpress-forums .bs-single-forum-list.bb-single .status-spam {
@@ -3754,6 +3754,7 @@ body:not(.forum) .entry-content .bbp-topic-form .bbp-form .emojionearea.medium-e
 body:not(.forum) .entry-content .bbp-topic-form .bbp-form .bbp_topic_tags_wrapper {
   background: var(--bb-content-background-color);
   border: 1px solid var(--bb-content-border-color);
+  border-top: 0;
   border-radius: var(--bb-input-radius);
   padding: 0 12px;
   margin-bottom: 10px !important;
@@ -3817,15 +3818,19 @@ body .entry-content > .bbp-topic-form.bb-modal .new_topic_title_avatar {
 }
 
 /* bbp-forum-form, bbp-reply-form and bbp-topic-form shortcode style starts */
-article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form input, article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form select,
+article:not(.type-forum) .entry-content > .bbp-topic-form input, article:not(.type-forum) .entry-content > .bbp-topic-form select,
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form input,
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form select,
 .entry-content > .bbp-forum-form input,
 .entry-content > .bbp-forum-form select {
   width: 100%;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-the-content-wrapper,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form .bbp-the-content-wrapper,
 .entry-content > .bbp-forum-form .bbp-the-content-wrapper {
   margin-bottom: 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-the-content-wrapper .bbp_editor_forum_content,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form .bbp-the-content-wrapper .bbp_editor_forum_content,
 .entry-content > .bbp-forum-form .bbp-the-content-wrapper .bbp_editor_forum_content {
   font-size: 15px;
@@ -3837,12 +3842,14 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form .bbp-t
   padding: 15px;
   min-height: 90px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-the-content-wrapper .bbp_editor_forum_content:after,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form .bbp-the-content-wrapper .bbp_editor_forum_content:after,
 .entry-content > .bbp-forum-form .bbp-the-content-wrapper .bbp_editor_forum_content:after {
   font-size: 15px;
   color: rgba(var(--bb-body-text-color-rgb), 0.5);
   pointer-events: none;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar,
 .entry-content > .bbp-forum-form #whats-new-toolbar {
   border: 1px solid var(--bb-content-border-color);
@@ -3852,6 +3859,7 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats
   padding: 15px;
   margin-bottom: 15px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar {
   background-color: var(--bb-content-background-color);
@@ -3859,36 +3867,44 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats
   top: 5px;
   right: 45px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar.active,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar.active {
   visibility: visible;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-button-active,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-button-active,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-button-active {
   background-color: transparent;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar li button,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li button,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li button {
   padding: 10px 0 10px 10px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar li button:hover,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li button:hover,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li button:hover {
   background-color: transparent;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-action-pre,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-action-pre,
 .entry-content > .bbp-forum-form #whats-new-toolbar .medium-editor-toolbar li .medium-editor-action-pre {
   padding: 10px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-submit-wrapper .button.submit,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-forum-form .bbp-submit-wrapper .button.submit,
 .entry-content > .bbp-forum-form .bbp-submit-wrapper .button.submit {
   margin-right: 0;
 }
 
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_title_wrapper,
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp_topic_title_wrapper,
 .entry-content > .bbp-reply-form .bbp-form > legend {
   font-size: 16px;
   font-weight: 600;
@@ -3902,6 +3918,7 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_t
   margin-bottom: 0;
 }
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_title_wrapper #bbp-close-btn,
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp_topic_title_wrapper #bbp-close-btn,
 .entry-content > .bbp-reply-form .bbp-form > legend #bbp-close-btn {
   display: none;
 }
@@ -3913,6 +3930,9 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_t
   display: none;
 }
 
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar,
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-attachments,
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-the-content-wrapper,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #whats-new-toolbar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #whats-new-attachments,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-the-content-wrapper,
@@ -3925,33 +3945,42 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-t
   background-color: var(--bb-content-background-color);
   margin-bottom: 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form div.dropzone.dz-started,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form div.dropzone.dz-started,
 .entry-content > .bbp-reply-form div.dropzone.dz-started {
   margin-bottom: 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp_topic_tags_wrapper,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_tags_wrapper,
 .entry-content > .bbp-reply-form .bbp_topic_tags_wrapper {
   background-color: var(--bb-content-background-color);
   border: 1px solid var(--bb-content-border-color);
+  border-top: 0;
   border-radius: 0 0 var(--bb-input-radius) var(--bb-input-radius);
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bb-form-select-fields,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bb-form-select-fields,
 .entry-content > .bbp-reply-form .bb-form-select-fields {
   margin: 15px 0px 0;
+  padding: 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .medium-editor-element,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .medium-editor-element,
 .entry-content > .bbp-reply-form .medium-editor-element {
   display: inline-block;
   width: 100%;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #whats-new-toolbar,
 .entry-content > .bbp-reply-form #whats-new-toolbar {
   padding: 15px 25px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar,
 .entry-content > .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar {
   right: 50px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #bbp-template-notices,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #bbp-template-notices,
 .entry-content > .bbp-reply-form #bbp-template-notices {
   display: table;
@@ -3961,24 +3990,30 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #bbp-t
   border-top: 0;
   width: 100%;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form #bbp-template-notices .bp-feedback,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #bbp-template-notices .bp-feedback,
 .entry-content > .bbp-reply-form #bbp-template-notices .bp-feedback {
   margin: 10px 15px;
 }
 
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal .bbp_topic_title_wrapper .new_topic_title_avatar,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_title_wrapper .new_topic_title_avatar {
   width: 64px;
   min-width: 64px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal .bbp_topic_title_wrapper .new_topic_title_avatar img,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_title_wrapper .new_topic_title_avatar img {
   width: 100%;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal .bbp_topic_title_wrapper #bbp_topic_title,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_title_wrapper #bbp_topic_title {
   margin: 10px 15px 0 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal #bbp_topic_submit,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form #bbp_topic_submit {
   margin-top: 15px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal .bbp_topic_subscription_wrapper,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_subscription_wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3987,8 +4022,13 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_t
       -ms-flex-align: center;
           align-items: center;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal .bbp_topic_subscription_wrapper > label,
 article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_topic_subscription_wrapper > label {
   margin-bottom: -15px;
+}
+
+article:not(.type-forum) .entry-content > .bbp-topic-form.bb-modal #bbp_stick_topic_select {
+  margin-bottom: 10px !important;
 }
 
 @media screen and (max-width: 992px) {
@@ -4056,19 +4096,24 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_t
   opacity: 1;
 }
 
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-form .bbp-the-content-wrapper,
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper,
 .reply-edit #bbpress-forums .bbp-reply-form .bbp-form .bbp-the-content-wrapper, .topic-edit #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper {
   background-color: var(--bb-content-background-color);
   border: 1px solid var(--bb-content-border-color);
   border-bottom: 0;
-  border-radius: var(--bb-input-radius) var(--bb-input-radius) 0 0;
   margin-bottom: 0;
   display: table;
   width: 100%;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-form .bbp-the-content-wrapper .medium-editor-element:not(.emojionearea),
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper .medium-editor-element:not(.emojionearea),
 .reply-edit #bbpress-forums .bbp-reply-form .bbp-form .bbp-the-content-wrapper .medium-editor-element:not(.emojionearea), .topic-edit #bbpress-forums .bbp-topic-form .bbp-form .bbp-the-content-wrapper .medium-editor-element:not(.emojionearea) {
   background-color: transparent;
   border-top: 0;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-form #whats-new-attachments,
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments,
 .reply-edit #bbpress-forums .bbp-reply-form .bbp-form #whats-new-attachments, .topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments {
   margin-bottom: 0;
   background-color: var(--bb-content-background-color);
@@ -4076,12 +4121,21 @@ article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp_t
   border-width: 0 1px 0 1px;
   padding: 15px;
 }
+article:not(.type-forum) .entry-content > .bbp-topic-form .bbp-form #whats-new-toolbar,
+article:not(.type-forum) .entry-content > #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar,
 .reply-edit #bbpress-forums .bbp-reply-form .bbp-form #whats-new-toolbar, .topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar {
   background-color: var(--bb-content-background-color);
   border: 1px solid var(--bb-content-border-color);
-  border-radius: 0 0 var(--bb-input-radius) var(--bb-input-radius);
+  border-radius: 0;
   border-top: 0;
   padding: 15px;
+}
+
+body.page .entry-content .bbp-topic-form .bbp-form .bbp_topic_title_wrapper .new_topic_title_avatar {
+  margin-left: 10px;
+}
+body.page .entry-content .bbp-topic-form .bbp-form .bbp_topic_title_wrapper .new_topic_title input {
+  width: 100%;
 }
 
 .topic .forum_single_action_wrap, #buddypress .forum_single_action_wrap {
@@ -5391,6 +5445,7 @@ body:not(.topic-edit) #new-post input.select2-search__field {
   }
 }
 .bbp-reply-form-success-modal .bbp-reply-form-success .reply-content .content-title .process-title .reply-to {
+  width: auto;
   margin-left: 5px;
 }
 @media only screen and (max-width: 992px) {
@@ -5445,15 +5500,12 @@ body:not(.topic-edit) #new-post input.select2-search__field {
   font-size: 24px;
 }
 
-.bb-quick-reply-form-wrap .bbp-reply-form {
-  border: 1px solid var(--bb-content-border-color) !important;
-  border-radius: 4px 4px 0 0 !important;
-}
 .bb-quick-reply-form-wrap .bbp-reply-form .bbp-form > legend {
   padding: 25px 15px !important;
-  color: #999 !important;
+  color: var(--bb-alternate-text-color) !important;
 }
 .bb-quick-reply-form-wrap .bbp-reply-form .bbp-form > legend #bbp-reply-exerpt {
+  font-size: 16px;
   font-weight: 600;
   font-size: inherit;
   color: var(--bb-headings-color);
@@ -5462,7 +5514,7 @@ body:not(.topic-edit) #new-post input.select2-search__field {
   margin-right: 0;
   margin-left: 0;
 }
-.bb-quick-reply-form-wrap .bbp-reply-form .bbp-form > legend .js-modal-close .bb-icon-close {
+.bb-quick-reply-form-wrap .bbp-reply-form .bbp-form > legend .js-modal-close .bb-model-close-button {
   color: var(--bb-headings-color);
   font-size: 24px;
 }
@@ -5561,4 +5613,27 @@ body.activity .activity .activity-list .bbp_reply_create .activity-inner .bb-act
 body.activity .activity .activity-list .bbp_reply_create .activity-inner .bb-activity-video-wrap .bb-activity-video-elem .single-activity-video:after {
   border: 0;
   border-radius: 4px;
+}
+
+body.page #bbpress-forums .bb-single-reply-list.list-view .bs-item-wrap {
+  border-radius: var(--bb-block-radius) var(--bb-block-radius);
+}
+body.page #bbpress-forums .bb-single-reply-list .bs-item-wrap .bs-reply-list-item {
+  padding: 0;
+}
+body.page #bbpress-forums .bb-single-reply-list .bs-item-wrap .bs-reply-list-item:hover {
+  background-color: transparent !important;
+}
+body.page #bbpress-forums .bb-single-reply-list .bs-item-wrap .bs-reply-header .item-meta {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+body.page #bbpress-forums .bb-single-reply-list .bs-item-wrap .bs-reply-header .item-meta h3 {
+  width: 100%;
+}
+body.page #bbpress-forums .bb-single-reply-list .bs-item-wrap .bs-reply-header .bb-theme-actions {
+  display: none;
 }

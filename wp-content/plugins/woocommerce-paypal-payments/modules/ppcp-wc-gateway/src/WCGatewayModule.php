@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\WcGateway;
 
-use Dhii\Container\ServiceProvider;
-use Dhii\Modular\Module\ModuleInterface;
+use WooCommerce\PayPalCommerce\Vendor\Dhii\Container\ServiceProvider;
+use WooCommerce\PayPalCommerce\Vendor\Dhii\Modular\Module\ModuleInterface;
 use WC_Order;
 use WooCommerce\PayPalCommerce\AdminNotices\Repository\Repository;
 use WooCommerce\PayPalCommerce\ApiClient\Entity\Capture;
@@ -31,6 +31,7 @@ use WooCommerce\PayPalCommerce\WcGateway\Gateway\CreditCardGateway;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\DCCProductStatus;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\PayUponInvoiceProductStatus;
+use WooCommerce\PayPalCommerce\WcGateway\Helper\SettingsStatus;
 use WooCommerce\PayPalCommerce\WcGateway\Notice\ConnectAdminNotice;
 use WooCommerce\PayPalCommerce\WcGateway\Notice\GatewayWithoutPayPalAdminNotice;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\AuthorizedPaymentsProcessor;
@@ -39,8 +40,8 @@ use WooCommerce\PayPalCommerce\WcGateway\Settings\SectionsRenderer;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\Settings;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\SettingsListener;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\SettingsRenderer;
-use Interop\Container\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use WooCommerce\PayPalCommerce\Vendor\Interop\Container\ServiceProviderInterface;
+use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
 
 /**
  * Class WcGatewayModule
@@ -87,11 +88,12 @@ class WCGatewayModule implements ModuleInterface {
 				$breakdown = $capture->seller_receivable_breakdown();
 				if ( $breakdown ) {
 					$wc_order->update_meta_data( PayPalGateway::FEES_META_KEY, $breakdown->to_array() );
-					$wc_order->save_meta_data();
 					$paypal_fee = $breakdown->paypal_fee();
 					if ( $paypal_fee ) {
-						update_post_meta( $wc_order->get_id(), 'PayPal Transaction Key', $paypal_fee->value() );
+						$wc_order->update_meta_data( 'PayPal Transaction Fee', (string) $paypal_fee->value() );
 					}
+
+					$wc_order->save_meta_data();
 				}
 
 				$fraud = $capture->fraud_processor_response();
@@ -153,9 +155,22 @@ class WCGatewayModule implements ModuleInterface {
 		);
 
 		if ( $c->has( 'wcgateway.url' ) ) {
+			$settings_status = $c->get( 'wcgateway.settings.status' );
+			assert( $settings_status instanceof SettingsStatus );
+
+			$settings = $c->get( 'wcgateway.settings' );
+			assert( $settings instanceof Settings );
+
 			$assets = new SettingsPageAssets(
 				$c->get( 'wcgateway.url' ),
-				$c->get( 'ppcp.asset-version' )
+				$c->get( 'ppcp.asset-version' ),
+				$c->get( 'subscription.helper' ),
+				$c->get( 'button.client_id_for_admin' ),
+				$c->get( 'api.shop.currency' ),
+				$c->get( 'api.shop.country' ),
+				$settings_status->is_pay_later_button_enabled(),
+				$settings->has( 'disable_funding' ) ? $settings->get( 'disable_funding' ) : array(),
+				$c->get( 'wcgateway.all-funding-sources' )
 			);
 			$assets->register_assets();
 		}
@@ -242,9 +257,7 @@ class WCGatewayModule implements ModuleInterface {
 					( $c->get( 'wcgateway.pay-upon-invoice' ) )->init();
 				}
 
-				if ( defined( 'PPCP_FLAG_OXXO' ) && PPCP_FLAG_OXXO === true ) {
-					( $c->get( 'wcgateway.oxxo' ) )->init();
-				}
+				( $c->get( 'wcgateway.oxxo' ) )->init();
 			}
 		);
 
@@ -278,10 +291,6 @@ class WCGatewayModule implements ModuleInterface {
 		add_action(
 			'wc_ajax_ppc-oxxo',
 			static function () use ( $c ) {
-				if ( defined( 'PPCP_FLAG_OXXO' ) && PPCP_FLAG_OXXO === false ) {
-					return;
-				}
-
 				$endpoint = $c->get( 'wcgateway.endpoint.oxxo' );
 				$endpoint->handle_request();
 			}
@@ -354,7 +363,7 @@ class WCGatewayModule implements ModuleInterface {
 					$methods[] = $container->get( 'wcgateway.pay-upon-invoice-gateway' );
 				}
 
-				if ( defined( 'PPCP_FLAG_OXXO' ) && PPCP_FLAG_OXXO === true && 'MX' === $shop_country ) {
+				if ( 'MX' === $shop_country ) {
 					$methods[] = $container->get( 'wcgateway.oxxo-gateway' );
 				}
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { __ } from '@wordpress/i18n';
 import {
 	Toaster,
 	Tooltip,
 } from '@brainstormforce/starter-templates-components';
+import { __ } from '@wordpress/i18n';
 import ICONS from '../../../../../icons';
 import { useStateValue } from '../../../../store/store';
 import { isSyncSuccess, SyncStart } from './utils';

@@ -129,7 +129,7 @@ abstract class GravityView_Inline_Edit_Field {
 	 *
 	 * @return bool|WP_Error|array Returns original result, if not a number field. Otherwise, returns a response array. Empty if no calculation fields, otherwise multi-dimensional array with `data` and `selector` keys
 	 */
-	public function updated_result( $update_result, $entry = array(), $form_id = 0, GF_Field $gf_field ) {
+	public function updated_result( $update_result, $entry = array(), $form_id = 0, GF_Field $gf_field = null ) {
 		$return = $update_result;
 
 		if ( $this->standard_live_update ) {

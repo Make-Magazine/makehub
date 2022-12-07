@@ -25,7 +25,7 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 
 ?>
 
-<div class="lifter-topic-sidebar-wrapper <?php echo $side_panel_state_class; ?>">
+<div class="lifter-topic-sidebar-wrapper <?php echo esc_attr( $side_panel_state_class ); ?>">
 
     <div class="lifter-topic-sidebar-data">
 
@@ -43,7 +43,7 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 		            <h2 class="course-entry-title"><?php echo esc_html( get_the_title( $lessonID ) ); ?></h2>
 	            <?php else: ?>
 
-		            <a title="<?php echo esc_html( get_the_title( $course_id ) ); ?>" href="<?php echo esc_url( get_permalink( $course_id ) ); ?>" class="course-entry-link">
+                    <a title="<?php echo esc_attr( get_the_title( $course_id ) ); ?>" href="<?php echo esc_url( get_permalink( $course_id ) ); ?>" class="course-entry-link">
 	                      <span>
 	                           <i class="bb-icons bb-icon-chevron-left"></i>
 	                           <?php esc_html_e( 'Back to Course', 'buddyboss-theme' ); ?>
@@ -62,7 +62,7 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 
 			echo  buddyboss_theme()->lifterlms_helper()->lifterlms_course_progress_bar( $progress, false, false, true ); ?>
 		</div>
-		
+
 		<?php if ( buddyboss_theme_get_option( 'lifterlms_lesson_list' ) ) : ?>
 			<div class="lifterlms-lessions-list">
 				<?php
@@ -82,7 +82,7 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 							<?php $lessons = $section->get_lessons(); ?>
 							<?php if ( $lessons ) : ?>
 								<?php foreach ( $lessons as $lesson ) : ?>
-									<div class="lifterlms_lesson_holder <?php if ( $lesson->id == $lesson_id ) { echo "current_title"; } ?>">
+									<div class="lifterlms_lesson_holder <?php if ( $lesson->id == $lesson_id ) { echo esc_attr( "current_title" ); } ?>">
 										<?php
 										llms_get_template( 'course/lesson-preview.php',
 											array(
@@ -122,9 +122,9 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 						        <?php
 						        $user_link = buddyboss_theme()->lifterlms_helper()->bb_llms_get_user_link( (int) $course_member->user_id );
 						        ?>
-                                <a href="<?php echo $user_link; ?>">
+                                <a href="<?php echo esc_url( $user_link ); ?>">
 
-                                    <img class="round" src="<?php echo get_avatar_url( (int) $course_member->user_id, array( 'size' => 96 ) ); ?>" alt="" />
+                                    <img class="round" src="<?php echo esc_url( get_avatar_url( (int) $course_member->user_id, array( 'size' => 96 ) ) ); ?>" alt="" />
 							        <?php
 							        if ( class_exists( 'BuddyPress' ) ) { ?>
                                         <span><?php echo bp_core_get_user_displayname( (int) $course_member->user_id ); ?></span>
@@ -169,8 +169,8 @@ $total_enrolled_users_data  = $enrolled_users['data'];
 	</div> <!-- .lifter-topic-sidebar-data -->
 
 </div> <!-- .lifter-topic-sidebar-wrapper -->
-	
-	
+
+
 
 
 
