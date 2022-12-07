@@ -197,7 +197,7 @@ jQuery(document).ready(function () {
 
     // make some room for our fixed header
     jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "121px");
-    if (jQuery(window).width() < 800) {
+    if (jQuery(window).width() <= 800) {
         jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "76px");
     }
 
@@ -223,7 +223,7 @@ jQuery(document).ready(function () {
 			}
 			jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery(".profile-menu"));
 			jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#make-coin"));
-        } else if (jQuery(window).width() > 800 && (jQuery("#primary-navbar #menu-secondary_universal_menu").length || jQuery("#primary-navbar #buddypanel-menu").length) ) {
+        } else if (jQuery(window).width() >= 800 && (jQuery("#primary-navbar #menu-secondary_universal_menu").length || jQuery("#primary-navbar #buddypanel-menu").length) ) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
             jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
             jQuery("#profile-view").append(jQuery(".profile-menu"));
@@ -233,7 +233,7 @@ jQuery(document).ready(function () {
 			}
 			jQuery("#primary-navbar h3").text("");
         }
-        if (jQuery(window).width() > 800) {
+        if (jQuery(window).width() >= 800) {
             navListOrder();
         }
     }
