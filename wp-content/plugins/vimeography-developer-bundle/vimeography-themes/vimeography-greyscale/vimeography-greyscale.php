@@ -4,7 +4,7 @@ Plugin Name: Vimeography Theme: Greyscale
 Plugin URI: https://vimeography.com/themes
 Theme Name: Greyscale
 Theme URI:  https://vimeography.com/themes/greyscale
-Version: 2.0.6
+Version: 2.1.1
 Description: Greyscale is a modern, interactive portfolio layout that fits any color scheme.
 Author: Dave Kiss
 Author URI: https://vimeography.com
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Greyscale') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

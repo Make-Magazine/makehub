@@ -9,15 +9,9 @@ namespace AcVendor\Brick\Money\Exception;
  */
 class CurrencyConversionException extends MoneyException
 {
-    /**
-     * @var string
-     */
-    private $sourceCurrencyCode;
+    private string $sourceCurrencyCode;
 
-    /**
-     * @var string
-     */
-    private $targetCurrencyCode;
+    private string $targetCurrencyCode;
 
     /**
      * CurrencyConversionException constructor.

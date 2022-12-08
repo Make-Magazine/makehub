@@ -2531,8 +2531,10 @@ div.gform_wrapper ul.gfield_radio li input[type=radio]:checked + label {
 }
 
 .gfield_checkbox input[type=checkbox] {
-  position: absolute;
+  /*position: absolute; // take it out of document flow */
   opacity: 0;
+  height: 0;
+  width: 0;
 }
 .gfield_checkbox input[type=checkbox] + label {
   cursor: pointer;
@@ -2548,7 +2550,7 @@ div.gform_wrapper ul.gfield_radio li input[type=radio]:checked + label {
   vertical-align: text-top;
   width: 20px;
   height: 20px;
-  background: #fff;
+  background: var(--bb-primary-color);
   border-radius: 3px;
   border: 1px solid #C9CBCA;
 }
@@ -2577,14 +2579,18 @@ div.gform_wrapper ul.gfield_radio li input[type=radio]:checked + label {
 }
 
 .gfield_radio input[type=radio] {
-  position: absolute;
+  margin: 0 !important;
+  height: 0;
+  width: 0;
   opacity: 0;
 }
 .gfield_radio input[type=radio] + label, .gfield_radio input[type=radio] + .bb-radio-label {
-  display: inline-block;
+  margin: 0 !important;
+  font-size: 15px;
+  display: inline-block !important;
+  line-height: normal !important;
   position: relative;
   cursor: pointer;
-  padding: 0;
 }
 .gfield_radio input[type=radio] + label:before, .gfield_radio input[type=radio] + .bb-radio-label:before {
   content: '';
@@ -2618,8 +2624,26 @@ div.gform_wrapper ul.gfield_radio li input[type=radio]:checked + label {
   height: 14px;
   text-align: center;
   left: 4px;
-  top: 4px;
+  top: 5px;
   border-radius: 100%;
+}
+
+.gform_wrapper .ginput_container_radio .gfield_radio .gchoice input[type=radio] + label {
+  padding-left: 32px;
+}
+.gform_wrapper .ginput_container_radio .gfield_radio .gchoice input[type=radio] + label::before {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+}
+.gform_wrapper .ginput_container_radio .gfield_radio .gchoice input[type=radio]:checked + label::after {
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+          transform: translate(0, -50%);
 }
 
 .nf-form-wrap .nf-form-content {
@@ -3321,6 +3345,10 @@ div.wpforms-container-full .wpforms-form .wpforms-field-credit-card-expiration s
   background: transparent;
   border: 0;
   font-size: 13px;
+}
+
+.toggle-sap-widgets:hover .cls-1 {
+  fill: var(--bb-primary-color);
 }
 
 @media screen and (max-width: 620px) {

@@ -247,18 +247,26 @@ class Activecampaign_For_Woocommerce_Customer_Utilities {
 	public function build_customer_data( $passed_data = null ) {
 		try {
 			// Get current customer
-			if ( ! empty( wc()->customer->get_id() ) && ! empty( wc()->customer->get_email() ) ) {
+			if (
+				isset( wc()->customer ) &&
+				! is_null( wc()->customer ) &&
+				AC_Utilities::validate_object( wc()->customer, 'get_id' ) &&
+				! empty( wc()->customer->get_id() ) &&
+				! empty( wc()->customer->get_email() )
+			) {
 				$customer_data               = wc()->customer->get_data();
 				$customer_data['id']         = wc()->customer->get_id(); // This is a user id if registered or a UUID if guest
 				$customer_data['email']      = wc()->customer->get_email();
 				$customer_data['first_name'] = wc()->customer->get_first_name();
 				$customer_data['last_name']  = wc()->customer->get_last_name();
 			} else {
-				// We don't have a real WC customer, get the session customer
-				$customer_data = wc()->session->get( 'customer' );
+				if ( isset( wc()->session ) && ! is_null( wc()->session ) && AC_Utilities::validate_object( wc()->session, 'get_customer_id' ) ) {
+					// We don't have a real WC customer, get the session customer
+					$customer_data = wc()->session->get( 'customer' );
 
-				// Make sure we've set the id
-				$customer_data['id'] = wc()->session->get_customer_id();
+					// Make sure we've set the id
+					$customer_data['id'] = wc()->session->get_customer_id();
+				}
 
 				// If we have guest data passed in, replace with that
 				if ( ! empty( $this->passed_data ) ) {

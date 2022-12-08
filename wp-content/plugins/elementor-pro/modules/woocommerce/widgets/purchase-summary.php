@@ -2,6 +2,7 @@
 namespace ElementorPro\Modules\Woocommerce\Widgets;
 
 use ElementorPro\Plugin;
+use ElementorPro\Modules\Woocommerce\Module;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Typography;
@@ -462,7 +463,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'sections_box_shadow',
-				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table, {{WRAPPER}} address',
 			]
 		);
@@ -591,7 +591,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'confirmation_message_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-thankyou-order-received',
 			]
 		);
@@ -627,7 +626,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'titles_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} h2',
 			]
 		);
@@ -741,7 +739,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'payment_details_titles_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-order-overview.order_details li',
 			]
 		);
@@ -912,7 +909,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'account_title_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .wc-bacs-bank-details-account-name',
 			]
 		);
@@ -969,7 +965,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'bank_details_titles_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-bacs-bank-details .wc-bacs-bank-details li',
 			]
 		);
@@ -1131,7 +1126,7 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'order_details_titles_totals_typography',
-				'selector' => '{{WRAPPER}} .shop_table thead tr th, {{WRAPPER}} .shop_table tfoot th, {{WRAPPER}} .shop_table tfoot tr td, {{WRAPPER}} .shop_table tfoot tr td span',
+				'selector' => '{{WRAPPER}} .shop_table thead tr th, {{WRAPPER}} .shop_table tfoot th, {{WRAPPER}} .shop_table tfoot tr td, {{WRAPPER}} .shop_table tfoot tr td span, {{WRAPPER}} .woocommerce-table--order-downloads tr td:before',
 			]
 		);
 
@@ -1139,8 +1134,7 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'order_details_titles_totals_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
-				'selector' => '{{WRAPPER}} .shop_table thead tr th, {{WRAPPER}} .shop_table tfoot th, {{WRAPPER}} .shop_table tfoot tr td, {{WRAPPER}} .shop_table tfoot tr td span',
+				'selector' => '{{WRAPPER}} .shop_table thead tr th, {{WRAPPER}} .shop_table tfoot th, {{WRAPPER}} .shop_table tfoot tr td, {{WRAPPER}} .shop_table tfoot tr td span, {{WRAPPER}} .woocommerce-table--order-downloads tr td:before',
 			]
 		);
 
@@ -1318,7 +1312,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'order_details_button_text_shadow',
-				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button, {{WRAPPER}} .order-again .button',
 			]
 		);
@@ -1350,7 +1343,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'order_details_button_normal_box_shadow',
-				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button, {{WRAPPER}} .order-again .button',
 			]
 		);
@@ -1382,7 +1374,6 @@ class Purchase_Summary extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'order_details_button_hover_box_shadow',
-				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button:hover, {{WRAPPER}} .order-again .button:hover',
 			]
 		);
@@ -1553,12 +1544,7 @@ class Purchase_Summary extends Base_Widget {
 
 	protected function render() {
 		$is_editor = Plugin::elementor()->editor->is_edit_mode();
-		$is_preview = (
-			isset( $_GET['preview'] )
-			&& isset( $_GET['preview_id'] )
-			&& isset( $_GET['preview_nonce'] )
-			&& wp_verify_nonce( $_GET['preview_nonce'], 'post_preview_' . $_GET['preview_id'] )
-		);
+		$is_preview = Module::is_preview();
 
 		if ( $is_editor || $is_preview ) {
 			$this->set_preview_order();

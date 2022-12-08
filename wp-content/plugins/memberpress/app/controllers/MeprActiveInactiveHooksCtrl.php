@@ -6,13 +6,18 @@ if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');
 */
 class MeprActiveInactiveHooksCtrl extends MeprBaseCtrl {
   public function load_hooks() {
-    add_action('mepr-txn-store', array($this, 'handle_txn_store'), 11, 2);
+    add_action('mepr-txn-store', array($this, 'handle_txn_store'), 99, 2);
     add_action('mepr-txn-expired', array($this, 'handle_txn_expired'), 11, 2);
   }
 
   public function handle_txn_store($txn, $old_txn) {
     // Already been here?
     if($old_txn->status == $txn->status) { return; }
+
+    // Allow third party plugins to stop the running of the method
+    if(MeprHooks::apply_filters('mepr-active-inactive-hooks-skip', false, $txn)){
+      return;
+    }
 
     // Bail if no id's
     if(!isset($txn->id) || $txn->id <= 0 || !isset($txn->user_id) || $txn->user_id <= 0) { return; }
@@ -46,6 +51,11 @@ class MeprActiveInactiveHooksCtrl extends MeprBaseCtrl {
 
     // Part of an Enabled subscription, so let's bail
     if($sub_status == MeprSubscription::$active_str) {
+      return;
+    }
+
+    // Allow third party plugins to stop the running of the method
+    if(MeprHooks::apply_filters('mepr-active-inactive-hooks-skip', false, $txn)){
       return;
     }
 

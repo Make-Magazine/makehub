@@ -131,6 +131,11 @@ function bbp_pro_version_updater() {
 		if ( $raw_db_version < 241 ) {
 			do_action( 'bbp_pro_update_to_1_2_0' );
 		}
+
+		// Version 2.1.8.
+		if ( $raw_db_version < 251 ) {
+			do_action( 'bbp_pro_update_to_2_1_5' );
+		}
 	}
 
 	/* All done! *************************************************************/

@@ -115,8 +115,8 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		 * @since 1.0.0
 		 */
 		private function setup_globals() {
-			$this->version        = '2.0.4';
-			$this->db_version     = 241;
+			$this->version        = '2.2.1.1';
+			$this->db_version     = 251;
 			$this->db_version_raw = (int) bp_get_option( '_bbp_pro_db_version' );
 
 			// root directory.
@@ -211,6 +211,13 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		private function setup_actions() {
 			// add actions.
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+
+			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_enqueue_scripts_styles_admin' ) );
+			add_action( 'admin_footer', array( $this, 'bb_pro_display_update_plugin_information' ) );
+
+			// Add link to settings page.
+			add_filter( 'plugin_action_links', array( $this, 'bb_pro_modify_plugin_action_links' ), 10, 2 );
+			add_filter( 'network_admin_plugin_action_links', array( $this, 'bb_pro_modify_plugin_action_links' ), 10, 2 );
 		}
 
 		/**
@@ -222,6 +229,66 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$rtl_css = is_rtl() ? '-rtl' : '';
 			wp_enqueue_style( 'bb-pro-enqueue-scripts', $this->plugin_url . 'assets/css/index' . $rtl_css . $min . '.css', false, bb_platform_pro()->version );
+		}
+
+		/**
+		 * Enqueue style and script to the admin area for release note pop-up.
+		 *
+		 * @since 2.1.7
+		 */
+		public function bb_enqueue_scripts_styles_admin() {
+			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$rtl_css = is_rtl() ? '-rtl' : '';
+
+			wp_enqueue_style( 'bb-pro-enqueue-hello-style', $this->plugin_url . 'assets/css/hello' . $rtl_css . $min . '.css', false, bb_platform_pro()->version );
+			wp_enqueue_script( 'bb-pro-enqueue-hello-script', $this->plugin_url . 'assets/js/hello' . $min . '.js', false, bb_platform_pro()->version, true );
+			wp_localize_script(
+				'bb-pro-enqueue-hello-script',
+				'BP_PRO_HELLO',
+				array(
+					'bb_pro_display_auto_popup' => get_option( '_bb_pro_is_update' ),
+				)
+			);
+
+		}
+
+		/**
+		 * Add Settings link to plugins area.
+		 *
+		 * @since 2.1.7
+		 *
+		 * @param array  $links Links array in which we would prepend our link.
+		 * @param string $file  Current plugin basename.
+		 * @return array Processed links.
+		 */
+		public function bb_pro_modify_plugin_action_links( $links, $file ) {
+
+			// Return normal links if not BuddyPress.
+			if ( 'buddyboss-platform-pro/buddyboss-platform-pro.php' !== $file ) {
+				return $links;
+			}
+
+			// Add a few links to the existing links array.
+			return array_merge(
+				$links,
+				array(
+					'release_notes' => '<a href="javascript:void(0);" id="bb-pro-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss-pro' ) . '</a>',
+				)
+			);
+		}
+
+		/**
+		 * Display plugin information after plugin successfully updated.
+		 *
+		 * @since 2.1.7
+		 */
+		public function bb_pro_display_update_plugin_information() {
+			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
+				return;
+			}
+			// Check the transient to see if we've just updated the plugin.
+			include trailingslashit( BB_PLATFORM_PRO_PLUGIN_DIR ) . 'includes/bb-pro-update-buddyboss.php';
+			delete_option( '_bb_pro_is_update' );
 		}
 	}
 }

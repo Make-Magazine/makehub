@@ -266,7 +266,6 @@ jQuery( function() {
 	/**
 	 * On the Lesson Settings metabox. If it contains no items we remove the metabox.
 	 */
-
 	if (!jQuery('body.post-type-sfwd-lessons #sfwd-lessons.postbox .inside .sfwd_input').length) {
 		jQuery('body.post-type-sfwd-lessons #sfwd-lessons.postbox').remove();
 	}
@@ -274,7 +273,6 @@ jQuery( function() {
 	/**
 	 * On the Lesson Settings metabox. If it contains no items we remove the metabox.
 	 */
-
 	if (!jQuery('body.post-type-sfwd-topic #sfwd-topic.postbox .inside .sfwd_input').length) {
 		jQuery('body.post-type-sfwd-topic #sfwd-topic.postbox').remove();
 	}
@@ -282,9 +280,15 @@ jQuery( function() {
 	/**
 	 * On the Quiz Settings metabox. If it contains no items we remove the metabox.
 	 */
-
 	if (!jQuery('body.post-type-sfwd-quiz #sfwd-quiz.postbox .inside .sfwd_input').length) {
 		jQuery('body.post-type-sfwd-quiz #sfwd-quiz.postbox').remove();
+	}
+
+	/**
+	 * On the Question Settings metabox. If it contains no items we remove the metabox.
+	 */
+	if (!jQuery('body.post-type-sfwd-question #sfwd-question.postbox .inside .sfwd_input').length) {
+		jQuery('body.post-type-sfwd-question #sfwd-question.postbox').remove();
 	}
 
 	/**
@@ -294,13 +298,13 @@ jQuery( function() {
 	jQuery('.sfwd_options').on('ld_setting_switch_changed_early', function (event) {
 		if (jQuery(event.ld_trigger_data.element).hasClass('learndash-section-field-checkbox-switch')) {
 			var ld_switch_wrapper = jQuery(event.ld_trigger_data.element).parents('.ld-switch-wrapper');
-			if ((typeof ld_switch_wrapper !== 'undefined') && (jQuery('span.label-text-multple', ld_switch_wrapper).length ) ) {
-				jQuery('span.label-text-multple', ld_switch_wrapper).find('.ld-label-text').hide();
+			if ((typeof ld_switch_wrapper !== 'undefined') && (jQuery('span.label-text-multple', ld_switch_wrapper).length ) ) {// cspell:disable-line -- too many CSS related references.
+				jQuery('span.label-text-multple', ld_switch_wrapper).find('.ld-label-text').hide();// cspell:disable-line -- too many CSS related references.
 				if ('checked' === event.ld_trigger_data.state ) {
 					var switch_val = jQuery(event.ld_trigger_data.element).val();
-					jQuery('span.label-text-multple', ld_switch_wrapper).find('.ld-label-text-' + switch_val).show();
+					jQuery('span.label-text-multple', ld_switch_wrapper).find('.ld-label-text-' + switch_val).show();// cspell:disable-line -- too many CSS related references.
 				} else {
-					jQuery('span.label-text-multple', ld_switch_wrapper).find('span.ld-label-text-').show();
+					jQuery('span.label-text-multple', ld_switch_wrapper).find('span.ld-label-text-').show();// cspell:disable-line -- too many CSS related references.
 				}
 			}
 		}
@@ -313,9 +317,11 @@ jQuery( function() {
 		jQuery('.sfwd_options input.learndash-section-field-checkbox-switch').each(function (idx, item) {
 
 			jQuery(item).on( 'click', function (e) {
-				checked_state = 'unchecked';
+				const is_inverted = jQuery(e.currentTarget).data('inverted') === 1;
+
+				checked_state = is_inverted ? 'checked' : 'unchecked';
 				if (jQuery(e.currentTarget).is(':checked') ) {
-					checked_state = 'checked';
+					checked_state = is_inverted ? 'unchecked' : 'checked';
 				}
 
 				var trigger_data = {
@@ -1117,6 +1123,17 @@ jQuery( function() {
 		}
 		// If we get to here the form will submit.
 	});
+
+	/**
+	 * Update hidden 'country' input field on Payments settings page when selecting a country from the currency selector.
+	 */
+	if ( jQuery('select#learndash_settings_payments_defaults_currency').length ) {
+		console.log( jQuery('select#learndash_settings_payments_defaults_currency').length )
+		jQuery('select#learndash_settings_payments_defaults_currency').on( 'change', function () {
+			var select_val = jQuery(this).find(':selected').attr('data-country');
+			jQuery('#learndash_settings_payments_defaults_country').val(select_val);
+		});
+	}
 });
 
 /**
@@ -1138,7 +1155,7 @@ if (jQuery('body.plugins-php table.wp-list-table.plugins .ld-plugin-update-notic
 }
 
 /**
- * Handle the dimissable license notice. Sends trigger to server to store for 24 hours.
+ * Handle the dismissible license notice. Sends trigger to server to store for 24 hours.
  */
 if (jQuery('.learndash-updates-disabled-dismissible').length) {
 	jQuery('.learndash-updates-disabled-dismissible').on('click', '.notice-dismiss', function (event, el) {
@@ -1163,7 +1180,32 @@ if (jQuery('.learndash-updates-disabled-dismissible').length) {
 }
 
 /**
- * Handle the dimissable license notice. Sends trigger to server to store for 24 hours.
+ * Handle the dismissible hub upgrade notice.
+ */
+ if (jQuery('.learndash_hub_upgrade_dismiss').length) {
+	jQuery('.learndash_hub_upgrade_dismiss').on('click', '.notice-dismiss', function (event, el) {
+		var nonce = jQuery(event.currentTarget).parent('.learndash_hub_upgrade_dismiss').data('notice-dismiss-nonce');
+		post_data = {
+			'action': 'learndash_hub_upgrade_dismissed',
+			'learndash_hub_upgrade_dismissed_nonce': nonce
+		}
+
+		jQuery.ajax({
+			type: 'POST',
+			url: ajaxurl,
+			dataType: 'json',
+			cache: false,
+			data: post_data,
+			error: function (jqXHR, textStatus, errorThrown) {
+			},
+			success: function (reply_data) {
+			}
+		});
+	});
+}
+
+/**
+ * Handle the dismissible license notice. Sends trigger to server to store for 24 hours.
  */
 if (jQuery('.ld-plugin-other-plugins-notice').length) {
 	jQuery('.ld-plugin-other-plugins-notice').on('click', '.notice-dismiss', function (event, el) {
@@ -1408,3 +1450,354 @@ window.learndash.admin.settings = {
 };
 window.onload = learndash.admin.settings.eventListeners;
 */
+
+jQuery(function($) {
+	/**
+	 * Handle assignments modal view.
+	 */
+	$('.view-learndash-assignment').on('click', function(e) {
+		e.preventDefault();
+
+		const content = '<img src="' + $(this).attr('href') + '" />';
+
+		$('#learndash-admin-table-modal')
+			.html(content)
+			.dialog({
+				modal: true,
+				draggable: false,
+				resizable: false,
+				width: '70%',
+				title: $(this).data('title'),
+			});
+	});
+
+	/**
+	 * Handle essays modal view.
+	 */
+	$('.view-learndash-essay').on('click', function(e) {
+		e.preventDefault()
+
+		$.ajax({
+			url : $(this).attr('href'),
+			method : 'POST',
+			success : function(response) {
+				if (response.success) {
+					$('#learndash-admin-table-modal')
+						.html(response.data.content)
+						.dialog({
+							modal: true,
+							draggable: false,
+							resizable: false,
+							width: '70%',
+							title: response.data.title,
+						});
+				}
+			}
+		})
+	});
+
+	/**
+	 * Bulk Edit.
+	 */
+
+	function map_bulk_edit_filters( container ) {
+		let filters = [];
+
+		container.find( '.bulk-edit-filter' ).each( function() {
+			const $filter = $( this ).find( '.learndash-filter' );
+
+			const value = [ 'radio', 'checkbox' ].includes( $filter.attr( 'type' ) )
+				? $( this ).find( '.learndash-filter:checked' ).val()
+				: $filter.val();
+
+			filters.push(
+				{
+					enabled: $( this ).find( '.bulk-edit-display-switcher' ).is( ':checked' ),
+					name: $filter.attr( 'name' ),
+					value: value,
+				}
+			);
+		} );
+
+		return filters;
+	}
+
+	function map_bulk_edit_fields( container ) {
+		let fields = [];
+
+		container.find( '.bulk-edit-field' ).each( function() {
+			// Map the parent field.
+
+			const $parent_switcher = $( this ).find( '.bulk-edit-display-switcher' );
+			const field_name       = $parent_switcher.data( 'field-name' );
+			const $field           = $( '[name="' + field_name + '"]' );
+
+			const value = [ 'radio', 'checkbox' ].includes( $field.attr( 'type' ) )
+				? $( '[name="' + field_name + '"]:checked' ).val() || ''
+				: $field.val();
+
+			fields.push(
+				{
+					name: field_name,
+					value: value,
+					enabled: $parent_switcher.is( ':checked' ),
+				}
+			);
+
+			// Map child fields.
+			$( this ).find( '.bulk-edit-child-display-switcher-container' ).each( function() {
+				const enabled = $( this ).find( '.bulk-edit-child-display-switcher' ).is( ':checked' );
+
+				$( this ).next().find( '.sfwd_option_div input, .sfwd_option_div select' ).each( function() {
+					const value = [ 'radio', 'checkbox' ].includes( $( this ).attr( 'type' ) )
+						? $( '[name="' + $( this ).attr( 'name' ) + '"]:checked' ).val() || ''
+						: $( this ).val();
+
+					fields.push(
+						{
+							name: $( this ).attr( 'name' ),
+							value: value,
+							enabled: enabled,
+						}
+					);
+				} );
+			} );
+
+		} );
+
+		return fields;
+	}
+
+	function update_bulk_edit_button_state( container ) {
+		let button = container.find( '.bulk-edit-button' );
+
+		const enabled_fields_count  = container.find( '.bulk-edit-fields .bulk-edit-display-switcher:checked' ).length;
+		const affected_posts_number = parseInt( button.find( '.posts-number' ).html() ) || 0;
+
+		button.attr( 'disabled', 0 === enabled_fields_count || 0 === affected_posts_number );
+	}
+
+	function update_affected_posts_number( container ) {
+		$.post( {
+			url : learndash_admin_settings_data.ajaxurl,
+			data: {
+				action: container.data( 'action-get-affected-posts-number' ),
+				nonce: container.data( 'action-get-affected-posts-number-nonce' ),
+				filters: map_bulk_edit_filters( container ),
+			},
+			success: function( response ) {
+				if ( response.success ) {
+					container.find( '.posts-number' ).html( response.data.posts_number );
+
+					update_bulk_edit_button_state( container );
+				} else {
+					alert( response.data.message );
+				}
+			}
+		} );
+	}
+
+	// Add checkboxes on document ready to support enabling of child fields.
+
+	$( '#learndash-bulk-edit .sfwd_input' ).each( function() {
+		const $label     = $( this ).find( 'label' );
+		const label_text = $label.html();
+		const id         = $label.attr( 'for' ) + '-switcher';
+
+		let input = '';
+		input += '<div class="sfwd_input bulk-edit-child-display-switcher-container">';
+		input += '<input type="checkbox" id="' + id + '" class="bulk-edit-child-display-switcher" autocomplete="off">';
+		input += '<label for="' + id + '">' + label_text + '</label>';
+		input += '</div>';
+
+		$( this ).before( input )
+			.hide();
+	} );
+
+	// Tabs.
+
+	$( '#learndash-bulk-edit .tabs .tab' ).on( 'click', function() {
+		$( this ).addClass( 'selected' )
+			.siblings().removeClass( 'selected' );
+
+		$( $( this ).data( 'target-id' ) ).show()
+			.siblings().hide();
+	} );
+
+	// Show a field/filter input when enabled.
+
+	$( '#learndash-bulk-edit .bulk-edit-display-switcher' ).on( 'change', function() {
+		$( $( this ).data( 'target-id' ) ).toggle();
+
+		update_bulk_edit_button_state(
+			$( this ).closest( '.tab-content' )
+		);
+	} );
+
+	// Show a child field input when enabled.
+
+	$( '#learndash-bulk-edit' ).on( 'change', '.bulk-edit-child-display-switcher', function() {
+		$( this ).parent()
+			.next()
+			.toggle();
+	} );
+
+	// Send update request.
+
+	$( '#learndash-bulk-edit .bulk-edit-button' ).on( 'click', function( e ) {
+		e.preventDefault();
+
+		const container = $( this ).closest( '.tab-content' );
+
+		$.post( {
+			url : learndash_admin_settings_data.ajaxurl,
+			data: {
+				action: container.data( 'action-update-posts' ),
+				nonce: container.data( 'action-update-posts-nonce' ),
+				filters: map_bulk_edit_filters( container ),
+				fields: map_bulk_edit_fields( container ),
+			},
+			success: function( response ) {
+				if (response.success) {
+					alert( response.data.message );
+				}
+			}
+		} );
+	} );
+
+	// Update posts number when a filter is changed.
+
+	$( '#learndash-bulk-edit .bulk-edit-filters .learndash-filter, #learndash-bulk-edit .bulk-edit-filters .bulk-edit-display-switcher' ).on( 'change', function() {
+		update_affected_posts_number(
+			$( this ).closest( '.tab-content' )
+		);
+	} );
+
+	// Update posts number on document ready.
+
+	$( '#learndash-bulk-edit .tab-content' ).each( function() {
+		update_affected_posts_number( $( this ) );
+	} );
+
+	/**
+	 * Import / Export.
+	 */
+
+	// Toggle the export form.
+
+	$( '#learndash-export-all' ).on( 'click', function() {
+		$( '.learndash-export-items' ).hide();
+	} );
+
+	$( '#learndash-export-selected' ).on( 'click', function() {
+		$( '.learndash-export-items' ).fadeIn();
+	} );
+
+	// Send export request.
+
+	$( '#learndash-export-button' ).on( 'click', function( e ) {
+		e.preventDefault();
+
+		const container = $( '#learndash-export-container' );
+
+		let options = {};
+
+		container.find( '.learndash-export-input' )
+			.serializeArray()
+			.map( function( option ) {
+				if ( options[ option.name ] === undefined ) {
+					options[ option.name ] = [];
+				}
+				options[ option.name ].push( option.value );
+			} );
+
+		$( '.notice' ).hide();
+
+		$.post( {
+			url : learndash_admin_settings_data.ajaxurl,
+			data: {
+				action: container.data( 'action-name' ),
+				nonce: container.data( 'action-nonce' ),
+				type: container.find( '.learndash-export-type:checked' ).val(),
+				options: options,
+			},
+			success: function( response ) {
+				if ( response.success ) {
+					$( '#learndash-export-info' ).fadeIn();
+
+					$( '#learndash-export-button' )
+					.text($( '#learndash-export-button' ).text() + learndash_admin_settings_data.in_progress_label)
+					.attr( 'disabled', true );
+				} else {
+					const alert = $( '#learndash-export-error' );
+					alert.find( 'p' ).html( response.data.message );
+					alert.fadeIn();
+				}
+			}
+		} );
+	} );
+
+	// Send import request.
+
+	$( '#learndash-import-button' ).on( 'click', function( e ) {
+		e.preventDefault();
+
+		const button     = $( this );
+		const container  = $( '#learndash-import-container' );
+		const importFile = $( '#learndash-import-file' )[0];
+
+		if ( importFile.files.length === 0 || importFile.files[0].size === 0 ) {
+			alert( learndash_admin_settings_data.import_file_empty );
+			button.attr( 'disabled', false ).text( defaultButtonLabel );
+
+			return;
+		}
+
+		if( importFile.files[0].size > learndash_admin_settings_data.import_file_size_limit ) {
+			alert( learndash_admin_settings_data.import_file_size_limit_exceeded );
+			button.attr( 'disabled', false ).text( defaultButtonLabel );
+
+			return;
+		}
+
+		let formData = new FormData();
+
+		formData.append( 'action', container.data( 'action-name' ) );
+		formData.append( 'nonce', container.data( 'action-nonce' ) );
+		formData.append( 'file', importFile.files[0] );
+
+		$( '.notice' ).hide();
+
+		let defaultButtonLabel = button.text();
+
+        button.attr( 'disabled', true )
+			.text( learndash_admin_settings_data.uploading_label );
+
+		$.post( {
+			url : learndash_admin_settings_data.ajaxurl,
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function( response ) {
+				if ( response.success ) {
+					$( '#learndash-import-info' ).fadeIn();
+
+					$( '#learndash-import-button' )
+						.text( defaultButtonLabel + learndash_admin_settings_data.in_progress_label )
+				} else {
+					const alert = $( '#learndash-import-error' );
+					alert.find( 'p' ).html( response.data.message );
+					alert.fadeIn();
+
+					button.attr( 'disabled', false ).text( defaultButtonLabel );
+				}
+			}
+		} ).fail( function( response ) {
+			const alert = $( '#learndash-import-error' );
+			alert.find( 'p' ).html( 'Upload failed: ' + response.status + ' - ' + response.statusText );
+			alert.fadeIn();
+
+			button.attr( 'disabled', false ).text( defaultButtonLabel );
+		} );
+	} );
+});

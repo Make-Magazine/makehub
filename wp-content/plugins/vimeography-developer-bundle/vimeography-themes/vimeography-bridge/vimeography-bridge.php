@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Bridge
 Plugin URI: https://vimeography.com/themes
 Theme Name: Bridge
 Theme URI:  https://vimeography.com/themes/bridge
-Version: 2.0.6
+Version: 2.1.1
 Description: Bridge is a complete thumbnail layout that shows your video description, views and tags in a popup player.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2017 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Bridge') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Bridge') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

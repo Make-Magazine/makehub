@@ -240,7 +240,7 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 
 		try {
 			if ( ! wp_next_scheduled( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ) ) {
-				wp_schedule_event( time(), 'hourly', 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
+				wp_schedule_event( time() + 10, 'hourly', 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 			} else {
 				if ( function_exists( 'wp_get_scheduled_event' ) ) {
 					$logger->debug(
@@ -348,7 +348,11 @@ class Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities {
 	 * @return string
 	 */
 	public function get_or_generate_uuid() {
-		if ( isset( wc()->session ) && wc()->session->get( 'activecampaignfwc_order_external_uuid' ) ) {
+		if (
+			isset( wc()->session ) &&
+			 AC_Utilities::validate_object( wc()->session, 'get' ) &&
+			 wc()->session->get( 'activecampaignfwc_order_external_uuid' )
+		) {
 			$uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
 		} else {
 			$uuid = uniqid( '', true );

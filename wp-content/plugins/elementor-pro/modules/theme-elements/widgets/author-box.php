@@ -88,6 +88,9 @@ class Author_Box extends Base {
 					'source' => 'custom',
 				],
 				'separator' => 'before',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 		//END
@@ -120,6 +123,9 @@ class Author_Box extends Base {
 					'source' => 'custom',
 				],
 				'separator' => 'before',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 		//END
@@ -217,6 +223,9 @@ class Author_Box extends Base {
 					'source' => 'custom',
 				],
 				'separator' => 'before',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -226,6 +235,9 @@ class Author_Box extends Base {
 				'label' => esc_html__( 'Archive Button', 'elementor-pro' ),
 				'type' => Controls_Manager::URL,
 				'placeholder' => esc_html__( 'https://your-link.com', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 				'condition' => [
 					'source' => 'custom',
 				],
@@ -238,6 +250,9 @@ class Author_Box extends Base {
 				'label' => esc_html__( 'Archive Text', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => esc_html__( 'All Posts', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -391,10 +406,13 @@ class Author_Box extends Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -411,6 +429,7 @@ class Author_Box extends Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-author-box__avatar img' => 'border-radius: {{SIZE}}{{UNIT}}',
 				],
@@ -649,10 +668,13 @@ class Author_Box extends Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -670,6 +692,7 @@ class Author_Box extends Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -703,7 +726,7 @@ class Author_Box extends Base {
 	}
 
 	protected function render() {
-		$settings = $this->get_active_settings();
+		$settings = $this->get_settings_for_display();
 		$author = [];
 		$link_tag = 'div';
 		$link_url = '';

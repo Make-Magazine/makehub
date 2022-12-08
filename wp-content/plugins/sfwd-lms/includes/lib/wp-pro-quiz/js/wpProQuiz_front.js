@@ -28,6 +28,11 @@
 		var cookieSending = false;
 		var quiz_resume_data = {};
 
+		if (config.ld_script_debug == true) {
+			console.log("config[%o]", config);
+		}
+
+
 		var bitOptions = {
 			randomAnswer: 0,
 			randomQuestion: 0,
@@ -66,6 +71,7 @@
 		};
 
 		var globalElements = {
+			self: $e,
 			back: $e.find( 'input[name="back"]' ),
 			next: $e.find( globalNames.next ),
 			quiz: $e.find( '.wpProQuiz_quiz' ),
@@ -128,7 +134,7 @@
 						limit = resume_data[this.timer_cookie];
 					}
 				}
-				
+
 				var x = limit * 1000;
 
 				var $timeText = globalElements.timelimit.find( 'span' ).text( plugin.methode.parseTime( limit ) );
@@ -178,70 +184,114 @@
 			var itemsStatus = [];
 
 			this.init = function() {
-				$contain = $e.find( '.wpProQuiz_reviewQuestion' );
-				$cursor = $contain.find( 'div' );
-				$list = $contain.find( 'ol' );
+				$contain = $e.find(".wpProQuiz_reviewQuestion");
+				$cursor = $contain.find("div");
+				$list = $contain.find("ol");
 				$items = $list.children();
 
-				if ( config.mode != 2 ) {
-					$( '.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-correct' ).hide();
-					$( '.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-incorrect' ).hide();
+				if (config.mode != 2) {
+					$(".wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-correct").hide();
+					$(".wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-incorrect").hide();
 				}
 
-				$cursor.on( 'mousedown', function( e ) {
+				this.reset();
+
+				var resume_data = learndash_prepare_quiz_resume_data(config);
+				if (config.ld_script_debug == true) {
+					console.log("resume_data[%o]", resume_data);
+				}
+
+				if (typeof resume_data.reviewBox !== "undefined") {
+					jQuery(resume_data.reviewBox).each(function (idx, item) {
+						if (typeof item === "object") {
+							var item_tmp = item;
+							item = {};
+							if (typeof item_tmp.solved !== "undefined") {
+								item.solved = true;
+							}
+
+							if (typeof item_tmp.correct !== "undefined") {
+								item.correct = true;
+							}
+
+							if (typeof item_tmp.incorrect !== "undefined") {
+								item.incorrect = true;
+							}
+
+							if (typeof item_tmp.skip !== "undefined") {
+								item.skip = true;
+							}
+
+							if (typeof item_tmp.review !== "undefined") {
+								item.review = true;
+							}
+						}
+						itemsStatus[idx] = item;
+						setColor(idx);
+					});
+				}
+
+				$cursor.on("mousedown", function (e) {
 					e.preventDefault();
 					e.stopPropagation();
 
 					offset = e.pageY - $cursor.offset().top + top;
 
-					$( document ).on( 'mouseup.scrollEvent', endScroll );
-					$( document ).on( 'mousemove.scrollEvent', moveScroll );
-				} );
+					$(document).on("mouseup.scrollEvent", endScroll);
+					$(document).on("mousemove.scrollEvent", moveScroll);
+				});
 
-				$items.on( 'click', function( e ) {
-					plugin.methode.showQuestion( $( this ).index() );
-				} );
+				$items.on("click", function (e) {
+					plugin.methode.showQuestion($(this).index());
+				});
 
-				$e.on( 'questionSolved', function( e ) {
+				$e.on("questionSolved", function (e) {
 					itemsStatus[e.values.index].solved = e.values.solved;
-					setColor( e.values.index );
-				} );
+					setColor(e.values.index);
+					updateItemsStatus();
+				});
 
-				$e.on( 'questionSolvedCorrect', function( e ) {
+				$e.on("questionSolvedCorrect", function (e) {
 					itemsStatus[e.values.index].correct = true;
-					setColor( e.values.index );
-				} );
+					setColor(e.values.index);
+					updateItemsStatus();
+				});
 
-				$e.on( 'questionSolvedIncorrect', function( e ) {
+				$e.on("questionSolvedIncorrect", function (e) {
 					itemsStatus[e.values.index].incorrect = true;
-					setColor( e.values.index );
-				} );
+					setColor(e.values.index);
+					updateItemsStatus();
+				});
 
-				$e.on( 'changeQuestion', function( e ) {
+				$e.on("changeQuestion", function (e) {
 					// On Matrix sort questions we need to set the sort capture UL to full height.
-					if ( e.values.item[0] != 'undefined' ) {
+					if (e.values.item[0] != "undefined") {
 						var questionItem = e.values.item[0];
 						plugin.methode.setupMatrixSortHeights();
 					}
 
-					$items.removeClass( 'wpProQuiz_reviewQuestionTarget' );
+					$items.removeClass("wpProQuiz_reviewQuestionTarget");
 					//$items.removeClass('wpProQuiz_reviewQuestionSolved');
 					//$items.removeClass('wpProQuiz_reviewQuestionReview');
 
-					$items.eq( e.values.index ).addClass( 'wpProQuiz_reviewQuestionTarget' );
+					$items.eq(e.values.index).addClass("wpProQuiz_reviewQuestionTarget");
+					//updateItemsStatus();
 
-					scroll( e.values.index );
-				} );
+					scroll(e.values.index);
+				});
 
-				$e.on( 'skipQuestion', function( e ) {
-					itemsStatus[e.values.index].skip = ! itemsStatus[e.values.index].skip;
-					setColor( e.values.index );
-				} );
+				$e.on("skipQuestion", function (e) {
+					itemsStatus[e.values.index].skip = !itemsStatus[e.values.index].skip;
+					setColor(e.values.index);
+					updateItemsStatus();
+				});
 
-				$e.on( 'reviewQuestion', function( e ) {
-					itemsStatus[e.values.index].review = ! itemsStatus[e.values.index].review;
-					setColor( e.values.index );
-				} );
+				$e.on("reviewQuestion", function (e) {
+					itemsStatus[e.values.index].review =
+						!itemsStatus[e.values.index].review;
+					setColor(e.values.index);
+					updateItemsStatus();
+				});
 
 				/*
 				$contain.on('mousewheel DOMMouseScroll', function(e) {
@@ -290,7 +340,7 @@
 				max = h - c;
 				diff = max / x;
 
-				this.reset();
+				//this.reset();
 
 				if ( h > 100 ) {
 					$cursor.show();
@@ -369,8 +419,16 @@
 			}
 
 			function setColor( index ) {
-				var css_class = '';
 				var itemStatus = itemsStatus[index];
+
+				$items.eq( index )
+					.removeClass( 'wpProQuiz_reviewQuestionSolved wpProQuiz_reviewQuestionReview wpProQuiz_reviewQuestionSkip' );
+
+				if ( 0 === Object.keys(itemStatus).length ) {
+					return;
+				}
+
+				let css_class = '';
 
 				if ( itemStatus.correct ) {
 					css_class = 'wpProQuiz_reviewQuestionSolvedCorrect';
@@ -383,10 +441,6 @@
 				} else if ( itemStatus.skip ) {
 					css_class = 'wpProQuiz_reviewQuestionSkip';
 				}
-
-				$items.eq( index ).removeClass( 'wpProQuiz_reviewQuestionSolved' );
-				$items.eq( index ).removeClass( 'wpProQuiz_reviewQuestionReview' );
-				$items.eq( index ).removeClass( 'wpProQuiz_reviewQuestionSkip' );
 
 				if ( css_class != '' ) {
 					$items.eq( index ).addClass( css_class );
@@ -417,6 +471,10 @@
 				e.preventDefault();
 
 				$( document ).unbind( '.scrollEvent' );
+			}
+
+			function updateItemsStatus() {
+				plugin.methode.saveMetaDataToCookie({ reviewBox: itemsStatus });
 			}
 		};
 
@@ -490,10 +548,6 @@
 		var questionTimer = new QuestionTimer();
 
 		var readResponses = function( name, data, $question, $questionList, lockResponse ) {
-			//if (config.ld_script_debug == true) {
-			//	console.log('readResponses: name[%o], data[%o], $question[%o], $questionList[%o], lockResponse[%o]', name, data, $question, $questionList, lockResponse);
-			//}
-
 			if ( lockResponse == undefined ) {
 				lockResponse = true;
 			}
@@ -553,7 +607,7 @@
 						}
 					} );
 					*/
-					
+
 					$items.each( function() {
 						var $this = $( this );
 						var id = $this.attr( 'data-pos' );
@@ -566,7 +620,7 @@
 
 						response = statistcAnswerData;
 					} );
-					
+
 					response = statistcAnswerData;
 
 					if ( lockResponse == true ) {
@@ -1142,11 +1196,11 @@
 			},
 
 			startQuiz: function( loadData ) {
-				//if (config.ld_script_debug == true) {
-				//	console.log('in startQuiz');
-				//}
+				if (config.ld_script_debug == true) {
+					console.log('in startQuiz');
+				}
 
-				if ( quizStatus.loadLock ) {
+				if (quizStatus.loadLock) {
 					quizStatus.isQuizStart = 1;
 
 					return;
@@ -1154,154 +1208,245 @@
 
 				quizStatus.isQuizStart = 0;
 
-				if ( quizStatus.isLocked ) {
+				if (quizStatus.isLocked) {
 					globalElements.quizStartPage.hide();
-					$e.find( '.wpProQuiz_lock' ).show();
+					$e.find(".wpProQuiz_lock").show();
 
 					return;
 				}
 
-				if ( quizStatus.isPrerequisite ) {
+				if (quizStatus.isPrerequisite) {
 					globalElements.quizStartPage.hide();
-					$e.find( '.wpProQuiz_prerequisite' ).show();
+					$e.find(".wpProQuiz_prerequisite").show();
 
 					return;
 				}
 
-				if ( quizStatus.isUserStartLocked ) {
+				if (quizStatus.isUserStartLocked) {
 					globalElements.quizStartPage.hide();
-					$e.find( '.wpProQuiz_startOnlyRegisteredUser' ).show();
+					$e.find(".wpProQuiz_startOnlyRegisteredUser").show();
 
 					return;
 				}
 
-				if ( bitOptions.maxShowQuestion && ! loadData ) {
-					if ( config.formPos == formPosConst.START ) {
-						if ( ! formClass.checkForm() ) {
+				if (bitOptions.maxShowQuestion && !loadData) {
+					if (config.formPos == formPosConst.START) {
+						if (!formClass.checkForm()) {
 							return;
 						}
 					}
 
 					globalElements.quizStartPage.hide();
-					$e.find( '.wpProQuiz_loadQuiz' ).show();
+					$e.find(".wpProQuiz_loadQuiz").show();
 
-					plugin.methode.loadQuizDataAjax( true );
+					plugin.methode.loadQuizDataAjax(true);
 
 					return;
 				}
 
-				if ( bitOptions.formActivated && config.formPos == formPosConst.START ) {
-					if ( ! formClass.checkForm() ) {
+				if (bitOptions.formActivated && config.formPos == formPosConst.START) {
+					if (!formClass.checkForm()) {
 						return;
 					}
 				}
 
 				plugin.methode.loadQuizData();
-				
-				quiz_resume_data = learndash_prepare_quiz_resume_data( config );
-				if ( quiz_resume_data === false ) {
+				quiz_resume_data = learndash_prepare_quiz_resume_data(config);
+
+				if (quiz_resume_data === false) {
 					quiz_resume_data = {};
 				}
 
-				if ( bitOptions.randomQuestion && ( jQuery.isEmptyObject( quiz_resume_data ) && ! quiz_resume_data.randomQuestions ) ) {
-					plugin.methode.random( globalElements.questionList, 'question' );
+				// Init our Cookies
+				//if (config.quiz_resume_enabled === "1") {
+				//	cookie_name = "ld_save_" + config.quizId + "_quiz_responses";
+				//	plugin.methode.CookieInit();
+				//} else if (config.timelimitcookie !== 0) {
+				//	cookie_name = "ld_" + config.quizId + "_quiz_responses";
+				//	plugin.methode.CookieInit();
+				//}
+
+				questionTimer.startQuiz();
+
+				if (
+					bitOptions.randomQuestion &&
+					jQuery.isEmptyObject(quiz_resume_data) &&
+					!quiz_resume_data.randomQuestions
+				) {
+					plugin.methode.random(globalElements.questionList, "question");
 				}
 
-				if ( bitOptions.randomAnswer ) {
-					plugin.methode.random( $e.find( globalNames.questionList ) );
+				if (bitOptions.randomAnswer) {
+					plugin.methode.random($e.find(globalNames.questionList));
 				}
 
-				if ( bitOptions.sortCategories ) {
+				if (bitOptions.sortCategories) {
 					plugin.methode.sortCategories();
 				}
 
 				// randomize the matrix sort question items
-				plugin.methode.random( $e.find( '.wpProQuiz_sortStringList' ) );
+				plugin.methode.random($e.find(".wpProQuiz_sortStringList"));
 
 				// randomize the sort question answers
 				//plugin.methode.random($e.find('.wpProQuiz_questionList[data-type="sort_answer"]'));
 
-				$e.find( '.wpProQuiz_listItem' ).each( function( i, v ) {
-					var $this = $( this );
-					$this.find( '.wpProQuiz_question_page span:eq(0)' ).text( i + 1 );
-					$this.find( '> h5 span' ).text( i + 1 );
+				$e.find(".wpProQuiz_listItem").each(function (i, v) {
+					var $this = $(this);
+					$this.find(".wpProQuiz_question_page span:eq(0)").text(i + 1);
+					$this.find("> h5 span").text(i + 1);
 
-					$this.find( '.wpProQuiz_questionListItem' ).each( function( i, v ) {
-						$( this ).find( '> span:not(.wpProQuiz_cloze)' ).text( i + 1 + '. ' );
-					} );
-				} );
+					$this.find(".wpProQuiz_questionListItem").each(function (i, v) {
+						$(this)
+							.find("> span:not(.wpProQuiz_cloze)")
+							.text(i + 1 + ". ");
+					});
+				});
 
-				globalElements.next = $e.find( globalNames.next );
+				globalElements.next = $e.find(globalNames.next);
 
-				switch ( config.mode ) {
+				switch (config.mode) {
 					case 3:
-						$e.find( 'input[name="checkSingle"]' ).show();
+						$e.find('input[name="checkSingle"]').show();
 						break;
 					case 2:
-						$e.find( globalNames.check ).show();
+						$e.find(globalNames.check).show();
 
-						if ( ! bitOptions.skipButton && bitOptions.reviewQustion ) {
-							$e.find( globalNames.skip ).show();
+						if (!bitOptions.skipButton && bitOptions.reviewQustion) {
+							$e.find(globalNames.skip).show();
 						}
 
 						break;
 					case 1:
-						$e.find( 'input[name="back"]' ).slice( 1 ).show();
+						$e.find('input[name="back"]').slice(1).show();
 					case 0:
 						globalElements.next.show();
 						break;
 				}
 
-				if ( bitOptions.hideQuestionPositionOverview || config.mode == 3 ) {
-					$e.find( '.wpProQuiz_question_page' ).hide();
+				if (bitOptions.hideQuestionPositionOverview || config.mode == 3) {
+					$e.find(".wpProQuiz_question_page").hide();
 				}
 
 				//Change last name
 				var $lastButton = globalElements.next.last();
 				lastButtonValue = $lastButton.val();
-				$lastButton.val( config.lbn );
+				$lastButton.val(config.lbn);
 
 				var $listItem = globalElements.questionList.children();
 
-				globalElements.listItems = $e.find( '.wpProQuiz_list > li' );
+				globalElements.listItems = $e.find(".wpProQuiz_list > li");
 
-				if ( config.mode === 3 && 'number' !== typeof quiz_resume_data.lastQuestion ) {
-					plugin.methode.showSinglePage( 0 );
+				//quiz_resume_data.lastQuestion = parseInt(quiz_resume_data.lastQuestion);
+
+				if (
+					config.mode === 3 &&
+					"number" !== typeof quiz_resume_data.lastQuestion
+				) {
+					plugin.methode.showSinglePage(0);
 				}
 
-				if ( 'number' !== typeof quiz_resume_data.lastQuestion ) {
+				if ("number" !== typeof quiz_resume_data.lastQuestion) {
 					quiz_resume_data.lastQuestion = 0;
 				}
 
+				// Original
+				/*
 				if ( config.mode !== 3 ) {
 					currentQuestion = $listItem.eq( 0 ).show();
 					var questionId = currentQuestion.find( globalNames.questionList ).data( 'question_id' );
 					questionTimer.questionStart( questionId );
 				}
+				*/
 
-				questionTimer.startQuiz();
+				if (config.mode !== 3) {
+					if (config.ld_script_debug == true) {
+						console.log(
+							"line 1359: quiz_resume_data.lastQuestion[%o]",
+							quiz_resume_data.lastQuestion
+						);
+					}
 
-				$e.find( '.wpProQuiz_sortable' ).parents( 'ul' ).sortable( {
-					scroll: true,
-					scrollSensitivity: 10 || config.scrollSensitivity,
-					scrollSpeed: 10 || config.scrollSpeed,
-					update: function( event, ui ) {
-						var $p = $( this ).parents( '.wpProQuiz_listItem' );
-						$e.trigger( { type: 'questionSolved', values: { item: $p, index: $p.index(), solved: true } } );
-					},
-				} ).disableSelection();
+					if (quiz_resume_data.lastQuestion > 0) {
+						$listItem.each(function (q_idx, q_item) {
+							var q_id = $(q_item)
+								.find(".wpProQuiz_questionList")
+								.data("question_id");
 
-				$e.find( '.wpProQuiz_sortStringList, .wpProQuiz_maxtrixSortCriterion' ).sortable( {
-					connectWith: '.wpProQuiz_maxtrixSortCriterion:not(:has(li)), .wpProQuiz_sortStringList',
-					placeholder: 'wpProQuiz_placehold',
-					scroll: true,
-					scrollSensitivity: 10 || config.scrollSensitivity,
-					scrollSpeed: 10 || config.scrollSpeed,
-					update: function( event, ui ) {
-						var $p = $( this ).parents( '.wpProQuiz_listItem' );
-						$e.trigger( { type: 'questionSolved', values: { item: $p, index: $p.index(), solved: true } } );
-					},
-				} ).disableSelection();
+							if (config.ld_script_debug == true) {
+								console.log(
+									"q_id[%o] quiz_resume_data.lastQuestion[%o]",
+									q_id,
+									quiz_resume_data.lastQuestion
+								);
+							}
+
+							if (q_id === quiz_resume_data.lastQuestion) {
+								currentQuestion = $listItem.eq(q_idx);
+								if (config.ld_script_debug == true) {
+									console.log("currentQuestion[%o]", currentQuestion);
+									console.log("$listItem[%o]", $listItem);
+								}
+
+								//$listItem.eq(q_idx).show();
+								return false;
+							}
+						});
+					} else {
+						if (config.ld_script_debug == true) {
+							console.log("line 1382: ELSE: quiz_resume_data.lastQuestion zero");
+							console.log("$listItem[%o]", $listItem);
+						}
+						currentQuestion = $listItem.eq(0);
+
+						if (config.ld_script_debug == true) {
+							console.log("currentQuestion[%o]", currentQuestion);
+						}
+
+						$listItem.eq(0).show();
+					}
+				} else {
+					if (config.ld_script_debug == true) {
+						console.log("line 1390: ELSE: condif.mode = 3");
+					}
+					currentQuestion = $listItem.eq(0);
+				}
+				if (config.ld_script_debug == true) {
+					console.log("after currentQuestion[%o]", currentQuestion);
+				}
+
+				$e.find(".wpProQuiz_sortable")
+					.parents("ul")
+					.sortable({
+						scroll: true,
+						scrollSensitivity: 10 || config.scrollSensitivity,
+						scrollSpeed: 10 || config.scrollSpeed,
+						update: function (event, ui) {
+							var $p = $(this).parents(".wpProQuiz_listItem");
+							$e.trigger({
+								type: "questionSolved",
+								values: { item: $p, index: $p.index(), solved: true },
+							});
+						},
+					})
+					.disableSelection();
+
+				$e.find(".wpProQuiz_sortStringList, .wpProQuiz_maxtrixSortCriterion")
+					.sortable({
+						connectWith:
+							".wpProQuiz_maxtrixSortCriterion:not(:has(li)), .wpProQuiz_sortStringList",
+						placeholder: "wpProQuiz_placehold",
+						scroll: true,
+						scrollSensitivity: 10 || config.scrollSensitivity,
+						scrollSpeed: 10 || config.scrollSpeed,
+						update: function (event, ui) {
+							var $p = $(this).parents(".wpProQuiz_listItem");
+							$e.trigger({
+								type: "questionSolved",
+								values: { item: $p, index: $p.index(), solved: true },
+							});
+						},
+					})
+					.disableSelection();
 
 				quizSolved = [];
 
@@ -1311,20 +1456,20 @@
 
 				results = { comp: { points: 0, correctQuestions: 0, quizTime: 0 } };
 
-				$e.find( '.wpProQuiz_questionList' ).each( function() {
-					var questionId = $( this ).data( 'question_id' );
+				$e.find(".wpProQuiz_questionList").each(function () {
+					var questionId = $(this).data("question_id");
 
 					results[questionId] = { time: 0 };
-				} );
+				});
 
 				catResults = {};
 
-				$.each( options.catPoints, function( i, v ) {
+				$.each(options.catPoints, function (i, v) {
 					catResults[i] = 0;
-				} );
+				});
 
 				globalElements.quizStartPage.hide();
-				$e.find( '.wpProQuiz_loadQuiz' ).hide();
+				$e.find(".wpProQuiz_loadQuiz").hide();
 				globalElements.quiz.show();
 				reviewBox.show();
 
@@ -1343,11 +1488,23 @@
 				plugin.methode.setupMatrixSortHeights();
 				//});
 
-				if ( config.mode != 3 ) {
-					$e.trigger( { type: 'changeQuestion', values: { item: currentQuestion, index: currentQuestion.index() } } );
+				if (config.ld_script_debug == true) {
+					console.log(
+						"currentQuestion.index [%o] currentQuestion[%o]",
+						currentQuestion.index(),
+						currentQuestion
+					);
+				}
+				if (config.mode != 3) {
+					$e.trigger({
+						type: "changeQuestion",
+						values: { item: currentQuestion, index: currentQuestion.index() },
+					});
 				}
 			},
 			showSingleQuestion: function( question ) {
+				//console.log('in showSingleQuestion question[%o]', question);
+
 				var page = question ? Math.ceil( question / config.qpp ) : 1;
 
 				if ( config.mode === 3 && 'number' !== typeof quiz_resume_data.lastQuestion ) {
@@ -1392,7 +1549,22 @@
 				var start = config.qpp * ( page - 1 );
 
 				$listItem.slice( start, start + config.qpp ).show();
-				plugin.methode.scrollTo( globalElements.quizStartPage );
+				//plugin.methode.scrollTo( globalElements.quizStartPage );
+
+				/**
+				 * LEARNDASH-6591 On Quiz Start the scroll to the top of the page
+				 * because the quiz element is hidden. So within the scrollTo()
+				 * function the element position can't determined.
+				 *
+				 * Also changed the scroll element to the outer quiz wrapper.
+				 */
+				if ( globalElements.self !== undefined ) {
+					if ( globalElements.self.is(":hidden") ) {
+						globalElements.self.show();
+					}
+					plugin.methode.scrollTo( globalElements.self );
+				}
+
 			},
 
 			nextQuestion: function() {
@@ -1440,6 +1612,20 @@
 			},
 
 			showQuestionObject: function( obj ) {
+				if (config.ld_script_debug == true) {
+					//console.trace();
+					console.log("showQuestionObject: obj[%o]", obj);
+				}
+
+				// We hide the current question IF it is set.
+				if ( ( typeof currentQuestion !== 'undefined' ) && ( currentQuestion.length > 0 ) ) {
+					globalElements.questionList.children().each( function() {
+						if ($( this ).data( 'question-meta' ).question_pro_id !== currentQuestion.data( 'question-meta' ).question_pro_id) {
+							$( this ).hide();
+						}
+					});
+				}
+
 				if ( ! obj.length && bitOptions.forcingQuestionSolve && bitOptions.quizSummeryHide && bitOptions.reviewQustion ) {
 					// First get all the questions...
 					list = globalElements.questionList.children();
@@ -1470,6 +1656,7 @@
 					}
 				}
 
+				//globalElements.questionList.children().hide();
 				currentQuestion.hide();
 
 				currentQuestion = obj.show();
@@ -1815,6 +2002,9 @@
 				// Server-side data
 
 				var quiz_resume_data = learndash_prepare_quiz_resume_data( config );
+				if (config.ld_script_debug == true) {
+					console.log("line: 1936 quiz_resume_data[%o]", quiz_resume_data);
+				}
 				if ( quiz_resume_data === false ) {
 					quiz_resume_data = {};
 				}
@@ -1977,16 +2167,16 @@
 			saveRandomQuestions: function( questions ) {
 				var orderedQuestions = [];
 				jQuery( questions ).each( function( index, question ) {
-					var type = jQuery( question ).data( 'question-meta' ).type;
 					var id = jQuery( question ).data( 'question-meta' ).question_pro_id;
-					var response = {};
-					response.response = {};
 					orderedQuestions.push(id);
-					setTimeout( function() {
-						plugin.methode.saveMetaDataToCookie( 'randomQuestions' );
-						plugin.methode.saveMetaDataToCookie( 'randomOrder', orderedQuestions );
-					}, 500 );
 				} );
+
+				if ( orderedQuestions.length > 0 ) {
+					plugin.methode.saveMetaDataToCookie({
+						randomQuestions: true,
+						randomOrder: orderedQuestions
+					});
+				}
 			},
 			sortCategories: function() {
 				var e = $( '.wpProQuiz_list' ).children().get().sort( function( a, b ) {
@@ -2356,7 +2546,7 @@
 								}
 							} );
 
-							
+
 							jQuery(sortlist_container).find('.wpProQuiz_questionList_container_student').append($questionList);
 							jQuery(sortlist_container).find('.wpProQuiz_questionList_container_correct').append($questionList_correct);
 
@@ -2410,7 +2600,7 @@
 
 							$questionList.append( $items );
 						}
-						
+
 						break;
 					case 'matrix_sort_answer':
 						var $items = $questionList.children();
@@ -2447,6 +2637,11 @@
 				}
 			},
 			setCheckedStatusFromData: function( data, question, list ) {
+				if (config.ld_script_debug == true) {
+					console.log("setCheckedStatusFromData data[%o]", data);
+					console.log("setCheckedStatusFromData question[%o]", question);
+					console.log("setCheckedStatusFromData list[%o]", list);
+				}
 				var dataObjects = [ quiz_resume_data, cookie_value ];
 				jQuery( dataObjects ).each( function(index, dataObject) {
 					if ( dataObject.hasOwnProperty( 'checked' + data.id) ) {
@@ -2459,7 +2654,7 @@
 
 									if ( questionResult.c ) {
 										if ( typeof questionResult.e.AnswerMessage !== 'undefined' ) {
-											question.find( '.wpProQuiz_correct' ).find( '.wpProQuiz_AnswerMessage' ).html( questionResult.e.AnswerMessage );
+											question.find( '.wpProQuiz_correct' ).find( '.wpProQuiz_AnswerMessage' ).html( learndash_decodeHTML( questionResult.e.AnswerMessage ));
 											question.find( '.wpProQuiz_correct' ).trigger( 'learndash-quiz-answer-response-contentchanged' );
 										}
 
@@ -2467,7 +2662,7 @@
 										question.find( '.wpProQuiz_correct' ).show();
 									} else {
 										if ( typeof questionResult.e.AnswerMessage !== 'undefined' ) {
-											question.find( '.wpProQuiz_incorrect' ).find( '.wpProQuiz_AnswerMessage' ).html( questionResult.e.AnswerMessage );
+											question.find( '.wpProQuiz_incorrect' ).find( '.wpProQuiz_AnswerMessage' ).html( learndash_decodeHTML( questionResult.e.AnswerMessage ) );
 											question.find( '.wpProQuiz_incorrect' ).trigger( 'learndash-quiz-answer-response-contentchanged' );
 										}
 
@@ -2837,12 +3032,13 @@
 				//	console.log('in initQuiz');
 				//}
 
-				plugin.methode.setClozeStyle();
+				//plugin.methode.setClozeStyle();
 				plugin.methode.registerSolved();
 
 				globalElements.next.on( 'click', plugin.methode.nextQuestionClicked );
 
-				globalElements.back.on( 'click', function() {
+				globalElements.back.on( 'click', function(e) {
+					//console.log('back button clicked [%o]', e);
 					plugin.methode.prevQuestion();
 				} );
 
@@ -2914,16 +3110,27 @@
 				// Comment out to force clear cookie on init.
 				// jQuery.cookie(cookie_name, '');
 
+				if (config.ld_script_debug == true) {
+					console.log("in CookieInit" );
+				}
+
 				cookie_value = jQuery.cookie( cookie_name );
+
 				if ( ! cookie_value || cookie_value == undefined || cookie_value === '%7B%7D' ) {
 					cookie_value = {};
 				} else {
 					try {
 						cookie_value = JSON.parse( cookie_value );
+						//console.log("cookie_value[%o]", cookie_value );
+
 					} catch ( exception ) {
 						console.log('JSON.parse error [%o]', exception );
 						cookie_value = {};
 					}
+				}
+
+				if (config.ld_script_debug == true) {
+					console.log("after parse: cookie_value[%o]", cookie_value);
 				}
 
 				// If we have form entries at the start, save them to cookie.
@@ -2997,12 +3204,17 @@
 			},
 			saveMetaDataToCookie: function( id, metadata ) {
 				var metadata = metadata || false;
-				// Calculate the cookie date to expire
+				// Calculate the cookie date to expire.
 				plugin.methode.calculateCookieExpiry();
+
+				if ( ! cookie_value || cookie_value == undefined ) {
+					cookie_value = {};
+				}
 
 				if ( typeof id === 'string' && typeof metadata === 'object' ) {
 					cookie_value[id] = {};
 					for ( var element in metadata ) {
+
 						// @todo Test in IE11
 						var obj = { [ element ]: metadata[ element ]};
 						Object.assign( cookie_value[id], obj );
@@ -3040,9 +3252,15 @@
 			},
 			// Load the Cookie (if present) and sets the values of the Quiz questions to the cookie saved value
 			CookieSetResponses: function() {
+				if (config.ld_script_debug == true) {
+					console.log("In CookieSetResponses");
+				}
+
 				if ( ( ( cookie_value == undefined ) || ( ! Object.keys( cookie_value ).length ) ) && ! config.quiz_resume_id ) {
+					// console.log( 'returning' );
 					return;
 				}
+
 				var list = globalElements.questionList.children();
 				list.each( function() {
 					var $this = $( this );
@@ -3072,9 +3290,15 @@
 
 					// Move to next unanswered question
 					if ( typeof quiz_resume_data !== 'undefined' && typeof cookie_value !== 'undefined' ) {
+						if (config.ld_script_debug == true) {
+							console.log("CookieSet: cookie_value['nextQuestion'][%o]", cookie_value["nextQuestion"] );
+							console.log("CookieSet: quiz_resume_data[%o]", quiz_resume_data);
+						}
 						if ( typeof cookie_value['nextQuestion'] !== 'undefined' && cookie_value['nextQuestion'] ) {
+							//console.log('cookie_value[%o]', cookie_value);
 							plugin.methode.moveToNextUnansweredQuestion( cookie_value );
 						} else {
+							//console.log('quiz_resume_data[%o]', quiz_resume_data);
 							plugin.methode.moveToNextUnansweredQuestion( quiz_resume_data );
 						}
 					}
@@ -3135,9 +3359,19 @@
 				}
 			},
 			moveToNextUnansweredQuestion: function( data ) {
+				if (config.ld_script_debug == true) {
+					console.log("moveToNextUnansweredQuestion: data[%o]", data );
+				}
+
 				if ( typeof data !== 'undefined' ) {
 					var nextQuestion = typeof data.nextQuestion === 'number' ? data.nextQuestion : 0;
 					var lastQuestion = typeof data.lastQuestion === 'number' ? data.lastQuestion : 0;
+
+					if (config.ld_script_debug == true) {
+						console.log("moveToNextUnansweredQuestion: nextQuestion[%o]", nextQuestion);
+						console.log("moveToNextUnansweredQuestion: lastQuestion[%o]", lastQuestion);
+						console.log("moveToNextUnansweredQuestion: config.mode[%o]", config.mode);
+					}
 
 					if ( config.mode === 3 ) {
 						if ( ! config.qpp ) {
@@ -3154,16 +3388,34 @@
 								}
 							} );
 						}
-					}
-
-					if ( config.mode !== 3 ) {
-						jQuery(globalElements.listItems).each(function(index, listItem) {
+					} else {
+						if ( ( config.mode == 1 ) && ( nextQuestion > 0 ) ) {
+							nextQuestion = lastQuestion;
+						} else if ( ( nextQuestion == 0 ) && ( lastQuestion > 0 ) ) {
+							nextQuestion = lastQuestion;
+						}
+ 						jQuery(globalElements.listItems).each(function(index, listItem) {
 							if ( $( listItem ).data( 'question-meta' ).question_pro_id === nextQuestion ) {
+								if (config.ld_script_debug == true) {
+									console.log(
+										"moveToNextUnansweredQuestion: match: listItem[%o]",
+										listItem
+									);
+								}
+
 								currentQuestion = globalElements.listItems.eq( index );
-								var questionId = currentQuestion.find( globalNames.questionList ).data( 'question_id' );
+
+								const questionId = currentQuestion.find( globalNames.questionList ).data( 'question_id' );
+
 								questionTimer.questionStart( questionId );
 								plugin.methode.showQuestionObject( currentQuestion );
-							};
+
+								return false; // break out of the loop.
+							} else {
+								// if (config.ld_script_debug == true) {
+								// 	console.log("moveToNextUnansweredQuestion: not match: listItem[%o]", listItem);
+								// }
+							}
 						})
 					}
 				}
@@ -3222,9 +3474,9 @@
 						}
 					},
 					error: function( xhr ) {
-						var message = JSON.parse(xhr.responseText);
-						console.log( message.data.message );
-						alert( message.data.message );
+						console.log( 'xhr[%o]', xhr );
+						var response = JSON.parse(xhr.responseText);
+						console.log( response.data.message );
 						cookieSending = false;
 					},
 				} );
@@ -3399,14 +3651,21 @@ var learndash_prepare_quiz_resume_data = function ( config ) {
 	}
 
 	var resume_data = {};
+	if (config.ld_script_debug == true) {
+		console.log("config.quiz_resume_data (raw)[%o]", config.quiz_resume_data);
+	}
 	try {
 		resume_data = JSON.parse( config.quiz_resume_data );
+		if (config.ld_script_debug == true) {
+			console.log("resume_data (parsed)[%o]", resume_data);
+		}
 	} catch ( exception ) {
 		console.log('JSON.parse error [%o]', exception );
 	}
 
 	return resume_data
 }
+
 var learndash_decodeHTML = function (html) {
 	html = html || '';
 

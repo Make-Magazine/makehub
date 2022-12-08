@@ -194,7 +194,9 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 				<span class="ld-course-status-price">
 					<?php
 					if ( ! empty( $group_pricing['price'] ) ) {
-						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						if ( is_numeric( $group_pricing['price'] ) ) {
+							echo '<span class="ld-currency">' . wp_kses_post( learndash_get_currency_symbol() ) . '</span>';
+						}
 						echo wp_kses_post( $group_pricing['price'] );
 					} elseif ( in_array( $group_pricing['type'], array( 'closed', 'free' ), true ) ) {
 							/**
@@ -217,7 +219,9 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-trial-price">
 						<?php
 						echo '<p class="ld-text ld-trial-text">';
-						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						if ( is_numeric( $group_pricing['trial_price'] ) ) {
+							echo '<span class="ld-currency">' . wp_kses_post( learndash_get_currency_symbol() ) . '</span>';
+						}
 						echo wp_kses_post( $group_pricing['trial_price'] );
 						echo '</p>';
 						echo '<p class="ld-trial-pricing ld-pricing">';
@@ -235,7 +239,9 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-course-price">
 							<?php
 							echo '<p class="ld-text ld-course-text">';
-							echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+							if ( is_numeric( $group_pricing['price'] ) ) {
+								echo '<span class="ld-currency">' . wp_kses_post( learndash_get_currency_symbol() ) . '</span>';
+							}
 							echo wp_kses_post( $group_pricing['price'] );
 							echo '</p>';
 							echo '<p class="ld-course-pricing ld-pricing">';
@@ -253,7 +259,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 									printf(
 										// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 										esc_html__( 'for %1$s %2$s', 'learndash' ),
-										absint( $group_pricing['repeats'] ),
+										// Get correct total time by multiplying interval by number of repeats
+										absint( $group_pricing['interval'] * $group_pricing['repeats'] ),
 										esc_html( $group_pricing['repeat_frequency'] )
 									);
 								}
@@ -268,10 +275,10 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-price">
 						<?php
 						if ( ! empty( $group_pricing['price'] ) ) {
-							if ( ! empty( $group_pricing['price'] ) ) {
-								echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
-								echo wp_kses_post( $group_pricing['price'] );
+							if ( is_numeric( $group_pricing['price'] ) ) {
+								echo wp_kses_post( '<span class="ld-currency">' . learndash_get_currency_symbol() . '</span>' );
 							}
+							echo wp_kses_post( $group_pricing['price'] );
 						}
 						?>
 						</span>
@@ -289,7 +296,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 										printf(
 											// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 											esc_html__( ' for %1$s %2$s', 'learndash' ),
-											absint( $group_pricing['repeats'] ),
+											// Get correct total time by multiplying interval by number of repeats
+											absint( $group_pricing['interval'] * $group_pricing['repeats'] ),
 											esc_html( $group_pricing['repeat_frequency'] )
 										);
 									}

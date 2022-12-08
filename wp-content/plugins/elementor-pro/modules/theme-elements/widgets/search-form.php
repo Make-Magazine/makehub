@@ -71,6 +71,9 @@ class Search_Form extends Base {
 				'type' => Controls_Manager::TEXT,
 				'separator' => 'before',
 				'default' => esc_html__( 'Search', 'elementor-pro' ) . '...',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -423,6 +426,7 @@ class Search_Form extends Base {
 			[
 				'label' => esc_html__( 'Border Size', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}}:not(.elementor-search-form--skin-full_screen) .elementor-search-form__container' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 					'{{WRAPPER}}.elementor-search-form--skin-full_screen input[type="search"].elementor-search-form__input' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -436,6 +440,7 @@ class Search_Form extends Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -684,9 +689,13 @@ class Search_Form extends Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
-						'max' => 10,
+						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -701,7 +710,7 @@ class Search_Form extends Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-search-form__toggle' => '--e-search-form-toggle-border-radius: {{SIZE}}{{UNIT}}',
 				],
@@ -712,7 +721,7 @@ class Search_Form extends Base {
 	}
 
 	protected function render() {
-		$settings = $this->get_settings();
+		$settings = $this->get_settings_for_display();
 		$this->add_render_attribute(
 			'input', [
 				'placeholder' => $settings['placeholder'],
@@ -742,7 +751,16 @@ class Search_Form extends Base {
 		?>
 		<form class="elementor-search-form" role="search" action="<?php // PHPCS - the method home_url is safe.
 			echo home_url(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" method="get">
-			<?php do_action( 'elementor_pro/search_form/before_input', $this ); ?>
+			<?php
+			/**
+			 * Before Elementor search form inputs.
+			 *
+			 * Fires before Elementor search form input fields.
+			 *
+			 * @param Search_Form $this An instance of Elementor search form.
+			 */
+			do_action( 'elementor_pro/search_form/before_input', $this );
+			?>
 			<?php if ( 'full_screen' === $settings['skin'] ) : ?>
 			<div class="elementor-search-form__toggle">
 				<?php $this->render_search_icon( $icon, [ 'aria-hidden' => 'true' ] ); ?>
@@ -757,7 +775,17 @@ class Search_Form extends Base {
 					</div>
 				<?php endif; ?>
 				<input <?php $this->print_render_attribute_string( 'input' ); ?>>
-				<?php do_action( 'elementor_pro/search_form/after_input', $this ); ?>
+				<?php
+				/**
+				 * After Elementor search form inputs.
+				 *
+				 * Fires after Elementor search form input fields, before the search
+				 * button.
+				 *
+				 * @param Search_Form $this An instance of Elementor search form.
+				 */
+				do_action( 'elementor_pro/search_form/after_input', $this );
+				?>
 				<?php if ( 'classic' === $settings['skin'] ) : ?>
 					<button class="elementor-search-form__submit" type="submit" title="<?php esc_attr_e( 'Search', 'elementor-pro' ); ?>" aria-label="<?php esc_attr_e( 'Search', 'elementor-pro' ); ?>">
 						<?php if ( 'icon' === $settings['button_type'] ) : ?>

@@ -267,6 +267,16 @@ abstract class Base extends Base_Widget {
 			]
 		);
 
+		$this->add_control(
+			'lazyload',
+			[
+				'label' => esc_html__( 'Lazyload', 'elementor-pro' ),
+				'type' => Controls_Manager::SWITCHER,
+				'separator' => 'before',
+				'frontend_available' => true,
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -328,6 +338,7 @@ abstract class Base extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Size', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-main-swiper .swiper-slide' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
 				],
@@ -339,7 +350,7 @@ abstract class Base extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'%' => [
 						'max' => 50,
@@ -561,6 +572,18 @@ abstract class Base extends Base_Widget {
 		}
 
 		return $image_url;
+	}
+
+	protected function get_slide_image_alt_attribute( $slide ) {
+		if ( ! empty( $slide['name'] ) ) {
+			return $slide['name'];
+		}
+
+		if ( ! empty( $slide['image']['alt'] ) ) {
+			return $slide['image']['alt'];
+		}
+
+		return '';
 	}
 
 	private function render_swiper_button( $type ) {

@@ -130,13 +130,13 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     $this->debug = defined( 'WP_MEPR_DEBUG' ) && WP_MEPR_DEBUG === true;
 
     if ( $this->is_test_mode() ) {
-      $this->settings->url          = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+      $this->settings->url          = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
       $this->settings->api_url      = 'https://api-3t.sandbox.paypal.com/nvp';
       $this->settings->rest_api_url = 'https://api-m.sandbox.paypal.com';
     } else {
-      $this->settings->url          = 'https://www.paypal.com/cgi-bin/webscr';
+      $this->settings->url          = 'https://ipnpb.paypal.com/cgi-bin/webscr';
       $this->settings->api_url      = 'https://api-3t.paypal.com/nvp';
-      $this->settings->rest_api_url = 'https://api-m.paypal.com';
+      $this->settings->rest_api_url = 'https://api.paypal.com';
     }
 
     $this->settings->api_version = 69;
@@ -640,6 +640,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
   }
 
   public function process_signup_form( $txn ) {
+    if ($txn->amount == 0) {
+      MeprTransaction::create_free_transaction($txn);
+      return;
+    }
     if ( isset( $_POST['smart-payment-button'] ) && $_POST['smart-payment-button'] == true ) {
       $data = $this->setup_payment_with_paypal_commerce( $txn, true );
       wp_send_json( $data );
@@ -722,6 +726,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     $response = wp_remote_retrieve_body( $response );
     $response = json_decode( $response, true );
 
+    if (!isset($response['purchase_units'])) {
+      $this->log($response);
+    }
+
     return $response;
   }
 
@@ -773,7 +781,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
    * @return array|mixed|string|WP_Error
    */
   protected function get_paypal_sale_payment_object( $pp_payment_id ) {
-    $response = wp_remote_get( $this->settings->rest_api_url . '/v1/payments/sale/' . $pp_payment_id, [
+    $response = wp_remote_get( $this->settings->rest_api_url . '/v2/payments/captures/' . $pp_payment_id, [
       'headers' => [
         'Content-Type'                  => 'application/json',
         'PayPal-Partner-Attribution-Id' => MeprPayPalConnectCtrl::PAYPAL_BN_CODE,
@@ -906,7 +914,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         ],
       ];
 
-      $payload = json_encode( $payload, JSON_UNESCAPED_SLASHES );
+      $payload = json_encode( MeprHooks::apply_filters('mepr_paypal_onetime_subscription_args', $payload, $txn), JSON_UNESCAPED_SLASHES );
 
       $response = wp_remote_post( $api_url . '/v2/checkout/orders', [
         'body'      => $payload,
@@ -1190,7 +1198,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       'currency'       => $mepr_options->currency_code,
     );
 
-    $plan_meta_key = '_mepr_paypal_plan_' . implode( '_', $args );
+    $plan_args = $args;
+    $plan_args['memberpress_product_id'] = $product->ID;
+
+    $plan_meta_key = '_mepr_paypal_plan_' . implode( '_', $plan_args );
     $plan_id       = get_post_meta( $product->ID, $plan_meta_key, true );
 
     if ( empty( $plan_id ) ) {
@@ -1207,7 +1218,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
           'pricing_scheme' => [
             'fixed_price' => [
               'currency_code' => $mepr_options->currency_code,
-              'value'         => $trial_amount,
+              'value'         => (string) $trial_amount,
             ]
           ],
           'tenure_type'    => 'TRIAL',
@@ -1366,20 +1377,9 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     <?php
   }
 
-  public function is_ipn_for_me() {
-    if(isset($_POST['custom']) && !empty($_POST['custom'])) {
-      $custom_vars = (array)json_decode($_POST['custom']);
-
-      if(isset($custom_vars['gateway_id']) && $custom_vars['gateway_id'] == $this->id) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   public function ipn_listener() {
     $_POST = wp_unslash( $_POST );
+    do_action('mepr_paypal_commerce_ipn_listener_preprocess');
     $this->email_status( "PayPal IPN Recieved\n" . MeprUtils::object_to_string( $_POST, true ) . "\n", $this->debug );
 
     if ( $this->validate_ipn() ) {
@@ -1391,10 +1391,45 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
 
       $standard_gateway = new MeprPayPalStandardGateway();
       $standard_gateway->load( $mepr_options->legacy_integrations[ $this->id ] );
+
       return $standard_gateway->process_ipn();
     }
 
     return false;
+  }
+
+  public function validate_ipn() {
+    // If not connected yet, use IPN
+    if ( ! $this->is_paypal_connected() && ! $this->is_paypal_connected_live() ) {
+      return parent::validate_ipn();
+    }
+
+    $recurring_payment_txn_types = array(
+      'recurring_payment',
+      'subscr_payment',
+      'recurring_payment_outstanding_payment'
+    );
+
+    if ( isset( $_POST['txn_type'] ) && $_POST['txn_type'] == 'cart' ) {
+      return false;
+    }
+
+    if ( isset( $_POST['txn_type'] ) && in_array( strtolower( $_POST['txn_type'] ), $recurring_payment_txn_types ) ) {
+      if ( isset( $_POST['subscr_id'] ) && ! empty( $_POST['subscr_id'] ) ) {
+        $sub = MeprSubscription::get_one_by_subscr_id( $_POST['subscr_id'] );
+      } else {
+        $sub = MeprSubscription::get_one_by_subscr_id( $_POST['recurring_payment_id'] );
+      }
+
+      $pp_subscription = $this->get_paypal_subscription_object( $sub->subscr_id );
+
+      // This is a subscription created by Commerce, skip the IPN handler, returning false
+      if ( isset( $pp_subscription['custom_id'] ) && $pp_subscription['custom_id'] == $sub->id ) {
+        return false;
+      }
+    }
+
+    return parent::validate_ipn();
   }
 
   public function webhook_handler() {
@@ -1457,18 +1492,21 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       $this->record_refund();
     } elseif ( $request['event_type'] == 'PAYMENT.SALE.COMPLETED' ) {
       $pp_payment = $this->get_paypal_sale_payment_object( $request['resource']['id'] );
+      $resource = $request['resource'];
       $this->log( 'Processing recurring payment' );
       $this->log( $pp_payment );
+      $this->log( $resource );
 
-      if ( $pp_payment['state'] == 'completed' && isset( $pp_payment['custom'] ) ) {
-        $sub = new MeprSubscription( $pp_payment['custom'] );
+      if ( $pp_payment['status'] == 'COMPLETED' && isset( $pp_payment['custom_id'] ) ) {
+        $this->log( 'Payment confirmed' );
+        $sub = new MeprSubscription( $pp_payment['custom_id'] );
 
-        if ( $sub->subscr_id == $pp_payment['billing_agreement_id'] ) {
+        if ( $sub->subscr_id == $resource['billing_agreement_id'] ) {
           $_POST['recurring_payment_id'] = $pp_payment['id'];
           $_POST['txn_id']               = $pp_payment['id'];
-          $_POST['mc_gross']             = $pp_payment['amount']['total'];
-          $_POST['payment_date']         = $pp_payment['create_time'];
-          $_POST['subscr_id']            = $pp_payment['billing_agreement_id'];
+          $_POST['mc_gross']             = $resource['amount']['total'];
+          $_POST['payment_date']         = $resource['create_time'];
+          $_POST['subscr_id']            = $resource['billing_agreement_id'];
 
           $this->record_subscription_payment();
         }

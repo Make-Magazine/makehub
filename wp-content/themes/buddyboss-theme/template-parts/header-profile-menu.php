@@ -238,7 +238,7 @@ if ( is_user_logged_in() ) {
 		}
 
 		?>
-		<li id="wp-admin-bar-my-account-messages" class="menupop parent">
+		<li id="wp-admin-bar-my-account-messages" class="menupop parent wp-admin-bar-my-account-messages-<?php echo esc_attr( bp_loggedin_user_id() ); ?>">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $messages_link ); ?>">
 				<i class="bb-icon-l bb-icon-inbox"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
@@ -246,7 +246,7 @@ if ( is_user_logged_in() ) {
 			<div class="ab-sub-wrapper wrapper">
 				<ul id="wp-admin-bar-my-account-messages-default" class="ab-submenu">
 					<li id="wp-admin-bar-my-account-messages-inbox">
-						<a class="ab-item" href="<?php echo esc_url( $messages_link ); ?>"><?php echo wp_kses_post( $inbox ); ?></a>
+						<a class="ab-item" href="<?php echo esc_url( $messages_link ); ?>"><?php esc_html_e( 'Messages', 'buddyboss-theme' ); ?></a>
 					</li>
 					<li id="wp-admin-bar-my-account-messages-compose">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $messages_link . 'compose' ) ); ?>"><?php esc_html_e( 'New Message', 'buddyboss-theme' ); ?></a>

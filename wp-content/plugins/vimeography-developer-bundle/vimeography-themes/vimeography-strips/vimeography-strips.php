@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Strips
 Plugin URI: https://vimeography.com/themes
 Theme Name: Strips
 Theme URI:  https://vimeography.com/themes/strips
-Version: 2.0.6
+Version: 2.1.1
 Description: Strips uses prominent thumbnail and caption strips to draw attention to your best videos.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Strips') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Strips') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

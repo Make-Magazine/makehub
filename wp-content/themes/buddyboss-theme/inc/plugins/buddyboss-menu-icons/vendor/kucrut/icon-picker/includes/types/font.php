@@ -160,8 +160,7 @@ abstract class Icon_Picker_Type_Font extends Icon_Picker_Type {
 	 * Alter the CSS path for BuddyBoss Icon.
 	 */
 	public function icon_type_stylesheet_uri( $stylesheet_uri, $id ) {
-
-		if ( 'buddyboss' === $id || 'buddyboss_legacy' === $id ) {
+		if ( 'buddyboss' === $id ) {
 			return;
 		}
 

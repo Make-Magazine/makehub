@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 6.0
-Version: 2.0.3
+Tested up to: 6.1.1
+Version: 2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,169 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 2.2 =
+* Messages - Provided Pusher Integration UI support from BuddyBoss Platform Pro
+
+= 2.1.6 =
+* Theme Options - Handled broken UI issue when Admin color scheme updated to anything other than the default
+* Theme Options - Handled 'BuddyBoss Profile link' option not working issue for a certain setup
+* Profiles - Small style improvement of repeater fieldset in the profile edit screen
+* Forums - Handled small border radius styling issue when the first reply gets added for a discussion
+* Forums - Handled styling issue for forum shortcodes
+* Activity - Handled auto-generated forum discussion, quick reply giphy option small styling issue
+* Widgets - Handled categories widget UI issue when classic widget mode enabled
+* Updater - Improvements to updater logic and performance
+* LearnDash - Provided new option 'Mark Incomplete' support for lessons and topics
+* Compatibility - Handled duplicate WooCommerce mini cart issue in the header when the header is set to sticky using Elementor
+
+= 2.1.5 =
+* Header - Improved 'Show logo in buddypanel' enabled option to show logo in the header even when the buddypanel menu doesn't exist
+* Footer - Handled footer menu not showing correct menu items issue for non-logged-in users
+* Groups - Handled member group join request accept/reject button UI issue
+* Groups - Handled single group courses layout issue in the responsive view
+* Forums - Small style improvement in forum discussion edit screen
+* Forums - Handled forum discussion long link overflow UI issue
+* Activity - Small improvement to auto-generated discussion activity quick reply flow
+* Zoom - Handled zoom meeting block 'Host Meeting in Browser' button background color issue
+* Core - Small anchor tag typo fix in templates
+* Core - Handled a bunch of alignment issues with Zoom meeting countdown, Notification, and Learndash topic count for the RTL language site
+* Core - Handled custom font woff2 file not loading issue in the frontend
+* LearnDash - Handled lesson comments text color issue in the dark mode
+* LearnDash - Handled lesson comments 'reply' option translation issue when focus mode is enabled
+* LearnDash - Handled single lesson sidebar not showing all lessons issues
+* LearnDash - Handled course expiration date not following WordPress timezone issue
+* LearnDash - Handled single lesson sidebar UI issue in the responsive view and when dark mode is enabled
+* LifterLMS - Handled emojis size issue with free imported templates
+* Elementor - Handled course grid widget lessons not showing correct status ribbon issue on the elementor page
+* Elementor - Handled course grid widget 'border radius' option not working issue on the elementor page
+* Elementor - Handled course grid widget courses not showing the correct custom ribbon on the elementor page
+* Elementor - Handled small checkbox UI issue on the checkout page
+* Elementor - Handled search widget UI issues
+* GamiPress - Small improvement to fix leaderboard widget UI issues
+* WooCommerce - Handled checkout screen UI issues with variable products
+* WooCommerce - Handled mini-cart dropdown option broken layout issue on the elementor page
+
+= 2.1.4 =
+* Messages - Improved UI/UX for the Private Messaging screen significantly
+* Messages - Provided archive/unarchive flow styling support
+* Messages - Provided joining/leaving a group message thread UX styling support
+* Messages - Provided single message splitting conversations by date styling support
+* Messages - Improved UI/UX for messages dropdown in the header
+* Moderation - Small styling improvement for blocked and suspended members names and avatars
+
+= 2.1.3 =
+* Media - Improved media uploading layout and styling
+* Groups - Handled activity navigation styling issue in single group responsive view
+* Zoom - Handled edit meeting minor layout issue with the sidebar
+* Core - Handled a bunch of alignment and styling issues for the RTL language site
+* LearnDash - Handled wrong notice issue for a linear course with a single lesson and topic
+* Compatibility - Handled 'WooCommerce' and 'Elementor' compatibility issues where 'Add to cart' button not showing on the elementor page
+
+= 2.1.2 =
+* Theme Options - Handled typography, font weight, and font size option not getting applied issue on pages
+* Theme Options - Handled 'Tooltips Background Color' option doesn't apply issue to the tooltip arrows
+* Theme Options - Handled 'LearnDash Single Pages Sidebar' left/right option not working issue
+* Styling - Handled theme 2.0 styling issue specific to form fields
+* Styling - Handled Header profile dropdown border radius issue on hover
+* Styling - Handled sticky sidebar UI issues when the content height on the page is less than the sidebar height
+* Styling - Handled Footer widget column size issue in the tablet view
+* BuddyPanel - Handled menu item stick to bottom margin issue when admin toolbar disabled
+* Profiles - Handled profile social links not clickable issue in the header
+* Profiles - Handled profile courses screen pagination not showing issue when the number of courses is less
+* Forums - Handled forums reply modal issue showing wrong member name and description context
+* Forums - Handled forums shortcodes medium editor toolbar styling issues
+* Activity - Handled media upload small UI issues
+* Media - Small GIPHY styling improvements in the frontend
+* Core - Icon Pack updated with latest icons
+* LearnDash - Handled single course 'Expand all' button alignment issue when accent color applied
+* LearnDash - Handled single lesson and topic screen maximize/minimize icon toggle issue
+* LearnDash - Handled single lesson and topic quiz icons not showing issue
+* LearnDash - Handled sidebar wrong order issue on the single lesson and topic screen
+* Elementor - Handled video not playing issue in activity block
+* Elementor - Handled WP Job Manager plugin compatibility issue with Elementor
+* Elementor - Handled course grid widget pagination not working issue on the elementor page
+
+= 2.1.1.1 =
+* Core - Handled updater critical issue by reverting the latest refactored code
+
+= 2.1.1 =
+* Moderation - Small styling support for report members option provided in 'BuddyBoss Platform'
+* Core - Icon Pack updated with latest icons
+
+= 2.1.0 =
+* Menus - Handled custom font not getting applied issue to sub-menus
+* Groups - Handled styling issue for group invites members pagination
+* Core - Icon Pack updated with latest icons
+* Core - Code refactoring by using transients to optimize the check updates logic for the theme
+* Core - Handled 404 page SVG image not compatible with all browsers issue
+* LearnDash - Handled sidebar toggle issue whenever going to the next lesson
+
+= 2.0.9 =
+* Groups - Handled group directory minor heading UI issue in the responsive view
+* Registration - Small improvement to tab structure to allow switching between fields in the meaningful order
+* Forums - Handled discussion reply notification issue not taking to relevant pagination and also not scrolling to the reply
+* Core - Icon Pack updated with latest icons
+* LearnDash - Handled RTL UI issues for courses directory and single course screen
+* Compatibility - Handled Learndash video progression compatibility issue when switching from the old BuddyBoss theme
+
+= 2.0.8 =
+* Forums - Handled [ld-profile] shortcode expand/collapse not working issue
+* Forums - Handled Forum activity widget 'View discussion' button UI issue
+* Activity - Improved link preview and embeds layout and styling
+* Core - Small improvements to plugin updates logic by reducing the number of requests to check updates
+* Elementor - Handled maintenance mode not working issue for non-logged-in users
+* Compatibility - Handled conflict with TranslatePress on language switcher not working in the menu
+* Compatibility - Handled 'Paid Memberships Pro' shortcode PHP notices
+
+= 2.0.7 =
+* Core - Icon Pack updated with latest icons
+* Events Calendar Pro - Handled calendar screen button wrong color issue
+
+= 2.0.6 =
+* Styling - Handled a bunch of styling issues for Theme 2.0 updates
+* Styling - Handled Cover block not showing full-width option issue
+* Menus - Handled Menu mobile view dropdown issue for active menu items
+* Forums - Small improvement to not create multiple discussions on double click
+* Core - Updated styling for toolbars and pickers across all content types editor
+* Core - Small improvement to show 'See all' for 'BB Recent Posts' widget
+* LearnDash - Handled quiz results not showing correct answers issue for incorrect input
+* LearnDash - Handled 'LearnDash LMS - Course Grid' shortcode issue to show the right labels and count
+* Elementor - Handled 'Activity' block wrong link issue for 'All Activity' link
+
+= 2.0.5 =
+* Theme Options - Handled maintenance mode shows blank screen issue for administrator
+* Theme Options - Small improvement for widgets to allow Footer 6th Column sidebar
+* Styling - Handled a bunch of important styling issues for Theme 2.0 updates
+* Menus - Handled custom icons not working issue for different display locations
+* Forums - Handled Forum discussion tag getting deleted issue on reply update
+* Forums - Handled forum [bbp-search] shortdcode UI issues
+* Activity - Handled Post activity not working UX issue without refresh
+* Core - Icon Pack updated with latest icons
+* Core - Handled critical issue on Theme activation when 'BuddyBoss Platform' plugin is not active
+* LearnDash - Handled Dark Mode styling issues for Lessons, Topics, and Quizzes
+* Events Calendar Pro - Handled colors CSS conflicts
+* Compatibility - Handled WooCommerce Membership and Elementor plugins conflict
+* Compatibility - Handled minor UX issue of page scrolling on submitting Gravity Forms
+* Compatibility - Handled conflict with TranslatePress on the Course page when switching to different languages
+
+= 2.0.4.1 =
+* Forums - Small style update for the Draft option available for forum Discussion and replies
+
+= 2.0.4 =
+* Notifications - Provided styling support for Web Push Notification from BuddyBoss Platform Pro
+* Forums - Handled discussion reply showing wrong member name issue
+* Messages - Small code refactoring to not save entity code in the DB for empty messages with just media
+* Menus - Handled menu icon picker issues not showing legacy icons
+* Menus - Small improvement to allow add a section for BuddyPanel menu settings only
+* Login - Fixed double quotation mark not working issue on Login Page form placeholder
+* Coding Standards - Menu and sub-navigation CSS Code refactoring
+* Coding Standards - 2.0 specific code cleanup and refactoring
+* Coding Standards - Code cleanup to centralize styling for buttons
+* LearnDash - Handled expand action not working issue for single course page
+* LearnDash - Handled scrolling issue for course page for device screen width between 820px and 768px
+* WooCommerce - Handle single product screen categories UI issue
+* Compatibility - Handled conflicts with a couple of third-party plugins
 
 = 2.0.3 =
 * Theme Options - Handled maintenance mode page description field shortcode support issue

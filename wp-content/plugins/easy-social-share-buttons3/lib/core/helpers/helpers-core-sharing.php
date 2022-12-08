@@ -1,15 +1,30 @@
 <?php
 
+/**
+ * Apply variable values to the custom content of a display method
+ * 
+ * @param {string} $content
+ * @return mixed
+ */
 function essb_post_details_to_content($content) {
 	global $post;
 
 	if (isset($post)) {
-		$url = get_permalink();
+	    $url = get_permalink($post->ID);
 		$title_plain = $post->post_title;
 		$image = essb_core_get_post_featured_image($post->ID);
 		$description = essb_core_get_post_excerpt($post->ID);
+		
+		$image_code = '';
+		
+		if (!empty($image)) {
+		    $image_code = '<img src="' . esc_url($image_code) . '" />';
+		}
 			
-		$content = preg_replace(array('#%%title%%#', '#%%url%%#', '#%%image%%#', '#%%excerpt%%#'), array($title_plain, $url, $image, $description), $content);
+		$content = preg_replace(
+		    array('#%%title%%#', '#%%url%%#', '#%%image%%#', '#%%excerpt%%#', '#%%picture%%#'), 
+		    array($title_plain, $url, $image, $description, $image_code), 
+		    $content);
 	}
 
 	return $content;
@@ -211,6 +226,14 @@ function essb_template_folder ($template_id) {
 	if (has_filter('essb4_templates_class')) {
 		$folder = apply_filters('essb4_templates_class', $folder, $template_id);
 	}
+	
+	/**
+	 * @since 8.6
+	 * Simplifying the filter name (old filter will be removed in the feature)
+	 */
+	if (has_filter('essb_additional_template_class')) {
+	    $folder = apply_filters('essb_additional_template_class', $folder, $template_id);
+	}
 
 	// fix when using template_slug instead of template_id
 	if (intval($template_id) == 0 && $template_id != '') {
@@ -318,6 +341,12 @@ function essb_core_helper_nonlatin_textencode($str = '') {
     $str = str_replace('\%27', '%27', $str);
     $str = str_replace('%26%238211%3B', '-', $str);
     
+    /**
+     * @since 8.3 Horizontal Ellipsis
+     */
+    $str = str_replace('&#8230;', '...', $str); 
+    $str = str_replace('%26%238230%3B', '...', $str);
+    
     return $str;
 }
 
@@ -350,6 +379,12 @@ function essb_core_helper_textencode($str) {
 	$str = str_replace('|', '%7C', $str);
 	$str = str_replace('\%27', '%27', $str);
 	$str = str_replace('%26%238211%3B', '-', $str);
+	
+	/**
+	 * @since 8.3 Horizontal Ellipsis
+	 */
+	$str = str_replace('&#8230;', '...', $str);
+	$str = str_replace('%26%238230%3B', '...', $str);
 	
 	return $str;
 }

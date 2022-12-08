@@ -38,6 +38,7 @@ class GP_Media_Library extends GWPerk {
 
 		// functionality
 		add_filter( 'gform_entry_post_save', array( $this, 'maybe_upload_to_media_library' ), 10, 2 );
+		add_action( 'gform_post_add_entry', array( $this, 'maybe_upload_to_media_library' ), 10, 2 );
 		add_action( 'gform_after_update_entry', array( $this, 'maybe_upload_to_media_library_after_update' ), 10, 2 );
 		add_action( 'wp_ajax_rg_delete_file', array( $this, 'hijack_delete_file' ), 9 );
 		add_action( 'gform_delete_lead', array( $this, 'maybe_delete_from_media_library' ) );
@@ -403,22 +404,23 @@ class GP_Media_Library extends GWPerk {
 			return;
 		}
 
+		$entry = GFAPI::get_entry( $entry_id );
+		$form  = GFAPI::get_form( $entry['form_id'] );
+
 		/**
 		 * Filter whether files imported into the Media Library from a given entry should be deleted when the entry is deleted.
 		 *
 		 * @param bool $should_delete Whether the entry's Media Library files should be deleted. Defaults to `true`.
 		 * @param int $entry_id The ID of the entry that has been deleted.
+		 * @param array $form The form that the entry is being deleted in.
 		 *
 		 * @since 1.2.7
 		 *
 		 */
-		$should_delete = apply_filters( 'gpml_delete_entry_files_from_media_library', true, $entry_id );
+		$should_delete = gf_apply_filters( array( 'gpml_delete_entry_files_from_media_library', $form['id'] ), true, $entry_id, $form );
 		if ( ! $should_delete ) {
 			return;
 		}
-
-		$entry = GFAPI::get_entry( $entry_id );
-		$form  = GFAPI::get_form( $entry['form_id'] );
 
 		foreach ( $form['fields'] as $field ) {
 			if ( $this->is_applicable_field( $field ) ) {

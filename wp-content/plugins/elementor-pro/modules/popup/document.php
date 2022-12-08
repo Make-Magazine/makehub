@@ -25,6 +25,10 @@ class Document extends Theme_Section_Document {
 	 */
 	private $display_settings;
 
+	public static function get_type() {
+		return 'popup';
+	}
+
 	public static function get_properties() {
 		$properties = parent::get_properties();
 
@@ -442,7 +446,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .dialog-widget-content' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
 				],
@@ -754,6 +758,9 @@ class Document extends Theme_Section_Document {
 				'placeholder' => esc_html__( '#id, .class', 'elementor-pro' ),
 				'description' => esc_html__( 'In order to open a popup on selector click, please set your Popup Conditions', 'elementor-pro' ),
 				'frontend_available' => true,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 

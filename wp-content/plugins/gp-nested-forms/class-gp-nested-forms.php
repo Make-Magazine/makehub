@@ -505,8 +505,8 @@ class GP_Nested_Forms extends GP_Plugin {
 		$expiration = time();
 		$this->log( sprintf( 'Expiration Timestamp: %d', $expiration ) );
 
-		$sql       = $wpdb->prepare( "SELECT entry_id FROM {$wpdb->prefix}gf_entry_meta WHERE meta_key = %s and meta_value < %d", GPNF_Entry::ENTRY_EXP_KEY, $expiration );
-		$entry_ids = wp_list_pluck( $wpdb->get_results( $sql ), 'entry_id' );
+		$results   = $wpdb->get_results( $wpdb->prepare( "SELECT entry_id FROM {$wpdb->prefix}gf_entry_meta WHERE meta_key = %s and meta_value < %d", GPNF_Entry::ENTRY_EXP_KEY, $expiration ) );
+		$entry_ids = wp_list_pluck( $results, 'entry_id' );
 
 		return $entry_ids;
 	}
@@ -907,8 +907,27 @@ class GP_Nested_Forms extends GP_Plugin {
 			$nested_form = $this->get_nested_form( $nested_form_field->gpnfForm );
 			$replace     = '';
 
-			$_entry        = new GPNF_Entry( $entry );
-			$child_entries = $_entry->get_child_entries( $nested_form_field_id );
+			$_entry = new GPNF_Entry( $entry );
+
+			/**
+			 * Filter the child entries used for Nested Forms' calculation merge tag modifiers such as :count, :sum,
+			 * and more. This is useful for conditionally including/excluding entries while calculating the results.
+			 *
+			 * @param array $entries Child entries to be used for calculations
+			 * @param array $match Information about the matched merge tag.
+			 * @param GF_Field $field Current Nested Form field.
+			 * @param array $form Current child form.
+			 * @param GF_Field $formula_field The formula field with the merge tag in it.
+			 *
+			 * @since 1.1.5
+			 *
+			 */
+			$child_entries = gf_apply_filters( array( 'gpnf_calc_entries', $form['id'], $nested_form_field['id'] ), $_entry->get_child_entries( $nested_form_field_id ), array(
+				$search,
+				$nested_form_field_id,
+				$func,
+				$target_field_id,
+			), $nested_form_field, $form, $field );
 
 			switch ( $func ) {
 				case 'sum':
@@ -936,6 +955,35 @@ class GP_Nested_Forms extends GP_Plugin {
 					$replace = implode( ', ', $items );
 					break;
 			}
+
+			/*
+			 * When using very small numbers (such as 0.000001) in values, PHP will use scientific notation instead
+			 * of decimals which will result in the replacement value being a string and having characters that will
+			 * be rejected by the eval() protection regular expression.
+			 *
+			 * Using sprintf(), we can force the number back to a decimal notation.
+			 */
+			$replace = is_numeric( $replace ) ? sprintf( '%F', $replace ) : $replace;
+
+			/**
+			 * Filter the replacement values for Nested Forms calculation merge tag modifiers such as :sum.
+			 *
+			 * @param float $replace Replacement value to use for the merge tag in the calculation.
+			 * @param array $match Information about the matched merge tag.
+			 * @param array $entries Child entries to be used for calculations
+			 * @param GF_Field $field Current Nested Form field.
+			 * @param array $form Current child form.
+			 * @param GF_Field $formula_field The formula field with the merge tag in it.
+			 *
+			 * @since 1.1.5
+			 *
+			 */
+			$replace = gf_apply_filters( array( 'gpnf_calc_replacement_value', $form['id'], $nested_form_field['id'] ), $replace, array(
+				$search,
+				$nested_form_field_id,
+				$func,
+				$target_field_id,
+			), $child_entries, $nested_form_field, $form, $field );
 
 			$formula = str_replace( $search, $replace, $formula );
 
@@ -984,7 +1032,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		$entry_id = $this->get_posted_entry_id();
 		$entry    = GFAPI::get_entry( $entry_id );
 
-		if ( is_wp_error($entry) ) {
+		if ( is_wp_error( $entry ) ) {
 			wp_send_json_error( __( 'Oops! There was an error finding an entry. Did you pass a valid entry_id?', 'gp-nested-forms' ) );
 		}
 
@@ -2149,7 +2197,9 @@ class GP_Nested_Forms extends GP_Plugin {
 				'sessionData'         => GPNF_Session::get_default_session_data( $field->formId, $this->get_stashed_shortcode_field_values( $form['id'] ) ),
 				'spinnerUrl'          => gf_apply_filters( array( 'gform_ajax_spinner_url', $field->formId ), GFCommon::get_base_url() . '/images/spinner' . ( $this->is_gf_version_gte( '2.5-beta-1' ) ? '.svg' : '.gif' ), $form ),
 				/* @deprecated options below */
+				// translators: placeholder is a singular item label such as "Item" or "Player"
 				'modalTitle'          => sprintf( __( 'Add %s', 'gp-nested-forms' ), $field->get_item_label() ),
+				// translators: placeholder is a singular item label such as "Item" or "Player"
 				'editModalTitle'      => sprintf( __( 'Edit %s', 'gp-nested-forms' ), $field->get_item_label() ),
 				'modalWidth'          => 700,
 				'modalHeight'         => 'auto',
@@ -2159,11 +2209,13 @@ class GP_Nested_Forms extends GP_Plugin {
 			);
 
 			// Backwards compatibility for deprecated "modalTitle" option.
+			// translators: placeholder is a singular item label such as "Item" or "Player"
 			if ( $args['modalLabels']['title'] == sprintf( __( 'Add %s', 'gp-nested-forms' ), $field->get_item_label() ) && $args['modalTitle'] !== $args['modalLabels']['title'] ) {
 				$args['modalLabels']['title'] = $args['modalTitle'];
 			}
 
 			// Backwards compatibility for deprecated "editModalTitle" option.
+			// translators: placeholder is a singular item label such as "Item" or "Player"
 			if ( $args['modalLabels']['editTitle'] == sprintf( __( 'Edit %s', 'gp-nested-forms' ), $field->get_item_label() ) && $args['editModalTitle'] !== $args['modalLabels']['editTitle'] ) {
 				$args['modalLabels']['editTitle'] = $args['editModalTitle'];
 			}
@@ -2232,6 +2284,7 @@ class GP_Nested_Forms extends GP_Plugin {
 	public function get_submitted_nested_entries( $form, $field_id = false, $display_values = true ) {
 
 		$all_entries = array();
+		$nested_form = null;
 
 		foreach ( $form['fields'] as $field ) {
 
@@ -2239,8 +2292,6 @@ class GP_Nested_Forms extends GP_Plugin {
 				continue;
 			}
 
-			$nested_form        = $this->get_nested_form( $field->gpnfForm );
-			$display_fields     = $field->gpnfFields;
 			$bypass_permissions = false;
 
 			$entries   = array();
@@ -2267,6 +2318,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				$entry_ids = $this->get_save_and_continue_child_entry_ids( $form['id'], $field->id );
 			}
 
+			// phpcs:ignore
 			if ( empty( $entry_ids ) && is_callable( 'gravityview' ) && $gv_entry = gravityview()->request->is_edit_entry() ) {
 				$parent_entry = $gv_entry->as_entry();
 				$entry_ids    = $this->get_child_entry_ids_from_value( $this->get_field_value( $form, $parent_entry, $field->id ) );
@@ -2278,6 +2330,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 			// Support populating child entries back into Nested Form field when parent form is reloaded via the
 			// WC GF Product Add-on's Enable Cart Edit option.
+			// phpcs:ignore
 			if ( empty( $entry_ids ) && is_callable( 'WC' ) && $cart_item_key = rgget( 'wc_gforms_cart_item_key' ) ) {
 
 				$cart_item = WC()->cart->get_cart_item( $cart_item_key );
@@ -2336,7 +2389,8 @@ class GP_Nested_Forms extends GP_Plugin {
 					}
 
 					if ( $display_values ) {
-						$entries[] = $this->get_entry_display_values( $entry, $nested_form );
+						$nested_form = $this->get_nested_form( $field->gpnfForm, $entry );
+						$entries[]   = $this->get_entry_display_values( $entry, $nested_form );
 					} else {
 						$entries[] = $entry;
 					}
@@ -2416,7 +2470,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		/* gf_token is used as the initial GET parameter and is then changed to gform_resume_token via POST. */
 		if ( ! empty( $this->get_query_arg( 'gform_resume_token' ) ) ) {
 			$gf_token = $this->get_query_arg( 'gform_resume_token' );
-		} else if ( ! empty( $this->get_query_arg( 'gf_token' ) ) ) {
+		} elseif ( ! empty( $this->get_query_arg( 'gf_token' ) ) ) {
 			$gf_token = $this->get_query_arg( 'gf_token' );
 		}
 
@@ -2770,7 +2824,9 @@ class GP_Nested_Forms extends GP_Plugin {
 		$form_tag .= '<input type="' . $type . '" name="gpnf_nested_form_field_id" value="' . esc_attr( $this->get_posted_nested_form_field_id() ) . '" />';
 
 		// append entry ID and mode inputs
-		if ( $entry_id = $this->get_posted_entry_id() ) {
+		$entry_id = $this->get_posted_entry_id();
+
+		if ( $entry_id ) {
 			$form_tag .= '<input type="' . $type . '" value="' . esc_attr( $entry_id ) . '" name="gpnf_entry_id" />';
 			$form_tag .= '<input type="' . $type . '" value="edit" name="gpnf_mode" />';
 		}
@@ -3051,13 +3107,17 @@ class GP_Nested_Forms extends GP_Plugin {
 		return false;
 	}
 
-	public function get_nested_form( $nested_form_or_id ) {
+	/**
+	 * @param int|array $form_or_id The form ID or form object.
+	 * @param array $entry The entry object. It is passed to the gpnf_get_nested_form filter so that GPPA can hydrate values with the entry data.
+	 */
+	public function get_nested_form( $nested_form_or_id, $entry = null ) {
 		// Do not return a form object if it contains a child form
 		// This prevents recursion/infinite loop.
 		if ( ! $this->has_child_form( $nested_form_or_id ) ) {
 			$nested_form = is_array( $nested_form_or_id ) ? $nested_form_or_id : GFAPI::get_form( $nested_form_or_id );
 
-			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form['id'] ), $nested_form );
+			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form['id'] ), $nested_form, $entry );
 		}
 		return false;
 	}
@@ -3216,7 +3276,8 @@ class GP_Nested_Forms extends GP_Plugin {
 			if ( $parent_form_id ) {
 				$session = new GPNF_Session( $parent_form_id );
 				$cookie  = $session->get_cookie();
-				$value   = rgar( $cookie['request'], $param );
+				$request = rgar( $cookie, 'request' );
+				$value   = rgar( $request, $param );
 			}
 		}
 

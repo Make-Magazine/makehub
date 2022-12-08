@@ -90,7 +90,7 @@ class OrderTrackingEndpoint {
 			$action       = $data['action'];
 			$request_body = $this->extract_tracking_information( $data );
 			$order_id     = (int) $data['order_id'];
-			$action === 'create' ? $this->add_tracking_information( $request_body, $order_id ) : $this->update_tracking_information( $data, $order_id );
+			$action === 'create' ? $this->add_tracking_information( $request_body, $order_id ) : $this->update_tracking_information( $request_body, $order_id );
 
 			$action_message = $action === 'create' ? 'created' : 'updated';
 			$message        = sprintf(
@@ -101,7 +101,7 @@ class OrderTrackingEndpoint {
 
 			wp_send_json_success( array( 'message' => $message ) );
 		} catch ( Exception $error ) {
-			wp_send_json_error( $error->getMessage(), 500 );
+			wp_send_json_error( array( 'message' => $error->getMessage() ), 500 );
 		}
 	}
 
@@ -117,14 +117,17 @@ class OrderTrackingEndpoint {
 		$url = trailingslashit( $this->host ) . 'v1/shipping/trackers-batch';
 
 		$body = array(
-			'trackers' => array( $data ),
+			'trackers' => array( (array) apply_filters( 'woocommerce_paypal_payments_tracking_data_before_sending', $data, $order_id ) ),
 		);
 
-		$args     = array(
+		$args = array(
 			'method'  => 'POST',
 			'headers' => $this->request_headers(),
 			'body'    => wp_json_encode( $body ),
 		);
+
+		do_action( 'woocommerce_paypal_payments_before_tracking_is_added', $order_id, $data );
+
 		$response = $this->request( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
@@ -168,7 +171,13 @@ class OrderTrackingEndpoint {
 			throw $error;
 		}
 
-		update_post_meta( $order_id, '_ppcp_paypal_tracking_number', $data['tracking_number'] ?? '' );
+		$wc_order = wc_get_order( $order_id );
+		if ( is_a( $wc_order, WC_Order::class ) ) {
+			$wc_order->update_meta_data( '_ppcp_paypal_tracking_number', $data['tracking_number'] ?? '' );
+			$wc_order->save();
+		}
+
+		do_action( 'woocommerce_paypal_payments_after_tracking_is_added', $order_id, $response );
 	}
 
 	/**
@@ -185,8 +194,12 @@ class OrderTrackingEndpoint {
 			throw new RuntimeException( 'wrong order ID' );
 		}
 
+		if ( ! $wc_order->meta_exists( '_ppcp_paypal_tracking_number' ) ) {
+			return null;
+		}
+
 		$transaction_id  = $wc_order->get_transaction_id();
-		$tracking_number = get_post_meta( $wc_order_id, '_ppcp_paypal_tracking_number', true );
+		$tracking_number = $wc_order->get_meta( '_ppcp_paypal_tracking_number', true );
 		$url             = trailingslashit( $this->host ) . 'v1/shipping/trackers/' . $this->find_tracker_id( $transaction_id, $tracking_number );
 
 		$args = array(
@@ -243,8 +256,10 @@ class OrderTrackingEndpoint {
 		$args = array(
 			'method'  => 'PUT',
 			'headers' => $this->request_headers(),
-			'body'    => wp_json_encode( $data ),
+			'body'    => wp_json_encode( (array) apply_filters( 'woocommerce_paypal_payments_tracking_data_before_update', $data, $order_id ) ),
 		);
+
+		do_action( 'woocommerce_paypal_payments_before_tracking_is_updated', $order_id, $data );
 
 		$response = $this->request( $url, $args );
 
@@ -289,7 +304,13 @@ class OrderTrackingEndpoint {
 			throw $error;
 		}
 
-		update_post_meta( $order_id, '_ppcp_paypal_tracking_number', $data['tracking_number'] ?? '' );
+		$wc_order = wc_get_order( $order_id );
+		if ( is_a( $wc_order, WC_Order::class ) ) {
+			$wc_order->update_meta_data( '_ppcp_paypal_tracking_number', $data['tracking_number'] ?? '' );
+			$wc_order->save();
+		}
+
+		do_action( 'woocommerce_paypal_payments_after_tracking_is_updated', $order_id, $response );
 	}
 
 	/**

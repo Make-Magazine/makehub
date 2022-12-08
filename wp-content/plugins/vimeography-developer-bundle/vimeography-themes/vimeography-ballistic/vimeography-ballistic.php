@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Ballistic
 Plugin URI: https://vimeography.com/themes
 Theme Name: Ballistic
 Theme URI:  https://vimeography.com/themes/ballistic
-Version: 2.0.5
+Version: 2.1.1
 Description: Ballistic is a simple list view of the videos from your Vimeo source.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Ballistic') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Ballistic') ) {
      *
      * @var string
      */
-    public $version = '2.0.5';
+    public $version = '2.1.1';
 
 
     /**

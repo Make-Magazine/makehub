@@ -867,14 +867,19 @@ function bb_onesingnal_send_notification( $data ) {
 	$fields = array(
 		'app_id'                    => $app_id,
 		'headings'                  => array(
-			$lang => html_entity_decode( wp_encode_emoji( $data['title'] ) ),
+			'en' => html_entity_decode( wp_encode_emoji( $data['title'] ) ),
 		),
 		'contents'                  => array(
-			$lang => html_entity_decode( wp_encode_emoji( $data['content'] ) ),
+			'en' => html_entity_decode( wp_encode_emoji( stripcslashes( $data['content'] ) ) ),
 		),
 		'include_external_user_ids' => wp_parse_list( $data['user_id'] ),
 
 	);
+
+	if ( ! isset( $fields['headings'][ $lang ] ) ) {
+		$fields['headings'][ $lang ] = html_entity_decode( wp_encode_emoji( $data['title'] ) );
+		$fields['contents'][ $lang ] = html_entity_decode( wp_encode_emoji( $data['content'] ) );
+	}
 
 	if ( isset( $data['link'] ) && ! empty( $data['link'] ) ) {
 		$fields['url'] = $data['link'];
@@ -917,4 +922,41 @@ function bb_onesignal_get_current_browser() {
 	}
 
 	return '';
+}
+
+/**
+ * Function will return excluded web push notification lists.
+ *
+ * @since 2.1.6
+ *
+ * @return array
+ */
+function bb_onesignal_excluded_web_notification_message_actions() {
+	return apply_filters(
+		'bb_onesignal_excluded_web_notification_message_actions',
+		array()
+	);
+}
+
+/**
+ * When a member is currently present in a web or app push notifications should not be sent.
+ *
+ * @since 2.1.6
+ *
+ * @param bool   $retval       True or False.
+ * @param object $notification Notification object.
+ *
+ * @return bool
+ */
+function bb_pro_onesignal_user_presence_check( $retval, $notification ) {
+	$excluded_actions = bb_onesignal_excluded_web_notification_message_actions();
+
+	if (
+		! empty( $notification->component_action ) &&
+		in_array( $notification->component_action, $excluded_actions, true )
+	) {
+		return $retval;
+	}
+
+	return bb_can_send_push_notification( $notification->user_id );
 }

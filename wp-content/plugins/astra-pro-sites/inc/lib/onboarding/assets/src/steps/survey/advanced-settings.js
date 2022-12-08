@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Tooltip } from '@brainstormforce/starter-templates-components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { Tooltip } from '@brainstormforce/starter-templates-components';
 import { useStateValue } from '../../store/store';
 import ICONS from '../../../icons';
 import { whiteLabelEnabled } from '../../utils/functions';

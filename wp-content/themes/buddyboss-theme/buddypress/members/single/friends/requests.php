@@ -17,14 +17,23 @@
 		<?php
 		while ( bp_members() ) :
 			bp_the_member();
-		?>
+			?>
 
 			<li id="friendship-<?php bp_friend_friendship_id(); ?>" <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_friend_friendship_id(); ?>" data-bp-item-component="members">
 				<div class="list-wrap member-request-list-wrap">
 					<div class="item-avatar">
 						<a href="<?php bp_member_permalink(); ?>">
-							<?php function_exists( 'bb_current_user_status' ) ? bb_current_user_status( bp_get_member_user_id() ) : bb_user_status( bp_get_member_user_id() ); ?>
-							<?php bp_member_avatar( bp_nouveau_avatar_args() ); ?>
+							<?php
+							if ( function_exists( 'bb_user_presence_html' ) ) {
+								bb_user_presence_html( bp_get_member_user_id() );
+							} elseif ( function_exists( 'bb_current_user_status' ) ) {
+								bb_current_user_status( bp_get_member_user_id() );
+							} else {
+								bb_user_status( bp_get_member_user_id() );
+							}
+
+							bp_member_avatar( bp_nouveau_avatar_args() );
+							?>
 						</a>
 					</div>
 

@@ -374,6 +374,13 @@
 		$( '.bb-forums-activity-wrapper' ).closest( 'section.elementor-element' ).prev('.elementor-heading-title-main-section').addClass('elementor-max-50');
 	};
 
+	//Fix double dropdown issue by hiding dropdown on scroll if header is sticky
+	$( window ).scroll( function() {
+		$( '.elementor-sticky:not(.elementor-sticky--active) .cart-wrap.header-cart-link-wrap.selected' ).removeClass( 'selected' );
+		$( '.elementor-sticky:not(.elementor-sticky--active) #header-messages-dropdown-elem.selected' ).removeClass( 'selected' );
+		$( '.elementor-sticky:not(.elementor-sticky--active) #header-notifications-dropdown-elem.selected' ).removeClass( 'selected' );
+	});
+
 
 
 	// Make sure you run this code under Elementor..

@@ -17,12 +17,13 @@
 	$activecampaign_for_woocommerce_options                 = $this->get_options();
 	$activecampaign_for_woocommerce_page_url                = esc_url( admin_url( 'admin.php?page=' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_historical_sync&activesync=1' ) );
 	$activecampaign_for_woocommerce_page_nonce              = wp_create_nonce( 'activecampaign_for_woocommerce_historical_sync_form' );
-
+	$activecampaign_for_woocommerce_request                 = wp_unslash( $_REQUEST );
+$activecampaign_for_woocommerce_get                         = wp_unslash( $_GET );
 if (
-isset( $_REQUEST['activecampaign_for_woocommerce_nonce_field'] )
-&& wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_nonce_field'], 'activecampaign_for_woocommerce_historical_sync_form' )
-) {
-	if ( isset( $_GET['activesync'] ) && ! empty( $_GET['activesync'] ) ) {
+	isset( $activecampaign_for_woocommerce_request['activecampaign_for_woocommerce_nonce_field'] ) &&
+	wp_verify_nonce( $activecampaign_for_woocommerce_request['activecampaign_for_woocommerce_nonce_field'], 'activecampaign_for_woocommerce_historical_sync_form' )
+ ) {
+	if ( isset( $activecampaign_for_woocommerce_get['activesync'] ) && ! empty( $activecampaign_for_woocommerce_get['activesync'] ) ) {
 		$this->run_historical_sync_active();
 	}
 }

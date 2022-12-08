@@ -349,7 +349,7 @@ add_filter( 'woocommerce_prevent_admin_access', 'learndash_check_group_leader_ac
  * @return array An array of course IDs.
  */
 function learndash_group_enrolled_courses( $group_id = 0, $bypass_transient = false ) {
-	$courses_ids = array();
+	$course_ids = array();
 
 	$group_id = absint( $group_id );
 	if ( ! empty( $group_id ) ) {
@@ -893,10 +893,6 @@ function learndash_set_users_group_ids( $user_id = 0, $user_groups_new = array()
 				ld_update_group_access( $user_id, $group_id, true );
 			}
 		}
-
-		// Finally clear our cache for other services.
-		$transient_key = 'learndash_user_groups_' . $user_id;
-		LDLMS_Transients::delete( $transient_key );
 	}
 }
 
@@ -974,7 +970,6 @@ function learndash_set_course_groups( $course_id = 0, $course_groups_new = array
 	}
 }
 
-
 /**
  * Gets the list of users ids that belong to a group.
  *
@@ -985,17 +980,20 @@ function learndash_set_course_groups( $course_id = 0, $course_groups_new = array
  *
  * @return array An array of user ids that belong to group.
  */
-function learndash_get_groups_user_ids( $group_id = 0, $bypass_transient = false ) {
-	$group_user_ids = array();
-
+function learndash_get_groups_user_ids( $group_id = 0, bool $bypass_transient = false ): array {
 	$group_id = absint( $group_id );
-	if ( ! empty( $group_id ) ) {
-		$group_users = learndash_get_groups_users( $group_id, $bypass_transient );
-		if ( ! empty( $group_users ) ) {
-			$group_user_ids = wp_list_pluck( $group_users, 'ID' );
-		}
+
+	if ( empty( $group_id ) ) {
+		return array();
 	}
-	return $group_user_ids;
+
+	$group_users = learndash_get_groups_users( $group_id, $bypass_transient );
+
+	if ( empty( $group_users ) ) {
+		return array();
+	}
+
+	return wp_list_pluck( $group_users, 'ID' );
 }
 
 /**
@@ -1610,7 +1608,17 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ) 
 				do_action( 'ld_added_group_access', $user_id, $group_id );
 			}
 		}
+
+		// Purge User Groups cache.
+		$transient_key = 'learndash_user_groups_' . $user_id;
+		LDLMS_Transients::delete( $transient_key );
+
+		// Purge User Courses cache.
+		$transient_key = 'learndash_user_courses_' . $user_id;
+		LDLMS_Transients::delete( $transient_key );
+
 	}
+
 
 	return $action_success;
 }
@@ -1825,10 +1833,9 @@ function learndash_get_group_course_quiz_ids( $group_id = 0 ) {
  *
  * @param integer $group_id Group ID to check.
  * @param integer $user_id  User ID to check.
- * @param boolean $recalc  Force the logic to recheck all courses.
+ * @param boolean $recalc   Force the logic to recheck all courses.
  */
 function learndash_get_user_group_progress( $group_id = 0, $user_id = 0, $recalc = false ) {
-
 	static $progress_group_user = array();
 
 	$group_id = absint( $group_id );
@@ -2226,7 +2233,7 @@ function learndash_get_user_group_completed_percentage( $group_id = 0, $user_id 
 function learndash_group_course_completed( $course_data = array() ) {
 
 	if ( ( isset( $course_data['course'] ) ) && ( isset( $course_data['user'] ) ) ) {
-		learndash_update_group_course_user_progress( $course_data['course']->ID, $course_data['user']->ID );
+		learndash_update_group_course_user_progress( $course_data['course']->ID, $course_data['user']->ID, true );
 	}
 }
 add_action( 'learndash_course_completed', 'learndash_group_course_completed', 30, 1 );
@@ -2239,13 +2246,14 @@ add_action( 'learndash_course_completed', 'learndash_group_course_completed', 30
  *
  * @param integer $course_id Course ID.
  * @param integer $user_id   User ID.
+ * @param boolean $recalc    Force the logic to recheck all courses.
  */
-function learndash_update_group_course_user_progress( $course_id = 0, $user_id = 0 ) {
+function learndash_update_group_course_user_progress( $course_id = 0, $user_id = 0, $recalc = false ) {
 	$course_id = absint( $course_id );
 	$user_id   = absint( $user_id );
 
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $course_id ) ) ) {
-		$user_group_ids = learndash_get_users_group_ids( $course_id );
+		$user_group_ids = learndash_get_users_group_ids( $user_id );
 		if ( empty( $user_group_ids ) ) {
 			return;
 		}
@@ -2258,7 +2266,7 @@ function learndash_update_group_course_user_progress( $course_id = 0, $user_id =
 		$group_ids = array_intersect( $user_group_ids, $course_group_ids );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				learndash_get_user_group_progress( $group_id, $user_id );
+				learndash_get_user_group_progress( $group_id, $user_id, $recalc );
 			}
 		}
 	}
@@ -2341,6 +2349,13 @@ function learndash_validate_groups( $group_ids = array() ) {
 function learndash_get_group_courses_per_page( $group_id = 0 ) {
 	$group_courses_per_page = 0;
 
+	// From the WP > Settings > Reading > Posts per page.
+	$group_courses_per_page = (int) get_option( 'posts_per_page' );
+
+	// From the LearnDash > Settings > General > Global Pagination Settings > Shortcodes & Widgets per page.
+	$group_courses_per_page = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page', $group_courses_per_page );
+
+	// From the LearnDash > Courses > Settings > Global Group Management > Group Table Pagination > Courses per page.
 	$group_global_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Groups_Management_Display' );
 	if ( ( isset( $group_global_settings['group_pagination_enabled'] ) ) && ( 'yes' === $group_global_settings['group_pagination_enabled'] ) ) {
 		if ( isset( $group_global_settings['group_pagination_courses'] ) ) {
@@ -2423,12 +2438,14 @@ function learndash_get_group_courses_order( $group_id = 0 ) {
  * Gets the list of enrolled courses for a group.
  *
  * @since 2.1.0
+ * @since 4.0.0 Added `$query_args` parameter.
  *
- * @param int $group_id Optional. Group ID. Default 0.
+ * @param int   $group_id   Optional. Group ID. Default 0.
+ * @param array $query_args Optional. An array of query arguments to get lesson list. Default empty array. (@since 4.0.0).
  *
  * @return array An array of course IDs.
  */
-function learndash_get_group_courses_list( $group_id = 0 ) {
+function learndash_get_group_courses_list( $group_id = 0, $query_args = array() ) {
 	global $course_pager_results;
 
 	$courses_ids = array();
@@ -2436,19 +2453,35 @@ function learndash_get_group_courses_list( $group_id = 0 ) {
 	$group_id = absint( $group_id );
 	if ( ! empty( $group_id ) ) {
 
-		$group_course_paged = 1;
-		if ( isset( $_GET['ld-group-courses-page'] ) ) {
-			$group_course_paged = absint( $_GET['ld-group-courses-page'] );
+		if ( ! isset( $query_args['paged'] ) ) {
+			$query_args['paged'] = 1;
+			if ( isset( $_GET['ld-group-courses-page'] ) ) {
+				$query_args['paged'] = absint( $_GET['ld-group-courses-page'] );
+			}
 		}
 
-		$group_courses_per_page   = learndash_get_group_courses_per_page( $group_id );
+		if ( isset( $query_args['num'] ) ) {
+			$query_args['per_page'] = intval( $query_args['num'] );
+			unset( $query_args['num'] );
+		}
+
+		if ( isset( $query_args['posts_per_page'] ) ) {
+			if ( ( ! isset( $query_args['per_page'] ) ) || ( empty( $query_args['per_page'] ) ) ) {
+				$query_args['per_page'] = intval( $query_args['posts_per_page'] );
+			}
+			unset( $query_args['posts_per_page'] );
+		}
+
+		if ( ! isset( $query_args['per_page'] ) ) {
+			$query_args['per_page'] = learndash_get_group_courses_per_page( $group_id );
+		}
 		$group_courses_order_args = learndash_get_group_courses_order( $group_id );
 
 		$query_args = array(
 			'post_type'      => learndash_get_post_type_slug( 'course' ),
 			'fields'         => 'ids',
-			'posts_per_page' => $group_courses_per_page,
-			'paged'          => $group_course_paged,
+			'posts_per_page' => $query_args['per_page'],
+			'paged'          => $query_args['paged'],
 			'meta_query'     => array(
 				array(
 					'key'     => 'learndash_group_enrolled_' . $group_id,
@@ -2465,7 +2498,7 @@ function learndash_get_group_courses_list( $group_id = 0 ) {
 			if ( ! isset( $course_pager_results['pager'] ) ) {
 				$course_pager_results['pager'] = array();
 			}
-			$course_pager_results['pager']['paged']       = $group_course_paged;
+			$course_pager_results['pager']['paged']       = $query_args['paged'];
 			$course_pager_results['pager']['total_items'] = $query->found_posts;
 			$course_pager_results['pager']['total_pages'] = $query->max_num_pages;
 		}
@@ -2829,4 +2862,59 @@ function learndash_groups_get_not_public_message() {
 	 * @return string $message The message when groups are not set to Public
 	 */
 	return apply_filters( 'learndash_groups_get_not_public_message', $message );
+}
+
+/**
+ * Returns true if it's a group post.
+ *
+ * @param WP_Post|int|null $post Post or Post ID.
+ *
+ * @since 4.1.0
+ *
+ * @return bool
+ */
+function learndash_is_group_post( $post ): bool {
+	if ( empty( $post ) ) {
+		return false;
+	}
+
+	$post_type = is_a( $post, WP_Post::class ) ? $post->post_type : get_post_type( $post );
+
+	return LDLMS_Post_Types::get_post_type_slug( 'group' ) === $post_type;
+}
+
+/**
+ * Returns group enrollment url.
+ *
+ * @param WP_Post|int|null $post Post or Post ID.
+ *
+ * @since 4.1.0
+ *
+ * @return string
+ */
+function learndash_get_group_enrollment_url( $post ): string {
+	if ( empty( $post ) ) {
+		return '';
+	}
+
+	if ( is_int( $post ) ) {
+		$post = get_post( $post );
+
+		if ( is_null( $post ) ) {
+			return '';
+		}
+	}
+
+	$url = get_permalink( $post );
+
+	$settings = learndash_get_setting( $post );
+
+	if ( 'paynow' === $settings['group_price_type'] && ! empty( $settings['group_price_type_paynow_enrollment_url'] ) ) {
+		$url = $settings['group_price_type_paynow_enrollment_url'];
+	} elseif ( 'subscribe' === $settings['group_price_type'] && ! empty( $settings['group_price_type_subscribe_enrollment_url'] ) ) {
+		$url = $settings['group_price_type_subscribe_enrollment_url'];
+	}
+
+	/** This filter is documented in includes/course/ld-course-functions.php */
+	return apply_filters( 'learndash_group_join_redirect', $url, $post->ID );
 }

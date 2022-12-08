@@ -3,8 +3,7 @@
  * LearnDash Admin Translations handler.
  * This class connects to a remote GlotPress server to retreive needed translations for LearnDash core and related add-ons.
  *
- * @package LearnDash
- * @subpackage Admin
+ * @package LearnDash\Admin
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -171,7 +170,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 				return $ld_translations['translation_sets'][ $project_slug ];
 			}
 
-			return [];
+			return array();
 		}
 
 		/**
@@ -623,12 +622,9 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 						<?php
 
 						if ( ! is_null( $translation_set ) ) {
-							if ( learndash_updates_enabled() ) {
-								$last_updated_time = learndash_get_timestamp_from_date_string( $translation_set['last_modified_gmt'] );
-								?>
-								<a href="<?php echo esc_url( self::get_action_url( 'update', $this->project_slug, $locale ) ); ?>" class="button button-primary learndash-translations-update" title="<?php esc_html_e( 'Update translation from LearnDash', 'learndash' ); ?>"><?php esc_html_e( 'Update', 'learndash' ); ?></a>
-								<?php
-							}
+							?>
+							<a href="<?php echo esc_url( self::get_action_url( 'update', $this->project_slug, $locale ) ); ?>" class="button button-primary learndash-translations-update" title="<?php esc_html_e( 'Update translation from LearnDash', 'learndash' ); ?>"><?php esc_html_e( 'Update', 'learndash' ); ?></a>
+							<?php
 						}
 						?>
 					</td>
@@ -679,58 +675,56 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 				}
 
 				if ( ( ! empty( $available_translations['recommended'] ) ) || ( ! empty( $available_translations['available'] ) ) ) {
-					if ( learndash_updates_enabled() ) {
-						?>
-						<div id="learndash-translations-available">
-							<h4><?php esc_html_e( 'Available Translations', 'learndash' ); ?></h4>
-							<select id="ld-translation-install-locale-<?php echo esc_attr( $this->project_slug ); ?>" class="ld-translation-install-locale" data-project="<?php echo esc_attr( $this->project_slug ); ?>">
-								<option value=""><?php esc_html_e( '-- Install Translation --', 'learndash' ); ?></option>
-								<?php
-								$show_opt_group = false;
-								if ( ( ! empty( $available_translations['recommended'] ) ) && ( ! empty( $available_translations['available'] ) ) ) {
-									$show_opt_group = true;
+					?>
+					<div id="learndash-translations-available">
+						<h4><?php esc_html_e( 'Available Translations', 'learndash' ); ?></h4>
+						<select id="ld-translation-install-locale-<?php echo esc_attr( $this->project_slug ); ?>" class="ld-translation-install-locale" data-project="<?php echo esc_attr( $this->project_slug ); ?>">
+							<option value=""><?php esc_html_e( '-- Install Translation --', 'learndash' ); ?></option>
+							<?php
+							$show_opt_group = false;
+							if ( ( ! empty( $available_translations['recommended'] ) ) && ( ! empty( $available_translations['available'] ) ) ) {
+								$show_opt_group = true;
+							}
+							if ( ! empty( $available_translations['recommended'] ) ) {
+								if ( $show_opt_group ) {
+									?>
+									<optgroup label="<?php esc_html_e( 'Recommended', 'learndash' ); ?>">
+									<?php
 								}
-								if ( ! empty( $available_translations['recommended'] ) ) {
-									if ( $show_opt_group ) {
-										?>
-										<optgroup label="<?php esc_html_e( 'Recommended', 'learndash' ); ?>">
-										<?php
-									}
-									foreach ( $available_translations['recommended'] as $translation_set ) {
-										?>
-										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
-										<?php
-									}
-									if ( $show_opt_group ) {
-										?>
-										</optgroup>
-										<?php
-									}
+								foreach ( $available_translations['recommended'] as $translation_set ) {
+									?>
+									<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
+									<?php
 								}
+								if ( $show_opt_group ) {
+									?>
+									</optgroup>
+									<?php
+								}
+							}
 
-								if ( ! empty( $available_translations['available'] ) ) {
-									if ( $show_opt_group ) {
-										?>
-										<optgroup label="<?php esc_html_e( 'Available', 'learndash' ); ?>">
-										<?php
-									}
-									foreach ( $available_translations['available'] as $translation_set ) {
-										?>
-										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
-										<?php
-									}
-									if ( $show_opt_group ) {
-										?>
-										</optgroup>
-										<?php
-									}
+							if ( ! empty( $available_translations['available'] ) ) {
+								if ( $show_opt_group ) {
+									?>
+									<optgroup label="<?php esc_html_e( 'Available', 'learndash' ); ?>">
+									<?php
 								}
-								?>
-							</select>
-							<a id="learndash-translation-install-<?php echo esc_attr( $this->project_slug ); ?>" class="button button-primary learndash-translations-install" href="#"><?php esc_html_e( 'Install', 'learndash' ); ?></a>
-						</div>
-						<?php
-					}
+								foreach ( $available_translations['available'] as $translation_set ) {
+									?>
+									<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
+									<?php
+								}
+								if ( $show_opt_group ) {
+									?>
+									</optgroup>
+									<?php
+								}
+							}
+							?>
+						</select>
+						<a id="learndash-translation-install-<?php echo esc_attr( $this->project_slug ); ?>" class="button button-primary learndash-translations-install" href="#"><?php esc_html_e( 'Install', 'learndash' ); ?></a>
+					</div>
+					<?php
 				}
 			}
 		}

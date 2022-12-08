@@ -1,6 +1,14 @@
 
 # Changelog
 
+## 1.2.27
+
+	- Updated `gpml_delete_entry_files_from_media_library` PHP filter hook to include a new `$form` param and also have a form-specific variation (e.g. `gpml_delete_entry_files_from_media_library_29`).
+
+## 1.2.26
+
+	- Fixed Gravity Flow Incoming Webhook not trigerring GP Media Library.
+
 ## 1.2.25
 
 	- Added support for mapping Multi-file Upload fields as a featured image and mapping the same field to an ACF gallery field. The first image will be uploaded as the featured image. All other photos would be added to the gallery field.

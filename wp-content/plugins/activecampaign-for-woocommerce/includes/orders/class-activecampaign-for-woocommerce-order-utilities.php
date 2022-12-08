@@ -370,7 +370,8 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 
 			$pre_product = [
-				'data'         => $product_data,
+				'data'         => $item->get_data(),
+				'wc_product'   => $product_data,
 				'item'         => $item,
 				'product_id'   => $item->get_product_id(),
 				'variation_id' => $item->get_variation_id(),
@@ -643,9 +644,9 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		}
 
 		if ( ! empty( $wc_product['short_description'] ) ) {
-			$description = $this->clean_description( $wc_product['short_description'] );
+			$description = AC_Utilities::clean_description( $wc_product['short_description'] );
 		} elseif ( ! empty( $wc_product['description'] ) ) {
-			$description = $this->clean_description( $wc_product['description'] );
+			$description = AC_Utilities::clean_description( $wc_product['description'] );
 		} else {
 			$description = '';
 		}
@@ -692,8 +693,32 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			foreach ( $data as $line ) {
 				try {
 					$order = wc_get_order( $line->wc_order_id );
-					if ( $this->verify_order_status( $order->get_status() ) ) {
+					if (
+						AC_Utilities::validate_object( $order, 'get_status' ) &&
+						$this->verify_order_status( $order->get_status() )
+					) {
 						$wc_orders[] = $order;
+					} else {
+						if ( AC_Utilities::validate_object( $order, 'get_data' ) ) {
+							$this->logger->debug(
+								'This order could not be found or the status may indicate it is not ready for sync.',
+								array(
+									'stored_order_id' => $line->wc_order_id,
+									'wc_order'        => $order,
+									'order_status'    => AC_Utilities::validate_object( $order, 'get_status' ) ? $order->get_status() : null,
+								)
+							);
+						} else {
+							$this->logger->debug(
+								'This order could not be found.',
+								array(
+									'stored_order_id' => $line->wc_order_id,
+									'wc_order'        => $order,
+									'order_status'    => AC_Utilities::validate_object( $order, 'get_status' ) ? $order->get_status() : null,
+									'order_data'      => AC_Utilities::validate_object( $order, 'get_data' ) ? $order->get_data() : null,
+								)
+							);
+						}
 					}
 				} catch ( Throwable $t ) {
 					$this->logger->error(
@@ -711,23 +736,26 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	}
 
 	/**
-	 * Convert money to cents
+	 * Convert money to cents. Different parameters might send different formats.
 	 *
-	 * @param string|int $amount The currency amount.
+	 * @param string|int|bool|float $amount The currency amount.
 	 *
 	 * @return \Brick\Math\BigDecimal|int
 	 */
 	public function convert_money_to_cents( $amount ) {
-		if ( empty( $amount ) ) {
+		if ( empty( $amount ) || is_bool( $amount ) ) {
 			return 0;
 		}
 
+		$currency = get_woocommerce_currency();
+		$dec      = null;
+		$cents    = null;
+
 		try {
-			$dec      = number_format( $amount, 2 );
-			$currency = get_woocommerce_currency();
+			$dec = round( $amount, 2 );
 		} catch ( Throwable $t ) {
 			$this->logger->error(
-				'There was an issue converting money to cents.',
+				'There was an issue rounding the amount to 2 decimals.',
 				[
 					'message'       => $t->getMessage(),
 					'amount_passed' => $amount,
@@ -736,24 +764,42 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			);
 		}
 
-		try {
-			if ( ! empty( $dec ) && ! empty( $currency ) ) {
-				// round to 2 decimals and convert to minor "cents" using WC currency
+		if ( isset( $dec ) && ! empty( $dec ) ) {
+			try {
+				// Convert rounded amount to minor "cents" integer
 				$cents = Money::of( $dec, $currency )->getMinorAmount()->toInt();
-
-				if ( null !== $cents ) {
-					return $cents;
-				}
+			} catch ( Throwable $t ) {
+				$this->logger->error(
+					'There was an issue converting rounded amount to cents.',
+					[
+						'message'       => $t->getMessage(),
+						'amount_passed' => $amount,
+						'rounded'       => $dec,
+						'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
+					]
+				);
 			}
-		} catch ( Throwable $t ) {
-			$this->logger->error(
-				'There was an issue converting money to cents.',
-				[
-					'message'       => $t->getMessage(),
-					'amount_passed' => $amount,
-					'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
-				]
-			);
+		}
+
+		if ( null === $cents ) {
+			try {
+				// Convert original amount to minor "cents" integer if the previous failed
+				$cents = Money::of( $amount, $currency )->getMinorAmount()->toInt();
+			} catch ( Throwable $t ) {
+				$this->logger->error(
+					'There was an issue converting amount to cents.',
+					[
+						'message'       => $t->getMessage(),
+						'amount_passed' => $amount,
+						'stack_trace'   => $this->logger->clean_trace( $t->getTrace() ),
+					]
+				);
+			}
+		}
+
+		// Cents can never be null, return cents or zero
+		if ( null !== $cents ) {
+			return $cents;
 		}
 
 		return 0;
@@ -810,48 +856,6 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 
 		return $accepts_marketing;
 	}
-
-	/**
-	 * Cleans a description field by removing tags and shortening the number of words to a max amount.
-	 *
-	 * @param string $description The description.
-	 *
-	 * @return string
-	 */
-	public function clean_description( $description ) {
-		$logger = new Logger();
-
-		try {
-			$plain_description = str_replace( array( "\r", "\n", '&nbsp;' ), ' ', $description );
-			$plain_description = trim( wp_strip_all_tags( $plain_description, false ) );
-			$plain_description = preg_replace( '/\s+/', ' ', $plain_description );
-			$wrap_description  = wordwrap( $plain_description, 300 );
-			$description_arr   = explode( "\n", $wrap_description );
-			if ( isset( $description_arr[0] ) ) {
-				$fin_description = $description_arr[0] . '...';
-			}
-		} catch ( Throwable $t ) {
-			$logger->warning(
-				'There was an issue cleaning the description field.',
-				[
-					'message'     => $t->getMessage(),
-					'description' => $description,
-				]
-			);
-		}
-
-		if ( ! empty( $fin_description ) ) {
-			return $fin_description;
-		}
-
-		if ( ! empty( $plain_description ) ) {
-			return $plain_description;
-		}
-
-		return $description;
-	}
-
-
 
 	/**
 	 * Verifies the status of the order for sending to AC
@@ -1143,7 +1147,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		try {
 			// wp_clear_scheduled_hook('activecampaign_for_woocommerce_cart_updated_recurring_event');
 			if ( ! wp_next_scheduled( 'activecampaign_for_woocommerce_run_order_sync' ) ) {
-				wp_schedule_event( time(), 'every_minute', 'activecampaign_for_woocommerce_run_order_sync' );
+				wp_schedule_event( time() + 10, 'every_minute', 'activecampaign_for_woocommerce_run_order_sync' );
 			} elseif ( function_exists( 'wp_get_scheduled_event' ) ) {
 				$logger->debug(
 					'Recurring order sync already scheduled',
@@ -1396,7 +1400,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				$order_ac = $this->order_repository->find_by_externalcheckoutid( $externalcheckout_id );
 			}
 
-			if ( ! AC_Utilities::validate_object( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
+			if ( ! isset( $order_ac ) || ! AC_Utilities::validate_object( $order_ac, 'get_id' ) || empty( $order_ac->get_id() ) ) {
 				// check ac by external order id
 				$order_ac = $this->order_repository->find_by_externalid( $order_id );
 			}

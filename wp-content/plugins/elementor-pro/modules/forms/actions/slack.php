@@ -41,6 +41,9 @@ class Slack extends Action_Base {
 				'description' => esc_html__( 'Enter the webhook URL that will receive the form\'s submitted data.', 'elementor-pro' ) . ' ' . sprintf( '<a href="%s" target="_blank">%s</a>.', 'https://slack.com/apps/A0F7XDUAZ-incoming-webhooks/', esc_html__( 'Click here for Instructions', 'elementor-pro' ) ),
 				'render_type' => 'none',
 				'classes' => 'elementor-control-direction-ltr',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -49,6 +52,9 @@ class Slack extends Action_Base {
 			[
 				'label' => esc_html__( 'Channel', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -57,6 +63,9 @@ class Slack extends Action_Base {
 			[
 				'label' => esc_html__( 'Username', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -65,6 +74,9 @@ class Slack extends Action_Base {
 			[
 				'label' => esc_html__( 'Pre Text', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -73,6 +85,9 @@ class Slack extends Action_Base {
 			[
 				'label' => esc_html__( 'Title', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -81,6 +96,9 @@ class Slack extends Action_Base {
 			[
 				'label' => esc_html__( 'Description', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -182,7 +200,11 @@ class Slack extends Action_Base {
 
 		if ( ! empty( $settings['slack_add_ts'] ) && 'yes' === $settings['slack_add_ts'] ) {
 			$attachment = array_merge( $attachment, [
-				'footer' => sprintf( esc_html__( 'Powered by %s', 'elementor-pro' ), 'Elementor' ),
+				'footer' => sprintf(
+					/* translators: %s: Elementor. */
+					esc_html__( 'Powered by %s', 'elementor-pro' ),
+					'Elementor'
+				),
 				'footer_icon' => is_ssl() ? ELEMENTOR_ASSETS_URL . 'images/logo-icon.png' : null,
 				'ts' => time(),
 			] );

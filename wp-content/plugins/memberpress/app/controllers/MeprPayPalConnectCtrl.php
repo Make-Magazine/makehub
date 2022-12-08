@@ -181,8 +181,8 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
     add_action( 'wp_ajax_mepr_paypal_commerce_create_smart_button', array( $this, 'generate_smart_button_object' ) );
     add_action( 'wp_ajax_nopriv_mepr_paypal_commerce_create_smart_button', array( $this, 'generate_smart_button_object' ) );
     add_action( 'admin_init', array( $this, 'onboarding_success' ) );
-    //add_action( 'admin_notices', array( $this, 'check_and_show_upgrade_notices' ) );
-    //add_action( 'admin_notices', array( $this, 'show_notices_if_commerce_not_connected' ) );
+    // add_action( 'admin_notices', array( $this, 'check_and_show_upgrade_notices' ) );
+    // add_action( 'admin_notices', array( $this, 'show_notices_if_commerce_not_connected' ) );
     add_action( 'admin_notices', array( $this, 'admin_notices' ) );
     add_filter('mepr_signup_form_payment_description', array($this, 'maybe_render_payment_form'), 10, 3);
   }
@@ -633,9 +633,6 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
   }
 
   public function generate_smart_button_object() {
-    $rawInput = file_get_contents('php://input');
-    $input = json_decode($rawInput, true);
-    $_POST = $input;
     $_POST['smart-payment-button'] = true;
     $checkout_ctrl = MeprCtrlFactory::fetch( 'checkout' );
     $checkout_ctrl->process_signup_form();

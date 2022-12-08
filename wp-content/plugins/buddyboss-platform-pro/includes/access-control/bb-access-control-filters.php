@@ -703,17 +703,18 @@ function bb_access_control_member_can_send_message( $thread, $recipients, $error
 				return '';
 			}
 		} else {
-			$error = __( 'You can no longer send replies to this thread as you are restricted from sending messages to this member.', 'buddyboss-pro' );
+			$error = __( 'You are restricted from sending new messages to this member.', 'buddyboss-pro' );
 			if ( count( $un_access_users ) > 1 ) {
-				$error = __( 'You can no longer send replies to this thread as you are restricted from sending messages to these members: ', 'buddyboss-pro' ) . implode( ', ', $un_access_users );
+				$error = __( 'You are restricted from sending new messages to these members: ', 'buddyboss-pro' ) . implode( ', ', $un_access_users );
 				if ( count( $un_access_users ) > 3 ) {
-					$error = __( 'You can no longer send replies to this thread as you are restricted from sending messages to these members: ', 'buddyboss-pro' ) . implode( ', ', array_slice( $un_access_users, -3 ) ) . __( '...', 'buddyboss-pro' );
+					$error = __( 'You are restricted from sending new messages to these members: ', 'buddyboss-pro' ) . implode( ', ', array_slice( $un_access_users, -3 ) ) . __( '...', 'buddyboss-pro' );
 				}
 			}
 			if ( '' === $error_type ) {
 				$thread->feedback_error = array(
 					'feedback' => $error,
 					'type'     => 'info',
+					'from'     => 'access-control',
 				);
 
 				return $thread;

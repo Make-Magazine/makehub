@@ -114,6 +114,12 @@ if ( ! function_exists( 'buddyboss_theme_setup' ) ) {
 		 * Remove Emoji Styles
 		 */
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+		/*
+		 * Gutenberg - Cover block (Adding wide option) 
+		 */
+		add_theme_support( 'align-wide' ); 
+		
 	}
 
 	add_action( 'after_setup_theme', 'buddyboss_theme_setup' );
@@ -184,6 +190,13 @@ function buddyboss_theme_scripts() {
 	/* Styles */
 	$template_type = '1';
 	$template_type = apply_filters( 'bb_template_type', $template_type );
+
+	// Icons.
+	// don't enqueue icons if BuddyBoss Platform 1.4.0 or higher is activated.
+	if ( ! function_exists( 'buddypress' ) || ( function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.4.0', '<' ) ) ) {
+		wp_enqueue_style( 'buddyboss-theme-icons-map', get_template_directory_uri() . '/assets/css/icons-map' . $mincss . '.css', '', buddyboss_theme()->version() );
+		wp_enqueue_style( 'buddyboss-theme-icons', get_template_directory_uri() . '/assets/icons/css/bb-icons' . $mincss . '.css', '', buddyboss_theme()->version() );
+	}
 
 	wp_enqueue_style( 'buddyboss-theme-magnific-popup-css', get_template_directory_uri() . '/assets/css/vendors/magnific-popup.min.css', '', buddyboss_theme()->version() );
 	wp_enqueue_style( 'buddyboss-theme-select2-css', get_template_directory_uri() . '/assets/css/vendors/select2.min.css', '', buddyboss_theme()->version() );
@@ -274,13 +287,6 @@ function buddyboss_theme_scripts() {
 
 	if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'buddyboss-platform/bp-loader.php' ) ) {
 		wp_enqueue_script( 'buddyboss-theme-cookie-js', get_template_directory_uri() . '/assets/js/plugins/jquery-cookie' . $minjs . '.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-	}
-
-	// Icons.
-	// don't enqueue icons if BuddyBoss Platform 1.4.0 or higher is activated.
-	if ( ! function_exists( 'buddypress' ) || ( function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.4.0', '<' ) ) ) {
-		wp_enqueue_style( 'buddyboss-theme-icons-map', get_template_directory_uri() . '/assets/css/icons-map' . $mincss . '.css', '', buddyboss_theme()->version() );
-		wp_enqueue_style( 'buddyboss-theme-icons', get_template_directory_uri() . '/assets/icons/css/bb-icons' . $mincss . '.css', '', buddyboss_theme()->version() );
 	}
 
 	/**
@@ -542,7 +548,13 @@ if ( ! function_exists( 'featured_img_layout' ) ) {
 if ( ! function_exists( 'bb_buddypanel_menu_atts' ) ) {
 
 	function bb_buddypanel_menu_atts( $atts, $item, $args ) {
-		if ( $args->theme_location == 'buddypanel-loggedin' || $args->theme_location == 'buddypanel-loggedout' ) {
+		if (
+			isset( $args->theme_location ) &&
+			(
+				'buddypanel-loggedin' === $args->theme_location ||
+				'buddypanel-loggedout' === $args->theme_location
+			)
+		) {
 			$atts['class'] = 'bb-menu-item';
 
 			$header = (int) buddyboss_theme_get_option( 'buddyboss_header' );
@@ -704,6 +716,17 @@ class BuddyBoss_BuddyPanel_Menu_Walker extends Walker_Nav_Menu {
 			$classes[] = 'bp-menu-item-at-bottom';
 		}
 
+		// Add the count for the messages in BuddyPanel.
+		if (
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'messages' ) &&
+			function_exists( 'bp_loggedin_user_id' ) &&
+			function_exists( 'bp_get_messages_slug' ) &&
+			in_array( 'bp-' . bp_get_messages_slug() . '-nav', $classes, true )
+		) {
+			$classes[] = 'bp-buddypanel-menu-item-' . bp_get_messages_slug() . '-count-' . bp_loggedin_user_id();
+		}
+
 		/**
 		 * Filters the arguments for a single nav menu item.
 		 *
@@ -801,6 +824,21 @@ class BuddyBoss_BuddyPanel_Menu_Walker extends Walker_Nav_Menu {
 		/** This filter is documented in wp-includes/post-template.php */
 		$title = apply_filters( 'the_title', $item->title, $item->ID );
 
+		// Add the count for the messages in BuddyPanel.
+		if (
+            function_exists( 'bp_is_active' ) &&
+            bp_is_active( 'messages' ) &&
+            function_exists( 'bp_loggedin_user_id' ) &&
+            function_exists( 'bp_get_total_unread_messages_count' ) &&
+            function_exists( 'bp_get_messages_slug' ) &&
+            in_array( 'bp-' . bp_get_messages_slug() . '-nav', $classes, true )
+		) {
+			$count = bp_get_total_unread_messages_count( bp_loggedin_user_id() );
+			if ( $count > 0 ) {
+				$title = $title . '<span class="count bb-messages-inbox-unread-count">' . $count . '</span>';
+			}
+		}
+
 		/**
 		 * Filters a menu item's title.
 		 *
@@ -812,11 +850,11 @@ class BuddyBoss_BuddyPanel_Menu_Walker extends Walker_Nav_Menu {
 		 * @param int      $depth Depth of menu item. Used for padding.
 		 */
 		$title        = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
-		$item_output  = $args->before;
+		$item_output  = ( isset( $args->before ) ? $args->before : '' );
 		$item_output .= '<a' . $attributes . '>';
-		$item_output .= $args->link_before . $title . $args->link_after;
+		$item_output .= ( isset( $args->link_before ) ? $args->link_before : '' ) . $title . ( isset( $args->link_after ) ? $args->link_after : '' );
 		$item_output .= '</a>';
-		$item_output .= $args->after;
+		$item_output .= ( isset( $args->after ) ? $args->after : '' );
 
 		/**
 		 * Filters a menu item's starting output.
@@ -895,6 +933,17 @@ class BuddyBoss_SubMenuWrap extends Walker_Nav_Menu {
 			$classes[] = 'icon-added';
 		}
 
+		// Add the count for the messages in BuddyPanel.
+		if (
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'messages' ) &&
+			function_exists( 'bp_loggedin_user_id' ) &&
+			function_exists( 'bp_get_messages_slug' ) &&
+			in_array( 'bp-' . bp_get_messages_slug() . '-nav', $classes, true )
+		) {
+			$classes[] = 'bp-buddypanel-menu-item-' . bp_get_messages_slug() . '-count-' . bp_loggedin_user_id();
+		}
+
 		/**
 		 * Filters the arguments for a single nav menu item.
 		 *
@@ -939,7 +988,7 @@ class BuddyBoss_SubMenuWrap extends Walker_Nav_Menu {
 		$data_ballon        = '';
 
 		if ( 'tab_bar' === $menu_style ) {
-			$data_ballon = 'data-balloon-pos="down" data-balloon="' . $data_balloon_title . '"';
+			$data_ballon = 'data-balloon-pos="down" data-balloon="' . esc_attr( wp_strip_all_tags( $data_balloon_title ) ) . '"';
 		}
 
 		$output .= $indent . '<li' . $id . $class_names . $data_ballon . '>';
@@ -986,6 +1035,21 @@ class BuddyBoss_SubMenuWrap extends Walker_Nav_Menu {
 
 		/** This filter is documented in wp-includes/post-template.php */
 		$title = apply_filters( 'the_title', $item->title, $item->ID );
+
+		// Add the count for the messages in BuddyPanel.
+		if (
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'messages' ) &&
+			function_exists( 'bp_loggedin_user_id' ) &&
+			function_exists( 'bp_get_total_unread_messages_count' ) &&
+			function_exists( 'bp_get_messages_slug' ) &&
+			in_array( 'bp-' . bp_get_messages_slug() . '-nav', $classes, true )
+		) {
+			$count = bp_get_total_unread_messages_count( bp_loggedin_user_id() );
+			if ( $count > 0 ) {
+				$title = $title . '<span class="count bb-messages-inbox-unread-count">' . $count . '</span>';
+			}
+		}
 
 		/**
 		 * Filters a menu item's title.

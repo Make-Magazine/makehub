@@ -40,25 +40,31 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		}
 
 		/**
-		 * Settings page init.
-		 *
-		 * Called from `learndash_settings_page_init` action.
+		 * Settings page init. Called from `learndash_settings_page_init` action.
 		 *
 		 * @since 3.6.0
 		 *
-		 * @param string $settings_page_id   Settings Page ID.
+		 * @param string $settings_page_id Settings Page ID.
 		 */
-		public function learndash_settings_page_init( $settings_page_id ) {
+		public function learndash_settings_page_init( string $settings_page_id ) {
+			if ( $settings_page_id !== $this->settings_page_id ) {
+				return;
+			}
 
-			if ( $settings_page_id === $this->settings_page_id ) {
-				if ( true === $this->settings_metabox_as_sub ) {
-					if ( 'settings_data_upgrades' === $this->get_current_settings_section_as_sub() ) {
-						$this->show_submit_meta      = false;
-						$this->show_quick_links_meta = false;
-						$this->settings_columns      = 1;
+			if ( true !== $this->settings_metabox_as_sub ) {
+				return;
+			}
 
-					}
-				}
+			$section_keys = array(
+				'settings_data_upgrades',
+				'settings_bulk_edit',
+				'settings_import_export',
+			);
+
+			if ( in_array( $this->get_current_settings_section_as_sub(), $section_keys, true ) ) {
+				$this->show_submit_meta      = false;
+				$this->show_quick_links_meta = false;
+				$this->settings_columns      = 1;
 			}
 		}
 

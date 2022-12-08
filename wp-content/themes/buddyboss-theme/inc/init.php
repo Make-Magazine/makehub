@@ -239,7 +239,7 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		 */
 		private function _setup_globals() {
 
-			$this->bb_theme_db_version = 400;
+			$this->bb_theme_db_version = 430;
 
 			// Get theme path.
 			$this->_tpl_dir = get_template_directory();
@@ -269,11 +269,10 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		protected function _do_includes() {
 
 			require_once $this->_inc_dir . '/common-functions.php';
+			require_once $this->_inc_dir . '/admin/options/setting-options.php';
 			require_once $this->_inc_dir . '/admin/admin-init.php';
 
 			require_once $this->_inc_dir . '/compatibility/incompatible-themes-helper.php';
-
-			require_once $this->_inc_dir . '/admin/options/setting-options.php';
 
 			// Theme stuff
 			// Wherever possible, we'll put related functions in a separate file, instead of dumping them all in functions.php
@@ -386,9 +385,9 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 			$theme           = wp_get_theme();
 			$current_version = $theme->get( 'Version' );
 			$new_version     = $this->bb_get_new_theme_version( $theme );
-			if ( $current_version < '2.0.0' && $new_version >= '2.0.0'  ) {
+			if ( $current_version < '2.0.0' && $new_version >= '2.0.0' ) {
 				// If want to using feature delete this option bb_theme_options_major from inc/theme/update.php.
-				require_once( $this->_inc_dir . '/theme/bb-theme-update.php' );
+				require_once $this->_inc_dir . '/theme/bb-theme-update.php';
 				$this->_bb_theme_update = new \BuddyBossTheme\BBThemeUpdate();
 			}
 		}
@@ -415,7 +414,7 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		public function include_buddyboss_updater() {
 			global $pagenow;
 
-			if ( ! function_exists( 'buddyboss_updater_init' ) && ! ( 'plugins.php' == $pagenow && ( isset( $_GET['action'] ) && 'activate' == $_GET['action'] ) ) ) {
+			if ( ! function_exists( 'buddyboss_updater_init' ) ) {
 				require_once $this->_inc_dir . '/lib/buddyboss-updater/buddyboss-updater.php';
 			}
 		}
@@ -430,8 +429,8 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		 * @return string $new_version Return new version of theme.
 		 */
 		public function bb_get_new_theme_version( $theme ) {
-			$new_version = '';
-			$stylesheet  = $theme->get_stylesheet();
+			$new_version          = '';
+			$stylesheet           = $theme->get_stylesheet();
 			static $themes_update = null;
 			if ( ! isset( $themes_update ) ) {
 				$themes_update = get_site_transient( 'update_themes' );

@@ -1774,6 +1774,7 @@ if ( ! class_exists( 'Astra_Sites' ) ) :
 					/* translators: %s URL to document. */
 					'process_failed_secondary'      => sprintf( __( '%1$sPlease report this <a href="%2$s" target="_blank">here</a>.%3$s', 'astra-sites' ), '<p>', esc_url( 'https://wpastra.com/starter-templates-support/?url=#DEMO_URL#&subject=#SUBJECT#' ), '</p>' ),
 					'st_page_url' => admin_url( 'themes.php?page=starter-templates' ),
+					'staging_connected' => apply_filters( 'astra_sites_staging_connected', '' ),
 					'isRTLEnabled' => is_rtl(),
 					/* translators: %s Anchor link to support URL. */
 					'support_text' => sprintf( __( 'Please report this error %1$shere%2$s, so we can fix it.', 'astra-sites' ), '<a href="https://wpastra.com/support/open-a-ticket/" target="_blank">', '</a>' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

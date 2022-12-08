@@ -233,6 +233,9 @@ class Slides extends Base_Widget {
 				'type' => Controls_Manager::TEXT,
 				'default' => esc_html__( 'Slide Heading', 'elementor-pro' ),
 				'label_block' => true,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -243,6 +246,9 @@ class Slides extends Base_Widget {
 				'type' => Controls_Manager::TEXTAREA,
 				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor-pro' ),
 				'show_label' => false,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -252,6 +258,9 @@ class Slides extends Base_Widget {
 				'label' => esc_html__( 'Button Text', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => esc_html__( 'Click Here', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -261,6 +270,9 @@ class Slides extends Base_Widget {
 				'label' => esc_html__( 'Link', 'elementor-pro' ),
 				'type' => Controls_Manager::URL,
 				'placeholder' => esc_html__( 'https://your-link.com', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -927,10 +939,13 @@ class Slides extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -944,6 +959,7 @@ class Slides extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -1203,7 +1219,7 @@ class Slides extends Base_Widget {
 	}
 
 	protected function render() {
-		$settings = $this->get_settings();
+		$settings = $this->get_settings_for_display();
 
 		if ( empty( $settings['slides'] ) ) {
 			return;

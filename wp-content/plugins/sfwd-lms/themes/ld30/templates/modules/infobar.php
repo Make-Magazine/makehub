@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash LD30 Displays an informational bar
+ * LearnDash Displays an informational bar
  *
  * Is contextulaized by passing in a $context variable that indicates post type
  *
@@ -20,6 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$post_type = get_post_type();
+if ( ( isset( $post ) ) && ( is_a( $post, 'WP_Post' ) ) ) {
+	$post_type = $post->post_type;
+} else {
+	$post_id = get_the_ID();
+	$post   = get_post( $post_id );
+}
+
 /**
  * Fires before the infobar.
  *
@@ -29,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param int          $course_id Course ID.
  * @param int          $user_id   User ID.
  */
-do_action( 'learndash-infobar-before', get_post_type(), $course_id, $user_id );
+do_action( 'learndash-infobar-before', $post_type, $course_id, $user_id );
 /**
  * Fires before the infobar for any context.
  *
@@ -54,7 +62,7 @@ do_action( 'learndash-' . $context . '-infobar-before', $course_id, $user_id ); 
  * @param int          $course_id Course ID.
  * @param int          $user_id   User ID.
  */
-do_action( 'learndash-infobar-inside-before', get_post_type(), $course_id, $user_id );
+do_action( 'learndash-infobar-inside-before', $post_type, $course_id, $user_id );
 
 /**
  * Fires inside the infobar (before) for any context.
@@ -86,6 +94,22 @@ switch ( $context ) {
 
 		break;
 
+	case ( 'group' ):
+		learndash_get_template_part(
+			'modules/infobar_group.php',
+			array(
+				'context'      => 'group',
+				'group_id'     => $course_id,
+				'user_id'      => $user_id,
+				'has_access'   => $has_access,
+				'group_status' => $course_status,
+				'post'         => $post,
+			),
+			true
+		);
+
+		break;
+
 	case ( 'lesson' ):
 		?>
 
@@ -99,28 +123,33 @@ switch ( $context ) {
 						'context'   => 'lesson',
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
+						'post'      => $post,
 					),
 					true
 				);
 
 				$status = '';
-				if ( is_user_logged_in() ) {
-					$status = ( learndash_is_item_complete() ? 'complete' : 'incomplete' );
+				if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
+					$status = ( learndash_is_item_complete( $post->ID, $user_id, $course_id ) ? 'complete' : 'incomplete' );
+				} else {
+					$course_status = '';
+					$status        = '';
 				}
 
-				learndash_status_bubble( $status );
+				learndash_status_bubble( ( ! empty( $course_status ) ? $course_status : $status ) );
 				?>
 
 			</div> <!--/.ld-breadcrumbs-->
 
 			<?php
-			if ( is_user_logged_in() ) {
+			if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
 				learndash_get_template_part(
 					'modules/progress.php',
 					array(
 						'context'   => 'topic',
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
+						'post'	    => $post,
 					),
 					true
 				);
@@ -145,27 +174,32 @@ switch ( $context ) {
 						'context'   => 'topic',
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
+						'post'      => $post,
 					),
 					true
 				);
 
 				$status = '';
-				if ( is_user_logged_in() ) {
-					$status = ( learndash_is_item_complete() ? 'complete' : 'incomplete' );
+				if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
+					$status = ( learndash_is_item_complete( $post->ID, $user_id, $course_id ) ? 'complete' : 'incomplete' );
+				} else {
+					$course_status = '';
+					$status        = '';
 				}
-				learndash_status_bubble( $status );
+				learndash_status_bubble( ( ! empty( $course_status ) ? $course_status : $status ) );
 				?>
 
 			</div> <!--/.ld-breadcrumbs-->
 
 			<?php
-			if ( is_user_logged_in() ) {
+			if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
 				learndash_get_template_part(
 					'modules/progress.php',
 					array(
 						'context'   => 'topic',
 						'user_id'   => $user_id,
 						'course_id' => $course_id,
+						'post'	    => $post,
 					),
 					true
 				);
@@ -178,7 +212,7 @@ switch ( $context ) {
 		break;
 
 	case 'quiz':
-		if ( get_post_type() === learndash_get_post_type_slug( 'quiz' ) ) {
+		if ( get_post_type( ( ! empty( $post ) ? $post : '' ) ) === learndash_get_post_type_slug( 'quiz' ) ) {
 			?>
 			<div class="ld-quiz-status">
 				<?php if ( ! empty( $course_id ) ) { ?>
@@ -190,6 +224,7 @@ switch ( $context ) {
 							'context'   => 'quiz',
 							'user_id'   => $user_id,
 							'course_id' => $course_id,
+							'post'      => $post,
 						),
 						true
 					);
@@ -214,7 +249,7 @@ switch ( $context ) {
  * @param int          $course_id Course ID.
  * @param int          $user_id   User ID.
  */
-do_action( 'learndash-infobar-inside-after', get_post_type(), $course_id, $user_id );
+do_action( 'learndash-infobar-inside-after', $post_type, $course_id, $user_id );
 
 /**
  * Fires inside the infobar (after) for any context.
@@ -241,7 +276,7 @@ do_action( 'learndash-' . $context . '-infobar-inside-after', $course_id, $user_
  * @param int          $course_id Course ID.
  * @param int          $user_id   User ID.
  */
-do_action( 'learndash-infobar-after', get_post_type(), $course_id, $user_id );
+do_action( 'learndash-infobar-after', $post_type, $course_id, $user_id );
 
 /**
  * Fires after the infobar for any context.

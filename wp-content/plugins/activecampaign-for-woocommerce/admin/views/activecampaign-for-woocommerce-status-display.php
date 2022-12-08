@@ -9,8 +9,6 @@
 	use Automattic\WooCommerce\Blocks\Package as Block_Package;
 
 	global $wpdb;
-
-	$activecampaign_for_woocommerce_status_data = $this->get_status_page_data();
 ?>
 <style>
 	.border td{
@@ -62,7 +60,22 @@
 		</tr>
 		<tr>
 			<td>Table Name</td>
-			<td><?php echo esc_html( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME ); ?></td>
+			<td>
+				<?php echo esc_html( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME ); ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Table Exists?
+			</td>
+			<td>
+				<?php if ( true === $activecampaign_for_woocommerce_status_data['table_exists'] ) : ?>
+					<mark class="yes">
+						<span class="dashicons dashicons-yes"></span>
+						<?php esc_html_e( 'Yes', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					</mark>
+				<?php endif; ?>
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -99,7 +112,7 @@
 			<td>
 				<?php
 
-				if ( 'yes' === $activecampaign_for_woocommerce_status_data['legacy_api'] && ! is_null( $activecampaign_for_woocommerce_status_data['legacy_api'] ) ) :
+				if ( ! is_null( $activecampaign_for_woocommerce_status_data['legacy_api'] ) && 'yes' === $activecampaign_for_woocommerce_status_data['legacy_api'] ) :
 					?>
 					<mark class="yes">
 						<span class="dashicons dashicons-yes"></span>
@@ -125,6 +138,42 @@
 					<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>
 				<?php else : ?>
 					<mark class="no">&ndash;</mark>
+				<?php endif; ?>
+			</td>
+		</tr>
+		<tr class="border">
+			<td>Crons scheduled</td>
+			<td>
+				<b><?php esc_html_e( 'Abandoned Cart Cron', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></b>
+				<br/>
+				<?php if ( ! $activecampaign_for_woocommerce_status_data['abandoned_schedule']['error'] ) : ?>
+					<?php esc_html_e( 'Last Run:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['abandoned_schedule']['timestamp'] ); ?>
+					<br/>
+					<?php esc_html_e( 'Next scheduled:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['abandoned_schedule']['next_scheduled'] ); ?>
+					Seconds until next run
+					<br/>
+					<?php esc_html_e( 'Frequency:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['abandoned_schedule']['schedule'] ); ?>
+				<?php else : ?>
+					<?php esc_html_e( 'Warning! Abandoned cron may not be scheduled.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+				<?php endif; ?>
+				<br/><br/>
+				<b><?php esc_html_e( 'New Order Cron', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></b>
+				<br/>
+				<?php if ( ! $activecampaign_for_woocommerce_status_data['new_order_schedule']['error'] ) : ?>
+					<?php esc_html_e( 'Last Run:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['new_order_schedule']['timestamp'] ); ?>
+					<br/>
+					<?php esc_html_e( 'Next scheduled:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['new_order_schedule']['next_scheduled'] ); ?>
+					Seconds until next run
+					<br/>
+					<?php esc_html_e( 'Frequency:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+					<?php echo esc_html( $activecampaign_for_woocommerce_status_data['new_order_schedule']['schedule'] ); ?>
+				<?php else : ?>
+					<?php esc_html_e( 'Warning! New order cron may not be scheduled.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 				<?php endif; ?>
 			</td>
 		</tr>
@@ -267,6 +316,9 @@
 				WooCommerce Logs: ActiveCampaign for WooCommerce error messages
 			</td>
 			<td>
+				Timestamp
+			</td>
+			<td>
 				Context
 			</td>
 		</tr>
@@ -275,10 +327,21 @@
 		<?php if ( $activecampaign_for_woocommerce_status_data['recent_log_errors'] ) : ?>
 			<?php foreach ( $activecampaign_for_woocommerce_status_data['recent_log_errors'] as $activecampaign_for_woocommerce_err ) : ?>
 				<tr>
-					<td style="width: 60%;">
+					<td>
 						<div class="td-container">
 							<?php echo esc_html( $activecampaign_for_woocommerce_err->message ); ?>
 						</div>
+					</td>
+					<td style="min-width:150px">
+						<?php if ( is_null( $activecampaign_for_woocommerce_err->timestamp ) ) : ?>
+							<div class="td-container no-context">
+								<?php echo esc_html( 'No context available' ); ?>
+							</div>
+						<?php else : ?>
+							<div class="td-container">
+								<?php echo esc_html( wp_json_encode( maybe_unserialize( $activecampaign_for_woocommerce_err->timestamp ) ) ); ?>
+							</div>
+						<?php endif; ?>
 					</td>
 					<td>
 						<?php if ( is_null( $activecampaign_for_woocommerce_err->context ) ) : ?>

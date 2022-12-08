@@ -253,6 +253,8 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				$bp_zoom_meeting_block = json_decode( $meeting_info );
 			}
 
+			$bp_zoom_meeting_block->block_class_name = isset( $attributes['className'] ) ? $attributes['className'] : '';
+
 			ob_start();
 			bp_get_template_part( 'zoom/blocks/meeting-block' );
 			$content = ob_get_clean();
@@ -550,7 +552,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date'             => $start_date,
+				'start_date_utc'         => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -815,6 +817,8 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 			} else {
 				$bp_zoom_webinar_block = json_decode( $webinar_info );
 			}
+
+			$bp_zoom_webinar_block->block_class_name = isset( $attributes['className'] ) ? $attributes['className'] : '';
 
 			ob_start();
 			bp_get_template_part( 'zoom/blocks/webinar-block' );
@@ -1107,7 +1111,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date'             => $start_date,
+				'start_date_utc'         => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,

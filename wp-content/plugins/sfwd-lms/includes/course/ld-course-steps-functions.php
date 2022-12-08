@@ -495,6 +495,11 @@ function learndash_get_courses_for_step( $step_id = 0, $return_flat_array = fals
 			}
 		}
 
+		// LEARNDASH-6567 : If shared steps is not enabled then clear the array node.
+		if ( ! learndash_is_course_shared_steps_enabled() ) {
+			$course_ids['secondary'] = array();
+		}
+
 		// Ensure the primary course is also part of the secondary courses.
 		if ( ! empty( $course_ids['primary'] ) ) {
 			foreach ( $course_ids['primary'] as $p_course_id => $p_course_title ) {
@@ -772,6 +777,7 @@ function learndash_transition_course_step_post_status( $new_status, $old_status,
 
 	if ( $new_status !== $old_status ) {
 		if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$course_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND (meta_key = %s OR meta_key LIKE %s)",
@@ -853,6 +859,76 @@ function learndash_get_step_post_status_slug( $post ) {
 	}
 
 	return '';
+}
+
+/**
+ * Get single course step post status label.
+ *
+ * @since 4.0.0
+ *
+ * @param object $post WP_Post object.
+ *
+ * @return string
+ */
+function learndash_get_step_post_status_label( $post ) {
+	$post_status_label = '';
+	if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
+		$post_status_slug = learndash_get_step_post_status_slug( $post );
+		$post_statuses    = learndash_get_step_post_statuses();
+		if ( isset( $post_statuses[ $post_status_slug ] ) ) {
+			$post_status_label = $post_statuses[ $post_status_slug ];
+		}
+	}
+
+	return $post_status_label;
+}
+
+/**
+ * Get the post title formatted with post status label.
+ *
+ * @since 4.0.0
+ *
+ * @param object $post          WP_Post object.
+ * @param array  $skip_statuses Optional. Array of post_stati to skip.
+ * @param string $before_label  Optional. String to prepend to the status label.
+ * @param string $after_label   Optional. String to append to the status label.
+ *
+ * @return string Formatted post title.
+ */
+function learndash_format_step_post_title_with_status_label( $post, $skip_statuses = array( 'publish' ), $before_label = '(', $after_label = ')' ) {
+	$post_title = '';
+
+	if ( is_a( $post, 'WP_Post' ) ) {
+		$post_title = get_the_title( $post->ID );
+
+		if ( ! empty( $skip_statuses ) ) {
+			if ( ! is_array( $skip_statuses ) ) {
+				$skip_statuses = array( $skip_statuses );
+			}
+		}
+
+		$post_status_slug = learndash_get_step_post_status_slug( $post );
+		if ( ! in_array( $post_status_slug, $skip_statuses, true ) ) {
+			$post_statuses = learndash_get_step_post_statuses();
+
+			if ( isset( $post_statuses[ $post_status_slug ] ) ) {
+				$post_status_label = esc_html( $before_label ) . esc_html( $post_statuses[ $post->post_status ] ) . esc_html( $after_label );
+			} else {
+				$post_status_label = esc_html( $before_label ) . esc_html__( 'Unknown', 'learndash' ) . esc_html( $after_label );
+			}
+
+			if ( ! empty( $post_status_label ) ) {
+				$post_title = sprintf(
+					// translators: placeholder: post title, post status.
+					esc_html_x( '%1$s %2$s', 'placeholder: post title, post status', 'learndash' ),
+					$post_title,
+					esc_html( $post_status_label )
+				);
+			}
+		}
+	}
+
+	return $post_title;
 }
 
 /**

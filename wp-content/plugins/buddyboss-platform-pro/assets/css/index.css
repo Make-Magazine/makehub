@@ -189,3 +189,13 @@
 #buddypress .users-header .centered #header-cover-image.cover-large .header-cover-reposition-wrap .drag-element-helper {
 	top: 90px;
 }
+
+.bb-pusher-typing-indicator-text {
+	font-size: 14px;
+	color: #9b9c9f;
+}
+
+.thread-item .typing-indicator {
+	font-size: 13px;
+	color: #9b9c9f;
+}

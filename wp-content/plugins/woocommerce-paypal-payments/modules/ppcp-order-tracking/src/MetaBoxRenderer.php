@@ -78,19 +78,18 @@ class MetaBoxRenderer {
 			return;
 		}
 
-		$tracking_info = $this->order_tracking_endpoint->get_tracking_information( $post->ID );
-
-		$tracking_is_not_added = empty( $tracking_info );
+		$tracking_info = $this->order_tracking_endpoint->get_tracking_information( $wc_order->get_id() );
 
 		$transaction_id  = $tracking_info['transaction_id'] ?? $wc_order->get_transaction_id() ?: '';
 		$tracking_number = $tracking_info['tracking_number'] ?? '';
 		$status_value    = $tracking_info['status'] ?? 'SHIPPED';
 		$carrier_value   = $tracking_info['carrier'] ?? '';
 
-		$carriers = (array) apply_filters( 'ppcp_tracking_carriers', $this->carriers );
-		$statuses = (array) apply_filters( 'ppcp_tracking_statuses', $this->allowed_statuses );
+		$carriers        = (array) apply_filters( 'woocommerce_paypal_payments_tracking_carriers', $this->carriers, $wc_order->get_id() );
+		$statuses        = (array) apply_filters( 'woocommerce_paypal_payments_tracking_statuses', $this->allowed_statuses, $wc_order->get_id() );
+		$tracking_number = (string) apply_filters( 'woocommerce_paypal_payments_tracking_number', $tracking_number, $wc_order->get_id() );
 
-		$action = $tracking_is_not_added ? 'create' : 'update';
+		$action = ! $tracking_info ? 'create' : 'update';
 		?>
 		<p>
 			<label for="<?php echo esc_attr( self::NAME_PREFIX ); ?>-transaction_id"><?php echo esc_html__( 'Transaction ID', 'woocommerce-paypal-payments' ); ?></label>
@@ -101,8 +100,8 @@ class MetaBoxRenderer {
 		<p>
 			<label for="<?php echo esc_attr( self::NAME_PREFIX ); ?>-status"><?php echo esc_html__( 'Status', 'woocommerce-paypal-payments' ); ?></label>
 			<select class="<?php echo esc_attr( self::NAME_PREFIX ); ?>-status" id="<?php echo esc_attr( self::NAME_PREFIX ); ?>-status" name="<?php echo esc_attr( self::NAME_PREFIX ); ?>[status]">
-				<?php foreach ( $statuses as $status ) : ?>
-					<option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status_value, $status ); ?>><?php echo esc_html( $status ); ?></option>
+				<?php foreach ( $statuses as $key => $status ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $status_value, $key ); ?>><?php echo esc_html( $status ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>

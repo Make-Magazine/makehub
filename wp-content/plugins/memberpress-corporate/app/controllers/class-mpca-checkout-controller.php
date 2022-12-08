@@ -1,6 +1,10 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');}
 
 class MPCA_Checkout_Controller {
+  //Note about free transactions: The sequence of creating the free transaction, deleting the subscription
+  //if a coupon was used, and calling mepr-signup does not always happen in the same order for all gateways/situations
+  //So we need to check in process_signup and have process_sub_destroy_free_txn function in order to make sure
+  //that CA records are created properly.
   public function __construct() {
     // Associate the CA with this signup early on in the signup process
     add_action( 'mepr-signup', array( $this, 'process_signup' ) );
@@ -17,9 +21,11 @@ class MPCA_Checkout_Controller {
     //The subscription is destroyed so we need to re-associate this CA with the free txn instead
     if($is_corporate_product) {
       $ca = MPCA_Corporate_Account::find_corporate_account_by_obj($sub);
-      $ca->obj_id = $txn->id;
-      $ca->obj_type = 'transactions';
-      $ca->store();
+      if($ca) { //avoids fatal error if CA record not found.
+        $ca->obj_id = $txn->id;
+        $ca->obj_type = 'transactions';
+        $ca->store();
+      }
     }
   }
 
@@ -30,7 +36,8 @@ class MPCA_Checkout_Controller {
     $obj = $transaction;
     $type = 'transactions';
 
-    if($transaction->subscription_id > 0) {
+    //For Subscriptions that have a free coupon applied, we need to create the CA under the transaction
+    if($transaction->subscription_id > 0 && $transaction->amount > 0.00) {
       $obj = $transaction->subscription();
       $type = 'subscriptions';
     }
@@ -39,6 +46,12 @@ class MPCA_Checkout_Controller {
     $num_sub_accounts = get_post_meta($obj->product_id, 'mpca_num_sub_accounts', true);
 
     if($is_corporate_product) {
+
+      // check if obj has already been added to corporate_accounts db
+      if( is_object( MPCA_Corporate_Account::find_corporate_account_by_obj_id($obj->id, $type) ) ){
+        return;
+      }
+
       // create corporate account using the information from above
       $ca = new MPCA_Corporate_Account();
       $ca->obj_id = $obj->id;

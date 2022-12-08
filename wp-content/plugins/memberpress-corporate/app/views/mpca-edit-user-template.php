@@ -13,6 +13,11 @@
     // Hide sub accounts
     if(MPCA_Corporate_Account::is_obj_sub_account( $sub->id, $obj_type )) continue;
 
+    // Hide non-corporate accounts
+    if( ! $sub->is_corporate_account ) {
+      continue;
+    }
+
     $i = uniqid();
     $product = $sub->product();
     ?>

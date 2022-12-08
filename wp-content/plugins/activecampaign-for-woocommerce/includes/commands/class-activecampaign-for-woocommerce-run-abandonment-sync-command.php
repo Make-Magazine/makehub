@@ -361,7 +361,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						$description = $wc_product->get_description();
 					}
 
-					$ecom_product->set_description( $this->order_utilities->clean_description( $description ) );
+					$ecom_product->set_description( AC_Utilities::clean_description( $description ) );
 
 					$products[] = $ecom_product;
 				} catch ( Throwable $t ) {

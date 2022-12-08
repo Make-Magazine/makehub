@@ -4,8 +4,7 @@
  *
  * This file contains functions to handle import of the LearnDash CPT Course
  *
- * @package LearnDash
- * @subpackage LearnDash
+ * @package LearnDash\Import
  * @since 1.0.0
  */
 

@@ -210,8 +210,6 @@ add_filter( 'next_post_link', 'learndash_clear_prev_next_links', 1, 2 );
  * @return string The quiz continue link output.
  */
 function learndash_quiz_continue_link( $id ) {
-	global $status, $pageQuizzes;
-
 	$course_id = learndash_get_course_id( $id );
 	if ( ( ! empty( $course_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) ) {
 		$lesson_id = learndash_course_get_single_parent_step( $course_id, $id );
@@ -223,6 +221,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'course_id'     => $course_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				$url
 			);
@@ -235,6 +234,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'lesson_id'     => $lesson_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				$url
 			);
@@ -258,6 +258,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'course_id'     => $course_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				get_permalink( $course_id )
 			);
@@ -270,6 +271,7 @@ function learndash_quiz_continue_link( $id ) {
 					'course_id'     => $course_id,
 					'lesson_id'     => $return_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				get_permalink( $return_id )
 			);
@@ -472,7 +474,7 @@ function learndash_get_global_quiz_list( $id = null ) {
  * @param int|null         $user_id    Optional. User ID. Default null.
  * @param array            $query_args Optional. An array of query arguments to get lesson list. Default empty array.
  *
- * @return string The lesson list HTML output.
+ * @return array The lesson list array.
  */
 function learndash_get_course_lessons_list( $course_id = null, $user_id = null, $query_args = array() ) {
 	if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) {

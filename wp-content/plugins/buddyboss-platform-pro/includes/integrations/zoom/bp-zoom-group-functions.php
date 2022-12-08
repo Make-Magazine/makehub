@@ -42,100 +42,39 @@ function bp_zoom_groups_send_meeting_notifications( $meeting, $notification = fa
 		return;
 	}
 
-	global $bb_zoom_type, $bb_zoom_is_created;
-
 	// Get members ids.
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Do not sent notification for meeting creator.
-		if ( (int) $meeting->user_id === (int) $user_id ) {
-			continue;
-		}
-
-		$action     = 'zoom_meeting_created';
-		$is_created = true;
-
-		if ( true === $notification ) {
-			$action     = 'zoom_meeting_notified';
-			$is_created = false;
-		}
-
-		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
-			$action = 'bb_groups_new_zoom';
-		}
-
-		$bb_zoom_type       = 'meeting';
-		$bb_zoom_is_created = $is_created;
-
-		add_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
-
-		// Trigger a BuddyPress Notification.
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => $user_id,
-				'item_id'           => $meeting->group_id,
-				'secondary_item_id' => $meeting->id,
-				'component_name'    => buddypress()->groups->id,
-				'component_action'  => $action,
-				'allow_duplicate'   => true,
-			)
-		);
-
-		remove_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
-
-		// Now email the user with the contents of the zoom meeting (if they have enabled email notifications).
-		if (
-			(
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
-				(
-					(
-						! bb_enabled_legacy_email_preference() &&
-						true === bb_is_notification_enabled( (int) $user_id, 'bb_groups_new_zoom' )
-					) ||
-					(
-						bb_enabled_legacy_email_preference() &&
-						'no' !== bp_get_user_meta( $user_id, 'notification_zoom_meeting_scheduled', true )
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $user_ids ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$chunk_user_ids = array_chunk( $user_ids, 20 );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $group_member_ids ) {
+				$bb_notifications_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_zoom_groups_meeting_notifications_details',
+							'args'     => array(
+								$group_member_ids,
+								$meeting,
+								$notification,
+								$group,
+							),
+						),
 					)
-				)
-			) || (
-				! function_exists( 'bb_is_notification_enabled' ) &&
-				'no' !== bp_get_user_meta( $user_id, 'notification_zoom_meeting_scheduled', true )
-			)
-		) {
-
-			$unsubscribe_args = array(
-				'user_id'           => $user_id,
-				'notification_type' => 'zoom-scheduled-meeting-email',
-			);
-
-			$poster_name = bp_core_get_user_displayname( $meeting->user_id );
-
-			$args = array(
-				'tokens' => array(
-					'zoom_meeting'     => $meeting,
-					'zoom_meeting.id'  => $meeting->id,
-					'group.name'       => $group->name,
-					'group.url'        => bp_get_group_permalink( $group ),
-					'poster.name'      => $poster_name,
-					'receiver-user.id' => $user_id,
-					'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-				),
-			);
-
-			if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-				bb_email_queue()->add_record( 'zoom-scheduled-meeting-email', $user_id, $args );
-				// call email background process.
-				bb_email_queue()->bb_email_background_process();
-			} else {
-				bp_send_email( 'zoom-scheduled-meeting-email', $user_id, $args );
+				);
+				$bb_notifications_background_updater->save();
 			}
+			$bb_notifications_background_updater->dispatch();
 		}
+	} else {
+		bb_zoom_groups_meeting_notifications_details( $user_ids, $meeting, $notification, $group );
 	}
+
 }
 
 /**
@@ -174,95 +113,34 @@ function bp_zoom_groups_send_webinar_notifications( $webinar, $notification = fa
 	// Get members ids.
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
-	global $bb_zoom_type, $bb_zoom_is_created;
-
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
-	foreach ( (array) $user_ids as $user_id ) {
-
-		// Do not sent notification for meeting creator.
-		if ( (int) $webinar->user_id === (int) $user_id ) {
-			continue;
-		}
-
-		$action     = 'zoom_webinar_created';
-		$is_created = true;
-
-		if ( true === $notification ) {
-			$action     = 'zoom_webinar_notified';
-			$is_created = false;
-		}
-
-		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
-			$action = 'bb_groups_new_zoom';
-		}
-
-		$bb_zoom_type       = 'webinar';
-		$bb_zoom_is_created = $is_created;
-
-		add_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
-
-		// Trigger a BuddyPress Notification.
-		bp_notifications_add_notification(
-			array(
-				'user_id'           => $user_id,
-				'item_id'           => $webinar->group_id,
-				'secondary_item_id' => $webinar->id,
-				'component_name'    => buddypress()->groups->id,
-				'component_action'  => $action,
-				'allow_duplicate'   => true,
-			)
-		);
-
-		remove_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
-
-		// Now email the user with the contents of the zoom webinar (if they have enabled email notifications).
-		if (
-			(
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
-				(
-					(
-						! bb_enabled_legacy_email_preference() &&
-						true === bb_is_notification_enabled( (int) $user_id, 'bb_groups_new_zoom' )
-					) ||
-					(
-						bb_enabled_legacy_email_preference() &&
-						'no' !== bp_get_user_meta( $user_id, 'notification_zoom_webinar_scheduled', true )
+	if (
+		function_exists( 'bb_notifications_background_enabled' ) &&
+		true === bb_notifications_background_enabled() &&
+		count( $user_ids ) > 20
+	) {
+		global $bb_notifications_background_updater;
+		$chunk_user_ids = array_chunk( $user_ids, 20 );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $key => $group_member_ids ) {
+				$bb_notifications_background_updater->data(
+					array(
+						array(
+							'callback' => 'bb_zoom_groups_webinar_notifications_details',
+							'args'     => array(
+								$group_member_ids,
+								$webinar,
+								$notification,
+								$group,
+							),
+						),
 					)
-				)
-			) || (
-				! function_exists( 'bb_is_notification_enabled' ) &&
-				'no' !== bp_get_user_meta( $user_id, 'notification_zoom_webinar_scheduled', true )
-			)
-		) {
-			$unsubscribe_args = array(
-				'user_id'           => $user_id,
-				'notification_type' => 'zoom-scheduled-webinar-email',
-			);
-
-			$poster_name = bp_core_get_user_displayname( $webinar->user_id );
-
-			$args = array(
-				'tokens' => array(
-					'zoom_webinar'     => $webinar,
-					'zoom_webinar.id'  => $webinar->id,
-					'group.name'       => $group->name,
-					'group.url'        => bp_get_group_permalink( $group ),
-					'poster.name'      => $poster_name,
-					'receiver-user.id' => $user_id,
-					'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-				),
-			);
-
-			if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-				bb_email_queue()->add_record( 'zoom-scheduled-webinar-email', $user_id, $args );
-				// call email background process.
-				bb_email_queue()->bb_email_background_process();
-			} else {
-				bp_send_email( 'zoom-scheduled-webinar-email', $user_id, $args );
+				);
+				$bb_notifications_background_updater->save();
 			}
+			$bb_notifications_background_updater->dispatch();
 		}
+	} else {
+		bb_zoom_groups_webinar_notifications_details( $user_ids, $webinar, $notification, $group );
 	}
 }
 
@@ -440,7 +318,7 @@ function bp_zoom_groups_create_webinar_activity( $webinar, $type = '' ) {
 /**
  * Create notification meta based on zoom.
  *
- * @since BuddyBoss 1.2.1
+ * @since 1.2.1
  *
  * @param object $notification Notification object.
  */
@@ -468,5 +346,212 @@ function bb_groups_zoom_add_notification_metas( $notification ) {
 	if ( $bb_zoom_is_created ) {
 		bp_notifications_update_meta( $notification->id, 'is_created', $bb_zoom_is_created );
 		$bb_zoom_is_created = '';
+	}
+}
+
+/**
+ * Function will run zoom meeting notifications and emails.
+ *
+ * @since 2.0.5
+ *
+ * @param array  $user_ids
+ * @param object $meeting
+ * @param object $notification
+ * @param object $group
+ */
+function bb_zoom_groups_meeting_notifications_details( $user_ids, $meeting, $notification, $group ) {
+	// bail if any one empty from the User ids, Meeting and Group.
+	if (
+		empty( $user_ids ) ||
+		empty( $meeting ) ||
+		empty( $group )
+	) {
+		return;
+	}
+
+	global $bb_zoom_type, $bb_zoom_is_created;
+
+	foreach ( (array) $user_ids as $user_id ) {
+
+		// Do not sent notification for meeting creator.
+		if ( (int) $meeting->user_id === (int) $user_id ) {
+			continue;
+		}
+
+		$action     = 'zoom_meeting_created';
+		$is_created = true;
+
+		if ( true === $notification ) {
+			$action     = 'zoom_meeting_notified';
+			$is_created = false;
+		}
+
+		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_groups_new_zoom';
+		}
+
+		$bb_zoom_type       = 'meeting';
+		$bb_zoom_is_created = $is_created;
+
+		add_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
+
+		// Trigger a BuddyPress Notification.
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $user_id,
+				'item_id'           => $meeting->group_id,
+				'secondary_item_id' => $meeting->id,
+				'component_name'    => buddypress()->groups->id,
+				'component_action'  => $action,
+				'allow_duplicate'   => true,
+			)
+		);
+
+		remove_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
+
+		// Now email the user with the contents of the zoom meeting (if they have enabled email notifications).
+		if (
+			(
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				(
+					(
+						! bb_enabled_legacy_email_preference() &&
+						true === bb_is_notification_enabled( (int) $user_id, 'bb_groups_new_zoom' )
+					) ||
+					(
+						bb_enabled_legacy_email_preference() &&
+						'no' !== bp_get_user_meta( $user_id, 'notification_zoom_meeting_scheduled', true )
+					)
+				)
+			) || (
+				! function_exists( 'bb_is_notification_enabled' ) &&
+				'no' !== bp_get_user_meta( $user_id, 'notification_zoom_meeting_scheduled', true )
+			)
+		) {
+
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => 'zoom-scheduled-meeting-email',
+			);
+
+			$poster_name = bp_core_get_user_displayname( $meeting->user_id );
+
+			$args = array(
+				'tokens' => array(
+					'zoom_meeting'     => $meeting,
+					'zoom_meeting.id'  => $meeting->id,
+					'group.name'       => $group->name,
+					'group.url'        => bp_get_group_permalink( $group ),
+					'poster.name'      => $poster_name,
+					'receiver-user.id' => $user_id,
+					'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
+
+			bp_send_email( 'zoom-scheduled-meeting-email', $user_id, $args );
+		}
+	}
+}
+
+/**
+ * Function will run zoom webinar notifications and emails.
+ *
+ * @since 2.0.5
+ *
+ * @param array  $user_ids
+ * @param object $webinar
+ * @param object $notification
+ * @param object $group
+ */
+function bb_zoom_groups_webinar_notifications_details( $user_ids, $webinar, $notification, $group ) {
+	// bail if any one empty from the User ids, Webinar and Group.
+	if (
+		empty( $user_ids ) ||
+		empty( $webinar ) ||
+		empty( $group )
+	) {
+		return;
+	}
+
+	global $bb_zoom_type, $bb_zoom_is_created;
+
+	foreach ( (array) $user_ids as $user_id ) {
+
+		// Do not sent notification for meeting creator.
+		if ( (int) $webinar->user_id === (int) $user_id ) {
+			continue;
+		}
+
+		$action     = 'zoom_webinar_created';
+		$is_created = true;
+
+		if ( true === $notification ) {
+			$action     = 'zoom_webinar_notified';
+			$is_created = false;
+		}
+
+		if ( function_exists( 'bb_enabled_legacy_email_preference' ) && ! bb_enabled_legacy_email_preference() ) {
+			$action = 'bb_groups_new_zoom';
+		}
+
+		$bb_zoom_type       = 'webinar';
+		$bb_zoom_is_created = $is_created;
+
+		add_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
+
+		// Trigger a BuddyPress Notification.
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $user_id,
+				'item_id'           => $webinar->group_id,
+				'secondary_item_id' => $webinar->id,
+				'component_name'    => buddypress()->groups->id,
+				'component_action'  => $action,
+				'allow_duplicate'   => true,
+			)
+		);
+
+		remove_action( 'bp_notification_after_save', 'bb_groups_zoom_add_notification_metas', 5 );
+
+		// Now email the user with the contents of the zoom webinar (if they have enabled email notifications).
+		if (
+			(
+				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				(
+					(
+						! bb_enabled_legacy_email_preference() &&
+						true === bb_is_notification_enabled( (int) $user_id, 'bb_groups_new_zoom' )
+					) ||
+					(
+						bb_enabled_legacy_email_preference() &&
+						'no' !== bp_get_user_meta( $user_id, 'notification_zoom_webinar_scheduled', true )
+					)
+				)
+			) || (
+				! function_exists( 'bb_is_notification_enabled' ) &&
+				'no' !== bp_get_user_meta( $user_id, 'notification_zoom_webinar_scheduled', true )
+			)
+		) {
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => 'zoom-scheduled-webinar-email',
+			);
+
+			$poster_name = bp_core_get_user_displayname( $webinar->user_id );
+
+			$args = array(
+				'tokens' => array(
+					'zoom_webinar'     => $webinar,
+					'zoom_webinar.id'  => $webinar->id,
+					'group.name'       => $group->name,
+					'group.url'        => bp_get_group_permalink( $group ),
+					'poster.name'      => $poster_name,
+					'receiver-user.id' => $user_id,
+					'unsubscribe'      => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
+
+			bp_send_email( 'zoom-scheduled-webinar-email', $user_id, $args );
+		}
 	}
 }

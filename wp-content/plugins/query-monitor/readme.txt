@@ -3,7 +3,7 @@ Contributors: johnbillion
 Tags: debug, debug-bar, debugging, development, developer, performance, profiler, queries, query monitor, rest-api
 Requires at least: 3.7
 Tested up to: 6.0
-Stable tag: 3.10.0
+Stable tag: 3.10.1
 License: GPLv2 or later
 Requires PHP: 5.6
 Donate link: https://johnblackbourn.com/donations/
@@ -140,6 +140,12 @@ Yes. You can enable this on the Settings panel.
 In addition, if you like the plugin then I'd love for you to [leave a review](https://wordpress.org/support/view/plugin-reviews/query-monitor). Tell all your friends about it too!
 
 ## Changelog ##
+
+### 3.10.1 ###
+
+* Prevents logging duplicate entries for multiple calls to load the same translation file
+* Brings the dispatcher priority back down to 9 for maximum compatibility with other plugins that use a shutdown handler
+
 
 ### 3.10.0 ###
 
@@ -411,7 +417,3 @@ New features! Read about them here: https://querymonitor.com/blog/2019/02/new-fe
 * Coding standards.
 * Layout tweaks.
 
-
-### 3.2.1 ###
-
-* Fix a fatal error for < 5.0 sites that are not running the Gutenberg plugin.

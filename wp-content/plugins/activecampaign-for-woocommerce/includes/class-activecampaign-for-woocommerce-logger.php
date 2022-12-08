@@ -70,7 +70,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		$ac_debug = null
 	) {
 		$this->path_to_log_directory = wp_upload_dir()['basedir'] . '/wc-logs';
-		$this->context               = array( 'source' => $plugin_name );
+		$this->context               = [ 'source' => $plugin_name ];
 		$this->error_context         = array( 'source' => ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_ERR_KEBAB );
 		if ( ! $this->logDirectoryExists() ) {
 			$this->createLogDirectory();
@@ -165,6 +165,13 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		// DO NOT record debug messages if debug is off. It's a waste of log space and makes a mess.
 	}
 
+	/**
+	 * Development only logger entry.
+	 * If you see this in the logs for a release, remove any associated logging code.
+	 *
+	 * @param           $message
+	 * @param     array $context
+	 */
 	public function dev( $message, array $context = array() ) {
 		$context = $this->resolveContext( $context );
 		$message = $this->formatMessageWithContext( $message, $context );
@@ -172,7 +179,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 			// If debug logging is turned on in the AC plugin settings, send all debug logs via the INFO level. Bypasses PHP settings.
 			$this->logger->info( "[ActiveCampaign DEV TESTING (DELETE THIS BEFORE PUSHING)] $message", $context );
 		}
-		// DO NOT record debug messages if debug is off. It's a waste of log space and makes a mess.
+		// DO NOT allow dev level log entries to go into prod code. This is for dev debugging only.
 	}
 
 	/**
@@ -262,6 +269,9 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 	 */
 	private function formatMessageWithContext( $message, array &$context ) {
 		// Add the request ID to the log entry
+		if ( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION ) {
+			$context['version'] = ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION;
+		}
 		$context['request_id'] = RequestIdService::get_request_id();
 
 		// Make absolutely sure we sanitize sensitive data
@@ -285,7 +295,7 @@ class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements
 		$c      = count( $trace );
 		// Only retrieve class, function, and line for the first 5 trace results
 		for ( $i = 0; $i <= $c; $i++ ) {
-			if ( $i <= 5 ) {
+			if ( $i <= 8 ) {
 				if ( isset( $trace[ $i ]['class'] ) ) {
 					$result[ $i ]['class'] = $trace[ $i ]['class'];
 				}

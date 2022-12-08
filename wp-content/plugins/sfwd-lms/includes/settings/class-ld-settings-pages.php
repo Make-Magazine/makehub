@@ -42,7 +42,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 
 		/**
 		 * Match the WP Screen ID. DO NOT SET. This is set when from add_submenu_page().
-		 * The value set via WP will be somethiing like 'sfwd-courses_page_courses-options'
+		 * The value set via WP will be something like 'sfwd-courses_page_courses-options'
 		 * for the URL admin.php?page=courses-options because it will reside within the
 		 * sfwd-courses submenu.
 		 *
@@ -145,8 +145,12 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 				$this->settings_tab_title = $this->settings_page_title;
 			}
 
-			if ( ( ! empty( $this->settings_page_id ) ) && ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) ) {
-				$learndash_pages[] = $this->settings_page_id;
+			if ( ! empty( $this->settings_page_id ) ) {
+				add_filter( 'option_page_capability_' . $this->settings_page_id, array( $this, 'filter_option_page_capability' ), 10, 1 );
+
+				if ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) {
+					$learndash_pages[] = $this->settings_page_id;
+				}
 			}
 
 			if ( true === $this->settings_metabox_as_sub ) {
@@ -161,7 +165,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		 *
 		 * @param string $page_key Page key to get instance of.
 		 *
-		 * @return object page instance
+		 * @return LearnDash_Settings_Page|null Page instance.
 		 */
 		final public static function get_page_instance( $page_key = '' ) {
 			if ( ! empty( $page_key ) ) {
@@ -212,6 +216,24 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			if ( ! isset( self::$_instances[ $section_class ] ) ) {
 				self::$_instances[ $section_class ] = new $section_class();
 			}
+		}
+
+		/**
+		 * Returns global settings pages' names.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @return array
+		 */
+		final public static function get_global_settings_page_names(): array {
+			return array_keys(
+				array_filter(
+					self::$_instances,
+					function ( LearnDash_Settings_Page $instance ): bool {
+						return 'admin.php?page=learndash_lms_settings' === $instance->parent_menu_page_url;
+					}
+				)
+			);
 		}
 
 		/**
@@ -470,7 +492,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		}
 
 		/**
-		 * Fucntion to handle showing of Settings page. This is the main function for all visible
+		 * Function to handle showing of Settings page. This is the main function for all visible
 		 * output. Extending classes can implement its own function.
 		 *
 		 * @since 2.4.0
@@ -658,7 +680,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		 *
 		 * @return array array of Sections for the current page.
 		 */
-		protected function get_settings_sections() {
+		public function get_settings_sections() {
 			if ( is_null( $this->page_sections ) ) {
 				$this->page_sections = LearnDash_Settings_Section::get_all_sections_by( 'settings_page_id', $this->settings_page_id );
 			}
@@ -760,6 +782,22 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			return $show;
 		}
 
+		/**
+		 * Filter function to override default settings save user capability 'manage_options'.
+		 *
+		 * @since 3.6.1
+		 *
+		 * @param string $capability User capability to save options page.
+		 * @return string.
+		 */
+		public function filter_option_page_capability( $capability ) {
+			if ( defined( 'LEARNDASH_ADMIN_CAPABILITY_CHECK' ) && LEARNDASH_ADMIN_CAPABILITY_CHECK ) {
+				$capability = LEARNDASH_ADMIN_CAPABILITY_CHECK;
+			}
+
+			return $capability;
+		}
+
 		// End of functions.
 	}
 }
@@ -773,8 +811,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
  */
 function learndash_admin_settings_page_assets() {
 	global $learndash_assets_loaded;
-	/** This filter is documented in includes/class-ld-lms.php */
-	if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+	if ( learndash_use_select2_lib() ) {
 		if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 			wp_enqueue_style(
 				'learndash-select2-jquery-style',
@@ -868,47 +905,41 @@ function learndash_admin_settings_page_assets() {
 add_action(
 	'wp_ajax_learndash_settings_select2_query',
 	function() {
-
-		$result_array = array(
+		$result = array(
 			'items'       => array(),
 			'total_items' => 0,
 			'page'        => 1,
 			'total_pages' => 1,
 		);
 
-		if ( ! current_user_can( 'read' ) ) {
-			echo wp_json_encode( $result_array );
+		if ( ! current_user_can( 'read' ) || empty( $_POST['query_data'] ) ) {
+			echo wp_json_encode( $result );
 			wp_die();
 		}
 
-		if ( ( ! isset( $_POST['query_data'] ) ) || ( empty( $_POST['query_data'] ) ) ) {
-			echo wp_json_encode( $result_array );
-			wp_die();
-		}
+		$post_query_data = wp_unslash( $_POST['query_data'] );
 
-		$post_query_data = $_POST['query_data'];
-
-		if ( ( ! isset( $post_query_data['nonce'] ) ) || ( empty( $post_query_data['nonce'] ) ) ) {
-			echo wp_json_encode( $result_array );
+		if ( empty( $post_query_data['nonce'] ) ) {
+			echo wp_json_encode( $result );
 			wp_die();
 		}
 
 		$post_query_data_nonce = $post_query_data['nonce'];
 		unset( $post_query_data['nonce'] );
 
-		if ( ( ! isset( $post_query_data['settings_element'] ) ) || ( empty( $post_query_data['settings_element'] ) ) ) {
-			echo wp_json_encode( $result_array );
+		if ( empty( $post_query_data['settings_element'] ) ) {
+			echo wp_json_encode( $result );
 			wp_die();
 		}
 
 		$post_query_data_json = wp_json_encode( $post_query_data['settings_element'], JSON_FORCE_OBJECT );
 		if ( ! wp_verify_nonce( $post_query_data_nonce, $post_query_data_json ) ) {
-			echo wp_json_encode( $result_array );
+			echo wp_json_encode( $result );
 			wp_die();
 		}
 
-		if ( ( ! isset( $post_query_data['query_args'] ) ) || ( empty( $post_query_data['query_args'] ) ) ) {
-			echo wp_json_encode( $result_array );
+		if ( empty( $post_query_data['query_args'] ) ) {
+			echo wp_json_encode( $result );
 			wp_die();
 		}
 
@@ -922,8 +953,8 @@ add_action(
 			$query_args['paged'] = 1;
 		}
 
-		if ( ( isset( $_POST['search'] ) ) && ( ! empty( $_POST['search'] ) ) ) {
-			$query_args['s'] = esc_attr( $_POST['search'] );
+		if ( ! empty( $_POST['search'] ) ) {
+			$query_args['s'] = sanitize_text_field( wp_unslash( $_POST['search'] ) );
 		}
 
 		if ( isset( $query_args['posts_per_page'] ) ) {
@@ -940,27 +971,56 @@ add_action(
 			$query_args['orderby'] = 'title';
 		}
 
+		$include_selected = 0;
+		if ( ( isset( $query_args['ld_include_selected'] ) ) && ( ! empty( $query_args['ld_include_selected'] ) ) ) {
+			$include_selected = absint( $query_args['ld_include_selected'] );
+		}
+
 		$query_results = new WP_Query( $query_args );
-		if ( ( $query_results ) && ( is_a( $query_results, 'WP_Query' ) ) ) {
-			$result_array['items'] = array();
-			if ( ( property_exists( $query_results, 'posts' ) ) && ( is_array( $query_results->posts ) ) && ( ! empty( $query_results->posts ) ) ) {
-				foreach ( $query_results->posts as $item ) {
-					$result_array['items'][] = array(
-						'id'   => $item->ID,
-						'text' => $item->post_title,
+
+		if ( is_a( $query_results, 'WP_Query' ) ) {
+			$result['items'] = array();
+
+			if ( ! empty( $include_selected ) && 1 === $query_args['paged'] ) {
+				$title = sprintf(
+					// translators: placeholder: post title.
+					esc_html_x( '%s (current selection)', 'placeholder: post title', 'learndash' ),
+					get_the_title( $include_selected )
+				);
+
+				if ( ! empty( $title ) ) {
+					$result['items'][] = array(
+						'id'   => $include_selected,
+						'text' => $title,
 					);
 				}
 			}
+
+			if (
+				property_exists( $query_results, 'posts' ) &&
+				is_array( $query_results->posts ) &&
+				! empty( $query_results->posts )
+			) {
+				foreach ( $query_results->posts as $item ) {
+					$result['items'][] = array(
+						'id'   => $item->ID,
+						'text' => html_entity_decode( learndash_format_step_post_title_with_status_label( $item ) ),
+					);
+				}
+			}
+
 			if ( property_exists( $query_results, 'found_posts' ) ) {
-				$result_array['total_items'] = absint( $query_results->found_posts );
+				$result['total_items'] = absint( $query_results->found_posts );
 			}
+
 			if ( property_exists( $query_results, 'max_num_pages' ) ) {
-				$result_array['total_pages'] = absint( $query_results->max_num_pages );
+				$result['total_pages'] = absint( $query_results->max_num_pages );
 			}
-			$result_array['page'] = absint( $query_args['paged'] );
+
+			$result['page'] = absint( $query_args['paged'] );
 		}
 
-		echo wp_json_encode( $result_array );
+		echo wp_json_encode( $result );
 		wp_die();
 	},
 	10

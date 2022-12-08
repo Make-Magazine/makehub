@@ -1245,6 +1245,8 @@ add_action( 'wp_ajax_learndash_quiz_statistics_users_select2', 'learndash_quiz_s
  */
 function learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data = array() ) {
 	if ( ! empty( $quiz_resume_data ) ) {
+		//error_log( 'IN: quiz_resume_data<pre>' . print_r( $quiz_resume_data, true ) . '</pre>' );
+
 		foreach( $quiz_resume_data as $key => &$set ) {
 			if ( 'formData' === substr( $key, 0, strlen( 'formData' ) ) ) { // Handle the form fields.
 				if ( ( isset( $set['type'] ) ) && ( in_array( $set['type'], array( WpProQuiz_Model_Form::FORM_TYPE_TEXT, WpProQuiz_Model_Form::FORM_TYPE_TEXTAREA ) ) ) ) {
@@ -1266,8 +1268,15 @@ function learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data = array() )
 						}
 					}
 				}
+			} elseif ( 'checked' === substr( $key, 0, strlen( 'checked' ) ) ) {
+				if ( ( isset( $set['e']['AnswerMessage'] ) ) && ( ! empty( $set['e']['AnswerMessage'] ) ) ) {
+					if ( is_string( $set['e']['AnswerMessage'] ) ) {
+						$set['e']['AnswerMessage'] = esc_js( $set['e']['AnswerMessage'] );
+					}
+				}
 			}
 		}
+		//error_log( 'OUT: quiz_resume_data<pre>' . print_r( $quiz_resume_data, true ) . '</pre>' );
 	}
 
 	return $quiz_resume_data;

@@ -5,6 +5,11 @@
 .iconpicker-element {
     padding-left: 30px !important;
 }
+
+.customize-control-range .customize-control-title {
+     margin-bottom: 16px;
+}
+
 .lds-range-input {
     width: 30% !important;
     float: right;

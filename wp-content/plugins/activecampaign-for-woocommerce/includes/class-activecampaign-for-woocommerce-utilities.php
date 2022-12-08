@@ -1,5 +1,7 @@
 <?php
 
+use Activecampaign_For_Woocommerce_Logger as Logger;
+
 /**
  * The file that defines the Global Utilities.
  *
@@ -93,5 +95,53 @@ class Activecampaign_For_Woocommerce_Utilities {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Cleans a description field by removing tags and shortening the number of characters.
+	 *
+	 * @param string $description The description.
+	 * @param int    $trim Character trim length for word wrap. Trimmed by default. Pass 0 to not trim.
+	 *
+	 * @return string
+	 */
+	public static function clean_description( $description, $trim = 300 ) {
+		$logger = new Logger();
+
+		try {
+			$plain_description = wp_strip_all_tags( $description, false );
+			$plain_description = str_replace( array( "\r", "\n", '&nbsp;' ), ' ', $plain_description );
+			$plain_description = trim( $plain_description );
+			$plain_description = preg_replace( '/\s+/', ' ', $plain_description );
+
+			if ( $trim > 0 && strlen( $plain_description ) > $trim ) {
+				$wrap_description = wordwrap( $plain_description, $trim - 3 );
+				$description_arr  = explode( "\n", $wrap_description );
+				if ( isset( $description_arr[0] ) ) {
+					$fin_description = $description_arr[0];
+					if ( isset( $description_arr[1] ) ) {
+						$fin_description .= '...';
+					}
+
+					if ( ! empty( $fin_description ) ) {
+						return $fin_description;
+					}
+				}
+			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an issue cleaning the description field.',
+				[
+					'message'     => $t->getMessage(),
+					'description' => $description,
+				]
+			);
+		}
+
+		if ( ! empty( $plain_description ) ) {
+			return $plain_description;
+		}
+
+		return $description;
 	}
 }

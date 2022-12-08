@@ -16,14 +16,8 @@ use AcVendor\Brick\Math\Exception\RoundingNecessaryException;
  */
 abstract class AbstractMoney implements MoneyContainer
 {
-    /**
-     * @return BigNumber
-     */
-    abstract public function getAmount();
+    abstract public function getAmount() : BigNumber;
 
-    /**
-     * @return Currency
-     */
     abstract public function getCurrency() : Currency;
 
     /**

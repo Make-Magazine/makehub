@@ -119,8 +119,8 @@ function learndash_get_course_certificate_link( $course_id, $cert_user_id = null
 		return '';
 	}
 
-	$course_status = learndash_course_status( $course_id, $cert_user_id );
-	if ( esc_html__( 'Completed', 'learndash' ) !== $course_status ) {
+	$course_status = learndash_course_status( $course_id, $cert_user_id, true );
+	if ( 'completed' !== $course_status ) {
 		return '';
 	}
 
@@ -478,8 +478,8 @@ function learndash_certificates_post_updated_messages( $messages ) {
 		7  => esc_html__( 'Certificate saved.', 'learndash' ),
 		8  => esc_html__( 'Certificate submitted.', 'learndash' ),
 		9  => sprintf(
-			// translators: plaeholder: Post Date.
-			esc_html_x( 'Certificate scheduled for: <strong>%s</strong>.', 'plaeholder: Post Date', 'learndash' ),
+			// translators: placeholder: Post Date.
+			esc_html_x( 'Certificate scheduled for: <strong>%s</strong>.', 'placeholder: Post Date', 'learndash' ),
 			// translators: Publish box date format, see https://secure.php.net/date.
 			date_i18n( __( 'M j, Y @ H:i', 'learndash' ), strtotime( $post->post_date ) )
 		),

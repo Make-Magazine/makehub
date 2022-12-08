@@ -140,7 +140,7 @@
 		border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
 	}
 
-    .gpnf-nested-entries tbody tr td:last-child,
+	.gpnf-nested-entries tbody tr td:last-child,
 	.gpnf-nested-entries tbody tr:last-child td:last-child {
 		border: 0;
 	}

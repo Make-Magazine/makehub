@@ -3,8 +3,8 @@
 Plugin Name: Vimeography Pro
 Plugin URI: http://vimeography.com/pro
 Description: Vimeography Pro supercharges your Vimeography galleries by adding unlimited videos, custom sorting, Vimeo Pro support, download links, playlisting, hidden videos and more.
-Version: 2.0.2
-Requires: 3.8
+Version: 2.1.1
+Requires: 4.7
 Author: Dave Kiss
 Author URI: http://www.davekiss.com/
 Copyright: Dave Kiss
@@ -30,7 +30,7 @@ if ( ! defined('VIMEOGRAPHY_PRO_BASENAME') ) {
 }
 
 if ( ! defined('VIMEOGRAPHY_PRO_VERSION') ) {
-  define( 'VIMEOGRAPHY_PRO_VERSION', '2.0.2');
+  define( 'VIMEOGRAPHY_PRO_VERSION', '2.1.1');
 }
 
 if ( ! defined('VIMEOGRAPHY_PRO_CURRENT_PAGE') ) {
@@ -61,14 +61,17 @@ class Vimeography_Pro {
 
     // Can be saved in public properties if need to access
     new \Vimeography\Pro\Welcome;
+    new \Vimeography\Pro\Init;
 
     new Vimeography_Pro_Rewrite;
     new Vimeography_Pro_Loader;
     $this->database = new Vimeography_Pro_Database;
     new Vimeography_Pro_Ajax;
     new Vimeography_Pro_Shortcode;
+    new Vimeography_Pro_Admin_Scripts;
 
     new \Vimeography\Pro\Ajax;
+    new \Vimeography\Pro\Api\Filters;
 
     add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
     add_action( 'plugins_loaded', array( $this, 'vimeography_pro_load_addon_plugin' ) );
@@ -121,6 +124,14 @@ class Vimeography_Pro {
     if ( ! isset( $wpdb->vimeography_pro_meta ) ) {
       $wpdb->vimeography_pro_meta = $wpdb->prefix . 'vimeography_pro_meta';
     }
+
+    if ( ! isset( $wpdb->vimeography_pro_filters ) ) {
+      $wpdb->vimeography_pro_filters = $wpdb->prefix . 'vimeography_pro_filters';
+    }
+
+    if ( ! isset( $wpdb->vimeography_pro_gallery_filters ) ) {
+      $wpdb->vimeography_pro_gallery_filters = $wpdb->prefix . 'vimeography_pro_gallery_filters';
+    }
   }
 
 
@@ -133,10 +144,13 @@ class Vimeography_Pro {
   private function _includes() {
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/rewrite.php';
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/welcome.php';
+    require_once VIMEOGRAPHY_PRO_PATH . 'lib/init.php';
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/loader.php';
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/database.php';
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/shortcode.php';
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/ajax.php';
+    require_once VIMEOGRAPHY_PRO_PATH . 'lib/admin/scripts.php';
+    require_once VIMEOGRAPHY_PRO_PATH . 'lib/api/filters.php';
 
     require_once VIMEOGRAPHY_PRO_PATH . 'lib/deprecated/ajax.php';
   }

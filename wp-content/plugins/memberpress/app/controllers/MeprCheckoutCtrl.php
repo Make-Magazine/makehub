@@ -457,10 +457,6 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
     }
 
     try {
-      if(('free' !== $signup_type) && isset($pm) && ($pm instanceof MeprBaseRealGateway)) {
-        $pm->process_signup_form($txn);
-      }
-
       if(! $is_existing_user) {
         if($mepr_options->disable_checkout_password_fields === true) {
           $usr->send_password_notification('new');
@@ -470,6 +466,10 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
       // DEPRECATED: These 2 actions here for backwards compatibility ... use mepr-signup instead
       MeprHooks::do_action('mepr-track-signup',   $txn->amount, $usr, $product->ID, $txn->id);
       MeprHooks::do_action('mepr-process-signup', $txn->amount, $usr, $product->ID, $txn->id);
+
+      if(('free' !== $signup_type) && isset($pm) && ($pm instanceof MeprBaseRealGateway)) {
+        $pm->process_signup_form($txn);
+      }
 
       // Signup type can be 'free', 'non-recurring' or 'recurring'
       MeprHooks::do_action("mepr-{$signup_type}-signup", $txn);
@@ -499,7 +499,7 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
           'mepr_transaction_id'       => $txn->id,
           'mepr_process_signup_form'  => 0,
           'mepr_process_payment_form' => 1,
-          'mepr_payment_method'       => $_POST['mepr_payment_method'],
+          'mepr_payment_method'       => sanitize_text_field($_POST['mepr_payment_method']),
         );
         if(!empty($_POST['mepr_coupon_code'])) {
           $query_params = array_merge(array('mepr_coupon_code' => htmlentities( sanitize_text_field( $_POST['mepr_coupon_code'] ) )), $query_params);
@@ -516,6 +516,11 @@ class MeprCheckoutCtrl extends MeprBaseCtrl {
   * Processes the payment for SPC
   */
   public function process_spc_payment_form($txn) {
+
+    if( did_action( 'mepr_stripe_payment_pending' ) ) {
+      return;
+    }
+
     $mepr_options = MeprOptions::fetch();
     if(isset($_POST['mepr_payment_method'])) {
       $payment_method = $mepr_options->payment_method($_POST['mepr_payment_method']);

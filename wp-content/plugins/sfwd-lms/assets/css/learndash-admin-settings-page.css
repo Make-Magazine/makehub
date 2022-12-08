@@ -1098,7 +1098,11 @@ Quiz Edit Result Text lists
 
 .sfwd_options #learndash-lesson-access-settings_visible_after_field,
 .sfwd_options #learndash-lesson-access-settings_visible_after_specific_date_field,
-.sfwd_options #learndash-quiz-display-content-settings_quizModus_single_back_button_field {
+.sfwd_options #learndash-quiz-display-content-settings_quizModus_single_back_button_field,
+.sfwd_options #learndash-topic-access-settings_visible_after_field,
+.sfwd_options #learndash-topic-access-settings_visible_after_specific_date_field,
+.sfwd_options #learndash-quiz-access-settings_visible_after_field,
+.sfwd_options #learndash-quiz-access-settings_visible_after_specific_date_field {
   border-left: none;
  /* padding-left: 5px; */
  padding-left: 0;
@@ -1135,7 +1139,9 @@ Quiz Edit Result Text lists
   width: 40% !important;
 }
 
-.sfwd_options #learndash-lesson-access-settings_visible_after_specific_date_field .sfwd_option_input {
+.sfwd_options #learndash-lesson-access-settings_visible_after_specific_date_field .sfwd_option_input,
+.sfwd_options #learndash-topic-access-settings_visible_after_specific_date_field .sfwd_option_input,
+.sfwd_options #learndash-quiz-access-settings_visible_after_specific_date_field .sfwd_option_input {
   width: 80% !important;
 }
 
@@ -1329,6 +1335,7 @@ table.learndash-settings-table-sortable td.col-name-move {
 .edit-post-meta-boxes-area #poststuff #learndash_course_builder .postbox-header .hndle,
 .edit-post-meta-boxes-area #poststuff #learndash_quiz_builder .postbox-header .hndle {
 	border-bottom: none;
+	padding: 5px 12px;
 	width: auto;
 }
 
@@ -1360,4 +1367,191 @@ body[data-active-tab="learndash_quiz_builder"] .postbox-header .handle-actions .
 #certificate-shortcodes.wrap .inside .dashicons,
 #certificate-shortcodes.wrap .inside .dashicons-before::before {
   text-decoration: none;
+}
+
+/* Stripe Payments Settings */
+
+.sfwd_options .learndash-stripe-connect, .notice.connect-stripe .learndash-stripe-connect {
+	align-items: center;
+	background: #6772e5;
+	border-radius: 5px;
+	color: #fff;
+	display: flex;
+	font-size: 16px;
+	justify-content: center;
+	letter-spacing: .6px;
+	padding: 6px 24px;
+	text-decoration: none;
+	transition: all .3s ease;
+	width: 200px;
+}
+
+.sfwd_options .learndash-stripe-connect:active, .learndash-stripe-connect:focus, .learndash-stripe-connect:hover, .notice.connect-stripe .learndash-stripe-connect:active, .notice.connect-stripe .learndash-stripe-connect:focus, .notice.connect-stripe .learndash-stripe-connect:hover {
+	background: #3f4ddf;
+	color: #fff;
+}
+
+.sfwd_options .learndash-stripe-connect .stripe-logo, .notice.connect-stripe .learndash-stripe-connect .stripe-logo {
+	padding: 2px 10px 0 0;
+}
+
+/* Bulk Edit Settings */
+
+#learndash-bulk-edit {
+	padding: 0 10px;
+}
+
+#learndash-bulk-edit h4 {
+	padding: 6px 0;
+}
+
+#learndash-bulk-edit .tabs {
+	display: flex;
+}
+
+#learndash-bulk-edit .tabs .tab {
+	background: #F8FAFC;
+	color: #6B7280;
+	font-size: .85rem;
+	padding: 7px 12px;
+	margin-right: 12px;
+	border-radius: 4px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+#learndash-bulk-edit .tabs .tab.selected {
+	background: #E5E7EB;
+}
+
+#learndash-bulk-edit .tab-content {
+	padding-right: 20px;
+}
+
+#learndash-bulk-edit .sfwd_option_input {
+	float: none;
+	margin: 0;
+	width: 100%;
+}
+
+#learndash-bulk-edit.sfwd_options .learndash-section-field-url.full-text {
+	width: 50%;
+	border-radius: 2px;
+	border: 1px solid #ddd;
+	box-shadow: none;
+	box-sizing: border-box;
+	font-size: 14px;
+	padding: 5px 7px;
+}
+
+#learndash-bulk-edit .select2 {
+	width: 100% !important;
+}
+
+#learndash-bulk-edit.sfwd_options .select2-container--learndash .select2-selection--multiple {
+	border: 1px solid #8c8f94 !important;
+}
+
+#learndash-bulk-edit .select2-search--inline {
+	display: contents; /*this will make the container disappear, making the child the one who sets the width of the element*/
+}
+
+#learndash-bulk-edit .select2-search__field:placeholder-shown {
+	width: 100% !important; /*makes the placeholder to be 100% of the width while there are no options selected*/
+	padding-left: 5px;
+}
+
+#learndash-bulk-edit .bulk-edit-fields .bulk-edit-field,
+#learndash-bulk-edit .bulk-edit-filters .bulk-edit-filter {
+	background: #F8FAFC;
+	padding: 15px;
+	width: auto;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+#learndash-bulk-edit .bulk-edit-fields .bulk-edit-field .bulk-edit-real-field-container,
+#learndash-bulk-edit .bulk-edit-filters .bulk-edit-filter .bulk-edit-real-filter-container {
+	padding-top: 15px;
+}
+
+#learndash-bulk-edit .bulk-edit-child-display-switcher-container {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+#learndash-bulk-edit .bulk-edit-button {
+	margin-top: 10px;
+}
+
+#learndash-bulk-edit input[type="text"].learndash-filter,
+#learndash-bulk-edit select.learndash-filter {
+	width: 100% !important;
+	padding: 3px 10px;
+}
+
+#learndash-bulk-edit input[type="checkbox"],
+#learndash-bulk-edit input[type="radio"] {
+	margin: 0 .3rem 0 0;
+	vertical-align: middle;
+}
+
+#learndash-bulk-edit input[type="radio"] {
+	margin-left: .75rem;
+}
+
+#learndash-bulk-edit input[type="radio"]:first-of-type {
+	margin-left: 0;
+}
+
+/* Import / Export Settings */
+
+#learndash_import_export_settings_import_export #learndash-import-export {
+	display: flex;
+	padding: 0 10px;
+	margin-top: -5px;
+}
+
+#learndash_import_export_settings_import_export #learndash-import-export > * {
+	flex: 1;
+}
+
+#learndash_import_export_settings_import_export #learndash-import-export > *:last-of-type {
+	padding-left: 50px;
+}
+
+#learndash_import_export_settings_import_export h4 {
+	padding: 6px 0;
+}
+
+#learndash_import_export_settings_import_export label {
+	vertical-align: baseline;
+	padding-right: 10px;
+}
+
+#learndash_import_export_settings_import_export .learndash-export-items {
+	margin-top: 25px;
+	margin-bottom: -10px;
+}
+
+#learndash_import_export_settings_import_export .learndash-export-item {
+	background: #F8FAFC;
+	padding: 15px;
+	width: auto;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+#learndash_import_export_settings_import_export .learndash-export-item .learndash-export-item-group-label {
+	display: inline-flex;
+	min-width: 140px;
+	font-weight: 500;
+}
+
+#learndash_import_export_settings_import_export .learndash-export-item .learndash-export-item-label {
+	padding-right: 15px;
+}
+
+#learndash_import_export_settings_import_export .button {
+	margin-top: 20px;
 }

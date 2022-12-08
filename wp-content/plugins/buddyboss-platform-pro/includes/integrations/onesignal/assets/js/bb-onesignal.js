@@ -1,6 +1,6 @@
 /* jshint browser: true */
 /* global bp, bb_onesignal_vars */
-/* @version [BBVERSION] */
+/* @version 2.0.3 */
 window.bp        = window.bp || {};
 window.OneSignal = window.OneSignal || [];
 

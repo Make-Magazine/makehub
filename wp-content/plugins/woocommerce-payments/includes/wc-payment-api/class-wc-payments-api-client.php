@@ -65,6 +65,7 @@ class WC_Payments_API_Client {
 	const DOCUMENTS_API                = 'documents';
 	const VAT_API                      = 'vat';
 	const LINKS_API                    = 'links';
+	const AUTHORIZATIONS_API           = 'authorizations';
 
 	/**
 	 * Common keys in API requests/responses that we might want to redact.
@@ -193,6 +194,7 @@ class WC_Payments_API_Client {
 	 * @param array  $additional_parameters           - An array of any additional request parameters, particularly for additional payment methods.
 	 * @param array  $payment_methods                 - An array of payment methods that might be used for the payment.
 	 * @param string $cvc_confirmation                - The CVC confirmation for this payment method.
+	 * @param string $fingerprint                     - User fingerprint.
 	 *
 	 * @return WC_Payments_API_Intention
 	 * @throws API_Exception - Exception thrown on intention creation failure.
@@ -210,7 +212,8 @@ class WC_Payments_API_Client {
 		$off_session = false,
 		$additional_parameters = [],
 		$payment_methods = null,
-		$cvc_confirmation = null
+		$cvc_confirmation = null,
+		$fingerprint = ''
 	) {
 		// TODO: There's scope to have amount and currency bundled up into an object.
 		$request                   = [];
@@ -229,7 +232,7 @@ class WC_Payments_API_Client {
 		}
 
 		$request             = array_merge( $request, $additional_parameters );
-		$request['metadata'] = array_merge( $request['metadata'], $this->get_fingerprint_metadata() );
+		$request['metadata'] = array_merge( $request['metadata'], $this->get_fingerprint_metadata( $fingerprint ) );
 
 		if ( $off_session ) {
 			$request['off_session'] = 'true';
@@ -275,13 +278,16 @@ class WC_Payments_API_Client {
 		array $metadata = [],
 		$customer_id = null
 	) {
+		$fingerprint = isset( $metadata['fingerprint'] ) ? $metadata['fingerprint'] : '';
+		unset( $metadata['fingerprint'] );
+
 		$request                         = [];
 		$request['amount']               = $amount;
 		$request['currency']             = $currency_code;
 		$request['description']          = $this->get_intent_description( $order_number );
 		$request['payment_method_types'] = $payment_methods;
 		$request['capture_method']       = $capture_method;
-		$request['metadata']             = array_merge( $metadata, $this->get_fingerprint_metadata() );
+		$request['metadata']             = array_merge( $metadata, $this->get_fingerprint_metadata( $fingerprint ) );
 		if ( $customer_id ) {
 			$request['customer'] = $customer_id;
 		}
@@ -500,25 +506,23 @@ class WC_Payments_API_Client {
 	 * @param string $payment_method_id              - ID of payment method to be saved.
 	 * @param string $customer_id                    - ID of the customer.
 	 * @param bool   $save_in_platform_account       - Indicate whether payment method should be stored in platform store.
+	 * @param bool   $is_platform_payment_method     - Indicate whether is using platform payment method.
 	 * @param bool   $save_user_in_platform_checkout - Indicate whether is creating a platform checkout user.
 	 * @param array  $metadata                 - Meta data values to be sent along with setup intent creation.
 	 *
 	 * @return array
 	 * @throws API_Exception - Exception thrown on setup intent creation failure.
 	 */
-	public function create_and_confirm_setup_intent( $payment_method_id, $customer_id, $save_in_platform_account = false, $save_user_in_platform_checkout = false, $metadata = [] ) {
+	public function create_and_confirm_setup_intent( $payment_method_id, $customer_id, $save_in_platform_account = false, $is_platform_payment_method = false, $save_user_in_platform_checkout = false, $metadata = [] ) {
 		$request = [
-			'payment_method'           => $payment_method_id,
-			'customer'                 => $customer_id,
-			'save_in_platform_account' => $save_in_platform_account,
-			'metadata'                 => $metadata,
-			'confirm'                  => 'true',
+			'payment_method'                  => $payment_method_id,
+			'customer'                        => $customer_id,
+			'save_in_platform_account'        => $save_in_platform_account,
+			'is_platform_payment_method'      => $is_platform_payment_method,
+			'save_payment_method_to_platform' => $save_user_in_platform_checkout,
+			'metadata'                        => $metadata,
+			'confirm'                         => 'true',
 		];
-
-		if ( $save_user_in_platform_checkout ) {
-			$request['is_platform_payment_method']      = 'true';
-			$request['save_payment_method_to_platform'] = 'true';
-		}
 
 		return $this->request( $request, self::SETUP_INTENTS_API, self::POST );
 	}
@@ -1018,7 +1022,12 @@ class WC_Payments_API_Client {
 	 * @throws API_Exception
 	 */
 	public function get_file_contents( string $file_id, bool $as_account = true ) : array {
-		return $this->request( [ 'as_account' => $as_account ], self::FILES_API . '/' . $file_id . '/contents', self::GET );
+		try {
+			return $this->request( [ 'as_account' => $as_account ], self::FILES_API . '/' . $file_id . '/contents', self::GET );
+		} catch ( API_Exception $e ) {
+			Logger::error( 'Error retrieving file contents for ' . $file_id . '. ' . $e->getMessage() );
+			return [];
+		}
 	}
 
 	/**
@@ -2080,6 +2089,8 @@ class WC_Payments_API_Client {
 			$use_user_token
 		);
 
+		$response = apply_filters( 'wcpay_api_request_response', $response, $method, $url, $api );
+
 		$this->check_response_for_errors( $response );
 
 		if ( ! $raw_response ) {
@@ -2118,8 +2129,8 @@ class WC_Payments_API_Client {
 			$params['level3']['line_items'] = [
 				[
 					'discount_amount'     => 0,
-					'product_code'        => 'zero-cost-fee',
-					'product_description' => 'Zero cost fee',
+					'product_code'        => 'empty-order',
+					'product_description' => 'The order is empty',
 					'quantity'            => 1,
 					'tax_amount'          => 0,
 					'unit_cost'           => 0,
@@ -2552,14 +2563,58 @@ class WC_Payments_API_Client {
 	/**
 	 * Returns a list of fingerprinting metadata to attach to order.
 	 *
+	 * @param string $fingerprint User fingerprint.
+	 *
 	 * @return array List of fingerprinting metadata.
 	 *
 	 * @throws API_Exception If an error occurs.
 	 */
-	private function get_fingerprint_metadata(): array {
-		$customer_fingerprint_metadata                                    = Buyer_Fingerprinting_Service::get_instance()->get_hashed_data_for_customer();
+	private function get_fingerprint_metadata( $fingerprint = '' ): array {
+		$customer_fingerprint_metadata                                    = Buyer_Fingerprinting_Service::get_instance()->get_hashed_data_for_customer( $fingerprint );
 		$customer_fingerprint_metadata['fraud_prevention_data_available'] = true;
 
 		return $customer_fingerprint_metadata;
+	}
+
+	/**
+	 * List authorizations
+	 *
+	 * @param int    $page       The requested page.
+	 * @param int    $page_size  The size of the requested page.
+	 * @param string $sort       The column to be used for sorting.
+	 * @param string $direction  The sorting direction.
+	 *
+	 * @return array
+	 * @throws API_Exception - Exception thrown on request failure.
+	 */
+	public function list_authorizations( int $page = 0, int $page_size = 25, string $sort = 'created', string $direction = 'desc' ) {
+		$query = [
+			'page'      => $page,
+			'pagesize'  => $page_size,
+			'sort'      => $sort,
+			'direction' => $direction,
+		];
+
+		return $this->request( $query, self::AUTHORIZATIONS_API, self::GET );
+	}
+
+	/**
+	 * Return summary for authorizations.
+	 *
+	 * @return array     The authorizations summary.
+	 * @throws API_Exception Exception thrown on request failure.
+	 */
+	public function get_authorizations_summary() {
+		return $this->request( [], self::AUTHORIZATIONS_API . '/summary', self::GET );
+	}
+
+	/**
+	 * Fetch a single authorizations with provided payment intent id.
+	 *
+	 * @param string $payment_intent_id id of requested transaction.
+	 * @return array authorization object.
+	 */
+	public function get_authorization( string $payment_intent_id ) {
+		return $this->request( [], self::AUTHORIZATIONS_API . '/' . $payment_intent_id, self::GET );
 	}
 }

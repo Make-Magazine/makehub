@@ -1,0 +1,8 @@
+.vimeography-thumbnail-wrap[data-v-730c6c53]{margin:0;max-width:100%;position:relative}@media all and (-ms-high-contrast: none), (-ms-high-contrast: active){.vimeography-thumbnail-wrap[data-v-730c6c53]{flex:0 0 25%}}.vimeography-link[data-v-730c6c53]{cursor:pointer;display:block;background-color:#4C4C4C;box-shadow:1px 1px 2px #A0A0A0;overflow:hidden;position:relative}.vimeography-link[data-v-730c6c53]:hover{box-shadow:1px 1px 2px #A0A0A0}.vimeography-link:hover .vimeography-thumbnail-img[data-v-730c6c53]{transform:translateY(-25px);opacity:1}.vimeography-thumbnail[data-v-730c6c53]{height:100%;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}.vimeography-thumbnail-img[data-v-730c6c53]{cursor:pointer;max-width:231px;opacity:0.9;transition:all 250ms ease-in-out;box-shadow:none}.vimeography-title[data-v-730c6c53]{position:absolute;bottom:0;left:3px;height:23px;width:auto;color:#f4f4f4;font-size:0.8rem;text-transform:uppercase;z-index:0;opacity:0;line-height:1.4rem;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;transition:all 250ms ease-in-out}.vimeography-link:hover .vimeography-title[data-v-730c6c53]{opacity:1}
+
+.vimeography-thumbnail-container[data-v-376faa69]{position:relative;display:grid;grid-template-columns:repeat(auto-fit, 130px);grid-column-gap:10px;grid-row-gap:10px;justify-content:center;margin-bottom:2rem}@media all and (-ms-high-contrast: none), (-ms-high-contrast: active){.vimeography-thumbnail-container[data-v-376faa69]{display:flex;flex-wrap:wrap}}
+
+.vimeography-gallery[data-v-6618c293]{width:90%;margin:0 auto 1rem}.vimeography-gallery[data-v-6618c293] .vimeography-player-container{margin:0;padding:0}
+
+
+/*# sourceMappingURL=styles.10fc169d.css.map*/

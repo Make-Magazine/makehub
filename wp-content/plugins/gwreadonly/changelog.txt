@@ -1,6 +1,19 @@
 
 # Changelog
 
+## 1.9.15
+
+	- Added German translations. Credit: Florian Rinnhofer of sportunion.at
+
+## 1.9.14
+
+	- Fixed PHP error that could show if a 24-hour time field is marked as read only and used in an Entry Block’s Edit Form block.
+
+## 1.9.13
+
+	- Fixed issue where the hidden capture value would not use values passed using dynamic population (e.g. query params or shortcode `field_values` attribute).
+	- Fixed issue where the hidden capture input would be output multiple times for some fields.
+
 ## 1.9.12
 
 	- Improved compatibility with Populate Anything when dynamically populating the value of a multi-input fields and also marking it as read-only.
@@ -145,7 +158,7 @@
 
 ## 1.2.10
 
-    - Updated perk to use GP Bootstrap 
+    - Updated perk to use GP Bootstrap
 
 ## 1.2.9
 
@@ -196,4 +209,3 @@
 
     - Added 'multiselect' to unsupported fields list
     - Updated to prevent setting from showing based on input type rather than field type
-    
