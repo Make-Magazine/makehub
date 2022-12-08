@@ -267,6 +267,8 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 			);
 		}
 
+		$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
+
 		try {
 			if ( isset( $stored_id ) && ! empty( $stored_id ) ) {
 				$wpdb->update(
@@ -313,7 +315,6 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 			);
 		}
 
-		$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
 		$this->order_utilities->schedule_recurring_order_sync_task();
 	}
 

@@ -703,14 +703,6 @@ class Activecampaign_For_Woocommerce {
 			$this->run_abandonment_sync_command,
 			'abandoned_cart_hourly_task'
 		);
-
-		$this->loader->add_action(
-			'activecampaign_for_woocommerce_cart_updated',
-			$this->new_order_sync,
-			'execute',
-			1,
-			2
-		);
 	}
 
 	/**

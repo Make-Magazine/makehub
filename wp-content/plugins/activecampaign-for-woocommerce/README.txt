@@ -3,7 +3,7 @@ Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
 Tested up to: 6.1
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,7 +47,7 @@ ActiveCampaign's category-defining Customer Experience Automation Platform (CXA)
 == Installation ==
 
 = WooCommerce Compatibility =
-* Tested up to version: 7.1.0
+* Tested up to version: 7.2.0
 * Minimal version requirement: 3.6.0
 
 = Minimum Requirements =
@@ -72,6 +72,11 @@ ActiveCampaign's category-defining Customer Experience Automation Platform (CXA)
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.9.6 2022-12-07 =
+* Bugfix for abandoned cart sync, duplicates, & add to cart customerid errors
+* Bugfix for products not syncing due to product attribute naming
+* AC Cronjobs will now be removed and re-scheduled on settings save
 
 = 1.9.5 2022-12-02 =
 * Bugfixes for 400 errors in historical sync

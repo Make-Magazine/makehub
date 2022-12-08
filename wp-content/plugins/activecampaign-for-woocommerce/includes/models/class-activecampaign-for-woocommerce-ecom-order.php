@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Has_Id as Has_Id;
 use Activecampaign_For_Woocommerce_Has_Email as Has_Email;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 
 /**
  * The model class for the EcomOrder
@@ -105,7 +106,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 *
 	 * @var string
 	 */
-	private $customerid;
+	public $customerid;
 
 	/**
 	 * The currency.
@@ -325,6 +326,7 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * Sets the email.
 	 *
 	 * @param string $email The email.
+	 * @throws RuntimeException Throws an exception for an invalid email to get a catch.
 	 */
 	public function set_email( $email ) {
 		$this->email = $email;

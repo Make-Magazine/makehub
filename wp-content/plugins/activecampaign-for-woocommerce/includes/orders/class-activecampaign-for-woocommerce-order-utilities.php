@@ -989,7 +989,6 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 	 */
 	public function get_wc_order( $order ) {
 		if ( AC_Utilities::validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
-
 			return $order;
 		}
 
@@ -1009,7 +1008,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 				}
 			} catch ( Throwable $t ) {
 				$this->logger->debug(
-					'Historical Sync: wc_get_order threw an error on the order object. ',
+					'Order Utilities: wc_get_order threw an error on the order object. ',
 					[
 						'message'     => $t->getMessage(),
 						'order class' => get_class( $order ),
@@ -1029,7 +1028,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->debug(
-				'Historical Sync: There was an issue parsing this order as an array.',
+				'Order Utilities: There was an issue parsing this order as an array.',
 				[
 					'message' => $t->getMessage(),
 				]
@@ -1044,7 +1043,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->debug(
-				'Historical Sync: A final WC_Order object failed to retrieve.',
+				'Order Utilities: A final WC_Order object failed to retrieve.',
 				[
 					'message' => $t->getMessage(),
 					'order'   => AC_Utilities::validate_object( $wc_order, 'get_data' ) ? $wc_order->get_data() : null,
@@ -1066,7 +1065,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->debug(
-				'Historical Sync: Could not create a new WC_Order from any data type.',
+				'Order Utilities: Could not create a new WC_Order from any data type.',
 				[
 					'message' => $t->getMessage(),
 				]
@@ -1074,7 +1073,7 @@ class Activecampaign_For_Woocommerce_Order_Utilities {
 		}
 
 		$this->logger->warning(
-			'Historical Sync: A WC_Order object could not be generated.',
+			'Order Utilities: A WC_Order object could not be generated.',
 			[
 				'order' => $order,
 			]

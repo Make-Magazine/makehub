@@ -292,6 +292,9 @@ class Activecampaign_For_Woocommerce_Ecom_Cofe_Product_Serializer {
 	private static function map_field( ?array $field ) : ?array {
 		$result = array();
 		foreach ( $field as $k => $v ) {
+			// GraphQL cannot process any other characters as keys, so replace them
+			$k = preg_replace( '/[^A-Za-z0-9_]+/', '__', $k );
+
 			if ( is_array( $v ) ) {
 				if ( ! empty( $v ) ) {
 					$result[ $k ] = wp_json_encode( $v );

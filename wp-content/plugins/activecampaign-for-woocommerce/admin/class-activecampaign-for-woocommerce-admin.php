@@ -1534,6 +1534,8 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function schedule_cron_syncs() {
 		$activecampaign_for_woocommerce_options = $this->get_options();
+		wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_run_order_sync' );
+		wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 
 		try {
 			if (
