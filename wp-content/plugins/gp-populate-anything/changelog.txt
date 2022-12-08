@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.36
+
+	- Fixed potential memory issue for more complex forms that use value population with multi-select fields.
+	- Fixed potential PHP warning if populating List fields.
+
 ## 1.2.35
 
 	- Fixed an issue where dynamically populating values into a multi-select field would not work if the value being populated was a comma-delimited list without spaces after commas.

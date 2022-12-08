@@ -867,14 +867,19 @@ function bb_onesingnal_send_notification( $data ) {
 	$fields = array(
 		'app_id'                    => $app_id,
 		'headings'                  => array(
-			$lang => html_entity_decode( wp_encode_emoji( $data['title'] ) ),
+			'en' => html_entity_decode( wp_encode_emoji( $data['title'] ) ),
 		),
 		'contents'                  => array(
-			$lang => html_entity_decode( wp_encode_emoji( stripcslashes( $data['content'] ) ) ),
+			'en' => html_entity_decode( wp_encode_emoji( stripcslashes( $data['content'] ) ) ),
 		),
 		'include_external_user_ids' => wp_parse_list( $data['user_id'] ),
 
 	);
+
+	if ( ! isset( $fields['headings'][ $lang ] ) ) {
+		$fields['headings'][ $lang ] = html_entity_decode( wp_encode_emoji( $data['title'] ) );
+		$fields['contents'][ $lang ] = html_entity_decode( wp_encode_emoji( $data['content'] ) );
+	}
 
 	if ( isset( $data['link'] ) && ! empty( $data['link'] ) ) {
 		$fields['url'] = $data['link'];

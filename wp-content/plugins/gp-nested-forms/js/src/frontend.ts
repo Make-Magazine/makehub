@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
 * Nested Forms, mama!
 */
@@ -287,6 +289,23 @@ const ko = window.ko;
 		};
 
 		self.openModal = function( trigger ) {
+			/**
+			 * Filter whether the nested form modal should open or not.
+			 *
+			 * @since 1.1.9
+			 *
+			 * @param bool  			shouldOpenModal 	Whether the modal should open or not.
+			 * @param object 			modal				The tingle.js modal object.
+			 * @param int 				formId				The form ID of the parent form containing the nested form field.
+			 * @param int 				fieldId				The field ID of the nested form field.
+			 * @param {GPNestedForms} 	gpnf      			Current instance of the GPNestedForms object.
+			 */
+			var shouldOpenModal = window.gform.applyFilters( 'gpnf_should_open_modal', true, self.modal, self.formId, self.fieldId, self );
+
+			if ( !shouldOpenModal ) {
+				return;
+			}
+
 			self.saveParentFocus( trigger );
 			self.modal.open();
 			/**

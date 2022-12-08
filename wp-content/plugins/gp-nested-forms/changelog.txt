@@ -1,6 +1,11 @@
 
 # Changelog
 
+## 1.1.11
+
+	- Fixed potential PHP error if an array is passed to `GPNF_Parent_Merge_Tag::parse_parent_merge_tag()`.
+	- Added [`gpnf_should_open_modal`](https://gravitywiz.com/gravity-forms-custom-javascript/) JavaScript filter hook.
+
 ## 1.1.10
 
 	- Fixed potential PHP error if creating GP Nested Forms sessions programmatically.

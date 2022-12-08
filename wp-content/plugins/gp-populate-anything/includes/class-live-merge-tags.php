@@ -437,7 +437,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $content;
 		}
 
-		if ( ! preg_match( '/@{.*?:?.+?}/', $field->defaultValue ) ) {
+		if ( ! is_string( $field->defaultValue ) || ! preg_match( '/@{.*?:?.+?}/', $field->defaultValue ) ) {
 			return $content;
 		}
 

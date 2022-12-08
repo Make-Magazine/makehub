@@ -1113,6 +1113,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $template_value;
 		}
 
+		// Do not continue with empty array as an empty array can cause some memory issues at this point.
+		if ( empty( $template_value ) ) {
+			return '';
+		}
+
 		if ( ! is_a( $field, 'GF_Field_MultiSelect' ) || ! method_exists( $field, 'to_array' ) ) {
 			return $template_value;
 		}

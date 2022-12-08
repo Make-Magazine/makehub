@@ -154,13 +154,13 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 			if ( ! $force_check ) {
 				$response_transient = get_transient( $this->transient_name );
 				if ( ! empty( $response_transient ) ) {
-					if ( isset( $response_transient->body ) ) {
-						unset( $response_transient->body );
+					if ( isset( $response_transient['body'] ) ) {
+						unset( $response_transient['body'] );
 						$transient->no_update[ $this->plugin_path ] = $response_transient;
 					} else {
-						if ( $current_version === $response_transient->new_version ) {
+						if ( isset( $response_transient['new_version'] ) && $current_version === $response_transient['new_version'] ) {
 							$transient->no_update[ $this->plugin_path ] = $response_transient;
-							unset( $transient->response[ $this->plugin_path ] );
+								unset( $transient->response[ $this->plugin_path ] );
 						} else {
 							$transient->response[ $this->plugin_path ] = $response_transient;
 						}
@@ -197,10 +197,10 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 				if ( empty( $raw_response['body'] ) ) {
 					$theme_data = wp_get_theme( $this->plugin_path );
 					// If we have no update then we store response in $transient->no_update variable.
-					$no_update_response                         = new stdClass();
-					$no_update_response->theme                  = $this->plugin_slug;
-					$no_update_response->new_version            = ! empty( $theme_data ) ? $theme_data->get( 'Version' ) : '';
-					$no_update_response->body                   = $raw_response['body'];
+					$no_update_response                         = array();
+					$no_update_response['theme']                = $this->plugin_slug;
+					$no_update_response['new_version']          = ! empty( $theme_data ) ? $theme_data->get( 'Version' ) : '';
+					$no_update_response['body']                 = ( isset( $raw_response['body'] ) ? $raw_response['body'] : '' );
 					$transient->no_update[ $this->plugin_path ] = $no_update_response;
 					set_transient( $this->transient_name, $no_update_response, $this->transient_time );
 				}
@@ -264,13 +264,13 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 			// Check if response exists then return existing transient.
 			// Also check if force check exists then bypass transient.
 			if ( ! $force_check ) {
-				$response_transient = get_transient( $this->transient_name );
+				$response_transient = (object) get_transient( $this->transient_name );
 				if ( ! empty( $response_transient ) ) {
 					if ( isset( $response_transient->body ) ) {
 						unset( $response_transient->body );
 						$transient->no_update[ $this->plugin_path ] = $response_transient;
 					} else {
-						if ( $current_version === $response_transient->new_version ) {
+						if ( isset( $response_transient->new_version ) && $current_version === $response_transient->new_version ) {
 							$transient->no_update[ $this->plugin_path ] = $response_transient;
 							unset( $transient->response[ $this->plugin_path ] );
 						} else {

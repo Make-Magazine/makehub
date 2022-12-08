@@ -14,6 +14,7 @@ add_filter( 'bb_on_screen_notification_query_string', 'bb_pro_pusher_on_screen_n
 add_filter( 'bb_nouveau_ajax_messages_send_reply_success', 'bb_pro_pusher_bb_nouveau_ajax_messages_send_reply_success', 10, 1 );
 add_filter( 'bb_nouveau_ajax_messages_send_message_success_response', 'bb_pro_pusher_bb_nouveau_ajax_messages_send_reply_success', 10, 1 );
 
+add_filter( 'bb_exclude_endpoints_from_restriction', 'bb_pro_pusher_exclude_endpoints_from_restriction', 10, 1 );
 
 /**
  * Filter the thread recipient inbox unread counts.
@@ -364,3 +365,24 @@ function bb_pro_pusher_bb_nouveau_ajax_messages_send_reply_success( $response ) 
 	return $response;
 }
 
+/**
+ * Exclude the pusher auth endpoint from private apis.
+ *
+ * @since 2.2.1
+ *
+ * @param array $exclude_endpoint Array of endpoints.
+ *
+ * @return mixed
+ */
+function bb_pro_pusher_exclude_endpoints_from_restriction( $exclude_endpoint ) {
+	if (
+		! bbp_pro_is_license_valid() ||
+		! bb_pusher_is_enabled()
+	) {
+		return $exclude_endpoint;
+	}
+
+	$exclude_endpoint[] = '/buddyboss/v1/pusher/auth';
+
+	return $exclude_endpoint;
+}

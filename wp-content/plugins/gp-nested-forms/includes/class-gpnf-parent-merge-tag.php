@@ -78,12 +78,12 @@ class GPNF_Parent_Merge_Tag {
 
 		if ( is_array( $field->inputs ) ) {
 			foreach ( $field->inputs as $input ) {
-				if ( stripos( rgar( $input, 'defaultValue' ), '{Parent' ) !== false ) {
+				if ( is_string( rgar( $input, 'defaultValue' ) ) && stripos( rgar( $input, 'defaultValue' ), '{Parent' ) !== false ) {
 					$has_parent_merge_tag = true;
 					break;
 				}
 			}
-		} elseif ( stripos( rgar( $field, 'defaultValue' ), '{Parent' ) !== false ) {
+		} elseif ( is_string( rgar( $field, 'defaultValue' ) ) && stripos( rgar( $field, 'defaultValue' ), '{Parent' ) !== false ) {
 			$has_parent_merge_tag = true;
 		}
 

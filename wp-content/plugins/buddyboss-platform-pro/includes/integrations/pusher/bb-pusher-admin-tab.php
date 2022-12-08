@@ -206,7 +206,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'page'              => 'Pusher',
 				'title'             => __( 'Pusher', 'buddyboss-pro' ) . $html,
 				'tutorial_callback' => array( $this, 'setting_callback_pusher_tutorial' ),
-				'notice'            => __( 'In your app\'s settings, please enable "Client events", "Subscription counting" and "Authorized connections" for this integration to work correctly.', 'buddyboss-pro' ),
+				'notice'            => __( 'In your app\'s settings, please enable "Client events" and "Authorized connections" for this integration to work correctly.', 'buddyboss-pro' ),
 			),
 		);
 

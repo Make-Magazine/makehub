@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2
+Stable tag: 2.2.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,15 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 2.2.1.1 =
+* Updater - Handled updater critical issue with the logic
+
+= 2.2.1 =
+* OneSignal - Handled web push notification not working issue for non-English site
+* Pusher - Handled pusher auth API error when the 'Private REST APIs' option is enabled
+* Zoom - Handled group zoom meeting screen minor UI issues
+* Member Access Controls - Handled accept button missing for group join request when access control enabled for groups
 
 = 2.2 =
 * Messages - Added Pusher integration option to enable LIVE messaging

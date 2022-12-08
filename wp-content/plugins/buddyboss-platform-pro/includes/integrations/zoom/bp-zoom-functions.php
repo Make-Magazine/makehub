@@ -117,7 +117,7 @@ function bp_zoom_enqueue_scripts_and_styles() {
 	wp_add_inline_script( 'bp-zoom-js', $inline_js, 'before' );
 }
 
-add_action( 'wp_enqueue_scripts', 'bp_zoom_enqueue_scripts_and_styles', 99 );
+add_action( 'wp_enqueue_scripts', 'bp_zoom_enqueue_scripts_and_styles', 19 );
 
 /**
  * Retrieve an meeting or meetings.
