@@ -566,7 +566,8 @@
 .bb-template-v2 #buddypress .bb_more_options .bb_more_options_list,
 .bb-template-v2 .bb_more_options .bb_more_options_list,
 .bb-template-v2 #bbpress-forums#bbpress-forums .bs-forums-items.list-view .bs-dropdown-wrap .bs-dropdown-wrap-inner .bs-dropdown,
-.bb-template-v2 .bb-footer .footer-menu .sub-menu {
+.bb-template-v2 .bb-footer .footer-menu .sub-menu,
+.bb-template-v2 .meeting-actions .meeting-actions-list.open {
   padding: 8px;
 }
 .bb-template-v2 .activity-list .bb-activity-more-options-wrap .bb-activity-more-options:after,
@@ -574,7 +575,8 @@
 .bb-template-v2 #buddypress .bb_more_options .bb_more_options_list:after,
 .bb-template-v2 .bb_more_options .bb_more_options_list:after,
 .bb-template-v2 #bbpress-forums#bbpress-forums .bs-forums-items.list-view .bs-dropdown-wrap .bs-dropdown-wrap-inner .bs-dropdown:after,
-.bb-template-v2 .bb-footer .footer-menu .sub-menu:after {
+.bb-template-v2 .bb-footer .footer-menu .sub-menu:after,
+.bb-template-v2 .meeting-actions .meeting-actions-list.open:after {
   display: none;
 }
 .bb-template-v2 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list {
@@ -2791,33 +2793,50 @@ body.bb-template-v2 #buddypress:not(.round-avatars) .groups-header #item-header-
   color: var(--bb-sidenav-links);
 }
 .bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a, .bb-template-v2 .side-panel-menu > .current-menu-item > a {
-  background-color: var(--bb-sidenav-links-hover);
-  color: var(--bb-sidenav-background);
+  background-color: var(--bb-sidenav-menu-background-color-active);
+  color: var(--bb-sidenav-text-active);
 }
 .bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a span.count, .bb-template-v2 .side-panel-menu > .current-menu-item > a span.count {
-  background-color: var(--bb-sidenav-background);
-  color: var(--bb-sidenav-links-hover);
+  background-color: var(--bb-sidenav-count-background-color-active);
+  color: var(--bb-sidenav-count-text-color-active);
 }
 .bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a > .bs-submenu-toggle, .bb-template-v2 .side-panel-menu > .current-menu-item > a > .bs-submenu-toggle {
-  color: var(--bb-sidenav-background);
+  color: var(--bb-sidenav-text-active);
+}
+.bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a:hover, .bb-template-v2 .side-panel-menu > .current-menu-item > a:hover {
+  background-color: var(--bb-sidenav-menu-background-color-active);
+  color: var(--bb-sidenav-text-active);
+}
+.bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a:hover span.count, .bb-template-v2 .side-panel-menu > .current-menu-item > a:hover span.count {
+  background-color: var(--bb-sidenav-count-background-color-active);
+  color: var(--bb-sidenav-count-text-color-active);
+}
+.bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item > a:hover > .bs-submenu-toggle, .bb-template-v2 .side-panel-menu > .current-menu-item > a:hover > .bs-submenu-toggle {
+  color: var(--bb-sidenav-text-active);
 }
 .bb-template-v2 .side-panel-menu .current-menu-parent.current-menu-item + .current-menu-item, .bb-template-v2 .side-panel-menu > .current-menu-item + .current-menu-item {
   margin-top: 5px;
 }
 .bb-template-v2 .side-panel-menu > .current-menu-item > a, .bb-template-v2 .side-panel-menu > .current-menu-item > i {
-  color: var(--bb-sidenav-background);
+  color: var(--bb-sidenav-text-active);
 }
 .bb-template-v2 .side-panel-menu > .current-menu-item > a:hover i {
-  color: var(--bb-sidenav-background);
+  color: var(--bb-sidenav-text-active);
 }
 .bb-template-v2 .side-panel-menu > .current-menu-item .sub-menu a {
-  color: var(--bb-sidenav-links);
+  color: var(--bb-sidenav-text-regular);
+  background-color: var(--bb-sidenav-menu-background-color-regular);
 }
-.bb-template-v2 .side-panel-menu > .current-menu-item .sub-menu a:hover {
-  color: var(--bb-sidenav-links-hover);
+.bb-template-v2 .side-panel-menu > .current-menu-item .sub-menu .current-menu-item > a {
+  background-color: var(--bb-sidenav-menu-background-color-active);
+  color: var(--bb-sidenav-text-active);
 }
-.bb-template-v2 .side-panel-menu .bs-submenu-toggle {
-  top: 8px;
+.bb-template-v2 .side-panel-menu > .current-menu-item .sub-menu .current-menu-item > a span.count {
+  background-color: var(--bb-sidenav-count-background-color-active);
+  color: var(--bb-sidenav-count-text-color-active);
+}
+.bb-template-v2 .side-panel-menu > .current-menu-item .sub-menu .current-menu-item > a > .bs-submenu-toggle {
+  color: var(--bb-sidenav-text-active);
 }
 .bb-template-v2 .side-panel-menu .sub-menu a {
   width: -webkit-calc(100% - 42px);
@@ -2864,9 +2883,6 @@ body.bb-template-v2 #buddypress:not(.round-avatars) .groups-header #item-header-
 .bb-template-v2.buddypanel-open .buddypanel ul.buddypanel-menu.has-section-menu > li:not(.bb-menu-section) > a {
   width: -webkit-calc(100% - 45px);
   width: calc(100% - 45px);
-}
-.bb-template-v2.buddypanel-open .buddypanel ul.buddypanel-menu.has-section-menu > li:not(.bb-menu-section).menu-item-has-children > a {
-  padding-left: 35px;
 }
 
 .bb-template-v2 .side-panel-inner.is_block .buddypanel-menu-block li.bb-menu-section a {

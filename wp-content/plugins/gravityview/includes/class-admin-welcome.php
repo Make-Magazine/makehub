@@ -142,7 +142,7 @@ class GravityView_Welcome {
 		global $plugin_page;
 
 		// Don't fetch -beta, etc.
-		list( $display_version ) = explode( '-', GravityView_Plugin::version );
+		list( $display_version ) = explode( '-', GV_PLUGIN_VERSION );
 
 		$selected = !empty( $plugin_page ) ? $plugin_page : 'gv-getting-started';
 
@@ -276,6 +276,34 @@ class GravityView_Welcome {
 				<div class="headline-feature" style="max-width: 100%">
 					<h2 style="border-bottom: 1px solid #ccc; padding-bottom: 1em; margin-bottom: 0; margin-top: 0"><?php esc_html_e( 'What&rsquo;s New', 'gk-gravityview' ); ?></h2>
 				</div>
+
+				<h3>2.16.1 on December 7, 2022</h3>
+
+				<ul>
+					<li>Fixed: Date picker and other JavaScript not working on the Edit Entry screen</li>
+					<li>Fixed: JavaScript error preventing the Search Bar widget properties from opening when creating a new View</li>
+					<li>Fixed: CodeMirror editor initializing multiple times when opening the custom content field properties in the View</li>
+					<li>Fixed: Secure download link for the file upload field was not showing the file name as the link text</li>
+					<li>Fixed: The saved View would not recognize fields added from a joined form when using the <a href="https://www.gravitykit.com/extensions/multiple-forms/">Multiple Forms</a> extension</li>
+				</ul>
+
+				<h3>2.16.0.4 on December 2, 2022</h3>
+
+				<ul>
+					<li>Fixed: Incompatibility with some plugins/themes that could result in a blank WordPress Dashboard</li>
+				</ul>
+
+				<h3>2.16.0.3 on December 2, 2022</h3>
+
+				<ul>
+					<li>Fixed: Fatal error when downloading plugin translations</li>
+				</ul>
+
+				<h3>2.16.0.2 on December 1, 2022</h3>
+
+				<ul>
+					<li>Fixed: Fatal error when Maps isn't installed</li>
+				</ul>
 
 				<h3>2.16.0.1 on December 1, 2022</h3>
 
@@ -835,12 +863,12 @@ class GravityView_Welcome {
 		$upgrade = get_option( 'gv_version_upgraded_from' );
 
 		// Don't do anything if they've already seen the new version info
-		if( $upgrade === GravityView_Plugin::version ) {
+		if( $upgrade === GV_PLUGIN_VERSION ) {
 			return;
 		}
 
 		// Add "Upgraded From" Option
-		update_option( 'gv_version_upgraded_from', GravityView_Plugin::version );
+		update_option( 'gv_version_upgraded_from', GV_PLUGIN_VERSION );
 
 		// Bail if activating from network, or bulk
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) { return; }

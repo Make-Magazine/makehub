@@ -353,13 +353,14 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			if (
 				(
 					in_array( 'single-sfwd-lessons', $header_lesson_topic, true ) ||
-					in_array( 'single-sfwd-topic', $header_lesson_topic, true )
+					in_array( 'single-sfwd-topic', $header_lesson_topic, true ) ||
+					in_array( 'single-sfwd-quiz', $header_lesson_topic, true )
 				) && empty( $header_sticky )
 			) {
 				?>
 				@media screen and (min-width: 800px) {
-					.bb-buddypanel.buddypanel-open.single-sfwd-lessons .site-header,
-					.bb-buddypanel.buddypanel-open.single-sfwd-topic .site-header {
+					.bb-buddypanel.buddypanel-open.single-sfwd-lessons .site-header:not(.site-header--elementor),
+					.bb-buddypanel.buddypanel-open.single-sfwd-topic .site-header:not(.site-header--elementor) {
 						width: -webkit-calc(100% - 220px);
 						width: calc(100% - 220px);
 						-webkit-transition: all .2s;
@@ -367,24 +368,20 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 					}
 				}
 
-				.single-sfwd-lessons .site-header,
-				.single-sfwd-topic .site-header {
-					position: fixed;
+				.bb-sfwd-aside .site-header {
 					z-index: 610;
 					width: 100%;
 					-webkit-transition: all .2s;
 					transition: all .2s;
 				}
 
-				.single-sfwd-lessons .site-header.has-scrolled,
-				.single-sfwd-topic .site-header.has-scrolled {
+				.bb-sfwd-aside .site-header.has-scrolled {
 					box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05), 0 5px 10px 0 rgba(0, 0, 0, 0.15);
 					-webkit-transition: all .2s;
 					transition: all .2s;
 				}
 
-				.single-sfwd-lessons .site-content,
-				.single-sfwd-topic .site-content {
+				.bb-sfwd-aside .site-content  {
 					<?php
 					if ( $header_height ) {
 						echo 'padding-top:' . $header_height . 'px !important';
@@ -442,14 +439,8 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 					height: <?php echo $header_height; ?>px;
 				}
 
-				#learndash-content .lms-topic-sidebar-wrapper {
-					width: 100%;
-				}
-
 				#learndash-content .lms-topic-sidebar-wrapper .lms-topic-sidebar-data {
-					width: 100%;
 					height: calc(90vh - <?php echo $header_height; ?>px);
-					max-width: 350px;
 				}
 			}
 			

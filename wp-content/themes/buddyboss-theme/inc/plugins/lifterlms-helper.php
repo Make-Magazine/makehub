@@ -1637,7 +1637,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				} // End if().
 				$last_activity_time = $completed_lesson_count . '/' . $all_lesson_count . ' ' . __( 'Steps', 'buddyboss-theme' );
 			} else {
-				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date( get_option( 'date_format' ), strtotime( $last_activity[0]->get( 'updated_date' ) ) );
+				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $last_activity[0]->get( 'updated_date' ) ) );
 			}
 
 			$temp_percentage = $percentage;

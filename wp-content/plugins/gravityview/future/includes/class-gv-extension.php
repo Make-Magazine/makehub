@@ -10,6 +10,10 @@ if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
  * The \GV\Extension class.
  *
  * An interface that most extensions would want to adhere to and inherit from.
+ *
+ * @deprecated 2.16.1
+ *
+ * @TODO Remove once all extensions have been updated to use Foundation.
  */
 abstract class Extension {
 	/**

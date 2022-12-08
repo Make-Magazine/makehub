@@ -1611,13 +1611,13 @@ form,
 }
 .bs-styled-checkbox:checked + label:after {
   content: "\e876";
+  font-weight: normal;
   position: absolute;
   left: 3px;
   top: 3px;
   font-family: "bb-icons";
   color: #fff;
   font-size: 14px;
-  line-height: 1;
   display: block;
 }
 
@@ -2554,6 +2554,41 @@ input[type=submit].error.outline.disabled,
   color: #DEDFE2;
   border-color: #DEDFE2;
   opacity: 1;
+}
+button.error:hover, button.error.outline:hover,
+.button.error:hover,
+.button.error.outline:hover,
+input[type=button].error:hover,
+input[type=button].error.outline:hover,
+input[type=submit].error:hover,
+input[type=submit].error.outline:hover,
+.buddypress .buddypress-wrap .comment-reply-link.error:hover,
+.buddypress .buddypress-wrap .comment-reply-link.error.outline:hover,
+.buddypress .buddypress-wrap .generic-button a.error:hover,
+.buddypress .buddypress-wrap .generic-button a.error.outline:hover,
+.buddypress .buddypress-wrap a.bp-title-button.error:hover,
+.buddypress .buddypress-wrap a.bp-title-button.error.outline:hover,
+.buddypress .buddypress-wrap a.button.error:hover,
+.buddypress .buddypress-wrap a.button.error.outline:hover,
+.buddypress .buddypress-wrap button.error:hover,
+.buddypress .buddypress-wrap button.error.outline:hover,
+.buddypress .buddypress-wrap input[type=button].error:hover,
+.buddypress .buddypress-wrap input[type=button].error.outline:hover,
+.buddypress .buddypress-wrap input[type=reset].error:hover,
+.buddypress .buddypress-wrap input[type=reset].error.outline:hover,
+.buddypress .buddypress-wrap input[type=submit].error:hover,
+.buddypress .buddypress-wrap input[type=submit].error.outline:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.error:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.error.outline:hover {
+  background-color: var(--bb-secondary-button-background-regular);
+  border-color: var(--bb-danger-color);
+  color: var(--bb-danger-color);
 }
 button.inverted,
 .button.inverted,

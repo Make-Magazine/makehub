@@ -243,6 +243,11 @@ function buddyboss_theme_scripts() {
 		wp_enqueue_style( 'buddyboss-theme-beaver-builder', get_template_directory_uri() . '/assets/css' . $rtl_css . '/beaver-builder' . $mincss . '.css', '', buddyboss_theme()->version() );
 	}
 
+	// Divi Builder
+    if ( class_exists( 'ET_Builder_Plugin' ) ) {
+        wp_enqueue_style( 'buddyboss-theme-divi-builder', get_template_directory_uri() . '/assets/css' . $rtl_css . '/divi' . $mincss . '.css', '', buddyboss_theme()->version() );
+	}
+
 	// Tribe Events Main.
 	if ( class_exists( 'Tribe__Events__Main' ) ) {
 		wp_enqueue_style( 'buddyboss-theme-eventscalendar', get_template_directory_uri() . '/assets/css' . $rtl_css . '/eventscalendar' . $mincss . '.css', '', buddyboss_theme()->version() );

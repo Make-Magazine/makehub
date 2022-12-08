@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-02 07:45:43+00:00\n"
+"POT-Creation-Date: 2022-12-08 14:53:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -129,7 +129,7 @@ msgstr ""
 msgid "Sorry, no courses were found."
 msgstr ""
 
-#: bbpress/content-single-forum.php:60
+#: bbpress/content-single-forum.php:40
 msgid "Sub Forums"
 msgstr ""
 
@@ -1357,7 +1357,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: inc/admin/options/custom-css.php:874
+#: inc/admin/options/custom-css.php:865
 msgid "Quiz Progress"
 msgstr ""
 
@@ -8342,7 +8342,7 @@ msgid "Log In"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php:1518
-#: inc/theme/functions.php:1526 inc/theme/template-functions.php:1469
+#: inc/theme/functions.php:1531 inc/theme/template-functions.php:1469
 #: paid-memberships-pro/pages/account.php:233
 #: template-parts/header-profile-menu.php:518
 msgid "Log Out"
@@ -14006,9 +14006,9 @@ msgstr ""
 #: inc/plugins/lifterlms-helper.php:1588
 #: learndash/ld30/learndash-sidebar.php:219
 #: learndash/ld30/learndash-sidebar.php:279
-#: learndash/ld30/learndash-sidebar.php:310
-#: learndash/ld30/learndash-sidebar.php:359
-#: learndash/ld30/learndash-sidebar.php:416
+#: learndash/ld30/learndash-sidebar.php:312
+#: learndash/ld30/learndash-sidebar.php:363
+#: learndash/ld30/learndash-sidebar.php:420
 #: learndash/ld30/shortcodes/course_list_template.php:166
 #: learndash/ld30/shortcodes/course_list_template.php:182
 #: learndash/ld30/shortcodes/course_list_template.php:214
@@ -14195,39 +14195,39 @@ msgstr ""
 msgid "Mobile Menu - Logged out"
 msgstr ""
 
-#: inc/theme/functions.php:401
+#: inc/theme/functions.php:406
 msgid "Share on Facebook"
 msgstr ""
 
-#: inc/theme/functions.php:402
+#: inc/theme/functions.php:407
 msgid "Tweet"
 msgstr ""
 
-#: inc/theme/functions.php:404
+#: inc/theme/functions.php:409
 msgid "Your comment has been posted."
 msgstr ""
 
-#: inc/theme/functions.php:405
+#: inc/theme/functions.php:410
 msgid "Please Wait..."
 msgstr ""
 
-#: inc/theme/functions.php:406
+#: inc/theme/functions.php:411
 msgid "Choose a file"
 msgstr ""
 
-#: inc/theme/functions.php:456
+#: inc/theme/functions.php:461
 msgid "Choose or Upload an Image"
 msgstr ""
 
-#: inc/theme/functions.php:457
+#: inc/theme/functions.php:462
 msgid "Use this image"
 msgstr ""
 
-#: inc/theme/functions.php:1383
+#: inc/theme/functions.php:1388
 msgid "Search..."
 msgstr ""
 
-#: inc/theme/functions.php:1436
+#: inc/theme/functions.php:1441
 msgid "Stick to Bottom"
 msgstr ""
 
@@ -14924,7 +14924,7 @@ msgid "Light Mode"
 msgstr ""
 
 #: learndash/ld30/learndash-sidebar.php:140
-#: learndash/ld30/learndash-sidebar.php:401
+#: learndash/ld30/learndash-sidebar.php:405
 #: learndash/ld30/lesson/partials/row.php:45
 #: learndash/ld30/quiz/partials/row.php:32
 msgid "You don't currently have access to this content"
@@ -14932,18 +14932,18 @@ msgstr ""
 
 #: learndash/ld30/learndash-sidebar.php:221
 #: learndash/ld30/learndash-sidebar.php:285
-#: learndash/ld30/learndash-sidebar.php:318
-#: learndash/ld30/learndash-sidebar.php:365
-#: learndash/ld30/learndash-sidebar.php:422
+#: learndash/ld30/learndash-sidebar.php:320
+#: learndash/ld30/learndash-sidebar.php:369
+#: learndash/ld30/learndash-sidebar.php:426
 msgid "Not Completed"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:441
+#: learndash/ld30/learndash-sidebar.php:445
 #: lifterlms/lesson/template-single-lesson-sidebar.php:110
 msgid "Participants"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:490
+#: learndash/ld30/learndash-sidebar.php:494
 #: lifterlms/lesson/template-single-lesson-sidebar.php:149
 msgid "Show more"
 msgstr ""
@@ -15571,14 +15571,14 @@ msgstr ""
 msgid "View Cart"
 msgstr ""
 
-#: template-parts/content-bbpress.php:48
+#: template-parts/content-bbpress.php:51
 #: template-parts/content-buddypress.php:41 template-parts/content-page.php:33
 #: template-parts/content-sfwd-assignment.php:18
 #: template-parts/content-sfwd.php:18
 msgid "Pages:"
 msgstr ""
 
-#: template-parts/content-bbpress.php:62
+#: template-parts/content-bbpress.php:65
 #: template-parts/content-buddypress.php:54 template-parts/content-page.php:46
 #: template-parts/content-sfwd-assignment.php:31
 #: template-parts/content-sfwd.php:31

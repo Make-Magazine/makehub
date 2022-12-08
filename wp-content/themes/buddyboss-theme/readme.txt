@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
-Version: 2.2
+Version: 2.2.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,32 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 2.2.1.1 =
+* Updater - Handled updater critical issue with the logic
+
+= 2.2.1 =
+* BuddyPanel - Handled sub-menus with count and dropdown icon UI issues
+* BuddyPanel - Handled main menu minor styling issues
+* Footer - Handled footer 'social links' option email type not working as expected
+* Blog - Small improvement for paragraph margin and comments font size to keep UI consistent
+* Forums - Small improvement to style description on the single forum screen
+* Forums - Handled recent discussion and replies widget minor UI issue
+* Forums - Handled single discussion sticky option icon issue
+* Media - Handled create album form validation UI issue
+* Zoom - Handled group zoom meeting screen minor UI issues
+* Groups - Handled group invites sub-menus should not show in the profile dropdown when the groups component is disabled
+* Core - Handled header dropdown icon issue for RTL language site
+* LearnDash - Handled single lesson and topic screen issue with sidebar quiz title doesn't show
+* LearnDash - Handled '[ld_profile]' shortcode not showing statistics column issue
+* LearnDash - Handled single quiz screen tooltip position issue for RTL language site
+* LearnDash - Handled single lesson and topic sidebar shortcode UI issues
+* LifterLMS - Handled single lesson and topic screen sidebar date translation issue 
+* LifterLMS - Handled single lesson and topic, dark mode styling issue for header search option
+* Compatibility - Handled WooCommerce 'Products' widget UI issues on the Elementor page
+* Compatibility - Handled 'Divi Builder' editor wireframe view option not working conflict
+* Compatibility - Handled BuddyPanel and Elementor header UI issues on a single Learndash lesson and topic screen
+* Compatibility - Handled WooCommerce checkout widget UI issue on the Elementor page
 
 = 2.2 =
 * Messages - Provided Pusher Integration UI support from BuddyBoss Platform Pro

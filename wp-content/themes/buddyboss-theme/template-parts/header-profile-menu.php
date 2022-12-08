@@ -91,7 +91,7 @@ if ( is_user_logged_in() ) {
 							</a>
 						</li>
 					<?php } ?>
-					<?php if ( function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) { ?>
+					<?php if ( bp_is_active('groups') && function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) { ?>
 						<li id="wp-admin-bar-my-account-settings-group-invites">
 							<a class="ab-item" href="<?php echo esc_url( trailingslashit( $settings_link . 'invites' ) ); ?>">
 								<?php esc_html_e( 'Group Invites', 'buddyboss-theme' ); ?>

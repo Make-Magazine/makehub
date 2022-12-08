@@ -548,6 +548,24 @@
 
 		learnDashSidePanel: function() {
 
+			/* Resize elementor header */
+            function elementorHeaderTriggerResize() {
+                if ( $( '.bb-buddypanel.bb-sfwd-aside .site-header--elementor' ).length > 0 ) {
+                    setTimeout(
+                        function () {
+                            $( window ).trigger( 'resize' );
+                        },
+                        300
+                    );
+                    setTimeout(
+                        function () {
+                            $( window ).trigger( 'resize' );
+                        },
+                        500
+                    );
+                }
+            }
+
 			$( document ).on(
 				'click',
 				'.header-maximize-link',
@@ -556,6 +574,7 @@
 					$( 'body' ).addClass( 'lms-side-panel-close' );
 					$( '.lms-topic-sidebar-wrapper' ).addClass( 'lms-topic-sidebar-close' );
 					$.cookie( 'lessonpanel', 'closed', { path: '/' } );
+					elementorHeaderTriggerResize();
 				}
 			);
 
@@ -567,6 +586,7 @@
 					$( 'body' ).removeClass( 'lms-side-panel-close' );
 					$( '.lms-topic-sidebar-wrapper' ).removeClass( 'lms-topic-sidebar-close' );
 					$.removeCookie( 'lessonpanel', { path: '/' } );
+					elementorHeaderTriggerResize();
 				}
 			);
 
@@ -930,37 +950,39 @@
 		},
 
 		bbStickyLdSidebar: function () {
-			var bbHeaderHeight = $( '#masthead' ).outerHeight();
+			function ldSaidebarPosition() {
+				var bbHeaderHeight = $( '#masthead' ).outerHeight();
 
-			if ( $( window ).width() > 820 && $( '.bb-ld-sticky-sidebar .ld-sidebar-widgets' ).length == 0 ) {
-				$( '.bb-ld-sticky-sidebar' ).stick_in_parent( {offset_top: bbHeaderHeight + 45} );
-
-				var adminBarHeight = 0;
-				if ( $( 'body' ).hasClass( 'admin-bar' ) ) {
-					adminBarHeight = 32;
-				}
-				$( '.lms-topic-sidebar-data' ).css( {'max-height': 'calc(100vh - ' + ( bbHeaderHeight + adminBarHeight ) + 'px', 'top': ( bbHeaderHeight + adminBarHeight ) + 'px' } );
-				/* Learndash single lesson/topic/quiz pages - header always sticky */
-				/*if( !$('body').hasClass( 'sticky-header' ) ) {
-					if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
-						bbHeaderHeight = 0;
-					} else {
-						bbHeaderHeight = $('#masthead').outerHeight();
+				if ( $( window ).width() > 820 && $( '.bb-ld-sticky-sidebar .ld-sidebar-widgets' ).length == 0 ) {
+					$( '.bb-ld-sticky-sidebar' ).stick_in_parent( {offset_top: bbHeaderHeight + 45} );
+	
+					var adminBarHeight = 0;
+					if ( $( 'body' ).hasClass( 'admin-bar' ) ) {
+						adminBarHeight = 32;
 					}
-					$('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
-				}*/
-
+					$( '.lms-topic-sidebar-data' ).css( {'max-height': 'calc(100vh - ' + ( bbHeaderHeight + adminBarHeight ) + 'px', 'top': ( bbHeaderHeight + adminBarHeight ) + 'px' } );
+					/* Learndash single lesson/topic/quiz pages - header always sticky */
+					/*if( !$('body').hasClass( 'sticky-header' ) ) {
+						if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
+							bbHeaderHeight = 0;
+						} else {
+							bbHeaderHeight = $('#masthead').outerHeight();
+						}
+						$('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
+					}*/
+	
+				} else {
+					$( '.bb-ld-sticky-sidebar' ).trigger( "sticky_kit:detach" );
+					// $('.lms-topic-sidebar-data').trigger("sticky_kit:detach");
+				}
 			}
+
+			ldSaidebarPosition();
 
 			$( window ).on(
 				'resize',
 				function () {
-					if ( $( window ).width() > 820 && $( '.bb-ld-sticky-sidebar .ld-sidebar-widgets' ).length == 0 ) {
-						$( '.bb-ld-sticky-sidebar' ).stick_in_parent( {offset_top: bbHeaderHeight + 45} );
-					} else {
-						$( '.bb-ld-sticky-sidebar' ).trigger( "sticky_kit:detach" );
-						// $('.lms-topic-sidebar-data').trigger("sticky_kit:detach");
-					}
+					ldSaidebarPosition();
 				}
 			);
 
