@@ -1,7 +1,7 @@
 // Before we get started, let's check if there is an auth0Hash either in the url or in localstorage
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
 
-if(window.location.hash) {
+if(window.location.hash.indexOf("access_token") > -1) {
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
@@ -173,7 +173,7 @@ jQuery(document).ready(function() {
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
-                authResult.expiresIn * 1000 + new Date().getTime()
+                authResult.expiresIn * 36000 + new Date().getTime()
             );
             localStorage.setItem('access_token', authResult.accessToken);
             localStorage.setItem('id_token', authResult.idToken);
@@ -368,11 +368,11 @@ jQuery(document).ready(function() {
         jQuery.post(ajax_object.ajax_url, data, function(response) {
             window.location.href = 'https://login.make.co/v2/logout?returnTo=' + templateUrl + '&client_id=' + AUTH0_CLIENT_ID;
         }).done(function() {
+			clearLocalStorage();
             location.href = location.href;
         });
         // css will hide buddyboss side panel until page loads
         showBuddypanel();
-
     }
 
     //this function is used to set the user avatar and drop down sections in the universal header
