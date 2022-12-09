@@ -205,7 +205,6 @@ jQuery(document).ready(function () {
     jQuery(".site-header-custom").append(jQuery("#universal-subnav"));
     jQuery(".nav-level-2").css("display", "block");
     if (jQuery(window).width() < 800) {
-		console.log(jQuery(window).width());
 		jQuery("#primary-navbar h3").text(sitename);
         jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#menu-secondary_universal_menu"));
 		if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
@@ -215,6 +214,7 @@ jQuery(document).ready(function () {
 		jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#make-coin"));
     }
     window.onresize = function() {
+		console.log(jQuery(window).width());
         if (jQuery(window).width() < 800 && (jQuery("#universal-subnav #menu-secondary_universal_menu").length || jQuery(".side-panel-menu-container #buddypanel-menu").length) ) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
 			jQuery("#primary-navbar h3").text(sitename);
