@@ -205,6 +205,7 @@ jQuery(document).ready(function () {
     jQuery(".site-header-custom").append(jQuery("#universal-subnav"));
     jQuery(".nav-level-2").css("display", "block");
     if (jQuery(window).width() < 800) {
+		console.log(jQuery(window).width());
 		jQuery("#primary-navbar h3").text(sitename);
         jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#menu-secondary_universal_menu"));
 		if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
