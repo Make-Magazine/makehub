@@ -118,6 +118,11 @@ jQuery(document).ready(function() {
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
+					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
+					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
+						jQuery("#LogoutBtn").click();
+					}
+					// other wise, do the thing!
 					userProfile = user;
 					auth0loggedin = true;
 					displayButtons();
