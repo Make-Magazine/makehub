@@ -625,7 +625,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( true === $title_tag_compatibility ) {
 		$bp_title_parts['site'] = $blogname;
 
-		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages()) {
+		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() ) {
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
@@ -685,7 +685,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	);
 
 	// Add the pagination number if needed (not sure if this is necessary).
-	if ( isset( $title['page'] ) && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
+	if ( isset( $title['page'] ) && ! bp_is_single_activity() ) {
 		$bp_title['page'] = $title['page'];
 	}
 
@@ -2221,10 +2221,13 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 		return $response;
 	}
 
-	bp_core_record_activity();
+	bp_core_record_activity( true );
 
-	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
-	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
+	$interval_time     = bb_presence_interval();
+	$presence_user_ids = wp_parse_id_list( $data['presence_users'] );
+	$compare_time      = $interval_time + 5;
+
+	$response['users_presence'] = bb_get_users_presence( $presence_user_ids, $compare_time );
 
 	return $response;
 }
@@ -2244,9 +2247,7 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_member_presence_info', 11
 function bb_heartbeat_settings( $settings ) {
 	$interval_time = bb_presence_interval();
 
-	if ( isset( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
-		bp_update_option( 'bb_presence_interval', absint( $settings['interval'] ) );
-	} else {
+	if ( ! empty( $settings['interval'] ) && $settings['interval'] !== $interval_time ) {
 		bp_delete_option( 'bb_presence_interval' );
 	}
 

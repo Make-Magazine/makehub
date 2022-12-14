@@ -1,11 +1,6 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * Fetch information about Publicize connections on a site, including tests and connection status.
- *
- * @package automattic/jetpack
- */
+<?php
 
-require_once __DIR__ . '/publicize-connections.php';
+require_once dirname( __FILE__ ) . '/publicize-connections.php';
 
 /**
  * Publicize: List Connection Test Result Data
@@ -15,9 +10,6 @@ require_once __DIR__ . '/publicize-connections.php';
  * @since 6.8
  */
 class WPCOM_REST_API_V2_Endpoint_List_Publicize_Connection_Test_Results extends WPCOM_REST_API_V2_Endpoint_List_Publicize_Connections {
-	/**
-	 * Constructor.
-	 */
 	public function __construct() {
 		$this->namespace = 'wpcom/v2';
 		$this->rest_base = 'publicize/connection-test-results';
@@ -55,23 +47,23 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Connection_Test_Results extends 
 			'type'       => 'object',
 			'properties' => $this->get_connection_schema_properties() + array(
 				'test_success' => array(
-					'description' => __( 'Did the Jetpack Social connection test pass?', 'jetpack' ),
+					'description' => __( 'Did the Publicize Connection test pass?', 'jetpack' ),
 					'type'        => 'boolean',
 				),
 				'test_message' => array(
-					'description' => __( 'Jetpack Social connection success or error message', 'jetpack' ),
+					'description' => __( 'Publicize Connection success or error message', 'jetpack' ),
 					'type'        => 'string',
 				),
 				'can_refresh'  => array(
-					'description' => __( 'Can the current user refresh the Jetpack Social connection?', 'jetpack' ),
+					'description' => __( 'Can the current user refresh the Publicize Connection?', 'jetpack' ),
 					'type'        => 'boolean',
 				),
 				'refresh_text' => array(
-					'description' => __( 'Message instructing the user to refresh their Connection to the Jetpack Social service', 'jetpack' ),
+					'description' => __( 'Message instructing the user to refresh their Connection to the Publicize Service', 'jetpack' ),
 					'type'        => 'string',
 				),
 				'refresh_url'  => array(
-					'description' => __( 'URL for refreshing the Connection to the Jetpack Social service', 'jetpack' ),
+					'description' => __( 'URL for refreshing the Connection to the Publicize Service', 'jetpack' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 				),
@@ -82,14 +74,11 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Connection_Test_Results extends 
 	}
 
 	/**
-	 * Get list of Publicize Connections.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
+	 * @param WP_REST_Request
 	 * @see Publicize::get_publicize_conns_test_results()
 	 * @return WP_REST_Response suitable for 1-page collection
 	 */
-	public function get_items( $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function get_items( $request ) {
 		global $publicize;
 
 		$items = $this->get_connections();
@@ -128,4 +117,5 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Connection_Test_Results extends 
 		return $response;
 	}
 }
+
 wpcom_rest_api_v2_load_plugin( 'WPCOM_REST_API_V2_Endpoint_List_Publicize_Connection_Test_Results' );

@@ -1,5 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-// phpcs:disable Generic.Classes.DuplicateClassName.Found -- sitemap-builder.php will require correct class file.
+<?php
 /**
  * Sitemaps (per the protocol) are essentially lists of XML fragments;
  * lists which are subject to size constraints. The Jetpack_Sitemap_Buffer_Page
@@ -16,21 +15,12 @@
  * @since 5.3.0
  */
 class Jetpack_Sitemap_Buffer_Page extends Jetpack_Sitemap_Buffer {
-	/**
-	 * Jetpack_Sitemap_Buffer_Page constructor.
-	 *
-	 * @param int    $item_limit The maximum size of the buffer in items.
-	 * @param int    $byte_limit The maximum size of the buffer in bytes.
-	 * @param string $time The initial datetime of the buffer. Must be in 'YYYY-MM-DD hh:mm:ss' format.
-	 */
+
 	public function __construct( $item_limit, $byte_limit, $time = '1970-01-01 00:00:00' ) {
 		parent::__construct( $item_limit, $byte_limit, $time );
 
 		$this->doc->appendChild(
 			$this->doc->createComment( "generator='jetpack-" . JETPACK__VERSION . "'" )
-		);
-		$this->doc->appendChild(
-			$this->doc->createComment( 'Jetpack_Sitemap_Buffer_Page' )
 		);
 
 		$this->doc->appendChild(
@@ -41,9 +31,6 @@ class Jetpack_Sitemap_Buffer_Page extends Jetpack_Sitemap_Buffer {
 		);
 	}
 
-	/**
-	 * Returns a DOM element that contains all single page sitemap elements.
-	 */
 	protected function get_root_element() {
 		if ( ! isset( $this->root ) ) {
 

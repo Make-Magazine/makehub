@@ -281,9 +281,9 @@ function bp_nouveau_activity_state() {
 				<span class="comments-count">
 					<?php
 					if ( $comment_count > 1 ) {
-						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
+						echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
 					} else {
-						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
+						echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
 					}
 					?>
 				</span>

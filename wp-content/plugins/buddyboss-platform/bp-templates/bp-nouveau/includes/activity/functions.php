@@ -649,4 +649,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 	) );
 }
 
-

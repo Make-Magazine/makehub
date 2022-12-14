@@ -60,7 +60,11 @@ class Jetpack_Media_Summary {
 		}
 
 		if ( ! class_exists( 'Jetpack_Media_Meta_Extractor' ) ) {
-			require_once JETPACK__PLUGIN_DIR . '_inc/lib/class.media-extractor.php';
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				jetpack_require_lib( 'class.wpcom-media-meta-extractor' );
+			} else {
+				jetpack_require_lib( 'class.media-extractor' );
+			}
 		}
 
 		$post      = get_post( $post_id );

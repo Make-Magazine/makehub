@@ -4852,15 +4852,16 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 		return false;
 	}
 
-	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
+	if ( true === $expiry ) {
+		$timeframe = apply_filters( 'bb_is_online_user_expiry', 300 ); // Default 300 seconds.
+	} elseif ( is_int( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		$timeframe = bb_presence_time_span();
+		// the activity timeframe is 5 minutes.
+		$timeframe = 5 * MINUTE_IN_SECONDS;
 	}
 
-	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
-
-	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $online_time ), $user_id );
+	return apply_filters( 'bb_is_online_user', ( time() - $last_activity <= $timeframe ), $user_id );
 }
 
 /**
@@ -5319,17 +5320,16 @@ function bb_get_user_presence( $user_id, $expiry = false ) {
  *
  * @since BuddyBoss 2.1.4
  *
- * @param int  $user_id User id.
- * @param bool $expiry  Consider expiry time.
+ * @param int $user_id User id.
  *
  * @return string
  */
-function bb_get_user_presence_html( $user_id, $expiry = true ) {
+function bb_get_user_presence_html( $user_id ) {
 	return sprintf(
 		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
-		bb_get_user_presence( $user_id, $expiry ),
+		bb_get_user_presence( $user_id ),
 		$user_id,
-		bb_get_user_presence( $user_id, $expiry )
+		bb_get_user_presence( $user_id )
 	);
 }
 
@@ -5338,12 +5338,11 @@ function bb_get_user_presence_html( $user_id, $expiry = true ) {
  *
  * @since BuddyBoss 2.1.4
  *
- * @param int  $user_id User id.
- * @param bool $expiry  Consider expiry time.
+ * @param int $user_id User id.
  *
  * @return void
  */
-function bb_user_presence_html( $user_id, $expiry = true ) {
-	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+function bb_user_presence_html( $user_id ) {
+	echo bb_get_user_presence_html( $user_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 

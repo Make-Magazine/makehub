@@ -1,28 +1,12 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-require_once __DIR__ . '/tiled-gallery-layout.php';
-require_once __DIR__ . '/tiled-gallery-shape.php';
-require_once __DIR__ . '/tiled-gallery-item.php';
+<?php
+require_once dirname( __FILE__ ) . '/tiled-gallery-layout.php';
+require_once dirname( __FILE__ ) . '/tiled-gallery-shape.php';
+require_once dirname( __FILE__ ) . '/tiled-gallery-item.php';
 
-// phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound
-/**
- * Tiled gallery rectangular layout.
- */
 class Jetpack_Tiled_Gallery_Layout_Rectangular extends Jetpack_Tiled_Gallery_Layout {
-
-	/**
-	 * The layout type.
-	 *
-	 * @var string
-	 */
 	protected $type = 'rectangular';
 
-	/**
-	 * The HTML function.
-	 *
-	 * @param array $context - the context array, unused.
-	 * @return string HTML
-	 */
-	public function HTML( $context = array() ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function HTML( $context = array() ) {
 		$grouper = new Jetpack_Tiled_Gallery_Grouper( $this->attachments );
 		Jetpack_Tiled_Gallery_Shape::reset_last_shape();
 
@@ -30,54 +14,24 @@ class Jetpack_Tiled_Gallery_Layout_Rectangular extends Jetpack_Tiled_Gallery_Lay
 	}
 }
 
-/**
- * Tiled gallery layout columns class.
- */
 class Jetpack_Tiled_Gallery_Layout_Columns extends Jetpack_Tiled_Gallery_Layout {
-
-	/**
-	 * The layout type.
-	 *
-	 * @var string
-	 */
 	protected $type = 'rectangular'; // It doesn't need separate template for now
 
-	/**
-	 * The HTML function.
-	 *
-	 * @param array $context - the context array, unused.
-	 * @return string HTML
-	 */
-	public function HTML( $context = array() ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function HTML( $context = array() ) {
 		$grouper = new Jetpack_Tiled_Gallery_Grouper( $this->attachments, array( 'Three_Columns', 'Two' ) );
 
 		return parent::HTML( array( 'rows' => $grouper->grouped_images ) );
 	}
 }
 
-/**
- * Gallery layout rectangle alis.
- */
+// Alias
 class Jetpack_Tiled_Gallery_Layout_Rectangle extends Jetpack_Tiled_Gallery_Layout_Rectangular {}
 
-/**
- * Image grouping and HTML generation logic class.
- */
+// Image grouping and HTML generation logic
 class Jetpack_Tiled_Gallery_Grouper {
-
-	/**
-	 * The margin.
-	 *
-	 * @var int
-	 */
 	public $margin = 4;
 
-	/**
-	 * Shapes array.
-	 * This list is ordered. If you put a shape that's likely to occur on top, it will happen all the time.
-	 *
-	 * @var array
-	 */
+	// This list is ordered. If you put a shape that's likely to occur on top, it will happen all the time.
 	public $shapes = array(
 		'Reverse_Symmetric_Row',
 		'Long_Symmetric_Row',
@@ -92,12 +46,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		'Panoramic',
 	);
 
-	/**
-	 * Constructor function.
-	 *
-	 * @param object $attachments - the attachments.
-	 * @param array  $shapes - the shapes.
-	 */
 	public function __construct( $attachments, $shapes = array() ) {
 		$content_width = Jetpack_Tiled_Gallery::get_content_width();
 
@@ -108,22 +56,12 @@ class Jetpack_Tiled_Gallery_Grouper {
 		$this->apply_content_width( $content_width );
 	}
 
-	/**
-	 * Overwrite the shapes.
-	 *
-	 * @param array $shapes - the shapes.
-	 */
 	public function overwrite_shapes( $shapes ) {
 		if ( ! empty( $shapes ) ) {
 			$this->shapes = $shapes;
 		}
 	}
 
-	/**
-	 * Get the current row size.
-	 *
-	 * @return array
-	 */
 	public function get_current_row_size() {
 		$images_left = count( $this->images );
 		if ( $images_left < 3 ) {
@@ -143,13 +81,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		return array( 1, 1 );
 	}
 
-	/**
-	 * Get images with sizes.
-	 *
-	 * @param object $attachments - the attachments.
-	 *
-	 * @return array
-	 */
 	public function get_images_with_sizes( $attachments ) {
 		$images_with_sizes = array();
 
@@ -165,11 +96,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		return $images_with_sizes;
 	}
 
-	/**
-	 * Get the current row size.
-	 *
-	 * @return array
-	 */
 	public function read_row() {
 		$vector = $this->get_current_row_size();
 
@@ -181,11 +107,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		return $row;
 	}
 
-	/**
-	 * Get grouped images.
-	 *
-	 * @return array
-	 */
 	public function get_grouped_images() {
 		$grouped_images = array();
 
@@ -196,14 +117,8 @@ class Jetpack_Tiled_Gallery_Grouper {
 		return $grouped_images;
 	}
 
-	/**
-	 * Apply content width.
-	 *
-	 * @param int $width - the width.
-	 *
-	 * @todo split in functions
-	 * @todo do not stretch images
-	 */
+	// todo: split in functions
+	// todo: do not stretch images
 	public function apply_content_width( $width ) {
 		foreach ( $this->grouped_images as $row ) {
 			$row->width      = $width;
@@ -214,11 +129,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		}
 	}
 
-	/**
-	 * Calculate group sizes.
-	 *
-	 * @param object $row - the row.
-	 */
 	public function calculate_group_sizes( $row ) {
 		// Storing the calculated group heights in an array for rounding them later while preserving their sum
 		// This fixes the rounding error that can lead to a few ugly pixels sticking out in the gallery
@@ -237,11 +147,6 @@ class Jetpack_Tiled_Gallery_Grouper {
 		}
 	}
 
-	/**
-	 * Calculate image sizes.
-	 *
-	 * @param object $group - the group of images.
-	 */
 	public function calculate_image_sizes( $group ) {
 		// Storing the calculated image heights in an array for rounding them later while preserving their sum
 		// This fixes the rounding error that can lead to a few ugly pixels sticking out in the gallery
@@ -262,27 +167,13 @@ class Jetpack_Tiled_Gallery_Grouper {
 	}
 }
 
-/**
- * Jetpack tiled row class.
- */
 class Jetpack_Tiled_Gallery_Row {
-
-	/**
-	 * Constructor class.
-	 *
-	 * @param object $groups - the group of images.
-	 */
 	public function __construct( $groups ) {
 		$this->groups         = $groups;
 		$this->ratio          = $this->get_ratio();
 		$this->weighted_ratio = $this->get_weighted_ratio();
 	}
 
-	/**
-	 * Get the ratio.
-	 *
-	 * @return int
-	 */
 	public function get_ratio() {
 		$ratio = 0;
 		foreach ( $this->groups as $group ) {
@@ -291,11 +182,6 @@ class Jetpack_Tiled_Gallery_Row {
 		return $ratio > 0 ? $ratio : 1;
 	}
 
-	/**
-	 * Get weighted ratio.
-	 *
-	 * @return int
-	 */
 	public function get_weighted_ratio() {
 		$weighted_ratio = 0;
 		foreach ( $this->groups as $group ) {
@@ -305,25 +191,12 @@ class Jetpack_Tiled_Gallery_Row {
 	}
 }
 
-/**
- * Tiled gallery group class.
- */
 class Jetpack_Tiled_Gallery_Group {
-	/**
-	 * Constructor class.
-	 *
-	 * @param object $images - the images.
-	 */
 	public function __construct( $images ) {
 		$this->images = $images;
 		$this->ratio  = $this->get_ratio();
 	}
 
-	/**
-	 * Get the ratio.
-	 *
-	 * @return int
-	 */
 	public function get_ratio() {
 		$ratio = 0;
 		foreach ( $this->images as $image ) {
@@ -338,14 +211,6 @@ class Jetpack_Tiled_Gallery_Group {
 		return 1 / $ratio;
 	}
 
-	/**
-	 * The items.
-	 *
-	 * @param string $needs_attachment_link - the attachment link.
-	 * @param bool   $grayscale - if the image is in grayscale.
-	 *
-	 * @return array
-	 */
 	public function items( $needs_attachment_link, $grayscale ) {
 		$items = array();
 		foreach ( $this->images as $image ) {

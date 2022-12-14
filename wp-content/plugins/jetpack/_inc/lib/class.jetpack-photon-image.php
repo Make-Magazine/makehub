@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * The Image Class.
  *
@@ -11,51 +11,37 @@
 class Jetpack_Photon_Image {
 
 	/**
-	 * Attachment's Filename.
-	 *
-	 * @var string
+	 * @var string $filename Attachment's Filename.
 	 */
 	public $filename;
 
 	/**
-	 * Attachment's mime-type, WP_Error on failure when recalculating the dimensions.
-	 *
-	 * @var string|WP_Error
+	 * @var string/WP_Erorr $mime_type Attachment's mime-type, WP_Error on failure when recalculating the dimensions.
 	 */
 	private $mime_type;
 
 	/**
-	 * Image original width.
-	 *
-	 * @var int
+	 * @var int $original_width Image original width.
 	 */
 	private $original_width;
 
 	/**
-	 * Image original height.
-	 *
-	 * @var int
+	 * @var int $original_width Image original height.
 	 */
 	private $original_height;
 
 	/**
-	 * Current attachment's width.
-	 *
-	 * @var int
+	 * @var int $width Current attachment's width.
 	 */
 	private $width;
 
 	/**
-	 * Current attachment's height.
-	 *
-	 * @var int
+	 * @var int $height Current attachment's height.
 	 */
 	private $height;
 
 	/**
-	 * Whether the attachment has been resized yet, or not.
-	 *
-	 * @var bool
+	 * @var bool $is_resized Whether the attachment has been resized yet, or not.
 	 */
 	private $is_resized = false;
 
@@ -67,16 +53,14 @@ class Jetpack_Photon_Image {
 	 *  width  : int    Image width
 	 *  height : int    Image height
 	 *
-	 * @param array            $data                Array of attachment metadata, typically value of _wp_attachment_metadata postmeta.
+	 * @param array $data                 Array of attachment metadata, typically value of _wp_attachment_metadata postmeta
 	 * @param string|\WP_Error $mime_type Typically value returned from get_post_mime_type function.
 	 */
 	public function __construct( $data, $mime_type ) {
-		$this->filename        = $data['file'];
-		$this->original_width  = $data['width'];
-		$this->original_height = $data['height'];
-		$this->width           = $this->original_width;
-		$this->height          = $this->original_height;
-		$this->mime_type       = $mime_type;
+		$this->filename = $data['file'];
+		$this->width = $this->original_width = $data['width'];
+		$this->height = $this->original_height = $data['height'];
+		$this->mime_type = $mime_type;
 	}
 
 	/**
@@ -100,9 +84,7 @@ class Jetpack_Photon_Image {
 
 		$this->set_width_height( $dimensions );
 
-		$this->is_resized = true;
-
-		return true;
+		return $this->is_resized = true;
 	}
 
 	/**
@@ -223,16 +205,16 @@ class Jetpack_Photon_Image {
 	 * associative array for the sake of more readable code no relying on index
 	 * nor `list`.
 	 *
-	 * @param int        $max_width  Maximum width.
-	 * @param int        $max_height Maximum height.
-	 * @param bool|array $crop       Cropping parameters.
+	 * @param int $max_width
+	 * @param int $max_height
+	 * @param bool|array $crop
 	 *
 	 * @return array|\WP_Error Array of dimensions matching the parameters to imagecopyresampled. WP_Error on failure.
 	 */
 	protected function image_resize_dimensions( $max_width, $max_height, $crop ) {
 		$dimensions = image_resize_dimensions( $this->original_width, $this->original_height, $max_width, $max_height, $crop );
 		if ( ! $dimensions ) {
-			return new WP_Error( 'error_getting_dimensions', __( 'Could not calculate resized image dimensions', 'jetpack' ), $this->filename );
+			return new WP_Error( 'error_getting_dimensions', __( 'Could not calculate resized image dimensions' ), $this->filename );
 		}
 
 		return array_combine(

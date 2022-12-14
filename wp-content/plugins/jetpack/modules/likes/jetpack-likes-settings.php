@@ -1,16 +1,9 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
 use Automattic\Jetpack\Sync\Settings;
 
-/**
- * Jetpack likes settings class.
- */
 class Jetpack_Likes_Settings {
-
-	/**
-	 * Constructor function.
-	 */
-	public function __construct() {
+	function __construct() {
 		$this->in_jetpack = ! ( defined( 'IS_WPCOM' ) && IS_WPCOM );
 	}
 
@@ -58,8 +51,6 @@ class Jetpack_Likes_Settings {
 
 	/**
 	 * Shows the likes option in the post screen metabox.
-	 *
-	 * @param object $post - the post object.
 	 */
 	public function meta_box_content( $post ) {
 		$post_id         = ! empty( $post->ID ) ? (int) $post->ID : get_the_ID();
@@ -89,7 +80,6 @@ class Jetpack_Likes_Settings {
 				<?php esc_html_e( 'Show likes.', 'jetpack' ); ?>
 			</label>
 			<input type="hidden" name="wpl_like_status_hidden" value="1" />
-			<?php wp_nonce_field( 'likes-and-shares', '_likesharenonce' ); ?>
 		</p> 
 		<?php
 		/**
@@ -123,27 +113,18 @@ class Jetpack_Likes_Settings {
 		return (bool) apply_filters( 'wpl_is_enabled_sitewide', ! Jetpack_Options::get_option_and_ensure_autoload( 'disabled_likes', 0 ) );
 	}
 
-	/**
-	 * Handle meta box saving.
-	 *
-	 * @param int $post_id - the post ID.
-	 */
 	public function meta_box_save( $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return $post_id;
 		}
 
-		if ( empty( $_POST['wpl_like_status_hidden'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- we're not changing anything on the site.
-			return $post_id;
-		}
-
-		if ( ! isset( $_POST['_likesharenonce'] ) || ! wp_verify_nonce( $_POST['_likesharenonce'], 'likes-and-shares' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- WordPress core doesn't unslash or verify nonces either.
+		if ( empty( $_POST['wpl_like_status_hidden'] ) ) {
 			return $post_id;
 		}
 
 		// Record sharing disable. Only needs to be done for WPCOM.
 		if ( ! $this->in_jetpack ) {
-			if ( isset( $_POST['post_type'] ) && in_array( $_POST['post_type'], get_post_types( array( 'public' => true ) ), true ) ) {
+			if ( isset( $_POST['post_type'] ) && in_array( $_POST['post_type'], get_post_types( array( 'public' => true ) ) ) ) {
 				if ( ! isset( $_POST['wpl_enable_post_sharing'] ) ) {
 					update_post_meta( $post_id, 'sharing_disabled', 1 );
 				} else {
@@ -152,7 +133,7 @@ class Jetpack_Likes_Settings {
 			}
 		}
 
-		if ( 'post' === $_POST['post_type'] ) {
+		if ( 'post' == $_POST['post_type'] ) {
 			if ( ! current_user_can( 'edit_post', $post_id ) ) {
 				return $post_id;
 			}
@@ -160,14 +141,18 @@ class Jetpack_Likes_Settings {
 
 		// Record a change in like status for this post - only if it contradicts the
 		// site like setting. If it doesn't contradict, then we delete the new individual status.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- this function is triggered either due the save_post or the edit attachment actions, by which time a nonce verification is complete. 
 		if ( ! $this->is_enabled_sitewide() && ! empty( $_POST['wpl_enable_post_likes'] ) ) {
 			// Likes turned on for individual posts. User wants to add the button to a single post.
 			update_post_meta( $post_id, 'switch_like_status', 1 );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- this function is triggered either due the save_post or the edit attachment actions, by which time a nonce verification is complete.
 		} elseif ( $this->is_enabled_sitewide() && empty( $_POST['wpl_enable_post_likes'] ) ) {
 			// Likes turned on for all posts. User wants to remove the button from a single post.
 			update_post_meta( $post_id, 'switch_like_status', 0 );
 		} elseif (
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- this function is triggered either due the save_post or the edit attachment actions, by which time a nonce verification is complete.
 		( ! $this->is_enabled_sitewide() && empty( $_POST['wpl_enable_post_likes'] ) ) ||
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- this function is triggered either due the save_post or the edit attachment actions, by which time a nonce verification is complete.
 		( $this->is_enabled_sitewide() && ! empty( $_POST['wpl_enable_post_likes'] ) )
 		) {
 			// User wants to update the likes button status for an individual post, but the new status
@@ -180,9 +165,7 @@ class Jetpack_Likes_Settings {
 	}
 
 	/**
-	 * WordPress.com: Metabox option for sharing (sharedaddy will handle this on the JP blog).
-	 *
-	 * @param object $post - the post object.
+	 * WordPress.com: Metabox option for sharing (sharedaddy will handle this on the JP blog)
 	 */
 	public function sharing_meta_box_content( $post ) {
 		$post_id  = ! empty( $post->ID ) ? (int) $post->ID : get_the_ID();
@@ -191,7 +174,7 @@ class Jetpack_Likes_Settings {
 		<p>
 			<label for="wpl_enable_post_sharing">
 				<input type="checkbox" name="wpl_enable_post_sharing" id="wpl_enable_post_sharing" value="1" <?php checked( ! $disabled ); ?>>
-				<?php esc_html_e( 'Show sharing buttons.', 'jetpack' ); ?>
+				<?php _e( 'Show sharing buttons.', 'jetpack' ); ?>
 			</label>
 			<input type="hidden" name="wpl_sharing_status_hidden" value="1" />
 		</p> 
@@ -262,10 +245,10 @@ class Jetpack_Likes_Settings {
 	/**
 	 * Are likes enabled for this post?
 	 *
-	 * @param int $post_id - the post ID.
+	 * @param int $post_id
 	 * @return bool
 	 */
-	public function is_post_likeable( $post_id = 0 ) {
+	function is_post_likeable( $post_id = 0 ) {
 		$post = get_post( $post_id );
 		if ( ! $post || is_wp_error( $post ) ) {
 			return false;
@@ -332,7 +315,7 @@ class Jetpack_Likes_Settings {
 	 * Some of this code was taken and modified from sharing_display() to ensure
 	 * similar logic and filters apply here, too.
 	 */
-	public function is_likes_visible() {
+	function is_likes_visible() {
 		if ( Settings::is_syncing() ) {
 			return false;
 		}
@@ -360,7 +343,7 @@ class Jetpack_Likes_Settings {
 				$enabled = false;
 			}
 
-			if ( in_array( 'get_the_excerpt', (array) $wp_current_filter, true ) ) {
+			if ( in_array( 'get_the_excerpt', (array) $wp_current_filter ) ) {
 				$enabled = false;
 			}
 			// Sharing Setting Overrides ****************************************
@@ -390,12 +373,12 @@ class Jetpack_Likes_Settings {
 
 		if ( $post instanceof WP_Post ) {
 			// Check that the post is a public, published post.
-			if ( 'attachment' === $post->post_type ) {
+			if ( 'attachment' == $post->post_type ) {
 				$post_status = get_post_status( $post->post_parent );
 			} else {
 				$post_status = $post->post_status;
 			}
-			if ( 'publish' !== $post_status ) {
+			if ( 'publish' != $post_status ) {
 				$enabled = false;
 			}
 		}
@@ -420,10 +403,10 @@ class Jetpack_Likes_Settings {
 	/**
 	 * Are Post Likes enabled on single posts?
 	 *
-	 * @param string $post_type custom post type identifier.
+	 * @param String $post_type custom post type identifier
 	 * @return bool
 	 */
-	public function is_single_post_enabled( $post_type = 'post' ) {
+	function is_single_post_enabled( $post_type = 'post' ) {
 		$options = $this->get_options();
 		return (bool) apply_filters(
 		/**
@@ -438,7 +421,7 @@ class Jetpack_Likes_Settings {
 		 * @param bool $enabled Are Post Likes enabled on single posts?
 		 */
 			"wpl_is_single_{$post_type}_disabled",
-			(bool) in_array( $post_type, $options['show'], true )
+			(bool) in_array( $post_type, $options['show'] )
 		);
 	}
 
@@ -447,7 +430,7 @@ class Jetpack_Likes_Settings {
 	 *
 	 * @return array
 	 */
-	public function get_options() {
+	function get_options() {
 		$setting             = array();
 		$setting['disabled'] = get_option( 'disabled_likes' );
 		$sharing             = get_option( 'sharing-options', array() );
@@ -491,7 +474,7 @@ class Jetpack_Likes_Settings {
 	 *
 	 * @return bool
 	 */
-	public function is_index_enabled() {
+	function is_index_enabled() {
 		$options = $this->get_options();
 		/**
 		 * Filters whether Likes should be enabled on archive/front/search pages.
@@ -502,7 +485,7 @@ class Jetpack_Likes_Settings {
 		 *
 		 * @param bool $enabled Are Post Likes enabled on archive/front/search pages?
 		 */
-		return (bool) apply_filters( 'wpl_is_index_disabled', (bool) in_array( 'index', $options['show'], true ) );
+		return (bool) apply_filters( 'wpl_is_index_disabled', (bool) in_array( 'index', $options['show'] ) );
 	}
 
 	/**
@@ -510,7 +493,7 @@ class Jetpack_Likes_Settings {
 	 *
 	 * @return bool
 	 */
-	public function is_single_page_enabled() {
+	function is_single_page_enabled() {
 		$options = $this->get_options();
 		/**
 		 * Filters whether Likes should be enabled on single pages.
@@ -521,7 +504,7 @@ class Jetpack_Likes_Settings {
 		 *
 		 * @param bool $enabled Are Post Likes enabled on single pages?
 		 */
-		return (bool) apply_filters( 'wpl_is_single_page_disabled', (bool) in_array( 'page', $options['show'], true ) );
+		return (bool) apply_filters( 'wpl_is_single_page_disabled', (bool) in_array( 'page', $options['show'] ) );
 	}
 
 	/**
@@ -529,7 +512,7 @@ class Jetpack_Likes_Settings {
 	 *
 	 * @return bool
 	 */
-	public function is_attachment_enabled() {
+	function is_attachment_enabled() {
 		$options = $this->get_options();
 		/**
 		 * Filters whether Likes should be enabled on attachment pages.
@@ -540,13 +523,13 @@ class Jetpack_Likes_Settings {
 		 *
 		 * @param bool $enabled Are Post Likes enabled on attachment pages?
 		 */
-		return (bool) apply_filters( 'wpl_is_attachment_disabled', (bool) in_array( 'attachment', $options['show'], true ) );
+		return (bool) apply_filters( 'wpl_is_attachment_disabled', (bool) in_array( 'attachment', $options['show'] ) );
 	}
 
 	/**
 	 * The actual options block to be inserted into the sharing page.
 	 */
-	public function admin_settings_init() {
+	function admin_settings_init() {
 		?>
 		<tr>
 			<th scope="row">
@@ -611,9 +594,9 @@ class Jetpack_Likes_Settings {
 	/**
 	 * Returns the current state of the "WordPress.com Reblogs are" option.
 	 *
-	 * @return bool true if enabled sitewide, false if not
+	 * @return boolean true if enabled sitewide, false if not
 	 */
-	public function reblogs_enabled_sitewide() {
+	function reblogs_enabled_sitewide() {
 		/**
 		 * Filters whether Reblogs are enabled by default on all posts.
 		 * true if enabled sitewide, false if not.
@@ -633,7 +616,7 @@ class Jetpack_Likes_Settings {
 	 *
 	 * @return boolean true if we should show comment likes, false if not
 	 */
-	public function is_comments_enabled() {
+	function is_comments_enabled() {
 		/**
 		 * Filters whether Comment Likes are enabled.
 		 * true if enabled, false if not.
@@ -648,55 +631,54 @@ class Jetpack_Likes_Settings {
 	}
 
 	/**
-	 * Saves the setting in the database.
+	 * Saves the setting in the database, bumps a stat on WordPress.com
 	 */
-	public function admin_settings_callback() {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'sharing-options' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- WordPress core doesn't unslash or verify nonces either.
-			return;
-		}
-
+	function admin_settings_callback() {
 		// We're looking for these, and doing a dance to set some stats and save
 		// them together in array option.
-		if ( ! empty( $_POST['wpl_default'] ) ) {
-			$new_state = sanitize_text_field( wp_unslash( $_POST['wpl_default'] ) );
-		} else {
-			$new_state = 'on';
-		}
+		$new_state = ! empty( $_POST['wpl_default'] ) ? $_POST['wpl_default'] : 'on';
+		$db_state  = $this->is_enabled_sitewide();
 
-		if ( ! empty( $_POST['jetpack_reblogs_enabled'] ) ) {
-			$reblogs_new_state = sanitize_text_field( wp_unslash( $_POST['jetpack_reblogs_enabled'] ) );
-		} else {
-			$reblogs_new_state = 'on';
-		}
+		$reblogs_new_state = ! empty( $_POST['jetpack_reblogs_enabled'] ) ? $_POST['jetpack_reblogs_enabled'] : 'on';
+		$reblogs_db_state  = $this->reblogs_enabled_sitewide();
+		/** Default State */
 
 		// Checked (enabled)
 		switch ( $new_state ) {
 			case 'off':
+				if ( true == $db_state && ! $this->in_jetpack ) {
+					$g_gif = file_get_contents( 'https://pixel.wp.com/g.gif?v=wpcom-no-pv&x_likes=disabled_likes' );
+				}
 				update_option( 'disabled_likes', 1 );
 				break;
 			case 'on':
 			default:
+				if ( false == $db_state && ! $this->in_jetpack ) {
+					$g_gif = file_get_contents( 'https://pixel.wp.com/g.gif?v=wpcom-no-pv&x_likes=reenabled_likes' );
+				}
 				delete_option( 'disabled_likes' );
 				break;
 		}
 
 		switch ( $reblogs_new_state ) {
 			case 'off':
+				if ( true == $reblogs_db_state && ! $this->in_jetpack ) {
+					$g_gif = file_get_contents( 'https://pixel.wp.com/g.gif?v=wpcom-no-pv&x_reblogs=disabled_reblogs' );
+				}
 				update_option( 'disabled_reblogs', 1 );
 				break;
 			case 'on':
 			default:
+				if ( false == $reblogs_db_state && ! $this->in_jetpack ) {
+					$g_gif = file_get_contents( 'https://pixel.wp.com/g.gif?v=wpcom-no-pv&x_reblogs=reenabled_reblogs' );
+				}
 				delete_option( 'disabled_reblogs' );
 				break;
 		}
 
 		// WPCOM only: Comment Likes
 		if ( ! $this->in_jetpack ) {
-			if ( ! empty( $_POST['jetpack_comment_likes_enabled'] ) ) {
-				$new_comments_state = sanitize_text_field( wp_unslash( $_POST['jetpack_comment_likes_enabled'] ) );
-			} else {
-				$new_comments_state = false;
-			}
+			$new_comments_state = ! empty( $_POST['jetpack_comment_likes_enabled'] ) ? $_POST['jetpack_comment_likes_enabled'] : false;
 			switch ( (bool) $new_comments_state ) {
 				case true:
 					update_option( 'jetpack_comment_likes_enabled', 1 );
@@ -712,9 +694,9 @@ class Jetpack_Likes_Settings {
 	/**
 	 * Adds the admin update hook so we can save settings even if Sharedaddy is not enabled.
 	 */
-	public function process_update_requests_if_sharedaddy_not_loaded() {
-		if ( isset( $_GET['page'] ) && ( $_GET['page'] === 'sharing.php' || $_GET['page'] === 'sharing' ) ) {
-			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'sharing-options' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- WordPress core doesn't unslash or verify nonces either.
+	function process_update_requests_if_sharedaddy_not_loaded() {
+		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'sharing.php' || $_GET['page'] == 'sharing' ) ) {
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'sharing-options' ) ) {
 				/** This action is documented in modules/sharedaddy/sharing.php */
 				do_action( 'sharing_admin_update' );
 				wp_safe_redirect( admin_url( 'options-general.php?page=sharing&update=saved' ) );
@@ -726,11 +708,11 @@ class Jetpack_Likes_Settings {
 	/**
 	 * If sharedaddy is not loaded, we don't have the "Show buttons on" yet, so we need to add that since it affects likes too.
 	 */
-	public function admin_settings_showbuttonon_init() {
+	function admin_settings_showbuttonon_init() {
 		/** This action is documented in modules/sharedaddy/sharing.php */
-		echo apply_filters( 'sharing_show_buttons_on_row_start', '<tr valign="top">' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'sharing_show_buttons_on_row_start', '<tr valign="top">' );
 		?>
-		<th scope="row"><label><?php esc_html_e( 'Show buttons on', 'jetpack' ); ?></label></th>
+		<th scope="row"><label><?php _e( 'Show buttons on', 'jetpack' ); ?></label></th>
 		<td>
 			<?php
 			$br    = false;
@@ -738,7 +720,7 @@ class Jetpack_Likes_Settings {
 			array_unshift( $shows, 'index' );
 			$global = $this->get_options();
 			foreach ( $shows as $show ) :
-				if ( 'index' === $show ) {
+				if ( 'index' == $show ) {
 					$label = __( 'Front Page, Archive Pages, and Search Results', 'jetpack' );
 				} else {
 					$post_type_object = get_post_type_object( $show );
@@ -757,13 +739,13 @@ class Jetpack_Likes_Settings {
 		</td>
 		<?php
 		/** This action is documented in modules/sharedaddy/sharing.php */
-		echo apply_filters( 'sharing_show_buttons_on_row_end', '</tr>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'sharing_show_buttons_on_row_end', '</tr>' );
 	}
 
 	/**
 	 * If sharedaddy is not loaded, we still need to save the the settings of the "Show buttons on" option.
 	 */
-	public function admin_settings_showbuttonon_callback() {
+	function admin_settings_showbuttonon_callback() {
 		$options = get_option( 'sharing-options' );
 		if ( ! is_array( $options ) ) {
 			$options = array();
@@ -789,8 +771,7 @@ class Jetpack_Likes_Settings {
 				}
 			}
 
-			$data['show'] = array_intersect( $data['show'], $shows );
-			if ( $data['show'] ) {
+			if ( $data['show'] = array_intersect( $data['show'], $shows ) ) {
 				$options['global']['show'] = $data['show'];
 			}
 		} else {

@@ -1,12 +1,5 @@
 <?php
 /**
- * Jetpack Compatibility File
- * See: https://jetpack.com/
- *
- * @package automattic/jetpack
- */
-
-/**
  * Content Options.
  *
  * This feature will only be activated for themes that declare their support.
@@ -53,32 +46,29 @@ function jetpack_content_options_init() {
 	}
 
 	// Load the Customizer options.
-	require __DIR__ . '/content-options/customizer.php';
+	require dirname( __FILE__ ) . '/content-options/customizer.php';
 
 	// Load Blog Display function.
-	require __DIR__ . '/content-options/blog-display.php';
+	require dirname( __FILE__ ) . '/content-options/blog-display.php';
 
 	// Load Author Bio function.
-	require __DIR__ . '/content-options/author-bio.php';
+	require dirname( __FILE__ ) . '/content-options/author-bio.php';
 
 	// Load Post Details function.
-	require __DIR__ . '/content-options/post-details.php';
+	require dirname( __FILE__ ) . '/content-options/post-details.php';
 
 	// Load Featured Images function.
 	if ( jetpack_featured_images_should_load() ) {
-		require __DIR__ . '/content-options/featured-images.php';
+		require dirname( __FILE__ ) . '/content-options/featured-images.php';
 	}
 
 	// Load Featured Images Fallback function.
 	if ( jetpack_featured_images_fallback_should_load() ) {
-		require __DIR__ . '/content-options/featured-images-fallback.php';
+		require dirname( __FILE__ ) . '/content-options/featured-images-fallback.php';
 	}
 }
 add_action( 'init', 'jetpack_content_options_init' );
 
-/**
- * Get featured images settings using the jetpack-content-options theme support.
- */
 function jetpack_featured_images_get_settings() {
 	$options = get_theme_support( 'jetpack-content-options' );
 
@@ -111,9 +101,6 @@ function jetpack_featured_images_get_settings() {
 	return $settings;
 }
 
-/**
- * Determine if the Jetpack Featured Images should be load.
- */
 function jetpack_featured_images_should_load() {
 	// If the theme doesn't support post thumbnails, don't continue.
 	if ( ! current_theme_supports( 'post-thumbnails' ) ) {
@@ -133,9 +120,6 @@ function jetpack_featured_images_should_load() {
 	return true;
 }
 
-/**
- * Determine if the Jetpack Featured Images fallback should load.
- */
 function jetpack_featured_images_fallback_should_load() {
 	// If the theme doesn't support post thumbnails, don't continue.
 	if ( ! current_theme_supports( 'post-thumbnails' ) ) {

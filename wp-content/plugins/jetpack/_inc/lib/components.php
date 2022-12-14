@@ -72,7 +72,7 @@ class Jetpack_Components {
 	 */
 	public static function render_upgrade_nudge( $props ) {
 		$plan_slug = $props['plan'];
-		require_once JETPACK__PLUGIN_DIR . '_inc/lib/plans.php';
+		jetpack_require_lib( 'plans' );
 		$plan = Jetpack_Plans::get_plan( $plan_slug );
 
 		if ( ! $plan ) {

@@ -113,7 +113,6 @@ new WPCOM_JSON_API_Site_Settings_Endpoint(
 			'posts_per_page'                          => '(int) Number of posts to show on blog pages',
 			'posts_per_rss'                           => '(int) Number of posts to show in the RSS feed',
 			'rss_use_excerpt'                         => '(bool) Whether the RSS feed will use post excerpts',
-			'launchpad_screen'                        => '(string) Whether or not launchpad is presented and what size it will be',
 		),
 
 		'response_format'     => array(
@@ -264,7 +263,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 	 */
 	protected function get_cast_option_value_or_null( $option_name, $cast_callable ) {
 		$option_value = get_option( $option_name, null );
-		if ( $option_value === null ) {
+		if ( is_null( $option_value ) ) {
 			return $option_value;
 		}
 
@@ -292,7 +291,8 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 		$response_format = apply_filters( 'site_settings_site_format', self::$site_format );
 
 		$blog_id = (int) $this->api->get_blog_id_for_output();
-		$site    = $this->get_platform()->get_site( $blog_id );
+		/** This filter is documented in class.json-api-endpoints.php */
+		$is_jetpack = true === apply_filters( 'is_jetpack_site', false, $blog_id );
 
 		foreach ( array_keys( $response_format ) as $key ) {
 
@@ -331,18 +331,22 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						$jetpack_relatedposts_options['enabled'] = true;
 					}
 
-					$jetpack_relatedposts_options['enabled'] =
-						$jetpack_relatedposts_options['enabled']
-						&& $site->is_module_active( 'related-posts' );
+					if ( method_exists( 'Jetpack', 'is_module_active' ) ) {
+						$jetpack_relatedposts_options['enabled'] = Jetpack::is_module_active( 'related-posts' );
+					}
 
 					$jetpack_search_supported = false;
 					if ( function_exists( 'wpcom_is_jetpack_search_supported' ) ) {
 						$jetpack_search_supported = wpcom_is_jetpack_search_supported( $blog_id );
 					}
 
-					$jetpack_search_active =
-						$jetpack_search_supported
-						&& $site->is_module_active( 'search' );
+					$jetpack_search_active = false;
+					if ( method_exists( 'Jetpack', 'is_module_active' ) ) {
+						$jetpack_search_active = Jetpack::is_module_active( 'search' );
+					}
+					if ( function_exists( 'is_jetpack_module_active' ) ) {
+						$jetpack_search_active = is_jetpack_module_active( 'search', $blog_id );
+					}
 
 					// array_values() is necessary to ensure the array starts at index 0.
 					$post_categories = array_values(
@@ -352,7 +356,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						)
 					);
 
-					$api_cache = $site->is_jetpack() ? (bool) get_option( 'jetpack_api_cache_enabled' ) : true;
+					$api_cache = $is_jetpack ? (bool) get_option( 'jetpack_api_cache_enabled' ) : true;
 
 					$response[ $key ] = array(
 						// also exists as "options".
@@ -399,7 +403,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						'lang_id'                          => defined( 'IS_WPCOM' ) && IS_WPCOM
 						? get_lang_id_by_code( wpcom_l10n_get_blog_locale_variant( $blog_id, true ) )
 						: get_option( 'lang_id' ),
-						'site_vertical_id'                 => (string) get_option( 'site_vertical_id' ),
 						'wga'                              => $this->get_google_analytics(),
 						'jetpack_cloudflare_analytics'     => get_option( 'jetpack_cloudflare_analytics' ),
 						'disabled_likes'                   => (bool) get_option( 'disabled_likes' ),
@@ -429,14 +432,10 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						Jetpack_SEO_Titles::TITLE_FORMATS_OPTION => get_option( Jetpack_SEO_Titles::TITLE_FORMATS_OPTION, array() ),
 						'amp_is_supported'                 => (bool) function_exists( 'wpcom_is_amp_supported' ) && wpcom_is_amp_supported( $blog_id ),
 						'amp_is_enabled'                   => (bool) function_exists( 'wpcom_is_amp_enabled' ) && wpcom_is_amp_enabled( $blog_id ),
-						'amp_is_deprecated'                => (bool) function_exists( 'wpcom_is_amp_deprecated' ) && wpcom_is_amp_deprecated( $blog_id ),
 						'api_cache'                        => $api_cache,
 						'posts_per_page'                   => (int) get_option( 'posts_per_page' ),
 						'posts_per_rss'                    => (int) get_option( 'posts_per_rss' ),
 						'rss_use_excerpt'                  => (bool) get_option( 'rss_use_excerpt' ),
-						'launchpad_screen'                 => (string) get_option( 'launchpad_screen' ),
-						'featured_image_email_enabled'     => (bool) get_option( 'featured_image_email_enabled' ),
-						'wpcom_gifting_subscription'       => (bool) get_option( 'wpcom_gifting_subscription', $this->get_wpcom_gifting_subscription_default() ),
 					);
 
 					if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
@@ -497,29 +496,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 		}
 		return $response;
 
-	}
-
-	/**
-	 * Get the default value for the wpcom_gifting_subscription option.
-	 * The default value is the inverse of the plan's auto_renew setting.
-	 *
-	 * @return bool
-	 */
-	protected function get_wpcom_gifting_subscription_default() {
-		if ( function_exists( 'wpcom_get_site_purchases' ) && function_exists( 'wpcom_purchase_has_feature' ) ) {
-			$purchases = wpcom_get_site_purchases();
-
-			foreach ( $purchases as $purchase ) {
-				if ( wpcom_purchase_has_feature( $purchase, \WPCOM_Features::SUBSCRIPTION_GIFTING ) ) {
-					if ( isset( $purchase->auto_renew ) ) {
-						return ! $purchase->auto_renew;
-					} elseif ( isset( $purchase->user_allows_auto_renew ) ) {
-						return ! $purchase->user_allows_auto_renew;
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -585,7 +561,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 			if ( ! is_array( $value ) ) {
 				$value = trim( $value );
 			}
-
 			// preserve the raw value before unslashing the value. The slashes need to be preserved for date and time formats.
 			$raw_value = $value;
 			$value     = wp_unslash( $value );
@@ -598,13 +573,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					$coerce_value = ( $value ) ? 'open' : 'closed';
 					if ( update_option( $key, $coerce_value ) ) {
 						$updated[ $key ] = $value;
-					}
-					break;
-				case 'launchpad_screen':
-					if ( in_array( $value, array( 'full', 'off', 'minimized' ), true ) ) {
-						if ( update_option( $key, $value ) ) {
-							$updated[ $key ] = $value;
-						}
 					}
 					break;
 				case 'jetpack_protect_whitelist':
@@ -620,10 +588,18 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					Jetpack_Options::update_option( 'sync_non_public_post_stati', $value );
 					break;
 				case 'jetpack_search_enabled':
+					if ( ! method_exists( 'Jetpack', 'activate_module' ) ) {
+						break;
+					}
+					$is_wpcom = defined( 'IS_WPCOM' ) && IS_WPCOM;
 					if ( $value ) {
-						Jetpack::activate_module( $blog_id, 'search' );
+						$is_wpcom
+							? Jetpack::activate_module( $blog_id, 'search' )
+							: Jetpack::activate_module( 'search', false, false );
 					} else {
-						Jetpack::deactivate_module( $blog_id, 'search' );
+						$is_wpcom
+							? Jetpack::deactivate_module( $blog_id, 'search' )
+							: Jetpack::deactivate_module( 'search' );
 					}
 					$updated[ $key ] = (bool) $value;
 					break;
@@ -633,11 +609,16 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					if ( ! $this->jetpack_relatedposts_supported() ) {
 						break;
 					}
-					if ( 'jetpack_relatedposts_enabled' === $key ) {
+					if ( 'jetpack_relatedposts_enabled' === $key && method_exists( 'Jetpack', 'is_module_active' ) && $this->jetpack_relatedposts_supported() ) {
+						$before_action = Jetpack::is_module_active( 'related-posts' );
 						if ( $value ) {
-							Jetpack::activate_module( $blog_id, 'related-posts' );
+							Jetpack::activate_module( 'related-posts', false, false );
 						} else {
-							Jetpack::deactivate_module( $blog_id, 'related-posts' );
+							Jetpack::deactivate_module( 'related-posts' );
+						}
+						$after_action = Jetpack::is_module_active( 'related-posts' );
+						if ( $after_action === $before_action ) {
+							break;
 						}
 					}
 					$just_the_key                                  = substr( $key, 21 );
@@ -690,7 +671,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					}
 					break;
 
-				case 'cloudflare_analytics':
+				case 'jetpack_cloudflare_analytics':
 					if ( ! isset( $value['code'] ) || ! preg_match( '/^$|^[a-fA-F0-9]+$/i', $value['code'] ) ) {
 						return new WP_Error( 'invalid_code', __( 'Invalid Cloudflare Analytics ID', 'jetpack' ) );
 					}
@@ -898,27 +879,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					}
 					break;
 
-				case 'wpcom_gifting_subscription':
-					$coerce_value = (bool) $value;
-
-					/*
-					 * get_option returns a boolean false if the option doesn't exist, otherwise it always returns
-					 * a serialized value. Knowing that we can check if the option already exists.
-					 */
-					$gift_toggle = get_option( $key );
-					if ( false === $gift_toggle ) {
-						// update_option will not create a new option if the initial value is false. So use add_option.
-						if ( add_option( $key, $coerce_value ) ) {
-							$updated[ $key ] = $coerce_value;
-						}
-					} else {
-						// If the option already exists use update_option.
-						if ( update_option( $key, $coerce_value ) ) {
-							$updated[ $key ] = $coerce_value;
-						}
-					}
-					break;
-
 				case 'amp_is_enabled':
 					if ( function_exists( 'wpcom_update_amp_enabled' ) ) {
 						$saved = wpcom_update_amp_enabled( $blog_id, $value );
@@ -949,11 +909,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					$updated[ $key ] = (int) $value;
 					break;
 
-				case 'featured_image_email_enabled':
-					update_option( 'featured_image_email_enabled', (int) (bool) $value );
-					$updated[ $key ] = (int) (bool) $value;
-					break;
-
 				default:
 					// allow future versions of this endpoint to support additional settings keys.
 					if ( has_filter( 'site_settings_endpoint_update_' . $key ) ) {
@@ -970,6 +925,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						$updated[ $key ] = $value;
 						break;
 					}
+
 					// no worries, we've already whitelisted and casted arguments above.
 					if ( update_option( $key, $value ) ) {
 						$updated[ $key ] = $value;

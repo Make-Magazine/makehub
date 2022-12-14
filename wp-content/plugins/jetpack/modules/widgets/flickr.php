@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Disable direct access/execution to/of the widget code.
  */
@@ -16,7 +16,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		/**
 		 * Constructor.
 		 */
-		public function __construct() {
+		function __construct() {
 			parent::__construct(
 				'flickr',
 				/** This filter is documented in modules/widgets/facebook-likebox.php */
@@ -36,7 +36,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		/**
 		 * Enqueue style.
 		 */
-		public function enqueue_style() {
+		function enqueue_style() {
 			wp_enqueue_style( 'flickr-widget-style', plugins_url( 'flickr/style.css', __FILE__ ), array(), '20170405' );
 		}
 
@@ -66,7 +66,10 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		public function widget( $args, $instance ) {
 			$instance = wp_parse_args( $instance, $this->defaults() );
 
+			$image_size_string = 'small' == $instance['flickr_image_size'] ? '_m.jpg' : '_t.jpg';
+
 			if ( ! empty( $instance['flickr_rss_url'] ) ) {
+
 				/*
 				 * Parse the URL, and rebuild a URL that's sure to display images.
 				 * Some Flickr Feeds do not display images by default.
@@ -102,7 +105,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 						);
 					}
 				}
-			}
+			} // End if().
 
 			// Still no RSS feed URL? Get a default feed from Flickr to grab interesting photos.
 			if ( empty( $rss_url ) ) {
@@ -140,10 +143,10 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 					$photos = Jetpack_Photon::filter_the_content( $photos );
 				}
 
-				$flickr_home = $rss->get_link(); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Used in flickr/widget.php template file.
+				$flickr_home = $rss->get_link();
 			}
 
-			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['before_widget'];
 			if ( empty( $photos ) ) {
 				if ( current_user_can( 'edit_theme_options' ) ) {
 					printf(
@@ -154,9 +157,9 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 				}
 			} else {
 				echo $args['before_title'] . $instance['title'] . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				require __DIR__ . '/flickr/widget.php';
+				require( dirname( __FILE__ ) . '/flickr/widget.php' );
 			}
-			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['after_widget'];
 			/** This action is already documented in modules/widgets/gravatar-profile.php */
 			do_action( 'jetpack_stats_extra', 'widget_view', 'flickr' );
 		}
@@ -168,7 +171,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( $instance, $this->defaults() );
-			require __DIR__ . '/flickr/form.php';
+			require( dirname( __FILE__ ) . '/flickr/form.php' );
 		}
 
 		/**
@@ -178,8 +181,9 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		 * @param  array $old_instance Previously saved values from database.
 		 * @return array Updated safe values to be saved.
 		 */
-		public function update( $new_instance, $old_instance ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		public function update( $new_instance, $old_instance ) {
 			$instance = array();
+			$defaults = $this->defaults();
 
 			if ( isset( $new_instance['title'] ) ) {
 				$instance['title'] = wp_kses( $new_instance['title'], array() );
@@ -195,7 +199,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 
 			if (
 				isset( $new_instance['flickr_image_size'] ) &&
-				in_array( $new_instance['flickr_image_size'], array( 'thumbnail', 'small', 'large' ), true )
+				in_array( $new_instance['flickr_image_size'], array( 'thumbnail', 'small', 'large' ) )
 			) {
 				$instance['flickr_image_size'] = $new_instance['flickr_image_size'];
 			} else {
@@ -214,9 +218,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 		}
 	}
 
-	/**
-	 * Register Jetpack_Flickr_Widget widget.
-	 */
+	// Register Jetpack_Flickr_Widget widget.
 	function jetpack_register_flickr_widget() {
 		register_widget( 'Jetpack_Flickr_Widget' );
 	}

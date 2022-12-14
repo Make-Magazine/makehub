@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
 use Automattic\Jetpack\Connection\Client;
 
@@ -39,17 +39,15 @@ class VideoPress_Edit_Attachment {
 	}
 
 	/**
-	 * Add VideoPress meta box.
-	 *
-	 * @param string $post_type Post type.
-	 * @param object $post Post object.
+	 * @param string $post_type
+	 * @param object $post
 	 */
 	public function configure_meta_boxes( $post_type = 'unknown', $post = null ) {
-		if ( null === $post ) {
+		if ( null == $post ) {
 			$post = (object) array( 'ID' => 0 );
 		}
 
-		if ( 'attachment' !== $post_type ) {
+		if ( 'attachment' != $post_type ) {
 			return;
 		}
 
@@ -62,17 +60,17 @@ class VideoPress_Edit_Attachment {
 	}
 
 	/**
-	 * Filter attachment fields data to save.
+	 * @param array      $post
+	 * @param array|null $attachment
 	 *
-	 * @param array      $post Post data.
-	 * @param array|null $attachment Attachment metadata.
+	 * Disable phpcs rule for nonce verification since it's already done by Core.
+	 * @phpcs:disable WordPress.Security.NonceVerification
 	 *
 	 * @return array
 	 */
 	public function save_fields( $post, $attachment = null ) {
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verification already done by core.
 		if ( null === $attachment && isset( $_POST['attachment'] ) ) {
-			$attachment = filter_var( wp_unslash( $_POST['attachment'] ) );
+			$attachment = $_POST['attachment'];
 		}
 
 		if ( ! isset( $attachment['is_videopress_attachment'] ) || 'yes' !== $attachment['is_videopress_attachment'] ) {
@@ -85,12 +83,11 @@ class VideoPress_Edit_Attachment {
 			return $post;
 		}
 
-		$post_title      = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : null;
-		$post_excerpt    = isset( $_POST['post_excerpt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['post_excerpt'] ) ) : null;
-		$rating          = isset( $attachment['rating'] ) ? $attachment['rating'] : null;
-		$display_embed   = isset( $attachment['display_embed'] ) ? $attachment['display_embed'] : 0;
-		$allow_download  = isset( $attachment['allow_download'] ) ? $attachment['allow_download'] : 0;
-		$privacy_setting = isset( $attachment['privacy_setting'] ) ? $attachment['privacy_setting'] : VIDEOPRESS_PRIVACY::SITE_DEFAULT;
+		$post_title     = isset( $_POST['post_title'] ) ? $_POST['post_title'] : null;
+		$post_excerpt   = isset( $_POST['post_excerpt'] ) ? $_POST['post_excerpt'] : null;
+		$rating         = isset( $attachment['rating'] ) ? $attachment['rating'] : null;
+		$display_embed  = isset( $attachment['display_embed'] ) ? $attachment['display_embed'] : 0;
+		$allow_download = isset( $attachment['allow_download'] ) ? $attachment['allow_download'] : 0;
 
 		$result = Videopress_Attachment_Metadata::persist_metadata(
 			$post['ID'],
@@ -100,8 +97,7 @@ class VideoPress_Edit_Attachment {
 			$post_excerpt,
 			$rating,
 			$this->normalize_checkbox_value( $display_embed ),
-			$this->normalize_checkbox_value( $allow_download ),
-			$privacy_setting
+			$this->normalize_checkbox_value( $allow_download )
 		);
 
 		if ( is_wp_error( $result ) ) {
@@ -110,7 +106,6 @@ class VideoPress_Edit_Attachment {
 		}
 
 		return $post;
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -127,7 +122,7 @@ class VideoPress_Edit_Attachment {
 	/**
 	 * Get the upload api path.
 	 *
-	 * @param string $guid The guid of the video.
+	 * @param string $guid
 	 * @return string
 	 */
 	public function make_video_api_path( $guid ) {
@@ -139,11 +134,12 @@ class VideoPress_Edit_Attachment {
 		);
 	}
 
+
 	/**
 	 * Creates an array of video fields to edit based on transcoded videos.
 	 *
-	 * @param array    $fields video fields of interest.
-	 * @param stdClass $post Post object.
+	 * @param array    $fields video fields of interest
+	 * @param stdClass $post post object
 	 * @return array modified version of video fields for administrative interface display
 	 */
 	public function fields_to_edit( $fields, $post ) {
@@ -164,11 +160,6 @@ class VideoPress_Edit_Attachment {
 		unset( $fields['url'] );
 		unset( $fields['post_content'] );
 
-		// If a video isn't attached to any specific post, manually add a post ID.
-		if ( ! isset( $info->post_id ) ) {
-			$info->post_id = 0;
-		}
-
 		if ( isset( $file_statuses['ogg'] ) && 'done' === $file_statuses['ogg'] ) {
 			$v_name     = preg_replace( '/\.\w+/', '', basename( $info->path ) );
 			$video_name = $v_name . '_fmt1.ogv';
@@ -186,7 +177,7 @@ class VideoPress_Edit_Attachment {
 
 		$fields['post_excerpt']['label'] = _x( 'Description', 'A header for the short description display', 'jetpack' );
 		$fields['post_excerpt']['input'] = 'textarea';
-		$fields['post_excerpt']['value'] = ! empty( $info->description ) ? $info->description : '';
+		$fields['post_excerpt']['value'] = $info->description;
 
 		$fields['is_videopress_attachment'] = array(
 			'input' => 'hidden',
@@ -219,19 +210,11 @@ class VideoPress_Edit_Attachment {
 			'html'  => $this->display_rating( $info ),
 		);
 
-		$fields['privacy_setting'] = array(
-			'label' => _x( 'Privacy Setting', 'A header for the video privacy setting area.', 'jetpack' ),
-			'input' => 'html',
-			'html'  => $this->display_privacy_setting( $info ),
-		);
-
 		return $fields;
 	}
 
 	/**
-	 * Meta box output.
-	 *
-	 * @param stdClass $post Post object.
+	 * @param stdClass $post
 	 */
 	public function videopress_information_box( $post ) {
 		$post_id = absint( $post->ID );
@@ -277,7 +260,7 @@ class VideoPress_Edit_Attachment {
 </div>
 HTML;
 
-		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Variables built above.
+		echo $html;
 	}
 
 	/**
@@ -302,15 +285,15 @@ HTML;
 	/**
 	 * Build HTML to display a form checkbox for embedcode display preference
 	 *
-	 * @param object $info Database row from the videos table.
-	 * @return string Input element of type checkbox set to checked state based on stored embed preference.
+	 * @param object $info database row from the videos table
+	 * @return string input element of type checkbox set to checked state based on stored embed preference
 	 */
 	protected function display_embed_choice( $info ) {
 		return $this->create_checkbox_for_option(
 			"attachments-{$info->post_id}-displayembed",
 			"attachments[{$info->post_id}][display_embed]",
 			__( 'Display share menu and allow viewers to copy a link or embed this video', 'jetpack' ),
-			isset( $info->display_embed ) ? $info->display_embed : 0
+			$info->display_embed
 		);
 	}
 
@@ -332,39 +315,8 @@ HTML;
 	/**
 	 * Build HTML to display a form input radio button for video ratings
 	 *
-	 * @param object $info Database row from the videos table.
-	 *
-	 * @return string Input Elements of type radio with existing stored value selected.
-	 */
-	protected function display_privacy_setting( $info ) {
-		$privacy_settings = array(
-			VIDEOPRESS_PRIVACY::SITE_DEFAULT => __( 'Site Default', 'jetpack' ),
-			VIDEOPRESS_PRIVACY::IS_PUBLIC    => __( 'Public', 'jetpack' ),
-			VIDEOPRESS_PRIVACY::IS_PRIVATE   => __( 'Private', 'jetpack' ),
-		);
-
-		$displayed_privacy_setting = intval( isset( $info->privacy_setting ) ? $info->privacy_setting : VIDEOPRESS_PRIVACY::SITE_DEFAULT );
-
-		$out = "<select name='attachments[{$info->post_id}][privacy_setting]'>";
-		foreach ( $privacy_settings as $r => $label ) {
-			$out .= "<option value=\"$r\"";
-			if ( intval( $r ) === $displayed_privacy_setting ) {
-				$out .= ' selected';
-			}
-
-			$out .= ">$label</option>";
-		}
-
-		$out .= '</select>';
-
-		return $out;
-	}
-
-	/**
-	 * Build HTML to display a form input radio button for video ratings
-	 *
-	 * @param object $info Database row from the videos table.
-	 * @return string Input elements of type radio with existing stored value selected.
+	 * @param object $info database row from the videos table
+	 * @return string input elements of type radio with existing stored value selected
 	 */
 	protected function display_rating( $info ) {
 		$out = '';
@@ -375,8 +327,7 @@ HTML;
 			'R-17'  => 'R',
 		);
 
-		$displayed_rating = isset( $info->rating ) ? $info->rating : null;
-
+		$displayed_rating = $info->rating;
 		// X-18 was previously supported but is now removed to better comply with our TOS.
 		if ( 'X-18' === $displayed_rating ) {
 			$displayed_rating = 'R-17';

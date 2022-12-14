@@ -1,4 +1,4 @@
-<?php // phpcs:disable -- Copy-pasted library. Not reformatting to facilitate identification of actual changes.
+<?php
 /**
  * SCSS compiler written in PHP
  *
@@ -1631,7 +1631,7 @@ class scssc {
 
 		foreach ($args as $arg) {
 			list($key, $value) = $arg;
-			$key = isset( $key[1] ) ? $key[1] : null;
+			$key = $key[1];
 			if (empty($key)) {
 				$posArgs[] = $value;
 			} else {

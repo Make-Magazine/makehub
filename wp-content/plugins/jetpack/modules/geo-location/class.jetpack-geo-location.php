@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
 /**
  * Adds support for geo-location features.
@@ -31,11 +31,6 @@
  * add_filter( 'jetpack_geo_location_display', 'your_filter_function_name', 10, 2);
  */
 class Jetpack_Geo_Location {
-	/**
-	 * Jetpack_Geo_Location singleton instance.
-	 *
-	 * @var Jetpack_Geo_Location|null
-	 */
 	private static $instance;
 
 	/**
@@ -47,11 +42,8 @@ class Jetpack_Geo_Location {
 	 */
 	private static $style_enqueued = false;
 
-	/**
-	 * Jetpack_Geo_Location instance init.
-	 */
 	public static function init() {
-		if ( self::$instance === null ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new Jetpack_Geo_Location();
 		}
 
@@ -65,9 +57,6 @@ class Jetpack_Geo_Location {
 		self::$instance = null;
 	}
 
-	/**
-	 * Jetpack_Geo_Location class constructor.
-	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'wordpress_init' ) );
 		add_action( 'wp_head', array( $this, 'wp_head' ) );
@@ -133,7 +122,7 @@ class Jetpack_Geo_Location {
 	/**
 	 * Filter "public" input to always be either 1 or 0.
 	 *
-	 * @param mixed $public Value to normalize.
+	 * @param mixed $public
 	 *
 	 * @return int
 	 */
@@ -144,7 +133,7 @@ class Jetpack_Geo_Location {
 	/**
 	 * Filter geo coordinates and normalize them to floats with 7 digits of precision.
 	 *
-	 * @param mixed $coordinate Latitude or longitude coordinate.
+	 * @param mixed $coordinate
 	 *
 	 * @return float|null
 	 */
@@ -208,7 +197,7 @@ class Jetpack_Geo_Location {
 	 * Note that we cannot render the microformat in the context of an excerpt because tags are stripped
 	 * in that context, making our microformat data visible.
 	 *
-	 * @param string $content Current post content.
+	 * @param string $content
 	 *
 	 * @return string
 	 */
@@ -297,7 +286,7 @@ class Jetpack_Geo_Location {
 	 * If we're rendering a single post and public geo-location data is available for it,
 	 * include the human-friendly location label in the output.
 	 *
-	 * @param string $content Current post content.
+	 * @param string $content
 	 *
 	 * @return string
 	 */
@@ -314,7 +303,7 @@ class Jetpack_Geo_Location {
 	 * supplied post ID.  If no post ID is given, we'll use the global $post variable, if
 	 * it is available.
 	 *
-	 * @param integer|null $post_id Post ID.
+	 * @param integer|null $post_id
 	 *
 	 * @return string
 	 */
@@ -367,8 +356,6 @@ class Jetpack_Geo_Location {
 	}
 
 	/**
-	 * Retrieve geo-location post_meta data for the specified post ID.
-	 *
 	 * This method always returns an array with the following structure:
 	 *
 	 * array(is_public => bool, latitude => float, longitude => float, label => string, is_populated => bool)
@@ -380,7 +367,7 @@ class Jetpack_Geo_Location {
 	 * Mocking this method during testing can also be useful for testing output and logic in various
 	 * hook functions.
 	 *
-	 * @param integer $post_id Post ID.
+	 * @param integer $post_id
 	 *
 	 * @return array A predictably structured array representing the meta values for the supplied post ID.
 	 */
@@ -404,8 +391,8 @@ class Jetpack_Geo_Location {
 	 * This function wraps get_post_meta() to enable us to keep the "geo_" prefix isolated to a single
 	 * location in the code and to assist in mocking during testing.
 	 *
-	 * @param integer $post_id Post ID.
-	 * @param string  $meta_field_name The meta field to retrieve.
+	 * @param integer $post_id
+	 * @param string  $meta_field_name
 	 *
 	 * @return mixed
 	 */

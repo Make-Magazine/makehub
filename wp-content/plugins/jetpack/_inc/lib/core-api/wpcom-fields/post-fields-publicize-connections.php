@@ -1,9 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * Handle Publicize connection information for each post.
- *
- * @package automattic/jetpack
- */
+<?php
 
 /**
  * Add per-post Publicize Connection data.
@@ -23,41 +18,18 @@
  *   meta: { # Not defined in this file. Handled in modules/publicize/publicize.php via `register_meta()`
  *     jetpack_publicize_feature_enabled: (boolean) Is this publicize feature enabled?
  *     jetpack_publicize_message: (string) The message to use instead of the post's title when sharing.
- *     jetpack_social_options: {
- *       attached_media: (array) List of media IDs that will be attached to the social media post.
- *     }
+ *   }
  *   ...
  * }
  *
  * @since 6.8.0
  */
 class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_V2_Field_Controller {
-	/**
-	 * Array of post types that can handle Publicize.
-	 *
-	 * @var array
-	 */
 	protected $object_type = array( 'post' );
+	protected $field_name  = 'jetpack_publicize_connections';
 
-	/**
-	 * Field name
-	 *
-	 * @var string
-	 */
-	protected $field_name = 'jetpack_publicize_connections';
+	private $_meta_saved = array();
 
-	/**
-	 * Array of post IDs that have been updated.
-	 *
-	 * @var array
-	 */
-	private $meta_saved = array();
-
-	/**
-	 * Used to memoize the updates for a given post.
-	 *
-	 * @var array
-	 */
 	public $memoized_updates = array();
 
 	/**
@@ -67,9 +39,6 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	public function register_fields() {
 		$this->object_type = get_post_types_by_support( 'publicize' );
 		foreach ( $this->object_type as $post_type ) {
-			if ( $this->is_registered( $post_type ) ) {
-				continue;
-			}
 			// Adds meta support for those post types that don't already have it.
 			// Only runs during REST API requests, so it doesn't impact UI.
 			if ( ! post_type_supports( $post_type, 'custom-fields' ) ) {
@@ -97,9 +66,6 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 		);
 	}
 
-	/**
-	 * Schema for the endpoint.
-	 */
 	private function post_connection_schema() {
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
@@ -107,13 +73,13 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 			'type'       => 'object',
 			'properties' => array(
 				'id'              => array(
-					'description' => __( 'Unique identifier for the Jetpack Social connection', 'jetpack' ),
+					'description' => __( 'Unique identifier for the Publicize Connection', 'jetpack' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'service_name'    => array(
-					'description' => __( 'Alphanumeric identifier for the Jetpack Social service', 'jetpack' ),
+					'description' => __( 'Alphanumeric identifier for the Publicize Service', 'jetpack' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -136,7 +102,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 					'context'     => array( 'edit' ),
 				),
 				'done'            => array(
-					'description' => __( 'Whether Jetpack Social has already finished sharing for this post', 'jetpack' ),
+					'description' => __( 'Whether Publicize has already finished sharing for this post', 'jetpack' ),
 					'type'        => 'boolean',
 					'context'     => array( 'edit' ),
 					'readonly'    => true,
@@ -152,19 +118,16 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	}
 
 	/**
-	 * Permission check, based on module availability and user capabilities.
-	 *
-	 * @param int $post_id Post ID.
-	 *
+	 * @param int $post_id
 	 * @return true|WP_Error
 	 */
-	public function permission_check( $post_id ) {
+	function permission_check( $post_id ) {
 		global $publicize;
 
 		if ( ! $publicize ) {
 			return new WP_Error(
 				'publicize_not_available',
-				__( 'Sorry, Jetpack Social is not available on your site right now.', 'jetpack' ),
+				__( 'Sorry, Publicize is not available on your site right now.', 'jetpack' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -175,7 +138,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 
 		return new WP_Error(
 			'invalid_user_permission_publicize',
-			__( 'Sorry, you are not allowed to access Jetpack Social data for this post.', 'jetpack' ),
+			__( 'Sorry, you are not allowed to access Publicize data for this post.', 'jetpack' ),
 			array( 'status' => rest_authorization_required_code() )
 		);
 	}
@@ -183,26 +146,21 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	/**
 	 * Getter permission check
 	 *
-	 * @param mixed           $post_array Response from the post endpoint.
-	 * @param WP_REST_Request $request    API request.
-	 *
+	 * @param array $post_array Response data from Post Endpoint
 	 * @return true|WP_Error
 	 */
-	public function get_permission_check( $post_array, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	function get_permission_check( $post_array, $request ) {
 		return $this->permission_check( isset( $post_array['id'] ) ? $post_array['id'] : 0 );
 
 	}
 
 	/**
-	 * Setter permission check.
+	 * Setter permission check
 	 *
-	 * @param mixed           $value   The new value for the field.
-	 * @param WP_Post         $post    The post object.
-	 * @param WP_REST_Request $request API request.
-	 *
+	 * @param WP_Post $post
 	 * @return true|WP_Error
 	 */
-	public function update_permission_check( $value, $post, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function update_permission_check( $value, $post, $request ) {
 		return $this->permission_check( isset( $post->ID ) ? $post->ID : 0 );
 	}
 
@@ -211,12 +169,12 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	 *
 	 * @see Publicize::get_filtered_connection_data()
 	 *
-	 * @param array           $post_array Response from Post Endpoint.
-	 * @param WP_REST_Request $request    API request.
+	 * @param array           $post_array Response from Post Endpoint
+	 * @param WP_REST_Request
 	 *
 	 * @return array List of connections
 	 */
-	public function get( $post_array, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function get( $post_array, $request ) {
 		global $publicize;
 
 		if ( ! $publicize ) {
@@ -249,9 +207,8 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	 * Prior to updating the post, first calculate which Services to
 	 * Publicize to and which to skip.
 	 *
-	 * @param object          $post    Post data to insert/update.
-	 * @param WP_REST_Request $request API request.
-	 *
+	 * @param object $post Post data to insert/update.
+	 * @param WP_REST_Request $request
 	 * @return Filtered $post
 	 */
 	public function rest_pre_insert( $post, $request ) {
@@ -263,7 +220,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 		if ( is_wp_error( $permission_check ) ) {
 			return $permission_check;
 		}
-		// memoize.
+		// memoize
 		$this->get_meta_to_update( $request['jetpack_publicize_connections'], isset( $post->ID ) ? $post->ID : 0 );
 
 		if ( isset( $post->ID ) ) {
@@ -279,9 +236,9 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	 * After creating a new post, update our cached data to reflect
 	 * the new post ID.
 	 *
-	 * @param WP_Post         $post    Post data to update.
-	 * @param WP_REST_Request $request API request.
-	 * @param bool            $is_new  Is this a new post.
+	 * @param WP_Post $post
+	 * @param WP_REST_Request $request
+	 * @param bool $is_new
 	 */
 	public function rest_insert( $post, $request, $is_new ) {
 		if ( ! $is_new ) {
@@ -303,13 +260,6 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 		unset( $this->memoized_updates[0] );
 	}
 
-	/**
-	 * Get list of meta data to update per post ID.
-	 *
-	 * @param array $requested_connections Publicize conenctions to update.
-	 *              Items are either `{ id: (string) }` or `{ service_name: (string) }`.
-	 * @param int   $post_id    Post ID.
-	 */
 	protected function get_meta_to_update( $requested_connections, $post_id = 0 ) {
 		global $publicize;
 
@@ -317,15 +267,15 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 			return array();
 		}
 
-		if ( isset( $this->memoized_updates[ $post_id ] ) ) {
-			return $this->memoized_updates[ $post_id ];
+		if ( isset( $this->memoized_updates[$post_id] ) ) {
+			return $this->memoized_updates[$post_id];
 		}
 
 		$available_connections = $publicize->get_filtered_connection_data( $post_id );
 
 		$changed_connections = array();
 
-		// Build lookup mappings.
+		// Build lookup mappings
 		$available_connections_by_unique_id    = array();
 		$available_connections_by_service_name = array();
 		foreach ( $available_connections as $available_connection ) {
@@ -337,8 +287,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 			$available_connections_by_service_name[ $available_connection['service_name'] ][] = $available_connection;
 		}
 
-		// Handle { service_name: $service_name, enabled: (bool) }.
-		// If the service is not available, it will be skipped.
+		// Handle { service_name: $service_name, enabled: (bool) }
 		foreach ( $requested_connections as $requested_connection ) {
 			if ( ! isset( $requested_connection['service_name'] ) ) {
 				continue;
@@ -354,7 +303,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 		}
 
 		// Handle { id: $id, enabled: (bool) }
-		// These override the service_name settings.
+		// These override the service_name settings
 		foreach ( $requested_connections as $requested_connection ) {
 			if ( ! isset( $requested_connection['id'] ) ) {
 				continue;
@@ -367,7 +316,7 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 			$changed_connections[ $requested_connection['id'] ] = $requested_connection['enabled'];
 		}
 
-		// Set all changed connections to their new value.
+		// Set all changed connections to their new value
 		foreach ( $changed_connections as $unique_id => $enabled ) {
 			$connection = $available_connections_by_unique_id[ $unique_id ];
 
@@ -379,16 +328,16 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 		}
 
 		$meta_to_update = array();
-		// For all connections, ensure correct post_meta.
+		// For all connections, ensure correct post_meta
 		foreach ( $available_connections_by_unique_id as $unique_id => $available_connection ) {
 			if ( $available_connection['enabled'] ) {
-				$meta_to_update[ $publicize->POST_SKIP . $unique_id ] = null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$meta_to_update[$publicize->POST_SKIP . $unique_id] = null;
 			} else {
-				$meta_to_update[ $publicize->POST_SKIP . $unique_id ] = 1; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$meta_to_update[$publicize->POST_SKIP . $unique_id] = 1;
 			}
 		}
 
-		$this->memoized_updates[ $post_id ] = $meta_to_update;
+		$this->memoized_updates[$post_id] = $meta_to_update;
 
 		return $meta_to_update;
 	}
@@ -396,23 +345,23 @@ class WPCOM_REST_API_V2_Post_Publicize_Connections_Field extends WPCOM_REST_API_
 	/**
 	 * Update the connections slated to be shared to.
 	 *
-	 * @param array           $requested_connections Publicize conenctions to update.
-	 *              Items are either `{ id: (string) }` or `{ service_name: (string) }`.
-	 * @param WP_Post         $post    Post data.
-	 * @param WP_REST_Request $request API request.
+	 * @param array           $requested_connections
+	 *              Items are either `{ id: (string) }` or `{ service_name: (string) }`
+	 * @param WP_Post         $post
+	 * @param WP_REST_Request
 	 */
-	public function update( $requested_connections, $post, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		if ( isset( $this->meta_saved[ $post->ID ] ) ) { // Make sure we only save it once - per request.
+	public function update( $requested_connections, $post, $request ) {
+		if ( isset( $this->_meta_saved[ $post->ID ] ) ) { // Make sure we only save it once - per request.
 			return;
 		}
 		foreach ( $this->get_meta_to_update( $requested_connections, $post->ID ) as $meta_key => $meta_value ) {
-			if ( $meta_value === null ) {
+			if ( is_null( $meta_value ) ) {
 				delete_post_meta( $post->ID, $meta_key );
 			} else {
 				update_post_meta( $post->ID, $meta_key, $meta_value );
 			}
 		}
-		$this->meta_saved[ $post->ID ] = true;
+		$this->_meta_saved[ $post->ID ] = true;
 	}
 }
 

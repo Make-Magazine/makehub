@@ -1,3 +1,6 @@
+/*!
+* Do not modify this file directly.  It is compiled SASS code.
+*/
 /* Include Cleanslate */
 /*!
 * CleanSlate
@@ -112,6 +115,7 @@
   -ms-perspective-origin: 50% 50% !important;
   -o-perspective-origin: 50% 50% !important;
   perspective-origin: 50% 50% !important;
+  -webkit-backface-visibility: visible !important;
   backface-visibility: visible !important;
   text-shadow: none !important;
   transition: all 0s ease 0s !important;
@@ -874,3 +878,4 @@
   color: #0085ba !important;
   text-decoration: none !important;
 }
+/*# sourceMappingURL=wordads-ccpa-rtl.css.map */

@@ -1,22 +1,11 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * Utilities to interact with a Keyring instance.
- * Used for Publicize as well as the Site Verification tools.
- *
- * @package automattic/jetpack
- */
+<?php
 
 use Automattic\Jetpack\Connection\Secrets;
 
-/**
- * A series of utilities to interact with a Keyring instance.
- */
 class Jetpack_Keyring_Service_Helper {
 	/**
-	 * Class instance
-	 *
 	 * @var Jetpack_Keyring_Service_Helper
-	 */
+	 **/
 	private static $instance = null;
 
 	/**
@@ -26,39 +15,36 @@ class Jetpack_Keyring_Service_Helper {
 	 */
 	private static $is_sharing_page_registered = false;
 
-	/**
-	 * Initialize instance.
-	 */
-	public static function init() {
-		if ( self::$instance === null ) {
-			self::$instance = new Jetpack_Keyring_Service_Helper();
+	static function init() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new Jetpack_Keyring_Service_Helper;
 		}
 
 		return self::$instance;
 	}
 
-	const SERVICES = array(
-		'facebook'                 => array(
-			'for' => 'publicize',
+	public static $SERVICES = array(
+		'facebook' => array(
+			'for' => 'publicize'
 		),
-		'twitter'                  => array(
-			'for' => 'publicize',
+		'twitter' => array(
+			'for' => 'publicize'
 		),
-		'linkedin'                 => array(
-			'for' => 'publicize',
+		'linkedin' => array(
+			'for' => 'publicize'
 		),
-		'tumblr'                   => array(
-			'for' => 'publicize',
+		'tumblr' => array(
+			'for' => 'publicize'
 		),
-		'path'                     => array(
-			'for' => 'publicize',
+		'path' => array(
+			'for' => 'publicize'
 		),
-		'google_plus'              => array(
-			'for' => 'publicize',
+		'google_plus' => array(
+			'for' => 'publicize'
 		),
 		'google_site_verification' => array(
-			'for' => 'other',
-		),
+			'for' => 'other'
+		)
 	);
 
 	/**
@@ -93,12 +79,7 @@ class Jetpack_Keyring_Service_Helper {
 		$_registered_pages[ $hookname ] = true; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
-	/**
-	 * Return a list of services.
-	 *
-	 * @param string $filter Choose 'all' to get all connected services, vs. just the connected ones.
-	 */
-	public function get_services( $filter = 'all' ) {
+	function get_services( $filter = 'all' ) {
 		$services = array();
 
 		if ( 'all' === $filter ) {
@@ -116,15 +97,14 @@ class Jetpack_Keyring_Service_Helper {
 	}
 
 	/**
-	 * Gets a URL to the public-api actions. Works like WP's admin_url.
-	 * On WordPress.com this is/calls Keyring::admin_url.
+	 * Gets a URL to the public-api actions. Works like WP's admin_url
 	 *
 	 * @param string $service Shortname of a specific service.
-	 * @param array  $params  Parameters to append to an API connection URL.
 	 *
 	 * @return URL to specific public-api process
 	 */
-	private static function api_url( $service = false, $params = array() ) {
+	// on WordPress.com this is/calls Keyring::admin_url
+	static function api_url( $service = false, $params = array() ) {
 		/**
 		 * Filters the API URL used to interact with WordPress.com.
 		 *
@@ -145,13 +125,7 @@ class Jetpack_Keyring_Service_Helper {
 		return $url;
 	}
 
-	/**
-	 * Build a connection URL (sharing settings page with unique query args to create a connection).
-	 *
-	 * @param string $service_name Service name.
-	 * @param string $for          Feature name.
-	 */
-	public static function connect_url( $service_name, $for ) {
+	static function connect_url( $service_name, $for ) {
 		return add_query_arg(
 			array(
 				'action'   => 'request',
@@ -164,14 +138,7 @@ class Jetpack_Keyring_Service_Helper {
 		);
 	}
 
-	/**
-	 * Build a URL to refresh a connection (sharing settings page with unique query args to refresh a connection).
-	 * Similar to connect_url, but with a refresh parameter.
-	 *
-	 * @param string $service_name Service name.
-	 * @param string $for          Feature name.
-	 */
-	public static function refresh_url( $service_name, $for ) {
+	static function refresh_url( $service_name, $for ) {
 		return add_query_arg(
 			array(
 				'action'   => 'request',
@@ -185,13 +152,7 @@ class Jetpack_Keyring_Service_Helper {
 		);
 	}
 
-	/**
-	 * Build a URL to delete a connection (sharing settings page with unique query args to delete a connection).
-	 *
-	 * @param string $service_name Service name.
-	 * @param string $id           Connection ID.
-	 */
-	public static function disconnect_url( $service_name, $id ) {
+	static function disconnect_url( $service_name, $id ) {
 		return add_query_arg(
 			array(
 				'action'   => 'delete',
@@ -204,13 +165,10 @@ class Jetpack_Keyring_Service_Helper {
 		);
 	}
 
-	/**
-	 * Build contents handling Keyring connection management into Sharing settings screen.
-	 */
-	public static function admin_page_load() {
+	static function admin_page_load() {
 		if ( isset( $_GET['action'] ) ) {
 			if ( isset( $_GET['service'] ) ) {
-				$service_name = sanitize_text_field( wp_unslash( $_GET['service'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We verify below.
+				$service_name = $_GET['service'];
 			}
 
 			switch ( $_GET['action'] ) {
@@ -222,20 +180,7 @@ class Jetpack_Keyring_Service_Helper {
 					$verification = ( new Secrets() )->generate( 'publicize' );
 					if ( ! $verification ) {
 						$url = Jetpack::admin_url( 'jetpack#/settings' );
-						wp_die(
-							sprintf(
-								wp_kses(
-									/* Translators: placeholder is a URL to a Settings page. */
-									__( "Jetpack is not connected. Please connect Jetpack by visiting <a href='%s'>Settings</a>.", 'jetpack' ),
-									array(
-										'a' => array(
-											'href' => array(),
-										),
-									)
-								),
-								esc_url( $url )
-							)
-						);
+						wp_die( sprintf( __( "Jetpack is not connected. Please connect Jetpack by visiting <a href='%s'>Settings</a>.", 'jetpack' ), $url ) );
 
 					}
 					$stats_options = get_option( 'stats_options' );
@@ -243,32 +188,23 @@ class Jetpack_Keyring_Service_Helper {
 					$wpcom_blog_id = ! empty( $wpcom_blog_id ) ? $wpcom_blog_id : $stats_options['blog_id'];
 
 					$user     = wp_get_current_user();
-					$redirect = self::api_url(
-						$service_name,
-						urlencode_deep(
-							array(
-								'action'       => 'request',
-								'redirect_uri' => add_query_arg( array( 'action' => 'done' ), menu_page_url( 'sharing', false ) ),
-								'for'          => 'publicize',
-								// required flag that says this connection is intended for publicize.
-								'siteurl'      => site_url(),
-								'state'        => $user->ID,
-								'blog_id'      => $wpcom_blog_id,
-								'secret_1'     => $verification['secret_1'],
-								'secret_2'     => $verification['secret_2'],
-								'eol'          => $verification['exp'],
-							)
-						)
-					);
-					wp_redirect( $redirect ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- The API URL is an external URL and is filterable.
+					$redirect = Jetpack_Keyring_Service_Helper::api_url( $service_name, urlencode_deep( array(
+						'action'       => 'request',
+						'redirect_uri' => add_query_arg( array( 'action' => 'done' ), menu_page_url( 'sharing', false ) ),
+						'for'          => 'publicize',
+						// required flag that says this connection is intended for publicize
+						'siteurl'      => site_url(),
+						'state'        => $user->ID,
+						'blog_id'      => $wpcom_blog_id,
+						'secret_1'     => $verification['secret_1'],
+						'secret_2'     => $verification['secret_2'],
+						'eol'          => $verification['exp'],
+					) ) );
+					wp_redirect( $redirect );
 					exit;
+					break;
 
 				case 'completed':
-					/*
-					 * We do not use a nonce here,
-					 * since we're populating a local cache of
-					 * the Publicize connections that were created and stored on WordPress.com.
-					 */
 					$xml = new Jetpack_IXR_Client();
 					$xml->query( 'jetpack.fetchPublicizeConnections' );
 
@@ -280,12 +216,12 @@ class Jetpack_Keyring_Service_Helper {
 					break;
 
 				case 'delete':
-					$id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
+					$id = $_GET['id'];
 
 					check_admin_referer( 'keyring-request', 'kr_nonce' );
 					check_admin_referer( "keyring-request-$service_name", 'nonce' );
 
-					self::disconnect( $service_name, $id );
+					Jetpack_Keyring_Service_Helper::disconnect( $service_name, $id );
 
 					do_action( 'connection_disconnected', $service_name );
 					break;
@@ -295,14 +231,8 @@ class Jetpack_Keyring_Service_Helper {
 
 	/**
 	 * Remove a Publicize connection
-	 *
-	 * @param string   $service_name  Service name.
-	 * @param string   $connection_id Connection ID.
-	 * @param int|bool $_blog_id      Blog ID.
-	 * @param int|bool $_user_id      User ID.
-	 * @param bool     $force_delete  Force delete the connection.
 	 */
-	public static function disconnect( $service_name, $connection_id, $_blog_id = false, $_user_id = false, $force_delete = false ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	static function disconnect( $service_name, $connection_id, $_blog_id = false, $_user_id = false, $force_delete = false ) {
 		$xml = new Jetpack_IXR_Client();
 		$xml->query( 'jetpack.deletePublicizeConnection', $connection_id );
 
@@ -312,4 +242,5 @@ class Jetpack_Keyring_Service_Helper {
 			return false;
 		}
 	}
+
 }

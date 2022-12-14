@@ -83,7 +83,7 @@ class Plugin {
 	 * @return bool
 	 */
 	public function is_only() {
-		$plugins = Plugin_Storage::get_all();
+		$plugins = Plugin_Storage::get_all( true );
 
 		return ! $plugins || ( array_key_exists( $this->slug, $plugins ) && 1 === count( $plugins ) );
 	}
@@ -91,32 +91,28 @@ class Plugin {
 	/**
 	 * Add the plugin to the set of disconnected ones.
 	 *
-	 * @deprecated since 1.39.0.
-	 *
 	 * @return bool
 	 */
 	public function disable() {
-		return true;
+		return Plugin_Storage::disable_plugin( $this->slug );
 	}
 
 	/**
 	 * Remove the plugin from the set of disconnected ones.
 	 *
-	 * @deprecated since 1.39.0.
-	 *
 	 * @return bool
 	 */
 	public function enable() {
-		return true;
+		return Plugin_Storage::enable_plugin( $this->slug );
 	}
 
 	/**
 	 * Whether this plugin is allowed to use the connection.
 	 *
-	 * @deprecated since 11.0
 	 * @return bool
 	 */
 	public function is_enabled() {
-		return true;
+		return ! in_array( $this->slug, Plugin_Storage::get_all_disabled_plugins(), true );
 	}
+
 }

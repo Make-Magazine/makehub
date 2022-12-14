@@ -38,23 +38,19 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 					'callback'            => array( $this, 'get_status' ),
 					'permission_callback' => array( $this, 'get_status_permission_check' ),
 					'args'                => array(
-						'type'        => array(
+						'type'   => array(
 							'type'              => 'string',
 							'required'          => false,
 							'validate_callback' => function ( $param ) {
 								return in_array( $param, array( 'donation', 'all' ), true );
 							},
 						),
-						'source'      => array(
+						'source' => array(
 							'type'              => 'string',
 							'required'          => false,
 							'validate_callback' => function ( $param ) {
 								return in_array( $param, array( 'calypso', 'earn', 'gutenberg', 'gutenberg-wpcom' ), true );
 							},
-						),
-						'is_editable' => array(
-							'type'     => 'boolean',
-							'required' => false,
 						),
 					),
 				),
@@ -69,28 +65,21 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 					'callback'            => array( $this, 'create_product' ),
 					'permission_callback' => array( $this, 'get_status_permission_check' ),
 					'args'                => array(
-						'title'                   => array(
+						'title'    => array(
 							'type'     => 'string',
 							'required' => true,
 						),
-						'price'                   => array(
+						'price'    => array(
 							'type'     => 'float',
 							'required' => true,
 						),
-						'currency'                => array(
+						'currency' => array(
 							'type'     => 'string',
 							'required' => true,
 						),
-						'interval'                => array(
+						'interval' => array(
 							'type'     => 'string',
 							'required' => true,
-						),
-						'is_editable'             => array(
-							'type'     => 'boolean',
-							'required' => false,
-						),
-						'buyer_can_change_amount' => array(
-							'type' => 'boolean',
 						),
 					),
 				),
@@ -121,39 +110,27 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 	/**
 	 * Do create a product based on data, or pass request to wpcom.
 	 *
-	 * @param WP_REST_Request $request - request passed from WP.
+	 * @param object $request - request passed from WP.
 	 *
 	 * @return array|WP_Error
 	 */
-	public function create_product( WP_REST_Request $request ) {
-		$is_editable             = isset( $request['is_editable'] ) ? (bool) $request['is_editable'] : null;
-		$type                    = isset( $request['type'] ) ? $request['type'] : null;
-		$buyer_can_change_amount = isset( $request['buyer_can_change_amount'] ) && (bool) $request['buyer_can_change_amount'];
-
-		$payload = array(
-			'title'                   => $request['title'],
-			'price'                   => $request['price'],
-			'currency'                => $request['currency'],
-			'buyer_can_change_amount' => $buyer_can_change_amount,
-			'interval'                => $request['interval'],
-			'type'                    => $type,
-		);
-
-		// If we pass directly the value "null", it will break the argument validation.
-		if ( null !== $is_editable ) {
-			$payload['is_editable'] = $is_editable;
-		}
-
+	public function create_product( $request ) {
 		if ( ( defined( 'IS_WPCOM' ) && IS_WPCOM ) ) {
-			require_lib( 'memberships' );
+			jetpack_require_lib( 'memberships' );
 			$connected_destination_account_id = Jetpack_Memberships::get_connected_account_id();
 			if ( ! $connected_destination_account_id ) {
 				return new WP_Error( 'no-destination-account', __( 'Please set up a Stripe account for this site first', 'jetpack' ) );
 			}
-
-			$payload['connected_destination_account_id'] = $connected_destination_account_id;
-
-			$product = Memberships_Product::create( get_current_blog_id(), $payload );
+			$product = Memberships_Product::create(
+				get_current_blog_id(),
+				array(
+					'title'                            => $request['title'],
+					'price'                            => $request['price'],
+					'currency'                         => $request['currency'],
+					'interval'                         => $request['interval'],
+					'connected_destination_account_id' => $connected_destination_account_id,
+				)
+			);
 			if ( is_wp_error( $product ) ) {
 				return new WP_Error( $product->get_error_code(), __( 'Creating product has failed.', 'jetpack' ) );
 			}
@@ -166,7 +143,12 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 				array(
 					'method' => 'POST',
 				),
-				$payload
+				array(
+					'title'    => $request['title'],
+					'price'    => $request['price'],
+					'currency' => $request['currency'],
+					'interval' => $request['interval'],
+				)
 			);
 			if ( is_wp_error( $response ) ) {
 				if ( $response->get_error_code() === 'missing_token' ) {
@@ -193,33 +175,19 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 	 * @return array|WP_Error
 	 */
 	public function create_products( $request ) {
-		$is_editable = isset( $request['is_editable'] ) ? (bool) $request['is_editable'] : null;
-
 		if ( ( defined( 'IS_WPCOM' ) && IS_WPCOM ) ) {
-			require_lib( 'memberships' );
+			jetpack_require_lib( 'memberships' );
 			$connected_destination_account_id = Jetpack_Memberships::get_connected_account_id();
 			if ( ! $connected_destination_account_id ) {
 				return new WP_Error( 'no-destination-account', __( 'Please set up a Stripe account for this site first', 'jetpack' ) );
 			}
-
-			$result = Memberships_Product::generate_default_products( get_current_blog_id(), $request['type'], $request['currency'], $connected_destination_account_id, $is_editable );
-
+			$result = Memberships_Product::generate_default_products( get_current_blog_id(), $request['type'], $request['currency'], $connected_destination_account_id );
 			if ( is_wp_error( $result ) ) {
 				$status = 'invalid_param' === $result->get_error_code() ? 400 : 500;
 				return new WP_Error( $result->get_error_code(), $result->get_error_message(), array( 'status' => $status ) );
 			}
 			return $result;
 		} else {
-			$payload = array(
-				'type'     => $request['type'],
-				'currency' => $request['currency'],
-			);
-
-			// If we pass directly is_editable as null, it would break API argument validation.
-			if ( null !== $is_editable ) {
-				$payload['is_editable'] = $is_editable;
-			}
-
 			$blog_id  = Jetpack_Options::get_option( 'id' );
 			$response = Client::wpcom_json_api_request_as_user(
 				"/sites/$blog_id/{$this->rest_base}/products",
@@ -227,7 +195,10 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 				array(
 					'method' => 'POST',
 				),
-				$payload
+				array(
+					'type'     => $request['type'],
+					'currency' => $request['currency'],
+				)
 			);
 			if ( is_wp_error( $response ) ) {
 				if ( $response->get_error_code() === 'missing_token' ) {
@@ -256,29 +227,19 @@ class WPCOM_REST_API_V2_Endpoint_Memberships extends WP_REST_Controller {
 	public function get_status( \WP_REST_Request $request ) {
 		$product_type = $request['type'];
 		$source       = $request['source'];
-		$is_editable  = ! isset( $request['is_editable'] ) ? null : (bool) $request['is_editable'];
-
 		if ( ( defined( 'IS_WPCOM' ) && IS_WPCOM ) ) {
-			require_lib( 'memberships' );
+			jetpack_require_lib( 'memberships' );
 			$blog_id = get_current_blog_id();
-			return (array) get_memberships_settings_for_site( $blog_id, $product_type, $is_editable );
+			return (array) get_memberships_settings_for_site( $blog_id, $product_type );
 		} else {
-			$payload = array(
-				'type'   => $request['type'],
-				'source' => $source,
-			);
-
-			// If we pass directly is_editable as null, it would break API argument validation.
-			// This also needs to be converted to int because boolean false is ignored by add_query_arg.
-			if ( null !== $is_editable ) {
-				$payload['is_editable'] = (int) $is_editable;
-			}
-
 			$blog_id = Jetpack_Options::get_option( 'id' );
 			$path    = "/sites/$blog_id/{$this->rest_base}/status";
 			if ( $product_type ) {
 				$path = add_query_arg(
-					$payload,
+					array(
+						'type'   => $product_type,
+						'source' => $source,
+					),
 					$path
 				);
 			}

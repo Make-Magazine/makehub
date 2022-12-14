@@ -120,11 +120,11 @@ class Jetpack_IXR_Client extends IXR_Client {
 	 * @return WP_Error Error object.
 	 */
 	public function get_jetpack_error( $fault_code = null, $fault_string = null ) {
-		if ( $fault_code === null ) {
+		if ( is_null( $fault_code ) ) {
 			$fault_code = $this->error->code;
 		}
 
-		if ( $fault_string === null ) {
+		if ( is_null( $fault_string ) ) {
 			$fault_string = $this->error->message;
 		}
 

@@ -39,7 +39,7 @@ class Domain_Mapping {
 	 * @return Domain_Mapping|null
 	 */
 	public static function init() {
-		if ( self::$instance === null ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new Domain_Mapping();
 		}
 

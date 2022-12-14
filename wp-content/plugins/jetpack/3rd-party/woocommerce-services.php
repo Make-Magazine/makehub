@@ -31,7 +31,7 @@ class WC_Services_Installer {
 	 * @return object The WC_Services_Installer object.
 	 */
 	public static function init() {
-		if ( self::$instance === null ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new WC_Services_Installer();
 		}
 		return self::$instance;
@@ -146,7 +146,7 @@ class WC_Services_Installer {
 		$result = activate_plugin( 'woocommerce-services/woocommerce-services.php' );
 
 		// Activate_plugin() returns null on success.
-		return $result === null;
+		return is_null( $result );
 	}
 }
 

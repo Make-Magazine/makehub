@@ -26,12 +26,12 @@ class WPCOM_REST_API_V2_Endpoint_Instagram_Gallery extends WP_REST_Controller {
 			$this->is_wpcom = true;
 
 			if ( ! class_exists( 'WPCOM_Instagram_Gallery_Helper' ) ) {
-				\require_lib( 'instagram-gallery-helper' );
+				\jetpack_require_lib( 'instagram-gallery-helper' );
 			}
 		}
 
 		if ( ! class_exists( 'Jetpack_Instagram_Gallery_Helper' ) ) {
-			require_once JETPACK__PLUGIN_DIR . '/_inc/lib/class-jetpack-instagram-gallery-helper.php';
+			\jetpack_require_lib( 'class-jetpack-instagram-gallery-helper' );
 		}
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
@@ -67,21 +67,16 @@ class WPCOM_REST_API_V2_Endpoint_Instagram_Gallery extends WP_REST_Controller {
 			array(
 				'args'                => array(
 					'access_token' => array(
-						'description'       => __( 'An Instagram Keyring access token.', 'jetpack' ),
-						'type'              => 'integer',
-						'required'          => true,
-						'minimum'           => 1,
-						'validate_callback' => function ( $param ) {
-							return is_numeric( $param ) && (int) $param > 0;
-						},
+						'description' => __( 'An Instagram Keyring access token.', 'jetpack' ),
+						'type'        => 'string',
+						'required'    => true,
 					),
 					'count'        => array(
 						'description'       => __( 'How many Instagram posts?', 'jetpack' ),
-						'type'              => 'integer',
+						'type'              => 'int',
 						'required'          => true,
-						'minimum'           => 1,
 						'validate_callback' => function ( $param ) {
-							return is_numeric( $param ) && (int) $param > 0;
+							return is_numeric( $param );
 						},
 					),
 				),

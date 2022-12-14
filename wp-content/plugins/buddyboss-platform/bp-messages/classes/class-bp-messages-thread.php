@@ -927,7 +927,6 @@ class BP_Messages_Thread {
 				'fields'       => 'all',
 				'having_sql'   => false,
 				'thread_type'  => 'unarchived',
-				'force_cache'  => false,
 			)
 		);
 
@@ -1052,7 +1051,7 @@ class BP_Messages_Thread {
 			$participants_sql        = $wpdb->prepare( $participants_sql, $participants_args );
 			$participants_sql_cached = bp_core_get_incremented_cache( $participants_sql, 'bp_messages' );
 
-			if ( false === $participants_sql_cached || true === $r['force_cache'] ) {
+			if ( false === $participants_sql_cached ) {
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$current_user_participants = $wpdb->get_results( $participants_sql );
 				bp_core_set_incremented_cache( $participants_sql, 'bp_messages', $current_user_participants );
@@ -1213,7 +1212,7 @@ class BP_Messages_Thread {
 
 		$thread_ids_cached = bp_core_get_incremented_cache( $qq, 'bp_messages' );
 
-		if ( false === $thread_ids_cached || true === $r['force_cache'] ) {
+		if ( false === $thread_ids_cached ) {
 			// Get thread IDs.
 			$thread_ids = $wpdb->get_results( $qq ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			bp_core_set_incremented_cache( $qq, 'bp_messages', $thread_ids );
@@ -1232,7 +1231,7 @@ class BP_Messages_Thread {
 		$total_threads_query  = implode( ' ', $sql );
 		$total_threads_cached = bp_core_get_incremented_cache( $total_threads_query, 'bp_messages' );
 
-		if ( false === $total_threads_cached || true === $r['force_cache'] ) {
+		if ( false === $total_threads_cached ) {
 			$total_threads = $wpdb->get_var( $total_threads_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			bp_core_set_incremented_cache( $total_threads_query, 'bp_messages', $total_threads );
 		} else {
@@ -1323,19 +1322,16 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $thread_id The message thread ID.
-	 * @param int $user_id   The user the thread will be marked as read.
 	 *
 	 * @return false|int Number of threads marked as read or false on error.
 	 */
-	public static function mark_as_read( $thread_id = 0, $user_id = 0 ) {
+	public static function mark_as_read( $thread_id = 0 ) {
 		global $wpdb;
 
-		if ( empty( $user_id ) ) {
-			$user_id =
-				bp_displayed_user_id() ?
-					bp_displayed_user_id() :
-					bp_loggedin_user_id();
-		}
+		$user_id =
+			bp_displayed_user_id() ?
+				bp_displayed_user_id() :
+				bp_loggedin_user_id();
 
 		$bp     = buddypress();
 		$retval = false;
@@ -1355,14 +1351,10 @@ class BP_Messages_Thread {
 			 * Fires when messages thread was marked as read.
 			 *
 			 * @since BuddyPress 2.8.0
-			 * @since BuddyBoss 2.2 Added the `user_id` parameter.
-			 * @since BuddyBoss 2.2 Added the `$retval` parameter.
 			 *
-			 * @param int      $thread_id The message thread ID.
-			 * @param int      $user_id   The user the thread will be marked as read.
-			 * @param bool|int $num_rows  Number of threads marked as unread or false on error.
+			 * @param int $thread_id The message thread ID.
 			 */
-			do_action( 'messages_thread_mark_as_read', $thread_id, $user_id, $retval );
+			do_action( 'messages_thread_mark_as_read', $thread_id );
 		}
 
 		return $retval;

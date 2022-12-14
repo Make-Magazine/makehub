@@ -395,7 +395,7 @@ abstract class WPCOM_JSON_API_Endpoint {
 						return null;
 					}
 				} else {
-					if ( $return === null && wp_json_encode( null ) !== $input ) {
+					if ( is_null( $return ) && wp_json_encode( null ) !== $input ) {
 						return null;
 					}
 				}
@@ -409,7 +409,7 @@ abstract class WPCOM_JSON_API_Endpoint {
 				// attempt JSON first, since probably a curl command.
 				$return = json_decode( $input, true );
 
-				if ( $return === null ) {
+				if ( is_null( $return ) ) {
 					wp_parse_str( $input, $return );
 				}
 
@@ -648,7 +648,7 @@ abstract class WPCOM_JSON_API_Endpoint {
 				break;
 			case 'object':
 				// Fallback object -> false.
-				if ( is_scalar( $value ) || $value === null ) {
+				if ( is_scalar( $value ) || is_null( $value ) ) {
 					if ( ! empty( $types[0] ) && 'false' === $types[0]['type'] ) {
 						return $this->cast_and_filter_item( $return, 'false', $key, $value, $types, $for_output );
 					}
@@ -1644,23 +1644,6 @@ abstract class WPCOM_JSON_API_Endpoint {
 					$response['allow_download'] = (string) (int) $metadata['videopress']['allow_download'];
 				}
 
-				if ( isset( $info->thumbnail_generating ) ) {
-					$response['thumbnail_generating'] = (bool) intval( $info->thumbnail_generating );
-				} elseif ( isset( $metadata['videopress']['thumbnail_generating'] ) ) {
-					$response['thumbnail_generating'] = (bool) intval( $metadata['videopress']['thumbnail_generating'] );
-				}
-
-				if ( isset( $info->privacy_setting ) ) {
-					$response['privacy_setting'] = (int) $info->privacy_setting;
-				} elseif ( isset( $metadata['videopress']['privacy_setting'] ) ) {
-					$response['privacy_setting'] = (int) $metadata['videopress']['privacy_setting'];
-				}
-
-				$thumbnail_query_data = array();
-				if ( function_exists( 'video_is_private' ) && video_is_private( $info ) ) {
-					$thumbnail_query_data['metadata_token'] = video_generate_auth_token( $info );
-				}
-
 				// Thumbnails.
 				if ( function_exists( 'video_format_done' ) && function_exists( 'video_image_url_by_guid' ) ) {
 					$response['thumbnails'] = array(
@@ -1670,15 +1653,11 @@ abstract class WPCOM_JSON_API_Endpoint {
 					);
 					foreach ( $response['thumbnails'] as $size => $thumbnail_url ) {
 						if ( video_format_done( $info, $size ) ) {
-							$response['thumbnails'][ $size ] = \add_query_arg( $thumbnail_query_data, \video_image_url_by_guid( $info->guid, $size ) );
+							$response['thumbnails'][ $size ] = video_image_url_by_guid( $info->guid, $size );
 						} else {
 							unset( $response['thumbnails'][ $size ] );
 						}
 					}
-				}
-
-				if ( isset( $info->title ) ) {
-					$response['title'] = $info->title;
 				}
 
 				// If we didn't get VideoPress information (for some reason) then let's
@@ -1855,14 +1834,6 @@ abstract class WPCOM_JSON_API_Endpoint {
 		// VIP context loading is handled elsewhere, so bail to prevent
 		// duplicate loading. See `switch_to_blog_and_validate_user()`.
 		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
-			return;
-		}
-
-		$do_check_theme =
-			defined( 'REST_API_TEST_REQUEST' ) && REST_API_TEST_REQUEST ||
-			defined( 'IS_WPCOM' ) && IS_WPCOM;
-
-		if ( $do_check_theme && ! wpcom_should_load_theme_files_on_rest_api() ) {
 			return;
 		}
 
@@ -2082,62 +2053,6 @@ abstract class WPCOM_JSON_API_Endpoint {
 	}
 
 	/**
-	 * Mobile apps are allowed free video uploads, but limited to 5 minutes in length.
-	 *
-	 * @param array $media_item the media item to evaluate.
-	 *
-	 * @return bool true if the media item is a video that was uploaded via the mobile
-	 * app that is longer than 5 minutes.
-	 */
-	public function media_item_is_free_video_mobile_upload_and_too_long( $media_item ) {
-		if ( ! $media_item ) {
-			return false;
-		}
-
-		// Verify file is a video.
-		$is_video = preg_match( '@^video/@', $media_item['type'] );
-		if ( ! $is_video ) {
-			return false;
-		}
-
-		// Check if the request is from a mobile app, where we allow free video uploads at limited length.
-		if ( ! in_array( $this->api->token_details['client_id'], VIDEOPRESS_ALLOWED_REST_API_CLIENT_IDS, true ) ) {
-			return false;
-		}
-
-		// We're only worried about free sites.
-		require_once WP_CONTENT_DIR . '/admin-plugins/wpcom-billing.php';
-		$current_plan = WPCOM_Store_API::get_current_plan( get_current_blog_id() );
-		if ( ! $current_plan['is_free'] ) {
-			return false;
-		}
-
-		// Check if video is longer than 5 minutes.
-		$video_meta = wp_read_video_metadata( $media_item['tmp_name'] );
-		if (
-			false !== $video_meta &&
-			isset( $video_meta['length'] ) &&
-			5 * MINUTE_IN_SECONDS < $video_meta['length']
-		) {
-			videopress_log(
-				'videopress_app_upload_length_block',
-				'Mobile app upload on free site blocked because length was longer than 5 minutes.',
-				null,
-				null,
-				null,
-				null,
-				array(
-					'blog_id' => get_current_blog_id(),
-					'user_id' => get_current_user_id(),
-				)
-			);
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Handle a v1.1 media creation.
 	 *
 	 * Only one of $media_files and $media_urls should be non-empty.
@@ -2164,22 +2079,17 @@ abstract class WPCOM_JSON_API_Endpoint {
 			$this->api->trap_wp_die( 'upload_error' );
 			foreach ( $media_files as $media_item ) {
 				$_FILES['.api.media.item.'] = $media_item;
-
 				if ( ! $user_can_upload_files ) {
 					$media_id = new WP_Error( 'unauthorized', 'User cannot upload media.', 403 );
 				} else {
-					if ( $this->media_item_is_free_video_mobile_upload_and_too_long( $media_item ) ) {
-						$media_id = new WP_Error( 'upload_video_length', 'Video uploads longer than 5 minutes require a paid plan.', 400 );
+					if ( $force_parent_id ) {
+						$parent_id = absint( $force_parent_id );
+					} elseif ( ! empty( $media_attrs[ $i ] ) && ! empty( $media_attrs[ $i ]['parent_id'] ) ) {
+						$parent_id = absint( $media_attrs[ $i ]['parent_id'] );
 					} else {
-						if ( $force_parent_id ) {
-							$parent_id = absint( $force_parent_id );
-						} elseif ( ! empty( $media_attrs[ $i ] ) && ! empty( $media_attrs[ $i ]['parent_id'] ) ) {
-							$parent_id = absint( $media_attrs[ $i ]['parent_id'] );
-						} else {
-							$parent_id = 0;
-						}
-						$media_id = media_handle_upload( '.api.media.item.', $parent_id );
+						$parent_id = 0;
 					}
+					$media_id = media_handle_upload( '.api.media.item.', $parent_id );
 				}
 				if ( is_wp_error( $media_id ) ) {
 					$errors[ $i ]['file']    = $media_item['name'];
@@ -2275,11 +2185,6 @@ abstract class WPCOM_JSON_API_Endpoint {
 						wp_update_attachment_metadata( $media_id, $id3_meta );
 					}
 				}
-
-				// Attributes: Meta
-				if ( isset( $attrs['meta'] ) && isset( $attrs['meta']['vertical_id'] ) ) {
-					update_post_meta( $media_id, 'vertical_id', $attrs['meta']['vertical_id'] );
-				}
 			}
 		}
 
@@ -2372,7 +2277,7 @@ abstract class WPCOM_JSON_API_Endpoint {
 		}
 
 		// bail early if they already have the upgrade..
-		if ( wpcom_site_has_videopress() ) {
+		if ( (string) get_option( 'video_upgrade' ) === '1' ) {
 			return $mimes;
 		}
 

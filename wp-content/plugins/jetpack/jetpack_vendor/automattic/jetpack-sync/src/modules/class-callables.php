@@ -8,7 +8,6 @@
 namespace Automattic\Jetpack\Sync\Modules;
 
 use Automattic\Jetpack\Constants as Jetpack_Constants;
-use Automattic\Jetpack\Sync\Dedicated_Sender;
 use Automattic\Jetpack\Sync\Defaults;
 use Automattic\Jetpack\Sync\Functions;
 use Automattic\Jetpack\Sync\Settings;
@@ -78,9 +77,8 @@ class Callables extends Module {
 	 */
 	const OPTION_NAMES_TO_CALLABLE_NAMES = array(
 		// @TODO: Audit the other option names for differences between the option names and callable names.
-		'home'                   => 'home_url',
-		'siteurl'                => 'site_url',
-		'jetpack_active_modules' => 'active_modules',
+		'home'    => 'home_url',
+		'siteurl' => 'site_url',
 	);
 
 	/**
@@ -376,10 +374,6 @@ class Callables extends Module {
 			);
 			/** This filter is documented in src/wp-admin/includes/class-wp-plugins-list-table.php */
 			$action_links = apply_filters( 'plugin_action_links', $action_links, $plugin_file, null, 'all' );
-			// Verify $action_links is still an array.
-			if ( ! is_array( $action_links ) ) {
-				$action_links = array();
-			}
 			/** This filter is documented in src/wp-admin/includes/class-wp-plugins-list-table.php */
 			$action_links = apply_filters( "plugin_action_links_{$plugin_file}", $action_links, $plugin_file, null, 'all' );
 			// Verify $action_links is still an array to resolve warnings from filters not returning an array.
@@ -459,12 +453,7 @@ class Callables extends Module {
 	public function maybe_sync_callables() {
 		$callables = $this->get_all_callables();
 		if ( ! apply_filters( 'jetpack_check_and_send_callables', false ) ) {
-			/**
-			 * Treating Dedicated Sync requests a bit differently from normal. We want to send callables
-			 * normally with all Sync actions, no matter if they were with admin action origin or not,
-			 * since Dedicated Sync runs out of bound and the requests are never coming from an admin.
-			 */
-			if ( ! is_admin() && ! Dedicated_Sender::is_dedicated_sync_request() ) {
+			if ( ! is_admin() ) {
 				// If we're not an admin and we're not doing cron and this isn't WP_CLI, don't sync anything.
 				if ( ! Settings::is_doing_cron() && ! Jetpack_Constants::get_constant( 'WP_CLI' ) ) {
 					return;
@@ -495,7 +484,7 @@ class Callables extends Module {
 			$checksum = $this->get_check_sum( $value );
 
 			// Explicitly not using Identical comparison as get_option returns a string.
-			if ( $value !== null && $this->should_send_callable( $callable_checksums, $name, $checksum ) ) {
+			if ( ! is_null( $value ) && $this->should_send_callable( $callable_checksums, $name, $checksum ) ) {
 
 				// Only send callable if the non sorted checksum also does not match.
 				if ( $this->should_send_callable( $callable_checksums, $name, $this->get_check_sum( $value, false ) ) ) {

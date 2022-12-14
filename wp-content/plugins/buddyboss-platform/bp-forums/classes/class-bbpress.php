@@ -462,7 +462,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
-						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -494,7 +493,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
-						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -524,7 +522,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'query_var'           => true,
 						'menu_icon'           => '',
 						'show_in_menu'        => false,
-						'source'              => 'bbpress',
 					)
 				)
 			);
@@ -554,7 +551,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
 						'public'            => true,
 						'show_in_admin_all' => true,
-						'source'            => 'bbpress',
 					)
 				)
 			);
@@ -571,7 +567,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => false,
-						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -588,7 +583,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => false,
-						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -605,7 +599,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
 						'show_in_admin_all_list'    => true,
-						'source'                    => 'bbpress',
 					)
 				)
 			);
@@ -642,7 +635,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 */
 		public static function register_taxonomies() {
 
-			// Register the topic-tag taxonomy.
+			// Register the topic-tag taxonomy
 			register_taxonomy(
 				bbp_get_topic_tag_tax_id(),
 				bbp_get_topic_post_type(),
@@ -660,7 +653,6 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'public'                => true,
 						'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
 						'show_in_menu'          => false,
-						'source'                => 'bbpress',
 					)
 				)
 			);
