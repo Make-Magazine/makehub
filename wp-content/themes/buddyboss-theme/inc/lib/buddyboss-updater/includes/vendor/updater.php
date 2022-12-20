@@ -156,7 +156,10 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 			// Also check if force check exists then bypass transient.
 			if ( ! $force_check ) {
 				$response_transient = get_transient( $this->transient_name );
-				if ( ! empty( $response_transient ) ) {
+				if ( is_object( $response_transient ) ) {
+					$response_transient = json_decode( wp_json_encode( $response_transient ), true );
+				}
+				if ( ! empty( $response_transient ) && is_array( $response_transient ) && ( isset( $response_transient['new_version'] ) || isset( $response_transient['body'] ) ) ) {
 					if ( isset( $response_transient['body'] ) ) {
 						unset( $response_transient['body'] );
 						$transient->no_update[ $this->plugin_path ] = $response_transient;
@@ -267,8 +270,8 @@ if ( ! class_exists( 'BBoss_Updates_Helper' ) ) {
 			// Check if response exists then return existing transient.
 			// Also check if force check exists then bypass transient.
 			if ( ! $force_check ) {
-				$response_transient = (object) get_transient( $this->transient_name );
-				if ( ! empty( $response_transient ) ) {
+				$response_transient = get_transient( $this->transient_name );
+				if ( ! empty( $response_transient ) && is_object( $response_transient ) && ( isset( $response_transient->body ) || isset( $response_transient->new_version ) ) ) {
 					if ( isset( $response_transient->body ) ) {
 						unset( $response_transient->body );
 						$transient->no_update[ $this->plugin_path ] = $response_transient;

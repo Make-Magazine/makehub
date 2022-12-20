@@ -27,8 +27,11 @@ function set_ajax_params(){
 	wp_enqueue_script('universal-auth0', content_url() . '/universal-assets/v1/js/min/universal-auth0.min.js', array('auth0'), $my_version, true);
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
-	$user = wp_get_current_user();
-	$membershipType = checkMakeCoMems($user);
+	$membershipType = "";
+	if(is_user_logged_in()) {
+	 	$user = wp_get_current_user();
+		$membershipType = checkMakeCoMems($user);
+	}
 
 	$user_image =
 		bp_core_fetch_avatar (

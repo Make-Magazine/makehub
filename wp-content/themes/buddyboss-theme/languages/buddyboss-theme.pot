@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 14:53:16+00:00\n"
+"POT-Creation-Date: 2022-12-14 06:47:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3660,14 +3660,14 @@ msgstr ""
 msgid "We are unable to validate the license key. Service unavailable."
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/vendor/updater.php:387
+#: inc/lib/buddyboss-updater/includes/vendor/updater.php:390
 msgid ""
 "An Unexpected HTTP Error occurred during the API request.</p> <p><a "
 "href=\"?\" onclick=\"document.location.reload(); return false;\">Try "
 "again</a>"
 msgstr ""
 
-#: inc/lib/buddyboss-updater/includes/vendor/updater.php:391
+#: inc/lib/buddyboss-updater/includes/vendor/updater.php:394
 msgid "An unknown error occurred"
 msgstr ""
 

@@ -227,6 +227,10 @@ function bb_theme_version_updater() {
 		bb_theme_update_support_custom_icon_2_0_5();
 	}
 
+	if ( $raw_db_version < 435 ) {
+		bb_theme_update_2_2_1_2();
+	}
+
 	// Bump the version.
 	bb_theme_version_bump();
 }
@@ -443,6 +447,25 @@ function bb_theme_update_2_0_0() {
 		buddyboss_theme_compressed_transient_delete();
 	}
 
+}
+
+/**
+ * Function to delete transient data from database.
+ *
+ * @since 2.2.1.2
+ */
+function bb_theme_update_2_2_1_2() {
+	delete_transient( 'update_themes' );
+	delete_transient( 'update_plugins' );
+	delete_transient( 'bb_updates_bp-loader' );
+	delete_transient( 'bb_updates_buddyboss-theme' );
+	delete_transient( 'bb_updates_buddyboss-platform-pro' );
+	// For Multi site.
+	delete_site_transient( 'update_themes' );
+	delete_site_transient( 'update_plugins' );
+	delete_site_transient( 'bb_updates_bp-loader' );
+	delete_site_transient( 'bb_updates_buddyboss-theme' );
+	delete_site_transient( 'bb_updates_buddyboss-platform-pro' );
 }
 
 /**

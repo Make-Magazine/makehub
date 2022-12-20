@@ -239,7 +239,7 @@ if ( ! class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 		 */
 		private function _setup_globals() {
 
-			$this->bb_theme_db_version = 430;
+			$this->bb_theme_db_version = 435;
 
 			// Get theme path.
 			$this->_tpl_dir = get_template_directory();
