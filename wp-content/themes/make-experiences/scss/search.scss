@@ -374,7 +374,6 @@
 		position: absolute;
 		padding: 0px;
 		right: 325px;
-
 		input {
 			border-radius: 5px !important;
 			text-transform: uppercase;
@@ -432,6 +431,18 @@
 			right: 0px;
 			margin-bottom: 10px;
 			width: calc(100vw - 70px);
+		}
+		.sf-field-submit {
+			left: 0px;
+			width: 48.5%;
+			input { width: 100%; }
+		}
+		.filter-reset {
+			right: 15px;
+			a { width: 44vw; }
+		}
+		.results-info {
+			margin-top: 70px;
 		}
 	}
 	.search-filter-results { margin-top: 60px; }
