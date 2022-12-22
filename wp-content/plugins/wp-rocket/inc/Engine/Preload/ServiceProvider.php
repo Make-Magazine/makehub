@@ -43,7 +43,6 @@ class ServiceProvider extends AbstractServiceProvider {
 		'fetch_sitemap_controller',
 		'check_finished_controller',
 		'load_initial_sitemap_controller',
-		'preload_url_controller',
 		'preload_caches_table',
 		'preload_caches_query',
 		'preload_admin_subscriber',
@@ -63,9 +62,14 @@ class ServiceProvider extends AbstractServiceProvider {
 	 * @return void
 	 */
 	public function register() {
+		// Subscribers.
 		$options = $this->getContainer()->get( 'options' );
 
 		$this->getContainer()->add( 'preload_mobile_detect', WP_Rocket_Mobile_Detect::class );
+
+		$this->getContainer()->add( 'preload_settings', Settings::class )
+			->addArgument( $options );
+		$preload_settings = $this->getContainer()->get( 'preload_settings' );
 
 		$this->getContainer()->add( 'wp_direct_filesystem', WP_Filesystem_Direct::class )
 			->addArgument( [] );
@@ -81,19 +85,17 @@ class ServiceProvider extends AbstractServiceProvider {
 		$this->getContainer()->add( 'preload_queue', Queue::class );
 		$queue = $this->getContainer()->get( 'preload_queue' );
 
-		$this->getContainer()->add( 'preload_url_controller', PreloadUrl::class )
-			->addArgument( $options )
-			->addArgument( $queue )
-			->addArgument( $cache_query )
-			->addArgument( $wp_file_system );
-
-		$preload_url_controller = $this->getContainer()->get( 'preload_url_controller' );
-
 		$this->getContainer()->add( 'homepage_crawler', CrawlHomepage::class );
 		$crawl_homepage = $this->getContainer()->get( 'homepage_crawler' );
 
 		$this->getContainer()->add( 'sitemap_parser', SitemapParser::class );
 		$sitemap_parser = $this->getContainer()->get( 'sitemap_parser' );
+
+		$this->getContainer()->add( 'preload_url_controller', PreloadUrl::class )
+			->addArgument( $options )
+			->addArgument( $queue )
+			->addArgument( $cache_query )
+			->addArgument( $wp_file_system );
 
 		$this->getContainer()->add( 'fetch_sitemap_controller', FetchSitemap::class )
 			->addArgument( $sitemap_parser )
@@ -101,6 +103,7 @@ class ServiceProvider extends AbstractServiceProvider {
 			->addArgument( $cache_query );
 
 		$fetch_sitemap_controller = $this->getContainer()->get( 'fetch_sitemap_controller' );
+		$preload_url_controller   = $this->getContainer()->get( 'preload_url_controller' );
 
 		$this->getContainer()->add( 'load_initial_sitemap_controller', LoadInitialSitemap::class )
 			->addArgument( $queue )
@@ -109,14 +112,7 @@ class ServiceProvider extends AbstractServiceProvider {
 
 		$this->getContainer()->add( 'preload_activation', Activation::class )
 			->addArgument( $queue )
-			->addArgument( $cache_query )
-			->addArgument( $options );
-
-		$this->getContainer()->add( 'preload_settings', Settings::class )
-			->addArgument( $options )
-			->addArgument( $preload_url_controller );
-
-		$preload_settings = $this->getContainer()->get( 'preload_settings' );
+			->addArgument( $cache_query );
 
 		$this->getContainer()->add( 'check_finished_controller', CheckFinished::class )
 			->addArgument( $preload_settings )

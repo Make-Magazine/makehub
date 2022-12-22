@@ -137,23 +137,17 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID ); ?>
 
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/comments_open/ */
 			if ( post_type_supports( 'sfwd-assignment', 'comments' ) && apply_filters( 'comments_open', $assignment->comment_status, $assignment->ID ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core filter
-
-				if ( true === (bool) $assignment_post_type_object->publicly_queryable ) {
+				?>
+				<a href='<?php echo esc_url( get_comments_link( $assignment->ID ) ); ?>' data-ld-tooltip="
+					<?php
+					echo sprintf(
+						// translators: placeholder: comment count.
+						esc_html_x( '%d Comments', 'placeholder: comment count', 'learndash' ),
+						esc_html( get_comments_number( $assignment->ID ) ) // get_comments_number returns a number. Adding escaping just in case somebody changes the template.
+					);
 					?>
-					<a href='<?php echo esc_url( get_comments_link( $assignment->ID ) ); ?>' data-ld-tooltip="
-						<?php
-						echo sprintf(
-							// translators: placeholder: comment count.
-							esc_html_x( '%d Comments', 'placeholder: comment count', 'learndash' ),
-							esc_html( get_comments_number( $assignment->ID ) ) // get_comments_number returns a number. Adding escaping just in case somebody changes the template.
-						);
-						?>
-					"><?php 
-				}
-				echo esc_html( get_comments_number( $assignment->ID ) ); ?><span class="ld-icon ld-icon-comments"></span><?php
-				if ( true === (bool) $assignment_post_type_object->publicly_queryable ) {	
-					?></a><?php
-				}
+				"><?php echo esc_html( get_comments_number( $assignment->ID ) ); ?><span class="ld-icon ld-icon-comments"></span></a>
+				<?php
 			} else {
 				echo '';
 			};

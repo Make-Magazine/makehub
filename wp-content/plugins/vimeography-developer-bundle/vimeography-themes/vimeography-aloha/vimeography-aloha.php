@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Aloha
 Plugin URI: https://vimeography.com/themes
 Theme Name: Aloha
 Theme URI:  https://vimeography.com/themes/aloha
-Version: 2.1.1
+Version: 2.0.6
 Description: Aloha shows your video thumbnails with a title caption and popup video player.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2020 Dave Kiss
+Copyright: 2018 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Aloha') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Aloha') ) {
      *
      * @var string
      */
-    public $version = '2.1.1';
+    public $version = '2.0.6';
 
 
     /**

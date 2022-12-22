@@ -93,14 +93,7 @@ export default class GPPopulateAnything {
 				calcObj: object
 			) => {
 				this.triggerChangeAfterCalculate = true;
-
-				if (
-					! this.triggerChangeOnFields.find(
-						( { field_id } ) => field_id === formulaField.field_id
-					)
-				) {
-					this.triggerChangeOnFields.push( formulaField );
-				}
+				this.triggerChangeOnFields.push( formulaField );
 			}
 		);
 
@@ -922,6 +915,7 @@ export default class GPPopulateAnything {
 						updatedFieldIDs.push( fieldID );
 					}
 
+					this.runAndBindCalculationEvents();
 					if (
 						typeof ( $.fn as any ).ionRangeSlider !== 'undefined'
 					) {
@@ -937,8 +931,6 @@ export default class GPPopulateAnything {
 				window.gppaLiveMergeTags[ this.formId ].replaceMergeTagValues(
 					response.merge_tag_values
 				);
-
-				this.runAndBindCalculationEvents();
 
 				enableSubmitButton( this.getFormElement() );
 

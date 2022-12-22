@@ -129,21 +129,10 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 			'email',
 			$email
 		);
-		$result       = array_values( $result_array );
+		$result       = $result_array;
 
-		if ( is_array( $result ) && isset( $result[0] ) ) {
-			try {
-				return $ac_contact_model->set_properties_from_serialized_array( $result[0] );
-			} catch ( Throwable $t ) {
-				$logger->warning(
-					'Activecampaign_For_Woocommerce_Interacts_With_Api: There was an issue parsing the resource from serialized array for a contact.',
-					[
-						'message' => $t->getMessage(),
-						'result'  => $result,
-					]
-				);
-			}
-
+		if ( empty( $result ) ) {
+			$logger = new Logger();
 			$logger->debug(
 				'ac_contact_repository: Resource not found.',
 				[
@@ -151,9 +140,9 @@ class Activecampaign_For_Woocommerce_AC_Contact_Repository implements Repository
 					'email'    => $email,
 				]
 			);
-
-			return null;
 		}
+
+		return $ac_contact_model->set_properties_from_serialized_array( array_values( $result )[0] );
 	}
 
 	/**

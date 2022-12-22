@@ -28,8 +28,7 @@ $border-radius: 5px;
 }
 
 .wc-block-components-express-payment--checkout {
-	/* stylelint-disable-next-line function-calc-no-unspaced-operator */
-	margin-top: calc($border-radius * 3);
+	margin-top: $border-radius;
 
 	.wc-block-components-express-payment__title-container {
 		display: flex;
@@ -131,11 +130,9 @@ $border-radius: 5px;
 	&::before {
 		margin-right: 10px;
 	}
-
 	&::after {
 		margin-left: 10px;
 	}
-
 	&::before,
 	&::after {
 		content: " ";

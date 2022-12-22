@@ -141,10 +141,6 @@ class QM_Collector_Languages extends QM_Collector {
 			return $mofile;
 		}
 
-		if ( isset( $this->data['languages'][ $domain ][ $mofile ] ) ) {
-			return $mofile;
-		}
-
 		$trace = new QM_Backtrace( array(
 			'ignore_hook' => array(
 				current_filter() => true,
@@ -161,7 +157,7 @@ class QM_Collector_Languages extends QM_Collector {
 
 		$found = file_exists( $mofile ) ? filesize( $mofile ) : false;
 
-		$this->data['languages'][ $domain ][ $mofile ] = array(
+		$this->data['languages'][ $domain ][] = array(
 			'caller' => $trace->get_caller(),
 			'domain' => $domain,
 			'file' => $mofile,

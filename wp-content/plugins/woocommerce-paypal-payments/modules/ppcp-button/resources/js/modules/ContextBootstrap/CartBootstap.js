@@ -1,10 +1,10 @@
 import CartActionHandler from '../ActionHandler/CartActionHandler';
+import ErrorHandler from '../ErrorHandler';
 
 class CartBootstrap {
-    constructor(gateway, renderer, errorHandler) {
+    constructor(gateway, renderer) {
         this.gateway = gateway;
         this.renderer = renderer;
-        this.errorHandler = errorHandler;
     }
 
     init() {
@@ -28,7 +28,7 @@ class CartBootstrap {
     render() {
         const actionHandler = new CartActionHandler(
             PayPalCommerceGateway,
-            this.errorHandler,
+            new ErrorHandler(this.gateway.labels.error.generic),
         );
 
         this.renderer.render(

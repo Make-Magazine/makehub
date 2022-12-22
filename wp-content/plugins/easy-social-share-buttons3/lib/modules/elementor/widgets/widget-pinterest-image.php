@@ -12,7 +12,7 @@ class ESSB_Elementor_Pinterest_Image_Widget extends Widget_Base {
 	}
 	
 	public function get_icon() {
-		return 'eicon-pinterest';
+		return 'fa fa-pinterest';
 	}
 	
 	public function get_categories() {

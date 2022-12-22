@@ -232,9 +232,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
-		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$return = bb_moderation_is_suspended_label( $user_id );
+			$return = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $return;
@@ -252,9 +251,8 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 */
 	public function blocked_get_comment_author( $author, $comment_id ) {
 
-		$user_id = BP_Moderation_Comment::get_content_owner_id( $comment_id );
 		if ( $this->check_is_hidden( $comment_id ) ) {
-			$author = bb_moderation_is_suspended_label( $user_id );
+			$author = esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $author;

@@ -213,7 +213,7 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 
 			$message     = $t->getMessage();
 			$stack_trace = $this->logger->clean_trace( $t->getTrace() );
-			$this->logger->error( $message, array( 'stack trace' => $stack_trace ) );
+			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return;
 		}
@@ -235,7 +235,7 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
 			$message     = $e->getMessage();
 			$stack_trace = $this->logger->clean_trace( $e->getTrace() );
-			$this->logger->error( $message, array( 'stack trace' => $stack_trace ) );
+			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			$this->connection_option = null;
 		}
@@ -285,7 +285,7 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 
 			$message     = $t->getMessage();
 			$stack_trace = $this->logger->clean_trace( $t->getTrace() );
-			$this->logger->error( $message, array( 'stack trace' => $stack_trace ) );
+			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return;
 		}
@@ -303,9 +303,9 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 	 */
 	private function update_connection_option_id_cache( $id ) {
 		$this->admin->update_storage(
-			array(
+			[
 				'connection_option_id' => $id,
-			)
+			]
 		);
 
 		$this->storage = $this->admin->get_storage();

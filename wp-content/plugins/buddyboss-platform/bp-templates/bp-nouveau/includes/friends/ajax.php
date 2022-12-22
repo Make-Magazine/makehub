@@ -100,7 +100,6 @@ function bp_nouveau_ajax_addremove_friend() {
 
 	$current_page     = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
 	$button_clicked   = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
-	$component        = isset( $_POST['component'] ) ? sanitize_text_field( wp_unslash( $_POST['component'] ) ) : '';
 	$button_arguments = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
 
 	// Actions button arguments to display different style based on arguments.
@@ -112,22 +111,17 @@ function bp_nouveau_ajax_addremove_friend() {
 		)
 	);
 
-	if ( 'messages' === $component ) {
-		add_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
-	}
-
-	$type = '';
-
 	// Check if the user exists only when the Friend ID is not a Frienship ID.
 	if ( isset( $_POST['action'] ) && 'friends_accept_friendship' !== $_POST['action'] && 'friends_reject_friendship' !== $_POST['action'] ) {
 		$user = get_user_by( 'id', $friend_id );
 		if ( ! $user ) {
-			$type     = 'error';
-			$response = array(
-				'feedback' => sprintf(
-					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'No member found by that ID.', 'buddyboss' )
-				),
+			wp_send_json_error(
+				array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error">%s</div>',
+						esc_html__( 'No member found by that ID.', 'buddyboss' )
+					),
+				)
 			);
 		}
 	}
@@ -135,51 +129,50 @@ function bp_nouveau_ajax_addremove_friend() {
 	// In the 2 first cases the $friend_id is a friendship id.
 	if ( ! empty( $_POST['action'] ) && 'friends_accept_friendship' === $_POST['action'] ) {
 		if ( ! friends_accept_friendship( $friend_id ) ) {
-
-			$type     = 'error';
-			$response = array(
-				'feedback' => sprintf(
-					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss' )
-				),
+			wp_send_json_error(
+				array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error">%s</div>',
+						esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss' )
+					),
+				)
 			);
-
 		} else {
-
-			$type     = 'success';
-			$response = array(
-				'feedback'     => sprintf(
-					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection accepted.', 'buddyboss' )
-				),
-				'type'         => 'success',
-				'is_user'      => true,
-				'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+			wp_send_json_success(
+				array(
+					'feedback'     => sprintf(
+						'<div class="bp-feedback success">%s</div>',
+						esc_html__( 'Connection accepted.', 'buddyboss' )
+					),
+					'type'         => 'success',
+					'is_user'      => true,
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+				)
 			);
 		}
 
 		// Rejecting a friendship.
 	} elseif ( ! empty( $_POST['action'] ) && 'friends_reject_friendship' === $_POST['action'] ) {
 		if ( ! friends_reject_friendship( $friend_id ) ) {
-
-			$type     = 'error';
-			$response = array(
-				'feedback' => sprintf(
-					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss' )
-				),
+			wp_send_json_error(
+				array(
+					'feedback' => sprintf(
+						'<div class="bp-feedback error">%s</div>',
+						esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss' )
+					),
+				)
 			);
 		} else {
-
-			$type     = 'success';
-			$response = array(
-				'feedback'     => sprintf(
-					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection rejected.', 'buddyboss' )
-				),
-				'type'         => 'success',
-				'is_user'      => true,
-				'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+			wp_send_json_success(
+				array(
+					'feedback'     => sprintf(
+						'<div class="bp-feedback success">%s</div>',
+						esc_html__( 'Connection rejected.', 'buddyboss' )
+					),
+					'type'         => 'success',
+					'is_user'      => true,
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
+				)
 			);
 		}
 
@@ -191,7 +184,7 @@ function bp_nouveau_ajax_addremove_friend() {
 				esc_html__( 'Connection could not be cancelled.', 'buddyboss' )
 			);
 
-			$type = 'error';
+			wp_send_json_error( $response );
 		} else {
 			$is_user = bp_is_my_profile();
 
@@ -216,8 +209,7 @@ function bp_nouveau_ajax_addremove_friend() {
 				);
 			}
 
-			$type = 'success';
-
+			wp_send_json_success( $response );
 		}
 
 		// Trying to request friendship.
@@ -228,10 +220,9 @@ function bp_nouveau_ajax_addremove_friend() {
 				esc_html__( 'Connection could not be requested.', 'buddyboss' )
 			);
 
-			$type = 'error';
+			wp_send_json_error( $response );
 		} else {
 
-			$type     = 'success';
 			$response = array(
 				'contents' => bp_get_add_friend_button(
 					$friend_id,
@@ -240,6 +231,7 @@ function bp_nouveau_ajax_addremove_friend() {
 				),
 			);
 
+			wp_send_json_success( $response );
 		}
 
 		// Trying to cancel pending request.
@@ -254,14 +246,14 @@ function bp_nouveau_ajax_addremove_friend() {
 				),
 			);
 
-			$type = 'success';
-
+			wp_send_json_success( $response );
 		} else {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
 				esc_html__( 'Connection request could not be cancelled.', 'buddyboss' )
 			);
-			$type                 = 'error';
+
+			wp_send_json_error( $response );
 		}
 
 		// Request already pending.
@@ -270,17 +262,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			'<div class="bp-feedback error">%s</div>',
 			esc_html__( 'Request Pending', 'buddyboss' )
 		);
-		$type                 = 'error';
 
-	}
-
-	if ( 'messages' === $component ) {
-		remove_filter( 'bp_after_bb_parse_button_args_parse_args', 'bb_messaged_set_friend_button_args' );
-	}
-
-	if ( 'error' === $type ) {
 		wp_send_json_error( $response );
-	} else {
-		wp_send_json_success( $response );
 	}
 }

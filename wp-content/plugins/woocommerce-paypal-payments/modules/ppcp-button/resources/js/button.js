@@ -14,7 +14,7 @@ import {
     ORDER_BUTTON_SELECTOR,
     PaymentMethods
 } from "./modules/Helper/CheckoutMethodState";
-import {hide, setVisible, setVisibleByClass} from "./modules/Helper/Hiding";
+import {hide, setVisible} from "./modules/Helper/Hiding";
 import {isChangePaymentPage} from "./modules/Helper/Subscriptions";
 import FreeTrialHandler from "./modules/ActionHandler/FreeTrialHandler";
 
@@ -29,16 +29,6 @@ const bootstrap = () => {
     const creditCardRenderer = new CreditCardRenderer(PayPalCommerceGateway, errorHandler, spinner);
 
     const freeTrialHandler = new FreeTrialHandler(PayPalCommerceGateway, spinner, errorHandler);
-
-    jQuery('form.woocommerce-checkout input').on('keydown', e => {
-        if (e.key === 'Enter' && [
-            PaymentMethods.PAYPAL,
-            PaymentMethods.CARDS,
-            PaymentMethods.CARD_BUTTON,
-        ].includes(getCurrentPaymentMethod())) {
-            e.preventDefault();
-        }
-    });
 
     const onSmartButtonClick = (data, actions) => {
         window.ppcpFundingSource = data.fundingSource;
@@ -110,8 +100,7 @@ const bootstrap = () => {
         if (PayPalCommerceGateway.mini_cart_buttons_enabled === '1') {
             const miniCartBootstrap = new MiniCartBootstap(
                 PayPalCommerceGateway,
-                renderer,
-                errorHandler,
+                renderer
             );
 
             miniCartBootstrap.init();
@@ -123,7 +112,6 @@ const bootstrap = () => {
             PayPalCommerceGateway,
             renderer,
             messageRenderer,
-            errorHandler,
         );
 
         singleProductBootstrap.init();
@@ -133,7 +121,6 @@ const bootstrap = () => {
         const cartBootstrap = new CartBootstrap(
             PayPalCommerceGateway,
             renderer,
-            errorHandler,
         );
 
         cartBootstrap.init();
@@ -144,8 +131,7 @@ const bootstrap = () => {
             PayPalCommerceGateway,
             renderer,
             messageRenderer,
-            spinner,
-            errorHandler,
+            spinner
         );
 
         checkoutBootstap.init();
@@ -156,8 +142,7 @@ const bootstrap = () => {
             PayPalCommerceGateway,
             renderer,
             messageRenderer,
-            spinner,
-            errorHandler,
+            spinner
         );
         payNowBootstrap.init();
     }
@@ -205,7 +190,7 @@ document.addEventListener(
             const isPaypalButton = paypalButtonGatewayIds.includes(currentPaymentMethod);
             const isCards = currentPaymentMethod === PaymentMethods.CARDS;
 
-            setVisibleByClass(ORDER_BUTTON_SELECTOR, !isPaypalButton && !isCards, 'ppcp-hidden');
+            setVisible(ORDER_BUTTON_SELECTOR, !isPaypalButton && !isCards, true);
 
             if (isPaypalButton) {
                 // stopped after the first rendering of the buttons, in onInit
@@ -255,6 +240,6 @@ document.addEventListener(
             return;
         }
 
-        document.body.appendChild(script);
+        document.body.append(script);
     },
 );

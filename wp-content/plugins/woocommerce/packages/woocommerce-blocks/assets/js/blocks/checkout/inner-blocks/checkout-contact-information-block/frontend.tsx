@@ -4,8 +4,7 @@
 import classnames from 'classnames';
 import { withFilteredAttributes } from '@woocommerce/shared-hocs';
 import { FormStep } from '@woocommerce/base-components/cart-checkout';
-import { useSelect } from '@wordpress/data';
-import { CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
+import { useCheckoutContext } from '@woocommerce/base-context';
 
 /**
  * Internal dependencies
@@ -29,9 +28,7 @@ const FrontendBlock = ( {
 	children: JSX.Element;
 	className?: string;
 } ) => {
-	const checkoutIsProcessing = useSelect( ( select ) =>
-		select( CHECKOUT_STORE_KEY ).isProcessing()
-	);
+	const { isProcessing: checkoutIsProcessing } = useCheckoutContext();
 	const { allowCreateAccount } = useCheckoutBlockContext();
 
 	return (

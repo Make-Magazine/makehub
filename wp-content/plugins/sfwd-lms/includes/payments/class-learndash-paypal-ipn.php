@@ -117,17 +117,11 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 		private static $hash_user_meta_values = null;
 
 		/**
-		 * Returns true if everything is configured and payment gateway can be used, otherwise false.
+		 * Public constructor for class
 		 *
-		 * @since 4.4.0
-		 *
-		 * @return bool
+		 * @since 3.2.2
 		 */
-		public function is_ready(): bool {
-			$settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
-			$enabled  = 'on' === ( $settings['enabled'] ?? '' );
-
-			return $enabled && ! empty( $tsettings['paypal_email'] );
+		private function __construct() {
 		}
 
 		/**
@@ -180,13 +174,6 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 			self::ipn_complete_transaction();
 			self::ipn_debug( '---' );
 
-			if ( self::$ipn_transaction_post_id > 0 && ! is_wp_error( self::$ipn_transaction_post_id ) ) {
-				/** This action is documented in includes/payments/class-transaction-functions.php */
-				do_action( 'learndash_transaction_created', self::$ipn_transaction_post_id );
-			}
-
-			self::ipn_debug( '---' );
-
 			self::ipn_debug( 'IPN Processing Completed Successfully.' );
 			self::ipn_exit();
 			// we're done here.
@@ -215,9 +202,6 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 			self::ipn_debug( 'IPN Post vars<pre>' . print_r( self::$ipn_transaction_data, true ) . '</pre>' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 
 			self::ipn_debug( 'IPN Get vars<pre>' . print_r( $_GET, true ) . '</pre>' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-
-			self::ipn_debug( 'LearnDash Version: ' . LEARNDASH_VERSION ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-
 		}
 
 		/**
@@ -246,11 +230,10 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					self::$hash_nonce = sanitize_text_field( wp_unslash( $_GET['return-notify'] ) );
 				} else {
-					self::$hash_action = 'return-notify';
-					return true;
+					self::ipn_exit();
 				}
 
-				if ( ( ! empty( self::$hash_nonce ) ) && ( ! self::hash_verify_nonce() ) ) {
+				if ( ! self::hash_verify_nonce() ) {
 					self::ipn_debug( 'DEBUG: hash verify nonce failed.' );
 					self::ipn_exit();
 				}
@@ -363,7 +346,7 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 				$user_query = new WP_User_Query(
 					array(
 						'number'       => 1,
-						'meta_key'     => self::hash_get_user_meta_key(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+						'meta_key'     => self::hash_get_user_meta_key(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key.
 						'meta_compare' => 'EXISTS',
 					)
 				);
@@ -771,21 +754,10 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 				}
 
 				$server_course_price = '0.00';
-
 				if ( isset( $post_settings[ $post_type_prefix . '_price' ] ) ) {
 					$server_course_price = preg_replace( '/[^0-9.]/', '', $post_settings[ $post_type_prefix . '_price' ] );
+					$server_course_price = number_format( floatval( $server_course_price ), 2, '.', '' );
 				}
-
-				/** This filter is documented in includes/payments/class-learndash-stripe-connect-checkout-integration.php */
-				$server_course_price = apply_filters(
-					'learndash_get_price_by_coupon',
-					floatval( $server_course_price ),
-					self::$ipn_transaction_data['post_id'],
-					empty( self::$ipn_transaction_data['custom'] ) ? null : absint( self::$ipn_transaction_data['custom'] )
-				);
-
-				$server_course_price = number_format( $server_course_price, 2, '.', '' );
-
 				self::ipn_debug( ucfirst( $post_type_prefix ) . ' Price [' . $server_course_price . ']' );
 
 				$server_course_trial_price = '0.00';
@@ -1012,7 +984,7 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 					array(
 						'ID'          => $transaction_post_id,
 						'post_title'  => self::ipn_get_transaction_title(),
-						'post_type'   => LDLMS_Post_Types::get_post_type_slug( 'transaction' ),
+						'post_type'   => 'sfwd-transactions',
 						'post_status' => 'publish',
 						'post_author' => self::$ipn_transaction_data['user_id'],
 					)

@@ -51,8 +51,9 @@ class Website extends Abstract_Schema_Piece {
 	 * @return array
 	 */
 	private function add_alternate_name( $data ) {
-		if ( $this->context->alternate_site_name !== '' ) {
-			$data['alternateName'] = $this->helpers->schema->html->smart_strip_tags( $this->context->alternate_site_name );
+		$alternate_name = $this->helpers->options->get( 'alternate_website_name', '' );
+		if ( $alternate_name !== '' ) {
+			$data['alternateName'] = $this->helpers->schema->html->smart_strip_tags( $alternate_name );
 		}
 
 		return $data;

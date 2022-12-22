@@ -77,8 +77,8 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		public function check_table_filters() {
 			$this->filters = array();
 
-			if ( ( isset( $_GET['s'] ) ) && ( ! empty( $_GET['s'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$this->filters['search'] = sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( isset( $_GET['s'] ) ) && ( ! empty( $_GET['s'] ) ) ) {
+				$this->filters['search'] = esc_attr( $_GET['s'] );
 			}
 		}
 
@@ -91,7 +91,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		 * @param string $input_id  Search field HTML ID.
 		 */
 		public function search_box( $text, $input_id ) {
-			if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 				return;
 			}
 
@@ -217,7 +217,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 				) . '</a>';
 			}
 
-			echo implode( ' | ', $actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+			if ( ! empty( $actions ) ) {
+				echo implode( ' | ', $actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+			}
 
 			/**
 			 * Fires after admin page group actions column.
@@ -319,8 +321,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 
 					$user_query = new WP_User_Query( $user_query_args );
 
-					$this->items = $user_query->get_results();
-					$total_items = $user_query->get_total();
+					$this->items = $user_query->results;
+					$total_items = $user_query->total_users;
+
 				}
 			} else {
 				$current_user = wp_get_current_user();

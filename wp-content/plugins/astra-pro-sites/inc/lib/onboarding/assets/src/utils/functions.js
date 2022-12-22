@@ -54,14 +54,10 @@ export const getDataUri = ( url, callback ) => {
 };
 
 export const storeCurrentState = ( currentState ) => {
-	try {
-		localStorage.setItem(
-			'starter-templates-onboarding',
-			JSON.stringify( currentState )
-		);
-	} catch ( err ) {
-		return false;
-	}
+	localStorage.setItem(
+		'starter-templates-onboarding',
+		JSON.stringify( currentState )
+	);
 };
 
 export const getStoredState = () => {

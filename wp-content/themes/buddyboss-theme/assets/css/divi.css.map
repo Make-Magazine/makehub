@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,2BAA2B;AAIvB,0FAA6D;EACzD,MAAM,EAAE,gBAAgB;;;AAIhC,oGAAqG;EACjG,UAAU,EAAE,eAAe",
-"sources": ["scss/plugins/divi/components/_layout.scss"],
-"names": [],
-"file": "divi.css"
-}

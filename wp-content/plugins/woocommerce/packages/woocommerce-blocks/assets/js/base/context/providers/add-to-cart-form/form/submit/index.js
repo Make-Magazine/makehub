@@ -6,13 +6,13 @@ import triggerFetch from '@wordpress/api-fetch';
 import { useEffect, useCallback, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { triggerAddedToCartEvent } from '@woocommerce/base-utils';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { VALIDATION_STORE_KEY } from '@woocommerce/block-data';
+import { useDispatch } from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
 import { useAddToCartFormContext } from '../../form-state';
+import { useValidationContext } from '../../../validation';
 import { useStoreCart } from '../../../../hooks/cart/use-store-cart';
 
 /**
@@ -30,18 +30,15 @@ const FormSubmit = () => {
 		isProcessing,
 		requestParams,
 	} = useAddToCartFormContext();
-	const { showAllValidationErrors } = useDispatch( VALIDATION_STORE_KEY );
-	const hasValidationErrors = useSelect( ( select ) => {
-		const store = select( VALIDATION_STORE_KEY );
-		return store.hasValidationErrors;
-	} );
+	const { hasValidationErrors, showAllValidationErrors } =
+		useValidationContext();
 	const { createErrorNotice, removeNotice } = useDispatch( 'core/notices' );
 	const { receiveCart } = useStoreCart();
 	const [ isSubmitting, setIsSubmitting ] = useState( false );
 	const doSubmit = ! hasError && isProcessing;
 
 	const checkValidationContext = useCallback( () => {
-		if ( hasValidationErrors() ) {
+		if ( hasValidationErrors ) {
 			showAllValidationErrors();
 			return {
 				type: 'error',
@@ -104,7 +101,7 @@ const FormSubmit = () => {
 						} else {
 							createErrorNotice(
 								__(
-									'Something went wrong. Please contact us for assistance.',
+									'Something went wrong. Please contact us to get assistance.',
 									'woocommerce'
 								),
 								{

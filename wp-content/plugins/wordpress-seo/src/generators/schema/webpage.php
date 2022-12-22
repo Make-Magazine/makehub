@@ -16,9 +16,6 @@ class WebPage extends Abstract_Schema_Piece {
 	 * @return bool
 	 */
 	public function is_needed() {
-		if ( $this->context->indexable->object_type === 'unknown' ) {
-			return false;
-		}
 		return ! ( $this->context->indexable->object_type === 'system-page' && $this->context->indexable->object_sub_type === '404' );
 	}
 
@@ -130,7 +127,7 @@ class WebPage extends Abstract_Schema_Piece {
 	 */
 	private function add_potential_action( $data ) {
 		$url = $this->context->canonical;
-		if ( $data['@type'] === 'CollectionPage' || ( \is_array( $data['@type'] ) && \in_array( 'CollectionPage', $data['@type'], true ) ) ) {
+		if ( $data['@type'] === 'CollectionPage' || ( is_array( $data['@type'] ) && in_array( 'CollectionPage', $data['@type'], true ) ) ) {
 			return $data;
 		}
 

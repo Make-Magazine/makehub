@@ -45,15 +45,12 @@ use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Gue
 use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
 use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
 use Activecampaign_For_Woocommerce_Historical_Sync_Job as Historical_Sync;
-use Activecampaign_For_Woocommerce_Product_Sync_Job as Product_Sync;
 use Activecampaign_For_Woocommerce_New_Order_Sync_Job as New_Order_Sync;
 use Activecampaign_For_Woocommerce_Bulksync_Repository as Bulksync_Repository;
 use Activecampaign_For_Woocommerce_Utilities as AC_Utilities;
 use Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository as AC_Contact_Batch_Repository;
-use Activecampaign_For_Woocommerce_Api_Client_Graphql as Graphql_Api_Client;
 use AcVendor\DI;
 use AcVendor\Psr\Container\ContainerInterface;
-use Activecampaign_For_Woocommerce_Product_Repository as Cofe_Product_Repository;
 use AcVendor\Psr\Log\LoggerInterface;
 
 return array(
@@ -85,9 +82,7 @@ return array(
 		Abandoned_Cart_Utilities $abandoned_cart_utilities,
 		Bulksync_Repository $bulksync_repository,
 		AC_Utilities $ac_utilities,
-		Contact_Repository $contact_repository,
-		Cofe_Product_Repository $cofe_product_repository,
-		Product_Sync $product_sync_job
+		Contact_Repository $contact_repository
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -127,9 +122,7 @@ return array(
 			$abandoned_cart_utilities,
 			$bulksync_repository,
 			$ac_utilities,
-			$contact_repository,
-			$cofe_product_repository,
-			$product_sync_job
+			$contact_repository
 		);
 	},
 
@@ -160,15 +153,6 @@ return array(
 		$api_key = isset( $settings['api_key'] ) ? $settings['api_key'] : null;
 
 		return new Api_Client( $api_uri, $api_key, $logger );
-	},
-
-	Graphql_Api_Client::class                         => static function ( Logger $logger ) {
-		$settings = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
-
-		$api_uri = isset( $settings['api_url'] ) ? $settings['api_url'] : null;
-		$api_key = isset( $settings['api_key'] ) ? $settings['api_key'] : null;
-
-		return new Graphql_Api_Client( $api_uri, $api_key, $logger );
 	},
 
 	AC_Public::class                                  => static function ( Admin $admin ) {
@@ -244,20 +228,6 @@ return array(
 	) {
 		return new Historical_Sync( $logger, $order_utilities, $contact_batch_repository, $bulksync_repository );
 	},
-
-	Product_Sync::class                               => static function (
-		Logger $logger,
-		Cofe_Product_Repository $cofe_product_repository
-	) {
-		return new Product_Sync( $logger, $cofe_product_repository );
-	},
-
-	Cofe_Product_Repository::class                    => static function (
-		Graphql_Api_Client $client
-	) {
-		return new Cofe_Product_Repository( $client );
-	},
-
 	New_Order_Sync::class                             => static function (
 		Logger $logger,
 		Order_Utilities $order_utilities,

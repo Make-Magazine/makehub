@@ -282,7 +282,6 @@ class CDN {
 			'php',
 			'html',
 			'htm',
-			'cfm',
 		];
 
 		if ( in_array( pathinfo( $path, PATHINFO_EXTENSION ), $excluded_extensions, true ) ) {

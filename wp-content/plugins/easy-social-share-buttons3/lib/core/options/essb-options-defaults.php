@@ -116,6 +116,7 @@ if (!function_exists('essb_available_social_networks')) {
 				'facebook' => array ('name' => 'Facebook', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
 				'facebook_like' => array ('name' => 'Like', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
 				'twitter' => array ('name' => 'Twitter', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
+				'google' => array ('name' => 'Google+', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
 				'pinterest' => array ('name' => 'Pinterest', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
 				'linkedin' => array ('name' => 'LinkedIn', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
 				'digg' => array ('name' => 'Digg', 'type' => 'buildin', 'supports' => 'desktop,mobile' ),
@@ -171,13 +172,6 @@ if (!function_exists('essb_available_social_networks')) {
 		
 		if (has_filter('essb4_social_networks')) {
 			$essb_available_social_networks = apply_filters('essb4_social_networks', $essb_available_social_networks);
-		}
-		
-	    /**
-	     * @since 8.6
-	     */
-		if (has_filter('essb_additional_social_networks')) {
-		    $essb_available_social_networks = apply_filters('essb_additional_social_networks', $essb_available_social_networks);
 		}
 		
 		if (!$always_show_all && has_filter('essb_manage_networks')) {

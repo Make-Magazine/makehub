@@ -30,6 +30,13 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
 
     $sub = new MeprSubscription();
 
+    // Load up the defaults like a champion
+    // Must do this before we start churning through rows so we don't overwrite any goodies
+    $this->fail_if_not_valid_product_id($row['product_id']);
+    $prd = new MeprProduct($row['product_id']);
+    $sub->product_id = $prd->ID;
+    $sub->load_product_vars($prd, (isset($row['coupon_code']) ? $row['coupon_code'] : null));
+
     // Updating existing sub?
     $updating_sub = false;
     if(isset($row['id']) && !empty($row['id'])) {
@@ -40,7 +47,7 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
       }
     }
 
-    $valid_period_types = array('days', 'weeks', 'months', 'years', 'lifetime');
+    $valid_period_types = array('weeks', 'months', 'years', 'lifetime');
     $valid_statuses = array(MeprSubscription::$active_str,
                             MeprSubscription::$cancelled_str,
                             MeprSubscription::$suspended_str,
@@ -90,12 +97,6 @@ class MpimpSubscriptionsImporter extends MpimpBaseImporter {
           $this->fail_if_empty($col, $cell);
           $this->fail_if_not_number($col, $cell);
           $sub->{$col} = empty($cell)?0:$cell;
-          break;
-        case 'product_id':
-          $this->fail_if_not_valid_product_id($cell);
-          $prd = new MeprProduct($cell);
-          $sub->product_id = $prd->ID;
-          $sub->load_product_vars($prd, (isset($row['coupon_code']) ? $row['coupon_code'] : null));
           break;
         case 'tax_rate':
           $sub->{$col} = empty($cell)?0:$cell;

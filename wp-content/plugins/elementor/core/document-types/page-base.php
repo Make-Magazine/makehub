@@ -111,14 +111,17 @@ abstract class PageBase extends Document {
 			]
 		);
 
-		$document->add_responsive_control(
-			'margin',
+		$document->add_group_control(
+			Group_Control_Background::get_type(),
 			[
-				'label' => esc_html__( 'Margin', 'elementor' ),
-				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%', 'rem' ],
-				'selectors' => [
-					'{{WRAPPER}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+				'name'  => 'background',
+				'fields_options' => [
+					'image' => [
+						// Currently isn't supported.
+						'dynamic' => [
+							'active' => false,
+						],
+					],
 				],
 			]
 		);
@@ -128,25 +131,9 @@ abstract class PageBase extends Document {
 			[
 				'label' => esc_html__( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%', 'rem' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
-				],
-			]
-		);
-
-		$document->add_group_control(
-			Group_Control_Background::get_type(),
-			[
-				'name'  => 'background',
-				'separator' => 'before',
-				'fields_options' => [
-					'image' => [
-						// Currently isn't supported.
-						'dynamic' => [
-							'active' => false,
-						],
-					],
 				],
 			]
 		);

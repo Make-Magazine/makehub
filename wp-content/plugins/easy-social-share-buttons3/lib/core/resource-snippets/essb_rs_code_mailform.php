@@ -30,9 +30,6 @@ if (!function_exists('essb_rs_mailform_build')) {
 			$translate_mail_message_error_fill = esc_html__('Please fill all form fields', 'essb');
 		}
 		
-		$translate_message_sending = essb_option_value('translate_mail_message_sending');
-		if ($translate_message_sending == '') { $translate_message_sending = esc_html__('Sending to', 'essb'); }
-		
 		if ($translate_mail_title == '') $translate_mail_title = esc_html__('Send this to a friend', 'essb');
 		if ($translate_mail_email == '') $translate_mail_email = esc_html__('Your email', 'essb');
 		if ($translate_mail_recipient == '') $translate_mail_recipient = esc_html__('Recipient email', 'essb');
@@ -47,7 +44,7 @@ if (!function_exists('essb_rs_mailform_build')) {
 		
 		$code = '';
 		
-		$code .= '<div class="essb_mailform" data-error="'.esc_attr($translate_mail_message_error_fill).'" data-sending="'.esc_attr($translate_message_sending).'">';
+		$code .= '<div class="essb_mailform" data-error="'.esc_attr($translate_mail_message_error_fill).'">';
 		$code .= '<div class="essb_mailform_header">';
 		$code .= '<div class="heading">'.$translate_mail_title.'</div>';
 		$code .= '</div>';
@@ -119,8 +116,6 @@ if (!function_exists('essb_rs_mailform_build')) {
 			$code .= '<div id="essb-modal-recaptcha"></div>';
 		}
 		
-		$code .= '<label class="essb_mailform_status_message" id="essb_mailform_status_message"></label>';
-		
 		$code .= '<div class="essb_mailform_content_buttons">';
 		$code .= '<button id="essb_mailform_btn_submit" class="essb_mailform_content_button" onclick="essb_mailform_send();">'.$translate_mail_send.'</button>';
 		$code .= '<button id="essb_mailform_btn_cancel" class="essb_mailform_content_button" onclick="essb_close_mailform(); return false;">'.$translate_mail_cancel.'</button>';
@@ -129,14 +124,6 @@ if (!function_exists('essb_rs_mailform_build')) {
 		$code .= '<input type="hidden" id="essb_mail_salt" value="'.esc_attr($mail_salt_check).'"/>';
 		$code .= '<input type="hidden" id="essb_mail_instance" value=""/>';
 		$code .= '<input type="hidden" id="essb_mail_post" value=""/>';
-		
-		if (essb_option_bool_value('affwp_active')) {
-		    essb_helper_maybe_load_feature('integration-affiliatewp');
-		    
-		    if (function_exists('essb_generate_affiliatewp_referral_id')) {
-		        $code .= '<input type="hidden" id="essb_mail_affiliate_id" value="'.essb_generate_affiliatewp_referral_id().'"/>';
-		    }
-		}
 		
 		$code .= '</div>';
 		$code .= '</div>';

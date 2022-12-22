@@ -52,11 +52,9 @@ class Database {
 	 * @return void
 	 */
 	public function delete_old_used_css() {
-		if ( ! $this->rucss_usedcss_table->exists() ) {
-			return;
+		if ( $this->rucss_usedcss_table->exists() ) {
+			$this->rucss_usedcss_table->delete_old_used_css();
 		}
-
-		$this->rucss_usedcss_table->delete_old_used_css();
 	}
 
 	/**

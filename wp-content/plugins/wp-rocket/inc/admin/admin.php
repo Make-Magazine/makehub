@@ -63,32 +63,11 @@ add_action( 'plugin_row_meta', 'rocket_plugin_row_meta', 10, 2 );
  * @return array Updated array of row action links
  */
 function rocket_post_row_actions( $actions, $post ) {
-
-	if ( ! rocket_can_display_options() ) {
-		return $actions;
-	}
-
 	if ( ! current_user_can( 'rocket_purge_posts' ) ) {
 		return $actions;
 	}
 
-	$cpts = get_post_types(
-		[
-			'public' => true,
-		],
-		'objects'
-	);
-
-	/**
-	 * Filters the post type on row actions.
-	 *
-	 * @since 3.11.4
-	 *
-	 * @param array $cpts Post Types.
-	 */
-	$cpts = apply_filters( 'rocket_skip_post_row_actions', $cpts );
-
-	if ( ! isset( $cpts[ $post->post_type ] ) ) {
+	if ( apply_filters( 'rocket_skip_post_row_actions', false, $post ) ) {
 		return $actions;
 	}
 
@@ -149,10 +128,6 @@ function rocket_dismiss_boxes( $args = [] ) {
 		return;
 	}
 
-	if ( ! current_user_can( 'rocket_manage_options' ) ) {
-		wp_nonce_ays( '' );
-	}
-
 	rocket_dismiss_box( $args['box'] );
 
 	if ( 'admin-post.php' === $pagenow ) {
@@ -195,10 +170,6 @@ function rocket_deactivate_plugin() {
 		wp_nonce_ays( '' );
 	}
 
-	if ( ! current_user_can( 'rocket_manage_options' ) ) {
-		wp_nonce_ays( '' );
-	}
-
 	deactivate_plugins( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) );
 
 	wp_safe_redirect( wp_get_referer() );
@@ -213,10 +184,6 @@ add_action( 'admin_post_deactivate_plugin', 'rocket_deactivate_plugin' );
  */
 function rocket_do_options_export() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'rocket_export' ) ) {
-		wp_nonce_ays( '' );
-	}
-
-	if ( ! current_user_can( 'rocket_manage_options' ) ) {
 		wp_nonce_ays( '' );
 	}
 

@@ -303,11 +303,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'Award', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'objects',
-				'id'    => 'bb-icon-award-slash',
-				'name'  => esc_html__( 'Award Slash', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'interfaces',
 				'id'    => 'bb-icon-backward',
 				'name'  => esc_html__( 'Backward', 'buddyboss-theme' ),
@@ -458,11 +453,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'BuddyPress', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'brands',
-				'id'    => 'bb-icon-brand-bunnynet',
-				'name'  => esc_html__( 'Bunny Net', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'technology',
 				'id'    => 'bb-icon-bug',
 				'name'  => esc_html__( 'Bug', 'buddyboss-theme' ),
@@ -604,11 +594,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'technology',
-				'id'    => 'bb-icon-cloud-check',
-				'name'  => esc_html__( 'Cloud Check', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'technology',
 				'id'    => 'bb-icon-cloud-download',
 				'name'  => esc_html__( 'Cloud Download', 'buddyboss-theme' ),
 			),
@@ -616,11 +601,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'objects',
 				'id'    => 'bb-icon-cloud-drizzle',
 				'name'  => esc_html__( 'Cloud Drizzle', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'technology',
-				'id'    => 'bb-icon-cloud-exclamation',
-				'name'  => esc_html__( 'Cloud Exclamation', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'objects',
@@ -646,11 +626,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'technology',
 				'id'    => 'bb-icon-cloud-sync',
 				'name'  => esc_html__( 'Cloud Sync', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'technology',
-				'id'    => 'bb-icon-cloud-times',
-				'name'  => esc_html__( 'Cloud Times', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'technology',
@@ -829,11 +804,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'objects',
-				'id'    => 'bb-icon-crown',
-				'name'  => esc_html__( 'Crown', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'objects',
 				'id'    => 'bb-icon-cube',
 				'name'  => esc_html__( 'Cube', 'buddyboss-theme' ),
 			),
@@ -969,11 +939,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-emoticon-confused',
-				'name'  => esc_html__( 'Emoticon Confused', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-emoticon-frown',
 				'name'  => esc_html__( 'Emoticon Frown', 'buddyboss-theme' ),
 			),
@@ -1043,16 +1008,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'Facebook', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'brands',
-				'id'    => 'bb-icon-brand-facebook-f',
-				'name'  => esc_html__( 'Facebook F', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'brands',
-				'id'    => 'bb-icon-brand-intercom',
-				'name'  => esc_html__( 'Brand Intercom', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'Interfaces',
 				'id'    => 'bb-icon-fast-backward',
 				'name'  => esc_html__( 'Fast Backward', 'buddyboss-theme' ),
@@ -1081,11 +1036,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'media-files',
 				'id'    => 'bb-icon-file-archive',
 				'name'  => esc_html__( 'File Archive', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-file-article',
-				'name'  => esc_html__( 'File Article', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'media-files',
@@ -1339,16 +1289,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'media-files',
-				'id'    => 'bb-icon-folder-download',
-				'name'  => esc_html__( 'Folder Download', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-folder-move',
-				'name'  => esc_html__( 'Folder Move', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
 				'id'    => 'bb-icon-folder-open',
 				'name'  => esc_html__( 'Folder Open', 'buddyboss-theme' ),
 			),
@@ -1361,11 +1301,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'media-files',
 				'id'    => 'bb-icon-folder-slash',
 				'name'  => esc_html__( 'Folder Slash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-folder-upload',
-				'name'  => esc_html__( 'Folder Upload', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-formatting',
@@ -1419,11 +1354,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-globe-alt',
-				'name'  => esc_html__( 'Globe Alt', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-globe-layers',
 				'name'  => esc_html__( 'Globe Layers', 'buddyboss-theme' ),
 			),
@@ -1464,23 +1394,8 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-grip-h',
-				'name'  => esc_html__( 'Grid H', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
-				'id'    => 'bb-icon-grip-v',
-				'name'  => esc_html__( 'Grid V', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-hashtag',
 				'name'  => esc_html__( 'Hashtag', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
-				'id'    => 'bb-icon-hand-pointer',
-				'name'  => esc_html__( 'Hand Pointer', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'text-formatting',
@@ -1506,16 +1421,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'media-files',
 				'id'    => 'bb-icon-image',
 				'name'  => esc_html__( 'Image', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-image-move',
-				'name'  => esc_html__( 'Image Move', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-image-plus',
-				'name'  => esc_html__( 'Image Plus', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'media-files',
@@ -1734,11 +1639,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-minimize',
-				'name'  => esc_html__( 'Minimize', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-minus',
 				'name'  => esc_html__( 'Minus', 'buddyboss-theme' ),
 			),
@@ -1746,11 +1646,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'technology',
 				'id'    => 'bb-icon-mobile',
 				'name'  => esc_html__( 'Mobile', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'technology',
-				'id'    => 'bb-icon-mobile-slash',
-				'name'  => esc_html__( 'Mobile Slash', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'shopping-money',
@@ -1796,11 +1691,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'media-files',
 				'id'    => 'bb-icon-music-slash',
 				'name'  => esc_html__( 'Music Slash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'objects',
-				'id'    => 'bb-icon-newspaper',
-				'name'  => esc_html__( 'Newspaper', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'brands',
@@ -1896,11 +1786,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'interfaces',
 				'id'    => 'bb-icon-phone-slash',
 				'name'  => esc_html__( 'Phone Slash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
-				'id'    => 'bb-icon-picture-in-picture',
-				'name'  => esc_html__( 'Picture In Picture', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'interfaces',
@@ -2133,11 +2018,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'Shopping Cart', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'shopping-money',
-				'id'    => 'bb-icon-cart-slash',
-				'name'  => esc_html__( 'Cart Slash', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'interfaces',
 				'id'    => 'bb-icon-sidebar',
 				'name'  => esc_html__( 'Sidebar', 'buddyboss-theme' ),
@@ -2259,11 +2139,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-spinner-alt',
-				'name'  => esc_html__( 'Spinner Alt', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-spinner-third',
 				'name'  => esc_html__( 'Spinner Third', 'buddyboss-theme' ),
 			),
@@ -2284,11 +2159,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'interfaces',
-				'id'    => 'bb-icon-star-slash',
-				'name'  => esc_html__( 'Star Slash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
 				'id'    => 'bb-icon-step-backward',
 				'name'  => esc_html__( 'Step Backward', 'buddyboss-theme' ),
 			),
@@ -2301,21 +2171,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'interfaces',
 				'id'    => 'bb-icon-stop',
 				'name'  => esc_html__( 'Stop', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'objects',
-				'id'    => 'bb-icon-stopwatch',
-				'name'  => esc_html__( 'Stopwatch', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'text-formatting',
-				'id'    => 'bb-icon-strikethrough',
-				'name'  => esc_html__( 'Strikethrough', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'interfaces',
-				'id'    => 'bb-icon-split',
-				'name'  => esc_html__( 'Split', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'objects',
@@ -2448,11 +2303,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'Trophy', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'objects',
-				'id'    => 'bb-icon-trophy-slash',
-				'name'  => esc_html__( 'Trophy Slash', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'brands',
 				'id'    => 'bb-icon-brand-tumblr',
 				'name'  => esc_html__( 'Tumblr', 'buddyboss-theme' ),
@@ -2514,28 +2364,8 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'users-people',
-				'id'    => 'bb-icon-user-arrow-down',
-				'name'  => esc_html__( 'User Arrow Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
-				'id'    => 'bb-icon-user-arrow-up',
-				'name'  => esc_html__( 'User Arrow Up', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
-				'id'    => 'bb-icon-user-crown',
-				'name'  => esc_html__( 'User Crown', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
 				'id'    => 'bb-icon-user-badge',
 				'name'  => esc_html__( 'User Badge', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
-				'id'    => 'bb-icon-user-cancel',
-				'name'  => esc_html__( 'User Cancel', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'users-people',
@@ -2579,18 +2409,8 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'users-people',
-				'id'    => 'bb-icon-user-friends-plus',
-				'name'  => esc_html__( 'User Friends Plus', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
 				'id'    => 'bb-icon-user-friends-slash',
 				'name'  => esc_html__( 'User Friends Slash', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'users-people',
-				'id'    => 'bb-icon-user-info',
-				'name'  => esc_html__( 'User Info', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'users-people',
@@ -2628,26 +2448,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'name'  => esc_html__( 'Users Slash', 'buddyboss-theme' ),
 			),
 			array(
-				'group' => 'arrows',
-				'id'    => 'bb-icon-u-turn-down',
-				'name'  => esc_html__( 'U Turn Down', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'arrows',
-				'id'    => 'bb-icon-u-turn-left',
-				'name'  => esc_html__( 'U Turn Left', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'arrows',
-				'id'    => 'bb-icon-u-turn-right',
-				'name'  => esc_html__( 'U Turn Right', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'arrows',
-				'id'    => 'bb-icon-u-turn-up',
-				'name'  => esc_html__( 'U Turn Up', 'buddyboss-theme' ),
-			),
-			array(
 				'group' => 'brands',
 				'id'    => 'bb-icon-brand-vk',
 				'name'  => esc_html__( 'VK', 'buddyboss-theme' ),
@@ -2656,11 +2456,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 				'group' => 'media-files',
 				'id'    => 'bb-icon-video',
 				'name'  => esc_html__( 'Video', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media-files',
-				'id'    => 'bb-icon-video-plus',
-				'name'  => esc_html__( 'Video Plus', 'buddyboss-theme' ),
 			),
 			array(
 				'group' => 'media-files',

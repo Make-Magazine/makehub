@@ -104,17 +104,14 @@ abstract class DataSourcePoller {
 	 * @return array list of specs.
 	 */
 	public function get_specs_from_data_sources() {
-		$locale      = get_user_locale();
-		$specs_group = get_transient( $this->args['transient_name'] ) ?? array();
-		$specs       = isset( $specs_group[ $locale ] ) ? $specs_group[ $locale ] : array();
+		$specs = get_transient( $this->args['transient_name'] );
 
-		if ( ! is_array( $specs ) || empty( $specs ) ) {
+		if ( false === $specs || ! is_array( $specs ) || 0 === count( $specs ) ) {
 			$this->read_specs_from_data_sources();
-			$specs_group = get_transient( $this->args['transient_name'] );
-			$specs       = isset( $specs_group[ $locale ] ) ? $specs_group[ $locale ] : array();
+			$specs = get_transient( $this->args['transient_name'] );
 		}
 		$specs = apply_filters( self::FILTER_NAME_SPECS, $specs, $this->id );
-		return $specs !== false ? $specs : array();
+		return false !== $specs ? $specs : array();
 	}
 
 	/**
@@ -133,16 +130,14 @@ abstract class DataSourcePoller {
 			$this->merge_specs( $specs_from_data_source, $specs, $url );
 		}
 
-		$specs_group            = get_transient( $this->args['transient_name'] ) ?? array();
-		$locale                 = get_user_locale();
-		$specs_group[ $locale ] = $specs;
 		// Persist the specs as a transient.
 		set_transient(
 			$this->args['transient_name'],
-			$specs_group,
+			$specs,
 			$this->args['transient_expiry']
 		);
-		return count( $specs ) !== 0;
+
+		return 0 !== count( $specs );
 	}
 
 	/**
@@ -166,12 +161,9 @@ abstract class DataSourcePoller {
 		$logger         = self::get_logger();
 		$response       = wp_remote_get(
 			add_query_arg(
-				'locale',
+				'_locale',
 				get_user_locale(),
 				$url
-			),
-			array(
-				'user-agent' => 'WooCommerce/' . WC_VERSION . '; ' . home_url( '/' ),
 			)
 		);
 
@@ -189,7 +181,7 @@ abstract class DataSourcePoller {
 		$body  = $response['body'];
 		$specs = json_decode( $body );
 
-		if ( $specs === null ) {
+		if ( null === $specs ) {
 			$logger->error(
 				'Empty response in data feed',
 				$logger_context

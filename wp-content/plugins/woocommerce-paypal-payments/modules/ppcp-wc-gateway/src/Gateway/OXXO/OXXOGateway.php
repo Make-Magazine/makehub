@@ -10,24 +10,17 @@ declare(strict_types=1);
 namespace WooCommerce\PayPalCommerce\WcGateway\Gateway\OXXO;
 
 use Psr\Log\LoggerInterface;
-use WC_Order;
 use WC_Payment_Gateway;
 use WooCommerce\PayPalCommerce\ApiClient\Endpoint\OrderEndpoint;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\PayPalApiException;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\RuntimeException;
 use WooCommerce\PayPalCommerce\ApiClient\Factory\PurchaseUnitFactory;
 use WooCommerce\PayPalCommerce\ApiClient\Factory\ShippingPreferenceFactory;
-use WooCommerce\PayPalCommerce\Onboarding\Environment;
-use WooCommerce\PayPalCommerce\WcGateway\Gateway\TransactionUrlProvider;
-use WooCommerce\PayPalCommerce\WcGateway\Processor\OrderMetaTrait;
 
 /**
  * Class OXXOGateway.
  */
 class OXXOGateway extends WC_Payment_Gateway {
-
-	use OrderMetaTrait;
-
 	const ID = 'ppcp-oxxo-gateway';
 
 	/**
@@ -59,20 +52,6 @@ class OXXOGateway extends WC_Payment_Gateway {
 	private $module_url;
 
 	/**
-	 * The transaction url provider.
-	 *
-	 * @var TransactionUrlProvider
-	 */
-	protected $transaction_url_provider;
-
-	/**
-	 * The environment.
-	 *
-	 * @var Environment
-	 */
-	protected $environment;
-
-	/**
 	 * The logger.
 	 *
 	 * @var LoggerInterface
@@ -86,8 +65,6 @@ class OXXOGateway extends WC_Payment_Gateway {
 	 * @param PurchaseUnitFactory       $purchase_unit_factory The purchase unit factory.
 	 * @param ShippingPreferenceFactory $shipping_preference_factory The shipping preference factory.
 	 * @param string                    $module_url The URL to the module.
-	 * @param TransactionUrlProvider    $transaction_url_provider The transaction url provider.
-	 * @param Environment               $environment The environment.
 	 * @param LoggerInterface           $logger The logger.
 	 */
 	public function __construct(
@@ -95,14 +72,12 @@ class OXXOGateway extends WC_Payment_Gateway {
 		PurchaseUnitFactory $purchase_unit_factory,
 		ShippingPreferenceFactory $shipping_preference_factory,
 		string $module_url,
-		TransactionUrlProvider $transaction_url_provider,
-		Environment $environment,
 		LoggerInterface $logger
 	) {
 		$this->id = self::ID;
 
 		$this->method_title       = __( 'OXXO', 'woocommerce-paypal-payments' );
-		$this->method_description = __( 'OXXO is a Mexican chain of convenience stores.<br />*Get PayPal account permission to use OXXO payment functionality by contacting us at (+52) 800-925-0304', 'woocommerce-paypal-payments' );
+		$this->method_description = __( 'OXXO is a Mexican chain of convenience stores.', 'woocommerce-paypal-payments' );
 
 		$this->title       = $this->get_option( 'title', $this->method_title );
 		$this->description = $this->get_option( 'description', __( 'OXXO allows you to pay bills and online purchases in-store with cash.', 'woocommerce-paypal-payments' ) );
@@ -124,9 +99,7 @@ class OXXOGateway extends WC_Payment_Gateway {
 		$this->module_url                  = $module_url;
 		$this->logger                      = $logger;
 
-		$this->icon                     = esc_url( $this->module_url ) . 'assets/images/oxxo.svg';
-		$this->transaction_url_provider = $transaction_url_provider;
-		$this->environment              = $environment;
+		$this->icon = esc_url( $this->module_url ) . 'assets/images/oxxo.svg';
 	}
 
 	/**
@@ -176,9 +149,7 @@ class OXXOGateway extends WC_Payment_Gateway {
 				'checkout'
 			);
 
-			$order = $this->order_endpoint->create( array( $purchase_unit ), $shipping_preference );
-			$this->add_paypal_meta( $wc_order, $order, $this->environment );
-
+			$order          = $this->order_endpoint->create( array( $purchase_unit ), $shipping_preference );
 			$payment_source = array(
 				'oxxo' => array(
 					'name'         => $wc_order->get_billing_first_name() . ' ' . $wc_order->get_billing_last_name(),
@@ -196,8 +167,17 @@ class OXXOGateway extends WC_Payment_Gateway {
 			}
 		} catch ( RuntimeException $exception ) {
 			$error = $exception->getMessage();
-			if ( is_a( $exception, PayPalApiException::class ) ) {
-				$error = $exception->get_details( $error );
+
+			if ( is_a( $exception, PayPalApiException::class ) && is_array( $exception->details() ) ) {
+				$details = '';
+				foreach ( $exception->details() as $detail ) {
+					$issue       = $detail->issue ?? '';
+					$field       = $detail->field ?? '';
+					$description = $detail->description ?? '';
+					$details    .= $issue . ' ' . $field . ' ' . $description . '<br>';
+				}
+
+				$error = $details;
 			}
 
 			$this->logger->error( $error );
@@ -226,18 +206,5 @@ class OXXOGateway extends WC_Payment_Gateway {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Return transaction url for this gateway and given order.
-	 *
-	 * @param WC_Order $order WC order to get transaction url by.
-	 *
-	 * @return string
-	 */
-	public function get_transaction_url( $order ): string {
-		$this->view_transaction_url = $this->transaction_url_provider->get_transaction_url_base( $order );
-
-		return parent::get_transaction_url( $order );
 	}
 }

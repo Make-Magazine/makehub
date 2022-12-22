@@ -4,7 +4,6 @@
 import { __ } from '@wordpress/i18n';
 import { Icon, external } from '@wordpress/icons';
 import { VisuallyHidden } from '@wordpress/components';
-import { sanitizeHTML } from '@woocommerce/utils';
 
 /**
  * Internal dependencies
@@ -38,12 +37,9 @@ const ExternalLinkCard = ( {
 					{ title }
 				</strong>
 				{ description && (
-					<span
-						className="wc-block-editor-components-external-link-card__description"
-						dangerouslySetInnerHTML={ {
-							__html: sanitizeHTML( description ),
-						} }
-					></span>
+					<span className="wc-block-editor-components-external-link-card__description">
+						{ description }
+					</span>
 				) }
 			</span>
 			<VisuallyHidden as="span">

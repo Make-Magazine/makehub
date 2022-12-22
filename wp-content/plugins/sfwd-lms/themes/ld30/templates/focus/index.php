@@ -153,30 +153,24 @@ if ( have_posts() ) :
 			 * @param boolean $show_existing_comments Whether to show existing comments.
 			 */
 			if ( comments_open() || ( apply_filters( 'learndash_focus_mode_show_existing_comments', false ) ) ) {
-				if ( has_filter( 'learndash_focus_mode_can_view_comments' ) ) {
-					/**
-					 * Filters the post listing before displaying it to user.
-					 *
-					 * @since 3.1.4
-					 * @deprecated 4.3.0
-					 *
-					 * @param boolean $load_focus_comments Whether to show comments in focus mode or not.
-					 */
-					apply_filters_deprecated(
-						'learndash_focus_mode_can_view_comments',
-						array( is_user_logged_in() ),
-						'4.3.0'
+				/**
+				 * Filters whether to load comments in focus mode or not.
+				 *
+				 * @since 3.1.4
+				 *
+				 * @param boolean $load_focus_comments Whether to show comments in focus mode or not.
+				 */
+				if ( apply_filters( 'learndash_focus_mode_can_view_comments', is_user_logged_in() ) ) {
+					learndash_get_template_part(
+						'focus/comments.php',
+						array(
+							'course_id' => $course_id,
+							'user_id'   => $user_id,
+							'context'   => 'focus',
+						),
+						true
 					);
 				}
-				learndash_get_template_part(
-					'focus/comments.php',
-					array(
-						'course_id' => $course_id,
-						'user_id'   => $user_id,
-						'context'   => 'focus',
-					),
-					true
-				);
 			}
 			?>
 

@@ -3,14 +3,15 @@
  */
 import { filledCart } from '@woocommerce/icons';
 import { Icon } from '@wordpress/icons';
-import { registerBlockType } from '@wordpress/blocks';
+import { registerFeaturePluginBlockType } from '@woocommerce/block-settings';
 
 /**
  * Internal dependencies
  */
 import { Edit, Save } from './edit';
+import metadata from './block.json';
 
-registerBlockType( 'woocommerce/filled-cart-block', {
+registerFeaturePluginBlockType( metadata, {
 	icon: {
 		src: (
 			<Icon

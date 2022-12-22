@@ -58,15 +58,6 @@ class View implements \ArrayAccess {
 	public $fields;
 
 	/**
-	 * @var string A unique anchor ID used to wrap Views.
-	 *
-	 * @see View_Renderer::render() Dynamically set in hooks here.
-	 *
-	 * @since 2.15
-	 */
-	private $anchor_id;
-
-	/**
 	 * @var array
 	 *
 	 * Internal static cache for gets, and whatnot.
@@ -148,33 +139,33 @@ class View implements \ArrayAccess {
 
 		/** Register Custom Post Type - gravityview */
 		$labels = array(
-			'name'                   => _x( 'Views', 'Post Type General Name', 'gk-gravityview' ),
-			'singular_name'          => _x( 'View', 'Post Type Singular Name', 'gk-gravityview' ),
-			'menu_name'              => _x( 'Views', 'Menu name', 'gk-gravityview' ),
-			'parent_item_colon'      => __( 'Parent View:', 'gk-gravityview' ),
-			'all_items'              => __( 'All Views', 'gk-gravityview' ),
-			'view_item'              => _x( 'View', 'View Item', 'gk-gravityview' ),
-			'add_new_item'           => __( 'Add New View', 'gk-gravityview' ),
-			'add_new'                => __( 'New View', 'gk-gravityview' ),
-			'edit_item'              => __( 'Edit View', 'gk-gravityview' ),
-			'update_item'            => __( 'Update View', 'gk-gravityview' ),
-			'search_items'           => __( 'Search Views', 'gk-gravityview' ),
+			'name'                   => _x( 'Views', 'Post Type General Name', 'gravityview' ),
+			'singular_name'          => _x( 'View', 'Post Type Singular Name', 'gravityview' ),
+			'menu_name'              => _x( 'Views', 'Menu name', 'gravityview' ),
+			'parent_item_colon'      => __( 'Parent View:', 'gravityview' ),
+			'all_items'              => __( 'All Views', 'gravityview' ),
+			'view_item'              => _x( 'View', 'View Item', 'gravityview' ),
+			'add_new_item'           => __( 'Add New View', 'gravityview' ),
+			'add_new'                => __( 'New View', 'gravityview' ),
+			'edit_item'              => __( 'Edit View', 'gravityview' ),
+			'update_item'            => __( 'Update View', 'gravityview' ),
+			'search_items'           => __( 'Search Views', 'gravityview' ),
 			'not_found'              => \GravityView_Admin::no_views_text(),
-			'not_found_in_trash'     => __( 'No Views found in Trash', 'gk-gravityview' ),
-			'filter_items_list'      => __( 'Filter Views list', 'gk-gravityview' ),
-			'items_list_navigation'  => __( 'Views list navigation', 'gk-gravityview' ),
-			'items_list'             => __( 'Views list', 'gk-gravityview' ),
-			'view_items'             => __( 'See Views', 'gk-gravityview' ),
-			'attributes'             => __( 'View Attributes', 'gk-gravityview' ),
-			'item_updated'           => __( 'View updated.', 'gk-gravityview' ),
-			'item_published'         => __( 'View published.', 'gk-gravityview' ),
-			'item_reverted_to_draft' => __( 'View reverted to draft.', 'gk-gravityview' ),
-			'item_scheduled'         => __( 'View scheduled.', 'gk-gravityview' ),
+			'not_found_in_trash'     => __( 'No Views found in Trash', 'gravityview' ),
+			'filter_items_list'      => __( 'Filter Views list', 'gravityview' ),
+			'items_list_navigation'  => __( 'Views list navigation', 'gravityview' ),
+			'items_list'             => __( 'Views list', 'gravityview' ),
+			'view_items'             => __( 'See Views', 'gravityview' ),
+			'attributes'             => __( 'View Attributes', 'gravityview' ),
+			'item_updated'           => __( 'View updated.', 'gravityview' ),
+			'item_published'         => __( 'View published.', 'gravityview' ),
+			'item_reverted_to_draft' => __( 'View reverted to draft.', 'gravityview' ),
+			'item_scheduled'         => __( 'View scheduled.', 'gravityview' ),
 		);
 
 		$args = array(
-			'label'               => __( 'view', 'gk-gravityview' ),
-			'description'         => __( 'Create views based on a Gravity Forms form', 'gk-gravityview' ),
+			'label'               => __( 'view', 'gravityview' ),
+			'description'         => __( 'Create views based on a Gravity Forms form', 'gravityview' ),
 			'labels'              => $labels,
 			'supports'            => $supports,
 			'hierarchical'        => $is_hierarchical,
@@ -187,7 +178,7 @@ class View implements \ArrayAccess {
 			 */
 			'public'              => apply_filters( 'gravityview_direct_access', gravityview()->plugin->is_compatible(), 0 ),
 			'show_ui'             => gravityview()->plugin->is_compatible(),
-			'show_in_menu'        => false, // Menu items are added in \GV\Plugin::add_to_gravitykit_admin_menu()
+			'show_in_menu'        => gravityview()->plugin->is_compatible(),
 			'show_in_nav_menus'   => true,
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 17,
@@ -305,11 +296,11 @@ class View implements \ArrayAccess {
 					 */
 					if ( \GVCommon::has_cap( array( 'edit_gravityviews', 'edit_gravityview' ), $view->ID ) ) {
 
-						$title = sprintf( __( 'This View is not configured properly. Start by <a href="%s">selecting a form</a>.', 'gk-gravityview' ), esc_url( get_edit_post_link( $view->ID, false ) ) );
+						$title = sprintf( __( 'This View is not configured properly. Start by <a href="%s">selecting a form</a>.', 'gravityview' ), esc_url( get_edit_post_link( $view->ID, false ) ) );
 
-						$message = esc_html__( 'You can only see this message because you are able to edit this View.', 'gk-gravityview' );
+						$message = esc_html__( 'You can only see this message because you are able to edit this View.', 'gravityview' );
 
-						$image =  sprintf( '<img alt="%s" src="%s" style="margin-top: 10px;" />', esc_attr__( 'Data Source', 'gk-gravityview' ), esc_url( plugins_url( 'assets/images/screenshots/data-source.png', GRAVITYVIEW_FILE ) ) );
+						$image =  sprintf( '<img alt="%s" src="%s" style="margin-top: 10px;" />', esc_attr__( 'Data Source', 'gravityview' ), esc_url( plugins_url( 'assets/images/screenshots/data-source.png', GRAVITYVIEW_FILE ) ) );
 
 						return \GVCommon::generate_notice( '<h3>' . $title . '</h3>' . wpautop( $message . $image ), 'notice' );
 					}
@@ -317,7 +308,7 @@ class View implements \ArrayAccess {
 				case 'in_trash':
 
 					if ( \GVCommon::has_cap( array( 'edit_gravityviews', 'edit_gravityview' ), $view->ID ) ) {
-						$notice = sprintf( __( 'This View is in the Trash. You can <a href="%s">restore the View here</a>.', 'gk-gravityview' ), esc_url( get_edit_post_link( $view->ID, false ) ) );
+						$notice = sprintf( __( 'This View is in the Trash. You can <a href="%s">restore the View here</a>.', 'gravityview' ), esc_url( get_edit_post_link( $view->ID, false ) ) );
 
 						return \GVCommon::generate_notice( '<h3>' . $notice . '</h3>', 'notice', array( 'edit_gravityviews', 'edit_gravityview' ), $view->ID );
 					}
@@ -329,7 +320,7 @@ class View implements \ArrayAccess {
 				case 'not_public':
 				default:
 					gravityview()->log->notice( 'View #{view_id} cannot render: {error_code} {error_message}', array( 'error_code' => $error->get_error_code(), 'error_message' => $error->get_error_message() ) );
-					return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+					return __( 'You are not allowed to view this content.', 'gravityview' );
 			}
 
 			return $content;
@@ -343,18 +334,18 @@ class View implements \ArrayAccess {
 		if ( $entry = $request->is_edit_entry( $view->form ? $view->form->ID : 0 ) ) {
 			if ( $entry['status'] != 'active' ) {
 				gravityview()->log->notice( 'Entry ID #{entry_id} is not active', array( 'entry_id' => $entry->ID ) );
-				return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+				return __( 'You are not allowed to view this content.', 'gravityview' );
 			}
 
 			if ( apply_filters( 'gravityview_custom_entry_slug', false ) && $entry->slug != get_query_var( \GV\Entry::get_endpoint_name() ) ) {
 				gravityview()->log->error( 'Entry ID #{entry_id} was accessed by a bad slug', array( 'entry_id' => $entry->ID ) );
-				return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+				return __( 'You are not allowed to view this content.', 'gravityview' );
 			}
 
 			if ( $view->settings->get( 'show_only_approved' ) && ! $is_admin_and_can_view ) {
 				if ( ! \GravityView_Entry_Approval_Status::is_approved( gform_get_meta( $entry->ID, \GravityView_Entry_Approval::meta_key ) )  ) {
 					gravityview()->log->error( 'Entry ID #{entry_id} is not approved for viewing', array( 'entry_id' => $entry->ID ) );
-					return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+					return __( 'You are not allowed to view this content.', 'gravityview' );
 				}
 			}
 
@@ -377,18 +368,18 @@ class View implements \ArrayAccess {
 
 				if ( 'active' !== $e['status'] ) {
 					gravityview()->log->notice( 'Entry ID #{entry_id} is not active', array( 'entry_id' => $e->ID ) );
-					return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+					return __( 'You are not allowed to view this content.', 'gravityview' );
 				}
 
 				if ( $custom_slug && ! in_array( $e->slug, $ids ) ) {
 					gravityview()->log->error( 'Entry ID #{entry_id} was accessed by a bad slug', array( 'entry_id' => $e->ID ) );
-					return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+					return __( 'You are not allowed to view this content.', 'gravityview' );
 				}
 
 				if ( $show_only_approved && ! $is_admin_and_can_view ) {
 					if ( ! \GravityView_Entry_Approval_Status::is_approved( gform_get_meta( $e->ID, \GravityView_Entry_Approval::meta_key ) )  ) {
 						gravityview()->log->error( 'Entry ID #{entry_id} is not approved for viewing', array( 'entry_id' => $e->ID ) );
-						return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+						return __( 'You are not allowed to view this content.', 'gravityview' );
 					}
 				}
 
@@ -396,7 +387,7 @@ class View implements \ArrayAccess {
 
 				if ( is_wp_error( $error ) ) {
 					gravityview()->log->error( 'Entry ID #{entry_id} is not approved for viewing: {message}', array( 'entry_id' => $e->ID, 'message' => $error->get_error_message() ) );
-					return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+					return __( 'You are not allowed to view this content.', 'gravityview' );
 				}
 			}
 
@@ -448,9 +439,9 @@ class View implements \ArrayAccess {
 
 		if ( in_array( 'rest', $context ) ) {
 			// REST
-			if ( gravityview()->plugin->settings->get( 'rest_api' ) && $this->settings->get( 'rest_disable' ) === '1' ) {
+			if ( gravityview()->plugin->settings->get( 'rest_api' ) === '1' && $this->settings->get( 'rest_disable' ) === '1' ) {
 				return new \WP_Error( 'gravityview/rest_disabled' );
-			} elseif ( ! gravityview()->plugin->settings->get( 'rest_api' ) && $this->settings->get( 'rest_enable' ) !== '1' ) {
+			} elseif ( gravityview()->plugin->settings->get( 'rest_api' ) !== '1' && $this->settings->get( 'rest_enable' ) !== '1' ) {
 				return new \WP_Error( 'gravityview/rest_disabled' );
 			}
 		}
@@ -709,8 +700,7 @@ class View implements \ArrayAccess {
 
 		/** Get connected form. */
 		$view->form = GF_Form::by_id( $view->_gravityview_form_id );
-		global $pagenow;
-		if ( ! $view->form && 'post-new.php' !== $pagenow  ) {
+		if ( ! $view->form ) {
 			gravityview()->log->error( 'View #{view_id} tried attaching non-existent Form #{form_id} to it.', array(
 				'view_id' => $view->ID,
 				'form_id' => $view->_gravityview_form_id ? : 0,
@@ -843,7 +833,6 @@ class View implements \ArrayAccess {
 	 * @since 2.0
 	 * @return bool Whether the offset exists or not, limited to GravityView_View_Data::$views element keys.
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
 		$data_keys = array( 'id', 'view_id', 'form_id', 'template_id', 'atts', 'fields', 'widgets', 'form' );
 		return in_array( $offset, $data_keys );
@@ -860,7 +849,6 @@ class View implements \ArrayAccess {
 	 *
 	 * @return mixed The value of the requested view data key limited to GravityView_View_Data::$views element keys. If offset not found, return null.
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 
 		gravityview()->log->notice( 'This is a \GV\View object should not be accessed as an array.' );
@@ -897,7 +885,6 @@ class View implements \ArrayAccess {
 	 *
 	 * @return void
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
 		gravityview()->log->error( 'The old view data is no longer mutable. This is a \GV\View object should not be accessed as an array.' );
 	}
@@ -910,7 +897,6 @@ class View implements \ArrayAccess {
 	 * @since 2.0
 	 * @return void
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
 		gravityview()->log->error( 'The old view data is no longer mutable. This is a \GV\View object should not be accessed as an array.' );
 	}
@@ -1598,36 +1584,6 @@ class View implements \ArrayAccess {
 		endswitch;
 
 		return $caps;
-	}
-
-	/**
-	 * Sets the anchor ID of a View, without the prefix.
-	 *
-	 * @since 2.15
-	 *
-	 * @param int $counter An incremental counter reflecting how many times this View has been rendered.
-	 *
-	 * @return void
-	 */
-	public function set_anchor_id( $counter = 1 ) {
-		$this->anchor_id = sprintf( 'gv-view-%d-%d', $this->ID, (int) $counter );
-	}
-
-	/**
-	 * Returns the anchor ID to be used in the View container HTML `id` attribute.
-	 *
-	 * @since 2.15
-	 *
-	 * @return string Unsanitized anchor ID.
-	 */
-	public function get_anchor_id() {
-		/**
-		 * @filter `gravityview/view/anchor_id` Modify the anchor ID.
-		 * @since 2.15
-		 * @param string $anchor_id The anchor ID.
-		 * @param \GV\View $this The View.
-		 */
-		return apply_filters( 'gravityview/view/anchor_id', $this->anchor_id, $this );
 	}
 
 	public function __get( $key ) {

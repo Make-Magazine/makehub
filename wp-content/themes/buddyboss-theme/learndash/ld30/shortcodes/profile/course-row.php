@@ -85,7 +85,7 @@ $course_class = apply_filters(
 		</div> <!--/.ld-course-details-->
 
 	</div> <!--/.ld-course-preview-->
-	<div class="ld-item-list-item-expanded" data-ld-expand-id="<?php echo esc_attr( 'ld-course-list-item-' . $course_id ); ?>">
+	<div class="ld-item-list-item-expanded">
 
 		<?php
 		learndash_get_template_part(

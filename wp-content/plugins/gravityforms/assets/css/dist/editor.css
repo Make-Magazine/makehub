@@ -368,6 +368,7 @@ html[dir="rtl"] .add-buttons {
 			border: 1px solid #d5d7e9;
 			border-radius: 3px;
 			color: #242748;
+			cursor: -webkit-grab;
 			cursor: grab;
 			display: flex;
 			flex-direction: column;
@@ -412,6 +413,7 @@ button.ui-draggable-dragging {
 	border-radius: 3px;
 	box-shadow: 0 0 1px rgba(18, 25, 97, 0.24), 0 24px 24px rgba(18, 25, 97, 0.03), 0 2px 2px rgba(18, 25, 97, 0.03), 0 4px 4px rgba(18, 25, 97, 0.03), 0 8px 8px rgba(18, 25, 97, 0.03), 0 16px 16px rgba(18, 25, 97, 0.03);
 	color: #242748;
+	cursor: -webkit-grabbing;
 	cursor: grabbing;
 	display: flex;
 	flex-direction: column;
@@ -854,6 +856,7 @@ html[dir="rtl"] .gfield .ui-resizable-e {
 	}
 
 .gfield-admin-icons .gfield-drag {
+		cursor: -webkit-grab;
 		cursor: grab;
 	}
 
@@ -1291,11 +1294,24 @@ body.toplevel_page_gf_edit_forms.folded .gform-form-toolbar {
 */
 
 .gf-popover {
-	animation: components-animate__appear-animation 0.1s cubic-bezier(0, 0, 0.2, 1) 0s;
-	animation-fill-mode: forwards;
+	-webkit-animation: components-animate__appear-animation 0.1s cubic-bezier(0, 0, 0.2, 1) 0s;
+	        animation: components-animate__appear-animation 0.1s cubic-bezier(0, 0, 0.2, 1) 0s;
+	-webkit-animation-fill-mode: forwards;
+	        animation-fill-mode: forwards;
 	display: none;
 	position: absolute;
 	top: 45px;
+}
+
+@-webkit-keyframes components-animate__appear-animation {
+
+	from {
+		transform: translateY(-2em) scaleY(0) scaleX(0);
+	}
+
+	to {
+		transform: translateY(0%) scaleY(1) scaleX(1);
+	}
 }
 
 @keyframes components-animate__appear-animation {
@@ -1907,6 +1923,7 @@ html[dir="rtl"] .field-choice-handle {
 	opacity: 0;
 	padding: 1rem 1.5rem;
 	position: fixed;
+	width: -webkit-fit-content;
 	width: -moz-fit-content;
 	width: fit-content;
 }

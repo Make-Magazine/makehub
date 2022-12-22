@@ -759,8 +759,7 @@ window.bp = window.bp || {};
 							{
 								'id': draft_documents[ d ].id,
 								'document_id': 0,
-								'name': draft_documents[ d ].full_name,
-								'full_name': draft_documents[ d ].full_name,
+								'name': draft_documents[ d ].name,
 								'type': 'document',
 								'title': draft_documents[ d ].name,
 								'size': draft_documents[ d ].size,
@@ -772,14 +771,14 @@ window.bp = window.bp || {};
 						);
 
 						d_mock_file = {
-							name: draft_documents[ d ].full_name,
+							name: draft_documents[ d ].name,
 							size: draft_documents[ d ].size,
 							accepted: true,
 							kind: 'document',
 							upload: {
-								name: draft_documents[ d ].full_name,
+								name: draft_documents[ d ].name,
 								title: draft_documents[ d ].name,
-								filename: draft_documents[ d ].full_name,
+								filename: draft_documents[ d ].name,
 								size: draft_documents[ d ].size,
 								uuid: draft_documents[ d ].uuid
 							},
@@ -933,9 +932,8 @@ window.bp = window.bp || {};
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 			this.resetTopicReplyDraftPostForm();
+			$( 'body .js-modal-close' ).trigger( 'click' );
 			this.topic_reply_draft.post_action = 'update';
-			bp.Nouveau.TopicReplyDraft.setupTopicReplyDraftIntervals();
-			bp.Nouveau.TopicReplyDraft.is_topic_reply_form_submit = false;
 
 			forum_topic.css( 'pointer-events', '' );
 			forum_reply.css( 'pointer-events', '' );

@@ -19,7 +19,7 @@ class Token {
 	/**
 	 * The Token data.
 	 *
-	 * @var object
+	 * @var \stdClass
 	 */
 	private $json;
 
@@ -33,10 +33,10 @@ class Token {
 	/**
 	 * Token constructor.
 	 *
-	 * @param object $json The JSON object.
+	 * @param \stdClass $json The JSON object.
 	 * @throws RuntimeException When The JSON object is not valid.
 	 */
-	public function __construct( $json ) {
+	public function __construct( \stdClass $json ) {
 		if ( ! isset( $json->created ) ) {
 			$json->created = time();
 		}
@@ -122,11 +122,11 @@ class Token {
 	/**
 	 * Validates whether a JSON object can be transformed to a Token object.
 	 *
-	 * @param object $json The JSON object.
+	 * @param \stdClass $json The JSON object.
 	 *
 	 * @return bool
 	 */
-	private function validate( $json ): bool {
+	private function validate( \stdClass $json ): bool {
 		$property_map = array(
 			'created'    => 'is_int',
 			'expires_in' => 'is_int',

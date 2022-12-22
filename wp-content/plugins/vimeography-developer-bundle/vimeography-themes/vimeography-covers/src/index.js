@@ -1,30 +1,30 @@
 __webpack_public_path__ = window.vimeographyBuildPath;
 
-import Vue from "vue";
-import Vuex from "vuex";
-import VueRouter from "vue-router";
-import VueObserveVisibility from "vue-observe-visibility";
-import VModal from "vue-js-modal";
-import VueLazyload from "vue-lazyload";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import VueRouter from 'vue-router';
+import VueObserveVisibility from 'vue-observe-visibility';
+import VModal from 'vue-js-modal';
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueObserveVisibility);
 Vue.use(VModal);
-Vue.use(VueLazyload);
 
-Vue.config.devtools = true;
+Vue.config.devtools = true
 
-import Gallery from "./components/Gallery.vue";
-import { storeModules } from "vimeography-blueprint";
+import Gallery from './components/Gallery.vue';
+import { storeModules } from 'vimeography-blueprint';
 
-import head from "lodash/head";
-import cloneDeep from "lodash/cloneDeep";
-var URLSearchParams = require("url-search-params");
+import head from 'lodash/head';
+import cloneDeep from 'lodash/cloneDeep';
+var URLSearchParams = require('url-search-params');
 
 const router = new VueRouter({
   mode: window.vimeographyRouterMode,
-  routes: [{ path: "/", component: Gallery, props: true, name: "gallery" }],
+  routes: [
+    { path: '/', component: Gallery, props: true, name: 'gallery' }
+  ]
 });
 
 let params = new URLSearchParams(location.search.slice(1));
@@ -35,35 +35,30 @@ let params = new URLSearchParams(location.search.slice(1));
  * @return {[type]}           [description]
  */
 const render = (Component, galleryId, store) => {
+
   // We use concatenation here so Vimeography Blueprint doesn't get confused
   // with this line when generating new themes.
-  const mount = "#vimeography-gallery-" + galleryId + " > div";
+  const mount = '#vimeography-gallery-' + galleryId + ' > div';
   const gallery = window.vimeography2.galleries.covers[galleryId];
-  const firstVideoId = head(
-    gallery.pages.default[Object.keys(gallery.pages.default)[0]]
-  );
-  const activeVideoId =
-    params.get("vimeography_video") &&
-    params.get("vimeography_gallery") == galleryId
-      ? parseInt(params.get("vimeography_video"))
-      : parseInt(firstVideoId);
+  const firstVideoId = head( gallery.pages.default[Object.keys(gallery.pages.default)[0]] );
+  const activeVideoId = params.get('vimeography_video') && params.get('vimeography_gallery') == galleryId ? parseInt( params.get('vimeography_video') ) : parseInt( firstVideoId );
 
   store.commit({
-    type: "vimeography/gallery/LOAD",
+    type: 'vimeography/gallery/LOAD',
     ...gallery,
-    activeVideoId,
-  });
+    activeVideoId
+  })
 
   new Vue({
     el: mount,
     store,
     router,
-    render: (h) => h(Component),
+    render: h => h(Component)
   });
-};
+}
 
 for (let id in window.vimeography2.galleries.covers) {
-  let store = new Vuex.Store({ modules: cloneDeep(storeModules) });
+  let store = new Vuex.Store({ modules: cloneDeep( storeModules ) });
   render(Gallery, id, store);
 }
 

@@ -135,7 +135,9 @@ class BB_Platform_Pro_Core {
 	private function buddyboss_updater() {
 		global $pagenow;
 
-		if ( ! function_exists( 'buddyboss_updater_init' ) ) {
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+
+		if ( ! function_exists( 'buddyboss_updater_init' ) && ! ( 'plugins.php' === $pagenow && ( isset( $action ) && 'activate' === $action ) ) ) {
 			require_once bb_platform_pro()->plugin_dir . '/includes/lib/buddyboss-updater/buddyboss-updater.php';
 		}
 	}

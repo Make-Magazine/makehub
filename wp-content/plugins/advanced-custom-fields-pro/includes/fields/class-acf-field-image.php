@@ -178,6 +178,27 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 		*/
 
 		function render_field_settings( $field ) {
+
+			// clear numeric settings
+			$clear = array(
+				'min_width',
+				'min_height',
+				'min_size',
+				'max_width',
+				'max_height',
+				'max_size',
+			);
+
+			foreach ( $clear as $k ) {
+
+				if ( empty( $field[ $k ] ) ) {
+
+					$field[ $k ] = '';
+
+				}
+			}
+
+			// return_format
 			acf_render_field_setting(
 				$field,
 				array(
@@ -194,6 +215,19 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 				)
 			);
 
+			// preview_size
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Preview Size', 'acf' ),
+					'instructions' => '',
+					'type'         => 'select',
+					'name'         => 'preview_size',
+					'choices'      => acf_get_image_sizes(),
+				)
+			);
+
+			// library
 			acf_render_field_setting(
 				$field,
 				array(
@@ -208,42 +242,17 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 					),
 				)
 			);
-		}
 
-		/**
-		 * Renders the field settings used in the "Validation" tab.
-		 *
-		 * @since 6.0
-		 *
-		 * @param array $field The field settings array.
-		 * @return void
-		 */
-		function render_field_validation_settings( $field ) {
-			// Clear numeric settings.
-			$clear = array(
-				'min_width',
-				'min_height',
-				'min_size',
-				'max_width',
-				'max_height',
-				'max_size',
-			);
-
-			foreach ( $clear as $k ) {
-				if ( empty( $field[ $k ] ) ) {
-					$field[ $k ] = '';
-				}
-			}
-
+			// min
 			acf_render_field_setting(
 				$field,
 				array(
-					'label'   => __( 'Minimum', 'acf' ),
-					'hint'    => __( 'Restrict which images can be uploaded', 'acf' ),
-					'type'    => 'text',
-					'name'    => 'min_width',
-					'prepend' => __( 'Width', 'acf' ),
-					'append'  => 'px',
+					'label'        => __( 'Minimum', 'acf' ),
+					'instructions' => __( 'Restrict which images can be uploaded', 'acf' ),
+					'type'         => 'text',
+					'name'         => 'min_width',
+					'prepend'      => __( 'Width', 'acf' ),
+					'append'       => 'px',
 				)
 			);
 
@@ -271,15 +280,16 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 				)
 			);
 
+			// max
 			acf_render_field_setting(
 				$field,
 				array(
-					'label'   => __( 'Maximum', 'acf' ),
-					'hint'    => __( 'Restrict which images can be uploaded', 'acf' ),
-					'type'    => 'text',
-					'name'    => 'max_width',
-					'prepend' => __( 'Width', 'acf' ),
-					'append'  => 'px',
+					'label'        => __( 'Maximum', 'acf' ),
+					'instructions' => __( 'Restrict which images can be uploaded', 'acf' ),
+					'type'         => 'text',
+					'name'         => 'max_width',
+					'prepend'      => __( 'Width', 'acf' ),
+					'append'       => 'px',
 				)
 			);
 
@@ -307,6 +317,7 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 				)
 			);
 
+			// allowed type
 			acf_render_field_setting(
 				$field,
 				array(
@@ -316,28 +327,9 @@ if ( ! class_exists( 'acf_field_image' ) ) :
 					'name'         => 'mime_types',
 				)
 			);
+
 		}
 
-		/**
-		 * Renders the field settings used in the "Presentation" tab.
-		 *
-		 * @since 6.0
-		 *
-		 * @param array $field The field settings array.
-		 * @return void
-		 */
-		function render_field_presentation_settings( $field ) {
-			acf_render_field_setting(
-				$field,
-				array(
-					'label'        => __( 'Preview Size', 'acf' ),
-					'instructions' => '',
-					'type'         => 'select',
-					'name'         => 'preview_size',
-					'choices'      => acf_get_image_sizes(),
-				)
-			);
-		}
 
 		/*
 		*  format_value()

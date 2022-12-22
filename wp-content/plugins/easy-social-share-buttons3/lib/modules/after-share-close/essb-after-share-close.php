@@ -66,13 +66,6 @@ class ESSBAfterCloseShare3 {
 		}
 
 		if ($is_active) {
-		    /**
-		     * Activate the module main CSS styles
-		     */
-		    if (class_exists('ESSB_Module_Assets')) {
-		        ESSB_Module_Assets::register_after_share_actions();
-		    }
-		      
 			add_action ( 'wp_enqueue_scripts', array ($this, 'check_after_postload_settings' ), 1 );
 		}
 	}
@@ -122,7 +115,7 @@ class ESSBAfterCloseShare3 {
 			remove_action ( 'wp_footer', array ($this, 'generate_popular_posts' ), 99 );
 				
 		}
-		else {		   		    
+		else {
 			$this->load($is_active_option);
 		}
 	}
@@ -301,7 +294,7 @@ class ESSBAfterCloseShare3 {
 		
 		$output .= '<div class="essbasc-fans-single essbasc-fans-'.esc_attr($network_key).'">
 				<div class="essbasc-fans-icon">
-					'.essb_svg_replace_font_icon($icon_key).'
+					<i class="essb_icon_'.esc_attr($icon_key).'"></i>
 				</div>
 				<div class="essbasc-fans-text">
 		'.$social_code.'
@@ -356,11 +349,11 @@ class ESSBAfterCloseShare3 {
 		}	
 		if ($afterclose_like_youtube_channel != '') {
 			$social_code = '<div class="g-ytsubscribe" data-channelid="'.esc_attr($afterclose_like_youtube_channel).'" data-layout="default" data-count="default"></div>';
-			$widget .= $this->generateFollowButton($social_code, 'youtube', 'youtube');				
+			$widget .= $this->generateFollowButton($social_code, 'youtube', 'youtube-play');				
 		}
 		if ($afterclose_like_youtube_user != '') {
 			$social_code = '<div class="g-ytsubscribe" data-channel="'.esc_attr($afterclose_like_youtube_user).'" data-layout="default" data-count="default"></div>';
-			$widget .= $this->generateFollowButton($social_code, 'youtube', 'youtube');				
+			$widget .= $this->generateFollowButton($social_code, 'youtube', 'youtube-play');				
 		}
 		if ($afterclose_like_linkedin_company != '') {
 			$social_code = '<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script><script type="IN/FollowCompany" data-id="'.$afterclose_like_linkedin_company.'" data-counter="right"></script>';
@@ -466,7 +459,7 @@ class ESSBAfterCloseShare3 {
 				echo '<span>'.$title.'</span>';
 			}
 		}
-		echo '<a href="#" class="essbasc-popup-close" onclick="essbasc_popup_close(); return false;">'.essb_svg_replace_font_icon('close').'</a>';
+		echo '<a href="#" class="essbasc-popup-close" onclick="essbasc_popup_close(); return false;"><i class="essb_icon_close"></i></a>';
 		if ($title_mode) {
 			echo '</div>';
 		}

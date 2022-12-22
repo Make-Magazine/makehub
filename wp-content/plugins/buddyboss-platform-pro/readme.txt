@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.1.1
+Tested up to: 5.9.3
 Requires PHP: 5.6.20
-Stable tag: 2.2.1.1
+Stable tag: 2.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,57 +31,6 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
-
-= 2.2.1.1 =
-* Updater - Handled updater critical issue with the logic
-
-= 2.2.1 =
-* OneSignal - Handled web push notification not working issue for non-English site
-* Pusher - Handled pusher auth API error when the 'Private REST APIs' option is enabled
-* Zoom - Handled group zoom meeting screen minor UI issues
-* Member Access Controls - Handled accept button missing for group join request when access control enabled for groups
-
-= 2.2 =
-* Messages - Added Pusher integration option to enable LIVE messaging
-* Messages - Provided real-time support for typing indicator, Sending/Receiving messages, and all relevant messages actions
-
-= 2.1.8 =
-* Zoom - Handled zoom meeting and webinar date and time issues with the timezone by refactoring the DB table
-* Updater - Improvements to updater logic and performance
-
-= 2.1.7.1 =
-* Compatibility - Handled critical conflict with third party plugins using guzzle composer library
-
-= 2.1.7 =
-* Updater - Provided 'Release Notes' modal to show information about the release
-
-= 2.1.6 =
-* Moderation - Small improvement for blocked and suspended members names and avatars
-
-= 2.1.5 =
-* Zoom - Handled edit meeting minor layout issue with the sidebar
-
-= 2.1.4 =
-* Zoom - Handled Zoom Gutenberg block CSS class not getting added issue
-
-= 2.1.3.1 =
-* Core - Handled updater critical issue by reverting the latest refactored code
-
-= 2.1.3 =
-* Zoom - Handled zoom meeting count-down translation issue
-* Core - Code refactoring by using transients to optimize the check updates logic for the plugin
-
-= 2.1.2 =
-* Notifications - Handled notification content backslash issue for specific special characters
-
-= 2.1.1 =
-* Core - Small improvements to plugin updates logic by reducing the number of requests to check updates
-
-= 2.1.0.2 =
-* Fixed versioning issue
-
-= 2.0.5 =
-* Zoom - Handled add meeting/webinar performance issue by processing notifications and emails in the background
 
 = 2.0.4 =
 * Zoom - Updated Zoom Client WebSDK to 2.4.0

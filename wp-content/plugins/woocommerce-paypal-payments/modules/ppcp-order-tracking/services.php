@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\OrderTracking;
 
-use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use WooCommerce\PayPalCommerce\OrderTracking\Assets\OrderEditPageAssets;
 use WooCommerce\PayPalCommerce\OrderTracking\Endpoint\OrderTrackingEndpoint;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
@@ -48,12 +48,7 @@ return array(
 		);
 	},
 	'order-tracking.allowed-shipping-statuses' => static function ( ContainerInterface $container ): array {
-		return array(
-			'SHIPPED'   => 'SHIPPED',
-			'ON_HOLD'   => 'ON_HOLD',
-			'DELIVERED' => 'DELIVERED',
-			'CANCELLED' => 'CANCELLED',
-		);
+		return array( 'SHIPPED', 'ON_HOLD', 'DELIVERED', 'CANCELLED' );
 	},
 	'order-tracking.allowed-carriers'          => static function ( ContainerInterface $container ): array {
 		return require __DIR__ . '/carriers.php';

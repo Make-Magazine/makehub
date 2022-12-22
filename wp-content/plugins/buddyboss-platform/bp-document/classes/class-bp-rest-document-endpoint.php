@@ -166,15 +166,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array(
-			'id'                => $upload['id'],
-			'url'               => $upload['url'],
-			'name'              => $upload['name'],
-			'type'              => $upload['type'],
-			'size'              => $upload['size'],
-			'extension'         => $upload['extension'],
-			'svg_icon'          => $upload['svg_icon'],
-			'svg_icon_download' => $upload['svg_icon_download'],
-			'text'              => $upload['text'],
+			'id'   => $upload['id'],
+			'url'  => $upload['url'],
+			'name' => $upload['name'],
+			'type' => $upload['type'],
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1365,7 +1360,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['description']  = wp_specialchars_decode( get_post_field( 'post_content', $document->attachment_id ), ENT_QUOTES );
+			$data['description']  = get_post_field( 'post_content', $document->attachment_id );
 			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
 			$data['extension']    = bp_document_extension( $document->attachment_id );
 			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
@@ -2349,15 +2344,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'support', 'activity' );
-		$object->set_param( 'context', 'view' );
-
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response(
 					$document,
-					$object
+					array(
+						'support' => 'activity',
+						'context' => 'view',
+					)
 				)
 			);
 		}
@@ -2654,12 +2648,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'support', 'message' );
-
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, $object )
+				$this->prepare_item_for_response( $document, array( 'support' => 'message' ) )
 			);
 		}
 
@@ -2827,12 +2818,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'support', 'forums' );
-
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, $object )
+				$this->prepare_item_for_response( $document, array( 'support' => 'forums' ) )
 			);
 		}
 

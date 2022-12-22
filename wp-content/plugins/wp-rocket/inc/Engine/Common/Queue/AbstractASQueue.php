@@ -4,8 +4,6 @@ declare( strict_types=1 );
 namespace WP_Rocket\Engine\Common\Queue;
 
 use ActionScheduler_Store;
-use Exception;
-use WP_Rocket\Logger\Logger;
 
 abstract class AbstractASQueue implements QueueInterface {
 
@@ -21,16 +19,10 @@ abstract class AbstractASQueue implements QueueInterface {
 	 *
 	 * @param string $hook The hook to trigger.
 	 * @param array  $args Arguments to pass when the hook triggers.
-	 * @return int The action ID.
+	 * @return string The action ID.
 	 */
 	public function add_async( $hook, $args = [] ) {
-		try {
-			return as_enqueue_async_action( $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return 0;
-		}
+		return as_enqueue_async_action( $hook, $args, $this->group );
 	}
 
 	/**
@@ -39,16 +31,10 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @param int    $timestamp When the job will run.
 	 * @param string $hook The hook to trigger.
 	 * @param array  $args Arguments to pass when the hook triggers.
-	 * @return int The action ID.
+	 * @return string The action ID.
 	 */
 	public function schedule_single( $timestamp, $hook, $args = [] ) {
-		try {
-			return as_schedule_single_action( $timestamp, $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return 0;
-		}
+		return as_schedule_single_action( $timestamp, $hook, $args, $this->group );
 	}
 
 	/**
@@ -58,7 +44,7 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @param int    $interval_in_seconds How long to wait between runs.
 	 * @param string $hook The hook to trigger.
 	 * @param array  $args Arguments to pass when the hook triggers.
-	 * @return int The action ID.
+	 * @return string The action ID.
 	 */
 	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = [] ) {
 		if ( $this->is_scheduled( $hook, $args ) ) {
@@ -91,13 +77,7 @@ abstract class AbstractASQueue implements QueueInterface {
 			$this->cancel_all( $hook, $args );
 		}
 
-		try {
-			return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return 0;
-		}
+		return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $this->group );
 	}
 
 	/**
@@ -113,13 +93,7 @@ abstract class AbstractASQueue implements QueueInterface {
 			return ! is_null( $this->get_next( $hook, $args ) );
 		}
 
-		try {
-			return as_has_scheduled_action( $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return false;
-		}
+		return as_has_scheduled_action( $hook, $args, $this->group );
 	}
 
 	/**
@@ -139,20 +113,14 @@ abstract class AbstractASQueue implements QueueInterface {
 	 *   +------------------------- min (0 - 59)
 	 * @param string $hook The hook to trigger.
 	 * @param array  $args Arguments to pass when the hook triggers.
-	 * @return int The action ID
+	 * @return string The action ID
 	 */
 	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = [] ) {
 		if ( $this->is_scheduled( $hook, $args ) ) {
 			return '';
 		}
 
-		try {
-			return as_schedule_cron_action( $timestamp, $cron_schedule, $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return 0;
-		}
+		return as_schedule_cron_action( $timestamp, $cron_schedule, $hook, $args, $this->group );
 	}
 
 	/**
@@ -171,11 +139,7 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @param array  $args Args that would have been passed to the job.
 	 */
 	public function cancel( $hook, $args = [] ) {
-		try {
-			as_unschedule_action( $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-		}
+		as_unschedule_action( $hook, $args, $this->group );
 	}
 
 	/**
@@ -185,11 +149,7 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @param array  $args Args that would have been passed to the job.
 	 */
 	public function cancel_all( $hook, $args = [] ) {
-		try {
-			as_unschedule_all_actions( $hook, $args, $this->group );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-		}
+		as_unschedule_all_actions( $hook, $args, $this->group );
 	}
 
 	/**
@@ -201,19 +161,14 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @return int|null The date and time for the next occurrence, or null if there is no pending, scheduled action for the given hook.
 	 */
 	public function get_next( $hook, $args = null ) {
-		try {
-			$next_timestamp = as_next_scheduled_action( $hook, $args, $this->group );
 
-			if ( is_numeric( $next_timestamp ) ) {
-				return $next_timestamp;
-			}
+		$next_timestamp = as_next_scheduled_action( $hook, $args, $this->group );
 
-			return null;
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return null;
+		if ( is_numeric( $next_timestamp ) ) {
+			return $next_timestamp;
 		}
+
+		return null;
 	}
 
 	/**
@@ -238,12 +193,7 @@ abstract class AbstractASQueue implements QueueInterface {
 	 * @return array
 	 */
 	public function search( $args = [], $return_format = OBJECT ) {
-		try {
-			return as_get_scheduled_actions( $args, $return_format );
-		} catch ( Exception $exception ) {
-			Logger::error( $exception->getMessage(), [ 'Action Scheduler Queue' ] );
-
-			return [];
-		}
+		return as_get_scheduled_actions( $args, $return_format );
 	}
+
 }

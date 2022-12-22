@@ -27,7 +27,6 @@ import {
 } from '@wordpress/element';
 import { sprintf, _n } from '@wordpress/i18n';
 import classnames from 'classnames';
-
 /**
  * Internal dependencies
  */
@@ -42,19 +41,15 @@ interface Props {
 	style?: Record< string, Record< string, string > >;
 	contents: string;
 	addToCartBehaviour: string;
-	hasHiddenPrice: boolean;
 }
 
-const MiniCartBlock = ( attributes: Props ): JSX.Element => {
-	const {
-		isInitiallyOpen = false,
-		colorClassNames,
-		style,
-		contents = '',
-		addToCartBehaviour = 'none',
-		hasHiddenPrice = false,
-	} = attributes;
-
+const MiniCartBlock = ( {
+	isInitiallyOpen = false,
+	colorClassNames,
+	style,
+	contents = '',
+	addToCartBehaviour = 'none',
+}: Props ): JSX.Element => {
 	const {
 		cartItemsCount: cartItemsCountFromApi,
 		cartIsLoading,
@@ -217,15 +212,13 @@ const MiniCartBlock = ( attributes: Props ): JSX.Element => {
 				} }
 				aria-label={ ariaLabel }
 			>
-				{ ! hasHiddenPrice && (
-					<span className="wc-block-mini-cart__amount">
-						{ formatPrice(
-							subTotal,
-							getCurrencyFromPriceResponse( cartTotals )
-						) }
-					</span>
-				) }
-				{ taxLabel !== '' && subTotal !== 0 && ! hasHiddenPrice && (
+				<span className="wc-block-mini-cart__amount">
+					{ formatPrice(
+						subTotal,
+						getCurrencyFromPriceResponse( cartTotals )
+					) }
+				</span>
+				{ taxLabel !== '' && subTotal !== 0 && (
 					<small className="wc-block-mini-cart__tax-label">
 						{ taxLabel }
 					</small>

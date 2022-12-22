@@ -93,7 +93,7 @@ class LD_QuizPro {
 				break;
 		}
 
-		exit; // We need to exit as this is the AJAX handler and should not return control back to WP.
+		exit;
 	}
 
 	/**
@@ -127,32 +127,6 @@ class LD_QuizPro {
 		if ( ( ! isset( $data['quiz_nonce'] ) ) || ( ! wp_verify_nonce( $data['quiz_nonce'], 'sfwd-quiz-nonce-' . $quiz_post_id . '-' . $id . '-' . $user_id ) ) ) {
 			//wp_send_json_error();
 			die();
-		}
-
-		learndash_quiz_debug_log_init( $quiz_post_id );
-		learndash_quiz_debug_log_message( 'Browser version: ' . $_SERVER['HTTP_USER_AGENT'] );
-		learndash_quiz_debug_log_message( '---------------------------------' );
-		learndash_quiz_debug_log_message( 'in ' . __FUNCTION__ );
-		learndash_quiz_debug_log_message( '_POST<pre>' . print_r( $_POST, true ) . '</pre>' );
-
-		learndash_quiz_debug_log_message( 'user_id ' . $user_id );
-		learndash_quiz_debug_log_message( 'quiz id ' . $id );
-		learndash_quiz_debug_log_message( 'quiz_post_id ' . $quiz_post_id );
-
-		if ( defined( 'LEARNDASH_QUIZ_DEBUG' ) && LEARNDASH_QUIZ_DEBUG ) {
-			/**
-			 * Filters quiz user responses.
-			 *
-			 * @since 4.3.0
-			 *
-			 * @param array $data         User Quiz response array.
-			 * @param int   $user_id      User ID.
-			 * @param int   $quiz_post_id Quiz Post ID.
-			 *
-			 */
-			$data = apply_filters( 'learndash_quiz_check_answers_data', $data, $user_id, $quiz_post_id );
-
-			learndash_quiz_debug_log_message( 'after filter: learndash_quiz_check_answers_data: data: ' . print_r( $data, true ) );
 		}
 
 		$quiz_post = get_post( $quiz_post_id );
@@ -193,6 +167,19 @@ class LD_QuizPro {
 
 					$userResponse = $info['response'];
 
+					if ( ( is_array( $userResponse ) ) && ( ! empty( $userResponse ) ) ) {
+						foreach ( $userResponse as $key => $value ) {
+							if ( ( $value != 0 ) && ( $value != 1 ) ) {
+
+								if ( $value == 'false' ) {
+									$userResponse[ $key ] = false;
+								} elseif ( $value == 'true' ) {
+									$userResponse[ $key ] = true;
+								}
+							}
+						}
+					}
+
 					$questionData           = $json[ $question_id ];
 					$correct                = false;
 					$points                 = 0;
@@ -204,68 +191,25 @@ class LD_QuizPro {
 					$question_index++;
 					$answer_pointed_activated = $questionModel->isAnswerPointsActivated();
 
-					/**
-					 * Filters whether use the legacy sanitize user response question.
-					 *
-					 * @since 4.3.0
-					 *
-					 * @param boolean $use_legacy   Whether to use legacy sanitize scheme. Default false.
-					 * @param mixed   $userResponse User question response data.
-					 * @param object  $questionData WpProQuiz_Model_Question Question Model instance.
-					 *
-					*/
-					$question_legacy_sanitize_scheme = apply_filters( 'learndash_quiz_question_legacy_sanitize_scheme', false, $userResponse, $questionData );
-
 					switch ( $questionData['type'] ) {
 						case 'free_answer':
+							$userResponse_filtered = stripslashes( trim( $userResponse ) );
 
-							if ( ! $question_legacy_sanitize_scheme ) {
-								$userResponse          = esc_attr( wp_unslash( trim( $userResponse ) ) );
-								$userResponse_filtered = $userResponse;
-							} else {
-								$userResponse = stripslashes( trim( $userResponse ) );
-								$userResponse = $userResponse_filtered;
-							}
 							$correct = false;
 							$points  = 0;
 
 							if ( ( ! empty( $questionData['correct'] ) ) && ( '' !== $userResponse_filtered ) ) {
-
-								/**
-								 * The default value is based on the opposite of the legacy sanitize var value.
-								 *
-								 * If the legacy var is 'false' then we probably want to set this var as true since we do
-								 * want to format the correct answers.
-								 */
-								$format_correct = ! $question_legacy_sanitize_scheme;
-
-								/**
-								 * Filters whether to format the question correct answers.
-								 *
-								 * This might mean converting HTML to entities, removing some HTML tags, etc.
-								 *
-								 * @since 4.4.0
-								 *
-								 * @param boolean                  $format_correct  Whether to format the question correct answers.
-								 * @param array                    $questionData    Array of question data.
-								 * @param WpProQuiz_Model_Question $question_model  Question model object.
-								 */
-								$format_correct = apply_filters( 'learndash_quiz_format_correct_answer', $format_correct, $questionData, $questionModel );
-
 								foreach ( $questionData['correct'] as $questionData_idx => $questionData_correct ) {
-									if ( $format_correct ) {
-										$questionData_correct_filtered = esc_attr( trim( $questionData_correct ) );
-									} else {
-										$questionData_correct_filtered = stripslashes( trim( $questionData_correct ) );
-									}
+
+									$questionData_correct_filtered = stripslashes( trim( $questionData_correct ) );
 
 									/**
 									 * Filters whether to convert quiz question free to lowercase or not.
 									 *
 									 * @since 3.5.0
 									 *
-									 * @param boolean $convert_to_lower Whether to convert quiz question free to lower case.
-									 * @param object  $question         WpProQuiz_Model_Question Question Model instance.
+									 * @param boolean $conver_to_lower Whether to convert quiz question free to lower case.
+									 * @param object  $question        WpProQuiz_Model_Question Question Model instance.
 									*/
 									if ( apply_filters( 'learndash_quiz_question_free_answers_to_lowercase', true, $questionModel ) ) {
 										if ( function_exists( 'mb_strtolower' ) ) {
@@ -313,29 +257,12 @@ class LD_QuizPro {
 
 							$extra['r'] = $userResponse;
 							if ( ! $quiz->isDisabledAnswerMark() && empty( $questionData['disCorrect'] ) ) {
-								if ( isset( $questionData['correct'] ) ) {
-									$extra['c'] = $questionData['correct'];
-								} else {
-									$extra['c'] = array();
-								}
+								$extra['c'] = $questionData['correct'];
 							}
 
 							break;
 
 						case 'multiple':
-							// Normalize the user response/answers.
-							if ( ( is_array( $userResponse ) ) && ( ! empty( $userResponse ) ) ) {
-								foreach ( $userResponse as $key => $value ) {
-									if ( ( $value != 0 ) && ( $value != 1 ) ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Strict compare causes failure. Need to rework logic.
-										if ( $value === 'true' ) {
-											$userResponse[ $key ] = true;
-										} else {
-											$userResponse[ $key ] = false;
-										}
-									}
-								}
-							}
-
 							$correct = true;
 							$r       = array();
 							if ( ! empty( $questionData['correct'] ) ) {
@@ -469,22 +396,9 @@ class LD_QuizPro {
 							break;
 
 						case 'single':
-							// Normalize the user response/answers.
-							if ( ( is_array( $userResponse ) ) && ( ! empty( $userResponse ) ) ) {
-								foreach ( $userResponse as $key => $value ) {
-									if ( ( $value != 0 ) && ( $value != 1 ) ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Strict compare causes failure. Need to rework logic.
-										if ( $value === 'true' ) {
-											$userResponse[ $key ] = true;
-										} else {
-											$userResponse[ $key ] = false;
-										}
-									}
-								}
-							}
-
 							if ( ! empty( $questionData['correct'] ) ) {
 								foreach ( $questionData['correct'] as $answerIndex => $correctAnswer ) {
-									if ( $userResponse[ $answerIndex ] === true ) {
+									if ( $userResponse[ $answerIndex ] == true ) {
 
 										if ( ( ( isset( $questionData['diffMode'] ) ) && ( ! empty( $questionData['diffMode'] ) ) ) || ( ! empty( $correctAnswer ) ) ) {
 											//DiffMode or Correct
@@ -542,14 +456,6 @@ class LD_QuizPro {
 							$correct                 = true;
 							$questionData['correct'] = self::datapos_array( $question_id, count( $questionData['correct'] ) );
 
-							// Normalize the user response/answers.
-							if ( ( is_array( $userResponse ) ) && ( ! empty( $userResponse ) ) ) {
-								foreach ( $userResponse as $key => &$value ) {
-									$value = sanitize_text_field( wp_unslash( trim( $value ) ) );
-								}
-								unset( $value );
-							}
-
 							if ( ! empty( $questionData['correct'] ) ) {
 								foreach ( $questionData['correct'] as $answerIndex => $answer ) {
 									if ( ! isset( $userResponse[ $answerIndex ] ) || $userResponse[ $answerIndex ] != $answer ) {
@@ -588,18 +494,6 @@ class LD_QuizPro {
 						case 'cloze_answer':
 							$answerData = array();
 
-							// Normalize the user response/answers.
-							if ( ( is_array( $userResponse ) ) && ( ! empty( $userResponse ) ) ) {
-								foreach ( $userResponse as $key => &$value ) {
-									if ( ! $question_legacy_sanitize_scheme ) {
-										$value = esc_attr( wp_unslash( trim( $value ) ) );
-									} else {
-										$value = stripslashes( trim( $value ) );
-									}
-								}
-								unset( $value );
-							}
-
 							if ( ! empty( $questionData['correct'] ) ) {
 								foreach ( $questionData['correct'] as $answerIndex => $correctArray ) {
 									$answerData[ $answerIndex ] = false;
@@ -608,23 +502,7 @@ class LD_QuizPro {
 										$answerData[ $answerIndex ] = false;
 									}
 
-									/**
-									 * The default value is based on the opposite of the legacy sanitize var value.
-									 *
-									 * If the legacy var is 'false' then we probably want to set this var as true since we do
-									 * want to format the correct answers.
-									 */
-									$format_correct = ! $question_legacy_sanitize_scheme;
-
-									/** This filter is documented in includes/quiz/ld-quiz-pro.php */
-									$format_correct = apply_filters( 'learndash_quiz_format_correct_answer', $format_correct, $questionData, $questionModel );
-									if ( $format_correct ) {
-										foreach ( $correctArray as $key => &$value ) {
-											$value = esc_attr( wp_unslash( trim( $value ) ) );
-										}
-										unset( $value );
-									}
-
+									$userResponse[ $answerIndex ] = stripslashes( trim( $userResponse[ $answerIndex ] ) );
 									/** This filter is documented in includes/lib/wp-pro-quiz/wp-pro-quiz.php */
 									if ( apply_filters( 'learndash_quiz_question_cloze_answers_to_lowercase', true ) ) {
 										if ( function_exists( 'mb_strtolower' ) ) {
@@ -645,7 +523,7 @@ class LD_QuizPro {
 									 * Filters whether to check the answer of cloze type question.
 									 *
 									 * @param boolean                  $check_answer    Whether to check the answer.
-									 * @param string                   $question_type   Type of the question.
+									 * @param string                   $queston_type    Type of the question.
 									 * @param string                   $answer          The answer given by user for the question.
 									 * @param array                    $correct_answers An array of correct answers for the question.
 									 * @param WpProQuiz_Model_Question $question_model  Question model object.
@@ -692,12 +570,10 @@ class LD_QuizPro {
 							break;
 
 						case 'assessment_answer':
-							// Normalize the user response/answers.
-							$userResponse = absint( $userResponse );
-
 							$correct = false;
 							$points  = 0;
 
+							$userResponse = absint( $userResponse );
 							if ( ( ! empty( $userResponse ) ) && ( isset( $questionData['correct'][ $userResponse-1 ] ) ) ) {
 								$correct = true;
 								if ( isset( $questionData['points'][ $userResponse-1 ] ) ) {
@@ -865,9 +741,6 @@ class LD_QuizPro {
 			$points_nonce                 = wp_create_nonce( 'ld_quiz_pnonce' . $user_id . '_' . $id . '_' . $quiz_post_id . '_' . $r_idx . '_' . $points_str );
 			$results[ $r_idx ]['p_nonce'] = $points_nonce;
 		}
-
-
-		learndash_quiz_debug_log_message( __FUNCTION__ . ': results: ' . print_r( $results, true ) );
 
 		return json_encode( $results );
 	}
@@ -1123,13 +996,13 @@ class LD_QuizPro {
 			learndash_update_user_activity(
 				array(
 					'activity_id'        => $activity_id,
-					'course_id'          => absint( $quizdata['course'] ),
-					'user_id'            => absint( $user->ID ),
-					'post_id'            => absint( $quizdata['quiz'] ),
+					'course_id'          => $quizdata['course'],
+					'user_id'            => $user->ID,
+					'post_id'            => $quizdata['quiz'],
 					'activity_type'      => 'quiz',
 					'activity_status'    => $quizdata_pass,
-					'activity_started'   => (int) $quizdata['started'],
-					'activity_completed' => (int) $quizdata['completed'],
+					'activity_started'   => $quizdata['started'],
+					'activity_completed' => $quizdata['completed'],
 					'activity_meta'      => $quizdata,
 				)
 			);
@@ -1374,6 +1247,10 @@ class LD_QuizPro {
 				}
 			}
 
+			if ( 0 === $quizdata['pass'] ) {
+				$send_quiz_completed = false;
+			}
+
 			if ( true === $send_quiz_completed ) {
 				if ( ! empty( $course_id ) ) {
 					$quiz_parent_post_id = 0;
@@ -1384,32 +1261,8 @@ class LD_QuizPro {
 					}
 
 					if ( ! empty( $quiz_parent_post_id ) ) {
-
-						/**
-						 * Filter to set all parent steps completed.
-						 *
-						 * @since 4.2.0
-						 *
-						 * @param boolean $set_all_steps_completed Whether to set all steps completed.
-						 * @param int     $quiz_post_id            Quiz post ID.
-						 * @param int     $user_id                 User ID.
-						 * @param int     $course_id               Course ID.
-						 */
-						if ( apply_filters( 'learndash_complete_all_parent_steps', true, $quiz_post_id, $user_id, $course_id ) ) {
-							if ( ! empty( $topic_id ) ) {
-								if ( learndash_can_complete_step( $user_id, $topic_id, $course_id ) ) {
-									learndash_process_mark_complete( $user_id, $topic_id, false, $course_id );
-								}
-							}
-							if ( ! empty( $lesson_id ) ) {
-								if ( learndash_can_complete_step( $user_id, $lesson_id, $course_id ) ) {
-									learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
-								}
-							}
-						} else {
-							if ( learndash_can_complete_step( $user_id, $quiz_parent_post_id, $course_id ) ) {
-								learndash_process_mark_complete( $user_id, $quiz_parent_post_id, false, $course_id );
-							}
+						if ( learndash_can_complete_step( $user_id, $quiz_parent_post_id, $course_id ) ) {
+							learndash_process_mark_complete( $user_id, $quiz_parent_post_id, false, $course_id );
 						}
 					} else {
 						$all_quizzes_complete = true;
@@ -2042,18 +1895,12 @@ function learndash_quiz_debug_log_init( $quiz_id = 0 ) {
 			if ( wp_mkdir_p( $ld_debug_dir ) === false ) {
 				return false;
 			}
+
+			// To prevent security browsing add an index.php file.
+			if ( ! file_exists( trailingslashit( $ld_debug_dir ) . 'index.php' ) ) {
+				file_put_contents( trailingslashit( $ld_debug_dir ) . 'index.php', '// nothing to see here' );
+			}
 		}
-
-		learndash_put_directory_index_file( trailingslashit( $ld_debug_dir ) . 'index.php' );
-
-		Learndash_Admin_File_Download_Handler::register_file_path(
-			'learndash-debug',
-			$ld_debug_dir
-		);
-
-		Learndash_Admin_File_Download_Handler::try_to_protect_file_path(
-			$ld_debug_dir
-		);
 
 		$date_time                 = learndash_adjust_date_time_display( time(), 'Ymd' );
 		$quiz_debug_error_log_file = trailingslashit( $ld_debug_dir ) . 'ld_debug_quiz_' . $date_time . '_' . absint( $user_id ) . '_' . absint( $quiz_id ) . '.log';

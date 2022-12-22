@@ -63,7 +63,7 @@ function gv_revisions_filter_links_entry_list( $filter_links = array(), $form = 
 		'id'            => GV_Entry_Revisions::revision_status_key,
 		'field_filters' => array(),
 		'count'         => $total_count,
-		'label'         => esc_html__( 'Entry Revisions', 'gk-gravityrevisions' ),
+		'label'         => esc_html__( 'Entry Revisions', 'gravityview-entry-revisions' ),
 	);
 
 	return $filter_links;
@@ -77,7 +77,7 @@ function gv_revisions_add_parent_column( $table_columns = array(), $form_id = 0 
 		return $table_columns;
 	}
 
-	$table_columns['field_id-gv_revision_parent_id'] = esc_html__( 'Parent Entry ID', 'gk-gravityrevisions' );
+	$table_columns['field_id-gv_revision_parent_id'] = esc_html__( 'Parent Entry ID', 'gravityview-entry-revisions' );
 
 	return $table_columns;
 }
@@ -103,7 +103,7 @@ function gv_revisions_parent_id_entry_column_filter( $value = '', $form_id = 0, 
 
 	if ( is_wp_error( $entry ) ) {
 
-		GravityKitFoundation::logger()->error( sprintf( '[%s] Entry not found at ID #%d', __METHOD__, $entry_or_entry_id ) );
+		gv_revisions_log_error( sprintf( '[%s] Entry not found at ID #%d', __METHOD__, $entry_or_entry_id ) );
 
 		return esc_html( $entry->get_error_message() );
 	}

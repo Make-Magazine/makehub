@@ -30,35 +30,6 @@ http://docs.snaporbital.com/
 
 == Changelog ==
 
-= 2.3.16 =
-* Fixes issue with price on course grid when no style is selected
-
-= 2.3.15 =
-* Fixes issues with price on course grid in recent release
-
-= 2.3.12 =
-* Changes load order of inline styling for focus mode issues in 4.0
-
-= 2.3.11 =
-* Safter fix for the 4.0 change in template loading
-
-= 2.3.10 =
-* Updates for 4.0 change in template loading
-
-= 2.3.9 =
-* More translations on course grid
-
-= 2.3.8 =
-* Feature: Set course grid course heading sizes
-* Feature: Set course grid body text size
-* Feature: Set course grid button text size
-* Fix: Fixes the custom sales page option
-* Fix: Fixes translations on course grid
-* Fix: Fixes source order issues on course grid colors
-
-= 2.3.7.1 =
-* Updated EDD plugin updater library to 1.9.0
-
 = 2.3.7.5 =
 * Fixes issue with icon picker on legacy
 * Fixes some responsive issues with grid template
@@ -85,11 +56,6 @@ http://docs.snaporbital.com/
 * Added view lesson / quiz / topic buttons in grid view
 * Improved BuddyBoss Support
 * Adds content type and duration to course grid if course grid add-on is installed
-
-2.3.7
-- TODO: Hide expand doesn't work in grid
-- TODO: Check focus mode sidebar colors
-- TODO: Hide secondary menu not working?
 
 = 2.3.6.1 =
 * Thumbnails on LearnDash Groups grid view

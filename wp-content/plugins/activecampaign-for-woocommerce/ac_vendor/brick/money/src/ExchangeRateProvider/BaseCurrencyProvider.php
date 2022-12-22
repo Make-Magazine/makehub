@@ -22,13 +22,17 @@ final class BaseCurrencyProvider implements ExchangeRateProvider
 {
     /**
      * The provider for rates relative to the base currency.
+     *
+     * @var ExchangeRateProvider
      */
-    private ExchangeRateProvider $provider;
+    private $provider;
 
     /**
      * The code of the currency all the exchanges rates are based on.
+     *
+     * @var string
      */
-    private string $baseCurrencyCode;
+    private $baseCurrencyCode;
 
     /**
      * @param ExchangeRateProvider $provider         The provider for rates relative to the base currency.

@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Timber
 Plugin URI: https://vimeography.com/themes
 Theme Name: Timber
 Theme URI:  https://vimeography.com/themes/timber
-Version: 2.1.1
+Version: 2.0.6
 Description: Timber displays your videos in a modern gallery layout for your portfolio or membership site.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2020 Dave Kiss
+Copyright: 2018 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Timber') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Timber') ) {
      *
      * @var string
      */
-    public $version = '2.1.1';
+    public $version = '2.0.6';
 
 
     /**

@@ -166,7 +166,7 @@ class MeprAccountCtrl extends MeprBaseCtrl {
 
     MeprView::render('/account/nav', get_defined_vars());
 
-    $action = MeprHooks::apply_filters('mepr-account-action', (isset($_REQUEST['action']))?$_REQUEST['action']:false);
+    $action = (isset($_REQUEST['action']))?$_REQUEST['action']:false;
 
     switch($action) {
       case 'payments':
@@ -615,7 +615,7 @@ class MeprAccountCtrl extends MeprBaseCtrl {
 
     if(!isset($txn->gateway) || $txn->gateway != $atts['gateway_id']) { return ''; }
 
-    return do_shortcode($content);
+    return $content;
   }
 
   public function account_page_the_title($title) {

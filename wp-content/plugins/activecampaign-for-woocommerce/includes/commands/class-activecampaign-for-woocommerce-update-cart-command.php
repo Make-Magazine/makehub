@@ -177,15 +177,15 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		try {
 			if ( ! $this->verify_ac_customer_id( $this->customer->get_id() ) ) {
 				$this->logger->debug(
-					'Update Cart Command: Verify AC customer - Could not verify customer exists in AC.',
+					'Update Cart Command: Verify AC customer - Cannot verify without a customer ID, continuing.',
 					[
 						'customer_email' => AC_Utilities::validate_object( $this->customer, 'get_email' ) ? $this->customer->get_email() : null,
 						'customer_id'    => AC_Utilities::validate_object( $this->customer, 'get_id' ) ? $this->customer->get_id() : null,
 					]
 				);
-
-				$this->create_customer();
 			}
+
+			$this->create_customer();
 		} catch ( Throwable $t ) {
 			$this->logger->warning( 'Update Cart Command: There was an issue creating a customer or reading order, continuing.' );
 		}

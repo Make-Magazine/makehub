@@ -13,7 +13,7 @@ import { RangeControl, ToggleControl } from '@wordpress/components';
  * @param {number}            props.columns
  * @param {number}            props.rows
  * @param {function(any):any} props.setAttributes Setter for block attributes.
- * @param {boolean}           props.alignButtons
+ * @param {string}            props.alignButtons
  * @param {number}            props.minColumns
  * @param {number}            props.maxColumns
  * @param {number}            props.minRows
@@ -57,13 +57,13 @@ const GridLayoutControl = ( {
 			/>
 			<ToggleControl
 				label={ __(
-					'Align the last block to the bottom',
+					'Align Last Block',
 					'woocommerce'
 				) }
 				help={
 					alignButtons
 						? __(
-								'Align the last block to the bottom.',
+								'The last inner block will be aligned vertically.',
 								'woocommerce'
 						  )
 						: __(

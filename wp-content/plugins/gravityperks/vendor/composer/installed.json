@@ -41,10 +41,6 @@
         "keywords": [
             "markdown",
             "parser"
-        ],
-        "support": {
-            "issues": "https://github.com/erusev/parsedown/issues",
-            "source": "https://github.com/erusev/parsedown/tree/master"
-        }
+        ]
     }
 ]

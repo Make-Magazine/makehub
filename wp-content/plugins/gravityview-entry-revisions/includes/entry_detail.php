@@ -4,26 +4,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( '\GFCommon' ) ) {
+if ( ! class_exists( 'GFCommon' ) ) {
 	return;
 }
 
-/**
- * When rendering entry detail, add hooks to hide metaboxes if we're showing a revision.
- */
-add_action( 'gform_pre_entry_detail', function() {
+// If showing a revision, get rid of all metaboxes and lingering HTML stuff
+if ( isset( $_GET['revision'] ) ) {
+    add_action( 'gform_entry_detail_sidebar_before', '_gv_ob_start' );
+    add_action( 'gform_entry_detail_content_before', '_gv_ob_start' );
 
-	if ( ! isset( $_GET['revision'] ) ) {
-		return;
-	}
+    add_action( 'gform_entry_detail', '_gv_ob_get_clean' );
+    add_action( 'gform_entry_detail_sidebar_after', '_gv_ob_get_clean' );
 
-	// If showing a revision, get rid of all metaboxes and lingering HTML stuff
-	add_action( 'gform_entry_detail_sidebar_before', '_gk_gravityrevisions_ob_start' );
-	add_action( 'gform_entry_detail_content_before', '_gk_gravityrevisions_ob_start' );
-
-	add_action( 'gform_entry_detail', '_gk_gravityrevisions_ob_get_clean' );
-	add_action( 'gform_entry_detail_sidebar_after', '_gk_gravityrevisions_ob_get_clean' );
-});
+}
 
 add_filter( 'gform_entry_detail_meta_boxes', 'gv_revisions_entry_detail_add_meta_box' );
 
@@ -40,23 +33,23 @@ add_filter( 'gform_entry_detail_meta_boxes', 'gv_revisions_entry_detail_add_meta
  */
 function gv_revisions_entry_detail_add_meta_box( $meta_boxes = array(), $entry = array(), $form = array() ) {
 
-	$revision_id = rgget( 'revision' );
+	$revision_id = rgget('revision');
 
-	if ( ! empty( $revision_id ) ) {
-		return array(
-			'gv_revisions' => array(
-				'title'    => esc_html__( 'Compare Revisions', 'gk-gravityrevisions' ),
-				'callback' => 'gv_revisions_meta_box_diff',
-				'context'  => 'normal',
-			),
+	if( ! empty( $revision_id )  ) {
+
+		$meta_boxes = array(); // Clear out other metaboxes
+		$meta_boxes['gv_revisions'] = array(
+			'title'    => esc_html__( 'Compare Revisions', 'gravityview-entry-revisions' ),
+			'callback' => 'gv_revisions_meta_box_diff',
+			'context'  => 'normal',
+		);
+	} else {
+		$meta_boxes['gv_revisions'] = array(
+			'title'    => esc_html__( 'Entry Revisions', 'gravityview-entry-revisions' ),
+			'callback' => 'gv_revisions_meta_box_revisions_list',
+			'context'  => 'normal',
 		);
 	}
-
-	$meta_boxes['gv_revisions'] = array(
-		'title'    => esc_html__( 'Entry Revisions', 'gk-gravityrevisions' ),
-		'callback' => 'gv_revisions_meta_box_revisions_list',
-		'context'  => 'normal',
-	);
 
 	return $meta_boxes;
 }
@@ -77,8 +70,8 @@ function gv_revisions_meta_box_diff( $data = array() ) {
 	$revision = $GV_Entry_Revisions->get_revision( rgget( 'revision'), $entry['id'] );
 
 	if( is_wp_error( $revision ) ) {
-		echo '<h3>' . esc_html__( 'This revision no longer exists.', 'gk-gravityrevisions' ) . '</h3>';
-		?><a href="<?php echo esc_url( remove_query_arg( 'revision', 'screen_mode' ) ); ?>" class="button button-primary button-large"><?php esc_html_e( 'Return to Entry', 'gk-gravityrevisions' ); ?></a><?php
+		echo '<h3>' . esc_html__( 'This revision no longer exists.', 'gravityview-entry-revisions' ) . '</h3>';
+		?><a href="<?php echo esc_url( remove_query_arg( 'revision', 'screen_mode' ) ); ?>" class="button button-primary button-large"><?php esc_html_e( 'Return to Entry', 'gravityview-entry-revisions' ); ?></a><?php
 		return;
 	}
 
@@ -89,10 +82,10 @@ function gv_revisions_meta_box_diff( $data = array() ) {
 	wp_enqueue_script( 'gv-revisions', plugins_url( 'assets/js/admin'.$min.'.js', GV_ENTRY_REVISIONS_FILE ), array( 'jquery' ), GV_ENTRY_REVISIONS_VERSION, true );
 
 	wp_localize_script( 'gv-revisions', 'gvRevisions', array(
-		'confirm' => esc_attr__( 'Are you sure? If you continue, the current entry will be updated with the selected field values.', 'gk-gravityrevisions' ),
+		'confirm' => esc_attr__( 'Are you sure? If you continue, the current entry will be updated with the selected field values.', 'gravityview-entry-revisions' ),
 		'restore' => array(
-			'singular' => esc_attr__( 'Restore This Value', 'gk-gravityrevisions' ),
-			'plural' => esc_attr__( 'Restore These Values', 'gk-gravityrevisions' ),
+			'singular' => esc_attr__( 'Restore This Value', 'gravityview-entry-revisions' ),
+			'plural' => esc_attr__( 'Restore These Values', 'gravityview-entry-revisions' ),
 		),
 	) );
 
@@ -130,7 +123,7 @@ function gv_revisions_maybe_print_restore_message() {
 	}
 
 	if( rgget( 'restore-success' ) ) {
-		$message = esc_html__( 'Success: the selected revision fields were restored.', 'gk-gravityrevisions' );
+		$message = esc_html__( 'Success: the selected revision fields were restored.', 'gravityview-entry-revisions' );
 		printf( '<div class="notice notice-success is-dismissible"><p><strong>%s</strong></p></div>', $message );
 		return;
 	}
@@ -144,16 +137,16 @@ function gv_revisions_maybe_print_restore_message() {
 	switch ( $error_code ) {
 		case 'mismatch':
 		case 'not_found':
-			$error = esc_html__( 'Revision not found', 'gk-gravityrevisions' );
+			$error = esc_html__( 'Revision not found', 'gravityview-entry-revisions' );
 			break;
 		case 'identical':
 		case 'no_changes':
-			$error = esc_html__( 'No changes were made to the current entry.', 'gk-gravityrevisions' );
+			$error = esc_html__( 'No changes were made to the current entry.', 'gravityview-entry-revisions' );
 			break;
 		default:
-			$error = esc_html__( 'There was a problem restoring the revision.', 'gk-gravityrevisions' );
+			$error = esc_html__( 'There was a problem restoring the revision.', 'gravityview-entry-revisions' );
 	}
 
-	printf( '<div class="notice notice-error is-dismissible"><h3>%s</h3></div>', sprintf( esc_html__( 'Error: %s', 'gk-gravityrevisions' ), $error ) );
+	printf( '<div class="notice notice-error is-dismissible"><h3>%s</h3></div>', sprintf( esc_html__( 'Error: %s', 'gravityview-entry-revisions' ), $error ) );
 
 }

@@ -12,14 +12,14 @@
 	 * @subpackage Activecampaign_For_Woocommerce/admin/partials
 	 */
 
-$activecampaign_for_woocommerce_limit   = 40;
-$activecampaign_for_woocommerce_request = wp_unslash( $_REQUEST );
-$activecampaign_for_woocommerce_get     = wp_unslash( $_GET );
+$activecampaign_for_woocommerce_limit = 40;
+
 if (
-	isset( $activecampaign_for_woocommerce_request['activecampaign_for_woocommerce_abandoned_cart_nonce_field'], $activecampaign_for_woocommerce_get['offset'] ) &&
-	wp_verify_nonce( $activecampaign_for_woocommerce_request['activecampaign_for_woocommerce_abandoned_cart_nonce_field'], 'activecampaign_for_woocommerce_abandoned_form' )
+		isset( $_REQUEST['activecampaign_for_woocommerce_abandoned_cart_nonce_field'] )
+		&& isset( $_GET['offset'] )
+		&& wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_abandoned_cart_nonce_field'], 'activecampaign_for_woocommerce_abandoned_form' )
 ) {
-	$activecampaign_for_woocommerce_offset = $activecampaign_for_woocommerce_get['offset'];
+	$activecampaign_for_woocommerce_offset = $_GET['offset'];
 } else {
 	$activecampaign_for_woocommerce_offset = 0;
 }

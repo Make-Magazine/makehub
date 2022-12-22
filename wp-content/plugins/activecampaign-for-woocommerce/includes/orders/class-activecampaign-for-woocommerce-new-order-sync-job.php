@@ -317,124 +317,69 @@ class Activecampaign_For_Woocommerce_New_Order_Sync_Job implements Executable {
 		$ac_customer_id = null;
 		$ac_order_id    = null;
 
-		if ( isset( $unsynced_order->wc_order_id, $unsynced_order->customer_email ) && ! empty( $unsynced_order->customer_email ) ) {
-			try {
-				if ( AC_Utilities::validate_object( $ac_order, 'get_id' ) ) {
-					$ac_order_id = $ac_order->get_id();
-				} elseif ( isset( $ac_order->id ) ) {
-					$ac_order_id = $ac_order->id;
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->info(
-					'Check synced order failed to get ID from ac_order',
-					[
-						'unsynced_order' => $unsynced_order,
-						'ac_order'       => $ac_order,
-					]
-				);
+		if ( AC_Utilities::validate_object( $ac_order, 'get_id' ) ) {
+			$ac_order_id = $ac_order->get_id();
+		} elseif ( isset( $ac_order->id ) ) {
+			$this->logger->dev( 'check_synced_order: we have an order id 2' );
+			$ac_order_id = $ac_order->id;
+		}
+
+		if ( empty( $ac_order_id ) ) {
+			$ac_order = $this->order_repository->find_by_externalid( $unsynced_order->wc_order_id );
+
+			if ( AC_Utilities::validate_object( $ac_order, 'get_id' ) ) {
+				$ac_order_id = $ac_order->get_id();
 			}
+		}
 
-			try {
-				// If no AC order id then find one in hosted
-				if ( empty( $ac_order_id ) && isset( $unsynced_order->wc_order_id ) ) {
-					$ac_order = $this->order_repository->find_by_externalid( $unsynced_order->wc_order_id );
+		if ( empty( $ac_customer_id ) && isset( $ac_order->customerid ) ) {
+			$this->logger->dev( 'check_synced_order: we have a customer id 3' );
+			$ac_customer_id = $ac_order->customerid;
+		}
 
-					if ( AC_Utilities::validate_object( $ac_order, 'get_id' ) ) {
-						$ac_order_id = $ac_order->get_id();
-					}
+		if ( empty( $ac_customer_id ) && AC_Utilities::validate_object( $ac_order, 'serialize_to_array' ) ) {
+			$ac_order_array = $ac_order->serialize_to_array();
+			$ac_customer_id = $ac_order_array['customerid'];
+		}
 
-					if ( AC_Utilities::validate_object( $ac_order, 'get_customerid' ) ) {
-						$ac_customer_id = $ac_order->get_customerid();
-					}
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->warning(
-					'Check synced order encountered an error trying to find record by external ID',
-					[
-						'unsynced_order' => $unsynced_order,
-						'ac_order'       => $ac_order,
-					]
-				);
+		if ( ! isset( $ac_customer_id ) ) {
+			$ac_customer = $this->customer_repository->find_by_email_and_connection_id( $unsynced_order->customer_email, $this->connection_id );
+			if ( AC_Utilities::validate_object( $ac_customer, 'get_id' ) ) {
+				$ac_customer_id = $ac_customer->get_id();
 			}
+		}
 
-			try {
-				if ( empty( $ac_customer_id ) && isset( $ac_order->customerid ) && ! empty( $ac_order->customerid ) ) {
-					$ac_customer_id = $ac_order->customerid;
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->warning(
-					'customerid not set or threw an error',
-					[
-						'unsynced_order' => $unsynced_order,
-						'ac_order'       => $ac_order,
-					]
-				);
-			}
+		$data = [ 'synced_to_ac' => 9 ];
 
-			try {
-				if ( empty( $ac_customer_id ) && AC_Utilities::validate_object( $ac_order, 'serialize_to_array' ) ) {
-					$ac_order_array = $ac_order->serialize_to_array();
-					$ac_customer_id = $ac_order_array['customerid'];
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->warning(
-					'Check synced order failed to get ID from ac_order',
-					[
-						'unsynced_order' => $unsynced_order,
-						'ac_order'       => $ac_order,
-					]
-				);
-			}
+		if ( ! empty( $ac_customer_id ) ) {
+			$data['ac_customer_id'] = $ac_customer_id;
+		}
 
-			try {
-				if ( ! isset( $ac_customer_id ) ) {
-					$ac_customer = $this->customer_repository->find_by_email_and_connection_id( $unsynced_order->customer_email, $this->connection_id );
-					if ( AC_Utilities::validate_object( $ac_customer, 'get_id' ) ) {
-						$ac_customer_id = $ac_customer->get_id();
-					}
-				}
-			} catch ( Throwable $t ) {
-				$this->logger->warning(
-					'Check synced order failed to get ID from ac_order',
-					[
-						'unsynced_order' => $unsynced_order,
-						'ac_order'       => $ac_order,
-					]
-				);
-			}
+		if ( ! empty( $ac_order_id ) ) {
+			$data['ac_order_id']  = $ac_order_id;
+			$data['synced_to_ac'] = 1;
+			$note                 = 'Order record synced to ActiveCampaign (ID: ' . $ac_order_id . ')';
+			wc_create_order_note( $unsynced_order->wc_order_id, $note );
+			$created_date = new DateTime( 'NOW', new DateTimeZone( 'UTC' ) );
+			update_option( 'activecampaign_for_woocommerce_last_order_sync', $created_date );
+		}
 
-			$data = [ 'synced_to_ac' => 9 ];
+		// if order do this
+		$wpdb->update(
+			$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
+			$data,
+			[
+				'id' => $unsynced_order->id,
+			]
+		);
 
-			if ( isset( $ac_customer_id ) && ! empty( $ac_customer_id ) ) {
-				$data['ac_customer_id'] = $ac_customer_id;
-			}
-
-			if ( ! empty( $ac_order_id ) ) {
-				$data['ac_order_id']  = $ac_order_id;
-				$data['synced_to_ac'] = 1;
-				$note                 = 'Order record synced to ActiveCampaign (ID: ' . $ac_order_id . ')';
-				wc_create_order_note( $unsynced_order->wc_order_id, $note );
-				$created_date = new DateTime( 'NOW', new DateTimeZone( 'UTC' ) );
-				update_option( 'activecampaign_for_woocommerce_last_order_sync', $created_date );
-			}
-
-			// if order do this
-			$wpdb->update(
-				$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
-				$data,
+		if ( $wpdb->last_error ) {
+			$this->logger->error(
+				'Abandonement sync: There was an error updating an abandoned cart record as synced.',
 				[
-					'id' => $unsynced_order->id,
+					'wpdb_last_error' => $wpdb->last_error,
 				]
 			);
-
-			if ( $wpdb->last_error ) {
-				$this->logger->error(
-					'Abandonement sync: There was an error updating an abandoned cart record as synced.',
-					[
-						'wpdb_last_error' => $wpdb->last_error,
-					]
-				);
-			}
 		}
 	}
 

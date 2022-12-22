@@ -1,8 +1,9 @@
 /**
- * @param {Object|string} styles { base: { shared: '', variant: { shared: '', h1: '', h2: '' } }, dark: { shared: '', variant: { shared: '', h1: '', h2: '' } } }
- * @param {Object}        props  { variant: 'h1', size: 'xl' }
- * @param {string}        type   shared/unique (in case that only the shared/unique styles are needed)
- * @return {string} - style
+ * @param styles {object} - { base: { shared: '', variant: { shared: '', h1: '', h2: '' } }, dark: { shared: '', variant: { shared: '', h1: '', h2: '' } } }
+ * @param config {object} - { variants: { light: true, dark: false } }
+ * @param props {object} - { variant: 'h1', size: 'xl' }
+ * @param type {string} - shared/unique (in case that only the shared/unique styles are needed)
+ * @returns {string} - 'background-color: #000; color: #fff;'
  */
 export const getStyle = ( styles, props, type ) => {
 	if ( ! styles ) {
@@ -28,7 +29,7 @@ export const getStyle = ( styles, props, type ) => {
 				return;
 			}
 
-			Object.values( keys ).forEach( ( key ) => {
+			Object.values( keys ).map( ( key ) => {
 				const styleObjKey = 'shared' !== key ? 'unique' : 'shared';
 
 				if ( ! type || styleObjKey === type ) {

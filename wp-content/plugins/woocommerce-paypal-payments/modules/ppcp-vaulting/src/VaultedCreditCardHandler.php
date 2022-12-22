@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\Vaulting;
 
-use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use WC_Customer;
 use WC_Order;
 use WooCommerce\PayPalCommerce\ApiClient\Endpoint\OrderEndpoint;
@@ -143,16 +143,15 @@ class VaultedCreditCardHandler {
 		string $saved_credit_card,
 		WC_Order $wc_order
 	): WC_Order {
+
+		$change_payment = filter_input( INPUT_POST, 'woocommerce_change_payment', FILTER_SANITIZE_STRING );
 		if (
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			isset( $_POST['woocommerce_change_payment'] )
+			$change_payment
 			&& $this->subscription_helper->has_subscription( $wc_order->get_id() )
 			&& $this->subscription_helper->is_subscription_change_payment()
 			&& $saved_credit_card
 		) {
-			$wc_order->update_meta_data( 'payment_token_id', $saved_credit_card );
-			$wc_order->save();
-
+			update_post_meta( $wc_order->get_id(), 'payment_token_id', $saved_credit_card );
 			return $wc_order;
 		}
 

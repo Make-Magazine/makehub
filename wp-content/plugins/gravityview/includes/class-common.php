@@ -42,26 +42,6 @@ class GVCommon {
 	}
 
 	/**
-	 * Returns form object for existing form or a form template.
-	 *
-	 * @since 2.16
-	 *
-	 * @param int|string $form_id Gravity Forms form ID. Default: 0.
-	 *
-	 * @return array|false
-	 */
-	public static function get_form_or_form_template( $form_id = 0 ) {
-		// Determine if form is a preset and convert it to an array with fields
-		if ( is_string( $form_id ) && preg_match( '/^preset_/', $form_id ) ) {
-			$form = GravityView_Ajax::pre_get_form_fields( $form_id );
-		} else {
-			$form = self::get_form( $form_id );
-		}
-
-		return $form;
-	}
-
-	/**
 	 * Alias of GravityView_Roles_Capabilities::has_cap()
 	 *
 	 * @since 1.15
@@ -369,7 +349,7 @@ class GVCommon {
 		 */
 		if ( $has_post_fields ) {
 			$fields['post_id'] = array(
-				'label' => __( 'Post ID', 'gk-gravityview' ),
+				'label' => __( 'Post ID', 'gravityview' ),
 				'type' => 'post_id',
 			);
 		}
@@ -790,16 +770,6 @@ class GVCommon {
 			$val1 = in_array( gravityview_get_context(), $matching_contexts ) ? $val2 : false;
 		}
 
-		// Attempt to parse dates.
-		$timestamp_1 = gravityview_maybe_convert_date_string_to_timestamp( $val1 );
-		$timestamp_2 = gravityview_maybe_convert_date_string_to_timestamp( $val2 );
-
-		// If both are timestamps, cast to string so we can use the > and < comparisons below.
-		if ( $timestamp_1 && $timestamp_2 ) {
-			$val1 = (string) $timestamp_1;
-			$val2 = (string) $timestamp_2;
-		}
-
 		switch ( $operation ) {
 			case 'equals':
 				$value = self::matches_operation( $val1, $val2, 'is' );
@@ -1042,7 +1012,7 @@ class GVCommon {
 		// If we're using time diff, we want to have a different default format
 		if( empty( $format ) ) {
 			/* translators: %s: relative time from now, used for generic date comparisons. "1 day ago", or "20 seconds ago" */
-			$format = $is_diff ? esc_html__( '%s ago', 'gk-gravityview' ) : get_option( 'date_format' );
+			$format = $is_diff ? esc_html__( '%s ago', 'gravityview' ) : get_option( 'date_format' );
 		}
 
 		// If raw was specified, don't modify the stored value
@@ -1396,7 +1366,7 @@ class GVCommon {
 	 * @return string         html
 	 */
 	public static function get_sortable_fields( $formid, $current = '' ) {
-		$output = '<option value="" ' . selected( '', $current, false ).'>' . esc_html__( 'Default (Entry ID)', 'gk-gravityview' ) .'</option>';
+		$output = '<option value="" ' . selected( '', $current, false ).'>' . esc_html__( 'Default (Entry ID)', 'gravityview' ) .'</option>';
 
 		if ( empty( $formid ) ) {
 			return $output;
@@ -1443,11 +1413,11 @@ class GVCommon {
 		$date_created = array(
 			'date_created' => array(
 				'type' => 'date_created',
-				'label' => __( 'Date Created', 'gk-gravityview' ),
+				'label' => __( 'Date Created', 'gravityview' ),
 			),
 			'date_updated' => array(
 				'type' => 'date_updated',
-				'label' => __( 'Date Updated', 'gk-gravityview' ),
+				'label' => __( 'Date Updated', 'gravityview' ),
 			),
 		);
 
@@ -1577,7 +1547,7 @@ class GVCommon {
 
 			$enkoder = new StandalonePHPEnkoder;
 
-			$message = empty( $message ) ? __( 'Email hidden; Javascript is required.', 'gk-gravityview' ) : $message;
+			$message = empty( $message ) ? __( 'Email hidden; Javascript is required.', 'gravityview' ) : $message;
 
 			/**
 			 * @filter `gravityview/phpenkoder/msg` Modify the message shown when Javascript is disabled and an encrypted email field is displayed

@@ -63,7 +63,6 @@ jQuery(document).ready(function($) {
             'type': 2,
             'activecampaign_for_woocommerce_settings_nonce_field': $('#activecampaign_for_woocommerce_settings_nonce_field').val()
         });
-        $('#activecampaign-historical-sync-run-contacts').hide();
         setTimeout(function(){
             enableStartSection();
             hideRunSection();
@@ -184,13 +183,8 @@ jQuery(document).ready(function($) {
                 $('#activecampaign-historical-sync-run-shortly').show();
                 $('#activecampaign-historical-sync-run-contacts').hide();
             }else if( 'contacts' === status_name){
-                showRunSection();
                 $('#activecampaign-historical-sync-run-shortly').hide();
                 $('#activecampaign-historical-sync-run-contacts').show();
-                $('#activecampaign-run-historical-sync-current-record-status').html(JSON.stringify(response.data));
-                $('#activecampaign-run-historical-sync-current-record-num').html('-');
-                $('#activecampaign-run-historical-sync-last-update').html(run_status.last_update);
-
                 if(run_status.contact_count >= 0) {
                     $('#activecampaign-historical-sync-contacts-count').html(run_status.contact_count + '/' + run_status.contact_total);
                 }
@@ -249,7 +243,6 @@ jQuery(document).ready(function($) {
                 getLastSyncData();
                 enableStartSection();
                 hideRunSection();
-                $('#activecampaign-historical-sync-run-contacts').hide();
                 startUpdateCheck(8000);
             }
         }).fail(response => {

@@ -1,19 +1,17 @@
 {
 	"name": "woocommerce/active-filters",
 	"version": "1.0.0",
-	"title": "Active Product Filters Controls",
-	"description": "Display the currently active product filters.",
+	"title": "Active Product Filters",
+	"description": "Show the currently active product filters. Works in combination with the All Products and filters blocks.",
 	"category": "woocommerce",
 	"keywords": [ "WooCommerce" ],
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"inserter": false,
 		"color": {
 			"text": true,
 			"background": false
-		},
-		"lock": false
+		}
 	},
 	"attributes": {
 		"displayStyle": {

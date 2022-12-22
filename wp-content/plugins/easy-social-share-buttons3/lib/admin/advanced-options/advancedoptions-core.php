@@ -34,7 +34,6 @@ wp_add_inline_script('essb-admin5', essb_advancedopts_generate_scripts());
   <div id="advancedoptions-loader"></div>
 </div>
 
-<?php if (!essb_option_bool_value('deactivate_helphints')) { ?>
 <!-- help beacon -->
 <div class="ao-helpbeacon" data-registered="<?php echo ESSBActivationManager::isActivated(); ?>" data-code="<?php echo ESSBActivationManager::getPurchaseCode(); ?>">
 	<button 		
@@ -53,7 +52,6 @@ wp_add_inline_script('essb-admin5', essb_advancedopts_generate_scripts());
 			class="help-button--text">Help</span>
 	</button>
 </div>
-<?php } ?>
 
 <div class="ao-help-holder">
 	<div class="support-inline">
@@ -85,7 +83,7 @@ else {
     ?>	
 	<div class="open-support-topic">
 			<a
-				href="https://my.socialsharingplugin.com/"
+				href="https://support.creoworx.com/forums/forum/wordpress-plugins/easy-social-share-buttons/"
 				target="_blank"
 				class="essb-btn essb-btn-green essb-back-to-settings1">Submit a
 				Topic<i class="fa fa-external-link"></i>

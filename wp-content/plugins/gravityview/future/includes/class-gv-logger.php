@@ -23,7 +23,9 @@ class LogLevel {
 /**
  * The \GV\Logger abstract class.
  *
- * @TODO: (Foundation) Deprecate in future versions.
+ * Provides logging facilities in line with PSR-3 Standard.
+ * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
+ * @see https://github.com/php-fig/log/blob/master/Psr/Log/AbstractLogger.php
  */
 abstract class Logger /** @todo extends Psr\Log\AbstractLogger */ {
     /**
@@ -151,7 +153,7 @@ abstract class Logger /** @todo extends Psr\Log\AbstractLogger */ {
 	protected function interpolate( $message, $context ) {
 		foreach ( $context as $key => $val ) {
 			if ( strpos( $message, "{{$key}}" ) !== false ) {
-				$message = str_replace( "{{$key}}", (string) $val, $message );
+				$message = str_replace( "{{$key}}", $val, $message );
 			}
 		}
 

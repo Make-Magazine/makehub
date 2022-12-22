@@ -3,7 +3,14 @@
 /**
  * @since 1.0
  */
-final class GravityView_Inline_Edit {
+final class GravityView_Inline_Edit extends GravityView_Extension {
+
+	/**
+	 * @var string Name of the plugin in gravityview.co
+	 *
+	 * @since 1.0
+	 */
+	protected $_title = 'Inline Edit by GravityView';
 
 	/**
 	 * @var string Version number of the plugin, set during initialization
@@ -13,11 +20,30 @@ final class GravityView_Inline_Edit {
 	protected $_version = NULL;
 
 	/**
-	 * @var int The ID of the download on www.gravitykit.com
+	 * @var int The ID of the download on gravityview.co
 	 *
 	 * @since 1.0
 	 */
 	protected $_item_id = 532208;
+
+	/**
+	 * @var string Minimum version of GravityView the Extension requires
+	 */
+	protected $_min_gravityview_version = '2.0-dev';
+
+	/**
+	 * @var string Translation textdomain
+	 *
+	 * @since 1.0
+	 */
+	protected $_text_domain = 'gravityview-inline-edit';
+
+	/**
+	 * @var string Path to main plugin file
+	 *
+	 * @since 1.0
+	 */
+	protected $_path = GRAVITYVIEW_INLINE_FILE;
 
 	/**
 	 * @var GravityView_Inline_Edit
@@ -25,6 +51,16 @@ final class GravityView_Inline_Edit {
 	 * @since 1.0
 	 */
 	private static $_instance;
+
+	/**
+	 * @var GravityView_Inline_Edit_GFAddon|null
+	 */
+	private $GFAddon = null;
+
+	/**
+	 * @var bool Only refresh the license one, if settings have been saved
+	 */
+	private $_did_license_refresh = false;
 
 
 	/**
@@ -37,12 +73,14 @@ final class GravityView_Inline_Edit {
 	 */
 	public function __construct( $version_number = '', $gf_addon = null ) {
 
-		$this->_title = esc_html__( 'GravityEdit', 'gk-gravityedit' );
+		$this->_title = esc_html__( 'Inline Edit by GravityView', 'gravityview-inline-edit' );
 		$this->_version = $version_number;
 		$this->GFAddon = $gf_addon;
 
 		$this->_require_files();
 		$this->_include_field_files();
+
+		parent::__construct();
 	}
 
 	/**
@@ -101,8 +139,6 @@ final class GravityView_Inline_Edit {
 	 */
 	public function get_edit_mode() {
 
-		$edit_mode = GravityView_Inline_Edit_GFAddon::get_instance()->get_plugin_setting( 'inline-edit-mode' );
-
 		/**
 		 * @filter `gravityview-inline-edit/edit-mode` Modify the inline edit mode.
 		 *
@@ -110,7 +146,7 @@ final class GravityView_Inline_Edit {
 		 *
 		 * @param string $edit_mode Editing mode. Options: "popup" or "inline" [Default: "popup"]
 		 */
-		$edit_mode = apply_filters( 'gravityview-inline-edit/edit-mode', $edit_mode );
+		$edit_mode = apply_filters( 'gravityview-inline-edit/edit-mode', 'popup' );
 
 		return in_array( $edit_mode, array( 'popup', 'inline' ) ) ? $edit_mode : 'popup';
 	}
@@ -123,12 +159,11 @@ final class GravityView_Inline_Edit {
 	 * @return void
 	 */
 	private function _require_files() {
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-scripts.php' );
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-render-abstract.php' );
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-gravityview.php' );
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-gravity-forms.php' );
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-user-registration.php' );
-		require_once( GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-ajax.php' );
+		require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-scripts.php' );
+		require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-render-abstract.php' );
+		require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-gravityview.php' );
+		require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-gravity-forms.php' );
+		require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-ajax.php' );
 	}
 
 	/**
@@ -140,10 +175,10 @@ final class GravityView_Inline_Edit {
 	 */
 	private function _include_field_files() {
 
-		include_once( GRAVITYEDIT_DIR . 'includes/fields/class-gravityview-inline-edit-field.php' );
+		include_once( GRAVITYVIEW_INLINE_DIR . 'includes/fields/class-gravityview-inline-edit-field.php' );
 
 		// Load all field files automatically
-		foreach ( glob( GRAVITYEDIT_DIR . 'includes/fields/class-gravityview-inline-edit-field*.php' ) as $gv_inline_field_filename ) {
+		foreach ( glob( GRAVITYVIEW_INLINE_DIR . 'includes/fields/class-gravityview-inline-edit-field*.php' ) as $gv_inline_field_filename ) {
 			include_once( $gv_inline_field_filename );
 		}
 	}
@@ -200,10 +235,6 @@ final class GravityView_Inline_Edit {
 			'textarea',
 			'time',
 			'website',
-			'fileupload',
-			'created_by',
-			'source_url',
-			'date_created',
 		);
 
 		/**
@@ -227,12 +258,12 @@ final class GravityView_Inline_Edit {
 
 		$buttons = array(
 			'ok'     => array(
-				'text'  => __( 'Update', 'gk-gravityedit' ),
+				'text'  => __( 'Update', 'gravityview-inline-edit' ),
 				//can be replaced with <i class="glyphicon glyphicon-ok"></i>
 				'class' => ( is_admin() ? ' button button-primary button-large alignleft' : '' ),
 			),
 			'cancel' => array(
-				'text'  => __( 'Cancel', 'gk-gravityedit' ),
+				'text'  => __( 'Cancel', 'gravityview-inline-edit' ),
 				//can be replaced with <i class="glyphicon glyphicon-remove"></i>
 				'class' => ( is_admin() ? ' button button-secondary alignright' : '' ),
 			),
@@ -248,7 +279,7 @@ final class GravityView_Inline_Edit {
 		$buttons = apply_filters( 'gravityview-inline-edit/form-buttons', $buttons );
 
 		ob_start();
-		require( GRAVITYEDIT_DIR . 'templates/buttons-edit.php' );
+		require( GRAVITYVIEW_INLINE_DIR . 'templates/buttons-edit.php' );
 
 		return ob_get_clean();
 	}
@@ -309,6 +340,34 @@ final class GravityView_Inline_Edit {
 	}
 
 	/**
+	 * Check whether the extension is supported:
+	 *
+	 * - Checks if Gravity Forms is active
+	 * - Sets self::$is_compatible to boolean value
+	 *
+	 * @since 1.0
+	 *
+	 * @return boolean Is the extension able to continue running?
+	 */
+	protected function is_extension_supported() {
+
+		self::$is_compatible = true;
+
+		if ( ! class_exists( 'GFCommon' ) ) {
+
+			$reason = esc_html__('The plugin requires Gravity Forms.', 'gravityview-inline-edit' );
+			$message = esc_html_x('Could not activate %s: %s', '1st replacement is the plugin name; 2nd replacement is the reason why', 'gravityview-inline-edit' );
+			$message = sprintf( $message, esc_html__('Inline Edit by GravityView', 'gravityview-inline-edit'), $reason );
+
+			self::add_notice( $message );
+
+			self::$is_compatible = false;
+		}
+
+		return self::$is_compatible;
+	}
+
+	/**
 	 * Get the current version of the plugin
 	 *
 	 * @since 1.0
@@ -317,6 +376,107 @@ final class GravityView_Inline_Edit {
 	 */
 	public static function get_version() {
 		return self::get_instance()->_version;
+	}
+
+	/**
+	 * Get the title of the plugin
+	 *
+	 * @since 1.0
+	 *
+	 * @return string
+	 */
+	public static function get_title() {
+		return self::get_instance()->_title;
+	}
+
+	/**
+	 * @since 1.0
+	 *
+	 * @return int Post ID of this plugin on gravityview.co
+	 */
+	public static function get_item_id() {
+		return self::get_instance()->_item_id;
+	}
+
+	/**
+	 * @since 1.0
+	 *
+	 * @return string Author of the plugin
+	 */
+	public static function get_author() {
+		return self::get_instance()->_author;
+	}
+
+	/**
+	 * @since 1.0
+	 *
+	 * @return string The URL to fetch license info from
+	 */
+	public static function get_remote_update_url() {
+		return self::get_instance()->_remote_update_url;
+	}
+
+	/**
+	 * @param object|array|string|WP_Error $response
+	 */
+	public function set_license_response( $response ) {
+		set_transient( 'gravityview-inline-edit-license', (array) $response, DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Get license data from the website
+	 *
+	 * @uses GravityView_Inline_Edit_GFAddon::license_call()
+	 *
+	 * @param array $settings {
+	 * @type string $edd_action The EDD action to perform, like `check_license`
+	 * @type string $license The license key
+	 * @type string $format If `object`, return the object of the license data. `array` for array, `json` to return the JSON-encoded object. [Default: "array"]
+	 * }
+	 *
+	 * @return array|object|string|WP_Error Returns license data in the format specified (default: array). If error, returns WP_Error.
+	 */
+	public function fetch_license( $params = array() ) {
+
+		$license_response = $this->GFAddon->license_call( $params );
+
+		$this->set_license_response( $license_response );
+
+		$this->_did_license_refresh = true;
+
+		return $license_response;
+	}
+
+	/**
+	 * Get license information for this plugin
+	 *
+	 * Fetches fresh information if the plugin's GF settings have been saved, or if $force_refresh is true
+	 *
+	 * @param bool $force_refresh Whether to force fetching fresh data about the license from the website
+	 * @param array $params
+	 *
+	 * @return array License details. If error, returns array with error message.
+	 */
+	public function get_license( $force_refresh = false, $params = array() ) {
+
+		$license = get_transient( 'gravityview-inline-edit-license' );
+
+		$force_refresh = ( $force_refresh || $this->GFAddon->is_save_postback() );
+
+		if ( empty( $license ) || $force_refresh ) {
+			if( ! $this->_did_license_refresh ) {
+				$license = $this->fetch_license( $params );
+			}
+		}
+
+		if ( is_wp_error( $license ) ) {
+			$license = array(
+				'success' => false,
+				'message' => $license->get_error_message(),
+			);
+		}
+
+		return (array) $license;
 	}
 
 }

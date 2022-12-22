@@ -2,11 +2,8 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import {
-	usePrevious,
-	useShallowEqual,
-	useBorderProps,
-} from '@woocommerce/base-hooks';
+import { speak } from '@wordpress/a11y';
+import { usePrevious, useShallowEqual } from '@woocommerce/base-hooks';
 import {
 	useCollection,
 	useQueryStateByKey,
@@ -14,12 +11,14 @@ import {
 	useCollectionData,
 } from '@woocommerce/base-context/hooks';
 import { useCallback, useEffect, useState, useMemo } from '@wordpress/element';
+import CheckboxList from '@woocommerce/base-components/checkbox-list';
+import DropdownSelector from '@woocommerce/base-components/dropdown-selector';
 import Label from '@woocommerce/base-components/filter-element-label';
-import FilterResetButton from '@woocommerce/base-components/filter-reset-button';
 import FilterSubmitButton from '@woocommerce/base-components/filter-submit-button';
 import isShallowEqual from '@wordpress/is-shallow-equal';
 import { decodeEntities } from '@wordpress/html-entities';
 import { Notice } from 'wordpress-components';
+import classNames from 'classnames';
 import { getSettingWithCoercion } from '@woocommerce/settings';
 import { getQueryArgs, removeQueryArgs } from '@wordpress/url';
 import {
@@ -29,16 +28,10 @@ import {
 	isString,
 	objectHasProp,
 } from '@woocommerce/types';
-import { Icon, chevronDown } from '@wordpress/icons';
 import {
-	changeUrl,
 	PREFIX_QUERY_ARG_FILTER_TYPE,
 	PREFIX_QUERY_ARG_QUERY_TYPE,
 } from '@woocommerce/utils';
-import { difference } from 'lodash';
-import FormTokenField from '@woocommerce/base-components/form-token-field';
-import FilterTitlePlaceholder from '@woocommerce/base-components/filter-placeholder';
-import classnames from 'classnames';
 
 /**
  * Internal dependencies
@@ -46,6 +39,7 @@ import classnames from 'classnames';
 import { getAttributeFromID } from '../../utils/attributes';
 import { updateAttributeFilter } from '../../utils/attributes-query';
 import { previewAttributeObject, previewOptions } from './preview';
+import { useBorderProps } from '../../hooks/style-attributes';
 import './style.scss';
 import {
 	formatParams,
@@ -53,12 +47,8 @@ import {
 	areAllFiltersRemoved,
 	isQueryArgsEqual,
 	parseTaxonomyToGenerateURL,
-	formatSlug,
-	generateUniqueId,
 } from './utils';
 import { BlockAttributes, DisplayOption } from './types';
-import CheckboxFilter from './checkbox-filter';
-import { useSetWraperVisibility } from '../filter-wrapper/context';
 
 /**
  * Formats filter values into a string for the URL parameters needed for filtering PHP templates.
@@ -101,7 +91,7 @@ const AttributeFilterBlock = ( {
 		isString
 	);
 
-	const [ hasSetFilterDefaultsFromUrl, setHasSetFilterDefaultsFromUrl ] =
+	const [ hasSetPhpFilterDefaults, setHasSetPhpFilterDefaults ] =
 		useState( false );
 
 	const attributeObject =
@@ -109,19 +99,9 @@ const AttributeFilterBlock = ( {
 			? previewAttributeObject
 			: getAttributeFromID( blockAttributes.attributeId );
 
-	const initialFilters = useMemo(
-		() => getActiveFilters( attributeObject ),
-		[ attributeObject ]
+	const [ checked, setChecked ] = useState(
+		getActiveFilters( filteringForPhpTemplate, attributeObject )
 	);
-
-	const [ checked, setChecked ] = useState( initialFilters );
-
-	/*
-		FormTokenField forces the dropdown to reopen on reset, so we create a unique ID to use as the components key.
-		This will force the component to remount on reset when we change this value.
-		More info: https://github.com/woocommerce/woocommerce-blocks/pull/6920#issuecomment-1222402482
-	 */
-	const [ remountKey, setRemountKey ] = useState( generateUniqueId() );
 
 	const [ displayedOptions, setDisplayedOptions ] = useState<
 		DisplayOption[]
@@ -222,7 +202,6 @@ const AttributeFilterBlock = ( {
 				const count = filteredTerm ? filteredTerm.count : 0;
 
 				return {
-					formattedValue: formatSlug( term.slug ),
 					value: term.slug,
 					name: decodeEntities( term.name ),
 					label: (
@@ -231,15 +210,11 @@ const AttributeFilterBlock = ( {
 							count={ blockAttributes.showCounts ? count : null }
 						/>
 					),
-					textLabel: blockAttributes.showCounts
-						? `${ decodeEntities( term.name ) } (${ count })`
-						: decodeEntities( term.name ),
 				};
 			} )
 			.filter( ( option ): option is DisplayOption => !! option );
 
 		setDisplayedOptions( newOptions );
-		setRemountKey( generateUniqueId() );
 	}, [
 		attributeObject?.taxonomy,
 		attributeTerms,
@@ -275,7 +250,7 @@ const AttributeFilterBlock = ( {
 	 * @param {Object}  query             The object containing the active filter query.
 	 * @param {boolean} allFiltersRemoved If there are active filters or not.
 	 */
-	const updateFilterUrl = useCallback(
+	const redirectPageForPhpTemplate = useCallback(
 		( query, allFiltersRemoved = false ) => {
 			if ( allFiltersRemoved ) {
 				if ( ! attributeObject?.taxonomy ) {
@@ -303,14 +278,14 @@ const AttributeFilterBlock = ( {
 				);
 
 				const newUrl = formatParams( url, query );
-				changeUrl( newUrl );
+				window.location.href = newUrl;
 			} else {
 				const newUrl = formatParams( pageUrl, query );
 				const currentQueryArgs = getQueryArgs( window.location.href );
 				const newUrlQueryArgs = getQueryArgs( newUrl );
 
 				if ( ! isQueryArgsEqual( currentQueryArgs, newUrlQueryArgs ) ) {
-					changeUrl( newUrl );
+					window.location.href = newUrl;
 				}
 			}
 		},
@@ -326,17 +301,20 @@ const AttributeFilterBlock = ( {
 			blockAttributes.queryType === 'or' ? 'in' : 'and'
 		);
 
-		updateFilterUrl( query, checkedFilters.length === 0 );
+		// This is for PHP rendered template filtering only.
+		if ( filteringForPhpTemplate ) {
+			redirectPageForPhpTemplate( query, checkedFilters.length === 0 );
+		}
 	};
 
 	const updateCheckedFilters = useCallback(
-		( checkedFilters: string[], force = false ) => {
+		( checkedFilters: string[] ) => {
 			if ( isEditor ) {
 				return;
 			}
 
 			setChecked( checkedFilters );
-			if ( force || ! blockAttributes.showFilterButton ) {
+			if ( ! blockAttributes.showFilterButton ) {
 				updateAttributeFilter(
 					productAttributesQuery,
 					setProductAttributesQuery,
@@ -388,18 +366,84 @@ const AttributeFilterBlock = ( {
 		updateCheckedFilters,
 	] );
 
-	const multiple = blockAttributes.selectType !== 'single';
+	const multiple =
+		blockAttributes.displayStyle !== 'dropdown' ||
+		blockAttributes.queryType === 'or';
 
 	/**
 	 * When a checkbox in the list changes, update state.
 	 */
 	const onChange = useCallback(
 		( checkedValue ) => {
+			const getFilterNameFromValue = ( filterValue: string ) => {
+				const result = displayedOptions.find(
+					( option ) => option.value === filterValue
+				);
+
+				if ( result ) {
+					return result.name;
+				}
+			};
+
+			const announceFilterChange = ( {
+				filterAdded,
+				filterRemoved,
+			}: {
+				filterAdded?: string | null;
+				filterRemoved?: string | null;
+			} ) => {
+				const filterAddedName = filterAdded
+					? getFilterNameFromValue( filterAdded )
+					: null;
+				const filterRemovedName = filterRemoved
+					? getFilterNameFromValue( filterRemoved )
+					: null;
+				if ( filterAddedName && filterRemovedName ) {
+					speak(
+						sprintf(
+							/* translators: %1$s and %2$s are attribute terms (for example: 'red', 'blue', 'large'...). */
+							__(
+								'%1$s filter replaced with %2$s.',
+								'woo-gutenberg-products-block'
+							),
+							filterAddedName,
+							filterRemovedName
+						)
+					);
+				} else if ( filterAddedName ) {
+					speak(
+						sprintf(
+							/* translators: %s attribute term (for example: 'red', 'blue', 'large'...) */
+							__(
+								'%s filter added.',
+								'woo-gutenberg-products-block'
+							),
+							filterAddedName
+						)
+					);
+				} else if ( filterRemovedName ) {
+					speak(
+						sprintf(
+							/* translators: %s attribute term (for example: 'red', 'blue', 'large'...) */
+							__(
+								'%s filter removed.',
+								'woo-gutenberg-products-block'
+							),
+							filterRemovedName
+						)
+					);
+				}
+			};
+
 			const previouslyChecked = checked.includes( checkedValue );
 			let newChecked;
 
 			if ( ! multiple ) {
 				newChecked = previouslyChecked ? [] : [ checkedValue ];
+				const filterAdded = previouslyChecked ? null : checkedValue;
+				const filterRemoved =
+					checked.length === 1 ? checked[ 0 ] : null;
+				announceFilterChange( { filterAdded, filterRemoved } );
 			} else {
 				newChecked = checked.filter(
 					( value ) => value !== checkedValue
@@ -408,35 +452,46 @@ const AttributeFilterBlock = ( {
 				if ( ! previouslyChecked ) {
 					newChecked.push( checkedValue );
 					newChecked.sort();
+					announceFilterChange( { filterAdded: checkedValue } );
+				} else {
+					announceFilterChange( { filterRemoved: checkedValue } );
 				}
 			}
 
 			updateCheckedFilters( newChecked );
 		},
-		[ checked, multiple, updateCheckedFilters ]
+		[ checked, displayedOptions, multiple, updateCheckedFilters ]
 	);
 
 	/**
-	 * Update the filter URL on state change.
+	 * Important: For PHP rendered block templates only.
+	 *
+	 * When we render the PHP block template (e.g. Classic Block) we need to set the default checked values,
+	 * and also update the URL when the filters are clicked/updated.
 	 */
 	useEffect( () => {
-		if ( ! attributeObject || blockAttributes.showFilterButton ) {
-			return;
-		}
+		if ( filteringForPhpTemplate && attributeObject ) {
+			if (
+				areAllFiltersRemoved( {
+					currentCheckedFilters: checked,
+					hasSetPhpFilterDefaults,
+				} )
+			) {
+				if ( ! blockAttributes.showFilterButton ) {
+					setChecked( [] );
+					redirectPageForPhpTemplate( productAttributesQuery, true );
+				}
+			}
 
-		if (
-			areAllFiltersRemoved( {
-				currentCheckedFilters: checked,
-				hasSetFilterDefaultsFromUrl,
-			} )
-		) {
-			updateFilterUrl( productAttributesQuery, true );
-		} else {
-			updateFilterUrl( productAttributesQuery, false );
+			if ( ! blockAttributes.showFilterButton ) {
+				setChecked( checked );
+				redirectPageForPhpTemplate( productAttributesQuery, false );
+			}
 		}
 	}, [
-		hasSetFilterDefaultsFromUrl,
-		updateFilterUrl,
+		hasSetPhpFilterDefaults,
+		redirectPageForPhpTemplate,
+		filteringForPhpTemplate,
 		productAttributesQuery,
 		attributeObject,
 		checked,
@@ -444,35 +499,35 @@ const AttributeFilterBlock = ( {
 	] );
 
 	/**
-	 * Try to get the current attribute filter from the URl.
+	 * Important: For PHP rendered block templates only.
+	 *
+	 * When we set the default parameter values which we get from the URL in the above useEffect(),
+	 * we need to run updateCheckedFilters which will set these values in state for the Active Filters block.
 	 */
 	useEffect( () => {
-		if ( hasSetFilterDefaultsFromUrl || attributeTermsLoading ) {
-			return;
-		}
-
-		if ( initialFilters.length > 0 ) {
-			setHasSetFilterDefaultsFromUrl( true );
-			updateCheckedFilters( initialFilters, true );
-			return;
-		}
-
-		if ( ! filteringForPhpTemplate ) {
-			setHasSetFilterDefaultsFromUrl( true );
+		if ( filteringForPhpTemplate ) {
+			const activeFilters = getActiveFilters(
+				filteringForPhpTemplate,
+				attributeObject
+			);
+			if (
+				activeFilters.length > 0 &&
+				! hasSetPhpFilterDefaults &&
+				! attributeTermsLoading
+			) {
+				setHasSetPhpFilterDefaults( true );
+				updateCheckedFilters( activeFilters );
+			}
 		}
 	}, [
 		attributeObject,
-		hasSetFilterDefaultsFromUrl,
+		filteringForPhpTemplate,
+		hasSetPhpFilterDefaults,
 		attributeTermsLoading,
 		updateCheckedFilters,
-		initialFilters,
-		filteringForPhpTemplate,
 	] );
 
-	const setWrapperVisibility = useSetWraperVisibility();
-
 	if ( ! hasFilterableProducts ) {
-		setWrapperVisibility( false );
 		return null;
 	}
 
@@ -490,7 +545,6 @@ const AttributeFilterBlock = ( {
 				</Notice>
 			);
 		}
-		setWrapperVisibility( false );
 		return null;
 	}
 
@@ -500,192 +554,62 @@ const AttributeFilterBlock = ( {
 				<Notice status="warning" isDismissible={ false }>
 					<p>
 						{ __(
-							'There are no products with the selected attributes.',
+							'The selected attribute does not have any term assigned to products.',
 							'woo-gutenberg-products-block'
 						) }
 					</p>
 				</Notice>
 			);
 		}
+		return null;
 	}
 
 	const TagName =
 		`h${ blockAttributes.headingLevel }` as keyof JSX.IntrinsicElements;
-	const termsLoading = ! blockAttributes.isPreview && attributeTermsLoading;
-	const countsLoading = ! blockAttributes.isPreview && filteredCountsLoading;
-
-	const isLoading =
-		( termsLoading || countsLoading ) && displayedOptions.length === 0;
-
-	if ( ! isLoading && displayedOptions.length === 0 ) {
-		setWrapperVisibility( false );
-		return null;
-	}
-
-	const heading = (
-		<TagName className="wc-block-attribute-filter__title">
-			{ blockAttributes.heading }
-		</TagName>
-	);
-
-	const filterHeading = isLoading ? (
-		<FilterTitlePlaceholder>{ heading }</FilterTitlePlaceholder>
-	) : (
-		heading
-	);
-
-	setWrapperVisibility( true );
+	const isLoading = ! blockAttributes.isPreview && attributeTermsLoading;
+	const isDisabled = ! blockAttributes.isPreview && filteredCountsLoading;
 
 	return (
 		<>
-			{ ! isEditor && blockAttributes.heading && filterHeading }
-			<div
-				className={ classnames(
-					'wc-block-attribute-filter',
-					`style-${ blockAttributes.displayStyle }`
+			{ ! isEditor &&
+				blockAttributes.heading &&
+				displayedOptions.length > 0 && (
+					<TagName className="wc-block-attribute-filter__title">
+						{ blockAttributes.heading }
+					</TagName>
 				) }
+			<div
+				className={ `wc-block-attribute-filter style-${ blockAttributes.displayStyle }` }
 			>
 				{ blockAttributes.displayStyle === 'dropdown' ? (
-					<>
-						<FormTokenField
-							key={ remountKey }
-							className={ classnames( borderProps.className, {
-								'single-selection': ! multiple,
-								'is-loading': isLoading,
-							} ) }
-							style={ {
-								...borderProps.style,
-								borderStyle: 'none',
-							} }
-							suggestions={ displayedOptions
-								.filter(
-									( option ) =>
-										! checked.includes( option.value )
-								)
-								.map( ( option ) => option.formattedValue ) }
-							disabled={ isLoading }
-							placeholder={ sprintf(
-								/* translators: %s attribute name. */
-								__(
-									'Select %s',
-									'woo-gutenberg-products-block'
-								),
-								attributeObject.label
-							) }
-							onChange={ ( tokens: string[] ) => {
-								if ( ! multiple && tokens.length > 1 ) {
-									tokens = [ tokens[ tokens.length - 1 ] ];
-								}
-
-								tokens = tokens.map( ( token ) => {
-									const displayOption = displayedOptions.find(
-										( option ) =>
-											option.formattedValue === token
-									);
-
-									return displayOption
-										? displayOption.value
-										: token;
-								} );
-
-								const added = difference( tokens, checked );
-
-								if ( added.length === 1 ) {
-									return onChange( added[ 0 ] );
-								}
-
-								const removed = difference( checked, tokens );
-								if ( removed.length === 1 ) {
-									onChange( removed[ 0 ] );
-								}
-							} }
-							value={ checked }
-							displayTransform={ ( value: string ) => {
-								const result = displayedOptions.find(
-									( option ) =>
-										[
-											option.value,
-											option.formattedValue,
-										].includes( value )
-								);
-								return result ? result.textLabel : value;
-							} }
-							saveTransform={ formatSlug }
-							messages={ {
-								added: sprintf(
-									/* translators: %s is the attribute label. */
-									__(
-										'%s filter added.',
-										'woo-gutenberg-products-block'
-									),
-									attributeObject.label
-								),
-								removed: sprintf(
-									/* translators: %s is the attribute label. */
-									__(
-										'%s filter removed.',
-										'woo-gutenberg-products-block'
-									),
-									attributeObject.label
-								),
-								remove: sprintf(
-									/* translators: %s is the attribute label. */
-									__(
-										'Remove %s filter.',
-										'woo-gutenberg-products-block'
-									),
-									attributeObject.label.toLocaleLowerCase()
-								),
-								__experimentalInvalid: sprintf(
-									/* translators: %s is the attribute label. */
-									__(
-										'Invalid %s filter.',
-										'woo-gutenberg-products-block'
-									),
-									attributeObject.label.toLocaleLowerCase()
-								),
-							} }
-						/>
-						{ multiple && (
-							<Icon icon={ chevronDown } size={ 30 } />
+					<DropdownSelector
+						attributeLabel={ attributeObject.label }
+						checked={ checked }
+						className={ classNames(
+							'wc-block-attribute-filter-dropdown',
+							borderProps.className
 						) }
-					</>
+						style={ { ...borderProps.style, borderStyle: 'none' } }
+						inputLabel={ blockAttributes.heading }
+						isLoading={ isLoading }
+						multiple={ multiple }
+						onChange={ onChange }
+						options={ displayedOptions }
+					/>
 				) : (
-					<CheckboxFilter
+					<CheckboxList
+						className={ 'wc-block-attribute-filter-list' }
 						options={ displayedOptions }
 						checked={ checked }
 						onChange={ onChange }
 						isLoading={ isLoading }
-						isDisabled={ isLoading }
-					/>
-				) }
-			</div>
-
-			<div className="wc-block-attribute-filter__actions">
-				{ checked.length > 0 && ! isLoading && (
-					<FilterResetButton
-						onClick={ () => {
-							setChecked( [] );
-							setRemountKey( generateUniqueId() );
-							if ( hasSetFilterDefaultsFromUrl ) {
-								onSubmit( [] );
-							}
-						} }
-						screenReaderLabel={ __(
-							'Reset attribute filter',
-							'woo-gutenberg-products-block'
-						) }
+						isDisabled={ isDisabled }
 					/>
 				) }
 				{ blockAttributes.showFilterButton && (
 					<FilterSubmitButton
 						className="wc-block-attribute-filter__button"
-						isLoading={ isLoading }
-						disabled={
-							termsLoading ||
-							countsLoading ||
-							checked.length === 0
-						}
+						disabled={ isLoading || isDisabled }
 						onClick={ () => onSubmit( checked ) }
 					/>
 				) }

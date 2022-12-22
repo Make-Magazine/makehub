@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Toaster } from '@brainstormforce/starter-templates-components';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import { Toaster } from '@brainstormforce/starter-templates-components';
 import Button from '../../../../components/button/button';
 import { useStateValue } from '../../../../store/store';
 import PreviousStepLink from '../../../../components/util/previous-step-link/index';

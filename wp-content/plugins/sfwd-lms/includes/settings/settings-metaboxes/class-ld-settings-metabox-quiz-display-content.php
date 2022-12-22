@@ -438,7 +438,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -475,10 +475,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'context'     => array( 'view', 'edit' ),
 										'readonly'    => true,
 									),
-								),
-								'arg_options' => array(
-									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
-									'validate_callback' => null,
 								),
 							),
 						),

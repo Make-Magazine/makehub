@@ -38,7 +38,7 @@
 			<fieldset class="bbp-form">
 				<legend>
 					<?php esc_html_e( 'Reply to', 'buddyboss-theme' ); ?>  <span id="bbp-reply-exerpt"></span>
-					<a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-l bb-icon-times bb-model-close-button"></i></a>
+					<a href="#" id="bbp-close-btn" class="js-modal-close"><i class="bb-icon-l bb-icon-times"></i></a>
 				</legend>
 
 				<div id="bbp-template-notices">

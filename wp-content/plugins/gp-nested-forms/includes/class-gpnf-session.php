@@ -2,7 +2,7 @@
 
 class GPNF_Session {
 
-	const COOKIE_NAME           = 'gpnf_form_session';
+	const COOKIE_NAME = 'gpnf_form_session';
 	const SESSION_HASH_META_KEY = 'gpnf_session_hash';
 
 	private $_form_id;
@@ -51,6 +51,7 @@ class GPNF_Session {
 
 		// Existing cookie.
 		if ( $cookie ) {
+
 			$data = array(
 				'form_id'        => $cookie['form_id'],
 				'hash'           => $cookie['hash'],
@@ -64,12 +65,14 @@ class GPNF_Session {
 		}
 		// New cookie.
 		else {
+
 			$data = array(
 				'form_id'        => $this->_form_id,
 				'hash'           => $this->make_hashcode(),
 				'user_id'        => get_current_user_id(),
 				'nested_entries' => array(),
 			);
+
 		}
 
 		foreach ( $_POST as $key => $value ) {
@@ -171,8 +174,8 @@ class GPNF_Session {
 			$all = array_merge( $all, $entry_ids );
 		}
 
-		$results         = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}gf_entry WHERE id IN( " . implode( ', ', array_fill( 0, count( $all ), '%d' ) ) . " ) and status != 'trash'", $all ) );
-		$valid_entry_ids = wp_list_pluck( $results, 'id' );
+		$sql             = "SELECT id FROM {$wpdb->prefix}gf_entry WHERE id IN( " . implode( ', ', $all ) . " ) and status != 'trash'";
+		$valid_entry_ids = wp_list_pluck( $wpdb->get_results( $sql ), 'id' );
 		$return          = array();
 
 		foreach ( $entries as $field_id => $entry_ids ) {
@@ -197,78 +200,18 @@ class GPNF_Session {
 		return gp_nested_forms()->get_save_and_continue_token();
 	}
 
-	/**
-	 * There are some situations in which we need variables off of $_REQUEST.
-	 * Specifically, dynamic population, Save & Continue, and Easy Passthrough.
-	 *
-	 * Previously, we would keep the entire $_REQUEST, but it could cause the cookie to reach the 4KB max on complex
-	 * multi-page forms.
-	 *
-	 * The goal with this method is to strip the 'request' var down to only what's needed for the form to function.
-	 *
-	 * @param array $form The current parent form.
-	 *
-	 * @return array
-	 */
-	public static function get_session_request_vars( $form ) {
-		if ( empty( $_REQUEST ) ) {
-			return array();
-		}
-
-		$allowed_keys = array(
-			'gf_token',
-			'gform_resume_token',
-			'ep_token',
-		);
-
-		/* Find all child forms and get the fields that allow dynamic population and their names. */
-		if ( ! empty( $form['fields'] ) ) {
-			foreach ( $form['fields'] as $field ) {
-				if ( $field->type !== 'form' ) {
-					continue;
-				}
-
-				$child_form = GFAPI::get_form( rgar( $field, 'gpnfForm' ) );
-
-				if ( ! empty( $child_form['fields'] ) ) {
-					foreach ( $child_form['fields'] as $child_form_field ) {
-						if ( ! $child_form_field->allowsPrepopulate ) {
-							continue;
-						}
-
-						if ( ! empty( $child_form_field->inputs ) ) {
-							foreach ( $child_form_field->inputs as $child_form_input ) {
-								if ( ! empty( $child_form_input->name ) ) {
-									$allowed_keys[] = $child_form_input->name;
-								}
-							}
-						}
-
-						if ( ! empty( $child_form_field->inputName ) ) {
-							$allowed_keys[] = $child_form_field->inputName;
-						}
-					}
-				}
-			}
-		}
-
-		return array_filter( $_REQUEST, function( $key ) use ( $allowed_keys ) {
-			return in_array( $key, $allowed_keys, true );
-		}, ARRAY_FILTER_USE_KEY );
-	}
-
 	public static function get_default_session_data( $form_id, $field_values = array() ) {
 
 		$data = array(
 			'action'       => 'gpnf_session',
 			'form_id'      => $form_id,
-			'request'      => self::get_session_request_vars( GFAPI::get_form( $form_id ) ),
+			'request'      => $_REQUEST ? $_REQUEST : array(),
 			'post_id'      => get_queried_object_id(),
 			'field_values' => $field_values,
 			'hash'         => ( new GPNF_Session( $form_id ) )->get_runtime_hashcode(),
 		);
 
-		if ( gp_nested_forms()->get_save_and_continue_token() ) {
+		if( gp_nested_forms()->get_save_and_continue_token() ) {
 			$parent_hash = gp_nested_forms()->get_save_and_continue_parent_hash( $form_id );
 			if ( $parent_hash ) {
 				$data['hash'] = $parent_hash;

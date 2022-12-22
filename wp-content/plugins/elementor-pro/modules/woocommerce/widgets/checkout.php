@@ -10,7 +10,6 @@ use Elementor\Group_Control_Border;
 use Elementor\Repeater;
 use Elementor\Group_Control_Background;
 use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -295,7 +294,7 @@ class Checkout extends Base_Widget {
 			]
 		);
 
-		if ( $this->is_wc_feature_active( 'ship_to_billing_address_only' ) ) {
+		if ( $this->is_wc_feature_active( 'additional_options' ) ) {
 			$this->add_control(
 				'additional_information_section_title',
 				[
@@ -354,9 +353,6 @@ class Checkout extends Base_Widget {
 			[
 				'label' => esc_html__( 'Label', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -365,9 +361,6 @@ class Checkout extends Base_Widget {
 			[
 				'label' => esc_html__( 'Placeholder', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -584,6 +577,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => $this->get_main_woocommerce_sections_selectors(),
 			]
 		);
@@ -709,6 +703,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'sections_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => $this->get_main_woocommerce_sections_title_selectors(),
 			]
 		);
@@ -1092,7 +1087,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'forms_fields_normal_background',
-				'selector' => '{{WRAPPER}} .woocommerce #customer_details .form-row .input-text, {{WRAPPER}}  .woocommerce #customer_details .form-row textarea, {{WRAPPER}} .woocommerce form #customer_details select, {{WRAPPER}} .woocommerce .e-woocommerce-login-anchor .form-row .input-text, {{WRAPPER}} #coupon_code, {{WRAPPER}} .select2-container--default .select2-selection--single, {{WRAPPER}} .woocommerce-checkout #payment .payment_methods .payment_box',
+				'selector' => '{{WRAPPER}} #customer_details .input-text, {{WRAPPER}}  #customer_details .form-row textarea, {{WRAPPER}} .woocommerce form #customer_details select, {{WRAPPER}} .e-woocommerce-login-anchor .input-text, {{WRAPPER}} #coupon_code, {{WRAPPER}} .select2-container--default .select2-selection--single, {{WRAPPER}} #payment .payment_box',
 			]
 		);
 
@@ -1100,6 +1095,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_fields_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} #customer_details .input-text, {{WRAPPER}}  #customer_details .form-row textarea, {{WRAPPER}} .woocommerce form #customer_details select, {{WRAPPER}} .e-woocommerce-login-anchor .input-text, {{WRAPPER}} #coupon_code, {{WRAPPER}} .select2-container--default .select2-selection--single',
 			]
 		);
@@ -1126,7 +1122,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'forms_fields_focus_background',
-				'selector' => '{{WRAPPER}} .woocommerce #customer_details .form-row .input-text:focus, {{WRAPPER}}  .woocommerce #customer_details .form-row textarea:focus, {{WRAPPER}} #customer_details select:focus, {{WRAPPER}} .woocommerce .e-woocommerce-login-anchor .form-row .input-text:focus, {{WRAPPER}} #coupon_code:focus, {{WRAPPER}} .select2-container--default .select2-selection--single:focus',
+				'selector' => '{{WRAPPER}} #customer_details .input-text:focus, {{WRAPPER}} #customer_details textarea:focus, {{WRAPPER}} #customer_details select:focus, {{WRAPPER}} .e-woocommerce-login-anchor .input-text:focus, {{WRAPPER}} #coupon_code:focus, {{WRAPPER}} .select2-container--default .select2-selection--single:focus',
 			]
 		);
 
@@ -1134,6 +1130,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_fields_focus_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} #customer_details .input-text:focus, {{WRAPPER}} #customer_details textarea:focus, {{WRAPPER}} #customer_details select:focus, {{WRAPPER}} .e-woocommerce-login-anchor .input-text:focus, {{WRAPPER}} #coupon_code:focus, {{WRAPPER}} .select2-container--default .select2-selection--single:focus',
 			]
 		);
@@ -1144,7 +1141,7 @@ class Checkout extends Base_Widget {
 				'label' => esc_html__( 'Border Color', 'elementor-pro' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .woocommerce #customer_details .form-row .input-text:focus, {{WRAPPER}}  .woocommerce #customer_details .form-row textarea:focus, {{WRAPPER}} #customer_details select:focus, {{WRAPPER}} .woocommerce .e-woocommerce-login-anchor .form-row .input-text:focus, {{WRAPPER}} #coupon_code:focus, {{WRAPPER}} .select2-container--default .select2-selection--single:focus' => 'border-color: {{VALUE}}',
+					'{{WRAPPER}}' => '--forms-fields-focus-border-color: {{VALUE}}',
 				],
 				'condition' => [
 					'forms_fields_border_border!' => '',
@@ -1177,7 +1174,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Border::get_type(),
 			[
 				'name' => 'forms_fields_border',
-				'selector' => '{{WRAPPER}} .woocommerce #customer_details .form-row .input-text, {{WRAPPER}}  .woocommerce #customer_details .form-row textarea, {{WRAPPER}} .woocommerce form #customer_details select, {{WRAPPER}} .woocommerce .e-woocommerce-login-anchor .form-row .input-text, {{WRAPPER}} #coupon_code, {{WRAPPER}} .select2-container--default .select2-selection--single',
+				'selector' => '{{WRAPPER}} #customer_details .input-text, {{WRAPPER}} #customer_details textarea, {{WRAPPER}} #customer_details select, {{WRAPPER}} .e-woocommerce-login-anchor .input-text, {{WRAPPER}} #coupon_code, {{WRAPPER}} .select2-container--default .select2-selection--single',
 				'separator' => 'before',
 			]
 		);
@@ -1231,6 +1228,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'forms_button_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-button',
 			]
 		);
@@ -1264,6 +1262,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_buttons_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-button',
 			]
 		);
@@ -1297,6 +1296,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_buttons_focus_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-button:hover',
 			]
 		);
@@ -1550,7 +1550,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'order_summary_totals_typography',
-				'selector' => '{{WRAPPER}} .woocommerce-checkout-review-order-table thead tr th, {{WRAPPER}} .woocommerce-checkout-review-order-table tfoot tr th, {{WRAPPER}} .woocommerce-checkout-review-order-table tfoot tr td',
+				'selector' => '{{WRAPPER}} .woocommerce-checkout-review-order-table thead, {{WRAPPER}} .woocommerce-checkout-review-order-table tfoot',
 			]
 		);
 
@@ -1607,6 +1607,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'purchase_button_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce #payment #place_order',
 			]
 		);
@@ -1640,6 +1641,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'purchase_button_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} #place_order',
 			]
 		);
@@ -1673,6 +1675,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'purchase_button_hover_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} #place_order:hover',
 			]
 		);
@@ -1846,6 +1849,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'returning_customers_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-woocommerce-login-section',
 			]
 		);
@@ -2092,6 +2096,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'billing_details_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-checkout__column-start .col2-set .col-1',
 			]
 		);
@@ -2206,6 +2211,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'billing_details_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-billing-fields h3',
 			]
 		);
@@ -2273,6 +2279,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'additional_information_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-additional-fields',
 			]
 		);
@@ -2336,7 +2343,7 @@ class Checkout extends Base_Widget {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .woocommerce-additional-fields' => '--sections-padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -2388,6 +2395,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'additional_information_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-additional-fields h3',
 			]
 		);
@@ -2436,6 +2444,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'order_summary_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-checkout__order_review',
 			]
 		);
@@ -2550,6 +2559,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'order_summary_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} h3#order_review_heading',
 			]
 		);
@@ -2644,6 +2654,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'payment_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-checkout #payment',
 			]
 		);
@@ -2739,7 +2750,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'payment_info_box_title_background',
-				'selector' => '{{WRAPPER}} .woocommerce-checkout #payment .payment_methods .payment_box',
+				'selector' => '{{WRAPPER}} #payment .payment_box',
 			]
 		);
 
@@ -2957,59 +2968,6 @@ class Checkout extends Base_Widget {
 			]
 		);
 
-		$this->add_responsive_control(
-			'login_button_title',
-			[
-				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Login Button', 'elementor-pro' ),
-				'separator' => 'before',
-			]
-		);
-
-		$this->add_responsive_control(
-			'login_button_alignment',
-			[
-				'label' => esc_html__( 'Alignment', 'elementor-pro' ),
-				'type' => Controls_Manager::CHOOSE,
-				'options' => [
-					'start' => [
-						'title' => esc_html__( 'Start', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => esc_html__( 'Center', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'end' => [
-						'title' => esc_html__( 'End', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-right',
-					],
-					'justify' => [
-						'title' => esc_html__( 'Justify', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-justify',
-					],
-				],
-				'selectors' => [
-					'{{WRAPPER}} .e-login-wrap' => '{{VALUE}}',
-				],
-				'selectors_dictionary' => [
-					'start' => '--login-button-alignment: start; --login-button-width: 35%;',
-					'center' => '--login-button-alignment: center;  --login-button-width: 35%;',
-					'end' => '--login-button-alignment: end;  --login-button-width: 35%;',
-					'justify' => '--login-button-alignment: center; --login-button-width: 100%;',
-				],
-			]
-		);
-
-		$this->add_control(
-			'login_button_alignment_note',
-			[
-				'raw' => esc_html__( 'Note: This control will only affect screen sizes Tablet and below', 'elementor-pro' ),
-				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
-			]
-		);
-
 		$this->end_controls_section();
 	}
 
@@ -3178,17 +3136,6 @@ class Checkout extends Base_Widget {
 		);
 
 		$this->add_control(
-			'coupon_section_display',
-			[
-				'label' => esc_html__( 'Coupon', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Show', 'elementor-pro' ),
-				'label_off' => esc_html__( 'Hide', 'elementor-pro' ),
-				'default' => 'yes',
-			]
-		);
-
-		$this->add_control(
 			'coupon_section_title_text',
 			[
 				'label' => esc_html__( 'Section Title', 'elementor-pro' ),
@@ -3196,9 +3143,6 @@ class Checkout extends Base_Widget {
 				'default' => esc_html__( 'Have a coupon?', 'elementor-pro' ),
 				'dynamic' => [
 					'active' => true,
-				],
-				'condition' => [
-					'coupon_section_display' => 'yes',
 				],
 			]
 		);
@@ -3211,9 +3155,6 @@ class Checkout extends Base_Widget {
 				'default' => esc_html__( 'Click here to enter your coupon code', 'elementor-pro' ),
 				'dynamic' => [
 					'active' => true,
-				],
-				'condition' => [
-					'coupon_section_display' => 'yes',
 				],
 			]
 		);
@@ -3239,71 +3180,6 @@ class Checkout extends Base_Widget {
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--coupon-title-alignment: {{VALUE}};',
-				],
-				'condition' => [
-					'coupon_section_display' => 'yes',
-				],
-			]
-		);
-
-		$this->add_responsive_control(
-			'coupon_button_title',
-			[
-				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Apply Button', 'elementor-pro' ),
-				'separator' => 'before',
-				'condition' => [
-					'coupon_section_display' => 'yes',
-				],
-			]
-		);
-
-		$this->add_responsive_control(
-			'coupon_button_alignment',
-			[
-				'label' => esc_html__( 'Alignment', 'elementor-pro' ),
-				'type' => Controls_Manager::CHOOSE,
-				'options' => [
-					'start' => [
-						'title' => esc_html__( 'Start', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => esc_html__( 'Center', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'end' => [
-						'title' => esc_html__( 'End', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-right',
-					],
-					'justify' => [
-						'title' => esc_html__( 'Justify', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-justify',
-					],
-				],
-				'selectors' => [
-					'{{WRAPPER}} .coupon-container-grid' => '{{VALUE}}',
-				],
-				'selectors_dictionary' => [
-					'start' => '--coupon-button-alignment: start;',
-					'center' => '--coupon-button-alignment: center;',
-					'end' => '--coupon-button-alignment: end;',
-					'justify' => '--coupon-button-alignment: justify; --coupon-button-width: 100%;',
-				],
-				'condition' => [
-					'coupon_section_display' => 'yes',
-				],
-			]
-		);
-
-		$this->add_control(
-			'coupon_button_alignment_note',
-			[
-				'raw' => esc_html__( 'Note: This control will only affect screen sizes Tablet and below', 'elementor-pro' ),
-				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor',
-				'condition' => [
-					'coupon_section_display' => 'yes',
 				],
 			]
 		);
@@ -3346,6 +3222,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'shipping_address_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .woocommerce-shipping-fields .shipping_address',
 			]
 		);
@@ -3495,6 +3372,7 @@ class Checkout extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'coupon_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-coupon-box',
 			]
 		);
@@ -4096,22 +3974,14 @@ class Checkout extends Base_Widget {
 	 * Decide if the coupon form should be rendered.
 	 * The coupon form should be rendered if:
 	 * 1) The WooCommerce setting is enabled
-	 * 2) And the Coupon Display toggle hasn't been set to 'no'
-	 * 3) AND: a payment is needed, OR the Editor is open
+	 * 2) AND: a payment is needed, OR the Editor is open
 	 *
 	 * @since 3.5.0
 	 *
 	 * @return boolean
 	 */
 	private function should_render_coupon() {
-		$settings = $this->get_settings_for_display();
-		$coupon_display_control = true;
-
-		if ( '' === $settings['coupon_section_display'] ) {
-			$coupon_display_control = false;
-		}
-
-		return ( WC()->cart->needs_payment() || Plugin::elementor()->editor->is_edit_mode() ) && wc_coupons_enabled() && $coupon_display_control;
+		return ( WC()->cart->needs_payment() || Plugin::elementor()->editor->is_edit_mode() ) && wc_coupons_enabled();
 	}
 
 	/**

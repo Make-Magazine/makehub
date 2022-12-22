@@ -312,35 +312,17 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     if ( ( $coupon = $txn->coupon() ) ) {
       $amount     = $txn->amount;
       $prd        = new MeprProduct($txn->product_id);
-      $show_coupon = true;
 
       if($sub) {
         $amount = $sub->price; // Attempt to get price from Subscription
-
-        //For standard discounts the subscription price will be the price after the coupon, so either reverse and show coupon,
-        //or hide the coupon, defaults to reverse, to hide coupon they can use the filter to set to false
-        if ($coupon->discount_mode == 'standard') {
-          if (apply_filters('mepr-pdf-invoice-reverse-coupon', true, $txn, $mepr_options, $prd, $current_user)) {
-            //Since we store the after coupon price when the coupon is standard discount type, then we have to reverse that for the invoice
-            if ($coupon->discount_type == 'percent') {
-              $amount = $amount / (1 - ($coupon->discount_amount / 100)); //Conver the percent to decimal, subtract from 1, then dive
-            } else if ($coupon->discount_type == 'dollar') {
-              $amount = $amount + $coupon->discount_amount;
-            }
-          } else {
-            $show_coupon = false;
-          }
-        }
       }
       elseif ($prd) {
         $amount = $prd->price; //Note, this is not 100% acurrate, but its the best we can do right now.
       }
 
-      if(apply_filters('mepr-pdf-invoice-show-coupon', $show_coupon, $txn, $mepr_options, $prd, $current_user)) {
-        $cpn_id     = $coupon->ID;
-        $cpn_desc   = sprintf( esc_html__( "Coupon Code '%s'", 'memberpress-pdf-invoice' ), $coupon->post_title );
-        $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount );
-      }
+      $cpn_id     = $coupon->ID;
+      $cpn_desc   = sprintf( esc_html__( "Coupon Code '%s'", 'memberpress-pdf-invoice' ), $coupon->post_title );
+      $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount );
     } else {
       $amount     = $txn->amount;
       $cpn_id     = 0;

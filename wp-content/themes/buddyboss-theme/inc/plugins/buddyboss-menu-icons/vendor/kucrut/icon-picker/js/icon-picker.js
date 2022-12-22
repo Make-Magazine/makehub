@@ -885,8 +885,6 @@ IconPicker = Select.extend({
 				}
 				jQuery( '.submitbox.button-controls' ).show();
 				jQuery( 'div.media-frame.mode-select' ).addClass( 'hide-router' );
-				jQuery( '.menu-icon-tabs button' ).removeClass( 'active' );
-				jQuery( '.menu-icon-tabs button[data-id="menu-item-manage"]' ).addClass( 'active' );
 			} else {
 				if ( 'menu-item-image' === tab_name ) {
 					jQuery( 'div.media-frame-router' ).show();

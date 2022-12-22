@@ -26,7 +26,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		protected $db_tables = array();
 
 		/**
-		 * Array of System Info
+		 * Arrey of System Info
 		 *
 		 * @var array
 		 */

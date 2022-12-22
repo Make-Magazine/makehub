@@ -6,6 +6,9 @@ import classnames from 'classnames';
 import { createInterpolateElement, useEffect } from '@wordpress/element';
 import { useStoreCart } from '@woocommerce/base-context/hooks';
 import {
+	useCheckoutContext,
+	useValidationContext,
+	ValidationContextProvider,
 	CheckoutProvider,
 	SnackbarNoticesContainer,
 } from '@woocommerce/base-context';
@@ -15,11 +18,6 @@ import { SidebarLayout } from '@woocommerce/base-components/sidebar-layout';
 import { CURRENT_USER_IS_ADMIN, getSetting } from '@woocommerce/settings';
 import { SlotFillProvider } from '@woocommerce/blocks-checkout';
 import withScrollToTop from '@woocommerce/base-hocs/with-scroll-to-top';
-import { useDispatch, useSelect } from '@wordpress/data';
-import {
-	CHECKOUT_STORE_KEY,
-	VALIDATION_STORE_KEY,
-} from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -31,6 +29,7 @@ import { LOGIN_TO_CHECKOUT_URL, isLoginRequired, reloadPage } from './utils';
 import type { Attributes } from './types';
 import { CheckoutBlockContext } from './context';
 import { hasNoticesOfType } from '../../utils/notices';
+import { StoreNoticesProvider } from '../../base/context/providers';
 
 const LoginPrompt = () => {
 	return (
@@ -56,13 +55,7 @@ const Checkout = ( {
 	attributes: Attributes;
 	children: React.ReactChildren;
 } ): JSX.Element => {
-	const { hasOrder, customerId } = useSelect( ( select ) => {
-		const store = select( CHECKOUT_STORE_KEY );
-		return {
-			hasOrder: store.hasOrder(),
-			customerId: store.getCustomerId(),
-		};
-	} );
+	const { hasOrder, customerId } = useCheckoutContext();
 	const { cartItems, cartIsLoading } = useStoreCart();
 
 	const {
@@ -111,22 +104,10 @@ const ScrollOnError = ( {
 }: {
 	scrollToTop: ( props: Record< string, unknown > ) => void;
 } ): null => {
-	const { hasError: checkoutHasError, isIdle: checkoutIsIdle } = useSelect(
-		( select ) => {
-			const store = select( CHECKOUT_STORE_KEY );
-			return {
-				isIdle: store.isIdle(),
-				hasError: store.hasError(),
-			};
-		}
-	);
-	const { hasValidationErrors } = useSelect( ( select ) => {
-		const store = select( VALIDATION_STORE_KEY );
-		return {
-			hasValidationErrors: store.hasValidationErrors(),
-		};
-	} );
-	const { showAllValidationErrors } = useDispatch( VALIDATION_STORE_KEY );
+	const { hasError: checkoutHasError, isIdle: checkoutIsIdle } =
+		useCheckoutContext();
+	const { hasValidationErrors, showAllValidationErrors } =
+		useValidationContext();
 
 	const hasErrorsToDisplay =
 		checkoutIsIdle &&
@@ -164,7 +145,7 @@ const Block = ( {
 	return (
 		<BlockErrorBoundary
 			header={ __(
-				'Something went wrong. Please contact us for assistance.',
+				'Something went wrong…',
 				'woo-gutenberg-products-block'
 			) }
 			text={ createInterpolateElement(
@@ -184,22 +165,27 @@ const Block = ( {
 			showErrorMessage={ CURRENT_USER_IS_ADMIN }
 		>
 			<SnackbarNoticesContainer context="wc/checkout" />
-			<StoreNoticesContainer context="wc/checkout" />
-			{ /* SlotFillProvider need to be defined before CheckoutProvider so fills have the SlotFill context ready when they mount. */ }
-			<SlotFillProvider>
-				<CheckoutProvider>
-					<SidebarLayout
-						className={ classnames( 'wc-block-checkout', {
-							'has-dark-controls': attributes.hasDarkControls,
-						} ) }
-					>
-						<Checkout attributes={ attributes }>
-							{ children }
-						</Checkout>
-						<ScrollOnError scrollToTop={ scrollToTop } />
-					</SidebarLayout>
-				</CheckoutProvider>
-			</SlotFillProvider>
+			<StoreNoticesProvider>
+				<StoreNoticesContainer context="wc/checkout" />
+				<ValidationContextProvider>
+					{ /* SlotFillProvider need to be defined before CheckoutProvider so fills have the SlotFill context ready when they mount. */ }
+					<SlotFillProvider>
+						<CheckoutProvider>
+							<SidebarLayout
+								className={ classnames( 'wc-block-checkout', {
+									'has-dark-controls':
+										attributes.hasDarkControls,
+								} ) }
+							>
+								<Checkout attributes={ attributes }>
+									{ children }
+								</Checkout>
+								<ScrollOnError scrollToTop={ scrollToTop } />
+							</SidebarLayout>
+						</CheckoutProvider>
+					</SlotFillProvider>
+				</ValidationContextProvider>
+			</StoreNoticesProvider>
 		</BlockErrorBoundary>
 	);
 };

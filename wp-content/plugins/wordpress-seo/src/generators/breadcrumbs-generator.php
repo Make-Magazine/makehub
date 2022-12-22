@@ -176,21 +176,9 @@ class Breadcrumbs_Generator implements Generator_Interface {
 		/**
 		 * Filter: 'wpseo_breadcrumb_links' - Allow the developer to filter the Yoast SEO breadcrumb links, add to them, change order, etc.
 		 *
-		 * @param array $crumbs The crumbs array.
+		 * @api array $crumbs The crumbs array.
 		 */
-		$filtered_crumbs = \apply_filters( 'wpseo_breadcrumb_links', $crumbs );
-
-		// Basic check to make sure the filtered crumbs are in an array.
-		if ( ! \is_array( $filtered_crumbs ) ) {
-			\_doing_it_wrong(
-				'Filter: \'wpseo_breadcrumb_links\'',
-				'The `wpseo_breadcrumb_links` filter should return a multi-dimensional array.',
-				'YoastSEO v20.0'
-			);
-		}
-		else {
-			$crumbs = $filtered_crumbs;
-		}
+		$crumbs = \apply_filters( 'wpseo_breadcrumb_links', $crumbs );
 
 		$filter_callback = static function( $link_info, $index ) use ( $crumbs ) {
 			/**
@@ -243,8 +231,7 @@ class Breadcrumbs_Generator implements Generator_Interface {
 	 * @return array The crumb.
 	 */
 	private function get_term_crumb( $crumb, $ancestor ) {
-		$crumb['term_id']  = $ancestor->object_id;
-		$crumb['taxonomy'] = $ancestor->object_sub_type;
+		$crumb['term_id'] = $ancestor->object_id;
 
 		return $crumb;
 	}

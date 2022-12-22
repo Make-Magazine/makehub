@@ -442,7 +442,7 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -698,7 +698,6 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -830,7 +829,6 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Icon Rotate', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
 				'default' => [
 					'size' => 0,
 					'unit' => 'deg',
@@ -850,15 +848,6 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
-				'range' => [
-					'px' => [
-						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
-					],
-				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-width: {{SIZE}}{{UNIT}}',
 				],
@@ -874,7 +863,7 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1367,13 +1356,10 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
+						'min' => 0,
 						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -1391,7 +1377,6 @@ class Flip_Box extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,

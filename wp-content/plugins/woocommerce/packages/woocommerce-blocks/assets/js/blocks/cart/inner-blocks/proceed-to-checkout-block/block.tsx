@@ -6,10 +6,9 @@ import classnames from 'classnames';
 import { useState, useEffect } from '@wordpress/element';
 import Button from '@woocommerce/base-components/button';
 import { CHECKOUT_URL } from '@woocommerce/block-settings';
+import { useCheckoutContext } from '@woocommerce/base-context';
 import { usePositionRelativeToViewport } from '@woocommerce/base-hooks';
 import { getSetting } from '@woocommerce/settings';
-import { useSelect } from '@wordpress/data';
-import { CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -27,9 +26,7 @@ const Block = ( {
 	className: string;
 } ): JSX.Element => {
 	const link = getSetting( 'page-' + checkoutPageId, false );
-	const isCalculating = useSelect( ( select ) =>
-		select( CHECKOUT_STORE_KEY ).isCalculating()
-	);
+	const { isCalculating } = useCheckoutContext();
 	const [ positionReferenceElement, positionRelativeToViewport ] =
 		usePositionRelativeToViewport();
 	const [ showSpinner, setShowSpinner ] = useState( false );

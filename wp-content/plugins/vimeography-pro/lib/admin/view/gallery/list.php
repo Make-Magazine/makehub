@@ -13,9 +13,163 @@ class Vimeography_Pro_Gallery_List extends Vimeography_Gallery_List {
     add_action('vimeography-pro/delete-gallery', array($this, 'delete_pro_gallery'));
     parent::__construct();
 
+    add_action('toplevel_page_vimeography-edit-galleries', array($this, 'render_tools') );
     add_action('vimeography_action_export_galleries', array($this, 'export_galleries') );
     add_action('vimeography_action_import_galleries', array($this, 'import_galleries') );
   }
+
+
+  /**
+   * Output Vimeography Pro tools.
+   *
+   * @param  [type] $a [description]
+   * @param  [type] $r [description]
+   * @return [type]    [description]
+   */
+  public function render_tools() {
+  ?>
+    <style>
+      #vimeography-pro-tools {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        box-sizing: border-box;
+        padding: 1em;
+      }
+
+      #vimeography-pro-tools h4 {
+        margin-bottom: 2em;
+      }
+    </style>
+    <div id="vimeography-pro-tools">
+      <h4>Extra Tools</h4>
+      <?php $this->render_export_button(); ?>
+      <?php $this->render_import_form(); ?>
+    </div>
+  <?php
+  }
+
+
+  /**
+   * Outputs an export button if there are galleries that exist.
+   *
+   * @return string
+   */
+  public function render_export_button() {
+    global $wpdb;
+
+    $result = $wpdb->get_results("
+      SELECT
+        gallery.id,
+        gallery.title,
+        gallery.date_created,
+        meta.gallery_id,
+        meta.source_url,
+        meta.resource_uri,
+        meta.featured_video,
+        meta.video_limit,
+        meta.gallery_width,
+        meta.cache_timeout,
+        meta.theme_name,
+        pro.per_page,
+        pro.sort,
+        pro.playlist,
+        pro.allow_downloads,
+        pro.enable_search,
+        pro.direction,
+        pro.gallery_id
+      FROM $wpdb->vimeography_gallery gallery
+      JOIN $wpdb->vimeography_gallery_meta meta
+      ON gallery.id = meta.gallery_id
+      JOIN $wpdb->vimeography_pro_meta pro
+      ON gallery.id = pro.gallery_id
+      ORDER BY gallery.id;
+    ");
+
+    if ( empty( $result ) ) {
+      return;
+    }
+
+    $url = add_query_arg( 'vimeography-action', 'export_galleries', menu_page_url('vimeography-edit-galleries', false) );
+
+    ?>
+      <style>
+      .vimeography-tools-export {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 0 4em;
+      }
+
+      .vimeography-tools-export h5 {
+        margin: 0;
+        padding: 0;
+        width: 200px;
+      }
+
+      .vimeography-tools-export label {
+        margin-bottom: 1.5em;
+      }
+
+      </style>
+      <div class="vimeography-tools-export">
+        <h5>Export Galleries</h5>
+        <div>
+          <label for="vimeography_preserve_gallery_ids">
+            <input type="checkbox" name="vimeography_preserve_gallery_ids" id="vimeography_preserve_gallery_ids" value="1" style="margin-right: 2px;">
+            <span style="transform: translateY(2px); display: inline-block;">Preserve Gallery IDs</span>
+          </label>
+          <a id="vimeography_export_galleries" class="button" href="<?php esc_attr_e( $url ); ?>">Click to Export Galleries</a>
+        </div>
+      </div>
+      <script>
+        jQuery(function($) {
+          $('#vimeography_preserve_gallery_ids').change(function(){
+            var vimeography_export = document.querySelector('#vimeography_export_galleries');
+
+            if (this.checked) {
+              vimeography_export.href += '&preserve_gallery_ids=1';
+            } else {
+              vimeography_export.href = vimeography_export.href.replace('&preserve_gallery_ids=1','');
+            }
+          });
+        });
+      </script>
+    <?php
+  }
+
+
+  /**
+   * Outputs an import form for importing galleries to a site.
+   *
+   * @return string
+   */
+  public function render_import_form() {
+    $url = add_query_arg( 'vimeography-action', 'import_galleries', menu_page_url('vimeography-edit-galleries', false) );
+
+    ?>
+      <style>
+      .vimeography-tools-import {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 0 2em;
+      }
+
+      .vimeography-tools-import h5 {
+        width: 200px;
+      }
+
+      </style>
+      <div class="vimeography-tools-import">
+        <h5>Import Galleries</h5>
+        <form method="post" action="<?php esc_attr_e( $url ); ?>" enctype="multipart/form-data">
+          <input type="file" id="vimeography-import" name="vimeography_gallery_manifest" onchange="this.form.submit()">
+        </form>
+      </div>
+    <?php
+  }
+
 
   /**
    * Exports all of the current site's Vimeography galleries
@@ -44,7 +198,6 @@ class Vimeography_Pro_Gallery_List extends Vimeography_Gallery_List {
         pro.playlist,
         pro.allow_downloads,
         pro.enable_search,
-        pro.enable_tags,
         pro.direction,
         pro.gallery_id
       FROM $wpdb->vimeography_gallery gallery
@@ -165,10 +318,9 @@ class Vimeography_Pro_Gallery_List extends Vimeography_Gallery_List {
             'direction'  => $gallery->direction,
             'playlist'   => $gallery->playlist,
             'allow_downloads' => $gallery->allow_downloads,
-            'enable_search' => $gallery->enable_search,
-            'enable_tags' => $gallery->enable_tags
+            'enable_search' => $gallery->enable_search
           ),
-          array('%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d')
+          array('%d', '%d', '%s', '%s', '%d', '%d', '%d')
         );
 
         if (!$result) {
@@ -224,8 +376,7 @@ class Vimeography_Pro_Gallery_List extends Vimeography_Gallery_List {
           'direction'  => $duplicate[0]->direction,
           'playlist'   => $duplicate[0]->playlist,
           'allow_downloads' => $duplicate[0]->allow_downloads,
-          'enable_search'   => $duplicate[0]->enable_search,
-          'enable_tags'   => $duplicate[0]->enable_tags
+          'enable_search'   => $duplicate[0]->enable_search
         )
       );
 

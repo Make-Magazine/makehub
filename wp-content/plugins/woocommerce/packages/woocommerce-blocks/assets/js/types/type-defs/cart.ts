@@ -12,10 +12,7 @@ import {
 	ExtensionsData,
 } from './cart-response';
 
-import {
-	ProductResponseItemData,
-	ProductResponseItem,
-} from './product-response';
+import { ProductResponseItemData } from './product-response';
 
 export interface CurrencyInfo {
 	currency_code: CurrencyCode;
@@ -193,14 +190,13 @@ export interface Cart {
 	items: Array< CartItem >;
 	itemsCount: number;
 	itemsWeight: number;
-	crossSells: Array< ProductResponseItem >;
 	needsPayment: boolean;
 	needsShipping: boolean;
 	hasCalculatedShipping: boolean;
 	fees: Array< CartFeeItem >;
 	totals: CartTotals;
 	errors: Array< CartErrorItem >;
-	paymentRequirements: Array< string >;
+	paymentRequirements: Array< unknown >;
 	extensions: ExtensionsData;
 }
 export interface CartMeta {

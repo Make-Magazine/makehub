@@ -1,5 +1,6 @@
+import ErrorHandler from '../ErrorHandler';
 import CheckoutActionHandler from '../ActionHandler/CheckoutActionHandler';
-import {setVisible, setVisibleByClass} from '../Helper/Hiding';
+import { setVisible } from '../Helper/Hiding';
 import {
     getCurrentPaymentMethod,
     isSavedCardSelected, ORDER_BUTTON_SELECTOR,
@@ -7,14 +8,17 @@ import {
 } from "../Helper/CheckoutMethodState";
 
 class CheckoutBootstap {
-    constructor(gateway, renderer, messages, spinner, errorHandler) {
+    constructor(gateway, renderer, messages, spinner) {
         this.gateway = gateway;
         this.renderer = renderer;
         this.messages = messages;
         this.spinner = spinner;
-        this.errorHandler = errorHandler;
 
         this.standardOrderButtonSelector = ORDER_BUTTON_SELECTOR;
+
+        this.buttonChangeObserver = new MutationObserver((el) => {
+            this.updateUi();
+        });
     }
 
     init() {
@@ -60,12 +64,17 @@ class CheckoutBootstap {
         }
         const actionHandler = new CheckoutActionHandler(
             PayPalCommerceGateway,
-            this.errorHandler,
+            new ErrorHandler(this.gateway.labels.error.generic),
             this.spinner
         );
 
         this.renderer.render(
             actionHandler.configuration()
+        );
+
+        this.buttonChangeObserver.observe(
+            document.querySelector(this.standardOrderButtonSelector),
+            {attributes: true}
         );
     }
 
@@ -86,7 +95,7 @@ class CheckoutBootstap {
                 }, {}),
         };
 
-        setVisibleByClass(this.standardOrderButtonSelector, (isPaypal && isFreeTrial && hasVaultedPaypal) || isNotOurGateway || isSavedCard, 'ppcp-hidden');
+        setVisible(this.standardOrderButtonSelector,  (isPaypal && isFreeTrial && hasVaultedPaypal) || isNotOurGateway || isSavedCard, true);
         setVisible('.ppcp-vaulted-paypal-details', isPaypal);
         setVisible(this.gateway.button.wrapper, isPaypal && !(isFreeTrial && hasVaultedPaypal));
         setVisible(this.gateway.messages.wrapper, isPaypal && !isFreeTrial);

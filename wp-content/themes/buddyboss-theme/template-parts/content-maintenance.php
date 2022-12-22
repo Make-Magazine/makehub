@@ -23,11 +23,6 @@ $social_network_google           = buddyboss_theme_get_option( 'social_network_g
 $social_network_instagram        = buddyboss_theme_get_option( 'social_network_instagram' );
 $social_network_youtube          = buddyboss_theme_get_option( 'social_network_youtube' );
 $contact_button_text             = buddyboss_theme_get_option( 'contact_button_text' );
-
-if ( defined( 'ELEMENTOR_VERSION' ) ) {
-	$elementor_frontend_instance = Elementor\Plugin::instance()->frontend;
-	remove_filter( 'the_content', [ $elementor_frontend_instance, 'apply_builder_in_content' ], $elementor_frontend_instance::THE_CONTENT_FILTER_PRIORITY );
-}
 ?>
 
 <div id="page" class="site">

@@ -227,31 +227,31 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	 */
 	public function create_ecom_customer_from_order( $order ) {
 		$logger = new Logger();
-		if ( isset( $order ) && AC_Utilities::validate_object( $order, 'get_id' ) && ! empty( $order->get_id() ) ) {
+		if ( isset( $order ) && $order->get_id() ) {
 			if ( AC_Utilities::validate_object( $order, 'get_customer_id' ) && $order->get_customer_id() ) {
 				try {
 					// Use the customer information
 					$customer = new WC_Customer( $order->get_customer_id(), false );
 
-					if ( AC_Utilities::validate_object( $customer, 'get_id' ) && ! empty( $customer->get_id() ) ) {
+					if ( $customer->get_id() ) {
 						$this->externalid = $customer->get_id();
 					}
 
-					if ( AC_Utilities::validate_object( $customer, 'get_email' ) && ! empty( $customer->get_email() ) ) {
+					if ( $customer->get_email() ) {
 						$this->email = $customer->get_email();
-					} elseif ( AC_Utilities::validate_object( $customer, 'get_billing_email' ) && ! empty( $customer->get_billing_email() ) ) {
+					} elseif ( $customer->get_billing_email() ) {
 						$this->email = $customer->get_billing_email();
 					}
 
-					if ( AC_Utilities::validate_object( $customer, 'get_first_name' ) && ! empty( $customer->get_first_name() ) ) {
+					if ( $customer->get_first_name() ) {
 						$this->first_name = $customer->get_first_name();
-					} elseif ( AC_Utilities::validate_object( $customer, 'get_billing_first_name' ) && ! empty( $customer->get_billing_first_name() ) ) {
+					} elseif ( $customer->get_billing_first_name() ) {
 						$this->first_name = $customer->get_billing_first_name();
 					}
 
-					if ( AC_Utilities::validate_object( $customer, 'get_last_name' ) && ! empty( $customer->get_last_name() ) ) {
+					if ( $customer->get_last_name() ) {
 						$this->last_name = $customer->get_last_name();
-					} elseif ( AC_Utilities::validate_object( $customer, 'get_billing_last_name' ) && ! empty( $customer->get_billing_last_name() ) ) {
+					} elseif ( $customer->get_billing_last_name() ) {
 						$this->last_name = $customer->get_billing_last_name();
 					}
 				} catch ( Throwable $t ) {

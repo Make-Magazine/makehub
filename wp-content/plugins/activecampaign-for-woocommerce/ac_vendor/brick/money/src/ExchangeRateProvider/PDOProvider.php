@@ -14,23 +14,31 @@ final class PDOProvider implements ExchangeRateProvider
 {
     /**
      * The SELECT statement.
+     *
+     * @var \PDOStatement
      */
-    private \PDOStatement $statement;
+    private $statement;
 
     /**
      * The source currency code if fixed, or null if dynamic.
+     *
+     * @var string|null
      */
-    private ?string $sourceCurrencyCode = null;
+    private $sourceCurrencyCode;
 
     /**
      * The target currency code if fixed, or null if dynamic.
+     *
+     * @var string|null
      */
-    private ?string $targetCurrencyCode = null;
+    private $targetCurrencyCode;
 
     /**
      * Extra parameters set dynamically to resolve the query placeholders.
+     *
+     * @var array
      */
-    private array $parameters = [];
+    private $parameters = [];
 
     /**
      * @param \PDO                     $pdo
@@ -42,10 +50,12 @@ final class PDOProvider implements ExchangeRateProvider
     {
         $conditions = [];
 
+        /** @psalm-suppress DocblockTypeContradiction */
         if ($configuration->tableName === null) {
             throw new \InvalidArgumentException('Invalid configuration: $tableName is not set.');
         }
 
+        /** @psalm-suppress DocblockTypeContradiction */
         if ($configuration->exchangeRateColumnName === null) {
             throw new \InvalidArgumentException('Invalid configuration: $exchangeRateColumnName is not set.');
         }

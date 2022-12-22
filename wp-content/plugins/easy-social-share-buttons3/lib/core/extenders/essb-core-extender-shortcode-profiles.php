@@ -26,8 +26,6 @@ class ESSBCoreExtenderShortcodeProfiles {
 		$sc_columns = isset($atts['columns']) ? $atts['columns'] : '';
 		$sc_profiles_all_networks = isset($atts['profiles_all_networks']) ? $atts['profiles_all_networks'] : '';
 		
-		$preview_mode = isset($atts['preview_mode']) ? $atts['preview_mode'] : '';
-		
 		if ($sc_profiles_all_networks == '' && $sc_networks != '') {
 		    $sc_profiles_all_networks = 'true';
 		}
@@ -88,11 +86,19 @@ class ESSBCoreExtenderShortcodeProfiles {
 		}
 		
 		
-		if (!essb_resource_builder()->is_activated('social-profiles')) {
-		    $template_url = ESSBSocialProfilesHelper::get_stylesheet_url();
-		    essb_resource_builder()->add_static_footer_css($template_url, 'essb-social-followers-counter');		
+		if (!defined('ESSB3_SOCIALPROFILES_ACTIVE')) {
+			include_once (ESSB3_PLUGIN_ROOT . 'lib/modules/social-profiles/essb-social-profiles.php');
+			include_once (ESSB3_PLUGIN_ROOT . 'lib/modules/social-profiles/essb-social-profiles-helper.php');
+			define('ESSB3_SOCIALPROFILES_ACTIVE', 'true');
+			$template_url = ESSBSocialProfilesHelper::get_stylesheet_url();
+			essb_resource_builder()->add_static_footer_css($template_url, 'essb-social-followers-counter');
 		}
-		
+		else {
+			if (!essb_resource_builder()->is_activated('profiles_css')) {
+			    $template_url = ESSBSocialProfilesHelper::get_stylesheet_url();
+				essb_resource_builder()->add_static_footer_css($template_url, 'essb-social-followers-counter');				
+			}
+		}
 		
 		$options = array(
 				'position' => '',
@@ -106,8 +112,7 @@ class ESSBCoreExtenderShortcodeProfiles {
 				'size' => $sc_size,
 				'cta' => $sc_cta,
 				'cta_vertical' => $sc_cta_vertical,
-				'columns' => $sc_columns,
-		        'preview_mode' => $preview_mode
+				'columns' => $sc_columns
 		);
 		
 		return ESSBSocialProfiles::draw_social_profiles($options);

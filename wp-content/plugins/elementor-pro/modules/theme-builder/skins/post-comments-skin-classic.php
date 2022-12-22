@@ -134,7 +134,7 @@ class Post_Comments_Skin_Classic extends Skin_Base {
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'placeholder' => '1',
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-comment' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -146,7 +146,7 @@ class Post_Comments_Skin_Classic extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-comment' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -278,6 +278,7 @@ class Post_Comments_Skin_Classic extends Skin_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'reply_button_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_ACCENT,
 				],
@@ -314,7 +315,7 @@ class Post_Comments_Skin_Classic extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-comment .comment-reply-link' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

@@ -3,7 +3,7 @@
  * LearnDash Multiselect Settings Field.
  *
  * @since 3.0.0
- * @package LearnDash\Settings\Field
+ * @package LearnDashSettings\Field
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,11 +31,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settings field.
+		 * Function to crete the settiings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the output.
+		 * @param array $field_args An array of field arguments used to process the ouput.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -55,7 +55,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_class( $field_args );
 			$html .= $this->get_field_attribute_placeholder( $field_args );
 
-			if ( learndash_use_select2_lib() ) {
+			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
 				if ( ! isset( $field_args['attrs']['data-ld-select2'] ) ) {
 					$html .= ' data-ld-select2="1" ';
 				}
@@ -68,7 +68,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			if ( ( isset( $field_args['options'] ) ) && ( ! empty( $field_args['options'] ) ) ) {
 				foreach ( $field_args['options'] as $option_key => $option_label ) {
-					if ( ( '' === $option_key ) && ( learndash_use_select2_lib() ) ) {
+					if ( ( '' === $option_key ) && ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
 						continue;
 					}
 					$selected_item = '';

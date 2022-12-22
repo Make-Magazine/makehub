@@ -6,7 +6,7 @@
  * @subpackage	Gateways/PayPal
  * @category	Class
  * @author		Prospress
- * @since		1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+ * @since		2.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

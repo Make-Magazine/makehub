@@ -198,15 +198,14 @@ if ( ! class_exists( 'acf_validation' ) ) :
 
 		function acf_validate_save_post() {
 
-			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
 			// bail early if no $_POST
 			if ( empty( $_POST['acf'] ) ) {
 				return;
 			}
 
 			// validate
-			acf_validate_values( $_POST['acf'], 'acf' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			// phpcs:enable WordPress.Security.NonceVerification.Missing
+			acf_validate_values( $_POST['acf'], 'acf' );
+
 		}
 
 	}
@@ -276,7 +275,7 @@ function acf_validate_save_post( $show_errors = false ) {
 	// vars
 	$errors = acf_get_validation_errors();
 
-	// bail early if no errors
+	// bail ealry if no errors
 	if ( ! $errors ) {
 		return true;
 	}

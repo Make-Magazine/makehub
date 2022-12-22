@@ -2,7 +2,7 @@
 	"name": "woocommerce/checkout-terms-block",
 	"version": "1.0.0",
 	"title": "Terms and Conditions",
-	"description": "Ensure that customers agree to your Terms & Conditions and Privacy Policy.",
+	"description": "Ensure customers agree to your terms and conditions and privacy policy.",
 	"category": "woocommerce",
 	"supports": {
 		"align": false,
@@ -26,6 +26,5 @@
 	},
 	"parent": [ "woocommerce/checkout-fields-block" ],
 	"textdomain": "woo-gutenberg-products-block",
-	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2
 }

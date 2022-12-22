@@ -604,7 +604,7 @@ class GravityView_frontend {
 	/**
 	 * In case View post is called directly, insert the view in the post content
 	 *
-	 * @deprecated {@see \GV\View::content()} instead.
+	 * @deprecated Use \GV\View::content() instead.
 	 *
 	 * @static
 	 * @param mixed $content
@@ -663,22 +663,22 @@ class GravityView_frontend {
 
 		switch( $context ) {
 			case 'directory':
-				$tab = __( 'Multiple Entries', 'gk-gravityview' );
+				$tab = __( 'Multiple Entries', 'gravityview' );
 				break;
 			case 'edit':
-				$tab = __( 'Edit Entry', 'gk-gravityview' );
+				$tab = __( 'Edit Entry', 'gravityview' );
 				break;
 			case 'single':
 			default:
-				$tab = __( 'Single Entry', 'gk-gravityview' );
+				$tab = __( 'Single Entry', 'gravityview' );
 				break;
 		}
 
 
-		$title = sprintf( esc_html_x('The %s layout has not been configured.', 'Displayed when a View is not configured. %s is replaced by the tab label', 'gk-gravityview' ), $tab );
+		$title = sprintf( esc_html_x('The %s layout has not been configured.', 'Displayed when a View is not configured. %s is replaced by the tab label', 'gravityview' ), $tab );
 		$edit_link = admin_url( sprintf( 'post.php?post=%d&action=edit#%s-view', $view_id, $context ) );
-		$action_text = sprintf( esc_html__('Add fields to %s', 'gk-gravityview' ), $tab );
-		$message = esc_html__( 'You can only see this message because you are able to edit this View.', 'gk-gravityview' );
+		$action_text = sprintf( esc_html__('Add fields to %s', 'gravityview' ), $tab );
+		$message = esc_html__( 'You can only see this message because you are able to edit this View.', 'gravityview' );
 
 		$image =  sprintf( '<img alt="%s" src="%s" style="margin-top: 10px;" />', $tab, esc_url(plugins_url( sprintf( 'assets/images/tab-%s.png', $context ), GRAVITYVIEW_FILE ) ) );
 		$output = sprintf( '<h3>%s <strong><a href="%s">%s</a></strong></h3><p>%s</p>', $title, esc_url( $edit_link ), $action_text, $message );
@@ -728,7 +728,7 @@ class GravityView_frontend {
 		$embed_only = $view->settings->get( 'embed_only' );
 
 		if( ! $direct_access || ( $embed_only && ! GVCommon::has_cap( 'read_private_gravityviews' ) ) ) {
-			return __( 'You are not allowed to view this content.', 'gk-gravityview' );
+			return __( 'You are not allowed to view this content.', 'gravityview' );
 		}
 
 		$shortcode = new \GV\Shortcodes\gravityview();
@@ -1460,16 +1460,16 @@ class GravityView_frontend {
 					$css_dependencies[] = 'dashicons';
 				}
 
-				wp_register_script( 'gravityview-jquery-cookie', plugins_url( 'assets/lib/jquery.cookie/jquery.cookie.min.js', GRAVITYVIEW_FILE ), array( 'jquery' ), GV_PLUGIN_VERSION, true );
+				wp_register_script( 'gravityview-jquery-cookie', plugins_url( 'assets/lib/jquery.cookie/jquery.cookie.min.js', GRAVITYVIEW_FILE ), array( 'jquery' ), GravityView_Plugin::version, true );
 
 				$script_debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-				wp_register_script( 'gravityview-fe-view', plugins_url( 'assets/js/fe-views' . $script_debug . '.js', GRAVITYVIEW_FILE ), apply_filters( 'gravityview_js_dependencies', $js_dependencies ) , GV_PLUGIN_VERSION, true );
+				wp_register_script( 'gravityview-fe-view', plugins_url( 'assets/js/fe-views' . $script_debug . '.js', GRAVITYVIEW_FILE ), apply_filters( 'gravityview_js_dependencies', $js_dependencies ) , GravityView_Plugin::version, true );
 
 				wp_enqueue_script( 'gravityview-fe-view' );
 
 				if ( ! empty( $data['atts']['sort_columns'] ) ) {
-					wp_enqueue_style( 'gravityview_font', plugins_url( 'assets/css/font.css', GRAVITYVIEW_FILE ), $css_dependencies, GV_PLUGIN_VERSION, 'all' );
+					wp_enqueue_style( 'gravityview_font', plugins_url( 'assets/css/font.css', GRAVITYVIEW_FILE ), $css_dependencies, GravityView_Plugin::version, 'all' );
 				}
 
 				$this->enqueue_default_style( $css_dependencies );
@@ -1481,8 +1481,8 @@ class GravityView_frontend {
 
 				$js_localization = array(
 					'cookiepath' => COOKIEPATH,
-					'clear' => _x( 'Clear', 'Clear all data from the form', 'gk-gravityview' ),
-					'reset' => _x( 'Reset', 'Reset the search form to the state that existed on page load', 'gk-gravityview' ),
+					'clear' => _x( 'Clear', 'Clear all data from the form', 'gravityview' ),
+					'reset' => _x( 'Reset', 'Reset the search form to the state that existed on page load', 'gravityview' ),
 				);
 
 				/**
@@ -1521,7 +1521,7 @@ class GravityView_frontend {
 
 		$path = gravityview_css_url( $css_file_base . $rtl . '.css' );
 
-		wp_enqueue_style( 'gravityview_default_style', $path, $css_dependencies, GV_PLUGIN_VERSION, 'all' );
+		wp_enqueue_style( 'gravityview_default_style', $path, $css_dependencies, GravityView_Plugin::version, 'all' );
 	}
 
 	/**

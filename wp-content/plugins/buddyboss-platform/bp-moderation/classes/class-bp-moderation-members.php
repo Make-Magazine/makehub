@@ -24,13 +24,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static $moderation_type = 'user';
 
 	/**
-	 * Item type for report member.
-	 *
-	 * @var string
-	 */
-	public static $moderation_type_report = 'user_report';
-
-	/**
 	 * BP_Moderation_Members constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -114,10 +107,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
-
-		if ( bb_is_moderation_member_reporting_enable() ) {
-			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss' );
-		}
 
 		return $content_types;
 	}
@@ -233,12 +222,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $value;
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-			if ( bp_moderation_is_user_blocked( $user_id ) ) {
-				return bb_moderation_has_blocked_label( $value, $user_id );
-			} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
-				return bb_moderation_is_blocked_label( $value, $user_id );
-			}
+		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
+			return esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -256,8 +241,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user       = false;
-		$old_retval = $retval;
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -282,21 +266,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			$retval = bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
-		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
-		/**
-		 * Filter to update blocked avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $retval         The URL of the avatar.
-		 * @param string $old_avatar_url URL for a originally uploaded avatar.
-		 * @param array  $args           Arguments passed to get_avatar_data(), after processing.
-		 */
-		return apply_filters( 'bb_get_blocked_avatar_url', $retval, $old_retval, $args );
+		return $retval;
 	}
 
 	/**
@@ -311,31 +284,18 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
-		$old_avatar_url = $avatar_url;
-
+		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
-				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
-					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
 
-		/**
-		 * Filter to update blocked avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $avatar_url     URL for a locally uploaded avatar.
-		 * @param string $old_avatar_url URL for a originally uploaded avatar.
-		 * @param array  $params         Array of parameters for the request.
-		 */
-		return apply_filters( 'bb_get_blocked_avatar_url', $avatar_url, $old_avatar_url, $params );
+		return $avatar_url;
 	}
 
 	/**

@@ -13,7 +13,6 @@ use WC_Order;
 use WC_Product;
 use WC_Subscription;
 use WC_Subscriptions_Product;
-use WC_Subscriptions_Synchroniser;
 
 /**
  * Class FreeTrialHandlerTrait
@@ -38,7 +37,10 @@ trait FreeTrialHandlerTrait {
 
 		foreach ( $cart->get_cart() as $item ) {
 			$product = $item['data'] ?? null;
-			if ( $product && WC_Subscriptions_Product::is_subscription( $product ) ) {
+			if ( ! $product instanceof WC_Product ) {
+				continue;
+			}
+			if ( WC_Subscriptions_Product::get_trial_length( $product ) > 0 ) {
 				return true;
 			}
 		}
@@ -58,22 +60,9 @@ trait FreeTrialHandlerTrait {
 
 		$product = wc_get_product();
 
-		if ( ! $product || ! WC_Subscriptions_Product::is_subscription( $product ) ) {
-			return false;
-		}
-
-		if ( WC_Subscriptions_Product::get_trial_length( $product ) > 0 ) {
-			return true;
-		}
-
-		if ( WC_Subscriptions_Synchroniser::is_product_synced( $product ) && ! WC_Subscriptions_Synchroniser::is_payment_upfront( $product ) ) {
-			$date = WC_Subscriptions_Synchroniser::calculate_first_payment_date( $product, 'timestamp' );
-			if ( ! WC_Subscriptions_Synchroniser::is_today( $date ) ) {
-				return true;
-			}
-		}
-
-		return false;
+		return $product
+			&& WC_Subscriptions_Product::is_subscription( $product )
+			&& WC_Subscriptions_Product::get_trial_length( $product ) > 0;
 	}
 
 	/**
@@ -93,6 +82,13 @@ trait FreeTrialHandlerTrait {
 
 		$subs = wcs_get_subscriptions_for_order( $wc_order );
 
-		return ! empty( $subs );
+		return ! empty(
+			array_filter(
+				$subs,
+				function ( WC_Subscription $sub ): bool {
+					return (float) $sub->get_total_initial_payment() <= 0;
+				}
+			)
+		);
 	}
 }

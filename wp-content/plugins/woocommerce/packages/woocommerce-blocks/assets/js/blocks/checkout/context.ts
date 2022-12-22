@@ -25,8 +25,8 @@ export type CheckoutBlockControlsContextProps = {
 	accountControls: () => JSX.Element | null;
 };
 
-export const CheckoutBlockContext: React.Context< CheckoutBlockContextProps > =
-	createContext< CheckoutBlockContextProps >( {
+export const CheckoutBlockContext = createContext< CheckoutBlockContextProps >(
+	{
 		allowCreateAccount: false,
 		showCompanyField: false,
 		showApartmentField: false,
@@ -38,9 +38,10 @@ export const CheckoutBlockContext: React.Context< CheckoutBlockContextProps > =
 		showReturnToCart: true,
 		cartPageId: 0,
 		showRateAfterTaxName: false,
-	} );
+	}
+);
 
-export const CheckoutBlockControlsContext: React.Context< CheckoutBlockControlsContextProps > =
+export const CheckoutBlockControlsContext =
 	createContext< CheckoutBlockControlsContextProps >( {
 		addressFieldControls: () => null,
 		accountControls: () => null,

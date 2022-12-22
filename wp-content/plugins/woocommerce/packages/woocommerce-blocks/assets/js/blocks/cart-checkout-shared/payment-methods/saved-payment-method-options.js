@@ -3,15 +3,15 @@
  */
 import { useMemo, cloneElement } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { noticeContexts } from '@woocommerce/base-context';
+import { usePaymentMethodDataContext } from '@woocommerce/base-context';
 import RadioControl from '@woocommerce/base-components/radio-control';
 import {
 	usePaymentMethodInterface,
+	usePaymentMethods,
 	useStoreEvents,
+	useEmitResponse,
 } from '@woocommerce/base-context/hooks';
-import { PAYMENT_STORE_KEY } from '@woocommerce/block-data';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { getPaymentMethods } from '@woocommerce/blocks-registry';
+import { useDispatch } from '@wordpress/data';
 
 /**
  * @typedef {import('@woocommerce/type-defs/contexts').CustomerPaymentMethod} CustomerPaymentMethod
@@ -63,20 +63,23 @@ const getDefaultLabel = ( { method } ) => {
 };
 
 const SavedPaymentMethodOptions = () => {
-	const { activeSavedToken, activePaymentMethod, savedPaymentMethods } =
-		useSelect( ( select ) => select( PAYMENT_STORE_KEY ).getState() );
-	const { __internalSetActivePaymentMethod } =
-		useDispatch( PAYMENT_STORE_KEY );
-	const paymentMethods = getPaymentMethods();
+	const {
+		customerPaymentMethods,
+		activePaymentMethod,
+		setActivePaymentMethod,
+		activeSavedToken,
+	} = usePaymentMethodDataContext();
+	const { paymentMethods } = usePaymentMethods();
 	const paymentMethodInterface = usePaymentMethodInterface();
+	const { noticeContexts } = useEmitResponse();
 	const { removeNotice } = useDispatch( 'core/notices' );
 	const { dispatchCheckoutEvent } = useStoreEvents();
 
 	const options = useMemo( () => {
-		const types = Object.keys( savedPaymentMethods );
+		const types = Object.keys( customerPaymentMethods );
 		return types
 			.flatMap( ( type ) => {
-				const typeMethods = savedPaymentMethods[ type ];
+				const typeMethods = customerPaymentMethods[ type ];
 				return typeMethods.map( ( paymentMethod ) => {
 					const isCC = type === 'cc' || type === 'echeck';
 					const paymentMethodSlug = paymentMethod.method.gateway;
@@ -88,15 +91,12 @@ const SavedPaymentMethodOptions = () => {
 						value: paymentMethod.tokenId.toString(),
 						onChange: ( token ) => {
 							const savedTokenKey = `wc-${ paymentMethodSlug }-payment-token`;
-							__internalSetActivePaymentMethod(
-								paymentMethodSlug,
-								{
-									token,
-									payment_method: paymentMethodSlug,
-									[ savedTokenKey ]: token.toString(),
-									isSavedToken: true,
-								}
-							);
+							setActivePaymentMethod( paymentMethodSlug, {
+								token,
+								payment_method: paymentMethodSlug,
+								[ savedTokenKey ]: token.toString(),
+								isSavedToken: true,
+							} );
 							removeNotice(
 								'wc-payment-error',
 								noticeContexts.PAYMENTS
@@ -113,11 +113,13 @@ const SavedPaymentMethodOptions = () => {
 			} )
 			.filter( Boolean );
 	}, [
-		savedPaymentMethods,
-		__internalSetActivePaymentMethod,
+		customerPaymentMethods,
+		setActivePaymentMethod,
 		removeNotice,
+		noticeContexts.PAYMENTS,
 		dispatchCheckoutEvent,
 	] );
+
 	const savedPaymentMethodHandler =
 		!! activeSavedToken &&
 		paymentMethods[ activePaymentMethod ] &&
@@ -134,7 +136,6 @@ const SavedPaymentMethodOptions = () => {
 				id={ 'wc-payment-method-saved-tokens' }
 				selected={ activeSavedToken }
 				options={ options }
-				onChange={ () => void 0 }
 			/>
 			{ savedPaymentMethodHandler }
 		</>

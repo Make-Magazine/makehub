@@ -50,7 +50,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		add_filter( 'bp_recipients_recipient_get_where_conditions', array( $this, 'exclude_moderated_recipients' ), 10, 2 );
-		add_filter( 'bp_recipients_recipient_get_where_conditions', array( $this, 'exclude_reported_recipients' ), 10, 2 );
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
@@ -72,7 +71,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		add_filter( 'get_avatar_url', array( $this, 'get_avatar_url' ), 9999, 3 );
 		add_filter( 'bp_core_fetch_avatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
 		add_filter( 'bp_core_fetch_gravatar_url_check', array( $this, 'bp_fetch_avatar_url' ), 1005, 2 );
-
 	}
 
 	/**
@@ -240,49 +238,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		 * Filters the hidden member Where SQL statement.
 		 *
 		 * @since BuddyBoss 1.7.8
-		 *
-		 * @param array $where Query to hide suspended user's member.
-		 * @param array $class current class object.
-		 */
-		$where = apply_filters( 'bp_suspend_member_recipient_get_where_conditions', $where, $this );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
-		return $where_conditions;
-	}
-
-	/**
-	 * Exclude reported members from message recipients lists.
-	 *
-	 * @since BuddyBoss 2.1.4
-	 *
-	 * @param array $where_conditions Recipients member where sql.
-	 * @param array $args             Array of arguments of recipients query.
-	 *
-	 * @return mixed
-	 */
-	public function exclude_reported_recipients( $where_conditions, $args ) {
-		global $wpdb;
-		$bp = buddypress();
-		if (
-			! isset( $args['exclude_reported_members'] ) ||
-			(
-				false === (bool) $args['exclude_reported_members']
-			)
-		) {
-			return $where_conditions;
-		}
-
-		$where = array();
-		// phpcs:ignore
-		$sql                    = $wpdb->prepare( "SELECT DISTINCT {$this->alias}.item_id FROM {$bp->moderation->table_name} {$this->alias} WHERE {$this->alias}.item_type = %s AND ( {$this->alias}.user_report = 1 )", 'user' );
-		$where['suspend_where'] = '( r.user_id NOT IN( ' . $sql . ' ) )';
-		/**
-		 * Filters the hidden member Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.1.4
 		 *
 		 * @param array $where Query to hide suspended user's member.
 		 * @param array $class current class object.
@@ -702,7 +657,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			return bb_moderation_is_suspended_label( $user_id );
+			return esc_html__( 'Suspended Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -721,8 +676,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user       = false;
-		$old_retval = $retval;
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -747,19 +701,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 
 		if ( bp_moderation_is_user_suspended( $user->ID ) ) {
-			$retval = bb_moderation_is_suspended_avatar( $user->ID, $args );
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
-		/**
-		 * Filter to update suspended avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $retval     The URL of the avatar.
-		 * @param string $old_retval URL for a originally uploaded avatar.
-		 * @param array  $args       Arguments passed to get_avatar_data(), after processing.
-		 */
-		return apply_filters( 'bb_get_suspended_avatar_url', $retval, $old_retval, $args );
+		return $retval;
 	}
 
 	/**
@@ -774,27 +719,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
-		$old_avatar_url = $avatar_url;
+		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_suspended( $item_id ) ) {
-					$avatar_url = bb_moderation_is_suspended_avatar( $item_id, $params );
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
 
-		/**
-		 * Filter to update suspended avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $avatar_url     URL for a locally uploaded avatar.
-		 * @param string $old_avatar_url URL for a originally uploaded avatar.
-		 * @param array  $params         Array of parameters for the request.
-		 */
-		return apply_filters( 'bb_get_suspended_avatar_url', $avatar_url, $old_avatar_url, $params );
+		return $avatar_url;
 	}
 }

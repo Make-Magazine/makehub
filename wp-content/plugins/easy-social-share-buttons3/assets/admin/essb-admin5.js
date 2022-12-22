@@ -317,7 +317,6 @@ jQuery(document).ready(function($){
 		if ($(this).parent().hasClass('essb-switch-submit')) {
 			essb_disable_ajax_submit = true;
 			$('#essb_options_form').submit();
-			if ($('#essb-cc-preloader').length) $('#essb-cc-preloader').fadeIn(100);
 		}
 	});
 
@@ -484,7 +483,7 @@ jQuery(document).ready(function($){
 		});
 	});
 
-	$('.essb-options-container').find('.essb-portlet-switch').find('.essb-portlet-heading .onoffswitch-checkbox').each(function(){
+	$('.essb-options-container').find('.essb-portlet-switch').find('.onoffswitch-checkbox').each(function(){
 		$(this).on('click', function(e) {
 
 			var state_checkbox = $(this);
@@ -493,7 +492,7 @@ jQuery(document).ready(function($){
 			var state = $(state_checkbox).is(':checked');
 
 
-			var parent_heading = $(this).parent().parent().parent().parent();
+			var parent_heading = $(this).parent().parent().parent();
 
 			if ($(parent_heading).hasClass('essb-portlet-submit')) {
 				essb_disable_ajax_submit = true;
@@ -562,6 +561,7 @@ jQuery(document).ready(function($){
 
 					if ($('.ess-section-tab-'+data_tab).length) {
 						if ($('.ess-section-tab-'+data_tab).hasClass('active')) {
+							$('.ess-section-tab-'+data_tab).fadeOut('fast');
 							$('.ess-section-tab-'+data_tab).removeClass('active');
 						}
 					}
@@ -572,6 +572,7 @@ jQuery(document).ready(function($){
 			var data_tab = $(this).attr('data-tab');
 
 			if ($('.ess-section-tab-'+data_tab).length) {
+				$('.ess-section-tab-'+data_tab).fadeIn('fast');
 				$('.ess-section-tab-'+data_tab).addClass('active');
 
 				window.setTimeout(function() {
@@ -906,7 +907,7 @@ jQuery(document).ready(function($){
 		for (var i=0;i<networksIndex.length;i++) {
 			var network = networksIndex[i],
 				networkDetails = essbAdminSettings.networks[network] || {},
-				name = networkDetails['label'] || networkDetails['name'] || '',
+				name = networkDetails['name'] || '',
 				isActive = activeNetworks[network] ? true: false;
 
 			output.push('<div class="essb-admin-networkselect essb-admin-network-' + network+' essb-network-color-' + network + ' '+(isActive ? 'active' : '')+'" data-filter-value="'+name+'" data-network="'+network+'">');
@@ -978,8 +979,6 @@ jQuery(document).ready(function($){
 			$('.essb-component-buttons-livepreview').each(function() {
 				var settings = $(this).attr('data-settings') || '';
 
-				console.log('loading = ' + settings);
-				
 				if (settings == '') return;
 
 				var previewOptions = {};
@@ -991,7 +990,7 @@ jQuery(document).ready(function($){
 					console.log('live preview generation error = ' + e.stack);
 				}
 
-				var uniqueID = 'essb-lv-' + (new Date()).getTime() + '-' + settings;
+				var uniqueID = 'essb-lv-' + (new Date()).getTime();
 				$(this).attr('id', uniqueID);
 				essbPreviewButtonsHolder[uniqueID] = {
 						'id': uniqueID,
@@ -1049,7 +1048,6 @@ jQuery(document).ready(function($){
 				name_hidde_class = 'essb_vertical_name';
 
 			var template = drawSettings['template'] || '5';
-			var templateID = Number(template);
 
 			if (essbAdminSettings) {
 				template = Number(template);
@@ -1057,10 +1055,6 @@ jQuery(document).ready(function($){
 					template = essbAdminSettings.templates[template];
 			}
 			additional_classes += ' essb_template_' + template;
-			
-			if (essbAdminSettings && essbAdminSettings.template_classes && essbAdminSettings.template_classes[templateID]) {
-				if (essbAdminSettings.template_classes[templateID].root != '') additional_classes += ' ' + essbAdminSettings.template_classes[templateID].root;
-			}
 
 			if (drawSettings['nospace'])
 				additional_classes += ' essb_nospace';
@@ -1299,27 +1293,12 @@ jQuery(document).ready(function($){
 					useDrawingStyles = fullwidth_first;
 				if (drawSettings['width'] == 'full' && i == 1)
 					useDrawingStyles = fullwidth_second;
-				
-				var element_a_classes = '', element_icon_classes = '';
-				var svg_icon = '', network_id = networkDetails['key'];
-				if (essbAdminSettings && essbAdminSettings.svg && essbAdminSettings.svg[network_id])
-					svg_icon = essbAdminSettings.svg[network_id];
-				
-				//
 
-				if (essbAdminSettings && essbAdminSettings.template_classes && essbAdminSettings.template_classes[templateID]) {
-					element_a_classes = essbAdminSettings.template_classes[templateID].element;
-					element_icon_classes = essbAdminSettings.template_classes[templateID].icon;
-					
-					element_a_classes = element_a_classes.replace(/{network}/g, networkDetails['key']);
-					element_icon_classes = element_icon_classes.replace(/{network}/g, networkDetails['key']);
-				}
-
-				output.push('<li class="essb_item essb_link_' + networkDetails['key']+(svg_icon != '' ? ' essb_link_svg_icon': '')+'" style="'+useDrawingStyles+'">');
+				output.push('<li class="essb_item essb_link_' + networkDetails['key']+'" style="'+useDrawingStyles+'">');
 				output.push(cached_code_left);
-				output.push('<a href="#" style="'+additional_full_width_correction+'" class="'+element_a_classes+'">');
+				output.push('<a href="#" style="'+additional_full_width_correction+'">');
 				output.push(cached_code_before);
-				output.push('<span class="essb_icon essb_icon_'+networkDetails['key']+' '+element_icon_classes+'">'+svg_icon+'</span>');
+				output.push('<span class="essb_icon essb_icon_'+networkDetails['key']+'"></span>');
 				output.push('<span class="essb_network_name">' + cached_code_insidebefore + nameDisplay+ cached_code_insideafter +'</span>');
 				output.push(cached_code_after);
 				output.push('</a>');
@@ -1658,14 +1637,9 @@ jQuery(document).ready(function($){
 	
 	$('#essb_options_afterclose_type').on('change', function(e){
 		var value = $(this).val();
-		$('.essb-aftershare-type').hide();		
-		$('#essb-aftershare-'+value).show();
+		$('.essb-aftershare-type').hide();
 		
-		setTimeout(function() {
-			$('.CodeMirror').each(function(i, el){
-			    el.CodeMirror.refresh();
-			});
-		}, 1);
+		$('#essb-aftershare-'+value).show();
 	});
 
 	$('#essb_options_shorturl_type').on('change', function(e){
@@ -1880,14 +1854,10 @@ jQuery(document).ready(function($){
 			$('#essb_field_remove_ver_resource').attr('checked', false);
 			$('#essb_field_precompiled_resources').attr('checked', false);
 			$('#essb_options_precompiled_mode').val('');
-			$('#essb_options_precompiled_folder').val('');
 			$('#essb_field_essb_cache_runtime').attr('checked', false);
 			$('#essb_field_essb_cache').attr('checked', false);
 			$('#essb_field_essb_cache_static').attr('checked', false);
 			$('#essb_field_essb_cache_static_js').attr('checked', false);
-			$('#essb_field_precompiled_unique').attr('checked', false);
-			$('#essb_field_precompiled_post').attr('checked', false);
-			$('#essb_field_precompiled_preload_css').attr('checked', false);
 
 			$('#essb_field_use_stylebuilder').attr('checked', true);
 			$('#essb_field_use_stylebuilder').trigger('click');
@@ -1895,6 +1865,7 @@ jQuery(document).ready(function($){
 			if (value == 'level1') {
 				$('#essb_field_use_minified_css').attr('checked', true);
 				$('#essb_field_use_minified_js').attr('checked', true);
+				$('#essb_field_load_js_async').attr('checked', true);
 			}
 
 			if (value == 'level2') {
@@ -1902,19 +1873,20 @@ jQuery(document).ready(function($){
 				$('#essb_field_use_minified_js').attr('checked', true);
 				$('#essb_field_load_js_async').attr('checked', true);
 				$('#essb_field_remove_ver_resource').attr('checked', true);
-				$('#essb_options_precompiled_mode').val('');
 				$('#essb_field_precompiled_resources').attr('checked', true);
-				$('#essb_options_precompiled_folder').val('');
-				$('#essb_field_precompiled_unique').attr('checked', true);				
-				$('#essb_field_precompiled_preload_css').attr('checked', true);
 			}
 
 			if (value == 'level3') {
 				$('#essb_field_use_minified_css').attr('checked', true);
 				$('#essb_field_use_minified_js').attr('checked', true);
 				$('#essb_field_load_js_async').attr('checked', true);
-				$('#essb_field_load_css_footer').attr('checked', true);
 				$('#essb_field_remove_ver_resource').attr('checked', true);
+				$('#essb_options_precompiled_mode').val('js');
+				$('#essb_field_precompiled_resources').attr('checked', true);
+				$('#optimizations-css-builder').show();
+
+				$('#essb_field_use_stylebuilder').attr('checked', false);
+				$('#essb_field_use_stylebuilder').trigger('click');
 			}
 		}
 	});
@@ -2028,22 +2000,8 @@ jQuery(document).ready(function($){
 		});
 
 		$(this).find('.essb-portlet-content').find('select').each(function(){
-			var defaultValue = $(this).attr('data-default') || '',
-				current = $(this).val();
-			
-			if ($(this).hasClass('essb-select2') && current == '') {
-				current = $(this).attr('data-values') || '';
-			} 
-			
-			if (current != '' && defaultValue != '' && current == defaultValue) current = '';			
-			if (current != '')
-				hasOneValue = true;
-		});
-		
-		$(this).find('.essb-portlet-content').find('textarea').each(function(){
-			var	current = $(this).val();
-						
-			if (current != '')
+
+			if ($(this).val() != '')
 				hasOneValue = true;
 		});
 

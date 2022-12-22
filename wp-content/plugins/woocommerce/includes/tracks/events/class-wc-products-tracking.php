@@ -152,11 +152,7 @@ class WC_Products_Tracking {
 
 					if ( ! isBlockEditor ) {
 						tagsText          = $( '[name=\"tax_input[product_tag]\"]' ).val();
-						if ( $( '#content' ).is( ':visible' ) ) {
-							description_value = $( '#content' ).val();	
-						} else if ( typeof tinymce === 'object' && tinymce.get( 'content' ) ) {
-							description_value = tinymce.get( 'content' ).getContent();
-						}
+						description_value  = $( '#content' ).is( ':visible' ) ? $( '#content' ).val() : tinymce.get( 'content' ).getContent();
 					} else {
 						description_value  = $( '.block-editor-rich-text__editable' ).text();
 					}
@@ -345,7 +341,17 @@ class WC_Products_Tracking {
 			return;
 		}
 
-		WCAdminAssets::register_script( 'wp-admin-scripts', 'product-tracking', false );
+		$script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'product-tracking' );
+		$script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $script_assets_filename;
+
+		wp_enqueue_script(
+			'wc-admin-product-tracking',
+			WCAdminAssets::get_url( 'wp-admin-scripts/product-tracking', 'js' ),
+			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			WCAdminAssets::get_file_version( 'js' ),
+			true
+		);
+
 		wp_localize_script(
 			'wc-admin-product-tracking',
 			'productScreen',
@@ -371,7 +377,16 @@ class WC_Products_Tracking {
 		}
 		// phpcs:enable
 
-		WCAdminAssets::register_script( 'wp-admin-scripts', 'attributes-tracking', false );
+		$script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'attributes-tracking' );
+		$script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $script_assets_filename;
+
+		wp_enqueue_script(
+			'wc-admin-attributes-tracking',
+			WCAdminAssets::get_url( 'wp-admin-scripts/attributes-tracking', 'js' ),
+			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			WCAdminAssets::get_file_version( 'js' ),
+			true
+		);
 	}
 
 	/**
@@ -395,7 +410,17 @@ class WC_Products_Tracking {
 			isset( $_GET['taxonomy'] ) &&
 			'product_tag' === wp_unslash( $_GET['taxonomy'] )
 		) {
-			WCAdminAssets::register_script( 'wp-admin-scripts', 'tags-tracking', false );
+			// phpcs:enable
+			$tags_script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'tags-tracking' );
+			$tags_script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $tags_script_assets_filename;
+
+			wp_enqueue_script(
+				'wc-admin-tags-tracking',
+				WCAdminAssets::get_url( 'wp-admin-scripts/tags-tracking', 'js' ),
+				array_merge( array( WC_ADMIN_APP ), $tags_script_assets ['dependencies'] ),
+				WCAdminAssets::get_file_version( 'js' ),
+				true
+			);
 			return;
 		}
 
@@ -404,9 +429,29 @@ class WC_Products_Tracking {
 			isset( $_GET['taxonomy'] ) &&
 			'product_cat' === wp_unslash( $_GET['taxonomy'] )
 		) {
-			WCAdminAssets::register_script( 'wp-admin-scripts', 'category-tracking', false );
+			// phpcs:enable
+			$category_script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'category-tracking' );
+			$category_script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $category_script_assets_filename;
+
+			wp_enqueue_script(
+				'wc-admin-category-tracking',
+				WCAdminAssets::get_url( 'wp-admin-scripts/category-tracking', 'js' ),
+				array_merge( array( WC_ADMIN_APP ), $category_script_assets ['dependencies'] ),
+				WCAdminAssets::get_file_version( 'js' ),
+				true
+			);
 			return;
 		}
-		WCAdminAssets::register_script( 'wp-admin-scripts', 'add-term-tracking', false );
+
+		$script_assets_filename = WCAdminAssets::get_script_asset_filename( 'wp-admin-scripts', 'add-term-tracking' );
+		$script_assets          = require WC_ADMIN_ABSPATH . WC_ADMIN_DIST_JS_FOLDER . 'wp-admin-scripts/' . $script_assets_filename;
+
+		wp_enqueue_script(
+			'wc-admin-add-term-tracking',
+			WCAdminAssets::get_url( 'wp-admin-scripts/add-term-tracking', 'js' ),
+			array_merge( array( WC_ADMIN_APP ), $script_assets ['dependencies'] ),
+			WCAdminAssets::get_file_version( 'js' ),
+			true
+		);
 	}
 }

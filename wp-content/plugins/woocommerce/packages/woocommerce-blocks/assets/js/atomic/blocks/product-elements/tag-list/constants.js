@@ -12,6 +12,6 @@ export const BLOCK_ICON = (
 	<Icon icon={ tag } className="wc-block-editor-components-block-icon" />
 );
 export const BLOCK_DESCRIPTION = __(
-	'Display the list of tags that are assigned to a product.',
+	'Display a list of tags belonging to a product.',
 	'woocommerce'
 );

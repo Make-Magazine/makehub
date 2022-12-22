@@ -728,7 +728,7 @@ font-size: 13px; display: flex; background: #fff; }
  */
 
 .essb-usefull-hint {
-	background: #172153;
+	background: #19073B;
 	color: #fff;
 	padding: 25px;
 	margin-bottom: 15px;
@@ -737,14 +737,14 @@ font-size: 13px; display: flex; background: #fff; }
 }
 
 .essb-usefull-hint .title {
-	color: #fff !important;
+	color: #F56640 !important;
 	font-weight: bold;
 	letter-spacing: -0.5px;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 }
 
 .essb-usefull-hint .tag-list {
-	margin-top: 10px;
+	margin-top: 15px;
 }
 
 .essb-usefull-hint .tag {
@@ -807,8 +807,6 @@ font-size: 13px; display: flex; background: #fff; }
 
 /** Extensions **/
 
-.essb-tgmpa-hidden { display: none !important; }
-
 .essb-extension-list { padding: 25px; }
 .essb-extension-list .essb-options-helprow .help-heading .fa32 { margin-right: 5px; }
 .essb-extension-list .list {   
@@ -816,13 +814,6 @@ font-size: 13px; display: flex; background: #fff; }
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 15px;
 	max-width: 1100px;
-}
-
-@media (min-width: 1600px) {
-	.essb-extension-list .list {
-		grid-template-columns: 1fr 1fr 1fr 1fr;
-		max-width: 100%;
-	}
 }
 
 .essb-extension-list .list .addon-card {
@@ -833,11 +824,7 @@ font-size: 13px; display: flex; background: #fff; }
 	overflow: hidden;
 }
 
-.essb-extension-list .list .addon-card {
-	font-family: 'Open Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-}
-
-.essb-extension-list .list .addon-card-installed { opacity: 1; }
+.essb-extension-list .list .addon-card-installed { opacity: 0.35; }
 
 .essb-extension-list .list .addon-card .header {
 	padding: 30px 20px;
@@ -878,11 +865,11 @@ font-size: 13px; display: flex; background: #fff; }
 
 .essb-extension-list .list .addon-card .main {
 	padding: 15px 20px;
-	margin-bottom: 50px;
+	margin-bottom: 45px;
 }
 
 .essb-extension-list .list .addon-card .main .title {
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: 600;
 	margin-bottom: 10px;
 }
@@ -911,8 +898,8 @@ font-size: 13px; display: flex; background: #fff; }
 	left: 0;
 	display: flex;
 	align-items: center;
-	height: 50px;
-	background: #f2f3f4;
+	height: 45px;
+	background: #f5f9fa;
 	padding: 0 15px;
 	overflow: hidden;
 }
@@ -926,34 +913,19 @@ font-size: 13px; display: flex; background: #fff; }
 }
 
 .essb-extension-list .list .addon-card .footer .action {
+	text-align: right;
 	width: 75%;
-}
-
-.essb-extension-list .list .addon-card .footer .action .button-deactivate {
-	color: #b32d2e;
-	border-color: #b32d2e;
-}
-
-.essb-extension-list .list .addon-card .footer .action .button-orange {
-	background-color: #e67e22;
-	border-color: #e67e22;
-	color: #fff;
-}
-
-.essb-extension-list .list .addon-card .footer .action .button-orange:hover {
-	background-color: #b05d14;
-	border-color: #b05d14;
 }
 
 .essb-extension-list .list .addon-card .footer .action .action-open-btn {
 	background: #e67e22;
 	color: #fff;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 8px 20px;
 	border-radius: 3px;
-	margin-right: 25px;
+	margin-right: 35px;
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: 500;
 }
 
 .essb-extension-list .list .addon-card .footer .action .action-open-btn:hover {
@@ -963,23 +935,23 @@ font-size: 13px; display: flex; background: #fff; }
 .essb-extension-list .list .addon-card .footer .action .action-download-btn {
 	background: #02b1ff;
 	color: #fff;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 8px 20px;
 	border-radius: 3px;
-	margin-right: 25px;
+	margin-right: 35px;
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: 500;
 }
 
 .essb-extension-list .list .addon-card .footer .action .installed {
 	background: #9899A0;
 	color: #fff;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 8px 20px;
 	border-radius: 3px;
-	margin-right: 25px;
+	margin-right: 35px;
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: 500;
 }
 
 .essb-extension-list .list .addon-card .footer .action .action-download-btn:hover {
@@ -1072,9 +1044,9 @@ font-size: 13px; display: flex; background: #fff; }
 	padding: 10px;
 }
 
-.essb-custom-button-list .advancedoptions-tile-body .icon svg {	
-	height: 80px;
-	width: auto;
+.essb-custom-button-list .advancedoptions-tile-body .icon svg {
+	max-width: 96px;
+	height: auto;
 }
 
 /**
@@ -1158,10 +1130,6 @@ font-size: 13px; display: flex; background: #fff; }
 	border-radius: 3px;
 }
 
-.ao-settings-section.ao-shortcode-panel .ao-panel-icon {
-	color: #02b1ff;
-}
-
 .essb-control-content .ao-settings-section-deactivate {
 	border: 1px solid #ffc1cd;
 	border-radius: 3px;
@@ -1205,52 +1173,3 @@ font-size: 13px; display: flex; background: #fff; }
 
 .essb-svg-size18 svg { width: 18px; height: 18px; vertical-align: middle;}
 .essb-portlet-heading-icon .essb-svg-icon { width: 18px; height: 18px; line-height: 1; }
-
-.essb-control-content .essb-help-hinticon,
-.essb-metabox7 .essb-help-hinticon {
-	display: inline-flex;
-	align-items: center;
-}
-
-/* Help hint icons */
-.essb-control-content .essb-help-hinticon .title,
-.essb-metabox7 .essb-help-hinticon .title { flex: 1; }
-.essb-control-content .essb-help-hinticon .help,
-.essb-metabox7 .essb-help-hinticon .help {
-    /* width: 21px; */
-    height: 21px;
-    background: #f1f1f1;
-    border-radius: 50%;
-    justify-content: center;
-    padding: 0 8px;
-	color: #000;	
-	--microtip-font-size: 12px;
-	position: relative;
-	margin-left: 5px;
-}
-
-.essb-control-content .essb-help-hinticon .help .click-to-learn,
-.essb-metabox7 .essb-help-hinticon .help .click-to-learn { display: none; }
-
-.essb-control-content .essb-help-hinticon .help:hover,
-.essb-metabox7 .essb-help-hinticon .help:hover {
-	background: #5867dd;
-	color: #fff;
-}
-
-.essb-control-content .essb-help-hinticon .help:hover .click-to-learn,
-.essb-metabox7 .essb-help-hinticon .help:hover .click-to-learn {
-	display: inline-block;
-	position: absolute;
-	top: -30px;
-}
-
-.essb-post-clear-shorturl .spinner1,
-.essb-post-clear-shorturl .dashicons-yes,
-.essb-post-clear-counters .dashicons-yes { display: none; }
-
-.essb-options-hint-glowhint {
-	background-color: #eff3fc;
-}
-
-.essb-options-hint-glowhint .essb-options-hint-title { font-size: 14px; margin-bottom: 5px; }

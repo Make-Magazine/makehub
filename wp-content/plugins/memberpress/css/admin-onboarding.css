@@ -1201,50 +1201,30 @@ h2.mepr-wizard-finished {
 }
 .mepr-wizard-payments p {
   font-size: 13px;
-  line-height: 150%;
+  line-height: 120%;
   color: #5B748A;
+  margin: 10px 0 20px 0;
+  min-height: 50px;
 }
 .mepr-wizard-payments .mepr-wizard-hr {
   border-bottom: 1px solid #CDD9EC;
-  margin: 0 auto;
-  width: 70%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 25px 0 20px 0;
 }
-.mepr-wizard-payments-features {
-  columns: 1;
-  column-count: 1;
-  -webkit-columns: 1;
-  -moz-columns: 1;
-  width: 100%;
-  margin: 0 auto 10px;
-}
-
-.mepr-wizard-payments-features > li {
+.mepr-wizard-payments-features > div {
   font-size: 13px;
   line-height: 200%;
   color: #3A4A58;
-  text-align: center;
-  margin: 0;
 }
-
-div.mepr-wizard-feature-highlight{
+.mepr-wizard-payments-features > div:first-child {
+  font-weight: 700;
   line-height: 150%;
   color: #091D2E;
   margin-bottom: 6px;
-  font-size: 16px;
-}
-
-div.mepr-wizard-feature-plusmore{
-  line-height: 150%;
-  color: #2271b1;
-  margin-bottom: 6px;
-  font-size: 14px;
 }
 
 .mepr-wizard-payments-stripe img,
 .mepr-wizard-payment-gateway-stripe .mepr-wizard-payment-gateway-logo img {
-  width: 144px;
+  width: 94px;
   height: auto;
 }
 .mepr-wizard-payments-paypal img,
@@ -1262,12 +1242,6 @@ div.mepr-wizard-feature-plusmore{
   align-items: center;
   justify-content: center;
   min-height: 50px;
-  margin-top: 20px;
-}
-
-.mepr-payment-description{
-  width: 35%;
-  margin: 0 auto;
 }
 .mepr-wizard-payment-gateway > div:last-child {
   display: flex;
@@ -1310,11 +1284,6 @@ div.mepr-wizard-feature-plusmore{
   border: 1px solid #CED2D5;
   border-radius: 4px;
   color: #9DA5AB;
-}
-
-#mepr-wizard-add-stripe {
-  margin-top: 20px;
-  margin-bottom: 40px;
 }
 
 .mepr-wizard-payments-authorize{
@@ -1388,7 +1357,7 @@ body.folded .mepr-wizard-onboarding-video-wrapper {
 
 .mepr-wizard-onboarding-video-wrapper.active {
   position: absolute;
-  width: 420px;
+  width: 300px;
   background: linear-gradient(90deg, #06429E 0%, #1481B3 100%);
   border-radius: 0px 8px 8px 0px;
 }
@@ -1461,7 +1430,7 @@ body.auto-fold.sticky-menu .mepr-wizard-onboarding-video-wrapper {
 }
 
 .mepr-video-holder{
-  width: 400px;
+  width: 270px;
   height: 240px;
   margin: 20px auto;
   position: relative;

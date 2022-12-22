@@ -918,7 +918,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		if ( bb_enabled_legacy_email_preference() || is_admin() ) {
+		if ( bb_enabled_legacy_email_preference() ) {
 
 			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
 			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
@@ -1271,20 +1271,9 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	 */
 	function bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		add_filter(
-			'wp_mail',
-			function ( $args ) use ( $content, $key, $user_email ) {
-				$args['message'] = sprintf(
-					$content,
-					site_url( "wp-activate.php?key=$key" )
-				);
-				$args['message'] = bp_email_core_wp_get_template( $args['message'], get_user_by( 'email', $user_email ) );
-
-				return $args;
-			}
-		);
+		$content = bp_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
 
 		return $content;
 	}

@@ -24,7 +24,7 @@ class GravityView_Field_Post_Title extends GravityView_Field {
 	var $icon = 'dashicons-edit';
 
 	public function __construct() {
-		$this->label = esc_html__( 'Post Title', 'gk-gravityview' );
+		$this->label = esc_html__( 'Post Title', 'gravityview' );
 		parent::__construct();
 	}
 

@@ -12,7 +12,7 @@ class ESSB_Elementor_Subscribe_Form_Widget extends Widget_Base {
 	}
 	
 	public function get_icon() {
-		return 'eicon-mail';
+		return 'fa fa-envelope-o';
 	}
 	
 	public function get_categories() {

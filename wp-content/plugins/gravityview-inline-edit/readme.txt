@@ -1,17 +1,16 @@
-=== GravityEdit ===
-Tags: gravity forms, inline edit, gravityview
-Requires at least: 4.4
-Tested up to: 6.1
-Contributors: The GravityKit Team
+=== Inline Edit by GravityView ===
+Tags: gravity forms
+Requires at least: 3.3
+Tested up to: 5.9
+Stable tag: trunk
+Contributors: The GravityView Team
 License: GPL 2
-Requires PHP: 5.6.4
-Stable tag: 1.8
 
 Easily edit your Gravity Forms field values without having to go to the Edit Entry screen.
 
 == Description ==
 
-Inline Editing is a powerful way to quickly make changes to a form entry without needing to enter an Edit Entry form individually. [Learn more about the plugin](https://www.gravitykit.com/extensions/gravityview-inline-edit/).
+Inline Editing is a powerful way to quickly make changes to a form entry without needing to enter an Edit Entry form individually. [Learn more about the plugin](https://gravityview.co/extensions/inline-edit/).
 
 == Installation ==
 
@@ -20,65 +19,6 @@ Inline Editing is a powerful way to quickly make changes to a form entry without
 3. Set your license key
 
 == Changelog ==
-
-= 1.8 on November 30, 2022 =
-
-* Added: You can now inline edit File Upload fields! (Including support for multiple files)
-* Added: Support for editing entry metadata (Created By, Date Created, Payment Date, etc.)
-* Added: Support for the Gravity Forms User Registration Add-On (When entry details are changed, changes will be made to the User profile)
-* Improved: Styling of the form
-* Fixed: Time field AM/PM inputs were not showing
-* Fixed: Time, Number, Website, and Product fields with User-Defined Price were not updating correctly
-* Fixed: Datepicker appearance
-
-= 1.7.3 on November 14, 2022 =
-
-* Fixed: Fatal error when loading plugin translations
-* Fixed: Slow loading times on some hosts
-* Fixed: Plugin failing to install on some hosts
-
-= 1.7.2 on November 3, 2022 =
-
-* Fixed: Fatal error when editing Number fields with calculations
-
-= 1.7.1 on October 31, 2022 =
-
-* Improved: Clicking on a column header to edit all fields in a column no longer requires submitting changes; changes are saved when leaving the input
-* Fixed: Plugin was not appearing in the "Add-Ons" section of the Gravity Forms System Status page
-
-= 1.7.0.2 on October 20, 2022 =
-
-* Fixed: Potential error when the plugin tries to log an unsuccessful operation
-
-= 1.7.0.1 on October 19, 2022 =
-
-* Fixed: Error when trying to activate license keys
-
-= 1.7 on October 19, 2022 =
-
-* Added: New WordPress admin menu where you can now centrally manage all your GravityKit product licenses and settings ([learn more about the new GravityKit menu](https://www.gravitykit.com/foundation/))
-    - Go to the WordPress sidebar and check out the GravityKit menu!
-    - We have automatically migrated your existing GravityEdit license, which was previously entered in the Gravity Forms settings page
-    - Request support using the "Grant Support Access" menu item
-* Added: Live-update all calculations that rely on a number field (instead of just one)
-* Added: GravityEdit icon to the Gravity Forms settings screen
-* Improved: Typography and editor size for textarea fields
-* Improved: Submit/Cancel button alignment is much nicer and more consistent
-* Improved: Reduced number of database queries when loading GravityEdit functionality
-* Fixed: Popup width was set to 100%, making it unusable in certain contexts
-* Fixed: Fatal error when inline-editing an address field if GravityView is not active
-* Fixed: PHP warnings when editing a Name field without the Prefix input
-
-= 1.6 on July 28, 2022 =
-
-* [GravityView (the company) is now GravityKit](https://www.gravitykit.com/rebrand/) and this plugin is now called GravityEdit!
-* Fixed: List field editing did not work in Gravity Forms 2.5 or newer
-* Added: Support for Gravity Wiz's Populate Anything and other extensions modifying form field values
-* Added: Support for field calculations
-
-__Developer Updates:__
-
-**IMPORTANT: `GRAVITYVIEW_INLINE_*` constants were renamed to `GRAVITYEDIT_*` and future plugin versions will see similar name changes to namespaces, class names, and hooks**
 
 = 1.5 on January 26, 2022 =
 

@@ -25,7 +25,7 @@ use WooCommerce\PayPalCommerce\WcGateway\Exception\GatewayGenericException;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\OrderProcessor;
 use WooCommerce\PayPalCommerce\WcGateway\Processor\RefundProcessor;
 use WooCommerce\PayPalCommerce\WcGateway\Settings\SettingsRenderer;
-use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class CreditCardGateway
@@ -197,7 +197,7 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 		}
 
 		$this->method_title       = __(
-			'Advanced Card Processing',
+			'PayPal Card Processing',
 			'woocommerce-paypal-payments'
 		);
 		$this->method_description = __(
@@ -360,8 +360,7 @@ class CreditCardGateway extends \WC_Payment_Gateway_CC {
 		/**
 		 * If customer has chosen a saved credit card payment.
 		 */
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$saved_credit_card = wc_clean( wp_unslash( $_POST['saved_credit_card'] ?? '' ) );
+		$saved_credit_card = filter_input( INPUT_POST, 'saved_credit_card', FILTER_SANITIZE_STRING );
 		if ( $saved_credit_card ) {
 			try {
 				$wc_order = $this->vaulted_credit_card_handler->handle_payment(

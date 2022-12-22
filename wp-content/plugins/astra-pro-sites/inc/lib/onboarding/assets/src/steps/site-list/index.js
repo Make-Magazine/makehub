@@ -1,5 +1,7 @@
 // External Dependencies.
 import React, { useEffect, useState, useReducer } from 'react';
+import { sprintf, __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import { sortBy } from 'underscore';
 import {
 	SiteType,
@@ -8,8 +10,6 @@ import {
 	NoResultFound,
 } from '@brainstormforce/starter-templates-components';
 import { useNavigate } from 'react-router-dom';
-import { decodeEntities } from '@wordpress/html-entities';
-import { sprintf, __ } from '@wordpress/i18n';
 
 // Internal Dependencies.
 import { DefaultStep, PreviousStepLink, Button } from '../../components/index';

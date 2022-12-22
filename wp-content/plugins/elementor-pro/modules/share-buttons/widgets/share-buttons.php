@@ -120,9 +120,6 @@ class Share_Buttons extends Base_Widget {
 			[
 				'label' => esc_html__( 'Custom Label', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -286,9 +283,6 @@ class Share_Buttons extends Base_Widget {
 			[
 				'label' => esc_html__( 'Link', 'elementor-pro' ),
 				'type' => Controls_Manager::URL,
-				'dynamic' => [
-					'active' => true,
-				],
 				'options' => false,
 				'placeholder' => esc_html__( 'https://your-link.com', 'elementor-pro' ),
 				'condition' => [
@@ -431,16 +425,18 @@ class Share_Buttons extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', 'em' ],
 				'default' => [
 					'size' => 2,
 				],
 				'range' => [
 					'px' => [
+						'min' => 1,
 						'max' => 20,
 					],
 					'em' => [
 						'max' => 2,
+						'step' => 0.1,
 					],
 				],
 				'selectors' => [
@@ -576,7 +572,7 @@ class Share_Buttons extends Base_Widget {
 	}
 
 	protected function render() {
-		$settings = $this->get_settings_for_display();
+		$settings = $this->get_active_settings();
 
 		if ( empty( $settings['share_buttons'] ) ) {
 			return;
@@ -601,15 +597,12 @@ class Share_Buttons extends Base_Widget {
 				$social_network_class = ' elementor-share-btn_' . $network_name;
 				?>
 					<div class="elementor-grid-item">
-						<div
-							class="<?php echo esc_attr( $button_classes . $social_network_class ); ?>"
-							role="button"
-							tabindex="0"
-							aria-label="<?php echo sprintf( esc_attr__( 'Share on %s', 'elementor-pro' ), esc_attr( $network_name ) ); ?>"
-						>
+						<div class="<?php echo esc_attr( $button_classes . $social_network_class ); ?>" tabindex="0">
 							<?php if ( 'icon' === $settings['view'] || 'icon-text' === $settings['view'] ) : ?>
 								<span class="elementor-share-btn__icon">
 								<?php self::render_share_icon( $network_name ); ?>
+								<span
+									class="elementor-screen-only"><?php echo sprintf( esc_html__( 'Share on %s', 'elementor-pro' ), esc_html( $network_name ) ); ?></span>
 							</span>
 							<?php endif; ?>
 							<?php if ( $show_text ) : ?>
@@ -661,10 +654,11 @@ class Share_Buttons extends Base_Widget {
 						socialNetworkClass = 'elementor-share-btn_' + networkName;
 					#>
 					<div class="elementor-grid-item">
-						<div class="{{ buttonClass }} {{ socialNetworkClass }}" role="button" tabindex="0" aria-label="Share on {{{ networkName }}}">
+						<div class="{{ buttonClass }} {{ socialNetworkClass }}" tabindex="0">
 							<# if ( 'icon' === settings.view || 'icon-text' === settings.view ) { #>
 							<span class="elementor-share-btn__icon">
 								<i class="{{ shareButtonsEditorModule.getNetworkClass( networkName ) }}" aria-hidden="true"></i>
+								<span class="elementor-screen-only">Share on {{{ networkName }}}</span>
 							</span>
 							<# } #>
 							<# if ( showText ) { #>

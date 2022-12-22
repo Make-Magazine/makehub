@@ -5,7 +5,7 @@ $footer_copyright       = buddyboss_theme_get_option( 'footer_copyright' ); ?>
 
 <?php
 if ( $footer_widgets ) {
-	if ( is_active_sidebar( 'footer-1' ) || is_active_sidebar( 'footer-2' ) || is_active_sidebar( 'footer-3' ) || is_active_sidebar( 'footer-4' ) || is_active_sidebar( 'footer-5' ) || is_active_sidebar( 'footer-6' ) ) :
+	if ( is_active_sidebar( 'footer-1' ) || is_active_sidebar( 'footer-2' ) || is_active_sidebar( 'footer-3' ) || is_active_sidebar( 'footer-4' ) || is_active_sidebar( 'footer-5' ) ) :
 		?>
 		<div class="footer-widget-area bb-footer">
 			<div class="container">
@@ -39,12 +39,6 @@ if ( $footer_widgets ) {
 							<?php dynamic_sidebar( 'footer-5' ); ?>
 						</div><!-- .footer-widget -->
 					<?php endif; ?>
-
-					<?php if ( is_active_sidebar( 'footer-6' ) && $footer_widgets_columns >= '6' ) : ?>
-						<div class="footer-widget area-6">
-							<?php dynamic_sidebar( 'footer-6' ); ?>
-						</div><!-- .footer-widget -->
-					<?php endif; ?>
 				</div>
 			</div><!-- .widget-area -->
 		</div>
@@ -54,7 +48,7 @@ if ( $footer_widgets ) {
 ?>
 
 <?php if ( ( $footer_copyright ) && ( ! is_singular( 'lesson' ) ) && ( ! is_singular( 'llms_quiz' ) ) && ( ! is_singular( 'llms_assignment' ) ) && ( ! is_singular( 'llms_my_certificate' ) ) ) { ?>
-	<footer class="footer-bottom bb-footer style-<?php echo esc_attr( buddyboss_theme_get_option( 'footer_style' ) ); ?>">
+	<footer class="footer-bottom bb-footer style-<?php echo buddyboss_theme_get_option( 'footer_style' ); ?>">
 		<div class="container flex">
 			<?php
 			$copyright_text        = buddyboss_theme_get_option( 'copyright_text' );
@@ -73,7 +67,7 @@ if ( $footer_widgets ) {
 				?>
 				<div class="footer-logo-wrap">
 					<a class="footer-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-						<?php echo wp_kses_post( $logo ); ?>
+						<?php echo $logo; ?>
 					</a>
 					<?php
 					if ( ! empty( $footer_tagline ) ) {
@@ -81,7 +75,7 @@ if ( $footer_widgets ) {
 					}
 					?>
 				</div>
-				<?php
+                <?php
 			}
 
 			if ( ! empty( $footer_menu ) && 1 === $footer_style ) {
@@ -91,8 +85,6 @@ if ( $footer_widgets ) {
 						'container'  => false,
 						'menu_class' => 'footer-menu',
 						'depth'      => 1,
-						'fallback_cb' => false,
-						'walker'     => new BuddyBoss_BuddyPanel_Menu_Walker(),
 					)
 				);
 			}
@@ -114,8 +106,6 @@ if ( $footer_widgets ) {
 						'container'  => false,
 						'menu_class' => 'footer-menu secondary',
 						'depth'      => 1,
-						'fallback_cb' => false,
-						'walker'     => new BuddyBoss_BuddyPanel_Menu_Walker(),
 					)
 				);
 			}
@@ -137,7 +127,7 @@ if ( $footer_widgets ) {
 							$container_set = true;
 						}
 						if ( 'email' === $network ) {
-							echo '<li><a href="' . esc_url( 'mailto:' . sanitize_email( $url ) ) . '" target="_top"  data-balloon-pos="up" data-balloon="' . esc_attr( $network ) . '" ><i class="bb-icon-f bb-icon-envelope"></i></a></li>';
+							echo '<li><a href="mailto:' . sanitize_email( $url ) . '" target="_top"  data-balloon-pos="up" data-balloon="' . esc_attr( $network ) . '" ><i class="bb-icon-f bb-icon-envelope"></i></a></li>';
 						} else {
 							echo '<li><a href="' . esc_url( $url ) . '" target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $network ) . '" ><i class="bb-icon-f bb-icon-brand-' . esc_attr( $network ) . '"></i></a></li>';
 						}

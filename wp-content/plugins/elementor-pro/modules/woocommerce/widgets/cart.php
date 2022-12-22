@@ -1,7 +1,6 @@
 <?php
 namespace ElementorPro\Modules\Woocommerce\Widgets;
 
-use ElementorPro\Modules\Woocommerce\Module;
 use ElementorPro\Plugin;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Box_Shadow;
@@ -9,9 +8,6 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Text_Shadow;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Background;
-use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
-use ElementorPro\Modules\QueryControl\Module as QueryControlModule;
-use Elementor\Core\Base\Document;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -145,41 +141,6 @@ class Cart extends Base_Widget {
 			]
 		);
 
-		$this->add_responsive_control(
-			'update_cart_button_alignment',
-			[
-				'label' => esc_html__( 'Alignment', 'elementor-pro' ),
-				'type' => Controls_Manager::CHOOSE,
-				'options' => [
-					'start' => [
-						'title' => esc_html__( 'Start', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => esc_html__( 'Center', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'end' => [
-						'title' => esc_html__( 'End', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-right',
-					],
-					'justify' => [
-						'title' => esc_html__( 'Justify', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-justify',
-					],
-				],
-				'selectors' => [
-					'{{WRAPPER}} .woocommerce-cart-form' => '{{VALUE}}',
-				],
-				'selectors_dictionary' => [
-					'start' => '--update-cart-button-alignment: start; --update-cart-button-width: auto;',
-					'center' => '--update-cart-button-alignment: center; --update-cart-button-width: auto;',
-					'end' => '--update-cart-button-alignment: end; --update-cart-button-width: auto;',
-					'justify' => '--update-cart-button-alignment: justify; --update-cart-button-width: 100%;',
-				],
-			]
-		);
-
 		$this->end_controls_section();
 
 		if ( $this->is_wc_feature_active( 'coupons' ) ) {
@@ -192,24 +153,10 @@ class Cart extends Base_Widget {
 			);
 
 			$this->add_control(
-				'section_coupon_display',
-				[
-					'label' => esc_html__( 'Coupon', 'elementor-pro' ),
-					'type' => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'elementor-pro' ),
-					'label_off' => esc_html__( 'Hide', 'elementor-pro' ),
-					'default' => 'yes',
-				]
-			);
-
-			$this->add_control(
 				'apply_coupon_heading',
 				[
 					'type' => Controls_Manager::HEADING,
 					'label' => esc_html__( 'Apply Coupon Button', 'elementor-pro' ),
-					'condition' => [
-						'section_coupon_display' => 'yes',
-					],
 				]
 			);
 
@@ -223,59 +170,6 @@ class Cart extends Base_Widget {
 					],
 					'placeholder' => esc_html__( 'Apply coupon', 'elementor-pro' ),
 					'default' => esc_html__( 'Apply coupon', 'elementor-pro' ),
-					'condition' => [
-						'section_coupon_display' => 'yes',
-					],
-				]
-			);
-
-			$this->add_responsive_control(
-				'apply_coupon_button_alignment',
-				[
-					'label' => esc_html__( 'Alignment', 'elementor-pro' ),
-					'type' => Controls_Manager::CHOOSE,
-					'options' => [
-						'start' => [
-							'title' => esc_html__( 'Start', 'elementor-pro' ),
-							'icon' => 'eicon-text-align-left',
-						],
-						'center' => [
-							'title' => esc_html__( 'Center', 'elementor-pro' ),
-							'icon' => 'eicon-text-align-center',
-						],
-						'end' => [
-							'title' => esc_html__( 'End', 'elementor-pro' ),
-							'icon' => 'eicon-text-align-right',
-						],
-						'justify' => [
-							'title' => esc_html__( 'Justify', 'elementor-pro' ),
-							'icon' => 'eicon-text-align-justify',
-						],
-					],
-					'selectors' => [
-						'{{WRAPPER}} .coupon' => '{{VALUE}}',
-					],
-					'selectors_dictionary' => [
-						'start' => '--apply-coupon-button-alignment: start; --apply-coupon-button-width: auto;',
-						'center' => '--apply-coupon-button-alignment: center;  --apply-coupon-button-width: auto;',
-						'end' => '--apply-coupon-button-alignment: end;  --apply-coupon-button-width: auto;',
-						'justify' => '--apply-coupon-button-alignment: center; --apply-coupon-button-width: 100%;',
-					],
-					'condition' => [
-						'section_coupon_display' => 'yes',
-					],
-				]
-			);
-
-			$this->add_control(
-				'coupon_button_alignment_note',
-				[
-					'raw' => esc_html__( 'Note: This control will only affect screen sizes Tablet and below', 'elementor-pro' ),
-					'type' => Controls_Manager::RAW_HTML,
-					'content_classes' => 'elementor-descriptor',
-					'condition' => [
-						'section_coupon_display' => 'yes',
-					],
 				]
 			);
 
@@ -346,41 +240,6 @@ class Cart extends Base_Widget {
 				],
 				'placeholder' => esc_html__( 'Update', 'elementor-pro' ),
 				'default' => esc_html__( 'Update', 'elementor-pro' ),
-			]
-		);
-
-		$this->add_responsive_control(
-			'update_shipping_button_alignment',
-			[
-				'label' => esc_html__( 'Alignment', 'elementor-pro' ),
-				'type' => Controls_Manager::CHOOSE,
-				'options' => [
-					'start' => [
-						'title' => esc_html__( 'Start', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => esc_html__( 'Center', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'end' => [
-						'title' => esc_html__( 'End', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-right',
-					],
-					'justify' => [
-						'title' => esc_html__( 'Justify', 'elementor-pro' ),
-						'icon' => 'eicon-text-align-justify',
-					],
-				],
-				'selectors' => [
-					'{{WRAPPER}} .shipping-calculator-form' => '{{VALUE}}',
-				],
-				'selectors_dictionary' => [
-					'start' => '--update-shipping-button-alignment: start; --update-shipping-button-width: auto;',
-					'center' => '--update-shipping-button-alignment: center;  --update-shipping-button-width: auto;',
-					'end' => '--update-shipping-button-alignment: end;  --update-shipping-button-width: auto;',
-					'justify' => '--update-shipping-button-alignment: center; --update-shipping-button-width: 100%;',
-				],
 			]
 		);
 
@@ -476,90 +335,6 @@ class Cart extends Base_Widget {
 			]
 		);
 
-		$this->add_control(
-			'additional_template_switch',
-			[
-				'label' => esc_html__( 'Customize empty cart', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor-pro' ),
-				'label_off' => esc_html__( 'No', 'elementor-pro' ),
-				'return_value' => 'active',
-				'default' => '',
-				'render_type' => 'template',
-				'prefix_class' => 'e-cart-empty-template-',
-			]
-		);
-
-		$this->add_control(
-			'additional_template_description',
-			[
-				'raw' => sprintf(
-					/* translators: 1: Saved templates link opening tag, 2: Link closing tag. */
-					esc_html__( 'Replaces the default WooCommerce Empty Cart screen with a custom template. (Don’t have one? Head over to %1$sSaved Templates%2$s)', 'elementor-pro' ),
-					sprintf( '<a href="%s" target="_blank">', admin_url( 'edit.php?post_type=elementor_library&tabs_group=library#add_new' ) ),
-					'</a>'
-				),
-				'type' => Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-descriptor elementor-descriptor-subtle',
-				'condition' => [
-					'additional_template_switch' => 'active',
-				],
-			]
-		);
-
-		$this->add_control(
-			'additional_template_select_heading',
-			[
-				'type' => Controls_Manager::HEADING,
-				'label' => esc_html__( 'Choose template', 'elementor-pro' ),
-				'condition' => [
-					'additional_template_switch' => 'active',
-				],
-			]
-		);
-
-		$document_types = Plugin::elementor()->documents->get_document_types( [
-			'show_in_library' => true,
-		] );
-
-		$this->add_control(
-			'additional_template_select',
-			[
-				'type' => QueryControlModule::QUERY_CONTROL_ID,
-				'label_block' => true,
-				'show_label' => false,
-				'autocomplete' => [
-					'object' => QueryControlModule::QUERY_OBJECT_LIBRARY_TEMPLATE,
-					'query' => [
-						'meta_query' => [
-							[
-								'key' => Document::TYPE_META_KEY,
-								'value' => array_keys( $document_types ),
-								'compare' => 'IN',
-							],
-						],
-					],
-				],
-				'frontend_available' => true,
-				'condition' => [
-					'additional_template_switch' => 'active',
-				],
-				'render_type' => 'template',
-			]
-		);
-
-		$this->add_control(
-			'edit_button',
-			[
-				'raw' => sprintf( '<a href="#" target="_blank" class="elementor-button elementor-button-default elementor-edit-template" style="margin-top:0px;"><i class="eicon-pencil"> %s</i></a>', esc_html__( 'Edit Template', 'elementor-pro' ) ),
-				'type' => \Elementor\Controls_Manager::RAW_HTML,
-				'content_classes' => 'elementor-edit-template-wrapper',
-				'condition' => [
-					'additional_template_switch' => 'active',
-				],
-			]
-		);
-
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -585,6 +360,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-cart-section',
 			]
 		);
@@ -708,6 +484,7 @@ class Cart extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'sections_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .cart_totals h2',
 			]
 		);
@@ -922,6 +699,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_fields_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .coupon .input-text, {{WRAPPER}} .e-cart-totals .input-text, {{WRAPPER}} select, {{WRAPPER}} .select2-selection--single',
 			]
 		);
@@ -954,6 +732,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_fields_focus_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .coupon .input-text:focus, {{WRAPPER}} .e-cart-totals .input-text:focus, {{WRAPPER}} select:focus, {{WRAPPER}} .select2-selection--single:focus',
 			]
 		);
@@ -977,14 +756,14 @@ class Cart extends Base_Widget {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor-pro' ) . ' (ms)',
 				'type' => Controls_Manager::SLIDER,
+				'selectors' => [
+					'{{WRAPPER}}' => '--forms-fields-focus-transition-duration: {{SIZE}}ms',
+				],
 				'range' => [
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
 					],
-				],
-				'selectors' => [
-					'{{WRAPPER}}' => '--forms-fields-focus-transition-duration: {{SIZE}}ms',
 				],
 			]
 		);
@@ -1051,6 +830,7 @@ class Cart extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'forms_button_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button',
 			]
 		);
@@ -1082,6 +862,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_buttons_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button',
 			]
 		);
@@ -1113,6 +894,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'forms_buttons_focus_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .shop_table .button:hover',
 			]
 		);
@@ -1289,6 +1071,7 @@ class Cart extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'order_summary_title_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-shop-table .cart th, {{WRAPPER}} .e-shop-table .cart td:before',
 			]
 		);
@@ -1625,6 +1408,7 @@ class Cart extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'checkout_button_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .checkout-button',
 			]
 		);
@@ -1648,7 +1432,7 @@ class Cart extends Base_Widget {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'checkout_button_normal_background',
-				'selector' => '{{WRAPPER}} .woocommerce .wc-proceed-to-checkout .checkout-button',
+				'selector' => '{{WRAPPER}} .checkout-button',
 			]
 		);
 
@@ -1656,6 +1440,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'checkout_button_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .checkout-button',
 			]
 		);
@@ -1679,7 +1464,7 @@ class Cart extends Base_Widget {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'checkout_button_hover_background',
-				'selector' => '{{WRAPPER}} .woocommerce .wc-proceed-to-checkout .checkout-button:hover',
+				'selector' => '{{WRAPPER}} .checkout-button:hover',
 			]
 		);
 
@@ -1687,6 +1472,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'checkout_button_hover_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .checkout-button:hover',
 			]
 		);
@@ -1843,6 +1629,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'order_summary_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-shop-table',
 				'separator' => 'after',
 			]
@@ -1866,7 +1653,7 @@ class Cart extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .e-shop-table' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1963,6 +1750,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'totals_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .e-cart-totals',
 			]
 		);
@@ -1985,7 +1773,7 @@ class Cart extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .e-cart-totals' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -2077,6 +1865,7 @@ class Cart extends Base_Widget {
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'totals_section_titles_text_shadow',
+				'label' => esc_html__( 'Text Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .cart_totals h2',
 				'separator' => 'after',
 			]
@@ -2187,6 +1976,7 @@ class Cart extends Base_Widget {
 			Group_Control_Box_Shadow::get_type(),
 			[
 				'name' => 'customize_coupon_section_normal_box_shadow',
+				'label' => esc_html__( 'Box Shadow', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .coupon',
 			]
 		);
@@ -2294,17 +2084,6 @@ class Cart extends Base_Widget {
 	}
 
 	/**
-	 * Check if an Elementor template has been selected to display the empty cart notification
-	 *
-	 * @since 3.7.0
-	 * @return boolean
-	 */
-	protected function has_empty_cart_template() {
-		$additional_template_select = $this->get_settings_for_display( 'additional_template_select' );
-		return ! empty( $additional_template_select ) && 0 < $additional_template_select;
-	}
-
-	/**
 	 * Render Woocommerce Cart Coupon Form
 	 *
 	 * A custom function to render a coupon form on the Cart widget. The default WC coupon form
@@ -2365,29 +2144,6 @@ class Cart extends Base_Widget {
 	}
 
 	/**
-	 * Should Render Coupon
-	 *
-	 * Decide if the coupon form should be rendered.
-	 * The coupon form should be rendered if:
-	 * 1) The WooCommerce setting is enabled
-	 * 2) And the Coupon Display toggle hasn't been set to 'no'
-	 *
-	 * @since 3.6.0
-	 *
-	 * @return boolean
-	 */
-	private function should_render_coupon() {
-		$settings = $this->get_settings_for_display();
-		$coupon_display_control = true;
-
-		if ( '' === $settings['section_coupon_display'] ) {
-			$coupon_display_control = false;
-		}
-
-		return wc_coupons_enabled() && $coupon_display_control;
-	}
-
-	/**
 	 * Woocommerce Before Cart Table
 	 *
 	 * Output containing elements. Callback function for the woocommerce_before_cart_table hook
@@ -2397,19 +2153,8 @@ class Cart extends Base_Widget {
 	 * @since 3.5.0
 	 */
 	public function woocommerce_before_cart_table() {
-		$section_classes = [ 'e-shop-table', 'e-cart-section' ];
-
-		if ( ! $this->should_render_coupon() ) {
-			$section_classes[] = 'e-cart-section--no-coupon';
-		}
-
-		$this->add_render_attribute(
-			'before_cart_table', [
-				'class' => $section_classes,
-			]
-		);
 		?>
-		<div <?php $this->print_render_attribute_string( 'before_cart_table' ); ?>>
+		<div class="e-shop-table e-cart-section">
 						<!--open shop table div -->
 		<?php
 	}
@@ -2429,7 +2174,7 @@ class Cart extends Base_Widget {
 					<!--close shop table div -->
 					<div class="e-clear"></div>
 		<?php
-		if ( $this->should_render_coupon() ) {
+		if ( $this->is_wc_feature_active( 'coupons' ) ) {
 			$this->render_woocommerce_cart_coupon_form();
 		}
 	}
@@ -2482,19 +2227,16 @@ class Cart extends Base_Widget {
 	 * WooCommerce Get Remove URL.
 	 *
 	 * When in the Editor or (wp preview) and the uer clicks to remove an item from the cart, WooCommerce uses
-	 * the`_wp_http_referer` url during the ajax call to generate the new cart html. So when we're in the Editor
+	 * the`_wp_http_referer` url during the ajax call to genrate the new cart html. So when we're in the Editor
 	 * or (wp preview) we modify the `_wp_http_referer` to use the `get_wp_preview_url()` which will have
 	 * the new cart content.
 	 *
 	 * @since 3.5.0
-	 * @deprecated 3.7.0
 	 *
 	 * @param $url
 	 * @return string
 	 */
 	public function woocommerce_get_remove_url( $url ) {
-		Plugin::elementor()->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.7.0' );
-
 		$url_components = wp_parse_url( $url );
 
 		if ( ! isset( $url_components['query'] ) ) {
@@ -2507,31 +2249,6 @@ class Cart extends Base_Widget {
 		$params['_wp_http_referer'] = rawurlencode( Plugin::elementor()->documents->get_current()->get_wp_preview_url() );
 
 		return add_query_arg( $params, get_site_url() );
-	}
-
-	/**
-	 * WooCommerce Get Cart Url
-	 *
-	 * Used with the `woocommerce_get_cart_url`. This sets the url to the current page, so links like the `remove_url`
-	 * wre set to the current page, and not the existing WooCommerce cart endpoint.
-	 *
-	 * @since 3.7.0
-	 *
-	 * @param $url
-	 * @return string
-	 */
-	public function woocommerce_get_cart_url( $url ) {
-		global $post;
-
-		if ( ! $post ) {
-			return $url;
-		}
-
-		if ( Module::is_preview() || Plugin::elementor()->editor->is_edit_mode() ) {
-			return Plugin::elementor()->documents->get_current()->get_wp_preview_url();
-		}
-
-		return get_permalink( $post->ID );
 	}
 
 	/**
@@ -2549,16 +2266,14 @@ class Cart extends Base_Widget {
 		return false;
 	}
 
-	/**
-	 * Add Render Hooks
-	 *
-	 * Add actions & filters before displaying our widget.
-	 *
-	 * @since 3.7.0
-	 */
-	public function add_render_hooks() {
+	protected function render() {
 		$is_editor = Plugin::elementor()->editor->is_edit_mode();
-		$is_preview = Module::is_preview();
+		$is_preview = (
+			isset( $_GET['preview'] )
+			&& isset( $_GET['preview_id'] )
+			&& isset( $_GET['preview_nonce'] )
+			&& wp_verify_nonce( $_GET['preview_nonce'], 'post_preview_' . $_GET['preview_id'] )
+		);
 
 		/**
 		 * Add actions & filters before displaying our Widget.
@@ -2575,25 +2290,22 @@ class Cart extends Base_Widget {
 		// `wc_coupons_enabled()` can still be reliably used elsewhere.
 		add_action( 'woocommerce_cart_contents', [ $this, 'disable_cart_coupon' ] );
 		add_action( 'woocommerce_after_cart_contents', [ $this, 'enable_cart_coupon' ] );
-		add_filter( 'woocommerce_get_cart_url', [ $this, 'woocommerce_get_cart_url' ] );
 
-		if ( $this->has_empty_cart_template() ) {
-			remove_action( 'woocommerce_cart_is_empty', 'wc_empty_cart_message', 10 );
-			add_action( 'woocommerce_cart_is_empty', [ $this, 'display_empty_cart_template' ], 10 );
+		if ( $is_editor || $is_preview ) {
+			add_filter( 'woocommerce_get_remove_url', [ $this, 'woocommerce_get_remove_url' ] );
 		}
 
 		// Remove cross-sells in cart.
 		remove_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' );
-	}
 
-	/**
-	 * Remove Render Hooks
-	 *
-	 * Remove actions & filters after displaying our widget.
-	 *
-	 * @since 3.7.0
-	 */
-	public function remove_render_hooks() {
+		/**
+		 * Display our Widget.
+		 */
+		echo do_shortcode( '[woocommerce_cart]' );
+
+		/**
+		 * Remove actions & filters after displaying our Widget.
+		 */
 		remove_filter( 'gettext', [ $this, 'filter_gettext' ], 20 );
 
 		remove_action( 'woocommerce_before_cart', [ $this, 'woocommerce_before_cart' ] );
@@ -2605,27 +2317,7 @@ class Cart extends Base_Widget {
 		remove_filter( 'woocommerce_get_remove_url', [ $this, 'woocommerce_get_remove_url' ] );
 		remove_action( 'woocommerce_cart_contents', [ $this, 'disable_cart_coupon' ] );
 		remove_action( 'woocommerce_after_cart_contents', [ $this, 'enable_cart_coupon' ] );
-		remove_action( 'woocommerce_get_cart_url', [ $this, 'woocommerce_get_cart_url' ] );
 		add_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' );
-		if ( $this->has_empty_cart_template() ) {
-			add_action( 'woocommerce_cart_is_empty', 'wc_empty_cart_message', 10 );
-		}
-	}
-
-	public function render() {
-		// Add actions & filters before displaying our Widget.
-		$this->add_render_hooks();
-
-		// Display our Widget.
-		if ( $this->has_empty_cart_template() && WC()->cart->get_cart_contents_count() === 0 ) {
-			$template_id = intval( $this->get_settings_for_display( 'additional_template_select' ) );
-			echo do_shortcode( '[elementor-template id="' . $template_id . '"]' );
-		} else {
-			echo do_shortcode( '[woocommerce_cart]' );
-		}
-
-		// Remove actions & filters after displaying our Widget.
-		$this->remove_render_hooks();
 	}
 
 	public function get_group_name() {

@@ -102,8 +102,6 @@ class Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command implements 
 				'connection_id' => $id,
 			]
 		);
-
-		$this->admin->update_storage_from_connection( $connection );
 	}
 	// phpcs:enable
 

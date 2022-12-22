@@ -4,8 +4,6 @@
 import './filled-cart-block';
 import './cart-items-block';
 import './cart-line-items-block';
-import './cart-cross-sells-block';
-import './cart-cross-sells-products';
 import './cart-totals-block';
 import './cart-express-payment-block';
 import './proceed-to-checkout-block';

@@ -25,7 +25,7 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PARENT_MENU_NAME' ) ) {
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.9.6' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.7.14' );
 }
 
 /**
@@ -151,16 +151,6 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_RUNNING_STATUS_NAME' ) ) {
 }
 
 /**
- * The product sync running status common name.
- *
- * @var string The product sync running status common name.
- * @since 1.9.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_RUNNING_STATUS_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_RUNNING_STATUS_NAME', 'activecampaign_for_woocommerce_product_sync_running_status' );
-}
-
-/**
  * The historical sync last status common name.
  *
  * @var string The historical sync last status common name.
@@ -191,60 +181,11 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_SCHEDULED_STATUS_NAME' ) ) 
 }
 
 /**
- * The historical sync stop check common name.
- *
- * @var string The historical sync stop check common name.
- * @since 1.5.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_HISTORICAL_SYNC_STOP_CHECK_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_HISTORICAL_SYNC_STOP_CHECK_NAME', 'activecampaign_for_woocommerce_historical_sync_stop' );
-}
-
-/**
- * The product sync scheduled status common name.
- *
- * @var string The product sync scheduled status common name.
- * @since 1.9.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_SCHEDULED_STATUS_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_SCHEDULED_STATUS_NAME', 'activecampaign_for_woocommerce_product_sync_scheduled_status' );
-}
-
-/**
  * The sync stop check common name.
  *
  * @var string The sync stop check common name.
- * @since 1.9.0
+ * @since 1.5.0
  */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_STOP_CHECK_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_STOP_CHECK_NAME', 'activecampaign_for_woocommerce_product_sync_stop' );
-}
-
-/**
- * Whether or not the product sync is enabled
- *
- * @since 1.9.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_ENABLED_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_ENABLED_NAME', 'activecampaign_for_woocommerce_product_sync_enabled' );
-}
-
-/**
- * The run product sync common name.
- *
- * @var string The run product sync common name.
- * @since 1.9.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_PRODUCT_SYNC_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_RUN_PRODUCT_SYNC_NAME', 'activecampaign_for_woocommerce_run_product_sync' );
-}
-
-/**
- * The product sync last status common name.
- *
- * @var string The product sync last status common name.
- * @since 1.9.0
- */
-if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_LAST_STATUS_NAME' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_LAST_STATUS_NAME', 'activecampaign_for_woocommerce_product_sync_last_status' );
+if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_STOP_CHECK_NAME' ) ) {
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_SYNC_STOP_CHECK_NAME', 'activecampaign_for_woocommerce_historical_sync_stop' );
 }

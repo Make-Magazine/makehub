@@ -5,7 +5,6 @@ import {
 	act,
 	render,
 	screen,
-	queryByText,
 	waitFor,
 	waitForElementToBeRemoved,
 } from '@testing-library/react';
@@ -20,7 +19,7 @@ import userEvent from '@testing-library/user-event';
  * Internal dependencies
  */
 import Block from '../block';
-import { defaultCartState } from '../../../data/cart/default-state';
+import { defaultCartState } from '../../../data/default-states';
 
 const MiniCartBlock = ( props ) => (
 	<SlotFillProvider>
@@ -123,28 +122,6 @@ describe( 'Testing Mini Cart', () => {
 			expect(
 				screen.getByLabelText( /3 items in cart/i )
 			).toBeInTheDocument()
-		);
-	} );
-
-	it( 'renders cart price if "Hide Cart Price" setting is not enabled', async () => {
-		mockEmptyCart();
-		render( <MiniCartBlock /> );
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
-
-		await waitFor( () =>
-			expect( screen.getByText( '$0.00' ) ).toBeInTheDocument()
-		);
-	} );
-
-	it( 'does not render cart price if "Hide Cart Price" setting is enabled', async () => {
-		mockEmptyCart();
-		const { container } = render(
-			<MiniCartBlock hasHiddenPrice={ true } />
-		);
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
-
-		await waitFor( () =>
-			expect( queryByText( container, '$0.00' ) ).not.toBeInTheDocument()
 		);
 	} );
 } );

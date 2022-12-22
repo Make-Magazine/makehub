@@ -104,9 +104,7 @@ if (!function_exists('essb5_available_button_positions')) {
 		}
 		
 		
-		if (!essb_options_bool_value('deactivate_method_widget')) {
-		  $essb_available_button_positions ['widget'] = array ('image' => 'assets/images/display-positions-25.png', 'label' => 'Widget' );
-		}		
+		$essb_available_button_positions ['widget'] = array ('image' => 'assets/images/display-positions-25.png', 'label' => 'Widget' );
 
 		if (has_filter('essb4_button_positions')) {
 			$essb_available_button_positions = apply_filters('essb4_button_positions', $essb_available_button_positions);
@@ -172,9 +170,9 @@ if (!function_exists('essb5_available_button_positions_mobile')) {
 if (!function_exists('essb5_available_positions_mobile_only')) {
 	function essb5_available_positions_mobile_only() {
 		$essb_available_button_positions_mobile = array ();
-		$essb_available_button_positions_mobile ['sharebottom'] = array ('image' => 'assets/images/display-positions-17.png', 'label' => 'Share buttons bar (Mobile Only Display Method)', 'link' => 'essb-menu-display|essb-menu-display-93|essb-inner-menu-item-display-93' );
-		$essb_available_button_positions_mobile ['sharebar'] = array ('image' => 'assets/images/display-positions-18.png', 'label' => 'Share bar (Mobile Only Display Method)', 'link' => 'essb-menu-display|essb-menu-display-91|essb-inner-menu-item-display-91' );
-		$essb_available_button_positions_mobile ['sharepoint'] = array ('image' => 'assets/images/display-positions-19.png', 'label' => 'Share point (Mobile Only Display Method)', 'link' => 'essb-menu-display|essb-menu-display-92|essb-inner-menu-item-display-92' );
+		$essb_available_button_positions_mobile ['sharebottom'] = array ('image' => 'assets/images/display-positions-17.png', 'label' => 'Share buttons bar (Mobile Only Display Method)' );
+		$essb_available_button_positions_mobile ['sharebar'] = array ('image' => 'assets/images/display-positions-18.png', 'label' => 'Share bar (Mobile Only Display Method)' );
+		$essb_available_button_positions_mobile ['sharepoint'] = array ('image' => 'assets/images/display-positions-19.png', 'label' => 'Share point (Mobile Only Display Method)' );
 		
 		if (has_filter('essb_positions_mobile_only')) {
 			$essb_available_button_positions_mobile = apply_filters('essb_positions_mobile_only', $essb_available_button_positions_mobile);
@@ -274,14 +272,13 @@ class ESSBOptionsStructureHelper {
 		}
 	}
 
-	public static function field_heading($tab_id, $menu_id, $level = 'heading1', $title = '', $desc = '', $class = '', $icon = '') {
+	public static function field_heading($tab_id, $menu_id, $level = 'heading1', $title = '', $desc = '', $class = '') {
 		global $essb_navigation_tabs, $essb_sidebar_sections, $essb_section_options;
 		$essb_section_options[$tab_id][$menu_id][] = array(
 				'type' => $level,
 				'title' => $title,
 				'description' => $desc,
-				'class' => $class,
-		        'icon' => $icon
+				'class' => $class
 		);
 
 	}
@@ -440,14 +437,14 @@ class ESSBOptionsStructureHelper {
 		);
 	}
 
-	public static function field_textarea ($tab_id, $menu_id, $id, $title, $description, $rows = '') {
+	public static function field_textarea ($tab_id, $menu_id, $id, $title, $description, $recommended = '') {
 		global $essb_navigation_tabs, $essb_sidebar_sections, $essb_section_options;
 		$essb_section_options[$tab_id][$menu_id][] = array(
 				'id' => $id,
 				'type' => 'textarea',
 				'title' => $title,
 				'description' => $description,
-		        'rows' => $rows
+				'recommeded' => $recommended
 		);
 	}
 

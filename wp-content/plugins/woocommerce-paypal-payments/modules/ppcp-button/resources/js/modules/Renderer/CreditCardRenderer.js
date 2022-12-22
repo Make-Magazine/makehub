@@ -233,12 +233,8 @@ class CreditCardRenderer {
                 this.spinner.unblock();
                 this.errorHandler.clear();
 
-                if (err.details?.length) {
+                if (err.details) {
                     this.errorHandler.message(err.details.map(d => `${d.issue} ${d.description}`).join('<br/>'), true);
-                } else if (err.message) {
-                    this.errorHandler.message(err.message, true);
-                } else {
-                    this.errorHandler.genericError();
                 }
             });
         } else {

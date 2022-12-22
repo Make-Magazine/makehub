@@ -198,8 +198,8 @@
 		  		$parent_div.prev().find( 'div.uael-has-submenu-container' ).removeClass( 'sub-menu-active' );
 			}else {
 
-				$parent_div.next().find('ul').css( { 'height': '0', 'opacity': '0', 'visibility': 'hidden' } );
-		  		$parent_div.prev().find('ul').css( { 'height': '0', 'opacity': '0', 'visibility': 'hidden' } );
+				$parent_div.next().find('ul').css( { 'height': '0' } );
+		  		$parent_div.prev().find('ul').css( { 'height': '0' } );
 
 		  		$parent_div.next().find( 'div.uael-has-submenu-container' ).removeClass( 'sub-menu-active' );
 		  		$parent_div.prev().find( 'div.uael-has-submenu-container' ).removeClass( 'sub-menu-active' );
@@ -223,7 +223,7 @@
 
 				$this.find( 'a' ).attr( 'aria-expanded', 'true' );
 
-				$this.next().css( { 'visibility': 'visible', 'height': 'auto', 'opacity': '1' } );
+				$this.next().css( { 'visibility': 'visible', 'height': 'auto' } );
 
 				if ( 'horizontal' !== layout ) {
 
@@ -604,7 +604,7 @@
 				sub_menu.css('width', width + 'px' );
 			}else if ('container' == dropdown_width) {
 
-				var container = $( '.elementor-element-' + id).closest('.e-con');
+				var container = $( '.elementor-element-' + id).closest('.elementor-container');
 				var width = container.outerWidth();
 
 				if( $( 'body' ).hasClass( 'rtl' ) ) {
@@ -754,9 +754,6 @@
 
 					$this.addClass( 'uael-active-menu-full-width' );
 					var $element_section = $element.closest('.elementor-section');
-					if (0 == $element_section.length){
-						$element_section = $element.closest('.e-con');
-					}
 
 					var width = $element_section.outerWidth();
 					var sec_pos = $element_section.offset().left - $selector.offset().left;

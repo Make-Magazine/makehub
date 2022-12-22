@@ -1,23 +1,5 @@
 # Changelog
 
-## [0.6.0](https://github.com/brick/money/releases/tag/0.6.0) - 2022-08-02
-
-💥 **Breaking changes**
-
-- Minimum PHP version is now 7.4
-- `AbstractMoney::getAmount()` now has a return type
-- `CurrencyConverter`'s constructor does not accept a default `$context` anymore
-- `CurrencyConverter::convert()` now requires the `$context` previously accepted by the constructor as third parameter
-- `Money::allocateWithRemainder()` now refuses to allocate a portion of the amount that cannot be spread over all ratios, and instead adds that amount to the remainder (#55)
-
-✨ **New ISO currencies**
-
-- `SLE` (Leone) in Sierra Leone (`SL`)
-
-👌 **Improvements**
-
-- Compatibility with `brick/math` version `0.10`
-
 ## [0.5.2](https://github.com/brick/money/releases/tag/0.5.2) - 2021-04-03
 
 ✨ **New methods**

@@ -1,30 +1,23 @@
 <?php
 /**
- * Plugin Name:       	GravityRevisions
+ * Plugin Name:       	GravityView - Entry Revisions
  * Plugin URI:        	https://gravityview.co/extensions/entry-revisions/
  * Description:       	Track changes to Gravity Forms entries and restore values from earlier versions.
- * Version:          	1.2.4
- * Author:            	GravityKit
- * Author URI:        	https://www.gravitykit.com
- * Text Domain:       	gk-gravityrevisions
+ * Version:          	1.1
+ * Author:            	GravityView
+ * Author URI:        	https://gravityview.co
+ * Text Domain:       	gravityview-entry-revisions
  * License:           	GPLv2 or later
  * License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
+ * Domain Path:			/languages
  */
-
-defined( 'ABSPATH' ) || exit; // Exit if accessed directly
-
-require_once __DIR__ . '/vendor_prefixed/gravitykit/foundation/src/preflight_check.php';
-
-if ( ! GravityKit\GravityRevisions\Foundation\should_load( __FILE__ ) ) {
-	return;
-}
 
 /**
  * The plugin version number
  *
  * @since 1.0
  */
-define( 'GV_ENTRY_REVISIONS_VERSION', '1.2.4' );
+define( 'GV_ENTRY_REVISIONS_VERSION', '1.1' );
 
 /** @define "GV_ENTRY_REVISIONS_DIR" "./" The absolute path to the plugin directory */
 define( 'GV_ENTRY_REVISIONS_DIR', plugin_dir_path( __FILE__ ) );
@@ -36,11 +29,6 @@ define( 'GV_ENTRY_REVISIONS_DIR', plugin_dir_path( __FILE__ ) );
  */
 define( 'GV_ENTRY_REVISIONS_FILE', __FILE__ );
 
-require_once GV_ENTRY_REVISIONS_DIR . 'vendor/autoload.php';
-require_once GV_ENTRY_REVISIONS_DIR . 'vendor_prefixed/autoload.php';
-
-GravityKit\GravityRevisions\Foundation\Core::register( GV_ENTRY_REVISIONS_FILE );
-
 /**
  * Load Inline Edit plugin. Wrapper function to make sure GravityView_Extension has loaded.
  *
@@ -49,6 +37,10 @@ GravityKit\GravityRevisions\Foundation\Core::register( GV_ENTRY_REVISIONS_FILE )
  * @return void
  */
 function gravityview_entry_revisions_load() {
+
+	if ( ! class_exists( 'GravityView_Extension' ) ) {
+		include_once GV_ENTRY_REVISIONS_DIR . 'lib/class-gravityview-extension.php';
+	}
 
 	require_once GV_ENTRY_REVISIONS_DIR . 'class-gv-entry-revisions.php';
 

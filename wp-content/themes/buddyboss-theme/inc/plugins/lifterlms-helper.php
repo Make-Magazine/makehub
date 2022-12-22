@@ -719,21 +719,6 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				];
 			}
 
-			$pagination_url = '';
-			if ( isset( $_GET['request_url'] ) && ! empty( $_GET['request_url'] ) ) {
-				// Decode the requested URL.
-				$pagination_url = urldecode_deep( $_GET['request_url'] );
-
-				// Validate the requested URL.
-				if ( false === strpos( $pagination_url, get_site_url() ) ) {
-					$pagination_url = '';
-				}
-			}
-
-			if ( empty( $pagination_url ) ) {
-				$pagination_url = $category ? get_category_link( $category ) : get_post_type_archive_link( 'course' );
-			}
-
 			$c_q = new WP_Query( $args );
 
 			if ( $c_q->have_posts() ) {
@@ -775,7 +760,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				if ( $category ) {
 					$html .= paginate_links(
 						[
-							'base'               => trailingslashit( $pagination_url ) . 'page/%#%/',
+							'base'               => trailingslashit( get_category_link( $category ) ) . 'page/%#%/',
 							'format'             => '?paged=%#%',
 							'current'            => ( isset( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 ),
 							'total'              => $c_q->max_num_pages,
@@ -785,7 +770,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				} else {
 					$html .= paginate_links(
 						[
-							'base'               => trailingslashit( $pagination_url ) . 'page/%#%/',
+							'base'               => trailingslashit( get_post_type_archive_link( 'course' ) ) . 'page/%#%/',
 							'format'             => '?paged=%#%',
 							'current'            => ( isset( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 ),
 							'total'              => $c_q->max_num_pages,
@@ -1637,7 +1622,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				} // End if().
 				$last_activity_time = $completed_lesson_count . '/' . $all_lesson_count . ' ' . __( 'Steps', 'buddyboss-theme' );
 			} else {
-				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $last_activity[0]->get( 'updated_date' ) ) );
+				$last_activity_time = __( 'Last activity on', 'buddyboss-theme' ) . ' ' . date( get_option( 'date_format' ), strtotime( $last_activity[0]->get( 'updated_date' ) ) );
 			}
 
 			$temp_percentage = $percentage;

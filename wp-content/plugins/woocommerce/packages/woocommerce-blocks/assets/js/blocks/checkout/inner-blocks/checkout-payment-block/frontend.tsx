@@ -2,11 +2,10 @@
  * External dependencies
  */
 import classnames from 'classnames';
-import { useStoreCart } from '@woocommerce/base-context/hooks';
+import { useStoreCart, useEmitResponse } from '@woocommerce/base-context/hooks';
 import { withFilteredAttributes } from '@woocommerce/shared-hocs';
 import { FormStep } from '@woocommerce/base-components/cart-checkout';
-import { useSelect } from '@wordpress/data';
-import { CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
+import { useCheckoutContext } from '@woocommerce/base-context';
 
 /**
  * Internal dependencies
@@ -14,7 +13,6 @@ import { CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 import Block from './block';
 import attributes from './attributes';
 import { StoreNoticesContainer } from '../../../../base/context/providers';
-import { noticeContexts } from '../../../../base/context/event-emit';
 
 const FrontendBlock = ( {
 	title,
@@ -29,10 +27,9 @@ const FrontendBlock = ( {
 	children: JSX.Element;
 	className?: string;
 } ) => {
-	const checkoutIsProcessing = useSelect( ( select ) =>
-		select( CHECKOUT_STORE_KEY ).isProcessing()
-	);
+	const { isProcessing: checkoutIsProcessing } = useCheckoutContext();
 	const { cartNeedsPayment } = useStoreCart();
+	const { noticeContexts } = useEmitResponse();
 
 	if ( ! cartNeedsPayment ) {
 		return null;

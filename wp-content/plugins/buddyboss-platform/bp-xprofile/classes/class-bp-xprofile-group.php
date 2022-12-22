@@ -65,15 +65,6 @@ class BP_XProfile_Group {
 	public $fields;
 
 	/**
-	 * Static cache key for the groups.
-	 *
-	 * @since BuddyBoss 2.1.6
-	 *
-	 * @var array Fields of cache.
-	 */
-	public static $bp_xprofile_group_ids = array();
-
-	/**
 	 * Initialize and/or populate profile field group.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -279,6 +270,7 @@ class BP_XProfile_Group {
 	 * @return array $groups
 	 */
 	public static function get( $args = array() ) {
+		static $bp_xprofile_group_ids = array();
 		static $bp_xprofile_field_ids = array();
 		global $wpdb;
 
@@ -324,15 +316,15 @@ class BP_XProfile_Group {
 
 		// Include or exclude empty groups.
 		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
-		if ( ! isset( self::$bp_xprofile_group_ids[ $cache_key ] ) ) {
+		if ( ! isset( $bp_xprofile_group_ids[ $cache_key ] ) ) {
 			if ( ! empty( $r['hide_empty_groups'] ) ) {
 				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g INNER JOIN {$bp->profile->table_name_fields} f ON g.id = f.group_id {$where_sql} ORDER BY g.group_order ASC" );
 			} else {
 				$group_ids = $wpdb->get_col( "SELECT DISTINCT g.id FROM {$bp->profile->table_name_groups} g {$where_sql} ORDER BY g.group_order ASC" );
 			}
-			self::$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
+			$bp_xprofile_group_ids[ $cache_key ] = $group_ids;
 		} else {
-			$group_ids = self::$bp_xprofile_group_ids[ $cache_key ];
+			$group_ids = $bp_xprofile_group_ids[ $cache_key ];
 		}
 
 		// Get all group data.

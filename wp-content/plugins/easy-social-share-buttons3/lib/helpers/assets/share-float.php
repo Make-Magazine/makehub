@@ -21,13 +21,10 @@ if (!function_exists('essb_register_dynamic_share_float_styles')) {
         }
         
         if ($bg_color != '') {
-            /**
-             * @since 8.0 compatibility with the new color field with opacity
-             */
-            if ($bg_color_opacity != '' && strpos($bg_color, 'rgba') === false) {
+            if ($bg_color_opacity != '') {
                 $bg_color = essb_hex2rgba($bg_color, $bg_color_opacity);
             }
-            ESSB_Dynamic_CSS_Builder::register_header_field('.essb_fixed', 'background', $bg_color, '', true);
+            ESSB_Dynamic_CSS_Builder::register_header_field('.essb_fixed', 'background', $bg_color, 'px', true);
         }
         
         if (essb_option_bool_value('float_full')) {

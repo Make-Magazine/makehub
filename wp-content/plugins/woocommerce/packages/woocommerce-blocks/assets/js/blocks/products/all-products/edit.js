@@ -149,7 +149,7 @@ class Editor extends Component {
 						{
 							icon: 'edit',
 							title: __(
-								'Edit the layout of each product',
+								'Edit inner product layout',
 								'woocommerce'
 							),
 							onClick: () => this.togglePreview(),
@@ -208,7 +208,7 @@ class Editor extends Component {
 				<div className="wc-block-all-products-grid-item-template">
 					<Tip>
 						{ __(
-							'Edit the blocks inside the example below to change the content displayed for all products within the product grid.',
+							'Edit the blocks inside the preview below to change the content displayed for each product within the product grid.',
 							'woocommerce'
 						) }
 					</Tip>

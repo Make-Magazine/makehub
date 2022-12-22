@@ -4,12 +4,8 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import type { ReactElement } from 'react';
 import { formatPrice } from '@woocommerce/price-format';
-import {
-	PanelBody,
-	ExternalLink,
-	SelectControl,
-	ToggleControl,
-} from '@wordpress/components';
+import { CartCheckoutCompatibilityNotice } from '@woocommerce/editor-components/compatibility-notices';
+import { PanelBody, ExternalLink, SelectControl } from '@wordpress/components';
 import { getSetting } from '@woocommerce/settings';
 import { __ } from '@wordpress/i18n';
 import Noninteractive from '@woocommerce/base-components/noninteractive';
@@ -21,7 +17,6 @@ import QuantityBadge from './quantity-badge';
 
 interface Attributes {
 	addToCartBehaviour: string;
-	hasHiddenPrice: boolean;
 }
 
 interface Props {
@@ -30,7 +25,7 @@ interface Props {
 }
 
 const Edit = ( { attributes, setAttributes }: Props ): ReactElement => {
-	const { addToCartBehaviour, hasHiddenPrice } = attributes;
+	const { addToCartBehaviour } = attributes;
 	const blockProps = useBlockProps( {
 		className: `wc-block-mini-cart`,
 	} );
@@ -82,22 +77,6 @@ const Edit = ( { attributes, setAttributes }: Props ): ReactElement => {
 							},
 						] }
 					/>
-					<ToggleControl
-						label={ __(
-							'Hide Cart Price',
-							'woo-gutenberg-products-block'
-						) }
-						help={ __(
-							'Toggles the visibility of the Mini Cart price.',
-							'woo-gutenberg-products-block'
-						) }
-						checked={ hasHiddenPrice }
-						onChange={ () =>
-							setAttributes( {
-								hasHiddenPrice: ! hasHiddenPrice,
-							} )
-						}
-					/>
 				</PanelBody>
 				{ templatePartEditUri && (
 					<PanelBody
@@ -108,7 +87,7 @@ const Edit = ( { attributes, setAttributes }: Props ): ReactElement => {
 					>
 						<p>
 							{ __(
-								'Edit the appearance of the Mini Cart.',
+								'Edit the appearance of your empty and filled mini cart contents.',
 								'woo-gutenberg-products-block'
 							) }
 						</p>
@@ -123,14 +102,13 @@ const Edit = ( { attributes, setAttributes }: Props ): ReactElement => {
 			</InspectorControls>
 			<Noninteractive>
 				<button className="wc-block-mini-cart__button">
-					{ ! hasHiddenPrice && (
-						<span className="wc-block-mini-cart__amount">
-							{ formatPrice( productTotal ) }
-						</span>
-					) }
+					<span className="wc-block-mini-cart__amount">
+						{ formatPrice( productTotal ) }
+					</span>
 					<QuantityBadge count={ productCount } />
 				</button>
 			</Noninteractive>
+			<CartCheckoutCompatibilityNotice blockName="mini-cart" />
 		</div>
 	);
 };

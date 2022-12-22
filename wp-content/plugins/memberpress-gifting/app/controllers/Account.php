@@ -16,9 +16,30 @@ class Account extends lib\BaseCtrl {
     add_action('mepr-txn-status-refunded', array($this, 'handle_txn_refund'));
     add_action('wp_ajax_mpgft_send_gift_email', array($this, 'send_gift_email'));
 
+    add_action('mepr_recurring_subscriptions_table_joins', array($this, 'recurring_subscriptions_table_joins'));
     add_action('mepr_recurring_subscriptions_table_args', array($this, 'recurring_subscriptions_table_args'));
+    add_action('mepr_nonrecurring_subscriptions_table_joins', array($this, 'nonrecurring_subscriptions_table_joins'));
     add_action('mepr_nonrecurring_subscriptions_table_args', array($this, 'nonrecurring_subscriptions_table_args'));
   }
+
+  /**
+   * Join Subscription Meta table to remove Gift subscriptions from Account->Subscriptions tab
+   *
+   * @param mixed $joins
+   *
+   * @return array
+   */
+  public function recurring_subscriptions_table_joins($joins){
+
+    if(is_admin()) return $joins;
+
+    $mepr_db = new \MeprDb();
+    $joins[] = "/* IMPORTANT */ LEFT JOIN {$mepr_db->subscription_meta} AS meta
+    ON meta.subscription_id = sub.id";
+
+    return $joins;
+  }
+
 
   /**
    * Join Subscription Meta table to remove Gift subscriptions from Account->Subscriptions tab
@@ -48,6 +69,20 @@ class Account extends lib\BaseCtrl {
     );
 
     return $args;
+  }
+
+  /**
+   * Join Transaction Meta table to remove gifter/giftee transactions from Account->Subscriptions on the frontend and backend
+   * @param mixed $joins
+   *
+   * @return array
+   */
+  public function nonrecurring_subscriptions_table_joins($joins){
+    $mepr_db = new \MeprDb();
+    $joins[] = "LEFT JOIN {$mepr_db->transaction_meta} AS meta
+    ON meta.transaction_id = txn.id";
+
+    return $joins;
   }
 
   /**

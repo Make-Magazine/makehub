@@ -49,8 +49,7 @@
 				// On AJAX-enabled forms, GF will evaluate conditional logic *before* GPLC can test for checkboxes which
 				// are disabled by default. If the field is hidden by conditional logic, GPLC will incorrectly think that
 				// it is disabled by default. Let's account for this...
-				// Added a second check to prevent double binding making deselected checkboxes permanently disabled.
-				if ( ( ! $parent.data( 'gf-disabled-assessed' ) || $( this ).hasClass( 'gf-default-disabled' ) ) && ! $( this ).hasClass( 'gplc-disabled' ) ) {
+				if ( ! $parent.data( 'gf-disabled-assessed' ) || $( this ).hasClass( 'gf-default-disabled' ) ) {
 					$( this ).filter( ':disabled' ).addClass( 'gplc-pre-disabled' );
 				}
 			} );

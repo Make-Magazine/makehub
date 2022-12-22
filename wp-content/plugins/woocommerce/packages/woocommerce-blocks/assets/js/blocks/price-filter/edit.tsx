@@ -5,6 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { getAdminLink } from '@woocommerce/settings';
 import { blocksConfig } from '@woocommerce/block-settings';
+import HeadingToolbar from '@woocommerce/editor-components/heading-toolbar';
 import BlockTitle from '@woocommerce/editor-components/block-title';
 import { Icon, currencyDollar, external } from '@wordpress/icons';
 import type { BlockEditProps } from '@wordpress/blocks';
@@ -26,20 +27,13 @@ import {
 import Block from './block';
 import './editor.scss';
 import type { Attributes } from './types';
-import { UpgradeNotice } from '../filter-wrapper/upgrade';
 
 export default function ( {
 	attributes,
 	setAttributes,
-	clientId,
 }: BlockEditProps< Attributes > ) {
-	const {
-		heading,
-		headingLevel,
-		showInputFields,
-		inlineInput,
-		showFilterButton,
-	} = attributes;
+	const { heading, headingLevel, showInputFields, showFilterButton } =
+		attributes;
 
 	const blockProps = useBlockProps();
 
@@ -47,11 +41,14 @@ export default function ( {
 		return (
 			<InspectorControls key="inspector">
 				<PanelBody
-					title={ __( 'Settings', 'woo-gutenberg-products-block' ) }
+					title={ __(
+						'Block Settings',
+						'woo-gutenberg-products-block'
+					) }
 				>
 					<ToggleGroupControl
 						label={ __(
-							'Price Range Selector',
+							'Price Range',
 							'woo-gutenberg-products-block'
 						) }
 						value={ showInputFields ? 'editable' : 'text' }
@@ -60,7 +57,6 @@ export default function ( {
 								showInputFields: value === 'editable',
 							} )
 						}
-						className="wc-block-price-filter__price-range-toggle"
 					>
 						<ToggleGroupControlOption
 							value="editable"
@@ -77,33 +73,15 @@ export default function ( {
 							) }
 						/>
 					</ToggleGroupControl>
-					{ showInputFields && (
-						<ToggleControl
-							label={ __(
-								'Inline input fields',
-								'woo-gutenberg-products-block'
-							) }
-							checked={ inlineInput }
-							onChange={ () =>
-								setAttributes( {
-									inlineInput: ! inlineInput,
-								} )
-							}
-							help={ __(
-								'Show input fields inline with the slider.',
-								'woo-gutenberg-products-block'
-							) }
-						/>
-					) }
 					<ToggleControl
 						label={ __(
-							"Show 'Apply filters' button",
+							'Filter button',
 							'woo-gutenberg-products-block'
 						) }
 						help={
 							showFilterButton
 								? __(
-										'Products will only update when the button is clicked.',
+										'Products will only update when the button is pressed.',
 										'woo-gutenberg-products-block'
 								  )
 								: __(
@@ -118,6 +96,21 @@ export default function ( {
 							} )
 						}
 					/>
+					<p>
+						{ __(
+							'Heading Level',
+							'woo-gutenberg-products-block'
+						) }
+					</p>
+					<HeadingToolbar
+						isCollapsed={ false }
+						minLevel={ 2 }
+						maxLevel={ 7 }
+						selectedLevel={ headingLevel }
+						onChange={ ( newLevel: number ) =>
+							setAttributes( { headingLevel: newLevel } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 		);
@@ -127,7 +120,10 @@ export default function ( {
 		<Placeholder
 			className="wc-block-price-slider"
 			icon={ <Icon icon={ currencyDollar } /> }
-			label={ __( 'Filter by Price', 'woo-gutenberg-products-block' ) }
+			label={ __(
+				'Filter Products by Price',
+				'woo-gutenberg-products-block'
+			) }
 			instructions={ __(
 				'Display a slider to filter products in your store by price.',
 				'woo-gutenberg-products-block'
@@ -135,7 +131,7 @@ export default function ( {
 		>
 			<p>
 				{ __(
-					'To filter your products by price you first need to assign prices to your products.',
+					"Products with prices are needed for filtering by price. You haven't created any products yet.",
 					'woo-gutenberg-products-block'
 				) }
 			</p>
@@ -165,22 +161,14 @@ export default function ( {
 			) : (
 				<>
 					{ getInspectorControls() }
-					<UpgradeNotice
-						attributes={ attributes }
-						clientId={ clientId }
-						setAttributes={ setAttributes }
-						filterType="price-filter"
+					<BlockTitle
+						className="wc-block-price-filter__title"
+						headingLevel={ headingLevel }
+						heading={ heading }
+						onChange={ ( value: string ) =>
+							setAttributes( { heading: value } )
+						}
 					/>
-					{ heading && (
-						<BlockTitle
-							className="wc-block-price-filter__title"
-							headingLevel={ headingLevel }
-							heading={ heading }
-							onChange={ ( value: string ) =>
-								setAttributes( { heading: value } )
-							}
-						/>
-					) }
 					<Disabled>
 						<Block attributes={ attributes } isEditor={ true } />
 					</Disabled>

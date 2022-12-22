@@ -12,7 +12,7 @@ class ESSB_Elementor_Share_Action_Button_Widget extends Widget_Base {
 	}
 	
 	public function get_icon() {
-		return 'eicon-share-arrow';
+		return 'fa fa-share-square-o';
 	}
 	
 	public function get_categories() {

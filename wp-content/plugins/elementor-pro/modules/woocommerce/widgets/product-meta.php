@@ -289,9 +289,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'Singular', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'Category', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -301,9 +298,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'Plural', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'Categories', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -322,9 +316,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'Singular', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'Tag', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -334,9 +325,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'Plural', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'Tags', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -355,9 +343,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'SKU', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'SKU', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -367,9 +352,6 @@ class Product_Meta extends Base_Widget {
 				'label' => esc_html__( 'Missing', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'N/A', 'elementor-pro' ),
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -383,9 +365,9 @@ class Product_Meta extends Base_Widget {
 	protected function render() {
 		global $product;
 
-		$product = $this->get_product();
+		$product = wc_get_product();
 
-		if ( ! $product ) {
+		if ( empty( $product ) ) {
 			return;
 		}
 

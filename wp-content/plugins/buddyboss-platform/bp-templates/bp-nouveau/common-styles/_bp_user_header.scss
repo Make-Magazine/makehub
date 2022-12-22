@@ -126,7 +126,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&:before {
 				font-family: "bb-icons";/* stylelint-disable-line */
-				font-size: 18px;
+				font-size: 20px;
 				display: inline-block;
 				margin-right: 10px;
 				vertical-align: middle;
@@ -145,10 +145,12 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 			&.view-as:before {
 				content: "\ee69";
+				font-family: "bb-icons";/* stylelint-disable-line */
 			}
 
 			&.send-message:before {
 				content: "\ee62";
+				color: inherit !important;
 			}
 
 			&.block-member:before {

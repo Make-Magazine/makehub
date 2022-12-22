@@ -328,8 +328,7 @@ class GP_Limit_Checkboxes extends GWPerk {
 			if ( $this->is_applicable_field( $field ) && ! in_array( $field->id, $step->get_editable_fields() ) ) {
 				$field->failed_validation = false;
 			} elseif ( $field->failed_validation ) {
-				// If the field has failed validation, the validation result should be updated to 'false'.
-				$validation_result['is_valid'] = false;
+				$validation_result['is_valid'] = true;
 			}
 		}
 

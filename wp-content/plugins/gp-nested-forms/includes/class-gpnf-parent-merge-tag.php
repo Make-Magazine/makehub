@@ -7,7 +7,7 @@ class GPNF_Parent_Merge_Tag {
 	public $is_loading_nested_form = false;
 
 	public static function get_instance() {
-		if ( self::$instance == null ) {
+		if ( null == self::$instance ) {
 			self::$instance = new self;
 		}
 
@@ -52,11 +52,6 @@ class GPNF_Parent_Merge_Tag {
 				$full_tag = $match[0];
 				$modifier = $match[1];
 
-				// process {Parent:id} merge tag as Parent:entry_id} merge tag to fetch correct Parent entry id.
-				if ( strpos( $full_tag, 'Parent:id' ) !== false ) {
-					$modifier = 'entry_id';
-				}
-
 				$stubbed_text_format = preg_match( '/\d+(\.\d+)?/', $modifier ) ? '{Parent Form Field:%s}' : '{%s}';
 				$stubbed_text        = sprintf( $stubbed_text_format, $modifier );
 
@@ -78,12 +73,12 @@ class GPNF_Parent_Merge_Tag {
 
 		if ( is_array( $field->inputs ) ) {
 			foreach ( $field->inputs as $input ) {
-				if ( is_string( rgar( $input, 'defaultValue' ) ) && stripos( rgar( $input, 'defaultValue' ), '{Parent' ) !== false ) {
+				if ( stripos( rgar( $input, 'defaultValue' ), '{Parent' ) !== false ) {
 					$has_parent_merge_tag = true;
 					break;
 				}
 			}
-		} elseif ( is_string( rgar( $field, 'defaultValue' ) ) && stripos( rgar( $field, 'defaultValue' ), '{Parent' ) !== false ) {
+		} elseif ( stripos( rgar( $field, 'defaultValue' ), '{Parent' ) !== false ) {
 			$has_parent_merge_tag = true;
 		}
 
@@ -100,17 +95,13 @@ class GPNF_Parent_Merge_Tag {
 				foreach ( $inputs as $input ) {
 					$default_value = rgar( $input, 'defaultValue' );
 					if ( stripos( $default_value, '{Parent' ) !== false && $default_value == rgar( $value, $input['id'] ) ) {
-						$input['defaultValue'] = '';
-
-						$value = '';
+						$input['defaultValue'] = $value = '';
 						break;
 					}
 				}
 				$field->inputs = $inputs;
 			} elseif ( $field->defaultValue == $value ) {
-				$field->defaultValue = '';
-
-				$value = '';
+				$field->defaultValue = $value = '';
 			}
 		}
 

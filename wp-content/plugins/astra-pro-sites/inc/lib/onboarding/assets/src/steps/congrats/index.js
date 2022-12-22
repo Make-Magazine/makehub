@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import confetti from 'canvas-confetti';
 import { __, sprintf } from '@wordpress/i18n';
+import confetti from 'canvas-confetti';
 import DefaultStep from '../../components/default-step/index';
 import { useStateValue } from '../../store/store';
 import './style.scss';

@@ -95,10 +95,9 @@ class BP_Video_Theme_Compat {
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function directory_dummy_post() {
-		$video_page_id = bp_core_get_directory_page_id( 'video' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => ! empty( $video_page_id ) ? $video_page_id : 0,
+				'ID'             => 0,
 				'post_title'     => bp_get_directory_title( 'video' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -162,10 +161,9 @@ class BP_Video_Theme_Compat {
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function single_dummy_post() {
-		$video_page_id = bp_core_get_directory_page_id( 'video' );
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => ! empty( $video_page_id ) ? $video_page_id : 0,
+				'ID'             => 0,
 				'post_title'     => __( 'Videos', 'buddyboss' ),
 				'post_author'    => 0,
 				'post_date'      => 0,

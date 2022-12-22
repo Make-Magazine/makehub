@@ -154,7 +154,7 @@ class GPNF_Export {
 			}
 		}
 
-		if ( empty( $lines ) ) {
+		if ( empty ( $lines ) ) {
 			return $line;
 		}
 

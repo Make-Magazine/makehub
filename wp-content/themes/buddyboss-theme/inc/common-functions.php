@@ -58,7 +58,8 @@ function bb_theme_get_404_svg_code( $version = 1 ) {
 			<circle class="circle-fill-404" cx="297.156" cy="53.9609" r="1.16671" fill="#385DFF" stroke="#385DFF" stroke-width="0.583353"/>
 			<defs>
 			<filter id="filter0_b_6658_10486" x="24.4381" y="18.0847" width="249.384" height="104.73" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>			
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feGaussianBlur in="BackgroundImage" stdDeviation="1.16671"/>
 			<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_6658_10486"/>
 			<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_6658_10486" result="shape"/>
 			</filter>

@@ -62,15 +62,4 @@ class MeprCouponsHelper
     }
     return $content;
   }
-
-  /**
-   * Formats the coupon amount for invoice table
-   *
-   * @param string $amount
-   * @return float
-   */
-  public static function format_coupon_amount( $amount ){
-    return -( $amount );
-  }
-
 }

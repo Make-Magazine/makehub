@@ -21,7 +21,7 @@ class GravityView_Field_Phone extends GravityView_Field {
 	var $icon = 'dashicons-smartphone';
 
 	public function __construct() {
-		$this->label = esc_html__( 'Phone', 'gk-gravityview' );
+		$this->label = esc_html__( 'Phone', 'gravityview' );
 		parent::__construct();
 	}
 
@@ -46,8 +46,8 @@ class GravityView_Field_Phone extends GravityView_Field {
 
 		$field_options['link_phone'] = array(
 	        'type' => 'checkbox',
-	        'label' => __( 'Make Phone Number Clickable', 'gk-gravityview' ),
-	        'desc' => __( 'Allow dialing a number by clicking it?', 'gk-gravityview'),
+	        'label' => __( 'Make Phone Number Clickable', 'gravityview' ),
+	        'desc' => __( 'Allow dialing a number by clicking it?', 'gravityview'),
 	        'value' => true,
 	        'group' => 'display',
 	        'priority' => 100,

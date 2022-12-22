@@ -6,7 +6,6 @@
  */
 
 use Yoast\WP\SEO\Config\Schema_Types;
-use Yoast\WP\SEO\Integrations\Settings_Integration;
 
 /**
  * Class WPSEO_Admin_Pages.
@@ -42,8 +41,8 @@ class WPSEO_Admin_Pages {
 	 */
 	public function init() {
 		$page = filter_input( INPUT_GET, 'page' );
-		if ( $page === Settings_Integration::PAGE ) {
-			// Bail, this is managed in the Settings_Integration.
+		if ( $page === 'wpseo_settings' ) {
+			// Bail, this is managed in `Yoast\WP\SEO\Integrations\Settings_Integration`.
 			return;
 		}
 
@@ -89,12 +88,11 @@ class WPSEO_Admin_Pages {
 		$dismissed_alerts       = $alert_dismissal_action->all_dismissed();
 
 		$script_data = [
-			'userLanguageCode'               => WPSEO_Language_Utils::get_language( \get_user_locale() ),
-			'dismissedAlerts'                => $dismissed_alerts,
-			'isRtl'                          => is_rtl(),
-			'isPremium'                      => YoastSEO()->helpers->product->is_premium(),
-			'webinarIntroSettingsUrl'        => WPSEO_Shortlinker::get( 'https://yoa.st/webinar-intro-settings' ),
-			'webinarIntroFirstTimeConfigUrl' => WPSEO_Shortlinker::get( 'https://yoa.st/webinar-intro-first-time-config' ),
+			'userLanguageCode'        => WPSEO_Language_Utils::get_language( \get_user_locale() ),
+			'dismissedAlerts'         => $dismissed_alerts,
+			'isRtl'                   => is_rtl(),
+			'isPremium'               => YoastSEO()->helpers->product->is_premium(),
+			'webinarIntroSettingsUrl' => WPSEO_Shortlinker::get( 'https://yoa.st/webinar-intro-settings' ),
 		];
 
 		$page = filter_input( INPUT_GET, 'page' );

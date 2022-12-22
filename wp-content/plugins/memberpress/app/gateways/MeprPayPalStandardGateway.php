@@ -56,11 +56,11 @@ class MeprPayPalStandardGateway extends MeprBasePayPalGateway {
     $this->use_desc = $this->settings->use_desc;
 
     if($this->is_test_mode()) {
-      $this->settings->url     = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+      $this->settings->url     = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
       $this->settings->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
     }
     else {
-      $this->settings->url = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+      $this->settings->url = 'https://www.paypal.com/cgi-bin/webscr';
       $this->settings->api_url = 'https://api-3t.paypal.com/nvp';
     }
 
@@ -189,15 +189,6 @@ class MeprPayPalStandardGateway extends MeprBasePayPalGateway {
   }
 
   public function is_ipn_for_me() {
-    //Note: Sometimes PayPal doesn't send the custom field, or it is cutoff and doesn't include the gateway_id
-    //This prevents transactions from being created in MP. Since the fix is dependent on PayPal, this filter
-    //is to override the IPN is for me check so customers sites can still operate.
-    //CAUTION: Should ony be used for customers with this specific issue and that only have 1 PayPal payment gateway setup.
-    //The same filter is in MeprPayPalCommerceGateway as well.
-    if(apply_filters('mepr_override_ipn_is_for_me', false)) {
-      return true;
-    }
-
     if(isset($_POST['custom']) && !empty($_POST['custom'])) {
       $custom_vars = (array)json_decode($_POST['custom']);
 

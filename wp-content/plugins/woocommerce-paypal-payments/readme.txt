@@ -2,9 +2,9 @@
 Contributors: woocommerce, automattic, inpsyde
 Tags: woocommerce, paypal, payments, ecommerce, e-commerce, store, sales, sell, shop, shopping, cart, checkout
 Requires at least: 5.3
-Tested up to: 6.1
-Requires PHP: 7.2
-Stable tag: 2.0.0
+Tested up to: 6.0
+Requires PHP: 7.1
+Stable tag: 1.9.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,60 +80,6 @@ Follow the steps below to connect the plugin to your PayPal account:
 6. Main settings screen.
 
 == Changelog ==
-
-= 2.0.0 =
-* Add - Option to separate JSSDK APM payment buttons into individual WooCommerce gateways #671 
-* Add - OXXO APM (Alternative Payment Method) #684 
-* Add - Pay Later tab #961
-* Add - Button preview in settings #929
-* Fix - Prevent Enter key submit for our non-standard button gateways #981 
-* Fix - Pay Upon Invoice - Stock correction on failed orders #964
-* Fix - Check that WC session exists before using it #846
-* Fix - Compatibility with One Page Checkout Extension #356
-* Fix - Tracking status filter sending wrong parameter #970
-* Enhancement - Compatibility with WC High-Performance Order Storage #933
-* Enhancement - PHP 8.1 warning: Constant FILTER_SANITIZE_STRING is deprecated #867
-* Enhancement - Execute server-side WC validation when clicking button #942
-* Enhancement - Update order with order note if payment failed after billing agreement canceled at PayPal #886
-* Enhancement - Missing PUI refund functionality from WC order #937 
-* Enhancement - Hide Pay upon Invoice tab if not available for merchant #978
-* Enhancement - Handle synced sub without upfront payment like free trial #936
-* Enhancement - Isolate container and modularity deps #972
-  **NOTE**: if you were extending/modifying the plugin using the modularity system, 
-  you will need to add the `WooCommerce\PayPalCommerce\Vendor\`  prefix for the container/modularity namespaces in your code,
-  that is `Psr\Container\ContainerInterface` becomes `WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface`,
-  and `Dhii\Modular\Module\ModuleInterface` becomes `WooCommerce\PayPalCommerce\Vendor\Dhii\Modular\Module\ModuleInterface`.
-* Enhancement - PUI gateway displayed on pay for order page when mandatory billing fields are left empty or country is unsupported #966
-* Enhancement - When Brand Name field is left empty, PUI purchase fails #916
-* Enhancement - Improve styling when using separate buttons #996
-
-= 1.9.5 =
-* Fix - Invalid tracking number in logs when adding tracking #903
-* Fix - Tracking on Connection tab always enabled #900
-* Fix - PUI payment instructions printed in the refund email #873
-* Fix - Fix `thankyou_order_received` filter usage #899
-* Enhancement - Add SCA payment indicator for credit card renewals #847
-* Enhancement - Rename plugin settings tabs #893
-* Enhancement - Hide order button via class #921
-* Enhancement - Tracking integration compatibility with Germanized plugin #883
-* Enhancement - Onboarding buttons must be clicked multiple times after using PUI checkbox #851
-* Enhancement - Ratepay payment instructions added to non Pay upon Invoice orders #892
-* Enhancement - During PayPal express checkout PUI js file is loaded #905
-* Enhancement - PayPal Transaction Key meta field not populated for PUI payments #897
-* Enhancement - Onboard with PUI Checkbox automatically set when shop is set to Germany #876
-* Enhancement - Update all plugin strings #946
-
-= 1.9.4 =
-* Add - Create new connection tab #801
-* Add - Functionality to choose subscription failure behavior #728
-* Fix - Virtual-only orders always move order status to completed #868
-* Fix - PayPal order created twice when context is checkout #832
-* Enhancement - Handle unsupported browsers better #843
-* Enhancement - Combine the Webhooks Status page into a new Connection tab (891) #827
-* Enhancement - Hide PayPal Card Processing tab if not available in country or for merchant #870
-* Enhancement - Resubscribe webhooks on plugin upgrades #838
-* Enhancement - PUI-relevant webhook not subscribed to #842
-* Enhancement - Remove WC logo during onboarding #881
 
 = 1.9.3 =
 * Add - Tracking API #792

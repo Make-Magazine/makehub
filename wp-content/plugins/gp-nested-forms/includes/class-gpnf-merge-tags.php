@@ -25,13 +25,11 @@ class GPNF_Merge_Tags {
 
 			$merge_tags[] = array(
 				'tag'   => "{{$field->label}:{$field->id}:count}",
-				// translators: placeholder is a field label
 				'label' => sprintf( esc_html__( '%s: Count', 'gp-nested-forms' ), $field->label ),
 			);
 
 			$merge_tags[] = array(
 				'tag'   => "{{$field->label}:{$field->id}:sum=CHILD_FIELD_ID}",
-				// translators: placeholder is a field label
 				'label' => sprintf( esc_html__( '%s: Sum', 'gp-nested-forms' ), $field->label ),
 			);
 
@@ -40,14 +38,12 @@ class GPNF_Merge_Tags {
 			if ( gp_nested_forms()->has_pricing_field( $child_form ) ) {
 				$merge_tags[] = array(
 					'tag'   => "{{$field->label}:{$field->id}:total}",
-					// translators: placeholder is a field label
 					'label' => sprintf( esc_html__( '%s: Total', 'gp-nested-forms' ), $field->label ),
 				);
 			}
 
 			$merge_tags[] = array(
 				'tag'   => "{{$field->label}:{$field->id}:set=CHILD_FIELD_ID}",
-				// translators: placeholder is a field label
 				'label' => sprintf( esc_html__( '%s: Set', 'gp-nested-forms' ), $field->label ),
 			);
 

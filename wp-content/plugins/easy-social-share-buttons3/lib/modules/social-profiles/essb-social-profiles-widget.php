@@ -305,13 +305,6 @@ foreach ($columns as $key => $text) {
 			$profile_networks = $profiles_order;
 		}
 		
-		/**
-		 * @since 8.5 Prevent showing in the Profiles widget a warning message if there are no active networks
-		 */
-		if (!is_array($profile_active_networks)) {
-		    $profile_active_networks = array();
-		}
-		
 		$sc_network_address = array();
 		$sc_network_texts = array();
 		foreach ($profile_networks as $network) {
@@ -338,17 +331,6 @@ foreach ($columns as $key => $text) {
 			
 		}
 		
-		/**
-		 * @since 8.4
-		 */
-		if (class_exists('ESSBWpmlBridge')) {
-            $key = 'wpml_widget_title_profiles_'.ESSBWpmlBridge::getFrontEndLanugage();
-            $translated_title = essb_option_value($key);
-            
-            if (!empty($translated_title)) {
-                $title = $translated_title;
-            }
-		}
 		
 		if (!empty($show_title)) {
 			echo $before_widget . $before_title . $title . $after_title;

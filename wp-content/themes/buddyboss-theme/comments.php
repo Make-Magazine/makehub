@@ -27,12 +27,7 @@ if ( post_password_required() ) {
 	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss-theme' ); ?></h4>
 
 	<?php
-	$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-	if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
-		$user_link = bp_core_get_user_domain( get_current_user_id() );
-	} else {
-		$user_link = get_author_posts_url( get_current_user_id() );
-	}
+	$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( get_current_user_id() ) : get_author_posts_url( get_current_user_id() );
 
 	// You can start editing here -- including this comment!
 	$args = array(

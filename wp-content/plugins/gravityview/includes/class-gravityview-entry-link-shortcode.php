@@ -230,13 +230,13 @@ class GravityView_Entry_Link_Shortcode {
 
 		switch ( $this->settings['action'] ) {
 			case 'edit':
-				$anchor_text = __( 'Edit Entry', 'gk-gravityview' );
+				$anchor_text = __( 'Edit Entry', 'gravityview' );
 				break;
 			case 'delete':
-				$anchor_text = __( 'Delete Entry', 'gk-gravityview' );
+				$anchor_text = __( 'Delete Entry', 'gravityview' );
 				break;
 			default:
-				$anchor_text = __( 'View Details', 'gk-gravityview' );
+				$anchor_text = __( 'View Details', 'gravityview' );
 		}
 
 		return $anchor_text;

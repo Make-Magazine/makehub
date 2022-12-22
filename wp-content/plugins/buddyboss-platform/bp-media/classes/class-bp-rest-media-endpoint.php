@@ -1232,12 +1232,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'upload_id'    => $upload['id'],
 			'upload'       => $upload['url'],
 			'upload_thumb' => $upload['thumb'],
-			'name'         => $upload['name'],
 		);
-
-		if ( 'messages' === $request->get_param( 'component' ) && isset( $upload['msg_url'] ) ) {
-			$retval['msg_url'] = $upload['msg_url'];
-		}
 
 		$response = rest_ensure_response( $retval );
 
@@ -1403,7 +1398,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id'         => $media->attachment_id,
 			'user_id'               => $media->user_id,
 			'title'                 => $media->title,
-			'description'           => wp_specialchars_decode( get_post_field( 'post_content', $media->attachment_id ), ENT_QUOTES ),
+			'description'           => get_post_field( 'post_content', $media->attachment_id ),
 			'album_id'              => $media->album_id,
 			'group_id'              => $media->group_id,
 			'activity_id'           => $media->activity_id,
@@ -2315,12 +2310,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'context', 'view' );
-
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $object )
+				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
 			);
 		}
 
@@ -2869,11 +2861,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $object )
+				$this->prepare_item_for_response( $media, array() )
 			);
 		}
 
@@ -3248,12 +3238,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$retval = array();
-		$object = new WP_REST_Request();
-		$object->set_param( 'context', 'view' );
-
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $object )
+				$this->prepare_item_for_response( $media, array( 'context' => 'view' ) )
 			);
 		}
 

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'str_getcsv' ) ) {
 
 	/**
-	 * Input a text file name of a comma separated file, and parse it, returning the data as an array
+	 * Input a text file name of a comma seperated file, and parse it, returning the data as an array
 	 *
 	 * @since 2.1.0
 	 *
@@ -23,14 +23,14 @@ if ( ! function_exists( 'str_getcsv' ) ) {
 	 * @param  string $enclosure Enclosure.
 	 * @param  string $escape    Escape.
 	 *
-	 * @return array Array of strings that are parsed as comma separated values
+	 * @return array Array of strings that are parsed as comma seperated values
 	 */
 	function str_getcsv( $input, $delimiter = ',', $enclosure = '"', $escape = '\\' ) {
 		$fp = fopen( 'php://memory', 'r+' );
 		fputs( $fp, $input );
 		rewind( $fp );
-		$data = fgetcsv( $fp, 0, $delimiter, $enclosure ); // $escape only got added in 5.3.0
-		fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+		$data = fgetcsv( $fp, null, $delimiter, $enclosure ); // $escape only got added in 5.3.0
+		fclose( $fp );
 		return $data;
 	}
 }
@@ -200,11 +200,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		protected $script_data = null;
 
 		/**
-		 * Plugin path details.
+		 * Plugin path
 		 *
-		 * @var array
+		 * @var string
 		 */
-		protected $plugin_path = array();
+		protected $plugin_path = null;
 
 		/**
 		 * Array of pointers
@@ -276,14 +276,14 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @since 2.1.0
 		 *
 		 * @param  string $option   Option to be changed.
-		 * @param  string $new_value Value of new option.
+		 * @param  string $newvalue Value of new option.
 		 * @return bool
 		 */
-		public function update_option( $option, $new_value ) {
+		public function update_option( $option, $newvalue ) {
 			if ( $this->network_options ) {
-				return update_site_option( $option, $new_value );
+				return update_site_option( $option, $newvalue );
 			} else {
-				return update_option( $option, $new_value );
+				return update_option( $option, $newvalue );
 			}
 		}
 
@@ -463,7 +463,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @since 2.1.0
 		 *
 		 * @param  string $buf Buffer.
-		 * @return string      Saved options line separated
+		 * @return string      Saved options line seperated
 		 */
 		public function settings_export( $buf ) {
 			global $sfwd_options, $sfp;
@@ -594,8 +594,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $csv Comma separated text string.
-		 * @return array      Array representation of comma separated text
+		 * @param  string $csv Comma seperated text string.
+		 * @return array      Array representation of comma seperated text
 		 */
 		public function csv_to_array( $csv ) {
 			$args = array();
@@ -614,7 +614,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 
 		/**
-		 * Crude approximation of whether current user is an admin
+		 * Crude approximization of whether current user is an admin
 		 *
 		 * @since 2.1.0
 		 *
@@ -978,7 +978,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									$options['sfwd-courses_course_prerequisite'] = array();
 								}
 
-								// IF prerequisites not enabled then clear out the courses array.
+								// IF prereq not enabled then clear out the courses array.
 								if ( 'on' !== $options['sfwd-courses_course_prerequisite_enabled'] ) {
 									$options['sfwd-courses_course_prerequisite'] = array();
 								} else {
@@ -993,7 +993,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									}
 								}
 
-								// Or the other way if there are no selected prerequisites courses set enable off.
+								// Or the other way if there are no selected prereq courses set enable off.
 								if ( empty( $options['sfwd-courses_course_prerequisite'] ) ) {
 									$options['sfwd-courses_course_prerequisite_enabled'] = 'off';
 								} else {
@@ -1080,7 +1080,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									/**
 									 * If this quiz was the primary for all shared settings. We need to
 									 * delete the primary marker then move the primary marker to another
-									 * quiz using the same shared settings.
+									 * quiz using the same shared settngs.
 									 */
 									$quiz_id_primary_org = absint( learndash_get_quiz_primary_shared( $quiz_pro_id_org, false ) );
 									if ( $quiz_id_primary_org === $post_id ) {
@@ -1781,7 +1781,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 						$this->reset_options( $location, true );
 
 						/**
-						 * Fires after resetting sfwd options.
+						 * Fires after reseting sfwd options.
 						 *
 						 * @since 2.1.0
 						 */

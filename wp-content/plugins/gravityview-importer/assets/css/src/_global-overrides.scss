@@ -1,0 +1,37 @@
+.section {
+	padding-bottom: 1rem;
+}
+
+a.no-underline {
+	text-decoration: none;
+}
+
+.flex-grow-1 {
+	flex-grow: 1;
+}
+
+.flex-grow-2 {
+	flex-grow: 2;
+}
+
+.flex-grow-3 {
+	flex-grow: 3;
+}
+
+.flex-grow-4 {
+	flex-grow: 4;
+}
+
+.flex-grow-5 {
+	flex-grow: 5;
+}
+
+.hero {
+	border-radius: 1rem;
+}
+
+span.spinner-custom {
+	visibility: visible;
+	float: none;
+	margin: auto .25rem
+}

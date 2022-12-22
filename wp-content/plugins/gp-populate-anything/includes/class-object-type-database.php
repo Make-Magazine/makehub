@@ -222,7 +222,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	}
 
 	public function build_where_clause( $table, $column, $operator, $value ) {
-		$value = $this->maybe_convert_to_date( $table, $column, $value, $operator );
+		$value = $this->maybe_convert_to_date( $table, $column, $value );
 		return parent::build_where_clause( $table, $column, $operator, $value );
 	}
 
@@ -234,42 +234,25 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	 * @param $table  string  Table name to look up
 	 * @param $column string  Column name
 	 * @param $value  string  Value to convert
-	 * @param $operator  string The operator being used.
 	 *
 	 * @return string  Converted date value if applicable.
 	 */
-	private function maybe_convert_to_date( $table, $column, $value, $operator ) {
+	private function maybe_convert_to_date( $table, $column, $value ) {
 		$is_date = false;
-
 		if ( isset( $this->tables_cache[ $table ] ) ) {
-			$is_date = in_array( $this->tables_cache[ $table ][ $column ], array( 'date', 'datetime' ), true );
+			$is_date = $this->tables_cache[ $table ][ $column ] === 'date';
 		} else {
 			$structure = $this->get_db()->get_results( sprintf( 'DESCRIBE `%s`', esc_sql( $table ) ), ARRAY_N );
-
-			foreach ( $structure as $row ) {
+			foreach ( $structure as $index => $row ) {
 				$this->tables_cache[ $table ][ $row[0] ] = $row[1];
-				if ( $row[0] === $column && in_array( $row[1], array( 'date', 'datetime' ), true ) ) {
+				if ( $row[0] === $column && $row[1] === 'date' ) {
 					$is_date = true;
 				}
 			}
 		}
-
 		if ( $is_date ) {
 			$value = gmdate( 'Y-m-d', strtotime( $value ) );
-
-			switch ( $operator ) {
-				case '>=':
-				case '>':
-					$value .= ' 00:00:00';
-					break;
-
-				case '<=':
-				case '<':
-					$value .= ' 23:59:59';
-					break;
-			}
 		}
-
 		return $value;
 	}
 

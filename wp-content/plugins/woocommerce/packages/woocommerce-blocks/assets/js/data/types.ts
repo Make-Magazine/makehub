@@ -42,8 +42,3 @@ export function assertResponseIsValid(
 	}
 	throw new Error( 'Response not valid' );
 }
-
-export interface FieldValidationStatus {
-	message: string;
-	hidden: boolean;
-}

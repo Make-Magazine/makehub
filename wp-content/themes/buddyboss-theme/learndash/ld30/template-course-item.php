@@ -13,10 +13,8 @@ $is_enrolled            = false;
 $current_user_id        = get_current_user_id();
 $course_id              = get_the_ID();
 $cats                   = wp_get_post_terms( $course_id, 'ld_course_category' );
-$lession_list            = learndash_get_course_lessons_list( $course_id );
-$lession_list            = array_column( $lession_list, 'post' );
-$lesson_count            = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
-$lesson_count            = array_column( $lesson_count, 'post' );
+$lession_list           = learndash_get_lesson_list( $course_id );
+$lesson_count           = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
 $paypal_settings        = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
 $course_price           = trim( learndash_get_course_meta_setting( $course_id, 'course_price' ) );
 $course_price_type      = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
@@ -46,8 +44,6 @@ $class = '';
 if ( ! empty( $course_price ) && ( 'paynow' === $course_price_type || 'subscribe' === $course_price_type || 'closed' === $course_price_type ) ) {
 	$class = 'bb-course-paid';
 }
-
-$ribbon_text = get_post_meta( $course_id, '_learndash_course_grid_custom_ribbon_text', true );
 ?>
 
 <li class="bb-course-item-wrap">
@@ -76,9 +72,8 @@ $ribbon_text = get_post_meta( $course_id, '_learndash_course_grid_custom_ribbon_
 				if ( $progress['percentage'] > 0 && 100 !== $progress['percentage'] ) {
 					$status = 'progress';
 				}
-				if ( defined( 'LEARNDASH_COURSE_GRID_FILE' ) && ! empty( $ribbon_text ) ) {
-					echo '<div class="ld-status ld-status-progress ld-primary-background ld-custom-ribbon-text">' . sprintf( esc_html_x( '%s', 'Start ribbon', 'buddyboss-theme' ), $ribbon_text ) . '</div>';
-				} elseif ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
+
+				if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 
 					if ( ( 'open' === $course_pricing['type'] && 0 === (int) $progress['percentage'] ) || ( 'open' !== $course_pricing['type'] && $user_course_has_access && 0 === $progress['percentage'] ) ) {
 

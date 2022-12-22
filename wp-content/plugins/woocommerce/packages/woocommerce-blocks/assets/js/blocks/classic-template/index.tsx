@@ -2,6 +2,7 @@
  * External dependencies
  */
 import {
+	Block,
 	BlockEditProps,
 	createBlock,
 	getBlockType,
@@ -25,11 +26,6 @@ import { useEffect } from '@wordpress/element';
 import './editor.scss';
 import './style.scss';
 import { BLOCK_SLUG, TEMPLATES } from './constants';
-import {
-	isClassicTemplateBlockRegisteredWithAnotherTitle,
-	hasTemplateSupportForClassicTemplateBlock,
-	getTemplateDetailsBySlug,
-} from './utils';
 
 type Attributes = {
 	template: string;
@@ -44,12 +40,10 @@ const Edit = ( {
 	const { replaceBlock } = useDispatch( 'core/block-editor' );
 
 	const blockProps = useBlockProps();
-	const templateDetails = getTemplateDetailsBySlug(
-		attributes.template,
-		TEMPLATES
-	);
-	const templateTitle = templateDetails?.title ?? attributes.template;
-	const templatePlaceholder = templateDetails?.placeholder ?? 'fallback';
+	const templateTitle =
+		TEMPLATES[ attributes.template ]?.title ?? attributes.template;
+	const templatePlaceholder =
+		TEMPLATES[ attributes.template ]?.placeholder ?? 'fallback';
 
 	useEffect(
 		() =>
@@ -71,12 +65,12 @@ const Edit = ( {
 					<p className="wp-block-woocommerce-classic-template__placeholder-warning">
 						<strong>
 							{ __(
-								'Do not remove this block!',
+								'Attention: Do not remove this block!',
 								'woo-gutenberg-products-block'
 							) }
 						</strong>{ ' ' }
 						{ __(
-							'Removing this will cause unintended effects on your store.',
+							'Removal will cause unintended effects on your store.',
 							'woo-gutenberg-products-block'
 						) }
 					</p>
@@ -84,7 +78,7 @@ const Edit = ( {
 						{ sprintf(
 							/* translators: %s is the template title */
 							__(
-								'This is a placeholder for the %s. In your store it will display the actual product image, title, price, etc. You can move this placeholder around and add more blocks around it to customize the template.',
+								'This is an editor placeholder for the %s. On your store this will be replaced by the template and display with your product image(s), title, price, etc. You can move this placeholder around and add further blocks around it to extend the template.',
 								'woo-gutenberg-products-block'
 							),
 							templateTitle
@@ -124,6 +118,8 @@ const Edit = ( {
 	);
 };
 
+const templates = Object.keys( TEMPLATES );
+
 const registerClassicTemplateBlock = ( {
 	template,
 	inserter,
@@ -140,13 +136,12 @@ const registerClassicTemplateBlock = ( {
 	 * See https://github.com/woocommerce/woocommerce-gutenberg-products-block/issues/5861 for more context
 	 */
 	registerBlockType( BLOCK_SLUG, {
-		title:
-			template && TEMPLATES[ template ]
-				? TEMPLATES[ template ].title
-				: __(
-						'WooCommerce Classic Template',
-						'woo-gutenberg-products-block'
-				  ),
+		title: template
+			? TEMPLATES[ template ].title
+			: __(
+					'WooCommerce Classic Template',
+					'woo-gutenberg-products-block'
+			  ),
 		icon: (
 			<Icon
 				icon={ box }
@@ -207,6 +202,15 @@ const registerClassicTemplateBlock = ( {
 	} );
 };
 
+const isClassicTemplateBlockRegisteredWithAnotherTitle = (
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	block: Block< any > | undefined,
+	parsedTemplate: string
+) => block?.title !== TEMPLATES[ parsedTemplate ].title;
+
+const hasTemplateSupportForClassicTemplateBlock = ( parsedTemplate: string ) =>
+	templates.includes( parsedTemplate );
+
 // @todo Refactor when there will be possible to show a block according on a template/post with a Gutenberg API. https://github.com/WordPress/gutenberg/pull/41718
 
 let currentTemplateId: string | undefined;
@@ -231,10 +235,7 @@ if ( isExperimentalBuild() ) {
 
 		if (
 			block !== undefined &&
-			( ! hasTemplateSupportForClassicTemplateBlock(
-				parsedTemplate,
-				TEMPLATES
-			) ||
+			( ! hasTemplateSupportForClassicTemplateBlock( parsedTemplate ) ||
 				isClassicTemplateBlockRegisteredWithAnotherTitle(
 					block,
 					parsedTemplate
@@ -247,10 +248,7 @@ if ( isExperimentalBuild() ) {
 
 		if (
 			block === undefined &&
-			hasTemplateSupportForClassicTemplateBlock(
-				parsedTemplate,
-				TEMPLATES
-			)
+			hasTemplateSupportForClassicTemplateBlock( parsedTemplate )
 		) {
 			registerClassicTemplateBlock( {
 				template: parsedTemplate,

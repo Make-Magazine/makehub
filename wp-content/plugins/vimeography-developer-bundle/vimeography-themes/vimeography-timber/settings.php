@@ -50,18 +50,6 @@ $settings = array(
       )
   ),
   array(
-    'type'       => 'visibility',
-    'label'      => __('Show Video Playcount'),
-    'id'         => 'video-playcount-visibility',
-    'value'      => 'block',
-    'pro'        => TRUE,
-    'namespace'  => FALSE,
-    'properties' =>
-      array(
-        array('target' => '.vimeography-theme-timber .vimeography-modal .vimeography-plays', 'attribute' => 'display'),
-      )
-  ),
-  array(
     'type'       => 'colorpicker',
     'label'      => __('Date Color'),
     'id'         => 'date-color',

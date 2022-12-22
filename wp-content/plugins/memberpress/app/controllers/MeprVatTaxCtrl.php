@@ -16,7 +16,7 @@ class MeprVatTaxCtrl extends MeprBaseCtrl {
       add_filter('mepr-signup-scripts', array($this,'product_scripts'), 10, 3);
 
       // Filter for signup / payment page
-      add_action('mepr-checkout-before-coupon-field', array($this,'signup'));
+      add_action('mepr-checkout-before-submit', array($this,'signup'), 9, 1);
 
       // Validate the VAT number
       add_filter('mepr-validate-signup', array($this,'validate_signup'));
@@ -132,7 +132,9 @@ class MeprVatTaxCtrl extends MeprBaseCtrl {
   }
 
   public function process_signup($amt, $usr, $pid, $tid) {
-    if($this->vat_calc_possible()) {
+    $is_stripe_spc = isset($_POST['mepr_process_signup_form'], $_POST['mepr_transaction_id']) && is_numeric($_POST['mepr_transaction_id']);
+
+    if($this->vat_calc_possible() || $is_stripe_spc) {
       if(isset($_POST['mepr_vat_customer_type'])) {
         update_user_meta($usr->ID, 'mepr_vat_customer_type', $this->get_customer_type());
       }
@@ -159,11 +161,10 @@ class MeprVatTaxCtrl extends MeprBaseCtrl {
 
     if(!empty($usr) && $usr instanceof MeprUser && $usr->address_is_set()) {
       $usr_country = $usr->address('country');
-      $use_address_from_request = $usr->use_address_from_request();
 
       // When updating pricing terms string with AJAX,user country should be the POST country
-      if($use_address_from_request) {
-        $usr_country = isset($_POST['mepr-address-country']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-country'])) : '';
+      if( isset($_POST['action']) && ($_POST['action'] == "mepr_update_price_string" || $_POST['action'] == "mepr_update_spc_invoice_table") ){
+        $usr_country = sanitize_text_field($_POST['mepr_address_country']);
       }
 
       if($customer_type == 'business'){
@@ -179,10 +180,6 @@ class MeprVatTaxCtrl extends MeprBaseCtrl {
       if($usr_country == 'ES') {
         $canary_island_zips = array('35','38','51','52');
         $usr_zip = (string)trim($usr->address('zip'));
-
-        if($use_address_from_request) {
-          $usr_zip = isset($_POST['mepr-address-zip']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-zip'])) : '';
-        }
 
         foreach($canary_island_zips as $zip_prefix) {
           if(strpos($usr_zip, $zip_prefix) === 0) {
@@ -517,8 +514,8 @@ class MeprVatTaxCtrl extends MeprBaseCtrl {
       return false; // bail.
     }
 
-    if( isset($_POST['action']) && ($_POST['action'] == "mepr_update_price_string" || $_POST['action'] == "mepr_update_spc_invoice_table" || $_POST['action'] == 'mepr_stripe_create_payment_client_secret') ) {
-      $country = isset($_POST['mepr-address-country']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-country'])) : '';
+    if( isset($_POST['action']) && ($_POST['action'] == "mepr_update_price_string" || $_POST['action'] == "mepr_update_spc_invoice_table") ){
+      $country  = sanitize_text_field($_POST['mepr_address_country']);
     }
     else{
       $country  = $mepr_user->address('country');

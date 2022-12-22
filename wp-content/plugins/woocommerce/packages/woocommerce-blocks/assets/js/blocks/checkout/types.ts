@@ -4,7 +4,7 @@ export type InnerBlockTemplate = [
 	InnerBlockTemplate[] | undefined
 ];
 
-export interface Attributes extends Record< string, boolean | number > {
+export interface Attributes {
 	allowCreateAccount: boolean;
 	hasDarkControls: boolean;
 	showCompanyField: boolean;

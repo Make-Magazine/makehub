@@ -19,32 +19,10 @@ $ribbon = array(
     'background_enrolled'   =>  strval(get_option('lds_cg_ribbon_enrolled_bg')),
 );
 
-$fonts = array(
-     'heading' => strval( get_option('lds_cg_heading_txt_size') ),
-     'body'    => strval( get_option('lds_cg_body_txt_size') )
-);
-
 $button = array(
      'background'   =>   strval( get_option('lds_cg_button_bg') ),
-     'text'         =>   strval( get_option('lds_cg_button_txt') ),
-     'txt_size'     =>   strval( get_option('lds_cg_btn_txt_size') ),
+     'text'         =>   strval( get_option('lds_cg_button_txt') )
 );
-
-/*
- * Fonts
- */
-
-if( $fonts['heading'] != '' && !empty($fonts['heading']) ): ?>
-     .ld-course-list-items .ld_course_grid .entry-title {
-          font-size: <?php echo $fonts['heading']; ?>px;
-     }
-<?php endif;
-if( $fonts['body'] != '' && !empty($fonts['body']) ): ?>
-     .ld-course-list-items .ld_course_grid .entry-content {
-          font-size: <?php echo $fonts['body']; ?>px;
-     }
-<?php endif;
-
 
 /**
   * Button treatments
@@ -59,11 +37,6 @@ if( $button['background'] != '' && !empty($button['background']) ): ?>
 if( $button['text'] != '' && !empty($button['text']) ): ?>
      .ld-course-list-items .ld_course_grid .thumbnail.course a.btn-primary {
           color: <?php echo $button['text']; ?>;
-     }
-<?php endif;
-if( $button['txt_size'] != '' && !empty($button['txt_size']) ): ?>
-     .ld-course-list-items .ld_course_grid .thumbnail.course a.btn-primary {
-          font-size: <?php echo $button['txt_size']; ?>px;
      }
 <?php endif;
 
@@ -213,7 +186,7 @@ if( $element['hover-effect'] !== '' && !empty($element['hover-effect']) ): ?>
                break;
                case('reverse'):
                     if( $button['background'] != '' && !empty($button['background']) ): ?>
-                         background: <?php echo $button['background']; ?> !important;
+                         background: <?php echo $button['background']; ?>;
                     <?php else: ?>
                          background: #3276b1 !important;
                     <?php endif;
@@ -225,23 +198,23 @@ if( $element['hover-effect'] !== '' && !empty($element['hover-effect']) ): ?>
           .ld-course-list-items .ld_course_grid article.course:hover p.ld_course_grid_button a {
                <?php
                if( $button['text'] != '' && !empty($button['text']) ): ?>
-                    background-color: <?php echo $button['text']; ?> !important;
+                    background-color: <?php echo $button['text']; ?>;
                <?php else: ?>
-                    background-color: #fff !important;
+                    background-color: #fff;
                <?php endif;
                if( $button['background'] != '' && !empty($button['background']) ): ?>
-                    color: <?php echo $button['background']; ?> !important;
+                    color: <?php echo $button['background']; ?>;
                <?php else: ?>
-                    color: #3276b1 !important;
+                    color: #3276b1;
                <?php endif; ?>
           }
           .ld-course-list-items .ld_course_grid article.course:hover p.entry-content,
           .ld-course-list-items .ld_course_grid article.course:hover h3.entry-title {
                <?php
                if( $button['text'] != '' && !empty($button['text']) ): ?>
-                    color: <?php echo $button['text']; ?> !important;
+                    color: <?php echo $button['text']; ?>;
                <?php else: ?>
-                    color: #fff !important;
+                    color: #fff;
                <?php endif; ?>
           }
 
@@ -251,29 +224,29 @@ endif;
 
 if( $ribbon['text'] !== '' && !empty($ribbon['text']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price {
-    color: <?php echo $ribbon['text']; ?> !important;
+    color: <?php echo $ribbon['text']; ?>;
 }
 <?php endif;
 
 if( $ribbon['background'] !== '' && !empty($ribbon['background']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price {
-    background: <?php echo $ribbon['background']; ?> !important;
+    background: <?php echo $ribbon['background']; ?>;
 }
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price::before {
-    border-top-color: <?php echo ldvc_color_shift( $ribbon['background'], -0.2 ); ?> !important;
-    border-right-color: <?php echo ldvc_color_shift( $ribbon['background'], -0.2 ); ?> !important;
+    border-top-color: <?php echo ldvc_color_shift( $ribbon['background'], -0.2 ); ?>;
+    border-right-color: <?php echo ldvc_color_shift( $ribbon['background'], -0.2 ); ?>;
 }
 <?php endif;
 
 if( $ribbon['text_free'] !== '' && !empty($ribbon['text_free']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-free {
-    color: <?php echo $ribbon['text_free']; ?> !important;
+    color: <?php echo $ribbon['text_free']; ?>;
 }
 <?php endif;
 
 if( $ribbon['background_free'] !== '' && !empty($ribbon['background_free']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-free {
-    background: <?php echo $ribbon['background_free']; ?> !important;
+    background: <?php echo $ribbon['background_free']; ?>;
 }
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-free::before {
     border-top-color: <?php echo ldvc_color_shift( $ribbon['background_free'], -0.2 ); ?>;
@@ -283,26 +256,19 @@ if( $ribbon['background_free'] !== '' && !empty($ribbon['background_free']) ): ?
 
 if( $ribbon['text_enrolled'] !== '' && !empty($ribbon['text_enrolled']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-enrolled {
-    color: <?php echo $ribbon['text_enrolled']; ?> !important;
+    color: <?php echo $ribbon['text_enrolled']; ?>;
 }
 <?php endif;
 
 if( $ribbon['background_enrolled'] !== '' && !empty($ribbon['background_enrolled']) ): ?>
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-enrolled {
-    background: <?php echo $ribbon['background_enrolled']; ?> !important;
+    background: <?php echo $ribbon['background_enrolled']; ?>;
 }
 .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price.ribbon-enrolled::before {
-    border-top-color: <?php echo ldvc_color_shift( $ribbon['background_enrolled'], -0.2 ); ?> !important;
-    border-right-color: <?php echo ldvc_color_shift( $ribbon['background_enrolled'], -0.2 ); ?> !important;
+    border-top-color: <?php echo ldvc_color_shift( $ribbon['background_enrolled'], -0.2 ); ?>;
+    border-right-color: <?php echo ldvc_color_shift( $ribbon['background_enrolled'], -0.2 ); ?>;
 }
 <?php endif;
-
-if( !empty($ribbon['style']) ): ?>
-     .ld-course-list-items .ld_course_grid .thumbnail.course .ld_course_grid_price {
-          position: absolute;
-     }
-<?php
-endif; 
 
 switch( $ribbon['style'] ):
      case('modern'): ?>

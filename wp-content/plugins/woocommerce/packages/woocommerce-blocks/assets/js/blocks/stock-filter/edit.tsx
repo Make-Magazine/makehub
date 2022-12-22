@@ -10,6 +10,7 @@ import {
 	ToggleControl,
 	withSpokenMessages,
 } from '@wordpress/components';
+import HeadingToolbar from '@woocommerce/editor-components/heading-toolbar';
 import BlockTitle from '@woocommerce/editor-components/block-title';
 import type { BlockEditProps } from '@wordpress/blocks';
 
@@ -19,10 +20,8 @@ import type { BlockEditProps } from '@wordpress/blocks';
 import Block from './block';
 import './editor.scss';
 import { Attributes } from './types';
-import { UpgradeNotice } from '../filter-wrapper/upgrade';
 
 const Edit = ( {
-	clientId,
 	attributes,
 	setAttributes,
 }: BlockEditProps< Attributes > ) => {
@@ -41,9 +40,20 @@ const Edit = ( {
 				>
 					<ToggleControl
 						label={ __(
-							'Display product count',
+							'Product count',
 							'woo-gutenberg-products-block'
 						) }
+						help={
+							showCounts
+								? __(
+										'Product count is visible.',
+										'woo-gutenberg-products-block'
+								  )
+								: __(
+										'Product count is hidden.',
+										'woo-gutenberg-products-block'
+								  )
+						}
 						checked={ showCounts }
 						onChange={ () =>
 							setAttributes( {
@@ -51,23 +61,41 @@ const Edit = ( {
 							} )
 						}
 					/>
+					<p>
+						{ __(
+							'Heading Level',
+							'woo-gutenberg-products-block'
+						) }
+					</p>
+					<HeadingToolbar
+						isCollapsed={ false }
+						minLevel={ 2 }
+						maxLevel={ 7 }
+						selectedLevel={ headingLevel }
+						onChange={ ( newLevel: number ) =>
+							setAttributes( { headingLevel: newLevel } )
+						}
+					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Settings', 'woo-gutenberg-products-block' ) }
+					title={ __(
+						'Block Settings',
+						'woo-gutenberg-products-block'
+					) }
 				>
 					<ToggleControl
 						label={ __(
-							"Show 'Apply filters' button",
+							'Filter button',
 							'woo-gutenberg-products-block'
 						) }
 						help={
 							showFilterButton
 								? __(
-										'Products will only update when the button is clicked.',
+										'Products will only update when the button is pressed.',
 										'woo-gutenberg-products-block'
 								  )
 								: __(
-										'Products will update as soon as attributes are selected.',
+										'Products will update as options are selected.',
 										'woo-gutenberg-products-block'
 								  )
 						}
@@ -86,24 +114,16 @@ const Edit = ( {
 	return (
 		<>
 			{ getInspectorControls() }
-			<UpgradeNotice
-				clientId={ clientId }
-				attributes={ attributes }
-				setAttributes={ setAttributes }
-				filterType="stock-filter"
-			/>
 			{
 				<div { ...blockProps }>
-					{ heading && (
-						<BlockTitle
-							className="wc-block-stock-filter__title"
-							headingLevel={ headingLevel }
-							heading={ heading }
-							onChange={ ( value: string ) =>
-								setAttributes( { heading: value } )
-							}
-						/>
-					) }
+					<BlockTitle
+						className="wc-block-stock-filter__title"
+						headingLevel={ headingLevel }
+						heading={ heading }
+						onChange={ ( value: string ) =>
+							setAttributes( { heading: value } )
+						}
+					/>
 					<Disabled>
 						<Block attributes={ attributes } isEditor={ true } />
 					</Disabled>

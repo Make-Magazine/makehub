@@ -16,7 +16,6 @@ use Brick\Math\RoundingMode;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
 use Brick\Math\Exception\RoundingNecessaryException;
-use InvalidArgumentException;
 
 /**
  * A monetary value in a given currency. This class is immutable.
@@ -35,18 +34,24 @@ final class Money extends AbstractMoney
 {
     /**
      * The amount.
+     *
+     * @var \Brick\Math\BigDecimal
      */
-    private BigDecimal $amount;
+    private $amount;
 
     /**
      * The currency.
+     *
+     * @var \Brick\Money\Currency
      */
-    private Currency $currency;
+    private $currency;
 
     /**
      * The context that defines the capability of this Money.
+     *
+     * @var Context
      */
-    private Context $context;
+    private $context;
 
     /**
      * @param BigDecimal $amount
@@ -470,8 +475,6 @@ final class Money extends AbstractMoney
      *
      * @return Money[] The quotient and the remainder.
      *
-     * @psalm-return array{Money, Money}
-     *
      * @throws MathException If the divisor cannot be converted to a BigInteger.
      */
     public function quotientAndRemainder($that) : array
@@ -593,47 +596,19 @@ final class Money extends AbstractMoney
             throw new \InvalidArgumentException('Cannot allocateWithRemainder() to zero ratios only.');
         }
 
-        $ratios = $this->simplifyRatios(array_values($ratios));
-        $total = array_sum($ratios);
+        $monies = [];
 
-        [, $remainder] = $this->quotientAndRemainder($total);
+        $remainder = $this;
 
-        $toAllocate = $this->minus($remainder);
-
-        $monies = array_map(
-            fn (int $ratio) => $toAllocate->multipliedBy($ratio)->dividedBy($total),
-            $ratios,
-        );
+        foreach ($ratios as $ratio) {
+            $money = $this->multipliedBy($ratio)->quotient($total);
+            $remainder = $remainder->minus($money);
+            $monies[] = $money;
+        }
 
         $monies[] = $remainder;
 
         return $monies;
-    }
-
-    /**
-     * @param int[] $ratios
-     * @psalm-param non-empty-list<int> $ratios
-     *
-     * @return int[]
-     * @psalm-return non-empty-list<int>
-     */
-    private function simplifyRatios(array $ratios): array
-    {
-        $gcd = $this->gcdOfMultipleInt($ratios);
-
-        return array_map(fn (int $ratio) => intdiv($ratio, $gcd), $ratios);
-    }
-
-    /**
-     * @param int[] $values
-     *
-     * @psalm-param non-empty-list<int> $values
-     */
-    private function gcdOfMultipleInt(array $values): int
-    {
-        $values = array_map(fn (int $value) => BigInteger::of($value), $values);
-
-        return BigInteger::gcdMultiple(...$values)->toInt();
     }
 
     /**

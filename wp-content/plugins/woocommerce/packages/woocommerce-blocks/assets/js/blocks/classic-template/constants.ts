@@ -2,14 +2,10 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
+
 export const BLOCK_SLUG = 'woocommerce/legacy-template';
 
-/**
- * Internal dependencies
- */
-import { TemplateDetails } from './types';
-
-export const TEMPLATES: TemplateDetails = {
+export const TEMPLATES: Record< string, Record< string, string > > = {
 	'single-product': {
 		title: __(
 			'WooCommerce Single Product Block',

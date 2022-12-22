@@ -303,7 +303,7 @@ final class GravityView_Delete_Entry {
 
 		$View = \GV\View::by_id( $view_id );
 
-		$delete_label = __( 'Delete', 'Button label to delete an entry from the Edit Entry screen', 'gk-gravityview' );
+		$delete_label = __( 'Delete', 'Button label to delete an entry from the Edit Entry screen', 'gravityview' );
 
 		if ( $View ) {
 			$delete_label = $View->settings->get( 'action_label_delete', $delete_label );
@@ -370,7 +370,7 @@ final class GravityView_Delete_Entry {
 
 			gravityview()->log->debug( 'Delete entry failed: there was no entry with the entry slug {entry_slug}', array( 'entry_slug' => $entry_slug ) );
 
-			$this->_redirect_and_exit( $delete_redirect_base, __( 'The entry does not exist.', 'gk-gravityview' ), 'error' );
+			$this->_redirect_and_exit( $delete_redirect_base, __( 'The entry does not exist.', 'gravityview' ), 'error' );
 		}
 
 		$has_permission = $this->user_can_delete_entry( $entry, \GV\Utils::_GET( 'gvid', \GV\Utils::_GET( 'view_id' ) ) );
@@ -497,7 +497,7 @@ final class GravityView_Delete_Entry {
 			new GravityView_Cache();
 
 			if ( ! $trashed ) {
-				$delete_response = new WP_Error( 'trash_entry_failed', __( 'Moving the entry to the trash failed.', 'gk-gravityview' ) );
+				$delete_response = new WP_Error( 'trash_entry_failed', __( 'Moving the entry to the trash failed.', 'gravityview' ) );
 			} else {
 
 				/**
@@ -607,7 +607,7 @@ final class GravityView_Delete_Entry {
 	 */
 	public static function get_confirm_dialog() {
 
-		$confirm = __( 'Are you sure you want to delete this entry? This cannot be undone.', 'gk-gravityview' );
+		$confirm = __( 'Are you sure you want to delete this entry? This cannot be undone.', 'gravityview' );
 
 		/**
 		 * @filter `gravityview/delete-entry/confirm-text` Modify the Delete Entry Javascript confirmation text
@@ -634,18 +634,18 @@ final class GravityView_Delete_Entry {
 		$error = null;
 
 		if ( ! $this->verify_nonce() ) {
-			$error = __( 'The link to delete this entry is not valid; it may have expired.', 'gk-gravityview' );
+			$error = __( 'The link to delete this entry is not valid; it may have expired.', 'gravityview' );
 		}
 
 		if ( ! self::check_user_cap_delete_entry( $entry, array(), $view_id ) ) {
-			$error = __( 'You do not have permission to delete this entry.', 'gk-gravityview' );
+			$error = __( 'You do not have permission to delete this entry.', 'gravityview' );
 		}
 
 		if ( $entry['status'] === 'trash' ) {
 			if ( 'trash' === $this->get_delete_mode() ) {
-				$error = __( 'The entry is already in the trash.', 'gk-gravityview' );
+				$error = __( 'The entry is already in the trash.', 'gravityview' );
 			} else {
-				$error = __( 'You cannot delete the entry; it is already in the trash.', 'gk-gravityview' );
+				$error = __( 'You cannot delete the entry; it is already in the trash.', 'gravityview' );
 			}
 		}
 
@@ -780,21 +780,21 @@ final class GravityView_Delete_Entry {
 		}
 
 		$status = esc_attr( $_GET['status'] );
-		$message_from_url = \GV\Utils::_GET( 'message', '' );
+		$message_from_url = \GV\Utils::_GET( 'message' );
 		$message_from_url = rawurldecode( stripslashes_deep( $message_from_url ) );
 		$class = '';
 
 		switch ( $status ) {
 			case 'error':
 				$class = ' gv-error error';
-				$error_message = __( 'There was an error deleting the entry: %s', 'gk-gravityview' );
+				$error_message = __( 'There was an error deleting the entry: %s', 'gravityview' );
 				$message = sprintf( $error_message, $message_from_url );
 				break;
 			case 'trashed':
-				$message = __( 'The entry was successfully moved to the trash.', 'gk-gravityview' );
+				$message = __( 'The entry was successfully moved to the trash.', 'gravityview' );
 				break;
 			default:
-				$message = __( 'The entry was successfully deleted.', 'gk-gravityview' );
+				$message = __( 'The entry was successfully deleted.', 'gravityview' );
 				break;
 		}
 

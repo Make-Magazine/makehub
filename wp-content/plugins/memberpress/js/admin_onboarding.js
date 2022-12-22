@@ -3,7 +3,6 @@ var MeprOnboarding = (function($) {
   var working = false;
   var selected_content = null;
   var ea_install_started;
-  var upgrade_wait_started;
 
   onboarding = {
     init: function () {
@@ -275,7 +274,7 @@ var MeprOnboarding = (function($) {
       var video_hash = o_this.data('hash');
       var iframe_id = 'mepr_iframe' + video_hash;
 
-      $('#'+ video_holder_id).html('<iframe id="'+iframe_id+'" width="100%" height="100%" src="https://www.youtube.com/embed/'+video_id+'?rel=0&autoplay=0&mute=1&enablejsapi=1" frameborder="0" allowfullscreen></iframe>')
+      $('#'+ video_holder_id).html('<iframe id="'+iframe_id+'" width="100%" height="100%" src="https://www.youtube.com/embed/'+video_id+'?rel=0&autoplay=0&mute=1&enablejsapi=1" frameborder="0" allowfullscreen>')
       o_this.addClass('iframe_loaded');
     },
 
@@ -420,12 +419,6 @@ var MeprOnboarding = (function($) {
     },
 
     load_finish_step: function () {
-      var edition = MeprOnboardingL10n.edition_url_param;
-
-      if(upgrade_wait_started && (Date.now() - upgrade_wait_started > 45000)) {
-        edition = null;
-      }
-
       $.ajax({
         method: 'POST',
         url: MeprOnboardingL10n.ajax_url,
@@ -433,28 +426,13 @@ var MeprOnboarding = (function($) {
         data: {
           action: 'mepr_onboarding_load_finish_step',
           _ajax_nonce: MeprOnboardingL10n.load_finish_step,
-          data: JSON.stringify({
-            step: 8,
-            edition: edition
-          })
+           data: JSON.stringify({step:8})
         }
       })
       .done(function (response) {
         if(response && typeof response.success === 'boolean') {
           if(response.success) {
             $('#mepr-wizard-finish-step-container').html(response.data.html);
-
-            if($('#mepr-upgrade-wait-edition').length) {
-              if(!upgrade_wait_started) {
-                upgrade_wait_started = Date.now();
-              }
-
-              setTimeout(function () {
-                onboarding.load_finish_step();
-              }, 10000);
-
-              return;
-            }
 
             if($('#mepr-finishing-setup-redirect').length) {
               setTimeout(function(){

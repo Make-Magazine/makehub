@@ -19,7 +19,7 @@ class Renderer extends \Vimeography\Renderer {
    * @param [type] $settings [description]
    */
   public function add_pro_settings( $data, $gallery_settings ) {
-    return array_replace_recursive( $data, array(
+    return array_merge( $data, array(
       'pro' => true,
       'paging' => array(
         'sort'      => isset( $gallery_settings['sort'] ) ? $gallery_settings['sort'] : 'default',
@@ -37,20 +37,17 @@ class Renderer extends \Vimeography\Renderer {
           'playsinline' => apply_filters('vimeography.player.settings.playsinline', false),
         ),
         'downloads' => array(
-          'enabled' => array_key_exists('allow_downloads', $gallery_settings) && $gallery_settings['allow_downloads'] === 1,
+          'enabled' => $gallery_settings['allow_downloads'] === 1,
         ),
         'embed' => array(
           'title'  => true,
           'author' => true,
         ),
         'playlist' => array(
-          'enabled' => array_key_exists('playlist', $gallery_settings) && $gallery_settings['playlist'] === 1,
+          'enabled' => $gallery_settings['playlist'] === 1,
         ),
         'search' => array(
-          'enabled' => array_key_exists('enable_search', $gallery_settings) && $gallery_settings['enable_search'] === 1,
-        ),
-        'tags' => array(
-          'enabled' => array_key_exists('enable_tags', $gallery_settings) && $gallery_settings['enable_tags'] === 1,
+          'enabled' => $gallery_settings['enable_search'] === 1,
         ),
         'xhr' => array(
           'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -58,39 +55,9 @@ class Renderer extends \Vimeography\Renderer {
         ),
       ),
       'query'  => '',
-      'tags'   => $this->_aggregate_tags( $data, $gallery_settings ),
+      'tags'   => array(),
     ) );
   }
-
-
-  /**
-   * Consolidate all tags associated with the videos in the result set
-   * and send them to the theme to be rendered.
-   *
-   * @param  array $videos
-   * @return array $tags
-   */
-  private function _aggregate_tags( $data, $gallery_settings ) {
-    $tags = array();
-
-    if ( ! isset( $gallery_settings['enable_tags'] ) || $gallery_settings['enable_tags'] === 0 ) {
-      return $tags;
-    }
-
-    if ( is_array( $data['video_set'] ) && ! empty( $data['video_set'] ) ) {
-      foreach ( $data['video_set'] as $video ) {
-        if ( ! empty( $video->tags ) ) {
-          foreach ( $video->tags as $tag ) {
-            $tags[] = $tag;
-          }
-        }
-      }
-    }
-
-    $unique_tags = array_values( array_unique( $tags, SORT_REGULAR ) );
-    return apply_filters('vimeography.pro.tags', $unique_tags, $gallery_settings, $data);
-  }
-
 
   /**
    * [set_router_mode description]

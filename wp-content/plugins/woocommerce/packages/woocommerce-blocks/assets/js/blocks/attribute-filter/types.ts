@@ -4,7 +4,7 @@
 import type { BlockEditProps } from '@wordpress/blocks';
 
 export interface BlockAttributes {
-	className?: string;
+	className: string;
 	attributeId: number;
 	showCounts: boolean;
 	queryType: string;
@@ -12,8 +12,7 @@ export interface BlockAttributes {
 	headingLevel: number;
 	displayStyle: string;
 	showFilterButton: boolean;
-	selectType: string;
-	isPreview?: boolean;
+	isPreview: boolean;
 }
 
 export interface EditProps extends BlockEditProps< BlockAttributes > {
@@ -24,6 +23,4 @@ export interface DisplayOption {
 	value: string;
 	name: string;
 	label: JSX.Element;
-	textLabel: string;
-	formattedValue: string;
 }

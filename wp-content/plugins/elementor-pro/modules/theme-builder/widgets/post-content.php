@@ -107,8 +107,7 @@ class Post_Content extends Base_Widget {
 	}
 
 	protected function render() {
-		// Post CSS should not be printed here because it overrides the already existing post CSS.
-		$this->render_post_content( false, false );
+		$this->render_post_content();
 	}
 
 	public function render_plain_content() {}

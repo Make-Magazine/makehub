@@ -2,17 +2,12 @@
 
 namespace WP_Rocket\ThirdParty\Themes;
 
-use WP_Rocket\Admin\{Options, Options_Data};
+use WP_Rocket\Admin\Options;
+use WP_Rocket\Admin\Options_Data;
+use WP_Rocket\Event_Management\Subscriber_Interface;
 use WP_Rocket\Engine\Optimization\DelayJS\HTML;
 
-class Divi extends ThirdpartyTheme {
-	/**
-	 * Theme name
-	 *
-	 * @var string
-	 */
-	protected static $theme_name = 'divi';
-
+class Divi implements Subscriber_Interface {
 	/**
 	 * Options API instance.
 	 *
@@ -58,7 +53,7 @@ class Divi extends ThirdpartyTheme {
 			'rocket_specify_dimension_images' => 'disable_image_dimensions_height_percentage',
 		];
 
-		if ( ! self::is_current_theme() ) {
+		if ( ! self::is_divi() ) {
 			return $events;
 		}
 		$events['rocket_exclude_js']                            = 'exclude_js';
@@ -106,7 +101,8 @@ class Divi extends ThirdpartyTheme {
 	 * @return void
 	 */
 	public function maybe_disable_youtube_preview( $name, $theme ) {
-		if ( ! self::is_current_theme( $theme ) ) {
+		if ( ! self::is_divi( $theme ) ) {
+
 			return;
 		}
 
@@ -124,7 +120,7 @@ class Divi extends ThirdpartyTheme {
 	 * @return array
 	 */
 	public function add_divi_to_description( $disable_youtube_lazyload ) {
-		if ( ! self::is_current_theme() ) {
+		if ( ! self::is_divi() ) {
 			return $disable_youtube_lazyload;
 		}
 
@@ -150,6 +146,19 @@ class Divi extends ThirdpartyTheme {
 		}
 
 		return $images;
+	}
+
+	/**
+	 * Checks if the current theme (or parent) is Divi
+	 *
+	 * @since 3.6.3
+	 *
+	 * @param WP_Theme $theme Instance of the theme.
+	 */
+	private static function is_divi( $theme = null ) {
+		$theme = $theme instanceof WP_Theme ? $theme : wp_get_theme();
+
+		return ( 'Divi' === $theme->get( 'Name' ) || 'divi' === $theme->get_template() );
 	}
 
 	/**

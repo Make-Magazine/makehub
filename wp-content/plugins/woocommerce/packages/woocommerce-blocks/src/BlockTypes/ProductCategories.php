@@ -56,12 +56,11 @@ class ProductCategories extends AbstractDynamicBlock {
 	/**
 	 * Render the Product Categories List block.
 	 *
-	 * @param array    $attributes Block attributes.
-	 * @param string   $content    Block content.
-	 * @param WP_Block $block Block instance.
+	 * @param array  $attributes Block attributes.
+	 * @param string $content    Block content.
 	 * @return string Rendered block type output.
 	 */
-	protected function render( $attributes, $content, $block ) {
+	protected function render( $attributes, $content ) {
 		$uid        = uniqid( 'product-categories-' );
 		$categories = $this->get_categories( $attributes );
 

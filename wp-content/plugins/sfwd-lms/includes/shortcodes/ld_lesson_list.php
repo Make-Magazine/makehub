@@ -24,11 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    Default empty array. {@see 'ld_course_list'}
  * }.
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_lesson_list'.
  *
  * @return string The `ld_lesson_list` shortcode output.
  */
-function ld_lesson_list( $attr = array(), $content = '', $shortcode_slug = 'ld_lesson_list' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+function ld_lesson_list( $attr = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -58,9 +57,6 @@ function ld_lesson_list( $attr = array(), $content = '', $shortcode_slug = 'ld_l
 		}
 	}
 
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
-
 	return ld_course_list( $attr );
 }
-add_shortcode( 'ld_lesson_list', 'ld_lesson_list', 10, 3 );
+add_shortcode( 'ld_lesson_list', 'ld_lesson_list', 10, 2 );

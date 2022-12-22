@@ -34,7 +34,7 @@ if ( isset( $shortcode_atts['course_id'] ) ) {
 
 $button_link = apply_filters( 'learndash_course_grid_custom_button_link', $button_link, $post_id );
 
-$button_text = isset( $button_text ) && ! empty( $button_text ) ? $button_text : __( 'See more...', 'lds_skins' );
+$button_text = isset( $button_text ) && ! empty( $button_text ) ? $button_text : __( 'See more...', 'learndash-course-grid' );
 $button_text = apply_filters( 'learndash_course_grid_custom_button_text', $button_text, $post_id );
 
 $options = get_option( 'sfwd_cpt_options' );
@@ -78,7 +78,7 @@ if ( function_exists( 'learndash_get_course_price' ) && function_exists( 'learnd
 		$price_type = $price_args['type'];
 	}
 } else {
-	$price = $course_options && isset($course_options['sfwd-courses_course_price']) ? $course_options['sfwd-courses_course_price'] : __( 'Free', 'lds_skins' );
+	$price = $course_options && isset($course_options['sfwd-courses_course_price']) ? $course_options['sfwd-courses_course_price'] : __( 'Free', 'learndash-course-grid' );
 	$price_type = $course_options && isset( $course_options['sfwd-courses_course_price_type'] ) ? $course_options['sfwd-courses_course_price_type'] : '';
 }
 
@@ -131,10 +131,10 @@ if ( is_numeric( $price ) && ! empty( $price ) ) {
 } elseif ( is_string( $price ) && ! empty( $price ) ) {
 	$price_text = $price;
 } elseif ( empty( $price ) ) {
-	$price_text = __( 'Free', 'lds_skins' );
+	$price_text = __( 'Free', 'learndash-course-grid' );
 }
 
-$class       = 'ld_course_grid_price ribbon';
+$class       = 'ld_course_grid_price';
 $course_class = '';
 $ribbon_text = get_post_meta( $post->ID, '_learndash_course_grid_custom_ribbon_text', true );
 $ribbon_text = isset( $ribbon_text ) && ! empty( $ribbon_text ) ? $ribbon_text : '';
@@ -143,20 +143,20 @@ if ( in_array( $post_type, [ 'sfwd-courses', 'groups' ] ) ) {
 	if ( $has_access && ! $is_completed && $price_type != 'open' && empty( $ribbon_text ) ) {
 		$class .= ' ribbon-enrolled';
 		$course_class .= ' learndash-available learndash-incomplete	';
-		$ribbon_text = __( 'Enrolled', 'lds_skins' );
+		$ribbon_text = __( 'Enrolled', 'learndash-course-grid' );
 	} elseif ( $has_access && $is_completed && $price_type != 'open' && empty( $ribbon_text ) ) {
 		$class .= '';
 		$course_class .= ' learndash-available learndash-complete';
-		$ribbon_text = __( 'Completed', 'lds_skins' );
+		$ribbon_text = __( 'Completed', 'learndash-course-grid' );
 	} elseif ( $price_type == 'open' && empty( $ribbon_text ) ) {
 		if ( is_user_logged_in() && ! $is_completed ) {
 			$class .= ' ribbon-enrolled';
 			$course_class .= ' learndash-available learndash-incomplete';
-			$ribbon_text = __( 'Enrolled', 'lds_skins' );
+			$ribbon_text = __( 'Enrolled', 'learndash-course-grid' );
 		} elseif ( is_user_logged_in() && $is_completed ) {
 			$class .= '';
 			$course_class .= ' learndash-available learndash-complete';
-			$ribbon_text = __( 'Completed', 'lds_skins' );
+			$ribbon_text = __( 'Completed', 'learndash-course-grid' );
 		} else {
 			$course_class .= ' learndash-available';
 			$class .= ' ribbon-enrolled';
@@ -190,13 +190,13 @@ if ( in_array( $post_type, [ 'sfwd-courses', 'groups' ] ) ) {
 } elseif ( in_array( $post_type, ['sfwd-lessons', 'sfwd-topic'] ) ) {
 	if ( $has_access && $is_completed ) {
 		$class .= '';
-		$ribbon_text = __( 'Completed', 'lds_skins' );
+		$ribbon_text = __( 'Completed', 'learndash-course-grid' );
 	} elseif ( $has_access && ! $is_completed ) {
 		$class .= ' ribbon-enrolled';
-		$ribbon_text = __( 'In progress', 'lds_skins' );
+		$ribbon_text = __( 'In progress', 'learndash-course-grid' );
 	} else {
 		$class .= '';
-		$ribbon_text = __( 'Not available', 'lds_skins' );
+		$ribbon_text = __( 'Not available', 'learndash-course-grid' );
 	}
 }
 

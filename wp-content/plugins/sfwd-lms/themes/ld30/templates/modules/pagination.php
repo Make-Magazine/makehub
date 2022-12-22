@@ -74,10 +74,6 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 					$href_query_arg = 'ld-group-courses-page';
 					break;
 
-				case 'profile_quizzes':
-					$href_query_arg = 'profile-quizzes';
-					break;
-
 				// These are just here to show the existing different context items.
 				case 'course_info_registered':
 				case 'course_info_quizzes':
@@ -130,7 +126,7 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 
 		<a class="prev ld-primary-color-hover <?php echo esc_attr( $pager_left_class ); ?>" <?php if ( ( isset( $href_query_arg ) ) && ( ! empty( $href_query_arg ) ) ) { ?>
 			href="<?php echo esc_url( add_query_arg( $href_query_arg, $href_val_prefix . $prev_page_number ) ); ?>"
-		<?php } ?> data-context="<?php echo esc_attr( $pager_context ); ?>" data-paged="<?php echo esc_attr( $href_val_prefix . $prev_page_number . $search_arg ); ?>" <?php echo $data_course_id; ?> <?php echo $data_lesson_id; ?> <?php echo $data_group_id; ?> class="<?php echo esc_attr( $pager_left_class ); ?>" <?php echo esc_attr( $pager_left_disabled ); ?> title="<?php esc_attr_e( 'Previous Page', 'learndash' ); ?>" aria-label="<?php esc_attr_e( 'Previous Page', 'learndash' ); ?>">
+		<?php } ?> data-context="<?php echo esc_attr( $pager_context ); ?>" data-paged="<?php echo esc_attr( $href_val_prefix . $prev_page_number . $search_arg ); ?>" <?php echo $data_course_id; ?> <?php echo $data_lesson_id; ?> <?php echo $data_group_id; ?> class="<?php echo esc_attr( $pager_left_class ); ?>" <?php echo esc_attr( $pager_left_disabled ); ?> title="<?php esc_attr_e( 'Previous Page', 'learndash' ); ?>">
 		<?php if ( is_rtl() ) { ?>
 			<span class="ld-icon-arrow-right ld-icon"></span></a>
 		<?php } else { ?>
@@ -150,7 +146,7 @@ if ( ( isset( $pager_results ) ) && ( ! empty( $pager_results ) ) ) {
 		</span>
 			<a class="next ld-primary-color-hover <?php echo esc_attr( $pager_right_class ); ?>" <?php if ( ( isset( $href_query_arg ) ) && ( ! empty( $href_query_arg ) ) ) { ?>
 				href="<?php echo esc_url( add_query_arg( $href_query_arg, $href_val_prefix . $next_page_number ) ); ?>"
-			<?php } ?> data-context="<?php echo esc_attr( $pager_context ); ?>" data-paged="<?php echo esc_attr( $href_val_prefix . $next_page_number . $search_arg ); ?>" <?php echo $data_course_id; ?> <?php echo $data_lesson_id; ?> <?php echo $data_group_id; ?> class="<?php echo esc_attr( $pager_right_class ); ?>" <?php echo esc_attr( $pager_right_disabled ); ?> title="<?php esc_attr_e( 'Next Page', 'learndash' ); ?>" aria-label="<?php esc_attr_e( 'Next Page', 'learndash' ); ?>">
+			<?php } ?> data-context="<?php echo esc_attr( $pager_context ); ?>" data-paged="<?php echo esc_attr( $href_val_prefix . $next_page_number . $search_arg ); ?>" <?php echo $data_course_id; ?> <?php echo $data_lesson_id; ?> <?php echo $data_group_id; ?> class="<?php echo esc_attr( $pager_right_class ); ?>" <?php echo esc_attr( $pager_right_disabled ); ?> title="<?php esc_attr_e( 'Next Page', 'learndash' ); ?>">
 			<?php if ( is_rtl() ) { ?>
 				<span class="ld-icon-arrow-left ld-icon"></span></a>
 			<?php } else { ?>

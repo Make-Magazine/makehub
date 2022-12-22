@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: GravityEdit
- * Plugin URI:  https://www.gravitykit.com/extensions/gravityview-inline-edit/
+ * Plugin Name: GravityView Inline Edit
+ * Plugin URI:  https://gravityview.co/extensions/inline-edit/
  * Description: Edit your fields inline in Gravity Forms and GravityView.
- * Version:     1.8
- * Author:      GravityKit
- * Author URI:  https://www.gravitykit.com/
- * Text Domain: gk-gravityedit
+ * Version:     1.5
+ * Author:      GravityView
+ * Author URI:  https://gravityview.co
+ * Text Domain: gravityview-inline-edit
  * License:     GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Domain Path: /languages
@@ -17,10 +17,10 @@
  *
  * @since 1.0
  */
-define( 'GRAVITYEDIT_VERSION', '1.8' );
+define( 'GRAVITYVIEW_INLINE_VERSION', '1.5' );
 
-/** @define "GRAVITYEDIT_DIR" "./" The absolute path to the plugin directory */
-define( 'GRAVITYEDIT_DIR', plugin_dir_path( __FILE__ ) );
+/** @define "GRAVITYVIEW_INLINE_DIR" "./" The absolute path to the plugin directory */
+define( 'GRAVITYVIEW_INLINE_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
  * The URL to this file, with trailing slash
@@ -34,34 +34,28 @@ define( 'GRAVITYVIEW_INLINE_URL', plugin_dir_url( __FILE__ ) );
  *
  * @since 1.0
  */
-define( 'GRAVITYEDIT_FILE', __FILE__ );
-
-require_once GRAVITYEDIT_DIR . 'vendor_prefixed/gravitykit/foundation/src/preflight_check.php';
-
-if ( ! GravityKit\GravityEdit\Foundation\should_load( GRAVITYEDIT_FILE ) ) {
-	return;
-}
-
-require_once  GRAVITYEDIT_DIR . 'vendor/autoload.php';
-require_once  GRAVITYEDIT_DIR . 'vendor_prefixed/autoload.php';
-
-GravityKit\GravityEdit\Foundation\Core::register( GRAVITYEDIT_FILE );
+define( 'GRAVITYVIEW_INLINE_FILE', __FILE__ );
 
 /**
- * Load GravityEdit. Wrapper function to make sure GravityView_Extension has loaded.
+ * Load Inline Edit plugin. Wrapper function to make sure GravityView_Extension has loaded.
  *
  * @since 1.0
  *
  * @return void
  */
-function gravityedit_load() {
-	require_once GRAVITYEDIT_DIR . 'class-gravityview-inline-edit.php';
-	require_once GRAVITYEDIT_DIR . 'includes/class-gravityview-inline-edit-settings.php';
+function gravityview_inline_edit_load() {
+
+	if ( ! class_exists( 'GravityView_Extension' ) ) {
+		include_once GRAVITYVIEW_INLINE_DIR . 'lib/class-gravityview-extension.php';
+	}
+
+	require_once GRAVITYVIEW_INLINE_DIR . 'class-gravityview-inline-edit.php';
+	require_once( GRAVITYVIEW_INLINE_DIR . 'includes/class-gravityview-inline-edit-settings.php' );
 
 	// Won't be loaded if `GFForms` doesn't exist
-	if ( class_exists( 'GravityView_Inline_Edit_GFAddon' ) ) {
-		GravityView_Inline_Edit::get_instance( GRAVITYEDIT_VERSION, GravityView_Inline_Edit_GFAddon::get_instance() );
+	if( class_exists('GravityView_Inline_Edit_GFAddon') ) {
+		GravityView_Inline_Edit::get_instance( GRAVITYVIEW_INLINE_VERSION, GravityView_Inline_Edit_GFAddon::get_instance() );
 	}
 }
 
-add_action( 'plugins_loaded', 'gravityedit_load', 20 );
+add_action( 'plugins_loaded', 'gravityview_inline_edit_load', 20 );

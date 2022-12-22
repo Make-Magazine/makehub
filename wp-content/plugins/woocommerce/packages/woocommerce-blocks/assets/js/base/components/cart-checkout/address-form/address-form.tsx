@@ -10,6 +10,7 @@ import {
 	BillingStateInput,
 	ShippingStateInput,
 } from '@woocommerce/base-components/state-input';
+import { useValidationContext } from '@woocommerce/base-context';
 import { useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { withInstanceId } from '@wordpress/compose';
@@ -19,13 +20,8 @@ import {
 	AddressFields,
 	AddressType,
 	defaultAddressFields,
-	ShippingAddress,
+	EnteredAddress,
 } from '@woocommerce/settings';
-import { useSelect, useDispatch } from '@wordpress/data';
-import {
-	VALIDATION_STORE_KEY,
-	FieldValidationStatus,
-} from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -35,21 +31,18 @@ import prepareAddressFields from './prepare-address-fields';
 // If it's the shipping address form and the user starts entering address
 // values without having set the country first, show an error.
 const validateShippingCountry = (
-	values: ShippingAddress,
-	setValidationErrors: (
-		errors: Record< string, FieldValidationStatus >
-	) => void,
+	values: EnteredAddress,
+	setValidationErrors: ( errors: Record< string, unknown > ) => void,
 	clearValidationError: ( error: string ) => void,
 	hasValidationError: boolean
 ): void => {
-	const validationErrorId = 'shipping-missing-country';
 	if (
 		! hasValidationError &&
 		! values.country &&
 		( values.city || values.state || values.postcode )
 	) {
 		setValidationErrors( {
-			[ validationErrorId ]: {
+			'shipping-missing-country': {
 				message: __(
 					'Please select a country to calculate rates.',
 					'woo-gutenberg-products-block'
@@ -59,7 +52,7 @@ const validateShippingCountry = (
 		} );
 	}
 	if ( hasValidationError && values.country ) {
-		clearValidationError( validationErrorId );
+		clearValidationError( 'shipping-missing-country' );
 	}
 };
 
@@ -73,11 +66,11 @@ interface AddressFormProps {
 	// Field configuration for fields in form.
 	fieldConfig?: Record< keyof AddressFields, Partial< AddressField > >;
 	// Function to all for an form onChange event.
-	onChange: ( newValue: ShippingAddress ) => void;
+	onChange: ( newValue: EnteredAddress ) => void;
 	// Type of form.
 	type?: AddressType;
 	// Values for fields.
-	values: ShippingAddress;
+	values: EnteredAddress;
 }
 
 /**
@@ -94,16 +87,17 @@ const AddressForm = ( {
 	type = 'shipping',
 	values,
 }: AddressFormProps ): JSX.Element => {
-	const validationErrorId = 'shipping-missing-country';
-	const { setValidationErrors, clearValidationError } =
-		useDispatch( VALIDATION_STORE_KEY );
-
-	const countryValidationError = useSelect( ( select ) => {
-		const store = select( VALIDATION_STORE_KEY );
-		return store.getValidationError( validationErrorId );
-	} );
+	const { getValidationError, setValidationErrors, clearValidationError } =
+		useValidationContext();
 
 	const currentFields = useShallowEqual( fields );
+
+	const countryValidationError = ( getValidationError(
+		'shipping-missing-country'
+	) || {} ) as {
+		message: string;
+		hidden: boolean;
+	};
 
 	const addressFormFields = useMemo( () => {
 		return prepareAddressFields(
@@ -131,14 +125,14 @@ const AddressForm = ( {
 				values,
 				setValidationErrors,
 				clearValidationError,
-				!! countryValidationError?.message &&
-					! countryValidationError?.hidden
+				!! countryValidationError.message &&
+					! countryValidationError.hidden
 			);
 		}
 	}, [
 		values,
-		countryValidationError?.message,
-		countryValidationError?.hidden,
+		countryValidationError.message,
+		countryValidationError.hidden,
 		setValidationErrors,
 		clearValidationError,
 		type,

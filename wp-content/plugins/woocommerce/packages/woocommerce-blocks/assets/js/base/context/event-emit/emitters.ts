@@ -1,12 +1,9 @@
 /**
  * Internal dependencies
  */
-import {
-	getObserversByPriority,
-	isErrorResponse,
-	isFailResponse,
-} from './utils';
+import { getObserversByPriority } from './utils';
 import type { EventObserversType } from './types';
+import { isErrorResponse, isFailResponse } from '../hooks/use-emit-response';
 
 /**
  * Emits events on registered observers for the provided type and passes along

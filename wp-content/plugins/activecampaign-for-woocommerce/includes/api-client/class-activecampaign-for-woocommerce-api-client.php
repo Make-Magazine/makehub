@@ -68,20 +68,12 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	private $method;
 
 	/**
-	 * The endpoint for the request formatted, e.g. 'ecomOrder/1'
+	 * The endpoint for the request, e.g. 'ecomOrder/1'
 	 *
 	 * @var string
 	 * @since      1.0.0
 	 */
 	private $endpoint;
-
-	/**
-	 * The endpoint for the request in origin, e.g. 'ecomOrder/1'
-	 *
-	 * @var string
-	 * @since      1.0.0
-	 */
-	private $origin_endpoint;
 
 	/**
 	 * The JSON-formatted string to include as the body of the request.
@@ -97,7 +89,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * @var array
 	 * @since      1.0.0
 	 */
-	private $filters = array();
+	private $filters = [];
 
 	/**
 	 * Whether or not we've already configured the client.
@@ -121,18 +113,18 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * @var bool
 	 * @since      1.6.10
 	 */
-	private $retries_allowed = 1;
+	private $retries_allowed = 0;
 
 	/**
 	 * A list of methods that can be magic-called.
 	 *
 	 * @since      1.0.0
 	 */
-	const ACCEPTED_METHODS = array(
+	const ACCEPTED_METHODS = [
 		'get',
 		'put',
 		'post',
-	);
+	];
 	/**
 	 * Whether or not to log the response.
 	 *
@@ -146,7 +138,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * @since 1.2.11
 	 * @var   Logger|null
 	 */
-	protected $logger;
+	private $logger;
 
 	/**
 	 * Activecampaign_For_Woocommerce_Api_Client constructor.
@@ -183,7 +175,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 *
 	 * @since      1.0.0
 	 */
-	public function configure_client( Client $client = null, $extra_path = '' ) {
+	public function configure_client( Client $client = null ) {
 		if ( $client ) {
 			$this->client = $client;
 
@@ -203,19 +195,14 @@ class Activecampaign_For_Woocommerce_Api_Client {
 		}
 
 		$this->client = new Client(
-			array(
-				// LOCAL (because locally, you can't access cofe under {hosted_url}/api/3/ecom
-				// Still looking for a more elegant solution for this.
-				// 'base_uri' => 'http://host.docker.internal:14001/graphql',
-				// REAL CODE:
-				'base_uri' => $this->get_api_uri_with_v3_path() . $extra_path,
+			[
+				'base_uri' => $this->get_api_uri_with_v3_path(),
 				'timeout'  => 20,
-				'headers'  => array(
-					'Api-Token'         => $this->get_api_key(),
-					'X-Request-Id'      => RequestIdService::get_request_id(),
-					'wc-plugin-version' => ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION,
-				),
-			)
+				'headers'  => [
+					'Api-Token'    => $this->get_api_key(),
+					'X-Request-Id' => RequestIdService::get_request_id(),
+				],
+			]
 		);
 
 		$this->configured = true;
@@ -321,9 +308,9 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			$this->configure_client();
 		}
 
-		$this->method          = $this->format_request_method( $name );
-		$this->origin_endpoint = $arguments;
-		$this->endpoint        = $this->format_endpoint( $arguments );
+		$this->method = $this->format_request_method( $name );
+
+		$this->endpoint = $this->format_endpoint( $arguments );
 
 		return $this;
 	}
@@ -427,7 +414,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 * @throws GuzzleException Thrown when a non-200/300 response is received.
 	 * @since      1.0.0
 	 */
-	public function execute( $headers = null ) {
+	public function execute() {
 		$endpoint = $this->construct_endpoint_with_filters();
 		$response = null;
 
@@ -438,26 +425,27 @@ class Activecampaign_For_Woocommerce_Api_Client {
 		}
 
 		try {
-			$options = array();
-			if ( $headers ) {
-				$options['headers'] = $headers;
-			}
-
 			if ( $this->body ) {
-				$options['body'] = $this->body;
+				$response = $this->client->request(
+					$this->method,
+					$endpoint,
+					[
+						'body' => $this->body,
+					]
+				);
+			} else {
+				$response = $this->client->request( $this->method, $endpoint );
 			}
-
-			$response = $this->client->request( $this->method, $endpoint, $options );
 
 			if ( $response instanceof ResponseInterface && $this->ac_debug && $this->logger ) {
 				$this->logger->debug(
 					'Received response',
-					array(
+					[
 						'endpoint'             => $this->endpoint,
 						'response_status_code' => AC_Utilities::validate_object( $response, 'getStatusCode' ) ? $response->getStatusCode() : null,
 						'response_headers'     => AC_Utilities::validate_object( $response, 'getHeaders' ) ? $response->getHeaders() : null,
 						'response_body'        => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody()->getContents() : null,
-					)
+					]
 				);
 			}
 		} catch ( GuzzleException $e ) {
@@ -469,9 +457,9 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			) {
 				$this->logger->debug(
 					'Hosted lookup returned zero results. This is probably not an error.',
-					array(
+					[
 						'response' => $message,
-					)
+					]
 				);
 
 				return 'No results found.';
@@ -483,29 +471,23 @@ class Activecampaign_For_Woocommerce_Api_Client {
 				if ( strpos( $message, 'duplicate' ) !== false ) {
 					$this->logger->debug(
 						'Duplicate record found',
-						array(
+						[
 							'message'  => $message,
 							'endpoint' => $this->endpoint,
-						)
+						]
 					);
 				} else {
 					$this->logger->debug(
 						'The API returned an error [api_e0]',
-						array(
-							'message'         => $message,
-							'endpoint'        => $this->endpoint,
-							'origin_endpoint' => $this->origin_endpoint,
-							'code'            => $e->getCode(),
-							'stack trace'     => $stack_trace,
-						)
+						[
+							'message'     => $message,
+							'endpoint'    => $this->endpoint,
+							'code'        => $e->getCode(),
+							'stack trace' => $stack_trace,
+						]
 					);
 
-					return [
-						'type'             => 'error',
-						'code'             => $e->getCode(),
-						'response_message' => $e->getMessage(),
-						'message'          => 'The API returned an error. This may be a duplicate record or data that could not be processed. Please check logs.',
-					];
+					return false;
 				}
 			} else {
 
@@ -513,14 +495,13 @@ class Activecampaign_For_Woocommerce_Api_Client {
 					if ( $this->retries_allowed > $this->retry_count ) {
 						$this->logger->error(
 							'The connection to Hosted timed out. Waiting 10 seconds to try again.',
-							array(
+							[
 								'message'         => $message,
 								'endpoint'        => $this->endpoint,
-								'origin_endpoint' => $this->origin_endpoint,
 								'retries_allowed' => $this->retries_allowed,
 								'retry_count'     => $this->retry_count,
 								'stack_trace'     => $this->logger->clean_trace( $e->getTrace() ),
-							)
+							]
 						);
 
 						$this->retry_count ++;
@@ -529,87 +510,48 @@ class Activecampaign_For_Woocommerce_Api_Client {
 					} else {
 						$this->logger->error(
 							'The connection to ActiveCampaign timed out ' . $this->retry_count . ' times. Aborting the call and continuing on.',
-							array(
+							[
 								'message'         => $message,
 								'endpoint'        => $this->endpoint,
-								'origin_endpoint' => $this->origin_endpoint,
 								'retries_allowed' => $this->retries_allowed,
 								'retry_count'     => $this->retry_count,
 								'stack trace'     => $this->logger->clean_trace( $e->getTrace() ),
-							)
-						);
-
-						return array(
-							'type'    => 'timeout',
-							'message' => 'The connection to ActiveCampaign timed out ' . $this->retry_count . ' times. Aborting the call and continuing on.',
-						);
-					}
-				} else {
-					if (
-						(
-							'ecomData/bulkSync' === $this->endpoint ||
-							'ecomData\/bulkSync' === $this->endpoint
-						) &&
-						(
-							400 === $e->getCode() ||
-							'400' === $e->getCode()
-						)
-					) {
-						$this->logger->warning(
-							'The API returned an error but it may be false [api_eb]',
-							array(
-								'message'         => $message,
-								'endpoint'        => $this->endpoint,
-								'origin_endpoint' => $this->origin_endpoint,
-								'call_body'       => $this->body,
-								'response_code'   => $e->getCode(),
-								'stack_trace'     => $stack_trace,
-							)
+							]
 						);
 
 						return [
-							'type'    => 'error',
-							'message' => $message,
-							'code'    => $e->getCode(),
+							'type'    => 'timeout',
+							'message' => 'The connection to ActiveCampaign timed out ' . $this->retry_count . ' times. Aborting the call and continuing on.',
 						];
-					} elseif ( in_array( $e->getCode(), array( 500, 503, 520, 521, 525, 526, 590 ), true ) ) {
-						$this->logger->error(
-							'The API returned an error [api_e5]',
-							array(
-								'message'         => $message,
-								'response_code'   => $e->getCode(),
-								'endpoint'        => $this->endpoint,
-								'origin_endpoint' => $this->origin_endpoint,
-								'method'          => $this->method,
-								'response_body'   => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody() : null,
-								'stack_trace'     => $stack_trace,
-							)
+					}
+				} else {
+					if ( 'ecomData\/bulkSync' === $this->endpoint && 400 === $e->getCode() ) {
+						$this->logger->warning(
+							'The API returned an error but it may be false [api_eb]',
+							[
+								'message'     => $message,
+								'endpoint'    => $this->endpoint,
+								'code'        => $e->getCode(),
+								'stack trace' => $stack_trace,
+							]
 						);
-
-						return array(
+					} elseif ( in_array( $e->getCode(), [ 500, 503, 520, 521, 525, 526, 590 ], true ) ) {
+						return [
 							'type'    => 'error',
 							'message' => $e->getMessage(),
 							'code'    => $e->getCode(),
-						);
+						];
 					} else {
 						$this->logger->error(
 							'The API returned an error [api_e1]',
-							array(
-								'message'         => $message,
-								'response_code'   => $e->getCode(),
-								'endpoint'        => $this->endpoint,
-								'origin_endpoint' => $this->origin_endpoint,
-								'method'          => $this->method,
-								'response_body'   => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody() : null,
-								'stack_trace'     => $stack_trace,
-							)
+							[
+								'message'     => $message,
+								'endpoint'    => $this->endpoint,
+								'body'        => AC_Utilities::validate_object( $response, 'getBody' ) ? $response->getBody() : null,
+								'code'        => $e->getCode(),
+								'stack trace' => $stack_trace,
+							]
 						);
-
-						return [
-							'type'    => 'error',
-							'message' => $message,
-							'code'    => $e->getCode(),
-						];
 					}
 				}
 
@@ -624,18 +566,18 @@ class Activecampaign_For_Woocommerce_Api_Client {
 					// Don't waste log space with stack traces if it's just a duplicate
 					$this->logger->debug(
 						'Duplicate record found [api_e2]',
-						array(
+						[
 							'message'     => $message,
 							'stack trace' => $stack_trace,
-						)
+						]
 					);
 				} else {
 					$this->logger->debug(
 						'The API returned an error [api_e3]',
-						array(
+						[
 							'message'     => $message,
 							'stack trace' => $stack_trace,
-						)
+						]
 					);
 
 					return false;
@@ -643,10 +585,10 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			} else {
 				$this->logger->error(
 					'The API returned an error [api_e4]',
-					array(
+					[
 						'message'     => $message,
 						'stack trace' => $stack_trace,
-					)
+					]
 				);
 
 				return false;
@@ -741,7 +683,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 
 		$id = count( $args ) > 1 ? (string) $args[1] : null;
 
-		if ( 'ecomData/bulkSync' !== $endpoint && 'import/bulk_import' !== $endpoint && 'ecom/graphql' !== $endpoint ) {
+		if ( 'ecomData/bulkSync' !== $endpoint && 'import/bulk_import' !== $endpoint ) {
 			$endpoint = str_replace( '/', '', $endpoint );
 		}
 

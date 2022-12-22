@@ -145,14 +145,10 @@ class Activecampaign_For_Woocommerce_AC_Contact_Batch_Repository implements Repo
 	 * @return Ecom_Model
 	 */
 	public function create( Ecom_Model $model ) {
-		$logger = new Logger();
-		$result = $this->create_and_set_model_properties_from_api(
+		$this->create_and_set_model_properties_from_api(
 			$this->client,
 			$model
 		);
-		if ( is_array( $result ) & isset( $result['type'] ) ) {
-			return $result;
-		}
 
 		return $model;
 	}

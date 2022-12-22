@@ -216,10 +216,6 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
             $concrete = $this->invokeMethods($concrete);
         }
 
-        if (is_string($concrete) && $this->getContainer()->has($concrete)) {
-            $concrete = $this->getContainer()->get($concrete);
-        }
-
         $this->resolved = $concrete;
 
         return $concrete;

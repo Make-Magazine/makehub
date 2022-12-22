@@ -53,16 +53,8 @@ trait ProcessPaymentTrait {
 	 * @param int $customer_id The customer ID.
 	 */
 	protected function schedule_saved_payment_check( int $wc_order_id, int $customer_id ): void {
-		$timestamp = 1 * MINUTE_IN_SECONDS;
-		if (
-			$this->config->has( 'subscription_behavior_when_vault_fails' )
-			&& $this->config->get( 'subscription_behavior_when_vault_fails' ) === 'capture_auth'
-		) {
-			$timestamp = 0;
-		}
-
 		as_schedule_single_action(
-			time() + $timestamp,
+			time() + ( 1 * MINUTE_IN_SECONDS ),
 			'woocommerce_paypal_payments_check_saved_payment',
 			array(
 				'order_id'    => $wc_order_id,

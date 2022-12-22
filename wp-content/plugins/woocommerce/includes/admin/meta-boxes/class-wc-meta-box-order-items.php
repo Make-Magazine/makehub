@@ -10,8 +10,6 @@
  * @version     2.1.0
  */
 
-use Automattic\WooCommerce\Utilities\OrderUtil;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -24,18 +22,21 @@ class WC_Meta_Box_Order_Items {
 	/**
 	 * Output the metabox.
 	 *
-	 * @param WP_Post|WC_Order $post Post or order object.
+	 * @param WP_Post $post
 	 */
 	public static function output( $post ) {
 		global $post, $thepostid, $theorder;
 
-		OrderUtil::init_theorder_object( $post );
-		if ( ! is_int( $thepostid ) && ( $post instanceof WP_Post ) ) {
+		if ( ! is_int( $thepostid ) ) {
 			$thepostid = $post->ID;
 		}
 
+		if ( ! is_object( $theorder ) ) {
+			$theorder = wc_get_order( $thepostid );
+		}
+
 		$order = $theorder;
-		$data  = ( $post instanceof WP_Post ) ? get_post_meta( $post->ID ) : array();
+		$data  = get_post_meta( $post->ID );
 
 		include __DIR__ . '/views/html-order-items.php';
 	}

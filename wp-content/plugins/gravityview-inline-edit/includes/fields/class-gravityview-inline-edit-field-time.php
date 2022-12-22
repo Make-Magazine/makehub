@@ -45,11 +45,7 @@ class GravityView_Inline_Edit_Field_Time extends GravityView_Inline_Edit_Field {
 	 *
 	 * @return array|bool|WP_Error
 	 */
-	public function updated_result( $update_result, $entry = array(), $form_id = 0, GF_Field $gf_field = null ) {
-
-		if ( ! is_bool( $update_result ) ) {
-			return $update_result;
-		}
+	public function updated_result( $update_result, $entry = array(), $form_id = 0, GF_Field $gf_field ) {
 
 		$gvtime = $this->_get_inline_edit_value( rgar( $entry, $gf_field->id ), false );
 

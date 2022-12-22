@@ -29,14 +29,13 @@ class Vimeography_Pro_Gallery_New extends Vimeography_Gallery_New {
         'direction'  => 'desc',
         'playlist'   => 0,
         'allow_downloads' => 0,
-        'enable_search' => 0,
-        'enable_tags' => 0
+        'enable_search' => 0
       ),
-      array('%d', '%d', '%s', '%s', '%d', '%d', '%d', '%d')
+      array('%d', '%d', '%s', '%s', '%d', '%d')
     );
 
     if ( ! $row ) {
-      throw new \Vimegraphy_Exception( __('Your Vimeography Pro gallery settings could not be saved. Reason: ' . $wpdb->last_error) );
+      throw new Vimegraphy_Exception( __('Your Vimeography Pro gallery settings could not be saved.') );
     }
 
     return TRUE;

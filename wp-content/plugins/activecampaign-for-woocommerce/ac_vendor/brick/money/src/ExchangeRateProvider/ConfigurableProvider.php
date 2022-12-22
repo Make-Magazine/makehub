@@ -16,8 +16,10 @@ final class ConfigurableProvider implements ExchangeRateProvider
 {
     /**
      * @psalm-var array<string, array<string, BigNumber|int|float|string>>
+     *
+     * @var array
      */
-    private array $exchangeRates = [];
+    private $exchangeRates = [];
 
     /**
      * @param string                     $sourceCurrencyCode

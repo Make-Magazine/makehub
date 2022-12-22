@@ -1,8 +1,0 @@
-.vimeography-thumbnail-wrap[data-v-30f70180]{margin:0;max-width:100%;position:relative}@media all and (-ms-high-contrast: none), (-ms-high-contrast: active){.vimeography-thumbnail-wrap[data-v-30f70180]{flex:0 0 25%}}.vimeography-link[data-v-30f70180]{display:block;border-radius:50%;overflow:hidden}.vimeography-overlay[data-v-30f70180]{overflow:hidden;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);opacity:0;background:#232323;position:absolute;border-radius:50%;top:0;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 250ms ease-in-out;padding:1rem}.vimeography-overlay[data-v-30f70180]:hover{opacity:0.9}.vimeography-play-icon[data-v-30f70180]{display:block;width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid #fff}.vimeography-thumbnail[data-v-30f70180]{display:block;margin:0 auto;padding:0;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}.vimeography-thumbnail-img[data-v-30f70180]{height:auto;max-width:284px}.vimeography-title[data-v-30f70180]{flex:2;color:#e4e4e4;font-size:0.9rem;line-height:1.3em;padding:0 0.5rem 0 0}
-
-.vimeography-thumbnail-container[data-v-6807e0a6]{position:relative;display:grid;grid-template-columns:repeat(auto-fit, 160px);grid-column-gap:15px;grid-row-gap:15px;justify-content:center;margin-bottom:2rem}@media all and (-ms-high-contrast: none), (-ms-high-contrast: active){.vimeography-thumbnail-container[data-v-6807e0a6]{display:flex;flex-wrap:wrap}}
-
-.vimeography-gallery[data-v-23894748]{width:90%;margin:0 auto 1rem}
-
-
-/*# sourceMappingURL=styles.769b615b.css.map*/

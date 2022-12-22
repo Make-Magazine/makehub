@@ -198,7 +198,7 @@
     'SI' => ['EUR'],
     'SJ' => ['NOK'],
     'SK' => ['EUR'],
-    'SL' => ['SLL', 'SLE'],
+    'SL' => ['SLL'],
     'SM' => ['EUR'],
     'SN' => ['XOF'],
     'SO' => ['SOS'],

@@ -12,7 +12,7 @@ namespace WooCommerce\PayPalCommerce\Onboarding\Assets;
 use WooCommerce\PayPalCommerce\Onboarding\Endpoint\LoginSellerEndpoint;
 use WooCommerce\PayPalCommerce\Onboarding\Environment;
 use WooCommerce\PayPalCommerce\Onboarding\State;
-use WooCommerce\PayPalCommerce\WcGateway\Settings\Settings;
+use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
 /**
  * Class OnboardingAssets
@@ -172,6 +172,6 @@ class OnboardingAssets {
 	 * @return bool
 	 */
 	private function should_render_onboarding_script(): bool {
-		return Settings::CONNECTION_TAB_ID === $this->page_id;
+		return PayPalGateway::ID === $this->page_id;
 	}
 }

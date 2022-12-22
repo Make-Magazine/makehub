@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Journey
 Plugin URI: https://vimeography.com/themes
 Theme Name: Journey
 Theme URI:  https://vimeography.com/themes/journey
-Version: 2.1.1
+Version: 2.0.6
 Description: Journey is a beautiful thumbnail slider coupled with descriptions, titles and playcounts.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2020 Dave Kiss
+Copyright: 2018 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Journey') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Journey') ) {
      *
      * @var string
      */
-    public $version = '2.1.1';
+    public $version = '2.0.6';
 
 
     /**

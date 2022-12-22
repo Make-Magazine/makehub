@@ -20,8 +20,10 @@ final class MoneyComparator
 {
     /**
      * The exchange rate provider.
+     *
+     * @var ExchangeRateProvider
      */
-    private ExchangeRateProvider $exchangeRateProvider;
+    private $exchangeRateProvider;
 
     /**
      * Class constructor.

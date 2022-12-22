@@ -30,7 +30,7 @@ export const HandpickedProductsEditMode = (
 		setIsEditing( ! isEditing );
 		debouncedSpeak(
 			__(
-				'Now displaying a preview of the Hand-picked Products block.',
+				'Showing Hand-picked Products block preview.',
 				'woo-gutenberg-products-block'
 			)
 		);

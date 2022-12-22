@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { Search } from '@brainstormforce/starter-templates-components';
-import { useNavigate } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
+import { Search } from '@brainstormforce/starter-templates-components';
 import { decodeEntities } from '@wordpress/html-entities';
+import { useNavigate } from 'react-router-dom';
 import { useStateValue } from '../../../store/store';
 import './style.scss';
 import { setURLParmsValue } from '../../../utils/url-params';
@@ -16,7 +16,6 @@ const SiteSearch = ( { setSiteData } ) => {
 			searchTermsWithCount,
 			builder,
 			siteType,
-			stagingConnected,
 		},
 		dispatch,
 	] = useStateValue();
@@ -109,7 +108,7 @@ const SiteSearch = ( { setSiteData } ) => {
 		<div className="st-search-box-wrap" ref={ parentRef }>
 			<div className="st-search-filter st-search-box" ref={ ref }>
 				<Search
-					apiUrl={ `${ astraSitesVars.ApiDomain }wp-json/starter-templates/v2/sites-search/?search=${ siteSearchTerm }&page-builder=${ builder }&type=${ siteType }${ stagingConnected }` }
+					apiUrl={ `${ astraSitesVars.ApiDomain }wp-json/starter-templates/v2/sites-search/?search=${ siteSearchTerm }&page-builder=${ builder }&type=${ siteType }` }
 					beforeSearchResult={ () => {
 						if ( ! siteSearchTerm ) {
 							return;

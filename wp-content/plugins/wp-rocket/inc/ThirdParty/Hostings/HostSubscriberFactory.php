@@ -39,8 +39,6 @@ class HostSubscriberFactory implements SubscriberFactoryInterface {
 				return new Savvii();
 			case 'dreampress':
 				return new Dreampress();
-			case 'wpxcloud':
-				return new WPXCloud();
 			case 'litespeed':
 				return new LiteSpeed();
 			case 'godaddy':

@@ -9,8 +9,6 @@ if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
 /**
  * The \GV\WP_Action_Logger implementation.
  *
- * @TODO: (Foundation) Deprecate in future versions.
- *
  * Uses the old logging stuff for now.
  */
 class WP_Action_Logger extends Logger {
@@ -28,9 +26,17 @@ class WP_Action_Logger extends Logger {
 	 * @return void
 	 */
 	protected function log( $level, $message, $context ) {
-		$backtrace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 3 );
-		$location = $this->interpolate( "{class}{type}{function}", $backtrace[2] );
-		$message = $this->interpolate( "[$level, $location] $message", $context );
+
+		$php_version = ( ! empty( $GLOBALS['GRAVITYVIEW_TESTS_PHP_VERSION_OVERRIDE'] ) ) ?
+			$GLOBALS['GRAVITYVIEW_TESTS_PHP_VERSION_OVERRIDE'] : phpversion();
+
+		if ( version_compare( $php_version, '5.4', '>=' ) ) {
+			$backtrace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 3 );
+			$location = $this->interpolate( "{class}{type}{function}", $backtrace[2] );
+			$message = $this->interpolate( "[$level, $location] $message", $context );
+		} else {
+			$message = "[$level] $message";
+		}
 
 		switch ( $level ):
 			case LogLevel::EMERGENCY:

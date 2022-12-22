@@ -270,15 +270,25 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Rotate', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
+				'size_units' => [ 'deg' ],
+				'range' => [
+					'deg' => [
+						'min' => 0,
+						'max' => 360,
+						'step' => 1,
+					],
+				],
 				'default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'tablet_default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'mobile_default' => [
 					'unit' => 'deg',
+					'size' => '',
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--rotate: {{SIZE}}{{UNIT}};',
@@ -334,17 +344,12 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Word Spacing', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => -20,
 						'max' => 20,
 						'step' => 1,
-					],
-					'em' => [
-						'min' => -1,
-						'max' => 1,
-						'step' => 0.1,
 					],
 				],
 				'default' => [
@@ -448,10 +453,16 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 's', 'ms' ],
 				'default' => [
-					'unit' => 's',
 					'size' => 0.3,
+					'unit' => 's',
+				],
+				'range' => [
+					's' => [
+						'min' => 0,
+						'max' => 3,
+						'step' => 0.1,
+					],
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--transition: {{SIZE}}{{UNIT}}',
@@ -616,10 +627,16 @@ class TextPath extends Widget_Base {
 			[
 				'label' => esc_html__( 'Transition Duration', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 's', 'ms' ],
 				'default' => [
-					'unit' => 's',
 					'size' => 0.3,
+					'unit' => 's',
+				],
+				'range' => [
+					's' => [
+						'min' => 0,
+						'max' => 3,
+						'step' => 0.1,
+					],
 				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--stroke-transition: {{SIZE}}{{UNIT}}',

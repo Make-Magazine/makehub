@@ -275,12 +275,8 @@ class ESSBSocialFollowersCounter {
 	public function update_all_followers() {
 		$counters = array();		
 		
-		if (class_exists('ESSB_Logger_Followers_Update')) {
-		    ESSB_Logger_Followers_Update::clear();
-		}		
-		
 		$require_check_in_cache = false;
-				
+		
 		/**
 		 * @since 7.9 Instagram number of followers goes manually
 		 */			
@@ -299,11 +295,7 @@ class ESSBSocialFollowersCounter {
 					$count = $this->updater()->update_pinterest ();
 					break;
 				case 'linkedin' :
-					/**
-					 * @since 8.4 - moved to update manually only
-					 */
-				    //$count = $this->updater()->update_linkedin_token ();
-				    $count = $this->update_manual_value($social);
+					$count = $this->updater()->update_linkedin_token ();
 					break;
 				case 'vimeo' :
 					$count = $this->updater()->update_vimeo ();
@@ -430,10 +422,6 @@ class ESSBSocialFollowersCounter {
 			
 			if (has_filter("essb4_followers_{$social}_counter")) {
 				$count = apply_filters("essb4_followers_{$social}_counter", $social);
-			}
-			
-			if (has_filter("essb_get_followers_{$social}_counter")) {
-			    $count = apply_filters("essb_get_followers_{$social}_counter", $social);
 			}
 			
 			$counters[$social] = $count;
@@ -783,13 +771,6 @@ class ESSBSocialFollowersCounter {
 	}
 	
 	public function draw_followers_sidebar() {
-	    
-	    /**
-	     * @since 8.0 - validate the generation of the profiles
-	     */
-	    if (ESSB_Plugin_Loader::is_module_deactivated('followers_sidebar')) {
-	        return;
-	    }
 		
 		$options = array('position' => '', 'template' => '', 'animation' => '', 'nospace' => '', 'width' => '');
 		

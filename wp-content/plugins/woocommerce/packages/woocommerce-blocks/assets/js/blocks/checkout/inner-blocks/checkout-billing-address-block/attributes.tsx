@@ -12,7 +12,7 @@ export default {
 	...formStepAttributes( {
 		defaultTitle: __( 'Billing address', 'woo-gutenberg-products-block' ),
 		defaultDescription: __(
-			'Enter the billing address that matches your payment method.',
+			'Enter the address that matches your card or payment method.',
 			'woo-gutenberg-products-block'
 		),
 	} ),

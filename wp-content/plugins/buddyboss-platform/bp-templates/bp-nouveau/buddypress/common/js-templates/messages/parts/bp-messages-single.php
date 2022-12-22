@@ -7,9 +7,6 @@
  * @since   1.0.0
  * @version 1.0.0
  */
-
-$os = bb_core_get_os();
-
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-single">
@@ -27,10 +24,8 @@ $os = bb_core_get_os();
 
 	<?php bp_nouveau_messages_hook( 'before', 'thread_reply' ); ?>
 
-	<div class="bp-messages-notice"></div>
 	<form id="send-reply" class="standard-form send-reply">
 		<div class="message-box">
-			<div class="bp-send-message-notices"></div>
 			<div class="message-metadata">
 
 				<?php bp_nouveau_messages_hook( 'before', 'reply_meta' ); ?>
@@ -47,19 +42,8 @@ $os = bb_core_get_os();
 
 				<?php bp_nouveau_messages_hook( 'before', 'reply_box' ); ?>
 
-				<label for="message_content" class="bp-screen-reader-text"><?php esc_html_e( 'Reply to Message', 'buddyboss' ); ?></label>
+				<label for="message_content" class="bp-screen-reader-text"><?php _e( 'Reply to Message', 'buddyboss' ); ?></label>
 				<div id="bp-message-content"></div>
-				<?php
-				if ( 'mac' === $os ) {
-					?>
-					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Return+Shift', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
-					<?php
-				} elseif ( 'window' === $os ) {
-					?>
-					<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Enter', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
-					<?php
-				}
-				?>
 
 				<?php bp_nouveau_messages_hook( 'after', 'reply_box' ); ?>
 
@@ -73,5 +57,5 @@ $os = bb_core_get_os();
 	<?php bp_nouveau_messages_hook( 'after', 'thread_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-reply-form-submit">
-	<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
+    <input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
 </script>

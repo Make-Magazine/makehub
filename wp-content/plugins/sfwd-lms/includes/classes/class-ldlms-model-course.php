@@ -135,7 +135,23 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		 * Get Lessons per page setting
 		 */
 		public function get_settings_lessons_per_page() {
-			$course_lessons_per_page = learndash_get_course_lessons_per_page( $this->post_id );
+			$course_lessons_per_page = 0;
+
+			$lessons_options = learndash_get_option( 'sfwd-lessons' );
+			if ( isset( $lessons_options['posts_per_page'] ) ) {
+				$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+			}
+
+			if ( ( isset( $this->settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $this->settings['course_lesson_per_page'] ) && ( isset( $this->settings['course_lesson_per_page_custom'] ) ) ) {
+				$course_lessons_per_page = absint( $this->settings['course_lesson_per_page_custom'] );
+			} else {
+				if ( ( ! isset( $lessons_options['posts_per_page'] ) ) || ( is_null( $lessons_options['posts_per_page'] ) ) ) {
+					$course_lessons_per_page = get_option( 'posts_per_page' );
+				} else {
+					$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+				}
+			}
+
 			return $course_lessons_per_page;
 		}
 
@@ -143,7 +159,23 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		 * Get Topics per page setting
 		 */
 		public function get_settings_topics_per_page() {
-			$course_topics_per_page = learndash_get_course_topics_per_page( $this->post_id );
+			$course_topics_per_page = 0;
+
+			$lessons_options = learndash_get_option( 'sfwd-lessons' );
+			if ( isset( $lessons_options['posts_per_page'] ) ) {
+				$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+			}
+
+			if ( ( isset( $this->settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $this->settings['course_lesson_per_page'] ) && ( isset( $this->settings['course_topic_per_page_custom'] ) ) ) {
+				$course_topics_per_page = absint( $this->settings['course_topic_per_page_custom'] );
+			} else {
+				if ( ( ! isset( $lessons_options['posts_per_page'] ) ) || ( is_null( $lessons_options['posts_per_page'] ) ) ) {
+					$course_topics_per_page = get_option( 'posts_per_page' );
+				} else {
+					$course_topics_per_page = intval( $lessons_options['posts_per_page'] );
+				}
+			}
+
 			return $course_topics_per_page;
 		}
 

@@ -63,9 +63,7 @@ export const useForcedLayout = ( {
 			const newBlock = createBlock( block.name );
 			insertBlock( newBlock, position, clientId, false );
 		},
-		// We need to skip insertBlock here due to a cache issue in wordpress.com that causes an inifinite loop, see https://github.com/Automattic/wp-calypso/issues/66092 for an expanded doc.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ clientId ]
+		[ clientId, insertBlock ]
 	);
 
 	const lockedBlockTypes = useMemo(
@@ -142,10 +140,11 @@ export const useForcedLayout = ( {
 					break;
 			}
 		} );
-		/*
-		We need to skip replaceInnerBlocks here due to a cache issue in wordpress.com that causes an inifinite loop, see https://github.com/Automattic/wp-calypso/issues/66092 for an expanded doc.
-		 @todo Add replaceInnerBlocks and insertBlock after fixing https://github.com/Automattic/wp-calypso/issues/66092
-		*/
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ clientId, innerBlocks, lockedBlockTypes, appendBlock ] );
+	}, [
+		clientId,
+		innerBlocks,
+		lockedBlockTypes,
+		replaceInnerBlocks,
+		appendBlock,
+	] );
 };

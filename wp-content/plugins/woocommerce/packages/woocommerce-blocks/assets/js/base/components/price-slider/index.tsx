@@ -8,12 +8,10 @@ import {
 	useCallback,
 	useMemo,
 	useRef,
-	useLayoutEffect,
 } from '@wordpress/element';
 import classnames from 'classnames';
 import FormattedMonetaryAmount from '@woocommerce/base-components/formatted-monetary-amount';
 import { Currency, isObject } from '@woocommerce/types';
-import { useDebouncedCallback } from 'use-debounce';
 
 /**
  * Internal dependencies
@@ -22,7 +20,6 @@ import './style.scss';
 import { constrainRangeSliderValues } from './constrain-range-slider-values';
 import FilterSubmitButton from '../filter-submit-button';
 import { isValidMaxValue, isValidMinValue } from './utils';
-import FilterResetButton from '../filter-reset-button';
 
 export interface PriceSliderProps {
 	/**
@@ -33,10 +30,6 @@ export interface PriceSliderProps {
 	 * Whether values are loading or not.
 	 */
 	isLoading?: boolean;
-	/**
-	 * Whether values are updating or not. The update starts when the price slider is changed.
-	 */
-	isUpdating?: boolean;
 	/**
 	 * Maximum constraint.
 	 */
@@ -70,10 +63,6 @@ export interface PriceSliderProps {
 	 */
 	showInputFields?: boolean;
 	/**
-	 * Whether to show input fields inline with the slider or not.
-	 */
-	inlineInput?: boolean;
-	/**
 	 * What step values the slider uses.
 	 */
 	step?: number;
@@ -89,9 +78,7 @@ const PriceSlider = ( {
 	currency,
 	showInputFields = true,
 	showFilterButton = false,
-	inlineInput = true,
 	isLoading = false,
-	isUpdating = false,
 	onSubmit = () => void 0,
 }: PriceSliderProps ): JSX.Element => {
 	const minRange = useRef< HTMLInputElement >( null );
@@ -103,9 +90,6 @@ const PriceSlider = ( {
 	const [ minPriceInput, setMinPriceInput ] = useState( minPrice );
 	const [ maxPriceInput, setMaxPriceInput ] = useState( maxPrice );
 
-	const wrapper = useRef< HTMLInputElement >( null );
-	const [ wrapperWidth, setWrapperWidth ] = useState( 0 );
-
 	useEffect( () => {
 		setMinPriceInput( minPrice );
 	}, [ minPrice ] );
@@ -113,12 +97,6 @@ const PriceSlider = ( {
 	useEffect( () => {
 		setMaxPriceInput( maxPrice );
 	}, [ maxPrice ] );
-
-	useLayoutEffect( () => {
-		if ( inlineInput && wrapper.current ) {
-			setWrapperWidth( wrapper.current?.offsetWidth );
-		}
-	}, [ inlineInput, setWrapperWidth ] );
 
 	/**
 	 * Checks if the min and max constraints are valid.
@@ -296,8 +274,6 @@ const PriceSlider = ( {
 		[ onChange, stepValue, minPriceInput, maxPriceInput ]
 	);
 
-	const debouncedUpdateQuery = useDebouncedCallback( onSubmit, 600 );
-
 	const classes = classnames(
 		'wc-block-price-filter',
 		'wc-block-components-price-slider',
@@ -306,9 +282,8 @@ const PriceSlider = ( {
 		showFilterButton && 'wc-block-price-filter--has-filter-button',
 		showFilterButton &&
 			'wc-block-components-price-slider--has-filter-button',
-		! hasValidConstraints && 'is-disabled',
-		( inlineInput || wrapperWidth <= 300 ) &&
-			'wc-block-components-price-slider--is-input-inline'
+		isLoading && 'is-loading',
+		! hasValidConstraints && 'is-disabled'
 	);
 
 	const activeElement = isObject( minRange.current )
@@ -326,77 +301,67 @@ const PriceSlider = ( {
 		maxPriceInput / 10 ** currency.minorUnit
 	);
 
-	const inlineInputAvailable = inlineInput && wrapperWidth > 300;
-
-	const slider = (
-		<div
-			className={ classnames(
-				'wc-block-price-filter__range-input-wrapper',
-				'wc-block-components-price-slider__range-input-wrapper',
-				{ 'is-loading': isLoading && isUpdating }
-			) }
-			onMouseMove={ findClosestRange }
-			onFocus={ findClosestRange }
-		>
-			{ hasValidConstraints && (
-				<div aria-hidden={ showInputFields }>
-					<div
-						className="wc-block-price-filter__range-input-progress wc-block-components-price-slider__range-input-progress"
-						style={ progressStyles as React.CSSProperties }
-					/>
-					<input
-						type="range"
-						className="wc-block-price-filter__range-input wc-block-price-filter__range-input--min wc-block-components-price-slider__range-input wc-block-components-price-slider__range-input--min"
-						aria-label={ __(
-							'Filter products by minimum price',
-							'woo-gutenberg-products-block'
-						) }
-						aria-valuetext={ ariaReadableMinPrice }
-						value={
-							Number.isFinite( minPrice )
-								? minPrice
-								: minConstraint
-						}
-						onChange={ rangeInputOnChange }
-						step={ minRangeStep }
-						min={ minConstraint }
-						max={ maxConstraint }
-						ref={ minRange }
-						disabled={ isLoading && ! hasValidConstraints }
-						tabIndex={ showInputFields ? -1 : 0 }
-					/>
-					<input
-						type="range"
-						className="wc-block-price-filter__range-input wc-block-price-filter__range-input--max wc-block-components-price-slider__range-input wc-block-components-price-slider__range-input--max"
-						aria-label={ __(
-							'Filter products by maximum price',
-							'woo-gutenberg-products-block'
-						) }
-						aria-valuetext={ ariaReadableMaxPrice }
-						value={
-							Number.isFinite( maxPrice )
-								? maxPrice
-								: maxConstraint
-						}
-						onChange={ rangeInputOnChange }
-						step={ maxRangeStep }
-						min={ minConstraint }
-						max={ maxConstraint }
-						ref={ maxRange }
-						disabled={ isLoading }
-						tabIndex={ showInputFields ? -1 : 0 }
-					/>
-				</div>
-			) }
-		</div>
-	);
-
 	return (
-		<div className={ classes } ref={ wrapper }>
-			{ ( ! inlineInputAvailable || ! showInputFields ) && slider }
-			{ showInputFields && (
-				<div className="wc-block-price-filter__controls wc-block-components-price-slider__controls">
-					{ ! isUpdating ? (
+		<div className={ classes }>
+			<div
+				className="wc-block-price-filter__range-input-wrapper wc-block-components-price-slider__range-input-wrapper"
+				onMouseMove={ findClosestRange }
+				onFocus={ findClosestRange }
+			>
+				{ hasValidConstraints && (
+					<div aria-hidden={ showInputFields }>
+						<div
+							className="wc-block-price-filter__range-input-progress wc-block-components-price-slider__range-input-progress"
+							style={ progressStyles as React.CSSProperties }
+						/>
+						<input
+							type="range"
+							className="wc-block-price-filter__range-input wc-block-price-filter__range-input--min wc-block-components-price-slider__range-input wc-block-components-price-slider__range-input--min"
+							aria-label={ __(
+								'Filter products by minimum price',
+								'woo-gutenberg-products-block'
+							) }
+							aria-valuetext={ ariaReadableMinPrice }
+							value={
+								Number.isFinite( minPrice )
+									? minPrice
+									: minConstraint
+							}
+							onChange={ rangeInputOnChange }
+							step={ minRangeStep }
+							min={ minConstraint }
+							max={ maxConstraint }
+							ref={ minRange }
+							disabled={ isLoading }
+							tabIndex={ showInputFields ? -1 : 0 }
+						/>
+						<input
+							type="range"
+							className="wc-block-price-filter__range-input wc-block-price-filter__range-input--max wc-block-components-price-slider__range-input wc-block-components-price-slider__range-input--max"
+							aria-label={ __(
+								'Filter products by maximum price',
+								'woo-gutenberg-products-block'
+							) }
+							aria-valuetext={ ariaReadableMaxPrice }
+							value={
+								Number.isFinite( maxPrice )
+									? maxPrice
+									: maxConstraint
+							}
+							onChange={ rangeInputOnChange }
+							step={ maxRangeStep }
+							min={ minConstraint }
+							max={ maxConstraint }
+							ref={ maxRange }
+							disabled={ isLoading }
+							tabIndex={ showInputFields ? -1 : 0 }
+						/>
+					</div>
+				) }
+			</div>
+			<div className="wc-block-price-filter__controls wc-block-components-price-slider__controls">
+				{ showInputFields && (
+					<>
 						<FormattedMonetaryAmount
 							currency={ currency }
 							displayType="input"
@@ -406,7 +371,6 @@ const PriceSlider = ( {
 								'woo-gutenberg-products-block'
 							) }
 							allowNegative={ false }
-							isLoading={ isLoading }
 							isAllowed={ isValidMinValue( {
 								minConstraint,
 								minorUnit: currency.minorUnit,
@@ -422,11 +386,6 @@ const PriceSlider = ( {
 							disabled={ isLoading || ! hasValidConstraints }
 							value={ minPriceInput }
 						/>
-					) : (
-						<div className="input-loading"></div>
-					) }
-					{ inlineInputAvailable && slider }
-					{ ! isUpdating ? (
 						<FormattedMonetaryAmount
 							currency={ currency }
 							displayType="input"
@@ -435,7 +394,6 @@ const PriceSlider = ( {
 								'Filter products by maximum price',
 								'woo-gutenberg-products-block'
 							) }
-							isLoading={ isLoading }
 							isAllowed={ isValidMaxValue( {
 								maxConstraint,
 								minorUnit: currency.minorUnit,
@@ -450,60 +408,38 @@ const PriceSlider = ( {
 							disabled={ isLoading || ! hasValidConstraints }
 							value={ maxPriceInput }
 						/>
-					) : (
-						<div className="input-loading"></div>
-					) }
-				</div>
-			) }
-
-			{ ! showInputFields &&
-				! isUpdating &&
-				Number.isFinite( minPrice ) &&
-				Number.isFinite( maxPrice ) && (
-					<div className="wc-block-price-filter__range-text wc-block-components-price-slider__range-text">
-						<FormattedMonetaryAmount
-							currency={ currency }
-							value={ minPrice }
-						/>
-						<FormattedMonetaryAmount
-							currency={ currency }
-							value={ maxPrice }
-						/>
-					</div>
+					</>
 				) }
-			{
-				<div className="wc-block-components-price-slider__actions">
-					{ ! isUpdating &&
-						( minPrice !== minConstraint ||
-							maxPrice !== maxConstraint ) && (
-							<FilterResetButton
-								onClick={ () => {
-									onChange( [
-										minConstraint,
-										maxConstraint,
-									] );
-									debouncedUpdateQuery();
-								} }
-								screenReaderLabel={ __(
-									'Reset price filter',
-									'woo-gutenberg-products-block'
-								) }
+				{ ! showInputFields &&
+					! isLoading &&
+					Number.isFinite( minPrice ) &&
+					Number.isFinite( maxPrice ) && (
+						<div className="wc-block-price-filter__range-text wc-block-components-price-slider__range-text">
+							{ __( 'Price', 'woo-gutenberg-products-block' ) }
+							: &nbsp;
+							<FormattedMonetaryAmount
+								currency={ currency }
+								value={ minPrice }
 							/>
-						) }
-					{ showFilterButton && (
-						<FilterSubmitButton
-							className="wc-block-price-filter__button wc-block-components-price-slider__button"
-							isLoading={ isUpdating }
-							disabled={ isLoading || ! hasValidConstraints }
-							onClick={ onSubmit }
-							screenReaderLabel={ __(
-								'Apply price filter',
-								'woo-gutenberg-products-block'
-							) }
-						/>
+							&nbsp;&ndash;&nbsp;
+							<FormattedMonetaryAmount
+								currency={ currency }
+								value={ maxPrice }
+							/>
+						</div>
 					) }
-				</div>
-			}
+				{ showFilterButton && (
+					<FilterSubmitButton
+						className="wc-block-price-filter__button wc-block-components-price-slider__button"
+						disabled={ isLoading || ! hasValidConstraints }
+						onClick={ onSubmit }
+						screenReaderLabel={ __(
+							'Apply price filter',
+							'woo-gutenberg-products-block'
+						) }
+					/>
+				) }
+			</div>
 		</div>
 	);
 };

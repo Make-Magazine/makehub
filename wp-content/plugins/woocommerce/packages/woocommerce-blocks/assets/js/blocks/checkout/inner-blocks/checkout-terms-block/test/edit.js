@@ -59,7 +59,7 @@ describe( 'Edit', () => {
 		expect(
 			queryByText(
 				container,
-				"You don't have any Terms and Conditions and/or Privacy Policy pages set up."
+				"You don't seem to have a Terms and Conditions and/or a Privacy Policy pages setup."
 			)
 		).toBeInTheDocument();
 	} );

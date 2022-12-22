@@ -144,7 +144,7 @@ function ldfc_favorite_button_shortcode() {
           $class .= ' favcon-saved';
      }
 
-     return '<div class="ldfc-shortcode"><div class="ldfc-favorite-button"><a href="#" class="' . $class . '" data-post_id="' . $post->ID . '"><span class="ld-icon">' . ldfc_heart_icon() . '</span> <span class="ld-favorite-label">' . __( 'Favorite', 'favcon' ) . '</a></a></div></div>';
+     return '<div class="ldfc-shortcode"><div class="ldfc-favorite-button"><a href="#" class="' . $class . '" data-post_id="' . $post->ID . '"><span class="ld-icon">' . ldfc_heart_icon() . '</span> ' . __( 'Favorite', 'favcon' ) . '</a></div></div>';
 
 }
 

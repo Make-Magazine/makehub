@@ -55,15 +55,14 @@ class Honeypot_Handler {
 			return;
 		}
 
-		foreach ( $fields as $field ) {
-			if ( ! empty( $field['value'] ) ) {
-				$ajax_handler->add_error( $field['id'], esc_html__( 'Invalid Form.', 'elementor-pro' ) );
-			} else {
-				// If success - remove the field form list (don't send it in emails and etc )
-				$record->remove_field( $field['id'] );
-			}
+		$field = current( $fields );
+
+		if ( ! empty( $field['value'] ) ) {
+			$ajax_handler->add_error( $field['id'], esc_html__( 'Invalid Form.', 'elementor-pro' ) );
 		}
 
+		// If success - remove the field form list (don't send it in emails and etc )
+		$record->remove_field( $field['id'] );
 	}
 
 	public function update_controls( Widget_Base $widget ) {

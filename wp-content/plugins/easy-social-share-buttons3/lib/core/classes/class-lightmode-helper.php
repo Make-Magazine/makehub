@@ -24,7 +24,6 @@ class ESSB_LightMode_Helper {
 		$options['sso_apply_the_content'] = 'false';
 		$options['native_active'] = 'false';
 		$options['esml_active'] = 'false';
-		$options['activate_ga_ntg_tracking'] = 'false';
 		
 		return $options;
 	}

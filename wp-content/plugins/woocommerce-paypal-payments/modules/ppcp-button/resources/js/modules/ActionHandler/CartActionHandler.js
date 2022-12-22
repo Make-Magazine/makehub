@@ -16,7 +16,6 @@ class CartActionHandler {
                 this.config.bn_codes[this.config.context] : '';
             return fetch(this.config.ajax.create_order.endpoint, {
                 method: 'POST',
-                credentials: 'same-origin',
                 body: JSON.stringify({
                     nonce: this.config.ajax.create_order.nonce,
                     purchase_units: [],

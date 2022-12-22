@@ -842,8 +842,8 @@ section.llms-instructor-info .llms-author .name {
   line-height: 16px;
   text-align: center;
   font-weight: 300;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
   position: absolute;
   left: -10px;
   top: 15px;
@@ -1166,8 +1166,7 @@ section.llms-instructor-info .llms-author .name {
 .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke {
   stroke: #939597;
 }
-.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-fill,
-.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke.ql-fill {
+.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-fill, .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke.ql-fill {
   fill: #939597;
 }
 .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-toolbar.ql-snow {
@@ -1381,18 +1380,6 @@ section.llms-instructor-info .llms-author .name {
     margin-bottom: 20px !important;
   }
 }
-.llms-pa-posts.llms-pa-posts--single .llms-pa-discussion-list .llms_pa_post_comment.llms-pa-read:after,
-.nf-form-wrap .nf-form-content .nf-field-element input[type=button],
-.frm_submit button,
-.llms-button-action.clicked,
-.llms-button-primary.clicked,
-.llms-quiz-ui .llms-question-wrapper.type--scale .llms-aq-scale .llms-aq-scale-range .llms-aq-scale-radio input[type="radio"]:checked + .llms-aq-scale-button,
-.llms-quiz-ui .llms-question-wrapper.type--scale .llms-aq-scale .llms-aq-scale-range .llms-aq-scale-radio .llms-aq-scale-button:hover,
-.llms-pointer.llms-inner .lifterlms-lesson-nav .lifterlms_next_prev_link a:hover,
-.lifter-sidebar-widgets li.widget a.button:not(.logout-link):hover {
-  background-color: var(--bb-primary-color);
-}
-
 .llms-checkout.llms-checkout-cols-2 {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2972,7 +2959,6 @@ body:not(.has-sidebar) .llms-student-dashboard:not(.dashboard) .llms-sd-notifica
       -ms-flex-pack: center;
           justify-content: center;
   font-size: 16px;
-  color: var(--bb-headings-color);
 }
 .single-course.llms-pointer .llms-instructor-info .llms-author-holder .llms-author-number-courses {
   font-size: 14px;
@@ -3733,13 +3719,6 @@ body:not(.has-sidebar) .llms-student-dashboard:not(.dashboard) .llms-sd-notifica
   background-color: var(--bb-primary-color);
 }
 
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-lesson-preview.is-incomplete .llms-lesson-link:after,
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-lesson-preview.is-complete .llms-lesson-preview.llms-quizz-preview.is-incomplete .llms-lesson-link:after,
-.llms-pointer.llms-inner .llms-lesson-link-locked:after,
-.llms-loop-item.course .llms-pa-permalink {
-  border-color: var(--bb-headings-color);
-}
-
 .status-in-progress {
   background: var(--bb-primary-color);
   color: #fff;
@@ -3918,10 +3897,6 @@ body:not(.single-sfwd-courses) .bb-single-course-sidebar .bb-course-member-wrap 
     width: 100%;
   }
 }
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-quizz-preview .llms-lesson-link h5 {
-  color: var(--bb-headings-color);
-}
-
 body:not(.bb-dark-theme).llms-pointer.llms-inner .sfwd-light-mode {
   display: none;
 }
@@ -4118,8 +4093,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button {
   margin-left: 0px;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button.ld-button-alternate {
   -webkit-transform: rotate(-90deg);
@@ -4147,8 +4122,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
   line-height: 16px;
   text-align: center;
   font-weight: bold;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button .ld-icon-arrow-down:before {
   content: "\e861";
@@ -5167,8 +5142,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button {
   margin-left: 18px;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button.ld-button-alternate {
   -webkit-transform: rotate(-90deg);
@@ -5196,8 +5171,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
   line-height: 16px;
   text-align: center;
   font-weight: bold;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button .ld-icon-arrow-down:before {
   content: "\e861";
@@ -5232,10 +5207,6 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 .single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p,
 .single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p {
   margin-bottom: 1.5rem;
-}
-.single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p a,
-.single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p a {
-  color: var(--bb-headings-color);
 }
 .single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p.llms-error a,
 .single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p.llms-error a {
@@ -5340,40 +5311,6 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-pointer.llms-inner .llms-course-navigation .llms-tooltip.show:after {
   display: none;
-}
-
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper .llms-lesson-link:hover .llms-main h5,
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-quizz-preview .llms-lesson-link:hover h5,
-.llms-pointer.llms-inner .llms-lesson-preview.llms-quizz-preview:hover .llms-lesson-link h5,
-.llms-syllabus-wrapper .llms-lesson-preview.llms-quizz-preview:hover .llms-lesson-link h5,
-.llms-syllabus-wrapper .llms-lesson-preview .llms-lesson-link:hover .llms-lesson-title,
-.bb-llms-content-wrap .llms-syllabus-wrapper .llms-lesson-preview .llms-lesson-link:hover .llms-extra .llms-lesson-counter,
-.single-course.llms-pointer .llms-instructor-info .llms-author-holder a:hover .llms-author-info.name,
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .llms-quiz-attempt-question-header:hover h3.llms-question-title,
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .llms-quiz-attempt-question-header:hover .toggle-answer:before,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-meta strong a:hover,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-title a:hover,
-.llms-loop-item-content .llms-loop-title:hover,
-.llms-widget-syllabus .lesson-title a:hover,
-.llms-widget-syllabus .lesson-title.done a:hover,
-.llms-syllabus-wrapper .llms-lesson-main .llms-lesson-holder .llms-lesson-link:hover .llms-main h5 {
-  color: var(--bb-primary-color);
-}
-
-.llms-pa-posts.llms-pa-posts--single .llms-pa-discussion-list .llms_pa_post_comment.llms-pa-read:after,
-.llms-pa-posts.llms-pa-posts--single #llms-pa-post-discussion-form .llms-form-field.type-submit #llms_pa_leave_comment,
-.nf-form-wrap .nf-form-content .nf-field-element input[type=button] {
-  border-color: var(--bb-primary-color);
-}
-
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap p:not(.llms-error) a,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-meta strong a {
-  color: var(--bb-headings-color);
-}
-
-.single-lesson.llms-pointer #lifterlms-page-content #lifterlms-lesson-header .lifterlms-header-instructor .bb-about-instructor > .flex .bb-content-wrap h5 .bb-about-instructor-date::before,
-.single-llms_quiz.llms-pointer #lifterlms-page-content #lifterlms-lesson-header .lifterlms-header-instructor .bb-about-instructor > .flex .bb-content-wrap h5 .bb-about-instructor-date::before {
-  background-color: var(--bb-alternate-text-color);
 }
 
 .tax-course_track footer.footer-bottom,
@@ -7064,8 +7001,6 @@ body div.wpforms-container-full .wpforms-form button[type=submit]:hover {
   text-decoration: none;
   color: #fff;
   box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.1);
-  background-color: var(--bb-primary-color);
-  border-color: var(--bb-primary-color);
 }
 
 .single-lesson.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .wpforms-confirmation-container-full,
@@ -7081,11 +7016,6 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 body .wpforms-confirmation-container-full p,
 body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-redirection-message) p {
   margin: 0.5rem 0;
-}
-
-body .wpforms-confirmation-container-full,
-body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-redirection-message) {
-  border-color: var(--bb-primary-color);
 }
 
 .frm_forms .frm_form_fields fieldset {
@@ -7284,11 +7214,6 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 }
 .frm_forms .frm_form_fields fieldset .frm-line-table tr td h3 {
   margin-bottom: 0px;
-}
-
-.lifterlms .llms-sd-items .llms-sd-item:hover a,
-.llms-widget-syllabus .lesson-complete-placeholder.done {
-  color: var(--bb-primary-color);
 }
 
 .nf-form-wrap .nf-form-content .nf-field-element select,
@@ -8458,8 +8383,8 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme .buddypanel .panel-head .bb-toggle-panel:hover {
   color: #aaa;
 }
-.llms-pointer.llms-inner.bb-dark-theme .bb-mobile-panel-inner .side-panel-menu .sub-menu a > i {
-  color: #fff;
+.llms-pointer.llms-inner.bb-dark-theme .buddypanel-menu > li > a.bb-menu-item:hover > i {
+  color: #1c1c1c;
 }
 .llms-pointer.llms-inner.bb-dark-theme .buddypanel-menu > li > .bb-menu-item > i:not(.bb-icon-angle-down) {
   color: #fff;
@@ -8503,9 +8428,6 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme .site-header [data-balloon][data-balloon-pos='down']:before {
   background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba(255,255,255,0.95)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
   background-size: 100% auto;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .header-search-primary {
-  background: #232323;
 }
 .llms-pointer.llms-inner.bb-dark-theme .lifter-topic-sidebar-wrapper {
   background-color: #1c1c1c;
@@ -8610,8 +8532,7 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .listradio-wrap .nf-field-element label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap div.wpforms-container-full .wpforms-form .wpforms-field-label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap div.wpforms-container-full .wpforms-form .wpforms-field-label-inline,
-.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container .frm_primary_label,
-.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container label.frm_primary_label,
+.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container .frm_primary_label, .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container label.frm_primary_label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .with_frm_style .vertical_radio .frm_checkbox label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .with_frm_style .vertical_radio .frm_radio label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_description {
@@ -8745,37 +8666,16 @@ ul.llms-payment-gateways li:last-child:after {
   color: #1c1c1c;
 }
 .bb-sfwd-aside.bb-dark-theme .side-panel-menu a {
-  color: var(--bb-alternate-text-color);
+  color: #fff;
 }
 .bb-sfwd-aside.bb-dark-theme .side-panel-menu a:hover {
-  color: #fff;
+  color: #1c1c1c;
 }
 .bb-sfwd-aside.bb-dark-theme .llms-course-members-list .course-members-list a,
 .bb-sfwd-aside.bb-dark-theme .lifterlms-lessions-list .llms-syllabus-wrapper .llms-lesson-link .llms-main h5,
 .bb-sfwd-aside.bb-dark-theme .widget .item-list .item-title a,
 .bb-sfwd-aside.bb-dark-theme .lifter-sidebar-widgets li.widget a, .bb-sfwd-aside.bb-dark-theme.llms-pointer.llms-inner .llms-lesson-preview.llms-quizz-preview .llms-lesson-link h5 {
   color: #fff;
-}
-.bb-sfwd-aside.bb-dark-theme .bb-progress .bb-progress-circle {
-  border-color: var(--bb-primary-color);
-}
-
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-inner {
-  background: #121212;
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .bb-icon-close {
-  color: #fff;
-  background-color: rgba(146, 164, 183, 0.2);
-}
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-wrapper .bb-mobile-panel-header {
-  background-color: #121212;
-}
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-header .user-name {
-  color: #fff;
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .header-aside i,
-.bb-sfwd-aside.bb-dark-theme .site-header .bb-left-panel-mobile > i {
-  color: var(--bb-alternate-text-color);
 }
 
 .llms-sl-directory {

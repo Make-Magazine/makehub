@@ -1,10 +1,10 @@
 <?php
 /*
-  Plugin Name: Embed Plus YouTube WordPress Plugin
+  Plugin Name: Embed Plus Plugin for YouTube
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.1.4.1
-  Author: Embed Plus YouTube Plugin Team
+  Version: 14.1.2
+  Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
   Requires at least: 4.5
  */
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.1.4.1';
+    public static $version = '14.1.2';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -1865,7 +1865,7 @@ class YouTubePrefs
     public static function fitvids()
     {
         $loggedin = current_user_can('edit_posts');
-        if (!($loggedin && self::$alloptions[self::$opt_admin_off_scripts]) && (self::$alloptions[self::$opt_responsive] || self::$alloptions[self::$opt_widgetfit]))
+        if (!($loggedin && self::$alloptions[self::$opt_admin_off_scripts]))
         {
             wp_enqueue_script('__ytprefsfitvids__', plugins_url('scripts/fitvids' . self::$min . '.js', __FILE__), array('__ytprefs__'), self::$version, true);
         }
@@ -2880,7 +2880,7 @@ class YouTubePrefs
             $code_iframe1 = '<div ' . $centercode . ' id="_ytid_' . $iframe_id . '" ' . $dim_attrs . ' data-origwidth="' . self::$defaultwidth . '" data-origheight="' . self::$defaultheight . '" ' . $relstop .
                     'data-facadesrc="https://www.' . $youtubebaseurl . '.com/embed/' . $videoidoutput . '?';
             $code_iframe2 = '" class="__youtube_prefs__ epyt-facade' . (!empty($finalparams['live_stream']) ? ' epyt-live-channel ' : '') . ($iscontent ? '' : ' __youtube_prefs_widget__ ') . ($isoverride ? ' epyt-is-override ' : '') . ' no-lazyload"' .
-                    $voloutput . $galleryid_ifm_data . $facade_autoplay . '><img data-spai-excluded="true" class="epyt-facade-poster skip-lazy" loading="lazy" ' . $acctitle . $facade_img_src . ' />' .
+                    $voloutput . $galleryid_ifm_data . $facade_autoplay . '><img class="epyt-facade-poster" loading="lazy" ' . $acctitle . $facade_img_src . ' />' .
                     '<button class="epyt-facade-play" aria-label="Play"><svg data-no-lazy="1" height="100%" version="1.1" viewBox="0 0 68 48" width="100%"><path class="ytp-large-play-button-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path><path d="M 45,24 27,14 27,34" fill="#fff"></path></svg></button>' .
                     '</div>';
         }
@@ -3263,7 +3263,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This version provides better compatibility with older browsers in both free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update provides higher quality images for facades, and avoids unused javascript for facade mode in free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -8611,11 +8611,7 @@ margin: 0 auto;
         // backend styels
         self::ytprefsscript();
         self::fitvids();
-        if (!empty(self::$alloptions[self::$opt_not_live_on_channel]))
-        {
-            add_action("admin_print_footer_scripts", array(get_class(), 'live_fallback_template'));
-        }
-        
+
         if (!self::is_restrict_wizard() && current_user_can('edit_posts'))
         {
             // Scripts.

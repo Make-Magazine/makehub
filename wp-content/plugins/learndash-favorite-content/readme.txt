@@ -31,12 +31,6 @@ https://docs.snaporbital.com/
 
 = Changelog =
 
-1.0.4
-* Fixes issue with unset variable
-
-1.0.3
-* Fixes issue with unset variable
-
 1.0.2
 * Fixes issue with language translations
 

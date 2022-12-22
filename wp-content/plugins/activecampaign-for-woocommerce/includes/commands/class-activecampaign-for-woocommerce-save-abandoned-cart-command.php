@@ -11,7 +11,6 @@
 
 use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_Abandoned_Cart_Utilities as Abandoned_Cart_Utilities;
-use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 
 /**
  * Save the cart to a table to keep the record in case it gets abandoned
@@ -278,10 +277,6 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					'cart_totals_ref_json'           => wp_json_encode( $cart_totals, JSON_UNESCAPED_UNICODE ),
 					'removed_cart_contents_ref_json' => wp_json_encode( $removed_cart_contents, JSON_UNESCAPED_UNICODE ),
 				];
-
-				if ( isset( $customer_data['id'] ) && User_Meta_Service::get_current_user_ac_customer_id( $customer_data['id'] ) ) {
-					$store_data['ac_customer_id'] = User_Meta_Service::get_current_user_ac_customer_id( $customer_data['id'] );
-				}
 
 				$current_hash = wc()->cart->get_cart_hash();
 				$saved_hash   = wc()->session->get( 'activecampaign_abandoned_cart_hash' );

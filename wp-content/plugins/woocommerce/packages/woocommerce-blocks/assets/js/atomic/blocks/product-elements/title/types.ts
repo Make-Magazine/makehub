@@ -2,6 +2,7 @@ export interface Attributes {
 	headingLevel: number;
 	showProductLink: boolean;
 	linkTarget?: string;
+	productId: number;
 	align: string;
 }
 

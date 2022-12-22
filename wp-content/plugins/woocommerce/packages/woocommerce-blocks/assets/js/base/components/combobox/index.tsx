@@ -6,10 +6,11 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import { withInstanceId } from '@wordpress/compose';
 import { ComboboxControl } from 'wordpress-components';
-import { ValidationInputError } from '@woocommerce/base-components/validation-input-error';
+import {
+	ValidationInputError,
+	useValidationContext,
+} from '@woocommerce/base-context';
 import { isObject } from '@woocommerce/types';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { VALIDATION_STORE_KEY } from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -54,16 +55,19 @@ const Combobox = ( {
 	instanceId = '0',
 	autoComplete = 'off',
 }: ComboboxProps ): JSX.Element => {
+	const { getValidationError, setValidationErrors, clearValidationError } =
+		useValidationContext();
+
 	const controlRef = useRef< HTMLDivElement >( null );
 	const controlId = id || 'control-' + instanceId;
 	const errorId = incomingErrorId || controlId;
-
-	const { setValidationErrors, clearValidationError } =
-		useDispatch( VALIDATION_STORE_KEY );
-	const error = useSelect( ( select ) => {
-		const store = select( VALIDATION_STORE_KEY );
-		return store.getValidationError( errorId );
-	} );
+	const error = ( getValidationError( errorId ) || {
+		message: '',
+		hidden: false,
+	} ) as {
+		message: string;
+		hidden: boolean;
+	};
 
 	useEffect( () => {
 		if ( ! required || value ) {
@@ -95,7 +99,7 @@ const Combobox = ( {
 			id={ controlId }
 			className={ classnames( 'wc-block-components-combobox', className, {
 				'is-active': value,
-				'has-error': error?.message && ! error?.hidden,
+				'has-error': error.message && ! error.hidden,
 			} ) }
 			ref={ controlRef }
 		>
@@ -138,7 +142,7 @@ const Combobox = ( {
 				value={ value || '' }
 				allowReset={ false }
 				autoComplete={ autoComplete }
-				aria-invalid={ error?.message && ! error?.hidden }
+				aria-invalid={ error.message && ! error.hidden }
 			/>
 			<ValidationInputError propertyName={ errorId } />
 		</div>

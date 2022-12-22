@@ -253,11 +253,18 @@ function essb_short_bitly($url, $user = '', $api = '', $post_id = '', $deactivat
     $api = sanitize_text_field($api);
     
     $encoded_url = ($url);
-
-    $params = http_build_query(array (
-        'access_token' => $api,'uri' => ($encoded_url),'format' => 'json'
-    ));
-        
+    
+    if ($bitly_api_version == 'new') {
+        $params = http_build_query(array (
+            'access_token' => $api,'uri' => ($encoded_url),'format' => 'json'
+        ));
+    }
+    else {
+        $params = http_build_query(array (
+            'login' => $user,'apiKey' => $api,'longUrl' => $encoded_url,'format' => 'json'
+        ));
+    }
+    
     $result = $url;
     
     $rest_url = 'https://api-ssl.bitly.com/v3/shorten?' . $params;
@@ -353,7 +360,7 @@ function essb_short_pus($url, $post_id, $deactivate_cache = false, $api_url = ''
     $short = curl_exec($curl);
     curl_close($curl);
         
-    $short = json_decode($short, TRUE);    
+    $short = json_decode($short, TRUE);
     
     if (!$short['error']) {
         $result = $short["short"];

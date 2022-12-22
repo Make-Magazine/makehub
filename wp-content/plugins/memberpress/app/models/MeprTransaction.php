@@ -161,8 +161,9 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
   }
 
   /**
-   * @param string $trans_num
-   * @return stdClass
+   * @param $trans_num
+   *
+   * @return this
    */
   public static function get_one_by_trans_num($trans_num) {
     $mepr_db = new MeprDb();
@@ -972,6 +973,9 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
 
     $this->apply_tax($subtotal, 2, $subtotal);
   }
+
+
+
 
   public function load_product_vars($prd, $cpn_code=null, $set_subtotal=false) {
     $mock_cpn = (object)array('post_title' => null, 'ID' => 0, 'trial' => 0);

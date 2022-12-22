@@ -95,16 +95,14 @@ abstract class Request {
 	 *
 	 * @api
 	 * @since 2.0
-	 * @since 2.16 Added $return_view parameter.
+	 * @todo tests
 	 *
-	 * @param bool $return_view Whether to return a View object or boolean.
-	 *
-	 * @return \GV\View|bool If the global $post is a View, returns the View or true, depending on $return_view. If not a View, returns false.
+	 * @return \GV\View|false The view requested or false
 	 */
-	public function is_view( $return_view = true ) {
+	public function is_view() {
 		global $post;
-		if ( $post && 'gravityview' === get_post_type( $post ) ) {
-			return ( $return_view ) ? \GV\View::from_post( $post ) : true;
+		if ( $post && get_post_type( $post ) == 'gravityview' ) {
+			return \GV\View::from_post( $post );
 		}
 		return false;
 	}
@@ -242,7 +240,7 @@ abstract class Request {
 
 		$get = array_filter( $get, 'gravityview_is_not_empty_string' );
 
-		if( $this->_has_field_key( $get ) ) {
+		if( $has_field_key = $this->_has_field_key( $get ) ) {
 			return true;
 		}
 

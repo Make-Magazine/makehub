@@ -39,8 +39,7 @@ class ServiceProvider extends AbstractServiceProvider {
 			->addArgument( $this->getContainer()->get( 'delay_js_settings' ) )
 			->addTag( 'admin_subscriber' );
 		$this->getContainer()->add( 'delay_js_html', HTML::class )
-			->addArgument( $this->getContainer()->get( 'options' ) )
-			->addArgument( $this->getContainer()->get( 'dynamic_lists_data_manager' ) );
+			->addArgument( $this->getContainer()->get( 'options' ) );
 		$this->getContainer()->share( 'delay_js_subscriber', Subscriber::class )
 			->addArgument( $this->getContainer()->get( 'delay_js_html' ) )
 			->addArgument( rocket_direct_filesystem() )

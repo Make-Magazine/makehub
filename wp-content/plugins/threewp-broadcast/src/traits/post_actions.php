@@ -31,7 +31,6 @@ trait post_actions
 		$this->add_action( 'untrash_post' );
 		$this->add_action( 'untrashed_post', 'untrash_post' );
 		$this->add_action( 'wp_trash_post', 'trash_post' );
-		$this->add_action( 'threewp_broadcast_trash_untrash_delete_post' );
 	}
 
 	/**
@@ -343,37 +342,6 @@ trait post_actions
 	}
 
 	/**
-		@brief		Run a post command on a post.
-		@since		2022-09-12 21:44:54
-	**/
-	public function threewp_broadcast_trash_untrash_delete_post( $action )
-	{
-		if ( $action->is_finished() )
-			return;
-
-		$key = 'trash_untrash_delete_post_' . $action->child_blog_id . '_' . $action->child_post_id;
-		if ( isset( $this->$key ) )
-			return;
-
-		$this->$key = true;
-
-		$this->debug( 'Running trash_untrash_delete_post command %s on blog %s, post %s',
-			$action->command,
-			$action->child_blog_id,
-			$action->child_post_id
-		);
-
-		switch_to_blog( $action->child_blog_id );
-
-		$command = $action->command;
-		$command( $action->child_post_id );
-
-		restore_current_blog();
-
-		unset( $this->$key );
-	}
-
-	/**
 		@brief		Execute an action on a post.
 		@since		2014-11-02 16:35:27
 	**/
@@ -431,7 +399,7 @@ trait post_actions
 
 	public function trash_post( $post_id )
 	{
-		ThreeWP_Broadcast()->debug( 'trash_post %s', $post_id );
+		ThreeWP_Broadcast()->debug( 'BC trash post' );
 		$this->trash_untrash_delete_post( 'wp_trash_post', $post_id );
 	}
 
@@ -442,26 +410,10 @@ trait post_actions
 	 */
 	private function trash_untrash_delete_post( $command, $post_id )
 	{
-		if ( ! $post_id )
-			return;
-
-		$blog_id = get_current_blog_id();
-
-		// Check whether we are currently doing this command.
-		$key = 'trash_untrash_delete_post_' . $blog_id . '_' . $post_id;
-		if ( isset( $this->$key ) )
-			return;
-
-		$this->$key = true;
-
+		global $blog_id;
 		$broadcast_data = $this->get_post_broadcast_data( $blog_id, $post_id );
 
-		$this->debug( 'Intercepted %s on blog %s, post %s. Set %s',
-			$command,
-			$blog_id,
-			$post_id,
-			$key
-		);
+		$this->debug( 'Intercepted %s on blog %s, post %s', $command, $blog_id, $post_id );
 
 		if ( $broadcast_data->has_linked_children() )
 		{
@@ -472,12 +424,10 @@ trait post_actions
 					// Delete the broadcast data of this child
 					$this->delete_post_broadcast_data( $childBlog, $childPost );
 				}
-				$action = $this->new_action( 'trash_untrash_delete_post' );
-				$action->broadcast_data = $broadcast_data;
-				$action->command = $command;
-				$action->child_blog_id = $childBlog;
-				$action->child_post_id = $childPost;
-				$action->execute();
+				switch_to_blog( $childBlog);
+				$this->debug( 'Running %s on blog %s, post %s', $command, $childBlog, $childPost );
+				$command( $childPost);
+				restore_current_blog();
 			}
 		}
 
@@ -497,9 +447,6 @@ trait post_actions
 
 			$this->delete_post_broadcast_data( $blog_id, $post_id );
 		}
-
-		$this->debug( 'Unsetting %s', $key );
-		unset( $this->$key );
 	}
 
 	public function untrash_post( $post_id )

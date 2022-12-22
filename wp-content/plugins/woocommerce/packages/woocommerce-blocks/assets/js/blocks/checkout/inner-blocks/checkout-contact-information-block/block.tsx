@@ -3,11 +3,13 @@
  */
 import { __ } from '@wordpress/i18n';
 import { ValidatedTextInput } from '@woocommerce/base-components/text-input';
-import { useCheckoutAddress, useStoreEvents } from '@woocommerce/base-context';
+import {
+	useCheckoutContext,
+	useCheckoutAddress,
+	useStoreEvents,
+} from '@woocommerce/base-context';
 import { getSetting } from '@woocommerce/settings';
 import { CheckboxControl } from '@woocommerce/blocks-checkout';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -18,16 +20,12 @@ const Block = ( {
 }: {
 	allowCreateAccount: boolean;
 } ): JSX.Element => {
-	const { customerId, shouldCreateAccount } = useSelect( ( select ) =>
-		select( CHECKOUT_STORE_KEY ).getCheckoutState()
-	);
-
-	const { __internalSetShouldCreateAccount } =
-		useDispatch( CHECKOUT_STORE_KEY );
+	const { customerId, shouldCreateAccount, setShouldCreateAccount } =
+		useCheckoutContext();
 	const { billingAddress, setEmail } = useCheckoutAddress();
 	const { dispatchCheckoutEvent } = useStoreEvents();
 
-	const onChangeEmail = ( value: string ) => {
+	const onChangeEmail = ( value ) => {
 		setEmail( value );
 		dispatchCheckoutEvent( 'set-email-address' );
 	};
@@ -43,9 +41,7 @@ const Block = ( {
 					'woo-gutenberg-products-block'
 				) }
 				checked={ shouldCreateAccount }
-				onChange={ ( value ) =>
-					__internalSetShouldCreateAccount( value )
-				}
+				onChange={ ( value ) => setShouldCreateAccount( value ) }
 			/>
 		);
 

@@ -5,10 +5,6 @@
 
 namespace Automattic\WooCommerce\Internal\DataStores\Orders;
 
-use Automattic\WooCommerce\Internal\BatchProcessing\BatchProcessingController;
-use Automattic\WooCommerce\Internal\Features\FeaturesController;
-use Automattic\WooCommerce\Internal\Traits\AccessiblePrivateMethods;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -21,8 +17,6 @@ defined( 'ABSPATH' ) || exit;
  * ...and in general, any functionality that doesn't imply database access.
  */
 class CustomOrdersTableController {
-
-	use AccessiblePrivateMethods;
 
 	/**
 	 * The name of the option for enabling the usage of the custom orders tables
@@ -54,13 +48,6 @@ class CustomOrdersTableController {
 	private $data_store;
 
 	/**
-	 * Refunds data store object to use.
-	 *
-	 * @var OrdersTableRefundDataStore
-	 */
-	private $refund_data_store;
-
-	/**
 	 * The data synchronizer object to use.
 	 *
 	 * @var DataSynchronizer
@@ -68,23 +55,18 @@ class CustomOrdersTableController {
 	private $data_synchronizer;
 
 	/**
-	 * The batch processing controller to use.
+	 * Is the feature visible?
 	 *
-	 * @var BatchProcessingController
+	 * @var bool
 	 */
-	private $batch_processing_controller;
-
-	/**
-	 * The features controller to use.
-	 *
-	 * @var FeaturesController
-	 */
-	private $features_controller;
+	private $is_feature_visible;
 
 	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
+		$this->is_feature_visible = false;
+
 		$this->init_hooks();
 	}
 
@@ -92,39 +74,92 @@ class CustomOrdersTableController {
 	 * Initialize the hooks used by the class.
 	 */
 	private function init_hooks() {
-		self::add_filter( 'woocommerce_order_data_store', array( $this, 'get_orders_data_store' ), 999, 1 );
-		self::add_filter( 'woocommerce_order-refund_data_store', array( $this, 'get_refunds_data_store' ), 999, 1 );
-		self::add_filter( 'woocommerce_debug_tools', array( $this, 'add_initiate_regeneration_entry_to_tools_array' ), 999, 1 );
-		self::add_filter( 'woocommerce_get_sections_advanced', array( $this, 'get_settings_sections' ), 999, 1 );
-		self::add_filter( 'woocommerce_get_settings_advanced', array( $this, 'get_settings' ), 999, 2 );
-		self::add_filter( 'updated_option', array( $this, 'process_updated_option' ), 999, 3 );
-		self::add_filter( 'pre_update_option', array( $this, 'process_pre_update_option' ), 999, 3 );
-		self::add_filter( DataSynchronizer::PENDING_SYNCHRONIZATION_FINISHED_ACTION, array( $this, 'process_sync_finished' ), 10, 0 );
-		self::add_action( 'woocommerce_update_options_advanced_custom_data_stores', array( $this, 'process_options_updated' ), 10, 0 );
-		self::add_action( 'woocommerce_after_register_post_type', array( $this, 'register_post_type_for_order_placeholders' ), 10, 0 );
+		add_filter(
+			'woocommerce_order_data_store',
+			function ( $default_data_store ) {
+				return $this->get_data_store_instance( $default_data_store );
+			},
+			999,
+			1
+		);
+
+		add_filter(
+			'woocommerce_debug_tools',
+			function( $tools ) {
+				return $this->add_initiate_regeneration_entry_to_tools_array( $tools );
+			},
+			999,
+			1
+		);
+
+		add_filter(
+			'woocommerce_get_sections_advanced',
+			function( $sections ) {
+				return $this->get_settings_sections( $sections );
+			},
+			999,
+			1
+		);
+
+		add_filter(
+			'woocommerce_get_settings_advanced',
+			function ( $settings, $section_id ) {
+				return $this->get_settings( $settings, $section_id );
+			},
+			999,
+			2
+		);
+
+		add_filter(
+			'updated_option',
+			function( $option, $old_value, $value ) {
+				$this->process_updated_option( $option, $old_value, $value );
+			},
+			999,
+			3
+		);
+
+		add_filter(
+			'pre_update_option',
+			function( $value, $option, $old_value ) {
+				return $this->process_pre_update_option( $option, $old_value, $value );
+			},
+			999,
+			3
+		);
+
+		add_filter(
+			DataSynchronizer::PENDING_SYNCHRONIZATION_FINISHED_ACTION,
+			function() {
+				$this->process_sync_finished();
+			}
+		);
+
+		add_action(
+			'woocommerce_update_options_advanced_custom_data_stores',
+			function() {
+				$this->process_options_updated();
+			}
+		);
+
+		add_action(
+			'woocommerce_after_register_post_type',
+			function() {
+				$this->register_post_type_for_order_placeholders();
+			}
+		);
 	}
 
 	/**
 	 * Class initialization, invoked by the DI container.
 	 *
 	 * @internal
-	 * @param OrdersTableDataStore       $data_store The data store to use.
-	 * @param DataSynchronizer           $data_synchronizer The data synchronizer to use.
-	 * @param OrdersTableRefundDataStore $refund_data_store The refund data store to use.
-	 * @param BatchProcessingController  $batch_processing_controller The batch processing controller to use.
-	 * @param FeaturesController         $features_controller The features controller instance to use.
+	 * @param OrdersTableDataStore $data_store The data store to use.
+	 * @param DataSynchronizer     $data_synchronizer The data synchronizer to use.
 	 */
-	final public function init(
-		OrdersTableDataStore $data_store,
-		DataSynchronizer $data_synchronizer,
-		OrdersTableRefundDataStore $refund_data_store,
-		BatchProcessingController $batch_processing_controller,
-		FeaturesController $features_controller ) {
-		$this->data_store                  = $data_store;
-		$this->data_synchronizer           = $data_synchronizer;
-		$this->batch_processing_controller = $batch_processing_controller;
-		$this->refund_data_store           = $refund_data_store;
-		$this->features_controller         = $features_controller;
+	final public function init( OrdersTableDataStore $data_store, DataSynchronizer $data_synchronizer ) {
+		$this->data_store        = $data_store;
+		$this->data_synchronizer = $data_synchronizer;
 	}
 
 	/**
@@ -133,35 +168,21 @@ class CustomOrdersTableController {
 	 * @return bool True if the feature is visible.
 	 */
 	public function is_feature_visible(): bool {
-		return $this->features_controller->feature_is_enabled( 'custom_order_tables' );
+		return $this->is_feature_visible;
 	}
 
 	/**
 	 * Makes the feature visible, so that dedicated entries will be added to the debug tools page.
-	 *
-	 * This method shouldn't be used anymore, see the FeaturesController class.
 	 */
 	public function show_feature() {
-		$class_and_method = ( new \ReflectionClass( $this ) )->getShortName() . '::' . __FUNCTION__;
-		wc_doing_it_wrong(
-			$class_and_method,
-			__( "${class_and_method}: The visibility of the custom orders table feature is now handled by the WooCommerce features engine. See the FeaturesController class, or go to WooCommerce - Settings - Advanced - Features.", 'woocommerce' ),
-			'7.0'
-		);
+		$this->is_feature_visible = true;
 	}
 
 	/**
 	 * Hides the feature, so that no entries will be added to the debug tools page.
-	 *
-	 * This method shouldn't be used anymore, see the FeaturesController class.
 	 */
 	public function hide_feature() {
-		$class_and_method = ( new \ReflectionClass( $this ) )->getShortName() . '::' . __FUNCTION__;
-		wc_doing_it_wrong(
-			$class_and_method,
-			__( "${class_and_method}: The visibility of the custom orders table feature is now handled by the WooCommerce features engine. See the FeaturesController class, or go to WooCommerce - Settings - Advanced - Features.", 'woocommerce' ),
-			'7.0'
-		);
+		$this->is_feature_visible = false;
 	}
 
 	/**
@@ -171,47 +192,18 @@ class CustomOrdersTableController {
 	 * @return bool True if the custom orders table usage is enabled
 	 */
 	public function custom_orders_table_usage_is_enabled(): bool {
-		return get_option( self::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION ) === 'yes';
+		return 'yes' === get_option( self::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION );
 	}
 
 	/**
 	 * Gets the instance of the orders data store to use.
 	 *
-	 * @param \WC_Object_Data_Store_Interface|string $default_data_store The default data store (as received via the woocommerce_order_data_store hook).
-	 *
-	 * @return \WC_Object_Data_Store_Interface|string The actual data store to use.
+	 * @param WC_Object_Data_Store_Interface|string $default_data_store The default data store (as received via the woocommerce_order_data_store hooks).
+	 * @return WC_Object_Data_Store_Interface|string The actual data store to use.
 	 */
-	private function get_orders_data_store( $default_data_store ) {
-		return $this->get_data_store_instance( $default_data_store, 'order' );
-	}
-
-	/**
-	 * Gets the instance of the refunds data store to use.
-	 *
-	 * @param \WC_Object_Data_Store_Interface|string $default_data_store The default data store (as received via the woocommerce_order-refund_data_store hook).
-	 *
-	 * @return \WC_Object_Data_Store_Interface|string The actual data store to use.
-	 */
-	private function get_refunds_data_store( $default_data_store ) {
-		return $this->get_data_store_instance( $default_data_store, 'order_refund' );
-	}
-
-	/**
-	 * Gets the instance of a given data store.
-	 *
-	 * @param \WC_Object_Data_Store_Interface|string $default_data_store The default data store (as received via the appropriate hooks).
-	 * @param string                                 $type               The type of the data store to get.
-	 *
-	 * @return \WC_Object_Data_Store_Interface|string The actual data store to use.
-	 */
-	private function get_data_store_instance( $default_data_store, string $type ) {
+	private function get_data_store_instance( $default_data_store ) {
 		if ( $this->is_feature_visible() && $this->custom_orders_table_usage_is_enabled() ) {
-			switch ( $type ) {
-				case 'order_refund':
-					return $this->refund_data_store;
-				default:
-					return $this->data_store;
-			}
+			return $this->data_store;
 		} else {
 			return $default_data_store;
 		}
@@ -268,7 +260,7 @@ class CustomOrdersTableController {
 	 */
 	private function create_custom_orders_tables() {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		if ( ! isset( $_REQUEST['_wpnonce'] ) || wp_verify_nonce( $_REQUEST['_wpnonce'], 'debug_action' ) === false ) {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || false === wp_verify_nonce( $_REQUEST['_wpnonce'], 'debug_action' ) ) {
 			throw new \Exception( 'Invalid nonce' );
 		}
 
@@ -319,7 +311,7 @@ class CustomOrdersTableController {
 	 * @return array The updated settings array.
 	 */
 	private function get_settings( array $settings, string $section_id ): array {
-		if ( ! $this->is_feature_visible() || $section_id !== 'custom_data_stores' ) {
+		if ( ! $this->is_feature_visible() || 'custom_data_stores' !== $section_id ) {
 			return $settings;
 		}
 
@@ -337,7 +329,7 @@ class CustomOrdersTableController {
 			);
 
 			$sync_status     = $this->data_synchronizer->get_sync_status();
-			$sync_is_pending = $sync_status['current_pending_count'] !== 0;
+			$sync_is_pending = 0 !== $sync_status['current_pending_count'];
 
 			$settings[] = array(
 				'title'         => __( 'Data store for orders', 'woocommerce' ),
@@ -369,7 +361,7 @@ class CustomOrdersTableController {
 						sprintf( _n( 'There\'s %s order pending sync!', 'There are %s orders pending sync!', $current_pending_count, 'woocommerce' ), $current_pending_count, 'woocommerce' );
 				}
 
-				if ( $this->batch_processing_controller->is_enqueued( get_class( $this->data_synchronizer ) ) ) {
+				if ( $this->data_synchronizer->pending_data_sync_is_in_progress() ) {
 					$text .= __( "<br/>Synchronization for these orders is currently in progress.<br/>The authoritative table can't be changed until sync completes.", 'woocommerce' );
 				} else {
 					$text .= __( "<br/>The authoritative table can't be changed until these orders are synchronized.", 'woocommerce' );
@@ -456,7 +448,7 @@ class CustomOrdersTableController {
 	 * @param mixed  $value New value of the setting.
 	 */
 	private function process_updated_option( $option, $old_value, $value ) {
-		if ( $option === DataSynchronizer::ORDERS_DATA_SYNC_ENABLED_OPTION && $value === 'no' ) {
+		if ( DataSynchronizer::ORDERS_DATA_SYNC_ENABLED_OPTION === $option && 'no' === $value ) {
 			$this->data_synchronizer->cleanup_synchronization_state();
 		}
 	}
@@ -465,24 +457,25 @@ class CustomOrdersTableController {
 	 * Handler for the setting pre-update hook.
 	 * We use it to verify that authoritative orders table switch doesn't happen while sync is pending.
 	 *
-	 * @param mixed  $value New value of the setting.
 	 * @param string $option Setting name.
 	 * @param mixed  $old_value Old value of the setting.
+	 * @param mixed  $value New value of the setting.
 	 *
 	 * @throws \Exception Attempt to change the authoritative orders table while orders sync is pending.
 	 */
-	private function process_pre_update_option( $value, $option, $old_value ) {
-		if ( $option !== self::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION || $value === $old_value || $old_value === false ) {
+	private function process_pre_update_option( $option, $old_value, $value ) {
+		if ( self::CUSTOM_ORDERS_TABLE_USAGE_ENABLED_OPTION !== $option || $value === $old_value || false === $old_value ) {
 			return $value;
 		}
 
-		/**
-		 * Commenting out for better testability.
+		// TODO: Re-enable the following code once the COT to posts table sync is implemented (it's currently disabled to ease testing).
+
+		/*
 		$sync_is_pending = 0 !== $this->data_synchronizer->get_current_orders_pending_sync_count();
 		if ( $sync_is_pending ) {
 			throw new \Exception( "The authoritative table for orders storage can't be changed while there are orders out of sync" );
 		}
-		 */
+		*/
 
 		return $value;
 	}
@@ -511,7 +504,7 @@ class CustomOrdersTableController {
 	 * @return bool
 	 */
 	private function auto_flip_authoritative_table_enabled(): bool {
-		return get_option( self::AUTO_FLIP_AUTHORITATIVE_TABLE_ROLES_OPTION ) === 'yes';
+		return 'yes' === get_option( self::AUTO_FLIP_AUTHORITATIVE_TABLE_ROLES_OPTION );
 	}
 
 	/**
@@ -525,16 +518,11 @@ class CustomOrdersTableController {
 			update_option( self::AUTO_FLIP_AUTHORITATIVE_TABLE_ROLES_OPTION, 'no' );
 		}
 
-		// Enabling/disabling the sync implies starting/stopping it too, if needed.
+		// Enabling the sync implies starting it too, if needed.
 		// We do this check here, and not in process_pre_update_option, so that if for some reason
 		// the setting is enabled but no sync is in process, sync will start by just saving the
-		// settings even without modifying them (and the opposite: sync will be stopped if for
-		// some reason it was ongoing while it was disabled).
-		if ( $data_sync_is_enabled ) {
-			$this->batch_processing_controller->enqueue_processor( DataSynchronizer::class );
-		} else {
-			$this->batch_processing_controller->remove_processor( DataSynchronizer::class );
-		}
+		// settings even without modifying them.
+		$this->data_synchronizer->maybe_start_synchronizing_pending_orders( true );
 	}
 
 	/**

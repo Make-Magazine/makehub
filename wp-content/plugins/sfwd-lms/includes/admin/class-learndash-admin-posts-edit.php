@@ -36,7 +36,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		/**
 		 * Common array set to contain the metaboxes shown on the post edit screen.
 		 *
-		 * @var LearnDash_Settings_Metabox[] $_metaboxes;
+		 * @var array $_metaboxes;
 		 */
 		protected $_metaboxes = array(); //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
@@ -104,12 +104,13 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 				 *
 				 * @since 3.0.0
 				 *
+				 * @param string $post_type Post type slug.
 				 * @param array  $metaboxes Common array set to contain the metaboxes shown on the post edit screen.
 				 */
 				$this->_metaboxes = apply_filters( 'learndash_post_settings_metaboxes_init_' . $this->post_type, $this->_metaboxes );
 
-				if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$this->post_id = absint( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) ) {
+					$this->post_id = absint( $_GET['post'] );
 				}
 
 				if ( ( ! empty( $this->_metaboxes ) ) && ( ! empty( $this->post_id ) ) ) {
@@ -204,7 +205,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 					$learndash_assets_loaded['scripts']['learndash_pager_js'] = __FUNCTION__;
 				}
 
-				if ( isset( $_GET['ld_reset_metaboxes'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( isset( $_GET['ld_reset_metaboxes'] ) ) {
 					delete_user_meta( get_current_user_id(), 'closedpostboxes_' . $this->post_type );
 					delete_user_meta( get_current_user_id(), 'metaboxhidden_' . $this->post_type );
 					delete_user_meta( get_current_user_id(), 'meta-box-order_' . $this->post_type );
@@ -216,7 +217,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		}
 
 		/**
-		 * Check super global data.
+		 * Check superglobal data.
 		 *
 		 * @since 2.6.0
 		 *
@@ -243,8 +244,8 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		public function edit_form_top( $post ) {
 			if ( $this->post_type_check() ) {
 				$current_tab = '';
-				if ( isset( $_GET['currentTab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$current_tab = sanitize_text_field( wp_unslash( $_GET['currentTab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( isset( $_GET['currentTab'] ) ) {
+					$current_tab = esc_attr( $_GET['currentTab'] );
 				}
 				echo '<input type="hidden" id="ld_post_edit_current_tab" name="ld_post_edit_current_tab" value="' . esc_attr( $current_tab ) . '" />';
 			}
@@ -265,8 +266,8 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 			if ( ( ! empty( $location ) ) && ( ! empty( $post_id ) ) ) {
 				$post_type = get_post_type( $post_id );
 				if ( $this->post_type_check( $post_type ) ) {
-					if ( ( isset( $_POST['ld_post_edit_current_tab'] ) ) && ( ! empty( $_POST['ld_post_edit_current_tab'] ) ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Missing
-						$current_tab = sanitize_text_field( wp_unslash( $_POST['ld_post_edit_current_tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					if ( ( isset( $_POST['ld_post_edit_current_tab'] ) ) && ( ! empty( $_POST['ld_post_edit_current_tab'] ) ) ) {
+						$current_tab = esc_attr( $_POST['ld_post_edit_current_tab'] );
 						$location    = add_query_arg( 'currentTab', $current_tab, $location );
 					}
 				}
@@ -343,11 +344,11 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 				return false;
 			}
 
-			if ( ! isset( $_POST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( ! isset( $_POST['post_type'] ) ) {
 				return false;
 			}
 
-			if ( $_POST['post_type'] !== $this->post_type ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( $_POST['post_type'] !== $this->post_type ) {
 				return false;
 			}
 
@@ -381,7 +382,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		}
 
 		/**
-		 * Filter post_parent before update/insert. Ensure the post_parent field is zero for course post types.
+		 * Filter post_parent before update/insert. Ensure the post_parent fiel is zero for course post types.
 		 *
 		 * @since 3.1.0
 		 *
@@ -471,8 +472,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		// End of functions.
 	}
 }
-
-// Include the LearnDash table listing files here.
+// Incldue the LearnDash table listing files here.
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-course-edit.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-lesson-edit.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-topic-edit.php';
@@ -481,5 +481,3 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/clas
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-essay-edit.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-group-edit.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-assignment-edit.php';
-require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-exam-edit.php';
-require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-posts-edits/class-learndash-admin-coupon-edit.php';

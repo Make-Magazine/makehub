@@ -2,8 +2,8 @@
 Contributors: iamdavekiss
 Tags: vimeo
 Requires at least: 3.8
-Tested up to: 5.5
-Stable tag: 2.1.1
+Tested up to: 4.9.4
+Stable tag: 2.0.6
 License: GPL3
 
 The easiest way to create beautiful Vimeo galleries on your Wordpress blog.
@@ -33,29 +33,6 @@ Okay, deep breath. More than likely, it is another plugin causing this issue. Se
 Heck yeah! Use the appearance editor to change your theme's style so that it matches your site perfectly.
 
 == Changelog ==
-
-= 2.1.1 =
-* Fixes bug with background close and close button on all modals in Firefox
-* Adds default font size to search box
-* Introduces New Coast theme
-* Bump compatibility to WordPress 5.5
-
-= 2.1 =
-* Update theme dependencies to latest versions
-* Add `fitvidsignore` attribute to player to prevent fitvids intervention
-* Lightbox templates can now be selected for overrides
-* Add support for loading "unlisted" videos in Pro
-* Improve error message with link to docs on video load error
-* Added search results indicator to all themes
-* Include Shadow in theme bundle
-* Bump compatibility to WordPress 5.4
-
-= 2.0.7 =
-* [All Themes] Thumbnails are now lazy loaded by default
-* [All Themes] Videos that appear in a lightbox will now autoplay when the thumbnail is clicked
-* [All Themes] Hide the spinner if a search returns no results
-* [All Themes] Change the close element in modal windows to an anchor tag
-* [All Themes] Unload the video player before loading a new video in it
 
 = 2.0.6 =
 * [All Themes] Introduce fallback for when source video downloads are unavailable

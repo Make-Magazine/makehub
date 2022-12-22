@@ -4,7 +4,6 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { Fragment, useMemo, useState } from '@wordpress/element';
 import classNames from 'classnames';
-import { CheckboxControl } from '@woocommerce/blocks-checkout';
 
 /**
  * Internal dependencies
@@ -133,15 +132,19 @@ const CheckboxList = ( {
 								! showExpanded &&
 								index >= limit && { hidden: true } ) }
 						>
-							<CheckboxControl
+							<input
+								type="checkbox"
 								id={ option.value }
-								className="wc-block-checkbox-list__checkbox"
-								label={ option.label }
-								checked={ checked.includes( option.value ) }
-								onChange={ () => {
-									onChange( option.value );
+								value={ option.value }
+								onChange={ ( event ) => {
+									onChange( event.target.value );
 								} }
+								checked={ checked.includes( option.value ) }
+								disabled={ isDisabled }
 							/>
+							<label htmlFor={ option.value }>
+								{ option.label }
+							</label>
 						</li>
 						{ shouldTruncateOptions &&
 							index === limit - 1 &&

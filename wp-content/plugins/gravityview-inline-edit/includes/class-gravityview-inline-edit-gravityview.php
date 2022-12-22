@@ -63,66 +63,6 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 
 		add_filter( 'gravityview/datatables/output', array( $this, 'modify_datatables_output' ), 10, 2 );
 
-		add_filter( 'gravityview_template_field_options', array( $this, 'add_inline_edit_option' ), 10, 6 );
-
-		add_filter( 'gravityview/admin/indicator_icons', array( $this, 'add_inline_edit_icon' ), 10, 2 );
-
-	}
-
-	/**
-	 * Add inline edit icon in the field setting.
-	 *
-	 * @param array $icons
-	 * @param array $settings
-	 *
-	 * @return array
-	 */
-	public function add_inline_edit_icon( $icons, $settings ) {
-
-		$icons['enable_inline_edit'] = array(
-			'visible'   => isset( $settings['enable_inline_edit'] ) && 'enabled' === rgar( $settings, 'enable_inline_edit', 'enabled' ),
-			'title'     => __( 'This field is allowed to be inline edited', 'gk-gravityedit' ),
-			'css_class' => 'dashicons dashicons-edit icon-allow-inline-edit',
-		);
-
-		return $icons;
-	}
-
-	/**
-	 * Add inline edit checkbox in the field setting
-	 *
-	 * @since 1.7 Moved to this class from GravityView_Inline_Edit_GFAddon.
-	 *
-	 * @param array $field_options
-	 * @param integer $template_id
-	 * @param integer $field_id
-	 * @param string $context
-	 * @param string $input_type
-	 * @param integer $form_id
-	 *
-	 * @return array
-	 */
-	public function add_inline_edit_option( $field_options, $template_id, $field_id, $context, $input_type, $form_id ) {
-		// Show option only to supported fields.
-		$supported_fields = GravityView_Inline_Edit::get_instance()->get_supported_fields();
-		if ( ! in_array( $input_type, $supported_fields ) ) {
-			return $field_options;
-		}
-
-		$field_options['enable_inline_edit'] = array(
-			'type'     => 'radio',
-			'label'    => __( 'Enable editing this field with Inline Edit', 'gk-gravityedit' ),
-			'value'    => 'enabled',
-			'choices'  => array(
-				'enabled'  => __( 'Enabled', 'gk-gravityedit' ),
-				'disabled' => __( 'Disabled', 'gk-gravityedit' ),
-			),
-			'class'    => 'checkbox',
-			'priority' => 5100,
-			'group'    => 'advanced',
-		);
-
-		return $field_options;
 	}
 
 	/**
@@ -236,31 +176,18 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 			return null;
 		}
 
-		// Prevent from running multiple times for one request.
-		static $_can_edit_cache;
-
-		$_can_edit_cache = isset( $_can_edit_cache ) ? $_can_edit_cache : [];
-
-		// Already processed!
-		if ( isset( $_can_edit_cache[ $view_id ] ) ) {
-			return $_can_edit_cache[ $view_id ];
-		}
-
 		/** @var GV\View $view */
 		$view = \GV\View::by_id( $view_id );
 
 		$view_entries = GravityView_frontend::get_view_entries( $view->settings->as_atts(), $view->form->ID );
 
-		$_can_edit_cache[ $view_id ] = false;
-
 		foreach ( $view_entries['entries'] as $entry ) {
 			if( $this->filter_can_edit_entry( false, $entry['id'], $view->form->ID ) ) {
-				$_can_edit_cache[ $view_id ] = true;
-				break;
+				return true;
 			}
 		}
 
-		return $_can_edit_cache[ $view_id ];
+		return false;
 	}
 
 	/**
@@ -274,11 +201,11 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 	 */
 	function filter_inline_edit_mode( $mode = '' ) {
 
-		if ( ! class_exists( 'GravityKitFoundation' ) ) {
+		if ( ! class_exists( 'GravityView_Settings' ) ) {
 			return $mode;
 		}
 
-		$inline_edit_mode = GravityKitFoundation::settings()->get_plugin_setting( 'gravityedit', 'inline-edit-mode' );
+		$inline_edit_mode = GravityView_Settings::getSetting( 'inline-edit-mode' );
 
 		return ( empty( $inline_edit_mode ) ? $mode : $inline_edit_mode );
 	}
@@ -362,7 +289,7 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 
 		$gf_field = is_a( $current_field, 'GF_Field' ) ? GVCommon::get_field( $form, $current_field->id ) : null;
 
-		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'filter_wrapper_attribute_add_entry_link' ), 10, 8 );
+		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'filter_wrapper_attribute_add_entry_link' ), 10, 7 );
 
 		$return = parent::wrap_field_value( $output, $entry, $field_settings['id'], $gf_field, $form, $field_settings );
 
@@ -383,11 +310,10 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 	 * @param $form
 	 * @param $gf_field
 	 * @param $output
-	 * @param $field_settings
 	 *
 	 * @return array Modified attributes, with 'data-viewid' and 'data-entry-link' (optional) keys
 	 */
-	public function filter_wrapper_attribute_add_entry_link( $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings ) {
+	public function filter_wrapper_attribute_add_entry_link( $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output ) {
 
 		if ( ! class_exists( 'GravityView_frontend' ) ) {
 			return $wrapper_attributes;
@@ -434,8 +360,8 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 	public function add_inline_edit_toggle_setting( $gv_settings ) {
 
 		$gv_settings['inline_edit'] = array(
-			'label'             => esc_html__( 'Enable Inline Edit', 'gk-gravityedit' ),
-			'desc'              => esc_html__( 'Adds a link to toggle Inline Editing capabilities.', 'gk-gravityedit' ),
+			'label'             => esc_html__( 'Enable Inline Edit', 'gravityview-inline-edit' ),
+			'desc'              => esc_html__( 'Adds a link to toggle Inline Editing capabilities.', 'gravityview-inline-edit' ),
 			'type'              => 'checkbox',
 			'group'             => 'default',
 			'value'             => 0,
@@ -517,11 +443,11 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 		$tooltips = array(
 			array(
 				'image' => 'popup',
-				'description' => esc_html__('Popup: The edit form will appear above the content.', 'gk-gravityedit' ),
+				'description' => esc_html__('Popup: The edit form will appear above the content.', 'gravityview-inline-edit'),
 			),
 			array(
 				'image' => 'in-place',
-				'description' => esc_html__('In-Place: The edit form for the field will show in the same place as the content.', 'gk-gravityedit' ),
+				'description' => esc_html__('In-Place: The edit form for the field will show in the same place as the content.', 'gravityview-inline-edit'),
 			),
 		);
 
@@ -531,7 +457,7 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 
 		foreach ( $tooltips as $tooltip ) {
 
-			$image_link = plugins_url( "assets/images/{$tooltip['image']}.png", GRAVITYEDIT_FILE );
+			$image_link = plugins_url( "assets/images/{$tooltip['image']}.png", GRAVITYVIEW_INLINE_FILE );
 
 			$tooltip_html .= sprintf( $tooltip_format, $image_link, $tooltip['description'] );
 		}
@@ -553,20 +479,20 @@ final class GravityView_Inline_Edit_GravityView extends GravityView_Inline_Edit_
 		$gv_settings[] = array(
 			'name'          => 'inline-edit-mode',
 			'type'          => 'select',
-			'label'         => __( 'Inline Edit Mode', 'gk-gravityedit' ),
+			'label'         => __( 'Inline Edit Mode', 'gravityview-inline-edit' ),
 			'tooltip'       => $this->_get_edit_mode_tooltip_html(),
-			'description'   => esc_html__( 'Change where the Inline Edit form appears &ndash; above the content or in its place.', 'gk-gravityedit' ) . ' ' . esc_html__( 'Hover over the ? above for examples of each mode.', 'gk-gravityedit' ),
+			'description'   => esc_html__( 'Change where the Inline Edit form appears &ndash; above the content or in its place.', 'gravityview-inline-edit' ) . ' ' . esc_html__( 'Hover over the ? above for examples of each mode.', 'gravityview-inline-edit' ),
 			'default_value' => 'popup',
 			'horizontal'    => 1,
 			'choices'       => array(
 				array
 				(
-					'label' => esc_html__( 'Popup', 'gk-gravityedit' ),
+					'label' => esc_html__( 'Popup', 'gravityview-inline-edit' ),
 					'value' => 'popup',
 				),
 				array
 				(
-					'label' => esc_html__( 'In-Place', 'gk-gravityedit' ),
+					'label' => esc_html__( 'In-Place', 'gravityview-inline-edit' ),
 					'value' => 'inline',
 				),
 

@@ -18,9 +18,15 @@ use AcVendor\Brick\Math\Exception\MathException;
  */
 final class RationalMoney extends AbstractMoney
 {
-    private BigRational $amount;
+    /**
+     * @var BigRational
+     */
+    private $amount;
 
-    private Currency $currency;
+    /**
+     * @var Currency
+     */
+    private $currency;
 
     /**
      * Class constructor.

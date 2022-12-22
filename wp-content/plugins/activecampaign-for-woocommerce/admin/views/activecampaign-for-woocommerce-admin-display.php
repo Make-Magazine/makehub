@@ -13,7 +13,6 @@
  */
 
 $activecampaign_for_woocommerce_options = $this->get_options();
-$activecampaign_for_woocommerce_storage = $this->get_storage();
 
 $activecampaign_for_woocommerce_configured = false;
 if ( isset( $activecampaign_for_woocommerce_options['api_url'], $activecampaign_for_woocommerce_options['api_key'] ) ) {
@@ -42,8 +41,7 @@ if ( isset( $activecampaign_for_woocommerce_settings['ac_debug'] ) ) {
 }
 $activecampaign_for_woocommerce_debug = esc_html( sanitize_text_field( $activecampaign_for_woocommerce_debug ) );
 
-$activecampaign_for_woocommerce_product_sync_enabled = Activecampaign_For_Woocommerce_Product_Repository::is_enabled( $activecampaign_for_woocommerce_settings );
-$activecampaign_for_woocommerce_email_option         = '0';
+$activecampaign_for_woocommerce_email_option = '0';
 if ( isset( $activecampaign_for_woocommerce_settings['ac_emailoption'] ) ) {
 	$activecampaign_for_woocommerce_email_option = $activecampaign_for_woocommerce_settings['ac_emailoption'];
 }
@@ -72,20 +70,20 @@ if ( isset( $activecampaign_for_woocommerce_settings['custom_email_field'] ) ) {
 }
 $activecampaign_for_woocommerce_custom_email_field = esc_html( sanitize_text_field( $activecampaign_for_woocommerce_custom_email_field ) );
 
-$activecampaign_for_woocommerce_ab_cart_options = array(
+$activecampaign_for_woocommerce_ab_cart_options = [
 	'1'  => esc_html__( '1 hour (recommended)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
 	'6'  => esc_html__( '6 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
 	'10' => esc_html__( '10 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
 	'24' => esc_html__( '24 hours', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-);
+];
 
-$activecampaign_for_woocommerce_ac_debug_options = array(
+$activecampaign_for_woocommerce_ac_debug_options = [
 	// value  // label
 	'1' => esc_html__( 'On', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
 	'0' => esc_html__( 'Off', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ),
-);
+];
 
-$activecampaign_for_woocommerce_checkbox_display_options = array(
+$activecampaign_for_woocommerce_checkbox_display_options = [
 	// value                          // label
 	'visible_checked_by_default'   => esc_html__(
 		'Visible, checked by default',
@@ -99,7 +97,7 @@ $activecampaign_for_woocommerce_checkbox_display_options = array(
 		'Not visible',
 		ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
 	),
-);
+];
 
 ?>
 <?php settings_errors(); ?>
@@ -318,32 +316,6 @@ $activecampaign_for_woocommerce_checkbox_display_options = array(
 					   data-value="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>"
 					   class="activecampaign-for-woocommerce button secondary"><span><?php esc_html_e( 'Test connection', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></span></a>
 					<hr/>
-					<?php
-					if ( $activecampaign_for_woocommerce_debug || $activecampaign_for_woocommerce_product_sync_enabled ) :
-						?>
-						<label>
-							<?php esc_html_e( 'Enable Product Sync Beta:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-						</label>
-						<label class="radio">
-							<input type="radio" id="ac_product_sync_enabled0" name="<?php echo esc_html( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_ENABLED_NAME ); ?>" value="0"
-								<?php
-								if ( ! $activecampaign_for_woocommerce_product_sync_enabled ) :
-									echo 'checked';
-								endif;
-								?>
-							> Off
-						</label>
-						<label class="radio">
-							<input type="radio" id="ac_product_sync_enabled1" name="<?php echo esc_html( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PRODUCT_SYNC_ENABLED_NAME ); ?>" value="1"
-								<?php
-								if ( $activecampaign_for_woocommerce_product_sync_enabled ) :
-									echo 'checked';
-								endif;
-								?>
-							> On
-						</label>
-					<hr/>
-					<?php endif; ?>
 					<div>
 						<label>
 							<?php esc_html_e( 'Activate debugging:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
@@ -428,43 +400,26 @@ $activecampaign_for_woocommerce_checkbox_display_options = array(
 							<h2>
 								<?php esc_html_e( 'Repair Connection ID', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 							</h2>
-							<?php if ( isset( $activecampaign_for_woocommerce_storage ) && ! empty( $activecampaign_for_woocommerce_storage ) ) : ?>
-								<p>
-									<?php
-									esc_html_e( 'ActiveCampaign connection ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									?>
-
-									<?php if ( ! isset( $activecampaign_for_woocommerce_storage['connection_option_id'] ) ) : ?>
-										<?php esc_html_e( 'Error: No connection ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-									<?php else : ?>
-										<?php echo esc_html( $activecampaign_for_woocommerce_storage['connection_id'] ); ?>
-									<?php endif; ?>
-								</p>
-								<p>
-									<?php
-									esc_html_e( 'ActiveCampaign connection option ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									?>
-									<?php if ( ! isset( $activecampaign_for_woocommerce_storage['connection_option_id'] ) ) : ?>
-										<?php esc_html_e( 'Error: No connection option ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-									<?php else : ?>
-										<?php echo esc_html( $activecampaign_for_woocommerce_storage['connection_option_id'] ); ?>
-									<?php endif; ?>
-								</p>
-								<?php if ( isset( $activecampaign_for_woocommerce_storage['external_id'] ) ) : ?>
-									<p>
-										<?php esc_html_e( 'ActiveCampaign external ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-										<?php echo esc_html( $activecampaign_for_woocommerce_storage['external_id'] ); ?>
-									</p>
+							<p>
+								<?php
+								esc_html_e( 'ActiveCampaign connection ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+								?>
+								<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_id'] ) ) : ?>
+									<?php esc_html_e( 'Error: No connection ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+								<?php else : ?>
+									<?php echo esc_html( $this->get_storage()['connection_id'] ); ?>
 								<?php endif; ?>
-								<?php if ( isset( $activecampaign_for_woocommerce_storage['name'] ) ) : ?>
-									<p>
-										<?php esc_html_e( 'Connection name: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-											<?php echo esc_html( $activecampaign_for_woocommerce_storage['name'] ); ?>
-									</p>
+							</p>
+							<p>
+								<?php
+								esc_html_e( 'ActiveCampaign connection option ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+								?>
+								<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_option_id'] ) ) : ?>
+									<?php esc_html_e( 'Error: No connection option ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+								<?php else : ?>
+									<?php echo esc_html( $this->get_storage()['connection_option_id'] ); ?>
 								<?php endif; ?>
-							<?php else : ?>
-								No connection!
-							<?php endif; ?>
+							</p>
 							<hr/>
 							<p>
 								<?php esc_html_e( 'This button should only be used if you are facing issues with orders not properly sending to ActiveCampaign. Please reach out to support before trying this option.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>

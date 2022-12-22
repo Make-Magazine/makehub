@@ -14,7 +14,14 @@ class data
 		$this->checks = new checks\container;
 		$this->checks->controller = $controller;
 		$this->checks->maintenance_data = $this;
-		$this->load_checks();
+		$this->checks->add_check( new checks\broadcast_data\check );
+		$this->checks->add_check( new checks\simple_broadcast_data\check );
+		$this->checks->add_check( new checks\database_tools\check );
+		$this->checks->add_check( new checks\view_broadcast_data\check );
+		$this->checks->add_check( new checks\view_blog_access\check );
+		$this->checks->add_check( new checks\view_post_info\check );
+		$this->checks->add_check( new checks\view_taxonomy_info\check );
+		$this->checks->add_check( new checks\view_user_info\check );
 	}
 
 	/**
@@ -48,19 +55,6 @@ class data
 	public static function get_filename( $user_id )
 	{
 		return get_temp_dir() . sprintf( 'broadcast_maintenance_for_user_%s.tmp', $user_id );
-	}
-
-	/**
-		@brief		Load the checks.
-		@since		2022-09-19 20:46:35
-	**/
-	public function load_checks()
-	{
-		$action = ThreeWP_Broadcast()->new_action( 'maintenance_populate_checks' );
-		$action->controller = $this->controller;
-		$action->checks = $this->checks;
-		$action->data = $this;
-		$action->execute();
 	}
 
 	/**

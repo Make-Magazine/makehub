@@ -121,7 +121,9 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 			$this->logger = $logger;
 		}
 
-		$this->validate_connection_id();
+		if ( ! isset( $this->connection_id ) && isset( $this->admin->get_storage()['connection_id'] ) ) {
+			$this->connection_id = $this->admin->get_storage()['connection_id'];
+		}
 	}
 
 	/**
@@ -285,40 +287,6 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	}
 
 	/**
-	 * Validates the connection ID and sets it if it happens to be unset.
-	 *
-	 * @return bool
-	 */
-	private function validate_connection_id() {
-		$storage = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
-
-		if (
-			(
-				! isset( $this->connection_id ) ||
-				empty( $this->connection_id )
-			) &&
-			isset( $storage['connection_id'] ) &&
-			! empty( $storage['connection_id'] )
-		) {
-			$this->connection_id = $storage['connection_id'];
-		}
-
-		if ( ! isset( $this->connection_id ) || empty( $this->connection_id ) ) {
-			$this->logger->error(
-				'Abandoned cart was not able to establish a valid connection ID',
-				[
-					'connection_id'       => $this->connection_id,
-					'conneciton_settings' => $storage,
-				]
-			);
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Process the abandoned carts per record
 	 *
 	 * @param     Array $abandoned_carts     Abandoned carts found in the database.
@@ -393,7 +361,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 						$description = $wc_product->get_description();
 					}
 
-					$ecom_product->set_description( AC_Utilities::clean_description( $description ) );
+					$ecom_product->set_description( $this->order_utilities->clean_description( $description ) );
 
 					$products[] = $ecom_product;
 				} catch ( Throwable $t ) {
@@ -418,18 +386,6 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 			try {
 				$externalcheckout_id = $this->abandoned_cart_util->generate_externalcheckoutid( $customer->id, $customer->email, $activecampaignfwc_order_external_uuid );
 
-				if ( ! $this->validate_connection_id() ) {
-					$this->logger->error(
-						'Abandoned cart could not find valid connection ID or the cart. Please repair your connection to ActiveCampaign.',
-						[
-							'connection_id' => $this->connection_id,
-						]
-					);
-					continue;
-				}
-
-				$ecom_order->set_customerid( $customer_ac->get_id() );
-				$ecom_order->set_connectionid( $this->connection_id );
 				$ecom_order->set_externalcheckoutid( $externalcheckout_id );
 				$ecom_order->set_source( '1' );
 				$ecom_order->set_email( $customer->email );
@@ -437,6 +393,8 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				$ecom_order->set_total_price( $this->order_utilities->convert_money_to_cents( $cart_totals->total ) ); // must be in cents
 				$ecom_order->set_tax_amount( $this->order_utilities->convert_money_to_cents( $cart_totals->total_tax ) );
 				$ecom_order->set_shipping_amount( $this->order_utilities->convert_money_to_cents( $cart_totals->shipping_total ) );
+				$ecom_order->set_connectionid( $this->connection_id );
+				$ecom_order->set_customerid( $customer_ac->get_id() );
 				$ecom_order->set_order_url( wc_get_cart_url() );
 				$ecom_order->set_total_products( $item_count_total );
 
@@ -573,6 +531,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 			try {
 				if ( $synced_to_ac ) {
 					// Update the record to show we've synced so we don't sync it again
+					$this->abandoned_cart_util->cleanup_session_activecampaignfwc_order_external_uuid();
 
 					$wpdb->update(
 						$wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_TABLE_NAME,
@@ -620,16 +579,8 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 	 */
 	private function find_or_create_ac_customer( $customer ) {
 		$customer_ac = null;
-
-		if ( ! $this->validate_connection_id() ) {
-			$this->logger->error(
-				'Abandoned cart could not find valid connection ID. Please repair your connection to ActiveCampaign.',
-				[
-					'connection_id' => $this->connection_id,
-				]
-			);
-
-			return null;
+		if ( ! isset( $this->connection_id ) ) {
+			$this->connection_id = $this->admin->get_storage()['connection_id'];
 		}
 
 		try {
@@ -637,7 +588,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 			$customer_ac = $this->customer_repository->find_by_email_and_connection_id( $customer->email, $this->connection_id );
 		} catch ( Throwable $t ) {
 			$this->logger->debug(
-				'Abandonment sync: Find customer exception.',
+				'Abandonment sync: Abandon find customer exception.',
 				[
 					'exception'           => $t->getMessage(),
 					'customer_email'      => isset( $customer->email ) ? $customer->email : null,
@@ -654,7 +605,6 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				// Customer does not exist in AC yet
 				// Set up AC customer model
 				$new_customer = new Ecom_Customer();
-
 				$new_customer->set_connectionid( $this->connection_id );
 				$new_customer->set_email( $customer->email );
 				$new_customer->set_first_name( $customer->first_name );

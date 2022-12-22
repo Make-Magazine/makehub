@@ -2039,13 +2039,11 @@ class Video extends Common_Widget {
 
 				$response = wp_remote_get( "https://vimeo.com/api/v2/video/$id.php" );
 
-				if ( is_wp_error( $response ) || 404 === $response['response']['code'] ) {
+				if ( is_wp_error( $response ) ) {
 					return;
 				}
 				$vimeo = maybe_unserialize( $response['body'] );
-
-				// privacy enabled videos don't return thumbnail data.
-				$thumb = ( isset( $vimeo[0]['thumbnail_large'] ) && ! empty( $vimeo[0]['thumbnail_large'] ) ) ? str_replace( '_640', '_840', $vimeo[0]['thumbnail_large'] ) : '';
+				$thumb = str_replace( '_640', '_840', $vimeo[0]['thumbnail_large'] );
 
 			} elseif ( 'wistia' === $settings['video_type'] ) {
 				$url   = $settings['wistia_link'];
@@ -2172,10 +2170,6 @@ class Video extends Common_Widget {
 		$response = wp_remote_get( "https://vimeo.com/api/v2/video/$id.php" );
 
 		if ( is_wp_error( $response ) ) {
-			return;
-		}
-
-		if ( 404 === $response['response']['code'] ) {
 			return;
 		}
 		$vimeo = maybe_unserialize( $response['body'] );

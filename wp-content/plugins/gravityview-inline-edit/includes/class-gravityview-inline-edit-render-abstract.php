@@ -157,39 +157,34 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @filter `gravityview-inline-edit/wrapper-attributes` Modify the attributes being added to an inline editable wrapper HTML tag
 		 *
 		 * @since 1.0
-		 * @since 1.4 added $output parameter.
-		 * @since 1.6 added $field_settings parameter.
+		 * @since 1.4 added $output parameter
 		 *
-		 * @param array $wrapper_attributes The attributes of the container <div> or <span>.
-		 * @param string $field_input_type The field input type.
-		 * @param int $field_id The field ID.
-		 * @param array $entry The entry.
-		 * @param array $form The current Form.
+		 * @param array $wrapper_attributes The attributes of the container <div> or <span>
+		 * @param string $field_input_type The field input type
+		 * @param int $field_id The field ID
+		 * @param array $entry The entry
+		 * @param array $form The current Form
 		 * @param GF_Field $gf_field Gravity Forms field object.
-		 * @param string $output The original field value HTML.
-		 * @param array $field_settings GravityView field settings array.
+		 * @param string $output The original field value HTML
 		 */
-		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings );
+		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output );
 
 		/**
 		 * @filter `gravityview-inline-edit/{$input_type}-wrapper-attributes` Modify the attributes being added to an inline editable link for a specific input type
 		 *
 		 * @since 1.0
-		 * @since 1.6 added $output and $field_settings parameter.
 		 *
-		 * @param array $wrapper_attributes The attributes of the container <div> or <span>.
-		 * @param string $field_input_type The field input type.
-		 * @param int $field_id The field ID.
-		 * @param array $entry The entry.
-		 * @param array $form The current Form.
-		 * @param GF_Field $gf_field Gravity Forms field object. Is an instance of GF_Field.
-		 * @param string $output The original field value HTML.
-		 * @param array $field_settings GravityView field settings array.
+		 * @param array $wrapper_attributes The attributes of the container <div> or <span>
+		 * @param string $field_input_type The field input type
+		 * @param int $field_id The field ID
+		 * @param array $entry The entry
+		 * @param array $form The current Form
+		 * @param GF_Field $gf_field Gravity Forms field object. Is an instance of GF_Field
 		 */
-		$wrapper_attributes = apply_filters( "gravityview-inline-edit/{$input_type}-wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings );
+		$wrapper_attributes = apply_filters( "gravityview-inline-edit/{$input_type}-wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field );
 
 		// If only inline elements, use <span>
-		if ( $output === strip_tags( $output, '<a><abbr><acronym><audio><b><bdi><bdo><big><br><button><canvas><cite><code><data><datalist><del><dfn><em><embed><i><iframe><img><input><ins><kbd><label><map><mark><meter><noscript><object><output><picture><progress><q><ruby><s><samp><script><select><slot><small><span><strong><sub><sup><svg><template><textarea><time><u><tt><var><video><wbr>' ) ) {
+		if ( $output === strip_tags( $output, '<a><bdo><br><img><map><object><q><script><span><sub><sup><abbr><acronym><cite><code><dfn><em><kbd><strong><samp><var><b><big><i><small><tt>' ) ) {
 			$tag_name = 'span';
 		} else {
 			$tag_name = 'div';
@@ -201,11 +196,7 @@ abstract class GravityView_Inline_Edit_Render {
 		}
 
 		// Return <tag atts>output</tag>
-		return strtr( '<{tag} {atts}>{output}</{tag}>', array(
-			'{tag}'    => $tag_name,
-			'{atts}'   => $atts_output,
-			'{output}' => $output,
-		) );
+		return sprintf( '<%s %s>%s</%1$s>', $tag_name, $atts_output, $output );
 	}
 
 	/**
@@ -229,9 +220,9 @@ abstract class GravityView_Inline_Edit_Render {
 	protected function add_inline_edit_toggle_button() {
 
 		$labels = array(
-			'toggle'   => __( 'Toggle Inline Edit', 'gk-gravityedit' ),
-			'disabled' => __( 'Enable Inline Edit', 'gk-gravityedit' ),
-			'enabled'  => __( 'Disable Inline Edit', 'gk-gravityedit' ),
+			'toggle'   => __( 'Toggle Inline Edit', 'gravityview-inline-edit' ),
+			'disabled' => __( 'Enable Inline Edit', 'gravityview-inline-edit' ),
+			'enabled'  => __( 'Disable Inline Edit', 'gravityview-inline-edit' ),
 		);
 
 		/**
@@ -247,8 +238,8 @@ abstract class GravityView_Inline_Edit_Render {
 		$link_class = is_admin() ? 'button button-primary hidden' : '';
 
 		ob_start();
-		/** @define "GRAVITYEDIT_DIR" "../" */
-		include GRAVITYEDIT_DIR . 'templates/toggle.php';
+		/** @define "GRAVITYVIEW_INLINE_DIR" "../" */
+		include GRAVITYVIEW_INLINE_DIR . 'templates/toggle.php';
 		echo ob_get_clean();
 	}
 }

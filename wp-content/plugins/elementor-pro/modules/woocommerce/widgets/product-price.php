@@ -161,9 +161,9 @@ class Product_Price extends Base_Widget {
 
 	protected function render() {
 		global $product;
-		$product = $this->get_product();
+		$product = wc_get_product();
 
-		if ( ! $product ) {
+		if ( empty( $product ) ) {
 			return;
 		}
 

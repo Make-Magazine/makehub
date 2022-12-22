@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Tooltip } from '@brainstormforce/starter-templates-components';
 import { __ } from '@wordpress/i18n';
+import { Tooltip } from '@brainstormforce/starter-templates-components';
 import { PreviousStepLink, DefaultStep } from '../../components/index';
 import ICONS from '../../../icons';
 import { useStateValue } from '../../store/store';

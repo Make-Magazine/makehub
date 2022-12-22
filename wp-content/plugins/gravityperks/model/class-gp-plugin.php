@@ -102,10 +102,9 @@ abstract class GP_Plugin extends GFAddOn {
 
 	public function check_requirements() {
 
-		$requirements   = $this->minimum_requirements();
-		$min_gf_version = rgars( $requirements, 'gravityforms/version' );
+		$requirements = $this->minimum_requirements();
 
-		if ( $min_gf_version ) {
+		if ( $min_gf_version = rgars( $requirements, 'gravityforms/version' ) ) {
 			$this->_min_gravityforms_version = $min_gf_version;
 		}
 

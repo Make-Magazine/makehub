@@ -39,9 +39,6 @@ class Discord extends Action_Base {
 				'separator' => 'before',
 				'description' => esc_html__( 'Enter the webhook URL that will receive the form\'s submitted data.', 'elementor-pro' ) . ' ' . sprintf( '<a href="%s" target="_blank">%s</a>.', 'https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks', esc_html__( 'Click here for Instructions', 'elementor-pro' ) ),
 				'render_type' => 'none',
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -50,9 +47,6 @@ class Discord extends Action_Base {
 			[
 				'label' => esc_html__( 'Username', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -61,9 +55,6 @@ class Discord extends Action_Base {
 			[
 				'label' => esc_html__( 'Avatar URL', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -72,9 +63,6 @@ class Discord extends Action_Base {
 			[
 				'label' => esc_html__( 'Title', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -83,9 +71,6 @@ class Discord extends Action_Base {
 			[
 				'label' => esc_html__( 'Description', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -175,11 +160,7 @@ class Discord extends Action_Base {
 		if ( ! empty( $settings['discord_ts'] ) && 'yes' === $settings['discord_ts'] ) {
 			$embeds['timestamp'] = gmdate( \DateTime::ISO8601 );
 			$embeds['footer'] = [
-				'text' => sprintf(
-					/* translators: %s: Elementor. */
-					esc_html__( 'Powered by %s', 'elementor-pro' ),
-					'Elementor'
-				),
+				'text' => sprintf( esc_html__( 'Powered by %s', 'elementor-pro' ), 'Elementor' ),
 				'icon_url' => is_ssl() ? ELEMENTOR_ASSETS_URL . 'images/logo-icon.png' : null,
 			];
 		}

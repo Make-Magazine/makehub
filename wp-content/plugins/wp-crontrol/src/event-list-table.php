@@ -136,14 +136,6 @@ class Table extends \WP_List_Table {
 			return ( ! in_array( $event->hook, $all_core_hooks, true ) );
 		} );
 
-		$paused = array_filter( $events, function( $event ) {
-			return ( is_paused( $event ) );
-		} );
-
-		if ( count( $paused ) > 0 ) {
-			$filtered['paused'] = $paused;
-		}
-
 		/**
 		 * Filters the available filtered events on the cron event listing screen.
 		 *
@@ -230,7 +222,6 @@ class Table extends \WP_List_Table {
 			'noaction' => __( 'Events with no action', 'wp-crontrol' ),
 			'core'     => __( 'WordPress core events', 'wp-crontrol' ),
 			'custom'   => __( 'Custom events', 'wp-crontrol' ),
-			'paused'   => __( 'Paused events', 'wp-crontrol' ),
 		);
 
 		/**
@@ -314,7 +305,7 @@ class Table extends \WP_List_Table {
 		$callbacks = \Crontrol\get_hook_callbacks( $event->hook );
 
 		if ( ! $callbacks ) {
-			$classes[] = 'crontrol-no-action';
+			$classes[] = 'crontrol-warning';
 		} else {
 			foreach ( $callbacks as $callback ) {
 				if ( ! empty( $callback['callback']['error'] ) ) {
@@ -326,10 +317,6 @@ class Table extends \WP_List_Table {
 
 		if ( is_late( $event ) || is_too_frequent( $event ) ) {
 			$classes[] = 'crontrol-warning';
-		}
-
-		if ( is_paused( $event ) ) {
-			$classes[] = 'crontrol-paused';
 		}
 
 		printf(
@@ -362,50 +349,24 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'edit-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+				'crontrol_next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
 
 			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Edit', 'wp-crontrol' ) . '</a>';
 		}
 
-		if ( ! is_paused( $event ) ) {
-			$link = array(
-				'page'                  => 'crontrol_admin_manage_page',
-				'crontrol_action'       => 'run-cron',
-				'crontrol_id'           => rawurlencode( $event->hook ),
-				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
-			);
-			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
+		$link = array(
+			'page'                  => 'crontrol_admin_manage_page',
+			'crontrol_action'       => 'run-cron',
+			'crontrol_id'           => rawurlencode( $event->hook ),
+			'crontrol_sig'          => rawurlencode( $event->sig ),
+			'crontrol_next_run_utc' => rawurlencode( $event->time ),
+		);
+		$link = add_query_arg( $link, admin_url( 'tools.php' ) );
+		$link = wp_nonce_url( $link, "crontrol-run-cron_{$event->hook}_{$event->sig}" );
 
-			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
-		}
-
-		if ( is_paused( $event ) ) {
-			$link = array(
-				'page'            => 'crontrol_admin_manage_page',
-				'crontrol_action' => 'resume-hook',
-				'crontrol_id'     => rawurlencode( $event->hook ),
-			);
-			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "crontrol-resume-hook_{$event->hook}" );
-
-			/* translators: Verb */
-			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Resume', 'wp-crontrol' ) . '</a>';
-		} elseif ( 'crontrol_cron_job' !== $event->hook ) {
-			$link = array(
-				'page'            => 'crontrol_admin_manage_page',
-				'crontrol_action' => 'pause-hook',
-				'crontrol_id'     => rawurlencode( $event->hook ),
-			);
-			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "crontrol-pause-hook_{$event->hook}" );
-
-			/* translators: Verb */
-			$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Pause', 'wp-crontrol' ) . '</a>';
-		}
+		$links[] = "<a href='" . esc_url( $link ) . "'>" . esc_html__( 'Run Now', 'wp-crontrol' ) . '</a>';
 
 		if ( ! in_array( $event->hook, self::$persistent_core_hooks, true ) && ( ( 'crontrol_cron_job' !== $event->hook ) || self::$can_manage_php_crons ) ) {
 			$link = array(
@@ -413,10 +374,10 @@ class Table extends \WP_List_Table {
 				'crontrol_action'       => 'delete-cron',
 				'crontrol_id'           => rawurlencode( $event->hook ),
 				'crontrol_sig'          => rawurlencode( $event->sig ),
-				'crontrol_next_run_utc' => rawurlencode( $event->timestamp ),
+				'crontrol_next_run_utc' => rawurlencode( $event->time ),
 			);
 			$link = add_query_arg( $link, admin_url( 'tools.php' ) );
-			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->timestamp}" );
+			$link = wp_nonce_url( $link, "crontrol-delete-cron_{$event->hook}_{$event->sig}_{$event->time}" );
 
 			$links[] = "<span class='delete'><a href='" . esc_url( $link ) . "'>" . esc_html__( 'Delete', 'wp-crontrol' ) . '</a></span>';
 		}
@@ -452,7 +413,7 @@ class Table extends \WP_List_Table {
 	protected function column_cb( $event ) {
 		$id = sprintf(
 			'crontrol-delete-%1$s-%2$s-%3$s',
-			$event->timestamp,
+			$event->time,
 			rawurlencode( $event->hook ),
 			$event->sig
 		);
@@ -469,7 +430,7 @@ class Table extends \WP_List_Table {
 				<input type="checkbox" name="crontrol_delete[%3$s][%4$s]" value="%5$s" id="%1$s">',
 				esc_attr( $id ),
 				esc_html__( 'Select this row', 'wp-crontrol' ),
-				esc_attr( $event->timestamp ),
+				esc_attr( $event->time ),
 				esc_attr( rawurlencode( $event->hook ) ),
 				esc_attr( $event->sig )
 			);
@@ -494,17 +455,7 @@ class Table extends \WP_List_Table {
 			}
 		}
 
-		$output = esc_html( $event->hook );
-
-		if ( is_paused( $event ) ) {
-			$output .= sprintf(
-				' &mdash; <strong class="status-crontrol-paused post-state"><span class="dashicons dashicons-controls-pause" aria-hidden="true"></span> %s</strong>',
-				/* translators: State of a cron event, adjective */
-				esc_html__( 'Paused', 'wp-crontrol' )
-			);
-		}
-
-		return $output;
+		return esc_html( $event->hook );
 	}
 
 	/**
@@ -592,14 +543,14 @@ class Table extends \WP_List_Table {
 	protected function column_crontrol_next( $event ) {
 		$date_local_format = 'Y-m-d H:i:s';
 		$offset_site = get_date_from_gmt( 'now', 'P' );
-		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), 'P' );
+		$offset_event = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), 'P' );
 
 		if ( $offset_site !== $offset_event ) {
 			$date_local_format .= ' P';
 		}
 
-		$date_utc   = gmdate( 'c', $event->timestamp );
-		$date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->timestamp ), $date_local_format );
+		$date_utc   = gmdate( 'c', $event->time );
+		$date_local = get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $event->time ), $date_local_format );
 
 		$time = sprintf(
 			'<time datetime="%1$s">%2$s</time>',
@@ -607,7 +558,7 @@ class Table extends \WP_List_Table {
 			esc_html( $date_local )
 		);
 
-		$until = $event->timestamp - time();
+		$until = $event->time - time();
 		$late  = is_late( $event );
 
 		if ( $late ) {

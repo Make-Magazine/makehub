@@ -123,7 +123,6 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
     MeprHooks::do_action('mepr_subscription_stored', $this);
     MeprHooks::do_action('mepr_subscription_saved', $this);
     MeprHooks::do_action('mepr_subscription_status_'.$this->status, $this);
-    MeprHooks::do_action('mepr_subscription_compare', $this, $old_sub);
 
     // DEPRECATED ... please use the actions above instead
     MeprHooks::do_action('mepr-subscr-transition-status', $old_sub->status, $this->status, $this);
@@ -533,10 +532,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
 
     $args = array();
 
-    if(array_key_exists('member', $params)) {
-      if( empty($params['member'] ) ){
-        $params['member'] = NULL;
-      }
+    if(isset($params['member']) && !empty($params['member'])) {
       $args[] = $wpdb->prepare("u.user_login = %s", $params['member']);
     }
 
@@ -733,10 +729,7 @@ class MeprSubscription extends MeprBaseMetaModel implements MeprProductInterface
 
     $args = array('(txn.subscription_id IS NULL OR txn.subscription_id <= 0)');
 
-    if(array_key_exists('member', $params)) {
-      if( empty($params['member'] ) ){
-        $params['member'] = NULL;
-      }
+    if(isset($params['member']) && !empty($params['member'])) {
       $args[] = $wpdb->prepare("u.user_login = %s", $params['member']);
     }
 

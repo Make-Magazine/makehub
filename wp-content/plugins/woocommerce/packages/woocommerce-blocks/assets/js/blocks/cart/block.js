@@ -6,6 +6,7 @@ import { useStoreCart } from '@woocommerce/base-context/hooks';
 import { useEffect } from '@wordpress/element';
 import LoadingMask from '@woocommerce/base-components/loading-mask';
 import {
+	ValidationContextProvider,
 	StoreNoticesContainer,
 	SnackbarNoticesContainer,
 } from '@woocommerce/base-context';
@@ -13,7 +14,10 @@ import { CURRENT_USER_IS_ADMIN } from '@woocommerce/settings';
 import BlockErrorBoundary from '@woocommerce/base-components/block-error-boundary';
 import { translateJQueryEventToNative } from '@woocommerce/base-utils';
 import withScrollToTop from '@woocommerce/base-hocs/with-scroll-to-top';
-import { CartProvider } from '@woocommerce/base-context/providers';
+import {
+	StoreNoticesProvider,
+	CartProvider,
+} from '@woocommerce/base-context/providers';
 import { SlotFillProvider } from '@woocommerce/blocks-checkout';
 
 /**
@@ -35,7 +39,9 @@ const Cart = ( { children, attributes = {} } ) => {
 					hasDarkControls,
 				} }
 			>
-				{ children }
+				<ValidationContextProvider>
+					{ children }
+				</ValidationContextProvider>
 			</CartBlockContext.Provider>
 		</LoadingMask>
 	);
@@ -68,10 +74,7 @@ const ScrollOnError = ( { scrollToTop } ) => {
 };
 const Block = ( { attributes, children, scrollToTop } ) => (
 	<BlockErrorBoundary
-		header={ __(
-			'Something went wrong. Please contact us for assistance.',
-			'woocommerce'
-		) }
+		header={ __( 'Something went wrong…', 'woocommerce' ) }
 		text={ __(
 			'The cart has encountered an unexpected error. If the error persists, please get in touch with us for help.',
 			'woocommerce'
@@ -84,13 +87,15 @@ const Block = ( { attributes, children, scrollToTop } ) => (
 		showErrorMessage={ CURRENT_USER_IS_ADMIN }
 	>
 		<SnackbarNoticesContainer context="wc/cart" />
-		<StoreNoticesContainer context="wc/cart" />
-		<SlotFillProvider>
-			<CartProvider>
-				<Cart attributes={ attributes }>{ children }</Cart>
-				<ScrollOnError scrollToTop={ scrollToTop } />
-			</CartProvider>
-		</SlotFillProvider>
+		<StoreNoticesProvider>
+			<StoreNoticesContainer context="wc/cart" />
+			<SlotFillProvider>
+				<CartProvider>
+					<Cart attributes={ attributes }>{ children }</Cart>
+					<ScrollOnError scrollToTop={ scrollToTop } />
+				</CartProvider>
+			</SlotFillProvider>
+		</StoreNoticesProvider>
 	</BlockErrorBoundary>
 );
 export default withScrollToTop( Block );

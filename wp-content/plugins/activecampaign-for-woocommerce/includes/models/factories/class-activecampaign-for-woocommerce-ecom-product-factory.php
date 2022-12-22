@@ -55,14 +55,11 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	public function product_from_cart_content( $content ) {
 		try {
 			if (
-				isset( $content['data'] ) && (
-				AC_Utilities::validate_object( $content['wc_product'], 'get_id' ) ||
-				$content['wc_product'] instanceof WC_Product ||
-				$content['wc_product'] instanceof WC_Product_Factory
-				)
+				AC_Utilities::validate_object( $content['data'], 'get_id' ) ||
+				$content['data'] instanceof WC_Product ||
+				$content['data'] instanceof WC_Product_Factory
 			) {
-				$ecom_product = $this->convert_product_data_to_ecom_product( $content['wc_product'], $content['data'] );
-				// $ecom_product = $this->convert_wc_product_to_ecom_product( $content['data'] );
+				$ecom_product = $this->convert_wc_product_to_ecom_product( $content['data'] );
 			} else {
 				$ecom_product = $this->convert_item_data_to_generic_product( $content );
 			}
@@ -79,89 +76,6 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 					'message'  => $t->getMessage(),
 					'function' => 'product_from_cart_content',
 					'trace'    => $logger->clean_trace( $t->getTrace() ),
-				]
-			);
-		}
-
-		return null;
-	}
-
-	public function convert_product_data_to_ecom_product( $wc_product, $data ) {
-		try {
-			if ( isset( $data['id'] ) ) {
-				$logger = new Logger();
-
-				$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
-				if ( isset( $data['variation_id'] ) ) {
-					$ecom_product->set_externalid( $data['variation_id'] );
-					$child_product = wc_get_product( $data['variation_id'] );
-				} else {
-					$ecom_product->set_externalid( $data['product_id'] );
-				}
-
-				if ( isset( $data['name'] ) && ! empty( $data['name'] ) ) {
-					$ecom_product->set_name( $data['name'] );
-				} elseif ( AC_Utilities::validate_object( $child_product, 'get_name' ) ) {
-					$ecom_product->set_name( $child_product->get_name() );
-				} else {
-					$ecom_product->set_name( $wc_product->get_name() );
-				}
-
-				if ( AC_Utilities::validate_object( $child_product, 'get_name' ) ) {
-					$ecom_product->set_price( $child_product->get_price() > 0 ? $child_product->get_price() * 100 : 0 );
-				} else {
-					$ecom_product->set_price( $wc_product->get_price() > 0 ? $wc_product->get_price() * 100 : 0 );
-				}
-
-				$ecom_product->set_category( $this->get_product_all_categories( $child_product ) );
-				$ecom_product->set_image_url( $this->get_product_image_url( $child_product ) );
-				$ecom_product->set_product_url( $this->get_product_url( $child_product ) );
-				$ecom_product->set_sku( $this->get_sku( $child_product ) );
-
-				if ( AC_Utilities::validate_object( $child_product, 'get_short_description' ) && ! empty( $child_product->get_short_description() ) ) {
-					$description = $child_product->get_short_description();
-				} elseif ( AC_Utilities::validate_object( $child_product, 'get_description' ) && ! empty( $child_product->get_description() ) ) {
-					$description = $child_product->get_description();
-				}
-
-				if ( empty( $description ) && ! empty( $wc_product->get_short_description() ) ) {
-					$description = $wc_product->get_short_description();
-				} elseif ( empty( $description ) && ! empty( $wc_product->get_description() ) ) {
-					$description = $wc_product->get_description();
-				}
-
-				if ( empty( $description ) ) {
-					$ecom_product->set_description( '' );
-				} else {
-					$ecom_product->set_description( $this->clean_description( $description ) );
-				}
-
-				if (
-					empty( $ecom_product->get_category() ) ||
-					'Unknown' === $ecom_product->get_category()
-				) {
-					$ecom_product->set_category( $this->get_product_all_categories( $wc_product ) );
-				}
-
-				if ( empty( $ecom_product->get_image_url() ) ) {
-					$ecom_product->set_image_url( $this->get_product_image_url( $wc_product ) );
-				}
-				if ( empty( $ecom_product->get_product_url() ) ) {
-					$ecom_product->set_product_url( $this->get_product_url( $wc_product ) );
-				}
-				if ( empty( $ecom_product->get_sku() ) ) {
-					$ecom_product->set_sku( $this->get_sku( $wc_product ) );
-				}
-
-				return $ecom_product;
-			}
-		} catch ( Throwable $t ) {
-			$logger = new Logger();
-			$logger->error(
-				'Product factory could not convert a WC_Product to an ecom_product.',
-				[
-					'message' => $t->getMessage(),
-					'trace'   => $logger->clean_trace( $t->getTrace() ),
 				]
 			);
 		}
@@ -225,12 +139,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		try {
 			$ecom_product = new Activecampaign_For_Woocommerce_Ecom_Product();
 
-			if ( $pre_product['variation_id'] ) {
-				$ecom_product->set_externalid( $pre_product['variation_id'] );
-			} else {
-				$ecom_product->set_externalid( $pre_product['product_id'] );
-			}
-
+			$ecom_product->set_externalid( $pre_product['product_id'] );
 			$ecom_product->set_name( $pre_product['name'] );
 			$ecom_product->set_price( $pre_product['total'] > 0 ? $pre_product['total'] * 100 : 0 );
 			$ecom_product->set_category( $this->get_product_all_categories( $pre_product['item'] ) );

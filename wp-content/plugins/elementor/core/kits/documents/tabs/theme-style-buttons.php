@@ -32,7 +32,7 @@ class Theme_Style_Buttons extends Tab_Base {
 	}
 
 	public function get_help_url() {
-		return 'https://go.elementor.com/global-theme-style-buttons/';
+		return 'https://go.elementor.com/global-theme-style-buttons';
 	}
 
 	protected function register_tab_controls() {
@@ -70,6 +70,7 @@ class Theme_Style_Buttons extends Tab_Base {
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
+				'label' => esc_html__( 'Typography', 'elementor' ),
 				'name' => 'button_typography',
 				'selector' => $button_selector,
 			]
@@ -151,7 +152,7 @@ class Theme_Style_Buttons extends Tab_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					$button_selector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -226,7 +227,7 @@ class Theme_Style_Buttons extends Tab_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					$button_hover_selector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

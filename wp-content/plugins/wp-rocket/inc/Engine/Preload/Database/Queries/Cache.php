@@ -124,10 +124,6 @@ class Cache extends Query {
 	public function create_or_update( array $resource ) {
 		$url = untrailingslashit( strtok( $resource['url'], '?' ) );
 
-		if ( $this->is_rejected( $resource['url'] ) ) {
-			return false;
-		}
-
 		// check the database if those resources added before.
 		$rows = $this->query(
 			[
@@ -142,7 +138,6 @@ class Cache extends Query {
 				[
 					'url'           => $url,
 					'status'        => key_exists( 'status', $resource ) ? $resource['status'] : 'pending',
-					'is_locked'     => key_exists( 'is_locked', $resource ) ? $resource['is_locked'] : false,
 					'last_accessed' => current_time( 'mysql', true ),
 				]
 			);
@@ -159,10 +154,9 @@ class Cache extends Query {
 		$db_row = array_pop( $rows );
 
 		$data = [
-			'url'       => $url,
-			'status'    => key_exists( 'status', $resource ) ? $resource['status'] : $db_row->status,
-			'is_locked' => key_exists( 'is_locked', $resource ) ? $resource['is_locked'] : $db_row->is_locked,
-			'modified'  => current_time( 'mysql', true ),
+			'url'      => $url,
+			'status'   => $resource['status'],
+			'modified' => current_time( 'mysql', true ),
 		];
 
 		if ( key_exists( 'last_accessed', $resource ) && (bool) $resource['last_accessed'] ) {
@@ -188,17 +182,12 @@ class Cache extends Query {
 	 * @return bool
 	 */
 	public function create_or_nothing( array $resource ) {
-
-		if ( $this->is_rejected( $resource['url'] ) ) {
-			return false;
-		}
-
 		$url = strtok( $resource['url'], '?' );
 
 		// check the database if those resources added before.
 		$rows = $this->query(
 			[
-				'url' => untrailingslashit( $url ),
+				'url' => untrailingslashit( $resource['url'] ),
 			],
 			false
 		);
@@ -212,7 +201,6 @@ class Cache extends Query {
 			[
 				'url'           => untrailingslashit( $url ),
 				'status'        => key_exists( 'status', $resource ) ? $resource['status'] : 'pending',
-				'is_locked'     => key_exists( 'is_locked', $resource ) ? $resource['is_locked'] : false,
 				'last_accessed' => current_time( 'mysql', true ),
 			]
 		);
@@ -266,9 +254,7 @@ class Cache extends Query {
 
 		$deleted = true;
 		foreach ( $items as $item ) {
-			if ( ! is_bool( $item ) ) {
-				$deleted = $deleted && $this->delete_item( $item->id );
-			}
+			$deleted = $deleted && $this->delete_item( $item->id );
 		}
 
 		return $deleted;
@@ -304,9 +290,7 @@ class Cache extends Query {
 		$rows = $this->get_old_cache();
 
 		foreach ( $rows as $row ) {
-			if ( ! is_bool( $row ) ) {
-				$this->delete_item( $row->id );
-			}
+			$this->delete_item( $row->id );
 		}
 	}
 
@@ -316,36 +300,11 @@ class Cache extends Query {
 	 * @param int $total total of jobs to fetch.
 	 * @return array
 	 */
-	public function get_pending_jobs( int $total = 45 ) {
-		$inprogress_count = $this->query(
-			[
-				'count'     => true,
-				'status'    => 'in-progress',
-				'is_locked' => false,
-			],
-			false
-		);
-
-		if ( $inprogress_count >= $total ) {
-			return [];
-		}
-
-		$orderby = 'modified';
-
-		/**
-		 * Filter order for preloading pending urls.
-		 *
-		 * @param bool $orderby order for preloading pending urls.
-		 *
-		 * @returns bool
-		 */
-		if ( apply_filters( 'rocket_preload_order', false ) ) {
-			$orderby = 'id';
-		}
+	public function get_pending_jobs( int $total ) {
 
 		return $this->query(
 			[
-				'number'         => ( $total - $inprogress_count ),
+				'number'         => $total,
 				'status'         => 'pending',
 				'fields'         => [
 					'id',
@@ -354,8 +313,7 @@ class Cache extends Query {
 				'job_id__not_in' => [
 					'not_in' => '',
 				],
-				'is_locked'      => false,
-				'orderby'        => $orderby,
+				'orderby'        => 'modified',
 				'order'          => 'asc',
 			]
 		);
@@ -487,7 +445,6 @@ class Cache extends Query {
 	 * @return bool
 	 */
 	public function is_preloaded( string $url ): bool {
-
 		$pending_count = $this->query(
 			[
 				'count'  => true,
@@ -512,7 +469,6 @@ class Cache extends Query {
 				'url'    => untrailingslashit( $url ),
 			]
 		);
-
 		return 0 !== $pending_count;
 	}
 
@@ -533,56 +489,5 @@ class Cache extends Query {
 		$prefixed_table_name = $db->prefix . $this->table_name;
 
 		$db->query( "DELETE FROM `$prefixed_table_name` WHERE 1 = 1" );
-	}
-
-	/**
-	 * Lock a URL.
-	 *
-	 * @param string $url URL to lock.
-	 *
-	 * @return void
-	 */
-	public function lock( string $url ) {
-		$this->create_or_update(
-			[
-				'url'       => $url,
-				'is_locked' => true,
-			]
-			);
-	}
-
-	/**
-	 * Unlock a URL.
-	 *
-	 * @param string $url URL to unlock.
-	 *
-	 * @return void
-	 */
-	public function unlock( string $url ) {
-		$this->create_or_update(
-			[
-				'url'       => $url,
-				'is_locked' => false,
-			]
-			);
-	}
-
-	/**
-	 * Check if the url is rejected.
-	 *
-	 * @param string $url url to check.
-	 * @return bool
-	 */
-	protected function is_rejected( string $url ): bool {
-		$extensions = [
-			'php' => 1,
-			'xml' => 1,
-			'xsl' => 1,
-			'kml' => 1,
-		];
-
-		$extension = pathinfo( $url, PATHINFO_EXTENSION );
-
-		return $extension && isset( $extensions[ $extension ] );
 	}
 }

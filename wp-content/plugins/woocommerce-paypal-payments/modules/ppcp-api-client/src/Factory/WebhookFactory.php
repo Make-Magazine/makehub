@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\ApiClient\Factory;
 
+use stdClass;
 use WooCommerce\PayPalCommerce\ApiClient\Entity\Webhook;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\RuntimeException;
 
@@ -27,7 +28,7 @@ class WebhookFactory {
 	 */
 	public function for_url_and_events( string $url, array $event_types ): Webhook {
 		$event_types = array_map(
-			static function ( string $type ) {
+			static function ( string $type ): stdClass {
 				return (object) array( 'name' => $type );
 			},
 			$event_types
@@ -52,12 +53,12 @@ class WebhookFactory {
 	/**
 	 * Returns a Webhook based of a PayPal JSON response.
 	 *
-	 * @param object $data The JSON object.
+	 * @param stdClass $data The JSON object.
 	 *
 	 * @return Webhook
 	 * @throws RuntimeException When JSON object is malformed.
 	 */
-	public function from_paypal_response( $data ): Webhook {
+	public function from_paypal_response( stdClass $data ): Webhook {
 		if ( ! isset( $data->id ) ) {
 			throw new RuntimeException(
 				__( 'No id for webhook given.', 'woocommerce-paypal-payments' )

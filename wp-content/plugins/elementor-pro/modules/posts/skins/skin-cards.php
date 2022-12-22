@@ -183,7 +183,6 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'max' => 50,
@@ -375,13 +374,11 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
-						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
+						'min' => 0,
+						'max' => 15,
 					],
 				],
 				'selectors' => [
@@ -395,7 +392,7 @@ class Skin_Cards extends Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'range' => [
 					'px' => [
 						'min' => 0,

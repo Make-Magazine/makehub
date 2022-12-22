@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace WooCommerce\PayPalCommerce\ApiClient\Entity;
 
-use stdClass;
 use WooCommerce\PayPalCommerce\ApiClient\Exception\RuntimeException;
 
 /**
@@ -43,12 +42,12 @@ class PaymentToken {
 	/**
 	 * PaymentToken constructor.
 	 *
-	 * @param string   $id The Id.
-	 * @param stdClass $source The source.
-	 * @param string   $type The type.
+	 * @param string    $id The Id.
+	 * @param string    $type The type.
+	 * @param \stdClass $source The source.
 	 * @throws RuntimeException When the type is not valid.
 	 */
-	public function __construct( string $id, stdClass $source, string $type = self::TYPE_PAYMENT_METHOD_TOKEN ) {
+	public function __construct( string $id, string $type = self::TYPE_PAYMENT_METHOD_TOKEN, \stdClass $source ) {
 		if ( ! in_array( $type, self::get_valid_types(), true ) ) {
 			throw new RuntimeException(
 				__( 'Not a valid payment source type.', 'woocommerce-paypal-payments' )

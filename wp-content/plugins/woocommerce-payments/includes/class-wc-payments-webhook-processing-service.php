@@ -174,12 +174,6 @@ class WC_Payments_Webhook_Processing_Service {
 			case 'payment_intent.succeeded':
 				$this->process_webhook_payment_intent_succeeded( $event_body );
 				break;
-			case 'payment_intent.canceled':
-				$this->process_webhook_payment_intent_canceled( $event_body );
-				break;
-			case 'payment_intent.amount_capturable_updated':
-				$this->process_webhook_payment_intent_amount_capturable_updated( $event_body );
-				break;
 			case 'invoice.upcoming':
 				WC_Payments_Subscriptions::get_event_handler()->handle_invoice_upcoming( $event_body );
 				break;
@@ -318,33 +312,6 @@ class WC_Payments_Webhook_Processing_Service {
 
 		// TODO: Revisit this logic once we support partial captures or multiple charges for order. We'll need to handle the "payment_intent.canceled" event too.
 		$this->order_service->mark_payment_capture_expired( $order, $intent_id, $intent_status, $charge_id );
-
-		// Clear the authorization summary cache to trigger a fetch of new data.
-		$this->database_cache->delete( DATABASE_CACHE::AUTHORIZATION_SUMMARY_KEY );
-	}
-
-	/**
-	 * Process webhook for a payment intent canceled event.
-	 *
-	 * @param array $event_body The event that triggered the webhook.
-	 *
-	 * @return void
-	 */
-	private function process_webhook_payment_intent_canceled( $event_body ) {
-		// Clear the authorization summary cache to trigger a fetch of new data.
-		$this->database_cache->delete( DATABASE_CACHE::AUTHORIZATION_SUMMARY_KEY );
-	}
-
-	/**
-	 * Process webhook for a payment intent amount capturable updated event.
-	 *
-	 * @param array $event_body The event that triggered the webhook.
-	 *
-	 * @return void
-	 */
-	private function process_webhook_payment_intent_amount_capturable_updated( $event_body ) {
-		// Clear the authorization summary cache to trigger a fetch of new data.
-		$this->database_cache->delete( DATABASE_CACHE::AUTHORIZATION_SUMMARY_KEY );
 	}
 
 	/**
@@ -418,14 +385,16 @@ class WC_Payments_Webhook_Processing_Service {
 			WC_Payments_Utils::ORDER_INTENT_CURRENCY_META_KEY => $currency,
 		];
 
+		$order_changed = false;
 		foreach ( $meta_data_to_update as $key => $value ) {
-			// Override existing meta data with incoming values, if present.
-			if ( $value ) {
+			if ( $value && ! $order->get_meta( $key ) ) {
+				$order_changed = true;
 				$order->update_meta_data( $key, $value );
 			}
 		}
-		// Save the order after updating the meta data values.
-		$order->save();
+		if ( true === $order_changed ) {
+			$order->save();
+		}
 
 		$this->order_service->mark_payment_completed( $order, $intent_id, $intent_status, $charge_id );
 
@@ -442,9 +411,6 @@ class WC_Payments_Webhook_Processing_Service {
 			];
 			$this->receipt_service->send_customer_ipp_receipt_email( $order, $merchant_settings, $charges_data[0] );
 		}
-
-		// Clear the authorization summary cache to trigger a fetch of new data.
-		$this->database_cache->delete( DATABASE_CACHE::AUTHORIZATION_SUMMARY_KEY );
 	}
 
 	/**

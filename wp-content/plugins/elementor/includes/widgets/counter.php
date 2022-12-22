@@ -187,8 +187,6 @@ class Widget_Counter extends Widget_Base {
 					'' => 'Default',
 					'.' => 'Dot',
 					' ' => 'Space',
-					'_' => 'Underline',
-					"'" => 'Apostrophe',
 				],
 			]
 		);
@@ -252,14 +250,6 @@ class Widget_Counter extends Widget_Base {
 		);
 
 		$this->add_group_control(
-			Group_Control_Text_Stroke::get_type(),
-			[
-				'name' => 'number_stroke',
-				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
-			]
-		);
-
-		$this->add_group_control(
 			Group_Control_Text_Shadow::get_type(),
 			[
 				'name' => 'number_shadow',
@@ -298,14 +288,6 @@ class Widget_Counter extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_SECONDARY,
 				],
-				'selector' => '{{WRAPPER}} .elementor-counter-title',
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Text_Stroke::get_type(),
-			[
-				'name' => 'title_stroke',
 				'selector' => '{{WRAPPER}} .elementor-counter-title',
 			]
 		);

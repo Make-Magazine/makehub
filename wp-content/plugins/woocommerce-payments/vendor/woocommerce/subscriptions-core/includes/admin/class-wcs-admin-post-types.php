@@ -5,7 +5,7 @@
  * @author   Prospress
  * @category Admin
  * @package  WooCommerce Subscriptions/Admin
- * @version  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+ * @version  2.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -299,15 +299,12 @@ class WCS_Admin_Post_Types {
 			return;
 		}
 
-		// Verify the nonce before proceeding, using the bulk actions nonce name as defined in WP core.
-		check_admin_referer( 'bulk-posts' );
-
 		$action = '';
 
 		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-			$action = wc_clean( wp_unslash( $_REQUEST['action'] ) );
-		} elseif ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
-			$action = wc_clean( wp_unslash( $_REQUEST['action2'] ) );
+			$action = $_REQUEST['action'];
+		} else if ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
+			$action = $_REQUEST['action2'];
 		}
 
 		switch ( $action ) {
@@ -339,7 +336,7 @@ class WCS_Admin_Post_Types {
 
 			try {
 
-				if ( 'cancelled' === $action ) {
+				if ( 'cancelled' == $action ) {
 					$subscription->cancel_order( $order_note );
 				} else {
 					$subscription->update_status( $new_status, $order_note, true );
@@ -364,7 +361,7 @@ class WCS_Admin_Post_Types {
 		}
 
 		$sendback_args['changed'] = $changed;
-		$sendback                 = add_query_arg( $sendback_args, wp_get_referer() ? wp_get_referer() : '' );
+		$sendback = add_query_arg( $sendback_args, wp_get_referer() ? wp_get_referer() : '' );
 		wp_safe_redirect( esc_url_raw( $sendback ) );
 
 		exit();
@@ -484,7 +481,6 @@ class WCS_Admin_Post_Types {
 				$action_url = add_query_arg(
 					array(
 						'post'     => $the_subscription->get_id(),
-						// Using the bulk actions nonce name as defined in WP core.
 						'_wpnonce' => wp_create_nonce( 'bulk-posts' ),
 					)
 				);
@@ -664,7 +660,7 @@ class WCS_Admin_Post_Types {
 	 * @param WC_Subscription $subscription
 	 * @param string $column
 	 * @return string
-	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.3.0
+	 * @since 2.3.0
 	 */
 	public static function get_date_column_content( $subscription, $column ) {
 
@@ -792,7 +788,6 @@ class WCS_Admin_Post_Types {
 					WCS_Customer_Store::instance()->get_users_subscription_ids( $customer_id ),
 					$customer_id
 				);
-
 				$vars = self::set_post__in_query_var( $vars, $subscription_ids );
 			}
 
@@ -804,7 +799,6 @@ class WCS_Admin_Post_Types {
 					array_keys( $subscription_ids ),
 					$product_id
 				);
-
 				$vars = self::set_post__in_query_var( $vars, $subscription_ids );
 			}
 
@@ -832,11 +826,11 @@ class WCS_Admin_Post_Types {
 				}
 
 				$query_vars = array(
-					'type'       => 'shop_subscription',
-					'limit'      => -1,
-					'status'     => 'any',
-					'return'     => 'ids',
-					'meta_query' => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'post_type'      => 'shop_subscription',
+					'posts_per_page' => -1,
+					'post_status'    => 'any',
+					'fields'         => 'ids',
+					'meta_query'     => $meta_query,
 				);
 
 				// If there are already set post restrictions (post__in) apply them to this query
@@ -844,7 +838,7 @@ class WCS_Admin_Post_Types {
 					$query_vars['post__in'] = $vars['post__in'];
 				}
 
-				$subscription_ids = wcs_get_orders_with_meta_query( $query_vars );
+				$subscription_ids = get_posts( $query_vars );
 
 				if ( ! empty( $subscription_ids ) ) {
 					$vars['post__in'] = $subscription_ids;
@@ -953,7 +947,7 @@ class WCS_Admin_Post_Types {
 	 * Returns a clickable link that takes you to a collection of orders relating to the subscription.
 	 *
 	 * @uses  self::get_related_orders()
-	 * @since  1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+	 * @since  2.0
 	 * @return string the link string
 	 */
 	public function get_related_orders_link( $the_subscription ) {
@@ -967,7 +961,7 @@ class WCS_Admin_Post_Types {
 	/**
 	 * Displays the dropdown for the payment method filter.
 	 *
-	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.0
+	 * @since 2.0
 	 */
 	public static function restrict_by_payment_method() {
 		global $typenow;
@@ -1113,7 +1107,7 @@ class WCS_Admin_Post_Types {
 	/**
 	 * Renders the dropdown for the customer filter.
 	 *
-	 * @since 1.0.0 - Migrated from WooCommerce Subscriptions v2.2.17
+	 * @since 2.2.17
 	 */
 	public static function restrict_by_customer() {
 		global $typenow;
@@ -1150,7 +1144,7 @@ class WCS_Admin_Post_Types {
 	/**
 	 * Get the HTML for an order item to display on the Subscription list table.
 	 *
-	 * @deprecated 1.0.0 - Migrated from WooCommerce Subscriptions v3.0.7
+	 * @deprecated 3.0.7
 	 *
 	 * @param WC_Line_Item_Product $item         The subscription line item object.
 	 * @param WC_Subscription      $subscription The subscription object. This variable is no longer used.
@@ -1177,7 +1171,7 @@ class WCS_Admin_Post_Types {
 	 * Gets the HTML for order item to display on the Subscription list table using a div element
 	 * as the wrapper, which is done for subscriptions with a single line item.
 	 *
-	 * @deprecated 1.0.0 - Migrated from WooCommerce Subscriptions v3.0.7
+	 * @deprecated 3.0.7
 	 *
 	 * @param WC_Line_Item_Product $item           The line item object.
 	 * @param string               $item_name      The line item's name.

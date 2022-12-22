@@ -2,20 +2,20 @@
 # This file is distributed under the same license as the MemberPress Importer plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Importer 1.6.14\n"
+"Project-Id-Version: MemberPress Importer 1.6.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-importer\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-02T18:17:20+00:00\n"
+"POT-Creation-Date: 2022-02-18T16:47:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: memberpress-importer\n"
 
 #. Plugin Name of the plugin
-#: memberpress-importer.php:480
+#: memberpress-importer.php:471
 msgid "MemberPress Importer"
 msgstr ""
 
@@ -41,14 +41,14 @@ msgstr ""
 
 #: memberpress-importer.php:76
 #: memberpress-importer.php:77
-#: memberpress-importer.php:168
-#: memberpress-importer.php:221
+#: memberpress-importer.php:167
+#: memberpress-importer.php:220
 msgid "Import"
 msgstr ""
 
 #: memberpress-importer.php:90
-#: memberpress-importer.php:250
-#: memberpress-importer.php:273
+#: memberpress-importer.php:249
+#: memberpress-importer.php:272
 msgid "You don't have sufficient privileges for this"
 msgstr ""
 
@@ -56,88 +56,88 @@ msgstr ""
 msgid "There was a system error processing your file. You may want to check the write permissions on your WordPress uploads directory"
 msgstr ""
 
-#: memberpress-importer.php:149
+#: memberpress-importer.php:148
 msgid "Forbidden"
 msgstr ""
 
-#: memberpress-importer.php:153
+#: memberpress-importer.php:152
 msgid "You must select a file before uploading"
 msgstr ""
 
-#: memberpress-importer.php:172
+#: memberpress-importer.php:171
 msgid "Before importing for the first time go to the %1$s to get instructions."
 msgstr ""
 
-#: memberpress-importer.php:172
+#: memberpress-importer.php:171
 msgid "User Manual Page on Importing"
 msgstr ""
 
-#: memberpress-importer.php:173
+#: memberpress-importer.php:172
 msgid "Note: Make sure your database is backed up before running any MemberPress import."
 msgstr ""
 
-#: memberpress-importer.php:176
+#: memberpress-importer.php:175
 msgid "Select the type of file to import:"
 msgstr ""
 
-#: memberpress-importer.php:193
+#: memberpress-importer.php:192
 msgid "%s CSV File:"
 msgstr ""
 
-#: memberpress-importer.php:199
+#: memberpress-importer.php:198
 msgid "Upload"
 msgstr ""
 
-#: memberpress-importer.php:223
+#: memberpress-importer.php:222
 msgid "Processing %s CSV File..."
 msgstr ""
 
-#: memberpress-importer.php:224
+#: memberpress-importer.php:223
 msgid "%s CSV File Processing Complete"
 msgstr ""
 
-#: memberpress-importer.php:225
+#: memberpress-importer.php:224
 msgid "Import Another File"
 msgstr ""
 
-#: memberpress-importer.php:227
+#: memberpress-importer.php:226
 msgid "Rows Successfully Imported"
 msgstr ""
 
-#: memberpress-importer.php:228
+#: memberpress-importer.php:227
 msgid "Rows Failed to be Imported"
 msgstr ""
 
-#: memberpress-importer.php:229
+#: memberpress-importer.php:228
 msgid "Total Rows Processed"
 msgstr ""
 
-#: memberpress-importer.php:231
+#: memberpress-importer.php:230
 msgid "Row Success Messages:"
 msgstr ""
 
-#: memberpress-importer.php:234
+#: memberpress-importer.php:233
 msgid "Row Errors:"
 msgstr ""
 
-#: memberpress-importer.php:237
+#: memberpress-importer.php:236
 msgid "CSV for failed rows ... copy these, fix and reimport:"
 msgstr ""
 
-#: memberpress-importer.php:247
-#: memberpress-importer.php:270
+#: memberpress-importer.php:246
+#: memberpress-importer.php:269
 msgid "Why You Creepin'?"
 msgstr ""
 
-#: memberpress-importer.php:276
+#: memberpress-importer.php:275
 msgid "No file was specified"
 msgstr ""
 
-#: memberpress-importer.php:327
+#: memberpress-importer.php:318
 msgid "Row %1$d: %2$s"
 msgstr ""
 
-#: memberpress-importer.php:481
+#: memberpress-importer.php:472
 msgid "Import MemberPress data from a csv file."
 msgstr ""
 

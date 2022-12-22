@@ -595,7 +595,6 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -714,15 +713,6 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
-				'range' => [
-					'px' => [
-						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
-					],
-				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-width: {{SIZE}}{{UNIT}}',
 				],
@@ -738,7 +728,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1036,6 +1026,7 @@ class Call_To_Action extends Base_Widget {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'button_typography',
+				'label' => esc_html__( 'Typography', 'elementor-pro' ),
 				'selector' => '{{WRAPPER}} .elementor-cta__button',
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_ACCENT,
@@ -1135,13 +1126,10 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
+						'min' => 0,
 						'max' => 20,
-					],
-					'em' => [
-						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -1156,7 +1144,6 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
@@ -1821,7 +1808,7 @@ class Call_To_Action extends Base_Widget {
 					</div>
 				<# } #>
 				<# if ( settings.title ) { #>
-					<# var titleTag = elementor.helpers.validateHTMLTag( settings.title_tag ) #>
+					<# var titleTag = elementorPro.validateHTMLTag( settings.title_tag ) #>
 					<{{ titleTag }} {{{ view.getRenderAttributeString( 'title' ) }}}>{{{ settings.title }}}</{{ titleTag }}>
 				<# } #>
 

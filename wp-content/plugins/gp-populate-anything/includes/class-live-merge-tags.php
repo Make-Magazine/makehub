@@ -437,7 +437,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $content;
 		}
 
-		if ( ! is_string( $field->defaultValue ) || ! preg_match( '/@{.*?:?.+?}/', $field->defaultValue ) ) {
+		if ( ! preg_match( '/@{.*?:?.+?}/', $field->defaultValue ) ) {
 			return $content;
 		}
 
@@ -457,17 +457,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $field->defaultValue ) ) . '"';
 
-		$content = str_replace( ' value=\'', ' ' . $data_attr . ' value=\'', $content );
+		return str_replace( ' value=\'', ' ' . $data_attr . ' value=\'', $content );
 
-		/*
-		 * Support Live Merge Tags for Date Picker Date fields. By default, the date will fail to parse so the value
-		 * will be "//" which then causes the field to be decoupled and not update correctly.
-		 */
-		if ( $field->get_input_type() === 'date' && rgar( $field, 'dateType' ) === 'datepicker' ) {
-			$content = str_replace( 'value=\'//\'', 'value=\'' . esc_attr( $merge_tag_value ) . '\'', $content );
-		}
-
-		return $content;
 	}
 
 	/**
@@ -1166,13 +1157,6 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @param $form array Current form object.
 	 */
 	public function replace_lmts_in_checkable_choices( $form ) {
-		/**
-		 * When refreshing a field with AJAX, $form will only contain the fields being reloaded. This means LMT
-		 * values may reference a field that does not exist in $form which can result in LMTs that do not have their
-		 * value properly replaced.
-		 */
-		$form_for_lmts = wp_doing_ajax() ? GFAPI::get_form( $form['id'] ) : $form;
-
 		foreach ( $form['fields'] as &$field ) {
 			if ( ! in_array( $field->get_input_type(), $this->checkable_input_types, true ) ) {
 				continue;
@@ -1184,12 +1168,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			foreach ( $field->choices as $choice_index => &$choice ) {
 				$choice['gppaOriginalValue'] = trim( $choice['value'] );
-				$choice['value']             = trim( $this->replace_live_merge_tags( $choice['value'], $form_for_lmts ) );
+				$choice['value']             = trim( $this->replace_live_merge_tags( $choice['value'], $form ) );
 
 				// If the value is empty, change POST params to prevent it from becoming checked on multi-page forms.
 				$input_id = sprintf( 'input_%d_%d', $field->id, $choice_index + 1 );
 
-				if ( rgpost( 'is_submit_' . $form['id'] ) && rgar( $choice, 'value' ) === '' && rgar( $_POST, $input_id ) === '' ) {
+				if ( $choice['value'] === '' && $_POST[ $input_id ] === '' ) {
 					// An empty string will not suffice here as GFFormsModel::choice_value_match() will still check it.
 					$_POST[ $input_id ] = 'gppa-unchecked';
 				}

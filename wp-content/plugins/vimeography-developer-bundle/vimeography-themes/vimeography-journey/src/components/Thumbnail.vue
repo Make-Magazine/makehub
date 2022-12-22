@@ -1,6 +1,6 @@
 <script>
-import { mapState } from "vuex";
-import { Mixins } from "vimeography-blueprint";
+import { mapState } from 'vuex'
+import { Mixins } from 'vimeography-blueprint'
 
 const defaultTemplate = `
   <figure class="swiper-slide vimeography-thumbnail">
@@ -12,10 +12,10 @@ const defaultTemplate = `
   </figure>
 `;
 
-const userTemplate = document.querySelector("#vimeography-journey-thumbnail");
+const userTemplate = document.querySelector('#vimeography-journey-thumbnail');
 
 const Thumbnail = {
-  props: ["video"],
+  props: ['video'],
   mixins: [Mixins.Thumbnail],
   template: userTemplate ? userTemplate.innerText : defaultTemplate,
   computed: {
@@ -23,76 +23,71 @@ const Thumbnail = {
       const q = {
         ...this.$route.query,
         vimeography_gallery: this.$store.state.gallery.id,
-        vimeography_video: this.video.id,
+        vimeography_video: this.video.id
       };
 
-      return (
-        "?" +
-        Object.keys(q)
-          .map((k) => k + "=" + encodeURIComponent(q[k]))
-          .join("&")
-      );
+      return '?' + Object.keys(q).map(k => k + '=' + encodeURIComponent(q[k])).join('&')
     },
     ...mapState({
-      galleryId: (state) => state.id,
-    }),
-  },
-};
+      galleryId: state => state.id
+    })
+  }
+}
 
 export default Thumbnail;
 </script>
 
 <style lang="scss" scoped>
-.vimeography-thumbnail.vimeography-thumbnail {
-  width: 95px;
-  height: 95px;
-  margin: 0;
+  .vimeography-thumbnail {
+    margin: 0;
 
-  zoom: 1;
-  overflow: hidden;
-  border-radius: 2px;
-  position: relative;
+    zoom: 1;
+    width: 95px;
+    height: 95px;
+    overflow: hidden;
+    border-radius: 2px;
+    position: relative;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.vimeography-link {
-  display: block;
+  .vimeography-link {
+    display: block;
 
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  background: rgba(0, 0, 0, 0.75);
-  padding: 5px;
-  text-decoration: none;
-  font-weight: 500;
-  outline: none;
-  transition: opacity 0.2s ease-in-out;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    background: rgba(0, 0, 0, .75);
+    padding: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    outline: none;
+    transition: opacity 0.2s ease-in-out;
 
-  &:hover {
+    &:hover {
+      opacity: 1;
+    }
+
+    span {
+      color: #fff;
+      font-size: 0.8rem;
+      line-height: 1rem;
+    }
+  }
+
+  .vimeography-link-active {
     opacity: 1;
   }
 
-  span {
-    color: #fff;
-    font-size: 0.8rem;
-    line-height: 1rem;
+  .vimeography-thumbnail-img {
+    cursor: pointer;
+
+    max-width: 169px;
+    position: absolute;
   }
-}
-
-.vimeography-link-active {
-  opacity: 1;
-}
-
-.vimeography-thumbnail-img {
-  cursor: pointer;
-
-  max-width: 169px;
-  position: absolute;
-}
 </style>

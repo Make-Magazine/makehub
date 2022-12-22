@@ -1878,6 +1878,7 @@ box-shadow: 0 0 2px rgba(30,140,190,.8);*/
 	-webkit-border-top-left-radius: 2px;
 	-webkit-border-bottom-left-radius: 2px;
 	margin-right: -2px;
+	margin-top: 1px;
 	width: 12px;
 }
 
@@ -4004,10 +4005,6 @@ display: inline-block;
 
 .essb-admin-dashboard-widget .essb-admindash-row {
 	margin-top: 20px;
-}
-
-.essb-admin-dashboard-widget .essb-admindash-row.essb-admindash-row-nomt {
-	margin-top: 0;
 }
 
 .essb-admin-dashboard-widget .essb-admindash-footer .portfolio-button {

@@ -5,7 +5,7 @@
  * @package  WooCommerce Subscriptions
  * @category Class
  * @author   WooCommerce
- * @since    1.0.0 - Migrated from WooCommerce Subscriptions v4.0.0
+ * @since    4.0.0
  */
 
 defined( 'ABSPATH' ) || exit;

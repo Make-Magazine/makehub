@@ -1,9 +1,4 @@
 /**
- * External dependencies
- */
-import { ProductResponseItem } from '@woocommerce/type-defs/product-response';
-
-/**
  * Internal dependencies
  */
 import type {
@@ -39,7 +34,6 @@ export interface StoreCartCoupon {
 export interface StoreCart {
 	cartCoupons: CartResponseCoupons;
 	cartItems: Array< CartResponseItem >;
-	crossSellsProducts: Array< ProductResponseItem >;
 	cartFees: Array< CartResponseFeeItem >;
 	cartItemsCount: number;
 	cartItemsWeight: number;

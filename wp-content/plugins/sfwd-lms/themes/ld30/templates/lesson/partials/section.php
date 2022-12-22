@@ -3,7 +3,7 @@
  * LearnDash LD30 Displays section
  *
  * Available Variables:
- * WIP
+ * TBD
  *
  * @since 3.0.0
  *

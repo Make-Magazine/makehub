@@ -1,7 +1,6 @@
 <?php
 namespace Elementor;
 
-use Elementor\Core\Admin\Menu\Admin_Menu_Manager;
 use Elementor\Core\Wp_Api;
 use Elementor\Core\Admin\Admin;
 use Elementor\Core\Breakpoints\Manager as Breakpoints_Manager;
@@ -410,11 +409,6 @@ class Plugin {
 	public $inspector;
 
 	/**
-	 * @var Admin_Menu_Manager
-	 */
-	public $admin_menu_manager;
-
-	/**
 	 * Common functionality.
 	 *
 	 * Holds the plugin common functionality.
@@ -503,7 +497,7 @@ class Plugin {
 	 * @since 3.0.0
 	 * @access public
 	 *
-	 * @var App\App
+	 * @var Core\App\App
 	 */
 	public $app;
 
@@ -731,9 +725,6 @@ class Plugin {
 		$this->assets_loader = new Assets_Loader();
 		$this->uploads_manager = new Uploads_Manager();
 
-		$this->admin_menu_manager = new Admin_Menu_Manager();
-		$this->admin_menu_manager->register_actions();
-
 		User::init();
 		Api::init();
 		Tracker::init();
@@ -741,7 +732,7 @@ class Plugin {
 		$this->upgrade = new Core\Upgrade\Manager();
 		$this->custom_tasks = new Core\Upgrade\Custom_Tasks_Manager();
 
-		$this->app = new App\App();
+		$this->app = new Core\App\App();
 
 		if ( is_admin() ) {
 			$this->heartbeat = new Heartbeat();

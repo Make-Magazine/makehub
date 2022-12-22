@@ -13,7 +13,7 @@ import { BillingAddress, ShippingAddress } from '@woocommerce/settings';
 /**
  * Internal dependencies
  */
-import { CartState, defaultCartState } from './default-state';
+import { CartState, defaultCartState } from '../default-states';
 import type { ResponseError } from '../types';
 
 /**

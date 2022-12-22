@@ -10,12 +10,11 @@ use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Text_Stroke;
 use Elementor\Icons_Manager;
 use Elementor\Skin_Base as Elementor_Skin_Base;
-use Elementor\Utils;
 use Elementor\Widget_Base;
+use Elementor\Utils;
 use ElementorPro\Modules\Posts\Traits\Button_Widget_Trait;
 use ElementorPro\Plugin;
 use ElementorPro\Modules\Posts\Widgets\Posts_Base;
-use ElementorPro\Core\Utils as ProUtils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -271,20 +270,6 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 				],
 			]
 		);
-
-		$this->add_control(
-			'apply_to_custom_excerpt',
-			[
-				'label' => esc_html__( 'Apply to custom Excerpt', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor-pro' ),
-				'label_off' => esc_html__( 'No', 'elementor-pro' ),
-				'default' => 'no',
-				'condition' => [
-					$this->get_control_id( 'show_excerpt' ) => 'yes',
-				],
-			]
-		);
 	}
 
 	protected function register_read_more_controls() {
@@ -305,31 +290,8 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 			[
 				'label' => esc_html__( 'Read More Text', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
 				'default' => esc_html__( 'Read More »', 'elementor-pro' ),
 				'condition' => [
-					$this->get_control_id( 'show_read_more' ) => 'yes',
-				],
-			]
-		);
-
-		$this->add_control(
-			'read_more_alignment',
-			[
-				'label' => esc_html__( 'Automatically align buttons', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'elementor-pro' ),
-				'label_off' => esc_html__( 'No', 'elementor-pro' ),
-				'default' => '',
-				'render_type' => 'template',
-				'selectors' => [
-					// --item-display is used for the styling of both elementor-post__card and elementor-post__text
-					'{{WRAPPER}}' => '--item-display: flex; --read-more-alignment: 1;',
-				],
-				'condition' => [
-					$this->get_control_id( 'masonry!' ) => 'yes',
 					$this->get_control_id( 'show_read_more' ) => 'yes',
 				],
 			]
@@ -389,9 +351,6 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 				],
 				'condition' => [
 					$this->get_control_id( 'meta_data!' ) => [],
-				],
-				'dynamic' => [
-					'active' => true,
 				],
 			]
 		);
@@ -493,7 +452,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-post__thumbnail' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -870,6 +829,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		wp_reset_postdata();
 
 		$this->render_loop_footer();
+
 	}
 
 	public function filter_excerpt_length() {
@@ -941,20 +901,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 
 		?>
 		<div class="elementor-post__excerpt">
-			<?php
-			global $post;
-			$apply_to_custom_excerpt = $this->get_instance_value( 'apply_to_custom_excerpt' );
-
-			// Force the manually-generated Excerpt length as well if the user chose to enable 'apply_to_custom_excerpt'.
-			if ( 'yes' === $apply_to_custom_excerpt && ! empty( $post->post_excerpt ) ) {
-				$max_length = (int) $this->get_instance_value( 'excerpt_length' );
-				$excerpt = apply_filters( 'the_excerpt', get_the_excerpt() );
-				$excerpt = ProUtils::trim_words( $excerpt, $max_length );
-				echo wp_kses_post( $excerpt );
-			} else {
-				the_excerpt();
-			}
-			?>
+			<?php the_excerpt(); ?>
 		</div>
 		<?php
 
@@ -963,27 +910,19 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 	}
 
 	protected function render_read_more() {
-		$settings = $this->parent->get_settings_for_display();
-		$read_more_key = $this->get_control_id( 'read_more_text' );
-		$read_more = $settings[ $read_more_key ];
-
 		if ( ! $this->get_instance_value( 'show_read_more' ) ) {
 			return;
 		}
 
 		$optional_attributes_html = $this->get_optional_link_attributes_html();
 
-		if ( $this->display_read_more_bottom() ) : ?>
-			<div class="elementor-post__read-more-wrapper">
-		<?php endif; ?>
-
-		<a class="elementor-post__read-more" href="<?php echo esc_url( $this->current_permalink ); ?>" <?php Utils::print_unescaped_internal_string( $optional_attributes_html ); ?>>
-			<?php echo wp_kses_post( $read_more ); ?>
-		</a>
-
-		<?php if ( $this->display_read_more_bottom() ) : ?>
-			</div>
-		<?php endif;
+		?>
+			<a class="elementor-post__read-more" href="<?php echo $this->current_permalink; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" <?php Utils::print_unescaped_internal_string( $optional_attributes_html ); ?>>
+				<?php
+				echo wp_kses_post( ( $this->get_instance_value( 'read_more_text' ) ) );
+				?>
+			</a>
+		<?php
 	}
 
 	protected function render_post_header() {
@@ -1010,16 +949,12 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		<?php
 	}
 
-	protected function get_loop_header_widget_classes() {
-		return [
+	protected function render_loop_header() {
+		$classes = [
 			'elementor-posts-container',
 			'elementor-posts',
 			$this->get_container_class(),
 		];
-	}
-
-	protected function render_loop_header() {
-		$classes = $this->get_loop_header_widget_classes();
 
 		/** @var \WP_Query $wp_query */
 		$wp_query = $this->parent->get_query();
@@ -1039,29 +974,23 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 	}
 
 	protected function render_message() {
-		$settings = $this->parent->get_settings_for_display();
+		$settings = $this->parent->get_settings();
 		?>
 		<div class="e-load-more-message"><?php echo esc_html( $settings['load_more_no_posts_custom_message'] ); ?></div>
 		<?php
 	}
 
 	protected function render_loop_footer() {
-		?>
-		</div>
-		<?php
-		$parent_settings = $this->parent->get_settings_for_display();
-
-		// If the skin has no pagination, there's nothing to render in the loop footer.
-		if ( ! isset( $parent_settings['pagination_type'] ) ) {
-			return;
-		}
-
+		$parent_settings = $this->parent->get_settings();
 		$using_ajax_pagination = in_array( $parent_settings['pagination_type'], [
 			Posts_Base::LOAD_MORE_ON_CLICK,
 			Posts_Base::LOAD_MORE_INFINITE_SCROLL,
 		], true);
+		?>
+		</div>
 
-		if ( $using_ajax_pagination && ! empty( $parent_settings['load_more_spinner']['value'] ) ) : ?>
+
+		<?php if ( $using_ajax_pagination && ! empty( $parent_settings['load_more_spinner']['value'] ) ) : ?>
 			<span class="e-load-more-spinner">
 				<?php Icons_Manager::render_icon( $parent_settings['load_more_spinner'], [ 'aria-hidden' => 'true' ] ); ?>
 			</span>
@@ -1149,7 +1078,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 
 		// PHPCS - Seems that `$links` is safe.
 		?>
-		<nav class="elementor-pagination" aria-label="<?php esc_attr_e( 'Pagination', 'elementor-pro' ); ?>">
+		<nav class="elementor-pagination" role="navigation" aria-label="<?php esc_attr_e( 'Pagination', 'elementor-pro' ); ?>">
 			<?php echo implode( PHP_EOL, $links ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</nav>
 		<?php
@@ -1195,6 +1124,14 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		<?php
 	}
 
+	/**
+	 * @deprecated since 3.0.0 Use `Skin_Base::render_date_by_type()` instead
+	 */
+	protected function render_date() {
+		// _deprecated_function( __METHOD__, '3.0.0', 'Skin_Base::render_date_by_type()' );
+		$this->render_date_by_type();
+	}
+
 	protected function render_date_by_type( $type = 'publish' ) {
 		?>
 		<span class="elementor-post-date">
@@ -1222,30 +1159,6 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		<?php
 	}
 
-	/**
-	 * Check if the Read More links needs to be displayed at the bottom of the Post item.
-	 *
-	 * Conditions:
-	 * 1) Read More aligned to the bottom
-	 * 2) Masonry layout not used.
-	 * 3) Display Read More link.
-	 *
-	 * @since 3.7.0
-	 *
-	 * @return boolean
-	 */
-	protected function display_read_more_bottom() {
-		$settings = $this->parent->get_settings();
-
-		if ( 'full_content' === $settings['_skin'] ) {
-			return false;
-		}
-
-		return 'yes' === $settings[ $this->get_control_id( 'read_more_alignment' ) ] &&
-		'yes' === $settings[ $this->get_control_id( 'show_read_more' ) ] &&
-		'yes' !== $settings[ $this->get_control_id( 'masonry' ) ];
-	}
-
 	protected function render_comments() {
 		?>
 		<span class="elementor-post-avatar">
@@ -1264,5 +1177,9 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		$this->render_read_more();
 		$this->render_text_footer();
 		$this->render_post_footer();
+	}
+
+	public function render_amp() {
+
 	}
 }

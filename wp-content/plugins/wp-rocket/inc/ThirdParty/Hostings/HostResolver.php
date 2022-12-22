@@ -85,11 +85,6 @@ class HostResolver {
 			return 'dreampress';
 		}
 
-		if ( isset( $_SERVER['HTTP_WPXCLOUD'] ) ) {
-			self::$hostname = 'wpxcloud';
-			return 'wpxcloud';
-		}
-
 		if ( isset( $_SERVER['X-LSCACHE'] ) ) {
 			self::$hostname = 'litespeed';
 			return 'litespeed';

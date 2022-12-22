@@ -565,7 +565,7 @@ class Animated_Headline extends Base_Widget {
 		?>
 		<#
 		var headlineClasses = 'elementor-headline',
-			tag = elementor.helpers.validateHTMLTag( settings.tag );
+			tag = elementorPro.validateHTMLTag( settings.tag );
 
 		if ( 'rotate' === settings.headline_style ) {
 			headlineClasses += ' elementor-headline-animation-type-' + settings.animation_type;

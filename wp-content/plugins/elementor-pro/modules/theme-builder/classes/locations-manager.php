@@ -41,11 +41,13 @@ class Locations_Manager {
 		// Run Once.
 		if ( ! did_action( 'elementor/theme/register_locations' ) ) {
 			/**
-			 * Elementor theme locations registration.
+			 * Register theme locations.
 			 *
-			 * Fires after template files where included but before locations have
-			 * been registered. This hook allows theme developers to register new
-			 * theme locations.
+			 * Fires after template files where included but before locations
+			 * have been registered.
+			 *
+			 * This is where Elementor theme locations are registered by
+			 * external themes.
 			 *
 			 * @since 2.0.0
 			 *
@@ -168,15 +170,6 @@ class Locations_Manager {
 		$is_header_footer = 'header' === $location || 'footer' === $location;
 		$need_override_location = ! empty( $location_settings['overwrite'] ) && ! $is_header_footer;
 
-		/**
-		 * Override theme location.
-		 *
-		 * Filters the ability to override any Elementor theme location.
-		 *
-		 * @param bool              $need_override_location Whether to override theme location.
-		 * @param string            $location               Location name.
-		 * @param Locations_Manager $this                   An instance of location manager.
-		 */
 		$need_override_location = apply_filters( 'elementor/theme/need_override_location', $need_override_location, $location, $this );
 
 		if ( $location && empty( $page_template ) && ( ! $location_exist || $need_override_location ) ) {
@@ -268,7 +261,7 @@ class Locations_Manager {
 		/**
 		 * Before location content printed.
 		 *
-		 * Fires before Elementor theme location is printed.
+		 * Fires before Elementor location was printed.
 		 *
 		 * The dynamic portion of the hook name, `$location`, refers to the location name.
 		 *
@@ -322,7 +315,7 @@ class Locations_Manager {
 		/**
 		 * After location content printed.
 		 *
-		 * Fires after Elementor theme location is printed.
+		 * Fires after Elementor location was printed.
 		 *
 		 * The dynamic portion of the hook name, `$location`, refers to the location name.
 		 *

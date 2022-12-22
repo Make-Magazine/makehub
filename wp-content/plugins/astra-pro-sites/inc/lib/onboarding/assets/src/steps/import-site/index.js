@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Lottie from 'react-lottie-player';
 import { __, sprintf } from '@wordpress/i18n';
+import Lottie from 'react-lottie-player';
 import PreviousStepLink from '../../components/util/previous-step-link/index';
 import DefaultStep from '../../components/default-step/index';
 import ImportLoader from '../../components/import-steps/import-loader';
@@ -144,7 +144,6 @@ const ImportSite = () => {
 		let cfStatus = false;
 		let formsStatus = false;
 		let customizerStatus = false;
-		let spectraStatus = false;
 
 		resetStatus = await resetOldSite();
 
@@ -161,11 +160,7 @@ const ImportSite = () => {
 		}
 
 		if ( customizerStatus ) {
-			spectraStatus = await importSiteContent();
-		}
-
-		if ( spectraStatus ) {
-			await ImportSpectraSettings();
+			await importSiteContent();
 		}
 	};
 
@@ -1124,71 +1119,6 @@ const ImportSite = () => {
 				return false;
 			} );
 
-		return status;
-	};
-
-	/**
-	 * 6. Import Spectra Settings.
-	 */
-	const ImportSpectraSettings = async () => {
-		const spectraSettings =
-			encodeURI( templateResponse[ 'astra-site-spectra-settings' ] ) ||
-			'';
-
-		if ( '' === spectraSettings || 'null' === spectraSettings ) {
-			return true;
-		}
-
-		dispatch( {
-			type: 'set',
-			importStatus: __( 'Importing Spectra Settings.', 'astra-sites' ),
-		} );
-
-		const spectra = new FormData();
-		spectra.append( 'action', 'astra-sites-import-spectra-settings' );
-		spectra.append( 'spectra_settings', spectraSettings );
-		spectra.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
-
-		const status = await fetch( ajaxurl, {
-			method: 'post',
-			body: spectra,
-		} )
-			.then( ( response ) => response.text() )
-			.then( ( text ) => {
-				try {
-					const data = JSON.parse( text );
-					if ( data.success ) {
-						percentage += 2;
-						dispatch( {
-							type: 'set',
-							importPercent: percentage,
-						} );
-						return true;
-					}
-					throw data.data;
-				} catch ( error ) {
-					report(
-						__(
-							'Importing Spectra Settings failed due to parse JSON error.',
-							'astra-sites'
-						),
-						'',
-						error,
-						'',
-						'',
-						text
-					);
-					return false;
-				}
-			} )
-			.catch( ( error ) => {
-				report(
-					__( 'Importing Spectra Settings Failed.', 'astra-sites' ),
-					'',
-					error
-				);
-				return false;
-			} );
 		return status;
 	};
 

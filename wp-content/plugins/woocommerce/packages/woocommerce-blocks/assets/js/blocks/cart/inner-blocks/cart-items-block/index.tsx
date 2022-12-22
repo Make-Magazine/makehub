@@ -2,14 +2,15 @@
  * External dependencies
  */
 import { Icon, column } from '@wordpress/icons';
-import { registerBlockType } from '@wordpress/blocks';
+import { registerFeaturePluginBlockType } from '@woocommerce/block-settings';
 
 /**
  * Internal dependencies
  */
 import { Edit, Save } from './edit';
+import metadata from './block.json';
 
-registerBlockType( 'woocommerce/cart-items-block', {
+registerFeaturePluginBlockType( metadata, {
 	icon: {
 		src: (
 			<Icon

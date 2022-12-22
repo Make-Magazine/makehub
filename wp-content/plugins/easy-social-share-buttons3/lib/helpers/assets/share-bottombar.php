@@ -13,10 +13,7 @@ if (!function_exists('essb_register_dynamic_share_bottombar_styles')) {
             $bottombar_bg_color = '#ffffff';
         }
         if ($bottombar_bg_color != '') {
-            /**
-             * @since 8.0 - modified to have just one field for color supporting alpha
-             */
-            if ($bottombar_bg_color_opacity != '' && strpos($bottombar_bg_color, 'rgba') === false) {
+            if ($bottombar_bg_color_opacity != '') {
                 $bottombar_bg_color = essb_hex2rgba($bottombar_bg_color, $bottombar_bg_color_opacity);
             }
             ESSB_Dynamic_CSS_Builder::register_header_field('.essb_bottombar', 'background', $bottombar_bg_color, '', true);

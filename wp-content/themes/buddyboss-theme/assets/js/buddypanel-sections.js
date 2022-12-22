@@ -172,20 +172,57 @@
 				'change',
 				function () {
 					if (
-						$( '.menu-theme-locations .menu-settings-input input:checked' ).length === 0 ||
-						$( '#locations-header-menu' ).prop( 'checked' ) ||
-						$( '#locations-header-menu-logout' ).prop( 'checked' ) ||
-						$( '#locations-header-my-account' ).prop( 'checked' )
-
+						false === $( '#locations-mobile-menu-logged-in' ).length && $( '#locations-mobile-menu-logged-in' ).prop( 'checked' ) &&
+						false === $( '#locations-mobile-menu-logged-out' ).length && $( '#locations-mobile-menu-logged-out' ).prop( 'checked' ) &&
+						false === $( '#locations-buddypanel-loggedin' ).length && $( '#locations-buddypanel-loggedin' ).prop( 'checked' ) &&
+						false === $( '#locations-buddypanel-loggedout' ).length && $( '#locations-buddypanel-loggedout' ).prop( 'checked' )
 					) {
-						$( '#buddypanel-menu p.warning' ).show();
 						$( '#buddypanel-menu p.button-controls' ).hide();
+						$( '#buddypanel-menu p.warning' ).show();
+						if (
+							$( '#locations-mobile-menu-logged-in' ).parent().find( '.theme-location-set' ).length > 0 ||
+							$( '#locations-mobile-menu-logged-out' ).parent().find( '.theme-location-set' ).length > 0 ||
+							$( '#locations-buddypanel-loggedin' ).parent().find( '.theme-location-set' ).length > 0 ||
+							$( '#locations-buddypanel-loggedout' ).parent().find( '.theme-location-set' ).length > 0
+						) {
+							$( '#add-buddypanel-sections-nav-menu' ).hide();
+						}
 					} else {
-						$( '#buddypanel-menu p.warning' ).hide();
+						$( '#add-buddypanel-sections-nav-menu' ).show();
 						$( '#buddypanel-menu p.button-controls' ).show();
+						$( '#buddypanel-menu p.warning' ).hide();
 					}
 				}
 			);
+
+			if (
+				$( '#locations-mobile-menu-logged-in' ).parent().find( '.theme-location-set' ).length > 0 ||
+				$( '#locations-mobile-menu-logged-out' ).parent().find( '.theme-location-set' ).length > 0 ||
+				$( '#locations-buddypanel-loggedin' ).parent().find( '.theme-location-set' ).length > 0 ||
+				$( '#locations-buddypanel-loggedout' ).parent().find( '.theme-location-set' ).length > 0
+			) {
+				$( '#add-buddypanel-sections-nav-menu' ).hide();
+			}
+			if (
+				false === $( '#locations-mobile-menu-logged-in' ).length && $( '#locations-mobile-menu-logged-in' ).prop( 'checked' ) &&
+				false === $( '#locations-mobile-menu-logged-out' ).length && $( '#locations-mobile-menu-logged-out' ).prop( 'checked' ) &&
+				false === $( '#locations-buddypanel-loggedin' ).length && $( '#locations-buddypanel-loggedin' ).prop( 'checked' ) &&
+				false === $( '#locations-buddypanel-loggedout' ).length && $( '#locations-buddypanel-loggedout' ).prop( 'checked' )
+			) {
+				$( '#buddypanel-menu p.button-controls' ).hide();
+				$( '#buddypanel-menu p.warning' ).show();
+				if (
+					$( '#locations-mobile-menu-logged-in' ).parent().find( '.theme-location-set' ).length > 0 ||
+					$( '#locations-mobile-menu-logged-out' ).parent().find( '.theme-location-set' ).length > 0 ||
+					$( '#locations-buddypanel-loggedin' ).parent().find( '.theme-location-set' ).length > 0 ||
+					$( '#locations-buddypanel-loggedout' ).parent().find( '.theme-location-set' ).length > 0 ) {
+					$( '#add-buddypanel-sections-nav-menu' ).hide();
+				}
+			} else {
+				$( '#add-buddypanel-sections-nav-menu' ).show();
+				$( '#buddypanel-menu p.button-controls' ).show();
+				$( '#buddypanel-menu p.warning' ).hide();
+			}
 
 			window.wpNavMenu.moveMenuItem = function ( $this, dir ) {
 

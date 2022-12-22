@@ -1,0 +1,40 @@
+$icon-color: encodecolor($grey-dark) !default;
+
+.select-source {
+	.box {
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		background-color: inherit;
+
+		&:hover {
+			cursor: pointer;
+			background-color: $grey-lighter;
+		}
+
+		> * {
+			margin-top: 1rem;
+		}
+	}
+
+	/*CSV*/
+	.column:nth-of-type(1) {
+		.image {
+			@include icon-background-image(url("data:image/svg+xml, %3Csvg fill='" + $icon-color + "' viewBox='0 0 1792 1792' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1344 1472q0-26-19-45t-45-19-45 19-19 45 19 45 45 19 45-19 19-45zm256 0q0-26-19-45t-45-19-45 19-19 45 19 45 45 19 45-19 19-45zm128-224v320q0 40-28 68t-68 28h-1472q-40 0-68-28t-28-68v-320q0-40 28-68t68-28h427q21 56 70.5 92t110.5 36h256q61 0 110.5-36t70.5-92h427q40 0 68 28t28 68zm-325-648q-17 40-59 40h-256v448q0 26-19 45t-45 19h-256q-26 0-45-19t-19-45v-448h-256q-42 0-59-40-17-39 14-69l448-448q18-19 45-19t45 19l448 448q31 30 14 69z'/%3E%3C/svg%3E"));
+		}
+	}
+
+	/*Google Sheets*/
+	.column:nth-of-type(3) {
+		.image {
+			@include icon-background-image(url("data:image/svg+xml, %3Csvg fill='" + $icon-color + "' viewBox='0 0 1792 1792' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1596 380q28 28 48 76t20 88v1152q0 40-28 68t-68 28h-1344q-40 0-68-28t-28-68v-1600q0-40 28-68t68-28h896q40 0 88 20t76 48zm-444-244v376h376q-10-29-22-41l-313-313q-12-12-41-22zm384 1528v-1024h-416q-40 0-68-28t-28-68v-416h-768v1536h1280zm-1024-864q0-14 9-23t23-9h704q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64zm736 224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h704zm0 256q14 0 23 9t9 23v64q0 14-9 23t-23 9h-704q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h704z'/%3E%3C/svg%3E"));
+		}
+	}
+
+	/*FTP*/
+	.column:nth-of-type(5) {
+		.image {
+			@include icon-background-image(url("data:image/svg+xml, %3Csvg fill='" + $icon-color + "' viewBox='0 0 2048 1792' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1856 992v-832q0-13-9.5-22.5t-22.5-9.5h-1600q-13 0-22.5 9.5t-9.5 22.5v832q0 13 9.5 22.5t22.5 9.5h1600q13 0 22.5-9.5t9.5-22.5zm128-832v1088q0 66-47 113t-113 47h-544q0 37 16 77.5t32 71 16 43.5q0 26-19 45t-45 19h-512q-26 0-45-19t-19-45q0-14 16-44t32-70 16-78h-544q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1600q66 0 113 47t47 113z'/%3E%3C/svg%3E"));
+		}
+	}
+}

@@ -12,7 +12,6 @@ namespace WooCommerce\PayPalCommerce\Subscription;
 use WooCommerce\PayPalCommerce\ApiClient\Endpoint\OrderEndpoint;
 use WooCommerce\PayPalCommerce\ApiClient\Entity\Order;
 use WooCommerce\PayPalCommerce\ApiClient\Entity\PaymentToken;
-use WooCommerce\PayPalCommerce\ApiClient\Exception\PayPalApiException;
 use WooCommerce\PayPalCommerce\ApiClient\Factory\PayerFactory;
 use WooCommerce\PayPalCommerce\ApiClient\Factory\PurchaseUnitFactory;
 use WooCommerce\PayPalCommerce\ApiClient\Factory\ShippingPreferenceFactory;
@@ -142,27 +141,17 @@ class RenewalHandler {
 	public function renew( \WC_Order $wc_order ) {
 		try {
 			$this->process_order( $wc_order );
-		} catch ( \Exception $exception ) {
-			$error = $exception->getMessage();
-			if ( is_a( $exception, PayPalApiException::class ) ) {
-				$error = $exception->get_details( $error );
-			}
-
-			$wc_order->update_status(
-				'failed',
-				$error
+		} catch ( \Exception $error ) {
+			$this->logger->error(
+				sprintf(
+					'An error occurred while trying to renew the subscription for order %1$d: %2$s',
+					$wc_order->get_id(),
+					$error->getMessage()
+				)
 			);
-
-			$error_message = sprintf(
-				'An error occurred while trying to renew the subscription for order %1$d: %2$s',
-				$wc_order->get_id(),
-				$error
-			);
-			$this->logger->error( $error_message );
 
 			return;
 		}
-
 		$this->logger->info(
 			sprintf(
 				'Renewal for order %d is completed.',
@@ -214,8 +203,12 @@ class RenewalHandler {
 
 		$this->handle_new_order_status( $order, $wc_order );
 
-		if ( $this->capture_authorized_downloads( $order ) ) {
-			$this->authorized_payments_processor->capture_authorized_payment( $wc_order );
+		if ( $this->capture_authorized_downloads( $order ) && AuthorizedPaymentsProcessor::SUCCESSFUL === $this->authorized_payments_processor->process( $wc_order ) ) {
+			$wc_order->add_order_note(
+				__( 'Payment successfully captured.', 'woocommerce-paypal-payments' )
+			);
+			$wc_order->update_meta_data( AuthorizedPaymentsProcessor::CAPTURED_META_KEY, 'true' );
+			$wc_order->update_status( 'completed' );
 		}
 	}
 

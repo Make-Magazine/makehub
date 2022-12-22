@@ -14,7 +14,7 @@ use WooCommerce\PayPalCommerce\ApiClient\Helper\DccApplies;
 use WooCommerce\PayPalCommerce\Button\Helper\MessagesApply;
 use WooCommerce\PayPalCommerce\Onboarding\State;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\CreditCardGateway;
-use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\DCCProductStatus;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 use WooCommerce\PayPalCommerce\WcGateway\Helper\SettingsStatus;
@@ -32,13 +32,6 @@ class SettingsRenderer {
 	 * @var SettingsStatus
 	 */
 	protected $settings_status;
-
-	/**
-	 * The api shop country.
-	 *
-	 * @var string
-	 */
-	protected $api_shop_country;
 
 	/**
 	 * The settings.
@@ -100,7 +93,6 @@ class SettingsRenderer {
 	 * @param DCCProductStatus   $dcc_product_status The product status.
 	 * @param SettingsStatus     $settings_status The Settings status helper.
 	 * @param string             $page_id ID of the current PPCP gateway settings page, or empty if it is not such page.
-	 * @param string             $api_shop_country The api shop country.
 	 */
 	public function __construct(
 		ContainerInterface $settings,
@@ -110,8 +102,7 @@ class SettingsRenderer {
 		MessagesApply $messages_apply,
 		DCCProductStatus $dcc_product_status,
 		SettingsStatus $settings_status,
-		string $page_id,
-		string $api_shop_country
+		string $page_id
 	) {
 
 		$this->settings           = $settings;
@@ -122,7 +113,6 @@ class SettingsRenderer {
 		$this->dcc_product_status = $dcc_product_status;
 		$this->settings_status    = $settings_status;
 		$this->page_id            = $page_id;
-		$this->api_shop_country   = $api_shop_country;
 	}
 
 	/**
@@ -164,9 +154,9 @@ class SettingsRenderer {
 	}
 
 	/**
-	 * Check if current screen is Standard Payments settings screen.
+	 * Check if current screen is PayPal checkout settings screen.
 	 *
-	 * @return bool Whether is Standard Payments screen or not.
+	 * @return bool Whether is PayPal checkout screen or not.
 	 */
 	private function is_paypal_checkout_screen(): bool {
 		return PayPalGateway::ID === $this->page_id;
@@ -358,7 +348,7 @@ $data_rows_html
 	/**
 	 * Renders the settings.
 	 */
-	public function render(): void {
+	public function render() {
 
 		$is_dcc = CreditCardGateway::ID === $this->page_id;
 		//phpcs:enable WordPress.Security.NonceVerification.Recommended
@@ -391,14 +381,14 @@ $data_rows_html
 				continue;
 			}
 			if (
-				in_array( 'messages', $config['requirements'], true )
-				&& ! $this->messages_apply->for_country()
+				in_array( 'dcc', $config['requirements'], true )
+				&& ! $this->dcc_product_status->dcc_is_active()
 			) {
 				continue;
 			}
 			if (
-				in_array( 'pui_ready', $config['requirements'], true )
-				&& $this->api_shop_country !== 'DE'
+				in_array( 'messages', $config['requirements'], true )
+				&& ! $this->messages_apply->for_country()
 			) {
 				continue;
 			}
@@ -442,10 +432,6 @@ $data_rows_html
 
 				<?php if ( $description ) : ?>
 				<p class="<?php echo 'ppcp-heading' === $config['type'] ? '' : 'description'; ?>"><?php echo wp_kses_post( $description ); ?></p>
-				<?php endif; ?>
-
-				<?php if ( isset( $config['description_with_tip'] ) && $config['description_with_tip'] ) : ?>
-					<p class="<?php echo 'description'; ?>"><?php echo wp_kses_post( $config['description_with_tip'] ); ?></p>
 				<?php endif; ?>
 			</td>
 		</tr>
@@ -514,7 +500,7 @@ $data_rows_html
 	/**
 	 * Renders the DCC onboarding info.
 	 */
-	private function render_dcc_onboarding_info(): void {
+	private function render_dcc_onboarding_info() {
 		?>
 <tr>
 	<th><?php esc_html_e( 'Onboarding', 'woocommerce-paypal-payments' ); ?></th>
@@ -522,7 +508,7 @@ $data_rows_html
 	<p>
 		<?php
 			esc_html_e(
-				'You need to complete your onboarding, before you can use the Advanced Card Processing option.',
+				'You need to complete your onboarding, before you can use the PayPal Card Processing option.',
 				'woocommerce-paypal-payments'
 			);
 		?>
@@ -578,7 +564,7 @@ $data_rows_html
 		}
 
 		return $this->is_paypal_checkout_screen()
-			&& ( $this->paypal_vaulting_is_enabled() || $this->settings_status->is_pay_later_messaging_enabled() );
+			&& ( $this->paypal_vaulting_is_enabled() || $this->settings_status->pay_later_messaging_is_enabled() );
 	}
 }
 

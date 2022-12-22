@@ -173,20 +173,11 @@ class WC_Connect_TaxJar_Integration {
 	 * @return array
 	 */
 	public function add_tax_settings( $tax_settings ) {
-		$enabled                = $this->is_enabled();
-		$backedup_tax_rates_url = admin_url( '/admin.php?page=wc-status&tab=connect#tax-rate-backups' );
+		$enabled = $this->is_enabled();
 
-		$powered_by_wct_notice = '<p>' . __( 'Powered by WooCommerce Tax. If automated taxes are enabled, you\'ll need to enter prices exclusive of tax.', 'woocommerce-services' ) . '</p>';
-
-		if ( ! empty( WC_Connect_Functions::get_backed_up_tax_rate_files() ) ) {
-			$powered_by_wct_notice .= '<p>' . sprintf( __( 'Your previous tax rates were backed up and can be downloaded %1$shere%2$s.', 'woocommerce-services' ), '<a href="' . esc_url( $backedup_tax_rates_url ) . '">', '</a>' ) . '</p>';
-		}
-
+		$powered_by_wct_notice       = '<p>' . __( 'Powered by WooCommerce Tax. If automated taxes are enabled, you\'ll need to enter prices exclusive of tax.', 'woocommerce-services' ) . '</p>';
 		$desctructive_action_notice  = '<p>' . __( 'Enabling this option overrides any tax rates you have manually added.', 'woocommerce-services' ) . '</p>';
-		$desctructive_action_notice .= '<p>' . sprintf( __( 'Your existing tax rates will be backed-up to a CSV that you can download %1$shere%2$s.', 'woocommerce-services' ), '<a href="' . esc_url( $backedup_tax_rates_url ) . '">', '</a>' ) . '</p>';
-
-		$tax_nexus_notice = '<p>' . $this->get_tax_tooltip() . '</p>';
-
+		$tax_nexus_notice            = '<p>' . $this->get_tax_tooltip() . '</p>';
 		$automated_taxes_description = join(
 			'',
 			$enabled ? [
@@ -377,8 +368,7 @@ class WC_Connect_TaxJar_Integration {
 		// ignore error messages caused by customer input
 		$state_zip_mismatch = false !== strpos( $formatted_message, 'to_zip' ) && false !== strpos( $formatted_message, 'is not used within to_state' );
 		$invalid_postcode   = false !== strpos( $formatted_message, 'isn\'t a valid postal code for' );
-		$malformed_postcode = false !== strpos( $formatted_message, 'zip code has incorrect format' );
-		if ( ! is_admin() && ( $state_zip_mismatch || $invalid_postcode || $malformed_postcode ) ) {
+		if ( ! is_admin() && ( $state_zip_mismatch || $invalid_postcode ) ) {
 			$fields              = WC()->countries->get_address_fields();
 			$postcode_field_name = __( 'ZIP/Postal code', 'woocommerce-services' );
 			if ( isset( $fields['billing_postcode'] ) && isset( $fields['billing_postcode']['label'] ) ) {
@@ -387,8 +377,6 @@ class WC_Connect_TaxJar_Integration {
 
 			if ( $state_zip_mismatch ) {
 				$message = sprintf( _x( '%s does not match the selected state.', '%s - ZIP/Postal code checkout field label', 'woocommerce-services' ), $postcode_field_name );
-			} elseif ( $malformed_postcode ) {
-				$message = sprintf( _x( '%s is not formatted correctly.', '%s - ZIP/Postal code checkout field label', 'woocommerce-services' ), $postcode_field_name );
 			} else {
 				$message = sprintf( _x( 'Invalid %s entered.', '%s - ZIP/Postal code checkout field label', 'woocommerce-services' ), $postcode_field_name );
 			}
@@ -450,14 +438,9 @@ class WC_Connect_TaxJar_Integration {
 		$cart_taxes     = array();
 		$cart_tax_total = 0;
 
-		/**
-		 * WC Coupon object.
-		 *
-		 * @var WC_Coupon $coupon
-		*/
 		foreach ( $wc_cart_object->coupons as $coupon ) {
-			if ( method_exists( $coupon, 'get_limit_usage_to_x_items' ) ) { // Woo 3.0+.
-				$limit_usage_qty = $coupon->get_limit_usage_to_x_items();
+			if ( method_exists( $coupon, 'get_id' ) ) { // Woo 3.0+
+				$limit_usage_qty = get_post_meta( $coupon->get_id(), 'limit_usage_to_x_items', true );
 
 				if ( $limit_usage_qty ) {
 					$coupon->set_limit_usage_to_x_items( $limit_usage_qty );
@@ -1078,10 +1061,6 @@ class WC_Connect_TaxJar_Integration {
 
 		// Decode Response
 		$taxjar_response = json_decode( $response['body'] );
-		if ( empty( $taxjar_response->tax ) ) {
-			return false;
-		}
-
 		$taxjar_response = $this->maybe_override_taxjar_tax( $taxjar_response->tax, $body );
 
 		// Update Properties based on Response

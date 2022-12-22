@@ -229,7 +229,7 @@ class Note extends \WC_Data {
 	 * Get note content data (i.e. values that would be needed for re-localization)
 	 *
 	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return object
+	 * @return array
 	 */
 	public function get_content_data( $context = 'view' ) {
 		return $this->get_prop( 'content_data', $context );
@@ -300,7 +300,7 @@ class Note extends \WC_Data {
 	 *
 	 * @param  string $action_name The action name.
 	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return object the action.
+	 * @return array the action.
 	 */
 	public function get_action( $action_name, $context = 'view' ) {
 		$actions = $this->get_prop( 'actions', $context );

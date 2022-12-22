@@ -24,9 +24,7 @@ class Module extends App {
 		wp_register_script(
 			'elementor-web-cli',
 			$this->get_js_assets_url( 'web-cli' ),
-			[
-				'jquery',
-			],
+			[],
 			ELEMENTOR_VERSION,
 			true
 		);
@@ -42,7 +40,6 @@ class Module extends App {
 				'assets' => ELEMENTOR_ASSETS_URL,
 			],
 			'nonce' => wp_create_nonce( 'wp_rest' ),
-			'version' => ELEMENTOR_VERSION,
 		];
 	}
 }

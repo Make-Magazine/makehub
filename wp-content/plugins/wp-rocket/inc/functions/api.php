@@ -138,7 +138,6 @@ function rocket_is_live_site() {
 		'.runcloud.link',
 		'.onrocket.site',
 		'.singlestaging.com',
-		'.myraidbox.de',
 	];
 	foreach ( $staging as $partial_host ) {
 		if ( strpos( $host, $partial_host ) ) {

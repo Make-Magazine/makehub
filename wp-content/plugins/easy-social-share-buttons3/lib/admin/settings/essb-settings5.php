@@ -9,15 +9,6 @@
  */
 
 /**
- * @since 8.6
- * Do not load the control center render in case of add-on installation
- * essb-tgmpa-install=install-plugin
- */
-if (isset($_REQUEST['essb-tgmpa-install']) && $_REQUEST['essb-tgmpa-install'] == 'install-plugin') {
-    return;
-}
-
-/**
  * Loading the form designer functions but only inside the setup
  */
 if (! function_exists ( 'essb5_get_form_designs' )) {
@@ -30,14 +21,6 @@ if (!function_exists('essb_display_status_message')) {
 		ESSBOptionsFramework::draw_hint($title, $text.'<span class="close-icon" onclick="essbCloseStatusMessage(this); return false;"><i class="fa fa-close"></i></span>', $icon, 'status '.$additional_class);
 		echo '</div>';
 	}
-}
-
-if (!function_exists('essb_display_static_header_message')) {
-    function essb_display_static_header_message ($title = '', $text = '', $icon = '', $additional_class = '') {
-        echo '<div class="essb-static-header-status">';
-        ESSBOptionsFramework::draw_hint($title, $text, $icon, 'status '.$additional_class);
-        echo '</div>';
-    }
 }
 
 // Reset Settings
@@ -196,7 +179,7 @@ if ($drawing_tab == 'update' || $drawing_tab == 'status') { $drawing_tab = 'abou
 			include_once ESSB3_PLUGIN_ROOT . 'lib/admin/settings/essb-structure5-about.php';
 			
 		}
-		else if ($current_tab == 'extensions' || $current_tab == 'addons') {
+		else if ($current_tab == 'extensions') {
 			ESSBControlCenter::draw_blank_content_start();
 			include_once ESSB3_PLUGIN_ROOT . 'lib/admin/settings/essb-structure5-addons.php';
 			ESSBControlCenter::draw_blank_content_end();
@@ -342,74 +325,25 @@ if ($drawing_tab == 'update' || $drawing_tab == 'status') { $drawing_tab = 'abou
 <?php 
 /***
  * Load the boarding guide for the users
- * include_once ESSB3_PLUGIN_ROOT . 'lib/admin/settings/essb-structure5-boarding.php';
  */
-?>
-
-<?php 
-/**
- * @since 8.7
- */
-if (class_exists('ESSB_MyAPI')) {
-    ESSB_MyAPI::should_validate_code();
-    
-    if (ESSB_MyAPI::news_update_required()) {
-        ESSB_MyAPI::refresh_news();
-    }
-}
-
+include_once ESSB3_PLUGIN_ROOT . 'lib/admin/settings/essb-structure5-boarding.php';
 ?>
 
 <?php
 
 $template_list = essb_available_tempaltes4();
 $templates = array();
-$template_classes = array();
-
-$network_svg_icons = array();
 
 foreach ($template_list as $key => $name) {
 	$templates[$key] = essb_template_folder($key);
-	$template_classes[$key] = array(
-	    'root' => ESSB_Share_Button_Styles::get_root_template_classes($key),
-	    'element' => ESSB_Share_Button_Styles::get_network_element_classes($key, '{network}'),
-	    'icon' => ESSB_Share_Button_Styles::get_network_icon_classes($key, '{network}')
-	);
 }
-
-foreach (essb_available_social_networks() as $single => $data) {
-    /**
-     * Development integration for the SVG icons
-     */
-    $custom_svg_icon = '';
-    if (defined('ESSB_SVG_SHARE_ICONS')) {
-        if (!class_exists('ESSB_SVG_Icons')) {
-            include_once (ESSB3_CLASS_PATH . 'assets/class-svg-icons.php');
-        }                
-        $custom_svg_icon = ESSB_SVG_Icons::get_icon($single);        
-        // @param $additional_icon defines the additional icon class
-        // @param $more_after_class defines the additional class on the parent
-        // @param $additional_a_class defines the additional link class
-    }
-    
-    if (has_filter("essb_network_svg_icon_{$single}")) {
-        $custom_svg_icon = apply_filters("essb_network_svg_icon_{$single}", $custom_svg_icon);
-    }
-    
-    if (!empty($custom_svg_icon)) {
-        $network_svg_icons[$single] = $custom_svg_icon;
-    }
-}
-
 
 ?>
 
 <script type="text/javascript">
 var essbAdminSettings = {
 		'networks': <?php echo json_encode(essb_available_social_networks()); ?>,
-		'templates': <?php echo json_encode($templates); ?>,
-		'template_classes': <?php echo json_encode($template_classes); ?>,
-		'svg': <?php echo json_encode($network_svg_icons); ?>
+		'templates': <?php echo json_encode($templates); ?>
 };
 
 function essbCloseStatusMessage(sender) {
@@ -423,10 +357,6 @@ function essbCloseStatusMessage(sender) {
 function essb_settings5_status_notifications() {
 	global $essb_admin_options, $current_tab;
 
-	if (class_exists('ESSB_MyAPI') && !essb_option_bool_value('deactivate_appscreo')) {
-	    ESSB_MyAPI::has_promotion();
-	}
-	
 	$purge_cache = isset ( $_REQUEST ['purge-cache'] ) ? $_REQUEST ['purge-cache'] : '';
 	$rebuild_resource = isset ( $_REQUEST ['rebuild-resource'] ) ? $_REQUEST ['rebuild-resource'] : '';
 
@@ -452,7 +382,7 @@ function essb_settings5_status_notifications() {
 
 	$settings_update = isset ( $_REQUEST ['settings-updated'] ) ? $_REQUEST ['settings-updated'] : '';
 	if ($settings_update == "true") {
-		essb_display_status_message(esc_html__('Options are saved!', 'essb'), 'Your new setup is ready to use. If you use a cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or an optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle', 'essb-status-update essb-status-fixed');
+		essb_display_status_message(esc_html__('Options are saved!', 'essb'), 'Your new setup is ready to use. If you use cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle', 'essb-status-update');
 
 	}
 
@@ -464,11 +394,11 @@ function essb_settings5_status_notifications() {
 
 	$settings_imported = isset ( $_REQUEST ['settings-imported'] ) ? $_REQUEST ['settings-imported'] : '';
 	if ($settings_imported == "true") {
-		essb_display_status_message(esc_html__('Options are imported!', 'essb'), 'If you use cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle', 'essb-status-fixed');
+		essb_display_status_message(esc_html__('Options are imported!', 'essb'), 'If you use cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle');
 
 	}
 	if ($reset_settings == 'true') {
-		essb_display_status_message(esc_html__('Options are reset to default!', 'essb'), 'If you use cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle', 'essb-status-fixed');
+		essb_display_status_message(esc_html__('Options are reset to default!', 'essb'), 'If you use cache plugin (example: W3 Total Cache, WP Super Cache, WP Rocket) or optimization plugin (example: Autoptimize, BWP Minify) it is highly recommended to clear cache or you may not see the changes. '.$cache_plugin_message, 'fa fa-info-circle');
 
 	}
 
@@ -512,8 +442,9 @@ function essb_settings5_status_notifications() {
 
 	if ($general_precompiled_resources) {
 		$cache_clear_address = esc_url_raw ( add_query_arg ( array ('rebuild-resource' => 'true' ), essb_get_current_page_url () ) );
-		$dismiss_addons_button = '<a href="' . $cache_clear_address . '"  text="' . esc_html__ ( 'Rebuild Resources', 'essb' ) . '" class="status_button essb-btn float_right" style="margin-right: 5px;"><i class="fa ti-close"></i>&nbsp;' . esc_html__ ( 'Clear Cache', 'essb' ) . '</a>';
-		essb_display_static_header_message(esc_html__('Combine CSS and Javascript files (Pre-compiled Mode)', 'essb') . essb_generate_running_badge(), $dismiss_addons_button, 'ti-server');
+
+		$dismiss_addons_button = '<a href="' . $cache_clear_address . '"  text="' . esc_html__ ( 'Rebuild Resources', 'essb' ) . '" class="status_button float_right" style="margin-right: 5px;"><i class="fa fa-close"></i>&nbsp;' . esc_html__ ( 'Rebuild Resources', 'essb' ) . '</a>';
+		essb_display_status_message(esc_html__('Precompiled Resource Mode is Active!', 'essb'), sprintf('In precompiled mode plugin will load default setup into single static files that will run on entire site. %1$s', $dismiss_addons_button), 'fa fa-history');
 	}
 
 	if ($backup == 'true') {

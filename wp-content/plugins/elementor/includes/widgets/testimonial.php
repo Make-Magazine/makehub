@@ -279,7 +279,7 @@ class Widget_Testimonial extends Widget_Base {
 			[
 				'label' => esc_html__( 'Image Size', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem' ],
+				'size_units' => [ 'px' ],
 				'range' => [
 					'px' => [
 						'min' => 20,
@@ -301,12 +301,12 @@ class Widget_Testimonial extends Widget_Base {
 			]
 		);
 
-		$this->add_responsive_control(
+		$this->add_control(
 			'image_border_radius',
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-testimonial-wrapper .elementor-testimonial-image img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -542,10 +542,6 @@ class Widget_Testimonial extends Widget_Base {
 		#>
 		<div class="elementor-testimonial-wrapper">
 			<# if ( '' !== settings.testimonial_content ) {
-				view.addRenderAttribute( 'testimonial_content', {
-					'data-binding-type': 'content',
-					'data-binding-setting': 'testimonial_content',
-				} );
 				view.addRenderAttribute( 'testimonial_content', 'class', 'elementor-testimonial-content' );
 
 				view.addInlineEditingAttributes( 'testimonial_content' );

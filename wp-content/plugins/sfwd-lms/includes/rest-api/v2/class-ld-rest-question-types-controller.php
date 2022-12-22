@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Question_Types_Controller_V2' ) ) && ( class_exi
 	 * @since 3.3.0
 	 * @uses WP_REST_Controller
 	 */
-	class LD_REST_Question_Types_Controller_V2 extends WP_REST_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
+	class LD_REST_Question_Types_Controller_V2 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 		/**
 		 * Version
 		 *

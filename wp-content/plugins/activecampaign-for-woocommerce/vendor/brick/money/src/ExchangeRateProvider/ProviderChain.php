@@ -15,11 +15,9 @@ final class ProviderChain implements ExchangeRateProvider
     /**
      * The exchange rate providers, indexed by object hash.
      *
-     * @psalm-var array<int, ExchangeRateProvider>
-     *
      * @var ExchangeRateProvider[]
      */
-    private array $providers = [];
+    private $providers = [];
 
     /**
      * Adds an exchange rate provider to the chain.
@@ -32,7 +30,7 @@ final class ProviderChain implements ExchangeRateProvider
      */
     public function addExchangeRateProvider(ExchangeRateProvider $provider) : self
     {
-        $hash = spl_object_id($provider);
+        $hash = spl_object_hash($provider);
         $this->providers[$hash] = $provider;
 
         return $this;
@@ -49,7 +47,7 @@ final class ProviderChain implements ExchangeRateProvider
      */
     public function removeExchangeRateProvider(ExchangeRateProvider $provider) : self
     {
-        $hash = spl_object_id($provider);
+        $hash = spl_object_hash($provider);
         unset($this->providers[$hash]);
 
         return $this;

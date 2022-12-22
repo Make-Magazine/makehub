@@ -1,0 +1,12 @@
+.multi-input-mapping {
+	.is-divider::after {
+		font-size: $size-6;
+		font-weight: $weight-bold;
+		padding-top: 0.1rem;
+	}
+
+	.controls {
+		margin-top: 1.95rem;
+		flex-grow: unset;
+	}
+}

@@ -140,7 +140,7 @@ class TCPDF_STATIC {
 			define('PHP_VERSION_ID', (($version[0] * 10000) + ($version[2] * 100) + $version[4]));
 		}
 		if (PHP_VERSION_ID < 50300) {
-			@set_magic_quotes_runtime($mqr); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.set_magic_quotes_runtimeDeprecatedRemoved
+			@set_magic_quotes_runtime($mqr);
 		}
 	}
 
@@ -156,7 +156,7 @@ class TCPDF_STATIC {
 			define('PHP_VERSION_ID', (($version[0] * 10000) + ($version[2] * 100) + $version[4]));
 		}
 		if (PHP_VERSION_ID < 50300) {
-			return @get_magic_quotes_runtime(); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.get_magic_quotes_runtimeDeprecated
+			return @get_magic_quotes_runtime();
 		}
 		return 0;
 	}
@@ -450,8 +450,8 @@ class TCPDF_STATIC {
 			$text = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
 			return $iv.substr($text, 0, -16);
 		}
-		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_RAND); // phpcs:ignore -- Run only if openssl is not loaded.
-		$text = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv); // phpcs:ignore -- Run only if openssl is not loaded.
+		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_RAND);
+		$text = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
 		$text = $iv.$text;
 		return $text;
 	}
@@ -472,8 +472,8 @@ class TCPDF_STATIC {
 			$text = openssl_encrypt($text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
 			return substr($text, 0, -16);
 		}
-		$iv = str_repeat("\x00", mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)); // phpcs:ignore -- Run only if openssl is not loaded.
-		$text = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv); // phpcs:ignore -- Run only if openssl is not loaded.
+		$iv = str_repeat("\x00", mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+		$text = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
 		return $text;
 	}
 
@@ -490,7 +490,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _RC4($key, $text, &$last_enc_key, &$last_enc_key_c) {
-		if (function_exists('mcrypt_encrypt') AND ($out = @mcrypt_encrypt(MCRYPT_ARCFOUR, $key, $text, MCRYPT_MODE_STREAM, ''))) { // phpcs:ignore -- Safe use of mcrypt_encrypt().
+		if (function_exists('mcrypt_encrypt') AND ($out = @mcrypt_encrypt(MCRYPT_ARCFOUR, $key, $text, MCRYPT_MODE_STREAM, ''))) {
 			// try to use mcrypt function if exist
 			return $out;
 		}
@@ -1808,8 +1808,8 @@ class TCPDF_STATIC {
 	/**
 	 * Wrapper to use fopen only with local files
 	 * @param filename (string) Name of the file to open
-	 * @param $mode (string)
-	 * @return Returns a file pointer resource on success, or FALSE on error.
+	 * @param $mode (string) 
+	 * @return Returns a file pointer resource on success, or FALSE on error.  
 	 * @public static
 	 */
 	public static function fopenLocal($filename, $mode) {
@@ -1832,7 +1832,7 @@ class TCPDF_STATIC {
 		curl_setopt($crs, CURLOPT_URL, $url);
 		curl_setopt($crs, CURLOPT_NOBODY, true);
 		curl_setopt($crs, CURLOPT_FAILONERROR, true);
-		if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+		if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) {
 			curl_setopt($crs, CURLOPT_FOLLOWLOCATION, true);
 		}
 		curl_setopt($crs, CURLOPT_CONNECTTIMEOUT, 5);
@@ -1850,8 +1850,8 @@ class TCPDF_STATIC {
 	 * Wrapper for file_exists.
 	 * Checks whether a file or directory exists.
 	 * Only allows some protocols and local files.
-	 * @param filename (string) Path to the file or directory.
-	 * @return Returns TRUE if the file or directory specified by filename exists; FALSE otherwise.
+	 * @param filename (string) Path to the file or directory. 
+	 * @return Returns TRUE if the file or directory specified by filename exists; FALSE otherwise.  
 	 * @public static
 	 */
 	public static function file_exists($filename) {
@@ -1868,7 +1868,7 @@ class TCPDF_STATIC {
 	 * Reads entire file into a string.
 	 * The file can be also an URL.
 	 * @param $file (string) Name of the file or URL to read.
-	 * @return The function returns the read data or FALSE on failure.
+	 * @return The function returns the read data or FALSE on failure. 
 	 * @author Nicola Asuni
 	 * @since 6.0.025
 	 * @public static
@@ -1943,7 +1943,7 @@ class TCPDF_STATIC {
 				curl_setopt($crs, CURLOPT_BINARYTRANSFER, true);
 				curl_setopt($crs, CURLOPT_FAILONERROR, true);
 				curl_setopt($crs, CURLOPT_RETURNTRANSFER, true);
-				if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+				if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) {
 				    curl_setopt($crs, CURLOPT_FOLLOWLOCATION, true);
 				}
 				curl_setopt($crs, CURLOPT_CONNECTTIMEOUT, 5);
@@ -2098,7 +2098,7 @@ class TCPDF_STATIC {
 		return $a['i'];
 	}
 
-
+	
 	/**
 	 * Array of page formats
 	 * measures are calculated in this way: (inches * 72) or (millimeters * 72 / 25.4)

@@ -26,11 +26,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int $user_id   User ID. Default current user ID.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'ld_quiz_complete'.
  *
  * @return string The `ld_quiz_complete` shortcode output.
  */
-function ld_quiz_complete_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_quiz_complete' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+function ld_quiz_complete_shortcode( $atts = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 
 	if ( ! is_array( $atts ) ) {
@@ -44,9 +43,6 @@ function ld_quiz_complete_shortcode( $atts = array(), $content = '', $shortcode_
 	);
 	$atts     = shortcode_atts( $defaults, $atts );
 
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
-
 	$atts['course_id'] = absint( $atts['course_id'] );
 	$atts['quiz_id']   = absint( $atts['quiz_id'] );
 	$atts['user_id']   = absint( $atts['user_id'] );
@@ -59,7 +55,7 @@ function ld_quiz_complete_shortcode( $atts = array(), $content = '', $shortcode_
 	}
 
 	$learndash_shortcode_used = true;
-	if ( ( ! empty( $atts['quiz_id'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( get_current_user_id() === $atts['user_id'] ) ) {
+	if ( ( ! empty( $atts['quiz_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
 		if ( learndash_is_quiz_complete( $atts['user_id'], $atts['quiz_id'], $atts['course_id'] ) ) {
 			$content = do_shortcode( $content );
 		} else {
@@ -71,4 +67,4 @@ function ld_quiz_complete_shortcode( $atts = array(), $content = '', $shortcode_
 
 	return $content;
 }
-add_shortcode( 'ld_quiz_complete', 'ld_quiz_complete_shortcode', 10, 3 );
+add_shortcode( 'ld_quiz_complete', 'ld_quiz_complete_shortcode', 10, 2 );

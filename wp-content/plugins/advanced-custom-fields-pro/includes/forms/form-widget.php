@@ -97,21 +97,19 @@ if ( ! class_exists( 'acf_form_widget' ) ) :
 
 		function acf_validate_save_post() {
 
-			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
-			// bail early if not widget
+			// bail ealry if not widget
 			if ( ! isset( $_POST['_acf_widget_id'] ) ) {
 				return;
 			}
 
 			// vars
-			$id     = sanitize_text_field( $_POST['_acf_widget_id'] );
-			$number = sanitize_text_field( $_POST['_acf_widget_number'] );
-			$prefix = sanitize_text_field( $_POST['_acf_widget_prefix'] );
-			$values = acf_sanitize_request_args( $_POST[ $id ][ $number ]['acf'] );
+			$id     = $_POST['_acf_widget_id'];
+			$number = $_POST['_acf_widget_number'];
+			$prefix = $_POST['_acf_widget_prefix'];
 
 			// validate
-			acf_validate_values( $values, $prefix );
-			// phpcs:enable WordPress.Security.NonceVerification.Missing
+			acf_validate_values( $_POST[ $id ][ $number ]['acf'], $prefix );
+
 		}
 
 

@@ -1,10 +1,10 @@
 /**
  * External dependencies
  */
+import { usePaymentMethods } from '@woocommerce/base-context/hooks';
 import { __ } from '@wordpress/i18n';
 import Label from '@woocommerce/base-components/label';
-import { select } from '@wordpress/data';
-import { PAYMENT_STORE_KEY } from '@woocommerce/block-data';
+import { usePaymentMethodDataContext } from '@woocommerce/base-context';
 
 /**
  * Internal dependencies
@@ -19,23 +19,17 @@ import SavedPaymentMethodOptions from './saved-payment-method-options';
  * @return {*} The rendered component.
  */
 const PaymentMethods = () => {
-	const {
-		paymentMethodsInitialized,
-		availablePaymentMethods,
-		savedPaymentMethods,
-	} = select( PAYMENT_STORE_KEY ).getState();
+	const { isInitialized, paymentMethods } = usePaymentMethods();
+	const { customerPaymentMethods } = usePaymentMethodDataContext();
 
-	if (
-		paymentMethodsInitialized &&
-		Object.keys( availablePaymentMethods ).length === 0
-	) {
+	if ( isInitialized && Object.keys( paymentMethods ).length === 0 ) {
 		return <NoPaymentMethods />;
 	}
 
 	return (
 		<>
 			<SavedPaymentMethodOptions />
-			{ Object.keys( savedPaymentMethods ).length > 0 && (
+			{ Object.keys( customerPaymentMethods ).length > 0 && (
 				<Label
 					label={ __(
 						'Use another payment method.',

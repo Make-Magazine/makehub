@@ -27,7 +27,7 @@ const EmptyPlaceholder = () => (
 		className="wc-block-product-categories"
 	>
 		{ __(
-			'This block displays the product categories for your store. To use it you first need to create a product and assign it to a category.',
+			"This block shows product categories for your store. To use it, you'll first need to create a product and assign it to a category.",
 			'woocommerce'
 		) }
 	</Placeholder>
@@ -92,6 +92,17 @@ const ProductCategoriesBlock = ( { attributes, setAttributes, name } ) => {
 							'Show product count',
 							'woocommerce'
 						) }
+						help={
+							hasCount
+								? __(
+										'Product count is visible.',
+										'woocommerce'
+								  )
+								: __(
+										'Product count is hidden.',
+										'woocommerce'
+								  )
+						}
 						checked={ hasCount }
 						onChange={ () =>
 							setAttributes( { hasCount: ! hasCount } )
@@ -125,6 +136,17 @@ const ProductCategoriesBlock = ( { attributes, setAttributes, name } ) => {
 							'Show hierarchy',
 							'woocommerce'
 						) }
+						help={
+							isHierarchical
+								? __(
+										'Hierarchy is visible.',
+										'woocommerce'
+								  )
+								: __(
+										'Hierarchy is hidden.',
+										'woocommerce'
+								  )
+						}
 						checked={ isHierarchical }
 						onChange={ () =>
 							setAttributes( {
@@ -137,6 +159,17 @@ const ProductCategoriesBlock = ( { attributes, setAttributes, name } ) => {
 							'Show empty categories',
 							'woocommerce'
 						) }
+						help={
+							hasEmpty
+								? __(
+										'Empty categories are visible.',
+										'woocommerce'
+								  )
+								: __(
+										'Empty categories are hidden.',
+										'woocommerce'
+								  )
+						}
 						checked={ hasEmpty }
 						onChange={ () =>
 							setAttributes( { hasEmpty: ! hasEmpty } )

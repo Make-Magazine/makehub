@@ -348,7 +348,6 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem' ],
 				'default' => [
 					'size' => 15,
 				],
@@ -369,7 +368,6 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em', 'rem' ],
 				'range' => [
 					'px' => [
 						'min' => 6,
@@ -409,6 +407,7 @@ class Widget_Icon_Box extends Widget_Base {
 		$rotate_device_settings = [
 			'default' => [
 				'unit' => 'deg',
+				'size' => '',
 			],
 		];
 
@@ -421,15 +420,17 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'label' => esc_html__( 'Rotate', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'deg', 'grad', 'rad', 'turn' ],
+				'size_units' => [ 'deg' ],
+				'range' => [
+					'deg' => [
+						'min' => 0,
+						'max' => 360,
+						'step' => 1,
+					],
+				],
 				'default' => [
 					'unit' => 'deg',
-				],
-				'tablet_default' => [
-					'unit' => 'deg',
-				],
-				'mobile_default' => [
-					'unit' => 'deg',
+					'size' => '',
 				],
 				'device_args' => $rotate_device_args,
 				'selectors' => [
@@ -443,7 +444,6 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -458,7 +458,7 @@ class Widget_Icon_Box extends Widget_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],

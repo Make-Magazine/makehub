@@ -60,6 +60,17 @@ const Edit = ( {
 							'Show search field label',
 							'woocommerce'
 						) }
+						help={
+							hasLabel
+								? __(
+										'Label is visible.',
+										'woocommerce'
+								  )
+								: __(
+										'Label is hidden.',
+										'woocommerce'
+								  )
+						}
 						checked={ hasLabel }
 						onChange={ () =>
 							setAttributes( { hasLabel: ! hasLabel } )

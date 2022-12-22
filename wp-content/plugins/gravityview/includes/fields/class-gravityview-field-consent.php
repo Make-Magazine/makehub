@@ -25,7 +25,7 @@ class GravityView_Field_Consent extends GravityView_Field {
 
 	public function __construct() {
 
-		$this->label = esc_html__( 'Consent', 'gk-gravityview' );
+		$this->label = esc_html__( 'Consent', 'gravityview' );
 
 		parent::__construct();
 
@@ -106,13 +106,13 @@ class GravityView_Field_Consent extends GravityView_Field {
 		$field_options['choice_display'] = array(
 			'type'    => 'radio',
 			'class'   => 'vertical',
-			'label'   => __( 'What should be displayed:', 'gk-gravityview' ),
+			'label'   => __( 'What should be displayed:', 'gravityview' ),
 			'value'   => $default,
 			'desc'    => '',
 			'choices' => array(
-				'both'  => __( 'Consent image with description', 'gk-gravityview' ),
-				'tick'  => __( 'Consent image', 'gk-gravityview' ),
-				'label' => __( 'Consent description', 'gk-gravityview' ),
+				'both'  => __( 'Consent image with description', 'gravityview' ),
+				'tick'  => __( 'Consent image', 'gravityview' ),
+				'label' => __( 'Consent description', 'gravityview' ),
 			),
 			'priorty' => 100,
 			'group'   => 'display',

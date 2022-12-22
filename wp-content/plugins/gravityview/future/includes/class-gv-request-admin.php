@@ -45,15 +45,19 @@ class Admin_Request extends Request {
 		}
 
 		if ( $current_screen && $current_screen->post_type == 'gravityview' ) {
-			if ( 'edit' === $current_screen->base ) {
+			if ( $is_gv_edit_list = 'edit' === $current_screen->base ) {
 				$is_page = 'views';
-			} elseif ( 'post' === $current_screen->base ) {
+			} elseif ( $is_gv_edit_single = 'post' === $current_screen->base ) {
 				$is_page = 'single';
-			} elseif( 'gravityview_page_gv-changelog' === $current_screen->id ) {
+			} elseif ( $is_gv_settings = 'gravityview_page_gravityview_settings' === $current_screen->id ) {
+				$is_page = 'settings';
+			} elseif( $is_extensions = 'gravityview_page_gv-admin-installer' === $current_screen->id ) {
+				$is_page = 'downloads';
+			} elseif( $is_changelog = 'gravityview_page_gv-changelog' === $current_screen->id ) {
 				$is_page = 'changelog';
-			} elseif( 'gravityview_page_gv-getting-started' === $current_screen->id ) {
+			} elseif( $is_getting_started = 'gravityview_page_gv-getting-started' === $current_screen->id ) {
 				$is_page = 'getting-started';
-			} elseif( 'gravityview_page_gv-credits' === $current_screen->id ) {
+			} elseif( $is_credits = 'gravityview_page_gv-credits' === $current_screen->id ) {
 				$is_page = 'credits';
 			}
 		}

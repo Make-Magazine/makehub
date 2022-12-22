@@ -13,17 +13,12 @@ import {
 	getAllowedBlocks,
 } from '../../../cart-checkout-shared';
 
-interface Props {
-	clientId: string;
-}
-
-export const Edit = ( { clientId }: Props ): JSX.Element => {
+export const Edit = ( { clientId }: { clientId: string } ): JSX.Element => {
 	const blockProps = useBlockProps( { className: 'wc-block-cart__main' } );
 	const allowedBlocks = getAllowedBlocks( innerBlockAreas.CART_ITEMS );
 	const defaultTemplate = [
 		[ 'woocommerce/cart-line-items-block', {}, [] ],
-		[ 'woocommerce/cart-cross-sells-block', {}, [] ],
-	] as unknown as TemplateArray;
+	] as TemplateArray;
 
 	useForcedLayout( {
 		clientId,

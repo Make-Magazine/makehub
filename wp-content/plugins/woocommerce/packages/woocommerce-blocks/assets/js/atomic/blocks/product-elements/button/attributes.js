@@ -3,10 +3,6 @@ export const blockAttributes = {
 		type: 'number',
 		default: 0,
 	},
-	isDescendentOfQueryLoop: {
-		type: 'boolean',
-		default: false,
-	},
 };
 
 export default blockAttributes;

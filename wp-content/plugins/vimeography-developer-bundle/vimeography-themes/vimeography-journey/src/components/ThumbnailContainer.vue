@@ -1,17 +1,21 @@
 <script>
-/** Theme specific file. */
-import { mapActions, mapState } from "vuex";
+  /** Theme specific file. */
+  import { mapActions, mapState } from 'vuex'
 
-// Import Swiper and modules
-import { Swiper, Navigation, Pagination } from "swiper/js/swiper.esm.js";
+  // Import Swiper and modules
+  import {
+    Swiper,
+    Navigation,
+    Pagination
+  } from 'swiper/dist/js/swiper.esm.js';
 
-// Install modules
-Swiper.use([Navigation, Pagination]);
+  // Install modules
+  Swiper.use([Navigation, Pagination]);
 
-import Thumbnail from "./Thumbnail.vue";
-require("swiper/css/swiper.min.css");
+  import Thumbnail from './Thumbnail.vue';
+  require('../../node_modules/swiper/dist/css/swiper.min.css');
 
-const template = `
+  const template = `
     <div class="vimeography-thumbnail-container" v-observe-visibility="visibilityChanged">
       <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -29,58 +33,58 @@ const template = `
     </div>
   `;
 
-const ThumbnailContainer = {
-  props: ["videos", "activeVideoId"],
-  template,
-  components: {
-    Thumbnail,
-  },
-  methods: {
-    ...mapActions(["paginate"]),
-    reload: function() {
-      setTimeout(
-        function() {
+  const ThumbnailContainer = {
+    props: ['videos', 'activeVideoId'],
+    template,
+    components: {
+      Thumbnail
+    },
+    methods: {
+      ...mapActions([
+        'paginate',
+      ]),
+      reload: function () {
+        setTimeout(function () {
+
           this.swiper.update();
           this.swiper.navigation.update();
-          this.swiper.updateSize();
-          this.swiper.updateSlides();
-          this.swiper.updateProgress();
-          this.swiper.updateSlidesClasses();
-        }.bind(this),
-        250
-      );
-    },
-    visibilityChanged: function(isVisible) {
-      if (isVisible) {
-        this.reload();
+          this.swiper.updateSize()
+          this.swiper.updateSlides()
+          this.swiper.updateProgress()
+          this.swiper.updateSlidesClasses()
+
+        }.bind(this), 250)
+      },
+      visibilityChanged: function (isVisible) {
+        if (isVisible) {
+          this.reload();
+        }
       }
     },
-  },
-  computed: {
-    ...mapState({
-      pro: (state) => state.gallery.pro,
-    }),
-  },
-  updated: function() {
-    this.reload();
-  },
-  watch: {
-    activeVideoId(id) {
-      let index = this.$store.getters.getVideoIndex(id);
-      this.swiper.slideTo(index);
+    computed: {
+      ...mapState({
+        pro: state => state.gallery.pro
+      }),
     },
-  },
-  mounted: function() {
-    let initialSlide =
-      this.$store.getters.getVideoIndex(this.activeVideoId) + 1;
+    updated: function() {
+      this.reload();
+    },
+    watch: {
+      activeVideoId(id) {
+        let index = this.$store.getters.getVideoIndex(id);
+        this.swiper.slideTo(index);
+      }
+    },
+    mounted: function() {
+      let initialSlide = this.$store.getters.getVideoIndex(this.activeVideoId) + 1;
 
-    this.swiper = new Swiper(this.$el.childNodes[0], {
-      initialSlide,
-      slidesPerView: "auto",
-      spaceBetween: 10,
-      slideToClickedSlide: true,
+      this.swiper = new Swiper(this.$el.childNodes[0], {
+        initialSlide,
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        slideToClickedSlide: true,
 
-      /*
+        /*
           Namespace swiper classes
           Note: this will require you to write or copy entirely custom CSS
           Only do this if absolutely necessary
@@ -98,89 +102,84 @@ const ThumbnailContainer = {
           wrapperClass: 'swiper-wrapper',
         */
 
-      navigation: {
-        nextEl: this.$refs.next,
-        prevEl: this.$refs.prev,
-      },
-      observer: true,
-      // observeParents: true,
-
-      breakpoints: {
-        320: {
-          slidesPerGroup: 1,
-          spaceBetween: 10,
+        navigation: {
+          nextEl: this.$refs.next,
+          prevEl: this.$refs.prev,
         },
-        480: {
-          slidesPerGroup: 2,
-          spaceBetween: 10,
-        },
-        640: {
-          slidesPerGroup: 3,
-          spaceBetween: 10,
-        },
-      },
-    });
+        observer: true,
+        // observeParents: true,
 
-    /** Note: this should only happen in PRO */
-    this.swiper.on("progress", (progress) => {
-      if (!this.pro) {
-        console.log(
-          "Vimeography PRO is not installed, pagination is unavailable."
-        );
-        return;
-      }
+        breakpoints: {
+          320: {
+            slidesPerGroup: 1,
+            spaceBetween: 10
+          },
+          480: {
+            slidesPerGroup: 2,
+            spaceBetween: 10
+          },
+          640: {
+            slidesPerGroup: 3,
+            spaceBetween: 10
+          }
+        }
+      });
 
-      let paging = this.$store.getters.paging;
+      /** Note: this should only happen in PRO */
+      this.swiper.on('progress', progress => {
+        if (! this.pro) {
+          console.log('Vimeography PRO is not installed, pagination is unavailable.')
+          return;
+        }
 
-      console.log("Vimeography: gallery progress is " + progress);
+        let paging = this.$store.getters.paging
 
-      if (progress < 0.25) {
-        this.paginate(paging.previous);
-      }
+        console.log('Vimeography: gallery progress is ' + progress );
 
-      if (progress > 0.75) {
-        this.paginate(paging.next);
-      }
-    });
-  },
-};
+        if ( progress < 0.25 ) {
+          this.paginate( paging.previous );
+        }
 
-export default ThumbnailContainer;
+        if ( progress > 0.75 ) {
+          this.paginate( paging.next );
+        }
+      } );
+
+    },
+  }
+
+  export default ThumbnailContainer;
 </script>
 
 <style lang="scss" scoped>
-.vimeography-thumbnail-container {
-  position: relative;
-  padding: 22px;
-  background-color: #232323;
-  border-radius: 3px;
-}
-
-.swiper-slide {
-  flex-shrink: 0;
-  height: 100%;
-  width: auto;
-  position: relative;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  cursor: pointer;
-  width: 12px;
-  height: 20px;
-  margin-top: -10px;
-  background-size: 12px 20px;
-
-  &:after {
-    font-size: 20px;
+  .vimeography-thumbnail-container {
+    position: relative;
+    padding: 22px;
+    background-color: #232323;
+    border-radius: 3px;
   }
-}
 
-.swiper-button-prev {
-  left: -20px;
-}
+  .swiper-slide {
+    flex-shrink: 0;
+    height: 100%;
+    width: auto;
+    position: relative;
+  }
 
-.swiper-button-next {
-  right: -20px;
-}
+  .swiper-button-prev,
+  .swiper-button-next {
+    cursor: pointer;
+    width: 12px;
+    height: 20px;
+    margin-top: -10px;
+    background-size: 12px 20px;
+  }
+
+  .swiper-button-prev {
+    left: -20px;
+  }
+
+  .swiper-button-next {
+    right: -20px;
+  }
 </style>

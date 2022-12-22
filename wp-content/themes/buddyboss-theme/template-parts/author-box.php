@@ -5,13 +5,7 @@ if ( is_single() && !is_related_posts() && is_singular('post') ) : ?>
 	<div class="post-author-info">
         <?php if ( !empty( $author_box ) ) :
 		$description = get_the_author_meta( 'description' );
-
-		$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-		if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
-			$user_link = bp_core_get_user_domain( get_the_author_meta( 'ID' ) );
-		} else {
-			$user_link = get_author_posts_url( get_the_author_meta( 'ID' ) );
-		}
+		$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( get_the_author_meta( 'ID' ) ) : get_author_posts_url( get_the_author_meta( 'ID' ) );
 		$class = empty( $description ) ? 'align-items-center' : '';
 		?>
 		<div class="post-author-details <?php echo $class; ?>">

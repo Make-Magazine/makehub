@@ -26,16 +26,8 @@ interface AppendScriptAttributesParam {
  * This function checks whether an element matching that selector exists.
  * Useful to know if a script has already been appended to the page.
  */
-const isScriptTagInDOM = ( scriptId: string, src = '' ): boolean => {
-	const srcParts = src.split( '?' );
-	if ( srcParts?.length > 1 ) {
-		src = srcParts[ 0 ];
-	}
-	const selector = src
-		? `script#${ scriptId }, script[src*="${ src }"]`
-		: `script#${ scriptId }`;
-	const scriptElements = document.querySelectorAll( selector );
-
+const isScriptTagInDOM = ( scriptId: string ): boolean => {
+	const scriptElements = document.querySelectorAll( `script#${ scriptId }` );
 	return scriptElements.length > 0;
 };
 
@@ -45,10 +37,7 @@ const isScriptTagInDOM = ( scriptId: string, src = '' ): boolean => {
  */
 const appendScript = ( attributes: AppendScriptAttributesParam ): void => {
 	// Abort if id is not valid or a script with the same id exists.
-	if (
-		! isString( attributes.id ) ||
-		isScriptTagInDOM( attributes.id, attributes?.src )
-	) {
+	if ( ! isString( attributes.id ) || isScriptTagInDOM( attributes.id ) ) {
 		return;
 	}
 	const scriptElement = document.createElement( 'script' );
@@ -103,7 +92,7 @@ const lazyLoadScript = ( {
 	translations,
 }: LazyLoadScriptParams ): Promise< void > => {
 	return new Promise( ( resolve, reject ) => {
-		if ( isScriptTagInDOM( `${ handle }-js`, src ) ) {
+		if ( isScriptTagInDOM( `${ handle }-js` ) ) {
 			resolve();
 		}
 

@@ -83,7 +83,7 @@
 /* line 77, ../../sass/templates/grid-banner.scss */
 .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail,
 .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail {
-  background: url("../../img/placeholder-image.svg") #efefef center center;
+  background: url("../img/placeholder-image.svg") #efefef center center;
   background-size: 50px 50px;
   margin: 0 0 20px 0;
   padding-top: 55%;

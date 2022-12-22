@@ -11,17 +11,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Builds the `[learndash_group_user_list]` shortcode output.
+ *
+ * @since 2.1.0
+ *
+ * @global boolean $learndash_shortcode_used
+ *
+ * @param int $group_id ID of the group to get list for.
+ *
+ * @return string|void Echos shortcode output or returns string if no users found.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
  * Group user list
  *
- * @param array  $attr {
- *    An array of shortcode attributes.
- * }.
- * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'learndash_group_user_list'.
+ * @param array  $attr     Array of attributes.
+ * @param string $content Content.
  *
  * @return string
  */
-function learndash_group_user_list( $attr = array(), $content = '', $shortcode_slug = 'learndash_group_user_list' ) {
+function learndash_group_user_list( $attr = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -38,9 +51,6 @@ function learndash_group_user_list( $attr = array(), $content = '', $shortcode_s
 		),
 		$attr
 	);
-
-	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
 
 	$attr['group_post'] = null;
 	if ( ! empty( $attr['group_id'] ) ) {
@@ -94,7 +104,7 @@ function learndash_group_user_list( $attr = array(), $content = '', $shortcode_s
 						);
 						?>
 						<tr>
-							<td><?php echo absint( $sn++ ); ?></td>
+							<td><?php echo esc_html( $sn++ ); ?></td>
 							<td><?php echo esc_html( $name ); ?></td>
 							<td><?php echo esc_html( $user->user_login ); ?></td>
 							<td><?php echo esc_html( $user->user_email ); ?></td>
@@ -113,4 +123,4 @@ function learndash_group_user_list( $attr = array(), $content = '', $shortcode_s
 	}
 	return '';
 }
-add_shortcode( 'learndash_group_user_list', 'learndash_group_user_list', 10, 3 );
+add_shortcode( 'learndash_group_user_list', 'learndash_group_user_list', 10, 2 );

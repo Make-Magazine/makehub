@@ -199,9 +199,6 @@ class Post_Info extends Base {
 				'condition' => [
 					'type!' => 'custom',
 				],
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 

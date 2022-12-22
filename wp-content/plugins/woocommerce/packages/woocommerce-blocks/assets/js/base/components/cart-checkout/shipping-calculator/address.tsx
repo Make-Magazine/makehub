@@ -5,9 +5,8 @@ import { __ } from '@wordpress/i18n';
 import Button from '@woocommerce/base-components/button';
 import { useState } from '@wordpress/element';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import type { ShippingAddress, AddressFields } from '@woocommerce/settings';
-import { VALIDATION_STORE_KEY } from '@woocommerce/block-data';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useValidationContext } from '@woocommerce/base-context';
+import type { EnteredAddress, AddressFields } from '@woocommerce/settings';
 
 /**
  * Internal dependencies
@@ -16,8 +15,8 @@ import './style.scss';
 import { AddressForm } from '../address-form';
 
 interface ShippingCalculatorAddressProps {
-	address: ShippingAddress;
-	onUpdate: ( address: ShippingAddress ) => void;
+	address: EnteredAddress;
+	onUpdate: ( address: EnteredAddress ) => void;
 	addressFields: Partial< keyof AddressFields >[];
 }
 const ShippingCalculatorAddress = ( {
@@ -26,18 +25,12 @@ const ShippingCalculatorAddress = ( {
 	addressFields,
 }: ShippingCalculatorAddressProps ): JSX.Element => {
 	const [ address, setAddress ] = useState( initialAddress );
-	const { showAllValidationErrors } = useDispatch( VALIDATION_STORE_KEY );
-
-	const { hasValidationErrors } = useSelect( ( select ) => {
-		const store = select( VALIDATION_STORE_KEY );
-		return {
-			hasValidationErrors: store.hasValidationErrors,
-		};
-	} );
+	const { hasValidationErrors, showAllValidationErrors } =
+		useValidationContext();
 
 	const validateSubmit = () => {
 		showAllValidationErrors();
-		return ! hasValidationErrors();
+		return ! hasValidationErrors;
 	};
 
 	return (

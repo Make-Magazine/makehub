@@ -2,10 +2,10 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro v2.1.7.1\n"
+"Project-Id-Version: BuddyBoss Platform Pro v2.0.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2022-11-16 13:32+0100\n"
-"PO-Revision-Date: 2022-11-24 16:28+0400\n"
+"POT-Creation-Date: 2022-06-28 22:19+0200\n"
+"PO-Revision-Date: 2022-07-08 11:43+0600\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -19,11 +19,11 @@ msgstr ""
 "esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 3.2\n"
+"X-Generator: Poedit 3.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #. Plugin Name of the plugin/theme
-#: buddyboss-platform-pro.php:50 buddyboss-platform-pro.php:65
+#: buddyboss-platform-pro.php:46 buddyboss-platform-pro.php:61
 #: includes/access-control/includes/class-bb-access-control.php:388
 #: includes/access-control/includes/class-bb-access-control.php:500
 #: includes/access-control/includes/class-bb-access-control.php:615
@@ -32,26 +32,25 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:832
 #: includes/access-control/includes/class-bb-access-control.php:1029
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:18
-#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:18
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:18
 #: includes/lib/buddyboss-updater/includes/functions.php:130
 #: includes/lib/buddyboss-updater/includes/functions.php:168
 msgid "BuddyBoss Platform Pro"
 msgstr "BuddyBoss Platform Pro"
 
-#: buddyboss-platform-pro.php:51
+#: buddyboss-platform-pro.php:47
 msgid "requires the BuddyBoss Platform plugin to work. Please"
 msgstr "benötigt das BuddyBoss Platform Plugin, um zu funktionieren. Bitte"
 
-#: buddyboss-platform-pro.php:52
+#: buddyboss-platform-pro.php:48
 msgid "install BuddyBoss Platform"
 msgstr "installieren Sie die BuddyBoss Plattform"
 
-#: buddyboss-platform-pro.php:53
+#: buddyboss-platform-pro.php:49
 msgid "first."
 msgstr "zuerst."
 
-#: buddyboss-platform-pro.php:66
+#: buddyboss-platform-pro.php:62
 msgid ""
 "requires BuddyBoss Platform plugin version 1.3.5 or higher to work. Please "
 "update BuddyBoss Platform."
@@ -63,10 +62,6 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr "Sie schummeln&#8217; oder?"
 
-#: class-bb-platform-pro.php:275 includes/bb-pro-update-buddyboss.php:81
-msgid "Release Notes"
-msgstr "Entwicklungsstand"
-
 #: includes/access-control/bb-access-control-filters.php:483
 msgid "You don't have access to send request membership."
 msgstr ""
@@ -74,13 +69,27 @@ msgstr ""
 "fehlen die Berechtigungen."
 
 #: includes/access-control/bb-access-control-filters.php:706
-msgid "You are restricted from sending new messages to this member."
-msgstr "Sie können keine neuen Nachrichten an dieses Mitglied senden."
+#: includes/access-control/bb-access-control-rest-filters.php:447
+#: includes/access-control/bb-access-control-rest-filters.php:523
+msgid ""
+"You can no longer send replies to this thread as you are restricted from "
+"sending messages to this member."
+msgstr ""
+"Sie können keine Antworten mehr auf diesen Diskussionsfaden senden, da das "
+"Senden von Nachrichten an dieses Mitglied eingeschränkt ist."
 
 #: includes/access-control/bb-access-control-filters.php:708
 #: includes/access-control/bb-access-control-filters.php:710
-msgid "You are restricted from sending new messages to these members: "
-msgstr "Sie können keine neuen Nachrichten an diese Mitglieder senden: "
+#: includes/access-control/bb-access-control-rest-filters.php:449
+#: includes/access-control/bb-access-control-rest-filters.php:451
+#: includes/access-control/bb-access-control-rest-filters.php:525
+#: includes/access-control/bb-access-control-rest-filters.php:527
+msgid ""
+"You can no longer send replies to this thread as you are restricted from "
+"sending messages to these members: "
+msgstr ""
+"Sie können keine Antworten mehr auf diesen Diskussionsfaden senden, da das "
+"Senden von Nachrichten an diese Mitglieder eingeschränkt ist: "
 
 #: includes/access-control/bb-access-control-filters.php:710
 #: includes/access-control/bb-access-control-rest-filters.php:451
@@ -90,11 +99,10 @@ msgstr "..."
 
 #: includes/access-control/bb-access-control-functions.php:574
 #: includes/integrations/onesignal/bb-onesignal-functions.php:69
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:238
 #: includes/integrations/zoom/bp-zoom-functions.php:1450
 #: includes/integrations/zoom/bp-zoom-functions.php:1479
 #: includes/integrations/zoom/bp-zoom-functions.php:1506
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:850
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:853
 #: includes/lib/buddyboss-updater/includes/views/package.php:20
 msgid "View Tutorial"
 msgstr "Tutorial ansehen"
@@ -143,26 +151,6 @@ msgid ""
 msgstr ""
 "Der angeforderte Benutzer verfügt nicht über die richtige Mitgliedschaft, um "
 "Anfragen zur Mitgliedschaft an diese Gruppe zu genehmigen."
-
-#: includes/access-control/bb-access-control-rest-filters.php:447
-#: includes/access-control/bb-access-control-rest-filters.php:523
-msgid ""
-"You can no longer send replies to this thread as you are restricted from "
-"sending messages to this member."
-msgstr ""
-"Sie können keine Antworten mehr auf diesen Diskussionsfaden senden, da das "
-"Senden von Nachrichten an dieses Mitglied eingeschränkt ist."
-
-#: includes/access-control/bb-access-control-rest-filters.php:449
-#: includes/access-control/bb-access-control-rest-filters.php:451
-#: includes/access-control/bb-access-control-rest-filters.php:525
-#: includes/access-control/bb-access-control-rest-filters.php:527
-msgid ""
-"You can no longer send replies to this thread as you are restricted from "
-"sending messages to these members: "
-msgstr ""
-"Sie können keine Antworten mehr auf diesen Diskussionsfaden senden, da das "
-"Senden von Nachrichten an diese Mitglieder eingeschränkt ist: "
 
 #: includes/access-control/bb-access-control-rest-filters.php:615
 msgid "You don't have enough access to send the friend request to this member."
@@ -272,7 +260,6 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:831
 #: includes/access-control/includes/class-bb-access-control.php:1028
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:17
-#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:17
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:17
 #, php-format
 msgid ""
@@ -289,7 +276,6 @@ msgstr ""
 #: includes/access-control/includes/class-bb-access-control.php:846
 #: includes/access-control/includes/class-bb-access-control.php:1043
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:32
-#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:32
 #: includes/integrations/zoom/templates/admin/integration-tab-intro.php:32
 msgid "Add License key"
 msgstr "Lizenzschlüssel hinzufügen"
@@ -490,70 +476,6 @@ msgstr "GamiPress-Typ auswählen"
 msgid "- Select Membership Type -"
 msgstr "- Mitgliedschaftsart wählen -"
 
-#: includes/bb-pro-update-buddyboss.php:75
-msgid "Close pop-up"
-msgstr "Popup schließen"
-
-#: includes/bb-pro-update-buddyboss.php:76
-#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:240
-#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
-#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
-msgid "Close"
-msgstr "Schließen"
-
-#: includes/bb-pro-update-buddyboss.php:82
-msgid "BuddyBoss Platform Pro v"
-msgstr "BuddyBoss Platform Pro v"
-
-#: includes/bb-pro-update-buddyboss.php:86
-msgid "Overview"
-msgstr "Überblick"
-
-#: includes/bb-pro-update-buddyboss.php:88
-msgid "Changelog"
-msgstr "Änderungsverlauf"
-
-#: includes/bb-pro-update-buddyboss.php:102
-msgid "Welcome to BuddyBoss Theme 2.0 🥳"
-msgstr "Willkommen bei BuddyBoss Theme 2.0 🥳"
-
-#: includes/bb-pro-update-buddyboss.php:103
-msgid ""
-"Check out the video below for a full walkthrough of all the new features and "
-"updates available to you in this release."
-msgstr ""
-"Schauen Sie sich das Video unten an, um einen vollständigen Überblick über "
-"alle neuen Funktionen und Aktualisierungen zu erhalten, die Ihnen in dieser "
-"Version zur Verfügung stehen."
-
-#. translators: %1$s - Overview tab link for details.
-#: includes/bb-pro-update-buddyboss.php:108
-#, php-format
-msgid ""
-"As this update contains a number of improvements to the theme’s colors, "
-"layouts and styling, we recommend you reconfigure your Theme Options and "
-"review any custom CSS you may have.  For more information on how to update, "
-"%1$s."
-msgstr ""
-"Da dieses Update eine Reihe von Verbesserungen an den Farben, dem Layout und "
-"dem Styling des Themes enthält, empfehlen wir Ihnen, Ihre Theme-Optionen neu "
-"zu konfigurieren und alle benutzerdefinierten CSS, die Sie möglicherweise "
-"haben, zu überprüfen.  Weitere Informationen über das Update finden Sie "
-"unter %1$s."
-
-#: includes/bb-pro-update-buddyboss.php:113
-msgid "check out this tutorial"
-msgstr "Sehen Sie sich dieses Tutorial an"
-
-#: includes/bb-pro-update-buddyboss.php:121
-msgid "For more information, please watch the video below:"
-msgstr "Für weitere Informationen sehen Sie sich bitte das Video unten an:"
-
-#: includes/bb-pro-update-buddyboss.php:136
-msgid "Changes:"
-msgstr "Änderungen:"
-
 #. translators: Image src.
 #: includes/integrations/onesignal/bb-onesignal-actions.php:263
 #: includes/integrations/onesignal/bb-onesignal-actions.php:277
@@ -734,15 +656,11 @@ msgstr "weiches Aufforderungsfoto wurde erfolgreich gelöscht."
 
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:284
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:298
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:174
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:196
 msgid "Not Connected"
 msgstr "Nicht verbunden"
 
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:309
 #: includes/integrations/onesignal/bb-onesignal-admin-tab.php:322
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:188
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:193
 msgid "Connected"
 msgstr "Verbunden"
 
@@ -923,22 +841,22 @@ msgid "OneSignal App"
 msgstr "OneSignal-App"
 
 #: includes/integrations/onesignal/bb-onesignal-functions.php:560
-#: includes/integrations/onesignal/bb-onesignal-functions.php:707
+#: includes/integrations/onesignal/bb-onesignal-functions.php:706
 msgid "Uploading..."
 msgstr "Hochladen…"
 
 #: includes/integrations/onesignal/bb-onesignal-functions.php:560
-#: includes/integrations/onesignal/bb-onesignal-functions.php:707
+#: includes/integrations/onesignal/bb-onesignal-functions.php:706
 msgid "Upload"
 msgstr "Hochladen"
 
 #: includes/integrations/onesignal/bb-onesignal-functions.php:561
-#: includes/integrations/onesignal/bb-onesignal-functions.php:708
+#: includes/integrations/onesignal/bb-onesignal-functions.php:707
 msgid "Removing..."
 msgstr "Entfernen..."
 
 #: includes/integrations/onesignal/bb-onesignal-functions.php:561
-#: includes/integrations/onesignal/bb-onesignal-functions.php:708
+#: includes/integrations/onesignal/bb-onesignal-functions.php:707
 msgid "Remove"
 msgstr "Löschen"
 
@@ -1059,398 +977,28 @@ msgstr "Nachricht"
 msgid "/90 characters"
 msgstr "/90 Zeichen"
 
-#: includes/integrations/onesignal/bb-onesignal-functions.php:701
-msgid "Image"
-msgstr "Bild"
-
+#: includes/integrations/onesignal/bb-onesignal-functions.php:731
 #: includes/integrations/onesignal/bb-onesignal-functions.php:732
-#: includes/integrations/onesignal/bb-onesignal-functions.php:733
 msgid "Allow Button"
 msgstr "Schaltfläche „Zulassen“"
 
-#: includes/integrations/onesignal/bb-onesignal-functions.php:735
-#: includes/integrations/onesignal/bb-onesignal-functions.php:742
+#: includes/integrations/onesignal/bb-onesignal-functions.php:734
+#: includes/integrations/onesignal/bb-onesignal-functions.php:741
 msgid "/15 characters"
 msgstr "/15 Zeichen"
 
+#: includes/integrations/onesignal/bb-onesignal-functions.php:738
 #: includes/integrations/onesignal/bb-onesignal-functions.php:739
-#: includes/integrations/onesignal/bb-onesignal-functions.php:740
 msgid "Cancel Button"
 msgstr "Schaltfläche „Abbrechen“"
 
-#: includes/integrations/onesignal/bb-onesignal-functions.php:780
+#: includes/integrations/onesignal/bb-onesignal-functions.php:779
 msgid "Preview"
 msgstr "Vorschau"
 
 #: includes/integrations/onesignal/templates/admin/integration-tab-intro.php:12
 msgid "OneSignal <span>&mdash; requires license</span>"
 msgstr "OneSignal <span>&mdash; erfordert Lizenz</span>"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:188
-msgid "a second ago"
-msgstr "vor einer Sekunde"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:195
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:711
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:995
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1594
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2273
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2553
-#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:3148
-#: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:520
-#: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:516
-#: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:54
-#: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:54
-msgid "Cancel"
-msgstr "Verwerfen"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:196
-msgid "Not delivered"
-msgstr "Nicht zugestellt"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:197
-msgid "Try again"
-msgstr "Nochmal versuchen"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:198
-msgid "Sending..."
-msgstr "Senden..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:201
-#, php-format
-msgid "The conversation with %s has been deleted."
-msgstr "Die Unterhaltung mit %s wurde gelöscht."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:202
-msgid "You have left "
-msgstr "Sie haben verlassen "
-
-#: includes/integrations/pusher/bb-pusher-actions.php:203
-msgid "You are banned in "
-msgstr "Sie sind gesperrt in "
-
-#: includes/integrations/pusher/bb-pusher-actions.php:204
-msgid " are typing..."
-msgstr " tippen gerade..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:205
-msgid " is typing..."
-msgstr " tippt gerade..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:206
-msgid " members are typing..."
-msgstr " Mitglieder tippen gerade..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:207
-msgid " others are typing..."
-msgstr " andere tippen gerade..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:208
-msgid " and "
-msgstr " und "
-
-#: includes/integrations/pusher/bb-pusher-actions.php:209
-msgid "Group messages have been disabled by a site administrator."
-msgstr ""
-"Die Gruppennachrichten wurden von einem Website-Administrator deaktiviert."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:210
-msgid " was deleted."
-msgstr " wurde gelöscht."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:211
-msgid "Private messages have been disabled by a site administrator."
-msgstr ""
-"Private Nachrichten wurden von einem Website-Administrator deaktiviert."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:212
-msgid "You have removed from group "
-msgstr "Sie haben aus der Gruppe entfernt "
-
-#: includes/integrations/pusher/bb-pusher-actions.php:306
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:206
-msgid "This content has been hidden as you have blocked this member."
-msgstr ""
-"Dieser Inhalt wurde ausgeblendet, da Sie dieses Mitglied blockiert haben."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:331
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:231
-msgid "This content has been hidden from site admin."
-msgstr "Dieser Inhalt wurde admin.c der Website ausgeblendet."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:378
-msgid "Typing..."
-msgstr "Tippen..."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1502
-#: includes/integrations/pusher/bb-pusher-actions.php:1926
-msgid "sent a photo"
-msgstr "sendete ein Foto"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1504
-#: includes/integrations/pusher/bb-pusher-actions.php:1928
-msgid "sent some photos"
-msgstr "sendete einige Fotos"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1515
-#: includes/integrations/pusher/bb-pusher-actions.php:1939
-msgid "sent a video"
-msgstr "sendete eine Video"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1517
-#: includes/integrations/pusher/bb-pusher-actions.php:1941
-msgid "sent some videos"
-msgstr "sendete einige Videos"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1528
-#: includes/integrations/pusher/bb-pusher-actions.php:1952
-msgid "sent a document"
-msgstr "sendete ein Dokument"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1530
-#: includes/integrations/pusher/bb-pusher-actions.php:1954
-msgid "sent some documents"
-msgstr "sendete einige Dokumente"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1539
-#: includes/integrations/pusher/bb-pusher-actions.php:1963
-msgid "sent a GIF"
-msgstr "sendete eine GIF"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1734
-#: includes/integrations/pusher/bb-pusher-actions.php:2157
-msgid "Your browser does not support the audio element."
-msgstr "Ihr Browser unterstützt das Audioelement nicht."
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1763
-#: includes/integrations/pusher/bb-pusher-actions.php:2186
-msgid "Click to expand"
-msgstr "Zum Erweitern anklicken"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1796
-#: includes/integrations/pusher/bb-pusher-actions.php:2219
-msgid "Click to view"
-msgstr "Zur Ansicht anklicken"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1798
-#: includes/integrations/pusher/bb-pusher-actions.php:2221
-#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:266
-#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:266
-msgid "Download"
-msgstr "Herunterladen"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1799
-#: includes/integrations/pusher/bb-pusher-actions.php:2222
-msgid "Collapse"
-msgstr "Einklappen"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1800
-#: includes/integrations/pusher/bb-pusher-actions.php:2223
-msgid "Copy Download Link"
-msgstr "Download-Link kopieren"
-
-#: includes/integrations/pusher/bb-pusher-actions.php:1801
-#: includes/integrations/pusher/bb-pusher-actions.php:2224
-msgid "More actions"
-msgstr "Weitere Aktionen"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:46
-msgid "mt1 (N. Virginia)"
-msgstr "mt1 (Nord-Virginia)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:47
-msgid "us2 (Ohio)"
-msgstr "us2 (Ohio)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:48
-msgid "us3 (Oregon)"
-msgstr "us3 (Oregon)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:49
-msgid "eu (Ireland)"
-msgstr "eu (Irland)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:50
-msgid "ap1 (Singapore)"
-msgstr "ap1 (Singapur)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:51
-msgid "ap2 (Mumbai)"
-msgstr "ap2 (Mumbai)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:52
-msgid "ap3 (Tokyo)"
-msgstr "ap3 (Tokio)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:53
-msgid "ap4 (Sydney)"
-msgstr "ap4 (Sydney)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:54
-msgid "sa1 (São Paulo)"
-msgstr "sa1 (São Paulo)"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:55
-msgid "Custom"
-msgstr "Benutzerdefiniert"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:207
-#: includes/integrations/pusher/bb-pusher-integration.php:25
-msgid "Pusher"
-msgstr "Pusher"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:209
-msgid ""
-"In your app's settings, please enable \"Client events\", \"Subscription "
-"counting\" and \"Authorized connections\" for this integration to work "
-"correctly."
-msgstr ""
-"Aktivieren Sie in den Einstellungen Ihrer App „Kundenevents“, "
-"„Abonnementzählung“ und „Autorisierte Verbindungen“, damit diese Integration "
-"korrekt funktioniert."
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:283
-msgid "Information"
-msgstr "Information"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:289
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:295
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:400
-msgid "Pusher App ID"
-msgstr "Pusher App ID"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:301
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:412
-msgid "Pusher App Key"
-msgstr "Pusher-App-Schlüssel"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:307
-msgid "Pusher Secret Key"
-msgstr "Pusher Geheimschlüssel"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:313
-msgid "Pusher Cluster"
-msgstr "Pusher-Cluster"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:322
-msgid "Enable Features"
-msgstr "Funktionen aktivieren"
-
-#. translators: pusher channels link
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:369
-#, php-format
-msgid ""
-"The BuddyBoss Platform has an integration with %s, a WebSocket service which "
-"can power realtime features on your BuddyBoss community such as live "
-"messaging."
-msgstr ""
-"Die BuddyBoss-Plattform verfügt über eine Integration mit %s, einem "
-"WebSocket-Dienst, der Echtzeit-Funktionen in Ihrer BuddyBoss-Community wie "
-"z. B. Live-Messaging bereitstellen kann."
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:370
-msgid "Pusher Channels"
-msgstr "Pusher-Kanäle"
-
-#. translators: 1. pusher channels dashboard link 2. App Keys text
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:386
-#, php-format
-msgid ""
-"After creating your app in your Pusher Channels %1$s, enter the %2$s below "
-"to connect it to this site."
-msgstr ""
-"Nachdem Sie Ihre App in Ihren Pusher-Kanälen %1$s erstellt haben, geben Sie "
-"unten die %2$s ein, um sie mit dieser Website zu verbinden."
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:387
-msgid "account"
-msgstr "Konto"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:388
-msgid "App Keys"
-msgstr "App-Schlüssel"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:428
-msgid "Pusher App Secret"
-msgstr "Pusher-App-Geheimnis"
-
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:457
-#: includes/integrations/pusher/bb-pusher-admin-tab.php:458
-msgid "Cluster Name"
-msgstr "Clustername"
-
-#: includes/integrations/pusher/bb-pusher-functions.php:137
-msgid "Live Messaging"
-msgstr "Live-Nachrichten"
-
-#: includes/integrations/pusher/bb-pusher-functions.php:138
-msgid ""
-"When enabled, members will send and receive private messages in realtime "
-"across their devices."
-msgstr ""
-"Wenn diese Funktion aktiviert ist, können Mitglieder private Nachrichten in "
-"Echtzeit über ihre Geräte senden und empfangen."
-
-#. translators: BuddyBoss components link
-#: includes/integrations/pusher/bb-pusher-functions.php:146
-#, php-format
-msgid "To use Live Messaging, please enable the %s component."
-msgstr ""
-"Um Live Messaging zu verwenden, aktivieren Sie bitte die Komponente %s."
-
-#: includes/integrations/pusher/bb-pusher-functions.php:155
-msgid "Private Messaging"
-msgstr "Private Nachrichten"
-
-#. translators: Error Message.
-#: includes/integrations/pusher/bb-pusher-functions.php:234
-#, php-format
-msgid "There was a problem connecting to your Pusher Channels app: %s"
-msgstr ""
-"Beim Herstellen einer Verbindung mit Ihrer Pusher Channels-App ist ein "
-"Problem aufgetreten: %s"
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:54
-msgid "Channel Name"
-msgstr "Channel-Name"
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:59
-msgid "Socket ID"
-msgstr "Socket-ID"
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:285
-msgid "Sorry, Restrict access to only logged-in members."
-msgstr "Entschuldigung, beschränkt den Zugriff auf nur eingeloggte Mitglieder."
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:297
-msgid "Pusher does not setup properly."
-msgstr "Der Pusher lässt sich nicht richtig einrichten."
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:331
-msgid "a valid channel_name param is required."
-msgstr "ist ein gültiger channel_name Parameter erforderlich."
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:334
-msgid "a valid socket_id param is required."
-msgstr "ist ein gültiger socket_id-Parameter erforderlich."
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:373
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:434
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:439
-msgid "You are not authorized to subscribe this channel."
-msgstr "Sie sind nicht berechtigt, diesen Kanal zu abonnieren."
-
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:381
-#: includes/integrations/pusher/includes/class-bb-rest-pusher-endpoint.php:455
-msgid "Sorry, you are not allowed to access this endpoint"
-msgstr "Sie sind leider nicht berechtigt, auf diesen Endpunkt zuzugreifen"
-
-#: includes/integrations/pusher/templates/admin/integration-tab-intro.php:12
-msgid "Pusher <span>&mdash; requires license</span>"
-msgstr "Pusher <span>&mdash; benötigt eine Lizenz</span>"
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:47
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:625
@@ -1527,9 +1075,9 @@ msgstr "Konferenz erstellen oder bestehende Konferenz hinzufügen."
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:632
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:727
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:178
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2457
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2508
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:181
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2695
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2746
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:11
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:457
 msgid "Create Meeting"
@@ -1543,7 +1091,7 @@ msgstr "Vorhandene Konferenz hinzufügen"
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:647
 #: includes/integrations/zoom/bp-zoom-functions.php:3776
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:62
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:153
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:152
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:96
 msgid "Meeting ID"
 msgstr "Konferenz-ID"
@@ -1561,9 +1109,22 @@ msgstr "Konferenz synchronisiert."
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1589
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2267
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:3143
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:825
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:828
 msgid "Save"
 msgstr "Sichern"
+
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:711
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:995
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1594
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2273
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2553
+#: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:3148
+#: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:520
+#: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:516
+#: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:54
+#: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:54
+msgid "Cancel"
+msgstr "Verwerfen"
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:729
 msgid "Existing Meeting"
@@ -1739,7 +1300,7 @@ msgstr ""
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1148
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:219
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:282
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:281
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:385
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:415
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:252
@@ -1749,7 +1310,7 @@ msgstr "Teilnahme vor dem Gastgeber ermöglichen"
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1154
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:223
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:197
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:286
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:285
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:390
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:420
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:256
@@ -1758,7 +1319,7 @@ msgstr "Teilnehmer bei Eintritt stumm schalten"
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1160
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:227
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:290
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:289
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:395
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:425
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:260
@@ -1769,8 +1330,8 @@ msgstr "Warteraum aktivieren"
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2721
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:231
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:201
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:294
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:259
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:293
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:258
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:400
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:431
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:426
@@ -2193,8 +1754,8 @@ msgstr "Datum"
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:1388
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2874
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2946
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:146
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:145
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:145
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:144
 msgid "Occurrences"
 msgstr "Ereignisse"
 
@@ -2237,8 +1798,8 @@ msgstr "Webinar erstellen oder bestehendes Webinar hinzufügen."
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2194
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2289
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2469
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2520
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2707
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2758
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:11
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:453
 msgid "Create Webinar"
@@ -2252,7 +1813,7 @@ msgstr "Vorhandenes Webinar hinzufügen"
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2209
 #: includes/integrations/zoom/bp-zoom-functions.php:3922
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:60
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:152
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:151
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:96
 msgid "Webinar ID"
 msgstr "Webinar ID"
@@ -2288,7 +1849,7 @@ msgid "Start video when panelists join"
 msgstr "Video starten, wenn Diskussionsteilnehmer beitreten"
 
 #: includes/integrations/zoom/assets/js/blocks/bp-zoom-meeting-block.js:2715
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:255
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:254
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:389
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:420
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:237
@@ -2347,9 +1908,9 @@ msgstr "Zoom API Secret"
 
 #: includes/integrations/zoom/bp-zoom-admin-tab.php:264
 #: includes/integrations/zoom/bp-zoom-functions.php:1183
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:659
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:741
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:758
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:662
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:744
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:761
 msgid "Zoom Account Email"
 msgstr "E-Mail des Zoom-Kontos"
 
@@ -2494,7 +2055,7 @@ msgstr ""
 "der Aufzeichnung anzeigen"
 
 #: includes/integrations/zoom/bp-zoom-functions.php:1452
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:686
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:689
 msgid "Check Connection"
 msgstr "Verbindung prüfen"
 
@@ -2700,8 +2261,8 @@ msgstr "Einmal in 5 Minuten"
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:28
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:27
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:28
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:110
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:109
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:109
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:108
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:37
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:34
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:175
@@ -2715,8 +2276,8 @@ msgstr " um "
 #: includes/integrations/zoom/bp-zoom-functions.php:3936
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:56
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:54
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:139
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:138
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:138
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:137
 msgid "Date and Time"
 msgstr "Datum und Uhrzeit"
 
@@ -2724,8 +2285,8 @@ msgstr "Datum und Uhrzeit"
 #: includes/integrations/zoom/bp-zoom-functions.php:3944
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:79
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:77
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:169
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:168
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:168
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:167
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:114
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:118
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:165
@@ -2743,8 +2304,8 @@ msgstr "Dauer"
 #: includes/integrations/zoom/bp-zoom-functions.php:3954
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:84
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:82
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:174
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:173
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:173
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:172
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:124
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:124
 #, php-format
@@ -2761,8 +2322,8 @@ msgstr[1] "%d Stunden"
 #: includes/integrations/zoom/bp-zoom-functions.php:3958
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:88
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:86
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:178
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:177
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:177
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:176
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:128
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:128
 #, php-format
@@ -2775,8 +2336,8 @@ msgstr[1] "%d Minuten"
 #: includes/integrations/zoom/bp-zoom-functions.php:3971
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:157
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:153
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:213
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:212
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:212
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:211
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:192
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:192
 msgid "Registration Link"
@@ -2784,46 +2345,46 @@ msgstr "Link zur Registrierung"
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3841
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:170
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:225
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:224
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:206
 msgid "Meeting Link"
 msgstr "Konferenz-Link"
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3853
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:45
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:130
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:129
 msgid "Meeting Details"
 msgstr "Einzelheiten zur Konferenz"
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3987
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:166
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:224
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:223
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:206
 msgid "Webinar Link"
 msgstr "Webinar-Link"
 
 #: includes/integrations/zoom/bp-zoom-functions.php:3999
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:44
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:129
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:128
 msgid "Webinar Details"
 msgstr "Webinar-Details"
 
 #. translators: %1$s - user link, %2$s - group link.
-#: includes/integrations/zoom/bp-zoom-group-functions.php:190
+#: includes/integrations/zoom/bp-zoom-group-functions.php:312
 #, php-format
 msgid "%1$s scheduled a Zoom meeting in the group %2$s"
 msgstr "%1$s hat eine Zoom-Konferenz in der Gruppe terminiert %2$s"
 
 #. translators: %1$s - user link, %2$s - group link.
-#: includes/integrations/zoom/bp-zoom-group-functions.php:275
+#: includes/integrations/zoom/bp-zoom-group-functions.php:397
 #, php-format
 msgid "%1$s scheduled a Zoom webinar in the group %2$s"
 msgstr "%1$s hat ein Zoom-Webinar in der Gruppe %2$s geplant"
 
 #: includes/integrations/zoom/bp-zoom-integration.php:25
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:116
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:203
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2117
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:119
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:206
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2355
 msgid "Zoom"
 msgstr "Zoom"
 
@@ -2906,8 +2467,8 @@ msgstr "Bitte ändern Sie das Datum der Konferenz auf ein zukünftiges Datum."
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:213
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:410
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:456
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:546
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:454
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:544
 msgid "Please select the meeting duration to a minimum of 15 minutes."
 msgstr "Die Konferenzdauer sollte mindestens 15 Minuten betragen."
 
@@ -2927,30 +2488,30 @@ msgstr ""
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:565
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1109
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1340
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:318
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:323
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:371
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:376
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:423
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:428
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:494
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:503
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:685
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:707
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:714
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:790
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:883
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:888
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:935
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:940
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:986
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:991
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1054
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1063
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1236
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1258
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1265
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1340
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:316
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:321
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:369
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:374
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:421
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:426
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:492
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:501
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:683
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:705
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:712
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:788
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:879
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:884
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:931
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:936
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:982
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:987
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1050
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1059
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1232
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1254
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1261
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1336
 msgid ""
 "Something went wrong. If passcode is entered then please make sure it "
 "matches Zoom Passcode requirements and try again."
@@ -3026,8 +2587,8 @@ msgstr "Bitte wählen Sie das Webinar-Datum aus."
 
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1192
 #: includes/integrations/zoom/includes/class-bp-zoom-ajax.php:1792
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1018
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1105
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1014
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1101
 msgid "Please select the webinar duration to a minimum of 15 minutes."
 msgstr "Bitte wählen Sie die Webinardauer von mindestens 15 Minuten."
 
@@ -3064,75 +2625,75 @@ msgstr "Aktualisierung der Webinare abgeschlossen!"
 msgid "Are you sure you want to delete this occurrence?"
 msgstr "Sind Sie sicher, dass Sie dieses Ereignis löschen möchten?"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:330
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:383
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:435
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:518
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:895
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:947
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:998
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1078
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:328
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:381
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:433
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:516
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:891
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:943
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:994
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1074
 msgid "Please choose API Host Email in the settings and try again."
 msgstr ""
 "In den Einstellungen wählen Sie bitte API-Host-E-Mail und versuchen Sie es "
 "erneut."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:720
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:718
 msgid "Please provide Meeting ID."
 msgstr "Bitte geben Sie die Konferenz-ID an."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1271
+#: includes/integrations/zoom/includes/class-bp-zoom-blocks.php:1267
 msgid "Please provide Webinar ID."
 msgstr "Bitte Webinar-ID angeben."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:137
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2453
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2504
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:140
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2691
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2742
 msgid "Upcoming Meetings"
 msgstr "Bevorstehende Konferenzen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:146
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2449
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2500
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:149
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2687
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2738
 #: includes/integrations/zoom/templates/buddypress/zoom/meetings.php:25
 msgid "Past Meetings"
 msgstr "Frühere Konferenzen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:158
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2465
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2516
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:161
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2703
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2754
 msgid "Upcoming Webinars"
 msgstr "Bevorstehende Webinare"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:167
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2461
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2512
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:170
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2699
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2750
 #: includes/integrations/zoom/templates/buddypress/zoom/webinars.php:26
 msgid "Past Webinars"
 msgstr "Vergangene Webinare"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:188
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:191
 msgid "Create Webinars"
 msgstr "Webinare erstellen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:237
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:240
 msgid "Group meetings were successfully synced with Zoom."
 msgstr "Die Konferenzen der Gruppe wurden erfolgreich mit Zoom synchronisiert."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:244
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:247
 msgid "Group webinars were successfully synced with Zoom."
 msgstr "Gruppen-Webinare wurden erfolgreich mit Zoom synchronisiert."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:529
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:532
 msgid "Zoom Conference"
 msgstr "Zoom-Konferenz"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:591
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:594
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:597
 msgid "Group Zoom Settings"
 msgstr "Gruppen-Zoom-Einstellungen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:596
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:599
 msgid ""
 "Connect this group to a Zoom account, to allow meetings to be scheduled from "
 "this group and synced with Zoom. Once enabled, enter your Zoom API "
@@ -3145,7 +2706,7 @@ msgstr ""
 "Anmeldeinformationen ein, und klicken Sie auf die Schaltfläche "
 "„Einrichtungsassistent“, der Sie Schritt für Schritt anleitet."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:598
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:601
 msgid ""
 "Connect this group to a Zoom account, to allow meetings to be scheduled from "
 "this group and synced with Zoom. Once enabled, enter your Zoom API "
@@ -3156,16 +2717,16 @@ msgstr ""
 "diese Funktion aktiviert ist, geben Sie unten Ihre Zoom-API-"
 "Anmeldeinformationen ein."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:604
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:607
 msgid "Yes, I want to connect this group to Zoom."
 msgstr "Ja, ich möchte diese Gruppe mit Zoom verbinden."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:613
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:616
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:619
 msgid "Group Permissions"
 msgstr "Gruppenberechtigungen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:617
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:620
 msgid ""
 "Which members of this group are allowed to create, edit and delete Zoom "
 "meetings? The \"Zoom Account Email\" (below) will be assigned as the default "
@@ -3176,75 +2737,75 @@ msgstr ""
 "Gastgeber für jedes Meeting in dieser Gruppe zugewiesen, unabhängig davon, "
 "wer das Meeting erstellt hat."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:621
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:624
 msgid "All group members"
 msgstr "Alle Gruppenmitglieder"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:626
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:629
 msgid "Organizers and Moderators only"
 msgstr "Nur Organisatoren und Moderatoren"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:631
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:634
 msgid "Organizers only"
 msgstr "Nur Organisatoren"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:640
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:641
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:643
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:644
 msgid "Zoom API Credentials"
 msgstr "Zoom-API-Anmeldeinformationen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:643
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:741
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:646
 #: includes/integrations/zoom/includes/class-bp-zoom-group.php:744
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:747
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:651
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:741
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:751
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:654
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:744
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:754
 msgid "API Secret"
 msgstr "API-Secret"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:667
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:709
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:802
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:670
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:712
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:805
 msgid "Verification Token"
 msgstr "Verifizierungs-Token"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:673
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:676
 msgid "Copy"
 msgstr "Kopieren"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:673
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:782
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:676
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:785
 msgid "Copied"
 msgstr "Kopiert"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:697
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:700
 msgid "Setup Wizard"
 msgstr "Einrichtungsassistent"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:700
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:703
 msgid "Connect a Zoom Account"
 msgstr "Verbinden eines Zoom-Kontos"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:706
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:709
 msgid "Zoom Login"
 msgstr "Zoom-Anmeldung"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:707
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:710
 msgid "Create App"
 msgstr "Anwendung erstellen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:708
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:711
 msgid "App Credentials"
 msgstr "App-Anmeldeinformationen"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:710
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:713
 msgid "Finish"
 msgstr "Fertig"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:718
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:721
 msgid ""
 "To use Zoom, we will need you to create an \"app\" in your Zoom account and "
 "connect it to this group so we can sync meeting data with Zoom. This should "
@@ -3260,7 +2821,7 @@ msgstr ""
 "„Business“-Zoom-Konto haben."
 
 #. translators: %s is buddyboss marketplace link.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:720
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:723
 #, php-format
 msgid ""
 "Start by going to the %s and clicking the \"Sign In\" link in the titlebar. "
@@ -3276,12 +2837,12 @@ msgstr ""
 "erfolgreich beim Zoom App Marketplace angemeldet haben, können Sie zum "
 "nächsten Schritt übergehen."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:720
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:723
 msgid "Zoom App Marketplace"
 msgstr "Zoom App Marketplace"
 
 #. translators: %s is build app link in zoom.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:728
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:731
 #, php-format
 msgid ""
 "Once you are signed into Zoom App Marketplace, you need to %s. You can "
@@ -3292,11 +2853,11 @@ msgstr ""
 "zur Erstellung einer Anwendung finden Sie immer unter „Entwickeln“ &#8594; "
 "„Anwendung erstellen“ in der Titelleiste."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:728
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:731
 msgid "build an app"
 msgstr "Erstellen einer Anwendung"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:730
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:733
 msgid ""
 "On the next page, select the first option \"JWT\" as the app type and click "
 "the \"Create\" button. If you see the message \"Your account already has JWT "
@@ -3309,7 +2870,7 @@ msgstr ""
 "vorhandene Anwendung verwenden. Klicken Sie in diesem Fall auf den Link "
 "„Hier anzeigen“, um die bestehende JWT-Anwendung zu ändern."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:732
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:735
 msgid ""
 "After clicking \"Create App\" you will get a popup asking you to enter an "
 "App Name. Enter any name that will remind you the app is being used for this "
@@ -3321,7 +2882,7 @@ msgstr ""
 "diese Website verwendet wird. Klicken Sie dann auf die Schaltfläche "
 "„Erstellen“."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:734
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:737
 msgid ""
 "After clicking \"Create\" you will be redirected to a form asking for some "
 "basic personal information. Fill out all required fields and click the "
@@ -3334,7 +2895,7 @@ msgstr ""
 "Anmeldeinformationen“ sehen, gehen Sie zum nächsten Schritt über."
 
 #. translators: %1$s - API Key, %2$s - API Secret, %3$s - API Email
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:741
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:744
 #, php-format
 msgid ""
 "Once you get to the \"App Credentials\" page, copy the %1$s and %2$s and "
@@ -3350,7 +2911,7 @@ msgstr ""
 "ihre E-Mail-Adresse in das Feld %3$s unten ein. Die E-Mail muss als "
 "Gastgeber in Ihrem Zoom-Konto vorhanden sein."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:771
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:774
 msgid ""
 "Once you have entered the API Key, API Secret, and Zoom Account Email, "
 "continue to the \"Feature\" tab. Enable \"Event Subscriptions\" and then "
@@ -3369,7 +2930,7 @@ msgstr ""
 "klicken können, um eine manuelle Synchronisierung zu erzwingen."
 
 #. translators: %1$s - icon html
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:777
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:780
 #, php-format
 msgid ""
 "For \"Subscription Name\" you can again enter any name you want. Click the "
@@ -3381,15 +2942,15 @@ msgstr ""
 "einen speziellen Link zu kopieren, und fügen Sie diesen Link dann wieder in "
 "Zoom im Feld „URL des Ereignisbenachrichtigungs-Endpunkts“ ein."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:782
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:783
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:785
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:786
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:263
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:263
 msgid "Copy Link"
 msgstr "Link kopieren"
 
 #. translators: %s is options and already having translation another string.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:787
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:790
 #, php-format
 msgid ""
 "Next, click the \"Add events\" button. In the popup, make sure to check the "
@@ -3398,7 +2959,7 @@ msgstr ""
 "Klicken Sie dann auf die Schaltfläche „Ereignisse hinzufügen“. Stellen Sie "
 "sicher, dass im Popup-Fenster die folgenden Optionen aktiviert sind: %s"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:787
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:790
 msgid ""
 "Start Meeting, End Meeting, Meeting has been updated, Meeting has been "
 "deleted."
@@ -3407,22 +2968,22 @@ msgstr ""
 "Konferenz wurde gelöscht."
 
 #. translators: %s is options and already having translation another string.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:790
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:793
 #, php-format
 msgid "Make sure to check: %s"
 msgstr "Prüfen Sie unbedingt: %s"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:790
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:793
 msgid "All Recordings have completed."
 msgstr "Alle Aufzeichnungen sind abgeschlossen."
 
 #. translators: %s is options and already having translation another string.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:793
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:796
 #, php-format
 msgid "Make sure to check the following options: %s"
 msgstr "Stellen Sie sicher, dass Sie die folgenden Optionen überprüfen: %s"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:793
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:796
 msgid ""
 "Start Webinar, End Webinar, Webinar has been updated, Webinar has been "
 "deleted."
@@ -3430,7 +2991,7 @@ msgstr ""
 "Webinar starten, Webinar beenden, Webinar wurde aktualisiert, Webinar wurde "
 "gelöscht."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:795
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:798
 msgid ""
 "Click \"Done\" to close the popup. In the \"Event Subscriptions\" box, click "
 "\"Save\"."
@@ -3438,7 +2999,7 @@ msgstr ""
 "Klicken Sie auf „Fertig“, um das Popup zu schließen. Klicken Sie im Feld "
 "„Ereignis-Abonnements“ auf „Speichern“."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:797
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:800
 msgid ""
 "You should now see a \"Verification Token\" created at the top of the page. "
 "Click \"Copy\" and then paste the token into the Verification Token field at "
@@ -3449,7 +3010,7 @@ msgstr ""
 "das Feld „Verifikations-Token“ unten in diesem Formular ein. Sie sind fast "
 "fertig!"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:813
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:816
 msgid ""
 "Now you can click \"Continue\" back at Zoom. You should see a message that "
 "\"Your app is activated on the account\". At this point we are done with the "
@@ -3459,7 +3020,7 @@ msgstr ""
 "Meldung sehen, dass „Ihre Anwendung auf dem Konto aktiviert ist“. An diesem "
 "Punkt sind wir mit der Zoom-Website fertig."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:815
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:818
 msgid ""
 "Make sure to click the \"Save\" button on this tab to save the data you "
 "entered. Then click the \"Check Connection\" button on the page to confirm "
@@ -3473,108 +3034,200 @@ msgstr ""
 "funktioniert hat, sollten Sie eine neue Registerkarte „Zoom“ in Ihrer Gruppe "
 "sehen, wo Sie mit der Planung von Konferenzen beginnen können! "
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:822
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:825
 msgid "Previous"
 msgstr "Zurück"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:823
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:826
 msgid "Next"
 msgstr "Weiter"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:833
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:836
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:952
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:983
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:955
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:986
 msgid "Group Zoom settings were successfully updated."
 msgstr "Die Gruppen-Zoom-Einstellungen wurden erfolgreich aktualisiert."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:966
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:969
 msgid ""
 "Invalid Credentials. Please enter valid key, secret key or account email."
 msgstr ""
 "Ungültige Zugangsdaten. Bitte geben Sie einen gültigen Schlüssel, einen "
 "geheimen Schlüssel oder eine Konto-E-Mail ein."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:980
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:983
 msgid "There was an error updating group Zoom API settings. Please try again."
 msgstr ""
 "Es gab einen Fehler bei der Aktualisierung der Zoom-API-Einstellungen der "
 "Gruppe. Bitte versuchen Sie es erneut."
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1060
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1071
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1063
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1074
 msgid "New Zoom meeting"
 msgstr "Neue Zoom-Konferenz"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1082
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1093
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1085
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1096
 msgid "New Zoom webinar"
 msgstr "Neues Zoom-Webinar"
 
 #. translators: %1$s - user link, %2$s - meeting link., %3$s - group link.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1138
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1141
 #, php-format
 msgid "%1$s scheduled a Zoom meeting %2$s in the group %3$s"
 msgstr "%1$s hat eine Zoom-Konferenz in der Gruppe %3$s am %2$s geplant"
 
 #. translators: %1$s - user link, %2$s - meeting link., %3$s - group link.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1147
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1150
 #, php-format
 msgid "%1$s scheduled Zoom meeting %2$s starting soon in the group %3$s"
 msgstr "%1$s geplantes Zoom-Meeting %2$s beginnt in Kürze in der Gruppe %3$s"
 
 #. translators: %1$s - user link, %2$s - group link.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1194
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1197
 #, php-format
 msgid "%1$s scheduled a Zoom webinar %2$s in the group %3$s"
 msgstr "%1$s hat ein Zoom-Webinar %2$s in der Gruppe %3$s geplant"
 
 #. translators: %1$s - user link, %2$s - webinar link., %3$s - group link.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1203
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1206
 #, php-format
 msgid "%1$s - Zoom webinar %2$s is starting soon in the group %3$s"
 msgstr "%1$s - Das Zoom-Webinar %2$s beginnt in Kürze in der Gruppe %3$s"
 
 #. translators: total number of groups.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1388
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1551
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:271
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1391
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1544
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1789
 #, php-format
 msgid "You have %1$d new Zoom meetings in groups"
 msgstr "Sie haben %1$d neue Zoom-Konferenzen in Gruppen"
 
 #. translators: 1 Meeting title. 2 Group Title.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1434
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1597
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1437
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1835
 #, php-format
 msgid "You have a meeting \"%1$s\" scheduled in the group \"%2$s\""
 msgstr "Sie haben ein Meeting „%1$s“ in der Gruppe „%2$s“ geplant"
 
 #. translators: 1 Meeting title. 2 Group Title.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1441
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1444
 #, php-format
 msgid "Zoom meeting \"%1$s\" created in the group \"%2$s\""
 msgstr "Zoom-Konferenz „%1$s“ in der Gruppe „%2$s“ erstellt"
 
 #. translators: total number of groups.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1759
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1895
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:277
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1550
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1997
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2133
 #, php-format
 msgid "You have %1$d new Zoom webinars in groups"
 msgstr "Sie haben %1$d neue Zoom-Webinare in Gruppen"
 
+#. translators: 1. Group name. 2. The meeting start date.
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1570
+#, php-format
+msgid "%1$s: New meeting scheduled for %2$s"
+msgstr "%1$s: Neues Meeting für %2$s geplant"
+
+#. translators: %s: The meeting start date
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1577
+#, php-format
+msgid "New meeting scheduled for %1$s"
+msgstr "Neues Meeting für %1$s geplant"
+
+#. translators: 1. Group name. 2. The meeting start date.
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1585
+#, php-format
+msgid "%1$s: Update meeting scheduled for %2$s"
+msgstr "%1$s: Aktualisierung des Meetings für %2$s geplant"
+
+#. translators: %s: The meeting start date
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1592
+#, php-format
+msgid "Update meeting scheduled for %1$s"
+msgstr "Aktualisierung des Meetings für %1$s geplant"
+
+#. translators: %s: Group name
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1602
+#, php-format
+msgid "%1$s: New meeting scheduled"
+msgstr "%1$s: Neues Meeting geplant"
+
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1606
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:213
+msgid "New meeting scheduled"
+msgstr "Neues Meeting geplant"
+
+#. translators: %s: Group name
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1612
+#, php-format
+msgid "%1$s: Update meeting scheduled"
+msgstr "%1$s: Aktualisierung des Meetings geplant"
+
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1616
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:215
+msgid "Update meeting scheduled"
+msgstr "Aktualisierung des Meetings geplant"
+
+#. translators: 1. Group name. 2. The meeting start date.
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1638
+#, php-format
+msgid "%1$s: New webinar scheduled for %2$s"
+msgstr "%1$s: Neues Webinar für %2$s geplant"
+
+#. translators: %s: The meeting start date
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1645
+#, php-format
+msgid "New webinar scheduled for %1$s"
+msgstr "Neues Webinar für %1$s geplant"
+
+#. translators: 1. Group name. 2. The meeting start date.
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1653
+#, php-format
+msgid "%1$s: Update webinar scheduled for %2$s"
+msgstr "%1$s: Aktualisierung des Webinars für %2$s geplant"
+
+#. translators: %s: The meeting start date
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1660
+#, php-format
+msgid "Update webinar scheduled for %1$s"
+msgstr "Aktualisierung des Webinars für %1$s geplant"
+
+#. translators: %s: Group name
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1670
+#, php-format
+msgid "%1$s: New webinar scheduled"
+msgstr "%1$s: Neues Webinar geplant"
+
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1674
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:247
+msgid "New webinar scheduled"
+msgstr "Neues Webinar geplant"
+
+#. translators: %s: Group name
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1680
+#, php-format
+msgid "%1$s: Update webinar scheduled"
+msgstr "%1$s: Aktualisierung des Webinars geplant"
+
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1684
+#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:249
+msgid "Update webinar scheduled"
+msgstr "Aktualisierung des Webinars geplant"
+
 #. translators: 1 Webinar title. 2 Group Title.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1805
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1941
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2043
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2179
 #, php-format
 msgid "You have a webinar \"%1$s\" scheduled in the group \"%2$s\""
 msgstr "Sie haben ein Webinar „%1$s“ in der Gruppe „%2$s“ geplant"
 
 #. translators: 1 Webinar title. 2 Group Title.
-#: includes/integrations/zoom/includes/class-bp-zoom-group.php:1812
+#: includes/integrations/zoom/includes/class-bp-zoom-group.php:2050
 #, php-format
 msgid "Zoom webinar \"%1$s\" created in the group \"%2$s\""
 msgstr "Zoom-Webinar „%1$s“ in der Gruppe „%2$s“ erstellt"
@@ -3687,16 +3340,6 @@ msgstr "Neues Meeting geplant für %s"
 msgid "Update meeting scheduled for %s"
 msgstr "Aktualisierung des Meetings für %s geplant"
 
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:213
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:327
-msgid "New meeting scheduled"
-msgstr "Neues Meeting geplant"
-
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:215
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:337
-msgid "Update meeting scheduled"
-msgstr "Aktualisierung des Meetings geplant"
-
 #. translators: %s: The meeting start date
 #: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:235
 #, php-format
@@ -3708,88 +3351,6 @@ msgstr "Neues Webinar für %s geplant"
 #, php-format
 msgid "Update webinar scheduled for %s"
 msgstr "Aktualisierung des Webinars für %s geplant"
-
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:247
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:395
-msgid "New webinar scheduled"
-msgstr "Neues Webinar geplant"
-
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:249
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:405
-msgid "Update webinar scheduled"
-msgstr "Aktualisierung des Webinars geplant"
-
-#. translators: 1. Group name. 2. The meeting start date.
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:291
-#, php-format
-msgid "%1$s: New meeting scheduled for %2$s"
-msgstr "%1$s: Neues Meeting für %2$s geplant"
-
-#. translators: %s: The meeting start date
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:298
-#, php-format
-msgid "New meeting scheduled for %1$s"
-msgstr "Neues Meeting für %1$s geplant"
-
-#. translators: 1. Group name. 2. The meeting start date.
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:306
-#, php-format
-msgid "%1$s: Update meeting scheduled for %2$s"
-msgstr "%1$s: Aktualisierung des Meetings für %2$s geplant"
-
-#. translators: %s: The meeting start date
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:313
-#, php-format
-msgid "Update meeting scheduled for %1$s"
-msgstr "Aktualisierung des Meetings für %1$s geplant"
-
-#. translators: %s: Group name
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:323
-#, php-format
-msgid "%1$s: New meeting scheduled"
-msgstr "%1$s: Neues Meeting geplant"
-
-#. translators: %s: Group name
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:333
-#, php-format
-msgid "%1$s: Update meeting scheduled"
-msgstr "%1$s: Aktualisierung des Meetings geplant"
-
-#. translators: 1. Group name. 2. The meeting start date.
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:359
-#, php-format
-msgid "%1$s: New webinar scheduled for %2$s"
-msgstr "%1$s: Neues Webinar für %2$s geplant"
-
-#. translators: %s: The meeting start date
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:366
-#, php-format
-msgid "New webinar scheduled for %1$s"
-msgstr "Neues Webinar für %1$s geplant"
-
-#. translators: 1. Group name. 2. The meeting start date.
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:374
-#, php-format
-msgid "%1$s: Update webinar scheduled for %2$s"
-msgstr "%1$s: Aktualisierung des Webinars für %2$s geplant"
-
-#. translators: %s: The meeting start date
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:381
-#, php-format
-msgid "Update webinar scheduled for %1$s"
-msgstr "Aktualisierung des Webinars für %1$s geplant"
-
-#. translators: %s: Group name
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:391
-#, php-format
-msgid "%1$s: New webinar scheduled"
-msgstr "%1$s: Neues Webinar geplant"
-
-#. translators: %s: Group name
-#: includes/integrations/zoom/includes/class-bp-zoom-groups-notification.php:401
-#, php-format
-msgid "%1$s: Update webinar scheduled"
-msgstr "%1$s: Aktualisierung des Webinars geplant"
 
 #: includes/integrations/zoom/includes/class-bp-zoom-meeting-template.php:246
 #: includes/integrations/zoom/includes/class-bp-zoom-webinar-template.php:246
@@ -3825,8 +3386,8 @@ msgstr "Gruppenbesprechungen mit Zoom synchronisieren"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:69
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:67
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:160
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:159
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:159
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:158
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:107
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:107
 msgid "Description"
@@ -3889,15 +3450,22 @@ msgstr "Kein Passwort erforderlich"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:174
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:178
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:232
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:237
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:231
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:210
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:213
 msgid "View Invitation"
 msgstr "Einladung ansehen"
 
+#: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:179
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:239
+#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:275
+#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:275
+msgid "Close"
+msgstr "Schließen"
+
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:187
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:250
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:249
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:263
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:220
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:263
@@ -3905,15 +3473,15 @@ msgid "Copied to clipboard"
 msgstr "In die Zwischenablage kopiert"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:187
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:250
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:249
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:220
 msgid "Copy Meeting Invitation"
 msgstr "Einladung zur Konferenz kopieren"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:195
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:175
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:258
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:233
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:257
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:232
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:335
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:339
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:365
@@ -3925,8 +3493,8 @@ msgstr "Video"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:198
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:178
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:260
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:235
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:339
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:429
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:343
@@ -3942,8 +3510,8 @@ msgstr "Gastgeber"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:199
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:179
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:262
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:237
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:232
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:219
 msgid " On"
@@ -3953,10 +3521,10 @@ msgstr " An"
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:203
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:179
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:183
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:262
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:266
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:237
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:241
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:261
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:236
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:232
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:219
@@ -3966,22 +3534,22 @@ msgstr "Aus"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:202
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:182
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:264
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:235
 msgid "Participant"
 msgstr "Teilnehmer"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:203
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:183
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:266
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:241
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:265
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:236
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:223
 msgid "On"
 msgstr "An"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:208
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:271
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:270
 #: includes/integrations/zoom/templates/buddypress/zoom/create-meeting.php:365
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-meeting.php:395
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:241
@@ -3989,43 +3557,43 @@ msgid "Meeting Options"
 msgstr "Konferenz-Optionen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:238
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:301
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:300
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:271
 msgid "Record the meeting automatically in the cloud"
 msgstr "Die Konferenz automatisch in der Cloud aufzeichnen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:240
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:303
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:302
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:273
 msgid "Record the meeting automatically in the local computer"
 msgstr "Die Konferenz automatisch auf dem lokalen Computer aufzeichnen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:242
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:305
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:304
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:275
 msgid "Do not record the meeting."
 msgstr "Die Konferenz darf nicht aufgezeichnet werden."
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:282
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:334
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:333
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:319
 msgid "Host Meeting in Browser"
 msgstr "Konferenz im Browser durchführen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:284
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:336
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:335
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:321
 msgid "Join Meeting in Browser"
 msgstr "Konferenz im Browser beitreten"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:290
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:342
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:341
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:329
 msgid "Host Meeting in Zoom"
 msgstr "Konferenz in Zoom durchführen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:292
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:344
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:343
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:331
 msgid "Join Meeting in Zoom"
 msgstr "Konferenz in Zoom beitreten"
@@ -4047,7 +3615,7 @@ msgid "Webinar Password"
 msgstr "Webinar-Kennwort"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:188
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:246
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:245
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:369
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:399
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:228
@@ -4055,43 +3623,43 @@ msgid "Webinar Options"
 msgstr "Webinar-Optionen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:208
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:266
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:265
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:248
 msgid "Record the webinar automatically in the cloud"
 msgstr "Das Webinar automatisch in der Cloud aufzeichnen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:210
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:268
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:267
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:250
 msgid "Record the webinar automatically in the local computer"
 msgstr "Das Webinar automatisch auf dem lokalen Computer aufzeichnen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:212
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:270
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:269
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:252
 msgid "Do not record the webinar."
 msgstr "Das Webinar darf nicht aufgezeichnet werden."
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:253
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:299
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:298
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:312
 msgid "Join Webinar in Browser"
 msgstr "Am Webinar mit dem Browser teilnehmen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:259
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:305
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:304
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:322
 msgid "Host Webinar in Zoom"
 msgstr "Webinar in Zoom durchführen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:261
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:307
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:306
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:324
 msgid "Join Webinar in Zoom"
 msgstr "Am Webinar in Zoom teilnehmen"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:118
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:117
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:117
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:116
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:34
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:31
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:17
@@ -4099,45 +3667,45 @@ msgstr "Am Webinar in Zoom teilnehmen"
 msgid "Recurring"
 msgstr "Wiederholung"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:121
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:120
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:120
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:119
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-meeting.php:17
 #: includes/integrations/zoom/templates/buddypress/zoom/loop-webinar.php:16
 msgid "Live"
 msgstr "Live"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:184
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:183
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:166
 msgid "Meeting Passcode"
 msgstr "Konferenz-Kenncode"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:194
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:193
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:193
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:192
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:175
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:175
 msgid "Show passcode"
 msgstr "Kenncode anzeigen"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:197
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:196
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:196
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:195
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:176
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:176
 msgid "Hide passcode"
 msgstr "Kenncode ausblenden"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:204
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:203
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:203
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:202
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:182
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:182
 msgid "No passcode required"
 msgstr "Kein Kenncode erforderlich"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:183
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:182
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:166
 msgid "Webinar Passcode"
 msgstr "Webinar-Kenncode (Passcode)"
 
-#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:240
+#: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:239
 #: includes/integrations/zoom/templates/buddypress/zoom/create-webinar.php:353
 #: includes/integrations/zoom/templates/buddypress/zoom/edit-webinar.php:383
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:222
@@ -4500,6 +4068,11 @@ msgstr "Audio-Mitschrift"
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:242
 msgid "Timeline"
 msgstr "Chronik"
+
+#: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:266
+#: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:266
+msgid "Download"
+msgstr "Herunterladen"
 
 #: includes/integrations/zoom/templates/buddypress/zoom/meeting/recordings.php:288
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:288
@@ -5016,6 +4589,9 @@ msgstr "BuddyBoss"
 #~ msgid "Attach a document"
 #~ msgstr "Ein Dokument anhängen"
 
+#~ msgid "Post a GIF"
+#~ msgstr "Ein GIF veröffentlichen"
+
 #~ msgid "Search GIFs"
 #~ msgstr "GIFs suchen"
 
@@ -5139,6 +4715,9 @@ msgstr "BuddyBoss"
 #~ msgstr ""
 #~ "FEHLER: Der Eintrag, den Sie zu beantworten versuchen, konnte nicht "
 #~ "gefunden werden oder wurde gelöscht."
+
+#~ msgid "Overview"
+#~ msgstr "Überblick"
 
 #~ msgid ""
 #~ "You edit activities made on your site similar to the way you edit a "
@@ -5767,6 +5346,10 @@ msgstr "BuddyBoss"
 
 #~ msgid "Invalid activity ID."
 #~ msgstr "Ungültige Aktivitäts-ID."
+
+#~ msgid "Sorry, Restrict access to only logged-in members."
+#~ msgstr ""
+#~ "Entschuldigung, beschränkt den Zugriff auf nur eingeloggte Mitglieder."
 
 #~ msgid "Sorry, Activity component was not enabled."
 #~ msgstr "Tut mir leid, die Aktivitätskomponente war nicht aktiviert."
@@ -6823,6 +6406,9 @@ msgstr "BuddyBoss"
 #~ msgid "First Name"
 #~ msgstr "Vorname"
 
+#~ msgid "Last Name"
+#~ msgstr "Nachname"
+
 #~ msgid "Nickname"
 #~ msgstr "Profilname"
 
@@ -7378,6 +6964,9 @@ msgstr "BuddyBoss"
 #~ msgid "Connection Settings"
 #~ msgstr "Einstellungen zu Kontakten"
 
+#~ msgid "Messaging"
+#~ msgstr "Nachrichten"
+
 #~ msgid ""
 #~ "Require non-admin members to be connected before they can message each "
 #~ "other"
@@ -7593,6 +7182,9 @@ msgstr "BuddyBoss"
 #~ "Listenansicht an oder erlauben Sie das Umschalten zwischen beiden "
 #~ "Ansichten."
 
+#~ msgid "Close pop-up"
+#~ msgstr "Popup schließen"
+
 #~ msgid "Video Demo of BuddyBoss App"
 #~ msgstr "Video-Demo der BuddyBoss-App"
 
@@ -7639,6 +7231,9 @@ msgstr "BuddyBoss"
 #~ "mit der E-Mail und dem Passwort an, die Sie während Ihres Kaufs erstellt "
 #~ "haben, und von dort aus können Sie auf Support-Tickets, Downloads und "
 #~ "Lizenzschlüssel zugreifen."
+
+#~ msgid "Consider the BuddyBoss Theme"
+#~ msgstr "Beachten Sie das BuddyBoss-Theme"
 
 #~ msgid ""
 #~ "BuddyBoss Platform is theme independent, meaning any generic WordPress "
@@ -7827,6 +7422,10 @@ msgstr "BuddyBoss"
 #~ msgstr[1] ""
 #~ "<strong>Version %1$s</strong> adressiert mehrere Sicherheitsprobleme und "
 #~ "behoben %2$s Bugs."
+
+#~ msgid "For more information, see <a href=\"%s\">the release notes</a>."
+#~ msgstr ""
+#~ "Weitere Informationen finden Sie in den <a href=\"%s\">Release Notes</a>."
 
 #~ msgid "My Account"
 #~ msgstr "Mein Konto"
@@ -8205,6 +7804,11 @@ msgstr "BuddyBoss"
 #~ msgid_plural "%s days"
 #~ msgstr[0] "%s Tag"
 #~ msgstr[1] "%s Tagen"
+
+#~ msgid "%s second"
+#~ msgid_plural "%s seconds"
+#~ msgstr[0] "%s Sekunde"
+#~ msgstr[1] "%s Sekunden"
 
 #~ msgid "Not recently active"
 #~ msgstr "In letzter Zeit nicht aktiv"
@@ -10525,6 +10129,9 @@ msgstr "BuddyBoss"
 #~ msgid "Alphabetically"
 #~ msgstr "Alphabetisch"
 
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
 #~ msgid "New Post"
 #~ msgstr "Neuer Beitrag"
 
@@ -10710,6 +10317,9 @@ msgstr "BuddyBoss"
 #~ msgid "Pending Received Connection Requests"
 #~ msgstr "Ausstehende Kontaktanfragen (erhalten)"
 
+#~ msgid "Connection Name"
+#~ msgstr "Name der Kontaktverbindung"
+
 #~ msgid "Sent Created (GMT)"
 #~ msgstr "Gesendet erstellt (GMT)"
 
@@ -10769,6 +10379,9 @@ msgstr "BuddyBoss"
 
 #~ msgid "Group Comments"
 #~ msgstr "Gruppenkommentare"
+
+#~ msgid "Private Messages"
+#~ msgstr "Private Nachrichten"
 
 #~ msgid "Message Threads & Replies"
 #~ msgstr "Nachrichten-Threads & Antworten"
@@ -11113,6 +10726,9 @@ msgstr "BuddyBoss"
 #~ msgid "Design"
 #~ msgstr "Design"
 
+#~ msgid "Image"
+#~ msgstr "Bild"
+
 #~ msgid "Presentation"
 #~ msgstr "Präsentation"
 
@@ -11273,6 +10889,12 @@ msgstr "BuddyBoss"
 
 #~ msgid "Privacy of the document."
 #~ msgstr "Datenschutz des Dokuments."
+
+#~ msgid "Your browser does not support the audio element."
+#~ msgstr "Ihr Browser unterstützt das Audioelement nicht."
+
+#~ msgid "Click to expand"
+#~ msgstr "Zum Erweitern anklicken"
 
 #~ msgid "A unique numeric ID for the Document."
 #~ msgstr "Eine eindeutige numerische ID für das Dokument."
@@ -13777,6 +13399,9 @@ msgstr "BuddyBoss"
 #~ msgid "Invalid reply ID."
 #~ msgstr "Ungültige Antwort-ID."
 
+#~ msgid "Sorry, you are not allowed to access this reply."
+#~ msgstr "Es tut uns leid, Sie dürfen nicht auf diese Antwort zugreifen."
+
 #~ msgid "Sorry, You do not have permission to reply."
 #~ msgstr "Sie haben leider keine Berechtigung zu antworten."
 
@@ -13871,6 +13496,9 @@ msgstr "BuddyBoss"
 
 #~ msgid "Sorry, Your reply cannot be edited at this time."
 #~ msgstr "Es tut uns leid, Ihre Antwort kann derzeit nicht bearbeitet werden."
+
+#~ msgid "Please try again."
+#~ msgstr "Bitte versuchen Sie es erneut."
 
 #~ msgid "We are facing a problem to updating a reply."
 #~ msgstr "Wir haben ein Problem mit der Aktualisierung einer Antwort."
@@ -15246,6 +14874,9 @@ msgstr "BuddyBoss"
 #~ msgid "Hidden Replies"
 #~ msgstr "Ausgeblendete Antworten"
 
+#~ msgid "You are already logged in."
+#~ msgstr "Sie sind bereits angemeldet."
+
 #~ msgid "You do not have permission to view this reply."
 #~ msgstr "Sie haben keine Berechtigung, diese Antwort einzusehen."
 
@@ -15901,6 +15532,9 @@ msgstr "BuddyBoss"
 #~ msgstr ""
 #~ "<strong>FEHLER</strong>: Beim Löschen der Schlagwörter wurden die "
 #~ "folgenden Probleme gefunden: %s"
+
+#~ msgid "Pending"
+#~ msgstr "Ausstehend"
 
 #~ msgid "Normal"
 #~ msgstr "Normal"
@@ -17138,6 +16772,9 @@ msgstr "BuddyBoss"
 #~ msgid "No Group Type"
 #~ msgstr "Kein Gruppentyp"
 
+#~ msgid "Change"
+#~ msgstr "Ändern"
+
 #~ msgid "Group Moderator"
 #~ msgstr "Gruppenmoderator"
 
@@ -17171,6 +16808,10 @@ msgstr "BuddyBoss"
 
 #~ msgid "Sorry, group avatar upload is disabled."
 #~ msgstr "Der Gruppen-Avatar-Upload ist leider deaktiviert."
+
+#~ msgid "Sorry, you are not authorized to perform this action."
+#~ msgstr ""
+#~ "Entschuldigung, Sie sind nicht berechtigt, diese Aktion auszuführen."
 
 #~ msgid "Sorry, there are no uploaded avatars for this group on this site."
 #~ msgstr ""
@@ -19026,6 +18667,9 @@ msgstr "BuddyBoss"
 #~ "Erlauben Sie den Mitgliedern, Fotos in <strong>Profile</strong> "
 #~ "hochzuladen"
 
+#~ msgid "Enable Albums"
+#~ msgstr "Alben aktivieren"
+
 #~ msgid ""
 #~ "Allow members to upload photos in <strong>groups</strong> and "
 #~ "<strong>group activity</strong>"
@@ -20091,6 +19735,18 @@ msgstr "BuddyBoss"
 #~ msgid "Members directory tabs."
 #~ msgstr "Registerkarten des Mitgliederverzeichnisses."
 
+#~ msgid "Members order by options."
+#~ msgstr "Mitglieder nach Optionen sortieren."
+
+#~ msgid "Newest Registered"
+#~ msgstr "Neueste Registrierungen"
+
+#~ msgid "Account"
+#~ msgstr "Konto"
+
+#~ msgid "Login Information"
+#~ msgstr "Anmeldeinformationen"
+
 #~ msgid "Group Invites"
 #~ msgstr "Gruppeneinladungen"
 
@@ -20317,6 +19973,9 @@ msgstr "BuddyBoss"
 
 #~ msgid "There was an error deleting messages."
 #~ msgstr "Es gab einen Fehler Löschen der Nachrichten."
+
+#~ msgid "Messages deleted."
+#~ msgstr "Nachrichten gelöscht."
 
 #~ msgid "%s message was successfully starred"
 #~ msgid_plural "%s messages were successfully starred"
@@ -20587,6 +20246,9 @@ msgstr "BuddyBoss"
 
 #~ msgid "Activate Notice"
 #~ msgstr "Nachricht aktivieren"
+
+#~ msgid "Delete Notice"
+#~ msgstr "Nachricht löschen"
 
 #~ msgid "Deactivate Notice"
 #~ msgstr "Nachricht deaktivieren"
@@ -21436,6 +21098,9 @@ msgstr "BuddyBoss"
 #~ msgid "The invite has not been sent."
 #~ msgstr "Die Einladung wurde noch nicht gesendet."
 
+#~ msgid "The invite has been sent."
+#~ msgstr "Die Einladung wurde gesendet."
+
 #~ msgid "Invite"
 #~ msgstr "Einladen"
 
@@ -21546,6 +21211,15 @@ msgstr "BuddyBoss"
 
 #~ msgid "Click to"
 #~ msgstr "Klicken Sie auf"
+
+#~ msgid "Collapse"
+#~ msgstr "Einklappen"
+
+#~ msgid "More actions"
+#~ msgstr "Weitere Aktionen"
+
+#~ msgid "Copy Download Link"
+#~ msgstr "Download-Link kopieren"
 
 #~ msgid "Create Folder"
 #~ msgstr "Ordner erstellen"
@@ -23122,6 +22796,9 @@ msgstr "BuddyBoss"
 #~ msgid "Promote to %s"
 #~ msgstr "Zum %s hochstufen"
 
+#~ msgid "Remove from group"
+#~ msgstr "Aus Gruppe entfernen"
+
 #~ msgid "Groups default front page"
 #~ msgstr "Gruppiert die Standard-Startseite"
 
@@ -23227,11 +22904,29 @@ msgstr "BuddyBoss"
 #~ "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es "
 #~ "erneut."
 
+#~ msgid "Click to view"
+#~ msgstr "Zur Ansicht anklicken"
+
 #~ msgid "Unauthorized request."
 #~ msgstr "Nicht autorisierte Anfrage."
 
 #~ msgid "Sorry, no messages were found."
 #~ msgstr "Keine Nachrichten gefunden."
+
+#~ msgid "sent a photo"
+#~ msgstr "sendete ein Foto"
+
+#~ msgid "sent some photos"
+#~ msgstr "sendete einige Fotos"
+
+#~ msgid "sent a document"
+#~ msgstr "sendete ein Dokument"
+
+#~ msgid "sent some documents"
+#~ msgstr "sendete einige Dokumente"
+
+#~ msgid "sent a gif"
+#~ msgstr "sendete eine GIF"
 
 #~ msgid "Sorry, no more messages can be loaded."
 #~ msgstr ""
@@ -23422,6 +23117,9 @@ msgstr "BuddyBoss"
 #~ "* Diese Felder erscheinen auf der Anmeldeseite. Die (Anmelde-)Felder "
 #~ "können nicht gelöscht oder verschoben werden, da sie für den "
 #~ "Anmeldevorgang benötigt werden."
+
+#~ msgid "You have no field sets."
+#~ msgstr "Sie haben keine Feldsätze."
 
 #~ msgid "There was an error saving the field set. Please try again."
 #~ msgstr ""
@@ -24035,6 +23733,9 @@ msgstr "BuddyBoss"
 
 #~ msgid "Sort Order:"
 #~ msgstr "Sortierreihenfolge:"
+
+#~ msgid "Custom"
+#~ msgstr "Benutzerdefiniert"
 
 #~ msgid "Ascending"
 #~ msgstr "Aufsteigend"

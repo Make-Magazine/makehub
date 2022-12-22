@@ -7,11 +7,19 @@ import { renderFrontend } from '@woocommerce/base-utils';
  * Internal dependencies
  */
 import Block from './block';
-import { parseAttributes } from './utils';
+import metadata from './block.json';
+import { blockAttributes } from './attributes';
 
 const getProps = ( el: HTMLElement ) => {
 	return {
-		attributes: parseAttributes( el.dataset ),
+		attributes: {
+			showCounts: el.dataset.showCounts === 'true',
+			heading: el.dataset.heading || blockAttributes.heading.default,
+			headingLevel: el.dataset.headingLevel
+				? parseInt( el.dataset.headingLevel, 10 )
+				: metadata.attributes.headingLevel.default,
+			showFilterButton: el.dataset.showFilterButton === 'true',
+		},
 		isEditor: false,
 	};
 };

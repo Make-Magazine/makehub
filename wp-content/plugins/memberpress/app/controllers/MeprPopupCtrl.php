@@ -92,7 +92,7 @@ class MeprPopupCtrl extends MeprBaseCtrl {
 
     // If this isn't a MemberPress authorized user then bail
     if(!MeprUtils::is_mepr_admin()) {
-      MeprUtils::exit_with_status(403,json_encode(array('error'=>__('Forbidden', 'memberpress'))));
+      MeprUtils::exit_with_status(403,json_encode(array('error'=>__('Forbidden', 'pretty-link', 'memberpress'))));
     }
 
     if(!isset($_POST['popup'])) {

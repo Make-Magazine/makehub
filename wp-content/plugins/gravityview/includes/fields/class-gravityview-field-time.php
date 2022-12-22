@@ -58,7 +58,7 @@ class GravityView_Field_Time extends GravityView_Field {
 	 */
 	public function __construct() {
 
-		$this->label = esc_html__( 'Time', 'gk-gravityview' );
+		$this->label = esc_html__( 'Time', 'gravityview' );
 
 		parent::__construct();
 

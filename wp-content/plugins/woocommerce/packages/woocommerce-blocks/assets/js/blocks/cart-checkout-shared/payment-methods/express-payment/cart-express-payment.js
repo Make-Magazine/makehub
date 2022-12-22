@@ -2,14 +2,16 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { useExpressPaymentMethods } from '@woocommerce/base-context/hooks';
+import {
+	useEmitResponse,
+	useExpressPaymentMethods,
+} from '@woocommerce/base-context/hooks';
 import {
 	StoreNoticesContainer,
-	noticeContexts,
+	useCheckoutContext,
+	usePaymentMethodDataContext,
 } from '@woocommerce/base-context';
 import LoadingMask from '@woocommerce/base-components/loading-mask';
-import { useSelect } from '@wordpress/data';
-import { CHECKOUT_STORE_KEY, PAYMENT_STORE_KEY } from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -19,6 +21,7 @@ import './style.scss';
 
 const CartExpressPayment = () => {
 	const { paymentMethods, isInitialized } = useExpressPaymentMethods();
+	const { noticeContexts } = useEmitResponse();
 	const {
 		isCalculating,
 		isProcessing,
@@ -26,24 +29,8 @@ const CartExpressPayment = () => {
 		isBeforeProcessing,
 		isComplete,
 		hasError,
-	} = useSelect( ( select ) => {
-		const store = select( CHECKOUT_STORE_KEY );
-		return {
-			isCalculating: store.isCalculating(),
-			isProcessing: store.isProcessing(),
-			isAfterProcessing: store.isAfterProcessing(),
-			isBeforeProcessing: store.isBeforeProcessing(),
-			isComplete: store.isComplete(),
-			hasError: store.hasError(),
-		};
-	} );
-	const { paymentStatus } = useSelect( ( select ) => {
-		const store = select( PAYMENT_STORE_KEY );
-
-		return {
-			paymentStatus: store.getCurrentStatus(),
-		};
-	} );
+	} = useCheckoutContext();
+	const { currentStatus: paymentStatus } = usePaymentMethodDataContext();
 
 	if (
 		! isInitialized ||

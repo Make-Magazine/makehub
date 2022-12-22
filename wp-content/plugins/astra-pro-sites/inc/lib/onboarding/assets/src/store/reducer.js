@@ -91,12 +91,6 @@ export const initialState = {
 	licenseStatus: astraSitesVars.license_status,
 	validateLicenseStatus: false,
 
-	// Staging connected.
-	stagingConnected:
-		astraSitesVars.staging_connected !== 'yes'
-			? ''
-			: '&draft=' + astraSitesVars.staging_connected,
-
 	// Search.
 	searchTerms: [],
 	searchTermsWithCount: [],

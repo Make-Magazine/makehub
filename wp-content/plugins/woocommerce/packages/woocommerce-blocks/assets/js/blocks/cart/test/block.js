@@ -6,12 +6,10 @@ import { previewCart } from '@woocommerce/resource-previews';
 import { dispatch } from '@wordpress/data';
 import { CART_STORE_KEY as storeKey } from '@woocommerce/block-data';
 import { default as fetchMock } from 'jest-fetch-mock';
-import { __experimentalRegisterCheckoutFilters } from '@woocommerce/blocks-checkout';
-
 /**
  * Internal dependencies
  */
-import { defaultCartState } from '../../../data/cart/default-state';
+import { defaultCartState } from '../../../data/default-states';
 import { allSettings } from '../../../settings/shared/settings-init';
 
 import Cart from '../block';
@@ -231,28 +229,5 @@ describe( 'Testing cart', () => {
 		} );
 
 		expect( quantityInput.value ).toBe( '5' );
-	} );
-
-	it( 'does not show the remove item button when a filter prevents this', async () => {
-		const cart = {
-			...previewCart,
-			// Make it so there is only one item to simplify things.
-			items: [ previewCart.items[ 0 ] ],
-		};
-
-		__experimentalRegisterCheckoutFilters( 'woo-blocks-test-extension', {
-			showRemoveItemLink: ( value, extensions, { cartItem } ) => {
-				return cartItem.id !== cart.items[ 0 ].id;
-			},
-		} );
-		render( <CartBlock /> );
-
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
-
-		act( () => {
-			dispatch( storeKey ).receiveCart( cart );
-		} );
-
-		expect( screen.queryAllByText( /Remove item/i ).length ).toBe( 0 );
 	} );
 } );

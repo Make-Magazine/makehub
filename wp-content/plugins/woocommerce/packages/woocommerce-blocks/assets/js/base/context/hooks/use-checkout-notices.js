@@ -6,7 +6,7 @@ import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import { noticeContexts } from '../event-emit';
+import { useEmitResponse } from './use-emit-response';
 
 /**
  * @typedef {import('@woocommerce/type-defs/contexts').StoreNoticeObject} StoreNoticeObject
@@ -19,6 +19,8 @@ import { noticeContexts } from '../event-emit';
  * @return {CheckoutNotices} Notices from the checkout form or payment methods.
  */
 export const useCheckoutNotices = () => {
+	const { noticeContexts } = useEmitResponse();
+
 	/**
 	 * @type {StoreNoticeObject[]}
 	 */

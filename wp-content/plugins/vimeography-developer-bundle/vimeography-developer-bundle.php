@@ -3,7 +3,7 @@
 Plugin Name: Vimeography Developer Bundle
 Plugin URI: http://www.vimeography.com/themes
 Description: A collection of every Vimeography gallery theme in one plugin. Use along with the Vimeography video gallery plugin and start making awesome video galleries for your Vimeo videos.
-Version: 2.1.1
+Version: 2.0.6
 Author: Dave Kiss
 Author URI: http://www.davekiss.com/
 Copyright: Dave Kiss
@@ -18,7 +18,7 @@ class Vimeography_Developer_Bundle {
    *
    * @var string
    */
-  public $version = '2.1.1';
+  public $version = '2.0.6';
 
 
   /**

@@ -3,7 +3,6 @@
 namespace Automattic\WooCommerce\Internal\Admin;
 
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Tasks\WooCommercePayments;
-use Automattic\WooCommerce\Admin\WCAdminHelper;
 
 /**
  * Class WCPayWelcomePage
@@ -12,47 +11,7 @@ use Automattic\WooCommerce\Admin\WCAdminHelper;
  */
 class WcPayWelcomePage {
 
-	const EXPERIMENT_NAME = 'woocommerce_payments_menu_promo_us_2022';
-	const OTHER_GATEWAYS  = [
-		'affirm',
-		'afterpay',
-		'amazon_payments_advanced_express',
-		'amazon_payments_advanced',
-		'authorize_net_cim_credit_card',
-		'authorize_net_cim_echeck',
-		'bacs',
-		'bambora_credit_card',
-		'braintree_credit_card',
-		'braintree_paypal',
-		'chase_paymentech',
-		'cybersource_credit_card',
-		'elavon_converge_credit_card',
-		'elavon_converge_echeck',
-		'gocardless',
-		'intuit_payments_credit_card',
-		'intuit_payments_echeck',
-		'kco',
-		'klarna_payments',
-		'payfast',
-		'paypal',
-		'paytrace',
-		'ppcp-gateway',
-		'psigate',
-		'sagepaymentsusaapi',
-		'square_credit_card',
-		'stripe_alipay',
-		'stripe_multibanco',
-		'stripe',
-		'trustcommerce',
-		'usa_epay_credit_card',
-	];
-
-	/**
-	 * WCPayWelcomePage constructor.
-	 */
-	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_payments_welcome_page' ) );
-	}
+	const EXPERIMENT_NAME_BASE = 'woocommerce_payments_menu_promo_nz_ie_:yyyy_:mm';
 
 	/**
 	 * Registers the WooCommerce Payments welcome page.
@@ -60,54 +19,20 @@ class WcPayWelcomePage {
 	public function register_payments_welcome_page() {
 		global $menu;
 
-		// WC Payment must not be installed.
-		if ( WooCommercePayments::is_installed() ) {
+		// WC Payment must not be active.
+		if ( is_plugin_active( 'woocommerce-payments/woocommerce-payments.php' ) ) {
 			return;
 		}
 
-		// Live store for at least 90 days.
-		if ( ! WCAdminHelper::is_wc_admin_active_for( DAY_IN_SECONDS * 90 ) ) {
+		if ( ! WooCommercePayments::is_supported() ) {
 			return;
 		}
 
-		// Must be a US based business.
-		if ( WC()->countries->get_base_country() !== 'US' ) {
+		if ( 'yes' === get_option( 'wc_calypso_bridge_payments_dismissed', 'no' ) ) {
 			return;
 		}
 
-		// Has another payment gateway installed.
-		if ( ! $this->is_another_payment_gateway_installed() ) {
-			return;
-		}
-
-		// No existing WCPay account.
-		if ( $this->has_wcpay_account() ) {
-			return;
-		}
-
-		// Suggestions may be disabled via a setting.
-		if ( get_option( 'woocommerce_show_marketplace_suggestions', 'yes' ) === 'no' ) {
-			return;
-		}
-
-		/**
-		 * Filter allow marketplace suggestions.
-		 *
-		 * User can disabled all suggestions via filter.
-		 *
-		 * @since 3.6.0
-		 */
-		if ( ! apply_filters( 'woocommerce_allow_marketplace_suggestions', true ) ) {
-			return;
-		}
-
-		// Manually dismissed.
-		if ( get_option( 'wc_calypso_bridge_payments_dismissed', 'no' ) === 'yes' ) {
-			return;
-		}
-
-		// Users must be in the experiment.
-		if ( ! $this->is_user_in_treatment_mode() ) {
+		if ( ! $this->should_add_the_menu() ) {
 			return;
 		}
 
@@ -133,7 +58,7 @@ class WcPayWelcomePage {
 		// nav is enabled. The new nav disabled everything, except the 'WooCommerce' menu.
 		// We need to register this menu via add_menu_page so that it doesn't become a child of
 		// WooCommerce menu.
-		if ( get_option( 'woocommerce_navigation_enabled', 'no' ) === 'yes' ) {
+		if ( 'yes' === get_option( 'woocommerce_navigation_enabled', 'no' ) ) {
 			$menu_with_nav_data = array(
 				__( 'Payments', 'woocommerce' ),
 				__( 'Payments', 'woocommerce' ),
@@ -158,47 +83,28 @@ class WcPayWelcomePage {
 	}
 
 	/**
-	 * Whether a WCPay account exists. By checking account data cache.
-	 *
-	 * @return boolean
-	 */
-	private function has_wcpay_account(): bool {
-		$account_data = get_option( 'wcpay_account_data' );
-		return isset( $account_data['data'] ) && is_array( $account_data['data'] ) && ! empty( $account_data['data'] );
-	}
-
-	/**
 	 * Checks if user is in the experiment.
 	 *
 	 * @return bool Whether the user is in the treatment group.
 	 */
-	private function is_user_in_treatment_mode() {
+	private function should_add_the_menu() {
 		$anon_id        = isset( $_COOKIE['tk_ai'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['tk_ai'] ) ) : '';
-		$allow_tracking = get_option( 'woocommerce_allow_tracking' ) === 'yes';
+		$allow_tracking = 'yes' === get_option( 'woocommerce_allow_tracking' );
 		$abtest         = new \WooCommerce\Admin\Experimental_Abtest(
 			$anon_id,
 			'woocommerce',
 			$allow_tracking
 		);
 
-		return $abtest->get_variation( self::EXPERIMENT_NAME ) === 'treatment';
+		$date            = new \DateTime( 'now', wp_timezone() );
+		$experiment_name = strtr(
+			self::EXPERIMENT_NAME_BASE,
+			array(
+				':yyyy' => $date->format( 'Y' ),
+				':mm'   => $date->format( 'm' ),
+			)
+		);
+
+		return $abtest->get_variation( $experiment_name ) === 'treatment';
 	}
-
-	/**
-	 * Checks if there is another payment gateway installed using a static list of US gateways from WC Store.
-	 *
-	 * @return bool Whether there is another payment gateway installed.
-	 */
-	private function is_another_payment_gateway_installed() {
-		$available_gateways = wp_list_pluck( WC()->payment_gateways()->get_available_payment_gateways(), 'id' );
-
-		foreach ( $available_gateways as $gateway ) {
-			if ( in_array( $gateway, self::OTHER_GATEWAYS, true ) ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 }

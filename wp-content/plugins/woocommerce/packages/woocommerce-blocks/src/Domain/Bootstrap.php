@@ -4,7 +4,6 @@ namespace Automattic\WooCommerce\Blocks\Domain;
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\AssetsController;
-use Automattic\WooCommerce\Blocks\BlockPatterns;
 use Automattic\WooCommerce\Blocks\BlockTemplatesController;
 use Automattic\WooCommerce\Blocks\BlockTypesController;
 use Automattic\WooCommerce\Blocks\Domain\Services\CreateAccount;
@@ -13,7 +12,8 @@ use Automattic\WooCommerce\Blocks\Domain\Services\FeatureGating;
 use Automattic\WooCommerce\Blocks\Domain\Services\GoogleAnalytics;
 use Automattic\WooCommerce\Blocks\InboxNotifications;
 use Automattic\WooCommerce\Blocks\Installer;
-use Automattic\WooCommerce\Blocks\Migration;
+use Automattic\WooCommerce\Blocks\Templates\ProductSearchResultsTemplate;
+use Automattic\WooCommerce\Blocks\Templates\ClassicTemplatesCompatibility;
 use Automattic\WooCommerce\Blocks\Payments\Api as PaymentsApi;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\BankTransfer;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\CashOnDelivery;
@@ -21,12 +21,9 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\Cheque;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\PayPal;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\Blocks\Registry\Container;
-use Automattic\WooCommerce\Blocks\Templates\ClassicTemplatesCompatibility;
-use Automattic\WooCommerce\Blocks\Templates\ProductAttributeTemplate;
-use Automattic\WooCommerce\Blocks\Templates\ProductSearchResultsTemplate;
+use Automattic\WooCommerce\StoreApi\StoreApi;
 use Automattic\WooCommerce\StoreApi\RoutesController;
 use Automattic\WooCommerce\StoreApi\SchemaController;
-use Automattic\WooCommerce\StoreApi\StoreApi;
 
 /**
  * Takes care of bootstrapping the plugin.
@@ -49,14 +46,6 @@ class Bootstrap {
 	 */
 	private $package;
 
-
-	/**
-	 * Holds the Migration instance
-	 *
-	 * @var Migration
-	 */
-	private $migration;
-
 	/**
 	 * Constructor
 	 *
@@ -65,8 +54,6 @@ class Bootstrap {
 	public function __construct( Container $container ) {
 		$this->container = $container;
 		$this->package   = $container->get( Package::class );
-		$this->migration = $container->get( Migration::class );
-
 		if ( $this->has_core_dependencies() ) {
 			$this->init();
 			/**
@@ -86,19 +73,10 @@ class Bootstrap {
 		$this->register_dependencies();
 		$this->register_payment_methods();
 
-		if ( $this->package->is_experimental_build() && is_admin() ) {
-			if ( $this->package->get_version() !== $this->package->get_version_stored_on_db() ) {
-				$this->migration->run_migrations();
-				$this->package->set_version_stored_on_db();
-			}
-		}
-
 		add_action(
 			'admin_init',
 			function() {
-				// Delete this notification because the blocks are included in WC Core now. This will handle any sites
-				// with lingering notices.
-				InboxNotifications::delete_surface_cart_checkout_blocks_notification();
+				InboxNotifications::create_surface_cart_checkout_blocks_notification();
 			},
 			10,
 			0
@@ -120,11 +98,10 @@ class Bootstrap {
 		$this->container->get( BlockTypesController::class );
 		$this->container->get( BlockTemplatesController::class );
 		$this->container->get( ProductSearchResultsTemplate::class );
-		$this->container->get( ProductAttributeTemplate::class );
 		$this->container->get( ClassicTemplatesCompatibility::class );
-		$this->container->get( BlockPatterns::class );
-		$this->container->get( PaymentsApi::class );
-
+		if ( $this->package->feature()->is_feature_plugin_build() ) {
+			$this->container->get( PaymentsApi::class );
+		}
 	}
 
 	/**
@@ -149,7 +126,7 @@ class Bootstrap {
 						if ( should_display_compatibility_notices() ) {
 							?>
 							<div class="notice notice-error">
-								<p><?php esc_html_e( 'The WooCommerce Blocks plugin requires a more recent version of WooCommerce and has been deactivated. Please update to the latest version of WooCommerce.', 'woocommerce' ); ?></p>
+								<p><?php esc_html_e( 'The WooCommerce Blocks feature plugin requires a more recent version of WooCommerce and has been paused. Please update WooCommerce to the latest version to continue enjoying WooCommerce Blocks.', 'woocommerce' ); ?></p>
 							</div>
 							<?php
 						}
@@ -244,20 +221,14 @@ class Bootstrap {
 		);
 		$this->container->register(
 			BlockTemplatesController::class,
-			function ( Container $container ) {
-				return new BlockTemplatesController( $container->get( Package::class ) );
+			function () {
+				return new BlockTemplatesController();
 			}
 		);
 		$this->container->register(
 			ProductSearchResultsTemplate::class,
 			function () {
 				return new ProductSearchResultsTemplate();
-			}
-		);
-		$this->container->register(
-			ProductAttributeTemplate::class,
-			function () {
-				return new ProductAttributeTemplate();
 			}
 		);
 		$this->container->register(
@@ -290,14 +261,16 @@ class Bootstrap {
 				return new GoogleAnalytics( $asset_api );
 			}
 		);
-		$this->container->register(
-			PaymentsApi::class,
-			function ( Container $container ) {
-				$payment_method_registry = $container->get( PaymentMethodRegistry::class );
-				$asset_data_registry     = $container->get( AssetDataRegistry::class );
-				return new PaymentsApi( $payment_method_registry, $asset_data_registry );
-			}
-		);
+		if ( $this->package->feature()->is_feature_plugin_build() ) {
+			$this->container->register(
+				PaymentsApi::class,
+				function ( Container $container ) {
+					$payment_method_registry = $container->get( PaymentMethodRegistry::class );
+					$asset_data_registry     = $container->get( AssetDataRegistry::class );
+					return new PaymentsApi( $payment_method_registry, $asset_data_registry );
+				}
+			);
+		}
 		$this->container->register(
 			StoreApi::class,
 			function () {
@@ -331,12 +304,6 @@ class Bootstrap {
 			function( Container $container ) {
 				$this->deprecated_dependency( 'Automattic\WooCommerce\Blocks\StoreApi\RoutesController', '7.2.0', 'Automattic\WooCommerce\StoreApi\RoutesController', '7.4.0' );
 				return $container->get( StoreApi::class )::container()->get( RoutesController::class );
-			}
-		);
-		$this->container->register(
-			BlockPatterns::class,
-			function () {
-				return new BlockPatterns( $this->package );
 			}
 		);
 	}

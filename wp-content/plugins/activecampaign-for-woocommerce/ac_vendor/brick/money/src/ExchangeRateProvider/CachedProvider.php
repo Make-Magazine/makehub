@@ -14,15 +14,19 @@ final class CachedProvider implements ExchangeRateProvider
 {
     /**
      * The underlying exchange rate provider.
+     *
+     * @var ExchangeRateProvider
      */
-    private ExchangeRateProvider $provider;
+    private $provider;
 
     /**
      * The cached exchange rates.
      *
      * @psalm-var array<string, array<string, BigNumber|int|float|string>>
+     *
+     * @var array
      */
-    private array $exchangeRates = [];
+    private $exchangeRates = [];
 
     /**
      * Class constructor.

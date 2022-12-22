@@ -27,7 +27,6 @@ const storeToken = (token) => {
 const dataClientIdAttributeHandler = (script, config) => {
     fetch(config.endpoint, {
         method: 'POST',
-        credentials: 'same-origin',
         body: JSON.stringify({
             nonce: config.nonce
         })
@@ -40,7 +39,7 @@ const dataClientIdAttributeHandler = (script, config) => {
         }
         storeToken(data);
         script.setAttribute('data-client-token', data.token);
-        document.body.appendChild(script);
+        document.body.append(script);
     });
 }
 

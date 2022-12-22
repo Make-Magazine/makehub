@@ -67,13 +67,9 @@ class Admin extends App {
 		$locale_settings = [];
 
 		/**
-		 * Localized admin settings.
+		 * Localize admin settings.
 		 *
-		 * Filters the localized settings used in the admin as JavaScript variables.
-		 *
-		 * By default Elementor Pro passes some admin settings to be consumed as JavaScript
-		 * variables. This hook allows developers to add extra settings values to be consumed
-		 * using JavaScript in WordPress admin.
+		 * Filters the admin localized settings.
 		 *
 		 * @since 1.0.0
 		 *
@@ -114,18 +110,6 @@ class Admin extends App {
 				$lowercase_version = strtolower( $version );
 				$is_valid_rollback_version = ! preg_match( '/(trunk|beta|rc|dev)/i', $lowercase_version );
 
-				/**
-				 * Is valid rollback version.
-				 *
-				 * Filters whether the version of the rollback is valid or not.
-				 *
-				 * By default Elementor doesn't allow to rollback for trunk/beta/rc/dev versions.
-				 * This hook allows developers to enable a rollback for thise kind of versions by
-				 * returning `true`.
-				 *
-				 * @param bool  $is_valid_rollback_version Whether a rollback version is valid.
-				 * @param array $lowercase_version         A list of previous versions.
-				 */
 				$is_valid_rollback_version = apply_filters(
 					'elementor-pro/settings/tools/rollback/is_valid_rollback_version',
 					$is_valid_rollback_version,
@@ -282,8 +266,5 @@ class Admin extends App {
 
 		add_filter( 'elementor/tracker/send_tracking_data_params', [ $this, 'change_tracker_params' ], 200 );
 		add_action( 'admin_post_elementor_pro_rollback', [ $this, 'post_elementor_pro_rollback' ] );
-		add_action( 'in_plugin_update_message-' . ELEMENTOR_PRO_PLUGIN_BASE, function( $plugin_data ) {
-			Plugin::elementor()->admin->version_update_warning( ELEMENTOR_PRO_VERSION, $plugin_data['new_version'] );
-		} );
 	}
 }

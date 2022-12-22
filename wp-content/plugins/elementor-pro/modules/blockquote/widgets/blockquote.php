@@ -177,9 +177,6 @@ class Blockquote extends Base_Widget {
 					'tweet_button' => 'yes',
 					'tweet_button_view!' => 'icon',
 				],
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -191,9 +188,6 @@ class Blockquote extends Base_Widget {
 				'placeholder' => '@username',
 				'condition' => [
 					'tweet_button' => 'yes',
-				],
-				'dynamic' => [
-					'active' => true,
 				],
 			]
 		);
@@ -691,7 +685,6 @@ class Blockquote extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-blockquote' => 'border-radius: {{SIZE}}{{UNIT}}',
 				],
@@ -742,7 +735,6 @@ class Blockquote extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-blockquote:hover' => 'border-radius: {{SIZE}}{{UNIT}}',
 				],

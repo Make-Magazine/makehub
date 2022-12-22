@@ -161,7 +161,6 @@ jQuery(
 						if ( response.total_reply_count ) {
 							$bbpress_forums_element.find( '.header-total-reply-count .topic-reply-count' ).html( response.total_reply_count );
 							$bbpress_forums_element.find( '.topic-lead .bs-replies' ).html( response.total_reply_count );
-							$( '.bs-forums-items' ).removeClass( 'topic-list-no-replies' )
 						}
 
 						if ( $bbpress_forums_element.find( '.replies-content .bp-feedback.info' ).length > 0 ) {
@@ -192,7 +191,7 @@ jQuery(
 									);
 									scrubbers_obj.total_item = parseInt( scrubbers_obj.total_item, 10 ) + 1;
 									scrubbers_obj.to = parseInt( scrubbers_obj.to, 10 ) + 1;
-									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, '', scrubber_key );
+									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, 'last', scrubber_key );
 									break;
 								}
 							}
@@ -329,7 +328,6 @@ jQuery(
 		var bbp_quick_reply = {
 			init: function () {
 				this.ajax_call();
-				this.moveToReply();
 			},
 
 			// Quick Reply AJAX call
@@ -374,7 +372,6 @@ jQuery(
 								if ( $bbpress_forums_element.find('div.bb-quick-reply-form-wrap').length ) {
 									var $quick_reply_wrap = $bbpress_forums_element.find('div.bb-quick-reply-form-wrap');
 									$quick_reply_wrap.show();
-									$quick_reply_wrap.not('[data-component="activity"]').hide();
 
 									if ( $quick_reply_wrap.find('.bbp-reply-form').length ) {
 										$quick_reply_wrap.find('.bbp-reply-form').addClass('bb-modal bb-modal-box');
@@ -639,26 +636,6 @@ jQuery(
 					}
 				}
 			},
-			
-			// When click on notification then move to particular reply.
-			moveToReply: function () {
-				if ( window.location.href.indexOf( '#post-' ) > 0 ) {
-					var varUrl = window.location.href.split( '#post-' );
-					var postID = varUrl && undefined !== varUrl[1] ? varUrl[1] : '';
-					if ( !postID ) {
-						return;
-					}
-					var scrollTop;
-					if ( $( 'body' ).hasClass( 'sticky-header' ) ) {
-						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#masthead' ).innerHeight() - $( '#wpadminbar' ).innerHeight() );
-					} else {
-						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#wpadminbar' ).innerHeight() );
-					}
-					$( 'html, body' ).animate( {
-						scrollTop: scrollTop
-					}, 200 );
-				}
-			}
 
 		};
 

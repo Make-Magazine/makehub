@@ -2,18 +2,12 @@
 namespace WP_Rocket\ThirdParty\Themes;
 
 use WP_Rocket\Admin\Options_Data;
+use WP_Rocket\Event_Management\Subscriber_Interface;
 
 /**
  * Compatibility class for Avada theme
  */
-class Avada extends ThirdpartyTheme {
-	/**
-	 * Theme name
-	 *
-	 * @var string
-	 */
-	protected static $theme_name = 'avada';
-
+class Avada implements Subscriber_Interface {
 	/**
 	 * Options instance
 	 *
@@ -29,7 +23,7 @@ class Avada extends ThirdpartyTheme {
 	 * @return array
 	 */
 	public static function get_subscribed_events() {
-		if ( ! self::is_current_theme() ) {
+		if ( ! self::is_avada() ) {
 			return [];
 		}
 		return [
@@ -41,6 +35,16 @@ class Avada extends ThirdpartyTheme {
 			'rocket_wc_product_gallery_delay_js_exclusions' => 'exclude_delay_js',
 			'init'                                 => 'disable_compilers',
 		];
+	}
+
+	/**
+	 * Check if is Avada theme.
+	 *
+	 * @return boolean
+	 */
+	private static function is_avada() {
+		$current_theme = wp_get_theme();
+		return 'avada' === strtolower( $current_theme->get( 'Name' ) ) || 'avada' === strtolower( $current_theme->get_template() );
 	}
 
 	/**
