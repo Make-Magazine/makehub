@@ -31,19 +31,19 @@ function set_ajax_params(){
 	if(is_user_logged_in()) {
 	 	$user = wp_get_current_user();
 		$membershipType = checkMakeCoMems($user);
+    $user_image =
+  		bp_core_fetch_avatar (
+  			array(  'item_id' => $user->ID, // id of user for desired avatar
+  					'object'  =>'user',
+  					'type'    => 'thumb',
+  					'html'    => FALSE     // FALSE = return url, TRUE (default) = return img html
+  			)
+  	);
+
+  	$last_name  = get_user_meta( $user->ID, 'last_name', true );
+  	$first_name = get_user_meta( $user->ID, 'first_name', true );
+    $user_email = $user->user_email;
 	}
-
-	$user_image =
-		bp_core_fetch_avatar (
-			array(  'item_id' => $user->ID, // id of user for desired avatar
-					'object'  =>'user',
-					'type'    => 'thumb',
-					'html'    => FALSE     // FALSE = return url, TRUE (default) = return img html
-			)
-	);
-
-	$last_name  = get_user_meta( $user->ID, 'last_name', true );
-	$first_name = get_user_meta( $user->ID, 'first_name', true );
 
 	//set the ajax parameters
 	wp_localize_script('universal', 'ajax_object',
@@ -51,7 +51,7 @@ function set_ajax_params(){
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'home_url' => get_home_url(),
 			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => $user->user_email,
+			'wp_user_email' => $user_email,
 			'wp_user_nicename' => $first_name.' '.$last_name,
 			'wp_user_avatar' => $user_image,
 			'wp_user_memlevel' => $membershipType
