@@ -27,7 +27,7 @@ function set_ajax_params(){
 	wp_enqueue_script('universal-auth0', content_url() . '/universal-assets/v1/js/min/universal-auth0.min.js', array('auth0'), $my_version, true);
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array('auth0'), $my_version, true);
 
-	$membershipType = "";
+	$membershipType = $last_name = $first_name = $user_email = $user_image = "";
 	if(is_user_logged_in()) {
 	 	$user = wp_get_current_user();
 		$membershipType = checkMakeCoMems($user);
