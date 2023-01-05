@@ -193,16 +193,18 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                                 font-size: 16px;
                                 &:hover {
                                     background: #f5f5f5;
-									@media screen and (max-width:805px){
-										&:before, &:after {
-											display: none;
-										}
-									}
                                 }
 								i.buddyboss { display: none; }
                             }
 							.bp-logout-nav, .bp-login-nav { display: none; }
                         }
+						#buddypanel-menu {
+							@media screen and (max-width:805px){
+								&:before, &:after {
+									display: none;
+								}
+							}
+						}
                     }
                     #primary-menu {
                         margin: 0;
