@@ -260,7 +260,7 @@ jQuery(document).ready(function () {
         jQuery('.bottom-menu.menu-item-has-children').not(this).removeClass("show-submenu");
         jQuery(this).toggleClass("show-submenu");
     });
-	jQuery('#profile-view').on('click', function (e) {
+	jQuery('#profile-view #dropdownMenuLink').on('click', function (e) {
         e.preventDefault();
 		jQuery("#profile-view .dropdown-menu").toggleClass("show");
     });
