@@ -193,6 +193,11 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                                 font-size: 16px;
                                 &:hover {
                                     background: #f5f5f5;
+									@media screen and (max-width:805px){
+										&:before, &:after {
+											display: none;
+										}
+									}
                                 }
 								i.buddyboss { display: none; }
                             }
@@ -578,9 +583,11 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 			align-items: center;
 			margin-right: 10px;
             &:hover {
-                 .dropdown-menu {
-                     display: block;
-                 }
+				@media screen and (min-width:805px) {
+					.dropdown-menu {
+						display: block;
+					}
+				}
             }
 			&.show {
 				display: flex !important;
