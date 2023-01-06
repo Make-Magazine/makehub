@@ -149,7 +149,7 @@ jQuery(document).ready(function() {
 		                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
 		                        WPlogout();
 		                    }
-		                    clearLocalStorage();
+		                    // clearLocalStorage(); try removing this to test out extending
 		                } else {
 		                    //logged into Auth0
 		                    auth0loggedin = true;
@@ -190,7 +190,7 @@ jQuery(document).ready(function() {
             localStorage.setItem('id_token', authResult.idToken);
             localStorage.setItem('expires_at', expiresAt);
         } else {
-            clearLocalStorage();
+            // clearLocalStorage(); try removing the clear storage, see how long we can keep users logged in
         }
     }
 
