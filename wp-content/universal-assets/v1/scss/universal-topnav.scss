@@ -200,7 +200,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                         }
 						#buddypanel-menu {
 							@media screen and (max-width:805px){
-								&:before, &:after {
+								.bb-menu-item:before, .bb-menu-item:after {
 									display: none;
 								}
 							}
