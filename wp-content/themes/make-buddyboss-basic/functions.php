@@ -169,4 +169,10 @@ add_filter( 'wp_mail_from_name', function( $name ) {
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
 
+// remove svg that are appearing in share preview excerpts
+function strip_svg_from_excerpt( $excerpt ) {
+    return apply_filters('get_the_excerpt', strip_tags($excerpt));
+}
+add_filter( 'get_the_excerpt', 'strip_svg_from_excerpt', 9);
+
 ?>
