@@ -173,6 +173,6 @@ add_filter( 'send_password_change_email', '__return_false' );
 function strip_svg_from_excerpt( $excerpt ) {
     return apply_filters('get_the_excerpt', strip_tags($excerpt));
 }
-add_filter( 'get_the_excerpt', 'strip_svg_from_excerpt', 9);
+//add_filter( 'get_the_excerpt', 'strip_svg_from_excerpt', 9);
 
 ?>
