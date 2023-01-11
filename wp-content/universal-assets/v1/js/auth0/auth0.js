@@ -2,6 +2,7 @@
 var auth0Hash = window.location.hash ? window.location.hash : localStorage.getItem('auth0_hash');
 
 if(window.location.hash.indexOf("access_token") > -1) {
+	console.log("we are just setting the auth0hash on a first time login");
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
@@ -18,19 +19,23 @@ jQuery(document).ready(function() {
     var makehubSite = false; //is this a makehub site?
 
     if (url.indexOf('make.co') !== -1 || url.indexOf('makehub') !== -1) {
+		console.log("we on makehub");
         makehubSite = true;
         wpLoginRequired = true;
     } else if (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) {
+		console.log("we on makerfaire");
         wpLoginRequired = true;
     }
 
     //if you are on a makehub site and logged in, you do not need to call auth0
     // we use ajax fields to set the user drop down in this case
     if (makehubSite && (document.body.classList.contains('logged-in') || getUrlParam('login') == "true")) {
+		console.log("we logged in already");
         wploggedin = true;
         //let's set up the dropdowns
         displayButtons();
     } else {
+		console.log("we're not logged in! what are we going to do?");
         //otherwise we need to call auth0 for login and to show the user drop down
 
         //If the buddypanel exists, hide it while we check for logged in
@@ -52,6 +57,8 @@ jQuery(document).ready(function() {
             //scope of data pulled by auth0
             leeway: 60
         });
+		console.log("check out this webAuth");
+		console.log(webAuth);
 
 		// always need to make sure we clear the localStorage when the login button is clicked, regardless of case
 		jQuery("#LogoutBtn").on("click", function(event) {
@@ -60,6 +67,7 @@ jQuery(document).ready(function() {
 
         // for makezine or other non wplogin sites, we still want the login button to trigger an auth0 login rather than
         if (wpLoginRequired == false) {
+			console.log("we on makezine");
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
 				setCookie("mz_redirect_url", window.location.href, 1);
@@ -80,7 +88,10 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
+			console.log("this is the first login");
+
 			if(auth0Hash.includes("access_token")){
+				console.log("we got an access_token");
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
 				  if (err) {
@@ -88,6 +99,8 @@ jQuery(document).ready(function() {
 					console.log('err', err);
 				  }
 				  if (data) {
+					  console.log("data was returned and here it is: ");
+					  console.log(data);
 						//logged into Auth0
 						auth0loggedin = true;
 						userProfile = data.idTokenPayload;
@@ -95,6 +108,7 @@ jQuery(document).ready(function() {
 						displayButtons();
 						//if this is a site that requires WP login, but they aren't logged into wp, log them in
 						if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+							console.log("we're on a wp login site");
 							// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 							//TBD - this needs styling as this isn't seen where it's at
 							jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
@@ -104,6 +118,7 @@ jQuery(document).ready(function() {
 				  window.location.hash = '';
 				});
 			}else if(auth0Hash.includes("login_required")){
+				console.log("we don't got no hash, gotta log out.");
 				// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 				//If you are makehub and you are logged in, you will never hit this code
 				if (wpLoginRequired && jQuery("body").is(".logged-in")) {
@@ -111,33 +126,46 @@ jQuery(document).ready(function() {
 				}
 				clearLocalStorage();
 			}
+			console.log("we're done with the first login, remove the first_login flag from local storage");
 			localStorage.removeItem('first_login');
 		} else {
+			console.log("this ain't the first login anymore, let's check if we've expired");
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
 			var currentDate = new Date();
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
+				console.log("we sure haven't expired!");
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
+						console.log("uh oh, we got an error and here it is");
+						console.log(err);
+						alert("I'm just going to give you a second to check that error, as I suspect this is where we are losing our auth");
 						jQuery("#LogoutBtn").click();
 					}
+					console.log("we got user data");
+					console.log(user);
 					// other wise, do the thing!
 					userProfile = user;
 					auth0loggedin = true;
 					displayButtons();
 				});
 			} else {
+				console.log("we have expired");
 				// log if we are still getting any user info after the expiration
 				if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') <= currentDate.getTime()) {
 					webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
+						console.log("can we get any user data anyways?");
 						console.log(user);
 					});
 				}
 		        //check if logged in another place
+				console.log("check if logged in anywhere else");
 		        webAuth.checkSession({},
 		            function(err, result) {
 		                if (err) {
+							console.log("I guess not, check this error");
+							console.log(err);
 		                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
 		                    if (err.error !== 'login_required') {
 		                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
@@ -149,16 +177,19 @@ jQuery(document).ready(function() {
 		                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
 		                        WPlogout();
 		                    }
-		                    // clearLocalStorage(); try removing this to test out extending
+		                    clearLocalStorage();
 		                } else {
+							console.log("oh sweet, we are logged in somewhere else");
 		                    //logged into Auth0
 		                    auth0loggedin = true;
 		                    userProfile = result.idTokenPayload;
-
+							console.log("and here's the user data:");
+							console.log(userProfile);
 		                    setSession(result);
 
 		                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
 		                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+								console.log("login to wordress");
 		                        // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 		                        //TBD - this needs styling as this isn't seen where it's at
 		                        jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
@@ -174,6 +205,8 @@ jQuery(document).ready(function() {
 
     //place functions here so they can access the variables inside the event addEventListener
     function clearLocalStorage() {
+		console.log("we are clearing local storage");
+		alert("we are clearing local storage");
 		localStorage.removeItem('auth0_hash');
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
@@ -181,7 +214,10 @@ jQuery(document).ready(function() {
     }
 
     function setSession(authResult) {  // delete the hash localStorage and set the new one
+		console.log("setting session");
         if (authResult) {
+			console.log("auth result:");
+			console.log(authResult);
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
                 authResult.expiresIn * 36000 + new Date().getTime()
@@ -190,7 +226,8 @@ jQuery(document).ready(function() {
             localStorage.setItem('id_token', authResult.idToken);
             localStorage.setItem('expires_at', expiresAt);
         } else {
-            // clearLocalStorage(); try removing the clear storage, see how long we can keep users logged in
+			console.log("no authresult");
+            clearLocalStorage();
         }
     }
 
@@ -237,9 +274,11 @@ jQuery(document).ready(function() {
     }
 
     function getProfile() {
+		console.log("getting user profile");
         var user = {};
         //are they logged into WP or Auth0 and is this a makeco domain?
         if (wploggedin && makehubSite) {
+			console.log("getting user profile from makehub");
             //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
             user = {
                 user_avatar: (ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
@@ -249,6 +288,7 @@ jQuery(document).ready(function() {
             };
 
         } else if (auth0loggedin) { // if user is logged into auth0, we will call data from auth0
+			console.log("getting user profile from auth0");
             //we already got the userprofile info from auth0 in the check session step
 			var accessToken = localStorage.getItem('access_token');
 
@@ -264,6 +304,7 @@ jQuery(document).ready(function() {
                 user_memlevel: (userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
             };
         } else {
+			console.log("not logged into auth0 or wp, get out of here");
             //not logged into auth0 or wp, get out of here
             return;
         }
