@@ -138,10 +138,10 @@ jQuery(document).ready(function() {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
-						console.log("uh oh, we got an error and here it is");
+						console.log("uh oh, we got an error and so, were stopping the logout btn click to investigate it");
 						console.log(err);
 						alert("I'm just going to give you a second to check that error, as I suspect this is where we are losing our auth");
-						jQuery("#LogoutBtn").click();
+						//jQuery("#LogoutBtn").click();
 					}
 					console.log("we got user data");
 					console.log(user);
@@ -206,7 +206,6 @@ jQuery(document).ready(function() {
     //place functions here so they can access the variables inside the event addEventListener
     function clearLocalStorage() {
 		console.log("we are clearing local storage");
-		alert("we are clearing local storage");
 		localStorage.removeItem('auth0_hash');
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
