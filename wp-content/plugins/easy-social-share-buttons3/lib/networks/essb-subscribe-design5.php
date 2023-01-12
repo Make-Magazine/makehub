@@ -74,11 +74,13 @@ if (!function_exists('essb_subscribe_form_design5')) {
 			$output .= '<input class="essb-subscribe-form-content-name-field '.esc_attr($input_cols).'" type="text" value="" placeholder="'.esc_attr($subscribe_mc_name).'" name="mailchimp_name">';
 		}
 		
+		$output .= ESSBNetworks_Subscribe::generate_custom_fields();
+		
 		$output .= '<input class="essb-subscribe-form-content-email-field '.esc_attr($input_cols).'" type="text" value="" placeholder="'.esc_attr($subscribe_mc_email).'" name="mailchimp_email">';
 		
 		$output .= ESSBNetworks_Subscribe::generate_if_needed_agree_check();
 		
-		$output .= '<input class="submit '.$submit_width.'" name="submit" type="submit" value="'.esc_attr($subscribe_mc_button).'" onclick="essb.ajax_subscribe(\''.$salt.'\', event);">';
+		$output .= '<input class="submit '.$submit_width.'" name="submit" type="submit" value="'.esc_attr($subscribe_mc_button).'" onclick="essb_ajax_subscribe(\''.$salt.'\', event);">';
 		$output .= '</form>';
 		
 		$output .= '<p class="essb-subscribe-form-content-text">'.ESSBNetworks_Subscribe::sanitize_html($subscribe_mc_text).'</p>';

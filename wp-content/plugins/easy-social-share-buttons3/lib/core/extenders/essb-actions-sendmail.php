@@ -51,6 +51,7 @@ if (!function_exists('essb_actions_sendmail')) {
 		$mail_salt = essb_object_value($_REQUEST, 'salt');
 		$cu = essb_object_value($_REQUEST, 'cu');
 		$from_name = essb_object_value($_REQUEST, 'from_name');
+		$affid = essb_object_value($_REQUEST, 'affid');
 
 		$post_id = sanitize_text_field($post_id);
 		$from = sanitize_email($from);
@@ -128,21 +129,59 @@ if (!function_exists('essb_actions_sendmail')) {
 		if ($valid) {
 			$message_subject = essb_option_value('mail_subject');
 			$message_body = essb_option_value('mail_body');
+			
+			$message_original_body = essb_option_value('mail_body');
 				
 			$post = get_post($post_id);
 			$url = get_permalink($post_id);
 			$short_url = '';
+			
+			/**
+			 * Affiliate integration
+			 */
+			if (essb_option_bool_value('affwp_active')) {
+			    essb_helper_maybe_load_feature('integration-affiliatewp');
+			    $url = essb_generate_affiliatewp_referral_link($url);
+			}
+			
+			if (essb_option_bool_value('affs_active')) {
+			    $url = do_shortcode('[affiliates_url]'.$url.'[/affiliates_url]');
+			}
+			
+			if (essb_option_bool_value('mycred_referral_activate') && function_exists('mycred_render_affiliate_link')) {
+			    $url = mycred_render_affiliate_link( array( 'url' => $url ) );
+			}
+			//--end: affiliate integration
 				
 			if (essb_option_bool_value('shorturl_activate')) {
-			    essb_helper_maybe_load_feature('short-url');
-				$short_url = essb_short_url ( $url, essb_option_value('shorturl_type'), $post_id, essb_option_value('shorturl_bitlyuser'), essb_option_value('shorturl_bitlyapi') );
-				if ($short_url == '') {
-					$short_url = $url;
-				}
+			    
+			    if (class_exists('ESSB_Short_URL')) {
+			        if (ESSB_Short_URL::active()) {
+			            $short_url = ESSB_Short_URL::generate_short_url($url, $post_id, 'mail');
+			        }
+			    }
+			    
+			    if (empty($short_url)) {
+			        $short_url = $url;
+			    }
 			}
 				
 			if (has_filter('essb_mailshare_url')) {
 				$url = apply_filters('essb_mailshare_url', $url);
+			}
+			
+			if (!empty($affid)) {
+			    if (strpos($affid, '/') === false) {
+			        if (strpos($url, '?') === false) {
+			            $url .= '?' . $affid;
+			        }
+			        else {
+			            $url .= '&' . $affid;
+			        }
+			    }
+			    else {
+			        $url = trailingslashit($url) . $affid;
+			    }
 			}
 								
 			$base_post_url = $url;
@@ -238,6 +277,22 @@ if (!function_exists('essb_actions_sendmail')) {
 			}
 			if (has_filter('essb_mailshare_body')) {
 			    $message_body = apply_filters('essb_mailshare_body', $message_body);
+			}
+			
+			if (has_filter('essb_mailshare_body_advanced')) {			    
+			    $sending_options = array(
+			         'title' => $title,
+			         'siteurl' => $site_url,
+			         'permalink' => $url,
+			         'image' => $image,
+			         'shorturl' => $short_url,
+			         'from_email' => $from,
+			         'from_name' => $from_name,
+			         'to_email' => $to
+			    );
+			    
+			    $message_original_body = apply_filters('essb_mailshare_body_advanced', $message_body, $sending_options);
+			    $message_body = $message_original_body;
 			}
 			
 			$message_body = essb_sendmail_generate_header() . $message_body . essb_sendmail_generate_footer();

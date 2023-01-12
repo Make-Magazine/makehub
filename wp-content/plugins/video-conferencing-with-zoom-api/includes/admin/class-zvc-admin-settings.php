@@ -46,7 +46,7 @@ class Zoom_Video_Conferencing_Admin_Views {
 				'page'      => 'zoom-video-conferencing-settings',
 			],
 				admin_url( 'edit.php' ),
-			) );
+				) );
 			$admin_page_link = '<a href="' . $admin_page_url . '">here</a>';
 
 			$dismiss_button = '<a href="#" class="vczapi-dismiss-admin-notice" data-id="vczapi_dismiss_sdk_not_active_notice" data-security="' . wp_create_nonce( 'vczapi-dismiss-nonce' ) . '" >don\'t show this message again</a>.';
@@ -259,16 +259,20 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 						'page'      => 'zoom-video-conferencing-settings',
 					],
 					admin_url( 'edit.php' )
-				) ); ?>" class="nav-tab <?php echo ( 'connect' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
+				) ); ?>"
+                   class="nav-tab <?php echo ( 'connect' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
 					<?php esc_html_e( 'Connect', 'video-conferencing-with-zoom-api' ); ?>
                 </a>
-                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'api-settings' ) ) ); ?>" class="nav-tab <?php echo ( 'api-settings' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
-					<?php esc_html_e( 'API Settings', 'video-conferencing-with-zoom-api' ); ?>
+                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'api-settings' ) ) ); ?>"
+                   class="nav-tab <?php echo ( 'api-settings' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
+					<?php esc_html_e( 'Settings', 'video-conferencing-with-zoom-api' ); ?>
                 </a>
-                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'support' ) ) ); ?>" class="nav-tab <?php echo ( 'support' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
+                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'support' ) ) ); ?>"
+                   class="nav-tab <?php echo ( 'support' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
 					<?php esc_html_e( 'Support', 'video-conferencing-with-zoom-api' ); ?>
                 </a>
-                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'debug' ) ) ); ?>" class="nav-tab <?php echo ( 'debug' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
+                <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'debug' ) ) ); ?>"
+                   class="nav-tab <?php echo ( 'debug' === $active_tab ) ? esc_attr( 'nav-tab-active' ) : ''; ?>">
 					<?php esc_html_e( 'Logs', 'video-conferencing-with-zoom-api' ); ?>
                 </a>
 				<?php do_action( 'vczapi_admin_tabs_heading', $active_tab ); ?>
@@ -310,6 +314,7 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 					$disable_join_via_browser           = sanitize_text_field( filter_input( INPUT_POST, 'meeting_disable_join_via_browser' ) );
 					$join_via_browser_default_lang      = sanitize_text_field( filter_input( INPUT_POST, 'meeting-lang' ) );
 					$disable_auto_pwd_generation        = sanitize_text_field( filter_input( INPUT_POST, 'disable_auto_pwd_generation' ) );
+					$disableMomentJs                    = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_disable_moment_js' ) );
 					$debugger_logs                      = sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_debugger_logs' ) );
 
 					update_option( 'zoom_vanity_url', $vanity_url );
@@ -330,6 +335,7 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 					update_option( 'zoom_api_disable_jvb', $disable_join_via_browser );
 					update_option( 'zoom_api_default_lang_jvb', $join_via_browser_default_lang );
 					update_option( 'zoom_api_disable_auto_meeting_pwd', $disable_auto_pwd_generation );
+					update_option( 'zoom_api_disable_moment_js', $disableMomentJs );
 					update_option( 'zoom_api_enable_debug_log', $debugger_logs );
 
 					//After user has been created delete this transient in order to fetch latest Data.
@@ -364,6 +370,7 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 				$disable_auto_pwd_generation = get_option( 'zoom_api_disable_auto_meeting_pwd' );
 				$donot_delete_zoom           = get_option( 'zoom_api_donot_delete_on_zoom' );
 				$debug_logs                  = get_option( 'zoom_api_enable_debug_log' );
+				$disable_moment_js           = get_option( 'zoom_api_disable_moment_js' );
 
 				//Get Template
 				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/api-settings.php';
