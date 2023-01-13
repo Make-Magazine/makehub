@@ -23,6 +23,10 @@
         <?php
         // Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
         if (!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes") {
+			$pageUniq = trim(strtok($_SERVER["REQUEST_URI"], '?'), '/');
+			if(is_front_page()) {
+				$pageUniq = "home";
+			}
             ?>
             <!-- Global site tag (gtag.js) - Google Analytics -->
 			<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-36"></script>
@@ -73,6 +77,7 @@
 			<img height="1" width="1" style="display:none;" alt=""
 			  src="https://ct.pinterest.com/v3/?event=init&tid=2613138638003&pd[em]=01392d484c1786527202fad89aa49be69f7f2cc04b95fee86ce581b81e6e4536&noscript=1" />
 			</noscript>
+			<script>pintrk('track', 'pagevisit', {event_id: <?php echo $pageUniq; ?>});</script>
 			<!-- end Pinterest Tag -->
 
         <?php } // end cookie law if  ?>
