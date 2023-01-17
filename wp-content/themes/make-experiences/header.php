@@ -62,6 +62,19 @@
                 })(window, document, 'script', 'dataLayer', 'GTM-5PRW4M2');</script>
             <!-- End Google Tag Manager -->
 
+        <?php } // end cookie law if  ?>
+
+        <?php wp_head(); ?>
+    </head>
+
+    <body <?php body_class(); ?>>
+
+        <?php wp_body_open(); ?>
+
+		<?php
+		// Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
+        if (!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes") { ?>
+			
 			<!-- Pinterest Tag -->
 			<script>
 			!function(e){if(!window.pintrk){window.pintrk = function () {
@@ -80,22 +93,15 @@
 			<script>pintrk('track', 'pagevisit', {event_id: <?php echo $pageUniq; ?>});</script>
 			<!-- end Pinterest Tag -->
 
-        <?php } // end cookie law if  ?>
+		<?php } // end cookie law if  ?>
 
-        <?php wp_head(); ?>
-    </head>
+		<?php
+		if (!is_singular('llms_my_certificate')):
 
-    <body <?php body_class(); ?>>
+		    do_action(THEME_HOOK_PREFIX . 'before_page');
 
-        <?php wp_body_open(); ?>
-
-<?php
-if (!is_singular('llms_my_certificate')):
-
-    do_action(THEME_HOOK_PREFIX . 'before_page');
-
-endif;
-?>
+		endif;
+		?>
 
         <div id="page" class="site">
 
