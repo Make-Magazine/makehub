@@ -96,7 +96,7 @@ jQuery(document).ready(function() {
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
 				  if (err) {
 				   	//user does not have a session you'll see something like 'login required'
-					console.log('err', err);
+					console.log('parse hash err', err);
 				  }
 				  if (data) {
 					  console.log("data was returned and here it is: ");
@@ -141,6 +141,7 @@ jQuery(document).ready(function() {
 						console.log("uh oh, we got an error and so, were stopping the logout btn click to investigate it");
 						console.log(err);
 						alert("I'm just going to give you a second to check that error, as I suspect this is where we are losing our auth");
+						checkSession();
 						//jQuery("#LogoutBtn").click();
 					}
 					console.log("we got user data");
@@ -161,47 +162,51 @@ jQuery(document).ready(function() {
 				}
 		        //check if logged in another place
 				console.log("check if logged in anywhere else");
-		        webAuth.checkSession({},
-		            function(err, result) {
-		                if (err) {
-							console.log("I guess not, check this error");
-							console.log(err);
-		                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
-		                    if (err.error !== 'login_required') {
-		                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-		                    }
-
-		                    // This should take care of SSO
-		                    // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
-		                    //If you are makehub and you are logged in, you will never hit this code
-		                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
-		                        WPlogout();
-		                    }
-		                    clearLocalStorage();
-		                } else {
-							console.log("oh sweet, we are logged in somewhere else");
-		                    //logged into Auth0
-		                    auth0loggedin = true;
-		                    userProfile = result.idTokenPayload;
-							console.log("and here's the user data:");
-							console.log(userProfile);
-		                    setSession(result);
-
-		                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
-		                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
-								console.log("login to wordress");
-		                        // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-		                        //TBD - this needs styling as this isn't seen where it's at
-		                        jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-		                        WPlogin();
-		                    }
-		                }
-		                displayButtons();
-		            }
-		        ); //end webAuth.checkSession
+ 				checkSession();
 			}
 		}
     }
+
+	function checkSession() {
+		webAuth.checkSession({},
+			function(err, result) {
+				if (err) {
+					console.log("Check Session Error");
+					console.log(err);
+					//not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
+					if (err.error !== 'login_required') {
+						//errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+					}
+
+					// This should take care of SSO
+					// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+					//If you are makehub and you are logged in, you will never hit this code
+					if (wpLoginRequired && jQuery("body").is(".logged-in")) {
+						WPlogout();
+					}
+					clearLocalStorage();
+				} else {
+					console.log("oh sweet, we are logged in somewhere else");
+					//logged into Auth0
+					auth0loggedin = true;
+					userProfile = result.idTokenPayload;
+					console.log("and here's the user data:");
+					console.log(userProfile);
+					setSession(result);
+
+					//if this is a site that requires WP login, but they aren't logged into wp, log them in
+					if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+						console.log("login to wordress");
+						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+						//TBD - this needs styling as this isn't seen where it's at
+						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+						WPlogin();
+					}
+				}
+				displayButtons();
+			}
+		); //end webAuth.checkSession
+	}
 
     //place functions here so they can access the variables inside the event addEventListener
     function clearLocalStorage() {
