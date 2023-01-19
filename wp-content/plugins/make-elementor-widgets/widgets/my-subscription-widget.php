@@ -141,11 +141,9 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		//display all php Errors
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
 		error_reporting(E_ALL);
-
 		$settings = $this->get_settings_for_display();
     	$user = wp_get_current_user();
 
@@ -160,14 +158,14 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		//$user_email = 'tim@cometoconnect.com'; //expired subscription
 		//$user_email = 'steam.jazzy.0w@icloud.com'; //cancelled (no active or pending) subscription
 	    //$user_email = 'dana@thelabellas.com'; //active gift subscription - recipient
-		//$user_email = 'KOA.ROSA@GMAIL.COM'; //active subscription and given gifts
-		//$user_email = 'KOA.ROSA@GMAIL.COM'; //no active subscription and given gifts
+		$user_email = 'KOA.ROSA@GMAIL.COM'; //active subscription and given gifts
+		//$user_email = 'pjo@pobox.com'; //no active subscription, gifts given
 		//$user_email = 'tyler.smelley@gmail.com'; //auto renewal
 		//$user_email = 'kentkrue@gmail.com'; //active example
 		//$user_email = 'pjo@pobox.com'; //no subscription, 2 gift subscriptions example
 		//$user_email = 'MICHAEL@MFRANCE.NET'; // multiple expired subscriptions
 		//$user_email = 'dhares@hickoryhill-consulting.com'; //multiple active customer accounts
-		$user_email = 'mike.kinsman@gmail.com'; //multiple active customer accounts
+		//$user_email = 'mike.kinsman@gmail.com'; //multiple active customer accounts
 		//$user_email = 'BRIAN@TREEGECKO.COM'; //multiple active customer accounts
 		//$user_email = 'webmaster@make.co'; //no subscription
 		//$return .= '  Using email '.$user_email.'<br/>';
@@ -229,25 +227,27 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 			// loop through all subscriptions for this customer
 			foreach($customer->Subscriptions as $customer_sub){
-				//was this subscription gifted?
-				$donorName = '';
-				if(isset($customer_sub->DonorId)){
-					//pull donor information
-					$donor_api  = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/'.$customer_sub->DonorId.'/*';
-					//echo '<b>Calling donor API '.$donor_api.'</b><br/>';
-					$donorInfo  = json_decode(basicCurl($donor_api, $header));
-					$donorName = (isset($donorInfo->FirstName) ? $donorInfo->FirstName:'') . ' ' .
-					             (isset($donorInfo->LastName) ? $donorInfo->LastName:'');
-				}
+				if(isset($customer_sub->Status)){
+					//was this subscription gifted?
+					$donorName = '';
+					if(isset($customer_sub->DonorId)){
+						//pull donor information
+						$donor_api  = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/'.$customer_sub->DonorId.'/*';
+						//echo '<b>Calling donor API '.$donor_api.'</b><br/>';
+						$donorInfo  = json_decode(basicCurl($donor_api, $header));
+						$donorName = (isset($donorInfo->FirstName) ? $donorInfo->FirstName:'') . ' ' .
+						             (isset($donorInfo->LastName) ? $donorInfo->LastName:'');
+					}
 
-				// the customer array contains all information regarding the customer.
-				// each row is specific to a subscription
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]  = (array) $customer_sub;
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['customer_id'] = $customer_id;   //customer id associated with this subscriptiobn
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['FirstName']   = $customerInfo->FirstName;  //customer basic information
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	   = $customerInfo->LastName;  //customer basic information
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
-				$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['donorName']     = $donorName;	   //donor information if any,
+					// the customer array contains all information regarding the customer.
+					// each row is specific to a subscription
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]  = set_sub_fields((array) $customer_sub);
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['customer_id'] = $customer_id;   //customer id associated with this subscriptiobn
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['FirstName']   = $customerInfo->FirstName;  //customer basic information
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	   = $customerInfo->LastName;  //customer basic information
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['donorName']     = $donorName;	   //donor information if any,
+				}
 			} //end customer subscription loop
 
 			//now let's see if this customer has given any gifts
@@ -273,13 +273,15 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 						$emails = (isset($giftRecipients->Emails) ? (array) $giftRecipients->Emails: array());
 						//loop through subscriptions for each gift recipien`t
 						foreach($giftRecipients->Subscriptions as $gift_sub){
-							// the customer array contains all information regarding the customer.
-							// each row is specific to a subscription
-							$customer_array['gifts'][$gift_sub->ShippingAddressId]  = (array) $gift_sub;
-							$customer_array['gifts'][$gift_sub->ShippingAddressId]['FirstName']   = $giftRecipients->FirstName;  //customer basic information
-							$customer_array['gifts'][$gift_sub->ShippingAddressId]['LastName']	   = $giftRecipients->LastName;  //customer basic information
-							$customer_array['gifts'][$gift_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
-							$customer_array['gifts'][$gift_sub->ShippingAddressId]['Emails'] = $emails; //addresses associated with this subscription
+							if(isset($gift_sub->Status)){
+								// the customer array contains all information regarding the customer.
+								// each row is specific to a subscription
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]  = set_sub_fields((array) $gift_sub);
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['FirstName']   = $giftRecipients->FirstName;  //customer basic information
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['LastName']	   = $giftRecipients->LastName;  //customer basic information
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['Emails'] = $emails; //addresses associated with this subscription
+							}
 						}
 					}
 				}
@@ -311,26 +313,39 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 						} //end subscription loop
 					} //end check if subscription array is set
 
-					//Check if customer has given any gifts
-					if(isset($customer_array['gifts']) && !empty($customer_array['gifts']) ){
-						$return .= '<h3>Gifts Given</h3>';
-						$gift_subs = cleanSubs($customer_array['gifts']);
-						foreach($gift_subs as $gift){
-							$return .= buildSubOutput($gift);
-						}
-					}
 					echo $return;
 					?>
 				</li>
 			</ul>
 		</div>
+
 		<?php
+		//Check if customer has given any gifts
+		if(isset($customer_array['gifts']) && !empty($customer_array['gifts']) ){
+			$return = '';
+			?>
+			<div class="dashboard-box make-elementor-expando-box">
+				<h4 class="open"><?php echo 'My Magazine Gift(s)';?></h4>
+				<ul class="open">
+					<li>
+						<?php
+						$gift_subs = cleanSubs($customer_array['gifts']);
+						foreach($gift_subs as $gift){
+							$return .= buildSubOutput($gift);
+						}
+						echo $return;
+					?>
+					</li>
+				</ul>
+				<div>Your print subscription starts upon payment receipt. US - first volume arrives within 6-8 weeks. For telephone service call 847-559-7395 between the hours of 8am and 4:30pm Central Time. Fax: 847-564-9453. Email: make@omeda.com. Please include your Account # in any correspondence.</div>
+			</div>
+			<?php
+		} // end gift check
 	} //end render function
 }
 
 function cleanSubs($subArray) {
 	$subscriptions = array();
-
 	//ensure the subscriptions are sorted with the most recent subscription on top, based on exp date
 	$exp_date=array_column($subArray,"IssueExpirationDate");
 	array_multisort($exp_date, SORT_DESC,$subArray);
@@ -356,6 +371,20 @@ function cleanSubs($subArray) {
 
 		}
 	}
+	return $subscriptions;
+}
+
+function set_sub_fields($customer_sub) {
+	$subscriptions = array('ActualVersionCode'	=> $customer_sub['ActualVersionCode'],
+							'Status' 			=> $customer_sub['Status'],
+							'AutoRenewalCode'	=> (isset($customer_sub['AutoRenewalCode'])?$customer_sub['AutoRenewalCode']:''),
+							'IssueExpirationDate' => ($customer_sub['IssueExpirationDate']?$customer_sub['IssueExpirationDate']:''),
+							'IssuesRemaining'	=> (isset($customer_sub['IssuesRemaining'])?$customer_sub['IssuesRemaining']:0),
+							'LastPaymentDate'	=> (isset($customer_sub['LastPaymentDate'])?$customer_sub['LastPaymentDate']:''),
+							'LastPaymentAmount' => (isset($customer_sub['LastPaymentAmount'])?$customer_sub['LastPaymentAmount']:''),
+							'OrderDate'			=> (isset($customer_sub['OrderDate'])?$customer_sub['OrderDate']:''),
+							'ShippingAddressId' => $customer_sub['ShippingAddressId']
+						);
 	return $subscriptions;
 }
 
@@ -411,6 +440,7 @@ function buildSubOutput($subscription) {
 
 	//renewal type
 	$auto_renew = '';
+	/*
 	// 0 = Not Auto Renewal, 5 = Auto Charge, 6 = Auto Bill Me on Invoice
 	if(isset($subscription['AutoRenewalCode']) ){
 		switch ($subscription['AutoRenewalCode']){
@@ -418,7 +448,7 @@ function buildSubOutput($subscription) {
 			case 5: $auto_renew .= "(account will auto renew)"; break;
 			case 6: $auto_renew .= "(account will be billed with an invoice)"; break;
 		}
-	}
+	}*/
 
 	//expiration date - show expiration date and number of issues remaining if subscription is not expired
 	$exp_date = $issues_remaining = '';
@@ -435,9 +465,9 @@ function buildSubOutput($subscription) {
 	}
 
 	//Order date
+	$order_date = '';
 	if(isset($subscription['OrderDate'])) {
 		$order_date=date_format(date_create($subscription['OrderDate']), "Y/m/d");
-		//$return .= 'Ordered on: '. $order_date.'<br/><br/>';
 	}
 
 	$return .= '<div class="container">';
@@ -455,8 +485,9 @@ function buildSubOutput($subscription) {
 	 }
 
 	$return .= '<div id="additional_info" class="container">';
-	$return .= 		($exp_date!=''?'Subscription expires on '.$exp_date.' '.$auto_renew.'.<br/>':'');
+	$return .= 		($exp_date!=''?'Subscription expires on '.$exp_date.'<br/>':'');
 	$return .= 		($last_pay_date!='' ? 'Last payment received on '.$last_pay_date.' for '.$last_pay_amt.'. Thank you!<br/>':'');
+	$return .=		($order_date!='' ? 'Ordered on:'.$order_date:'');
 	$return .= '</div>';
 
 	$return .= '<hr>';
