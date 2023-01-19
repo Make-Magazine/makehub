@@ -141,9 +141,6 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
 		$settings = $this->get_settings_for_display();
     	$user = wp_get_current_user();
 
