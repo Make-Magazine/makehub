@@ -80,12 +80,13 @@ jQuery(document).ready(function() {
         }
 		//check for if this is the first login
 		if(localStorage.getItem('first_login')) {
+
 			if(auth0Hash.includes("access_token")){
 				// this is the first time logging in
 				webAuth.parseHash(({hash: auth0Hash}),function(err, data) {
 				  if (err) {
 				   	//user does not have a session you'll see something like 'login required'
-					console.log('err', err);
+					console.log('parse hash err', err);
 				  }
 				  if (data) {
 						//logged into Auth0
@@ -120,7 +121,9 @@ jQuery(document).ready(function() {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
-						jQuery("#LogoutBtn").click();
+						console.log(err);
+						checkSession();
+						//jQuery("#LogoutBtn").click();
 					}
 					// other wise, do the thing!
 					userProfile = user;
@@ -131,46 +134,50 @@ jQuery(document).ready(function() {
 				// log if we are still getting any user info after the expiration
 				if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') <= currentDate.getTime()) {
 					webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
+						console.log("can we get any user data anyways?");
 						console.log(user);
 					});
 				}
 		        //check if logged in another place
-		        webAuth.checkSession({},
-		            function(err, result) {
-		                if (err) {
-		                    //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
-		                    if (err.error !== 'login_required') {
-		                        //errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
-		                    }
-
-		                    // This should take care of SSO
-		                    // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
-		                    //If you are makehub and you are logged in, you will never hit this code
-		                    if (wpLoginRequired && jQuery("body").is(".logged-in")) {
-		                        WPlogout();
-		                    }
-		                    clearLocalStorage();
-		                } else {
-		                    //logged into Auth0
-		                    auth0loggedin = true;
-		                    userProfile = result.idTokenPayload;
-
-		                    setSession(result);
-
-		                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
-		                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
-		                        // loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-		                        //TBD - this needs styling as this isn't seen where it's at
-		                        jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-		                        WPlogin();
-		                    }
-		                }
-		                displayButtons();
-		            }
-		        ); //end webAuth.checkSession
+ 				checkSession();
 			}
 		}
     }
+
+	function checkSession() {
+		webAuth.checkSession({},
+			function(err, result) {
+				if (err) {
+					//not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
+					if (err.error !== 'login_required') {
+						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
+					}
+
+					// This should take care of SSO
+					// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
+					//If you are makehub and you are logged in, you will never hit this code
+					if (wpLoginRequired && jQuery("body").is(".logged-in")) {
+						WPlogout();
+					}
+					clearLocalStorage();
+				} else {
+					//logged into Auth0
+					auth0loggedin = true;
+					userProfile = result.idTokenPayload;
+					setSession(result);
+
+					//if this is a site that requires WP login, but they aren't logged into wp, log them in
+					if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
+						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+						//TBD - this needs styling as this isn't seen where it's at
+						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+						WPlogin();
+					}
+				}
+				displayButtons();
+			}
+		); //end webAuth.checkSession
+	}
 
     //place functions here so they can access the variables inside the event addEventListener
     function clearLocalStorage() {
@@ -253,7 +260,6 @@ jQuery(document).ready(function() {
 			var accessToken = localStorage.getItem('access_token');
 
             if (!accessToken) {
-                console.log('Access token must exist to fetch profile');
                 errorMsg('Login attempted without Access Token');
             }
 

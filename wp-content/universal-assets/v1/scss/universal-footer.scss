@@ -107,6 +107,12 @@
 				.faire-links {
 					max-width: 220px;
 					margin-left: 25px;
+					@media screen and (max-width: 768px) {
+						margin-left: 0px;
+						margin-top: 5px;
+						max-width: 100%;
+						width: 100%;
+					}
 				}
 			}
 

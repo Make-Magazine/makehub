@@ -198,6 +198,13 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             }
 							.bp-logout-nav, .bp-login-nav { display: none; }
                         }
+						#buddypanel-menu {
+							@media screen and (max-width:805px){
+								.bb-menu-item:before, .bb-menu-item:after {
+									display: none;
+								}
+							}
+						}
                     }
                     #primary-menu {
                         margin: 0;
@@ -578,15 +585,14 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 			align-items: center;
 			margin-right: 10px;
             &:hover {
-                 .dropdown-menu {
-                     display: block;
-                 }
+				@media screen and (min-width:805px) {
+					.dropdown-menu {
+						display: block;
+					}
+				}
             }
 			&.show {
 				display: flex !important;
-			}
-			@media screen and (max-width: 768px) {
-				pointer-events: none;
 			}
         }
 		#dropdownMenuLink {
@@ -620,32 +626,6 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 				word-wrap: break-word;
 			 }
         }
-		.dropdown-menu.profile-menu {
-			right: -25px;
-			top: 90% !important;
-			left: auto !important;
-			min-width: 265px;
-			transform: none !important;
-			will-change: transform;
-			&::before {
-				left: 79%;
-				content: ' ';
-				position: absolute;
-				width: 0;
-				height: 0;
-				top: 0;
-				border: 7px solid #000;
-				border-color: #fff #fff transparent transparent;
-				-webkit-transform-origin: 0 0;
-				-ms-transform-origin: 0 0;
-				transform-origin: 0 0;
-				-webkit-transform: rotate(-45deg);
-				-ms-transform: rotate(-45deg);
-				transform: rotate(-45deg);
-				box-shadow: 2px -3px 3px 0 rgba(0,0,0,.1);
-				z-index: 1002;
-			}
-		}
     }
 }
 .logged-in {
@@ -682,7 +662,31 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 }
 
 // Profile dropdown
- .dropdown-menu.profile-menu {
+.dropdown-menu.profile-menu {
+	right: -25px;
+	top: 90% !important;
+	left: auto !important;
+	min-width: 265px;
+	transform: none !important;
+	will-change: transform;
+	&::before {
+		left: 79%;
+		content: ' ';
+		position: absolute;
+		width: 0;
+		height: 0;
+		top: 0;
+		border: 7px solid #000;
+		border-color: #fff #fff transparent transparent;
+		-webkit-transform-origin: 0 0;
+		-ms-transform-origin: 0 0;
+		transform-origin: 0 0;
+		-webkit-transform: rotate(-45deg);
+		-ms-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+		box-shadow: 2px -3px 3px 0 rgba(0,0,0,.1);
+		z-index: 1002;
+	}
 	.dropdown-links {
 		padding: 15px;
 		border-top: solid 1px #ccc;
@@ -750,35 +754,6 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 					display: block;
 				}
 			}
-		}
-	}
-	@media screen and (max-width: 805px) {
-		position: relative;
-		border: 0px;
-		box-shadow: none;
-		padding-top: 0px;
-		border-radius: 0px;
-		display: none;
-		.dropdown-links {
-			padding-bottom: 0px;
-			border: 0px;
-		}
-		.profile-info {
-			display: none !important;
-		}
-		#LogoutBtn {
-			display: flex;
-			align-items: center;
-			&:before {
-				font-family: "FontAwesome";
-				content: "\f2f5";
-				color: #999;
-				font-size: 22px;
-				margin-right: 18px;
-			}
-		}
-		.menu-item a {
-			padding-left: 15px !important;
 		}
 	}
 }
