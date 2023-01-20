@@ -252,7 +252,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		    'user_id' => bp_loggedin_user_id()
 		);
 		$interests = bp_get_profile_field_data($args);
-		var_dump(bp_get_profile_field_data('Topics'));
+		//var_dump(bp_get_profile_field_data('Topics'));
 		array_walk($interests, function (&$value) {
 			$value = str_replace("&amp;", "", $value);
 			$value = preg_replace("/\W+/","-",$value);

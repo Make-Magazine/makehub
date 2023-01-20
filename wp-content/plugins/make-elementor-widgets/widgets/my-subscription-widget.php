@@ -104,6 +104,29 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
     			]
     		);
 
+		$this->add_control(
+    			'email',
+    			[
+    				'label' => esc_html__( 'Email', 'elementor-make-widget' ),
+					'description' => "Select a specific type of user to test that view, set to default to display for current user",
+    				'type' => \Elementor\Controls_Manager::SELECT,
+					'default' => '',
+					'options' => [
+						'' => esc_html__( 'Default', 'elementor-make-widget' ),
+						'cathy@make.co' => esc_html__( 'No Subscription', 'elementor-make-widget' ),
+						'TMC104@GMAIL.COM' => esc_html__( 'Payment Due', 'elementor-make-widget' ),
+						'alicia@make.co' => esc_html__( 'Active Subscription', 'elementor-make-widget' ),
+						'tim@cometoconnect.com' => esc_html__( 'Expired Subscription', 'elementor-make-widget' ),
+						'steam.jazzy.0w@icloud.com' => esc_html__( 'Cancelled Subscription', 'elementor-make-widget' ),
+						'dana@thelabellas.com' => esc_html__( 'Gift Subscription Recipient', 'elementor-make-widget' ),
+						'KOA.ROSA@GMAIL.COM' => esc_html__( 'Active Subscription - Gift Donor', 'elementor-make-widget' ),
+						'pjo@pobox.com' => esc_html__( 'No Subscription - Gift Donor', 'elementor-make-widget' ),
+						'MICHAEL@MFRANCE.NET' => esc_html__( 'Multiple Expired Subscriptions', 'elementor-make-widget' ),
+						'dhares@hickoryhill-consulting.com' => esc_html__( 'Multiple Active Accounts', 'elementor-make-widget' ),
+					],
+    			]
+    		);
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -148,8 +171,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		$customer_array = array();
 
 		$user_email = $user->user_email;
+		if($settings['email'] != '') {
+			$user_email = $settings['email'];
+		}
+
+
 		//$user_email = 'cathy@make.co'; //no subscription
-		$user_email = 'TMC104@GMAIL.COM'; //pending subscription
+		//$user_email = 'TMC104@GMAIL.COM'; //payment due subscription
 		//$user_email = 'alicia@make.co'; //active subscription
 		//$user_email = 'rio@make.co'; //active subscription
 		//$user_email = 'tim@cometoconnect.com'; //expired subscription
@@ -288,8 +316,8 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		?>
 
-		<div class="dashboard-box make-elementor-expando-box">
-			<h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'My Magazine Subscription(s)');?></h4>
+		<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
+			<h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'My Make: Magazine Subscriptions');?></h4>
 			<ul class="open">
 				<li>
 					<?php
@@ -321,7 +349,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		if(isset($customer_array['gifts']) && !empty($customer_array['gifts']) ){
 			$return = '';
 			?>
-			<div class="dashboard-box make-elementor-expando-box">
+			<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
 				<h4 class="open"><?php echo 'My Magazine Gift(s)';?></h4>
 				<ul class="open">
 					<li>
@@ -334,7 +362,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					?>
 					</li>
 				</ul>
-				<div>Your print subscription starts upon payment receipt. US - first volume arrives within 6-8 weeks. For telephone service call 847-559-7395 between the hours of 8am and 4:30pm Central Time. Fax: 847-564-9453. Email: make@omeda.com. Please include your Account # in any correspondence.</div>
+				<div class="subscription-item disclaimer">Your print subscription starts upon payment receipt. US - first volume arrives within 6-8 weeks. For telephone service call 847-559-7395 between the hours of 8am and 4:30pm Central Time. Fax: 847-564-9453. Email: make@omeda.com. Please include your Account # in any correspondence.</div>
 			</div>
 			<?php
 		} // end gift check
@@ -391,17 +419,20 @@ function buildSubOutput($subscription) {
 	$return = '';
 
 	//Build the output
-	$name_address =  ucfirst($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
+	$name = prettifyString($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
 
 	//show the address associated with this subscription
 	if($subscription['address_array'] !=''){
+		$address = (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
 		foreach($subscription['address_array'] as $address_info) {
-			$name_address .= (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
-			$name_address .= $address_info['Street'].'<br/>';
-			$name_address .= (isset($address_info['ApartmentMailStop'])!=''?$address_info['ApartmentMailStop'].'<br/>':'');
-			$name_address .= (isset($address_info['ExtraAddress'])!=''?$address_info['ExtraAddress'].'<br/>':'');
-			$name_address .= $address_info['City'] .', '. $address_info['Region'].' '. $address_info['PostalCode'].'<br/>';
-			$name_address .= $address_info['Country'].'<br/><br/>';
+			$address .= prettifyString($address_info['Street']).'<br/>';
+			$address .= (isset($address_info['ApartmentMailStop'])!=''?$address_info['ApartmentMailStop'].'<br/>':'');
+			$address .= (isset($address_info['ExtraAddress'])!=''?$address_info['ExtraAddress'].'<br/>':'');
+			if(strlen($address_info['PostalCode']) > 5) {
+				$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
+			}
+			$address .= prettifyString($address_info['City']) .', '. $address_info['Region'].' '. $address_info['PostalCode'] .'<br/>';
+			$address .= $address_info['Country'].'<br/><br/>';
 		}
 	}
 
@@ -462,10 +493,9 @@ function buildSubOutput($subscription) {
 	}*/
 
 	//expiration date - show expiration date and number of issues remaining if subscription is not expired
-	$exp_date = $issues_remaining = '';
+	$exp_date = '';
 	if($subscription['Status'] == 1){
 		$exp_date = date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d");
-		$issues_remaining = $subscription['IssuesRemaining'];
 	}
 
 	//last payment date
@@ -481,26 +511,39 @@ function buildSubOutput($subscription) {
 		$order_date=date_format(date_create($subscription['OrderDate']), "Y/m/d");
 	}
 
-	$return .= '<div class="container">';
-	$return .= '	<div class="row">
-						<div class="col-sm-3">'.$subscription['ShippingAddressId'].'</div>
-						<div class="col-sm-3">'.$subscription_type.' Subscription</div>
-					   	<div class="col-sm-3">'.$subscription_status.'</div>
-					   	<div class="col-sm-3">'.$name_address.'</div>
-				   	</div>
-				 </div>';
+	$issues_remaining = '';
+	if($subscription['IssuesRemaining'] != '') {
+		$issues_remaining = $subscription['IssuesRemaining'];
+	}
 
-	 //was this subscription a gift?
-	 if(isset($subscription['donorName'])&&$subscription['donorName']!=''){
-	 	$return .= '<i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.$subscription['donorName'].'.<br/><br/>';
-	 }
+	$return .= '<div class="subscription-item-wrapper"><div class="subscription-item">';
+	$return .= 	   '<div class="sub-shippingAdID" title="Shipping Address ID">'.$subscription['ShippingAddressId'].'</div>
+					<div class="sub-type" title="Subscription Type">'.$subscription_type.'</div>
+					<div class="sub-status sub-'.strtok(strtolower($subscription_status)," ").'" title="Subscription Status">'.$subscription_status.'</div>
+					<div class="sub-name" title="Name">'.$name.'</div>';
+	if($issues_remaining!='') {
+		$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
+	}
+	$return .= 	   '<div class="sub-additional-info">
+						<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>'.$address.'</div>';
+	if($exp_date!='') {
+		$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expires:</b> '.$exp_date.'</div>';
+	}
+	if($last_pay_date!='') {
+		$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
+						<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> '.$last_pay_amt.'</div>';
+	}
+	$return .= 	   '</div>';
+	//was this subscription a gift?
+	if(isset($subscription['donorName'])&&$subscription['donorName']!=''){
+	   $return .= '<div class="sub-gift"><i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.$subscription['donorName'].'.</div><br/><br/>';
+	}
+	$return .= 	   '<div class="more-info" title="See More">...</div>
+				</div></div>';
 
-	$return .= '<div id="additional_info" class="container">';
-	$return .= 		($exp_date!=''?'Subscription expires on '.$exp_date.'<br/>':'');
-	$return .= 		($last_pay_date!='' ? 'Last payment received on '.$last_pay_date.' for '.$last_pay_amt.'. Thank you!<br/>':'');
-	$return .=		($order_date!='' ? 'Ordered on:'.$order_date:'');
-	$return .= '</div>';
-
-	$return .= '<hr>';
 	return $return;
+}
+
+function prettifyString($string) {
+	return ucwords(strtolower($string));
 }

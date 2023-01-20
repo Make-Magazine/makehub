@@ -336,3 +336,111 @@
     position:relative;
     left: -10px;
 }
+
+.subscriptions-wrapper ul {
+	margin: 10px 5px 15px !important;
+}
+.subscriptions-wrapper .subscription-item-wrapper {
+	background: #fff;
+}
+.subscriptions-wrapper .subscription-item {
+	margin-right: 2px;
+	margin-bottom: 15px;
+	padding: 10px 50px 10px 15px;
+	display: flex;
+	flex-wrap: wrap;
+	border: solid 1px #f1f1f1;
+	border-radius: 5px;
+	box-shadow: 1px 2px 3px 0px rgba(155,155,155,0.75);
+	height: 40px;
+	overflow: hidden;
+	position: relative;
+}
+.subscriptions-wrapper .subscription-item-wrapper .subscription-item.disclaimer {
+	height: auto;
+}
+.subscriptions-wrapper .subscription-item-wrapper .subscription-item.open {
+	height: auto;
+	background: linear-gradient(180deg, rgba(0,0,0,0) 39px, rgb(192, 192, 192) 40px, rgba(0,0,0,0) 41px );
+}
+.subscriptions-wrapper .subscription-item .more-info {
+	position: absolute;
+	top: 5px;
+	right: 0px;
+	font-weight: bold;
+	cursor: pointer;
+	min-width: 0px;
+}
+.subscriptions-wrapper .subscription-item .more-info:hover {
+	color: #0000EE;
+	text-decoration: underline;
+}
+.subscriptions-wrapper .subscription-item > div {
+	margin-bottom: 10px;
+	line-height: 24px;
+	margin-right: 15px;
+	font-weight: 400;
+	min-width: 10%;
+}
+.subscriptions-wrapper .subscription-item .sub-status:before{
+	font-family: FontAwesome;
+	margin-right: 5px;
+}
+.subscriptions-wrapper .subscription-item .sub-shippingAdID {
+	width: 100px;
+}
+.subscriptions-wrapper .subscription-item .sub-type {
+	width: 120px;
+}
+.subscriptions-wrapper .subscription-item .sub-status {
+	width: 170px;
+}
+.subscriptions-wrapper .subscription-item .sub-active {
+	color: limegreen;
+}
+.subscriptions-wrapper .subscription-item .sub-active:before {
+	content: "\f058";
+}
+.subscriptions-wrapper .subscription-item .sub-name {
+	width: 200px;
+}
+.subscriptions-wrapper .subscription-item .sub-additional-info {
+	width: 100%;
+}
+.subscriptions-wrapper .subscription-item .sub-additional-info > div {
+	display: flex;
+	gap: 15px;
+	width: 100%;
+}
+.subscriptions-wrapper .subscription-item .sub-additional-info > div b {
+	font-weight: 600;
+	min-width: 200px;
+	font-family: Roboto Light;
+}
+.subscriptions-wrapper .subscription-item .sub-address, .subscriptions-wrapper .subscription-item .sub-lastPayment {
+	width: 50%;
+}
+.subscriptions-wrapper .subscription-item .sub-lastPayment {
+	text-align: right;
+}
+.subscriptions-wrapper .subscription-item .sub-expired, .subscriptions-wrapper .subscription-item .sub-cancelled, .subscriptions-wrapper .subscription-item .sub-balance {
+	color: darkred;
+}
+.subscriptions-wrapper .subscription-item .sub-expired:before, .subscriptions-wrapper .subscription-item .sub-cancelled:before {
+	content: "\f057";
+}
+.subscriptions-wrapper .subscription-item .sub-balance:before {
+	content: "\f06a";
+}
+@media screen and (max-width:990px) {
+	.subscriptions-wrapper .subscription-item .sub-name {
+		width: 100%;
+	}
+}
+@media screen and (max-width:500px) {
+	.subscriptions-wrapper .subscription-item .sub-additional-info > div {
+		flex-direction: column;
+		gap: 0px;
+		margin-bottom: 5px;
+	}
+}
