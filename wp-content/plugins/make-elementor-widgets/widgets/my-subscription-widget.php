@@ -149,13 +149,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		$user_email = $user->user_email;
 		//$user_email = 'cathy@make.co'; //no subscription
-		//$user_email = 'TMC104@GMAIL.COM'; //pending subscription
+		$user_email = 'TMC104@GMAIL.COM'; //pending subscription
 		//$user_email = 'alicia@make.co'; //active subscription
 		//$user_email = 'rio@make.co'; //active subscription
 		//$user_email = 'tim@cometoconnect.com'; //expired subscription
 		//$user_email = 'steam.jazzy.0w@icloud.com'; //cancelled (no active or pending) subscription
 	    //$user_email = 'dana@thelabellas.com'; //active gift subscription - recipient
-		$user_email = 'KOA.ROSA@GMAIL.COM'; //active subscription and given gifts
+		//$user_email = 'KOA.ROSA@GMAIL.COM'; //active subscription and given gifts
 		//$user_email = 'pjo@pobox.com'; //no active subscription, gifts given
 		//$user_email = 'tyler.smelley@gmail.com'; //auto renewal
 		//$user_email = 'kentkrue@gmail.com'; //active example
@@ -239,9 +239,9 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					// the customer array contains all information regarding the customer.
 					// each row is specific to a subscription
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]  = set_sub_fields((array) $customer_sub);
-					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['customer_id'] = $customer_id;   //customer id associated with this subscriptiobn
-					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['FirstName']   = $customerInfo->FirstName;  //customer basic information
-					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	   = $customerInfo->LastName;  //customer basic information
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['customer_id']   = $customer_id;   //customer id associated with this subscriptiobn
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['FirstName']     = $customerInfo->FirstName;  //customer basic information
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	    = $customerInfo->LastName;  //customer basic information
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['donorName']     = $donorName;	   //donor information if any,
 				}
@@ -274,10 +274,10 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 								// the customer array contains all information regarding the customer.
 								// each row is specific to a subscription
 								$customer_array['gifts'][$gift_sub->ShippingAddressId]  = set_sub_fields((array) $gift_sub);
-								$customer_array['gifts'][$gift_sub->ShippingAddressId]['FirstName']   = $giftRecipients->FirstName;  //customer basic information
-								$customer_array['gifts'][$gift_sub->ShippingAddressId]['LastName']	   = $giftRecipients->LastName;  //customer basic information
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['FirstName']     = $giftRecipients->FirstName;  //customer basic information
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['LastName']	    = $giftRecipients->LastName;  //customer basic information
 								$customer_array['gifts'][$gift_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
-								$customer_array['gifts'][$gift_sub->ShippingAddressId]['Emails'] = $emails; //addresses associated with this subscription
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]['Emails'] 		= $emails; //addresses associated with this subscription
 							}
 						}
 					}
@@ -302,7 +302,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 					//process subscription array
 					if(!empty($customer_array['subscriptions']) ){
-						//We only want to display Active or pending subscriptions. If none are found, display the most recent sub based on postal ID
+						//We only want to display Active or pending subscriptions. If none are found, display the most recent sub based on exp date
 						$subscriptions = cleanSubs($customer_array['subscriptions']);
 						//build output
 						foreach($subscriptions as $subscription){
@@ -380,7 +380,9 @@ function set_sub_fields($customer_sub) {
 							'LastPaymentDate'	=> (isset($customer_sub['LastPaymentDate'])?$customer_sub['LastPaymentDate']:''),
 							'LastPaymentAmount' => (isset($customer_sub['LastPaymentAmount'])?$customer_sub['LastPaymentAmount']:''),
 							'OrderDate'			=> (isset($customer_sub['OrderDate'])?$customer_sub['OrderDate']:''),
-							'ShippingAddressId' => $customer_sub['ShippingAddressId']
+							'ShippingAddressId' => $customer_sub['ShippingAddressId'],
+							'PaymentStatus'		=> (isset($customer_sub['PaymentStatus'])?$customer_sub['PaymentStatus']:''),
+							'Amount'			=> (isset($customer_sub['Amount'])?$customer_sub['Amount']:0)
 						);
 	return $subscriptions;
 }
@@ -392,7 +394,7 @@ function buildSubOutput($subscription) {
 	$name_address =  ucfirst($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
 
 	//show the address associated with this subscription
-	if(isset($subscription['address_array']) ){
+	if($subscription['address_array'] !=''){
 		foreach($subscription['address_array'] as $address_info) {
 			$name_address .= (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
 			$name_address .= $address_info['Street'].'<br/>';
@@ -404,7 +406,7 @@ function buildSubOutput($subscription) {
 	}
 
 	//determine supscription type
-	if(isset($subscription['ActualVersionCode'])){
+	if($subscription['ActualVersionCode']!=''){
 		switch ($subscription['ActualVersionCode']) {
 			case "P":
 				$subscription_type = "Print";
@@ -423,7 +425,7 @@ function buildSubOutput($subscription) {
 
 	//determine subscription Status
 	$subscription_status = '';
-	if(isset($subscription['Status']) ){
+	if($subscription['Status']!='' ){
 		switch ($subscription['Status']){
 			case 1:   $subscription_status = "Active"; break;
 			case 2:   $subscription_status = "Pending"; break;
@@ -435,11 +437,23 @@ function buildSubOutput($subscription) {
 		}
 	}
 
+	/*
+	Payment Status Codes
+		value	description	what it means
+		1	Paid on invoice.	Customer paid after being invoiced.
+		2	Paid with order.	Customer paid at the time of his order.
+		3	Credit.	Customer owes an outstanding balance on the subscription.
+		6	Free.	Customer is being granted a free subscription, but isn’t necessarily qualified by the publisher.
+		7	Controlled.	Customer was selected by publisher to receive subscription for free.*/
+	if($subscription['PaymentStatus']==3){
+		$subscription_status = 'Balance due: '.$subscription['Amount'];
+	}
+
 	//renewal type
 	$auto_renew = '';
 	/*
 	// 0 = Not Auto Renewal, 5 = Auto Charge, 6 = Auto Bill Me on Invoice
-	if(isset($subscription['AutoRenewalCode']) ){
+	if($subscription['AutoRenewalCode'] !='' ){
 		switch ($subscription['AutoRenewalCode']){
 			case 0: $auto_renew = "(account not set up for auto renewal)"; break;
 			case 5: $auto_renew .= "(account will auto renew)"; break;
@@ -449,21 +463,21 @@ function buildSubOutput($subscription) {
 
 	//expiration date - show expiration date and number of issues remaining if subscription is not expired
 	$exp_date = $issues_remaining = '';
-	if(isset($subscription['Status']) && $subscription['Status'] ==1){
+	if($subscription['Status'] == 1){
 		$exp_date = date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d");
 		$issues_remaining = $subscription['IssuesRemaining'];
 	}
 
 	//last payment date
 	$last_pay_date = $last_pay_amt = '';
-	if(isset($subscription['LastPaymentDate'])){
+	if($subscription['LastPaymentDate'] != ''){
 		$last_pay_date = date_format(date_create($subscription['LastPaymentDate']), "Y/m/d");
 		$last_pay_amt  = $subscription['LastPaymentAmount'];
 	}
 
 	//Order date
 	$order_date = '';
-	if(isset($subscription['OrderDate'])) {
+	if($subscription['OrderDate'] != '') {
 		$order_date=date_format(date_create($subscription['OrderDate']), "Y/m/d");
 	}
 
