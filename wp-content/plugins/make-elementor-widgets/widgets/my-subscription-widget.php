@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
+	private $noActive;
 
 	/**
 	 * Get widget name.
@@ -266,7 +267,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 					// the customer array contains all information regarding the customer.
 					// each row is specific to a subscription
-					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]  = set_sub_fields((array) $customer_sub);
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]  = $this->set_sub_fields((array) $customer_sub);
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['customer_id']   = $customer_id;   //customer id associated with this subscriptiobn
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['FirstName']     = $customerInfo->FirstName;  //customer basic information
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	    = $customerInfo->LastName;  //customer basic information
@@ -301,7 +302,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 							if(isset($gift_sub->Status)){
 								// the customer array contains all information regarding the customer.
 								// each row is specific to a subscription
-								$customer_array['gifts'][$gift_sub->ShippingAddressId]  = set_sub_fields((array) $gift_sub);
+								$customer_array['gifts'][$gift_sub->ShippingAddressId]  = $this->set_sub_fields((array) $gift_sub);
 								$customer_array['gifts'][$gift_sub->ShippingAddressId]['FirstName']     = $giftRecipients->FirstName;  //customer basic information
 								$customer_array['gifts'][$gift_sub->ShippingAddressId]['LastName']	    = $giftRecipients->LastName;  //customer basic information
 								$customer_array['gifts'][$gift_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
@@ -330,10 +331,10 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					//process subscription array
 					if(!empty($customer_array['subscriptions']) ){
 						//We only want to display Active or pending subscriptions. If none are found, display the most recent sub based on exp date
-						$subscriptions = cleanSubs($customer_array['subscriptions']);
+						$subscriptions = $this->cleanSubs($customer_array['subscriptions']);
 						//build output
 						foreach($subscriptions as $subscription){
-							$return .= buildSubOutput($subscription);
+							$return .= $this->buildSubOutput($subscription);
 						} //end subscription loop
 					} //end check if subscription array is set
 
@@ -353,9 +354,9 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				<ul class="open">
 					<li>
 						<?php
-						$gift_subs = cleanSubs($customer_array['gifts']);
+						$gift_subs = $this->cleanSubs($customer_array['gifts']);
 						foreach($gift_subs as $gift){
-							$return .= buildSubOutput($gift);
+							$return .= $this->buildSubOutput($gift);
 						}
 						echo $return;
 					?>
@@ -365,7 +366,8 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			<?php
 		} // end gift check
 
-		if(empty($customer_array) || empty($customer_array['subscriptions']) ){
+		if(empty($customer_array) || empty($customer_array['subscriptions']) || $this->noActive ){
+			//TBD - add link to image and make image bigger on hover
 			?>
 			<div class="subscription-item sub-offer">
 				<img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" >
@@ -379,190 +381,193 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		<div class="subscription-item disclaimer" style="clear:both">Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time (847-559-7395), or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</div>
 		<?php
 	} //end render function
-}
 
-function cleanSubs($subArray) {
-	$subscriptions = array();
-	//ensure the subscriptions are sorted with the most recent subscription on top, based on exp date
-	$exp_date=array_column($subArray,"IssueExpirationDate");
-	array_multisort($exp_date, SORT_DESC,$subArray);
+	protected function cleanSubs($subArray) {
+		$this->noActive = FALSE;
 
-	//check for any active or pending subscriptions
-	$active  = array_search(1, array_column($subArray, 'Status'));
-	$pending = array_search(2, array_column($subArray, 'Status'));
+		$subscriptions = array();
+		//ensure the subscriptions are sorted with the most recent subscription on top, based on exp date
+		$exp_date=array_column($subArray,"IssueExpirationDate");
+		array_multisort($exp_date, SORT_DESC,$subArray);
 
-	//we only want to display active or pending subscriptions
-	if($active === false && $pending===false){
-		//	If there are no active or pending subscriptions found,
-		//	display the most recent subscription based on postal ID
-		//echo 'no active or pending subsriptions found';
-		//remove all but the most recent subscription
-		$subscriptions[] = array_shift($subArray);
-	}else{
-		//loop through the subscriptions and only output the active and pending subscriptions
-		foreach($subArray as $subscription){
-			//save only the active and pending orders
-			if(isset($subscription['Status']) && ($subscription['Status']==1 || $subscription['Status']==2)){
-				$subscriptions[] = $subscription;
+		//check for any active or pending subscriptions
+		$active  = array_search(1, array_column($subArray, 'Status'));
+		$pending = array_search(2, array_column($subArray, 'Status'));
+
+		//we only want to display active or pending subscriptions
+		if($active === false && $pending===false){
+			//	If there are no active or pending subscriptions found,
+			//	display the most recent subscription based on postal ID
+			//remove all but the most recent subscription
+			$subscriptions[] = array_shift($subArray);
+			$this->noActive = TRUE;
+		}else{
+			//loop through the subscriptions and only output the active and pending subscriptions
+			foreach($subArray as $subscription){
+				//save only the active and pending orders
+				if(isset($subscription['Status']) && ($subscription['Status']==1 || $subscription['Status']==2)){
+					$subscriptions[] = $subscription;
+				}
+
 			}
-
 		}
+		return $subscriptions;
 	}
-	return $subscriptions;
-}
 
-function set_sub_fields($customer_sub) {
-	$subscriptions = array('ActualVersionCode'	=> $customer_sub['ActualVersionCode'],
-							'Status' 			=> $customer_sub['Status'],
-							'AutoRenewalCode'	=> (isset($customer_sub['AutoRenewalCode'])?$customer_sub['AutoRenewalCode']:''),
-							'IssueExpirationDate' => ($customer_sub['IssueExpirationDate']?$customer_sub['IssueExpirationDate']:''),
-							'IssuesRemaining'	=> (isset($customer_sub['IssuesRemaining'])?$customer_sub['IssuesRemaining']:0),
-							'LastPaymentDate'	=> (isset($customer_sub['LastPaymentDate'])?$customer_sub['LastPaymentDate']:''),
-							'LastPaymentAmount' => (isset($customer_sub['LastPaymentAmount'])?$customer_sub['LastPaymentAmount']:''),
-							'OrderDate'			=> (isset($customer_sub['OrderDate'])?$customer_sub['OrderDate']:''),
-							'ShippingAddressId' => $customer_sub['ShippingAddressId'],
-							'PaymentStatus'		=> (isset($customer_sub['PaymentStatus'])?$customer_sub['PaymentStatus']:''),
-							'Amount'			=> (isset($customer_sub['Amount'])?$customer_sub['Amount']:0)
-						);
-	return $subscriptions;
-}
+	protected function set_sub_fields($customer_sub) {
+		$subscriptions = array('ActualVersionCode'	=> $customer_sub['ActualVersionCode'],
+								'Status' 			=> $customer_sub['Status'],
+								'AutoRenewalCode'	=> (isset($customer_sub['AutoRenewalCode'])?$customer_sub['AutoRenewalCode']:''),
+								'IssueExpirationDate' => ($customer_sub['IssueExpirationDate']?$customer_sub['IssueExpirationDate']:''),
+								'IssuesRemaining'	=> (isset($customer_sub['IssuesRemaining'])?$customer_sub['IssuesRemaining']:0),
+								'LastPaymentDate'	=> (isset($customer_sub['LastPaymentDate'])?$customer_sub['LastPaymentDate']:''),
+								'LastPaymentAmount' => (isset($customer_sub['LastPaymentAmount'])?$customer_sub['LastPaymentAmount']:''),
+								'OrderDate'			=> (isset($customer_sub['OrderDate'])?$customer_sub['OrderDate']:''),
+								'ShippingAddressId' => $customer_sub['ShippingAddressId'],
+								'PaymentStatus'		=> (isset($customer_sub['PaymentStatus'])?$customer_sub['PaymentStatus']:''),
+								'Amount'			=> (isset($customer_sub['Amount'])?$customer_sub['Amount']:0)
+							);
+		return $subscriptions;
+	}
 
-function buildSubOutput($subscription) {
-	$return = '';
+	protected function buildSubOutput($subscription) {
+		$return = '';
 
-	//Build the output
-	$name = prettifyString($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
+		//Build the output
+		$name = prettifyString($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
 
-	//show the address associated with this subscription
-	if($subscription['address_array'] !=''){
-		$address = (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
-		foreach($subscription['address_array'] as $address_info) {
-			$address .= prettifyString($address_info['Street']).'<br/>';
-			$address .= (isset($address_info['ApartmentMailStop'])!=''?$address_info['ApartmentMailStop'].'<br/>':'');
-			$address .= (isset($address_info['ExtraAddress'])!=''?$address_info['ExtraAddress'].'<br/>':'');
-			if(strlen($address_info['PostalCode']) > 5) {
-				$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
+		//show the address associated with this subscription
+		if($subscription['address_array'] !=''){
+			$address = (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
+			foreach($subscription['address_array'] as $address_info) {
+				$address .= prettifyString($address_info['Street']).'<br/>';
+				$address .= (isset($address_info['ApartmentMailStop'])!=''?$address_info['ApartmentMailStop'].'<br/>':'');
+				$address .= (isset($address_info['ExtraAddress'])!=''?$address_info['ExtraAddress'].'<br/>':'');
+				if(strlen($address_info['PostalCode']) > 5) {
+					$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
+				}
+				$address .= prettifyString($address_info['City']) .', '. prettifyString($address_info['Region']).' '. $address_info['PostalCode'] .'<br/>';
+				$address .= prettifyString($address_info['Country']).'<br/><br/>';
 			}
-			$address .= prettifyString($address_info['City']) .', '. prettifyString($address_info['Region']).' '. $address_info['PostalCode'] .'<br/>';
-			$address .= prettifyString($address_info['Country']).'<br/><br/>';
 		}
-	}
 
-	//determine supscription type
-	if($subscription['ActualVersionCode']!=''){
-		switch ($subscription['ActualVersionCode']) {
-			case "P":
-				$subscription_type = "Print";
-				break;
-			case "D":
-				$subscription_type = "Digital";
-				break;
-			case "B":
-				$subscription_type = "Print & Digital";
-				break;
-			default:
-				$subscription_type = $subscription['ActualVersionCode'];
-				break;
+		//determine supscription type
+		if($subscription['ActualVersionCode']!=''){
+			switch ($subscription['ActualVersionCode']) {
+				case "P":
+					$subscription_type = "Print";
+					break;
+				case "D":
+					$subscription_type = "Digital";
+					break;
+				case "B":
+					$subscription_type = "Print & Digital";
+					break;
+				default:
+					$subscription_type = $subscription['ActualVersionCode'];
+					break;
+			}
 		}
-	}
 
-	//determine subscription Status
-	$subscription_status = '';
-	if($subscription['Status']!='' ){
-		switch ($subscription['Status']){
-			case 1:   $subscription_status = "Active"; break;
-			case 2:   $subscription_status = "Pending"; break;
-			case 3:   $subscription_status = "Expired"; break;
-			case 4:   $subscription_status = "Cancelled"; break;
-			case 5:   $subscription_status = "Graced"; break;
-			case 6:   $subscription_status = "Standing Order"; break;
-			default:  $subscription_status = $subscription['Status']; break;
+		//determine subscription Status
+		$subscription_status = '';
+		if($subscription['Status']!='' ){
+			switch ($subscription['Status']){
+				case 1:   $subscription_status = "Active"; break;
+				case 2:   $subscription_status = "Pending"; break;
+				case 3:   $subscription_status = "Expired"; break;
+				case 4:   $subscription_status = "Cancelled"; break;
+				case 5:   $subscription_status = "Graced"; break;
+				case 6:   $subscription_status = "Standing Order"; break;
+				default:  $subscription_status = $subscription['Status']; break;
+			}
 		}
-	}
 
-	/*
-	Payment Status Codes
-		value	description	what it means
-		1	Paid on invoice.	Customer paid after being invoiced.
-		2	Paid with order.	Customer paid at the time of his order.
-		3	Credit.	Customer owes an outstanding balance on the subscription.
-		6	Free.	Customer is being granted a free subscription, but isn’t necessarily qualified by the publisher.
-		7	Controlled.	Customer was selected by publisher to receive subscription for free.*/
-	if($subscription['PaymentStatus']==3){
-		$subscription_status = 'Balance due: '.$subscription['Amount'];
-	}
-
-	//renewal type
-	$auto_renew = '';
-	/*
-	// 0 = Not Auto Renewal, 5 = Auto Charge, 6 = Auto Bill Me on Invoice
-	if($subscription['AutoRenewalCode'] !='' ){
-		switch ($subscription['AutoRenewalCode']){
-			case 0: $auto_renew = "(account not set up for auto renewal)"; break;
-			case 5: $auto_renew .= "(account will auto renew)"; break;
-			case 6: $auto_renew .= "(account will be billed with an invoice)"; break;
+		/*
+		Payment Status Codes
+			value	description	what it means
+			1	Paid on invoice.	Customer paid after being invoiced.
+			2	Paid with order.	Customer paid at the time of his order.
+			3	Credit.	Customer owes an outstanding balance on the subscription.
+			6	Free.	Customer is being granted a free subscription, but isn’t necessarily qualified by the publisher.
+			7	Controlled.	Customer was selected by publisher to receive subscription for free.*/
+		if($subscription['PaymentStatus']==3){
+			$subscription_status = 'Balance due: '.$subscription['Amount'];
 		}
-	}*/
 
-	//expiration date - show expiration date and number of issues remaining if subscription is not expired
-	$exp_date = '';
-	if($subscription['Status'] == 1){
-		$exp_date = date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d");
+		//renewal type
+		$auto_renew = '';
+		/*
+		// 0 = Not Auto Renewal, 5 = Auto Charge, 6 = Auto Bill Me on Invoice
+		if($subscription['AutoRenewalCode'] !='' ){
+			switch ($subscription['AutoRenewalCode']){
+				case 0: $auto_renew = "(account not set up for auto renewal)"; break;
+				case 5: $auto_renew .= "(account will auto renew)"; break;
+				case 6: $auto_renew .= "(account will be billed with an invoice)"; break;
+			}
+		}*/
+
+		//expiration date - show expiration date and number of issues remaining if subscription is not expired
+		$exp_date = '';
+		if($subscription['Status'] == 1){
+			$exp_date = date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d");
+		}
+
+		//last payment date
+		$last_pay_date = $last_pay_amt = '';
+		if($subscription['LastPaymentDate'] != ''){
+			$last_pay_date = date_format(date_create($subscription['LastPaymentDate']), "Y/m/d");
+			$last_pay_amt  = $subscription['LastPaymentAmount'];
+		}
+
+		//Order date
+		$order_date = '';
+		if($subscription['OrderDate'] != '') {
+			$order_date=date_format(date_create($subscription['OrderDate']), "Y/m/d");
+		}
+
+		$issues_remaining = '';
+		if($subscription['IssuesRemaining'] != '') {
+			$issues_remaining = $subscription['IssuesRemaining'];
+		}
+
+		$return .= '<div class="subscription-item-wrapper"><div class="subscription-item">';
+		$return .= 	   '<div class="sub-shippingAdID" title="Shipping Address ID">'.$subscription['ShippingAddressId'].'</div>
+						<div class="sub-type" title="Subscription Type">'.$subscription_type.'</div>
+						<div class="sub-status sub-'.strtok(strtolower($subscription_status)," ").'" title="Subscription Status">'.$subscription_status.'</div>
+						<div class="sub-name" title="Name">'.$name.'</div>';
+		if($issues_remaining!='') {
+			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
+		}
+
+		//Begin additional information section
+		$return .= 	   '<div class="sub-additional-info">
+							<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>'.$address.'</div>';
+		if($exp_date!='') {
+			$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expires:</b> '.$exp_date.'</div>';
+		}
+		if($last_pay_date!='') {
+			$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
+							<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> '.$last_pay_amt.'</div>';
+		}
+
+		//add issues remaining in the additional information section as well, but only show it when 'issues remaining' drops down from the main screen
+		if($issues_remaining!='') {
+			$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><b>Issues Remaining:</b> '.$issues_remaining.'</div>';
+		}
+		$return .= 	   '</div>';
+		//end additional information section
+
+		//was this subscription a gift?
+		if(isset($subscription['donorName'])&&$subscription['donorName']!=''){
+		   $return .= '<div class="sub-gift"><i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.prettifyString($subscription['donorName']).'.</div><br/><br/>';
+		}
+		$return .= 	   '<div class="more-info" title="See More">...</div>
+					</div></div>';
+
+		return $return;
 	}
 
-	//last payment date
-	$last_pay_date = $last_pay_amt = '';
-	if($subscription['LastPaymentDate'] != ''){
-		$last_pay_date = date_format(date_create($subscription['LastPaymentDate']), "Y/m/d");
-		$last_pay_amt  = $subscription['LastPaymentAmount'];
-	}
-
-	//Order date
-	$order_date = '';
-	if($subscription['OrderDate'] != '') {
-		$order_date=date_format(date_create($subscription['OrderDate']), "Y/m/d");
-	}
-
-	$issues_remaining = '';
-	if($subscription['IssuesRemaining'] != '') {
-		$issues_remaining = $subscription['IssuesRemaining'];
-	}
-
-	$return .= '<div class="subscription-item-wrapper"><div class="subscription-item">';
-	$return .= 	   '<div class="sub-shippingAdID" title="Shipping Address ID">'.$subscription['ShippingAddressId'].'</div>
-					<div class="sub-type" title="Subscription Type">'.$subscription_type.'</div>
-					<div class="sub-status sub-'.strtok(strtolower($subscription_status)," ").'" title="Subscription Status">'.$subscription_status.'</div>
-					<div class="sub-name" title="Name">'.$name.'</div>';
-	if($issues_remaining!='') {
-		$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
-	}
-
-	//Begin additional information section
-	$return .= 	   '<div class="sub-additional-info">
-						<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>'.$address.'</div>';
-	if($exp_date!='') {
-		$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expires:</b> '.$exp_date.'</div>';
-	}
-	if($last_pay_date!='') {
-		$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
-						<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> '.$last_pay_amt.'</div>';
-	}
-
-	//add issues remaining in the additional information section as well, but only show it when 'issues remaining' drops down from the main screen
-	if($issues_remaining!='') {
-		$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><b>Issues Remaining:</b> '.$issues_remaining.'</div>';
-	}
-	$return .= 	   '</div>';
-	//end additional information section
-
-	//was this subscription a gift?
-	if(isset($subscription['donorName'])&&$subscription['donorName']!=''){
-	   $return .= '<div class="sub-gift"><i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.prettifyString($subscription['donorName']).'.</div><br/><br/>';
-	}
-	$return .= 	   '<div class="more-info" title="See More">...</div>
-				</div></div>';
-
-	return $return;
 }
 
 function prettifyString($string) {
