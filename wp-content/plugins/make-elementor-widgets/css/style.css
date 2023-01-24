@@ -5,10 +5,10 @@
 	 font-family: 'Roboto Bold';
 	 color: red;
 	 font-size: 22px;
-	 margin: 10px 5px 15px !important;
 	 display: flex;
 	 position: relative;
 	 align-items: center;
+	 margin: 0px;
 }
 .make-elementor-expando-box h4 img {
 	 margin-right: 10px;
@@ -30,20 +30,21 @@
 	 content: "\f077";
 }
 .make-elementor-expando-box h4:not(.closed) {
-	 border-bottom: solid 2px #ccc;
-	 padding-bottom: 15px;
+	border-bottom: solid 2px #ccc;
+	padding-bottom: 15px;
 }
 .make-elementor-expando-box ul {
-	 list-style: none;
-	 margin-left: 15px;
-	 transition: max-height 0.5s;
-	 max-height: 0px;
-	 height: 0px;
-	 overflow: hidden;
-	 margin-bottom: 0px;
+	list-style: none;
+	padding: 5px 0;
+	margin-left: 15px;
+	transition: max-height 0.5s;
+	max-height: 0px;
+	height: 0px;
+	overflow: hidden;
+	margin-bottom: 0px;
 }
 .make-elementor-expando-box ul li {
-	 margin-bottom: 10px;
+	 margin: 5px 0;
 }
 .make-elementor-expando-box ul li p {
 	 margin: 0px;
@@ -338,14 +339,17 @@
 }
 
 .subscriptions-wrapper ul {
-	margin: 10px 5px 15px !important;
+	margin: 10px 5px !important;
 }
 .subscriptions-wrapper .subscription-item-wrapper {
 	background: #fff;
+	margin-bottom: 15px;
+}
+.subscriptions-wrapper .subscription-item-wrapper:last-of-type {
+	margin-bottom: 0px;
 }
 .subscriptions-wrapper .subscription-item {
 	margin-right: 2px;
-	margin-bottom: 15px;
 	padding: 10px 50px 10px 15px;
 	display: flex;
 	flex-wrap: wrap;
@@ -372,7 +376,7 @@
 
 .subscription-item.disclaimer {
 	height: auto;
-	padding-top: 20px;
+	margin-top: 20px;
 }
 .subscriptions-wrapper .subscription-item-wrapper .subscription-item.open {
 	height: auto;
@@ -428,9 +432,7 @@
 	width: 100%;
 }
 .subscriptions-wrapper .subscription-item .sub-additional-info > div b {
-	font-weight: 600;
 	min-width: 200px;
-	font-family: 'Roboto Bold';
 }
 .subscriptions-wrapper .subscription-item .sub-address, .subscriptions-wrapper .subscription-item .sub-lastPayment {
 	width: 50%;
