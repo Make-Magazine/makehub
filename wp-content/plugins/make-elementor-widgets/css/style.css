@@ -362,6 +362,9 @@
 	display: flex;
 	gap: 55px;
 }
+.subscription-item.sub-offer img {
+	max-width: fit-content;
+}
 .subscription-item.sub-offer div {
 	align-self: center;
 	font-size: 22px;
