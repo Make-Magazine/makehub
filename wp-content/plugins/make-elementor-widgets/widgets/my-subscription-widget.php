@@ -370,7 +370,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			//TBD - add link to image and make image bigger on hover
 			?>
 			<div class="subscription-item sub-offer">
-				<img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" >
+				<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" ></a>
 				<div>
 					Ready for a creative escape? <i>Make:</i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
 				</div>
