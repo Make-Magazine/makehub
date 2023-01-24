@@ -362,10 +362,12 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					?>
 					</li>
 				</ul>
-				<div class="subscription-item disclaimer">Your print subscription starts upon payment receipt. US - first volume arrives within 6-8 weeks. For telephone service call 847-559-7395 between the hours of 8am and 4:30pm Central Time. Fax: 847-564-9453. Email: make@omeda.com. Please include your Account # in any correspondence.</div>
 			</div>
 			<?php
 		} // end gift check
+		?>
+		<div class="subscription-item disclaimer">Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time (847-559-7395), or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</div>
+		<?php
 	} //end render function
 }
 
@@ -431,8 +433,8 @@ function buildSubOutput($subscription) {
 			if(strlen($address_info['PostalCode']) > 5) {
 				$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
 			}
-			$address .= prettifyString($address_info['City']) .', '. $address_info['Region'].' '. $address_info['PostalCode'] .'<br/>';
-			$address .= $address_info['Country'].'<br/><br/>';
+			$address .= prettifyString($address_info['City']) .', '. prettifyString($address_info['Region']).' '. $address_info['PostalCode'] .'<br/>';
+			$address .= prettifyString($address_info['Country']).'<br/><br/>';
 		}
 	}
 
@@ -524,6 +526,8 @@ function buildSubOutput($subscription) {
 	if($issues_remaining!='') {
 		$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
 	}
+
+	//Begin additional information section
 	$return .= 	   '<div class="sub-additional-info">
 						<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>'.$address.'</div>';
 	if($exp_date!='') {
@@ -533,10 +537,17 @@ function buildSubOutput($subscription) {
 		$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
 						<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> '.$last_pay_amt.'</div>';
 	}
+
+	//add issues remaining in the additional information section as well, but only show it when 'issues remaining' drops down from the main screen
+	if($issues_remaining!='') {
+		$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><b>Issues Remaining:</b> '.$issues_remaining.'</div>';
+	}
 	$return .= 	   '</div>';
+	//end additional information section
+
 	//was this subscription a gift?
 	if(isset($subscription['donorName'])&&$subscription['donorName']!=''){
-	   $return .= '<div class="sub-gift"><i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.$subscription['donorName'].'.</div><br/><br/>';
+	   $return .= '<div class="sub-gift"><i style="color:#eb002a" class="fas fa-gift"></i> Lucky you! This subscription was gifted to you by '.prettifyString($subscription['donorName']).'.</div><br/><br/>';
 	}
 	$return .= 	   '<div class="more-info" title="See More">...</div>
 				</div></div>';

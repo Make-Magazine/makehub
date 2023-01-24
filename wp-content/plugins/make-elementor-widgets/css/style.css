@@ -395,27 +395,27 @@
 .subscriptions-wrapper .subscription-item .sub-status {
 	width: 170px;
 }
-.subscriptions-wrapper .subscription-item .sub-active {
-	color: limegreen;
-}
+
 .subscriptions-wrapper .subscription-item .sub-active:before {
 	content: "\f058";
+	color: limegreen;
 }
 .subscriptions-wrapper .subscription-item .sub-name {
 	width: 200px;
 }
 .subscriptions-wrapper .subscription-item .sub-additional-info {
 	width: 100%;
+	padding-top: 10px;
 }
 .subscriptions-wrapper .subscription-item .sub-additional-info > div {
 	display: flex;
-	gap: 15px;
+	gap: 55px;
 	width: 100%;
 }
 .subscriptions-wrapper .subscription-item .sub-additional-info > div b {
 	font-weight: 600;
 	min-width: 200px;
-	font-family: Roboto Light;
+	font-family: 'Roboto Bold';
 }
 .subscriptions-wrapper .subscription-item .sub-address, .subscriptions-wrapper .subscription-item .sub-lastPayment {
 	width: 50%;
@@ -423,18 +423,25 @@
 .subscriptions-wrapper .subscription-item .sub-lastPayment {
 	text-align: right;
 }
-.subscriptions-wrapper .subscription-item .sub-expired, .subscriptions-wrapper .subscription-item .sub-cancelled, .subscriptions-wrapper .subscription-item .sub-balance {
-	color: darkred;
-}
+
 .subscriptions-wrapper .subscription-item .sub-expired:before, .subscriptions-wrapper .subscription-item .sub-cancelled:before {
 	content: "\f057";
+	color: darkred;
 }
 .subscriptions-wrapper .subscription-item .sub-balance:before {
 	content: "\f06a";
+	color: darkred;
+}
+.subscriptions-wrapper .subscription-item .sub-gift {
+	padding-top: 20px;
 }
 @media screen and (max-width:990px) {
 	.subscriptions-wrapper .subscription-item .sub-name {
 		width: 100%;
+		font-size: 1.5em;
+		font-weight: 600;
+		color: #025e9a;
+		padding-top: 10px;
 	}
 }
 @media screen and (max-width:500px) {
@@ -442,5 +449,22 @@
 		flex-direction: column;
 		gap: 0px;
 		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width:1159px) {
+	.subscriptions-wrapper .subscription-item .sub-additional-info .sub-addinfo-issuesRemaining {
+		display: flex;
+	}
+	.subscriptions-wrapper .subscription-item .sub-issuesRemaining {
+		display: none;
+	}
+}
+@media screen and (min-width:1160px) {
+	.subscriptions-wrapper .subscription-item .sub-additional-info .sub-addinfo-issuesRemaining {
+		display: none;
+	}
+	.subscriptions-wrapper .subscription-item .sub-issuesRemaining {
+		display: block;
 	}
 }
