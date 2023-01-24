@@ -356,8 +356,20 @@
 	overflow: hidden;
 	position: relative;
 }
-.subscriptions-wrapper .subscription-item-wrapper .subscription-item.disclaimer {
+.subscription-item.sub-offer {
 	height: auto;
+	padding-top: 20px;
+	display: flex;
+	gap: 55px;
+}
+.subscription-item.sub-offer div {
+	align-self: center;
+	font-size: 22px;
+}
+
+.subscription-item.disclaimer {
+	height: auto;
+	padding-top: 20px;
 }
 .subscriptions-wrapper .subscription-item-wrapper .subscription-item.open {
 	height: auto;

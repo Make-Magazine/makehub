@@ -324,8 +324,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					$return = '';
 					//var_dump($customer_array);
 					if(empty($customer_array) || empty($customer_array['subscriptions']) ){
-						echo "<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.'</p><br/>';
-						echo '    <a href="https://subscribe.makezine.com" target="_blank" class="btn universal-btn">Subscribe Today</a>';
+						echo "<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.'</p>';
 					}
 
 					//process subscription array
@@ -365,8 +364,19 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			</div>
 			<?php
 		} // end gift check
+
+		if(empty($customer_array) || empty($customer_array['subscriptions']) ){
+			?>
+			<div class="subscription-item sub-offer">
+				<img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" >
+				<div>
+					Ready for a creative escape? <i>Make:</i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
+				</div>
+			</div>
+			<?php
+		}
 		?>
-		<div class="subscription-item disclaimer">Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time (847-559-7395), or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</div>
+		<div class="subscription-item disclaimer" style="clear:both">Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time (847-559-7395), or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</div>
 		<?php
 	} //end render function
 }
