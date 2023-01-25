@@ -114,7 +114,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					'default' => '',
 					'options' => [
 						'' => esc_html__( 'Default', 'elementor-make-widget' ),
-						'cathy@make.co' => esc_html__( 'No Subscription', 'elementor-make-widget' ),
+						'webmaster@make.co' => esc_html__( 'No Subscription', 'elementor-make-widget' ),
 						'TMC104@GMAIL.COM' => esc_html__( 'Payment Due', 'elementor-make-widget' ),
 						'alicia@make.co' => esc_html__( 'Active Subscription', 'elementor-make-widget' ),
 						'tim@cometoconnect.com' => esc_html__( 'Expired Subscription', 'elementor-make-widget' ),
@@ -177,7 +177,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		}
 
 
-		//$user_email = 'cathy@make.co'; //no subscription
+		//$user_email = 'webmaster@make.co'; //no subscription
 		//$user_email = 'TMC104@GMAIL.COM'; //payment due subscription
 		//$user_email = 'alicia@make.co'; //active subscription
 		//$user_email = 'rio@make.co'; //active subscription
@@ -367,7 +367,6 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		} // end gift check
 
 		if(empty($customer_array) || empty($customer_array['subscriptions']) || $this->noActive ){
-			//TBD - add link to image and make image bigger on hover
 			?>
 			<div class="subscription-item sub-offer">
 				<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" ></a>
@@ -458,6 +457,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					$subscription_type = "Print";
 					break;
 				case "D":
+				case "A":
 					$subscription_type = "Digital";
 					break;
 				case "B":
