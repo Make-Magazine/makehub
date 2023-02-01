@@ -230,6 +230,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				*/
 				//echo '<b>Calling customer specific API '.$customer->Url.'</b><br/>';
 				$customerInfo = json_decode(basicCurl($customer->Url, $header));
+				$custEncryptID = (isset($customerInfo->EncryptedCustomerId)? $customerInfo->EncryptedCustomerId:0);
 
 				/*                   Address Lookup By Customer Id
 					This API provides the ability look up a Customer’s Address by the Customer Id.
@@ -273,6 +274,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['LastName']	    = $customerInfo->LastName;  //customer basic information
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['address_array'] = $address_array; //addresses associated with this subscription
 					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['donorName']     = $donorName;	   //donor information if any,
+					$customer_array['subscriptions'][$customer_sub->ShippingAddressId]['custEncryptID'] = $custEncryptID;
 				}
 			} //end customer subscription loop
 
@@ -323,9 +325,37 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				<li>
 					<?php
 					$return = '';
-					//var_dump($customer_array);
+					echo 'submitted postal id is '.$_POST['omeda_postal_id'];
 					if(empty($customer_array) || empty($customer_array['subscriptions']) ){
-						echo "<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.'</p>';
+						$return .= '<div class="subscriptions-wrapper">
+										<div class="subscription-item-wrapper">
+											<div class="subscription-item disclaimer">';
+						$return .= 				"<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.'</p><br/><br/>';
+						$return .= 				'<p>Have a subscription with us? We can also look up your subscription using the account number found on the mailing label of your most recent magazine.</p>
+												 <div  style="padding:20px"><img src="'.get_stylesheet_directory_uri().'/images/label-example.png" alt="magazine label example" /></div>
+												 <div style="padding:45px">
+												 	Account Number
+												 	<br/>
+													<form method="post">
+												 		<input type="text" id="omeda_postal_id" name="omeda_postal_id" />
+														<button type="submit" class="elementor-button elementor-size-sm">
+															<span class="elementor-button-text">Search</span>
+														</button>
+													</form
+												</div>
+										    </div>
+										</div>
+									</div>';
+						/*
+						display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: lightgrey;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    /* gap: 15px;
+						*/
 					}
 
 					//process subscription array
@@ -377,7 +407,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			<?php
 		}
 		?>
-		<div class="subscriptions-wrapper"><div class="subscription-item-wrapper"><div class="subscription-item disclaimer">Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time <a href="tel:847-559-7395">(847-559-7395)</a>, or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</div></div></div>
+		<div class="subscriptions-wrapper">
+			<div class="subscription-item-wrapper">
+				<div class="subscription-item disclaimer">
+					<p>Your first volume will arrive within 6-8 weeks in the U.S. If you need additional help or have questions, our customer representatives are available to chat over the phone from 8 am - 4:30 pm Central Time <a href="tel:847-559-7395">(847-559-7395)</a>, or you may also send an email with your Account # included to make@omeda.com – we'll be more than happy to offer assistance!</p>
+				</div>
+			</div>
+		</div>
 		<?php
 	} //end render function
 
@@ -440,8 +476,8 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			$address = (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
 			foreach($subscription['address_array'] as $address_info) {
 				$address .= prettifyString($address_info['Street']).'<br/>';
-				$address .= (isset($address_info['ApartmentMailStop'])!=''?$address_info['ApartmentMailStop'].'<br/>':'');
-				$address .= (isset($address_info['ExtraAddress'])!=''?$address_info['ExtraAddress'].'<br/>':'');
+				$address .= (isset($address_info['ApartmentMailStop']) 	!= '' ? prettifyString($address_info['ApartmentMailStop']).'<br/>':'');
+				$address .= (isset($address_info['ExtraAddress']) 		!= '' ? prettifyString($address_info['ExtraAddress']).'<br/>':'');
 				if(strlen($address_info['PostalCode']) > 5) {
 					$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
 				}
@@ -492,7 +528,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			6	Free.	Customer is being granted a free subscription, but isn’t necessarily qualified by the publisher.
 			7	Controlled.	Customer was selected by publisher to receive subscription for free.*/
 		if($subscription['PaymentStatus']==3){
-			$subscription_status = 'Balance due: '.$subscription['Amount'];
+			$subscription_status = 'Balance due: $'.$subscription['Amount'];
 		}
 
 		//renewal type
@@ -532,11 +568,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		}
 
 		$return .= '<div class="subscription-item-wrapper"><div class="subscription-item">';
-		$return .= 	   '<div class="sub-shippingAdID" title="Shipping Address ID">'.$subscription['ShippingAddressId'].'</div>
+		$return .= 	   '<div class="sub-shippingAdID" title="Postal ID">'.$subscription['ShippingAddressId'].'</div>
 						<div class="sub-type" title="Subscription Type">'.$subscription_type.'</div>
 						<div class="sub-status sub-'.strtok(strtolower($subscription_status)," ").'" title="Subscription Status">'.$subscription_status.'</div>
 						<div class="sub-name" title="Name">'.$name.'</div>';
-		if($issues_remaining!='') {
+		if($subscription['PaymentStatus']==3 && $subscription['custEncryptID']!=0){
+			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
+		}elseif($issues_remaining!='') {
 			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
 		}
 
@@ -548,11 +586,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		}
 		if($last_pay_date!='') {
 			$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
-							<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> '.$last_pay_amt.'</div>';
+							<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> $'.$last_pay_amt.'</div>';
 		}
 
 		//add issues remaining in the additional information section as well, but only show it when 'issues remaining' drops down from the main screen
-		if($issues_remaining!='') {
+		if($subscription['PaymentStatus']==3 && $subscription['custEncryptID']!=0){
+			$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
+		}elseif($issues_remaining!='') {
 			$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><b>Issues Remaining:</b> '.$issues_remaining.'</div>';
 		}
 		$return .= 	   '</div>';
