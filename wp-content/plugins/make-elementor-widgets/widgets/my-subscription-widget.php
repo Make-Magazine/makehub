@@ -324,8 +324,12 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			<ul class="open">
 				<li>
 					<?php
+					$userInfo = wp_get_current_user();
+
+			        echo 'Account number = '. xprofile_get_field("Subscription Account Number", $userInfo->ID);
+
 					$return = '';
-					echo 'submitted postal id is '.$_POST['omeda_postal_id'];
+
 					if(empty($customer_array) || empty($customer_array['subscriptions']) ){
 						$return .= '<div class="subscriptions-wrapper">
 										<div class="subscription-item-wrapper">
@@ -336,13 +340,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 												 <div style="padding:45px">
 												 	Account Number
 												 	<br/>
-													<form method="post">
-												 		<input type="text" id="omeda_postal_id" name="omeda_postal_id" />
-														<button type="submit" class="elementor-button elementor-size-sm">
-															<span class="elementor-button-text">Search</span>
-														</button>
-													</form
+												 	<input type="number" id="omeda_postal_id" name="omeda_postal_id" />
+													<button id="make-update-Omeda-ID" class="elementor-button elementor-size-sm">
+														<span class="loading" style="display:none">' . __('loading..', 'make-elementor-widgets') . '</span>
+														<span class="update">' . __('Update', 'make-elementor-widgets') . '</span>
+													</button>
 												</div>
+												<span id="omeda-ajax-return-msg"></span>
 										    </div>
 										</div>
 									</div>';
