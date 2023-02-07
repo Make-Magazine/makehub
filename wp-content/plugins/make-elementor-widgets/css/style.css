@@ -377,6 +377,23 @@
 .subscription-item.disclaimer {
 	height: auto;
 	margin-top: 20px;
+	gap: 15px;
+	padding: 15px;
+}
+.subscription-item.disclaimer p {
+	margin-bottom: 0px;
+}
+.subscription-item.disclaimer input {
+	height: 50px;
+	margin-right: 15px;
+}
+.ui-dialog-content { 
+	text-align: center;
+	min-height: auto !important;
+	padding-top: 5px;
+}
+.subscription-item.disclaimer .universal-btn {
+	font-weight: bold;
 }
 .subscriptions-wrapper .subscription-item-wrapper .subscription-item.open {
 	height: auto;

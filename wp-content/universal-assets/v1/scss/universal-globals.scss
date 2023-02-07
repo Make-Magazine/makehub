@@ -130,7 +130,7 @@ a { // don't let genesis molest our links
     font-weight: 300;
     height: 50px;
     padding: 0px 15px;
-    border: solid 1px #005e9a;
+    border: solid 1px #005e9a !important;
     &:visited, &:active { color: #fff; }
     &:hover, &:focus {
         background: #fff;
@@ -140,7 +140,7 @@ a { // don't let genesis molest our links
 .universal-btn-red, .btn.universal-btn-red {
     @extend .universal-btn;
     background-color: #EA002A;
-    border-color: #EA002A;
+    border-color: #EA002A !important;
     &:hover, &:focus {
         background-color: #FFF;
 		color: #EA002A;
@@ -149,7 +149,7 @@ a { // don't let genesis molest our links
 .universal-btn-navy, .btn.universal-btn-navy {
     @extend .universal-btn;
     background-color: #151733;
-	border-color: #151733;
+	border-color: #151733 !important;
     &:hover, &:focus {
         color: #151733;
         border-color: #151733;
@@ -158,7 +158,7 @@ a { // don't let genesis molest our links
 .universal-btn-light-blue, .btn.universal-btn-blue {
     @extend .universal-btn;
     background-color: #3fafed;
-    border-color: #3fafed;
+    border-color: #3fafed !important;
     &:hover {
         color: #3fafed;
         border-color: #3fafed;
@@ -167,7 +167,7 @@ a { // don't let genesis molest our links
 .universal-btn-reversed, .btn.universal-btn-reversed {
     @extend .universal-btn;
     background-color: #fff;
-    border-color: #005e9a;
+    border-color: #005e9a !important;
     color: #005e9a !important;
     &:hover, &:focus, &:active {
         color: #fff !important;

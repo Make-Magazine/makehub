@@ -11,7 +11,7 @@ function save_omeda_postalID($) {
         // retrieve ID entered
         var postal_id = $("#omeda_postal_id").val();
         if(postal_id==''){
-            alert('you must enter an account number');
+            makeModal("You must enter an account number to proceed.");
             return;
         }
 
@@ -29,17 +29,15 @@ function save_omeda_postalID($) {
             data: data,
             beforeSend: function (xhr) {
                 // show loading text
-                updateOmedaIdBtn.find('.update').hide();
-                updateOmedaIdBtn.find('.loading').show();
+                updateOmedaIdBtn.css({"pointer-events":"none", "background":"grey"});
+                updateOmedaIdBtn.text("Loading");
             },
             success: function (res) {
                 console.log('success');
-
                 // hide loading text
-                updateOmedaIdBtn.find('.update').show();
-                updateOmedaIdBtn.find('.loading').hide();
-
-                $('#omeda-ajax-return-msg').text(res);
+                updateOmedaIdBtn.text("Done");
+                makeModal(res);
+                jQuery('.elementor-widget-mysubs').load(document.URL + " .elementor-widget-mysubs > *");
 
             },
             error: function (e) {
