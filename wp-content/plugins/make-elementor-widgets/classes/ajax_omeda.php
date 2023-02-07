@@ -42,16 +42,15 @@ class Make_Widget_Ajax {
         }
 
         //retrieve submitted data here
-
         $userInfo = wp_get_current_user();
 
-        $fieldUpdated = xprofile_set_field_data("Subscription Account Number", $userInfo->ID, $_POST['postal_id']);
+        $fieldUpdated = xprofile_set_field_data("Make: Magazine Account ID", $userInfo->ID, $_POST['postal_id']);
         if($fieldUpdated){
             echo 'Account ID updated';
         }else{
             echo 'Account ID not updated';
         }
-        
+
         ob_end_flush();
         wp_die();  // using wp_die() when ajax call
 

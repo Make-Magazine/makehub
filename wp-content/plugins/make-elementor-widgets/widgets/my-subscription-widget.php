@@ -113,7 +113,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
     				'type' => \Elementor\Controls_Manager::SELECT,
 					'default' => '',
 					'options' => [
-						'' => esc_html__( 'Default', 'elementor-make-widget' ),
+						'' => esc_html__( 'User Email', 'elementor-make-widget' ),
 						'webmaster@make.co' => esc_html__( 'No Subscription', 'elementor-make-widget' ),
 						'TMC104@GMAIL.COM' => esc_html__( 'Payment Due', 'elementor-make-widget' ),
 						'alicia@make.co' => esc_html__( 'Active Subscription', 'elementor-make-widget' ),
@@ -165,36 +165,51 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
+		if(bp_is_active('xprofile')){ // is xprofile active?
+			//check if the field is defined
+			if (!xprofile_get_field_id_from_name('Make: Magazine Account ID') ) {
+				// the bb field must be defined
+				global $bp;
+				$xfield_args =  array (
+		           'field_group_id'  => 1,
+		           'name'            => 'Make: Magazine Account ID',
+				   'description'	 => 'Have a <i>Make:</i> subscription with us? Enter the account number here.',
+		           'can_delete'      => true,
+		           'field_order'     => 99,
+		           'is_required'     => false,
+		           'type'            => 'textbox'
+		    	);
+
+		   		$field_id=xprofile_insert_field( $xfield_args );
+				bp_xprofile_update_field_meta($field_id, 'allow_custom_visibility', 'disabled');
+				bp_xprofile_update_field_meta($field_id, 'default_visibility', 'adminsonly');
+	   		}
+		}else{
+			return ('Error in setup. Xprofile in BuddyPress is not active');
+		}
+
+		//retrieve widget settings
 		$settings = $this->get_settings_for_display();
+
+		global $bp;
+		//retrieve logged in user information
     	$user = wp_get_current_user();
 
-		$return = '';
+		//check if user has set an Omeda Postal ID
+		global $bp;
+
+        $args = array(
+			'field'   => 'Make: Magazine Account ID',
+			'user_id' => bp_loggedin_user_id()
+		);
+		$omeda_postal_id = bp_get_profile_field_data($args);
+
 		$customer_array = array();
 
 		$user_email = $user->user_email;
 		if($settings['email'] != '') {
 			$user_email = $settings['email'];
 		}
-
-
-		//$user_email = 'webmaster@make.co'; //no subscription
-		//$user_email = 'TMC104@GMAIL.COM'; //payment due subscription
-		//$user_email = 'alicia@make.co'; //active subscription
-		//$user_email = 'rio@make.co'; //active subscription
-		//$user_email = 'tim@cometoconnect.com'; //expired subscription
-		//$user_email = 'steam.jazzy.0w@icloud.com'; //cancelled (no active or pending) subscription
-	    //$user_email = 'dana@thelabellas.com'; //active gift subscription - recipient
-		//$user_email = 'KOA.ROSA@GMAIL.COM'; //active subscription and given gifts
-		//$user_email = 'pjo@pobox.com'; //no active subscription, gifts given
-		//$user_email = 'tyler.smelley@gmail.com'; //auto renewal
-		//$user_email = 'kentkrue@gmail.com'; //active example
-		//$user_email = 'pjo@pobox.com'; //no subscription, 2 gift subscriptions example
-		//$user_email = 'MICHAEL@MFRANCE.NET'; // multiple expired subscriptions
-		//$user_email = 'dhares@hickoryhill-consulting.com'; //multiple active customer accounts
-		//$user_email = 'mike.kinsman@gmail.com'; //multiple active customer accounts
-		//$user_email = 'BRIAN@TREEGECKO.COM'; //multiple active customer accounts
-		//$user_email = 'webmaster@make.co'; //no subscription
-		//$return .= '  Using email '.$user_email.'<br/>';
 
 		/*                   Subscription Lookup By Email
 			This service returns all subscription information stored for all customers
@@ -213,8 +228,26 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		$subscriptionJson = json_decode(basicCurl($sub_by_email_api, $header));
 
-		// check if customer found at omeda, otherwise skip
-		$customers = (isset($subscriptionJson->Customers)?$subscriptionJson->Customers:array());
+		//no customers found, let's try by entered postal id
+		if(!isset($subscriptionJson->Customers)) {
+			$customers = array();
+
+			if($omeda_postal_id!=''){
+				//call Customer Lookup By PostalAddressId
+				$url = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/'.$omeda_postal_id.'/postaladdressid/*';
+				$customerInfo  = json_decode(basicCurl($url, $header));
+
+				//did we find a customer?
+				if(isset($customerInfo->Customer)){
+					//pull any subscriptions
+					$subscriptions = json_decode(basicCurl($customerInfo->Subscriptions, $header));
+					$customers[] = (object) array('Url'=>$customerInfo->Customer, 'Subscriptions'=>(array)$subscriptions->Subscriptions);
+				}
+			}
+		}else{
+			// check if customer found at omeda, otherwise skip
+			$customers = $subscriptionJson->Customers;
+		}
 
 		//loop through all customers associated with this email
 		foreach($customers as $customer){
@@ -317,68 +350,63 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		} //end customer loop
 
-		?>
+		/*
+			only show the Make subscription box,
+			1) if the customer array is empty
+				or
+			2) if the customer array is not empty and
+				there are no subscriptions (gift giver with no subscription)
+		*/
 
-		<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
-			<h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'My Make: Magazine Subscriptions');?></h4>
-			<ul class="open">
-				<li>
-					<?php
-					$userInfo = wp_get_current_user();
-
-			        echo 'Account number = '. xprofile_get_field("Subscription Account Number", $userInfo->ID);
-
-					$return = '';
-
-					if(empty($customer_array) || empty($customer_array['subscriptions']) ){
-						$return .= '<div class="subscriptions-wrapper">
-										<div class="subscription-item-wrapper">
-											<div class="subscription-item disclaimer">';
-						$return .= 				"<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.'</p><br/><br/>';
-						$return .= 				'<p>Have a subscription with us? We can also look up your subscription using the account number found on the mailing label of your most recent magazine.</p>
-												 <div  style="padding:20px"><img src="'.get_stylesheet_directory_uri().'/images/label-example.png" alt="magazine label example" /></div>
-												 <div style="padding:45px">
-												 	Account Number
-												 	<br/>
-												 	<input type="number" id="omeda_postal_id" name="omeda_postal_id" />
-													<button id="make-update-Omeda-ID" class="elementor-button elementor-size-sm">
-														<span class="loading" style="display:none">' . __('loading..', 'make-elementor-widgets') . '</span>
-														<span class="update">' . __('Update', 'make-elementor-widgets') . '</span>
-													</button>
+		if(empty($customer_array) || isset($customer_array['subscriptions']) ){
+			?>
+			<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
+				<h4 class="open"><?php echo ($settings['title']!=''?$settings['title']:'My Make: Magazine Subscriptions');?></h4>
+				<ul class="open">
+					<li>
+						<?php
+						$return = '';
+						//if no customer information was found, prompt them to enter in a postal id
+						if(empty($customer_array)){
+							$return .= '<div class="subscriptions-wrapper">
+											<div class="subscription-item-wrapper">
+												<div class="subscription-item disclaimer">';
+							$return .= 				"<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.($omeda_postal_id?' or Account Number '.$omeda_postal_id:'').'</p><br/><br/>';
+							$return .= 				'<p>Have a subscription with us? We can also look up your subscription using the account number found on the mailing label of your most recent magazine.</p>
+													 <div  style="padding:20px"><img src="'.get_stylesheet_directory_uri().'/images/label-example.png" alt="magazine label example" /></div>
+													 <div style="padding:45px">
+														Account Number
+														<br/>
+														<input type="number" id="omeda_postal_id" name="omeda_postal_id" value="'.$omeda_postal_id.'" />
+														<button id="make-update-Omeda-ID" class="elementor-button elementor-size-sm">
+															<span class="loading" style="display:none">' . __('loading..', 'make-elementor-widgets') . '</span>
+															<span class="update">' . __('Update', 'make-elementor-widgets') . '</span>
+														</button>
+													</div>
+													<span id="omeda-ajax-return-msg"></span>
 												</div>
-												<span id="omeda-ajax-return-msg"></span>
-										    </div>
-										</div>
-									</div>';
-						/*
-						display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: lightgrey;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    /* gap: 15px;
-						*/
-					}
+											</div>
+										</div>';
+						}
 
-					//process subscription array
-					if(!empty($customer_array['subscriptions']) ){
-						//We only want to display Active or pending subscriptions. If none are found, display the most recent sub based on exp date
-						$subscriptions = $this->cleanSubs($customer_array['subscriptions']);
-						//build output
-						foreach($subscriptions as $subscription){
-							$return .= $this->buildSubOutput($subscription);
-						} //end subscription loop
-					} //end check if subscription array is set
+						//process subscription array
+						if(!empty($customer_array['subscriptions']) ){
+							//We only want to display Active or pending subscriptions. If none are found, display the most recent sub based on exp date
+							$subscriptions = $this->cleanSubs($customer_array['subscriptions']);
+							//build output
+							foreach($subscriptions as $subscription){
+								$return .= $this->buildSubOutput($subscription);
+							} //end subscription loop
+						} //end check if subscription array is set
 
-					echo $return;
-					?>
-				</li>
-			</ul>
-		</div>
-
-		<?php
+						echo $return;
+						?>
+					</li>
+				</ul>
+			</div>
+			<?php
+		}
+		
 		//Check if customer has given any gifts
 		if(isset($customer_array['gifts']) && !empty($customer_array['gifts']) ){
 			$return = '';
