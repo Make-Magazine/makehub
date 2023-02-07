@@ -12,6 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 	private $noActive;
+	const VERSION = '1.2.0';
+
+	public function __construct( $data = array(), $args = null ) {
+		parent::__construct( $data, $args );
+
+		//JS for form submission
+		wp_enqueue_script('make-omeda-script', plugin_dir_url(dirname(__FILE__)) . 'js/omeda.js', array('jquery'), self::VERSION , true);
+		wp_localize_script('make-omeda-script', 'make_ajax_object', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+			'ajaxnonce' => wp_create_nonce('omeda_ajax')
+		));
+	}
 
 	/**
 	 * Get widget name.
@@ -402,7 +414,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			</div>
 			<?php
 		}
-		
+
 		//Check if customer has given any gifts
 		if(isset($customer_array['gifts']) && !empty($customer_array['gifts']) ){
 			$return = '';
