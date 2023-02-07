@@ -145,7 +145,7 @@ final class Make_Elementor_Widgets
 		// ----------------------
         // # My Makerspaces Widget
         // ----------------------
-        require_once(__DIR__ . '/widgets/my-MakerCamp-widget.php'); // Include Widget files
+        require_once(__DIR__ . '/widgets/my-makerCamp-widget.php'); // Include Widget files
         \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_MyMakerCamp_Widget()); // Register widget
 
 		// ----------------------
