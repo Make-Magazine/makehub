@@ -29,16 +29,21 @@ function save_omeda_postalID($) {
             data: data,
             beforeSend: function (xhr) {
                 // show loading text
-                updateOmedaIdBtn.css({"pointer-events":"none", "background":"grey"});
-                updateOmedaIdBtn.text("Loading");
+                updateOmedaIdBtn.css({"pointer-events":"none", "background":"grey", "color":"white"});
+                updateOmedaIdBtn.html("Loading <i class='fa fa-spinner'></i>");
             },
             success: function (res) {
                 console.log('success');
-                // hide loading text
-                updateOmedaIdBtn.text("Done");
                 makeModal(res);
-                jQuery('.elementor-widget-mysubs').load(document.URL + " .elementor-widget-mysubs > *");
-
+                $('.elementor-widget-mysubs').load(document.URL + " .elementor-widget-mysubs > *", function(){
+					updateOmedaIdBtn.css({"pointer-events":"all", "background":"white", "color": "#005e9a"});
+                    updateOmedaIdBtn.html("Update");
+                    save_omeda_postalID($);
+                    $(".more-info").click(function(){
+						$(this).parent().toggleClass( "open" );
+					});
+				});
+				
             },
             error: function (e) {
                 console.log(e);

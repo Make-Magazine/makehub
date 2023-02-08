@@ -385,13 +385,15 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 												<div class="subscription-item disclaimer">';
 							$return .= 				"<p>I'm sorry, we couldn't find any subscriptions using email ". $user_email.($omeda_postal_id?' or Account Number '.$omeda_postal_id:'').'</p><br/><br/>';
 							$return .= 				'<p>Have a subscription with us? We can also look up your subscription using the account number found on the mailing label of your most recent magazine.</p>
-													 <img src="'.plugin_dir_url( dirname( __FILE__ ) ).'/images/label-example.png" alt="magazine label example" />
-													 <div class="account-form">
-														Account Number
-														<br/>
-														<input type="number" id="omeda_postal_id" name="omeda_postal_id" value="'.$omeda_postal_id.'" />
-														<button id="make-update-Omeda-ID" class="universal-btn">Update</button>
-													</div>
+													 <div class="account-form-wrapper">
+                                                         <img src="'.plugin_dir_url( dirname( __FILE__ ) ).'/images/label-example.png" alt="magazine label example" />
+    													 <div class="account-form">
+    														Account Number
+    														<br/>
+    														<input type="number" id="omeda_postal_id" name="omeda_postal_id" value="'.$omeda_postal_id.'" />
+    														<button id="make-update-Omeda-ID" class="universal-btn">Update</button>
+    													</div>
+                                                     </div>
 												</div>
 											</div>
 										</div>';
