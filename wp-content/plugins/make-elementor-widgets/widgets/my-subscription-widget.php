@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 	private $noActive;
-	const VERSION = '1.2.0';
+	const VERSION = '1.2.1';
 
 	public function __construct( $data = array(), $args = null ) {
 		parent::__construct( $data, $args );

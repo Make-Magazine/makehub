@@ -26,7 +26,7 @@ require_once(plugin_dir_path(__FILE__) . 'classes/ajax_omeda.php');
 final class Make_Elementor_Widgets
 {
 
-    const VERSION = '1.2.0';
+    const VERSION = '1.2.1';
     const MINIMUM_ELEMENTOR_VERSION = '3.5.0';
     const MINIMUM_PHP_VERSION = '7.0';
 
