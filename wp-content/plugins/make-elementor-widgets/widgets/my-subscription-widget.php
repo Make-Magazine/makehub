@@ -289,10 +289,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					//save addresses for this customer
 					$address_array=array();
 					foreach($customer_address->Addresses as $address){
-						//only write the primary address
-						if($address->StatusCode==1){
-							$address_array[] = (array) $address;
-						}
+						$address_array[] = (array) $address;
 					} //end customer address loop
 				} //end check if customer address url set
 			} //end check if customer url set
@@ -443,7 +440,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			<div class="subscription-item sub-offer">
 				<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83" ></a>
 				<div>
-					Ready for a creative escape? <i><strong>Make:</strong></i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
+					Ready for a creative escape? <i><strong>Make:</strong></i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% savings off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
 				</div>
 			</div>
 			<?php
@@ -512,19 +509,21 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		//Build the output
 		$name = prettifyString($subscription['FirstName'].' '. $subscription['LastName']).'<br/>';
-
 		//show the address associated with this subscription
 		if($subscription['address_array'] !=''){
 			$address = (isset($address_info['Company'])?$address_info['Company'].'<br/>':'');
 			foreach($subscription['address_array'] as $address_info) {
-				$address .= prettifyString($address_info['Street']).'<br/>';
-				$address .= (isset($address_info['ApartmentMailStop']) 	!= '' ? prettifyString($address_info['ApartmentMailStop']).'<br/>':'');
-				$address .= (isset($address_info['ExtraAddress']) 		!= '' ? prettifyString($address_info['ExtraAddress']).'<br/>':'');
-				if(strlen($address_info['PostalCode']) > 5) {
-					$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
+				//use the address assigned to this postal id
+				if($address_info['Id']==$subscription['ShippingAddressId']){
+					$address .= prettifyString($address_info['Street']).'<br/>';
+					$address .= (isset($address_info['ApartmentMailStop']) 	!= '' ? prettifyString($address_info['ApartmentMailStop']).'<br/>':'');
+					$address .= (isset($address_info['ExtraAddress']) 		!= '' ? prettifyString($address_info['ExtraAddress']).'<br/>':'');
+					if(strlen($address_info['PostalCode']) > 5) {
+						$address_info['PostalCode'] = substr_replace($address_info['PostalCode'], "-", 5, 0);
+					}
+					$address .= prettifyString($address_info['City']) .', '. prettifyString($address_info['Region']).' '. $address_info['PostalCode'] .'<br/>';
+					$address .= prettifyString($address_info['Country']).'<br/><br/>';
 				}
-				$address .= prettifyString($address_info['City']) .', '. prettifyString($address_info['Region']).' '. $address_info['PostalCode'] .'<br/>';
-				$address .= prettifyString($address_info['Country']).'<br/><br/>';
 			}
 		}
 
@@ -618,6 +617,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
 		}elseif($issues_remaining!='') {
 			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
+
+		//if they have access to a digital sub, add this link
+		if(
+			($subscription['ActualVersionCode']=='B' || $subscription['ActualVersionCode']=='D')
+				&& $subscription['Status'] == '1'
+			){
+			$return .= 	   '<div class="sub-digital" title="Digital Access"><a href="https://make-digital.com" target="_blank">View Digital</a></div>';
 		}
 
 		//Begin additional information section
