@@ -498,20 +498,3 @@
 		margin-bottom: 5px;
 	}
 }
-
-@media screen and (max-width:1159px) {
-	.subscriptions-wrapper .subscription-item .sub-additional-info .sub-addinfo-issuesRemaining {
-		display: flex;
-	}
-	.subscriptions-wrapper .subscription-item .sub-issuesRemaining {
-		display: none;
-	}
-}
-@media screen and (min-width:1160px) {
-	.subscriptions-wrapper .subscription-item .sub-additional-info .sub-addinfo-issuesRemaining {
-		display: none;
-	}
-	.subscriptions-wrapper .subscription-item .sub-issuesRemaining {
-		display: block;
-	}
-}

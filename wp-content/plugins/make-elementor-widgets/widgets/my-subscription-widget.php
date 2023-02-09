@@ -584,11 +584,8 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			}
 		}*/
 
-		//expiration date - show expiration date and number of issues remaining if subscription is not expired
-		$exp_date = '';
-		if($subscription['Status'] == 1){
-			$exp_date = date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d");
-		}
+		//expiration date
+		$exp_date = (isset($subscription['IssueExpirationDate']) ? date_format(date_create($subscription['IssueExpirationDate']), "Y/m/d") : '');		
 
 		//last payment date
 		$last_pay_date = $last_pay_amt = '';
@@ -613,10 +610,10 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 						<div class="sub-type" title="Subscription Type">'.$subscription_type.'</div>
 						<div class="sub-status sub-'.strtok(strtolower($subscription_status)," ").'" title="Subscription Status">'.$subscription_status.'</div>
 						<div class="sub-name" title="Name">'.$name.'</div>';
+
 		if($subscription['PaymentStatus']==3 && $subscription['custEncryptID']!=0){
-			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
-		}elseif($issues_remaining!='') {
-			$return .= '<div class="sub-issuesRemaining" title="Issues Remaining">Issues Remaining: '.$issues_remaining.'</div>';
+			$return .= '<div class="sub-issuesRemaining" title="Pay bill now"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
+		}
 
 		//if they have access to a digital sub, add this link
 		if(
@@ -630,18 +627,16 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		$return .= 	   '<div class="sub-additional-info">
 							<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>'.$address.'</div>';
 		if($exp_date!='') {
-			$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expires:</b> '.$exp_date.'</div>';
+			$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expire Date:</b> '.$exp_date.'</div>';
 		}
 		if($last_pay_date!='') {
 			$return .= 	   '<div class="sub-lastPaymentDate" title="Last Payment Date"><b>Last Payment Date:</b> '.$last_pay_date.'</div>
 							<div class="sub-lastPaymentAmount" title="Last Payment Amount"><b>Last Payment Amount:</b> $'.$last_pay_amt.'</div>';
 		}
 
-		//add issues remaining in the additional information section as well, but only show it when 'issues remaining' drops down from the main screen
+		//add Payment due but only show it when it drops down from the main screen
 		if($subscription['PaymentStatus']==3 && $subscription['custEncryptID']!=0){
-			$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
-		}elseif($issues_remaining!='') {
-			$return .= '<div class="sub-addinfo-issuesRemaining" title="Issues Remaining"><b>Issues Remaining:</b> '.$issues_remaining.'</div>';
+			$return .= '<div class="sub-addinfo-issuesRemaining" title="Pay Bill Now"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r='.$subscription['custEncryptID'].'" target="_blank">Pay Now</a></div>';
 		}
 		$return .= 	   '</div>';
 		//end additional information section
