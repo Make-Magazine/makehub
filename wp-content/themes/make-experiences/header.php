@@ -63,7 +63,7 @@
             <!-- End Google Tag Manager -->
             
             <!--  Pinterest  -->
-             <script type="text/javascript">
+            <script type="text/javascript">
              !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(
                Array.prototype.slice.call(arguments))};var
                n=window.pintrk;n.queue=[],n.version="3.0";var
