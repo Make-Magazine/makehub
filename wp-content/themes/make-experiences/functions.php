@@ -159,6 +159,11 @@ function add_slug_body_class($classes) {
 }
 add_filter('body_class', 'add_slug_body_class');
 
+// Disables the block editor from managing widgets in the Gutenberg plugin.
+add_filter( 'gutenberg_use_widgets_block_editor', '__return_false' );
+// Disables the block editor from managing widgets.
+add_filter( 'use_widgets_block_editor', '__return_false' );
+
 /*
  * Override any of the translation files if we need to change language
  *

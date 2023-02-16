@@ -121,3 +121,7 @@ wp-content/mu-plugins/wpe-wp-sign-on-plugin*
 *.wmv
 *.avi
 
+//eclipse specific
+.buildpath
+.project
+org.eclipse*
