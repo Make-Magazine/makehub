@@ -454,6 +454,15 @@ button.ges-change, button.ges-change:hover {
 		#facilitator-portal-personal-li { display: none; }
 	}
 }
+.bp-navs {
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		li {
+			line-height: 40px; 
+		}
+	}
+}
 
 // messages
 #buddypress .message-action-delete, #buddypress .message_action__anchor {
