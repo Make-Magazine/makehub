@@ -336,6 +336,7 @@ class MPCA_Corporate_Account extends MeprBaseModel {
     global $wpdb;
     $mepr_db = MeprDb::fetch();
     $transaction = self::get_user_sub_account_transaction($user_id);
+    $parent_transaction = $this->setup_parent_transaction();
 
     //Let's expire the txn instead of deleting it
     //That way our transaction-expired events will still trigger
@@ -358,6 +359,7 @@ class MPCA_Corporate_Account extends MeprBaseModel {
     delete_user_meta($user_id, 'mpca_corporate_account_id', $this->id);
 
     if($transaction !== false) {
+      do_action('mpca_remove_sub_account', $transaction->id, $parent_transaction->id);
       MPCA_Event::record_event('sub-account-removed', $transaction->id, MPCA_Event::$transactions_str);
     }
   }

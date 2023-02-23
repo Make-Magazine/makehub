@@ -29,13 +29,14 @@ return array(
     'required' => __('Required', 'memberpress-developer-tools'),
     'desc' => __('The username for this User. If you\'re using email addresses as the Username, then both username and email should be set to the same string.', 'memberpress-developer-tools')
   ),
-  'password' => array(
-    'name' => __('Plaintext Password', 'memberpress-developer-tools'),
-    'type' => 'string',
-    'default' => '',
-    'required' => false,
-    'desc' => __('A plaintext password which will be hashed and stored with this user. If creating and a password is not provided then a random password will be automatically generated for the member on create. If updating and a password is not provided then it will remain as is.', 'memberpress-developer-tools')
-  ),
+  //Removed for securty reasons
+  // 'password' => array(
+  //   'name' => __('Plaintext Password', 'memberpress-developer-tools'),
+  //   'type' => 'string',
+  //   'default' => '',
+  //   'required' => false,
+  //   'desc' => __('A plaintext password which will be hashed and stored with this user. If creating and a password is not provided then a random password will be automatically generated for the member on create. If updating and a password is not provided then it will remain as is.', 'memberpress-developer-tools')
+  // ),
   //'add_to_membership' => array(
   //  'name' => __('Add to Membership', 'memberpress-developer-tools'),
   //  'type' => 'bool',

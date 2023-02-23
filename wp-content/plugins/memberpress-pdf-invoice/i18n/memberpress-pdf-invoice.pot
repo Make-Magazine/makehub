@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MemberPress PDF Invoice plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress PDF Invoice 1.1.17\n"
+"Project-Id-Version: MemberPress PDF Invoice 1.1.19\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-pdf-invoice\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-27T19:36:02+00:00\n"
+"POT-Creation-Date: 2022-10-17T23:02:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: memberpress-pdf-invoice\n"
@@ -80,7 +80,7 @@ msgstr ""
 
 #: app/controllers/MePdfInvoicesCtrl.php:296
 #: app/controllers/MePdfInvoicesCtrl.php:302
-#: app/controllers/MePdfInvoicesCtrl.php:598
+#: app/controllers/MePdfInvoicesCtrl.php:616
 msgid "Initial Payment"
 msgstr ""
 
@@ -96,47 +96,47 @@ msgstr ""
 msgid "Refund"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:324
+#: app/controllers/MePdfInvoicesCtrl.php:341
 msgid "Coupon Code '%s'"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:539
+#: app/controllers/MePdfInvoicesCtrl.php:557
 msgid "Invoice Number already exists. Invoice number is a unique incremental ID. The next Invoice number is "
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:546
+#: app/controllers/MePdfInvoicesCtrl.php:564
 msgid "Wrong Invoice Number. Invoice number is a unique incremental ID. Select a number equal to or lower than the Next Invoice number which is "
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:550
+#: app/controllers/MePdfInvoicesCtrl.php:568
 msgid "<strong>Invoice Number:</strong> Please add Next Invoice number in <em>MemberPress > Settings > Info</em>"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:592
+#: app/controllers/MePdfInvoicesCtrl.php:610
 msgid "John Doe"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:593
+#: app/controllers/MePdfInvoicesCtrl.php:611
 msgid "111 Cool Avenue"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:594
+#: app/controllers/MePdfInvoicesCtrl.php:612
 msgid "New York, NY 10005"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:595
+#: app/controllers/MePdfInvoicesCtrl.php:613
 msgid "United States"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:598
+#: app/controllers/MePdfInvoicesCtrl.php:616
 msgid "Bronze Edition"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:629
+#: app/controllers/MePdfInvoicesCtrl.php:647
 msgid "Invoice Number*:"
 msgstr ""
 
-#: app/controllers/MePdfInvoicesCtrl.php:632
+#: app/controllers/MePdfInvoicesCtrl.php:650
 msgid "A unique Invoice ID for this Transaction. Only edit this if you absolutely have to."
 msgstr ""
 
