@@ -119,7 +119,7 @@ if ( ! class_exists( 'Astra_Sites_Image_Importer' ) ) :
 			global $wpdb;
 
 			// 1. Is already imported in Batch Import Process?
-			$post_id = $wpdb->get_var(
+			$post_id = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We are checking if this image is already processed. WO_Query would have been overkill.
 				$wpdb->prepare(
 					'SELECT `post_id` FROM `' . $wpdb->postmeta . '`
 						WHERE `meta_key` = \'_astra_sites_image_hash\'
@@ -138,7 +138,7 @@ if ( ! class_exists( 'Astra_Sites_Image_Importer' ) ) :
 
 				// Find the attachment by meta value.
 				// Code reused from Elementor plugin.
-				$post_id = $wpdb->get_var(
+				$post_id = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We are checking if this attachment is already processed. WO_Query would have been overkill.
 					$wpdb->prepare(
 						"SELECT post_id FROM {$wpdb->postmeta}
 						WHERE meta_key = '_wp_attached_file'

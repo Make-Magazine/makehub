@@ -226,7 +226,6 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Importer' ) ) :
 						astra_sites_error_log( 'HTTP Request Error!' );
 					}
 				} else {
-					// @codingStandardsIgnoreStart
 					// Set mini agency page builder.
 					$page_builder_slugs = wp_list_pluck( $page_builders, 'slug' );
 					if ( in_array( 'elementor', $page_builder_slugs ) && ! in_array( 'beaver-builder', $page_builder_slugs ) ) {
@@ -239,7 +238,6 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Importer' ) ) :
 						update_option( 'astra-sites-license-page-builder', '', 'no' );
 						astra_sites_error_log( 'Not Set Any License Page Builder' );
 					}
-					// @codingStandardsIgnoreEnd
 				}
 			}
 		}

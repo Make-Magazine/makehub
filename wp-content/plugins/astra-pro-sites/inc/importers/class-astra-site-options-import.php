@@ -206,7 +206,7 @@ class Astra_Site_Options_Import {
 			'post_type'   => 'elementor_library',
 			'post_status' => 'publish',
 			'numberposts' => 1,
-			'meta_query'  => array(
+			'meta_query'  => array( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Setting elementor kit. WP Query would have been expensive.
 				array(
 					'key'   => '_astra_sites_imported_post',
 					'value' => '1',
@@ -234,6 +234,10 @@ class Astra_Site_Options_Import {
 	 * @return void
 	 */
 	private function update_page_id_by_option_value( $option_name, $option_value ) {
+		if ( empty( $option_value ) ) {
+			return;
+		}
+
 		$page = get_page_by_title( $option_value );
 		if ( is_object( $page ) ) {
 			update_option( $option_name, $page->ID );

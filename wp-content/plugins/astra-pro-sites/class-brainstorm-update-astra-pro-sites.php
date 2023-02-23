@@ -59,16 +59,6 @@ if ( ! class_exists( 'Brainstorm_Update_Astra_Pro_Sites' ) ) :
 
 			add_action( 'bsf_activate_license_astra-pro-sites_after_success', array( $this, 'activate_or_deactivate_license' ) );
 			add_action( 'bsf_deactivate_license_astra-pro-sites_after_success', array( $this, 'activate_or_deactivate_license' ) );
-			add_action( 'astra_sites_activate_license_popup', array( $this, 'add_activate_license_popup' ) );
-		}
-
-		/**
-		 * Add Activate License Popup
-		 *
-		 * @since 2.0.0
-		 */
-		public function add_activate_license_popup() {
-			require_once ASTRA_PRO_SITES_DIR . 'includes/license-form.php';
 		}
 
 		/**
@@ -294,6 +284,8 @@ if ( ! class_exists( 'Brainstorm_Update_Astra_Pro_Sites' ) ) :
 				/* translators: %1$s white label plugin name */
 				return '<h3>' . sprintf( __( 'Activate %1$s License', 'astra-sites' ), Astra_Pro_Sites_White_Label::get_option( 'astra-sites', 'name', ASTRA_PRO_SITES_NAME ) ) . '</h3>';
 			}
+
+			return $form_heading;
 
 		}
 

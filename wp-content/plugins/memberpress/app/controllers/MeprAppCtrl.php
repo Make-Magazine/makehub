@@ -36,6 +36,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
     //Load language - must be done after plugins are loaded to work with PolyLang/WPML
     add_action('plugins_loaded', 'MeprAppCtrl::load_language');
+    add_action('init', array($this, 'load_translations'));
 
     add_filter('months_dropdown_results', array($this, 'cleanup_list_table_month_dropdown'), 10, 2);
 
@@ -558,7 +559,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
         $action = self::get_param('action');
         $manual_login_form = get_post_meta($current_post->ID, '_mepr_manual_login_form', true);
-
         try {
           $login_ctrl = MeprCtrlFactory::fetch('login');
 
@@ -579,7 +579,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
             if($action and $action == 'mepr_unauthorized') {
               $resource = isset($_REQUEST['redirect_to']) ? esc_url(urldecode($_REQUEST['redirect_to'])) : __('the requested resource.','memberpress');
-              $unauth_message = wpautop(MeprHooks::apply_filters('mepr-unauthorized-message', do_shortcode($mepr_options->unauthorized_message), $current_post));
 
               //Maybe override the message if a page id is set
               if(isset($_GET['mepr-unauth-page'])) {
@@ -587,6 +586,8 @@ class MeprAppCtrl extends MeprBaseCtrl {
                 $unauth = MeprRule::get_unauth_settings_for($unauth_post);
                 $unauth_message = $unauth->message;
               }
+
+              $unauth_message = wpautop(MeprHooks::apply_filters('mepr-unauthorized-message', do_shortcode($unauth_message), $current_post));
 
               $message = '<p id="mepr-unauthorized-for-resource">' . __('Unauthorized for', 'memberpress') . ': <span id="mepr-unauthorized-resource-url">' . $resource . '</span></p>' . $unauth_message;
             }
@@ -653,7 +654,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
     // Yeah we enqueue this globally all the time so the login form will work on any page
     wp_enqueue_style('mp-theme', MEPR_CSS_URL . '/ui/theme.css', null, MEPR_VERSION);
 
-    if($global_styles || $is_account_page) {
+    if(($global_styles || $is_account_page) && ! has_block('memberpress/pro-account-tabs')) {
       wp_enqueue_style('mp-account-css', MEPR_CSS_URL.'/ui/account.css', null, MEPR_VERSION);
     }
 
@@ -681,15 +682,15 @@ class MeprAppCtrl extends MeprBaseCtrl {
       $prereqs = MeprHooks::apply_filters('mepr-signup-styles', array());
       wp_enqueue_style('mp-signup',  MEPR_CSS_URL.'/signup.css', $prereqs, MEPR_VERSION);
 
-      wp_register_script('mepr-timepicker-js', MEPR_JS_URL.'/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker'));
+      wp_register_script('mepr-timepicker-js', MEPR_JS_URL.'/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker'), MEPR_VERSION);
       wp_register_script('mp-datepicker', MEPR_JS_URL.'/date_picker.js', array('mepr-timepicker-js'), MEPR_VERSION);
 
       $date_picker_frontend = array('translations' => self::get_datepicker_strings(), 'timeFormat' => (is_admin())?'HH:mm:ss':'', 'dateFormat' => MeprUtils::datepicker_format(get_option('date_format')), 'showTime' => (is_admin())?true:false);
       wp_localize_script('mp-datepicker', 'MeprDatePicker', $date_picker_frontend);
 
-      wp_register_script('jquery.payment', MEPR_JS_URL.'/jquery.payment.js');
-      wp_register_script('mp-validate', MEPR_JS_URL.'/validate.js');
-      wp_register_script('mp-i18n', MEPR_JS_URL.'/i18n.js');
+      wp_register_script('jquery.payment', MEPR_JS_URL.'/jquery.payment.js', array(), MEPR_VERSION);
+      wp_register_script('mp-validate', MEPR_JS_URL.'/validate.js', array(), MEPR_VERSION);
+      wp_register_script('mp-i18n', MEPR_JS_URL.'/i18n.js', array(), MEPR_VERSION);
 
       $i18n = array('states' => MeprUtils::states(), 'ajaxurl' => admin_url('admin-ajax.php'));
       $i18n['please_select_state'] = __('-- Select State --', 'memberpress');
@@ -706,8 +707,8 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
       $local_data = array(
         'coupon_nonce' => wp_create_nonce('mepr_coupons'),
-        'spc_enabled'  => $mepr_options->enable_spc,
-        'spc_invoice'  => $mepr_options->enable_spc_invoice
+        'spc_enabled'  => ( $mepr_options->enable_spc || $mepr_options->design_enable_checkout_template ),
+        'spc_invoice'  => ( $mepr_options->enable_spc_invoice || $mepr_options->design_enable_checkout_template )
       );
 
       wp_localize_script('mp-signup', 'MeprSignup', $local_data);
@@ -884,7 +885,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
     * so we should be good to do it this way
     */
     $paths = array();
-    $paths[] = str_replace(WP_PLUGIN_DIR, '', MEPR_I18N_PATH);
 
     //Have to use WP_PLUGIN_DIR because load_plugin_textdomain doesn't accept abs paths
     if(!file_exists(WP_PLUGIN_DIR . '/' . 'mepr-i18n')) {
@@ -897,6 +897,9 @@ class MeprAppCtrl extends MeprBaseCtrl {
       $paths[] = '/mepr-i18n';
     }
 
+    // /wp-content/mepr-i18n should have priority over wp-content/memberpress/i18n/
+    $paths[] = str_replace(WP_PLUGIN_DIR, '', MEPR_I18N_PATH);
+
     $paths = MeprHooks::apply_filters('mepr-textdomain-paths', $paths);
 
     foreach($paths as $path) {
@@ -905,6 +908,18 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
     //Force a refresh of the $mepr_options so those strings can be marked as translatable in WPML/Polylang type plugins
     MeprOptions::fetch(true);
+  }
+
+  public static function load_translations() {
+    if(MeprHooks::apply_filters('mepr-remove-traduttore', false)) { return; }
+    // Load Traduttore
+    require_once(MEPR_I18N_PATH . '/namespace.php');
+
+    \MP_Required\Traduttore_Registry\add_project(
+      'plugin',
+      'memberpress',
+      'https://translate.memberpress.com/api/translations/memberpress'
+    );
   }
 
   // Utility function to grab the parameter whether it's a get or post

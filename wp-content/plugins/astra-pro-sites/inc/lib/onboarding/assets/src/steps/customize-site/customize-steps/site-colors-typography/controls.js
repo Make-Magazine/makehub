@@ -12,10 +12,8 @@ import TypographyWrapper from './typography';
 import { DARK_PALETTES, LIGHT_PALETTES } from './colors';
 
 const SiteColorsControls = () => {
-	const [
-		{ activePaletteSlug, templateResponse, builder },
-		dispatch,
-	] = useStateValue();
+	const [ { activePaletteSlug, templateResponse, builder }, dispatch ] =
+		useStateValue();
 	const [ defaultPalette, setDefaultPalette ] = useState( [] );
 	const [ colorScheme, setColorScheme ] = useState( LIGHT_PALETTES );
 

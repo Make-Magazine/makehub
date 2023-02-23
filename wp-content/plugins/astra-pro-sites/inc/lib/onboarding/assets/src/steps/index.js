@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { __ } from '@wordpress/i18n';
 import { Tooltip } from '@brainstormforce/starter-templates-components';
+import { __ } from '@wordpress/i18n';
 import { useStateValue } from '../store/store';
 import ICONS from '../../icons';
 import Logo from '../components/logo';

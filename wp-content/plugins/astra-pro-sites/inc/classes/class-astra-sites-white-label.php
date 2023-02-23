@@ -72,6 +72,9 @@ if ( ! class_exists( 'Astra_Sites_White_Label' ) ) :
 			add_filter( 'astra_sites_menu_page_title', array( $this, 'get_white_label_name' ) );
 			add_filter( 'astra_sites_page_title', array( $this, 'get_white_label_name' ) );
 
+			// Update Astra's admin top level menu position.
+			add_filter( 'astra_menu_priority', array( $this, 'update_admin_menu_position' ) );
+
 			// Display the link with the plugin meta.
 			if ( is_admin() ) {
 				add_filter( 'plugin_row_meta', array( $this, 'plugin_links' ), 10, 4 );
@@ -79,6 +82,17 @@ if ( ! class_exists( 'Astra_Sites_White_Label' ) ) :
 
 			add_filter( 'gutenberg_templates_localize_vars', array( $this, 'add_white_label_name' ) );
 		}
+
+		/**
+		 * Update Astra's menu priority to show after Dashboard menu.
+		 *
+		 * @param int $menu_priority top level menu priority.
+		 * @since 3.1.22
+		 */
+		public function update_admin_menu_position( $menu_priority ) {
+			return 2.1;
+		}
+
 		/**
 		 * Add White Label data
 		 *

@@ -145,8 +145,8 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 			if ( ! empty( $ids_mapping ) ) {
 				// Replace ID's.
 				foreach ( $ids_mapping as $old_id => $new_id ) {
-					$content = str_replace( '[wpforms id="' . $old_id, '[wpforms id="' . $new_id, $content );
-					$content = str_replace( '{"formId":"' . $old_id . '"}', '{"formId":"' . $new_id . '"}', $content );
+					$content = str_replace( '[wpforms id=\"' . $old_id, '[wpforms id=\"' . $new_id, $content );
+					$content = str_replace( '{\"formId\":\"' . $old_id . '\"}', '{\"formId\":\"' . $new_id . '\"}', $content );
 				}
 			}
 

@@ -381,6 +381,82 @@ class MeprOptions {
     if(!isset($this->sslverify)) {
       $this->sslverify = true;
     }
+
+    if(!isset( $this->design_logo_img ) ){
+        $this->design_logo_img = '';
+    }
+
+    if(!isset( $this->design_primary_color ) ){
+        $this->design_primary_color = '#06429E';
+    }
+
+    if(!isset( $this->design_enable_checkout_template ) ){
+        $this->design_enable_checkout_template = false;
+    }
+
+    if(!isset( $this->design_enable_login_template ) ){
+        $this->design_enable_login_template = false;
+    }
+
+    if(!isset( $this->design_show_login_welcome_image ) ){
+        $this->design_show_login_welcome_image = false;
+    }
+
+    if(!isset( $this->design_login_welcome_img ) ){
+        $this->design_login_welcome_img = '';
+    }
+
+    if(!isset( $this->design_enable_account_template ) ){
+        $this->design_enable_account_template = false;
+    }
+
+    if(!isset( $this->design_show_account_welcome_image ) ){
+        $this->design_show_account_welcome_image = false;
+    }
+
+    if(!isset( $this->design_account_welcome_img ) ){
+        $this->design_account_welcome_img = '';
+    }
+
+    if(!isset( $this->design_enable_courses_template ) ){
+        $this->design_enable_courses_template = '';
+    }
+
+    if(!isset( $this->design_enable_thankyou_template ) ){
+        $this->design_enable_thankyou_template = false;
+    }
+
+    if(!isset( $this->design_show_thankyou_welcome_image) ){
+        $this->design_show_thankyou_welcome_image = false;
+    }
+
+    if(!isset( $this->design_thankyou_hide_invoice ) ){
+        $this->design_thankyou_hide_invoice = '';
+    }
+
+    if(!isset( $this->design_thankyou_invoice_message ) ){
+        $this->design_thankyou_invoice_message = '';
+    }
+
+    if(!isset( $this->design_thankyou_welcome_img ) ){
+        $this->design_thankyou_welcome_img = '';
+    }
+
+    if(!isset( $this->design_enable_pricing_template ) ){
+        $this->design_enable_pricing_template = false;
+    }
+
+    if(!isset( $this->design_pricing_title ) ){
+        $this->design_pricing_title = '';
+    }
+
+    if(!isset( $this->design_pricing_cta_color ) ){
+        $this->design_pricing_cta_color = '';
+    }
+
+    if(!isset( $this->design_pricing_subheadline ) ){
+      $this->design_pricing_subheadline = '';
+    }
   }
 
   public function set_strings() {
@@ -472,6 +548,26 @@ class MeprOptions {
     $this->include_email_privacy_link_str           = 'mepr-email-privacy-link';
     $this->require_privacy_policy_str               = 'mepr-require-privacy-policy';
     $this->privacy_policy_title_str                 = 'mepr-privacy-policy-title';
+
+    $this->design_logo_img_str                      = 'mepr-design-logo-img';
+    $this->design_primary_color_str                 = 'mepr-design-primary-color';
+    $this->design_enable_login_template_str         = 'mepr-design-enable-login-template';
+    $this->design_show_login_welcome_image_str      = 'mepr-design-show-login-welcome-image';
+    $this->design_login_welcome_img_str             = 'mepr-design-login-welcome-img';
+    $this->design_enable_checkout_template_str      = 'mepr-design-enable-checkout-template';
+    $this->design_enable_account_template_str       = 'mepr-design-enable-account-template';
+    $this->design_show_account_welcome_image_str    = 'mepr-design-show-account-welcome-image';
+    $this->design_account_welcome_img_str           = 'mepr-design-account-welcome-img';
+    $this->design_enable_courses_template_str       = 'mepr-design-enable-courses-template';
+    $this->design_enable_thankyou_template_str      = 'mepr-design-enable-thankyou-template';
+    $this->design_show_thankyou_welcome_image_str   = 'mepr-design-show-thankyou-welcome-image';
+    $this->design_thankyou_welcome_img_str          = 'mepr-design-thankyou-welcome-img';
+    $this->design_thankyou_hide_invoice_str         = 'mepr-design-thankyou-hide-invoice';
+    $this->design_thankyou_invoice_message_str              = 'mepr-design-thankyou-message';
+    $this->design_enable_pricing_template_str       = 'mepr-design-enable-pricing-template';
+    $this->design_pricing_title_str                 = 'mepr-design-pricing-title';
+    $this->design_pricing_cta_color_str             = 'mepr-design-pricing-cta-color';
+    $this->design_pricing_subheadline_str           = 'mepr-design-pricing-subheadline';
   }
 
   public function validate($params, $errors = array()) {
@@ -657,6 +753,27 @@ class MeprOptions {
     //We now support address being required -- handle that here
     $this->address_fields                     = $this->update_address_fields_required();
     $this->custom_fields                      = $this->update_custom_fields($params);
+
+    // design
+    $this->design_logo_img                    = absint($params[$this->design_logo_img_str]);
+    $this->design_primary_color               = sanitize_text_field($params[$this->design_primary_color_str]);
+    $this->design_enable_checkout_template    = isset($params[$this->design_enable_checkout_template_str]);
+    $this->design_enable_login_template       = isset($params[$this->design_enable_login_template_str]);
+    $this->design_show_login_welcome_image    = isset($params[$this->design_show_login_welcome_image_str]);
+    $this->design_login_welcome_img           = absint($params[$this->design_login_welcome_img_str]);
+    $this->design_enable_account_template     = isset($params[$this->design_enable_account_template_str]);
+    $this->design_show_account_welcome_image  = isset($params[$this->design_show_account_welcome_image_str]);
+    $this->design_account_welcome_img         = absint($params[$this->design_account_welcome_img_str]);
+    $this->design_enable_courses_template     = isset($params[$this->design_enable_courses_template_str]);
+    $this->design_enable_thankyou_template    = isset($params[$this->design_enable_thankyou_template_str]);
+    $this->design_show_thankyou_welcome_image = isset($params[$this->design_show_thankyou_welcome_image_str]);
+    $this->design_thankyou_hide_invoice       = isset($params[$this->design_thankyou_hide_invoice_str]);
+    $this->design_thankyou_invoice_message    = wp_kses_post(stripslashes($params[$this->design_thankyou_invoice_message_str]));
+    $this->design_thankyou_welcome_img        = absint($params[$this->design_thankyou_welcome_img_str]);
+    $this->design_enable_pricing_template     = isset($params[$this->design_enable_pricing_template_str]);
+    $this->design_pricing_title               = sanitize_text_field($params[$this->design_pricing_title_str]);
+    $this->design_pricing_cta_color           = sanitize_text_field($params[$this->design_pricing_cta_color_str]);
+    $this->design_pricing_subheadline         = wp_kses_post(stripslashes($params[$this->design_pricing_subheadline_str]));
   }
 
   public function update_address_fields_required() {
@@ -938,6 +1055,25 @@ class MeprOptions {
     }
 
     return MeprHooks::apply_filters('mepr-thankyou-page-url', $url, $args_array);
+  }
+
+  public function forgot_password_url()
+  {
+    $mepr_options = MeprOptions::fetch();
+
+    $login_page_id = (!empty($mepr_options->login_page_id) && $mepr_options->login_page_id > 0)?$mepr_options->login_page_id:0;
+
+    if($login_page_id) {
+      $login_url = $mepr_options->login_page_url();
+      $login_delim = MeprAppCtrl::get_param_delimiter_char($login_url);
+      $forgot_password_url = "{$login_url}{$login_delim}action=forgot_password";
+    }
+    else {
+      $login_url = home_url('/wp-login.php');
+      $forgot_password_url = home_url('/wp-login.php?action=lostpassword');
+    }
+
+    return $forgot_password_url;
   }
 
   private function set_address_fields() {

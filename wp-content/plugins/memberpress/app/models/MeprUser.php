@@ -667,6 +667,11 @@ class MeprUser extends MeprBaseModel {
     return !is_wp_error($wp_user);
   }
 
+  public function reset_form_key_has_expired($key) {
+    $wp_user = check_password_reset_key($key, $this->user_login);
+    return is_wp_error($wp_user) && 'expired_key' === $wp_user->get_error_code() ? true : false;
+  }
+
   /**
   * Backwards compatibility
   * @deprecated Use send_password_notification('reset')
@@ -802,7 +807,7 @@ class MeprUser extends MeprBaseModel {
   public static function validate_account($params, $errors = array()) {
     $mepr_options = MeprOptions::fetch();
 
-    extract($params);
+    extract($params, EXTR_SKIP);
 
     if($mepr_options->require_fname_lname && (empty($user_first_name) || empty($user_last_name))) {
       $errors[] = __('You must enter both your First and Last name', 'memberpress');
@@ -816,6 +821,29 @@ class MeprUser extends MeprBaseModel {
     $user = MeprUtils::get_currentuserinfo(); //Old user info is here since we haven't stored the new stuff yet
     if($user !== false && $user->user_email != stripslashes($user_email) && email_exists(stripslashes($user_email))) {
       $errors[] = __('This email is already in use by another member', 'memberpress');
+    }
+
+    return $errors;
+  }
+
+  /**
+   * Validate single account field
+   *
+   * @param array $field The field array, showuld have name, value keys
+   * @param array $errors The errors array.
+   * @return array
+   */
+  public static function validate_account_field($params, $errors = array()) {
+    if( array_key_exists('user_email', $params) ){
+      if(empty($params['user_email']) || !is_email(stripslashes($params['user_email']))) {
+        $errors[] = __('You must enter a valid email address', 'memberpress');
+      }
+
+      //Old email is not the same as the new, so let's make sure no else has it
+      $user = MeprUtils::get_currentuserinfo(); //Old user info is here since we haven't stored the new stuff yet
+      if($user !== false && $user->user_email != stripslashes($params['user_email']) && email_exists(stripslashes($params['user_email']))) {
+        $errors[] = __('This email is already in use by another member', 'memberpress');
+      }
     }
 
     return $errors;
@@ -1393,15 +1421,35 @@ class MeprUser extends MeprBaseModel {
 
     // To update pricing terms string with AJAX, we need to send the POST address
     // This only runs when running AJAX, that's the only place the two actions are set
-    if( isset($_POST['action']) && ($_POST['action'] == "mepr_update_price_string" || $_POST['action'] == "mepr_update_spc_invoice_table") ){
-      $one      = isset($_POST['mepr_address_one']) ? sanitize_text_field($_POST['mepr_address_one']) : '';
-      $city     = isset($_POST['mepr_address_city']) ? sanitize_text_field($_POST['mepr_address_city']) : '';
-      $state    = isset($_POST['mepr_address_state']) ? sanitize_text_field($_POST['mepr_address_state']) : '';
-      $country  = isset($_POST['mepr_address_country']) ? sanitize_text_field($_POST['mepr_address_country']) : '';
-      $postcode = isset($_POST['mepr_address_zip']) ? sanitize_text_field($_POST['mepr_address_zip']) : '';
+    if($this->use_address_from_request()) {
+      $one      = isset($_POST['mepr-address-one']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-one'])) : '';
+      $city     = isset($_POST['mepr-address-city']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-city'])) : '';
+      $state    = isset($_POST['mepr-address-state']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-state'])) : '';
+      $country  = isset($_POST['mepr-address-country']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-country'])) : '';
+      $postcode = isset($_POST['mepr-address-zip']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-zip'])) : '';
     }
 
     return (!empty($country) && !empty($postcode) && !empty($state) && !empty($city) && !empty($one));
+  }
+
+  /**
+   * Whether the address in the request data should override the saved user address
+   *
+   * @return bool
+   */
+  public function use_address_from_request() {
+    $use_address_from_request = false;
+    $action = isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '';
+
+    if(!empty($action) && in_array($action, ['mepr_update_price_string', 'mepr_update_spc_invoice_table', 'mepr_stripe_create_payment_client_secret'], true)) {
+      $mepr_options = MeprOptions::fetch();
+
+      if(!MeprUtils::is_user_logged_in() || ($mepr_options->show_address_fields && $mepr_options->show_fields_logged_in_purchases)) {
+        $use_address_from_request = true;
+      }
+    }
+
+    return $use_address_from_request;
   }
 
   /**
@@ -1436,12 +1484,14 @@ class MeprUser extends MeprBaseModel {
       if($mepr_options->attr('tax_calc_location')=='customer' ||
          MeprHooks::apply_filters('mepr-tax-rate-use-customer-address', false, $this)) {
 
-        if( isset($_POST['action']) && ($_POST['action'] == "mepr_update_price_string" || $_POST['action'] == "mepr_update_spc_invoice_table") ){
-          $country  = sanitize_text_field($_POST['mepr_address_country']);
-          $state    = sanitize_text_field($_POST['mepr_address_state']);
-          $postcode = sanitize_text_field($_POST['mepr_address_zip']);
-          $city     = sanitize_text_field($_POST['mepr_address_city']);
-          $street   = sprintf('%s %s', sanitize_text_field($_POST['mepr_address_one']), sanitize_text_field($_POST['mepr_address_two']));
+        if($this->use_address_from_request()) {
+          $one      = isset($_POST['mepr-address-one']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-one'])) : '';
+          $two      = isset($_POST['mepr-address-two']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-two'])) : '';
+          $city     = isset($_POST['mepr-address-city']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-city'])) : '';
+          $state    = isset($_POST['mepr-address-state']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-state'])) : '';
+          $country  = isset($_POST['mepr-address-country']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-country'])) : '';
+          $postcode = isset($_POST['mepr-address-zip']) ? sanitize_text_field(wp_unslash($_POST['mepr-address-zip'])) : '';
+          $street   = sprintf('%s %s', $one, $two);
         }
         else{
           $country  = $this->address('country');
@@ -1531,7 +1581,7 @@ class MeprUser extends MeprBaseModel {
   }
 
   public static function manually_place_account_form($post) {
-    return ($post instanceof WP_Post && preg_match('~\[mepr-account-form~', $post->post_content));
+    return ($post instanceof WP_Post && ( preg_match('~\[mepr-account-form~', $post->post_content) || has_block('memberpress/pro-account-tabs') ) );
   }
 
   public static function is_account_page($post) {
@@ -1549,7 +1599,8 @@ class MeprUser extends MeprBaseModel {
     $mepr_options = MeprOptions::fetch();
     return ($post instanceof WP_Post &&
             ($post->ID == $mepr_options->login_page_id ||
-             preg_match('~\[mepr-login-form~', $post->post_content)));
+             preg_match('~\[mepr-login-form~', $post->post_content))
+             || has_block('memberpress/pro-login-form'));
   }
 
   public function custom_profile_values($force_all = false) {

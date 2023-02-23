@@ -12,6 +12,11 @@
  */
 
 /**
+ * All the PHPCS errors are ignored in this file as it is a third party file.
+ * Forked from WP importer v2 - https://github.com/humanmade/WordPress-Importer
+ */
+
+/**
  * WXR Importer
  */
 if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
@@ -255,7 +260,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			$data = new WXR_Import_Info();
 			while ( $reader->read() ) {
 				// Only deal with element opens.
-				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
@@ -374,7 +379,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			$authors = array();
 			while ( $reader->read() ) {
 				// Only deal with element opens.
-				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
@@ -428,7 +433,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		 */
 		public function import( $file ) {
 			add_filter( 'import_post_meta_key', array( $this, 'is_valid_meta_key' ) );
-			add_filter( 'http_request_timeout', array( &$this, 'bump_request_timeout' ) );
+			add_filter( 'http_request_timeout', array( &$this, 'bump_request_timeout' ) ); //phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_timeout
 
 			$result = $this->import_start( $file );
 			if ( is_wp_error( $result ) ) {
@@ -450,7 +455,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			// Start parsing!
 			while ( $reader->read() ) {
 				// Only deal with element opens.
-				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XMLReader::ELEMENT !== $reader->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
@@ -603,7 +608,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			// Log the data as debug info too.
 			$data = $error->get_error_data();
 			if ( ! empty( $data ) ) {
-				$this->logger->debug( var_export( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
+				$this->logger->debug( var_export( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- 3rd party library.
 			}
 		}
 
@@ -675,7 +680,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			foreach ( $mapping as $map ) {
 				if ( empty( $map['old_slug'] ) || empty( $map['old_id'] ) || empty( $map['new_id'] ) ) {
 					$this->logger->warning( __( 'Invalid author mapping', 'wordpress-importer' ) );
-					$this->logger->debug( var_export( $map, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
+					$this->logger->debug( var_export( $map, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- 3rd party library.
 					continue;
 				}
 
@@ -713,63 +718,63 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			$comments = array();
 			$terms    = array();
 
-			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				// We only care about child elements.
-				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
-				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					case 'wp:post_type':
-						$data['post_type'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_type'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'title':
-						$data['post_title'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_title'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'guid':
-						$data['guid'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['guid'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'dc:creator':
-						$data['post_author'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_author'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'content:encoded':
-						$data['post_content'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_content'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'excerpt:encoded':
-						$data['post_excerpt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_excerpt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:post_id':
-						$data['post_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:post_date':
-						$data['post_date'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_date'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:post_date_gmt':
-						$data['post_date_gmt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_date_gmt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_status':
-						$data['comment_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:ping_status':
-						$data['ping_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['ping_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:post_name':
-						$data['post_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:status':
-						$data['post_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_status'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 
 						if ( 'auto-draft' === $data['post_status'] ) {
 							// Bail now.
@@ -782,23 +787,23 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 						break;
 
 					case 'wp:post_parent':
-						$data['post_parent'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_parent'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:menu_order':
-						$data['menu_order'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['menu_order'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:post_password':
-						$data['post_password'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['post_password'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:is_sticky':
-						$data['is_sticky'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['is_sticky'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:attachment_url':
-						$data['attachment_url'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['attachment_url'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:postmeta':
@@ -849,7 +854,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param array $comments Comments on the post.
 			 * @param array $terms Terms on the post.
 			 */
-			$data = apply_filters( 'wxr_importer.pre_process.post', $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			$data = apply_filters( 'wxr_importer.pre_process.post', $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 			if ( empty( $data ) ) {
 				return false;
 			}
@@ -899,7 +904,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 *
 				 * @param array $data Raw data imported for the post.
 				 */
-				do_action( 'wxr_importer.process_already_imported.post', $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.process_already_imported.post', $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 
 				// Even though this post already exists, new comments might need importing.
 				$this->process_comments( $comments, $original_id, $data, $post_exists );
@@ -995,7 +1000,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 					 * @param array $data Raw data imported for the post.
 					 * @param array $meta Raw meta data, already processed by {@see process_post_meta}.
 					 */
-					do_action( 'wxr_importer.process_skipped.post', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+					do_action( 'wxr_importer.process_skipped.post', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 					return false;
 				}
 				$remote_url = ! empty( $data['attachment_url'] ) ? $data['attachment_url'] : $data['guid'];
@@ -1025,7 +1030,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param array $comments Raw comment data, already processed by {@see process_comments}.
 				 * @param array $terms Raw term data, already processed.
 				 */
-				do_action( 'wxr_importer.process_failed.post', $post_id, $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.process_failed.post', $post_id, $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 				return false;
 			}
 
@@ -1100,7 +1105,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param array $comments Raw comment data, already processed by {@see process_comments}.
 			 * @param array $terms Raw term data, already processed.
 			 */
-			do_action( 'wxr_importer.processed.post', $post_id, $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			do_action( 'wxr_importer.processed.post', $post_id, $data, $meta, $comments, $terms ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 		}
 
 		/**
@@ -1241,19 +1246,19 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		 * @return array|null Meta data array on success, or null on error.
 		 */
 		protected function parse_meta_node( $node ) {
-			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				// We only care about child elements.
-				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
-				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					case 'wp:meta_key':
-						$key = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$key = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:meta_value':
-						$value = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$value = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 				}
 			}
@@ -1285,7 +1290,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param array $meta_item Meta data. (Return empty to skip.)
 				 * @param int $post_id Post the meta is attached to.
 				 */
-				$meta_item = apply_filters( 'wxr_importer.pre_process.post_meta', $meta_item, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				$meta_item = apply_filters( 'wxr_importer.pre_process.post_meta', $meta_item, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 				if ( empty( $meta_item ) ) {
 					return false;
 				}
@@ -1333,58 +1338,58 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				'commentmeta' => array(),
 			);
 
-			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				// We only care about child elements.
-				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
-				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					case 'wp:comment_id':
-						$data['comment_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 					case 'wp:comment_author':
-						$data['comment_author'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_author'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_author_email':
-						$data['comment_author_email'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_author_email'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_author_IP':
-						$data['comment_author_IP'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_author_IP'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_author_url':
-						$data['comment_author_url'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_author_url'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_user_id':
-						$data['comment_user_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_user_id'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_date':
-						$data['comment_date'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_date'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_date_gmt':
-						$data['comment_date_gmt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_date_gmt'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_content':
-						$data['comment_content'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_content'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_approved':
-						$data['comment_approved'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_approved'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_type':
-						$data['comment_type'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_type'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:comment_parent':
-						$data['comment_parent'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['comment_parent'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:commentmeta':
@@ -1427,7 +1432,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param array $comment Comment data. (Return empty to skip.)
 				 * @param int $post_id Post the comment is attached to.
 				 */
-				$comment = apply_filters( 'wxr_importer.pre_process.comment', $comment, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				$comment = apply_filters( 'wxr_importer.pre_process.comment', $comment, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 				if ( empty( $comment ) ) {
 					return false;
 				}
@@ -1447,7 +1452,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 						 *
 						 * @param array $comment Raw data imported for the comment.
 						 */
-						do_action( 'wxr_importer.process_already_imported.comment', $comment ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+						do_action( 'wxr_importer.process_already_imported.comment', $comment ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 
 						$this->mapping['comment'][ $original_id ] = $existing;
 						continue;
@@ -1529,7 +1534,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param array $meta Raw meta data, already processed by {@see process_post_meta}.
 				 * @param array $post_id Parent post ID.
 				 */
-				do_action( 'wxr_importer.processed.comment', $comment_id, $comment, $meta, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.processed.comment', $comment_id, $comment, $meta, $post_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 
 				$num_comments++;
 			}
@@ -1557,7 +1562,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				$data['slug'] = $node->getAttribute( 'nicename' );
 			}
 
-			$data['name'] = $node->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$data['name'] = $node->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 
 			if ( empty( $data['slug'] ) ) {
 				return null;
@@ -1599,35 +1604,35 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		protected function parse_author_node( $node ) {
 			$data = array();
 			$meta = array();
-			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				// We only care about child elements.
-				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
-				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				switch ( $child->tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					case 'wp:author_login':
-						$data['user_login'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['user_login'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:author_id':
-						$data['ID'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['ID'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:author_email':
-						$data['user_email'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['user_email'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:author_display_name':
-						$data['display_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['display_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:author_first_name':
-						$data['first_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['first_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 
 					case 'wp:author_last_name':
-						$data['last_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$data['last_name'] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 						break;
 				}
 			}
@@ -1649,7 +1654,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param array $data User data. (Return empty to skip.)
 			 * @param array $meta Meta data.
 			 */
-			$data = apply_filters( 'wxr_importer.pre_process.user', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			$data = apply_filters( 'wxr_importer.pre_process.user', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 			if ( empty( $data ) ) {
 				return false;
 			}
@@ -1720,7 +1725,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param WP_Error $user_id Error object.
 				 * @param array $userdata Raw data imported for the user.
 				 */
-				do_action( 'wxr_importer.process_failed.user', $user_id, $userdata ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.process_failed.user', $user_id, $userdata ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 				return false;
 			}
 
@@ -1752,7 +1757,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param int $user_id New user ID.
 			 * @param array $userdata Raw data imported for the user.
 			 */
-			do_action( 'wxr_importer.processed.user', $user_id, $userdata ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			do_action( 'wxr_importer.processed.user', $user_id, $userdata ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 		}
 
 		/**
@@ -1799,15 +1804,15 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 					break;
 			}
 
-			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				// We only care about child elements.
-				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 					continue;
 				}
 
-				$key = array_search( $child->tagName, $tag_name ); // phpcs:ignore
+				$key = array_search( $child->tagName, $tag_name ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				if ( $key ) {
-					$data[ $key ] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$data[ $key ] = $child->textContent; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- 3rd party library.
 				}
 			}
 
@@ -1837,7 +1842,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param array $data Term data. (Return empty to skip.)
 			 * @param array $meta Meta data.
 			 */
-			$data = apply_filters( 'wxr_importer.pre_process.term', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			$data = apply_filters( 'wxr_importer.pre_process.term', $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 			if ( empty( $data ) ) {
 				return false;
 			}
@@ -1854,7 +1859,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 *
 				 * @param array $data Raw data imported for the term.
 				 */
-				do_action( 'wxr_importer.process_already_imported.term', $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.process_already_imported.term', $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 
 				$this->mapping['term'][ $mapping_key ]    = $existing;
 				$this->mapping['term_id'][ $original_id ] = $existing;
@@ -1919,7 +1924,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				 * @param array $data Raw data imported for the term.
 				 * @param array $meta Meta data supplied for the term.
 				 */
-				do_action( 'wxr_importer.process_failed.term', $result, $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+				do_action( 'wxr_importer.process_failed.term', $result, $data, $meta ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 				return false;
 			}
 
@@ -1953,7 +1958,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			 * @param int $term_id New term ID.
 			 * @param array $data Raw data imported for the term.
 			 */
-			do_action( 'wxr_importer.processed.term', $term_id, $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+			do_action( 'wxr_importer.processed.term', $term_id, $data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- 3rd party library.
 		}
 
 		/**
@@ -1968,7 +1973,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			$file_name = basename( $url );
 
 			// get placeholder file in the upload dir with a unique, sanitized filename.
-			$upload = wp_upload_bits( $file_name, 0, '', $post['upload_date'] ); // phpcs:ignore WordPress.WP.DeprecatedParameters.Wp_upload_bitsParam2Found
+			$upload = wp_upload_bits( $file_name, null, '', $post['upload_date'] );
 			if ( $upload['error'] ) {
 				return new WP_Error( 'upload_dir_error', $upload['error'] );
 			}
@@ -1984,7 +1989,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 
 			// request failed.
 			if ( is_wp_error( $response ) ) {
-				unlink( $upload['file'] );
+				unlink( $upload['file'] ); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				return $response;
 			}
 
@@ -1992,7 +1997,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 
 			// make sure the fetch was successful.
 			if ( 200 !== $code ) {
-				unlink( $upload['file'] );
+				unlink( $upload['file'] ); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				return new WP_Error(
 					'import_file_error',
 					sprintf(
@@ -2009,18 +2014,18 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			$headers  = wp_remote_retrieve_headers( $response );
 
 			if ( isset( $headers['content-length'] ) && $filesize !== (int) $headers['content-length'] ) {
-				unlink( $upload['file'] );
+				unlink( $upload['file'] ); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				return new WP_Error( 'import_file_error', __( 'Remote file is incorrect size', 'wordpress-importer' ) );
 			}
 
 			if ( 0 === $filesize ) {
-				unlink( $upload['file'] );
+				unlink( $upload['file'] ); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				return new WP_Error( 'import_file_error', __( 'Zero size file downloaded', 'wordpress-importer' ) );
 			}
 
 			$max_size = (int) $this->max_attachment_size();
 			if ( ! empty( $max_size ) && $filesize > $max_size ) {
-				unlink( $upload['file'] );
+				unlink( $upload['file'] ); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 				/* translators: %s max file size. */
 				$message = sprintf( __( 'Remote file is too large, limit is %s', 'wordpress-importer' ), size_format( $max_size ) );
 				return new WP_Error( 'import_file_error', $message );
@@ -2288,7 +2293,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 				}
 
 				// Run the update.
-				$data['comment_ID'] = $comment_ID; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+				$data['comment_ID'] = $comment_ID; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- 3rd party library.
 				$result             = wp_update_comment( wp_slash( $data ) );
 				if ( empty( $result ) ) {
 					$this->logger->warning(
@@ -2318,11 +2323,11 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			foreach ( $this->url_remap as $from_url => $to_url ) {
 				// remap urls in post_content.
 				$query = $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s)", $from_url, $to_url );
-				$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 3rd party library.
 
 				// remap enclosure urls.
 				$query  = $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s) WHERE meta_key='enclosure'", $from_url, $to_url );
-				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 3rd party library.
 			}
 		}
 
@@ -2352,7 +2357,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		public function is_valid_meta_key( $key ) {
 			// skip attachment metadata since we'll regenerate it from scratch
 			// skip _edit_lock as not relevant for import.
-			if ( in_array( $key, array( '_wp_attached_file', '_wp_attachment_metadata', '_edit_lock' ) ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+			if ( in_array( $key, array( '_wp_attached_file', '_wp_attachment_metadata', '_edit_lock' ) ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- 3rd party library.
 				return false;
 			}
 
@@ -2405,7 +2410,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		 */
 		protected function prefill_existing_posts() {
 			global $wpdb;
-			$posts = $wpdb->get_results( "SELECT ID, guid FROM {$wpdb->posts}" );
+			$posts = $wpdb->get_results( "SELECT ID, guid FROM {$wpdb->posts}" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			foreach ( $posts as $item ) {
 				$this->exists['post'][ $item->guid ] = $item->ID;
@@ -2456,7 +2461,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 		 */
 		protected function prefill_existing_comments() {
 			global $wpdb;
-			$posts = $wpdb->get_results( "SELECT comment_ID, comment_author, comment_date FROM {$wpdb->comments}" );
+			$posts = $wpdb->get_results( "SELECT comment_ID, comment_author, comment_date FROM {$wpdb->comments}" ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			foreach ( $posts as $item ) {
 				$exists_key                             = sha1( $item->comment_author . ':' . $item->comment_date );
@@ -2510,7 +2515,7 @@ if ( ! class_exists( 'WXR_Importer' ) && class_exists( 'WP_Importer' ) ) :
 			global $wpdb;
 			$query  = "SELECT t.term_id, tt.taxonomy, t.slug FROM {$wpdb->terms} AS t";
 			$query .= " JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id";
-			$terms  = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$terms  = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 3rd party library.
 
 			foreach ( $terms as $item ) {
 				$exists_key                          = sha1( $item->taxonomy . ':' . $item->slug );

@@ -133,10 +133,8 @@ export const SyncBlocks = async () => {
 				);
 			}
 
-			const response = await Promise.allSettled(
-				allBlocksRequest
-			).then( ( res ) =>
-				Promise.all( res.map( ( val ) => val.value.json() ) )
+			const response = await Promise.allSettled( allBlocksRequest ).then(
+				( res ) => Promise.all( res.map( ( val ) => val.value.json() ) )
 			);
 
 			return response.every( ( res ) => res.success === true );

@@ -66,7 +66,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 			$this->cron_interval_identifier = $this->identifier . '_cron_interval';
 
 			add_action( $this->cron_hook_identifier, array( $this, 'handle_cron_healthcheck' ) );
-			add_filter( 'cron_schedules', array( $this, 'schedule_cron_healthcheck' ) ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
+			add_filter( 'cron_schedules', array( $this, 'schedule_cron_healthcheck' ) ); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected -- Adding Every 5 mintures to existing schedules.
 		}
 
 		/**
@@ -164,7 +164,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		 */
 		public function maybe_handle() {
 			// Don't lock up other requests while processing.
-			session_write_close();
+			session_write_close(); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.session_session_write_close
 
 			if ( $this->is_process_running() ) {
 				// Background process already running.
@@ -201,7 +201,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 
 			$key = $this->identifier . '_batch_%';
 
-			$count = $wpdb->get_var(
+			$count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WP Query would have been expensive. Finding if the batch process Queue is empty or not.
 				$wpdb->prepare(
 					// phpcs:disable
 					"
@@ -283,7 +283,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 
 			$key = $this->identifier . '_batch_%';
 
-			$query = $wpdb->get_row(
+			$query = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- WP Query would have been expensive. Reading all the batch processes.
 				$wpdb->prepare(
 					// phpcs:disable
 					"

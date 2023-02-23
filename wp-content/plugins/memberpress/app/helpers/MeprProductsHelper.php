@@ -62,7 +62,7 @@ class MeprProductsHelper {
   /** Especially for formatting a membership's price */
   public static function format_currency($product, $show_symbol = true, $coupon_code = null, $show_prorated = true, &$payment_required = true) {
     return MeprAppHelper::format_price_string($product,
-                                              $product->adjusted_price($coupon_code),
+                                              $product->adjusted_price($coupon_code, $show_prorated),
                                               $show_symbol,
                                               $coupon_code,
                                               $show_prorated,
@@ -174,17 +174,13 @@ class MeprProductsHelper {
       if(empty($coupon_code)) { //We've already validated the coupon before including signup_form.php
         if($product->register_price_action == 'custom') {
           echo stripslashes($product->register_price);
-          echo "<input type='hidden' name='mepr_stripe_txn_amount' value='". MeprUtils::format_stripe_currency($tmp_txn->total) ."' />";
         }
         else {
           echo MeprAppHelper::format_price_string($tmp_txn, $tmp_txn->amount, true, $coupon_code, true, $payment_required);
-          echo "<input type='hidden' name='mepr_stripe_txn_amount' value='". MeprUtils::format_stripe_currency($tmp_txn->total) ."' />";
         }
       }
       else {
         echo MeprAppHelper::format_price_string($tmp_txn, $tmp_txn->amount, true, $coupon_code, true, $payment_required);
-
-        echo "<input type='hidden' name='mepr_stripe_txn_amount' value='". MeprUtils::format_stripe_currency($tmp_txn->total) ."' />";
       }
 
       echo self::renewal_str($product); // possibly print out the renewal string
@@ -205,11 +201,8 @@ class MeprProductsHelper {
 
       if($product->register_price_action == 'custom' && empty($coupon_code) && !$tmp_sub->prorated_trial) {
         echo stripslashes($product->register_price);
-
-        echo "<input type='hidden' name='mepr_stripe_txn_amount' value='". MeprUtils::format_stripe_currency(empty($tmp_sub->trial_total) ? $tmp_sub->total : $tmp_sub->trial_total) ."' />";
       }
       else {
-        echo "<input type='hidden' name='mepr_stripe_txn_amount' value='". MeprUtils::format_stripe_currency(empty($tmp_sub->trial_total) ? $tmp_sub->total : $tmp_sub->trial_total) ."' />";
         echo MeprAppHelper::format_price_string($tmp_sub, $tmp_sub->price, true, $coupon_code, true, $payment_required);
       }
     }
@@ -223,10 +216,11 @@ class MeprProductsHelper {
     $tmp_txn->id = 0;
     $tmp_txn->user_id = (isset($current_user->ID))?$current_user->ID:0;
     $tmp_txn->load_product_vars($product, $coupon_code, true);
-    $tmp_sub = new MeprSubscription();
+    $tmp_sub = '';
 
     if(!$product->is_one_time_payment()) {
       // Setup to possibly do a proration without actually creating a subscription record
+      $tmp_sub = new MeprSubscription();
       $tmp_sub->id = 0;
       $tmp_sub->user_id = (isset($current_user->ID))?$current_user->ID:0;
       $tmp_sub->load_product_vars($product, $coupon_code,true);

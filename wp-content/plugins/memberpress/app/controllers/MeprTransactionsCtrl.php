@@ -351,7 +351,7 @@ class MeprTransactionsCtrl extends MeprBaseCtrl {
         'del_txn_error' => __('The Transaction could not be deleted. Please try again later.', 'memberpress'),
         'refund_txn' => __('This will refund the transaction at the gateway level. This action is not reversable. Are you sure you want to refund this Transaction?', 'memberpress'),
         'refund_txn_and_cancel_sub' => __('This will refund the transaction and cancel the subscription associated with this transaction at the gateway level. This action is not reversable. Are you sure you want to refund this Transaction and cancel it\'s Subscription?', 'memberpress'),
-        'refunded_text' => __('refunded','memberpress'),
+        'refunded_text' => __('Refunded','memberpress'),
         'refund_txn_success' => __('Your transaction was successfully refunded.','memberpress'),
         'refund_txn_error' => __('The Transaction could not be refunded. Please issue the refund by logging into your gateway\'s virtual terminal','memberpress'),
         'refund_txn_and_cancel_sub_success' => __('Your transaction was refunded and subscription was cancelled successfully.','memberpress'),
@@ -558,7 +558,7 @@ class MeprTransactionsCtrl extends MeprBaseCtrl {
         ( preg_match('/\d\d\d\d-\d\d-\d\d/', $_REQUEST['created_at']) ||
           preg_match('/\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d/', $_REQUEST['created_at']) ||
           empty($_REQUEST['created_at']) ) ) {
-      $expires_at_ts = $prd->get_expires_at(strtotime($_REQUEST['created_at']));
+      $expires_at_ts = $prd->get_expires_at(strtotime($_REQUEST['created_at']), false);
 
       if(!is_null($expires_at_ts)) {
         echo date('Y-m-d H:i:s', (int)$expires_at_ts);

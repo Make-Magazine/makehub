@@ -198,7 +198,7 @@ class MeprUsersCtrl extends MeprBaseCtrl {
     MeprView::render("/admin/users/extra_profile_fields", get_defined_vars());
   }
 
-  public static function save_extra_profile_fields($user_id, $validated=false, $product=false, $is_signup=false) {
+  public static function save_extra_profile_fields($user_id, $validated=false, $product=false, $is_signup=false, $selected=[]) {
     $mepr_options = MeprOptions::fetch();
     $errors = array();
     $user = new MeprUser($user_id);
@@ -262,6 +262,11 @@ class MeprUsersCtrl extends MeprBaseCtrl {
       }
 
       foreach($custom_fields as $line) {
+        // Allows fields to be selectively saved.
+        if( ! empty( $selected ) && ! in_array( $line->field_key, $selected ) ) {
+          continue;
+        }
+
         //Don't do anything if this field isn't shown during signup, and this is a signup
         if($is_signup && isset($line->show_on_signup) && !$line->show_on_signup) { continue; }
         //Only allow admin to update if it is not shown in account
@@ -331,7 +336,8 @@ class MeprUsersCtrl extends MeprBaseCtrl {
                                                         $update = null,
                                                         $user  = null,
                                                         $is_signup = false,
-                                                        $product = false ) {
+                                                        $product = false,
+                                                        $selected = [] ) {
     $mepr_options = MeprOptions::fetch();
     $errs = array();
 
@@ -362,6 +368,11 @@ class MeprUsersCtrl extends MeprBaseCtrl {
     }
 
     foreach($custom_fields as $line) {
+      // Allows fields to be selectively validated.
+      if( ! empty( $selected ) && ! in_array( $line->field_key, $selected ) ) {
+        continue;
+      }
+
       // If we're processing a signup and the custom field is not set
       // to show on signup we need to make sure it isn't required
       if($is_signup && $line->required && !$line->show_on_signup) {
@@ -387,6 +398,18 @@ class MeprUsersCtrl extends MeprBaseCtrl {
         $file_headers = $file ? @get_headers($file) : [];
         if($line->required && false == strpos($file_headers[0], '200 OK')){
           $errs[] = sprintf(__('%s is required.', 'memberpress'), stripslashes($line->field_name));
+        }
+      }
+
+      if( $line->required && 'email' == $line->field_type && !empty($_POST[$line->field_key]) ){
+        if( !is_email($_POST[$line->field_key]) ){
+          $errs[] = sprintf(__('%s is not a valid email address.', 'memberpress'), stripslashes($line->field_name));
+        }
+      }
+
+      if( $line->required && 'url' == $line->field_type && !empty($_POST[$line->field_key]) ){
+        if( !preg_match('/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&\/\/=]*)/', $_POST[$line->field_key]) ){
+          $errs[] = sprintf(__('%s is not a valid URL.', 'memberpress'), stripslashes($line->field_name));
         }
       }
     }

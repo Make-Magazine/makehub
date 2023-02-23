@@ -176,10 +176,20 @@ class MeprOptionsHelper {
   * @param MeprBaseRealGateway[] $payment_methods
   * @return string Radio HTML
   */
-  public static function payment_methods_radios($payment_methods) {
+  public static function payment_methods_radios($payment_methods, $with_icons = false) {
     $mepr_options = MeprOptions::fetch();
     $field_name = 'mepr_payment_method';
     $radio_html = '';
+
+    if(
+      is_user_logged_in() &&
+      count($payment_methods) > 1 &&
+      isset($payment_methods[0]) &&
+      $payment_methods[0] instanceof MeprStripeGateway &&
+      $payment_methods[0]->settings->stripe_checkout_enabled != 'on'
+    ) {
+      array_splice($payment_methods, 1, 0, array_splice($payment_methods, 0, 1));
+    }
 
     foreach($payment_methods as $payment_method) {
       $first = true;
@@ -204,6 +214,7 @@ class MeprOptionsHelper {
           data-payment-method-type="<?php echo $payment_method->name; ?>"
           <?php if(isset($_POST[$field_name])): checked($_POST[$field_name], $payment_method->id); endif ?> />
         <?php echo $label; ?>
+
       </label>
       <?php
       $radio_html .= ob_get_clean();
@@ -295,6 +306,34 @@ class MeprOptionsHelper {
 
     return MeprHooks::apply_filters('mepr_signup_form_payment_label', $label, $payment_method, $first);
   }
+
+  /**
+  * Payment method description
+  * @param MeprBaseRealGateway $payment_method
+  * @return string Payment method description HTML
+  */
+  public static function payment_method_description($payment_method) {
+    $mepr_options = MeprOptions::fetch();
+    $field_name = 'mepr_payment_method';
+    $desc_html = '';
+
+    $desc = wpautop(esc_html(trim(stripslashes($payment_method->desc))));
+
+    ob_start();
+    ?>
+      <div class="mepr-payment-method <?php echo "{$field_name}-{$payment_method->id}"; ?> mepr-payment-method-<?php echo $payment_method->key; ?>">
+        <div class="mepr-payment-method-desc-text mp-pm-desc-<?php echo $payment_method->id; ?>">
+          <?php echo wp_unslash($desc); ?>
+        </div>
+      </div>
+    <?php
+    $desc = ob_get_clean();
+
+    $desc_html .= $desc;
+
+    return $desc_html;
+  }
+
 
   public static function payment_methods_dropdown($field_name, $pms = false) {
     $mepr_options = MeprOptions::fetch();

@@ -359,6 +359,16 @@
       } else {
         $('div.mepr-price-box-price').html('');
       }
+
+      // Check if membership is marked as highlighted.
+      if($('#_mepr_product_is_highlighted').is(':checked')) {
+        $('div.mepr-price-box').addClass('highlighted');
+        $('div.mepr-most-popular').show();
+      } else {
+        $('div.mepr-price-box').removeClass('highlighted');
+        $('div.mepr-most-popular').hide();
+      }
+
       //Load everything else
       $('div.mepr-price-box-heading').html($('#_mepr_product_pricing_heading_text').val());
       $('div.mepr-price-box-benefits-list').html(benefits);
@@ -410,7 +420,6 @@
           $('#_mepr_product_who_can_purchase-product_id')
             .find('option[value=nothing], option[value=subscribed-before], option[value=not-subscribed-before]')
             .hide();
-          $('#_mepr_product_who_can_purchase-product_id').val('anything');
         }else {
           $('#_mepr_product_who_can_purchase-product_id')
             .find('option[value=nothing], option[value=subscribed-before], option[value=not-subscribed-before]')
