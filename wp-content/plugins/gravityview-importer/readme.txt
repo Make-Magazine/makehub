@@ -1,23 +1,106 @@
-=== GravityView Importer ===
+=== GravityImport ===
+Tags: gravitykit, gravityview, gravity forms, import
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 6.1
 Stable tag: trunk
-Contributors: The GravityView Team
+Contributors: The GravityKit Team
 License: GPL 3 or higher
 
-The best way to import Gravity Forms entries.
+The best way to import entries into Gravity Forms. Proud to be a Gravity Forms Certified Add-On.
 
 == Description ==
 
-Easily import Gravity Forms entries from a CSV file. Learn more on [gravityview.co](https://gravityview.co/extensions/gravity-forms-entry-importer/).
+Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.com](https://www.gravitykit.com/extensions/gravity-forms-entry-importer/).
 
 == Installation ==
 
-1. Upload plugin files to your plugins folder, or install using WordPress' built-in Add New Plugin installer
+1. Upload plugin files to your plugins folder, or install using WordPress's built-in Add New Plugin installer
 2. Activate the plugin
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.4.5 on January 5, 2023 =
+
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.8
+
+= 2.4.4 on December 21, 2022 =
+
+* Fixed: PHP 8.1 notices
+* Fixed: Fatal error on some hosts due to a conflict with one of the plugin dependencies (psr/log)
+
+= 2.4.3 on December 1, 2022 =
+
+* Fixed: It was not possible to remove an expired license key
+
+= 2.4.2 on November 29, 2022 =
+
+Fixed: "Undefined index" PHP notice
+
+= 2.4.1 on November 14, 2022 =
+
+* Fixed: Fatal error when loading plugin translations
+* Fixed: Slow loading times on some hosts
+* Fixed: Plugin failing to install on some hosts
+
+= 2.4.0.3 on October 31, 2022 =
+
+* Fixed: Plugin was not appearing in the "Add-Ons" section of the Gravity Forms System Status page
+
+= 2.4.0.2 on October 20, 2022 =
+
+* Fixed: Potential error when the plugin tries to log an unsuccessful operation
+
+= 2.4.0.1 on October 19, 2022 =
+
+* Fixed: Error when trying to activate license keys
+
+= 2.4 on October 19, 2022 =
+
+* Added: New WordPress admin menu where you can now centrally manage all your GravityKit product licenses and settings ([learn more about the new GravityKit menu](https://www.gravitykit.com/foundation/))
+    - Go to the WordPress sidebar and check out the GravityKit menu!
+    - We have automatically migrated your existing GravityImport license, which was previously entered in the Gravity Forms settings page
+    - Request support using the "Grant Support Access" menu item
+
+__Developer Updates:__
+
+* Removed actions:
+    - `gravityview/import/settings/before`
+    - `gravityview/import/settings/after`
+    - `gravityview-import/before-settings`
+    - `gravityview-import/after-settings`
+
+= 2.3.0.2 on July 27, 2022 =
+
+* Fixed: GravityImport license section was missing from the Gravity Forms Settings screen
+
+= 2.3.0.1 on July 18, 2022 =
+
+* Fixed: The option to import entries was missing from the Gravity Forms Entries and WordPress Import screens
+
+= 2.3 on July 7, 2022 =
+
+* [GravityView (the company) is now GravityKit](https://www.gravitykit.com/rebrand/) and this plugin is now called GravityImport!
+* Fixed: It was not possible to access form field properties in Gravity Forms 2.6+ if the form was created during import
+
+__Developer Updates:__
+
+**IMPORTANT: `GV\Import_Entries` namespace was renamed to `GravityKit\GravityImport` and future plugin versions will see similar name changes to the REST namespace, constants, and hooks**
+
+= 2.2.6 on January 27, 2022 =
+
+* Tested with WordPress 5.9
+* Improved: Warning message that's displayed when CSV data is mapped to an Entry ID field now clearly states that all existing entry data will be deleted
+* Fixed: Import fails to start when `pt_PT_ao90` (variant of `pt_PT`) locale is used
+
+= 2.2.5 on October 1, 2021 =
+
+* Fixed: Import would fail if [GravityExport](https://www.gravitykit.com/extensions/gravityexport/) is installed
+
+= 2.2.4 on August 31, 2021 =
+
+* Fixed: New form creation capabilities were being checked when importing into an existing form
+* Fixed: If specified, hours and minutes were not being saved when updating "Entry Date", "Entry Updated Date" and "Payment Date" entry properties
 
 = 2.2.3 on July 20, 2021 =
 
@@ -371,3 +454,6 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * First preview release
 
 == Upgrade Notice ==
+
+
+= 1677172796-4249 =

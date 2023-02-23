@@ -4,8 +4,129 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc0b621a91a75f04418817489413ec85c
+class ComposerStaticInitf53af1dadb2ee15f2d37832077ca18ff
 {
+    public static $files = array (
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
+        '78f278b8d5e25c06d1f4ed3594fbf783' => __DIR__ . '/../..' . '/src/Schema.php',
+        'f4357a3582cc07033c65f86a5aa6ea9f' => __DIR__ . '/../..' . '/src/GF_Export_Screen.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'TrustedLogin\\' => 13,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\Finder\\' => 25,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
+        ),
+        'K' => 
+        array (
+            'Katzgrau\\KLogger\\' => 17,
+        ),
+        'I' => 
+        array (
+            'Illuminate\\Validation\\' => 22,
+            'Illuminate\\Translation\\' => 23,
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Filesystem\\' => 22,
+            'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
+        ),
+        'G' => 
+        array (
+            'GravityKit\\GravityImport\\' => 25,
+            'GravityKit\\Foundation\\' => 22,
+            'Gettext\\Languages\\' => 18,
+            'Gettext\\' => 8,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'TrustedLogin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/trustedlogin/client/src',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Katzgrau\\KLogger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/katzgrau/klogger/src',
+        ),
+        'Illuminate\\Validation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/validation',
+        ),
+        'Illuminate\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/translation',
+        ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Filesystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/filesystem',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
+        ),
+        'GravityKit\\GravityImport\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+        'GravityKit\\Foundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gravitykit/foundation/src',
+        ),
+        'Gettext\\Languages\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gettext/languages/src',
+        ),
+        'Gettext\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gettext/gettext/src',
+        ),
+    );
+
     public static $prefixesPsr0 = array (
         'G' => 
         array (
@@ -14,12 +135,27 @@ class ComposerStaticInitc0b621a91a75f04418817489413ec85c
                 0 => __DIR__ . '/..' . '/goodby/csv/src',
             ),
         ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Inflector\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
+            ),
+        ),
+    );
+
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Katzgrau\\KLogger\\Logger' => __DIR__ . '/..' . '/katzgrau/klogger/src/Logger.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInitc0b621a91a75f04418817489413ec85c::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf53af1dadb2ee15f2d37832077ca18ff::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf53af1dadb2ee15f2d37832077ca18ff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf53af1dadb2ee15f2d37832077ca18ff::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf53af1dadb2ee15f2d37832077ca18ff::$classMap;
 
         }, null, ClassLoader::class);
     }
