@@ -1,10 +1,11 @@
-=== Entry Revisions by GravityView ===
-Tags: gravityview, gravity forms
+=== GravityRevisions ===
+Tags: gravitykit, gravityview, gravity forms, revisions
 Requires at least: 4.4
-Tested up to: 5.9
-Stable tag: trunk
-Contributors: gravityview
-License: GPL 3 or higher
+Tested up to: 6.1
+Contributors: The GravityKit Team
+License: GPL 2
+Requires PHP: 7.2.0
+Stable tag: 1.2.7
 
 Track changes to Gravity Forms entries and restore from previous revisions. Requires Gravity Forms 2.0 or higher.
 
@@ -17,9 +18,66 @@ Track changes to Gravity Forms entries and restore from previous revisions. Requ
 
 == Changelog ==
 
+= 1.2.7 on February 20, 2023 =
+
+**Note: GravityRevisions now requires PHP 7.2 or newer**
+
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.9
+
+= 1.2.6 on January 5, 2023 =
+
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.8
+
+= 1.2.5 on December 21, 2022 =
+
+* Fixed: PHP 8.1 notices
+* Fixed: Fatal error on some hosts due to a conflict with one of the plugin dependencies (psr/log)
+
+= 1.2.4 on December 1, 2022 =
+
+* Fixed: It was not possible to remove an expired license key
+
+= 1.2.3 on November 30, 2022 =
+
+* Fixed: Potential fatal error when Gravity Forms is inactive
+* Fixed: "Undefined index" PHP notice
+
+= 1.2.2 on November 14, 2022 =
+
+* Fixed: Fatal error when loading plugin translations
+* Fixed: Slow loading times on some hosts
+* Fixed: Plugin failing to install on some hosts
+
+= 1.2.1 on October 31, 2022 =
+
+* Fixed: `{entry_revision_diff}` merge tag not working
+* Fixed: Plugin was not appearing in the "Add-Ons" section of the Gravity Forms System Status page
+
+= 1.2.0.2 on October 20, 2022 =
+
+* Fixed: Potential error when the plugin tries to log an unsuccessful operation
+
+= 1.2.0.1 on October 19, 2022 =
+
+* Fixed: Error when trying to activate license keys
+
+= 1.2 on October 19, 2022 =
+
+* [GravityView (the company) is now GravityKit](https://www.gravitykit.com/rebrand/) and this plugin is now called GravityRevisions!
+* Added: New WordPress admin menu where you can now centrally manage all your GravityKit product licenses and settings ([learn more about the new GravityKit menu](https://www.gravitykit.com/foundation/))
+    - Go to the WordPress sidebar and check out the GravityKit menu!
+    - We have automatically migrated your existing Entry Revisions license, which was previously entered in the Gravity Forms settings page
+    - Request support using the "Grant Support Access" menu item
+* Fixed: Notifications were not being sent when creating a revision using GravityEdit
+
+__Developer Updates:__
+
+* Added: Revision entry data is being passed along to `GFAPI::send_notifications`
+* Improved: Prevent extra query when processing entry revision merge tags
+
 = 1.1 on January 26, 2022 =
 
-* Added: Entry Revisions now tracks edits made using our [Inline Edit add-on](https://gravityview.co/extensions/inline-edit/). Tracking revisions is enabled by default. You can change the default setting and override the setting per-form. [Learn how to change these settings.](https://docs.gravityview.co/article/777-inline-edit-revisions). Requires Gravity Forms 2.5 or newer.
+* Added: Entry Revisions now tracks edits made using our [GravityEdit add-on](https://www.gravitykit.com/extensions/inline-edit/). Tracking revisions is enabled by default. You can change the default setting and override the setting per-form. [Learn how to change these settings.](https://docs.gravitykit.com/article/777-inline-edit-revisions). Requires Gravity Forms 2.5 or newer.
 
 = 1.0.4 on July 22, 2021 =
 
@@ -29,7 +87,7 @@ Track changes to Gravity Forms entries and restore from previous revisions. Requ
 = 1.0.3 on February 19, 2020 =
 
 * Fixed: Error when Gravity Forms is deactivated
-* Fixed: Linking to entry revisions from GravityView and [Gravity Forms Calendar](https://gravityview.co/extensions/calendar/)
+* Fixed: Linking to entry revisions from GravityView and [Gravity Forms Calendar](https://www.gravitykit.com/extensions/calendar/)
 * Fixed: PHP warning in Gravity Forms Entry screen
 
 __Developer Updates:__
@@ -47,7 +105,7 @@ __Developer Updates:__
 
 __Developer Updates:__
 
-* Added: The `gravityview/entry-revisions/send-notifications` filter, which supplies the changed fields array ([see filter documentation](https://docs.gravityview.co/article/483-entry-revisions-hooks#gravityview-entry-revisions-send-notifications))
+* Added: The `gravityview/entry-revisions/send-notifications` filter, which supplies the changed fields array ([see filter documentation](https://docs.gravitykit.com/article/483-entry-revisions-hooks#gravityview-entry-revisions-send-notifications))
 
 = 1.0.1 on September 17, 2018 =
 

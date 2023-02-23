@@ -1,5 +1,93 @@
 # Changelog
 
+## 1.2.43
+
+	- Fixed an issue with Read Only inputs trigerring Dynamic Population when any input is attempted on them.
+
+## 1.2.42
+
+	- Improved Preview modal in the Form Editor to show a JSON representation of arrays rather than just "Array."
+	- Fixed an issue with the Post object type only returning a single meta value rather than all meta values.
+	- Fixed an improper runtime cache key that could cause value population to not check multiple results if a field also has choice population enabled.
+	- Fixed an issue where the `:price` modifier would not work for choice-based products when used in a Live Merge Tag.
+	- Fixed potential PHP warnings and error in preview AJAX request in the Form Editor.
+	- Fixed potential PHP warning when populating arrays.
+	- Fixed issue where zeros returned from certain object types would be replaced with an empty string.
+
+## 1.2.41
+
+	- Improved security with the Users Object Type. (Credit: GravityKit)
+	- Fixed issue where prices from values would be removed when rendering Live Merge Tags which could cause issues with `@{order_summary}`.
+	- Fixed issue where apostrophes could cause issues in queries in some situations and cause choices to not be populated correctly.
+
+## 1.2.40
+
+	- Fixed an issue where Post date filters wouldn't work if the filter relies on a value from a field populated with Easy Passthrough.
+
+## 1.2.39
+
+	- Added support for more operators such as "is in" and "is not in" for the User Object Type.
+
+## 1.2.38
+
+	- Fixed an issue with Live Merge Tags on conditionally hidden fields.
+
+## 1.2.37
+
+	- Fixed issue with `<` and `>` operators not behaving correctly with post date properties.
+	- Fixed potential JavaScript error when Populate Anything is used with GP Nested Forms and GP Reload Form.
+
+## 1.2.36
+
+	- Fixed potential memory issue for more complex forms that use value population with multi-select fields.
+	- Fixed potential PHP warning if populating List fields.
+
+## 1.2.35
+
+	- Fixed an issue where dynamically populating values into a multi-select field would not work if the value being populated was a comma-delimited list without spaces after commas.
+
+## 1.2.34
+
+	- Fixed issue where Populate Anything would prevent default-checked static choices from being checked on form render.
+	- Added [gppa_where_clause](https://gravitywiz.com/documentation/gppa_where_clause/) filter to allow modifying the where clause.
+	- Fixed issue where Live Merge Tags in HTML fields weren't always populated correctly in GravityView views.
+	- Fixed issue where dynamically populated choices wouldn't always populate correctly in GravityView search fields.
+	- Fixed issue where validation errors could be removed by Populate Anything in some contexts such as a Gravity Flow User Input Step. (Reintroduced fix after reverting it)
+	- Fixed warning for field value object choices.
+
+## 1.2.33
+
+	- Fixed regression in population caused by a fix for Gravity Flow.
+
+## 1.2.32
+
+	- Fixed issue where validation errors could be removed by Populate Anything in some contexts such as a Gravity Flow User Input Step.
+	- Fixed issue where forms submitted via AJAX that also had calculation
+	- Fixed an issue where Live Merge Tags wouldn't always be processed in some choice-based fields when a field is refreshed.
+	- Fixed issue where Quiz fields would show two sets of options in the "Choices" UI.
+
+## 1.2.31
+
+	- Fixed issues where backslashes in field labels could cause issues with Live Merge Tags.
+
+## 1.2.30
+
+	- Fixed issue where GT/GTE and LT/LTE operators did not work as expected with dates in the Gravity Forms Entry Object Type and Database Object Type.
+	- Fixed issue where `gpnf_get_nested_form` filter was not taking nested form entries into account properly.
+
+## 1.2.29
+
+	- Fixed issue where calculations could be processed before Live Merge Tag replacements rather than after.
+
+## 1.2.28
+
+	- Fixed issue where Radio Buttons using Live Merge Tags could display a warning message if there’s an empty value.
+
+## 1.2.27
+
+	- Fixed issue where calculations would not be reprocessed if only Live Merge Tag values are returned by Populate Anything's AJAX refresh request.
+	- Fixed issue where Live Merge Tags used as default values in Date fields using the Date Picker Date Input Type would not work and would result in a value of `//` on initial load.
+
 ## 1.2.26
 
 	- Fixed issue where dynamically populated choices were not populated in selects when using Inline Edit with GravityView after a recent update of GravityView.

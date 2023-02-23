@@ -12,6 +12,8 @@ class GP_Read_Only extends GWPerk {
 
 	public function init() {
 
+		load_plugin_textdomain( 'gwreadonly', false, basename( dirname( __file__ ) ) . '/languages/' );
+
 		$this->add_tooltip( $this->key( 'readonly' ), __( '<h6>Read-only</h6> Set field as "readonly". Read-only fields will be visible on the form but cannot be modified by the user.', 'gravityperks' ) );
 		$this->enqueue_field_settings();
 
@@ -195,14 +197,15 @@ class GP_Read_Only extends GWPerk {
 		// add hidden capture input markup for disabled field types
 		if ( in_array( $input_type, $this->disable_attr_field_types ) ) {
 
-			$value           = $this->get_field_value( $field );
+			// Use $value if we have it as it'll likely be from dynamic population (e.g. query param or shortcode).
+			$value           = ! rgblank( $value ) ? $value : $this->get_field_value( $field );
 			$hc_input_markup = '';
 
 			if ( is_array( $field['inputs'] ) ) {
 
 				switch ( $input_type ) {
 					case 'time':
-						$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', array_pop( $value ) );
+						$hc_input_markup .= $this->get_hidden_capture_markup( $form_id, $field->id . '.3', is_array( $value ) ? array_pop( $value ) : $value );
 						break;
 					case 'date':
 						switch ( rgar( $field, 'dateFormat' ) ) {
@@ -243,7 +246,7 @@ class GP_Read_Only extends GWPerk {
 			if ( strpos( $input_html, '</div>' ) !== false ) {
 				// Append GPRO hidden input before last closing div tag.
 				// This ensures that GPPA will replace the hidden GPRO input during XHR requests.
-				$input_html = preg_replace( '((.*)<\/div>)', '$1' . str_replace( '$', '\$', $hc_input_markup ) . '</div>', $input_html );
+				$input_html = preg_replace( '/<\/div>(?!\s*<\/?div>?\s*)(.*)/', str_replace( '$', '\$', $hc_input_markup ) . '</div>$1', $input_html );
 			} else {
 				// No closing div tag, append GPRO hidden input to the end
 				$input_html .= $hc_input_markup;

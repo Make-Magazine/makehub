@@ -1,14 +1,14 @@
-# Copyright (C) 2020 GravityView
+# Copyright (C) 2023 GravityView
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GravityView - DIY Layout 2.3\n"
+"Project-Id-Version: GravityView - DIY Layout 2.4\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-05-09 02:13:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: GravityView <hello@gravityview.co>\n"
 "Language-Team: GravityView <hello@gravityview.co>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
@@ -62,23 +62,31 @@ msgstr ""
 msgid "before"
 msgstr ""
 
-#: class-gravityview-diy-template.php:120
+#: class-gravityview-diy-template.php:121
 msgid "Container Tag"
 msgstr ""
 
-#: class-gravityview-diy-template.php:121
+#: class-gravityview-diy-template.php:122
 msgid "This HTML tag will be used to wrap the field value."
 msgstr ""
 
-#: class-gravityview-diy-template.php:133
+#: class-gravityview-diy-template.php:135
 msgid "After Output"
 msgstr ""
 
-#: class-gravityview-diy-template.php:134
+#: class-gravityview-diy-template.php:136
 msgid "after"
 msgstr ""
 
-#: class-gravityview-diy-template.php:164
+#: class-gravityview-diy-template.php:146
+msgid "Show Label"
+msgstr ""
+
+#: class-gravityview-diy-template.php:154
+msgid "Custom Label:"
+msgstr ""
+
+#: class-gravityview-diy-template.php:185
 msgid "None"
 msgstr ""
 
@@ -94,7 +102,7 @@ msgctxt ""
 msgid "Display HTML %s the field output. Supports Merge Tags."
 msgstr ""
 
-#: gravityview-diy.php:46
+#: gravityview-diy.php:47
 msgctxt ""
 "First placeholder: Name of the Extension. Second: Version of GravityView "
 "not found"

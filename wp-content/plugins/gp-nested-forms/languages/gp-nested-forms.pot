@@ -1,15 +1,15 @@
-# Copyright (C) 2022 Gravity Wiz
+# Copyright (C) 2023 Gravity Wiz
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: GP Nested Forms 1.1.3\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-K0ZJWAtBu\n"
+"Project-Id-Version: GP Nested Forms 1.1.17\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-VkZ80eu7r\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-08-31T03:46:43+00:00\n"
+"POT-Creation-Date: 2023-02-23T05:36:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: gp-nested-forms\n"
@@ -162,82 +162,85 @@ msgstr ""
 msgid "Child Form Field ID"
 msgstr ""
 
-#: class-gp-nested-forms.php:965
+#: class-gp-nested-forms.php:1013
 msgid "Oops! You don't have permission to get fields for this form."
 msgstr ""
 
-#: class-gp-nested-forms.php:981
-#: class-gp-nested-forms.php:992
+#: class-gp-nested-forms.php:1029
+#: class-gp-nested-forms.php:1040
 msgid "Oops! You don't have permission to delete this entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:988
+#: class-gp-nested-forms.php:1036
 msgid "Oops! There was an error finding an entry. Did you pass a valid entry_id?"
 msgstr ""
 
-#: class-gp-nested-forms.php:1021
-#: class-gp-nested-forms.php:1033
+#: class-gp-nested-forms.php:1069
+#: class-gp-nested-forms.php:1081
 msgid "Oops! You don't have permission to edit this entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:1029
+#: class-gp-nested-forms.php:1077
 msgid "Oops! We can't locate that entry."
 msgstr ""
 
-#: class-gp-nested-forms.php:1072
+#: class-gp-nested-forms.php:1120
 msgid "Oops! You don't have permission to do this."
 msgstr ""
 
-#: class-gp-nested-forms.php:1089
+#: class-gp-nested-forms.php:1137
 msgid "Configuration Error"
 msgstr ""
 
-#: class-gp-nested-forms.php:1090
+#: class-gp-nested-forms.php:1138
 msgid "Child forms cannot contain nested forms. Please edit the child form and remove any nested form fields in it."
 msgstr ""
 
-#: class-gp-nested-forms.php:1103
+#: class-gp-nested-forms.php:1151
 msgid "Sorry. You must be logged in to view this form."
 msgstr ""
 
-#: class-gp-nested-forms.php:1141
-#: class-gp-nested-forms.php:1161
+#: class-gp-nested-forms.php:1189
+#: class-gp-nested-forms.php:1209
 msgid "Oops! You don't have permission to duplicate this entry."
 msgstr ""
 
 #. Translators: %s is replaced by singular item label.
-#: class-gp-nested-forms.php:2129
-#: class-gp-nested-forms.php:2152
-#: class-gp-nested-forms.php:2162
-#: includes/class-gp-field-nested-form.php:87
+#. translators: placeholder is a singular item label such as "Item" or "Player"
+#. translators: placeholder is a singlular item label such as "Item" or "Player"
+#: class-gp-nested-forms.php:2177
+#: class-gp-nested-forms.php:2201
+#: class-gp-nested-forms.php:2213
+#: includes/class-gp-field-nested-form.php:89
 msgid "Add %s"
 msgstr ""
 
 #. Translators: %s is replaced by singular item label.
-#: class-gp-nested-forms.php:2131
-#: class-gp-nested-forms.php:2153
-#: class-gp-nested-forms.php:2167
+#. translators: placeholder is a singular item label such as "Item" or "Player"
+#: class-gp-nested-forms.php:2179
+#: class-gp-nested-forms.php:2203
+#: class-gp-nested-forms.php:2219
 msgid "Edit %s"
 msgstr ""
 
-#: class-gp-nested-forms.php:2134
+#: class-gp-nested-forms.php:2182
 msgid "Cancel"
 msgstr ""
 
-#: class-gp-nested-forms.php:2135
-#: includes/class-gp-field-nested-form.php:119
+#: class-gp-nested-forms.php:2183
+#: includes/class-gp-field-nested-form.php:121
 msgid "Delete"
 msgstr ""
 
-#: class-gp-nested-forms.php:2136
+#: class-gp-nested-forms.php:2184
 msgid "Are you sure?"
 msgstr ""
 
-#: class-gp-nested-forms.php:2137
+#: class-gp-nested-forms.php:2185
 msgid "Close"
 msgstr ""
 
-#: class-gp-nested-forms.php:3242
+#: class-gp-nested-forms.php:3320
 msgid "Row ID"
 msgstr ""
 
@@ -254,76 +257,82 @@ msgid "Use the Nested Form and Summary Fields settings to choose the form and fi
 msgstr ""
 
 #. Translators: %1$s is replaced with a <span>. %2$s is replaced with the plural label for child entries. %3$s is replaced with a closing </span>.
-#: includes/class-gp-field-nested-form.php:115
+#: includes/class-gp-field-nested-form.php:117
 msgid "There are no %1$s%2$s.%3$s"
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:117
+#: includes/class-gp-field-nested-form.php:119
 msgid "Edit"
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:118
+#: includes/class-gp-field-nested-form.php:120
 msgid "Duplicate"
 msgstr ""
 
 #. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
-#: includes/class-gp-field-nested-form.php:123
+#: includes/class-gp-field-nested-form.php:125
 msgid "Edit %1$s {0} where %2$s is {1}."
 msgstr ""
 
 #. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
-#: includes/class-gp-field-nested-form.php:125
+#: includes/class-gp-field-nested-form.php:127
 msgid "Duplicate %1$s {0} where %2$s is {1}."
 msgstr ""
 
 #. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
-#: includes/class-gp-field-nested-form.php:127
+#: includes/class-gp-field-nested-form.php:129
 msgid "Delete %1$s {0} where %2$s is {1}."
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:207
+#. translators: placeholder is a plural item label such as "Items" or "Players"
+#: includes/class-gp-field-nested-form.php:210
 msgid "Maximum number of %s reached."
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:290
+#. translators: placeholder is a singular item label such as "Item" or "Player"
+#: includes/class-gp-field-nested-form.php:294
 msgid "View Expanded %s List"
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:313
+#: includes/class-gp-field-nested-form.php:317
 msgid "View Entry"
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:403
+#: includes/class-gp-field-nested-form.php:407
 msgid "Entry"
 msgstr ""
 
-#: includes/class-gp-field-nested-form.php:404
+#: includes/class-gp-field-nested-form.php:408
 msgid "Entries"
 msgstr ""
 
 #. Translators: %1$d is replaced with the minimum. %2$s is replaced with the label for an individual entry.
-#: includes/class-gp-field-nested-form.php:469
+#: includes/class-gp-field-nested-form.php:473
 msgid "Please enter a minimum of %1$d %2$s"
 msgstr ""
 
 #. Translators: %1$d is replaced with the maximum. %2$s is replaced with the label for an individual entry.
-#: includes/class-gp-field-nested-form.php:487
+#: includes/class-gp-field-nested-form.php:491
 msgid "Please enter a maximum of %1$d %2$s"
 msgstr ""
 
-#: includes/class-gpnf-merge-tags.php:28
+#. translators: placeholder is a field label
+#: includes/class-gpnf-merge-tags.php:29
 msgid "%s: Count"
 msgstr ""
 
-#: includes/class-gpnf-merge-tags.php:33
+#. translators: placeholder is a field label
+#: includes/class-gpnf-merge-tags.php:35
 msgid "%s: Sum"
 msgstr ""
 
-#: includes/class-gpnf-merge-tags.php:41
+#. translators: placeholder is a field label
+#: includes/class-gpnf-merge-tags.php:44
 msgid "%s: Total"
 msgstr ""
 
-#: includes/class-gpnf-merge-tags.php:47
+#. translators: placeholder is a field label
+#: includes/class-gpnf-merge-tags.php:51
 msgid "%s: Set"
 msgstr ""
 

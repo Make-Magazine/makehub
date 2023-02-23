@@ -183,7 +183,7 @@ class Entry_DIY_Template extends Entry_Template {
 	 *
 	 * @return void
 	 */
-	public static function entry_before( $entry = array(), $context ) {
+	public static function entry_before( $entry, $context ) {
 		/**
 		 * @action `gravityview/template/diy/entry/before`
 		 * @since 2.1
@@ -202,7 +202,7 @@ class Entry_DIY_Template extends Entry_Template {
 	 *
 	 * @return void
 	 */
-	public static function entry_after( $entry = array(), $context ) {
+	public static function entry_after( $entry, $context ) {
 		/**
 		 * @action `gravityview/template/diy/entry/after`
 		 * @since 2.1

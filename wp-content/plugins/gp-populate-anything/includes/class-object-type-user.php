@@ -12,6 +12,10 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		add_action( 'gppa_pre_object_type_query_user', array( $this, 'add_filter_hooks' ) );
 	}
 
+	public function supported_operators() {
+		return array_merge( gp_populate_anything()->get_default_operators(), array( 'is_in', 'is_not_in' ) );
+	}
+
 	/**
 	 * Extract unique identifier for a given user.
 	 *
@@ -187,39 +191,44 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		return array_merge(
 			array(
 				'display_name' => array(
-					'label'    => esc_html__( 'Display Name', 'gp-populate-anything' ),
-					'value'    => 'display_name',
-					'callable' => array( $this, 'get_user_col_rows' ),
-					'args'     => array( $wpdb->users, 'display_name' ),
-					'orderby'  => true,
+					'label'     => esc_html__( 'Display Name', 'gp-populate-anything' ),
+					'value'     => 'display_name',
+					'callable'  => array( $this, 'get_user_col_rows' ),
+					'args'      => array( $wpdb->users, 'display_name' ),
+					'orderby'   => true,
+					'operators' => $this->supported_operators(),
 				),
 				'ID'           => array(
-					'label'    => esc_html__( 'User ID', 'gp-populate-anything' ),
-					'value'    => 'ID',
-					'callable' => array( $this, 'get_user_col_rows' ),
-					'args'     => array( $wpdb->users, 'ID' ),
-					'orderby'  => true,
+					'label'     => esc_html__( 'User ID', 'gp-populate-anything' ),
+					'value'     => 'ID',
+					'callable'  => array( $this, 'get_user_col_rows' ),
+					'args'      => array( $wpdb->users, 'ID' ),
+					'orderby'   => true,
+					'operators' => $this->supported_operators(),
 				),
 				'user_login'   => array(
-					'label'    => esc_html__( 'Username', 'gp-populate-anything' ),
-					'value'    => 'user_login',
-					'callable' => array( $this, 'get_user_col_rows' ),
-					'args'     => array( $wpdb->users, 'user_login' ),
-					'orderby'  => true,
+					'label'     => esc_html__( 'Username', 'gp-populate-anything' ),
+					'value'     => 'user_login',
+					'callable'  => array( $this, 'get_user_col_rows' ),
+					'args'      => array( $wpdb->users, 'user_login' ),
+					'orderby'   => true,
+					'operators' => $this->supported_operators(),
 				),
 				'user_email'   => array(
-					'label'    => esc_html__( 'User Email', 'gp-populate-anything' ),
-					'value'    => 'user_email',
-					'callable' => array( $this, 'get_user_col_rows' ),
-					'args'     => array( $wpdb->users, 'user_email' ),
-					'orderby'  => true,
+					'label'     => esc_html__( 'User Email', 'gp-populate-anything' ),
+					'value'     => 'user_email',
+					'callable'  => array( $this, 'get_user_col_rows' ),
+					'args'      => array( $wpdb->users, 'user_email' ),
+					'orderby'   => true,
+					'operators' => $this->supported_operators(),
 				),
 				'user_url'     => array(
-					'label'    => esc_html__( 'User URL', 'gp-populate-anything' ),
-					'value'    => 'user_url',
-					'callable' => array( $this, 'get_user_col_rows' ),
-					'args'     => array( $wpdb->users, 'user_url' ),
-					'orderby'  => true,
+					'label'     => esc_html__( 'User URL', 'gp-populate-anything' ),
+					'value'     => 'user_url',
+					'callable'  => array( $this, 'get_user_col_rows' ),
+					'args'      => array( $wpdb->users, 'user_url' ),
+					'orderby'   => true,
+					'operators' => $this->supported_operators(),
 				),
 				'roles'        => array(
 					'label'     => esc_html__( 'Role', 'gp-populate-anything' ),
@@ -318,13 +327,14 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		foreach ( $meta_rows as $user_meta_key ) {
 			$user_meta_properties[ 'meta_' . $user_meta_key ] = array(
-				'label'    => $user_meta_key,
-				'value'    => $user_meta_key,
-				'meta'     => true,
-				'callable' => array( $this, 'get_meta_values' ),
-				'args'     => array( $user_meta_key, $wpdb->usermeta ),
-				'group'    => 'meta',
-				'orderby'  => true,
+				'label'     => $user_meta_key,
+				'value'     => $user_meta_key,
+				'meta'      => true,
+				'callable'  => array( $this, 'get_meta_values' ),
+				'args'      => array( $user_meta_key, $wpdb->usermeta ),
+				'group'     => 'meta',
+				'orderby'   => true,
+				'operators' => $this->supported_operators(),
 			);
 		}
 
@@ -348,12 +358,13 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		foreach ( $query_results as $field ) {
 			$xprofile_properties[ 'bp_xprofile_' . $field->id ] = array(
-				'label'    => $field->name,
-				'value'    => $field->id,
-				'meta'     => true,
-				'callable' => array( $this, 'get_buddypress_xprofile_values' ),
-				'args'     => array( $field->id ),
-				'group'    => 'bp_xprofile',
+				'label'     => $field->name,
+				'value'     => $field->id,
+				'meta'      => true,
+				'callable'  => array( $this, 'get_buddypress_xprofile_values' ),
+				'args'      => array( $field->id ),
+				'group'     => 'bp_xprofile',
+				'operators' => $this->supported_operators(),
 			);
 		}
 
@@ -526,6 +537,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		foreach ( $users as $key => $user ) {
 			$users[ $key ] = new WP_User( $user );
+
+			/* Remove certain keys for security */
+			if ( isset( $users[ $key ]->user_pass ) ) {
+				unset( $users[ $key ]->user_pass );
+			}
 		}
 
 		$_cache[ $query ] = $users;

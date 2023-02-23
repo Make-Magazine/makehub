@@ -378,8 +378,10 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 				// If we're querying `date_created` or `date_updated` we need a new WHERE clause that uses a date
 				// range of `Y-m-d 00:00:00` and `Y-m-d 23:59:59` as an upper/lower bounds.
-				if ( $source_is_date && ( $operator === GF_Query_Condition::EQ || $operator === GF_Query_Condition::NEQ ) ) {
-					$gf_query_where[ $filter_group_index ][] = $this->sql_date_range( $gf_query_where, $filter_value, $operator, $property, $primary_property_value );
+				$sql_date_range_query = $this->sql_date_range( $gf_query_where, $filter_value, $operator, $property, $primary_property_value );
+
+				if ( $source_is_date && ! is_wp_error( $sql_date_range_query ) ) {
+					$gf_query_where[ $filter_group_index ][] = $sql_date_range_query;
 					return $gf_query_where;
 				}
 			}
@@ -430,6 +432,20 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 						new GF_Query_Literal( $filter_value . ' 23:59:59' )
 					),
 				) );
+			case GF_Query_Condition::GTE:
+			case GF_Query_Condition::GT:
+				return new GF_Query_Condition(
+					new GF_Query_Column( rgar( $property, 'value' ), (int) $primary_property_value ),
+					$operator,
+					new GF_Query_Literal( $filter_value . ' 00:00:00' )
+				);
+			case GF_Query_Condition::LTE:
+			case GF_Query_Condition::LT:
+				return new GF_Query_Condition(
+					new GF_Query_Column( rgar( $property, 'value' ), (int) $primary_property_value ),
+					$operator,
+					new GF_Query_Literal( $filter_value . ' 23:59:59' )
+				);
 		}
 
 		return new WP_Error( 'Unsupported operator for sql_date_range.' );
@@ -701,7 +717,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 * Check for existence of merge tags prior to trying to parse as looking up the form and replace_variables()
 		 * itself can be expensive when there are a lot of entries.
 		 */
-		if ( ! preg_match( gp_populate_anything()->live_merge_tags->merge_tag_regex, $template_value ) ) {
+		if ( ! is_string( $template_value ) || ! preg_match( gp_populate_anything()->live_merge_tags->merge_tag_regex, $template_value ) ) {
 			return $template_value;
 		}
 

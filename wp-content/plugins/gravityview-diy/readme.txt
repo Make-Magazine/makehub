@@ -20,6 +20,11 @@ DIY is a different kind of View layout: the purpose is to allow designers and de
 
 == Changelog ==
 
+= 2.4 on January 5, 2023 =
+
+* Added: Support for Custom Content fields on the Edit Entry screen (this requires GravityView 2.16.5 or newer)
+* Fixed: PHP 8 notices
+
 = 2.3 on December 10, 2020 =
 
 * Modified Single Entry template (`/templates/entries/diy.php`) to be consistent Multiple Entries output. Before, the wrapper would output: `<div id="gv_diy_95" class="gv-diy-view">` for View #95, Entry #14257. Now, the wrapper outputs: `<div id="gv_diy_95" class="gv-diy-view gv-container gv-container-14257">`
@@ -84,4 +89,4 @@ __Developer Notes:__
 
 * Launch!
 
-= 1648681390-4249 =
+= 1677170616-4249 =

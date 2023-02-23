@@ -93,7 +93,14 @@ export default class GPPopulateAnything {
 				calcObj: object
 			) => {
 				this.triggerChangeAfterCalculate = true;
-				this.triggerChangeOnFields.push( formulaField );
+
+				if (
+					! this.triggerChangeOnFields.find(
+						( { field_id } ) => field_id === formulaField.field_id
+					)
+				) {
+					this.triggerChangeOnFields.push( formulaField );
+				}
 			}
 		);
 
@@ -117,6 +124,19 @@ export default class GPPopulateAnything {
 				defaultValues: string | Array< string >,
 				isInit: boolean
 			) => {
+				// Cancel GF reset on multi input fields (e.g. address) that have LMTs
+				// It's key to do this before the `isInit` check; otherwise, the LMT value can be removed.
+				if (
+					$( targetId ).find(
+						'input[data-gppa-live-merge-tag-value]'
+					).length ||
+					$( targetId ).find(
+						'textarea[data-gppa-live-merge-tag-innerhtml]'
+					).length
+				) {
+					return false;
+				}
+
 				if ( isInit ) {
 					return reset;
 				}
@@ -127,15 +147,6 @@ export default class GPPopulateAnything {
 					window.gppaLiveMergeTags[ this.formId ].hasLiveAttrOnPage(
 						id as string
 					)
-				) {
-					return false;
-				}
-
-				// Cancel GF reset on multi input fields (e.g. address) that have LMTs
-				if (
-					$( targetId ).find(
-						'input[data-gppa-live-merge-tag-value]'
-					).length
 				) {
 					return false;
 				}
@@ -337,6 +348,13 @@ export default class GPPopulateAnything {
 					}
 				}
 
+				/**
+				 * Ignore any attempted input on Read Only inputs
+				 */
+				if ( event.type === 'keyup' && $el.prop( 'readonly' ) ) {
+					return;
+				}
+
 				$el.data( 'lastValue', $el.val()! );
 
 				this.onChange( inputId );
@@ -501,7 +519,8 @@ export default class GPPopulateAnything {
 				''
 			);
 
-			( window[ prop ] as any ).viewModel.entries.subscribe( () => {
+			// Use safe navigation operator in case entries aren't ready. Can sometimes happen with AJAX forms and GP Reload Form.
+			( window[ prop ] as any ).viewModel?.entries?.subscribe( () => {
 				this.onChange( nestedFormFieldId );
 			} );
 		}
@@ -915,7 +934,6 @@ export default class GPPopulateAnything {
 						updatedFieldIDs.push( fieldID );
 					}
 
-					this.runAndBindCalculationEvents();
 					if (
 						typeof ( $.fn as any ).ionRangeSlider !== 'undefined'
 					) {
@@ -931,6 +949,8 @@ export default class GPPopulateAnything {
 				window.gppaLiveMergeTags[ this.formId ].replaceMergeTagValues(
 					response.merge_tag_values
 				);
+
+				this.runAndBindCalculationEvents();
 
 				enableSubmitButton( this.getFormElement() );
 
