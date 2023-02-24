@@ -22,7 +22,7 @@ if ( ! function_exists( 'learndash_get_thumb_path' ) ) {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return string|void Optional. Certificate featured image path. Default 0.
+	 * @return string Optional. Certificate featured image path. Default 0.
 	 */
 	function learndash_get_thumb_path( $post_id = 0 ) {
 		if ( ! empty( $post_id ) ) {
@@ -55,6 +55,7 @@ if ( ! function_exists( 'learndash_get_thumb_path' ) ) {
 				}
 			}
 		}
+		return '';
 	}
 }
 
@@ -146,18 +147,18 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$cert_args['user_id'] = absint( $cert_args['user_id'] );
 
 		if ( empty( $cert_args['cert_id'] ) ) {
-			if ( isset( $_GET['id'] ) ) {
-				$cert_args['cert_id'] = absint( $_GET['id'] );
+			if ( isset( $_GET['id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$cert_args['cert_id'] = absint( $_GET['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			} else {
 				$cert_args['cert_id'] = get_the_id();
 			}
 		}
 
 		if ( empty( $cert_args['user_id'] ) ) {
-			if ( isset( $_GET['user'] ) ) {
-				$cert_args['user_id'] = absint( $_GET['user'] );
-			} elseif ( isset( $_GET['user_id'] ) ) {
-				$cert_args['user_id'] = absint( $_GET['user_id'] );
+			if ( isset( $_GET['user'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$cert_args['user_id'] = absint( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			} elseif ( isset( $_GET['user_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$cert_args['user_id'] = absint( $_GET['user_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
@@ -184,13 +185,13 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		 * lang=yyy.
 		 */
 		$config_lang_tmp = '';
-		if ( ( isset( $_GET['cert_lang'] ) ) && ( ! empty( $_GET['cert_lang'] ) ) ) {
-			$config_lang_tmp = substr( esc_attr( $_GET['cert_lang'] ), 0, 3 );
-		} elseif ( ( isset( $_GET['lang'] ) ) && ( ! empty( $_GET['lang'] ) ) ) {
-			$config_lang_tmp = substr( esc_attr( $_GET['lang'] ), 0, 3 );
+		if ( ( isset( $_GET['cert_lang'] ) ) && ( ! empty( $_GET['cert_lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$config_lang_tmp = substr( esc_attr( sanitize_text_field( wp_unslash( $_GET['cert_lang'] ) ) ), 0, 3 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		} elseif ( ( isset( $_GET['lang'] ) ) && ( ! empty( $_GET['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$config_lang_tmp = substr( esc_attr( sanitize_text_field( wp_unslash( $_GET['lang'] ) ) ), 0, 3 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		if ( ( ! empty( $config_lang_tmp ) ) && ( strlen( $config_lang_tmp ) == 3 ) ) {
+		if ( ( ! empty( $config_lang_tmp ) ) && ( strlen( $config_lang_tmp ) === 3 ) ) {
 			$ld_cert_lang_dir = LEARNDASH_LMS_LIBRARY_DIR . '/tcpdf/config/lang';
 			$lang_files       = array_diff( scandir( $ld_cert_lang_dir ), array( '..', '.' ) );
 			if ( ( ! empty( $lang_files ) ) && ( is_array( $lang_files ) ) && ( in_array( $config_lang_tmp, $lang_files, true ) ) && ( file_exists( $ld_cert_lang_dir . '/' . $config_lang_tmp . '.php' ) ) ) {
@@ -203,6 +204,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 
 		$logo_file         = '';
 		$logo_enable       = '';
+		$logo_width        = '';
 		$subsetting_enable = '';
 		$filters           = '';
 		$header_enable     = '';
@@ -269,11 +271,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$cert_args['pdf_keywords'] = implode( ' ', $tags_array );
 		}
 
-		if ( ! empty( $_GET['file'] ) ) {
-			$cert_args['filename_type'] = $_GET['file'];
+		if ( ! empty( $_GET['file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$cert_args['filename_type'] = sanitize_text_field( wp_unslash( $_GET['file'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		if ( 'title' == $cert_args['filename_type'] && 0 == $target_post_id ) {
+		if ( 'title' === $cert_args['filename_type'] ) {
 			$filename = sanitize_file_name( str_replace( " $sep ", "$sep", $cert_args['pdf_title'] ) );
 			/**
 			 * Filters the file name of the certificate pdf.
@@ -290,7 +292,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$filename = substr( $filename, 0, 255 );
 		$filename = sanitize_file_name( $filename );
 
-		$chached_filename = '';
+		$cached_filename = '';
 
 		$query_string_params_supported = array( 'font', 'monospaced', 'fontsize', 'subsetting', 'ratio', 'header', 'logo', 'logo_file', 'logo_width', 'footer', 'destination', 'destination_type' );
 
@@ -313,91 +315,87 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$query_string_params_allowed = array_intersect( $query_string_params_allowed, $query_string_params_supported );
 
 		if ( in_array( 'font', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['font'] ) ) {
-				$font = esc_html( $_GET['font'] );
+			if ( ! empty( $_GET['font'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$font = esc_html( sanitize_text_field( wp_unslash( $_GET['font'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'monospaced', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['monospaced'] ) ) {
-				$monospaced_font = esc_html( $_GET['monospaced'] );
+			if ( ! empty( $_GET['monospaced'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$monospaced_font = esc_html( sanitize_text_field( wp_unslash( $_GET['monospaced'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'fontsize', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['fontsize'] ) ) {
-				$font_size = intval( $_GET['fontsize'] );
+			if ( ! empty( $_GET['fontsize'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$font_size = intval( sanitize_text_field( wp_unslash( $_GET['fontsize'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'subsetting', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['subsetting'] ) && ( 1 == $_GET['subsetting'] || 0 == $_GET['subsetting'] ) ) {
-				$subsetting_enable = $_GET['subsetting'];
+			if ( ! empty( sanitize_text_field( wp_unslash( $_GET['subsetting'] ) ) ) && ( 1 === $_GET['subsetting'] || 0 === $_GET['subsetting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$subsetting_enable = sanitize_text_field( wp_unslash( $_GET['subsetting'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
-		if ( 1 == $subsetting_enable ) {
+		if ( $subsetting_enable ) {
 			$subsetting = 'true';
 		} else {
 			$subsetting = 'false';
 		}
 
 		if ( in_array( 'ratio', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['ratio'] ) ) {
-				$cert_args['ratio'] = floatval( $_GET['ratio'] );
+			if ( ! empty( $_GET['ratio'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$cert_args['ratio'] = floatval( $_GET['ratio'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'header', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['header'] ) ) {
-				$header_enable = $_GET['header'];
+			if ( ! empty( $_GET['header'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$header_enable = sanitize_text_field( wp_unslash( $_GET['header'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'logo', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['logo'] ) ) {
-				$logo_enable = $_GET['logo'];
+			if ( ! empty( $_GET['logo'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$logo_enable = sanitize_text_field( wp_unslash( $_GET['logo'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'logo_file', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['logo_file'] ) ) {
-				$logo_file = esc_html( $_GET['logo_file'] );
+			if ( ! empty( $_GET['logo_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$logo_file = esc_html( sanitize_text_field( wp_unslash( $_GET['logo_file'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'logo_width', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['logo_width'] ) ) {
-				$logo_width = intval( $_GET['logo_width'] );
+			if ( ! empty( $_GET['logo_width'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$logo_width = intval( $_GET['logo_width'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'footer', $query_string_params_allowed, true ) ) {
-			if ( ! empty( $_GET['footer'] ) ) {
-				$footer_enable = $_GET['footer'];
+			if ( ! empty( $_GET['footer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$footer_enable = sanitize_text_field( wp_unslash( $_GET['footer'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 
 		if ( in_array( 'destination', $query_string_params_allowed, true ) ) {
-			if ( ( isset( $_GET['destination'] ) ) && ( ! empty( $_GET['destination'] ) ) ) {
-				if ( 'F' === $_GET['destination'] ) {
+			if ( ( isset( $_GET['destination'] ) ) && ( ! empty( $_GET['destination'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( 'F' === $_GET['destination'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$destination = 'F';
 				} else {
 					$destination = 'I';
 				}
 			} else {
-				if ( 0 != $target_post_id ) {
-					$destination = 'F';
-				} else {
-					$destination = 'I';
-				}
+				$destination = 'I';
 			}
 		}
 
 		if ( in_array( 'destination_type', $query_string_params_allowed, true ) ) {
 			if ( 'F' === $destination ) {
-				if ( ( isset( $_GET['destination_type'] ) ) && ( ! empty( $_GET['destination_type'] ) ) ) {
-					if ( 'F' === $_GET['destination_type'] ) {
+				if ( ( isset( $_GET['destination_type'] ) ) && ( ! empty( $_GET['destination_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					if ( 'F' === $_GET['destination_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$destination_type = 'F';
 					} else {
 						$destination_type = 'U';
@@ -433,13 +431,13 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			 * Define LearnDash LMS - Set to enable legacy TCPDF processing logic.
 			 *
 			 * LD 3.2.0 includes an upgrade of the TCPDF library for generating PDF
-			 * Certificates. The newer TCPDF library incldues some improvements which
+			 * Certificates. The newer TCPDF library includes some improvements which
 			 * cause the rendering to not match the prior version of the library. This
 			 * define if set to `true` will enable legacy logic in the new library.
 			 *
 			 * @since 3.2.2
 			 *
-			 * @var bool true When enabling legacy logic.
+			 * @var bool $use_LD322_define true When enabling legacy logic.
 			 */
 			define( 'LEARNDASH_TCPDF_LEGACY_LD322', $use_LD322_define ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 		}
@@ -462,7 +460,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$cert_content = wpautop( $cert_content );
 		}
 
-		// For other sourcecode.
+		// For other source code.
 		$cert_content = preg_replace( '/<pre[^>]*?><code[^>]*?>(.*?)<\/code><\/pre>/is', '<pre style="word-wrap:break-word; color: #406040; background-color: #F1F1F1; border: 1px solid #9F9F9F;">$1</pre>', $cert_content );
 
 		// For blockquote.
@@ -546,7 +544,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		);
 
 		/**
-		 * Filters certificate tcpdf paramaters.
+		 * Filters certificate tcpdf parameters.
 		 *
 		 * @since 2.4.7
 		 *
@@ -630,8 +628,8 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$header_title = mb_substr( $cert_args['cert_title'], 0, 42, 'UTF-8' ) . '...';
 		}
 
-		if ( 1 == $header_enable ) {
-			if ( 1 == $logo_enable && $logo_file ) {
+		if ( $header_enable ) {
+			if ( ! $logo_enable && $logo_file ) {
 				$pdf->SetHeaderData( $logo_file, $logo_width, $header_title, 'by ' . $cert_args['pdf_author_name'] . ' - ' . $cert_args['cert_permalink'] );
 			} else {
 				$pdf->SetHeaderData( '', 0, $header_title, 'by ' . $cert_args['pdf_author_name'] . ' - ' . $cert_args['cert_permalink'] );
@@ -639,20 +637,20 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		}
 
 		// Set header and footer fonts.
-		if ( 1 == $header_enable ) {
+		if ( $header_enable ) {
 			$pdf->setHeaderFont( array( $font, '', PDF_FONT_SIZE_MAIN ) );
 		}
 
-		if ( 1 == $footer_enable ) {
+		if ( $footer_enable ) {
 			$pdf->setFooterFont( array( $font, '', PDF_FONT_SIZE_DATA ) );
 		}
 
 		// Remove header/footer.
-		if ( 0 == $header_enable ) {
+		if ( ! $header_enable ) {
 			$pdf->setPrintHeader( false );
 		}
 
-		if ( 0 == $header_enable ) {
+		if ( ! $header_enable ) {
 			$pdf->setPrintFooter( false );
 		}
 
@@ -662,11 +660,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		// Set margins.
 		$pdf->SetMargins( $tcpdf_params['margins']['left'], $tcpdf_params['margins']['top'], $tcpdf_params['margins']['right'] );
 
-		if ( 1 == $header_enable ) {
+		if ( $header_enable ) {
 			$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
 		}
 
-		if ( 1 == $footer_enable ) {
+		if ( $footer_enable ) {
 			$pdf->SetFooterMargin( PDF_MARGIN_FOOTER );
 		}
 
@@ -677,11 +675,6 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		if ( ! empty( $cert_args['ratio'] ) ) {
 			$pdf->setImageScale( $cert_args['ratio'] );
 		}
-
-		// Set some language-dependent strings.
-		//if ( isset( $l ) && ! empty( $l ) ) {
-		//	$pdf->setLanguageArray( $l );
-		//}
 
 		// Set fontsubsetting mode.
 		$pdf->setFontSubsetting( $subsetting );
@@ -709,7 +702,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$img_file = learndash_get_thumb_path( $cert_args['cert_id'] );
 
 		// Only print image if it exists.
-		if ( '' != $img_file ) {
+		if ( '' !== $img_file ) {
 			/**
 			 * Fires when thumbnail image processing starts.
 			 *
@@ -809,10 +802,10 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param string $pdf_cell_args See TCPDF function writeHTMLCell() parameters
-		 * @param array  $cert_args     Array of certificate args.
-		 * @param array  $tcpdf_params  An array of tcpdf parameters.
-		 * @param TCPDF  $pdf           `TCPDF` class instance.
+		 * @param array $pdf_cell_args See TCPDF function writeHTMLCell() parameters
+		 * @param array $cert_args     Array of certificate args.
+		 * @param array $tcpdf_params  An array of tcpdf parameters.
+		 * @param TCPDF $pdf           `TCPDF` class instance.
 		 */
 		$pdf_cell_args = apply_filters( 'learndash_certification_content_write_cell_args', $pdf_cell_args, $cert_args, $tcpdf_params, $pdf );
 

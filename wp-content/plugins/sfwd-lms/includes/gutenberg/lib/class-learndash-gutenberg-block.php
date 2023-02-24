@@ -26,6 +26,15 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		protected $block_base = 'learndash';
 
 		/**
+		 * Block directory where block.json is located.
+		 *
+		 * @since 4.5.0
+		 *
+		 * @var string
+		 */
+		protected $block_dir;
+
+		/**
 		 * Shortcode slug
 		 *
 		 * @var string $shortcode_slug
@@ -69,12 +78,14 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 				add_action( 'init', array( $this, 'register_blocks' ) );
 				add_filter( 'learndash_block_markers_shortcode_atts', array( $this, 'learndash_block_markers_shortcode_atts_filter' ), 30, 4 );
 
-				/**
-				 * Filter on the 'the_content' hook from WP. This needs to be at a priority
-				 * before the 'run_shortcode' function which runs at a priority of 8.
-				 */
-				add_filter( 'the_content', array( $this, 'the_content_filter' ), 5 );
-				add_filter( 'learndash_convert_block_markers_to_shortcode_content', array( $this, 'convert_block_markers_to_shortcode_content_filter' ), 30, 4 );
+				if ( ( defined( 'LEARNDASH_GUTENBERG_CONTENT_PARSE_LEGACY' ) ) && ( true === LEARNDASH_GUTENBERG_CONTENT_PARSE_LEGACY ) ) {
+					/**
+					 * Filter on the 'the_content' hook from WP. This needs to be at a priority
+					 * before the 'run_shortcode' function which runs at a priority of 8.
+					 */
+					add_filter( 'the_content', array( $this, 'the_content_filter' ), 5 );
+					add_filter( 'learndash_convert_block_markers_to_shortcode_content', array( $this, 'convert_block_markers_to_shortcode_content_filter' ), 30, 4 );
+				}
 			}
 		}
 
@@ -84,8 +95,10 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 * @since 2.5.9
 		 */
 		public function register_blocks() {
+			$block_register = ! empty( $this->block_dir ) ? $this->block_dir : $this->block_base . '/' . $this->block_slug;
+
 			register_block_type(
-				$this->block_base . '/' . $this->block_slug,
+				$block_register,
 				array(
 					'render_callback' => array( $this, 'render_block' ),
 					'attributes'      => $this->block_attributes,
@@ -94,17 +107,17 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		}
 
 		/**
-		 * Hook into 'the_content' WP filter and parse out our block. We want to convert eh Gutenber Block notation to a normal LD shortcode.
+		 * Hook into 'the_content' WP filter and parse out our block. We want to convert the Gutenberg Block notation to a normal LD shortcode.
 		 * Called at high priority BEFORE do_shortcode() and do_blocks().
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param string $content The post content containg all the inline HTML and blocks.
+		 * @param string $content The post content containing all the inline HTML and blocks.
 		 *
 		 * @return string $content.
 		 */
 		public function the_content_filter( $content = '' ) {
-			if ( ( is_admin() ) && ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) && ( ( isset( $_REQUEST['action'] ) ) && ( 'edit' === $_REQUEST['action'] ) ) ) {
+			if ( ( is_admin() ) && ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) && ( ( isset( $_REQUEST['action'] ) ) && ( 'edit' === $_REQUEST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return $content;
 			}
 
@@ -125,11 +138,13 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attributes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return void The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
-			return;
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
 		}
 
 		/**
@@ -147,7 +162,18 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 			$return_content .= '<!-- ' . $this->block_slug . ' gutenberg block begin -->';
 
 			if ( true === $with_inner ) {
-				$return_content .= '<div class="learndash-block-inner">';
+
+				/**
+				 * Temp hack until we update all the block/shortcodes.
+				 */
+				$extra_classes = '';
+				if ( ! strstr( $content, 'learndash-wrap' ) ) {
+					$extra_classes = ' learndash-wrap';
+				}
+				if ( ! strstr( $content, 'learndash-wrapper' ) ) {
+					$extra_classes = ' learndash-wrapper';
+				}
+				$return_content .= '<div class="learndash-block-inner' . $extra_classes . '">';
 			}
 
 			$return_content .= $content;
@@ -166,14 +192,14 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array $block_attributes Shortcode attributes.
 		 *
-		 * @return array $attributes
+		 * @return array $block_attributes
 		 */
-		protected function preprocess_block_attributes( $attributes = array() ) {
-			$attributes_new = array();
+		protected function preprocess_block_attributes( $block_attributes = array() ) {
+			$block_attributes_new = array();
 
-			foreach ( $attributes as $key => $val ) {
+			foreach ( $block_attributes as $key => $val ) {
 				if ( ( empty( $key ) ) || ( is_null( $val ) ) ) {
 					continue;
 				}
@@ -183,10 +209,75 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 					continue;
 				}
 
-				$attributes_new[ $key ] = $val;
+				if ( 'editing_post_meta' === $key ) {
+					$block_attributes_new[ $key ] = (array) $val;
+				} else {
+					if ( isset( $this->block_attributes[ $key ]['type'] ) ) {
+						$attribute_type = $this->block_attributes[ $key ]['type'];
+					} else {
+						$attribute_type = 'string';
+					}
+
+					if ( 'string' === $attribute_type ) {
+						$block_attributes_new[ $key ] = esc_attr( $val );
+					} elseif ( 'boolean' === $attribute_type ) {
+						$block_attributes_new[ $key ] = (bool) $val;
+					} elseif ( 'integer' === $attribute_type ) {
+						$block_attributes_new[ $key ] = intval( $val );
+					} elseif ( 'array' === $attribute_type ) {
+						$block_attributes_new[ $key ] = (array) $val;
+					} elseif ( 'object' === $attribute_type ) {
+						$block_attributes_new[ $key ] = (object) $val;
+					} else {
+						$block_attributes_new[ $key ] = $val;
+					}
+				}
 			}
 
-			return $attributes_new;
+			return $block_attributes_new;
+		}
+
+		/**
+		 * Build the block shortcode from attributes string.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array  $block_attributes Block attributes array.
+		 * @param string $block_content   Used for inner blocks.
+		 *
+		 * @return string $shortcode_str.
+		 */
+		protected function build_block_shortcode( $block_attributes = array(), $block_content = '' ) {
+
+			$shortcode_str = '[' . $this->shortcode_slug;
+			foreach ( $block_attributes as $key => $val ) {
+				if ( substr( $key, 0, strlen( 'preview_' ) ) == 'preview_' ) {
+					continue;
+				}
+
+				if ( substr( $key, 0, strlen( 'editing_' ) ) == 'editing_' ) {
+					continue;
+				}
+
+				if ( ( empty( $key ) ) || ( '' == $val ) || ( is_null( $val ) ) ) {
+					continue;
+				}
+
+				if ( ! empty( $shortcode_str ) ) {
+					$shortcode_str .= ' ';
+				}
+				$shortcode_str .= $key . '="' . esc_attr( $val ) . '"';
+			}
+			$shortcode_str .= ']';
+
+			if ( false === $this->self_closing ) {
+				if ( ! empty( $block_content ) ) {
+					$shortcode_str .= $block_content;
+				}
+				$shortcode_str .= '[/' . $this->shortcode_slug . ']';
+			}
+
+			return $shortcode_str;
 		}
 
 
@@ -198,7 +289,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 * @param string  $content Full page/post content to be searched.
 		 * @param string  $block_slug This is the block token pattern to search for. Ex: ld-user-meta, ld-visitor, ld-profile.
 		 * @param string  $shortcode_slug This is the actual shortcode token to be used.
-		 * @param boolean $self_closing true if not an innerblock.
+		 * @param boolean $self_closing true if not an inner block.
 		 * @return string $content
 		 */
 		public function convert_block_markers_to_shortcode( $content = '', $block_slug = '', $shortcode_slug = '', $self_closing = false ) {
@@ -278,7 +369,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 				} else {
 					/**
 					 * A non-self closing WP block will look like the following for the ld-student. The
-					 * patter will have an outer wrapper of the block whihc will be converted into a shortcode
+					 * patter will have an outer wrapper of the block which will be converted into a shortcode
 					 * wrapper like [ld_student]<content here>[/ld_student]
 					 *
 					 * <!-- wp:learndash/ld-student {"course_id":"109"} -->
@@ -369,15 +460,15 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
+		 * @param array  $block_attributes The array of attributes parse from the block content.
 		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
 		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
-		 * @param string $content This is the orignal full content being parsed.
+		 * @param string $content This is the original full content being parsed.
 		 *
-		 * @return array $attributes.
+		 * @return array $block_attributes.
 		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
-			return $attributes;
+		public function learndash_block_markers_shortcode_atts_filter( $block_attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
+			return $block_attributes;
 		}
 
 		/**
@@ -386,38 +477,45 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 *
 		 * @since 2.6.4
 		 *
-		 * @param string $content This is the orignal full content being parsed.
-		 * @param array  $attributes The array of attributes parse from the block content.
+		 * @param string $content This is the original full content being parsed.
+		 * @param array  $block_attributes The array of attributes parse from the block content.
 		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
 		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
 		 *
 		 * @return string $content.
 		 */
-		public function convert_block_markers_to_shortcode_content_filter( $content = '', $attributes = array(), $shortcode_slug = '', $block_slug = '' ) {
+		public function convert_block_markers_to_shortcode_content_filter( $content = '', $block_attributes = array(), $shortcode_slug = '', $block_slug = '' ) {
 			return $content;
 		}
 
 		/**
 		 * Common function used by the ld_course_list, ld_lesson_list, ld_topic_list,
 		 * and ld_quiz_list called from the render_block short/block processing function.
-		 * Converts the array of atrributes to a normalized shortcode parameter string.
+		 * Converts the array of attributes to a normalized shortcode parameter string.
 		 *
 		 * @since 2.6.4
-		 * @param array $attributes Array of block attributes.
+		 * @param array $block_attributes Array of block attributes.
 		 * @return string.
 		 */
-		protected function prepare_course_list_atts_to_param( $attributes = array() ) {
+		protected function prepare_course_list_atts_to_param( $block_attributes = array() ) {
 			$shortcode_params_str = '';
 
-			foreach ( $attributes as $key => $val ) {
+			foreach ( $block_attributes as $key => $val ) {
 				if ( ( empty( $key ) ) || ( is_null( $val ) ) ) {
 					continue;
 				}
 
-				if ( 'preview_show' === $key ) {
+				if ( ( 'preview_show' === $key ) || ( 'editing_post_meta' === $key ) ) {
 					continue;
 				} elseif ( 'preview_user_id' === $key ) {
-					if ( ( ! isset( $attributes['user_id'] ) ) && ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
+					if ( ( isset( $block_attributes['user_id'] ) ) && ( ! empty( $block_attributes['user_id'] ) ) ) {
+						continue;
+					}
+
+					if ( ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
+						if ( ! $this->block_attributes_is_editing_post( $block_attributes ) ) {
+							continue;
+						}
 						if ( ! learndash_is_admin_user( get_current_user_id() ) ) {
 							if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
 								// If group leader user we ensure the preview user_id is within their group(s).
@@ -525,7 +623,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $post_type Post Type Slug to retreive.
+		 * @param string $post_type Post Type Slug to retrieve.
 		 *
 		 * @return integer $post_id Post ID.
 		 */
@@ -546,6 +644,165 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 			}
 
 			return $post_id;
+		}
+
+		/**
+		 * Utility function to check if we are editing a post.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array $block_attributes The block attributes.
+		 *
+		 * @return boolean true if we are editing a post.
+		 */
+		protected function block_attributes_is_editing_post( $block_attributes = array() ) {
+			if ( isset( $block_attributes['editing_post_meta']['editing'] ) ) {
+				if ( ( 'true' === $block_attributes['editing_post_meta']['editing'] ) || ( true === $block_attributes['editing_post_meta']['editing'] ) ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Utility function to determine the Post ID from the block attributes.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array  $block_attributes The block attributes.
+		 * @param string $post_prefix     The post prefix to use. Example: 'course', 'quiz', 'group', etc.
+		 *
+		 * @return int Post ID.
+		 */
+		protected function block_attributes_get_post_id( $block_attributes = array(), $post_prefix = '' ) {
+			if ( ! empty( $post_prefix ) ) {
+				if ( ( isset( $block_attributes[ $post_prefix . '_id' ] ) ) && ( '' != $block_attributes[ $post_prefix . '_id' ] ) ) {
+					return absint( $block_attributes[ $post_prefix . '_id' ] );
+				}
+
+				if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+					if ( ( isset( $block_attributes[ 'preview_' . $post_prefix . '_id' ] ) ) && ( '' != $block_attributes[ 'preview_' . $post_prefix . '_id' ] ) ) {
+						return absint( $block_attributes[ 'preview_' . $post_prefix . '_id' ] );
+					}
+				}
+			}
+
+			return '';
+		}
+
+		/**
+		 * Utility function to determine the User ID from the block attributes.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array $block_attributes The block attributes.
+		 *
+		 * @return int User ID.
+		 */
+		protected function block_attributes_get_user_id( $block_attributes = array() ) {
+			$user_id = '';
+			if ( ( isset( $block_attributes['user_id'] ) ) && ( '' != $block_attributes['user_id'] ) ) {
+				$user_id = absint( $block_attributes['user_id'] );
+			}
+
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				if ( ( isset( $block_attributes['preview_user_id'] ) ) && ( '' != $block_attributes['preview_user_id'] ) ) {
+					$user_id = absint( $block_attributes['preview_user_id'] );
+				}
+			}
+
+			if ( ! empty( $user_id ) ) {
+				if ( ! learndash_is_admin_user( get_current_user_id() ) ) {
+					if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+						// If group leader user we ensure the preview user_id is within their group(s).
+						if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $user_id ) ) {
+							$user_id = '';
+						}
+					} elseif ( (int) get_current_user_id() !== (int) $block_attributes['user_id'] ) {
+						$user_id = '';
+					}
+				}
+			}
+
+			return $user_id;
+		}
+
+		/**
+		 * Utility function to determine the Edit Post Type.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array $block_attributes The block attributes.
+		 *
+		 * @return string Preview Post Type.
+		 */
+		protected function block_attributes_get_editing_post_type( $block_attributes = array() ) {
+			return $this->block_attributes_get_editing_post_data( $block_attributes, 'post_type' );
+		}
+
+		/**
+		 * Utility function to determine the Edit Post ID.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array $block_attributes The block attributes.
+		 *
+		 * @return int Edit Post ID.
+		 */
+		protected function block_attributes_get_editing_post_id( $block_attributes = array() ) {
+			return $this->block_attributes_get_editing_post_data( $block_attributes, 'post_id' );
+		}
+
+		/**
+		 * Utility function to determine the Edit Course Post ID.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array $block_attributes The block attributes.
+		 *
+		 * @return int Edit Course Post ID.
+		 */
+		protected function block_attributes_get_editing_course_id( $block_attributes = array() ) {
+			return $this->block_attributes_get_editing_post_data( $block_attributes, 'course_id' );
+		}
+
+		/**
+		 * Utility function to determine the Edit Post Data.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array  $block_attributes The block attributes.
+		 * @param string $return_key       The post data key value to return.
+		 *
+		 * @return array Preview Post Data.
+		 */
+		protected function block_attributes_get_editing_post_data( $block_attributes = array(), $return_key = '' ) {
+			$editing_post_data = array(
+				'post_id'   => 0,
+				'post_type' => '',
+				'course_id' => 0,
+			);
+
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				if ( isset( $block_attributes['editing_post_meta']['post_type'] ) ) {
+					$editing_post_data['post_type'] = esc_attr( $block_attributes['editing_post_meta']['post_type'] );
+				}
+
+				if ( isset( $block_attributes['editing_post_meta']['post_id'] ) ) {
+					$editing_post_data['post_id'] = absint( $block_attributes['editing_post_meta']['post_id'] );
+				}
+
+				if ( isset( $block_attributes['editing_post_meta']['course_id'] ) ) {
+					$editing_post_data['course_id'] = absint( $block_attributes['editing_post_meta']['course_id'] );
+				}
+			}
+
+			if ( ! empty( $return_key ) ) {
+				if ( isset( $editing_post_data[ $return_key ] ) ) {
+					return $editing_post_data[ $return_key ];
+				}
+			}
+			return $editing_post_data;
 		}
 
 		// End of functions.

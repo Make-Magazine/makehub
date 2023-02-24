@@ -98,7 +98,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 				$quiz = $data['quiz'];
 				$quiz->setId( $quizId );
 				$quiz->setName( $this->_post['name'] );
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 				$quizMapper->save( $quiz );
 				if ( empty( $quizId ) && ! empty( $get['post_id'] ) ) {
 					learndash_update_setting( $get['post_id'], 'quiz_pro', $quiz->getId() );
@@ -125,7 +125,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 			if ( $this->checkValidit( $this->_post ) ) {
 
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 
 				$quizMapper->save( $quiz );
 				if ( empty( $quizId ) && ! empty( $get['post_id'] ) ) {
@@ -143,7 +143,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 				if ( ! $this->formHandler( $quiz->getId(), $this->_post ) ) {
 					$quiz->setFormActivated( false );
-					$quiz->setText( 'AAZZAAZZ' );
+					$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 					$quizMapper->save( $quiz );
 				}
 
@@ -243,7 +243,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			}
 
 			if ( $this->checkValidit( $this->_post ) ) {
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 
 				$quiz2 = $quizMapper->save( $quiz );
 
@@ -267,7 +267,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 				if ( ! $this->formHandler( $quiz->getId(), $this->_post ) ) {
 					$quiz->setFormActivated( false );
-					$quiz->setText( ' AAZZAAZZ' );
+					$quiz->setText( ' AAZZAAZZ' ); // cspell:disable-line.
 					$quizMapper->save( $quiz );
 				}
 			} else {
@@ -325,7 +325,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 					$quiz = $data['quiz'];
 					$quiz->setId( $quizId );
 					$quiz->setName( $this->_post['name'] );
-					$quiz->setText( 'AAZZAAZZ' );
+					$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 					$forms                = $data['forms'];
 					$prerequisiteQuizList = $data['prerequisiteQuizList'];
 				}
@@ -1023,7 +1023,14 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 						}
 					}
 					if ( $attempts_count > $repeats ) {
-						$lockIp = true;
+						$bypass_course_limits_admin_users = learndash_can_user_bypass( $userId, 'learndash_course_lesson_access_from', $this->_post['course_id'], get_post( $this->_post['quiz'] ) );
+
+						// For logged in users to allow an override filter.
+						/** This filter is documented in includes/course/ld-course-progress.php */
+						$bypass_course_limits_admin_users = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $userId, $this->_post['course_id'], $this->_post['quiz'] );
+						if ( true !== $bypass_course_limits_admin_users )  {
+							$lockIp = true;
+						}
 					}
 				}
 			}
@@ -1163,7 +1170,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 				if ( ( ! isset( $email_settings_user['user_mail_from_name'] ) ) || ( empty( $email_settings_user['user_mail_from_name'] ) ) ) {
 					$email_settings_user['user_mail_from_name'] = '';
 
-					$email_user = get_user_by( 'emal', $email_settings_user['user_mail_from'] );
+					$email_user = get_user_by( 'email', $email_settings_user['user_mail_from'] );
 					if ( ( $email_user ) && ( is_a( $email_user, 'WP_User' ) ) ) {
 						$email_settings_user['user_mail_from_name'] = $email_user->display_name;
 					}
@@ -1180,6 +1187,8 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			if ( ( isset( $email_settings_user['user_mail_html'] ) ) && ( 'yes' === $email_settings_user['user_mail_html'] ) ) {
 				add_filter( 'wp_mail_content_type', array( $this, 'htmlEmailContent' ) );
 				$user_mail_message = wpautop( $user_mail_message );
+			} else {
+				$user_mail_message = esc_html( wp_strip_all_tags( wptexturize( $user_mail_message ) ) );
 			}
 
 			$email_params = array(
@@ -1229,7 +1238,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 				$email_settings_admin['admin_mail_from_name'] = '';
 
 				if ( ! empty( $email_settings_admin['admin_mail_from'] ) ) {
-					$email_user = get_user_by( 'emal', $email_settings_admin['admin_mail_from'] );
+					$email_user = get_user_by( 'email', $email_settings_admin['admin_mail_from'] );
 					if ( ( $email_user ) && ( is_a( $email_user, 'WP_User' ) ) ) {
 						$email_settings_admin['admin_mail_from_name'] = $email_user->display_name;
 					}
@@ -1248,7 +1257,8 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			if ( ( isset( $email_settings_admin['admin_mail_html'] ) ) && ( $email_settings_admin['admin_mail_html'] ) ) {
 				add_filter( 'wp_mail_content_type', array( $this, 'htmlEmailContent' ) );
 				$admin_mail_message = wpautop( $admin_mail_message );
-
+			} else {
+				$admin_mail_message = esc_html( wp_strip_all_tags( wptexturize( $admin_mail_message ) ) );
 			}
 
 			$email_params = array(

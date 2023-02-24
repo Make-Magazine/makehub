@@ -16,7 +16,8 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 	 *
 	 * @since 3.2.0
 	 */
-	class LD_Groups_Membership { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_Groups_Membership {
+ // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Static instance variable to ensure
@@ -90,12 +91,11 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 			if ( in_array( $typenow, $this->get_global_included_post_types(), true ) ) {
 
-				/** This filter is documented in includes/class-ld-lms.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+				if ( learndash_use_select2_lib() ) {
 					if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 						wp_enqueue_style(
 							'learndash-select2-jquery-style',
-							LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor/select2-jquery/css/select2.min.css',
+							LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor-libs/select2-jquery/css/select2.min.css',
 							array(),
 							LEARNDASH_SCRIPT_VERSION_TOKEN
 						);
@@ -105,7 +105,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 					if ( ! isset( $learndash_assets_loaded['scripts']['learndash-select2-jquery-script'] ) ) {
 						wp_enqueue_script(
 							'learndash-select2-jquery-script',
-							LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor/select2-jquery/js/select2.full.min.js',
+							LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor-libs/select2-jquery/js/select2.full.min.js',
 							array( 'jquery' ),
 							LEARNDASH_SCRIPT_VERSION_TOKEN,
 							true
@@ -138,7 +138,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				}
 
 				add_filter( 'manage_edit-' . $typenow . '_columns', array( $this, 'add_data_columns' ), 10, 1 );
-				add_action( 'manage_' . $typenow . '_posts_custom_column', array( $this, 'posts_custom_column' ), 10, 3 );
+				add_action( 'manage_' . $typenow . '_posts_custom_column', array( $this, 'posts_custom_column' ), 10, 2 );
 				add_action( 'bulk_edit_custom_box', array( $this, 'display_custom_bulk_edit' ), 10, 2 );
 
 				add_action( 'save_post', array( $this, 'save_post_bulk_edit' ), 10, 2 );
@@ -229,8 +229,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 				$select_groups_options = $sfwd_lms->select_a_group();
 				if ( ! empty( $select_groups_options ) ) {
-					/** This filter is documented in includes/class-ld-lms.php */
-					if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+					if ( learndash_use_select2_lib() ) {
 						$select_groups_options_default = sprintf(
 							// translators: placeholder: Group.
 							esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),
@@ -616,12 +615,6 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 					 * @return boolean True to process template. Anything else to abort.
 					 */
 					if ( true === apply_filters( 'learndash_group_membership_access_denied_show_ld30_alert', true, $this->vars['post_id'], $this->vars['user_id'] ) ) {
-						// Save for next release to load if needed.
-						// $theme_template_dir = LearnDash_Theme_Register::get_active_theme_base_dir();
-						// $css_front_file = $theme_template_dir . '/assets/css/learndash' . learndash_min_asset() . '.css';
-						// $css_front_file_content = file_get_contents( $css_front_file );
-						// if ( ! empty( $css_front_file_content ) ) {
-
 						if ( false === $inline_css_loaded ) {
 							$inline_css_loaded      = true;
 							$css_front_file_content = '.learndash-wrapper .ld-alert a.ld-button.learndash-group-membership-link { text-decoration: none !important; }';
@@ -789,7 +782,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 						return true;
 					}
 				}
-				$this->add_debug_message( __FUNCTION__ . ': post type [' . get_post_type( $post_id ) . '] not under membership control. bypased' );
+				$this->add_debug_message( __FUNCTION__ . ': post type [' . get_post_type( $post_id ) . '] not under membership control. bypassed' );
 			}
 
 			return false;
