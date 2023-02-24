@@ -100,6 +100,7 @@ class A8c_Mc_Stats {
 		}
 
 		return $urls;
+
 	}
 
 	/**

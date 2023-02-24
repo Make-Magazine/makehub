@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'str_getcsv' ) ) {
 
 	/**
-	 * Input a text file name of a comma separated file, and parse it, returning the data as an array
+	 * Input a text file name of a comma seperated file, and parse it, returning the data as an array
 	 *
 	 * @since 2.1.0
 	 *
@@ -23,14 +23,14 @@ if ( ! function_exists( 'str_getcsv' ) ) {
 	 * @param  string $enclosure Enclosure.
 	 * @param  string $escape    Escape.
 	 *
-	 * @return array Array of strings that are parsed as comma separated values
+	 * @return array Array of strings that are parsed as comma seperated values
 	 */
 	function str_getcsv( $input, $delimiter = ',', $enclosure = '"', $escape = '\\' ) {
-		$fp = fopen( 'php://memory', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen -- I don't think we'll refactor it in the nearest feature.
+		$fp = fopen( 'php://memory', 'r+' );
 		fputs( $fp, $input );
 		rewind( $fp );
-		$data = fgetcsv( $fp, 0, $delimiter, $enclosure ); // $escape only got added in 5.3.0
-		fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+		$data = fgetcsv( $fp, null, $delimiter, $enclosure ); // $escape only got added in 5.3.0
+		fclose( $fp );
 		return $data;
 	}
 }
@@ -42,11 +42,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 	/**
 	 * Abstract base class
-	 *
-	 * @codingStandardsIgnoreStart
 	 */
 	abstract class Semper_Fi_Module {
-		// @codingStandardsIgnoreEnd
 
 		/**
 		 * Instance of this class
@@ -151,7 +148,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @var null|string
 		 */
-		protected $pagehook = null; // cspell:disable-line.
+		protected $pagehook = null;
 
 		/**
 		 * Store option
@@ -203,11 +200,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		protected $script_data = null;
 
 		/**
-		 * Plugin path details.
+		 * Plugin path
 		 *
-		 * @var array
+		 * @var string
 		 */
-		protected $plugin_path = array();
+		protected $plugin_path = null;
 
 		/**
 		 * Array of pointers
@@ -231,7 +228,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		public function __call( $name, $arguments ) {
 			if ( strpos( $name, 'display_settings_page_' ) === 0 ) {
 				$location = substr( $name, 22 );
-				$this->display_settings_page( $location );
+				return $this->display_settings_page( $location );
 			}
 			// translators: placeholder: method name.
 			throw new InvalidArgumentException( sprintf( esc_html_x( "Method %s doesn't exist", 'placeholder: method name', 'learndash' ), $name ) );
@@ -279,14 +276,14 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @since 2.1.0
 		 *
 		 * @param  string $option   Option to be changed.
-		 * @param  string $new_value Value of new option.
+		 * @param  string $newvalue Value of new option.
 		 * @return bool
 		 */
-		public function update_option( $option, $new_value ) {
+		public function update_option( $option, $newvalue ) {
 			if ( $this->network_options ) {
-				return update_site_option( $option, $new_value );
+				return update_site_option( $option, $newvalue );
 			} else {
-				return update_option( $option, $new_value );
+				return update_option( $option, $newvalue );
 			}
 		}
 
@@ -466,7 +463,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @since 2.1.0
 		 *
 		 * @param  string $buf Buffer.
-		 * @return string      Saved options line separated
+		 * @return string      Saved options line seperated
 		 */
 		public function settings_export( $buf ) {
 			global $sfwd_options, $sfp;
@@ -512,7 +509,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									$value     = $this->get_prefix( $k ) . $k;
 									$post_meta = get_post_meta( $post->ID, '_' . $value, true );
 									if ( $post_meta ) {
-										$data .= "$value = '" . str_replace( array( "'", "\n", "\r" ), array( "\'", '\n', '\r' ), trim( serialize( $post_meta ) ) ) . "'"; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- I don't think we need to touch this.
+										$data .= "$value = '" . str_replace( array( "'", "\n", "\r" ), array( "\'", '\n', '\r' ), trim( serialize( $post_meta ) ) ) . "'";
 									}
 								}
 							}
@@ -562,9 +559,9 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 					// Don't re-export all module settings -- pdb.
 					if ( is_array( $value ) ) {
-						$value = "'" . str_replace( array( "'", "\n", "\r" ), array( "\'", '\n', '\r' ), trim( serialize( $value ) ) ) . "'"; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- I don't think we need to touch this.
+						$value = "'" . str_replace( array( "'", "\n", "\r" ), array( "\'", '\n', '\r' ), trim( serialize( $value ) ) ) . "'";
 					} else {
-						$value = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), trim( var_export( $value, true ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- I don't think we need to touch this.
+						$value = str_replace( array( "\n", "\r" ), array( '\n', '\r' ), trim( var_export( $value, true ) ) );
 					}
 
 					$buf .= "$key = $value\n";
@@ -597,8 +594,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $csv Comma separated text string.
-		 * @return array      Array representation of comma separated text
+		 * @param  string $csv Comma seperated text string.
+		 * @return array      Array representation of comma seperated text
 		 */
 		public function csv_to_array( $csv ) {
 			$args = array();
@@ -617,7 +614,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 
 		/**
-		 * Crude approximation of whether current user is an admin
+		 * Crude approximization of whether current user is an admin
 		 *
 		 * @since 2.1.0
 		 *
@@ -672,7 +669,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				wp_enqueue_script( 'thickbox' );
 
 				if ( ! empty( $this->pointers ) ) {
-					wp_enqueue_script( 'wp-pointer', false, array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, false );
+					wp_enqueue_script( 'wp-pointer', false, array( 'jquery' ) );
 					$this->script_data['pointers'] = $this->pointers;
 				}
 			}
@@ -764,7 +761,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			$hookname = current_filter();
 
 			if ( strpos( $hookname, 'load-' ) === 0 ) {
-				$this->pagehook = substr( $hookname, 5 ); // cspell:disable-line.
+				$this->pagehook = substr( $hookname, 5 );
 			}
 
 			$this->filter_pointers();
@@ -868,11 +865,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									 *
 									 * @since 2.1.0
 									 *
-									 * @param string $title    Metabox title
-									 * @param string $prefix   Title prefix
-									 * @param string $location Metabox location key.
+									 * @param string  $title    Metabox title
+									 * @param string  $prefix    Title prefix
+									 * @param string  $location Metabox location key.
 									 */
-									$title = apply_filters( 'semperfi_metabox_title', $title, $v['prefix'] . $k, $k ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy prefix.
+									$title = apply_filters( 'semperfi_metabox_title', $title, $v['prefix'] . $k );
 									add_meta_box( $v['prefix'] . $k, $title, array( $this, 'display_metabox' ), $posttype, $v['context'], $v['priority'], $v );
 								} // phpcs:ignore Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace -- DocBlock for filter follows
 								/**
@@ -883,7 +880,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 								 */
 								elseif ( apply_filters( 'learndash_settings_metaboxes_legacy', LEARNDASH_SETTINGS_METABOXES_LEGACY, $posttype ) ) {
 									/** This filter is documented in includes/class-ld-semper-fi-module.php */
-									$title = apply_filters( 'semperfi_metabox_title', $title, $v['prefix'] . $k ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy prefix.
+									$title = apply_filters( 'semperfi_metabox_title', $title, $v['prefix'] . $k );
 									add_meta_box( $v['prefix'] . $k, $title, array( $this, 'display_metabox' ), $posttype, $v['context'], 'low', $v );
 								}
 							}
@@ -981,7 +978,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									$options['sfwd-courses_course_prerequisite'] = array();
 								}
 
-								// IF prerequisites not enabled then clear out the courses array.
+								// IF prereq not enabled then clear out the courses array.
 								if ( 'on' !== $options['sfwd-courses_course_prerequisite_enabled'] ) {
 									$options['sfwd-courses_course_prerequisite'] = array();
 								} else {
@@ -996,7 +993,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									}
 								}
 
-								// Or the other way if there are no selected prerequisites courses set enable off.
+								// Or the other way if there are no selected prereq courses set enable off.
 								if ( empty( $options['sfwd-courses_course_prerequisite'] ) ) {
 									$options['sfwd-courses_course_prerequisite_enabled'] = 'off';
 								} else {
@@ -1083,7 +1080,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									/**
 									 * If this quiz was the primary for all shared settings. We need to
 									 * delete the primary marker then move the primary marker to another
-									 * quiz using the same shared settings.
+									 * quiz using the same shared settngs.
 									 */
 									$quiz_id_primary_org = absint( learndash_get_quiz_primary_shared( $quiz_pro_id_org, false ) );
 									if ( $quiz_id_primary_org === $post_id ) {
@@ -1166,7 +1163,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @return string
 		 */
 		public function do_multi_input( $args ) {
-			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
+			extract( $args );
 			$buf1 = '';
 			$type = $options['type'];
 
@@ -1175,7 +1172,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 					'block'     => "%s\n",
 					'group'     => "\t<b>%s</b><br>\n%s\n",
 					'item'      => "\t<label class='sfwd_option_setting_label'><input type='$type' %s name='%s' value='%s' %s> %s</label>\n",
-					'item_args' => array( 'sel', 'name', 'v', 'attr', 'subopt' ), // cspell:disable-line.
+					'item_args' => array( 'sel', 'name', 'v', 'attr', 'subopt' ),
 					'selected'  => 'checked ',
 				);
 			} else {
@@ -1211,13 +1208,13 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 					'block'     => $block,
 					'group'     => "\t<optgroup label='%s'>\n%s\t</optgroup>\n",
 					'item'      => "\t<option %s value='%s'>%s</option>\n",
-					'item_args' => array( 'sel', 'v', 'subopt' ), // cspell:disable-line.
+					'item_args' => array( 'sel', 'v', 'subopt' ),
 					'selected'  => 'selected ',
 				);
 
 			}
 
-			$set_selected = $strings['selected'];
+			$setsel = $strings['selected'];
 
 			if ( isset( $options['initial_options'] ) && is_array( $options['initial_options'] ) ) {
 
@@ -1230,7 +1227,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 					$buf2 = '';
 
-					foreach ( $option as $v => $subopt ) { // cspell:disable-line.
+					foreach ( $option as $v => $subopt ) {
 						$sel    = '';
 						$is_arr = is_array( $value );
 
@@ -1241,7 +1238,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 						}
 
 						if ( ( ! $is_arr && $cmp ) || ( $is_arr && in_array( $v, $value, true ) ) ) {
-							$sel = $set_selected;
+							$sel = $setsel;
 						}
 
 						$item_arr = array();
@@ -1274,15 +1271,14 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param array $args Arguments.
-		 *
+		 * @param  array $args Arguments.
 		 * @return string|array
 		 */
 		public function get_option_html( $args ) {
 			global $wp_locale;
 
 			static $n = 0;
-			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
+			extract( $args );
 
 			if ( 'custom' === $options['type'] ) {
 				/**
@@ -1293,12 +1289,12 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				 * @since 2.1.0
 				 *
 				 * @param string $output_option Output option
-				 * @param array  $args          Option arguments.
+				 * @param string $args          Option arguments.
 				 */
-				return apply_filters( "{$this->prefix}output_option", '', $args ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+				return apply_filters( "{$this->prefix}output_option", '', $args );
 			}
 
-			if ( in_array( $options['type'], array( 'multiselect', 'select', 'multicheckbox', 'radio', 'checkbox', 'textarea', 'text', 'submit', 'hidden' ), true ) ) { // cspell:disable-line.
+			if ( in_array( $options['type'], array( 'multiselect', 'select', 'multicheckbox', 'radio', 'checkbox', 'textarea', 'text', 'submit', 'hidden' ), true ) ) {
 				if ( is_string( $value ) ) {
 					$value = esc_attr( $value );
 				}
@@ -1315,19 +1311,16 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				case 'multiselect':
 					$attr        .= ' MULTIPLE';
 					$args['attr'] = $attr;
-					$name         = "{$name}[]";
-					$args['name'] = $name;
+					$args['name'] = $name = "{$name}[]";
 					// no break.
 
 				case 'select':
 					$buf .= $this->do_multi_input( $args );
 					break;
 
-				case 'multicheckbox': // cspell:disable-line.
-					$name                    = "{$name}[]";
-					$args['name']            = $name;
-					$options['type']         = 'checkbox';
-					$args['options']['type'] = 'checkbox';
+				case 'multicheckbox':
+					$args['name']            = $name = "{$name}[]";
+					$args['options']['type'] = $options['type']          = 'checkbox';
 					// no break.
 
 				case 'radio':
@@ -1386,7 +1379,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							$value = learndash_get_timestamp_from_date_string( $value );
 						} else {
 							// If we have a timestamp we assume it is GMT. So we need to convert it to local.
-							$value_ymd = get_date_from_gmt( date( 'Y-m-d H:i:s', $value ), 'Y-m-d H:i:s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+							$value_ymd = get_date_from_gmt( date( 'Y-m-d H:i:s', $value ), 'Y-m-d H:i:s' );
 							$value     = strtotime( $value_ymd );
 
 						}
@@ -1504,11 +1497,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		public function get_option_row( $name, $opts, $args ) {
 			global $post_type;
 
-			$label_text  = '';
-			$input_attr  = '';
-			$help_text_2 = '';
-			$id_attr     = '';
-
+			$label_text = $input_attr = $help_text_2 = $id_attr = '';
 			if ( 'top' == $opts['label'] ) {
 				$align = 'left';
 			} else {
@@ -1575,7 +1564,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				 * @param array        $current_options Current options stored for a location.
 				 * @param null|string  $location        Location index.
 				 */
-				$current_options = apply_filters( "{$this->prefix}display_options", $this->get_current_options( array(), $location, $defaults ), $location ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+				$current_options = apply_filters( "{$this->prefix}display_options", $this->get_current_options( array(), $location, $defaults ), $location );
 
 				/**
 				 * Filters semperfi display settings.
@@ -1586,7 +1575,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				 * @param null|string $location        Location index.
 				 * @param array       $current_options Current options stored for a location.
 				 */
-				$settings = apply_filters( "{$this->prefix}display_settings", $this->setting_options( $location, $defaults ), $location, $current_options ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+				$settings = apply_filters( "{$this->prefix}display_settings", $this->setting_options( $location, $defaults ), $location, $current_options );
 
 				$location_settings[ $prefix ]['current_options'] = $current_options;
 				$location_settings[ $prefix ]['settings']        = $settings;
@@ -1704,7 +1693,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 					switch ( $type ) {
 						case 'multiselect':
-						case 'multicheckbox': // cspell:disable-line.
+						case 'multicheckbox':
 							$this->options[ $k ] = urlencode_deep( $this->options[ $k ] );
 							break;
 						case 'textarea':
@@ -1792,7 +1781,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 						$this->reset_options( $location, true );
 
 						/**
-						 * Fires after resetting sfwd options.
+						 * Fires after reseting sfwd options.
 						 *
 						 * @since 2.1.0
 						 */
@@ -1826,7 +1815,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 					 * @param array        $options  An array of options.
 					 * @param null|string  $location Location index.
 					 */
-					$this->options = apply_filters( $this->prefix . 'update_options', $this->options, $location ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+					$this->options = apply_filters( $this->prefix . 'update_options', $this->options, $location );
 
 					$this->update_class_option( $this->options );
 
@@ -1843,7 +1832,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				 * @param array        $options  An array of options.
 				 * @param null|string  $location Location index.
 				 */
-				do_action( $this->prefix . 'settings_update', $this->options, $location ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+				do_action( $this->prefix . 'settings_update', $this->options, $location );
 
 			}
 		}
@@ -1855,12 +1844,10 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param null|string $location $this->locations array index.
-		 *
-		 * @return void
+		 * @param  null|string $location   $this->locations array index.
 		 */
 		public function display_settings_page( $location = null ) {
-			// Do nothing.
+			return;
 		}
 
 		/**

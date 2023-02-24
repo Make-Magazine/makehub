@@ -145,7 +145,7 @@ class REST_Connector {
 			'/connection/plugins',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( __CLASS__, 'get_connection_plugins' ),
+				'callback'            => array( $this, 'get_connection_plugins' ),
 				'permission_callback' => __CLASS__ . '::connection_plugins_permission_check',
 			)
 		);
@@ -179,6 +179,10 @@ class REST_Connector {
 						'type'        => 'string',
 						'required'    => true,
 					),
+					'no_iframe'          => array(
+						'description' => __( 'Disable In-Place connection flow and go straight to Calypso', 'jetpack-connection' ),
+						'type'        => 'boolean',
+					),
 					'redirect_uri'       => array(
 						'description' => __( 'URI of the admin page where the user should be redirected after connection flow', 'jetpack-connection' ),
 						'type'        => 'string',
@@ -200,6 +204,10 @@ class REST_Connector {
 				'callback'            => array( $this, 'connection_authorize_url' ),
 				'permission_callback' => __CLASS__ . '::user_connection_data_permission_check',
 				'args'                => array(
+					'no_iframe'    => array(
+						'description' => __( 'Disable In-Place connection flow and go straight to Calypso', 'jetpack-connection' ),
+						'type'        => 'boolean',
+					),
 					'redirect_uri' => array(
 						'description' => __( 'URI of the admin page where the user should be redirected after connection flow', 'jetpack-connection' ),
 						'type'        => 'string',
@@ -302,7 +310,7 @@ class REST_Connector {
 		$connection = new Manager();
 
 		$connection_status = array(
-			'isActive'          => $connection->has_connected_owner(), // TODO deprecate this.
+			'isActive'          => $connection->is_active(), // TODO deprecate this.
 			'isStaging'         => $status->is_staging_site(),
 			'isRegistered'      => $connection->is_connected(),
 			'isUserConnected'   => $connection->is_user_connected(),
@@ -339,15 +347,12 @@ class REST_Connector {
 	/**
 	 * Get plugins connected to the Jetpack.
 	 *
-	 * @param bool $rest_response Should we return a rest response or a simple array. Default to rest response.
-	 *
 	 * @since 1.13.1
-	 * @since 1.38.0 Added $rest_response param.
 	 *
 	 * @return WP_REST_Response|WP_Error Response or error object, depending on the request result.
 	 */
-	public static function get_connection_plugins( $rest_response = true ) {
-		$plugins = ( new Manager() )->get_connected_plugins();
+	public function get_connection_plugins() {
+		$plugins = $this->connection->get_connected_plugins();
 
 		if ( is_wp_error( $plugins ) ) {
 			return $plugins;
@@ -360,11 +365,7 @@ class REST_Connector {
 			}
 		);
 
-		if ( $rest_response ) {
-			return rest_ensure_response( array_values( $plugins ) );
-		}
-
-		return array_values( $plugins );
+		return rest_ensure_response( array_values( $plugins ) );
 	}
 
 	/**
@@ -397,6 +398,7 @@ class REST_Connector {
 		}
 
 		return new WP_Error( 'invalid_user_permission_activate_plugins', self::get_user_permissions_error_msg(), array( 'status' => rest_authorization_required_code() ) );
+
 	}
 
 	/**
@@ -430,8 +432,6 @@ class REST_Connector {
 	 * @return \WP_REST_Response|array
 	 */
 	public static function get_user_connection_data( $rest_response = true ) {
-		$blog_id = \Jetpack_Options::get_option( 'id' );
-
 		$connection = new Manager();
 
 		$current_user     = wp_get_current_user();
@@ -464,7 +464,6 @@ class REST_Connector {
 			'isMaster'    => $is_master_user,
 			'username'    => $current_user->user_login,
 			'id'          => $current_user->ID,
-			'blogId'      => $blog_id,
 			'wpcomUser'   => $wpcom_user_data,
 			'gravatar'    => get_avatar_url( $current_user->ID, 64, 'mm', '', array( 'force_display' => true ) ),
 			'permissions' => array(
@@ -493,6 +492,7 @@ class REST_Connector {
 		}
 
 		return $response;
+
 	}
 
 	/**
@@ -510,6 +510,7 @@ class REST_Connector {
 			self::get_user_permissions_error_msg(),
 			array( 'status' => rest_authorization_required_code() )
 		);
+
 	}
 
 	/**
@@ -530,13 +531,13 @@ class REST_Connector {
 			return false;
 		}
 
-		$signature = base64_decode( filter_var( wp_unslash( $_GET['signature'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$signature = base64_decode( $_GET['signature'] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 
 		$signature_data = wp_json_encode(
 			array(
-				'rest_route' => filter_var( wp_unslash( $_GET['rest_route'] ) ),
+				'rest_route' => $_GET['rest_route'],
 				'timestamp'  => (int) $_GET['timestamp'],
-				'url'        => filter_var( wp_unslash( $_GET['url'] ) ),
+				'url'        => wp_unslash( $_GET['url'] ),
 			)
 		);
 
@@ -675,9 +676,17 @@ class REST_Connector {
 		$redirect_uri = $request->get_param( 'redirect_uri' ) ? admin_url( $request->get_param( 'redirect_uri' ) ) : null;
 
 		if ( class_exists( 'Jetpack' ) ) {
-			$authorize_url = \Jetpack::build_authorize_url( $redirect_uri );
+			$authorize_url = \Jetpack::build_authorize_url( $redirect_uri, ! $request->get_param( 'no_iframe' ) );
 		} else {
+			if ( ! $request->get_param( 'no_iframe' ) ) {
+				add_filter( 'jetpack_use_iframe_authorization_flow', '__return_true' );
+			}
+
 			$authorize_url = $this->connection->get_authorization_url( null, $redirect_uri );
+
+			if ( ! $request->get_param( 'no_iframe' ) ) {
+				remove_filter( 'jetpack_use_iframe_authorization_flow', '__return_true' );
+			}
 		}
 
 		/**
@@ -710,8 +719,17 @@ class REST_Connector {
 	 * @return \WP_REST_Response|WP_Error
 	 */
 	public function connection_authorize_url( $request ) {
-		$redirect_uri  = $request->get_param( 'redirect_uri' ) ? admin_url( $request->get_param( 'redirect_uri' ) ) : null;
+		$redirect_uri = $request->get_param( 'redirect_uri' ) ? admin_url( $request->get_param( 'redirect_uri' ) ) : null;
+
+		if ( ! $request->get_param( 'no_iframe' ) ) {
+			add_filter( 'jetpack_use_iframe_authorization_flow', '__return_true' );
+		}
+
 		$authorize_url = $this->connection->get_authorization_url( null, $redirect_uri );
+
+		if ( ! $request->get_param( 'no_iframe' ) ) {
+			remove_filter( 'jetpack_use_iframe_authorization_flow', '__return_true' );
+		}
 
 		return rest_ensure_response(
 			array(

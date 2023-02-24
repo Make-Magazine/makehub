@@ -289,7 +289,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 			}
 
 			$filter = shortcode_atts( $args, $atts );
-			extract( shortcode_atts( $args, $atts ) ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
+			extract( shortcode_atts( $args, $atts ) );
 			$sno = 1;
 
 			if ( ( 'true' === $pagination ) && ( isset( $posts_per_page ) ) && ( ! empty( $posts_per_page ) ) ) {
@@ -502,7 +502,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		public function shortcode( $atts, $content = null, $code = '' ) {
 			global $learndash_shortcode_used;
 
-			extract( // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
+			extract(
 				shortcode_atts(
 					array(
 						'post_type'       => $code,
@@ -540,7 +540,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 			$template = apply_filters( 'sfwd_cpt_template', $template );
 			$buf      = do_shortcode( $template );
 
-			$shortcode_tags = $save_tags; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
+			$shortcode_tags = $save_tags;
 
 			$learndash_shortcode_used = true;
 

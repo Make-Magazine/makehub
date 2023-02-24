@@ -2,7 +2,8 @@
 /**
  * LearnDash Settings Metabox for Quiz Results Page Display & Content Options.
  *
- * @package LearnDash\Settings
+ * @package LearnDash
+ * @subpackage Settings
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -224,7 +225,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'               => esc_html__( 'Result Message(s)', 'learndash' ),
 					'value'               => $this->setting_option_values['resultGradeEnabled'],
 					'default'             => '',
-					'help_text'           => esc_html__( "When enabled, the first message will be displayed to ALL users. To customize the message based on earned score, add new Graduation Levels and set the 'From' field to the desired grade.", 'learndash' ),
+					'help_text'           => esc_html__( "When enabled, the first message will be diplayed to ALL users. To customize the message based on earned score, add new Graduation Levels and set the 'From' field to the desired grade.", 'learndash' ),
 					'options'             => array(
 						''   => '',
 						'on' => sprintf(

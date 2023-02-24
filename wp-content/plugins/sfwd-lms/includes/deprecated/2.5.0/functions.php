@@ -3,8 +3,8 @@
  * Deprecated functions from LD 2.5.0
  * The functions will be removed in a later version.
  *
- * @package LearnDash\Deprecated
- * @since 2.5.0
+ * @package LearnDash
+ * @subpackage Deprecated
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

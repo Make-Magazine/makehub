@@ -4,7 +4,6 @@
  * The functions will be removed in a later version.
  *
  * @package LearnDash\Deprecated
- * @since 3.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -463,23 +462,23 @@ if ( ! function_exists( 'wp_ajax_ld_course_navigation_admin_pager' ) ) {
 	}
 }
 
-if ( ! function_exists( 'lesson_hasassignments' ) ) { // cspell:disable-line.
+if ( ! function_exists( 'lesson_hasassignments' ) ) {
 	/**
 	 * Utility function to check whether a lesson has an assignment.
 	 *
 	 * @since 2.1.0
-	 * @deprecated 3.4.0 Use {@see 'learndash_lesson_hasassignments'} instead. // cspell:disable-line.
+	 * @deprecated 3.4.0 Use {@see 'learndash_lesson_hasassignments'} instead.
 	 *
 	 * @param WP_Post $post The assignment `WP_Post` object.
 	 *
 	 * @return boolean
 	 */
-	function lesson_hasassignments( $post ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound // cspell:disable-line.
+	function lesson_hasassignments( $post ) { //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 		if ( function_exists( '_deprecated_function' ) ) {
-			_deprecated_function( __FUNCTION__, '3.4.0', 'learndash_lesson_hasassignments' ); // cspell:disable-line.
+			_deprecated_function( __FUNCTION__, '3.4.0', 'learndash_lesson_hasassignments' );
 		}
 
-		return learndash_lesson_hasassignments( $post ); // cspell:disable-line.
+		return learndash_lesson_hasassignments( $post );
 	}
 }
 

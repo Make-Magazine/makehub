@@ -34,6 +34,7 @@ $tools = array(
 	'theme-tools/content-options.php',
 	'theme-tools/devicepx.php',
 	// Needed for VideoPress, so videos keep working in existing posts/pages when the module is deactivated.
+	'videopress/utility-functions.php',
 	'videopress/class.videopress-gutenberg.php',
 );
 

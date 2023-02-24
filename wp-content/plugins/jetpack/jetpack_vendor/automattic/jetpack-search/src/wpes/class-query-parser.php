@@ -452,6 +452,7 @@ class Query_Parser extends Query_Builder {
 				'should'
 			);
 		}
+
 	}
 
 	/*
@@ -690,7 +691,7 @@ class Query_Parser extends Query_Builder {
 				$broken = true;
 				break;
 			}
-			--$breakpoint;
+			$breakpoint--;
 		}
 		// if we weren't able to find a break, need to chop mid-word
 		if ( ! $broken ) {

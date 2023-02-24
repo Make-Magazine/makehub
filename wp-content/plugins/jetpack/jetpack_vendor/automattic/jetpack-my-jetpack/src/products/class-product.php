@@ -107,18 +107,16 @@ abstract class Product {
 	 * @return array
 	 */
 	public static function get_info() {
-		if ( static::$slug === null ) {
+		if ( is_null( static::$slug ) ) {
 			throw new \Exception( 'Product classes must declare the $slug attribute.' );
 		}
 		return array(
 			'slug'                     => static::$slug,
-			'plugin_slug'              => static::$plugin_slug,
 			'name'                     => static::get_name(),
 			'title'                    => static::get_title(),
 			'description'              => static::get_description(),
 			'long_description'         => static::get_long_description(),
 			'features'                 => static::get_features(),
-			'disclaimers'              => static::get_disclaimers(),
 			'status'                   => static::get_status(),
 			'pricing_for_ui'           => static::get_pricing_for_ui(),
 			'is_bundle'                => static::is_bundle_product(),
@@ -201,15 +199,6 @@ abstract class Product {
 	}
 
 	/**
-	 * Get the disclaimers corresponding to a feature
-	 *
-	 * @return ?array
-	 */
-	public static function get_disclaimers() {
-		return array();
-	}
-
-	/**
 	 * Checks whether the current plan (or purchases) of the site already supports the product
 	 *
 	 * Returns true if it supports. Return false if a purchase is still required.
@@ -220,19 +209,6 @@ abstract class Product {
 	 */
 	public static function has_required_plan() {
 		return true;
-	}
-
-	/**
-	 * Checks whether the product supports trial or not
-	 *
-	 * Returns true if it supports. Return false otherwise.
-	 *
-	 * Free products will always return false.
-	 *
-	 * @return boolean
-	 */
-	public static function has_trial_support() {
-		return false;
 	}
 
 	/**
@@ -279,19 +255,11 @@ abstract class Product {
 			// We only consider missing user connection an error when the Product is active.
 			if ( static::$requires_user_connection && ! ( new Connection_Manager() )->has_connected_owner() ) {
 				$status = 'error';
-			} elseif ( ! static::has_required_plan() ) { // We need needs_purchase here as well because some products we consider active without the required plan.
-				if ( static::has_trial_support() ) {
-					$status = 'needs_purchase_or_free';
-				} else {
-					$status = 'needs_purchase';
-				}
+			} elseif ( ! static::has_required_plan() ) {
+				$status = 'needs_purchase'; // We need needs_purchase here as well because some products we consider active without the required plan.
 			}
 		} elseif ( ! static::has_required_plan() ) {
-			if ( static::has_trial_support() ) {
-				$status = 'needs_purchase_or_free';
-			} else {
-				$status = 'needs_purchase';
-			}
+			$status = 'needs_purchase';
 		} else {
 			$status = 'inactive';
 		}
@@ -304,7 +272,7 @@ abstract class Product {
 	 * @return boolean
 	 */
 	public static function is_active() {
-		return static::is_plugin_active() && static::has_required_plan();
+		return static::is_plugin_active();
 	}
 
 	/**
@@ -353,11 +321,11 @@ abstract class Product {
 	}
 
 	/**
-	 * Perform the top level activation routines, which is installing and activating the required plugin
+	 * Activates the product by installing and activating its plugin
 	 *
-	 * @return bool|WP_Error
+	 * @return boolean|WP_Error
 	 */
-	private static function do_activation() {
+	public static function activate() {
 		if ( static::is_active() ) {
 			return true;
 		}
@@ -377,42 +345,7 @@ abstract class Product {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-
-		return true;
-	}
-
-	/**
-	 * Activates the product by installing and activating its plugin
-	 *
-	 * @return boolean|WP_Error
-	 */
-	final public static function activate() {
-
-		$result = self::do_activation();
-
-		$result = static::do_product_specific_activation( $result );
-
-		$product_slug = static::$slug;
-
-		/**
-		 * Fires after My Jetpack activates a product and filters the result
-		 * Use this filter to run additional routines for a product activation on stand-alone plugins
-		 *
-		 * @param bool|WP_Error $result The result of the previous steps of activation.
-		 */
-		$result = apply_filters( "my_jetpack_{$product_slug}_activation", $result );
-
-		return $result;
-	}
-
-	/**
-	 * Override this method to perform product specific activation routines.
-	 *
-	 * @param bool|WP_Error $current_result Is the result of the top level activation actions. You probably won't do anything if it is an WP_Error.
-	 * @return bool|WP_Error
-	 */
-	public static function do_product_specific_activation( $current_result ) {
-		return $current_result;
+		return is_null( $result );
 	}
 
 	/**
@@ -424,45 +357,4 @@ abstract class Product {
 		deactivate_plugins( static::get_installed_plugin_filename() );
 		return true;
 	}
-
-	/**
-	 * Returns filtered Jetpack plugin actions links.
-	 *
-	 * @param array $actions - Jetpack plugin action links.
-	 * @return array           Filtered Jetpack plugin actions links.
-	 */
-	public static function get_plugin_actions_links( $actions ) {
-		// My Jetpack action link.
-		$my_jetpack_home_link = array(
-			'jetpack-home' => sprintf(
-				'<a href="%1$s" title="%3$s">%2$s</a>',
-				admin_url( 'admin.php?page=my-jetpack' ),
-				__( 'My Jetpack', 'jetpack-my-jetpack' ),
-				__( 'My Jetpack dashboard', 'jetpack-my-jetpack' )
-			),
-		);
-
-		// Otherwise, add it to the beginning of the array.
-		return array_merge( $my_jetpack_home_link, $actions );
-	}
-
-	/**
-	 * Extend the plugin action links.
-	 */
-	public static function extend_plugin_action_links() {
-
-		$filenames = static::get_plugin_filename();
-		if ( ! is_array( $filenames ) ) {
-			$filenames = array( $filenames );
-		}
-
-		foreach ( $filenames as $filename ) {
-			$hook     = 'plugin_action_links_' . $filename;
-			$callback = array( static::class, 'get_plugin_actions_links' );
-			if ( ! has_filter( $hook, $callback ) ) {
-				add_filter( $hook, $callback, 20, 2 );
-			}
-		}
-	}
-
 }

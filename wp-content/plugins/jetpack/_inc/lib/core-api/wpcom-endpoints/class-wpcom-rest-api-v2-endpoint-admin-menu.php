@@ -83,7 +83,11 @@ class WPCOM_REST_API_V2_Endpoint_Admin_Menu extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		require_once JETPACK__PLUGIN_DIR . '/modules/masterbar/admin-menu/load.php';
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			require_once WP_CONTENT_DIR . '/mu-plugins/masterbar/admin-menu/load.php';
+		} else {
+			require_once JETPACK__PLUGIN_DIR . '/modules/masterbar/admin-menu/load.php';
+		}
 
 		// All globals need to be declared for menu items to properly register.
 		global $admin_page_hooks, $menu, $menu_order, $submenu, $_wp_menu_nopriv, $_wp_submenu_nopriv; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
@@ -343,7 +347,11 @@ class WPCOM_REST_API_V2_Endpoint_Admin_Menu extends WP_REST_Controller {
 	 */
 	private function prepare_dashicon( $icon ) {
 		if ( empty( $this->dashicon_set ) ) {
-			$this->dashicon_list = include JETPACK__PLUGIN_DIR . '/modules/masterbar/admin-menu/dashicon-set.php';
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				$this->dashicon_list = include WP_CONTENT_DIR . '/mu-plugins/masterbar/admin-menu/dashicon-set.php';
+			} else {
+				$this->dashicon_list = include JETPACK__PLUGIN_DIR . '/modules/masterbar/admin-menu/dashicon-set.php';
+			}
 		}
 
 		if ( isset( $this->dashicon_list[ $icon ] ) && $this->dashicon_list[ $icon ] ) {
@@ -378,10 +386,7 @@ class WPCOM_REST_API_V2_Endpoint_Admin_Menu extends WP_REST_Controller {
 			}
 
 			// Disallow other external URLs.
-			if ( 0 !== strpos( $url, get_site_url() ) ) {
-				return '';
-			}
-			// The URL matches that of the site, treat it as an internal URL.
+			return '';
 		}
 
 		// Internal URLs.

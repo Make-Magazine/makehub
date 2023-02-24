@@ -1,5 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-
+<?php
 // POST /sites/%s/plugins/%s/delete
 new Jetpack_JSON_API_Plugins_Delete_Endpoint(
 	array(
@@ -48,46 +47,24 @@ new Jetpack_JSON_API_Plugins_Delete_Endpoint(
 	)
 );
 
-/**
- * Plugins delete endpoint class.
- *
- * POST  /sites/%s/plugins/%s/delete
- */
 class Jetpack_JSON_API_Plugins_Delete_Endpoint extends Jetpack_JSON_API_Plugins_Endpoint {
 
-	/**
-	 * Needed capabilities.
-	 *
-	 * @var string
-	 */
+	// POST  /sites/%s/plugins/%s/delete
 	protected $needed_capabilities = 'delete_plugins';
-
-	/**
-	 * The action.
-	 *
-	 * @var string
-	 */
 	protected $action = 'delete';
 
-	/**
-	 * The delete function.
-	 *
-	 * @return bool|WP_Error
-	 */
 	protected function delete() {
 
 		foreach ( $this->plugins as $plugin ) {
 
 			if ( Jetpack::is_plugin_active( $plugin ) ) {
-				$error                  = __( 'You cannot delete a plugin while it is active on the main site.', 'jetpack' );
-				$this->log[ $plugin ][] = $error;
+				$error = $this->log[ $plugin ][] = __( 'You cannot delete a plugin while it is active on the main site.', 'jetpack' );
 				continue;
 			}
 
 			$result = delete_plugins( array( $plugin ) );
 			if ( is_wp_error( $result ) ) {
-				$error                  = $result->get_error_message();
-				$this->log[ $plugin ][] = $error;
+				$error = $this->log[ $plugin ][] = $result->get_error_message();
 			} else {
 				$this->log[ $plugin ][] = 'Plugin deleted';
 			}

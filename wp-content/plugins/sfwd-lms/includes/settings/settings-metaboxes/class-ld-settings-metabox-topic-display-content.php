@@ -429,7 +429,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -466,10 +466,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'context'     => array( 'view', 'edit' ),
 										'readonly'    => true,
 									),
-								),
-								'arg_options' => array(
-									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
-									'validate_callback' => null,
 								),
 							),
 						),
@@ -509,7 +505,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'schema' => array(
 								'field_key'   => 'video_enabled',
 								// translators: placeholder: Topic.
-								'description' => sprintf( esc_html_x( '%s Video Progression Enabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'description' => sprintf( esc_html_x( '%s Video Progression Eabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -579,7 +575,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								'field_key'   => 'video_shown',
 								// translators: placeholder: Topic.
 								'description' => sprintf( esc_html_x( '%s Video Shown before or after sub-steps', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
-								'default'     => 'BEFORE',
+								'default'     => 'ANY',
 								'type'        => 'string',
 								'enum'        => array(
 									'BEFORE',
@@ -644,7 +640,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'          => esc_html__( 'Video Pause on Window Unfocused', 'learndash' ),
 					'type'           => 'checkbox-switch',
 					'value'          => $this->setting_option_values['lesson_video_focus_pause'],
-					'help_text'      => esc_html__( 'Pause the video if user switches to a different window.', 'learndash' ),
+					'help_text'      => esc_html__( 'Pause the video if user switches to a different window. VooPlayer not supported.', 'learndash' ),
 					'default'        => '',
 					'options'        => array(
 						'on' => '',
@@ -667,7 +663,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'          => esc_html__( 'Video Resume', 'learndash' ),
 					'type'           => 'checkbox-switch',
 					'value'          => $this->setting_option_values['lesson_video_track_time'],
-					'help_text'      => esc_html__( 'Allows user to resume video position. Uses browser cookie.', 'learndash' ),
+					'help_text'      => esc_html__( 'Allows user to resume video position. Uses browser cookie. VooPlayer not supported.', 'learndash' ),
 					'default'        => '',
 					'options'        => array(
 						'on' => '',
@@ -698,7 +694,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'description' => '',
 							'tooltip'     => sprintf(
 								// translators: placeholder: topic.
-								esc_html_x( 'Cannot be enabled while %s timer or Video progression are enabled', 'placeholder: topic', 'learndash' ),
+								esc_html_x( 'Cannot be enabled while %s timer or Video progression are enabled', 'placeholder: toic', 'learndash' ),
 								learndash_get_custom_label_lower( 'topic' )
 							),
 						),

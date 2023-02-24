@@ -4,7 +4,8 @@
  *
  * This file contains functions to handle import of the LearnDash Topic
  *
- * @package LearnDash\Import
+ * @package LearnDash
+ * @subpackage LearnDash
  * @since 1.0.0
  */
 
@@ -29,7 +30,7 @@ if ( ( ! class_exists( 'LearnDash_Import_Topic' ) ) && ( class_exists( 'LearnDas
 		 *
 		 * @var string $dest_post_type
 		 */
-		protected $dest_post_type = 'sfwd-topic';
+		protected $dest_post_type   = 'sfwd-topic';
 
 		/**
 		 * Source Post Type
@@ -44,6 +45,13 @@ if ( ( ! class_exists( 'LearnDash_Import_Topic' ) ) && ( class_exists( 'LearnDas
 		 * @var string $dest_taxonomy
 		 */
 		protected $dest_taxonomy = 'ld_topic_tag';
+
+		/**
+		 * Constructor
+		 */
+		public function __construct() {
+			parent::__construct();
+		}
 
 		/**
 		 * Duplicate post

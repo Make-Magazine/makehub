@@ -304,7 +304,7 @@ if ( ! class_exists( 'Jetpack_EU_Cookie_Law_Widget' ) ) {
 			}
 
 			// Show the banner again if a setting has been changed.
-			setcookie( self::$cookie_name, '', time() - 86400, '/', COOKIE_DOMAIN, is_ssl(), false ); // phpcs:ignore Jetpack.Functions.SetCookie -- Fine to have accessible.
+			setcookie( self::$cookie_name, '', time() - 86400, '/' );
 
 			return $instance;
 		}
@@ -325,8 +325,6 @@ if ( ! class_exists( 'Jetpack_EU_Cookie_Law_Widget' ) ) {
 			return $value;
 		}
 	}
-
-	// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed -- TODO: Move these functions to some other file.
 
 	/**
 	 * Register Jetpack_EU_Cookie_Law_Widget widget.

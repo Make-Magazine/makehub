@@ -15,6 +15,7 @@ if ( ! Jetpack::is_module_active( 'videopress' ) ) {
 		'dns-prefetch'
 	);
 
+	include_once JETPACK__PLUGIN_DIR . 'modules/videopress/utility-functions.php';
 	include_once JETPACK__PLUGIN_DIR . 'modules/videopress/shortcode.php';
 
 }

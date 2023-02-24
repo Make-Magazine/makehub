@@ -18,10 +18,6 @@
 	margin: 0;
 }
 
-div.jp-relatedposts .jp-relatedposts-headline em:after {
-	content: ":";
-}
-
 #page .entry-content div.sharedaddy h3,
 #page .entry-summary div.sharedaddy h3,
 #page .entry-content h3.sd-title,
@@ -43,7 +39,7 @@ div.jp-relatedposts .jp-relatedposts-headline em:after {
 .wp-multiplayer,
 .PDS_Poll,
 .CSS_Poll,
-.entry-content .jetpack-slideshow-window {
+.entry-content .slideshow-window {
 	margin-bottom: 24px;
 }
 
@@ -51,7 +47,7 @@ div.jp-relatedposts .jp-relatedposts-headline em:after {
 	margin-bottom: 0;
 }
 
-.entry-content .jetpack-slideshow-window {
+.entry-content .slideshow-window {
 	border-radius: 0;
 }
 
@@ -151,10 +147,6 @@ img[id*="botd"] {
 
 .widget_authors li:last-child {
 	margin-bottom: 0;
-}
-
-.widget_authors img {
-	margin-right: 5px;
 }
 
 /* Contact Info Widget */

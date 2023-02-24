@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Admin Shortcodes TinyMCE Class.
+ * LearnDash Admin Shortcods TinyMCE Class.
  *
  * @since 2.4.0
  * @package LearnDash\Settings\Shortcodes
@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 	/**
-	 * Class for LearnDash Admin Shortcodes TinyMCE.
+	 * Class for LearnDash Admin Shortcods TinyMCE.
 	 *
 	 * @since 2.4.0
 	 */
 	class LearnDash_Shortcodes_TinyMCE {
 
 		/**
-		 * Shortcode assets
+		 * Shortocde assets
 		 *
 		 * @var array learndash_admin_shortcodes_assets
 		 */
@@ -179,8 +179,10 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 			);
 			$learndash_assets_loaded['scripts']['sfwd-module-script'] = __FUNCTION__;
 
-			$data            = array();
-			$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
+			$data = array();
+			if ( ! isset( $data['ajaxurl'] ) ) {
+				$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
+			}
 
 			$data = array( 'json' => wp_json_encode( $data ) );
 			wp_localize_script( 'sfwd-module-script', 'sfwd_data', $data );
@@ -230,13 +232,13 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			// The wp_verify_nonce() call is just a few lines below.
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$fields_args = shortcode_atts( $fields_args, $_POST['atts'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
+			$fields_args = shortcode_atts( $fields_args, $_POST['atts'] );
 
 			if ( ( empty( $fields_args['nonce'] ) ) || ( empty( $fields_args['pagenow'] ) ) ) {
 				die();
 			}
 
-			if ( ( empty( $fields_args['post_type'] ) ) && ( ! empty( $fields_args['typenow'] ) ) ) { // @phpstan-ignore-line -- false positive of does not exist.
+			if ( ( empty( $fields_args['post_type'] ) ) && ( ! empty( $fields_args['typenow'] ) ) ) {
 				$fields_args['post_type'] = $fields_args['typenow'];
 			}
 
@@ -310,9 +312,6 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/course_content.php';
 				$shortcode_sections['course_content'] = new LearnDash_Shortcodes_Section_course_content( $fields_args );
 
-				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_navigation.php';
-				$shortcode_sections['ld_navigation'] = new LearnDash_Shortcodes_Section_ld_navigation( $fields_args );
-
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_course_expire_status.php';
 				$shortcode_sections['ld_course_expire_status'] = new LearnDash_Shortcodes_Section_ld_course_expire_status( $fields_args );
 
@@ -334,23 +333,16 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/groupinfo.php';
 			$shortcode_sections['groupinfo'] = new LearnDash_Shortcodes_Section_groupinfo( $fields_args );
 
-			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/quizinfo.php';
-			$shortcode_sections['quizinfo'] = new LearnDash_Shortcodes_Section_quizinfo( $fields_args );
+			if ( 'sfwd-certificates' === $fields_args['typenow'] ) {
+				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/quizinfo.php';
+				$shortcode_sections['quizinfo'] = new LearnDash_Shortcodes_Section_quizinfo( $fields_args );
+			}
 
 			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/usermeta.php';
 			$shortcode_sections['usermeta'] = new LearnDash_Shortcodes_Section_usermeta( $fields_args );
 
 			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_registration.php';
 			$shortcode_sections['ld_registration'] = new LearnDash_Shortcodes_Section_ld_registration( $fields_args );
-
-			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_infobar.php';
-			$shortcode_sections['ld_infobar'] = new LearnDash_Shortcodes_Section_ld_infobar( $fields_args );
-
-			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/ld_materials.php';
-			$shortcode_sections['ld_materials'] = new LearnDash_Shortcodes_Section_ld_materials( $fields_args );
-
-			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/shortcodes-sections/learndash_user_status.php';
-			$shortcode_sections['learndash_user_status'] = new LearnDash_Shortcodes_Section_learndash_user_status( $fields_args );
 
 				/**
 				 * Filters TinyMCE shortcode content arguments.

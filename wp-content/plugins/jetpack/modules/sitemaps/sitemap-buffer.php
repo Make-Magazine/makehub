@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Sitemaps (per the protocol) are essentially lists of XML fragments;
  * lists which are subject to size constraints. The Jetpack_Sitemap_Buffer
@@ -139,7 +139,7 @@ abstract class Jetpack_Sitemap_Buffer {
 	 * @return bool True if the append succeeded, False if not.
 	 */
 	public function append( $array ) {
-		if ( $array === null ) {
+		if ( is_null( $array ) ) {
 			return true;
 		}
 
@@ -270,8 +270,7 @@ abstract class Jetpack_Sitemap_Buffer {
 
 		if ( null === $parent ) {
 			$return_string = true;
-			$root          = new DOMDocument();
-			$parent        = $root;
+			$parent        = $root = new DOMDocument();
 		}
 
 		if ( is_array( $array ) ) {

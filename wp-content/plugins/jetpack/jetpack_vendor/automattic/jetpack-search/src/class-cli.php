@@ -11,10 +11,6 @@ use \WP_CLI;
 use \WP_CLI_Command;
 use \WP_Error;
 
-if ( ! class_exists( 'WP_CLI_Command' ) ) {
-	return;
-}
-
 /**
  * Provide functionality by WPCLI.
  */
@@ -63,7 +59,7 @@ class CLI extends WP_CLI_Command {
 		}
 		$user_info = get_user_by( $get_user_by, (string) $user );
 		if ( ! $user_info ) {
-			return new WP_Error( 'user_not_found', "Could not find user '{$user}' by {$get_user_by}." );
+			return new WP_Error( 'user_not_found', "Could not find user '${user}' by ${get_user_by}." );
 		}
 		return wp_set_current_user( $user_info->ID );
 	}

@@ -46,7 +46,7 @@ if ( ! empty( $group_courses ) ) :
 	 */
 	?>
 
-	<div class="<?php echo esc_attr( $table_class ); ?>" id="<?php echo esc_attr( 'ld-item-list-' . $group_id ); ?>" data-ld-expand-list="true" data-ld-expand-id="<?php echo esc_attr( 'ld-item-list-' . $group_id ); ?>">
+	<div class="<?php echo esc_attr( $table_class ); ?>" id="<?php echo esc_attr( 'ld-item-list-' . $group_id ); ?>" data-ld-expand-list="true">
 		<?php
 		/**
 		 * Fires before the group courses listing.

@@ -32,11 +32,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settings field.
+		 * Function to crete the settiings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the output.
+		 * @param array $field_args An array of field arguments used to process the ouput.
 		 *
 		 * @return void
 		 */
@@ -157,8 +157,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 				$html .= '<span class="label-text';
 				if ( count( $field_args['options'] ) > 1 ) {
-					 // phpcs:ignore CSpell: CSS changes needed when updating spelling.
-					$html .= ' label-text-multple'; // cspell:disable-line.
+					$html .= ' label-text-multple';
 				}
 				$html .= '">';
 

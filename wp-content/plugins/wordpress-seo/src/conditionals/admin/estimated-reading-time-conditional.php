@@ -43,8 +43,7 @@ class Estimated_Reading_Time_Conditional implements Conditional {
 	public function is_met() {
 		// Check if we are in our Elementor ajax request (for saving).
 		if ( \wp_doing_ajax() ) {
-			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- This deprecation will be addressed later.
-			$post_action = $this->input_helper->filter( \INPUT_POST, 'action', @\FILTER_SANITIZE_STRING );
+			$post_action = $this->input_helper->filter( \INPUT_POST, 'action', \FILTER_SANITIZE_STRING );
 			if ( $post_action === 'wpseo_elementor_save' ) {
 				return true;
 			}

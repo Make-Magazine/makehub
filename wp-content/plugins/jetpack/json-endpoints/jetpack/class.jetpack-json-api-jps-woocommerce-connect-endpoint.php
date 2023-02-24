@@ -1,23 +1,10 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 
-/**
- * JPS WooCommerce connect endpoint.
- */
 class Jetpack_JSON_API_JPS_WooCommerce_Connect_Endpoint extends Jetpack_JSON_API_Endpoint {
 
-	/**
-	 * Needed capabilities.
-	 *
-	 * @var string
-	 */
 	protected $needed_capabilities = 'manage_options';
 
-	/**
-	 * The result.
-	 *
-	 * @return array|WP_Error
-	 */
-	public function result() {
+	function result() {
 		$input       = $this->input();
 		$helper_data = get_option( 'woocommerce_helper_data', array() );
 
@@ -47,14 +34,7 @@ class Jetpack_JSON_API_JPS_WooCommerce_Connect_Endpoint extends Jetpack_JSON_API
 		);
 	}
 
-	/**
-	 * Validate input.
-	 *
-	 * @param object $object - the object we're validating.
-	 *
-	 * @return bool|WP_Error
-	 */
-	public function validate_input( $object ) {
+	function validate_input( $object ) {
 		$input = $this->input();
 
 		if ( empty( $input['access_token'] ) ) {

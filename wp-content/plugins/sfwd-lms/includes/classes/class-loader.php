@@ -21,9 +21,6 @@ require_once 'class-ldlms-model-quiz.php';
 require_once 'class-ldlms-model-question.php';
 require_once 'class-ldlms-model-group.php';
 
-require_once 'class-ldlms-model-exam.php';
-require_once 'class-ldlms-model-exam-question.php';
-
 require_once 'class-ldlms-model-course-steps.php';
 require_once 'class-ldlms-model-quiz-questions.php';
 

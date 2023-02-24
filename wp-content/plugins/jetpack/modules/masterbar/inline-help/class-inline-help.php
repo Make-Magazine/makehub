@@ -102,6 +102,7 @@ class Inline_Help {
 			)
 		);
 		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+
 	}
 
 	/**

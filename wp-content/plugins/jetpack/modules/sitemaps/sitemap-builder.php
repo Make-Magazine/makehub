@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Build the sitemap tree.
  *
@@ -38,18 +38,12 @@ if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
  * Simple class for rendering an empty sitemap with a short TTL
  */
 class Jetpack_Sitemap_Buffer_Empty extends Jetpack_Sitemap_Buffer {
-	/**
-	 * Jetpack_Sitemap_Buffer_Empty constructor.
-	 */
+
 	public function __construct() {
 		parent::__construct( JP_SITEMAP_MAX_ITEMS, JP_SITEMAP_MAX_BYTES, '1970-01-01 00:00:00' );
 
 		$this->doc->appendChild(
 			$this->doc->createComment( "generator='jetpack-" . JETPACK__VERSION . "'" )
-		);
-
-		$this->doc->appendChild(
-			$this->doc->createComment( 'Jetpack_Sitemap_Buffer_Empty' )
 		);
 
 		$this->doc->appendChild(
@@ -60,9 +54,6 @@ class Jetpack_Sitemap_Buffer_Empty extends Jetpack_Sitemap_Buffer {
 		);
 	}
 
-	/**
-	 * Returns a DOM element for an empty sitemap.
-	 */
 	protected function get_root_element() {
 		if ( ! isset( $this->root ) ) {
 			$this->root = $this->doc->createElement( 'sitemapindex' );
@@ -83,7 +74,7 @@ class Jetpack_Sitemap_Buffer_Empty extends Jetpack_Sitemap_Buffer {
  *
  * @since 4.8.0
  */
-class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound,Generic.Classes.OpeningBraceSameLine.ContentAfterBrace
+class Jetpack_Sitemap_Builder {
 
 	/**
 	 * Librarian object for storing and retrieving sitemap data.
@@ -622,7 +613,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 				JP_SITEMAP_BATCH_SIZE
 			);
 
-			if ( null == $posts ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+			if ( null == $posts ) { // WPCS: loose comparison ok.
 				$any_posts_left = false;
 				break;
 			}
@@ -709,7 +700,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 		 * @param DOMDocument      $doc Data tree for sitemap.
 		 * @param string           $last_modified Date of last modification.
 		 */
-		$tree = apply_filters( // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		$tree = apply_filters(
 			'jetpack_print_sitemap',
 			$buffer->get_document(),
 			$buffer->last_modified()
@@ -772,7 +763,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 				JP_SITEMAP_BATCH_SIZE
 			);
 
-			if ( null == $posts ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+			if ( null == $posts ) { // WPCS: loose comparison ok.
 				$any_posts_left = false;
 				break;
 			}
@@ -851,7 +842,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 				JP_SITEMAP_BATCH_SIZE
 			);
 
-			if ( null == $posts ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+			if ( null == $posts ) { // WPCS: loose comparison ok.
 				$any_posts_left = false;
 				break;
 			}
@@ -959,7 +950,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 			);
 
 			// If there were no posts to get, make a note.
-			if ( null == $posts ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+			if ( null == $posts ) { // WPCS: loose comparison ok.
 				$any_sitemaps_left = false;
 				break;
 			}
@@ -1031,6 +1022,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 			'last_modified' => $row['post_date'],
 		);
 	}
+
 
 	/**
 	 * This is served instead of a 404 when the master sitemap is requested
@@ -1232,7 +1224,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 		}
 
 		$parent_url = get_permalink( get_post( $post->post_parent ) );
-		if ( '' == $parent_url ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+		if ( '' == $parent_url ) { // WPCS: loose comparison ok.
 			$parent_url = get_permalink( $post );
 		}
 
@@ -1245,6 +1237,9 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 				),
 			),
 		);
+
+		$item_array['url']['image:image']['image:title']   = $post->post_title;
+		$item_array['url']['image:image']['image:caption'] = $post->post_excerpt;
 
 		/**
 		 * Filter associative array with data to build <url> node
@@ -1313,7 +1308,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 		}
 
 		$parent_url = esc_url( get_permalink( get_post( $post->post_parent ) ) );
-		if ( '' == $parent_url ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- WPCS: loose comparison ok.
+		if ( '' == $parent_url ) { // WPCS: loose comparison ok.
 			$parent_url = esc_url( get_permalink( $post ) );
 		}
 
@@ -1325,7 +1320,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 		/** This filter is already documented in core/wp-includes/feed.php */
 		$content = apply_filters( 'the_content_feed', $content, 'rss2' );
 
-		// Include thumbnails for VideoPress videos, use blank image for others.
+		// Include thumbnails for VideoPress videos, use blank image for others
 		if ( 'complete' === get_post_meta( $post->ID, 'videopress_status', true ) && has_post_thumbnail( $post ) ) {
 			$video_thumbnail_url = get_the_post_thumbnail_url( $post );
 		} else {
@@ -1393,9 +1388,6 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 	 */
 	private function post_to_news_sitemap_item( $post ) {
 
-		// Exclude posts with meta 'jetpack_seo_noindex' set true from the Jetpack news sitemap.
-		add_filter( 'jetpack_sitemap_news_skip_post', array( 'Jetpack_SEO_Posts', 'exclude_noindex_posts_from_jetpack_sitemap' ), 10, 2 );
-
 		/**
 		 * Filter condition to allow skipping specific posts in news sitemap.
 		 *
@@ -1441,7 +1433,7 @@ class Jetpack_Sitemap_Builder { // phpcs:ignore Generic.Files.OneObjectStructure
 				'lastmod'   => jp_sitemap_datetime( $post->post_modified_gmt ),
 				'news:news' => array(
 					'news:publication'      => array(
-						'news:name'     => html_entity_decode( get_bloginfo( 'name' ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
+						'news:name'     => html_entity_decode( get_bloginfo( 'name' ) ),
 						'news:language' => $language,
 					),
 					/** This filter is already documented in core/wp-includes/feed.php */

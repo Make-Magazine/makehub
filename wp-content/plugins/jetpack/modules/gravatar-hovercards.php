@@ -137,7 +137,7 @@ function grofiles_gravatars_to_append( $author = null ) {
 	static $authors = array();
 
 	// Get.
-	if ( $author === null ) {
+	if ( is_null( $author ) ) {
 		return array_keys( $authors );
 	}
 
@@ -202,14 +202,15 @@ function grofiles_get_avatar( $avatar, $author ) {
 				$response_body = wp_cache_get( $cache_key, $cache_group );
 				if ( false === $response_body ) {
 					$response = wp_remote_get( esc_url_raw( 'https://en.gravatar.com/' . $email_hash . '.json' ) );
+
 					if ( is_array( $response ) && ! is_wp_error( $response ) ) {
 						$response_body = json_decode( $response['body'] );
 						wp_cache_set( $cache_key, $response_body, $cache_group, 60 * MINUTE_IN_SECONDS );
 					}
 				}
 
-				$profile      = isset( $response_body->entry[0] ) ? $response_body->entry[0] : null;
-				$display_name = isset( $profile->displayName ) ? $profile->displayName : ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$profile      = $response_body->entry[0];
+				$display_name = $profile->displayName; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				$location     = isset( $profile->currentLocation ) ? $profile->currentLocation : ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				$description  = isset( $profile->aboutMe ) ? $profile->aboutMe : ''; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -269,7 +270,7 @@ function grofiles_attach_cards() {
 			$cu      = wp_get_current_user();
 			$my_hash = md5( $cu->user_email );
 		} elseif ( ! empty( $_COOKIE[ 'comment_author_email_' . COOKIEHASH ] ) ) {
-			$my_hash = md5( filter_var( wp_unslash( $_COOKIE[ 'comment_author_email_' . COOKIEHASH ] ) ) );
+			$my_hash = md5( $_COOKIE[ 'comment_author_email_' . COOKIEHASH ] );
 		} else {
 			$my_hash = '';
 		}
@@ -392,7 +393,7 @@ function grofiles_hovercards_data( $author ) {
 			continue;
 		}
 		$data = call_user_func( $callback, $author, $key );
-		if ( $data !== null ) {
+		if ( ! is_null( $data ) ) {
 			$r[ $key ] = $data;
 		}
 	}

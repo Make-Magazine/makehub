@@ -24,7 +24,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 	 * @since 3.3.0
 	 * @uses WP_REST_Posts_Controller
 	 */
-	class LD_REST_Posts_Controller_V2 extends WP_REST_Posts_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
+	class LD_REST_Posts_Controller_V2 extends WP_REST_Posts_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * REST API version.
@@ -164,7 +164,6 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 
 			add_filter( "rest_{$post_type}_query", array( $this, 'rest_query_filter' ), 20, 2 );
 			add_filter( "rest_prepare_{$post_type}", array( $this, 'rest_prepare_response_filter' ), 20, 3 );
-			add_filter( "rest_pre_insert_{$post_type}", array( $this, 'rest_pre_insert_filter' ), 20, 2 );
 
 			add_action( "rest_after_insert_{$post_type}", array( $this, 'rest_after_insert_action' ), 20, 3 );
 		}
@@ -311,7 +310,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 			$this->swap_rest_registered_fields( $this->post_type );
 
 			/**
-			 * Initialize the metaboxes so we can apply the updates changes.
+			 * Initialize themetaboxes so we can apply the updates changes.
 			 */
 			if ( ! empty( $this->metaboxes ) ) {
 				foreach ( $this->metaboxes as &$metabox ) {
@@ -361,7 +360,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 			}
 
 			/**
-			 * Initialize the metaboxes so we can apply the updates changes.
+			 * Initialize themetaboxes so we can apply the updates changes.
 			 */
 			if ( ! empty( $this->metaboxes ) ) {
 				foreach ( $this->metaboxes as &$metabox ) {
@@ -451,39 +450,6 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 					$wp_rest_additional_fields[ $object_type ] = $this->saved_rest_registered_fields[ $object_type ];
 				}
 			}
-		}
-
-		/**
-		 * Filters a post before it is inserted via the REST API.
-		 *
-		 * Called from the WP REST filter 'rest_pre_insert_{$post_type}'
-		 *
-		 * @since 4.2.1
-		 *
-		 * @param stdClass        $prepared_post An object representing a single post prepared
-		 *                                       for inserting or updating the database.
-		 * @param WP_REST_Request $request       Request object.
-		 *
-		 * @return stdClass $prepared_post
-		 */
-		public function rest_pre_insert_filter( $prepared_post, $request ) {
-
-			// Materials content.
-			if ( ( isset( $this->rest_fields['materials_enabled'] ) ) && ( isset( $this->rest_fields['materials'] ) ) ) {
-				if ( true === $request['materials_enabled'] ) {
-					if ( is_string( $request['materials'] ) ) {
-						$prepared_post->materials = $request['materials'];
-					} elseif ( isset( $request['materials']['raw'] ) ) {
-						$prepared_post->materials = $request['content']['raw'];
-					} else {
-						$prepared_post->materials = '';
-					}
-				} else {
-					$prepared_post->materials = '';
-				}
-			}
-
-			return $prepared_post;
 		}
 
 		/**

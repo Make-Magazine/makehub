@@ -215,6 +215,7 @@ class Jetpack_Cxn_Test_Base {
 		}
 
 		return true;
+
 	}
 
 	/**
@@ -470,6 +471,7 @@ class Jetpack_Cxn_Test_Base {
 		}
 
 		return $result;
+
 	}
 
 	/**

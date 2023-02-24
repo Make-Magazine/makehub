@@ -46,6 +46,7 @@ class Jetpack_Display_Posts_Widget extends Jetpack_Display_Posts_Widget__Base {
 		}
 
 		return $cached_data;
+
 	}
 
 	/**
@@ -231,6 +232,7 @@ class Jetpack_Display_Posts_Widget extends Jetpack_Display_Posts_Widget__Base {
 		$urls = array_unique( $urls );
 
 		return $urls;
+
 	}
 
 	// MOCKABLES.

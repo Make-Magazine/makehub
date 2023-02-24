@@ -439,11 +439,7 @@ class Masterbar {
 			}
 		}
 
-		if ( isset( $jetpack_locale ) ) {
-			return $jetpack_locale;
-		}
-
-		return 'en_US';
+		return $jetpack_locale;
 	}
 
 	/**
@@ -474,7 +470,7 @@ class Masterbar {
 	 * Hide language dropdown on user edit form.
 	 */
 	public function hide_language_dropdown() {
-		add_filter( 'get_available_languages', '__return_empty_array' );
+		add_filter( 'get_available_languages', '__return_null' );
 	}
 
 	/**
@@ -620,6 +616,7 @@ class Masterbar {
 				),
 			)
 		);
+
 	}
 
 	/**
@@ -1256,12 +1253,11 @@ class Masterbar {
 				)
 			);
 
-			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 			if ( is_admin() ) {
 				// In wp-admin the `return` query arg will return to that page after closing the Customizer.
 				$customizer_url = add_query_arg(
 					array(
-						'return' => rawurlencode( site_url( $request_uri ) ),
+						'return' => rawurlencode( site_url( $_SERVER['REQUEST_URI'] ) ),
 					),
 					wp_customize_url()
 				);
@@ -1272,7 +1268,7 @@ class Masterbar {
 				 * non-home URLs won't work unless we undo domain mapping
 				 * since the Customizer preview is unmapped to always have HTTPS.
 				 */
-				$current_page   = '//' . $this->primary_site_slug . $request_uri;
+				$current_page   = '//' . $this->primary_site_slug . $_SERVER['REQUEST_URI'];
 				$customizer_url = add_query_arg( array( 'url' => rawurlencode( $current_page ) ), wp_customize_url() );
 			}
 
@@ -1289,7 +1285,8 @@ class Masterbar {
 				)
 			);
 			$meta        = array(
-				'class' => 'mb-icon inline-action',
+				'class' => 'mb-icon',
+				'class' => 'inline-action',
 			);
 			$href        = false;
 

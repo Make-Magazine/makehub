@@ -29,4 +29,5 @@ function jetpack_bitly_og_tag() {
 	} elseif ( isset( $GLOBALS['posts'] ) && $GLOBALS['posts'][0]->ID > 0 ) {
 		printf( "<meta property=\"bitly:url\" content=\"%s\" /> \n", esc_attr( $GLOBALS['bitly']->get_bitly_link_for_post_id( $GLOBALS['posts'][0]->ID ) ) );
 	}
+
 }

@@ -1,5 +1,8 @@
-const path = require( 'path' );
+/**
+ * External dependencies
+ */
 const jetpackWebpackConfig = require( '@automattic/jetpack-webpack-config/webpack' );
+const path = require( 'path' );
 
 module.exports = [
 	{

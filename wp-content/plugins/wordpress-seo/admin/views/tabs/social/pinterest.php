@@ -35,21 +35,4 @@ echo '</p>';
 
 $yform->textinput( 'pinterestverify', __( 'Pinterest confirmation', 'wordpress-seo' ) );
 
-/**
- * WARNING: This hook is intended for internal use only.
- * Don't use it in your code as it will be removed shortly.
- */
-do_action( 'wpseo_admin_pinterest_section_internal' );
-
-/**
- * Admin Pinterest section hook.
- *
- * @deprecated 19.10 No replacement available.
- */
-do_action_deprecated(
-	'wpseo_admin_pinterest_section',
-	[],
-	'19.10',
-	'',
-	'This action is going away with no replacement. If you want to add settings that interact with Yoast SEO, please create your own settings page.'
-);
+do_action( 'wpseo_admin_pinterest_section' );

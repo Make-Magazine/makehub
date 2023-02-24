@@ -25,14 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string  $content   The shortcode content. Default empty.
  *    @type int     $course_id Course ID. Default false.
  *    @type int     $user_id   User ID. Default false.
- *    @type boolean $autop     Whether to replace line breaks with paragraph elements. Default true.
+ *    @type boolean $autop     Whether to replace linebreaks with paragraph elements. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
- * @param string $shortcode_slug The shortcode slug. Default 'course_notstarted'.
  *
  * @return string The `course_notstarted` shortcode output.
  */
-function learndash_course_notstarted_shortcode( $atts = array(), $content = '', $shortcode_slug = 'course_notstarted' ) {
+function learndash_course_notstarted_shortcode( $atts = array(), $content = '' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -60,9 +59,6 @@ function learndash_course_notstarted_shortcode( $atts = array(), $content = '', 
 			$atts['autop'] = false;
 		}
 
-		/** This filter is documented in includes/shortcodes/ld_course_resume.php */
-		$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
-
 		/**
 		 * Filters `course_notstarted` shortcode attributes.
 		 *
@@ -81,4 +77,4 @@ function learndash_course_notstarted_shortcode( $atts = array(), $content = '', 
 	}
 	return '';
 }
-add_shortcode( 'course_notstarted', 'learndash_course_notstarted_shortcode', 10, 3 );
+add_shortcode( 'course_notstarted', 'learndash_course_notstarted_shortcode', 10, 2 );

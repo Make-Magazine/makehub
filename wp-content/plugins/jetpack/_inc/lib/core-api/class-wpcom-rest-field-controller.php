@@ -1,64 +1,38 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
+
+// @todo - nicer API for array values?
+
 /**
  * `WP_REST_Controller` is basically a wrapper for `register_rest_route()`
  * `WPCOM_REST_API_V2_Field_Controller` is a mostly-analogous wrapper for `register_rest_field()`
- *
- * @todo - nicer API for array values?
- *
- * @package automattic/jetpack
- */
-
-/**
- * Abstract WPCOM_REST_API_V2_Field_Controller class extended for different fields needed in the Jetpack plugin.
  */
 abstract class WPCOM_REST_API_V2_Field_Controller {
 	/**
-	 * The REST Object Type(s) to which the field should be added.
-	 *
-	 * @var string|string[]
+	 * @var string|string[] $object_type The REST Object Type(s) to which the field should be added.
 	 */
 	protected $object_type;
 
 	/**
-	 * The name of the REST API field to add.
-	 *
-	 * @var string
+	 * @var string $field_name The name of the REST API field to add.
 	 */
 	protected $field_name;
 
-	/**
-	 * Constructor
-	 */
 	public function __construct() {
 		if ( ! $this->object_type ) {
-			_doing_it_wrong(
-				'WPCOM_REST_API_V2_Field_Controller::$object_type',
-				sprintf(
-					/* translators: %s: object_type */
-					esc_html__( "Property '%s' must be overridden.", 'jetpack' ),
-					'object_type'
-				),
-				'jetpack-6.8'
-			);
+			/* translators: %s: object_type */
+			_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::$object_type', sprintf( __( "Property '%s' must be overridden.", 'jetpack' ), 'object_type' ), 'Jetpack 6.8' );
 			return;
 		}
 
 		if ( ! $this->field_name ) {
-			_doing_it_wrong(
-				'WPCOM_REST_API_V2_Field_Controller::$field_name',
-				sprintf(
-					/* translators: %s: field_name */
-					esc_html__( "Property '%s' must be overridden.", 'jetpack' ),
-					'field_name'
-				),
-				'jetpack-6.8'
-			);
+			/* translators: %s: field_name */
+			_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::$field_name', sprintf( __( "Property '%s' must be overridden.", 'jetpack' ), 'field_name' ), 'Jetpack 6.8' );
 			return;
 		}
 
 		add_action( 'rest_api_init', array( $this, 'register_fields' ) );
 
-		// do this again later to collect any CPTs that get registered later.
+		// do this again later to collect any CPTs that get registered later
 		add_action( 'restapi_theme_init', array( $this, 'register_fields' ), 20 );
 	}
 
@@ -67,9 +41,6 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 */
 	public function register_fields() {
 		foreach ( (array) $this->object_type as $object_type ) {
-			if ( $this->is_registered( $object_type ) ) {
-				continue;
-			}
 			register_rest_field(
 				$object_type,
 				$this->field_name,
@@ -83,23 +54,10 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	}
 
 	/**
-	 * Checks if the field is already registered for the object_type
-	 *
-	 * @param string $object_type The name of the object type.
-	 * @return boolean Whether the field has been registered for the type.
-	 */
-	public function is_registered( $object_type ) {
-		global $wp_rest_additional_fields;
-
-		return ! empty( $wp_rest_additional_fields[ $object_type ][ $this->field_name ] );
-	}
-
-	/**
 	 * Ensures the response matches the schema and request context.
 	 *
-	 * @param mixed           $value   Value passed in request.
-	 * @param WP_REST_Request $request WP API request.
-	 *
+	 * @param mixed           $value
+	 * @param WP_REST_Request $request
 	 * @return mixed
 	 */
 	private function prepare_for_response( $value, $request ) {
@@ -119,8 +77,7 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 *
 	 * If there is no default, returns the type's falsey value.
 	 *
-	 * @param array $schema Schema to validate against.
-	 *
+	 * @param array $schema
 	 * @return mixed
 	 */
 	final public function get_default_value( $schema ) {
@@ -128,7 +85,7 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 			return $schema['default'];
 		}
 
-		// If you have something more complicated, use $schema['default'].
+		// If you have something more complicated, use $schema['default'];
 		switch ( isset( $schema['type'] ) ? $schema['type'] : 'null' ) {
 			case 'string':
 				return '';
@@ -153,25 +110,17 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 * This cannot be extended: implement `->get()` instead.
 	 *
 	 * @param mixed           $object_data Probably an array. Whatever the endpoint returns.
-	 * @param string          $field_name  Should always match `->field_name`.
-	 * @param WP_REST_Request $request     WP API request.
-	 * @param string          $object_type Should always match `->object_type`.
-	 *
+	 * @param string          $field_name Should always match `->field_name`
+	 * @param WP_REST_Request $request
+	 * @param string          $object_type Should always match `->object_type`
 	 * @return mixed
 	 */
-	final public function get_for_response( $object_data, $field_name, $request, $object_type ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	final public function get_for_response( $object_data, $field_name, $request, $object_type ) {
 		$permission_check = $this->get_permission_check( $object_data, $request );
 
 		if ( ! $permission_check ) {
-			_doing_it_wrong(
-				'WPCOM_REST_API_V2_Field_Controller::get_permission_check',
-				sprintf(
-					/* translators: %s: get_permission_check() */
-					esc_html__( "Method '%s' must return either true or WP_Error.", 'jetpack' ),
-					'get_permission_check'
-				),
-				'jetpack-6.8'
-			);
+			/* translators: %s: get_permission_check() */
+			_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::get_permission_check', sprintf( __( "Method '%s' must return either true or WP_Error.", 'jetpack' ), 'get_permission_check' ), 'Jetpack 6.8' );
 			return $this->get_default_value( $this->get_schema() );
 		}
 
@@ -189,35 +138,21 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 *
 	 * This cannot be extended: implement `->update()` instead.
 	 *
-	 * @param mixed           $value       The new value for the field.
-	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post).
-	 * @param string          $field_name  Should always match `->field_name`.
-	 * @param WP_REST_Request $request     WP API request.
-	 * @param string          $object_type Should always match `->object_type`.
+	 * @param mixed           $value The new value for the field.
+	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post)
+	 * @param string          $field_name Should always match `->field_name`
+	 * @param WP_REST_Request $request
+	 * @param string          $object_type Should always match `->object_type`
 	 * @return void|WP_Error
 	 */
-	final public function update_from_request( $value, $object_data, $field_name, $request, $object_type ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	final public function update_from_request( $value, $object_data, $field_name, $request, $object_type ) {
 		$permission_check = $this->update_permission_check( $value, $object_data, $request );
 
 		if ( ! $permission_check ) {
-			_doing_it_wrong(
-				'WPCOM_REST_API_V2_Field_Controller::update_permission_check',
-				sprintf(
-					/* translators: %s: update_permission_check() */
-					esc_html__( "Method '%s' must return either true or WP_Error.", 'jetpack' ),
-					'update_permission_check'
-				),
-				'jetpack-6.8'
-			);
-
-			return new WP_Error(
-				'invalid_user_permission',
-				sprintf(
-					/* translators: %s: the name of an API response field */
-					__( "You are not allowed to access the '%s' field.", 'jetpack' ),
-					$this->field_name
-				)
-			);
+			/* translators: %s: update_permission_check() */
+			_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::update_permission_check', sprintf( __( "Method '%s' must return either true or WP_Error.", 'jetpack' ), 'update_permission_check' ), 'Jetpack 6.8' );
+			/* translators: %s: the name of an API response field */
+			return new WP_Error( 'invalid_user_permission', sprintf( __( "You are not allowed to access the '%s' field.", 'jetpack' ), $this->field_name ) );
 		}
 
 		if ( is_wp_error( $permission_check ) ) {
@@ -235,83 +170,50 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 * Permission Check for the field's getter. Must be implemented in the inheriting class.
 	 *
 	 * @param mixed           $object_data Whatever the endpoint would return for its response.
-	 * @param WP_REST_Request $request     WP API request.
-	 *
+	 * @param WP_REST_Request $request
 	 * @return true|WP_Error
 	 */
-	public function get_permission_check( $object_data, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		_doing_it_wrong(
-			'WPCOM_REST_API_V2_Field_Controller::get_permission_check',
-			sprintf(
-				/* translators: %s: method name. */
-				esc_html__( "Method '%s' must be overridden.", 'jetpack' ),
-				__METHOD__
-			),
-			'jetpack-6.8'
-		);
-		return null;
+	public function get_permission_check( $object_data, $request ) {
+		/* translators: %s: get_permission_check() */
+		_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::get_permission_check', sprintf( __( "Method '%s' must be overridden.", 'jetpack' ), __METHOD__ ), 'Jetpack 6.8' );
 	}
 
 	/**
 	 * The field's "raw" getter. Must be implemented in the inheriting class.
 	 *
 	 * @param mixed           $object_data Whatever the endpoint would return for its response.
-	 * @param WP_REST_Request $request     WP API request.
+	 * @param WP_REST_Request $request
 	 * @return mixed
 	 */
-	public function get( $object_data, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		_doing_it_wrong(
-			'WPCOM_REST_API_V2_Field_Controller::get',
-			sprintf(
-				/* translators: %s: method name. */
-				esc_html__( "Method '%s' must be overridden.", 'jetpack' ),
-				__METHOD__
-			),
-			'jetpack-6.8'
-		);
+	public function get( $object_data, $request ) {
+		/* translators: %s: get() */
+		_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::get', sprintf( __( "Method '%s' must be overridden.", 'jetpack' ), __METHOD__ ), 'Jetpack 6.8' );
 	}
 
 	/**
 	 * Permission Check for the field's setter. Must be implemented in the inheriting class.
 	 *
 	 * @param mixed           $value The new value for the field.
-	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post).
-	 * @param WP_REST_Request $request     WP API request.
-	 *
+	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post)
+	 * @param WP_REST_Request $request
 	 * @return true|WP_Error
 	 */
-	public function update_permission_check( $value, $object_data, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		_doing_it_wrong(
-			'WPCOM_REST_API_V2_Field_Controller::update_permission_check',
-			sprintf(
-				/* translators: %s: method name. */
-				esc_html__( "Method '%s' must be overridden.", 'jetpack' ),
-				__METHOD__
-			),
-			'jetpack-6.8'
-		);
-		return null;
+	public function update_permission_check( $value, $object_data, $request ) {
+		/* translators: %s: update_permission_check() */
+		_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::update_permission_check', sprintf( __( "Method '%s' must be overridden.", 'jetpack' ), __METHOD__ ), 'Jetpack 6.8' );
 	}
 
 	/**
 	 * The field's "raw" setter. Must be implemented in the inheriting class.
 	 *
 	 * @param mixed           $value The new value for the field.
-	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post).
-	 * @param WP_REST_Request $request     WP API request.
-	 *
+	 * @param mixed           $object_data Probably a WordPress object (e.g., WP_Post)
+	 * @param WP_REST_Request $request
 	 * @return mixed
 	 */
-	public function update( $value, $object_data, $request ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		_doing_it_wrong(
-			'WPCOM_REST_API_V2_Field_Controller::update',
-			sprintf(
-				/* translators: %s: method name. */
-				esc_html__( "Method '%s' must be overridden.", 'jetpack' ),
-				__METHOD__
-			),
-			'jetpack-6.8'
-		);
+	public function update( $value, $object_data, $request ) {
+		/* translators: %s: update() */
+		_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::update', sprintf( __( "Method '%s' must be overridden.", 'jetpack' ), __METHOD__ ), 'Jetpack 6.8' );
 	}
 
 	/**
@@ -340,23 +242,13 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 * @return array
 	 */
 	public function get_schema() {
-		_doing_it_wrong(
-			'WPCOM_REST_API_V2_Field_Controller::get_schema',
-			sprintf(
-				/* translators: %s: method name. */
-				esc_html__( "Method '%s' must be overridden.", 'jetpack' ),
-				__METHOD__
-			),
-			'jetpack-6.8'
-		);
-		return null;
+		/* translators: %s: get_schema() */
+		_doing_it_wrong( 'WPCOM_REST_API_V2_Field_Controller::get_schema', sprintf( __( "Method '%s' must be overridden.", 'jetpack' ), __METHOD__ ), 'Jetpack 6.8' );
 	}
 
 	/**
-	 * Ensure that our request matches its expected context.
-	 *
-	 * @param array  $schema  Schema to validate against.
-	 * @param string $context REST API Request context.
+	 * @param array  $schema
+	 * @param string $context REST API Request context
 	 * @return bool
 	 */
 	private function is_valid_for_context( $schema, $context ) {
@@ -382,10 +274,9 @@ abstract class WPCOM_REST_API_V2_Field_Controller {
 	 *
 	 * This function handles that recursion.
 	 *
-	 * @param mixed  $value   Value passed to API request.
-	 * @param array  $schema  Schema to validate against.
-	 * @param string $context REST API Request context.
-	 *
+	 * @param mixed  $value
+	 * @param array  $schema
+	 * @param string $context REST API Request context
 	 * @return mixed Filtered $value
 	 */
 	final public function filter_response_by_context( $value, $schema, $context ) {

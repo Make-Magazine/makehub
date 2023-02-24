@@ -4,7 +4,6 @@
 		"button",
 		"calendly",
 		"contact-form",
-		"contact-form/salesforce-lead-form",
 		"contact-info",
 		"donations",
 		"eventbrite",
@@ -18,7 +17,6 @@
 		"map",
 		"markdown",
 		"opentable",
-		"payments",
 		"pinterest",
 		"podcast-player",
 		"publicize",
@@ -39,25 +37,13 @@
 		"subscriptions",
 		"tiled-gallery",
 		"videopress",
-		"wordads",
-		"payments-intro",
-		"post-publish-qr-post-panel",
-		"payment-buttons"
+		"wordads"
 	],
 	"beta": [
-		"amazon",
-		"google-docs-embed",
-		"launchpad-save-modal",
-		"post-publish-promote-post-panel",
-		"recipe",
-		"videopress/video",
-		"videopress/video-chapters"
+		"amazon"
 	],
 	"experimental": [
-		"ai-image",
-		"ai-paragraph",
 		"anchor-fm",
-		"blogging-prompts",
 		"premium-content",
 		"conversation",
 		"dialogue"
@@ -79,11 +65,13 @@
 		"opentable",
 		"pinterest",
 		"rating-star",
+		"recurring-payments",
 		"related-posts",
 		"repeat-visitor",
 		"revue",
 		"simple-payments",
 		"slideshow",
+		"subscriptions",
 		"tiled-gallery",
 		"videopress",
 		"wordads"

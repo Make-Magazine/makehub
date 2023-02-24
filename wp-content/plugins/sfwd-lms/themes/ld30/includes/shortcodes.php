@@ -104,9 +104,7 @@ function learndash_login_shortcode( $atts = array(), $content = '' ) {
 	 */
 	$atts = apply_filters( 'learndash_login_shortcode_atts', $atts );
 
-	$filter_args   = array();
-	$filter_action = '';
-
+	$filter_args = array();
 	if ( 'logout' === $atts['action'] ) {
 		$filter_action = 'learndash-login-shortcode-logout';
 
@@ -252,17 +250,15 @@ function learndash_login_shortcode( $atts = array(), $content = '' ) {
 	 */
 	$filter_args['url'] = apply_filters( 'learndash_login_url', $filter_args['url'], $atts['action'], $atts );
 
-	if ( ! empty( $filter_action ) ) {
-		/**
-		 * Filters the filter arguments depending on the action which is login and logout.
-		 *
-		 * The dynamic part depends on the action attribute it will be learndash-login-shortcode-login for the login action and learndash-login-shortcode-logout for the logout action.
-		 *
-		 * @param array $filter_args An Array of filter arguments with identifiers like label, icon, placement, class.
-		 * @param array $atts        Shortcode Attributes.
-		 */
-		$filter_args = apply_filters( $filter_action, $filter_args, $atts ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Let's keep it this way for now.
-	}
+	/**
+	 * Filters the filter arguments depending on the action which is login and logout.
+	 *
+	 * The dynamic part depends on the action attribute it will be learndash-login-shortcode-login for the login action and learndash-login-shortcode-logout for the logout action.
+	 *
+	 * @param array  $filter_args An Array of filter arguments with identifiers like label, icon, placement, class.
+	 * @param array  $atts       Shortcode Attributes.
+	 */
+	$filter_args = apply_filters( $filter_action, $filter_args, $atts );
 
 	$filter_args['class'] .= ' ld-login-text ld-login-button ' . ( isset( $filter_args['button'] ) && 'true' == $filter_args['button'] ? 'ld-button' : '' );
 
@@ -297,3 +293,54 @@ function learndash_login_shortcode( $atts = array(), $content = '' ) {
 	return $content;
 }
 add_shortcode( 'learndash_login', 'learndash_login_shortcode' );
+
+/**
+ * Builds the `learndash_user_status` shortcode output.
+ *
+ * @since 3.0.0
+ *
+ * @param array $atts {
+ *    An array of shortcode attributes.
+ *
+ *    @type string $user_id User ID.
+ *    @type string $return  Whether to return the output.
+ * }
+ */
+function learndash_user_status_shortcode( $atts = array() ) {
+
+	if ( isset( $atts['user_id'] ) && ! empty( $atts['user_id'] ) ) {
+
+		$user_id = intval( $atts['user_id'] );
+		unset( $atts['user_id'] );
+
+	} else {
+
+		$current_user = wp_get_current_user();
+
+		if ( empty( $current_user->ID ) ) {
+			return;
+		}
+
+		$user_id = $current_user->ID;
+
+	}
+
+	if ( empty( $atts ) ) {
+		$atts = array( 'return' => true );
+	} elseif ( ! isset( $atts['return'] ) ) {
+		$atts['return'] = true;
+	}
+
+	$course_info = SFWD_LMS::get_course_info( $user_id, $atts );
+
+	learndash_get_template_part(
+		'shortcodes/user-status.php',
+		array(
+			'course_info'    => $course_info,
+			'shortcode_atts' => $atts,
+		),
+		true
+	);
+
+}
+add_shortcode( 'learndash_user_status', 'learndash_user_status_shortcode' );

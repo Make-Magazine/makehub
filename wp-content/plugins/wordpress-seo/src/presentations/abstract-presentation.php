@@ -2,13 +2,11 @@
 
 namespace Yoast\WP\SEO\Presentations;
 
-use AllowDynamicProperties;
 use Exception;
 
 /**
  * The abstract presentation class.
  */
-#[AllowDynamicProperties]
 class Abstract_Presentation {
 
 	/**

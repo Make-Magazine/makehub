@@ -81,7 +81,7 @@ function learndash_group_emails() {
 						'wp_mail_failed',
 						function ( $mail_error ) {
 							global $group_email_error;
-							$group_email_error = $mail_error; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- It is what it is.
+							$group_email_error = $mail_error;
 						}
 					);
 
@@ -114,7 +114,7 @@ function learndash_group_emails() {
 							do_action( 'ld_group_email_users_after', $mail_args, $mail_ret );
 
 							if ( ! $mail_ret ) {
-								if ( is_wp_error( $group_email_error ) ) { // @phpstan-ignore-line - No time to investigate.
+								if ( is_wp_error( $group_email_error ) ) {
 									$group_email_error_message[ $user->user_email ] = $group_email_error->get_error_message();
 								}
 								wp_send_json_error(
@@ -130,7 +130,7 @@ function learndash_group_emails() {
 						} else {
 							wp_send_json_error(
 								array(
-									'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unexpected condition from filter: ld_group_email_users_args', 'learndash' ) . '</span>',
+									'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unepected condition from filter: ld_group_email_users_args', 'learndash' ) . '</span>',
 								)
 							);
 						}
@@ -161,12 +161,12 @@ function learndash_group_emails() {
 					}
 				}
 
-				$group_email_error = null; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- It is what it is.
+				$group_email_error = null;
 				add_action(
 					'wp_mail_failed',
 					function ( $mail_error ) {
 						global $group_email_error;
-						$group_email_error = $mail_error; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- It is what it is.
+						$group_email_error = $mail_error;
 					}
 				);
 
@@ -201,7 +201,7 @@ function learndash_group_emails() {
 						if ( ! $mail_ret ) {
 							$group_email_error_message = '';
 
-							if ( is_wp_error( $group_email_error ) ) { // @phpstan-ignore-line - No time to investigate.
+							if ( is_wp_error( $group_email_error ) ) {
 								$group_email_error_message = $group_email_error->get_error_message();
 							}
 							wp_send_json_error(
@@ -233,7 +233,7 @@ function learndash_group_emails() {
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unexpected condition from filter: ld_group_email_users_args', 'learndash' ) . '</span>',
+								'message' => '<span style="color:red">' . esc_html__( 'Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ) . '</span>',
 							)
 						);
 					}
@@ -349,7 +349,7 @@ add_filter( 'woocommerce_prevent_admin_access', 'learndash_check_group_leader_ac
  * @return array An array of course IDs.
  */
 function learndash_group_enrolled_courses( $group_id = 0, $bypass_transient = false ) {
-	$course_ids = array();
+	$courses_ids = array();
 
 	$group_id = absint( $group_id );
 	if ( ! empty( $group_id ) ) {
@@ -456,7 +456,8 @@ function learndash_get_groups_courses_ids( $user_id = 0, $group_ids = array() ) 
 		} else {
 			$group_ids = array_intersect( $group_leader_group_ids, $group_ids );
 		}
-	} elseif ( ! learndash_is_admin_user( $user_id ) ) {
+	} elseif ( learndash_is_admin_user( $user_id ) ) {
+	} else {
 		return $course_ids;
 	}
 
@@ -502,7 +503,7 @@ function learndash_group_has_course( $group_id = 0, $course_id = 0 ) {
  *
  * @since 2.1.0
  *
- * @param int $group_id  Group ID.
+ * @param int $group_id  Groupd ID.
  * @param int $course_id Course ID.
  *
  * @return string The timestamp of when a course is available to the group.
@@ -662,19 +663,19 @@ function learndash_user_group_enrolled_to_course_from( $user_id = 0, $course_id 
  *
  * @since 2.1.0
  *
- * @global wpdb   $wpdb    WordPress database abstraction object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int     $user_id User ID.
- * @param boolean $menu    Optional. Menu. Default false.
+ * @param boolean $_MENU   Optional. Menu. Default false.
  *
  * @return array A list of group ids managed by user.
  */
-function learndash_get_administrators_group_ids( $user_id, $menu = false ) {
+function learndash_get_administrators_group_ids( $user_id, $_MENU = false ) {
 	$group_ids = array();
 
 	$user_id = absint( $user_id );
 	if ( ! empty( $user_id ) ) {
-		if ( ( learndash_is_admin_user( $user_id ) ) && ( true !== $menu ) ) {
+		if ( ( learndash_is_admin_user( $user_id ) ) && ( true !== $_MENU ) ) {
 			$group_ids = learndash_get_groups( true, $user_id );
 		} else {
 			$all_user_meta = get_user_meta( $user_id );
@@ -892,6 +893,10 @@ function learndash_set_users_group_ids( $user_id = 0, $user_groups_new = array()
 				ld_update_group_access( $user_id, $group_id, true );
 			}
 		}
+
+		// Finally clear our cache for other services.
+		$transient_key = 'learndash_user_groups_' . $user_id;
+		LDLMS_Transients::delete( $transient_key );
 	}
 }
 
@@ -969,6 +974,7 @@ function learndash_set_course_groups( $course_id = 0, $course_groups_new = array
 	}
 }
 
+
 /**
  * Gets the list of users ids that belong to a group.
  *
@@ -979,20 +985,17 @@ function learndash_set_course_groups( $course_id = 0, $course_groups_new = array
  *
  * @return array An array of user ids that belong to group.
  */
-function learndash_get_groups_user_ids( $group_id = 0, bool $bypass_transient = false ): array {
+function learndash_get_groups_user_ids( $group_id = 0, $bypass_transient = false ) {
+	$group_user_ids = array();
+
 	$group_id = absint( $group_id );
-
-	if ( empty( $group_id ) ) {
-		return array();
+	if ( ! empty( $group_id ) ) {
+		$group_users = learndash_get_groups_users( $group_id, $bypass_transient );
+		if ( ! empty( $group_users ) ) {
+			$group_user_ids = wp_list_pluck( $group_users, 'ID' );
+		}
 	}
-
-	$group_users = learndash_get_groups_users( $group_id, $bypass_transient );
-
-	if ( empty( $group_users ) ) {
-		return array();
-	}
-
-	return wp_list_pluck( $group_users, 'ID' );
+	return $group_user_ids;
 }
 
 /**
@@ -1500,8 +1503,8 @@ function learndash_is_user_in_group( $user_id = 0, $group_id = 0 ) {
  *
  * Fires on `delete_post` hook.
  *
- * @todo  restrict function to only run if post type is group
- *        will run against db every time a post is deleted
+ * @todo  restrict function to only run if post type is grou
+ *        will run against db everytime a post is deleted
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -1509,7 +1512,7 @@ function learndash_is_user_in_group( $user_id = 0, $group_id = 0 ) {
  *
  * @param int $pid ID of the group being deleted.
  *
- * @return boolean|void Returns true if the deletion was successful.
+ * @return boolean|void Returns true if the deletion was successfull.
  */
 function learndash_delete_group( $pid = 0 ) {
 	global $wpdb;
@@ -1548,9 +1551,9 @@ add_action( 'delete_post', 'learndash_delete_group', 10 );
  * @param int     $group_id Group ID.
  * @param boolean $remove   Optional. Whether to remove user from the group. Default false.
  *
- * @return bool true on action success otherwise false.
+ * @return boolean true on action success otherwise false.
  */
-function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ): bool {
+function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ) {
 	$action_success = false;
 
 	$user_id  = absint( $user_id );
@@ -1607,15 +1610,6 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ):
 				do_action( 'ld_added_group_access', $user_id, $group_id );
 			}
 		}
-
-		// Purge User Groups cache.
-		$transient_key = 'learndash_user_groups_' . $user_id;
-		LDLMS_Transients::delete( $transient_key );
-
-		// Purge User Courses cache.
-		$transient_key = 'learndash_user_courses_' . $user_id;
-		LDLMS_Transients::delete( $transient_key );
-
 	}
 
 	return $action_success;
@@ -1688,57 +1682,58 @@ function ld_update_course_group_access( $course_id = 0, $group_id = 0, $remove =
  * @since 2.2.1
  * @since 3.4.0 Added return boolean.
  *
- * @param int  $user_id       User ID.
- * @param int  $group_id      Group ID.
- * @param bool $remove_access Optional. Whether to remove user from the group. Default false.
+ * @param int     $user_id  User ID.
+ * @param int     $group_id Group ID.
+ * @param boolean $remove   Optional. Whether to remove user from the group. Default false.
  *
- * @return bool True on action success, otherwise false.
+ * @return boolean true on action success otherwise false.
  */
-function ld_update_leader_group_access( int $user_id, int $group_id, bool $remove_access = false ): bool {
-	if ( empty( $user_id ) || empty( $group_id ) ) {
-		return false;
+function ld_update_leader_group_access( $user_id = 0, $group_id = 0, $remove = false ) {
+	$action_success = false;
+
+	$user_id  = absint( $user_id );
+	$group_id = absint( $group_id );
+
+	if ( ( ! empty( $user_id ) ) && ( ! empty( $group_id ) ) ) {
+		$activity_type = 'group_access_leader';
+
+		if ( $remove ) {
+			$group_enrolled = get_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, true );
+			if ( ! empty( $group_enrolled ) ) {
+				$action_success = true;
+
+				delete_user_meta( $user_id, 'learndash_group_leaders_' . $group_id );
+
+				/**
+				 * Fires after the user is removed from group leader access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_removed_leader_group_access', $user_id, $group_id );
+			}
+		} else {
+			$group_enrolled = get_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, true );
+			if ( empty( $group_enrolled ) ) {
+				$action_success = true;
+				update_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, $group_id );
+
+				/**
+				 * Fires after the user is added to the group leader access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_added_leader_group_access', $user_id, $group_id );
+			}
+		}
 	}
 
-	$group_leader_meta_key = 'learndash_group_leaders_' . $group_id;
-	$has_group_leader_meta = ! empty( get_user_meta( $user_id, $group_leader_meta_key, true ) );
-
-	// Adding (not updating, updating always returns false).
-
-	if ( ! $remove_access && ! $has_group_leader_meta ) {
-		update_user_meta( $user_id, $group_leader_meta_key, $group_id );
-
-		/**
-		 * Fires after the user is added to the group as a leader.
-		 *
-		 * @since 2.1.0
-		 *
-		 * @param int $user_id  User ID.
-		 * @param int $group_id Group ID.
-		 */
-		do_action( 'ld_added_leader_group_access', $user_id, $group_id );
-
-		return true;
-	}
-
-	// Removing.
-
-	if ( $remove_access && $has_group_leader_meta ) {
-		delete_user_meta( $user_id, $group_leader_meta_key );
-
-		/**
-		 * Fires after the user is removed from a group as a leader.
-		 *
-		 * @since 2.1.0
-		 *
-		 * @param int $user_id  User ID.
-		 * @param int $group_id Group ID.
-		 */
-		do_action( 'ld_removed_leader_group_access', $user_id, $group_id );
-
-		return true;
-	}
-
-	return false;
+	return $action_success;
 }
 
 /**
@@ -1830,9 +1825,10 @@ function learndash_get_group_course_quiz_ids( $group_id = 0 ) {
  *
  * @param integer $group_id Group ID to check.
  * @param integer $user_id  User ID to check.
- * @param boolean $recalc   Force the logic to recheck all courses.
+ * @param boolean $recalc  Force the logic to recheck all courses.
  */
 function learndash_get_user_group_progress( $group_id = 0, $user_id = 0, $recalc = false ) {
+
 	static $progress_group_user = array();
 
 	$group_id = absint( $group_id );
@@ -2230,7 +2226,7 @@ function learndash_get_user_group_completed_percentage( $group_id = 0, $user_id 
 function learndash_group_course_completed( $course_data = array() ) {
 
 	if ( ( isset( $course_data['course'] ) ) && ( isset( $course_data['user'] ) ) ) {
-		learndash_update_group_course_user_progress( $course_data['course']->ID, $course_data['user']->ID, true );
+		learndash_update_group_course_user_progress( $course_data['course']->ID, $course_data['user']->ID );
 	}
 }
 add_action( 'learndash_course_completed', 'learndash_group_course_completed', 30, 1 );
@@ -2243,14 +2239,13 @@ add_action( 'learndash_course_completed', 'learndash_group_course_completed', 30
  *
  * @param integer $course_id Course ID.
  * @param integer $user_id   User ID.
- * @param boolean $recalc    Force the logic to recheck all courses.
  */
-function learndash_update_group_course_user_progress( $course_id = 0, $user_id = 0, $recalc = false ) {
+function learndash_update_group_course_user_progress( $course_id = 0, $user_id = 0 ) {
 	$course_id = absint( $course_id );
 	$user_id   = absint( $user_id );
 
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $course_id ) ) ) {
-		$user_group_ids = learndash_get_users_group_ids( $user_id );
+		$user_group_ids = learndash_get_users_group_ids( $course_id );
 		if ( empty( $user_group_ids ) ) {
 			return;
 		}
@@ -2263,7 +2258,7 @@ function learndash_update_group_course_user_progress( $course_id = 0, $user_id =
 		$group_ids = array_intersect( $user_group_ids, $course_group_ids );
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_id ) {
-				learndash_get_user_group_progress( $group_id, $user_id, $recalc );
+				learndash_get_user_group_progress( $group_id, $user_id );
 			}
 		}
 	}
@@ -2346,13 +2341,6 @@ function learndash_validate_groups( $group_ids = array() ) {
 function learndash_get_group_courses_per_page( $group_id = 0 ) {
 	$group_courses_per_page = 0;
 
-	// From the WP > Settings > Reading > Posts per page.
-	$group_courses_per_page = (int) get_option( 'posts_per_page' );
-
-	// From the LearnDash > Settings > General > Global Pagination Settings > Shortcodes & Widgets per page.
-	$group_courses_per_page = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page', $group_courses_per_page );
-
-	// From the LearnDash > Courses > Settings > Global Group Management > Group Table Pagination > Courses per page.
 	$group_global_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Groups_Management_Display' );
 	if ( ( isset( $group_global_settings['group_pagination_enabled'] ) ) && ( 'yes' === $group_global_settings['group_pagination_enabled'] ) ) {
 		if ( isset( $group_global_settings['group_pagination_courses'] ) ) {
@@ -2424,7 +2412,7 @@ function learndash_get_group_courses_order( $group_id = 0 ) {
 	 *
 	 * @since 3.2.0
 	 *
-	 * @param array $group_courses_args An array of group courses order arguments.
+	 * @param array $group_courses_args An arry of group courses order arguments.
 	 * @param int   $group_id          Group ID.
 	 */
 	return apply_filters( 'learndash_group_courses_order', $group_courses_args, $group_id );
@@ -2435,14 +2423,12 @@ function learndash_get_group_courses_order( $group_id = 0 ) {
  * Gets the list of enrolled courses for a group.
  *
  * @since 2.1.0
- * @since 4.0.0 Added `$query_args` parameter.
  *
- * @param int   $group_id   Optional. Group ID. Default 0.
- * @param array $query_args Optional. An array of query arguments to get lesson list. Default empty array. (@since 4.0.0).
+ * @param int $group_id Optional. Group ID. Default 0.
  *
  * @return array An array of course IDs.
  */
-function learndash_get_group_courses_list( $group_id = 0, $query_args = array() ) {
+function learndash_get_group_courses_list( $group_id = 0 ) {
 	global $course_pager_results;
 
 	$courses_ids = array();
@@ -2450,35 +2436,19 @@ function learndash_get_group_courses_list( $group_id = 0, $query_args = array() 
 	$group_id = absint( $group_id );
 	if ( ! empty( $group_id ) ) {
 
-		if ( ! isset( $query_args['paged'] ) ) {
-			$query_args['paged'] = 1;
-			if ( isset( $_GET['ld-group-courses-page'] ) ) {
-				$query_args['paged'] = absint( $_GET['ld-group-courses-page'] );
-			}
+		$group_course_paged = 1;
+		if ( isset( $_GET['ld-group-courses-page'] ) ) {
+			$group_course_paged = absint( $_GET['ld-group-courses-page'] );
 		}
 
-		if ( isset( $query_args['num'] ) ) {
-			$query_args['per_page'] = intval( $query_args['num'] );
-			unset( $query_args['num'] );
-		}
-
-		if ( isset( $query_args['posts_per_page'] ) ) {
-			if ( ( ! isset( $query_args['per_page'] ) ) || ( empty( $query_args['per_page'] ) ) ) {
-				$query_args['per_page'] = intval( $query_args['posts_per_page'] );
-			}
-			unset( $query_args['posts_per_page'] );
-		}
-
-		if ( ! isset( $query_args['per_page'] ) ) {
-			$query_args['per_page'] = learndash_get_group_courses_per_page( $group_id );
-		}
+		$group_courses_per_page   = learndash_get_group_courses_per_page( $group_id );
 		$group_courses_order_args = learndash_get_group_courses_order( $group_id );
 
 		$query_args = array(
 			'post_type'      => learndash_get_post_type_slug( 'course' ),
 			'fields'         => 'ids',
-			'posts_per_page' => $query_args['per_page'],
-			'paged'          => $query_args['paged'],
+			'posts_per_page' => $group_courses_per_page,
+			'paged'          => $group_course_paged,
 			'meta_query'     => array(
 				array(
 					'key'     => 'learndash_group_enrolled_' . $group_id,
@@ -2495,7 +2465,7 @@ function learndash_get_group_courses_list( $group_id = 0, $query_args = array() 
 			if ( ! isset( $course_pager_results['pager'] ) ) {
 				$course_pager_results['pager'] = array();
 			}
-			$course_pager_results['pager']['paged']       = $query_args['paged'];
+			$course_pager_results['pager']['paged']       = $group_course_paged;
 			$course_pager_results['pager']['total_items'] = $query->found_posts;
 			$course_pager_results['pager']['total_pages'] = $query->max_num_pages;
 		}
@@ -2663,7 +2633,10 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 				}
 			}
 		}
-	} elseif ( in_array( 'edit_others_groups', $cap, true ) ) { // Check if Group Leader can edit Groups they are Leader of.
+	}
+
+	// Check if Group Leader can edit Groups they are Leader of.
+	elseif ( in_array( 'edit_others_groups', $cap, true ) ) {
 		if ( ( ! isset( $allcaps['edit_others_groups'] ) ) || ( true !== $allcaps['edit_others_groups'] ) ) {
 			if ( 'basic' === learndash_get_group_leader_manage_groups() ) {
 				/**
@@ -2674,11 +2647,14 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 				 * @param bool     $true Always True if user can edit post.
 				 * @param bool[]   $allcaps Array of key/value pairs where keys represent a capability name
 				 *                          and boolean values represent whether the user has that capability.
+				 * @param string[] $caps    Required primitive capabilities for the requested capability.
 				 * @param array    $args {
-				 *     @type string    $index_0 Requested capability.
-				 *     @type int       $index_1 Concerned user ID.
-				 *     @type mixed  ...$other   Optional second and further parameters, typically object ID.
-				 * } Arguments that accompany the requested capability check.
+				 *     Arguments that accompany the requested capability check.
+				 *
+				 *     @type string    $0 Requested capability.
+				 *     @type int       $1 Concerned user ID.
+				 *     @type mixed  ...$2 Optional second and further parameters, typically object ID.
+				 * }
 				 * @param WP_User  $user    The user object.
 				 *
 				 * @return bool True if Group Leader is allowed to edit post.
@@ -2854,85 +2830,3 @@ function learndash_groups_get_not_public_message() {
 	 */
 	return apply_filters( 'learndash_groups_get_not_public_message', $message );
 }
-
-/**
- * Returns true if it's a group post.
- *
- * @param WP_Post|int|null $post Post or Post ID.
- *
- * @since 4.1.0
- *
- * @return bool
- */
-function learndash_is_group_post( $post ): bool {
-	if ( empty( $post ) ) {
-		return false;
-	}
-
-	$post_type = is_a( $post, WP_Post::class ) ? $post->post_type : get_post_type( $post );
-
-	return LDLMS_Post_Types::get_post_type_slug( 'group' ) === $post_type;
-}
-
-/**
- * Returns group enrollment url.
- *
- * @param WP_Post|int|null $post Post or Post ID.
- *
- * @since 4.1.0
- *
- * @return string
- */
-function learndash_get_group_enrollment_url( $post ): string {
-	if ( empty( $post ) ) {
-		return '';
-	}
-
-	if ( is_int( $post ) ) {
-		$post = get_post( $post );
-
-		if ( is_null( $post ) ) {
-			return '';
-		}
-	}
-
-	$url = get_permalink( $post );
-
-	$settings = learndash_get_setting( $post );
-
-	if ( 'paynow' === $settings['group_price_type'] && ! empty( $settings['group_price_type_paynow_enrollment_url'] ) ) {
-		$url = $settings['group_price_type_paynow_enrollment_url'];
-	} elseif ( 'subscribe' === $settings['group_price_type'] && ! empty( $settings['group_price_type_subscribe_enrollment_url'] ) ) {
-		$url = $settings['group_price_type_subscribe_enrollment_url'];
-	}
-
-	/** This filter is documented in includes/course/ld-course-functions.php */
-	return apply_filters( 'learndash_group_join_redirect', $url, $post->ID );
-}
-
-/**
- * Deletes group leader metadata when a group leader role is changed to another.
- *
- * @since 4.5.0
- */
-add_action(
-	'set_user_role',
-	function( int $user_id, string $role, array $old_roles ) {
-		if (
-			in_array( 'group_leader', $old_roles, true )
-			&& 'group_leader' !== $role
-		) {
-			global $wpdb;
-
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key LIKE %s",
-					$user_id,
-					'learndash_group_leaders_%'
-				)
-			);
-		}
-	},
-	10,
-	3
-);

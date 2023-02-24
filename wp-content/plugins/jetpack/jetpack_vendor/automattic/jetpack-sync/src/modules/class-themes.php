@@ -307,17 +307,16 @@ class Themes extends Module {
 			}
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writeable
 		if ( ! is_writeable( $real_file ) ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 		$file_pointer = fopen( $real_file, 'w+' );
 		if ( false === $file_pointer ) {
 			return;
 		}
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 		fclose( $file_pointer );
 
 		$theme_data = array(
@@ -678,6 +677,7 @@ class Themes extends Module {
 			}
 		}
 		return $moved_to_inactive;
+
 	}
 
 	/**
@@ -715,6 +715,7 @@ class Themes extends Module {
 			 */
 			do_action( 'jetpack_widget_reordered', $sidebar, $sidebar_name );
 		}
+
 	}
 
 	/**

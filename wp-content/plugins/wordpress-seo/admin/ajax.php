@@ -58,11 +58,7 @@ function wpseo_set_ignore() {
 
 	check_ajax_referer( 'wpseo-ignore' );
 
-	if ( ! isset( $_POST['option'] ) || ! is_string( $_POST['option'] ) ) {
-		die( '-1' );
-	}
-
-	$ignore_key = sanitize_text_field( wp_unslash( $_POST['option'] ) );
+	$ignore_key = sanitize_text_field( filter_input( INPUT_POST, 'option' ) );
 	WPSEO_Options::set( 'ignore_' . $ignore_key, true );
 
 	die( '1' );
@@ -115,7 +111,7 @@ function wpseo_save_what( $what ) {
  * @param string $meta_key        Meta key string.
  * @param string $return_key      Return key string to use in results.
  *
- * @return array
+ * @return string
  */
 function wpseo_upsert_meta( $post_id, $new_meta_value, $orig_meta_value, $meta_key, $return_key ) {
 
@@ -317,3 +313,20 @@ wpseo_register_ajax_integrations();
 new WPSEO_Shortcode_Filter();
 
 new WPSEO_Taxonomy_Columns();
+
+/* ********************* DEPRECATED FUNCTIONS ********************* */
+
+/**
+ * Hides the default tagline notice for a specific user.
+ *
+ * @deprecated 13.2
+ * @codeCoverageIgnore
+ */
+function wpseo_dismiss_tagline_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		die( '-1' );
+	}
+
+	_deprecated_function( __FUNCTION__, 'WPSEO 13.2', 'This method is deprecated.' );
+	wpseo_ajax_json_echo_die( '' );
+}

@@ -7,8 +7,6 @@
 
 namespace Automattic\Jetpack\Extensions\Premium_Content;
 
-use Automattic\Jetpack\Extensions\Premium_Content\Subscription_Service\Token_Subscription_Service;
-
 require __DIR__ . '/subscription-service/include.php';
 
 /**
@@ -93,9 +91,8 @@ function current_visitor_can_access( $attributes, $block ) {
 		return false;
 	}
 
-	$paywall      = subscription_service();
-	$access_level = Token_Subscription_Service::POST_ACCESS_LEVEL_PAID_SUBSCRIBERS; // Only paid subscribers should be granted access to the premium content
-	$can_view     = $paywall->visitor_can_view_content( array( $selected_plan_id ), $access_level );
+	$paywall  = subscription_service();
+	$can_view = $paywall->visitor_can_view_content( array( $selected_plan_id ) );
 
 	if ( $can_view ) {
 		/**

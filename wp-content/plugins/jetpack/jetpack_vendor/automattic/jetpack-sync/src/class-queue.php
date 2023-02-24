@@ -22,20 +22,12 @@ class Queue {
 	 * @var string
 	 */
 	public $id;
-
 	/**
 	 * Keeps track of the rows.
 	 *
 	 * @var int
 	 */
 	private $row_iterator;
-
-	/**
-	 * Random number.
-	 *
-	 * @var int
-	 */
-	public $random_int;
 
 	/**
 	 * Queue constructor.
@@ -419,7 +411,7 @@ class Queue {
 		if ( is_wp_error( $is_valid ) ) {
 			// Always delete ids_to_remove even when buffer is no longer checked-out.
 			// They were processed by WP.com so safe to remove from queue.
-			if ( $ids_to_remove !== null ) {
+			if ( ! is_null( $ids_to_remove ) ) {
 				$this->delete( $ids_to_remove );
 			}
 			return $is_valid;
@@ -428,7 +420,7 @@ class Queue {
 		$this->delete_checkout_id();
 
 		// By default clear all items in the buffer.
-		if ( $ids_to_remove === null ) {
+		if ( is_null( $ids_to_remove ) ) {
 			$ids_to_remove = $buffer->get_item_ids();
 		}
 
@@ -619,6 +611,7 @@ class Queue {
 				$this->get_lock_option_name()
 			)
 		);
+
 	}
 
 	/**
@@ -678,6 +671,7 @@ class Queue {
 		}
 
 		return $this->unserialize_values( $items );
+
 	}
 
 	/**
@@ -728,6 +722,7 @@ class Queue {
 		);
 
 		return $items;
+
 	}
 
 	/**

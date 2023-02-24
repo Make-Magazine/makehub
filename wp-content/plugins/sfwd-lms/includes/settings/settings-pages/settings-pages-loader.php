@@ -10,8 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once __DIR__ . '/class-ld-settings-page-setup.php';
-require_once __DIR__ . '/class-ld-settings-page-help.php';
+require_once __DIR__ . '/class-ld-settings-page-overview.php';
 
 require_once __DIR__ . '/class-ld-settings-page-courses-options.php';
 require_once __DIR__ . '/class-ld-settings-page-courses-shortcodes.php';
@@ -40,6 +39,10 @@ if ( ( defined( 'LEARNDASH_TRANSLATIONS' ) ) && ( LEARNDASH_TRANSLATIONS === tru
 }
 require_once __DIR__ . '/class-ld-settings-page-support.php';
 require_once __DIR__ . '/class-ld-settings-page-advanced.php';
+
+//require_once __DIR__ . '/class-ld-settings-page-paypal.php';
+//require_once __DIR__ . '/class-ld-settings-page-custom-labels.php';
+//require_once __DIR__ . '/class-ld-settings-page-data-upgrades.php';
 
 // Add-ons Page.
 if ( ( defined( 'LEARNDASH_ADDONS_UPDATER' ) ) && ( LEARNDASH_ADDONS_UPDATER === true ) ) {

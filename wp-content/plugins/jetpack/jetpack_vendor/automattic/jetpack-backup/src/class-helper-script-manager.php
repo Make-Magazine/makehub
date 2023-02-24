@@ -50,11 +50,6 @@ class Helper_Script_Manager {
 		// Replace '[wp_path]' in the Helper Script with the WordPress installation location. Allows the Helper Script to find WordPress.
 		$script_body = str_replace( '[wp_path]', addslashes( ABSPATH ), $script_body );
 
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
-			return new \WP_Error( 'install_failed', 'Failed to install Helper Script' );
-		}
-
 		// Create a jetpack-temp directory for the Helper Script.
 		$temp_directory = self::create_temp_directory();
 		if ( \is_wp_error( $temp_directory ) ) {
@@ -68,11 +63,11 @@ class Helper_Script_Manager {
 			$file_name = 'jp-helper-' . $file_key . '.php';
 			$file_path = trailingslashit( $temp_directory['path'] ) . $file_name;
 
-			if ( ! $wp_filesystem->exists( $file_path ) ) {
+			if ( ! file_exists( $file_path ) ) {
 				// Attempt to write helper script.
 				if ( ! self::put_contents( $file_path, $script_body ) ) {
-					if ( $wp_filesystem->exists( $file_path ) ) {
-						$wp_filesystem->delete( $file_path );
+					if ( file_exists( $file_path ) ) {
+						unlink( $file_path );
 					}
 
 					continue;
@@ -102,12 +97,7 @@ class Helper_Script_Manager {
 	 * @return boolean     True if the file is deleted (or does not exist).
 	 */
 	public static function delete_helper_script( $path ) {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
-			return false;
-		}
-
-		if ( ! $wp_filesystem->exists( $path ) ) {
+		if ( ! file_exists( $path ) ) {
 			return true;
 		}
 
@@ -116,7 +106,7 @@ class Helper_Script_Manager {
 			return false;
 		}
 
-		return $wp_filesystem->delete( $path );
+		return unlink( $path );
 	}
 
 	/**
@@ -149,21 +139,16 @@ class Helper_Script_Manager {
 	 * @param int|null $expiry_time If specified, only delete scripts older than $expiry_time.
 	 */
 	public static function cleanup_helper_scripts( $expiry_time = null ) {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
-			return;
-		}
-
 		foreach ( self::get_install_locations() as $directory => $url ) {
 			$temp_dir = trailingslashit( $directory ) . self::TEMP_DIRECTORY;
 
-			if ( $wp_filesystem->is_dir( $temp_dir ) ) {
+			if ( is_dir( $temp_dir ) ) {
 				// Find expired helper scripts and delete them.
-				$helper_scripts = $wp_filesystem->dirlist( $temp_dir );
+				$helper_scripts = glob( trailingslashit( $temp_dir ) . 'jp-helper-*.php' );
 				if ( is_array( $helper_scripts ) ) {
-					foreach ( $helper_scripts as $entry ) {
-						if ( preg_match( '/^jp-helper-*\.php$/', $entry['name'] ) && ( null === $expiry_time || $entry['lastmodunix'] < $expiry_time ) ) {
-							self::delete_helper_script( trailingslashit( $temp_dir ) . $entry['name'] );
+					foreach ( $helper_scripts as $filename ) {
+						if ( null === $expiry_time || filemtime( $filename ) < $expiry_time ) {
+							self::delete_helper_script( $filename );
 						}
 					}
 				}
@@ -184,18 +169,14 @@ class Helper_Script_Manager {
 	 * @return boolean    True if the directory is deleted
 	 */
 	private static function delete_empty_helper_directory( $dir ) {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
-			return false;
-		}
-
-		if ( ! $wp_filesystem->is_dir( $dir ) ) {
+		if ( ! is_dir( $dir ) ) {
 			return false;
 		}
 
 		// Tally the files in the target directory, and reject if there are too many.
-		$dir_contents = $wp_filesystem->dirlist( $dir );
-		if ( $dir_contents === false || count( $dir_contents ) > 2 ) {
+		$glob_path    = trailingslashit( $dir ) . '*';
+		$dir_contents = glob( $glob_path );
+		if ( count( $dir_contents ) > 2 ) {
 			return false;
 		}
 
@@ -205,9 +186,8 @@ class Helper_Script_Manager {
 			'index.php' => self::INDEX_FILE,
 		);
 
-		foreach ( $dir_contents as $entry ) {
-			$basename = $entry['name'];
-			$path     = trailingslashit( $dir ) . $basename;
+		foreach ( $dir_contents as $path ) {
+			$basename = basename( $path );
 			if ( ! isset( $allowed_files[ $basename ] ) ) {
 				return false;
 			}
@@ -217,15 +197,14 @@ class Helper_Script_Manager {
 				return false;
 			}
 
-			if ( ! $wp_filesystem->delete( $path ) ) {
+			if ( ! unlink( $path ) ) {
 				return false;
 			}
 		}
 
 		// If the directory is now empty, delete it.
-		$dir_contents = $wp_filesystem->dirlist( $dir );
-		if ( $dir_contents === false || count( $dir_contents ) === 0 ) {
-			return $wp_filesystem->rmdir( $dir );
+		if ( count( glob( $glob_path ) ) === 0 ) {
+			return rmdir( $dir );
 		}
 
 		return false;
@@ -240,21 +219,16 @@ class Helper_Script_Manager {
 	 * @return WP_Error|array Array containing the url and path of the temp directory if successful, WP_Error if not.
 	 */
 	private static function create_temp_directory() {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
-			return new \WP_Error( 'temp_directory', 'Failed to create jetpack-temp directory' );
-		}
-
 		foreach ( self::get_install_locations() as $directory => $url ) {
 			// Check if the install location is writeable.
-			if ( ! $wp_filesystem->is_writable( $directory ) ) {
+			if ( ! is_writeable( $directory ) ) {
 				continue;
 			}
 
 			// Create if one doesn't already exist.
 			$temp_dir = trailingslashit( $directory ) . self::TEMP_DIRECTORY;
-			if ( ! $wp_filesystem->is_dir( $temp_dir ) ) {
-				if ( ! $wp_filesystem->mkdir( $temp_dir ) ) {
+			if ( ! is_dir( $temp_dir ) ) {
+				if ( ! mkdir( $temp_dir ) ) {
 					continue;
 				}
 
@@ -298,8 +272,13 @@ class Helper_Script_Manager {
 	 * @return boolean          True if successfully written.
 	 */
 	private static function put_contents( $file_path, $contents ) {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
+		global $wp_filesystem;
+
+		if ( ! function_exists( '\\WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( ! \WP_Filesystem() ) {
 			return false;
 		}
 
@@ -317,8 +296,13 @@ class Helper_Script_Manager {
 	 * @return boolean                True if the file exists, is readable, and the header matches.
 	 */
 	private static function verify_file_header( $file_path, $expected_header ) {
-		$wp_filesystem = self::get_wp_filesystem();
-		if ( ! $wp_filesystem ) {
+		global $wp_filesystem;
+
+		if ( ! function_exists( '\\WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( ! \WP_Filesystem() ) {
 			return false;
 		}
 
@@ -358,27 +342,6 @@ class Helper_Script_Manager {
 		$install_locations[ $upload_dir_info['basedir'] ] = $upload_dir_info['baseurl'];
 
 		return $install_locations;
-	}
-
-	/**
-	 * Get the WP_Filesystem.
-	 *
-	 * @return \WP_Filesystem|null
-	 */
-	private static function get_wp_filesystem() {
-		global $wp_filesystem;
-
-		if ( ! $wp_filesystem ) {
-			if ( ! function_exists( '\\WP_Filesystem' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/file.php';
-			}
-
-			if ( ! \WP_Filesystem() ) {
-				return null;
-			}
-		}
-
-		return $wp_filesystem;
 	}
 
 }

@@ -1,6 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-
-// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed -- TODO: Move classes to appropriately-named class files.
+<?php
 
 use Automattic\Jetpack\Assets;
 
@@ -17,28 +15,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Jetpack_Google_Translate_Widget main class.
- */
 class Jetpack_Google_Translate_Widget extends WP_Widget {
-	/**
-	 * Singleton instance of the widget, not to show more than once.
-	 *
-	 * @var array
-	 */
-	public static $instance = null;
+	static $instance = null;
 
 	/**
 	 * Default widget title.
 	 *
 	 * @var string $default_title
 	 */
-	public $default_title;
+	var $default_title;
 
 	/**
 	 * Register widget with WordPress.
 	 */
-	public function __construct() {
+	function __construct() {
 		parent::__construct(
 			'google_translate_widget',
 			/** This filter is documented in modules/widgets/facebook-likebox.php */
@@ -62,22 +52,13 @@ class Jetpack_Google_Translate_Widget extends WP_Widget {
 			Assets::get_file_url_for_environment(
 				'_inc/build/widgets/google-translate/google-translate.min.js',
 				'modules/widgets/google-translate/google-translate.js'
-			),
-			array(),
-			JETPACK__VERSION,
-			false
+			)
 		);
-		wp_register_script(
-			'google-translate',
-			'//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit',
-			array( 'google-translate-init' ),
-			JETPACK__VERSION,
-			false
-		);
+		wp_register_script( 'google-translate', '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array( 'google-translate-init' ) );
 		// Admin bar is also displayed on top of the site which causes google translate bar to hide beneath.
 		// Overwrite position of body.admin-bar
 		// This is a hack to show google translate bar a bit lower.
-		$lower_translate_bar = '
+		$lowerTranslateBar = '
 			.admin-bar {
 				position: inherit !important;
 				top: auto !important;
@@ -96,8 +77,8 @@ class Jetpack_Google_Translate_Widget extends WP_Widget {
 				}
 			}
 		';
-		wp_add_inline_style( 'admin-bar', $lower_translate_bar );
-		wp_add_inline_style( 'wpcom-admin-bar', $lower_translate_bar );
+		wp_add_inline_style( 'admin-bar', $lowerTranslateBar );
+		wp_add_inline_style( 'wpcom-admin-bar', $lowerTranslateBar );
 	}
 
 	/**
@@ -112,8 +93,7 @@ class Jetpack_Google_Translate_Widget extends WP_Widget {
 		// We never should show more than 1 instance of this.
 		if ( null === self::$instance ) {
 			$instance = wp_parse_args(
-				$instance,
-				array(
+				$instance, array(
 					'title' => $this->default_title,
 				)
 			);
@@ -164,12 +144,12 @@ class Jetpack_Google_Translate_Widget extends WP_Widget {
 			/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 			$title = apply_filters( 'widget_title', $title );
 
-			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['before_widget'];
 			if ( ! empty( $title ) ) {
 				echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			echo '<div id="google_translate_element"></div>';
-			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['after_widget'];
 			self::$instance = $instance;
 			/** This action is documented in modules/widgets/gravatar-profile.php */
 			do_action( 'jetpack_stats_extra', 'widget_view', 'google-translate' );
@@ -206,11 +186,11 @@ class Jetpack_Google_Translate_Widget extends WP_Widget {
 	 *
 	 * @return array $instance Updated safe values to be saved.
 	 */
-	public function update( $new_instance, $old_instance ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function update( $new_instance, $old_instance ) {
 		$instance          = array();
 		$instance['title'] = wp_kses( $new_instance['title'], array() );
 		if ( $instance['title'] === $this->default_title ) {
-			$instance['title'] = false; // Store as false in case of language change.
+			$instance['title'] = false; // Store as false in case of language change
 		}
 		return $instance;
 	}

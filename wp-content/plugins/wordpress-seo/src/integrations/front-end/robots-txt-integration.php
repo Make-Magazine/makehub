@@ -2,12 +2,9 @@
 
 namespace Yoast\WP\SEO\Integrations\Front_End;
 
-use WPSEO_Sitemaps_Router;
 use Yoast\WP\SEO\Conditionals\Robots_Txt_Conditional;
 use Yoast\WP\SEO\Helpers\Options_Helper;
-use Yoast\WP\SEO\Helpers\Robots_Txt_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
-use Yoast\WP\SEO\Presenters\Robots_Txt_Presenter;
 
 /**
  * Handles adding the sitemap to the `robots.txt`.
@@ -22,30 +19,12 @@ class Robots_Txt_Integration implements Integration_Interface {
 	protected $options_helper;
 
 	/**
-	 * Holds the robots txt helper.
-	 *
-	 * @var Robots_Txt_Helper
-	 */
-	protected $robots_txt_helper;
-
-	/**
-	 * Holds the robots txt presenter.
-	 *
-	 * @var Robots_Txt_Presenter
-	 */
-	protected $robots_txt_presenter;
-
-	/**
 	 * Sets the helpers.
 	 *
-	 * @param Options_Helper       $options_helper       Options helper.
-	 * @param Robots_Txt_Helper    $robots_txt_helper    Robots txt helper.
-	 * @param Robots_Txt_Presenter $robots_txt_presenter Robots txt presenter.
+	 * @param Options_Helper $options_helper Options helper.
 	 */
-	public function __construct( Options_Helper $options_helper, Robots_Txt_Helper $robots_txt_helper, Robots_Txt_Presenter $robots_txt_presenter ) {
-		$this->options_helper       = $options_helper;
-		$this->robots_txt_helper    = $robots_txt_helper;
-		$this->robots_txt_presenter = $robots_txt_presenter;
+	public function __construct( Options_Helper $options_helper ) {
+		$this->options_helper = $options_helper;
 	}
 
 	/**
@@ -65,39 +44,27 @@ class Robots_Txt_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_filter( 'robots_txt', [ $this, 'filter_robots' ], 99999 );
+		\add_filter( 'robots_txt', [ $this, 'filter_robots' ], 99999, 2 );
 	}
 
 	/**
 	 * Filters the robots.txt output.
 	 *
 	 * @param string $robots_txt The robots.txt output from WordPress.
+	 * @param string $public     Option that says whether the site is public or not.
 	 *
-	 * @return string Filtered robots.txt output.
+	 * @return string $output Filtered robots.txt output.
 	 */
-	public function filter_robots( $robots_txt ) {
-		$robots_txt = $this->remove_default_robots( $robots_txt );
-		$this->maybe_add_xml_sitemap();
-
-		/**
-		 * Filter: 'wpseo_should_add_subdirectory_multisite_xml_sitemaps' - Disabling this filter removes subdirectory sites from xml sitemaps.
-		 *
-		 * @since 19.8
-		 *
-		 * @param bool $show Whether to display multisites in the xml sitemaps.
-		 */
-		if ( \apply_filters( 'wpseo_should_add_subdirectory_multisite_xml_sitemaps', true ) ) {
-			$this->add_subdirectory_multisite_xml_sitemaps();
+	public function filter_robots( $robots_txt, $public ) {
+		// If the site isn't public, bail.
+		if ( $public === '0' ) {
+			return $robots_txt;
 		}
 
-		/**
-		 * Allow registering custom robots rules to be outputted within the Yoast content block in robots.txt.
-		 *
-		 * @param Robots_Txt_Helper $robots_txt_helper The Robots_Txt_Helper object.
-		 */
-		\do_action( 'Yoast\WP\SEO\register_robots_rules', $this->robots_txt_helper );
+		$robots_txt = $this->change_default_robots( $robots_txt );
+		$robots_txt = $this->add_xml_sitemap( $robots_txt );
 
-		return \trim( $robots_txt . \PHP_EOL . $this->robots_txt_presenter->present() . \PHP_EOL );
+		return $this->add_subdirectory_multisite_xml_sitemaps( $robots_txt );
 	}
 
 	/**
@@ -107,10 +74,10 @@ class Robots_Txt_Integration implements Integration_Interface {
 	 *
 	 * @return string
 	 */
-	protected function remove_default_robots( $robots_txt ) {
-		return \preg_replace(
-			'`User-agent: \*[\r\n]+Disallow: /wp-admin/[\r\n]+Allow: /wp-admin/admin-ajax\.php[\r\n]+`',
-			'',
+	protected function change_default_robots( $robots_txt ) {
+		return \str_replace(
+			"User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php",
+			"User-agent: *\nDisallow:",
 			$robots_txt
 		);
 	}
@@ -118,35 +85,57 @@ class Robots_Txt_Integration implements Integration_Interface {
 	/**
 	 * Adds XML sitemap reference to robots.txt.
 	 *
-	 * @return void
+	 * @param string $robots_txt Robots.txt input.
+	 *
+	 * @return string
 	 */
-	protected function maybe_add_xml_sitemap() {
+	protected function add_xml_sitemap( $robots_txt ) {
 		// If the XML sitemap is disabled, bail.
 		if ( ! $this->options_helper->get( 'enable_xml_sitemap', false ) ) {
-			return;
+			return $robots_txt;
 		}
-		$this->robots_txt_helper->add_sitemap( \esc_url( WPSEO_Sitemaps_Router::get_base_url( 'sitemap_index.xml' ) ) );
+
+		$sitemap = 'Sitemap: ' . \esc_url( \WPSEO_Sitemaps_Router::get_base_url( 'sitemap_index.xml' ) );
+
+		// If our sitemap is already output, bail.
+		if ( \strpos( $robots_txt, $sitemap ) !== false ) {
+			return $robots_txt;
+		};
+
+		return \trim( $robots_txt ) . "\n\n" . $sitemap . "\n";
 	}
 
 	/**
 	 * Adds subdomain multisite' XML sitemap references to robots.txt.
 	 *
-	 * @return void
+	 * @param string $robots_txt Robots.txt input.
+	 *
+	 * @return string
 	 */
-	protected function add_subdirectory_multisite_xml_sitemaps() {
+	protected function add_subdirectory_multisite_xml_sitemaps( $robots_txt ) {
 		// If not on a multisite subdirectory, bail.
 		if ( ! \is_multisite() || \is_subdomain_install() ) {
-			return;
+			return $robots_txt;
 		}
 
 		$sitemaps_enabled = $this->get_xml_sitemaps_enabled();
-
+		$sitemaps         = "\n\n";
 		foreach ( $sitemaps_enabled as $blog_id => $is_sitemap_enabled ) {
 			if ( ! $is_sitemap_enabled ) {
 				continue;
 			}
-			$this->robots_txt_helper->add_sitemap( \esc_url( \get_home_url( $blog_id, 'sitemap_index.xml' ) ) );
+
+			$sitemap = 'Sitemap: ' . \esc_url( \get_home_url( $blog_id, 'sitemap_index.xml' ) );
+
+			// If our sitemap is already output, bail.
+			if ( \strpos( $robots_txt, $sitemap ) !== false ) {
+				continue;
+			};
+
+			$sitemaps .= $sitemap . "\n";
 		}
+
+		return \trim( $robots_txt ) . $sitemaps;
 	}
 
 	/**

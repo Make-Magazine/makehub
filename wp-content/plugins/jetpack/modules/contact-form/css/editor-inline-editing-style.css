@@ -23,8 +23,7 @@ a:visited {
 a:hover,
 a:focus,
 a:active {
-	/* Not defined here? */
-	/* color: $link-highlight; */
+	color: $link-highlight;
 }
 
 /* ==========================================================================

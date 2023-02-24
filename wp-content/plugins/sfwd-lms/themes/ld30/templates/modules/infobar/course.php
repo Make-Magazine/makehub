@@ -226,7 +226,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 				<span class="ld-course-status-price">
 					<?php
 					if ( ! empty( $course_pricing['price'] ) ) {
-						echo wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) );
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						echo wp_kses_post( $course_pricing['price'] );
 					} elseif ( in_array( $course_pricing['type'], array( 'closed', 'free' ), true ) ) {
 							/**
 							 * Filters label to be displayed when there is no price set for a course or it is closed.
@@ -248,7 +249,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-trial-price">
 						<?php
 						echo '<p class="ld-text ld-trial-text">';
-						echo wp_kses_post( learndash_get_price_formatted( $course_pricing['trial_price'] ) );
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						echo wp_kses_post( $course_pricing['trial_price'] );
 						echo '</p>';
 						echo '<p class="ld-trial-pricing ld-pricing">';
 						if ( ( ! empty( $course_pricing['trial_interval'] ) ) && ( ! empty( $course_pricing['trial_frequency'] ) ) ) {
@@ -265,7 +267,8 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-course-price">
 							<?php
 							echo '<p class="ld-text ld-course-text">';
-							echo wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) );
+							echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+							echo wp_kses_post( $course_pricing['price'] );
 							echo '</p>';
 							echo '<p class="ld-course-pricing ld-pricing">';
 
@@ -282,8 +285,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 									printf(
 										// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 										esc_html__( 'for %1$s %2$s', 'learndash' ),
-										// Get correct total time by multiplying interval by number of repeats
-										absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
+										absint( $course_pricing['repeats'] ),
 										esc_html( $course_pricing['repeat_frequency'] )
 									);
 								}
@@ -298,7 +300,10 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						<span class="ld-course-status-price">
 						<?php
 						if ( ! empty( $course_pricing['price'] ) ) {
-							echo wp_kses_post( learndash_get_price_formatted( $course_pricing['price'] ) );
+							if ( ! empty( $course_pricing['price'] ) ) {
+								echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
+								echo wp_kses_post( $course_pricing['price'] );
+							}
 						}
 						?>
 						</span>
@@ -316,8 +321,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 										printf(
 											// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
 											esc_html__( ' for %1$s %2$s', 'learndash' ),
-											// Get correct total time by multiplying interval by number of repeats
-											absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
+											absint( $course_pricing['repeats'] ),
 											esc_html( $course_pricing['repeat_frequency'] )
 										);
 									}

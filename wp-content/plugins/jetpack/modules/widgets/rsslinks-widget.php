@@ -5,8 +5,6 @@
  * @package automattic/jetpack
  */
 
-// phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed -- TODO: Move classes to appropriately-named class files.
-
 /**
  * Register the widget.
  */

@@ -26,8 +26,12 @@ if ( is_multisite() ) {
 	$can_register = get_option( 'users_can_register' );
 }
 ?>
-
-<div class="ld-modal ld-login-modal<?php echo ( $can_register ? ' ld-can-register' : '' ); ?>">
+<div class="ld-modal ld-login-modal
+<?php
+if ( $can_register ) {
+	echo esc_attr( 'ld-can-register' ); }
+?>
+">
 
 	<span class="ld-modal-closer ld-icon ld-icon-delete"></span>
 
@@ -91,7 +95,7 @@ if ( is_multisite() ) {
 					 */
 					do_action( 'learndash-login-modal-alert-after' );
 
-			elseif ( isset( $_GET['ld-resetpw'] ) && 'true' === $_GET['ld-resetpw'] ) : // cspell:disable-line.
+			elseif ( isset( $_GET['ld-resetpw'] ) && 'true' === $_GET['ld-resetpw'] ) :
 
 				learndash_get_template_part(
 					'modules/alert.php',
@@ -148,12 +152,9 @@ if ( is_multisite() ) {
 				do_action( 'learndash-login-modal-form-after' );
 
 				$lost_password_url = remove_query_arg( 'login', get_permalink() );
-				$lost_password_url = add_query_arg( 'ld-resetpw', 'true', $lost_password_url ); // cspell:disable-line.
+				$lost_password_url = add_query_arg( 'ld-resetpw', 'true', $lost_password_url );
 				$lost_password_url = learndash_add_login_hash( $lost_password_url );
 				$lost_password_url = wp_lostpassword_url( $lost_password_url );
-				if ( learndash_reset_password_is_enabled() ) {
-					$lost_password_url = get_permalink( learndash_get_reset_password_page_id() );
-				}
 				?>
 				<a class="ld-forgot-password-link" href="<?php echo esc_url( $lost_password_url ); ?>"><?php esc_html_e( 'Lost Your Password?', 'learndash' ); ?></a>
 
@@ -196,7 +197,7 @@ if ( is_multisite() ) {
 					// If we are showing on a Course or Group we inlcude the 'ld_register_id' query string param.
 					$register_url = add_query_arg( 'ld_register_id', get_the_ID(), $register_url );
 				} elseif ( get_the_ID() === $ld_registration_page_id ) {
-					// If we are showing on the new Registration page we make sure to include the query argument.
+					// If we are showing on the new Registration page we make sure to include the 
 					if ( isset( $_GET['ld_register_id'] ) ) {
 						$register_url = add_query_arg( 'ld_register_id', absint( $_GET['ld_register_id'] ), $register_url );
 					}

@@ -309,12 +309,7 @@ class Indexable_Link_Builder {
 
 				$model->width  = $width;
 				$model->height = $height;
-				if ( \file_exists( $file ) ) {
-					$model->size = \filesize( $file );
-				}
-				else {
-					$model->size = null;
-				}
+				$model->size   = \filesize( $file );
 			}
 			else {
 				$model->width  = 0;

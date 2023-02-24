@@ -149,29 +149,25 @@ class WpProQuiz_Helper_Until {
 		$jsFormat = '';
 		$esc      = false;
 
-		try {
-			for ( $i = 0, $len = strlen( $format ); $i < $len; $i++ ) {
-				$c = $format[ $i ];
+		for ( $i = 0, $len = strlen( $format ); $i < $len; $i++ ) {
+			$c = $format[ $i ];
 
-				//escaping
-				if ( '\\' === $c ) {
-					$i++;
-					$c = $format[ $i ];
+			//escaping
+			if ( '\\' === $c ) {
+				$i++;
+				$c = $format[ $c ];
 
-					$jsFormat .= $esc ? $c : '\'' . $c;
+				$jsFormat .= $esc ? $c : '\'' . $c;
 
-					$esc = true;
-				} else {
-					if ( $esc ) {
-						$jsFormat .= "'";
-						$esc       = false;
-					}
-
-					$jsFormat .= isset( $symbolsConvert[ $c ] ) ? $symbolsConvert[ $c ] : $c;
+				$esc = true;
+			} else {
+				if ( $esc ) {
+					$jsFormat .= "'";
+					$esc       = false;
 				}
+
+				$jsFormat .= isset( $symbolsConvert[ $c ] ) ? $symbolsConvert[ $c ] : $c;
 			}
-		} catch( Exception $e ) {
-			$jsFormat = 'MM d, yy';
 		}
 
 		return $jsFormat;

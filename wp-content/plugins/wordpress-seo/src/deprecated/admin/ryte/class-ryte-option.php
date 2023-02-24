@@ -16,23 +16,20 @@ class WPSEO_Ryte_Option {
 	/**
 	 * Indicates the data is not fetched.
 	 *
-	 * @deprecated 19.6
 	 * @var int
 	 */
-	const NOT_FETCHED = 0;
+	const NOT_FETCHED = 99;
 
 	/**
 	 * Indicates the option is indexable.
 	 *
-	 * @deprecated 19.6
 	 * @var int
 	 */
-	const IS_INDEXABLE = 0;
+	const IS_INDEXABLE = 1;
 
 	/**
 	 * Indicates the option is not indexable.
 	 *
-	 * @deprecated 19.6
 	 * @var int
 	 */
 	const IS_NOT_INDEXABLE = 0;
@@ -40,7 +37,6 @@ class WPSEO_Ryte_Option {
 	/**
 	 * Indicates the data could not be fetched.
 	 *
-	 * @deprecated 19.6
 	 * @var int
 	 */
 	const CANNOT_FETCH = -1;
@@ -48,34 +44,37 @@ class WPSEO_Ryte_Option {
 	/**
 	 * The name of the option where data will be stored.
 	 *
-	 * @deprecated 19.6
 	 * @var string
 	 */
-	const OPTION_NAME = '';
+	const OPTION_NAME = 'wpseo_ryte';
 
 	/**
 	 * The key of the status in the option.
 	 *
-	 * @deprecated 19.6
 	 * @var string
 	 */
-	const STATUS = '';
+	const STATUS = 'status';
 
 	/**
 	 * The key of the last fetch date in the option.
 	 *
-	 * @deprecated 19.6
 	 * @var string
 	 */
-	const LAST_FETCH = '';
+	const LAST_FETCH = 'last_fetch';
 
 	/**
 	 * The limit for fetching the status manually.
 	 *
-	 * @deprecated 19.6
 	 * @var int
 	 */
-	const FETCH_LIMIT = 0;
+	const FETCH_LIMIT = 15;
+
+	/**
+	 * The Ryte option stored in the database.
+	 *
+	 * @var array
+	 */
+	private $ryte_option;
 
 	/**
 	 * Setting the object by setting the properties.
@@ -84,7 +83,7 @@ class WPSEO_Ryte_Option {
 	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		$this->ryte_option = $this->get_option();
 	}
 
 	/**
@@ -93,12 +92,14 @@ class WPSEO_Ryte_Option {
 	 * @deprecated 19.6
 	 * @codeCoverageIgnore
 	 *
-	 * @return int|string
+	 * @return integer|string
 	 */
 	public function get_status() {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		if ( array_key_exists( self::STATUS, $this->ryte_option ) ) {
+			return $this->ryte_option[ self::STATUS ];
+		}
 
-		return -1;
+		return self::CANNOT_FETCH;
 	}
 
 	/**
@@ -110,7 +111,7 @@ class WPSEO_Ryte_Option {
 	 * @param string $status The status to save.
 	 */
 	public function set_status( $status ) {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		$this->ryte_option[ self::STATUS ] = $status;
 	}
 
 	/**
@@ -122,7 +123,7 @@ class WPSEO_Ryte_Option {
 	 * @param int $timestamp Timestamp with the new value.
 	 */
 	public function set_last_fetch( $timestamp ) {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		$this->ryte_option[ self::LAST_FETCH ] = $timestamp;
 	}
 
 	/**
@@ -138,9 +139,11 @@ class WPSEO_Ryte_Option {
 	 * @return bool Whether the indexability status should be fetched.
 	 */
 	public function should_be_fetched() {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		if ( ! isset( $this->ryte_option[ self::LAST_FETCH ] ) ) {
+			return true;
+		}
 
-		return false;
+		return ( ( time() - $this->ryte_option[ self::LAST_FETCH ] ) > self::FETCH_LIMIT );
 	}
 
 	/**
@@ -150,7 +153,7 @@ class WPSEO_Ryte_Option {
 	 * @codeCoverageIgnore
 	 */
 	public function save_option() {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		update_option( self::OPTION_NAME, $this->ryte_option );
 	}
 
 	/**
@@ -162,8 +165,23 @@ class WPSEO_Ryte_Option {
 	 * @return bool
 	 */
 	public function is_enabled() {
-		_deprecated_function( __METHOD__, 'Yoast SEO 19.6' );
+		return WPSEO_Options::get( 'ryte_indexability' );
+	}
 
-		return false;
+	/**
+	 * Getting the option with the Ryte data.
+	 *
+	 * @deprecated 19.6
+	 * @codeCoverageIgnore
+	 *
+	 * @return array
+	 */
+	private function get_option() {
+		$default = [
+			self::STATUS     => self::NOT_FETCHED,
+			self::LAST_FETCH => 0,
+		];
+
+		return get_option( self::OPTION_NAME, $default );
 	}
 }

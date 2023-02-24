@@ -1,3 +1,6 @@
+/*!
+* Do not modify this file directly.  It is compiled SASS code.
+*/
 .j-row {
   width: 100%;
   margin: 0 auto;
@@ -185,7 +188,7 @@
   width: 30px;
   height: 30px;
   vertical-align: middle;
-  background: url(../images/connect-plug.svg) center center no-repeat;
+  background: url("../images/connect-plug.svg") center center no-repeat;
   background-size: 100%;
 }
 .download-jetpack:after {
@@ -254,8 +257,8 @@
 
 @font-face {
   font-family: "automatticons";
-  src: url(../_inc/fonts/automatticons/automatticons.eot);
-  src: url(../_inc/fonts/automatticons/automatticons.eot?#iefix) format("embedded-opentype"), url(../_inc/fonts/automatticons/automatticons.woff) format("woff"), url(../_inc/fonts/automatticons/automatticons.ttf) format("truetype"), url(../_inc/fonts/automatticons/automatticons.svg#automatticonsregular) format("svg");
+  src: url("../_inc/fonts/automatticons/automatticons.eot");
+  src: url("../_inc/fonts/automatticons/automatticons.eot?#iefix") format("embedded-opentype"), url("../_inc/fonts/automatticons/automatticons.woff") format("woff"), url("../_inc/fonts/automatticons/automatticons.ttf") format("truetype"), url("../_inc/fonts/automatticons/automatticons.svg#automatticonsregular") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -1364,3 +1367,4 @@
     padding: 0 0.5em;
   }
 }
+/*# sourceMappingURL=jetpack-admin-rtl.css.map */

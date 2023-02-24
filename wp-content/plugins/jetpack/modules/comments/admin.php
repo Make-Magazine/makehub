@@ -1,41 +1,26 @@
-<?php //phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
-/**
- * Jetpack comments admin menu file.
- *
- * @package automattic/jetpack
- */
-/**
- * Class Jetpack_Comments_Settings
- * This class represents the comments settings functionality.
- */
+<?php
+
 class Jetpack_Comments_Settings {
 
 	/** Variables *************************************************************/
 
 	/**
-	 * The Jetpack Comments singleton
-	 *
-	 * @var Highlander_Comments_Base
+	 * The Jetpack Coments singleton
 	 */
 	public $jetpack_comments;
 
 	/**
-	 * The default comment form greeting - blank to start with
-	 *
+	 * The default comment form greeting
 	 * @var string
 	 */
-	public $default_greeting = ''; // Set in constructor.
+	public $default_greeting = ''; // Set in constructor
 
 	/**
-	 * The default comment form color scheme - an empty array to start with
-	 *
+	 * The default comment form color scheme
 	 * @var string
 	 */
 	public $color_schemes = array();
 
-	/**
-	 * Initialize class
-	 */
 	public static function init() {
 		static $instance = false;
 
@@ -46,31 +31,25 @@ class Jetpack_Comments_Settings {
 		return $instance;
 	}
 
-	/**
-	 * Constructor
-	 *
-	 * @param Highlander_Comments_Base $jetpack_comments The Jetpack Comments singleton.
-	 */
 	public function __construct( Highlander_Comments_Base $jetpack_comments ) {
 		$this->jetpack_comments = $jetpack_comments;
 
-		// Setup settings.
+		// Setup settings
 		add_action( 'admin_init', array( $this, 'add_settings' ) );
 		$this->setup_globals();
 	}
 
-	/** Private Methods ****************************************************** */
+	/** Private Methods *******************************************************/
 
 	/**
 	 * Set any global variables or class variables
-	 *
 	 * @since JetpackComments (1.4)
 	 */
 	protected function setup_globals() {
-		// Default option values.
+		// Default option values
 		$this->default_greeting = __( 'Leave a Reply', 'jetpack' );
 
-		// Possible color schemes.
+		// Possible color schemes
 		$this->color_schemes = array(
 			'light'       => __( 'Light', 'jetpack' ),
 			'dark'        => __( 'Dark', 'jetpack' ),
@@ -78,7 +57,7 @@ class Jetpack_Comments_Settings {
 		);
 	}
 
-	/** Settings ************************************************************* */
+	/** Settings **************************************************************/
 
 	/**
 	 * Add the Jetpack settings to WordPress's discussions page
@@ -87,7 +66,7 @@ class Jetpack_Comments_Settings {
 	 */
 	public function add_settings() {
 
-		// Create the section.
+		// Create the section
 		add_settings_section(
 			'jetpack_comment_form',
 			__( 'Comments', 'jetpack' ),
@@ -95,9 +74,8 @@ class Jetpack_Comments_Settings {
 			'discussion'
 		);
 
-		/**
-		 * Clever Greeting
-		 */
+		/** Clever Greeting ***************************************************/
+
 		add_settings_field(
 			'highlander_comment_form_prompt',
 			__( 'Greeting Text', 'jetpack' ),
@@ -112,9 +90,8 @@ class Jetpack_Comments_Settings {
 			array( $this, 'comment_form_greeting_sanitize' )
 		);
 
-		/**
-		 * Color Scheme
-		 */
+		/** Color Scheme ******************************************************/
+
 		add_settings_field(
 			'jetpack_comment_form_color_scheme',
 			__( 'Color Scheme', 'jetpack' ),
@@ -136,11 +113,11 @@ class Jetpack_Comments_Settings {
 	 * @since JetpackComments (1.4)
 	 */
 	public function comment_form_settings_section() {
-		?>
+	?>
 
-		<p id="jetpack-comments-settings"><?php esc_html_e( 'Adjust your Comments form with a clever greeting and color-scheme.', 'jetpack' ); ?></p>
+		<p id="jetpack-comments-settings"><?php _e( 'Adjust your Comments form with a clever greeting and color-scheme.', 'jetpack' ); ?></p>
 
-		<?php
+	<?php
 	}
 
 	/**
@@ -150,27 +127,27 @@ class Jetpack_Comments_Settings {
 	 */
 	public function comment_form_greeting_setting() {
 
-		// The greeting.
+		// The greeting
 		$greeting = get_option( 'highlander_comment_form_prompt', $this->default_greeting );
 		?>
 
 		<input type="text" name="highlander_comment_form_prompt" id="jetpack-comment-form-greeting" value="<?php echo esc_attr( $greeting ); ?>" class="regular-text">
-		<p class="description"><?php esc_html_e( 'A few catchy words to motivate your readers to comment', 'jetpack' ); ?></p>
+		<p class="description"><?php _e( 'A few catchy words to motivate your readers to comment', 'jetpack' ); ?></p>
 
-		<?php
+	<?php
 	}
 
 	/**
 	 * Sanitize the clever comment greeting
 	 *
 	 * @since JetpackComments (1.4)
-	 * @param string $val The contact form greeting string.
+	 * @param type $val
 	 * @return string
 	 */
-	public function comment_form_greeting_sanitize( $val ) {
+	function comment_form_greeting_sanitize( $val ) {
 
-		// Delete if empty or the default.
-		if ( empty( $val ) || ( $this->default_greeting === $val ) ) {
+		// Delete if empty or the default
+		if ( empty( $val ) || ( $this->default_greeting == $val ) ) {
 			delete_option( 'highlander_comment_form_prompt' );
 			return false;
 		}
@@ -179,24 +156,24 @@ class Jetpack_Comments_Settings {
 	}
 
 	/**
-	 * Comment Form Color Scheme Setting
+	 * Color Scheme Setting
 	 *
 	 * @since JetpackComments (1.4)
 	 */
 	public function comment_form_color_scheme_setting() {
 
-		// The color scheme.
+		// The color scheme
 		$scheme = get_option( 'jetpack_comment_form_color_scheme', $this->jetpack_comments->default_color_scheme );
 		?>
 
 		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Color Scheme', 'jetpack' ); ?></legend>
+			<legend class="screen-reader-text"><?php _e( 'Color Scheme', 'jetpack' ); ?></legend>
 
 			<?php foreach ( $this->color_schemes as $key => $label ) : ?>
 
 				<label>
-					<input type="radio" name="jetpack_comment_form_color_scheme" id="jetpack-comment-form-color-scheme" value="<?php echo esc_attr( $key ); ?>" <?php checked( $scheme, $key ); ?>>
-					<?php echo esc_attr( $label ); ?>
+					<input type="radio" name="jetpack_comment_form_color_scheme" id="jetpack-comment-form-color-scheme" value="<?php echo $key; ?>" <?php checked( $scheme, $key ); ?>>
+					<?php echo $label; ?>
 				</label>
 				<br />
 
@@ -204,23 +181,23 @@ class Jetpack_Comments_Settings {
 
 		</fieldset>
 
-		<?php
+	<?php
 	}
 
 	/**
 	 * Sanitize the color scheme
 	 *
 	 * @since JetpackComments (1.4)
-	 * @param string $val The color scheme string.
+	 * @param type $val
 	 * @return string
 	 */
 	public function comment_form_color_scheme_sanitize( $val ) {
 
-		// Delete the option if it's unknown, or the default.
+		// Delete the option if it's...
 		if (
-			empty( $val ) || ! array_key_exists( $val, $this->color_schemes )
+			empty( $val ) || ! in_array( $val, array_keys( $this->color_schemes ) ) // ... unknown
 		||
-			$val === $this->jetpack_comments->default_color_scheme
+			$val == $this->jetpack_comments->default_color_scheme // ... or the default
 		) {
 			delete_option( 'jetpack_comment_form_color_scheme' );
 			return false;

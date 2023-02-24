@@ -35,35 +35,20 @@ class Wpcom_Products {
 	 * @return Object|WP_Error
 	 */
 	private static function get_products_from_wpcom() {
-		$blog_id = \Jetpack_Options::get_option( 'id' );
-		$ip      = ( new Visitor() )->get_ip( true );
-		$headers = array(
-			'X-Forwarded-For' => $ip,
+
+		$blog_id  = \Jetpack_Options::get_option( 'id' );
+		$endpoint = sprintf( '/sites/%d/products/?_locale=%s&type=jetpack', $blog_id, get_user_locale() );
+
+		$wpcom_request = Client::wpcom_json_api_request_as_blog(
+			$endpoint,
+			'1.1',
+			array(
+				'method'  => 'GET',
+				'headers' => array(
+					'X-Forwarded-For' => ( new Visitor() )->get_ip( true ),
+				),
+			)
 		);
-
-		// If has a blog id, use connected endpoint.
-
-		if ( $blog_id ) {
-			$endpoint = sprintf( '/sites/%d/products/?_locale=%s&type=jetpack', $blog_id, get_user_locale() );
-
-			$wpcom_request = Client::wpcom_json_api_request_as_blog(
-				$endpoint,
-				'1.1',
-				array(
-					'method'  => 'GET',
-					'headers' => $headers,
-				)
-			);
-		} else {
-			$endpoint = 'https://public-api.wordpress.com/rest/v1.1/products?locale=' . get_user_locale() . '&type=jetpack';
-
-			$wpcom_request = wp_remote_get(
-				esc_url_raw( $endpoint ),
-				array(
-					'headers' => $headers,
-				)
-			);
-		}
 
 		$response_code = wp_remote_retrieve_response_code( $wpcom_request );
 
@@ -142,6 +127,7 @@ class Wpcom_Products {
 
 		self::update_cache( $products );
 		return $products;
+
 	}
 
 	/**
@@ -171,38 +157,20 @@ class Wpcom_Products {
 			return array();
 		}
 
-		$cost                  = $product->cost;
-		$discount_price        = $cost;
-		$is_introductory_offer = false;
-		$introductory_offer    = null;
+		$cost           = $product->cost;
+		$discount_price = $cost;
 
 		// Get/compute the discounted price.
 		if ( isset( $product->introductory_offer->cost_per_interval ) ) {
-			$discount_price        = $product->introductory_offer->cost_per_interval;
-			$is_introductory_offer = true;
-			$introductory_offer    = $product->introductory_offer;
+			$discount_price = $product->introductory_offer->cost_per_interval;
 		}
 
 		$pricing = array(
-			'currency_code'         => $product->currency_code,
-			'full_price'            => $cost,
-			'discount_price'        => $discount_price,
-			'is_introductory_offer' => $is_introductory_offer,
-			'introductory_offer'    => $introductory_offer,
+			'currency_code'  => $product->currency_code,
+			'full_price'     => $cost,
+			'discount_price' => $discount_price,
 		);
 
-		return self::populate_with_discount( $product, $pricing, $discount_price );
-	}
-
-	/**
-	 * Populate the pricing array with the discount information.
-	 *
-	 * @param {object} $product - The product object.
-	 * @param {object} $pricing - The pricing array.
-	 * @param {float}  $price   - The price to be discounted.
-	 * @return {object} The pricing array with the discount information.
-	 */
-	public static function populate_with_discount( $product, $pricing, $price ) {
 		// Check whether the product has a coupon.
 		if ( ! isset( $product->sale_coupon ) ) {
 			return $pricing;
@@ -216,13 +184,11 @@ class Wpcom_Products {
 			return $pricing;
 		}
 
-		$coupon_discount = intval( $coupon->discount );
-
 		// Populate response with coupon discount.
-		$pricing['coupon_discount'] = $coupon_discount;
+		$pricing['coupon_discount'] = $coupon->discount;
 
-		// Apply coupon discount to the price.
-		$pricing['discount_price'] = $price * ( 100 - $coupon_discount ) / 100;
+		// Apply coupon discount to discount price.
+		$pricing['discount_price'] = $discount_price * ( 100 - $coupon->discount ) / 100;
 
 		return $pricing;
 	}

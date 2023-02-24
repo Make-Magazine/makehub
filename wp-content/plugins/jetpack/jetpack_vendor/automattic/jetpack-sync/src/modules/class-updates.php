@@ -107,6 +107,7 @@ class Updates extends Module {
 		add_action( 'jetpack_sync_core_reinstalled_successfully', $callable );
 		add_action( 'jetpack_sync_core_autoupdated_successfully', $callable, 10, 2 );
 		add_action( 'jetpack_sync_core_updated_successfully', $callable, 10, 2 );
+
 	}
 
 	/**
@@ -351,6 +352,7 @@ class Updates extends Module {
 			 */
 			do_action( "jetpack_{$transient}_change", $value );
 		}
+
 	}
 
 	/**

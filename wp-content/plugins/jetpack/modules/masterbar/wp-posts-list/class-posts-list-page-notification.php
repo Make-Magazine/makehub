@@ -67,7 +67,7 @@ class Posts_List_Page_Notification {
 	 * @return Posts_List_Page_Notification
 	 */
 	public static function init() {
-		if ( self::$instance === null ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new self( \get_option( 'page_for_posts' ), \get_option( 'show_on_front' ), \get_option( 'page_on_front' ) );
 		}
 

@@ -10926,7 +10926,7 @@ class TCPDF {
 			if (extension_loaded('openssl') && !in_array('aes-256-cbc', openssl_get_cipher_methods())) {
 				$this->Error('AES encryption requires openssl/aes-256-cbc cypher.');
 			}
-			if (extension_loaded('mcrypt') && mcrypt_get_cipher_name(MCRYPT_RIJNDAEL_128) === false) { // phpcs:ignore -- Safe use of mcrypt_get_cipher_name()
+			if (extension_loaded('mcrypt') && mcrypt_get_cipher_name(MCRYPT_RIJNDAEL_128) === false) {
 				$this->Error('AES encryption requires MCRYPT_RIJNDAEL_128 cypher.');
 			}
 			if (($mode == 3) AND !function_exists('hash')) {
@@ -16358,7 +16358,7 @@ class TCPDF {
 		// define self-closing tags
 		$selfclosingtags = array('area','base','basefont','br','hr','input','img','link','meta');
 		// remove all unsupported tags (the line below lists all supported tags)
-		$html = strip_tags($html, '<marker/><a><b><blockquote><body><br><br/><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr/><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>'); //phpcs:ignore PHPCompatibility.ParameterValues.ForbiddenStripTagsSelfClosingXHTML.Found -- Safe ignore.
+		$html = strip_tags($html, '<marker/><a><b><blockquote><body><br><br/><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr/><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
 		//replace some blank characters
 		$html = preg_replace('/<pre/', '<xre', $html); // preserve pre tag
 		$html = preg_replace('/<(table|tr|td|th|tcpdf|blockquote|dd|div|dl|dt|form|h1|h2|h3|h4|h5|h6|br|hr|li|ol|ul|p)([^\>]*)>[\n\r\t]+/', '<\\1\\2>', $html);
@@ -18916,7 +18916,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					 * 2020-08-27: The following block of code incorrectly decodes theimage 'src'. The
 					 * problem this creates is related to query string params which might be themselves
 					 * a URL that need to be properly encoded/decoded. See LEARNDASH-5234 for more details.
-					 *
+					 * 
 					 */
 					if ( ( defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) && ( true === LEARNDASH_TCPDF_LEGACY_LD322 ) ) {
 						$imgsrc = htmlspecialchars_decode($imgsrc);
