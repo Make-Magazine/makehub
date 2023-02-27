@@ -131,13 +131,6 @@ jQuery(document).ready(function() {
 					displayButtons();
 				});
 			} else {
-				// log if we are still getting any user info after the expiration
-				if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') <= currentDate.getTime()) {
-					webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
-						console.log("can we get any user data anyways?");
-						console.log(user);
-					});
-				}
 		        //check if logged in another place
  				checkSession();
 			}
