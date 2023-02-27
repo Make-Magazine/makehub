@@ -30,6 +30,7 @@ jQuery(document).ready(function() {
         wploggedin = true;
         //let's set up the dropdowns
         displayButtons();
+        // we are skipping setting auth0 localStorage as log in is managed by the auth0 plugin
     } else {
         //otherwise we need to call auth0 for login and to show the user drop down
 
@@ -145,7 +146,7 @@ jQuery(document).ready(function() {
 					if (err.error !== 'login_required') {
 						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 					}
-
+			
 					// This should take care of SSO
 					// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 					//If you are makehub and you are logged in, you will never hit this code
@@ -184,7 +185,7 @@ jQuery(document).ready(function() {
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
-                authResult.expiresIn * 36000 + new Date().getTime()
+                authResult.expiresIn * 360000 + new Date().getTime()
             );
             localStorage.setItem('access_token', authResult.accessToken);
             localStorage.setItem('id_token', authResult.idToken);
