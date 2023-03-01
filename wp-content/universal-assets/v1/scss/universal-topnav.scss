@@ -794,15 +794,18 @@ body.buddyboss-theme {
 				}
 			}
 		}
+        
 	}
 	&.buddypanel-closed.bb-page-loaded {
 		.buddypanel { margin-left: 0px; }
-		#page.site {
-			margin-left: 68px;
-			@media screen and (max-width: 805px) {
-				margin-left: 0px;
-			}
-		}
+        &:not(.sfwd-sidebar) {
+            #page.site {
+                margin-left: 68px;
+                @media screen and (max-width: 805px) {
+                    margin-left: 0px;
+                }
+            }
+        }
 		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
 		&.single-sfwd-lessons #page.site {
 			margin-left: 0px;

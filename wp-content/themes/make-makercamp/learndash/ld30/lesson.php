@@ -64,7 +64,7 @@ $terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
 
 
 // variables for building Breadcrumbs
-$referrer_url = parse_url($_SERVER['HTTP_REFERER']);
+$referrer_url = (isset($_SERVER['HTTP_REFERER'])? parse_url($_SERVER['HTTP_REFERER']) : array());
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
 	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
