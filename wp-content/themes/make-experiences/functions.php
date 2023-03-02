@@ -200,4 +200,11 @@ add_filter( 'wp_mail_from_name', function( $name ) {
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
 
+// the default wp user created emails are bad, we got auth0 for that
+function disable_new_user_notifications() {
+    remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
+}
+add_action( 'init', 'disable_new_user_notifications' );
+
+
 ?>
