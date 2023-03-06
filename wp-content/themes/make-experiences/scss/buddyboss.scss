@@ -365,6 +365,12 @@ button.ges-change, button.ges-change:hover {
 			&:after {
 				visibility: visible;
 				content: "Yes";
+				position: absolute;
+				top: 2.5px;
+				left: 30px;
+				color: #000 !important;
+				font-family: Roboto;
+				font-size: 16px;
 			}
 		}
 	}
@@ -460,6 +466,7 @@ button.ges-change, button.ges-change:hover {
 		flex-wrap: wrap;
 		li {
 			line-height: 40px; 
+			width: 100%;
 		}
 	}
 }
