@@ -466,7 +466,9 @@ button.ges-change, button.ges-change:hover {
 		flex-wrap: wrap;
 		li {
 			line-height: 40px; 
-			width: 100%;
+			&.bp-personal-sub-tab {
+				width: 100%;
+			}
 		}
 	}
 }
