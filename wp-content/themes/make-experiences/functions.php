@@ -45,7 +45,7 @@ function remove_unnecessary_scripts() {
         wp_dequeue_style('buddyboss-theme-select2-css');
         wp_dequeue_style('buddyboss-theme-magnific-popup-css');
         wp_dequeue_style('buddyboss-theme-template');
-        wp_dequeue_style('buddyboss-theme-elementor');
+        
     }
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {
