@@ -32,11 +32,20 @@ function make_experiences_languages() {
 add_action('after_setup_theme', 'make_experiences_languages');
 
 function remove_unnecessary_scripts() {
+    wp_dequeue_style( 'font-awesome' );
 	// if it's not a buddypress page, no need for these scripts
     if ( is_page() && !is_buddypress() ) {
+        remove_action( 'wp_enqueue_scripts', 'buddyboss_theme_scripts' );
         wp_dequeue_style( 'bp-nouveau' );
         wp_deregister_script('bp-jquery-query');
         wp_deregister_script('bp-confirm');
+        wp_deregister_script('bp-nouveau-magnific-popup');
+        wp_dequeue_style('buddyboss-theme-plugins');
+        wp_dequeue_style('buddyboss-theme-buddypress');
+        wp_dequeue_style('buddyboss-theme-select2-css');
+        wp_dequeue_style('buddyboss-theme-magnific-popup-css');
+        wp_dequeue_style('buddyboss-theme-template');
+        wp_dequeue_style('buddyboss-theme-elementor');
     }
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {
@@ -50,6 +59,14 @@ function remove_unnecessary_scripts() {
             wp_dequeue_style( 'learndash-front' ); 
             wp_deregister_script( 'learndash-front' );
             wp_dequeue_script( 'learndash-front' );
+            wp_dequeue_script( 'buddyboss-theme-learndash-js' );
+            wp_dequeue_style( 'buddyboss-theme-learndash' );
+        }
+    }
+    // WooCommerce.
+    if ( function_exists( 'WC' ) ) {
+        if(!is_woocommerce()) {
+            wp_dequeue_style('buddyboss-theme-woocommerce');
         }
     }
 	
