@@ -33,20 +33,28 @@ add_action('after_setup_theme', 'make_experiences_languages');
 
 function remove_unnecessary_scripts() {
 	// if it's not a buddypress page, no need for these scripts
-    if ( is_page() && ( $bp->current_component == "" ) ) {
+    if ( is_page() && !is_buddypress() ) {
         wp_dequeue_style( 'bp-nouveau' );
         wp_deregister_script('bp-jquery-query');
         wp_deregister_script('bp-confirm');
     }
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {
-        if ( is_front_page() ) {
-            learndash_unload_resources();
+        if( !is_singular( array( ‘sfwd-courses’, ‘sfwd-lessons’, ‘sfwd-topic’, ‘sfwd-quiz’, ‘sfwd-assignment’ ) ) ) {
+            // Remove Default LearnDash Styles;
+            wp_dequeue_style( 'learndash_lesson_video-css' );
+            wp_dequeue_style( 'ldvc-css' );
+            wp_dequeue_style( 'learndash_quiz_front_css' );
+            wp_dequeue_style( 'learndash-front' );
+            wp_deregister_style( 'learndash-front' );
+            wp_dequeue_style( 'learndash-front' ); 
+            wp_deregister_script( 'learndash-front' );
+            wp_dequeue_script( 'learndash-front' );
         }
     }
 	
 }
-add_action( 'wp_enqueue_scripts', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
+add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
 
 function remove_jquery_migrate( $scripts ) {
 	if ( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
@@ -56,7 +64,7 @@ function remove_jquery_migrate( $scripts ) {
 		}
 	}
 }
-add_action( 'wp_default_scripts', 'remove_jquery_migrate' );
+add_action( 'wp_print_styles', 'remove_jquery_migrate' );
 
 /**
  * Enqueues scripts and styles for child theme front-end.
