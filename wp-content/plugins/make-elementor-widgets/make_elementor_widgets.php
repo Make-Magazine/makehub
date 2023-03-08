@@ -212,14 +212,15 @@ function makewidget_rss_output($rss, $settings) {
         if (empty($title)) {
             $title = __('Untitled');
         }
-        $title = '<div class="rssTitle">' . $title . "</div>";
 
         //set image
         if (strpos($settings['rss_url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
-            $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 600, 400) . '"  />';
+            $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 600, 400) . '" alt="'.$title.'"  />';
         } else {
-            $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 600, 400) . '"  />';
+            $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 600, 400) . '" alt="'.$title.'" />';
         }
+        
+        $title = '<div class="rssTitle">' . $title . "</div>";
 
         //set description
 		if (strpos($settings['rss_url'], 'www.makershed.com')) {

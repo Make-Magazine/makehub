@@ -489,3 +489,8 @@ button.ges-change, button.ges-change:hover {
 		margin-right: 0px !important;
 	}
 }
+
+#content-report.moderation-popup, #block-member.block-member-popup, #reported-content.content-report-popup { display: none; }
+.mfp-content {
+	#content-report.moderation-popup, #block-member.block-member-popup, #reported-content.content-report-popup { display: block; }
+}
