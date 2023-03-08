@@ -33,7 +33,8 @@
     .vimeography-gallery {
         .vimeography-player > div {
             .fluid-width-video-wrapper {
-                padding-top: 56.25% !important;
+                position: absolute;
+			    top: 0;
             }
         }
     }
