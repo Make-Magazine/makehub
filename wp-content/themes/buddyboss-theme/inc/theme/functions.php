@@ -558,6 +558,7 @@ if ( ! function_exists( 'bb_buddypanel_menu_atts' ) ) {
 				$atts['data-balloon-pos'] = 'right';
 			}
 			$atts['data-balloon'] = $item->title;
+			$atts['aria-label'] = $item->title;
 		}
 
 		return $atts;
