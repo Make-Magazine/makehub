@@ -117,7 +117,9 @@ jQuery(document).ready(function() {
 		} else {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
+			console.log("auth0_comp: " + localStorage.getItem('expires_at') + "/" + Date.now());
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > Date.now()) {
+				console.log("not expired");
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
