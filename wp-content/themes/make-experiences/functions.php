@@ -31,6 +31,21 @@ function make_experiences_languages() {
 }
 add_action('after_setup_theme', 'make_experiences_languages');
 
+if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
+    add_action( 'init', 'remove_bb_actions');
+    function remove_bb_actions() {
+        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    /**
+     * Add a viewport meta.
+     */
+    function buddyboss_theme_viewport_meta_custom() {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />';
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
+}
+
 function remove_unnecessary_scripts() {
     wp_dequeue_style( 'font-awesome' );
 	// if it's not a buddypress page, no need for these scripts
