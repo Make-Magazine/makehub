@@ -64,7 +64,7 @@ function remove_unnecessary_scripts() {
     }
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {
-        if( !is_singular( array( ‘sfwd-courses’, ‘sfwd-lessons’, ‘sfwd-topic’, ‘sfwd-quiz’, ‘sfwd-assignment’ ) ) ) {
+        if( !is_singular( array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment' ) ) ) {
             // Remove Default LearnDash Styles;
             wp_dequeue_style( 'learndash_lesson_video-css' );
             wp_dequeue_style( 'ldvc-css' );
