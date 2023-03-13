@@ -56,7 +56,7 @@ class make_projects_widget extends WP_Widget {
         // Loop through products in the collection
         foreach ($projectArray as $project) {
             $return .= "<li>
-			              <a href='https://makeprojects.com/project/" . $project->slug . "?utm_source=make&utm_medium=widget&utm_campaign=makeco&utm_content=link' target='_blank'>
+			              <a href='https://makeprojects.com/project/" . $project->slug . "?utm_source=make&utm_medium=widget&utm_campaign=makezine&utm_content=link' target='_blank'>
 						  	  <img src='https://makeprojects.com/images/140x100,q80/" . $project->image . "' />
 							  <div class='mp-text'>
 							  	<div class='mp-title'>" . $project->title . "</div>
