@@ -7,6 +7,7 @@
             //this.bpgl_search();
             this.exchange();
             this.wpForms();
+			this.bpges();
         },
 
         bpgl_search: function() {
@@ -123,6 +124,34 @@
                     $in.next().html( $in.val().replace( /C:\\fakepath\\/i, '' ) );
                 }
             } );
+        },
+
+		bpges: function() {
+
+			function bpgesShift() {
+				$( '.group-subscription-div' ).each( function () {
+					var $subDiv = $( this );
+					var $subDivParent = $subDiv.closest( '.item' );
+					var $subDivWrap = $subDiv.closest( '.group-footer-wrap' );
+					$subDivParent.addClass( 'bpgesWrapper' );
+					$subDiv.appendTo( $subDivWrap );
+				} );
+			}
+
+			bpgesShift();
+
+			$( document ).ajaxComplete( function () {
+				bpgesShift();
+
+				setTimeout( function () {
+					bpgesShift();
+				}, 150 );
+
+				setTimeout( function () {
+					bpgesShift();
+				}, 850 );
+			} );
+            
         },
 
     };

@@ -2814,7 +2814,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 						'mode'     => 'javascript',
 						'validate' => 'plain_text',
 						'theme'    => 'chrome',
-						'default'  => "jQuery( document ).ready( function(){\n    //Your codes strat from here\n});",
+						'default'  => "jQuery( document ).ready( function(){\n    //Your codes start from here\n});",
 						'required' => array( 'custom_js', 'equals', '1' ),
 					),
 				),
@@ -2902,7 +2902,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 				// Enable basic customizer support.
 				'page_priority'        => null,
 				// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
-				'page_parent'          => function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ? 'buddyboss-platform' : 'buddyboss-settings',
+				'page_parent'          => function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ? 'buddyboss-platform' : 'buddyboss-settings',
 				// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters.
 				'page_permissions'     => 'manage_options',
 				// Permissions needed to access the options panel.

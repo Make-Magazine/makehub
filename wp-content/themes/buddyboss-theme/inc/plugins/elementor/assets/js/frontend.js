@@ -3,7 +3,7 @@
 		
 		$('.site-header--elementor .header-search-link').on('click', function (e) {
 			e.preventDefault();
-			$('body').toggleClass('search-visible-el');
+			$( this ).closest('.elementor-widget-header-bar').addClass('search-visible-el');
 			if ( ! navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 				setTimeout(function () {
 					$('body').find('.header-search-wrap--elementor .search-field-top').focus();
@@ -14,7 +14,7 @@
 		// Hide Search
 		$('.site-header--elementor .close-search').on('click', function (e) {
 			e.preventDefault();
-			$('body').removeClass('search-visible-el');
+			$( this ).closest('.elementor-widget-header-bar').removeClass('search-visible-el');
 			$('.header-search-wrap--elementor input.search-field-top').val('');
 		});
 
@@ -71,11 +71,17 @@
 
 		// Fix user mention position
 		$(document).ready(function() {
-			if ( $( '.site-header--elementor .bp-suggestions-mention' ).length ) {
-				var userMentionText = $( '.site-header--elementor .bp-suggestions-mention' ).text();
-				$( '.site-header--elementor .sub-menu .user-mention' ).append( document.createTextNode( userMentionText ) );
-				$( '.site-header--elementor .bp-suggestions-mention' ).hide();
-			}
+			var mention = false;
+			$( '.site-header--elementor' ).each(function(){
+				var $this = $( this );
+				var $mention_suggestion = $( this ).find( '.bp-suggestions-mention' );
+				var $user_mention = $( this ).find( '.user-mention' )
+
+				if ( $mention_suggestion.length ) {	
+					$mention_suggestion.appendTo( $user_mention );
+				}
+	
+			});
 		});
 
 		// User sub menu dropdown on smaller screens
@@ -86,6 +92,11 @@
 				$( this ).parent().siblings().find( '.ab-submenu' ).slideUp();
         		return false;
 			}
+		});
+
+		$( '.elementor-widget-header-bar .user-link').on('click', function (e) {
+			$( '.elementor-widget-header-bar' ).not( $( this ).closest( '.elementor-widget-header-bar' ) ).removeClass( 'is-active' );
+			$( this ).closest( '.elementor-widget-header-bar' ).addClass( 'is-active' );
 		});
 
 	};
@@ -373,6 +384,13 @@
 		$( '.bb-ldactivity' ).closest( 'section.elementor-element' ).prev('.elementor-heading-title-main-section').addClass('elementor-max-50');
 		$( '.bb-forums-activity-wrapper' ).closest( 'section.elementor-element' ).prev('.elementor-heading-title-main-section').addClass('elementor-max-50');
 	};
+
+	//Fix double dropdown issue by hiding dropdown on scroll if header is sticky
+	$( window ).scroll( function() {
+		$( '.elementor-sticky:not(.elementor-sticky--active) .cart-wrap.header-cart-link-wrap.selected' ).removeClass( 'selected' );
+		$( '.elementor-sticky:not(.elementor-sticky--active) #header-messages-dropdown-elem.selected' ).removeClass( 'selected' );
+		$( '.elementor-sticky:not(.elementor-sticky--active) #header-notifications-dropdown-elem.selected' ).removeClass( 'selected' );
+	});
 
 
 

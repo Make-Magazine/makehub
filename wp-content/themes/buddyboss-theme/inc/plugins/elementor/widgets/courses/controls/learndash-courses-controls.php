@@ -565,6 +565,8 @@ $this->add_control(
         ],
         'selectors'  => [
             '{{WRAPPER}} .bb-course-items .bb-cover-list-item' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			'{{WRAPPER}} .bb-course-items .bb-cover-wrap' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0;',
+			'{{WRAPPER}} .bb-course-items.list-view .bb-cover-wrap' => 'border-radius: {{TOP}}{{UNIT}} 0 0 {{LEFT}}{{UNIT}};',
         ],
     ]
 );

@@ -165,14 +165,14 @@ if ( isset( $exists ) && '' !== $exists ) {
 
 			$current_page = max(1, get_query_var('paged'));
 
-			echo paginate_links(array(
-				'base' => get_pagenum_link(1) . '%_%',
-				'format' => '?paged=%#%',
-				'current' => $current_page,
-				'total' => $total_pages,
-				'prev_text'    => __('« Prev', 'buddyboss-theme'),
-				'next_text'    => __('Next »', 'buddyboss-theme'),
-			));
+			echo paginate_links( array(
+				'base'      => add_query_arg( 'paged', '%#%' ),
+				'format'    => '',
+				'current'   => $current_page,
+				'total'     => $total_pages,
+				'prev_text' => __( '« Prev', 'buddyboss-theme' ),
+				'next_text' => __( 'Next »', 'buddyboss-theme' ),
+			) );
 		}
 
 		wp_reset_postdata();

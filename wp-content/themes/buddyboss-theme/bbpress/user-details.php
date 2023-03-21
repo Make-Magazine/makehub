@@ -64,17 +64,15 @@
 				<?php endif; ?>
 
 				<?php if ( bbp_is_user_home() || current_user_can( 'edit_users' ) ) : ?>
-
-					<?php if ( bbp_is_subscriptions_active() ) : ?>
-						<li class="<?php if ( bbp_is_subscriptions() ) :?>current<?php endif; ?>">
-							<a href="<?php bbp_subscriptions_permalink(); ?>" title="<?php printf( esc_attr__( "%s's Subscriptions", 'buddyboss-theme' ), bbp_get_displayed_user_field( 'display_name' ) ); ?>"><?php _e( 'Subscriptions', 'buddyboss-theme' ); ?></a>
-						</li>
+					<?php if ( ! function_exists( 'bb_is_enabled_subscription' ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) : ?>
+					    <li class="<?php if ( bbp_is_subscriptions() ) : ?>current<?php endif; ?>">
+					        <a href="<?php bbp_subscriptions_permalink(); ?>" title="<?php printf( esc_attr__( "%s's Subscriptions", 'buddyboss-theme' ), bbp_get_displayed_user_field( 'display_name' ) ); ?>"><?php _e( 'Subscriptions', 'buddyboss-theme' ); ?></a>
+					    </li>
 					<?php endif; ?>
 
-					<li class="<?php if ( bbp_is_single_user_edit() ) :?>current<?php endif; ?>">
-						<a href="<?php bbp_user_profile_edit_url(); ?>" title="<?php printf( esc_attr__( "Edit %s's Profile", 'buddyboss-theme' ), bbp_get_displayed_user_field( 'display_name' ) ); ?>"><?php _e( 'Edit', 'buddyboss-theme' ); ?></a>
-					</li>
-
+					    <li class="<?php if ( bbp_is_single_user_edit() ) : ?>current<?php endif; ?>">
+					        <a href="<?php bbp_user_profile_edit_url(); ?>" title="<?php printf( esc_attr__( "Edit %s's Profile", 'buddyboss-theme' ), bbp_get_displayed_user_field( 'display_name' ) ); ?>"><?php _e( 'Edit', 'buddyboss-theme' ); ?></a>
+                        </li>
 				<?php endif; ?>
 			</ul>
 		</div>

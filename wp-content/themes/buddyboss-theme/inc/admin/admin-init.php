@@ -38,7 +38,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 
 	function register_buddyboss_menu_page() {
 		// don't create menu if buddyboss platform in activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 	function buddyboss_theme_menu_order( $menu_order ) {
 
 		// don't create separator if buddyboss platform is activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
 			return $menu_order;
 		}
 
@@ -102,7 +102,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 	function buddyboss_theme_plugins_menu_order( $menu_order ) {
 
 		// don't create separator if buddyboss platform is activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
 			return $menu_order;
 		}
 

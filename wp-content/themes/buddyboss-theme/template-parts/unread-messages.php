@@ -12,33 +12,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 	while ( bp_message_threads() ) :
 		bp_message_thread();
-		$excerpt = '';
-		foreach ( array_reverse( $messages_template->thread->messages ) as $message ) {
-			if ( '' !== wp_strip_all_tags( $message->message ) ) {
-				$messages_template->thread->last_message_content = $message->message;
-				$excerpt                                   = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
-				$last_message_id                           = (int) $message->id;
-				$messages_template->thread->thread_id      = $message->thread_id;
-				$messages_template->thread->last_sender_id = $message->sender_id;
-			}
-		}
-		if ( '' === $excerpt ) {
-			$thread_messages = BP_Messages_Thread::get_messages( bp_get_message_thread_id(), null, 99999999 );
-			foreach ( $thread_messages as $thread_message ) {
-				$excerpt = wp_strip_all_tags( do_shortcode( $thread_message->message ) );
-				if ( '' !== $excerpt ) {
-					$last_message_id                                 = (int) $thread_message->id;
-					$messages_template->thread->last_message_id      = $thread_message->id;
-					$messages_template->thread->thread_id            = $thread_message->thread_id;
-					$messages_template->thread->last_message_subject = $thread_message->subject;
-					$messages_template->thread->last_message_content = $thread_message->message;
-					$messages_template->thread->last_sender_id       = $thread_message->sender_id;
-					$messages_template->thread->last_message_date    = $thread_message->date_sent;
-					$excerpt = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
-					break;
-				}
-			}
-		}
+
+		$excerpt         = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
+		$last_message_id = (int) $messages_template->thread->last_message_id;
 
 		$group_id = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		if ( 0 === $last_message_id && ! $group_id ) {
@@ -149,7 +125,6 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						// Close the avatar directory.
 						closedir( $av_dir );
 					}
-
 				} elseif ( function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) && ( function_exists( 'bp_disable_group_avatar_uploads' ) && ! bp_disable_group_avatar_uploads() ) ) {
 					$group_avatar = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				} elseif ( function_exists( 'bb_get_buddyboss_group_avatar' ) && ( function_exists( 'bp_disable_group_avatar_uploads' ) && bp_disable_group_avatar_uploads() ) ) {
@@ -177,6 +152,13 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			}
 		}
 
+		// Fetch all recipient.
+		$messages_template->thread->recipients = $messages_template->thread->get_recipients();
+
+		$can_message        = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
+		$is_check_un_access = $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message();
+		$un_access_users    = array();
+
 		$recipients       = array();
 		$other_recipients = array();
 		$current_user     = false;
@@ -185,7 +167,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				if ( empty( $recipient->is_deleted ) ) {
 					$is_you         = $recipient->user_id === bp_loggedin_user_id();
 					$recipient_data = array(
-						'avatar'    => esc_url(
+						'avatar'             => esc_url(
 							bp_core_fetch_avatar(
 								array(
 									'item_id' => $recipient->user_id,
@@ -197,9 +179,13 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								)
 							)
 						),
-						'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-						'is_you'    => $is_you,
+						'user_link'          => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'          => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_you'             => $is_you,
+						'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $recipient->user_id ) : false,
+						'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $recipient->user_id ) : false,
+						'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $recipient->user_id ) : false,
+						'is_deleted'         => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 					);
 					$recipients[]   = $recipient_data;
 
@@ -208,9 +194,20 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 					} else {
 						$current_user = $recipient_data;
 					}
+
+					if ( $is_check_un_access && bp_loggedin_user_id() !== $recipient->user_id ) {
+						if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+							$un_access_users[] = false;
+						}
+					}
 				}
 			}
 		}
+
+		if ( $is_check_un_access && ! empty( $un_access_users ) ) {
+			$can_message = false;
+		}
+
 		$include_you = count( $other_recipients ) >= 2;
 		$first_three = array_slice( $other_recipients, 0, 3 );
 		if ( count( $first_three ) === 0 ) {
@@ -220,12 +217,12 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 		$unread_class = '';
 		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) {
 			$unread_class = bp_message_thread_has_unread() ? 'unread' : '';
-		} elseif ( is_array( $messages_template->thread->recipients ) && isset( $messages_template->thread->recipients[ bp_loggedin_user_id() ] ) ) {
-			$unread_class = ! empty( $messages_template->thread->recipients[ bp_loggedin_user_id() ]->unread_count ) ? 'unread' : '';
+		} elseif ( function_exists( 'bb_get_thread_messages_unread_count' ) && 0 < bb_get_thread_messages_unread_count( bp_get_message_thread_id() ) ) {
+			$unread_class = 'unread';
 		}
 		?>
 
-		<li class="read-item <?php echo esc_attr( $unread_class ); ?>">
+		<li class="read-item <?php echo esc_attr( $unread_class ); ?>" data-thread-id="<?php echo esc_attr( bp_get_message_thread_id() ); ?>">
 			<span class="bb-full-link">
 				<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 					<?php bp_message_thread_subject(); ?>
@@ -234,20 +231,37 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 			<?php
 			if ( function_exists( 'bp_messages_get_avatars' ) && ! empty( bp_messages_get_avatars( bp_get_message_thread_id(), get_current_user_id() ) ) ) {
-				$avatars = bp_messages_get_avatars( bp_get_message_thread_id(), get_current_user_id() );
+				$avatars          = bp_messages_get_avatars( bp_get_message_thread_id(), get_current_user_id() );
+				$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $avatars[0]['id'] ) ? 'bp-user-suspended' : '';
+				$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $avatars[0]['id'] ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+				if ( ! empty( $moderation_class ) ) {
+					$can_message = false;
+				}
+				$moderation_class = function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $avatars[0]['id'] ) ? $moderation_class . ' bp-user-blocked-by' : $moderation_class;
 				?>
-				<div class="notification-avatar">
+				<div class="notification-avatar <?php echo ( 1 === count( $avatars ) && 'user' === $avatars[0]['type'] ? esc_attr( $moderation_class ) : '' ); ?>">
 					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 						<?php
+						if ( 1 === count( $avatars ) && 'user' === $avatars[0]['type'] && function_exists( 'bb_user_presence_html' ) ) {
+							bb_user_presence_html( $avatars[0]['id'] );
+						}
 						if ( count( $avatars ) > 1 ) {
 							echo '<div class="thread-multiple-avatar">';
 						}
 						foreach ( $avatars as $avatar ) {
 							echo '<img src="' . esc_url( $avatar['url'] ) . '" alt="' . esc_attr( $avatar['name'] ) . '" />';
+							if ( 1 === count( $avatars ) && isset( $avatar['is_deleted'] ) && 0 === $avatar['is_deleted'] ) { // Check user should not be deleted.
+								if ( isset( $avatar['is_user_blocked'] ) && true === $avatar['is_user_blocked'] ) {
+									echo '<i class="bb-icon-f bb-icon-cancel"></i>';
+								} elseif ( ( isset( $avatar['is_user_blocked_by'] ) && true === $avatar['is_user_blocked_by'] ) || ! $can_message ) {
+									echo '<i class="bb-icon-f bb-icon-lock"></i>';
+								}
+							}
 						}
 						if ( count( $avatars ) > 1 ) {
 							echo '</div>';
 						}
+
 						?>
 					</a>
 				</div>
@@ -271,9 +285,28 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						<?php
 					} else {
 						$recipient = ! empty( $first_three[0] ) ? $first_three[0] : $current_user;
+
+						// If user suspended.
+						if ( isset( $recipient['is_user_suspended'] ) && true === $recipient['is_user_suspended'] ) {
+							$can_message = false;
+						}
+
+						// If user blocked.
+						if ( isset( $recipient['is_user_blocked'] ) && true === $recipient['is_user_blocked'] ) {
+							$can_message = false;
+						}
 						?>
 						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>">
 							<img class="avatar" src="<?php echo esc_url( $recipient['avatar'] ); ?>" alt="<?php echo esc_attr( $recipient['user_name'] ); ?>" />
+							<?php
+							if ( isset( $recipient['is_deleted'] ) && 0 === $recipient['is_deleted'] ) {
+								if ( isset( $recipient['is_user_blocked'] ) && true === $recipient['is_user_blocked'] ) {
+									echo '<i class="bb-icon-f bb-icon-cancel"></i>';
+								} elseif ( ( isset( $recipient['is_user_blocked_by'] ) && true === $recipient['is_user_blocked_by'] ) || ! $can_message ) {
+									echo '<i class="bb-icon-f bb-icon-lock"></i>';
+								}
+							}
+							?>
 						</a>
 						<?php
 					}
@@ -308,8 +341,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$recipients      = (array) $messages_template->thread->recipients;
 							$recipient_names = array();
 
+							$i = 1;
 							foreach ( $recipients as $recipient ) :
 								if ( bp_loggedin_user_id() !== (int) $recipient->user_id ) :
+									$i ++;
 									$recipient_name = bp_core_get_user_displayname( $recipient->user_id );
 
 									if ( empty( $recipient_name ) ) :
@@ -317,17 +352,24 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 									endif;
 
 									if ( bp_is_active( 'moderation' ) ) {
-										if ( bp_moderation_is_user_suspended( $recipient->user_id ) ) {
-											$recipient_name = esc_html__( 'Suspended Member', 'buddyboss-theme' );
-										} elseif ( bp_moderation_is_user_blocked( $recipient->user_id ) ) {
-											$recipient_name = esc_html__( 'Blocked Member', 'buddyboss-theme' );
+										if ( function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $recipient->user_id ) ) {
+											$recipient_name = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $recipient->user_id ) : esc_html__( 'Suspended Member', 'buddyboss-theme' );
+										} elseif ( function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $recipient->user_id ) ) {
+											$recipient_name = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $recipient_name, $recipient->user_id ) : esc_html__( 'Blocked Member', 'buddyboss-theme' );
 										}
 									}
 
 									$recipient_names[] = ( $recipient_name ) ? ucwords( $recipient_name ) : '';
+
+									if ( $i > 4 ) {
+										break;
+									}
 								endif;
 							endforeach;
 
+							if ( ! empty( $recipients ) && count( $recipients ) > 5 ) {
+								$recipient_names[] = esc_html__( 'others', 'buddyboss-theme' );
+							}
 							echo ( ! empty( $recipient_names ) ? implode( ', ', $recipient_names ) : '' );
 							?>
 						</a>
@@ -335,16 +377,20 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 					<?php
 				}
 				?>
+				<span class="typing-indicator bp-hide"></span>
 				<span class="posted">
 					<?php
 					if ( bp_is_active( 'moderation' ) ) {
-						$is_last_sender_suspended = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
-						$is_last_sender_blocked   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
+						$is_last_sender_suspended  = function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id ) : false;
+						$is_last_sender_blocked    = function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id ) : false;
+						$is_last_sender_blocked_by = function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $messages_template->thread->last_sender_id ) : false;
 					}
 
-					$exerpt = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
+					$send_media = false;
 
-					if ( function_exists( 'buddypress' ) && bp_is_active( 'media' ) ) :
+					$exerpt = wp_strip_all_tags( bp_create_excerpt( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $messages_template->thread->last_message_content ), 50, array( 'ending' => '&hellip;' ) ) );
+
+					if ( empty( $exerpt ) && function_exists( 'buddypress' ) && bp_is_active( 'media' ) ) :
 						if ( bp_is_messages_media_support_enabled() ) :
 							$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
 
@@ -352,9 +398,11 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								$media_ids = explode( ',', $media_ids );
 
 								if ( count( $media_ids ) < 2 ) :
-									$exerpt = esc_html__( 'sent a photo', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent a photo', 'buddyboss-theme' );
 								else :
-									$exerpt = esc_html__( 'sent some photos', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent some photos', 'buddyboss-theme' );
 								endif;
 							endif;
 						endif;
@@ -366,9 +414,11 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								$video_ids = explode( ',', $video_ids );
 
 								if ( count( $video_ids ) < 2 ) :
-									$exerpt = esc_html__( 'sent a video', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent a video', 'buddyboss-theme' );
 								else :
-									$exerpt = esc_html__( 'sent some videos', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent some videos', 'buddyboss-theme' );
 								endif;
 							endif;
 						endif;
@@ -380,9 +430,11 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								$document_ids = explode( ',', $document_ids );
 
 								if ( count( $document_ids ) < 2 ) :
-									$exerpt = esc_html__( 'sent a document', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent a document', 'buddyboss-theme' );
 								else :
-									$exerpt = esc_html__( 'sent some documents', 'buddyboss-theme' );
+									$send_media = true;
+									$exerpt     = esc_html__( 'Sent some documents', 'buddyboss-theme' );
 								endif;
 							endif;
 						endif;
@@ -391,34 +443,49 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
 							if ( ! empty( $gif_data ) ) :
-								$exerpt = esc_html__( 'sent a gif', 'buddyboss-theme' );
+								$send_media = true;
+								$exerpt     = esc_html__( 'Sent a gif', 'buddyboss-theme' );
 							endif;
 						endif;
 					endif;
 
 					if ( bp_is_active( 'moderation' ) ) {
 						if ( $is_last_sender_suspended ) {
-							$exerpt = esc_html__( 'This content has been hidden as the member is suspended.', 'buddyboss-theme' );
+							$exerpt = bb_moderation_is_suspended_message( $exerpt, BP_Moderation_Message::$moderation_type, $last_message_id );
+						} elseif ( $is_last_sender_blocked_by ) {
+							$exerpt = bb_moderation_is_blocked_message( $exerpt, BP_Moderation_Message::$moderation_type, $last_message_id );
 						} elseif ( $is_last_sender_blocked ) {
-							$exerpt = esc_html__( 'This content has been hidden as you have blocked this member.', 'buddyboss-theme' );
+							$exerpt = bb_moderation_has_blocked_message( $exerpt, BP_Moderation_Message::$moderation_type, $last_message_id );
 						}
 					}
 
-					if ( bp_loggedin_user_id() === $messages_template->thread->last_sender_id ) {
-						echo esc_html__( 'You', 'buddyboss-theme' ) . ': ' . stripslashes_deep( $exerpt );
-						// } else if ( 1 === count( $recipient_names) ) {
-						// echo stripslashes_deep( $exerpt );
+					if ( (int) bp_loggedin_user_id() === (int) $messages_template->thread->last_sender_id ) {
+						if ( $send_media ) {
+							echo esc_html__( 'You', 'buddyboss-theme' ) . ' ' . stripslashes_deep( strtolower( $exerpt ) );
+						} else {
+							echo esc_html__( 'You', 'buddyboss-theme' ) . ': ' . stripslashes_deep( $exerpt );
+						}
 					} else {
 						$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 						if ( bp_is_active( 'moderation' ) ) {
 							if ( $is_last_sender_suspended ) {
-								$last_sender = esc_html__( 'Suspended Member', 'buddyboss-theme' );
+								$last_sender = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $messages_template->thread->last_sender_id ) : esc_html__( 'Suspended Member', 'buddyboss-theme' );
 							} elseif ( $is_last_sender_blocked ) {
-								$last_sender = esc_html__( 'Blocked Member', 'buddyboss-theme' );
+								$last_sender = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $last_sender, $messages_template->thread->last_sender_id ) : esc_html__( 'Blocked Member', 'buddyboss-theme' );
 							}
 						}
+						// For conversations with a single recipient - Don’t include the name of the last person to message before the message content.
+						if ( ! $is_group_thread && ! empty( $recipients ) && count( $other_recipients ) === 1 ) {
+							$last_sender = '';
+						}
 						if ( $last_sender ) {
-							echo $last_sender . ': ' . stripslashes_deep( $exerpt );
+							if ( $send_media ) {
+								echo $last_sender . ' ' . stripslashes_deep( strtolower( $exerpt ) );
+							} else {
+								echo $last_sender . ': ' . stripslashes_deep( $exerpt );
+							}
+						} else {
+							echo stripslashes_deep( $exerpt );
 						}
 					}
 					?>

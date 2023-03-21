@@ -9,7 +9,8 @@ if ( class_exists( '\BuddyBossTheme\BuddyBossMultiPostThumbnails' ) ) {
 
 $course        = get_post( $course_id );
 $has_access    = sfwd_lms_has_access( $course_id, get_current_user_id() );
-$lessons       = learndash_get_lesson_list( $course_id );
+$lessons       = learndash_get_course_lessons_list( $course_id );
+$lessons       = array_column( $lessons, 'post' );
 $ld_permalinks = get_option( 'learndash_settings_permalinks', array() );
 $course_slug   = isset( $ld_permalinks['courses'] ) ? $ld_permalinks['courses'] : 'courses';
 

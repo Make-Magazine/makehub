@@ -106,6 +106,7 @@ $this->add_control(
         ),
         'selectors'  => array(
             '{{WRAPPER}} .bb-course-items .bb-cover-wrap' => 'padding-top: {{SIZE}}{{UNIT}};',
+			'{{WRAPPER}} .bb-course-cover--videoTile .fluid-width-video-wrapper' => 'padding-top: {{SIZE}}{{UNIT}} !important;',
         ),
         'condition' => [
             'skin_style' => 'classic',
@@ -552,6 +553,10 @@ $this->add_control(
         ],
         'selectors'  => [
             '{{WRAPPER}} .bb-course-items .bb-cover-list-item' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+			'{{WRAPPER}} .bb-cover-wrap--llms' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0;',
+			'{{WRAPPER}} .bb-course-items.list-view .bb-course-item-wrap .bb-cover-list-item .bb-course-cover .bb-cover-wrap' => 'border-radius: {{TOP}}{{UNIT}} 0 0 {{LEFT}}{{UNIT}};',
+			'{{WRAPPER}} .bb-course-items .bb-course-cover--videoTile' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0;',
+			'{{WRAPPER}} .bb-course-items.list-view .bb-course-cover--videoTile' => 'border-radius: {{TOP}}{{UNIT}} 0 0 {{LEFT}}{{UNIT}};',
         ],
     ]
 );

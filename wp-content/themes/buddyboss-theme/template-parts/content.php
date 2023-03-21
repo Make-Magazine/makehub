@@ -157,6 +157,15 @@ global $post;
 				)
 				), get_the_title()
 				) );
+
+				wp_link_pages(
+					array(
+						'before'      => '<nav class="page-links bb-page-links">',
+						'after'       => '</nav>',
+						'link_before' => '',
+						'link_after'  => ''
+					)
+				);
 			?>
 			</div><!-- .entry-content -->
 		<?php } ?>

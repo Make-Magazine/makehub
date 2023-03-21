@@ -12,7 +12,8 @@ $courses_progress    = buddyboss_theme()->learndash_helper()->get_courses_progre
 $course_progress     = isset( $courses_progress[ $course_id ] ) ? $courses_progress[ $course_id ] : null;
 $course_progress_new = buddyboss_theme()->learndash_helper()->ld_get_progress_course_percentage( get_current_user_id(), $course_id );
 $admin_enrolled      = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
-$lesson_count        = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
+$lesson_count        = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
+$lesson_count        = array_column( $lesson_count, 'post' );
 $course_pricing      = learndash_get_course_price( $course_id );
 $has_access          = sfwd_lms_has_access( $course_id, $current_user_id );
 $file_info           = pathinfo( $course_video_embed );
@@ -148,6 +149,10 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 						$btn_advance_class = 'btn-advance-continue';
 						$btn_advance_label = __( 'Continue', 'buddyboss-theme' );
 						$resume_link       = buddyboss_theme()->learndash_helper()->boss_theme_course_resume( $course_id );
+					}
+
+					if ( learndash_get_course_steps_count( $course_id ) == 0 && false !== $is_enrolled ) {
+						$btn_advance_class .= ' btn-advance-disable';
 					}
 
 					$login_model = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'login_mode_enabled' );
@@ -331,10 +336,10 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 					}
 				}
 
-				if ( sizeof( $lesson_count ) > 0 || $topics_count > 0 || $course_quizzes_count > 0 || $course_certificate ) { ?>
+				if ( sizeof( $lesson_count ) > 0 || $topics_count > 0 || $course_quizzes_count > 0 || $course_certificate ) { 
+				$course_label = LearnDash_Custom_Label::get_label( 'course' ); ?>
                     <div class="bb-course-volume">
-                    <h4><?php echo LearnDash_Custom_Label::get_label( 'course' ); ?> <?php _e( 'Includes',
-							'buddyboss-theme' ); ?></h4>
+                    <h4><?php echo sprintf( esc_html__( '%s Includes', 'buddyboss-theme' ), $course_label ); ?></h4>
                     <ul class="bb-course-volume-list">
 						<?php if ( sizeof( $lesson_count ) > 0 ) { ?>
                             <li>
@@ -353,8 +358,8 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 						<?php } ?>
 						<?php if ( $course_certificate ) { ?>
                             <li>
-                                <i class="bb-icon-l bb-icon-certificate"></i><?php echo LearnDash_Custom_Label::get_label( 'course' ); ?> <?php _e( 'Certificate',
-									'buddyboss-theme' ); ?></li>
+								<i class="bb-icon-l bb-icon-certificate"></i><?php echo sprintf( esc_html__( '%s Certificate', 'buddyboss-theme' ), $course_label ); ?>
+							</li>
 						<?php } ?>
                     </ul>
                     </div><?php

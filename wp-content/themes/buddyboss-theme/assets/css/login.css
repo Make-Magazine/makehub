@@ -1346,18 +1346,6 @@ select:focus {
   box-shadow: var(--bb-input-focus-shadow);
   border-color: var(--bb-input-focus-border-color);
 }
-input.error,
-textarea.error,
-select.error {
-  background-color: rgba(var(--bb-danger-color-rgb), 0.1);
-  border: 1px solid rgba(var(--bb-danger-color-rgb), 0.15);
-}
-input.error:focus,
-textarea.error:focus,
-select.error:focus {
-  border-color: var(--bb-danger-color);
-  box-shadow: none;
-}
 input.success,
 textarea.success,
 select.success {
@@ -1375,10 +1363,19 @@ textarea:disabled,
 textarea.disabled,
 select:disabled,
 select.disabled {
-  resize: none;
-  opacity: 0.6;
-  cursor: default;
-  color: rgba(0, 0, 0, 0.5);
+  background-color: var(--bb-content-alternate-background-color);
+  opacity: 0.75;
+}
+input.error,
+textarea.error,
+select.error {
+  border-color: rgba(var(--bb-danger-color-rgb), 1);
+}
+input.error:focus,
+textarea.error:focus,
+select.error:focus {
+  border-color: var(--bb-danger-color);
+  box-shadow: none;
 }
 
 select {
@@ -1614,13 +1611,14 @@ form,
 }
 .bs-styled-checkbox:checked + label:after {
   content: "\e876";
+  font-weight: normal;
   position: absolute;
   left: 3px;
   top: 3px;
   font-family: "bb-icons";
+  font-weight: normal;
   color: #fff;
   font-size: 14px;
-  line-height: 1;
   display: block;
 }
 
@@ -1766,62 +1764,88 @@ input[type=submit] i,
   /*top: 1px;*/
   /*margin: 0 2px;*/
 }
-button:hover,
+button:hover, button:focus,
 .button:hover,
+.button:focus,
 input[type=button]:hover,
+input[type=button]:focus,
 input[type=submit]:hover,
+input[type=submit]:focus,
 .buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover {
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
   outline: none;
   text-decoration: none;
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
   border-color: var(--bb-primary-button-border-hover);
 }
-button:focus,
+button:hover, button:focus, button:active,
+.button:hover,
 .button:focus,
-input[type=button]:focus,
-input[type=submit]:focus,
-.buddypress .buddypress-wrap .comment-reply-link:focus,
-.buddypress .buddypress-wrap .generic-button a:focus,
-.buddypress .buddypress-wrap a.bp-title-button:focus,
-.buddypress .buddypress-wrap a.button:focus,
-.buddypress .buddypress-wrap button:focus,
-.buddypress .buddypress-wrap input[type=button]:focus,
-.buddypress .buddypress-wrap input[type=reset]:focus,
-.buddypress .buddypress-wrap input[type=submit]:focus,
-.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
-.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus {
-  outline: none;
-  text-decoration: none;
-}
-button:active,
 .button:active,
+input[type=button]:hover,
+input[type=button]:focus,
 input[type=button]:active,
+input[type=submit]:hover,
+input[type=submit]:focus,
 input[type=submit]:active,
+.buddypress .buddypress-wrap .comment-reply-link:hover,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
 .buddypress .buddypress-wrap .comment-reply-link:active,
+.buddypress .buddypress-wrap .generic-button a:hover,
+.buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap .generic-button a:active,
+.buddypress .buddypress-wrap a.bp-title-button:hover,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
 .buddypress .buddypress-wrap a.bp-title-button:active,
+.buddypress .buddypress-wrap a.button:hover,
+.buddypress .buddypress-wrap a.button:focus,
 .buddypress .buddypress-wrap a.button:active,
+.buddypress .buddypress-wrap button:hover,
+.buddypress .buddypress-wrap button:focus,
 .buddypress .buddypress-wrap button:active,
+.buddypress .buddypress-wrap input[type=button]:hover,
+.buddypress .buddypress-wrap input[type=button]:focus,
 .buddypress .buddypress-wrap input[type=button]:active,
+.buddypress .buddypress-wrap input[type=reset]:hover,
+.buddypress .buddypress-wrap input[type=reset]:focus,
 .buddypress .buddypress-wrap input[type=reset]:active,
+.buddypress .buddypress-wrap input[type=submit]:hover,
+.buddypress .buddypress-wrap input[type=submit]:focus,
 .buddypress .buddypress-wrap input[type=submit]:active,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment:active,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save:active {
   outline: none;
   text-decoration: none;
@@ -2532,6 +2556,41 @@ input[type=submit].error.outline.disabled,
   border-color: #DEDFE2;
   opacity: 1;
 }
+button.error:hover, button.error.outline:hover,
+.button.error:hover,
+.button.error.outline:hover,
+input[type=button].error:hover,
+input[type=button].error.outline:hover,
+input[type=submit].error:hover,
+input[type=submit].error.outline:hover,
+.buddypress .buddypress-wrap .comment-reply-link.error:hover,
+.buddypress .buddypress-wrap .comment-reply-link.error.outline:hover,
+.buddypress .buddypress-wrap .generic-button a.error:hover,
+.buddypress .buddypress-wrap .generic-button a.error.outline:hover,
+.buddypress .buddypress-wrap a.bp-title-button.error:hover,
+.buddypress .buddypress-wrap a.bp-title-button.error.outline:hover,
+.buddypress .buddypress-wrap a.button.error:hover,
+.buddypress .buddypress-wrap a.button.error.outline:hover,
+.buddypress .buddypress-wrap button.error:hover,
+.buddypress .buddypress-wrap button.error.outline:hover,
+.buddypress .buddypress-wrap input[type=button].error:hover,
+.buddypress .buddypress-wrap input[type=button].error.outline:hover,
+.buddypress .buddypress-wrap input[type=reset].error:hover,
+.buddypress .buddypress-wrap input[type=reset].error.outline:hover,
+.buddypress .buddypress-wrap input[type=submit].error:hover,
+.buddypress .buddypress-wrap input[type=submit].error.outline:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.error:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.error.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.error:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.error.outline:hover {
+  background-color: var(--bb-secondary-button-background-regular);
+  border-color: var(--bb-danger-color);
+  color: var(--bb-danger-color);
+}
 button.inverted,
 .button.inverted,
 input[type=button].inverted,
@@ -2812,36 +2871,51 @@ input[type=submit].outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus {
   box-shadow: var(--bb-secondary-button-focus-shadow);
 }
-button.outline:hover, button.outline:active,
+button.outline:hover, button.outline:focus, button.outline:active,
 .button.outline:hover,
+.button.outline:focus,
 .button.outline:active,
 input[type=button].outline:hover,
+input[type=button].outline:focus,
 input[type=button].outline:active,
 input[type=submit].outline:hover,
+input[type=submit].outline:focus,
 input[type=submit].outline:active,
 .buddypress .buddypress-wrap .comment-reply-link.outline:hover,
+.buddypress .buddypress-wrap .comment-reply-link.outline:focus,
 .buddypress .buddypress-wrap .comment-reply-link.outline:active,
 .buddypress .buddypress-wrap .generic-button a.outline:hover,
+.buddypress .buddypress-wrap .generic-button a.outline:focus,
 .buddypress .buddypress-wrap .generic-button a.outline:active,
 .buddypress .buddypress-wrap a.bp-title-button.outline:hover,
+.buddypress .buddypress-wrap a.bp-title-button.outline:focus,
 .buddypress .buddypress-wrap a.bp-title-button.outline:active,
 .buddypress .buddypress-wrap a.button.outline:hover,
+.buddypress .buddypress-wrap a.button.outline:focus,
 .buddypress .buddypress-wrap a.button.outline:active,
 .buddypress .buddypress-wrap button.outline:hover,
+.buddypress .buddypress-wrap button.outline:focus,
 .buddypress .buddypress-wrap button.outline:active,
 .buddypress .buddypress-wrap input[type=button].outline:hover,
+.buddypress .buddypress-wrap input[type=button].outline:focus,
 .buddypress .buddypress-wrap input[type=button].outline:active,
 .buddypress .buddypress-wrap input[type=reset].outline:hover,
+.buddypress .buddypress-wrap input[type=reset].outline:focus,
 .buddypress .buddypress-wrap input[type=reset].outline:active,
 .buddypress .buddypress-wrap input[type=submit].outline:hover,
+.buddypress .buddypress-wrap input[type=submit].outline:focus,
 .buddypress .buddypress-wrap input[type=submit].outline:active,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:hover,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:focus,
 .buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_cancel.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.outline:active,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:hover,
+.activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:focus,
 .activity-list .activity-item .comment-item .activity-meta.action .buddyboss_edit_activity_comment.action-save.outline:active {
   background-color: var(--bb-secondary-button-background-hover);
   color: var(--bb-secondary-button-text-hover);
@@ -2965,8 +3039,9 @@ input[type=submit].upper.large,
 .wp-block-file a.wp-block-file__button:focus {
   box-shadow: var(--bb-primary-button-focus-shadow);
 }
-.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:active,
+.wp-block-file .wp-block-file__button:hover, .wp-block-file .wp-block-file__button:focus, .wp-block-file .wp-block-file__button:active,
 .wp-block-file a.wp-block-file__button:hover,
+.wp-block-file a.wp-block-file__button:focus,
 .wp-block-file a.wp-block-file__button:active {
   background-color: var(--bb-primary-button-background-hover);
   color: var(--bb-primary-button-text-hover);
@@ -3068,7 +3143,7 @@ input[type="submit"] {
 .bbp-pagination-links span.current {
   background-color: var(--bb-primary-color);
   color: var(--bb-body-background-color);
-  padding: 5px 12px;
+  padding: 5px 0;
   line-height: 18px;
 }
 
@@ -3090,49 +3165,88 @@ input[type="submit"] {
           justify-content: end;
 }
 
+.page-links {
+  font-size: 12px;
+  color: var(--bb-alternate-text-color);
+  margin: 0 0 15px;
+}
+
+.bb-bp-invites-content .table-responsive .page-numbers,
+.bb-bp-invites-content .table-responsive .post-page-numbers,
 .bb-lms-pagination .page-numbers,
+.bb-lms-pagination .post-page-numbers,
 .bp-pagination-links .page-numbers,
+.bp-pagination-links .post-page-numbers,
 .bbp-pagination-links .page-numbers,
+.bbp-pagination-links .post-page-numbers,
 .woocommerce-pagination .page-numbers,
-.llms-pagination .page-numbers {
+.woocommerce-pagination .post-page-numbers,
+.llms-pagination .page-numbers,
+.llms-pagination .post-page-numbers,
+.page-links .page-numbers,
+.page-links .post-page-numbers {
   display: inline-block;
   width: 28px;
   height: 28px;
   line-height: 28px;
   text-align: center;
   font-size: 12px;
-  border-radius: 4px;
+  border-radius: var(--bb-block-radius-inner);
   padding: 0;
 }
+.bb-bp-invites-content .table-responsive a.page-numbers:not(.prev):not(.next),
+.bb-bp-invites-content .table-responsive a.post-page-numbers,
 .bb-lms-pagination a.page-numbers:not(.prev):not(.next),
+.bb-lms-pagination a.post-page-numbers,
 .bp-pagination-links a.page-numbers:not(.prev):not(.next),
+.bp-pagination-links a.post-page-numbers,
 .bbp-pagination-links a.page-numbers:not(.prev):not(.next),
+.bbp-pagination-links a.post-page-numbers,
 .woocommerce-pagination a.page-numbers:not(.prev):not(.next),
-.llms-pagination a.page-numbers:not(.prev):not(.next) {
+.woocommerce-pagination a.post-page-numbers,
+.llms-pagination a.page-numbers:not(.prev):not(.next),
+.llms-pagination a.post-page-numbers,
+.page-links a.page-numbers:not(.prev):not(.next),
+.page-links a.post-page-numbers {
   color: var(--bb-body-text-color);
   margin: 0 2px;
 }
+.bb-bp-invites-content .table-responsive a.page-numbers:not(.prev):not(.next):hover,
+.bb-bp-invites-content .table-responsive a.post-page-numbers:hover,
 .bb-lms-pagination a.page-numbers:not(.prev):not(.next):hover,
+.bb-lms-pagination a.post-page-numbers:hover,
 .bp-pagination-links a.page-numbers:not(.prev):not(.next):hover,
+.bp-pagination-links a.post-page-numbers:hover,
 .bbp-pagination-links a.page-numbers:not(.prev):not(.next):hover,
+.bbp-pagination-links a.post-page-numbers:hover,
 .woocommerce-pagination a.page-numbers:not(.prev):not(.next):hover,
-.llms-pagination a.page-numbers:not(.prev):not(.next):hover {
+.woocommerce-pagination a.post-page-numbers:hover,
+.llms-pagination a.page-numbers:not(.prev):not(.next):hover,
+.llms-pagination a.post-page-numbers:hover,
+.page-links a.page-numbers:not(.prev):not(.next):hover,
+.page-links a.post-page-numbers:hover {
   color: var(--bb-primary-color);
 }
+.bb-bp-invites-content .table-responsive a.prev,
 .bb-lms-pagination a.prev,
 .bp-pagination-links a.prev,
 .bbp-pagination-links a.prev,
 .woocommerce-pagination a.prev,
-.llms-pagination a.prev {
+.llms-pagination a.prev,
+.page-links a.prev {
   margin-right: 5px;
 }
+.bb-bp-invites-content .table-responsive a.next,
 .bb-lms-pagination a.next,
 .bp-pagination-links a.next,
 .bbp-pagination-links a.next,
 .woocommerce-pagination a.next,
-.llms-pagination a.next {
+.llms-pagination a.next,
+.page-links a.next {
   margin-left: 5px;
 }
+.bb-bp-invites-content .table-responsive a.prev,
+.bb-bp-invites-content .table-responsive a.next,
 .bb-lms-pagination a.prev,
 .bb-lms-pagination a.next,
 .bp-pagination-links a.prev,
@@ -3142,7 +3256,9 @@ input[type="submit"] {
 .woocommerce-pagination a.prev,
 .woocommerce-pagination a.next,
 .llms-pagination a.prev,
-.llms-pagination a.next {
+.llms-pagination a.next,
+.page-links a.prev,
+.page-links a.next {
   background-color: var(--bb-content-background-color);
   border: 1px solid var(--bb-content-border-color);
   font-size: 0;
@@ -3157,6 +3273,8 @@ input[type="submit"] {
           justify-content: center;
   color: var(--bb-body-text-color);
 }
+.bb-bp-invites-content .table-responsive a.prev:hover,
+.bb-bp-invites-content .table-responsive a.next:hover,
 .bb-lms-pagination a.prev:hover,
 .bb-lms-pagination a.next:hover,
 .bp-pagination-links a.prev:hover,
@@ -3166,9 +3284,13 @@ input[type="submit"] {
 .woocommerce-pagination a.prev:hover,
 .woocommerce-pagination a.next:hover,
 .llms-pagination a.prev:hover,
-.llms-pagination a.next:hover {
+.llms-pagination a.next:hover,
+.page-links a.prev:hover,
+.page-links a.next:hover {
   background-color: var(--bb-content-alternate-background-color);
 }
+.bb-bp-invites-content .table-responsive a.prev:before,
+.bb-bp-invites-content .table-responsive a.next:before,
 .bb-lms-pagination a.prev:before,
 .bb-lms-pagination a.next:before,
 .bp-pagination-links a.prev:before,
@@ -3178,7 +3300,9 @@ input[type="submit"] {
 .woocommerce-pagination a.prev:before,
 .woocommerce-pagination a.next:before,
 .llms-pagination a.prev:before,
-.llms-pagination a.next:before {
+.llms-pagination a.next:before,
+.page-links a.prev:before,
+.page-links a.next:before {
   font-family: 'bb-icons';
   speak: none;
   font-style: normal;
@@ -3190,27 +3314,50 @@ input[type="submit"] {
   font-size: 20px;
   line-height: 28px;
 }
+.bb-bp-invites-content .table-responsive a.prev:before,
 .bb-lms-pagination a.prev:before,
 .bp-pagination-links a.prev:before,
 .bbp-pagination-links a.prev:before,
 .woocommerce-pagination a.prev:before,
-.llms-pagination a.prev:before {
+.llms-pagination a.prev:before,
+.page-links a.prev:before {
   content: "\e8ab";
 }
+.bb-bp-invites-content .table-responsive a.next:before,
 .bb-lms-pagination a.next:before,
 .bp-pagination-links a.next:before,
 .bbp-pagination-links a.next:before,
 .woocommerce-pagination a.next:before,
-.llms-pagination a.next:before {
+.llms-pagination a.next:before,
+.page-links a.next:before {
   content: "\e827";
 }
+.bb-bp-invites-content .table-responsive span.page-numbers:not(.dots),
+.bb-bp-invites-content .table-responsive span.post-page-numbers,
 .bb-lms-pagination span.page-numbers:not(.dots),
+.bb-lms-pagination span.post-page-numbers,
 .bp-pagination-links span.page-numbers:not(.dots),
+.bp-pagination-links span.post-page-numbers,
 .bbp-pagination-links span.page-numbers:not(.dots),
+.bbp-pagination-links span.post-page-numbers,
 .woocommerce-pagination span.page-numbers:not(.dots),
-.llms-pagination span.page-numbers:not(.dots) {
+.woocommerce-pagination span.post-page-numbers,
+.llms-pagination span.page-numbers:not(.dots),
+.llms-pagination span.post-page-numbers,
+.page-links span.page-numbers:not(.dots),
+.page-links span.post-page-numbers {
   color: var(--bb-body-background-color);
   background-color: var(--bb-primary-color);
+}
+.bb-bp-invites-content .table-responsive span.page-numbers.disabled,
+.bb-lms-pagination span.page-numbers.disabled,
+.bp-pagination-links span.page-numbers.disabled,
+.bbp-pagination-links span.page-numbers.disabled,
+.woocommerce-pagination span.page-numbers.disabled,
+.llms-pagination span.page-numbers.disabled,
+.page-links span.page-numbers.disabled {
+  background-color: transparent;
+  color: var(--bb-body-text-color);
 }
 
 .woocommerce-pagination ul.page-numbers,
@@ -4240,7 +4387,7 @@ button[data-balloon] {
   font-weight: 500;
   font-size: 13px;
   letter-spacing: -0.24px;
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
   color: var(--bb-tooltip-color);
@@ -4552,7 +4699,7 @@ button[data-balloon] {
 }
 
 [data-bp-tooltip]:after {
-  background: var(--bb-tooltip-background);
+  background: rgba(var(--bb-tooltip-background-rgb), 0.95);
   color: var(--bb-tooltip-color);
 }
 [data-bp-tooltip]:before {
@@ -4726,6 +4873,7 @@ body.login.login-split-page .login-split__entry p {
   margin-top: 20px;
   margin-bottom: 0;
   color: var(--bb-login-custom-heading-color);
+  word-wrap: break-word;
 }
 
 body.login.login-split-page #login {
@@ -4961,9 +5109,9 @@ body.login:not(.login-split-page) .language-switcher {
 .login.bb-login .button-primary,
 .login.wp-core-ui .button-primary,
 .login.bb-login .wp-generate-pw {
-  background-color: var(--bb-primary-button-background-regular);
-  color: var(--bb-primary-button-text-regular);
-  border: 1px solid var(--bb-primary-button-border-regular);
+  background-color: var(--bb-login-register-button-background-color-regular);
+  border-color: var(--bb-login-register-button-border-color-regular);
+  color: var(--bb-login-register-button-text-color-regular);
   border-radius: var(--bb-button-radius);
   box-shadow: none;
   text-shadow: none;
@@ -4976,17 +5124,12 @@ body.login:not(.login-split-page) .language-switcher {
   margin: 20px 0 0;
   font-size: 14px;
 }
-.login.bb-login .button-primary:focus,
-.login.wp-core-ui .button-primary:focus,
-.login.bb-login .wp-generate-pw:focus {
-  box-shadow: var(--bb-primary-button-focus-shadow);
-}
 .login.bb-login .button-primary:hover,
 .login.wp-core-ui .button-primary:hover,
 .login.bb-login .wp-generate-pw:hover {
-  background-color: var(--bb-primary-button-background-hover);
-  color: var(--bb-primary-button-text-hover);
-  border-color: var(--bb-primary-button-border-hover);
+  background-color: var(--bb-login-register-button-background-color-hover);
+  border-color: var(--bb-login-register-button-border-color-hover);
+  color: var(--bb-login-register-button-text-color-hover);
 }
 .login.bb-login .button-primary:active,
 .login.wp-core-ui .button-primary:active,
@@ -4999,19 +5142,15 @@ body.login:not(.login-split-page) .language-switcher {
 .language-switcher .button,
 .bb-login.wp-core-ui .language-switcher .button {
   background-color: var(--bb-secondary-button-background-regular);
+  border-color: var(--bb-secondary-button-border-regular);
   color: var(--bb-secondary-button-text-regular);
-  border: 1px solid var(--bb-secondary-button-border-regular);
   border-radius: var(--bb-button-radius);
-}
-.language-switcher .button:focus,
-.bb-login.wp-core-ui .language-switcher .button:focus {
-  box-shadow: var(--bb-secondary-button-focus-shadow);
 }
 .language-switcher .button:hover,
 .bb-login.wp-core-ui .language-switcher .button:hover {
   background-color: var(--bb-secondary-button-background-hover);
+  border-color: var(--bb-secondary-button-border-hover);
   color: var(--bb-secondary-button-text-hover);
-  border: 1px solid var(--bb-secondary-button-border-hover);
 }
 .language-switcher select,
 .bb-login.wp-core-ui .language-switcher select {
@@ -5061,6 +5200,9 @@ body.login:not(.login-split-page) .language-switcher {
   max-width: 440px;
   padding: 0 20px;
   width: 100%;
+}
+.login-action-confirm_admin_email.login-split-page #login {
+  max-width: 100%;
 }
 
 .login h1.admin-email__heading {

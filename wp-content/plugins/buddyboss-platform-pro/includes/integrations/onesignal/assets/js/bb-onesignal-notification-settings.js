@@ -97,7 +97,7 @@ window.bp = window.bp || {};
 
 		validateWebPush: function() {
 			if ( jQuery( '#bb-onesignal-enabled-web-push' ).is( ':checked' ) ) {
-				jQuery( '.bb-onesignal-request-permission, .bb-onesignal-default-notification-icon' ).removeClass( 'bp-hide' );
+				jQuery( '.bb-onesignal-request-permission, .bb-onesignal-default-notification-icon, .bb-onesignal-web-push-skip-active-members' ).removeClass( 'bp-hide' );
 
 				if ( jQuery( '#bb-onesignal-request-permission' ).is( ':checked' ) ) {
 					jQuery( '.bb-onesignal-enable-soft-prompt' ).removeClass( 'bp-hide' );
@@ -110,7 +110,7 @@ window.bp = window.bp || {};
 				}
 
 			} else {
-				jQuery( '.bb-onesignal-request-permission, .bb-onesignal-default-notification-icon, .bb-onesignal-enable-soft-prompt, .bb-onesignal-enable-soft-prompt-extra-fields' ).addClass( 'bp-hide' );
+				jQuery( '.bb-onesignal-request-permission, .bb-onesignal-default-notification-icon, .bb-onesignal-enable-soft-prompt, .bb-onesignal-enable-soft-prompt-extra-fields, .bb-onesignal-web-push-skip-active-members' ).addClass( 'bp-hide' );
 			}
 		},
 

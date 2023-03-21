@@ -9,7 +9,7 @@
 	if ( $buddypanel_toggle ) {
 		?>
 		<header class="panel-head">
-			<a href="#" class="bb-toggle-panel" aria-label="Side-menu toggle"><i class="bb-icon-l bb-icon-sidebar"></i></a>
+			<a href="#" class="bb-toggle-panel"><i class="bb-icon-l bb-icon-sidebar"></i></a>
 		</header>
 		<?php
 	}

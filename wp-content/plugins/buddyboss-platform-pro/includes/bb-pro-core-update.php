@@ -131,6 +131,16 @@ function bbp_pro_version_updater() {
 		if ( $raw_db_version < 241 ) {
 			do_action( 'bbp_pro_update_to_1_2_0' );
 		}
+
+		// Version 2.1.8.
+		if ( $raw_db_version < 251 ) {
+			do_action( 'bbp_pro_update_to_2_1_5' );
+		}
+
+		// Version 2.2.1.2 .
+		if ( $raw_db_version < 255 ) {
+			bbp_pro_update_to_2_2_1_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -183,4 +193,23 @@ function bbp_pro_update_to_1_0_7() {
 	 * @since 1.0.7
 	 */
 	do_action( 'bbp_pro_update_to_1_0_7' );
+}
+
+/**
+ * Update migration for version 2.2.1.2
+ *
+ * @since 2.2.1.3
+ */
+function bbp_pro_update_to_2_2_1_2() {
+	delete_transient( 'update_themes' );
+	delete_transient( 'update_plugins' );
+	delete_transient( 'bb_updates_bp-loader' );
+	delete_transient( 'bb_updates_buddyboss-theme' );
+	delete_transient( 'bb_updates_buddyboss-platform-pro' );
+	// For Multi site.
+	delete_site_transient( 'update_themes' );
+	delete_site_transient( 'update_plugins' );
+	delete_site_transient( 'bb_updates_bp-loader' );
+	delete_site_transient( 'bb_updates_buddyboss-theme' );
+	delete_site_transient( 'bb_updates_buddyboss-platform-pro' );
 }

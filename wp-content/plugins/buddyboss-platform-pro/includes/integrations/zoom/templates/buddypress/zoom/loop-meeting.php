@@ -34,7 +34,7 @@ global $bp_zoom_current_meeting;
 			<span class="recurring-meeting-label" data-bp-tooltip="<?php esc_html_e( 'Recurring', 'buddyboss-pro' ); ?>" data-bp-tooltip-pos="left"></span>
 		<?php endif; ?>
 		<div class="meeting-date">
-			<?php echo esc_html( wp_date( bp_core_date_format( false, true ), strtotime( bp_get_zoom_meeting_start_date_utc() ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( bp_get_zoom_meeting_start_date_utc() ) ) ); ?>
+			<?php echo esc_html( wp_date( bp_core_date_format( false, true ), strtotime( bp_get_zoom_meeting_start_date_utc() ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( bp_get_zoom_meeting_start_date_utc() ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) ) ); ?>
 		</div>
 	</div>
 </li>

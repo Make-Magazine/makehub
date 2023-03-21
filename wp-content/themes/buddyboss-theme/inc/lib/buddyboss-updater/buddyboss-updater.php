@@ -83,3 +83,16 @@ register_deactivation_hook( __FILE__, 'buddyboss_updater_remove_schedule_4hours'
 function buddyboss_updater_remove_schedule_4hours() {
 	wp_clear_scheduled_hook( 'buddyboss_updater_schedule_4hours' );
 }
+
+function bbupdater_register_self_update( $products ) {
+
+	$products['BB_PLATFORM'] = array(
+		'path'         => 'buddyboss-platform/bp-loader.php',
+		'id'           => 847,
+		'software_ids' => array(),
+	);
+
+	return $products;
+}
+
+add_filter( 'bboss_updatable_products', 'bbupdater_register_self_update' );

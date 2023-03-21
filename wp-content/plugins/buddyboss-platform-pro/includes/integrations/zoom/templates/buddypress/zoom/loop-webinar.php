@@ -31,7 +31,7 @@
 			<span class="recurring-webinar-label" data-bp-tooltip="<?php esc_html_e( 'Recurring', 'buddyboss-pro' ); ?>" data-bp-tooltip-pos="left"></span>
 		<?php endif; ?>
 		<div class="webinar-date">
-			<?php echo esc_html( wp_date( bp_core_date_format( false, true ), strtotime( bp_get_zoom_webinar_start_date_utc() ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( bp_get_zoom_webinar_start_date_utc() ) ) ); ?>
+			<?php echo esc_html( wp_date( bp_core_date_format( false, true ), strtotime( bp_get_zoom_webinar_start_date_utc() ), new DateTimeZone( bp_get_zoom_webinar_timezone() ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( bp_get_zoom_webinar_start_date_utc() ), new DateTimeZone( bp_get_zoom_webinar_timezone() ) ) ); ?>
 		</div>
 	</div>
 </li>

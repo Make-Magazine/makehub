@@ -537,7 +537,16 @@ function bb_pro_onesignal_notification_after_save( $notification ) {
 		return;
 	}
 
-	if ( isset( $notification->inserted ) && true === $notification->inserted && bp_can_send_notification( $notification->user_id, $notification->component_name, $notification->component_action, 'web' ) ) {
+	if (
+		isset( $notification->inserted ) &&
+		true === $notification->inserted &&
+		bp_can_send_notification( $notification->user_id, $notification->component_name, $notification->component_action, 'web' )
+	) {
+
+		if ( true !== (bool) apply_filters( 'bb_pro_onesignal_notification_fire', bb_pro_onesignal_user_presence_check( true, $notification ), $notification ) ) {
+			return;
+		}
+
 		if ( function_exists( 'bb_notification_get_renderable_notifications' ) ) {
 			$content = array(
 				'title'   => '',
@@ -579,6 +588,7 @@ function bb_pro_onesignal_notification_after_save( $notification ) {
 				'image'   => $notification_content['image'],
 			)
 		);
+
 	}
 }
 

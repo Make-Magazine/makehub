@@ -66,7 +66,6 @@ class Boss_Widget_Recent_Posts extends WP_Widget {
 				'widget_posts_args',
 				array(
 					'posts_per_page'      => $number,
-					'no_found_rows'       => true,
 					'post_status'         => 'publish',
 					'ignore_sticky_posts' => true,
 				)
@@ -99,8 +98,15 @@ class Boss_Widget_Recent_Posts extends WP_Widget {
 							<?php endif; ?>
 						</div>
 					</li>
-				<?php endwhile; ?>
+					<?php
+				endwhile;
+				?>
 			</ul>
+			<?php
+			if ( $r->post_count < $r->found_posts ) {
+				?>
+				<div class="more-block"><a href="<?php echo get_post_type_archive_link( 'post' ); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-theme' ); ?><i class="bb-icon-angle-right"></i></a></div>
+			<?php } ?>
 			<?php echo $args['after_widget']; ?>
 			<?php
 			// Reset the global $the_post as this query will have stomped on it
