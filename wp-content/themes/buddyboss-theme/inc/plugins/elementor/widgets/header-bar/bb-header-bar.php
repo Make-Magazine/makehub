@@ -123,7 +123,7 @@ class Header_Bar extends Widget_Base {
 	 *
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_content',
 			array(
@@ -362,8 +362,8 @@ class Header_Bar extends Widget_Base {
 					'type'         => Controls_Manager::SWITCHER,
 					'label_on'     => esc_html__( 'On', 'buddyboss-theme' ),
 					'label_off'    => esc_html__( 'Off', 'buddyboss-theme' ),
-					'return_value' => 'inline-block',
-					'default'      => 'inline-block',
+					'return_value' => 'flex',
+					'default'      => 'flex',
 					'selectors'    => array(
 						'{{WRAPPER}} #bb-toggle-theme' => 'display: {{VALUE}};',
 					),
@@ -378,8 +378,8 @@ class Header_Bar extends Widget_Base {
 					'type'         => Controls_Manager::SWITCHER,
 					'label_on'     => esc_html__( 'On', 'buddyboss-theme' ),
 					'label_off'    => esc_html__( 'Off', 'buddyboss-theme' ),
-					'return_value' => 'inline-block',
-					'default'      => 'inline-block',
+					'return_value' => 'flex',
+					'default'      => 'flex',
 					'selectors'    => array(
 						'{{WRAPPER}} .header-minimize-link' => 'display: {{VALUE}};',
 						'{{WRAPPER}} .header-maximize-link' => 'display: {{VALUE}};',

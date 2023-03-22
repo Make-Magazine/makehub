@@ -76,7 +76,7 @@ class BB_Elementor_Widgets {
 	private function add_actions() {
 		add_action( 'elementor/elements/categories_registered', array( $this, 'bb_elementor_widget_categories' ) );
 
-		add_action( 'elementor/widgets/widgets_registered', array( $this, 'bb_elementor_widgets_registered' ) );
+		add_action( 'elementor/widgets/register', array( $this, 'bb_elementor_widgets_registered' ) );
 
 		add_action(
 			'elementor/frontend/after_register_scripts',
@@ -289,31 +289,31 @@ class BB_Elementor_Widgets {
 	 * @access private
 	 */
 	private function register_widget() {
-		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Header_Bar() );
-		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Dashboard_Grid() );
-		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Tabs() );
-		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Review() );
-		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Gallery() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new Header_Bar() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Dashboard_Grid() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new BB_Tabs() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new BB_Review() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new BB_Gallery() );
 		if ( function_exists( 'bp_is_active' ) ) {
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Members() );
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Profile_Completion() );
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Dashboard_Intro() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Members() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Profile_Completion() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Dashboard_Intro() );
 		}
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) ) {
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Activity() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Activity() );
 		}
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Forums() );
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BBP_Forums_Activity() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Forums() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BBP_Forums_Activity() );
 		}
 
 		if ( class_exists( 'LifterLMS' ) || class_exists( 'SFWD_LMS' ) ) {
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Lms_Courses() );
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Lms_Activity() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BB_Lms_Courses() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BB_Lms_Activity() );
 		}
 
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) ) {
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new BB_Groups() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new BB_Groups() );
 		}
 	}
 }

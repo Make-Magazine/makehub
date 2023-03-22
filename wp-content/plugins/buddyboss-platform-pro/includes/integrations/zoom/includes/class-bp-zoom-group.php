@@ -584,9 +584,23 @@ class BP_Zoom_Group {
 		$api_secret    = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-secret', true );
 		$api_email     = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-email', true );
 		$webhook_token = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-webhook-token', true );
+
+		$notice_exists = get_transient( 'bb_group_zoom_notice_' . $group_id );
 		?>
 
 		<div class="bb-group-zoom-settings-container">
+
+			<?php if ( ! empty( $notice_exists ) ) { ?>
+				<div class="bp-messages-feedback">
+					<div class="bp-feedback <?php echo esc_attr( $notice_exists['type'] ); ?>-notice">
+						<span class="bp-icon" aria-hidden="true"></span>
+						<p><?php echo esc_html( $notice_exists['message'] ); ?></p>
+					</div>
+				</div>
+				<?php
+				delete_transient( 'bb_group_zoom_notice_' . $group_id );
+			}
+			?>
 
 			<h4 class="bb-section-title"><?php esc_html_e( 'Group Zoom Settings', 'buddyboss-pro' ); ?></h4>
 
@@ -949,8 +963,19 @@ class BP_Zoom_Group {
 						}
 					}
 
-					bp_core_add_message( __( 'Group Zoom settings were successfully updated.', 'buddyboss-pro' ), 'success' );
-
+					$success_message = __( 'Group Zoom settings were successfully updated.', 'buddyboss-pro' );
+					if ( ! is_admin() ) {
+						bp_core_add_message( $success_message, 'success' );
+					} else {
+						set_transient(
+							'bb_group_zoom_notice_' . $group_id,
+							array(
+								'message' => $success_message,
+								'type'    => 'success',
+							),
+							30
+						);
+					}
 				} else {
 
 					groups_update_groupmeta( $group_id, 'bp-group-zoom-api-email', $api_email );
@@ -963,7 +988,19 @@ class BP_Zoom_Group {
 					groups_delete_groupmeta( $group_id, 'bp-group-zoom-api-host-user-settings' );
 					groups_delete_groupmeta( $group_id, 'bp-group-zoom-enable-webinar' );
 
-					bp_core_add_message( __( 'Invalid Credentials. Please enter valid key, secret key or account email.', 'buddyboss-pro' ), 'error' );
+					$error_message = __( 'Invalid Credentials. Please enter valid key, secret key or account email.', 'buddyboss-pro' );
+					if ( ! is_admin() ) {
+						bp_core_add_message( $error_message, 'error' );
+					} else {
+						set_transient(
+							'bb_group_zoom_notice_' . $group_id,
+							array(
+								'message' => $error_message,
+								'type'    => 'error',
+							),
+							30
+						);
+					}
 				}
 			} else {
 
@@ -977,10 +1014,34 @@ class BP_Zoom_Group {
 				groups_delete_groupmeta( $group_id, 'bp-group-zoom-api-host-user-settings' );
 				groups_delete_groupmeta( $group_id, 'bp-group-zoom-enable-webinar' );
 
-				bp_core_add_message( __( 'There was an error updating group Zoom API settings. Please try again.', 'buddyboss-pro' ), 'error' );
+				$error_message = __( 'There was an error updating group Zoom API settings. Please try again.', 'buddyboss-pro' );
+				if ( ! is_admin() ) {
+					bp_core_add_message( $error_message, 'error' );
+				} else {
+					set_transient(
+						'bb_group_zoom_notice_' . $group_id,
+						array(
+							'message' => $error_message,
+							'type'    => 'error',
+						),
+						30
+					);
+				}
 			}
 		} else {
-			bp_core_add_message( __( 'Group Zoom settings were successfully updated.', 'buddyboss-pro' ), 'success' );
+			$success_message = __( 'Group Zoom settings were successfully updated.', 'buddyboss-pro' );
+			if ( ! is_admin() ) {
+				bp_core_add_message( $success_message, 'success' );
+			} else {
+				set_transient(
+					'bb_group_zoom_notice_' . $group_id,
+					array(
+						'message' => $success_message,
+						'type'    => 'success',
+					),
+					30
+				);
+			}
 		}
 
 		/**

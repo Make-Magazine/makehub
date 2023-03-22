@@ -18,6 +18,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
+
+$courses_label = LearnDash_Custom_Label::get_label( 'courses' );
 ?>
 <div id="<?php echo $nameLower ?>-content" <?php echo $this->get_render_attribute_string('ld-switch'); ?>>
     <form data-current_page_url="<?php echo esc_url( $current_page_url ); ?>" id="bb-courses-directory-form" class="bb-elementor-widget bb-courses-directory" method="get" action="">
@@ -33,7 +35,7 @@ if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
                 <div id="courses-dir-search" class="bs-dir-search" role="search">
                     <div id="search-members-form" class="bs-search-form">
                         <label for="bs_members_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss-theme' ); ?></label>
-                        <input type="text" name="search" id="bs_members_search" value="<?php echo ! empty( $_GET['search'] ) ? $_GET['search'] : ''; ?>" placeholder="<?php _e( 'Search', 'buddyboss-theme' ); ?> <?php echo LearnDash_Custom_Label::get_label( 'courses' ) . '...'; ?>">
+                        <input type="text" name="search" id="bs_members_search" value="<?php echo ! empty( $_GET['search'] ) ? $_GET['search'] : ''; ?>" placeholder="<?php echo sprintf( esc_html__( 'Search %s...', 'buddyboss-theme' ), $courses_label ); ?>">
                     </div>
                 </div>
             <?php endif; ?>
@@ -43,11 +45,11 @@ if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
                 <ul class="component-navigation courses-nav">
                     <?php
                     $navs = array(
-                        'all' => '<div class="bb-component-nav-item-point">' . esc_html__( 'All', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . $query->found_posts . '</span>',
+                        'all' => '<div class="bb-component-nav-item-point">' . sprintf( esc_html__( 'All %s', 'buddyboss-theme' ), $courses_label ) . '</div>' . '<span class="count">' . $query->found_posts . '</span>',
                     );
 
                     if ( is_user_logged_in() ) {
-                        $navs['my-courses'] = '<div class="bb-component-nav-item-point">' . esc_html__( 'My', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
+                        $navs['my-courses'] = '<div class="bb-component-nav-item-point">' . sprintf( esc_html__( 'My %s', 'buddyboss-theme' ), $courses_label ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count( null, $tax_query ) . '</span>';
                     }
 
                     $navs = apply_filters( 'BuddyBossTheme/Learndash/Archive/Navs', $navs );

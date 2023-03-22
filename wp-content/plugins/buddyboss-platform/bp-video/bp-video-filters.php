@@ -207,7 +207,12 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
+			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
+
+			if ( 'activity_comment' === $activity->type ) {
+				$args['privacy'][] = 'comment';
+			}
+
 			if ( ! bp_is_profile_video_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
@@ -353,6 +358,11 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
 
+	if ( ! empty( $post_video ) ) {
+		$video_order = array_column( $post_video, 'menu_order' );
+		array_multisort( $video_order, SORT_ASC, $post_video );
+	}
+
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_videos ) ) {
 		$moderated_videos = explode( ',', $moderated_videos );
 		foreach ( $moderated_videos as $video_id ) {
@@ -426,7 +436,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 						$video_ids[] = $video_id;
 					}
 				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
-						bp_video_delete( array( 'id' => $video_id ) );
+						bp_video_delete( array( 'id' => $video_id ), 'activity' );
 					}
 				}
 
@@ -1826,6 +1836,7 @@ function bb_setup_template_for_video_preview( $template ) {
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
+	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-id=$matches[2]', 'top' );
 }
 
 /**
@@ -1839,6 +1850,10 @@ function bb_setup_attachment_video_preview() {
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
 	$query_vars[] = 'video-attachment-id';
+
+	if ( bp_is_active( 'messages' ) ) {
+		$query_vars[] = 'video-thread-id';
+	}
 
 	return $query_vars;
 }
@@ -1868,3 +1883,4 @@ function bb_setup_attachment_video_preview_template( $template ) {
 
 	return $template;
 }
+

@@ -25,6 +25,8 @@ add_filter( 'bb_web_notification_enabled', 'bb_onesignal_web_push_enabled', 10, 
 
 add_filter( 'bp_core_do_avatar_handle_crop', 'bb_onesignal_custom_image_handle_crop_remove', 10, 2 );
 
+add_filter( 'bb_pro_onesignal_notification_fire', 'bb_onesignal_manage_web_push_notification', 99, 2 );
+
 /**
  * Added Web Push notification settings.
  *
@@ -54,6 +56,12 @@ function bb_onesignal_admin_settings_web_push( $fields ) {
 		'title'    => esc_html__( 'Default Notification Icon', 'buddyboss-pro' ),
 		'callback' => 'bb_onesignal_admin_setting_callback_default_notification_icon_fields',
 		'args'     => array( 'class' => 'bb-onesignal-default-notification-icon bp-hide' ),
+	);
+
+	$fields['bb_web_push_skip_active_members'] = array(
+		'title'    => esc_html__( 'Skip Active Members', 'buddyboss-pro' ),
+		'callback' => 'bb_onesignal_admin_setting_callback_web_push_skip_active_members',
+		'args'     => array( 'class' => 'bb-onesignal-web-push-skip-active-members bp-hide' ),
 	);
 
 	$fields['bb-onesignal-request-permission'] = array(
@@ -394,4 +402,35 @@ function bb_onesignal_custom_image_handle_crop_remove( $value, $r ) {
 		return false;
 	}
 	return $value;
+}
+
+/**
+ * Needs to check the web push needs to fired or not.
+ *
+ * @since 2.2.3
+ *
+ * @param bool                          $retval       Return value.
+ * @param BP_Notifications_Notification $notification Notification object.
+ *
+ * @return mixed
+ */
+function bb_onesignal_manage_web_push_notification( $retval, $notification ) {
+	if (
+		! empty( $notification->id ) &&
+		! empty( $notification->component_action ) &&
+		in_array(
+			$notification->component_action,
+			array(
+				'bb_activity_following_post',
+				'bb_groups_subscribed_activity',
+				'bb_groups_subscribed_discussion',
+			),
+			true
+		) &&
+		true === (bool) bp_notifications_get_meta( $notification->id, 'not_send_web', true )
+	) {
+		return false;
+	}
+
+	return $retval;
 }

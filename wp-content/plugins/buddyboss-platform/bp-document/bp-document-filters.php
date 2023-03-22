@@ -190,13 +190,20 @@ function bp_document_activity_append_document( $content, $activity ) {
 
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
-	if ( ! empty( $document_ids ) && bp_has_document(
-		array(
-			'include'  => $document_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	$args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$args['privacy'][] = 'comment';
+		}
+	}
+
+	if ( ! empty( $document_ids ) && bp_has_document( $args ) ) {
 		ob_start();
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
@@ -360,6 +367,11 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$actions             = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 	$moderated_documents = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 
+	if ( ! empty( $documents ) ) {
+		$document_order = array_column( $documents, 'menu_order' );
+		array_multisort( $document_order, SORT_ASC, $documents );
+	}
+
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_documents ) ) {
 		$moderated_documents = explode( ',', $moderated_documents );
 		foreach ( $moderated_documents as $document_id ) {
@@ -432,7 +444,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 						$document_ids[] = $document_id;
 					}
 					if ( ! in_array( $document_id, $document_ids ) ) {
-						bp_document_delete( array( 'id' => $document_id ) );
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
 					}
 				}
 
@@ -1856,13 +1868,13 @@ function bp_document_get_edit_activity_data( $activity ) {
 					'size'        => $size,
 					'saved'       => true,
 					'menu_order'  => $document->menu_order,
+					'full_name'   => esc_attr( basename( $file ) ),
 				);
 
 				if ( 0 === $folder_id && $document->folder_id > 0 ) {
 					$folder_id                    = $document->folder_id;
 					$activity['can_edit_privacy'] = false;
 				}
-
 			}
 		}
 

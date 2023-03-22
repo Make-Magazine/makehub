@@ -131,10 +131,14 @@ class BuddyPanel_Section {
 			return;
 		}
 
-		$theme_locations  = array_flip( $theme_locations );
-		$current_location = isset( $theme_locations[ $nav_menu_selected_id ] ) ? $theme_locations[ $nav_menu_selected_id ] : '';
-		$menu_ids         = array( 'buddypanel-loggedin', 'buddypanel-loggedout', 'mobile-menu-logged-in', 'mobile-menu-logged-out' );
-		$ele_class        = ( $current_location && in_array( $current_location, $menu_ids, true ) ) ? 'style="display: none;"' : '';
+		$ele_class = in_array( $nav_menu_selected_id, array_values( $theme_locations ), true ) ? 'style="display: none;"' : '';
+		$menu_ids  = array( 'buddypanel-loggedin', 'buddypanel-loggedout', 'mobile-menu-logged-in', 'mobile-menu-logged-out' );
+		foreach ( $theme_locations as $key => $value ) {
+			if ( $value === $nav_menu_selected_id && ! in_array( $key, $menu_ids, true ) ) {
+				$ele_class = '';
+				break;
+			}
+		}
 		?>
 
 		<div id="buddypanel-menu" class="posttypediv">
@@ -150,8 +154,8 @@ class BuddyPanel_Section {
 				<?php
 				printf(
 					/* translators: BuddyPanel menu location text. */
-					wp_kses_post( __( 'Link this menu to a %s to add sections.', 'buddyboss-theme' ) ),
-					'<strong>' . esc_html__( 'BuddyPanel menu location', 'buddyboss-theme' ) . '</strong>'
+					wp_kses_post( __( 'Link this menu to either %s only to add sections.', 'buddyboss-theme' ) ),
+					'<strong>' . esc_html__( 'BuddyPanel or Mobile menu location', 'buddyboss-theme' ) . '</strong>'
 				);
 				?>
 			</p>

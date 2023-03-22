@@ -117,7 +117,7 @@ function bp_zoom_enqueue_scripts_and_styles() {
 	wp_add_inline_script( 'bp-zoom-js', $inline_js, 'before' );
 }
 
-add_action( 'wp_enqueue_scripts', 'bp_zoom_enqueue_scripts_and_styles', 99 );
+add_action( 'wp_enqueue_scripts', 'bp_zoom_enqueue_scripts_and_styles', 19 );
 
 /**
  * Retrieve an meeting or meetings.
@@ -303,7 +303,6 @@ function bp_zoom_meeting_add( $args = '' ) {
 			'host_id'                => '',
 			'title'                  => '',
 			'description'            => '',
-			'start_date'             => bp_core_current_time(),
 			'timezone'               => '',
 			'duration'               => false,
 			'meeting_authentication' => false,
@@ -336,7 +335,6 @@ function bp_zoom_meeting_add( $args = '' ) {
 	$meeting->host_id                = $r['host_id'];
 	$meeting->title                  = $r['title'];
 	$meeting->description            = $r['description'];
-	$meeting->start_date             = $r['start_date'];
 	$meeting->timezone               = $r['timezone'];
 	$meeting->duration               = (int) $r['duration'];
 	$meeting->meeting_authentication = (bool) $r['meeting_authentication'];
@@ -2769,7 +2767,7 @@ function bp_zoom_get_recurrence_label( $meeting_id, $meeting_details = false ) {
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $meeting_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -2820,7 +2818,7 @@ function bp_zoom_get_recurrence_label( $meeting_id, $meeting_details = false ) {
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $meeting_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -2881,7 +2879,7 @@ function bp_zoom_get_recurrence_label( $meeting_id, $meeting_details = false ) {
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $meeting_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -2983,7 +2981,7 @@ function bp_zoom_get_webinar_recurrence_label( $webinar_id, $webinar_details = f
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $webinar_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -3034,7 +3032,7 @@ function bp_zoom_get_webinar_recurrence_label( $webinar_id, $webinar_details = f
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $webinar_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -3095,7 +3093,7 @@ function bp_zoom_get_webinar_recurrence_label( $webinar_id, $webinar_details = f
 
 			if ( ! empty( $recurrence->end_date_time ) ) {
 				$return .= ' ' . __( 'until', 'buddyboss-pro' ) . ' ';
-				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ) );
+				$return .= wp_date( bp_core_date_format(), strtotime( $last_occurrence_date ), new DateTimeZone( $webinar_details->timezone ) );
 			}
 
 			$return .= ', ' . sprintf( '%d %s', $no_of_occurrences, _n( 'occurrence', 'occurrences', $no_of_occurrences, 'buddyboss-pro' ) );
@@ -3765,7 +3763,7 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 					$time_zone     = $meeting->timezone;
 				}
 
-				$date  = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) );
+				$date  = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				$date .= __( ' at ', 'buddyboss-pro' );
 				$date .= wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				?>

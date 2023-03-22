@@ -586,6 +586,8 @@ function bp_zoom_meeting_start_date() {
 function bp_get_zoom_meeting_start_date() {
 	global $zoom_meeting_template;
 
+	$start_date = wp_date( 'Y-m-d H:i:s', strtotime( $zoom_meeting_template->meeting->start_date_utc ), new DateTimeZone( $zoom_meeting_template->meeting->timezone ) );
+
 	/**
 	 * Filters the meeting start date being displayed.
 	 *
@@ -593,7 +595,7 @@ function bp_get_zoom_meeting_start_date() {
 	 *
 	 * @param string $start_date The meeting start date.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_start_date', $zoom_meeting_template->meeting->start_date );
+	return apply_filters( 'bp_get_zoom_meeting_start_date', $start_date );
 }
 
 /**
@@ -2197,6 +2199,7 @@ function bp_zoom_webinar_start_date() {
 function bp_get_zoom_webinar_start_date() {
 	global $zoom_webinar_template;
 
+	$start_date = wp_date( 'Y-m-d H:i:s', strtotime( $zoom_webinar_template->webinar->start_date_utc ), new DateTimeZone( $zoom_webinar_template->webinar->timezone ) );
 	/**
 	 * Filters the webinar start date being displayed.
 	 *
@@ -2204,7 +2207,7 @@ function bp_get_zoom_webinar_start_date() {
 	 *
 	 * @param string $start_date The webinar start date.
 	 */
-	return apply_filters( 'bp_get_zoom_webinar_start_date', $zoom_webinar_template->webinar->start_date );
+	return apply_filters( 'bp_get_zoom_webinar_start_date', $start_date );
 }
 
 /**

@@ -24,8 +24,7 @@ $current_date             = wp_date( 'U' );
 $occurrence_date_unix     = wp_date( 'U', strtotime( $utc_date_time ), new DateTimeZone( 'UTC' ) );
 $meeting_is_started       = ( $occurrence_date_unix > wp_date( 'U', strtotime( 'now' ), new DateTimeZone( 'UTC' ) ) ) ? false : true;
 $show_join_meeting_button = ( $occurrence_date_unix > wp_date( 'U', strtotime( '+10 minutes' ), new DateTimeZone( 'UTC' ) ) ) ? false : true;
-$meeting_date             = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ) );
-$date                     = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) );
+$date                     = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( bp_get_zoom_meeting_timezone() ) );
 
 $meeting_date_obj = new DateTime( $utc_date_time );
 $meeting_date_obj->setTimezone( wp_timezone() );

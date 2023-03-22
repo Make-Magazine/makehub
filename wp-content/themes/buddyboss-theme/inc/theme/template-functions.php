@@ -187,10 +187,10 @@ if ( ! function_exists( 'buddyboss_theme_body_classes' ) ) {
 			// LearnDash sidebar.
 			$sidebar   = ' sidebar-' . buddyboss_theme_get_option( 'learndash' );
 			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
-		} elseif ( is_active_sidebar( 'learndash_sidebar' ) && buddyboss_is_learndash() ) {
-			// LearnDash sidebar.
-			$sidebar   = 'sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
-			$classes[] = $sidebar;
+		} elseif ( is_active_sidebar( 'learndash_lesson_sidebar' ) && buddyboss_is_learndash() ) {
+			// LearnDash lesson sidebar
+			$sidebar   = ' sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
+			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
 		} elseif ( buddyboss_is_lifterlms() ) {
 			// LifterLMS class.
 			$classes[] = 'llms-pointer';
@@ -483,7 +483,7 @@ if ( ! function_exists( 'buddyboss_theme_entry_header_image' ) ) {
 			ob_start();
 			?>
 			<div class="ratio-wrap">
-				<a href="<?php the_permalink(); ?> title="
+				<a href="<?php the_permalink(); ?>" title="
 					<?php
 					echo esc_attr(
 						sprintf(
@@ -806,7 +806,7 @@ function bb_custom_excerpt_length( $length ) {
 	return 25;
 }
 
-add_filter( 'excerpt_length', 'bb_custom_excerpt_length', 999 );
+add_filter( 'excerpt_length', 'bb_custom_excerpt_length', 15 );
 
 /**
  * Filter the excerpt "read more" string.
@@ -841,7 +841,12 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 
 			<?php
 			if ( 0 != $args['avatar_size'] ) {
-				$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $comment->user_id ) : get_comment_author_url( $comment );
+				$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
+				if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
+					$user_link = bp_core_get_user_domain( $comment->user_id );
+				} else {
+					$user_link = get_comment_author_url( $comment );
+				}
 				?>
 				<div class="comment-author vcard">
 					<a href="<?php echo esc_url( $user_link ); ?>">
@@ -857,7 +862,8 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					/* translators: %s: Author related metas. */
 					__( '%s', 'buddyboss-theme' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
 					sprintf(
-						'<cite class="fn comment-author">%s</cite>',
+						'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
+						esc_url( $user_link ),
 						get_comment_author_link( $comment )
 					)
 				);
@@ -902,6 +908,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					array_merge(
 						$args,
 						array(
+							'reply_text' => esc_html__( 'Reply', 'buddyboss-theme' ),
 							'add_below' => $add_below,
 							'depth'     => $depth,
 							'max_depth' => $args['max_depth'],
@@ -912,7 +919,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 				);
 				?>
 
-				<?php edit_comment_link( __( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
+				<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
 			</footer>
 		</div>		</article>
 		<?php
@@ -2246,7 +2253,7 @@ add_filter( 'cancel_comment_reply_link', 'buddyboss_theme_remove_blog_comment_re
  *
  * @return string Return HTML markup for cancel reply link and submit button.
  */
-function buddyboss_theme_add_blog_comment_reply_link( $submit_field, $args ) {
+function buddyboss_theme_add_blog_comment_reply_link( $submit_button, $args ) {
 	$cancel_reply_link = '';
 
 	if ( get_option( 'thread_comments' ) ) {
@@ -2256,6 +2263,7 @@ function buddyboss_theme_add_blog_comment_reply_link( $submit_field, $args ) {
 		$cancel_reply_link .= $args['cancel_reply_after'];
 	}
 
-	return $submit_field . $cancel_reply_link;
+	return $cancel_reply_link . $submit_button;
 }
-add_action( 'comment_form_submit_field', 'buddyboss_theme_add_blog_comment_reply_link', 99, 2 );
+add_action( 'comment_form_submit_button', 'buddyboss_theme_add_blog_comment_reply_link', 99, 2 );
+

@@ -257,7 +257,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['topic']      = ! empty( $data['title'] ) ? $data['title'] : '';
 			$args['agenda']     = ! empty( $data['description'] ) ? $data['description'] : '';
 			$args['type']       = ! empty( $data['type'] ) ? $data['type'] : 2; // Scheduled.
-			$args['start_time'] = ! empty( $data['start_date'] ) ? $data['start_date'] : '';
+			$args['start_time'] = ! empty( $data['start_date_utc'] ) ? $data['start_date_utc'] : '';
 			$args['timezone']   = $data['timezone'];
 			$args['password']   = ! empty( $data['password'] ) ? $data['password'] : '';
 			$args['duration']   = ! empty( $data['duration'] ) ? $data['duration'] : 60;
@@ -304,7 +304,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['topic']      = ! empty( $update_data['title'] ) ? $update_data['title'] : '';
 			$args['agenda']     = ! empty( $update_data['description'] ) ? $update_data['description'] : '';
 			$args['type']       = ! empty( $update_data['type'] ) ? $update_data['type'] : 2; // Scheduled.
-			$args['start_time'] = ! empty( $update_data['start_date'] ) ? $update_data['start_date'] : '';
+			$args['start_time'] = ! empty( $update_data['start_date_utc'] ) ? $update_data['start_date_utc'] : '';
 			$args['timezone']   = ! empty( $update_data['timezone'] ) ? $update_data['timezone'] : 'UTC';
 			$args['password']   = ! empty( $update_data['password'] ) ? $update_data['password'] : '';
 			$args['duration']   = ! empty( $update_data['duration'] ) ? $update_data['duration'] : 60;
@@ -430,7 +430,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['topic']      = ! empty( $data['title'] ) ? $data['title'] : '';
 			$args['agenda']     = ! empty( $data['description'] ) ? $data['description'] : '';
 			$args['type']       = ! empty( $data['type'] ) ? $data['type'] : 2; // Scheduled.
-			$args['start_time'] = ! empty( $data['start_date'] ) ? $data['start_date'] : '';
+			$args['start_time'] = ! empty( $data['start_date_utc'] ) ? $data['start_date_utc'] : '';
 			$args['timezone']   = $data['timezone'];
 			$args['password']   = ! empty( $data['password'] ) ? $data['password'] : '';
 			$args['duration']   = ! empty( $data['duration'] ) ? $data['duration'] : 60;
@@ -476,7 +476,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['topic']      = ! empty( $update_data['title'] ) ? $update_data['title'] : '';
 			$args['agenda']     = ! empty( $update_data['description'] ) ? $update_data['description'] : '';
 			$args['type']       = ! empty( $update_data['type'] ) ? $update_data['type'] : 2; // Scheduled.
-			$args['start_time'] = ! empty( $update_data['start_date'] ) ? $update_data['start_date'] : '';
+			$args['start_time'] = ! empty( $update_data['start_date_utc'] ) ? $update_data['start_date_utc'] : '';
 			$args['timezone']   = ! empty( $update_data['timezone'] ) ? $update_data['timezone'] : 'UTC';
 			$args['password']   = ! empty( $update_data['password'] ) ? $update_data['password'] : '';
 			$args['duration']   = ! empty( $update_data['duration'] ) ? $update_data['duration'] : 60;

@@ -60,7 +60,7 @@ if ( ! function_exists( 'learndash_focus_mode_comments_list' ) ) {
 				<div class="ld-comment-reply">
 					<?php comment_reply_link( array_merge( $args,
 						array(
-							'reply_text' => 'Reply',
+							'reply_text' => esc_html__( 'Reply', 'buddyboss-theme' ),
 							'after'      => '',
 							'depth'      => $depth,
 							'max_depth'  => $args['max_depth']

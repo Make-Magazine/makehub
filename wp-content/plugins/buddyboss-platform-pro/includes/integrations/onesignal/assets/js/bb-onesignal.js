@@ -1,6 +1,6 @@
 /* jshint browser: true */
 /* global bp, bb_onesignal_vars */
-/* @version [BBVERSION] */
+/* @version 2.0.3 */
 window.bp        = window.bp || {};
 window.OneSignal = window.OneSignal || [];
 
@@ -149,29 +149,33 @@ var bb_player_id = '';
 				}
 			);
 
-			window.OneSignal.on(
-				'notificationPermissionChange',
-				function ( permissionChange ) {
-					var currentPermission = permissionChange.to;
-					if ( bb_player_id ) {
-						if ( 'granted' === currentPermission ) {
-							window.OneSignal.push( [ 'setSubscription', true ] );
-							bp.OneSignal_FrontCommon.updateDeviceInfo(
-								bb_player_id,
-								true,
-								true
-							);
-						} else {
-							if ( 'denied' === currentPermission ) {
-								window.OneSignal.push( [ 'setSubscription', false ] );
+			window.OneSignal.push(
+				function () {
+					window.OneSignal.on(
+						'notificationPermissionChange',
+						function ( permissionChange ) {
+							var currentPermission = permissionChange.to;
+							if ( bb_player_id ) {
+								if ( 'granted' === currentPermission ) {
+									window.OneSignal.push( [ 'setSubscription', true ] );
+									bp.OneSignal_FrontCommon.updateDeviceInfo(
+										bb_player_id,
+										true,
+										true
+									);
+								} else {
+									if ( 'denied' === currentPermission ) {
+										window.OneSignal.push( [ 'setSubscription', false ] );
+									}
+									bp.OneSignal_FrontCommon.updateDeviceInfo(
+										bb_player_id,
+										false,
+										true
+									);
+								}
 							}
-							bp.OneSignal_FrontCommon.updateDeviceInfo(
-								bb_player_id,
-								false,
-								true
-							);
 						}
-					}
+					);
 				}
 			);
 		},

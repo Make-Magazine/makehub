@@ -95,7 +95,7 @@ class BB_Lms_Courses extends Widget_Base {
 	 * @since  1.1.0
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 
 		$shortName = $this->get_active_plugin_short_name();
 
@@ -1020,7 +1020,7 @@ class BB_Lms_Courses extends Widget_Base {
 		$settings_skin     = isset( $settings['skin_style'] ) ? $settings['skin_style'] : 'classic';
 		$course_cols       = isset( $settings['columns_num'] ) ? $settings['columns_num'] : 'default';
 		$posts_per_page    = $this->get_settings( 'posts_per_page' );
-		$current_page      = ! empty( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1;
+		$current_page      = get_query_var( 'paged', ! empty( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 );
 		$category          = isset( $settings['categories'] ) ? $settings['categories'] : '';
 		$tags              = isset( $settings['tags'] ) ? $settings['tags'] : '';
 

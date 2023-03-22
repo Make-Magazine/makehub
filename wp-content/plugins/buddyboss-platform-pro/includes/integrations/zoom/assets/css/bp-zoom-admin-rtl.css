@@ -60,6 +60,14 @@ hr.bb-sep-line {
 	line-height: 1;
 }
 
+.radio-button-options .bp-radio-wrap {
+	display: block;
+}
+
+.radio-button-options .bp-radio-wrap label {
+	line-height: 1.5;
+}
+
 .bb-description-info {
 	font-size: 14px;
 	color: #a3a5a9;
