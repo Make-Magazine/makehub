@@ -1120,6 +1120,19 @@ function bb_send_notifications_to_subscribers( $args ) {
 		'notification_from' => $r['notification_from'],
 	);
 
+	$usernames = array();
+	if ( ! empty( $r['data']['email_tokens'] ) && ! empty( $r['data']['email_tokens']['tokens'] ) ) {
+		if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
+		}
+		if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
+			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+		}
+	}
+	if ( ! empty( $usernames ) ) {
+		$parse_args['usernames'] = $usernames;
+	}
+
 	if (
 		isset( $subscriptions['total'] ) &&
 		$subscriptions['total'] > $min_count
@@ -1325,7 +1338,6 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 			);
 
 			if ( ! empty( $member_ids ) ) {
-
 				$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 				if ( $is_background && count( $member_ids ) > $min_count ) {
 					$chunk_results = array_chunk( $member_ids, $min_count );

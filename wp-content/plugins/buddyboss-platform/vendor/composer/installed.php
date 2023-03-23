@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f2800a453e05af63dfd62012c6ea2cf533945f29',
+        'reference' => '064f94cc9d0a1886ef37ac7e27ba1d719c099501',
         'name' => 'buddyboss/buddyboss-platform',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f2800a453e05af63dfd62012c6ea2cf533945f29',
+            'reference' => '064f94cc9d0a1886ef37ac7e27ba1d719c099501',
             'dev_requirement' => false,
         ),
         'composer/installers' => array(
