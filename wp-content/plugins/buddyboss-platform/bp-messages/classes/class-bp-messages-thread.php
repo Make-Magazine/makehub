@@ -943,7 +943,13 @@ class BP_Messages_Thread {
 			$message_list = $wpdb->get_results( "SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE 1 = 1 {$group_ids_sql} AND message_id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key  = 'group_message_users' and meta_value = 'all' AND message_id in ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} where meta_key  = 'group_message_type' and meta_value = 'open' ) ) " );				
 
 			$message_ids = array_map( 'intval', wp_list_pluck( $message_list, 'message_id' ) );
-			$sub_query = "AND m.id NOT IN ( ".implode(",",$message_ids).")";			
+			if(!empty($message_ids)){
+				$sub_query = "AND m.id NOT IN ( ".implode(",",$message_ids).")";			
+			}else{
+				$sub_query = "";
+			}
+
+			
 		}
 
 		$sub_query = apply_filters( 'bb_messages_thread_sub_query', $sub_query, $r );
